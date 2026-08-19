@@ -18,16 +18,151 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 608 Handoff Evaluation (by Session 609)
+**Score: 9/10.** **What helped:** the ratified scope in `next_steps` (apply the verified one-line
+self-duplicate-exclusion fix, add diagnostic return fields, run a fresh Critique Round 3, only
+then proceed PRE-RED→RED→GREEN) was exact and directly executable — this session's own `Workflow`
+prompt was built almost verbatim from it, with zero re-derivation needed. The `gotchas` field
+(mating-union ids sort lexicographically not numerically; the collision-safety cap's own guarantee
+doesn't see 2 later pipeline passes) were both directly confirmed live this session — the second
+one recurred nearly word-for-word as one of Critique Round 3's own findings. **What was missing:**
+nothing the handoff could reasonably have anticipated — it could not have known the D3‴ rebuild
+itself would fail a fresh Critique Round 3 (that's this session's own discovery, not an omission),
+and it explicitly scoped OUT re-litigating D1/D2/the duplicate-occurrence mechanism, which turned
+out to be exactly right restraint. **What was wrong:** nothing found inaccurate. **ROI:** high —
+the precision of the ratified scope let this session go straight into a well-specified `Workflow`
+dispatch instead of re-deriving requirements from the investigation doc's prose.
+
 ### What Session 609 Did
-**Deliverable:** Track 6 targeted repair session — apply the already-verified one-line
-self-duplicate-exclusion fix to `.computeSingleChildAntiCoincidence()` (investigation doc §7),
-add diagnostic return fields, run a fresh Critique Round 3, then proceed PRE-RED→RED→GREEN.
-(IN PROGRESS)
-**Started:** 2026-08-18.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Track 6 targeted repair session, as ratified by S608 §9 — build "D3‴," run
+Critique Round 3, and (only if sound) proceed through PRE-RED→RED→GREEN. **DONE, but redirected
+by the owner mid-session rather than reaching implementation** — Critique Round 3 found the
+design not sound (6th failed attempt in this investigation's history), and a direct owner
+architectural challenge, resolved by reading 3 primary sources in full, redirected the whole
+defect class toward a future algorithm-family redesign (issue #141) instead of a 7th patch.
+**No production code was touched.** **Started/Completed:** 2026-08-18.
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md` in full; `SESSION_NOTES.md`
+   (S608's own active task, DONE); `gh issue list` (13 open); `git status`/`log`/`diff --stat`
+   (clean; untracked evidence-doc `.html` render outputs and a recurring Office lock-file
+   individually checked and confirmed pre-existing, not a ghost session); `methodology_dashboard.py`
+   (96/100, 0 High+ risk, dashboard itself flagged stale v2.14.0 vs canonical v2.15.2 —
+   informational); `gh run list --branch master` (last 10 runs all `completed success`). Ledger
+   reconcile: `CHANGELOG.md` frontier == `HEAD`, no gap; `HANDOFFS.md` frontier 1 commit behind
+   but that commit is itself a self-referential ledger entry (established S600/602-607 precedent,
+   no backfill owed). Cross-checked `PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md` —
+   its own Tier 1/2 items are all already resolved, nothing new to surface.
+2. Rendered the `BACKLOG.md`-sourced priorities list (4 items) via `AskUserQuestion` — **user
+   picked the Track 6 targeted repair session** (the item S608 §9 ratified).
+3. **Phase 1B claimed correctly this time** (the exact gap Learnings 624/625/628 flagged 3
+   consecutive prior sessions for) — wrote the `SESSION_NOTES.md` stub and `HANDOFFS.md`
+   `status: pending` receipt and committed (`cffc09b7`) before any research/technical work.
+4. Read `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`, the full investigation doc
+   (§0-9), `.computeDupNudge()`'s precedent code, the pipeline insertion point
+   (`R/makePedigreeDiagramData.R:1099-1226`), and the relevant test fixtures
+   (`test_positionMatingUnitForest.R:229-326,1067-1183`) to ground a precise `Workflow` dispatch.
+5. Built a first-draft `.computeSingleChildAntiCoincidence()` in a scratch copy myself (not
+   delegated — needed surgical precision on exact line numbers/formulas already in context),
+   live-verified it reproduces the investigation doc's own F1-fixture number exactly
+   (`__union_4`: 255.12→224.00 scaled px), then found via live measurement against the real
+   375-fixture that my own draft's collision-safety cap was too aggressive (79/224 residual vs.
+   the doc's own target 11/224) — a genuine bug in my own construction, diagnosed but not
+   fully fixed solo.
+6. **User asked for a kinship2-vs-nprcgenekeepr before/after visual comparison** mid-session.
+   Rendered all 3 (kinship2 reference, current-HEAD "before," scratch-repair "after") for the
+   F1 fixture via `visNetwork` + `chromote`, verified the exact node coordinates programmatically
+   before trusting the images (per `[[verify-diagrams-against-ground-truth]]`), and published a
+   comparison Artifact (design-system grounded in the diagrams' own Okabe-Ito palette).
+7. **Dispatched a background `Workflow`** (1 rebuild agent + 3 independent Critique Round 3
+   lenses: correctness, edge-case, blast-radius/TDD) to fix the safety-cap bug and re-verify
+   against every already-established number, matching this investigation's own established
+   multi-agent methodology. Continued conversation with the user while it ran (~1hr, 321 tool
+   calls, 761K tokens across 4 agents).
+8. **User pushed back directly**, mid-conversation, on the whole repair thread: kinship2's
+   convention is "known to work, the community standard," and asked how "simple rules" (even
+   spacing, parent-centered descenders) could be hard to implement. Answered from the codebase's
+   own source/docs read this session, but the framing (calling Track 6's own choice a deviation
+   from "the" standard) was later found to be wrong.
+9. **User asked whether nprcgenekeepr had ever tried parent-centering, and why not just adopt
+   kinship2's algorithm.** Re-read `pedigree-diagram-track6-child-centered-union-position-plan.md`
+   and `pedigree-diagram-option2-layout-design-plan.md` in full (not from memory) — found
+   nprcgenekeepr's *original* formula WAS parent-centered, replaced by Track 6 only after
+   measuring a *worse* defect (max 10,687-unit sibship-bar drift); and found kinship2 was never
+   adopted directly because it's GPL (project is MIT) and its own source (read by that prior
+   design session) contains an uncapped factorial search and a heuristic its own vignette admits
+   "works 9 times out of 10."
+10. **User asked whether issue #141 (BJL) meant parent-centering.** Answered no — BJL is in the
+    Reingold-Tilford/Walker family, whose own rule is "parent centered over children," the SAME
+    direction as Track 6, not kinship2's.
+11. **User asked for actual examples of BJL-drawn pedigrees.** Read
+    `inst/extdata/reference/5201430.pdf` (the CraneFoot paper, already vendored in this repo)
+    directly rather than from a prior session's condensed restatement — found and disclosed a
+    real error in this session's own prior framing: CraneFoot's own published Aesthetic 4,
+    "the parents should be centred over their children," is — through the mating-unit
+    transformation — Track 6's own rule, not kinship2's. Extracted and showed Figure 2 (a real,
+    published pedigree captioned as drawn via Walker's algorithm improved to linear time by
+    Buchheim et al.) as the concrete example asked for.
+12. **The background `Workflow` completed** (task-notification arrived truncated — read the full
+    output file per the tool's own guidance, which was essential: the truncation cut immediately
+    after the rebuild agent's own report, before all 3 critique verdicts). Result: rebuild fixed
+    2 real bugs honestly (a floating-point guard band; a direction-reversal cap risk) and
+    reproduced every established number exactly, but **all 3 Critique Round 3 lenses
+    independently returned `designStillSound: false`** — a production-test regression (0→3
+    violations of an existing green invariant guard), 7/11 "residual" cases being complete
+    no-ops misreported as partial corrections, a 2nd unhypothesized bug class (narrow-span
+    midpoint-fallback also defeated by the cap), a 3rd (general N-way dense-cluster collapse,
+    not limited to shared-founder), and a diagnostic-sufficiency claim that failed adversarial
+    mutation testing.
+13. Wrote up the full Critique Round 3 findings as investigation doc §10 (verbatim source
+    included) and presented the decision back to the user, connecting it explicitly to the
+    architecture conversation already underway.
+14. **User directed: "go with CraneFoot / the Reingold-Tilford–Walker–BJL family."** Recorded
+    this as a ratified *direction* (§11), not a scoped plan — explicitly declined to start
+    scoping/implementing the redesign in this session, matching this project's own consistent
+    precedent that algorithm-level layout decisions get their own dedicated planning session.
+    Posted a comment on issue #141 (AI-authorship disclaimer included) documenting that the new
+    evidence (6 failed local-patch attempts) is a *correctness*-based justification, different
+    from that issue's own filed *performance*-based bar — did not change the `premature
+    optimization` label unilaterally. Updated `BACKLOG.md`'s Track 3 item accordingly.
+
+**Runtime smoke test (Phase 3E):** n/a — zero `R/*.R`/`tests/*.R` files under the tracked repo
+touched (confirmed `git status --porcelain -- R/ tests/` empty throughout); every "verification"
+this session ran (mine and the `Workflow`'s 4 agents) executed against disposable scratch copies
+under the harness's own scratchpad, never the tracked package.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation/tutorial-article/`NEWS.Rmd`/
+`a2interactive.Rmd`/`_pkgdown.yml` checklists all N/A (no shipped code, no exported function, no
+user-facing feature). GitHub issue close-out N/A (no issue closed — #141 got an evidence comment,
+not a state change). Lint checklist N/A (no `.R` files touched).
+
+**Self-assessment (Session 609): 9/10.** **Strengths:** (1) Phase 1B claimed correctly and
+immediately after scope settled — breaking a 3-consecutive-session streak of skipping it
+(Learnings 624/625/628), directly citing those learnings as the reason to get it right this time.
+(2) When directly challenged on a technical claim, did not defend from memory — re-read 3 primary
+sources in full (2 planning docs, 1 PDF) each time, and found and openly disclosed a real error in
+its own prior framing rather than smoothing it over. (3) Read the full, un-truncated `Workflow`
+output file before reporting, per the tool's own guidance — the truncated inline notification
+would have omitted all 3 unanimous "not sound" verdicts, the single most decisive fact in the
+whole result. (4) Correctly declined to scope/implement the architecture redirect in-session
+despite direct owner momentum toward it — recorded the ratified direction and stopped, matching
+this project's own planning/implementation session-boundary discipline exactly. (5) Verified the
+pedigree-comparison artifact's own visual claims against programmatically-traced ground truth
+before publishing, per standing user-level guidance. **Weaknesses:** (1) My own first-draft
+`.computeSingleChildAntiCoincidence()` (built solo, before dispatching the Workflow) had a real,
+measurable bug (79/224 vs. target 11/224) — caught by my own live-measurement discipline before
+it went anywhere consequential, but worth naming: hand-deriving a safety-cap algorithm from prose
+alone, without the original session's own iterative live-verification loop, is unreliable even
+when the surrounding context is well-understood. (2) This session's surface area grew very large
+(repair attempt + artifact + a multi-round architecture discussion + a redirect decision) — every
+expansion was directly, explicitly driven by the user's own real-time questions, not
+self-initiated scope creep, but it's still worth flagging honestly as a very long single session.
+**ROI:** high — this session prevented a bad repair from reaching PRE-RED (Critique Round 3 caught
+real, load-bearing bugs the rebuild's own honest self-report missed), corrected a real
+misconception this session itself introduced earlier in the same conversation, and leaves a
+future planning session with a precisely-scoped, evidence-backed direction plus a public GitHub
+record, rather than either a shipped-but-broken fix or an undirected "investigate more" pointer.
 
 ### Session 607 Handoff Evaluation (by Session 608)
 **Score: 9/10.** **What helped:** every priority carried forward in `next_steps` matched this

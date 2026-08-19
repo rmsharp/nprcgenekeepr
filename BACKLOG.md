@@ -155,8 +155,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 - [ ] **Track 3's 2 disclosed trade-offs (child-centering quality, D1 bar-vs-bar overlap) — accept
       as shipped, or investigate a narrower mechanism** (found S596, 2026-08-16 — **child-centering
       half: S602 (2026-08-17) implementation RETRACTED as a fix S603 (2026-08-18), verified to
-      produce no visible correction — READY, see the S603 correction below, not scoped**; D1
-      bar-vs-bar half READY, Effort unknown, not scoped) — plan
+      produce no visible correction; single-child union/parent-coincidence sub-thread (S608-609)
+      NOT READY, needs a redesign session (not a repair attempt) — see the S609 correction below**;
+      D1 bar-vs-bar half READY, Effort unknown, not scoped) — plan
       §2.3/§6 Session C's parent-span clamp
       (`docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md`) was owner-accepted
       "as designed" this session via `AskUserQuestion`, but 2 costs were measured, not merely
@@ -391,6 +392,64 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       metric is stale at current HEAD (true baseline 53/251, not 9/251) — a separate housekeeping
       item. The original Track 3 child-centering/D1-bar-vs-bar decision (accept as permanent vs.
       investigate further) remains itself unresolved pending this new investigation's own outcome.
+
+      **Progress (S609, 2026-08-18), "D3‴" built and Critique Round 3 run — still NOT sound,
+      needs a redesign, not another repair attempt:** picked up §9's ratified targeted-repair
+      scope via a `Workflow` (1 rebuild agent + 3 independent adversarial critique lenses, scratch
+      copy only, zero production code touched). The rebuild reproduced every number the
+      investigation had already established exactly (F1 `__union_4` = 224.00px; real-fixture
+      residual 11/224; `resolveEdgeNodeCollisions` pairs = 1427; S583 pinned case = 29; Constraint
+      1 bit-identical) and honestly fixed 2 further bugs beyond the ratified scope (a
+      floating-point guard band; a latent direction-reversal risk in the safety cap) — but **all 3
+      critique lenses independently returned `designStillSound: false`**, finding problems the
+      rebuild's own honest disclosure did not reach: (1) **the shipped scratch copy regresses an
+      existing, currently-green production test** — Track 6's own "zero exact coincidence"
+      invariant guard — from 0 to 3 violations on the real fixture; (2) **7 of the 11 "residual"
+      cases are not partial corrections, they are exact no-ops** (`target == curX`, the union
+      renders on top of its parent, unchanged) — the `capped` diagnostic field is actively
+      misleading for these; (3) a structurally separate, previously-unhypothesized bug: the
+      narrow-parent-span midpoint-fallback branch is also defeated by the same obstacle cap; (4)
+      the failure isn't limited to "shared founder boundary" as scoped — a hand-built case with 3
+      independently-engaged unions (no shared parent) shows the identical collapse, because the
+      sweep is a one-directional pass with no fixed-point reconciliation between overlapping local
+      corrections; (5) the diagnostic fields fail adversarial mutation testing for a "wrong
+      formula" bug class. **Six independent design attempts across this investigation's full
+      history (S598, S599, S600, S601×1, S609) have now failed adversarial critique** — this is
+      not a one-line-fix-away situation; the root cause is architectural (no reconciliation
+      mechanism between 2+ single-child unions whose corrections overlap), matching this
+      investigation's own repeated pattern. Full record:
+      [`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)
+      §10 — **start at §10.3** for a future redesign session. Not scoped for that session (per
+      this document's own bounds, §0): the D1 bar-vs-bar residual, the multi-child population, or
+      re-litigating the duplicate-occurrence-selection mechanism (already separately exhausted at
+      5 attempts).
+
+      **Redirect (S609 continued, 2026-08-18) — owner-directed, informed by re-reading this
+      project's own algorithm-design history:** in conversation, the owner challenged this
+      whole repair thread against kinship2's own convention. Re-reading
+      `pedigree-diagram-track6-child-centered-union-position-plan.md` and
+      `pedigree-diagram-option2-layout-design-plan.md` in full (not from memory) established (a)
+      nprcgenekeepr's *original* formula was parent-centered, like kinship2, and Track 6 moved
+      away from it only after measuring a *worse* defect (max 10,687-unit sibship-bar drift for
+      polygamous anchors); (b) kinship2 was never adopted directly because it is GPL (nprcgenekeepr
+      is MIT) and its own source contains an uncapped factorial search plus a heuristic its own
+      vignette admits "works 9 times out of 10." Reading `inst/extdata/reference/5201430.pdf` (the
+      CraneFoot paper) directly then corrected this session's own framing: CraneFoot's published
+      Aesthetic (4), "parents centred over children," is — through the mating-unit transformation —
+      **Track 6's own rule, not kinship2's**; kinship2 and the Reingold-Tilford/Walker/BJL family
+      are 2 different published conventions, not one "the" standard. **Owner directive: "go with
+      CraneFoot / the Reingold-Tilford–Walker–BJL family this whole approach is built on"** —
+      pursue a complete, correct implementation of that family (issue #141) as the direction for
+      this whole defect class, rather than a 7th local-patch attempt or reverting to kinship2-style
+      parent-centering. **This is a ratified direction, not a scoped plan** — no redesign session
+      has been scheduled, no implementation started. A comment was added to issue #141 documenting
+      that the evidence in hand (6 failed local-patch attempts, ordinary-scale correctness
+      failures) is a different kind of justification than that issue's own filed text asks for
+      (which was performance-only); the `premature optimization` label was deliberately not
+      changed — that is a decision for a future planning session or the owner directly. Full
+      record, ratification, and the precise scope boundary for a future planning session:
+      [`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)
+      §11.
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --

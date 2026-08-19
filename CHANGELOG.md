@@ -16,6 +16,33 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S609: close out (Track 6 D3‴ repair — Critique Round 3 failed, redirected to algorithm-family redesign)
+- **Deliverable:** built and Critique-Round-3'd "D3‴" (the Track 6 single-child union/parent-
+  coincidence repair ratified S608 §9) in a scratch copy — all 3 independent critique lenses
+  returned `designStillSound: false` (6th failed design attempt in this investigation's history).
+  A live owner architecture challenge, resolved by re-reading 3 primary sources in full, then
+  redirected the defect class: pursue a complete Reingold-Tilford/Walker/Buchheim-Jünger-Leipert
+  implementation (issue #141) rather than a 7th local patch. No production code changed.
+- Published a verified kinship2-vs-nprcgenekeepr before/after comparison Artifact (F1 fixture,
+  node coordinates traced programmatically before trusting the images).
+- `docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md` §10
+  (Critique Round 3 findings) and §11 (owner-ratified redirect) added.
+- `BACKLOG.md` Track 3 item updated with the S609 progress + redirect paragraphs.
+- GitHub issue #141 commented (new correctness-based evidence; AI-authorship disclaimer; label
+  not changed unilaterally).
+- `PROJECT_LEARNINGS.md` Learnings 630 (adversarial mutation-test diagnostic-sufficiency claims;
+  boolean `capped` fields need a magnitude check) and 631 (read full truncated Workflow output
+  before reporting; re-read primary sources, not condensed restatements, under direct challenge).
+- `CLAUDE.md` learnings-count pointer updated (627→631 learnings, Sessions 1–607+→1–609+ — also
+  corrects a 2-learning drift S608 itself left unfixed).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-18 · [ad hoc] S609: claim session (Track 6 targeted repair) (cffc09b7)
+- **Deliverable:** Phase 1B claim stub (`SESSION_NOTES.md`) + `HANDOFFS.md` `status: pending`
+  receipt, written and committed before any technical work — correcting the pattern
+  Learnings 624/625/628 flagged in the 3 immediately preceding sessions.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-18 · [ad hoc] S608: record the HANDOFFS.md sha-fix action itself (30631c83)
 - **Deliverable:** `HANDOFFS.md`'s S608 receipt `commit:` field updated from `pending` to the
   actual close-out commit sha (`8c697fab`), then this action itself recorded here per failure

@@ -138,18 +138,55 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S609
 date: 2026-08-18
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Track 6 targeted repair session — apply the already-verified one-line
-  self-duplicate-exclusion fix to `.computeSingleChildAntiCoincidence()` (investigation doc §7),
-  add diagnostic return fields, run a fresh Critique Round 3, then proceed PRE-RED→RED→GREEN.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE, redirected — built and Critique-Round-3'd "D3‴" (Track 6 single-child
+  anti-coincidence repair); all 3 lenses returned designStillSound:false (6th failed attempt in
+  this investigation's history). A live architecture challenge from the owner, resolved by
+  re-reading 3 primary sources, then redirected the whole defect class: owner-directed to pursue
+  a complete Reingold-Tilford/Walker/BJL implementation (issue #141) rather than a 7th patch.
+  No production code changed.
+what_was_done: Dispatched a background Workflow (1 rebuild + 3 critique lenses) against my own
+  scratch-copy draft of .computeSingleChildAntiCoincidence(); rebuild fixed 2 real bugs (fp guard
+  band, direction-reversal cap risk) and reproduced every established number exactly, but all 3
+  critique lenses found designStillSound:false (a production-test regression 0->3 violations;
+  7/11 "residual" cases were complete no-ops mislabeled capped=TRUE; 2 further unhypothesized bug
+  classes; diagnostic fields failed adversarial mutation testing). Mid-session, built and
+  published a verified kinship2-vs-nprcgenekeepr before/after comparison Artifact for the user.
+  Owner then challenged the whole repair thread's framing; re-read
+  pedigree-diagram-track6-child-centered-union-position-plan.md,
+  pedigree-diagram-option2-layout-design-plan.md, and inst/extdata/reference/5201430.pdf (the
+  CraneFoot paper) in full, found and disclosed a real error in this session's own earlier
+  framing (CraneFoot's own Aesthetic 4 is Track 6's rule, not kinship2's). Owner directed
+  pursuing the CraneFoot/Reingold-Tilford/Walker/BJL family; recorded as a ratified direction
+  (investigation doc §11), not implemented. Commented on issue #141 with the new
+  correctness-based evidence (AI-authorship disclaimer, label not changed). Updated BACKLOG.md.
+  Commits: cffc09b7 (claim), <this close-out commit>.
+next_steps: A future PLANNING session (not implementation) should scope a complete, correct
+  Reingold-Tilford/Walker/BJL tree-positioning implementation for D3, per investigation doc §11
+  and issue #141 (now carrying correctness evidence, not just the original performance
+  justification) — evidence-based inventory, which family member to implement (BJL is the
+  natural default per §11's own note), migration path, completion criteria; matching this
+  project's own precedent (Option 2/Track 4/Track 6 each got dedicated planning sessions).
+  Issue #161 (hide the mating-unit marker) and the D1 bar-vs-bar residual remain separately open,
+  explicitly out of this redirect's own scope.
+key_files: docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md
+  §10-11 (Critique Round 3 findings + the redirect ratification, full record);
+  docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md §1-3 (why Track 6
+  chose child- over parent-centering); docs/planning/pedigree-diagram-option2-layout-design-plan.md
+  §2-5 (why kinship2/BJL weren't adopted directly, D3's own scope); GitHub issue #141 (new
+  evidence comment); BACKLOG.md Active (Track 3 item, redirect paragraph appended).
+gotchas: The scratch copy at
+  /private/tmp/.../scratchpad/pkg_d3_repair still contains the failed "D3‴" build — disposable,
+  never merged, safe to discard, NOT a starting point for a future redesign (its whole
+  architecture, a one-directional sweep, is the thing Critique Round 3 found broken). A future
+  planning session should start from Reingold-Tilford/Walker/BJL literature + D3's current
+  contour-merge code, not from this scratch attempt. Issue #141's own filed text still reads as
+  performance-only justification — read it together with the new comment, not instead of it.
+runtime_smoke: n/a — zero R/*.R or tests/*.R files touched under the tracked repo; all
+  verification (mine and the Workflow's 4 agents) ran against disposable scratch copies.
+changelog_ref: CHANGELOG.md 2026-08-18, S609 entries.
 commit: pending
 ```
 

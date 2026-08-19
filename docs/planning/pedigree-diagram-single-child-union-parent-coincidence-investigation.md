@@ -1,13 +1,19 @@
 # Pedigree Diagram: Single-Child Union/Parent Coincidence — Investigation
 
-> **STATUS: INVESTIGATED, NOT IMPLEMENTED (S608, 2026-08-18).** A 15-agent
-> Evidence → Design → Synthesize → Critique → Repair → Critique-2 `Workflow` produced a repaired
-> candidate design (D3″) that Critique Round 2 found still carries one live-verified bug (with a
-> verified one-line fix already in hand, "D3‴" below) plus 2 disclosed architectural gaps (a
-> collision-safety guarantee that cannot see 2 later pipeline passes; a weak, tautological
-> §2.4-invariant test surface). **This document is explicitly not a ratified plan** — see §8 for
-> the decision this investigation hands back to the owner. No production code was written or
-> modified this session; every number below is from live execution against unmodified `HEAD`.
+> **STATUS: INVESTIGATED, NOT IMPLEMENTED — REDIRECTED (S609, 2026-08-18).** §10's "D3‴" repair
+> attempt failed a fresh 3-lens Critique Round 3 (all 3 lenses `designStillSound: false`) — the
+> 6th independent local-patch attempt in this investigation's history to fail adversarial
+> critique. §11 records the owner's resulting direction: pursue a complete, correct
+> implementation of the Reingold-Tilford/Walker/Buchheim-Jünger-Leipert tree-layout family
+> (issue #141) rather than a 7th local patch — informed by a *correctness*-based justification
+> issue #141 was not originally filed against (it was filed and deferred purely on
+> *performance* grounds). No production code was written or modified in this investigation —
+> every number below is from live execution against unmodified `HEAD` or a disposable scratch
+> copy, never the tracked package.
+>
+> *(Earlier status, preserved for context: S608's own 15-agent Workflow produced a repaired
+> candidate design ("D3″") that Critique Round 2 found still carried one live-verified bug, with
+> a verified one-line fix in hand ("D3‴" below) plus 2 disclosed architectural gaps.)*
 
 ## 0. What this addresses (and what it deliberately does not)
 
@@ -327,6 +333,204 @@ This document remains an investigation, not a ratified implementation plan — t
 above is of *direction*, matching this project's own established distinction between a
 go/no-go decision and a PRE-RED implementation gate (`SESSION_RUNNER.md` Planning Sessions:
 "the plan is the deliverable... implementation happens in a separate session").
+
+## 10. "D3‴" built and Critique Round 3 run (S609, 2026-08-18) — verdict: NOT sound, no PRE-RED
+
+**Status: investigated, not implemented.** Per §9's own ratified scope, a `Workflow` (1 rebuild
+agent + 3 independent adversarial critique lenses) built "D3‴" in a scratch copy, live-verified
+it against every number this document had already established, and ran a fresh Critique Round 3
+against it specifically. **All 3 lenses independently returned `designStillSound: false`.** No
+production code was touched — the scratch copy never left `/private/tmp/.../scratchpad/pkg_d3_repair`,
+confirmed via `git status`/`git diff` on the tracked repo before and after.
+
+### 10.1 What the rebuild got right
+
+Every number this document had already established was reproduced *exactly*, live-measured, not
+assumed: F1 `__union_4` = 224.00 scaled px; real-fixture single-child residual = 11/224 (the
+same id set §7 already reported: `__union_40,41,68,75,92,97,100,151,179,190,220`);
+`resolveEdgeNodeCollisions` pairs = 1427 (matching §6's own D3″ target); S583's pinned case = 29
+(the disclosed 60→29 deliberate change); Constraint 1 (13 multi-child unions + all 375 real
+individuals bit-identical to unmodified HEAD) held exactly, independently re-verified twice more
+by 2 of the 3 critique lenses via a second, separate `pkgload::load_all()` of the unmodified
+tracked package.
+
+The rebuild also found and fixed 2 real bugs beyond §7's own scope, both disclosed in the
+function's own roxygen docs: (1) a floating-point guard band — a push landing algebraically
+exactly at the 31px margin does not reliably re-measure as exactly 31.0 via an independent
+`abs(x1-x2)*xScale` path (ordinary IEEE-754 non-associativity; magnitude ~1e-14, fixed with a
+1e-9-internal-unit `fpGuard`); (2) a latent direction-reversal risk in the "stop short of the
+blocking obstacle" cap formula, floored/ceilinged at `curX` defensively (verified a behavioral
+no-op on this fixture in isolation — see §10.2 for why it is *not* a no-op in general).
+
+**Deliberately not shipped:** a "search past the blocking obstacle" fix that live-verified
+resolves 7–10 of the 11 shared-founder residual cases (down to as low as 1/224) — rejected
+because it regresses `resolveEdgeNodeCollisions` pairs (1427→1446) and pushes bar-vs-bar past
+this document's own §5 "regression to avoid" mark (358/119 → 359–361/120–122), a genuine,
+previously-unmeasured trade-off this document's own §6/§7 never quantified for D3‴ specifically
+(only for D3″, pre-self-dup-fix). Disclosed in full rather than silently shipped or silently
+dropped.
+
+### 10.2 What Critique Round 3 found that the rebuild's own honest disclosure did not reach
+
+**Correctness lens — MAJOR, live-verified, confirmed 2 independent ways:** the shipped scratch
+copy **regresses an existing, currently-green production test** — `test_positionMatingUnitForest.R`'s
+own "zero exact x/gen coincidence among real, duplicate, AND mating-unit nodes together" guard
+(Track 6 §2.3's own invariant, the direct structural guard against the exact defect class this
+whole investigation exists to eliminate) — from **0 violations on unmodified HEAD to 3
+violations** on the repaired scratch copy (`__union_40`/`QWUKUY`, `__union_92`/`IM1B5T`,
+`__union_97`/`KUENM8`). The rebuild's own `honestGapReport` characterized all 182
+`test_positionMatingUnitForest.R` failures as "expected, hardcoded-literal blast radius" — true
+for the great majority, but false for this one boolean invariant assertion, which was never run
+or mentioned by the rebuild agent.
+
+**Edge-case lens — 3 independent MAJOR findings:**
+
+1. Of the 11 residual cases, **7 are not partial corrections — they are exact no-ops**
+   (`target == curX` exactly, `achievedParentDist == 0.000000`): the union renders at the
+   *literal same coordinate* as its own parent, unchanged from the original defect. The `capped`
+   diagnostic field reads `TRUE` for these — actively misleading, since it implies a correction
+   was applied when none was. (These 7 are a superset of the correctness lens's own 3
+   test-regression cases — the same underlying failure, caught two different ways.)
+2. **A structurally separate bug, not previously hypothesized:** the narrow-parent-span
+   "midpoint fallback" branch (§6) is *also* defeated by the same obstacle-avoidance cap, because
+   a union's own 2 real parents are treated as ordinary, unexcluded obstacles (unlike its own
+   duplicate marker, which the self-dup-exclusion fix already excludes). Algebraically proven:
+   whenever the fallback's own trigger condition (`span < 2·touchThreshold`) holds, the far parent
+   is *unconditionally* flagged as blocking, so the intended 50/50 midpoint split essentially
+   never survives intact.
+3. **The failure isn't limited to "shared founder boundary" as §7/§9 framed it.** A hand-built
+   case with 3 *independently*-engaged single-child unions (distinct sire/dam pairs, no shared
+   parent x) shows the identical collapse pattern. Root cause: the sweep is a single
+   one-directional pass (each union sees only *earlier*-processed unions as obstacles, never
+   *later* ones) with no fixed-point iteration — "first one wins, everyone else collapses" is a
+   general property of this design, not a narrow edge case.
+
+**Blast-radius/TDD lens — MAJOR:** the `diagnosticFieldsSufficient: true` claim (§9's own
+requirement) does not hold under adversarial mutation testing. A planted "wrong `primaryTarget`
+formula" mutation produced **0 detected violations**, because the independent checker's own
+midpoint-fallback classifier silently excludes any case whose `primaryTarget` no longer sits near
+`curX ± touchThreshold` from that specific check — exactly the shape of bug it was supposed to
+catch. (The engagement-gate and cap-arithmetic checks *did* correctly catch their own planted
+mutations — this is a specific blind spot in one of the four invariants, not a wholesale
+failure.) Two minor/note findings also recorded: `touchThreshold` itself is not a returned
+field (an external checker must hardcode `minSep · 31/120`, which can silently drift from
+production); and the safety cap's own clearance guarantee is not structurally protected against
+2 later pipeline passes (empirically harmless by margin on this fixture, not by design — the
+same class of gap §7 already flagged and left unresolved for D3″).
+
+### 10.3 What this means
+
+**Not PRE-RED-ready — not a "ship with known gaps" situation, a "the design has confirmed,
+undisclosed correctness failures" one.** A production regression of an existing green invariant
+test (correctness lens) plus 2 further MAJOR bug classes the rebuild never hypothesized
+(midpoint-fallback defeat; general N-way dense-cluster collapse, not just shared-founder) mean
+"D3‴" as built this session is not a small patch away from PRE-RED — the underlying
+"one-directional sweep, no reconciliation between competing local corrections" architecture is
+the root cause of at least 2 of the 3 MAJOR findings, not a bug within it. Per this project's own
+established one-repair-round-per-session precedent (S599–601, restated §8 above), no 4th repair
+round was attempted this session — this is the record of exactly how far it got and what remains,
+matching this investigation's own §8 practice.
+
+**Open items for whoever picks this up next:**
+1. The 3 newly-confirmed MAJOR findings (test regression + no-op-not-partial residuals; the
+   midpoint-fallback cap defeat; general dense-cluster collapse) all trace to the same
+   architectural gap: a single-pass, one-directional sweep cannot reconcile 2+ single-child
+   unions whose correction corridors overlap, however they come to overlap. A future session
+   should treat this as a redesign question (does the cap need a real fixed-point relaxation
+   over just the engaged single-child population, not a one-shot sweep?), not another one-line
+   patch attempt.
+2. The diagnostic-field blind spot (§10.2, blast-radius lens) should be closed in the same pass
+   as any redesign, not patched independently — the fields exist to make a future §2.4-style
+   test meaningful, and a redesigned target formula would need re-verified diagnostics anyway.
+3. §7's own item 4 (Track 6's stale "91% reduction" headline metric) remains unaddressed,
+   independent of this section's fate.
+
+## 11. Owner-directed redirect: pursue the algorithm family, not a 7th patch (S609, 2026-08-18)
+
+**Context leading to this decision, in order:**
+
+1. In conversation (not a formal `AskUserQuestion` gate — a genuine architectural challenge),
+   the owner pushed back on this investigation's whole approach: kinship2's own convention
+   (evenly-spaced nodes, descenders centered on the parent mate-line) is "known to work and is
+   the community standard," and this session's patch-on-patch repair work was never actually
+   trying to reproduce it.
+2. Reading `docs/planning/pedigree-diagram-track6-child-centered-union-position-plan.md` §1–3 in
+   full (not from memory) established that nprcgenekeepr's *original* formula **was**
+   parent-centered, exactly like kinship2 — Track 6 replaced it (2026-08-14) after measuring a
+   worse defect: a polygamous anchor's own cross-union centroid, substituted in as the union's
+   position, produced sibship bars up to 10,687 scaled units off-target (100/251 real-fixture
+   child edges >200 units off) versus child-centering's 9/251, max 4,121.
+3. Reading `docs/planning/pedigree-diagram-option2-layout-design-plan.md` §2 in full established
+   why nprcgenekeepr never simply adopted kinship2's own algorithm: kinship2 is GPL (nprcgenekeepr
+   is MIT — a hard license wall, not a preference), and kinship2's own source, read directly by
+   that design session, contains an uncapped factorial founder-order search and a sibling/mate
+   heuristic its own vignette admits "works 9 times out of 10" — i.e. kinship2 is not itself a
+   proven-correct algorithm. The field-standard alternative — transform to a forest via mating-unit
+   nodes (CraneFoot, Mäkinen et al. 2005), then apply a genuine tree algorithm with a real
+   correctness/complexity proof — is what nprcgenekeepr's own Option 2 design already followed;
+   Buchheim-Jünger-Leipert (BJL) was evaluated and deliberately deferred (issue #141), not
+   overlooked, pending "profiling shows a real need."
+4. Reading `inst/extdata/reference/5201430.pdf` (the CraneFoot paper itself, already vendored in
+   this repo) directly, at the owner's own prompt, corrected a real error in this session's own
+   framing: CraneFoot's own published Aesthetic (4) is **"The parents should be centred over
+   their children"** — which, applied through the mating-unit transformation, means the
+   *tree*-parent (the mating-unit node) is centered over the actual pedigree children. **That is
+   Track 6's own rule, not kinship2's.** kinship2 and the CraneFoot/Reingold-Tilford/Walker/BJL
+   family are two different, independently-published conventions on this exact axis; Track 6
+   aligns with the latter, not a deviation from "the" standard. Figure 2 of that paper (a real,
+   published example, captioned as drawn via "Walker II's algorithm... owing to the improvement
+   by Buchheim et al [BJL]") also visibly demonstrates the *even, regular same-generation spacing*
+   this session's own patch-stack lacks — a property Aesthetic (3) states as a goal and a complete
+   contour-merge implementation provides structurally, not as a happy accident.
+5. §10's own "D3‴" repair — this session's own attempt, built and critiqued *after* points 1–4
+   above were already in view — failed 3-lens Critique Round 3 unanimously, the **6th** independent
+   design attempt across this investigation's full history (S598, S599, S600, S601, S609) to fail
+   adversarial critique. Every failure's own root cause traces to the same gap: a one-directional
+   sweep/merge with no reconciliation between 2+ locally-computed corrections that turn out to
+   overlap.
+
+**Owner directive:** *"go with CraneFoot / the Reingold-Tilford–Walker–BJL family this whole
+approach is built on"* — pursue a complete, correct implementation of that algorithm family
+(issue #141) as the direction for the Track 3/6 child-centering defect class, rather than a 7th
+local-patch attempt at `.computeSingleChildAntiCoincidence()` specifically, and rather than
+reverting to kinship2-style parent-centering (which would reopen Track 6's own, larger, already-
+measured defect).
+
+**What this decision is, and is not:**
+
+- It **is** a ratified *direction* for a future session, matching this investigation's own
+  established distinction between a go/no-go decision and a PRE-RED implementation gate — no
+  redesign has been scoped, no plan written, no production code touched.
+- It is **not** an instruction to implement BJL (or any tree algorithm) in this or the next
+  session directly. Per this project's own consistent precedent for algorithm-level layout
+  decisions (Option 2's own layout design, Track 4, Track 6 each got a dedicated planning
+  session), the next step is a **planning session** — evidence-based inventory, an explicit
+  decision on which family member to implement (Reingold-Tilford / Walker / BJL — see the note
+  below on why the choice matters less than it may appear), a migration path, and its own
+  completion criteria — not a session that plans and implements in the same sitting.
+- **The justification is now different from issue #141's own filed text.** #141 was filed and
+  deferred on *performance* grounds only ("if profiling shows a real need" — scaling worse than
+  linear, or a pathological tree shape). This investigation's own evidence is *correctness*
+  evidence: 6 failed patch attempts, on ordinary real data (375 individuals, well under the
+  1,500-node cap), not a profiling result. A future planning session should read this section
+  and issue #141's own current text together rather than assume the existing "why this is filed
+  but not scheduled" reasoning still applies unchanged.
+- **BJL specifically vs. the family generally:** BJL's own contribution over Reingold-Tilford/
+  Walker is an asymptotic run-time guarantee (true O(n), no O(n²) pathological case) — it does not
+  add correctness properties beyond what a *complete, correctly-implemented* Walker's algorithm
+  already provides. The defects this investigation chased are evidence the current *simplified*
+  merge is an *incomplete* implementation of this family (missing the apportioning/reconciliation
+  step that gives the family its "no overlap, parent centered over children, even spacing"
+  guarantees), not evidence that Walker's algorithm specifically (as opposed to BJL) is
+  insufficient. A future planning session should treat "which specific member of the family" as
+  a smaller, secondary decision — BJL is the natural default given issue #141 already names it and
+  it subsumes the correctness properties a plain Walker implementation would also provide, plus
+  the performance guarantee for free — not re-litigate the whole family choice from scratch.
+
+**Not decided here, deliberately:** whether issue #141's `premature optimization` label should be
+changed — flagged in a comment on that issue (see below) with the AI-authored-triage disclaimer,
+not changed unilaterally. Issue #161 (hide the mating-unit node marker) and the D1 bar-vs-bar
+residual remain separately open, unaffected by this redirect.
 
 ## References
 
