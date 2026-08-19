@@ -185,8 +185,8 @@ gotchas: (1) A full testthat::test_dir() run in this sandbox silently dies partw
 runtime_smoke: n/a -- grep-confirmed zero references to any new function outside the 2 new
   files, no exports (NAMESPACE unchanged); Phase 1a's own scope is explicitly zero production
   wiring.
-changelog_ref: CHANGELOG.md 2026-08-19, S611 entries (RED/GREEN/REFACTOR/close-out/BACKLOG-item).
-commit: pending
+changelog_ref: CHANGELOG.md 2026-08-19, S611 entries (implementation/close-out/BACKLOG-item).
+commit: 8ac50a4e
 ```
 Self-score breakdown: +PRE-RED research was genuinely primary-source (read the actual 1989 paper)
 and executable-reference-based (ran real d3-hierarchy, not just described it) -- the strictest
