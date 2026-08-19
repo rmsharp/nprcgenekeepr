@@ -181,7 +181,7 @@ gotchas: The verified one-line fix and diagnostic-field addition are NOT yet PRE
 runtime_smoke: n/a — investigation/docs-only session, zero R/*.R files modified (confirmed
   `git status --porcelain -- R/ tests/` empty throughout by multiple Workflow agents).
 changelog_ref: CHANGELOG.md 2026-08-18, 3 S608 entries (claim / investigation / close-out).
-commit: pending
+commit: 8c697fab
 ```
 Self-score breakdown: +matched this project's own established multi-agent investigation pattern
 for this exact problem class rather than improvising a lighter process; +the 2-round critique
