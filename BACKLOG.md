@@ -526,6 +526,38 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       session, per the plan's own phase boundaries; may legitimately conclude "more research
       needed."
 
+      **Phase 1b — S612 (2026-08-19): substantial progress, NOT DONE — honest "needs a
+      continuation session" outcome, exactly the allowance the plan's own Phase 1b charter names.**
+      [`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md).
+      A research→design→critique→repair `Workflow` (research: gen-recompute call-site trace,
+      layered-graph literature review, `apportion()` mechanics) → design synthesis → **3 further
+      critique+repair rounds** (11 + 4 + 4 = 19 agents total, ~87 min combined). **Settled,
+      validated, safe to build on:** the core architecture (Candidate 2b — eliminate every 0-delta
+      edge from the tree recursion by reattaching a union's real children onto its anchor,
+      representing everything else as a one-way-derived point) survived all 3 critique rounds
+      unchallenged at the structural level, independently corroborated by direct reads of
+      CraneFoot's actual C++ source and kinship2's own design vignette (both real pedigree tools
+      independently never make a mating union a first-class tree-recursion node either). Candidates
+      1 (revived global table) and 3 (same-rank/flat-edge, Sugiyama-literature) are conclusively
+      ruled out. The B1/B2/B3 non-anchor-occurrence classification is sound. Case (d) (multi-gen
+      forest roots) is resolved for the Shiny app's own reactive chain and, more importantly,
+      covered generally by a reinstated `sweepMinSep()` backstop. **NOT settled:** round 4's own
+      critique (3 lenses, all independently constructing and *executing* a counter-example) found
+      that reinstating `sweepMinSep()` as a safety net (fixing one round-2 finding) breaks the
+      invariant a new `orderBySex` sign-fold formula (fixing round 2's *other* finding) depends on
+      — when `sweepMinSep()` moves a real child of an `orderBySex`-qualifying union, the drift
+      (measured: 0.5 and 0.700 in 2 independent executed fixtures) reliably exceeds the sign-fold's
+      own tolerance budget (0.4), inverting the male/female ordering the fix exists to preserve.
+      This is the *same signature failure shape* (2+ locally-computed corrections whose interaction
+      was never checked against each other) recurring a 4th time within this design-note stage
+      alone, on top of the 6 prior full implementation attempts — found here, before any
+      implementation code, which is exactly Phase 1b's own purpose. The design note's own §7
+      proposes 3 concrete candidate fixes for a follow-up session to evaluate (none adopted here,
+      deliberately — adopting one without its own adversarial pass would repeat the mistake this
+      note documents). **Next: a Phase 1b continuation session** resolving specifically this seam
+      (not a restart — cases (a)/(b)/(c)/(d) and the 2b architecture are settled inputs), THEN
+      Phase 2. Effort S-M for the continuation.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8
