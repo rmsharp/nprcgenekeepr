@@ -17,6 +17,28 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-20 · \[ad hoc\] S617: sync methodology framework to canonical v3.7 (hand-reconciled)
+
+- **Deliverable:** synced this project’s canonical-overlay methodology
+  files toward `v3.7` of `https://github.com/KJ5HST/methodology.git`,
+  hand-reconciled rather than blind-overlaid after discovering
+  `FRAMEWORK_LEARNINGS.md`/`methodology_trim.py` have never existed in
+  any tagged canonical release (they trace to the 2026-08-10 sync
+  actually running against the `rmsharp/methodology` fork’s unreleased
+  `main` branch, `v3.6-255-gc43e7ee`) and that local
+  `methodology_dashboard.py` (2.14.0) is genuinely newer than true
+  v3.7’s (2.10.6). Adopted FM \#28 “Unbounded mandatory read” + 4
+  Degradation Detection rows into `SESSION_RUNNER.md`; applied
+  `RECOMMENDED_SKILLS.md`’s improved `/caveman` description; preserved
+  the local `FRAMEWORK_LEARNINGS.md`-extraction pattern (21 rows
+  vs. v3.7’s inline 13) and `methodology_dashboard.py` at 2.14.0 per
+  owner direction (`AskUserQuestion`); corrected `CLAUDE.md`’s
+  inaccurate claim that `methodology_trim.py` is a canonical-overlay
+  file; fixed a stale “27 failure modes” cross-reference; filed a
+  `BACKLOG.md` item for the new-in-v3.7 `context_budget.py` (not adopted
+  this session); recorded `PROJECT_LEARNINGS.md` Learning 645.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-20 · \[ad hoc\] S616: post-close-out correction folded into SESSION_NOTES.md/HANDOFFS.md (S575/S603/S607 precedent)
 
 - **Deliverable:** the owner flagged that the prior conversational recap

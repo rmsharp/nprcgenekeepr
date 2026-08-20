@@ -801,3 +801,261 @@ original close-out content above was inaccurate or retracted, unlike
 S603’s precedent (a retracted fix) or S607’s (a verification gap); this
 is closer to S575’s shape (real findings surfaced after the close-out
 commit had already landed).
+
+------------------------------------------------------------------------
+
+### What Session 617 Did
+
+**Deliverable:** Sync this project’s canonical-overlay methodology files
+to `v3.7` of `https://github.com/KJ5HST/methodology.git`, per
+`BOOTSTRAP.md`’s “Updating an existing project” procedure, then re-apply
+this project’s own documented local customization to
+`methodology_trim.py` (`CLAUDE.md`’s “methodology_trim.py
+local-customization checklist”) and verify. (IN PROGRESS) **Started:**
+2026-08-20 **Status:** Session claimed. Work beginning. **Ledger:**
+`CHANGELOG: pending` — set at claim; this session’s actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session’s reconcile.
+
+### Session 616 Handoff Evaluation (by Session 617)
+
+**Score: 8/10.** **What helped:** the handoff was structurally complete
+(all 6 minimum requirements present, `HANDOFFS.md` receipt filled
+correctly) and its “Gotchas for future sessions” item 1 (“`$go_to()` is
+now this project’s own established pattern for ANY future chromote-based
+live-render helper”) is exactly the kind of durable, transferable fact a
+handoff should carry forward. **What was missing:** nothing that blocked
+this session — S616’s own task (a CI-timing fix) is unrelated to today’s
+methodology-sync task, which arrived as a fresh user directive rather
+than from S616’s own `next_steps` list, so there was little in that list
+this session could directly use. This is expected, not a defect in
+S616’s handoff: not every session’s task descends from the
+immediately-prior one. **What was wrong:** nothing found inaccurate.
+**ROI:** moderate — mainly useful for confirming the repo was in a
+genuinely clean, fully-closed-out state before this session’s own claim
+(verified independently via `git status`/ledger-frontier checks in Phase
+0, which matched what S616 reported).
+
+### What Session 617 Did
+
+**Deliverable:** Sync this project’s canonical-overlay methodology files
+to `v3.7` of `https://github.com/KJ5HST/methodology.git`. **DONE**, via
+hand-reconciliation rather than a blind overlay — the user picked this
+explicitly (`AskUserQuestion`, “Hand-reconcile onto v3.7”) after a
+significant discovery changed the shape of the task.
+**Started/Completed:** 2026-08-20.
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** (continuing from the prior turn) — read
+    `SESSION_RUNNER.md`/`SAFEGUARDS.md` in full; `SESSION_NOTES.md`
+    (S613-616’s own active task, the Walker/BJL Phase 2a/2b + CI-fix
+    thread); `gh issue list` (13 open); `git status`/`log`/`diff --stat`
+    (clean, ledger frontiers both `== HEAD`); `gh run list` (several
+    in-progress/pending from the last 2 pushes, nothing red);
+    `methodology_dashboard.py` (96/100, 1 HIGH risk — `HANDOFFS.md` past
+    its 2,000-line cap, unchanged); ghost-session check on 6 untracked
+    files (all pre-existing, already traced by S614-616). Rendered the
+    priorities list + `AskUserQuestion` — user did not pick from it;
+    instead gave a fresh directive: “sync with v3.7 of
+    <https://github.com/KJ5HST/methodology.git>”.
+2.  **Investigated the sibling `/Users/rmsharp/Development/methodology`
+    checkout** (a fork, `origin=rmsharp/methodology`,
+    `upstream=KJ5HST/methodology`, both remotes present) — confirmed it
+    has the real `v3.7` tag (`git describe --tags` → `v3.7`, commit
+    `dcb6fc6`, “Merge pull request \#74 from KJ5HST/release/v3.7”). Ran
+    `bin/status`/`bin/sync --dry-run` against it with the sibling
+    checked out AT that tag (never touched the sibling’s working tree
+    destructively — restored to `main` immediately after extracting what
+    was needed; later comparisons used `git show v3.7:<path>` directly,
+    touching nothing in the sibling repo at all).
+3.  **Major discovery, before any file was touched:** `bin/status`
+    flagged `SESSION_RUNNER.md`, `BOOTSTRAP.md`, `CLAUDE_TEMPLATE.md`,
+    `methodology_dashboard.py`, and 3 `docs/methodology/` files as
+    “locally modified” (not “N versions behind”) against true `v3.7`.
+    Full diffs revealed why: this project’s `FRAMEWORK_LEARNINGS.md` and
+    `methodology_trim.py` — both actively, heavily used (the latter for
+    CHANGELOG/HANDOFFS/SESSION_NOTES archiving; the former never
+    actually true canonical) — **have never existed in any tagged
+    `KJ5HST/methodology` release, v1.0.0 through v3.7** (checked all 27
+    tags directly). They reached this project via the 2026-08-10 sync
+    (`18d8e3c7`), whose own commit message honestly names its actual
+    source as `KJ5HST/methodology v3.6-255-gc43e7ee` — the
+    `rmsharp/methodology` fork’s unreleased `main` branch, 255 commits
+    past the v3.6 *tag*, not an official release. Also found:
+    `methodology_dashboard.py` locally is 2.14.0, genuinely NEWER than
+    true v3.7’s 2.10.6 — a literal sync would have been a downgrade.
+    Conversely, true v3.7’s `SESSION_RUNNER.md` has a real addition this
+    project was missing: **Failure Mode \#28 “Unbounded mandatory
+    read”** + 4 Degradation Detection rows. Recorded as
+    `PROJECT_LEARNINGS.md` Learning 645.
+4.  **Surfaced this to the user via `AskUserQuestion`** before touching
+    any file — 3 options (hand-reconcile / literal overlay / sync from
+    the fork’s main instead). **User picked hand-reconcile.**
+5.  **Executed the reconciliation**, file by file, verifying each
+    against the actual `v3.7` tag content (`git show v3.7:<path>`, never
+    the sibling’s live working tree after the first checkout):
+    - `SESSION_RUNNER.md`: added FM \#28 + its 4 Degradation Detection
+      rows (genuine new v3.7 content); kept the local
+      `FRAMEWORK_LEARNINGS.md`-extraction pattern for the 2
+      Learning-routing bullets and the “Learnings (added by sessions)”
+      section (local’s `FRAMEWORK_LEARNINGS.md` already holds 21 rows
+      vs. v3.7’s inline 13 — reverting would have been a real
+      regression, confirmed by reading the file directly, not assumed).
+    - `RECOMMENDED_SKILLS.md`: applied v3.7’s improved `/caveman` skill
+      description verbatim (a genuine content upgrade, unrelated to the
+      `FRAMEWORK_LEARNINGS.md` question) — now matches v3.7 exactly.
+    - `CLAUDE_TEMPLATE.md`, `ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md`,
+      `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`: confirmed
+      each’s only diff is the `FRAMEWORK_LEARNINGS.md` citation-target
+      (both sides self-consistent with their own pattern) — no change
+      needed.
+    - `BOOTSTRAP.md`: confirmed local is a strict superset of v3.7
+      (includes the FRAMEWORK_LEARNINGS.md/ `methodology_trim.py`
+      mentions AND an entire “3 rules for a `bin/sync`-less update”
+      section v3.7 doesn’t have at all) — no change needed.
+    - `methodology_dashboard.py`: kept at local 2.14.0 per the user’s
+      explicit choice (no downgrade).
+    - `SAFEGUARDS.md`, `CONTEXT_TEMPLATE.md`, and 8
+      `docs/methodology/workstreams/*` files: already confirmed
+      byte-identical to v3.7 — no action.
+    - `FRAMEWORK_LEARNINGS.md`, `methodology_trim.py`: left untouched by
+      design (not part of v3.7’s manifest at all; `bin/sync` would
+      neither update nor delete them).
+6.  **Corrected `CLAUDE.md`’s now-confirmed-inaccurate claim** that
+    `methodology_trim.py` is “a canonical-overlay file per
+    `BOOTSTRAP.md`’s sync table” — rewrote the local-customization
+    checklist entry to state the actual provenance and narrow the
+    residual risk to its real trigger (a future sync against the fork’s
+    *unreleased* `main`, not a tagged release, which is what S617 ran).
+7.  **Verified cross-references** (this project’s own Learning \#7
+    discipline, now literally cited inside the SESSION_RUNNER.md text
+    just edited): grepped for stale “27 failure modes” claims after
+    adding FM \#28 — found and fixed one in `CLAUDE.md`’s
+    Project-Specific Failure Modes section; found one more
+    (`docs/methodology/README.md`) that is dated historical changelog
+    prose describing a past release, correctly left untouched. Also
+    refreshed `CLAUDE.md`’s stale `PROJECT_LEARNINGS.md` pointer count
+    (635→645 learnings, _(3.5MB→)2.6MB actual) while already editing the
+    surrounding text.
+8.  **Filed a `BACKLOG.md` Housekeeping item** for `context_budget.py`
+    (a genuinely new v3.7 tool, `bin/status` reports `missing`/`absent`)
+    — deliberately NOT adopted this session (a new capability is a
+    bigger decision than syncing an existing file), flagged for a future
+    scoping session.
+9.  **Verified nothing broke:** `methodology_trim.py --check` still runs
+    cleanly on all 3 ledgers (CHANGELOG.md/HANDOFFS.md/SESSION_NOTES.md
+    — pre-existing trigger-fires unrelated to this session, matching the
+    dashboard’s already-known HIGH risk flag);
+    `methodology_dashboard.py` still runs, health unchanged at 96/100.
+10. **Close-out:** this handoff; `PROJECT_LEARNINGS.md` Learning 645
+    recorded (step 3 above).
+
+**Runtime smoke test (Phase 3E):** n/a — docs/tooling-only sync, zero
+`.R` files touched, no Shiny app or package runtime behavior affected.
+Confirmed via `git status --porcelain` (only `.md` files +
+`RECOMMENDED_SKILLS.md`/`CLAUDE.md`/`PROJECT_LEARNINGS.md`/`BACKLOG.md`
+changed).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `NEWS.Rmd` / `a2interactive.Rmd` / `_pkgdown.yml`
+checklists all **N/A** — no R code, no exported function, no Shiny
+feature. GitHub issue close-out **N/A** — not tied to a GitHub issue.
+Lint checklist **N/A** — no `.R` files touched.
+
+**Self-assessment (Session 617): 9/10.** **Strengths:** (1) Did not
+blindly trust “sync to v3.7” as a mechanical file-overlay — checked out
+the actual tag and diffed against it before touching anything, which is
+what surfaced the fork-vs-upstream provenance gap in the first place.
+(2) When the discovery changed the shape of the task, stopped and asked
+via `AskUserQuestion` rather than either silently downgrading working
+tools (`methodology_dashboard.py`, the `FRAMEWORK_LEARNINGS.md` pattern)
+or silently deviating from the literal instruction by syncing from the
+fork instead. (3) Verified every “locally modified” file’s diff
+line-by-line against actual `v3.7` tag content (via `git show`, never
+trusting the sibling repo’s mutable working tree after the first
+checkout) rather than accepting `bin/status`’s summary label at face
+value — this is what caught that `RECOMMENDED_SKILLS.md`’s “1 version
+behind” WAS a safe, genuine upgrade while the 7 “locally modified” files
+were not. (4) Applied this project’s own Learning \#7 (cross-reference
+completeness) to the very edit that introduced it — grepped for stale
+failure-mode-count claims after adding FM \#28 and fixed the one live
+instance found. (5) Recorded the provenance-gap discovery as a
+`PROJECT_LEARNINGS.md` learning with a concrete, transferable practical
+rule, not just fixed-and-moved-on. **Weaknesses:** (1) Did not re-verify
+the sibling repo’s clean/restored state with a final `git status` after
+the last `git show`-based extraction pass (though no further checkouts
+happened after the one restore, so risk was low — worth a habit going
+forward: confirm the sibling repo is exactly as found before ending any
+session that touches it). (2) The Phase 1B claim (S617’s own stub)
+happened after the Phase 0 orientation-continuation and BEFORE any
+technical investigation began, which is correct per Learning
+624/625/628/644’s own repeated finding — but this session’s
+investigation (checking out tags, running `bin/status`) happened AFTER
+the claim, so this session did NOT repeat that specific failure mode;
+noting explicitly since it’s now a recorded pattern worth confirming
+session over session. **ROI:** high — this session avoided 2 real
+regressions (a `methodology_dashboard.py` downgrade, a
+`FRAMEWORK_LEARNINGS.md`-pattern content loss with no replacement) that
+a literal, un-investigated “just run `bin/sync`” would have caused,
+adopted one genuine new capability (FM \#28) the project was missing,
+and corrected a standing factual error in `CLAUDE.md` about this
+project’s own tooling provenance.
+
+**Next steps:** No further methodology-sync work is owed from this
+session’s own scope — the reconciliation is complete and verified. One
+item is now in `BACKLOG.md` Housekeeping a future session could pick up:
+evaluate adopting `context_budget.py` (v3.7’s new context/token-budget
+tracker, READY, Effort S — a scoping session). Separately, this
+session’s investigation makes 2 broader, optional future considerations
+visible (not filed as BACKLOG items, since neither is a concrete, scoped
+task yet): (a) whether `FRAMEWORK_LEARNINGS.md`/`methodology_trim.py`
+should be formally re-framed as fully project-owned tools (drop the
+“sync” framing entirely, since no tagged release will ever update them)
+or whether this project wants to periodically pull fresh copies from the
+fork’s `main` on purpose; (b) whether future methodology syncs should
+default to checking out a specific tag in the sibling checkout (as this
+session did) rather than trusting whatever branch happens to be checked
+out there, given `bin/sync --source=local`’s documented behavior of
+reading the working tree as-is.
+
+**Key files:** `SESSION_RUNNER.md:220-222,278,329-330,356-360,365-382`
+(the FM \#28 addition + the preserved `FRAMEWORK_LEARNINGS.md` pattern);
+`CLAUDE.md:272` (the corrected `methodology_trim.py` provenance note),
+`CLAUDE.md:282,286` (refreshed cross-reference counts);
+`RECOMMENDED_SKILLS.md:94` (the `/caveman` description upgrade);
+`BACKLOG.md` Housekeeping (the new `context_budget.py` item, inserted
+first); `PROJECT_LEARNINGS.md` Learning 645 (the full provenance-gap
+finding and practical rule).
+
+**Gotchas for future sessions:** (1) A future “sync methodology” session
+should check out the specific target tag in the sibling
+`/Users/rmsharp/Development/methodology` checkout (verify clean first,
+restore the branch after) rather than trusting whatever is currently
+checked out there — `bin/sync --source=local` has no concept of “the
+latest release,” it reads the working tree as-is. (2)
+`FRAMEWORK_LEARNINGS.md` and `methodology_trim.py` will NOT be touched
+by any future tagged-release sync (they’re absent from
+`bin/_manifest.py`’s `DISTRIBUTION` for every tag checked) — do not
+expect `bin/status`/`bin/sync` to ever report them as anything but
+`missing`/absent-from-manifest when compared against a tag; this is
+expected, not a bug. (3) `methodology_dashboard.py` was deliberately
+left at 2.14.0 (ahead of true v3.7’s 2.10.6) — if a future session syncs
+again and sees this flagged “locally modified,” that’s the same
+intentional preservation, not new drift, unless the fork’s version has
+since fallen behind what’s needed.
+
+------------------------------------------------------------------------
+
+### What Session 618 Did
+
+**Deliverable:** Fix `R-CMD-check.yaml`’s intermittent chromote
+Chrome-launch failure (BACKLOG.md Housekeeping item, found S616) — port
+`shinytest2.yaml`’s `browser-actions/setup-chrome@v2` +
+`CHROMOTE_CHROME` + preflight-resolvability pattern into
+`R-CMD-check.yaml`, then verify via repeated real CI pushes. (IN
+PROGRESS) **Started:** 2026-08-20 **Status:** Session claimed. Work
+beginning. **Ledger:** `CHANGELOG: pending` — set at claim; this
+session’s actions are recorded in `CHANGELOG.md` at Phase 3F. Until
+close-out, this line is the crash breadcrumb for the next session’s
+reconcile.

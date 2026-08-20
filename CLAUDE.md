@@ -575,24 +575,36 @@ Learnings 549/550 diagnosed. See `PROJECT_LEARNINGS.md` for the full
 verification record.
 
 **`methodology_trim.py` local-customization checklist (found S518,
-2026-08-11):** `methodology_trim.py` is a canonical-**overlay** file per
-`BOOTSTRAP.md`’s sync table (“Tracked (canonical owns them) … overlay —
-replace with the latest”), but its `LEDGERS` config table is the tool’s
-own documented per-adopter extension point (a file with no entry exits
-`NO_CONFIG` by design — “a generic rule is what would mis-zone a
-differently-shaped ledger”). This project has added a **local,
-uncanonical** `SESSION_NOTES.md` entry (verified against all 577
-record-start headings in the file, zero shape variance) that the design
-doc names no mechanism for surviving a sync overlay. **Any session that
-runs `chore(methodology): sync framework update from canonical` on this
-file must re-diff it against the pre-sync copy first and re-add this
-project’s `SESSION_NOTES.md` `LedgerSpec` entry (and its
-`_session_notes_date` helper) if the sync dropped it** — check
-`git log -p --follow -- methodology_trim.py` for the S518 commit
+2026-08-11; corrected S617, 2026-08-20):** `methodology_trim.py` is
+**not actually part of real upstream `KJ5HST/methodology`** — confirmed
+absent from every tagged release, v1.0.0 through v3.7, by direct
+inspection of each tag’s tree (S617’s v3.7 sync session). The tool (and
+`FRAMEWORK_LEARNINGS.md`, similarly absent from every tag) reached this
+project via the 2026-08-10 sync (`18d8e3c7`), which — because
+`bin/sync --source=local` uses whatever the sibling checkout has
+currently checked out — ran against `rmsharp/methodology`’s `main`
+branch at `v3.6-255-gc43e7ee` (255 commits past the v3.6 *tag*,
+i.e. unreleased fork-ahead work), not an official release. So the
+original framing here (“a canonical-overlay file per `BOOTSTRAP.md`’s
+sync table”) was wrong: a sync against an actual version *tag* (as S617
+ran, for v3.7) never touches this file at all — it isn’t in
+`bin/_manifest.py`’s `DISTRIBUTION` list for any tagged release, so it
+is simply skipped, neither updated nor deleted. It is, in practice, a
+**local, project-owned tool** now, same footing as
+`PROJECT_LEARNINGS.md`. The real residual risk this checklist originally
+named still applies, narrowed to its actual trigger: **if a future
+session ever re-syncs specifically against the `rmsharp/methodology`
+fork’s unreleased `main` branch** (not a tagged release) and that
+branch’s own `methodology_trim.py` has diverged, re-diff before
+overwriting and re-add this project’s local `SESSION_NOTES.md`
+`LedgerSpec` entry (and its `_session_notes_date` helper) if the sync
+dropped it — check `git log -p --follow -- methodology_trim.py` for the
+S518 commit
 (`feat(methodology): add local SESSION_NOTES.md ledger config`) if it’s
 unclear what was lost. A `NO_CONFIG` result on
-`python3 methodology_trim.py --file SESSION_NOTES.md --check` after a
-sync is the signal this happened.
+`python3 methodology_trim.py --file SESSION_NOTES.md --check` after such
+a sync is the signal this happened. A tagged-release sync (the normal
+case from here on) needs no such caution — it never reaches this file.
 
 **`SESSION_NOTES.md` archive fence-scanner defect (found S518,
 2026-08-11; RESOLVED S527/S528, 2026-08-12) — historical, not current
@@ -631,7 +643,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–611+; 635 learnings, ~3.5 MB)
+Project institutional memory (Sessions 1–617+; 645 learnings, ~2.6 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget
@@ -641,6 +653,8 @@ methodology-level learnings remain in `SESSION_RUNNER.md`.
 
 ### Project-specific Failure Modes
 
-(none — the base failure modes \#1–27 in `SESSION_RUNNER.md` apply,
+(none — the base failure modes \#1–28 in `SESSION_RUNNER.md` apply,
 including \#26 “mega-session masquerading as a vertical slice” and \#27
-“unrecorded action,” added by the 2026-07-08 methodology sync to v3.4.)
+“unrecorded action,” added by the 2026-07-08 methodology sync to v3.4,
+and \#28 “unbounded mandatory read,” added by the 2026-08-20 methodology
+sync to v3.7.)
