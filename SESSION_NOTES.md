@@ -207,15 +207,186 @@ Learning 639's own bug recurring — do not "simplify" this back to an inferred 
 
 ---
 
+### Session 614 Handoff Evaluation (by Session 615)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md`/`SESSION_NOTES.md` `next_steps` field named 5
+exact, executable pieces of work ("build helper-live-render-positions.R"; "run the real-fixture
+zero-coincidence gate"; "the F1/Track-C/real-375 live-render checks"; "must explicitly measure, not
+assume: whether the zero-exact-coincidence property survives real scale"; "fold in S613's Obligation
+3") — all 5 were directly actionable and became this session's own 7 new tests almost one-to-one.
+`key_files` pointed exactly at the shipped `.positionMatingUnitForestBJL()` (`:1278-1457`) and the
+new function's own output contract (`id`/`x`/`gen`, no `y`) — both read directly and confirmed
+before writing a single test. **Gotcha #2 ("the real-375 fixture will very likely surface at least
+one case the 17 synthetic fixtures didn't anticipate") was directly borne out — but not in the
+shape predicted:** no code defect surfaced (the adapter's own internal invariants all passed clean
+on first run), but the REAL-SCALE live-render check surfaced something more fundamental — a
+previously-unmeasured characteristic of vis.js's own rendering (pixel-rounding collapses the shared
+1e-3 cosmetic tie-break nudge) that neither the 17 synthetic tests nor any prior session had reason
+to find, since it requires actual production-scale chromote rendering to observe. The handoff's own
+framing ("do not be surprised if Phase 2b needs its own repair-and-critique round") correctly primed
+for "expect something," even though what showed up was a measurement finding, not an implementation
+bug. **What was missing:** the handoff didn't anticipate that `devtools::check()` itself (not just
+`testthat`/`lintr`) would be needed to catch a real regression (the new "unstated dependencies in
+tests" WARNING) — a reasonable gap, since Phase 2a touched zero chromote/htmlwidgets code, so there
+was no reason for S614 to have hit this. **What was wrong:** nothing found inaccurate. **ROI:** very
+high — the 5-item `next_steps` list mapped almost directly onto this session's own scope, with zero
+re-derivation needed.
+
 ### What Session 615 Did
-**Deliverable:** Walker/BJL Phase 2b (issue #141) — build the chromote-based live-render helper
-(`tests/testthat/helper-live-render-positions.R`) and run the real-375-fixture zero-coincidence
-verification against `.positionMatingUnitForestBJL()`, per S614's own handoff and the parent plan's
-Phase 2 Verification Plan. (IN PROGRESS)
-**Started:** 2026-08-19 (Phase 0 orientation complete; user picked this item via the priorities
-`AskUserQuestion`).
-**Status:** Session claimed. Work beginning — PRE-RED research into the governing planning
-documents next.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Walker/BJL Phase 2b (issue #141) — the real-fixture verification half of the
+Walker/BJL pedigree adapter, per `docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-
+plan.md`'s Phase 2 spec and `docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-
+reconciliation.md` §8.4 Obligation 2. **DONE** — new reusable chromote-based live-render helper,
+7 new tests (24 total in the file), all GREEN and REFACTORed. **Started/Completed:** 2026-08-19 –
+2026-08-20.
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md` in full; `SESSION_NOTES.md`
+   (S614's own active task); `gh issue list` (13 open); `git status`/`log`/`diff --stat` (clean, 6
+   local unpushed S614 commits, both `CHANGELOG.md`/`HANDOFFS.md` ledger frontiers `== HEAD`, no
+   reconcile owed); `gh run list` (S612's own `R-CMD-check.yaml` failure traced to hosted-runner
+   infra flake, not code; 3 S613-push workflows shown `in_progress` 5+ hours — flagged as likely
+   stuck/orphaned, not diagnosed, per report-don't-fix); `methodology_dashboard.py` (96/100, 1 HIGH
+   risk, unchanged from S614). Ghost-session check on the same 6 untracked files S614 already
+   traced — unchanged, no new ghost work. Rendered the priorities list (4 numbered `AskUserQuestion`
+   options) — **user picked Walker/BJL Phase 2b.**
+2. **Phase 1B claimed** — `SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending` receipt,
+   committed (`87c59054`).
+3. **PRE-RED research** — full reads of both governing planning documents' Phase 2 spec, Phase 1b
+   §8.4 Obligation 1/2, and the `data-raw/kinship2FidelityValidation.R`/`test_makePedigreeMatingLayout.R:124`/
+   investigation-doc §2.2 precedent for the live-render methodology; read `.positionMatingUnitForestBJL()`
+   and `makePedigreeMatingLayout()` directly (not from memory) to derive the exact `xScale=120`/
+   `yScale=150` scaling and the vis.js `document.getElementById("graph"+el.id).chart` binding
+   mechanism (read directly from the installed `visNetwork.js` source, then **verified live via a
+   throwaway probe script** before committing to the design — confirmed the mechanism actually
+   works and found `elementId` isn't reliably honored by `visNetwork()`, so the helper locates the
+   widget dynamically via `document.querySelector('.visNetwork')` instead). Found F1 and "Track C"
+   are the SAME already-established 9-subject fixture (not 2 separate ones the plan's own wording
+   suggested). **2 dedicated `AskUserQuestion` gates before RED:** (a) minimal position-only
+   nodes/edges for the live-render check vs. full `makePedigreeMatingLayout()` cosmetic decoration
+   — owner picked minimal, informed by the probe confirming styling doesn't affect `getPositions()`
+   when physics is off; (b) the formal PRE-RED→RED gate itself, listing the exact 7 planned tests.
+4. **RED** — added `.buildMinimalEdges()` test helper + 7 `test_that()` blocks to
+   `test_positionMatingUnitForestBJL.R` (24 total). Confirmed genuine RED: the 3 helper-dependent
+   tests errored "could not find function `getLiveRenderedPositions`"; the 4 real-fixture
+   measurement tests (calling the ALREADY-SHIPPED adapter, genuinely unknown outcome) all **passed
+   on first run** — zero-coincidence gate clean, exact-midpoint invariant clean, 224/237 structural
+   count confirmed, Obligation 2 drift comfortably bounded. Directly computed (outside testthat, for
+   the session record) the actual measured numbers: 180/224 touching / 208/224 half-column (vs. OLD
+   175/224 / 203/224); 34 qualifying B1 unions, drift 0.399–0.401.
+5. **GREEN** — implemented `getLiveRenderedPositions()` (`tests/testthat/helper-live-render-positions.R`).
+   First combined-file run found 2 real bugs, both found and fixed via direct execution, not
+   inspection: (a) chromote's own 10s default `Page$loadEventFired()` timeout was too short for the
+   714-node real fixture's self-contained HTML — added a `loadTimeout` parameter (30s default, 60s
+   for the real fixture); (b) **major finding, not a bug**: live-rendering revealed vis.js's
+   `getPositions()` rounds to whole pixels (confirmed via a direct 3-node probe: `x=150/150.12/150.5`
+   all read back as `150`), so the shared 1e-3-raw-unit cosmetic tie-break nudge (×`xScale=120` =
+   0.12px) used by BOTH the OLD and NEW algorithms renders pixel-identical to whatever it was
+   nudged away from. Measured side by side on the real fixture (same script, same helper): OLD
+   368/714 nodes pixel-coincident (182 groups), NEW 380/714 (190 groups) — comparable, a
+   pre-existing shared characteristic, not a Phase 2b regression. **Stopped and asked** (via
+   `AskUserQuestion`) rather than silently redesigning the tests: owner picked "diagnostic, not hard
+   gate" — Tests 6/7 rewritten to assert only DataSet-integrity (no id silently collapses; confirmed
+   clean on both fixtures) and report the measured rate via `message()`. Recorded
+   `PROJECT_LEARNINGS.md` Learning 641. 24/24 tests GREEN; full clean regression 0 failed/0 error;
+   `lintr::lint_package()` 0 findings (already clean, no fixes needed).
+6. **`devtools::check()` — found and fixed a real NEW WARNING** ("unstated dependencies in tests:
+   chromote, htmlwidgets") — the SAME `pkg::fn()` pattern `data-raw/kinship2FidelityValidation.R`
+   already used safely (that script is `.Rbuildignore`d, outside the checked surface) is genuinely
+   unsafe once copied into the CHECKED `tests/testthat/` surface. **Stopped and asked** rather than
+   unilaterally choosing between "add to Suggests" vs. "avoid `::` syntax"; the user clarified the
+   general packaging rule directly (`Suggests:` for test/example/vignette-needed packages,
+   `Config/Needs/<name>:` for dev-tooling-only ones) rather than answering the question as posed —
+   applied it: `chromote`/`htmlwidgets` added to `Suggests:` (confirmed `renv::snapshot(dev=TRUE)`
+   needed no changes, both already transitively pinned). **User then flagged `covr`'s own placement
+   mid-turn** (already sitting in `Suggests:` despite being pure coverage tooling, already installed
+   independently by `.github/workflows/test-coverage.yaml:27`) — relocated to a new
+   `Config/Needs/coverage: covr`, matching the file's own pre-existing `Config/Needs/website: quarto`
+   precedent. Flagged (not fixed, user directed a `BACKLOG.md` item instead) that `devtools`/
+   `roxygen2`/`pkgdown` look like further instances of the same misplacement. Recorded
+   `PROJECT_LEARNINGS.md` Learning 642. Re-ran `devtools::check()`: "unstated dependencies in tests
+   ... OK" confirmed; final result 0 errors/1 WARNING/2 NOTEs, all 3 pre-existing (non-portable
+   filename, `scratchpad/` top level, `vignettes/figure/` knitr leftover) — identical to S614's own
+   baseline, zero new.
+7. **REFACTOR** — re-confirmed `lintr::lint_package()` 0 lints project-wide and the full test suite
+   (via `devtools::check()`'s own `testthat.R` run, 24/24 + whole project) green; no structural code
+   changes needed beyond the GREEN-phase bug fixes already made.
+8. **Close-out:** `BACKLOG.md`'s Walker/BJL item updated with the Phase 2b progress paragraph; new
+   Housekeeping item added for the `Suggests`/`Config-Needs` cleanup (user-directed); this handoff
+   written.
+
+**Runtime smoke test (Phase 3E):** n/a, matching Phase 1a/2a's own precedent exactly —
+`.positionMatingUnitForestBJL()` itself is unchanged this session (zero production code touched;
+only new test infrastructure + a `DESCRIPTION`/`renv.lock` metadata change). No runtime behavior
+changed; nothing to smoke-test.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation / tutorial-article / `NEWS.Rmd` /
+`a2interactive.Rmd` / `_pkgdown.yml` checklists all **N/A** — no new exported function, no new
+user-facing Shiny feature. GitHub issue close-out **N/A** — issue #141 stays open (one slice of a
+5+ session parent plan). Lint checklist **DONE** (0 lints, confirmed above).
+
+**Self-assessment (Session 615): 9/10.** **Strengths:** (1) Verified the vis.js `getPositions()`
+binding mechanism via a live throwaway probe BEFORE committing to the helper's design, exactly
+matching this project's own "verified by execution" standard — caught that `elementId` isn't
+reliably honored, avoiding a design built on an untested assumption. (2) When the live-render check
+revealed the pixel-rounding characteristic, stopped and asked rather than either (a) silently
+weakening the test to hide an inconvenient result, or (b) unilaterally attempting a production-code
+fix outside a measurement session's own charter — this is the single most consequential judgment
+call this session made. (3) Measured the OLD algorithm side by side with the NEW one before
+characterizing the finding, rather than assuming (without evidence) that Phase 2b's own new code was
+the cause — this turned a scary-looking "380 nodes colliding" result into a correctly-contextualized
+"comparable to the pre-existing baseline" finding. (4) Ran `devtools::check()`, not just
+`testthat`/`lintr`, catching a real regression neither of the other two tools could have found; fixed
+it via the owner's own stated packaging rule rather than guessing. (5) Directly computed the actual
+real-fixture measured numbers (touching/half-column counts, Obligation 2 drift range) via a
+standalone script for the session record, since `testthat`'s own reporters suppress `message()`
+output by default. **Weaknesses:** (1) The initial DESCRIPTION-fix question offered only 2 options
+(add to Suggests vs. avoid `::`) without considering the `Config/Needs/` alternative at all — the
+user had to supply that framing directly rather than it being one of the offered choices, a real gap
+in the question's own completeness. (2) Did not proactively audit the REST of `Suggests:` for the
+same misplacement pattern before the user pointed at `covr` specifically — once `covr`'s own
+placement was flagged, `devtools`/`roxygen2`/`pkgdown` should arguably have been checked with the
+same scrutiny in the same pass rather than only afterward, in prose, unverified. (3) The Obligation-2
+measurement test re-derives `b1Ids`/`qualifies()` predicates directly from `forest`/`ped` rather than
+reusing any shared production logic — necessary (these predicates are internal to
+`.positionMatingUnitForestBJL()`, not separately callable) but creates a real, disclosed duplication-
+drift risk if the production predicate ever changes without the test being updated to match. **ROI:**
+very high — Phase 2 is now fully closed out with real, measured evidence (not just synthetic-fixture
+coverage) behind its own most important gate, and a previously-unknown, potentially load-bearing
+characteristic of the rendering pipeline (pixel-rounding vs. cosmetic nudges) is now documented
+rather than latent.
+
+**Next steps:** Phase 3 (cutover) — its own separate session, per the parent plan's own Phase 3
+spec: **Commit 3-1** (4 files — production call site switch, `.positionMatingUnitForest()`/
+`.computeDupNudge()`/patch-stack deletion, `.positionMatingUnitForestBJL()` renamed to replace it
+outright, `test_positionMatingUnitForest.R` becomes the merged final test file with re-pinned
+positional literals); **Commit 3-2** (2 files, genuinely deferrable only if `test_addRectilinearWaypoints.R`/
+`test_resolveEdgeNodeCollisions.R` are ALREADY green after Commit 3-1 — must be confirmed by
+actually running the suite, not assumed). **A decision Phase 3 should make explicitly, informed by
+this session's own new evidence:** whether the pixel-rounding/cosmetic-nudge characteristic
+(Learning 641) needs its own follow-up design session (widening the epsilon so it survives pixel
+rounding) before or after cutover — this session deliberately left that open, not resolved, per its
+own measurement-only charter. Also still owed: Phase 4 (cleanup/docs, close issue #141).
+
+**Key files:** `tests/testthat/helper-live-render-positions.R` (new, the reusable chromote helper —
+`getLiveRenderedPositions()`, `loadTimeout` param); `tests/testthat/test_positionMatingUnitForestBJL.R:809-`
+(Phase 2b's 7 new tests, `.buildMinimalEdges()` helper near the top); `DESCRIPTION` (`chromote`/
+`htmlwidgets` added to `Suggests:`, `covr` moved to new `Config/Needs/coverage:`); `R/makePedigreeDiagramData.R:1278-1457`
+(`.positionMatingUnitForestBJL()`, UNCHANGED this session — read only, for the Obligation-2 predicate
+re-derivation); `PROJECT_LEARNINGS.md` Learnings 641/642 (the 2 findings this session).
+
+**Gotchas for Phase 3:** (1) The pixel-rounding characteristic (Learning 641) applies EQUALLY to the
+OLD algorithm being replaced — do not treat it as something the cutover itself needs to fix; it's a
+pre-existing, disclosed, comparable-magnitude characteristic of both. (2) `test_positionMatingUnitForestBJL.R`'s
+own Tests 6/7 (F1/real-375 live-render) are diagnostic, not hard gates — when merging this file's
+content into `test_positionMatingUnitForest.R` per Commit 3-1's own spec, preserve that framing
+rather than accidentally hardening them into a gate neither algorithm clears. (3) `.buildMinimalEdges()`
+and the live-render tests deliberately do NOT exercise `makePedigreeMatingLayout()`'s own full
+cosmetic decoration (shapes/colors/twin markers) — Phase 3's own live-render check (F1/Track-C/real
+fixture, "directly confirming... correct child-centering and no new visual overlap") is the first
+point where that full decoration actually needs live-rendering, and should reuse
+`getLiveRenderedPositions()` unmodified (per the plan's own intent) rather than building a second
+helper. (4) `getLiveRenderedPositions()`'s default `loadTimeout=30`/`waitSeconds=1.5` are fine for
+small fixtures; the real-375-scale render needs `loadTimeout=60`/`waitSeconds=3` explicitly (not
+committed as new defaults, to keep small-fixture tests fast) — pass them explicitly for any
+comparably large fixture in Phase 3.

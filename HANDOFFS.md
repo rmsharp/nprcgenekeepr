@@ -137,18 +137,64 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S615
-date: 2026-08-19
-status: pending
-self_score: pending
+date: 2026-08-20
+status: complete
+self_score: 9
 predecessor_score: 9
-active_task: Walker/BJL Phase 2b (issue #141) -- chromote live-render helper + real-375-fixture
-  zero-coincidence verification against .positionMatingUnitForestBJL(). Session claimed, work
-  beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
+active_task: DONE. Walker/BJL Phase 2b (issue #141) -- real-fixture verification half of the
+  Walker/BJL pedigree adapter. New reusable chromote-based live-render helper
+  (tests/testthat/helper-live-render-positions.R), 7 new tests (24 total in
+  test_positionMatingUnitForestBJL.R), all GREEN and REFACTORed. Next: Phase 3 (cutover), its own
+  separate session.
+what_was_done: Built getLiveRenderedPositions() (tests/testthat/helper-live-render-positions.R) --
+  renders via the app's own visNetwork()/visPhysics(FALSE) call, drives chromote headless, reads
+  back ground truth via vis.js's own getPositions(). Added .buildMinimalEdges() test helper + 7
+  test_that() blocks to test_positionMatingUnitForestBJL.R: a helper smoke test, the real-375
+  zero-exact-coincidence gate ("the single most important test in the whole migration" -- PASSES),
+  the exact-midpoint invariant re-run on real data (PASSES), single-child-union prevalence
+  re-measurement (224/237 structural, new breakdown 180/224 touching / 208/224 half-column vs OLD
+  175/224 / 203/224), Phase 1b sec8.4 Obligation 2's combined trigger-frequency measurement (34
+  qualifying B1 unions, drift 0.399-0.401), and 2 live-render checks (F1/Track-C, real-375).
+  Fixed 2 real bugs found via execution: chromote's own 10s default Page$loadEventFired() timeout
+  too short for the 714-node fixture (added loadTimeout param); found (not a bug) that vis.js's
+  getPositions() rounds to whole pixels, making the shared 1e-3 cosmetic tie-break nudge (both OLD
+  and NEW algorithms) invisible at render scale -- measured OLD 368/714 vs NEW 380/714 pixel-
+  coincident nodes, comparable, not a regression. Stopped and asked (AskUserQuestion) rather than
+  silently redesigning: Tests 6/7 rewritten as diagnostics (DataSet-integrity hard gate + message()
+  report), not a hard pixel-coincidence gate neither algorithm clears. Found and fixed a NEW
+  devtools::check() WARNING (unstated chromote/htmlwidgets deps in tests/) by adding both to
+  DESCRIPTION Suggests, per the user's own clarified packaging rule; also relocated covr (pure
+  coverage tooling) to a new Config/Needs/coverage field. Commits: 87c59054 (claim), plus this
+  session's close-out commits (see CHANGELOG.md/git log -- commit sha for THIS receipt is
+  necessarily filled in a follow-up commit, matching the established S600/S602-S614 self-reference
+  precedent).
+next_steps: Phase 3 (cutover), its own session, per the parent plan's own Phase 3 spec exactly --
+  Commit 3-1 (4 files: switch the production call site in R/makePedigreeDiagramData.R, delete
+  .positionMatingUnitForest()/.computeDupNudge()/the patch-stack, rename
+  .positionMatingUnitForestBJL() to replace it outright; test_positionMatingUnitForest.R becomes
+  the merged final test file, re-pinning positional literals by actually re-running the new engine,
+  never hand-derived); Commit 3-2 (2 files -- test_addRectilinearWaypoints.R/
+  test_resolveEdgeNodeCollisions.R -- ONLY if confirmed already-green after Commit 3-1 by actually
+  running the suite, not assumed; if not, fold into Commit 3-1 per the plan's own 5-file-cap
+  contingency). Phase 3 should also explicitly decide (informed by this session's Learning 641)
+  whether the pixel-rounding/cosmetic-nudge finding needs its own follow-up design session
+  (widening the epsilon) before or after cutover -- left open, not resolved, by this
+  measurement-only session.
+key_files: tests/testthat/helper-live-render-positions.R (new helper); test_positionMatingUnitForestBJL.R:809-
+  (7 new Phase 2b tests); DESCRIPTION (Suggests + Config/Needs edits); R/makePedigreeDiagramData.R:1278-1457
+  (.positionMatingUnitForestBJL(), read-only this session, unchanged); PROJECT_LEARNINGS.md
+  Learnings 641/642.
+gotchas: (1) The pixel-rounding characteristic (Learning 641) is shared by the OLD algorithm too --
+  Phase 3 should not treat it as a cutover-introduced defect to fix. (2) Tests 6/7 are diagnostic,
+  not hard gates -- preserve that framing when merging this file's content per Commit 3-1's spec.
+  (3) The live-render tests deliberately skip makePedigreeMatingLayout()'s full cosmetic decoration
+  (shapes/colors/twin markers) -- Phase 3's own live-render check is the first point that needs it,
+  and should reuse getLiveRenderedPositions() unmodified. (4) getLiveRenderedPositions()'s defaults
+  (loadTimeout=30, waitSeconds=1.5) are fine for small fixtures; pass loadTimeout=60/waitSeconds=3
+  explicitly for anything real-375-scale.
+runtime_smoke: n/a -- .positionMatingUnitForestBJL() itself unchanged this session (zero production
+  code touched, matching Phase 1a/2a's own precedent); only new test infrastructure + a
+  DESCRIPTION/renv.lock metadata change. No runtime behavior changed.
 changelog_ref: pending
 commit: pending
 ```

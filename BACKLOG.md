@@ -611,6 +611,55 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       style-only fixes). See `PROJECT_LEARNINGS.md` Learnings 639/640. **Next: Phase 2b** (the
       live-render helper + real-fixture A/B verification) — its own separate session.
 
+      **Phase 2b — S615 (2026-08-20): DONE.** New reusable
+      [`tests/testthat/helper-live-render-positions.R`](tests/testthat/helper-live-render-positions.R)
+      (`getLiveRenderedPositions()` — renders via the app's own `visNetwork()`/`visPhysics(FALSE)`
+      call, `chromote`-drives it headless, reads back ground truth via vis.js's own
+      `getPositions()`), completing the parent plan's own Phase 2 "New deliverable... fixing C2-4."
+      7 new tests added to
+      [`tests/testthat/test_positionMatingUnitForestBJL.R`](tests/testthat/test_positionMatingUnitForestBJL.R)
+      (24 total). **Real-375-fixture results, all measured (not assumed):** the zero-exact-
+      x/gen-coincidence gate ("the single most important test in the whole migration") **passes**;
+      the exact-midpoint invariant (previously synthetic-only) **passes** on real data too;
+      single-child-union near-parent prevalence is 224/237 (structural, unchanged — D1 out of
+      scope) with a new distance breakdown of 180/224 touching (≤31px) / 208/224 half-column
+      (≤60px) vs. the OLD algorithm's clamp-affected 175/224 / 203/224 — comparable, not
+      dramatically reduced, because BJL's own genuine child-centering produces similar visual
+      closeness for structurally honest reasons (the plan's own "naturally close... may legitimately
+      remain close" caveat, now directly measured); Phase 1b §8.4 Obligation 2's combined
+      trigger-frequency measurement found 34 `orderBySex`-qualifying B1 unions, drift range
+      0.399–0.401, comfortably inside the disclosed cosmetic bound. **Major incidental finding
+      (`PROJECT_LEARNINGS.md` Learning 641):** live-rendering revealed vis.js's `getPositions()`
+      rounds to whole pixels, so the shared 1e-3-raw-unit "cosmetic" tie-break nudge (×`xScale=120`
+      = 0.12px) used by BOTH algorithms renders pixel-identical to whatever it was nudged away
+      from — measured side by side on the real fixture: OLD 368/714 nodes pixel-coincident (182
+      groups), NEW 380/714 (190 groups), comparable, a pre-existing characteristic, not a Phase 2b
+      regression. Owner-directed (`AskUserQuestion`, on finding this): Tests 6/7 report this via
+      `message()` as a diagnostic, asserting only what Phase 2b's charter requires (no id silently
+      collapses in vis.js's own DataSet — confirmed clean on both the F1/"Track C" fixture and the
+      real 714-node fixture), not a hard pixel-coincidence gate neither algorithm clears. A real
+      epsilon-magnitude fix, if wanted, is future design work, not scoped here. **Also found and
+      fixed:** chromote's own 10s default `Page$loadEventFired()` timeout was too short for the
+      714-node fixture's self-contained HTML (helper gained a `loadTimeout` parameter, default 30s,
+      used 60s for the real fixture); a NEW `devtools::check()` WARNING ("unstated dependencies in
+      tests: chromote, htmlwidgets") from using the same `data-raw/kinship2FidelityValidation.R`
+      `::`-call pattern inside the CHECKED `tests/testthat/` surface — fixed by adding both to
+      `DESCRIPTION`'s `Suggests:` (owner-clarified packaging rule: `Suggests:` for anything
+      test/example/vignette code loads, `Config/Needs/<name>:` for dev-tooling-only packages);
+      `PROJECT_LEARNINGS.md` Learning 642. Incidentally also relocated `covr` (pure coverage
+      tooling, already CI-installed independently) from `Suggests:` to a new
+      `Config/Needs/coverage: covr`, matching this file's own `Config/Needs/website: quarto`
+      precedent — flagged, not fixed, that `devtools`/`roxygen2`/`pkgdown` look like further
+      instances of the same misplacement (new Housekeeping item below). Full clean regression:
+      0 failed/0 error project-wide (confirmed twice — a direct `test_dir()` run and again inside
+      `devtools::check()`'s own `testthat.R`). `lintr::lint_package()`: 0 lints. `devtools::check()`:
+      0 errors, 1 WARNING + 2 NOTEs — all 3 pre-existing (non-portable filename, `scratchpad/` top
+      level dir, `vignettes/figure/` knitr leftover), zero new, matching S614's own baseline
+      exactly. `.positionMatingUnitForestBJL()` itself unchanged — Phase 2b touched zero production
+      code. **Next: Phase 3** (cutover, 2 explicitly-scoped commits per the parent plan's own Phase
+      3 spec) — its own separate session; the real-fixture zero-coincidence gate now has DIRECT
+      real-data evidence behind it, not just synthetic-fixture coverage.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8
@@ -690,6 +739,28 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       a package boundary, etc.) before any decision to split.
 
 ## Housekeeping
+- [ ] **`DESCRIPTION`'s `Suggests:` mixes real test/example/vignette dependencies with
+      dev-tooling-only packages that belong in a `Config/Needs/...` field instead** (found
+      2026-08-20, incidental to S615's own DESCRIPTION edit, owner-directed via chat, READY,
+      Effort S) -- owner-stated rule: `Suggests:` is for packages optional code in `tests/`,
+      `man/examples`, or `vignettes/` actually loads; anything needed only by dev tooling (website
+      building, linting, coverage, release scripts) belongs in its own `Config/Needs/<name>:`
+      field instead (`pak` and similar tools understand these named dev-dependency groups), kept
+      out of `Suggests:` entirely. This session already fixed one instance directly (`covr` moved
+      to the new `Config/Needs/coverage: covr`, matching the file's own pre-existing `Config/Needs/
+      website: quarto` precedent and confirmed via `.github/workflows/test-coverage.yaml:27`
+      already installing `covr` itself via `extra-packages: any::covr`, independent of
+      `DESCRIPTION`). Not fixed this session (out of Phase 2b's own scope, flagged not touched
+      per owner direction): `devtools` and `roxygen2` are also listed in `Config/renv/profiles/
+      dev/dependencies` (line 88) as well as `Suggests` -- redundant, or intentionally dual-listed
+      for a reason not investigated this session; `pkgdown` sits in `Suggests` with no matching
+      `Config/Needs/website` entry even though `quarto` (already `Config/Needs/website`) is ALSO
+      still separately listed in `Suggests` -- looks like the same pkgdown-belongs-in-Config/Needs/
+      website gap, not confirmed. A future session should audit every `Suggests:` entry against
+      "does any file under `tests/`, `vignettes/`, or a roxygen `@examples` block actually load
+      this via `library()`/`::`" and relocate anything that fails that test to the matching
+      `Config/Needs/<name>` group, verifying `devtools::check()` still reports 0 new
+      warnings/notes after.
 - [x] **Add MIT license badge + REUSE compliance badge to `README.Rmd`** (found 2026-08-17,
       owner-directed) -- **DONE S607 (2026-08-18).** Both badges added, `README.md` re-rendered.
       REUSE compliance implemented for real, not just the badge: `reuse` CLI installed (v6.2.0),
