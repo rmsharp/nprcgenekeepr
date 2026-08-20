@@ -29,16 +29,24 @@
 ##     B2 (M has a parent edge or her own D5 direct child) gets NO derived point --
 ##     the render layer points directly at M's own, already-final genuine x.
 ##
-## Deliberately OUT of THIS session's scope (2a), per the owner-directed split
+## Phase 2a (above, unchanged this session) deliberately left the real-fixture
+## verification for a dedicated Phase 2b session, per the owner-directed split
 ## documented in SESSION_NOTES.md/BACKLOG.md (Phase 2's own "splittable if too
-## large" allowance, parent plan S Migration Path Phase 2): the reusable
-## chromote-based live-render helper, and the real 375-individual fixture's own
-## zero-coincidence/single-child-union-prevalence measurements -- both deferred to
-## a dedicated Phase 2b session. Every fixture below is synthetic or hand-built,
-## matching test_positionMatingUnitForest.R's own existing-fixture style. This is a
-## real, disclosed gap, not a silent one: Phase 2b still owes the real-fixture A/B
-## verification the parent plan's own Verification Plan names as the single most
-## important gate in the whole migration.
+## large" allowance, parent plan Migration Path Phase 2): every fixture in Phase
+## 2a is synthetic/hand-built, matching test_positionMatingUnitForest.R's own
+## existing-fixture style.
+##
+## Phase 2b (this session, S615) adds the real-fixture verification and the new
+## reusable chromote-based live-render helper
+## (tests/testthat/helper-live-render-positions.R) -- see the tests below the
+## Phase 2a block, under "Phase 2b: real-fixture + live-render verification."
+## Completes the parent plan's own required Phase 2 deliverables: the
+## zero-exact-coincidence gate on the real 375-individual fixture ("the single
+## most important test in the whole migration"), the exact-midpoint invariant
+## re-run on real data, the single-child-union near-parent prevalence
+## re-measurement, Phase 1b sec8.4 Obligation 2's combined trigger-frequency
+## measurement, and live-rendered ground-truth checks (not internal x/gen math
+## alone) on the F1/"Track C" and real-375 fixtures.
 ##
 ## Oracle provenance for the numerically-exact fixtures below (Tests 1, 2, 5, 6, 11,
 ## 13, 14, 15): derived this session by actually running Tier 1's own mechanics
@@ -54,6 +62,33 @@
 .nodeKind <- function(ids) {
   ifelse(grepl("^__union_", ids), "union",
          ifelse(grepl("^__dup_", ids), "duplicate", "individual"))
+}
+
+## Minimal, position-only edge set for the Phase 2b live-render checks below:
+## parent -> mating-unit and mating-unit -> child, direct (no rectilinear
+## waypoints, no shape/color/dashes) -- deliberately NOT
+## makePedigreeMatingLayout()'s own full cosmetic decoration (owner-directed,
+## this session's own PRE-RED AskUserQuestion): styling does not affect
+## chromote's getPositions() output when physics is off (confirmed live this
+## session), so a minimal id/x/y node set is sufficient to catch an
+## id-collision/transcription bug and to confirm rendered-space
+## zero-coincidence, without duplicating production's cosmetic logic into
+## test-only code. Filters both ends of every edge against nodeIds so a
+## dangling non-anchor party's sire/dam edge (dropped from the node set
+## entirely, matching the OLD function's own confirmed behavior) never
+## references a node vis.js was never given.
+.buildMinimalEdges <- function(forest, nodeIds) {
+  u <- forest$matingUnits
+  unitParentEdges <- rbind(
+    data.frame(from = u$sire, to = u$id, stringsAsFactors = FALSE),
+    data.frame(from = u$dam, to = u$id, stringsAsFactors = FALSE)
+  )
+  edges <- rbind(
+    unitParentEdges,
+    data.frame(from = forest$childEdges$from, to = forest$childEdges$to,
+               stringsAsFactors = FALSE)
+  )
+  edges[edges$from %in% nodeIds & edges$to %in% nodeIds, , drop = FALSE]
 }
 
 ## ---- 1. P/C1/P-union-M/C2: individual anchor's CHILDREN() mixes a direct D5 -----
@@ -549,4 +584,348 @@ test_that(".positionMatingUnitForestBJL produces exactly nrow(ped) +
                nrow(ped) + nrow(forest$duplicates) + nrow(forest$matingUnits))
   expect_false(any(is.na(pos$x)))
   expect_false(any(is.na(pos$gen)))
+})
+
+## ==========================================================================
+## Phase 2b: real-fixture + live-render verification (S615)
+## docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md
+## Phase 2's own required deliverables, deferred from Phase 2a above:
+##   - a reusable, checked-in chromote-based live-render helper (new deliverable
+##     fixing C2-4, tests/testthat/helper-live-render-positions.R)
+##   - the real 375-individual fixture's own zero-exact-coincidence gate ("the
+##     single most important test in the whole migration")
+##   - the same exact-midpoint invariant re-run on real, not just synthetic, data
+##   - the single-child-union "near a parent" prevalence re-measurement
+##   - live-rendered ground-truth checks (chromote getPositions(), not internal
+##     x/gen math alone) on the F1/"Track C" and real-375 fixtures
+## plus docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-
+## reconciliation.md sec8.4 Obligation 2's own explicit ask: "Phase 2 should
+## measure both trigger shapes' real-fixture frequency together."
+## ==========================================================================
+
+test_that("getLiveRenderedPositions() (new reusable helper,
+           tests/testthat/helper-live-render-positions.R) returns the EXACT
+           fixed x/y of a tiny 3-node fixture, ground-truth-verified via a
+           real chromote render (not a prediction) -- confirms the helper
+           mirrors the app's own visNetwork()/visPhysics(FALSE) call
+           (R/modPedigree.R:611-614) and correctly locates the vis.js Network
+           instance via
+           document.getElementById('graph'+widgetDivId).chart.getPositions()
+           (verified directly against the installed visNetwork.js source this
+           session -- vis.js exposes the Network instance as
+           document.getElementById(\"graph\"+el.id).chart, not assumed)", {
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("htmlwidgets")
+  skip_on_cran()
+
+  nodes <- data.frame(id = c("A", "B", "C"), x = c(0, 120, 60),
+                       y = c(0, 0, 150), stringsAsFactors = FALSE)
+  edges <- data.frame(from = c("A", "C"), to = c("B", "A"),
+                       stringsAsFactors = FALSE)
+
+  rendered <- getLiveRenderedPositions(nodes, edges)
+
+  expect_setequal(rendered$id, nodes$id)
+  ord <- match(nodes$id, rendered$id)
+  expect_equal(rendered$x[ord], nodes$x, tolerance = 1e-6)
+  expect_equal(rendered$y[ord], nodes$y, tolerance = 1e-6)
+})
+
+test_that(".positionMatingUnitForestBJL has zero exact x/gen coincidence
+           among real, duplicate, AND mating-unit nodes together on the real
+           375-individual bundled fixture -- the parent plan's own Phase 2
+           spec calls this 'the single most important test in the whole
+           migration': if it fails here, Phase 2b returns to Phase 1b with
+           the specific counter-example, it does not close out GREEN
+           (mirrors test_positionMatingUnitForest.R:1185-1205's own
+           OLD-algorithm assertion, run here against the NEW one)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForestBJL(ped, forest)
+  key <- paste(round(pos$x, 6), pos$gen)
+  expect_false(any(duplicated(key)),
+               info = paste("colliding ids:",
+                             paste(pos$id[key %in% key[duplicated(key)]],
+                                   collapse = ", ")))
+})
+
+test_that(".positionMatingUnitForestBJL gives every ANCHORED mating unit's x
+           the exact midpoint of its own real children's final x -- one
+           formula, no OR-branches, no clamp exceptions, including every
+           single-child union -- on the real 375-individual bundled fixture
+           (parent plan's own Phase 2 spec bullet 3; the version of this
+           same invariant above runs only on synthetic fixtures -- Phase 2a's
+           own disclosed gap, this extends it to real data)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForestBJL(ped, forest)
+  anchored <- forest$matingUnits[!is.na(forest$matingUnits$anchor), , drop = FALSE]
+  for (i in seq_len(nrow(anchored))) {
+    unitId <- anchored$id[i]
+    kids <- forest$childEdges$to[forest$childEdges$from == unitId]
+    expect_equal(pos$x[pos$id == unitId], mean(pos$x[pos$id %in% kids]),
+                 tolerance = 2e-3, info = unitId)
+  }
+})
+
+test_that(".positionMatingUnitForestBJL re-measures the single-child-union
+           'near a parent' prevalence on the real 375-individual bundled
+           fixture (parent plan's own Phase 2 spec bullet 5 / Verification
+           Plan item 4's own bullet): the structural count (224/237) is
+           unchanged -- D1 is out of scope for this migration -- and every
+           one of the 224 unions' x is now the EXACT midpoint of its own
+           single child's x (the test above), so the entire 83/224
+           'mathematically deterministic from Track 3's clamp' population
+           (docs/planning/pedigree-diagram-single-child-union-parent-
+           coincidence-investigation.md sec2.2) is resolved BY CONSTRUCTION --
+           no clamp exists anywhere in this code. The new distance-to-
+           nearest-parent breakdown is reported via message() for the
+           session record -- the plan explicitly does not predict this
+           number ('the real number can only come from running the engine'),
+           so this test asserts only internal consistency, not a specific
+           count", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  matingUnits <- forest$matingUnits
+  childEdges <- forest$childEdges
+  pos <- .positionMatingUnitForestBJL(ped, forest)
+
+  childCount <- table(childEdges$from)
+  singleChildUnits <- intersect(names(childCount)[childCount == 1L],
+                                 matingUnits$id)
+  expect_equal(length(singleChildUnits), 224L)
+
+  xScale <- 120L
+  dist <- vapply(singleChildUnits, function(uid) {
+    sireX <- pos$x[pos$id == matingUnits$sire[matingUnits$id == uid]]
+    damX <- pos$x[pos$id == matingUnits$dam[matingUnits$id == uid]]
+    ux <- pos$x[pos$id == uid]
+    min(abs(ux - sireX), abs(ux - damX)) * xScale
+  }, numeric(1L))
+
+  touching <- sum(dist <= 31)
+  halfColumn <- sum(dist <= 60)
+  message(sprintf(
+    paste("Phase 2b real-fixture re-measurement: %d/%d single-child unions",
+          "touch a parent (<=31px), %d/%d within half a column (<=60px).",
+          "Historical OLD-algorithm baseline (clamp-affected): 175/224",
+          "touching, 203/224 half-column. Every one of these %d unions' x",
+          "is the EXACT midpoint of its own single child's x (no clamp) --",
+          "this is genuine structural closeness, not clamp artifact."),
+    touching, length(singleChildUnits), halfColumn,
+    length(singleChildUnits), length(singleChildUnits)
+  ))
+  expect_true(touching <= halfColumn && halfColumn <= length(singleChildUnits),
+              info = sprintf("touching=%d halfColumn=%d total=%d",
+                              touching, halfColumn, length(singleChildUnits)))
+})
+
+test_that(".positionMatingUnitForestBJL measures, on the real 375-individual
+           bundled fixture, the combined frequency of the 2 disclosed
+           sweepMinSep() cosmetic union-dot/M_repr visual-distance-drift
+           triggers together (Phase 1b design note sec8.4 Obligation 2:
+           'measure both trigger shapes' real-fixture frequency together,
+           not just the first') -- confirms every orderBySex-qualifying B1
+           case's disclosed drift stays within the formula's own documented
+           cosmetic bound (its fixed 0.4*minSep offset plus at most a few
+           1e-3 tie-sweep nudges), never a correctness violation of the
+           ordering guarantee (sec8.2's own proof)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  matingUnits <- forest$matingUnits
+  duplicates <- forest$duplicates
+  childEdges <- forest$childEdges
+  pos <- .positionMatingUnitForestBJL(ped, forest)
+  realIds <- as.character(ped$id)
+  sexOf <- stats::setNames(as.character(ped$sex), realIds)
+  sireOf <- stats::setNames(as.character(ped$sire), realIds)
+  damOf <- stats::setNames(as.character(ped$dam), realIds)
+  hasParentEdge <- function(id) !is.na(sireOf[[id]]) || !is.na(damOf[[id]])
+  hasOwnDirectChild <- function(id) id %in% childEdges$from
+
+  anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
+  everAnchor <- unique(anchoredUnits$anchor)
+  nonAnchorSides <- c(anchoredUnits$sire, anchoredUnits$dam)
+  neverAnchorIds <- setdiff(unique(nonAnchorSides), everAnchor)
+  b1Ids <- Filter(function(id) {
+    id %in% realIds && !hasOwnDirectChild(id) && !hasParentEdge(id)
+  }, neverAnchorIds)
+
+  unitOf <- function(fp) {
+    ownUnits <- matingUnits$id[matingUnits$sire == fp | matingUnits$dam == fp]
+    dupUnits <- duplicates$matingUnitId[duplicates$realId == fp]
+    setdiff(ownUnits, dupUnits)[1L]
+  }
+  qualifies <- function(fp) {
+    unitId <- unitOf(fp)
+    p <- matingUnits$anchor[matingUnits$id == unitId]
+    sireId <- matingUnits$sire[matingUnits$id == unitId]
+    damId <- matingUnits$dam[matingUnits$id == unitId]
+    if (!(sireId %in% realIds) || !(damId %in% realIds)) return(FALSE)
+    mateCountP <- sum(anchoredUnits$sire == p | anchoredUnits$dam == p)
+    mateCountM <- sum(anchoredUnits$sire == fp | anchoredUnits$dam == fp)
+    unambig <- (identical(sexOf[[p]], "M") && identical(sexOf[[fp]], "F")) ||
+      (identical(sexOf[[p]], "F") && identical(sexOf[[fp]], "M"))
+    mateCountP == 1L && mateCountM == 1L && !hasOwnDirectChild(p) && unambig
+  }
+  qualifyingB1 <- Filter(qualifies, b1Ids)
+
+  drift <- vapply(qualifyingB1, function(fp) {
+    unitId <- unitOf(fp)
+    abs(pos$x[pos$id == fp] - pos$x[pos$id == unitId])
+  }, numeric(1L))
+
+  expect_true(length(drift) == 0L || all(drift <= 0.41),
+              info = paste("max drift:",
+                            if (length(drift) > 0L) max(drift) else NA))
+
+  message(sprintf(
+    paste("Phase 2b Obligation 2 measurement: %d orderBySex-qualifying B1",
+          "unions on the real fixture; union-dot/M_repr drift range [%s,",
+          "%s] (formula's own fixed 0.4*minSep offset -- disclosed cosmetic,",
+          "not a correctness defect)."),
+    length(qualifyingB1),
+    if (length(drift) > 0L) sprintf("%.4f", min(drift)) else "NA",
+    if (length(drift) > 0L) sprintf("%.4f", max(drift)) else "NA"
+  ))
+})
+
+## NOTE on the 2 tests below: an earlier version of each asserted a HARD zero
+## rendered-pixel-coincidence gate. Running them live this session (Pre-GREEN
+## verification, not assumed) found that gate is unachievable by EITHER
+## algorithm, for a reason with nothing to do with this migration's own
+## correctness: vis.js's own getPositions() rounds reported coordinates to
+## the nearest whole pixel (confirmed directly: 3 nodes fed x = 150/150.12/
+## 150.5 all read back as x = 150), so the shared, pre-existing "cosmetic"
+## 1e-3-raw-unit exact-tie nudge used throughout BOTH
+## .positionMatingUnitForest() (OLD) and .positionMatingUnitForestBJL() (NEW)
+## -- xScale=120, so 1e-3 * 120 = 0.12px -- is BELOW that rounding
+## granularity and renders pixel-identical to whatever it was nudged away
+## from, despite being genuinely float-distinct internally (the already-
+## passing internal zero-coincidence test above catches THAT, correctly; it
+## was never evidence of zero RENDERED overlap, and this is the first time
+## that gap has been measured directly rather than assumed closed). Measured
+## on the real 375-individual fixture, side by side, same script, same
+## helper: OLD 368/714 nodes pixel-coincident (182 groups), NEW 380/714 (190
+## groups) -- comparable, NOT a Phase 2b regression (owner-directed decision
+## this session, via AskUserQuestion, on finding this: report as a
+## diagnostic measurement, not a hard gate a "measurement session" has no
+## charter to fix -- a real epsilon-magnitude fix belongs to a future
+## Phase-1b-adjacent session, not here). Both tests below therefore assert
+## only what Phase 2b's adapter-parity charter actually requires (no id
+## silently collapses in vis.js's own DataSet -- confirmed clean, a genuine,
+## useful ground-truth check no internal-only test could perform) and report
+## the measured pixel-coincidence rate via message() for the record.
+
+test_that(".positionMatingUnitForestBJL's positions render with no id
+           silently collapsing in vis.js's own DataSet on the F1/'Track C'
+           9-subject fixture (P1/P2/X/A/Y/W/C1/GC/C2, consanguineous A x Y)
+           -- live chromote ground truth, not internal x/gen math alone
+           (this project's own memory note: code-level correctness is not
+           evidence of a correct rendered image); reports the measured
+           rendered-pixel-coincidence rate (see the NOTE above -- not a hard
+           gate, a pre-existing characteristic shared with the OLD
+           algorithm)", {
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("htmlwidgets")
+  skip_on_cran()
+
+  f1 <- data.frame(
+    id   = c("P1", "P2", "X", "A", "Y", "W", "C1", "GC", "C2"),
+    sire = c(NA, NA, NA, "P1", "P1", NA, "A", "A", "W"),
+    dam  = c(NA, NA, NA, "P2", "P2", NA, "X", "Y", "Y"),
+    sex  = c("M", "F", "F", "M", "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  f1$gen <- findGeneration(f1$id, f1$sire, f1$dam)
+  forest <- .buildMatingUnitForest(f1)
+  pos <- .positionMatingUnitForestBJL(f1, forest)
+
+  nodes <- data.frame(id = pos$id, x = pos$x * 120, y = pos$gen * 150,
+                       stringsAsFactors = FALSE)
+  edges <- .buildMinimalEdges(forest, nodes$id)
+
+  rendered <- getLiveRenderedPositions(nodes, edges)
+
+  expect_equal(nrow(rendered), nrow(nodes),
+               info = "vis.js DataSet must not silently collapse any id")
+  expect_setequal(rendered$id, nodes$id)
+
+  key <- paste(rendered$x, rendered$y)
+  nCoincident <- sum(duplicated(key) | duplicated(key, fromLast = TRUE))
+  message(sprintf(
+    "Phase 2b F1/Track-C live-render measurement: %d/%d nodes rendered
+     pixel-coincident (see the NOTE above these 2 tests).",
+    nCoincident, nrow(nodes)))
+})
+
+test_that(".positionMatingUnitForestBJL's positions render with no id
+           silently collapsing in vis.js's own DataSet, among all 714
+           real/duplicate/union nodes, on the real 375-individual bundled
+           fixture -- live chromote ground truth on production scale,
+           completing the parent plan's own required live-render deliverable
+           for Phase 2 ('to verify the BJL adapter's real-fixture behavior
+           against ground truth, not just internal x/gen values'); reports
+           the measured rendered-pixel-coincidence rate side by side against
+           the OLD algorithm's own (see the NOTE above)", {
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("htmlwidgets")
+  skip_on_cran()
+
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForestBJL(ped, forest)
+  posOld <- .positionMatingUnitForest(ped, forest)
+
+  render1 <- function(p) {
+    nodes <- data.frame(id = p$id, x = p$x * 120, y = p$gen * 150,
+                         stringsAsFactors = FALSE)
+    edges <- .buildMinimalEdges(forest, nodes$id)
+    rendered <- getLiveRenderedPositions(nodes, edges, width = 3000L,
+                                          height = 3000L, waitSeconds = 3,
+                                          loadTimeout = 60)
+    list(nodes = nodes, rendered = rendered)
+  }
+
+  new <- render1(pos)
+  expect_equal(nrow(new$rendered), nrow(new$nodes),
+               info = "vis.js DataSet must not silently collapse any id")
+  expect_setequal(new$rendered$id, new$nodes$id)
+
+  old <- render1(posOld)
+  expect_equal(nrow(old$rendered), nrow(old$nodes),
+               info = "OLD algorithm: vis.js DataSet must not silently
+                        collapse any id (same helper, same check, for the
+                        side-by-side measurement below)")
+
+  coincidentCount <- function(rendered) {
+    key <- paste(rendered$x, rendered$y)
+    sum(duplicated(key) | duplicated(key, fromLast = TRUE))
+  }
+  message(sprintf(
+    "Phase 2b real-375 live-render measurement: NEW %d/%d nodes rendered
+     pixel-coincident vs OLD %d/%d (same helper, same script -- see the NOTE
+     above these 2 tests).",
+    coincidentCount(new$rendered), nrow(new$nodes),
+    coincidentCount(old$rendered), nrow(old$nodes)))
 })

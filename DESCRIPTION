@@ -57,12 +57,13 @@ Imports:
     utils,
     visNetwork
 Suggests:
-    covr,
+    chromote,
     devtools,
     dplyr,
     grid,
     shinytest2,
     htmltools,
+    htmlwidgets,
     kableExtra,
     knitr,
     markdown,
@@ -85,4 +86,5 @@ VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Config/renv/profiles/dev/dependencies: checkhelper, devtools, httpuv, qpdf, markdown, pak, roxygen2, spelling, usethis
 Config/Needs/website: quarto
+Config/Needs/coverage: covr
 Config/roxygen2/version: 8.0.0

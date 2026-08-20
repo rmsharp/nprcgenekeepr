@@ -1,0 +1,105 @@
+# Helper for the Walker/BJL pedigree-diagram redesign's live-render
+# verification (Phase 2, docs/planning/pedigree-diagram-walker-bjl-
+# apportioning-redesign-plan.md -- "New deliverable this round, fixing C2-4").
+
+#' Render a nodes/edges pair via the app's own visNetwork() call and read
+#' back live, ground-truth rendered positions via chromote
+#'
+#' Renders \code{nodes}/\code{edges} through the SAME core \code{visNetwork()}
+#' call the app itself makes (\code{R/modPedigree.R:611-614} -- fixed x/y,
+#' physics off), saves it to a self-contained temporary HTML file, drives a
+#' headless \code{chromote} session against it, and calls the underlying
+#' vis.js \code{Network}'s own live \code{getPositions()} method -- the
+#' widget's actual DOM-rendered ground truth, not a prediction from the R-side
+#' \code{x}/\code{y} values alone. vis.js exposes its \code{Network} instance
+#' as \code{document.getElementById("graph" + widgetDivId).chart} (confirmed
+#' directly against the installed \code{visNetwork.js} source this session,
+#' not assumed); \code{widgetDivId} is located dynamically via
+#' \code{document.querySelector(".visNetwork")} rather than relying on
+#' \code{elementId} (which \code{visNetwork()} does not reliably honor,
+#' confirmed live this session -- an explicitly-set \code{elementId} did not
+#' appear anywhere in the saved widget's HTML).
+#'
+#' This is the reusable, checked-in version of the methodology this project
+#' has used bespoke and uncommitted at least twice before
+#' (\code{test_makePedigreeMatingLayout.R:124}'s own comment;
+#' \code{docs/planning/pedigree-diagram-single-child-union-parent-coincidence-
+#' investigation.md} sec2.2's own narrated \code{getPositions()} measurement),
+#' and mirrors \code{data-raw/kinship2FidelityValidation.R}'s own
+#' \code{screenshot_layout()} helper (same widget construction, same
+#' self-contained-HTML-plus-chromote technique) but reads back live positions
+#' instead of taking a screenshot.
+#'
+#' Requires \code{chromote} and \code{htmlwidgets} installed locally --
+#' declared direct \code{Suggests} dependencies (added this session): unlike
+#' \code{data-raw/kinship2FidelityValidation.R} (a build-ignored dev script,
+#' outside \code{R CMD check}'s surface, where they stay merely transitive --
+#' via \code{shinytest2} and \code{visNetwork} respectively), this helper
+#' lives in \code{tests/testthat/} and is checked, so R CMD check's own
+#' "unstated dependencies in tests" gate requires them declared. Callers are
+#' responsible for their own \code{skip_if_not_installed()}/
+#' \code{skip_on_cran()} guards (this helper does not guard itself, matching
+#' \code{helper-shinytest2.R}'s own convention of leaving skip logic to the
+#' calling test).
+#'
+#' @param nodes data.frame with at least \code{id}, \code{x}, \code{y}
+#'   columns (any other visNetwork node column -- shape/size/color/label --
+#'   is passed through unchanged).
+#' @param edges data.frame with at least \code{from}, \code{to} columns.
+#' @param width,height Pixel viewport size for the rendered widget.
+#' @param waitSeconds Seconds to wait after the page load event fires before
+#'   reading positions back, giving vis.js time to fully instantiate the
+#'   Network for larger graphs.
+#' @param loadTimeout Seconds to wait for the page's own \code{load} event
+#'   (chromote's \code{Page$loadEventFired(timeout_ = loadTimeout)}) --
+#'   chromote's own 10-second default is too short for a several-hundred-node
+#'   self-contained HTML (confirmed live this session against the real
+#'   375-individual/714-node fixture).
+#' @return A data.frame(id, x, y) of the LIVE rendered positions, one row per
+#'   node vis.js actually placed -- a silently-collapsed duplicate id in
+#'   vis.js's own DataSet would surface here as fewer rows than
+#'   \code{nrow(nodes)}, not as an error.
+getLiveRenderedPositions <- function(nodes, edges, width = 1200L,
+                                      height = 900L, waitSeconds = 1.5,
+                                      loadTimeout = 30) {
+  widget <- visNetwork::visNetwork(nodes, edges, width = width,
+      height = height) |>
+    visNetwork::visPhysics(enabled = FALSE) |>
+    visNetwork::visNodes(physics = FALSE) |>
+    visNetwork::visEdges(smooth = FALSE)
+
+  tmpHtml <- tempfile(fileext = ".html")
+  htmlwidgets::saveWidget(widget, tmpHtml, selfcontained = TRUE)
+  on.exit(unlink(tmpHtml), add = TRUE)
+
+  b <- chromote::ChromoteSession$new()
+  on.exit(b$close(), add = TRUE)
+  b$Page$navigate(paste0("file://", tmpHtml))
+  ## chromote's own default timeout_ (10s, ChromoteSession$default_timeout)
+  ## is too short for a several-hundred-node self-contained HTML in this
+  ## environment (confirmed live this session: the real 375-individual
+  ## fixture's 714-node/725-edge render intermittently exceeded it, throwing
+  ## "timed out waiting for event Page.loadEventFired") -- explicit,
+  ## caller-tunable loadTimeout replaces the default for this one call.
+  b$Page$loadEventFired(timeout_ = loadTimeout)
+  Sys.sleep(waitSeconds)
+
+  js <- paste0(
+    "(() => { ",
+    "const w = document.querySelector('.visNetwork'); ",
+    "const g = document.getElementById('graph' + w.id); ",
+    "return g.chart.getPositions(); })()"
+  )
+  raw <- b$Runtime$evaluate(js, returnByValue = TRUE)$result$value
+
+  if (length(raw) == 0L) {
+    return(data.frame(id = character(0L), x = numeric(0L), y = numeric(0L),
+                       stringsAsFactors = FALSE))
+  }
+  data.frame(
+    id = names(raw),
+    x = vapply(raw, function(p) as.numeric(p$x), numeric(1L)),
+    y = vapply(raw, function(p) as.numeric(p$y), numeric(1L)),
+    stringsAsFactors = FALSE
+  )
+}
