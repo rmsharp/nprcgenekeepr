@@ -16,6 +16,64 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-20 · [ad hoc] S616: close out (fix confirmed GREEN, 2 BACKLOG.md items filed, Learnings 643/644)
+- **Deliverable:** `SESSION_NOTES.md` Session 615 handoff evaluation (7/10, a structural ceiling —
+  the failure this session fixed was triggered by S615's own closing push, so S615's handoff could
+  not have anticipated it) + full Session 616 handoff (self-score 8/10); `HANDOFFS.md` S616 receipt
+  completed (`status: complete`).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-20 · [ad hoc] S616: file 2 BACKLOG.md items found this session
+- **Deliverable:** (1) Simplify `NEWS.Rmd` entries for a non-technical audience, reorganized by
+  feature not chronologically, with a designed-and-landed guardrail against recurrence
+  (owner-directed, READY, Effort L) — S538 (2026-08-12) trimmed the dev-section once with no
+  guardrail; it regrew from 134 to 315 lines / 26 to 57 entries in 8 days in the same
+  verbose/technical style. (2) `R-CMD-check.yaml`'s chromote tests can hit an intermittent
+  `chromote:::launch_chrome()` process-launch failure, distinct from the `Page.loadEventFired` race
+  fixed this session and unmitigated unlike `shinytest2.yaml`'s own already-solved version of the
+  same problem (`browser-actions/setup-chrome@v2` + `CHROMOTE_CHROME` + assert-resolvable, per
+  `docs/planning/phase8-e2e-harness-subplan.md` Risk R5) — owner-directed to file separately rather
+  than fold into this session, matching "1 and done."
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-20 · [ad hoc] S616: fix R-CMD-check.yaml windows-latest chromote timeout (Page.loadEventFired race)
+- **Deliverable:** `tests/testthat/helper-live-render-positions.R`'s `getLiveRenderedPositions()`
+  (shipped S615) used the manual `Page$navigate()` + `Page$loadEventFired(timeout_ = loadTimeout)`
+  sequence, a documented chromote race (rstudio/chromote#102, the package's own "Loading a page
+  reliably" vignette): the load event can fire in the gap between the 2 calls, before R registers a
+  listener, so the 2nd call then waits the FULL timeout for an event that will never fire again.
+  Surfaced as `R-CMD-check.yaml` red on `windows-latest` only (run `32335116264`, triggered by
+  S615's own final push) — the other 4 matrix platforms (macOS, 3× Linux) were unaffected, a slower/
+  busier CI runner being exactly what tips a race from "usually wins" to "loses." Fixed by replacing
+  the 2-call sequence + a trailing `Sys.sleep(waitSeconds)` with chromote's own documented reliable
+  alternative, a single `$go_to(url, timeout_ = loadTimeout, delay = waitSeconds)` call, which
+  registers the listener before navigating. `PROJECT_LEARNINGS.md` Learning 643.
+- **Diagnosis method:** downloaded the failed run's actual `nprcgenekeepr.Rcheck` artifact (`gh run
+  download`) rather than trusting the annotation summary; confirmed both Windows failures were the
+  identical `Chromote: timed out waiting for event Page.loadEventFired` at
+  `helper-live-render-positions.R:84`. Root cause identified via `WebSearch`/`WebFetch` against
+  chromote's own documentation/issue tracker, not guessed. No local Windows environment was
+  available — the fix's verification is 2 consecutive real `R-CMD-check.yaml` pushes going GREEN on
+  `windows-latest`, the only faithful check for a CI-platform-timing-specific defect. A owner-
+  directed pre-RED `AskUserQuestion` established this approach (no new local test — a race
+  condition can't be deterministically captured in a fast local unit test; the existing 2 chromote
+  tests + the real CI run serve as RED/GREEN).
+- **Incidentally found, NOT fixed this session (filed to `BACKLOG.md` instead, owner-directed):** a
+  SECOND, unrelated chromote failure (`chromote:::launch_chrome()` process-launch abort) appeared on
+  `ubuntu-latest (release)` in the very next CI run — confirmed NOT caused by this session's diff
+  (`$go_to()` only touches post-connection page-load waiting, never process launch) and confirmed
+  transient by re-running the same job unmodified (`gh run rerun --job`), which passed clean.
+- **Verification:** full clean regression 0 failed/0 error (incl. all 24 chromote tests),
+  `lintr::lint()` 0 findings, both confirmed locally before push; `windows-latest` GREEN on 2
+  consecutive real `R-CMD-check.yaml` runs after the fix.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-20 · [ad hoc] S616: claim session for R-CMD-check Windows chromote timeout fix
+- **Deliverable:** `SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending` receipt, committed
+  (`db736a3d`) — written after diagnosis had already begun (a disclosed Phase 1B-skip, see
+  `PROJECT_LEARNINGS.md` Learning 644), not at the ideal point, but before any code change.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-20 · [ad hoc] S615: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S614 precedent)
 - **Deliverable:** `HANDOFFS.md`'s S615 receipt `commit:`/`changelog_ref:` fields updated from
   `pending` to the actual close-out commit sha (`ac2723b5`) and the dated `CHANGELOG.md` entry

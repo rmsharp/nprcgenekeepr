@@ -138,18 +138,61 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S616
 date: 2026-08-20
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Diagnose and fix the R-CMD-check.yaml windows-latest CI failure (chromote
-  "Page.loadEventFired" timeout, run 32335116264) introduced by S615's new live-render test
-  infrastructure (tests/testthat/helper-live-render-positions.R).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE. R-CMD-check.yaml's windows-latest chromote "Page.loadEventFired" timeout
+  (run 32335116264, from S615's own final push) fixed and confirmed GREEN on 2 consecutive
+  real CI runs. 2 follow-on BACKLOG.md items filed (NEWS.Rmd simplify-by-feature, the
+  launch_chrome() intermittent flake) rather than pursued in-session.
+what_was_done: Root-caused the Windows timeout to a documented chromote race
+  (rstudio/chromote#102): the manual Page$navigate()+Page$loadEventFired() sequence in
+  tests/testthat/helper-live-render-positions.R can miss the load event if it fires between
+  the 2 calls, then waits the full timeout for an event that will never repeat -- confirmed
+  via a downloaded failed-run artifact (gh run download), not just the annotation summary.
+  Fixed by replacing the 2-call sequence + Sys.sleep() with chromote's own documented
+  reliable alternative, a single $go_to(url, timeout_ = loadTimeout, delay = waitSeconds)
+  call. Verified locally (0 failed/0 error full regression incl. 24 chromote tests, 0 lints)
+  then via 2 consecutive real R-CMD-check.yaml pushes going GREEN on windows-latest -- the
+  only faithful verification for a CI-platform-timing-specific defect. Owner-approved via a
+  pre-RED AskUserQuestion to skip a new local test (a race can't be deterministically
+  captured locally) and RED/GREEN gates for the fix itself. A SECOND, unrelated
+  chromote:::launch_chrome() process-launch failure appeared on ubuntu-latest (release) in
+  the immediate next run -- confirmed not caused by this session's diff, confirmed transient
+  by an unmodified job re-run, researched (a well-documented upstream port-allocation/
+  resource-contention category) and filed to BACKLOG.md with a concrete lead (this project's
+  own shinytest2.yaml already solved an analogous flake) rather than pursued here, per owner
+  direction via AskUserQuestion. Also: answered an unrelated user question (why BACKLOG.md
+  items stay as checked-off `[x]` entries instead of moving to CHANGELOG.md -- a known,
+  already-diagnosed S518/S529 gap) with no file changes, and filed a second, unrelated
+  owner-directed BACKLOG.md item (NEWS.Rmd simplification) with 3 explicit owner requirements
+  captured. Commits: db736a3d (claim), f75e3e42 (fix), 935cca22 (2 BACKLOG.md items), plus
+  this close-out's own commit (see CHANGELOG.md/git log -- this receipt's own commit sha is
+  necessarily filled in a follow-up commit, matching the established S600/S602-S615
+  precedent).
+next_steps: No specific next step from this session's own scope -- the fix is complete and
+  verified. 3 items now sit in BACKLOG.md: (1) the launch_chrome() intermittent-flake fix
+  (READY, Effort M -- port shinytest2.yaml's Chrome-setup pattern into R-CMD-check.yaml,
+  verify via REPEATED pushes since the failure is intermittent, not a single green run); (2)
+  the NEWS.Rmd simplify-by-feature-with-guardrails item (READY, Effort L, owner-directed,
+  explicitly iterative/multi-round, not a one-session pass); (3) Walker/BJL Phase 3 (cutover,
+  issue #141), unchanged by this session -- still the largest single READY item, per S615's
+  own next_steps (Commit 3-1 / 3-2 as specified there).
+key_files: tests/testthat/helper-live-render-positions.R:75-90 ($go_to() fix, the only
+  production-relevant change); BACKLOG.md ("Up Next" section, 2 new items after the
+  pedigree-package-factoring item); PROJECT_LEARNINGS.md Learnings 643 (the chromote race/fix)
+  and 644 (a 4th Phase 1B-skip recurrence, with a candidate mechanical countermeasure).
+gotchas: (1) $go_to() is now this project's established pattern for any future chromote-based
+  live-render helper -- do not reintroduce the manual Page$navigate()+Page$loadEventFired()
+  sequence elsewhere. (2) The launch_chrome() flake is real and NOT fixed -- do not assume a
+  clean retry means it's resolved; BACKLOG.md's own item explains why (intermittent, needs
+  Chrome-provisioning parity with shinytest2.yaml, needs repeated-push verification). (3)
+  Learning 644's own candidate fix (folding the Phase 1B claim into the priorities-picker
+  AskUserQuestion) is an untried hypothesis, not a validated mechanism.
+runtime_smoke: n/a -- the only production-relevant file touched
+  (tests/testthat/helper-live-render-positions.R) is test-only infrastructure with zero call
+  sites outside tests/testthat/; no Shiny app / runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-08-20, S616 entries.
 commit: pending
 ```
 <claim stub -- filled at Phase 3D close-out>
