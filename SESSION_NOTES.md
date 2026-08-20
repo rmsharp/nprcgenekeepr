@@ -1088,3 +1088,14 @@ this specific symptom without new evidence; treat a still-failing raised-timeout
 "wedged," not "needs more time." (3) The 16-item `BACKLOG.md` `[x]`-sweep and the optional
 macOS root-cause item are both genuinely optional/low-priority — neither blocks anything, both are
 explicitly deferred, not accidentally dropped.
+
+### What Session 620 Did
+**Deliverable:** Walker/BJL Phase 3 — Cutover (issue #141), per `docs/planning/pedigree-diagram-
+walker-bjl-apportioning-redesign-plan.md` §Migration Path Phase 3 (Commit 3-1: production call-site
+swap + 3 merged/re-pinned test files; Commit 3-2, conditional: 2 files' defect-count re-pins;
+required live-render verification via `helper-live-render-positions.R`). (IN PROGRESS)
+**Started:** 2026-08-20
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.

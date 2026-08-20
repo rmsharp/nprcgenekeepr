@@ -136,6 +136,25 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S620
+date: 2026-08-20
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Walker/BJL Phase 3 -- Cutover (issue #141), per docs/planning/pedigree-diagram-
+  walker-bjl-apportioning-redesign-plan.md Migration Path Phase 3. Session claimed, work
+  beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: filled at close-out>
+
+```handoff
 session: S619
 date: 2026-08-20
 status: complete
