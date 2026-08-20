@@ -136,6 +136,26 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S619
+date: 2026-08-20
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Diagnose the macos-latest CDP-timeout CI failure in R-CMD-check.yaml (Chromote:
+  timed out waiting for response to command Runtime.evaluate / attempt to apply non-function,
+  now recurring 3/3, most recently on a docs-only S618 close-out push -- BACKLOG.md
+  Housekeeping item, found S618).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<in progress>
+
+```handoff
 session: S618
 date: 2026-08-20
 status: complete

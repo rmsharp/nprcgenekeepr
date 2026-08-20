@@ -912,3 +912,16 @@ already-connected, correctly-pinned session. (3) `ubuntu-latest (oldrel-1)`'s r-
 version-resolution failure is unrelated CI infra noise, already confirmed transient by a clean
 rerun — do not fold it into the chromote-flake investigation if it recurs; it is a different
 category entirely (R-version resolution, not Chrome).
+
+### What Session 619 Did
+**Deliverable:** Diagnose the `macos-latest` CDP-timeout CI failure in `R-CMD-check.yaml`
+(`BACKLOG.md` Housekeeping item, found S618) — research `Chromote: timed out waiting for response
+to command Runtime.evaluate` / `attempt to apply non-function` against chromote's own issue
+tracker, determine whether the pinned Chrome-for-Testing build has known headless-CDP problems on
+macOS ARM64, and decide whether pinning is even the right fix for that leg before attempting
+another fix. (IN PROGRESS)
+**Started:** 2026-08-20
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
