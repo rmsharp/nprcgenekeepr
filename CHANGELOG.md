@@ -17,6 +17,31 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-20 · \[ad hoc\] S616: post-close-out correction folded into SESSION_NOTES.md/HANDOFFS.md (S575/S603/S607 precedent)
+
+- **Deliverable:** the owner flagged that the prior conversational recap
+  was not a formal Phase 3G report (a context interruption meant the
+  actual close-out content was never shown before this session continued
+  into the BACKLOG.md addendum below). Folded BOTH the missed-report gap
+  and the NEWS.Rmd item’s by-feature scoping clarification into S616’s
+  own `SESSION_NOTES.md` record and `HANDOFFS.md` receipt (`gotchas`/new
+  “Post-close-out correction” paragraph), rather than leaving the
+  addendum below as a bare, disconnected CHANGELOG line — matching this
+  project’s own established precedent (S575, S603, S607) for disclosing
+  a found-after-the-fact correction in the session’s own durable record,
+  not just the ledger.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-20 · \[ad hoc\] S616 addendum: clarify NEWS.Rmd BACKLOG.md item’s by-feature scoping
+
+- **Deliverable:** owner asked (post-close-out, same conversation) that
+  the NEWS.Rmd simplification item’s “reorganize by feature” requirement
+  explicitly scope to WITHIN each release heading, not across them.
+  `BACKLOG.md`’s existing item (filed this session) edited to add that
+  scoping explicitly, plus a note that release headings themselves keep
+  their existing reverse-chronological order. No other file changed.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-20 · \[ad hoc\] S616: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S615 precedent)
 
 - **Deliverable:** `HANDOFFS.md`’s S616 receipt `commit:` field updated

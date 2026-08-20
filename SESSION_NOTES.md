@@ -783,3 +783,21 @@ not single-run). (3) Learning 644’s own candidate fix (folding the Phase
 1B claim into the priorities-picker `AskUserQuestion`) is untried — a
 future session proposing it should treat it as a hypothesis to test, not
 an already-validated mechanism.
+
+**Post-close-out correction (same session, disclosed rather than left
+silent, matching the established S575/S603/S607 precedent):** after this
+record was first written, a context interruption meant the Phase 3G
+report was never actually shown to the owner — the owner’s next message
+(“this is not a formal Phase 3 close-out report”) caught it. Separately,
+before that: the owner directly clarified the NEWS.Rmd `BACKLOG.md`
+item’s “reorganize by feature” requirement — feature-grouping applies
+WITHIN each release heading, never across them (release headings keep
+their existing reverse-chronological order). `BACKLOG.md:740-770` edited
+to make that scoping explicit; logged in `CHANGELOG.md` as its own dated
+entry (`8007c1c8`) rather than silently folded into this record with no
+trace, matching this project’s own “disclose a found-after-the-fact
+correction” convention. Both corrections are additive — nothing in the
+original close-out content above was inaccurate or retracted, unlike
+S603’s precedent (a retracted fix) or S607’s (a verification gap); this
+is closer to S575’s shape (real findings surfaced after the close-out
+commit had already landed).

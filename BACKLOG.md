@@ -851,20 +851,24 @@ multilocus likelihood-ratio (LOD) score” (`:91`), and
 exported-function-name-first phrasing (`` `checkLocusMetadata()` ``,
 `` `markerLdBlock()` ``) throughout – readable to an R programmer, not
 to the colony-manager/veterinarian audience this package’s NEWS is meant
-to serve. **Owner- stated requirements for this item (2026-08-20):** (1)
-entries must be simplified iteratively until the owner is satisfied –
-draft, owner review, revise – not a single unilateral pass an executing
-session declares done on its own judgment; (2) entries must be
-reorganized BY FEATURE (e.g. a “Pedigree Diagram” group, a “Marker
-Genetics” group, a “Genetic Value Analysis” group), not
+to serve. **Owner- stated requirements for this item (2026-08-20,
+refined 2026-08-20):** (1) entries must be simplified iteratively until
+the owner is satisfied – draft, owner review, revise – not a single
+unilateral pass an executing session declares done on its own judgment;
+(2) WITHIN each version/release heading (`# nprcgenekeepr X.Y.Z`),
+entries must be reorganized BY FEATURE (e.g. a “Pedigree Diagram” group,
+a “Marker Genetics” group, a “Genetic Value Analysis” group), not
 chronologically/by-issue-number the way every version section is laid
-out now; (3) the item must design and land a concrete guardrail
-preventing the verbose/technical style from creeping back in after this
-pass, the way it did after S538’s own fix – candidates to evaluate, not
-pre-decided: an explicit plain-language house-style note committed at
-the top of the dev section itself (visible at the exact point new
-entries get added), and/or extending `CLAUDE.md`’s existing same-session
-“NEWS.Rmd entry checklist” (ratified Session 448) with an explicit
+out now – **the release headings themselves stay in their existing
+reverse-chronological order** (standard changelog/CRAN convention); only
+the entries inside each one get regrouped, never merged across versions;
+(3) the item must design and land a concrete guardrail preventing the
+verbose/technical style from creeping back in after this pass, the way
+it did after S538’s own fix – candidates to evaluate, not pre-decided:
+an explicit plain-language house-style note committed at the top of the
+dev section itself (visible at the exact point new entries get added),
+and/or extending `CLAUDE.md`’s existing same-session “NEWS.Rmd entry
+checklist” (ratified Session 448) with an explicit
 terseness/no-jargon/plain-language criterion a new entry must pass
 before commit. A future session should propose the feature-taxonomy and
 the guardrail mechanism via `AskUserQuestion` before rewriting, then
