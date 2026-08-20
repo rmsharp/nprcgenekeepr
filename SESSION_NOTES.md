@@ -204,3 +204,18 @@ only (matching the design note's own intent), not total mating-unit membership; 
 touches this function, preserve that distinction. (4) `derivedX()`'s `isB1` parameter is passed
 explicitly by each call site (never inferred from `memberId %in% b1Ids`) specifically to avoid
 Learning 639's own bug recurring — do not "simplify" this back to an inferred check.
+
+---
+
+### What Session 615 Did
+**Deliverable:** Walker/BJL Phase 2b (issue #141) — build the chromote-based live-render helper
+(`tests/testthat/helper-live-render-positions.R`) and run the real-375-fixture zero-coincidence
+verification against `.positionMatingUnitForestBJL()`, per S614's own handoff and the parent plan's
+Phase 2 Verification Plan. (IN PROGRESS)
+**Started:** 2026-08-19 (Phase 0 orientation complete; user picked this item via the priorities
+`AskUserQuestion`).
+**Status:** Session claimed. Work beginning — PRE-RED research into the governing planning
+documents next.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.

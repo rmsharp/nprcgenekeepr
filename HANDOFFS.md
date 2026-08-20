@@ -136,6 +136,25 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S615
+date: 2026-08-19
+status: pending
+self_score: pending
+predecessor_score: 9
+active_task: Walker/BJL Phase 2b (issue #141) -- chromote live-render helper + real-375-fixture
+  zero-coincidence verification against .positionMatingUnitForestBJL(). Session claimed, work
+  beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim stub -- filled at Phase 3D close-out>
+
+```handoff
 session: S614
 date: 2026-08-19
 status: complete
