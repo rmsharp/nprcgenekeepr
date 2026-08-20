@@ -16,6 +16,14 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-20 · [ad hoc] S616 addendum: clarify NEWS.Rmd BACKLOG.md item's by-feature scoping
+- **Deliverable:** owner asked (post-close-out, same conversation) that the NEWS.Rmd
+  simplification item's "reorganize by feature" requirement explicitly scope to WITHIN each
+  release heading, not across them. `BACKLOG.md`'s existing item (filed this session) edited
+  to add that scoping explicitly, plus a note that release headings themselves keep their
+  existing reverse-chronological order. No other file changed.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-20 · [ad hoc] S616: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S615 precedent)
 - **Deliverable:** `HANDOFFS.md`'s S616 receipt `commit:` field updated from `pending` to the
   actual close-out commit sha (`25fd57cd`).
