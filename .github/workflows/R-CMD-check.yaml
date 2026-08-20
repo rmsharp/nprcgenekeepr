@@ -48,10 +48,23 @@ jobs:
       # Provision a pinned, reproducible Chrome-for-Testing binary for chromote
       # (mirrors shinytest2.yaml's own fix for an analogous flake -- BACKLOG.md
       # Housekeeping item, found S616/S618): chromote's own ambient Chrome
-      # discovery is unreliable across this job's 5 runner images, observed
+      # discovery is unreliable across this job's runner images, observed
       # failing as launch_chrome()/startup() abort (ubuntu-latest) and "Chrome
       # debugging port not open after 10 seconds" (windows-latest).
+      #
+      # Skipped on macos-latest (if: guard below), which reverts to ambient/
+      # unpinned Chrome discovery instead: the pinned binary's freshly-
+      # launched ChromoteSession hangs on its internal Runtime.evaluate
+      # bootstrap probe there specifically -- NOT simple cold-start latency,
+      # since raising chromote's default_timeout to 60s
+      # (helper-live-render-positions.R) did NOT resolve it on a real CI push
+      # (run 32417985922, still timed out after the full 60s, 3/3 identical
+      # failures). Ambient Chrome discovery is already proven green on
+      # macos-latest (S616's own run) -- this pin's original rationale above
+      # never named macos-latest as needing it in the first place (found
+      # S618, fallback applied S619, 2026-08-20).
       - name: Set up Chrome
+        if: ${{ matrix.config.os != 'macos-latest' }}
         uses: browser-actions/setup-chrome@v2
         id: setup-chrome
         with:
@@ -64,10 +77,12 @@ jobs:
       # windows-latest, whose run: default shell is PowerShell, under which
       # this bash-syntax redirect silently no-ops (confirmed live, S618).
       - name: Point chromote at the installed Chrome
+        if: ${{ matrix.config.os != 'macos-latest' }}
         run: echo "CHROMOTE_CHROME=${{ steps.setup-chrome.outputs.chrome-path }}" >> "$GITHUB_ENV"
         shell: bash
 
       - name: Assert Chrome is resolvable by chromote
+        if: ${{ matrix.config.os != 'macos-latest' }}
         run: |
           chrome <- Sys.getenv("CHROMOTE_CHROME")
           cat("CHROMOTE_CHROME =", chrome, "\n")
