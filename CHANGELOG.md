@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-20 · [ad hoc] S615: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S614 precedent)
+- **Deliverable:** `HANDOFFS.md`'s S615 receipt `commit:`/`changelog_ref:` fields updated from
+  `pending` to the actual close-out commit sha (`ac2723b5`) and the dated `CHANGELOG.md` entry
+  pointer.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-20 · [issue #141] S615: Phase 2b GREEN -- Walker/BJL real-fixture + live-render verification
 - **Deliverable:** New reusable `tests/testthat/helper-live-render-positions.R` (`getLiveRenderedPositions()`
   -- renders via the app's own `visNetwork()`/`visPhysics(FALSE)` call, drives `chromote` headless,

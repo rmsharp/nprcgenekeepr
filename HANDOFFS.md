@@ -195,8 +195,8 @@ gotchas: (1) The pixel-rounding characteristic (Learning 641) is shared by the O
 runtime_smoke: n/a -- .positionMatingUnitForestBJL() itself unchanged this session (zero production
   code touched, matching Phase 1a/2a's own precedent); only new test infrastructure + a
   DESCRIPTION/renv.lock metadata change. No runtime behavior changed.
-changelog_ref: pending
-commit: pending
+changelog_ref: CHANGELOG.md 2026-08-20, S615 entries.
+commit: ac2723b5
 ```
 <claim stub -- filled at Phase 3D close-out>
 
