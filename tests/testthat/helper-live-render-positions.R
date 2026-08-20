@@ -74,15 +74,29 @@ getLiveRenderedPositions <- function(nodes, edges, width = 1200L,
 
   b <- chromote::ChromoteSession$new()
   on.exit(b$close(), add = TRUE)
-  b$Page$navigate(paste0("file://", tmpHtml))
   ## chromote's own default timeout_ (10s, ChromoteSession$default_timeout)
   ## is too short for a several-hundred-node self-contained HTML in this
   ## environment (confirmed live this session: the real 375-individual
   ## fixture's 714-node/725-edge render intermittently exceeded it, throwing
   ## "timed out waiting for event Page.loadEventFired") -- explicit,
   ## caller-tunable loadTimeout replaces the default for this one call.
-  b$Page$loadEventFired(timeout_ = loadTimeout)
-  Sys.sleep(waitSeconds)
+  ##
+  ## Uses $go_to() rather than the separate Page$navigate()+
+  ## Page$loadEventFired() calls it replaces: that 2-call sequence is a
+  ## documented chromote race (rstudio/chromote#102 and the package's own
+  ## "Loading a page reliably" vignette) -- the page can finish loading and
+  ## fire its load event BEFORE Page$loadEventFired() registers a listener
+  ## for it, so the second call then waits the full timeout_ for an event
+  ## that already happened and will never fire again. $go_to() registers the
+  ## listener before navigating, eliminating the race. This was invisible in
+  ## local/macOS/Linux CI testing (found S616, 2026-08-20) -- Windows CI's
+  ## R-CMD-check run hit it consistently (windows-latest only, both chromote
+  ## tests in test_positionMatingUnitForestBJL.R), a slower/busier runner
+  ## being exactly what tips a race condition from "usually wins" to "loses."
+  ## $go_to()'s own `delay` parameter (seconds after the load event fires)
+  ## replaces the separate Sys.sleep(waitSeconds) call this used to make.
+  b$go_to(paste0("file://", tmpHtml), timeout_ = loadTimeout,
+          delay = waitSeconds)
 
   js <- paste0(
     "(() => { ",
