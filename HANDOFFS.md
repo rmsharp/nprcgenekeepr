@@ -184,8 +184,11 @@ gotchas: (1) shell: bash is now required for any bash-syntax run: step in a work
 runtime_smoke: Verified via 2 real pushed R-CMD-check.yaml CI runs (not local-only) -- the
   faithful verification this CI-config change needs. windows-latest confirmed GREEN on live
   infrastructure; macos-latest confirmed still RED, disclosed, not treated as passing.
-changelog_ref: pending (recorded in the same close-out commit as this receipt)
-commit: pending
+changelog_ref: ab46e4a3 (CHANGELOG.md entry landed in that commit)
+commit: 1d1d9203 (claim), 888fcbf4 (RED), 58905242 (GREEN), a3d34f1a (shell:bash
+  fix), ab46e4a3 (close-out docs), b18d22ab (handoff) -- reconciled to the real
+  shas immediately after, matching the S600/S602-S617 self-reference-workaround
+  precedent.
 ```
 
 ```handoff
