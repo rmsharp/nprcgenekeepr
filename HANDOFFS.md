@@ -165,8 +165,8 @@ what_was_done: Checked out the real v3.7 tag in the sibling methodology/ checkou
   Learning #7 discipline). Filed a BACKLOG.md Housekeeping item for context_budget.py (new in
   v3.7, deliberately not adopted this session). Recorded PROJECT_LEARNINGS.md Learning 645.
   Verified methodology_trim.py --check and methodology_dashboard.py both still run cleanly
-  post-sync. Commit: pending (this receipt is reconciled to the real sha immediately after
-  the close-out commit, matching the S600/S602-S616 self-reference-workaround precedent).
+  post-sync. Commits: dcf877f2 (sync), 0f08c564 (close-out) -- reconciled to the real shas
+  immediately after, matching the S600/S602-S616 self-reference-workaround precedent.
 next_steps: No further methodology-sync work owed from this session. BACKLOG.md Housekeeping
   now carries: evaluate adopting context_budget.py (READY, Effort S, scoping session). 2
   unfiled, optional considerations surfaced for a future session to weigh (not concrete enough
@@ -189,8 +189,8 @@ gotchas: (1) A future "sync methodology" session should checkout the specific ta
   flag on it against a tag is the same intentional preservation, not new drift.
 runtime_smoke: n/a -- docs/tooling-only sync, zero .R files touched, no Shiny app or package
   runtime behavior affected.
-changelog_ref: pending (recorded in the same close-out commit as this receipt)
-commit: pending
+changelog_ref: dcf877f2 (CHANGELOG.md entry landed in the close-out commit 0f08c564)
+commit: dcf877f2 (sync), 0f08c564 (close-out)
 ```
 Self-score breakdown: +checked out the actual tag and diffed before touching anything rather
 than trusting bin/sync as a black box; +stopped and asked via AskUserQuestion when the
