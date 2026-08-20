@@ -185,9 +185,9 @@ runtime_smoke: Verified via 2 real pushed R-CMD-check.yaml CI runs (not local-on
 changelog_ref: 90b614fd (CHANGELOG.md entry "S619: fix R-CMD-check.yaml's macos-latest chromote
   CDP timeout" landed in this commit)
 commit: 40c2e96b (claim), ff091613 (BACKLOG housekeeping filing), 1553099a (H1 RED), 1780789d
-  (H1 GREEN), 4a134701 (fallback RED), d2e9f487 (fallback GREEN), pending (close-out --
-  reconciled to the real sha immediately after, matching the S600/S602-S618
-  self-reference-workaround precedent)
+  (H1 GREEN), 4a134701 (fallback RED), d2e9f487 (fallback GREEN), 90b614fd (close-out docs),
+  44fc4510 (handoff) -- reconciled to the real shas immediately after, matching the
+  S600/S602-S618 self-reference-workaround precedent
 ```
 <Diagnosed and fixed a CI failure that had recurred on every real push since S618 (4 consecutive
 red macos-latest runs across 2 sessions). Used a 6-agent research workflow for direct
