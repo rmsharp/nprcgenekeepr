@@ -141,6 +141,200 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <p><strong>Archived 17 record(s), 2026-08-12 → 2026-08-13</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-13.html"><code>docs/archive/HANDOFFS-through-2026-08-13.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p><strong>Archived 21 record(s), 2026-08-13 → 2026-08-14</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-14.html"><code>docs/archive/HANDOFFS-through-2026-08-14.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p>This file currently holds <strong>15</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
+<pre class="handoff"><code>session: S615
+date: 2026-08-20
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Walker/BJL Phase 2b (issue #141) -- real-fixture verification half of the
+  Walker/BJL pedigree adapter. New reusable chromote-based live-render helper
+  (tests/testthat/helper-live-render-positions.R), 7 new tests (24 total in
+  test_positionMatingUnitForestBJL.R), all GREEN and REFACTORed. Next: Phase 3 (cutover), its own
+  separate session.
+what_was_done: Built getLiveRenderedPositions() (tests/testthat/helper-live-render-positions.R) --
+  renders via the app's own visNetwork()/visPhysics(FALSE) call, drives chromote headless, reads
+  back ground truth via vis.js's own getPositions(). Added .buildMinimalEdges() test helper + 7
+  test_that() blocks to test_positionMatingUnitForestBJL.R: a helper smoke test, the real-375
+  zero-exact-coincidence gate ("the single most important test in the whole migration" -- PASSES),
+  the exact-midpoint invariant re-run on real data (PASSES), single-child-union prevalence
+  re-measurement (224/237 structural, new breakdown 180/224 touching / 208/224 half-column vs OLD
+  175/224 / 203/224), Phase 1b sec8.4 Obligation 2's combined trigger-frequency measurement (34
+  qualifying B1 unions, drift 0.399-0.401), and 2 live-render checks (F1/Track-C, real-375).
+  Fixed 2 real bugs found via execution: chromote's own 10s default Page$loadEventFired() timeout
+  too short for the 714-node fixture (added loadTimeout param); found (not a bug) that vis.js's
+  getPositions() rounds to whole pixels, making the shared 1e-3 cosmetic tie-break nudge (both OLD
+  and NEW algorithms) invisible at render scale -- measured OLD 368/714 vs NEW 380/714 pixel-
+  coincident nodes, comparable, not a regression. Stopped and asked (AskUserQuestion) rather than
+  silently redesigning: Tests 6/7 rewritten as diagnostics (DataSet-integrity hard gate + message()
+  report), not a hard pixel-coincidence gate neither algorithm clears. Found and fixed a NEW
+  devtools::check() WARNING (unstated chromote/htmlwidgets deps in tests/) by adding both to
+  DESCRIPTION Suggests, per the user's own clarified packaging rule; also relocated covr (pure
+  coverage tooling) to a new Config/Needs/coverage field. Commits: 87c59054 (claim), plus this
+  session's close-out commits (see CHANGELOG.md/git log -- commit sha for THIS receipt is
+  necessarily filled in a follow-up commit, matching the established S600/S602-S614 self-reference
+  precedent).
+next_steps: Phase 3 (cutover), its own session, per the parent plan's own Phase 3 spec exactly --
+  Commit 3-1 (4 files: switch the production call site in R/makePedigreeDiagramData.R, delete
+  .positionMatingUnitForest()/.computeDupNudge()/the patch-stack, rename
+  .positionMatingUnitForestBJL() to replace it outright; test_positionMatingUnitForest.R becomes
+  the merged final test file, re-pinning positional literals by actually re-running the new engine,
+  never hand-derived); Commit 3-2 (2 files -- test_addRectilinearWaypoints.R/
+  test_resolveEdgeNodeCollisions.R -- ONLY if confirmed already-green after Commit 3-1 by actually
+  running the suite, not assumed; if not, fold into Commit 3-1 per the plan's own 5-file-cap
+  contingency). Phase 3 should also explicitly decide (informed by this session's Learning 641)
+  whether the pixel-rounding/cosmetic-nudge finding needs its own follow-up design session
+  (widening the epsilon) before or after cutover -- left open, not resolved, by this
+  measurement-only session.
+key_files: tests/testthat/helper-live-render-positions.R (new helper); test_positionMatingUnitForestBJL.R:809-
+  (7 new Phase 2b tests); DESCRIPTION (Suggests + Config/Needs edits); R/makePedigreeDiagramData.R:1278-1457
+  (.positionMatingUnitForestBJL(), read-only this session, unchanged); PROJECT_LEARNINGS.md
+  Learnings 641/642.
+gotchas: (1) The pixel-rounding characteristic (Learning 641) is shared by the OLD algorithm too --
+  Phase 3 should not treat it as a cutover-introduced defect to fix. (2) Tests 6/7 are diagnostic,
+  not hard gates -- preserve that framing when merging this file's content per Commit 3-1's spec.
+  (3) The live-render tests deliberately skip makePedigreeMatingLayout()'s full cosmetic decoration
+  (shapes/colors/twin markers) -- Phase 3's own live-render check is the first point that needs it,
+  and should reuse getLiveRenderedPositions() unmodified. (4) getLiveRenderedPositions()'s defaults
+  (loadTimeout=30, waitSeconds=1.5) are fine for small fixtures; pass loadTimeout=60/waitSeconds=3
+  explicitly for anything real-375-scale.
+runtime_smoke: n/a -- .positionMatingUnitForestBJL() itself unchanged this session (zero production
+  code touched, matching Phase 1a/2a's own precedent); only new test infrastructure + a
+  DESCRIPTION/renv.lock metadata change. No runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-08-20, S615 entries.
+commit: ac2723b5</code></pre>
+<p>&lt;claim stub – filled at Phase 3D close-out&gt;</p>
+<pre class="handoff"><code>session: S614
+date: 2026-08-19
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: DONE (2a of 2). Walker/BJL Phase 2a (issue #141) -- the adapter-mechanics half of the
+  pedigree adapter parallel to production. New .positionMatingUnitForestBJL() implementing the
+  full 3-tier reconciliation (docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-
+  reconciliation.md S3/S8), GREEN and REFACTORed, 17/17 new tests passing, zero collateral damage.
+  Owner-directed scope split (this session's own pre-RED AskUserQuestion): Phase 2b (the
+  live-render helper + real-375-fixture A/B verification) is explicitly NOT done -- a required,
+  separate follow-up session, not a formality.
+what_was_done: Strict TDD, every phase transition gated via AskUserQuestion: PRE-RED (grounded in
+  both planning docs) -&gt; scope-split AskUserQuestion (2a adapter-only vs. full Phase 2 vs.
+  RED-only -- user picked 2a) -&gt; RED (17 test_that blocks, tests/testthat/
+  test_positionMatingUnitForestBJL.R, oracle values for the hard fixtures derived by actually
+  running Tier 1's mechanics against the real existing engine, never hand-derived; confirmed
+  genuine RED, 0 fixture bugs in the pre-function assertions) -&gt; GREEN (new
+  .positionMatingUnitForestBJL() in R/makePedigreeDiagramData.R, zero changes to
+  .positionMatingUnitForest() or any other file; found and fixed 2 real implementation defects by
+  running failing fixtures in isolation -- B1 eligibility needed an explicit !hasParentEdge(M)
+  conjunct the OLD shipped freePassIds helper doesn't carry; a dangling non-anchor id crashed on
+  sireOf[[id]], fixed by excluding dangling ids up front, matching the OLD function's own confirmed
+  drop-from-output behavior; also fixed 3 of my own RED-phase test bugs, not implementation bugs)
+  -&gt; REFACTOR (lintr: 2 style-only findings fixed, 0 remaining). Verified 3 times: post-RED (17
+  genuine errors, 0 collateral), post-GREEN (17/17 pass, 0 collateral), post-REFACTOR (same, +0
+  lints). Extra: devtools::check() -- 1 WARNING + 2 NOTEs, all 3 pre-existing/unrelated (traced to
+  this session's own Phase 0 ghost-session-check findings and a long-documented vignettes/figure/
+  leftover), 0 errors, nothing new. PROJECT_LEARNINGS.md Learnings 639 (reused-helper narrower-
+  scope gap) and 640 (B1 id-collision test pitfall) recorded. BACKLOG.md's Walker/BJL item updated
+  with the S614 progress paragraph. Commits: 577ad298 (claim), 0a43ec30 (RED), e7f1f593 (GREEN),
+  afa7c5f5 (REFACTOR), plus this close-out commit.
+next_steps: Phase 2b (its own session, required, not optional): build tests/testthat/
+  helper-live-render-positions.R (chromote getPositions() ground-truth harness, the parent plan's
+  own required Phase 2 deliverable -- genuinely new infrastructure, no prior committed version
+  exists despite 2 prior bespoke uncommitted uses per the plan's own C2-4 finding), then run the
+  real-375-individual-fixture zero-exact-coincidence gate (the parent plan's own "single most
+  important test in the whole migration") plus F1/Track-C/real-375 live-render checks against
+  .positionMatingUnitForestBJL(). This is NOT a formality -- Phase 2a's 17 green synthetic tests
+  are necessary but explicitly not sufficient evidence the adapter is correct on the actual
+  irregular pedigree shape this whole redesign exists to fix; expect a real possibility of finding
+  a counter-example the synthetic matrix didn't anticipate, matching this investigation's own
+  6-prior-attempts history -- if so, per the parent plan's own gate, return to Phase 1b, don't
+  patch around it in Phase 2b. Also fold in, not forgotten: S613's own Obligation 3 (widen the
+  union-dot/M_repr cosmetic-distance disclosure to cover sweepMinSep() pushing P itself) into
+  whatever real-fixture measurement Phase 2b runs.
+key_files: R/makePedigreeDiagramData.R:1278-1457 (.positionMatingUnitForestBJL(), the new
+  function); tests/testthat/test_positionMatingUnitForestBJL.R (all 17 tests, own header documents
+  the Phase 2b deferral explicitly); R/positionTreeApportion.R (unchanged, Phase 1a engine this
+  adapter's Tier 1 calls into); docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-
+  reconciliation.md S3 (mechanism)/S8 (formula); PROJECT_LEARNINGS.md Learnings 639/640.
+gotchas: (1) The live-render helper is genuinely new work, not a mechanical port -- budget real
+  design time. (2) .positionMatingUnitForestBJL() is untested against any real-world irregularity
+  (polygamous anchors beyond 5 mates, deep asymmetric branches, actual dangling-parent data) --
+  don't be surprised if Phase 2b needs its own repair-and-critique round. (3) qualifies()'s
+  mateCountP/mateCountM count ANCHORED unions only (sum(anchoredUnits$sire==id|
+  anchoredUnits$dam==id)), matching design intent -- preserve this if touched. (4) derivedX()'s
+  isB1 parameter is passed explicitly by each call site (never inferred from
+  memberId %in% b1Ids) specifically to avoid Learning 639's own bug recurring -- do not
+  "simplify" this back to an inferred check. (5) This session's own Phase 1B claim was not made at
+  the literal next tool call (2 planning-doc reads happened first, disclosed in SESSION_NOTES.md)
+  -- no harm resulted this time, but re-apply Learning 628's rule more strictly next claim.
+runtime_smoke: n/a -- .positionMatingUnitForestBJL() is @noRd with zero call sites anywhere in the
+  package (grep-confirmed), never reached by the Shiny app or any exported function. Matches Phase
+  1a's own precedent exactly. No runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-08-19/2026-08-20, S614 entries.
+commit: 55cd2875</code></pre>
+<pre class="handoff"><code>session: S613
+date: 2026-08-19
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: DONE. Phase 1b of the Walker/BJL apportioning redesign (issue #141) is now FULLY
+  resolved -- the sweepMinSep()-vs-orderBySex sign-fold seam from S612's round-4 critique
+  (docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md S7) has a repaired
+  formula that survived a full 3-lens adversarial critique on its first attempt. Phase 2 (the
+  pedigree adapter, parallel to production) is now READY to start, subject to 2 disclosed
+  implementation-time obligations documented in the design note's new S8.
+what_was_done: Ran a repair-&gt;3-lens-adversarial-critique Workflow (4 agents) against specifically
+  the S7 seam, seeded with the hypothesis "anchor M_repr.x on P.x (Tier-1, frozen) instead of
+  U.x(FINAL) (Tier-2, drift-prone)". Round 1: all 3 independent lenses returned
+  designStillSound=true, each with its own executed verification (not trusting the repair
+  author's claims) -- no repair round 2 needed, the first first-attempt-sound outcome in this
+  investigation's 5-round design-note history plus 6 prior full implementation attempts. The
+  repair agent independently caught and fixed a gap the seeded hypothesis itself had (an ungated
+  P.x-anchor would regress the design note's own required Test 6, WCPXHD) by restating the
+  existing mateCount==1 qualifying gate. Wrote the resolved formula, its drift-independence proof,
+  and 2 disclosed implementation-time obligations (a required new Test 15 + a P.x-freshness
+  assertion; a widened cosmetic-disclosure scope) into a new S8 in the design note (supersedes
+  S3.1.2 Step 2/S3.3.3's Tier-3 block in place; S7 kept verbatim as historical record). Updated
+  BACKLOG.md's Walker/BJL item and recorded PROJECT_LEARNINGS.md Learning 638. Zero R/tests files
+  touched (git status --porcelain -- R/ tests/ empty throughout). Commits: 272c659f (claim),
+  &lt;this close-out commit, see git log&gt;.
+next_steps: Phase 2 (pedigree adapter, parallel to production) is the next session, per the parent
+  plan's own Migration Path (docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md).
+  It MUST incorporate S8's 2 disclosed obligations as part of its own RED phase, not defer them:
+  (1) write the new Test 15 (a B1 orderBySex-qualifying union where sweepMinSep() pushes P itself,
+  not just P's children) plus an explicit assertion that P.x is read from its genuinely final,
+  post-sweepMinSep() value -- today's shipped code has 2 distinct write-points for a real
+  individual's x (a pre-sweep assignAbs() intermediate, then the post-sweepMinSep() final value)
+  and a careless implementation reading the wrong one would silently reintroduce a one-tier-earlier
+  variant of this exact seam; (2) restate the qualifies(U) gate in the actual implementation using
+  the full 5 conjuncts design note S8.5 lists (the abbreviated 3-conjunct form in S8's first draft
+  is documentation-imprecise, though not incorrect); (3) fold the widened union-dot/M_repr cosmetic
+  drift disclosure (sweepMinSep() pushing P, not only children, is a second trigger) into whatever
+  real-fixture measurement Phase 2 already owed per the design note's S5. Separately, unrelated to
+  Walker/BJL: BACKLOG's other numbered priorities from this session's own Phase 0 report remain
+  untouched (SESSION_NOTES.md/HANDOFFS.md archiving -- both now past the 2,000-line cap AND their
+  byte-budget triggers fire; pedigree-diagram package-extraction scoping; BACKLOG.md's own
+  remaining ledger-size housekeeping).
+key_files: docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md S8 (the
+  full resolution -- S8.1 is the formula, S8.4 the 2 obligations Phase 2 must not skip);
+  R/makePedigreeDiagramData.R:997-1015 (sweepMinSep(), unchanged, ground truth for its push
+  mechanic), :1054-1078 (orderBySex, the shipped code the new qualifies() gate mirrors);
+  BACKLOG.md (Walker/BJL item, S613 progress paragraph); PROJECT_LEARNINGS.md Learning 638 (the
+  "eliminate the invariant dependency" pattern this session's success demonstrates).
+gotchas: (1) The design note's S8 formula applies ONLY to the B1 qualifying case -- B3 duplicates
+  and the non-qualifying B1 fallback are byte-identical to the pre-existing shipped
+  dupX/U.x(FINAL)+minSep*0.4 formula; do not generalize the P.x-anchor idea to those cases, no
+  critique round ever verified it there and one lens explicitly confirmed B3 has no defect to fix.
+  (2) The 2 implementation-time obligations in S8.4 are NOT optional follow-up polish -- 2 of the 3
+  critique lenses converged on the P.x-freshness risk independently, and this investigation has
+  now hit "a correction sound in isolation, broken by an implementation detail nobody checked"
+  6 times; treat Test 15 as a Phase-2 RED-phase requirement, not a nice-to-have. (3) Read the full
+  Workflow output file before reporting on a multi-agent result, not just the task-notification's
+  inline &lt;result&gt; -- this session's own notification truncated at ~35% of the actual content,
+  cutting off before the 2 most substantive critique findings (Learning 631's own rule, confirmed
+  again).
+runtime_smoke: n/a -- planning/research session, zero R/*.R or tests/*.R files touched throughout
+  (git status --porcelain -- R/ tests/ empty).
+changelog_ref: CHANGELOG.md 2026-08-19, S613 entries.
+commit: 3d5019b0</code></pre>
 <pre class="handoff"><code>session: S612
 date: 2026-08-19
 status: complete

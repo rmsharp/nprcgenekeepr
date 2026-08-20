@@ -619,6 +619,108 @@ deliberately — adopting one without its own adversarial pass would repeat the 
 note documents). **Next: a Phase 1b continuation session** resolving specifically this seam
 (not a restart — cases (a)/(b)/(c)/(d) and the 2b architecture are settled inputs), THEN
 Phase 2. Effort S-M for the continuation.
+
+**Phase 1b continuation — S613 (2026-08-19): SEAM RESOLVED, first-attempt sound.**
+[`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)
+§8. A repair→3-lens-adversarial-critique `Workflow` (4 agents: 1 repair + 3 independent
+critique lenses) resolved the `sweepMinSep()`-vs-`orderBySex` sign-fold seam on its **first**
+repair attempt — every lens returned `designStillSound: true` with its own independently
+executed verification, no repair round 2 needed. First first-attempt-sound outcome in this
+investigation's full history (4 prior design-note rounds + 6 prior implementation attempts
+all failed critique). **The fix:** anchor the non-anchor parent's derived x on the anchor's
+own frozen Tier-1 `P.x` directly (`M_repr.x = P.x + sign(M)*minSep*0.4`) instead of the
+drift-prone Tier-2 `U.x(FINAL)`, gated on the same `mateCount==1` qualifying test today's
+shipped `orderBySex` already uses (restated in full, 5 conjuncts, since the design note's own
+pseudocode had dropped 2 of them) — B3 duplicates and the non-qualifying fallback are
+untouched. Provably correct for any drift magnitude/sign, not just the 2 magnitudes §7's own
+counter-examples happened to execute. **2 disclosed implementation-time obligations for
+Phase 2** (not further open design questions): (1) a required new Test 15 + an explicit
+assertion that `P.x` is read post-`sweepMinSep()`, never a pre-sweep intermediate — the
+critique found today's shipped code has exactly 2 write-points for a real individual's `x`
+and a careless implementation could read the wrong one; (2) widen the disclosed
+union-dot/`M_repr` cosmetic-distance trade-off to cover `sweepMinSep()` pushing `P` itself,
+not only `P`'s children. **Phase 2 (the pedigree adapter, parallel to production) is now
+READY** — design/research only this session, zero production code touched, matching Phase
+1b's own precedent throughout. Effort L overall unchanged; Phase 2 itself Effort M-L,
+5+ sessions per the parent plan's own estimate.
+
+**Phase 2a — S614 (2026-08-19): adapter mechanics DONE, split from live-render
+verification.** Owner-directed scope split (via `AskUserQuestion`, matching Phase 2's own
+"splittable if too large" allowance): this session built `.positionMatingUnitForestBJL()`
+(new function, `R/makePedigreeDiagramData.R`, zero changes to `.positionMatingUnitForest()`
+or any other existing code, no shared call site yet) implementing the design note's 3-tier
+reconciliation (Tier 1 genuine-tree BJL + reinstated `sweepMinSep()` backstop; Tier 2 union
+midpoint + exact-tie sweep; Tier 3 B1/B3 derived points using §8.1's fixed formula) — via
+strict TDD (PRE-RED → `AskUserQuestion` → RED → `AskUserQuestion` → GREEN →
+`AskUserQuestion` → REFACTOR, each transition gated). New
+[`tests/testthat/test_positionMatingUnitForestBJL.R`](tests/testthat/test_positionMatingUnitForestBJL.R):
+17 `test_that()` blocks — the design note's own 15-fixture matrix (§4 Tests 1-14 + §8.4's
+required Test 15) plus 3 property tests — all synthetic/hand-built; explicitly **deferred to
+a Phase 2b session**: the reusable chromote-based live-render helper and the real
+375-individual fixture's own zero-coincidence/single-child-union-prevalence measurements
+(both still owed per the parent plan's own Verification Plan). Oracle values for the
+numerically-exact fixtures derived by actually running Tier 1's own mechanics against the
+existing Phase 1a engine, never hand-derived. 2 real implementation defects found and fixed
+during GREEN (both via execution, not foreseen at RED): (1) B1 eligibility needs an explicit
+`!hasParentEdge(M)` conjunct the OLD, shipped `freePassIds` computation doesn't carry — a B2
+individual (own parent edge) was wrongly getting a second, Tier-3 derived-point row; (2) a
+dangling non-anchor party (no own row in `ped`) crashed on `sireOf[[id]]`/`damOf[[id]]` —
+fixed by excluding dangling ids from B1 eligibility up front, matching the OLD function's
+own confirmed behavior of dropping such an id from its output entirely. 3 RED-phase test
+bugs (not implementation bugs) also found and fixed. Verified: `test_file()` 17/17 GREEN (53
+expectations); full clean regression 0 failed/0 error project-wide (OLD function and every
+other existing test bit-for-bit unaffected); `lintr::lint()` 0 findings after REFACTOR (2
+style-only fixes). See `PROJECT_LEARNINGS.md` Learnings 639/640. **Next: Phase 2b** (the
+live-render helper + real-fixture A/B verification) — its own separate session.
+
+**Phase 2b — S615 (2026-08-20): DONE.** New reusable
+[`tests/testthat/helper-live-render-positions.R`](tests/testthat/helper-live-render-positions.R)
+(`getLiveRenderedPositions()` — renders via the app's own `visNetwork()`/`visPhysics(FALSE)`
+call, `chromote`-drives it headless, reads back ground truth via vis.js's own
+`getPositions()`), completing the parent plan's own Phase 2 "New deliverable... fixing C2-4."
+7 new tests added to
+[`tests/testthat/test_positionMatingUnitForestBJL.R`](tests/testthat/test_positionMatingUnitForestBJL.R)
+(24 total). **Real-375-fixture results, all measured (not assumed):** the zero-exact-
+x/gen-coincidence gate ("the single most important test in the whole migration") **passes**;
+the exact-midpoint invariant (previously synthetic-only) **passes** on real data too;
+single-child-union near-parent prevalence is 224/237 (structural, unchanged — D1 out of
+scope) with a new distance breakdown of 180/224 touching (≤31px) / 208/224 half-column
+(≤60px) vs. the OLD algorithm's clamp-affected 175/224 / 203/224 — comparable, not
+dramatically reduced, because BJL's own genuine child-centering produces similar visual
+closeness for structurally honest reasons (the plan's own "naturally close... may legitimately
+remain close" caveat, now directly measured); Phase 1b §8.4 Obligation 2's combined
+trigger-frequency measurement found 34 `orderBySex`-qualifying B1 unions, drift range
+0.399–0.401, comfortably inside the disclosed cosmetic bound. **Major incidental finding
+(`PROJECT_LEARNINGS.md` Learning 641):** live-rendering revealed vis.js's `getPositions()`
+rounds to whole pixels, so the shared 1e-3-raw-unit "cosmetic" tie-break nudge (×`xScale=120`
+= 0.12px) used by BOTH algorithms renders pixel-identical to whatever it was nudged away
+from — measured side by side on the real fixture: OLD 368/714 nodes pixel-coincident (182
+groups), NEW 380/714 (190 groups), comparable, a pre-existing characteristic, not a Phase 2b
+regression. Owner-directed (`AskUserQuestion`, on finding this): Tests 6/7 report this via
+`message()` as a diagnostic, asserting only what Phase 2b's charter requires (no id silently
+collapses in vis.js's own DataSet — confirmed clean on both the F1/"Track C" fixture and the
+real 714-node fixture), not a hard pixel-coincidence gate neither algorithm clears. A real
+epsilon-magnitude fix, if wanted, is future design work, not scoped here. **Also found and
+fixed:** chromote's own 10s default `Page$loadEventFired()` timeout was too short for the
+714-node fixture's self-contained HTML (helper gained a `loadTimeout` parameter, default 30s,
+used 60s for the real fixture); a NEW `devtools::check()` WARNING ("unstated dependencies in
+tests: chromote, htmlwidgets") from using the same `data-raw/kinship2FidelityValidation.R`
+`::`-call pattern inside the CHECKED `tests/testthat/` surface — fixed by adding both to
+`DESCRIPTION`'s `Suggests:` (owner-clarified packaging rule: `Suggests:` for anything
+test/example/vignette code loads, `Config/Needs/<name>:` for dev-tooling-only packages);
+`PROJECT_LEARNINGS.md` Learning 642. Incidentally also relocated `covr` (pure coverage
+tooling, already CI-installed independently) from `Suggests:` to a new
+`Config/Needs/coverage: covr`, matching this file's own `Config/Needs/website: quarto`
+precedent — flagged, not fixed, that `devtools`/`roxygen2`/`pkgdown` look like further
+instances of the same misplacement (new Housekeeping item below). Full clean regression:
+0 failed/0 error project-wide (confirmed twice — a direct `test_dir()` run and again inside
+`devtools::check()`'s own `testthat.R`). `lintr::lint_package()`: 0 lints. `devtools::check()`:
+0 errors, 1 WARNING + 2 NOTEs — all 3 pre-existing (non-portable filename, `scratchpad/` top
+level dir, `vignettes/figure/` knitr leftover), zero new, matching S614's own baseline
+exactly. `.positionMatingUnitForestBJL()` itself unchanged — Phase 2b touched zero production
+code. **Next: Phase 3** (cutover, 2 explicitly-scoped commits per the parent plan's own Phase
+3 spec) — its own separate session; the real-fixture zero-coincidence gate now has DIRECT
+real-data evidence behind it, not just synthetic-fixture coverage.
 ```
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
@@ -735,6 +837,37 @@ test/CI complexity, `@noRd`/internal-function visibility loss across a
 package boundary, etc.) before any decision to split.
 
 ## Housekeeping
+
+**`DESCRIPTION`’s `Suggests:` mixes real test/example/vignette
+dependencies with dev-tooling-only packages that belong in a
+`Config/Needs/...` field instead** (found 2026-08-20, incidental to
+S615’s own DESCRIPTION edit, owner-directed via chat, READY, Effort S) –
+owner-stated rule: `Suggests:` is for packages optional code in
+`tests/`, `man/examples`, or `vignettes/` actually loads; anything
+needed only by dev tooling (website building, linting, coverage, release
+scripts) belongs in its own `Config/Needs/<name>:` field instead (`pak`
+and similar tools understand these named dev-dependency groups), kept
+out of `Suggests:` entirely. This session already fixed one instance
+directly (`covr` moved to the new `Config/Needs/coverage: covr`,
+matching the file’s own pre-existing `Config/Needs/ website: quarto`
+precedent and confirmed via `.github/workflows/test-coverage.yaml:27`
+already installing `covr` itself via `extra-packages: any::covr`,
+independent of `DESCRIPTION`). Not fixed this session (out of Phase 2b’s
+own scope, flagged not touched per owner direction): `devtools` and
+`roxygen2` are also listed in `Config/renv/profiles/ dev/dependencies`
+(line 88) as well as `Suggests` – redundant, or intentionally
+dual-listed for a reason not investigated this session; `pkgdown` sits
+in `Suggests` with no matching `Config/Needs/website` entry even though
+`quarto` (already `Config/Needs/website`) is ALSO still separately
+listed in `Suggests` – looks like the same
+pkgdown-belongs-in-Config/Needs/ website gap, not confirmed. A future
+session should audit every `Suggests:` entry against “does any file
+under `tests/`, `vignettes/`, or a roxygen `@examples` block actually
+load this via [`library()`](https://rdrr.io/r/base/library.html)/`::`”
+and relocate anything that fails that test to the matching
+`Config/Needs/<name>` group, verifying
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+still reports 0 new warnings/notes after.
 
 **Add MIT license badge + REUSE compliance badge to `README.Rmd`**
 (found 2026-08-17, owner-directed) – **DONE S607 (2026-08-18).** Both

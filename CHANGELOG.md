@@ -17,6 +17,170 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-20 · \[ad hoc\] S615: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S614 precedent)
+
+- **Deliverable:** `HANDOFFS.md`’s S615 receipt
+  `commit:`/`changelog_ref:` fields updated from `pending` to the actual
+  close-out commit sha (`ac2723b5`) and the dated `CHANGELOG.md` entry
+  pointer.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-20 · \[issue \#141\] S615: Phase 2b GREEN – Walker/BJL real-fixture + live-render verification
+
+- **Deliverable:** New reusable
+  `tests/testthat/helper-live-render-positions.R`
+  (`getLiveRenderedPositions()` – renders via the app’s own
+  `visNetwork()`/`visPhysics(FALSE)` call, drives `chromote` headless,
+  reads back ground truth via vis.js’s own `getPositions()`), completing
+  the parent plan’s own Phase 2 “New deliverable… fixing C2-4.” 7 new
+  tests added to `tests/testthat/test_positionMatingUnitForestBJL.R` (24
+  total): a helper smoke test; the real 375-individual fixture’s own
+  zero-exact-x/gen-coincidence gate (“the single most important test in
+  the whole migration” – PASSES); the exact-midpoint invariant re-run on
+  real data (previously synthetic-only, PASSES); single-child-union
+  near-parent prevalence re-measurement (224/237 structural, unchanged;
+  new breakdown 180/224 touching \<=31px / 208/224 half-column \<=60px
+  vs. the OLD algorithm’s clamp-affected 175/224 / 203/224 – comparable,
+  not dramatically reduced); Phase 1b sec8.4 Obligation 2’s combined
+  trigger-frequency measurement (34 `orderBySex`-qualifying B1 unions,
+  drift range 0.399-0.401, inside the disclosed cosmetic bound); 2
+  live-render checks (F1/“Track C” 9-subject fixture, real
+  375-individual/714-node fixture).
+- **Major incidental finding (`PROJECT_LEARNINGS.md` Learning 641):**
+  live-rendering revealed vis.js’s `getPositions()` rounds reported
+  coordinates to the nearest whole pixel, so the shared 1e-3-raw-unit
+  “cosmetic” tie-break nudge used by BOTH `.positionMatingUnitForest()`
+  (OLD) and `.positionMatingUnitForestBJL()` (NEW) – `xScale=120`, so
+  0.12px – renders pixel-identical to whatever it was nudged away from.
+  Measured side by side on the real fixture, same script, same helper:
+  OLD 368/714 nodes pixel-coincident (182 groups), NEW 380/714 (190
+  groups) – comparable, a pre-existing characteristic shared by both
+  algorithms, not a Phase 2b regression. Owner-directed
+  (`AskUserQuestion`, on finding this): Tests 6/7 redesigned as
+  diagnostics (DataSet-integrity hard gate – confirmed clean, no id
+  silently collapses in vis.js’s own DataSet on either fixture – plus a
+  [`message()`](https://rdrr.io/r/base/message.html)-reported
+  measurement), not a hard pixel-coincidence gate neither algorithm
+  actually clears.
+- **2 real implementation bugs found and fixed during GREEN, both via
+  direct execution:** (1) chromote’s own 10-second default
+  `Page$loadEventFired()` timeout was too short for the 714-node
+  fixture’s self-contained HTML – added a `loadTimeout` parameter
+  (default 30s, 60s used for the real fixture); (2) a NEW
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  WARNING (“unstated dependencies in tests: chromote, htmlwidgets”) from
+  copying `data-raw/kinship2FidelityValidation.R`’s own `pkg::fn()` call
+  pattern (safe there – that script is `.Rbuildignore`d) into the
+  CHECKED `tests/testthat/` surface – fixed per the user’s own clarified
+  packaging rule (`Suggests:` for anything test/example/
+  vignette-needed, `Config/Needs/<name>:` for dev-tooling-only packages)
+  by adding `chromote`/ `htmlwidgets` to `DESCRIPTION`’s `Suggests:`
+  (`renv::snapshot(dev=TRUE)` needed no lockfile changes – both already
+  transitively pinned). `PROJECT_LEARNINGS.md` Learning 642.
+  Incidentally also relocated `covr` (pure coverage tooling, already
+  CI-installed independently via `.github/workflows/test-coverage.yaml`)
+  from `Suggests:` to a new `Config/Needs/coverage: covr`, user-flagged
+  mid-session.
+- **Verification:** 24/24 tests GREEN; full clean regression 0 failed/0
+  error project-wide (confirmed twice – a direct `test_dir()` run and
+  again inside
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+  own `testthat.R`); `lintr::lint_package()` 0 findings project-wide;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors / 1 WARNING / 2 NOTEs, all 3 pre-existing (non-portable
+  filename, `scratchpad/` top-level dir, `vignettes/figure/` knitr
+  leftover) – identical to S614’s own baseline, zero new.
+  `.positionMatingUnitForestBJL()` itself unchanged – Phase 2b touched
+  zero production code.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-20 · \[issue \#141\] S615: Phase 2b close-out (BACKLOG/PROJECT_LEARNINGS/SESSION_NOTES/HANDOFFS)
+
+- **Deliverable:** `BACKLOG.md`’s Walker/BJL item updated with the Phase
+  2b progress paragraph plus a new Housekeeping item (`DESCRIPTION`’s
+  `Suggests:`/`Config/Needs/` cleanup, user-directed, not fixed this
+  session beyond `covr`); `PROJECT_LEARNINGS.md` Learnings 641 (vis.js
+  pixel-rounding vs. the shared cosmetic tie-break nudge) and 642 (the
+  `R CMD check` unstated-test-dependencies gotcha); `SESSION_NOTES.md`
+  Session 614 handoff evaluation (9/10) + full Session 615 handoff;
+  `HANDOFFS.md` S615 receipt completed (`status: complete`,
+  `self_score: 9`).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-19 · \[ad hoc\] S614: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S613 precedent)
+
+- **Deliverable:** `HANDOFFS.md`’s S614 receipt `commit:` field updated
+  from `pending` to the actual close-out commit sha (`55cd2875`).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-19 · \[issue \#141\] S614: Phase 2a GREEN – Walker/BJL pedigree adapter (`.positionMatingUnitForestBJL()`)
+
+- **Deliverable:** New `.positionMatingUnitForestBJL()` in
+  `R/makePedigreeDiagramData.R`, alongside `.positionMatingUnitForest()`
+  – zero changes to that function or any other existing code, no shared
+  call site yet. Implements the 3-tier reconciliation
+  [`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)
+  settles on: Tier 1 genuine-tree BJL (`.positionTreeApportion()`, Phase
+  1a, unchanged) via a `CHILDREN(individual)` accessor, terminated by a
+  reinstated `sweepMinSep()` backstop; Tier 2 union-midpoint
+  derivation + exact-tie sweep; Tier 3 B1/B3 derived points using §8.1’s
+  fixed formula (anchored on the anchor’s own final Tier-1 `x`, never
+  the union’s). Owner-directed scope split (Phase 2’s own “splittable if
+  too large” allowance, via `AskUserQuestion` before RED): this session
+  covers adapter mechanics only (“Phase 2a”) – the live-render helper
+  and real-375-fixture A/B verification are explicitly deferred to a
+  required Phase 2b session, not done here.
+- New
+  [`tests/testthat/test_positionMatingUnitForestBJL.R`](https://github.com/rmsharp/nprcgenekeepr/tests/testthat/test_positionMatingUnitForestBJL.R):
+  17 `test_that()` blocks (the design note’s own 15-fixture matrix, §4
+  Tests 1-14 + §8.4’s required Test 15, plus 3 property tests), all
+  synthetic/hand-built. Full strict-TDD cycle, every transition gated
+  via `AskUserQuestion`: PRE-RED (grounded in both planning docs) → RED
+  (confirmed genuine, 0 fixture bugs in pre-function assertions) → GREEN
+  (found and fixed 2 real implementation defects – B1 eligibility needed
+  an explicit `!hasParentEdge(M)` conjunct the OLD shipped `freePassIds`
+  helper doesn’t carry; a dangling non-anchor id crashed on
+  `sireOf[[id]]`, fixed by excluding dangling ids up front) → REFACTOR
+  (2 style-only lint fixes). Verified 3 times: 17/17 GREEN (53
+  expectations), full clean regression 0 failed/0 error project-wide
+  each time, `lintr::lint()` 0 findings, and a full
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  (1 WARNING + 2 NOTEs, all 3 confirmed pre-existing and unrelated to
+  this diff). `PROJECT_LEARNINGS.md` Learnings 639/640 recorded.
+  `BACKLOG.md`’s Walker/BJL item updated with the S614 progress
+  paragraph.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-19 · \[ad hoc\] S613: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S612 precedent)
+
+- **Deliverable:** `HANDOFFS.md`’s S613 receipt `commit:` field updated
+  from `pending` to the actual close-out commit sha (`3d5019b0`).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-19 · \[issue \#141\] S613: Phase 1b continuation – sweepMinSep()/orderBySex seam RESOLVED, first-attempt sound
+
+- **Deliverable:**
+  [`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)
+  §8 – resolves the seam S612’s round-4 critique found (§7): reinstating
+  `sweepMinSep()` broke an invariant the `orderBySex` sign-fold formula
+  depended on. Fix: anchor `M_repr.x` on the frozen Tier-1 `P.x`
+  directly instead of the drift-prone Tier-2 `U.x(FINAL)`, gated on the
+  same `mateCount==1` qualifying test the shipped `orderBySex` code
+  already uses. A repair→3-lens adversarial-critique `Workflow` (4
+  agents) found this sound on its **first** attempt – no repair round 2
+  needed, the first first-attempt-sound outcome across this
+  investigation’s 5-round design-note history plus 6 prior full
+  implementation attempts. Proof holds for any drift magnitude, not just
+  the 2 executed counter-examples §7 produced. 2 implementation-time
+  obligations disclosed for Phase 2 (a required new Test 15 + a
+  P.x-freshness assertion; a widened cosmetic-disclosure scope), written
+  into the design note as binding conditions, not open questions.
+  **Phase 2 (pedigree adapter, parallel to production) is now READY.**
+  Zero production code touched. `BACKLOG.md`’s Walker/BJL item updated
+  with the S613 progress paragraph. `PROJECT_LEARNINGS.md` Learning 638
+  recorded (eliminate-the-invariant-dependency pattern).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-19 · \[ad hoc\] S612: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S611 precedent)
 
 - **Deliverable:** `HANDOFFS.md`’s S612 receipt `commit:` field updated
