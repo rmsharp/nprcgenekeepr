@@ -129,3 +129,42 @@ test_that("R-CMD-check.yaml asserts Chrome is resolvable by chromote before chec
     )
   )
 })
+
+test_that("the Chrome-provisioning steps are skipped on macos-latest (S619 CDP-timeout fallback)", {
+  ## macos-latest reverts to ambient/unpinned Chrome discovery (S616's own
+  ## proven-green behavior for that leg) rather than the pinned
+  ## Chrome-for-Testing binary the other 4 legs use. Root cause: the pinned
+  ## binary's freshly-launched ChromoteSession hangs on its internal
+  ## Runtime.evaluate bootstrap probe on macos-latest specifically -- NOT a
+  ## simple "10s wasn't long enough" cold-start latency issue, since raising
+  ## default_timeout to 60s (helper-live-render-positions.R) did NOT resolve
+  ## it on a real CI push (run 32417985922, still timed out after the full
+  ## 60s, 3/3 identical failures) -- confirmed live, S619, 2026-08-20.
+  ## ubuntu-latest/windows-latest keep the pin; only macos-latest is
+  ## excluded, matching the pin's own original committed rationale, which
+  ## never named macos-latest as needing it in the first place.
+  skip_if_not(file.exists(workflow_path),
+              "R-CMD-check.yaml not present in this build")
+
+  lines <- drop_comment_lines(read_workflow_lines(workflow_path))
+
+  chrome_step_patterns <- c(
+    "uses:\\s*browser-actions/setup-chrome@v2",
+    "CHROMOTE_CHROME=.*steps\\.setup-chrome\\.outputs\\.chrome-path",
+    "chromote::find_chrome\\(\\)"
+  )
+
+  for (pattern in chrome_step_patterns) {
+    block <- step_block_containing(lines, pattern)
+    expect_true(
+      length(block) > 0 &&
+        any(grepl("if:.*matrix\\.config\\.os\\s*!=\\s*'macos-latest'", block)),
+      info = paste0(
+        "the step matching '", pattern, "' must carry an `if:` guard ",
+        "excluding matrix.config.os == 'macos-latest' -- macos-latest ",
+        "reverts to ambient Chrome (S619 fallback), the pinned binary hangs ",
+        "there even with a raised timeout"
+      )
+    )
+  }
+})
