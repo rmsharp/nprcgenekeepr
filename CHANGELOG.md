@@ -16,6 +16,15 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-20 · [ad hoc] S619: file BACKLOG.md item for stale [x] DONE-item sweep
+- **Deliverable:** owner noticed `BACKLOG.md` still carries 16 `[x]`-checked DONE items despite
+  its own "open, actionable work only" header. Investigated: confirmed each already has a dated
+  `CHANGELOG.md` entry (spot-checked, nothing at risk of loss); confirmed this matches an
+  established periodic-batch-sweep precedent (S548, 2026-08-13, "delete 61 resolved BACKLOG.md
+  pointer bullets outright") rather than a new process break. Filed a new `BACKLOG.md`
+  Housekeeping item (READY, Effort S) for a future sweep session, per owner direction to keep
+  the current macOS CDP-timeout diagnosis (S619's own claimed task) uninterrupted.
+
 ### 2026-08-20 · [ad hoc] S618: port Chrome-provisioning into R-CMD-check.yaml (windows-latest fixed, macos-latest still open)
 - **Deliverable:** fixed `R-CMD-check.yaml`'s intermittent chromote Chrome-launch failure
   (`BACKLOG.md` Housekeeping item, found S616) on `windows-latest` -- ported `shinytest2.yaml`'s

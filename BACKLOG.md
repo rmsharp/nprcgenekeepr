@@ -861,6 +861,21 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       question, not a repeat of this session's own port-and-verify work).
 
 ## Housekeeping
+- [ ] **Sweep the 16 accumulated `[x]`-checked DONE items out of `BACKLOG.md`** (found S619,
+      2026-08-20, owner-directed via chat after noticing stale DONE entries, READY, Effort S) --
+      `BACKLOG.md`'s own header states "Open, actionable work only. Completed history ->
+      `CHANGELOG.md`," and `SESSION_RUNNER.md` Phase 3F calls for removing a completed item from
+      `BACKLOG.md` in its closing commit, but in practice items are often left `[x]`-checked in
+      place rather than deleted, and periodically swept in a dedicated batch pass -- matching
+      established precedent (`95ae9d70` "S548: delete 61 resolved BACKLOG.md pointer bullets
+      outright," 2026-08-13; `3ff03967` "remove 4 of 9 checked-but-unmigrated BACKLOG.md items,"
+      earlier). The last sweep was S548 (2026-08-13); 16 `[x]` items have accumulated since
+      (oldest from S592-era collision-avoidance work, newest S607's MIT/REUSE badges) -- spot-
+      checked S619: every one already has its own dated `CHANGELOG.md` entry, so nothing is at
+      risk of being lost, only redundant duplication awaiting deletion. A future session should
+      confirm each of the 16 items' content is fully captured in `CHANGELOG.md` (not just spot-
+      checked), then delete the checked bullets outright, matching S548's own verification-then-
+      delete method.
 - [ ] **Evaluate adopting `context_budget.py`, a new methodology tool shipped in canonical v3.7**
       (found S617, 2026-08-20, incidental to the v3.7 methodology sync, READY, Effort S -- a
       research/scoping session, not an implementation session) -- true upstream `KJ5HST/methodology`
