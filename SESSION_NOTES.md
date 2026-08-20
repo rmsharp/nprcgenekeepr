@@ -570,3 +570,11 @@ intent) rather than building a second helper. (4)
 real-375-scale render needs `loadTimeout=60`/`waitSeconds=3` explicitly
 (not committed as new defaults, to keep small-fixture tests fast) — pass
 them explicitly for any comparably large fixture in Phase 3.
+
+### What Session 616 Did
+
+**Deliverable:** Diagnose and fix the `R-CMD-check.yaml`
+`windows-latest` CI failure (`gh run` `32335116264`) introduced by
+S615’s new `tests/testthat/helper-live-render-positions.R`. **Status:**
+IN PROGRESS. **Started:** 2026-08-20. **Ledger:** `CHANGELOG: pending` —
+set at claim; recorded in `CHANGELOG.md` at Phase 3F.
