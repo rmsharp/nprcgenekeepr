@@ -1298,7 +1298,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   hasOwnDirectChild <- function(id) length(directChildrenOf(id)) > 0L
   unitChildrenOf <- function(id) {
     myUnits <- unitIds[!is.na(anchorOf) & anchorOf == id]
-    if (length(myUnits) == 0L) return(character(0))
+    if (length(myUnits) == 0L) return(character(0L))
     unlist(lapply(myUnits, function(u) childEdges$to[childEdges$from == u]),
            use.names = FALSE)
   }
@@ -1413,7 +1413,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     b1UnitOf[[fp]] <- setdiff(ownUnits, dupUnits)[1L]
   }
 
-  dupIds <- if (nrow(duplicates) > 0L) duplicates$id else character(0)
+  dupIds <- if (nrow(duplicates) > 0L) duplicates$id else character(0L)
   tier3Ids <- c(b1Ids, dupIds)
   tier3X <- stats::setNames(numeric(length(tier3Ids)), tier3Ids)
   tier3Gen <- stats::setNames(integer(length(tier3Ids)), tier3Ids)
