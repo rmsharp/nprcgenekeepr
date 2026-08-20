@@ -929,6 +929,57 @@ change is not proof of a fix, matching how this exact finding was
 surfaced (a clean re-run of the UNFIXED workflow also happened, by
 chance).
 
+``` R
+**windows-latest: FIXED and verified -- S618 (2026-08-20).** Confirmed
+`browser-actions/setup-chrome@v2` supports all 3 OS families (WebFetch/WebSearch against
+the action's own docs/source before touching anything: `install-dependencies` is
+Linux-only and a documented no-op elsewhere, `no-sudo` likewise). Ported the 3-step
+pattern into `.github/workflows/R-CMD-check.yaml` between `setup-r-dependencies@v2` and
+`check-r-package@v2` (guarded by a new `tests/testthat/test_r_cmd_check_workflow_chrome_
+setup.R`, mirroring `test_shinytest2_workflow_coverage.R`'s own house style). **1st real
+push (`32403201121`) found the port only PARTLY worked:** `windows-latest` still failed
+with the exact same "Chrome debugging port not open after 10 seconds" -- root-caused live
+to a genuine bug, not intermittency: the `echo ... >> "$GITHUB_ENV"` step is bash syntax,
+and unlike `shinytest2.yaml` (ubuntu-only, bash is the OS default), this job's matrix
+includes `windows-latest`, whose `run:` default shell is PowerShell -- `CHROMOTE_CHROME`
+read back empty, so `chromote::find_chrome()` silently fell back to the ambient system
+Chrome. Fixed by adding `shell: bash` explicitly (own RED test added first, confirmed
+failing, then GREEN). **2nd real push (`32406103954`): `windows-latest` GREEN**,
+`CHROMOTE_CHROME` confirmed correctly populated with the pinned binary.
+
+**macos-latest: NOT fixed -- a different, genuinely recurring problem, owner-directed to
+defer to its own future session rather than investigate further here.** `CHROMOTE_CHROME`
+IS correctly set on macOS (confirmed both real pushes -- this is not the Windows shell
+bug), yet `macos-latest` failed on **both** real CI runs with the same signature: `Error:
+Chromote: timed out waiting for response to command Runtime.evaluate` plus an internal
+`attempt to apply non-function` inside chromote's own event-callback dispatch -- a live
+CDP round-trip timeout mid-test, not a launch failure, and a symptom class this BACKLOG
+item's own upstream citations (rstudio/chromote #106/#124/#134/#150/#170) don't cover.
+Recurring 2/2 with the pinned Chrome-for-Testing binary rules out one-off resource
+contention as the sole explanation; whether the pin itself (vs. this project's prior
+untested ambient-Chrome path on macOS, which was green before S618) is implicated is
+unknown and unresearched. A future session should investigate this specific signature
+(chromote issue tracker, CDP `Runtime.evaluate` timeout reports, whether the pinned
+152.0.7977.54 build has known headless-CDP problems) before deciding whether pinning
+Chrome-for-Testing is even the right fix for the macOS leg, or whether macOS needs a
+different mitigation (e.g. leave macOS on ambient Chrome, pin only where it's proven to
+help).
+
+**ubuntu-latest (oldrel-1): unrelated, transient infra noise, not this item's concern.**
+The 2nd push's run also showed this leg red, but the error (`Failed to resolve R version
+oldrel/1 at https://api.r-hub.io/rversions/resolve/...`) is an r-hub.io R-version-resolution
+API failure at the `setup-r@v2` step, before any Chrome-provisioning step runs -- confirmed
+unrelated to this diff (this leg was green on the 1st push, moments earlier, with the same
+code). Re-ran the single job (`gh run rerun --job 96545448701`): passed clean, confirming
+transience.
+
+**Net effect of S618: 1 of 2 originally-affected platforms genuinely fixed and verified
+(windows-latest); macos-latest reclassified as a distinct, better-characterized problem,
+still open, deferred to a future session per owner direction rather than investigated
+further this session.** Effort re-estimated S (a scoped chromote-CDP-timeout research
+question, not a repeat of this session's own port-and-verify work).
+```
+
 ## Housekeeping
 
 **Evaluate adopting `context_budget.py`, a new methodology tool shipped

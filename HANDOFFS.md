@@ -174,20 +174,57 @@ hand-maintained.
 ``` handoff
 session: S618
 date: 2026-08-20
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix R-CMD-check.yaml's intermittent chromote Chrome-launch failure (BACKLOG.md
-  Housekeeping item, found S616) -- port shinytest2.yaml's browser-actions/setup-chrome@v2 +
-  CHROMOTE_CHROME + preflight-resolvability pattern into R-CMD-check.yaml, verify via repeated
-  real CI pushes.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: PARTIALLY DONE, disclosed. Fixed R-CMD-check.yaml's chromote Chrome-launch failure
+  on windows-latest (verified GREEN on 2 real CI pushes). macos-latest reclassified as a
+  distinct, still-open CDP-timeout problem, recurring 2/2, deferred to a future session per
+  owner direction rather than investigated further this session.
+what_was_done: Ported shinytest2.yaml's browser-actions/setup-chrome@v2 + CHROMOTE_CHROME +
+  find_chrome() preflight pattern into R-CMD-check.yaml via full TDD (PRE-RED->RED->GREEN->
+  REFACTOR, each AskUserQuestion-gated). New tests/testthat/test_r_cmd_check_workflow_chrome_
+  setup.R (9 expectations, 3 test_that blocks). 1st real push found windows-latest UNCHANGED
+  (still "port not open") -- CHROMOTE_CHROME read back empty; root-caused to bash-syntax step
+  silently no-op'ing under windows-latest's default PowerShell shell (shinytest2.yaml never
+  needed shell: bash since it's ubuntu-only). Same push showed a NEW macos-latest failure
+  (Chromote: timed out waiting for response to command Runtime.evaluate / attempt to apply
+  non-function) with CHROMOTE_CHROME confirmed correctly set. Stopped and reported both via
+  AskUserQuestion rather than pushing another guess. Fixed the diagnosed shell bug (added
+  shell: bash, extended RED coverage first via a new step_block_containing() helper, confirmed
+  RED then GREEN). 2nd push: windows-latest GREEN, CHROMOTE_CHROME confirmed populated;
+  macos-latest failed AGAIN with the identical signature (2/2, ruling out the shell bug and
+  pure one-off contention); ubuntu-latest(oldrel-1) also red on that run, characterized as
+  unrelated r-hub.io R-version-resolution infra noise, confirmed transient via `gh run rerun
+  --job 96545448701` (passed clean). Commits: 1d1d9203 (claim), 888fcbf4 (RED), 58905242
+  (GREEN), a3d34f1a (shell:bash fix + extended RED/GREEN).
+next_steps: A future session should investigate the macos-latest CDP-timeout regression as its
+  own dedicated task: research "Chromote: timed out waiting for response to command
+  Runtime.evaluate" / "attempt to apply non-function" against chromote's own issue tracker,
+  check whether the pinned 152.0.7977.54 Chrome-for-Testing build has known headless-CDP
+  problems on macOS ARM64, and decide whether pinning is even the right fix for that leg (vs.
+  leaving macOS on ambient Chrome, which was green before this session's diff) before attempting
+  another fix. A 3rd real CI push would add a 3rd data point either strengthening or weakening
+  the "real, recurring" conclusion -- not pursued this session past 2, per owner direction.
+key_files: .github/workflows/R-CMD-check.yaml:48-75 (the 3-step block + shell: bash fix);
+  tests/testthat/test_r_cmd_check_workflow_chrome_setup.R (all 9 expectations, incl.
+  step_block_containing()/drop_comment_lines() helpers); BACKLOG.md Housekeeping (chromote item
+  updated in place, not checked off); PROJECT_LEARNINGS.md Learnings 646/647.
+gotchas: (1) shell: bash is now required for any bash-syntax run: step in a workflow whose
+  matrix includes windows-latest -- a step ported from an ubuntu-only workflow does not carry
+  its shell default along. (2) The macOS CDP timeout reproduced with CHROMOTE_CHROME CONFIRMED
+  correctly set both times -- "the pin isn't working" is already ruled out as the cause; the
+  open question is why a live CDP round-trip times out on an already-connected session. (3)
+  ubuntu-latest(oldrel-1)'s r-hub.io failure is unrelated infra noise, already confirmed
+  transient -- do not fold it into the chromote investigation if it recurs.
+runtime_smoke: Verified via 2 real pushed R-CMD-check.yaml CI runs (not local-only) -- the
+  faithful verification this CI-config change needs. windows-latest confirmed GREEN on live
+  infrastructure; macos-latest confirmed still RED, disclosed, not treated as passing.
+changelog_ref: ab46e4a3 (CHANGELOG.md entry landed in that commit)
+commit: 1d1d9203 (claim), 888fcbf4 (RED), 58905242 (GREEN), a3d34f1a (shell:bash
+  fix), ab46e4a3 (close-out docs), b18d22ab (handoff) -- reconciled to the real
+  shas immediately after, matching the S600/S602-S617 self-reference-workaround
+  precedent.
 ```
 
 ``` handoff

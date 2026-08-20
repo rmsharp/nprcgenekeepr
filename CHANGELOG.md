@@ -17,6 +17,37 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-20 · \[ad hoc\] S618: port Chrome-provisioning into R-CMD-check.yaml (windows-latest fixed, macos-latest still open)
+
+- **Deliverable:** fixed `R-CMD-check.yaml`’s intermittent chromote
+  Chrome-launch failure (`BACKLOG.md` Housekeeping item, found S616) on
+  `windows-latest` – ported `shinytest2.yaml`’s
+  `browser-actions/setup-chrome@v2` + `CHROMOTE_CHROME` +
+  `find_chrome()` preflight pattern via full TDD
+  (PRE-RED→RED→GREEN→REFACTOR, `AskUserQuestion`-gated at every
+  transition). New
+  `tests/testthat/test_r_cmd_check_workflow_chrome_setup.R` guards the
+  pattern structurally. 1st real CI push found the port only partly
+  worked: `windows-latest` still failed identically because the
+  `CHROMOTE_CHROME` env-export step uses bash syntax, which silently
+  no-ops under `windows-latest`’s default PowerShell shell
+  (`shinytest2.yaml` never needed `shell: bash` since it’s ubuntu-only)
+  – fixed by adding `shell: bash`, with a new RED test locking in the
+  requirement. Confirmed GREEN on 2 real CI pushes. **Same 2 pushes
+  surfaced a NEW, distinct problem on `macos-latest`** (previously
+  green):
+  `Chromote: timed out waiting for response to command Runtime.evaluate`
+  with `CHROMOTE_CHROME` confirmed correctly set both times (2/2
+  recurrence) – a live CDP round-trip timeout, not a launch failure,
+  ruling out both the shell bug and pure one-off resource contention.
+  Owner-directed to defer investigation to a future session rather than
+  continue speculative fixing. `ubuntu-latest (oldrel-1)`’s red on the
+  2nd push confirmed unrelated (r-hub.io R-version-resolution API infra
+  noise, transient — passed clean on rerun). `BACKLOG.md`’s chromote
+  item updated in place with the full finding (not checked off — macOS
+  remains open). Recorded `PROJECT_LEARNINGS.md` Learnings 646/647.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-20 · \[ad hoc\] S617: sync methodology framework to canonical v3.7 (hand-reconciled)
 
 - **Deliverable:** synced this project’s canonical-overlay methodology
