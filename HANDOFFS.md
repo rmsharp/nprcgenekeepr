@@ -136,6 +136,25 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S618
+date: 2026-08-20
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix R-CMD-check.yaml's intermittent chromote Chrome-launch failure (BACKLOG.md
+  Housekeeping item, found S616) -- port shinytest2.yaml's browser-actions/setup-chrome@v2 +
+  CHROMOTE_CHROME + preflight-resolvability pattern into R-CMD-check.yaml, verify via repeated
+  real CI pushes.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S617
 date: 2026-08-20
 status: complete

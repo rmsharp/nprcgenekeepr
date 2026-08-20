@@ -734,3 +734,16 @@ compared against a tag; this is expected, not a bug. (3) `methodology_dashboard.
 left at 2.14.0 (ahead of true v3.7's 2.10.6) — if a future session syncs again and sees this flagged
 "locally modified," that's the same intentional preservation, not new drift, unless the fork's version
 has since fallen behind what's needed.
+
+---
+
+### What Session 618 Did
+**Deliverable:** Fix `R-CMD-check.yaml`'s intermittent chromote Chrome-launch failure (BACKLOG.md
+Housekeeping item, found S616) — port `shinytest2.yaml`'s `browser-actions/setup-chrome@v2` +
+`CHROMOTE_CHROME` + preflight-resolvability pattern into `R-CMD-check.yaml`, then verify via
+repeated real CI pushes. (IN PROGRESS)
+**Started:** 2026-08-20
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
