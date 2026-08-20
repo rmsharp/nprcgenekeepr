@@ -193,7 +193,7 @@ runtime_smoke: n/a -- the only production-relevant file touched
   (tests/testthat/helper-live-render-positions.R) is test-only infrastructure with zero call
   sites outside tests/testthat/; no Shiny app / runtime behavior changed.
 changelog_ref: CHANGELOG.md 2026-08-20, S616 entries.
-commit: pending
+commit: 25fd57cd
 ```
 <claim stub -- filled at Phase 3D close-out>
 

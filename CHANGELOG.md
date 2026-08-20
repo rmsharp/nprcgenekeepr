@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-20 · [ad hoc] S616: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S615 precedent)
+- **Deliverable:** `HANDOFFS.md`'s S616 receipt `commit:` field updated from `pending` to the
+  actual close-out commit sha (`25fd57cd`).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-20 · [ad hoc] S616: close out (fix confirmed GREEN, 2 BACKLOG.md items filed, Learnings 643/644)
 - **Deliverable:** `SESSION_NOTES.md` Session 615 handoff evaluation (7/10, a structural ceiling —
   the failure this session fixed was triggered by S615's own closing push, so S615's handoff could
