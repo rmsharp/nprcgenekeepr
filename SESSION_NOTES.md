@@ -737,13 +737,178 @@ has since fallen behind what's needed.
 
 ---
 
+### Session 617 Handoff Evaluation (by Session 618)
+**Score: 8/10.** **What helped:** the receipt was structurally complete (all 6 minimum
+requirements present, `HANDOFFS.md` block filled correctly, `status: complete`) and every claim
+it made — clean repo, both ledger frontiers `== HEAD`, dashboard 96/100 — was independently
+re-verified as accurate in this session's own Phase 0 (`git log -1 -- CHANGELOG.md`/`HANDOFFS.md`,
+a fresh `methodology_dashboard.py` run). The `gotchas` list (FRAMEWORK_LEARNINGS.md/
+methodology_trim.py permanently absent from tagged-sync manifests; methodology_dashboard.py
+deliberately ahead of v3.7) is durable, correct information a future methodology-sync session will
+need. **What was missing:** nothing that blocked this session — S617's own task (a methodology
+framework sync) is unrelated to this session's task (a CI-config fix), which arrived from the
+priorities-list picker rather than from S617's own `next_steps`, so there was little in that list
+this session could directly use. This mirrors S617's own evaluation of S616 exactly ("not every
+session's task descends from the immediately-prior one") — expected, not a defect. **What was
+wrong:** nothing found inaccurate. **ROI:** moderate — mainly useful for confirming the repo was
+genuinely clean and fully closed out before this session's own claim, matching S617's own
+precedent for scoring a handoff whose task didn't chain into the next session's.
+
 ### What Session 618 Did
 **Deliverable:** Fix `R-CMD-check.yaml`'s intermittent chromote Chrome-launch failure (BACKLOG.md
 Housekeeping item, found S616) — port `shinytest2.yaml`'s `browser-actions/setup-chrome@v2` +
 `CHROMOTE_CHROME` + preflight-resolvability pattern into `R-CMD-check.yaml`, then verify via
-repeated real CI pushes. (IN PROGRESS)
-**Started:** 2026-08-20
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+repeated real CI pushes. **PARTIALLY DONE, disclosed:** `windows-latest` genuinely fixed and
+verified GREEN on a real push; `macos-latest` reclassified as a distinct, still-open problem,
+deferred to a future session per owner direction. **Started/Completed:** 2026-08-20.
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** — read `SAFEGUARDS.md` in full; `SESSION_NOTES.md` (S613–617's full
+   thread, ~590 lines); `gh issue list` (13 open); `git status`/`log --oneline -5`/`diff --stat`
+   (clean, 4 unpushed S617 commits); `methodology_dashboard.py` (96/100, 1 project HIGH — but the
+   underlying risk-flag detail, read directly from `dashboard.html`, showed 3 files now past the
+   2,000-line cap: `HANDOFFS.md` 2,529, and **`BACKLOG.md` 2,097 / `CHANGELOG.md` 2,039, both
+   newly crossed** since S617 — a timely instance of the FM #28 "unbounded mandatory read" S617
+   itself had just adopted into `SESSION_RUNNER.md`, flagged in the report, not fixed). `gh run
+   list --branch master` (S545-ratified CI-status-check step) found `R-CMD-check.yaml` RED on
+   `windows-latest` — "Chrome debugging port not open after 10 seconds" — matching the already-
+   filed BACKLOG item almost exactly, plus new evidence it now also hits `windows-latest`, not
+   just `ubuntu-latest`. Ledger reconcile: 1 commit past the `CHANGELOG.md` frontier
+   (`d0d248b8`), matched the established S600/S602–S616 self-reference-workaround precedent
+   (a receipt-only edit, nothing new to log) — no backfill needed; `HANDOFFS.md` frontier
+   `== HEAD`. Ghost-session check on the same 6 untracked files prior sessions already traced —
+   unchanged. Rendered the 4-item priorities list + `AskUserQuestion` — **user picked the
+   chromote CI-flake fix.**
+2. **Phase 1B claimed immediately** — `SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending`
+   receipt, committed (`1d1d9203`), before any technical investigation — avoided a 5th
+   recurrence of the Learning 624/625/628/644 pattern.
+3. **PRE-RED research** — read `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`,
+   `shinytest2.yaml`'s full Chrome-provisioning block, `R-CMD-check.yaml`'s current state.
+   `WebFetch`/`WebSearch` confirmed `browser-actions/setup-chrome@v2` supports macOS/Windows/
+   Linux and that `install-dependencies` is documented Linux-only (a no-op elsewhere, matching
+   `no-sudo`'s own explicit annotation) — verified against the action's own `action.yml`, not
+   assumed. **PRE-RED→RED gate** (`AskUserQuestion`): chose a static structural test (parsing
+   the raw workflow YAML, `test_shinytest2_workflow_coverage.R`'s own house style) over "CI-run-
+   only, no new test" (S616's precedent for a pure runtime race) — this is a parseable config
+   change, not a runtime race, so a deterministic local RED/GREEN cycle is possible and was
+   judged more rigorous.
+4. **RED** — wrote `tests/testthat/test_r_cmd_check_workflow_chrome_setup.R` (3 `test_that`
+   blocks, 8 expectations): asserts `browser-actions/setup-chrome@v2` + `id: setup-chrome` +
+   `install-dependencies: true`; `CHROMOTE_CHROME` exported from `chrome-path` via
+   `$GITHUB_ENV`; `chromote::find_chrome()` asserted, in the correct order ahead of
+   `check-r-package@v2`. Confirmed genuine RED: 8/8 fail (steps don't exist yet), full clean
+   regression 8 failed/0 error project-wide, all 8 in the new file. Committed (`888fcbf4`).
+5. **RED→GREEN gate** (`AskUserQuestion`, exact diff spelled out) → implemented: ported the
+   3-step pattern into `R-CMD-check.yaml` between `setup-r-dependencies@v2` and
+   `check-r-package@v2`. 8/8 GREEN, full regression 0 failed/0 error, `lintr::lint_package()` 0
+   lints. Committed (`58905242`).
+6. **GREEN→REFACTOR gate** (`AskUserQuestion`) → confirmatory no-op (0 lints, minimal diff); ran
+   `devtools::check()` as extra verification — 0 errors/1 WARNING/2 NOTEs, all 3 confirmed
+   pre-existing (matching S614–S617's own exact baseline). Pushed to trigger real CI.
+7. **1st real CI run (`32403201121`) found the GREEN implementation had a genuine bug, NOT
+   intermittency:** `windows-latest` still failed with the EXACT SAME "port not open" symptom.
+   Direct log inspection (`gh run view --log`, not just `--log-failed`) found `CHROMOTE_CHROME =`
+   printed EMPTY — the `echo ... >> "$GITHUB_ENV"` step is bash syntax, and unlike
+   `shinytest2.yaml` (ubuntu-only, bash is the OS default), this job's matrix includes
+   `windows-latest`, whose `run:` default shell is PowerShell. `chromote::find_chrome()` had
+   silently fallen back to the ambient system Chrome. **Same run also showed a NEW,
+   previously-green leg failing: `macos-latest`**, with `CHROMOTE_CHROME` confirmed correctly
+   set (ruling out the same shell bug) but `Chromote: timed out waiting for response to command
+   Runtime.evaluate` plus an internal `attempt to apply non-function` — a live CDP timeout, not a
+   launch failure, a genuinely different symptom class. **Stopped and reported both findings to
+   the owner via `AskUserQuestion` rather than silently pushing another speculative fix** — owner
+   clarified: fix the diagnosed Windows bug and re-push; treat macOS as intermittent for now,
+   escalate to its own future session if it recurs.
+8. **Fixed the diagnosed bug within GREEN** (matching this project's own "found/fixed via
+   execution during GREEN" precedent, S614/S615): extended the RED test with a `step_block_
+   containing()` helper asserting the CHROMOTE_CHROME-exporting step declares `shell: bash` —
+   confirmed genuine RED (1/9 new expectation fails) — then added `shell: bash` to the step —
+   9/9 GREEN, full regression 0 failed/0 error, 0 lints. Committed (`a3d34f1a`), pushed.
+9. **2nd real CI run (`32406103954`): `windows-latest` GREEN**, `CHROMOTE_CHROME` confirmed
+   correctly populated. **`macos-latest` failed AGAIN with the identical CDP-timeout signature**
+   — 2/2 recurrence with `CHROMOTE_CHROME` confirmed correctly set both times, ruling out both
+   the shell bug and pure one-off resource contention as the sole explanation; the same run also
+   showed `ubuntu-latest (oldrel-1)` red, characterized via its own log as an entirely unrelated
+   r-hub.io R-version-resolution API failure (before any Chrome-provisioning step runs, this leg
+   was green on the 1st push with the same code) — confirmed transient by re-running the single
+   job (`gh run rerun --job 96545448701`), passed clean.
+10. **Close-out:** `BACKLOG.md`'s chromote-flake item updated in place with the full S618
+    narrative (windows-latest FIXED/verified; macos-latest reclassified as a distinct, still-open
+    problem, deferred; ubuntu-oldrel-1 noted as unrelated transient noise) rather than checked
+    off, since the item's own original scope (both platforms) is only half-resolved.
+    `PROJECT_LEARNINGS.md` Learnings 646/647 recorded; `CLAUDE.md`'s learning-count cross-
+    reference refreshed (645→647). This handoff written.
+
+**Runtime smoke test (Phase 3E):** the deliverable changes CI runtime behavior directly — verified
+via 2 real, pushed `R-CMD-check.yaml` runs (not local-only), exactly the faithful verification this
+kind of change needs (matching S616's own "push-and-observe" precedent). `windows-latest`
+confirmed GREEN on live infrastructure with `CHROMOTE_CHROME` populated correctly; `macos-latest`
+confirmed still RED on live infrastructure, disclosed, not silently treated as passing.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation / tutorial-article / `NEWS.Rmd` /
+`a2interactive.Rmd` / `_pkgdown.yml` checklists all **N/A** — no new exported R function, no new
+user-facing Shiny feature, CI-workflow-config-only. GitHub issue close-out **N/A** — this work
+isn't tied to a specific open issue. Lint checklist **DONE** (0 lints on both touched `.R` files,
+confirmed 3 times across RED/GREEN/the shell-bash fix).
+
+**Self-assessment (Session 618): 8/10.** **Strengths:** (1) Followed the full TDD PRE-RED→RED→
+GREEN→REFACTOR cycle with an `AskUserQuestion` gate at every transition, including the atypical
+"is a local RED/GREEN cycle even possible for a CI-config change" pre-RED decision — reasoned
+explicitly rather than defaulting to S616's runtime-race precedent without checking whether it
+actually applied here. (2) Verified via REAL CI pushes, not just local tests, exactly per the
+BACKLOG item's own "repeated real pushes, not a single run" requirement — this is what caught a
+genuine implementation bug (Windows shell portability) no local machine (bash-default) could ever
+have surfaced. (3) When the 1st real push contradicted the fix hypothesis (macOS regression,
+Windows unchanged), stopped and reported both findings via `AskUserQuestion` rather than either
+silently declaring partial victory or unilaterally chasing more speculative fixes — matching this
+project's own established "stop and ask" precedent (S616). (4) Correctly distinguished 3 different
+failure signatures across 2 CI runs (Windows shell bug; macOS CDP timeout; unrelated ubuntu
+r-hub.io infra flake) by reading actual step logs and env values, not by assuming a shared cause —
+avoided both over-fixing and mis-attributing. (5) Found and fixed a bug in my OWN test (a comment
+line falsely matching `chromote::find_chrome()`) via direct execution, then extended the RED
+coverage to lock in the shell:bash requirement rather than patching the YAML and moving on. (6)
+Claimed the session at the literal next step after the picker resolved, avoiding a 5th recurrence
+of Learning 624/625/628/644's documented pattern. **Weaknesses:** (1) Did not research GitHub
+Actions' own per-OS default-shell behavior before writing the first GREEN diff — a `shinytest2.yaml`-
+verbatim port assumed bash without checking whether the destination matrix's OS composition
+(mixed, unlike the ubuntu-only source) made that assumption unsafe; a live CI failure was needed to
+surface it, when a documentation check likely would have caught it first. (2) The macOS
+CDP-timeout regression remains genuinely unresolved at close-out — disclosed in full, with 2
+data points and exact signatures, not silently dropped, but the underlying "is the pin itself
+implicated" question is still open. (3) 2 full CI-verification round-trips (≈35 CI-minutes each
+across 5 matrix legs) were needed rather than 1, extending the session's real-world duration —
+inherent to "verify via real CI," not obviously avoidable, but worth naming. **ROI:** high — a
+genuinely broken CI leg (`windows-latest`, red across the 2 pushes immediately preceding this
+session) is now green and independently re-verified twice; a previously vague "intermittent
+Chrome-launch failure" is now split into 3 precisely characterized, evidence-backed problems
+(1 fixed, 1 newly-scoped for a future session, 1 confirmed unrelated noise) — a materially
+better-scoped starting point than this session's own.
+
+**Next steps:** A future session should investigate the `macos-latest` CDP-timeout regression as
+its own dedicated task (`BACKLOG.md`'s chromote item narrates the full finding) — research the
+`Chromote: timed out waiting for response to command Runtime.evaluate` / `attempt to apply
+non-function` signature against chromote's own issue tracker, determine whether the pinned
+152.0.7977.54 Chrome-for-Testing build has known headless-CDP problems on macOS ARM64, and decide
+whether pinning is even the right fix for that leg (vs. leaving macOS on ambient Chrome, which was
+green before this session's diff) before attempting another fix. **Must explicitly measure, not
+assume:** whether a 3rd real CI push reproduces the same signature a 3rd time (strengthening the
+"real, recurring" conclusion) or clears (weakening it back toward "coincidental double flake") —
+this session stopped at 2 data points per owner direction, not because 2 was judged sufficient.
+
+**Key files:** `.github/workflows/R-CMD-check.yaml:48-75` (the 3-step Chrome-provisioning block +
+the `shell: bash` fix); `tests/testthat/test_r_cmd_check_workflow_chrome_setup.R` (3 `test_that`
+blocks, 9 expectations, incl. the `step_block_containing()`/`drop_comment_lines()` helpers);
+`BACKLOG.md` Housekeeping (the chromote-flake item, updated in place with the full S618
+narrative — NOT checked off, since macOS remains open); `PROJECT_LEARNINGS.md` Learnings 646/647.
+
+**Gotchas for a future session:** (1) `shell: bash` is now this project's own established
+requirement for ANY `run:` step using bash syntax inside a workflow whose matrix includes
+`windows-latest` — do not assume a step ported from an ubuntu-only workflow carries its shell
+default along. (2) The macOS CDP timeout reproduced with `CHROMOTE_CHROME` CONFIRMED correctly
+set both times — do not re-diagnose it as "the pin isn't working," that specific hypothesis is
+already ruled out; the open question is why a live CDP round-trip times out on an
+already-connected, correctly-pinned session. (3) `ubuntu-latest (oldrel-1)`'s r-hub.io
+version-resolution failure is unrelated CI infra noise, already confirmed transient by a clean
+rerun — do not fold it into the chromote-flake investigation if it recurs; it is a different
+category entirely (R-version resolution, not Chrome).
