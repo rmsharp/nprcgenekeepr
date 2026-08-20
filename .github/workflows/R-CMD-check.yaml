@@ -45,6 +45,35 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      # Provision a pinned, reproducible Chrome-for-Testing binary for chromote
+      # (mirrors shinytest2.yaml's own fix for an analogous flake -- BACKLOG.md
+      # Housekeeping item, found S616/S618): chromote's own ambient Chrome
+      # discovery is unreliable across this job's 5 runner images, observed
+      # failing as launch_chrome()/startup() abort (ubuntu-latest) and "Chrome
+      # debugging port not open after 10 seconds" (windows-latest).
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v2
+        id: setup-chrome
+        with:
+          install-dependencies: true
+
+      # chromote::find_chrome() honours CHROMOTE_CHROME first; point it at the
+      # action's installed binary (its name is not guaranteed to be on PATH).
+      - name: Point chromote at the installed Chrome
+        run: echo "CHROMOTE_CHROME=${{ steps.setup-chrome.outputs.chrome-path }}" >> "$GITHUB_ENV"
+
+      - name: Assert Chrome is resolvable by chromote
+        run: |
+          chrome <- Sys.getenv("CHROMOTE_CHROME")
+          cat("CHROMOTE_CHROME =", chrome, "\n")
+          found <- chromote::find_chrome()
+          cat("chromote::find_chrome() =", if (is.null(found)) "<NULL>" else found, "\n")
+          if (length(found) != 1L || !nzchar(found) || !file.exists(found)) {
+            stop("Chrome not resolvable by chromote: ",
+                 if (is.null(found)) "NULL" else found)
+          }
+        shell: Rscript {0}
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true

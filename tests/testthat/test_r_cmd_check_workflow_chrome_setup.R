@@ -23,6 +23,15 @@ read_workflow_lines <- function(path) {
   readLines(path, warn = FALSE)
 }
 
+## Drops full-line YAML comments before matching, so a comment that merely
+## *mentions* a step (e.g. explaining WHY CHROMOTE_CHROME is set) can't be
+## mistaken for the step itself -- this file's own comments do exactly that
+## (see the "chromote::find_chrome() honours CHROMOTE_CHROME first" comment
+## directly above the real Point-chromote step).
+drop_comment_lines <- function(lines) {
+  lines[!grepl("^\\s*#", lines)]
+}
+
 first_match <- function(lines, pattern) {
   hit <- grep(pattern, lines)
   if (length(hit) == 0L) NA_integer_ else hit[1]
@@ -32,7 +41,7 @@ test_that("R-CMD-check.yaml provisions a pinned Chrome via browser-actions/setup
   skip_if_not(file.exists(workflow_path),
               "R-CMD-check.yaml not present in this build")
 
-  lines <- read_workflow_lines(workflow_path)
+  lines <- drop_comment_lines(read_workflow_lines(workflow_path))
 
   expect_true(
     any(grepl("uses:\\s*browser-actions/setup-chrome@v2", lines)),
@@ -52,7 +61,7 @@ test_that("R-CMD-check.yaml points chromote at the installed Chrome via CHROMOTE
   skip_if_not(file.exists(workflow_path),
               "R-CMD-check.yaml not present in this build")
 
-  lines <- read_workflow_lines(workflow_path)
+  lines <- drop_comment_lines(read_workflow_lines(workflow_path))
 
   expect_true(
     any(grepl("CHROMOTE_CHROME=.*steps\\.setup-chrome\\.outputs\\.chrome-path", lines)),
@@ -68,7 +77,7 @@ test_that("R-CMD-check.yaml asserts Chrome is resolvable by chromote before chec
   skip_if_not(file.exists(workflow_path),
               "R-CMD-check.yaml not present in this build")
 
-  lines <- read_workflow_lines(workflow_path)
+  lines <- drop_comment_lines(read_workflow_lines(workflow_path))
 
   expect_true(
     any(grepl("chromote::find_chrome\\(\\)", lines)),
