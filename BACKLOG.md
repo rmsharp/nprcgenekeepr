@@ -812,6 +812,20 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       surfaced (a clean re-run of the UNFIXED workflow also happened, by chance).
 
 ## Housekeeping
+- [ ] **Evaluate adopting `context_budget.py`, a new methodology tool shipped in canonical v3.7**
+      (found S617, 2026-08-20, incidental to the v3.7 methodology sync, READY, Effort S -- a
+      research/scoping session, not an implementation session) -- true upstream `KJ5HST/methodology`
+      v3.7 ships a new tracked file, `context_budget.py` (+ `.context-budget.json` seed), that this
+      project has never adopted (`bin/status` reports both `missing`/`absent`). Per the methodology
+      repo's own `CHANGELOG.md`, it addresses "Failure mode #28 and context_budget.py -- the
+      artifacts Phase 0 mandates reading now have ceilings" -- i.e. a token/context-budget tracker,
+      the tooling counterpart to the FM #28 "unbounded mandatory read" failure mode this session
+      DID adopt into `SESSION_RUNNER.md`. Deliberately not adopted this session (a new capability is
+      a bigger decision than syncing an existing file, out of "sync to v3.7"'s own scope) -- a
+      future session should read `starter-kit/context_budget.py` and its `HOW_TO_USE.md`/
+      `BOOTSTRAP.md` documentation in the sibling `methodology/` checkout, decide whether it's worth
+      adopting given this project already tracks file-size risk via `methodology_dashboard.py` and
+      `methodology_trim.py`, and if so run `bin/sync` (or manual copy) to add it.
 - [ ] **`DESCRIPTION`'s `Suggests:` mixes real test/example/vignette dependencies with
       dev-tooling-only packages that belong in a `Config/Needs/...` field instead** (found
       2026-08-20, incidental to S615's own DESCRIPTION edit, owner-directed via chat, READY,
