@@ -59,8 +59,13 @@ jobs:
 
       # chromote::find_chrome() honours CHROMOTE_CHROME first; point it at the
       # action's installed binary (its name is not guaranteed to be on PATH).
+      # shell: bash is required here -- unlike shinytest2.yaml (ubuntu-only,
+      # where bash is the OS default), this job's matrix includes
+      # windows-latest, whose run: default shell is PowerShell, under which
+      # this bash-syntax redirect silently no-ops (confirmed live, S618).
       - name: Point chromote at the installed Chrome
         run: echo "CHROMOTE_CHROME=${{ steps.setup-chrome.outputs.chrome-path }}" >> "$GITHUB_ENV"
+        shell: bash
 
       - name: Assert Chrome is resolvable by chromote
         run: |

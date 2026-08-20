@@ -57,6 +57,20 @@ test_that("R-CMD-check.yaml provisions a pinned Chrome via browser-actions/setup
   )
 })
 
+## Extracts the lines belonging to the FIRST step whose block (from its own
+## "- name:"/"- uses:" line up to, but not including, the next step at the
+## same nesting) matches `pattern` -- used to check a step's own `shell:`
+## override without accidentally matching a different step's `shell:` line.
+step_block_containing <- function(lines, pattern) {
+  step_starts <- grep("^\\s*-\\s+(name:|uses:)", lines)
+  hit <- grep(pattern, lines)
+  if (length(hit) == 0L || length(step_starts) == 0L) return(character(0))
+  start_idx <- max(step_starts[step_starts <= hit[1]])
+  later_starts <- step_starts[step_starts > start_idx]
+  end_idx <- if (length(later_starts) == 0L) length(lines) else later_starts[1] - 1L
+  lines[start_idx:end_idx]
+}
+
 test_that("R-CMD-check.yaml points chromote at the installed Chrome via CHROMOTE_CHROME", {
   skip_if_not(file.exists(workflow_path),
               "R-CMD-check.yaml not present in this build")
@@ -70,6 +84,19 @@ test_that("R-CMD-check.yaml points chromote at the installed Chrome via CHROMOTE
   expect_true(
     any(grepl("GITHUB_ENV", lines)),
     info = "CHROMOTE_CHROME must be written to $GITHUB_ENV so it is visible to the later check-r-package step"
+  )
+
+  ## The matrix includes windows-latest, whose run: default shell is
+  ## PowerShell, not bash -- unlike shinytest2.yaml (ubuntu-only, where bash
+  ## is the OS default). The `echo ... >> "$GITHUB_ENV"` line is bash syntax
+  ## and silently no-ops under PowerShell (CHROMOTE_CHROME reads back empty,
+  ## chromote falls back to whatever Chrome is ambiently on PATH -- exactly
+  ## the failure this whole fix exists to prevent). Confirmed live on a real
+  ## windows-latest CI run (S618): CHROMOTE_CHROME = "" .
+  block <- step_block_containing(lines, "CHROMOTE_CHROME=.*steps\\.setup-chrome\\.outputs\\.chrome-path")
+  expect_true(
+    length(block) > 0 && any(grepl("shell:\\s*bash", block)),
+    info = "the CHROMOTE_CHROME-exporting step must declare `shell: bash` explicitly -- its bash-syntax `>> \"$GITHUB_ENV\"` silently no-ops under windows-latest's default PowerShell shell"
   )
 })
 
