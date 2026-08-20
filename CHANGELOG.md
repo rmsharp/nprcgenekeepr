@@ -16,6 +16,26 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-20 · [ad hoc] S619: fix R-CMD-check.yaml's macos-latest chromote CDP timeout
+- **Deliverable:** diagnose AND fix the `macos-latest` chromote `Runtime.evaluate` CDP timeout in
+  `R-CMD-check.yaml` (`BACKLOG.md` Housekeeping item, found S618) -- **DONE, all 5 matrix legs
+  green.** Root cause found via a 6-agent research workflow doing direct chromote 0.5.1 source
+  inspection: `ChromoteSession$new()` unconditionally issues an internal `Runtime.evaluate`
+  command during its own bootstrap (`private$get_pixel_ratio()`) governed by a 10s
+  `default_timeout` with no constructor argument to raise it. First fix attempt (raise
+  `default_timeout` to 60s, `helper-live-render-positions.R`, full TDD RED/GREEN) was pushed and
+  verified via real CI to NOT resolve the failure (identical signature, wall time roughly doubled,
+  confirming a genuinely wedged session, not slow -- run `32417985922`) -- reported honestly
+  rather than silently retried, recorded as `PROJECT_LEARNINGS.md` Learning 648. Fallback fix
+  (revert `macos-latest` specifically to ambient/unpinned Chrome via an `if:` guard on the 3
+  Chrome-provisioning steps, matching S616's own proven-green precedent for that leg, full TDD
+  RED/GREEN) verified GREEN on the next real CI push (run `32423688930`, all 5 legs green,
+  `macos-latest` in 10m4s) -- recorded as Learning 649. `BACKLOG.md`'s chromote item removed
+  outright (fully resolved); a new, explicitly optional/low-priority item added for the still-
+  unexplained pinned-binary hang mechanism. Commits: `40c2e96b` (claim), `ff091613` (BACKLOG
+  housekeeping filing, unrelated mid-session user question), `1553099a` (H1 RED), `1780789d` (H1
+  GREEN), `4a134701` (fallback RED), `d2e9f487` (fallback GREEN).
+
 ### 2026-08-20 · [ad hoc] S619: file BACKLOG.md item for stale [x] DONE-item sweep
 - **Deliverable:** owner noticed `BACKLOG.md` still carries 16 `[x]`-checked DONE items despite
   its own "open, actionable work only" header. Investigated: confirmed each already has a dated
