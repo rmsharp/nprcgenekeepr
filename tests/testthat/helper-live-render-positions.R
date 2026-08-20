@@ -72,6 +72,31 @@ getLiveRenderedPositions <- function(nodes, edges, width = 1200L,
   htmlwidgets::saveWidget(widget, tmpHtml, selfcontained = TRUE)
   on.exit(unlink(tmpHtml), add = TRUE)
 
+  ## Raise chromote's default per-command timeout BEFORE creating the first
+  ## session. chromote::ChromoteSession$new() unconditionally issues an
+  ## internal Runtime.evaluate command during its own bootstrap
+  ## (private$get_pixel_ratio(), chromote's own R/chromote_session.R --
+  ## confirmed by direct source inspection, chromote 0.5.1) to read
+  ## window.devicePixelRatio for Emulation$setDeviceMetricsOverride -- not a
+  ## call this helper makes itself. That probe is governed by
+  ## default_timeout (10s default), a mutable field on the parent Chromote
+  ## singleton (chromote::default_chromote_object(), reused by every
+  ## ChromoteSession$new() call in this file, since none pass a `parent`
+  ## arg) with no constructor argument to raise it. Confirmed insufficient
+  ## for the FIRST chromote-driven Chrome launch of a macOS GitHub Actions
+  ## R-CMD-check run: macos-latest is GitHub's most resource-constrained
+  ## hosted-runner class (3 vCPU/7GB vs. 4 vCPU/16GB on Linux), and a
+  ## freshly-provisioned, never-before-executed Chrome-for-Testing binary
+  ## pays a first-launch cost on top of that -- failed 3/3 real CI pushes as
+  ## "Chromote: timed out waiting for response to command Runtime.evaluate"
+  ## inside ChromoteSession$new() itself, always on macos-latest, never on
+  ## ubuntu-latest/windows-latest with the identical pinned binary (found
+  ## S618, diagnosed S619, 2026-08-20 -- see BACKLOG.md's chromote item for
+  ## the full ranked-hypothesis diagnosis).
+  chromeParent <- chromote::default_chromote_object()
+  if (chromeParent$default_timeout < 60) {
+    chromeParent$default_timeout <- 60
+  }
   b <- chromote::ChromoteSession$new()
   on.exit(b$close(), add = TRUE)
   ## chromote's own default timeout_ (10s, ChromoteSession$default_timeout)
