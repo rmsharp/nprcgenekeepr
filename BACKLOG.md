@@ -582,6 +582,35 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       1b's own precedent throughout. Effort L overall unchanged; Phase 2 itself Effort M-L,
       5+ sessions per the parent plan's own estimate.
 
+      **Phase 2a — S614 (2026-08-19): adapter mechanics DONE, split from live-render
+      verification.** Owner-directed scope split (via `AskUserQuestion`, matching Phase 2's own
+      "splittable if too large" allowance): this session built `.positionMatingUnitForestBJL()`
+      (new function, `R/makePedigreeDiagramData.R`, zero changes to `.positionMatingUnitForest()`
+      or any other existing code, no shared call site yet) implementing the design note's 3-tier
+      reconciliation (Tier 1 genuine-tree BJL + reinstated `sweepMinSep()` backstop; Tier 2 union
+      midpoint + exact-tie sweep; Tier 3 B1/B3 derived points using §8.1's fixed formula) — via
+      strict TDD (PRE-RED → `AskUserQuestion` → RED → `AskUserQuestion` → GREEN →
+      `AskUserQuestion` → REFACTOR, each transition gated). New
+      [`tests/testthat/test_positionMatingUnitForestBJL.R`](tests/testthat/test_positionMatingUnitForestBJL.R):
+      17 `test_that()` blocks — the design note's own 15-fixture matrix (§4 Tests 1-14 + §8.4's
+      required Test 15) plus 3 property tests — all synthetic/hand-built; explicitly **deferred to
+      a Phase 2b session**: the reusable chromote-based live-render helper and the real
+      375-individual fixture's own zero-coincidence/single-child-union-prevalence measurements
+      (both still owed per the parent plan's own Verification Plan). Oracle values for the
+      numerically-exact fixtures derived by actually running Tier 1's own mechanics against the
+      existing Phase 1a engine, never hand-derived. 2 real implementation defects found and fixed
+      during GREEN (both via execution, not foreseen at RED): (1) B1 eligibility needs an explicit
+      `!hasParentEdge(M)` conjunct the OLD, shipped `freePassIds` computation doesn't carry — a B2
+      individual (own parent edge) was wrongly getting a second, Tier-3 derived-point row; (2) a
+      dangling non-anchor party (no own row in `ped`) crashed on `sireOf[[id]]`/`damOf[[id]]` —
+      fixed by excluding dangling ids from B1 eligibility up front, matching the OLD function's
+      own confirmed behavior of dropping such an id from its output entirely. 3 RED-phase test
+      bugs (not implementation bugs) also found and fixed. Verified: `test_file()` 17/17 GREEN (53
+      expectations); full clean regression 0 failed/0 error project-wide (OLD function and every
+      other existing test bit-for-bit unaffected); `lintr::lint()` 0 findings after REFACTOR (2
+      style-only fixes). See `PROJECT_LEARNINGS.md` Learnings 639/640. **Next: Phase 2b** (the
+      live-render helper + real-fixture A/B verification) — its own separate session.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8

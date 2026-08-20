@@ -138,19 +138,70 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S614
 date: 2026-08-19
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Walker/BJL Phase 2 (issue #141) -- the pedigree adapter parallel to production, per
-  docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md's Phase 2 spec as amended
-  by docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md S8's seam
-  resolution. Session claimed; PRE-RED scoping beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 10
+active_task: DONE (2a of 2). Walker/BJL Phase 2a (issue #141) -- the adapter-mechanics half of the
+  pedigree adapter parallel to production. New .positionMatingUnitForestBJL() implementing the
+  full 3-tier reconciliation (docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-
+  reconciliation.md S3/S8), GREEN and REFACTORed, 17/17 new tests passing, zero collateral damage.
+  Owner-directed scope split (this session's own pre-RED AskUserQuestion): Phase 2b (the
+  live-render helper + real-375-fixture A/B verification) is explicitly NOT done -- a required,
+  separate follow-up session, not a formality.
+what_was_done: Strict TDD, every phase transition gated via AskUserQuestion: PRE-RED (grounded in
+  both planning docs) -> scope-split AskUserQuestion (2a adapter-only vs. full Phase 2 vs.
+  RED-only -- user picked 2a) -> RED (17 test_that blocks, tests/testthat/
+  test_positionMatingUnitForestBJL.R, oracle values for the hard fixtures derived by actually
+  running Tier 1's mechanics against the real existing engine, never hand-derived; confirmed
+  genuine RED, 0 fixture bugs in the pre-function assertions) -> GREEN (new
+  .positionMatingUnitForestBJL() in R/makePedigreeDiagramData.R, zero changes to
+  .positionMatingUnitForest() or any other file; found and fixed 2 real implementation defects by
+  running failing fixtures in isolation -- B1 eligibility needed an explicit !hasParentEdge(M)
+  conjunct the OLD shipped freePassIds helper doesn't carry; a dangling non-anchor id crashed on
+  sireOf[[id]], fixed by excluding dangling ids up front, matching the OLD function's own confirmed
+  drop-from-output behavior; also fixed 3 of my own RED-phase test bugs, not implementation bugs)
+  -> REFACTOR (lintr: 2 style-only findings fixed, 0 remaining). Verified 3 times: post-RED (17
+  genuine errors, 0 collateral), post-GREEN (17/17 pass, 0 collateral), post-REFACTOR (same, +0
+  lints). Extra: devtools::check() -- 1 WARNING + 2 NOTEs, all 3 pre-existing/unrelated (traced to
+  this session's own Phase 0 ghost-session-check findings and a long-documented vignettes/figure/
+  leftover), 0 errors, nothing new. PROJECT_LEARNINGS.md Learnings 639 (reused-helper narrower-
+  scope gap) and 640 (B1 id-collision test pitfall) recorded. BACKLOG.md's Walker/BJL item updated
+  with the S614 progress paragraph. Commits: 577ad298 (claim), 0a43ec30 (RED), e7f1f593 (GREEN),
+  afa7c5f5 (REFACTOR), plus this close-out commit.
+next_steps: Phase 2b (its own session, required, not optional): build tests/testthat/
+  helper-live-render-positions.R (chromote getPositions() ground-truth harness, the parent plan's
+  own required Phase 2 deliverable -- genuinely new infrastructure, no prior committed version
+  exists despite 2 prior bespoke uncommitted uses per the plan's own C2-4 finding), then run the
+  real-375-individual-fixture zero-exact-coincidence gate (the parent plan's own "single most
+  important test in the whole migration") plus F1/Track-C/real-375 live-render checks against
+  .positionMatingUnitForestBJL(). This is NOT a formality -- Phase 2a's 17 green synthetic tests
+  are necessary but explicitly not sufficient evidence the adapter is correct on the actual
+  irregular pedigree shape this whole redesign exists to fix; expect a real possibility of finding
+  a counter-example the synthetic matrix didn't anticipate, matching this investigation's own
+  6-prior-attempts history -- if so, per the parent plan's own gate, return to Phase 1b, don't
+  patch around it in Phase 2b. Also fold in, not forgotten: S613's own Obligation 3 (widen the
+  union-dot/M_repr cosmetic-distance disclosure to cover sweepMinSep() pushing P itself) into
+  whatever real-fixture measurement Phase 2b runs.
+key_files: R/makePedigreeDiagramData.R:1278-1457 (.positionMatingUnitForestBJL(), the new
+  function); tests/testthat/test_positionMatingUnitForestBJL.R (all 17 tests, own header documents
+  the Phase 2b deferral explicitly); R/positionTreeApportion.R (unchanged, Phase 1a engine this
+  adapter's Tier 1 calls into); docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-
+  reconciliation.md S3 (mechanism)/S8 (formula); PROJECT_LEARNINGS.md Learnings 639/640.
+gotchas: (1) The live-render helper is genuinely new work, not a mechanical port -- budget real
+  design time. (2) .positionMatingUnitForestBJL() is untested against any real-world irregularity
+  (polygamous anchors beyond 5 mates, deep asymmetric branches, actual dangling-parent data) --
+  don't be surprised if Phase 2b needs its own repair-and-critique round. (3) qualifies()'s
+  mateCountP/mateCountM count ANCHORED unions only (sum(anchoredUnits$sire==id|
+  anchoredUnits$dam==id)), matching design intent -- preserve this if touched. (4) derivedX()'s
+  isB1 parameter is passed explicitly by each call site (never inferred from
+  memberId %in% b1Ids) specifically to avoid Learning 639's own bug recurring -- do not
+  "simplify" this back to an inferred check. (5) This session's own Phase 1B claim was not made at
+  the literal next tool call (2 planning-doc reads happened first, disclosed in SESSION_NOTES.md)
+  -- no harm resulted this time, but re-apply Learning 628's rule more strictly next claim.
+runtime_smoke: n/a -- .positionMatingUnitForestBJL() is @noRd with zero call sites anywhere in the
+  package (grep-confirmed), never reached by the Shiny app or any exported function. Matches Phase
+  1a's own precedent exactly. No runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-08-19/2026-08-20, S614 entries.
 commit: pending
 ```
 

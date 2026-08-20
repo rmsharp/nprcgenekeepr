@@ -16,6 +16,32 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-19 · [issue #141] S614: Phase 2a GREEN -- Walker/BJL pedigree adapter (`.positionMatingUnitForestBJL()`)
+- **Deliverable:** New `.positionMatingUnitForestBJL()` in `R/makePedigreeDiagramData.R`, alongside
+  `.positionMatingUnitForest()` -- zero changes to that function or any other existing code, no
+  shared call site yet. Implements the 3-tier reconciliation
+  [`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)
+  settles on: Tier 1 genuine-tree BJL (`.positionTreeApportion()`, Phase 1a, unchanged) via a
+  `CHILDREN(individual)` accessor, terminated by a reinstated `sweepMinSep()` backstop; Tier 2
+  union-midpoint derivation + exact-tie sweep; Tier 3 B1/B3 derived points using §8.1's fixed
+  formula (anchored on the anchor's own final Tier-1 `x`, never the union's). Owner-directed scope
+  split (Phase 2's own "splittable if too large" allowance, via `AskUserQuestion` before RED): this
+  session covers adapter mechanics only ("Phase 2a") -- the live-render helper and real-375-fixture
+  A/B verification are explicitly deferred to a required Phase 2b session, not done here.
+- New [`tests/testthat/test_positionMatingUnitForestBJL.R`](tests/testthat/test_positionMatingUnitForestBJL.R):
+  17 `test_that()` blocks (the design note's own 15-fixture matrix, §4 Tests 1-14 + §8.4's required
+  Test 15, plus 3 property tests), all synthetic/hand-built. Full strict-TDD cycle, every transition
+  gated via `AskUserQuestion`: PRE-RED (grounded in both planning docs) → RED (confirmed genuine, 0
+  fixture bugs in pre-function assertions) → GREEN (found and fixed 2 real implementation defects --
+  B1 eligibility needed an explicit `!hasParentEdge(M)` conjunct the OLD shipped `freePassIds`
+  helper doesn't carry; a dangling non-anchor id crashed on `sireOf[[id]]`, fixed by excluding
+  dangling ids up front) → REFACTOR (2 style-only lint fixes). Verified 3 times: 17/17 GREEN (53
+  expectations), full clean regression 0 failed/0 error project-wide each time, `lintr::lint()` 0
+  findings, and a full `devtools::check()` (1 WARNING + 2 NOTEs, all 3 confirmed pre-existing and
+  unrelated to this diff). `PROJECT_LEARNINGS.md` Learnings 639/640 recorded. `BACKLOG.md`'s
+  Walker/BJL item updated with the S614 progress paragraph.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-19 · [ad hoc] S613: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S612 precedent)
 - **Deliverable:** `HANDOFFS.md`'s S613 receipt `commit:` field updated from `pending` to the
   actual close-out commit sha (`3d5019b0`).

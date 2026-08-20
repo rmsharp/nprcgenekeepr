@@ -103,11 +103,22 @@ test_that(".positionMatingUnitForestBJL positions a >=3-child union's x as the e
   unitId <- forest$matingUnits$id[1L]
   unitX <- pos$x[pos$id == unitId]
   kidsX <- pos$x[pos$id %in% c("C1", "C2", "C3")]
-  expect_equal(unitX, mean(kidsX), tolerance = 1e-9)
+  ## Tolerance, not exact equality: ANCH's own CHILDREN() set here is
+  ## EXACTLY this union's real children, so her Tier-1 x and the union's
+  ## Tier-2 raw midpoint coincide exactly at the same gen -- Tier 2's own
+  ## exact-tie sweep (S3.4) legitimately nudges the union by +1e-3.
+  expect_equal(unitX, mean(kidsX), tolerance = 2e-3)
 
   expect_equal(nrow(forest$duplicates), 0L)  # MATE is B1, not B3 -- no __dup_ row
+  ## This union QUALIFIES (S8.1): ANCH male, mateCount 1 each, no direct
+  ## child, unambiguous sex -- so MATE's derived point is anchored on
+  ## ANCH's own Tier-1 x directly (S8's own fix), NOT on the union's own
+  ## (nudged) x -- the two differ by exactly the 1e-3 nudge above, which
+  ## is precisely the point: qualifying B1 derivation is immune to a
+  ## union-level nudge because it never reads the union's x at all.
+  anchX <- pos$x[pos$id == "ANCH"]
   mateX <- pos$x[pos$id == "MATE"]
-  expect_equal(mateX, unitX + 0.4, tolerance = 1e-9)
+  expect_equal(mateX, anchX + 0.4, tolerance = 1e-9)
 })
 
 ## ---- 3. A B3 duplicate occurrence anchoring elsewhere in a different branch -----
@@ -450,22 +461,39 @@ test_that(".positionMatingUnitForestBJL reads the anchor's own x from its
 ## ---- Property tests (parent plan's own Phase 2 "What DONE looks like") ---------
 
 test_that(".positionMatingUnitForestBJL guarantees at least minSep between every
-           pair of same-generation REAL individual nodes on a moderately complex
-           synthetic multi-anchor fixture -- the property-level successor to the
-           OLD function's own sweepMinSep regression test, real-fixture
-           measurement explicitly deferred to Phase 2b", {
-  nMates <- 4L
+           pair of same-generation REAL individual nodes on the real
+           GA204Z/8LKBV9 loop fixture (the same multi-anchor fixture the OLD
+           function's own sweepMinSep regression test uses) -- the
+           property-level successor to that test, real-375-fixture
+           measurement explicitly deferred to Phase 2b. A B1 derived point
+           can share its underlying individual's own real id with a genuine
+           node (S3.3.1), so this fixture is deliberately one where no B1
+           occurrence exists at all (8LKBV9's only non-anchor occurrence is
+           a B3 __dup_ marker, unambiguously excluded by id prefix) --
+           keeping .nodeKind()'s id-pattern classification reliable here", {
   ped <- data.frame(
-    id = c("HUB2", paste0("W", seq_len(nMates)), paste0("KW", seq_len(nMates))),
-    sire = c(NA, rep(NA, nMates), rep("HUB2", nMates)),
-    dam = c(NA, rep(NA, nMates), paste0("W", seq_len(nMates))),
-    sex = c("M", rep("F", nMates), rep("M", nMates)),
-    gen = c(3L, rep(0L, nMates), rep(1L, nMates)),  # HUB2 forced deep -> he anchors
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
     stringsAsFactors = FALSE
   )
   forest <- .buildMatingUnitForest(ped)
+  expect_equal(nrow(forest$duplicates), 1L)  # 8LKBV9's own B3 marker, confirmed
+  expect_equal(forest$duplicates$realId, "8LKBV9")
   pos <- .positionMatingUnitForestBJL(ped, forest)
-  indiv <- pos[.nodeKind(pos$id) == "individual", ]
+  ## A B1/B2 non-anchor party's derived/genuine point can share its own
+  ## real id with what .nodeKind() classifies as a plain "individual" node
+  ## (S3.3.1) -- e.g. 8DKELJ/G8EBU9/8P17E3 here are each B1, not part of
+  ## this fixture's own duplicate count. sweepMinSep()'s backstop only
+  ## guarantees separation among genuine Tier-1 nodes (real individuals
+  ## who are never a "nonAnchor" of any unit), so exclude every id that
+  ## IS a nonAnchor anywhere, rather than trust id-pattern alone.
+  nonAnchorIds <- unique(forest$matingUnits$nonAnchor[
+    !is.na(forest$matingUnits$nonAnchor)])
+  indiv <- pos[.nodeKind(pos$id) == "individual" & !(pos$id %in% nonAnchorIds), ]
   for (g in sort(unique(indiv$gen))) {
     xs <- sort(indiv$x[indiv$gen == g])
     if (length(xs) < 2L) next
@@ -493,8 +521,13 @@ test_that(".positionMatingUnitForestBJL: every ANCHORED mating unit's x equals t
   for (i in seq_len(nrow(anchored))) {
     unitId <- anchored$id[i]
     kids <- forest$childEdges$to[forest$childEdges$from == unitId]
+    ## Tolerance, not exact equality: each anchor here has no OTHER
+    ## CHILDREN() besides this one union's real children, so the anchor's
+    ## own Tier-1 x and the union's raw midpoint coincide exactly at the
+    ## same gen -- Tier 2's own exact-tie sweep (S3.4) legitimately nudges
+    ## the union by +1e-3 in that case (see Test 2's own fixture/comment).
     expect_equal(pos$x[pos$id == unitId], mean(pos$x[pos$id %in% kids]),
-                 tolerance = 1e-9, info = unitId)
+                 tolerance = 2e-3, info = unitId)
   }
 })
 
