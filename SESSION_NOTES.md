@@ -913,15 +913,178 @@ version-resolution failure is unrelated CI infra noise, already confirmed transi
 rerun — do not fold it into the chromote-flake investigation if it recurs; it is a different
 category entirely (R-version resolution, not Chrome).
 
+### Session 618 Handoff Evaluation (by Session 619)
+**Score: 9/10.** **What helped:** `next_steps` named 3 exact, actionable directives — "research
+the signature against chromote's own issue tracker," "check whether the pinned 152.0.7977.54
+Chrome-for-Testing build has known headless-CDP problems on macOS ARM64," and "decide whether
+pinning is even the right fix for that leg (vs. leaving macOS on ambient Chrome, which was green
+before this session's diff) before attempting another fix" — all 3 were followed almost verbatim:
+a 6-agent research workflow did exactly that research, and the eventual fix WAS "leave macOS on
+ambient Chrome," precisely the alternative S618 had already named as a live option rather than
+something this session had to discover from scratch. `key_files`
+(`.github/workflows/R-CMD-check.yaml:48-75`, `test_r_cmd_check_workflow_chrome_setup.R`) pointed
+exactly at the files this session edited. `gotchas` #2 ("`CHROMOTE_CHROME` CONFIRMED correctly set
+both times — do not re-diagnose it as 'the pin isn't working'") held up exactly: this session's own
+H1 fix attempt independently re-confirmed the env var was correctly set even while genuinely
+failing, matching the gotcha precisely rather than re-litigating it. **What was missing:** nothing
+critical — S618 could not have known the eventual root-cause mechanism (chromote's internal
+`get_pixel_ratio()` bootstrap probe) without the same source-level research this session did; that
+gap is appropriately S618's own deferral, not an omission. **What was wrong:** nothing found
+inaccurate — every claim (distinct from the Windows shell bug, recurring 2/2, `CHROMOTE_CHROME`
+correctly set) was independently re-verified and held. **ROI:** very high — the `next_steps` text
+functioned almost as a mini research brief, directly shaping this session's own investigation
+structure.
+
 ### What Session 619 Did
-**Deliverable:** Diagnose the `macos-latest` CDP-timeout CI failure in `R-CMD-check.yaml`
-(`BACKLOG.md` Housekeeping item, found S618) — research `Chromote: timed out waiting for response
-to command Runtime.evaluate` / `attempt to apply non-function` against chromote's own issue
-tracker, determine whether the pinned Chrome-for-Testing build has known headless-CDP problems on
-macOS ARM64, and decide whether pinning is even the right fix for that leg before attempting
-another fix. (IN PROGRESS)
-**Started:** 2026-08-20
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Diagnose AND fix the `macos-latest` CDP-timeout CI failure in `R-CMD-check.yaml`
+(`BACKLOG.md` Housekeeping item, found S618). **DONE** — root cause identified via direct chromote
+source inspection; a first fix attempt (raise `default_timeout`) was tried, verified via real CI,
+and found NOT to work (a genuine falsification, not a formality); a fallback fix (revert
+`macos-latest` to ambient Chrome) was then implemented and verified GREEN on real CI, resolving the
+CI-config half of this item completely — all 5 `R-CMD-check.yaml` matrix legs are now green.
+**Started/Completed:** 2026-08-20 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** — read `SAFEGUARDS.md` in full; `SESSION_NOTES.md` (S613–618's full
+   thread); `gh issue list` (13 open); `git status`/`log`/`diff --stat` (clean, S618 fully closed
+   out, both ledger frontiers `== HEAD`). `gh run list --branch master` (S545-ratified CI-status
+   check) found the MOST RECENT push (S618's own docs-only close-out commit) still showed
+   `R-CMD-check.yaml` red on `macos-latest`, with the identical `Runtime.evaluate` signature — a
+   3rd data point, on a docs-only commit, ruling out any code-diff cause. `methodology_dashboard.py`
+   (96/100, 1 HIGH risk, unchanged — the same 3 files past the 2,000-line cap, report-don't-fix).
+   Ledger reconcile: no gap (both frontiers `== HEAD`). Ghost-session check on the same 6 untracked
+   files prior sessions already traced — unchanged. Rendered the priorities list + `AskUserQuestion`
+   — **user picked the macOS CDP-timeout investigation.**
+2. **Phase 1B claimed at the literal next step** — `SESSION_NOTES.md` stub + `HANDOFFS.md`
+   `status: pending` receipt, committed (`40c2e96b`), before any technical investigation — avoided
+   a 5th recurrence of the Learning 624/625/628/644 pattern.
+3. **Mid-session, unrelated user question:** owner noticed 16 `[x]`-checked DONE items still in
+   `BACKLOG.md`. Investigated (not assumed): confirmed each already has a dated `CHANGELOG.md`
+   entry (nothing at risk of loss) and that this matches an established periodic-batch-sweep
+   precedent (S548, 2026-08-13), not a new process break. Filed a new Housekeeping item per owner
+   direction to keep the current task uninterrupted rather than switching scope mid-session
+   (`ff091613`).
+4. **Diagnosis via a 6-agent research workflow** (`diagnose` skill's Phase 1–3): 5 parallel research
+   angles (chromote's own source, chromote's issue tracker, GitHub Actions macOS-runner
+   resource-constraint evidence, Gatekeeper/quarantine mechanics, a fresh trace of this project's
+   own CI logs) + 1 synthesis pass. Found the exact mechanism via direct source inspection (not
+   assumed): `ChromoteSession$new()` unconditionally issues an internal `Runtime.evaluate` command
+   during its own bootstrap (`private$get_pixel_ratio()`, chromote 0.5.1) to read
+   `window.devicePixelRatio`, governed by a 10s `default_timeout` field with no constructor
+   argument to raise it. Ranked 5 falsifiable hypotheses; H1 (cold-launch timing exhaustion) was
+   top-ranked and best-evidenced.
+5. **H1 fix, full TDD cycle** (PRE-RED→RED→GREEN→REFACTOR, `AskUserQuestion`-gated at every
+   transition): raised `chromote::default_chromote_object()$default_timeout` to 60s in
+   `helper-live-render-positions.R`, guarded by a new structural RED test
+   (`test_helper_live_render_positions_timeout.R`, 3 `test_that` blocks / 6 expectations).
+   Confirmed genuine RED (6/6 fail), GREEN (6/6 pass, full clean regression 0 failed/0 error, 0
+   lints), `devtools::check()` (0 errors, 1 pre-existing WARNING, 2 pre-existing NOTEs, all
+   confirmed unrelated to this diff). Committed (`1553099a` RED, `1780789d` GREEN), pushed.
+6. **Real CI verification found H1 FALSIFIED, not confirmed:** run `32417985922`'s `macos-latest`
+   leg failed again after 13m34s — identical signature, identical 3 tests, wall time roughly
+   doubled (454s→865s, consistent with the full 60s actually being exhausted 3 times). Reported
+   this negative result to the user immediately via `AskUserQuestion` rather than silently trying
+   another guess (matching S616/S618's own "stop and ask" precedent) — recorded as
+   `PROJECT_LEARNINGS.md` Learning 648.
+7. **Fallback fix, full TDD cycle** (PRE-RED→RED→GREEN→REFACTOR, gated): added
+   `if: ${{ matrix.config.os != 'macos-latest' }}` to the 3 Chrome-provisioning steps in
+   `R-CMD-check.yaml`, reverting that one leg to ambient Chrome (S616's own proven-green
+   precedent), guarded by 3 new assertions extending
+   `test_r_cmd_check_workflow_chrome_setup.R`. Confirmed genuine RED (3/3 fail), GREEN (12/12
+   pass — 9 pre-existing + 3 new — full clean regression 0 failed/0 error, 0 lints). Committed
+   (`4a134701` RED, `d2e9f487` GREEN), pushed.
+8. **Real CI verification: ALL 5 matrix legs GREEN**, run `32423688930` — `macos-latest` completed
+   in 10m4s (faster than any prior run on this leg since chromote tests joined `R CMD check`'s
+   surface), with the 3 Chrome-provisioning steps cleanly skipped (`-`) and `check-r-package@v2`
+   passing. `ubuntu-latest`/`windows-latest` unaffected, pin intact. Recorded as
+   `PROJECT_LEARNINGS.md` Learning 649.
+9. **Close-out:** `BACKLOG.md`'s chromote item removed outright (Phase 3F's literal instruction —
+   fully resolved, full history already in `CHANGELOG.md` across S616/S618/S619 entries; a
+   deliberate choice not to perpetuate the exact `[x]`-left-in-place pattern flagged mid-session
+   in step 3) plus a new, explicitly optional/low-priority Housekeeping item for the still-
+   unexplained *why* (the pinned binary's hang mechanism itself, distinct from the now-fully-
+   resolved practical CI failure). `PROJECT_LEARNINGS.md` Learnings 648/649 recorded; `CLAUDE.md`'s
+   learning-count cross-reference refreshed (647→649). This handoff written.
+
+**Runtime smoke test (Phase 3E):** the deliverable changes CI runtime behavior directly — verified
+via 2 real, pushed `R-CMD-check.yaml` runs (not local-only): the H1 attempt confirmed FAILING on
+live infrastructure (disclosed, not hidden), the fallback confirmed GREEN on all 5 matrix legs on
+live infrastructure. This is the faithful verification this kind of change needs, matching
+S616/S618's own "push-and-observe" precedent.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation / tutorial-article / `NEWS.Rmd` /
+`a2interactive.Rmd` / `_pkgdown.yml` checklists all **N/A** — no new exported R function, no new
+user-facing Shiny feature, CI-workflow/test-helper-config-only. GitHub issue close-out **N/A** —
+this work isn't tied to a specific open issue (matching S618's own precedent). Lint checklist
+**DONE** (0 lints on all 3 touched files, confirmed at each GREEN phase).
+
+**Self-assessment (Session 619): 9/10.** **Strengths:** (1) Used a 6-agent research workflow for
+the diagnosis phase rather than guessing — direct source inspection of chromote's actual GitHub
+code (not just its documented API) found the exact internal mechanism, which no amount of log-
+reading alone would have surfaced. (2) Followed the full TDD PRE-RED→RED→GREEN→REFACTOR cycle,
+`AskUserQuestion`-gated at every transition, for BOTH the H1 attempt and the fallback — two
+complete, independently-verified cycles within one deliverable, not one cycle skipped for
+expediency. (3) When H1 failed on real CI, reported the negative result honestly and immediately,
+treating the falsification itself as diagnostic evidence (distinguishing "genuinely wedged" from
+"needs more time") rather than silently trying a second guess — matching this project's own
+"stop and ask" precedent and turning a failed attempt into a documented, transferable learning
+(648) rather than a discarded dead end. (4) Verified via REAL CI pushes both times, not local
+tests alone — the only faithful verification for a CI-runner-specific timing/environment bug. (5)
+Handled the mid-session unrelated user question (stale BACKLOG.md `[x]` items) by investigating
+before answering (confirmed nothing was at risk, confirmed it matched existing precedent) rather
+than assuming either "this is broken" or "this is fine," and avoided scope creep by filing rather
+than fixing mid-task, per the user's own explicit choice. (6) At close-out, removed the now-fully-
+resolved chromote BACKLOG item outright (Phase 3F's literal text) rather than leaving it
+`[x]`-checked — a small but deliberate act of not perpetuating the exact debt pattern surfaced
+mid-session. **Weaknesses:** (1) Two early process missteps, both self-corrected but real
+overhead: attempted `ScheduleWakeup` (a `/loop`-specific tool) to wait on a background task
+outside a loop context, and spawned a redundant monitoring `Agent` for a background Bash task
+that already had its own completion notification — neither caused harm, both wasted a small
+amount of turns/tokens. (2) The H1 fix attempt, while the top-ranked hypothesis from a genuinely
+thorough research pass, still cost a full ~14-minute real-CI round-trip that did not resolve the
+issue — the fallback's own supporting evidence (S616's directly-proven-green run on ambient
+Chrome, same leg) was arguably at least as strong as H1's evidence going in, and a more skeptical
+prioritization might have tried the lower-risk fallback first or in parallel rather than
+sequentially. (3) The research workflow itself was a substantial token investment (~500k
+subagent tokens, 6 agents, ~12 minutes) for a diagnosis whose actionable outcome (the fallback)
+did not strictly require ALL 5 research angles — though the mechanism-level finding (the exact
+internal `Runtime.evaluate` call site) is now durably documented and may save a future session
+real time if pinned-Chrome parity on macOS is ever revisited. **ROI:** very high — a CI failure
+that had recurred on every real push since S618 (4 consecutive red `macos-latest` runs across 2
+sessions) is now fully green, with a well-evidenced, documented root-cause explanation on record
+rather than a blind patch, and the exact falsification data point (raising the timeout does NOT
+help) is preserved so no future session re-attempts the same speculative fix.
+
+**Next steps:** No forced next step — the practical problem (macOS CI failing) is FULLY resolved.
+Optional, explicitly low-priority: a future session could investigate WHY the pinned
+Chrome-for-Testing binary hangs on `macos-latest`'s `ChromoteSession$new()` bootstrap specifically
+(`BACKLOG.md` Housekeeping's new optional item) — only worth doing if pinned-Chrome reproducibility
+on macOS becomes valuable later; the research workflow's own findings (an unconfirmed-for-Chromium
+Firefox/Mozilla sandbox-stall analog; Gatekeeper/quarantine evidenced as NOT applicable to
+`browser-actions/setup-chrome`'s actual pipeline) are a starting point, not a solved problem.
+Otherwise, pick up any other `BACKLOG.md` item per the normal Phase 0 priorities-list process
+(Walker/BJL Phase 2b, NEWS.Rmd simplification, and the pedigree-package-split scoping session were
+the other 3 items on this session's own priorities list, still open).
+
+**Key files:** `.github/workflows/R-CMD-check.yaml:48-89` (the 3-step Chrome-provisioning block +
+the new `if:` guards); `tests/testthat/helper-live-render-positions.R:75-96` (the `default_timeout`
+raise, H1's own code — kept even though H1 alone didn't resolve macOS, since it's harmless, correct
+hygiene, and still matters for the legs that keep the pin); `tests/testthat/test_r_cmd_check_
+workflow_chrome_setup.R` (12 expectations, 4 `test_that` blocks, the new one guarding the `if:`
+guards); `tests/testthat/test_helper_live_render_positions_timeout.R` (new file, 3 `test_that`
+blocks / 6 expectations, structural/source-inspection style); `PROJECT_LEARNINGS.md` Learnings
+648/649 (the falsification finding and the per-platform-fallback pattern); `BACKLOG.md`
+Housekeeping (the chromote item removed outright; the new optional root-cause item added).
+
+**Gotchas for a future session:** (1) `macos-latest` in `R-CMD-check.yaml` now runs WITHOUT a
+pinned Chrome — it uses whatever Chrome the runner image ships ambiently, same as before S618's
+pin was introduced. If `macos-latest` ever starts failing chromote tests again, do NOT assume it's
+this exact bug recurring — re-diagnose from scratch, since ambient Chrome can itself drift over
+time in a way the pinned binary wouldn't. (2) Raising `default_timeout` (`helper-live-render-
+positions.R`) is proven NOT sufficient to fix a genuinely wedged chromote session on the pinned
+macOS binary — do not re-attempt "just raise it further" as a fix for any future recurrence of
+this specific symptom without new evidence; treat a still-failing raised-timeout as confirming
+"wedged," not "needs more time." (3) The 16-item `BACKLOG.md` `[x]`-sweep and the optional
+macOS root-cause item are both genuinely optional/low-priority — neither blocks anything, both are
+explicitly deferred, not accidentally dropped.
