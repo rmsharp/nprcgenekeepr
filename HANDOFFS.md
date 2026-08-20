@@ -136,6 +136,27 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S617
+date: 2026-08-20
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Sync this project's canonical-overlay methodology files to v3.7 of
+  https://github.com/KJ5HST/methodology.git, per BOOTSTRAP.md's "Updating an existing project"
+  procedure, then re-apply this project's own documented local customization to
+  methodology_trim.py (CLAUDE.md's "methodology_trim.py local-customization checklist") and
+  verify.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(stub written at Phase 1B claim; filled at Phase 3D close-out)
+
+```handoff
 session: S616
 date: 2026-08-20
 status: complete

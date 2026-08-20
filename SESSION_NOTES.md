@@ -557,3 +557,18 @@ correction" convention. Both corrections are additive — nothing in the origina
 above was inaccurate or retracted, unlike S603's precedent (a retracted fix) or S607's (a
 verification gap); this is closer to S575's shape (real findings surfaced after the close-out
 commit had already landed).
+
+
+---
+
+### What Session 617 Did
+**Deliverable:** Sync this project's canonical-overlay methodology files to `v3.7` of
+`https://github.com/KJ5HST/methodology.git`, per `BOOTSTRAP.md`'s "Updating an existing project"
+procedure, then re-apply this project's own documented local customization to
+`methodology_trim.py` (`CLAUDE.md`'s "methodology_trim.py local-customization checklist") and verify.
+(IN PROGRESS)
+**Started:** 2026-08-20
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
