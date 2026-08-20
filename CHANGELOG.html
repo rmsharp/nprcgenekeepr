@@ -57,6 +57,47 @@
 <div class="section level2">
 <h2 id="id_2026-08">2026-08<a class="anchor" aria-label="anchor" href="#id_2026-08"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-08-20--ad-hoc-s616-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s615-precedent">2026-08-20 · [ad hoc] S616: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S615 precedent)<a class="anchor" aria-label="anchor" href="#id_2026-08-20--ad-hoc-s616-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s615-precedent"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>HANDOFFS.md</code>’s S616 receipt <code>commit:</code> field updated from <code>pending</code> to the actual close-out commit sha (<code>25fd57cd</code>).</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-20--ad-hoc-s616-close-out-fix-confirmed-green-2-backlogmd-items-filed-learnings-643644">2026-08-20 · [ad hoc] S616: close out (fix confirmed GREEN, 2 BACKLOG.md items filed, Learnings 643/644)<a class="anchor" aria-label="anchor" href="#id_2026-08-20--ad-hoc-s616-close-out-fix-confirmed-green-2-backlogmd-items-filed-learnings-643644"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>SESSION_NOTES.md</code> Session 615 handoff evaluation (7/10, a structural ceiling — the failure this session fixed was triggered by S615’s own closing push, so S615’s handoff could not have anticipated it) + full Session 616 handoff (self-score 8/10); <code>HANDOFFS.md</code> S616 receipt completed (<code>status: complete</code>).</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-20--ad-hoc-s616-file-2-backlogmd-items-found-this-session">2026-08-20 · [ad hoc] S616: file 2 BACKLOG.md items found this session<a class="anchor" aria-label="anchor" href="#id_2026-08-20--ad-hoc-s616-file-2-backlogmd-items-found-this-session"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> (1) Simplify <code>NEWS.Rmd</code> entries for a non-technical audience, reorganized by feature not chronologically, with a designed-and-landed guardrail against recurrence (owner-directed, READY, Effort L) — S538 (2026-08-12) trimmed the dev-section once with no guardrail; it regrew from 134 to 315 lines / 26 to 57 entries in 8 days in the same verbose/technical style. (2) <code>R-CMD-check.yaml</code>’s chromote tests can hit an intermittent <code>chromote:::launch_chrome()</code> process-launch failure, distinct from the <code>Page.loadEventFired</code> race fixed this session and unmitigated unlike <code>shinytest2.yaml</code>’s own already-solved version of the same problem (<code>browser-actions/setup-chrome@v2</code> + <code>CHROMOTE_CHROME</code> + assert-resolvable, per <code>docs/planning/phase8-e2e-harness-subplan.md</code> Risk R5) — owner-directed to file separately rather than fold into this session, matching “1 and done.”</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-20--ad-hoc-s616-fix-r-cmd-checkyaml-windows-latest-chromote-timeout-pageloadeventfired-race">2026-08-20 · [ad hoc] S616: fix R-CMD-check.yaml windows-latest chromote timeout (Page.loadEventFired race)<a class="anchor" aria-label="anchor" href="#id_2026-08-20--ad-hoc-s616-fix-r-cmd-checkyaml-windows-latest-chromote-timeout-pageloadeventfired-race"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>tests/testthat/helper-live-render-positions.R</code>’s <code>getLiveRenderedPositions()</code> (shipped S615) used the manual <code>Page$navigate()</code> + <code>Page$loadEventFired(timeout_ = loadTimeout)</code> sequence, a documented chromote race (rstudio/chromote#102, the package’s own “Loading a page reliably” vignette): the load event can fire in the gap between the 2 calls, before R registers a listener, so the 2nd call then waits the FULL timeout for an event that will never fire again. Surfaced as <code>R-CMD-check.yaml</code> red on <code>windows-latest</code> only (run <code>32335116264</code>, triggered by S615’s own final push) — the other 4 matrix platforms (macOS, 3× Linux) were unaffected, a slower/ busier CI runner being exactly what tips a race from “usually wins” to “loses.” Fixed by replacing the 2-call sequence + a trailing <code>Sys.sleep(waitSeconds)</code> with chromote’s own documented reliable alternative, a single <code>$go_to(url, timeout_ = loadTimeout, delay = waitSeconds)</code> call, which registers the listener before navigating. <code>PROJECT_LEARNINGS.md</code> Learning 643.</li>
+<li>
+<strong>Diagnosis method:</strong> downloaded the failed run’s actual <code>nprcgenekeepr.Rcheck</code> artifact (<code>gh run download</code>) rather than trusting the annotation summary; confirmed both Windows failures were the identical <code>Chromote: timed out waiting for event Page.loadEventFired</code> at <code>helper-live-render-positions.R:84</code>. Root cause identified via <code>WebSearch</code>/<code>WebFetch</code> against chromote’s own documentation/issue tracker, not guessed. No local Windows environment was available — the fix’s verification is 2 consecutive real <code>R-CMD-check.yaml</code> pushes going GREEN on <code>windows-latest</code>, the only faithful check for a CI-platform-timing-specific defect. A owner- directed pre-RED <code>AskUserQuestion</code> established this approach (no new local test — a race condition can’t be deterministically captured in a fast local unit test; the existing 2 chromote tests + the real CI run serve as RED/GREEN).</li>
+<li>
+<strong>Incidentally found, NOT fixed this session (filed to <code>BACKLOG.md</code> instead, owner-directed):</strong> a SECOND, unrelated chromote failure (<code>chromote:::launch_chrome()</code> process-launch abort) appeared on <code>ubuntu-latest (release)</code> in the very next CI run — confirmed NOT caused by this session’s diff (<code>$go_to()</code> only touches post-connection page-load waiting, never process launch) and confirmed transient by re-running the same job unmodified (<code>gh run rerun --job</code>), which passed clean.</li>
+<li>
+<strong>Verification:</strong> full clean regression 0 failed/0 error (incl. all 24 chromote tests), <code>lintr::lint()</code> 0 findings, both confirmed locally before push; <code>windows-latest</code> GREEN on 2 consecutive real <code>R-CMD-check.yaml</code> runs after the fix.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-20--ad-hoc-s616-claim-session-for-r-cmd-check-windows-chromote-timeout-fix">2026-08-20 · [ad hoc] S616: claim session for R-CMD-check Windows chromote timeout fix<a class="anchor" aria-label="anchor" href="#id_2026-08-20--ad-hoc-s616-claim-session-for-r-cmd-check-windows-chromote-timeout-fix"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> <code>SESSION_NOTES.md</code> stub + <code>HANDOFFS.md</code> <code>status: pending</code> receipt, committed (<code>db736a3d</code>) — written after diagnosis had already begun (a disclosed Phase 1B-skip, see <code>PROJECT_LEARNINGS.md</code> Learning 644), not at the ideal point, but before any code change.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-08-20--ad-hoc-s615-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s614-precedent">2026-08-20 · [ad hoc] S615: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S614 precedent)<a class="anchor" aria-label="anchor" href="#id_2026-08-20--ad-hoc-s615-record-close-out-commit-sha-in-handoffsmd-receipt-self-reference-workaround-matching-s600s602-s614-precedent"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> <code>HANDOFFS.md</code>’s S615 receipt <code>commit:</code>/<code>changelog_ref:</code> fields updated from <code>pending</code> to the actual close-out commit sha (<code>ac2723b5</code>) and the dated <code>CHANGELOG.md</code> entry pointer.</li>

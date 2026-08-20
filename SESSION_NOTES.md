@@ -571,10 +571,215 @@ real-375-scale render needs `loadTimeout=60`/`waitSeconds=3` explicitly
 (not committed as new defaults, to keep small-fixture tests fast) — pass
 them explicitly for any comparably large fixture in Phase 3.
 
+### Session 615 Handoff Evaluation (by Session 616)
+
+**Score: 7/10** (structural ceiling, not a quality fault). **What
+helped:** the receipt’s `key_files`/`what_was_done` fields let me
+quickly confirm `getLiveRenderedPositions()` and its 2 call sites were
+the only surface in play, and its own disclosed gotcha — “the real-375
+fixture will very likely surface at least one case the 17 synthetic
+fixtures didn’t anticipate” — primed me correctly for “expect a genuine
+new finding here,” which turned out true, just in a different place
+(CI-platform timing, not the fixture itself). **What was missing,
+structurally rather than by omission:** S615’s `next_steps`/`gotchas`
+are entirely about Phase 3 (cutover) — which is NOT what this session
+worked on. This isn’t a handoff quality gap: the run that actually
+failed (`32335116264`) was triggered by S615’s OWN final close-out
+commit push, meaning the failure didn’t exist yet at the moment S615
+wrote its handoff — no amount of care in that handoff could have
+surfaced it. This session’s actual task was found by MY OWN Phase 0’s
+`gh run list` CI-status check (the CLAUDE.md addition ratified S545),
+not inherited from S615’s handoff at all. **What was wrong:** nothing
+found inaccurate in what S615 claimed about its own work. **ROI:** low
+for THIS session specifically, but through no fault of S615’s — a real
+structural limit on how far a written handoff can reach (it cannot
+predict a CI run triggered by its own closing commit).
+
 ### What Session 616 Did
 
 **Deliverable:** Diagnose and fix the `R-CMD-check.yaml`
 `windows-latest` CI failure (`gh run` `32335116264`) introduced by
-S615’s new `tests/testthat/helper-live-render-positions.R`. **Status:**
-IN PROGRESS. **Started:** 2026-08-20. **Ledger:** `CHANGELOG: pending` —
-set at claim; recorded in `CHANGELOG.md` at Phase 3F.
+S615’s new `tests/testthat/helper-live-render-positions.R`. **DONE** —
+root-caused to a documented chromote
+`Page$navigate()`/`Page$loadEventFired()` race (rstudio/chromote#102),
+fixed via `$go_to()`, verified GREEN on 2 consecutive real
+`R-CMD-check.yaml` pushes (`windows-latest` clean both times).
+**Started/Completed:** 2026-08-20.
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+    in full; `SESSION_NOTES.md` (S614/S615’s own active task, both read
+    in full); `gh issue list` (13 open); `git status`/`log`/
+    `diff --stat` (clean, ledger frontiers both `== HEAD`, no reconcile
+    owed); `methodology_dashboard.py` (96/100, 1 HIGH risk, unchanged);
+    **`gh run list --branch master --limit 10`** (per CLAUDE.md’s
+    S545-ratified CI-status-check step) found `R-CMD-check.yaml` RED on
+    `windows-latest` only, from S615’s own final push — surfaced as a
+    4th numbered priorities-list option, distinct from any `BACKLOG.md`
+    tag. Ghost-session check on the same 6 untracked files prior
+    sessions already traced — unchanged, no new ghost work. Rendered the
+    priorities list (4 numbered `AskUserQuestion` options) — **user
+    picked the CI fix.**
+2.  **Protocol gap, disclosed and corrected (see `PROJECT_LEARNINGS.md`
+    Learning 644):** went straight from the picker answer into diagnosis
+    (`gh run view --log-failed`, downloading the failed run’s artifact,
+    reading `00check.log`/`testthat.Rout.fail`) WITHOUT claiming the
+    session first — a 4th recurrence of the Learning 624/625/628
+    pattern. Caught once the diagnosis reached a concrete root-cause
+    hypothesis; corrected immediately (claimed before writing any fix
+    code), committed separately (`db736a3d`).
+3.  **Diagnosis, verified by primary sources, not guesswork:**
+    downloaded the failed run’s `nprcgenekeepr.Rcheck` artifact directly
+    (`gh run download`) rather than trusting the annotation summary
+    alone; confirmed both Windows failures were
+    `Chromote: timed out waiting for event Page.loadEventFired` at
+    `helper-live-render-positions.R:84`. `WebSearch`/`WebFetch` research
+    (rstudio/chromote#102, the package’s own “Loading a page reliably”
+    vignette) identified the documented race between `Page$navigate()`
+    and `Page$loadEventFired()` as separate CDP round- trips, and
+    `$go_to()` as chromote’s own shipped fix; confirmed `$go_to()`
+    exists with the needed `timeout_`/`delay` parameters in the exact
+    pinned/installed chromote version (0.5.1).
+4.  **Pre-RED approach decision, via its own `AskUserQuestion`:** this
+    is a CI-environment-timing bug no local test can deterministically
+    RED/GREEN (the race doesn’t reliably reproduce on a quiet local
+    machine); owner picked “no new test — the CI run itself is the test”
+    over adding a source-inspection regression test, with the existing 2
+    chromote tests (already green locally, already red on Windows CI)
+    serving as RED and a real pushed CI run as GREEN.
+5.  **RED→GREEN gate** (`AskUserQuestion`, exact diff spelled out) →
+    implemented: replaced `helper-live-render-positions.R`’s
+    `Page$navigate()`+`Page$loadEventFired()`+[`Sys.sleep()`](https://rdrr.io/r/base/Sys.sleep.html)
+    sequence with a single
+    `$go_to(url, timeout_ = loadTimeout, delay = waitSeconds)` call.
+    Verified locally: full clean regression 0 failed/0 error (incl. all
+    24 chromote tests), `lintr::lint()` 0 findings.
+6.  **GREEN→REFACTOR gate** (no-op, already 0 lints) → committed
+    (`f75e3e42`), pushed, then polled `gh run view`/`gh run list`
+    (background, via `Bash run_in_background` + `TaskOutput`) for the
+    real R-CMD-check.yaml run until completion: **`windows-latest`
+    GREEN** — confirms the fix. A DIFFERENT, unrelated failure appeared
+    on `ubuntu-latest (release)` (`chromote:::launch_chrome()`
+    process-launch abort, not the loadEventFired race) — diagnosed as
+    NOT caused by this session’s diff (`$go_to()` only touches
+    post-connection page-load waiting, never process launch) and
+    confirmed transient by re-running the SAME job unmodified
+    (`gh run rerun --job`), which passed clean. **User flagged this had
+    been seen before and asked for deeper diagnosis, not a dismissal** —
+    researched it properly (rstudio/chromote issues
+    \#106/#124/#134/#150/#170, a well-documented
+    port-allocation/resource-contention category) and found this project
+    had ALREADY solved an analogous flake for a different workflow
+    (`.github/workflows/shinytest2.yaml`’s
+    `browser-actions/setup-chrome@v2` + `CHROMOTE_CHROME` +
+    assert-resolvable pattern, from
+    `docs/planning/phase8-e2e-harness-subplan.md` Risk R5) — a concrete,
+    evidenced lead for a future session, filed as a `BACKLOG.md` item
+    rather than folded into this session’s own scope (owner-directed via
+    `AskUserQuestion`, matching “1 and done”).
+7.  **Mid-session, unrelated user question answered without touching
+    files:** “why are `BACKLOG.md` items marked Done instead of moved to
+    `CHANGELOG.md`” — investigated and answered directly (the file uses
+    `- [x]` checked-but-retained items against its own stated “open
+    items only” policy; a known, already-diagnosed gap per S518/S529’s
+    own Housekeeping item), no file changes made answering it.
+8.  **Mid-session, second explicit user task, executed inline:** “make a
+    backlog item to simplify NEWS.Rmd entries… include guardrails…
+    organize by feature not chronologically.” Investigated S538’s prior
+    trim (386-\>134 lines, 2026-08-12) and the CURRENT state (315
+    lines/57 entries, 8 days later — regrown in the same
+    verbose/technical style with zero guardrail), pulled 3 verified
+    current examples of the technical/verbose pattern, wrote a
+    fully-scoped `BACKLOG.md` item capturing the owner’s 3 explicit
+    requirements (iterative-until-satisfied; by-feature not
+    chronological; a designed, landed guardrail against recurrence).
+9.  **Close-out:** this handoff; `PROJECT_LEARNINGS.md` Learnings
+    643/644; 2 `BACKLOG.md` items filed (NEWS.Rmd simplification; the
+    `launch_chrome()` flake) — committed separately (`935cca22`) from
+    the code fix, per `SAFEGUARDS.md`’s commit-boundary discipline.
+
+**Runtime smoke test (Phase 3E):** n/a — the only production-surface
+file touched is `tests/testthat/helper-live-render-positions.R`, a
+test-only helper with zero call sites outside `tests/testthat/`. No
+Shiny app / runtime behavior changed.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `NEWS.Rmd` / `a2interactive.Rmd` / `_pkgdown.yml`
+checklists all **N/A** — no new exported function, no new user-facing
+Shiny feature, test-infrastructure-only fix. GitHub issue close-out
+**N/A** — this work isn’t tied to a specific open issue (a CI-health fix
+incidental to issue \#141’s own Phase 2b, not itself part of that
+issue’s scope). Lint checklist **DONE** (0 lints, confirmed above).
+
+**Self-assessment (Session 616): 8/10.** **Strengths:** (1) Diagnosed
+from primary evidence at every step — downloaded and read the actual
+failed-run artifact rather than trusting the annotation summary;
+researched the race condition via chromote’s own documentation/issue
+tracker rather than guessing at a fix; confirmed the exact
+installed/pinned chromote version had the needed API before proposing
+it. (2) Correctly distinguished 2 genuinely different chromote failure
+classes (a post-connect event race vs. a pre-connect process-launch
+failure) rather than assuming one fix should cover both, or that a green
+retry meant “nothing more to see” — this distinction came from actually
+reading the stack traces, not from a plausible-sounding unified story.
+(3) When the user pushed back on treating the launch_chrome flake as a
+dismissible fluke, did real research rather than either over-conceding
+scope (silently expanding this session) or under-responding (reasserting
+“it’s just flaky”) — landed on a well-evidenced `BACKLOG.md` item citing
+this project’s OWN prior, analogous fix. (4) Honored the
+CI-environment-only nature of the bug by using an actual
+push-and-observe verification loop (background polling) rather than
+declaring victory on local-only evidence, which would have been
+faithful-verification failure mode \#24 in this exact shape. (5) Kept 2
+unrelated mid-session user requests (the BACKLOG.md-Done question, the
+NEWS.Rmd item) properly scoped — answered/filed without expanding this
+session’s own TDD-gated deliverable. **Weaknesses:** (1) **Repeated
+Learning 624/625/628’s Phase 1B-skip pattern a 4th time** — went
+straight from the priorities-picker answer into diagnostic work
+(downloading CI artifacts) before writing the claim stub, exactly the
+failure mode 3 prior learnings already named. Recorded as Learning 644
+with a candidate mechanical fix (fold the claim into the picker’s own
+`AskUserQuestion`) rather than a 4th “try to remember better”
+restatement, since restating clearly isn’t working. (2) Did not verify
+the `windows-latest` fix with more than 2 CI runs — a race condition fix
+confirmed clean twice is strong but not absolute evidence; a 3rd or Nth
+push over time would strengthen confidence further, deliberately not
+pursued here to avoid over-scoping a single-fix session into an extended
+confidence-building campaign. **ROI:** high — the actual CI-red state
+this session inherited (S615’s own final push, `R-CMD-check.yaml` red on
+`windows-latest`) is now genuinely green, confirmed by real CI evidence,
+not just local passing tests; 2 well-evidenced follow-on `BACKLOG.md`
+items were filed rather than either silently expanding scope or losing
+the findings.
+
+**Next steps:** No specific technical next step from this session’s own
+scope (the CI fix is complete and verified). 3 items now sit in
+`BACKLOG.md` a future session could pick up: (1) the `launch_chrome()`
+intermittent-flake fix (READY, Effort M — port `shinytest2.yaml`’s
+Chrome-setup pattern into `R-CMD-check.yaml`, verify via repeated pushes
+since the failure is intermittent); (2) the NEWS.Rmd
+simplify-by-feature-with-guardrails item (READY, Effort L,
+owner-directed, explicitly iterative/multi-round); (3) Walker/BJL Phase
+3 (cutover, issue \#141) — still the largest single READY item,
+unchanged by this session, per S615’s own `next_steps` (Commit 3-1 / 3-2
+as specified there).
+
+**Key files:** `tests/testthat/helper-live-render-positions.R:75-90`
+(the `$go_to()` fix, only file with production-relevant changes);
+`BACKLOG.md` (2 new items, “Up Next” section, after the
+pedigree-package-factoring item); `PROJECT_LEARNINGS.md` Learnings
+643/644.
+
+**Gotchas for future sessions:** (1) `$go_to()` is now this project’s
+own established pattern for ANY future chromote-based live-render helper
+— do not reintroduce the manual
+`Page$navigate()`+`Page$loadEventFired()` sequence elsewhere. (2) The
+`launch_chrome()` flake is real and NOT fixed — a future session should
+not assume “it passed on retry” means it’s resolved; `BACKLOG.md`’s own
+item lays out why (intermittent, needs the same Chrome-provisioning
+pattern `shinytest2.yaml` already uses, needs repeated-push verification
+not single-run). (3) Learning 644’s own candidate fix (folding the Phase
+1B claim into the priorities-picker `AskUserQuestion`) is untried — a
+future session proposing it should treat it as a hypothesis to test, not
+an already-validated mechanism.

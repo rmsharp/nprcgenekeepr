@@ -836,6 +836,95 @@ cleaner dependency graph, and versioning/release overhead, cross-package
 test/CI complexity, `@noRd`/internal-function visibility loss across a
 package boundary, etc.) before any decision to split.
 
+**Simplify `NEWS.Rmd` entries for a non-technical audience, reorganized
+by feature not chronologically, with guardrails against recurrence**
+(found 2026-08-20, owner-directed, READY, Effort L) – a prior session
+(S538, 2026-08-12) already trimmed the `2.0.0.9000` dev-section once
+(386-\>134 lines, 26 entries, rewritten from multi-sentence technical
+paragraphs to the terse pre-1.0.8 house style; `PROJECT_LEARNINGS.md`
+Learning 544), but that fix had no guardrail: 8 days and ~80 sessions
+later the section has regrown to 315 lines / 57 entries, most written
+back in the SAME verbose/technical style S538 removed – e.g. “a
+KING-robust marker-based kinship estimate” (`NEWS.Rmd:57`), “Hudson’s
+Fst between the populations of two centers” (`:70`), “a CERVUS-style
+multilocus likelihood-ratio (LOD) score” (`:91`), and
+exported-function-name-first phrasing (`` `checkLocusMetadata()` ``,
+`` `markerLdBlock()` ``) throughout – readable to an R programmer, not
+to the colony-manager/veterinarian audience this package’s NEWS is meant
+to serve. **Owner- stated requirements for this item (2026-08-20):** (1)
+entries must be simplified iteratively until the owner is satisfied –
+draft, owner review, revise – not a single unilateral pass an executing
+session declares done on its own judgment; (2) entries must be
+reorganized BY FEATURE (e.g. a “Pedigree Diagram” group, a “Marker
+Genetics” group, a “Genetic Value Analysis” group), not
+chronologically/by-issue-number the way every version section is laid
+out now; (3) the item must design and land a concrete guardrail
+preventing the verbose/technical style from creeping back in after this
+pass, the way it did after S538’s own fix – candidates to evaluate, not
+pre-decided: an explicit plain-language house-style note committed at
+the top of the dev section itself (visible at the exact point new
+entries get added), and/or extending `CLAUDE.md`’s existing same-session
+“NEWS.Rmd entry checklist” (ratified Session 448) with an explicit
+terseness/no-jargon/plain-language criterion a new entry must pass
+before commit. A future session should propose the feature-taxonomy and
+the guardrail mechanism via `AskUserQuestion` before rewriting, then
+iterate the rewrite with the owner across as many review rounds as
+needed – this is explicitly NOT a one-session, one-pass item.
+
+**`R-CMD-check.yaml`’s chromote-based tests can hit an intermittent
+Chrome-launch failure (`chromote:::launch_chrome()` -\> `Chrome$new()`
+-\> `startup()` abort) with no CI-side mitigation, unlike
+`shinytest2.yaml`’s own already-solved version of the same problem**
+(found 2026-08-20, S616, incidental to the Windows `Page.loadEventFired`
+race fix, owner-directed to file separately rather than fold in, READY,
+Effort M) – **genuinely distinct from the race S616 fixed:** that bug
+was a listener-registration race AFTER a chromote session connects
+(`Page$navigate()`+`Page$loadEventFired()`, fixed via `$go_to()`); this
+one is Chrome failing to START its process at all, one layer earlier,
+and `$go_to()` cannot touch it. Observed on run `32389587748`
+(`ubuntu-latest (release)` job `96492206881`) immediately after S616’s
+own fix pushed clean on `windows-latest` – left Chrome-profile detritus
+(`com.google.Chrome.81LbRt`/`com.google.Chrome.zVZId9`) in the check
+dir, consistent with a process that started launching and aborted rather
+than a deterministic code defect. **Confirmed transient, not caused by
+S616’s diff:** an unmodified re-run of the SAME job
+(`gh run rerun --job 96492206881`) passed clean minutes later, and
+`$go_to()` only touches post-connection page-load waiting, never process
+launch. This matches a well-documented, still-open upstream category
+(rstudio/chromote
+[\#134](https://github.com/rstudio/chromote/issues/134) “Cannot find an
+available port” on multi-user/shared machines,
+[\#124](https://github.com/rstudio/chromote/issues/124)/
+[\#106](https://github.com/rstudio/chromote/issues/106) “Chrome
+debugging port not open after 10 seconds”,
+[\#150](https://github.com/rstudio/chromote/issues/150),
+[\#170](https://github.com/rstudio/chromote/issues/170)) – port
+allocation/resource contention under a loaded, shared CI runner. **The
+project has already solved an analogous flake once, for a DIFFERENT
+workflow:** `docs/planning/ phase8-e2e-harness-subplan.md`’s own Risk R5
+(“CI snap-chromium fails headless”) is exactly this failure class, and
+`.github/workflows/shinytest2.yaml:91-118` already mitigates it –
+`browser-actions/setup-chrome@v2` provisions a pinned, reproducible
+Chrome-for-Testing binary (replacing the flaky snap `chromium-browser`),
+points `CHROMOTE_CHROME` at it explicitly, and asserts
+[`chromote::find_chrome()`](https://rstudio.github.io/chromote/reference/find_chrome.html)
+resolves to a real, existing path BEFORE any test runs.
+`R-CMD-check.yaml` has NONE of this: it only installs the `chromote` R
+package (`r-lib/actions/setup-r-dependencies@v2`) with no Chrome
+provisioning, pinning, or pre-flight health check on any of its 5 matrix
+platforms – an exposure that is brand-new as of S615 (2026-08-19/20),
+since chromote tests were not part of `R CMD check`’s surface before
+that. A future session should: (1) confirm
+`browser-actions/setup-chrome@v2` supports all 3 OS families in
+`R-CMD-check.yaml`’s matrix (macOS/Windows/Linux), not just the
+ubuntu-only `shinytest2.yaml` job it was proven on; (2) port the same
+setup-Chrome + `CHROMOTE_CHROME` + assert-resolvable pattern into
+`R-CMD-check.yaml`; (3) verify via REPEATED pushes/reruns, not a single
+green run – the failure is intermittent, so one clean run after the
+change is not proof of a fix, matching how this exact finding was
+surfaced (a clean re-run of the UNFIXED workflow also happened, by
+chance).
+
 ## Housekeeping
 
 **`DESCRIPTION`’s `Suggests:` mixes real test/example/vignette
