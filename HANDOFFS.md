@@ -174,21 +174,81 @@ hand-maintained.
 ``` handoff
 session: S619
 date: 2026-08-20
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Diagnose the macos-latest CDP-timeout CI failure in R-CMD-check.yaml (Chromote:
-  timed out waiting for response to command Runtime.evaluate / attempt to apply non-function,
-  now recurring 3/3, most recently on a docs-only S618 close-out push -- BACKLOG.md
-  Housekeeping item, found S618).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Diagnosed AND fixed the macos-latest chromote CDP timeout in
+  R-CMD-check.yaml -- all 5 matrix legs verified green on real CI.
+what_was_done: 6-agent research workflow found the root cause via direct chromote 0.5.1 source
+  inspection: ChromoteSession$new() unconditionally issues an internal Runtime.evaluate command
+  during its own bootstrap (private$get_pixel_ratio()), governed by a 10s default_timeout with no
+  constructor argument to raise it. 1st fix attempt (raise default_timeout to 60s,
+  helper-live-render-positions.R, full TDD RED/GREEN) pushed and verified via real CI (run
+  32417985922) to NOT resolve the failure -- identical signature, wall time roughly doubled,
+  confirming a genuinely wedged session not a slow one. Reported honestly rather than retried
+  silently (Learning 648). Fallback fix (revert macos-latest specifically to ambient/unpinned
+  Chrome via an if: guard on the 3 Chrome-provisioning steps, matching S616's own proven-green
+  precedent, full TDD RED/GREEN) verified GREEN on the next real CI push (run 32423688930, all 5
+  legs green, macos-latest in 10m4s) -- Learning 649. Also, mid-session: investigated and filed
+  (did not fix, per owner direction) an unrelated user-noticed issue -- 16 stale [x]-checked DONE
+  items in BACKLOG.md. Commits: 40c2e96b (claim), ff091613 (BACKLOG housekeeping filing),
+  1553099a (H1 RED), 1780789d (H1 GREEN), 4a134701 (fallback RED), d2e9f487 (fallback GREEN).
+next_steps: No forced next step -- the practical CI failure is fully resolved. Optional,
+  explicitly low-priority: investigate WHY the pinned Chrome-for-Testing binary hangs on
+  macos-latest's ChromoteSession$new() bootstrap specifically (BACKLOG.md Housekeeping's new
+  optional item) -- only worth it if pinned-Chrome reproducibility on macOS becomes valuable
+  later. Otherwise pick up any other BACKLOG.md item per the normal Phase 0 priorities-list
+  process (Walker/BJL Phase 2b, NEWS.Rmd simplification, and the pedigree-package-split scoping
+  session were the other 3 items on this session's own priorities list, still open).
+key_files: .github/workflows/R-CMD-check.yaml:48-89 (the 3-step block + new if: guards);
+  tests/testthat/helper-live-render-positions.R:75-96 (the default_timeout raise, kept as
+  harmless hygiene even though it alone didn't fix macOS); tests/testthat/test_r_cmd_check_
+  workflow_chrome_setup.R (12 expectations, 4 test_that blocks); tests/testthat/test_helper_
+  live_render_positions_timeout.R (new file, 3 test_that blocks / 6 expectations);
+  PROJECT_LEARNINGS.md Learnings 648/649; BACKLOG.md Housekeeping (chromote item removed
+  outright, new optional root-cause item added).
+gotchas: (1) macos-latest now runs WITHOUT a pinned Chrome -- uses whatever the runner image
+  ships ambiently. If it fails chromote tests again, do NOT assume it's this exact bug recurring
+  -- re-diagnose from scratch, ambient Chrome can itself drift. (2) Raising default_timeout is
+  PROVEN NOT sufficient to fix a genuinely wedged chromote session on the pinned macOS binary --
+  do not re-attempt "just raise it further" without new evidence; a still-failing raised-timeout
+  confirms "wedged," not "needs more time." (3) The 16-item BACKLOG.md [x]-sweep and the optional
+  macOS root-cause item are both genuinely optional/low-priority, not accidentally dropped.
+runtime_smoke: Verified via 2 real pushed R-CMD-check.yaml CI runs (not local-only). The H1
+  attempt confirmed FAILING on live infrastructure (disclosed, not hidden); the fallback
+  confirmed GREEN on all 5 matrix legs on live infrastructure -- the faithful verification this
+  CI-config change needs, matching S616/S618's own push-and-observe precedent.
+changelog_ref: 90b614fd (CHANGELOG.md entry "S619: fix R-CMD-check.yaml's macos-latest chromote
+  CDP timeout" landed in this commit)
+commit: 40c2e96b (claim), ff091613 (BACKLOG housekeeping filing), 1553099a (H1 RED), 1780789d
+  (H1 GREEN), 4a134701 (fallback RED), d2e9f487 (fallback GREEN), 90b614fd (close-out docs),
+  44fc4510 (handoff) -- reconciled to the real shas immediately after, matching the
+  S600/S602-S618 self-reference-workaround precedent
 ```
+
+\<Diagnosed and fixed a CI failure that had recurred on every real push
+since S618 (4 consecutive red macos-latest runs across 2 sessions). Used
+a 6-agent research workflow for direct source-level diagnosis rather
+than guessing from error text alone, found the exact internal mechanism
+(ChromoteSession\$new()’s own Runtime.evaluate bootstrap probe), tried
+the best-evidenced fix (raise the timeout), and when real CI
+verification FALSIFIED that fix, reported it honestly and pivoted to a
+lower-risk, better-evidenced fallback (revert macOS to its own prior
+proven-green ambient-Chrome state) rather than iterating on speculative
+timeout values. Both fix attempts followed full TDD RED/GREEN cycles
+with AskUserQuestion gates at every transition. Self-score +: thorough
+diagnosis: source-level not just log-level; honest negative-result
+reporting; two complete verified TDD cycles; handled an unrelated
+mid-session user question (stale BACKLOG.md items) by investigating
+before answering and avoiding scope creep; removed the
+now-fully-resolved BACKLOG item outright per Phase 3F’s literal text
+rather than perpetuating the exact debt pattern just flagged. Self-score
+-: two small process missteps (misapplied ScheduleWakeup outside a /loop
+context; a redundant monitoring Agent for an already-self-notifying
+background task) added minor overhead; the H1 attempt, while
+well-evidenced, still cost a full CI round-trip that didn’t pan out – a
+more skeptical read weighing S616’s own directly-proven-green
+ambient-Chrome precedent might have gone to the fallback sooner.\>
 
 ``` handoff
 session: S618
