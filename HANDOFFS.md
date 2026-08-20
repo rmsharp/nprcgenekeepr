@@ -138,23 +138,72 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S617
 date: 2026-08-20
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Sync this project's canonical-overlay methodology files to v3.7 of
-  https://github.com/KJ5HST/methodology.git, per BOOTSTRAP.md's "Updating an existing project"
-  procedure, then re-apply this project's own documented local customization to
-  methodology_trim.py (CLAUDE.md's "methodology_trim.py local-customization checklist") and
-  verify.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE. Synced this project's canonical-overlay methodology files to v3.7 of
+  https://github.com/KJ5HST/methodology.git via hand-reconciliation (owner-directed via
+  AskUserQuestion, after discovering FRAMEWORK_LEARNINGS.md/methodology_trim.py have never
+  existed in any tagged canonical release and methodology_dashboard.py locally is newer than
+  true v3.7's).
+what_was_done: Checked out the real v3.7 tag in the sibling methodology/ checkout and diffed
+  every tracked file against it (never trusting bin/status's summary label alone). Found the
+  2026-08-10 sync (18d8e3c7) actually pulled from the rmsharp/methodology fork's unreleased
+  main branch (v3.6-255-gc43e7ee), not a tagged release -- confirmed by checking all 27 tags
+  v1.0.0-v3.7 directly, none contain FRAMEWORK_LEARNINGS.md or methodology_trim.py. Surfaced
+  this via AskUserQuestion before touching any file; owner picked hand-reconcile. Adopted FM
+  #28 "Unbounded mandatory read" + 4 Degradation Detection rows into SESSION_RUNNER.md (genuine
+  new v3.7 content); kept the local FRAMEWORK_LEARNINGS.md-extraction pattern (21 rows there vs.
+  v3.7's inline 13 -- reverting would regress); applied RECOMMENDED_SKILLS.md's improved
+  /caveman description verbatim; kept methodology_dashboard.py at local 2.14.0 (v3.7's 2.10.6
+  would be a downgrade); confirmed BOOTSTRAP.md/CLAUDE_TEMPLATE.md/ITERATIVE_METHODOLOGY.md/
+  HOW_TO_USE.md/AUDIT_WORKSTREAM.md need no changes (local is either a superset or
+  self-consistent on its own citation pattern); left FRAMEWORK_LEARNINGS.md/methodology_trim.py
+  untouched (not in v3.7's manifest). Corrected CLAUDE.md's inaccurate "canonical-overlay"
+  claim about methodology_trim.py to state its real fork-only provenance. Fixed a stale
+  "27 failure modes" cross-reference in CLAUDE.md after adding FM #28 (this project's own
+  Learning #7 discipline). Filed a BACKLOG.md Housekeeping item for context_budget.py (new in
+  v3.7, deliberately not adopted this session). Recorded PROJECT_LEARNINGS.md Learning 645.
+  Verified methodology_trim.py --check and methodology_dashboard.py both still run cleanly
+  post-sync. Commit: pending (this receipt is reconciled to the real sha immediately after
+  the close-out commit, matching the S600/S602-S616 self-reference-workaround precedent).
+next_steps: No further methodology-sync work owed from this session. BACKLOG.md Housekeeping
+  now carries: evaluate adopting context_budget.py (READY, Effort S, scoping session). 2
+  unfiled, optional considerations surfaced for a future session to weigh (not concrete enough
+  to file yet): (a) whether to formally re-frame FRAMEWORK_LEARNINGS.md/methodology_trim.py as
+  fully project-owned (no tagged release will ever sync them) vs. periodically pulling fresh
+  copies from the fork's main on purpose; (b) future syncs should checkout a specific tag in
+  the sibling checkout rather than trust whatever branch is currently there.
+key_files: SESSION_RUNNER.md:220-222,278,329-330,356-360,365-382 (FM #28 addition + preserved
+  FRAMEWORK_LEARNINGS.md pattern); CLAUDE.md:272 (corrected methodology_trim.py provenance);
+  CLAUDE.md:282,286 (refreshed cross-reference counts); RECOMMENDED_SKILLS.md:94 (/caveman
+  upgrade); BACKLOG.md Housekeeping (new context_budget.py item); PROJECT_LEARNINGS.md
+  Learning 645 (the full provenance-gap finding).
+gotchas: (1) A future "sync methodology" session should checkout the specific target tag in
+  the sibling /Users/rmsharp/Development/methodology checkout (verify clean first, restore
+  after) rather than trust whatever's currently checked out there -- bin/sync --source=local
+  has no concept of "the latest release." (2) FRAMEWORK_LEARNINGS.md and methodology_trim.py
+  will NOT be touched by any future tagged-release sync -- expected, not a bug, when
+  bin/status reports them missing/absent against a tag. (3) methodology_dashboard.py was
+  deliberately left at 2.14.0 (ahead of true v3.7's 2.10.6) -- a future "locally modified"
+  flag on it against a tag is the same intentional preservation, not new drift.
+runtime_smoke: n/a -- docs/tooling-only sync, zero .R files touched, no Shiny app or package
+  runtime behavior affected.
+changelog_ref: pending (recorded in the same close-out commit as this receipt)
 commit: pending
 ```
-(stub written at Phase 1B claim; filled at Phase 3D close-out)
+Self-score breakdown: +checked out the actual tag and diffed before touching anything rather
+than trusting bin/sync as a black box; +stopped and asked via AskUserQuestion when the
+discovery changed the task's shape instead of guessing or silently deviating; +verified every
+flagged file against real tag content via `git show`, never the sibling's mutable working tree
+after the first checkout; +applied this project's own Learning #7 (cross-reference
+completeness) to the very edit that introduced FM #28; +recorded the provenance-gap discovery
+as a transferable PROJECT_LEARNINGS.md entry. -Did not re-confirm the sibling repo's clean/
+restored state with a final `git status` after the last extraction pass (low risk -- no further
+checkouts happened after the one restore, but worth a standing habit). Predecessor (S616)
+scored 8/10: structurally complete, well-evidenced CI fix, but not directly useful for this
+session's task since it arrived as a fresh user directive rather than descending from S616's
+own next_steps -- expected, not a defect in S616's own handoff.
 
 ```handoff
 session: S616
