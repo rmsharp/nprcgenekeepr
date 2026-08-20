@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-19 · [ad hoc] S614: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S613 precedent)
+- **Deliverable:** `HANDOFFS.md`'s S614 receipt `commit:` field updated from `pending` to the
+  actual close-out commit sha (`55cd2875`).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-19 · [issue #141] S614: Phase 2a GREEN -- Walker/BJL pedigree adapter (`.positionMatingUnitForestBJL()`)
 - **Deliverable:** New `.positionMatingUnitForestBJL()` in `R/makePedigreeDiagramData.R`, alongside
   `.positionMatingUnitForest()` -- zero changes to that function or any other existing code, no

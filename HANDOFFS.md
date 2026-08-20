@@ -202,7 +202,7 @@ runtime_smoke: n/a -- .positionMatingUnitForestBJL() is @noRd with zero call sit
   package (grep-confirmed), never reached by the Shiny app or any exported function. Matches Phase
   1a's own precedent exactly. No runtime behavior changed.
 changelog_ref: CHANGELOG.md 2026-08-19/2026-08-20, S614 entries.
-commit: pending
+commit: 55cd2875
 ```
 
 ```handoff
