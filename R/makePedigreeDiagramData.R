@@ -1225,6 +1225,237 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   nodes
 }
 
+#' Position a mating-unit forest via a genuine Buchheim-Junger-Leipert
+#' apportioning engine, parallel to \code{.positionMatingUnitForest()}
+#' (Pedigree Diagram Walker/BJL redesign, Phase 2a)
+#'
+#' \code{docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-
+#' plan.md}'s Phase 2, as amended by \code{docs/planning/pedigree-diagram-
+#' walker-bjl-phase1b-mixed-gen-reconciliation.md}'s S3 mechanism
+#' (Candidate 2b) and S8's seam-resolution formula. Runs SIDE BY SIDE with
+#' \code{\link{.positionMatingUnitForest}} -- zero changes to it, no shared
+#' call site yet (a later, separate cutover session per the plan's own
+#' Phase 3).
+#'
+#' Three strictly ordered tiers, each fully reconciled before the next
+#' tier reads it (S3.1/S3.4):
+#' \itemize{
+#'   \item \strong{Tier 1} -- genuine-tree BJL
+#'     (\code{\link{.positionTreeApportion}}, Phase 1a, UNCHANGED) via a
+#'     \code{CHILDREN(individual)} accessor (S3.2): a mating unit's real
+#'     children are reattached directly onto its anchor -- the unit
+#'     itself is NEVER a tree-recursion node. A B1 (free-pass) individual
+#'     is excluded from the recursion entirely (never a root, never
+#'     anyone's child) -- represented only via a Tier-3 derived point.
+#'     Terminated by a reinstated, gen-grouped \code{sweepMinSep()}
+#'     backstop (S3.1.1), run ONCE.
+#'   \item \strong{Tier 2} -- for every ANCHORED unit,
+#'     \code{x_raw = midpoint(real children's FINAL Tier-1 x)}; an
+#'     exact-tie sweep (gen, id radix order) among all ANCHORED units +
+#'     genuine nodes at the same gen (S3.3.3/S3.4).
+#'   \item \strong{Tier 3} -- for every B1/B3 non-anchor occurrence, a
+#'     derived point off its own unit's FINAL x. B1's qualifying case
+#'     folds the old \code{orderBySex} post-hoc swap directly into the
+#'     formula (S8.1): anchored on the anchor's own FINAL Tier-1 x
+#'     (\code{P.x}), never the union's (\code{U.x(FINAL)}) -- S8's own
+#'     fix, proven correct for any \code{sweepMinSep()}-induced drift
+#'     where the OLD (\code{U.x(FINAL)}-anchored) formula was not (S8.2).
+#'     B2 (M has her own parent edge or her own D5 direct child) gets NO
+#'     derived point -- the render layer already points at her own,
+#'     already-final genuine x.
+#' }
+#'
+#' Deliberately scoped to 2a: no live-render verification, no real-fixture
+#' A/B measurement (both explicitly deferred to a Phase 2b session, per
+#' the parent plan's own "splittable if too large" allowance).
+#'
+#' @param ped as \code{\link{.positionMatingUnitForest}}.
+#' @param forest as \code{\link{.positionMatingUnitForest}}.
+#' @return A data frame with one row per node (\code{id}, \code{x},
+#'   \code{gen}), the SAME output contract as
+#'   \code{\link{.positionMatingUnitForest}}.
+#' @noRd
+.positionMatingUnitForestBJL <- function(ped, forest) {
+  ped$gen[is.na(ped$gen)] <- 0L
+  minSep <- 1L
+
+  matingUnits <- forest$matingUnits
+  duplicates <- forest$duplicates
+  childEdges <- forest$childEdges
+  unitIds <- matingUnits$id
+  realIds <- as.character(ped$id)
+  genOf <- stats::setNames(ped$gen, realIds)
+  sireOf <- stats::setNames(as.character(ped$sire), realIds)
+  damOf <- stats::setNames(as.character(ped$dam), realIds)
+  sexOf <- stats::setNames(as.character(ped$sex), realIds)
+  anchorOf <- stats::setNames(matingUnits$anchor, unitIds)
+  nonAnchorOf <- stats::setNames(matingUnits$nonAnchor, unitIds)
+
+  ## ---- S3.2 CHILDREN(individual) ---------------------------------------
+  directChildrenOf <- function(id) {
+    childEdges$to[childEdges$from == id & childEdges$from %in% realIds]
+  }
+  hasOwnDirectChild <- function(id) length(directChildrenOf(id)) > 0L
+  unitChildrenOf <- function(id) {
+    myUnits <- unitIds[!is.na(anchorOf) & anchorOf == id]
+    if (length(myUnits) == 0L) return(character(0))
+    unlist(lapply(myUnits, function(u) childEdges$to[childEdges$from == u]),
+           use.names = FALSE)
+  }
+  childrenOf <- function(id) c(directChildrenOf(id), unitChildrenOf(id))
+
+  ## S3.3.1 classification primitives. 'neverAnchorIds' is restricted to
+  ## sire/dam of an ANCHORED unit, matching the shipped freePassIds
+  ## computation above (orphan units, issue #154, contribute no
+  ## "non-anchor side" to contrast against). B1 (S3.3.1) additionally
+  ## requires !hasParentEdge(M) -- a conjunct the OLD, shipped freePassIds
+  ## does not need (its own 'neverAnchorIds' pool already excludes real
+  ## children by construction: 'nonAnchorSides' only ever lists a unit's
+  ## own sire/dam, never a unit's real children), but 2b's own B1 pool
+  ## must check directly: a non-anchor party who has her own real parent
+  ## edge (e.g. a "grandchild" reachable both as a reattached real child
+  ## AND as a non-anchor co-parent elsewhere) is B2, not B1 -- she must
+  ## get NO Tier-3 derived point at all.
+  hasParentEdge <- function(id) !is.na(sireOf[[id]]) || !is.na(damOf[[id]])
+  anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
+  everAnchor <- unique(anchoredUnits$anchor)
+  nonAnchorSides <- c(anchoredUnits$sire, anchoredUnits$dam)
+  neverAnchorIds <- setdiff(unique(nonAnchorSides), everAnchor)
+  ## A dangling non-anchor (no own row in 'ped', S461 -- e.g. an
+  ## unrecorded co-parent) has no identity to render at all: the OLD,
+  ## shipped .positionMatingUnitForest() drops such an id from its final
+  ## output entirely (confirmed directly this session against its own
+  ## F0/D/[S(dangling) x D]/C fixture -- 'S' contributes zero rows), so
+  ## 2b does the same. The 'id %in% realIds' check must come first: '&&'
+  ## short-circuits, so hasParentEdge()/hasOwnDirectChild() (which index
+  ## sireOf/damOf/childEdges by 'id') are never reached for a dangling id.
+  b1Ids <- Filter(function(id) {
+    id %in% realIds && !hasOwnDirectChild(id) && !hasParentEdge(id)
+  }, neverAnchorIds)
+
+  founderIds <- Filter(function(id) !hasParentEdge(id), realIds)
+  rootIds <- setdiff(founderIds, b1Ids)
+
+  forestChildrenOf <- .buildForestChildrenOf(rootIds, childrenOf,
+                                              superRootId = "__super_root__")
+  tier1X <- .positionTreeApportion("__super_root__", forestChildrenOf)
+  tier1X <- tier1X[names(tier1X) != "__super_root__"]
+
+  ## S3.1.1: reinstated sweepMinSep() backstop, gen-grouped, real
+  ## individuals only, run ONCE -- same push semantics as the shipped
+  ## sweepMinSep() above, including its exact
+  ## order(x, ids, method = "radix") tie-break.
+  dispGenOf <- genOf[names(tier1X)]
+  for (g in sort(unique(dispGenOf))) {
+    rowIds <- names(tier1X)[dispGenOf == g]
+    if (length(rowIds) < 2L) next
+    rowIds <- rowIds[order(tier1X[rowIds], rowIds, method = "radix")]
+    for (i in 2L:length(rowIds)) {
+      prevX <- tier1X[[rowIds[i - 1L]]]
+      if (tier1X[[rowIds[i]]] < prevX + minSep) {
+        tier1X[[rowIds[i]]] <- prevX + minSep
+      }
+    }
+  }
+
+  ## ---- Tier 2: union-point derivation + exact-tie sweep (S3.3.3/S3.4) --
+  unitX <- stats::setNames(rep(NA_real_, length(unitIds)), unitIds)
+  for (u in anchoredUnits$id) {
+    kids <- childEdges$to[childEdges$from == u]
+    unitX[[u]] <- mean(tier1X[kids])
+  }
+  if (nrow(anchoredUnits) > 0L) {
+    ord <- order(anchoredUnits$gen, anchoredUnits$id, method = "radix")
+    orderedUnits <- anchoredUnits[ord, , drop = FALSE]
+    placedAtGen <- list()
+    for (i in seq_len(nrow(orderedUnits))) {
+      u <- orderedUnits$id[i]
+      g <- as.character(orderedUnits$gen[i])
+      occupied <- c(tier1X[dispGenOf == orderedUnits$gen[i]], placedAtGen[[g]])
+      while (length(occupied) > 0L && any(abs(occupied - unitX[[u]]) < 1e-9)) {
+        unitX[[u]] <- unitX[[u]] + 1e-3
+      }
+      placedAtGen[[g]] <- c(placedAtGen[[g]], unname(unitX[[u]]))
+    }
+  }
+
+  ## ---- Tier 3: B1/B3 derived points (S3.3.3, S8.1's fixed formula) -----
+  qualifies <- function(unitId) {
+    p <- anchorOf[[unitId]]
+    m <- nonAnchorOf[[unitId]]
+    if (is.na(p) || is.na(m)) return(FALSE)
+    sireId <- matingUnits$sire[matingUnits$id == unitId]
+    damId <- matingUnits$dam[matingUnits$id == unitId]
+    if (!(sireId %in% realIds) || !(damId %in% realIds)) return(FALSE)
+    mateCountP <- sum(anchoredUnits$sire == p | anchoredUnits$dam == p)
+    mateCountM <- sum(anchoredUnits$sire == m | anchoredUnits$dam == m)
+    unambiguousOppositeSex <-
+      (identical(sexOf[[p]], "M") && identical(sexOf[[m]], "F")) ||
+      (identical(sexOf[[p]], "F") && identical(sexOf[[m]], "M"))
+    mateCountP == 1L && mateCountM == 1L && !hasOwnDirectChild(p) &&
+      unambiguousOppositeSex
+  }
+  derivedX <- function(unitId, memberId, isB1) {
+    p <- anchorOf[[unitId]]
+    if (isB1 && qualifies(unitId)) {
+      sign <- if (identical(sexOf[[p]], "F") &&
+                    identical(sexOf[[memberId]], "M")) -1L else 1L
+      unname(tier1X[[p]]) + sign * minSep * 0.4
+    } else {
+      unname(unitX[[unitId]]) + minSep * 0.4
+    }
+  }
+
+  b1UnitOf <- stats::setNames(character(length(b1Ids)), b1Ids)
+  for (fp in b1Ids) {
+    ownUnits <- matingUnits$id[matingUnits$sire == fp | matingUnits$dam == fp]
+    dupUnits <- duplicates$matingUnitId[duplicates$realId == fp]
+    b1UnitOf[[fp]] <- setdiff(ownUnits, dupUnits)[1L]
+  }
+
+  dupIds <- if (nrow(duplicates) > 0L) duplicates$id else character(0)
+  tier3Ids <- c(b1Ids, dupIds)
+  tier3X <- stats::setNames(numeric(length(tier3Ids)), tier3Ids)
+  tier3Gen <- stats::setNames(integer(length(tier3Ids)), tier3Ids)
+  for (fp in b1Ids) {
+    unitId <- b1UnitOf[[fp]]
+    tier3X[[fp]] <- derivedX(unitId, fp, isB1 = TRUE)
+    tier3Gen[[fp]] <- unname(matingUnits$gen[matingUnits$id == unitId])
+  }
+  if (nrow(duplicates) > 0L) {
+    for (i in seq_len(nrow(duplicates))) {
+      dupId <- duplicates$id[i]
+      unitId <- duplicates$matingUnitId[i]
+      tier3X[[dupId]] <- derivedX(unitId, duplicates$realId[i], isB1 = FALSE)
+      tier3Gen[[dupId]] <- unname(matingUnits$gen[matingUnits$id == unitId])
+    }
+  }
+  if (length(tier3Ids) > 0L) {
+    for (g in sort(unique(tier3Gen))) {
+      ids <- tier3Ids[tier3Gen == g]
+      if (length(ids) < 2L) next
+      ids <- ids[order(tier3X[ids], ids, method = "radix")]
+      for (i in 2L:length(ids)) {
+        if (abs(tier3X[[ids[i]]] - tier3X[[ids[i - 1L]]]) < 1e-9) {
+          tier3X[[ids[i]]] <- tier3X[[ids[i]]] + 1e-3
+        }
+      }
+    }
+  }
+
+  ## ---- Assemble output, same contract as .positionMatingUnitForest() ---
+  ## B2 individuals (their own parent edge or own D5 direct child, and
+  ## non-anchor somewhere) get NO derived point -- they render at their
+  ## own genuine Tier-1 x, already present in tier1X/genuineIds below.
+  genuineIds <- names(tier1X)
+  ids <- c(genuineIds, unitIds, tier3Ids)
+  x <- c(unname(tier1X[genuineIds]), unname(unitX[unitIds]),
+         unname(tier3X[tier3Ids]))
+  gen <- c(unname(dispGenOf[genuineIds]), unname(matingUnits$gen),
+           unname(tier3Gen[tier3Ids]))
+  data.frame(id = ids, x = x, gen = gen, stringsAsFactors = FALSE)
+}
+
 #' Combine the Option 2 mating-unit forest into visNetwork-ready diagram data
 #'
 #' The exported wrapper for the kinship2-parity pedigree layout (Pedigree
