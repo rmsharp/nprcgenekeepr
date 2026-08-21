@@ -181,9 +181,9 @@ gotchas: (1) .computeSingleChildAntiCoincidence() was NEVER shipped -- any futur
 runtime_smoke: n/a -- documentation/cleanup only, zero production logic touched (R/ needed no
   changes at all; the one code-adjacent edit was a test file's comment-only docstring).
 changelog_ref: CHANGELOG.md 2026-08-21 S621 entry (landed in 909dad20)
-commit: 7dccb6e6 (claim), 909dad20 (deliverable), 8878239c (learnings) -- reconciled to include
-  this receipt's own commit sha immediately after, matching the S600/S602-S620
-  self-reference-workaround precedent
+commit: 7dccb6e6 (claim), 909dad20 (deliverable), 8878239c (learnings), ea422974 (handoff) --
+  reconciled to the real sha immediately after, matching the S600/S602-S620 self-reference
+  workaround precedent
 ```
 Session 621 closed out the Walker/BJL migration's final phase: no code changed (R/ needed zero
 edits), but the documentation trail is now fully consistent with what actually shipped across
