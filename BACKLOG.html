@@ -536,7 +536,61 @@
 <span id="cb1-473"><a href="#cb1-473" tabindex="-1"></a><span class="st">exactly. `.positionMatingUnitForestBJL()` itself unchanged — Phase 2b touched zero production</span></span>
 <span id="cb1-474"><a href="#cb1-474" tabindex="-1"></a><span class="st">code. **Next: Phase 3** (cutover, 2 explicitly-scoped commits per the parent plan's own Phase</span></span>
 <span id="cb1-475"><a href="#cb1-475" tabindex="-1"></a><span class="st">3 spec) — its own separate session; the real-fixture zero-coincidence gate now has DIRECT</span></span>
-<span id="cb1-476"><a href="#cb1-476" tabindex="-1"></a><span class="st">real-data evidence behind it, not just synthetic-fixture coverage.</span></span></code></pre></div>
+<span id="cb1-476"><a href="#cb1-476" tabindex="-1"></a><span class="st">real-data evidence behind it, not just synthetic-fixture coverage.</span></span>
+<span id="cb1-477"><a href="#cb1-477" tabindex="-1"></a></span>
+<span id="cb1-478"><a href="#cb1-478" tabindex="-1"></a><span class="st">**Phase 3 — S620 (2026-08-21): DONE — full TDD RED→GREEN→REFACTOR cycle, gated.** Cutover</span></span>
+<span id="cb1-479"><a href="#cb1-479" tabindex="-1"></a><span class="st">complete: `.positionMatingUnitForest()` (OLD contour-merge implementation) and</span></span>
+<span id="cb1-480"><a href="#cb1-480" tabindex="-1"></a><span class="st">`.computeDupNudge()` deleted outright; `.positionMatingUnitForestBJL()` renamed to</span></span>
+<span id="cb1-481"><a href="#cb1-481" tabindex="-1"></a><span class="st">`.positionMatingUnitForest()`, replacing the OLD implementation as the sole production</span></span>
+<span id="cb1-482"><a href="#cb1-482" tabindex="-1"></a><span class="st">positioning engine; `makePedigreeMatingLayout()`'s call site updated. **Restructured from the</span></span>
+<span id="cb1-483"><a href="#cb1-483" tabindex="-1"></a><span class="st">plan's own literal "</span>Commit <span class="dv">3-1</span> (<span class="dv">4</span> files) <span class="sc">/</span> Commit <span class="dv">3-2</span> (<span class="dv">2</span> files, conditional)<span class="st">" split**, per the</span></span>
+<span id="cb1-484"><a href="#cb1-484" tabindex="-1"></a><span class="st">plan's own explicit fallback clause (§Migration Path Phase 3: "</span>if <span class="st">`</span><span class="at">test_addRectilinearWaypoints.R</span><span class="st">`</span><span class="sc">/</span></span>
+<span id="cb1-485"><a href="#cb1-485" tabindex="-1"></a><span class="st">`</span><span class="at">test_resolveEdgeNodeCollisions.R</span><span class="st">`</span> go red as a direct, mechanical consequence... pull it into</span>
+<span id="cb1-486"><a href="#cb1-486" tabindex="-1"></a>Commit <span class="dv">3-1</span><span class="st">"): both files genuinely needed re-pinning (measured, not assumed) rather than</span></span>
+<span id="cb1-487"><a href="#cb1-487" tabindex="-1"></a><span class="st">staying green untouched, so all 5 test files landed in ONE RED commit (`e92d945e`, 5 files,</span></span>
+<span id="cb1-488"><a href="#cb1-488" tabindex="-1"></a><span class="st">within the SAFEGUARDS.md cap) with production code in a separate GREEN commit (`b013c009`, 5</span></span>
+<span id="cb1-489"><a href="#cb1-489" tabindex="-1"></a><span class="st">files: `R/makePedigreeDiagramData.R` + `NEWS.Rmd`/`NEWS.md` + `man/makePedigreeMatingLayout.Rd`</span></span>
+<span id="cb1-490"><a href="#cb1-490" tabindex="-1"></a><span class="st">+ `inst/WORDLIST`) — Commit 3-2 does not exist as a separate step; nothing was left deferred.</span></span>
+<span id="cb1-491"><a href="#cb1-491" tabindex="-1"></a><span class="st">**2 genuine implementation defects found and fixed during GREEN** (neither anticipated at RED,</span></span>
+<span id="cb1-492"><a href="#cb1-492" tabindex="-1"></a><span class="st">both diagnosed by running the specific failing fixture in isolation): (1) BJL never carried the</span></span>
+<span id="cb1-493"><a href="#cb1-493" tabindex="-1"></a><span class="st">OLD function's own input-validation guards (`ped` must be a data frame / must have required</span></span>
+<span id="cb1-494"><a href="#cb1-494" tabindex="-1"></a><span class="st">columns) — restored verbatim; (2) a mating unit whose BOTH sire and dam are dangling (issue</span></span>
+<span id="cb1-495"><a href="#cb1-495" tabindex="-1"></a><span class="st">#154's original "</span>both<span class="sc">-</span>dangling<span class="st">" shape) crashed `.buildForestChildrenOf()` on an empty</span></span>
+<span id="cb1-496"><a href="#cb1-496" tabindex="-1"></a><span class="st">`rootIds` — BJL had no equivalent to the OLD algorithm's own issue #154 fix; fixed by making</span></span>
+<span id="cb1-497"><a href="#cb1-497" tabindex="-1"></a><span class="st">such a unit's own real children independent Tier-1 roots directly, and broadening Tier 2's</span></span>
+<span id="cb1-498"><a href="#cb1-498" tabindex="-1"></a><span class="st">union-x derivation to cover every unit with ≥1 real child (not just anchored ones), so the</span></span>
+<span id="cb1-499"><a href="#cb1-499" tabindex="-1"></a><span class="st">orphan unit itself still gets a valid, finite x. **`orderBySex` removed from</span></span>
+<span id="cb1-500"><a href="#cb1-500" tabindex="-1"></a><span class="st">`makePedigreeMatingLayout()`'s public signature** (owner-directed via `AskUserQuestion`,</span></span>
+<span id="cb1-501"><a href="#cb1-501" tabindex="-1"></a><span class="st">PRE-RED): Phase 1b's own design note had already found the mechanism "</span>restructured, not</span>
+<span id="cb1-502"><a href="#cb1-502" tabindex="-1"></a>preserved unchanged — eliminated as a separate pass<span class="st">" (folded unconditionally into Tier 3's B1</span></span>
+<span id="cb1-503"><a href="#cb1-503" tabindex="-1"></a><span class="st">formula, S8.1); grep-confirmed zero real callers anywhere in `R/`/`inst/` ever passed it; kept</span></span>
+<span id="cb1-504"><a href="#cb1-504" tabindex="-1"></a><span class="st">as a silently inert no-op was judged worse than an honest removal. Every new/changed test</span></span>
+<span id="cb1-505"><a href="#cb1-505" tabindex="-1"></a><span class="st">literal (positional x values, jog-node/waypoint/collision counts, twin-connector jog states,</span></span>
+<span id="cb1-506"><a href="#cb1-506" tabindex="-1"></a><span class="st">duplicate-connector from/to ordering) derived by actually running the new engine via a</span></span>
+<span id="cb1-507"><a href="#cb1-507" tabindex="-1"></a><span class="st">throwaway probe script (monkey-patched under the OLD function's own name), never hand-derived</span></span>
+<span id="cb1-508"><a href="#cb1-508" tabindex="-1"></a><span class="st">— including several genuinely surprising findings only discoverable this way: the D1 bar-vs-bar</span></span>
+<span id="cb1-509"><a href="#cb1-509" tabindex="-1"></a><span class="st">residual (348/116 → 0/0) and the larger-gap residual (2 → 0) both fully resolve under the new</span></span>
+<span id="cb1-510"><a href="#cb1-510" tabindex="-1"></a><span class="st">engine (Track 3's clamp, the mechanism that worsened them, no longer exists); a B2 individual</span></span>
+<span id="cb1-511"><a href="#cb1-511" tabindex="-1"></a><span class="st">(own parent edge or own direct child) now renders at their own genuine gen rather than the OLD</span></span>
+<span id="cb1-512"><a href="#cb1-512" tabindex="-1"></a><span class="st">algorithm's uniform non-anchor-override gen, a deliberate, disclosed Phase 1b/2a design choice</span></span>
+<span id="cb1-513"><a href="#cb1-513" tabindex="-1"></a><span class="st">that required rewriting 2 regression-guard tests and adapting 1 fixture (not a bug). Live-render</span></span>
+<span id="cb1-514"><a href="#cb1-514" tabindex="-1"></a><span class="st">verification (F1/Track-C 9-subject and real-375 fixtures, via `helper-live-render-positions.R`,</span></span>
+<span id="cb1-515"><a href="#cb1-515" tabindex="-1"></a><span class="st">already merged into the test suite from Phase 2b) confirmed passing as part of the full clean</span></span>
+<span id="cb1-516"><a href="#cb1-516" tabindex="-1"></a><span class="st">regression, plus a direct standalone re-confirmation this session. Fresh grep re-confirmed the</span></span>
+<span id="cb1-517"><a href="#cb1-517" tabindex="-1"></a><span class="st">call-site/downstream-consumer inventory (single call site, zero `matingUnits`/`duplicates`/</span></span>
+<span id="cb1-518"><a href="#cb1-518" tabindex="-1"></a><span class="st">`childEdges` consumers outside this file) has not drifted since planning. Full clean regression</span></span>
+<span id="cb1-519"><a href="#cb1-519" tabindex="-1"></a><span class="st">0 failed/0 error project-wide throughout (2 marker-genetics failures seen in one full-suite run</span></span>
+<span id="cb1-520"><a href="#cb1-520" tabindex="-1"></a><span class="st">confirmed pre-existing order-dependent flakiness via `git stash`, unrelated to this diff — both</span></span>
+<span id="cb1-521"><a href="#cb1-521" tabindex="-1"></a><span class="st">pass cleanly in isolation). `lintr::lint_package()` (whole package): 0 findings.</span></span>
+<span id="cb1-522"><a href="#cb1-522" tabindex="-1"></a><span class="st">`devtools::check()`: 0 errors, 1 WARNING + 2 NOTEs, all 3 confirmed pre-existing — a 4th, NEW</span></span>
+<span id="cb1-523"><a href="#cb1-523" tabindex="-1"></a><span class="st">Rd-cross-reference WARNING (a `\link{}` to the now-internal `.positionMatingUnitForest()` from</span></span>
+<span id="cb1-524"><a href="#cb1-524" tabindex="-1"></a><span class="st">the one exported function's doc) was found and fixed in-session. CI green on all 4 workflows,</span></span>
+<span id="cb1-525"><a href="#cb1-525" tabindex="-1"></a><span class="st">commit `01f29342`. **Next: Phase 4** (cleanup/documentation — update</span></span>
+<span id="cb1-526"><a href="#cb1-526" tabindex="-1"></a><span class="st">`docs/planning/pedigree-diagram-option2-layout-design-plan.md`'s D3 section, close issue #141</span></span>
+<span id="cb1-527"><a href="#cb1-527" tabindex="-1"></a><span class="st">citing this migration's commits, update this `BACKLOG.md` item, sweep stale in-code comments</span></span>
+<span id="cb1-528"><a href="#cb1-528" tabindex="-1"></a><span class="st">referencing Track 3/Track 6/`.computeDupNudge()`/the patch-stack, add `NEWS.Rmd`/`CHANGELOG.md`</span></span>
+<span id="cb1-529"><a href="#cb1-529" tabindex="-1"></a><span class="st">entries for the feature-level user-facing changelog) — its own separate session per the plan's</span></span>
+<span id="cb1-530"><a href="#cb1-530" tabindex="-1"></a><span class="st">own spec, acceptable to split into 4a/4b if too large for one sitting.</span></span></code></pre></div>
 </li>
 </ul></div>
 <div class="section level2">
