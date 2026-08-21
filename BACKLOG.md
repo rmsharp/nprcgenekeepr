@@ -152,7 +152,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       warrant some observation first given Track 3's own disclosed trade-offs (see the follow-up
       item below).
 
-- [ ] **Track 3's 2 disclosed trade-offs (child-centering quality, D1 bar-vs-bar overlap) — accept
+- [x] **Track 3's 2 disclosed trade-offs (child-centering quality, D1 bar-vs-bar overlap) — accept
       as shipped, or investigate a narrower mechanism** (found S596, 2026-08-16 — **child-centering
       half: S602 (2026-08-17) implementation RETRACTED as a fix S603 (2026-08-18), verified to
       produce no visible correction; single-child union/parent-coincidence sub-thread (S608-609)
@@ -385,11 +385,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       still carries one live-verified bug — with an already-verified one-line fix in hand (residual
       drops 40/224→11/224) — plus 2 disclosed architectural gaps (a collision-safety guarantee
       that can't see 2 later pipeline passes; a tautological invariant-test surface). **Not yet
-      PRE-RED-ready.** Owner-ratified next step (via `AskUserQuestion`, §9): a **targeted repair
-      session (READY, Effort S)** — apply the already-verified one-line self-duplicate-exclusion
+      PRE-RED-ready.** Owner-ratified next step (via `AskUserQuestion`, §9): a targeted repair
+      session — apply the already-verified one-line self-duplicate-exclusion
       fix (residual 40/224→11/224, already measured) + add diagnostic return fields to
       `.computeSingleChildAntiCoincidence()`, run a fresh Critique Round 3 against the result
-      specifically, then proceed through PRE-RED→RED→GREEN. Full record, the ratification, and
+      specifically, then proceed through PRE-RED→RED→GREEN. **STALE, found S621 (2026-08-20):
+      this "READY, Effort S" tag never got struck when the very next session (S609, below)
+      redirected the whole thread to a full algorithm-family redesign instead — the targeted
+      repair was never built, `.computeSingleChildAntiCoincidence()` was never shipped
+      (grep-confirmed: 0 hits anywhere in `R/`/`tests/`), and the redesign it redirected to
+      (Walker/BJL, issue #141) is now DONE (S610-S620, see this item's own closing update below).
+      Left here struck-through rather than deleted, matching this project's own precedent against
+      retroactively editing already-written narrative — a future flat `BACKLOG.md` tag grep should
+      not treat this as a live option.** Full record, the ratification, and
       exact scope:
       [`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)
       §7-9. Independent finding, unrelated to this item: Track 6's own "91% reduction" headline
@@ -713,6 +721,26 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       referencing Track 3/Track 6/`.computeDupNudge()`/the patch-stack, add `NEWS.Rmd`/`CHANGELOG.md`
       entries for the feature-level user-facing changelog) — its own separate session per the plan's
       own spec, acceptable to split into 4a/4b if too large for one sitting.
+
+      **Phase 4 — S621 (2026-08-20): DONE — both of this item's own original trade-offs resolved
+      by construction, item closed.** Track 3's clamp (the mechanism both trade-offs traced to) no
+      longer exists anywhere in the codebase as of S620's Phase 3 cutover: every anchored mating
+      unit's x is now, unconditionally, the exact midpoint of its own real children's final x, no
+      clamp/nudge exceptions. **(1) Child-centering quality:** no longer a clamp-vs-centering
+      trade-off at all — the new engine's Tier 2 formula IS exact child-centering, verified
+      directly (`test_positionMatingUnitForest.R`'s own single-equality invariant test, S620).
+      **(2) D1 bar-vs-bar x-overlap residual:** the 9→116 post-Track-1 worsening this item
+      originally reported is fully resolved — re-measured this session by executing the real
+      375-individual bundled fixture under the shipped engine: **0** residual (matching S620's own
+      `test_addRectilinearWaypoints.R` re-pin). The single-child-union/parent-coincidence sub-thread
+      above (found S596, redirected S609) is superseded by the same migration — see the STALE note
+      struck into that thread directly, above. `docs/planning/pedigree-diagram-option2-layout-
+      design-plan.md`'s D3 section updated to describe the completed implementation (this session);
+      issue #141 closed citing this migration's full commit history (S610-S620); stale in-code
+      comments swept (`grep -rn "Track 6\|Track 3\|computeDupNudge\|finalUnitX" R/ tests/` —
+      `R/` was already accurate, one stale `tests/testthat/test_makePedigreeMatingLayout.R`
+      docstring found and fixed, `docs/planning/*.md` deliberately left as historical record per
+      this project's own precedent). `NEWS.Rmd`/`CHANGELOG.md` entries added this session.
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --

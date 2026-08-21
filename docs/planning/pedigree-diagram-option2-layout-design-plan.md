@@ -275,6 +275,40 @@ follow-up, not something to build speculatively now -- tracked as
 optimization` specifically so it is not picked up until profiling/evidence shows the need is
 real.
 
+**Superseded (S609-S620, 2026-08-18 -- 2026-08-21) -- the simplified merge above described this
+project's D3 from Session 458 through Session 609; it is no longer what ships.** Issue #141 was
+picked back up on **correctness** grounds, not the performance grounds this section originally
+named: `docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`
+§10-11 records 6 independent local-patch attempts (S598-S601, S609) that all failed adversarial
+critique, tracing to the same architectural gap the simplified contour-merge has by construction
+-- it computes each node's position once, in one direction, with no reconciliation against a
+later-computed sibling's competing correction, so 2+ locally-correct-looking fixes can cancel
+each other out even at ordinary (not pathological) real scale. Owner-directed (S609): pursue the
+full Walker/Buchheim-Jünger-Leipert family as the fix for this defect class rather than a 7th
+local patch. The resulting redesign and implementation --
+[`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`](pedigree-diagram-walker-bjl-apportioning-redesign-plan.md)
+(design) and
+[`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)
+(the forest/mixed-generation reconciliation this project's own duplicate-node/mating-unit
+structure needed, which no published BJL treatment addresses) -- shipped across Sessions 610-620:
+Phase 1a the standalone, pedigree-agnostic apportioning engine (cross-checked against real
+`d3-hierarchy` v3.1.2); Phase 1b the mixed-generation reconciliation design; Phase 2 the pedigree
+adapter (3-tier reconciliation: Tier 1 genuine-tree BJL plus a reinstated `sweepMinSep()`
+backstop, Tier 2 union midpoint with an exact-tie sweep, Tier 3 B1/B3 non-anchor-occurrence
+derived points via the phase1b design note's §8.1 formula), verified against the real
+375-individual bundled fixture via a new, reusable `helper-live-render-positions.R` chromote
+harness; Phase 3 the production cutover (`R/makePedigreeDiagramData.R`'s
+`.positionMatingUnitForest()` is now this engine, replacing the D3 contour-merge described above
+outright -- `.computeDupNudge()` and the OLD implementation deleted, `orderBySex` removed from
+`makePedigreeMatingLayout()`'s public signature since the new engine folds that swap
+unconditionally into Tier 3, no longer a separate, disable-able pass). D1 (mating-unit/duplication
+transformation), D2 (anchor selection), D4 (founder ordering), D5 (partial-parentage fallback),
+and D6 (click-navigate/tooltip/legend/node-cap integration) are all untouched by this migration --
+Walker/BJL only replaces how an already-built forest is positioned, per this section's own
+original scope note above. Full record, evidence, and verification:
+[`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`](pedigree-diagram-walker-bjl-apportioning-redesign-plan.md)
+§Migration Path; `BACKLOG.md`'s own Walker/BJL item (Phases 1a-3, S611/S612/S613/S614/S615/S620).
+
 ### D4 -- Founder/root ordering
 
 Founders are ordered by their existing row order in the input pedigree data frame -- matching

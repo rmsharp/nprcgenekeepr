@@ -588,19 +588,24 @@ test_that(
 test_that(
   "makePedigreeMatingLayout on the full real 375-individual bundled
    fixture produces exactly 1,412 nodes under edgeStyle = \"rectilinear\"
-   (CHANGED from 1,202 -- Track 2, issue #160 comment 1,
+   -- re-verified unchanged under the Walker/BJL engine (Phase 3 cutover,
+   this session), though its own composition shifted: 375 real + 237
+   union + 102 duplicate + 251 __bar_ + 237 __drop_ + 56 __proj_
+   (dogleg parent/union-gen-mismatch waypoints, D1/D2-driven, out of this
+   migration's scope, unaffected) = 1,258 pre-jog-repair, plus
+   .resolveEdgeNodeCollisions()'s 154 __jog_ waypoints (CHANGED from
+   210L -- see below) = 1,412; every count re-confirmed live through the
+   actual public entry point, not just the internal helper, never
+   hand-derived. Track 3's parent-span clamp -- which this test's own
+   docstring used to credit for part of the pre-cutover collision-count
+   reduction (150 -> 105 colliding edges, issue #160 comment 1,
    docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md
-   sec2.2: .resolveEdgeNodeCollisions() adds 2 __jog_ waypoints for each
-   of the 105 same-row straight-edge collisions found + repaired on this
-   real fixture (post-Track-3; was 150 pre-Track-3), 1,202 + 210 = 1,412;
-   re-confirmed through the actual public entry point, not just the
-   internal helper. Track 3 update (sec2.3/sec6 Session C, REFACTOR, this
-   session): clamping a runaway union back inside its own parents' span
-   coincidentally resolves some of what Track 2 used to have to detect
-   and jog -- 150 -> 105 collisions, re-measured live this session, an
-   owner-accepted trade-off disclosed alongside the D1 bar-vs-bar
-   WORSENING this same clamp causes
-   (test_addRectilinearWaypoints.R's own baseline test).)", {
+   sec2.2/sec2.3) -- no longer exists anywhere in this codebase; Track
+   2's own detect-and-jog mechanism is untouched by this migration.
+   .resolveEdgeNodeCollisions()'s own re-measured baseline under the new
+   engine (76 colliding edges, 1,715 obstacle-pairs, both fully resolved
+   to 0 residual) is documented directly in
+   test_resolveEdgeNodeCollisions.R.", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
