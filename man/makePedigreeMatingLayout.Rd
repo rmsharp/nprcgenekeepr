@@ -7,8 +7,7 @@
 makePedigreeMatingLayout(
   ped,
   edgeStyle = c("rectilinear", "direct"),
-  twinRelations = NULL,
-  orderBySex = TRUE
+  twinRelations = NULL
 )
 }
 \arguments{
@@ -33,17 +32,6 @@ connector edges and leaves \code{edges} unchanged from the pre-#137
 contract. A connector always targets the two individuals' REAL node
 ids (D7) and always renders as a direct edge regardless of
 \code{edgeStyle} (D9).}
-
-\item{orderBySex}{issue #145 Slice 1 (D8 option (b)):
-\code{docs/planning/issue145-sire-dam-left-right-placement-plan.md}.
-When \code{TRUE} (the default), every simple two-real-parent mating
-unit (mate-count exactly 1 each, unambiguous \code{"M"}/\code{"F"}
-sex codes, neither parent with a D5 direct child of their own) is
-rendered with the male parent to the left and the female parent to
-the right, matching common pedigree-drawing convention -- an
-additive, new default, not a bug fix (multi-mate/"crowded" families
-are unaffected, out of scope). \code{FALSE} reproduces the pre-#145,
-sex-agnostic default unchanged.}
 }
 \value{
 A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
@@ -90,6 +78,19 @@ child segments (owner-directed, S461) -- not the fully rectilinear
 mate-line/sibship-bar waypoint style S457's original Case C2
 proof-of-concept used; that style is tracked as a deferred, additive
 follow-up (issue #142) rather than built speculatively here.
+
+Male-left/female-right ordering (issue #145) -- every simple two-real-
+parent mating unit (mate-count exactly 1 each, unambiguous
+\code{"M"}/\code{"F"} sex codes, neither parent with a D5 direct child
+of their own) renders with the male parent to the left of the female
+parent -- is now unconditional, folded directly into the Walker/BJL
+positioning engine's own Tier 3 formula (\code{.positionMatingUnitForest()},
+an internal function, S8.1). The former \code{orderBySex}
+parameter that toggled this is removed: the Phase 1b design note found
+the mechanism "restructured, not preserved unchanged -- eliminated
+as a separate pass," with no way to disable it in the new engine, and
+this function had zero real callers ever passing \code{orderBySex =
+FALSE} (grep-confirmed).
 }
 \examples{
 library(nprcgenekeepr)

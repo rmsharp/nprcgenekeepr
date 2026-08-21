@@ -522,720 +522,18 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
        childEdges = childEdges)
 }
 
-#' Compute the Track-3-Engagement-Gated post-hoc duplicate-occurrence nudge
-#'
-#' Internal helper for the kinship2-parity pedigree layout (Pedigree
-#' Diagram Option 2). Investigation
-#' \code{docs/planning/pedigree-diagram-duplicate-occurrence-centering-
-#' investigation.md} secs 10-11 (Sessions 598-601): a targeted correction
-#' for a mating unit \code{U} whose child-centered position (Track 6) is
-#' pulled off-center by a genuinely duplicated-occurrence child, applied
-#' strictly AFTER Track 3's parent-span clamp and gated on whether Track 3
-#' actually engaged for \code{U}.
-#'
-#' \strong{Qualification (per real child C of U, unchanged from the
-#' investigation's own literal rule):} C qualifies iff (a) C has EXACTLY
-#' ONE row in \code{duplicates} with \code{realId == C}, whose
-#' \code{matingUnitId} V has an "other parent" (V's sire/dam other than C)
-#' that is ALSO a real child of U, AND (b) NONE of C's other mating-unit
-#' memberships (excluding V) has an other-parent also a real child of U.
-#'
-#' \strong{Target (Stage 1, unconditional on qualification):} for each
-#' qualifying child, substitute the position of its duplicate node's own
-#' mating unit V (\code{finalUnitX[[V]] + minSep * 0.4} -- identical to
-#' this file's own \code{dupX} formula for V's duplicate node), clipped
-#' into \verb{[min(realKidX), max(realKidX)]}; every non-qualifying
-#' child keeps its own real x. \code{preReclampTarget} is the midpoint of
-#' this effective span. Provably within the real children's own footprint
-#' by construction -- the caller still applies Track 3's own \verb{[lo,
-#' hi]} parent-span clamp to it (Stage 2, mandatory, can erase Stage 1's
-#' correction -- the investigation's own disclosed, accepted trade-off,
-#' out of this gate's scope).
-#'
-#' \strong{Track-3-Engagement Gate (sec11.1):} \code{engaged} is TRUE only
-#' when Track 3's own clamp loop actually altered U's value --
-#' \code{rawFinalUnitX} (recomputed here from \code{nodes$x} of U's real
-#' children, matching Track 6's own raw formula -- no separate parameter
-#' needed, sec11.3 finding (a)) differs from the caller-supplied
-#' \code{finalUnitX[[U]]} (Track 3's already-clamped value) by more than a
-#' fixed \code{1e-9} absolute epsilon. When \code{engaged} is FALSE, the
-#' caller must leave U's value exactly as Track 3 alone left it,
-#' regardless of \code{qualifyingKids} -- a union Track 3's clamp never
-#' touched already carries its own correct, child-centered answer, and the
-#' nudge has no way to know that without this check (the worse-than-
-#' erasure nested/chained regression sec10.4 found). A dangling-parent
-#' union (Track 3's own clamp loop skips it, so
-#' \code{finalUnitX[[U]] == rawFinalUnitX[[U]]} always) is therefore
-#' always \code{engaged == FALSE} (sec11.3 finding (2), stated explicitly).
-#'
-#' @param matingUnits,duplicates,childEdges the 3 elements of
-#'   \code{\link{.buildMatingUnitForest}}'s own return value.
-#' @param nodes the in-progress \code{nodes} data frame -- real
-#'   individuals' \code{x} must already be final (post-sweep,
-#'   post-orderBySex); mating-unit \code{x} is not read from here (see
-#'   \code{finalUnitX}).
-#' @param finalUnitX a named numeric vector, one entry per
-#'   \code{matingUnits$id}, holding each union's ALREADY-Track-3-clamped
-#'   x (the same local variable \code{\link{.positionMatingUnitForest}}
-#'   already maintains, read here, never mutated by this function).
-#' @param minSep this file's own minimum-separation constant.
-#' @return A list keyed by \code{matingUnits$id}; each element is
-#'   \code{list(qualifyingKids = character(), preReclampTarget =
-#'   NA_real_, engaged = logical(1))}.
-#' @noRd
-.computeDupNudge <- function(matingUnits, duplicates, childEdges, nodes,
-                              finalUnitX, minSep) {
-  out <- vector("list", nrow(matingUnits))
-  names(out) <- matingUnits$id
-  for (i in seq_len(nrow(matingUnits))) {
-    uid <- matingUnits$id[i]
-    kids <- childEdges$to[childEdges$from == uid]
-    clampedX <- finalUnitX[[uid]]
-    rawX <- if (length(kids) >= 1L) {
-      kidX0 <- nodes$x[match(kids, nodes$id)]
-      (min(kidX0) + max(kidX0)) / 2L
-    } else {
-      NA_real_
-    }
-    engaged <- length(kids) >= 1L && !is.na(rawX) && !is.na(clampedX) &&
-      abs(rawX - clampedX) > 1e-9
-    if (length(kids) < 2L) {
-      out[[uid]] <- list(qualifyingKids = character(0L),
-                          preReclampTarget = NA_real_, engaged = engaged)
-      next
-    }
-    qualifyingKids <- character(0L)
-    for (kid in kids) {
-      dupRows <- duplicates[duplicates$realId == kid, , drop = FALSE]
-      if (nrow(dupRows) != 1L) next
-      vId <- dupRows$matingUnitId[1L]
-      vRow <- matingUnits[matingUnits$id == vId, ]
-      otherParent <- setdiff(c(vRow$sire, vRow$dam), kid)
-      if (length(otherParent) != 1L || !(otherParent %in% kids)) next
-      otherMemberships <- matingUnits[(matingUnits$sire == kid |
-                                          matingUnits$dam == kid) &
-                                         matingUnits$id != vId, ,
-                                       drop = FALSE]
-      failsClauseB <- FALSE
-      if (nrow(otherMemberships) > 0L) {
-        for (r in seq_len(nrow(otherMemberships))) {
-          otherParent2 <- setdiff(c(otherMemberships$sire[r],
-                                     otherMemberships$dam[r]), kid)
-          if (length(otherParent2) == 1L && otherParent2 %in% kids) {
-            failsClauseB <- TRUE
-            break
-          }
-        }
-      }
-      if (failsClauseB) next
-      qualifyingKids <- c(qualifyingKids, kid)
-    }
-    preReclampTarget <- NA_real_
-    if (length(qualifyingKids) > 0L) {
-      kidX <- nodes$x[match(kids, nodes$id)]
-      names(kidX) <- kids
-      loK <- min(kidX)
-      hiK <- max(kidX)
-      effX <- kidX
-      for (kid in qualifyingKids) {
-        dupRows <- duplicates[duplicates$realId == kid, , drop = FALSE]
-        vId <- dupRows$matingUnitId[1L]
-        dupXForV <- finalUnitX[[vId]] + minSep * 0.4
-        effX[[kid]] <- min(max(dupXForV, loK), hiK)
-      }
-      preReclampTarget <- (min(effX) + max(effX)) / 2L
-    }
-    out[[uid]] <- list(qualifyingKids = qualifyingKids,
-                        preReclampTarget = preReclampTarget,
-                        engaged = engaged)
-  }
-  out
-}
-
-#' Position a mating-unit forest (Option 2 layout, D3/D4/D5)
-#'
-#' Internal helper for the kinship2-parity pedigree layout (Pedigree
-#' Diagram Option 2,
-#' \code{docs/planning/pedigree-diagram-option2-layout-design-plan.md}).
-#' Consumes \code{\link{.buildMatingUnitForest}}'s structural output
-#' (D1/D2) and assigns final \code{x}/\code{gen} coordinates to every
-#' node: a simplified Reingold-Tilford/Walker-style recursive
-#' contour-merge (D3), founders ordered by their input row order (D4),
-#' and the D5 one-known-parent fallback attaching directly (no
-#' synthesized mating unit).
-#'
-#' Contour occupancy is tracked per absolute real \code{gen}, not
-#' recursive tree depth, because a node's vertical position is always
-#' its real \code{gen} (D3 step 6), which can differ from recursive
-#' tree depth once a duplicate or "free" non-anchor individual is
-#' attached deep inside another individual's own subtree -- a genuine
-#' tree cannot hit this (an ancestor and its descendant are never at
-#' the same depth), but this forest can, since
-#' \code{\link{.buildMatingUnitForest}} deliberately re-attaches
-#' individuals who belong to more than one mating unit.
-#'
-#' A non-anchor individual who never anchors any mating unit of their
-#' own and has no directly-known (D5) child gets their one mating-unit
-#' occurrence "for free" (\code{\link{.buildMatingUnitForest}} creates
-#' no duplicate node for it). Such an individual is not an independent
-#' tree root -- they belong to that one mating unit -- so they are
-#' folded into its own children-merge as a genuine, width-reserving
-#' leaf (offset to one side, matching D3 step 5's treatment of true
-#' duplicate nodes), rather than positioned from an untethered offset
-#' that could coincide with an unrelated node elsewhere in the forest.
-#'
-#' Even with gen-indexed contours, an ancestor's own position can still
-#' exactly coincide with a nested duplicate/free-pass descendant's
-#' position at the same gen (the envelope-based contour merge only
-#' guarantees non-overlap between sibling subtrees, not between a node
-#' and an arbitrarily-deep descendant re-attached at the node's own
-#' gen). A final deterministic pass nudges any such exact coincidence
-#' apart, for real-individual/mating-unit nodes only -- duplicate nodes
-#' keep D3 step 5's own accepted "contribute no width" trade-off,
-#' matching kinship2's own documented "not always successfully
-#' collapsed" duplicate placement.
-#'
-#' @param ped data frame with \code{id}, \code{sire}, \code{dam},
-#'   \code{sex}, and \code{gen} columns, same contract as
-#'   \code{\link{makePedigreeDiagramData}}.
-#' @param forest the list returned by \code{\link{.buildMatingUnitForest}}
-#'   for this same \code{ped}.
-#' @param orderBySex issue #145 (D1-D4, D8):
-#'   \code{docs/planning/issue145-sire-dam-left-right-placement-plan.md}.
-#'   When \code{TRUE} (the default), an additive post-hoc step swaps the
-#'   two real parents' own \code{x} values (nothing else) for every
-#'   D1-qualifying mating unit -- both parents real, unambiguous
-#'   \code{"M"}/\code{"F"} sex codes, mate-count exactly 1 each, neither
-#'   with a D5 direct child of their own -- so the male parent ends up
-#'   left of the female parent (D3). \code{FALSE} reproduces the
-#'   pre-#145, sex-agnostic default unchanged.
-#' @return A data frame with one row per node (\code{id}, \code{x},
-#'   \code{gen}): every real individual in \code{ped}, every duplicate
-#'   node in \code{forest$duplicates}, and every mating-unit node in
-#'   \code{forest$matingUnits}.
-#' @noRd
-.positionMatingUnitForest <- function(ped, forest, orderBySex = TRUE) {
-  if (!is.data.frame(ped)) {
-    stop(".positionMatingUnitForest() requires 'ped' to be a data ",
-         "frame.")
-  }
-  required <- c("id", "sire", "dam", "sex", "gen")
-  missingCols <- setdiff(required, names(ped))
-  if (length(missingCols) > 0L) {
-    stop(".positionMatingUnitForest() requires 'ped' to have columns: ",
-         toString(required), ". Missing: ", toString(missingCols))
-  }
-
-  ## A real individual with NA gen (issue #154 -- defensive; not currently
-  ## reachable via findGeneration()'s own contract) is treated as
-  ## generation 0 rather than propagating NA into maxGen/contour indexing
-  ## below.
-  ped$gen[is.na(ped$gen)] <- 0L
-
-  matingUnits <- forest$matingUnits
-  duplicates <- forest$duplicates
-  childEdges <- forest$childEdges
-  unitIds <- matingUnits$id
-  realIds <- as.character(ped$id)
-  genOf <- stats::setNames(ped$gen, realIds)
-
-  ## A sire/dam value with no own row in 'ped' (a dangling reference --
-  ## e.g. a focal-animal-trimmed pedigree, R/modPedigree.R's own
-  ## trimPedigree(..., addBackParents = FALSE), keeps a blood relative's
-  ## row but not that relative's own mate's row) has no gen of its own
-  ## here. Back-fill from the one mating unit .buildMatingUnitForest()
-  ## already knows them by (.buildMatingUnitForest() guarantees such an
-  ## individual is never an anchor, so they need only a free-pass/
-  ## duplicate leaf gen, never a recursively-positioned one). Found live,
-  ## S461.
-  ##
-  ## integer(1L), not numeric(1L) (found S555, fixed S556): matingUnits$gen
-  ## (the value this vapply() actually returns) is already integer -- a
-  ## numeric(1L) template forces a double regardless, and genOf <- c(genOf,
-  ## ...) then silently widens the WHOLE genOf vector (every real
-  ## individual's gen too, not just the dangling entries) from integer to
-  ## double via R's own type-promotion rule, the moment ANY dangling parent
-  ## exists anywhere in 'ped'. That double then survives into
-  ## dispGenOf/nodes$gen/pos$gen, while .addRectilinearWaypoints()'s D2 loop
-  ## compares gens via identical() -- type-sensitive (identical(0, 0L) is
-  ## FALSE) -- so it started spuriously doglegging OTHER, unrelated,
-  ## correctly-matched mate-line edges elsewhere in the same diagram.
-  danglingIds <- setdiff(c(matingUnits$sire, matingUnits$dam), realIds)
-  if (length(danglingIds) > 0L) {
-    fallbackGen <- vapply(danglingIds, function(x) {
-      matingUnits$gen[matingUnits$sire == x | matingUnits$dam == x][1L]
-    }, integer(1L))
-    genOf <- c(genOf, stats::setNames(fallbackGen, danglingIds))
-  }
-
-  unitGenOf <- stats::setNames(matingUnits$gen, unitIds)
-  maxGen <- max(ped$gen, if (nrow(matingUnits) > 0L) {
-    matingUnits$gen
-  } else {
-    0L
-  }, na.rm = TRUE)
-  if (!is.finite(maxGen)) maxGen <- 0L
-  minSep <- 1L
-
-  ## D3 contour-merge machinery: occupancy tracked per absolute gen
-  ## (0..maxGen), not relative recursive depth -- see @noRd above.
-  leafContour <- function(gen) {
-    left <- rep(Inf, maxGen + 1L)
-    right <- rep(-Inf, maxGen + 1L)
-    left[gen + 1L] <- 0L
-    right[gen + 1L] <- 0L
-    list(x = 0L, contour = list(left = left, right = right))
-  }
-
-  mergeSubtrees <- function(subResults) {
-    n <- length(subResults)
-    xs <- numeric(n)
-    contour <- subResults[[1L]]$contour
-    if (n > 1L) {
-      for (i in 2L:n) {
-        ci <- subResults[[i]]$contour
-        finite <- is.finite(contour$right) & is.finite(ci$left)
-        shift <- minSep
-        if (any(finite)) {
-          needed <- max(contour$right[finite] - ci$left[finite] +
-                          minSep)
-          shift <- max(shift, needed)
-        }
-        xs[i] <- shift
-        contour <- list(left = pmin(contour$left, ci$left + shift),
-                         right = pmax(contour$right, ci$right + shift))
-      }
-    }
-    list(xs = xs, contour = contour)
-  }
-
-  finalizeNode <- function(merged, ownGen) {
-    xs <- merged$xs
-    ownX <- (xs[1L] + xs[length(xs)]) / 2L
-    shiftAmt <- -ownX
-    contour <- list(left = merged$contour$left + shiftAmt,
-                     right = merged$contour$right + shiftAmt)
-    contour$left[ownGen + 1L] <- min(contour$left[ownGen + 1L], 0L)
-    contour$right[ownGen + 1L] <- max(contour$right[ownGen + 1L], 0L)
-    list(ownX = ownX, childOffsets = xs - ownX, contour = contour)
-  }
-
-  ## Individuals whose one non-anchor occurrence is "free" (no
-  ## duplicate node): never anchor anywhere, no D5 direct child of
-  ## their own. They fold into their one unit's children-merge as an
-  ## extra width-reserving leaf instead of being an independent root.
-  ## Orphan units (issue #154 -- both sire and dam dangling, anchor = NA)
-  ## are excluded from the sire/dam pool feeding this: there is no real
-  ## anchor to contrast a "non-anchor side" against, and both of an
-  ## orphan unit's (dangling) parents are handled instead by that unit's
-  ## own root-level positioning below, not as a free-pass leaf of it.
-  anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
-  everAnchor <- unique(anchoredUnits$anchor)
-  nonAnchorSides <- c(anchoredUnits$sire, anchoredUnits$dam)
-  neverAnchorIds <- setdiff(unique(nonAnchorSides), everAnchor)
-  hasOwnDirectChild <- function(id) {
-    any(childEdges$from == id & !(childEdges$from %in% unitIds))
-  }
-  freePassIds <- Filter(function(id) !hasOwnDirectChild(id),
-                         neverAnchorIds)
-  freePassUnitOf <- stats::setNames(character(length(freePassIds)),
-                                     freePassIds)
-  for (fp in freePassIds) {
-    ownUnits <- matingUnits$id[matingUnits$sire == fp |
-                                 matingUnits$dam == fp]
-    dupUnits <- duplicates$matingUnitId[duplicates$realId == fp]
-    freePassUnitOf[[fp]] <- setdiff(ownUnits, dupUnits)[1L]
-  }
-  freePassOfUnit <- split(names(freePassUnitOf), freePassUnitOf)
-
-  # nolint start: commented_code_linter.
-  ## D3 step 6 correction (issue #143): every NON-ANCHOR occurrence -- a
-  ## free-pass real node or a genuine duplicate -- renders at its own
-  ## MATING UNIT's gen, not the underlying individual's global tree-native
-  ## gen (which can legitimately differ, e.g. a founder marrying into a
-  ## later generation). The intersect(freePassIds, realIds) guard is
-  ## required: freePassIds can contain dangling ids (no own row in 'ped',
-  ## S461) that are absent from realIds -- indexing dispGenOf by such an id
-  ## would silently APPEND rather than error, misaligning it with
-  ## realIds/nodes$id.
-  ##
-  ## Computed here -- ahead of the recursive descent below, moved from its
-  ## original post-positioning location (Track 3,
-  ## docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md
-  ## Track 3; a pure reordering, same logic, no behavior change) -- because
-  ## Track 3's minimum-spacing sweep, below, needs to group nodes by the
-  ## same DISPLAY row a viewer actually sees, not raw ped$gen.
-  # nolint end
-  dispGenOf <- genOf[realIds]
-  realFreePassIds <- intersect(freePassIds, realIds)
-  if (length(realFreePassIds) > 0L) {
-    dispGenOf[realFreePassIds] <-
-      unname(unitGenOf[freePassUnitOf[realFreePassIds]])
-  }
-  ## No anchor-side override is needed here (Track 4, issue #144's own
-  ## effGenOf mechanism removed): under the new gen-first D2 tie-break
-  ## (.buildMatingUnitForest()'s preferAnchor()), every mating unit's
-  ## anchor has genOf[[anchor]] >= genOf[[nonAnchor]] by construction, so
-  ## genOf[[anchor]] == unitGen for every unit an individual anchors --
-  ## an anchor's own raw gen is already its correct display gen, with no
-  ## exceptions to correct for.
-
-  ## Recursive descent (post-order): mating units recurse into their
-  ## real children (plus any free-pass non-anchor parent, D3 step 5);
-  ## individuals recurse into the mating units they anchor plus any D5
-  ## direct child of their own.
-  relNode <- new.env(parent = emptyenv())
-
-  positionUnit <- function(unitId) {
-    kidIds <- childEdges$to[childEdges$from == unitId]
-    fpHere <- freePassOfUnit[[unitId]]
-    subIds <- c(fpHere, kidIds)  # free-pass parent leftmost
-    subResults <- lapply(subIds, function(sid) {
-      if (!is.null(fpHere) && sid %in% fpHere) {
-        leafContour(unitGenOf[[unitId]])
-      } else {
-        positionIndividual(sid)
-      }
-    })
-    fin <- finalizeNode(mergeSubtrees(subResults), unitGenOf[[unitId]])
-    relNode[[unitId]] <- list(childIds = subIds,
-                               childOffsets = fin$childOffsets)
-    list(x = fin$ownX, contour = fin$contour)
-  }
-
-  positionIndividual <- function(id) {
-    ## %in%, not == : matingUnits$anchor can be NA for an orphan unit
-    ## (issue #154, both parents dangling) -- NA == id is NA, which would
-    ## select an NA element from matingUnits$id and recurse into it
-    ## indefinitely; id is always a real, non-NA individual here, and
-    ## %in% treats an NA anchor as simply "not a match".
-    unitSub <- matingUnits$id[matingUnits$anchor %in% id]
-    directSub <- childEdges$to[childEdges$from == id &
-                                  !(childEdges$from %in% unitIds)]
-    subIds <- c(unitSub, directSub)
-    if (length(subIds) == 0L) {
-      relNode[[id]] <- list(childIds = character(0L),
-                             childOffsets = numeric(0L))
-      return(leafContour(genOf[[id]]))
-    }
-    subResults <- lapply(subIds, function(sid) {
-      if (sid %in% unitIds) positionUnit(sid) else positionIndividual(sid)
-    })
-    fin <- finalizeNode(mergeSubtrees(subResults), genOf[[id]])
-    relNode[[id]] <- list(childIds = subIds,
-                           childOffsets = fin$childOffsets)
-    list(x = fin$ownX, contour = fin$contour)
-  }
-
-  ## D4: founders (no incoming parent edge), ordered by input row
-  ## order, excluding free-pass-only individuals (they attach to their
-  ## one unit above, not as an independent root).
-  hasParentEdge <- realIds %in% childEdges$to
-  founderIds <- realIds[!hasParentEdge]
-  rootIds <- setdiff(founderIds, freePassIds)
-  rootIds <- rootIds[order(match(rootIds, realIds))]
-
-  ## Orphan units (issue #154 -- both sire and dam dangling, anchor = NA)
-  ## have no real anchor individual to be reached through, so they are
-  ## positioned as additional top-level roots in their own right, exactly
-  ## like a founder individual, via positionUnit() instead of
-  ## positionIndividual().
-  orphanUnitIds <- matingUnits$id[is.na(matingUnits$anchor)]
-
-  rootResults <- c(lapply(rootIds, positionIndividual),
-                    lapply(orphanUnitIds, positionUnit))
-  allRootIds <- c(rootIds, orphanUnitIds)
-  rootMerge <- mergeSubtrees(rootResults)
-
-  ## Top-down pass: accumulate absolute x from the relative offsets
-  ## recorded above.
-  absX <- new.env(parent = emptyenv())
-  assignAbs <- function(id, base) {
-    absX[[id]] <- base
-    node <- relNode[[id]]
-    if (!is.null(node) && length(node$childIds) > 0L) {
-      for (i in seq_along(node$childIds)) {
-        assignAbs(node$childIds[i], base + node$childOffsets[i])
-      }
-    }
-  }
-  for (i in seq_along(allRootIds)) {
-    assignAbs(allRootIds[i], rootMerge$xs[i])
-  }
-
-  realX <- vapply(realIds, function(i) absX[[i]], numeric(1L))
-
-  # nolint start: commented_code_linter.
-  ## Track 3 minimum-spacing guarantee
-  ## (docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md
-  ## Track 3; PRE-RED AskUserQuestion decision, this session): mergeSubtrees()
-  ## above only guarantees adjacent subtrees do not exactly overlap -- it
-  ## reserves however much width a subtree's own descendants need, not a
-  ## fixed minimum gap. Two unrelated free-pass nodes nested at different
-  ## recursion depths are never inputs to the SAME mergeSubtrees() call, so
-  ## no leaf-width change inside the recursive merge itself can guarantee
-  ## spacing between them (documented dragon,
-  ## pedigree-diagram-option2-layout-design-plan.md:486-495, "New dragon
-  ## found S461"). This global post-merge sweep -- over every REAL
-  ## individual node only (mating-unit "__union_*" dots and DUPLICATE nodes
-  ## are excluded; Track 6,
-  ## docs/planning/pedigree-diagram-track6-child-centered-union-position-
-  ## plan.md sec2.2, removed duplicates from this sweep -- a duplicate's x
-  ## is now a derived offset from its own mating unit's FINAL x, computed
-  ## below, not an independently laid-out leaf any longer) -- closes that
-  ## gap directly: group by DISPLAY gen, sort left-to-right, and push any
-  ## node closer than minSep to its left neighbor out to exactly minSep.
-  ## sweepMinSep() is applied HERE (before orderBySex/finalUnitX below, so
-  ## every downstream computation reads swept real positions) AND again at
-  ## the very end of this function (after the broadened final de-collision
-  ## pass, which is not a sweep input but CAN disturb a value the sweep
-  ## already fixed here -- found live against the real 375-individual
-  ## bundled fixture: the de-collision pass's epsilon-nudge, breaking an
-  ## unrelated exact-coincidence, moved a real node 1e-3 closer to an
-  ## already-minSep-exact neighbor).
-  # nolint end
-  sweepMinSep <- function(ids, xVals, genVals) {
-    x <- stats::setNames(xVals, ids)
-    for (g in unique(genVals)) {
-      rowIds <- ids[genVals == g]
-      if (length(rowIds) < 2L) next
-      rowIds <- rowIds[order(x[rowIds], rowIds, method = "radix")]
-      for (i in 2L:length(rowIds)) {
-        prevX <- x[[rowIds[i - 1L]]]
-        if (x[[rowIds[i]]] < prevX + minSep) {
-          x[[rowIds[i]]] <- prevX + minSep
-        }
-      }
-    }
-    x
-  }
-  sweepIds <- realIds
-  sweepGen <- unname(dispGenOf[realIds])
-  sweepX <- sweepMinSep(sweepIds, unname(realX), sweepGen)
-  realX <- sweepX[realIds]
-
-  nodes <- data.frame(
-    id = c(realIds, unitIds),
-    x = c(unname(realX), rep(NA_real_, length(unitIds))),
-    gen = c(unname(dispGenOf), matingUnits$gen),
-    stringsAsFactors = FALSE
-  )
-
-  # nolint start: commented_code_linter.
-  ## issue #145 D1-D4/D2 (male-left/female-right default,
-  ## docs/planning/issue145-sire-dam-left-right-placement-plan.md): an
-  ## additive post-hoc value-swap, scoped to exactly the D1-qualifying
-  ## simple pair -- both parents real, mate-count exactly 1 each, neither
-  ## with a D5 direct child of their own (hasOwnDirectChild(), already
-  ## defined above), unambiguous "M"/"F" sex codes (D4 excludes "H"/"U"/
-  ## NA). Swapping only the two real parents' own x (nothing else) is
-  ## safe regardless of child count/fanout width (D2's own safety
-  ## argument, empirically re-verified live at this Slice's own Pre-RED):
-  ## the free-pass parent is always the unit's global leftmost point and
-  ## the anchor's own x always lies within the same bounding footprint,
-  ## so both swapped values already occupy positions inside the
-  ## pre-existing footprint before AND after -- no child, duplicate, or
-  ## ancestor moves.
-  ##
-  ## Track 6 moved this block EARLIER in the function (was after the final
-  ## de-collision pass; docs/planning/pedigree-diagram-track6-child-
-  ## centered-union-position-plan.md, Pre-RED finding, this session): the
-  ## new finalUnitX formula below (sec2.1) reads a mating unit's own
-  ## CHILDREN's x, and a child can itself be a swapped parent in a
-  ## DIFFERENT, deeper mating unit -- computing finalUnitX from a pre-swap
-  ## child position would silently go stale the moment that child is later
-  ## swapped. Running the swap first (it only ever touches 2 REAL
-  ## individuals' x, never a union or duplicate) and finalUnitX second
-  ## closes this; verified empirically against the real fixture (measured
-  ## 19/251 > 200-unit offset without this reordering vs. the ratified
-  ## 9/251 with it). The swap's own logic/guard conditions are unchanged --
-  ## only its position in the pipeline moves.
-  # nolint end
-  if (isTRUE(orderBySex)) {
-    sexOf <- stats::setNames(as.character(ped$sex), realIds)
-    mateCount <- table(c(matingUnits$sire, matingUnits$dam))
-    for (u in seq_len(nrow(matingUnits))) {
-      sireId <- matingUnits$sire[u]
-      damId <- matingUnits$dam[u]
-      if (!(sireId %in% realIds) || !(damId %in% realIds)) next
-      if (mateCount[[sireId]] != 1L || mateCount[[damId]] != 1L) next
-      if (hasOwnDirectChild(sireId) || hasOwnDirectChild(damId)) next
-      sireSex <- sexOf[[sireId]]
-      damSex <- sexOf[[damId]]
-      isQualifying <- (identical(sireSex, "M") && identical(damSex, "F")) ||
-        (identical(sireSex, "F") && identical(damSex, "M"))
-      if (!isQualifying) next
-      maleId <- if (identical(sireSex, "M")) sireId else damId
-      femaleId <- if (identical(sireSex, "F")) sireId else damId
-      mIdx <- which(nodes$id == maleId)
-      fIdx <- which(nodes$id == femaleId)
-      if (nodes$x[mIdx] > nodes$x[fIdx]) {
-        tmp <- nodes$x[mIdx]
-        nodes$x[mIdx] <- nodes$x[fIdx]
-        nodes$x[fIdx] <- tmp
-      }
-    }
-  }
-
-  # nolint start: commented_code_linter.
-  ## Track 6 (docs/planning/pedigree-diagram-track6-child-centered-union-
-  ## position-plan.md sec2.1/sec2.2, this session): a mating unit's final x
-  ## is now the midpoint of its OWN CHILDREN's final x -- reusing the SAME
-  ## midpoint-of-merged-span formula D3 step 2 already uses for the
-  ## PROVISIONAL position (finalizeNode() above), just applied again here
-  ## to the FINAL (post-sweep, post-orderBySex) child positions, instead of
-  ## overridden by the 2 parents' midpoint. Every mating unit has >= 1
-  ## child by construction (.buildMatingUnitForest() only synthesizes a
-  ## unit from an observed child row), including orphan units (issue #154,
-  ## both parents dangling) -- so no anchor/non-anchor/orphan-unit
-  ## branching or provisional-position fallback is needed any longer (net
-  ## simplification, not just a substitution).
-  ##
-  ## A duplicate node is then offset adjacent to its OWN mating unit's new
-  ## FINAL x (sec2.2, was the pre-finalization PROVISIONAL x) -- restoring
-  ## D3 step 5's own stated intent ("positioned immediately adjacent to
-  ## their mating unit") now that "final" means something different.
-  # nolint end
-  finalUnitX <- stats::setNames(numeric(nrow(matingUnits)), matingUnits$id)
-  if (nrow(matingUnits) > 0L) {
-    for (i in seq_len(nrow(matingUnits))) {
-      uid <- matingUnits$id[i]
-      kids <- childEdges$to[childEdges$from == uid]
-      kidX <- nodes$x[match(kids, nodes$id)]
-      finalUnitX[[uid]] <- (min(kidX) + max(kidX)) / 2L
-    }
-  }
-
-  ## Track 3 (docs/planning/pedigree-diagram-same-row-collision-avoidance-
-  ## plan.md sec2.3/sec6 Session C, issue #160 / BACKLOG.md's S583 item): clamp
-  ## each union's finalUnitX into its own 2 parents' [min, max] x-range.
-  ## A disclosed, owner-ratified (S592 sec9) reopening of the sec2.4
-  ## "unconditionally" wording above -- whenever the child-centered
-  ## formula already falls inside the parent span (the common,
-  ## already-correct case), this is a no-op; it engages only for the
-  ## outlier cases issue #160/S583 found (a union with a single child, or
-  ## whose children's own midpoint happens to fall outside the parents'
-  ## span). Must run BEFORE nodes$x is synced below and BEFORE dupX is
-  ## computed (sec2.2), so both read the FINAL (clamped) union x. Skips a
-  ## unit whose sire or dam has NO node of its own (a dangling free-pass
-  ## reference, no own row in 'ped' -- match() returns NA) rather than
-  ## propagating NA into finalUnitX: there is no parent x to clamp
-  ## against, so the unconditional formula value is left untouched,
-  ## matching this function's own existing dangling-parent precedent
-  ## elsewhere (found live this session, regressed 2 pre-existing tests
-  ## before this guard was added).
-  ## parentLo/parentHi (REFACTOR, this session): cache each union's own
-  ## [lo, hi] parent-x span here, once, keyed by matingUnits$id -- an NA
-  ## entry means a dangling parent (no clamp target). Reused below by the
-  ## nudge-application loop so it need not re-run the same match()/min/max
-  ## work Track 3's own clamp loop already did for every union.
-  parentLo <- stats::setNames(rep(NA_real_, nrow(matingUnits)), matingUnits$id)
-  parentHi <- parentLo
-  for (i in seq_len(nrow(matingUnits))) {
-    uid <- matingUnits$id[i]
-    parentX <- nodes$x[match(c(matingUnits$sire[i], matingUnits$dam[i]),
-                              nodes$id)]
-    if (!anyNA(parentX)) {
-      parentLo[[uid]] <- min(parentX)
-      parentHi[[uid]] <- max(parentX)
-      finalUnitX[[uid]] <- min(max(finalUnitX[[uid]], parentLo[[uid]]),
-                                parentHi[[uid]])
-    }
-  }
-
-  ## Track-3-Engagement-Gated post-hoc duplicate-occurrence nudge
-  ## (docs/planning/pedigree-diagram-duplicate-occurrence-centering-
-  ## investigation.md sec10-sec11, PRE-RED->RED->GREEN this session): a
-  ## targeted correction for a union whose Track-6 child-centered position
-  ## was pulled off-center by a genuinely duplicated child, applied AFTER
-  ## Track 3's own clamp above and BEFORE nodes$x is synced/dupX is
-  ## computed below (sec10.1's confirmed insertion point), so it reads an
-  ## already-clamped, parent-span-safe starting point and both downstream
-  ## computations see the final (possibly nudged) union x. Gated on
-  ## .computeDupNudge()'s own "engaged" flag: a union Track 3's clamp
-  ## never touched already carries its own correct answer, and firing the
-  ## nudge anyway can leave it strictly worse than doing nothing at all
-  ## (sec10.4's live-verified nested/chained regression) -- this gate
-  ## closes that, confirmed by adversarial critique to leave the target
-  ## case (sec11.2 F1), the pre-existing no-op cases (F2/F3), and the
-  ## separately-accepted invariant-preservation erasure trade-off
-  ## (sec10.4 point 1, out of this gate's own scope) all unaffected.
-  nudge <- .computeDupNudge(matingUnits, duplicates, childEdges, nodes,
-                             finalUnitX, minSep)
-  for (i in seq_len(nrow(matingUnits))) {
-    uid <- matingUnits$id[i]
-    unitNudge <- nudge[[uid]]
-    if (isTRUE(unitNudge$engaged) && !is.na(unitNudge$preReclampTarget) &&
-          !is.na(parentLo[[uid]])) {
-      finalUnitX[[uid]] <- min(max(unitNudge$preReclampTarget,
-                                    parentLo[[uid]]), parentHi[[uid]])
-    }
-  }
-
-  nodes$x[match(matingUnits$id, nodes$id)] <- unname(finalUnitX[matingUnits$id])
-
-  dupX <- numeric(nrow(duplicates))
-  if (nrow(duplicates) > 0L) {
-    dupX <- unname(finalUnitX[duplicates$matingUnitId]) + minSep * 0.4
-  }
-  nodes <- rbind(nodes, data.frame(
-    id = duplicates$id, x = dupX,
-    gen = unname(unitGenOf[duplicates$matingUnitId]),
-    stringsAsFactors = FALSE
-  ))
-
-  ## Final de-collision pass -- Track 6 (sec2.3) broadened this to EVERY
-  ## node (real, duplicate, AND mating-unit), not just real/union: an
-  ## ancestor's own point can exactly coincide with a nested duplicate/
-  ## free-pass descendant's point at the same gen (see @noRd above), and
-  ## sec2.2's dupX (now anchored to the union's own final x rather than an
-  ## independent Track-3-swept position) is no longer protected by Track
-  ## 3's own minSep guarantee -- confirmed live against the real fixture
-  ## this session (Pre-RED): removing duplicates from Track 3's sweep
-  ## surfaces exact duplicate/real and duplicate/union coincidences this
-  ## pass did not previously need to reach (including 1 PRE-EXISTING
-  ## coincidence unrelated to this decision that today's narrower pass
-  ## also missed). Nudge apart deterministically, in (gen, id) order.
-  ord <- order(nodes$gen, nodes$id, method = "radix")
-  seenAtGen <- new.env(parent = emptyenv())
-  for (i in ord) {
-    genKey <- as.character(nodes$gen[i])
-    used <- seenAtGen[[genKey]]
-    x <- nodes$x[i]
-    while (!is.null(used) && any(abs(used - x) < 1e-9)) {
-      x <- x + 1e-3
-    }
-    nodes$x[i] <- x
-    seenAtGen[[genKey]] <- c(used, x)
-  }
-
-  ## Track 3 (see sweepMinSep()'s own definition/comment above): re-apply
-  ## the minSep sweep one final time, now that the broadened de-collision
-  ## pass has had its say -- its epsilon-nudge can, and does, erode a gap
-  ## Track 3 already fixed above (found live against the real
-  ## 375-individual bundled fixture). REAL individuals only (Track 6
-  ## sec2.2) -- duplicates are no longer a Track 3 sweep input; the
-  ## broadened de-collision pass above is what protects them now, not a
-  ## Track-3-shaped guarantee. This final pass is idempotent when nothing
-  ## upstream disturbed the first sweep's result.
-  nodes$x[match(sweepIds, nodes$id)] <-
-    unname(sweepMinSep(sweepIds, nodes$x[match(sweepIds, nodes$id)],
-                        sweepGen))
-
-  nodes
-}
 
 #' Position a mating-unit forest via a genuine Buchheim-Junger-Leipert
-#' apportioning engine, parallel to \code{.positionMatingUnitForest()}
-#' (Pedigree Diagram Walker/BJL redesign, Phase 2a)
+#' apportioning engine (Option 2 layout, D3/D4/D5)
 #'
-#' \code{docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-
-#' plan.md}'s Phase 2, as amended by \code{docs/planning/pedigree-diagram-
-#' walker-bjl-phase1b-mixed-gen-reconciliation.md}'s S3 mechanism
-#' (Candidate 2b) and S8's seam-resolution formula. Runs SIDE BY SIDE with
-#' \code{\link{.positionMatingUnitForest}} -- zero changes to it, no shared
-#' call site yet (a later, separate cutover session per the plan's own
-#' Phase 3).
+#' Internal helper for the kinship2-parity pedigree layout (Pedigree
+#' Diagram Walker/BJL redesign, issue #141). Production implementation as
+#' of Phase 3's cutover (\code{docs/planning/pedigree-diagram-walker-bjl-
+#' apportioning-redesign-plan.md} Migration Path Phase 3): replaces the
+#' OLD Reingold-Tilford/Walker-style contour-merge implementation outright
+#' (deleted in the same commit), as amended by \code{docs/planning/
+#' pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md}'s S3
+#' mechanism (Candidate 2b) and S8's seam-resolution formula.
 #'
 #' Three strictly ordered tiers, each fully reconciled before the next
 #' tier reads it (S3.1/S3.4):
@@ -1255,8 +553,10 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'     genuine nodes at the same gen (S3.3.3/S3.4).
 #'   \item \strong{Tier 3} -- for every B1/B3 non-anchor occurrence, a
 #'     derived point off its own unit's FINAL x. B1's qualifying case
-#'     folds the old \code{orderBySex} post-hoc swap directly into the
-#'     formula (S8.1): anchored on the anchor's own FINAL Tier-1 x
+#'     folds the OLD \code{orderBySex} post-hoc swap directly into the
+#'     formula (S8.1), unconditionally -- there is no parameter to disable
+#'     it (the Phase 1b design note found this "restructured, not
+#'     preserved unchanged"): anchored on the anchor's own FINAL Tier-1 x
 #'     (\code{P.x}), never the union's (\code{U.x(FINAL)}) -- S8's own
 #'     fix, proven correct for any \code{sweepMinSep()}-induced drift
 #'     where the OLD (\code{U.x(FINAL)}-anchored) formula was not (S8.2).
@@ -1265,17 +565,38 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'     already-final genuine x.
 #' }
 #'
-#' Deliberately scoped to 2a: no live-render verification, no real-fixture
-#' A/B measurement (both explicitly deferred to a Phase 2b session, per
-#' the parent plan's own "splittable if too large" allowance).
+#' Track 3 (the parent-span clamp on a union's finalUnitX) and the
+#' Track-3-Engagement-Gate post-hoc duplicate-occurrence nudge
+#' (\code{.computeDupNudge()}, deleted in this same commit) are both gone
+#' by construction: every ANCHORED mating unit's x is now,
+#' unconditionally, the exact midpoint of its own real children's final x
+#' (Tier 2 above), no clamp/nudge exceptions.
 #'
-#' @param ped as \code{\link{.positionMatingUnitForest}}.
-#' @param forest as \code{\link{.positionMatingUnitForest}}.
+#' @param ped data frame with \code{id}, \code{sire}, \code{dam},
+#'   \code{sex}, and \code{gen} columns, same contract as
+#'   \code{\link{makePedigreeDiagramData}}.
+#' @param forest the list returned by \code{\link{.buildMatingUnitForest}}
+#'   for this same \code{ped}.
 #' @return A data frame with one row per node (\code{id}, \code{x},
-#'   \code{gen}), the SAME output contract as
-#'   \code{\link{.positionMatingUnitForest}}.
+#'   \code{gen}): every real individual in \code{ped}, every duplicate
+#'   node in \code{forest$duplicates}, and every mating-unit node in
+#'   \code{forest$matingUnits}.
 #' @noRd
-.positionMatingUnitForestBJL <- function(ped, forest) {
+.positionMatingUnitForest <- function(ped, forest) {
+  ## Same input-validation contract the OLD implementation carried --
+  ## preserved across the Phase 3 cutover (found during GREEN: BJL's own
+  ## Phase 2a/2b tests never exercised these malformed-input cases, since
+  ## every fixture there was already valid by construction).
+  if (!is.data.frame(ped)) {
+    stop(".positionMatingUnitForest() requires 'ped' to be a data frame.")
+  }
+  required <- c("id", "sire", "dam", "sex", "gen")
+  missingCols <- setdiff(required, names(ped))
+  if (length(missingCols) > 0L) {
+    stop(".positionMatingUnitForest() requires 'ped' to have columns: ",
+         toString(required), ". Missing: ", toString(missingCols))
+  }
+
   ped$gen[is.na(ped$gen)] <- 0L
   minSep <- 1L
 
@@ -1334,7 +655,28 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   }, neverAnchorIds)
 
   founderIds <- Filter(function(id) !hasParentEdge(id), realIds)
-  rootIds <- setdiff(founderIds, b1Ids)
+  ## issue #154 (both-dangling case): a mating unit whose anchor is NA
+  ## (BOTH sire and dam dangling -- no real row for either) has no real
+  ## parent for CHILDREN()/unitChildrenOf() to ever reach it through
+  ## (anchorOf is never matched by a real id), so its own real children
+  ## would otherwise never enter the recursion at all -- and, since such
+  ## a child's own sire/dam ARE non-NA (dangling id strings, not NA
+  ## values), hasParentEdge() is TRUE for them, excluding them from
+  ## founderIds too. Left unhandled, a pedigree with no genuine founder at
+  ## all (every real individual's only "parents" are dangling) leaves
+  ## rootIds empty, crashing .buildForestChildrenOf() -- the OLD
+  ## algorithm's own issue #154 fix (mergeSubtrees() on an empty rootIds)
+  ## has no BJL equivalent yet; this is that equivalent. Such a child
+  ## becomes an independent root directly.
+  orphanUnitIds <- unitIds[is.na(anchorOf)]
+  orphanChildIds <- if (length(orphanUnitIds) > 0L) {
+    unique(unlist(lapply(orphanUnitIds, function(u) {
+      childEdges$to[childEdges$from == u]
+    }), use.names = FALSE))
+  } else {
+    character(0L)
+  }
+  rootIds <- union(setdiff(founderIds, b1Ids), orphanChildIds)
 
   forestChildrenOf <- .buildForestChildrenOf(rootIds, childrenOf,
                                               superRootId = "__super_root__")
@@ -1359,14 +701,27 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   }
 
   ## ---- Tier 2: union-point derivation + exact-tie sweep (S3.3.3/S3.4) --
+  ## Includes every unit with >=1 real child -- not just anchoredUnits --
+  ## so an orphan unit (anchor NA, issue #154's both-dangling case above)
+  ## still gets a valid, finite x (its own children's midpoint), matching
+  ## the OLD algorithm's own output contract. qualifies()/Tier 3 below
+  ## still uses anchoredUnits specifically -- an orphan unit can never be
+  ## a Tier-3 B1 formula's own qualifying anchor (its anchorOf is NA, the
+  ## qualifies() gate's own first check already excludes it), so this
+  ## broadening is scoped to x-derivation only, no Tier-3 behavior change.
   unitX <- stats::setNames(rep(NA_real_, length(unitIds)), unitIds)
-  for (u in anchoredUnits$id) {
+  xDerivableUnits <- matingUnits[matingUnits$id %in% unitIds[
+    vapply(unitIds, function(u) {
+      length(childEdges$to[childEdges$from == u]) > 0L
+    }, logical(1L))
+  ], , drop = FALSE]
+  for (u in xDerivableUnits$id) {
     kids <- childEdges$to[childEdges$from == u]
     unitX[[u]] <- mean(tier1X[kids])
   }
-  if (nrow(anchoredUnits) > 0L) {
-    ord <- order(anchoredUnits$gen, anchoredUnits$id, method = "radix")
-    orderedUnits <- anchoredUnits[ord, , drop = FALSE]
+  if (nrow(xDerivableUnits) > 0L) {
+    ord <- order(xDerivableUnits$gen, xDerivableUnits$id, method = "radix")
+    orderedUnits <- xDerivableUnits[ord, , drop = FALSE]
     placedAtGen <- list()
     for (i in seq_len(nrow(orderedUnits))) {
       u <- orderedUnits$id[i]
@@ -1480,6 +835,19 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' proof-of-concept used; that style is tracked as a deferred, additive
 #' follow-up (issue #142) rather than built speculatively here.
 #'
+#' Male-left/female-right ordering (issue #145) -- every simple two-real-
+#' parent mating unit (mate-count exactly 1 each, unambiguous
+#' \code{"M"}/\code{"F"} sex codes, neither parent with a D5 direct child
+#' of their own) renders with the male parent to the left of the female
+#' parent -- is now unconditional, folded directly into the Walker/BJL
+#' positioning engine's own Tier 3 formula (\code{.positionMatingUnitForest()},
+#' an internal function, S8.1). The former \code{orderBySex}
+#' parameter that toggled this is removed: the Phase 1b design note found
+#' the mechanism "restructured, not preserved unchanged -- eliminated
+#' as a separate pass," with no way to disable it in the new engine, and
+#' this function had zero real callers ever passing \code{orderBySex =
+#' FALSE} (grep-confirmed).
+#'
 #' @param ped data frame with \code{id}, \code{sire}, \code{dam},
 #'   \code{sex}, and \code{gen} columns, same contract as
 #'   \code{\link{makePedigreeDiagramData}}.
@@ -1499,16 +867,6 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   contract. A connector always targets the two individuals' REAL node
 #'   ids (D7) and always renders as a direct edge regardless of
 #'   \code{edgeStyle} (D9).
-#' @param orderBySex issue #145 Slice 1 (D8 option (b)):
-#'   \code{docs/planning/issue145-sire-dam-left-right-placement-plan.md}.
-#'   When \code{TRUE} (the default), every simple two-real-parent mating
-#'   unit (mate-count exactly 1 each, unambiguous \code{"M"}/\code{"F"}
-#'   sex codes, neither parent with a D5 direct child of their own) is
-#'   rendered with the male parent to the left and the female parent to
-#'   the right, matching common pedigree-drawing convention -- an
-#'   additive, new default, not a bug fix (multi-mate/"crowded" families
-#'   are unaffected, out of scope). \code{FALSE} reproduces the pre-#145,
-#'   sex-agnostic default unchanged.
 #' @return A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
 #'   \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
 #'   (\code{from}, \code{to}, \code{dashes}, \code{color}, \code{width} --
@@ -1537,8 +895,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' @export
 makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
                                                           "direct"),
-                                      twinRelations = NULL,
-                                      orderBySex = TRUE) {
+                                      twinRelations = NULL) {
   if (!is.data.frame(ped)) {
     stop("makePedigreeMatingLayout() requires 'ped' to be a data frame.")
   }
@@ -1551,7 +908,7 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
   edgeStyle <- match.arg(edgeStyle)
 
   forest <- .buildMatingUnitForest(ped)
-  pos <- .positionMatingUnitForest(ped, forest, orderBySex = orderBySex)
+  pos <- .positionMatingUnitForest(ped, forest)
   matingUnits <- forest$matingUnits
   duplicates <- forest$duplicates
   childEdges <- forest$childEdges

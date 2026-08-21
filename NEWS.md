@@ -7,6 +7,12 @@ R. Mark Sharp, Ph.D.
 
 - CRAN accepted the 2.0.0 submission (tagged `v2.0.0`); published
   2026-07-26. Development continues here on top of it.
+- Pedigree diagram layout switched to a new positioning engine (issue
+  \#141) for better child-centering and fewer overlapping lines,
+  especially in large or tangled families. Diagrams will look somewhat
+  different as a result. `makePedigreeMatingLayout()` lost its
+  `orderBySex` argument (the male-left/female-right convention it
+  controlled is now always on).
 - New `checkLocusMetadata()` (issue \#153, Slice 1) validates a
   locus-metadata sidecar table (`locus, chrom, pos[, cM]`) and reports
   each locus's coverage as `"full"`, `"partial"`, or `"none"`,
