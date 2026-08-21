@@ -82,8 +82,7 @@ this is an additive sibling function (Migration Path step 2).</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">makePedigreeMatingLayout</span><span class="op">(</span></span>
 <span>  <span class="va">ped</span>,</span>
 <span>  edgeStyle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rectilinear"</span>, <span class="st">"direct"</span><span class="op">)</span>,</span>
-<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  orderBySex <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -117,19 +116,6 @@ connector edges and leaves <code>edges</code> unchanged from the pre-#137
 contract. A connector always targets the two individuals' REAL node
 ids (D7) and always renders as a direct edge regardless of
 <code>edgeStyle</code> (D9).</p></dd>
-
-
-<dt id="arg-orderbysex">orderBySex<a class="anchor" aria-label="anchor" href="#arg-orderbysex"></a></dt>
-<dd><p>issue #145 Slice 1 (D8 option (b)):
-<code>docs/planning/issue145-sire-dam-left-right-placement-plan.md</code>.
-When <code>TRUE</code> (the default), every simple two-real-parent mating
-unit (mate-count exactly 1 each, unambiguous <code>"M"</code>/<code>"F"</code>
-sex codes, neither parent with a D5 direct child of their own) is
-rendered with the male parent to the left and the female parent to
-the right, matching common pedigree-drawing convention – an
-additive, new default, not a bug fix (multi-mate/"crowded" families
-are unaffected, out of scope). <code>FALSE</code> reproduces the pre-#145,
-sex-agnostic default unchanged.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -168,13 +154,25 @@ child segments (owner-directed, S461) – not the fully rectilinear
 mate-line/sibship-bar waypoint style S457's original Case C2
 proof-of-concept used; that style is tracked as a deferred, additive
 follow-up (issue #142) rather than built speculatively here.</p>
+<p>Male-left/female-right ordering (issue #145) – every simple two-real-
+parent mating unit (mate-count exactly 1 each, unambiguous
+<code>"M"</code>/<code>"F"</code> sex codes, neither parent with a D5 direct child
+of their own) renders with the male parent to the left of the female
+parent – is now unconditional, folded directly into the Walker/BJL
+positioning engine's own Tier 3 formula (<code>.positionMatingUnitForest()</code>,
+an internal function, S8.1). The former <code>orderBySex</code>
+parameter that toggled this is removed: the Phase 1b design note found
+the mechanism "restructured, not preserved unchanged – eliminated
+as a separate pass," with no way to disable it in the new engine, and
+this function had zero real callers ever passing <code>orderBySex =
+FALSE</code> (grep-confirmed).</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">layout</span> <span class="op">&lt;-</span> <span class="fu">makePedigreeMatingLayout</span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>makePedigreeMatingLayout(): 327 same-row edge-node collision(s) could not be fully resolved (residual after the repair-pass cap, or an unconfirmed curved-connector heuristic) -- rendered output may still show a straight or curved edge passing near an unrelated node.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>makePedigreeMatingLayout(): 318 same-row edge-node collision(s) could not be fully resolved (residual after the repair-pass cap, or an unconfirmed curved-connector heuristic) -- rendered output may still show a straight or curved edge passing near an unrelated node.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

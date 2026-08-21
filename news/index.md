@@ -4,6 +4,14 @@
 
 - CRAN accepted the 2.0.0 submission (tagged `v2.0.0`); published
   2026-07-26. Development continues here on top of it.
+- Pedigree diagram layout switched to a new positioning engine (issue
+  [\#141](https://github.com/rmsharp/nprcgenekeepr/issues/141)) for
+  better child-centering and fewer overlapping lines, especially in
+  large or tangled families. Diagrams will look somewhat different as a
+  result.
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  lost its `orderBySex` argument (the male-left/female-right convention
+  it controlled is now always on).
 - New
   [`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)
   (issue [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153),

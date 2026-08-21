@@ -548,16 +548,16 @@ names(diagramDataRectilinear)
 nrow(diagramDataRectilinear$nodes)
 ```
 
-    ## [1] 106
+    ## [1] 98
 
 ``` r
 
 nrow(diagramDataRectilinear$edges)
 ```
 
-    ## [1] 111
+    ## [1] 103
 
-106 nodes and 111 edges here, versus 48 and 53 for the same 33-animal
+98 nodes and 103 edges here, versus 48 and 53 for the same 33-animal
 *demoPed* under the *direct* style above – the difference is entirely
 extra invisible “waypoint” nodes/edges that carry out the right-angle
 routing (zero size, transparent color, excluded from the **Select by
@@ -1454,7 +1454,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmp1qegIs/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpfoQOVW/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2226,7 +2226,7 @@ into the de-identified table.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-08-20 22:47:01.160759. The processing
+The current date and time is 2026-08-21 02:48:00.032186. The processing
 time for this document was 22 seconds..
 
 ``` r
