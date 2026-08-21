@@ -710,11 +710,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## qualifies() gate's own first check already excludes it), so this
   ## broadening is scoped to x-derivation only, no Tier-3 behavior change.
   unitX <- stats::setNames(rep(NA_real_, length(unitIds)), unitIds)
-  xDerivableUnits <- matingUnits[matingUnits$id %in% unitIds[
-    vapply(unitIds, function(u) {
-      length(childEdges$to[childEdges$from == u]) > 0L
-    }, logical(1L))
-  ], , drop = FALSE]
+  xDerivableUnits <- matingUnits[matingUnits$id %in%
+                                    unique(childEdges$from), , drop = FALSE]
   for (u in xDerivableUnits$id) {
     kids <- childEdges$to[childEdges$from == u]
     unitX[[u]] <- mean(tier1X[kids])
