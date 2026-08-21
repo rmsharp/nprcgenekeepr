@@ -1856,3 +1856,239 @@ B1 vs. B2 status first (Learning 650’s own practical rule). (4) Track
 anywhere in the codebase — any future BACKLOG.md item or in-code comment
 still referencing them describes OLD, now-dead behavior (Phase 4’s own
 comment-sweep task, not yet done).
+
+------------------------------------------------------------------------
+
+### Session 620 Handoff Evaluation (by Session 621)
+
+**Score: 9/10.** **What helped:** the `next_steps` field named exactly
+the 6 concrete actions Phase 4 needed (D3 section update; close issue
+\#141 citing commits; update `BACKLOG.md`’s trade-off item; sweep stale
+in-code comments with the plan’s own exact `grep` command; confirm the
+tutorial/article and `a2interactive.Rmd` checklists rather than assume;
+add `NEWS.Rmd`/`CHANGELOG.md` entries) — used almost verbatim as this
+session’s own task checklist. `key_files`/`gotchas` were directly useful
+and all confirmed accurate on re-read:
+`.positionMatingUnitForest():585-798`, `orderBySex` removed, Track
+3/`.computeDupNudge()` genuinely gone (grep-confirmed 0 hits in `R/`),
+B2-vs-B1 gen rendering — every one of these was load-bearing for writing
+an accurate D3 update and issue-close comment without re-deriving them
+from scratch. **What was missing:** the `HANDOFFS.md` receipt’s own
+free-text prose section was left as the literal unfilled placeholder
+(`<free-text prose: filled at close-out>`) rather than actual prose —
+`SESSION_NOTES.md`’s version was fully written, so this cost nothing
+practically, but the receipt itself didn’t fully satisfy its own
+documented format (a small, worth-noting gap, not scored heavily).
+**What was wrong:** nothing found inaccurate — every specific claim
+(commit shas, line ranges, “Track 3/6 no longer exist”,
+“`a2interactive.Rmd` already N/A for `orderBySex`”) checked out exactly
+on independent verification this session. **ROI:** very high.
+
+### What Session 621 Did
+
+**Deliverable:** Walker/BJL Phase 4 — Cleanup & Close (issue \#141), per
+`docs/planning/pedigree- diagram-walker-bjl-apportioning-redesign-plan.md`’s
+§Phase 4 spec. **DONE** — documentation/cleanup only, no production
+logic changed. **Started/Completed:** 2026-08-20 (single session).
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+    in full; `SESSION_NOTES.md` (S613-S620’s thread); `gh issue list`
+    (13 open); `git status`/`log`/`diff --stat` (clean, S620 fully
+    closed out, `CHANGELOG.md` ledger 2 commits behind `HEAD` —
+    confirmed the established self-reference no-op pattern, not a
+    genuine gap; `HANDOFFS.md` frontier `== HEAD`); `gh run list` (CI
+    green on all recent runs); `methodology_dashboard.py` (96/100, 1
+    HIGH risk, unchanged file-size items). Ghost-session check on the
+    same 6 untracked files prior sessions already traced — unchanged, no
+    new ghost deliverable. **Incidental finding, reported not fixed:**
+    `BACKLOG.md`’s single-child-union item still carried an inline
+    “targeted repair session (READY, Effort S)” tag for a function
+    (`.computeSingleChildAntiCoincidence()`) that grep-confirmed was
+    never shipped — the item’s own LATER prose (S609, same block) showed
+    this was redirected to the Walker/BJL migration itself 12 sessions
+    earlier; struck later this session as part of the Phase 4
+    deliverable itself (see below), not a separate action. Rendered the
+    priorities list (4 numbered `AskUserQuestion` options) — **user
+    picked Walker/BJL Phase 4.**
+2.  **Phase 1B claimed** — `SESSION_NOTES.md` stub + `HANDOFFS.md`
+    `status: pending` receipt, committed (`7dccb6e6`).
+3.  **Grounded directly in the plan’s Phase 4 spec, the D3 section it
+    points at, and issue \#141’s full text/comments** before any edit:
+    read
+    `docs/planning/pedigree-diagram-walker-bjl- apportioning-redesign-plan.md`’s
+    §Phase 4 (“what DONE looks like,” the verification command), the
+    option2-layout-design-plan.md’s full D3 section (§3), and
+    `gh issue view 141` in full (body + the S609 comment; state OPEN,
+    labels `enhancement`/`premature optimization`).
+4.  **D3 section updated** — appended a “Superseded (S609-S620)” note
+    after the original D3 text (not rewritten in place, matching this
+    project’s established precedent of preserving historical planning
+    narrative — BACKLOG.md’s own append-only item convention is the same
+    pattern) describing the correctness-driven redirect, the 3-tier
+    reconciliation mechanism shipped, and the explicit
+    D1/D2/D4/D5/D6-unchanged scope boundary.
+5.  **Stale in-code comment sweep** — ran the plan’s own verification
+    command
+    (`grep -rn "Track 6|Track 3|computeDupNudge|finalUnitX" R/ docs/`),
+    then deliberately extended it to `tests/` (not in the plan’s own
+    command, but `test_that()` descriptions are exactly as much in-code
+    documentation as a roxygen comment — Learning 654). `R/` was already
+    accurate (S620 had annotated its own doc comments correctly during
+    RED). `docs/planning/*.md` deliberately left untouched — 13 files
+    reference these terms, all legitimate historical record of decisions
+    made at the time, matching this project’s precedent against
+    retroactively editing frozen/historical narrative. **One genuine
+    finding in `tests/`:** `test_makePedigreeMatingLayout.R`’s own
+    `test_that()` docstring for the 1,412-node real-fixture assertion
+    still narrated the REMOVED Track 3 clamp’s arithmetic (“1,202 + 210
+    = 1,412”) as the live explanation — verified stale, not just dated,
+    by actually re-executing the real fixture (`direct nodes: 714`,
+    `__bar_: 251`, `__drop_: 237`, `__proj_: 56` \[pre-existing dogleg
+    infrastructure, unrelated to this migration\], `__jog_: 154`) and
+    finding the OLD arithmetic’s own terms no longer decompose the
+    number at all, even though both totals coincidentally land on 1,412.
+    Rewrote the docstring to the verified current composition — **no
+    assertion values changed** (both `1412L` and `154L` were already
+    correct), comment-only. Spot-verified via
+    [`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+    on the one touched file (all green) plus a full clean regression
+    afterward (0 failed/0 error, no non-baseline offenders) and
+    `lintr::lint()` (0 findings) before committing.
+6.  **BACKLOG.md’s “Track 3’s 2 disclosed trade-offs” item closed**
+    (`[x]`) — both trade-offs (child-centering quality, D1 bar-vs-bar
+    overlap) confirmed resolved by construction; the D1 bar-vs-bar
+    residual specifically re-measured this session by running
+    `test_addRectilinearWaypoints.R` directly (all green, 0 residual,
+    matching its own docstring claim). The stale single-child-union tag
+    found at Phase 0 (step 1 above) struck in place with a dated
+    explanation, not deleted — Learning 653.
+7.  **Issue \#141 closed** on GitHub: a comment citing the full Phase
+    1a-4 commit history (`8ac50a4e` S611;
+    `0a43ec30`/`e7f1f593`/`afa7c5f5` S614; `891837d6` S615;
+    `014f0910`/`e92d945e`/`b013c009`/`01f29342` S620) and re-confirming
+    the D1/D2/D4/D5/D6-unchanged scope. **Label decision gated via
+    `AskUserQuestion`** (3 prior sessions, S609/S620×2, had explicitly
+    deferred this exact call to “a future planning session or the owner
+    directly” — this was that session): owner picked removing
+    `premature optimization`, since its own meaning no longer applies to
+    a closed, shipped, adversarially-verified implementation.
+8.  **Tutorial/article and `a2interactive.Rmd` checklists explicitly
+    re-confirmed, not assumed** — grepped both
+    `vignettes/articles/colony-manager-guide.qmd` and
+    `vignettes/a2interactive.Rmd` for algorithm-specific claims
+    (contour-merge/Reingold/Walker/Buchheim/`orderBySex`): zero hits in
+    either. Independently confirmed the vignette’s own “5 reserved
+    node-id prefixes” comment is still accurate — `__proj_` is
+    pre-existing `.buildMatingUnitForest()` dogleg infrastructure
+    (gen-mismatch waypoints), unrelated to and unaffected by this
+    migration, not a new prefix it introduced.
+9.  **`NEWS.Rmd`** needs no further entry — S620’s own entry already
+    discloses the user-facing change (layout engine switch, `orderBySex`
+    removal) completely, confirmed by direct read.
+10. **Close-out:** `CHANGELOG.md` S621 entry added; commits split across
+    the 5-file cap (deliverable: `909dad20`; learnings: `8878239c`);
+    `PROJECT_LEARNINGS.md` Learnings 653/654 recorded; `CLAUDE.md`’s
+    learning-count cross-reference refreshed (652→654); this handoff
+    written.
+
+**Runtime smoke test (Phase 3E):** n/a — documentation/cleanup only,
+zero production logic touched (confirmed: `R/` needed no changes at all,
+the one code-adjacent edit was a test file’s comment-only docstring). No
+runtime behavior changed; nothing to smoke-test, matching this session’s
+own declared TDD framing (stated at Phase 1: “N/A this session…
+documentation/cleanup”).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist
+**N/A** — no new statistic. Tutorial/article checklist **DONE (confirmed
+N/A)** — explicitly re-grepped this session, not assumed. `NEWS.Rmd`
+checklist **N/A (already satisfied by S620)** — confirmed by direct
+read, no further entry needed. `a2interactive.Rmd` checklist **DONE
+(confirmed N/A)** — explicitly re-grepped, including the
+reserved-node-id-prefix claim specifically. `_pkgdown.yml` checklist
+**N/A** — no new exported function. GitHub issue close-out **DONE** —
+issue \#141 closed this session, citing the full commit history per the
+established \#131/#134/#135/#139/#142/#143/#144 precedent. Lint
+checklist **DONE** (0 lints on the one touched test file, package-wide
+unaffected).
+
+**Self-assessment (Session 621): 9/10.** **Strengths:** (1) Extended the
+plan’s own literal verification grep beyond its stated `R/ docs/` scope
+into `tests/`, finding one genuine stale docstring the plan’s own
+command would have missed entirely (Learning 654). (2) Verified the
+stale docstring’s replacement by actually re-executing the real fixture
+and breaking down every node-id prefix, rather than just updating the
+one number that had visibly changed (`210L`→`154L`) and leaving an
+equally-confident-but-wrong arithmetic framing around it — found a
+pre-existing, unrelated `__proj_` node category in the process that
+resolved what first looked like a real discrepancy. (3) Found and
+corrected a stale `BACKLOG.md` inline tag that a flat future grep would
+have surfaced as a live option, years after the same item’s own later
+prose had already documented its abandonment (Learning 653) — caught
+only because the named function was grep-confirmed never shipped, not by
+reading the tag’s own text. (4) Gated the `premature optimization` label
+decision via `AskUserQuestion` rather than either unilaterally deciding
+it or leaving it unresolved a 4th time, directly resolving a decision 3
+prior sessions had explicitly deferred. (5) Preserved historical
+planning narrative by appending rather than rewriting (D3 section,
+BACKLOG.md item), matching this project’s own strong precedent, while
+still making the CURRENT state easy to find. (6) Full clean regression +
+lint run despite this being a documentation-only session, rather than
+assuming comment-only edits are risk-free. **Weaknesses:** (1) Spent
+real investigative time (several tool calls) chasing the exact
+node-count arithmetic discrepancy before finding the `__proj_`
+explanation — defensible given this project’s own “verify by execution,
+never assume” standard, but a more experienced first guess (checking
+`.buildMatingUnitForest()`’s reserved-prefix list, which already
+enumerated `__proj_`) would have found the explanation faster. (2) Did
+not independently re-verify EVERY one of S620’s own `key_files`
+line-range claims byte-for-byte before relying on them (spot-checked the
+ones actually used); low risk here since all spot-checks that were done
+came back accurate. **ROI:** high — the 11-session Walker/BJL migration
+(S610-S621) is fully closed out: implementation shipped and verified
+(S610-S620), documentation/issue/backlog trail closed (S621), 2
+project-level process learnings captured with transferable practical
+rules.
+
+**Next steps:** Walker/BJL (issue \#141) is fully closed — no further
+session owed. `BACKLOG.md`’s other READY items remain open, in the order
+left by this session’s own Phase 0 priorities list: (1) the
+pedigree-diagram package-split scoping session (Effort M,
+research/scoping only) — the “probably after the Walker/BJL redesign”
+sequencing condition its own text named is now satisfied; (2) `NEWS.Rmd`
+simplification for a non-technical audience (Effort L, explicitly
+iterative, needs a recurrence guardrail this time per S538’s own gap);
+(3) the 16-item `BACKLOG.md` `[x]`-sweep (Effort S, housekeeping — note
+this item’s own count grows by at least 1 more now that this session’s
+own Track 3 trade-off item is `[x]`-checked); (4) lower-priority items
+unchanged from S621’s own Phase 0 report (Chrome-for-Testing macOS hang
+root-cause, `context_budget.py` adoption evaluation, `DESCRIPTION`
+`Suggests:`/`Config/Needs` cleanup, kinship2 supplement PDF
+reproduction, `BACKLOG.md`’s own ledger-size compression).
+
+**Key files:**
+`docs/planning/pedigree-diagram-option2-layout-design-plan.md` (D3
+section, the “Superseded (S609-S620)” note appended this session);
+`BACKLOG.md` (the “Track 3’s 2 disclosed trade-offs” item, now
+`[x]`-closed, plus the struck stale tag in the single-child-union
+sub-thread); `tests/testthat/test_makePedigreeMatingLayout.R:588-625`
+(the corrected docstring, assertions unchanged); `PROJECT_LEARNINGS.md`
+Learnings 653/654; GitHub issue \#141 (closed, `enhancement` label only,
+`premature optimization` removed).
+
+**Gotchas for a future session:** (1)
+`.computeSingleChildAntiCoincidence()` was NEVER shipped — if a future
+session finds it referenced anywhere outside `BACKLOG.md`’s own
+now-struck historical note, that is new, not a missed cleanup from this
+session. (2) The `__proj_` node-id prefix is PRE-EXISTING
+`.buildMatingUnitForest()` dogleg infrastructure (parent/union
+gen-mismatch waypoints), NOT something the Walker/BJL migration
+introduced — do not attribute future `__proj_`-related bugs to the new
+positioning engine without checking `.buildMatingUnitForest()` first
+(line ~1418 in `R/makePedigreeDiagramData.R`). (3) `docs/planning/*.md`
+files are deliberately excluded from any future “stale reference” sweep
+unless a specific file is explicitly named as needing a live update (as
+`pedigree-diagram-option2-layout-design-plan.md`’s D3 section was this
+session) — most planning docs are intentionally frozen historical
+record, not living documentation.

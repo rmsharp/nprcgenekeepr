@@ -172,6 +172,76 @@ This file currently holds **15** receipt(s). Computed by
 hand-maintained.
 
 ``` handoff
+session: S621
+date: 2026-08-20
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Walker/BJL Phase 4 -- Cleanup & Close (issue #141): documentation/cleanup only,
+  no production logic changed. The 11-session Walker/BJL migration (S610-S621) is fully closed
+  out.
+what_was_done: docs/planning/pedigree-diagram-option2-layout-design-plan.md's D3 section updated
+  with a superseded-by note (appended, not rewritten) describing the shipped implementation.
+  BACKLOG.md's "Track 3's 2 disclosed trade-offs" item closed ([x]), both trade-offs confirmed
+  resolved by construction (D1 bar-vs-bar residual re-measured 0 on the real fixture); a stale,
+  superseded "targeted repair session (READY)" tag on the same item's own sub-thread struck in
+  place. Issue #141 closed on GitHub citing the full Phase 1a-4 commit history
+  (8ac50a4e/0a43ec30/e7f1f593/afa7c5f5/891837d6/014f0910/e92d945e/b013c009/01f29342);
+  premature optimization label removed (AskUserQuestion-gated, owner-directed). One genuinely
+  stale test_that() docstring found and fixed in test_makePedigreeMatingLayout.R (narrated the
+  removed Track 3 clamp's arithmetic; no assertion values changed, comment-only, re-verified by
+  direct execution of the real fixture). Tutorial/article and a2interactive.Rmd checklists
+  explicitly re-confirmed N/A via fresh grep, not assumed. NEWS.Rmd needed no further entry
+  (S620's own entry already complete). 2 project learnings recorded (653: stale BACKLOG.md tags
+  can survive their own item's later supersession prose; 654: a migration's stale-comment sweep
+  must extend to tests/, not just R/+docs/). Commits: 7dccb6e6 (claim), 909dad20 (deliverable:
+  D3/BACKLOG/CHANGELOG/test-docstring), 8878239c (learnings + CLAUDE.md cross-ref refresh).
+next_steps: Walker/BJL (issue #141) is fully closed -- no further session owed on it. BACKLOG.md's
+  other READY items, in this session's own Phase 0 priority order: (1) pedigree-diagram
+  package-split scoping session (Effort M) -- its own "probably after Walker/BJL" sequencing
+  condition is now satisfied; (2) NEWS.Rmd simplification for non-technical audience (Effort L,
+  iterative, needs a recurrence guardrail this time); (3) the 16-item BACKLOG.md [x]-sweep
+  (Effort S -- now +1 given this session's own item); (4) lower-priority: Chrome-for-Testing
+  macOS hang root-cause, context_budget.py adoption evaluation, DESCRIPTION Suggests:/Config/Needs
+  cleanup, kinship2 supplement PDF reproduction, BACKLOG.md's own ledger-size compression.
+key_files: docs/planning/pedigree-diagram-option2-layout-design-plan.md (D3 section, appended
+  note); BACKLOG.md (Track 3 trade-offs item, now [x]); tests/testthat/test_makePedigreeMatingLayout.R:588-625
+  (corrected docstring); PROJECT_LEARNINGS.md Learnings 653/654; GitHub issue #141 (closed).
+gotchas: (1) .computeSingleChildAntiCoincidence() was NEVER shipped -- any future reference to it
+  outside BACKLOG.md's own now-struck historical note is new. (2) __proj_ node-id prefix is
+  PRE-EXISTING .buildMatingUnitForest() dogleg infrastructure, NOT introduced by Walker/BJL -- do
+  not attribute future __proj_ bugs to the new positioning engine without checking
+  .buildMatingUnitForest() first (R/makePedigreeDiagramData.R ~line 1418). (3) docs/planning/*.md
+  files are deliberately excluded from future stale-reference sweeps unless a specific file is
+  explicitly named needing a live update -- most are intentionally frozen historical record.
+runtime_smoke: n/a -- documentation/cleanup only, zero production logic touched (R/ needed no
+  changes at all; the one code-adjacent edit was a test file's comment-only docstring).
+changelog_ref: CHANGELOG.md 2026-08-21 S621 entry (landed in 909dad20)
+commit: 7dccb6e6 (claim), 909dad20 (deliverable), 8878239c (learnings), ea422974 (handoff) --
+  reconciled to the real sha immediately after, matching the S600/S602-S620 self-reference
+  workaround precedent
+```
+
+Session 621 closed out the Walker/BJL migration’s final phase: no code
+changed (R/ needed zero edits), but the documentation trail is now fully
+consistent with what actually shipped across S610-S620 – the design
+plan’s D3 section describes the real implementation, the BACKLOG.md
+tracking item is closed with both its trade-offs confirmed resolved,
+GitHub issue \#141 is closed with a full evidence trail, and one
+genuinely stale test docstring (found by extending the plan’s own
+verification grep into tests/, which it didn’t originally cover) no
+longer misleads a future reader about how a still-correct assertion’s
+number is actually composed. Self-score breakdown: + extended scope past
+the plan’s literal grep and found a real gap; + verified by execution
+rather than assumption throughout (the \_\_proj\_ investigation, the D1
+bar-vs-bar re-measurement); + caught and fixed a stale BACKLOG.md tag a
+future flat grep would have surfaced as live; + resolved a
+3-session-deferred label decision via AskUserQuestion instead of leaving
+it open a 4th time; − spent more investigative time than strictly
+necessary chasing the node-count arithmetic before finding the
+pre-existing \_\_proj\_ explanation.
+
+``` handoff
 session: S620
 date: 2026-08-21
 status: complete

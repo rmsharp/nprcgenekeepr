@@ -60,7 +60,7 @@
 <li><p><label><input type="checkbox" checked><strong>Pedigree Diagram: rectilinear sibship bar can visually imply false parentage</strong> (found live in conversation 2026-08-15, not a claimed session, filed as <a href="https://github.com/rmsharp/nprcgenekeepr/issues/160">issue #160</a>) — <strong>RESOLVED S595 (2026-08-15), closed citing both Session A (S593, Track 1) and Session B (S595, Track 2) evidence.</strong> Root-cause plan written S592 (see the 2 DONE implementation items above). Reproduced on the “cleanest comparison” 14-person fixture (no multi-mate ambiguity), 2 independent collisions found in one render; not fixed here. <strong>Update (same day):</strong> a second, more severe reproduction (P1×P2’s own union landing entirely outside their span, plus a duplicate-connector line rendering behind an unrelated node) traced the root cause one level deeper — see the issue’s comment thread. The defect is broader than the sibship-bar D1 loop alone: any straight same-row edge (sibship bar OR duplicate-connector) can collide with an intervening unrelated node.</label></p></li>
 <li><p><label><input type="checkbox"><strong>Pedigree Diagram: consider hiding the mating-unit node marker to match kinship2’s plain-intersection convention</strong> (found live in conversation 2026-08-15, not a claimed session, filed as <a href="https://github.com/rmsharp/nprcgenekeepr/issues/161">issue #161</a>) — <strong>addressed S592: recommend deferring</strong> until Tracks 1-3 above ship and stabilize (plan §2.5) — hiding the marker would make any remaining, not-yet-repaired same-row collision harder to spot, not easier, while the collision-avoidance framework is still unproven on the real fixture. Mechanically easy (the <code>size = 0</code> + transparent-color technique already used for invisible D1/D2 waypoints applies directly) but a genuine design call, not an obvious fix — the dot may be a useful explicit anchor independent of kinship2 parity. Still needs a final decision before implementation, just not this session. <strong>Tracks 1-3 all shipped as of S596 (2026-08-16)</strong> — the deferral condition this recommendation named is now satisfied; a future session may pick up the #161 decision itself, though “stabilize” (S592’s own word) may warrant some observation first given Track 3’s own disclosed trade-offs (see the follow-up item below).</label></p></li>
 <li>
-<p><label><input type="checkbox"><strong>Track 3’s 2 disclosed trade-offs (child-centering quality, D1 bar-vs-bar overlap) — accept as shipped, or investigate a narrower mechanism</strong> (found S596, 2026-08-16 — <strong>child-centering half: S602 (2026-08-17) implementation RETRACTED as a fix S603 (2026-08-18), verified to produce no visible correction; single-child union/parent-coincidence sub-thread (S608-609) redirected to a full algorithm-family redesign, </strong>now SCOPED and READY to implement from Phase 1a — S610 (2026-08-19), <a href="docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.html"><code>docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md</code></a>, Effort L overall (5+ sessions); note Phase 1b is a genuine open research question the plan does not pretend to have solved — see the S610 entry below**; D1 bar-vs-bar half READY, Effort unknown, not scoped) — plan §2.3/§6 Session C’s parent-span clamp (<code>docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md</code>) was owner-accepted “as designed” this session via <code>AskUserQuestion</code>, but 2 costs were measured, not merely anticipated: (1) the plan’s own §7 faithful child-centering metric on the real 375-individual bundled fixture worsens from 9/251 child edges exceeding a 200-unit threshold (3.6%, max offset 4,121) to 53/251 (21.1%, max offset 10,627); (2) the pre-existing, already-disclosed D1 bar-vs-bar x-overlap residual (plan §8) worsens from 9 to 116 post-Track-1 hits (42→348 pre-Track-1-equivalent). Both trace to the same mechanism: clamping a runaway union back inside its own parents’ span moves it (and its sibship bar’s drop point) away from its children’s true midpoint and back toward the x-region other relatives’ subtrees occupy. A future session should decide whether this is acceptable as a permanent trade-off (matching plan §2.4’s own deferred Track 4 — a narrower fix substituting the locally-relevant duplicate’s x, estimated to bring the headline P1×P2 case to x≈-6 vs. the clamp’s x=0, a materially tighter centering — was already designed and vetted but not adopted into this plan’s scope) or warrants revisiting the clamp’s own design (e.g. scoping it to single-child unions only, where Track 6’s “centering” concept is arguably meaningless anyway, per the original S583 report’s own framing; or a partial/soft pull instead of a hard clamp). Not filed as its own GitHub issue — matches this project’s own precedent (<code>BACKLOG.md</code>’s S583 item was itself “the same already-tracked gap, not a new one”) of tracking a same-root-cause finding here rather than opening a new issue.</label></p>
+<p><label><input type="checkbox" checked><strong>Track 3’s 2 disclosed trade-offs (child-centering quality, D1 bar-vs-bar overlap) — accept as shipped, or investigate a narrower mechanism</strong> (found S596, 2026-08-16 — <strong>child-centering half: S602 (2026-08-17) implementation RETRACTED as a fix S603 (2026-08-18), verified to produce no visible correction; single-child union/parent-coincidence sub-thread (S608-609) redirected to a full algorithm-family redesign, </strong>now SCOPED and READY to implement from Phase 1a — S610 (2026-08-19), <a href="docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.html"><code>docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md</code></a>, Effort L overall (5+ sessions); note Phase 1b is a genuine open research question the plan does not pretend to have solved — see the S610 entry below**; D1 bar-vs-bar half READY, Effort unknown, not scoped) — plan §2.3/§6 Session C’s parent-span clamp (<code>docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md</code>) was owner-accepted “as designed” this session via <code>AskUserQuestion</code>, but 2 costs were measured, not merely anticipated: (1) the plan’s own §7 faithful child-centering metric on the real 375-individual bundled fixture worsens from 9/251 child edges exceeding a 200-unit threshold (3.6%, max offset 4,121) to 53/251 (21.1%, max offset 10,627); (2) the pre-existing, already-disclosed D1 bar-vs-bar x-overlap residual (plan §8) worsens from 9 to 116 post-Track-1 hits (42→348 pre-Track-1-equivalent). Both trace to the same mechanism: clamping a runaway union back inside its own parents’ span moves it (and its sibship bar’s drop point) away from its children’s true midpoint and back toward the x-region other relatives’ subtrees occupy. A future session should decide whether this is acceptable as a permanent trade-off (matching plan §2.4’s own deferred Track 4 — a narrower fix substituting the locally-relevant duplicate’s x, estimated to bring the headline P1×P2 case to x≈-6 vs. the clamp’s x=0, a materially tighter centering — was already designed and vetted but not adopted into this plan’s scope) or warrants revisiting the clamp’s own design (e.g. scoping it to single-child unions only, where Track 6’s “centering” concept is arguably meaningless anyway, per the original S583 report’s own framing; or a partial/soft pull instead of a hard clamp). Not filed as its own GitHub issue — matches this project’s own precedent (<code>BACKLOG.md</code>’s S583 item was itself “the same already-tracked gap, not a new one”) of tracking a same-root-cause finding here rather than opening a new issue.</label></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="sc">**</span>A third possibility, found live <span class="cf">in</span> <span class="fu">conversation</span> (<span class="dv">2026-08-16</span>, unclaimed session), <span class="cf">for</span> the</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>separate D1 bar<span class="sc">-</span>vs<span class="sc">-</span>bar residual specifically<span class="sc">**</span> (not the child<span class="sc">-</span>centering cost, which only the</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>Track <span class="dv">4</span> substitution above addresses)<span class="sc">:</span> a future session could add a bar<span class="sc">-</span>aware detect<span class="sc">-</span>and<span class="sc">-</span>jog</span>
@@ -263,334 +263,362 @@
 <span id="cb1-200"><a href="#cb1-200" tabindex="-1"></a><span class="st">still carries one live-verified bug — with an already-verified one-line fix in hand (residual</span></span>
 <span id="cb1-201"><a href="#cb1-201" tabindex="-1"></a><span class="st">drops 40/224→11/224) — plus 2 disclosed architectural gaps (a collision-safety guarantee</span></span>
 <span id="cb1-202"><a href="#cb1-202" tabindex="-1"></a><span class="st">that can't see 2 later pipeline passes; a tautological invariant-test surface). **Not yet</span></span>
-<span id="cb1-203"><a href="#cb1-203" tabindex="-1"></a><span class="st">PRE-RED-ready.** Owner-ratified next step (via `AskUserQuestion`, §9): a **targeted repair</span></span>
-<span id="cb1-204"><a href="#cb1-204" tabindex="-1"></a><span class="st">session (READY, Effort S)** — apply the already-verified one-line self-duplicate-exclusion</span></span>
+<span id="cb1-203"><a href="#cb1-203" tabindex="-1"></a><span class="st">PRE-RED-ready.** Owner-ratified next step (via `AskUserQuestion`, §9): a targeted repair</span></span>
+<span id="cb1-204"><a href="#cb1-204" tabindex="-1"></a><span class="st">session — apply the already-verified one-line self-duplicate-exclusion</span></span>
 <span id="cb1-205"><a href="#cb1-205" tabindex="-1"></a><span class="st">fix (residual 40/224→11/224, already measured) + add diagnostic return fields to</span></span>
 <span id="cb1-206"><a href="#cb1-206" tabindex="-1"></a><span class="st">`.computeSingleChildAntiCoincidence()`, run a fresh Critique Round 3 against the result</span></span>
-<span id="cb1-207"><a href="#cb1-207" tabindex="-1"></a><span class="st">specifically, then proceed through PRE-RED→RED→GREEN. Full record, the ratification, and</span></span>
-<span id="cb1-208"><a href="#cb1-208" tabindex="-1"></a><span class="st">exact scope:</span></span>
-<span id="cb1-209"><a href="#cb1-209" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)</span></span>
-<span id="cb1-210"><a href="#cb1-210" tabindex="-1"></a><span class="st">§7-9. Independent finding, unrelated to this item: Track 6's own "</span><span class="dv">91</span>% reduction<span class="st">" headline</span></span>
-<span id="cb1-211"><a href="#cb1-211" tabindex="-1"></a><span class="st">metric is stale at current HEAD (true baseline 53/251, not 9/251) — a separate housekeeping</span></span>
-<span id="cb1-212"><a href="#cb1-212" tabindex="-1"></a><span class="st">item. The original Track 3 child-centering/D1-bar-vs-bar decision (accept as permanent vs.</span></span>
-<span id="cb1-213"><a href="#cb1-213" tabindex="-1"></a><span class="st">investigate further) remains itself unresolved pending this new investigation's own outcome.</span></span>
-<span id="cb1-214"><a href="#cb1-214" tabindex="-1"></a></span>
-<span id="cb1-215"><a href="#cb1-215" tabindex="-1"></a><span class="st">**Progress (S609, 2026-08-18), "</span>D3‴<span class="st">" built and Critique Round 3 run — still NOT sound,</span></span>
-<span id="cb1-216"><a href="#cb1-216" tabindex="-1"></a><span class="st">needs a redesign, not another repair attempt:** picked up §9's ratified targeted-repair</span></span>
-<span id="cb1-217"><a href="#cb1-217" tabindex="-1"></a><span class="st">scope via a `Workflow` (1 rebuild agent + 3 independent adversarial critique lenses, scratch</span></span>
-<span id="cb1-218"><a href="#cb1-218" tabindex="-1"></a><span class="st">copy only, zero production code touched). The rebuild reproduced every number the</span></span>
-<span id="cb1-219"><a href="#cb1-219" tabindex="-1"></a><span class="st">investigation had already established exactly (F1 `__union_4` = 224.00px; real-fixture</span></span>
-<span id="cb1-220"><a href="#cb1-220" tabindex="-1"></a><span class="st">residual 11/224; `resolveEdgeNodeCollisions` pairs = 1427; S583 pinned case = 29; Constraint</span></span>
-<span id="cb1-221"><a href="#cb1-221" tabindex="-1"></a><span class="st">1 bit-identical) and honestly fixed 2 further bugs beyond the ratified scope (a</span></span>
-<span id="cb1-222"><a href="#cb1-222" tabindex="-1"></a><span class="st">floating-point guard band; a latent direction-reversal risk in the safety cap) — but **all 3</span></span>
-<span id="cb1-223"><a href="#cb1-223" tabindex="-1"></a><span class="st">critique lenses independently returned `designStillSound: false`**, finding problems the</span></span>
-<span id="cb1-224"><a href="#cb1-224" tabindex="-1"></a><span class="st">rebuild's own honest disclosure did not reach: (1) **the shipped scratch copy regresses an</span></span>
-<span id="cb1-225"><a href="#cb1-225" tabindex="-1"></a><span class="st">existing, currently-green production test** — Track 6's own "</span>zero exact coincidence<span class="st">"</span></span>
-<span id="cb1-226"><a href="#cb1-226" tabindex="-1"></a><span class="st">invariant guard — from 0 to 3 violations on the real fixture; (2) **7 of the 11 "</span>residual<span class="st">"</span></span>
-<span id="cb1-227"><a href="#cb1-227" tabindex="-1"></a><span class="st">cases are not partial corrections, they are exact no-ops** (`target == curX`, the union</span></span>
-<span id="cb1-228"><a href="#cb1-228" tabindex="-1"></a><span class="st">renders on top of its parent, unchanged) — the `capped` diagnostic field is actively</span></span>
-<span id="cb1-229"><a href="#cb1-229" tabindex="-1"></a><span class="st">misleading for these; (3) a structurally separate, previously-unhypothesized bug: the</span></span>
-<span id="cb1-230"><a href="#cb1-230" tabindex="-1"></a><span class="st">narrow-parent-span midpoint-fallback branch is also defeated by the same obstacle cap; (4)</span></span>
-<span id="cb1-231"><a href="#cb1-231" tabindex="-1"></a><span class="st">the failure isn't limited to "</span>shared founder boundary<span class="st">" as scoped — a hand-built case with 3</span></span>
-<span id="cb1-232"><a href="#cb1-232" tabindex="-1"></a><span class="st">independently-engaged unions (no shared parent) shows the identical collapse, because the</span></span>
-<span id="cb1-233"><a href="#cb1-233" tabindex="-1"></a><span class="st">sweep is a one-directional pass with no fixed-point reconciliation between overlapping local</span></span>
-<span id="cb1-234"><a href="#cb1-234" tabindex="-1"></a><span class="st">corrections; (5) the diagnostic fields fail adversarial mutation testing for a "</span>wrong</span>
-<span id="cb1-235"><a href="#cb1-235" tabindex="-1"></a>formula<span class="st">" bug class. **Six independent design attempts across this investigation's full</span></span>
-<span id="cb1-236"><a href="#cb1-236" tabindex="-1"></a><span class="st">history (S598, S599, S600, S601×1, S609) have now failed adversarial critique** — this is</span></span>
-<span id="cb1-237"><a href="#cb1-237" tabindex="-1"></a><span class="st">not a one-line-fix-away situation; the root cause is architectural (no reconciliation</span></span>
-<span id="cb1-238"><a href="#cb1-238" tabindex="-1"></a><span class="st">mechanism between 2+ single-child unions whose corrections overlap), matching this</span></span>
-<span id="cb1-239"><a href="#cb1-239" tabindex="-1"></a><span class="st">investigation's own repeated pattern. Full record:</span></span>
-<span id="cb1-240"><a href="#cb1-240" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)</span></span>
-<span id="cb1-241"><a href="#cb1-241" tabindex="-1"></a><span class="st">§10 — **start at §10.3** for a future redesign session. Not scoped for that session (per</span></span>
-<span id="cb1-242"><a href="#cb1-242" tabindex="-1"></a><span class="st">this document's own bounds, §0): the D1 bar-vs-bar residual, the multi-child population, or</span></span>
-<span id="cb1-243"><a href="#cb1-243" tabindex="-1"></a><span class="st">re-litigating the duplicate-occurrence-selection mechanism (already separately exhausted at</span></span>
-<span id="cb1-244"><a href="#cb1-244" tabindex="-1"></a><span class="st">5 attempts).</span></span>
-<span id="cb1-245"><a href="#cb1-245" tabindex="-1"></a></span>
-<span id="cb1-246"><a href="#cb1-246" tabindex="-1"></a><span class="st">**Redirect (S609 continued, 2026-08-18) — owner-directed, informed by re-reading this</span></span>
-<span id="cb1-247"><a href="#cb1-247" tabindex="-1"></a><span class="st">project's own algorithm-design history:** in conversation, the owner challenged this</span></span>
-<span id="cb1-248"><a href="#cb1-248" tabindex="-1"></a><span class="st">whole repair thread against kinship2's own convention. Re-reading</span></span>
-<span id="cb1-249"><a href="#cb1-249" tabindex="-1"></a><span class="st">`pedigree-diagram-track6-child-centered-union-position-plan.md` and</span></span>
-<span id="cb1-250"><a href="#cb1-250" tabindex="-1"></a><span class="st">`pedigree-diagram-option2-layout-design-plan.md` in full (not from memory) established (a)</span></span>
-<span id="cb1-251"><a href="#cb1-251" tabindex="-1"></a><span class="st">nprcgenekeepr's *original* formula was parent-centered, like kinship2, and Track 6 moved</span></span>
-<span id="cb1-252"><a href="#cb1-252" tabindex="-1"></a><span class="st">away from it only after measuring a *worse* defect (max 10,687-unit sibship-bar drift for</span></span>
-<span id="cb1-253"><a href="#cb1-253" tabindex="-1"></a><span class="st">polygamous anchors); (b) kinship2 was never adopted directly because it is GPL (nprcgenekeepr</span></span>
-<span id="cb1-254"><a href="#cb1-254" tabindex="-1"></a><span class="st">is MIT) and its own source contains an uncapped factorial search plus a heuristic its own</span></span>
-<span id="cb1-255"><a href="#cb1-255" tabindex="-1"></a><span class="st">vignette admits "</span>works <span class="dv">9</span> times out of <span class="fl">10.</span><span class="st">" Reading `inst/extdata/reference/5201430.pdf` (the</span></span>
-<span id="cb1-256"><a href="#cb1-256" tabindex="-1"></a><span class="st">CraneFoot paper) directly then corrected this session's own framing: CraneFoot's published</span></span>
-<span id="cb1-257"><a href="#cb1-257" tabindex="-1"></a><span class="st">Aesthetic (4), "</span>parents centred over children,<span class="st">" is — through the mating-unit transformation —</span></span>
-<span id="cb1-258"><a href="#cb1-258" tabindex="-1"></a><span class="st">**Track 6's own rule, not kinship2's**; kinship2 and the Reingold-Tilford/Walker/BJL family</span></span>
-<span id="cb1-259"><a href="#cb1-259" tabindex="-1"></a><span class="st">are 2 different published conventions, not one "</span>the<span class="st">" standard. **Owner directive: "</span>go with</span>
-<span id="cb1-260"><a href="#cb1-260" tabindex="-1"></a>CraneFoot <span class="sc">/</span> the Reingold<span class="sc">-</span>Tilford–Walker–BJL family this whole approach is built on<span class="st">"** —</span></span>
-<span id="cb1-261"><a href="#cb1-261" tabindex="-1"></a><span class="st">pursue a complete, correct implementation of that family (issue #141) as the direction for</span></span>
-<span id="cb1-262"><a href="#cb1-262" tabindex="-1"></a><span class="st">this whole defect class, rather than a 7th local-patch attempt or reverting to kinship2-style</span></span>
-<span id="cb1-263"><a href="#cb1-263" tabindex="-1"></a><span class="st">parent-centering. **This is a ratified direction, not a scoped plan** — no redesign session</span></span>
-<span id="cb1-264"><a href="#cb1-264" tabindex="-1"></a><span class="st">has been scheduled, no implementation started. A comment was added to issue #141 documenting</span></span>
-<span id="cb1-265"><a href="#cb1-265" tabindex="-1"></a><span class="st">that the evidence in hand (6 failed local-patch attempts, ordinary-scale correctness</span></span>
-<span id="cb1-266"><a href="#cb1-266" tabindex="-1"></a><span class="st">failures) is a different kind of justification than that issue's own filed text asks for</span></span>
-<span id="cb1-267"><a href="#cb1-267" tabindex="-1"></a><span class="st">(which was performance-only); the `premature optimization` label was deliberately not</span></span>
-<span id="cb1-268"><a href="#cb1-268" tabindex="-1"></a><span class="st">changed — that is a decision for a future planning session or the owner directly. Full</span></span>
-<span id="cb1-269"><a href="#cb1-269" tabindex="-1"></a><span class="st">record, ratification, and the precise scope boundary for a future planning session:</span></span>
-<span id="cb1-270"><a href="#cb1-270" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)</span></span>
-<span id="cb1-271"><a href="#cb1-271" tabindex="-1"></a><span class="st">§11.</span></span>
-<span id="cb1-272"><a href="#cb1-272" tabindex="-1"></a></span>
-<span id="cb1-273"><a href="#cb1-273" tabindex="-1"></a><span class="st">**Scoped (S610, 2026-08-19) — the planning session §11 called for is DONE; implementation is</span></span>
-<span id="cb1-274"><a href="#cb1-274" tabindex="-1"></a><span class="st">now READY to start at Phase 1a (Effort L overall, 5+ sessions):**</span></span>
-<span id="cb1-275"><a href="#cb1-275" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`](docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md).</span></span>
-<span id="cb1-276"><a href="#cb1-276" tabindex="-1"></a><span class="st">An 8-agent research→design→3-lens-critique→repair `Workflow` produced it; **all 3 critique</span></span>
-<span id="cb1-277"><a href="#cb1-277" tabindex="-1"></a><span class="st">lenses returned `designStillSound: false` on the first draft**, and the repaired plan states</span></span>
-<span id="cb1-278"><a href="#cb1-278" tabindex="-1"></a><span class="st">what they found rather than hiding it. The most consequential finding was structural: the</span></span>
-<span id="cb1-279"><a href="#cb1-279" tabindex="-1"></a><span class="st">draft's own proposed reconciliation mechanism (a "</span>global LEFTNEIGHBOR table<span class="st">") was both</span></span>
-<span id="cb1-280"><a href="#cb1-280" tabindex="-1"></a><span class="st">*misattributed* (real BJL **replaces** Walker's global per-level table with a purely local</span></span>
-<span id="cb1-281"><a href="#cb1-281" tabindex="-1"></a><span class="st">sibling lookup — the draft claimed BJL keeps it unchanged) and *mechanically unsound*</span></span>
-<span id="cb1-282"><a href="#cb1-282" tabindex="-1"></a><span class="st">(grafting a non-sibling comparison partner into `moveSubtree`/`executeShifts`'s sibling-indexed</span></span>
-<span id="cb1-283"><a href="#cb1-283" tabindex="-1"></a><span class="st">bookkeeping), and would have reintroduced this investigation's own signature "</span>one<span class="sc">-</span>directional</span>
-<span id="cb1-284"><a href="#cb1-284" tabindex="-1"></a>sweep, first one wins<span class="st">" failure shape **one level down, inside the replacement algorithm's own</span></span>
-<span id="cb1-285"><a href="#cb1-285" tabindex="-1"></a><span class="st">internals** — i.e. a 7th instance of the same root cause, caught at the planning stage this</span></span>
-<span id="cb1-286"><a href="#cb1-286" tabindex="-1"></a><span class="st">time instead of after implementation. Phasing: **1a** standalone BJL apportioning engine</span></span>
-<span id="cb1-287"><a href="#cb1-287" tabindex="-1"></a><span class="st">(genuine trees only, cross-checked against MIT-licensed `d3-hierarchy`, strong exact-value</span></span>
-<span id="cb1-288"><a href="#cb1-288" tabindex="-1"></a><span class="st">oracles required on every fixture); **1b** (NEW, required, gates Phase 2) a research/design</span></span>
-<span id="cb1-289"><a href="#cb1-289" tabindex="-1"></a><span class="st">spike for the forest/mixed-gen reconciliation problem the literature does not address at all —</span></span>
-<span id="cb1-290"><a href="#cb1-290" tabindex="-1"></a><span class="st">this project's forest has 0-delta tree edges (an individual→its own anchored union, a</span></span>
-<span id="cb1-291"><a href="#cb1-291" tabindex="-1"></a><span class="st">union→its non-anchor-parent phantom leaf) that no Reingold-Tilford/Walker/BJL no-overlap proof</span></span>
-<span id="cb1-292"><a href="#cb1-292" tabindex="-1"></a><span class="st">covers, and 1b may legitimately conclude "</span>more research needed<span class="st">"; **2** pedigree adapter built</span></span>
-<span id="cb1-293"><a href="#cb1-293" tabindex="-1"></a><span class="st">parallel to production, A/B verified, plus a new reusable checked-in</span></span>
-<span id="cb1-294"><a href="#cb1-294" tabindex="-1"></a><span class="st">`helper-live-render-positions.R` (chromote `getPositions()` ground-truth harness); **3**</span></span>
-<span id="cb1-295"><a href="#cb1-295" tabindex="-1"></a><span class="st">cutover in 2 explicitly-scoped commits (4 files, then 2), each independently green;</span></span>
-<span id="cb1-296"><a href="#cb1-296" tabindex="-1"></a><span class="st">**4** cleanup/docs + close issue #141. Track 3's clamp, Track 6's `finalUnitX` override,</span></span>
-<span id="cb1-297"><a href="#cb1-297" tabindex="-1"></a><span class="st">`.computeDupNudge()`, both `sweepMinSep()` applications and the epsilon de-collision pass are</span></span>
-<span id="cb1-298"><a href="#cb1-298" tabindex="-1"></a><span class="st">all targeted for removal — but **conditionally**, gated on Phase 2's real-fixture</span></span>
-<span id="cb1-299"><a href="#cb1-299" tabindex="-1"></a><span class="st">zero-coincidence test (`test_positionMatingUnitForest.R:1185-1205`) actually passing, never</span></span>
-<span id="cb1-300"><a href="#cb1-300" tabindex="-1"></a><span class="st">asserted in advance. D1/D2/D4/D5, Track 1, Track 2, and the D1 bar-vs-bar residual are all</span></span>
-<span id="cb1-301"><a href="#cb1-301" tabindex="-1"></a><span class="st">explicitly OUT of scope. Issue #141 not closed and its `premature optimization` label not</span></span>
-<span id="cb1-302"><a href="#cb1-302" tabindex="-1"></a><span class="st">changed — both deferred to Phase 4/the owner, matching S609's own restraint.</span></span>
-<span id="cb1-303"><a href="#cb1-303" tabindex="-1"></a></span>
-<span id="cb1-304"><a href="#cb1-304" tabindex="-1"></a><span class="st">**Phase 1a DONE — S611 (2026-08-19):** standalone, pedigree-agnostic BJL apportioning</span></span>
-<span id="cb1-305"><a href="#cb1-305" tabindex="-1"></a><span class="st">engine, [`R/positionTreeApportion.R`](R/positionTreeApportion.R) (`.positionTreeApportion()`,</span></span>
-<span id="cb1-306"><a href="#cb1-306" tabindex="-1"></a><span class="st">`.buildForestChildrenOf()`, both internal/non-exported) +</span></span>
-<span id="cb1-307"><a href="#cb1-307" tabindex="-1"></a><span class="st">[`tests/testthat/test_positionTreeApportion.R`](tests/testthat/test_positionTreeApportion.R)</span></span>
-<span id="cb1-308"><a href="#cb1-308" tabindex="-1"></a><span class="st">(5 `test_that()` blocks, 8 exact-value expectations). **Zero changes to</span></span>
-<span id="cb1-309"><a href="#cb1-309" tabindex="-1"></a><span class="st">`R/makePedigreeDiagramData.R` or any existing test file** (`git status --porcelain -- R/</span></span>
-<span id="cb1-310"><a href="#cb1-310" tabindex="-1"></a><span class="st">tests/` shows only the 2 new files throughout). Strict TDD followed: PRE-RED research →</span></span>
-<span id="cb1-311"><a href="#cb1-311" tabindex="-1"></a><span class="st">`AskUserQuestion` gate → RED (genuine, 5/5 tests erroring on "</span>could not find <span class="cf">function</span>,<span class="st">" not</span></span>
-<span id="cb1-312"><a href="#cb1-312" tabindex="-1"></a><span class="st">vacuous) → `AskUserQuestion` gate → GREEN (8/8 expectations passed on the first</span></span>
-<span id="cb1-313"><a href="#cb1-313" tabindex="-1"></a><span class="st">implementation attempt) → `AskUserQuestion` gate → REFACTOR (53→0 lintr findings, all</span></span>
-<span id="cb1-314"><a href="#cb1-314" tabindex="-1"></a><span class="st">style-only, re-verified 8/8 GREEN + full regression after). **PRE-RED research, done before</span></span>
-<span id="cb1-315"><a href="#cb1-315" tabindex="-1"></a><span class="st">any code was written:** downloaded and read Walker's primary source (TR89-034, UNC, Sept.</span></span>
-<span id="cb1-316"><a href="#cb1-316" tabindex="-1"></a><span class="st">1989) directly, extracted Figure 12's 15-node worked example and its published final</span></span>
-<span id="cb1-317"><a href="#cb1-317" tabindex="-1"></a><span class="st">x-coordinates from "</span>Nodes Visited <span class="cf">in</span> the Second Traversal<span class="st">" (pp.17-20) — not a secondary</span></span>
-<span id="cb1-318"><a href="#cb1-318" tabindex="-1"></a><span class="st">summary. Independently cross-checked against real `d3-hierarchy` v3.1.2 (installed via</span></span>
-<span id="cb1-319"><a href="#cb1-319" tabindex="-1"></a><span class="st">Node.js; **correction to the plan's own wording: ISC-licensed, not MIT** — equally</span></span>
-<span id="cb1-320"><a href="#cb1-320" tabindex="-1"></a><span class="st">permissive and GPL-avoiding, so the plan's licensing rationale is unaffected): all 15 nodes</span></span>
-<span id="cb1-321"><a href="#cb1-321" tabindex="-1"></a><span class="st">matched exactly (relative to root). Generated exact-value oracles for the other 3 required</span></span>
-<span id="cb1-322"><a href="#cb1-322" tabindex="-1"></a><span class="st">fixtures (balanced 3×3 n-ary tree, asymmetric deep-narrow+wide-shallow tree, a 3-tree forest</span></span>
-<span id="cb1-323"><a href="#cb1-323" tabindex="-1"></a><span class="st">via `.buildForestChildrenOf()`) by actually running `d3-hierarchy` on identical input —</span></span>
-<span id="cb1-324"><a href="#cb1-324" tabindex="-1"></a><span class="st">satisfying the plan's own C2-3 "</span>strong, exact<span class="sc">-</span>value oracle<span class="st">" requirement at its most rigorous</span></span>
-<span id="cb1-325"><a href="#cb1-325" tabindex="-1"></a><span class="st">reading. **Found and fixed a real defect in the plan's own `apportion()` pseudocode** via</span></span>
-<span id="cb1-326"><a href="#cb1-326" tabindex="-1"></a><span class="st">the required d3-hierarchy source cross-check: the plan omits `vip_mod += shiftVal;</span></span>
-<span id="cb1-327"><a href="#cb1-327" tabindex="-1"></a><span class="st">vop_mod += shiftVal` immediately after `moveSubtree()` fires (real d3-hierarchy's</span></span>
-<span id="cb1-328"><a href="#cb1-328" tabindex="-1"></a><span class="st">`apportion()` does this — `sip += shift; sop += shift`, `tree.js` lines ~163-165). Proved</span></span>
-<span id="cb1-329"><a href="#cb1-329" tabindex="-1"></a><span class="st">this is mechanically necessary, not cosmetic, by implementing both the plan's literal</span></span>
-<span id="cb1-330"><a href="#cb1-330" tabindex="-1"></a><span class="st">pseudocode and the corrected version in JS, constructing an adversarial fixture forcing 2+</span></span>
-<span id="cb1-331"><a href="#cb1-331" tabindex="-1"></a><span class="st">compounding shifts within one `apportion()` call, and confirming only the corrected version</span></span>
-<span id="cb1-332"><a href="#cb1-332" tabindex="-1"></a><span class="st">matches the real reference exactly. The R implementation includes this correction, documented</span></span>
-<span id="cb1-333"><a href="#cb1-333" tabindex="-1"></a><span class="st">in the file's own header and inline at the call site. Full clean regression (277 files,</span></span>
-<span id="cb1-334"><a href="#cb1-334" tabindex="-1"></a><span class="st">excluding the documented pre-existing `test-app-*`/`test-e2e-*`/`appServer`/`shinytest2`</span></span>
-<span id="cb1-335"><a href="#cb1-335" tabindex="-1"></a><span class="st">baseline-noise set) run 3 times (RED baseline, GREEN, REFACTOR): 0 failed/0 error every</span></span>
-<span id="cb1-336"><a href="#cb1-336" tabindex="-1"></a><span class="st">time, including `test_positionMatingUnitForest.R`/`test_buildMatingUnitForest.R`</span></span>
-<span id="cb1-337"><a href="#cb1-337" tabindex="-1"></a><span class="st">unaffected. `lintr::lint()` on both new files: 0 lints. Runtime smoke test: n/a — grep-</span></span>
-<span id="cb1-338"><a href="#cb1-338" tabindex="-1"></a><span class="st">confirmed zero references to any new function outside the 2 new files (no wiring, no</span></span>
-<span id="cb1-339"><a href="#cb1-339" tabindex="-1"></a><span class="st">exports; matches Phase 1a's own explicit "</span>zero changes<span class="st">" scope). **Next: Phase 1b** (forest/</span></span>
-<span id="cb1-340"><a href="#cb1-340" tabindex="-1"></a><span class="st">mixed-gen/cross-branch reconciliation research spike, gates Phase 2) — its own separate</span></span>
-<span id="cb1-341"><a href="#cb1-341" tabindex="-1"></a><span class="st">session, per the plan's own phase boundaries; may legitimately conclude "</span>more research</span>
-<span id="cb1-342"><a href="#cb1-342" tabindex="-1"></a>needed.<span class="st">"</span></span>
-<span id="cb1-343"><a href="#cb1-343" tabindex="-1"></a></span>
-<span id="cb1-344"><a href="#cb1-344" tabindex="-1"></a><span class="st">**Phase 1b — S612 (2026-08-19): substantial progress, NOT DONE — honest "</span>needs a</span>
-<span id="cb1-345"><a href="#cb1-345" tabindex="-1"></a>continuation session<span class="st">" outcome, exactly the allowance the plan's own Phase 1b charter names.**</span></span>
-<span id="cb1-346"><a href="#cb1-346" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md).</span></span>
-<span id="cb1-347"><a href="#cb1-347" tabindex="-1"></a><span class="st">A research→design→critique→repair `Workflow` (research: gen-recompute call-site trace,</span></span>
-<span id="cb1-348"><a href="#cb1-348" tabindex="-1"></a><span class="st">layered-graph literature review, `apportion()` mechanics) → design synthesis → **3 further</span></span>
-<span id="cb1-349"><a href="#cb1-349" tabindex="-1"></a><span class="st">critique+repair rounds** (11 + 4 + 4 = 19 agents total, ~87 min combined). **Settled,</span></span>
-<span id="cb1-350"><a href="#cb1-350" tabindex="-1"></a><span class="st">validated, safe to build on:** the core architecture (Candidate 2b — eliminate every 0-delta</span></span>
-<span id="cb1-351"><a href="#cb1-351" tabindex="-1"></a><span class="st">edge from the tree recursion by reattaching a union's real children onto its anchor,</span></span>
-<span id="cb1-352"><a href="#cb1-352" tabindex="-1"></a><span class="st">representing everything else as a one-way-derived point) survived all 3 critique rounds</span></span>
-<span id="cb1-353"><a href="#cb1-353" tabindex="-1"></a><span class="st">unchallenged at the structural level, independently corroborated by direct reads of</span></span>
-<span id="cb1-354"><a href="#cb1-354" tabindex="-1"></a><span class="st">CraneFoot's actual C++ source and kinship2's own design vignette (both real pedigree tools</span></span>
-<span id="cb1-355"><a href="#cb1-355" tabindex="-1"></a><span class="st">independently never make a mating union a first-class tree-recursion node either). Candidates</span></span>
-<span id="cb1-356"><a href="#cb1-356" tabindex="-1"></a><span class="st">1 (revived global table) and 3 (same-rank/flat-edge, Sugiyama-literature) are conclusively</span></span>
-<span id="cb1-357"><a href="#cb1-357" tabindex="-1"></a><span class="st">ruled out. The B1/B2/B3 non-anchor-occurrence classification is sound. Case (d) (multi-gen</span></span>
-<span id="cb1-358"><a href="#cb1-358" tabindex="-1"></a><span class="st">forest roots) is resolved for the Shiny app's own reactive chain and, more importantly,</span></span>
-<span id="cb1-359"><a href="#cb1-359" tabindex="-1"></a><span class="st">covered generally by a reinstated `sweepMinSep()` backstop. **NOT settled:** round 4's own</span></span>
-<span id="cb1-360"><a href="#cb1-360" tabindex="-1"></a><span class="st">critique (3 lenses, all independently constructing and *executing* a counter-example) found</span></span>
-<span id="cb1-361"><a href="#cb1-361" tabindex="-1"></a><span class="st">that reinstating `sweepMinSep()` as a safety net (fixing one round-2 finding) breaks the</span></span>
-<span id="cb1-362"><a href="#cb1-362" tabindex="-1"></a><span class="st">invariant a new `orderBySex` sign-fold formula (fixing round 2's *other* finding) depends on</span></span>
-<span id="cb1-363"><a href="#cb1-363" tabindex="-1"></a><span class="st">— when `sweepMinSep()` moves a real child of an `orderBySex`-qualifying union, the drift</span></span>
-<span id="cb1-364"><a href="#cb1-364" tabindex="-1"></a><span class="st">(measured: 0.5 and 0.700 in 2 independent executed fixtures) reliably exceeds the sign-fold's</span></span>
-<span id="cb1-365"><a href="#cb1-365" tabindex="-1"></a><span class="st">own tolerance budget (0.4), inverting the male/female ordering the fix exists to preserve.</span></span>
-<span id="cb1-366"><a href="#cb1-366" tabindex="-1"></a><span class="st">This is the *same signature failure shape* (2+ locally-computed corrections whose interaction</span></span>
-<span id="cb1-367"><a href="#cb1-367" tabindex="-1"></a><span class="st">was never checked against each other) recurring a 4th time within this design-note stage</span></span>
-<span id="cb1-368"><a href="#cb1-368" tabindex="-1"></a><span class="st">alone, on top of the 6 prior full implementation attempts — found here, before any</span></span>
-<span id="cb1-369"><a href="#cb1-369" tabindex="-1"></a><span class="st">implementation code, which is exactly Phase 1b's own purpose. The design note's own §7</span></span>
-<span id="cb1-370"><a href="#cb1-370" tabindex="-1"></a><span class="st">proposes 3 concrete candidate fixes for a follow-up session to evaluate (none adopted here,</span></span>
-<span id="cb1-371"><a href="#cb1-371" tabindex="-1"></a><span class="st">deliberately — adopting one without its own adversarial pass would repeat the mistake this</span></span>
-<span id="cb1-372"><a href="#cb1-372" tabindex="-1"></a><span class="st">note documents). **Next: a Phase 1b continuation session** resolving specifically this seam</span></span>
-<span id="cb1-373"><a href="#cb1-373" tabindex="-1"></a><span class="st">(not a restart — cases (a)/(b)/(c)/(d) and the 2b architecture are settled inputs), THEN</span></span>
-<span id="cb1-374"><a href="#cb1-374" tabindex="-1"></a><span class="st">Phase 2. Effort S-M for the continuation.</span></span>
-<span id="cb1-375"><a href="#cb1-375" tabindex="-1"></a></span>
-<span id="cb1-376"><a href="#cb1-376" tabindex="-1"></a><span class="st">**Phase 1b continuation — S613 (2026-08-19): SEAM RESOLVED, first-attempt sound.**</span></span>
-<span id="cb1-377"><a href="#cb1-377" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)</span></span>
-<span id="cb1-378"><a href="#cb1-378" tabindex="-1"></a><span class="st">§8. A repair→3-lens-adversarial-critique `Workflow` (4 agents: 1 repair + 3 independent</span></span>
-<span id="cb1-379"><a href="#cb1-379" tabindex="-1"></a><span class="st">critique lenses) resolved the `sweepMinSep()`-vs-`orderBySex` sign-fold seam on its **first**</span></span>
-<span id="cb1-380"><a href="#cb1-380" tabindex="-1"></a><span class="st">repair attempt — every lens returned `designStillSound: true` with its own independently</span></span>
-<span id="cb1-381"><a href="#cb1-381" tabindex="-1"></a><span class="st">executed verification, no repair round 2 needed. First first-attempt-sound outcome in this</span></span>
-<span id="cb1-382"><a href="#cb1-382" tabindex="-1"></a><span class="st">investigation's full history (4 prior design-note rounds + 6 prior implementation attempts</span></span>
-<span id="cb1-383"><a href="#cb1-383" tabindex="-1"></a><span class="st">all failed critique). **The fix:** anchor the non-anchor parent's derived x on the anchor's</span></span>
-<span id="cb1-384"><a href="#cb1-384" tabindex="-1"></a><span class="st">own frozen Tier-1 `P.x` directly (`M_repr.x = P.x + sign(M)*minSep*0.4`) instead of the</span></span>
-<span id="cb1-385"><a href="#cb1-385" tabindex="-1"></a><span class="st">drift-prone Tier-2 `U.x(FINAL)`, gated on the same `mateCount==1` qualifying test today's</span></span>
-<span id="cb1-386"><a href="#cb1-386" tabindex="-1"></a><span class="st">shipped `orderBySex` already uses (restated in full, 5 conjuncts, since the design note's own</span></span>
-<span id="cb1-387"><a href="#cb1-387" tabindex="-1"></a><span class="st">pseudocode had dropped 2 of them) — B3 duplicates and the non-qualifying fallback are</span></span>
-<span id="cb1-388"><a href="#cb1-388" tabindex="-1"></a><span class="st">untouched. Provably correct for any drift magnitude/sign, not just the 2 magnitudes §7's own</span></span>
-<span id="cb1-389"><a href="#cb1-389" tabindex="-1"></a><span class="st">counter-examples happened to execute. **2 disclosed implementation-time obligations for</span></span>
-<span id="cb1-390"><a href="#cb1-390" tabindex="-1"></a><span class="st">Phase 2** (not further open design questions): (1) a required new Test 15 + an explicit</span></span>
-<span id="cb1-391"><a href="#cb1-391" tabindex="-1"></a><span class="st">assertion that `P.x` is read post-`sweepMinSep()`, never a pre-sweep intermediate — the</span></span>
-<span id="cb1-392"><a href="#cb1-392" tabindex="-1"></a><span class="st">critique found today's shipped code has exactly 2 write-points for a real individual's `x`</span></span>
-<span id="cb1-393"><a href="#cb1-393" tabindex="-1"></a><span class="st">and a careless implementation could read the wrong one; (2) widen the disclosed</span></span>
-<span id="cb1-394"><a href="#cb1-394" tabindex="-1"></a><span class="st">union-dot/`M_repr` cosmetic-distance trade-off to cover `sweepMinSep()` pushing `P` itself,</span></span>
-<span id="cb1-395"><a href="#cb1-395" tabindex="-1"></a><span class="st">not only `P`'s children. **Phase 2 (the pedigree adapter, parallel to production) is now</span></span>
-<span id="cb1-396"><a href="#cb1-396" tabindex="-1"></a><span class="st">READY** — design/research only this session, zero production code touched, matching Phase</span></span>
-<span id="cb1-397"><a href="#cb1-397" tabindex="-1"></a><span class="st">1b's own precedent throughout. Effort L overall unchanged; Phase 2 itself Effort M-L,</span></span>
-<span id="cb1-398"><a href="#cb1-398" tabindex="-1"></a><span class="st">5+ sessions per the parent plan's own estimate.</span></span>
-<span id="cb1-399"><a href="#cb1-399" tabindex="-1"></a></span>
-<span id="cb1-400"><a href="#cb1-400" tabindex="-1"></a><span class="st">**Phase 2a — S614 (2026-08-19): adapter mechanics DONE, split from live-render</span></span>
-<span id="cb1-401"><a href="#cb1-401" tabindex="-1"></a><span class="st">verification.** Owner-directed scope split (via `AskUserQuestion`, matching Phase 2's own</span></span>
-<span id="cb1-402"><a href="#cb1-402" tabindex="-1"></a><span class="st">"</span>splittable <span class="cf">if</span> too large<span class="st">" allowance): this session built `.positionMatingUnitForestBJL()`</span></span>
-<span id="cb1-403"><a href="#cb1-403" tabindex="-1"></a><span class="st">(new function, `R/makePedigreeDiagramData.R`, zero changes to `.positionMatingUnitForest()`</span></span>
-<span id="cb1-404"><a href="#cb1-404" tabindex="-1"></a><span class="st">or any other existing code, no shared call site yet) implementing the design note's 3-tier</span></span>
-<span id="cb1-405"><a href="#cb1-405" tabindex="-1"></a><span class="st">reconciliation (Tier 1 genuine-tree BJL + reinstated `sweepMinSep()` backstop; Tier 2 union</span></span>
-<span id="cb1-406"><a href="#cb1-406" tabindex="-1"></a><span class="st">midpoint + exact-tie sweep; Tier 3 B1/B3 derived points using §8.1's fixed formula) — via</span></span>
-<span id="cb1-407"><a href="#cb1-407" tabindex="-1"></a><span class="st">strict TDD (PRE-RED → `AskUserQuestion` → RED → `AskUserQuestion` → GREEN →</span></span>
-<span id="cb1-408"><a href="#cb1-408" tabindex="-1"></a><span class="st">`AskUserQuestion` → REFACTOR, each transition gated). New</span></span>
-<span id="cb1-409"><a href="#cb1-409" tabindex="-1"></a><span class="st">[`tests/testthat/test_positionMatingUnitForestBJL.R`](tests/testthat/test_positionMatingUnitForestBJL.R):</span></span>
-<span id="cb1-410"><a href="#cb1-410" tabindex="-1"></a><span class="st">17 `test_that()` blocks — the design note's own 15-fixture matrix (§4 Tests 1-14 + §8.4's</span></span>
-<span id="cb1-411"><a href="#cb1-411" tabindex="-1"></a><span class="st">required Test 15) plus 3 property tests — all synthetic/hand-built; explicitly **deferred to</span></span>
-<span id="cb1-412"><a href="#cb1-412" tabindex="-1"></a><span class="st">a Phase 2b session**: the reusable chromote-based live-render helper and the real</span></span>
-<span id="cb1-413"><a href="#cb1-413" tabindex="-1"></a><span class="st">375-individual fixture's own zero-coincidence/single-child-union-prevalence measurements</span></span>
-<span id="cb1-414"><a href="#cb1-414" tabindex="-1"></a><span class="st">(both still owed per the parent plan's own Verification Plan). Oracle values for the</span></span>
-<span id="cb1-415"><a href="#cb1-415" tabindex="-1"></a><span class="st">numerically-exact fixtures derived by actually running Tier 1's own mechanics against the</span></span>
-<span id="cb1-416"><a href="#cb1-416" tabindex="-1"></a><span class="st">existing Phase 1a engine, never hand-derived. 2 real implementation defects found and fixed</span></span>
-<span id="cb1-417"><a href="#cb1-417" tabindex="-1"></a><span class="st">during GREEN (both via execution, not foreseen at RED): (1) B1 eligibility needs an explicit</span></span>
-<span id="cb1-418"><a href="#cb1-418" tabindex="-1"></a><span class="st">`!hasParentEdge(M)` conjunct the OLD, shipped `freePassIds` computation doesn't carry — a B2</span></span>
-<span id="cb1-419"><a href="#cb1-419" tabindex="-1"></a><span class="st">individual (own parent edge) was wrongly getting a second, Tier-3 derived-point row; (2) a</span></span>
-<span id="cb1-420"><a href="#cb1-420" tabindex="-1"></a><span class="st">dangling non-anchor party (no own row in `ped`) crashed on `sireOf[[id]]`/`damOf[[id]]` —</span></span>
-<span id="cb1-421"><a href="#cb1-421" tabindex="-1"></a><span class="st">fixed by excluding dangling ids from B1 eligibility up front, matching the OLD function's</span></span>
-<span id="cb1-422"><a href="#cb1-422" tabindex="-1"></a><span class="st">own confirmed behavior of dropping such an id from its output entirely. 3 RED-phase test</span></span>
-<span id="cb1-423"><a href="#cb1-423" tabindex="-1"></a><span class="st">bugs (not implementation bugs) also found and fixed. Verified: `test_file()` 17/17 GREEN (53</span></span>
-<span id="cb1-424"><a href="#cb1-424" tabindex="-1"></a><span class="st">expectations); full clean regression 0 failed/0 error project-wide (OLD function and every</span></span>
-<span id="cb1-425"><a href="#cb1-425" tabindex="-1"></a><span class="st">other existing test bit-for-bit unaffected); `lintr::lint()` 0 findings after REFACTOR (2</span></span>
-<span id="cb1-426"><a href="#cb1-426" tabindex="-1"></a><span class="st">style-only fixes). See `PROJECT_LEARNINGS.md` Learnings 639/640. **Next: Phase 2b** (the</span></span>
-<span id="cb1-427"><a href="#cb1-427" tabindex="-1"></a><span class="st">live-render helper + real-fixture A/B verification) — its own separate session.</span></span>
-<span id="cb1-428"><a href="#cb1-428" tabindex="-1"></a></span>
-<span id="cb1-429"><a href="#cb1-429" tabindex="-1"></a><span class="st">**Phase 2b — S615 (2026-08-20): DONE.** New reusable</span></span>
-<span id="cb1-430"><a href="#cb1-430" tabindex="-1"></a><span class="st">[`tests/testthat/helper-live-render-positions.R`](tests/testthat/helper-live-render-positions.R)</span></span>
-<span id="cb1-431"><a href="#cb1-431" tabindex="-1"></a><span class="st">(`getLiveRenderedPositions()` — renders via the app's own `visNetwork()`/`visPhysics(FALSE)`</span></span>
-<span id="cb1-432"><a href="#cb1-432" tabindex="-1"></a><span class="st">call, `chromote`-drives it headless, reads back ground truth via vis.js's own</span></span>
-<span id="cb1-433"><a href="#cb1-433" tabindex="-1"></a><span class="st">`getPositions()`), completing the parent plan's own Phase 2 "</span>New deliverable... fixing C2<span class="fl">-4.</span><span class="st">"</span></span>
-<span id="cb1-434"><a href="#cb1-434" tabindex="-1"></a><span class="st">7 new tests added to</span></span>
-<span id="cb1-435"><a href="#cb1-435" tabindex="-1"></a><span class="st">[`tests/testthat/test_positionMatingUnitForestBJL.R`](tests/testthat/test_positionMatingUnitForestBJL.R)</span></span>
-<span id="cb1-436"><a href="#cb1-436" tabindex="-1"></a><span class="st">(24 total). **Real-375-fixture results, all measured (not assumed):** the zero-exact-</span></span>
-<span id="cb1-437"><a href="#cb1-437" tabindex="-1"></a><span class="st">x/gen-coincidence gate ("</span>the single most important test <span class="cf">in</span> the whole migration<span class="st">") **passes**;</span></span>
-<span id="cb1-438"><a href="#cb1-438" tabindex="-1"></a><span class="st">the exact-midpoint invariant (previously synthetic-only) **passes** on real data too;</span></span>
-<span id="cb1-439"><a href="#cb1-439" tabindex="-1"></a><span class="st">single-child-union near-parent prevalence is 224/237 (structural, unchanged — D1 out of</span></span>
-<span id="cb1-440"><a href="#cb1-440" tabindex="-1"></a><span class="st">scope) with a new distance breakdown of 180/224 touching (≤31px) / 208/224 half-column</span></span>
-<span id="cb1-441"><a href="#cb1-441" tabindex="-1"></a><span class="st">(≤60px) vs. the OLD algorithm's clamp-affected 175/224 / 203/224 — comparable, not</span></span>
-<span id="cb1-442"><a href="#cb1-442" tabindex="-1"></a><span class="st">dramatically reduced, because BJL's own genuine child-centering produces similar visual</span></span>
-<span id="cb1-443"><a href="#cb1-443" tabindex="-1"></a><span class="st">closeness for structurally honest reasons (the plan's own "</span>naturally close... may legitimately</span>
-<span id="cb1-444"><a href="#cb1-444" tabindex="-1"></a>remain close<span class="st">" caveat, now directly measured); Phase 1b §8.4 Obligation 2's combined</span></span>
-<span id="cb1-445"><a href="#cb1-445" tabindex="-1"></a><span class="st">trigger-frequency measurement found 34 `orderBySex`-qualifying B1 unions, drift range</span></span>
-<span id="cb1-446"><a href="#cb1-446" tabindex="-1"></a><span class="st">0.399–0.401, comfortably inside the disclosed cosmetic bound. **Major incidental finding</span></span>
-<span id="cb1-447"><a href="#cb1-447" tabindex="-1"></a><span class="st">(`PROJECT_LEARNINGS.md` Learning 641):** live-rendering revealed vis.js's `getPositions()`</span></span>
-<span id="cb1-448"><a href="#cb1-448" tabindex="-1"></a><span class="st">rounds to whole pixels, so the shared 1e-3-raw-unit "</span>cosmetic<span class="st">" tie-break nudge (×`xScale=120`</span></span>
-<span id="cb1-449"><a href="#cb1-449" tabindex="-1"></a><span class="st">= 0.12px) used by BOTH algorithms renders pixel-identical to whatever it was nudged away</span></span>
-<span id="cb1-450"><a href="#cb1-450" tabindex="-1"></a><span class="st">from — measured side by side on the real fixture: OLD 368/714 nodes pixel-coincident (182</span></span>
-<span id="cb1-451"><a href="#cb1-451" tabindex="-1"></a><span class="st">groups), NEW 380/714 (190 groups), comparable, a pre-existing characteristic, not a Phase 2b</span></span>
-<span id="cb1-452"><a href="#cb1-452" tabindex="-1"></a><span class="st">regression. Owner-directed (`AskUserQuestion`, on finding this): Tests 6/7 report this via</span></span>
-<span id="cb1-453"><a href="#cb1-453" tabindex="-1"></a><span class="st">`message()` as a diagnostic, asserting only what Phase 2b's charter requires (no id silently</span></span>
-<span id="cb1-454"><a href="#cb1-454" tabindex="-1"></a><span class="st">collapses in vis.js's own DataSet — confirmed clean on both the F1/"</span>Track C<span class="st">" fixture and the</span></span>
-<span id="cb1-455"><a href="#cb1-455" tabindex="-1"></a><span class="st">real 714-node fixture), not a hard pixel-coincidence gate neither algorithm clears. A real</span></span>
-<span id="cb1-456"><a href="#cb1-456" tabindex="-1"></a><span class="st">epsilon-magnitude fix, if wanted, is future design work, not scoped here. **Also found and</span></span>
-<span id="cb1-457"><a href="#cb1-457" tabindex="-1"></a><span class="st">fixed:** chromote's own 10s default `Page$loadEventFired()` timeout was too short for the</span></span>
-<span id="cb1-458"><a href="#cb1-458" tabindex="-1"></a><span class="st">714-node fixture's self-contained HTML (helper gained a `loadTimeout` parameter, default 30s,</span></span>
-<span id="cb1-459"><a href="#cb1-459" tabindex="-1"></a><span class="st">used 60s for the real fixture); a NEW `devtools::check()` WARNING ("</span>unstated dependencies <span class="cf">in</span></span>
-<span id="cb1-460"><a href="#cb1-460" tabindex="-1"></a>tests<span class="sc">:</span> chromote, htmlwidgets<span class="st">") from using the same `data-raw/kinship2FidelityValidation.R`</span></span>
-<span id="cb1-461"><a href="#cb1-461" tabindex="-1"></a><span class="st">`::`-call pattern inside the CHECKED `tests/testthat/` surface — fixed by adding both to</span></span>
-<span id="cb1-462"><a href="#cb1-462" tabindex="-1"></a><span class="st">`DESCRIPTION`'s `Suggests:` (owner-clarified packaging rule: `Suggests:` for anything</span></span>
-<span id="cb1-463"><a href="#cb1-463" tabindex="-1"></a><span class="st">test/example/vignette code loads, `Config/Needs/&lt;name&gt;:` for dev-tooling-only packages);</span></span>
-<span id="cb1-464"><a href="#cb1-464" tabindex="-1"></a><span class="st">`PROJECT_LEARNINGS.md` Learning 642. Incidentally also relocated `covr` (pure coverage</span></span>
-<span id="cb1-465"><a href="#cb1-465" tabindex="-1"></a><span class="st">tooling, already CI-installed independently) from `Suggests:` to a new</span></span>
-<span id="cb1-466"><a href="#cb1-466" tabindex="-1"></a><span class="st">`Config/Needs/coverage: covr`, matching this file's own `Config/Needs/website: quarto`</span></span>
-<span id="cb1-467"><a href="#cb1-467" tabindex="-1"></a><span class="st">precedent — flagged, not fixed, that `devtools`/`roxygen2`/`pkgdown` look like further</span></span>
-<span id="cb1-468"><a href="#cb1-468" tabindex="-1"></a><span class="st">instances of the same misplacement (new Housekeeping item below). Full clean regression:</span></span>
-<span id="cb1-469"><a href="#cb1-469" tabindex="-1"></a><span class="st">0 failed/0 error project-wide (confirmed twice — a direct `test_dir()` run and again inside</span></span>
-<span id="cb1-470"><a href="#cb1-470" tabindex="-1"></a><span class="st">`devtools::check()`'s own `testthat.R`). `lintr::lint_package()`: 0 lints. `devtools::check()`:</span></span>
-<span id="cb1-471"><a href="#cb1-471" tabindex="-1"></a><span class="st">0 errors, 1 WARNING + 2 NOTEs — all 3 pre-existing (non-portable filename, `scratchpad/` top</span></span>
-<span id="cb1-472"><a href="#cb1-472" tabindex="-1"></a><span class="st">level dir, `vignettes/figure/` knitr leftover), zero new, matching S614's own baseline</span></span>
-<span id="cb1-473"><a href="#cb1-473" tabindex="-1"></a><span class="st">exactly. `.positionMatingUnitForestBJL()` itself unchanged — Phase 2b touched zero production</span></span>
-<span id="cb1-474"><a href="#cb1-474" tabindex="-1"></a><span class="st">code. **Next: Phase 3** (cutover, 2 explicitly-scoped commits per the parent plan's own Phase</span></span>
-<span id="cb1-475"><a href="#cb1-475" tabindex="-1"></a><span class="st">3 spec) — its own separate session; the real-fixture zero-coincidence gate now has DIRECT</span></span>
-<span id="cb1-476"><a href="#cb1-476" tabindex="-1"></a><span class="st">real-data evidence behind it, not just synthetic-fixture coverage.</span></span>
-<span id="cb1-477"><a href="#cb1-477" tabindex="-1"></a></span>
-<span id="cb1-478"><a href="#cb1-478" tabindex="-1"></a><span class="st">**Phase 3 — S620 (2026-08-21): DONE — full TDD RED→GREEN→REFACTOR cycle, gated.** Cutover</span></span>
-<span id="cb1-479"><a href="#cb1-479" tabindex="-1"></a><span class="st">complete: `.positionMatingUnitForest()` (OLD contour-merge implementation) and</span></span>
-<span id="cb1-480"><a href="#cb1-480" tabindex="-1"></a><span class="st">`.computeDupNudge()` deleted outright; `.positionMatingUnitForestBJL()` renamed to</span></span>
-<span id="cb1-481"><a href="#cb1-481" tabindex="-1"></a><span class="st">`.positionMatingUnitForest()`, replacing the OLD implementation as the sole production</span></span>
-<span id="cb1-482"><a href="#cb1-482" tabindex="-1"></a><span class="st">positioning engine; `makePedigreeMatingLayout()`'s call site updated. **Restructured from the</span></span>
-<span id="cb1-483"><a href="#cb1-483" tabindex="-1"></a><span class="st">plan's own literal "</span>Commit <span class="dv">3-1</span> (<span class="dv">4</span> files) <span class="sc">/</span> Commit <span class="dv">3-2</span> (<span class="dv">2</span> files, conditional)<span class="st">" split**, per the</span></span>
-<span id="cb1-484"><a href="#cb1-484" tabindex="-1"></a><span class="st">plan's own explicit fallback clause (§Migration Path Phase 3: "</span>if <span class="st">`</span><span class="at">test_addRectilinearWaypoints.R</span><span class="st">`</span><span class="sc">/</span></span>
-<span id="cb1-485"><a href="#cb1-485" tabindex="-1"></a><span class="st">`</span><span class="at">test_resolveEdgeNodeCollisions.R</span><span class="st">`</span> go red as a direct, mechanical consequence... pull it into</span>
-<span id="cb1-486"><a href="#cb1-486" tabindex="-1"></a>Commit <span class="dv">3-1</span><span class="st">"): both files genuinely needed re-pinning (measured, not assumed) rather than</span></span>
-<span id="cb1-487"><a href="#cb1-487" tabindex="-1"></a><span class="st">staying green untouched, so all 5 test files landed in ONE RED commit (`e92d945e`, 5 files,</span></span>
-<span id="cb1-488"><a href="#cb1-488" tabindex="-1"></a><span class="st">within the SAFEGUARDS.md cap) with production code in a separate GREEN commit (`b013c009`, 5</span></span>
-<span id="cb1-489"><a href="#cb1-489" tabindex="-1"></a><span class="st">files: `R/makePedigreeDiagramData.R` + `NEWS.Rmd`/`NEWS.md` + `man/makePedigreeMatingLayout.Rd`</span></span>
-<span id="cb1-490"><a href="#cb1-490" tabindex="-1"></a><span class="st">+ `inst/WORDLIST`) — Commit 3-2 does not exist as a separate step; nothing was left deferred.</span></span>
-<span id="cb1-491"><a href="#cb1-491" tabindex="-1"></a><span class="st">**2 genuine implementation defects found and fixed during GREEN** (neither anticipated at RED,</span></span>
-<span id="cb1-492"><a href="#cb1-492" tabindex="-1"></a><span class="st">both diagnosed by running the specific failing fixture in isolation): (1) BJL never carried the</span></span>
-<span id="cb1-493"><a href="#cb1-493" tabindex="-1"></a><span class="st">OLD function's own input-validation guards (`ped` must be a data frame / must have required</span></span>
-<span id="cb1-494"><a href="#cb1-494" tabindex="-1"></a><span class="st">columns) — restored verbatim; (2) a mating unit whose BOTH sire and dam are dangling (issue</span></span>
-<span id="cb1-495"><a href="#cb1-495" tabindex="-1"></a><span class="st">#154's original "</span>both<span class="sc">-</span>dangling<span class="st">" shape) crashed `.buildForestChildrenOf()` on an empty</span></span>
-<span id="cb1-496"><a href="#cb1-496" tabindex="-1"></a><span class="st">`rootIds` — BJL had no equivalent to the OLD algorithm's own issue #154 fix; fixed by making</span></span>
-<span id="cb1-497"><a href="#cb1-497" tabindex="-1"></a><span class="st">such a unit's own real children independent Tier-1 roots directly, and broadening Tier 2's</span></span>
-<span id="cb1-498"><a href="#cb1-498" tabindex="-1"></a><span class="st">union-x derivation to cover every unit with ≥1 real child (not just anchored ones), so the</span></span>
-<span id="cb1-499"><a href="#cb1-499" tabindex="-1"></a><span class="st">orphan unit itself still gets a valid, finite x. **`orderBySex` removed from</span></span>
-<span id="cb1-500"><a href="#cb1-500" tabindex="-1"></a><span class="st">`makePedigreeMatingLayout()`'s public signature** (owner-directed via `AskUserQuestion`,</span></span>
-<span id="cb1-501"><a href="#cb1-501" tabindex="-1"></a><span class="st">PRE-RED): Phase 1b's own design note had already found the mechanism "</span>restructured, not</span>
-<span id="cb1-502"><a href="#cb1-502" tabindex="-1"></a>preserved unchanged — eliminated as a separate pass<span class="st">" (folded unconditionally into Tier 3's B1</span></span>
-<span id="cb1-503"><a href="#cb1-503" tabindex="-1"></a><span class="st">formula, S8.1); grep-confirmed zero real callers anywhere in `R/`/`inst/` ever passed it; kept</span></span>
-<span id="cb1-504"><a href="#cb1-504" tabindex="-1"></a><span class="st">as a silently inert no-op was judged worse than an honest removal. Every new/changed test</span></span>
-<span id="cb1-505"><a href="#cb1-505" tabindex="-1"></a><span class="st">literal (positional x values, jog-node/waypoint/collision counts, twin-connector jog states,</span></span>
-<span id="cb1-506"><a href="#cb1-506" tabindex="-1"></a><span class="st">duplicate-connector from/to ordering) derived by actually running the new engine via a</span></span>
-<span id="cb1-507"><a href="#cb1-507" tabindex="-1"></a><span class="st">throwaway probe script (monkey-patched under the OLD function's own name), never hand-derived</span></span>
-<span id="cb1-508"><a href="#cb1-508" tabindex="-1"></a><span class="st">— including several genuinely surprising findings only discoverable this way: the D1 bar-vs-bar</span></span>
-<span id="cb1-509"><a href="#cb1-509" tabindex="-1"></a><span class="st">residual (348/116 → 0/0) and the larger-gap residual (2 → 0) both fully resolve under the new</span></span>
-<span id="cb1-510"><a href="#cb1-510" tabindex="-1"></a><span class="st">engine (Track 3's clamp, the mechanism that worsened them, no longer exists); a B2 individual</span></span>
-<span id="cb1-511"><a href="#cb1-511" tabindex="-1"></a><span class="st">(own parent edge or own direct child) now renders at their own genuine gen rather than the OLD</span></span>
-<span id="cb1-512"><a href="#cb1-512" tabindex="-1"></a><span class="st">algorithm's uniform non-anchor-override gen, a deliberate, disclosed Phase 1b/2a design choice</span></span>
-<span id="cb1-513"><a href="#cb1-513" tabindex="-1"></a><span class="st">that required rewriting 2 regression-guard tests and adapting 1 fixture (not a bug). Live-render</span></span>
-<span id="cb1-514"><a href="#cb1-514" tabindex="-1"></a><span class="st">verification (F1/Track-C 9-subject and real-375 fixtures, via `helper-live-render-positions.R`,</span></span>
-<span id="cb1-515"><a href="#cb1-515" tabindex="-1"></a><span class="st">already merged into the test suite from Phase 2b) confirmed passing as part of the full clean</span></span>
-<span id="cb1-516"><a href="#cb1-516" tabindex="-1"></a><span class="st">regression, plus a direct standalone re-confirmation this session. Fresh grep re-confirmed the</span></span>
-<span id="cb1-517"><a href="#cb1-517" tabindex="-1"></a><span class="st">call-site/downstream-consumer inventory (single call site, zero `matingUnits`/`duplicates`/</span></span>
-<span id="cb1-518"><a href="#cb1-518" tabindex="-1"></a><span class="st">`childEdges` consumers outside this file) has not drifted since planning. Full clean regression</span></span>
-<span id="cb1-519"><a href="#cb1-519" tabindex="-1"></a><span class="st">0 failed/0 error project-wide throughout (2 marker-genetics failures seen in one full-suite run</span></span>
-<span id="cb1-520"><a href="#cb1-520" tabindex="-1"></a><span class="st">confirmed pre-existing order-dependent flakiness via `git stash`, unrelated to this diff — both</span></span>
-<span id="cb1-521"><a href="#cb1-521" tabindex="-1"></a><span class="st">pass cleanly in isolation). `lintr::lint_package()` (whole package): 0 findings.</span></span>
-<span id="cb1-522"><a href="#cb1-522" tabindex="-1"></a><span class="st">`devtools::check()`: 0 errors, 1 WARNING + 2 NOTEs, all 3 confirmed pre-existing — a 4th, NEW</span></span>
-<span id="cb1-523"><a href="#cb1-523" tabindex="-1"></a><span class="st">Rd-cross-reference WARNING (a `\link{}` to the now-internal `.positionMatingUnitForest()` from</span></span>
-<span id="cb1-524"><a href="#cb1-524" tabindex="-1"></a><span class="st">the one exported function's doc) was found and fixed in-session. CI green on all 4 workflows,</span></span>
-<span id="cb1-525"><a href="#cb1-525" tabindex="-1"></a><span class="st">commit `01f29342`. **Next: Phase 4** (cleanup/documentation — update</span></span>
-<span id="cb1-526"><a href="#cb1-526" tabindex="-1"></a><span class="st">`docs/planning/pedigree-diagram-option2-layout-design-plan.md`'s D3 section, close issue #141</span></span>
-<span id="cb1-527"><a href="#cb1-527" tabindex="-1"></a><span class="st">citing this migration's commits, update this `BACKLOG.md` item, sweep stale in-code comments</span></span>
-<span id="cb1-528"><a href="#cb1-528" tabindex="-1"></a><span class="st">referencing Track 3/Track 6/`.computeDupNudge()`/the patch-stack, add `NEWS.Rmd`/`CHANGELOG.md`</span></span>
-<span id="cb1-529"><a href="#cb1-529" tabindex="-1"></a><span class="st">entries for the feature-level user-facing changelog) — its own separate session per the plan's</span></span>
-<span id="cb1-530"><a href="#cb1-530" tabindex="-1"></a><span class="st">own spec, acceptable to split into 4a/4b if too large for one sitting.</span></span></code></pre></div>
+<span id="cb1-207"><a href="#cb1-207" tabindex="-1"></a><span class="st">specifically, then proceed through PRE-RED→RED→GREEN. **STALE, found S621 (2026-08-20):</span></span>
+<span id="cb1-208"><a href="#cb1-208" tabindex="-1"></a><span class="st">this "</span>READY, Effort S<span class="st">" tag never got struck when the very next session (S609, below)</span></span>
+<span id="cb1-209"><a href="#cb1-209" tabindex="-1"></a><span class="st">redirected the whole thread to a full algorithm-family redesign instead — the targeted</span></span>
+<span id="cb1-210"><a href="#cb1-210" tabindex="-1"></a><span class="st">repair was never built, `.computeSingleChildAntiCoincidence()` was never shipped</span></span>
+<span id="cb1-211"><a href="#cb1-211" tabindex="-1"></a><span class="st">(grep-confirmed: 0 hits anywhere in `R/`/`tests/`), and the redesign it redirected to</span></span>
+<span id="cb1-212"><a href="#cb1-212" tabindex="-1"></a><span class="st">(Walker/BJL, issue #141) is now DONE (S610-S620, see this item's own closing update below).</span></span>
+<span id="cb1-213"><a href="#cb1-213" tabindex="-1"></a><span class="st">Left here struck-through rather than deleted, matching this project's own precedent against</span></span>
+<span id="cb1-214"><a href="#cb1-214" tabindex="-1"></a><span class="st">retroactively editing already-written narrative — a future flat `BACKLOG.md` tag grep should</span></span>
+<span id="cb1-215"><a href="#cb1-215" tabindex="-1"></a><span class="st">not treat this as a live option.** Full record, the ratification, and</span></span>
+<span id="cb1-216"><a href="#cb1-216" tabindex="-1"></a><span class="st">exact scope:</span></span>
+<span id="cb1-217"><a href="#cb1-217" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)</span></span>
+<span id="cb1-218"><a href="#cb1-218" tabindex="-1"></a><span class="st">§7-9. Independent finding, unrelated to this item: Track 6's own "</span><span class="dv">91</span>% reduction<span class="st">" headline</span></span>
+<span id="cb1-219"><a href="#cb1-219" tabindex="-1"></a><span class="st">metric is stale at current HEAD (true baseline 53/251, not 9/251) — a separate housekeeping</span></span>
+<span id="cb1-220"><a href="#cb1-220" tabindex="-1"></a><span class="st">item. The original Track 3 child-centering/D1-bar-vs-bar decision (accept as permanent vs.</span></span>
+<span id="cb1-221"><a href="#cb1-221" tabindex="-1"></a><span class="st">investigate further) remains itself unresolved pending this new investigation's own outcome.</span></span>
+<span id="cb1-222"><a href="#cb1-222" tabindex="-1"></a></span>
+<span id="cb1-223"><a href="#cb1-223" tabindex="-1"></a><span class="st">**Progress (S609, 2026-08-18), "</span>D3‴<span class="st">" built and Critique Round 3 run — still NOT sound,</span></span>
+<span id="cb1-224"><a href="#cb1-224" tabindex="-1"></a><span class="st">needs a redesign, not another repair attempt:** picked up §9's ratified targeted-repair</span></span>
+<span id="cb1-225"><a href="#cb1-225" tabindex="-1"></a><span class="st">scope via a `Workflow` (1 rebuild agent + 3 independent adversarial critique lenses, scratch</span></span>
+<span id="cb1-226"><a href="#cb1-226" tabindex="-1"></a><span class="st">copy only, zero production code touched). The rebuild reproduced every number the</span></span>
+<span id="cb1-227"><a href="#cb1-227" tabindex="-1"></a><span class="st">investigation had already established exactly (F1 `__union_4` = 224.00px; real-fixture</span></span>
+<span id="cb1-228"><a href="#cb1-228" tabindex="-1"></a><span class="st">residual 11/224; `resolveEdgeNodeCollisions` pairs = 1427; S583 pinned case = 29; Constraint</span></span>
+<span id="cb1-229"><a href="#cb1-229" tabindex="-1"></a><span class="st">1 bit-identical) and honestly fixed 2 further bugs beyond the ratified scope (a</span></span>
+<span id="cb1-230"><a href="#cb1-230" tabindex="-1"></a><span class="st">floating-point guard band; a latent direction-reversal risk in the safety cap) — but **all 3</span></span>
+<span id="cb1-231"><a href="#cb1-231" tabindex="-1"></a><span class="st">critique lenses independently returned `designStillSound: false`**, finding problems the</span></span>
+<span id="cb1-232"><a href="#cb1-232" tabindex="-1"></a><span class="st">rebuild's own honest disclosure did not reach: (1) **the shipped scratch copy regresses an</span></span>
+<span id="cb1-233"><a href="#cb1-233" tabindex="-1"></a><span class="st">existing, currently-green production test** — Track 6's own "</span>zero exact coincidence<span class="st">"</span></span>
+<span id="cb1-234"><a href="#cb1-234" tabindex="-1"></a><span class="st">invariant guard — from 0 to 3 violations on the real fixture; (2) **7 of the 11 "</span>residual<span class="st">"</span></span>
+<span id="cb1-235"><a href="#cb1-235" tabindex="-1"></a><span class="st">cases are not partial corrections, they are exact no-ops** (`target == curX`, the union</span></span>
+<span id="cb1-236"><a href="#cb1-236" tabindex="-1"></a><span class="st">renders on top of its parent, unchanged) — the `capped` diagnostic field is actively</span></span>
+<span id="cb1-237"><a href="#cb1-237" tabindex="-1"></a><span class="st">misleading for these; (3) a structurally separate, previously-unhypothesized bug: the</span></span>
+<span id="cb1-238"><a href="#cb1-238" tabindex="-1"></a><span class="st">narrow-parent-span midpoint-fallback branch is also defeated by the same obstacle cap; (4)</span></span>
+<span id="cb1-239"><a href="#cb1-239" tabindex="-1"></a><span class="st">the failure isn't limited to "</span>shared founder boundary<span class="st">" as scoped — a hand-built case with 3</span></span>
+<span id="cb1-240"><a href="#cb1-240" tabindex="-1"></a><span class="st">independently-engaged unions (no shared parent) shows the identical collapse, because the</span></span>
+<span id="cb1-241"><a href="#cb1-241" tabindex="-1"></a><span class="st">sweep is a one-directional pass with no fixed-point reconciliation between overlapping local</span></span>
+<span id="cb1-242"><a href="#cb1-242" tabindex="-1"></a><span class="st">corrections; (5) the diagnostic fields fail adversarial mutation testing for a "</span>wrong</span>
+<span id="cb1-243"><a href="#cb1-243" tabindex="-1"></a>formula<span class="st">" bug class. **Six independent design attempts across this investigation's full</span></span>
+<span id="cb1-244"><a href="#cb1-244" tabindex="-1"></a><span class="st">history (S598, S599, S600, S601×1, S609) have now failed adversarial critique** — this is</span></span>
+<span id="cb1-245"><a href="#cb1-245" tabindex="-1"></a><span class="st">not a one-line-fix-away situation; the root cause is architectural (no reconciliation</span></span>
+<span id="cb1-246"><a href="#cb1-246" tabindex="-1"></a><span class="st">mechanism between 2+ single-child unions whose corrections overlap), matching this</span></span>
+<span id="cb1-247"><a href="#cb1-247" tabindex="-1"></a><span class="st">investigation's own repeated pattern. Full record:</span></span>
+<span id="cb1-248"><a href="#cb1-248" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)</span></span>
+<span id="cb1-249"><a href="#cb1-249" tabindex="-1"></a><span class="st">§10 — **start at §10.3** for a future redesign session. Not scoped for that session (per</span></span>
+<span id="cb1-250"><a href="#cb1-250" tabindex="-1"></a><span class="st">this document's own bounds, §0): the D1 bar-vs-bar residual, the multi-child population, or</span></span>
+<span id="cb1-251"><a href="#cb1-251" tabindex="-1"></a><span class="st">re-litigating the duplicate-occurrence-selection mechanism (already separately exhausted at</span></span>
+<span id="cb1-252"><a href="#cb1-252" tabindex="-1"></a><span class="st">5 attempts).</span></span>
+<span id="cb1-253"><a href="#cb1-253" tabindex="-1"></a></span>
+<span id="cb1-254"><a href="#cb1-254" tabindex="-1"></a><span class="st">**Redirect (S609 continued, 2026-08-18) — owner-directed, informed by re-reading this</span></span>
+<span id="cb1-255"><a href="#cb1-255" tabindex="-1"></a><span class="st">project's own algorithm-design history:** in conversation, the owner challenged this</span></span>
+<span id="cb1-256"><a href="#cb1-256" tabindex="-1"></a><span class="st">whole repair thread against kinship2's own convention. Re-reading</span></span>
+<span id="cb1-257"><a href="#cb1-257" tabindex="-1"></a><span class="st">`pedigree-diagram-track6-child-centered-union-position-plan.md` and</span></span>
+<span id="cb1-258"><a href="#cb1-258" tabindex="-1"></a><span class="st">`pedigree-diagram-option2-layout-design-plan.md` in full (not from memory) established (a)</span></span>
+<span id="cb1-259"><a href="#cb1-259" tabindex="-1"></a><span class="st">nprcgenekeepr's *original* formula was parent-centered, like kinship2, and Track 6 moved</span></span>
+<span id="cb1-260"><a href="#cb1-260" tabindex="-1"></a><span class="st">away from it only after measuring a *worse* defect (max 10,687-unit sibship-bar drift for</span></span>
+<span id="cb1-261"><a href="#cb1-261" tabindex="-1"></a><span class="st">polygamous anchors); (b) kinship2 was never adopted directly because it is GPL (nprcgenekeepr</span></span>
+<span id="cb1-262"><a href="#cb1-262" tabindex="-1"></a><span class="st">is MIT) and its own source contains an uncapped factorial search plus a heuristic its own</span></span>
+<span id="cb1-263"><a href="#cb1-263" tabindex="-1"></a><span class="st">vignette admits "</span>works <span class="dv">9</span> times out of <span class="fl">10.</span><span class="st">" Reading `inst/extdata/reference/5201430.pdf` (the</span></span>
+<span id="cb1-264"><a href="#cb1-264" tabindex="-1"></a><span class="st">CraneFoot paper) directly then corrected this session's own framing: CraneFoot's published</span></span>
+<span id="cb1-265"><a href="#cb1-265" tabindex="-1"></a><span class="st">Aesthetic (4), "</span>parents centred over children,<span class="st">" is — through the mating-unit transformation —</span></span>
+<span id="cb1-266"><a href="#cb1-266" tabindex="-1"></a><span class="st">**Track 6's own rule, not kinship2's**; kinship2 and the Reingold-Tilford/Walker/BJL family</span></span>
+<span id="cb1-267"><a href="#cb1-267" tabindex="-1"></a><span class="st">are 2 different published conventions, not one "</span>the<span class="st">" standard. **Owner directive: "</span>go with</span>
+<span id="cb1-268"><a href="#cb1-268" tabindex="-1"></a>CraneFoot <span class="sc">/</span> the Reingold<span class="sc">-</span>Tilford–Walker–BJL family this whole approach is built on<span class="st">"** —</span></span>
+<span id="cb1-269"><a href="#cb1-269" tabindex="-1"></a><span class="st">pursue a complete, correct implementation of that family (issue #141) as the direction for</span></span>
+<span id="cb1-270"><a href="#cb1-270" tabindex="-1"></a><span class="st">this whole defect class, rather than a 7th local-patch attempt or reverting to kinship2-style</span></span>
+<span id="cb1-271"><a href="#cb1-271" tabindex="-1"></a><span class="st">parent-centering. **This is a ratified direction, not a scoped plan** — no redesign session</span></span>
+<span id="cb1-272"><a href="#cb1-272" tabindex="-1"></a><span class="st">has been scheduled, no implementation started. A comment was added to issue #141 documenting</span></span>
+<span id="cb1-273"><a href="#cb1-273" tabindex="-1"></a><span class="st">that the evidence in hand (6 failed local-patch attempts, ordinary-scale correctness</span></span>
+<span id="cb1-274"><a href="#cb1-274" tabindex="-1"></a><span class="st">failures) is a different kind of justification than that issue's own filed text asks for</span></span>
+<span id="cb1-275"><a href="#cb1-275" tabindex="-1"></a><span class="st">(which was performance-only); the `premature optimization` label was deliberately not</span></span>
+<span id="cb1-276"><a href="#cb1-276" tabindex="-1"></a><span class="st">changed — that is a decision for a future planning session or the owner directly. Full</span></span>
+<span id="cb1-277"><a href="#cb1-277" tabindex="-1"></a><span class="st">record, ratification, and the precise scope boundary for a future planning session:</span></span>
+<span id="cb1-278"><a href="#cb1-278" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md`](docs/planning/pedigree-diagram-single-child-union-parent-coincidence-investigation.md)</span></span>
+<span id="cb1-279"><a href="#cb1-279" tabindex="-1"></a><span class="st">§11.</span></span>
+<span id="cb1-280"><a href="#cb1-280" tabindex="-1"></a></span>
+<span id="cb1-281"><a href="#cb1-281" tabindex="-1"></a><span class="st">**Scoped (S610, 2026-08-19) — the planning session §11 called for is DONE; implementation is</span></span>
+<span id="cb1-282"><a href="#cb1-282" tabindex="-1"></a><span class="st">now READY to start at Phase 1a (Effort L overall, 5+ sessions):**</span></span>
+<span id="cb1-283"><a href="#cb1-283" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`](docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md).</span></span>
+<span id="cb1-284"><a href="#cb1-284" tabindex="-1"></a><span class="st">An 8-agent research→design→3-lens-critique→repair `Workflow` produced it; **all 3 critique</span></span>
+<span id="cb1-285"><a href="#cb1-285" tabindex="-1"></a><span class="st">lenses returned `designStillSound: false` on the first draft**, and the repaired plan states</span></span>
+<span id="cb1-286"><a href="#cb1-286" tabindex="-1"></a><span class="st">what they found rather than hiding it. The most consequential finding was structural: the</span></span>
+<span id="cb1-287"><a href="#cb1-287" tabindex="-1"></a><span class="st">draft's own proposed reconciliation mechanism (a "</span>global LEFTNEIGHBOR table<span class="st">") was both</span></span>
+<span id="cb1-288"><a href="#cb1-288" tabindex="-1"></a><span class="st">*misattributed* (real BJL **replaces** Walker's global per-level table with a purely local</span></span>
+<span id="cb1-289"><a href="#cb1-289" tabindex="-1"></a><span class="st">sibling lookup — the draft claimed BJL keeps it unchanged) and *mechanically unsound*</span></span>
+<span id="cb1-290"><a href="#cb1-290" tabindex="-1"></a><span class="st">(grafting a non-sibling comparison partner into `moveSubtree`/`executeShifts`'s sibling-indexed</span></span>
+<span id="cb1-291"><a href="#cb1-291" tabindex="-1"></a><span class="st">bookkeeping), and would have reintroduced this investigation's own signature "</span>one<span class="sc">-</span>directional</span>
+<span id="cb1-292"><a href="#cb1-292" tabindex="-1"></a>sweep, first one wins<span class="st">" failure shape **one level down, inside the replacement algorithm's own</span></span>
+<span id="cb1-293"><a href="#cb1-293" tabindex="-1"></a><span class="st">internals** — i.e. a 7th instance of the same root cause, caught at the planning stage this</span></span>
+<span id="cb1-294"><a href="#cb1-294" tabindex="-1"></a><span class="st">time instead of after implementation. Phasing: **1a** standalone BJL apportioning engine</span></span>
+<span id="cb1-295"><a href="#cb1-295" tabindex="-1"></a><span class="st">(genuine trees only, cross-checked against MIT-licensed `d3-hierarchy`, strong exact-value</span></span>
+<span id="cb1-296"><a href="#cb1-296" tabindex="-1"></a><span class="st">oracles required on every fixture); **1b** (NEW, required, gates Phase 2) a research/design</span></span>
+<span id="cb1-297"><a href="#cb1-297" tabindex="-1"></a><span class="st">spike for the forest/mixed-gen reconciliation problem the literature does not address at all —</span></span>
+<span id="cb1-298"><a href="#cb1-298" tabindex="-1"></a><span class="st">this project's forest has 0-delta tree edges (an individual→its own anchored union, a</span></span>
+<span id="cb1-299"><a href="#cb1-299" tabindex="-1"></a><span class="st">union→its non-anchor-parent phantom leaf) that no Reingold-Tilford/Walker/BJL no-overlap proof</span></span>
+<span id="cb1-300"><a href="#cb1-300" tabindex="-1"></a><span class="st">covers, and 1b may legitimately conclude "</span>more research needed<span class="st">"; **2** pedigree adapter built</span></span>
+<span id="cb1-301"><a href="#cb1-301" tabindex="-1"></a><span class="st">parallel to production, A/B verified, plus a new reusable checked-in</span></span>
+<span id="cb1-302"><a href="#cb1-302" tabindex="-1"></a><span class="st">`helper-live-render-positions.R` (chromote `getPositions()` ground-truth harness); **3**</span></span>
+<span id="cb1-303"><a href="#cb1-303" tabindex="-1"></a><span class="st">cutover in 2 explicitly-scoped commits (4 files, then 2), each independently green;</span></span>
+<span id="cb1-304"><a href="#cb1-304" tabindex="-1"></a><span class="st">**4** cleanup/docs + close issue #141. Track 3's clamp, Track 6's `finalUnitX` override,</span></span>
+<span id="cb1-305"><a href="#cb1-305" tabindex="-1"></a><span class="st">`.computeDupNudge()`, both `sweepMinSep()` applications and the epsilon de-collision pass are</span></span>
+<span id="cb1-306"><a href="#cb1-306" tabindex="-1"></a><span class="st">all targeted for removal — but **conditionally**, gated on Phase 2's real-fixture</span></span>
+<span id="cb1-307"><a href="#cb1-307" tabindex="-1"></a><span class="st">zero-coincidence test (`test_positionMatingUnitForest.R:1185-1205`) actually passing, never</span></span>
+<span id="cb1-308"><a href="#cb1-308" tabindex="-1"></a><span class="st">asserted in advance. D1/D2/D4/D5, Track 1, Track 2, and the D1 bar-vs-bar residual are all</span></span>
+<span id="cb1-309"><a href="#cb1-309" tabindex="-1"></a><span class="st">explicitly OUT of scope. Issue #141 not closed and its `premature optimization` label not</span></span>
+<span id="cb1-310"><a href="#cb1-310" tabindex="-1"></a><span class="st">changed — both deferred to Phase 4/the owner, matching S609's own restraint.</span></span>
+<span id="cb1-311"><a href="#cb1-311" tabindex="-1"></a></span>
+<span id="cb1-312"><a href="#cb1-312" tabindex="-1"></a><span class="st">**Phase 1a DONE — S611 (2026-08-19):** standalone, pedigree-agnostic BJL apportioning</span></span>
+<span id="cb1-313"><a href="#cb1-313" tabindex="-1"></a><span class="st">engine, [`R/positionTreeApportion.R`](R/positionTreeApportion.R) (`.positionTreeApportion()`,</span></span>
+<span id="cb1-314"><a href="#cb1-314" tabindex="-1"></a><span class="st">`.buildForestChildrenOf()`, both internal/non-exported) +</span></span>
+<span id="cb1-315"><a href="#cb1-315" tabindex="-1"></a><span class="st">[`tests/testthat/test_positionTreeApportion.R`](tests/testthat/test_positionTreeApportion.R)</span></span>
+<span id="cb1-316"><a href="#cb1-316" tabindex="-1"></a><span class="st">(5 `test_that()` blocks, 8 exact-value expectations). **Zero changes to</span></span>
+<span id="cb1-317"><a href="#cb1-317" tabindex="-1"></a><span class="st">`R/makePedigreeDiagramData.R` or any existing test file** (`git status --porcelain -- R/</span></span>
+<span id="cb1-318"><a href="#cb1-318" tabindex="-1"></a><span class="st">tests/` shows only the 2 new files throughout). Strict TDD followed: PRE-RED research →</span></span>
+<span id="cb1-319"><a href="#cb1-319" tabindex="-1"></a><span class="st">`AskUserQuestion` gate → RED (genuine, 5/5 tests erroring on "</span>could not find <span class="cf">function</span>,<span class="st">" not</span></span>
+<span id="cb1-320"><a href="#cb1-320" tabindex="-1"></a><span class="st">vacuous) → `AskUserQuestion` gate → GREEN (8/8 expectations passed on the first</span></span>
+<span id="cb1-321"><a href="#cb1-321" tabindex="-1"></a><span class="st">implementation attempt) → `AskUserQuestion` gate → REFACTOR (53→0 lintr findings, all</span></span>
+<span id="cb1-322"><a href="#cb1-322" tabindex="-1"></a><span class="st">style-only, re-verified 8/8 GREEN + full regression after). **PRE-RED research, done before</span></span>
+<span id="cb1-323"><a href="#cb1-323" tabindex="-1"></a><span class="st">any code was written:** downloaded and read Walker's primary source (TR89-034, UNC, Sept.</span></span>
+<span id="cb1-324"><a href="#cb1-324" tabindex="-1"></a><span class="st">1989) directly, extracted Figure 12's 15-node worked example and its published final</span></span>
+<span id="cb1-325"><a href="#cb1-325" tabindex="-1"></a><span class="st">x-coordinates from "</span>Nodes Visited <span class="cf">in</span> the Second Traversal<span class="st">" (pp.17-20) — not a secondary</span></span>
+<span id="cb1-326"><a href="#cb1-326" tabindex="-1"></a><span class="st">summary. Independently cross-checked against real `d3-hierarchy` v3.1.2 (installed via</span></span>
+<span id="cb1-327"><a href="#cb1-327" tabindex="-1"></a><span class="st">Node.js; **correction to the plan's own wording: ISC-licensed, not MIT** — equally</span></span>
+<span id="cb1-328"><a href="#cb1-328" tabindex="-1"></a><span class="st">permissive and GPL-avoiding, so the plan's licensing rationale is unaffected): all 15 nodes</span></span>
+<span id="cb1-329"><a href="#cb1-329" tabindex="-1"></a><span class="st">matched exactly (relative to root). Generated exact-value oracles for the other 3 required</span></span>
+<span id="cb1-330"><a href="#cb1-330" tabindex="-1"></a><span class="st">fixtures (balanced 3×3 n-ary tree, asymmetric deep-narrow+wide-shallow tree, a 3-tree forest</span></span>
+<span id="cb1-331"><a href="#cb1-331" tabindex="-1"></a><span class="st">via `.buildForestChildrenOf()`) by actually running `d3-hierarchy` on identical input —</span></span>
+<span id="cb1-332"><a href="#cb1-332" tabindex="-1"></a><span class="st">satisfying the plan's own C2-3 "</span>strong, exact<span class="sc">-</span>value oracle<span class="st">" requirement at its most rigorous</span></span>
+<span id="cb1-333"><a href="#cb1-333" tabindex="-1"></a><span class="st">reading. **Found and fixed a real defect in the plan's own `apportion()` pseudocode** via</span></span>
+<span id="cb1-334"><a href="#cb1-334" tabindex="-1"></a><span class="st">the required d3-hierarchy source cross-check: the plan omits `vip_mod += shiftVal;</span></span>
+<span id="cb1-335"><a href="#cb1-335" tabindex="-1"></a><span class="st">vop_mod += shiftVal` immediately after `moveSubtree()` fires (real d3-hierarchy's</span></span>
+<span id="cb1-336"><a href="#cb1-336" tabindex="-1"></a><span class="st">`apportion()` does this — `sip += shift; sop += shift`, `tree.js` lines ~163-165). Proved</span></span>
+<span id="cb1-337"><a href="#cb1-337" tabindex="-1"></a><span class="st">this is mechanically necessary, not cosmetic, by implementing both the plan's literal</span></span>
+<span id="cb1-338"><a href="#cb1-338" tabindex="-1"></a><span class="st">pseudocode and the corrected version in JS, constructing an adversarial fixture forcing 2+</span></span>
+<span id="cb1-339"><a href="#cb1-339" tabindex="-1"></a><span class="st">compounding shifts within one `apportion()` call, and confirming only the corrected version</span></span>
+<span id="cb1-340"><a href="#cb1-340" tabindex="-1"></a><span class="st">matches the real reference exactly. The R implementation includes this correction, documented</span></span>
+<span id="cb1-341"><a href="#cb1-341" tabindex="-1"></a><span class="st">in the file's own header and inline at the call site. Full clean regression (277 files,</span></span>
+<span id="cb1-342"><a href="#cb1-342" tabindex="-1"></a><span class="st">excluding the documented pre-existing `test-app-*`/`test-e2e-*`/`appServer`/`shinytest2`</span></span>
+<span id="cb1-343"><a href="#cb1-343" tabindex="-1"></a><span class="st">baseline-noise set) run 3 times (RED baseline, GREEN, REFACTOR): 0 failed/0 error every</span></span>
+<span id="cb1-344"><a href="#cb1-344" tabindex="-1"></a><span class="st">time, including `test_positionMatingUnitForest.R`/`test_buildMatingUnitForest.R`</span></span>
+<span id="cb1-345"><a href="#cb1-345" tabindex="-1"></a><span class="st">unaffected. `lintr::lint()` on both new files: 0 lints. Runtime smoke test: n/a — grep-</span></span>
+<span id="cb1-346"><a href="#cb1-346" tabindex="-1"></a><span class="st">confirmed zero references to any new function outside the 2 new files (no wiring, no</span></span>
+<span id="cb1-347"><a href="#cb1-347" tabindex="-1"></a><span class="st">exports; matches Phase 1a's own explicit "</span>zero changes<span class="st">" scope). **Next: Phase 1b** (forest/</span></span>
+<span id="cb1-348"><a href="#cb1-348" tabindex="-1"></a><span class="st">mixed-gen/cross-branch reconciliation research spike, gates Phase 2) — its own separate</span></span>
+<span id="cb1-349"><a href="#cb1-349" tabindex="-1"></a><span class="st">session, per the plan's own phase boundaries; may legitimately conclude "</span>more research</span>
+<span id="cb1-350"><a href="#cb1-350" tabindex="-1"></a>needed.<span class="st">"</span></span>
+<span id="cb1-351"><a href="#cb1-351" tabindex="-1"></a></span>
+<span id="cb1-352"><a href="#cb1-352" tabindex="-1"></a><span class="st">**Phase 1b — S612 (2026-08-19): substantial progress, NOT DONE — honest "</span>needs a</span>
+<span id="cb1-353"><a href="#cb1-353" tabindex="-1"></a>continuation session<span class="st">" outcome, exactly the allowance the plan's own Phase 1b charter names.**</span></span>
+<span id="cb1-354"><a href="#cb1-354" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md).</span></span>
+<span id="cb1-355"><a href="#cb1-355" tabindex="-1"></a><span class="st">A research→design→critique→repair `Workflow` (research: gen-recompute call-site trace,</span></span>
+<span id="cb1-356"><a href="#cb1-356" tabindex="-1"></a><span class="st">layered-graph literature review, `apportion()` mechanics) → design synthesis → **3 further</span></span>
+<span id="cb1-357"><a href="#cb1-357" tabindex="-1"></a><span class="st">critique+repair rounds** (11 + 4 + 4 = 19 agents total, ~87 min combined). **Settled,</span></span>
+<span id="cb1-358"><a href="#cb1-358" tabindex="-1"></a><span class="st">validated, safe to build on:** the core architecture (Candidate 2b — eliminate every 0-delta</span></span>
+<span id="cb1-359"><a href="#cb1-359" tabindex="-1"></a><span class="st">edge from the tree recursion by reattaching a union's real children onto its anchor,</span></span>
+<span id="cb1-360"><a href="#cb1-360" tabindex="-1"></a><span class="st">representing everything else as a one-way-derived point) survived all 3 critique rounds</span></span>
+<span id="cb1-361"><a href="#cb1-361" tabindex="-1"></a><span class="st">unchallenged at the structural level, independently corroborated by direct reads of</span></span>
+<span id="cb1-362"><a href="#cb1-362" tabindex="-1"></a><span class="st">CraneFoot's actual C++ source and kinship2's own design vignette (both real pedigree tools</span></span>
+<span id="cb1-363"><a href="#cb1-363" tabindex="-1"></a><span class="st">independently never make a mating union a first-class tree-recursion node either). Candidates</span></span>
+<span id="cb1-364"><a href="#cb1-364" tabindex="-1"></a><span class="st">1 (revived global table) and 3 (same-rank/flat-edge, Sugiyama-literature) are conclusively</span></span>
+<span id="cb1-365"><a href="#cb1-365" tabindex="-1"></a><span class="st">ruled out. The B1/B2/B3 non-anchor-occurrence classification is sound. Case (d) (multi-gen</span></span>
+<span id="cb1-366"><a href="#cb1-366" tabindex="-1"></a><span class="st">forest roots) is resolved for the Shiny app's own reactive chain and, more importantly,</span></span>
+<span id="cb1-367"><a href="#cb1-367" tabindex="-1"></a><span class="st">covered generally by a reinstated `sweepMinSep()` backstop. **NOT settled:** round 4's own</span></span>
+<span id="cb1-368"><a href="#cb1-368" tabindex="-1"></a><span class="st">critique (3 lenses, all independently constructing and *executing* a counter-example) found</span></span>
+<span id="cb1-369"><a href="#cb1-369" tabindex="-1"></a><span class="st">that reinstating `sweepMinSep()` as a safety net (fixing one round-2 finding) breaks the</span></span>
+<span id="cb1-370"><a href="#cb1-370" tabindex="-1"></a><span class="st">invariant a new `orderBySex` sign-fold formula (fixing round 2's *other* finding) depends on</span></span>
+<span id="cb1-371"><a href="#cb1-371" tabindex="-1"></a><span class="st">— when `sweepMinSep()` moves a real child of an `orderBySex`-qualifying union, the drift</span></span>
+<span id="cb1-372"><a href="#cb1-372" tabindex="-1"></a><span class="st">(measured: 0.5 and 0.700 in 2 independent executed fixtures) reliably exceeds the sign-fold's</span></span>
+<span id="cb1-373"><a href="#cb1-373" tabindex="-1"></a><span class="st">own tolerance budget (0.4), inverting the male/female ordering the fix exists to preserve.</span></span>
+<span id="cb1-374"><a href="#cb1-374" tabindex="-1"></a><span class="st">This is the *same signature failure shape* (2+ locally-computed corrections whose interaction</span></span>
+<span id="cb1-375"><a href="#cb1-375" tabindex="-1"></a><span class="st">was never checked against each other) recurring a 4th time within this design-note stage</span></span>
+<span id="cb1-376"><a href="#cb1-376" tabindex="-1"></a><span class="st">alone, on top of the 6 prior full implementation attempts — found here, before any</span></span>
+<span id="cb1-377"><a href="#cb1-377" tabindex="-1"></a><span class="st">implementation code, which is exactly Phase 1b's own purpose. The design note's own §7</span></span>
+<span id="cb1-378"><a href="#cb1-378" tabindex="-1"></a><span class="st">proposes 3 concrete candidate fixes for a follow-up session to evaluate (none adopted here,</span></span>
+<span id="cb1-379"><a href="#cb1-379" tabindex="-1"></a><span class="st">deliberately — adopting one without its own adversarial pass would repeat the mistake this</span></span>
+<span id="cb1-380"><a href="#cb1-380" tabindex="-1"></a><span class="st">note documents). **Next: a Phase 1b continuation session** resolving specifically this seam</span></span>
+<span id="cb1-381"><a href="#cb1-381" tabindex="-1"></a><span class="st">(not a restart — cases (a)/(b)/(c)/(d) and the 2b architecture are settled inputs), THEN</span></span>
+<span id="cb1-382"><a href="#cb1-382" tabindex="-1"></a><span class="st">Phase 2. Effort S-M for the continuation.</span></span>
+<span id="cb1-383"><a href="#cb1-383" tabindex="-1"></a></span>
+<span id="cb1-384"><a href="#cb1-384" tabindex="-1"></a><span class="st">**Phase 1b continuation — S613 (2026-08-19): SEAM RESOLVED, first-attempt sound.**</span></span>
+<span id="cb1-385"><a href="#cb1-385" tabindex="-1"></a><span class="st">[`docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md`](docs/planning/pedigree-diagram-walker-bjl-phase1b-mixed-gen-reconciliation.md)</span></span>
+<span id="cb1-386"><a href="#cb1-386" tabindex="-1"></a><span class="st">§8. A repair→3-lens-adversarial-critique `Workflow` (4 agents: 1 repair + 3 independent</span></span>
+<span id="cb1-387"><a href="#cb1-387" tabindex="-1"></a><span class="st">critique lenses) resolved the `sweepMinSep()`-vs-`orderBySex` sign-fold seam on its **first**</span></span>
+<span id="cb1-388"><a href="#cb1-388" tabindex="-1"></a><span class="st">repair attempt — every lens returned `designStillSound: true` with its own independently</span></span>
+<span id="cb1-389"><a href="#cb1-389" tabindex="-1"></a><span class="st">executed verification, no repair round 2 needed. First first-attempt-sound outcome in this</span></span>
+<span id="cb1-390"><a href="#cb1-390" tabindex="-1"></a><span class="st">investigation's full history (4 prior design-note rounds + 6 prior implementation attempts</span></span>
+<span id="cb1-391"><a href="#cb1-391" tabindex="-1"></a><span class="st">all failed critique). **The fix:** anchor the non-anchor parent's derived x on the anchor's</span></span>
+<span id="cb1-392"><a href="#cb1-392" tabindex="-1"></a><span class="st">own frozen Tier-1 `P.x` directly (`M_repr.x = P.x + sign(M)*minSep*0.4`) instead of the</span></span>
+<span id="cb1-393"><a href="#cb1-393" tabindex="-1"></a><span class="st">drift-prone Tier-2 `U.x(FINAL)`, gated on the same `mateCount==1` qualifying test today's</span></span>
+<span id="cb1-394"><a href="#cb1-394" tabindex="-1"></a><span class="st">shipped `orderBySex` already uses (restated in full, 5 conjuncts, since the design note's own</span></span>
+<span id="cb1-395"><a href="#cb1-395" tabindex="-1"></a><span class="st">pseudocode had dropped 2 of them) — B3 duplicates and the non-qualifying fallback are</span></span>
+<span id="cb1-396"><a href="#cb1-396" tabindex="-1"></a><span class="st">untouched. Provably correct for any drift magnitude/sign, not just the 2 magnitudes §7's own</span></span>
+<span id="cb1-397"><a href="#cb1-397" tabindex="-1"></a><span class="st">counter-examples happened to execute. **2 disclosed implementation-time obligations for</span></span>
+<span id="cb1-398"><a href="#cb1-398" tabindex="-1"></a><span class="st">Phase 2** (not further open design questions): (1) a required new Test 15 + an explicit</span></span>
+<span id="cb1-399"><a href="#cb1-399" tabindex="-1"></a><span class="st">assertion that `P.x` is read post-`sweepMinSep()`, never a pre-sweep intermediate — the</span></span>
+<span id="cb1-400"><a href="#cb1-400" tabindex="-1"></a><span class="st">critique found today's shipped code has exactly 2 write-points for a real individual's `x`</span></span>
+<span id="cb1-401"><a href="#cb1-401" tabindex="-1"></a><span class="st">and a careless implementation could read the wrong one; (2) widen the disclosed</span></span>
+<span id="cb1-402"><a href="#cb1-402" tabindex="-1"></a><span class="st">union-dot/`M_repr` cosmetic-distance trade-off to cover `sweepMinSep()` pushing `P` itself,</span></span>
+<span id="cb1-403"><a href="#cb1-403" tabindex="-1"></a><span class="st">not only `P`'s children. **Phase 2 (the pedigree adapter, parallel to production) is now</span></span>
+<span id="cb1-404"><a href="#cb1-404" tabindex="-1"></a><span class="st">READY** — design/research only this session, zero production code touched, matching Phase</span></span>
+<span id="cb1-405"><a href="#cb1-405" tabindex="-1"></a><span class="st">1b's own precedent throughout. Effort L overall unchanged; Phase 2 itself Effort M-L,</span></span>
+<span id="cb1-406"><a href="#cb1-406" tabindex="-1"></a><span class="st">5+ sessions per the parent plan's own estimate.</span></span>
+<span id="cb1-407"><a href="#cb1-407" tabindex="-1"></a></span>
+<span id="cb1-408"><a href="#cb1-408" tabindex="-1"></a><span class="st">**Phase 2a — S614 (2026-08-19): adapter mechanics DONE, split from live-render</span></span>
+<span id="cb1-409"><a href="#cb1-409" tabindex="-1"></a><span class="st">verification.** Owner-directed scope split (via `AskUserQuestion`, matching Phase 2's own</span></span>
+<span id="cb1-410"><a href="#cb1-410" tabindex="-1"></a><span class="st">"</span>splittable <span class="cf">if</span> too large<span class="st">" allowance): this session built `.positionMatingUnitForestBJL()`</span></span>
+<span id="cb1-411"><a href="#cb1-411" tabindex="-1"></a><span class="st">(new function, `R/makePedigreeDiagramData.R`, zero changes to `.positionMatingUnitForest()`</span></span>
+<span id="cb1-412"><a href="#cb1-412" tabindex="-1"></a><span class="st">or any other existing code, no shared call site yet) implementing the design note's 3-tier</span></span>
+<span id="cb1-413"><a href="#cb1-413" tabindex="-1"></a><span class="st">reconciliation (Tier 1 genuine-tree BJL + reinstated `sweepMinSep()` backstop; Tier 2 union</span></span>
+<span id="cb1-414"><a href="#cb1-414" tabindex="-1"></a><span class="st">midpoint + exact-tie sweep; Tier 3 B1/B3 derived points using §8.1's fixed formula) — via</span></span>
+<span id="cb1-415"><a href="#cb1-415" tabindex="-1"></a><span class="st">strict TDD (PRE-RED → `AskUserQuestion` → RED → `AskUserQuestion` → GREEN →</span></span>
+<span id="cb1-416"><a href="#cb1-416" tabindex="-1"></a><span class="st">`AskUserQuestion` → REFACTOR, each transition gated). New</span></span>
+<span id="cb1-417"><a href="#cb1-417" tabindex="-1"></a><span class="st">[`tests/testthat/test_positionMatingUnitForestBJL.R`](tests/testthat/test_positionMatingUnitForestBJL.R):</span></span>
+<span id="cb1-418"><a href="#cb1-418" tabindex="-1"></a><span class="st">17 `test_that()` blocks — the design note's own 15-fixture matrix (§4 Tests 1-14 + §8.4's</span></span>
+<span id="cb1-419"><a href="#cb1-419" tabindex="-1"></a><span class="st">required Test 15) plus 3 property tests — all synthetic/hand-built; explicitly **deferred to</span></span>
+<span id="cb1-420"><a href="#cb1-420" tabindex="-1"></a><span class="st">a Phase 2b session**: the reusable chromote-based live-render helper and the real</span></span>
+<span id="cb1-421"><a href="#cb1-421" tabindex="-1"></a><span class="st">375-individual fixture's own zero-coincidence/single-child-union-prevalence measurements</span></span>
+<span id="cb1-422"><a href="#cb1-422" tabindex="-1"></a><span class="st">(both still owed per the parent plan's own Verification Plan). Oracle values for the</span></span>
+<span id="cb1-423"><a href="#cb1-423" tabindex="-1"></a><span class="st">numerically-exact fixtures derived by actually running Tier 1's own mechanics against the</span></span>
+<span id="cb1-424"><a href="#cb1-424" tabindex="-1"></a><span class="st">existing Phase 1a engine, never hand-derived. 2 real implementation defects found and fixed</span></span>
+<span id="cb1-425"><a href="#cb1-425" tabindex="-1"></a><span class="st">during GREEN (both via execution, not foreseen at RED): (1) B1 eligibility needs an explicit</span></span>
+<span id="cb1-426"><a href="#cb1-426" tabindex="-1"></a><span class="st">`!hasParentEdge(M)` conjunct the OLD, shipped `freePassIds` computation doesn't carry — a B2</span></span>
+<span id="cb1-427"><a href="#cb1-427" tabindex="-1"></a><span class="st">individual (own parent edge) was wrongly getting a second, Tier-3 derived-point row; (2) a</span></span>
+<span id="cb1-428"><a href="#cb1-428" tabindex="-1"></a><span class="st">dangling non-anchor party (no own row in `ped`) crashed on `sireOf[[id]]`/`damOf[[id]]` —</span></span>
+<span id="cb1-429"><a href="#cb1-429" tabindex="-1"></a><span class="st">fixed by excluding dangling ids from B1 eligibility up front, matching the OLD function's</span></span>
+<span id="cb1-430"><a href="#cb1-430" tabindex="-1"></a><span class="st">own confirmed behavior of dropping such an id from its output entirely. 3 RED-phase test</span></span>
+<span id="cb1-431"><a href="#cb1-431" tabindex="-1"></a><span class="st">bugs (not implementation bugs) also found and fixed. Verified: `test_file()` 17/17 GREEN (53</span></span>
+<span id="cb1-432"><a href="#cb1-432" tabindex="-1"></a><span class="st">expectations); full clean regression 0 failed/0 error project-wide (OLD function and every</span></span>
+<span id="cb1-433"><a href="#cb1-433" tabindex="-1"></a><span class="st">other existing test bit-for-bit unaffected); `lintr::lint()` 0 findings after REFACTOR (2</span></span>
+<span id="cb1-434"><a href="#cb1-434" tabindex="-1"></a><span class="st">style-only fixes). See `PROJECT_LEARNINGS.md` Learnings 639/640. **Next: Phase 2b** (the</span></span>
+<span id="cb1-435"><a href="#cb1-435" tabindex="-1"></a><span class="st">live-render helper + real-fixture A/B verification) — its own separate session.</span></span>
+<span id="cb1-436"><a href="#cb1-436" tabindex="-1"></a></span>
+<span id="cb1-437"><a href="#cb1-437" tabindex="-1"></a><span class="st">**Phase 2b — S615 (2026-08-20): DONE.** New reusable</span></span>
+<span id="cb1-438"><a href="#cb1-438" tabindex="-1"></a><span class="st">[`tests/testthat/helper-live-render-positions.R`](tests/testthat/helper-live-render-positions.R)</span></span>
+<span id="cb1-439"><a href="#cb1-439" tabindex="-1"></a><span class="st">(`getLiveRenderedPositions()` — renders via the app's own `visNetwork()`/`visPhysics(FALSE)`</span></span>
+<span id="cb1-440"><a href="#cb1-440" tabindex="-1"></a><span class="st">call, `chromote`-drives it headless, reads back ground truth via vis.js's own</span></span>
+<span id="cb1-441"><a href="#cb1-441" tabindex="-1"></a><span class="st">`getPositions()`), completing the parent plan's own Phase 2 "</span>New deliverable... fixing C2<span class="fl">-4.</span><span class="st">"</span></span>
+<span id="cb1-442"><a href="#cb1-442" tabindex="-1"></a><span class="st">7 new tests added to</span></span>
+<span id="cb1-443"><a href="#cb1-443" tabindex="-1"></a><span class="st">[`tests/testthat/test_positionMatingUnitForestBJL.R`](tests/testthat/test_positionMatingUnitForestBJL.R)</span></span>
+<span id="cb1-444"><a href="#cb1-444" tabindex="-1"></a><span class="st">(24 total). **Real-375-fixture results, all measured (not assumed):** the zero-exact-</span></span>
+<span id="cb1-445"><a href="#cb1-445" tabindex="-1"></a><span class="st">x/gen-coincidence gate ("</span>the single most important test <span class="cf">in</span> the whole migration<span class="st">") **passes**;</span></span>
+<span id="cb1-446"><a href="#cb1-446" tabindex="-1"></a><span class="st">the exact-midpoint invariant (previously synthetic-only) **passes** on real data too;</span></span>
+<span id="cb1-447"><a href="#cb1-447" tabindex="-1"></a><span class="st">single-child-union near-parent prevalence is 224/237 (structural, unchanged — D1 out of</span></span>
+<span id="cb1-448"><a href="#cb1-448" tabindex="-1"></a><span class="st">scope) with a new distance breakdown of 180/224 touching (≤31px) / 208/224 half-column</span></span>
+<span id="cb1-449"><a href="#cb1-449" tabindex="-1"></a><span class="st">(≤60px) vs. the OLD algorithm's clamp-affected 175/224 / 203/224 — comparable, not</span></span>
+<span id="cb1-450"><a href="#cb1-450" tabindex="-1"></a><span class="st">dramatically reduced, because BJL's own genuine child-centering produces similar visual</span></span>
+<span id="cb1-451"><a href="#cb1-451" tabindex="-1"></a><span class="st">closeness for structurally honest reasons (the plan's own "</span>naturally close... may legitimately</span>
+<span id="cb1-452"><a href="#cb1-452" tabindex="-1"></a>remain close<span class="st">" caveat, now directly measured); Phase 1b §8.4 Obligation 2's combined</span></span>
+<span id="cb1-453"><a href="#cb1-453" tabindex="-1"></a><span class="st">trigger-frequency measurement found 34 `orderBySex`-qualifying B1 unions, drift range</span></span>
+<span id="cb1-454"><a href="#cb1-454" tabindex="-1"></a><span class="st">0.399–0.401, comfortably inside the disclosed cosmetic bound. **Major incidental finding</span></span>
+<span id="cb1-455"><a href="#cb1-455" tabindex="-1"></a><span class="st">(`PROJECT_LEARNINGS.md` Learning 641):** live-rendering revealed vis.js's `getPositions()`</span></span>
+<span id="cb1-456"><a href="#cb1-456" tabindex="-1"></a><span class="st">rounds to whole pixels, so the shared 1e-3-raw-unit "</span>cosmetic<span class="st">" tie-break nudge (×`xScale=120`</span></span>
+<span id="cb1-457"><a href="#cb1-457" tabindex="-1"></a><span class="st">= 0.12px) used by BOTH algorithms renders pixel-identical to whatever it was nudged away</span></span>
+<span id="cb1-458"><a href="#cb1-458" tabindex="-1"></a><span class="st">from — measured side by side on the real fixture: OLD 368/714 nodes pixel-coincident (182</span></span>
+<span id="cb1-459"><a href="#cb1-459" tabindex="-1"></a><span class="st">groups), NEW 380/714 (190 groups), comparable, a pre-existing characteristic, not a Phase 2b</span></span>
+<span id="cb1-460"><a href="#cb1-460" tabindex="-1"></a><span class="st">regression. Owner-directed (`AskUserQuestion`, on finding this): Tests 6/7 report this via</span></span>
+<span id="cb1-461"><a href="#cb1-461" tabindex="-1"></a><span class="st">`message()` as a diagnostic, asserting only what Phase 2b's charter requires (no id silently</span></span>
+<span id="cb1-462"><a href="#cb1-462" tabindex="-1"></a><span class="st">collapses in vis.js's own DataSet — confirmed clean on both the F1/"</span>Track C<span class="st">" fixture and the</span></span>
+<span id="cb1-463"><a href="#cb1-463" tabindex="-1"></a><span class="st">real 714-node fixture), not a hard pixel-coincidence gate neither algorithm clears. A real</span></span>
+<span id="cb1-464"><a href="#cb1-464" tabindex="-1"></a><span class="st">epsilon-magnitude fix, if wanted, is future design work, not scoped here. **Also found and</span></span>
+<span id="cb1-465"><a href="#cb1-465" tabindex="-1"></a><span class="st">fixed:** chromote's own 10s default `Page$loadEventFired()` timeout was too short for the</span></span>
+<span id="cb1-466"><a href="#cb1-466" tabindex="-1"></a><span class="st">714-node fixture's self-contained HTML (helper gained a `loadTimeout` parameter, default 30s,</span></span>
+<span id="cb1-467"><a href="#cb1-467" tabindex="-1"></a><span class="st">used 60s for the real fixture); a NEW `devtools::check()` WARNING ("</span>unstated dependencies <span class="cf">in</span></span>
+<span id="cb1-468"><a href="#cb1-468" tabindex="-1"></a>tests<span class="sc">:</span> chromote, htmlwidgets<span class="st">") from using the same `data-raw/kinship2FidelityValidation.R`</span></span>
+<span id="cb1-469"><a href="#cb1-469" tabindex="-1"></a><span class="st">`::`-call pattern inside the CHECKED `tests/testthat/` surface — fixed by adding both to</span></span>
+<span id="cb1-470"><a href="#cb1-470" tabindex="-1"></a><span class="st">`DESCRIPTION`'s `Suggests:` (owner-clarified packaging rule: `Suggests:` for anything</span></span>
+<span id="cb1-471"><a href="#cb1-471" tabindex="-1"></a><span class="st">test/example/vignette code loads, `Config/Needs/&lt;name&gt;:` for dev-tooling-only packages);</span></span>
+<span id="cb1-472"><a href="#cb1-472" tabindex="-1"></a><span class="st">`PROJECT_LEARNINGS.md` Learning 642. Incidentally also relocated `covr` (pure coverage</span></span>
+<span id="cb1-473"><a href="#cb1-473" tabindex="-1"></a><span class="st">tooling, already CI-installed independently) from `Suggests:` to a new</span></span>
+<span id="cb1-474"><a href="#cb1-474" tabindex="-1"></a><span class="st">`Config/Needs/coverage: covr`, matching this file's own `Config/Needs/website: quarto`</span></span>
+<span id="cb1-475"><a href="#cb1-475" tabindex="-1"></a><span class="st">precedent — flagged, not fixed, that `devtools`/`roxygen2`/`pkgdown` look like further</span></span>
+<span id="cb1-476"><a href="#cb1-476" tabindex="-1"></a><span class="st">instances of the same misplacement (new Housekeeping item below). Full clean regression:</span></span>
+<span id="cb1-477"><a href="#cb1-477" tabindex="-1"></a><span class="st">0 failed/0 error project-wide (confirmed twice — a direct `test_dir()` run and again inside</span></span>
+<span id="cb1-478"><a href="#cb1-478" tabindex="-1"></a><span class="st">`devtools::check()`'s own `testthat.R`). `lintr::lint_package()`: 0 lints. `devtools::check()`:</span></span>
+<span id="cb1-479"><a href="#cb1-479" tabindex="-1"></a><span class="st">0 errors, 1 WARNING + 2 NOTEs — all 3 pre-existing (non-portable filename, `scratchpad/` top</span></span>
+<span id="cb1-480"><a href="#cb1-480" tabindex="-1"></a><span class="st">level dir, `vignettes/figure/` knitr leftover), zero new, matching S614's own baseline</span></span>
+<span id="cb1-481"><a href="#cb1-481" tabindex="-1"></a><span class="st">exactly. `.positionMatingUnitForestBJL()` itself unchanged — Phase 2b touched zero production</span></span>
+<span id="cb1-482"><a href="#cb1-482" tabindex="-1"></a><span class="st">code. **Next: Phase 3** (cutover, 2 explicitly-scoped commits per the parent plan's own Phase</span></span>
+<span id="cb1-483"><a href="#cb1-483" tabindex="-1"></a><span class="st">3 spec) — its own separate session; the real-fixture zero-coincidence gate now has DIRECT</span></span>
+<span id="cb1-484"><a href="#cb1-484" tabindex="-1"></a><span class="st">real-data evidence behind it, not just synthetic-fixture coverage.</span></span>
+<span id="cb1-485"><a href="#cb1-485" tabindex="-1"></a></span>
+<span id="cb1-486"><a href="#cb1-486" tabindex="-1"></a><span class="st">**Phase 3 — S620 (2026-08-21): DONE — full TDD RED→GREEN→REFACTOR cycle, gated.** Cutover</span></span>
+<span id="cb1-487"><a href="#cb1-487" tabindex="-1"></a><span class="st">complete: `.positionMatingUnitForest()` (OLD contour-merge implementation) and</span></span>
+<span id="cb1-488"><a href="#cb1-488" tabindex="-1"></a><span class="st">`.computeDupNudge()` deleted outright; `.positionMatingUnitForestBJL()` renamed to</span></span>
+<span id="cb1-489"><a href="#cb1-489" tabindex="-1"></a><span class="st">`.positionMatingUnitForest()`, replacing the OLD implementation as the sole production</span></span>
+<span id="cb1-490"><a href="#cb1-490" tabindex="-1"></a><span class="st">positioning engine; `makePedigreeMatingLayout()`'s call site updated. **Restructured from the</span></span>
+<span id="cb1-491"><a href="#cb1-491" tabindex="-1"></a><span class="st">plan's own literal "</span>Commit <span class="dv">3-1</span> (<span class="dv">4</span> files) <span class="sc">/</span> Commit <span class="dv">3-2</span> (<span class="dv">2</span> files, conditional)<span class="st">" split**, per the</span></span>
+<span id="cb1-492"><a href="#cb1-492" tabindex="-1"></a><span class="st">plan's own explicit fallback clause (§Migration Path Phase 3: "</span>if <span class="st">`</span><span class="at">test_addRectilinearWaypoints.R</span><span class="st">`</span><span class="sc">/</span></span>
+<span id="cb1-493"><a href="#cb1-493" tabindex="-1"></a><span class="st">`</span><span class="at">test_resolveEdgeNodeCollisions.R</span><span class="st">`</span> go red as a direct, mechanical consequence... pull it into</span>
+<span id="cb1-494"><a href="#cb1-494" tabindex="-1"></a>Commit <span class="dv">3-1</span><span class="st">"): both files genuinely needed re-pinning (measured, not assumed) rather than</span></span>
+<span id="cb1-495"><a href="#cb1-495" tabindex="-1"></a><span class="st">staying green untouched, so all 5 test files landed in ONE RED commit (`e92d945e`, 5 files,</span></span>
+<span id="cb1-496"><a href="#cb1-496" tabindex="-1"></a><span class="st">within the SAFEGUARDS.md cap) with production code in a separate GREEN commit (`b013c009`, 5</span></span>
+<span id="cb1-497"><a href="#cb1-497" tabindex="-1"></a><span class="st">files: `R/makePedigreeDiagramData.R` + `NEWS.Rmd`/`NEWS.md` + `man/makePedigreeMatingLayout.Rd`</span></span>
+<span id="cb1-498"><a href="#cb1-498" tabindex="-1"></a><span class="st">+ `inst/WORDLIST`) — Commit 3-2 does not exist as a separate step; nothing was left deferred.</span></span>
+<span id="cb1-499"><a href="#cb1-499" tabindex="-1"></a><span class="st">**2 genuine implementation defects found and fixed during GREEN** (neither anticipated at RED,</span></span>
+<span id="cb1-500"><a href="#cb1-500" tabindex="-1"></a><span class="st">both diagnosed by running the specific failing fixture in isolation): (1) BJL never carried the</span></span>
+<span id="cb1-501"><a href="#cb1-501" tabindex="-1"></a><span class="st">OLD function's own input-validation guards (`ped` must be a data frame / must have required</span></span>
+<span id="cb1-502"><a href="#cb1-502" tabindex="-1"></a><span class="st">columns) — restored verbatim; (2) a mating unit whose BOTH sire and dam are dangling (issue</span></span>
+<span id="cb1-503"><a href="#cb1-503" tabindex="-1"></a><span class="st">#154's original "</span>both<span class="sc">-</span>dangling<span class="st">" shape) crashed `.buildForestChildrenOf()` on an empty</span></span>
+<span id="cb1-504"><a href="#cb1-504" tabindex="-1"></a><span class="st">`rootIds` — BJL had no equivalent to the OLD algorithm's own issue #154 fix; fixed by making</span></span>
+<span id="cb1-505"><a href="#cb1-505" tabindex="-1"></a><span class="st">such a unit's own real children independent Tier-1 roots directly, and broadening Tier 2's</span></span>
+<span id="cb1-506"><a href="#cb1-506" tabindex="-1"></a><span class="st">union-x derivation to cover every unit with ≥1 real child (not just anchored ones), so the</span></span>
+<span id="cb1-507"><a href="#cb1-507" tabindex="-1"></a><span class="st">orphan unit itself still gets a valid, finite x. **`orderBySex` removed from</span></span>
+<span id="cb1-508"><a href="#cb1-508" tabindex="-1"></a><span class="st">`makePedigreeMatingLayout()`'s public signature** (owner-directed via `AskUserQuestion`,</span></span>
+<span id="cb1-509"><a href="#cb1-509" tabindex="-1"></a><span class="st">PRE-RED): Phase 1b's own design note had already found the mechanism "</span>restructured, not</span>
+<span id="cb1-510"><a href="#cb1-510" tabindex="-1"></a>preserved unchanged — eliminated as a separate pass<span class="st">" (folded unconditionally into Tier 3's B1</span></span>
+<span id="cb1-511"><a href="#cb1-511" tabindex="-1"></a><span class="st">formula, S8.1); grep-confirmed zero real callers anywhere in `R/`/`inst/` ever passed it; kept</span></span>
+<span id="cb1-512"><a href="#cb1-512" tabindex="-1"></a><span class="st">as a silently inert no-op was judged worse than an honest removal. Every new/changed test</span></span>
+<span id="cb1-513"><a href="#cb1-513" tabindex="-1"></a><span class="st">literal (positional x values, jog-node/waypoint/collision counts, twin-connector jog states,</span></span>
+<span id="cb1-514"><a href="#cb1-514" tabindex="-1"></a><span class="st">duplicate-connector from/to ordering) derived by actually running the new engine via a</span></span>
+<span id="cb1-515"><a href="#cb1-515" tabindex="-1"></a><span class="st">throwaway probe script (monkey-patched under the OLD function's own name), never hand-derived</span></span>
+<span id="cb1-516"><a href="#cb1-516" tabindex="-1"></a><span class="st">— including several genuinely surprising findings only discoverable this way: the D1 bar-vs-bar</span></span>
+<span id="cb1-517"><a href="#cb1-517" tabindex="-1"></a><span class="st">residual (348/116 → 0/0) and the larger-gap residual (2 → 0) both fully resolve under the new</span></span>
+<span id="cb1-518"><a href="#cb1-518" tabindex="-1"></a><span class="st">engine (Track 3's clamp, the mechanism that worsened them, no longer exists); a B2 individual</span></span>
+<span id="cb1-519"><a href="#cb1-519" tabindex="-1"></a><span class="st">(own parent edge or own direct child) now renders at their own genuine gen rather than the OLD</span></span>
+<span id="cb1-520"><a href="#cb1-520" tabindex="-1"></a><span class="st">algorithm's uniform non-anchor-override gen, a deliberate, disclosed Phase 1b/2a design choice</span></span>
+<span id="cb1-521"><a href="#cb1-521" tabindex="-1"></a><span class="st">that required rewriting 2 regression-guard tests and adapting 1 fixture (not a bug). Live-render</span></span>
+<span id="cb1-522"><a href="#cb1-522" tabindex="-1"></a><span class="st">verification (F1/Track-C 9-subject and real-375 fixtures, via `helper-live-render-positions.R`,</span></span>
+<span id="cb1-523"><a href="#cb1-523" tabindex="-1"></a><span class="st">already merged into the test suite from Phase 2b) confirmed passing as part of the full clean</span></span>
+<span id="cb1-524"><a href="#cb1-524" tabindex="-1"></a><span class="st">regression, plus a direct standalone re-confirmation this session. Fresh grep re-confirmed the</span></span>
+<span id="cb1-525"><a href="#cb1-525" tabindex="-1"></a><span class="st">call-site/downstream-consumer inventory (single call site, zero `matingUnits`/`duplicates`/</span></span>
+<span id="cb1-526"><a href="#cb1-526" tabindex="-1"></a><span class="st">`childEdges` consumers outside this file) has not drifted since planning. Full clean regression</span></span>
+<span id="cb1-527"><a href="#cb1-527" tabindex="-1"></a><span class="st">0 failed/0 error project-wide throughout (2 marker-genetics failures seen in one full-suite run</span></span>
+<span id="cb1-528"><a href="#cb1-528" tabindex="-1"></a><span class="st">confirmed pre-existing order-dependent flakiness via `git stash`, unrelated to this diff — both</span></span>
+<span id="cb1-529"><a href="#cb1-529" tabindex="-1"></a><span class="st">pass cleanly in isolation). `lintr::lint_package()` (whole package): 0 findings.</span></span>
+<span id="cb1-530"><a href="#cb1-530" tabindex="-1"></a><span class="st">`devtools::check()`: 0 errors, 1 WARNING + 2 NOTEs, all 3 confirmed pre-existing — a 4th, NEW</span></span>
+<span id="cb1-531"><a href="#cb1-531" tabindex="-1"></a><span class="st">Rd-cross-reference WARNING (a `\link{}` to the now-internal `.positionMatingUnitForest()` from</span></span>
+<span id="cb1-532"><a href="#cb1-532" tabindex="-1"></a><span class="st">the one exported function's doc) was found and fixed in-session. CI green on all 4 workflows,</span></span>
+<span id="cb1-533"><a href="#cb1-533" tabindex="-1"></a><span class="st">commit `01f29342`. **Next: Phase 4** (cleanup/documentation — update</span></span>
+<span id="cb1-534"><a href="#cb1-534" tabindex="-1"></a><span class="st">`docs/planning/pedigree-diagram-option2-layout-design-plan.md`'s D3 section, close issue #141</span></span>
+<span id="cb1-535"><a href="#cb1-535" tabindex="-1"></a><span class="st">citing this migration's commits, update this `BACKLOG.md` item, sweep stale in-code comments</span></span>
+<span id="cb1-536"><a href="#cb1-536" tabindex="-1"></a><span class="st">referencing Track 3/Track 6/`.computeDupNudge()`/the patch-stack, add `NEWS.Rmd`/`CHANGELOG.md`</span></span>
+<span id="cb1-537"><a href="#cb1-537" tabindex="-1"></a><span class="st">entries for the feature-level user-facing changelog) — its own separate session per the plan's</span></span>
+<span id="cb1-538"><a href="#cb1-538" tabindex="-1"></a><span class="st">own spec, acceptable to split into 4a/4b if too large for one sitting.</span></span>
+<span id="cb1-539"><a href="#cb1-539" tabindex="-1"></a></span>
+<span id="cb1-540"><a href="#cb1-540" tabindex="-1"></a><span class="st">**Phase 4 — S621 (2026-08-20): DONE — both of this item's own original trade-offs resolved</span></span>
+<span id="cb1-541"><a href="#cb1-541" tabindex="-1"></a><span class="st">by construction, item closed.** Track 3's clamp (the mechanism both trade-offs traced to) no</span></span>
+<span id="cb1-542"><a href="#cb1-542" tabindex="-1"></a><span class="st">longer exists anywhere in the codebase as of S620's Phase 3 cutover: every anchored mating</span></span>
+<span id="cb1-543"><a href="#cb1-543" tabindex="-1"></a><span class="st">unit's x is now, unconditionally, the exact midpoint of its own real children's final x, no</span></span>
+<span id="cb1-544"><a href="#cb1-544" tabindex="-1"></a><span class="st">clamp/nudge exceptions. **(1) Child-centering quality:** no longer a clamp-vs-centering</span></span>
+<span id="cb1-545"><a href="#cb1-545" tabindex="-1"></a><span class="st">trade-off at all — the new engine's Tier 2 formula IS exact child-centering, verified</span></span>
+<span id="cb1-546"><a href="#cb1-546" tabindex="-1"></a><span class="st">directly (`test_positionMatingUnitForest.R`'s own single-equality invariant test, S620).</span></span>
+<span id="cb1-547"><a href="#cb1-547" tabindex="-1"></a><span class="st">**(2) D1 bar-vs-bar x-overlap residual:** the 9→116 post-Track-1 worsening this item</span></span>
+<span id="cb1-548"><a href="#cb1-548" tabindex="-1"></a><span class="st">originally reported is fully resolved — re-measured this session by executing the real</span></span>
+<span id="cb1-549"><a href="#cb1-549" tabindex="-1"></a><span class="st">375-individual bundled fixture under the shipped engine: **0** residual (matching S620's own</span></span>
+<span id="cb1-550"><a href="#cb1-550" tabindex="-1"></a><span class="st">`test_addRectilinearWaypoints.R` re-pin). The single-child-union/parent-coincidence sub-thread</span></span>
+<span id="cb1-551"><a href="#cb1-551" tabindex="-1"></a><span class="st">above (found S596, redirected S609) is superseded by the same migration — see the STALE note</span></span>
+<span id="cb1-552"><a href="#cb1-552" tabindex="-1"></a><span class="st">struck into that thread directly, above. `docs/planning/pedigree-diagram-option2-layout-</span></span>
+<span id="cb1-553"><a href="#cb1-553" tabindex="-1"></a><span class="st">design-plan.md`'s D3 section updated to describe the completed implementation (this session);</span></span>
+<span id="cb1-554"><a href="#cb1-554" tabindex="-1"></a><span class="st">issue #141 closed citing this migration's full commit history (S610-S620); stale in-code</span></span>
+<span id="cb1-555"><a href="#cb1-555" tabindex="-1"></a><span class="st">comments swept (`grep -rn "</span>Track <span class="dv">6</span>\<span class="sc">|</span>Track <span class="dv">3</span>\<span class="sc">|</span>computeDupNudge\<span class="sc">|</span>finalUnitX<span class="st">" R/ tests/` —</span></span>
+<span id="cb1-556"><a href="#cb1-556" tabindex="-1"></a><span class="st">`R/` was already accurate, one stale `tests/testthat/test_makePedigreeMatingLayout.R`</span></span>
+<span id="cb1-557"><a href="#cb1-557" tabindex="-1"></a><span class="st">docstring found and fixed, `docs/planning/*.md` deliberately left as historical record per</span></span>
+<span id="cb1-558"><a href="#cb1-558" tabindex="-1"></a><span class="st">this project's own precedent). `NEWS.Rmd`/`CHANGELOG.md` entries added this session.</span></span></code></pre></div>
 </li>
 </ul></div>
 <div class="section level2">

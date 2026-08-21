@@ -17,6 +17,63 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-21 · \[issue \#141\] S621: Walker/BJL Phase 4 – cleanup, docs, and issue close-out
+
+- **Deliverable:** the migration’s final phase, per
+  `docs/planning/pedigree-diagram-walker-bjl- apportioning-redesign-plan.md`’s
+  own Phase 4 spec – **DONE**, documentation/cleanup only, no production
+  logic changed.
+  `docs/planning/pedigree-diagram-option2-layout-design-plan.md`’s D3
+  section updated with a superseded-by note describing the shipped
+  implementation (appended, not rewritten, matching this project’s
+  precedent against retroactively editing historical planning
+  narrative). Issue \#141 closed with a comment citing the full Phase
+  1a-4 commit history (`8ac50a4e` S611, `0a43ec30`/`e7f1f593`/`afa7c5f5`
+  S614, `891837d6` S615, `014f0910`/`e92d945e`/ `b013c009`/`01f29342`
+  S620) and re-confirming D1/D2/D4/D5/D6 stayed untouched; its
+  `premature optimization` label removed via `AskUserQuestion`
+  (deliberately left unchanged by 3 prior sessions, S609/S620×2, as a
+  decision for a future session or the owner – this was that session;
+  owner picked removal, since the label’s own meaning no longer applies
+  to a closed, shipped, adversarially-verified implementation).
+  `BACKLOG.md`’s “Track 3’s 2 disclosed trade-offs” item closed (`[x]`):
+  both trade-offs (child-centering quality, D1 bar-vs-bar overlap)
+  confirmed resolved by construction – re-measured live this session, D1
+  bar-vs-bar residual is now 0 on the real 375-individual fixture. A
+  separate, stale “targeted repair session (READY, Effort S)” tag on the
+  same item’s own single-child-union sub-thread (superseded by the S609
+  redirect to this same Walker/BJL migration, but never struck) was
+  found and corrected in place – a flat future `BACKLOG.md` tag grep
+  would otherwise have surfaced a dead option (the function it named,
+  `.computeSingleChildAntiCoincidence()`, was never shipped,
+  grep-confirmed 0 hits). Stale in-code comment sweep
+  (`grep -rn "Track 6\|Track 3\|computeDupNudge\|finalUnitX" R/ tests/`,
+  extended beyond the plan’s own `R/ docs/` command since
+  `docs/planning/*.md` is deliberately left as historical record): `R/`
+  was already accurate (S620 had already annotated its own doc comments
+  correctly); one genuinely stale docstring found and fixed in
+  `tests/testthat/test_makePedigreeMatingLayout.R` (a test’s own
+  multi-line description still narrated the OLD Track 3 clamp’s “1,202 +
+  210 = 1,412” arithmetic and its “coincidentally resolves” framing;
+  replaced with the current, directly-executed composition – 1,412
+  unchanged, but now correctly decomposed as 1,258 structural + 154 jog
+  waypoints, not the stale formula). Tutorial/article and
+  `a2interactive.Rmd` checklists explicitly re-confirmed N/A (not merely
+  assumed): grepped both for algorithm-specific claims
+  (contour-merge/Reingold/Walker/Buchheim/ `orderBySex`) – zero hits in
+  either; the vignette’s own “5 reserved node-id prefixes” comment was
+  independently confirmed still accurate (`__proj_` is pre-existing
+  `.buildMatingUnitForest()` dogleg infrastructure, unrelated to and
+  unaffected by this migration, not a new prefix this migration
+  introduced). `NEWS.Rmd` needs no further entry – S620’s own entry
+  already discloses the user-facing change completely. No new
+  test/lint/check run required (no assertions or production logic
+  changed); the one behavior-preserving test-docstring edit was
+  spot-verified via
+  [`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html)
+  on the touched file (all green) rather than a full regression, since
+  nothing else in the diff could affect other files.
+
 ### 2026-08-21 · \[issue \#141\] S620: Walker/BJL Phase 3 cutover – production call-site swap
 
 - **Deliverable:** cut over `.positionMatingUnitForest()` from the OLD
