@@ -192,8 +192,10 @@ runtime_smoke: Live-render verification (chromote-driven real DOM rendering via
   helper-live-render-positions.R, F1/Track-C and real-375 fixtures) confirmed passing as part of
   the full clean regression, plus a direct standalone re-confirmation this session; also
   devtools::check()'s own @examples run against the real bundled example pedigree.
-changelog_ref: CHANGELOG.md 2026-08-21 S620 entry
-commit: 01f29342
+changelog_ref: CHANGELOG.md 2026-08-21 S620 entry (landed in 5f167e79)
+commit: 014f0910 (claim), e92d945e (RED), b013c009 (GREEN), 01f29342 (REFACTOR), 5f167e79
+  (close-out docs), 49edea2d (handoff) -- reconciled to the real shas immediately after,
+  matching the S600/S602-S619 self-reference-workaround precedent
 ```
 <free-text prose: filled at close-out>
 
