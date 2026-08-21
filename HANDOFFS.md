@@ -136,6 +136,25 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S621
+date: 2026-08-20
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Walker/BJL Phase 4 -- Cleanup & Close (issue #141), per docs/planning/pedigree-
+  diagram-walker-bjl-apportioning-redesign-plan.md's Phase 4 spec. Just claimed, work not yet
+  started.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: filled at close-out>
+
+```handoff
 session: S620
 date: 2026-08-21
 status: complete

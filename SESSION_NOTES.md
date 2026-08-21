@@ -1303,3 +1303,14 @@ first (Learning 650's own practical rule). (4) Track 3's parent-span clamp and t
 `.computeDupNudge()`/Track-3-Engagement-Gate mechanism no longer exist anywhere in the codebase — any
 future BACKLOG.md item or in-code comment still referencing them describes OLD, now-dead behavior
 (Phase 4's own comment-sweep task, not yet done).
+
+---
+
+### What Session 621 Did
+**Deliverable:** Walker/BJL Phase 4 — Cleanup & Close (issue #141), per `docs/planning/pedigree-
+diagram-walker-bjl-apportioning-redesign-plan.md`'s §Phase 4 spec. (IN PROGRESS)
+**Started:** 2026-08-20
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
