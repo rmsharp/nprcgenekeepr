@@ -137,20 +137,63 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S620
-date: 2026-08-20
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Walker/BJL Phase 3 -- Cutover (issue #141), per docs/planning/pedigree-diagram-
-  walker-bjl-apportioning-redesign-plan.md Migration Path Phase 3. Session claimed, work
-  beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+date: 2026-08-21
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE. Walker/BJL Phase 3 -- Cutover (issue #141): .positionMatingUnitForest() cut
+  over to the Walker/BJL engine, full TDD RED->GREEN->REFACTOR cycle, CI green on all 4
+  workflows.
+what_was_done: Deleted .computeDupNudge() and the OLD .positionMatingUnitForest() (contour-merge
+  impl); renamed .positionMatingUnitForestBJL() to .positionMatingUnitForest(), replacing it as
+  the sole production engine; makePedigreeMatingLayout()'s call site updated; orderBySex removed
+  from its public signature (owner-directed -- Phase 1b's design note already found the
+  mechanism "restructured, not preserved unchanged," zero real callers ever passed it). 2 genuine
+  implementation defects found and fixed during GREEN: missing input-validation guards; a
+  both-sire-and-dam-dangling mating unit crashed on an empty rootIds (issue #154's own fix had no
+  BJL equivalent) -- fixed via orphan-unit roots + broadened Tier 2 x-derivation. 4 RED-phase
+  test bugs found and fixed (B2 individuals render at their own genuine gen under the new engine
+  by design, not the OLD uniform non-anchor override -- affected 4 separate tests/fixtures, one
+  root cause). Every re-pinned literal derived via a monkey-patch probe (never hand-derived).
+  Live-render verification (F1/Track-C, real-375) confirmed passing. Full clean regression 0
+  failed/0 error throughout; lintr::lint_package() 0 findings; devtools::check() 0 errors, 1
+  WARNING + 2 NOTEs all pre-existing (a 4th, new Rd cross-reference warning found and fixed
+  in-session). Commits: 014f0910 (claim), e92d945e (RED, amended once to fold in the 4 test-bug
+  corrections above), b013c009 (GREEN), 01f29342 (REFACTOR).
+next_steps: Phase 4 (cleanup/documentation) is the plan's own explicit next step, its own
+  separate session: update docs/planning/pedigree-diagram-option2-layout-design-plan.md's D3
+  section; close GitHub issue #141 citing this migration's commits; update BACKLOG.md's "Track
+  3's 2 disclosed trade-offs" item (both now resolved by construction); sweep stale in-code
+  comments referencing Track 3/Track 6/computeDupNudge/the patch-stack (grep -rn "Track 6\|Track
+  3\|computeDupNudge\|finalUnitX" R/ docs/ is the plan's own named verification command); confirm
+  whether the tutorial/article checklist applies once the full migration (through Phase 4)
+  completes. a2interactive.Rmd checklist already confirmed N/A this session (never documented
+  orderBySex). Otherwise BACKLOG.md's other READY items remain open: NEWS.Rmd simplification,
+  the pedigree-package-split scoping session (owner-directed to run AFTER this migration is
+  fully done), the 16-item BACKLOG.md [x]-sweep.
+key_files: R/makePedigreeDiagramData.R:585-798 (production .positionMatingUnitForest(), the 2
+  new GREEN-phase fixes at :657-679 and :703-717); R/makePedigreeDiagramData.R:896- (
+  makePedigreeMatingLayout(), orderBySex removed); tests/testthat/test_positionMatingUnitForest.R
+  (~1910 lines, the merged production test file); docs/planning/pedigree-diagram-walker-bjl-
+  apportioning-redesign-plan.md (Migration Path Phase 3/Phase 4); PROJECT_LEARNINGS.md Learnings
+  650/651/652.
+gotchas: (1) The monkey-patch probe technique (Learning 651) is reusable for any future
+  engine-swap migration -- unlockBinding()+assign() on the OLD function's namespace binding, then
+  call the real exported top-level function through it. (2) orderBySex is GONE from
+  makePedigreeMatingLayout()'s public signature -- any external caller still passing it will now
+  error with "unused argument," not silently no-op; this is intended/disclosed, not a regression.
+  (3) B2 individuals now render at their own genuine gen, not their non-anchor unit's gen -- do
+  NOT assume every non-anchor renders at its unit's gen the way the OLD algorithm's issue #143
+  override guaranteed; check B1 vs. B2 status first. (4) Track 3's clamp and the entire
+  computeDupNudge()/Track-3-Engagement-Gate mechanism no longer exist anywhere -- any BACKLOG.md
+  item or in-code comment still referencing them describes OLD, now-dead behavior (Phase 4's own
+  comment-sweep, not yet done).
+runtime_smoke: Live-render verification (chromote-driven real DOM rendering via
+  helper-live-render-positions.R, F1/Track-C and real-375 fixtures) confirmed passing as part of
+  the full clean regression, plus a direct standalone re-confirmation this session; also
+  devtools::check()'s own @examples run against the real bundled example pedigree.
+changelog_ref: CHANGELOG.md 2026-08-21 S620 entry
+commit: 01f29342
 ```
 <free-text prose: filled at close-out>
 

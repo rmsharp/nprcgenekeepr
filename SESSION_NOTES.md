@@ -1089,13 +1089,217 @@ this specific symptom without new evidence; treat a still-failing raised-timeout
 macOS root-cause item are both genuinely optional/low-priority — neither blocks anything, both are
 explicitly deferred, not accidentally dropped.
 
+### Session 619 Handoff Evaluation (by Session 620)
+**Score: 8/10.** **What helped:** `key_files` pointed exactly at the files this session's own
+diagnosis touched; `gotchas` #1/#2 (macOS reverted to ambient Chrome; raising `default_timeout`
+proven insufficient, don't re-attempt) held up and were directly relevant background while reading
+the CI-status check at Phase 0. **What was missing/wrong:** `next_steps` said "Walker/BJL Phase 2b...
+still open" as one of "the other 3 items on this session's own priorities list" — this was already
+STALE at the moment S619 wrote it: Phase 2b had been DONE 4 sessions earlier (S615, per
+`BACKLOG.md`'s own dated entry), and S619's own Phase 0 orientation should have surfaced this via
+the standard priorities-list render. This didn't cost this session real time (Phase 0's own fresh
+`BACKLOG.md` read caught the correct state — Phase 3 was the actual next step, not Phase 2b — before
+any priorities list was rendered to the user), but it's the kind of inaccuracy Learning-worthy
+elsewhere in this project's history: a handoff's "next_steps" list should be re-verified against the
+CURRENT `BACKLOG.md` state at write time, not copied forward from an earlier session's own framing
+without re-checking. **ROI:** moderate — the CI-status gotchas were useful; the stale priorities
+pointer was caught by Phase 0's own independent process, not by trusting the handoff.
+
 ### What Session 620 Did
 **Deliverable:** Walker/BJL Phase 3 — Cutover (issue #141), per `docs/planning/pedigree-diagram-
-walker-bjl-apportioning-redesign-plan.md` §Migration Path Phase 3 (Commit 3-1: production call-site
-swap + 3 merged/re-pinned test files; Commit 3-2, conditional: 2 files' defect-count re-pins;
-required live-render verification via `helper-live-render-positions.R`). (IN PROGRESS)
-**Started:** 2026-08-20
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+walker-bjl-apportioning-redesign-plan.md` §Migration Path Phase 3. **DONE** — full TDD
+PRE-RED→RED→GREEN→REFACTOR cycle, `AskUserQuestion`-gated at every transition. `.positionMatingUnitForest()`
+cut over from the OLD contour-merge implementation to the Walker/BJL engine; `.computeDupNudge()`
+and the OLD implementation deleted; `orderBySex` removed from `makePedigreeMatingLayout()`'s public
+signature. **Started/Completed:** 2026-08-20–2026-08-21 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** — read `SESSION_RUNNER.md`/`SAFEGUARDS.md` in full; `SESSION_NOTES.md`
+   (S613-619's thread); `gh issue list` (13 open); `git status`/`log`/`diff --stat` (clean, S619
+   fully closed out, ledger frontiers both `== HEAD` except the self-reference 2-commit gap, matching
+   the established S600/S602-619 no-op pattern); `gh run list` (CI green on all recent runs);
+   `methodology_dashboard.py` (96/100, 1 HIGH risk, unchanged file-size items). Ghost-session check
+   on the same 6 untracked files prior sessions already traced — unchanged, no new ghost deliverable.
+   Rendered the priorities list (4 numbered `AskUserQuestion` options) — **user picked Walker/BJL
+   Phase 3 (the direct continuation of the in-flight epic, Phase 2b's real-fixture gate having
+   already passed per S615).**
+2. **Grounded directly in the plan document's Phase 3 spec, Evidence-Based Inventory, and current
+   source** before any code: full read of the plan's Migration Path Phase 3 section (Commit 3-1/3-2
+   file lists), the full pinned-value/test inventory table, and direct reads of every affected test
+   file (`test_positionMatingUnitForest.R` in full — all 1583 original lines across several Read
+   calls — plus `test_positionMatingUnitForestBJL.R` in full, 931 lines, plus the relevant sections
+   of `test_makePedigreeMatingLayout.R`/`test_addRectilinearWaypoints.R`/
+   `test_resolveEdgeNodeCollisions.R`) and the current `.positionMatingUnitForestBJL()`/
+   `.positionMatingUnitForest()`(OLD)/`makePedigreeMatingLayout()` source.
+3. **Phase 1B claimed** — `SESSION_NOTES.md` stub + `HANDOFFS.md` `status: pending` receipt,
+   committed (`014f0910`).
+4. **PRE-RED scope decision, via its own dedicated `AskUserQuestion`** (per CLAUDE.md's "pre-RED
+   scope decision is a separate question" rule): reconciled the plan's literal "Commit 3-1 (4 files)
+   / Commit 3-2 (2 files)" split against this project's own unbroken RED/GREEN-as-separate-commits
+   convention — chose RED (test-only, files re-pinned/merged/deleted) then GREEN (production swap
+   alone), each its own commit.
+5. **Second PRE-RED scope decision**, surfaced by direct source inspection before writing RED: found
+   the top-level plan's own "orderBySex... untouched" claim was stale relative to Phase 1b's own
+   later, ratified finding ("restructured, not preserved unchanged — eliminated as a separate
+   pass") — `.positionMatingUnitForestBJL()` never had an `orderBySex` parameter at all, and 6 test
+   blocks across 2 files still tested the OLD toggle directly. Presented via `AskUserQuestion`; owner
+   picked removing the parameter from the public signature outright (zero real callers,
+   grep-confirmed) over keeping it as a silent no-op.
+6. **RED**, gated: built a throwaway monkey-patch probe (reassigning `.positionMatingUnitForest`'s
+   package-namespace binding to delegate to `.positionMatingUnitForestBJL()`, matching this
+   project's own "verify by execution, never hand-derive" discipline) to derive every new pinned
+   value — trio/GA204Z-loop positional literals, the F1/nested/notover black-box regression values
+   (150.12/60.12/180.12), Track 1/2 defect counts (all found to fully resolve to 0, a genuinely
+   surprising result from directly running the code, not predicted) — then wrote the merged/re-pinned
+   `test_positionMatingUnitForest.R` (24 BJL tests merged in, 3-way-OR invariant replaced with a
+   single exact-equality assertion, 4 orderBySex tests + 2 Track-3-clamp tests + 3 computeDupNudge
+   white-box tests deleted, 3 Track-3-Engagement-Gate fixtures transformed into black-box regression
+   coverage), deleted `test_positionMatingUnitForestBJL.R`, and re-pinned the other 3 files. Confirmed
+   genuine RED (219 failed / 0 error, entirely contained to the 5 touched files). Committed
+   (`d6135511`, later amended — see step 8).
+7. **RED→GREEN**, gated: deleted `.computeDupNudge()` and the OLD `.positionMatingUnitForest()`
+   (~700 lines); renamed `.positionMatingUnitForestBJL()` to `.positionMatingUnitForest()`, updating
+   its own roxygen doc; updated the call site; removed `orderBySex` from `makePedigreeMatingLayout()`.
+   First full-regression run found 20 failures / 1 error — **2 genuine implementation defects**,
+   diagnosed by running each failing fixture in isolation, not by inspection: (a) BJL never carried
+   the OLD function's own input-validation guards (Phase 2a/2b's fixtures were always valid by
+   construction, so this gap was never exercised) — restored verbatim; (b) a mating unit whose BOTH
+   sire and dam are dangling (issue #154's original "both-dangling" shape) crashed
+   `.buildForestChildrenOf()` on an empty `rootIds` — BJL had no equivalent to the OLD algorithm's
+   own issue #154 fix; fixed by making such a unit's own real children independent Tier-1 roots
+   directly, and broadening Tier 2's union-x derivation to cover every unit with ≥1 real child (not
+   just anchored ones). The remaining 18 failures / 0 errors were **RED-phase test bugs** (matching
+   S614's own established "3 RED-phase test bugs found and fixed during GREEN" precedent): a now-
+   superseded minSep property test (deleted, its correctly-scoped Phase 2a successor already merged
+   in), the issue #143/#144 mismatch-count regression guard (rewrote to assert the mismatch set is
+   exactly the B2 population, 56, not 0 — B2 individuals render at their own genuine gen by design
+   under the new engine, a deliberate Phase 1b/2a difference from the OLD algorithm's uniform
+   non-anchor override, confirmed via direct classification: all 56 were B2, none unexplained), 1
+   `test_addRectilinearWaypoints.R` fixture whose own non-anchor was accidentally B2-shaped (fixed by
+   making it a parentless B1 founder, restoring the fixture's own intended premise), and 3
+   `test_makePedigreeMatingLayout.R`/`test_resolveEdgeNodeCollisions.R` connector/curved-heuristic
+   re-pins driven by the new engine's different coordinate distribution (1 fixture — the small issue
+   #160 comment 1 synthetic reproduction — no longer collides at all under the new coordinates;
+   rewritten to use the real 375-fixture instead, which reliably reproduces the mechanism, 47
+   measured collisions). Verified genuine GREEN: full clean regression 0 failed/0 error project-wide
+   (2 marker-genetics failures seen in ONE full-suite run confirmed pre-existing order-dependent
+   flakiness via `git stash` — both pass cleanly in isolation, absent from RED's own offender list).
+8. **Amended RED** (`e92d945e`) to fold in the 4 test-file corrections from step 7 — each
+   re-verified via `git stash` (temporarily removing the GREEN-phase production diff) to confirm the
+   corrected content still shows genuine, meaningful RED against the OLD, unmodified algorithm (229
+   failed / 0 error, up from 219, still entirely contained to the same 5 files) before amending —
+   keeping RED an honest, minimal "what should be true post-cutover" record and GREEN a clean,
+   SAFEGUARDS.md-cap-compliant (5 files: `R/makePedigreeDiagramData.R` + `NEWS.Rmd`/`NEWS.md` +
+   `man/makePedigreeMatingLayout.Rd` + `inst/WORDLIST`) production-only commit (`b013c009`).
+9. **GREEN→REFACTOR**, gated: `lintr::lint_package()` (whole package) 0 findings before AND after a
+   genuine simplification (an O(n·m) `vapply` scan replaced with a direct `unique(childEdges$from)`
+   membership check, verified behavior-preserving via full regression + lint). Committed
+   (`01f29342`).
+10. **Required Phase-3 verification beyond the gated cycle:** live-render check (F1/Track-C 9-subject
+    and real-375 fixtures, via `helper-live-render-positions.R`, already merged into the suite from
+    Phase 2b) confirmed passing as part of the full clean regression, plus a direct standalone
+    re-confirmation; fresh grep re-confirmed the call-site/downstream-consumer inventory (single call
+    site, zero `matingUnits`/`duplicates`/`childEdges` consumers outside this file) has not drifted
+    since planning; `devtools::check()` (0 errors, 1 WARNING + 2 NOTEs, all 3 confirmed pre-existing
+    — a 4th, NEW Rd cross-reference warning, a `\link{}` to the now-internal
+    `.positionMatingUnitForest()` from the one exported function's doc, was found and fixed
+    in-session); pushed and confirmed CI green on all 4 workflows.
+11. **Close-out:** `BACKLOG.md`'s Walker/BJL item updated with the full S620 progress narrative;
+    `CHANGELOG.md` entry added; `PROJECT_LEARNINGS.md` Learnings 650/651/652 recorded; `CLAUDE.md`'s
+    learning-count cross-reference refreshed (649→652); this handoff written.
+
+**Runtime smoke test (Phase 3E):** the deliverable changes runtime behavior directly (every Diagram
+tab render now uses the new positioning engine) — verified via the live-render checks in step 10
+(chromote-driven real DOM rendering, not just internal x/gen math), plus the full `devtools::check()`
+examples run (`makePedigreeMatingLayout()`'s own `@examples` block executes against the real bundled
+example pedigree). This is the faithful verification this kind of change needs, matching this
+project's own established "live-render, not just internal math" precedent (S615's own memory note).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist **N/A** — no new statistic.
+Tutorial/article checklist **N/A** — no new Shiny tab/control, internal algorithm swap only.
+`NEWS.Rmd` checklist **DONE** — same-session entry disclosing the layout-engine switch and the
+`orderBySex` removal. `a2interactive.Rmd` checklist **deferred, per its own explicit policy** —
+`grep`-confirmed `a2interactive.Rmd` never documented `orderBySex` to begin with (removing it creates
+no staleness/broken-example risk there), so nothing is actively broken; the whole Walker/BJL
+migration's user-facing effect (diagrams look different) is a candidate for the deferred
+documentation pass once the migration fully completes (Phase 4+). `_pkgdown.yml` checklist **N/A** —
+no new exported function, only a parameter removed from an already-listed one. GitHub issue
+close-out **N/A** — issue #141 stays open (Phase 4, a future session, closes it per the plan's own
+spec). Lint checklist **DONE** (0 lints, package-wide, confirmed at REFACTOR).
+
+**Self-assessment (Session 620): 9/10.** **Strengths:** (1) Used a real monkey-patch probe (never a
+plain "call the new function directly") to derive every re-pinned literal against the FULL, real
+downstream pipeline — this is what caught several genuinely surprising, unpredictable-by-reasoning
+findings (the D1 bar-vs-bar residual and larger-gap residual both fully resolving to 0, not just
+improving; the real-fixture DZ twin connector losing its collision while MZ/"?" kept theirs) that a
+literal-by-literal hand-derivation would have gotten wrong. (2) Diagnosed every GREEN-phase failure
+by running the specific failing fixture/probe in isolation, never by inspection or assumption — this
+surfaced 2 genuine implementation defects (input validation, both-dangling root handling) as
+distinct from RED-phase test bugs, and traced the B2-rendering-difference root cause across 4
+separately-symptomatic test failures rather than patching each ad hoc (recorded as its own
+transferable Learning 650). (3) Surfaced 2 real, non-obvious scope/approach decisions
+(RED/GREEN commit-split reconciliation; the `orderBySex` removal, found via direct source inspection
+contradicting the top-level plan's own now-stale claim) via dedicated `AskUserQuestion`s before
+writing code, rather than silently picking an interpretation. (4) Kept every commit within
+`SAFEGUARDS.md`'s 5-file cap by amending the still-local, unpushed RED commit with GREEN-phase test
+corrections — re-verified via `git stash` that the amended content was still genuinely RED against
+the untouched baseline before amending, rather than either exceeding the cap or leaving a known-red
+intermediate commit (which the plan's own Phase 3 spec explicitly warns against). (5) Found and fixed
+a NEW `devtools::check()` warning (Rd cross-reference) in-session rather than deferring it, keeping
+the package's check status at parity with every prior session's own established pre-existing-only
+baseline. **Weaknesses:** (1) The initial RED-phase test-file authoring did not anticipate the
+B2-rendering-difference (a design choice already documented in the Phase 1b design note, findable via
+grep before writing RED, not just via GREEN-phase failures) — Learning 650 names the transferable
+fix (grep the design note's own documented OLD-vs-NEW differences against the existing test suite's
+own trigger conditions BEFORE writing RED). (2) This session ran long (a single sitting covering the
+full plan-scoped Phase 3, as the plan's own "session boundary: this phase is one session" note
+anticipated given its C2-1/C2-2 restructuring) — no session-boundary violation, but a genuinely large
+amount of ground covered in one continuous session. **ROI:** very high — a 5+ session migration's own
+central cutover step is complete, all tests genuinely green (not vacuously), 2 real defects the new
+engine would otherwise have shipped with are fixed, and 3 transferable Learnings (650/651/652)
+compress the session's own hard-won diagnostic technique for any future engine-swap migration.
+
+**Next steps:** **Phase 4** (cleanup/documentation) is the plan's own explicit next step — its own
+separate session, per the plan's "session boundary: this phase is one session" note (acceptable to
+split into 4a/4b if too large, per the plan's own C2-8 fix): (1) update
+`docs/planning/pedigree-diagram-option2-layout-design-plan.md`'s D3 section to describe the completed
+BJL implementation; (2) close GitHub issue #141, citing this migration's commits
+(`014f0910`/`e92d945e`/`b013c009`/`01f29342`, plus S610/S613/S614/S615's own prior-phase commits) and
+the regression-number re-pin evidence; (3) update `BACKLOG.md`'s "Track 3's 2 disclosed trade-offs"
+item (both trade-offs are now resolved by construction — no clamp exists anywhere in the new engine);
+(4) sweep stale in-code comments referencing Track 3/Track 6/`.computeDupNudge()`/the old patch-stack
+(a fresh `grep -rn "Track 6\|Track 3\|computeDupNudge\|finalUnitX" R/ docs/` is the plan's own named
+verification command); (5) confirm explicitly (not assume) whether the tutorial/article and
+`a2interactive.Rmd` checklists apply — this session's own close-out already confirmed
+`a2interactive.Rmd` needs no fix (never documented `orderBySex`), but the FULL migration's own
+user-facing "diagrams look different" effect may warrant a documentation note once Phase 4 completes
+the whole redesign. Otherwise, `BACKLOG.md`'s other READY items remain open: NEWS.Rmd simplification
+(Effort L, explicitly iterative/multi-round), the pedigree-diagram-package-split scoping session
+(Effort M, owner-directed to run after this migration is fully done — i.e., after Phase 4), and the
+16-item `BACKLOG.md` `[x]`-sweep (Effort S).
+
+**Key files:** `R/makePedigreeDiagramData.R:585-798` (the production `.positionMatingUnitForest()`,
+formerly `.positionMatingUnitForestBJL()` — the 2 new GREEN-phase fixes live at `:657-679` [orphan-
+unit roots] and `:703-717` [Tier 2 `xDerivableUnits` broadening]); `:896-` (`makePedigreeMatingLayout()`,
+`orderBySex` removed); `tests/testthat/test_positionMatingUnitForest.R` (now ~1910 lines, the merged
+production test file — the 3-way-OR replacement is at the "single exact-equality" test near the file's
+middle, the transformed Track-3-Engagement-Gate fixtures and the merged BJL Phase 2a/2b content follow
+the zero-coincidence-gate test); `docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-
+plan.md` (§Migration Path Phase 3/Phase 4, §Evidence-Based Inventory); `PROJECT_LEARNINGS.md`
+Learnings 650/651/652.
+
+**Gotchas for a future session:** (1) The monkey-patch probe technique (Learning 651) is reusable for
+ANY future "swap engine X for Y, re-pin downstream literals" migration in this codebase — don't
+re-derive it from scratch; `unlockBinding()` + `assign()` on the OLD function's namespace binding,
+then call the real, unmodified, exported top-level function through it. (2) `orderBySex` is GONE from
+`makePedigreeMatingLayout()`'s public signature — if any future session finds external code (a script,
+a vignette, a downstream consumer) still passing it, that call will now error with "unused argument,"
+not silently no-op; this is the intended, disclosed behavior (NEWS.Rmd/man page both document it), not
+a regression to investigate. (3) B2 individuals (own parent edge or own D5 direct child) now render at
+their own genuine gen, not their non-anchor unit's gen — do NOT assume every non-anchor party renders
+at its unit's gen the way the OLD algorithm's issue #143 override guaranteed; check B1 vs. B2 status
+first (Learning 650's own practical rule). (4) Track 3's parent-span clamp and the entire
+`.computeDupNudge()`/Track-3-Engagement-Gate mechanism no longer exist anywhere in the codebase — any
+future BACKLOG.md item or in-code comment still referencing them describes OLD, now-dead behavior
+(Phase 4's own comment-sweep task, not yet done).
