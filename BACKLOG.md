@@ -660,6 +660,60 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       3 spec) — its own separate session; the real-fixture zero-coincidence gate now has DIRECT
       real-data evidence behind it, not just synthetic-fixture coverage.
 
+      **Phase 3 — S620 (2026-08-21): DONE — full TDD RED→GREEN→REFACTOR cycle, gated.** Cutover
+      complete: `.positionMatingUnitForest()` (OLD contour-merge implementation) and
+      `.computeDupNudge()` deleted outright; `.positionMatingUnitForestBJL()` renamed to
+      `.positionMatingUnitForest()`, replacing the OLD implementation as the sole production
+      positioning engine; `makePedigreeMatingLayout()`'s call site updated. **Restructured from the
+      plan's own literal "Commit 3-1 (4 files) / Commit 3-2 (2 files, conditional)" split**, per the
+      plan's own explicit fallback clause (§Migration Path Phase 3: "if `test_addRectilinearWaypoints.R`/
+      `test_resolveEdgeNodeCollisions.R` go red as a direct, mechanical consequence... pull it into
+      Commit 3-1"): both files genuinely needed re-pinning (measured, not assumed) rather than
+      staying green untouched, so all 5 test files landed in ONE RED commit (`e92d945e`, 5 files,
+      within the SAFEGUARDS.md cap) with production code in a separate GREEN commit (`b013c009`, 5
+      files: `R/makePedigreeDiagramData.R` + `NEWS.Rmd`/`NEWS.md` + `man/makePedigreeMatingLayout.Rd`
+      + `inst/WORDLIST`) — Commit 3-2 does not exist as a separate step; nothing was left deferred.
+      **2 genuine implementation defects found and fixed during GREEN** (neither anticipated at RED,
+      both diagnosed by running the specific failing fixture in isolation): (1) BJL never carried the
+      OLD function's own input-validation guards (`ped` must be a data frame / must have required
+      columns) — restored verbatim; (2) a mating unit whose BOTH sire and dam are dangling (issue
+      #154's original "both-dangling" shape) crashed `.buildForestChildrenOf()` on an empty
+      `rootIds` — BJL had no equivalent to the OLD algorithm's own issue #154 fix; fixed by making
+      such a unit's own real children independent Tier-1 roots directly, and broadening Tier 2's
+      union-x derivation to cover every unit with ≥1 real child (not just anchored ones), so the
+      orphan unit itself still gets a valid, finite x. **`orderBySex` removed from
+      `makePedigreeMatingLayout()`'s public signature** (owner-directed via `AskUserQuestion`,
+      PRE-RED): Phase 1b's own design note had already found the mechanism "restructured, not
+      preserved unchanged — eliminated as a separate pass" (folded unconditionally into Tier 3's B1
+      formula, S8.1); grep-confirmed zero real callers anywhere in `R/`/`inst/` ever passed it; kept
+      as a silently inert no-op was judged worse than an honest removal. Every new/changed test
+      literal (positional x values, jog-node/waypoint/collision counts, twin-connector jog states,
+      duplicate-connector from/to ordering) derived by actually running the new engine via a
+      throwaway probe script (monkey-patched under the OLD function's own name), never hand-derived
+      — including several genuinely surprising findings only discoverable this way: the D1 bar-vs-bar
+      residual (348/116 → 0/0) and the larger-gap residual (2 → 0) both fully resolve under the new
+      engine (Track 3's clamp, the mechanism that worsened them, no longer exists); a B2 individual
+      (own parent edge or own direct child) now renders at their own genuine gen rather than the OLD
+      algorithm's uniform non-anchor-override gen, a deliberate, disclosed Phase 1b/2a design choice
+      that required rewriting 2 regression-guard tests and adapting 1 fixture (not a bug). Live-render
+      verification (F1/Track-C 9-subject and real-375 fixtures, via `helper-live-render-positions.R`,
+      already merged into the test suite from Phase 2b) confirmed passing as part of the full clean
+      regression, plus a direct standalone re-confirmation this session. Fresh grep re-confirmed the
+      call-site/downstream-consumer inventory (single call site, zero `matingUnits`/`duplicates`/
+      `childEdges` consumers outside this file) has not drifted since planning. Full clean regression
+      0 failed/0 error project-wide throughout (2 marker-genetics failures seen in one full-suite run
+      confirmed pre-existing order-dependent flakiness via `git stash`, unrelated to this diff — both
+      pass cleanly in isolation). `lintr::lint_package()` (whole package): 0 findings.
+      `devtools::check()`: 0 errors, 1 WARNING + 2 NOTEs, all 3 confirmed pre-existing — a 4th, NEW
+      Rd-cross-reference WARNING (a `\link{}` to the now-internal `.positionMatingUnitForest()` from
+      the one exported function's doc) was found and fixed in-session. CI green on all 4 workflows,
+      commit `01f29342`. **Next: Phase 4** (cleanup/documentation — update
+      `docs/planning/pedigree-diagram-option2-layout-design-plan.md`'s D3 section, close issue #141
+      citing this migration's commits, update this `BACKLOG.md` item, sweep stale in-code comments
+      referencing Track 3/Track 6/`.computeDupNudge()`/the patch-stack, add `NEWS.Rmd`/`CHANGELOG.md`
+      entries for the feature-level user-facing changelog) — its own separate session per the plan's
+      own spec, acceptable to split into 4a/4b if too large for one sitting.
+
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
 `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8

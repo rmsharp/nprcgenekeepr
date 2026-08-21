@@ -16,6 +16,32 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-21 · [issue #141] S620: Walker/BJL Phase 3 cutover -- production call-site swap
+- **Deliverable:** cut over `.positionMatingUnitForest()` from the OLD Reingold-Tilford/Walker-style
+  contour-merge implementation to the Walker/Buchheim-Jünger-Leipert engine built across S610-S615,
+  per `docs/planning/pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`'s Migration Path
+  Phase 3 -- **DONE**, full TDD RED→GREEN→REFACTOR cycle, `AskUserQuestion`-gated at every
+  transition. `.computeDupNudge()` and the OLD implementation deleted outright;
+  `.positionMatingUnitForestBJL()` renamed to `.positionMatingUnitForest()`, replacing it as the
+  sole production positioning engine. Restructured from the plan's own literal "Commit 3-1 (4
+  files) / Commit 3-2 (2 files, conditional)" split, per the plan's own explicit fallback clause:
+  `test_addRectilinearWaypoints.R`/`test_resolveEdgeNodeCollisions.R` genuinely needed re-pinning
+  (measured via a monkey-patch probe, not assumed), so all 5 test files landed in one RED commit
+  with production code in a separate GREEN commit -- Commit 3-2 does not exist as a separate step.
+  2 genuine implementation defects found and fixed during GREEN (input-validation guards missing;
+  a both-sire-and-dam-dangling mating unit crashed on an empty `rootIds`, issue #154's own original
+  fix having no BJL equivalent). `orderBySex` removed from `makePedigreeMatingLayout()`'s public
+  signature (owner-directed) -- Phase 1b's design note had already found the mechanism
+  "restructured, not preserved unchanged," folded unconditionally into the new engine with no way
+  to disable it, and zero real callers ever passed it. Live-render verification (F1/Track-C,
+  real-375 fixtures) confirmed passing. Full clean regression 0 failed/0 error throughout;
+  `lintr::lint_package()` 0 findings; `devtools::check()` 0 errors, 1 WARNING + 2 NOTEs all
+  pre-existing (a 4th, new Rd cross-reference warning found and fixed in-session). CI green on all
+  4 workflows. Commits: `014f0910` (claim), `e92d945e` (RED, amended once to fold in 4 GREEN-phase
+  test corrections), `b013c009` (GREEN), `01f29342` (REFACTOR). `BACKLOG.md`'s Walker/BJL item
+  updated with the full S620 narrative; `PROJECT_LEARNINGS.md` Learnings 650/651/652 recorded.
+  **Next: Phase 4** (cleanup/documentation, issue #141 close-out) — its own separate session.
+
 ### 2026-08-20 · [ad hoc] S619: fix R-CMD-check.yaml's macos-latest chromote CDP timeout
 - **Deliverable:** diagnose AND fix the `macos-latest` chromote `Runtime.evaluate` CDP timeout in
   `R-CMD-check.yaml` (`BACKLOG.md` Housekeeping item, found S618) -- **DONE, all 5 matrix legs
