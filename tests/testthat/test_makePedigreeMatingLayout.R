@@ -295,11 +295,15 @@ test_that(
   fromX <- nodes$x[match(dupConnectors$from, nodes$id)]
   toX <- nodes$x[match(dupConnectors$to, nodes$id)]
   expect_true(all(fromX <= toX))
-  ## Locks in the specific swap this fixture exercises: the real self
-  ## (smaller x) becomes `from`; the duplicate (larger x) becomes `to` --
-  ## the OPPOSITE of the pre-fix from=dup,to=real default.
-  expect_equal(dupConnectors$from, "8LKBV9")
-  expect_equal(dupConnectors$to, "__dup_8LKBV9_1")
+  ## Walker/BJL cutover (Phase 3, this session): found during GREEN that
+  ## the new engine's different coordinate distribution flips WHICH side
+  ## of this pair has the smaller x -- the duplicate (48.12) now sits to
+  ## the LEFT of its real self (60), the opposite of the OLD algorithm's
+  ## own arrangement this fixture was originally chosen to exercise. The
+  ## smaller-x-becomes-from invariant itself (asserted above, unchanged)
+  ## is what matters -- re-measured directly, not assumed.
+  expect_equal(dupConnectors$from, "__dup_8LKBV9_1")
+  expect_equal(dupConnectors$to, "8LKBV9")
 })
 
 test_that(
@@ -615,62 +619,26 @@ test_that(
   expect_equal(nrow(result$nodes), 1412L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 210L)
+  ## CHANGED from 210L -- Walker/BJL cutover (Phase 3, this session):
+  ## re-measured by actually running the new engine, never hand-derived.
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 154L)
 })
 
-## ---- orderBySex parameter (issue #145 Slice 1, D8 option (b)) ----------
-## docs/planning/issue145-sire-dam-left-right-placement-plan.md. Threads
-## through to .positionMatingUnitForest()'s own new orderBySex argument
-## (tests/testthat/test_positionMatingUnitForest.R carries the actual
-## positioning-mechanism coverage) -- this section confirms the WIRING at
-## the exported entry point only, mirroring the edgeStyle precedent above.
-
-test_that(
-  "makePedigreeMatingLayout defaults to orderBySex = TRUE -- identical to
-   calling with orderBySex explicitly TRUE, and produces a different
-   result than orderBySex = FALSE for a pair that needs the swap", {
-  ## AM (sire, 'M') < ZF (dam, 'F') lexically -> AM anchors -> pre-#145,
-  ## AM ends up right of ZF -- the swap-needing case (matches
-  ## test_positionMatingUnitForest.R's own AM/ZF fixture).
-  ped <- data.frame(
-    id = c("AM", "ZF", "K"),
-    sire = c(NA, NA, "AM"), dam = c(NA, NA, "ZF"),
-    sex = c("M", "F", "F"), gen = c(0L, 0L, 1L),
-    stringsAsFactors = FALSE
-  )
-  default <- makePedigreeMatingLayout(ped)
-  explicit <- makePedigreeMatingLayout(ped, orderBySex = TRUE)
-  legacy <- makePedigreeMatingLayout(ped, orderBySex = FALSE)
-  expect_equal(default, explicit)
-  expect_false(isTRUE(all.equal(default$nodes$x, legacy$nodes$x)))
-
-  amX <- default$nodes$x[default$nodes$id == "AM"]
-  zfX <- default$nodes$x[default$nodes$id == "ZF"]
-  expect_true(amX < zfX)
-})
-
-test_that(
-  "makePedigreeMatingLayout with orderBySex = FALSE produces exactly the
-   same nodes as calling .positionMatingUnitForest() directly with
-   orderBySex = FALSE (confirms the wiring, not a reimplementation of
-   Slice 1's own already-tested positioning mechanism)", {
-  ped <- data.frame(
-    id = c("AM", "ZF", "K"),
-    sire = c(NA, NA, "AM"), dam = c(NA, NA, "ZF"),
-    sex = c("M", "F", "F"), gen = c(0L, 0L, 1L),
-    stringsAsFactors = FALSE
-  )
-  forest <- .buildMatingUnitForest(ped)
-  pos <- .positionMatingUnitForest(ped, forest, orderBySex = FALSE)
-  result <- makePedigreeMatingLayout(ped, orderBySex = FALSE)
-
-  ## makePedigreeMatingLayout() scales .positionMatingUnitForest()'s raw x
-  ## by its own xScale (120L, R/makePedigreeDiagramData.R:1049) for
-  ## rendering -- compare post-scale, not raw.
-  xScale <- 120L
-  expect_equal(sort(result$nodes$x[result$nodes$id %in% pos$id]),
-               sort(pos$x * xScale), tolerance = 1e-6)
-})
+## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------
+## issue #145 Slice 1's own orderBySex toggle (docs/planning/issue145-
+## sire-dam-left-right-placement-plan.md) is removed from
+## makePedigreeMatingLayout()'s public signature this session. The Phase
+## 1b design note (docs/planning/pedigree-diagram-walker-bjl-phase1b-
+## mixed-gen-reconciliation.md:434) already found this parameter
+## "restructured, not preserved unchanged -- eliminated as a separate
+## pass": the new engine folds the male-left/female-right swap
+## unconditionally into Tier 3's B1 derived-point formula (S8.1), with no
+## way to disable it -- .positionMatingUnitForestBJL() (now
+## .positionMatingUnitForest()) never had an orderBySex parameter at all.
+## Grep-confirmed (this session) zero real callers anywhere in R/ or
+## inst/ ever passed orderBySex, so removing the now-dead parameter
+## (rather than keeping it as a silently inert no-op) is the honest
+## choice -- owner-directed via AskUserQuestion. See NEWS.Rmd.
 
 ## ---- Issue #133 -- affected/phenotype/genotype status encoding (D1-D8,
 ## docs/planning/issue133-affected-status-pedigree-diagram-plan.md) --------
@@ -994,9 +962,12 @@ test_that(
   "makePedigreeMatingLayout adds a distinctly-styled MZ/DZ/UZ connector edge
    per twin pair on the real Slice 1 fixture pair, using kinship2's own
    'MZ'/'DZ'/'?' labels, all sharing the same Okabe-Ito #009E73 color (D6,
-   D10, found unwired S494, fixed S506) -- each split into a Track 2 jog
-   (3 segments, color/label/dashes preserved on all 3) since all 3
-   connectors genuinely collide with an unrelated node on their own row", {
+   D10, found unwired S494, fixed S506) -- under the Walker/BJL engine
+   (Phase 3 cutover, this session), the MZ and '?' pairs genuinely collide
+   with an unrelated node on their own row and are Track 2 jogged (3
+   segments each, color/label/dashes preserved), while the DZ pair no
+   longer collides under the new coordinate distribution and renders as a
+   single direct edge -- re-measured directly, not assumed", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped_twins.csv",
                 package = "nprcgenekeepr"),
@@ -1016,7 +987,9 @@ test_that(
     }
   )
   connectors <- result$edges[!is.na(result$edges$label), ]
-  expect_equal(nrow(connectors), 9L)  # 3 pairs x 3 jog segments each
+  ## CHANGED from 9L (3 pairs x 3 jog segments each) -- DZ is no longer
+  ## jogged: 3 (MZ) + 1 (DZ) + 3 ("?") = 7.
+  expect_equal(nrow(connectors), 7L)
 
   .expectJoggedConnector <- function(connectors, fromId, toId, label,
                                       dashPattern) {
@@ -1033,8 +1006,15 @@ test_that(
   }
 
   .expectJoggedConnector(connectors, "E06FRB", "HV7LZ3", "MZ", FALSE)
-  .expectJoggedConnector(connectors, "8GSXTQ", "P844CW", "DZ", c(4L, 4L))
   .expectJoggedConnector(connectors, "BRI2MW", "677E7M", "?", c(14L, 8L))
+
+  ## DZ: CHANGED from a 3-segment jog to a single direct edge -- re-measured.
+  dz <- connectors[connectors$label == "DZ", ]
+  expect_equal(nrow(dz), 1L)
+  expect_equal(dz$from, "8GSXTQ")
+  expect_equal(dz$to, "P844CW")
+  expect_equal(dz$color, "#009E73")
+  expect_identical(dz$dashes[[1L]], c(4L, 4L))
 })
 
 test_that(
@@ -1087,11 +1067,13 @@ test_that(
 test_that(
   "makePedigreeMatingLayout's edgeStyle = \"rectilinear\" does not crash
    with 'undefined columns selected' when twinRelations is present (D9) --
-   the connector edge passes through unchanged, since it is not part of
-   .buildMatingUnitForest()'s childEdges/matingUnits structure the waypoint
-   routing logic rewrites, and keeps its #009E73 color -- Dragon: found
-   S506, .addRectilinearWaypoints() blanket-reset every kept edge's color
-   to NA before this fix", {
+   the connector edge is not part of .buildMatingUnitForest()'s
+   childEdges/matingUnits structure the waypoint routing logic rewrites,
+   and keeps its #009E73 color whether it passes through unchanged or (as
+   under the Walker/BJL engine, Phase 3 cutover, this session) gets
+   Track-2 jogged for a genuine same-row collision -- Dragon: found S506,
+   .addRectilinearWaypoints() blanket-reset every kept edge's color to NA
+   before this fix", {
   d7Ped <- data.frame(
     id = c("TW1", "TW2", "M1", "M2", "C1", "C2"),
     sire = c(NA, NA, NA, NA, "M1", "M2"),
@@ -1103,17 +1085,29 @@ test_that(
   twinRelations <- data.frame(
     id1 = "TW1", id2 = "TW2", code = "MZ twin", stringsAsFactors = FALSE
   )
-  result <- expect_error(
+  ## Walker/BJL cutover (Phase 3, this session): found during GREEN that
+  ## TW1/TW2 now genuinely collide with an unrelated node on their own row
+  ## under the new engine's different coordinate distribution (they did
+  ## not under the OLD algorithm) -- the connector is Track 2 jogged into
+  ## 3 segments, same as the "genuinely collide" pattern already
+  ## documented for the real-fixture twin connectors elsewhere in this
+  ## file. Re-measured directly, not assumed.
+  result <- withCallingHandlers(
     makePedigreeMatingLayout(d7Ped, edgeStyle = "rectilinear",
                               twinRelations = twinRelations),
-    NA
+    warning = function(w) {
+      expect_match(conditionMessage(w), "same-row edge-node collision")
+      invokeRestart("muffleWarning")
+    }
   )
   connector <- result$edges[result$edges$label %in% "MZ", ]
-  expect_equal(nrow(connector), 1L)
-  expect_equal(connector$from, "TW1")
-  expect_equal(connector$to, "TW2")
-  expect_identical(connector$dashes[[1L]], FALSE)
-  expect_identical(connector$color, "#009E73")
+  expect_equal(nrow(connector), 3L)
+  expect_true(all(connector$color == "#009E73"))
+  expect_true(all(vapply(connector$dashes, identical, logical(1L), FALSE)))
+  expect_true("TW1" %in% connector$from)
+  expect_true("TW2" %in% connector$to)
+  expect_true(all(grepl("^__jog_", setdiff(c(connector$from, connector$to),
+                                            c("TW1", "TW2")))))
 })
 
 ## ---- Finding #2 (S549 kinship2 supplement audit): consanguineous-mating
@@ -1343,14 +1337,24 @@ test_that(
   ]
   expect_equal(length(consanguineousUnit), 1L)
 
-  result <- expect_error(
-    makePedigreeMatingLayout(d7Ped, twinRelations = twinRelations), NA
+  ## Walker/BJL cutover (Phase 3, this session): found during GREEN that
+  ## TW1/TW2 now genuinely collide with an unrelated node on their own row
+  ## under the new engine (same finding as the sibling D7 fixture test
+  ## above) -- the connector is Track 2 jogged into 3 segments, re-measured
+  ## directly.
+  result <- withCallingHandlers(
+    makePedigreeMatingLayout(d7Ped, twinRelations = twinRelations),
+    warning = function(w) {
+      expect_match(conditionMessage(w), "same-row edge-node collision")
+      invokeRestart("muffleWarning")
+    }
   )
 
-  ## The twin connector still renders correctly, unaffected.
+  ## The twin connector still renders correctly, unaffected by the
+  ## consanguinity marker below.
   connector <- result$edges[result$edges$label %in% "MZ", ]
-  expect_equal(nrow(connector), 1L)
-  expect_equal(connector$color, "#009E73")
+  expect_equal(nrow(connector), 3L)
+  expect_true(all(connector$color == "#009E73"))
 
   ## The consanguineous union's own mate edges are marked, distinctly
   ## from the twin connector's color. (result$edges$dashes is a list

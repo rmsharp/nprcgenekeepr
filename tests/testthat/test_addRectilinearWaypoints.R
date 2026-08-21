@@ -458,6 +458,18 @@ test_that(".addRectilinearWaypoints adds zero projection nodes for a
 ## non-anchor occurrence at unit1, still displayed at unit1's gen (2) via
 ## issue #143's unchanged non-anchor override, unaffected by Track 4. Full
 ## rewrite, not a value tweak -- both fixtures' anchor identity changes.
+##
+## Walker/BJL cutover (Phase 3, this session): found during GREEN that
+## SIRE's own SGF/SGM founders (present only to give him gen 1) made him
+## B2-classified (own parent edge) under the new engine -- B2 individuals
+## render at their OWN genuine gen, not the unit's (Phase 1b/2a's own
+## deliberate, disclosed design: issue #143's non-anchor override no
+## longer applies uniformly to every non-anchor, only to B1 free-pass
+## ones). That broke this fixture's own premise (SIRE's gen must equal
+## unit1's gen "by construction" for the zero-projection case under test).
+## Fixed by making SIRE a parentless founder (own gen set directly to 1,
+## no SGF/SGM rows) -- B1, not B2 -- restoring the intended "gen matches
+## unit via issue #143's override" premise.
 
 test_that(".addRectilinearWaypoints adds zero projection nodes for a
            mating unit whose anchor (Track 4: gen-first D2 selects DAM,
@@ -465,12 +477,12 @@ test_that(".addRectilinearWaypoints adds zero projection nodes for a
            construction -- leaves both the anchor's own direct edge and
            the non-anchor's free-pass edge unchanged", {
   ped <- data.frame(
-    id = c("SGF", "SGM", "SIRE", "DGP", "DAM", "OTHERMATE", "CHILD",
+    id = c("SIRE", "DGP", "DAM", "OTHERMATE", "CHILD",
            "OTHERCHILD"),
-    sire = c(NA, NA, "SGF", NA, "DGP", NA, "SIRE", "OTHERMATE"),
-    dam = c(NA, NA, "SGM", NA, NA, NA, "DAM", "DAM"),
-    sex = c("M", "F", "M", "M", "F", "M", "M", "F"),
-    gen = c(0L, 0L, 1L, 0L, 2L, 0L, 3L, 3L),
+    sire = c(NA, NA, "DGP", NA, "SIRE", "OTHERMATE"),
+    dam = c(NA, NA, NA, NA, "DAM", "DAM"),
+    sex = c("M", "M", "F", "M", "M", "F"),
+    gen = c(1L, 0L, 2L, 0L, 3L, 3L),
     stringsAsFactors = FALSE
   )
   inputs <- .buildLayoutAndForest(ped)
@@ -489,8 +501,8 @@ test_that(".addRectilinearWaypoints adds zero projection nodes for a
   ## DAM (anchor) is on-row by construction -- no relocation mechanism
   ## exists any longer, and none is needed.
   expect_equal(inputs$pos$gen[inputs$pos$id == "DAM"], 2L)
-  ## SIRE is the free-pass non-anchor occurrence, on-row via issue #143's
-  ## still-unchanged override (his own raw gen is 1).
+  ## SIRE is the B1 free-pass non-anchor occurrence (no own parent edge),
+  ## on-row via issue #143's override for B1 (his own raw gen is 1).
   expect_equal(inputs$pos$gen[inputs$pos$id == "SIRE"], 2L)
 
   result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
@@ -531,11 +543,14 @@ test_that(".addRectilinearWaypoints applied to the full real
     stringsAsFactors = FALSE
   )
   inputs <- .buildLayoutAndForest(ped)
-  expect_equal(nrow(inputs$nodes), 714L)  # CHANGED from 740L, Track 4
+  expect_equal(nrow(inputs$nodes), 714L)  # unchanged, Walker/BJL cutover
+                                           # (structural, D1/D2/D4 untouched)
 
   result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
                                       inputs$forest, inputs$pos)
-  expect_equal(nrow(result$nodes), 1202L)  # CHANGED from 1228L, Track 4
+  ## CHANGED from 1202L -- Walker/BJL cutover (Phase 3, this session):
+  ## re-measured by actually running the new engine, never hand-derived.
+  expect_equal(nrow(result$nodes), 1258L)
 
   ## No NA coordinates or duplicate (id, waypoint) collisions among the
   ## new waypoint nodes.
@@ -566,9 +581,11 @@ test_that(".addRectilinearWaypoints applied to the full real
 test_that(".addRectilinearWaypoints's D1 bar/drop waypoints never share a
            row with any real/duplicate/union node for a 1-generation gap
            (the common case, and issue #160's own reported shape), on the
-           real 375-individual bundled fixture; a rare, disclosed residual
-           of exactly 2 waypoints survives for one larger-gap group; and no
-           existing node's x/y ever changes", {
+           real 375-individual bundled fixture; the larger-gap residual
+           that survived under the OLD algorithm (2 waypoints) no longer
+           occurs under the Walker/BJL engine (Phase 3 cutover, this
+           session, re-measured by actually running it); and no existing
+           node's x/y ever changes", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -603,7 +620,10 @@ test_that(".addRectilinearWaypoints's D1 bar/drop waypoints never share a
     totalResidual <- totalResidual + hits
   }
   expect_equal(gap1Collisions, 0L)
-  expect_equal(totalResidual, 2L)
+  ## CHANGED from 2L to 0L -- Walker/BJL cutover (Phase 3, this session):
+  ## the disclosed larger-gap residual no longer occurs under the new
+  ## engine, re-measured by actually running it, never hand-derived.
+  expect_equal(totalResidual, 0L)
 
   ## Track 1 never moves an existing (non-waypoint) node's VALUE -- only a
   ## synthetic waypoint's y changes. expect_equal, not expect_identical: a
@@ -630,33 +650,25 @@ test_that(".addRectilinearWaypoints's D1 bar/drop waypoints never share a
 ## disclosed and counted here, not silently dropped, deferred to Track 2's
 ## general framework alongside the other residual above.
 ##
-## Track 3 update (docs/planning/pedigree-diagram-same-row-collision-
-## avoidance-plan.md sec2.3/sec6 Session C, REFACTOR, this session):
-## x-spans are NO LONGER unaffected by union clamping -- each group's
-## "drop" point sits at its OWN UNION's x (barPointX <- c(xOf[[fromId]],
-## xOf[kids]), fromId being the union id), and Track 3 pulls a runaway
-## union back inside its own parents' span. That is exactly Track 3's
-## purpose (fixing the S583 parent-span containment defect), but it
-## moves the drop point back INTO the x-region other relatives'
-## subtrees occupy, substantially WORSENING this already-disclosed
-## bar-vs-bar residual: 42 -> 348 pre-Track-1-equivalent baseline hits,
-## 9 -> 116 post-Track-1 hits (both re-measured live this session).
-## Owner-directed (AskUserQuestion, this session): accept as a disclosed
-## trade-off -- Track 3 fixes a DIFFERENT, higher-priority invariant
-## (parent-span containment, kinship2 parity) than this ALREADY-
-## ACKNOWLEDGED-as-imperfect residual (sec8's own "not examined in this
-## plan" framing) -- not fixed here; filed as its own BACKLOG.md
-## follow-up per sec8's own instruction ("file it as its own issue if
-## found").
+## Walker/BJL cutover (Phase 3, this session): Track 3's parent-span
+## clamp -- the mechanism that WORSENED this residual (42 -> 348
+## pre-Track-1-equivalent, 9 -> 116 post-Track-1) by pulling a runaway
+## union's drop point back into the x-region other relatives' subtrees
+## occupy -- is REMOVED entirely by this migration. Re-measured by
+## actually running the new engine (never hand-derived): this residual
+## drops to 0 under BOTH measurements, since every union's drop point is
+## now genuinely, unconditionally its own children's midpoint, with no
+## clamp pulling it anywhere else. The BACKLOG.md follow-up this residual
+## was filed under is resolved by construction, not by a targeted fix.
 
 test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
            collisions (2 different sibships sharing a generation gap,
-           whose bar x-spans overlap) are substantially reduced by Track
-           1 relative to pre-Track-1, but WORSENED by Track 3's parent-
-           span clamp (an accepted, disclosed trade-off -- see the
-           docstring above), on the real 375-individual bundled fixture
-           -- a residual named in the collision-avoidance plan's own
-           section 8, counted here so a further regression would be
+           whose bar x-spans overlap) are eliminated under the Walker/BJL
+           engine (Phase 3 cutover, this session) -- Track 3's parent-span
+           clamp, the mechanism that used to worsen this residual, no
+           longer exists -- on the real 375-individual bundled fixture, a
+           residual originally named in the collision-avoidance plan's own
+           section 8, counted here so a future regression would be
            caught", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
@@ -711,13 +723,16 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
   }, numeric(1L))
   oldHits <- countHits(oldYs)
 
-  ## Track 3 (this session) substantially worsens BOTH counts, since it
-  ## moves the drop point's x back toward the union's own (now-clamped)
-  ## parents -- an accepted, disclosed trade-off (see the docstring
-  ## above), re-measured live this session.
-  expect_equal(oldHits, 348L)  # pre-Track1-equivalent baseline, post-Track3
-  expect_equal(newHits, 116L)  # post-Track1 AND post-Track3
-  expect_true(newHits < oldHits)
+  ## Walker/BJL cutover (Phase 3, this session): Track 3's parent-span
+  ## clamp -- the mechanism that caused this residual to worsen (42->348,
+  ## 9->116) -- is removed entirely. Re-measured by actually running the
+  ## new engine (never hand-derived): BOTH counts drop to 0, since every
+  ## union's drop point is now genuinely, unconditionally its own
+  ## children's midpoint (no clamp pulling it back toward its parents'
+  ## x-region).
+  expect_equal(oldHits, 0L)  # CHANGED from 348L
+  expect_equal(newHits, 0L)  # CHANGED from 116L
+  expect_true(newHits <= oldHits)
 })
 
 ## ---- issue #154: dangling, free-pass non-anchor parent crash (BACKLOG.md

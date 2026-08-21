@@ -259,62 +259,63 @@ test_that(".resolveEdgeNodeCollisions does not flag a node that is
 })
 
 ## ---- curved duplicate connector: separate disclosed-heuristic branch --
-## GitHub issue #160 comment 1's exact reproduction: P1xP2's 2 children
-## are A and Y; Y is duplicated (mates both A -- consanguineous -- and W).
-## Reproduced live this session against current HEAD: the ONLY real
-## collision in this fixture is the CURVED duplicate connector
-## (__dup_Y_1 -> Y) passing through W -- neither the D1 bar chain nor any
-## kept straight mate edge collides here (every apparent case turns out
-## to be a node directly adjacent to one of the edge's own endpoints, PRE-
-## RED finding 2 above).
-
-.commentOneFixture <- function() {
-  ped <- data.frame(
-    id   = c("P1", "P2", "X", "A", "Y", "W", "C1", "GC", "C2"),
-    sire = c(NA, NA, NA, "P1", "P1", NA, "A", "A", "W"),
-    dam  = c(NA, NA, NA, "P2", "P2", NA, "X", "Y", "Y"),
-    sex  = c("M", "F", "F", "M", "F", "M", "F", "M", "M"),
+## GitHub issue #160 comment 1's original reproduction (P1xP2's 2 children
+## A and Y; Y duplicated, mating both A -- consanguineous -- and W) exactly
+## isolated the curved-connector-behind-W collision under the OLD
+## algorithm. Walker/BJL cutover (Phase 3, this session): found during
+## GREEN that this small synthetic fixture no longer collides under the
+## new engine's different coordinate distribution -- W's own x (288.12)
+## now falls OUTSIDE the __dup_Y_1/Y chord (168-240), confirmed directly
+## (probe execution); the fixture and its own .commentOneFixture() helper
+## are removed as dead code rather than kept unused. The curved-heuristic
+## mechanism itself (.resolveEdgeNodeCollisions(), untouched by this
+## migration) still fires reliably on real data -- 47 curved-heuristic
+## collisions measured on the
+## real 375-individual bundled fixture (down from 102 curved connectors
+## total, all initially at roundness 0.2) -- so this test is rewritten to
+## exercise it there instead of via a now-inert small fixture, rather than
+## engineering a new synthetic shape to force a specific collision under
+## an unrelated coordinate system.
+test_that(".resolveEdgeNodeCollisions applies a disclosed smooth.roundness
+           heuristic to curved duplicate connectors that collide with an
+           unrelated node, on the real 375-individual bundled fixture",
+          {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
     stringsAsFactors = FALSE
   )
-  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
-  ped
-}
-
-test_that(".resolveEdgeNodeCollisions applies a disclosed smooth.roundness
-           heuristic to the curved duplicate connector when it collides
-           with an unrelated node -- issue #160 comment 1's own
-           duplicate-connector-behind-W reproduction", {
-  ped <- .commentOneFixture()
-  waypointLayout <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
   forest <- .buildMatingUnitForest(ped)
   pos <- .positionMatingUnitForest(ped, forest)
-  waypoints <- .addRectilinearWaypoints(waypointLayout$nodes,
-                                          waypointLayout$edges, forest, pos)
+  direct <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
+  waypoints <- .addRectilinearWaypoints(direct$nodes, direct$edges, forest,
+                                          pos)
 
-  ## Confirm the pre-fix broken state first (documents the actual defect,
-  ## not an assumed one): the curved connector's chord does contain W.
   curved <- waypoints$edges[!is.na(waypoints$edges$smooth.enabled) &
                                 waypoints$edges$smooth.enabled == TRUE, ]
-  expect_equal(nrow(curved), 1L)
-  expect_equal(curved$from, "__dup_Y_1")
-  expect_equal(curved$to, "Y")
-  baselineRoundness <- curved$smooth.roundness
-  expect_equal(baselineRoundness, 0.2)
+  expect_equal(nrow(curved), 102L)
+  expect_true(all(curved$smooth.roundness == 0.2))
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
 
-  ## The heuristic bumps roundness on the specific colliding curved edge
-  ## -- a disclosed nudge, not a closed-form clearance proof (plan
-  ## section 2.2). Confirmed only mechanically here; the actual visual
-  ## effect is confirmed by rendered-image inspection in REFACTOR.
+  ## The heuristic bumps roundness on each colliding curved edge -- a
+  ## disclosed nudge, not a closed-form clearance proof (plan section
+  ## 2.2). Confirmed only mechanically here; the actual visual effect is
+  ## confirmed by rendered-image inspection in REFACTOR.
   fixedCurved <- result$edges[!is.na(result$edges$smooth.enabled) &
                                   result$edges$smooth.enabled == TRUE, ]
-  expect_equal(nrow(fixedCurved), 1L)
-  expect_true(fixedCurved$smooth.roundness > baselineRoundness)
+  expect_equal(nrow(fixedCurved), 102L)
+  ## One concrete, named pair re-measured directly, not hand-derived.
+  one <- fixedCurved[fixedCurved$from == "__dup_28XSME_1" &
+                        fixedCurved$to == "28XSME", ]
+  expect_equal(nrow(one), 1L)
+  expect_equal(one$smooth.roundness, 0.5)
 
   ## Recorded in the residuals data frame as a heuristic (unconfirmed by
   ## coordinate math), distinct from a rectilinear (fully-proven) repair.
-  expect_true(any(result$residuals$kind == "curved-heuristic"))
+  curvedResiduals <- result$residuals[result$residuals$kind ==
+                                          "curved-heuristic", ]
+  expect_equal(nrow(curvedResiduals), 47L)
 
   ## Every pre-existing node's x/y is byte-identical.
   before <- waypoints$nodes[, c("id", "x", "y")]
@@ -343,7 +344,13 @@ test_that("makePedigreeMatingLayout() wires .resolveEdgeNodeCollisions()
                 package = "nprcgenekeepr"),
     stringsAsFactors = FALSE
   )
-  layout <- makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
+  layout <- withCallingHandlers(
+    makePedigreeMatingLayout(ped, edgeStyle = "rectilinear"),
+    warning = function(w) {
+      expect_match(conditionMessage(w), "same-row edge-node collision")
+      invokeRestart("muffleWarning")
+    }
+  )
   expect_true(any(grepl("^__jog_", layout$nodes$id)))
 })
 
@@ -358,22 +365,20 @@ test_that("makePedigreeMatingLayout() wires .resolveEdgeNodeCollisions()
 ## measured empirically (same discipline as Track 1's own disclosed 42 ->
 ## 9 bar-vs-bar residual count).
 ##
-## Track 3 update (docs/planning/pedigree-diagram-same-row-collision-
-## avoidance-plan.md sec2.3/sec6 Session C, REFACTOR, this session): this
-## file's OWN baseline is measured against .addRectilinearWaypoints()
-## output, which is now built on Track 3's clamped union positions --
-## pulling a runaway union back inside its own parents' span (Track 3's
-## whole point) coincidentally resolves some of what Track 2 used to have
-## to detect and jog. 150 -> 105 colliding edges (-30%), 3,081 -> 1,431
-## obstacle-pairs (-53%), re-measured live this session, an owner-accepted
-## trade-off disclosed alongside the D1 bar-vs-bar WORSENING this same
-## clamp causes (test_addRectilinearWaypoints.R's own baseline test).
+## Walker/BJL cutover (Phase 3, this session): Track 3's parent-span
+## clamp -- the mechanism the prior (105/1,431) baseline was measured
+## against -- is removed entirely. Re-measured by actually running the
+## new engine, never hand-derived: 105 -> 76 colliding edges, 1,431 ->
+## 1,715 obstacle-pairs (fewer distinct edges affected, but each with more
+## obstacles under the new engine's own coordinate distribution). The
+## resolve pass itself still fully clears every collision on this
+## fixture (0 residual, confirmed below).
 
 test_that(".resolveEdgeNodeCollisions dramatically reduces the real
-           375-individual bundled fixture's same-row collision count
-           (105 colliding edges / 1,431 obstacle-pairs pre-fix, post-
-           Track-3), and any residual is disclosed via the residuals data
-           frame, never silently dropped", {
+           375-individual bundled fixture's same-row collision count (76
+           colliding edges / 1,715 obstacle-pairs pre-fix, under the
+           Walker/BJL engine), and any residual is disclosed via the
+           residuals data frame, never silently dropped", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -387,8 +392,12 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
 
   baseline <- .findEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   baselineEdges <- unique(baseline[, c("from", "to")])
-  expect_equal(nrow(baselineEdges), 105L)
-  expect_equal(nrow(baseline), 1431L)
+  ## CHANGED from 105L/1431L -- Walker/BJL cutover (Phase 3, this
+  ## session): re-measured by actually running the new engine, never
+  ## hand-derived (Track 3's parent-span clamp, part of the OLD baseline
+  ## this test's own docstring/comment above narrates, no longer exists).
+  expect_equal(nrow(baselineEdges), 76L)
+  expect_equal(nrow(baseline), 1715L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)
