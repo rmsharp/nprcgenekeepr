@@ -196,7 +196,7 @@ runtime_smoke: n/a -- test-file-only diff, zero R/ production code changed. Func
   rendering path, not just in isolation.
 changelog_ref: CHANGELOG.md 2026-08-22 S623 entry [issue #163] (landed in 31bed774)
 commit: 150faea2 (claim), b3b033d9 (BACKLOG finding), 31bed774 (deliverable), 4b7ba98c (learnings),
-  pending (handoff) -- reconciled to the real sha immediately after, matching the
+  87d7efbf (handoff) -- reconciled to the real sha immediately after, matching the
   S600/S602-S622 self-reference workaround precedent
 ```
 S623 diagnosed and fixed the intermittent shinytest2 e2e-mate-pair-analysis-module CI failure
