@@ -16,6 +16,45 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-22 · [issue #163] S623: fix intermittent shinytest2 e2e-mate-pair-analysis-module E2E failure (DT server-side-render race)
+- **Deliverable:** diagnose and fix the intermittent `test-e2e-mate-pair-analysis-module.R` failure
+  found by S622 in the same nightly CI run as the (separately fixed) `e2e-pedigree-` regressions --
+  **DONE**, test-only fix, zero `R/` production code changed.
+- **Root cause, confirmed empirically, not just inferred:** `modMatePairServer()`'s
+  `observeEvent(input$analyze, ...)` (and every other module using the same pattern) flips the
+  app's `data-ready` attribute via `session$sendCustomMessage("setDataReady", ...)` the moment its
+  SERVER-side reactive computation finishes -- but `pairsTable`/`excludedTable` are
+  `DT::renderDT(server = TRUE)` outputs, which then make their OWN separate client<->server AJAX
+  round-trip to fetch and draw the row data. `wait_for_module_ready()` polling `data-ready` says
+  nothing about that second, later step. Confirmed via: (1) both real CI failures' captured HTML
+  showing the table's own `.dataTables_processing` indicator still `display: block` (still
+  fetching) at the moment the test read it; (2) a local JS-instrumented probe measuring the actual
+  `data-ready` -> DT-draw gap (~130-150ms even on a fast unthrottled machine); (3) a throttled-CDP-
+  network reproduction (`Network.emulateNetworkConditions`) that reliably reproduces the exact
+  failure (0 rows, expected id absent) without the fix and reliably passes with it.
+- **Fix:** new shared `wait_for_dt_rendered()` helper in `tests/testthat/helper-shinytest2.R`
+  (polls a DT table's own `.dataTables_processing` indicator until hidden -- reusable by any
+  server-side DT table read in the E2E suite, not mate-pair-specific); wired in before both
+  `pairsTable` and `excludedTable` reads in `test-e2e-mate-pair-analysis-module.R`. Caught and fixed
+  a real bug in the helper's own first draft during verification (`.closest('.dataTables_wrapper')`
+  vs `.querySelector(...)` -- the wrapper is a DOM *child* of the table's outer container, not an
+  ancestor).
+- **Verification:** touched test file 5/5 clean at normal speed (0 failed/error/warning); full
+  project-wide regression run UNFILTERED (`NPRC_RUN_E2E=true`, no `test-app-*`/`test-e2e-*`
+  exclusion -- see the BACKLOG.md finding below): 6,606 passed / 0 failed / 0 error / 2 skipped / 39
+  warnings (pre-existing, unrelated -- the touched file itself ran 0 warnings across all 5 runs).
+  `lintr::lint()`: 0 findings on both touched files. `devtools::check()` deliberately skipped
+  (test-only diff, matching S622's own precedent for the identical file-type diff).
+- **Incidental finding, logged not fixed:** `CLAUDE.md`'s "Clean regression read" guidance still
+  instructs excluding `test-app-*`/`test-e2e-*` files as "pre-existing baseline noise" (Learning
+  2/4, Sessions 3-4) -- that root cause (`create_test_app()` undefined) no longer exists
+  (`tests/testthat/helper-shinytest2.R:200`), so the filter is stale and risks hiding a real future
+  regression in exactly those files. Logged to `BACKLOG.md` Housekeeping (READY, Effort S), not
+  fixed this session (out of this session's own one-deliverable scope). This session's own
+  regression checks did not use that filter.
+- Issue #163 closed. `PROJECT_LEARNINGS.md` Learning 656 recorded.
+- **Model:** claude-sonnet-5.
+
 ### 2026-08-21 · [ad hoc] S622: fix 2 shinytest2 e2e-pedigree- E2E assertions that broke once diagram edges route through waypoint nodes
 - **Deliverable:** diagnose and fix 2 `test-e2e-pedigree-module.R` failures found via this
   session's own Phase 0 unconditional `gh run list` check (CLAUDE.md, S545) -- **DONE**, test-only

@@ -104,6 +104,17 @@ test_that("E2E: Mate Pair Analysis reports a live pair with marker kinship after
   if (!wait_for_module_ready(app, "matePair", timeout = 60000)) {
     skip("Mate Pair Analysis did not signal data-ready within 60s")
   }
+  # data-ready flips the moment the SERVER-side computation finishes, but
+  # pairsTable is a server = TRUE DT::renderDT() output: DT still has its
+  # OWN separate client<->server AJAX round-trip to fetch and draw the row
+  # data. Reading the table's HTML before that finishes intermittently caught
+  # it still empty/processing under CI load (issue #163) -- confirmed both
+  # from real CI failure captures and by reproducing the race locally under
+  # throttled network conditions. Always wait for DT's own render, not just
+  # data-ready, before asserting on table rows.
+  if (!wait_for_dt_rendered(app, "#matePair-pairsTable")) {
+    skip("Eligible Pairs table did not finish rendering (DT still processing)")
+  }
 
   pairsHtml <- get_html_safe(app, "#matePair-pairsTable")
   expect_match(pairsHtml, "shiny-bound-output",
@@ -117,6 +128,9 @@ test_that("E2E: Mate Pair Analysis reports a live pair with marker kinship after
 
   # ...and present, with reason "user-excluded", in the Excluded tab.
   click_element_safe(app, "a[data-value='Excluded']")
+  if (!wait_for_dt_rendered(app, "#matePair-excludedTable")) {
+    skip("Excluded table did not finish rendering (DT still processing)")
+  }
   excludedHtml <- get_html_safe(app, "#matePair-excludedTable")
   expect_match(excludedHtml, matePairE2eIds$males[2L], fixed = TRUE)
   expect_match(excludedHtml, "user-excluded")

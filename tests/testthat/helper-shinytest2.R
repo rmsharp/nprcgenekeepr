@@ -524,3 +524,58 @@ get_edge_chain_terminus <- function(app, widget_id, label, start_id) {
   if (identical(result, "null")) return(NULL)
   result
 }
+
+## ---- DataTables server-side-processing render wait (S623) ---------------
+##
+## `wait_for_module_ready()` polls the app's own `data-ready` attribute,
+## which every module (modMatePair.R, modMarkerGenetics.R, modInput.R, ...)
+## flips via session$sendCustomMessage("setDataReady", ...) the moment its
+## SERVER-side reactive computation finishes. A DT::renderDT() output with
+## the package default server = TRUE then makes its OWN separate client ->
+## server AJAX round-trip to actually fetch and draw the row data -- a step
+## `data-ready` says nothing about. Confirmed empirically (issue #163): on a
+## fast local machine the data-ready -> DT-draw gap measured ~130-150ms; the
+## 2 real nightly-CI failures this fixes both captured the table's own
+## `.dataTables_processing` indicator still visible
+## (`style="display: block;"`) in the exact HTML the test read immediately
+## after `wait_for_module_ready()` returned TRUE. `wait_for_module_ready()`
+## alone is therefore NOT a safe precondition for reading a server-side DT
+## table's row content -- always follow it with `wait_for_dt_rendered()`
+## before asserting on table rows.
+
+#' Wait for a server-side DataTables (DT) widget to finish its own
+#' client<->server AJAX round-trip and draw, not just for the app's
+#' `data-ready` flag to flip.
+#'
+#' @param app AppDriver object.
+#' @param selector CSS id selector of the DT table output (e.g.
+#'   "#matePair-pairsTable").
+#' @param timeout Maximum wait time in milliseconds (default 10000).
+#' @param poll_interval Polling interval in milliseconds (default 100).
+#' @return TRUE once the table's `.dataTables_processing` indicator is
+#'   confirmed hidden (the table has drawn); FALSE if the timeout is reached
+#'   first -- the table's own wrapper/processing element never appeared
+#'   (selector wrong, or DT not yet initialized) or never cleared.
+wait_for_dt_rendered <- function(app, selector, timeout = 10000,
+                                  poll_interval = 100) {
+  js <- sprintf(paste0(
+    "(() => { const el = document.querySelector('%s'); ",
+    "if (!el) return 'missing'; ",
+    "const wrapper = el.querySelector('.dataTables_wrapper'); ",
+    "if (!wrapper) return 'no-wrapper'; ",
+    "const proc = wrapper.querySelector('.dataTables_processing'); ",
+    "if (!proc) return 'no-processing-el'; ",
+    "return window.getComputedStyle(proc).display === 'none' ? ",
+    "  'ready' : 'processing'; })()"
+  ), selector)
+
+  start_time <- Sys.time()
+  elapsed <- 0
+  while (elapsed < timeout) {
+    state <- tryCatch(app$get_js(js), error = function(e) NA_character_)
+    if (identical(state, "ready")) return(TRUE)
+    Sys.sleep(poll_interval / 1000)
+    elapsed <- as.numeric(difftime(Sys.time(), start_time, units = "secs")) * 1000
+  }
+  FALSE
+}
