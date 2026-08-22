@@ -138,22 +138,81 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S622
 date: 2026-08-21
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Diagnose (and fix, if bounded) the 2 shinytest2 e2e-pedigree- E2E regressions found
-  in this session's Phase 0 gh run list check: consanguineous mate-edge overcount
-  (test-e2e-pedigree-module.R:350, expects 56, observed 82 pre-cutover / 101 post-cutover) and MZ
-  twin-connector wrong-target (test-e2e-pedigree-module.R:694, targets __jog_19_a instead of
-  HV7LZ3).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Diagnosed and fixed 2 shinytest2 e2e-pedigree- E2E test failures (found via
+  this session's own Phase 0 unconditional gh run list check, CLAUDE.md S545). Both were
+  pre-existing test-assertion defects (confirmed present in the 2026-08-18 nightly CI log, 3 days
+  before the Walker/BJL production cutover), not migration regressions -- zero R/ production code
+  changed.
+what_was_done: Root-caused by direct execution: makePedigreeMatingLayout() on the real fixture,
+  edgeStyle="direct" gave the expected 56 marked edges (detection logic correct);
+  edgeStyle="rectilinear" (the app's default) gave 103 raw rows that collapse to exactly 56 once
+  BOTH __jog_ (Track 2 collision jogging) and __proj_ (D2 dogleg routing) waypoint node types are
+  treated as pass-through in a shared-endpoint graph analysis (cross-validated with
+  igraph::components()). The MZ-connector "wrong target" test had the same root cause: its chain
+  (E06FRB -> __jog_23_a -> __jog_23_b -> HV7LZ3) correctly reaches the real co-twin node via 2
+  waypoint hops, not 1 direct edge. Added 2 shared helpers to tests/testthat/helper-shinytest2.R
+  (count_colored_edge_lines(), get_edge_chain_terminus()) that collapse waypoint chains before
+  asserting; rewrote both failing assertions to use them. Verified: test-e2e-pedigree-module.R run
+  locally against the real app, 52/52 passed (was 2 failed); lintr::lint() 0 findings on both
+  touched files; full project-wide clean regression 6339 passed/0 failed/0 error/0 non-baseline
+  offenders. Filed issue #163 for the unrelated, intermittent e2e-mate-pair-analysis-module flake
+  found in the same CI run (explicitly out of scope). PROJECT_LEARNINGS.md Learning 655 recorded.
+  Commits: 09f74f72 (claim), 201c7ff4 (deliverable: fix + CHANGELOG entry), 0f2922e2
+  (learnings + CLAUDE.md cross-ref refresh).
+next_steps: No further work owed on the e2e-pedigree- fix -- it's complete and verified. (1) Issue
+  #163 (e2e-mate-pair-analysis-module flake, empty results table, intermittent -- passed
+  2026-08-20, failed 2026-08-18/2026-08-21) is READY for a future session: reproduce locally with
+  a tight loop first to raise the reproduction rate before diagnosing, per the diagnose skill's own
+  non-deterministic-bug guidance; likely candidate is a missing/insufficient wait_for_idle() around
+  the D6 marker-genetics/mate-pair cross-module wiring the test's own docstring names. (2) This
+  session did NOT touch BACKLOG.md's other READY items (context_budget.py evaluation,
+  BACKLOG.md's own ledger-size housekeeping continuation, the 16-item [x]-sweep, pedigree-diagram
+  package-split scoping, NEWS.Rmd simplification) -- S621's own priority order still applies,
+  unchanged.
+key_files: tests/testthat/helper-shinytest2.R:422-524 (2 new helpers, count_colored_edge_lines()
+  and get_edge_chain_terminus()); tests/testthat/test-e2e-pedigree-module.R:330-359 (consanguineous
+  marker fix), :690-711 (MZ connector fix); R/makePedigreeDiagramData.R:1802-1821
+  (.resolveEdgeNodeCollisions()'s color/width-preservation-on-split, the mechanism behind both
+  bugs -- read, not modified); PROJECT_LEARNINGS.md Learning 655; GitHub issue #163 (filed, open).
+gotchas: (1) __proj_ nodes ARE reachable on the real 375-individual fixture, unlike the small
+  unit-test fixture in test_makePedigreeMatingLayout.R:1270-1318 whose own comment says Track 4's
+  structural invariant makes them "permanently unreachable" -- that claim is fixture-specific
+  (an anchor-side-only guarantee), not a general one; any future waypoint-chain-walking code must
+  treat BOTH __jog_ and __proj_ as pass-through, not just __jog_ (my own first attempt used only
+  __jog_ and got 67 components instead of the correct 56). (2) `gh run view <id> --log-failed`
+  returned empty output for this job even though the run clearly had failed steps -- worked around
+  via `gh api repos/OWNER/REPO/actions/jobs/<job-id>/logs` directly (returns the raw log as plain
+  text). Not root-caused further; if it recurs, try that API path first rather than re-debugging
+  the CLI flag. (3) A raw DOM edge count/single-hop target on the pedigree diagram is NEVER a safe
+  E2E assertion by itself -- always route through the 2 new helper-shinytest2.R helpers.
+runtime_smoke: n/a -- test-file-only diff, zero R/ production code changed. Functional equivalent:
+  the fixed tests were run against the REAL Shiny app (shinytest2 + chromote), not mocked,
+  confirming the fix holds under the actual rendering path.
+changelog_ref: CHANGELOG.md 2026-08-21 S622 entry [ad hoc] (landed in 201c7ff4)
+commit: 09f74f72 (claim), 201c7ff4 (deliverable), 0f2922e2 (learnings), <handoff commit sha to
+  follow -- self-reference workaround, matching S600/S602-S621 precedent>
 ```
+S622 diagnosed and fixed 2 shinytest2 nightly-CI E2E test failures that this session's own Phase 0
+gh run list check (CLAUDE.md's S545 addition) surfaced -- confirmed, by direct execution and a
+pre-migration CI log check, to be pre-existing test-assertion defects that pre-date the Walker/BJL
+migration entirely, not regressions from it. Root cause: both failing assertions read raw DOM edge
+properties (a count, a single-hop target) that silently stop being valid once
+.addRectilinearWaypoints()/.resolveEdgeNodeCollisions() route the specific edge in question through
+1+ __proj_/__jog_ waypoint nodes -- deliberate, correct, already-unit-tested production behavior.
+Fixed with 2 new shared test helpers that collapse waypoint chains before asserting. Self-score
+breakdown: + did CI forensics (including working around a CLI gap via the raw GitHub API) before
+claiming scope, which is what surfaced 2 unrelated failures bundled in one red run; + checked the
+pre-migration CI log before accepting "regression" as the working theory, avoiding an entirely
+wrong-cause investigation; + caught my own first root-cause hypothesis being wrong (67 vs. 56
+components) via independent cross-validation (igraph) rather than trusting one implementation, and
+kept digging to full explanation rather than a patch; + surfaced the "this doesn't fit classic
+RED-must-fail TDD" tension to the user explicitly rather than silently forcing or skipping the
+ceremony; − briefly misused ScheduleWakeup (a /loop-specific tool) to wait on a background test
+run, self-corrected within the same turn.
+
 
 ```handoff
 session: S621
