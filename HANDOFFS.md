@@ -192,8 +192,9 @@ runtime_smoke: n/a -- test-file-only diff, zero R/ production code changed. Func
   the fixed tests were run against the REAL Shiny app (shinytest2 + chromote), not mocked,
   confirming the fix holds under the actual rendering path.
 changelog_ref: CHANGELOG.md 2026-08-21 S622 entry [ad hoc] (landed in 201c7ff4)
-commit: 09f74f72 (claim), 201c7ff4 (deliverable), 0f2922e2 (learnings), <handoff commit sha to
-  follow -- self-reference workaround, matching S600/S602-S621 precedent>
+commit: 09f74f72 (claim), 201c7ff4 (deliverable), 0f2922e2 (learnings), 4c44d141 (handoff) --
+  reconciled to the real sha immediately after, matching the S600/S602-S621 self-reference
+  workaround precedent
 ```
 S622 diagnosed and fixed 2 shinytest2 nightly-CI E2E test failures that this session's own Phase 0
 gh run list check (CLAUDE.md's S545 addition) surfaced -- confirmed, by direct execution and a
