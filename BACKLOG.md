@@ -852,6 +852,28 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       owner across as many review rounds as needed -- this is explicitly NOT a one-session,
       one-pass item.
 ## Housekeeping
+- [ ] **`CLAUDE.md`'s "Clean regression read" `test-app-*`/`test-e2e-*` baseline-noise filter is
+      stale and should be removed or re-scoped** (found S623, 2026-08-21, incidental to this
+      session's own diagnostic work on issue #163, owner-flagged mid-session, READY, Effort S) --
+      `CLAUDE.md`'s Build/Test/Verify section instructs isolating "true offenders" with
+      `!grepl("test-app-|test-e2e-", file)`, citing `PROJECT_LEARNINGS.md` Learning 2/4 (Sessions
+      3-4). Both learnings' actual root cause was narrow and specific: `create_test_app()` was
+      *undefined* at the time, so every `test-app-*`/`test-e2e-*` file errored or was skipped as a
+      structural artifact, not a real failure. **That root cause no longer exists** --
+      `create_test_app()` is defined at `tests/testthat/helper-shinytest2.R:200` and has been for a
+      long time (confirmed by direct grep this session). Recent sessions' own regression reads
+      (e.g. S622: "6,339 passed/0 failed/0 error/0 non-baseline offenders") show 0 for weeks, i.e.
+      the filter currently matches nothing and is dead in practice -- but its *premise* ("these
+      files ARE baseline noise") is still asserted as live guidance, and a blanket `grepl` exclusion
+      would silently hide a REAL future regression landing in exactly those files (this session's
+      own issue #163 -- an actual, non-baseline `test-e2e-mate-pair-analysis-module.R` failure --
+      is a concrete example of the file-name pattern the filter would exclude). Do not retroactively
+      edit Learning 2/4 themselves (frozen historical record, matching this project's own
+      no-retroactive-edit precedent) -- fix the *live* `CLAUDE.md` guidance: either remove the
+      blanket filter now that its cause is gone, or re-scope it to name the specific, currently-true
+      exclusion (if any remains) rather than a permanent file-name-pattern amnesty. This session's
+      own regression checks on issue #163 do NOT rely on the stale filter -- real counts are
+      verified directly, unfiltered.
 - [ ] **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing binary hangs on
       `macos-latest`'s `ChromoteSession$new()` bootstrap** (found S619, 2026-08-20, incidental to
       the chromote CDP-timeout fallback fix below, READY, Effort M -- research only, not
