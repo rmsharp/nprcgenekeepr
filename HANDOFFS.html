@@ -195,11 +195,14 @@ gotchas: (1) EVERY module using the reactiveVal + immediate session$sendCustomMe
   CHILD of the Shiny output container, not an ancestor -- use `.querySelector()` (descendant) to
   find it. (4) CLAUDE.md's test-app-*/test-e2e-* "baseline noise" exclusion filter is stale (see
   next_steps item 1) -- do not rely on it; count regression results unfiltered.
-runtime_smoke: n/a -- test-file-only diff, zero R/ production code changed. Functional equivalent:
-  the fixed tests were run against the REAL Shiny app (shinytest2 + chromote) under both normal and
-  CDP-throttled network conditions, confirming the fix holds under the actual client-server
-  rendering path, not just in isolation.
-changelog_ref: CHANGELOG.md 2026-08-22 S623 entry [issue #163] (landed in 31bed774)
+runtime_smoke: n/a in the traditional sense -- test-file-only diff, zero R/ production code changed.
+  Functional equivalent, now CONFIRMED beyond local: fixed tests run against the REAL Shiny app
+  (shinytest2 + chromote) locally under both normal and CDP-throttled network conditions, AND
+  (owner-directed, post-close-out) verified on live GitHub Actions via a manually-dispatched
+  shinytest2.yaml run (32594167345) after pushing -- e2e-mate-pair-analysis-module:
+  passed=8/failed=0/error=0; e2e-pedigree- (S622's fix, same push): passed=73/failed=0/error=0.
+changelog_ref: CHANGELOG.md 2026-08-22 S623 entry [issue #163] (landed in 31bed774; live-CI
+  confirmation appended post-close-out)
 commit: 150faea2 (claim), b3b033d9 (BACKLOG finding), 31bed774 (deliverable), 4b7ba98c (learnings),
   87d7efbf (handoff) -- reconciled to the real sha immediately after, matching the
   S600/S602-S622 self-reference workaround precedent</code></pre>

@@ -74,6 +74,15 @@ missed. Taking an action and not recording it is failure mode \#27.
   (out of this session’s own one-deliverable scope). This session’s own
   regression checks did not use that filter.
 - Issue \#163 closed. `PROJECT_LEARNINGS.md` Learning 656 recorded.
+- **Post-close-out, owner-directed:** pushed all 11 session commits to
+  `origin/master` (`004eb3e9..9128ee52`), then manually dispatched
+  `shinytest2.yaml` (`gh workflow run`, run `32594167345`) rather than
+  waiting for tomorrow’s schedule, to confirm the fix on real CI rather
+  than local verification alone. **Result: SUCCESS.**
+  `e2e-mate-pair-analysis-module` group: `passed=8 failed=0 error=0`;
+  `e2e-pedigree-` group (S622’s fix, same push):
+  `passed=73 failed=0 error=0`. Both fixes now confirmed green on live
+  GitHub Actions, not just locally.
 - **Model:** claude-sonnet-5.
 
 ### 2026-08-21 · \[ad hoc\] S622: fix 2 shinytest2 e2e-pedigree- E2E assertions that broke once diagram edges route through waypoint nodes

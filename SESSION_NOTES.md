@@ -150,6 +150,16 @@ saved real investigative time.
     `CLAUDE.md` learning-count cross-reference refreshed (655→656);
     `CHANGELOG.md` `[issue #163]` entry added; issue \#163 closed on
     GitHub citing the full evidence trail; this handoff written.
+8.  **Post-close-out, owner-directed**: pushed all 11 session commits to
+    `origin/master` (`004eb3e9..9128ee52`), then manually dispatched
+    `shinytest2.yaml` (`gh workflow run`, since it only runs on
+    schedule/dispatch, never on push) rather than waiting for tomorrow’s
+    schedule. **Result: SUCCESS** (run `32594167345`) —
+    `e2e-mate-pair-analysis-module`: `passed=8 failed=0 error=0`;
+    `e2e-pedigree-` (S622’s fix, same push):
+    `passed=73 failed=0 error=0`. Both fixes now confirmed on live
+    GitHub Actions CI, not just local verification.
+    `CHANGELOG.md`/`HANDOFFS.md` updated with this result.
 
 **Runtime smoke test (Phase 3E):** n/a in the traditional sense — no
 production runtime behavior changed (zero `R/` diffs). The functional

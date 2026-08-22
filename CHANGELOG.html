@@ -70,6 +70,8 @@
 <strong>Incidental finding, logged not fixed:</strong> <code>CLAUDE.md</code>’s “Clean regression read” guidance still instructs excluding <code>test-app-*</code>/<code>test-e2e-*</code> files as “pre-existing baseline noise” (Learning 2/4, Sessions 3-4) – that root cause (<code>create_test_app()</code> undefined) no longer exists (<code>tests/testthat/helper-shinytest2.R:200</code>), so the filter is stale and risks hiding a real future regression in exactly those files. Logged to <code>BACKLOG.md</code> Housekeeping (READY, Effort S), not fixed this session (out of this session’s own one-deliverable scope). This session’s own regression checks did not use that filter.</li>
 <li>Issue #163 closed. <code>PROJECT_LEARNINGS.md</code> Learning 656 recorded.</li>
 <li>
+<strong>Post-close-out, owner-directed:</strong> pushed all 11 session commits to <code>origin/master</code> (<code>004eb3e9..9128ee52</code>), then manually dispatched <code>shinytest2.yaml</code> (<code>gh workflow run</code>, run <code>32594167345</code>) rather than waiting for tomorrow’s schedule, to confirm the fix on real CI rather than local verification alone. <strong>Result: SUCCESS.</strong> <code>e2e-mate-pair-analysis-module</code> group: <code>passed=8 failed=0 error=0</code>; <code>e2e-pedigree-</code> group (S622’s fix, same push): <code>passed=73 failed=0 error=0</code>. Both fixes now confirmed green on live GitHub Actions, not just locally.</li>
+<li>
 <strong>Model:</strong> claude-sonnet-5.</li>
 </ul></div>
 <div class="section level3">
