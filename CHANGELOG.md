@@ -16,6 +16,36 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-21 · [ad hoc] S622: fix 2 shinytest2 e2e-pedigree- E2E assertions that broke once diagram edges route through waypoint nodes
+- **Deliverable:** diagnose and fix 2 `test-e2e-pedigree-module.R` failures found via this
+  session's own Phase 0 unconditional `gh run list` check (CLAUDE.md, S545) -- **DONE**, test-only
+  fix, zero `R/` production code changed. Root-caused by direct execution (`makePedigreeMatingLayout()`
+  called locally against the real `obfuscated_rhesus_mhc_ped.csv` fixture, both `edgeStyle` values):
+  `edgeStyle = "direct"` gave exactly the expected 56 consanguineous-marker edges, confirming the
+  detection logic was correct; `edgeStyle = "rectilinear"` (the app's actual default) gave 103 raw
+  colored DOM rows that collapsed to exactly 56 once both `__jog_` (Track 2 same-row collision
+  jogging) and `__proj_` (D2 anchor/non-anchor dogleg routing) waypoint node types were treated as
+  pass-through in a shared-endpoint graph analysis (cross-validated with `igraph::components()`).
+  The MZ twin-connector "wrong target" failure was the same class of bug: the connector chain
+  `E06FRB -> __jog_23_a -> __jog_23_b -> HV7LZ3` correctly reaches the real co-twin node, just via 2
+  waypoint hops instead of 1 direct edge. Checked the pre-Walker/BJL-cutover 2026-08-18 nightly CI
+  log: identical failure shape, confirming BOTH bugs pre-date the migration entirely (the cutover
+  only reshuffled which edges collide, shifting the raw count from 82 to 101, never introducing
+  either defect). Fixed by adding 2 shared helpers to `tests/testthat/helper-shinytest2.R`
+  (`count_colored_edge_lines()`, `get_edge_chain_terminus()`) that collapse waypoint chains before
+  asserting, replacing the raw-DOM-row-count and single-hop-target assertions in
+  `test-e2e-pedigree-module.R:350`/`:694`. A grep across every other `test-e2e-*.R` file confirmed
+  this raw-edge-property assertion pattern was isolated to this one file -- no further audit needed.
+  Verification: `test-e2e-pedigree-module.R` run locally against the real app, 52/52 passed, 0
+  failed/error (was 2 failed pre-fix); `lintr::lint()` 0 findings on both touched files; full
+  project-wide clean regression 6339 passed/0 failed/0 error/0 non-baseline offenders. A third,
+  unrelated, intermittent failure in the same CI run (`e2e-mate-pair-analysis-module`, empty
+  results table) was explicitly out of scope (different module, flaky not deterministic -- passed
+  on the 2026-08-20 nightly run) and filed as
+  [issue #163](https://github.com/rmsharp/nprcgenekeepr/issues/163) for a future session.
+  `PROJECT_LEARNINGS.md` Learning 655 recorded. See `HANDOFFS.md`/`SESSION_NOTES.md` for the full
+  session record.
+
 ### 2026-08-21 · [issue #141] S621: Walker/BJL Phase 4 -- cleanup, docs, and issue close-out
 - **Deliverable:** the migration's final phase, per `docs/planning/pedigree-diagram-walker-bjl-
   apportioning-redesign-plan.md`'s own Phase 4 spec -- **DONE**, documentation/cleanup only, no

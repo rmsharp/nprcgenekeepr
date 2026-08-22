@@ -327,29 +327,34 @@ test_that(
   clicked <- click_element_safe(app, 'a[data-value="Diagram"]')
   if (!clicked) skip("Could not switch to the Diagram tab")
 
-  ## Query every edge's own color/width directly (no jsonlite dependency,
-  ## same helper-shinytest2.R precedent as get_node_color() above) --
-  ## filter for the marker color rather than a specific __union_<n> node
-  ## id, since that numbering is an internal implementation detail not
-  ## worth pinning in a live E2E test.
-  marked <- app$get_js(paste0(
-    "(() => { const w = HTMLWidgets.find('#pedigree-pedigreeDiagram'); ",
-    "if (!w) return 'null'; ",
-    "const edges = w.network.body.data.edges.get(); ",
-    "const m = edges.filter(e => e.color === '#D55E00'); ",
-    "return m.length + ':' + (m[0] ? m[0].width : 'none'); })()"
-  ))
-  if (identical(marked, "null")) skip("visNetwork widget instance not found")
-
-  parts <- strsplit(marked, ":", fixed = TRUE)[[1L]]
+  ## S622 fix: a raw DOM edge-count is not a stable proxy once
+  ## .addRectilinearWaypoints()/.resolveEdgeNodeCollisions() route a
+  ## marked edge through 1+ __proj_/__jog_ waypoint nodes -- both
+  ## deliberately preserve color/width onto every resulting segment
+  ## (unit-tested directly, test_makePedigreeMatingLayout.R:1360-1362),
+  ## so a raw row count inflates by however many marked edges happen to
+  ## be routed through waypoints on this fixture, a number with no reason
+  ## to stay fixed release to release (measured this session: 82 -> 101
+  ## on this exact fixture, purely from the Walker/BJL cutover
+  ## reshuffling which edges collide -- neither value is 56, and this
+  ## bug PRE-DATES Walker/BJL: confirmed present, same shape, on the
+  ## pre-cutover 08-18 nightly CI run). count_colored_edge_lines()
+  ## (helper-shinytest2.R) collapses __jog_/__proj_ waypoint chains back
+  ## into the single logical line each represents, which stays exactly
+  ## 56 regardless of how the positioning engine routes them (re-derived
+  ## directly against the live production code this session, not
+  ## hand-derived: raw 103 rows collapse to exactly 56 components once
+  ## both waypoint prefixes are treated as pass-through).
+  marked <- count_colored_edge_lines(app, "pedigree-pedigreeDiagram", "#D55E00")
+  if (is.null(marked)) skip("visNetwork widget instance not found")
 
   ## obfuscated_rhesus_mhc_ped.csv has 28 genuinely consanguineous mating
   ## units (confirmed directly via kinship(sire, dam) > 0 on the raw
   ## fixture, independent of the app) -- each contributes exactly 2
   ## marked mate-line edges.
-  expect_equal(as.integer(parts[1L]), 56L,
+  expect_equal(marked$count, 56L,
                info = "every consanguineous union's 2 mate edges marked")
-  expect_equal(parts[2L], "4")
+  expect_equal(marked$uniform_width, "4")
 
   logs <- app$get_logs()
   diagramErrors <- logs[logs$level == "throw" &
@@ -691,7 +696,25 @@ test_that(
   if (identical(mzEdges, "null")) skip("visNetwork widget instance not found")
   expect_match(mzEdges, '"label":"MZ"',
                info = "MZ twin connector should carry the 'MZ' label")
-  expect_match(mzEdges, '"to":"HV7LZ3"', fixed = TRUE,
+
+  ## S622 fix: a connector that .resolveEdgeNodeCollisions() reroutes
+  ## around a same-row obstacle is deliberately split across 1+ __jog_
+  ## waypoint nodes while every segment still carries the SAME "MZ" label
+  ## (same preserve-on-split mechanism as the consanguineous-marker test
+  ## above) -- so the single edge directly touching E06FRB can
+  ## legitimately target a waypoint node instead of HV7LZ3, with HV7LZ3
+  ## reached 1+ hops further along the SAME "MZ"-labeled chain (confirmed
+  ## this session against the live production code: E06FRB -> __jog_23_a
+  ## -> __jog_23_b -> HV7LZ3, all 3 segments labeled "MZ"). This bug
+  ## PRE-DATES Walker/BJL too (same shape on the pre-cutover 08-18
+  ## nightly CI run, just a different jog counter).
+  ## get_edge_chain_terminus() (helper-shinytest2.R) follows the "MZ"
+  ## chain to its real end instead of asserting a direct single-hop
+  ## target.
+  mzTerminus <- get_edge_chain_terminus(app, "pedigree-pedigreeDiagram",
+                                         "MZ", "E06FRB")
+  if (is.null(mzTerminus)) skip("visNetwork widget instance not found")
+  expect_equal(mzTerminus, "HV7LZ3",
                info = "MZ connector should target the co-twin's real node")
 
   dzEdges <- get_diagram_edges_touching("8GSXTQ")

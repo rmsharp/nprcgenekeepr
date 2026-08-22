@@ -419,3 +419,108 @@ assert_active_pane <- function(app, tab_label, pattern = NULL,
   if (is.null(pattern)) return(TRUE)
   grepl(pattern, get_active_pane_text(app), ignore.case = ignore.case)
 }
+
+## ---- Pedigree Diagram edge/waypoint-chain helpers (S622) ----------------
+##
+## Both helpers below exist because a raw DOM edge is not a stable proxy for
+## "one logical line" in the pedigree diagram widget: R/makePedigreeDiagramData.R's
+## .addRectilinearWaypoints() (D2 anchor/non-anchor dogleg routing, __proj_
+## nodes) and .resolveEdgeNodeCollisions() (Track 2 same-row-collision
+## jogging, __jog_ nodes) both deliberately REROUTE a single logical edge
+## through 1+ waypoint nodes while preserving that edge's own color/width/
+## label on every resulting segment (D10's "preserve, never blanket-reset"
+## rule, unit-tested directly in test_makePedigreeMatingLayout.R). A test
+## that counts raw rows or checks a single direct hop therefore overcounts
+## or mistargets by however many of the edges it cares about happen to be
+## routed through waypoints on the fixture in question -- a count with no
+## reason to stay fixed release to release (found S622: a real-fixture
+## raw count went 82 -> 101 across the Walker/BJL positioning-engine
+## cutover purely from it reshuffling which edges collide, while the true
+## logical-line count, 56, was unchanged throughout and pre-dated the
+## cutover). Both helpers collapse __jog_/__proj_ waypoint hops back into
+## the single logical line/chain they represent.
+
+#' Count DISTINCT logical edge "lines" of a given color in the live
+#' pedigree diagram widget, collapsing any __jog_/__proj_ waypoint chain
+#' back into the ONE logical line it represents.
+#'
+#' Groups same-colored edges that share a waypoint endpoint (a __jog_ or
+#' __proj_ node is always degree-2 within a single color-filtered chain,
+#' by construction of how each is spliced in) -- so 2 logical lines that
+#' happen to share a NON-waypoint endpoint (e.g. a mating unit's 2 mate
+#' edges converging on the same __union_ node, or one individual sitting
+#' in 2 different consanguineous unions) are correctly kept distinct,
+#' since union-ing only ever happens through a waypoint node.
+#'
+#' @param app AppDriver object.
+#' @param widget_id CSS id of the visNetwork htmlwidget container (no
+#'   leading '#').
+#' @param color The vis.js edge `color` value to match (e.g. "#D55E00").
+#' @return A list(count = integer, uniform_width = the single width value
+#'   shared by every matched edge, or "mixed" if they differ) -- or NULL
+#'   if the widget instance was not found (caller should skip()).
+count_colored_edge_lines <- function(app, widget_id, color) {
+  js <- sprintf(paste0(
+    "(() => { const w = HTMLWidgets.find('#%s'); ",
+    "if (!w) return 'null'; ",
+    "const edges = w.network.body.data.edges.get(); ",
+    "const marked = edges.filter(e => e.color === '%s'); ",
+    "const isWaypoint = id => typeof id === 'string' && ",
+    "  (id.indexOf('__jog_') === 0 || id.indexOf('__proj_') === 0); ",
+    "const parent = {}; ",
+    "const find = x => { if (!(x in parent)) parent[x] = x; ",
+    "  return parent[x] === x ? x : (parent[x] = find(parent[x])); }; ",
+    "const unite = (a, b) => { const ra = find(a), rb = find(b); ",
+    "  if (ra !== rb) parent[ra] = rb; }; ",
+    "const byWaypoint = {}; ",
+    "marked.forEach((e, i) => { find(i); ",
+    "  [e.from, e.to].forEach(n => { if (isWaypoint(n)) { ",
+    "    (byWaypoint[n] = byWaypoint[n] || []).push(i); } }); }); ",
+    "Object.values(byWaypoint).forEach(idxs => { ",
+    "  for (let k = 1; k < idxs.length; k++) unite(idxs[0], idxs[k]); }); ",
+    "const roots = new Set(marked.map((_, i) => find(i))); ",
+    "const widths = new Set(marked.map(e => e.width)); ",
+    "return roots.size + ':' + (widths.size === 1 ? [...widths][0] : 'mixed'); })()"
+  ), widget_id, color)
+  result <- app$get_js(js)
+  if (identical(result, "null")) return(NULL)
+  parts <- strsplit(result, ":", fixed = TRUE)[[1L]]
+  list(count = as.integer(parts[1L]), uniform_width = parts[2L])
+}
+
+#' Walk a labeled edge chain in the live pedigree diagram widget from a
+#' starting node to its real terminus, collapsing any __jog_/__proj_
+#' waypoint hops along the way.
+#'
+#' @param app AppDriver object.
+#' @param widget_id CSS id of the visNetwork htmlwidget container (no
+#'   leading '#').
+#' @param label The vis.js edge `label` value to follow (e.g. "MZ").
+#' @param start_id The real node id to start the walk from.
+#' @return The terminal (non-waypoint) node id reached by following
+#'   label-matching edges from start_id -- returns start_id unchanged if
+#'   no label-matching edge touches it -- or NULL if the widget instance
+#'   was not found (caller should skip()).
+get_edge_chain_terminus <- function(app, widget_id, label, start_id) {
+  js <- sprintf(paste0(
+    "(() => { const w = HTMLWidgets.find('#%s'); ",
+    "if (!w) return 'null'; ",
+    "const edges = w.network.body.data.edges.get(); ",
+    "const chain = edges.filter(e => e.label === '%s'); ",
+    "const isWaypoint = id => typeof id === 'string' && ",
+    "  (id.indexOf('__jog_') === 0 || id.indexOf('__proj_') === 0); ",
+    "let cur = '%s', prevIdx = -1; ",
+    "while (true) { ",
+    "  const opts = chain.map((e, i) => ({e: e, i: i})).filter(o => ",
+    "    o.i !== prevIdx && (o.e.from === cur || o.e.to === cur)); ",
+    "  if (opts.length === 0) break; ",
+    "  const next = opts[0].e.from === cur ? opts[0].e.to : opts[0].e.from; ",
+    "  prevIdx = opts[0].i; cur = next; ",
+    "  if (!isWaypoint(cur)) break; ",
+    "} ",
+    "return cur; })()"
+  ), widget_id, label, start_id)
+  result <- app$get_js(js)
+  if (identical(result, "null")) return(NULL)
+  result
+}
