@@ -167,9 +167,188 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **15** receipt(s). Computed by
+This file currently holds **16** receipt(s). Computed by
 `methodology_trim.py` on every `--check`/`--write` run, never
 hand-maintained.
+
+``` handoff
+session: S623
+date: 2026-08-22
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Diagnosed and fixed the intermittent e2e-mate-pair-analysis-module shinytest2
+  E2E failure (issue #163, found by S622 in the same CI run as the separately-fixed e2e-pedigree-
+  failures). Root cause: a DT::renderDT(server = TRUE) table's own client<->server AJAX round-trip
+  races the app's data-ready signal, which fires on server-side computation completion only.
+what_was_done: Confirmed the race via 3 independent lines of evidence -- (1) real CI failure HTML
+  showing .dataTables_processing still visible at read time, (2) a JS-instrumented local probe
+  measuring a genuine ~130-150ms data-ready->DT-draw gap unthrottled, (3) a Chrome DevTools Protocol
+  network-throttle harness that reliably reproduced the exact failure without a fix and reliably
+  passed with one -- a forced RED->GREEN cycle for a bug that would not reproduce locally at normal
+  speed (8/8 clean unthrottled). Added a new shared wait_for_dt_rendered() helper
+  (helper-shinytest2.R) polling a DT table's own processing indicator; wired it in before both
+  pairsTable and excludedTable reads in test-e2e-mate-pair-analysis-module.R. Caught and fixed a
+  real bug in the helper's own first draft during verification (closest() vs querySelector() --
+  the DT wrapper is a DOM child of the table container, not an ancestor). Verified: touched file
+  5/5 clean; full project-wide regression run UNFILTERED (NPRC_RUN_E2E=true, no
+  test-app-*/test-e2e-* exclusion): 6,606 passed/0 failed/0 error/2 skipped/39 warnings (warnings
+  confirmed pre-existing/unrelated). lintr::lint(): 0 findings on both touched files. Also: verified
+  and logged (not fixed) that CLAUDE.md's "Clean regression read" test-app-*/test-e2e-* baseline-
+  noise filter is stale (its root cause, an undefined create_test_app(), no longer exists) --
+  BACKLOG.md Housekeeping item added, owner-flagged mid-session. Issue #163 closed on GitHub.
+  PROJECT_LEARNINGS.md Learning 656 recorded. Commits: 150faea2 (claim), b3b033d9 (BACKLOG finding),
+  31bed774 (deliverable: fix + CHANGELOG entry), 4b7ba98c (learnings + CLAUDE.md cross-ref refresh).
+next_steps: No further work owed on the mate-pair-analysis fix -- it's complete and verified. (1)
+  BACKLOG.md's newly-added Housekeeping item (this session): fix or re-scope CLAUDE.md's stale
+  test-app-*/test-e2e-* "Clean regression read" filter (READY, Effort S) -- do NOT retroactively
+  edit PROJECT_LEARNINGS.md Learning 2/4 themselves (frozen historical record), only the live
+  CLAUDE.md guidance. (2) This session did NOT touch BACKLOG.md's other READY items from S621's own
+  priority order (pedigree-diagram package-split scoping, NEWS.Rmd simplification, the 16-item
+  BACKLOG.md [x]-sweep, or the lower-priority bundle) -- that order still applies, unchanged.
+key_files: tests/testthat/helper-shinytest2.R:527-575 (new wait_for_dt_rendered() helper);
+  tests/testthat/test-e2e-mate-pair-analysis-module.R:104-133 (both DT-render waits wired in);
+  R/modMatePair.R:176-222 (observeEvent(input$analyze, ...), the mechanism behind the race -- read,
+  not modified, since every other module shares the identical setDataReady-then-server=TRUE-DT
+  pattern and this is a test-side timing fix, not a production bug); BACKLOG.md Housekeeping (new
+  stale-filter item); PROJECT_LEARNINGS.md Learning 656; GitHub issue #163 (closed).
+gotchas: (1) EVERY module using the reactiveVal + immediate session$sendCustomMessage("setDataReady")
+  + DT::renderDT(server = TRUE) pattern (modMarkerGenetics.R, modGeneticValue.R,
+  modBreedingGroups.R, ...) has the same latent data-ready-vs-DT-draw race as modMatePair.R did --
+  this fix only touched the ONE test file that was actually observed failing; any future E2E test
+  reading a server-side DT table's row content right after wait_for_module_ready() should use
+  wait_for_dt_rendered() too, even if it hasn't flaked yet. (2) `app$get_chromote_session()` exposes
+  the real CDP session -- Network.emulateNetworkConditions can force a genuine repeatable RED->GREEN
+  cycle for a non-deterministic bug, but keep latency/throughput moderate (very aggressive
+  throttling, e.g. sub-5000 bytes/sec, breaks the websocket connection itself and produces
+  unrelated, uninterpretable failures -- 250ms latency / 60000 bytes/sec worked cleanly here). (3)
+  `.closest()` only walks UP the DOM tree (ancestors); DT nests its own `.dataTables_wrapper` as a
+  CHILD of the Shiny output container, not an ancestor -- use `.querySelector()` (descendant) to
+  find it. (4) CLAUDE.md's test-app-*/test-e2e-* "baseline noise" exclusion filter is stale (see
+  next_steps item 1) -- do not rely on it; count regression results unfiltered.
+runtime_smoke: n/a -- test-file-only diff, zero R/ production code changed. Functional equivalent:
+  the fixed tests were run against the REAL Shiny app (shinytest2 + chromote) under both normal and
+  CDP-throttled network conditions, confirming the fix holds under the actual client-server
+  rendering path, not just in isolation.
+changelog_ref: CHANGELOG.md 2026-08-22 S623 entry [issue #163] (landed in 31bed774)
+commit: 150faea2 (claim), b3b033d9 (BACKLOG finding), 31bed774 (deliverable), 4b7ba98c (learnings),
+  87d7efbf (handoff) -- reconciled to the real sha immediately after, matching the
+  S600/S602-S622 self-reference workaround precedent
+```
+
+S623 diagnosed and fixed the intermittent shinytest2
+e2e-mate-pair-analysis-module CI failure (issue \#163). Root cause: a
+DT::renderDT(server = TRUE) table’s own client\<-\>server AJAX
+round-trip races the app’s data-ready signal, which fires on server-side
+reactive completion only and says nothing about DT’s own later render
+step – a latent pattern shared by every module in the app, not unique to
+Mate Pair Analysis. Confirmed by 3 independent lines of evidence rather
+than settling for static inference alone, culminating in a genuine
+forced RED-\>GREEN cycle via Chrome DevTools Protocol network throttling
+for a bug that would not reproduce locally at normal speed. Fixed with a
+new shared wait_for_dt_rendered() helper, reusable by any future E2E
+test reading a server-side DT table. Self-score breakdown: + built and
+used real instrumentation (a JS event-timestamp probe, then CDP network
+throttling) rather than stopping at plausible-looking static CI
+evidence; + caught a real bug in the fix’s own first draft (closest() vs
+querySelector()) via the verification process itself, before it reached
+the committed test file; + took the user’s mid-session Learning-2/4
+observation seriously, verified it directly, and concretely changed this
+session’s own regression-check methodology as a result rather than just
+noting it; + correctly scoped out 3 older, already-resolved CI failures
+as a different bug rather than conflating them; − mishandled a
+backgrounded process once (killed it out of an unfounded timeout worry
+right as it completed naturally, producing corrupted output that had to
+be diagnosed and the run redone – no evidence was actually lost, but it
+cost real time); − spent several tool calls on ineffective “wait for the
+background task” filler before settling on a single proper long-running
+background waiter.
+
+``` handoff
+session: S622
+date: 2026-08-21
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Diagnosed and fixed 2 shinytest2 e2e-pedigree- E2E test failures (found via
+  this session's own Phase 0 unconditional gh run list check, CLAUDE.md S545). Both were
+  pre-existing test-assertion defects (confirmed present in the 2026-08-18 nightly CI log, 3 days
+  before the Walker/BJL production cutover), not migration regressions -- zero R/ production code
+  changed.
+what_was_done: Root-caused by direct execution: makePedigreeMatingLayout() on the real fixture,
+  edgeStyle="direct" gave the expected 56 marked edges (detection logic correct);
+  edgeStyle="rectilinear" (the app's default) gave 103 raw rows that collapse to exactly 56 once
+  BOTH __jog_ (Track 2 collision jogging) and __proj_ (D2 dogleg routing) waypoint node types are
+  treated as pass-through in a shared-endpoint graph analysis (cross-validated with
+  igraph::components()). The MZ-connector "wrong target" test had the same root cause: its chain
+  (E06FRB -> __jog_23_a -> __jog_23_b -> HV7LZ3) correctly reaches the real co-twin node via 2
+  waypoint hops, not 1 direct edge. Added 2 shared helpers to tests/testthat/helper-shinytest2.R
+  (count_colored_edge_lines(), get_edge_chain_terminus()) that collapse waypoint chains before
+  asserting; rewrote both failing assertions to use them. Verified: test-e2e-pedigree-module.R run
+  locally against the real app, 52/52 passed (was 2 failed); lintr::lint() 0 findings on both
+  touched files; full project-wide clean regression 6339 passed/0 failed/0 error/0 non-baseline
+  offenders. Filed issue #163 for the unrelated, intermittent e2e-mate-pair-analysis-module flake
+  found in the same CI run (explicitly out of scope). PROJECT_LEARNINGS.md Learning 655 recorded.
+  Commits: 09f74f72 (claim), 201c7ff4 (deliverable: fix + CHANGELOG entry), 0f2922e2
+  (learnings + CLAUDE.md cross-ref refresh).
+next_steps: No further work owed on the e2e-pedigree- fix -- it's complete and verified. (1) Issue
+  #163 (e2e-mate-pair-analysis-module flake, empty results table, intermittent -- passed
+  2026-08-20, failed 2026-08-18/2026-08-21) is READY for a future session: reproduce locally with
+  a tight loop first to raise the reproduction rate before diagnosing, per the diagnose skill's own
+  non-deterministic-bug guidance; likely candidate is a missing/insufficient wait_for_idle() around
+  the D6 marker-genetics/mate-pair cross-module wiring the test's own docstring names. (2) This
+  session did NOT touch BACKLOG.md's other READY items (context_budget.py evaluation,
+  BACKLOG.md's own ledger-size housekeeping continuation, the 16-item [x]-sweep, pedigree-diagram
+  package-split scoping, NEWS.Rmd simplification) -- S621's own priority order still applies,
+  unchanged.
+key_files: tests/testthat/helper-shinytest2.R:422-524 (2 new helpers, count_colored_edge_lines()
+  and get_edge_chain_terminus()); tests/testthat/test-e2e-pedigree-module.R:330-359 (consanguineous
+  marker fix), :690-711 (MZ connector fix); R/makePedigreeDiagramData.R:1802-1821
+  (.resolveEdgeNodeCollisions()'s color/width-preservation-on-split, the mechanism behind both
+  bugs -- read, not modified); PROJECT_LEARNINGS.md Learning 655; GitHub issue #163 (filed, open).
+gotchas: (1) __proj_ nodes ARE reachable on the real 375-individual fixture, unlike the small
+  unit-test fixture in test_makePedigreeMatingLayout.R:1270-1318 whose own comment says Track 4's
+  structural invariant makes them "permanently unreachable" -- that claim is fixture-specific
+  (an anchor-side-only guarantee), not a general one; any future waypoint-chain-walking code must
+  treat BOTH __jog_ and __proj_ as pass-through, not just __jog_ (my own first attempt used only
+  __jog_ and got 67 components instead of the correct 56). (2) `gh run view <id> --log-failed`
+  returned empty output for this job even though the run clearly had failed steps -- worked around
+  via `gh api repos/OWNER/REPO/actions/jobs/<job-id>/logs` directly (returns the raw log as plain
+  text). Not root-caused further; if it recurs, try that API path first rather than re-debugging
+  the CLI flag. (3) A raw DOM edge count/single-hop target on the pedigree diagram is NEVER a safe
+  E2E assertion by itself -- always route through the 2 new helper-shinytest2.R helpers.
+runtime_smoke: n/a -- test-file-only diff, zero R/ production code changed. Functional equivalent:
+  the fixed tests were run against the REAL Shiny app (shinytest2 + chromote), not mocked,
+  confirming the fix holds under the actual rendering path.
+changelog_ref: CHANGELOG.md 2026-08-21 S622 entry [ad hoc] (landed in 201c7ff4)
+commit: 09f74f72 (claim), 201c7ff4 (deliverable), 0f2922e2 (learnings), 4c44d141 (handoff) --
+  reconciled to the real sha immediately after, matching the S600/S602-S621 self-reference
+  workaround precedent
+```
+
+S622 diagnosed and fixed 2 shinytest2 nightly-CI E2E test failures that
+this session’s own Phase 0 gh run list check (CLAUDE.md’s S545 addition)
+surfaced – confirmed, by direct execution and a pre-migration CI log
+check, to be pre-existing test-assertion defects that pre-date the
+Walker/BJL migration entirely, not regressions from it. Root cause: both
+failing assertions read raw DOM edge properties (a count, a single-hop
+target) that silently stop being valid once
+.addRectilinearWaypoints()/.resolveEdgeNodeCollisions() route the
+specific edge in question through 1+ \_\_proj\_/\_\_jog\_ waypoint nodes
+– deliberate, correct, already-unit-tested production behavior. Fixed
+with 2 new shared test helpers that collapse waypoint chains before
+asserting. Self-score breakdown: + did CI forensics (including working
+around a CLI gap via the raw GitHub API) before claiming scope, which is
+what surfaced 2 unrelated failures bundled in one red run; + checked the
+pre-migration CI log before accepting “regression” as the working
+theory, avoiding an entirely wrong-cause investigation; + caught my own
+first root-cause hypothesis being wrong (67 vs. 56 components) via
+independent cross-validation (igraph) rather than trusting one
+implementation, and kept digging to full explanation rather than a
+patch; + surfaced the “this doesn’t fit classic RED-must-fail TDD”
+tension to the user explicitly rather than silently forcing or skipping
+the ceremony; − briefly misused ScheduleWakeup (a /loop-specific tool)
+to wait on a background test run, self-corrected within the same turn.
 
 ``` handoff
 session: S621

@@ -28,6 +28,330 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 622 Handoff Evaluation (by Session 623)
+
+**Score: 9/10.** **What helped:** the receipt’s `next_steps` field named
+issue \#163 specifically as READY, with a concrete investigative
+starting point (“likely candidate is a missing/insufficient
+`wait_for_idle()` around the D6 marker-genetics/mate-pair cross-module
+wiring”) — directionally correct (the actual root cause IS a missing
+wait for an async step, just a more specific one: DT’s own
+`server = TRUE` client\<-\>server AJAX round-trip, not a generic Shiny
+idle wait) and enough to start the investigation focused rather than
+blind. `gotchas` (2) — `gh run view <id> --log-failed` returning empty
+for this job’s log, work around via
+`gh api repos/.../actions/jobs/<id>/logs` directly — was directly
+load-bearing: this session hit the identical need (pulling 3 separate
+historical job logs, 08-18/08-20/08-21) and used the API path from the
+start with zero rediscovery time. **What was missing:** nothing the
+receipt could reasonably have included — the exact mechanism (DT’s
+server-side AJAX round-trip racing the app’s own `data-ready` signal)
+genuinely required this session’s own investigation; S622 correctly
+scoped it out rather than guessing. **What was wrong:** nothing found
+inaccurate. **ROI:** high — both the next_steps direction and the gotcha
+saved real investigative time.
+
+### What Session 623 Did
+
+**Deliverable:** Diagnose and fix the intermittent
+`e2e-mate-pair-analysis-module` shinytest2 E2E failure — GitHub issue
+\#163 (found by S622 in the same nightly CI run as the separately-fixed
+`e2e-pedigree-` failures). **DONE.** **Started/Completed:**
+2026-08-21/2026-08-22 (single session).
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** (full protocol), then a mid-session owner
+    interjection: the user flagged that `CLAUDE.md`’s “Clean regression
+    read” guidance still treats `test-app-*`/`test-e2e-*` files as
+    “pre-existing baseline noise” (citing `PROJECT_LEARNINGS.md`
+    Learning 2/4, Sessions 3-4) even though the project has run 0
+    failed/0 error for weeks. Verified directly: `create_test_app()`
+    (the specific thing undefined back in S3/S4) is now defined
+    (`tests/testthat/helper-shinytest2.R:200`) and has been for a long
+    time — the filter’s premise is stale and, worse, would silently
+    exclude a REAL regression landing in exactly those files (this
+    session’s own issue \#163 is a concrete example). Logged to
+    `BACKLOG.md` Housekeeping (READY, Effort S) rather than fixed
+    mid-session (kept to the one claimed deliverable); this session’s
+    own regression checks did not use that filter.
+2.  **CI forensics**: pulled job logs for all 3 relevant
+    `shinytest2.yaml` scheduled runs (08-18 failed, 08-20 passed, 08-21
+    failed — same 2 assertions both failing runs) via the raw GitHub API
+    (S622’s own gotcha about `gh run view --log-failed` returning empty
+    saved rediscovery time). Confirmed 3 earlier “failure” runs
+    (08-12/08-13/08-14) were a DIFFERENT, already-resolved bug
+    (`makeExamplePedigreeFile` not yet available) — correctly excluded
+    from scope, not conflated with the current issue.
+3.  **Root-caused via direct execution + instrumentation, not
+    inference**: read
+    [`modMatePairServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMatePairServer.md)
+    (`R/modMatePair.R`) and found
+    `session$sendCustomMessage("setDataReady", ...)` fires synchronously
+    right after `matchResults(res)`, but `pairsTable`/`excludedTable`
+    are `DT::renderDT(server = TRUE)` outputs (the DT package default) —
+    a separate, later, client\<-\>server AJAX round-trip `data-ready`
+    says nothing about. Confirmed empirically via 3 independent lines of
+    evidence: (1) both real CI failures’ captured HTML showed
+    `.dataTables_processing` still `display: block` at read time; (2) a
+    JS-instrumented local probe (event listeners on
+    `nprcgenekeepr:dataReady` + DT’s own `xhr.dt`/ `draw.dt`) measured a
+    genuine ~130-150ms gap even unthrottled locally; (3) a Chrome
+    DevTools Protocol network-throttle harness
+    (`app$get_chromote_session()$Network$emulateNetworkConditions()`)
+    reliably reproduced the exact real failure (0 rows, id absent,
+    processing visible) without a fix and reliably passed with one — a
+    genuine forced RED→GREEN cycle for a bug that would not reproduce
+    locally at normal speed (8/8 clean in an unthrottled tight loop,
+    matching the `diagnose` skill’s own “raise the reproduction rate”
+    guidance for non-deterministic bugs). Presented root cause + fix
+    approach via `AskUserQuestion` (PRE-RED gate) before writing any
+    test code — user approved the recommended (defensive, both-tables)
+    approach.
+4.  **RED**: added a new shared `wait_for_dt_rendered()` helper to
+    `tests/testthat/helper-shinytest2.R` (polls a DT table’s own
+    processing indicator until hidden); wired it in before both
+    `pairsTable` and `excludedTable` reads in
+    `test-e2e-mate-pair-analysis-module.R`. **Caught a real bug in the
+    helper’s own first draft during the throttled verification**, not
+    just in the target defect: used `el.closest('.dataTables_wrapper')`,
+    which returned null 100% of the time because DT’s wrapper is a DOM
+    *child* of the table’s outer container, not an ancestor
+    (`.closest()` only walks up) — the broken helper’s own 15s timeout
+    simply outlasted the real (much shorter) render time, so a
+    superficial check would have looked like a pass for the wrong
+    reason. Caught by comparing the poll’s own FALSE result against an
+    immediately-following direct HTML read that showed the table WAS
+    actually populated — the contradiction was the tell. Fixed with
+    `.querySelector(...)` (descendant search). Presented RED evidence +
+    the caught bug via `AskUserQuestion` (RED→GREEN gate) before running
+    the confirming test suite.
+5.  **GREEN**: touched file (`test-e2e-mate-pair-analysis-module.R`) ran
+    5/5 clean at normal speed (0 failed/error/warning each run). Full
+    project-wide regression run **unfiltered** (`NPRC_RUN_E2E=true`, no
+    `test-app-*`/`test-e2e-*` exclusion, per this session’s own
+    Learning-2/4 finding above): 6,606 passed / 0 failed / 0 error / 2
+    skipped / 39 warnings across 2,244 test blocks — the 39 warnings
+    confirmed pre-existing/unrelated (the touched file itself ran 0
+    warnings across all 5 of its own runs). A background-process
+    handling mistake mid-run: killed a backgrounded regression run out
+    of an unfounded timeout concern, right as it happened to complete
+    naturally — produced a corrupted/truncated read; caught immediately
+    (the printed content didn’t match a clean run’s shape) and re-ran
+    cleanly via `nohup`+`disown` rather than trusting the corrupted
+    output.
+6.  **REFACTOR**: `lintr::lint()` 0 findings on both touched files (no
+    duplication to extract — the helper was written once, shared, from
+    the start).
+    [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+    deliberately skipped (test-only diff, matching S622’s own precedent
+    for the identical file-type diff).
+7.  **Close-out**: `PROJECT_LEARNINGS.md` Learning 656 recorded;
+    `CLAUDE.md` learning-count cross-reference refreshed (655→656);
+    `CHANGELOG.md` `[issue #163]` entry added; issue \#163 closed on
+    GitHub citing the full evidence trail; this handoff written.
+
+**Runtime smoke test (Phase 3E):** n/a in the traditional sense — no
+production runtime behavior changed (zero `R/` diffs). The functional
+equivalent: the fixed tests were run against the REAL Shiny app
+(shinytest2 + chromote, both real and throttled-real), confirming the
+fix holds under the actual client-server rendering path under both
+normal and stressed network conditions.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `NEWS.Rmd` / `a2interactive.Rmd` / `_pkgdown.yml`
+checklists all **N/A** — no new exported function, no new user-facing
+Shiny feature, test-file-only diff. GitHub issue close-out **DONE**
+(issue \#163 closed this session, citing the `CHANGELOG.md` entry and
+verification evidence). Lint checklist **DONE** (0 lints, confirmed
+above).
+
+**Self-assessment (Session 623): 9/10.** **Strengths:** (1) Did not stop
+at plausible static evidence (the captured CI HTML alone) — built a
+JS-instrumented probe to MEASURE the actual race window, then went
+further and used Chrome DevTools Protocol network throttling to force a
+genuine, repeatable RED→GREEN cycle for a bug that would not reproduce
+locally at normal speed, rather than settling for “probably fixed.” (2)
+Caught a real bug in my own fix’s first draft
+(`closest()`/`querySelector()`) via the throttled verification itself,
+before it ever reached the committed test file — the verification
+process did its job. (3) Took the user’s mid-session Learning-2/4
+observation seriously: verified it directly (confirmed
+`create_test_app()` is now defined) rather than deferring or dismissing
+it, and concretely changed this session’s own regression-check
+methodology (unfiltered) as a result, not just noted it for later. (4)
+Correctly scoped the 3 older (08-12/08-13/08-14) CI “failures” as a
+different, already-resolved bug rather than folding them into this
+investigation. **Weaknesses:** (1) Mishandled a backgrounded process
+once — killed it out of an unfounded timeout worry right as it was
+completing naturally, producing corrupted output that had to be
+diagnosed and the run redone; cost real time even though the underlying
+regression evidence was never actually lost (recovered cleanly via
+`nohup`+`disown`). (2) Spent several tool calls on ineffective “wait for
+the background task” filler (repeated no-op Bash calls) before settling
+on a single proper long-running background waiter — should have gone
+straight to that pattern.
+
+### Session 621 Handoff Evaluation (by Session 622)
+
+**Score: 9/10.** **What helped:** the receipt’s `next_steps` field gave
+a clean, ordered BACKLOG priority list (pedigree-diagram package-split
+scoping; NEWS.Rmd simplification; the 16-item BACKLOG sweep; 4
+lower-priority items including `context_budget.py` and the macOS
+chromote hang) that fed directly into this session’s own Phase 0
+priorities list — no reconstruction needed, just re-verification the
+tags were still accurate (they were). `gotchas` (2) — “`__proj_` node-id
+prefix is PRE-EXISTING `.buildMatingUnitForest()` dogleg infrastructure,
+NOT introduced by Walker/BJL” — was directly load-bearing: this
+session’s own root-cause investigation independently rediscovered
+`__proj_` nodes mid-diagnosis (the first jog-only-waypoint model gave 67
+components instead of the ground-truth 56) and the gotcha’s framing
+meant the “wait, is this a Walker/BJL artifact?” tangent was ruled out
+in seconds rather than becoming its own investigative detour. **What was
+missing:** the receipt couldn’t have flagged this (it’s new information,
+not a gap in S621’s own scope), but worth noting for the record: S621’s
+own close-out did not run the `gh run list` CI check this session’s
+Phase 0 found red (the scheduled `shinytest2.yaml` run) — not a fault of
+S621 (that check runs at ORIENT, not close-out, and S621’s own Orient
+predates the red run entirely by a day), just context for why this sat
+unnoticed until now. **What was wrong:** nothing found inaccurate.
+**ROI:** high — the handoff’s own priorities list was accurate and
+immediately actionable, and the `__proj_` gotcha specifically saved real
+investigative time.
+
+### What Session 622 Did
+
+**Deliverable:** Diagnose (and fix) the 2 shinytest2 `e2e-pedigree-` E2E
+failures surfaced by the nightly CI run, found via this session’s own
+Phase 0 unconditional `gh run list` check (`CLAUDE.md`’s S545 addition).
+**DONE.** **Started/Completed:** 2026-08-21 (single session).
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** (full protocol:
+    `SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+    `SESSION_NOTES.md`, `gh issue list` (12 open),
+    `git status`/`log`/`diff --stat` (clean, S621 fully closed out),
+    `python3 methodology_dashboard.py` (96/100, 1 HIGH risk —
+    `HANDOFFS.md`/ `BACKLOG.md`/`CHANGELOG.md` all past the 2,000-line
+    read cap, FM \#28), ghost-session check on 6 untracked files (all
+    pre-existing, already traced by S614). **`gh run list` found the
+    scheduled `shinytest2.yaml` run red** (2026-08-21T07:19 UTC)
+    alongside all green push-triggered runs — surfaced as a NEW finding,
+    not yet in `BACKLOG.md`/GitHub issues. Rendered the priorities list
+    (4 `AskUserQuestion` options: the CI failure, `context_budget.py`
+    evaluation, `BACKLOG.md` housekeeping continuation, the 16-item DONE
+    sweep) — **user picked the CI failure.**
+2.  **CI forensics before claiming scope**, since the raw failure output
+    alone didn’t say which of the 19 module groups failed or why: pulled
+    the full job log directly via
+    `gh api repos/.../actions/jobs/<id>/logs` (the
+    `gh run view --log-failed` CLI path returned empty for this job — a
+    tooling gap worth remembering, not investigated further). Found 2
+    distinct, unrelated failing groups: `e2e-mate-pair-analysis-module`
+    (2 failures, empty results table, later confirmed intermittent —
+    passed on the 2026-08-20 nightly run) and `e2e-pedigree-` (2
+    failures, same exact assertions both times). Cross-checked the
+    pre-Walker/BJL-cutover 2026-08-18 nightly log and found the
+    identical `e2e-pedigree-` failure shape already present — ruling out
+    “fresh migration regression” before it was ever claimed as the
+    working hypothesis.
+3.  **Phase 1B claimed** (`SESSION_NOTES.md` stub + `HANDOFFS.md`
+    `status: pending` receipt, committed `09f74f72`), scoped explicitly
+    to `e2e-pedigree-` only — the mate-pair-analysis flake stated as
+    out-of-scope up front, per “one intent” discipline.
+4.  **Root-caused by direct execution, not inference** (the `diagnose`
+    skill’s Phase 1-4): called
+    [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+    locally against the real `obfuscated_rhesus_mhc_ped.csv` fixture.
+    `edgeStyle = "direct"` gave exactly the expected 56 marked edges
+    (detection logic correct); `edgeStyle = "rectilinear"` (the app’s
+    actual default) gave 103 raw rows. First hypothesis (collapse only
+    `__jog_` waypoint chains) gave 67 components, not 56 — genuinely
+    wrong, caught by cross-validating with an independent
+    `igraph::components()` implementation rather than trusting the
+    hand-rolled union-find. Root-caused the gap: `__proj_` D2-dogleg
+    nodes (from `.addRectilinearWaypoints()`) also need treating as
+    pass-through waypoints on this real, 375-individual fixture (the
+    small unit-test fixture that “confirmed” `__proj_` unreachable was a
+    different, smaller fixture under a structural invariant that doesn’t
+    generalize). With both waypoint types collapsed: exactly 56. Traced
+    the MZ-connector chain the same way:
+    `E06FRB -> __jog_23_a -> __jog_23_b -> HV7LZ3` — reaches the real
+    co-twin node correctly, just via 2 hops. Presented the full
+    root-cause finding via `AskUserQuestion` (PRE-RED gate) before
+    writing any fix, since “the test’s own assertion is wrong” doesn’t
+    fit the classic write-a-failing-test-first mold — user approved the
+    chain-walking-fix approach.
+5.  **RED**: added 2 shared helpers to
+    `tests/testthat/helper-shinytest2.R` (`count_colored_edge_lines()`,
+    `get_edge_chain_terminus()`) implementing the validated
+    waypoint-collapsing algorithm, and rewrote both failing assertions
+    in `test-e2e-pedigree-module.R:350`/`:694` to use them.
+6.  **GREEN**: ran `test-e2e-pedigree-module.R` locally against the real
+    Shiny app (shinytest2 + chromote, both available locally) — 52/52
+    passed, 0 failed/error (was 2 failed pre-fix), confirmed via
+    `AskUserQuestion` gate before proceeding.
+7.  **REFACTOR**: `lintr::lint()` 0 findings on both touched files (no
+    duplication existed to extract — the helpers were written once,
+    shared, from the start). Full project-wide clean regression: 6,339
+    passed / 0 failed / 0 error / 0 non-baseline offenders across 2,244
+    test blocks.
+    [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+    deliberately skipped (owner-confirmed via `AskUserQuestion`):
+    test-only diff, no `R/`/`DESCRIPTION`/`NAMESPACE`/`man/` changes,
+    and the check’s own test-execution step is exactly what the
+    regression read already covered.
+8.  **Scope discipline**: grepped every other `test-e2e-*.R` file for
+    the same raw-edge-property assertion pattern
+    (`edges.get()|edges.filter|m.length|marked.length`) — 0 hits,
+    confirming the fragility was isolated to this one file, no broader
+    audit owed. Filed [issue
+    \#163](https://github.com/rmsharp/nprcgenekeepr/issues/163) for the
+    out-of-scope mate-pair-analysis-module flake rather than silently
+    dropping it.
+9.  **Close-out**: `PROJECT_LEARNINGS.md` Learning 655 recorded;
+    `CLAUDE.md` learning-count cross-reference refreshed (654→655);
+    `CHANGELOG.md` `[ad hoc]` entry added; this handoff written.
+
+**Runtime smoke test (Phase 3E):** n/a in the traditional sense — no
+production runtime behavior changed (zero `R/` diffs). The functional
+equivalent here is the E2E run itself: the fixed tests were executed
+against the REAL Shiny app (not mocked), confirming the fix actually
+holds under the real rendering path, not just in isolation.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `NEWS.Rmd` / `a2interactive.Rmd` / `_pkgdown.yml`
+checklists all **N/A** — no new exported function, no new user-facing
+Shiny feature, test-file-only diff. GitHub issue close-out **N/A** for
+the fix itself (ad hoc find-and-fix, no pre-filed issue to close) —
+issue \#163 filed fresh for the deferred flake, appropriately left open.
+Lint checklist **DONE** (0 lints, confirmed above).
+
+**Self-assessment (Session 622): 9/10.** **Strengths:** (1) Did the CI
+forensics (pulling the raw job log via the GitHub API when the CLI’s own
+`--log-failed` came back empty) BEFORE claiming scope or committing to a
+hypothesis — this is what surfaced that 2 unrelated failures were
+bundled in one red run, preventing an over-scoped claim. (2) Checked the
+pre-migration CI log before accepting “Walker/BJL regression” as the
+working theory, avoiding a wrong-cause investigation entirely. (3)
+Caught my own FIRST root-cause hypothesis being wrong (67 vs. 56
+components) by cross-validating with an independent implementation
+(`igraph`) rather than trusting one hand-rolled union-find, and kept
+digging until the discrepancy was fully explained (`__proj_` nodes), not
+just patched around. (4) Recognized explicitly that “the fix is a test
+correction, not a production fix” doesn’t fit the classic TDD
+RED-must-fail mold, and surfaced that tension to the user via
+`AskUserQuestion` rather than silently forcing the ceremony or silently
+skipping it. **Weaknesses:** (1) Briefly misused `ScheduleWakeup` (a
+`/loop`-specific tool) to wait on a background test run instead of just
+letting the harness’s own task-notification mechanism handle it — caught
+and self-corrected within the same turn, no real cost, but worth naming
+so it isn’t repeated. (2) Did not verify locally that
+`gh run view --log-failed` failing was itself worth a one-line note
+anywhere durable (e.g. a `PROJECT_LEARNINGS.md` tooling-gotcha entry) —
+minor, left as an oral note in this handoff instead.
+
 ### Session 613 Handoff Evaluation (by Session 614)
 
 **Score: 10/10.** **What helped:** the `HANDOFFS.md` receipt’s
