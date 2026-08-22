@@ -18,19 +18,118 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 622 Handoff Evaluation (by Session 623)
+**Score: 9/10.** **What helped:** the receipt's `next_steps` field named issue #163 specifically as
+READY, with a concrete investigative starting point ("likely candidate is a missing/insufficient
+`wait_for_idle()` around the D6 marker-genetics/mate-pair cross-module wiring") — directionally
+correct (the actual root cause IS a missing wait for an async step, just a more specific one: DT's
+own `server = TRUE` client<->server AJAX round-trip, not a generic Shiny idle wait) and enough to
+start the investigation focused rather than blind. `gotchas` (2) — `gh run view <id> --log-failed`
+returning empty for this job's log, work around via `gh api repos/.../actions/jobs/<id>/logs`
+directly — was directly load-bearing: this session hit the identical need (pulling 3 separate
+historical job logs, 08-18/08-20/08-21) and used the API path from the start with zero rediscovery
+time. **What was missing:** nothing the receipt could reasonably have included — the exact
+mechanism (DT's server-side AJAX round-trip racing the app's own `data-ready` signal) genuinely
+required this session's own investigation; S622 correctly scoped it out rather than guessing.
+**What was wrong:** nothing found inaccurate. **ROI:** high — both the next_steps direction and the
+gotcha saved real investigative time.
+
 ### What Session 623 Did
-**Deliverable:** Diagnose (and fix, if the root cause is a bounded implementation bug) the
-intermittent `e2e-mate-pair-analysis-module` shinytest2 E2E failure — GitHub issue #163 (found by
-S622 in the same nightly CI run as the just-fixed `e2e-pedigree-` failures): empty results table,
-failed 2026-08-18 and 2026-08-21, passed 2026-08-20. (IN PROGRESS)
-**Started:** 2026-08-21
-**Status:** Session claimed. Work beginning. Per S622's own `next_steps`: reproduce locally with a
-tight loop first to raise the reproduction rate before diagnosing (non-deterministic-bug
-discipline); likely candidate named in that handoff is a missing/insufficient `wait_for_idle()`
-around the D6 marker-genetics/mate-pair cross-module wiring the test's own docstring names.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Diagnose and fix the intermittent `e2e-mate-pair-analysis-module` shinytest2 E2E
+failure — GitHub issue #163 (found by S622 in the same nightly CI run as the separately-fixed
+`e2e-pedigree-` failures). **DONE.** **Started/Completed:** 2026-08-21/2026-08-22 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0 orientation** (full protocol), then a mid-session owner interjection: the user flagged
+   that `CLAUDE.md`'s "Clean regression read" guidance still treats `test-app-*`/`test-e2e-*` files
+   as "pre-existing baseline noise" (citing `PROJECT_LEARNINGS.md` Learning 2/4, Sessions 3-4) even
+   though the project has run 0 failed/0 error for weeks. Verified directly: `create_test_app()`
+   (the specific thing undefined back in S3/S4) is now defined
+   (`tests/testthat/helper-shinytest2.R:200`) and has been for a long time — the filter's premise is
+   stale and, worse, would silently exclude a REAL regression landing in exactly those files (this
+   session's own issue #163 is a concrete example). Logged to `BACKLOG.md` Housekeeping (READY,
+   Effort S) rather than fixed mid-session (kept to the one claimed deliverable); this session's own
+   regression checks did not use that filter.
+2. **CI forensics**: pulled job logs for all 3 relevant `shinytest2.yaml` scheduled runs (08-18
+   failed, 08-20 passed, 08-21 failed — same 2 assertions both failing runs) via the raw GitHub API
+   (S622's own gotcha about `gh run view --log-failed` returning empty saved rediscovery time).
+   Confirmed 3 earlier "failure" runs (08-12/08-13/08-14) were a DIFFERENT, already-resolved bug
+   (`makeExamplePedigreeFile` not yet available) — correctly excluded from scope, not conflated with
+   the current issue.
+3. **Root-caused via direct execution + instrumentation, not inference**: read `modMatePairServer()`
+   (`R/modMatePair.R`) and found `session$sendCustomMessage("setDataReady", ...)` fires synchronously
+   right after `matchResults(res)`, but `pairsTable`/`excludedTable` are `DT::renderDT(server = TRUE)`
+   outputs (the DT package default) — a separate, later, client<->server AJAX round-trip `data-ready`
+   says nothing about. Confirmed empirically via 3 independent lines of evidence: (1) both real CI
+   failures' captured HTML showed `.dataTables_processing` still `display: block` at read time; (2) a
+   JS-instrumented local probe (event listeners on `nprcgenekeepr:dataReady` + DT's own `xhr.dt`/
+   `draw.dt`) measured a genuine ~130-150ms gap even unthrottled locally; (3) a Chrome DevTools
+   Protocol network-throttle harness (`app$get_chromote_session()$Network$emulateNetworkConditions()`)
+   reliably reproduced the exact real failure (0 rows, id absent, processing visible) without a fix
+   and reliably passed with one — a genuine forced RED→GREEN cycle for a bug that would not
+   reproduce locally at normal speed (8/8 clean in an unthrottled tight loop, matching the
+   `diagnose` skill's own "raise the reproduction rate" guidance for non-deterministic bugs).
+   Presented root cause + fix approach via `AskUserQuestion` (PRE-RED gate) before writing any test
+   code — user approved the recommended (defensive, both-tables) approach.
+4. **RED**: added a new shared `wait_for_dt_rendered()` helper to `tests/testthat/helper-shinytest2.R`
+   (polls a DT table's own processing indicator until hidden); wired it in before both `pairsTable`
+   and `excludedTable` reads in `test-e2e-mate-pair-analysis-module.R`. **Caught a real bug in the
+   helper's own first draft during the throttled verification**, not just in the target defect: used
+   `el.closest('.dataTables_wrapper')`, which returned null 100% of the time because DT's wrapper is
+   a DOM *child* of the table's outer container, not an ancestor (`.closest()` only walks up) — the
+   broken helper's own 15s timeout simply outlasted the real (much shorter) render time, so a
+   superficial check would have looked like a pass for the wrong reason. Caught by comparing the
+   poll's own FALSE result against an immediately-following direct HTML read that showed the table
+   WAS actually populated — the contradiction was the tell. Fixed with `.querySelector(...)`
+   (descendant search). Presented RED evidence + the caught bug via `AskUserQuestion` (RED→GREEN
+   gate) before running the confirming test suite.
+5. **GREEN**: touched file (`test-e2e-mate-pair-analysis-module.R`) ran 5/5 clean at normal speed (0
+   failed/error/warning each run). Full project-wide regression run **unfiltered**
+   (`NPRC_RUN_E2E=true`, no `test-app-*`/`test-e2e-*` exclusion, per this session's own Learning-2/4
+   finding above): 6,606 passed / 0 failed / 0 error / 2 skipped / 39 warnings across 2,244 test
+   blocks — the 39 warnings confirmed pre-existing/unrelated (the touched file itself ran 0 warnings
+   across all 5 of its own runs). A background-process handling mistake mid-run: killed a
+   backgrounded regression run out of an unfounded timeout concern, right as it happened to complete
+   naturally — produced a corrupted/truncated read; caught immediately (the printed content didn't
+   match a clean run's shape) and re-ran cleanly via `nohup`+`disown` rather than trusting the
+   corrupted output.
+6. **REFACTOR**: `lintr::lint()` 0 findings on both touched files (no duplication to extract — the
+   helper was written once, shared, from the start). `devtools::check()` deliberately skipped
+   (test-only diff, matching S622's own precedent for the identical file-type diff).
+7. **Close-out**: `PROJECT_LEARNINGS.md` Learning 656 recorded; `CLAUDE.md` learning-count
+   cross-reference refreshed (655→656); `CHANGELOG.md` `[issue #163]` entry added; issue #163 closed
+   on GitHub citing the full evidence trail; this handoff written.
+
+**Runtime smoke test (Phase 3E):** n/a in the traditional sense — no production runtime behavior
+changed (zero `R/` diffs). The functional equivalent: the fixed tests were run against the REAL
+Shiny app (shinytest2 + chromote, both real and throttled-real), confirming the fix holds under the
+actual client-server rendering path under both normal and stressed network conditions.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation / tutorial-article / `NEWS.Rmd` /
+`a2interactive.Rmd` / `_pkgdown.yml` checklists all **N/A** — no new exported function, no new
+user-facing Shiny feature, test-file-only diff. GitHub issue close-out **DONE** (issue #163 closed
+this session, citing the `CHANGELOG.md` entry and verification evidence). Lint checklist **DONE** (0
+lints, confirmed above).
+
+**Self-assessment (Session 623): 9/10.** **Strengths:** (1) Did not stop at plausible static
+evidence (the captured CI HTML alone) — built a JS-instrumented probe to MEASURE the actual race
+window, then went further and used Chrome DevTools Protocol network throttling to force a genuine,
+repeatable RED→GREEN cycle for a bug that would not reproduce locally at normal speed, rather than
+settling for "probably fixed." (2) Caught a real bug in my own fix's first draft
+(`closest()`/`querySelector()`) via the throttled verification itself, before it ever reached the
+committed test file — the verification process did its job. (3) Took the user's mid-session
+Learning-2/4 observation seriously: verified it directly (confirmed `create_test_app()` is now
+defined) rather than deferring or dismissing it, and concretely changed this session's own
+regression-check methodology (unfiltered) as a result, not just noted it for later. (4) Correctly
+scoped the 3 older (08-12/08-13/08-14) CI "failures" as a different, already-resolved bug rather
+than folding them into this investigation. **Weaknesses:** (1) Mishandled a backgrounded process
+once — killed it out of an unfounded timeout worry right as it was completing naturally, producing
+corrupted output that had to be diagnosed and the run redone; cost real time even though the
+underlying regression evidence was never actually lost (recovered cleanly via `nohup`+`disown`).
+(2) Spent several tool calls on ineffective "wait for the background task" filler (repeated no-op
+Bash calls) before settling on a single proper long-running background waiter — should have gone
+straight to that pattern.
 
 ### Session 621 Handoff Evaluation (by Session 622)
 **Score: 9/10.** **What helped:** the receipt's `next_steps` field gave a clean, ordered

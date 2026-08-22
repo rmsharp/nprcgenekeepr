@@ -137,21 +137,87 @@ This file currently holds **16** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S623
-date: 2026-08-21
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Diagnose (and fix, if bounded) the intermittent e2e-mate-pair-analysis-module
-  shinytest2 E2E failure (issue #163) -- empty results table, failed 2026-08-18/2026-08-21, passed
-  2026-08-20. Found by S622 in the same CI run as the just-fixed e2e-pedigree- failures.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+date: 2026-08-22
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Diagnosed and fixed the intermittent e2e-mate-pair-analysis-module shinytest2
+  E2E failure (issue #163, found by S622 in the same CI run as the separately-fixed e2e-pedigree-
+  failures). Root cause: a DT::renderDT(server = TRUE) table's own client<->server AJAX round-trip
+  races the app's data-ready signal, which fires on server-side computation completion only.
+what_was_done: Confirmed the race via 3 independent lines of evidence -- (1) real CI failure HTML
+  showing .dataTables_processing still visible at read time, (2) a JS-instrumented local probe
+  measuring a genuine ~130-150ms data-ready->DT-draw gap unthrottled, (3) a Chrome DevTools Protocol
+  network-throttle harness that reliably reproduced the exact failure without a fix and reliably
+  passed with one -- a forced RED->GREEN cycle for a bug that would not reproduce locally at normal
+  speed (8/8 clean unthrottled). Added a new shared wait_for_dt_rendered() helper
+  (helper-shinytest2.R) polling a DT table's own processing indicator; wired it in before both
+  pairsTable and excludedTable reads in test-e2e-mate-pair-analysis-module.R. Caught and fixed a
+  real bug in the helper's own first draft during verification (closest() vs querySelector() --
+  the DT wrapper is a DOM child of the table container, not an ancestor). Verified: touched file
+  5/5 clean; full project-wide regression run UNFILTERED (NPRC_RUN_E2E=true, no
+  test-app-*/test-e2e-* exclusion): 6,606 passed/0 failed/0 error/2 skipped/39 warnings (warnings
+  confirmed pre-existing/unrelated). lintr::lint(): 0 findings on both touched files. Also: verified
+  and logged (not fixed) that CLAUDE.md's "Clean regression read" test-app-*/test-e2e-* baseline-
+  noise filter is stale (its root cause, an undefined create_test_app(), no longer exists) --
+  BACKLOG.md Housekeeping item added, owner-flagged mid-session. Issue #163 closed on GitHub.
+  PROJECT_LEARNINGS.md Learning 656 recorded. Commits: 150faea2 (claim), b3b033d9 (BACKLOG finding),
+  31bed774 (deliverable: fix + CHANGELOG entry), 4b7ba98c (learnings + CLAUDE.md cross-ref refresh).
+next_steps: No further work owed on the mate-pair-analysis fix -- it's complete and verified. (1)
+  BACKLOG.md's newly-added Housekeeping item (this session): fix or re-scope CLAUDE.md's stale
+  test-app-*/test-e2e-* "Clean regression read" filter (READY, Effort S) -- do NOT retroactively
+  edit PROJECT_LEARNINGS.md Learning 2/4 themselves (frozen historical record), only the live
+  CLAUDE.md guidance. (2) This session did NOT touch BACKLOG.md's other READY items from S621's own
+  priority order (pedigree-diagram package-split scoping, NEWS.Rmd simplification, the 16-item
+  BACKLOG.md [x]-sweep, or the lower-priority bundle) -- that order still applies, unchanged.
+key_files: tests/testthat/helper-shinytest2.R:527-575 (new wait_for_dt_rendered() helper);
+  tests/testthat/test-e2e-mate-pair-analysis-module.R:104-133 (both DT-render waits wired in);
+  R/modMatePair.R:176-222 (observeEvent(input$analyze, ...), the mechanism behind the race -- read,
+  not modified, since every other module shares the identical setDataReady-then-server=TRUE-DT
+  pattern and this is a test-side timing fix, not a production bug); BACKLOG.md Housekeeping (new
+  stale-filter item); PROJECT_LEARNINGS.md Learning 656; GitHub issue #163 (closed).
+gotchas: (1) EVERY module using the reactiveVal + immediate session$sendCustomMessage("setDataReady")
+  + DT::renderDT(server = TRUE) pattern (modMarkerGenetics.R, modGeneticValue.R,
+  modBreedingGroups.R, ...) has the same latent data-ready-vs-DT-draw race as modMatePair.R did --
+  this fix only touched the ONE test file that was actually observed failing; any future E2E test
+  reading a server-side DT table's row content right after wait_for_module_ready() should use
+  wait_for_dt_rendered() too, even if it hasn't flaked yet. (2) `app$get_chromote_session()` exposes
+  the real CDP session -- Network.emulateNetworkConditions can force a genuine repeatable RED->GREEN
+  cycle for a non-deterministic bug, but keep latency/throughput moderate (very aggressive
+  throttling, e.g. sub-5000 bytes/sec, breaks the websocket connection itself and produces
+  unrelated, uninterpretable failures -- 250ms latency / 60000 bytes/sec worked cleanly here). (3)
+  `.closest()` only walks UP the DOM tree (ancestors); DT nests its own `.dataTables_wrapper` as a
+  CHILD of the Shiny output container, not an ancestor -- use `.querySelector()` (descendant) to
+  find it. (4) CLAUDE.md's test-app-*/test-e2e-* "baseline noise" exclusion filter is stale (see
+  next_steps item 1) -- do not rely on it; count regression results unfiltered.
+runtime_smoke: n/a -- test-file-only diff, zero R/ production code changed. Functional equivalent:
+  the fixed tests were run against the REAL Shiny app (shinytest2 + chromote) under both normal and
+  CDP-throttled network conditions, confirming the fix holds under the actual client-server
+  rendering path, not just in isolation.
+changelog_ref: CHANGELOG.md 2026-08-22 S623 entry [issue #163] (landed in 31bed774)
+commit: 150faea2 (claim), b3b033d9 (BACKLOG finding), 31bed774 (deliverable), 4b7ba98c (learnings),
+  pending (handoff) -- reconciled to the real sha immediately after, matching the
+  S600/S602-S622 self-reference workaround precedent
 ```
+S623 diagnosed and fixed the intermittent shinytest2 e2e-mate-pair-analysis-module CI failure
+(issue #163). Root cause: a DT::renderDT(server = TRUE) table's own client<->server AJAX round-trip
+races the app's data-ready signal, which fires on server-side reactive completion only and says
+nothing about DT's own later render step -- a latent pattern shared by every module in the app, not
+unique to Mate Pair Analysis. Confirmed by 3 independent lines of evidence rather than settling for
+static inference alone, culminating in a genuine forced RED->GREEN cycle via Chrome DevTools
+Protocol network throttling for a bug that would not reproduce locally at normal speed. Fixed with
+a new shared wait_for_dt_rendered() helper, reusable by any future E2E test reading a server-side DT
+table. Self-score breakdown: + built and used real instrumentation (a JS event-timestamp probe, then
+CDP network throttling) rather than stopping at plausible-looking static CI evidence; + caught a
+real bug in the fix's own first draft (closest() vs querySelector()) via the verification process
+itself, before it reached the committed test file; + took the user's mid-session Learning-2/4
+observation seriously, verified it directly, and concretely changed this session's own
+regression-check methodology as a result rather than just noting it; + correctly scoped out 3 older,
+already-resolved CI failures as a different bug rather than conflating them; − mishandled a
+backgrounded process once (killed it out of an unfounded timeout worry right as it completed
+naturally, producing corrupted output that had to be diagnosed and the run redone -- no evidence was
+actually lost, but it cost real time); − spent several tool calls on ineffective "wait for the
+background task" filler before settling on a single proper long-running background waiter.
 
 ```handoff
 session: S622
