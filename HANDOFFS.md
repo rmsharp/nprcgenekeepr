@@ -136,6 +136,26 @@ This file currently holds **15** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S622
+date: 2026-08-21
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Diagnose (and fix, if bounded) the 2 shinytest2 e2e-pedigree- E2E regressions found
+  in this session's Phase 0 gh run list check: consanguineous mate-edge overcount
+  (test-e2e-pedigree-module.R:350, expects 56, observed 82 pre-cutover / 101 post-cutover) and MZ
+  twin-connector wrong-target (test-e2e-pedigree-module.R:694, targets __jog_19_a instead of
+  HV7LZ3).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S621
 date: 2026-08-20
 status: complete

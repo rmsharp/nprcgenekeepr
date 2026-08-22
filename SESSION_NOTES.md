@@ -18,6 +18,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 622 Did
+**Deliverable:** Diagnose (and fix, if the root cause is a bounded implementation bug) the 2
+shinytest2 `e2e-pedigree-` E2E regressions surfaced by the nightly CI run (found in this
+session's own Phase 0 unconditional `gh run list` check, per `CLAUDE.md`'s S545 addition):
+`test-e2e-pedigree-module.R:350` (consanguineous-mating mate-edge count: expects 56, observed 82
+pre-Walker/BJL-cutover on 08-18/08-20, 101 post-cutover on 08-21) and `test-e2e-pedigree-module.R:694`
+(MZ twin connector targets an internal routing waypoint `__jog_19_a` instead of the co-twin's real
+node `HV7LZ3`, violating the diagram's own D7 design rule). (IN PROGRESS)
+**Started:** 2026-08-21
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
+**Out of scope, noted not fixed:** `^e2e-mate-pair-analysis-module` also failed in the same CI run
+(2 failures, empty results table) but passed on 08-20 and is a different module/area — intermittent
+timing flake, not diagnosed this session; a future session should pick it up separately.
+
 ### Session 613 Handoff Evaluation (by Session 614)
 **Score: 10/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field named 3 exact,
 binding obligations rather than a vague "continue Phase 2" pointer — "(1) write the new Test 15
