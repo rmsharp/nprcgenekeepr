@@ -132,8 +132,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **15** receipt(s). Computed by `methodology_trim.py` on every
+This file currently holds **16** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
+
+```handoff
+session: S623
+date: 2026-08-21
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Diagnose (and fix, if bounded) the intermittent e2e-mate-pair-analysis-module
+  shinytest2 E2E failure (issue #163) -- empty results table, failed 2026-08-18/2026-08-21, passed
+  2026-08-20. Found by S622 in the same CI run as the just-fixed e2e-pedigree- failures.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
 
 ```handoff
 session: S622

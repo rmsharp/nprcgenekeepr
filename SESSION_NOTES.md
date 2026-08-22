@@ -18,6 +18,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 623 Did
+**Deliverable:** Diagnose (and fix, if the root cause is a bounded implementation bug) the
+intermittent `e2e-mate-pair-analysis-module` shinytest2 E2E failure — GitHub issue #163 (found by
+S622 in the same nightly CI run as the just-fixed `e2e-pedigree-` failures): empty results table,
+failed 2026-08-18 and 2026-08-21, passed 2026-08-20. (IN PROGRESS)
+**Started:** 2026-08-21
+**Status:** Session claimed. Work beginning. Per S622's own `next_steps`: reproduce locally with a
+tight loop first to raise the reproduction rate before diagnosing (non-deterministic-bug
+discipline); likely candidate named in that handoff is a missing/insufficient `wait_for_idle()`
+around the D6 marker-genetics/mate-pair cross-module wiring the test's own docstring names.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 621 Handoff Evaluation (by Session 622)
 **Score: 9/10.** **What helped:** the receipt's `next_steps` field gave a clean, ordered
 BACKLOG priority list (pedigree-diagram package-split scoping; NEWS.Rmd simplification; the
