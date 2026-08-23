@@ -136,6 +136,14 @@ This file currently holds **16** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S624
+date: 2026-08-23
+status: pending
+active_task: Fix CLAUDE.md's stale test-app-*/test-e2e-* "Clean regression read" baseline-noise
+  filter (BACKLOG.md Housekeeping item, found S623) -- IN PROGRESS.
+```
+
+```handoff
 session: S623
 date: 2026-08-22
 status: complete

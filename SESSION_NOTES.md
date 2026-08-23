@@ -18,6 +18,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 624 Did
+**Deliverable:** Fix `CLAUDE.md`'s stale `test-app-*`/`test-e2e-*` "Clean regression read"
+baseline-noise filter (`BACKLOG.md` Housekeeping item, found S623). (IN PROGRESS)
+**Started:** 2026-08-23
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 622 Handoff Evaluation (by Session 623)
 **Score: 9/10.** **What helped:** the receipt's `next_steps` field named issue #163 specifically as
 READY, with a concrete investigative starting point ("likely candidate is a missing/insufficient
