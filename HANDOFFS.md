@@ -186,8 +186,7 @@ gotchas: (1) A bulk BACKLOG.md deletion can break a same-file spatial cross-refe
 runtime_smoke: n/a -- documentation-only changes (BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md
   prose), zero R/ or tests/ files touched, zero runtime behavior changed.
 changelog_ref: CHANGELOG.md 2026-08-23 [BL-backlogXCheckSweep] entry (landed in bf3afcae)
-commit: 42e59d0b (claim), bf3afcae (sweep + fixes + filing) -- this receipt's own commit sha
-  reconciled next, matching the S600/S602-S624 self-reference workaround precedent
+commit: 42e59d0b (claim), bf3afcae (sweep + fixes + filing), f5a0cff9 (handoff)
 ```
 S625 swept the 18 [x]-checked, fully-resolved items out of BACKLOG.md's Active and Housekeeping
 sections (BACKLOG.md Housekeeping item, found S619). Direct re-count at claim found 18 items, not
