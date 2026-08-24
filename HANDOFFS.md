@@ -156,7 +156,7 @@ what_was_done: Re-read the live GitHub issue #161 thread (gh issue view --json, 
   decision. Presented via AskUserQuestion (4 options); owner picked "keep the dot." BACKLOG.md
   item marked [x] DONE in place; issue #161 closed (gh issue close --reason completed) citing the
   evidence. PROJECT_LEARNINGS.md Learning 660 recorded; CLAUDE.md pointer refreshed (626+/659 ->
-  627+/660). Commits: befa2fb3 (claim), pending (close-out).
+  627+/660). Commits: befa2fb3 (claim), 4226b902 (deliverable), ad92f032 (handoff).
 next_steps: No further work owed on this item -- resolved, issue closed. BACKLOG.md's other READY
   items are unchanged: pedigree-diagram package-split scoping (READY, Effort M), NEWS.Rmd
   simplification by feature + guardrail (READY, Effort L, explicitly multi-round/iterative --
@@ -190,7 +190,7 @@ runtime_smoke: n/a -- zero code changed (owner decision was "no change"); zero R
   touched beyond being read; the only non-documentation action was a GitHub issue close, not a
   runtime change.
 changelog_ref: CHANGELOG.md 2026-08-23 [issue #161] entry
-commit: befa2fb3 (claim), pending (close-out)
+commit: befa2fb3 (claim), 4226b902 (deliverable), ad92f032 (handoff)
 ```
 S627 resolved issue #161 (hide vs. keep the `__union_N` mating-unit node marker) as an owner
 decision: **keep the dot, no code change.** Re-read the live GitHub issue thread and the marker's
