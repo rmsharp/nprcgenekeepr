@@ -175,24 +175,27 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       full-file re-read confirmed no other artifacts). Also found and filed (not fixed) an
       incidental gap: `methodology_dashboard.py`'s size-risk check omits `PROJECT_LEARNINGS.md`,
       itself past the 2,000-line FM #28 cap -- new Housekeeping item below. See `CHANGELOG.md`.
-- [ ] **`PROJECT_LEARNINGS.md` is past the 2,000-line FM #28 agent-`Read` cap, but
-      `methodology_dashboard.py`'s size-risk check doesn't cover it** (found S625, 2026-08-23,
-      incidental to this session's own BACKLOG.md sweep close-out, Effort M -- confirm-then-decide,
-      not an implementation session) -- direct measurement: 2,005 lines as of this session (S624's
-      own `HANDOFFS.md` receipt flagged this as a gotcha, unconfirmed; confirmed here).
-      `methodology_dashboard.py`'s size-risk file list (`grep -n "SESSION_NOTES.md.*CHANGELOG.md"
-      methodology_dashboard.py`) is hardcoded to `("SESSION_NOTES.md", "CHANGELOG.md",
-      "HANDOFFS.md") + _BACKLOG_LOCATIONS` -- `PROJECT_LEARNINGS.md` is not in that list, so it
-      never surfaces as a dashboard risk flag despite being a mandatory Phase 0 (`CLAUDE.md`) read
-      subject to the same truncation risk. Unlike `SESSION_NOTES.md`/`CHANGELOG.md`/`HANDOFFS.md`,
-      this file has no `methodology_trim.py` `LedgerSpec`/archive precedent of its own. A future
-      session should decide: (a) add `PROJECT_LEARNINGS.md` to the dashboard's hardcoded list
-      (`methodology_dashboard.py` is a synced canonical file per `CLAUDE.md`'s own local-customization
-      note on `methodology_trim.py` -- confirm whether this specific list is safe to locally patch
-      or needs an upstream sync/local-tool split first), and (b) whether this file needs its own
-      archive mechanism (chronological `#### Learning N` entries, oldest-first, may fit
-      `methodology_trim.py`'s ledger model directly, unlike `BACKLOG.md`'s topical-section shape) --
-      matching the `SESSION_NOTES.md`/`CHANGELOG.md`/`HANDOFFS.md` precedent already established.
+- [x] **`PROJECT_LEARNINGS.md` is past the 2,000-line FM #28 agent-`Read` cap, but
+      `methodology_dashboard.py`'s size-risk check doesn't cover it** (found S625, 2026-08-23) --
+      **RESOLVED S626 (2026-08-23): confirmed NOT a gap -- the dashboard's exclusion is correct by
+      the tool's own stated design, not an oversight.** Direct grep of `SESSION_RUNNER.md`/
+      `SAFEGUARDS.md` found no step anywhere that mandates reading `PROJECT_LEARNINGS.md` in full;
+      `CLAUDE.md`'s own text (the "Project-specific Learnings" section) says explicitly: "Read it
+      when you need prior-session context... Base methodology-level learnings remain in
+      `SESSION_RUNNER.md`" -- i.e. read ON DEMAND (grep-by-`Learning N`, the pattern every citation
+      in `CLAUDE.md` actually uses), never read whole to compute anything. That is the SAME excluded
+      category `methodology_dashboard.py`'s own `READ_CAP_WATCHED` comment already names for
+      `ROADMAP.md` ("cited as a pointer, never as a file read whole to compute anything... flagging
+      it would re-create the very false positive BL-5's ext filter... exists to kill") -- the S625
+      finding's premise ("a mandatory Phase 0 (`CLAUDE.md`) read") does not hold, confirmed by direct
+      grep, not assumed. Separately confirmed `methodology_dashboard.py` is itself a canonical
+      **TRACKED** dest (`bin/_manifest.py` in the sibling `methodology` checkout,
+      `starter-kit/methodology_dashboard.py` line 44) -- this project's copy is already stale (v2.14.0
+      vs. canonical v2.15.2) -- so even a warranted local list edit would risk being lost or diverging
+      on the next sync, reinforcing that this was correctly left to the tool's own design rather than
+      hand-patched. No dashboard code change made. `PROJECT_LEARNINGS.md` Learning 659 records the
+      finding and the "confirm the premise before accepting a predecessor's framing" reflex it
+      demonstrates. See `CHANGELOG.md`.
 - [ ] **Evaluate adopting `context_budget.py`, a new methodology tool shipped in canonical v3.7**
       (found S617, 2026-08-20, incidental to the v3.7 methodology sync, READY, Effort S -- a
       research/scoping session, not an implementation session) -- true upstream `KJ5HST/methodology`
