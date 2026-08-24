@@ -136,6 +136,25 @@ This file currently holds **17** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S628
+date: 2026-08-23
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Simplify NEWS.Rmd's dev-version (2.0.0.9000) entries for a non-technical audience,
+  reorganize by feature within the release heading, and design/land a guardrail against
+  re-drift (BACKLOG.md Up Next, found 2026-08-20, owner-directed). Session claimed, work
+  beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S627
 date: 2026-08-23
 status: complete

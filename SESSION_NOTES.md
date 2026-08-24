@@ -18,6 +18,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 628 Did
+**Deliverable:** Simplify `NEWS.Rmd`'s dev-version (`2.0.0.9000`) entries for a non-technical
+audience, reorganize by feature within the release heading, and design/land a guardrail against
+re-drift (`BACKLOG.md` Up Next, found 2026-08-20, owner-directed). (IN PROGRESS)
+**Started:** 2026-08-23
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 626 Handoff Evaluation (by Session 627)
 **Score: 8/10.** **What helped:** the receipt's `next_steps` field correctly carried forward the
 full, unchanged priorities list from S625 — including naming issue #161 as "still unblocked for an
