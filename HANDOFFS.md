@@ -136,6 +136,28 @@ This file currently holds **17** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S629
+date: 2026-08-24
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Diagnose the red R-CMD-check-scheduled run (2026-08-24T09:18:39Z, run
+  32710819747) -- ubuntu-latest (release) failed with "R CMD check found ERRORs" while
+  devel/oldrel-1/macOS/Windows all passed. Root cause identified: chromote:::launch_chrome()
+  failed to open the CDP debugging port within 10s inside
+  test_positionMatingUnitForest.R:1645's getLiveRenderedPositions() call. A rerun of the
+  failed job was triggered to test for transience, matching the S616 diagnostic precedent
+  for this exact failure signature/platform.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S628
 date: 2026-08-23/24
 status: complete

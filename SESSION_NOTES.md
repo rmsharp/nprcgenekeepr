@@ -18,6 +18,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 629 Did
+**Deliverable:** Diagnose the red `R-CMD-check-scheduled` run (2026-08-24T09:18:39Z,
+run `32710819747`) — `ubuntu-latest (release)` failed with "R CMD check found ERRORs"
+while devel/oldrel-1/macOS/Windows all passed. (IN PROGRESS)
+**Started:** 2026-08-24
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 627 Handoff Evaluation (by Session 628)
 **Score: 9/10.** **What helped:** the receipt's `next_steps` field named this exact item —
 "NEWS.Rmd simplification by feature + guardrail (READY, Effort L, explicitly multi-round/
