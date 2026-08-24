@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-24 · [ad hoc] S628: record close-out commit shas in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S627 precedent)
+- **Deliverable:** fixed this session's own `HANDOFFS.md` receipt `commit`/`what_was_done: pending`
+  → real commit shas (`5c8cc7e1`, `815274cb`, `4f85129f`, `99572079`), matching the established
+  self-reference-workaround precedent (the receipt can't name its own close-out commit's sha until
+  after that commit exists).
+
 ### 2026-08-24 · [BL-N] S628: `NEWS.Rmd` dev-section simplified for a non-technical audience, reorganized by feature, guardrail landed
 - **Deliverable:** simplify `NEWS.Rmd`'s `2.0.0.9000` dev-version entries for a non-technical
   (colony-manager/veterinarian) audience, reorganize by feature within the release heading, and

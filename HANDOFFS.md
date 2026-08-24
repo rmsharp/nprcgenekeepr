@@ -159,7 +159,9 @@ what_was_done: 3-round AskUserQuestion draft/review/revise loop per the item's o
   legitimate delta language untouched elsewhere (confirmed pre-existing via
   NAMESPACE/git log/NEWS.md). Verified mechanically after every pass: 58-entry count held
   throughout, all 24 issue numbers preserved, rmarkdown::render() clean each time, NEWS.md
-  regenerated to match. Commits: 5c8cc7e1 (claim); deliverable + close-out commits follow.
+  regenerated to match. Commits: 5c8cc7e1 (claim), 815274cb (deliverable: NEWS.Rmd/NEWS.md),
+  4f85129f (BACKLOG.md/CLAUDE.md/PROJECT_LEARNINGS.md), 99572079 (handoff), self-reference
+  workaround follows (matching S600/S602-S627 precedent).
 next_steps: No further work owed on this item -- resolved, BACKLOG.md marked [x] DONE. Other
   READY items unchanged from S627's list: pedigree-diagram package-split scoping (READY, Effort
   M), context_budget.py evaluation (READY, Effort S), DESCRIPTION Suggests/Config-Needs audit
@@ -186,7 +188,7 @@ runtime_smoke: n/a -- docs-only session (NEWS.Rmd/NEWS.md/CLAUDE.md/BACKLOG.md/C
   PROJECT_LEARNINGS.md only, zero R/ or tests/ files touched). The file's own build-equivalent,
   rmarkdown::render("NEWS.Rmd"), was run clean after every substantive edit instead.
 changelog_ref: CHANGELOG.md 2026-08-24 entry, [BL-N] S628
-commit: pending
+commit: 5c8cc7e1 (claim), 815274cb (deliverable), 4f85129f (bookkeeping), 99572079 (handoff)
 ```
 
 ```handoff
