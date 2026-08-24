@@ -852,28 +852,23 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       owner across as many review rounds as needed -- this is explicitly NOT a one-session,
       one-pass item.
 ## Housekeeping
-- [ ] **`CLAUDE.md`'s "Clean regression read" `test-app-*`/`test-e2e-*` baseline-noise filter is
+- [x] **`CLAUDE.md`'s "Clean regression read" `test-app-*`/`test-e2e-*` baseline-noise filter is
       stale and should be removed or re-scoped** (found S623, 2026-08-21, incidental to this
-      session's own diagnostic work on issue #163, owner-flagged mid-session, READY, Effort S) --
-      `CLAUDE.md`'s Build/Test/Verify section instructs isolating "true offenders" with
-      `!grepl("test-app-|test-e2e-", file)`, citing `PROJECT_LEARNINGS.md` Learning 2/4 (Sessions
-      3-4). Both learnings' actual root cause was narrow and specific: `create_test_app()` was
-      *undefined* at the time, so every `test-app-*`/`test-e2e-*` file errored or was skipped as a
-      structural artifact, not a real failure. **That root cause no longer exists** --
-      `create_test_app()` is defined at `tests/testthat/helper-shinytest2.R:200` and has been for a
-      long time (confirmed by direct grep this session). Recent sessions' own regression reads
-      (e.g. S622: "6,339 passed/0 failed/0 error/0 non-baseline offenders") show 0 for weeks, i.e.
-      the filter currently matches nothing and is dead in practice -- but its *premise* ("these
-      files ARE baseline noise") is still asserted as live guidance, and a blanket `grepl` exclusion
-      would silently hide a REAL future regression landing in exactly those files (this session's
-      own issue #163 -- an actual, non-baseline `test-e2e-mate-pair-analysis-module.R` failure --
-      is a concrete example of the file-name pattern the filter would exclude). Do not retroactively
-      edit Learning 2/4 themselves (frozen historical record, matching this project's own
-      no-retroactive-edit precedent) -- fix the *live* `CLAUDE.md` guidance: either remove the
-      blanket filter now that its cause is gone, or re-scope it to name the specific, currently-true
-      exclusion (if any remains) rather than a permanent file-name-pattern amnesty. This session's
-      own regression checks on issue #163 do NOT rely on the stale filter -- real counts are
-      verified directly, unfiltered.
+      session's own diagnostic work on issue #163, owner-flagged mid-session) -- **DONE S624
+      (2026-08-23).** `CLAUDE.md`'s Build/Test/Verify section removed the blanket
+      `!grepl("test-app-|test-e2e-", file)` exclusion entirely (root cause -- `create_test_app()`
+      being undefined -- confirmed gone; unfiltered runs report 0 failed/0 error across those files
+      for weeks) rather than re-scoping it, since no currently-true exception exists to re-scope to.
+      Added an inline note (dated, S624) explaining why the filter was removed and warning against
+      reviving a permanent file-name-pattern amnesty, without retroactively editing
+      `PROJECT_LEARNINGS.md` Learning 2/4 (left as the frozen historical record of Sessions 3-4).
+      Confirmed no other live document depends on the stale filter -- every other repo hit for the
+      pattern is either a frozen archive (`docs/archive/`), `PROJECT_LEARNINGS.md` itself (not
+      edited, per above), or a historical planning doc for an already-closed/shipped issue (none of
+      the referenced issue numbers are open; `cran-2.0.0-submission-plan.md` and
+      `shiny-module-conversion-plan.md` both predate the already-shipped 2.0.0 release). No code
+      touched; not re-run through a fresh full regression (S623 already validated the exact
+      unfiltered scenario same-day: 6,606 passed/0 failed/0 error/2 skipped/39 warnings).
 - [ ] **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing binary hangs on
       `macos-latest`'s `ChromoteSession$new()` bootstrap** (found S619, 2026-08-20, incidental to
       the chromote CDP-timeout fallback fix below, READY, Effort M -- research only, not
