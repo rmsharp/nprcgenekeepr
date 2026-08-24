@@ -18,14 +18,86 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 623 Handoff Evaluation (by Session 624)
+**Score: 9/10.** **What helped:** the receipt's `next_steps` field named this exact deliverable as
+item 1 — "fix or re-scope CLAUDE.md's stale test-app-*/test-e2e-* 'Clean regression read' filter
+(READY, Effort S)" — with the precise rationale (root cause gone, filter matches nothing, risks
+hiding a future regression) already worked out; zero rediscovery needed. `gotchas` (4) —
+"CLAUDE.md's test-app-*/test-e2e-* baseline-noise exclusion filter is stale ... do not rely on it"
+— was directly load-bearing, and the underlying `BACKLOG.md` item (which the receipt pointed to)
+carried the exact line citation (`tests/testthat/helper-shinytest2.R:200`) this session verified
+and reused directly in the fix. **What was missing:** nothing critical — the item left "remove vs.
+re-scope" as an open decision for the executing session, which was the right call: it wasn't yet
+established whether a live exception remained (none did, confirmed this session), so pre-deciding
+would have been guessing. **What was wrong:** nothing found inaccurate — every claim in the
+receipt/BACKLOG item (the line number, the "0 failed/0 error for weeks" pattern, issue #163 as the
+concrete near-miss example) re-verified true this session. **ROI:** high — direct pickup with no
+investigative overhead beyond this session's own scope-verification grep sweep.
+
 ### What Session 624 Did
 **Deliverable:** Fix `CLAUDE.md`'s stale `test-app-*`/`test-e2e-*` "Clean regression read"
-baseline-noise filter (`BACKLOG.md` Housekeeping item, found S623). (IN PROGRESS)
-**Started:** 2026-08-23
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+baseline-noise filter (`BACKLOG.md` Housekeeping item, found S623). **DONE.**
+**Started/Completed:** 2026-08-23 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): `SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+   `SESSION_NOTES.md` ACTIVE TASK, `gh issue list` (12 open), `git status`/`log`/`diff --stat`
+   (clean, S623 fully closed out, ledger frontier == HEAD, no reconcile needed), `gh run list`
+   (all green, including today's scheduled `shinytest2.yaml`), `python3 methodology_dashboard.py`
+   (96/100, 1 HIGH risk — `HANDOFFS.md`/`CHANGELOG.md`/`BACKLOG.md` all past the 2,000-line read
+   cap, FM #28, unchanged/recurring). Individually traced 3 untracked-file groups found by `git
+   status` rather than batch-assuming: the 4 `docs/planning/*.html` files are known Quarto render
+   byproducts of tracked `.qmd` sources; `inst/extdata/reference/~$e Compounding Loop.html` is a
+   recurring MS/LibreOffice lock-file artifact matching the exact Session 568 precedent (deleted
+   once already, reappeared); `scratchpad/` is leftover debug scripts from the already-shipped
+   S598-S602 duplicate-occurrence-selection investigation. None were ghost-session deliverables.
+   Rendered the priorities list (4 `AskUserQuestion` options in S623's own stated order, +2 more
+   named below the picker per the >4-items rule) — **user picked item 1, the stale filter fix.**
+2. **Phase 1B claimed** (this stub + `HANDOFFS.md` `status: pending` receipt, commit `f1051c65`).
+3. **Scope verification before editing:** grepped the whole repo for the stale filter's text and
+   the "baseline noise" framing (~20 hits). Classified each individually rather than assuming
+   grep's hit count was the edit count: `docs/archive/*.md` (frozen), `PROJECT_LEARNINGS.md`
+   Learning #2/#4 (frozen historical record, explicitly named off-limits by the originating
+   `BACKLOG.md` item), a dozen `docs/planning/*.md` historical plans (none of their issue numbers
+   are open; `cran-2.0.0-submission-plan.md`/`shiny-module-conversion-plan.md` both predate the
+   already-shipped 2.0.0 release), and narrative in `CHANGELOG.md`/`SESSION_NOTES.md` describing
+   past sessions' findings. Only `CLAUDE.md`'s own Build/Test/Verify section was live guidance.
+   Re-verified (not trusted from the `BACKLOG.md` item's text) that `create_test_app()` is defined
+   at `tests/testthat/helper-shinytest2.R:200` exactly.
+4. **Fix:** removed the `!grepl("test-app-|test-e2e-", file)` exclusion from `CLAUDE.md`'s "Clean
+   regression read" entry; added a dated inline note (S624) explaining the removal and warning
+   against reviving a permanent file-name-pattern amnesty, without touching Learning #2/#4 itself.
+5. **Close-out bookkeeping:** `BACKLOG.md` Housekeeping item marked `[x]` DONE with the resolution
+   recorded in place (matching this project's mark-DONE-not-delete convention, per the standing
+   16-item-sweep housekeeping item). `PROJECT_LEARNINGS.md` Learning 657 recorded (scope
+   verification: classify each grep hit live-vs-frozen before editing); `CLAUDE.md`'s own
+   learning-count cross-reference refreshed (656→657). `CHANGELOG.md` `[BL-cleanRegressionFilter]`
+   entry added. Commit `e12ac08c` (CLAUDE.md fix + BACKLOG.md + PROJECT_LEARNINGS.md, 3 files).
+
+**Runtime smoke test (Phase 3E):** N/A — documentation-only change to `CLAUDE.md` prose; zero `R/`
+or `tests/` files touched, zero runtime behavior changed. Not silently skipped: stated explicitly.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation / tutorial-article / `NEWS.Rmd` /
+`a2interactive.Rmd` / `_pkgdown.yml` checklists all **N/A** — no new exported function, no new
+user-facing Shiny feature, no code touched. GitHub issue close-out **N/A** — this is a
+`BACKLOG.md`-only housekeeping item, not tied to a GitHub issue number. Lint checklist **N/A** — no
+`.R` files touched.
+
+**Self-assessment (Session 624): 9/10.** **Strengths:** (1) verified scope by grepping the whole
+repo before editing, rather than assuming the one obvious location was the only one, and correctly
+classified every hit as live vs. frozen instead of either over-editing archives/frozen learnings or
+under-editing a live doc; (2) re-verified the cited line number and regression-count claims directly
+rather than trusting the `BACKLOG.md` item's prose; (3) preserved this project's no-retroactive-edit
+precedent for frozen documents (Learning #2/#4, `docs/archive/`, closed-issue planning docs);
+(4) closed every standing bookkeeping obligation in the same session (BACKLOG DONE, CHANGELOG entry,
+learning + pointer refresh) without deferring any of it. **Weaknesses:** (1) did not re-run a fresh
+full regression suite this session — relied on S623's own same-day unfiltered run; defensible since
+zero code changed, but a fully independent verification would have re-run it; (2) the new Learning
+657, while accurate and reusable, sits close in spirit to already-established scope-verification
+precedents (Learnings 479, 653) — could arguably have been a shorter addendum rather than a full new
+numbered entry, especially given `PROJECT_LEARNINGS.md` is itself now past the 2,000-line read cap
+the dashboard already flags for its sibling ledgers (an FM #28 pressure this session added to rather
+than relieved).
 
 ### Session 622 Handoff Evaluation (by Session 623)
 **Score: 9/10.** **What helped:** the receipt's `next_steps` field named issue #163 specifically as

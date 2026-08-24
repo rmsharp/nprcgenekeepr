@@ -16,6 +16,35 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-23 · [BL-cleanRegressionFilter] S624: remove stale test-app-*/test-e2e-* baseline-noise filter from CLAUDE.md
+- **Deliverable:** fix `CLAUDE.md`'s stale "Clean regression read" `test-app-*`/`test-e2e-*` exclusion
+  filter (`BACKLOG.md` Housekeeping item, found S623) -- **DONE**, documentation-only, zero `R/`/
+  `tests/` code changed.
+- **Root cause of staleness:** the filter's own reason for existing (`create_test_app()` undefined,
+  Learning #2/#4, Sessions 3-4) no longer holds -- `create_test_app()` is defined at
+  `tests/testthat/helper-shinytest2.R:200` and has been for a long time; unfiltered full-regression
+  runs report 0 failed/0 error across those files for weeks (S622/S623). The blanket
+  `!grepl("test-app-|test-e2e-", file)` exclusion had become a live risk, not a convenience -- it
+  would silently hide a real regression landing in exactly those files, which issue #163 (S623)
+  nearly demonstrated.
+- **Fix:** removed the exclusion filter from `CLAUDE.md`'s Build/Test/Verify section; added a dated
+  inline note explaining why and warning against reviving a permanent file-name-pattern amnesty.
+  Left `PROJECT_LEARNINGS.md` Learning #2/#4 unedited (frozen historical record of Sessions 3-4),
+  per this project's no-retroactive-edit precedent.
+- **Scope verification:** grepped the full repo for the stale filter's text (~20 hits) and classified
+  each individually before deciding scope -- `docs/archive/*.md` (frozen), `PROJECT_LEARNINGS.md`
+  (frozen, named off-limits by the originating item), a dozen `docs/planning/*.md` historical plans
+  for already-closed issues or the already-shipped 2.0.0 release, and narrative in
+  `CHANGELOG.md`/`SESSION_NOTES.md` describing past sessions' findings -- only `CLAUDE.md`'s own
+  Build/Test/Verify section was live, executable guidance. Recorded as `PROJECT_LEARNINGS.md`
+  Learning 657.
+- **BACKLOG.md:** Housekeeping item marked DONE with the resolution and verification recorded in
+  place.
+- **Verify:** no code touched, so no fresh full-regression run this session -- relies on S623's own
+  same-day unfiltered run (6,606 passed/0 failed/0 error/2 skipped/39 warnings). Cross-references
+  (`Learning 2`/`Learning 4`, `helper-shinytest2.R:200`, issue #163) grep-confirmed to resolve.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-22 · [issue #163] S623: fix intermittent shinytest2 e2e-mate-pair-analysis-module E2E failure (DT server-side-render race)
 - **Deliverable:** diagnose and fix the intermittent `test-e2e-mate-pair-analysis-module.R` failure
   found by S622 in the same nightly CI run as the (separately fixed) `e2e-pedigree-` regressions --

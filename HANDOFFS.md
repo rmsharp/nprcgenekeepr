@@ -138,10 +138,66 @@ This file currently holds **16** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S624
 date: 2026-08-23
-status: pending
-active_task: Fix CLAUDE.md's stale test-app-*/test-e2e-* "Clean regression read" baseline-noise
-  filter (BACKLOG.md Housekeeping item, found S623) -- IN PROGRESS.
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Fixed CLAUDE.md's stale test-app-*/test-e2e-* "Clean regression read"
+  baseline-noise filter (BACKLOG.md Housekeeping item, found S623). Root cause (create_test_app()
+  undefined) confirmed gone; filter removed, dated inline note added explaining why.
+what_was_done: Grepped the whole repo for the stale filter's text (~20 hits) and classified each
+  individually (frozen archive, frozen PROJECT_LEARNINGS.md Learning #2/#4, historical planning
+  docs for closed issues/the shipped 2.0.0 release, or past-session narrative) before concluding
+  only CLAUDE.md's own Build/Test/Verify section was live guidance. Re-verified create_test_app()
+  at tests/testthat/helper-shinytest2.R:200 directly. Removed the !grepl("test-app-|test-e2e-",
+  file) exclusion from CLAUDE.md; added a dated inline note. Marked the BACKLOG.md item [x] DONE
+  in place. Recorded PROJECT_LEARNINGS.md Learning 657 (classify each grep hit live-vs-frozen
+  before editing); refreshed CLAUDE.md's learning-count pointer (656->657). Added a CHANGELOG.md
+  [BL-cleanRegressionFilter] entry. Commits: f1051c65 (claim), e12ac08c (fix + BACKLOG + learning).
+next_steps: No further work owed on this item -- it's complete. BACKLOG.md's other READY items
+  from S621/S623's own priority order are unchanged and still apply: pedigree-diagram package-split
+  scoping (READY, Effort M), NEWS.Rmd simplification by feature + guardrail (READY, Effort L,
+  explicitly multi-round/iterative with the owner), the 16-item BACKLOG.md [x]-sweep (READY, Effort
+  S -- now 17 items, since this session added one more DONE-but-unswept entry), plus the
+  lower-priority bundle (DESCRIPTION Suggests/Config-Needs audit, context_budget.py evaluation,
+  chromote macOS-hang research). Separately flagged this session, not yet a BACKLOG item of its
+  own: issue #148 (MHC haplotype reporting) is the last standing item from the ratified
+  2026-08-08 Genetic-Metrics Issues Sequencing Audit, needing a scope-narrowing conversation before
+  implementation; issue #161 (hide the mating-unit node marker) has both of S592's deferral
+  conditions now satisfied (Tracks 1-3 and the Track-3 trade-offs both shipped) and is unblocked
+  for an owner decision.
+key_files: CLAUDE.md:119 (the fixed "Clean regression read" entry), CLAUDE.md:282 (learning-count
+  pointer), BACKLOG.md Housekeeping (item marked DONE in place), PROJECT_LEARNINGS.md Learning 657,
+  CHANGELOG.md 2026-08-23 entry, tests/testthat/helper-shinytest2.R:200 (create_test_app(),
+  verified not modified -- read-only citation check).
+gotchas: (1) PROJECT_LEARNINGS.md is now 2,005 lines -- past the same 2,000-line agent-read cap the
+  dashboard already flags HIGH for HANDOFFS.md/CHANGELOG.md/BACKLOG.md; it wasn't in the dashboard's
+  reported list this session, worth confirming whether the dashboard's own check covers this file
+  at all. (2) When a BACKLOG.md item scopes a fix to "the live copy" of a stale instruction, grep
+  the whole repo for that instruction's text before editing, but classify every hit individually
+  (frozen archive / frozen learnings ledger / narrative about a past session / a plan for an
+  already-closed issue or shipped release) -- grep's hit count is not the edit count (Learning 657).
+  (3) This project's convention for a completed BACKLOG.md item is mark `[x]` DONE with the
+  resolution written in place, not delete the line outright -- deletion happens later, in a
+  dedicated sweep session (see the standing 16/17-item-sweep Housekeeping item).
+runtime_smoke: n/a -- documentation-only change to CLAUDE.md prose, zero R/ or tests/ files touched,
+  zero runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-08-23 [BL-cleanRegressionFilter] entry (landed in e12ac08c)
+commit: f1051c65 (claim), e12ac08c (fix + BACKLOG + learning) -- reconciled to the real handoff-
+  commit sha immediately after, matching the S600/S602-S623 self-reference workaround precedent
 ```
+S624 fixed CLAUDE.md's stale test-app-*/test-e2e-* "Clean regression read" baseline-noise filter
+(BACKLOG.md Housekeeping item, found S623). Root cause (create_test_app() undefined) confirmed
+gone via direct re-verification; unfiltered runs have shown 0 failed/0 error across those files for
+weeks. Removed the filter, added a dated inline explanatory note, left Learning #2/#4 unedited as
+frozen historical record. Verified scope by grepping the whole repo for the stale filter's text and
+classifying each of ~20 hits as live vs. frozen before deciding what to edit -- only CLAUDE.md's own
+guidance qualified. Self-score breakdown: + verified rather than trusted every cited fact (line
+number, regression counts); + preserved the no-retroactive-edit precedent for frozen documents;
++ closed every standing bookkeeping obligation (BACKLOG DONE, CHANGELOG entry, learning + pointer
+refresh) in the same session; − did not re-run a fresh full regression suite this session (relied on
+S623's own same-day unfiltered run -- defensible since zero code changed, but not independently
+re-verified); − the new Learning 657 sits close in spirit to already-established scope-verification
+precedents (Learnings 479, 653) and adds to a learnings file already past the 2,000-line read cap.
 
 ```handoff
 session: S623
