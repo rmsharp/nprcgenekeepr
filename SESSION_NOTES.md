@@ -18,16 +18,99 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 624 Handoff Evaluation (by Session 625)
+**Score: 9/10.** **What helped:** the receipt's `next_steps` field named the 16/17-item `BACKLOG.md`
+`[x]`-sweep as READY with useful count-drift context ("now 17 items, since this session added one
+more DONE-but-unswept entry") — directionally correct (the true count at claim was 18, still off by
+one, but the signal "the cited count has drifted since S619" was right and prompted a direct
+re-count rather than trusting either number). `gotchas` (3) — "this project's convention for a
+completed `BACKLOG.md` item is mark `[x]` DONE with the resolution written in place, not delete the
+line outright" — was directly load-bearing for correctly closing THIS session's own triggering item
+(marked `[x]` DONE in place, not deleted same-session, avoiding a self-referential ambiguity).
+`gotchas` (1) — flagging that `PROJECT_LEARNINGS.md` is past the 2,000-line FM #28 cap but "wasn't
+in the dashboard's reported list this session, worth confirming" — was directly acted on: confirmed
+true this session (2,005 lines, `methodology_dashboard.py`'s size-risk list hardcoded to 3 other
+files, `PROJECT_LEARNINGS.md` absent) and filed as a new `BACKLOG.md` item rather than left
+unconfirmed. **What was missing:** nothing the receipt could reasonably have included — the
+dangling-cross-reference risk this session found (deleting an item broke a still-open sibling
+item's "Tracks 1-3 above"/"the follow-up item below" pointers) is specific to actually performing a
+large bulk deletion, not something a prior session doing different work could have anticipated.
+**What was wrong:** nothing found inaccurate — the receipt's own claims (commits, root cause, scope)
+all re-verified true. **ROI:** high — both load-bearing gotchas paid off directly in this session's
+own close-out decisions.
+
 ### What Session 625 Did
 **Deliverable:** Sweep the `[x]`-checked, fully-resolved items out of `BACKLOG.md` (`BACKLOG.md`
-Housekeeping item, found S619) (IN PROGRESS)
-**Started:** 2026-08-23
-**Status:** Session claimed. Work beginning. Direct verification before starting: 18 `[x]`-checked
-items currently present (not the "16" the triggering item cites — 2 more checked since S619: S607
-MIT/REUSE badges, S624's own item). All cited session numbers (S578-S624) confirmed to have a
-substantive `CHANGELOG.md` entry via grep across `CHANGELOG.md` + `docs/archive/CHANGELOG*.md`.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+Housekeeping item, found S619). **DONE.**
+**Started/Completed:** 2026-08-23 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): `SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+   `SESSION_NOTES.md` ACTIVE TASK, `gh issue list` (12 open), `git status`/`log`/`diff --stat`
+   (clean except pre-existing, already-classified untracked artifacts; local branch 4 commits ahead
+   of `origin/master`, unpushed since S624), `gh run list` (all green), ledger reconcile (no gap —
+   the one commit past `CHANGELOG.md`'s frontier is the documented S600/S602-S623 self-referential
+   sha-recording pattern, not a new unrecorded action), `python3 methodology_dashboard.py` (96/100,
+   1 HIGH risk, same recurring FM #28 flag). Rendered the priorities list (4 `AskUserQuestion`
+   options, built from a full `BACKLOG.md` tag sweep since no single predecessor-stated order
+   existed this time) — **user picked the `[x]`-item sweep.**
+2. **Phase 1B claimed** (stub + `HANDOFFS.md` `status: pending` receipt, commit `42e59d0b`).
+   Direct re-count at claim found **18** `[x]`-checked items, not the "16" the triggering item
+   cites (2 more checked since S619: S607's MIT/REUSE badges, S624's own `CLAUDE.md`-filter item).
+   Confirmed, not spot-checked, every one of the 18 items' cited session numbers (S574-S624) has a
+   substantive `CHANGELOG.md` entry (`CHANGELOG.md` + `docs/archive/CHANGELOG*.md`); spot-verified
+   the largest deletion (the S592-S621 same-row-collision/Walker-BJL chain, ~590 lines) resolves to
+   real `[issue #141]`-tagged entries, not incidental mentions.
+3. **Mapped exact line boundaries** for all 18 items via `grep -n "^- \[x\]\|^- \[ \]\|^## "`
+   (marker-to-next-marker ranges), deleted all 18 in one `sed` pass into a scratch file, verified
+   before applying: `[x]` count 0, `[ ]` count unchanged (36=36, no open item caught in a deletion
+   range), every `## ` section header intact, no double-blank-line artifacts at any seam.
+4. **Found and fixed one dangling cross-reference this deletion created** (not caught by the
+   established `CHANGELOG.md`/Learning/file-path grep checklist, since it's a same-file spatial
+   pointer, not a citation): the kept issue #161 item referenced "Tracks 1-3 above" and "the
+   follow-up item below," both now-deleted. Rewrote in place with an S625 update noting both of
+   S592's named deferral conditions are now satisfied (Tracks 1-3 shipped S596; the Track 3
+   trade-offs fully resolved by the unrelated Walker/BJL migration, issue #141 closed S621),
+   unblocking #161 for an owner decision.
+5. **Full-file coherence re-read** (both halves, ~1,150 lines) confirmed no truncated sentences or
+   other artifacts beyond the one cross-reference already fixed.
+6. **Close-out bookkeeping:** triggering item marked `[x]` DONE in place (not deleted
+   same-session, matching this project's mark-DONE-not-delete convention). New `BACKLOG.md`
+   Housekeeping item filed (found, not fixed, per Learning 382 precedent): `PROJECT_LEARNINGS.md`
+   is past the 2,000-line FM #28 cap (2,005 lines) but `methodology_dashboard.py`'s hardcoded
+   size-risk list doesn't include it. `PROJECT_LEARNINGS.md` Learning 658 recorded (dangling
+   spatial cross-references after `BACKLOG.md` deletion + the dashboard-coverage gap);
+   `CLAUDE.md`'s learning-count/session-count pointer refreshed (624+/657 → 625+/658).
+   `CHANGELOG.md` entry to follow this commit. Net: `BACKLOG.md` 2,192 → ~1,170 lines (~47%
+   reduction, after this close-out's own additions).
+
+**Runtime smoke test (Phase 3E):** N/A — documentation-only changes (`BACKLOG.md`,
+`PROJECT_LEARNINGS.md`, `CLAUDE.md` prose); zero `R/` or `tests/` files touched, zero runtime
+behavior changed. Not silently skipped: stated explicitly.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation / tutorial-article / `NEWS.Rmd` /
+`a2interactive.Rmd` / `_pkgdown.yml` checklists all **N/A** — no new exported function, no new
+user-facing Shiny feature, no code touched. GitHub issue close-out **N/A** — `BACKLOG.md`-only
+housekeeping, not tied to a GitHub issue number. Lint checklist **N/A** — no `.R` files touched.
+
+**Self-assessment (Session 625): 9/10.** **Strengths:** (1) did not trust either the triggering
+item's stated count (16) or S624's own updated guess (17) — re-counted directly (18) and grepped
+CHANGELOG coverage for every cited session number before deleting anything, rather than assuming
+the prior sessions' spot-checks were sufficient; (2) computed exact line-range boundaries via a
+single `grep -n` pass and verified the deletion in a scratch file before applying it, rather than
+editing the live file iteratively and risking a mismatched `old_string`/partial edit across 1,000+
+lines; (3) caught and fixed a real defect the deletion itself introduced (the dangling issue #161
+cross-reference) via a full-file re-read, not just a diff-stat glance; (4) surfaced a genuinely new,
+on-theme finding (the `PROJECT_LEARNINGS.md`/dashboard gap) without scope-creeping into fixing it
+mid-session, matching the established Learning 382 precedent. **Weaknesses:** (1) added a new
+`PROJECT_LEARNINGS.md` entry (658) and a new `BACKLOG.md` item to a file already flagged oversized
+by the dashboard, the same FM #28 tension S624's own self-assessment flagged for Learning 657 —
+this session at least made the tension itself a tracked, actionable item rather than only
+restating it; (2) did not attempt a second independent verification pass of the `sed` deletion
+(e.g. `git diff` reviewed by a fresh sub-agent) beyond this session's own direct re-reads — for a
+~1,050-line deletion, an independent check would have been a stronger guarantee against a subtle
+off-by-one boundary error, though the direct seam-by-seam spot checks and full-file re-read this
+session did perform found nothing wrong.
 
 ### Session 623 Handoff Evaluation (by Session 624)
 **Score: 9/10.** **What helped:** the receipt's `next_steps` field named this exact deliverable as

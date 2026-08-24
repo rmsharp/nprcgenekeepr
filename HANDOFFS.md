@@ -132,25 +132,79 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **16** receipt(s). Computed by `methodology_trim.py` on every
+This file currently holds **17** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
 session: S625
 date: 2026-08-23
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Sweep the [x]-checked, fully-resolved items out of BACKLOG.md (18 items found,
-  verified all cited session numbers have CHANGELOG.md coverage).
-what_was_done: pending
-next_steps: pending
-key_files: BACKLOG.md
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Swept the 18 [x]-checked, fully-resolved items out of BACKLOG.md's Active and
+  Housekeeping sections (BACKLOG.md Housekeeping item, found S619). Every cited session number
+  confirmed to have CHANGELOG.md coverage before deleting; one dangling internal cross-reference
+  the deletion created (issue #161 item) found and fixed in place.
+what_was_done: Direct re-count at claim found 18 [x] items, not the "16" cited (2 more checked
+  since S619: S607 MIT/REUSE badges, S624's own CLAUDE.md-filter item). Grepped CHANGELOG.md +
+  docs/archive/CHANGELOG*.md to confirm every cited session number (S574-S624) has a substantive
+  entry -- spot-verified the largest deletion (S592-S621 same-row-collision/Walker-BJL chain,
+  ~590 lines) resolves to real [issue #141]-tagged entries. Computed exact line-range boundaries
+  via grep -n, deleted all 18 in one sed pass into a scratch file, verified before applying ([x]
+  count 0, [ ] count unchanged 36=36, all ## headers intact, no seam artifacts). Found and fixed
+  a dangling cross-reference: the kept issue #161 item referenced "Tracks 1-3 above"/"the
+  follow-up item below," both now-deleted -- rewritten noting both of S592's deferral conditions
+  are now satisfied. Filed (not fixed) a new BACKLOG.md item: methodology_dashboard.py's
+  size-risk list omits PROJECT_LEARNINGS.md, itself past the 2,000-line FM #28 cap (2,005 lines).
+  Recorded PROJECT_LEARNINGS.md Learning 658; refreshed CLAUDE.md's learning/session-count
+  pointer (624+/657 -> 625+/658). Triggering item marked [x] DONE in place. BACKLOG.md 2,192 ->
+  ~1,170 lines net (~47% reduction). Commits: 42e59d0b (claim), bf3afcae (sweep + fixes + filing).
+next_steps: No further work owed on this item -- it's complete. The new PROJECT_LEARNINGS.md /
+  methodology_dashboard.py item this session filed (READY-ish, Effort M, confirm-then-decide) is
+  a natural next pickup, on the same "ledger-size housekeeping" theme as this session. Otherwise
+  BACKLOG.md's other READY items are unchanged: pedigree-diagram package-split scoping (READY,
+  Effort M), NEWS.Rmd simplification by feature + guardrail (READY, Effort L, explicitly
+  multi-round/iterative with the owner), context_budget.py evaluation (READY, Effort S),
+  DESCRIPTION Suggests/Config-Needs audit (READY, Effort S), chromote macOS-hang research
+  (optional, Effort M). Separately: issue #161 (hide the mating-unit node marker) is now
+  unblocked for an owner decision (this session's own finding); issue #148 (MHC haplotype
+  reporting) still needs its scope-narrowing conversation, unchanged from S624's own next_steps.
+key_files: BACKLOG.md (2,192 -> ~1,170 lines), PROJECT_LEARNINGS.md Learning 658 (~line 2007),
+  CLAUDE.md:282 (learning/session-count pointer), CHANGELOG.md 2026-08-23 [BL-backlogXCheckSweep]
+  entry, methodology_dashboard.py (size-risk list, read-only citation, not modified).
+gotchas: (1) A bulk BACKLOG.md deletion can break a same-file spatial cross-reference
+  ("above"/"below"/"the item directly above") in a NEIGHBORING kept item -- the established
+  CHANGELOG.md/Learning/file-path grep checklist (S529/S530/S531 precedent) does not catch this,
+  since it's not a citation into another file. Re-read every item immediately adjacent (both
+  directions) to a deletion range before considering the sweep done. (2) This project's
+  convention for a completed BACKLOG.md item is mark [x] DONE with the resolution written in
+  place, not delete outright -- deletion happens later, in a dedicated sweep session (this one).
+  Do not delete an item's own triggering-item text in the same session that completes it. (3)
+  PROJECT_LEARNINGS.md is now 2,005 lines (past the 2,000-line FM #28 cap) and, unlike
+  SESSION_NOTES.md/CHANGELOG.md/HANDOFFS.md, methodology_dashboard.py does NOT flag it -- worth
+  fixing the dashboard's own hardcoded file list before this file grows further unnoticed.
+runtime_smoke: n/a -- documentation-only changes (BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md
+  prose), zero R/ or tests/ files touched, zero runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-08-23 [BL-backlogXCheckSweep] entry (landed in bf3afcae)
+commit: 42e59d0b (claim), bf3afcae (sweep + fixes + filing) -- this receipt's own commit sha
+  reconciled next, matching the S600/S602-S624 self-reference workaround precedent
 ```
+S625 swept the 18 [x]-checked, fully-resolved items out of BACKLOG.md's Active and Housekeeping
+sections (BACKLOG.md Housekeeping item, found S619). Direct re-count at claim found 18 items, not
+the "16" the triggering item cited -- confirmed, not spot-checked, every cited session number has
+CHANGELOG.md coverage before deleting anything. Deleted all 18 via a verified sed pass rather than
+iterative live-file edits; found and fixed a dangling cross-reference the deletion itself created
+(issue #161's item pointed at now-deleted siblings); filed, not fixed, an incidental gap
+(methodology_dashboard.py omits PROJECT_LEARNINGS.md from its size-risk check, and that file is
+itself now oversized). Self-score breakdown: + verified every cited count/CHANGELOG-coverage claim
+directly rather than trusting prior sessions' spot-checks; + computed exact deletion boundaries
+programmatically and verified in a scratch file before applying, rather than risking a partial
+live edit across 1,000+ lines; + caught a real defect the deletion introduced via a full-file
+re-read, not just a diff-stat glance; + surfaced a new, on-theme finding without scope-creeping
+into fixing it mid-session; − added to an already-oversized PROJECT_LEARNINGS.md, the same FM #28
+tension flagged in S624's own self-assessment (mitigated by making the tension itself a tracked
+BACKLOG item this session); − no independent second-agent verification of the sed deletion beyond
+this session's own direct re-reads.
 
 ```handoff
 session: S624

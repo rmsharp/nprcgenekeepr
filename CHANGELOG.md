@@ -16,6 +16,34 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-23 · [BL-backlogXCheckSweep] S625: sweep 18 `[x]`-checked, fully-resolved items out of `BACKLOG.md`
+- **Deliverable:** delete the accumulated `[x]`-checked DONE items out of `BACKLOG.md`'s "Active"
+  and "Housekeeping" sections outright, matching the S548 precedent -- **DONE**, documentation-only.
+- **Direct re-count at claim found 18 items, not the "16" the triggering item (found S619) cited**
+  (2 more checked since: S607's MIT/REUSE badges, S624's own `CLAUDE.md`-filter item). Confirmed,
+  not spot-checked, every one of the 18 items' cited session numbers (S574-S624) has a substantive
+  `CHANGELOG.md` entry before deleting anything -- spot-verified the largest deletion, the
+  S592-S621 same-row-collision/Walker-BJL migration chain (~590 lines), resolves to real dedicated
+  `[issue #141]`-tagged entries.
+- **Mechanics:** computed exact line-range boundaries via `grep -n "^- \[x\]\|^- \[ \]\|^## "`,
+  deleted all 18 in one `sed` pass into a scratch file, verified before applying (`[x]` count 0,
+  `[ ]` count unchanged 36=36, all `## ` headers intact, no seam artifacts) -- avoided iterative
+  live-file edits across 1,000+ lines. `BACKLOG.md` 2,192 -> ~1,170 lines net, ~47% reduction.
+- **Found and fixed one dangling cross-reference the deletion created** (not caught by the
+  established `CHANGELOG.md`/Learning/file-path grep checklist, since it's a same-file spatial
+  pointer, not a citation): the kept issue #161 item referenced "Tracks 1-3 above"/"the follow-up
+  item below," both now-deleted -- rewritten in place noting both of S592's named deferral
+  conditions are now satisfied (Tracks 1-3 shipped S596; the Track 3 trade-offs resolved by the
+  unrelated Walker/BJL migration, issue #141 closed S621), unblocking #161 for an owner decision.
+- **Incidental finding, filed not fixed:** `methodology_dashboard.py`'s size-risk file list omits
+  `PROJECT_LEARNINGS.md`, itself past the 2,000-line FM #28 cap (2,005 lines) -- confirms a gotcha
+  S624's own `HANDOFFS.md` receipt had flagged unconfirmed. New `BACKLOG.md` Housekeeping item filed.
+- Recorded `PROJECT_LEARNINGS.md` Learning 658 (dangling spatial cross-references after a
+  `BACKLOG.md` deletion; the dashboard-coverage gap); `CLAUDE.md`'s learning/session-count pointer
+  refreshed (624+/657 -> 625+/658). Triggering item marked `[x]` DONE in place (not deleted
+  same-session, matching this project's mark-DONE-not-delete convention).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-23 · [BL-cleanRegressionFilter] S624: remove stale test-app-*/test-e2e-* baseline-noise filter from CLAUDE.md
 - **Deliverable:** fix `CLAUDE.md`'s stale "Clean regression read" `test-app-*`/`test-e2e-*` exclusion
   filter (`BACKLOG.md` Housekeeping item, found S623) -- **DONE**, documentation-only, zero `R/`/
