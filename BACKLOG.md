@@ -4,21 +4,25 @@
 future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.md` Phase 0.)*
 
 ## Active
-- [ ] **Pedigree Diagram: consider hiding the mating-unit node marker to match kinship2's
-      plain-intersection convention** (found live in conversation 2026-08-15, not a claimed
-      session, filed as [issue #161](https://github.com/rmsharp/nprcgenekeepr/issues/161)) —
-      **addressed S592: recommend deferring** until the same-row collision-avoidance work
-      (Tracks 1-3, S593/S595/S596) ships and stabilizes (plan §2.5) — hiding the marker would make
-      any remaining, not-yet-repaired same-row collision harder to spot, not easier, while the
-      collision-avoidance framework was still unproven on the real fixture. Mechanically easy (the
-      `size = 0` + transparent-color technique already used for invisible D1/D2 waypoints applies
-      directly) but a genuine design call, not an obvious fix — the dot may be a useful explicit
-      anchor independent of kinship2 parity. **Update (S625, 2026-08-23):** both of S592's named
-      deferral conditions are now satisfied — Tracks 1-3 shipped (S596), and Track 3's own 2
-      disclosed trade-offs (child-centering quality, D1 bar-vs-bar overlap) were fully resolved,
-      not merely observed, by the unrelated Walker/BJL layout-engine migration (issue #141, closed
-      S621; see `CHANGELOG.md`), so there is no longer a known, live layout defect for this
-      deferral to protect. Unblocked for an owner decision; still needs one before implementation.
+- [x] **Pedigree Diagram: consider hiding the mating-unit node marker to match kinship2's
+      plain-intersection convention** (found live in conversation 2026-08-15, filed as
+      [issue #161](https://github.com/rmsharp/nprcgenekeepr/issues/161)) — **addressed S592:
+      recommend deferring** until the same-row collision-avoidance work (Tracks 1-3, S593/S595/
+      S596) shipped and stabilized (plan §2.5). **Unblocked S625** (both deferral conditions
+      satisfied). **RESOLVED S627 (2026-08-23): owner decision, via `AskUserQuestion` with visual
+      evidence in hand — keep the dot (status quo), no code change.** Read both
+      `vignettes/articles/shiny_app_use/diagram_rectilinear_edge_style.png` (nprcgenekeepr's own
+      current rendering: a small blue dot at every mating junction) and
+      `vignettes/articles/kinship2-fidelity-validation-img/trackC-kinship2.png` (kinship2's actual
+      output: mate-line and sibship-drop meet as a plain, marker-free right-angle intersection) to
+      confirm the issue's own framing before presenting the decision. Also found a functional cost
+      the issue didn't name: the `__union_N` node's `title = sprintf("%d offspring", ...)` hover
+      tooltip (`R/makePedigreeDiagramData.R:1067`) would be silently lost by the established
+      `size = 0` + transparent-color invisible-node technique — confirmed by checking the D1/D2
+      waypoint nodes' own construction (`title = NA_character_`, since a zero-size vis.js node
+      isn't hoverable). Presented via `AskUserQuestion` (4 options: keep / hide everywhere / hide
+      in "direct" style only / hold for a live comparison) with both images and the tooltip
+      finding; owner picked "keep the dot." Closed as [issue #161](https://github.com/rmsharp/nprcgenekeepr/issues/161) (decision reached, not deferred). See `CHANGELOG.md`.
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
 *Resolves the former "Tracker reconciliation" decision item (S365) --
