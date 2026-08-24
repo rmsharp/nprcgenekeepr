@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 625 Did
+**Deliverable:** Sweep the `[x]`-checked, fully-resolved items out of `BACKLOG.md` (`BACKLOG.md`
+Housekeeping item, found S619) (IN PROGRESS)
+**Started:** 2026-08-23
+**Status:** Session claimed. Work beginning. Direct verification before starting: 18 `[x]`-checked
+items currently present (not the "16" the triggering item cites — 2 more checked since S619: S607
+MIT/REUSE badges, S624's own item). All cited session numbers (S578-S624) confirmed to have a
+substantive `CHANGELOG.md` entry via grep across `CHANGELOG.md` + `docs/archive/CHANGELOG*.md`.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 623 Handoff Evaluation (by Session 624)
 **Score: 9/10.** **What helped:** the receipt's `next_steps` field named this exact deliverable as
 item 1 — "fix or re-scope CLAUDE.md's stale test-app-*/test-e2e-* 'Clean regression read' filter

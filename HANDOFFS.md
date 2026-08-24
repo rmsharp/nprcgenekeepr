@@ -136,6 +136,23 @@ This file currently holds **16** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S625
+date: 2026-08-23
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Sweep the [x]-checked, fully-resolved items out of BACKLOG.md (18 items found,
+  verified all cited session numbers have CHANGELOG.md coverage).
+what_was_done: pending
+next_steps: pending
+key_files: BACKLOG.md
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S624
 date: 2026-08-23
 status: complete
