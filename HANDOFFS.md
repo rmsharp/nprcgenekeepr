@@ -136,6 +136,23 @@ This file currently holds **17** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S627
+date: 2026-08-23
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Decide (owner call) whether to hide the __union_N mating-unit node marker to match
+  kinship2's plain-intersection convention (issue #161, unblocked S625).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S626
 date: 2026-08-23
 status: complete

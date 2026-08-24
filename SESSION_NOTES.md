@@ -18,6 +18,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 627 Did
+**Deliverable:** Decide (owner call) whether to hide the `__union_N` mating-unit node marker to
+match kinship2's plain-intersection convention (issue #161, unblocked S625). (IN PROGRESS)
+**Started:** 2026-08-23.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 625 Handoff Evaluation (by Session 626)
 **Score: 7/10.** **What helped:** the receipt precisely named the item (`BACKLOG.md`'s
 `PROJECT_LEARNINGS.md`/`methodology_dashboard.py` gap), gave the exact list contents
