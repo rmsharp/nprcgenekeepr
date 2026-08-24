@@ -16,6 +16,34 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-23 · [BL-projectLearningsGapConfirm] S626: confirm `PROJECT_LEARNINGS.md`/`methodology_dashboard.py` gap is NOT real -- correct the record
+- **Deliverable:** confirm-then-decide whether `methodology_dashboard.py`'s size-risk list has a
+  real gap by omitting `PROJECT_LEARNINGS.md` (`BACKLOG.md` Housekeeping item, found S625) --
+  **DONE, documentation-only, no code change.**
+- **Finding: the S625 item's premise does not hold.** Direct grep of `SESSION_RUNNER.md`/
+  `SAFEGUARDS.md` found no Phase 0 step that mandates reading `PROJECT_LEARNINGS.md` in full --
+  only `SAFEGUARDS.md` (step 1), `SESSION_NOTES.md`'s ACTIVE TASK (step 2), and `CHANGELOG.md`/
+  `HANDOFFS.md` (step 6's ledger reconcile) are named. `CLAUDE.md`'s own text says explicitly:
+  "Read it when you need prior-session context... append new learnings there, not here" -- read
+  ON DEMAND (grep-by-`Learning N`, the pattern every citation actually uses), never read whole.
+  `methodology_dashboard.py`'s own `READ_CAP_WATCHED` comment independently states the identical
+  exclusion principle for `ROADMAP.md` ("cited as a pointer, never as a file read whole to
+  compute anything") -- `PROJECT_LEARNINGS.md` fits that same excluded category, not the
+  mandated-read category the S625 item assumed.
+- **Second reason not to hand-patch even if the premise had held:** `methodology_dashboard.py` is
+  a canonical **TRACKED** dest (`bin/_manifest.py`, sibling `methodology` checkout,
+  `starter-kit/methodology_dashboard.py` line 44); this project's copy is already stale (v2.14.0
+  vs. canonical v2.15.2), so a local list edit risks silent loss or drift on the next sync -- the
+  same risk class the tool's own comment already names for why `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+  themselves are excluded from the list.
+- **Presented finding to the owner via `AskUserQuestion`** (3 options: correct the record / flag
+  it anyway as a different, non-FM#28 risk / hold and dig deeper) -- owner picked "correct the
+  record." `BACKLOG.md` item marked `[x]` DONE in place with the resolution recorded (not
+  deleted, matching this project's mark-DONE-not-delete convention). `PROJECT_LEARNINGS.md`
+  Learning 659 recorded (confirm a predecessor's premise via direct grep, even when the item is
+  well-hedged as "confirm-then-decide"); `CLAUDE.md`'s learning/session-count pointer refreshed
+  (625+/658 -> 626+/659).
+
 ### 2026-08-23 · [BL-backlogXCheckSweep] S625: sweep 18 `[x]`-checked, fully-resolved items out of `BACKLOG.md`
 - **Deliverable:** delete the accumulated `[x]`-checked DONE items out of `BACKLOG.md`'s "Active"
   and "Housekeeping" sections outright, matching the S548 precedent -- **DONE**, documentation-only.

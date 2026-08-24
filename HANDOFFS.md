@@ -138,20 +138,70 @@ This file currently holds **17** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S626
 date: 2026-08-23
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Confirm-then-decide whether methodology_dashboard.py's size-risk list has a real gap
-  by omitting PROJECT_LEARNINGS.md, or the omission is by design (BACKLOG.md Housekeeping item,
-  found S625).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: DONE. Confirmed the BACKLOG.md item's premise ("PROJECT_LEARNINGS.md is a mandatory
+  Phase 0 read") does NOT hold -- methodology_dashboard.py's exclusion of it is correct by the
+  tool's own stated design (same category as the already-excluded ROADMAP.md), not a gap.
+what_was_done: Grepped SESSION_RUNNER.md/SAFEGUARDS.md directly for "PROJECT_LEARNINGS" -- zero
+  hits; Phase 0 mandates full-file reads of only SAFEGUARDS.md, SESSION_NOTES.md's ACTIVE TASK, and
+  CHANGELOG.md/HANDOFFS.md (step 6 reconcile). CLAUDE.md's own text: "Read it when you need
+  prior-session context... not here" -- on-demand, not mandatory. methodology_dashboard.py's own
+  READ_CAP_WATCHED comment independently states the identical exclusion principle for ROADMAP.md.
+  Separately confirmed methodology_dashboard.py is a canonical TRACKED dest (bin/_manifest.py,
+  sibling methodology checkout) and this copy is already stale (v2.14.0 vs v2.15.2) -- a second
+  reason not to hand-patch even if the premise had held. Presented the finding via
+  AskUserQuestion (3 options); owner picked "correct the record." BACKLOG.md item marked [x] DONE
+  in place (no dashboard code change). PROJECT_LEARNINGS.md Learning 659 recorded. CLAUDE.md
+  learning/session-count pointer refreshed (625+/658 -> 626+/659). CHANGELOG.md
+  [BL-projectLearningsGapConfirm] entry added. Commits: d4c4243a (claim), pending (close-out).
+next_steps: No further work owed on this item -- it's resolved as "not a gap." BACKLOG.md's other
+  READY items are unchanged: pedigree-diagram package-split scoping (READY, Effort M), NEWS.Rmd
+  simplification by feature + guardrail (READY, Effort L, explicitly multi-round/iterative with
+  the owner -- propose the feature taxonomy + guardrail mechanism via AskUserQuestion first),
+  context_budget.py evaluation (READY, Effort S), DESCRIPTION Suggests/Config-Needs audit (READY,
+  Effort S), chromote macOS-hang research (optional, Effort M), pedigree-diagram-screenshots.R
+  staleness check (READY, Effort S), "Pedigree diagram vs kinship2" BACKLOG.md section regrowth
+  check (READY, Effort L). Separately: issue #161 (hide the mating-unit node marker) is still
+  unblocked for an owner decision (S625's finding, unchanged); 8 local commits remain unpushed to
+  origin/master as of this session's claim -- consider pushing.
+key_files: BACKLOG.md:178 (item resolved), PROJECT_LEARNINGS.md Learning 659 (~line 2009),
+  CLAUDE.md:282 (learning/session-count pointer), CHANGELOG.md 2026-08-23
+  [BL-projectLearningsGapConfirm] entry, methodology_dashboard.py:236-278 (READ_CAP_WATCHED,
+  read-only citation, not modified), SESSION_RUNNER.md Phase 0 (grepped, not modified).
+gotchas: (1) A `BACKLOG.md` item's own hedge ("confirm-then-decide") is not a substitute for
+  actually confirming the premise -- a prior session's HANDOFFS.md gotcha restating the item's
+  claim as settled ("worth fixing... before this file grows further unnoticed") can read as
+  corroboration when it's really just repetition of the same unverified claim. Grep the actual
+  mandate before trusting either. (2) methodology_dashboard.py is a canonical TRACKED dest (kept
+  current by `bin/sync`) -- any future local edit to it should be filed upstream or very carefully
+  re-applied after every sync, not hand-patched in place; this project's copy is already 1 minor
+  version behind canonical (v2.14.0 vs v2.15.2), unaddressed this session (out of scope -- the
+  decision was "don't patch," not "patch and also update the version").
+runtime_smoke: n/a -- documentation-only changes (BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md,
+  CHANGELOG.md prose), zero R/ or tests/ files touched, zero runtime behavior changed, zero .py
+  files touched (methodology_dashboard.py read-only).
+changelog_ref: CHANGELOG.md 2026-08-23 [BL-projectLearningsGapConfirm] entry
+commit: d4c4243a (claim), pending (close-out)
 ```
+S626 confirmed the `BACKLOG.md` item's own premise -- "`PROJECT_LEARNINGS.md` is a mandatory Phase 0
+read" -- does not hold: direct grep of `SESSION_RUNNER.md`/`SAFEGUARDS.md` found no such mandate,
+and `methodology_dashboard.py`'s own design comment already excludes exactly this class of file
+(the `ROADMAP.md` precedent). Also confirmed `methodology_dashboard.py` is a canonical TRACKED
+sync target, a second reason not to hand-patch its list. Presented the finding via
+`AskUserQuestion`; owner picked "correct the record" over "flag it anyway" or "dig deeper first."
+`BACKLOG.md` item resolved `[x]` DONE in place, no dashboard code change. Self-score breakdown: +
+did not accept the predecessor's stated premise at face value despite it appearing in two artifacts
+(a `BACKLOG.md` item and a `HANDOFFS.md` gotcha) -- verified by direct grep against the actual
+mandate instead of treating repetition as corroboration; + found and applied the tool's own stated
+design rationale as the deciding evidence rather than reasoning from first principles; + checked a
+second, independent angle (TRACKED-dest sync safety) that materially affects the road not taken; +
+surfaced the finding via `AskUserQuestion` rather than closing the item out unilaterally, since it
+overturns a predecessor's claim; − added a new `PROJECT_LEARNINGS.md` entry to the very file whose
+size was under investigation (unavoidable, but worth naming); − did not run an exhaustive
+repo-wide sweep for every possible "read PROJECT_LEARNINGS.md in full" instruction beyond
+`SESSION_RUNNER.md`/`SAFEGUARDS.md`/`CLAUDE.md`/`docs/methodology/workstreams/`.
 
 ```handoff
 session: S625

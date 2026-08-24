@@ -18,15 +18,107 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 625 Handoff Evaluation (by Session 626)
+**Score: 7/10.** **What helped:** the receipt precisely named the item (`BACKLOG.md`'s
+`PROJECT_LEARNINGS.md`/`methodology_dashboard.py` gap), gave the exact list contents
+(`("SESSION_NOTES.md", "CHANGELOG.md", "HANDOFFS.md") + _BACKLOG_LOCATIONS`) and the exact measured
+line count (2,005) with no rediscovery needed — both re-verified true this session. **What was
+missing:** the receipt's own `gotchas` (3) asserted "worth fixing the dashboard's own hardcoded
+file list before this file grows further unnoticed" — stated as a settled direction, not as a
+premise still needing confirmation, even though the underlying `BACKLOG.md` item it filed (also
+S625's own text) was more carefully hedged as "confirm-then-decide, not an implementation
+session." A `gotchas` field that flagged the "is this actually a Phase 0 mandate, or does it just
+look like one" open question explicitly would have made the investigative step this session did
+anyway more clearly the point, rather than something the item's own hedge had to rescue. **What
+was wrong:** the underlying factual claim, carried from S625's own `BACKLOG.md` item and Learning
+658 into this receipt's `gotchas`, that `PROJECT_LEARNINGS.md` is "a mandatory Phase 0 (`CLAUDE.md`)
+read" — direct grep of `SESSION_RUNNER.md`/`SAFEGUARDS.md` this session found no such mandate
+anywhere; `CLAUDE.md` itself says the opposite ("read it when you need prior-session context").
+**ROI:** moderate — the receipt's navigational pointers (exact item, exact list, exact count) saved
+real rediscovery time, but its framing leaned toward "fix it" when the honest state was "unconfirmed
+premise," and only the item's own separate, more careful hedge kept this session from following
+that lean directly into an unnecessary code change.
+
 ### What Session 626 Did
 **Deliverable:** Confirm-then-decide: does `methodology_dashboard.py`'s size-risk list have a real
 gap by omitting `PROJECT_LEARNINGS.md`, or is the omission by design? (`BACKLOG.md` Housekeeping
-item, found S625.) (IN PROGRESS)
-**Started:** 2026-08-23.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+item, found S625.) **DONE.**
+**Started/Completed:** 2026-08-23 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): `SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+   `SESSION_NOTES.md` ACTIVE TASK, `gh issue list` (12 open), `git status`/`log`/`diff --stat`
+   (clean except the same pre-classified untracked artifacts S624/S625 already traced — no new
+   ghost-session signal; local branch 8 commits ahead of `origin/master`, unpushed), `gh run list`
+   (all green), ledger reconcile (`CHANGELOG.md`/`HANDOFFS.md` frontiers both one commit behind
+   HEAD only via the established S600/S602-S625 self-referential sha-recording pattern — no real
+   gap, no backfill needed), `python3 methodology_dashboard.py` (96/100, 1 HIGH-risk category:
+   `HANDOFFS.md`/`CHANGELOG.md` both past the 2,000-line cap and archive-trigger byte budget,
+   recurring/known). Rendered the priorities list (4 `AskUserQuestion` options built from a full
+   `BACKLOG.md` tag sweep) — **user picked the `PROJECT_LEARNINGS.md`/dashboard gap item.**
+2. **Phase 1B claimed** (stub + `HANDOFFS.md` `status: pending` receipt, commit `d4c4243a`).
+3. **Investigated the item's own premise before acting on it.** Read `methodology_dashboard.py`'s
+   `READ_CAP_WATCHED` section (lines 236-278) in full: its own extensive design comment explains
+   the list is deliberately restricted to files `SESSION_RUNNER.md` Phase 0 instructs a session to
+   read IN FULL to establish state, and explicitly names `ROADMAP.md` as a file *deliberately*
+   excluded for the same reason ("cited as a pointer, never as a file read whole to compute
+   anything"). Grepped `SESSION_RUNNER.md`/`SAFEGUARDS.md` directly for "PROJECT_LEARNINGS" — zero
+   hits; Phase 0 names only `SAFEGUARDS.md`, `SESSION_NOTES.md`'s ACTIVE TASK, and `CHANGELOG.md`/
+   `HANDOFFS.md` (step 6 reconcile) as full-file reads. Re-read `CLAUDE.md`'s own "Project-specific
+   Learnings" section: "Read it when you need prior-session context... append new learnings there,
+   not here" — on-demand, not mandatory. **Conclusion: the S625 item's premise ("a mandatory Phase
+   0 (`CLAUDE.md`) read") does not hold** — `PROJECT_LEARNINGS.md` fits the same deliberately-
+   excluded category as `ROADMAP.md`, not a missed one.
+4. Separately checked whether `methodology_dashboard.py` itself is safe to locally patch even if the
+   premise had held: grepped the sibling `methodology` checkout's `bin/_manifest.py` and confirmed
+   `starter-kit/methodology_dashboard.py` is a canonical **TRACKED** dest (kept current by sync);
+   this project's copy is already stale (v2.14.0 vs. canonical v2.15.2) per the dashboard's own
+   startup warning — a second, independent reason not to hand-edit the list even as a fallback.
+5. **Presented the finding to the owner via `AskUserQuestion`** (3 options: correct the record /
+   flag the size anyway as a different, non-FM#28 risk / hold and dig deeper first) rather than
+   deciding unilaterally, since the finding overturns a predecessor's stated premise. **Owner
+   picked "correct the record."**
+6. **Close-out bookkeeping:** `BACKLOG.md` item marked `[x]` DONE in place with the resolution
+   recorded (matching this project's mark-DONE-not-delete convention) — no dashboard code change
+   made. `PROJECT_LEARNINGS.md` Learning 659 recorded (confirm a predecessor's premise by direct
+   grep against the actual mandate, even when the item is already well-hedged). `CLAUDE.md`'s
+   learning/session-count pointer refreshed (625+/658 → 626+/659). `CHANGELOG.md`
+   `[BL-projectLearningsGapConfirm]` entry added.
+
+**Runtime smoke test (Phase 3E):** N/A — documentation-only changes (`BACKLOG.md`,
+`PROJECT_LEARNINGS.md`, `CLAUDE.md`, `CHANGELOG.md` prose); zero `R/` or `tests/` files touched,
+zero runtime behavior changed, zero `.py` files touched (investigated `methodology_dashboard.py`
+read-only, never edited). Not silently skipped: stated explicitly.
+
+**TDD phase declaration:** no implementation code was written this session (investigation +
+decision + documentation only) — the RED/GREEN/REFACTOR gates do not apply; no `PRE-RED→RED`
+transition was ever entered, matching this project's established precedent for pure decision/
+documentation sessions (e.g. S546's "S325 reopened, decision only").
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation / tutorial-article / `NEWS.Rmd` /
+`a2interactive.Rmd` / `_pkgdown.yml` checklists all **N/A** — no new exported function, no new
+user-facing Shiny feature, no code touched. GitHub issue close-out **N/A** — `BACKLOG.md`-only
+housekeeping, not tied to a GitHub issue number. Lint checklist **N/A** — no `.R` files touched.
+
+**Self-assessment (Session 626): 9/10.** **Strengths:** (1) did not accept the predecessor's stated
+premise ("a mandatory Phase 0 read") at face value despite it appearing in both a `BACKLOG.md` item
+and a `HANDOFFS.md` gotcha — verified it by direct grep against the actual mandate
+(`SESSION_RUNNER.md`) rather than trusting repetition across two artifacts as corroboration; (2)
+found and applied the dashboard tool's own stated design rationale (the `ROADMAP.md` precedent) as
+the deciding evidence, rather than reasoning about what "should" be flagged from first principles;
+(3) checked a second, independent angle (the TRACKED-dest sync-safety question) even after the
+first finding made the primary decision fairly clear, since it materially affects the "flag it
+anyway" alternative the user might have picked; (4) surfaced the finding via `AskUserQuestion`
+rather than unilaterally closing the item out silently, since it directly overturns a predecessor's
+claim. **Weaknesses:** (1) added a new `PROJECT_LEARNINGS.md` entry (659) to a file whose own
+size was the subject of this session's investigation — an unavoidable tension (the append-only
+Learning ledger is where this project records exactly this kind of finding) but worth naming
+directly, matching S624/S625's own self-assessments naming the same tension; (2) did not
+additionally check whether any *other* mandated-read file (e.g. a workstream doc) references
+`PROJECT_LEARNINGS.md` as something to read in full — the grep covered `SESSION_RUNNER.md`/
+`SAFEGUARDS.md`/`CLAUDE.md`/`docs/methodology/workstreams/` but a narrower, more exhaustive sweep
+of every `.md` file for a "read PROJECT_LEARNINGS.md in full" instruction was not run; the finding
+is strong but not from an exhaustive negative-result search.
 
 ### Session 624 Handoff Evaluation (by Session 625)
 **Score: 9/10.** **What helped:** the receipt's `next_steps` field named the 16/17-item `BACKLOG.md`
