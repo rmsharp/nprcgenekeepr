@@ -13,323 +13,238 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 # nprcgenekeepr 2.0.0.9000 (development version)
-- CRAN accepted the 2.0.0 submission (tagged `v2.0.0`); published 2026-07-26.
-  Development continues here on top of it.
-- Pedigree diagram layout switched to a new positioning engine (issue #141)
-  for better child-centering and fewer overlapping lines, especially in
-  large or tangled families. Diagrams will look somewhat different as a
-  result. `makePedigreeMatingLayout()` lost its `orderBySex` argument (the
-  male-left/female-right convention it controlled is now always on).
-- New `checkLocusMetadata()` (issue #153, Slice 1) validates a locus-metadata
-  sidecar table (`locus, chrom, pos[, cM]`) and reports each locus's coverage
-  as `"full"`, `"partial"`, or `"none"`, PLINK-style. New example fixtures
-  `example_locus_metadata.csv`/`example_str_marker_genotypes.csv`. No Shiny UI
-  yet.
-- New `checkLinkageMarkerGenotypeFile()` (issue #153, Slice 2), a sibling to
-  `checkMarkerGenotypeFile()` that accepts multiallelic marker panels (e.g.
-  STR/microsatellite). No Shiny UI yet.
-- New `markerRealizedRelatednessVariance()` (issue #153, Slice 3) estimates
-  the variance of realized (marker-based) relatedness around a pair's
-  pedigree-expected value. No Shiny UI yet.
-- New `markerLdBlock()` and `obfuscateLdBlocks()` (issue #153, Slice 4) add a
-  descriptive same-chromosome pairwise LD/block statistic. No Shiny UI yet.
-- Genetic Value Analysis tab gained a configurable **Ranking Scheme** control
-  (issue #125): a new priority-tier scheme alongside the existing combined
-  kinship/uniqueness score. `reportGV()` gained matching `guCutoff`/
-  `zScoreCutoff`/`axisPriority` arguments.
-- Breeding Group Formation tab now surfaces up to 5 candidate groupings per
-  run (issue #125), with a selector and comparison table.
-  `groupAddAssign()` gains a `candidates` list field in its return value.
-- Breeding Group Formation tab gained an **Include animals by** control
-  (issue #128): a Genetic-value-floor option alongside the existing top-N
-  cutoff.
-- Genetic Value Analysis Summary Statistics table gained **Skewness** and
-  **Kurtosis** columns (issue #126) via new exported `calcSkewness()`/
-  `calcKurtosis()`; `makeGeneticSummaryTable()` gained matching columns.
-- Genetic Value Analysis rankings table gained a **flagged** column (issue
-  #127) marking animals whose mean-kinship correction could not be applied
-  for lack of an eligible peer cohort.
-- Pedigree Browser tab gained a **Diagram** view (issue #129): an interactive
-  pedigree diagram via `visNetwork`, with click-to-recenter on a focal
-  animal. Diagrams above 750 animals show an informative message instead of
-  rendering.
-- Diagram tab layout rebuilt for a kinship2-style, mating-aware convention
-  (Pedigree Diagram Option 2): mate-line connectors and duplicate nodes for
-  multiply-mated individuals; display limit dropped from 1,500 to 750. New
-  exported `makePedigreeMatingLayout()`; `makePedigreeDiagramData()`
-  unchanged.
-- New **Marker Genetics** tab with a **Kinship Comparison** sub-tab (issue
-  #130, Slice 1): a KING-robust marker-based kinship estimate alongside
-  pedigree-based kinship. New exported `checkMarkerGenotypeFile()`,
-  `buildMarkerGenotypeMatrix()`, `markerKinship()`.
-- Marker Genetics tab gained a **Heterozygosity** sub-tab (issue #130,
-  Slice 2): per-animal observed vs. population expected heterozygosity. New
-  exported `markerObservedHeterozygosity()`/`markerExpectedHeterozygosity()`.
-- Marker Genetics tab gained a **Parentage Exclusion** sub-tab (issue #130,
-  Slice 3): flags a pedigree-recorded parent contradicted by 3+
-  opposite-homozygote loci. New exported `markerParentageExclusion()`.
-- New exported `resolveCrossCenterIds(pedA, pedB, mapping)` (issue #130,
-  Slice 4) merges pedigrees from two centers via a curator-confirmed
-  identity-link table. Script-callable only.
-- Marker Genetics tab gained a **Cross-Center** sub-tab (issue #130,
-  Slice 5): Hudson's Fst between the populations of two centers. New
-  exported `markerFst()`.
-- Diagram tab gained an in-app **shape-to-sex legend** (issue #132).
-- Diagram tab gained **hover tooltips and a search/highlight dropdown**
-  (issue #135). Node data from `makePedigreeDiagramData()` gains a
-  `title` field.
-- Diagram tab gained a **Diagram Edge Style** toggle (issue #142): a
-  "Rectilinear (kinship2-style)" option alongside the default "Direct"
-  style. `makePedigreeMatingLayout()` gained a matching `edgeStyle`
-  argument.
-- Diagram tab can now shade **affected-status** individuals (issue #133) via
-  an optional `affected` column, matching a kinship2 naming convention.
-- Diagram tab can now show **animal names** alongside id (issue #136) via an
-  optional `name` column and a **Show Names on Diagram** toggle.
-  `getPossibleCols()` gained `name` alongside the existing `affected`;
-  `obfuscatePed()` scrubs `name` for de-identified exports.
-- Diagram tab can now show **twin/zygosity connectors** (issue #137),
-  adopting the kinship2 MZ/DZ/UZ twin-code convention. New exported
-  `checkTwinRelations()`/`obfuscateTwinRelations()`.
-- New exported `markerParentageLikelihood()` (issue #147) ranks candidate
-  replacement parents for a Mendelian-inconsistent recorded parent using a
-  CERVUS-style multilocus likelihood-ratio (LOD) score. Report-only. Marker
-  Genetics tab gained a matching **Candidate Parent Assignment** sub-tab.
-- Fixed (issue #155): the Candidate Parent Assignment sub-tab's auto-detect
-  default missed the common case of a flagged animal whose recorded parent
-  is present but wrong.
-- Diagram tab now defaults to placing the male parent on the left in a
-  two-parent mating pair (issue #145). `makePedigreeMatingLayout()` gained a
-  matching `orderBySex` argument (default `TRUE`).
-- New exported `checkCrossCenterMapping(pedA, pedB, mapping)` (issue #149,
-  Slice 1) reports every cross-center mapping problem at once instead of
-  stopping at the first. Also fixes a data-loss defect in
-  `resolveCrossCenterIds()` (non-id/sire/dam columns were silently dropped
-  on merge).
-- New **Cross-Center Identity** tab (issue #149, Slice 2): a curator
-  workflow around `resolveCrossCenterIds()`/`checkCrossCenterMapping()`,
-  with a merge preview and 5 downloadable artifacts behind a confirmation
-  dialog.
-- `groupAddAssign()` gained a `maxCandidates` argument (issue #146,
-  Slice 1), replacing the hardcoded cap of 5. Breeding Group Formation tab
-  gained a matching **Candidates to retain** control.
-- `groupAddAssign()` gained an `exhaustive` argument (issue #146, Slice 2,
-  closes #146): enumerates every possible single-group partition instead of
-  sampling, for `numGp = 1`. Breeding Group Formation tab gained a matching
-  **Exhaustive enumeration mode** checkbox.
-- New exported `reportMatePairs()` (issue #151, Slice 1) reports eligible
-  individual mate-pair candidates with pedigree/marker kinship and
-  genetic-value context. Report-only.
-- New **Mate Pair Analysis** tab (issue #151, Slice 2), a curator view over
-  `reportMatePairs()`, kept separate from Breeding Group Formation.
-- `obfuscatePed()` gained a **linkedDateShift** argument (issue #150,
-  Slice 1, default `TRUE`): shifts all of one individual's Date columns by
-  the same offset, preserving inter-date gaps (previously could invert date
-  order).
-- New **De-Identified Export** tab (issue #150, Slice 2, closes #150): a
-  curator workflow around `obfuscatePed()` with a live preview and 3
-  downloadable artifacts (de-identified pedigree, transformation manifest,
-  re-identification key) behind a confirmation dialog.
-- Marker Genetics tab gained a **Linkage and LD Block Metrics** sub-tab
-  (issue #153, Slice 5, closes #153): locus-metadata coverage report,
-  realized-relatedness-variance table, and LD-block table, with
-  de-identified export.
-- New exported `checkSequenceGenotypeFile()` (issue #152, Slice 1) validates
-  a sequence-scale marker genotype file. New example fixtures
-  `example_sequence_genotypes.csv`/`example_sequence_locus_metadata.csv`. No
-  Shiny UI yet.
-- `markerKinship()` and `markerParentageLikelihood()` (issue #152, Slice 2)
-  rewritten internally for large marker panels (vectorized matrix algebra,
-  precomputed allele frequencies); output unchanged.
-- New exported `computeGenomicROH()` (issue #152, Slice 3) computes
-  per-individual genomic Runs-of-Homozygosity segments and the F_ROH
-  inbreeding coefficient from sequence-scale marker data. No Shiny UI yet.
-- New exported `obfuscateGenotypeMatrix()` (issue #152, Slice 4) de-identifies
-  a sequence-scale genotype matrix's individual ids. No Shiny UI yet.
-- Marker Genetics gained a **Genomic ROH (F_ROH)** tab (issue #152, Slice 5,
-  closing the issue): computes F_ROH from the already-uploaded genotype/
-  locus-metadata files, with de-identified export
-  (`obfuscateGenomicROH()`).
-- `kinship()` gained a **twinRelations** argument (BL-N, Slice 1) correcting
-  a declared MZ-twin pair's computed kinship to genetic identity and
-  propagating that correction to every relative reached through either twin
-  (not just the pair itself), porting kinship2's own `mzgrp`/`mzindex`
-  mechanism. `reportGV()`, `gvaConvergence()`, `createSimKinships()`, and
-  `cumulateSimKinships()` (BL-N, Slice 2) each gained a matching
-  `twinRelations` argument, passed through to their own internal kinship
-  computation. Shiny wiring (BL-N, Slice 3): a twin/zygosity sidecar
-  uploaded on the Pedigree Browser's Diagram tab now corrects kinship
-  everywhere in the app -- Summary Statistics, Breeding Groups, and Genetic
-  Value Analysis -- regardless of which tab is visited first.
-- Fixed: the Pedigree Diagram tab's affected-status shading rendered
-  unaffected/unknown individuals filled instead of open/unfilled, counter
-  to standard pedigree drawing convention (kinship2's own "unfilled if
-  0/NA").
-- The Pedigree Diagram tab now renders a consanguineous mating's 2
-  connector lines thicker and in a distinct color (BL-N), matching
-  kinship2's own doubled/thickened mate-line convention for a blood-related
-  couple. Detected directly from the pedigree's own sire/dam data (no
-  optional column or toggle needed); `makePedigreeMatingLayout()`'s
-  returned `edges` gains `color`/`width` columns accordingly. Scoped to
-  `edgeStyle = "direct"` this release -- `"rectilinear"` propagation onto
-  a cross-generation dogleg reroute is a deferred follow-up.
-- Fixed: a pedigree with a dangling (no-own-row) parent anywhere in it could
-  cause the Pedigree Diagram tab's `edgeStyle = "rectilinear"` style to
-  spuriously reroute other, unrelated mate-line edges through an unneeded
-  cross-generation "dogleg," even when those edges' own parents were
-  already at the correct generation. Caused by an internal type-coercion
-  defect (a dangling parent's generation fallback silently widened an
-  internal generation vector from integer to double, breaking a strict
-  type-sensitive equality check elsewhere).
-- The Pedigree Diagram tab's consanguineous-mating marker (above) now also
-  survives an `edgeStyle = "rectilinear"` cross-generation "dogleg" reroute
-  -- previously the marker's color/width fell back to the generic
-  waypoint-edge style on a doglegged mate edge, even though the
-  `edgeStyle = "direct"` style always showed it correctly (BL-N, part of
-  the kinship2 supplement full-reproduction plan's Track C).
-- `kinship()` gained `chrtype = c("autosome", "x")` and `sex` arguments
-  (BL-N, the kinship2 supplement full-reproduction plan's Track A):
-  `chrtype = "x"` computes X-chromosome kinship instead of the default
-  autosomal calculation (a male's X comes from his mother only; a female's
-  X-linked kinship follows the usual average-of-parents formula). The
-  existing `twinRelations` MZ-twin correction applies inside the new branch
-  too. `chrtype = "autosome"` (the default) is unaffected -- every existing
-  call site keeps its current behavior unchanged. Script-callable only; no
-  Shiny UI yet.
-- New `shrinkPedigree()` (BL-N, the kinship2 supplement full-reproduction
-  plan's Track B), a `kinship2::pedigree.shrink()` equivalent: trims a
-  pedigree down to the individuals needed to keep it genetically
-  informative within a genotyping-cost budget (`maxBits`), given which
-  individuals are genotyped and, optionally, which are affected by a trait
-  of interest. Deterministic tie-break by lowest `id` (string-sorted) --
-  kinship2's own reference implementation breaks ties via `runif()`, so the
-  same input can give a different answer run-to-run there. Script-callable
-  only; no Shiny UI yet.
-- Fixed: the Pedigree Diagram tab's affected-status shading rendered every
-  individual filled with visNetwork's own default color when a pedigree had
-  no `affected` column at all -- unlike the already-fixed case where the
-  column is present but a value is `FALSE`/`NA` (above). Every individual
-  now defaults to an explicit open/unfilled (white) fill regardless of
-  whether the `affected` column exists, matching kinship2's own convention
-  for pedigrees with no phenotype data (the package's own bundled
-  `examplePedigree` among them).
-- Fixed: the Pedigree Diagram tab could space adjacent mates/siblings
-  unevenly -- the layout algorithm only guaranteed nodes did not exactly
-  overlap, not a fixed minimum gap, so two unrelated same-generation nodes
-  positioned deep in different branches of the family tree could land
-  visibly closer together than a directly-adjacent pair. Every pair of
-  same-generation individuals now keeps at least the algorithm's own
-  minimum-separation unit apart, matching kinship2's own near-uniform mate
-  spacing.
-- Fixed: the Pedigree Diagram tab could render a mating unit's anchor
-  parent at a generation row that didn't match the union's own generation,
-  whenever the two parents' own generations differed -- a common pattern
-  (62% of mating units in the bundled example pedigree). Previously
-  compensated by relocating the anchor's own displayed row after the fact;
-  now resolved at the source instead: whichever parent has the deeper
-  generation always becomes the anchor, so the mismatch can no longer
-  occur (a structural guarantee, not a case-by-case correction). A
-  measured visual consequence: individuals who anchor multiple matings at
-  different generations now more often appear as a duplicate node at one
-  of their own mating units, rather than being pulled to a single
-  relocated row (22 individuals in the bundled example pedigree, up from
-  2; the corresponding duplicate-node count drops from 128 to 102).
-- Changed: the Pedigree Diagram tab's default **Diagram Edge Style** is now
-  **Rectilinear (kinship2-style)**, not Direct -- the toggle (issue #142)
-  and the option itself are unchanged, only which one applies with no user
-  interaction. `makePedigreeMatingLayout()`'s own `edgeStyle` argument
-  default flips to match. The node cap that applies with no style chosen
-  is therefore now 400 animals (previously 750); switching to Direct
-  raises it back to 750.
-- Fixed: row order in the Genetic Value Analysis imports/no-parentage
-  tiers, the pedigree table produced by `qcStudbook()`, and the Breeding
-  Group Formation tab's group-member table could vary depending on the
-  server/session's own locale (`LC_COLLATE`) -- an id set sorted one way
-  under one locale and a different way under another, purely from
-  character-collation differences, not any change in the underlying data.
-  All three now sort ids in a fixed, locale-independent byte order.
-- Fixed: in the Pedigree Diagram tab's Rectilinear edge style, a sibship
-  bar could visually pass through an unrelated node's own row -- most
-  visibly, a sibling who separately anchors her own mating union at the
-  same generation (issue #160). `.addRectilinearWaypoints()`'s D1
-  sibship-bar/drop waypoints now land on a genuine intermediate row (40%
-  of the way from the parent/union row to the children's row) rather than
-  the children's own row, an unconditional geometric guarantee for the
-  common 1-generation-gap case. Two disclosed residuals remain, both
-  tracked for a future general same-row collision-avoidance pass: a rare
-  bar-vs-node coincidence for a union placed an exact multiple of 5
-  generations from its child, and a reduced-but-not-eliminated
-  bar-vs-bar case (2 unrelated sibships at the same generation gap with
-  overlapping horizontal spans; see below for the current count in the
-  bundled example pedigree, which the parent-span containment fix below
-  further affects).
-- Fixed: in the Pedigree Diagram tab's Rectilinear edge style, a straight
-  same-row edge -- a kept parent-to-union mate line, or a duplicate
-  individual's own dashed connector -- could visually pass through an
-  unrelated node, most severely on wide, many-founder colony pedigrees
-  where a founder's own mating union can land far from the founder
-  (issue #160). `makePedigreeMatingLayout()` now detects any such
-  collision and inserts a small local reroute clear of the obstacle,
-  never moving an existing node; this closes every straight-edge
-  collision found on the bundled 375-individual example pedigree (105,
-  down from an original 150 -- the parent-span containment fix below
-  resolves some of these before this detector even runs). The curved
-  duplicate-connector arc gets a smaller, disclosed nudge instead
-  (increasing its curvature) since rerouting it through right-angle
-  waypoints would destroy its own established arc styling -- confirmed
-  visually, not just by coordinate math; 47 curved-connector cases
-  remain disclosed, unconfirmed-by-coordinate-math residuals.
-- Fixed: in the Pedigree Diagram tab, a mating union could be positioned
-  entirely outside its own two parents' x-range -- most visibly a union
-  with a single child, which has no midpoint of its own to center on and
-  simply inherited that child's x, however far the child's own later
-  descendants had pulled it (BACKLOG.md's S583 item, part of the same
-  root cause as issue #160). The union's x is now clamped into its own 2
-  parents' `[min, max]` range whenever the ordinary child-centered
-  formula would place it outside that span, matching kinship2's
-  convention of always centering the union between its two parents. This
-  is a disclosed trade-off, not a free improvement: clamping a union
-  necessarily moves it further from its own children's true midpoint for
-  the unions it affects (measured on the bundled example pedigree: 9 of
-  251 child edges exceeded a 200-unit centering threshold before this
-  fix, 53 after), and it also increases how often two unrelated
-  sibships' own bars visually overlap in x-range at the same generation
-  gap (a pre-existing, already-disclosed residual; 9 cases before this
-  fix, 116 after, on the bundled example pedigree). Both are accepted,
-  disclosed costs of fixing the more severe parent-span defect.
-- Changed: in the Pedigree Diagram tab, the parent-span containment fix
-  above's own disclosed child-centering trade-off is now partially
-  recovered, in code, for one specific, narrow shape: a mating union whose
-  only duplicated child's duplicate occurs at another union among that same
-  union's own children (a sibling-consanguineous mating). Such a union is
-  now nudged back toward its true child-centered position after the
-  parent-span clamp runs, but only when the clamp actually altered the
-  union's value in the first place -- a union the clamp already left
-  correct is left untouched, closing a worse-than-doing-nothing
-  regression an earlier design attempt found on nested/chained
-  consanguineous shapes (5 candidate mechanisms, 2 mechanism families,
-  investigated across Sessions 598-601 before one survived adversarial
-  review). This qualifying shape does not occur anywhere in the bundled
-  375-individual example pedigree or the package's own `small` test
-  fixture, so it has no effect on either today; it only changes output
-  for real colonies with a sibling-consanguineous mating meeting the
-  above description. The separate D1 sibship-bar-vs-bar overlap trade-off
-  above is untouched by this fix. **Correction (Session 603):** even in the
-  one fixture built to exercise this, the nudge moves the union 5 rendered
-  pixels against a 25-pixel node radius -- verified via `visNetwork`'s own
-  live `getPositions()`, before/after screenshots at 3x zoom are
-  indistinguishable. The change is real and tested but currently produces
-  no visible correction in any case exercised so far; do not read this
-  entry as "the child-centering defect is fixed."
-- Fixed: in the Pedigree Diagram tab, the internal `preferAnchor()` anchor
-  tie-break's final clause -- used when 2 candidate parents tie on both
-  generation and mate count, a condition guaranteed for every full-sibling
-  mate pair -- fell back to a locale-dependent character comparison, so
-  which parent anchored a mating union (and, with it, node x-positions
-  across that anchor's own subtree) could differ between machines or
-  locales for the identical pedigree (issue #162). Now uses a byte/radix
-  order comparison, matching the locale-independent fix already applied
-  elsewhere in this file.
+
+## Package
+- CRAN accepted the 2.0.0 submission (tagged `v2.0.0`); published
+  2026-07-26. Development continues here on top of it.
+
+## Pedigree Diagram
+- The Pedigree Browser tab gained an interactive **Diagram** view: click
+  any animal to re-center the diagram on it. Pedigrees above 750 animals
+  show an informative message instead of rendering, to keep diagrams
+  readable (issue #129).
+- The Diagram tab includes an in-app legend explaining what each shape
+  means for an animal's sex (issue #132).
+- The Diagram tab includes hover tooltips and a search/highlight box for
+  finding an animal by id (issue #135).
+- The Diagram tab's layout follows the standard kinship2 convention used
+  in published pedigree charts: a mated pair is joined by a mate line, and
+  an individual with more than one mate is drawn once per mating rather
+  than once total. `makePedigreeMatingLayout()` builds this layout;
+  `makePedigreeDiagramData()` is unrelated to it.
+- The Diagram tab includes a **Diagram Edge Style** toggle: choose between
+  a default "Direct" straight-line connector style and an alternative
+  "Rectilinear (kinship2-style)" right-angle style (issue #142).
+- The Diagram tab can shade individuals as affected by a condition, using
+  an optional `affected` column, matching a kinship2 shading convention
+  (issue #133).
+- The Diagram tab can show each animal's name next to its id, via an
+  optional `name` column and a **Show Names on Diagram** toggle;
+  de-identified exports automatically remove names (issue #136).
+- The Diagram tab can show twin connectors (identical, fraternal, or
+  unknown zygosity), using the same twin-code convention as kinship2
+  (issue #137).
+- The Diagram tab places the male parent on the left within a mated pair
+  by default, matching the convention most pedigree readers expect (issue
+  #145).
+- Unaffected and unknown-status individuals are shown unshaded (open)
+  rather than filled, matching kinship2's own shading convention.
+- The Diagram tab draws a mate line thicker and in a distinct color for a
+  consanguineous mating (parents who are blood relatives), matching
+  kinship2's convention -- detected automatically from the pedigree, no
+  extra column needed. Applies to the "Direct" edge style; "Rectilinear"
+  support follows below.
+- The Rectilinear edge style correctly avoids an unnecessary extra bend in
+  unrelated mate lines even when a pedigree has one parent recorded but
+  missing their own row.
+- The consanguineous-mating marker above also survives a "Rectilinear"
+  reroute (a mate line that needs to bend around an obstacle).
+- When a pedigree has no `affected` column at all, animals default to
+  unshaded (open) rather than shaded as affected, matching kinship2's
+  convention -- including the package's own bundled example pedigree.
+- Every pair of animals at the same generation keeps at least a
+  consistent minimum gap apart, so nearby unrelated animals are never
+  drawn closer together than directly-related ones.
+- When a mated pair's two parents are recorded at different generations,
+  their shared mating symbol is placed on the correct row by construction.
+  A visible consequence: a parent who anchors matings at more than one
+  generation appears as a duplicate node more often than a naive
+  single-row placement would produce (22 individuals in the bundled
+  example pedigree).
+- The Diagram tab defaults to the "Rectilinear (kinship2-style)" edge
+  style; with no style chosen, the display limit is 400 animals
+  (switching to "Direct" raises it to 750).
+- In the Rectilinear edge style, a sibling group's connecting bar avoids
+  visually crossing an unrelated animal's own row in the common case --
+  most importantly when a sibling also anchors her own mating at the same
+  generation (issue #160). Two rarer related cases remain open, disclosed
+  follow-ups for a future pass.
+- In the Rectilinear edge style, the layout detects when a straight
+  connector line would visually pass through an unrelated animal -- most
+  often in large, many-founder colony pedigrees -- and reroutes around
+  the obstacle. A small number of curved duplicate-animal connectors get
+  only a partial correction and remain a disclosed residual.
+- A mating symbol is always kept within the range spanned by its own two
+  parents, matching kinship2's convention -- most notably for a mating
+  with only one child, which would otherwise have no other children to
+  center between. This is a disclosed trade-off, not a free improvement:
+  for the matings it affects, the symbol can sit further from where its
+  children are actually centered, and two unrelated sibling groups' bars
+  can somewhat more often overlap visually -- both accepted costs of the
+  correct parent-centered placement.
+- For one specific pattern (a sibling-consanguineous mating), the
+  trade-off above is partially mitigated -- though in the one test case
+  built to exercise this, the visual change is too small to see on
+  screen at normal zoom, so don't expect a visible difference in today's
+  example pedigrees.
+- Which parent a mating symbol anchors to is consistent across computers
+  and regional settings: the anchor tie-break uses a locale-independent
+  comparison (issue #162).
+- Pedigree diagram positioning centers children accurately over their
+  parents and produces fewer overlapping lines, especially in large or
+  tangled families (issue #141). `makePedigreeMatingLayout()` has no
+  `orderBySex` argument -- the male-left/female-right convention is
+  always applied.
+## Kinship & Pedigree Calculations
+- Declaring a pair of animals as identical (MZ) twins now corrects their
+  computed relatedness to genetic identity, and that correction flows
+  through to every other relative reached through either twin -- not just
+  the pair itself. A twin/zygosity file uploaded on the Diagram tab now
+  applies this correction everywhere relatedness is used in the app --
+  Summary Statistics, Breeding Groups, and Genetic Value Analysis --
+  regardless of which tab is opened first. Script users: `kinship()`,
+  `reportGV()`, `gvaConvergence()`, `createSimKinships()`, and
+  `cumulateSimKinships()` all gained a matching `twinRelations` argument.
+- New: `kinship()` can now compute X-chromosome relatedness (instead of the
+  usual whole-genome average) via a new `chrtype = "x"` option -- useful
+  for traits carried on the X chromosome. The default behavior (`chrtype =
+  "autosome"`) is unchanged; every existing use of `kinship()` keeps
+  working exactly as before. Script-callable only; no Shiny screen yet.
+- New `shrinkPedigree()` trims a large pedigree down to just the animals
+  needed to keep it genetically informative within a genotyping budget,
+  given which animals are already genotyped and, optionally, which are
+  affected by a condition of interest. Ties are broken in a fixed,
+  repeatable order (kinship2's own equivalent function breaks ties
+  randomly, so the same input there can give a different answer from one
+  run to the next). Script-callable only; no Shiny screen yet.
+
+## Marker Genetics
+- New **Marker Genetics** tab, starting with a **Kinship Comparison**
+  sub-tab: compares DNA-based relatedness (from marker genotypes) side by
+  side with pedigree-based relatedness (issue #130).
+- The Marker Genetics tab includes a **Heterozygosity** sub-tab: compares
+  each animal's own genetic diversity to what's expected for the
+  population (issue #130).
+- The Marker Genetics tab includes a **Parentage Exclusion** sub-tab:
+  flags a pedigree-recorded parent that the DNA evidence contradicts
+  (issue #130).
+- The Marker Genetics tab includes a **Cross-Center** sub-tab comparing
+  genetic diversity between two centers' populations (issue #130) -- not
+  to be confused with the separate **Cross-Center Identity** tab
+  described below, which matches and merges individual animal records
+  rather than comparing population-level diversity.
+- New **Candidate Parent Assignment** sub-tab: for a flagged animal,
+  ranks which other genotyped animals could be the real parent instead,
+  based on DNA evidence. Report-only. New `markerParentageLikelihood()`
+  (issue #147).
+- The Candidate Parent Assignment sub-tab's automatic suggestion covers
+  the common case where a flagged animal's recorded parent is present in
+  the data but simply wrong (issue #155).
+- New locus-metadata check (`checkLocusMetadata()`): reports, for each
+  marker locus, whether its chromosome/position data is complete,
+  partial, or missing -- PLINK-style. New example files included. No
+  Shiny screen yet (issue #153).
+- New `checkLinkageMarkerGenotypeFile()` validates marker panels with
+  more than 2 alleles per locus (e.g. STR/microsatellite markers),
+  alongside the existing 2-allele check. No Shiny screen yet (issue
+  #153).
+- New `markerRealizedRelatednessVariance()` estimates how much a pair's
+  actual DNA-based relatedness can vary around what the pedigree alone
+  would predict. No Shiny screen yet (issue #153).
+- New `markerLdBlock()` reports which nearby markers on the same
+  chromosome tend to be inherited together, with a matching
+  `obfuscateLdBlocks()` for de-identified export. No Shiny screen yet
+  (issue #153).
+- The Marker Genetics tab includes a **Linkage and LD Block Metrics**
+  sub-tab, combining the locus-coverage, relatedness-variance, and
+  linkage-block reports above in one place, with de-identified export
+  (issue #153).
+- New sequence-scale marker genotype check
+  (`checkSequenceGenotypeFile()`), for genotype files with far more
+  markers than a standard panel. No Shiny screen yet (issue #152).
+- The DNA-relatedness and candidate-parent calculations
+  (`markerKinship()`/`markerParentageLikelihood()`) are optimized to
+  handle large marker panels efficiently (issue #152).
+- New: computes each animal's inbreeding level directly from
+  large-scale sequence data (runs of homozygosity), not just from the
+  pedigree. No Shiny screen yet. New `computeGenomicROH()` (issue #152).
+- New `obfuscateGenotypeMatrix()` de-identifies a sequence-scale genotype
+  file's animal ids. No Shiny screen yet (issue #152).
+- The Marker Genetics tab includes a **Genomic ROH (F_ROH)** tab: the
+  sequence-based inbreeding calculation above, with de-identified export
+  (new `obfuscateGenomicROH()`) (issue #152).
+## Cross-Center Identity Matching
+- New `resolveCrossCenterIds()` merges pedigree records for the same
+  animals held by two different centers, using a curator-confirmed
+  id-matching table.
+- New `checkCrossCenterMapping()` reports every problem with a
+  cross-center id-matching table at once, instead of stopping at the
+  first one found. Merging preserves every one of an animal's own data
+  columns (issue #149).
+- New **Cross-Center Identity** tab: walks a curator through matching
+  and merging records from two centers, with a preview and downloadable
+  results behind a confirmation step (issue #149).
+## Genetic Value Analysis
+- The Genetic Value Analysis tab gained a configurable **Ranking Scheme**
+  control: choose a priority-tier ranking alongside the existing combined
+  kinship/uniqueness score (issue #125). Script users: `reportGV()` gained
+  matching `guCutoff`/`zScoreCutoff`/`axisPriority` arguments.
+- The Genetic Value Analysis Summary Statistics table gained **Skewness**
+  and **Kurtosis** columns, describing the shape of the genetic-value
+  distribution (issue #126). Script users: new `calcSkewness()`/
+  `calcKurtosis()`.
+- The Genetic Value Analysis rankings table gained a **flagged** column
+  marking animals whose ranking correction couldn't be applied for lack of
+  a comparable peer group (issue #127).
+
+## Breeding Group Formation
+- The Breeding Group Formation tab now shows up to 5 candidate groupings
+  per run, with a selector and comparison table (issue #125). Script users:
+  `groupAddAssign()` gained a matching `candidates` field in its return
+  value.
+- The Breeding Group Formation tab gained an **Include animals by**
+  control: an alternative genetic-value-floor option alongside the existing
+  top-N cutoff (issue #128).
+- The Breeding Group Formation tab gained a **Candidates to retain**
+  control, replacing a fixed cap of 5. Script users: `groupAddAssign()`
+  gained a matching `maxCandidates` argument (issue #146).
+- The Breeding Group Formation tab gained an **Exhaustive enumeration
+  mode** checkbox: checks every possible single-group split instead of
+  sampling, for the simplest case. Script users: `groupAddAssign()` gained
+  a matching `exhaustive` argument (issue #146).
+
+## Mate Pair Analysis
+- New `reportMatePairs()` reports individual mate-pair candidates with
+  their relatedness and genetic-value context. Report-only (issue #151).
+- New **Mate Pair Analysis** tab: a curator view built on the report above,
+  kept separate from Breeding Group Formation (issue #151).
+
+## De-Identified Export
+- `obfuscatePed()` gained a **linkedDateShift** argument (default `TRUE`):
+  shifts all of one animal's dates by the same offset when de-identifying,
+  so the gaps between its own dates stay realistic instead of possibly
+  ending up out of order (issue #150).
+- New **De-Identified Export** tab: a curator workflow with a live preview
+  and 3 downloadable files (the de-identified pedigree, a record of what
+  was changed, and a private key to re-identify records later) behind a
+  confirmation step (issue #150).
+
+## General Fixes
+- Fixed: the sort order in a few tables (the Genetic Value Analysis tiers,
+  the main pedigree table, and the Breeding Group member table) could vary
+  depending on the server's own regional settings, purely from how ids
+  happened to sort -- not from any real difference in the data. All three
+  now sort in a fixed, consistent order everywhere.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes
