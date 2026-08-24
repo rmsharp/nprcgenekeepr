@@ -18,15 +18,125 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 627 Handoff Evaluation (by Session 628)
+**Score: 9/10.** **What helped:** the receipt's `next_steps` field named this exact item —
+"NEWS.Rmd simplification by feature + guardrail (READY, Effort L, explicitly multi-round/
+iterative — propose the feature taxonomy + guardrail mechanism via `AskUserQuestion` first)" —
+and this session followed that procedural guidance precisely: proposed the taxonomy and guardrail
+options via `AskUserQuestion` before touching `NEWS.Rmd`, then iterated across multiple review
+rounds with the owner rather than declaring done after one pass. The receipt's own priorities list
+(unpushed-commit count, other READY items) was accurate and matched this session's independent
+Phase 0 sweep. **What was missing:** nothing the receipt could reasonably have provided — the
+specific defects the owner caught during this session (forward-reference ordering, then
+delta-language framing) emerged from live interactive review of prose, not something a prior
+session on an unrelated topic (the mating-unit marker decision) could have anticipated. **What was
+wrong:** nothing found inaccurate. **ROI:** high — the exact next-step framing ("propose via
+`AskUserQuestion` first") was followed directly and set this session's structure correctly from
+the start.
+
 ### What Session 628 Did
 **Deliverable:** Simplify `NEWS.Rmd`'s dev-version (`2.0.0.9000`) entries for a non-technical
 audience, reorganize by feature within the release heading, and design/land a guardrail against
-re-drift (`BACKLOG.md` Up Next, found 2026-08-20, owner-directed). (IN PROGRESS)
-**Started:** 2026-08-23
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+re-drift (`BACKLOG.md` Up Next, found 2026-08-20, owner-directed). **DONE.**
+**Started/Completed:** 2026-08-23/24 (spans a date rollover mid-session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): `SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+   `git status`/`log`/`diff --stat` (clean except pre-classified untracked artifacts — Quarto
+   render byproducts, a recurring MS/LibreOffice lock file, an old `scratchpad/` dir, all
+   individually traced, none new), `gh issue list` (11 open), `gh run list` (all green), ledger
+   reconcile (one-commit gap = the established self-referential sha-recording pattern, no real
+   gap), `python3 methodology_dashboard.py` (96/100, 1 HIGH risk = the recurring FM #28 file-size
+   flag). Rendered the priorities list (4 `AskUserQuestion` options) — **user picked the
+   NEWS.Rmd simplification item.**
+2. **Phase 1B claimed** (stub + `HANDOFFS.md` `status: pending` receipt, commit `5c8cc7e1`).
+3. **Read the full 318-line dev-version section** (57→58 entries by direct count) and proposed a
+   10-group feature taxonomy plus 4 guardrail-mechanism options via `AskUserQuestion` — owner
+   approved the taxonomy as proposed, then asked to clarify the "style note" guardrail option
+   before choosing. Explaining it surfaced a real weakness in the recommendation (no distinct
+   beneficiary once traced through, since every `NEWS.Rmd` edit is session-mediated and every
+   session already reads `CLAUDE.md`) — landed on the checklist-extension guardrail alone.
+4. Owner pushed back on "every entry traces to a numbered session" as implying a false 1:1
+   entry-to-session mapping; corrected the claim (many-to-many, sessions touch many entries and
+   entries get touched by many sessions) without it changing the underlying guardrail conclusion.
+5. **Round 1 draft:** rewrote all 58 entries for plain language, grouped by the approved taxonomy,
+   kept issue-number citations and function names (dropped for Shiny-first entries, kept for
+   script-only "no Shiny UI yet" ones). Landed the `CLAUDE.md` guardrail extension. Verified via
+   entry-count + issue-number diffs against the original (caught and restored 6 accidentally
+   dropped citations) and a clean `rmarkdown::render()`.
+6. **Round 2:** owner flagged that entries within a group weren't in true chronological/dependency
+   order (a refinement could sit before the introducing entry for the same feature). Ran an
+   8-agent background `Workflow` doing real `git log -S`/`CHANGELOG.md` archaeology per feature
+   group; used the results to reorder Pedigree Diagram and Marker Genetics (the two groups that
+   actually needed it), catching a real mis-attribution (the "anchor generation mismatch" fix is
+   S573, not issue #144/S473-474 as hinted) and a genuine naming collision (Marker Genetics'
+   "Cross-Center" sub-tab vs. the separate "Cross-Center Identity" tab — verified the real UI
+   label in `R/modMarkerGenetics.R:143` before wording a fix, rather than inventing a rename).
+7. **Round 3:** owner flagged "the Diagram tab's layout was rebuilt" as presupposing a released
+   "before" state that never existed (the Diagram tab is itself new in this unreleased section).
+   Generalized past the one instance: found and reworded the same delta-language defect in 11
+   further Pedigree Diagram entries and 5 Marker Genetics entries (every "gained a sub-tab" for a
+   tab that itself debuts this release) plus 1 in Cross-Center Identity Matching — leaving delta
+   language intact wherever it's legitimate (confirmed pre-existing tabs/functions via
+   `NAMESPACE`/`git log`/`NEWS.md`). Self-caught one own-introduced typo during the sweep.
+8. **Close-out** (this write-up): `BACKLOG.md` item marked `[x]` DONE with full resolution.
+   `PROJECT_LEARNINGS.md` Learning 661 recorded (the order-vs-wording generalization gap between
+   round 2 and round 3). `CLAUDE.md` learnings-count pointer refreshed (627+/660 → 628+/661).
+   `CHANGELOG.md` `[BL-N]` entry added.
+
+**Runtime smoke test (Phase 3E):** N/A — zero `R/`/`tests/` files touched; this is a documentation-
+only session (`NEWS.Rmd`, `NEWS.md`, `CLAUDE.md`, `BACKLOG.md`, `CHANGELOG.md`,
+`PROJECT_LEARNINGS.md`). The file's own build-equivalent, `rmarkdown::render("NEWS.Rmd")`, was run
+clean after every substantive edit instead — not silently skipped, stated explicitly.
+
+**TDD phase declaration:** no implementation code was written this session (`NEWS.Rmd` is
+documentation prose, not R production/test code) — the RED/GREEN/REFACTOR gates do not apply, no
+`PRE-RED→RED` transition entered, matching the S626/S627 precedent for documentation-only sessions.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation / tutorial-article / `a2interactive.Rmd` /
+`_pkgdown.yml` / lint checklists all **N/A** — no new exported function, no new Shiny feature, no
+`.R` file touched. GitHub issue close-out: **N/A** — this `BACKLOG.md` item names no GitHub issue.
+
+**Self-assessment (Session 628): 8/10.** **Strengths:** (1) followed the owner-stated multi-round
+process precisely rather than declaring done after one pass; (2) delegated the objective,
+checkable part of the ordering fix (real git/CHANGELOG chronology) to a parallel research
+workflow, kept the judgment-heavy synthesis (final ordering, wording, disambiguation) on myself,
+matching the project's capability-tiered-review guidance; (3) caught my own mistake before
+shipping it — the first fix for the Cross-Center naming collision (renaming the sub-tab) would
+itself have described a UI control that doesn't exist, caught only by checking the real Shiny code
+first; (4) verified fidelity mechanically (entry counts, issue-number diffs) after every pass
+rather than trusting a visual read; (5) used the file's actual build-equivalent
+(`rmarkdown::render()`) repeatedly rather than only inspecting source text.
+**Weaknesses:** (1) did not proactively generalize the "reader never experienced this" principle
+to WORDING in round 2 — I applied it fully to ORDER (an 8-agent research pass) but left
+delta-language framing untouched, even though the same underlying principle (nothing before
+`2.0.0` establishes a reader-known baseline) already implied it; it took the owner's specific
+"rebuilt" example in round 3 to surface it, costing an extra round that could have been one; (2)
+initially dropped 6 issue-number citations while paraphrasing for jargon in round 1 — caught by my
+own diff check before presenting, but shouldn't have happened; (3) introduced a spacing typo
+during the round-3 rewrite, self-caught only on a final re-read.
+
+**Key files:** `NEWS.Rmd` (the dev-version section, now organized into 10 `## ` feature-group
+headings under `# nprcgenekeepr 2.0.0.9000`), `NEWS.md` (regenerated via `rmarkdown::render()`,
+must stay in sync with `NEWS.Rmd` — always re-render after any further `NEWS.Rmd` edit),
+`CLAUDE.md` (NEWS.Rmd entry checklist, extended with the plain-language criterion), `BACKLOG.md`
+(item marked `[x]` DONE), `PROJECT_LEARNINGS.md` Learning 661, `CHANGELOG.md` 2026-08-24 `[BL-N]`
+entry.
+
+**Gotchas for a future session:** (1) any FUTURE `NEWS.Rmd` dev-version entry added under
+`2.0.0.9000` must go into the matching feature-group heading (not appended chronologically at the
+end) — check the existing 10 groups before adding a new one; if the entry doesn't fit any
+existing group, that's a real signal to ask before inventing an 11th. (2) The "everything not yet
+on CRAN is a draft" principle this session applied only reaches back to `2.0.0` — confirmed via
+`NEWS.Rmd`'s own text and `grep -i cran NEWS.Rmd` that no version before `2.0.0` was ever actually
+"accepted"/"published" on CRAN (only "submission"/"resubmission" attempts) — so `2.0.0` is the
+correct, and currently only, reader-known baseline; don't extend delta-language license further
+back without re-verifying if this package's CRAN history changes. (3) When this section next
+regroups or splits into a real release version, re-verify the "no Shiny UI yet"-tagged entries
+(script-callable-only functions) still say that accurately — several might have since gained a
+Shiny screen in a later, not-yet-NEWS'd session. (4) `NEWS.md` is a **tracked, generated** file —
+never hand-edit it; always regenerate from `NEWS.Rmd` via `rmarkdown::render(..., output_format =
+"github_document")` and commit both together.
 
 ### Session 626 Handoff Evaluation (by Session 627)
 **Score: 8/10.** **What helped:** the receipt's `next_steps` field correctly carried forward the

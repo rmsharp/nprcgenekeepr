@@ -16,6 +16,58 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-24 · [BL-N] S628: `NEWS.Rmd` dev-section simplified for a non-technical audience, reorganized by feature, guardrail landed
+- **Deliverable:** simplify `NEWS.Rmd`'s `2.0.0.9000` dev-version entries for a non-technical
+  (colony-manager/veterinarian) audience, reorganize by feature within the release heading, and
+  design/land a concrete guardrail against re-drift (`BACKLOG.md` Up Next, found 2026-08-20,
+  owner-directed, refined 2026-08-20) -- **DONE**, multi-round `AskUserQuestion` draft/review/
+  revise loop per the item's own owner-stated requirement, not a single unilateral pass.
+- **Guardrail (requirement 3):** extended `CLAUDE.md`'s existing "NEWS.Rmd entry checklist"
+  (Session 448) with an explicit plain-language/no-jargon criterion. Docs-only, no in-file style
+  note and no automated lint -- both evaluated and explicitly declined via owner discussion: the
+  in-file note's actual beneficiary traced to nothing distinct (every `NEWS.Rmd` edit in this
+  project's history is session-mediated, and every session already reads `CLAUDE.md`); an
+  automated banned-term lint would false-positive on legitimate domain vocabulary this audience
+  already knows (kinship/genotype/heterozygosity vs. e.g. "a CERVUS-style multilocus LOD score").
+- **Taxonomy (requirement 2):** reorganized the section's 58 entries into 10 feature groups
+  (Package, Pedigree Diagram, Kinship & Pedigree Calculations, Marker Genetics, Cross-Center
+  Identity Matching, Genetic Value Analysis, Breeding Group Formation, Mate Pair Analysis,
+  De-Identified Export, General Fixes), proposed and approved via `AskUserQuestion` before any
+  rewrite.
+- **Two further defect classes found and fixed, both owner-caught then generalized project-wide
+  rather than fixed only where first shown:**
+  - **Forward-reference ordering:** entries within a group were not reliably in true shipping
+    order, so a later refinement could sit before the feature's own introduction (most visibly
+    issue #141's positioning-engine entry -- actually shipped 2026-08-20/21 -- sitting first in
+    Pedigree Diagram, ahead of everything it depended on). Fixed via an 8-agent background
+    workflow doing real `git log`/`CHANGELOG.md` archaeology per feature group to establish true
+    chronology and reorder accordingly; also caught a real mis-attribution (the "anchor
+    generation mismatch" fix is S573, not issue #144/S473-474 as initially assumed) and a genuine
+    naming collision (Marker Genetics' "Cross-Center" sub-tab vs. the separate "Cross-Center
+    Identity" tab -- fixed with a disambiguating clause after confirming the real UI label in
+    `R/modMarkerGenetics.R:143`, not an invented rename).
+  - **Delta-language for a reader-invisible "before":** entries framed as "gained"/"Fixed:"/
+    "Changed:"/"rebuilt" relative to a prior state the reader never experienced, since the
+    enclosing feature is itself new within this still-unreleased dev section (nothing before
+    `2.0.0` -- the package's only actual CRAN-accepted version -- establishes any reader-known
+    baseline; owner: "everything not yet on CRAN is considered a draft"). Reworded to state final
+    shipped behavior directly wherever the enclosing tab is itself new this release (Pedigree
+    Diagram: 11 entries; Marker Genetics: 5; Cross-Center Identity Matching: 1); left untouched
+    wherever the delta is legitimate (Kinship & Pedigree Calculations, Genetic Value Analysis,
+    Breeding Group Formation, General Fixes, `obfuscatePed()`'s `linkedDateShift` -- each
+    confirmed pre-existing via `NAMESPACE`/`git log`/`NEWS.md`, not assumed).
+- **Verification, mechanical not eyeballed, after every pass:** entry count held at 58 throughout
+  every reorder/reword pass; all 24 distinct issue-number citations preserved (6 were accidentally
+  dropped mid-rewrite and caught by a diff sweep before presenting); `rmarkdown::render()` (this
+  file's own build-equivalent) run clean after every substantive edit; `NEWS.md` regenerated to
+  match. `git diff` confirmed the untouched rest of the file (everything from the `2.0.0` heading
+  onward) byte-identical throughout.
+- **`BACKLOG.md`:** item marked `[x]` DONE in place with the full resolution recorded. `PROJECT_
+  LEARNINGS.md` Learning 661 records the order-vs-wording generalization gap this session's own
+  round 2 -> round 3 correction demonstrated. `CLAUDE.md` learnings-count pointer refreshed
+  (627+/660 -> 628+/661).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-23 · [issue #161] S627: owner decision -- keep the mating-unit node marker, no code change
 - **Deliverable:** decide (owner call) whether to hide the `__union_N` mating-unit node marker to
   match kinship2's plain-intersection convention (unblocked S625) -- **DONE, decision-only, no

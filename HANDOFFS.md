@@ -137,20 +137,55 @@ This file currently holds **17** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S628
-date: 2026-08-23
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Simplify NEWS.Rmd's dev-version (2.0.0.9000) entries for a non-technical audience,
-  reorganize by feature within the release heading, and design/land a guardrail against
-  re-drift (BACKLOG.md Up Next, found 2026-08-20, owner-directed). Session claimed, work
-  beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+date: 2026-08-23/24
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE. NEWS.Rmd's 2.0.0.9000 dev-section simplified for a non-technical audience,
+  reorganized into 10 feature groups, guardrail landed (CLAUDE.md NEWS.Rmd checklist extended
+  with a plain-language criterion). BACKLOG.md item closed.
+what_was_done: 3-round AskUserQuestion draft/review/revise loop per the item's own owner-stated
+  requirement. Round 1: proposed + landed a 10-group taxonomy and the guardrail, rewrote all 58
+  entries for plain language (caught/restored 6 dropped issue-number citations before
+  presenting). Round 2: owner flagged missing forward-reference ordering; an 8-agent background
+  Workflow did real git log/CHANGELOG.md archaeology per group to establish true shipping
+  chronology, reordered Pedigree Diagram + Marker Genetics, fixed a real mis-attribution (S573,
+  not issue #144) and a naming collision (Marker Genetics "Cross-Center" sub-tab vs. the
+  separate "Cross-Center Identity" tab -- verified the real UI label in
+  R/modMarkerGenetics.R:143 before wording the fix). Round 3: owner flagged "the Diagram tab's
+  layout was rebuilt" as presupposing a released state that never existed; generalized to 11
+  further Pedigree Diagram entries + 5 Marker Genetics entries + 1 Cross-Center Identity
+  Matching entry (every delta-framed bullet for a tab that itself debuts this release), left
+  legitimate delta language untouched elsewhere (confirmed pre-existing via
+  NAMESPACE/git log/NEWS.md). Verified mechanically after every pass: 58-entry count held
+  throughout, all 24 issue numbers preserved, rmarkdown::render() clean each time, NEWS.md
+  regenerated to match. Commits: 5c8cc7e1 (claim); deliverable + close-out commits follow.
+next_steps: No further work owed on this item -- resolved, BACKLOG.md marked [x] DONE. Other
+  READY items unchanged from S627's list: pedigree-diagram package-split scoping (READY, Effort
+  M), context_budget.py evaluation (READY, Effort S), DESCRIPTION Suggests/Config-Needs audit
+  (READY, Effort S), chromote macOS-hang research (optional, Effort M),
+  pedigree-diagram-screenshots.R staleness check (READY, Effort S), "Pedigree diagram vs
+  kinship2" BACKLOG.md section regrowth check (READY, Effort L). Unpushed local commits keep
+  growing (16 at this session's claim, up from 12 at S627's) -- worth pushing soon, now 4+
+  sessions without a push. A future session extending NEWS.Rmd should re-check whether any
+  "no Shiny UI yet" entry has since gained a screen without NEWS being updated to match.
+key_files: NEWS.Rmd (dev-version section reorganized into 10 ## feature-group headings under
+  # nprcgenekeepr 2.0.0.9000), NEWS.md (regenerated, must stay in sync -- always re-render after
+  any further NEWS.Rmd edit), CLAUDE.md:256-257 (NEWS.Rmd entry checklist, extended with the
+  plain-language criterion), BACKLOG.md:104 (item marked [x] DONE), PROJECT_LEARNINGS.md
+  Learning 661 (~line 2013), CHANGELOG.md 2026-08-24 [BL-N] entry.
+gotchas: (1) any future NEWS.Rmd dev-version entry must go into its matching feature-group
+  heading, not appended chronologically -- check the existing 10 groups before adding an 11th.
+  (2) The "everything not yet on CRAN is a draft" reader-baseline reaches back only to 2.0.0 --
+  confirmed via grep -i cran NEWS.Rmd that no earlier version was ever actually
+  accepted/published on CRAN (only submission/resubmission attempts); re-verify if that history
+  changes before extending delta-language license further back. (3) NEWS.md is a TRACKED,
+  GENERATED file -- never hand-edit it, always regenerate via rmarkdown::render(NEWS.Rmd,
+  output_format = "github_document") and commit both together.
+runtime_smoke: n/a -- docs-only session (NEWS.Rmd/NEWS.md/CLAUDE.md/BACKLOG.md/CHANGELOG.md/
+  PROJECT_LEARNINGS.md only, zero R/ or tests/ files touched). The file's own build-equivalent,
+  rmarkdown::render("NEWS.Rmd"), was run clean after every substantive edit instead.
+changelog_ref: CHANGELOG.md 2026-08-24 entry, [BL-N] S628
 commit: pending
 ```
 
