@@ -101,38 +101,52 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       (reuse potential outside this project, cleaner dependency graph, and versioning/release
       overhead, cross-package test/CI complexity, `@noRd`/internal-function visibility loss across
       a package boundary, etc.) before any decision to split.
-- [ ] **Simplify `NEWS.Rmd` entries for a non-technical audience, reorganized by feature
+- [x] **Simplify `NEWS.Rmd` entries for a non-technical audience, reorganized by feature
       not chronologically, with guardrails against recurrence** (found 2026-08-20,
       owner-directed, READY, Effort L) -- a prior session (S538, 2026-08-12) already
       trimmed the `2.0.0.9000` dev-section once (386->134 lines, 26 entries, rewritten from
       multi-sentence technical paragraphs to the terse pre-1.0.8 house style;
       `PROJECT_LEARNINGS.md` Learning 544), but that fix had no guardrail: 8 days and ~80
       sessions later the section has regrown to 315 lines / 57 entries, most written back in
-      the SAME verbose/technical style S538 removed -- e.g. "a KING-robust marker-based
-      kinship estimate" (`NEWS.Rmd:57`), "Hudson's Fst between the populations of two
-      centers" (`:70`), "a CERVUS-style multilocus likelihood-ratio (LOD) score" (`:91`), and
-      exported-function-name-first phrasing (`` `checkLocusMetadata()` ``,
-      `` `markerLdBlock()` ``) throughout -- readable to an R programmer, not to the
-      colony-manager/veterinarian audience this package's NEWS is meant to serve. **Owner-
-      stated requirements for this item (2026-08-20, refined 2026-08-20):** (1) entries must
-      be simplified iteratively until the owner is satisfied -- draft, owner review, revise --
-      not a single unilateral pass an executing session declares done on its own judgment;
-      (2) WITHIN each version/release heading (`# nprcgenekeepr X.Y.Z`), entries must be
-      reorganized BY FEATURE (e.g. a "Pedigree Diagram" group, a "Marker Genetics" group, a
-      "Genetic Value Analysis" group), not chronologically/by-issue-number the way every
-      version section is laid out now -- **the release headings themselves stay in their
-      existing reverse-chronological order** (standard changelog/CRAN convention); only the
-      entries inside each one get regrouped, never merged across versions; (3) the item must design and land a concrete
-      guardrail preventing the verbose/technical style from creeping back in after this pass,
-      the way it did after S538's own fix -- candidates to evaluate, not pre-decided: an
-      explicit plain-language house-style note committed at the top of the dev section itself
-      (visible at the exact point new entries get added), and/or extending `CLAUDE.md`'s
-      existing same-session "NEWS.Rmd entry checklist" (ratified Session 448) with an
-      explicit terseness/no-jargon/plain-language criterion a new entry must pass before
-      commit. A future session should propose the feature-taxonomy and the guardrail
-      mechanism via `AskUserQuestion` before rewriting, then iterate the rewrite with the
-      owner across as many review rounds as needed -- this is explicitly NOT a one-session,
-      one-pass item.
+      the SAME verbose/technical style S538 removed. **RESOLVED S628 (2026-08-23/24):** all 3
+      owner-stated requirements met across a multi-round `AskUserQuestion` draft/review/revise
+      loop, per requirement (1). (2) Reorganized the `2.0.0.9000` section's 58 entries into 10
+      feature groups (Package, Pedigree Diagram, Kinship & Pedigree Calculations, Marker
+      Genetics, Cross-Center Identity Matching, Genetic Value Analysis, Breeding Group
+      Formation, Mate Pair Analysis, De-Identified Export, General Fixes), taxonomy approved
+      by owner before any rewrite. (3) Landed the guardrail as an extension to `CLAUDE.md`'s
+      existing "NEWS.Rmd entry checklist" (Session 448) with an explicit plain-language/
+      no-jargon criterion -- docs-only, no in-file note and no automated lint (both considered
+      and explicitly declined via owner discussion: the in-file note had no distinct
+      beneficiary once traced through -- every edit is session-mediated and every session
+      already reads `CLAUDE.md`; an automated banned-term lint would false-positive on
+      legitimate domain vocabulary this audience already knows, e.g. "kinship"/"genotype").
+      **2 defect classes found and fixed beyond the 3 stated requirements, both owner-caught
+      then generalized project-wide:** (a) *forward-reference ordering* -- entries within a
+      group were not reliably in true shipping order, so a later refinement to a feature could
+      sit before that feature's own introduction (most visibly issue #141's positioning-engine
+      entry, which actually shipped 2026-08-20/21, sitting first in Pedigree Diagram ahead of
+      everything it depended on); researched and corrected via an 8-agent background workflow
+      doing real `git log`/`CHANGELOG.md` archaeology per group (also caught a real
+      mis-attribution: the "anchor generation mismatch" fix was S573, not issue #144/S473-474
+      as initially assumed) and a genuine naming collision (Marker Genetics' "Cross-Center"
+      sub-tab vs. the separate "Cross-Center Identity" tab -- fixed with a disambiguating
+      clause, not an invented rename, after confirming the real UI label in
+      `R/modMarkerGenetics.R`). (b) *delta-language for a reader-invisible "before"* -- entries
+      describing a feature as "gained"/"Fixed:"/"Changed:"/"rebuilt" relative to a prior state,
+      when that entire feature is itself new within this still-unreleased dev section (nothing
+      before `2.0.0`, the package's only actual CRAN-accepted version, establishes any
+      reader-known baseline) -- reworded to state final shipped behavior directly wherever the
+      enclosing tab is itself new (Pedigree Diagram: 11 entries; Marker Genetics: 5;
+      Cross-Center Identity Matching: 1), left untouched wherever the delta is legitimate (a
+      pre-existing tab/function gaining something new -- Kinship & Pedigree Calculations,
+      Genetic Value Analysis, Breeding Group Formation, General Fixes, `obfuscatePed()`'s
+      `linkedDateShift`, each confirmed pre-existing via `NAMESPACE`/`git log`/`NEWS.md`, not
+      assumed). Fidelity verified mechanically after every pass, not eyeballed: entry count
+      held at 58 throughout; all 24 distinct issue-number citations preserved (6 were
+      accidentally dropped mid-rewrite and caught by a diff sweep before presenting).
+      `rmarkdown::render()` (this file's own build-equivalent) run clean after every
+      substantive edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`.
 ## Housekeeping
 - [ ] **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing binary hangs on
       `macos-latest`'s `ChromoteSession$new()` bootstrap** (found S619, 2026-08-20, incidental to
