@@ -182,8 +182,8 @@ gotchas: (1) PROJECT_LEARNINGS.md is now 2,005 lines -- past the same 2,000-line
 runtime_smoke: n/a -- documentation-only change to CLAUDE.md prose, zero R/ or tests/ files touched,
   zero runtime behavior changed.
 changelog_ref: CHANGELOG.md 2026-08-23 [BL-cleanRegressionFilter] entry (landed in e12ac08c)
-commit: f1051c65 (claim), e12ac08c (fix + BACKLOG + learning) -- reconciled to the real handoff-
-  commit sha immediately after, matching the S600/S602-S623 self-reference workaround precedent
+commit: f1051c65 (claim), e12ac08c (fix + BACKLOG + learning), 06dec197 (handoff) -- reconciled to
+  the real shas immediately after, matching the S600/S602-S623 self-reference workaround precedent
 ```
 S624 fixed CLAUDE.md's stale test-app-*/test-e2e-* "Clean regression read" baseline-noise filter
 (BACKLOG.md Housekeeping item, found S623). Root cause (create_test_app() undefined) confirmed
