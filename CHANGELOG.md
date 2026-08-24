@@ -16,6 +16,32 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-23 · [issue #161] S627: owner decision -- keep the mating-unit node marker, no code change
+- **Deliverable:** decide (owner call) whether to hide the `__union_N` mating-unit node marker to
+  match kinship2's plain-intersection convention (unblocked S625) -- **DONE, decision-only, no
+  code change.**
+- **Evidence gathered before presenting the decision:** read
+  `vignettes/articles/shiny_app_use/diagram_rectilinear_edge_style.png` (nprcgenekeepr's own
+  current rendering -- a small blue dot at every mating junction) and
+  `vignettes/articles/kinship2-fidelity-validation-img/trackC-kinship2.png` (kinship2's actual
+  output -- mate-line and sibship-drop meet as a plain, marker-free intersection), confirming the
+  issue's own framing directly rather than trusting its prose description.
+- **New finding beyond the issue's own stated trade-off:** the `__union_N` node's
+  `title = sprintf("%d offspring", ...)` hover tooltip (`R/makePedigreeDiagramData.R:1067`) would
+  be silently lost by the established `size = 0` + transparent-color invisible-node technique --
+  confirmed by checking the D1/D2 waypoint nodes' own construction (`title = NA_character_`,
+  since a zero-size vis.js node isn't hoverable). A real information-loss cost with no relation to
+  kinship2 parity, not named in the original issue.
+- **Presented via `AskUserQuestion`** (4 options: keep / hide everywhere / hide in "direct" style
+  only / hold for a live comparison), both images shown, tooltip finding included. **Owner
+  decision: keep the dot (status quo).**
+- **Close-out:** `BACKLOG.md` item marked `[x]` DONE in place with the resolution recorded.
+  [Issue #161](https://github.com/rmsharp/nprcgenekeepr/issues/161) closed (`gh issue close
+  --reason completed`) citing the evidence and decision. `PROJECT_LEARNINGS.md` Learning 660
+  recorded (trace a proposed technique against its own established precedent for hidden side
+  effects before presenting a design decision); `CLAUDE.md`'s learning/session-count pointer
+  refreshed (626+/659 -> 627+/660).
+
 ### 2026-08-23 · [BL-projectLearningsGapConfirm] S626: confirm `PROJECT_LEARNINGS.md`/`methodology_dashboard.py` gap is NOT real -- correct the record
 - **Deliverable:** confirm-then-decide whether `methodology_dashboard.py`'s size-risk list has a
   real gap by omitting `PROJECT_LEARNINGS.md` (`BACKLOG.md` Housekeeping item, found S625) --

@@ -18,14 +18,107 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 626 Handoff Evaluation (by Session 627)
+**Score: 8/10.** **What helped:** the receipt's `next_steps` field correctly carried forward the
+full, unchanged priorities list from S625 — including naming issue #161 as "still unblocked for an
+owner decision (S625's finding, unchanged)" — which this session confirmed independently (via a
+fresh `BACKLOG.md` grep) rather than relying on it alone, and it matched exactly. The `gotchas`
+about `methodology_dashboard.py` being a canonical TRACKED sync target were accurate background but
+not directly load-bearing for this session's own, unrelated topic. **What was missing:** nothing
+this session needed that the receipt could reasonably have provided — S626's own deliverable
+(the `PROJECT_LEARNINGS.md` dashboard question) was unrelated to issue #161, so it had no
+investigative head-start to offer beyond correctly noting the item was ready to pick up; the
+GitHub-issue-thread context (the S592 deferral comment) and the tooltip-loss finding were both
+things this session had to discover itself. **What was wrong:** nothing found inaccurate — every
+claim in the receipt (commits, the "not a gap" finding, the priorities list) re-verified true.
+**ROI:** high — the priorities list was reused directly as this session's own Phase 0 render,
+saving a from-scratch `BACKLOG.md` sweep.
+
 ### What Session 627 Did
 **Deliverable:** Decide (owner call) whether to hide the `__union_N` mating-unit node marker to
-match kinship2's plain-intersection convention (issue #161, unblocked S625). (IN PROGRESS)
-**Started:** 2026-08-23.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+match kinship2's plain-intersection convention (issue #161, unblocked S625). **DONE.**
+**Started/Completed:** 2026-08-23 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol, abbreviated re-check since this is a same-conversation
+   continuation of S626 — `SESSION_RUNNER.md`/`SAFEGUARDS.md` content unchanged since S626's own
+   full read this session): `git status`/`log`/`diff --stat` (clean except the same pre-classified
+   untracked artifacts, no new ghost-session signal; local branch grew to 12 commits ahead of
+   `origin/master`, unpushed), `gh issue list` (12 open, unchanged), `gh run list` (all green,
+   unchanged — no push since last check), ledger reconcile (`CHANGELOG.md`/`HANDOFFS.md` frontiers
+   one commit behind HEAD only via the established self-referential sha-recording pattern — no
+   real gap), `python3 methodology_dashboard.py` (96/100, 1 HIGH risk, same recurring flag),
+   `SESSION_NOTES.md` ACTIVE TASK re-read to confirm S626's own handoff landed intact. Rendered the
+   priorities list (4 `AskUserQuestion` options, same set as S626's own list minus the item S626
+   resolved) — **user picked issue #161's marker decision.**
+2. **Phase 1B claimed** (stub + `HANDOFFS.md` `status: pending` receipt, commit `befa2fb3`).
+3. **Re-read the full `BACKLOG.md` item and the live GitHub issue #161 thread** (`gh issue view
+   161 --json ...`, since `gh issue view` plain form errors on this repo's deprecated Projects-
+   classic integration) — confirmed the S592 deferral rationale and that both named deferral
+   conditions were satisfied per S625.
+4. **Located the exact styling code:** `R/makePedigreeDiagramData.R:1061-1076` (`unitNodes`
+   construction: `shape = "dot"`, `size = 6L`, `title = sprintf("%d offspring", ...)`, a comment
+   citing "Track 1, owner decision S570" for the *color* being kept `NA` — confirmed via
+   `CHANGELOG.md`/archive that S570's decision was specifically about affected-status fill color,
+   a narrower, orthogonal decision from #161's "does a marker exist at all" question). Cross-
+   checked the established `size = 0` + transparent-color invisible-node technique
+   (`.addRectilinearWaypoints()`'s D1/D2 waypoint node construction, lines ~1533-1548) and found it
+   sets `title = NA_character_` on every such node — a fact not mentioned anywhere in the GitHub
+   issue, surfacing a real functional cost (loss of the "N offspring" hover tooltip) beyond the
+   purely visual trade-off already named.
+5. **Gathered visual evidence per this project's established practice** (render/attach actual
+   images for any kinship2-vs-nprcgenekeepr comparison, not just describe metrics): read
+   `vignettes/articles/shiny_app_use/diagram_rectilinear_edge_style.png` (this package's own
+   current rendering) and `vignettes/articles/kinship2-fidelity-validation-img/trackC-kinship2.png`
+   (kinship2's actual output) — both displayed inline, confirming the issue's own framing directly.
+6. **Presented the decision via `AskUserQuestion`** (4 options: keep / hide everywhere / hide in
+   "direct" style only / hold for a live comparison) with both images and the tooltip finding.
+   **Owner picked "keep the dot" (status quo).**
+7. **Close-out bookkeeping:** `BACKLOG.md` item marked `[x]` DONE in place with the full resolution
+   recorded (not deleted, matching this project's mark-DONE-not-delete convention). [Issue
+   #161](https://github.com/rmsharp/nprcgenekeepr/issues/161) closed via `gh issue close --reason
+   completed` with a comment citing the evidence and decision, per `CLAUDE.md`'s GitHub issue
+   close-out checklist. `PROJECT_LEARNINGS.md` Learning 660 recorded. `CLAUDE.md`'s learning/
+   session-count pointer refreshed (626+/659 → 627+/660). `CHANGELOG.md` `[issue #161]` entry
+   added.
+
+**Runtime smoke test (Phase 3E):** N/A — zero code changed (the owner's decision was "no change");
+zero `R/`/`tests/` files touched beyond being read; the only non-documentation action was a GitHub
+issue close (not a runtime change). Not silently skipped: stated explicitly.
+
+**TDD phase declaration:** no implementation code was written this session (evidence-gathering +
+decision + documentation only, resolved as "no change") — the RED/GREEN/REFACTOR gates do not
+apply; no `PRE-RED→RED` transition was entered, matching S626's own precedent for a pure decision
+session (itself matching S546's "S325 reopened, decision only").
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation / tutorial-article / `NEWS.Rmd` /
+`a2interactive.Rmd` / `_pkgdown.yml` checklists all **N/A** — no new exported function, no new
+user-facing Shiny feature, no code touched. **GitHub issue close-out: DONE this session** — issue
+#161 closed with the decision and evidence, in the same session the `BACKLOG.md` item was marked
+DONE, per the established checklist. Lint checklist **N/A** — no `.R` files touched.
+
+**Self-assessment (Session 627): 9/10.** **Strengths:** (1) did not treat the GitHub issue's own
+named trade-off as the complete picture — traced the exact proposed implementation technique
+(`size = 0` + transparent color) against its own established precedent (D1/D2 waypoints) and found
+a real, previously-unnamed functional cost (tooltip loss) before presenting the decision; (2)
+gathered and displayed actual rendered images for both sides of the comparison rather than
+describing them, matching this project's established practice for kinship2-vs-nprcgenekeepr
+comparisons; (3) re-read the live GitHub issue thread directly (not just the `BACKLOG.md` summary)
+to confirm the S592 deferral rationale before treating it as settled; (4) correctly distinguished
+the S570 decision (affected-status fill color, orthogonal) from this session's own question (marker
+existence) rather than conflating the two just because both cite "mating-unit dot" in nearby code
+comments; (5) closed the GitHub issue in the same session per the established checklist, rather
+than leaving it open for a later orientation to catch. **Weaknesses:** (1) did not render a fresh,
+live screenshot of this specific package's own diagram — reused an existing committed screenshot
+(`diagram_rectilinear_edge_style.png`, dated Aug 13) rather than confirming it still reflects
+current `master` pixel-for-pixel; low risk (no rendering-affecting change has landed in the
+mating-unit-dot code since), but not independently re-verified this session; (2) presented 4
+options in the `AskUserQuestion` (including a hybrid "direct style only" option) without a stated
+recommendation of its own — arguably correct for a genuine aesthetic call reserved for the owner,
+but a light recommendation with reasoning might have made the choice faster without constraining
+it.
+
+### Session 625 Handoff Evaluation (by Session 626)
 
 ### Session 625 Handoff Evaluation (by Session 626)
 **Score: 7/10.** **What helped:** the receipt precisely named the item (`BACKLOG.md`'s

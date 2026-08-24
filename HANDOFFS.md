@@ -138,19 +138,73 @@ This file currently holds **17** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S627
 date: 2026-08-23
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Decide (owner call) whether to hide the __union_N mating-unit node marker to match
-  kinship2's plain-intersection convention (issue #161, unblocked S625).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE. Owner decision reached on issue #161: keep the __union_N mating-unit node
+  marker (status quo), no code change. Issue closed.
+what_was_done: Re-read the live GitHub issue #161 thread (gh issue view --json, since the plain
+  form errors on this repo's deprecated Projects-classic integration) and confirmed the S592
+  deferral rationale. Located the marker's styling code (R/makePedigreeDiagramData.R:1061-1076:
+  shape="dot", size=6L, title=sprintf("%d offspring", ...)) and distinguished the S570 decision
+  (affected-status FILL COLOR, orthogonal) from this session's own question (marker existence).
+  Cross-checked the established size=0 + transparent-color invisible-node technique (D1/D2
+  waypoint nodes) and found it sets title=NA_character_ -- surfacing a real, previously-unnamed
+  functional cost (loss of the "N offspring" hover tooltip) beyond the issue's own named visual
+  trade-off. Read and displayed both diagram_rectilinear_edge_style.png (nprcgenekeepr's own
+  current rendering) and trackC-kinship2.png (kinship2's actual output) before presenting the
+  decision. Presented via AskUserQuestion (4 options); owner picked "keep the dot." BACKLOG.md
+  item marked [x] DONE in place; issue #161 closed (gh issue close --reason completed) citing the
+  evidence. PROJECT_LEARNINGS.md Learning 660 recorded; CLAUDE.md pointer refreshed (626+/659 ->
+  627+/660). Commits: befa2fb3 (claim), pending (close-out).
+next_steps: No further work owed on this item -- resolved, issue closed. BACKLOG.md's other READY
+  items are unchanged: pedigree-diagram package-split scoping (READY, Effort M), NEWS.Rmd
+  simplification by feature + guardrail (READY, Effort L, explicitly multi-round/iterative --
+  propose the feature taxonomy + guardrail mechanism via AskUserQuestion first), context_budget.py
+  evaluation (READY, Effort S), DESCRIPTION Suggests/Config-Needs audit (READY, Effort S), chromote
+  macOS-hang research (optional, Effort M), pedigree-diagram-screenshots.R staleness check (READY,
+  Effort S), "Pedigree diagram vs kinship2" BACKLOG.md section regrowth check (READY, Effort L).
+  Separately: 12 local commits remain unpushed to origin/master as of this session's claim (grew
+  from 8 to 12 across S626-S627) -- worth pushing soon, this project has now gone 3+ sessions
+  without a push.
+key_files: BACKLOG.md:7 (Active section, item resolved), R/makePedigreeDiagramData.R:1061-1076
+  (__union_N node construction, read-only, not modified), R/makePedigreeDiagramData.R:1533-1548
+  (D1/D2 waypoint invisible-node technique, read-only precedent check), PROJECT_LEARNINGS.md
+  Learning 660 (~line 2011), CLAUDE.md:282 (pointer), CHANGELOG.md 2026-08-23 [issue #161] entry,
+  vignettes/articles/shiny_app_use/diagram_rectilinear_edge_style.png,
+  vignettes/articles/kinship2-fidelity-validation-img/trackC-kinship2.png (both read-only
+  evidence, not modified).
+gotchas: (1) `gh issue view <N>` (plain form) errors on this repo with a GraphQL "Projects
+  (classic) is being deprecated" error -- use `gh issue view <N> --json title,body,comments,labels,
+  createdAt` (or similar explicit --json field list) instead, which bypasses the broken
+  classic-projects field. (2) A code comment citing an old session's "owner decision" (e.g. S570's
+  comment on the __union_N node, "mating-unit dots are visually distinct... on purpose") may refer
+  to a narrower, different decision than the one currently in question -- verify what the CITED
+  session actually decided (via CHANGELOG.md/its archive shard) before assuming it already settled
+  the present question; S570's decision was about fill COLOR, not marker existence, and conflating
+  the two would have been a real mistake. (3) Before presenting any "apply invisible-node technique
+  X to a new node type" proposal, check what fields X's own established call sites set to
+  NA/omitted alongside the visual property being changed -- a tooltip is exactly the kind of side
+  effect a purely-visual issue description won't mention.
+runtime_smoke: n/a -- zero code changed (owner decision was "no change"); zero R/ or tests/ files
+  touched beyond being read; the only non-documentation action was a GitHub issue close, not a
+  runtime change.
+changelog_ref: CHANGELOG.md 2026-08-23 [issue #161] entry
+commit: befa2fb3 (claim), pending (close-out)
 ```
+S627 resolved issue #161 (hide vs. keep the `__union_N` mating-unit node marker) as an owner
+decision: **keep the dot, no code change.** Re-read the live GitHub issue thread and the marker's
+own styling code before presenting the question; found and surfaced a functional cost the issue
+never named (the size=0+transparent-color technique used for D1/D2 waypoints would also silently
+drop the node's "N offspring" hover tooltip); read and displayed both a current nprcgenekeepr
+screenshot and kinship2's actual rendered output before asking. Closed the GitHub issue in the
+same session per the established checklist. Self-score breakdown: + traced the proposed technique
+against its own established precedent rather than trusting the issue's stated trade-off as
+complete; + gathered and showed actual images rather than describing them; + correctly
+distinguished a superficially-similar prior decision (S570, fill color) from the actual question at
+hand (marker existence); + closed the GitHub issue same-session; − reused an existing committed
+screenshot rather than confirming it still reflects current `master` pixel-for-pixel (low risk,
+not independently re-verified); − presented options without a stated recommendation of its own.
 
 ```handoff
 session: S626
