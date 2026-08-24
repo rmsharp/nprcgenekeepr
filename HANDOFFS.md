@@ -155,7 +155,8 @@ what_was_done: Grepped SESSION_RUNNER.md/SAFEGUARDS.md directly for "PROJECT_LEA
   AskUserQuestion (3 options); owner picked "correct the record." BACKLOG.md item marked [x] DONE
   in place (no dashboard code change). PROJECT_LEARNINGS.md Learning 659 recorded. CLAUDE.md
   learning/session-count pointer refreshed (625+/658 -> 626+/659). CHANGELOG.md
-  [BL-projectLearningsGapConfirm] entry added. Commits: d4c4243a (claim), pending (close-out).
+  [BL-projectLearningsGapConfirm] entry added. Commits: d4c4243a (claim), 44eeb88f (deliverable),
+  574ea58c (handoff).
 next_steps: No further work owed on this item -- it's resolved as "not a gap." BACKLOG.md's other
   READY items are unchanged: pedigree-diagram package-split scoping (READY, Effort M), NEWS.Rmd
   simplification by feature + guardrail (READY, Effort L, explicitly multi-round/iterative with
@@ -183,7 +184,7 @@ runtime_smoke: n/a -- documentation-only changes (BACKLOG.md, PROJECT_LEARNINGS.
   CHANGELOG.md prose), zero R/ or tests/ files touched, zero runtime behavior changed, zero .py
   files touched (methodology_dashboard.py read-only).
 changelog_ref: CHANGELOG.md 2026-08-23 [BL-projectLearningsGapConfirm] entry
-commit: d4c4243a (claim), pending (close-out)
+commit: d4c4243a (claim), 44eeb88f (deliverable), 574ea58c (handoff)
 ```
 S626 confirmed the `BACKLOG.md` item's own premise -- "`PROJECT_LEARNINGS.md` is a mandatory Phase 0
 read" -- does not hold: direct grep of `SESSION_RUNNER.md`/`SAFEGUARDS.md` found no such mandate,
