@@ -136,6 +136,24 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S633
+date: 2026-08-25
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implementing Track A of docs/planning/pedigree-diagram-kinship2-structural-comparison-
+  plan.md (section 4.1) -- .extractKinship2Structure(), a new zero-kinship2-dependency internal
+  extractor, plus its test file. Strict TDD (RED->GREEN->REFACTOR).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S632
 date: 2026-08-25
 status: complete
