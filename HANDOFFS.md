@@ -138,19 +138,44 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S632
 date: 2026-08-25
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Design document for the programmatic structural-comparison algorithm between
-  makePedigreeMatingLayout() output and kinship2's own pedigree object (BACKLOG.md "Up Next" top
-  item, found S631). IN PROGRESS.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Design document written and owner-ratified for the programmatic structural-
+  comparison algorithm between makePedigreeMatingLayout() output and kinship2's own pedigree
+  object (BACKLOG.md "Up Next" top item, found S631). Plan only -- no implementation code, per the
+  planning/implementation boundary (FM #18). Track A is the next pickup.
+what_was_done: Ran a 5-agent Workflow research fan-out (kinship2 pedigree object internals verified
+  live; makePedigreeMatingLayout()'s output/synthetic-id structure; existing test/fixture
+  inventory; prior-planning-doc dragons; a grep-based integration-point inventory), then
+  independently re-verified the 2 most load-bearing structural claims by direct source reading
+  before relying on them. Wrote docs/planning/pedigree-diagram-kinship2-structural-comparison-
+  plan.md: 8 numbered design decisions (forced vs. judgment call), an interface-first design for 3
+  R/ internal (@noRd), zero-kinship2-dependency functions, and 4 session-sliceable tracks (A-D).
+  Routed 4 genuine judgment calls to the owner via AskUserQuestion -- all ratified exactly as
+  recommended. Updated BACKLOG.md's top item (DONE/RATIFIED, not closed) and PROJECT_LEARNINGS.md
+  (Learning 665). Commit 1662fa14.
+next_steps: Implement Track A (docs/planning/pedigree-diagram-kinship2-structural-comparison-
+  plan.md section 4.1) -- .extractKinship2Structure() in a new R/ file, zero kinship2 dependency,
+  unit-tested against synthetic list fixtures. Strict A->B->C->D order (plan section 5) -- do not
+  skip to Track C's live-kinship2 tests before A/B land, since B's tests import A's output shape
+  contract and C calls both directly.
+key_files: docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md (the
+  deliverable), R/makePedigreeDiagramData.R:1085-1234,460-522,355-365 (re-verified this session,
+  Track B's source of truth), R/modPedigree.R:773-775 (existing duplicateToReal resolution
+  precedent), BACKLOG.md "Up Next" top item, PROJECT_LEARNINGS.md#Learning-665
+gotchas: kinship2 is confirmed absent from every CI workflow (grepped this session) -- Track C's
+  skip_if_not_installed("kinship2")-guarded tests will skip cleanly in CI and only run live
+  locally; this is intentional design (plan section 1.5/5), not a gap. The plan's own section 3.2
+  pseudocode is explicitly illustrative/non-vectorized -- real translation work, not
+  transcription, for whichever session implements Track B. Dashboard flagged 3 files (HANDOFFS.md/
+  SESSION_NOTES.md/CHANGELOG.md) past the FM #28 2,000-line read cap this session -- reported, not
+  acted on, still open.
+runtime_smoke: n/a -- planning/docs-only session, no R production code or runtime behavior
+  changed.
+changelog_ref: CHANGELOG.md 2026-08-25 S632 entry
+commit: 1662fa14 (deliverable), close-out commit pending reconcile (self-reference workaround,
+  matching S600/S602-S631 precedent)
 ```
 
 ```handoff

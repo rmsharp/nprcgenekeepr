@@ -16,6 +16,31 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S632: design a structural/topological pedigree-diagram comparison algorithm vs kinship2 (BACKLOG.md Up Next item found S631)
+- **Deliverable:** `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md` — an
+  interface-first design resolving the DECISION NEEDED tag on `BACKLOG.md`'s top "Up Next" item.
+  A 5-agent research fan-out (kinship2 `pedigree` object internals verified live;
+  `makePedigreeMatingLayout()`'s output/synthetic-id structure re-verified directly against source;
+  existing test/fixture inventory; prior-planning-doc "dragons"; a grep-based integration-point
+  inventory), plus this session's own direct re-verification of the 2 most load-bearing structural
+  claims (`R/makePedigreeDiagramData.R:1085-1234,460-522,355-365`), produced 8 numbered design
+  decisions (forced vs. judgment call, each labeled) and an interface-first design for 3 `R/`
+  internal (`@noRd`) functions — `.extractKinship2Structure()`/`.extractNprcStructure()`/
+  `.comparePedigreeStructures()` — all zero-`kinship2`-dependency by construction (typed to the
+  minimal field shape kinship2's `pedigree` object actually exposes, not its S3 class; only a thin
+  `data-raw/`-side wrapper touches `kinship2::` directly). Split into 4 session-sliceable tracks
+  (A: kinship2-side extractor; B: nprcgenekeepr-side extractor + an edgeStyle-invariance property
+  test; C: the diff + a new crossing-duplication fixture + live-kinship2 end-to-end tests against
+  the Track-C fixture and the real 375-individual fixture; D: port the `$go_to()` chromote fix,
+  regenerate images, remove the S631 caveats once Track C confirms/resolves parity). 4 owner-
+  ratification questions (code placement, twin-relation scope, the new fixture, Track D placement)
+  answered via `AskUserQuestion`, all exactly per the plan's own recommendation. `BACKLOG.md`'s top
+  item updated (design DONE/RATIFIED, Track A named as next pickup — not marked `[x]`, since
+  implementation hasn't happened). `PROJECT_LEARNINGS.md` Learning 665 (the typed-to-minimal-shape
+  adapter pattern for optional-dependency comparators). `CLAUDE.md` learnings-count pointer
+  refreshed (631+/664 -> 632+/665). Commit: `1662fa14`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25 · [ad hoc] S631: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S630 precedent)
 - **Deliverable:** fixed this session's own `HANDOFFS.md` receipt `commit` field from the
   pre-close-out commit to include the close-out commit itself (`16a23c2a` correction, `35b1a23e`

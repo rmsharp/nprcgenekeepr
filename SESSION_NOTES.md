@@ -18,20 +18,133 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
-### What Session 632 Did
-**Deliverable:** Design document — `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md` —
-designing the programmatic structural-comparison algorithm between `makePedigreeMatingLayout()`'s
-output and kinship2's own `pedigree` object (resolving the DECISION NEEDED tag on `BACKLOG.md`'s
-top "Up Next" item, found S631). (IN PROGRESS)
-**Started:** 2026-08-25.
-**Status:** Session claimed. Work beginning. Following `ARCHITECTURE_WORKSTREAM.md` +
-`SESSION_RUNNER.md` Planning Session requirements. Implementation is explicitly out of scope for
-this session (FM #18).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+### Session 631 Handoff Evaluation (by Session 632)
+**Score: 9/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field was specific and
+actionable almost to the letter — "(c) design and build a real structural comparison -- extract the
+parent-child/mate-pair edge set from both kinship2's `pedigree` object and nprcgenekeepr's
+`makePedigreeMatingLayout()` output... and diff them programmatically" is nearly verbatim what became
+this session's plan document's own scope statement (§0). `key_files` correctly pointed at
+`data-raw/kinship2FidelityValidation.R:75-84` and `PROJECT_LEARNINGS.md#Learning-664`, both of which
+were central to this session's evidence base. The `BACKLOG.md` item's own framing (owner's exact
+words, both problems numbered and evidenced) meant Phase 0's priorities-list rendering needed no
+extra digging to present it accurately. **What was missing:** the handoff's `next_steps` field
+described (a)/(b)/(c) as one undifferentiated block ("a future session should (a)... (b)... (c)...");
+it didn't anticipate that (c) alone — the actual DECISION NEEDED item — would need its own dedicated
+*design* session before any implementation, per `SESSION_RUNNER.md`'s planning/implementation
+boundary (FM #18). This wasn't wrong, just incomplete — S632 had to derive the design-first framing
+itself from the `BACKLOG.md` item's own "DECISION NEEDED" tag rather than finding it already spelled
+out. **What was wrong:** nothing found inaccurate. **ROI:** high — the handoff's precision measurably
+shortened this session's own scoping work.
 
-### Session 630 Handoff Evaluation (by Session 631)
+### What Session 632 Did
+**Deliverable:** Design document — `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md`
+— an interface-first design for a programmatic structural-comparison algorithm between
+`makePedigreeMatingLayout()`'s output and kinship2's own `pedigree` object, resolving the DECISION
+NEEDED tag on `BACKLOG.md`'s top "Up Next" item (found S631). **DONE** (plan only — no implementation
+code, per `SESSION_RUNNER.md`'s planning/implementation boundary, FM #18).
+**Started/Completed:** 2026-08-25 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): clean tree except pre-classified untracked artifacts (all
+   individually date-checked and traced to already-documented sources — 3 spike-evidence HTMLs from
+   S588, the recurring Office lock file, the recurring `scratchpad/` debug-script dir, S630's own
+   deliberately-uncommitted review PDFs — no ghost session). Ledger frontiers current (`CHANGELOG.md`
+   == HEAD; `HANDOFFS.md` one commit behind HEAD, the standard self-referential non-gap). CI green
+   (`gh run list`, last 10 runs all `completed success`). Dashboard 96/100, 1 HIGH risk (3 files now
+   past the FM #28 2,000-line read cap: `HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` — flagged in
+   the report, not acted on, since it wasn't the item picked). Rendered the priorities list (4 items)
+   via `AskUserQuestion`; the user picked "Pedigree-diagram vs kinship2 comparison algorithm."
+2. **Scoped the task as a planning session**, not implementation — `BACKLOG.md`'s own "DECISION
+   NEEDED on the comparison methodology's actual design" tag, and `SESSION_RUNNER.md`'s
+   `Design→ARCHITECTURE_WORKSTREAM.md` mapping, both pointed here. Confirmed `DESIGN_WORKSTREAM.md`
+   (UI/UX-specific) didn't fit; `ARCHITECTURE_WORKSTREAM.md` (interface-first design for a new
+   internal capability) did. Declared TDD phase N/A (matching the sibling S569 plan doc's own
+   established precedent for planning sessions).
+3. **Claimed the session** (1B stub + `HANDOFFS.md` pending receipt, commit `c729a222`).
+4. **Ran a 5-agent Workflow research fan-out** (parallel, no barrier needed — each agent's findings
+   were consumed independently at synthesis time): kinship2 `pedigree` object internals (live
+   inspection, `str()`/`unclass()`, `align.pedigree()`'s unexported `spouselist` derivation deparsed);
+   `makePedigreeDiagramData.R`'s full output/synthetic-id structure (1,900-line file read in full);
+   existing test/fixture inventory (`test_makePedigreeMatingLayout.R`,
+   `test_resolveEdgeNodeCollisions.R`, repo-wide grep); prior planning-doc "dragons" (5 documents +
+   2 `PROJECT_LEARNINGS.md` learnings read in full); a grep-based integration-point inventory
+   (`DESCRIPTION`, every `makePedigreeMatingLayout`/`kinship2` call site). 530K subagent tokens, 86
+   tool calls, 0 errors.
+5. **Adversarially re-verified the 2 most load-bearing structural claims myself**, directly reading
+   `R/makePedigreeDiagramData.R:1085-1234,460-522,355-365` rather than trusting agent report alone —
+   both confirmed exactly as reported (the `edgeStyle="direct"` vs `"rectilinear"` split, the 5
+   reserved-prefix validation). Also spot-verified `R/modPedigree.R:773-775`,
+   `vignettes/a2interactive.Rmd:500`, both `PROJECT_LEARNINGS.md` Learning line numbers, and the
+   owner-correction callout's actual text in `pedigree-diagram-kinship2-reference-comparison.qmd`.
+6. **Designed the comparator** around one key architectural finding this session made, not merely
+   inherited: kinship2's `pedigree` object is a plain S3 list exposing only `id`/`findex`/`mindex`/
+   (optional `relation`) — nothing that actually requires the `kinship2` namespace to read. This let
+   the 3 core functions be typed to that minimal shape (not the `kinship2::pedigree` class), making
+   them fully unit-testable with **zero** `kinship2` dependency; only a thin `data-raw/`-side wrapper
+   that actually constructs a real `kinship2::pedigree()` object needs the guard/skip. Also
+   established (and required as its own verification task, not an assumption): comparing on
+   `makePedigreeMatingLayout(ped, edgeStyle="direct")` output is sufficient and far simpler than
+   walking `"rectilinear"`'s waypoint chains, since the underlying relationship structure is built
+   once, identically, before the style branch (confirmed by direct source reading, step 5).
+7. **Wrote the full plan** (`docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md`),
+   matching the sibling `kinship2-supplement-full-reproduction-plan.md`'s house style: evidence base,
+   8 numbered design decisions (forced vs. judgment call, each labeled), interface-first function
+   contracts with illustrative (explicitly-marked non-final) pseudocode, 4 session-sliceable tracks
+   with completion criteria and verification commands, cross-track notes, an alternatives-considered
+   table, and a provenance section.
+8. **Routed the 4 genuine judgment calls to the owner via `AskUserQuestion`**, matching the
+   established S562 ratification precedent — code placement (internal `R/` helpers vs. script-only
+   vs. exported), twin-relation comparison scope (now vs. deferred), whether to add a new
+   crossing-duplication fixture, and whether Track D (closing the loop on the vignette) stays in this
+   plan. **All 4 ratified exactly as recommended**, zero corrections. Filled in the plan's own
+   "Ratification outcome" section with the result.
+9. **Verified every citation added this session resolves** (Phase 3F requirement): grepped/read every
+   cited file:line and doc-line-range directly — all confirmed accurate, none fabricated or drifted.
+10. **Updated `BACKLOG.md`'s top item** to record the plan as DONE/RATIFIED and name Track A as the
+    next pickup, rather than marking the whole item `[x]` (implementation hasn't happened yet).
+11. **`PROJECT_LEARNINGS.md` Learning 665** — the typed-to-minimal-shape adapter pattern (§6 above),
+    a genuinely new, reusable architectural pattern, not a restatement of prior learnings.
+    `CLAUDE.md` learnings-count pointer refreshed.
+12. **Close-out** (this write-up).
+
+**Self-assessment (Session 632): 9/10.** **Strengths:** (1) used a Workflow research fan-out
+appropriately for a genuinely research-heavy design task, then did NOT simply trust the agents'
+output — independently re-verified the 2 claims the whole design's correctness rests on, catching
+zero errors but establishing real confidence rather than assumed confidence; (2) correctly
+distinguished *forced* design decisions (only one option is actually correct, given verified source
+facts) from genuine *judgment calls* (routed to the owner), rather than either deciding everything
+unilaterally or asking about everything; (3) found a real architectural win (the zero-kinship2-
+dependency typed-to-minimal-shape pattern) that wasn't merely assumed from the owner's callout text
+but derived from directly inspecting the installed package; (4) correctly scoped this session to
+design-only, resisting any pull toward writing implementation code even though the design was
+concrete enough to make that tempting (`SAFEGUARDS.md` mode-switch discipline, FM #18); (5) matched
+established house style (the sibling S562 plan) closely enough that the ratification step reused a
+proven pattern rather than improvising one. **Weaknesses:** (1) the illustrative pseudocode in the
+plan's §3.2 is explicitly unrolled/non-vectorized (flagged as such in the document itself) — a minor
+gap, deliberate, but means Track A/B's implementing session has real translation work to do, not just
+transcription; (2) did not independently re-execute the kinship2-internals research agent's own R
+code (I verified `makePedigreeMatingLayout()`'s structure directly via source reading, but trusted
+the kinship2 agent's live-run transcript output rather than re-running it myself) — a reasonable
+tradeoff given the output was highly concrete (actual `str()` dumps, actual code+output pairs) and
+independently cross-checked against kinship2's own deparsed `align.pedigree()` internals, but a
+stricter session could have re-run it.
+
+**Key files:** `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md` (the
+deliverable), `BACKLOG.md` "Up Next" top item (updated, not closed), `PROJECT_LEARNINGS.md` Learning
+665, `CLAUDE.md:283` (pointer), `R/makePedigreeDiagramData.R:1085-1234,460-522,355-365` (directly
+re-verified this session — the source of truth for Track B's design), `R/modPedigree.R:773-775` (the
+existing `duplicateToReal` resolution precedent).
+
+**Gotchas for a future session (Track A, the next pickup):** (1) implement exactly `docs/planning/
+pedigree-diagram-kinship2-structural-comparison-plan.md` §3.1/§4.1 — `.extractKinship2Structure()`,
+in a new `R/` file, zero kinship2 dependency, unit-tested against synthetic list fixtures (no kinship2
+install needed for this track at all). (2) Do not skip straight to Track C's live-kinship2 tests —
+the strict A→B→C→D dependency order (plan §5) exists because Track B's tests import Track A's output
+shape contract, and Track C directly calls both. (3) `kinship2` is confirmed absent from every CI
+workflow (grepped this session) — Track C's `skip_if_not_installed("kinship2")`-guarded tests will
+skip cleanly in CI and only run live locally; this is intentional, not a gap to "fix" later. (4) The
+dashboard's new HIGH-risk finding (3 files past the 2,000-line read cap) was reported but not acted
+on this session — still open for a future session to address if picked.
 **Score: N/A — no gap, direct continuation.** S631 is a same-conversation continuation of S630
 (the owner's correction arrived immediately after S630's own close-out report), not a
 fresh-session pickup from a written handoff — there was no discovery/re-orientation step where a
