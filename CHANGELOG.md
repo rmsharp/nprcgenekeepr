@@ -17,6 +17,14 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-24 · \[ad hoc\] S629: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S628 precedent)
+
+- **Deliverable:** fixed this session’s own `HANDOFFS.md` receipt
+  `commit` field from `pending` to the actual close-out commit shas
+  (`2e06b49c` claim, `1bedb5e5` RED, `156b67ad` GREEN, `9e643b46`
+  close-out docs). Commit: `33ebae62`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-24 · \[BL-N\] S629: fix R-CMD-check-scheduled.yaml’s chromote Chrome-launch flake (ported from R-CMD-check.yaml)
 
 - **Deliverable:** diagnose and fix the red `R-CMD-check-scheduled` run
