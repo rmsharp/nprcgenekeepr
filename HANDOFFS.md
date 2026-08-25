@@ -175,7 +175,7 @@ gotchas: pedigree-diagram-kinship2-reference-comparison.qmd cannot be rendered v
   session" framing, not because it's hard.
 runtime_smoke: n/a -- docs-only correction, no R production code or runtime behavior changed.
 changelog_ref: CHANGELOG.md 2026-08-25 S631 entry
-commit: 16a23c2a
+commit: 16a23c2a (correction), 35b1a23e (close-out)
 ```
 
 ```handoff
