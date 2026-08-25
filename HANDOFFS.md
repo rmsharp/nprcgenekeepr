@@ -179,8 +179,7 @@ gotchas: The plan's own section 3.2 pseudocode is explicitly marked illustrative
 runtime_smoke: n/a -- pure internal (@noRd) function, zero call sites, no runtime/Shiny wiring
   changed.
 changelog_ref: CHANGELOG.md 2026-08-25 S633 entry
-commit: d09a51e1 (deliverable), pending (close-out -- self-reference, fixed next commit per
-  established S600/S602-S632 precedent)
+commit: d09a51e1 (deliverable), de9efb07 (close-out)
 ```
 
 ```handoff
