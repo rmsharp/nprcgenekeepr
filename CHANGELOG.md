@@ -16,6 +16,13 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S630: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S629 precedent)
+- **Deliverable:** fixed this session's own `HANDOFFS.md` receipt `commit` field from the
+  pre-close-out commit list to include the actual close-out commit sha (`6740eba3` claim,
+  `27cad886` RED, `fcd24fdb` GREEN, `4fcdcb22` screenshots + BACKLOG.md, `ba12d1d5` close-out).
+  Commit: `0ced68d9`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25 · [ad hoc] S630: fix live Diagram-tab crash found while verifying pedigree-diagram.qmd screenshots (BACKLOG.md item found S582)
 - **Deliverable:** verifying the pedigree-diagram.qmd article's screenshots against the current
   app (a `BACKLOG.md`-flagged staleness item) surfaced a real, live crash instead: the Diagram tab
