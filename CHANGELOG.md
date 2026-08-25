@@ -16,6 +16,13 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S634: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S633 precedent)
+- **Deliverable:** logging this session's own `HANDOFFS.md` receipt `commit` field fix (deliverable
+  `b52f2058` → deliverable + close-out `b52f2058 (deliverable), af67682b (close-out)`) as its own
+  ledger entry, since the fix commit (`e468e899`) is itself an action this session took. Commit:
+  `e468e899`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25 · [ad hoc] S634: file issue #164 (makePedigreeMatingLayout() crashes on zero parent-child edges)
 - **Deliverable:** filed [issue #164](https://github.com/rmsharp/nprcgenekeepr/issues/164) for a
   genuine, reproducible, pre-existing bug incidentally found while designing a Track B founder-only
