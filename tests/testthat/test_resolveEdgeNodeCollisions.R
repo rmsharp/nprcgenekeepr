@@ -419,3 +419,78 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
                           c("id", "x", "y")]
   expect_identical(before, after)
 })
+
+## ---- dangling edge-node reference: found live, S630 --------------------
+##
+## Found while verifying the pedigree-diagram.qmd article's screenshots
+## against the current app (BACKLOG.md's own flagged-but-unverified
+## staleness item): the real Shiny app crashed with "Error: subscript out
+## of bounds" rendering the Diagram tab's DEFAULT edge style (Rectilinear)
+## on a realistic focal-animal-trim workflow. Root-caused via a live
+## shinytest2::AppDriver run with full server-log capture to
+## .detectStraight() (a closure inside .resolveEdgeNodeCollisions()):
+##
+##   yOf <- stats::setNames(nodes$y, nodes$id)   # a named ATOMIC vector
+##   ...
+##   yf <- yOf[[f]]
+##   if (is.null(yf) || ...) next                # assumes LIST `[[` semantics
+##
+## `[[` on a named atomic vector THROWS "subscript out of bounds" for an
+## unmatched name -- it does not return NULL the way `[[` on a list would.
+## So whenever an edge's 'from'/'to' references a node id genuinely absent
+## from 'nodes' (which the real ancestors+descendants focal-trim union in
+## modPedigree.R's pedigreeData() reactive can produce), the intended
+## "skip this edge, its row is unknown" guard never fires -- the lookup
+## errors first. No existing test in this file constructs a dangling
+## edge-node reference (every hand-built and real-fixture case above
+## always has every edge's endpoints present in 'nodes'), so this shipped
+## uncaught since .detectStraight()'s introduction (commit c7bdbe4b,
+## issue #160 Track 2).
+
+test_that(".resolveEdgeNodeCollisions does not error when an edge
+           references a node id absent from 'nodes' -- treats the edge as
+           having no determinable row instead of crashing", {
+  nodes <- data.frame(id = c("A", "B"), x = c(0, 100), y = c(0, 0),
+                       stringsAsFactors = FALSE)
+  ## "GHOST" is not in nodes$id -- the exact shape that crashed live.
+  edges <- data.frame(
+    from = c("A", "GHOST"), to = c("B", "A"),
+    dashes = FALSE, color = "#2B7CE9", width = NA_real_,
+    smooth.enabled = NA, smooth.type = NA_character_,
+    smooth.roundness = NA_real_, stringsAsFactors = FALSE
+  )
+  result <- .resolveEdgeNodeCollisions(nodes, edges)
+  expect_identical(result$nodes, nodes)
+  expect_equal(nrow(result$edges), 2L)
+})
+
+test_that("makePedigreeMatingLayout() does not error on the real
+           375-individual bundled fixture trimmed to a small focal-
+           animal's ancestors+descendants subset, under
+           edgeStyle = 'rectilinear' (found live, S630: this exact
+           shape -- modPedigree.R:588's own reactive path, focal IDs
+           8LKBV9/FJIB3R/GA204Z -- crashed the Shiny app's Diagram tab
+           under its own default edge style; confirmed via a live
+           shinytest2::AppDriver run with full server-log capture,
+           reproduced here with no Shiny/E2E harness needed)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  ## The exact ancestors-union-descendants subset modPedigree.R's
+  ## pedigreeData() reactive produces for focal IDs
+  ## 8LKBV9/FJIB3R/GA204Z (trimPedigree() + getDescendantPedigree(),
+  ## unioned) -- hardcoded so this test needs no Shiny/E2E harness.
+  focalTrimIds <- c("5A6DFT", "8DKELJ", "G8EBU9", "8LKBV9", "9VGCCV",
+                     "FJIB3R", "GA204Z", "JE4WD7", "5LG839", "7WQYLL",
+                     "PHCADH", "J85R4L", "P9RX04", "SBKELE", "K9X9T3",
+                     "T8EB3B", "ZPVN1V", "4A4EC5", "K93DCQ", "LDTVKR",
+                     "N0DGS1")
+  trimmed <- ped[ped$id %in% focalTrimIds, ]
+  expect_equal(nrow(trimmed), 21L)
+
+  result <- makePedigreeMatingLayout(trimmed, edgeStyle = "rectilinear")
+  expect_true(is.data.frame(result$nodes))
+  expect_true(is.data.frame(result$edges))
+})
