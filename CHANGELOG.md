@@ -16,6 +16,48 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S634: file issue #164 (makePedigreeMatingLayout() crashes on zero parent-child edges)
+- **Deliverable:** filed [issue #164](https://github.com/rmsharp/nprcgenekeepr/issues/164) for a
+  genuine, reproducible, pre-existing bug incidentally found while designing a Track B founder-only
+  test fixture — `makePedigreeMatingLayout()` throws `arguments imply differing number of rows: 0,
+  1` on any pedigree with zero total parent-child edges (root-caused to `R/makePedigreeDiagramData.R
+  :1172`'s `childEdgesOut <- data.frame(childEdges, dashes = FALSE, ...)`, which cannot recycle a
+  scalar onto a 0-row `childEdges`). Reported, not fixed, per the established "found-an-unrelated-
+  gap, report don't fix mid-session" precedent (`PROJECT_LEARNINGS.md` Learning 382). Worked around
+  in Track B's own tests by hand-building the founder-only fixture directly in
+  `.extractNprcStructure()`'s input-contract shape.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · [ad hoc] S634: implement Track B of the kinship2 structural-comparison plan (`.extractNprcStructure()`)
+- **Deliverable:** `R/comparePedigreeStructure.R` — `.extractNprcStructure()`, a new
+  zero-`kinship2`-dependency internal (`@noRd`) function implementing `docs/planning/
+  pedigree-diagram-kinship2-structural-comparison-plan.md` §3.2/§4.2 (hardened/vectorized, not the
+  plan's own illustrative loop version), plus the D-2 edgeStyle-invariance property test appended to
+  `tests/testthat/test_comparePedigreeStructure.R` (7 new `test_that()` blocks: return shape,
+  founder-only, D5 single-known-parent, the 7-subject fixture reused from Track A, the 9-subject
+  Track C fixture with duplicates + a real consanguineous union, and 2 edgeStyle-invariance property
+  tests against the Track C fixture and the real 375-individual bundled fixture), plus a test-file-
+  local `.extractNprcStructureFromWaypoints()` helper (a second, independent extraction walking
+  `__drop_`/`__bar_`/`__proj_`/`__jog_` rectilinear waypoint chains — the plan's own §3.2 gives no
+  pseudocode for this half, so it was designed from scratch this session and empirically prototyped/
+  verified in `scratchpad/` against the 9-subject fixture and the real 375-individual fixture BEFORE
+  being written into RED, confirming D-2's invariance claim holds — 502 parent-child edges / 237
+  mate pairs matched exactly on the real fixture). Full strict TDD: RED (7 blocks confirmed failing
+  for the right reason — function not found) → GREEN (implementation passed clean on the first run,
+  no bug found this time) → REFACTOR skipped by owner-approved choice (the apparent duplication
+  between the production extractor and the test-only walker is deliberate — plan §4.2's own
+  "separately-implemented" requirement — not accidental; factoring it out would let a shared-logic
+  bug silently pass the invariance test on both sides). Verified: `lintr::lint_package()` 0 lints
+  (fixed 2 `string_boundary_linter` hits, `grepl("^__union_", ...)` → `startsWith(...,
+  "__union_")`); full clean regression 1 pre-existing failure (`test_wordlist_coverage.R`, same
+  known baseline) / 0 error / 39 warnings; `devtools::check()` Status: 1 WARNING, 2 NOTEs, 0 errors,
+  all 3 confirmed pre-existing/unrelated (non-portable untracked filename, untracked `scratchpad/`,
+  `vignettes/figure/` knitr leftover), matching Track A's own baseline — the full installed-package
+  test suite ran clean inside the check (`FAIL 0 | WARN 39 | SKIP 206 | PASS 6395`). Runtime smoke
+  test: n/a — pure internal function, zero call sites (confirmed by grep), no runtime/Shiny wiring
+  changed. `BACKLOG.md`'s top item updated (Track B DONE, Track C next). Commit: `b52f2058`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25 · [ad hoc] S633: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S632 precedent)
 - **Deliverable:** fixed this session's own `HANDOFFS.md` receipt `commit` field from the
   deliverable-only sha to include the close-out commit itself (`d09a51e1` deliverable, `de9efb07`

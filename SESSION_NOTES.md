@@ -18,15 +18,159 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 633 Handoff Evaluation (by Session 634)
+**Score: 9/10.** **What helped:** `next_steps` named exactly what this session did ("Implement
+Track B ... `.extractNprcStructure()`, input is `makePedigreeMatingLayout(ped, edgeStyle="direct",
+twinRelations=NULL)`'s output. Must also include the D-2 edgeStyle-invariance property test ...
+Strict A->B->C->D order continues: do not skip to Track C") and the ordering constraint was used
+directly, unmodified. `key_files` correctly pointed at the plan's §3.2/§4.2 and Track A's own output
+shape contract. **What helped most:** the `gotchas` field's warning that "the plan's own §3.2
+pseudocode is explicitly marked illustrative/non-vectorized -- expect real translation work" was
+accurate but, if anything, understated: the D-2 edgeStyle-invariance test's own "rectilinear"-side
+extraction has **no pseudocode in the plan at all** (§3.2 only sketches the direct-style half) --
+this session had to design that algorithm from scratch, verified empirically in `scratchpad/`
+against real code output before committing it to a test file. **What was missing:** the handoff
+didn't flag that gap specifically (that Track B's harder half has zero pseudocode to translate,
+unlike Track A's fully-specified §3.1) -- a fair omission, since S633 was scoped to Track A only and
+had no obligation to pre-read Track B's own design gaps in depth. **What was wrong:** nothing found
+inaccurate. **ROI:** high — the ordering/scope guidance was used verbatim; the one gap cost real
+design time but was not something the handoff could reasonably have caught.
+
 ### What Session 634 Did
-**Deliverable:** Implement Track B of the ratified plan (`docs/planning/pedigree-diagram-kinship2-
-structural-comparison-plan.md` §3.2/§4.2) — `.extractNprcStructure()` plus the D-2 edgeStyle-
-invariance property test. (IN PROGRESS)
-**Started:** 2026-08-25
-**Status:** Session claimed. Work beginning. Following Strict TDD (RED→GREEN→REFACTOR gates).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Implemented **Track B** of `docs/planning/pedigree-diagram-kinship2-structural-
+comparison-plan.md` (§3.2/§4.2) — `.extractNprcStructure()`, a new zero-`kinship2`-dependency
+internal (`@noRd`) function in `R/comparePedigreeStructure.R`, plus the D-2 edgeStyle-invariance
+property test. **DONE**, full strict TDD (RED→GREEN, REFACTOR skipped by owner-approved choice).
+**Started/Completed:** 2026-08-25 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): clean tree except the same pre-classified untracked
+   artifacts S633 already checked (no ghost session — last commit `801d0b2d` at 15:07:35, same day,
+   continuous with this session). Ledger frontiers current. CI green (10/10 `completed success`).
+   Dashboard 96/100, 1 HIGH risk (3 files past the FM #28 read cap — carried forward, not acted on).
+   Rendered the priorities list (4 numbered items, including the ratified `GENETIC_METRICS_ISSUES_
+   SEQUENCING_AUDIT_2026-08-08.md` next-item for issue #148) via `AskUserQuestion`; owner picked
+   "Implement Track B."
+2. **Re-read the plan's Track B section in full** (§3.2, §4.2, plus §1.2's re-verified
+   `makePedigreeMatingLayout()` structure) and **re-verified the actual rectilinear-style output
+   directly against source** (`R/makePedigreeDiagramData.R:1239-1552` `.addRectilinearWaypoints()`,
+   `:1554-1853` `.resolveEdgeNodeCollisions()`) — the plan gives §3.2 pseudocode for the direct-style
+   extractor only; the D-2 edgeStyle-invariance test's own "rectilinear"-side walker has no
+   pseudocode at all and had to be designed from scratch this session.
+3. **Empirically prototyped and verified the design BEFORE writing RED** (`scratchpad/
+   prototype_trackB.R`, `explore_rectilinear.R`, `explore_real.R`): both the direct-style extractor
+   and a graph-based rectilinear-side walker (jog-waypoint collapse → connected components over
+   `__drop_`/`__bar_`/`__proj_` nodes → edge-direction-based parent/child-side classification),
+   run against the 9-subject Track C fixture AND the real 375-individual bundled fixture (confirmed
+   exercising real `__proj_`/`__jog_` waypoints — 56 and 154 respectively). Canonicalized results
+   matched exactly on both (502 parent-child edges / 237 mate pairs on the real fixture) — D-2's
+   invariance claim confirmed empirically before committing to a test design, and both algorithms
+   confirmed correct.
+4. **Incidental finding, filed not fixed:** while designing a founder-only edge-case fixture,
+   discovered `makePedigreeMatingLayout()` crashes (`arguments imply differing number of rows: 0,
+   1`) on any pedigree with zero total parent-child edges — a pre-existing, unrelated bug, root-
+   caused to `R/makePedigreeDiagramData.R:1172`. Filed as [issue #164](https://github.com/rmsharp/
+   nprcgenekeepr/issues/164) per the established "report, don't fix mid-session" precedent
+   (`PROJECT_LEARNINGS.md` Learning 382); worked around by hand-building the founder-only test
+   fixture directly in `.extractNprcStructure()`'s own input-contract shape, matching Track A's own
+   precedent.
+5. **Claimed the session** (1B stub + `HANDOFFS.md` pending receipt, commit `b18a3ef5`).
+6. **PRE-RED→RED gate** (`AskUserQuestion`): proposed the verified fixture/algorithm design (5
+   fixtures for `.extractNprcStructure()`'s own unit tests; the empirically-verified rectilinear
+   walker as a test-file-local helper for the D-2 property test) — owner approved.
+7. **RED:** appended to `tests/testthat/test_comparePedigreeStructure.R` — 7 new `test_that()`
+   blocks (return shape; founder-only; D5 single-known-parent; the 7-subject fixture reused from
+   Track A; the 9-subject Track C fixture with duplicates + consanguinity; 2 edgeStyle-invariance
+   property tests, Track C fixture + real 375-individual fixture), plus the local
+   `.extractNprcStructureFromWaypoints()` test helper (ported from the verified prototype). Ran —
+   confirmed all 7 new blocks fail with `could not find function ".extractNprcStructure"`, the
+   correct failure reason; the local test helper itself loaded and ran with no errors.
+8. **RED→GREEN gate** (`AskUserQuestion`): approved.
+9. **GREEN:** wrote `.extractNprcStructure()` in `R/comparePedigreeStructure.R`, implementing
+   §3.2's algorithm hardened per the plan's own note (`nChildren` counted from the assembled
+   `parentChildEdges`, never left `NA`; both loops vectorized, no `rbind` in a loop). Passed clean
+   on the first run — no bug found this time (unlike Track A's Learning 666), a direct result of
+   the upfront empirical prototyping.
+10. **GREEN→REFACTOR gate** (`AskUserQuestion`): presented the honest assessment that
+    `.extractNprcStructure()` itself needs no restructuring, and that its apparent duplication
+    with the test-only rectilinear walker's own downstream assembly logic is **deliberate, not
+    accidental** — plan §4.2 requires a "separately-implemented" second extraction specifically so
+    a bug in shared logic can't silently pass the invariance test on both sides; factoring it out
+    would defeat the cross-check. Owner chose to skip REFACTOR.
+11. **Full verification:** `lintr::lint_package()` (loaded via `pkgload::load_all()` first) found 2
+    `string_boundary_linter` hits (`grepl("^__union_", ...)` → `startsWith(..., "__union_")`),
+    fixed, re-ran clean (0 lints). Full clean regression: 1 pre-existing failure
+    (`test_wordlist_coverage.R`, same known baseline) / 0 error / 39 warnings — no new failures.
+    `devtools::check()`: **Status: 1 WARNING, 2 NOTEs, 0 errors** — all 3 confirmed pre-existing/
+    unrelated (non-portable untracked filename, untracked `scratchpad/`, `vignettes/figure/` knitr
+    leftover), matching Track A's own baseline exactly; the full installed-package test suite ran
+    clean (`FAIL 0 | WARN 39 | SKIP 206 | PASS 6395` inside the check).
+12. **Runtime smoke test (Phase 3E): n/a.** Same as Track A — a pure, internal (`@noRd`),
+    zero-call-site data transformation, confirmed by grep (no call sites outside the test file).
+    No runtime behavior changed to verify.
+13. **Updated `BACKLOG.md`'s top item**: Track B marked DONE with verification detail and the
+    issue #164 finding; next pickup named as Track C (`.comparePedigreeStructures()` + the D-7
+    fixture + live-kinship2 end-to-end tests).
+14. **Process hiccup, self-caused and resolved, reported in full:** the first `devtools::check()`
+    invocation nested a shell `&` inside an already-backgrounded `Bash` tool call — the tool
+    reported "completed" almost immediately (that was just the outer wrapper's `echo`), while the
+    actual check kept running detached. It was later killed mid-run (evidence: `testthat.R`'s own
+    `.Rout` shows a clean finish, `FAIL 0 | WARN 39 | SKIP 206 | PASS 6395`, but the parent
+    `R CMD check` process exited without ever printing the final `Status:` line — consistent with
+    the harness reclaiming the process group once the tool call was marked done). Diagnosed by
+    checking the `Rcheck` directory's own `00check.log`/`testthat.Rout` directly rather than
+    trusting the truncated redirect log; re-ran properly via the `Bash` tool's own
+    `run_in_background: true` (no nested `&`) to get a trustworthy, complete result. No data lost,
+    no incorrect conclusion reached — but this cost 2 Monitor cycles.
+15. **Close-out** (this write-up).
+
+**Self-assessment (Session 634): 9/10.** **Strengths:** (1) recognized that the plan gives Track
+B's harder half (the rectilinear-side walker) zero pseudocode, and responded by empirically
+prototyping and verifying a from-scratch graph algorithm against BOTH a small hand-traceable fixture
+and the real 375-individual fixture BEFORE writing any RED test — this is why GREEN passed clean on
+the first try, with zero wasted RED/GREEN churn; (2) found and correctly triaged a genuine,
+reproducible, unrelated pre-existing bug (issue #164) — filed properly, not fixed mid-session, not
+silently worked around without disclosure; (3) the GREEN→REFACTOR gate assessment was substantive,
+not a rubber stamp — correctly identified that the apparent code duplication with the test helper is
+load-bearing (independence for the cross-check), not an oversight, and explained why refactoring it
+away would be actively harmful to the test's own guarantee; (4) caught and correctly diagnosed my
+own process mistake (the nested-`&` background-task bug) by checking ground truth (the Rcheck
+directory's own logs) rather than accepting an ambiguous "completed" signal at face value, then
+re-ran to get a trustworthy result rather than reporting the incomplete one. **Weaknesses:** (1) the
+nested-`&` mistake itself — should have used the `Bash` tool's own `run_in_background: true`
+correctly on the first attempt; cost real wall-clock time (2 Monitor cycles) though no correctness
+risk since the mistake was caught before being reported as a result; (2) spent a longer-than-ideal
+stretch manually polling the check log via repeated `Bash` calls before correctly switching to
+`Monitor` with a properly-matching process-exit condition — the harness's own "do not poll" guidance
+applied and was not followed cleanly at first.
+
+**Key files:** `R/comparePedigreeStructure.R` (`.extractNprcStructure()`, new, the deliverable),
+`tests/testthat/test_comparePedigreeStructure.R` (7 new blocks + `.extractNprcStructureFromWaypoints()`
+test helper), `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md` §3.2/§4.2/§4.3
+(Track B's contract; Track C's up next), `BACKLOG.md` "Up Next" top item (updated, Track B DONE /
+Track C next), [issue #164](https://github.com/rmsharp/nprcgenekeepr/issues/164) (incidental
+finding), `scratchpad/prototype_trackB.R` (the verified prototype, session-local, not committed).
+
+**Gotchas for a future session (Track C, the next pickup):** (1) implement exactly `docs/planning/
+pedigree-diagram-kinship2-structural-comparison-plan.md` §3.3/§3.4/§4.3 —
+`.comparePedigreeStructures()` (the diff itself, canonicalized/unordered comparison per §1.3's
+"order never matters" fact) + `.toKinship2Pedigree()` + orchestration wrapper in `data-raw/
+kinship2FidelityValidation.R` (the ONE genuine `kinship2` dependency point, `requireNamespace()`-
+guarded) + the new D-7 crossing-duplication fixture + live-kinship2 end-to-end tests
+(`skip_if_not_installed("kinship2")`-guarded) against the Track-C fixture, the D-7 fixture, and the
+real 375-individual fixture (D-8's toy-AND-real-scale discipline). (2) D-8: **a non-empty diff on
+the real fixture is a genuine finding to report, not silently reconcile** — Track C's own
+"Done looks like" explicitly allows ending with an open question rather than a clean "identical"
+result. (3) Track B's own output contract (`list(parentChildEdges, matePairs)`, identical shape to
+Track A's) is already implemented/tested in both directions — Track C's comparator should be built
+and tested agnostic to which side is which, per the plan's own §3.3 framing. (4) CI will skip
+Track C's live-kinship2 tests (no workflow installs kinship2, §1.5) — confirm this visually once
+(not just assumed) when Track C first lands, per `SAFEGUARDS.md`'s "trust but verify." (5) The
+dashboard's HIGH-risk finding (3 files past the FM #28 2,000-line read cap) is still open, still
+not acted on, carried forward again. (6) When running `devtools::check()` in the background, use
+the `Bash` tool's own `run_in_background: true` directly — do NOT nest a shell `&` inside it (see
+this session's own process hiccup, item 14 above).
+**Score: N/A — Session 633's handoff evaluated above (9/10).**
 
 ### Session 632 Handoff Evaluation (by Session 633)
 **Score: 9/10.** **What helped:** `next_steps` named the exact deliverable ("Implement Track A ...
