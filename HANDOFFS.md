@@ -174,8 +174,7 @@ gotchas: kinship2 is confirmed absent from every CI workflow (grepped this sessi
 runtime_smoke: n/a -- planning/docs-only session, no R production code or runtime behavior
   changed.
 changelog_ref: CHANGELOG.md 2026-08-25 S632 entry
-commit: 1662fa14 (deliverable), close-out commit pending reconcile (self-reference workaround,
-  matching S600/S602-S631 precedent)
+commit: 1662fa14 (deliverable), 11bcf417 (close-out)
 ```
 
 ```handoff
