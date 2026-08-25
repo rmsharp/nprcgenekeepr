@@ -18,6 +18,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 634 Did
+**Deliverable:** Implement Track B of the ratified plan (`docs/planning/pedigree-diagram-kinship2-
+structural-comparison-plan.md` §3.2/§4.2) — `.extractNprcStructure()` plus the D-2 edgeStyle-
+invariance property test. (IN PROGRESS)
+**Started:** 2026-08-25
+**Status:** Session claimed. Work beginning. Following Strict TDD (RED→GREEN→REFACTOR gates).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 632 Handoff Evaluation (by Session 633)
 **Score: 9/10.** **What helped:** `next_steps` named the exact deliverable ("Implement Track A ...
 .extractKinship2Structure() in a new R/ file, zero kinship2 dependency, unit-tested against

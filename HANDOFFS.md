@@ -136,6 +136,24 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S634
+date: 2026-08-25
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implementing Track B of docs/planning/pedigree-diagram-kinship2-structural-comparison-
+  plan.md (section 4.2) -- .extractNprcStructure() + the D-2 edgeStyle-invariance property test
+  (a second, test-file-only rectilinear-side extraction). Strict TDD (RED->GREEN->REFACTOR).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S633
 date: 2026-08-25
 status: complete
