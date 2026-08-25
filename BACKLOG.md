@@ -3,6 +3,65 @@
 *Open, actionable work only. Completed history → `CHANGELOG.md`; feature inventory &
 future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.md` Phase 0.)*
 
+## Up Next
+- [ ] **Build a real structural/topological pedigree-diagram comparison algorithm against
+      kinship2 -- the current "comparison" is 2 static images and prose, not verified equivalence**
+      (found S631, 2026-08-25, owner-directed correction -- "you are still publishing comparisons
+      of kinship2 output to nprcgenekeepr output as equivalent when they are clearly not... I have
+      stated that your equivalence assessments have been wrong in the past for these same
+      pedigrees," DECISION NEEDED on the comparison methodology's actual design, Effort M-L). Two
+      distinct, independently-necessary problems, both confirmed this session, not assumed:
+      1. **No programmatic structural check exists for the diagram claims.**
+         `data-raw/kinship2FidelityValidation.R` genuinely verifies Track A (kinship-matrix
+         `identical()`, numeric) and Track B's surviving-id-set/`bitSize` (`setequal()`, numeric)
+         -- but Track B's full/shrunk pedigree PLOTS and Track C's consanguineous-marker PLOTS are
+         never diffed against kinship2's own structure by any code. `vignettes/articles/
+         kinship2-fidelity-validation.qmd`'s captions ("matching kinship2's own family groupings,"
+         "the same union kinship2 flags") are visual impressions from whoever wrote the article,
+         not computed facts. Manually hand-tracing Track C's own edge list this session (against
+         directly-computed `kinship()` ground truth: `kinship(A,Y) = 0.25`, all other pairs `0`)
+         DID confirm nprcgenekeepr's own consanguineous-marker placement is correct for that one
+         fixture -- but that was this session's own ad hoc verification, not a repeatable check;
+         nothing in the codebase does this automatically, for any fixture, ever.
+      2. **The committed images are stale relative to current code.** `kinship2-fidelity-
+         validation-img/trackB-nprc-*.png` (generated S566, 2026-08-13/14, calling
+         `makePedigreeMatingLayout()` with no explicit `edgeStyle`) show the diagonal "direct"
+         edge style -- the package's default AT THE TIME, before Track 2 (S574) flipped the
+         default to "rectilinear" and before the same-row-collision-avoidance work (Tracks 1-3,
+         S592-S596) and the Walker/BJL positioning rewrite (issue #141, S592-S621) substantially
+         changed the layout algorithm itself. `docs/planning/pedigree-diagram-kinship2-reference-
+         comparison.qmd` (generated 2026-08-08, refreshed once 2026-08-13) is staler still, and its
+         own `date: today` frontmatter field hides this -- every render shows today's date
+         regardless of when the content was actually verified. Attempting to regenerate
+         `kinship2FidelityValidation.R`'s own screenshots this session hit a known, unfixed
+         `chromote` race condition in its `screenshot_layout()` helper (`Page$navigate()` +
+         `Page$loadEventFired()` as 2 separate calls -- the exact defect class
+         `PROJECT_LEARNINGS.md` Learning 643 already fixed elsewhere via `$go_to()`, never ported
+         to this script). **Encouraging data point, not yet acted on:** despite the thrown error,
+         one retry of the unmodified script this session DID successfully capture a fresh
+         `trackB-nprc-full.png` before failing later -- and the fresh capture shows clean
+         right-angle sibship bars (matching kinship2's own routing style much more closely than the
+         stale "direct"-style image), suggesting the current positioning algorithm itself may
+         already be in reasonably good shape; the gap is verification and fresh evidence, not
+         necessarily the algorithm. Not committed (reverted to keep the working tree consistent
+         with this item's own "still stale" framing until the full regeneration + comparison work
+         below is done together, not piecemeal).
+      **Owner directive, to be honored until this item ships:** do not present a pedigree-diagram
+      image comparison against kinship2 as verified/equivalent in any session output, report, or
+      document -- caveats warning of exactly this were added this session to both
+      `vignettes/articles/kinship2-fidelity-validation.qmd` and `docs/planning/
+      pedigree-diagram-kinship2-reference-comparison.qmd` (2026-08-25); do not remove them until
+      this item's actual fix lands and is re-verified. **A future session should:** (a) port the
+      `$go_to()` fix into `kinship2FidelityValidation.R`'s `screenshot_layout()`; (b) regenerate
+      every Track B/C image against current code; (c) design and build an actual structural
+      comparison -- extract the parent-child/mate-pair edge set from both kinship2's own
+      `pedigree` object (e.g. via its `id`/`findex`/`mindex`/`hints` slots or `relation` table) and
+      nprcgenekeepr's `makePedigreeMatingLayout()` output (resolving `__union_N`/`__dup_X_N` node
+      ids back to real individuals, the way this session did by hand for Track C), then diff the 2
+      relationship sets programmatically -- before any equivalence claim is re-published for either
+      document, or for `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`'s own
+      examples. See `PROJECT_LEARNINGS.md` for the fuller verification record.
+
 ## Active
 - [x] **Pedigree Diagram: consider hiding the mating-unit node marker to match kinship2's
       plain-intersection convention** (found live in conversation 2026-08-15, filed as

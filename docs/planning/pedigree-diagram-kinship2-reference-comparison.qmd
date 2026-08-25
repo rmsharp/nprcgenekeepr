@@ -9,6 +9,21 @@ format:
     df-print: kable
 ---
 
+> **Owner correction, 2026-08-25 (S631): the "matches kinship2" claims throughout this document
+> are stale and not to be trusted as current.** This document's examples were generated 2026-08-08,
+> refreshed once 2026-08-13 -- both **before** the same-row-collision-avoidance work (Tracks 1-3,
+> S592-S596) and the Walker/BJL positioning rewrite (issue #141, S592-S621) substantially changed
+> the layout algorithm these examples describe, and before issue #145 itself closed (this
+> document's own subtitle still calls it "open"). The `date: today` field in this file's frontmatter
+> makes every render show today's date regardless of when the content was actually written or
+> verified -- do not take a fresh-looking render date as evidence the content is current. No
+> example in this document was ever checked by any programmatic structural comparison against
+> kinship2's own pedigree object -- every "matches"/"identical"/"reproduces kinship2" claim below is
+> a visual impression from a point-in-time render, not a computed fact. **Do not cite this document
+> as current evidence of kinship2 parity.** See `vignettes/articles/kinship2-fidelity-validation.qmd`'s
+> matching correction for what a future session needs to do before either document's diagram claims
+> can be trusted again.
+
 ## Purpose
 
 The owner asked, after seeing `nprcgenekeepr`'s live Pedigree Diagram tab
