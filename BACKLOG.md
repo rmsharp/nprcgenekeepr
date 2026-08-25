@@ -290,18 +290,28 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       itself IS `reuse lint`-compliant now (1234/1234, verified locally); only the badge's live
       display is blocked on this registration step. A future session can verify the badge went
       green after the owner registers, but cannot perform the registration itself.
-- [ ] (found S582, 2026-08-14, incidental to the `pb_diagram_legend.png` reshoot above, READY,
-      Effort S -- not verified) **`vignettes/articles/pedigree-diagram-screenshots.R`'s other 3
-      non-base-fixture screenshots may have gone stale by the same default-flip mechanism as
-      `pb_diagram_legend.png` above.** `diagram_show_names.png`, `diagram_affected_shading.png`,
-      and `diagram_twin_connectors.png` are each captured without ever setting
-      `pedigreeEdgeStyle` (see the script's own "3.", "4.", "5." sections) -- like
-      `pb_diagram_legend.png` before this session's fix, each therefore renders whatever the app's
-      zero-interaction default is, which Track 2 (S574) changed from "direct" to "rectilinear". If
-      any of these 3 committed images still show diagonal (`direct`-style) edge routing, they are
-      stale in the same way `pb_diagram_legend.png` was. Not checked this session (out of the
-      pb_diagram_legend.png item's own scope) -- a future session should open each and confirm,
-      reshooting via the same script/technique if stale.
+- [x] (found S582, 2026-08-14, incidental to the `pb_diagram_legend.png` reshoot above) **RESOLVED
+      S630 (2026-08-25):** the staleness fear was confirmed real (all 3 -- plus `pb_diagram_legend.png`
+      and `diagram_rectilinear_edge_style.png` -- had drifted to the pre-Track-2 "direct" default),
+      but re-running `pedigree-diagram-screenshots.R` surfaced something more serious first: the
+      Diagram tab's own default (Rectilinear) edge style crashed with `Error: subscript out of
+      bounds` on a realistic focal-animal trim of the real bundled fixture -- a real, live
+      regression, not a screenshot artifact (confirmed via a fresh package reinstall from current
+      `HEAD` and a standalone `shinytest2::AppDriver` run with full server-log capture, ruling out
+      both a stale-build false alarm and a screenshot-harness artifact). Root-caused to
+      `.detectStraight()` inside `.resolveEdgeNodeCollisions()`
+      (`R/makePedigreeDiagramData.R`, introduced by commit `c7bdbe4b`, issue #160 Track 2):
+      `xOf`/`yOf` were named ATOMIC vectors, and `[[` on an atomic vector throws for an unmatched
+      name instead of returning `NULL`, so the existing `is.null(yf)`/`is.null(yt)` guard (written
+      for list semantics) never fired whenever an edge referenced a node id genuinely absent from
+      `nodes` -- exactly what a real ancestors+descendants focal-trim union can produce. Fixed via
+      full strict-TDD RED->GREEN (2 new tests: a minimal synthetic dangling-reference fixture, and
+      a real-fixture regression pinning the exact production crash), `AskUserQuestion`-gated at
+      PRE-RED/RED->GREEN/GREEN->REFACTOR (owner confirmed no refactor needed -- the fix is a 2-line
+      change, `stats::setNames(...)` -> `as.list(stats::setNames(...))`). All 5 screenshots
+      regenerated against the fixed app and confirmed correct. Not filed as a GitHub issue, matching
+      the established "found-and-fixed same session" precedent. See `CHANGELOG.md` and
+      `PROJECT_LEARNINGS.md`.
 - [ ] (found S508, 2026-08-10, re-surfaced S559, 2026-08-13, **RESOLVED S561**.
       **`HANDOFFS.md`'s declared `methodology_trim.py` regenerated field ("retained
       receipt count") had no matching "This file currently holds **N**" sentence in the
