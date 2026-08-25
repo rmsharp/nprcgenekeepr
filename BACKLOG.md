@@ -51,16 +51,27 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       document -- caveats warning of exactly this were added this session to both
       `vignettes/articles/kinship2-fidelity-validation.qmd` and `docs/planning/
       pedigree-diagram-kinship2-reference-comparison.qmd` (2026-08-25); do not remove them until
-      this item's actual fix lands and is re-verified. **A future session should:** (a) port the
-      `$go_to()` fix into `kinship2FidelityValidation.R`'s `screenshot_layout()`; (b) regenerate
-      every Track B/C image against current code; (c) design and build an actual structural
-      comparison -- extract the parent-child/mate-pair edge set from both kinship2's own
-      `pedigree` object (e.g. via its `id`/`findex`/`mindex`/`hints` slots or `relation` table) and
-      nprcgenekeepr's `makePedigreeMatingLayout()` output (resolving `__union_N`/`__dup_X_N` node
-      ids back to real individuals, the way this session did by hand for Track C), then diff the 2
-      relationship sets programmatically -- before any equivalence claim is re-published for either
-      document, or for `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`'s own
-      examples. See `PROJECT_LEARNINGS.md` for the fuller verification record.
+      this item's actual fix lands and is re-verified.
+      **Design DONE, RATIFIED S632 (2026-08-25):** `docs/planning/
+      pedigree-diagram-kinship2-structural-comparison-plan.md` -- a 5-agent research fan-out
+      (kinship2 internals verified live, `makePedigreeMatingLayout()`'s output structure
+      re-verified directly against source, existing test/fixture inventory, prior-planning-doc
+      dragons, a grep-based integration-point inventory) plus this session's own direct
+      re-verification of the 2 most load-bearing structural claims produced an interface-first
+      design for `.extractKinship2Structure()`/`.extractNprcStructure()`/
+      `.comparePedigreeStructures()` (all `@noRd`, zero `kinship2` dependency by construction --
+      only a thin `data-raw/`-side wrapper touches `kinship2::` directly) and split
+      implementation into 4 session-sliceable tracks (A: kinship2-side extractor: B:
+      nprcgenekeepr-side extractor + an edgeStyle-invariance property test; C: the diff itself +
+      a new crossing-duplication fixture + live-kinship2 end-to-end tests against the Track-C
+      fixture and the real 375-individual fixture; D: port the `$go_to()` fix, regenerate images,
+      remove the caveats once Track C confirms/resolves parity). All 4 owner-ratification
+      questions (code placement, twin-relation scope, the new fixture, whether Track D stays in
+      this plan) were answered exactly per the plan's own recommendation via `AskUserQuestion`.
+      **A future session should implement Track A** (`docs/planning/
+      pedigree-diagram-kinship2-structural-comparison-plan.md` §4.1) -- strict A→B→C→D
+      dependency order, one session per track. See `PROJECT_LEARNINGS.md` Learning 665 and
+      `CHANGELOG.md`.
 
 ## Active
 - [x] **Pedigree Diagram: consider hiding the mating-unit node marker to match kinship2's
