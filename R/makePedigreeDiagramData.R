@@ -1660,8 +1660,16 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     if (nrow(edges) == 0L) {
       return(integer(0L))
     }
-    xOf <- stats::setNames(nodes$x, nodes$id)
-    yOf <- stats::setNames(nodes$y, nodes$id)
+    ## Named LISTS, not named atomic vectors: `[[` on a named atomic
+    ## vector THROWS "subscript out of bounds" for a name with no match,
+    ## whereas `[[` on a list returns NULL -- the semantics the
+    ## is.null(yf)/is.null(yt) guard below actually needs. An edge whose
+    ## 'from'/'to' references a node id genuinely absent from 'nodes' (the
+    ## real ancestors+descendants focal-trim union in modPedigree.R's
+    ## pedigreeData() reactive can produce exactly this) must be treated
+    ## as "row unknown, skip" rather than crash (found live, S630).
+    xOf <- as.list(stats::setNames(nodes$x, nodes$id))
+    yOf <- as.list(stats::setNames(nodes$y, nodes$id))
     adj <- .adjacency(edges)
     byRow <- split(nodes$id, nodes$y)
     hitRows <- integer(0L)
