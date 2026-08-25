@@ -18,15 +18,132 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 632 Handoff Evaluation (by Session 633)
+**Score: 9/10.** **What helped:** `next_steps` named the exact deliverable ("Implement Track A ...
+.extractKinship2Structure() in a new R/ file, zero kinship2 dependency, unit-tested against
+synthetic list fixtures") and the exact ordering constraint ("do not skip to Track C's live-kinship2
+tests before A/B land") — both used directly, unmodified, as this session's own scope statement.
+`key_files` correctly pointed at the plan document itself; the plan's own §3.1/§4.1 (algorithm,
+output contract, fixture list) was sufficiently precise that no additional research/rediscovery was
+needed before writing RED. **What was missing:** the handoff didn't flag that the plan's own §3.1
+pseudocode (presented as "re-implements kinship2's own align.pedigree() derivation verbatim," to be
+implemented exactly) has an untested edge case — a literal scalar `role` value fails R's `data.frame()`
+recycling rule against a zero-match (founder-only) mask. This wasn't discoverable from the handoff
+alone; it surfaced only once RED's own required founder fixture was written and run. Not a real gap
+in the handoff (S632 could not have known without implementing), but worth noting since Track B/C's
+own pseudocode blocks carry the same "illustrative, needs hardening" caveat explicitly, while Track
+A's did not. **What was wrong:** nothing found inaccurate. **ROI:** high — near-zero rediscovery cost.
+
 ### What Session 633 Did
-**Deliverable:** Implement Track A of the ratified plan (`docs/planning/pedigree-diagram-kinship2-
-structural-comparison-plan.md` §3.1/§4.1) — `.extractKinship2Structure()`, a new zero-`kinship2`-
-dependency internal extractor. (IN PROGRESS)
-**Started:** 2026-08-25
-**Status:** Session claimed. Work beginning. Following Strict TDD (RED→GREEN→REFACTOR gates).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Implemented **Track A** of `docs/planning/pedigree-diagram-kinship2-structural-
+comparison-plan.md` (§3.1/§4.1) — `.extractKinship2Structure()`, a new, zero-`kinship2`-dependency
+internal (`@noRd`) function in `R/comparePedigreeStructure.R`, plus its test file. **DONE**, full
+strict TDD (RED→GREEN, REFACTOR skipped by owner-approved choice).
+**Started/Completed:** 2026-08-25 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): clean tree except pre-classified untracked artifacts
+   (all individually date-checked, matching S632's own report — no ghost session). Ledger frontiers
+   current (`CHANGELOG.md` == HEAD; `HANDOFFS.md` one commit behind, the standard self-referential
+   non-gap). CI green (`gh run list`, 10/10 `completed success`). Dashboard 96/100, 1 HIGH risk
+   (3 files past the FM #28 read cap — carried forward, not acted on). Rendered the priorities list
+   (4 numbered items, including a ratified-sequencing-audit item for issue #148 per `CLAUDE.md`'s
+   own "flat tag grep is not sufficient" rule) via `AskUserQuestion`; owner picked "Implement Track A."
+2. **Re-read the plan's Track A section in full** (§3.1, §4.1, §1.1, §1.4, §7 ratification outcome)
+   before proposing RED scope — confirmed D-6 (internal `R/` helpers, no exported surface, so
+   `NEWS.Rmd`/`_pkgdown.yml`/`a2interactive.Rmd` checklists don't trigger for this track).
+3. **Claimed the session** (1B stub + `HANDOFFS.md` pending receipt, commit `ebc6ec70`).
+4. **PRE-RED→RED gate** (`AskUserQuestion`): proposed 4 synthetic fixtures (founder-only;
+   single-known-parent; multi-mate/shared-parent dedup; a combined 7-subject/2-mating fixture built
+   this session, since the plan's own live-verified 7-subject fixture data wasn't reproduced in the
+   document text) — owner approved as scoped.
+5. **RED:** wrote `tests/testthat/test_comparePedigreeStructure.R` (5 `test_that()` blocks, 19
+   assertions). Ran — confirmed all 5 blocks fail with `could not find function
+   ".extractKinship2Structure"`, the correct failure reason. No implementation code written.
+6. **RED→GREEN gate** (`AskUserQuestion`): approved.
+7. **GREEN:** wrote `R/comparePedigreeStructure.R`, implementing §3.1's algorithm. First run
+   surfaced a real bug the plan's own pseudocode carries: `data.frame(..., role = "father")` throws
+   `arguments imply differing number of rows: 0, 1` when the father-mask has zero matches (the
+   founder-only fixture) — R's recycling rule fills short-to-long, never long-to-zero. Fixed with
+   `role = rep("father", sum(hasFather))` (and the mother equivalent). Re-ran: all 19 assertions
+   pass. Documented as `PROJECT_LEARNINGS.md` Learning 666.
+8. **GREEN→REFACTOR gate** (`AskUserQuestion`): presented the honest assessment that nothing
+   in the ~20-line function needs restructuring; owner chose to skip REFACTOR and proceed to
+   close-out verification.
+9. **Full verification:** `lintr::lint_package()` (loaded via `pkgload::load_all()` first, per
+   Learning 224) found 2 `implicit_integer_linter` hits (`findex > 0`/`mindex > 0` → `0L`/`0L`),
+   fixed, re-ran clean (0 lints). Full clean regression: 1 pre-existing failure
+   (`test_wordlist_coverage.R`, flagged word `bitSize` — confirmed by direct grep that this word
+   originates entirely in the pre-existing `R/shrinkPedigree.R`, not this session's files) / 0
+   error / 39 pre-existing warnings (0 from the new test file, confirmed directly). `devtools::check()`
+   (the project's full build-equivalent): 0 errors, 1 warning + 2 notes, all 3 confirmed pre-existing/
+   unrelated (the untracked "Compounding Loop" file's non-portable name; the untracked `scratchpad/`
+   dir; a pre-existing `vignettes/figure/` knitr leftover — same three the project has flagged
+   before, e.g. `BACKLOG.md`'s own S(unnamed) precedent at line ~602-605).
+10. **Runtime smoke test (Phase 3E): n/a.** The new function is a pure, internal (`@noRd`), zero-call-site
+    data transformation — not wired into the Shiny app, any exported function, or any startup/service
+    path. No runtime behavior changed to verify.
+11. **Updated `BACKLOG.md`'s top item**: Track A marked DONE with verification detail; next pickup
+    named as Track B (`.extractNprcStructure()` + the D-2 edgeStyle-invariance property test).
+12. **`PROJECT_LEARNINGS.md` Learning 666** — the plan-pseudocode-recycling-edge-case finding (§7
+    above); `CLAUDE.md` learnings-count pointer refreshed (665→666, S632+→S633+).
+13. **Self-caused-and-resolved incident, reported here in full:** while confirming the wordlist
+    failure was pre-existing, ran `git stash` / `git stash pop` to diff against a clean tree — but
+    `git stash` had "no local changes to save" (my new files are untracked, and `git stash` doesn't
+    include untracked files by default), so the subsequent `git stash pop` instead popped a
+    completely unrelated, pre-existing stash entry (`stash@{0}: WIP on dev: be8d0598 start of dev
+    branch with use of renv`), producing a `.DS_Store` modify/delete conflict. Diagnosed immediately
+    (`git stash show --stat` confirmed the stash's ENTIRE content was a 10244-byte `.DS_Store`
+    binary churn, nothing else; `git show HEAD:.DS_Store` confirmed HEAD doesn't track the file at
+    all, per S488's "untrack .DS_Store" precedent). Resolved with `git rm .DS_Store` (matching HEAD's
+    own "deleted" state) — working tree confirmed back to its exact pre-incident state (same 8
+    untracked files, nothing else touched), and the pre-existing stash entry left untouched in the
+    stash list (not mine to drop). No data lost; verified the pre-existing-failure claim by grep
+    instead (more reliable than stash for this repo's state, given the leftover stash entry).
+14. **Close-out** (this write-up).
+
+**Self-assessment (Session 633): 8/10.** **Strengths:** (1) followed the full TDD phase-gate
+protocol correctly — 3 `AskUserQuestion` gates (PRE-RED→RED, RED→GREEN, GREEN→REFACTOR), each with
+concrete, verifiable actions, not rubber-stamp questions; (2) RED-phase fixture design deliberately
+included a zero-match edge case (per the plan's own "Done looks like" bar), which is what caught a
+genuine defect in the plan's own pseudocode rather than only in my translation of it — a real
+instance of the discipline paying for itself; (3) chose to build my own 7-subject/2-mating fixture
+transparently, flagging that the plan's cited fixture data wasn't reproduced in the document text,
+rather than fabricating "the" original fixture from guesswork; (4) verified the 2 pre-existing-defect
+claims (`test_wordlist_coverage.R`'s `bitSize`, `devtools::check()`'s 3 findings) by direct grep/
+content inspection against my own new files, not by assumption; (5) honestly reported the self-caused
+git-stash incident in full rather than omitting it, per this project's "recovering from its own
+errors" standard. **Weaknesses:** (1) the git-stash incident itself — reaching for `git stash` to
+verify a pre-existing failure was an unnecessary, riskier method when a direct grep (which I used
+right after, and which was strictly better here) was available from the start; a repo with a
+long-lived unrelated stash entry is not a scenario I checked for before invoking a stash command,
+and `SAFEGUARDS.md`'s own "Read Before Edit"/"Preserve User Edits" spirit argues for `git stash list`
+before ever popping; (2) did not re-verify Track A's own tests are still green after the final `0L`
+lint fix using the FULL regression command (only the fast single-file command) before running
+`devtools::check()` — reasonable given `devtools::check()` itself re-runs the full suite and did come
+back 0 errors, but the sequencing was slightly out of the stated verification order.
+
+**Key files:** `R/comparePedigreeStructure.R` (new, the deliverable — `.extractKinship2Structure()`),
+`tests/testthat/test_comparePedigreeStructure.R` (new, 5 blocks/19 assertions), `docs/planning/
+pedigree-diagram-kinship2-structural-comparison-plan.md` §3.1/§4.1 (source contract), `BACKLOG.md`
+"Up Next" top item (updated, Track A DONE / Track B next), `PROJECT_LEARNINGS.md` Learning 666,
+`CLAUDE.md:283` (pointer).
+
+**Gotchas for a future session (Track B, the next pickup):** (1) implement exactly `docs/planning/
+pedigree-diagram-kinship2-structural-comparison-plan.md` §3.2/§4.2 — `.extractNprcStructure()`,
+input is `makePedigreeMatingLayout(ped, edgeStyle="direct", twinRelations=NULL)`'s output; **must**
+also include the D-2 edgeStyle-invariance property test (a second, throwaway `"rectilinear"`-side
+extraction implementation) — this is the track that actually proves D-2's claim, not merely assumes
+it. (2) The plan's own §3.2 pseudocode is explicitly marked illustrative/non-vectorized — expect real
+translation work, and per this session's own Learning 666, treat every "must handle zero/founder/
+no-match" test requirement as an adversarial check on the pseudocode itself, not just your
+implementation of it — recycling/length-mismatch bugs are exactly the shape that hides in pseudocode
+that was only read, not executed against an empty case. (3) Do not skip to Track C's live-kinship2
+tests — Track B's own tests must import Track A's output shape contract (`list(parentChildEdges,
+matePairs)`, both already implemented and unit-tested in `R/comparePedigreeStructure.R` this
+session). (4) The dashboard's HIGH-risk finding (3 files past the FM #28 2,000-line read cap) is
+still open, still not acted on, carried forward again.
+**Score: N/A — Session 632's handoff evaluated above (9/10).**
 
 ### Session 631 Handoff Evaluation (by Session 632)
 **Score: 9/10.** **What helped:** the `HANDOFFS.md` receipt's `next_steps` field was specific and

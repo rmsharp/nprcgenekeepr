@@ -138,19 +138,49 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S633
 date: 2026-08-25
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implementing Track A of docs/planning/pedigree-diagram-kinship2-structural-comparison-
-  plan.md (section 4.1) -- .extractKinship2Structure(), a new zero-kinship2-dependency internal
-  extractor, plus its test file. Strict TDD (RED->GREEN->REFACTOR).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE. Track A of docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md
+  (section 4.1) implemented -- .extractKinship2Structure(), a zero-kinship2-dependency internal
+  (@noRd) function, plus its test file. Full strict TDD (RED->GREEN, REFACTOR skipped by
+  owner-approved choice). Track B (.extractNprcStructure() + edgeStyle-invariance test) is the
+  next pickup.
+what_was_done: Wrote R/comparePedigreeStructure.R (.extractKinship2Structure()) and
+  tests/testthat/test_comparePedigreeStructure.R (5 test_that() blocks, 19 assertions, 4 synthetic
+  fixtures: founder-only, single-known-parent, multi-mate/shared-parent dedup, a combined
+  7-subject/2-mating fixture). RED confirmed failing for the right reason (function not found).
+  GREEN implementation found and fixed a real bug in the plan's own section 3.1 pseudocode: a
+  literal scalar `role` value fails data.frame()'s recycling rule against a zero-match founder
+  mask -- fixed with role = rep("father", sum(hasFather)). REFACTOR skipped (owner-approved,
+  nothing to improve). lintr::lint_package() 0 lints (fixed 2 implicit_integer_linter hits). Full
+  clean regression: 1 pre-existing failure (test_wordlist_coverage.R, confirmed via direct grep
+  the flagged word "bitSize" originates in the pre-existing R/shrinkPedigree.R) / 0 error.
+  devtools::check(): 0 errors, 1 warning + 2 notes, all 3 confirmed pre-existing/unrelated.
+  Updated BACKLOG.md's top item (Track A DONE, Track B next), PROJECT_LEARNINGS.md (Learning 666),
+  CLAUDE.md pointer. Commit d09a51e1 (deliverable).
+next_steps: Implement Track B (docs/planning/pedigree-diagram-kinship2-structural-comparison-
+  plan.md section 4.2) -- .extractNprcStructure(), input is
+  makePedigreeMatingLayout(ped, edgeStyle="direct", twinRelations=NULL)'s output. Must also
+  include the D-2 edgeStyle-invariance property test (a second, throwaway "rectilinear"-side
+  extraction implementation) -- this is the track that actually proves D-2's claim, not merely
+  assumes it. Strict A->B->C->D order continues: do not skip to Track C.
+key_files: R/comparePedigreeStructure.R (new, Track A), tests/testthat/test_comparePedigreeStructure.R
+  (new), docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md section 3.2/4.2
+  (Track B's contract), BACKLOG.md "Up Next" top item, PROJECT_LEARNINGS.md#Learning-666
+gotchas: The plan's own section 3.2 pseudocode is explicitly marked illustrative/non-vectorized --
+  expect real translation work. Per this session's Learning 666, treat every "must handle
+  zero/founder/no-match" test requirement as an adversarial check on the pseudocode itself, not
+  just your implementation of it -- recycling/length-mismatch bugs hide in pseudocode that was
+  only read, not executed against an empty case. Track B's own tests must import Track A's output
+  shape contract (list(parentChildEdges, matePairs), already implemented/tested). The dashboard's
+  HIGH-risk finding (3 files past the FM #28 2,000-line read cap: HANDOFFS.md/SESSION_NOTES.md/
+  CHANGELOG.md) is still open, still not acted on.
+runtime_smoke: n/a -- pure internal (@noRd) function, zero call sites, no runtime/Shiny wiring
+  changed.
+changelog_ref: CHANGELOG.md 2026-08-25 S633 entry
+commit: d09a51e1 (deliverable), pending (close-out -- self-reference, fixed next commit per
+  established S600/S602-S632 precedent)
 ```
 
 ```handoff

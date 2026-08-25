@@ -68,10 +68,25 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       remove the caveats once Track C confirms/resolves parity). All 4 owner-ratification
       questions (code placement, twin-relation scope, the new fixture, whether Track D stays in
       this plan) were answered exactly per the plan's own recommendation via `AskUserQuestion`.
-      **A future session should implement Track A** (`docs/planning/
-      pedigree-diagram-kinship2-structural-comparison-plan.md` §4.1) -- strict A→B→C→D
-      dependency order, one session per track. See `PROJECT_LEARNINGS.md` Learning 665 and
-      `CHANGELOG.md`.
+      **Track A DONE -- S633 (2026-08-25):** `.extractKinship2Structure()` implemented in new
+      `R/comparePedigreeStructure.R` (`@noRd`, zero `kinship2` dependency) exactly per plan §3.1,
+      via full strict TDD (RED: 5 `test_that()` blocks / 19 assertions across 4 synthetic fixtures
+      -- founder-only, single-known-parent, multi-mate/shared-parent dedup, a combined
+      7-subject/2-mating fixture -- confirmed failing for the right reason; GREEN: minimum
+      implementation, one real edge-case bug found and fixed along the way -- the plan's own §3.1
+      pseudocode's literal scalar `role = "father"` throws when zero rows match (R's recycling
+      rule fills short-to-long, not long-to-zero), fixed with `role = rep("father", sum(hasFather))`,
+      see `PROJECT_LEARNINGS.md` Learning 666; REFACTOR: skipped by choice, code already minimal).
+      Verified: `devtools::check()` 0 errors (1 pre-existing warning, 2 pre-existing notes, all
+      confirmed unrelated -- see `CHANGELOG.md`); full clean regression 1 pre-existing failure
+      (`test_wordlist_coverage.R`, confirmed via direct grep this session that the flagged word
+      `bitSize` originates entirely in `R/shrinkPedigree.R`, not this session's files) / 0 error;
+      `lintr::lint_package()` 0 lints on touched files.
+      **A future session should implement Track B** (`docs/planning/
+      pedigree-diagram-kinship2-structural-comparison-plan.md` §4.2) -- `.extractNprcStructure()`
+      plus the D-2 edgeStyle-invariance property test. Strict A→B→C→D dependency order continues:
+      Track B's own tests import Track A's output shape contract. See `PROJECT_LEARNINGS.md`
+      Learning 665/666 and `CHANGELOG.md`.
 
 ## Active
 - [x] **Pedigree Diagram: consider hiding the mating-unit node marker to match kinship2's

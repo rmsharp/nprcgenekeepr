@@ -16,6 +16,28 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S633: implement Track A of the kinship2 structural-comparison plan (`.extractKinship2Structure()`)
+- **Deliverable:** `R/comparePedigreeStructure.R` (new) — `.extractKinship2Structure()`, a
+  zero-`kinship2`-dependency internal (`@noRd`) function implementing `docs/planning/
+  pedigree-diagram-kinship2-structural-comparison-plan.md` §3.1/§4.1 exactly, plus
+  `tests/testthat/test_comparePedigreeStructure.R` (5 `test_that()` blocks, 19 assertions across 4
+  synthetic fixtures: founder-only, single-known-parent, multi-mate/shared-parent dedup, a combined
+  7-subject/2-mating fixture). Full strict TDD: RED (5 blocks confirmed failing for the right
+  reason — function not found) → GREEN (implementation; found and fixed a real bug in the plan's own
+  §3.1 pseudocode along the way — a literal scalar `role` value fails `data.frame()`'s recycling rule
+  against a zero-match founder mask, fixed with `role = rep("father", sum(hasFather))`, see
+  `PROJECT_LEARNINGS.md` Learning 666) → REFACTOR skipped by owner-approved choice (code already
+  minimal). Verified: `lintr::lint_package()` 0 lints (after fixing 2 `implicit_integer_linter`
+  hits); full clean regression 1 pre-existing failure (`test_wordlist_coverage.R`, confirmed via
+  direct grep that the flagged word `bitSize` originates entirely in the pre-existing
+  `R/shrinkPedigree.R`) / 0 error; `devtools::check()` 0 errors, 1 warning + 2 notes, all 3 confirmed
+  pre-existing/unrelated (non-portable untracked-file name, untracked `scratchpad/` dir, pre-existing
+  `vignettes/figure/` knitr leftover). Runtime smoke test: n/a — pure internal function, zero call
+  sites, no runtime/Shiny wiring changed. `BACKLOG.md`'s top item updated (Track A DONE, Track B
+  next). `PROJECT_LEARNINGS.md` Learning 666. `CLAUDE.md` learnings-count pointer refreshed
+  (632+/665 -> 633+/666). Commit: `d09a51e1`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25 · [ad hoc] S632: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S631 precedent)
 - **Deliverable:** fixed this session's own `HANDOFFS.md` receipt `commit` field from the
   deliverable-only sha to include the close-out commit itself (`1662fa14` deliverable, `11bcf417`
