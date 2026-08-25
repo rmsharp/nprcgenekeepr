@@ -28,16 +28,172 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 628 Handoff Evaluation (by Session 629)
+
+**Score: 9/10.** **What helped:** the receipt’s `next_steps` field (6
+READY items, plus the growing-unpushed-commit-count note) was accurate
+and reused directly for this session’s own Phase 0 priorities rendering,
+saving a from-scratch `BACKLOG.md` sweep. **What was missing:** nothing
+it reasonably could have — this session’s actual deliverable (the red
+`R-CMD-check-scheduled` run) postdates S628’s own close-out entirely;
+the run that failed triggered at 2026-08-24T09:18:39Z, after S628 had
+already closed, so S628’s own Phase 0 `gh run list` correctly reported
+“all green” at the time it checked. **What was wrong:** nothing found
+inaccurate. **ROI:** high.
+
 ### What Session 629 Did
 
-**Deliverable:** Diagnose the red `R-CMD-check-scheduled` run
-(2026-08-24T09:18:39Z, run `32710819747`) — `ubuntu-latest (release)`
-failed with “R CMD check found ERRORs” while
-devel/oldrel-1/macOS/Windows all passed. (IN PROGRESS) **Started:**
-2026-08-24 **Status:** Session claimed. Work beginning. **Ledger:**
-`CHANGELOG: pending` — set at claim; this session’s actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session’s reconcile.
+**Deliverable:** Diagnose and fix the red `R-CMD-check-scheduled` run
+(found live at this session’s own Phase 0 `gh run list` check, run
+`32710819747`, 2026-08-24T09:18:39Z — `ubuntu-latest (release)` failed
+with “R CMD check found ERRORs” while devel/oldrel-1/macOS/ Windows all
+passed). **DONE.** **Started/Completed:** 2026-08-24 (single session).
+
+**What actually happened, in order:** 1. **Phase 0 orientation** (full
+protocol): `SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+`git status`/`log`/`diff --stat` (clean except the same pre-classified
+untracked artifacts — 4 `docs/planning/pedigree-diagram-*.html`
+spike-evidence files, a recurring MS/LibreOffice lock file, an old
+`scratchpad/` dir — all older than this session, none new),
+`gh issue list` (11 open, unchanged), ledger reconcile
+(`CHANGELOG.md`/`HANDOFFS.md` frontiers = HEAD, no gap),
+`python3 methodology_dashboard.py` (96/100, 3 individual HIGH file-size
+flags re-verified fresh rather than trusted from a prior session’s
+summary). **`gh run list --branch master` (the `CLAUDE.md`-mandated
+unconditional CI-status check) found the red scheduled run** — surfaced
+in the Phase 0 report per the established “report, don’t fix inline”
+guardrail. Rendered the priorities list (4 `AskUserQuestion` options,
+including the fresh CI finding alongside 3 of S628’s own carried-forward
+READY items) — **user picked the CI diagnosis.** 2. **Phase 1B claimed**
+(stub + `HANDOFFS.md` `status: pending` receipt, commit `2e06b49c`). 3.
+**Diagnosed via the real job log**, not the annotation summary
+(`gh api .../jobs/<id>/logs` — `gh run view --log-failed` returned empty
+output in this environment): root cause is
+`test_positionMatingUnitForest.R:1645`’s `getLiveRenderedPositions()`
+call failing inside `chromote:::launch_chrome()` → `startup()` → “Chrome
+debugging port not open after 10 seconds” — the exact failure class S616
+(2026-08-20) already diagnosed and fixed on `R-CMD-check.yaml`. Per
+`PROJECT_LEARNINGS.md` Learning 647’s own rule (“don’t stop after one
+push/run in either direction”), re-ran the failed job unmodified
+(`gh run rerun --job`) rather than assuming it was the known flake from
+memory — passed clean, a second data point confirming the failure was
+real-but-intermittent, not a code regression. 4. **Found the true root
+cause via step-by-step job inspection** (an initial misstep, corrected
+quickly: first inspected `R-CMD-check.yaml`, the wrong file, before
+noticing the failing run’s job had only 9 steps where
+`R-CMD-check.yaml`’s own Chrome-provisioning steps would put it at 13+ —
+traced to `.github/workflows/R-CMD-check-scheduled.yaml`, a
+near-duplicate weekly-cron workflow with the identical 5-leg matrix that
+never received the S616/S618/S619 fix, because
+`tests/testthat/test_r_cmd_check_workflow_chrome_setup.R` guarded only
+the non-scheduled file by hardcoded path). Presented the finding + 2
+fix-approach options via `AskUserQuestion` (pre-RED scope/approach gate)
+— **owner picked the direct port + parametrized test over a deeper DRY
+`workflow_call` refactor.** 5. **RED:** parametrized the test file’s
+existing 4 `test_that()` blocks to loop over both workflow files (shared
+helper functions, not a duplicated file) — confirmed failing only for
+`R-CMD-check-scheduled.yaml`, for the right reason (all 4 pattern
+elements genuinely absent), while all 4 `R-CMD-check.yaml` tests still
+passed. Commit `1bedb5e5`. 6. **RED→GREEN gate** via `AskUserQuestion` —
+owner approved. 7. **GREEN:** ported the identical 3-step pattern
+(pinned `browser-actions/setup-chrome@v2` + `CHROMOTE_CHROME` +
+[`chromote::find_chrome()`](https://rstudio.github.io/chromote/reference/find_chrome.html)
+pre-flight assertion, same `if: != macos-latest` guard) into
+`R-CMD-check-scheduled.yaml`. All 8 guard tests pass; full clean
+regression 0 failed/0 error;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors (1 warning + 2 notes, all pre-existing/unrelated);
+`lintr::lint_package()` 0 lints; YAML parses clean. Commit `156b67ad`.
+8. **GREEN→REFACTOR gate** via `AskUserQuestion` — owner confirmed no
+refactor needed (the ported block is already the proven pattern; the DRY
+alternative stays declined, not filed as a follow-up per owner
+direction). 9. **Phase 3E runtime smoke test** — owner-directed, via
+`AskUserQuestion`, to the real-CI-required option matching this
+project’s own established bar for CI-workflow fixes (S616/S618/S619:
+local checks alone are insufficient for a CI-platform-timing-specific
+defect). Pushed all 23 pending commits (`git push origin master`,
+closing a 5-session unpushed-commit gap); confirmed all 4 push-triggered
+workflows green; manually dispatched `R-CMD-check-scheduled.yaml`
+(`gh workflow run`, run `32796324964`) — **all 5 matrix legs green,
+including `ubuntu-latest (release)`, the leg that failed before.** 10.
+**Close-out** (this write-up): `BACKLOG.md` Housekeeping item added and
+marked `[x]` DONE in the same session. `PROJECT_LEARNINGS.md` Learning
+662 recorded. `CLAUDE.md` learnings-count pointer refreshed (628+/661 →
+629+/662). `CHANGELOG.md` entry added.
+
+**Runtime smoke test (Phase 3E):** DONE, live real-CI verification — see
+step 9 above. Not silently skipped, not settled for local-only checks:
+this is a CI-infrastructure fix, so the faithful verification is a real
+GitHub Actions run, which was obtained.
+
+**TDD phase declaration:** full RED→GREEN→REFACTOR cycle,
+`AskUserQuestion`-gated at every transition (PRE-RED scope/approach →
+RED → GREEN → REFACTOR), matching the S618/S619 precedent for a
+CI-workflow-config fix under this project’s TDD contract.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `NEWS.Rmd` / `a2interactive.Rmd` / `_pkgdown.yml`
+checklists all **N/A** — no new exported function, no new user-facing
+Shiny feature, no `R/` production file touched (only a test file and CI
+workflow YAML). GitHub issue close-out: **N/A** — not filed as a GitHub
+issue, matching the established “found-and-fixed same session” precedent
+(Tracks A/B/C, S563-S565). Lint checklist: **DONE** — 0 lints on the
+touched test file.
+
+**Self-assessment (Session 629): 9/10.** **Strengths:** (1) did not stop
+at “confirmed transient flake, nothing to do” after the first rerun
+passed — kept digging into WHY a supposedly-fixed flake class could
+still occur at all, which surfaced the real structural gap (workflow
+drift + missing test coverage) rather than settling for the shallower,
+incomplete conclusion; (2) applied Learning 647’s own “don’t stop after
+one data point” rule correctly, getting a second data point via a real
+rerun before concluding transience rather than pattern-matching from
+memory of the similar-sounding S616 incident; (3) matched this project’s
+own established bar for CI-workflow fixes (real CI verification, not
+just local checks) without being told to — proposed it via
+`AskUserQuestion` rather than declaring done after local tests passed;
+(4) used the actual raw job log (`gh api .../jobs/<id>/logs`) rather
+than giving up when the higher-level `gh run view --log-failed` returned
+empty output; (5) followed every TDD gate via `AskUserQuestion` as
+required, including a scope/approach decision distinct from the phase
+gates themselves. **Weaknesses:** (1) initially inspected the wrong
+workflow file (`R-CMD-check.yaml` instead of
+`R-CMD-check-scheduled.yaml`) before the step-numbering gap analysis
+corrected course — a fairly quick self-correction, but checking
+`gh api .../jobs/<id>` for the parent workflow name directly would have
+caught this a few tool calls sooner; (2) the full
+diagnose→fix→live-verify cycle took several background CI waits
+(appropriate given the real-verification requirement, but worth noting
+as the session’s actual wall-clock driver, not the diagnosis or
+implementation itself).
+
+**Key files:** `.github/workflows/R-CMD-check-scheduled.yaml` (gained
+the 3-step Chrome- provisioning block, lines ~49-93),
+`tests/testthat/test_r_cmd_check_workflow_chrome_setup.R` (parametrized
+over both workflow files), `BACKLOG.md` Housekeeping (new `[x]` DONE
+item), `PROJECT_LEARNINGS.md` Learning 662, `CLAUDE.md:283`
+(learnings-count pointer), `CHANGELOG.md` 2026-08-24 `[BL-N]` entry.
+
+**Gotchas for a future session:** (1) if `R-CMD-check.yaml`‘s own
+Chrome-provisioning block is ever changed again,
+`R-CMD-check-scheduled.yaml` must be updated to match in the SAME
+session — the two files are still two independent copies, not a shared
+source; `test_r_cmd_check_workflow_chrome_setup.R` will catch a full
+removal/reordering of the pattern in either file, but it does NOT catch
+every possible divergence between the two copies’ exact step content
+(e.g. a future comment-only edit to one and not the other). (2) The
+declined DRY `workflow_call` refactor (a single reusable workflow both
+files invoke) remains a legitimate future option if this class of drift
+recurs a third time — not filed as a `BACKLOG.md` item per this
+session’s owner direction, so a future session considering it should
+re-derive the case fresh rather than expect a pointer. (3)
+`gh run view --log-failed` returned empty output in this environment for
+both a run-level and job-level target;
+`gh api repos/<owner>/<repo>/actions/jobs/<job-id>/logs` (raw log dump,
+then grep) is the reliable fallback that actually worked here. (4) All
+23 previously-unpushed commits (spanning S627/S628 plus this session)
+are now on `origin/master` — the “N sessions without a push” tracking
+some recent handoffs carried can reset.
 
 ### Session 627 Handoff Evaluation (by Session 628)
 

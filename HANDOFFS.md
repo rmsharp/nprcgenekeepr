@@ -174,23 +174,55 @@ hand-maintained.
 ``` handoff
 session: S629
 date: 2026-08-24
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Diagnose the red R-CMD-check-scheduled run (2026-08-24T09:18:39Z, run
-  32710819747) -- ubuntu-latest (release) failed with "R CMD check found ERRORs" while
-  devel/oldrel-1/macOS/Windows all passed. Root cause identified: chromote:::launch_chrome()
-  failed to open the CDP debugging port within 10s inside
-  test_positionMatingUnitForest.R:1645's getLiveRenderedPositions() call. A rerun of the
-  failed job was triggered to test for transience, matching the S616 diagnostic precedent
-  for this exact failure signature/platform.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. R-CMD-check-scheduled.yaml's chromote Chrome-launch flake fixed (ported the
+  S616/S618/S619 Chrome-provisioning pattern from R-CMD-check.yaml), live-verified on real CI --
+  all 5 matrix legs green on a manual workflow_dispatch (run 32796324964), including
+  ubuntu-latest (release), the leg that failed before (run 32710819747).
+what_was_done: Root cause: R-CMD-check-scheduled.yaml is a near-duplicate of R-CMD-check.yaml
+  (same 5-leg matrix, same chromote dependency) that never received the S616/S618/S619
+  Chrome-provisioning fix, because test_r_cmd_check_workflow_chrome_setup.R guarded only the
+  non-scheduled file by hardcoded path -- confirmed by raw job-log inspection (gh api
+  .../jobs/<id>/logs, since gh run view --log-failed returned empty output) showing
+  chromote:::launch_chrome() -> startup() -> "Chrome debugging port not open after 10 seconds"
+  inside test_positionMatingUnitForest.R:1645's getLiveRenderedPositions() -- the exact S616
+  failure class. Confirmed transient-not-regression via gh run rerun --job (passed clean, 2nd
+  data point per Learning 647's own rule). Full TDD, AskUserQuestion-gated at every transition:
+  RED parametrized the test file's 4 test_that() blocks over both workflow files (confirmed
+  failing only for the scheduled file); GREEN ported the identical 3-step pattern (pinned
+  browser-actions/setup-chrome@v2 + CHROMOTE_CHROME + chromote::find_chrome() assertion, same
+  if: != macos-latest guard). No refactor needed (owner-confirmed). Pushed all 23 pending
+  commits, then manually dispatched the fixed workflow for live verification. Commits: 2e06b49c
+  (claim), 1bedb5e5 (RED), 156b67ad (GREEN), close-out commits follow.
+next_steps: No further work owed -- resolved, BACKLOG.md Housekeeping item marked [x] DONE.
+  Other READY items unchanged from S628's list (now minus this one): pedigree-diagram
+  package-split scoping (READY, Effort M), context_budget.py evaluation (READY, Effort S),
+  DESCRIPTION Suggests/Config-Needs audit (READY, Effort S), chromote macOS-hang research
+  (optional, Effort M), pedigree-diagram-screenshots.R staleness check (READY, Effort S),
+  "Pedigree diagram vs kinship2" BACKLOG.md section regrowth check (READY, Effort L). All 23
+  previously-unpushed commits are now on origin/master -- no push backlog remains. If
+  R-CMD-check.yaml's Chrome-provisioning block is ever edited again, R-CMD-check-scheduled.yaml
+  must be updated in the same session (the 2 files are still independent copies, not shared).
+key_files: .github/workflows/R-CMD-check-scheduled.yaml (Chrome-provisioning block, ~lines
+  49-93), tests/testthat/test_r_cmd_check_workflow_chrome_setup.R (parametrized over both
+  workflow files), BACKLOG.md Housekeeping (new [x] DONE item), PROJECT_LEARNINGS.md Learning
+  662, CLAUDE.md:283 (learnings-count pointer), CHANGELOG.md 2026-08-24 [BL-N] entry.
+gotchas: (1) R-CMD-check.yaml and R-CMD-check-scheduled.yaml are still 2 independent copies of
+  the same Chrome-provisioning block -- a future edit to one must be mirrored to the other in
+  the same session; the guard test now catches a full removal/reorder in either file but not
+  every possible fine-grained divergence between the two copies. (2) A deeper DRY workflow_call
+  refactor was considered and declined (bigger scope than this one-off fix) -- not filed as a
+  BACKLOG.md item per owner direction; re-derive the case fresh if this drift class recurs.
+  (3) gh run view --log-failed returned empty output in this environment (both run- and
+  job-level); gh api repos/<owner>/<repo>/actions/jobs/<job-id>/logs is the reliable fallback.
+runtime_smoke: DONE, real CI -- pushed + manually dispatched R-CMD-check-scheduled.yaml (run
+  32796324964), all 5 matrix legs green including ubuntu-latest (release), the leg that failed
+  before. Not settled for local-only checks (tests/devtools::check()/lint), matching this
+  project's own established bar for CI-workflow fixes.
+changelog_ref: CHANGELOG.md 2026-08-24 entry, [BL-N] S629
+commit: 2e06b49c (claim), 1bedb5e5 (RED), 156b67ad (GREEN), 9e643b46 (close-out)
 ```
 
 ``` handoff

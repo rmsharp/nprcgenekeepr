@@ -211,6 +211,45 @@ presenting).
 edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`. \##
 Housekeeping
 
+**`R-CMD-check-scheduled.yaml` (the weekly-cron twin of
+`R-CMD-check.yaml`) never received the S616/S618/S619 chromote
+Chrome-provisioning fix, and nothing guarded against the drift** (found
+live S629, 2026-08-24, via Phase 0’s mandatory `gh run list` CI-status
+check – **RESOLVED S629, same session.**) – the scheduled run’s
+`ubuntu-latest (release)` leg failed with the exact pre-fix
+ambient-Chrome-discovery signature (`chromote:::launch_chrome()` -\>
+`startup()` -\> “Chrome debugging port not open after 10 seconds”,
+inside `test_positionMatingUnitForest.R:1645`’s
+`getLiveRenderedPositions()` call) – because
+`tests/testthat/test_r_cmd_check_workflow_chrome_setup.R` guarded only
+`R-CMD-check.yaml` by hardcoded path, `R-CMD-check-scheduled.yaml` was
+free to drift indefinitely with no test catching it. Confirmed the flake
+was real-but-intermittent (not a code regression) by re-running the
+failed job unmodified (`gh run rerun --job`), which passed clean – same
+diagnostic method as the original S616 finding of this exact failure
+class on this exact platform. Fixed via full TDD: RED parametrized the
+test file’s existing 4 `test_that()` blocks to loop over both workflow
+files (confirmed failing only for the scheduled file, for the right
+reason); GREEN ported the identical 3-step pattern (pinned
+`browser-actions/setup-chrome@v2` + `CHROMOTE_CHROME` + a
+[`chromote::find_chrome()`](https://rstudio.github.io/chromote/reference/find_chrome.html)
+pre-flight assertion, same `if: != macos-latest` guard) into
+`R-CMD-check-scheduled.yaml`. Verified: all 8 guard tests pass; full
+clean regression 0 failed/0 error;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors (1 warning + 2 notes, all pre-existing/unrelated
+untracked-artifact noise); `lintr::lint_package()` 0 lints;
+**live-verified on real CI** (owner-directed, matching this project’s
+own established bar for CI-workflow fixes) – pushed, then a manual
+`workflow_dispatch` of `R-CMD-check-scheduled.yaml` confirmed all 5
+matrix legs GREEN. A deeper DRY fix (a shared `workflow_call` reusable
+workflow so the 2 files can’t drift apart structurally again) was
+considered and declined at the pre-RED gate as bigger scope than this
+session’s one-off fix – not filed as a follow-up item, per owner
+direction. Not filed as a GitHub issue, matching the established
+“found-and-fixed same session” precedent (Tracks A/B/C, S563-S565). See
+`CHANGELOG.md`.
+
 **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing
 binary hangs on `macos-latest`’s `ChromoteSession$new()` bootstrap**
 (found S619, 2026-08-20, incidental to the chromote CDP-timeout fallback
