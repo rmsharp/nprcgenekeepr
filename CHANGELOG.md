@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S631: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S630 precedent)
+- **Deliverable:** fixed this session's own `HANDOFFS.md` receipt `commit` field from the
+  pre-close-out commit to include the close-out commit itself (`16a23c2a` correction, `35b1a23e`
+  close-out). Commit: `7b487066`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25 · [ad hoc] S631: stop presenting kinship2 diagram comparisons as verified equivalent (owner correction)
 - **Deliverable:** owner corrected this session directly -- "you are still publishing comparisons
   of kinship2 output to nprcgenekeepr output as equivalent when they are clearly not... I have
