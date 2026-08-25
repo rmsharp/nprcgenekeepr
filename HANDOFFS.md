@@ -137,20 +137,42 @@ This file currently holds **17** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S630
-date: 2026-08-24
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Verify/refresh pedigree-diagram.qmd screenshots against current app, re-render to
-  HTML + PDF, open for owner review (BACKLOG.md line-293 staleness item + owner request for
-  visual evidence of pedigree-drawing improvements).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+date: 2026-08-25
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE. Found and fixed a live Diagram-tab crash (.detectStraight() inside
+  .resolveEdgeNodeCollisions(), R/makePedigreeDiagramData.R -- named atomic vector [[ throws on
+  an unmatched name instead of returning NULL) while verifying pedigree-diagram.qmd's screenshots
+  against the current app. Full RED->GREEN TDD cycle, AskUserQuestion-gated. All 5 screenshots
+  regenerated and verified correct; both articles re-rendered to HTML+PDF for owner review.
+what_was_done: Root-caused and fixed a real production crash in the Diagram tab's default
+  (Rectilinear) edge style, triggered by a realistic focal-animal ancestors+descendants trim.
+  2 new regression tests (commit 27cad886, RED), the 2-line fix (commit fcd24fdb, GREEN),
+  regenerated screenshots + BACKLOG.md close-out (commit 4fcdcb22). NEWS.Rmd entry,
+  PROJECT_LEARNINGS.md Learning 663, CLAUDE.md pointer refresh, CHANGELOG.md entry (this commit).
+next_steps: No follow-up owed for this fix -- fully closed, verified live. BACKLOG.md's other
+  READY items remain open in the order S629 left them (pedigree-diagram package-split scoping
+  session; DESCRIPTION Suggests/Config-Needs cleanup; HANDOFFS.md/CHANGELOG.md archive-trim, both
+  past their byte budget again per this session's own Phase 0 dashboard check; issue #148's
+  scope-narrowing conversation, the ratified sequencing audit's next item -- still needs an owner
+  decision, not a routine pickup).
+key_files: R/makePedigreeDiagramData.R:1663-1673 (.detectStraight() fix),
+  tests/testthat/test_resolveEdgeNodeCollisions.R (2 new tests at end of file), BACKLOG.md
+  (staleness item closed), NEWS.Rmd (Pedigree Diagram section), PROJECT_LEARNINGS.md#Learning-663
+gotchas: The installed package binary used by any shinytest2::AppDriver script can silently go
+  stale relative to source HEAD (it launches a separate R process via system.file(), not
+  pkgload::load_all()) -- reinstall first if freshness is unknown. pedigree-diagram.html/.pdf and
+  kinship2-fidelity-validation.pdf sit locally in vignettes/articles/, uncommitted by design
+  (regenerable review artifacts) -- safe to delete or regenerate via `quarto render`. The
+  Claude-in-Chrome extension disconnected mid-session and would not reconnect; a local
+  `python3 -m http.server 8791` may still be running at the repo root.
+runtime_smoke: DONE -- live shinytest2::AppDriver reproduction (pre-fix, captured the crash via
+  full server-log traceback) plus post-fix screenshot regeneration against a freshly-reinstalled
+  build (all 5 confirmed rendering correctly, no crash) together constitute faithful runtime
+  verification for this bug fix.
+changelog_ref: CHANGELOG.md 2026-08-25 S630 entry
+commit: 4fcdcb22
 ```
 
 ```handoff

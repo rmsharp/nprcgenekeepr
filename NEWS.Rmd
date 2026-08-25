@@ -105,6 +105,10 @@ knitr::opts_chunk$set(echo = TRUE)
   tangled families (issue #141). `makePedigreeMatingLayout()` has no
   `orderBySex` argument -- the male-left/female-right convention is
   always applied.
+- Fixed a crash in the Diagram tab: narrowing to a small set of focal
+  animals and their family could make the diagram fail to display at all
+  under the default connector style. The diagram now always displays
+  correctly for this kind of narrowed view.
 ## Kinship & Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their
   computed relatedness to genetic identity, and that correction flows

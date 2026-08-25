@@ -16,6 +16,31 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S630: fix live Diagram-tab crash found while verifying pedigree-diagram.qmd screenshots (BACKLOG.md item found S582)
+- **Deliverable:** verifying the pedigree-diagram.qmd article's screenshots against the current
+  app (a `BACKLOG.md`-flagged staleness item) surfaced a real, live crash instead: the Diagram tab
+  errored `Error: subscript out of bounds` under its own default (Rectilinear) edge style on a
+  realistic focal-animal trim of the real 375-individual bundled fixture. Root-caused (via a fresh
+  package reinstall + a standalone `shinytest2::AppDriver` run with full server-log capture,
+  ruling out a stale-build or harness artifact) to `.detectStraight()` inside
+  `.resolveEdgeNodeCollisions()` (`R/makePedigreeDiagramData.R`, introduced by commit `c7bdbe4b`,
+  issue #160 Track 2): `xOf`/`yOf` were named atomic vectors, and `[[` throws on an atomic vector
+  for an unmatched name instead of returning `NULL` as the existing `is.null()` guard expected --
+  so an edge referencing a node id absent from `nodes` (exactly what a real ancestors+descendants
+  focal-trim union can produce) crashed instead of being skipped. Fixed via full strict-TDD
+  RED->GREEN (2 new tests: a minimal synthetic dangling-reference fixture, and a real-fixture
+  regression pinning the exact production crash), `AskUserQuestion`-gated at PRE-RED/RED->GREEN/
+  GREEN->REFACTOR (no refactor needed -- a 2-line change). All 5 screenshots regenerated against
+  the fixed app and visually confirmed correct; `pedigree-diagram.qmd` and
+  `kinship2-fidelity-validation.qmd` re-rendered to HTML and PDF for owner review (not committed --
+  regenerable review artifacts, matching the `docs/planning/*.html` precedent). `BACKLOG.md`
+  staleness item (found S582) closed `[x]`. `NEWS.Rmd` Pedigree Diagram entry added (plain-language
+  criterion). `PROJECT_LEARNINGS.md` Learning 663 recorded. `CLAUDE.md` learnings-count pointer
+  refreshed (629+/662 -> 630+/663). Not filed as a GitHub issue, matching the established
+  "found-and-fixed same session" precedent. Commits: `27cad886` (RED), `fcd24fdb` (GREEN),
+  `4fcdcb22` (screenshots + BACKLOG.md).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-24 · [ad hoc] S629: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S628 precedent)
 - **Deliverable:** fixed this session's own `HANDOFFS.md` receipt `commit` field from `pending`
   to the actual close-out commit shas (`2e06b49c` claim, `1bedb5e5` RED, `156b67ad` GREEN,

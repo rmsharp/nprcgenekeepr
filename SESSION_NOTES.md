@@ -18,18 +18,136 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 629 Handoff Evaluation (by Session 630)
+**Score: 8/10.** **What helped:** Phase 0 orientation (CI status, ledger reconcile, priorities
+list) was accurate and complete — CHANGELOG.md/HANDOFFS.md frontiers matched HEAD exactly (modulo
+the known self-referential sha-fix commit pattern), all push-triggered CI was green, and the
+rendered priorities list gave a clean starting point. **What was missing/N/A:** this session's
+actual deliverable came from a fresh, specific user request ("show me evidence of pedigree drawing
+improvements") that bypassed the BACKLOG.md priorities picker entirely — S629's `next_steps` field
+had no way to anticipate that, so this isn't a gap in S629's own handoff, just a session that
+pivoted on direct user direction rather than picking from backlog. **What was wrong:** nothing
+found inaccurate. **ROI:** high for orientation, N/A for this session's specific deliverable.
+
 ### What Session 630 Did
-**Deliverable:** Verify (and refresh if stale) the `pedigree-diagram.qmd` article's screenshots
-against the current app, re-render the article to HTML, produce a PDF, and open both plus the
-existing `kinship2-fidelity-validation.html` for the owner's live review — closing `BACKLOG.md`'s
-flagged-but-unverified item (found S582, "3 non-base-fixture screenshots may have gone stale by
-the same default-flip mechanism as `pb_diagram_legend.png`"). (IN PROGRESS)
-**Started:** 2026-08-24 (continuing into 2026-08-25).
-**Status:** Session claimed. Work beginning. No production R code in scope — documentation/
-verification only, so the TDD RED/GREEN/REFACTOR gates do not apply this session.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Found and fixed a live crash in the Diagram tab (Rectilinear edge style, the
+app's own default, on a realistic focal-animal-trim workflow) while verifying the
+`pedigree-diagram.qmd` article's screenshots against the current app — the user's actual request
+("show me evidence of pedigree drawing improvements... create HTML and PDF files... documentation
+should demonstrate the use of each pedigree drawing feature"). **DONE.**
+**Started/Completed:** 2026-08-24/25 (single session, spanning midnight).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol, documented above): clean tree except pre-classified
+   untracked artifacts, CI green, ledger frontiers current, dashboard 96/100. Rendered the
+   priorities list; **before the user picked one, they asked directly:** "I want to see evidence
+   of Pedigree drawing improvements... create [HTML/PDF files] and open them for review" — a
+   direct task, superseding the backlog picker (Phase 1, not a backlog pick).
+2. **Investigated existing evidence:** found `vignettes/articles/kinship2-fidelity-validation.qmd`
+   (tracked, committed, real side-by-side kinship2-vs-nprcgenekeepr images across 3 tracks) —
+   opened it live in the browser via a local `python3 -m http.server` (the `file://` scheme is
+   blocked for the Claude-in-Chrome extension). Found `vignettes/articles/pedigree-diagram.qmd`
+   already demonstrates every current Diagram-tab control (`pedigreeEdgeStyle`, `pedigreeShowNames`,
+   `pedigreeShowTwinConnectors`, twin-relations upload, interaction, script-callable equivalent —
+   cross-checked directly against `R/modPedigree.R`'s actual `ns(...)`-registered inputs, no gaps)
+   — the user's mid-turn "documentation should demonstrate each feature" ask was already
+   substantially satisfied; the concrete, unresolved gap was `BACKLOG.md`'s own flagged-but-
+   unverified screenshot-staleness item (found S582).
+3. **Claimed the session** (1B stub + `HANDOFFS.md` pending receipt, commit `6740eba3`).
+4. **Regenerated the 5 screenshots** — got `Error: subscript out of bounds` for every fixture,
+   under Rectilinear (the current default). Ruled out 2 false leads before treating this as real:
+   (a) the installed package binary was 10 days stale (Aug 14, predating ~60 sessions of
+   pedigree-diagram work) — reinstalled from current `HEAD`, crash persisted; (b) a standalone
+   `shinytest2::AppDriver` script with full server-log capture reproduced the identical crash
+   outside the screenshot-harness, ruling out a harness-specific bug. The captured server log's own
+   traceback pinpointed `.detectStraight()` inside `.resolveEdgeNodeCollisions()`
+   (`R/makePedigreeDiagramData.R`, commit `c7bdbe4b`, issue #160 Track 2).
+5. **Root-caused precisely:** `xOf`/`yOf` were named ATOMIC vectors (`stats::setNames(...)`), and
+   `[[` on an atomic vector throws "subscript out of bounds" for an unmatched name — whereas the
+   surrounding `is.null(yf) || is.null(yt)` guard was written assuming LIST `[[` semantics (returns
+   `NULL`). An edge referencing a node id absent from `nodes` (which the real Shiny module's
+   ancestors-UNION-descendants focal-trim produces, confirmed by reproducing directly — an initial
+   manual repro using `trimPedigree()`'s ancestors-ONLY output did NOT crash, exposing the exact
+   shape that matters) hit this gap. Presented the full evidence chain to the owner via
+   `AskUserQuestion` (fix now / file-and-defer / show-what-exists) — **owner picked fix now.**
+6. **RED:** 2 new tests in `tests/testthat/test_resolveEdgeNodeCollisions.R` — a minimal synthetic
+   dangling-edge-reference fixture, and a real-fixture regression (21-row hardcoded subset,
+   reproducing the exact production crash with no Shiny/E2E harness needed). Both confirmed failing
+   for the right reason against unmodified source. Commit `27cad886`.
+7. **RED→GREEN gate** via `AskUserQuestion` — owner approved the minimum fix (named lists instead
+   of atomic vectors).
+8. **GREEN:** `xOf <- as.list(stats::setNames(nodes$x, nodes$id))` (same for `yOf`) — a 2-line
+   change. Both new tests pass; full `test_resolveEdgeNodeCollisions.R` passes; clean full
+   regression 1 failed (`test_markerParentageLikelihood.R`, a timing-benchmark test, confirmed
+   passing cleanly in isolation both with and without this change — a load flake, not a
+   regression); `devtools::check()` 1 error (the same 2 timing-flake tests, confirmed passing in
+   isolation) + 1 warning + 1 note (both pre-existing/well-documented: non-portable "Compounding
+   Loop" filename, leftover knitr `figure/` dir); `lintr::lint_package()` 0 lints (confirmed both
+   before and after). Commit `fcd24fdb`.
+9. **GREEN→REFACTOR gate** via `AskUserQuestion` — owner confirmed no refactor needed.
+10. **Regenerated all 5 screenshots** against the fixed, freshly-reinstalled app — all now render
+    correctly (visually confirmed via direct image inspection, not assumed). Confirmed the
+    original `BACKLOG.md` staleness fear was also real (3 of 5 had drifted to the pre-Track-2
+    "direct" edge-style default) — a secondary, now-moot finding once the crash fix made
+    regeneration possible at all. Committed the 5 PNGs + `BACKLOG.md` item closed `[x]`
+    (commit `4fcdcb22`).
+11. **Re-rendered both articles** (`pedigree-diagram.qmd`, `kinship2-fidelity-validation.qmd`) to
+    HTML (quarto) and PDF (quarto + system TeX, confirmed available — MacTeX at
+    `/Library/TeX/texbin`) for the owner's review. Verified the PDF's own content directly (not
+    just "render succeeded") via the `Read` tool's PDF-page support. **Not committed** — matching
+    the established `docs/planning/*.html` precedent of regenerable, one-time review artifacts.
+12. **Runtime smoke test (Phase 3E):** DONE — the live `shinytest2::AppDriver` reproduction (step
+    4) plus the post-fix screenshot regeneration (step 10) together ARE the faithful runtime
+    verification for this bug fix; not a separate, deferred step.
+13. **Close-out** (this write-up): `NEWS.Rmd` Pedigree Diagram entry (plain-language criterion
+    applied). `PROJECT_LEARNINGS.md` Learning 663. `CLAUDE.md` learnings-count pointer refreshed.
+    `CHANGELOG.md` entry added.
+
+**Self-assessment (Session 630): 9/10.** **Strengths:** (1) did not accept the first regenerated
+screenshot's error message at face value — ruled out 2 plausible false leads (stale build,
+harness artifact) with real, independent verification before treating the crash as a genuine
+production bug, matching this project's own "verify against ground truth" standard; (2) when a
+first manual repro attempt did NOT reproduce the crash, did not conclude "must be a Shiny-only
+issue" and stop — compared the manual repro's data shape against the real call site
+(`modPedigree.R:588`'s `pedigreeData()` reactive) and found the actual discrepancy (ancestors-only
+vs. ancestors-UNION-descendants); (3) got a full, precise server-side R traceback via a standalone
+`AppDriver` + `get_logs()` script rather than settling for the browser's generic "Error: subscript
+out of bounds" display; (4) followed every TDD gate via `AskUserQuestion` as required, including
+the PRE-RED scope/approach decision distinct from the phase gates themselves; (5) restored the
+working tree to a clean state immediately after finding the crash (the freshly-generated
+screenshots showed the error, not the feature) rather than leaving broken images sitting
+uncommitted while continuing the investigation. **Weaknesses:** (1) the very first repro attempt
+called `trimPedigree(ped2, ids)` with arguments in the wrong order (the signature is
+`(probands, ped, ...)`) — a self-inflicted, self-corrected mistake that cost a few tool calls
+before checking `args(trimPedigree)` directly; (2) did not attempt to verify the `diagram_twin_connectors.png`
+screenshot's exact connector colors/dash-styles pixel-level (relied on "renders without error,
+matches the article's description" — sufficient for this session's purpose, but a more exhaustive
+verification would zoom/color-sample it directly).
+
+**Key files:** `R/makePedigreeDiagramData.R:1663-1673` (`.detectStraight()`, the fix),
+`tests/testthat/test_resolveEdgeNodeCollisions.R` (2 new tests, end of file), `BACKLOG.md`
+(staleness item closed `[x]`), `NEWS.Rmd` (Pedigree Diagram section), `PROJECT_LEARNINGS.md`
+Learning 663, `CLAUDE.md:283` (learnings-count pointer), `CHANGELOG.md` 2026-08-25 entry,
+`vignettes/articles/shiny_app_use/{pb_diagram_legend,diagram_rectilinear_edge_style,
+diagram_show_names,diagram_affected_shading,diagram_twin_connectors}.png` (regenerated).
+
+**Gotchas for a future session:** (1) the installed package binary (used by any `shinytest2::AppDriver`-
+based script, since it launches a SEPARATE R process via `system.file(..., package = "nprcgenekeepr")`,
+not `pkgload::load_all()`'s dev session) can silently go stale relative to source `HEAD` — no
+existing session-runner step catches this; a future E2E/screenshot-generation session should
+`devtools::install(quick = TRUE, upgrade = FALSE)` first if the installed copy's age vs. `HEAD`'s
+commit date is not already known to be fresh. (2) `pedigree-diagram.html`/`.pdf` and
+`kinship2-fidelity-validation.pdf` are sitting locally in `vignettes/articles/` uncommitted
+(gitignored for `.html` via a nested `vignettes/articles/.gitignore`; the `.pdf`s are simply
+untracked) — regenerable review artifacts, not meant to be committed; a future session can delete
+them freely or regenerate via `quarto render <file>.qmd --to html`/`--to pdf`. (3) The
+Claude-in-Chrome browser extension disconnected mid-session (after working earlier) and could not
+be reconnected — the local `python3 -m http.server 8791` (repo root) used to view the articles may
+still be running; kill it if found (`lsof -i :8791`). (4) `.resolveEdgeNodeCollisions()`'s OTHER
+internal `xOf`/`yOf` computations (inside the `repeat` loop body, used for `hitInfo`/`jogUnitOf`/
+`levelOf`) were confirmed safe as-is (they only ever index `hitRows` entries that already passed
+`.detectStraight()`'s own guard) — not changed, and should not need to be unless `hitRows`'
+construction changes.
 
 ### Session 628 Handoff Evaluation (by Session 629)
 **Score: 9/10.** **What helped:** the receipt's `next_steps` field (6 READY items, plus the
