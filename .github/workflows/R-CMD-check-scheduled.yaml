@@ -46,6 +46,58 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      # Provision a pinned, reproducible Chrome-for-Testing binary for chromote
+      # (mirrors R-CMD-check.yaml's own fix for the identical flake on this
+      # identical matrix -- BACKLOG.md Housekeeping item, found S616/S618,
+      # ported here S629 after this scheduled twin's own ubuntu-latest
+      # (release) leg hit the exact same ambient-Chrome-discovery flake live,
+      # 2026-08-24, run 32710819747): chromote's own ambient Chrome discovery
+      # is unreliable across this job's runner images, observed failing as
+      # launch_chrome()/startup() abort (ubuntu-latest) and "Chrome
+      # debugging port not open after 10 seconds" (windows-latest).
+      #
+      # Skipped on macos-latest (if: guard below), which reverts to ambient/
+      # unpinned Chrome discovery instead: the pinned binary's freshly-
+      # launched ChromoteSession hangs on its internal Runtime.evaluate
+      # bootstrap probe there specifically -- NOT simple cold-start latency,
+      # since raising chromote's default_timeout to 60s
+      # (helper-live-render-positions.R) did NOT resolve it on a real CI push
+      # (run 32417985922, still timed out after the full 60s, 3/3 identical
+      # failures). Ambient Chrome discovery is already proven green on
+      # macos-latest (S616's own run) -- this pin's original rationale above
+      # never named macos-latest as needing it in the first place (found
+      # S618, fallback applied S619, 2026-08-20).
+      - name: Set up Chrome
+        if: ${{ matrix.config.os != 'macos-latest' }}
+        uses: browser-actions/setup-chrome@v2
+        id: setup-chrome
+        with:
+          install-dependencies: true
+
+      # chromote::find_chrome() honours CHROMOTE_CHROME first; point it at the
+      # action's installed binary (its name is not guaranteed to be on PATH).
+      # shell: bash is required here -- unlike shinytest2.yaml (ubuntu-only,
+      # where bash is the OS default), this job's matrix includes
+      # windows-latest, whose run: default shell is PowerShell, under which
+      # this bash-syntax redirect silently no-ops (confirmed live, S618).
+      - name: Point chromote at the installed Chrome
+        if: ${{ matrix.config.os != 'macos-latest' }}
+        run: echo "CHROMOTE_CHROME=${{ steps.setup-chrome.outputs.chrome-path }}" >> "$GITHUB_ENV"
+        shell: bash
+
+      - name: Assert Chrome is resolvable by chromote
+        if: ${{ matrix.config.os != 'macos-latest' }}
+        run: |
+          chrome <- Sys.getenv("CHROMOTE_CHROME")
+          cat("CHROMOTE_CHROME =", chrome, "\n")
+          found <- chromote::find_chrome()
+          cat("chromote::find_chrome() =", if (is.null(found)) "<NULL>" else found, "\n")
+          if (length(found) != 1L || !nzchar(found) || !file.exists(found)) {
+            stop("Chrome not resolvable by chromote: ",
+                 if (is.null(found)) "NULL" else found)
+          }
+        shell: Rscript {0}
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
