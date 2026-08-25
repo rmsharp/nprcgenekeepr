@@ -16,6 +16,45 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-24 · [BL-N] S629: fix R-CMD-check-scheduled.yaml's chromote Chrome-launch flake (ported from R-CMD-check.yaml)
+- **Deliverable:** diagnose and fix the red `R-CMD-check-scheduled` run found live at Phase 0
+  (`CLAUDE.md`'s `gh run list` CI-status checklist, run `32710819747`, `ubuntu-latest (release)`
+  only). Root cause: `.github/workflows/R-CMD-check-scheduled.yaml` is a near-duplicate of
+  `R-CMD-check.yaml` (identical 5-leg matrix, identical `chromote` dependency) that never received
+  the S616/S618/S619 Chrome-provisioning fix, because `tests/testthat/
+  test_r_cmd_check_workflow_chrome_setup.R` guarded only the non-scheduled file by hardcoded path
+  -- the scheduled twin was free to drift with nothing catching it until its own weekly cron run
+  hit the identical pre-fix failure signature (`chromote:::launch_chrome()` -> `startup()` ->
+  "Chrome debugging port not open after 10 seconds", inside `test_positionMatingUnitForest.R:1645`'s
+  `getLiveRenderedPositions()`). Confirmed the failure was real-but-intermittent (not a code
+  regression) via `gh run rerun --job`, which passed clean on the identical unmodified job --
+  matching the exact diagnostic method Learning 647 documents for this failure class. Fixed via
+  full TDD (`AskUserQuestion`-gated at every transition): RED parametrized the test file's existing
+  4 `test_that()` blocks to loop over both workflow files (shared helper functions, not a
+  duplicated test file), confirmed failing only for the scheduled file, for the right reason;
+  GREEN ported the identical 3-step pattern (pinned `browser-actions/setup-chrome@v2` +
+  `CHROMOTE_CHROME` + a `chromote::find_chrome()` pre-flight assertion, same
+  `if: != macos-latest` guard) into `R-CMD-check-scheduled.yaml`. A deeper DRY alternative (a
+  shared `workflow_call` reusable workflow so the 2 files can't drift apart structurally) was
+  considered and declined at the pre-RED gate as bigger scope than this one-off fix, owner-directed
+  not to file as a follow-up.
+- **Verification:** all 8 guard tests pass (was 4 pass/4 fail at RED); full clean regression 0
+  failed/0 error; `devtools::check()` 0 errors (1 warning + 2 notes, all pre-existing/unrelated --
+  the untracked lock-file/scratchpad/knitr-figure artifacts, unrelated to this diff);
+  `lintr::lint_package()` 0 lints on the touched test file; YAML parses clean
+  (`python3 yaml.safe_load`). **Live-verified on real CI, owner-directed** (matching this project's
+  own established bar for CI-workflow fixes, S616/S618/S619): pushed all 23 pending commits
+  (`git push origin master`, closing a 5-session unpushed-commit gap), confirming all 4 push-
+  triggered workflows green (`R-CMD-check.yaml`/`lint.yaml`/`pkgdown.yaml`/`test-coverage.yaml`),
+  then manually dispatched `R-CMD-check-scheduled.yaml` (`gh workflow run`, run `32796324964`) to
+  verify the fixed workflow directly rather than waiting for next Monday's cron.
+- **BACKLOG.md:** Housekeeping item added and marked `[x]` DONE in the same session (found-and-
+  fixed live, not filed as a GitHub issue, matching the established Track A/B/C precedent).
+  `PROJECT_LEARNINGS.md` Learning 662 recorded. `CLAUDE.md` learnings-count pointer refreshed
+  (628+/661 → 629+/662).
+- Commits: `2e06b49c` (claim), `1bedb5e5` (RED), `156b67ad` (GREEN).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-24 · [ad hoc] S628: record close-out commit shas in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S627 precedent)
 - **Deliverable:** fixed this session's own `HANDOFFS.md` receipt `commit`/`what_was_done: pending`
   → real commit shas (`5c8cc7e1`, `815274cb`, `4f85129f`, `99572079`), matching the established
