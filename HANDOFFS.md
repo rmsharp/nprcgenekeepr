@@ -136,6 +136,24 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S632
+date: 2026-08-25
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Design document for the programmatic structural-comparison algorithm between
+  makePedigreeMatingLayout() output and kinship2's own pedigree object (BACKLOG.md "Up Next" top
+  item, found S631). IN PROGRESS.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S631
 date: 2026-08-25
 status: complete

@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 632 Did
+**Deliverable:** Design document — `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md` —
+designing the programmatic structural-comparison algorithm between `makePedigreeMatingLayout()`'s
+output and kinship2's own `pedigree` object (resolving the DECISION NEEDED tag on `BACKLOG.md`'s
+top "Up Next" item, found S631). (IN PROGRESS)
+**Started:** 2026-08-25.
+**Status:** Session claimed. Work beginning. Following `ARCHITECTURE_WORKSTREAM.md` +
+`SESSION_RUNNER.md` Planning Session requirements. Implementation is explicitly out of scope for
+this session (FM #18).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 630 Handoff Evaluation (by Session 631)
 **Score: N/A — no gap, direct continuation.** S631 is a same-conversation continuation of S630
 (the owner's correction arrived immediately after S630's own close-out report), not a
