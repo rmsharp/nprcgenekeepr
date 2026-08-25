@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S632: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S631 precedent)
+- **Deliverable:** fixed this session's own `HANDOFFS.md` receipt `commit` field from the
+  deliverable-only sha to include the close-out commit itself (`1662fa14` deliverable, `11bcf417`
+  close-out). Commit: `86fead66`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25 · [ad hoc] S632: design a structural/topological pedigree-diagram comparison algorithm vs kinship2 (BACKLOG.md Up Next item found S631)
 - **Deliverable:** `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md` — an
   interface-first design resolving the DECISION NEEDED tag on `BACKLOG.md`'s top "Up Next" item.
