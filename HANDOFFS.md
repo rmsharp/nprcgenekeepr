@@ -172,7 +172,8 @@ runtime_smoke: DONE -- live shinytest2::AppDriver reproduction (pre-fix, capture
   build (all 5 confirmed rendering correctly, no crash) together constitute faithful runtime
   verification for this bug fix.
 changelog_ref: CHANGELOG.md 2026-08-25 S630 entry
-commit: 4fcdcb22
+commit: 6740eba3 (claim), 27cad886 (RED), fcd24fdb (GREEN), 4fcdcb22 (screenshots + BACKLOG.md),
+  ba12d1d5 (close-out)
 ```
 
 ```handoff
