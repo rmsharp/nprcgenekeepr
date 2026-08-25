@@ -191,7 +191,7 @@ gotchas: CI will skip Track C's live-kinship2 tests (no workflow installs kinshi
 runtime_smoke: n/a -- pure internal (@noRd) function, zero call sites (confirmed by grep), no
   runtime/Shiny wiring changed.
 changelog_ref: CHANGELOG.md 2026-08-25 S634 entries (implementation + issue #164 filing)
-commit: b52f2058 (deliverable)
+commit: b52f2058 (deliverable), af67682b (close-out)
 ```
 
 ```handoff
