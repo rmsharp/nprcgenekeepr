@@ -16,6 +16,25 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S631: stop presenting kinship2 diagram comparisons as verified equivalent (owner correction)
+- **Deliverable:** owner corrected this session directly -- "you are still publishing comparisons
+  of kinship2 output to nprcgenekeepr output as equivalent when they are clearly not... I have
+  stated that your equivalence assessments have been wrong in the past for these same pedigrees."
+  Investigated `vignettes/articles/kinship2-fidelity-validation.qmd` and `docs/planning/
+  pedigree-diagram-kinship2-reference-comparison.qmd`: found neither document's diagram-image
+  claims are backed by any programmatic structural comparison (only Track A's kinship-matrix
+  `identical()` and Track B's surviving-id-set `setequal()` are genuinely checked); found both
+  documents' images are stale relative to the same-row-collision-avoidance work and the Walker/BJL
+  positioning rewrite (issue #141). Added a prominent, honest caveat to both documents (not a fix)
+  stating the diagram-equivalence claims are unverified and must not be cited until a real
+  comparison exists. Filed a `BACKLOG.md` item scoping the actual fix (port the known `chromote`
+  `$go_to()` race fix into `data-raw/kinship2FidelityValidation.R`, regenerate every image, build
+  a real structural edge-set comparison) as dedicated future-session work, per owner direction not
+  to rush it this session. `PROJECT_LEARNINGS.md` Learning 664 recorded; user-memory
+  `verify-diagrams-against-ground-truth.md` updated with a third instance. `CLAUDE.md`
+  learnings-count pointer refreshed (630+/663 -> 631+/664). Commit: `16a23c2a`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25 · [ad hoc] S630: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S629 precedent)
 - **Deliverable:** fixed this session's own `HANDOFFS.md` receipt `commit` field from the
   pre-close-out commit list to include the actual close-out commit sha (`6740eba3` claim,

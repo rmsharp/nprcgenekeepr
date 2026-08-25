@@ -132,8 +132,51 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **17** receipt(s). Computed by `methodology_trim.py` on every
+This file currently holds **18** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
+
+```handoff
+session: S631
+date: 2026-08-25
+status: complete
+self_score: 8
+predecessor_score: N/A (same-conversation continuation of S630, not a fresh handoff pickup)
+active_task: DONE. Corrected 2 documents (vignettes/articles/kinship2-fidelity-validation.qmd,
+  docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd) that were presenting
+  kinship2-vs-nprcgenekeepr pedigree-diagram comparisons as verified equivalent when no
+  programmatic comparison exists and the images are stale relative to current code. Added honest
+  caveats (not a fix); scoped the real fix as a BACKLOG.md item for a dedicated future session.
+what_was_done: Read data-raw/kinship2FidelityValidation.R in full -- confirmed only Track A
+  (kinship-matrix identical()) and Track B's surviving-id-set (setequal()) are programmatically
+  checked; the diagram plots are 2 independent static images captioned by prose, never diffed.
+  Independently hand-verified Track C against directly-computed kinship() ground truth
+  (kinship(A,Y)=0.25, all other pairs 0) -- confirmed correct for that one fixture. Found both
+  documents' images predate the same-row-collision-avoidance work and the Walker/BJL rewrite
+  (issue #141). Added caveats to both .qmd sources, re-rendered kinship2-fidelity-validation.html
+  to confirm the caveat renders. Filed BACKLOG.md item. PROJECT_LEARNINGS.md Learning 664. Commit
+  16a23c2a.
+next_steps: A future session should (a) port the known chromote $go_to() race fix
+  (PROJECT_LEARNINGS.md Learning 643) into kinship2FidelityValidation.R's screenshot_layout(),
+  (b) regenerate every Track B/C image against current code, (c) design and build a real
+  structural comparison -- extract the parent-child/mate-pair edge set from both kinship2's
+  pedigree object and nprcgenekeepr's makePedigreeMatingLayout() output (resolving
+  __union_N/__dup_X_N synthetic ids back to real individuals, as this session did by hand for
+  Track C) and diff them programmatically -- before republishing any equivalence claim in either
+  document. Do not remove the caveats added this session until that work lands and is re-verified.
+key_files: vignettes/articles/kinship2-fidelity-validation.qmd (caveat), docs/planning/
+  pedigree-diagram-kinship2-reference-comparison.qmd (caveat), BACKLOG.md "Up Next" (new item, top
+  of file), data-raw/kinship2FidelityValidation.R:75-84 (screenshot_layout(), needs the chromote
+  fix), PROJECT_LEARNINGS.md#Learning-664
+gotchas: pedigree-diagram-kinship2-reference-comparison.qmd cannot be rendered via `quarto render`
+  in this environment -- its live library(kinship2) chunk fails under quarto's renv-scoped R
+  (kinship2 is deliberately not in the lockfile); use plain Rscript instead, matching how
+  data-raw/kinship2FidelityValidation.R itself is run. The chromote race fix is a small, known,
+  already-proven-elsewhere change -- deliberately not ported this session per owner's "next
+  session" framing, not because it's hard.
+runtime_smoke: n/a -- docs-only correction, no R production code or runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-08-25 S631 entry
+commit: 16a23c2a
+```
 
 ```handoff
 session: S630

@@ -18,6 +18,115 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 630 Handoff Evaluation (by Session 631)
+**Score: N/A — no gap, direct continuation.** S631 is a same-conversation continuation of S630
+(the owner's correction arrived immediately after S630's own close-out report), not a
+fresh-session pickup from a written handoff — there was no discovery/re-orientation step where a
+handoff's quality mattered. Noted here for the record rather than skipped silently.
+
+### What Session 631 Did
+**Deliverable:** Stopped presenting kinship2-vs-nprcgenekeepr pedigree-diagram comparisons as
+verified equivalent, per direct owner correction: "you are still publishing comparisons of
+kinship2 output to nprcgenekeepr output as equivalent when they are clearly not... I have stated
+that your equivalence assessments have been wrong in the past for these same pedigrees." **DONE**
+(as scoped — an honest correction + properly-scoped future fix, not the deeper algorithm work
+itself, per the owner's own "the next session needs to work on..." framing).
+**Started/Completed:** 2026-08-25 (same conversation as S630, immediately following its close-out).
+
+**What actually happened, in order:**
+1. **Took the correction seriously rather than defending S630's report.** S630 had presented
+   `vignettes/articles/kinship2-fidelity-validation.qmd`'s Track A/B/C comparisons as strong
+   existing evidence without re-verifying them — re-read both existing user-memory files
+   (`pedigree-comparison-show-images`, `verify-diagrams-against-ground-truth`) first to recall the
+   established discipline this exact mistake violates (S591/S603 precedent).
+2. **Read `data-raw/kinship2FidelityValidation.R` in full** (the script generating the disputed
+   evidence): confirmed Track A (kinship-matrix `identical()`) and Track B's surviving-id-set
+   (`setequal()`)/`bitSize` ARE genuinely computed and checked — but Track B's full/shrunk PLOTS
+   and Track C's consanguineous-marker PLOTS are two independently-rendered static images
+   (kinship2's own `plot.pedigree()`, nprcgenekeepr's `visNetwork` screenshot) with ZERO
+   programmatic comparison between them — captions asserting "matching kinship2's own family
+   groupings" etc. are prose, not computed facts.
+3. **Independently verified Track C by hand** (not eyeballing): computed `kinship(A,Y) = 0.25`
+   directly via the exported `kinship()` function against the fixture's own ground-truth
+   relationships (confirmed A and Y are full siblings via `pedC`'s own sire/dam columns), then
+   pulled `makePedigreeMatingLayout()`'s actual edge list and traced every `__union_N`/`__dup_X_N`
+   node back to real individuals — confirmed the A×Y union is the ONLY one marked consanguineous
+   (`#D55E00`), matching ground truth exactly, for this ONE fixture only.
+4. **Found the images are also stale**, independent of the missing-algorithm problem: regenerated
+   Track A/B via `data-raw/kinship2FidelityValidation.R` and directly compared old vs. new
+   `trackB-nprc-full.png` — the OLD (committed, S566/2026-08-13-14) image shows diagonal "direct"-
+   style fan-out edges (the package default AT THE TIME), while the current algorithm (confirmed
+   via a fresh, successful regeneration despite the script's own chromote error later in the run)
+   produces clean right-angle sibship bars — the package default flipped to "rectilinear" via
+   Track 2 (S574), and the entire positioning algorithm was rewritten since (Walker/BJL, issue
+   #141, S592-S621), with nobody re-verifying either change against this article.
+5. **Checked the sibling document** `docs/planning/pedigree-diagram-kinship2-reference-
+   comparison.qmd` (the file sitting untracked in the working directory since this conversation's
+   very start) — same defect shape, staler still (2026-08-08, refreshed once 2026-08-13), plus a
+   `date: today` frontmatter field that hides its own staleness by showing today's date on every
+   render regardless of actual content age.
+6. **Corrected both documents** with a prominent, honest caveat (added, not deleted the content —
+   the numeric claims remain genuinely valid) stating the diagram-equivalence claims are
+   unverified and must not be cited pending a real comparison. Re-rendered
+   `kinship2-fidelity-validation.qmd` to HTML to confirm the caveat renders correctly (it does);
+   could not re-render `pedigree-diagram-kinship2-reference-comparison.qmd` here (its own live
+   `library(kinship2)` code chunk fails under quarto's renv-scoped R, a pre-existing, unrelated
+   limitation) — deleted its now-inconsistent stale untracked `.html` instead of leaving a
+   pre-caveat version sitting in the working tree.
+7. **Filed a properly-scoped `BACKLOG.md` item** for the actual fix (port the known `chromote`
+   `$go_to()` race fix into the generation script, regenerate every image, build a real structural
+   edge-set comparison) as dedicated future-session work — explicitly NOT attempted this session,
+   matching the owner's own "the next session needs to work on our graphical comparison algorithm"
+   framing. Noted the encouraging data point (the one successfully-regenerated image looks
+   structurally much better than the stale one) without merging it, to keep the working tree
+   consistent with the caveat's own "still stale" framing until the full fix lands together.
+8. **Updated memory:** `PROJECT_LEARNINGS.md` Learning 664 (project-level); user-memory
+   `verify-diagrams-against-ground-truth.md` gained a third documented instance of this exact
+   failure class recurring.
+
+**Self-assessment (Session 631): 8/10.** **Strengths:** (1) did not get defensive or try to
+re-justify S630's report — took the correction at face value and re-derived ground truth from
+scratch, exactly matching the "when a user says a class of claim has been wrong before, re-derive
+it, don't re-read the writeup more carefully" rule this session itself wrote into memory; (2)
+found 2 DISTINCT real problems (no algorithm; stale images) rather than stopping at the first one
+found; (3) correctly recognized the difference between "verify and correct the immediate false
+claim" (this session's proper scope) and "build the actual comparison algorithm" (explicitly the
+owner's stated next-session scope) and did not blur the two — resisted the temptation to keep
+pulling the thread into the deeper fix after finding one image regenerated cleanly by luck.
+**Weaknesses:** (1) discovered, embarrassingly, that this session's own S630 predecessor report
+contained a small factual error unrelated to the main correction: it stated
+`kinship2-fidelity-validation.html` was a tracked/committed exception to the general
+untracked-HTML convention — `git ls-files` now shows it was never tracked at all, both `.html`
+files follow the identical (gitignored, regenerable) convention. Corrected understanding here;
+did not previously verify this claim before repeating it, a smaller instance of the same
+"repeated a claim without checking" pattern this whole session is about. (2) Did not attempt to
+port the `$go_to()` chromote fix even though it's a small, well-understood, mechanical change,
+out of deliberate restraint per the owner's "next session" framing — a defensible call, but a
+future session reading this should not assume the restraint means the fix is hard; it means it
+was deliberately deferred.
+
+**Key files:** `vignettes/articles/kinship2-fidelity-validation.qmd` (caveat added),
+`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` (caveat added), `BACKLOG.md`
+"Up Next" (new item, top of file), `data-raw/kinship2FidelityValidation.R` (read in full, not
+modified — its `screenshot_layout()` helper is where the `$go_to()` fix belongs),
+`PROJECT_LEARNINGS.md` Learning 664, `CLAUDE.md:283` (pointer).
+
+**Gotchas for a future session:** (1) `pedigree-diagram-kinship2-reference-comparison.qmd` cannot
+be rendered in this environment via `quarto render` — its live `library(kinship2)` chunk fails
+because quarto's R process is renv-scoped and kinship2 isn't in the lockfile (by design, per the
+project's own "never a Suggests dependency" rule); `data-raw/kinship2FidelityValidation.R` works
+fine via plain `Rscript` (not renv-scoped the same way) — a future session regenerating either
+document's content should use that same plain-`Rscript` path, not `quarto render` directly for
+the reference-comparison doc. (2) The `chromote` race fix needed in
+`kinship2FidelityValidation.R`'s `screenshot_layout()` is the same one-line-conceptual fix already
+applied elsewhere (`PROJECT_LEARNINGS.md` Learning 643, `$go_to()` instead of separate
+`navigate()`/`loadEventFired()` calls) — should be quick to port. (3) Building the actual
+structural comparison algorithm will need to resolve `__union_N`/`__dup_X_N`/`__bar_*`/`__drop_*`
+synthetic node ids in `makePedigreeMatingLayout()`'s output back to real individuals before
+diffing against kinship2's own `pedigree` object relationships — this session did this by hand for
+Track C only (see step 3 above); that manual method is a reasonable starting template for the
+real algorithm, not just a one-off.
+
 ### Session 629 Handoff Evaluation (by Session 630)
 **Score: 8/10.** **What helped:** Phase 0 orientation (CI status, ledger reconcile, priorities
 list) was accurate and complete — CHANGELOG.md/HANDOFFS.md frontiers matched HEAD exactly (modulo
