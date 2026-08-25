@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S633: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S632 precedent)
+- **Deliverable:** fixed this session's own `HANDOFFS.md` receipt `commit` field from the
+  deliverable-only sha to include the close-out commit itself (`d09a51e1` deliverable, `de9efb07`
+  close-out). Commit: `c09ac79d`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25 · [ad hoc] S633: implement Track A of the kinship2 structural-comparison plan (`.extractKinship2Structure()`)
 - **Deliverable:** `R/comparePedigreeStructure.R` (new) — `.extractKinship2Structure()`, a
   zero-`kinship2`-dependency internal (`@noRd`) function implementing `docs/planning/
