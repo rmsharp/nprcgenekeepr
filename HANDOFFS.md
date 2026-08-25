@@ -186,7 +186,7 @@ runtime_smoke: DONE, real CI -- pushed + manually dispatched R-CMD-check-schedul
   before. Not settled for local-only checks (tests/devtools::check()/lint), matching this
   project's own established bar for CI-workflow fixes.
 changelog_ref: CHANGELOG.md 2026-08-24 entry, [BL-N] S629
-commit: pending
+commit: 2e06b49c (claim), 1bedb5e5 (RED), 156b67ad (GREEN), 9e643b46 (close-out)
 ```
 
 ```handoff
