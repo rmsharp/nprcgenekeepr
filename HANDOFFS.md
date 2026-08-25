@@ -136,6 +136,24 @@ This file currently holds **17** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S630
+date: 2026-08-24
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Verify/refresh pedigree-diagram.qmd screenshots against current app, re-render to
+  HTML + PDF, open for owner review (BACKLOG.md line-293 staleness item + owner request for
+  visual evidence of pedigree-drawing improvements).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S629
 date: 2026-08-24
 status: complete

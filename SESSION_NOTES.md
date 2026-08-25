@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 630 Did
+**Deliverable:** Verify (and refresh if stale) the `pedigree-diagram.qmd` article's screenshots
+against the current app, re-render the article to HTML, produce a PDF, and open both plus the
+existing `kinship2-fidelity-validation.html` for the owner's live review — closing `BACKLOG.md`'s
+flagged-but-unverified item (found S582, "3 non-base-fixture screenshots may have gone stale by
+the same default-flip mechanism as `pb_diagram_legend.png`"). (IN PROGRESS)
+**Started:** 2026-08-24 (continuing into 2026-08-25).
+**Status:** Session claimed. Work beginning. No production R code in scope — documentation/
+verification only, so the TDD RED/GREEN/REFACTOR gates do not apply this session.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 628 Handoff Evaluation (by Session 629)
 **Score: 9/10.** **What helped:** the receipt's `next_steps` field (6 READY items, plus the
 growing-unpushed-commit-count note) was accurate and reused directly for this session's own
