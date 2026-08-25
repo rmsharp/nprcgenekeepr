@@ -167,9 +167,390 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **16** receipt(s). Computed by
+This file currently holds **17** receipt(s). Computed by
 `methodology_trim.py` on every `--check`/`--write` run, never
 hand-maintained.
+
+``` handoff
+session: S629
+date: 2026-08-24
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Diagnose the red R-CMD-check-scheduled run (2026-08-24T09:18:39Z, run
+  32710819747) -- ubuntu-latest (release) failed with "R CMD check found ERRORs" while
+  devel/oldrel-1/macOS/Windows all passed. Root cause identified: chromote:::launch_chrome()
+  failed to open the CDP debugging port within 10s inside
+  test_positionMatingUnitForest.R:1645's getLiveRenderedPositions() call. A rerun of the
+  failed job was triggered to test for transience, matching the S616 diagnostic precedent
+  for this exact failure signature/platform.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+``` handoff
+session: S628
+date: 2026-08-23/24
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE. NEWS.Rmd's 2.0.0.9000 dev-section simplified for a non-technical audience,
+  reorganized into 10 feature groups, guardrail landed (CLAUDE.md NEWS.Rmd checklist extended
+  with a plain-language criterion). BACKLOG.md item closed.
+what_was_done: 3-round AskUserQuestion draft/review/revise loop per the item's own owner-stated
+  requirement. Round 1: proposed + landed a 10-group taxonomy and the guardrail, rewrote all 58
+  entries for plain language (caught/restored 6 dropped issue-number citations before
+  presenting). Round 2: owner flagged missing forward-reference ordering; an 8-agent background
+  Workflow did real git log/CHANGELOG.md archaeology per group to establish true shipping
+  chronology, reordered Pedigree Diagram + Marker Genetics, fixed a real mis-attribution (S573,
+  not issue #144) and a naming collision (Marker Genetics "Cross-Center" sub-tab vs. the
+  separate "Cross-Center Identity" tab -- verified the real UI label in
+  R/modMarkerGenetics.R:143 before wording the fix). Round 3: owner flagged "the Diagram tab's
+  layout was rebuilt" as presupposing a released state that never existed; generalized to 11
+  further Pedigree Diagram entries + 5 Marker Genetics entries + 1 Cross-Center Identity
+  Matching entry (every delta-framed bullet for a tab that itself debuts this release), left
+  legitimate delta language untouched elsewhere (confirmed pre-existing via
+  NAMESPACE/git log/NEWS.md). Verified mechanically after every pass: 58-entry count held
+  throughout, all 24 issue numbers preserved, rmarkdown::render() clean each time, NEWS.md
+  regenerated to match. Commits: 5c8cc7e1 (claim), 815274cb (deliverable: NEWS.Rmd/NEWS.md),
+  4f85129f (BACKLOG.md/CLAUDE.md/PROJECT_LEARNINGS.md), 99572079 (handoff), self-reference
+  workaround follows (matching S600/S602-S627 precedent).
+next_steps: No further work owed on this item -- resolved, BACKLOG.md marked [x] DONE. Other
+  READY items unchanged from S627's list: pedigree-diagram package-split scoping (READY, Effort
+  M), context_budget.py evaluation (READY, Effort S), DESCRIPTION Suggests/Config-Needs audit
+  (READY, Effort S), chromote macOS-hang research (optional, Effort M),
+  pedigree-diagram-screenshots.R staleness check (READY, Effort S), "Pedigree diagram vs
+  kinship2" BACKLOG.md section regrowth check (READY, Effort L). Unpushed local commits keep
+  growing (16 at this session's claim, up from 12 at S627's) -- worth pushing soon, now 4+
+  sessions without a push. A future session extending NEWS.Rmd should re-check whether any
+  "no Shiny UI yet" entry has since gained a screen without NEWS being updated to match.
+key_files: NEWS.Rmd (dev-version section reorganized into 10 ## feature-group headings under
+  # nprcgenekeepr 2.0.0.9000), NEWS.md (regenerated, must stay in sync -- always re-render after
+  any further NEWS.Rmd edit), CLAUDE.md:256-257 (NEWS.Rmd entry checklist, extended with the
+  plain-language criterion), BACKLOG.md:104 (item marked [x] DONE), PROJECT_LEARNINGS.md
+  Learning 661 (~line 2013), CHANGELOG.md 2026-08-24 [BL-N] entry.
+gotchas: (1) any future NEWS.Rmd dev-version entry must go into its matching feature-group
+  heading, not appended chronologically -- check the existing 10 groups before adding an 11th.
+  (2) The "everything not yet on CRAN is a draft" reader-baseline reaches back only to 2.0.0 --
+  confirmed via grep -i cran NEWS.Rmd that no earlier version was ever actually
+  accepted/published on CRAN (only submission/resubmission attempts); re-verify if that history
+  changes before extending delta-language license further back. (3) NEWS.md is a TRACKED,
+  GENERATED file -- never hand-edit it, always regenerate via rmarkdown::render(NEWS.Rmd,
+  output_format = "github_document") and commit both together.
+runtime_smoke: n/a -- docs-only session (NEWS.Rmd/NEWS.md/CLAUDE.md/BACKLOG.md/CHANGELOG.md/
+  PROJECT_LEARNINGS.md only, zero R/ or tests/ files touched). The file's own build-equivalent,
+  rmarkdown::render("NEWS.Rmd"), was run clean after every substantive edit instead.
+changelog_ref: CHANGELOG.md 2026-08-24 entry, [BL-N] S628
+commit: 5c8cc7e1 (claim), 815274cb (deliverable), 4f85129f (bookkeeping), 99572079 (handoff)
+```
+
+``` handoff
+session: S627
+date: 2026-08-23
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE. Owner decision reached on issue #161: keep the __union_N mating-unit node
+  marker (status quo), no code change. Issue closed.
+what_was_done: Re-read the live GitHub issue #161 thread (gh issue view --json, since the plain
+  form errors on this repo's deprecated Projects-classic integration) and confirmed the S592
+  deferral rationale. Located the marker's styling code (R/makePedigreeDiagramData.R:1061-1076:
+  shape="dot", size=6L, title=sprintf("%d offspring", ...)) and distinguished the S570 decision
+  (affected-status FILL COLOR, orthogonal) from this session's own question (marker existence).
+  Cross-checked the established size=0 + transparent-color invisible-node technique (D1/D2
+  waypoint nodes) and found it sets title=NA_character_ -- surfacing a real, previously-unnamed
+  functional cost (loss of the "N offspring" hover tooltip) beyond the issue's own named visual
+  trade-off. Read and displayed both diagram_rectilinear_edge_style.png (nprcgenekeepr's own
+  current rendering) and trackC-kinship2.png (kinship2's actual output) before presenting the
+  decision. Presented via AskUserQuestion (4 options); owner picked "keep the dot." BACKLOG.md
+  item marked [x] DONE in place; issue #161 closed (gh issue close --reason completed) citing the
+  evidence. PROJECT_LEARNINGS.md Learning 660 recorded; CLAUDE.md pointer refreshed (626+/659 ->
+  627+/660). Commits: befa2fb3 (claim), 4226b902 (deliverable), ad92f032 (handoff).
+next_steps: No further work owed on this item -- resolved, issue closed. BACKLOG.md's other READY
+  items are unchanged: pedigree-diagram package-split scoping (READY, Effort M), NEWS.Rmd
+  simplification by feature + guardrail (READY, Effort L, explicitly multi-round/iterative --
+  propose the feature taxonomy + guardrail mechanism via AskUserQuestion first), context_budget.py
+  evaluation (READY, Effort S), DESCRIPTION Suggests/Config-Needs audit (READY, Effort S), chromote
+  macOS-hang research (optional, Effort M), pedigree-diagram-screenshots.R staleness check (READY,
+  Effort S), "Pedigree diagram vs kinship2" BACKLOG.md section regrowth check (READY, Effort L).
+  Separately: 12 local commits remain unpushed to origin/master as of this session's claim (grew
+  from 8 to 12 across S626-S627) -- worth pushing soon, this project has now gone 3+ sessions
+  without a push.
+key_files: BACKLOG.md:7 (Active section, item resolved), R/makePedigreeDiagramData.R:1061-1076
+  (__union_N node construction, read-only, not modified), R/makePedigreeDiagramData.R:1533-1548
+  (D1/D2 waypoint invisible-node technique, read-only precedent check), PROJECT_LEARNINGS.md
+  Learning 660 (~line 2011), CLAUDE.md:282 (pointer), CHANGELOG.md 2026-08-23 [issue #161] entry,
+  vignettes/articles/shiny_app_use/diagram_rectilinear_edge_style.png,
+  vignettes/articles/kinship2-fidelity-validation-img/trackC-kinship2.png (both read-only
+  evidence, not modified).
+gotchas: (1) `gh issue view <N>` (plain form) errors on this repo with a GraphQL "Projects
+  (classic) is being deprecated" error -- use `gh issue view <N> --json title,body,comments,labels,
+  createdAt` (or similar explicit --json field list) instead, which bypasses the broken
+  classic-projects field. (2) A code comment citing an old session's "owner decision" (e.g. S570's
+  comment on the __union_N node, "mating-unit dots are visually distinct... on purpose") may refer
+  to a narrower, different decision than the one currently in question -- verify what the CITED
+  session actually decided (via CHANGELOG.md/its archive shard) before assuming it already settled
+  the present question; S570's decision was about fill COLOR, not marker existence, and conflating
+  the two would have been a real mistake. (3) Before presenting any "apply invisible-node technique
+  X to a new node type" proposal, check what fields X's own established call sites set to
+  NA/omitted alongside the visual property being changed -- a tooltip is exactly the kind of side
+  effect a purely-visual issue description won't mention.
+runtime_smoke: n/a -- zero code changed (owner decision was "no change"); zero R/ or tests/ files
+  touched beyond being read; the only non-documentation action was a GitHub issue close, not a
+  runtime change.
+changelog_ref: CHANGELOG.md 2026-08-23 [issue #161] entry
+commit: befa2fb3 (claim), 4226b902 (deliverable), ad92f032 (handoff)
+```
+
+S627 resolved issue \#161 (hide vs. keep the `__union_N` mating-unit
+node marker) as an owner decision: **keep the dot, no code change.**
+Re-read the live GitHub issue thread and the marker’s own styling code
+before presenting the question; found and surfaced a functional cost the
+issue never named (the size=0+transparent-color technique used for D1/D2
+waypoints would also silently drop the node’s “N offspring” hover
+tooltip); read and displayed both a current nprcgenekeepr screenshot and
+kinship2’s actual rendered output before asking. Closed the GitHub issue
+in the same session per the established checklist. Self-score
+breakdown: + traced the proposed technique against its own established
+precedent rather than trusting the issue’s stated trade-off as
+complete; + gathered and showed actual images rather than describing
+them; + correctly distinguished a superficially-similar prior decision
+(S570, fill color) from the actual question at hand (marker
+existence); + closed the GitHub issue same-session; − reused an existing
+committed screenshot rather than confirming it still reflects current
+`master` pixel-for-pixel (low risk, not independently re-verified); −
+presented options without a stated recommendation of its own.
+
+``` handoff
+session: S626
+date: 2026-08-23
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: DONE. Confirmed the BACKLOG.md item's premise ("PROJECT_LEARNINGS.md is a mandatory
+  Phase 0 read") does NOT hold -- methodology_dashboard.py's exclusion of it is correct by the
+  tool's own stated design (same category as the already-excluded ROADMAP.md), not a gap.
+what_was_done: Grepped SESSION_RUNNER.md/SAFEGUARDS.md directly for "PROJECT_LEARNINGS" -- zero
+  hits; Phase 0 mandates full-file reads of only SAFEGUARDS.md, SESSION_NOTES.md's ACTIVE TASK, and
+  CHANGELOG.md/HANDOFFS.md (step 6 reconcile). CLAUDE.md's own text: "Read it when you need
+  prior-session context... not here" -- on-demand, not mandatory. methodology_dashboard.py's own
+  READ_CAP_WATCHED comment independently states the identical exclusion principle for ROADMAP.md.
+  Separately confirmed methodology_dashboard.py is a canonical TRACKED dest (bin/_manifest.py,
+  sibling methodology checkout) and this copy is already stale (v2.14.0 vs v2.15.2) -- a second
+  reason not to hand-patch even if the premise had held. Presented the finding via
+  AskUserQuestion (3 options); owner picked "correct the record." BACKLOG.md item marked [x] DONE
+  in place (no dashboard code change). PROJECT_LEARNINGS.md Learning 659 recorded. CLAUDE.md
+  learning/session-count pointer refreshed (625+/658 -> 626+/659). CHANGELOG.md
+  [BL-projectLearningsGapConfirm] entry added. Commits: d4c4243a (claim), 44eeb88f (deliverable),
+  574ea58c (handoff).
+next_steps: No further work owed on this item -- it's resolved as "not a gap." BACKLOG.md's other
+  READY items are unchanged: pedigree-diagram package-split scoping (READY, Effort M), NEWS.Rmd
+  simplification by feature + guardrail (READY, Effort L, explicitly multi-round/iterative with
+  the owner -- propose the feature taxonomy + guardrail mechanism via AskUserQuestion first),
+  context_budget.py evaluation (READY, Effort S), DESCRIPTION Suggests/Config-Needs audit (READY,
+  Effort S), chromote macOS-hang research (optional, Effort M), pedigree-diagram-screenshots.R
+  staleness check (READY, Effort S), "Pedigree diagram vs kinship2" BACKLOG.md section regrowth
+  check (READY, Effort L). Separately: issue #161 (hide the mating-unit node marker) is still
+  unblocked for an owner decision (S625's finding, unchanged); 8 local commits remain unpushed to
+  origin/master as of this session's claim -- consider pushing.
+key_files: BACKLOG.md:178 (item resolved), PROJECT_LEARNINGS.md Learning 659 (~line 2009),
+  CLAUDE.md:282 (learning/session-count pointer), CHANGELOG.md 2026-08-23
+  [BL-projectLearningsGapConfirm] entry, methodology_dashboard.py:236-278 (READ_CAP_WATCHED,
+  read-only citation, not modified), SESSION_RUNNER.md Phase 0 (grepped, not modified).
+gotchas: (1) A `BACKLOG.md` item's own hedge ("confirm-then-decide") is not a substitute for
+  actually confirming the premise -- a prior session's HANDOFFS.md gotcha restating the item's
+  claim as settled ("worth fixing... before this file grows further unnoticed") can read as
+  corroboration when it's really just repetition of the same unverified claim. Grep the actual
+  mandate before trusting either. (2) methodology_dashboard.py is a canonical TRACKED dest (kept
+  current by `bin/sync`) -- any future local edit to it should be filed upstream or very carefully
+  re-applied after every sync, not hand-patched in place; this project's copy is already 1 minor
+  version behind canonical (v2.14.0 vs v2.15.2), unaddressed this session (out of scope -- the
+  decision was "don't patch," not "patch and also update the version").
+runtime_smoke: n/a -- documentation-only changes (BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md,
+  CHANGELOG.md prose), zero R/ or tests/ files touched, zero runtime behavior changed, zero .py
+  files touched (methodology_dashboard.py read-only).
+changelog_ref: CHANGELOG.md 2026-08-23 [BL-projectLearningsGapConfirm] entry
+commit: d4c4243a (claim), 44eeb88f (deliverable), 574ea58c (handoff)
+```
+
+S626 confirmed the `BACKLOG.md` item’s own premise –
+“`PROJECT_LEARNINGS.md` is a mandatory Phase 0 read” – does not hold:
+direct grep of `SESSION_RUNNER.md`/`SAFEGUARDS.md` found no such
+mandate, and `methodology_dashboard.py`’s own design comment already
+excludes exactly this class of file (the `ROADMAP.md` precedent). Also
+confirmed `methodology_dashboard.py` is a canonical TRACKED sync target,
+a second reason not to hand-patch its list. Presented the finding via
+`AskUserQuestion`; owner picked “correct the record” over “flag it
+anyway” or “dig deeper first.” `BACKLOG.md` item resolved `[x]` DONE in
+place, no dashboard code change. Self-score breakdown: + did not accept
+the predecessor’s stated premise at face value despite it appearing in
+two artifacts (a `BACKLOG.md` item and a `HANDOFFS.md` gotcha) –
+verified by direct grep against the actual mandate instead of treating
+repetition as corroboration; + found and applied the tool’s own stated
+design rationale as the deciding evidence rather than reasoning from
+first principles; + checked a second, independent angle (TRACKED-dest
+sync safety) that materially affects the road not taken; + surfaced the
+finding via `AskUserQuestion` rather than closing the item out
+unilaterally, since it overturns a predecessor’s claim; − added a new
+`PROJECT_LEARNINGS.md` entry to the very file whose size was under
+investigation (unavoidable, but worth naming); − did not run an
+exhaustive repo-wide sweep for every possible “read PROJECT_LEARNINGS.md
+in full” instruction beyond
+`SESSION_RUNNER.md`/`SAFEGUARDS.md`/`CLAUDE.md`/`docs/methodology/workstreams/`.
+
+``` handoff
+session: S625
+date: 2026-08-23
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Swept the 18 [x]-checked, fully-resolved items out of BACKLOG.md's Active and
+  Housekeeping sections (BACKLOG.md Housekeeping item, found S619). Every cited session number
+  confirmed to have CHANGELOG.md coverage before deleting; one dangling internal cross-reference
+  the deletion created (issue #161 item) found and fixed in place.
+what_was_done: Direct re-count at claim found 18 [x] items, not the "16" cited (2 more checked
+  since S619: S607 MIT/REUSE badges, S624's own CLAUDE.md-filter item). Grepped CHANGELOG.md +
+  docs/archive/CHANGELOG*.md to confirm every cited session number (S574-S624) has a substantive
+  entry -- spot-verified the largest deletion (S592-S621 same-row-collision/Walker-BJL chain,
+  ~590 lines) resolves to real [issue #141]-tagged entries. Computed exact line-range boundaries
+  via grep -n, deleted all 18 in one sed pass into a scratch file, verified before applying ([x]
+  count 0, [ ] count unchanged 36=36, all ## headers intact, no seam artifacts). Found and fixed
+  a dangling cross-reference: the kept issue #161 item referenced "Tracks 1-3 above"/"the
+  follow-up item below," both now-deleted -- rewritten noting both of S592's deferral conditions
+  are now satisfied. Filed (not fixed) a new BACKLOG.md item: methodology_dashboard.py's
+  size-risk list omits PROJECT_LEARNINGS.md, itself past the 2,000-line FM #28 cap (2,005 lines).
+  Recorded PROJECT_LEARNINGS.md Learning 658; refreshed CLAUDE.md's learning/session-count
+  pointer (624+/657 -> 625+/658). Triggering item marked [x] DONE in place. BACKLOG.md 2,192 ->
+  ~1,170 lines net (~47% reduction). Commits: 42e59d0b (claim), bf3afcae (sweep + fixes + filing).
+next_steps: No further work owed on this item -- it's complete. The new PROJECT_LEARNINGS.md /
+  methodology_dashboard.py item this session filed (READY-ish, Effort M, confirm-then-decide) is
+  a natural next pickup, on the same "ledger-size housekeeping" theme as this session. Otherwise
+  BACKLOG.md's other READY items are unchanged: pedigree-diagram package-split scoping (READY,
+  Effort M), NEWS.Rmd simplification by feature + guardrail (READY, Effort L, explicitly
+  multi-round/iterative with the owner), context_budget.py evaluation (READY, Effort S),
+  DESCRIPTION Suggests/Config-Needs audit (READY, Effort S), chromote macOS-hang research
+  (optional, Effort M). Separately: issue #161 (hide the mating-unit node marker) is now
+  unblocked for an owner decision (this session's own finding); issue #148 (MHC haplotype
+  reporting) still needs its scope-narrowing conversation, unchanged from S624's own next_steps.
+key_files: BACKLOG.md (2,192 -> ~1,170 lines), PROJECT_LEARNINGS.md Learning 658 (~line 2007),
+  CLAUDE.md:282 (learning/session-count pointer), CHANGELOG.md 2026-08-23 [BL-backlogXCheckSweep]
+  entry, methodology_dashboard.py (size-risk list, read-only citation, not modified).
+gotchas: (1) A bulk BACKLOG.md deletion can break a same-file spatial cross-reference
+  ("above"/"below"/"the item directly above") in a NEIGHBORING kept item -- the established
+  CHANGELOG.md/Learning/file-path grep checklist (S529/S530/S531 precedent) does not catch this,
+  since it's not a citation into another file. Re-read every item immediately adjacent (both
+  directions) to a deletion range before considering the sweep done. (2) This project's
+  convention for a completed BACKLOG.md item is mark [x] DONE with the resolution written in
+  place, not delete outright -- deletion happens later, in a dedicated sweep session (this one).
+  Do not delete an item's own triggering-item text in the same session that completes it. (3)
+  PROJECT_LEARNINGS.md is now 2,005 lines (past the 2,000-line FM #28 cap) and, unlike
+  SESSION_NOTES.md/CHANGELOG.md/HANDOFFS.md, methodology_dashboard.py does NOT flag it -- worth
+  fixing the dashboard's own hardcoded file list before this file grows further unnoticed.
+runtime_smoke: n/a -- documentation-only changes (BACKLOG.md, PROJECT_LEARNINGS.md, CLAUDE.md
+  prose), zero R/ or tests/ files touched, zero runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-08-23 [BL-backlogXCheckSweep] entry (landed in bf3afcae)
+commit: 42e59d0b (claim), bf3afcae (sweep + fixes + filing), f5a0cff9 (handoff)
+```
+
+S625 swept the 18 \[x\]-checked, fully-resolved items out of
+BACKLOG.md’s Active and Housekeeping sections (BACKLOG.md Housekeeping
+item, found S619). Direct re-count at claim found 18 items, not the “16”
+the triggering item cited – confirmed, not spot-checked, every cited
+session number has CHANGELOG.md coverage before deleting anything.
+Deleted all 18 via a verified sed pass rather than iterative live-file
+edits; found and fixed a dangling cross-reference the deletion itself
+created (issue \#161’s item pointed at now-deleted siblings); filed, not
+fixed, an incidental gap (methodology_dashboard.py omits
+PROJECT_LEARNINGS.md from its size-risk check, and that file is itself
+now oversized). Self-score breakdown: + verified every cited
+count/CHANGELOG-coverage claim directly rather than trusting prior
+sessions’ spot-checks; + computed exact deletion boundaries
+programmatically and verified in a scratch file before applying, rather
+than risking a partial live edit across 1,000+ lines; + caught a real
+defect the deletion introduced via a full-file re-read, not just a
+diff-stat glance; + surfaced a new, on-theme finding without
+scope-creeping into fixing it mid-session; − added to an
+already-oversized PROJECT_LEARNINGS.md, the same FM \#28 tension flagged
+in S624’s own self-assessment (mitigated by making the tension itself a
+tracked BACKLOG item this session); − no independent second-agent
+verification of the sed deletion beyond this session’s own direct
+re-reads.
+
+``` handoff
+session: S624
+date: 2026-08-23
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Fixed CLAUDE.md's stale test-app-*/test-e2e-* "Clean regression read"
+  baseline-noise filter (BACKLOG.md Housekeeping item, found S623). Root cause (create_test_app()
+  undefined) confirmed gone; filter removed, dated inline note added explaining why.
+what_was_done: Grepped the whole repo for the stale filter's text (~20 hits) and classified each
+  individually (frozen archive, frozen PROJECT_LEARNINGS.md Learning #2/#4, historical planning
+  docs for closed issues/the shipped 2.0.0 release, or past-session narrative) before concluding
+  only CLAUDE.md's own Build/Test/Verify section was live guidance. Re-verified create_test_app()
+  at tests/testthat/helper-shinytest2.R:200 directly. Removed the !grepl("test-app-|test-e2e-",
+  file) exclusion from CLAUDE.md; added a dated inline note. Marked the BACKLOG.md item [x] DONE
+  in place. Recorded PROJECT_LEARNINGS.md Learning 657 (classify each grep hit live-vs-frozen
+  before editing); refreshed CLAUDE.md's learning-count pointer (656->657). Added a CHANGELOG.md
+  [BL-cleanRegressionFilter] entry. Commits: f1051c65 (claim), e12ac08c (fix + BACKLOG + learning).
+next_steps: No further work owed on this item -- it's complete. BACKLOG.md's other READY items
+  from S621/S623's own priority order are unchanged and still apply: pedigree-diagram package-split
+  scoping (READY, Effort M), NEWS.Rmd simplification by feature + guardrail (READY, Effort L,
+  explicitly multi-round/iterative with the owner), the 16-item BACKLOG.md [x]-sweep (READY, Effort
+  S -- now 17 items, since this session added one more DONE-but-unswept entry), plus the
+  lower-priority bundle (DESCRIPTION Suggests/Config-Needs audit, context_budget.py evaluation,
+  chromote macOS-hang research). Separately flagged this session, not yet a BACKLOG item of its
+  own: issue #148 (MHC haplotype reporting) is the last standing item from the ratified
+  2026-08-08 Genetic-Metrics Issues Sequencing Audit, needing a scope-narrowing conversation before
+  implementation; issue #161 (hide the mating-unit node marker) has both of S592's deferral
+  conditions now satisfied (Tracks 1-3 and the Track-3 trade-offs both shipped) and is unblocked
+  for an owner decision.
+key_files: CLAUDE.md:119 (the fixed "Clean regression read" entry), CLAUDE.md:282 (learning-count
+  pointer), BACKLOG.md Housekeeping (item marked DONE in place), PROJECT_LEARNINGS.md Learning 657,
+  CHANGELOG.md 2026-08-23 entry, tests/testthat/helper-shinytest2.R:200 (create_test_app(),
+  verified not modified -- read-only citation check).
+gotchas: (1) PROJECT_LEARNINGS.md is now 2,005 lines -- past the same 2,000-line agent-read cap the
+  dashboard already flags HIGH for HANDOFFS.md/CHANGELOG.md/BACKLOG.md; it wasn't in the dashboard's
+  reported list this session, worth confirming whether the dashboard's own check covers this file
+  at all. (2) When a BACKLOG.md item scopes a fix to "the live copy" of a stale instruction, grep
+  the whole repo for that instruction's text before editing, but classify every hit individually
+  (frozen archive / frozen learnings ledger / narrative about a past session / a plan for an
+  already-closed issue or shipped release) -- grep's hit count is not the edit count (Learning 657).
+  (3) This project's convention for a completed BACKLOG.md item is mark `[x]` DONE with the
+  resolution written in place, not delete the line outright -- deletion happens later, in a
+  dedicated sweep session (see the standing 16/17-item-sweep Housekeeping item).
+runtime_smoke: n/a -- documentation-only change to CLAUDE.md prose, zero R/ or tests/ files touched,
+  zero runtime behavior changed.
+changelog_ref: CHANGELOG.md 2026-08-23 [BL-cleanRegressionFilter] entry (landed in e12ac08c)
+commit: f1051c65 (claim), e12ac08c (fix + BACKLOG + learning), 06dec197 (handoff) -- reconciled to
+  the real shas immediately after, matching the S600/S602-S623 self-reference workaround precedent
+```
+
+S624 fixed CLAUDE.md’s stale test-app-*/test-e2e-* “Clean regression
+read” baseline-noise filter (BACKLOG.md Housekeeping item, found S623).
+Root cause (create_test_app() undefined) confirmed gone via direct
+re-verification; unfiltered runs have shown 0 failed/0 error across
+those files for weeks. Removed the filter, added a dated inline
+explanatory note, left Learning \#2/#4 unedited as frozen historical
+record. Verified scope by grepping the whole repo for the stale filter’s
+text and classifying each of ~20 hits as live vs. frozen before deciding
+what to edit – only CLAUDE.md’s own guidance qualified. Self-score
+breakdown: + verified rather than trusted every cited fact (line number,
+regression counts); + preserved the no-retroactive-edit precedent for
+frozen documents; + closed every standing bookkeeping obligation
+(BACKLOG DONE, CHANGELOG entry, learning + pointer refresh) in the same
+session; − did not re-run a fresh full regression suite this session
+(relied on S623’s own same-day unfiltered run – defensible since zero
+code changed, but not independently re-verified); − the new Learning 657
+sits close in spirit to already-established scope-verification
+precedents (Learnings 479, 653) and adds to a learnings file already
+past the 2,000-line read cap.
 
 ``` handoff
 session: S623

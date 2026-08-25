@@ -166,17 +166,32 @@ The build-equivalent for this R package (relocated here from
 `skip_on_cran()` silently bare-skips instead of running; see
 `PROJECT_LEARNINGS.md` Learning 417.)
 
-**Clean regression read** (the `test-app-*`/`test-e2e-*` files are
-pre-existing baseline noise — see Learning \#2/#4 below):
+**Clean regression read:**
 `Sys.setenv(NOT_CRAN = "true"); pkgload::load_all(".", quiet=TRUE); as.data.frame(testthat::test_dir("tests/testthat", reporter="silent", stop_on_failure=FALSE))`,
-then check `sum(failed)` **and** `sum(error)`, isolating true offenders
-with `!grepl("test-app-|test-e2e-", file)`. (`load_all()` must run first
-— without it this command produces mass-spurious failures unrelated to
-anything actually broken; see Learning 377. `NOT_CRAN` must be set too —
-without it, any file with a top-level `skip_on_cran()`
-\[e.g. `test_wordlist_coverage.R`\] silently bare-skips and its failure
-vanishes from `sum(failed)` instead of counting; see Learning 417 and
-Learning 594, which hit exactly this omission in this command.)
+then check `sum(failed)` **and** `sum(error)` directly, unfiltered.
+(`load_all()` must run first — without it this command produces
+mass-spurious failures unrelated to anything actually broken; see
+Learning 377. `NOT_CRAN` must be set too — without it, any file with a
+top-level `skip_on_cran()` \[e.g. `test_wordlist_coverage.R`\] silently
+bare-skips and its failure vanishes from `sum(failed)` instead of
+counting; see Learning 417 and Learning 594, which hit exactly this
+omission in this command.) **No `test-app-*`/`test-e2e-*` exclusion
+filter — removed S624 (2026-08-23).** Learning \#2/#4 (Sessions 3-4)
+once documented those files as pre-existing baseline noise because
+`create_test_app()` was undefined at the time, so every such file
+errored or was skipped as a structural artifact rather than a real
+failure; `create_test_app()` has been defined
+(`tests/testthat/helper-shinytest2.R:200`) for a long time, and
+unfiltered runs report 0 failed/0 error across those files for weeks
+(S622/S623). A blanket `!grepl("test-app-|test-e2e-", file)` exclusion
+is now a live risk, not a convenience — it would silently hide a real
+regression landing in exactly those files, which issue \#163 (S623)
+nearly demonstrated. Do not reintroduce the pattern; if a specific file
+ever develops a genuine, currently-true reason for exclusion, name that
+file and the reason explicitly in a fresh entry rather than reviving a
+permanent file-name-pattern amnesty. (Learning \#2/#4 themselves are
+left unedited as the frozen historical record of what was true in
+Sessions 3-4.)
 
 **[`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
 always needs `dev = TRUE` in this project.** `renv/settings.json` sets
@@ -378,9 +393,10 @@ triage session that found it, per the established “report an
 incidentally-discovered, unrelated pre-existing gap, don’t fix it
 mid-session” precedent (`PROJECT_LEARNINGS.md` Learning 382).
 
-**NEWS.Rmd entry checklist (owner-directed, 2026-08-01, Session 448):**
-any session that ships a new exported function or a new user-facing
-Shiny feature/control must add a `NEWS.Rmd` entry (in the current
+**NEWS.Rmd entry checklist (owner-directed, 2026-08-01, Session 448;
+extended S628, 2026-08-23 with a plain-language criterion):** any
+session that ships a new exported function or a new user-facing Shiny
+feature/control must add a `NEWS.Rmd` entry (in the current
 development-version section, matching the style of existing entries) in
 the same session it ships, rather than deferring to a later audit —
 mirroring the citation (issue \#120) and tutorial/article (Session 436)
@@ -399,7 +415,27 @@ audit-triage batch, each of which got one in its own shipping session
 one-time exception to the general no-retroactive-fix precedent above,
 since the gap spans the package’s entire user-visible changelog for a
 shipped capability; the checklist applies prospectively, same-session,
-from here on.
+from here on. **Plain-language criterion (extended S628, 2026-08-23):**
+“matching the style of existing entries” above also means passing a
+plain-language/no-jargon check before commit — plain language for a
+colony-manager/veterinarian reader, not an R programmer; state what
+changed and why it matters to that reader in one or two short sentences;
+avoid naming algorithms, internal function mechanics, or statistical
+jargon unless the reader would already know the term (domain vocabulary
+like “kinship”/“genotype”/“heterozygosity” is fine;
+implementation-flavored phrasing like “vectorized matrix algebra,”
+“KING-robust,” or “a CERVUS-style multilocus LOD score” is not —
+describe what it does for the reader instead, not how it’s computed).
+Added after finding the dev-version section had regrown back into
+verbose/technical style within 8 days of S538’s prior one-time trim
+(386→134 lines/26 entries, `PROJECT_LEARNINGS.md` Learning 544) — that
+trim carried no standing criterion of its own, so nothing caught the
+drift back to 315 lines/57 entries by S619. Deliberately docs-only, not
+an automated lint: a banned-term word list would false-positive on
+legitimate domain vocabulary this audience already knows, so the check
+stays a session’s own judgment call against this criterion, applied at
+each of the (typically many) sessions that touch the file, not a
+one-time mechanical gate.
 
 **`a2interactive.Rmd` script-callable-function checklist
 (owner-directed, 2026-08-02, Session 450; scope broadened S478,
@@ -643,7 +679,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–623+; 656 learnings, ~2.5 MB)
+Project institutional memory (Sessions 1–628+; 661 learnings, ~2.5 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget

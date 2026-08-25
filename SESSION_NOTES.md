@@ -28,6 +28,687 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 629 Did
+
+**Deliverable:** Diagnose the red `R-CMD-check-scheduled` run
+(2026-08-24T09:18:39Z, run `32710819747`) — `ubuntu-latest (release)`
+failed with “R CMD check found ERRORs” while
+devel/oldrel-1/macOS/Windows all passed. (IN PROGRESS) **Started:**
+2026-08-24 **Status:** Session claimed. Work beginning. **Ledger:**
+`CHANGELOG: pending` — set at claim; this session’s actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session’s reconcile.
+
+### Session 627 Handoff Evaluation (by Session 628)
+
+**Score: 9/10.** **What helped:** the receipt’s `next_steps` field named
+this exact item — “NEWS.Rmd simplification by feature + guardrail
+(READY, Effort L, explicitly multi-round/ iterative — propose the
+feature taxonomy + guardrail mechanism via `AskUserQuestion` first)” —
+and this session followed that procedural guidance precisely: proposed
+the taxonomy and guardrail options via `AskUserQuestion` before touching
+`NEWS.Rmd`, then iterated across multiple review rounds with the owner
+rather than declaring done after one pass. The receipt’s own priorities
+list (unpushed-commit count, other READY items) was accurate and matched
+this session’s independent Phase 0 sweep. **What was missing:** nothing
+the receipt could reasonably have provided — the specific defects the
+owner caught during this session (forward-reference ordering, then
+delta-language framing) emerged from live interactive review of prose,
+not something a prior session on an unrelated topic (the mating-unit
+marker decision) could have anticipated. **What was wrong:** nothing
+found inaccurate. **ROI:** high — the exact next-step framing (“propose
+via `AskUserQuestion` first”) was followed directly and set this
+session’s structure correctly from the start.
+
+### What Session 628 Did
+
+**Deliverable:** Simplify `NEWS.Rmd`’s dev-version (`2.0.0.9000`)
+entries for a non-technical audience, reorganize by feature within the
+release heading, and design/land a guardrail against re-drift
+(`BACKLOG.md` Up Next, found 2026-08-20, owner-directed). **DONE.**
+**Started/Completed:** 2026-08-23/24 (spans a date rollover
+mid-session).
+
+**What actually happened, in order:** 1. **Phase 0 orientation** (full
+protocol): `SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+`git status`/`log`/`diff --stat` (clean except pre-classified untracked
+artifacts — Quarto render byproducts, a recurring MS/LibreOffice lock
+file, an old `scratchpad/` dir, all individually traced, none new),
+`gh issue list` (11 open), `gh run list` (all green), ledger reconcile
+(one-commit gap = the established self-referential sha-recording
+pattern, no real gap), `python3 methodology_dashboard.py` (96/100, 1
+HIGH risk = the recurring FM \#28 file-size flag). Rendered the
+priorities list (4 `AskUserQuestion` options) — **user picked the
+NEWS.Rmd simplification item.** 2. **Phase 1B claimed** (stub +
+`HANDOFFS.md` `status: pending` receipt, commit `5c8cc7e1`). 3. **Read
+the full 318-line dev-version section** (57→58 entries by direct count)
+and proposed a 10-group feature taxonomy plus 4 guardrail-mechanism
+options via `AskUserQuestion` — owner approved the taxonomy as proposed,
+then asked to clarify the “style note” guardrail option before choosing.
+Explaining it surfaced a real weakness in the recommendation (no
+distinct beneficiary once traced through, since every `NEWS.Rmd` edit is
+session-mediated and every session already reads `CLAUDE.md`) — landed
+on the checklist-extension guardrail alone. 4. Owner pushed back on
+“every entry traces to a numbered session” as implying a false 1:1
+entry-to-session mapping; corrected the claim (many-to-many, sessions
+touch many entries and entries get touched by many sessions) without it
+changing the underlying guardrail conclusion. 5. **Round 1 draft:**
+rewrote all 58 entries for plain language, grouped by the approved
+taxonomy, kept issue-number citations and function names (dropped for
+Shiny-first entries, kept for script-only “no Shiny UI yet” ones).
+Landed the `CLAUDE.md` guardrail extension. Verified via entry-count +
+issue-number diffs against the original (caught and restored 6
+accidentally dropped citations) and a clean
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html).
+6. **Round 2:** owner flagged that entries within a group weren’t in
+true chronological/dependency order (a refinement could sit before the
+introducing entry for the same feature). Ran an 8-agent background
+`Workflow` doing real `git log -S`/`CHANGELOG.md` archaeology per
+feature group; used the results to reorder Pedigree Diagram and Marker
+Genetics (the two groups that actually needed it), catching a real
+mis-attribution (the “anchor generation mismatch” fix is S573, not issue
+\#144/S473-474 as hinted) and a genuine naming collision (Marker
+Genetics’ “Cross-Center” sub-tab vs. the separate “Cross-Center
+Identity” tab — verified the real UI label in
+`R/modMarkerGenetics.R:143` before wording a fix, rather than inventing
+a rename). 7. **Round 3:** owner flagged “the Diagram tab’s layout was
+rebuilt” as presupposing a released “before” state that never existed
+(the Diagram tab is itself new in this unreleased section). Generalized
+past the one instance: found and reworded the same delta-language defect
+in 11 further Pedigree Diagram entries and 5 Marker Genetics entries
+(every “gained a sub-tab” for a tab that itself debuts this release)
+plus 1 in Cross-Center Identity Matching — leaving delta language intact
+wherever it’s legitimate (confirmed pre-existing tabs/functions via
+`NAMESPACE`/`git log`/`NEWS.md`). Self-caught one own-introduced typo
+during the sweep. 8. **Close-out** (this write-up): `BACKLOG.md` item
+marked `[x]` DONE with full resolution. `PROJECT_LEARNINGS.md` Learning
+661 recorded (the order-vs-wording generalization gap between round 2
+and round 3). `CLAUDE.md` learnings-count pointer refreshed (627+/660 →
+628+/661). `CHANGELOG.md` `[BL-N]` entry added.
+
+**Runtime smoke test (Phase 3E):** N/A — zero `R/`/`tests/` files
+touched; this is a documentation- only session (`NEWS.Rmd`, `NEWS.md`,
+`CLAUDE.md`, `BACKLOG.md`, `CHANGELOG.md`, `PROJECT_LEARNINGS.md`). The
+file’s own build-equivalent, `rmarkdown::render("NEWS.Rmd")`, was run
+clean after every substantive edit instead — not silently skipped,
+stated explicitly.
+
+**TDD phase declaration:** no implementation code was written this
+session (`NEWS.Rmd` is documentation prose, not R production/test code)
+— the RED/GREEN/REFACTOR gates do not apply, no `PRE-RED→RED` transition
+entered, matching the S626/S627 precedent for documentation-only
+sessions.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `a2interactive.Rmd` / `_pkgdown.yml` / lint
+checklists all **N/A** — no new exported function, no new Shiny feature,
+no `.R` file touched. GitHub issue close-out: **N/A** — this
+`BACKLOG.md` item names no GitHub issue.
+
+**Self-assessment (Session 628): 8/10.** **Strengths:** (1) followed the
+owner-stated multi-round process precisely rather than declaring done
+after one pass; (2) delegated the objective, checkable part of the
+ordering fix (real git/CHANGELOG chronology) to a parallel research
+workflow, kept the judgment-heavy synthesis (final ordering, wording,
+disambiguation) on myself, matching the project’s
+capability-tiered-review guidance; (3) caught my own mistake before
+shipping it — the first fix for the Cross-Center naming collision
+(renaming the sub-tab) would itself have described a UI control that
+doesn’t exist, caught only by checking the real Shiny code first; (4)
+verified fidelity mechanically (entry counts, issue-number diffs) after
+every pass rather than trusting a visual read; (5) used the file’s
+actual build-equivalent
+([`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html))
+repeatedly rather than only inspecting source text. **Weaknesses:** (1)
+did not proactively generalize the “reader never experienced this”
+principle to WORDING in round 2 — I applied it fully to ORDER (an
+8-agent research pass) but left delta-language framing untouched, even
+though the same underlying principle (nothing before `2.0.0` establishes
+a reader-known baseline) already implied it; it took the owner’s
+specific “rebuilt” example in round 3 to surface it, costing an extra
+round that could have been one; (2) initially dropped 6 issue-number
+citations while paraphrasing for jargon in round 1 — caught by my own
+diff check before presenting, but shouldn’t have happened; (3)
+introduced a spacing typo during the round-3 rewrite, self-caught only
+on a final re-read.
+
+**Key files:** `NEWS.Rmd` (the dev-version section, now organized into
+10 `##` feature-group headings under `# nprcgenekeepr 2.0.0.9000`),
+`NEWS.md` (regenerated via
+[`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html),
+must stay in sync with `NEWS.Rmd` — always re-render after any further
+`NEWS.Rmd` edit), `CLAUDE.md` (NEWS.Rmd entry checklist, extended with
+the plain-language criterion), `BACKLOG.md` (item marked `[x]` DONE),
+`PROJECT_LEARNINGS.md` Learning 661, `CHANGELOG.md` 2026-08-24 `[BL-N]`
+entry.
+
+**Gotchas for a future session:** (1) any FUTURE `NEWS.Rmd` dev-version
+entry added under `2.0.0.9000` must go into the matching feature-group
+heading (not appended chronologically at the end) — check the existing
+10 groups before adding a new one; if the entry doesn’t fit any existing
+group, that’s a real signal to ask before inventing an 11th. (2) The
+“everything not yet on CRAN is a draft” principle this session applied
+only reaches back to `2.0.0` — confirmed via `NEWS.Rmd`’s own text and
+`grep -i cran NEWS.Rmd` that no version before `2.0.0` was ever actually
+“accepted”/“published” on CRAN (only “submission”/“resubmission”
+attempts) — so `2.0.0` is the correct, and currently only, reader-known
+baseline; don’t extend delta-language license further back without
+re-verifying if this package’s CRAN history changes. (3) When this
+section next regroups or splits into a real release version, re-verify
+the “no Shiny UI yet”-tagged entries (script-callable-only functions)
+still say that accurately — several might have since gained a Shiny
+screen in a later, not-yet-NEWS’d session. (4) `NEWS.md` is a **tracked,
+generated** file — never hand-edit it; always regenerate from `NEWS.Rmd`
+via `rmarkdown::render(..., output_format = "github_document")` and
+commit both together.
+
+### Session 626 Handoff Evaluation (by Session 627)
+
+**Score: 8/10.** **What helped:** the receipt’s `next_steps` field
+correctly carried forward the full, unchanged priorities list from S625
+— including naming issue \#161 as “still unblocked for an owner decision
+(S625’s finding, unchanged)” — which this session confirmed
+independently (via a fresh `BACKLOG.md` grep) rather than relying on it
+alone, and it matched exactly. The `gotchas` about
+`methodology_dashboard.py` being a canonical TRACKED sync target were
+accurate background but not directly load-bearing for this session’s
+own, unrelated topic. **What was missing:** nothing this session needed
+that the receipt could reasonably have provided — S626’s own deliverable
+(the `PROJECT_LEARNINGS.md` dashboard question) was unrelated to issue
+\#161, so it had no investigative head-start to offer beyond correctly
+noting the item was ready to pick up; the GitHub-issue-thread context
+(the S592 deferral comment) and the tooltip-loss finding were both
+things this session had to discover itself. **What was wrong:** nothing
+found inaccurate — every claim in the receipt (commits, the “not a gap”
+finding, the priorities list) re-verified true. **ROI:** high — the
+priorities list was reused directly as this session’s own Phase 0
+render, saving a from-scratch `BACKLOG.md` sweep.
+
+### What Session 627 Did
+
+**Deliverable:** Decide (owner call) whether to hide the `__union_N`
+mating-unit node marker to match kinship2’s plain-intersection
+convention (issue \#161, unblocked S625). **DONE.**
+**Started/Completed:** 2026-08-23 (single session).
+
+**What actually happened, in order:** 1. **Phase 0 orientation** (full
+protocol, abbreviated re-check since this is a same-conversation
+continuation of S626 — `SESSION_RUNNER.md`/`SAFEGUARDS.md` content
+unchanged since S626’s own full read this session):
+`git status`/`log`/`diff --stat` (clean except the same pre-classified
+untracked artifacts, no new ghost-session signal; local branch grew to
+12 commits ahead of `origin/master`, unpushed), `gh issue list` (12
+open, unchanged), `gh run list` (all green, unchanged — no push since
+last check), ledger reconcile (`CHANGELOG.md`/`HANDOFFS.md` frontiers
+one commit behind HEAD only via the established self-referential
+sha-recording pattern — no real gap), `python3 methodology_dashboard.py`
+(96/100, 1 HIGH risk, same recurring flag), `SESSION_NOTES.md` ACTIVE
+TASK re-read to confirm S626’s own handoff landed intact. Rendered the
+priorities list (4 `AskUserQuestion` options, same set as S626’s own
+list minus the item S626 resolved) — **user picked issue \#161’s marker
+decision.** 2. **Phase 1B claimed** (stub + `HANDOFFS.md`
+`status: pending` receipt, commit `befa2fb3`). 3. **Re-read the full
+`BACKLOG.md` item and the live GitHub issue \#161 thread**
+(`gh issue view 161 --json ...`, since `gh issue view` plain form errors
+on this repo’s deprecated Projects- classic integration) — confirmed the
+S592 deferral rationale and that both named deferral conditions were
+satisfied per S625. 4. **Located the exact styling code:**
+`R/makePedigreeDiagramData.R:1061-1076` (`unitNodes` construction:
+`shape = "dot"`, `size = 6L`, `title = sprintf("%d offspring", ...)`, a
+comment citing “Track 1, owner decision S570” for the *color* being kept
+`NA` — confirmed via `CHANGELOG.md`/archive that S570’s decision was
+specifically about affected-status fill color, a narrower, orthogonal
+decision from \#161’s “does a marker exist at all” question). Cross-
+checked the established `size = 0` + transparent-color invisible-node
+technique (`.addRectilinearWaypoints()`’s D1/D2 waypoint node
+construction, lines ~1533-1548) and found it sets
+`title = NA_character_` on every such node — a fact not mentioned
+anywhere in the GitHub issue, surfacing a real functional cost (loss of
+the “N offspring” hover tooltip) beyond the purely visual trade-off
+already named. 5. **Gathered visual evidence per this project’s
+established practice** (render/attach actual images for any
+kinship2-vs-nprcgenekeepr comparison, not just describe metrics): read
+`vignettes/articles/shiny_app_use/diagram_rectilinear_edge_style.png`
+(this package’s own current rendering) and
+`vignettes/articles/kinship2-fidelity-validation-img/trackC-kinship2.png`
+(kinship2’s actual output) — both displayed inline, confirming the
+issue’s own framing directly. 6. **Presented the decision via
+`AskUserQuestion`** (4 options: keep / hide everywhere / hide in
+“direct” style only / hold for a live comparison) with both images and
+the tooltip finding. **Owner picked “keep the dot” (status quo).** 7.
+**Close-out bookkeeping:** `BACKLOG.md` item marked `[x]` DONE in place
+with the full resolution recorded (not deleted, matching this project’s
+mark-DONE-not-delete convention). [Issue
+\#161](https://github.com/rmsharp/nprcgenekeepr/issues/161) closed via
+`gh issue close --reason completed` with a comment citing the evidence
+and decision, per `CLAUDE.md`’s GitHub issue close-out checklist.
+`PROJECT_LEARNINGS.md` Learning 660 recorded. `CLAUDE.md`’s learning/
+session-count pointer refreshed (626+/659 → 627+/660). `CHANGELOG.md`
+`[issue #161]` entry added.
+
+**Runtime smoke test (Phase 3E):** N/A — zero code changed (the owner’s
+decision was “no change”); zero `R/`/`tests/` files touched beyond being
+read; the only non-documentation action was a GitHub issue close (not a
+runtime change). Not silently skipped: stated explicitly.
+
+**TDD phase declaration:** no implementation code was written this
+session (evidence-gathering + decision + documentation only, resolved as
+“no change”) — the RED/GREEN/REFACTOR gates do not apply; no
+`PRE-RED→RED` transition was entered, matching S626’s own precedent for
+a pure decision session (itself matching S546’s “S325 reopened, decision
+only”).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `NEWS.Rmd` / `a2interactive.Rmd` / `_pkgdown.yml`
+checklists all **N/A** — no new exported function, no new user-facing
+Shiny feature, no code touched. **GitHub issue close-out: DONE this
+session** — issue \#161 closed with the decision and evidence, in the
+same session the `BACKLOG.md` item was marked DONE, per the established
+checklist. Lint checklist **N/A** — no `.R` files touched.
+
+**Self-assessment (Session 627): 9/10.** **Strengths:** (1) did not
+treat the GitHub issue’s own named trade-off as the complete picture —
+traced the exact proposed implementation technique (`size = 0` +
+transparent color) against its own established precedent (D1/D2
+waypoints) and found a real, previously-unnamed functional cost (tooltip
+loss) before presenting the decision; (2) gathered and displayed actual
+rendered images for both sides of the comparison rather than describing
+them, matching this project’s established practice for
+kinship2-vs-nprcgenekeepr comparisons; (3) re-read the live GitHub issue
+thread directly (not just the `BACKLOG.md` summary) to confirm the S592
+deferral rationale before treating it as settled; (4) correctly
+distinguished the S570 decision (affected-status fill color, orthogonal)
+from this session’s own question (marker existence) rather than
+conflating the two just because both cite “mating-unit dot” in nearby
+code comments; (5) closed the GitHub issue in the same session per the
+established checklist, rather than leaving it open for a later
+orientation to catch. **Weaknesses:** (1) did not render a fresh, live
+screenshot of this specific package’s own diagram — reused an existing
+committed screenshot (`diagram_rectilinear_edge_style.png`, dated Aug
+13) rather than confirming it still reflects current `master`
+pixel-for-pixel; low risk (no rendering-affecting change has landed in
+the mating-unit-dot code since), but not independently re-verified this
+session; (2) presented 4 options in the `AskUserQuestion` (including a
+hybrid “direct style only” option) without a stated recommendation of
+its own — arguably correct for a genuine aesthetic call reserved for the
+owner, but a light recommendation with reasoning might have made the
+choice faster without constraining it.
+
+### Session 625 Handoff Evaluation (by Session 626)
+
+### Session 625 Handoff Evaluation (by Session 626)
+
+**Score: 7/10.** **What helped:** the receipt precisely named the item
+(`BACKLOG.md`’s `PROJECT_LEARNINGS.md`/`methodology_dashboard.py` gap),
+gave the exact list contents
+(`("SESSION_NOTES.md", "CHANGELOG.md", "HANDOFFS.md") + _BACKLOG_LOCATIONS`)
+and the exact measured line count (2,005) with no rediscovery needed —
+both re-verified true this session. **What was missing:** the receipt’s
+own `gotchas` (3) asserted “worth fixing the dashboard’s own hardcoded
+file list before this file grows further unnoticed” — stated as a
+settled direction, not as a premise still needing confirmation, even
+though the underlying `BACKLOG.md` item it filed (also S625’s own text)
+was more carefully hedged as “confirm-then-decide, not an implementation
+session.” A `gotchas` field that flagged the “is this actually a Phase 0
+mandate, or does it just look like one” open question explicitly would
+have made the investigative step this session did anyway more clearly
+the point, rather than something the item’s own hedge had to rescue.
+**What was wrong:** the underlying factual claim, carried from S625’s
+own `BACKLOG.md` item and Learning 658 into this receipt’s `gotchas`,
+that `PROJECT_LEARNINGS.md` is “a mandatory Phase 0 (`CLAUDE.md`) read”
+— direct grep of `SESSION_RUNNER.md`/`SAFEGUARDS.md` this session found
+no such mandate anywhere; `CLAUDE.md` itself says the opposite (“read it
+when you need prior-session context”). **ROI:** moderate — the receipt’s
+navigational pointers (exact item, exact list, exact count) saved real
+rediscovery time, but its framing leaned toward “fix it” when the honest
+state was “unconfirmed premise,” and only the item’s own separate, more
+careful hedge kept this session from following that lean directly into
+an unnecessary code change.
+
+### What Session 626 Did
+
+**Deliverable:** Confirm-then-decide: does `methodology_dashboard.py`’s
+size-risk list have a real gap by omitting `PROJECT_LEARNINGS.md`, or is
+the omission by design? (`BACKLOG.md` Housekeeping item, found S625.)
+**DONE.** **Started/Completed:** 2026-08-23 (single session).
+
+**What actually happened, in order:** 1. **Phase 0 orientation** (full
+protocol): `SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+`SESSION_NOTES.md` ACTIVE TASK, `gh issue list` (12 open),
+`git status`/`log`/`diff --stat` (clean except the same pre-classified
+untracked artifacts S624/S625 already traced — no new ghost-session
+signal; local branch 8 commits ahead of `origin/master`, unpushed),
+`gh run list` (all green), ledger reconcile
+(`CHANGELOG.md`/`HANDOFFS.md` frontiers both one commit behind HEAD only
+via the established S600/S602-S625 self-referential sha-recording
+pattern — no real gap, no backfill needed),
+`python3 methodology_dashboard.py` (96/100, 1 HIGH-risk category:
+`HANDOFFS.md`/`CHANGELOG.md` both past the 2,000-line cap and
+archive-trigger byte budget, recurring/known). Rendered the priorities
+list (4 `AskUserQuestion` options built from a full `BACKLOG.md` tag
+sweep) — **user picked the `PROJECT_LEARNINGS.md`/dashboard gap item.**
+2. **Phase 1B claimed** (stub + `HANDOFFS.md` `status: pending` receipt,
+commit `d4c4243a`). 3. **Investigated the item’s own premise before
+acting on it.** Read `methodology_dashboard.py`’s `READ_CAP_WATCHED`
+section (lines 236-278) in full: its own extensive design comment
+explains the list is deliberately restricted to files
+`SESSION_RUNNER.md` Phase 0 instructs a session to read IN FULL to
+establish state, and explicitly names `ROADMAP.md` as a file
+*deliberately* excluded for the same reason (“cited as a pointer, never
+as a file read whole to compute anything”). Grepped
+`SESSION_RUNNER.md`/`SAFEGUARDS.md` directly for “PROJECT_LEARNINGS” —
+zero hits; Phase 0 names only `SAFEGUARDS.md`, `SESSION_NOTES.md`’s
+ACTIVE TASK, and `CHANGELOG.md`/ `HANDOFFS.md` (step 6 reconcile) as
+full-file reads. Re-read `CLAUDE.md`’s own “Project-specific Learnings”
+section: “Read it when you need prior-session context… append new
+learnings there, not here” — on-demand, not mandatory. **Conclusion: the
+S625 item’s premise (“a mandatory Phase 0 (`CLAUDE.md`) read”) does not
+hold** — `PROJECT_LEARNINGS.md` fits the same deliberately- excluded
+category as `ROADMAP.md`, not a missed one. 4. Separately checked
+whether `methodology_dashboard.py` itself is safe to locally patch even
+if the premise had held: grepped the sibling `methodology` checkout’s
+`bin/_manifest.py` and confirmed `starter-kit/methodology_dashboard.py`
+is a canonical **TRACKED** dest (kept current by sync); this project’s
+copy is already stale (v2.14.0 vs. canonical v2.15.2) per the
+dashboard’s own startup warning — a second, independent reason not to
+hand-edit the list even as a fallback. 5. **Presented the finding to the
+owner via `AskUserQuestion`** (3 options: correct the record / flag the
+size anyway as a different, non-FM#28 risk / hold and dig deeper first)
+rather than deciding unilaterally, since the finding overturns a
+predecessor’s stated premise. **Owner picked “correct the record.”** 6.
+**Close-out bookkeeping:** `BACKLOG.md` item marked `[x]` DONE in place
+with the resolution recorded (matching this project’s
+mark-DONE-not-delete convention) — no dashboard code change made.
+`PROJECT_LEARNINGS.md` Learning 659 recorded (confirm a predecessor’s
+premise by direct grep against the actual mandate, even when the item is
+already well-hedged). `CLAUDE.md`’s learning/session-count pointer
+refreshed (625+/658 → 626+/659). `CHANGELOG.md`
+`[BL-projectLearningsGapConfirm]` entry added.
+
+**Runtime smoke test (Phase 3E):** N/A — documentation-only changes
+(`BACKLOG.md`, `PROJECT_LEARNINGS.md`, `CLAUDE.md`, `CHANGELOG.md`
+prose); zero `R/` or `tests/` files touched, zero runtime behavior
+changed, zero `.py` files touched (investigated
+`methodology_dashboard.py` read-only, never edited). Not silently
+skipped: stated explicitly.
+
+**TDD phase declaration:** no implementation code was written this
+session (investigation + decision + documentation only) — the
+RED/GREEN/REFACTOR gates do not apply; no `PRE-RED→RED` transition was
+ever entered, matching this project’s established precedent for pure
+decision/ documentation sessions (e.g. S546’s “S325 reopened, decision
+only”).
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `NEWS.Rmd` / `a2interactive.Rmd` / `_pkgdown.yml`
+checklists all **N/A** — no new exported function, no new user-facing
+Shiny feature, no code touched. GitHub issue close-out **N/A** —
+`BACKLOG.md`-only housekeeping, not tied to a GitHub issue number. Lint
+checklist **N/A** — no `.R` files touched.
+
+**Self-assessment (Session 626): 9/10.** **Strengths:** (1) did not
+accept the predecessor’s stated premise (“a mandatory Phase 0 read”) at
+face value despite it appearing in both a `BACKLOG.md` item and a
+`HANDOFFS.md` gotcha — verified it by direct grep against the actual
+mandate (`SESSION_RUNNER.md`) rather than trusting repetition across two
+artifacts as corroboration; (2) found and applied the dashboard tool’s
+own stated design rationale (the `ROADMAP.md` precedent) as the deciding
+evidence, rather than reasoning about what “should” be flagged from
+first principles; (3) checked a second, independent angle (the
+TRACKED-dest sync-safety question) even after the first finding made the
+primary decision fairly clear, since it materially affects the “flag it
+anyway” alternative the user might have picked; (4) surfaced the finding
+via `AskUserQuestion` rather than unilaterally closing the item out
+silently, since it directly overturns a predecessor’s claim.
+**Weaknesses:** (1) added a new `PROJECT_LEARNINGS.md` entry (659) to a
+file whose own size was the subject of this session’s investigation — an
+unavoidable tension (the append-only Learning ledger is where this
+project records exactly this kind of finding) but worth naming directly,
+matching S624/S625’s own self-assessments naming the same tension; (2)
+did not additionally check whether any *other* mandated-read file
+(e.g. a workstream doc) references `PROJECT_LEARNINGS.md` as something
+to read in full — the grep covered `SESSION_RUNNER.md`/
+`SAFEGUARDS.md`/`CLAUDE.md`/`docs/methodology/workstreams/` but a
+narrower, more exhaustive sweep of every `.md` file for a “read
+PROJECT_LEARNINGS.md in full” instruction was not run; the finding is
+strong but not from an exhaustive negative-result search.
+
+### Session 624 Handoff Evaluation (by Session 625)
+
+**Score: 9/10.** **What helped:** the receipt’s `next_steps` field named
+the 16/17-item `BACKLOG.md` `[x]`-sweep as READY with useful count-drift
+context (“now 17 items, since this session added one more
+DONE-but-unswept entry”) — directionally correct (the true count at
+claim was 18, still off by one, but the signal “the cited count has
+drifted since S619” was right and prompted a direct re-count rather than
+trusting either number). `gotchas` (3) — “this project’s convention for
+a completed `BACKLOG.md` item is mark `[x]` DONE with the resolution
+written in place, not delete the line outright” — was directly
+load-bearing for correctly closing THIS session’s own triggering item
+(marked `[x]` DONE in place, not deleted same-session, avoiding a
+self-referential ambiguity). `gotchas` (1) — flagging that
+`PROJECT_LEARNINGS.md` is past the 2,000-line FM \#28 cap but “wasn’t in
+the dashboard’s reported list this session, worth confirming” — was
+directly acted on: confirmed true this session (2,005 lines,
+`methodology_dashboard.py`’s size-risk list hardcoded to 3 other files,
+`PROJECT_LEARNINGS.md` absent) and filed as a new `BACKLOG.md` item
+rather than left unconfirmed. **What was missing:** nothing the receipt
+could reasonably have included — the dangling-cross-reference risk this
+session found (deleting an item broke a still-open sibling item’s
+“Tracks 1-3 above”/“the follow-up item below” pointers) is specific to
+actually performing a large bulk deletion, not something a prior session
+doing different work could have anticipated. **What was wrong:** nothing
+found inaccurate — the receipt’s own claims (commits, root cause, scope)
+all re-verified true. **ROI:** high — both load-bearing gotchas paid off
+directly in this session’s own close-out decisions.
+
+### What Session 625 Did
+
+**Deliverable:** Sweep the `[x]`-checked, fully-resolved items out of
+`BACKLOG.md` (`BACKLOG.md` Housekeeping item, found S619). **DONE.**
+**Started/Completed:** 2026-08-23 (single session).
+
+**What actually happened, in order:** 1. **Phase 0 orientation** (full
+protocol): `SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+`SESSION_NOTES.md` ACTIVE TASK, `gh issue list` (12 open),
+`git status`/`log`/`diff --stat` (clean except pre-existing,
+already-classified untracked artifacts; local branch 4 commits ahead of
+`origin/master`, unpushed since S624), `gh run list` (all green), ledger
+reconcile (no gap — the one commit past `CHANGELOG.md`‘s frontier is the
+documented S600/S602-S623 self-referential sha-recording pattern, not a
+new unrecorded action), `python3 methodology_dashboard.py` (96/100, 1
+HIGH risk, same recurring FM \#28 flag). Rendered the priorities list (4
+`AskUserQuestion` options, built from a full `BACKLOG.md` tag sweep
+since no single predecessor-stated order existed this time) — **user
+picked the `[x]`-item sweep.** 2. **Phase 1B claimed** (stub +
+`HANDOFFS.md` `status: pending` receipt, commit `42e59d0b`). Direct
+re-count at claim found **18** `[x]`-checked items, not the “16” the
+triggering item cites (2 more checked since S619: S607’s MIT/REUSE
+badges, S624’s own `CLAUDE.md`-filter item). Confirmed, not
+spot-checked, every one of the 18 items’ cited session numbers
+(S574-S624) has a substantive `CHANGELOG.md` entry (`CHANGELOG.md` +
+`docs/archive/CHANGELOG*.md`); spot-verified the largest deletion (the
+S592-S621 same-row-collision/Walker-BJL chain, ~590 lines) resolves to
+real `[issue #141]`-tagged entries, not incidental mentions. 3. **Mapped
+exact line boundaries** for all 18 items via
+`grep -n "^- \[x\]\|^- \[ \]\|^## "` (marker-to-next-marker ranges),
+deleted all 18 in one `sed` pass into a scratch file, verified before
+applying: `[x]` count 0, `[ ]` count unchanged (36=36, no open item
+caught in a deletion range), every `##` section header intact, no
+double-blank-line artifacts at any seam. 4. **Found and fixed one
+dangling cross-reference this deletion created** (not caught by the
+established `CHANGELOG.md`/Learning/file-path grep checklist, since it’s
+a same-file spatial pointer, not a citation): the kept issue \#161 item
+referenced “Tracks 1-3 above” and “the follow-up item below,” both
+now-deleted. Rewrote in place with an S625 update noting both of S592’s
+named deferral conditions are now satisfied (Tracks 1-3 shipped S596;
+the Track 3 trade-offs fully resolved by the unrelated Walker/BJL
+migration, issue \#141 closed S621), unblocking \#161 for an owner
+decision. 5. **Full-file coherence re-read** (both halves, ~1,150 lines)
+confirmed no truncated sentences or other artifacts beyond the one
+cross-reference already fixed. 6. **Close-out bookkeeping:** triggering
+item marked `[x]` DONE in place (not deleted same-session, matching this
+project’s mark-DONE-not-delete convention). New `BACKLOG.md`
+Housekeeping item filed (found, not fixed, per Learning 382 precedent):
+`PROJECT_LEARNINGS.md` is past the 2,000-line FM \#28 cap (2,005 lines)
+but `methodology_dashboard.py`’s hardcoded size-risk list doesn’t
+include it. `PROJECT_LEARNINGS.md` Learning 658 recorded (dangling
+spatial cross-references after `BACKLOG.md` deletion + the
+dashboard-coverage gap); `CLAUDE.md`’s learning-count/session-count
+pointer refreshed (624+/657 → 625+/658). `CHANGELOG.md` entry to follow
+this commit. Net: `BACKLOG.md` 2,192 → ~1,170 lines (~47% reduction,
+after this close-out’s own additions).
+
+**Runtime smoke test (Phase 3E):** N/A — documentation-only changes
+(`BACKLOG.md`, `PROJECT_LEARNINGS.md`, `CLAUDE.md` prose); zero `R/` or
+`tests/` files touched, zero runtime behavior changed. Not silently
+skipped: stated explicitly.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `NEWS.Rmd` / `a2interactive.Rmd` / `_pkgdown.yml`
+checklists all **N/A** — no new exported function, no new user-facing
+Shiny feature, no code touched. GitHub issue close-out **N/A** —
+`BACKLOG.md`-only housekeeping, not tied to a GitHub issue number. Lint
+checklist **N/A** — no `.R` files touched.
+
+**Self-assessment (Session 625): 9/10.** **Strengths:** (1) did not
+trust either the triggering item’s stated count (16) or S624’s own
+updated guess (17) — re-counted directly (18) and grepped CHANGELOG
+coverage for every cited session number before deleting anything, rather
+than assuming the prior sessions’ spot-checks were sufficient; (2)
+computed exact line-range boundaries via a single `grep -n` pass and
+verified the deletion in a scratch file before applying it, rather than
+editing the live file iteratively and risking a mismatched
+`old_string`/partial edit across 1,000+ lines; (3) caught and fixed a
+real defect the deletion itself introduced (the dangling issue \#161
+cross-reference) via a full-file re-read, not just a diff-stat glance;
+(4) surfaced a genuinely new, on-theme finding (the
+`PROJECT_LEARNINGS.md`/dashboard gap) without scope-creeping into fixing
+it mid-session, matching the established Learning 382 precedent.
+**Weaknesses:** (1) added a new `PROJECT_LEARNINGS.md` entry (658) and a
+new `BACKLOG.md` item to a file already flagged oversized by the
+dashboard, the same FM \#28 tension S624’s own self-assessment flagged
+for Learning 657 — this session at least made the tension itself a
+tracked, actionable item rather than only restating it; (2) did not
+attempt a second independent verification pass of the `sed` deletion
+(e.g. `git diff` reviewed by a fresh sub-agent) beyond this session’s
+own direct re-reads — for a ~1,050-line deletion, an independent check
+would have been a stronger guarantee against a subtle off-by-one
+boundary error, though the direct seam-by-seam spot checks and full-file
+re-read this session did perform found nothing wrong.
+
+### Session 623 Handoff Evaluation (by Session 624)
+
+**Score: 9/10.** **What helped:** the receipt’s `next_steps` field named
+this exact deliverable as item 1 — “fix or re-scope CLAUDE.md’s stale
+test-app-*/test-e2e-* ‘Clean regression read’ filter (READY, Effort S)”
+— with the precise rationale (root cause gone, filter matches nothing,
+risks hiding a future regression) already worked out; zero rediscovery
+needed. `gotchas` (4) — “CLAUDE.md’s test-app-*/test-e2e-*
+baseline-noise exclusion filter is stale … do not rely on it” — was
+directly load-bearing, and the underlying `BACKLOG.md` item (which the
+receipt pointed to) carried the exact line citation
+(`tests/testthat/helper-shinytest2.R:200`) this session verified and
+reused directly in the fix. **What was missing:** nothing critical — the
+item left “remove vs. re-scope” as an open decision for the executing
+session, which was the right call: it wasn’t yet established whether a
+live exception remained (none did, confirmed this session), so
+pre-deciding would have been guessing. **What was wrong:** nothing found
+inaccurate — every claim in the receipt/BACKLOG item (the line number,
+the “0 failed/0 error for weeks” pattern, issue \#163 as the concrete
+near-miss example) re-verified true this session. **ROI:** high — direct
+pickup with no investigative overhead beyond this session’s own
+scope-verification grep sweep.
+
+### What Session 624 Did
+
+**Deliverable:** Fix `CLAUDE.md`’s stale `test-app-*`/`test-e2e-*`
+“Clean regression read” baseline-noise filter (`BACKLOG.md` Housekeeping
+item, found S623). **DONE.** **Started/Completed:** 2026-08-23 (single
+session).
+
+**What actually happened, in order:** 1. **Phase 0 orientation** (full
+protocol): `SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+`SESSION_NOTES.md` ACTIVE TASK, `gh issue list` (12 open),
+`git status`/`log`/`diff --stat` (clean, S623 fully closed out, ledger
+frontier == HEAD, no reconcile needed), `gh run list` (all green,
+including today’s scheduled `shinytest2.yaml`),
+`python3 methodology_dashboard.py` (96/100, 1 HIGH risk —
+`HANDOFFS.md`/`CHANGELOG.md`/`BACKLOG.md` all past the 2,000-line read
+cap, FM \#28, unchanged/recurring). Individually traced 3 untracked-file
+groups found by `git status` rather than batch-assuming: the 4
+`docs/planning/*.html` files are known Quarto render byproducts of
+tracked `.qmd` sources;
+`inst/extdata/reference/~$e Compounding Loop.html` is a recurring
+MS/LibreOffice lock-file artifact matching the exact Session 568
+precedent (deleted once already, reappeared); `scratchpad/` is leftover
+debug scripts from the already-shipped S598-S602
+duplicate-occurrence-selection investigation. None were ghost-session
+deliverables. Rendered the priorities list (4 `AskUserQuestion` options
+in S623’s own stated order, +2 more named below the picker per the
+\>4-items rule) — **user picked item 1, the stale filter fix.** 2.
+**Phase 1B claimed** (this stub + `HANDOFFS.md` `status: pending`
+receipt, commit `f1051c65`). 3. **Scope verification before editing:**
+grepped the whole repo for the stale filter’s text and the “baseline
+noise” framing (~20 hits). Classified each individually rather than
+assuming grep’s hit count was the edit count: `docs/archive/*.md`
+(frozen), `PROJECT_LEARNINGS.md` Learning \#2/#4 (frozen historical
+record, explicitly named off-limits by the originating `BACKLOG.md`
+item), a dozen `docs/planning/*.md` historical plans (none of their
+issue numbers are open;
+`cran-2.0.0-submission-plan.md`/`shiny-module-conversion-plan.md` both
+predate the already-shipped 2.0.0 release), and narrative in
+`CHANGELOG.md`/`SESSION_NOTES.md` describing past sessions’ findings.
+Only `CLAUDE.md`’s own Build/Test/Verify section was live guidance.
+Re-verified (not trusted from the `BACKLOG.md` item’s text) that
+`create_test_app()` is defined at
+`tests/testthat/helper-shinytest2.R:200` exactly. 4. **Fix:** removed
+the `!grepl("test-app-|test-e2e-", file)` exclusion from `CLAUDE.md`’s
+“Clean regression read” entry; added a dated inline note (S624)
+explaining the removal and warning against reviving a permanent
+file-name-pattern amnesty, without touching Learning \#2/#4 itself. 5.
+**Close-out bookkeeping:** `BACKLOG.md` Housekeeping item marked `[x]`
+DONE with the resolution recorded in place (matching this project’s
+mark-DONE-not-delete convention, per the standing 16-item-sweep
+housekeeping item). `PROJECT_LEARNINGS.md` Learning 657 recorded (scope
+verification: classify each grep hit live-vs-frozen before editing);
+`CLAUDE.md`’s own learning-count cross-reference refreshed (656→657).
+`CHANGELOG.md` `[BL-cleanRegressionFilter]` entry added. Commit
+`e12ac08c` (CLAUDE.md fix + BACKLOG.md + PROJECT_LEARNINGS.md, 3 files).
+
+**Runtime smoke test (Phase 3E):** N/A — documentation-only change to
+`CLAUDE.md` prose; zero `R/` or `tests/` files touched, zero runtime
+behavior changed. Not silently skipped: stated explicitly.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation /
+tutorial-article / `NEWS.Rmd` / `a2interactive.Rmd` / `_pkgdown.yml`
+checklists all **N/A** — no new exported function, no new user-facing
+Shiny feature, no code touched. GitHub issue close-out **N/A** — this is
+a `BACKLOG.md`-only housekeeping item, not tied to a GitHub issue
+number. Lint checklist **N/A** — no `.R` files touched.
+
+**Self-assessment (Session 624): 9/10.** **Strengths:** (1) verified
+scope by grepping the whole repo before editing, rather than assuming
+the one obvious location was the only one, and correctly classified
+every hit as live vs. frozen instead of either over-editing
+archives/frozen learnings or under-editing a live doc; (2) re-verified
+the cited line number and regression-count claims directly rather than
+trusting the `BACKLOG.md` item’s prose; (3) preserved this project’s
+no-retroactive-edit precedent for frozen documents (Learning \#2/#4,
+`docs/archive/`, closed-issue planning docs); (4) closed every standing
+bookkeeping obligation in the same session (BACKLOG DONE, CHANGELOG
+entry, learning + pointer refresh) without deferring any of it.
+**Weaknesses:** (1) did not re-run a fresh full regression suite this
+session — relied on S623’s own same-day unfiltered run; defensible since
+zero code changed, but a fully independent verification would have
+re-run it; (2) the new Learning 657, while accurate and reusable, sits
+close in spirit to already-established scope-verification precedents
+(Learnings 479, 653) — could arguably have been a shorter addendum
+rather than a full new numbered entry, especially given
+`PROJECT_LEARNINGS.md` is itself now past the 2,000-line read cap the
+dashboard already flags for its sibling ledgers (an FM \#28 pressure
+this session added to rather than relieved).
+
 ### Session 622 Handoff Evaluation (by Session 623)
 
 **Score: 9/10.** **What helped:** the receipt’s `next_steps` field named

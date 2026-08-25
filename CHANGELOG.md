@@ -17,6 +17,241 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-24 · \[ad hoc\] S628: record close-out commit shas in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S627 precedent)
+
+- **Deliverable:** fixed this session’s own `HANDOFFS.md` receipt
+  `commit`/`what_was_done: pending` → real commit shas (`5c8cc7e1`,
+  `815274cb`, `4f85129f`, `99572079`), matching the established
+  self-reference-workaround precedent (the receipt can’t name its own
+  close-out commit’s sha until after that commit exists).
+
+### 2026-08-24 · \[BL-N\] S628: `NEWS.Rmd` dev-section simplified for a non-technical audience, reorganized by feature, guardrail landed
+
+- **Deliverable:** simplify `NEWS.Rmd`’s `2.0.0.9000` dev-version
+  entries for a non-technical (colony-manager/veterinarian) audience,
+  reorganize by feature within the release heading, and design/land a
+  concrete guardrail against re-drift (`BACKLOG.md` Up Next, found
+  2026-08-20, owner-directed, refined 2026-08-20) – **DONE**,
+  multi-round `AskUserQuestion` draft/review/ revise loop per the item’s
+  own owner-stated requirement, not a single unilateral pass.
+- **Guardrail (requirement 3):** extended `CLAUDE.md`’s existing
+  “NEWS.Rmd entry checklist” (Session 448) with an explicit
+  plain-language/no-jargon criterion. Docs-only, no in-file style note
+  and no automated lint – both evaluated and explicitly declined via
+  owner discussion: the in-file note’s actual beneficiary traced to
+  nothing distinct (every `NEWS.Rmd` edit in this project’s history is
+  session-mediated, and every session already reads `CLAUDE.md`); an
+  automated banned-term lint would false-positive on legitimate domain
+  vocabulary this audience already knows
+  (kinship/genotype/heterozygosity vs. e.g. “a CERVUS-style multilocus
+  LOD score”).
+- **Taxonomy (requirement 2):** reorganized the section’s 58 entries
+  into 10 feature groups (Package, Pedigree Diagram, Kinship & Pedigree
+  Calculations, Marker Genetics, Cross-Center Identity Matching, Genetic
+  Value Analysis, Breeding Group Formation, Mate Pair Analysis,
+  De-Identified Export, General Fixes), proposed and approved via
+  `AskUserQuestion` before any rewrite.
+- **Two further defect classes found and fixed, both owner-caught then
+  generalized project-wide rather than fixed only where first shown:**
+  - **Forward-reference ordering:** entries within a group were not
+    reliably in true shipping order, so a later refinement could sit
+    before the feature’s own introduction (most visibly issue \#141’s
+    positioning-engine entry – actually shipped 2026-08-20/21 – sitting
+    first in Pedigree Diagram, ahead of everything it depended on).
+    Fixed via an 8-agent background workflow doing real
+    `git log`/`CHANGELOG.md` archaeology per feature group to establish
+    true chronology and reorder accordingly; also caught a real
+    mis-attribution (the “anchor generation mismatch” fix is S573, not
+    issue \#144/S473-474 as initially assumed) and a genuine naming
+    collision (Marker Genetics’ “Cross-Center” sub-tab vs. the separate
+    “Cross-Center Identity” tab – fixed with a disambiguating clause
+    after confirming the real UI label in `R/modMarkerGenetics.R:143`,
+    not an invented rename).
+  - **Delta-language for a reader-invisible “before”:** entries framed
+    as “gained”/“Fixed:”/ “Changed:”/“rebuilt” relative to a prior state
+    the reader never experienced, since the enclosing feature is itself
+    new within this still-unreleased dev section (nothing before `2.0.0`
+    – the package’s only actual CRAN-accepted version – establishes any
+    reader-known baseline; owner: “everything not yet on CRAN is
+    considered a draft”). Reworded to state final shipped behavior
+    directly wherever the enclosing tab is itself new this release
+    (Pedigree Diagram: 11 entries; Marker Genetics: 5; Cross-Center
+    Identity Matching: 1); left untouched wherever the delta is
+    legitimate (Kinship & Pedigree Calculations, Genetic Value Analysis,
+    Breeding Group Formation, General Fixes,
+    [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)’s
+    `linkedDateShift` – each confirmed pre-existing via
+    `NAMESPACE`/`git log`/`NEWS.md`, not assumed).
+- **Verification, mechanical not eyeballed, after every pass:** entry
+  count held at 58 throughout every reorder/reword pass; all 24 distinct
+  issue-number citations preserved (6 were accidentally dropped
+  mid-rewrite and caught by a diff sweep before presenting);
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+  (this file’s own build-equivalent) run clean after every substantive
+  edit; `NEWS.md` regenerated to match. `git diff` confirmed the
+  untouched rest of the file (everything from the `2.0.0` heading
+  onward) byte-identical throughout.
+- **`BACKLOG.md`:** item marked `[x]` DONE in place with the full
+  resolution recorded. `PROJECT_ LEARNINGS.md` Learning 661 records the
+  order-vs-wording generalization gap this session’s own round 2 -\>
+  round 3 correction demonstrated. `CLAUDE.md` learnings-count pointer
+  refreshed (627+/660 -\> 628+/661).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-23 · \[issue \#161\] S627: owner decision – keep the mating-unit node marker, no code change
+
+- **Deliverable:** decide (owner call) whether to hide the `__union_N`
+  mating-unit node marker to match kinship2’s plain-intersection
+  convention (unblocked S625) – **DONE, decision-only, no code change.**
+- **Evidence gathered before presenting the decision:** read
+  `vignettes/articles/shiny_app_use/diagram_rectilinear_edge_style.png`
+  (nprcgenekeepr’s own current rendering – a small blue dot at every
+  mating junction) and
+  `vignettes/articles/kinship2-fidelity-validation-img/trackC-kinship2.png`
+  (kinship2’s actual output – mate-line and sibship-drop meet as a
+  plain, marker-free intersection), confirming the issue’s own framing
+  directly rather than trusting its prose description.
+- **New finding beyond the issue’s own stated trade-off:** the
+  `__union_N` node’s `title = sprintf("%d offspring", ...)` hover
+  tooltip (`R/makePedigreeDiagramData.R:1067`) would be silently lost by
+  the established `size = 0` + transparent-color invisible-node
+  technique – confirmed by checking the D1/D2 waypoint nodes’ own
+  construction (`title = NA_character_`, since a zero-size vis.js node
+  isn’t hoverable). A real information-loss cost with no relation to
+  kinship2 parity, not named in the original issue.
+- **Presented via `AskUserQuestion`** (4 options: keep / hide everywhere
+  / hide in “direct” style only / hold for a live comparison), both
+  images shown, tooltip finding included. **Owner decision: keep the dot
+  (status quo).**
+- **Close-out:** `BACKLOG.md` item marked `[x]` DONE in place with the
+  resolution recorded. [Issue
+  \#161](https://github.com/rmsharp/nprcgenekeepr/issues/161) closed
+  (`gh issue close --reason completed`) citing the evidence and
+  decision. `PROJECT_LEARNINGS.md` Learning 660 recorded (trace a
+  proposed technique against its own established precedent for hidden
+  side effects before presenting a design decision); `CLAUDE.md`’s
+  learning/session-count pointer refreshed (626+/659 -\> 627+/660).
+
+### 2026-08-23 · \[BL-projectLearningsGapConfirm\] S626: confirm `PROJECT_LEARNINGS.md`/`methodology_dashboard.py` gap is NOT real – correct the record
+
+- **Deliverable:** confirm-then-decide whether
+  `methodology_dashboard.py`’s size-risk list has a real gap by omitting
+  `PROJECT_LEARNINGS.md` (`BACKLOG.md` Housekeeping item, found S625) –
+  **DONE, documentation-only, no code change.**
+- **Finding: the S625 item’s premise does not hold.** Direct grep of
+  `SESSION_RUNNER.md`/ `SAFEGUARDS.md` found no Phase 0 step that
+  mandates reading `PROJECT_LEARNINGS.md` in full – only `SAFEGUARDS.md`
+  (step 1), `SESSION_NOTES.md`’s ACTIVE TASK (step 2), and
+  `CHANGELOG.md`/ `HANDOFFS.md` (step 6’s ledger reconcile) are named.
+  `CLAUDE.md`’s own text says explicitly: “Read it when you need
+  prior-session context… append new learnings there, not here” – read ON
+  DEMAND (grep-by-`Learning N`, the pattern every citation actually
+  uses), never read whole. `methodology_dashboard.py`’s own
+  `READ_CAP_WATCHED` comment independently states the identical
+  exclusion principle for `ROADMAP.md` (“cited as a pointer, never as a
+  file read whole to compute anything”) – `PROJECT_LEARNINGS.md` fits
+  that same excluded category, not the mandated-read category the S625
+  item assumed.
+- **Second reason not to hand-patch even if the premise had held:**
+  `methodology_dashboard.py` is a canonical **TRACKED** dest
+  (`bin/_manifest.py`, sibling `methodology` checkout,
+  `starter-kit/methodology_dashboard.py` line 44); this project’s copy
+  is already stale (v2.14.0 vs. canonical v2.15.2), so a local list edit
+  risks silent loss or drift on the next sync – the same risk class the
+  tool’s own comment already names for why
+  `SESSION_RUNNER.md`/`SAFEGUARDS.md` themselves are excluded from the
+  list.
+- **Presented finding to the owner via `AskUserQuestion`** (3 options:
+  correct the record / flag it anyway as a different, non-FM#28 risk /
+  hold and dig deeper) – owner picked “correct the record.” `BACKLOG.md`
+  item marked `[x]` DONE in place with the resolution recorded (not
+  deleted, matching this project’s mark-DONE-not-delete convention).
+  `PROJECT_LEARNINGS.md` Learning 659 recorded (confirm a predecessor’s
+  premise via direct grep, even when the item is well-hedged as
+  “confirm-then-decide”); `CLAUDE.md`’s learning/session-count pointer
+  refreshed (625+/658 -\> 626+/659).
+
+### 2026-08-23 · \[BL-backlogXCheckSweep\] S625: sweep 18 `[x]`-checked, fully-resolved items out of `BACKLOG.md`
+
+- **Deliverable:** delete the accumulated `[x]`-checked DONE items out
+  of `BACKLOG.md`’s “Active” and “Housekeeping” sections outright,
+  matching the S548 precedent – **DONE**, documentation-only.
+- **Direct re-count at claim found 18 items, not the “16” the triggering
+  item (found S619) cited** (2 more checked since: S607’s MIT/REUSE
+  badges, S624’s own `CLAUDE.md`-filter item). Confirmed, not
+  spot-checked, every one of the 18 items’ cited session numbers
+  (S574-S624) has a substantive `CHANGELOG.md` entry before deleting
+  anything – spot-verified the largest deletion, the S592-S621
+  same-row-collision/Walker-BJL migration chain (~590 lines), resolves
+  to real dedicated `[issue #141]`-tagged entries.
+- **Mechanics:** computed exact line-range boundaries via
+  `grep -n "^- \[x\]\|^- \[ \]\|^## "`, deleted all 18 in one `sed` pass
+  into a scratch file, verified before applying (`[x]` count 0, `[ ]`
+  count unchanged 36=36, all `##` headers intact, no seam artifacts) –
+  avoided iterative live-file edits across 1,000+ lines. `BACKLOG.md`
+  2,192 -\> ~1,170 lines net, ~47% reduction.
+- **Found and fixed one dangling cross-reference the deletion created**
+  (not caught by the established `CHANGELOG.md`/Learning/file-path grep
+  checklist, since it’s a same-file spatial pointer, not a citation):
+  the kept issue \#161 item referenced “Tracks 1-3 above”/“the follow-up
+  item below,” both now-deleted – rewritten in place noting both of
+  S592’s named deferral conditions are now satisfied (Tracks 1-3 shipped
+  S596; the Track 3 trade-offs resolved by the unrelated Walker/BJL
+  migration, issue \#141 closed S621), unblocking \#161 for an owner
+  decision.
+- **Incidental finding, filed not fixed:** `methodology_dashboard.py`’s
+  size-risk file list omits `PROJECT_LEARNINGS.md`, itself past the
+  2,000-line FM \#28 cap (2,005 lines) – confirms a gotcha S624’s own
+  `HANDOFFS.md` receipt had flagged unconfirmed. New `BACKLOG.md`
+  Housekeeping item filed.
+- Recorded `PROJECT_LEARNINGS.md` Learning 658 (dangling spatial
+  cross-references after a `BACKLOG.md` deletion; the dashboard-coverage
+  gap); `CLAUDE.md`’s learning/session-count pointer refreshed (624+/657
+  -\> 625+/658). Triggering item marked `[x]` DONE in place (not deleted
+  same-session, matching this project’s mark-DONE-not-delete
+  convention).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-23 · \[BL-cleanRegressionFilter\] S624: remove stale test-app-*/test-e2e-* baseline-noise filter from CLAUDE.md
+
+- **Deliverable:** fix `CLAUDE.md`’s stale “Clean regression read”
+  `test-app-*`/`test-e2e-*` exclusion filter (`BACKLOG.md` Housekeeping
+  item, found S623) – **DONE**, documentation-only, zero `R/`/ `tests/`
+  code changed.
+- **Root cause of staleness:** the filter’s own reason for existing
+  (`create_test_app()` undefined, Learning \#2/#4, Sessions 3-4) no
+  longer holds – `create_test_app()` is defined at
+  `tests/testthat/helper-shinytest2.R:200` and has been for a long time;
+  unfiltered full-regression runs report 0 failed/0 error across those
+  files for weeks (S622/S623). The blanket
+  `!grepl("test-app-|test-e2e-", file)` exclusion had become a live
+  risk, not a convenience – it would silently hide a real regression
+  landing in exactly those files, which issue \#163 (S623) nearly
+  demonstrated.
+- **Fix:** removed the exclusion filter from `CLAUDE.md`’s
+  Build/Test/Verify section; added a dated inline note explaining why
+  and warning against reviving a permanent file-name-pattern amnesty.
+  Left `PROJECT_LEARNINGS.md` Learning \#2/#4 unedited (frozen
+  historical record of Sessions 3-4), per this project’s
+  no-retroactive-edit precedent.
+- **Scope verification:** grepped the full repo for the stale filter’s
+  text (~20 hits) and classified each individually before deciding scope
+  – `docs/archive/*.md` (frozen), `PROJECT_LEARNINGS.md` (frozen, named
+  off-limits by the originating item), a dozen `docs/planning/*.md`
+  historical plans for already-closed issues or the already-shipped
+  2.0.0 release, and narrative in `CHANGELOG.md`/`SESSION_NOTES.md`
+  describing past sessions’ findings – only `CLAUDE.md`’s own
+  Build/Test/Verify section was live, executable guidance. Recorded as
+  `PROJECT_LEARNINGS.md` Learning 657.
+- **BACKLOG.md:** Housekeeping item marked DONE with the resolution and
+  verification recorded in place.
+- **Verify:** no code touched, so no fresh full-regression run this
+  session – relies on S623’s own same-day unfiltered run (6,606 passed/0
+  failed/0 error/2 skipped/39 warnings). Cross-references
+  (`Learning 2`/`Learning 4`, `helper-shinytest2.R:200`, issue \#163)
+  grep-confirmed to resolve.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-22 · \[issue \#163\] S623: fix intermittent shinytest2 e2e-mate-pair-analysis-module E2E failure (DT server-side-render race)
 
 - **Deliverable:** diagnose and fix the intermittent
