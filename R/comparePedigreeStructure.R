@@ -60,3 +60,119 @@
 
   list(parentChildEdges = parentChildEdges, matePairs = matePairs)
 }
+
+#' Extract nprcgenekeepr's parent-child and mate-pair structure
+#'
+#' Re-derives the same real-individual-level relationship set
+#' \code{\link{.extractKinship2Structure}} (Track A) reads from a kinship2
+#' \code{pedigree} object, this time from
+#' \code{\link{makePedigreeMatingLayout}}'s own \code{"direct"}-style
+#' \code{nodes}/\code{edges}/\code{duplicateToReal} return value. This is
+#' Track B of a programmatic structural/topological comparison against
+#' kinship2; see
+#' \code{docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md}
+#' sections 3.2/4.2.
+#'
+#' Callers \strong{must} pass the return value of
+#' \code{makePedigreeMatingLayout(ped, edgeStyle = "direct", twinRelations =
+#' NULL)} -- this function does not walk \code{"rectilinear"}-style
+#' waypoint chains (\code{__drop_}/\code{__bar_}/\code{__proj_}/\code{__jog_}
+#' ids); that is the D-2 edgeStyle-invariance property test's own job
+#' (\code{tests/testthat/test_comparePedigreeStructure.R}), not this
+#' function's runtime responsibility (plan section 3.2).
+#'
+#' Edge classification mirrors \code{makePedigreeMatingLayout()}'s own
+#' construction exactly (re-verified directly against
+#' \code{R/makePedigreeDiagramData.R} this session, not assumed from the
+#' plan's own illustrative pseudocode): \code{mateEdges$to} is always a
+#' \code{__union_} id; a duplicate-node connector is uniquely marked by
+#' \code{dashes == TRUE & smooth.type == "curvedCW"}; every other edge is a
+#' child edge, whose \code{from} is either a \code{__union_} id (both
+#' parents known -- the common case, expanded to 2 rows via the matching
+#' mate pair) or a real/duplicate parent id directly (the D5
+#' single-known-parent fallback, passed through as one row). Every
+#' \code{__dup_} id is resolved to its real individual via
+#' \code{duplicateToReal} before being returned.
+#'
+#' @param layout the return value of \code{makePedigreeMatingLayout(ped,
+#'   edgeStyle = "direct", twinRelations = NULL)} -- a list with
+#'   \code{nodes}, \code{edges} (\code{from}, \code{to}, \code{dashes},
+#'   \code{smooth.type} at minimum), and \code{duplicateToReal}.
+#' @return A list with two data frames, in the SAME shape as
+#'   \code{\link{.extractKinship2Structure}}'s own return value --
+#'   deliberately, so \code{.comparePedigreeStructures()} (Track C) is
+#'   agnostic to which side is which: \code{parentChildEdges} (\code{child},
+#'   \code{parent}, both real individual ids); \code{matePairs}
+#'   (\code{parent1}, \code{parent2}, \code{nChildren} -- one row per
+#'   distinct real-individual mate pair with at least one child, counted
+#'   from the assembled \code{parentChildEdges}, never left \code{NA}).
+#' @noRd
+.extractNprcStructure <- function(layout) {
+  edges <- layout$edges
+  duplicateToReal <- layout$duplicateToReal
+  resolveId <- function(id) {
+    hit <- match(id, names(duplicateToReal))
+    ifelse(is.na(hit), id, unname(duplicateToReal[hit]))
+  }
+
+  isMateEdge <- startsWith(edges$to, "__union_")
+  isDupEdge <- !isMateEdge & edges$dashes &
+    !is.na(edges$smooth.type) & edges$smooth.type == "curvedCW"
+  isChildEdge <- !isMateEdge & !isDupEdge
+
+  mateEdges <- edges[isMateEdge, c("from", "to")]
+  childEdges <- edges[isChildEdge, c("from", "to")]
+
+  # matePairs: group mate edges by the union id they share (`to`) --
+  # exactly 2 per union in this codebase (anchor + non-anchor), but
+  # length < 2L is skipped defensively rather than assumed impossible.
+  mateEdges$parent <- resolveId(mateEdges$from)
+  bySplit <- split(mateEdges$parent, mateEdges$to)
+  matePairs <- do.call(rbind, lapply(names(bySplit), function(unionId) {
+    parents <- bySplit[[unionId]]
+    if (length(parents) < 2L) return(NULL)
+    data.frame(parent1 = parents[[1L]], parent2 = parents[[2L]],
+               unionId = unionId, stringsAsFactors = FALSE)
+  }))
+  if (is.null(matePairs)) {
+    matePairs <- data.frame(parent1 = character(), parent2 = character(),
+                             unionId = character(), stringsAsFactors = FALSE)
+  }
+
+  # parentChildEdges: a union-sourced child edge expands to 2 rows (one per
+  # resolved mate, looked up by unionId); a D5 real/dup-sourced edge passes
+  # through as a single row.
+  isUnionSourced <- startsWith(childEdges$from, "__union_")
+  unionChild <- childEdges[isUnionSourced, ]
+  directChild <- childEdges[!isUnionSourced, ]
+
+  pcFromUnion <- if (nrow(unionChild) > 0L) {
+    matchIdx <- match(unionChild$from, matePairs$unionId)
+    data.frame(child = rep(resolveId(unionChild$to), 2L),
+               parent = c(matePairs$parent1[matchIdx],
+                          matePairs$parent2[matchIdx]),
+               stringsAsFactors = FALSE)
+  } else {
+    data.frame(child = character(), parent = character(),
+               stringsAsFactors = FALSE)
+  }
+  pcFromDirect <- if (nrow(directChild) > 0L) {
+    data.frame(child = resolveId(directChild$to),
+               parent = resolveId(directChild$from),
+               stringsAsFactors = FALSE)
+  } else {
+    data.frame(child = character(), parent = character(),
+               stringsAsFactors = FALSE)
+  }
+  parentChildEdges <- rbind(pcFromUnion, pcFromDirect)
+
+  # nChildren counted from the assembled child edges (plan section 4.2's
+  # own hardening note: "should be counted from parentChildEdges after
+  # assembly, not left NA") -- one union-sourced child edge per child, so
+  # table() on unionChild$from gives exactly nChildren per union.
+  nChildrenByUnion <- table(unionChild$from)
+  matePairs$nChildren <- as.integer(nChildrenByUnion[matePairs$unionId])
+  matePairs$unionId <- NULL
+
+  list(parentChildEdges = parentChildEdges, matePairs = matePairs)
+}

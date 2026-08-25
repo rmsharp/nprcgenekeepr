@@ -82,11 +82,37 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (`test_wordlist_coverage.R`, confirmed via direct grep this session that the flagged word
       `bitSize` originates entirely in `R/shrinkPedigree.R`, not this session's files) / 0 error;
       `lintr::lint_package()` 0 lints on touched files.
-      **A future session should implement Track B** (`docs/planning/
-      pedigree-diagram-kinship2-structural-comparison-plan.md` §4.2) -- `.extractNprcStructure()`
-      plus the D-2 edgeStyle-invariance property test. Strict A→B→C→D dependency order continues:
-      Track B's own tests import Track A's output shape contract. See `PROJECT_LEARNINGS.md`
-      Learning 665/666 and `CHANGELOG.md`.
+      **Track B DONE -- S634 (2026-08-25):** `.extractNprcStructure()` implemented in
+      `R/comparePedigreeStructure.R` (`@noRd`, zero `kinship2` dependency) exactly per plan §3.2
+      (hardened/vectorized, not the plan's own illustrative loop version -- `nChildren` counted
+      from the assembled `parentChildEdges`, never left `NA`), via full strict TDD (RED: 7
+      `test_that()` blocks across 5 fixtures -- 7-subject/2-mating [reused from Track A], the
+      9-subject Track C dogleg fixture [duplicates + a real consanguineous union], a D5
+      single-known-parent fixture, a hand-built founder-only layout, plus 2 D-2 edgeStyle-
+      invariance property tests -- confirmed failing for the right reason; GREEN: passed clean on
+      the first implementation, no bug found this time; REFACTOR: skipped by choice -- the
+      apparent duplication between `.extractNprcStructure()` and the test-file-only rectilinear-
+      side walker is deliberate, not accidental, per plan §4.2's own "separately-implemented"
+      requirement -- factoring it out would let a shared-logic bug silently pass the invariance
+      test on both sides). **The D-2 edgeStyle-invariance property test's own second
+      implementation** (`.extractNprcStructureFromWaypoints()`, test-file-local, walks
+      `__drop_`/`__bar_`/`__proj_`/`__jog_` waypoint chains via jog-collapse + waypoint connected-
+      components + edge-direction classification) was empirically prototyped and verified in
+      `scratchpad/` against the 9-subject fixture AND the real 375-individual bundled fixture
+      (confirmed exercising real `__proj_`/`__jog_` waypoints, not just the small fixtures' D1
+      chains) BEFORE being written into RED -- D-2's invariance claim holds on both. Verified:
+      `devtools::check()` and full clean regression, both confirmed matching Track A's own
+      pre-existing baseline (see `CHANGELOG.md`); `lintr::lint_package()` 0 lints (fixed 2
+      `string_boundary_linter` hits, `grepl("^__union_", ...)` → `startsWith(..., "__union_")`).
+      **Incidental finding, filed not fixed:** `makePedigreeMatingLayout()` crashes on any
+      pedigree with zero total parent-child edges (e.g. all-founder input) --
+      [issue #164](https://github.com/rmsharp/nprcgenekeepr/issues/164).
+      **A future session should implement Track C** (`docs/planning/
+      pedigree-diagram-kinship2-structural-comparison-plan.md` §4.3) -- `.comparePedigreeStructures()`
+      + the new D-7 crossing-duplication fixture + live-kinship2 end-to-end tests against the
+      Track-C fixture, the D-7 fixture, and the real 375-individual fixture (D-8). Strict
+      A→B→C→D dependency order continues: Track C directly calls both Track A's and Track B's
+      extractors. See `CHANGELOG.md`.
 
 ## Active
 - [x] **Pedigree Diagram: consider hiding the mating-unit node marker to match kinship2's
