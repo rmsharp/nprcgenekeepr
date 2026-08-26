@@ -17,6 +17,63 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-26 · \[BL-N\] S638: root-cause and fix the `checking for detritus in the temp directory` NOTE (`org.chromium.Chromium.*`, all 3 `ubuntu-latest` legs)
+
+- **Deliverable:** `BACKLOG.md` item found S636, confirmed reproducing
+  S637 (“root cause not yet diagnosed”). Root cause:
+  `tests/testthat/helper-live-render-positions.R`’s
+  `getLiveRenderedPositions()` closed only the `ChromoteSession` it
+  creates, never the parent
+  [`chromote::default_chromote_object()`](https://rstudio.github.io/chromote/reference/default_chromote_object.html)
+  singleton – so the underlying Chrome subprocess was only ever
+  hard-killed by `processx`’s `supervise = TRUE` parent-exit mechanism,
+  never given a chance to run Chromium’s own
+  `ProcessSingleton::Cleanup()`, leaving its
+  `SingletonCookie`/`SingletonSocket` lock directory
+  (`org.chromium.Chromium.<random>` on CI’s unbranded build) behind in
+  the shared OS temp root. Confirmed via direct chromote 0.5.1 source
+  inspection and a local reproduction (a disposable subprocess mimicking
+  the helper’s exact pattern, before/after temp-dir diff) – reproduces
+  identically on macOS/branded Chrome, confirming the mechanism is
+  platform-generic, not CI-specific. Fix: register a ONE-TIME,
+  session-teardown-scoped graceful close
+  (`withr::defer(chromeParent$close(), envir = testthat::teardown_env())`)
+  on the helper’s first call, guarded to register exactly once across
+  its 3 call sites – no change to Chrome-launch count/timing. New
+  structural regression guard:
+  `tests/testthat/ test_helper_live_render_positions_teardown.R`
+  (matches `test_helper_live_render_positions_timeout.R`’s house style;
+  a supplementary live mechanism-proof test was prototyped, worked in
+  every standalone repro, but proved flaky specifically inside
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+  sandbox subprocess and never exercised this fix’s own code path –
+  dropped rather than chased further, owner-directed). Verified
+  empirically against the real caller: ran
+  `test_positionMatingUnitForest.R` (the only real usage, 3 call sites)
+  end-to-end as a standalone subprocess, 0 leftover temp-dir entries
+  before vs. after; a real
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  run’s “checking for detritus in the temp directory” step reported a
+  bare `OK` for the first time. Full clean regression 0 failed/0 error;
+  `lintr::lint_package()` 0 lints. Incidentally found, not chased (filed
+  to `BACKLOG.md` instead): `ubuntu-latest (oldrel-1)` failing at the
+  `setup-r@v2` step itself (a `sudo`/R-installer infra error, unrelated
+  to this fix). See `PROJECT_LEARNINGS.md` Learning 671. Commits:
+  `cc8d617e` (claim), `03e3bd52` (fix).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-26 · \[ad hoc\] S638: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S636 precedent)
+
+- **Deliverable:** Phase 0 reconcile found `dec55f20` (S637’s close-out
+  commit, writing the final `HANDOFFS.md` receipt + `SESSION_NOTES.md`)
+  past the `CHANGELOG.md` frontier with no ledger entry — the same
+  self-reference gap this project’s precedent already names (a close-out
+  commit cannot cite its own sha at write time). Fixed the S637
+  receipt’s `commit:` field to add `dec55f20` (commit `ce396c87`), and
+  this entry logs that fix commit itself, per the established two-step
+  pattern. Commit: `ce396c87`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · \[BL-N\] S637: fix R-CMD-check.yaml CI break to a genuinely clean 0/0/0 baseline
 
 - **Deliverable:** owner-directed “broader” scope (a clean baseline, not

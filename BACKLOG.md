@@ -40,28 +40,6 @@ actually installed in CI – Track C’s 6
 failures anywhere (grepped the full run log for `FAIL` – none). See
 `PROJECT_LEARNINGS.md` Learning 670.
 
-**`checking for detritus in the temp directory` NOTE on `ubuntu-latest`
-(all 3 legs: `release`/ `oldrel-1`/`devel`)** (found S636 as a
-single-platform occurrence, confirmed reproducing on all 3 ubuntu legs
-S637, 2026-08-26, Effort unknown – root cause not yet diagnosed). A
-leftover `org.chromium.Chromium.<random>` file/dir in R’s temp
-directory, almost certainly a Chromium singleton/lock artifact from
-chromote’s browser session during the live-render/diagram tests. Does
-not fail CI (NOTEs don’t trip `error-on: "warning"`), and has never been
-diagnosed – deliberately not chased S637 (owner-directed via
-`AskUserQuestion`: fix the 2 fully-diagnosed, deterministic issues above
-now, defer this unreproduced-at-the-time finding separately) – now
-confirmed reproducible on demand (all 3 ubuntu legs, 2 consecutive
-runs), so a future session should be able to root-cause it directly
-rather than treat it as a rare flake. Likely candidate: a
-chromote/`ChromoteSession` not calling `$close()` in some test’s
-teardown, leaving Chromium’s own temp lock file behind when R CMD
-check’s own temp-dir scan runs. Start with the live-render/
-screenshot-driving tests
-(`tests/testthat/helper-live-render-positions.R`,
-`data-raw/kinship2FidelityValidation.R`’s `screenshot_layout()`) and
-confirm whether each opened session is explicitly closed.
-
 **`test-coverage.yaml` fails intermittently on the known chromote
 Chrome-launch flake – never received the Chrome-provisioning fix
 `R-CMD-check.yaml`/`R-CMD-check-scheduled.yaml` both have** (found S637,
@@ -97,6 +75,21 @@ WARNING/`vignettes/figure` NOTE fix above), so flagged rather than
 folded in, per the established “report, don’t fix mid-session” precedent
 for an incidentally-discovered, unrelated gap (`PROJECT_LEARNINGS.md`
 Learning 382).
+
+**`R-CMD-check.yaml`’s `ubuntu-latest (oldrel-1)` leg failed at the
+`setup-r@v2` step itself, before any package code ran** (found S638,
+2026-08-26, incidental to watching CI while root-causing the
+temp-detritus NOTE – not chased, Effort unknown). One real CI run
+(`32930961617`, the S637 close-out commit) showed
+`ubuntu-latest (oldrel-1)` failing with
+`Failed to get R oldrel-1: Failed to get R 4.5.3: Failed to install R: Error: The process '/usr/bin/sudo' failed with exit code 100`
+– a GitHub Actions R-installer/`sudo`-level infrastructure error, not
+anything in this package’s own code, tests, or dependencies. The other 4
+legs (`macos-latest`, `ubuntu-latest release`/`devel`, `windows-latest`)
+all completed `success` on the identical commit. Not investigated
+further this session (unrelated to the temp-detritus fix being pursued);
+a future session should check whether this reproduces on a re-run before
+treating it as more than a one-off transient runner/apt flake.
 
 **Build a real structural/topological pedigree-diagram comparison
 algorithm against kinship2 – the current “comparison” is 2 static images

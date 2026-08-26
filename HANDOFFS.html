@@ -141,6 +141,20 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <p><strong>Archived 17 record(s), 2026-08-12 → 2026-08-13</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-13.html"><code>docs/archive/HANDOFFS-through-2026-08-13.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p><strong>Archived 21 record(s), 2026-08-13 → 2026-08-14</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-14.html"><code>docs/archive/HANDOFFS-through-2026-08-14.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p>This file currently holds <strong>18</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
+<pre class="handoff"><code>session: S638
+date: 2026-08-26
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Root-cause the org.chromium.Chromium.* temp-detritus NOTE in R CMD check, now
+  reproducing on all 3 ubuntu-latest legs (found S636, confirmed S637).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending</code></pre>
 <pre class="handoff"><code>session: S637
 date: 2026-08-26
 status: complete
@@ -189,7 +203,7 @@ runtime_smoke: CI-workflow fix, live-verified on the actual GitHub Actions runne
   matrix platforms (the equivalent "runtime" for this deliverable) -- not a local build-only check.
 changelog_ref: 2026-08-26 S637 entry, CHANGELOG.md ("fix R-CMD-check.yaml CI break to a genuinely
   clean 0/0/0 baseline")
-commit: 2224d1ec</code></pre>
+commit: 2224d1ec (BACKLOG.md/CHANGELOG.md), dec55f20 (close-out: this receipt + SESSION_NOTES.md)</code></pre>
 <p>Predecessor (S636) scored 7/10: correctly framed the DECISION NEEDED gate and the CI-break convention (both directly used this session), but its own 4 candidate fixes all missed the actual, simpler root cause (kinship2 undeclared in DESCRIPTION) – a real content gap, not just an unknowable one, since the same devtools::check() output S636 already had in hand names exactly “unstated dependencies,” a direct pointer to checking DESCRIPTION first.</p>
 <p>Self-score breakdown (8/10): +1 did not trust the predecessor’s candidate list, grepped DESCRIPTION directly and found the real root cause; +1 distinguished CI-real findings from local-only clutter by direct comparison against the actual failed CI job log rather than assumption; +1 proactively flagged the Suggests-declaration’s CI-behavior consequence (skip-to-run flip) before pushing, matching the project’s own “re-present a trade-off once known” discipline; +1 followed strict TDD with an explicit AskUserQuestion gate at every phase transition; +1 live-verified via direct per-platform log inspection (not the abbreviated summary), which is what surfaced the detritus NOTE’s wider reproduction; +1 found 2 more real, unrelated findings and correctly deferred both to BACKLOG.md rather than folding them in; +1 clean checkpoint commits, full verification suite, complete close-out artifacts. -1 the CI-watch phase (~20+ min) was foreseeable but not flagged as an expected cost before pushing; initial scope framing needed the owner’s clarifying question to reach the accurate CI-vs-local distinction rather than arriving there unprompted.</p>
 <pre class="handoff"><code>session: S636

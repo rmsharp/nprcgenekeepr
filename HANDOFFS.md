@@ -172,6 +172,23 @@ This file currently holds **18** receipt(s). Computed by
 hand-maintained.
 
 ``` handoff
+session: S638
+date: 2026-08-26
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Root-cause the org.chromium.Chromium.* temp-detritus NOTE in R CMD check, now
+  reproducing on all 3 ubuntu-latest legs (found S636, confirmed S637).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+``` handoff
 session: S637
 date: 2026-08-26
 status: complete
@@ -220,7 +237,7 @@ runtime_smoke: CI-workflow fix, live-verified on the actual GitHub Actions runne
   matrix platforms (the equivalent "runtime" for this deliverable) -- not a local build-only check.
 changelog_ref: 2026-08-26 S637 entry, CHANGELOG.md ("fix R-CMD-check.yaml CI break to a genuinely
   clean 0/0/0 baseline")
-commit: 2224d1ec
+commit: 2224d1ec (BACKLOG.md/CHANGELOG.md), dec55f20 (close-out: this receipt + SESSION_NOTES.md)
 ```
 
 Predecessor (S636) scored 7/10: correctly framed the DECISION NEEDED
