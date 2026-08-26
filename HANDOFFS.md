@@ -184,7 +184,7 @@ runtime_smoke: CI-workflow fix, live-verified on the actual GitHub Actions runne
   matrix platforms (the equivalent "runtime" for this deliverable) -- not a local build-only check.
 changelog_ref: 2026-08-26 S637 entry, CHANGELOG.md ("fix R-CMD-check.yaml CI break to a genuinely
   clean 0/0/0 baseline")
-commit: 2224d1ec
+commit: 2224d1ec (BACKLOG.md/CHANGELOG.md), dec55f20 (close-out: this receipt + SESSION_NOTES.md)
 ```
 Predecessor (S636) scored 7/10: correctly framed the DECISION NEEDED gate and the CI-break
 convention (both directly used this session), but its own 4 candidate fixes all missed the actual,
