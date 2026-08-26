@@ -107,12 +107,52 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Incidental finding, filed not fixed:** `makePedigreeMatingLayout()` crashes on any
       pedigree with zero total parent-child edges (e.g. all-founder input) --
       [issue #164](https://github.com/rmsharp/nprcgenekeepr/issues/164).
-      **A future session should implement Track C** (`docs/planning/
-      pedigree-diagram-kinship2-structural-comparison-plan.md` §4.3) -- `.comparePedigreeStructures()`
-      + the new D-7 crossing-duplication fixture + live-kinship2 end-to-end tests against the
-      Track-C fixture, the D-7 fixture, and the real 375-individual fixture (D-8). Strict
-      A→B→C→D dependency order continues: Track C directly calls both Track A's and Track B's
-      extractors. See `CHANGELOG.md`.
+      **Track C DONE -- S635 (2026-08-25):** `.comparePedigreeStructures()` implemented in
+      `R/comparePedigreeStructure.R` (`@noRd`, zero `kinship2` dependency) exactly per plan §3.3
+      (canonicalized, order-independent set-diff both directions), via full strict TDD (RED: 5 pure
+      unit tests on hand-built structures -- return shape, order-independence, parentChildEdges-
+      only-in-A/B, matePairs-only-in-A/B incl. an `nChildren` mismatch, zero-row founder-only case
+      -- confirmed failing for the right reason; GREEN: passed clean on the first implementation, 1
+      `brace_linter` style fix; REFACTOR: skipped by choice, already minimal, matching Track A/B's
+      own precedent). `toKinship2Pedigree()` (D-5's sire/dam-reversal auto-swap) +
+      `compareAgainstKinship2()` orchestration live in a NEW `tests/testthat/
+      helper-comparePedigreeStructure.R` -- a deliberate deviation from plan §3.4's literal
+      "`data-raw/kinship2FidelityValidation.R`" placement (that script has hard top-level
+      `chromote`/`htmlwidgets` `stop()`s that would break sourcing it from a test), matching the
+      project's own established `data-raw/fgSEValidation.R` + `tests/testthat/
+      helper-fgSEValidation.R` split instead -- owner-approved at the PRE-RED gate.
+      **New D-7 fixture** (a 10-subject double-cross-marriage between two founder sibships,
+      Family A's A1×B2 + Family B's A2×B1) empirically confirmed, by directly reading kinship2's
+      own unexported `alignped1`/`alignped2`/`alignped3` source (a full local literate-programming
+      checkout, not just the installed binary -- see `PROJECT_LEARNINGS.md` Learning 667), to
+      trigger kinship2's real crossing-driven duplication of single-mate individual A1 at plot time
+      (`align.pedigree()$nid`: A1's row-index placed at 2 columns of one generation row) -- while
+      `makePedigreeMatingLayout()`'s own `duplicateToReal` never duplicates A1, proving D-1's
+      "resolved by construction" claim empirically, not merely assumed. **D-8 (toy AND real scale):
+      live-kinship2 end-to-end tests pass `identical = TRUE`** on the existing 9-subject Track-C
+      fixture, the new D-7 fixture, AND the real 375-individual bundled fixture -- a clean pass on
+      the real fixture, itself a genuine finding worth reporting per D-8's own framing (no
+      discrepancy found, not silently assumed).
+      **New consequence, presented and owner-accepted (not silently absorbed):**
+      `devtools::check()` gained a 2nd, permanent WARNING ("unstated dependencies in tests:
+      kinship2") -- Track C's tests are the only ones in the codebase with a REAL executable
+      `kinship2::`/`kinship2:::` call (confirmed by grep; `test_kinship.R`/`test_shrinkPedigree.R`
+      only mention kinship2 in comments/descriptions, never as code, per plan §1.5's own
+      hardcoded-values design). Accepted as a documented, deliberate trade-off for genuine ongoing
+      regression protection (vs. a one-time hardcoded-value check) -- see `PROJECT_LEARNINGS.md`
+      Learning 667. Verified: `devtools::check()` 0 errors / 2 WARNINGs (1 pre-existing non-portable
+      filename + this new one) / 2 NOTEs (both pre-existing); full clean regression 1 pre-existing
+      failure (`test_wordlist_coverage.R`, same known baseline) / 0 error; `lintr::lint_package()`
+      0 lints on touched files. **CI skip-vs-run behavior to be visually confirmed once pushed**
+      (plan §5's own requirement) -- not yet done as of this entry.
+      **A future session should implement Track D** (`docs/planning/
+      pedigree-diagram-kinship2-structural-comparison-plan.md` §4.4) -- port the `$go_to()` fix
+      (`PROJECT_LEARNINGS.md` Learning 643) into `data-raw/kinship2FidelityValidation.R`'s
+      `screenshot_layout()`, regenerate every Track B/C image, run Track C's new comparator against
+      the vignette's own Track B/C fixtures specifically, and remove the S631 caveats from both
+      `vignettes/articles/kinship2-fidelity-validation.qmd` and `docs/planning/
+      pedigree-diagram-kinship2-reference-comparison.qmd` only if that comparison supports it (a
+      real discrepancy staying uncaught is a correct outcome, not a failure). See `CHANGELOG.md`.
 
 ## Active
 - [x] **Pedigree Diagram: consider hiding the mating-unit node marker to match kinship2's

@@ -16,6 +16,38 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S635: implement Track C of the kinship2 structural-comparison plan (`.comparePedigreeStructures()`)
+- **Deliverable:** `R/comparePedigreeStructure.R` — `.comparePedigreeStructures(a, b)`, a new
+  zero-`kinship2`-dependency internal (`@noRd`) function implementing `docs/planning/
+  pedigree-diagram-kinship2-structural-comparison-plan.md` §3.3/§4.3 (canonicalized,
+  order-independent set-diff of two `list(parentChildEdges, matePairs)` structures, agnostic to
+  which side is kinship2 vs. nprcgenekeepr). New `tests/testthat/helper-comparePedigreeStructure.R`
+  holds `toKinship2Pedigree()` (D-5's sire/dam-reversal auto-swap) and `compareAgainstKinship2()`
+  orchestration — genuinely `kinship2`-dependent, `requireNamespace()`-guarded, deliberately placed
+  outside `R/` and outside the plan's literal `data-raw/kinship2FidelityValidation.R` suggestion
+  (owner-approved deviation at the PRE-RED gate, matching the project's own established
+  `data-raw/fgSEValidation.R` + `tests/testthat/helper-fgSEValidation.R` split). New D-7
+  crossing-duplication fixture (10 subjects, a double cross-marriage between two founder sibships)
+  empirically confirmed, via direct inspection of kinship2's own unexported `alignped1`/`alignped2`/
+  `alignped3` source, to trigger kinship2's real single-mate plot-time duplication (dragon 1, plan
+  §1.3) — see `PROJECT_LEARNINGS.md` Learning 667. Full strict TDD (RED: 5 pure comparator unit
+  tests confirmed failing for the right reason — `could not find function
+  ".comparePedigreeStructures"`; GREEN: passed clean on the first implementation, 1
+  `brace_linter` style fix; REFACTOR: skipped by choice, already minimal). Live-kinship2
+  end-to-end tests confirm `identical = TRUE` on the existing 9-subject Track-C fixture, the new
+  D-7 fixture, and the real 375-individual bundled fixture (D-8 toy-and-real-scale discipline) — a
+  clean pass on all three, reported as a finding, not silently assumed. Verified: `devtools::check()`
+  0 errors / 2 WARNINGs (1 pre-existing non-portable filename + 1 new "unstated dependencies in
+  tests: kinship2" — Track C's tests are the only real executable `kinship2::`/`kinship2:::` calls
+  in the codebase; accepted as a documented trade-off for genuine ongoing regression protection,
+  owner-confirmed once the concrete WARNING count was in hand, per `PROJECT_LEARNINGS.md`
+  Learning 667) / 2 NOTEs (both pre-existing); full clean regression 1 pre-existing failure
+  (`test_wordlist_coverage.R`, same known baseline) / 0 error; `lintr::lint_package()` 0 lints on
+  touched files. `BACKLOG.md`'s top item updated: Track C marked DONE, Track D (port the
+  `$go_to()` chromote fix, regenerate images, remove the S631 caveats if the comparator supports
+  it) named as next pickup.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25 · [ad hoc] S634: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S633 precedent)
 - **Deliverable:** logging this session's own `HANDOFFS.md` receipt `commit` field fix (deliverable
   `b52f2058` → deliverable + close-out `b52f2058 (deliverable), af67682b (close-out)`) as its own

@@ -18,44 +18,163 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 634 Handoff Evaluation (by Session 635)
+**Score: 9/10.** **What helped:** `next_steps`/`active_task` named exactly what this session did
+("Track C (`.comparePedigreeStructures()` + D-7 fixture + live-kinship2 tests) is the next pickup")
+and the strict A→B→C→D order was reinforced again, unmodified. `key_files` and `gotchas` were both
+directly useful: gotcha (1)'s restatement of plan §3.3/§3.4/§4.3's scope was used as the literal
+task list; gotcha (2)'s D-8 framing ("a non-empty diff on the real fixture is a genuine finding to
+report, not silently reconcile") was applied directly -- this session's real fixture run came back
+`identical = TRUE`, reported as the mirror-image good-news finding, not silently assumed; gotcha (4)
+("CI will skip Track C's live-kinship2 tests... confirm this visually once") was actionable and is
+carried forward below, still pending a push; gotcha (6) (use `run_in_background: true` directly, no
+nested `&`) was followed correctly this session with no repeat of S634's own process hiccup.
+**What was missing:** gotcha (1) repeated the plan's own literal text that `toKinship2Pedigree()`/
+the orchestration wrapper should live in `data-raw/kinship2FidelityValidation.R`, without flagging
+that this specific file has hard top-level `chromote`/`htmlwidgets` `requireNamespace()` `stop()`s
+that make it unsourceable from a test -- a real, if minor, gap this session had to discover and
+route through its own `AskUserQuestion` gate. This is a fair, non-culpable gap: S634 was scoped to
+Track B and had no obligation to pre-verify Track C's own file-placement mechanics; the plan itself
+(S632) is the more natural place this should have been caught, and even a careful re-read of the
+plan's prose alone would not surface it -- it only became visible by actually trying to write a
+test that sources the named file. **What was wrong:** nothing found inaccurate. **ROI:** high -- the
+scope/ordering guidance was used directly and correctly; the one gap cost a single extra
+`AskUserQuestion` round-trip, not real rework.
+
 ### What Session 635 Did
-**Deliverable:** Implement Track C of `docs/planning/pedigree-diagram-kinship2-structural-
-comparison-plan.md` (section 4.3) -- `.comparePedigreeStructures()`, `toKinship2Pedigree()` +
-`compareAgainstKinship2()` orchestration, a new D-7 crossing-duplication fixture, and live-kinship2
-end-to-end tests against the Track-C fixture, the new D-7 fixture, and the real 375-individual
-bundled fixture (D-8). (IN PROGRESS)
-**Started:** 2026-08-25.
-**Status:** Session claimed. Phase 0 orientation done (owner picked this item via `AskUserQuestion`
-priorities list). Research/prototyping done in `scratchpad/` BEFORE this claim (matching S634's own
-precedent): re-read the plan's Track C sections (1.1-1.5, 2, 3.3/3.4, 4.3) in full; re-read the
-existing Track A/B implementation (`R/comparePedigreeStructure.R`) and test file
-(`tests/testthat/test_comparePedigreeStructure.R`) in full. Prototyped and empirically verified
-`.comparePedigreeStructures()` (canonicalized set-diff both directions) against hand-built
-structures. Prototyped `toKinship2Pedigree()` (D-5's auto-swap-reversed-sire/dam helper) and
-verified it against the existing Track-C 9-subject fixture's known C2 reversal case. **Found and
-verified a working D-7 fixture** (`scratchpad/explore_d7_v2.R` Candidate 5): a 10-subject
-double-cross-marriage pedigree (2 founder-family sibships, A1xB2 and A2xB1) that empirically,
-directly confirmed via `kinship2:::align.pedigree()`'s own `$nid` matrix, duplicates single-mate
-individual A1 at plot time (dragon 1, plan section 1.3) -- while `makePedigreeMatingLayout()`'s own
-`duplicateToReal` never duplicates A1 (confirmed empty), and the full
-`compareAgainstKinship2()` pipeline still reports `identical = TRUE` on this fixture -- proving D-1's
-"resolved by construction" claim empirically, not just reasoning about it (Learning 596 discipline).
-**Also ran the full pipeline against the real 375-individual bundled fixture as a prototype dry run
-(D-8): `identical = TRUE`, a clean pass** -- reported here as a genuine finding per D-8's own "a
-non-empty diff is a finding to report, not silently reconcile" framing (a clean pass is the
-mirror-image good-news finding, not silently assumed).
-**Design decision surfaced for owner approval (not yet in the ratified plan):** `toKinship2Pedigree()`
-and `compareAgainstKinship2()` are genuine `kinship2`-dependent functions the plan's own section 3.4
-says should live in `data-raw/kinship2FidelityValidation.R` -- but that file has hard top-level
-`requireNamespace()` `stop()` calls for `chromote`/`htmlwidgets` that would break sourcing it from a
-test. Recommending the established `data-raw/fgSEValidation.R` + `tests/testthat/helper-
-fgSEValidation.R` precedent instead: a new `tests/testthat/helper-comparePedigreeStructure.R`
-(auto-loaded by testthat, real per-function test coverage, reused later by
-`data-raw/kinship2FidelityValidation.R` via `source()` when Track D lands) -- routed to the owner via
-`AskUserQuestion` before RED.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Implemented **Track C** of `docs/planning/pedigree-diagram-kinship2-structural-
+comparison-plan.md` (§3.3/§3.4/§4.3) -- `.comparePedigreeStructures()` in `R/`, `toKinship2Pedigree()`
++ `compareAgainstKinship2()` orchestration in a new testthat helper, a new D-7 crossing-duplication
+fixture, and live-kinship2 end-to-end tests against the Track-C fixture, the D-7 fixture, and the
+real 375-individual bundled fixture (D-8). **DONE**, full strict TDD (RED→GREEN, REFACTOR skipped
+by owner-approved choice). **Started/Completed:** 2026-08-25 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): clean tree except the same pre-classified untracked
+   artifacts S633/S634 already checked (no ghost session -- last commit `bfcef69c`, same day,
+   continuous with this session). Ledger frontiers current (`CHANGELOG.md` at HEAD; `HANDOFFS.md`
+   one commit behind, but that gap was itself the established self-reference-workaround pattern, not
+   an unrecorded action). CI green (10/10 `completed success`). Dashboard 96/100, 1 HIGH risk
+   (carried-forward FM #28 finding, not acted on). Rendered the priorities list (4 numbered items)
+   via `AskUserQuestion`; owner picked "Track C: kinship2 structural comparison."
+2. **Re-read the plan's Track C sections in full** (§1.1-1.5, §2, §3.3/§3.4, §4.3) plus the existing
+   Track A/B implementation (`R/comparePedigreeStructure.R`) and test file
+   (`tests/testthat/test_comparePedigreeStructure.R`) in full.
+3. **Prototyped and empirically verified everything BEFORE writing RED** (`scratchpad/
+   prototype_trackC.R`, `explore_d7_duplication.R`, `explore_d7_v2.R`): `.comparePedigreeStructures()`
+   against hand-built structures; `toKinship2Pedigree()` against the existing Track-C fixture's known
+   C2 reversal; and, hardest, a NEW D-7 fixture. 6 hand-guessed candidates (including a literal
+   full-sibling-marriage case, the closest reading of the plan's one textual hint) all failed to
+   reproduce kinship2's own crossing-driven single-mate duplication. Found the real mechanism only
+   by reading kinship2's actual unexported source from a local literate-programming checkout
+   (`~/Documents/Development/R/r_workspace/kinship2/noweb/*.Rnw`) -- traced it to `spouselist`
+   consumption order across `align.pedigree()`'s top-level `founders` loop -- then predicted and
+   confirmed, on the first subsequent attempt, that a "double cross-marriage between two founder
+   sibships" duplicates one member (candidate 5). Directly verified via `align.pedigree()$nid`
+   (`[5,6,7,5,8]`, A1's index appearing at 2 columns). Ran the full `compareAgainstKinship2()`
+   pipeline against this fixture, the existing 9-subject Track-C fixture, AND the real 375-individual
+   bundled fixture: `identical = TRUE` on all three. See `PROJECT_LEARNINGS.md` Learning 667.
+4. **Claimed the session** (1B stub + `HANDOFFS.md` pending receipt, commit `e8babfb4`).
+5. **PRE-RED→RED gate** (`AskUserQuestion`): proposed the verified design, INCLUDING a scope/approach
+   deviation -- `toKinship2Pedigree()`/`compareAgainstKinship2()` live in a NEW
+   `tests/testthat/helper-comparePedigreeStructure.R`, not literally inside
+   `data-raw/kinship2FidelityValidation.R` as plan §3.4's text says, because that script's own hard
+   `chromote`/`htmlwidgets` `stop()`s would break sourcing it from a test -- matching the project's
+   own established `data-raw/fgSEValidation.R` + `tests/testthat/helper-fgSEValidation.R` split
+   instead. Owner approved the recommended option.
+6. **RED:** appended 10 `test_that()` blocks to `test_comparePedigreeStructure.R` (5 pure
+   `.comparePedigreeStructures()` unit tests; 2 `toKinship2Pedigree()` unit tests; 3 live-kinship2
+   end-to-end tests) plus the new D-7 fixture, and wrote `helper-comparePedigreeStructure.R` in full
+   (test scaffolding, not the tracked deliverable -- matching Track B's own precedent for the
+   rectilinear waypoint walker). Ran -- confirmed the 5 pure tests + 3 end-to-end tests fail with
+   `could not find function ".comparePedigreeStructures"`/`object '.comparePedigreeStructures' not
+   found` (the correct reason); the 2 `toKinship2Pedigree()` tests and the D-7-duplication-confirming
+   test passed cleanly (scaffolding, correctly not under this track's own RED/GREEN cycle).
+7. **RED→GREEN gate** (`AskUserQuestion`): approved.
+8. **GREEN:** wrote `.comparePedigreeStructures()` in `R/comparePedigreeStructure.R`, exactly the
+   verified prototype algorithm (canonicalize both sides, vectorized set-diff both directions).
+   Passed clean on the first run.
+9. **GREEN→REFACTOR gate** (`AskUserQuestion`): presented the honest assessment that no
+   restructuring is needed (already minimal, matches the prototype, no duplication with Track A/B's
+   structurally-different extractors) -- owner chose to skip REFACTOR, matching Track A/B's own
+   precedent for the same reason.
+10. **Lint fix:** `lintr::lint_package()` (loaded via `pkgload::load_all()` first) found 1
+    `brace_linter` hit (a multi-line function body without curly braces), fixed, re-ran clean.
+11. **Full verification, run properly in background this time** (`run_in_background: true` directly,
+    no nested `&` -- applying S634's own gotcha (6)): full clean regression 1 pre-existing failure
+    (`test_wordlist_coverage.R`, same known baseline) / 0 error / 39 warnings / 6436 passed (up from
+    Track B's 6395 baseline). `devtools::check()`: **0 errors, but 2 WARNINGs** (up from Track A/B's
+    1) -- a NEW "unstated dependencies in tests: kinship2" WARNING.
+12. **Found and presented a genuine, unanticipated consequence before finalizing:** confirmed by
+    grep that Track C's tests are the ONLY files anywhere in `tests/` with a REAL executable
+    `kinship2::`/`kinship2:::` call (`test_kinship.R`/`test_shrinkPedigree.R` only mention kinship2
+    in comments/test-description strings, per plan §1.5's hardcoded-values design) -- this is a
+    purely syntactic `R CMD check` consequence the plan's own §1.5 could not have anticipated before
+    the code existed. Presented 3 options via `AskUserQuestion` (accept & document / avoid via
+    indirect namespace dispatch / hold pending a CRAN-status check); owner picked "accept and
+    document," matching this project's existing posture (the pre-existing non-portable-filename
+    WARNING has been carried unfixed for many sessions as a known baseline item). See
+    `PROJECT_LEARNINGS.md` Learning 667 for the full write-up of both this and the D-7 discovery
+    method.
+13. **Updated `BACKLOG.md`'s top item**: Track C marked DONE with verification detail and the
+    WARNING decision; next pickup named as Track D. Added `PROJECT_LEARNINGS.md` Learning 667;
+    updated `CLAUDE.md`'s learnings-count pointer (666→667 learnings, Sessions 1-635+).
+14. **Close-out** (this write-up). **CI skip-vs-run behavior for Track C's live-kinship2 tests is
+    NOT YET visually confirmed** (plan §5's own requirement) -- this session's commits have not been
+    pushed as of this write-up; see gotchas below.
+
+**Self-assessment (Session 635): 9/10.** **Strengths:** (1) when 6 hand-guessed D-7 fixture
+candidates all failed, switched from "guess and check" to reading the dependency's actual unexported
+source from a local literate-programming checkout, rather than continuing to iterate blindly or
+giving up on empirical proof -- this is exactly the discipline the plan's own D-7/Learning 596 asked
+for, applied under real difficulty, not just on the easy first attempt; (2) found and transparently
+surfaced a genuine, previously-unanticipated `devtools::check()` consequence (the new kinship2
+WARNING) BEFORE finalizing verification, with the exact grep evidence distinguishing it from
+pre-existing kinship2 mentions, rather than either silently accepting a worse baseline or silently
+hiding it; (3) correctly distinguished test-scaffolding functions (`toKinship2Pedigree()`,
+matching Track B's rectilinear walker precedent) from the tracked TDD deliverable
+(`.comparePedigreeStructures()`), so RED correctly failed only for the right function; (4) applied
+S634's own handoff gotcha about background-task discipline correctly on the first attempt, with no
+repeat of the prior session's process hiccup. **Weaknesses:** (1) the D-7 fixture search itself cost
+real time (6 failed candidates before finding the local kinship2 source checkout) -- a faster path
+might have been checking for a local dependency source checkout FIRST, before hand-guessing
+candidates from the vaguer `.Rnw` comment hint alone; (2) as of this write-up, the plan's own
+explicit "CI skip-vs-run behavior must be visually confirmed once" requirement is not yet
+discharged -- carried forward as a gotcha rather than completed in-session.
+
+**Key files:** `R/comparePedigreeStructure.R` (`.comparePedigreeStructures()`, new, the deliverable),
+`tests/testthat/test_comparePedigreeStructure.R` (10 new blocks + the `.pedCrossMarriageFixture()`
+D-7 fixture), `tests/testthat/helper-comparePedigreeStructure.R` (new file, `toKinship2Pedigree()` +
+`compareAgainstKinship2()`), `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md`
+§3.3/§3.4/§4.3/§4.4 (Track C's contract; Track D's up next), `PROJECT_LEARNINGS.md` Learning 667 (the
+D-7 discovery method + the WARNING trade-off), `BACKLOG.md` "Up Next" top item (updated, Track C
+DONE / Track D next), `scratchpad/prototype_trackC.R`/`explore_d7_v2.R` (verified prototypes,
+session-local, not committed).
+
+**Gotchas for a future session (Track D, the next pickup):** (1) implement exactly `docs/planning/
+pedigree-diagram-kinship2-structural-comparison-plan.md` §4.4 -- port `PROJECT_LEARNINGS.md`
+Learning 643's `$go_to()` fix into `data-raw/kinship2FidelityValidation.R`'s own
+`screenshot_layout()` helper (currently 2 separate `Page$navigate()`/`Page$loadEventFired()` calls,
+the exact race-condition class already fixed elsewhere), regenerate every Track B/C image, run
+Track C's new `compareAgainstKinship2()` against the vignette's own Track B/C fixtures specifically,
+and remove the S631 caveats from both `vignettes/articles/kinship2-fidelity-validation.qmd` and
+`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` ONLY if that comparison supports
+it -- a real discrepancy staying uncaught (caveats left up) is a correct, valuable outcome per the
+plan's own framing, not something to force past. (2) **CI skip-vs-run behavior for Track C's
+live-kinship2 tests still needs visual confirmation once pushed** (plan §5) -- this session's
+commits are local-only as of close-out; whichever session pushes next should check the
+`R-CMD-check.yaml` run's own test log for a clean `SKIP` on the 3 new end-to-end tests (kinship2
+is absent in CI), not just assume `skip_if_not_installed()` behaves as documented. (3) `Track D`
+may want to reuse `toKinship2Pedigree()` from `tests/testthat/helper-comparePedigreeStructure.R` via
+`source(file.path("tests", "testthat", "helper-comparePedigreeStructure.R"))` inside
+`data-raw/kinship2FidelityValidation.R` itself (matching `data-raw/fgSEValidation.R`'s own established
+`source()` pattern for its paired helper) rather than re-deriving the sire/dam-swap logic a second
+time. (4) The 2nd `devtools::check()` WARNING ("unstated dependencies in tests: kinship2") is now a
+permanent part of this project's baseline going forward -- do not treat it as a new regression to
+fix in a future session; it is the accepted, documented cost of Track C's live-kinship2 design
+(`PROJECT_LEARNINGS.md` Learning 667). (5) The dashboard's HIGH-risk finding (3 files past the FM
+#28 2,000-line read cap) is still open, still not acted on, carried forward again.
+**Score: N/A -- Session 634's handoff evaluated above (9/10).**
 
 ### Session 633 Handoff Evaluation (by Session 634)
 **Score: 9/10.** **What helped:** `next_steps` named exactly what this session did ("Implement

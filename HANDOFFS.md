@@ -138,20 +138,61 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S635
 date: 2026-08-25
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement Track C of docs/planning/pedigree-diagram-kinship2-structural-comparison-
-  plan.md (section 4.3) -- .comparePedigreeStructures(), toKinship2Pedigree() +
-  compareAgainstKinship2() orchestration, a new D-7 crossing-duplication fixture, and live-kinship2
-  end-to-end tests against the Track-C fixture, the D-7 fixture, and the real 375-individual bundled
-  fixture (D-8). Research/prototyping already done in scratchpad/ before this claim.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Track C of docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md
+  (sections 3.3/3.4/4.3) implemented -- .comparePedigreeStructures() + toKinship2Pedigree() +
+  compareAgainstKinship2() + the new D-7 fixture + live-kinship2 end-to-end tests. Full strict TDD
+  (RED->GREEN, REFACTOR skipped by owner-approved choice). Track D (port the $go_to() chromote fix,
+  regenerate images, remove the S631 caveats if the comparator supports it) is the next pickup.
+what_was_done: Wrote R/comparePedigreeStructure.R (.comparePedigreeStructures(), plan section 3.3)
+  and a new tests/testthat/helper-comparePedigreeStructure.R (toKinship2Pedigree() +
+  compareAgainstKinship2(), a deliberate deviation from plan section 3.4's literal
+  data-raw/kinship2FidelityValidation.R placement, owner-approved -- see gotchas). Appended 10
+  test_that() blocks + the new .pedCrossMarriageFixture() (D-7) to
+  tests/testthat/test_comparePedigreeStructure.R. Found D-7's fixture only after 6 hand-guessed
+  candidates failed, by reading kinship2's actual unexported align.pedigree() source from a local
+  literate-programming checkout -- see PROJECT_LEARNINGS.md Learning 667. RED confirmed failing for
+  the right reason (function not found); GREEN passed clean on the first implementation (1
+  brace_linter fix). REFACTOR skipped -- already minimal. Live-kinship2 end-to-end tests report
+  identical = TRUE on the 9-subject Track-C fixture, the new D-7 fixture, AND the real
+  375-individual bundled fixture (D-8) -- a clean pass, reported as a finding. Found and presented a
+  genuine new devtools::check() consequence (a 2nd, permanent "unstated dependencies in tests:
+  kinship2" WARNING) before finalizing verification; owner chose to accept and document it (see
+  PROJECT_LEARNINGS.md Learning 667). Deliverable commit: `57a75044`.
+next_steps: Implement Track D (docs/planning/pedigree-diagram-kinship2-structural-comparison-
+  plan.md section 4.4): port PROJECT_LEARNINGS.md Learning 643's $go_to() fix into
+  data-raw/kinship2FidelityValidation.R's screenshot_layout() helper, regenerate every Track B/C
+  image, run compareAgainstKinship2() against the vignette's own Track B/C fixtures specifically,
+  and remove the S631 caveats from both vignettes/articles/kinship2-fidelity-validation.qmd and
+  docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd ONLY if that comparison supports
+  it. Also: confirm CI skip-vs-run behavior for Track C's 3 live-kinship2 tests once these commits
+  are pushed (plan section 5) -- not yet done as of this receipt.
+key_files: R/comparePedigreeStructure.R:180-244 (.comparePedigreeStructures(), the deliverable),
+  tests/testthat/helper-comparePedigreeStructure.R (new, toKinship2Pedigree()/
+  compareAgainstKinship2()), tests/testthat/test_comparePedigreeStructure.R:552-813 (Track C's 10
+  new blocks + the D-7 fixture), docs/planning/pedigree-diagram-kinship2-structural-comparison-
+  plan.md sections 3.3/3.4/4.3/4.4, PROJECT_LEARNINGS.md Learning 667, BACKLOG.md "Up Next" top
+  item.
+gotchas: (1) toKinship2Pedigree()/compareAgainstKinship2() live in tests/testthat/helper-
+  comparePedigreeStructure.R, NOT data-raw/kinship2FidelityValidation.R as plan section 3.4's text
+  literally says -- that script has hard top-level chromote/htmlwidgets stop()s that break sourcing
+  it from a test; matches the project's own data-raw/fgSEValidation.R + tests/testthat/helper-
+  fgSEValidation.R split instead. Track D should source this helper file from
+  data-raw/kinship2FidelityValidation.R via source(file.path("tests","testthat","helper-
+  comparePedigreeStructure.R")) rather than re-deriving the sire/dam-swap logic again. (2) CI
+  skip-vs-run behavior for Track C's live-kinship2 tests is NOT yet visually confirmed -- these
+  commits are local-only as of this receipt; whichever session pushes next must check the
+  R-CMD-check.yaml run's own test log for a clean SKIP on the 3 new end-to-end tests, not assume it.
+  (3) The devtools::check() WARNING count is now permanently 2 (was 1) -- this is the accepted,
+  documented cost of Track C's live-kinship2 design (PROJECT_LEARNINGS.md Learning 667), do NOT
+  treat it as a new regression to fix. (4) The dashboard's HIGH-risk finding (3 files past the FM
+  #28 2,000-line read cap) is still open, carried forward again, unrelated to this session.
+runtime_smoke: n/a -- .comparePedigreeStructures() is a pure, internal (@noRd), zero-call-site data
+  transformation (confirmed by grep: no call sites outside the test file). No runtime behavior
+  changed to verify.
+changelog_ref: CHANGELOG.md 2026-08-25 S635 entry (`.comparePedigreeStructures()`)
 commit: pending
 ```
 
