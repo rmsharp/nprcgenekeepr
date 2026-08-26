@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 636 Did
+**Deliverable:** Implement Track D of `docs/planning/pedigree-diagram-kinship2-structural-
+comparison-plan.md` (§4.4) -- port the `$go_to()` chromote fix into `data-raw/
+kinship2FidelityValidation.R`'s `screenshot_layout()`, regenerate every Track B/C image, run
+Track C's `.comparePedigreeStructures()` comparator against the vignette's own fixtures, and
+remove the S631 caveats + add a `NEWS.Rmd` entry only if that comparison supports it. (IN
+PROGRESS)
+**Started:** 2026-08-25 (session claimed via this stub).
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 634 Handoff Evaluation (by Session 635)
 **Score: 9/10.** **What helped:** `next_steps`/`active_task` named exactly what this session did
 ("Track C (`.comparePedigreeStructures()` + D-7 fixture + live-kinship2 tests) is the next pickup")

@@ -136,6 +136,26 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S636
+date: 2026-08-25
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Track D of docs/planning/pedigree-diagram-kinship2-structural-comparison-
+  plan.md (section 4.4) -- port the $go_to() chromote fix into data-raw/
+  kinship2FidelityValidation.R's screenshot_layout(), regenerate every Track B/C image, run
+  Track C's .comparePedigreeStructures() comparator against the vignette's own fixtures, and
+  remove the S631 caveats + add a NEWS.Rmd entry only if that comparison supports it.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S635
 date: 2026-08-25
 status: complete
