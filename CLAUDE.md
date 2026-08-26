@@ -489,6 +489,23 @@ cross-checking `gh issue list` against `BACKLOG.md`’s own DONE markers,
 never by the shipping session’s own close-out. See
 `PROJECT_LEARNINGS.md` Learning 475.
 
+**CI-break tracking convention (owner-directed, 2026-08-26, S636):** a
+CI break found live in-session (e.g. a red GitHub Actions run) does
+**not** get its own GitHub issue. Fix it as found if the fix is in scope
+and clear; otherwise defer it to a future session via a `BACKLOG.md` “Up
+Next” item with full root-cause detail — the same place any other undone
+work lives. This is a deliberate contrast with the “GitHub issue
+close-out checklist” directly above: that checklist governs *closing*
+issues tied to shipped `BACKLOG.md` DONE items, not *opening* new ones
+for a CI-health finding. Ratified after S636 filed issue \#165 for a
+newly-discovered `R-CMD-check.yaml` break, then closed it same-session
+per a live owner correction — see `PROJECT_LEARNINGS.md` Learning 669
+for the full incident (a
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+WARNING accepted as a documented trade-off against local tooling turned
+out to also trip CI’s own stricter `error-on: "warning"` gate, the first
+time the introducing commits had ever been pushed).
+
 **Lint close-out checklist (found S477, 2026-08-04):** any session that
 adds or modifies a tracked `.R` file must run `lintr::lint_package()` —
 package loaded first via
@@ -679,7 +696,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–636+; 668 learnings, ~2.6 MB)
+Project institutional memory (Sessions 1–636+; 669 learnings, ~2.6 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget

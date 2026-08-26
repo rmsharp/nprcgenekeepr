@@ -57,6 +57,20 @@
 <div class="section level2">
 <h2 id="id_2026-08">2026-08<a class="anchor" aria-label="anchor" href="#id_2026-08"></a></h2>
 <div class="section level3">
+<h3 id="id_2026-08-26--ad-hoc-s636-record-handoffsmd-receipt-commit-sha-fix-for-the-ci-break-correction-matching-s607s623s629-s635-precedent">2026-08-26 · [ad hoc] S636: record HANDOFFS.md receipt commit-sha fix for the CI-break correction (matching S607/S623/S629-S635 precedent)<a class="anchor" aria-label="anchor" href="#id_2026-08-26--ad-hoc-s636-record-handoffsmd-receipt-commit-sha-fix-for-the-ci-break-correction-matching-s607s623s629-s635-precedent"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> logging this session’s own <code>HANDOFFS.md</code> receipt <code>commit</code> field fix (<code>519a8182</code> content correction, <code>80ffacbf</code> second close-out pass) as its own ledger entry, since the fix commit (<code>613988c6</code>) is itself an action this session took. Commit: <code>613988c6</code>.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2026-08-26--ad-hoc-s636-push-track-a-ds-commits-first-time-discover-and-document-r-cmd-checkyaml-is-red-on-master">2026-08-26 · [ad hoc] S636: push Track A-D’s commits (first time), discover and document R-CMD-check.yaml is red on master<a class="anchor" aria-label="anchor" href="#id_2026-08-26--ad-hoc-s636-push-track-a-ds-commits-first-time-discover-and-document-r-cmd-checkyaml-is-red-on-master"></a></h3>
+<ul><li>
+<strong>Deliverable:</strong> pushed <code>master</code> (owner-approved via <code>AskUserQuestion</code>) — the first time Track A/B/C/D’s commits (31 prior + this session’s) ever reached CI. Confirmed good news first: Track C’s 3 live-kinship2 end-to-end tests skip cleanly on every platform (<code>{kinship2} is not installed (6): ...</code>), exactly as designed — the plan §5 gotcha outstanding since S635 is now resolved. Also discovered, not assumed: <code>R-CMD-check.yaml</code> fails on all 5 matrix jobs, root-caused via direct job-log inspection on 2 platforms to <code>r-lib/actions/check-r-package@v2</code>’s default <code>error-on: "warning"</code> (not overridden in this project’s workflow file) tripping on Track C’s already-accepted “unstated dependencies in tests: kinship2” WARNING (<code>PROJECT_LEARNINGS.md</code> Learning 667) — a real, previously-unverified consequence, since these commits had never reached CI before. Presented via <code>AskUserQuestion</code>; owner directed leaving CI red for a dedicated future session rather than editing the workflow file this session (a process/infra decision outside Track D’s own scope). Initially filed as issue #165, then closed same-session per live owner correction (“do not file GitHub issues for CI breaks – those should be fixed as found or deferred to a future session via the backlog”) — tracked instead as a <code>BACKLOG.md</code> “Up Next” item with full root-cause detail and 4 candidate fix approaches, none decided. Added <code>PROJECT_LEARNINGS.md</code> Learning 669.</li>
+<li>
+<strong>Model:</strong> Claude Sonnet 5.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_2026-08-26--ad-hoc-s636-record-changelogmd-entry-for-the-handoffsmd-sha-fix-action-itself-matching-s607s623s629-s635-precedent">2026-08-26 · [ad hoc] S636: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S635 precedent)<a class="anchor" aria-label="anchor" href="#id_2026-08-26--ad-hoc-s636-record-changelogmd-entry-for-the-handoffsmd-sha-fix-action-itself-matching-s607s623s629-s635-precedent"></a></h3>
 <ul><li>
 <strong>Deliverable:</strong> logging this session’s own <code>HANDOFFS.md</code> receipt <code>commit</code> field fix (<code>36653242</code> mechanical, <code>00a1d6d2</code> documentation, <code>8463dbd9</code> close-out) as its own ledger entry, since the fix commit (<code>8e7a12f6</code>) is itself an action this session took. Commit: <code>8e7a12f6</code>.</li>
