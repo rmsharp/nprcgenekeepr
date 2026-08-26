@@ -18,6 +18,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 638 Did
+**Deliverable:** Root-cause the `org.chromium.Chromium.*` temp-detritus NOTE in `R CMD check`
+("checking for detritus in the temp directory"), now reproducing on all 3 `ubuntu-latest` legs
+(found S636, confirmed S637) (IN PROGRESS)
+**Started:** 2026-08-26
+**Status:** Session claimed. Phase 0 orientation complete (ledger reconcile backfilled S637's
+self-reference gap, commits `ce396c87`/`c51202a7`, not yet pushed). Investigation beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 636 Handoff Evaluation (by Session 637)
 **Score: 7/10.** **What helped:** gotcha (1) correctly framed the CI break as a DECISION NEEDED item
 requiring an owner trade-off weigh-in before a session acts, not a routine pickup -- matched exactly:

@@ -136,6 +136,23 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S638
+date: 2026-08-26
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Root-cause the org.chromium.Chromium.* temp-detritus NOTE in R CMD check, now
+  reproducing on all 3 ubuntu-latest legs (found S636, confirmed S637).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S637
 date: 2026-08-26
 status: complete
