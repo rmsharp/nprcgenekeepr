@@ -18,6 +18,180 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 641 Did
+**Deliverable:** Fixed a real, previously undetected defect in the kinship2 structural comparator
+(`.comparePedigreeStructures()`) that let it report `identical = TRUE` on the article's own
+published Track B 16-subject fixture despite the two rendered images visibly differing (15
+individuals vs. 16). Closed the parent BACKLOG.md "kinship2 structural-comparison" item (all 4
+tracks + this final fix). **DONE**, full strict TDD (RED→GREEN, REFACTOR skipped by owner choice).
+**Started/Completed:** 2026-08-26 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): clean tracked tree, same 7 pre-existing untracked items
+   prior sessions already triaged. Ledger reconcile found the usual self-reference gap (S640's own
+   close-out commit `d2ecc8e1` past the `CHANGELOG.md` frontier) -- backfilled (`638e7417`, fixed
+   the receipt's `commit:` field + logged it). Dashboard 96/100, 1 HIGH-risk flag (unchanged:
+   `HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` past the FM #28 cap; `BACKLOG.md` 7 accumulated
+   `[x]` items). CI: S640's and this session's own reconcile push both still `in_progress` at last
+   check (last *completed* run, S639, all green). Rendered the priorities list; user picked
+   "kinship2 CI live-run verification."
+2. **Investigation** (matching the item's own gotcha framing "verify directly, don't re-derive"):
+   walked real CI job logs (`gh api .../jobs/<id>/logs`, not just `gh run view`'s summary) for a run
+   BEFORE the `kinship2` Suggests fix (S636, job `98049658131`) and multiple runs after (S637
+   through the latest completed S639 run, all 5 platforms) -- found kinship2's own testthat
+   "Skipped tests" categorized block explicitly names `{kinship2} is not installed (6):
+   test_comparePedigreeStructure.R:712/724/737/746/764/783` pre-fix, and zero kinship2-related skip
+   lines post-fix, with `FAIL 0` throughout. This alone would have been sufficient evidence to close
+   the item as originally scoped -- attempted to do so via `AskUserQuestion`.
+3. **Owner declined and redirected** (verbatim): *"I have not seen any evidence of progress.
+   Demonstrate that you have a working pedigree diagram comparison to ensure an nprcgenekeepr
+   pedigree figure has the appropriate fidelity with kinship2 pedigree figures. Demonstrate that the
+   pedigrees in the articles are now correct."* -- matching the project's own recorded history
+   (S631: "your equivalence assessments have been wrong in the past for these same pedigrees") and
+   this operator's standing memory rules (render/attach actual images; trace ground truth
+   programmatically, never just "looks uncorrupted").
+4. **Direct visual comparison, not a re-read of the comparator's own boolean result:** rendered
+   `kinship2-fidelity-validation-img/trackB-kinship2-full.png` and `trackB-nprc-full.png` side by
+   side via the `Read` tool. Immediately visible: kinship2's plot shows 15 individuals; nprcgenekeepr's
+   shows 16 (an extra `P5`, isolated, top-right). Confirmed live via code, not assumption:
+   `kinship2:::align.pedigree()`'s own `$nid` placement matrix never places `P5`'s row index (15 of
+   16 declared ids placed); `.comparePedigreeStructures()` on the exact same fixture nonetheless
+   reported `identical = TRUE`, because it diffs ONLY `parentChildEdges`/`matePairs` -- an isolated
+   individual (0 edges on either side) is invisible to that diff by construction. Cross-checked
+   Track C's image pair too (individual sets matched by eye -- no equivalent gap there). Read
+   `R/comparePedigreeStructure.R` source directly to confirm the mechanism, not just infer it from
+   output.
+5. **PRE-RED gate** (`AskUserQuestion`): presented the finding with full evidence; owner approved
+   fixing the comparator itself (not just correcting the vignette wording).
+6. **RED:** 23 new/updated assertions across `tests/testthat/test_comparePedigreeStructure.R` --
+   updated 2 return-shape tests (now expect `individuals` / 7 fields incl.
+   `individualsOnlyInA`/`individualsOnlyInB`), new unit tests for `.extractKinship2Structure()`'s
+   `displayedIds` param, `.extractNprcStructure()`'s duplicate-safe `individuals` extraction,
+   `.comparePedigreeStructures()`'s individuals-diff behavior (incl. a backward-compatibility test
+   for hand-built `a`/`b` with no `individuals` field at all), and 2 live-kinship2 integration
+   regression tests -- a minimal synthetic isolated-individual fixture, AND a new `.pedTrackBFixture()`
+   reproducing the article's own exact published fixture, both asserting `compareAgainstKinship2()`
+   now correctly reports `identical = FALSE` with the isolated id in `individualsOnlyInB`. Confirmed
+   RED: 23 failures, all for the right reason (missing fields, unused arg, pre-fix false positive).
+7. **RED→GREEN gate** (`AskUserQuestion`): owner approved.
+8. **GREEN:** `.extractKinship2Structure(pedLike, displayedIds = pedLike$id)` now returns
+   `individuals`; `.extractNprcStructure()` returns `individuals` (real, non-`__`-prefixed node ids,
+   naturally duplicate-safe since a duplicated individual's `__dup_` copy is filtered out);
+   `.comparePedigreeStructures()` diffs `individuals` too, folded into `identical` (missing
+   `individuals` on both sides treated as empty -- zero pre-existing test breakage beyond the 2
+   return-shape assertions). `compareAgainstKinship2()`
+   (`tests/testthat/helper-comparePedigreeStructure.R`) gained `.kinship2DisplayedIds()`, which
+   calls `align.pedigree()` directly and passes the actually-placed id set as `displayedIds` --
+   this surfaced a NEW warning ("Unexpected result in autohint") on the Track C fixture (confirmed
+   benign: `$nid` placement still fully correct despite it), muffled at the single call site only
+   after matching the exact known message text. 120/120 tests pass, 0 warnings.
+9. **GREEN→REFACTOR gate** (`AskUserQuestion`): owner approved skipping REFACTOR (diff minimal,
+   matches Track A/B/C precedent).
+10. Committed the fix (`9fe3b7f5`, 4 files: `R/comparePedigreeStructure.R`,
+    `tests/testthat/helper-comparePedigreeStructure.R`,
+    `tests/testthat/test_comparePedigreeStructure.R`,
+    `vignettes/articles/kinship2-fidelity-validation.qmd` -- within the 5-file cap).
+11. **Live-verified the fix's actual effect** on all 4 of the article's own fixtures via the fixed
+    `compareAgainstKinship2()`: Track B full now `identical = FALSE` (`P5` in
+    `individualsOnlyInB`); Track B shrunk, Track C, and the real 375-individual fixture all still
+    `identical = TRUE` -- confirming the fix catches the real defect without any false positive on
+    fixtures that were genuinely fine (P5 doesn't survive `shrinkPedigree()`'s trim; neither Track C
+    nor the real fixture has any isolated individuals).
+12. **Corrected the vignette** (`kinship2-fidelity-validation.qmd`): the Track B full-fixture
+    fig-alt (removed "matching kinship2's own family groupings" -- false), the Structural
+    verification table (Track B full: Yes → No, with explanation), and the Verdict section (blanket
+    "PASS, all 3 tracks" → "PASS, with one known and expected difference", naming the gap and the
+    fix explicitly, framing nprcgenekeepr's inclusion of the isolated individual as the more useful
+    default for colony management, not a defect to reconcile away). Confirmed via `quarto render`
+    -- clean, no errors (the documented build-equivalent for this project's Quarto docs).
+13. **Verified:** full clean regression 0 failed/0 error (6492 passed, 39 pre-existing warnings,
+    unchanged baseline, `test_dir()` run separate from `devtools::check()`'s own internal run);
+    `devtools::check()` 0 errors/1 warning/1 note (both pre-existing -- non-portable filename,
+    `scratchpad/` -- confirmed unrelated); `lintr::lint_package()` 0 lints on all touched files
+    (1 line-length hit found and fixed during verification).
+14. Removed the resolved BACKLOG.md item in full (`sed` line-range delete, verified boundaries via
+    `grep` immediately before and after -- no dangling references left anywhere else in the file),
+    recorded the full finding in `CHANGELOG.md`, added `PROJECT_LEARNINGS.md` Learning 673 (the
+    general lesson: an edge-only/relationship-only structural comparator can be blind to whether an
+    entity is displayed at all; a direct visual comparison of the actual rendered images is what
+    catches it, not a passing test suite that never happened to construct a zero-edge fixture),
+    updated `CLAUDE.md`'s learnings-count pointer (672→673, S639+→S641+). Committed (`ed574b86`).
+15. **Runtime smoke test (Phase 3E): not applicable, stated explicitly, not silently skipped.** This
+    session's deliverable is an internal `@noRd` validation utility (used only by tests and an
+    offline `data-raw/` script) plus a documentation correction -- no Shiny startup, service
+    registration, dispatch, or config-resolution path is touched. `devtools::check()`'s own
+    `R CMD check` process (which loads/attaches the package and runs the full test suite as part of
+    its checks) is the closest available runtime exercise of this code and passed clean.
+
+**Self-assessment (Session 641): 8/10.** **Strengths:** (1) did not accept the user's redirect as a
+minor course-correction -- treated it as the actual task and did the real, uncomfortable work of
+looking at the images directly rather than re-summarizing the existing (wrong) claims more
+confidently; (2) found the defect's actual mechanism by reading source and running code live, not
+by pattern-matching "images differ" to a guess; (3) verified the fix both positively (catches the
+real bug, on the exact published fixture) and negatively (doesn't false-positive on the 3 fixtures
+that were genuinely fine) -- the discipline this project's own citation checklist and Learning 596
+("toy AND real scale") consistently reward; (4) kept the TDD gates honest throughout despite the
+scope having grown substantially past the originally-picked item -- every expansion (fix the
+comparator vs. just reword the vignette; which fixtures to re-verify) was owner-approved via
+`AskUserQuestion`, not unilaterally decided; (5) corrected the vignette's own internal
+inconsistency (prose already hinted P5's omission was "expected," while the table/verdict two
+sections later still claimed full identity) rather than just patching the one line that was
+technically wrong. **Weaknesses:** (1) **skipped Phase 1B** -- never wrote the mandatory
+"session claimed" stub to `SESSION_NOTES.md`/`HANDOFFS.md` immediately after the task was picked;
+the unusual flow (Phase 0 orientation → user interrupted before I could act on the first
+`AskUserQuestion` pick → a substantial redirect) is an explanation, not an excuse -- this is a real
+protocol gap (FM #14's countermeasure exists precisely for sessions that don't follow the expected
+shape) and the next session's Phase 0 reconcile will find no S641 stub/pending receipt to catch it
+against, only this self-report; (2) a `Bash` tool mistake (backgrounding `devtools::check()` with
+BOTH a trailing `&` AND `run_in_background: true`) caused the harness to report the task
+"completed" while the real R process was still running for several more minutes, discovered via
+`ps aux` rather than trusting the notification -- cost a few minutes and one wrong assumption, not
+schedule-critical, filed as product feedback; (3) did not double check whether the parent BACKLOG
+item should have named a GitHub issue for close-out purposes -- confirmed none exists (the item was
+always owner-directed via chat, never filed as an issue), so no close-out was owed, but this should
+have been checked earlier in the session, not backfilled into the CHANGELOG entry after the fact.
+
+**Gotchas for a future session:** (1) **No Phase 1B stub exists for S641** -- if Phase 0's ledger
+reconcile in a future session looks for one and finds none, that is expected (see weakness (1)
+above), not a sign of a crash; this handoff and the `HANDOFFS.md` receipt below are the complete
+record. (2) `HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 2,000-line cap
+and growing -- unresolved across many sessions now (`methodology_trim.py --check --file <name>` is
+still the low-risk pickup). (3) `BACKLOG.md` still has 7 accumulated `[x]`-checked DONE items
+awaiting a sweep (dashboard LOW flag, precedent S619/S625) -- unrelated to and untouched by this
+session. (4) Issue #164 (`makePedigreeMatingLayout()` crashes on an all-founder/zero-parent-child-edge
+pedigree, filed S634) remains open and unrelated to this session's fix -- do not conflate the two;
+this session's isolated-individual fix is about the STRUCTURAL COMPARATOR's blind spot, not about
+`makePedigreeMatingLayout()` itself (which already handles isolated individuals fine when there is
+at least one real edge elsewhere in the pedigree, per the Track B full fixture rendering correctly).
+(5) The `.kinship2DisplayedIds()` helper (`tests/testthat/helper-comparePedigreeStructure.R`) is a
+new, genuine `align.pedigree()` dependency inside a helper already accepted as kinship2-dependent
+(Track C, Learning 667) -- no new `devtools::check()` consequence resulted (confirmed 0
+errors/1 warning/1 note, same as before), but a future session extending `compareAgainstKinship2()`
+should be aware `align.pedigree()` can emit its own "Unexpected result in autohint" warning on some
+fixture shapes; it does not indicate incorrect placement (verified directly), and is muffled only
+after matching the exact message text.
+
+### Session 640 Handoff Evaluation (by Session 641)
+**Score: 7/10.** **What helped:** S640's own investigation (walking every real CI run since the
+oldrel-1 failure via direct job-log inspection) was sound and thorough on its own terms, and its
+priorities list correctly surfaced "kinship2 CI-verification close-out" as a ready, low-effort next
+item with an accurate one-line pointer to S639 gotcha (4). **What was missing / what was wrong:**
+S640's gotcha (2) framed the kinship2 item's remaining requirement as "likely already satisfied...
+verify directly rather than re-deriving" -- reasonable given the evidence S640 had, but this
+undersold how much verification was actually still outstanding: the item's underlying comparator
+(built S633-S636, carried through S637-S640 without anyone re-checking it against an actual image)
+contained a real, previously undetected defect that a "verify CI skip-vs-run" framing would never
+have surfaced on its own (my own first attempt at exactly that framing was heading toward the same
+false "done" conclusion until the owner declined it). This isn't really S640's own fault -- the gap
+originated in S635/S636, and every intervening session inherited the same unverified "identical =
+TRUE" claim without independently re-checking it -- but it means **the handoff's framing of the
+item as a near-formality was itself part of the risk**: a handoff that says "verify directly" is
+only as good as what "directly" turns out to mean, and neither S640 (nor S633-S639 before it) ever
+went as far as an actual side-by-side image comparison. **ROI:** positive but not fully realized --
+S640's CI-history evidence was directly reusable and saved real time on the sub-question it
+answered (Track C tests do run, not skip, in CI), but the session's real deliverable turned out to
+be a different and larger question than the handoff anticipated.
+
 ### What Session 640 Did
 **Deliverable:** Checked whether `R-CMD-check.yaml`'s `ubuntu-latest (oldrel-1)` `setup-r@v2`
 failure (found S638, run `32930961617`) reproduces on a fresh re-run. **DONE — confirmed
