@@ -17,6 +17,56 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-26 · \[ad hoc\] S640: close `ubuntu-latest (oldrel-1)` `setup-r@v2` CI flake – confirmed transient, no code/config change
+
+- **Deliverable:** `BACKLOG.md` “Up Next” item found S638 (incidental to
+  watching CI while root-causing the temp-detritus NOTE) –
+  `R-CMD-check.yaml`’s `ubuntu-latest (oldrel-1)` leg failed once, at
+  the `setup-r@v2` step itself, before any package code ran
+  (`Failed to get R oldrel-1: ... Error: The process '/usr/bin/sudo' failed with exit code 100`,
+  run `32930961617`, the S637 close-out commit). The item’s own text
+  asked a future session to check reproducibility before treating it as
+  more than a one-off transient runner/apt flake. Checked directly
+  against real CI history (`gh run view` on each): the 4 real
+  `R-CMD-check.yaml` runs since that one failure – `32969359216` (S638
+  Learning-record push), `32971663253` (S638 close-out push),
+  `33002411920` (S639 resolve push), `33003541368` (S639 close-out push)
+  – all show `ubuntu-latest (oldrel-1)` completing `success` cleanly
+  (10-12 min each), with no intervening change to `R-CMD-check.yaml` or
+  `DESCRIPTION` that would explain a fix. Confirmed transient: GitHub
+  Actions/`r-lib/actions@setup-r` infrastructure, not this project’s
+  code, tests, dependencies, or workflow config. No RED/GREEN/REFACTOR
+  cycle – no defect exists to fix, matching the established precedent
+  (Track D, S636) for a PRE-RED-only investigative session with no new
+  package code to test. Owner-approved closing the item on this evidence
+  via `AskUserQuestion`. Removed from `BACKLOG.md` (no code/workflow
+  files touched this session).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-26 · \[ad hoc\] S640: record CHANGELOG.md entry for S639’s HANDOFFS.md sha-fix action, plus S639’s separately-committed Learning 672 record
+
+- **Deliverable:** Phase 0 reconcile found 2 commits past the
+  `CHANGELOG.md` frontier (`507cc6ad`) with no ledger entry. Unlike
+  prior sessions’ reconcile gaps (always just the close-out commit
+  alone, since the Learning-record commit and the CHANGELOG-entry commit
+  were usually the same commit), S639 split them: `805b2b83` (“record
+  Learning 672…, update learnings-count pointer”) landed *after*
+  `507cc6ad` (the commit that actually touched `CHANGELOG.md`), so it
+  was a genuine standalone undocumented action, not just the usual
+  self-reference case. `9f2b1c16` (S639’s close-out commit, writing the
+  final `HANDOFFS.md` receipt + `SESSION_NOTES.md`) is the familiar
+  self-reference gap this project’s precedent already names. Backfilled
+  both: fixed the S639 receipt’s `commit:` field from `507cc6ad` to
+  `9f2b1c16` (commit `0a79fbbc`), and this entry records that fix plus
+  `805b2b83`’s own action – `PROJECT_LEARNINGS.md` Learning 672
+  (documenting `test-coverage.yaml`’s no-`strategy.matrix` structural
+  nuance found during S639’s RED-phase research: a BACKLOG item’s
+  recommended fix can be right about the mechanism and wrong about the
+  mechanics when the target lacks a structural property the item’s text
+  never checked) and `CLAUDE.md`’s learnings-count pointer updated to
+  match.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · \[BL-N\] S639: provision pinned Chrome for `test-coverage.yaml`’s chromote-dependent tests
 
 - **Deliverable:** `BACKLOG.md` “Up Next” item found S637, incidental to

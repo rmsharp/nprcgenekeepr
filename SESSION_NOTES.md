@@ -28,6 +28,114 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 640 Did
+
+**Deliverable:** Checked whether `R-CMD-check.yaml`’s
+`ubuntu-latest (oldrel-1)` `setup-r@v2` failure (found S638, run
+`32930961617`) reproduces on a fresh re-run. **DONE — confirmed
+transient, no code/config change.** No RED/GREEN/REFACTOR cycle
+(PRE-RED-only investigative session, matching Track D/S636 precedent —
+no defect exists to fix). **Started/Completed:** 2026-08-26 (single
+session).
+
+**What actually happened, in order:** 1. **Phase 0 orientation** (full
+protocol): clean tracked tree, same 7 pre-existing untracked items S637
+already triaged (no new ghost-session signal, timestamps directly
+re-checked). Ledger reconcile found a genuine gap, structurally
+different from prior sessions’ recurring self-reference case: 2 commits
+sat past the `CHANGELOG.md` frontier (`507cc6ad`) — `805b2b83` (S639’s
+own “record Learning 672…, update learnings-count pointer” commit) and
+`9f2b1c16` (S639’s close-out commit). Unlike every prior instance of
+this gap, the two were NOT the same commit this time: S639 split the
+Learning-record action from the CHANGELOG-touching commit, so `805b2b83`
+was a genuine standalone undocumented action, not just the usual
+self-reference artifact. Backfilled both in the established 2-commit
+way: `0a79fbbc` (fixed the S639 receipt’s `commit:` field, `507cc6ad` →
+`9f2b1c16`) + `b96521df` (logged that fix plus `805b2b83`’s own action
+in `CHANGELOG.md`). GitHub Actions CI: all green
+(`lint.yaml`/`pkgdown.yaml`/`test-coverage.yaml` `success` on the latest
+push; `R-CMD-check.yaml` still `in_progress` at first check, confirmed
+`success` — all 5 legs — before this session’s own investigation began).
+Dashboard: health 96/100, 1 HIGH-risk flag (`HANDOFFS.md` 3,915 /
+`SESSION_NOTES.md` 3,695 / `CHANGELOG.md` 2,810 lines, all past the
+2,000-line FM \#28 cap; `HANDOFFS.md`/`CHANGELOG.md` also past their
+65,536 B archive-trigger budget; `BACKLOG.md` now has 7 done-marked
+`[x]` items not migrated, up from S639’s own gotcha (2) — none acted on
+this session, surfaced as a candidate priority). Rendered the priorities
+list (4 options via `AskUserQuestion`, +3 more noted below the picker);
+user picked “oldrel-1 setup-r flake check.” 2. **Claimed the session**
+(1B stub + `HANDOFFS.md` pending receipt, commit `ba3d6a68`). 3.
+**Investigation** (`DEVELOPMENT_WORKSTREAM.md`): the item’s own text
+named the exact failing run (`32930961617`) and asked a future session
+to check reproducibility before treating it as more than transient.
+Checked directly via `gh run view` on each real `R-CMD-check.yaml` run
+since that failure: `32969359216`, `32971663253` (both S638 pushes),
+`33002411920`, `33003541368` (both S639 pushes) — all 4 show
+`ubuntu-latest (oldrel-1)` completing `success` cleanly (10-12 min
+each), with no intervening change to `R-CMD-check.yaml` or `DESCRIPTION`
+that would explain a fix. Confirmed transient: GitHub
+Actions/`r-lib/actions@setup-r` infrastructure, not this project’s code,
+tests, dependencies, or workflow config. 4. **PRE-RED decision gate**
+(`AskUserQuestion`, matching Track D’s own precedent for a no-defect
+investigative session): presented the 4-run evidence table; owner
+approved closing the item with no code change. 5. Removed the item from
+`BACKLOG.md`, recorded the full finding in `CHANGELOG.md` (commit
+`a77d6a5c`) — no code, test, or workflow file touched this session.
+
+**Self-assessment (Session 640): 9/10.** **Strengths:** (1) did not just
+re-state the item’s own “check reproducibility” instruction — actually
+walked every real CI run since the failure via direct `gh run view`
+job-log inspection (not just the summary conclusion), building a genuine
+4-run evidence table rather than a single spot-check; (2) caught a
+ledger-reconcile gap with a structurally new shape (a split
+Learning-record commit, not the usual self-reference case) by comparing
+what each undocumented commit actually touched rather than assuming the
+familiar pattern applied verbatim; (3) presented the “no fix needed”
+finding via `AskUserQuestion` before closing, rather than unilaterally
+deciding a CI flake needs no further action — matching this project’s
+established bar for CI findings. **Weaknesses:** (1) did not check the
+GitHub Actions status page or `r-lib/actions` issue tracker for a
+documented incident matching the failure’s timestamp — the “Hold” option
+offered this, but 4 clean re-runs was accepted as sufficient evidence
+without it; a more thorough session might have looked for corroborating
+external evidence anyway. (2) A small, low-effort deliverable for a full
+session — reasonable given the item explicitly asked only for a
+reproducibility check, not a larger investigation.
+
+**Gotchas for a future session:** (1) `BACKLOG.md` now has 7 accumulated
+`[x]`-checked DONE items not yet migrated out (dashboard LOW flag, up
+from S639’s own count of 1) — matches the established S619/S625 sweep
+precedent, a quick, low-risk pickup. (2) The kinship2
+structural-comparison item’s last open requirement (CI skip-vs-run
+confirmation for Track C’s live-kinship2 tests) still awaits direct
+verification — S639’s gotcha (4) remains accurate and unactioned; the
+evidence likely already exists in the same S637-S639 CI run history this
+session just walked (all showing the full test suite passing with
+`kinship2` installed). (3)
+`HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` are all still past the
+FM \#28 2,000-line agent-read cap and growing —
+`methodology_trim.py --check --file <name>` on each remains a low-risk
+pickup, unresolved across several sessions now.
+
+### Session 639 Handoff Evaluation (by Session 640)
+
+**Score: 9/10.** **What helped:** the BACKLOG item’s own text for the
+oldrel-1 flake (found and filed by S638, carried into S639’s own handoff
+context) named the exact failing run ID (`32930961617`) and the precise
+error text — this session’s investigation could go straight to
+`gh run view` on that run and every run since, with zero re-diagnosis
+needed. The priorities list and gotcha (2)/(4) both proved accurate:
+gotcha (2)’s “7 done-marked items not migrated” (dashboard LOW flag)
+matched exactly what this session’s own dashboard run showed; gotcha
+(4)’s kinship2 CI-verification framing was offered as a priority option
+and remains accurate, just not picked. **What was missing:** nothing
+this session had to independently discover that should have been
+documented — the handoff was thorough and specific. **What was wrong:**
+none found. **ROI:** yes, clearly positive — the exact run ID and error
+text saved a full re-diagnosis of what the failure even was, leaving
+this session free to focus entirely on the reproducibility question
+itself.
+
 ### What Session 639 Did
 
 **Deliverable:** Fixed `test-coverage.yaml`’s missing
