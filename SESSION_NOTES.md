@@ -18,18 +18,135 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
-### What Session 636 Did
-**Deliverable:** Implement Track D of `docs/planning/pedigree-diagram-kinship2-structural-
-comparison-plan.md` (§4.4) -- port the `$go_to()` chromote fix into `data-raw/
+### Session 635 Handoff Evaluation (by Session 636)
+**Score: 9/10.** **What helped:** `next_steps`/`active_task` named exactly what this session did
+("Implement Track D ... port the `$go_to()` chromote fix into `data-raw/
 kinship2FidelityValidation.R`'s `screenshot_layout()`, regenerate every Track B/C image, run
-Track C's `.comparePedigreeStructures()` comparator against the vignette's own fixtures, and
-remove the S631 caveats + add a `NEWS.Rmd` entry only if that comparison supports it. (IN
-PROGRESS)
-**Started:** 2026-08-25 (session claimed via this stub).
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`compareAgainstKinship2()` against the vignette's own Track B/C fixtures specifically, and remove
+the S631 caveats ... ONLY if that comparison supports it") -- this was followed literally end to
+end. `gotchas` (3) ("Track D should reuse `toKinship2Pedigree()` ... via `source(file.path("tests",
+"testthat", "helper-comparePedigreeStructure.R"))` rather than re-deriving the sire/dam-swap logic
+again") gave the EXACT `source()` call used verbatim this session -- direct, real time saved.
+Gotcha (4) (the WARNING count is now permanently 2, do not treat as a new regression) was applied
+correctly: this session's own `devtools::check()` confirmed 2 WARNINGs/2 NOTEs, unchanged from
+that baseline, and did not flag it as new. **What was missing:** no gotcha flagged that plan
+§4.4's literal "remove the S631 caveats from both [documents] ... if that comparison supports it"
+text doesn't actually hold up under scrutiny -- `pedigree-diagram-kinship2-reference-comparison.qmd`
+rests on 4 completely different example pedigrees never touched by the Track B/C comparator, a gap
+this session had to discover by actually reading that second document's own examples in full (see
+`PROJECT_LEARNINGS.md` Learning 668). This is a fair, non-culpable gap: S635 was scoped to Track C
+and had no obligation to pre-read Track D's own two target documents in depth; the plan itself
+(S632) is the more natural place this should have been caught. **What was wrong:** nothing found
+inaccurate -- gotcha (2)'s "CI skip-vs-run behavior... still needs visual confirmation once pushed"
+remains accurate and is still not discharged (see gotchas below; this session's commits are also
+not yet pushed as of this write-up). **ROI:** high -- the exact `source()` line and the WARNING-
+baseline framing were both used directly; the one gap cost real investigation time but was not
+something the handoff could reasonably have caught in advance.
+
+### What Session 636 Did
+**Deliverable:** Implemented **Track D** of `docs/planning/pedigree-diagram-kinship2-structural-
+comparison-plan.md` (§4.4) -- ported the `$go_to()` chromote fix into `data-raw/
+kinship2FidelityValidation.R`'s `screenshot_layout()`, regenerated every Track B/C image, ran
+Track C's `compareAgainstKinship2()` comparator against the vignette's own fixtures, removed the
+S631 caveat from the published vignette (supported), left the sibling planning document's caveat
+standing (not supported by any evidence), and added a `NEWS.Rmd` entry. **DONE**, no RED/GREEN
+cycle (owner-approved PRE-RED framing -- no new package function exists to test). **All 4 tracks
+of the kinship2 structural-comparison plan are now complete.** **Started/Completed:** 2026-08-25/26
+(single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): clean tree except the same pre-classified untracked
+   artifacts S633-S635 already checked (no ghost session -- last commit `2e576c9d`, continuous with
+   this session). Ledger frontiers current (`CHANGELOG.md` at HEAD; `HANDOFFS.md` one commit behind,
+   the established self-reference-workaround pattern). CI green (10/10 `completed success`).
+   Dashboard 96/100, 1 HIGH risk (carried-forward FM #28 finding, not acted on). Rendered the
+   priorities list (4 numbered items) via `AskUserQuestion`; owner picked "Track D."
+2. **Re-read plan §4.4 in full**, plus `screenshot_layout()` (the race), the reference `$go_to()`
+   fix in `tests/testthat/helper-live-render-positions.R`, Track C's `compareAgainstKinship2()`
+   helper, `.comparePedigreeStructures()`'s return shape, and BOTH target documents' S631 caveats in
+   full -- found the reference-comparison.qmd coverage gap during this read (4 different, untested
+   example pedigrees), not assumed.
+3. **PRE-RED scope gate** (`AskUserQuestion`, 2 questions): (1) whether to run a RED/GREEN cycle for
+   a track with no new package function -- owner approved skipping it, verify functionally instead
+   (matching Learning 643's own precedent); (2) how to handle the coverage-gap finding -- owner
+   approved leaving `pedigree-diagram-kinship2-reference-comparison.qmd`'s caveat up regardless,
+   over following the plan's literal "remove from both" text.
+4. **Claimed the session** (1B stub + `HANDOFFS.md` pending receipt, commit `555e3fdf`).
+5. Ported the fix, added the `source()` call + Track D comparator section, ran the script live
+   (kinship2/chromote/htmlwidgets all available locally) -- clean run, `identical = TRUE` on all 3
+   fixtures (Track B full, Track B shrunk, Track C). Visually inspected 2 regenerated images against
+   kinship2's own reference render for the same fixture (per `[[verify-diagrams-against-ground-
+   truth]]`/`[[pedigree-comparison-show-images]]` user memory) -- confirmed the structural match the
+   comparator reported (nprcgenekeepr duplicates `A`, kinship2 duplicates `Y`, for the SAME
+   underlying relationships).
+6. Edited both target documents (removed vignette's caveat + added "Structural verification"
+   section + updated Verdict; added the coverage-gap note to the reference-comparison doc) and
+   `NEWS.Rmd`. Rendered both `.qmd` files via `quarto render` -- clean, no errors; cleaned up the
+   render byproducts (gitignored/local-only).
+7. **Full verification**, run properly in the true background this time after a mid-session
+   self-correction (see gotchas): `lintr::lint_package()` found 1 `undesirable_function_linter` hit
+   on the new `source()` call, fixed with the exact `# nolint start/end` pattern
+   `data-raw/fgSEValidation.R` already established for the identical case; `devtools::check()` 0
+   errors / 2 WARNINGs / 2 NOTEs, all 4 unchanged from Track C's own baseline; full clean regression
+   0 failed / 0 error / 39 warnings / 6437 passed -- the previously-documented
+   `test_wordlist_coverage.R` "1 pre-existing failure" did NOT reproduce (confirmed via an isolated
+   `test_file()` run too), flagged as a genuine finding rather than silently repeating the old
+   number from memory.
+8. Committed in 2 checkpoints (5-file cap): mechanical (script + 4 images), then documentation
+   (2 `.qmd` files + `NEWS.Rmd`). Updated `BACKLOG.md`'s top item (Track D DONE, all 4 tracks
+   complete), added `PROJECT_LEARNINGS.md` Learning 668, updated `CLAUDE.md`'s learnings-count
+   pointer (667→668, Sessions 1-635+→1-636+), added the `CHANGELOG.md` entry.
+9. **Close-out** (this write-up).
+
+**Self-assessment (Session 636): 9/10.** **Strengths:** (1) found and did not silently resolve
+either way a genuine gap between the plan's literal text and what the actual verification evidence
+covers (`pedigree-diagram-kinship2-reference-comparison.qmd`'s own untested examples) -- presented
+via `AskUserQuestion` before acting, rather than mechanically following "remove from both" or
+unilaterally deciding to keep both caveats up; (2) correctly recognized that a track with no new
+package function doesn't fit the RED/GREEN/REFACTOR model and raised that as an explicit PRE-RED
+scope question rather than either forcing a hollow test cycle or silently skipping the phase-gate
+ceremony; (3) visually cross-checked the regenerated images against kinship2's own reference render
+for the same fixture, not just trusting the comparator's boolean output, matching standing user
+memory on diagram-comparison rigor; (4) caught and self-corrected a background-task process-
+tracking mistake mid-session (see gotchas) rather than reporting an unverified "completed" result
+at face value. **Weaknesses:** (1) made the exact nested-`&` background-task mistake S634/S635's own
+documented gotcha warns against, on the FIRST attempt this session (not the second) -- caught only
+because the resulting log looked suspiciously short and a direct `ps`/`lsof` check confirmed the
+real process was still running; cost real wall-clock time working out the correct wait condition.
+(2) as of this write-up, this session's commits (and S633-S635's, and everything since) remain
+unpushed -- the standing "confirm CI skip-vs-run behavior once pushed" requirement (plan §5) is
+still not discharged, now spanning 4 sessions' worth of commits.
+
+**Key files:** `data-raw/kinship2FidelityValidation.R` (the `$go_to()` port + Track D comparator
+section, the deliverable), `vignettes/articles/kinship2-fidelity-validation.qmd` (caveat removed,
+new "Structural verification" section, Verdict updated), `docs/planning/pedigree-diagram-kinship2-
+reference-comparison.qmd` (coverage-gap note added, caveat left standing), `NEWS.Rmd` (Pedigree
+Diagram section, new entry), `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md`
+§4.4 (Track D's contract, now fully discharged), `PROJECT_LEARNINGS.md` Learning 668 (the coverage-
+gap finding + 2 smaller findings), `BACKLOG.md` top item (all 4 tracks now DONE).
+
+**Gotchas for a future session:** (1) **This session's commits are STILL unpushed** (31 commits
+before this session + this session's own commits) -- pushing was deliberately NOT done this
+session pending the user's explicit go-ahead (an outward-facing action, not durably pre-
+authorized). Whoever pushes next should check the `R-CMD-check.yaml` run's own test log for a
+clean `SKIP` on Track C's 3 live-kinship2 tests (plan §5) -- this has now been outstanding since
+S635 and needs to actually happen, not just be re-flagged again. (2) The kinship2 structural-
+comparison plan (`docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md`) has no
+further tracks -- A/B/C/D are all DONE. A future session picking up pedigree-diagram work should
+consult `BACKLOG.md`'s "Up Next" section fresh rather than assuming this plan has more to do.
+(3) **Background-task discipline, reinforced with a new failure shape (`PROJECT_LEARNINGS.md`
+Learning 668):** even when `run_in_background: true` is used correctly at the TOP level, adding a
+manual trailing `&` INSIDE that command (e.g. `Rscript ... > log 2>&1 &`) makes the harness report
+"completed" almost immediately -- because the wrapper script itself finishes fast -- while the
+real process keeps running fully detached. A plausible-looking partial log is not proof of
+completion; verify via `ps`/`lsof` on the actual output file to find the real driver PID, and wait
+on THAT PID specifically (a stale/wrong PID in the wait condition, as this session's own first fix
+attempt used, can also report "done" prematurely). (4) `pedigree-diagram-kinship2-reference-
+comparison.qmd` still carries an unverified-claims caveat and always will, absent a future session
+running Track C's comparator (or an equivalent) against ITS OWN 4 example pedigrees specifically --
+this is not a stale caveat to remove casually; it is now a checked, deliberate, currently-accurate
+state.
+**Score: N/A -- Session 635's handoff evaluated above (9/10).**
 
 ### Session 634 Handoff Evaluation (by Session 635)
 **Score: 9/10.** **What helped:** `next_steps`/`active_task` named exactly what this session did

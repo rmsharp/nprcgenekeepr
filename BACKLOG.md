@@ -145,14 +145,37 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       failure (`test_wordlist_coverage.R`, same known baseline) / 0 error; `lintr::lint_package()`
       0 lints on touched files. **CI skip-vs-run behavior to be visually confirmed once pushed**
       (plan §5's own requirement) -- not yet done as of this entry.
-      **A future session should implement Track D** (`docs/planning/
-      pedigree-diagram-kinship2-structural-comparison-plan.md` §4.4) -- port the `$go_to()` fix
-      (`PROJECT_LEARNINGS.md` Learning 643) into `data-raw/kinship2FidelityValidation.R`'s
-      `screenshot_layout()`, regenerate every Track B/C image, run Track C's new comparator against
-      the vignette's own Track B/C fixtures specifically, and remove the S631 caveats from both
-      `vignettes/articles/kinship2-fidelity-validation.qmd` and `docs/planning/
-      pedigree-diagram-kinship2-reference-comparison.qmd` only if that comparison supports it (a
-      real discrepancy staying uncaught is a correct outcome, not a failure). See `CHANGELOG.md`.
+      **Track D DONE -- S636 (2026-08-25/26):** ported the `$go_to()` fix (`PROJECT_LEARNINGS.md`
+      Learning 643) into `data-raw/kinship2FidelityValidation.R`'s `screenshot_layout()` (replacing
+      the racy `Page$navigate()`+`Page$loadEventFired()`+`Sys.sleep()` sequence); ran the script
+      end-to-end locally (kinship2/chromote/htmlwidgets all available) -- no hang, no race,
+      regenerating all 4 nprcgenekeepr-side Track B/C images (the 4 kinship2-side base-R plots were
+      byte-identical, as expected -- kinship2's own plotting hasn't changed). Added a Track D
+      section to the script running Track C's `compareAgainstKinship2()` against the vignette's own
+      fixtures live: Track B full (16 subjects), Track B shrunk (8 subjects), and Track C (9
+      subjects, consanguineous dogleg) all report `identical = TRUE`, no discrepancy found on any of
+      the 3. Owner-approved PRE-RED framing (no RED/GREEN cycle -- no new package function exists to
+      unit-test; verified functionally instead, matching Learning 643's own original precedent).
+      **Genuine coverage gap found and NOT silently resolved either way (`PROJECT_LEARNINGS.md`
+      Learning 668):** `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` shares the
+      identical S631 caveat but rests on 4 completely different example pedigrees never run through
+      the comparator -- presented via `AskUserQuestion`; owner chose to remove only
+      `vignettes/articles/kinship2-fidelity-validation.qmd`'s caveat (fully supported by the 3/3
+      identical result) and add an explicit untested-gap note to the reference-comparison document
+      instead, rather than following the plan's literal "remove from both" text. Added a new
+      "Structural verification" section to the vignette documenting the comparator and its results;
+      updated its "Verdict" section; added a plain-language `NEWS.Rmd` entry (the plan's own "first
+      genuinely user-facing consequence" framing). Verified: both `.qmd` files render clean via
+      `quarto render`; `devtools::check()` 0 errors / 2 WARNINGs / 2 NOTEs, all 4 unchanged from
+      Track C's own baseline (no new warnings/notes); full clean regression 0 failed / 0 error / 39
+      warnings / 6437 passed -- note the previously-documented `test_wordlist_coverage.R` "1
+      pre-existing failure" did NOT reproduce this session (flagged, not investigated, see Learning
+      668); `lintr::lint_package()` 0 lints (1 `undesirable_function_linter` hit on the new
+      `source()` call, suppressed via `# nolint start/end`, matching `data-raw/fgSEValidation.R`'s
+      own established precedent for the identical pattern). All 4 tracks of the kinship2
+      structural-comparison plan are now DONE. **CI skip-vs-run behavior for Track C's live-kinship2
+      tests still needs visual confirmation once these commits (plus S633-S635's) are pushed** (plan
+      §5's own requirement) -- not yet done as of this entry. See `CHANGELOG.md`.
 
 ## Active
 - [x] **Pedigree Diagram: consider hiding the mating-unit node marker to match kinship2's

@@ -16,6 +16,41 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-25/26 · [ad hoc] S636: implement Track D of the kinship2 structural-comparison plan (close the loop)
+- **Deliverable:** `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md` §4.4.
+  Ported `PROJECT_LEARNINGS.md` Learning 643's `$go_to()` chromote-race fix into
+  `data-raw/kinship2FidelityValidation.R`'s `screenshot_layout()` (replacing the racy
+  `Page$navigate()`+`Page$loadEventFired()`+`Sys.sleep()` sequence). Ran the script end-to-end
+  locally — no hang, no race — regenerating all 4 nprcgenekeepr-side Track B/C images (the 4
+  kinship2-side base-R plots were byte-identical, as expected). Added a Track D section sourcing
+  `tests/testthat/helper-comparePedigreeStructure.R` and running Track C's own
+  `compareAgainstKinship2()` against the vignette's own Track B/C fixtures live: Track B full (16
+  subjects), Track B shrunk (8 subjects), and Track C (9 subjects, consanguineous dogleg) all
+  report `identical = TRUE`, no discrepancy on any of the 3. Owner-approved PRE-RED framing — no
+  RED/GREEN cycle, since no new package function exists to unit-test; verified functionally
+  instead (script completes cleanly, images regenerate, comparator runs), matching Learning 643's
+  own original verification precedent (real execution, not a unit test).
+  Removed `vignettes/articles/kinship2-fidelity-validation.qmd`'s S631 "not currently verified"
+  caveat (fully supported by the 3/3 identical result); added a new "Structural verification"
+  section and updated the "Verdict" section. **Genuine coverage gap found and presented, not
+  silently resolved either way (`PROJECT_LEARNINGS.md` Learning 668):**
+  `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd` shares the identical S631
+  caveat but rests on 4 completely different example pedigrees never run through the comparator —
+  presented via `AskUserQuestion`; owner chose to leave that document's own caveat standing (adding
+  an explicit note naming the untested gap) rather than following plan §4.4's literal "remove from
+  both" text. Added a plain-language `NEWS.Rmd` entry (the plan's own "first genuinely user-facing
+  consequence" framing).
+  Verified: both `.qmd` files render clean via `quarto render`; `devtools::check()` 0 errors / 2
+  WARNINGs / 2 NOTEs, all 4 unchanged from Track C's own baseline; full clean regression 0 failed /
+  0 error / 39 warnings / 6437 passed (the previously-documented `test_wordlist_coverage.R` "1
+  pre-existing failure" did NOT reproduce this session — flagged, not investigated, see Learning
+  668); `lintr::lint_package()` 0 lints (1 `undesirable_function_linter` hit on the new `source()`
+  call, suppressed via `# nolint start/end`, matching `data-raw/fgSEValidation.R`'s own established
+  precedent). All 4 tracks of the kinship2 structural-comparison plan are now DONE.
+  Commits: `36653242` (mechanical: script fix + regenerated images), `00a1d6d2` (documentation:
+  caveat removal + coverage-gap note + `NEWS.Rmd`).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25 · [ad hoc] S635: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S634 precedent)
 - **Deliverable:** logging this session's own `HANDOFFS.md` receipt `commit` field fix (`57a75044`
   deliverable, `73a27e11` close-out) as its own ledger entry, since the fix commit (`456ca044`) is
