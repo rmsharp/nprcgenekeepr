@@ -194,7 +194,7 @@ runtime_smoke: n/a, stated explicitly -- this session's deliverable is an intern
 changelog_ref: 2026-08-26 S641 entries, CHANGELOG.md ("fix the kinship2 structural comparator's
   isolated-individual blind spot; close the kinship2 structural-comparison BACKLOG item" and the
   reconcile-backfill entry above it)
-commit: pending
+commit: 7c0b149d
 ```
 
 ```handoff

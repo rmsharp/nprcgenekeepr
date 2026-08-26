@@ -16,6 +16,26 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S642: record CHANGELOG.md entry for S641's HANDOFFS.md sha-fix action (reconcile-on-read)
+- **Deliverable:** Phase 0 reconcile found 1 commit past the `CHANGELOG.md` frontier (`ed574b86`)
+  with no ledger entry: `7c0b149d`, S641's own close-out commit (writing the final `HANDOFFS.md`
+  receipt + `SESSION_NOTES.md`). This is the same recurring self-reference gap this project's
+  precedent already names (S638→S639, S639→S640, S640→S641) -- a close-out commit can't cite its
+  own sha in the receipt it writes, so the receipt's `commit:` field is left `pending` and the
+  commit itself postdates the last `CHANGELOG.md`-touching commit. Backfilled: fixed the S641
+  receipt's `commit:` field from `pending` to `7c0b149d` (this session, prior to this entry's own
+  commit). `HANDOFFS.md` frontier check found no gap (`7c0b149d` is already its own frontier). Also
+  found, live-checked, and confirmed self-resolved: `R-CMD-check.yaml` run `33006620646` (S640's
+  close-out push, commit `d2ecc8e1`) failed on `ubuntu-latest (devel)` at the "Set up Chrome" step
+  with `read ECONNRESET` -- a transient network error, not a code/config regression (the other 4
+  platform legs on that same run, incl. `oldrel-1`, all passed). Both subsequent pushes
+  (`638e7417`, `7c0b149d`) re-ran all 5 legs clean, including `devel`, with no intervening change to
+  `.github/workflows/R-CMD-check.yaml` or Chrome-provisioning steps. No prior session's Phase 0
+  report caught this run as failed -- S641's own report only saw it as still `in_progress` and moved
+  on. No code, test, or workflow file touched this session (per the CI-break tracking convention,
+  `CLAUDE.md`: report a self-resolved live CI break, don't file an issue for it).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · [ad hoc] S641: fix the kinship2 structural comparator's isolated-individual blind spot; close the kinship2 structural-comparison BACKLOG item
 - **Deliverable:** picked up "kinship2 CI-verification close-out" from S640's priorities list
   (verify Track C's live-kinship2 tests actually run in CI). Before acting, the owner asked
