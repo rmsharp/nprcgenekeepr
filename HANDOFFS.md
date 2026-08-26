@@ -199,7 +199,7 @@ runtime_smoke: CI-workflow fix -- live-verified on the actual GitHub Actions R-C
   "Status: OK" -- the NOTE is gone. 0 test failures anywhere.
 changelog_ref: 2026-08-26 S638 entry, CHANGELOG.md ("root-cause and fix the checking for detritus in
   the temp directory NOTE")
-commit: cd4f968c
+commit: 92c717d7
 ```
 
 ```handoff
