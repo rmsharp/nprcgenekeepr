@@ -18,6 +18,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 635 Did
+**Deliverable:** Implement Track C of `docs/planning/pedigree-diagram-kinship2-structural-
+comparison-plan.md` (section 4.3) -- `.comparePedigreeStructures()`, `toKinship2Pedigree()` +
+`compareAgainstKinship2()` orchestration, a new D-7 crossing-duplication fixture, and live-kinship2
+end-to-end tests against the Track-C fixture, the new D-7 fixture, and the real 375-individual
+bundled fixture (D-8). (IN PROGRESS)
+**Started:** 2026-08-25.
+**Status:** Session claimed. Phase 0 orientation done (owner picked this item via `AskUserQuestion`
+priorities list). Research/prototyping done in `scratchpad/` BEFORE this claim (matching S634's own
+precedent): re-read the plan's Track C sections (1.1-1.5, 2, 3.3/3.4, 4.3) in full; re-read the
+existing Track A/B implementation (`R/comparePedigreeStructure.R`) and test file
+(`tests/testthat/test_comparePedigreeStructure.R`) in full. Prototyped and empirically verified
+`.comparePedigreeStructures()` (canonicalized set-diff both directions) against hand-built
+structures. Prototyped `toKinship2Pedigree()` (D-5's auto-swap-reversed-sire/dam helper) and
+verified it against the existing Track-C 9-subject fixture's known C2 reversal case. **Found and
+verified a working D-7 fixture** (`scratchpad/explore_d7_v2.R` Candidate 5): a 10-subject
+double-cross-marriage pedigree (2 founder-family sibships, A1xB2 and A2xB1) that empirically,
+directly confirmed via `kinship2:::align.pedigree()`'s own `$nid` matrix, duplicates single-mate
+individual A1 at plot time (dragon 1, plan section 1.3) -- while `makePedigreeMatingLayout()`'s own
+`duplicateToReal` never duplicates A1 (confirmed empty), and the full
+`compareAgainstKinship2()` pipeline still reports `identical = TRUE` on this fixture -- proving D-1's
+"resolved by construction" claim empirically, not just reasoning about it (Learning 596 discipline).
+**Also ran the full pipeline against the real 375-individual bundled fixture as a prototype dry run
+(D-8): `identical = TRUE`, a clean pass** -- reported here as a genuine finding per D-8's own "a
+non-empty diff is a finding to report, not silently reconcile" framing (a clean pass is the
+mirror-image good-news finding, not silently assumed).
+**Design decision surfaced for owner approval (not yet in the ratified plan):** `toKinship2Pedigree()`
+and `compareAgainstKinship2()` are genuine `kinship2`-dependent functions the plan's own section 3.4
+says should live in `data-raw/kinship2FidelityValidation.R` -- but that file has hard top-level
+`requireNamespace()` `stop()` calls for `chromote`/`htmlwidgets` that would break sourcing it from a
+test. Recommending the established `data-raw/fgSEValidation.R` + `tests/testthat/helper-
+fgSEValidation.R` precedent instead: a new `tests/testthat/helper-comparePedigreeStructure.R`
+(auto-loaded by testthat, real per-function test coverage, reused later by
+`data-raw/kinship2FidelityValidation.R` via `source()` when Track D lands) -- routed to the owner via
+`AskUserQuestion` before RED.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 633 Handoff Evaluation (by Session 634)
 **Score: 9/10.** **What helped:** `next_steps` named exactly what this session did ("Implement
 Track B ... `.extractNprcStructure()`, input is `makePedigreeMatingLayout(ped, edgeStyle="direct",

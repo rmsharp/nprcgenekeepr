@@ -136,6 +136,26 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S635
+date: 2026-08-25
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement Track C of docs/planning/pedigree-diagram-kinship2-structural-comparison-
+  plan.md (section 4.3) -- .comparePedigreeStructures(), toKinship2Pedigree() +
+  compareAgainstKinship2() orchestration, a new D-7 crossing-duplication fixture, and live-kinship2
+  end-to-end tests against the Track-C fixture, the D-7 fixture, and the real 375-individual bundled
+  fixture (D-8). Research/prototyping already done in scratchpad/ before this claim.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S634
 date: 2026-08-25
 status: complete
