@@ -59,6 +59,22 @@
 #'   node vis.js actually placed -- a silently-collapsed duplicate id in
 #'   vis.js's own DataSet would surface here as fewer rows than
 #'   \code{nrow(nodes)}, not as an error.
+## Tracks whether the session-wide teardown close of chromote's shared
+## default_chromote_object() has already been registered, so it registers
+## exactly once even though getLiveRenderedPositions() may be called
+## multiple times across the test suite (found/fixed S638 -- BACKLOG.md /
+## PROJECT_LEARNINGS.md: the shared Chrome browser process was previously
+## only ever hard-killed by processx's supervise = TRUE parent-exit
+## mechanism when the test R session ended, never gracefully $close()-d,
+## so Chromium's own ProcessSingleton cleanup -- which removes its
+## SingletonCookie/SingletonSocket lock files, named
+## org.chromium.Chromium.<random> on the unbranded Chrome-for-Testing
+## build CI uses -- never ran, leaving that directory behind as the
+## "checking for detritus in the temp directory" NOTE R CMD check flagged
+## on all 3 ubuntu-latest legs).
+.chromoteParentTeardownRegistered <- new.env(parent = emptyenv())
+.chromoteParentTeardownRegistered$done <- FALSE
+
 getLiveRenderedPositions <- function(nodes, edges, width = 1200L,
                                       height = 900L, waitSeconds = 1.5,
                                       loadTimeout = 30) {
@@ -96,6 +112,17 @@ getLiveRenderedPositions <- function(nodes, edges, width = 1200L,
   chromeParent <- chromote::default_chromote_object()
   if (chromeParent$default_timeout < 60) {
     chromeParent$default_timeout <- 60
+  }
+  ## Register a ONE-TIME, session-teardown-scoped graceful close of the
+  ## shared parent so its Chrome process is properly shut down (and its
+  ## temp-dir process-singleton lock files cleaned up by Chromium itself)
+  ## once, after the whole test suite finishes -- rather than hard-killed
+  ## at R exit. No change to Chrome-launch count/timing: still one shared
+  ## launch, reused across every call (see the macos-latest first-launch
+  ## timeout sensitivity documented above).
+  if (!isTRUE(.chromoteParentTeardownRegistered$done)) {
+    withr::defer(chromeParent$close(), envir = testthat::teardown_env())
+    .chromoteParentTeardownRegistered$done <- TRUE
   }
   b <- chromote::ChromoteSession$new()
   on.exit(b$close(), add = TRUE)
