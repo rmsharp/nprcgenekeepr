@@ -174,18 +174,68 @@ hand-maintained.
 ``` handoff
 session: S638
 date: 2026-08-26
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Root-cause the org.chromium.Chromium.* temp-detritus NOTE in R CMD check, now
-  reproducing on all 3 ubuntu-latest legs (found S636, confirmed S637).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE. Root-caused and fixed the org.chromium.Chromium.* temp-detritus NOTE (R CMD
+  check's "checking for detritus in the temp directory", all 3 ubuntu-latest legs). Also reconciled
+  a ledger self-reference gap left by S637's own close-out commit (Phase 0 step 6).
+what_was_done: Phase 0: backfilled S637's close-out commit (dec55f20) into CHANGELOG.md/HANDOFFS.md
+  (self-reference workaround, commits ce396c87/c51202a7). Root cause: getLiveRenderedPositions()
+  (tests/testthat/helper-live-render-positions.R) closed only its ChromoteSession, never the parent
+  chromote::default_chromote_object() singleton -- so the Chrome subprocess was only ever hard-killed
+  by processx's supervise=TRUE parent-exit mechanism, never running Chromium's own
+  ProcessSingleton::Cleanup(), leaving its SingletonCookie/SingletonSocket lock dir behind. Confirmed
+  via chromote 0.5.1 source inspection AND a local repro (disposable subprocess, before/after
+  temp-dir diff) that reproduces identically on macOS/branded Chrome -- proving the mechanism is
+  platform-generic, not CI-specific. Fix: a one-time, session-teardown-scoped graceful close
+  (withr::defer(chromeParent$close(), envir = testthat::teardown_env())), registered once across the
+  helper's 3 call sites. New structural guard: tests/testthat/
+  test_helper_live_render_positions_teardown.R. Verified empirically against the real caller
+  (test_positionMatingUnitForest.R run standalone, 0 leftover entries before/after) and via
+  devtools::check() itself reporting "checking for detritus in the temp directory ... OK" for the
+  first time. Full clean regression 0 failed/0 error; lintr 0 lints. Dropped a supplementary live
+  mechanism-proof test (owner-directed) after it proved flaky specifically inside devtools::check()'s
+  sandbox and never exercised the actual fix's code path anyway. Commits: ce396c87/c51202a7 (Phase 0
+  reconcile), cc8d617e (claim), 03e3bd52 (fix), cd4f968c (docs).
+next_steps: BACKLOG.md "Up Next" top item now: fix test-coverage.yaml's missing Chrome-provisioning
+  steps (READY, Effort S, found S637, matches R-CMD-check.yaml's proven 3-step pattern exactly --
+  port setup-chrome@v2 + CHROMOTE_CHROME + find_chrome() pre-flight, and extend
+  test_r_cmd_check_workflow_chrome_setup.R's workflow_files vector in the same session). Other READY
+  items in BACKLOG.md: DESCRIPTION Suggests/Config-Needs cleanup (Effort S), context_budget.py
+  adoption evaluation (Effort S, scoping only). New, unchased finding this session: ubuntu-latest
+  (oldrel-1) failed at the setup-r@v2 step itself (sudo/R-installer infra error, unrelated to this
+  fix) -- check on a re-run before treating as more than a one-off flake.
+key_files: tests/testthat/helper-live-render-positions.R:62-136 (the fix -- teardown-registered flag
+  env + withr::defer() call), tests/testthat/test_helper_live_render_positions_teardown.R (new
+  structural guard, 2 test_that() blocks), tests/testthat/test_helper_live_render_positions_timeout.R
+  (sibling guard, unchanged, re-verified still passing), tests/testthat/
+  test_positionMatingUnitForest.R (the only real caller, 3 call sites -- used for the empirical
+  before/after verification), PROJECT_LEARNINGS.md Learning 671 (full root-cause writeup),
+  BACKLOG.md (item resolved, 1 new oldrel-1 item filed).
+gotchas: (1) chromote's Chrome-launch args (default_chrome_args()/launch_chrome_impl()) never pass
+  --user-data-dir -- Chromium's own fallback creates a randomly-named ephemeral profile dir per
+  launch; this is generic Chromium behavior, not chromote-specific, so the same class of leak could
+  recur anywhere else in this codebase that launches Chrome without closing its OWN parent Chromote
+  object gracefully (audit any future direct chromote::Chromote$new()/default_chromote_object() use
+  the same way). (2) A supplementary live test using a dedicated (non-default) Chromote$new()
+  instance worked in every standalone repro but was flaky specifically inside devtools::check()'s
+  sandbox subprocess (0 new entries found even after a 5s poll) -- root cause of that specific
+  discrepancy was NOT pinned down (TMPDIR inheritance and find_chrome() resolution both checked,
+  both matched); if a future session investigates chromote/sandbox interactions, this is an open,
+  unexplained data point worth revisiting. (3) The CHANGELOG.md/HANDOFFS.md self-reference gap
+  pattern (a session's own final close-out commit can't cite its own sha) recurred again this
+  session for S637 -- same established 2-commit workaround applied (fix the receipt's commit field,
+  then log that fix commit in CHANGELOG.md); expect it to recur for S638's own close-out too, and the
+  next session's Phase 0 should backfill it the same way if not already done.
+runtime_smoke: CI-workflow fix -- live-verified on the actual GitHub Actions R-CMD-check.yaml run
+  (32969359216) for this session's own push (commit cd4f968c), watched to completion (~23 min).
+  All 5 platforms success; direct per-platform job-log inspection confirms all 3 ubuntu-latest legs
+  (release/oldrel-1/devel) show "checking for detritus in the temp directory ... OK" and
+  "Status: OK" -- the NOTE is gone. 0 test failures anywhere.
+changelog_ref: 2026-08-26 S638 entry, CHANGELOG.md ("root-cause and fix the checking for detritus in
+  the temp directory NOTE")
+commit: cd4f968c
 ```
 
 ``` handoff

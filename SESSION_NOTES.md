@@ -30,15 +30,160 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ### What Session 638 Did
 
-**Deliverable:** Root-cause the `org.chromium.Chromium.*` temp-detritus
-NOTE in `R CMD check` (“checking for detritus in the temp directory”),
-now reproducing on all 3 `ubuntu-latest` legs (found S636, confirmed
-S637) (IN PROGRESS) **Started:** 2026-08-26 **Status:** Session claimed.
-Phase 0 orientation complete (ledger reconcile backfilled S637’s
-self-reference gap, commits `ce396c87`/`c51202a7`, not yet pushed).
-Investigation beginning. **Ledger:** `CHANGELOG: pending` — set at
-claim; this session’s actions are recorded in `CHANGELOG.md` at Phase
-3F.
+**Deliverable:** Root-caused and fixed the `org.chromium.Chromium.*`
+temp-detritus NOTE in `R CMD check` (“checking for detritus in the temp
+directory”), which had been reproducing on all 3 `ubuntu-latest` legs
+(found S636, confirmed S637, “root cause not yet diagnosed”). **DONE**,
+full strict TDD (RED→GREEN, REFACTOR skipped by owner choice — diff
+minimal). **Started/Completed:** 2026-08-26 (single session).
+
+**What actually happened, in order:** 1. **Phase 0 orientation** (full
+protocol): clean tracked tree, 7 pre-existing untracked items already
+triaged by S637. Ledger reconcile found a genuine gap: S637’s own final
+close-out commit (`dec55f20`, writing `HANDOFFS.md`/`SESSION_NOTES.md`)
+landed after the `CHANGELOG.md` frontier with no entry — the established
+“self-reference” pattern (a close-out commit can’t cite its own sha).
+Backfilled it the same 2-commit way this project’s precedent already
+does: `ce396c87` (fixed S637’s `HANDOFFS.md` receipt `commit:` field) +
+`c51202a7` (logged that fix in `CHANGELOG.md`). Rendered the priorities
+list; user corrected a housekeeping-note mischaracterization (completed
+`BACKLOG.md` items get *removed*, recorded in `CHANGELOG.md` — never
+edited in place, already `SESSION_RUNNER.md` Phase 3F’s own rule) and
+picked “root-cause the temp-detritus NOTE.” 2. **Claimed the session**
+(1B stub + `HANDOFFS.md` pending receipt, commit `cc8d617e`). 3.
+**Investigation** (`diagnose` skill): built a fast local feedback loop
+despite the bug initially looking CI-only — a disposable `Rscript`
+subprocess mimicking `getLiveRenderedPositions()`’s exact pattern,
+diffing the OS temp root before/after. Confirmed the bug reproduces
+identically on macOS/branded desktop Chrome in seconds, proving the
+mechanism is platform-generic, not CI-specific. Direct chromote 0.5.1
+source inspection (`asNamespace("chromote")`) found
+`getLiveRenderedPositions()` closes only its `ChromoteSession`, never
+the parent
+[`chromote::default_chromote_object()`](https://rstudio.github.io/chromote/reference/default_chromote_object.html)
+singleton — so the underlying Chrome subprocess was only ever
+hard-killed by `processx`’s `supervise = TRUE` parent-exit mechanism,
+never given a chance to run Chromium’s own
+`ProcessSingleton::Cleanup()`. Directly inspected a real leftover
+directory’s contents (`SingletonCookie` symlink + `SingletonSocket` Unix
+socket) to confirm the mechanism rather than assume from the filename
+pattern. 4. **PRE-RED→RED gate** (`AskUserQuestion`): proposed the fix
+(one-time, teardown-scoped graceful close) plus a 2-part regression test
+(structural + a live mechanism-proof test using a dedicated, non-default
+`Chromote$new()` instance) — owner approved. 5. **RED:** wrote
+`tests/testthat/test_helper_live_render_positions_teardown.R` (matching
+`test_helper_live_render_positions_timeout.R`’s house style) — confirmed
+5 structural assertions fail for the right reason (the live
+mechanism-proof test passed immediately, since it validates chromote’s
+own behavior, not code this session had written yet). 6. **RED→GREEN
+gate** (`AskUserQuestion`): owner approved the fix. 7. **GREEN:** added
+a guarded, one-time
+`withr::defer(chromeParent$close(), envir = testthat::teardown_env())`
+registration to `getLiveRenderedPositions()`. Found and fixed a bug in
+my OWN test (not the implementation): `fixed = TRUE` combined with
+regex-escaped `\\(` searched for literal backslashes that don’t exist.
+Confirmed GREEN, sibling timeout test unaffected. 8. **Empirical
+verification against the real caller:** ran
+`test_positionMatingUnitForest.R` (the only real usage, 3 call sites)
+end-to-end as a standalone subprocess — 0 leftover temp-dir entries
+before vs. after, matching exactly what R CMD check measures. 9. **The
+live mechanism-proof test proved flaky specifically inside
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+sandboxed subprocess** (0 new entries found even after replacing a fixed
+0.3s sleep with a 5s poll) despite working reliably in every standalone
+reproduction (including with the default singleton already alive). Root
+cause of the sandbox-specific discrepancy not pinned down (`TMPDIR`
+inheritance and `find_chrome()` resolution both checked, both matched).
+Per `diagnose`’s “after 2 failed attempts, stop and reconsider” — and
+since this test never exercised the actual fix’s code path anyway —
+presented the finding via `AskUserQuestion`; owner approved dropping it
+rather than chasing further, keeping the structural test as the sole
+automated regression guard. 10. **GREEN→REFACTOR gate**
+(`AskUserQuestion`): owner approved skipping REFACTOR (diff minimal).
+11. Committed in 2 checkpoints (5-file cap): fix (`03e3bd52`), then
+documentation — `PROJECT_LEARNINGS.md` Learning 671, `CLAUDE.md`
+learnings-count pointer, `BACKLOG.md` (removed the resolved item per
+`SESSION_RUNNER.md` Phase 3F’s own rule — completed items are removed,
+not edited in place — and filed 1 new, unrelated, incidentally-found
+item: `ubuntu-latest (oldrel-1)` failing at the `setup-r@v2` step
+itself, a `sudo`/R-installer infra error found while watching CI, not
+chased), `CHANGELOG.md` (commit `cd4f968c`). 12. **Verified locally
+before pushing:** full clean regression 0 failed/0 error/6446 passed;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors — “checking for detritus in the temp directory … OK” for the
+first time — 1 WARNING + 1 NOTE both confirmed pre-existing local-only
+clutter (non-portable filename, `scratchpad/`), not new;
+`lintr::lint_package()` 0 lints. 13. **Pushed** (owner-approved via
+`AskUserQuestion`) and watched the real CI run (`32969359216`) to
+completion (~23 min). **All 5 platforms `success`; confirmed via direct
+per-platform job-log inspection (not the abbreviated summary) that all 3
+`ubuntu-latest` legs (`release`/`oldrel-1`/`devel`) now show
+`checking for detritus in the temp directory ... OK` and `Status: OK`**
+– the NOTE is gone. 0 test failures anywhere (`FAIL 0` grepped directly
+from the `devel` leg’s log). The separately-filed
+`ubuntu-latest (oldrel-1)` `setup-r@v2` infra flake did NOT reproduce
+this run (succeeded cleanly) – consistent with the
+one-off-transient-flake hypothesis noted in `BACKLOG.md`, though still
+not proven absent by a single clean re-run alone.
+
+**Self-assessment (Session 638): 8/10.** **Strengths:** (1) built a
+fast, cheap local feedback loop for a bug that initially looked CI-only,
+turning a slow CI-round-trip debugging loop into a several-second one —
+the `diagnose` skill’s own core discipline, applied faithfully; (2)
+traced the root cause to an actual library-internals mechanism
+(chromote’s own source, Chromium’s documented `ProcessSingleton`) rather
+than guessing from the filename pattern alone, directly inspecting a
+real leftover directory’s contents to confirm; (3) verified the fix
+empirically against the REAL caller (the actual test file that uses the
+helper), not just an isolated synthetic repro; (4) caught and fixed a
+bug in my OWN test (the `fixed = TRUE` + regex-escape mismatch) rather
+than assuming the implementation was wrong when the first re-run still
+failed; (5) recognized a genuinely flaky, tangential supplementary test
+for what it was (not testing the actual fix, environment-specific,
+already had 2 failed fix attempts) and stopped chasing it per
+`diagnose`’s own guidance, rather than either silently leaving it flaky
+or endlessly iterating; (6) followed strict TDD faithfully with an
+explicit `AskUserQuestion` gate at every phase transition, including the
+mid-GREEN scope-adjustment question when the live test’s flakiness
+surfaced. **Weaknesses:** (1) the root-cause investigation and the
+flaky-test back-and-forth together consumed 3 separate
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+runs (~4-5 min each) — the FIRST
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+run could have been deferred until after resolving the live test’s
+design, since the structural tests alone (verified via the much faster
+`test_file()`) already gave high confidence before that first full-check
+cycle; (2) did not anticipate the live mechanism-proof test’s
+sandbox-specific flakiness at PRE-RED gate time — the design looked
+sound in isolation and there was no obvious signal beforehand that it
+would behave differently under
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+subprocess.
+
+**Gotchas for a future session:** (1) chromote’s Chrome-launch args
+never pass `--user-data-dir` — Chromium’s own fallback creates a
+randomly-named ephemeral profile dir per launch; this is generic
+Chromium behavior, not chromote-specific, so the same leak class could
+recur anywhere else in this codebase that launches Chrome without
+gracefully closing its OWN parent `Chromote` object (audit any future
+direct `chromote::Chromote$new()`/`default_chromote_object()` use the
+same way). (2) The dropped live mechanism-proof test’s sandbox-specific
+flakiness (0 new entries found even after a 5s poll, inside
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+specifically) remains an open, unexplained data point — `TMPDIR`
+inheritance and `find_chrome()` resolution were both checked and matched
+between environments, so the actual cause is still unknown; a future
+session investigating chromote/sandbox interactions should treat this as
+a real, reproducible discrepancy worth another look, not dismiss it. (3)
+The `CHANGELOG.md`/`HANDOFFS.md` self-reference gap pattern (a session’s
+own final close-out commit can’t cite its own sha) recurred again this
+session for S637 — same established 2-commit workaround applied; expect
+it to recur for S638’s own close-out too, and the next session’s Phase 0
+should backfill it the same way if not already done by the time that
+session starts. (4) `BACKLOG.md`’s “Up Next” top item is now
+`test-coverage.yaml`’s missing Chrome-provisioning steps (READY, Effort
+S) — matches `R-CMD-check.yaml`’s proven 3-step fix pattern exactly,
+should be a fast pickup.
 
 ### Session 636 Handoff Evaluation (by Session 637)
 
