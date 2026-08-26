@@ -199,7 +199,7 @@ runtime_smoke: CI-workflow fix -- live-verified on the actual GitHub Actions tes
   FAIL 0 | WARN 39 | SKIP 245 | PASS 6298 -- the chromote Chrome-launch flake did not reproduce.
 changelog_ref: 2026-08-26 S639 entry, CHANGELOG.md ("provision pinned Chrome for
   test-coverage.yaml's chromote-dependent tests")
-commit: 507cc6ad
+commit: 9f2b1c16
 ```
 
 ```handoff
