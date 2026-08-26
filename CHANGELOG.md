@@ -17,6 +17,46 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-26 · \[BL-N\] S637: fix R-CMD-check.yaml CI break to a genuinely clean 0/0/0 baseline
+
+- **Deliverable:** owner-directed “broader” scope (a clean baseline, not
+  just a green checkmark) on `BACKLOG.md`’s top item (found S636).
+  Root-caused both real issues directly rather than trusting the 4
+  candidate fixes S636 listed: (1) `kinship2` was simply never declared
+  in `DESCRIPTION` (confirmed via grep) — added to `Suggests:`, removing
+  the “unstated dependencies in tests” WARNING without reopening Track
+  C’s “tests call kinship2 live” decision (Learning 667) or loosening
+  the CI gate; (2) the long-standing `vignettes/figure` knitr-leftover
+  NOTE (first documented ~S520, deferred 80+ sessions) traced to one
+  dead, git-tracked PNG nothing reads — removed via `git rm`. Full
+  strict TDD (RED → GREEN → REFACTOR skipped by owner choice, diff
+  minimal): new `tests/testthat/test_r_cmd_check_clean_baseline.R`
+  guards both. A third, newly-found NOTE (`org.chromium.Chromium.*` temp
+  detritus, chromote-related) was deliberately not chased this session
+  (owner-directed) — filed to `BACKLOG.md` instead, now confirmed
+  reproducing on all 3 `ubuntu-latest` legs. **Live-verified on real
+  CI:** pushed, then confirmed via direct per-platform job-log
+  inspection — `macos-latest`/`windows-latest` are genuine `Status: OK`;
+  the 3 ubuntu legs show only the separately-filed detritus NOTE. A
+  previously-flagged consequence (declaring `kinship2` in `Suggests:`
+  means CI’s `setup-r-dependencies@v2` `needs: check` now installs it,
+  flipping Track C’s 6 `skip_if_not_installed("kinship2")` tests from
+  skip to run) confirmed clean: 0 failures on any of the 5 platforms.
+  Incidentally discovered, not fixed (reported per Learning 382’s
+  precedent, filed to `BACKLOG.md`): `test-coverage.yaml` fails
+  intermittently on the already-diagnosed chromote Chrome-launch flake
+  (S616/S618/S619/S629) — it never received the Chrome-provisioning fix
+  the other 2 CI workflows have, and isn’t covered by the existing guard
+  test either. Verified:
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/0 \[tracked-repo\] warnings/0 \[tracked-repo\] notes; full
+  clean regression 0 failed/0 error/39 warnings/6439 passed;
+  `lintr::lint_package()` 0 lints; `renv::snapshot(dev = TRUE)` +
+  `renv::status(dev = TRUE)` consistent. See `PROJECT_LEARNINGS.md`
+  Learning 670. Commits: `e335542f` (claim), `526c7fec` (fix),
+  `438f3eb8` (docs).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · \[ad hoc\] S636: record HANDOFFS.md receipt commit-sha fix for the CI-break correction (matching S607/S623/S629-S635 precedent)
 
 - **Deliverable:** logging this session’s own `HANDOFFS.md` receipt

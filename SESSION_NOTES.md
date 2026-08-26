@@ -28,30 +28,213 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 636 Handoff Evaluation (by Session 637)
+
+**Score: 7/10.** **What helped:** gotcha (1) correctly framed the CI
+break as a DECISION NEEDED item requiring an owner trade-off weigh-in
+before a session acts, not a routine pickup – matched exactly: this
+session needed 2 `AskUserQuestion` rounds (fix-approach candidates, then
+the temp-detritus NOTE scope) before any code was written, precisely as
+the handoff anticipated. Gotcha (3) (the CI-break tracking convention –
+fix as found or defer via `BACKLOG.md`, never a standalone GitHub issue)
+was directly actionable: applied it correctly to both NEW findings this
+session surfaced (the temp-detritus NOTE reproducing further, and the
+unrelated `test-coverage.yaml` Chrome-provisioning gap), filing both to
+`BACKLOG.md` with no GitHub issue ever considered. `key_files`’ framing
+of `.github/workflows/R-CMD-check.yaml:97-100` as “the live CI break –
+NOT edited this session” was accurate and useful context. **What was
+missing:** the handoff’s own `BACKLOG.md` entry (which it pointed to,
+rather than duplicating) listed 4 candidate fixes – loosen `error-on`, a
+narrower `rcmdcheck` allowlist, redesign Track C’s kinship2 usage, or
+hold – and none of the 4 was “check whether kinship2 is actually
+declared in `DESCRIPTION` at all.” A direct `grep DESCRIPTION` (this
+session’s own first investigative step after the user pushed back on
+scope) found the real, much-simpler root cause in under a minute: it was
+never declared. This is a genuine gap in S636’s own analysis, not an
+unknowable one – the same
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+run S636 already had in hand states the WARNING is specifically about an
+*undeclared* dependency, which is a direct pointer to checking
+`DESCRIPTION` first, before reasoning about bigger structural
+trade-offs. **What was wrong:** nothing found inaccurate – gotcha (2)
+(“no further tracks – A/B/C/D are all DONE”) remains true, untouched
+this session. **ROI:** moderate – the process/convention guidance
+(gotchas 1/3) saved real back-and-forth, but the technical candidate
+list needed to be set aside rather than built on, costing this session
+its own from-scratch root-cause investigation rather than a shorter
+verify-and-apply.
+
 ### What Session 637 Did
 
-**Deliverable:** Fix the `R-CMD-check.yaml` CI break (`BACKLOG.md` “Up
-Next” top item, found S636) to a genuinely clean baseline —
-owner-directed scope: “broader” (0 errors/0 warnings/0 notes in CI, not
-just a green checkmark). (IN PROGRESS) **Started:** 2026-08-26
-**Status:** Session claimed. Phase 0 orientation complete; PRE-RED scope
-resolved via 2 `AskUserQuestion` rounds (user first corrected the
-framing from “just make CI green” to “broader – maintain a clean base”,
-then confirmed treating a 3rd, newly-found, unreproduced NOTE as a
-separate BACKLOG item rather than chasing it this session). Scope: (1)
-add `kinship2` to `DESCRIPTION` `Suggests:` (eliminates the “unstated
-dependencies in tests” WARNING — confirmed via grep it was simply never
-declared, not a rejected fix); (2) `git rm` the dead tracked
-`vignettes/figure/ plot-focal-age-sex-pyramid-1.png` leftover
-(eliminates the long-standing knitr-leftover NOTE — confirmed dead via
-grep, the same-named vignette chunk regenerates its own plot live); (3)
-file the newly-found `org.chromium.Chromium.*` temp-detritus NOTE
-(ubuntu-latest oldrel-1 only, single occurrence, no prior documentation)
-as a new `BACKLOG.md` item for a future session, not fixed here. Work
-beginning: RED tests for (1) and (2) not yet written. **Ledger:**
-`CHANGELOG: pending` — set at claim; this session’s actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session’s reconcile.
+**Deliverable:** Fixed the `R-CMD-check.yaml` CI break (`BACKLOG.md` “Up
+Next” top item, found S636) to a genuinely clean 0 errors/0 warnings/0
+notes baseline in CI, per owner-directed “broader” scope (not just a
+green checkmark). **DONE**, full strict TDD (RED→GREEN, REFACTOR skipped
+by owner choice – diff already minimal). **Started/Completed:**
+2026-08-26 (single session).
+
+**What actually happened, in order:** 1. **Phase 0 orientation** (full
+protocol): clean tracked tree (7 untracked items, all traced to
+pre-existing clutter or S636’s own uncleaned render byproducts, not a
+new ghost session). Ledger frontiers current (`CHANGELOG.md` at HEAD;
+`HANDOFFS.md` one commit behind, the established
+self-reference-workaround pattern). `gh run list` showed the last
+completed `R-CMD-check.yaml` run RED (all 5 platforms) – the exact
+finding S636 left. Dashboard 96/100, 1 HIGH risk (the same
+carried-forward FM \#28 ledger-size finding). Rendered the priorities
+list (4 numbered items) via `AskUserQuestion`; owner picked “Fix CI red
+build.” 2. **Owner asked a clarifying question before committing to
+scope**: “is the goal 0 errors/0 warnings/0 notes?” A live
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+run plus direct comparison against the actual failed CI job log (not
+assumed from the local run alone) showed the honest answer was more
+nuanced: 2 of the local WARNING/NOTE findings were purely local
+untracked clutter invisible to CI; CI’s own real state was 1 WARNING
+(kinship2) + 1-2 NOTEs. Presented this distinction; owner chose
+“broader” – pursue a genuinely clean CI baseline, not just silence the
+failing gate. 3. **Investigated before proposing a fix approach** (this
+session’s own initiative, not from the handoff): grepped `DESCRIPTION`
+directly and found `kinship2` was never declared at all – the 4
+candidate fixes `BACKLOG.md` listed had all missed this simpler root
+cause. Root-caused the `vignettes/figure` NOTE the same way: traced to
+one dead, git-tracked PNG (`c18b7fd6`) that nothing in the repo actually
+reads. Found a 3rd, brand-new NOTE (`org.chromium.Chromium.*` temp
+detritus, `ubuntu-latest oldrel-1` only) with no prior documentation.
+Presented all 3 findings; owner confirmed fixing the first 2 (fully
+diagnosed, deterministic) and filing the 3rd separately (undiagnosed,
+single-occurrence) rather than chasing it this session. 4. **Claimed the
+session** (1B stub + `HANDOFFS.md` pending receipt, commit `e335542f`).
+5. **PRE-RED→RED gate** (`AskUserQuestion`): proposed the exact fix (add
+`kinship2` to `Suggests:`; `git rm` the dead PNG; new guard test) –
+owner approved. 6. **RED:** wrote
+`tests/testthat/test_r_cmd_check_clean_baseline.R` (2 `test_that()`
+blocks, following `test_rbuildignore.R`’s established style: parse
+`DESCRIPTION`/filesystem state directly, no package install needed) –
+confirmed both fail for the right reason (kinship2 absent from
+`Suggests`; `vignettes/figure/` still present). 7. **RED→GREEN gate**
+(`AskUserQuestion`): owner approved the minimum fix. 8. **GREEN:** added
+`kinship2` to `DESCRIPTION` `Suggests:`; `git rm -r vignettes/figure`.
+Confirmed both new tests pass. Ran a full
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+the kinship2 WARNING and the `figure` NOTE are BOTH gone from the real
+check output – the 1 remaining WARNING + 1 NOTE are the same local- only
+clutter identified in step 2 (confirmed, not assumed). Full clean
+regression: 0 failed/0 error/39 warnings/6439 passed (matches S636’s own
+baseline, +2 for the new guards). `lintr::lint_package()` 0 lints on the
+new file. `renv::snapshot(dev = TRUE)` recorded `kinship2`/`quadprog`;
+`renv::status(dev = TRUE)` confirmed consistent. 9. **GREEN→REFACTOR
+gate** (`AskUserQuestion`): owner approved skipping REFACTOR (diff too
+small to need restructuring). 10. **Flagged a real,
+previously-unverified consequence BEFORE pushing** (matching
+`PROJECT_LEARNINGS.md` Learning 669’s own “re-present a trade-off once
+its shape is known” rule): `R-CMD-check.yaml`’s
+`setup-r-dependencies@v2` (`needs: check`) installs `Suggests` packages,
+so declaring `kinship2` there means CI will now actually install it –
+flipping Track C’s 6 `skip_if_not_installed("kinship2")` tests from skip
+to run, on all 5 platforms, for the first time ever. Confirmed via
+direct inspection of the workflow file (not assumed). Presented via
+`AskUserQuestion`; owner approved pushing and watching CI to confirm.
+11. Committed in 2 checkpoints (5-file cap): mechanical
+(`DESCRIPTION`/`renv.lock`/new test/ `vignettes/figure` removal, commit
+`526c7fec`), then documentation (`PROJECT_LEARNINGS.md` Learning 670 +
+`CLAUDE.md`’s learnings-count pointer, commit `438f3eb8`). Pushed. 12.
+**Watched the real CI run to completion** (2 `Monitor` cycles, ~20+ min
+total – the live- kinship2 tests actually running for the first time
+added real wall-clock time neither this session nor S636 had observed
+before). Along the way, incidentally found `test-coverage.yaml` (a
+DIFFERENT workflow, for the PREVIOUS commit) had failed on a known
+chromote Chrome-launch flake (S616/S618/S619/S629’s own diagnosed
+signature) – confirmed via direct job-log inspection that
+`test-coverage.yaml` has zero Chrome-provisioning steps (unlike the
+other 2 CI workflows) and isn’t even covered by the existing guard
+test’s `workflow_files` vector. Did NOT fix it – unrelated to this
+session’s own negotiated scope, filed to `BACKLOG.md` instead (Learning
+382 precedent: report an incidentally-discovered, unrelated gap, don’t
+fix it mid-session). 13. **Confirmed the real result via direct
+per-platform job-log inspection**, not the abbreviated summary table:
+`macos-latest`/`windows-latest` are a genuine `Status: OK` (0/0/0); the
+3 `ubuntu-latest` legs show only the separately-filed temp-detritus
+NOTE, now confirmed reproducing on all 3 (previously seen on only 1).
+Grepped the full 5-platform log for `FAIL` and for “kinship2 is not
+installed” – 0 and 0 respectively, confirming the skip-to-run flip
+landed cleanly with no new failures anywhere. 14. Updated `BACKLOG.md`
+(resolved the top item with full CI-confirmed detail; filed 2 new items
+– the temp-detritus NOTE now confirmed on all 3 ubuntu legs, and the
+separate `test-coverage.yaml` gap) and `CHANGELOG.md`, committed
+(`2224d1ec`).
+
+**Self-assessment (Session 637): 8/10.** **Strengths:** (1) did not
+trust the predecessor’s own candidate-fix list at face value – grepped
+`DESCRIPTION` directly and found a materially simpler, correct root
+cause none of the 4 candidates named; (2) caught and corrected its own
+initial framing gap when the owner asked a clarifying scope question,
+rather than defending the narrower reading – distinguished real
+CI-visible findings from local-only clutter via direct comparison
+against the actual failed CI job log, not assumption; (3) proactively
+surfaced the Suggests-declaration’s real CI-behavior consequence
+(skip-to-run flip) BEFORE pushing, matching the project’s own
+established “re-present a trade-off once its shape is known” discipline,
+rather than letting it surface as a surprise; (4) followed strict TDD
+faithfully with an explicit `AskUserQuestion` gate at every phase
+transition; (5) live-verified via direct per-platform log inspection
+rather than trusting the abbreviated CI summary table, which is exactly
+what surfaced the temp-detritus NOTE’s now-confirmed 3-platform
+reproduction; (6) found 2 more real, unrelated findings mid-session (the
+detritus NOTE’s wider reproduction; the completely separate
+`test-coverage.yaml` gap) and correctly did NOT fold either into this
+session’s own deliverable, filing both to `BACKLOG.md` instead.
+**Weaknesses:** (1) the CI-watch phase took much longer than anticipated
+(~20+ minutes across 2 `Monitor` cycles) – foreseeable in hindsight (the
+live-kinship2 tests actually running for the first time was the whole
+point of the fix) but not explicitly estimated before pushing, so the
+wait wasn’t flagged as an expected cost up front; (2) initially answered
+the owner’s “is the goal 0/0/0” question by treating it as settled by
+`BACKLOG.md`’s own framing before doing the comparative CI-log check
+that revealed the real, more nuanced picture – the right investigation
+happened, but only after the owner’s question prompted it rather than
+before presenting an initial (slightly imprecise) scope summary.
+
+**Key files:** `DESCRIPTION` (the one-line `Suggests:` fix, the actual
+root cause), `tests/testthat/ test_r_cmd_check_clean_baseline.R` (new
+regression guard, 2 `test_that()` blocks, follows
+`test_rbuildignore.R`’s style),
+`vignettes/figure/plot-focal-age-sex-pyramid-1.png` (removed – confirmed
+dead via `a2interactive.Rmd:340`’s live-regenerating chunk), `renv.lock`
+(records kinship2/quadprog), `.github/workflows/R-CMD-check.yaml:39-42`
+(`setup-r-dependencies@v2` `needs: check` – NOT edited, but its behavior
+is why kinship2 now installs in CI),
+`.github/workflows/test-coverage.yaml` (the new, separate, unrelated gap
+– zero Chrome-provisioning steps, not fixed this session),
+`tests/testthat/test_r_cmd_check_workflow_chrome_setup.R:33` (the
+existing guard’s `workflow_files` vector – doesn’t cover
+`test-coverage.yaml`, a future fix needs to extend it too),
+`PROJECT_LEARNINGS.md` Learning 670 (all 3 findings), `BACKLOG.md` (1
+item resolved, 2 new items filed).
+
+**Gotchas for a future session:** (1) **The temp-detritus NOTE
+(`org.chromium.Chromium.*`) now confirmed reproducing on all 3
+`ubuntu-latest` legs** (previously seen on only 1) – root cause not yet
+diagnosed, but no longer a rare flake; a future session should be able
+to reproduce it on demand. Likely candidate: a chromote
+`ChromoteSession` not `$close()`-ing in some test’s teardown – start
+with `tests/testthat/helper-live-render-positions.R` and
+`data-raw/kinship2FidelityValidation.R`’s `screenshot_layout()`. (2)
+**`test-coverage.yaml` will keep failing intermittently** until it gets
+the same 3-step Chrome-provisioning fix
+`R-CMD-check.yaml`/`R-CMD-check-scheduled.yaml` both already have
+(S618/S619/S629’s own precedent) – a future session fixing it must ALSO
+extend `test_r_cmd_check_workflow_chrome_setup.R`’s `workflow_files`
+vector to cover it, or the fix itself is unguarded against regressing.
+(3) Track C’s 6 live-kinship2 tests now actually run in CI (not skip) on
+every platform, for the first time ever – this is intentional and
+confirmed clean (0 failures), but a future CI failure in
+`test_comparePedigreeStructure.R` is now a real possibility that was
+structurally impossible before this session (previously the tests never
+executed in CI at all). (4) The kinship2 structural-comparison plan
+(Tracks A-D) has no further work – confirmed independently again this
+session; a future session touching pedigree-diagram/kinship2 work should
+consult `BACKLOG.md`’s “Up Next” fresh rather than assume there’s more
+there. **Score: 7/10 – Session 636’s handoff evaluated above.**
 
 ### Session 635 Handoff Evaluation (by Session 636)
 

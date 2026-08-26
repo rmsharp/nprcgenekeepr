@@ -7,35 +7,96 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 ## Up Next
 
 **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636,
-2026-08-26, DECISION NEEDED on the fix approach, Effort S).
-`r-lib/actions/check-r-package@v2`’s default `error-on: "warning"` (not
-overridden in this project’s workflow file) trips on Track C’s
-already-accepted “unstated dependencies in tests: kinship2” WARNING
-(`PROJECT_LEARNINGS.md` Learning 667) – the first time Track A/B/C/D’s
-commits ever reached CI (the branch sat 31+ commits unpushed until S636
-pushed them). Confirmed NOT a problem: Track C’s live-kinship2 tests
-skip cleanly in CI on every platform, exactly as designed. Owner
-directed (via `AskUserQuestion`, S636) to leave CI red for a dedicated
-future session rather than have S636 itself edit the workflow file.
-Initially filed as issue \#165, then closed same-session per live owner
-correction (“do not file GitHub issues for CI breaks – fix as found or
-defer to the backlog”) – this item is the sole tracker going forward. 4
-candidate fix approaches, none decided: (1) add `error-on: "error"` to
-the `check-r-package@v2` `with:` block in
-`.github/workflows/R-CMD-check.yaml:97-100`, overriding the default so
-WARNINGs no longer fail CI – matches the project’s own already-ratified
-acceptance of this WARNING, but loosens the bar for ALL future warnings,
-not just this one; (2) narrower allowlisting of just this one WARNING
-message (would need custom
-[`rcmdcheck::rcmdcheck()`](http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.md)
-scripting in place of the action, a bigger change); (3) redesign Track
-C’s kinship2 usage to avoid the WARNING entirely (e.g. indirect
-namespace dispatch) – already considered and explicitly rejected by the
-owner in S635 in favor of “accept and document,” so re-opening this
-needs a fresh owner decision; (4) hold as a known state – not
-sustainable long-term but not urgent-unsafe (the package itself is not
-broken: 0 errors, both locally and in CI). See `PROJECT_LEARNINGS.md`
-Learning 669.
+2026-08-26). **RESOLVED S637, 2026-08-26, per owner-directed “broader”
+scope (a genuinely clean baseline, not just a green checkmark):** the
+actual root cause was simpler than any of the 4 candidate fixes S636
+listed – `kinship2` was never declared anywhere in `DESCRIPTION` at all
+(confirmed via direct grep), despite 2 real, already-guarded
+([`requireNamespace()`](https://rdrr.io/r/base/ns-load.html)/
+`skip_if_not_installed()`) executable call sites. Adding `kinship2` to
+`Suggests:` removed the “unstated dependencies in tests” WARNING
+outright – no gate-loosening, no redesign, no reopening Track C’s “tests
+call kinship2 live” decision (`PROJECT_LEARNINGS.md` Learning 667). Same
+session also fixed a second, long-standing, previously-undiagnosed
+issue: the `vignettes/figure` knitr-leftover NOTE (first documented
+~S520, deferred as “pre-existing/ unrelated” across 80+ sessions) –
+traced to a single dead, git-tracked PNG
+(`plot-focal-age-sex-pyramid-1.png`, commit `c18b7fd6`) that nothing
+actually reads (the same-named vignette chunk regenerates its own plot
+live); `git rm` removed it. Both guarded by a new
+`tests/testthat/test_r_cmd_check_clean_baseline.R`. **Live-verified on
+real CI (matching this project’s own established bar for CI-workflow
+fixes, e.g. S629):** pushed, then confirmed via direct per-platform
+job-log inspection (not the abbreviated summary) – `macos-latest` and
+`windows-latest` are a genuine `Status: OK` (0 errors/0 warnings/0
+notes); the 3 `ubuntu-latest` legs (`release`/`oldrel-1`/`devel`) show
+only the separate, already-flagged temp-detritus NOTE below, confirmed
+reproducing on all 3 (previously seen on only 1). **Known,
+previously-flagged consequence confirmed clean:** `check-r-package@v2`’s
+`needs: check` installs `Suggests` packages, so `kinship2` is now
+actually installed in CI – Track C’s 6
+`skip_if_not_installed("kinship2")` live tests flipped from *skip* to
+*actually run*, on all 5 platforms, for the first time ever, with 0
+failures anywhere (grepped the full run log for `FAIL` – none). See
+`PROJECT_LEARNINGS.md` Learning 670.
+
+**`checking for detritus in the temp directory` NOTE on `ubuntu-latest`
+(all 3 legs: `release`/ `oldrel-1`/`devel`)** (found S636 as a
+single-platform occurrence, confirmed reproducing on all 3 ubuntu legs
+S637, 2026-08-26, Effort unknown – root cause not yet diagnosed). A
+leftover `org.chromium.Chromium.<random>` file/dir in R’s temp
+directory, almost certainly a Chromium singleton/lock artifact from
+chromote’s browser session during the live-render/diagram tests. Does
+not fail CI (NOTEs don’t trip `error-on: "warning"`), and has never been
+diagnosed – deliberately not chased S637 (owner-directed via
+`AskUserQuestion`: fix the 2 fully-diagnosed, deterministic issues above
+now, defer this unreproduced-at-the-time finding separately) – now
+confirmed reproducible on demand (all 3 ubuntu legs, 2 consecutive
+runs), so a future session should be able to root-cause it directly
+rather than treat it as a rare flake. Likely candidate: a
+chromote/`ChromoteSession` not calling `$close()` in some test’s
+teardown, leaving Chromium’s own temp lock file behind when R CMD
+check’s own temp-dir scan runs. Start with the live-render/
+screenshot-driving tests
+(`tests/testthat/helper-live-render-positions.R`,
+`data-raw/kinship2FidelityValidation.R`’s `screenshot_layout()`) and
+confirm whether each opened session is explicitly closed.
+
+**`test-coverage.yaml` fails intermittently on the known chromote
+Chrome-launch flake – never received the Chrome-provisioning fix
+`R-CMD-check.yaml`/`R-CMD-check-scheduled.yaml` both have** (found S637,
+2026-08-26, incidental to watching CI for the item above – READY, Effort
+S, matches an already-proven pattern). Confirmed via direct job-log
+inspection (2 consecutive runs, both on the exact same commits as the
+item above): fails inside `test_positionMatingUnitForest-1645.R`’s
+`getLiveRenderedPositions()` at `chromote:::launch_chrome()` -\>
+`startup()` -\>
+[`rlang::abort()`](https://rlang.r-lib.org/reference/abort.html), the
+identical failure signature S616/S618/S619/S629 already diagnosed and
+fixed twice elsewhere. Root cause confirmed directly:
+`.github/workflows/test-coverage.yaml` has **zero** Chrome-provisioning
+steps at all (no `browser-actions/setup-chrome@v2`, no
+`CHROMOTE_CHROME`, no
+[`chromote::find_chrome()`](https://rstudio.github.io/chromote/reference/find_chrome.html)
+pre-flight assertion) – relies entirely on ambient/unpinned Chrome
+discovery, the exact failure mode class the other 2 workflows were fixed
+against. Also confirmed:
+`tests/testthat/test_r_cmd_check_workflow_chrome_setup.R` (the
+regression guard for this exact defect class) only loops over
+`c("R-CMD-check.yaml", "R-CMD-check-scheduled.yaml")` –
+`test-coverage.yaml` is invisible to it, so even a future fix needs the
+guard’s own `workflow_files` vector extended or it can silently regress
+again unguarded. A future session should port the identical 3-step
+pattern (pinned `setup-chrome@v2` + `CHROMOTE_CHROME` +
+[`chromote::find_chrome()`](https://rstudio.github.io/chromote/reference/find_chrome.html)
+pre-flight) into `test-coverage.yaml`, matching S629’s own precedent
+exactly, and add it to the guard test’s `workflow_files` vector in the
+same session. Not fixed S637 – unrelated to that session’s own
+negotiated scope (the `R-CMD-check.yaml` kinship2
+WARNING/`vignettes/figure` NOTE fix above), so flagged rather than
+folded in, per the established “report, don’t fix mid-session” precedent
+for an incidentally-discovered, unrelated gap (`PROJECT_LEARNINGS.md`
+Learning 382).
 
 **Build a real structural/topological pedigree-diagram comparison
 algorithm against kinship2 – the current “comparison” is 2 static images
