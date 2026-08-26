@@ -326,27 +326,18 @@ cat("Track C (9 subjects, dogleg) structurally identical to kinship2:",
 ## If any comparison finds a real discrepancy, print it in full rather than
 ## just the boolean -- a diff staying uncaught here would otherwise be
 ## silently swallowed by the summary cat() calls above.
+## .formatStructuralDiscrepancy() (tests/testthat/helper-
+## comparePedigreeStructure.R, sourced above) replaces this script's own
+## former local reportDiscrepancy() copy (found live 2026-08-26: that copy
+## was never updated when individualsOnlyInA/individualsOnlyInB were added
+## to compareAgainstKinship2()'s return shape, so it silently omitted the
+## one detail -- individualsOnlyInB: "P5" -- the Track B full identical =
+## FALSE verdict is actually based on; this script has no test coverage of
+## its own, being explicitly excluded from R CMD check, so the gap went
+## unnoticed until an owner-directed live rerun caught it).
 reportDiscrepancy <- function(label, cmp) {
-  if (isTRUE(cmp$identical)) {
-    return(invisible(NULL))
-  }
-  cat("\n!! DISCREPANCY --", label, "!!\n")
-  if (nrow(cmp$parentChildOnlyInA) > 0L) {
-    cat("parent-child edges only in kinship2:\n")
-    print(cmp$parentChildOnlyInA)
-  }
-  if (nrow(cmp$parentChildOnlyInB) > 0L) {
-    cat("parent-child edges only in nprcgenekeepr:\n")
-    print(cmp$parentChildOnlyInB)
-  }
-  if (nrow(cmp$matePairsOnlyInA) > 0L) {
-    cat("mate pairs only in kinship2:\n")
-    print(cmp$matePairsOnlyInA)
-  }
-  if (nrow(cmp$matePairsOnlyInB) > 0L) {
-    cat("mate pairs only in nprcgenekeepr:\n")
-    print(cmp$matePairsOnlyInB)
-  }
+  report <- .formatStructuralDiscrepancy(label, cmp)
+  if (!is.null(report)) cat("\n", report, "\n", sep = "")
 }
 reportDiscrepancy("Track B full", cmpBFull)
 reportDiscrepancy("Track B shrunk", cmpBShrunk)

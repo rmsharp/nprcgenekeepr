@@ -117,3 +117,56 @@ compareAgainstKinship2 <- function(ped) {
   nprcStruct <- nprcgenekeepr:::.extractNprcStructure(nprcLayout)
   nprcgenekeepr:::.comparePedigreeStructures(kinship2Struct, nprcStruct)
 }
+
+## Formats compareAgainstKinship2()'s own return value into a human-readable
+## discrepancy report, or NULL (invisibly) when cmp$identical is TRUE.
+## Extracted from data-raw/kinship2FidelityValidation.R's own local
+## reportDiscrepancy() (found live 2026-08-26: that copy was never updated
+## when .comparePedigreeStructures() gained individualsOnlyInA/
+## individualsOnlyInB, so re-running the script on the article's own Track B
+## full fixture printed "!! DISCREPANCY -- Track B full !!" with nothing
+## underneath, silently omitting the one detail -- individualsOnlyInB: "P5"
+## -- the identical = FALSE verdict is actually based on). Living here
+## rather than in the data-raw/ script (which is explicitly excluded from R
+## CMD check, and so was never exercised by any test) gives this reporting
+## logic real, ongoing test coverage. Returns a character string, not a
+## cat() side effect, specifically so its CONTENT is assertable -- the
+## original's cat()-only form could not be tested at all, which is how the
+## individuals-diff omission went unnoticed in the first place.
+##
+## @param label a short string identifying which comparison this is (e.g.
+##   "Track B full"), included verbatim in the report.
+## @param cmp compareAgainstKinship2()'s own return value.
+## @return a single character string describing every populated diff field,
+##   or NULL (invisibly) when cmp$identical is TRUE.
+.formatStructuralDiscrepancy <- function(label, cmp) {
+  if (isTRUE(cmp$identical)) {
+    return(invisible(NULL))
+  }
+  lines <- sprintf("!! DISCREPANCY -- %s !!", label)
+  if (nrow(cmp$parentChildOnlyInA) > 0L) {
+    lines <- c(lines, "parent-child edges only in kinship2:",
+      utils::capture.output(print(cmp$parentChildOnlyInA)))
+  }
+  if (nrow(cmp$parentChildOnlyInB) > 0L) {
+    lines <- c(lines, "parent-child edges only in nprcgenekeepr:",
+      utils::capture.output(print(cmp$parentChildOnlyInB)))
+  }
+  if (nrow(cmp$matePairsOnlyInA) > 0L) {
+    lines <- c(lines, "mate pairs only in kinship2:",
+      utils::capture.output(print(cmp$matePairsOnlyInA)))
+  }
+  if (nrow(cmp$matePairsOnlyInB) > 0L) {
+    lines <- c(lines, "mate pairs only in nprcgenekeepr:",
+      utils::capture.output(print(cmp$matePairsOnlyInB)))
+  }
+  if (length(cmp$individualsOnlyInA) > 0L) {
+    lines <- c(lines, "individuals only in kinship2:",
+      toString(cmp$individualsOnlyInA))
+  }
+  if (length(cmp$individualsOnlyInB) > 0L) {
+    lines <- c(lines, "individuals only in nprcgenekeepr:",
+      toString(cmp$individualsOnlyInB))
+  }
+  paste(lines, collapse = "\n")
+}

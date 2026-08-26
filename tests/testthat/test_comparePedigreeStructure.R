@@ -1031,3 +1031,114 @@ test_that(
   expect_equal(result$individualsOnlyInA, character(0))
   expect_equal(result$individualsOnlyInB, "P5")
 })
+
+## ---- .formatStructuralDiscrepancy() reporting-helper tests ---------------
+##
+## Found live 2026-08-26: data-raw/kinship2FidelityValidation.R's own local
+## reportDiscrepancy() function was never updated when S641 added
+## individualsOnlyInA/individualsOnlyInB to .comparePedigreeStructures()'s
+## return shape -- re-running the script on the article's own Track B full
+## fixture printed "!! DISCREPANCY -- Track B full !!" with NOTHING
+## underneath, silently omitting the one detail (individualsOnlyInB: "P5")
+## the identical = FALSE verdict is actually based on. That reporting logic
+## lived only in a data-raw/ script explicitly excluded from R CMD check
+## ("not part of R CMD check" per its own header) -- so no test ever
+## exercised it, and it silently went stale. .formatStructuralDiscrepancy()
+## is the same reporting logic, extracted into this helper (auto-loaded
+## under test_dir()/devtools::test(), same file as compareAgainstKinship2())
+## so it has real test coverage going forward; data-raw/
+## kinship2FidelityValidation.R now calls this instead of a local copy.
+##
+## Returns a single formatted character string describing every populated
+## diff field, or NULL (invisibly) when cmp$identical is TRUE -- a return
+## value, not a cat() side effect, specifically so its CONTENT is
+## assertable (reportDiscrepancy()'s own cat()-only original could not be
+## tested at all, which is how the individuals-diff omission went
+## unnoticed).
+
+test_that(
+  ".formatStructuralDiscrepancy returns NULL (invisibly) when identical", {
+  cmp <- list(
+    parentChildOnlyInA = data.frame(child = character(), parent = character()),
+    parentChildOnlyInB = data.frame(child = character(), parent = character()),
+    matePairsOnlyInA = data.frame(parent1 = character(), parent2 = character()),
+    matePairsOnlyInB = data.frame(parent1 = character(), parent2 = character()),
+    individualsOnlyInA = character(0),
+    individualsOnlyInB = character(0),
+    identical = TRUE
+  )
+  expect_null(.formatStructuralDiscrepancy("Some label", cmp))
+})
+
+test_that(
+  ".formatStructuralDiscrepancy reports individualsOnlyInB when populated --
+   the exact field data-raw/kinship2FidelityValidation.R's own
+   reportDiscrepancy() silently dropped", {
+  cmp <- list(
+    parentChildOnlyInA = data.frame(child = character(), parent = character()),
+    parentChildOnlyInB = data.frame(child = character(), parent = character()),
+    matePairsOnlyInA = data.frame(parent1 = character(), parent2 = character()),
+    matePairsOnlyInB = data.frame(parent1 = character(), parent2 = character()),
+    individualsOnlyInA = character(0),
+    individualsOnlyInB = "P5",
+    identical = FALSE
+  )
+  report <- .formatStructuralDiscrepancy("Track B full", cmp)
+  expect_true(is.character(report))
+  expect_match(report, "Track B full", fixed = TRUE)
+  expect_match(report, "P5", fixed = TRUE)
+  expect_match(report, "individuals only in nprcgenekeepr", fixed = TRUE)
+})
+
+test_that(
+  ".formatStructuralDiscrepancy reports individualsOnlyInA when populated", {
+  cmp <- list(
+    parentChildOnlyInA = data.frame(child = character(), parent = character()),
+    parentChildOnlyInB = data.frame(child = character(), parent = character()),
+    matePairsOnlyInA = data.frame(parent1 = character(), parent2 = character()),
+    matePairsOnlyInB = data.frame(parent1 = character(), parent2 = character()),
+    individualsOnlyInA = "GHOST",
+    individualsOnlyInB = character(0),
+    identical = FALSE
+  )
+  report <- .formatStructuralDiscrepancy("Some label", cmp)
+  expect_match(report, "GHOST", fixed = TRUE)
+  expect_match(report, "individuals only in kinship2", fixed = TRUE)
+})
+
+test_that(
+  ".formatStructuralDiscrepancy still reports parentChildOnlyInA/B and
+   matePairsOnlyInA/B -- preserving reportDiscrepancy()'s own pre-existing
+   behavior, not just adding the individuals fields", {
+  cmp <- list(
+    parentChildOnlyInA = data.frame(child = "C9", parent = "F9",
+                                     stringsAsFactors = FALSE),
+    parentChildOnlyInB = data.frame(child = "C8", parent = "F8",
+                                     stringsAsFactors = FALSE),
+    matePairsOnlyInA = data.frame(parent1 = "X1", parent2 = "X2",
+                                   stringsAsFactors = FALSE),
+    matePairsOnlyInB = data.frame(parent1 = "Y1", parent2 = "Y2",
+                                   stringsAsFactors = FALSE),
+    individualsOnlyInA = character(0),
+    individualsOnlyInB = character(0),
+    identical = FALSE
+  )
+  report <- .formatStructuralDiscrepancy("Edges label", cmp)
+  expect_match(report, "C9", fixed = TRUE)
+  expect_match(report, "C8", fixed = TRUE)
+  expect_match(report, "X1", fixed = TRUE)
+  expect_match(report, "Y1", fixed = TRUE)
+})
+
+test_that(
+  ".formatStructuralDiscrepancy on the article's own published Track B full
+   (16-subject) fixture reports P5 -- the live-kinship2 integration-level
+   regression for the exact bug found this session (2026-08-26): re-running
+   data-raw/kinship2FidelityValidation.R printed an empty discrepancy block
+   for this exact fixture before this fix.", {
+  skip_if_not_installed("kinship2")
+  result <- compareAgainstKinship2(.pedTrackBFixture())
+  report <- .formatStructuralDiscrepancy("Track B full", result)
+  expect_true(is.character(report))
+  expect_match(report, "P5", fixed = TRUE)
+})

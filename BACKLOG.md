@@ -4,6 +4,34 @@
 future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.md` Phase 0.)*
 
 ## Up Next
+- [ ] **`makePedigreeMatingLayout()` erroneously renders fully-isolated individuals (no sire, no
+      dam, no mate, no children) -- reverses this project's own prior "acceptable difference"
+      framing** (found live 2026-08-26, owner-directed via direct visual review of
+      `kinship2-fidelity-validation.qmd`'s Track B full fixture, READY, Effort M/L -- needs a real
+      design decision, not a one-line fix) -- `P5` in the article's own published Track B 16-subject
+      fixture has zero edges of any kind (no parents, no mate, no children); kinship2's own
+      `plot.pedigree()` correctly omits it from the drawing (confirmed live:
+      `align.pedigree()`'s own `$nid` placement never places it), while
+      `makePedigreeMatingLayout()` renders it as a disconnected node. **The owner has explicitly
+      ruled this an error** ("P5... is erroneously included"), overriding S641's own
+      `kinship2-fidelity-validation.qmd` Verdict text, which called this "the more useful default,
+      not a bug to reconcile away" -- that framing is now known to be wrong and needs correcting in
+      the same session as the code fix, not separately. **Entangled with issue #164
+      (`makePedigreeMatingLayout()` crashes outright on a pedigree where every individual has zero
+      parent-child edges, e.g. all-founder input):** if the fix is "never render a fully-isolated
+      individual," a pedigree where *every* individual is isolated has nothing left to draw --
+      the same degenerate case #164 already can't handle. A future session should design "suppress
+      isolated individuals" and "what happens when suppression empties the diagram" together, not
+      fix the isolated-individual case in ignorance of the empty-diagram case. **Rule scoping
+      note (from this session's discussion, not yet ratified):** the safe rule is narrow --
+      literally zero edges (no sire, no dam, no mate, no children), matching `P5`'s exact profile
+      -- NOT "no mate and no children" alone, which would wrongly hide a real individual with known
+      parents who simply hasn't been mated/bred yet (colony management would want to still see
+      that individual). Also update `.comparePedigreeStructures()`'s Track B full fixture
+      expectation and the live-kinship2 regression test in
+      `tests/testthat/test_comparePedigreeStructure.R` once the renderer no longer includes `P5`
+      (today's test asserts `identical = FALSE` with `individualsOnlyInB = "P5"` -- once fixed,
+      Track B full should become `identical = TRUE`, this time correctly).
 - [x] **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636, 2026-08-26).
       **RESOLVED S637, 2026-08-26, per owner-directed "broader" scope (a genuinely clean baseline,
       not just a green checkmark):** the actual root cause was simpler than any of the 4 candidate
@@ -783,6 +811,18 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       (S487, 2026-08-08, issue #133 Slice 2's own NEWS/tutorial/article
       commit), not this session's diff. A future session fixing this item
       should hand-add all 9 words, not just the original 6.
+      **Count grown to 10 words as of S642 (2026-08-26)** -- incidental to
+      this session's `test_wordlist_coverage.R` full-regression run:
+      `comparator` (`R/comparePedigreeStructure.R:230`, a roxygen
+      `@details`-block word, likely introduced by S633-S636's original
+      `.comparePedigreeStructures()` implementation). Confirmed pre-existing
+      via a `git stash` test (fails identically with this session's own
+      diff stashed out) -- not caused by this session's `.
+      formatStructuralDiscrepancy()` work. Not visible on real CI (all
+      recent `R-CMD-check.yaml` runs green), likely a local hunspell/
+      dictionary-state difference from CI's runner, matching this item's own
+      established "local devtools::check() catches words CI's own spelling
+      gate doesn't" pattern.
 - [ ] **The "10 pre-existing baseline warnings" carried in every full-regression
       report since S448 have never been root-caused, and were introduced by a
       test-fixture gap, not a real production-code issue** (found S487,
