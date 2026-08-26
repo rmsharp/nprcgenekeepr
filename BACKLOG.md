@@ -3,6 +3,13 @@
 *Open, actionable work only. Completed history → `CHANGELOG.md`; feature inventory &
 future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.md` Phase 0.)*
 
+> **STANDING TOP PRIORITY (owner-directed, 2026-08-26, S643):** pedigree-drawing fidelity work
+> stays at the top of this list, ahead of every other item below, until the owner explicitly
+> says it's done. This overrides the normal "pick whatever's READY" Phase 0 priorities-list
+> convention for as long as this note stands — a future session's Phase 0 report should surface
+> pedigree-drawing work first regardless of other items' tags, and should not remove this note
+> without an explicit owner sign-off that the work is complete.
+
 ## Up Next
 - [ ] **`makePedigreeMatingLayout()` erroneously renders fully-isolated individuals (no sire, no
       dam, no mate, no children) -- reverses this project's own prior "acceptable difference"

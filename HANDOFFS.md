@@ -136,6 +136,25 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S643
+date: 2026-08-26
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Design document for the P5-suppression rule in makePedigreeMatingLayout(),
+  together with its interaction with issue #164 (all-isolated-pedigree crash) --
+  docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md. Owner also directed: pedigree-drawing
+  fidelity work stays the top of BACKLOG.md's priorities until the owner says it's done.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S642
 date: 2026-08-26
 status: complete

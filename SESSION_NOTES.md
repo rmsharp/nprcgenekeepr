@@ -18,6 +18,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 643 Did
+**Deliverable:** Design document (docs/planning/) for the P5-suppression rule in
+`makePedigreeMatingLayout()` (BACKLOG.md "Up Next" item, entangled with issue #164 -- the
+all-isolated-pedigree crash), following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`.
+Owner also directed: pedigree-drawing fidelity work stays the top of `BACKLOG.md`'s priorities
+until the owner says it's done -- pinned in `BACKLOG.md` and recorded as a project memory.
+**Started:** 2026-08-26.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 642 Did
 **Deliverable:** Owner-directed live review of `kinship2-fidelity-validation.qmd` (picked up in place
 of the rendered BACKLOG priorities list, per direct owner redirect: "We still do not have go[od]
