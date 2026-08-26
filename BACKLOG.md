@@ -28,17 +28,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `skip_if_not_installed("kinship2")` live tests flipped from *skip* to *actually run*, on all 5
       platforms, for the first time ever, with 0 failures anywhere (grepped the full run log for
       `FAIL` -- none). See `PROJECT_LEARNINGS.md` Learning 670.
-- [ ] **`R-CMD-check.yaml`'s `ubuntu-latest (oldrel-1)` leg failed at the `setup-r@v2` step itself,
-      before any package code ran** (found S638, 2026-08-26, incidental to watching CI while
-      root-causing the temp-detritus NOTE -- not chased, Effort unknown). One real CI run
-      (`32930961617`, the S637 close-out commit) showed `ubuntu-latest (oldrel-1)` failing with
-      `Failed to get R oldrel-1: Failed to get R 4.5.3: Failed to install R: Error: The process
-      '/usr/bin/sudo' failed with exit code 100` -- a GitHub Actions R-installer/`sudo`-level
-      infrastructure error, not anything in this package's own code, tests, or dependencies. The
-      other 4 legs (`macos-latest`, `ubuntu-latest release`/`devel`, `windows-latest`) all completed
-      `success` on the identical commit. Not investigated further this session (unrelated to the
-      temp-detritus fix being pursued); a future session should check whether this reproduces on a
-      re-run before treating it as more than a one-off transient runner/apt flake.
 - [ ] **Build a real structural/topological pedigree-diagram comparison algorithm against
       kinship2 -- the current "comparison" is 2 static images and prose, not verified equivalence**
       (found S631, 2026-08-25, owner-directed correction -- "you are still publishing comparisons
