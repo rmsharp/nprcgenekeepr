@@ -16,6 +16,23 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S640: record CHANGELOG.md entry for S639's HANDOFFS.md sha-fix action, plus S639's separately-committed Learning 672 record
+- **Deliverable:** Phase 0 reconcile found 2 commits past the `CHANGELOG.md` frontier (`507cc6ad`)
+  with no ledger entry. Unlike prior sessions' reconcile gaps (always just the close-out commit
+  alone, since the Learning-record commit and the CHANGELOG-entry commit were usually the same
+  commit), S639 split them: `805b2b83` ("record Learning 672..., update learnings-count pointer")
+  landed *after* `507cc6ad` (the commit that actually touched `CHANGELOG.md`), so it was a genuine
+  standalone undocumented action, not just the usual self-reference case. `9f2b1c16` (S639's
+  close-out commit, writing the final `HANDOFFS.md` receipt + `SESSION_NOTES.md`) is the familiar
+  self-reference gap this project's precedent already names. Backfilled both: fixed the S639
+  receipt's `commit:` field from `507cc6ad` to `9f2b1c16` (commit `0a79fbbc`), and this entry
+  records that fix plus `805b2b83`'s own action -- `PROJECT_LEARNINGS.md` Learning 672 (documenting
+  `test-coverage.yaml`'s no-`strategy.matrix` structural nuance found during S639's RED-phase
+  research: a BACKLOG item's recommended fix can be right about the mechanism and wrong about the
+  mechanics when the target lacks a structural property the item's text never checked) and
+  `CLAUDE.md`'s learnings-count pointer updated to match.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · [BL-N] S639: provision pinned Chrome for `test-coverage.yaml`'s chromote-dependent tests
 - **Deliverable:** `BACKLOG.md` "Up Next" item found S637, incidental to watching CI for the
   `R-CMD-check.yaml` fix -- `test-coverage.yaml` (which runs `covr::package_coverage()`, executing
