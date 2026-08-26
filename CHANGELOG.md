@@ -16,6 +16,68 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S641: fix the kinship2 structural comparator's isolated-individual blind spot; close the kinship2 structural-comparison BACKLOG item
+- **Deliverable:** picked up "kinship2 CI-verification close-out" from S640's priorities list
+  (verify Track C's live-kinship2 tests actually run in CI). Before acting, the owner asked
+  directly for a real demonstration -- render and compare actual images, trace ground truth
+  programmatically -- rather than trusting the prior "identical = TRUE" claims. Doing so live-viewed
+  `kinship2-fidelity-validation-img/trackB-kinship2-full.png`
+  against `trackB-nprc-full.png` and found a real, visible discrepancy: kinship2's own plot shows
+  15 individuals, nprcgenekeepr's shows 16 -- `P5`, a fully isolated founder (no parents, never
+  anyone's mate or parent) that kinship2's own `align.pedigree()` silently drops from the plot grid
+  while `makePedigreeMatingLayout()` renders it.
+- **Root cause, confirmed live, not assumed:** `.comparePedigreeStructures()` (Track C of the
+  kinship2 structural-comparison plan, S635) diffed only `parentChildEdges` and `matePairs` -- an
+  isolated individual contributes zero rows to either table on EITHER side, so its presence/absence
+  was structurally invisible to the diff. This is exactly the class of false-equivalence claim the
+  owner has previously flagged (S631: "your equivalence assessments have been wrong in the past for
+  these same pedigrees") -- confirmed here on the article's own published Track B full fixture,
+  which the "Structural verification" section (added Track D, S636) and the "Verdict" section both
+  claimed was "structurally identical"/"PASS" based on this blind spot.
+- **Fixed via full strict TDD** (RED: 23 new/updated assertions in
+  `tests/testthat/test_comparePedigreeStructure.R`, including a direct regression test against the
+  article's own published Track B fixture, confirmed failing for the right reason; GREEN: minimum
+  implementation). `.extractKinship2Structure()` gained a `displayedIds` param (default: all
+  declared ids) and returns `individuals`; `.extractNprcStructure()` returns `individuals` (real,
+  non-synthetic node ids, duplicate-safe); `.comparePedigreeStructures()` diffs `individuals` too
+  (`individualsOnlyInA`/`individualsOnlyInB`), folded into `identical` (missing `individuals` on
+  both sides stays backward compatible -- treated as empty, no discrepancy, so every pre-existing
+  hand-built-fixture unit test needed no changes beyond the field-count assertions).
+  `compareAgainstKinship2()` (`tests/testthat/helper-comparePedigreeStructure.R`) now computes
+  kinship2's actually-placed id set via a new `.kinship2DisplayedIds()` helper (calls
+  `align.pedigree()` directly, muffling the known-benign "Unexpected result in autohint" kinship2
+  message only after confirming the `nid` placement result is still fully correct despite it) and
+  passes it as `displayedIds`. REFACTOR skipped by owner choice (diff already minimal, matching
+  Track A/B/C's own precedent). Commit `9fe3b7f5`.
+- **Live-verified the fix's actual effect** on all 4 of the article's own fixtures via the fixed
+  `compareAgainstKinship2()`: Track B full (16 subjects) now correctly reports `identical = FALSE`
+  with `P5` in `individualsOnlyInB`; Track B shrunk (8 subjects), Track C (9-subject dogleg), and the
+  real 375-individual bundled fixture all still correctly report `identical = TRUE` (P5 does not
+  survive `shrinkPedigree()`'s trim -- an uninformative founder with no descendants -- and neither
+  Track C nor the real fixture has any isolated individuals). This confirms the fix catches a real
+  defect without introducing any false positive on fixtures that were genuinely fine.
+- **Corrected `vignettes/articles/kinship2-fidelity-validation.qmd`** to match: the Track B
+  full-fixture fig-alt (removed the false "matching kinship2's own family groupings" claim), the
+  Structural verification table (Track B full: Yes -> No, with an explanation that this is a real,
+  expected difference in rendering convention, not a defect in either package -- and that showing
+  every declared individual is arguably the more useful default for colony management), and the
+  Verdict section (from a blanket "PASS, all 3 tracks" to "PASS, with one known and expected
+  difference", explicitly naming the gap and the fix). Confirmed via `quarto render` (clean, no
+  errors) -- the build-equivalent for this documentation change.
+- **Verified:** full clean regression 0 failed/0 error (6492 passed, 39 pre-existing warnings,
+  unchanged baseline); `devtools::check()` 0 errors/1 warning/1 note (both pre-existing --
+  non-portable filename, `scratchpad/` -- unrelated); `lintr::lint_package()` 0 lints on touched
+  files.
+- **BACKLOG.md:** removed the "Build a real structural/topological pedigree-diagram comparison
+  algorithm against kinship2" item in full -- all 4 tracks (A-D, S633-S636) were already DONE, and
+  this session both fixed the one remaining gap in Track C's own comparator (a defect the item's
+  final "CI skip-vs-run confirmation" framing had not anticipated) and completed the confirmation
+  itself (all 6 live-kinship2 tests run, not skip, in CI since S637's `kinship2` Suggests fix,
+  confirmed directly against real CI job logs in this session's own Phase 0). No GitHub issue was
+  ever filed for this item (owner-directed correction handled directly in `BACKLOG.md`), so no issue
+  close-out is owed.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · [ad hoc] S641: record CHANGELOG.md entry for S640's HANDOFFS.md sha-fix action (reconcile-on-read)
 - **Deliverable:** Phase 0 reconcile found 1 commit past the `CHANGELOG.md` frontier (`a77d6a5c`)
   with no ledger entry: `d2ecc8e1`, S640's own close-out commit (writing the final `HANDOFFS.md`
