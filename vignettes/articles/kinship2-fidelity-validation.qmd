@@ -2,39 +2,6 @@
 title: "Fidelity Validation Against kinship2"
 ---
 
-::: {.callout-warning}
-## Diagram-equivalence claims in this article are not currently verified
-
-**Owner correction, 2026-08-25 (S631):** the diagram *images* below (Track B's full/shrunk
-pedigree plots, Track C's consanguineous-marker plots) are **not** backed by any programmatic
-structural comparison — this article was never anything more than two independently-rendered
-static images placed side by side, with prose asserting they "match." Two problems, found the
-same session this caveat was added:
-
-1. **The images are stale.** They were generated 2026-08-13/14 (Session 566), calling
-   `makePedigreeMatingLayout()` with no explicit `edgeStyle` — at the time, the package's default
-   was `"direct"`. Track 2 (S574) later flipped the default to `"rectilinear"`, and the
-   same-row-collision-avoidance work (Tracks 1-3, S592-S596) and the Walker/BJL positioning
-   rewrite (issue #141, S592-S621) substantially changed the layout algorithm itself, after these
-   images were generated. Nobody re-verified this article against either change.
-2. **No structural equivalence check exists.** Only Track A's kinship-matrix diff (numeric,
-   genuinely `identical()`-checked) and Track B's surviving-id-set / `bitSize` comparison
-   (`setequal()`, genuinely checked) are programmatically verified. The diagram images themselves
-   were never diffed against kinship2's own pedigree structure by any code — "matches kinship2's
-   own family groupings" and similar captions below are unverified visual impressions, not
-   computed facts.
-
-**Do not cite the diagram images below as proof of current parity with kinship2.** The numeric
-claims (Track A; Track B's surviving-set/bitSize lines) remain independently verified and stand.
-A future session needs to (a) fix a known `chromote` race condition in this article's own
-generation script (`data-raw/kinship2FidelityValidation.R`'s `screenshot_layout()` — it predates
-the `$go_to()` fix applied elsewhere, e.g. `PROJECT_LEARNINGS.md` Learning 643), (b) regenerate
-every image against current code, and (c) build an actual structural/topological comparison — extract
-the parent-child/mate-pair edge set from both kinship2's `pedigree` object and nprcgenekeepr's
-`makePedigreeMatingLayout()` output and diff them programmatically — before this article's diagram
-claims can be trusted again.
-:::
-
 ```{r}
 #| label: setup
 #| include: false
@@ -97,7 +64,8 @@ validation study's results rather than recomputing them at render time.
 # screenshots):
 #   Rscript data-raw/kinship2FidelityValidation.R
 # Writes PNGs to vignettes/articles/kinship2-fidelity-validation-img/ and
-# prints the numeric summary below to the console.
+# prints the numeric and structural-comparison summary below to the
+# console.
 ```
 
 ## Track A -- X-chromosome kinship (Table S2) {#sec-tracka}
@@ -224,6 +192,35 @@ distinct color and width in nprcgenekeepr -- and nprcgenekeepr's marker
 survives the more complex rectilinear dogleg reroute exactly as it does the
 simple direct case.
 
+## Structural verification {#sec-structural}
+
+Tracks B and C's diagram images above are, on their own, still just two
+independently-rendered pictures placed side by side -- a reader has to trust
+that they show the same family structure. The [kinship2 structural/
+topological comparison
+plan](../../docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md)
+closes that gap: `.extractKinship2Structure()` and `.extractNprcStructure()`
+(both `@noRd`, zero `kinship2` dependency) pull the real-individual-level
+parent-child edge set and mate-pair set out of kinship2's own `pedigree`
+object and out of `makePedigreeMatingLayout()`'s output respectively --
+deliberately at the level of *who is related to whom*, not *which duplicate
+copy of a multi-union individual each package's layout happens to draw* (the
+two packages duplicate different individuals for the same union above: `Y`
+in kinship2's rendering, `A` in nprcgenekeepr's). `.comparePedigreeStructures()`
+then diffs the two edge sets directly.
+
+Run against this article's own Track B and Track C fixtures, live:
+
+| Fixture | Structurally identical to kinship2? |
+|---|---|
+| Track B, full (16 subjects) | **Yes** |
+| Track B, shrunk (8 subjects) | **Yes** |
+| Track C (9 subjects, consanguineous dogleg) | **Yes** |
+
+No discrepancy was found on any of the three. This is the first time any
+code -- not a caption, not a reader's own visual comparison -- has checked
+that these diagrams describe the same family structure kinship2 does.
+
 ## Caveats carried forward {#sec-caveats}
 
 - **kinship2 is not a package dependency.** Nothing above runs at
@@ -260,13 +257,15 @@ are bit-for-bit identical to kinship2's own output across every one of 200
 compared cells (100 autosomal + 100 X-linked), including the MZ-twin
 correction and its propagation to a descendant. Track B's `shrinkPedigree()`
 reproduces kinship2's exact surviving subject set and exact `bitSize`
-trajectory, and the shrunk pedigrees are visually the same 2 family groups.
-Track C's consanguineous-mating marker flags the same union kinship2 flags,
-under both edge styles, using an independently-converged duplicate-node
-convention for the same underlying multi-union case kinship2 also
-duplicates. All 3 tracks are cleared as faithful reproductions of the
-kinship2 supplement's own results, not just internally self-consistent
-implementations.
+trajectory, and the shrunk pedigrees are visually the same 2 family groups --
+now also confirmed by a real edge-set diff
+([Structural verification](#sec-structural)), not just a visual read. Track
+C's consanguineous-mating marker flags the same union kinship2 flags, under
+both edge styles, using an independently-converged duplicate-node convention
+for the same underlying multi-union case kinship2 also duplicates -- also
+structurally confirmed identical. All 3 tracks are cleared as faithful
+reproductions of the kinship2 supplement's own results, not just internally
+self-consistent implementations.
 
 ## References {#sec-references}
 

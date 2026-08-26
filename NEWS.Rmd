@@ -109,6 +109,10 @@ knitr::opts_chunk$set(echo = TRUE)
   animals and their family could make the diagram fail to display at all
   under the default connector style. The diagram now always displays
   correctly for this kind of narrowed view.
+- The published article comparing pedigree diagrams against kinship2 (a
+  well-known reference pedigree tool) is now checked directly by code, not
+  just by eye -- confirming its example diagrams show the same family
+  relationships kinship2 does, in every case checked.
 ## Kinship & Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their
   computed relatedness to genetic identity, and that correction flows

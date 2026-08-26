@@ -23,6 +23,16 @@ format:
 > as current evidence of kinship2 parity.** See `vignettes/articles/kinship2-fidelity-validation.qmd`'s
 > matching correction for what a future session needs to do before either document's diagram claims
 > can be trusted again.
+>
+> **Update, 2026-08-25 (Track D of the [kinship2 structural/topological comparison
+> plan](pedigree-diagram-kinship2-structural-comparison-plan.md)):** the caveat above still stands
+> for THIS document specifically. Track D built and ran a real structural comparator
+> (`.comparePedigreeStructures()`) and confirmed it identical against kinship2 for
+> `vignettes/articles/kinship2-fidelity-validation.qmd`'s own Track B/C fixtures -- but this
+> document's 4 examples (`sample.ped` families 1/2, the 16-person genotyped case, the multi-mate
+> "crowding" case) are a *different* set of fixtures, never run through that comparator. Their own
+> "matches kinship2" claims remain exactly as unverified as before; the sibling article's caveat
+> removal does not extend to this document.
 
 ## Purpose
 
