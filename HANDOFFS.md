@@ -137,7 +137,7 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S636
-date: 2026-08-25
+date: 2026-08-25/26
 status: complete
 self_score: 9
 predecessor_score: 9
@@ -146,7 +146,12 @@ active_task: DONE. Track D of docs/planning/pedigree-diagram-kinship2-structural
   regenerated, compareAgainstKinship2() run against the vignette's own fixtures (identical =
   TRUE on all 3), kinship2-fidelity-validation.qmd's caveat removed, reference-comparison.qmd's
   caveat deliberately left standing (coverage-gap finding), NEWS.Rmd entry added. All 4 tracks
-  of the plan are now DONE. Commits are NOT yet pushed -- pending user go-ahead.
+  of the plan are now DONE. Then pushed (owner-approved) -- confirmed Track C's live-kinship2
+  tests skip cleanly in CI, but also discovered R-CMD-check.yaml is red on all 5 platforms
+  (Track C's accepted kinship2 WARNING trips check-r-package@v2's default error-on: "warning").
+  Filed a GitHub issue, then closed it same-session per a live owner correction (this project
+  tracks CI breaks via BACKLOG.md, never a standalone issue) and re-filed correctly there, plus
+  a new standing convention in CLAUDE.md.
 what_was_done: Ported PROJECT_LEARNINGS.md Learning 643's $go_to() fix into data-raw/
   kinship2FidelityValidation.R's screenshot_layout() (replacing the racy Page$navigate()+
   Page$loadEventFired()+Sys.sleep() sequence). Ran the script end-to-end locally -- no hang, no
@@ -166,36 +171,47 @@ what_was_done: Ported PROJECT_LEARNINGS.md Learning 643's $go_to() fix into data
   6437 passed (test_wordlist_coverage.R's previously-documented "1 pre-existing failure" did NOT
   reproduce -- flagged, not investigated); lintr::lint_package() 0 lints (1
   undesirable_function_linter hit on the new source() call, suppressed via # nolint start/end,
-  matching data-raw/fgSEValidation.R's own precedent). See PROJECT_LEARNINGS.md Learning 668.
-  Deliverable commits: `36653242` (mechanical), `00a1d6d2` (documentation).
-next_steps: The kinship2 structural-comparison plan has no further tracks -- A/B/C/D all DONE.
-  A future session should (a) push this session's commits (and the 31 that preceded it) once the
-  user approves, then check the R-CMD-check.yaml run's own test log for a clean SKIP on Track
-  C's 3 live-kinship2 tests (plan section 5, still outstanding since S635); (b) otherwise consult
-  BACKLOG.md's "Up Next" section fresh for the next pickup rather than assuming this plan has
-  more work.
+  matching data-raw/fgSEValidation.R's own precedent). Pushed to origin/master (owner-approved);
+  R-CMD-check.yaml confirmed red on all 5 platforms via direct job-log inspection on 2 of them --
+  root cause is check-r-package@v2's default error-on: "warning" tripping on Track C's own
+  already-accepted kinship2 WARNING (PROJECT_LEARNINGS.md Learning 667), the first time these
+  commits ever reached CI. See PROJECT_LEARNINGS.md Learning 668 (Track D findings) and Learning
+  669 (the CI-break root cause). Deliverable commits: `36653242` (mechanical), `00a1d6d2`
+  (documentation).
+next_steps: (a) master's CI is RED (R-CMD-check.yaml, all 5 platforms) -- a DECISION NEEDED
+  BACKLOG.md item with 4 candidate fixes, none chosen. A future session should NOT silently pick
+  one -- present the trade-off (loosen the gate for all warnings vs. narrower allowlisting vs.
+  redesigning Track C's kinship2 usage vs. holding) and let the owner decide, then implement.
+  (b) The kinship2 structural-comparison plan has no further tracks -- A/B/C/D all DONE,
+  independently confirmed by a real CI run. Consult BACKLOG.md's "Up Next" section fresh for the
+  next pickup rather than assuming this plan has more work.
 key_files: data-raw/kinship2FidelityValidation.R (the $go_to() port + Track D comparator
   section), vignettes/articles/kinship2-fidelity-validation.qmd (caveat removed, new
   "Structural verification" section), docs/planning/pedigree-diagram-kinship2-reference-
   comparison.qmd (coverage-gap note added, caveat left standing), NEWS.Rmd (Pedigree Diagram
-  section), PROJECT_LEARNINGS.md Learning 668, BACKLOG.md top item (all 4 tracks DONE).
-gotchas: (1) This session's commits are STILL unpushed (31 prior + this session's) -- pushing
-  was deliberately deferred pending explicit user approval, not done silently. Whoever pushes
-  next must check CI's skip-vs-run behavior for Track C's live-kinship2 tests (plan section 5) --
-  outstanding since S635, now genuinely overdue. (2) pedigree-diagram-kinship2-reference-
-  comparison.qmd's caveat is now a deliberately-checked, currently-accurate state, not staleness
-  to casually remove -- it needs Track C's comparator (or equivalent) run against its OWN 4
-  example pedigrees specifically before it can go. (3) Background-task discipline: adding a
-  manual trailing & INSIDE a call already marked run_in_background: true makes the harness
-  report "completed" almost immediately (the wrapper finishes fast) while the real process keeps
-  running fully detached -- verify via ps/lsof on the actual output file for the real driver PID,
-  not the notification alone. See PROJECT_LEARNINGS.md Learning 668.
+  section), .github/workflows/R-CMD-check.yaml:97-100 (the live CI break, NOT edited this
+  session), PROJECT_LEARNINGS.md Learning 668 and Learning 669, CLAUDE.md's new "CI-break
+  tracking convention" checklist entry, BACKLOG.md (2 items: Track D all-4-DONE, CI-red).
+gotchas: (1) master's CI is RED right now (R-CMD-check.yaml) -- see BACKLOG.md's top item before
+  doing any pedigree-diagram/kinship2 work; this is a DECISION NEEDED item, not a routine pickup.
+  (2) Do NOT file a GitHub issue for a CI break found live in-session -- fix it if in scope,
+  otherwise add/update a BACKLOG.md item with full root-cause detail (CLAUDE.md's new checklist
+  entry codifies this after S636 filed-then-closed issue #165 the wrong way first). (3)
+  pedigree-diagram-kinship2-reference-comparison.qmd's caveat is now a deliberately-checked,
+  currently-accurate state, not staleness to casually remove -- it needs Track C's comparator (or
+  equivalent) run against its OWN 4 example pedigrees specifically before it can go. (4)
+  Background-task discipline: adding a manual trailing & INSIDE a call already marked
+  run_in_background: true makes the harness report "completed" almost immediately (the wrapper
+  finishes fast) while the real process keeps running fully detached -- verify via ps/lsof on the
+  actual output file for the real driver PID, not the notification alone. See
+  PROJECT_LEARNINGS.md Learning 668.
 runtime_smoke: n/a -- no runtime (Shiny app) code changed. All changes are a data-raw script
   (build-ignored, never run under R CMD check or at app runtime), 2 vignette/planning-doc text
   files, NEWS.Rmd, and regenerated static PNG images referenced by the vignette at render time.
-changelog_ref: CHANGELOG.md 2026-08-25/26 S636 entry (implement Track D)
+changelog_ref: CHANGELOG.md 2026-08-25/26 S636 entries (implement Track D; push + discover +
+  document the CI break)
 commit: `36653242` (mechanical deliverable), `00a1d6d2` (documentation deliverable), `8463dbd9`
-  (close-out)
+  (first close-out pass), pending (second close-out pass amending this correction)
 ```
 
 ```handoff

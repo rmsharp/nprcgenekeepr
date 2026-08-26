@@ -51,8 +51,13 @@ Track C's `compareAgainstKinship2()` comparator against the vignette's own fixtu
 S631 caveat from the published vignette (supported), left the sibling planning document's caveat
 standing (not supported by any evidence), and added a `NEWS.Rmd` entry. **DONE**, no RED/GREEN
 cycle (owner-approved PRE-RED framing -- no new package function exists to test). **All 4 tracks
-of the kinship2 structural-comparison plan are now complete.** **Started/Completed:** 2026-08-25/26
-(single session).
+of the kinship2 structural-comparison plan are now complete.** Then pushed (owner-approved) --
+the first time any of Track A/B/C/D's commits ever reached CI -- confirming the outstanding
+Track C skip-vs-run gotcha resolved cleanly, but also discovering a genuinely new problem:
+`R-CMD-check.yaml` is red on all 5 platforms. Filed it as a GitHub issue, then closed that issue
+same-session per a live owner correction (this project does not track CI breaks as issues) and
+re-filed it correctly as a `BACKLOG.md` item instead, adding a matching standing convention to
+`CLAUDE.md`. **Started/Completed:** 2026-08-25/26 (single session).
 
 **What actually happened, in order:**
 1. **Phase 0 orientation** (full protocol): clean tree except the same pre-classified untracked
@@ -96,7 +101,31 @@ of the kinship2 structural-comparison plan are now complete.** **Started/Complet
    (2 `.qmd` files + `NEWS.Rmd`). Updated `BACKLOG.md`'s top item (Track D DONE, all 4 tracks
    complete), added `PROJECT_LEARNINGS.md` Learning 668, updated `CLAUDE.md`'s learnings-count
    pointer (667→668, Sessions 1-635+→1-636+), added the `CHANGELOG.md` entry.
-9. **Close-out** (this write-up).
+9. First close-out pass (evaluation + self-assessment + handoff notes + `HANDOFFS.md` receipt +
+   `CHANGELOG.md` sha-fix trailer, all committed) -- believed complete at this point.
+10. Asked the user whether to push (an outward-facing action, not silently pre-authorized); owner
+    approved. Pushed `master` -- the first time Track A/B/C/D's 31+6 commits ever reached CI.
+    Watched `R-CMD-check.yaml` via a background wait loop. Confirmed the outstanding plan §5
+    gotcha resolved cleanly: Track C's 3 live-kinship2 tests skip in CI exactly as designed
+    (`{kinship2} is not installed (6): ...`) on every platform. **Also discovered, via direct
+    job-log inspection on 2 platforms (not assumed from one), a genuinely new problem:** all 5
+    `R-CMD-check.yaml` matrix jobs fail identically at `check-r-package@v2`, root-caused to that
+    action's default `error-on: "warning"` (uncustomized in this project's workflow file) tripping
+    on Track C's own already-accepted kinship2 WARNING -- the first time these commits had ever
+    reached the live CI gate. See `PROJECT_LEARNINGS.md` Learning 669.
+11. Presented the finding via `AskUserQuestion` (loosen the CI gate now vs. leave red and track
+    for a dedicated session); owner picked leaving it for a dedicated session. Filed it as GitHub
+    issue #165.
+12. **User interrupted with a live correction:** this project does not file GitHub issues for CI
+    breaks -- fix as found, or defer via `BACKLOG.md`; it's fine if a future session picks it up.
+    Closed issue #165 immediately, rewrote the `BACKLOG.md` item as the sole tracker (with the
+    full root-cause detail + 4 candidate fix approaches that had been in the issue body), fixed
+    the "filed as issue #165" framing in the `CHANGELOG.md` entry and in `PROJECT_LEARNINGS.md`
+    Learning 669's own closing sentence, and added a new standing "CI-break tracking convention"
+    checklist entry to `CLAUDE.md` (mirroring the existing checklist-entry format) so a future
+    session doesn't repeat the same file-then-close round-trip.
+13. **Second close-out pass** (this write-up, superseding step 9's now-stale narrative) -- amended
+    rather than silently left inaccurate, per `SAFEGUARDS.md`'s re-read-before-edit discipline.
 
 **Self-assessment (Session 636): 9/10.** **Strengths:** (1) found and did not silently resolve
 either way a genuine gap between the plan's literal text and what the actual verification evidence
@@ -109,39 +138,57 @@ ceremony; (3) visually cross-checked the regenerated images against kinship2's o
 for the same fixture, not just trusting the comparator's boolean output, matching standing user
 memory on diagram-comparison rigor; (4) caught and self-corrected a background-task process-
 tracking mistake mid-session (see gotchas) rather than reporting an unverified "completed" result
-at face value. **Weaknesses:** (1) made the exact nested-`&` background-task mistake S634/S635's own
-documented gotcha warns against, on the FIRST attempt this session (not the second) -- caught only
-because the resulting log looked suspiciously short and a direct `ps`/`lsof` check confirmed the
-real process was still running; cost real wall-clock time working out the correct wait condition.
-(2) as of this write-up, this session's commits (and S633-S635's, and everything since) remain
-unpushed -- the standing "confirm CI skip-vs-run behavior once pushed" requirement (plan §5) is
-still not discharged, now spanning 4 sessions' worth of commits.
+at face value; (5) did not stop at "commits pushed, CI checked" once it turned red -- root-caused
+the failure via direct log inspection on 2 platforms before reporting anything, rather than
+guessing or assuming it was the already-anticipated kinship2-skip concern; (6) when corrected
+live about the issue-filing convention, applied the fix immediately and completely -- closed the
+issue, rewrote every file that referenced it (`BACKLOG.md`, `CHANGELOG.md`, `PROJECT_LEARNINGS.md`
+Learning 669), and captured the convention itself in `CLAUDE.md` so it doesn't need re-teaching.
+**Weaknesses:** (1) made the exact nested-`&` background-task mistake S634/S635's own documented
+gotcha warns against, on the FIRST attempt this session (not the second) -- caught only because
+the resulting log looked suspiciously short and a direct `ps`/`lsof` check confirmed the real
+process was still running; cost real wall-clock time working out the correct wait condition.
+(2) closed out once (step 9) before the push-and-verify work was actually finished, requiring a
+second close-out pass -- the push was known to be outstanding (gotcha 2, inherited from S635) but
+was treated as a separate, optional follow-up rather than sequenced before the first close-out;
+a cleaner session would have pushed and confirmed CI *before* writing the first handoff, avoiding
+the rework. (3) filed a GitHub issue for a CI break without first checking whether this project
+had a standing convention against it -- a plain read of `BACKLOG.md`'s own existing pattern (S634's
+issue #164 was filed for a *design-level* incidental finding, not a *CI-health* one) might have
+prompted asking before filing, rather than filing and being corrected.
 
 **Key files:** `data-raw/kinship2FidelityValidation.R` (the `$go_to()` port + Track D comparator
 section, the deliverable), `vignettes/articles/kinship2-fidelity-validation.qmd` (caveat removed,
 new "Structural verification" section, Verdict updated), `docs/planning/pedigree-diagram-kinship2-
 reference-comparison.qmd` (coverage-gap note added, caveat left standing), `NEWS.Rmd` (Pedigree
 Diagram section, new entry), `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md`
-§4.4 (Track D's contract, now fully discharged), `PROJECT_LEARNINGS.md` Learning 668 (the coverage-
-gap finding + 2 smaller findings), `BACKLOG.md` top item (all 4 tracks now DONE).
+§4.4 (Track D's contract, now fully discharged), `.github/workflows/R-CMD-check.yaml:97-100` (the
+`check-r-package@v2` step whose default `error-on: "warning"` is the live CI break -- NOT edited
+this session), `PROJECT_LEARNINGS.md` Learning 668 (the coverage-gap finding + 2 smaller findings)
+and Learning 669 (the CI-break root cause + the issue-filing correction), `CLAUDE.md`'s new
+"CI-break tracking convention" checklist entry, `BACKLOG.md` (2 items: Track D all-4-tracks-DONE,
+and the new CI-red item with 4 candidate fixes).
 
-**Gotchas for a future session:** (1) **This session's commits are STILL unpushed** (31 commits
-before this session + this session's own commits) -- pushing was deliberately NOT done this
-session pending the user's explicit go-ahead (an outward-facing action, not durably pre-
-authorized). Whoever pushes next should check the `R-CMD-check.yaml` run's own test log for a
-clean `SKIP` on Track C's 3 live-kinship2 tests (plan §5) -- this has now been outstanding since
-S635 and needs to actually happen, not just be re-flagged again. (2) The kinship2 structural-
-comparison plan (`docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md`) has no
-further tracks -- A/B/C/D are all DONE. A future session picking up pedigree-diagram work should
-consult `BACKLOG.md`'s "Up Next" section fresh rather than assuming this plan has more to do.
-(3) **Background-task discipline, reinforced with a new failure shape (`PROJECT_LEARNINGS.md`
+**Gotchas for a future session:** (1) **`master`'s CI is currently RED** (`R-CMD-check.yaml`, all
+5 platforms) -- see `BACKLOG.md`'s top-of-file item for the full root cause (Track C's accepted
+kinship2 WARNING vs. `check-r-package@v2`'s default `error-on: "warning"`) and 4 candidate fixes,
+none decided. This is a DECISION NEEDED item, not a routine pickup -- the owner should weigh the
+trade-off (loosen the gate for all warnings vs. a narrower fix vs. redesigning Track C's kinship2
+usage vs. holding) before a session acts. (2) The kinship2 structural-comparison plan (`docs/
+planning/pedigree-diagram-kinship2-structural-comparison-plan.md`) has no further tracks --
+A/B/C/D are all DONE, and this is now independently confirmed by a real CI run (not just local
+verification). A future session picking up pedigree-diagram work should consult `BACKLOG.md`'s
+"Up Next" section fresh rather than assuming this plan has more to do. (3) **CI-break convention:**
+do not file a GitHub issue for a CI break found live in-session -- fix it if in scope, otherwise
+add a `BACKLOG.md` item with full root-cause detail (see `CLAUDE.md`'s new checklist entry).
+(4) **Background-task discipline, reinforced with a new failure shape (`PROJECT_LEARNINGS.md`
 Learning 668):** even when `run_in_background: true` is used correctly at the TOP level, adding a
 manual trailing `&` INSIDE that command (e.g. `Rscript ... > log 2>&1 &`) makes the harness report
 "completed" almost immediately -- because the wrapper script itself finishes fast -- while the
 real process keeps running fully detached. A plausible-looking partial log is not proof of
 completion; verify via `ps`/`lsof` on the actual output file to find the real driver PID, and wait
 on THAT PID specifically (a stale/wrong PID in the wait condition, as this session's own first fix
-attempt used, can also report "done" prematurely). (4) `pedigree-diagram-kinship2-reference-
+attempt used, can also report "done" prematurely). (5) `pedigree-diagram-kinship2-reference-
 comparison.qmd` still carries an unverified-claims caveat and always will, absent a future session
 running Track C's comparator (or an equivalent) against ITS OWN 4 example pedigrees specifically --
 this is not a stale caveat to remove casually; it is now a checked, deliberate, currently-accurate
