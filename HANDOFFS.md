@@ -193,7 +193,7 @@ runtime_smoke: n/a -- .comparePedigreeStructures() is a pure, internal (@noRd), 
   transformation (confirmed by grep: no call sites outside the test file). No runtime behavior
   changed to verify.
 changelog_ref: CHANGELOG.md 2026-08-25 S635 entry (`.comparePedigreeStructures()`)
-commit: pending
+commit: `57a75044` (deliverable), `73a27e11` (close-out)
 ```
 
 ```handoff
