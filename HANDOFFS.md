@@ -138,24 +138,68 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S639
 date: 2026-08-26
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS. Fix test-coverage.yaml's missing Chrome-provisioning steps (BACKLOG.md
-  "Up Next" top item, found S637) -- port the 3-step pattern already proven on
-  R-CMD-check.yaml/R-CMD-check-scheduled.yaml, adapted for test-coverage.yaml's single-OS
-  (no-matrix) job and its different downstream anchor step ("Test coverage" instead of
-  check-r-package@v2). Also extend test_r_cmd_check_workflow_chrome_setup.R's coverage to guard
-  test-coverage.yaml too.
-what_was_done: pending
-next_steps: pending
-key_files: .github/workflows/test-coverage.yaml (the fix target), .github/workflows/
-  R-CMD-check.yaml:48-95 (the proven 3-step pattern to port), tests/testthat/
-  test_r_cmd_check_workflow_chrome_setup.R (guard test to extend)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: DONE. Fixed test-coverage.yaml's missing Chrome-provisioning steps (BACKLOG.md "Up
+  Next" top item, found S637). Also reconciled a ledger self-reference gap left by S638's own
+  close-out commit (Phase 0 step 6).
+what_was_done: Phase 0: backfilled S638's close-out commit (92c717d7) into CHANGELOG.md/HANDOFFS.md
+  (self-reference workaround, commits 6e2a3fe2/d6c06378). Root cause (already diagnosed by S637):
+  test-coverage.yaml runs covr::package_coverage(), executing this package's full test suite
+  including test_positionMatingUnitForest.R's getLiveRenderedPositions() call, which hits the
+  identical ambient-Chrome-discovery flake R-CMD-check.yaml/R-CMD-check-scheduled.yaml had before
+  their own fix. Research found a structural nuance neither BACKLOG.md nor S638's handoff named:
+  test-coverage.yaml has NO strategy.matrix (a single unconditional ubuntu-latest job), so the
+  existing guard test's macos-latest if:-guard test and check-r-package@v2 ordering anchor don't
+  apply. Fix: ported the identical 3-step pattern (browser-actions/setup-chrome@v2 +
+  CHROMOTE_CHROME export + chromote::find_chrome() pre-flight) with NO if: guard (no matrix leg to
+  skip). New guard coverage: 3 test_that() blocks in a SEPARATE section of
+  tests/testthat/test_r_cmd_check_workflow_chrome_setup.R (not folded into the existing loop),
+  reusing its helpers. Full strict TDD: RED (9 assertions failed for the right reason) -> GREEN
+  (33/33 pass) -> REFACTOR skipped (diff minimal). Verified locally: full clean regression 0
+  failed/0 error/6453 passed; devtools::check() 0 errors/1 WARNING+1 NOTE (both pre-existing);
+  lintr 0 lints. Pushed and watched real CI (run 33002411967) to completion: test-coverage.yaml
+  job success, confirmed via direct job-log inspection (CHROMOTE_CHROME/find_chrome() both
+  resolved to the same path, FAIL 0 | WARN 39 | SKIP 245 | PASS 6298). Commits: 6e2a3fe2/d6c06378
+  (Phase 0 reconcile), de9e4cf7 (claim), c6abedf5 (fix), 507cc6ad (docs), 805b2b83 (learning).
+next_steps: BACKLOG.md "Up Next" top items now: (1) R-CMD-check.yaml oldrel-1 setup-r@v2 infra
+  flake (Effort unknown, not investigated -- check on next CI run); (2) close out the kinship2
+  structural-comparison item -- all 4 tracks (A-D) DONE per S636, but the item itself is still
+  open pending plan section 5's "CI skip-vs-run confirmation," which S637/S638's own CI pushes may
+  already satisfy (Track C's live-kinship2 tests already flipped from skip to run with 0 failures)
+  -- verify directly and close out if so, rather than re-doing complete work. Other READY items:
+  DESCRIPTION Suggests/Config-Needs cleanup (Effort S), archive HANDOFFS.md/SESSION_NOTES.md/
+  CHANGELOG.md (dashboard HIGH-risk, all 3 past the 2,000-line read cap -- run
+  methodology_trim.py --check --file <name> on each). Also: BACKLOG.md's stale [x]-marked
+  "R-CMD-check.yaml CI is red" item (RESOLVED S637, never removed per Phase 3F's own rule) is a
+  quick housekeeping fix for whoever touches BACKLOG.md next.
+key_files: .github/workflows/test-coverage.yaml:25-59 (the fix -- 3 new steps, no if: guard),
+  tests/testthat/test_r_cmd_check_workflow_chrome_setup.R:216-303 (new separate test block, 3
+  test_that()s reusing existing helpers), PROJECT_LEARNINGS.md Learning 672 (the no-matrix/
+  different-anchor-step writeup), BACKLOG.md (item resolved, removed).
+gotchas: (1) test-coverage.yaml's guard tests are a SEPARATE block, not folded into the existing
+  workflow_files loop -- if test-coverage.yaml ever gains a real OS matrix, reconsider merging them
+  (Learning 672). (2) BACKLOG.md's stale [x]-marked R-CMD-check.yaml item (RESOLVED S637, never
+  removed) -- dashboard flagged this class of drift (7 done-marked items not migrated); not fixed
+  this session (out of scope), a quick cleanup for a future BACKLOG.md touch. (3) Dashboard
+  HIGH-risk: HANDOFFS.md/SESSION_NOTES.md/CHANGELOG.md all past the 2,000-line read cap, 2 of 3
+  past their byte-budget archive trigger -- methodology_trim.py --check on each is a fast pickup.
+  (4) The CHANGELOG.md/HANDOFFS.md self-reference gap pattern recurred again this session for
+  S638 -- same established 2-commit workaround applied; expect it to recur for S639's own
+  close-out too. (5) R-CMD-check.yaml/pkgdown.yaml were still in_progress on this session's pushed
+  commit when this session closed out -- not watched to completion (unrelated to this session's
+  own fix scope), but a future session should have no reason to expect them red since nothing in
+  this diff touches either workflow.
+runtime_smoke: CI-workflow fix -- live-verified on the actual GitHub Actions test-coverage.yaml
+  run (33002411967) for this session's own push (commit 507cc6ad), watched to completion via
+  Monitor (first attempt hit a zsh `status`-is-read-only script bug, fixed on retry). Job:
+  success. Direct job-log inspection confirms CHROMOTE_CHROME and chromote::find_chrome() both
+  resolved to the identical installed-Chrome path, and the full test suite reported
+  FAIL 0 | WARN 39 | SKIP 245 | PASS 6298 -- the chromote Chrome-launch flake did not reproduce.
+changelog_ref: 2026-08-26 S639 entry, CHANGELOG.md ("provision pinned Chrome for
+  test-coverage.yaml's chromote-dependent tests")
+commit: 507cc6ad
 ```
 
 ```handoff

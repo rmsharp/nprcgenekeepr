@@ -19,17 +19,124 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ## ACTIVE TASK
 
 ### What Session 639 Did
-**Deliverable:** Fix `test-coverage.yaml`'s missing Chrome-provisioning steps (`BACKLOG.md` "Up
-Next" top item, found S637 incidental to watching CI, matches the already-proven
-`R-CMD-check.yaml`/`R-CMD-check-scheduled.yaml` 3-step pattern). (IN PROGRESS)
-**Started:** 2026-08-26
-**Status:** Session claimed. Phase 0 orientation complete (ledger reconcile found and fixed one
-gap: S638's own close-out commit `92c717d7` was missing from `CHANGELOG.md`/cited the wrong sha in
-its `HANDOFFS.md` receipt -- fixed via commits `6e2a3fe2`/`d6c06378`, the established
-self-reference-gap 2-commit pattern). User picked this item over 3 other READY candidates via
-`AskUserQuestion`. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+**Deliverable:** Fixed `test-coverage.yaml`'s missing Chrome-provisioning steps (`BACKLOG.md` "Up
+Next" top item, found S637 incidental to watching CI, matching the already-proven
+`R-CMD-check.yaml`/`R-CMD-check-scheduled.yaml` 3-step pattern, adapted for a real structural
+difference discovered this session). **DONE**, full strict TDD (RED→GREEN, REFACTOR skipped by
+owner choice — diff minimal). **Started/Completed:** 2026-08-26 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): clean tracked tree, same 7 pre-existing untracked items
+   S637 already triaged (no new ghost-session signal). Ledger reconcile found a genuine gap: S638's
+   own final close-out commit (`92c717d7`, writing `HANDOFFS.md`/`SESSION_NOTES.md`) landed after the
+   `CHANGELOG.md` frontier with no entry, and cited the wrong sha in its own `HANDOFFS.md` receipt's
+   `commit:` field — the same self-reference pattern this project's precedent already names (a
+   close-out commit can't cite its own sha at write time), explicitly anticipated by S638's own
+   gotcha (3). Backfilled the same established 2-commit way: `6e2a3fe2` (fixed the receipt's
+   `commit:` field) + `d6c06378` (logged that fix in `CHANGELOG.md`). Dashboard: health 96/100, 1
+   HIGH-risk project flag — `HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` all now past the
+   2,000-line agent-read cap (failure mode #28), `HANDOFFS.md`/`CHANGELOG.md` also past their
+   byte-budget archive trigger — surfaced in the report as a candidate priority, not acted on.
+   Rendered the priorities list (4 options via `AskUserQuestion`); user picked "test-coverage.yaml
+   Chrome fix."
+2. **Claimed the session** (1B stub + `HANDOFFS.md` pending receipt, commit `de9e4cf7`).
+3. **Phase 2 research** (per `DEVELOPMENT_WORKSTREAM.md`): read `test-coverage.yaml`,
+   `R-CMD-check.yaml`, `R-CMD-check-scheduled.yaml`, and the guard test file directly. Found the
+   literal BACKLOG/S638-handoff framing ("extend the guard test's `workflow_files` vector") doesn't
+   transfer cleanly: `test-coverage.yaml` has **no `strategy.matrix`** at all (a single, unconditional
+   `ubuntu-latest` job) — unlike the 2 looped workflows' 5-leg matrix — so the loop's macos-latest
+   `if:`-guard test doesn't apply (referencing `matrix.config.os` on a non-matrix job is an invalid
+   GitHub Actions expression, not a no-op), and its ordering test anchors on `check-r-package@v2`, a
+   step `test-coverage.yaml` doesn't have (it runs `covr::package_coverage()` under a step named "Test
+   coverage" instead). See `PROJECT_LEARNINGS.md` Learning 672.
+4. **PRE-RED→RED gate** (`AskUserQuestion`): presented this finding and proposed a separate,
+   adapted 3-test block (reusing the loop's existing helpers) instead of blindly extending the shared
+   loop — owner approved.
+5. **RED:** added 3 `test_that()` blocks to `tests/testthat/test_r_cmd_check_workflow_chrome_setup.R`
+   — confirmed 9 assertions fail for the right reason (test-coverage.yaml has zero Chrome-provisioning
+   steps); the 24 pre-existing expectations for the other 2 workflows were unaffected.
+6. **RED→GREEN gate** (`AskUserQuestion`): owner approved the fix.
+7. **GREEN:** added the identical 3-step pattern (`browser-actions/setup-chrome@v2` +
+   `CHROMOTE_CHROME` export + `chromote::find_chrome()` pre-flight) to `test-coverage.yaml`, with **no
+   `if:` guard** (deliberate deviation — no matrix leg to skip). Confirmed 33/33 guard-test
+   expectations pass; YAML parses via a direct `python3 -c "yaml.safe_load(...)"` check with step order
+   printed and confirmed correct.
+8. **GREEN→REFACTOR gate** (`AskUserQuestion`): owner approved skipping REFACTOR (diff minimal).
+9. Committed the fix (`c6abedf5`, 2 files: workflow + test file — within the 5-file cap), then
+   documentation — `BACKLOG.md` (removed the resolved item), `CHANGELOG.md` (commit `507cc6ad`).
+10. **Verified locally:** full clean regression 0 failed/0 error/6453 passed (unchanged baseline,
+    39 warnings); `devtools::check()` 0 errors, 1 WARNING + 1 NOTE (both confirmed pre-existing —
+    non-portable filename, `scratchpad/`); `lintr::lint_package()` 0 lints on touched files.
+11. **Pushed** (owner-approved via `AskUserQuestion`) and watched the real CI run (`33002411967`)
+    to completion via `Monitor` (first attempt hit a zsh gotcha — `status` is a read-only shell
+    variable name, harmless script bug, fixed on retry). **`test-coverage.yaml` job: `success`.**
+    Confirmed via direct job-log inspection (not the summary): "Set up Chrome" installed Chrome
+    cleanly; "Assert Chrome is resolvable by chromote" logged matching
+    `CHROMOTE_CHROME`/`find_chrome()` paths (`/opt/hostedtoolcache/setup-chrome/chrome/stable/x64/chrome`
+    both times); "Show testthat output" reported `FAIL 0 | WARN 39 | SKIP 245 | PASS 6298` — the
+    chromote Chrome-launch flake this session exists to fix did not reproduce. `lint.yaml` also
+    `success` on the same commit; `R-CMD-check.yaml`/`pkgdown.yaml` (unrelated to this fix, not
+    watched to completion — deliberate scope boundary, this session touched only `test-coverage.yaml`).
+12. Recorded `PROJECT_LEARNINGS.md` Learning 672 (the no-matrix/different-anchor-step nuance),
+    updated `CLAUDE.md`'s learnings-count pointer (commit `805b2b83`).
+
+**Self-assessment (Session 639): 9/10.** **Strengths:** (1) read the actual target workflow file
+before writing any test, catching a real structural mismatch (no `strategy.matrix`) that both the
+BACKLOG item's own text and S638's handoff `next_steps` missed — avoided shipping either an invalid
+GitHub Actions expression or a test that would wrongly fail a correctly-fixed workflow; (2)
+presented that finding explicitly at the PRE-RED gate rather than silently improvising a fix, so the
+scope deviation from the literal "extend the vector" instruction was an approved decision, not a
+unilateral one; (3) followed strict TDD faithfully with an `AskUserQuestion` gate at every phase
+transition; (4) verified on real CI with job-log-level evidence (exact `CHROMOTE_CHROME`/
+`find_chrome()` output lines, exact `FAIL`/`WARN`/`SKIP`/`PASS` counts), not just the green summary,
+matching this project's established bar for CI-workflow fixes. **Weaknesses:** (1) the first
+`Monitor` call for the CI-run watch failed on a zsh reserved-variable-name bug (`status` is
+read-only in zsh) — a small, quickly-fixed process hiccup, not a project-relevant learning, but cost
+one wasted round-trip; (2) did not watch `R-CMD-check.yaml`/`pkgdown.yaml` to completion on the same
+commit — a deliberate scope boundary (this session touched only `test-coverage.yaml`), but a more
+thorough session might have confirmed nothing else regressed before closing out.
+
+**Gotchas for a future session:** (1) `test-coverage.yaml`'s guard tests live in a SEPARATE block in
+`test_r_cmd_check_workflow_chrome_setup.R`, not folded into the `workflow_files` loop — if a future
+session ever gives `test-coverage.yaml` a real OS matrix, the loop-vs-separate-block split should be
+reconsidered (see Learning 672). (2) `BACKLOG.md`'s "Up Next" section still has a stale `[x]`-marked
+item ("R-CMD-check.yaml CI is red on master") that was RESOLVED S637 but never removed, per Phase
+3F's own rule ("completed items are removed, recorded in CHANGELOG.md — never edited in place") —
+dashboard flagged this class of drift (7 done-marked items not migrated). Not fixed this session
+(unrelated to this session's own scope) — a future session doing BACKLOG.md housekeeping should
+clean it up. (3) Dashboard HIGH-risk flag from this session's own Phase 0: `HANDOFFS.md` (3,848
+lines)/`SESSION_NOTES.md` (3,575+ lines, now larger)/`CHANGELOG.md` (2,786+ lines, now larger) are
+all past the 2,000-line agent-read cap; `HANDOFFS.md`/`CHANGELOG.md` are also past their
+65,536 B archive-trigger budget — `methodology_trim.py --check --file <name>` on each is a fast,
+low-risk pickup for a future session, matching established precedent (S527/S539/S547/S594). (4) The
+kinship2 structural-comparison BACKLOG item (all 4 tracks A-D DONE per S636) may already satisfy its
+own last open requirement (plan §5's "CI skip-vs-run behavior for Track C's live-kinship2 tests"
+confirmation) via S637/S638's own CI pushes, which already showed those tests flipping from skip to
+run with 0 failures — a future session should verify this directly and close the item out if so,
+rather than re-doing already-complete work.
+
+### Session 638 Handoff Evaluation (by Session 639)
+**Score: 7/10.** **What helped:** gotcha (3) (the `CHANGELOG.md`/`HANDOFFS.md` self-reference gap
+recurring for the close-out commit's own sha) correctly predicted exactly what Phase 0 found this
+session, letting the ledger reconcile proceed confidently and quickly with no independent diagnosis
+needed. Gotcha (4) and `next_steps` correctly named `test-coverage.yaml`'s missing Chrome-provisioning
+fix as the top BACKLOG priority, with accurate framing (READY, Effort S, matches a proven pattern) —
+the user picked exactly this item. `BACKLOG.md`'s own detailed root-cause text (found S637) about the
+ambient-Chrome-discovery failure signature (`chromote:::launch_chrome()` -> `startup()` ->
+`rlang::abort()`) was directly useful and accurate, saving a full re-diagnosis. **What was missing:**
+neither the handoff's `next_steps` nor the underlying `BACKLOG.md` item's text ever mentioned that
+`test-coverage.yaml` has no OS matrix at all — a structural fact a direct read of the file would have
+surfaced, and one that changes both the implementation (no `if:` guard) and the test design (can't
+extend the shared loop as literally instructed). This is the same class of gap Session 637's own
+evaluation of Session 636 named: a prior session's framing was reasonable but stopped one level short
+of reading the actual file that would have caught the nuance. **What was wrong:** the specific
+instruction "extend the guard test's `workflow_files` vector" was not directly actionable as written
+— following it literally would have produced either an invalid GitHub Actions expression or an
+assertion that fails on a correctly-fixed workflow. Not a large error (the underlying "port the 3-step
+pattern" diagnosis was completely correct), but worth naming for the record. **ROI:** yes, clearly
+positive — the correct priority identification, root-cause detail, and ledger-reconcile gotcha
+together saved far more time than the one imprecise instruction cost, which a few minutes of direct
+file-reading resolved.
 
 ### What Session 638 Did
 **Deliverable:** Root-caused and fixed the `org.chromium.Chromium.*` temp-detritus NOTE in `R CMD
