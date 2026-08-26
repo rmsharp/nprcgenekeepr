@@ -65,6 +65,7 @@ Suggests:
     htmltools,
     htmlwidgets,
     kableExtra,
+    kinship2,
     knitr,
     markdown,
     mockery,
