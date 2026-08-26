@@ -24,9 +24,15 @@
 ## .extractNprcStructure() does from "direct"-style output on the same
 ## fixture -- proving D-2's foundational claim, not merely assuming it.
 ##
-## .comparePedigreeStructures() (Track C) remains out of scope here (plan
-## section 5's strict A->B->C->D order) and will get its own test_that()
-## blocks, or its own file, in a future session.
+## Track C (below): .comparePedigreeStructures() -- the diff itself, plan
+## sections 3.3/4.3. Pure, zero-kinship2 unit tests use hand-built
+## list(parentChildEdges, matePairs) structures directly. The live-kinship2
+## end-to-end tests use toKinship2Pedigree()/compareAgainstKinship2(),
+## defined in tests/testthat/helper-comparePedigreeStructure.R (kinship2 is
+## a genuine dependency there, requireNamespace()-guarded, plan D-5) --
+## these are skip_if_not_installed("kinship2")-guarded and include a new D-7
+## fixture (plan section 2.6) exercising kinship2's own crossing-driven
+## duplication of a single-mate individual (dragon 1, section 1.3).
 
 ## ---- test helpers (not exported, local to this file) -------------------
 
@@ -548,4 +554,238 @@ test_that(
   expect_setequal(.mateKeysB(fromDirect$matePairs),
                    .mateKeysB(fromRectilinear$matePairs))
   expect_equal(nrow(fromDirect$matePairs), nrow(fromRectilinear$matePairs))
+})
+
+## ===========================================================================
+## Track C: .comparePedigreeStructures() (plan sections 3.3/4.3)
+## ===========================================================================
+##
+## .comparePedigreeStructures(a, b) diffs two list(parentChildEdges,
+## matePairs) structures in Track A/B's own shared output shape (
+## deliberately agnostic to which side is which -- plan section 3.3).
+## Canonicalizes each side before comparing (plan section 1.3's fifth fact:
+## order never matters) and reports, in both directions, any
+## parentChildEdges/matePairs row present on only one side.
+##
+## The live-kinship2 end-to-end tests below use
+## toKinship2Pedigree()/compareAgainstKinship2(), defined in
+## tests/testthat/helper-comparePedigreeStructure.R (auto-loaded by
+## test_dir()/test_local()/devtools::test(); NOT by test_file() -- source on
+## demand, matching helper-fgSEValidation.R's own established pattern,
+## test_fgSEValidation.R:26-28).
+
+if (!exists("toKinship2Pedigree")) {
+  source(testthat::test_path("helper-comparePedigreeStructure.R"))
+}
+
+## ---- test helpers (not exported, local to this file) --------------------
+
+## The new D-7 fixture (plan sections 2.6/4.3): a double cross-marriage
+## between two founder sibships (Family A: FA1xFA2 -> A1,A2; Family B:
+## FB1xFB2 -> B1,B2; A1xB2 -> X; A2xB1 -> Y). Empirically confirmed
+## (scratchpad/explore_d7_v2.R Candidate 5, this session) to trigger
+## kinship2's own crossing-driven duplication of A1 -- a SINGLE-mate
+## individual (A1's only mate is B2) -- at plot time: align.pedigree()'s own
+## $nid matrix places A1's row index (5) at 2 different columns of the same
+## generation row ([5,6,7,5,8], for ids in id order
+## FA1,FA2,FB1,FB2,A1,A2,B1,B2,X,Y). This proves plan dragon 1 (section 1.3)
+## and D-1's "resolved by construction" claim on a real, verified case --
+## not merely reasoned about (PROJECT_LEARNINGS.md Learning 596's
+## "render/test the claim, don't just reason about it" rule).
+.pedCrossMarriageFixture <- function() {
+  ped <- data.frame(
+    id   = c("FA1", "FA2", "FB1", "FB2", "A1", "A2", "B1", "B2", "X", "Y"),
+    sire = c(NA, NA, NA, NA, "FA1", "FA1", "FB1", "FB1", "A1", "B1"),
+    dam  = c(NA, NA, NA, NA, "FA2", "FA2", "FB2", "FB2", "B2", "A2"),
+    sex  = c("M", "F", "M", "F", "M", "F", "M", "F", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+
+## ---- .comparePedigreeStructures() pure unit tests (zero kinship2) --------
+
+test_that(
+  ".comparePedigreeStructures returns a list with the 5 documented fields", {
+  a <- list(
+    parentChildEdges = data.frame(child = "C1", parent = "F1",
+                                    stringsAsFactors = FALSE),
+    matePairs = data.frame(parent1 = character(), parent2 = character(),
+                             nChildren = integer())
+  )
+  b <- a
+  result <- .comparePedigreeStructures(a, b)
+  expect_true(is.list(result))
+  expect_setequal(names(result), c("parentChildOnlyInA", "parentChildOnlyInB",
+                                     "matePairsOnlyInA", "matePairsOnlyInB",
+                                     "identical"))
+  expect_true(is.logical(result$identical))
+})
+
+test_that(
+  ".comparePedigreeStructures reports identical = TRUE for equal structures,
+   even when matePairs lists parent1/parent2 in opposite order (order never
+   matters, plan section 1.3's fifth fact)", {
+  a <- list(
+    parentChildEdges = data.frame(child = c("X", "X"), parent = c("A", "B"),
+                                    stringsAsFactors = FALSE),
+    matePairs = data.frame(parent1 = "A", parent2 = "B", nChildren = 1L,
+                             stringsAsFactors = FALSE)
+  )
+  b <- list(
+    parentChildEdges = data.frame(child = c("X", "X"), parent = c("B", "A"),
+                                    stringsAsFactors = FALSE),
+    matePairs = data.frame(parent1 = "B", parent2 = "A", nChildren = 1L,
+                             stringsAsFactors = FALSE)
+  )
+  result <- .comparePedigreeStructures(a, b)
+  expect_true(result$identical)
+  expect_equal(nrow(result$parentChildOnlyInA), 0L)
+  expect_equal(nrow(result$parentChildOnlyInB), 0L)
+  expect_equal(nrow(result$matePairsOnlyInA), 0L)
+  expect_equal(nrow(result$matePairsOnlyInB), 0L)
+})
+
+test_that(
+  ".comparePedigreeStructures reports a parentChildEdges row present only in
+   A, and only in B, in the correct respective slot", {
+  a <- list(
+    parentChildEdges = data.frame(child = c("X", "Y"), parent = c("A", "A"),
+                                    stringsAsFactors = FALSE),
+    matePairs = data.frame(parent1 = character(), parent2 = character(),
+                             nChildren = integer())
+  )
+  b <- list(
+    parentChildEdges = data.frame(child = "X", parent = "A",
+                                    stringsAsFactors = FALSE),
+    matePairs = data.frame(parent1 = character(), parent2 = character(),
+                             nChildren = integer())
+  )
+  result <- .comparePedigreeStructures(a, b)
+  expect_false(result$identical)
+  expect_equal(nrow(result$parentChildOnlyInA), 1L)
+  expect_equal(result$parentChildOnlyInA$child, "Y")
+  expect_equal(nrow(result$parentChildOnlyInB), 0L)
+})
+
+test_that(
+  ".comparePedigreeStructures reports a matePairs row present only in A, and
+   only in B -- including when nChildren differs for an otherwise-matching
+   pair (a real structural discrepancy, not silently ignored)", {
+  a <- list(
+    parentChildEdges = data.frame(child = character(), parent = character()),
+    matePairs = data.frame(parent1 = "A", parent2 = "B", nChildren = 2L,
+                             stringsAsFactors = FALSE)
+  )
+  b <- list(
+    parentChildEdges = data.frame(child = character(), parent = character()),
+    matePairs = data.frame(parent1 = "A", parent2 = "B", nChildren = 1L,
+                             stringsAsFactors = FALSE)
+  )
+  result <- .comparePedigreeStructures(a, b)
+  expect_false(result$identical)
+  expect_equal(nrow(result$matePairsOnlyInA), 1L)
+  expect_equal(result$matePairsOnlyInA$nChildren, 2L)
+  expect_equal(nrow(result$matePairsOnlyInB), 1L)
+  expect_equal(result$matePairsOnlyInB$nChildren, 1L)
+})
+
+test_that(
+  ".comparePedigreeStructures handles zero-row inputs on both sides
+   (founder-only pedigree) as identical = TRUE", {
+  empty <- list(
+    parentChildEdges = data.frame(child = character(), parent = character()),
+    matePairs = data.frame(parent1 = character(), parent2 = character(),
+                             nChildren = integer())
+  )
+  result <- .comparePedigreeStructures(empty, empty)
+  expect_true(result$identical)
+})
+
+## ---- toKinship2Pedigree() unit tests --------------------------------------
+
+test_that(
+  "toKinship2Pedigree auto-swaps a reversed sire/dam row (D-5) -- the
+   existing Track C fixture's own C2 row (sire='Y', but Y's sex is female)",
+  {
+  skip_if_not_installed("kinship2")
+  ped <- .pedTrackCFixture()
+  pedK2 <- toKinship2Pedigree(ped)
+  ## after the swap, C2's dadid must be male and momid female (kinship2's
+  ## own pedigree() would otherwise refuse to construct the object at all)
+  c2 <- which(pedK2$id == "C2")
+  expect_equal(pedK2$id[pedK2$findex[c2]], "W")
+  expect_equal(pedK2$id[pedK2$mindex[c2]], "Y")
+})
+
+test_that(
+  "toKinship2Pedigree leaves an already-correctly-sexed row unchanged", {
+  skip_if_not_installed("kinship2")
+  ped <- .ped7Fixture()
+  pedK2 <- toKinship2Pedigree(ped)
+  xIdx <- which(pedK2$id == "X")
+  expect_equal(pedK2$id[pedK2$findex[xIdx]], "A")
+  expect_equal(pedK2$id[pedK2$mindex[xIdx]], "B")
+})
+
+## ---- live-kinship2 end-to-end tests (D-8: toy AND real scale) ------------
+
+test_that(
+  "compareAgainstKinship2 reports identical = TRUE on the existing 9-subject
+   Track C dogleg fixture", {
+  skip_if_not_installed("kinship2")
+  result <- compareAgainstKinship2(.pedTrackCFixture())
+  expect_true(result$identical)
+})
+
+test_that(
+  "kinship2 itself genuinely duplicates the D-7 fixture's single-mate
+   individual A1 at plot time -- confirms the fixture actually exercises
+   dragon 1 (plan section 1.3), not merely assumed", {
+  skip_if_not_installed("kinship2")
+  ped <- .pedCrossMarriageFixture()
+  pedK2 <- toKinship2Pedigree(ped)
+  al <- kinship2:::align.pedigree(pedK2)
+  a1Idx <- which(pedK2$id == "A1")
+  placements <- sum(floor(al$nid) == a1Idx)
+  expect_equal(placements, 2L)
+  ## A1 truly has exactly 1 mate -- this is the "single-mate" dragon, not
+  ## the already-handled multi-mate case (dragon 3).
+  mates <- unique(c(ped$dam[ped$sire == "A1" & !is.na(ped$sire)],
+                     ped$sire[ped$dam == "A1" & !is.na(ped$dam)]))
+  expect_equal(length(mates), 1L)
+})
+
+test_that(
+  "compareAgainstKinship2 reports identical = TRUE on the new D-7
+   crossing-duplication fixture -- proves D-1's 'resolved by construction'
+   claim, not merely assumed (D-7, plan section 2.6)", {
+  skip_if_not_installed("kinship2")
+  ped <- .pedCrossMarriageFixture()
+  ## nprcgenekeepr itself must never duplicate the single-mate A1 (only a
+  ## real multi-mate anchor gets duplicated) -- confirmed before trusting
+  ## the comparison result below.
+  layout <- nprcgenekeepr:::makePedigreeMatingLayout(ped,
+                                                       edgeStyle = "direct")
+  expect_false(any(grepl("^__dup_A1_", names(layout$duplicateToReal))))
+
+  result <- compareAgainstKinship2(ped)
+  expect_true(result$identical)
+})
+
+test_that(
+  "compareAgainstKinship2 reports identical = TRUE on the real
+   375-individual bundled fixture -- the D-8 toy-AND-real-scale validation
+   discipline (PROJECT_LEARNINGS.md Learning 596) applied to Track C's own
+   comparator. A non-empty diff here would be a genuine finding to report,
+   not silently reconciled (plan section 4.3's own 'done looks like')", {
+  skip_if_not_installed("kinship2")
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  result <- compareAgainstKinship2(ped)
+  expect_true(result$identical)
 })

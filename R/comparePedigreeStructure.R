@@ -176,3 +176,73 @@
 
   list(parentChildEdges = parentChildEdges, matePairs = matePairs)
 }
+
+#' Diff two pedigree structural extractions
+#'
+#' Compares two \code{list(parentChildEdges, matePairs)} structures in the
+#' shared output shape of \code{\link{.extractKinship2Structure}} (Track A)
+#' and \code{\link{.extractNprcStructure}} (Track B) -- deliberately agnostic
+#' to which side is kinship2 vs. nprcgenekeepr (either argument order gives
+#' the same \code{identical} verdict, with A/B swapped in the "only in"
+#' fields). This is Track C of a programmatic structural/topological
+#' comparison against kinship2; see
+#' \code{docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md}
+#' sections 3.3/4.3.
+#'
+#' Canonicalizes each side before comparing (plan section 1.3's fifth fact:
+#' neither package treats sire/dam left-right order as meaningful, so a
+#' comparator must never assert positional/x-order equivalence) -- for
+#' \code{matePairs}, \code{parent1}/\code{parent2} are sorted alphabetically
+#' per row so \code{(A, B)} and \code{(B, A)} compare equal; rows in both
+#' tables are then compared as unordered sets (a row present in A but not B,
+#' or vice versa), never via positional \code{identical()}.
+#'
+#' @param a,b each a list with \code{parentChildEdges} (\code{child},
+#'   \code{parent}) and \code{matePairs} (\code{parent1}, \code{parent2},
+#'   \code{nChildren}) data frames, in \code{\link{.extractKinship2Structure}}/
+#'   \code{\link{.extractNprcStructure}}'s shared output shape.
+#' @return A list: \code{parentChildOnlyInA}, \code{parentChildOnlyInB},
+#'   \code{matePairsOnlyInA}, \code{matePairsOnlyInB} (each a data frame, in
+#'   the same shape as the corresponding input table, of rows found on only
+#'   one side); \code{identical} (\code{TRUE} iff all 4 of the above are
+#'   zero-row).
+#' @noRd
+.comparePedigreeStructures <- function(a, b) {
+  canonicalizeParentChild <- function(pc) {
+    pc <- pc[order(pc$child, pc$parent), c("child", "parent")]
+    rownames(pc) <- NULL
+    pc
+  }
+  canonicalizeMatePairs <- function(mp) {
+    lo <- pmin(mp$parent1, mp$parent2)
+    hi <- pmax(mp$parent1, mp$parent2)
+    out <- data.frame(parent1 = lo, parent2 = hi, nChildren = mp$nChildren,
+                       stringsAsFactors = FALSE)
+    out <- out[order(out$parent1, out$parent2), ]
+    rownames(out) <- NULL
+    out
+  }
+  pcKey <- function(pc) paste(pc$child, pc$parent, sep = "|")
+  mateKey <- function(mp) {
+    paste(mp$parent1, mp$parent2, mp$nChildren, sep = "|")
+  }
+
+  pcA <- canonicalizeParentChild(a$parentChildEdges)
+  pcB <- canonicalizeParentChild(b$parentChildEdges)
+  mpA <- canonicalizeMatePairs(a$matePairs)
+  mpB <- canonicalizeMatePairs(b$matePairs)
+
+  pcOnlyA <- pcA[!pcKey(pcA) %in% pcKey(pcB), , drop = FALSE]
+  pcOnlyB <- pcB[!pcKey(pcB) %in% pcKey(pcA), , drop = FALSE]
+  mpOnlyA <- mpA[!mateKey(mpA) %in% mateKey(mpB), , drop = FALSE]
+  mpOnlyB <- mpB[!mateKey(mpB) %in% mateKey(mpA), , drop = FALSE]
+
+  list(
+    parentChildOnlyInA = pcOnlyA,
+    parentChildOnlyInB = pcOnlyB,
+    matePairsOnlyInA = mpOnlyA,
+    matePairsOnlyInB = mpOnlyB,
+    identical = nrow(pcOnlyA) == 0L && nrow(pcOnlyB) == 0L &&
+      nrow(mpOnlyA) == 0L && nrow(mpOnlyB) == 0L
+  )
+}
