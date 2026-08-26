@@ -136,6 +136,29 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S639
+date: 2026-08-26
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS. Fix test-coverage.yaml's missing Chrome-provisioning steps (BACKLOG.md
+  "Up Next" top item, found S637) -- port the 3-step pattern already proven on
+  R-CMD-check.yaml/R-CMD-check-scheduled.yaml, adapted for test-coverage.yaml's single-OS
+  (no-matrix) job and its different downstream anchor step ("Test coverage" instead of
+  check-r-package@v2). Also extend test_r_cmd_check_workflow_chrome_setup.R's coverage to guard
+  test-coverage.yaml too.
+what_was_done: pending
+next_steps: pending
+key_files: .github/workflows/test-coverage.yaml (the fix target), .github/workflows/
+  R-CMD-check.yaml:48-95 (the proven 3-step pattern to port), tests/testthat/
+  test_r_cmd_check_workflow_chrome_setup.R (guard test to extend)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S638
 date: 2026-08-26
 status: complete
