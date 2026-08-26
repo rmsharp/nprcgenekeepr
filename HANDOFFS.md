@@ -172,6 +172,68 @@ This file currently holds **18** receipt(s). Computed by
 hand-maintained.
 
 ``` handoff
+session: S641
+date: 2026-08-26
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE. Fixed a real defect in the kinship2 structural comparator
+  (.comparePedigreeStructures() diffed only edges/matePairs, blind to whether an isolated
+  individual is displayed at all) found via a direct owner-requested visual comparison of the
+  article's own published images. Closed the parent BACKLOG.md kinship2 structural-comparison item.
+what_was_done: Started from S640's picked item (kinship2 CI-verification close-out); CI-log
+  evidence alone (gh api job logs, pre/post kinship2-Suggests-fix skip-reason diffs) would have
+  closed it, but the owner declined and asked for a real demonstration -- render/compare actual
+  images, trace ground truth programmatically. Viewing trackB-kinship2-full.png next to
+  trackB-nprc-full.png showed 15 vs 16 individuals; confirmed live via align.pedigree()'s own $nid
+  placement that kinship2 drops the isolated P5, and via direct source read that
+  .comparePedigreeStructures() only diffs parentChildEdges/matePairs (0 rows for an isolated
+  individual on either side, so invisible to the diff). Full strict TDD: RED (23 new/updated
+  assertions incl. a regression test against the article's own exact published fixture, confirmed
+  failing for the right reason) -> GREEN (.extractKinship2Structure() gained displayedIds param +
+  individuals field; .extractNprcStructure() gained individuals field; .comparePedigreeStructures()
+  diffs individuals too, folded into identical, backward compatible; compareAgainstKinship2() gained
+  .kinship2DisplayedIds() via align.pedigree(), muffling a confirmed-benign kinship2-internal
+  warning) -> REFACTOR skipped (owner choice, diff minimal). Live-verified the fix on all 4 article
+  fixtures: Track B full now correctly identical=FALSE (P5 flagged); Track B shrunk/Track C/real
+  375-fixture still correctly identical=TRUE (no false positive introduced). Corrected the
+  vignette's fig-alt/Structural-verification-table/Verdict sections to match. Verified: full clean
+  regression 0 failed/0 error (6492 passed, 39 pre-existing warnings); devtools::check() 0 errors/1
+  warning/1 note (both pre-existing, unrelated); lintr 0 lints; quarto render clean. Commits:
+  638e7417 (Phase 0 reconcile backfill), 9fe3b7f5 (the fix, 4 files), ed574b86 (BACKLOG.md removal +
+  CHANGELOG.md + PROJECT_LEARNINGS.md Learning 673 + CLAUDE.md pointer).
+next_steps: Pick up from BACKLOG.md's remaining priorities (not re-derived here -- see this
+  session's own Phase 0 report in SESSION_NOTES.md "What Session 641 Did" step 1 for the full
+  rendered list): the factor-out-pedigree-diagram-package research item (READY, M), the
+  context_budget.py evaluation (READY, S), the DESCRIPTION Suggests/Config-Needs audit (READY, S),
+  or the 7-item BACKLOG.md [x]-sweep (READY, S, precedent S619/S625). No item from this session's
+  own work is left outstanding -- the kinship2 structural-comparison item is fully closed.
+key_files: R/comparePedigreeStructure.R (the fix), tests/testthat/helper-comparePedigreeStructure.R
+  (.kinship2DisplayedIds()), tests/testthat/test_comparePedigreeStructure.R (23 new/updated
+  assertions, new .pedTrackBFixture()), vignettes/articles/kinship2-fidelity-validation.qmd
+  (corrected claims), BACKLOG.md (item removed), CHANGELOG.md, PROJECT_LEARNINGS.md (Learning 673).
+gotchas: (1) No Phase 1B claim stub exists for S641 -- skipped this session (self-assessed as a real
+  protocol gap, see SESSION_NOTES.md weakness (1)); a future Phase 0 reconcile finding no S641 stub
+  is expected, not a crash signal -- this receipt and SESSION_NOTES.md are the complete record.
+  (2) HANDOFFS.md/SESSION_NOTES.md/CHANGELOG.md remain past the FM #28 2,000-line cap, unresolved
+  across many sessions. (3) BACKLOG.md still has 7 accumulated [x]-checked DONE items (dashboard LOW
+  flag, precedent S619/S625), untouched by this session. (4) Issue #164 (makePedigreeMatingLayout()
+  crash on an all-founder pedigree) remains open, unrelated to this session's fix -- do not conflate
+  the two. (5) align.pedigree() can emit a benign "Unexpected result in autohint" warning on some
+  fixture shapes inside compareAgainstKinship2() -- confirmed not to affect placement correctness,
+  muffled only after matching the exact message text; a future extension of that function should be
+  aware of it.
+runtime_smoke: n/a, stated explicitly -- this session's deliverable is an internal @noRd validation
+  utility plus a documentation correction, no Shiny startup/dispatch/config-resolution path touched.
+  devtools::check()'s own R CMD check (which loads the package and runs the full suite) is the
+  closest available runtime exercise and passed clean.
+changelog_ref: 2026-08-26 S641 entries, CHANGELOG.md ("fix the kinship2 structural comparator's
+  isolated-individual blind spot; close the kinship2 structural-comparison BACKLOG item" and the
+  reconcile-backfill entry above it)
+commit: pending
+```
+
+``` handoff
 session: S640
 date: 2026-08-26
 status: complete
