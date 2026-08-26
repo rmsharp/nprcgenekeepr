@@ -197,7 +197,7 @@ runtime_smoke: n/a, stated explicitly -- this session's deliverable is a test-ha
   available runtime exercise and passed clean (0 errors).
 changelog_ref: 2026-08-26 S642 entries, CHANGELOG.md ("fix data-raw script's stale discrepancy
   reporting; file P5-suppression renderer defect" and the reconcile-backfill entry above it)
-commit: pending
+commit: df3ea858
 ```
 
 ```handoff

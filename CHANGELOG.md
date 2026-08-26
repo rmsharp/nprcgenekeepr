@@ -16,6 +16,37 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S643: record CHANGELOG.md entry for S642's Learning-674 record and close-out commit (reconcile-on-read)
+- **Deliverable:** Phase 0 reconcile found 2 commits past the `CHANGELOG.md` frontier (`39ef1c55`)
+  with no ledger entry, the same two-commit shape S640's own reconcile found for S639: `f6aecbdf`
+  ("record Learning 674, update learnings-count pointer" -- touched `CLAUDE.md`/`PROJECT_LEARNINGS.md`
+  only) is a genuine standalone undocumented action, not the usual self-reference case; `df3ea858`
+  (S642's own close-out commit, writing the final `HANDOFFS.md` receipt + `SESSION_NOTES.md`) is the
+  familiar self-reference gap this project's precedent already names (S639->S640->...->S642). Backfilled
+  both: fixed the S642 receipt's `commit:` field from `pending` to `df3ea858` (this session, prior to
+  this entry's own commit), and this entry records `f6aecbdf`'s own action -- `PROJECT_LEARNINGS.md`
+  Learning 674 (an untested diagnostic/reporting layer has its own bug surface independent of the thing
+  it reports on; a session's narrative interpretation of a fix is a separate claim from the fix itself
+  and needs the domain owner's own sign-off) -- and `CLAUDE.md`'s learnings-count pointer updated to
+  match (673->674, S641+->S642+). `HANDOFFS.md` frontier check found no gap (`df3ea858` is already its
+  own frontier).
+- **Also found, live-checked via `gh run list`/`gh run view`, NOT self-resolved -- reported, not
+  fixed:** `lint.yaml` FAILED on S642's own close-out push (run `33022564528`, commit `df3ea858`) --
+  `[object_usage_linter] no visible global function definition for '.formatStructuralDiscrepancy'` at
+  `data-raw/kinship2FidelityValidation.R:339`, exit code 31 (`LINTR_ERROR_ON_LINT: true`). This
+  contradicts S642's own close-out claim of "0 lints on all 3 touched files" -- `.formatStructuralDiscrepancy()`
+  lives in `tests/testthat/helper-comparePedigreeStructure.R` (a `testthat` helper, not part of the
+  package's `R/` source), so it is not in scope for `pkgload::load_all()` the way `CLAUDE.md`'s Lint
+  close-out checklist (Learning 224) prescribes; the most likely explanation is that S642's local
+  interactive session already had `.formatStructuralDiscrepancy` bound in its global environment (from
+  an earlier `test_dir()`/`test_file()` run in the same session) when `lintr::lint_package()` ran,
+  masking exactly the gap CI's clean-environment run exposed -- not yet confirmed, offered as a
+  hypothesis for whichever session fixes this. No code/workflow file touched this session (per the
+  CI-break tracking convention, `CLAUDE.md`: report a live CI break, don't file a GitHub issue for it;
+  fix if in scope, otherwise defer via `BACKLOG.md`). `R-CMD-check.yaml` was still `in_progress` on the
+  same push at observation time -- not yet resolved to a verdict.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · [ad hoc] S642: fix data-raw/kinship2FidelityValidation.R's own untested discrepancy-reporting gap; file the P5-suppression renderer defect
 - **Deliverable:** owner-directed review of `kinship2-fidelity-validation.qmd`, working through Track
   A/B/C with every image re-rendered live (not trusted from cached files) and every claim traced
