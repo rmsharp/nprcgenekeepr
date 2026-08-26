@@ -1,6 +1,8 @@
 # Shrink a pedigree to fit within a bit-size budget
 
-A `kinship2::pedigree.shrink()` equivalent (Track B of
+A
+[`kinship2::pedigree.shrink()`](https://rdrr.io/pkg/kinship2/man/pedigree.shrink.html)
+equivalent (Track B of
 `docs/planning/kinship2-supplement-full-reproduction-plan.md` §4): trims
 a pedigree down to the individuals needed to keep it genetically
 informative within a genotyping-cost budget (`maxBits`), given which

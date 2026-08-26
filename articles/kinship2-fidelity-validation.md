@@ -21,8 +21,10 @@ closed 3 tracks against that supplement:
   the supplement’s X-chromosome kinship matrix (Table S2).
 - **Track B** – new
   [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md),
-  a `kinship2::pedigree.shrink()` equivalent over this package’s own
-  `id`/`sire`/`dam` data-frame pedigree representation.
+  a
+  [`kinship2::pedigree.shrink()`](https://rdrr.io/pkg/kinship2/man/pedigree.shrink.html)
+  equivalent over this package’s own `id`/`sire`/`dam` data-frame
+  pedigree representation.
 - **Track C** –
   [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
   consanguineous-mating visual marker (a distinct color/width on a
@@ -286,19 +288,22 @@ that these diagrams describe the same family structure kinship2 does.
 - **Tracks B and C have no PDF-printed worked example at all** – the
   supplement names only *which* subjects a shrink trims, never their
   relationships, and says nothing about visual conventions. Both tracks’
-  ground truth is a live, installed `kinship2::pedigree.shrink()` /
-  `plot.pedigree()` run on a fixture purpose-built to exercise the
+  ground truth is a live, installed
+  [`kinship2::pedigree.shrink()`](https://rdrr.io/pkg/kinship2/man/pedigree.shrink.html)
+  / `plot.pedigree()` run on a fixture purpose-built to exercise the
   relevant algorithm, not a supplement-sourced value.
-- **`kinship2::pedigree()`’s sex-role validation is stricter than
-  nprcgenekeepr’s own sire/dam columns.** Track C’s own committed test
-  fixture lists one individual (`Y`) as a `sire` in one row despite her
-  declared sex being female – valid input to
+- **[`kinship2::pedigree()`](https://rdrr.io/pkg/kinship2/man/pedigree.html)’s
+  sex-role validation is stricter than nprcgenekeepr’s own sire/dam
+  columns.** Track C’s own committed test fixture lists one individual
+  (`Y`) as a `sire` in one row despite her declared sex being female –
+  valid input to
   [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
   which does not enforce sex/column-role consistency, but rejected by
-  `kinship2::pedigree()`, which does. The validation script swaps that
-  one row’s 2 column values (same 2 parents, same family structure) only
-  for the kinship2-side object; every nprcgenekeepr call in this article
-  uses the fixture exactly as committed.
+  [`kinship2::pedigree()`](https://rdrr.io/pkg/kinship2/man/pedigree.html),
+  which does. The validation script swaps that one row’s 2 column values
+  (same 2 parents, same family structure) only for the kinship2-side
+  object; every nprcgenekeepr call in this article uses the fixture
+  exactly as committed.
 
 ## Verdict
 

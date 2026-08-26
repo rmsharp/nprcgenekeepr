@@ -1879,25 +1879,25 @@ learnings-count pointer 625→626.
   1525 edges), no new errors. **Demonstration:** owner asked mid-session
   for a visual before/after vs. `kinship2` comparison; built one from a
   temporary git worktree at the pre-fix commit (F1 fixture,
-  `kinship2::plot.pedigree()` reference + nprcgenekeepr before/after),
-  traced every parent-child edge programmatically against the source
-  pedigree before trusting either rendering, and published as a shared
-  Artifact (union x moves 0.12 → -6.0, matching kinship2’s own centered
-  convergence point far more closely) — not committed to the repo (an
-  ephemeral demonstration, not a project deliverable).
-  `NEWS.Rmd`/`NEWS.md`: new entry disclosing the fix and its 0/237
-  real-corpus scope. `BACKLOG.md`: Track 3 trade-offs item’s
-  child-centering half marked DONE (D1 bar-vs-bar half remains open).
-  Investigation doc: status banner updated to IMPLEMENTED, new §12
-  recording the full RED/GREEN/REFACTOR/smoke-test record.
-  `PROJECT_LEARNINGS.md`: Learnings 621-622. No GitHub issue — this item
-  was tracked in `BACKLOG.md` only, matching the investigation’s own
-  established precedent. Follow-up commit `921d12f4`: corrected
-  `HANDOFFS.md`’s own S602 receipt (its `commit:` field initially said
-  `pending` despite `status: complete` — self-referencing a commit’s own
-  sha inside that same commit isn’t possible; fixed to name both the
-  claim and close-out commit shas, matching S600’s own established
-  precedent for this field).
+  [`kinship2::plot.pedigree()`](https://rdrr.io/pkg/kinship2/man/plot.pedigree.html)
+  reference + nprcgenekeepr before/after), traced every parent-child
+  edge programmatically against the source pedigree before trusting
+  either rendering, and published as a shared Artifact (union x moves
+  0.12 → -6.0, matching kinship2’s own centered convergence point far
+  more closely) — not committed to the repo (an ephemeral demonstration,
+  not a project deliverable). `NEWS.Rmd`/`NEWS.md`: new entry disclosing
+  the fix and its 0/237 real-corpus scope. `BACKLOG.md`: Track 3
+  trade-offs item’s child-centering half marked DONE (D1 bar-vs-bar half
+  remains open). Investigation doc: status banner updated to
+  IMPLEMENTED, new §12 recording the full RED/GREEN/REFACTOR/smoke-test
+  record. `PROJECT_LEARNINGS.md`: Learnings 621-622. No GitHub issue —
+  this item was tracked in `BACKLOG.md` only, matching the
+  investigation’s own established precedent. Follow-up commit
+  `921d12f4`: corrected `HANDOFFS.md`’s own S602 receipt (its `commit:`
+  field initially said `pending` despite `status: complete` —
+  self-referencing a commit’s own sha inside that same commit isn’t
+  possible; fixed to name both the claim and close-out commit shas,
+  matching S600’s own established precedent for this field).
 - **Model:** Claude Sonnet 5.
 
 ### 2026-08-17 · \[ad hoc\] S601: duplicate-occurrence-selection centering — narrow repair converges (5th workflow attempt, first sound design in this investigation)
@@ -2530,9 +2530,10 @@ here, in this ledger, not in a frozen shard.
   shipped, closing issue \#160’s 2 originally-reported collisions.
   `sibshipBarFraction = 0.4` added to `.addRectilinearWaypoints()`’s D1
   loop (`R/makePedigreeDiagramData.R`). Reproduced byte-for-byte against
-  the actual `kinship2::sample.ped` family 2 fixture cited in the
-  collision-avoidance plan’s own evidence — both collisions confirmed
-  cleared.
+  the actual
+  [`kinship2::sample.ped`](https://rdrr.io/pkg/kinship2/man/sample.ped.html)
+  family 2 fixture cited in the collision-avoidance plan’s own evidence
+  — both collisions confirmed cleared.
 - **Two disclosed residuals found during implementation** (neither
   anticipated by the plan’s Session A bullet in the bar-vs-node case;
   the bar-vs-bar case was named as an open gotcha by S592’s own handoff,
@@ -2723,16 +2724,17 @@ here, in this ledger, not in a frozen shard.
   live in conversation (not a claimed session), while generating fresh
   kinship2-vs-nprcgenekeepr comparison renders from current HEAD
   (`f12e7cbb`) to visually verify the Track 1-6 kinship2-fidelity
-  remediation effort. On `kinship2::sample.ped` family 2 (14 people, no
-  multi-mate individuals — the project’s own “cleanest comparison”
-  fixture), under `edgeStyle = "rectilinear"` (the current shipped
-  default since Track 2, S574): the rectilinear sibship-bar waypoints
-  sit at the exact same y as the children’s own row (zero vertical drop
-  from an intermediate bar row), so the bar reads as a straight
-  mate-line chain — and 2 unrelated nodes (203×204’s own mating-unit
-  dot; 209, a marry-in founder with no blood relation to 201×202) land
-  directly on that line, each visually implying a parent-child
-  relationship that does not exist. Confirmed against
+  remediation effort. On
+  [`kinship2::sample.ped`](https://rdrr.io/pkg/kinship2/man/sample.ped.html)
+  family 2 (14 people, no multi-mate individuals — the project’s own
+  “cleanest comparison” fixture), under `edgeStyle = "rectilinear"` (the
+  current shipped default since Track 2, S574): the rectilinear
+  sibship-bar waypoints sit at the exact same y as the children’s own
+  row (zero vertical drop from an intermediate bar row), so the bar
+  reads as a straight mate-line chain — and 2 unrelated nodes (203×204’s
+  own mating-unit dot; 209, a marry-in founder with no blood relation to
+  201×202) land directly on that line, each visually implying a
+  parent-child relationship that does not exist. Confirmed against
   [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
   own returned `nodes`/`edges` (coordinate collision, not a rendering
   artifact) and against a pixel-level screenshot crop of both collision
@@ -3214,11 +3216,12 @@ here, in this ledger, not in a frozen shard.
   on the real `obfuscated_rhesus_mhc_ped.csv` fixture, the same 6-animal
   subgraph `pb_diagram_legend.png` depicts: `5A6DFT` x=-60, `8DKELJ`
   x=60, their union x=120 (outside the parent span). Confirmed via a
-  direct `kinship2::pedigree()`/`plot.pedigree()` comparison of the
-  identical pedigree – kinship2 centers the descent line between the two
-  parents unconditionally. No code changed; investigation and filing
-  only, per the user’s own choice among 3 offered next steps. See
-  `PROJECT_LEARNINGS.md` Learning 590.
+  direct
+  [`kinship2::pedigree()`](https://rdrr.io/pkg/kinship2/man/pedigree.html)/`plot.pedigree()`
+  comparison of the identical pedigree – kinship2 centers the descent
+  line between the two parents unconditionally. No code changed;
+  investigation and filing only, per the user’s own choice among 3
+  offered next steps. See `PROJECT_LEARNINGS.md` Learning 590.
 
 ### 2026-08-15 · \[BL-N\] S583: claim (file union-outside-parents-span finding)
 

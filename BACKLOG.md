@@ -1040,11 +1040,12 @@ the S549 audit: the full 17-subject `fam1` pedigree still isn’t
 reconstructible from this repo, and Track B additionally had no
 PDF-printed worked example to check against at all (the PDF only names
 *which* subjects a shrink would trim, never their relationships) – Track
-B verified against the installed `kinship2::pedigree.shrink()` directly
-instead. **RESOLVED S566:** filed and closed 3 GitHub issues (#156 Track
-A, \#157 Track B, \#158 Track C), each citing its implementing commit
-and verification evidence; published a new numeric+ graphic fidelity
-validation article,
+B verified against the installed
+[`kinship2::pedigree.shrink()`](https://rdrr.io/pkg/kinship2/man/pedigree.shrink.html)
+directly instead. **RESOLVED S566:** filed and closed 3 GitHub issues
+(#156 Track A, \#157 Track B, \#158 Track C), each citing its
+implementing commit and verification evidence; published a new numeric+
+graphic fidelity validation article,
 [`vignettes/articles/kinship2-fidelity-validation.qmd`](https://github.com/rmsharp/vignettes/articles/kinship2-fidelity-validation.qmd)
 (matching the `fg-se-validation.qmd` precedent), running the SAME
 fixture from each track’s own committed test file through both packages,
@@ -1103,25 +1104,26 @@ issue, matching Track C’s own precedent. See `CHANGELOG.md`.)
 
 (**Track B above, DONE S565.** New `R/shrinkPedigree.R`:
 `shrinkPedigree(ped, genotyped, affected = NULL, maxBits = 16L)`, a
-`kinship2::pedigree.shrink()` equivalent over this package’s own
-`id`/`sire`/`dam` data-frame pedigree representation. All 8 of
-kinship2’s own internal helpers (`pedigree.shrink`, `bitSize`,
-`findUnavailable`, `excludeUnavailFounders`, `excludeStrayMarryin`,
-`findAvailNonInform`, `findAvailAffected`, `pedigree.trim`) were
-deparsed directly from the installed namespace (1.9.6.2) at Pre-RED –
-including the 2 the plan itself flagged as not yet deparsed. 4 findings
-beyond the plan’s own framing, all documented in the function’s own
-roxygen: (1) `excludeStrayMarryin` ignores `genotyped` entirely – any
-childless founder is removed unconditionally; (2)
-`excludeUnavailFounders`’s real criterion requires the founder couple
-have exactly one child together *and* neither parent married to anyone
-else, confirmed by a live negative-case test; (3) kinship2’s own
-`all(x == 0, na.rm = TRUE)` non-informative-affected check treats `NA`
-the same as unaffected; (4) a real, empirically-confirmed divergence –
-kinship2’s own `pedigree()` constructor forbids a single-known-parent
-individual (“Subjects must have both a father and mother, or have
-neither”), so its algorithm never has to define that case, but this
-package’s pedigrees allow partial parentage as ordinary data
+[`kinship2::pedigree.shrink()`](https://rdrr.io/pkg/kinship2/man/pedigree.shrink.html)
+equivalent over this package’s own `id`/`sire`/`dam` data-frame pedigree
+representation. All 8 of kinship2’s own internal helpers
+(`pedigree.shrink`, `bitSize`, `findUnavailable`,
+`excludeUnavailFounders`, `excludeStrayMarryin`, `findAvailNonInform`,
+`findAvailAffected`, `pedigree.trim`) were deparsed directly from the
+installed namespace (1.9.6.2) at Pre-RED – including the 2 the plan
+itself flagged as not yet deparsed. 4 findings beyond the plan’s own
+framing, all documented in the function’s own roxygen: (1)
+`excludeStrayMarryin` ignores `genotyped` entirely – any childless
+founder is removed unconditionally; (2) `excludeUnavailFounders`’s real
+criterion requires the founder couple have exactly one child together
+*and* neither parent married to anyone else, confirmed by a live
+negative-case test; (3) kinship2’s own `all(x == 0, na.rm = TRUE)`
+non-informative-affected check treats `NA` the same as unaffected; (4) a
+real, empirically-confirmed divergence – kinship2’s own `pedigree()`
+constructor forbids a single-known-parent individual (“Subjects must
+have both a father and mother, or have neither”), so its algorithm never
+has to define that case, but this package’s pedigrees allow partial
+parentage as ordinary data
 ([`getIdsWithOneParent()`](https://github.com/rmsharp/nprcgenekeepr/reference/getIdsWithOneParent.md));
 a literal port would divide a zero-length vector and error, so
 [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md)
