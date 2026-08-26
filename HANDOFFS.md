@@ -211,7 +211,7 @@ runtime_smoke: n/a -- no runtime (Shiny app) code changed. All changes are a dat
 changelog_ref: CHANGELOG.md 2026-08-25/26 S636 entries (implement Track D; push + discover +
   document the CI break)
 commit: `36653242` (mechanical deliverable), `00a1d6d2` (documentation deliverable), `8463dbd9`
-  (first close-out pass), pending (second close-out pass amending this correction)
+  (first close-out pass), `519a8182` (content correction), `80ffacbf` (second close-out pass)
 ```
 
 ```handoff
