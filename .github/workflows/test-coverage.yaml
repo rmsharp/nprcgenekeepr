@@ -27,6 +27,39 @@ jobs:
           extra-packages: any::covr, any::xml2
           needs: coverage
 
+      # Provision a pinned, reproducible Chrome-for-Testing binary for chromote
+      # (mirrors R-CMD-check.yaml/R-CMD-check-scheduled.yaml's own fix for the
+      # identical flake, BACKLOG.md Housekeeping, found S616/S618/S637): covr::
+      # package_coverage() below runs this package's full test suite, including
+      # test_positionMatingUnitForest.R's getLiveRenderedPositions() call, so it
+      # hits the same ambient-Chrome-discovery flake those 2 workflows had before
+      # their fix. This job runs a single, unconditional ubuntu-latest leg (no
+      # strategy.matrix) -- unlike the other 2 workflows, there is no
+      # macos-latest leg to skip, so these 3 steps carry no if: guard.
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v2
+        id: setup-chrome
+        with:
+          install-dependencies: true
+
+      # chromote::find_chrome() honours CHROMOTE_CHROME first; point it at the
+      # action's installed binary (its name is not guaranteed to be on PATH).
+      - name: Point chromote at the installed Chrome
+        run: echo "CHROMOTE_CHROME=${{ steps.setup-chrome.outputs.chrome-path }}" >> "$GITHUB_ENV"
+        shell: bash
+
+      - name: Assert Chrome is resolvable by chromote
+        run: |
+          chrome <- Sys.getenv("CHROMOTE_CHROME")
+          cat("CHROMOTE_CHROME =", chrome, "\n")
+          found <- chromote::find_chrome()
+          cat("chromote::find_chrome() =", if (is.null(found)) "<NULL>" else found, "\n")
+          if (length(found) != 1L || !nzchar(found) || !file.exists(found)) {
+            stop("Chrome not resolvable by chromote: ",
+                 if (is.null(found)) "NULL" else found)
+          }
+        shell: Rscript {0}
+
       - name: Test coverage
         run: |
           cov <- covr::package_coverage(

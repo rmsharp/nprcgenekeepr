@@ -213,3 +213,99 @@ for (workflow_file in workflow_files) {
     }
   })
 }
+
+## test-coverage.yaml runs covr::package_coverage(), which executes this package's
+## FULL test suite -- including test_positionMatingUnitForest.R's
+## getLiveRenderedPositions() call -- so it needs the identical chromote
+## Chrome-provisioning fix as the 2 workflows above. It never received it (found
+## S637, 2026-08-26, incidental to watching CI for the R-CMD-check.yaml fix):
+## confirmed via direct job-log inspection to fail with the exact same
+## ambient-Chrome-discovery signature (launch_chrome() -> startup() -> abort) that
+## R-CMD-check.yaml had before its own fix.
+##
+## Kept as a SEPARATE block below rather than folded into the `workflow_files` loop
+## above, because test-coverage.yaml differs from both looped workflows in 2 ways
+## the loop's own assertions assume:
+## (1) it has no strategy.matrix at all (a single, unconditional ubuntu-latest
+##     job) -- so there is no macos-latest leg to skip, and the loop's 4th test
+##     (the if:-guard check) does not apply; referencing matrix.config.os in an
+##     if: on a job with no matrix context is an invalid GitHub Actions
+##     expression, not a harmless no-op, so the 3 Chrome-provisioning steps below
+##     carry no if: guard;
+## (2) its downstream anchor step -- the one that actually needs Chrome already
+##     provisioned -- is "Test coverage" (a direct covr::package_coverage()
+##     Rscript call), not r-lib/actions/check-r-package@v2.
+coverage_workflow_file <- "test-coverage.yaml"
+coverage_workflow_path <- file.path(workflow_dir, coverage_workflow_file)
+
+test_that("test-coverage.yaml provisions a pinned Chrome via browser-actions/setup-chrome@v2", {
+  skip_if_not(file.exists(coverage_workflow_path),
+              sprintf("%s not present in this build", coverage_workflow_file))
+
+  lines <- drop_comment_lines(read_workflow_lines(coverage_workflow_path))
+
+  expect_true(
+    any(grepl("uses:\\s*browser-actions/setup-chrome@v2", lines)),
+    info = "test-coverage.yaml does not provision Chrome via browser-actions/setup-chrome@v2 (the shinytest2.yaml/R-CMD-check.yaml-proven pattern)"
+  )
+  expect_true(
+    any(grepl("^\\s*id:\\s*setup-chrome\\s*$", lines)),
+    info = "the setup-chrome step needs `id: setup-chrome` so a later step can reference steps.setup-chrome.outputs.chrome-path"
+  )
+  expect_true(
+    any(grepl("install-dependencies:\\s*true", lines)),
+    info = "setup-chrome should install Chrome's required system libraries (install-dependencies: true), matching shinytest2.yaml"
+  )
+})
+
+test_that("test-coverage.yaml points chromote at the installed Chrome via CHROMOTE_CHROME", {
+  skip_if_not(file.exists(coverage_workflow_path),
+              sprintf("%s not present in this build", coverage_workflow_file))
+
+  lines <- drop_comment_lines(read_workflow_lines(coverage_workflow_path))
+
+  expect_true(
+    any(grepl("CHROMOTE_CHROME=.*steps\\.setup-chrome\\.outputs\\.chrome-path", lines)),
+    info = "test-coverage.yaml does not export CHROMOTE_CHROME from the setup-chrome step's chrome-path output"
+  )
+  expect_true(
+    any(grepl("GITHUB_ENV", lines)),
+    info = "CHROMOTE_CHROME must be written to $GITHUB_ENV so it is visible to the later Test coverage step"
+  )
+
+  block <- step_block_containing(lines, "CHROMOTE_CHROME=.*steps\\.setup-chrome\\.outputs\\.chrome-path")
+  expect_true(
+    length(block) > 0 && any(grepl("shell:\\s*bash", block)),
+    info = "the CHROMOTE_CHROME-exporting step should declare `shell: bash` explicitly, matching the proven pattern"
+  )
+})
+
+test_that("test-coverage.yaml asserts Chrome is resolvable by chromote before the Test coverage step runs", {
+  skip_if_not(file.exists(coverage_workflow_path),
+              sprintf("%s not present in this build", coverage_workflow_file))
+
+  lines <- drop_comment_lines(read_workflow_lines(coverage_workflow_path))
+
+  expect_true(
+    any(grepl("chromote::find_chrome\\(\\)", lines)),
+    info = "test-coverage.yaml does not assert chromote::find_chrome() resolves before tests run"
+  )
+
+  idx_setup <- first_match(lines, "uses:\\s*browser-actions/setup-chrome@v2")
+  idx_env <- first_match(lines, "CHROMOTE_CHROME=.*steps\\.setup-chrome\\.outputs\\.chrome-path")
+  idx_assert <- first_match(lines, "chromote::find_chrome\\(\\)")
+  idx_test_step <- first_match(lines, "name:\\s*Test coverage")
+
+  expect_true(
+    all(!is.na(c(idx_setup, idx_env, idx_assert, idx_test_step))),
+    info = "test-coverage.yaml: one or more of the 4 ordering anchors (setup-chrome / CHROMOTE_CHROME / find_chrome() / the Test coverage step) is missing"
+  )
+  expect_true(
+    isTRUE(idx_setup < idx_env) && isTRUE(idx_env < idx_assert) && isTRUE(idx_assert < idx_test_step),
+    info = paste0(
+      "test-coverage.yaml: Chrome provisioning steps are not in the required order ",
+      "(setup-chrome < CHROMOTE_CHROME export < find_chrome() assertion < Test coverage step): ",
+      "got line numbers ", paste(idx_setup, idx_env, idx_assert, idx_test_step, collapse = ", ")
+    )
+  )
+})
