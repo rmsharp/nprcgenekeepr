@@ -16,6 +16,15 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S639: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S638 precedent)
+- **Deliverable:** Phase 0 reconcile found `92c717d7` (S638's own close-out commit, writing the
+  final `HANDOFFS.md` receipt + `SESSION_NOTES.md`) past the `CHANGELOG.md` frontier with no ledger
+  entry — the same self-reference gap this project's precedent already names (a close-out commit
+  cannot cite its own sha at write time), anticipated verbatim by S638's own gotcha (3). Fixed the
+  S638 receipt's `commit:` field from `cd4f968c` to `92c717d7` (commit `6e2a3fe2`), and this entry
+  logs that fix commit itself, per the established two-step pattern.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · [BL-N] S638: root-cause and fix the `checking for detritus in the temp directory` NOTE (`org.chromium.Chromium.*`, all 3 `ubuntu-latest` legs)
 - **Deliverable:** `BACKLOG.md` item found S636, confirmed reproducing S637 ("root cause not yet
   diagnosed"). Root cause: `tests/testthat/helper-live-render-positions.R`'s
