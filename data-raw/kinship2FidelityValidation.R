@@ -48,6 +48,16 @@ if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
     "indirect Suggests dependency via visNetwork)")
 }
 
+## Track D (plan section 4.4): compareAgainstKinship2()/toKinship2Pedigree()
+## are test-harness functions with a genuine kinship2:: dependency, so they
+## live in a testthat helper rather than R/ (plan D-5; see that file's own
+## header comment for why they aren't inline here instead). Sourced on
+## demand -- this script is not run under test_dir()/devtools::test(), so
+## the helper's own auto-load-under-test_dir() note does not cover it.
+# nolint start: undesirable_function_linter.
+source(file.path("tests", "testthat", "helper-comparePedigreeStructure.R"))
+# nolint end
+
 ## NOT named "..._files" -- that suffix is reserved by Quarto for a
 ## document's own knitr-generated output directory, and a pre-populated
 ## directory of that name collides with Quarto's render-time freezer/copy
@@ -76,9 +86,20 @@ screenshot_layout <- function(layout, filename, width = 900L, height = 650L) {
   htmlwidgets::saveWidget(widget, tmpHtml, selfcontained = TRUE)
   b <- chromote::ChromoteSession$new()
   on.exit(b$close(), add = TRUE)
-  b$Page$navigate(paste0("file://", tmpHtml))
-  b$Page$loadEventFired()
-  Sys.sleep(1.5)
+  ## Uses $go_to() rather than the separate Page$navigate()+
+  ## Page$loadEventFired() calls it replaces: that 2-call sequence is a
+  ## documented chromote race (rstudio/chromote#102 and the package's own
+  ## "Loading a page reliably" vignette) -- the page can finish loading and
+  ## fire its load event BEFORE Page$loadEventFired() registers a listener
+  ## for it, so the second call then waits the full timeout_ for an event
+  ## that already happened and will never fire again. $go_to() registers
+  ## the listener before navigating, eliminating the race -- ported from
+  ## PROJECT_LEARNINGS.md Learning 643 / tests/testthat/
+  ## helper-live-render-positions.R, which fixed the identical pattern
+  ## (found live only on windows-latest CI, invisible locally). $go_to()'s
+  ## own `delay` parameter (seconds after the load event fires) replaces
+  ## the separate Sys.sleep(1.5) call this used to make.
+  b$go_to(paste0("file://", tmpHtml), delay = 1.5)
   b$screenshot(filename = file.path(outDir, filename), selector = "html")
   invisible(NULL)
 }
@@ -279,5 +300,56 @@ consangEdgesDirect <- layoutDirectC$edges[isMarked(layoutDirectC$edges), ]
 consangEdgesRect <- layoutRectC$edges[isMarked(layoutRectC$edges), ]
 cat("direct-style marked edges:     ", nrow(consangEdgesDirect), "\n")
 cat("rectilinear-style marked edges:", nrow(consangEdgesRect), "\n")
+
+cat("\n============================================================\n")
+cat("Track D -- structural comparison against kinship2 (plan section 4.4)\n")
+cat("============================================================\n")
+
+## compareAgainstKinship2() (tests/testthat/helper-comparePedigreeStructure.R,
+## sourced above) runs THIS article's own Track B/C fixtures through
+## .extractKinship2Structure()/.extractNprcStructure()/
+## .comparePedigreeStructures() (Track C, R/comparePedigreeStructure.R) --
+## the first time any code has diffed these plots' underlying structure
+## against kinship2's own pedigree object, rather than placing 2
+## independently-rendered images side by side and asserting a visual match.
+cmpBFull <- compareAgainstKinship2(pedB)
+cmpBShrunk <- compareAgainstKinship2(resultNprc$ped)
+cmpC <- compareAgainstKinship2(pedC)
+
+cat("Track B full (16 subjects)   structurally identical to kinship2:",
+  cmpBFull$identical, "\n")
+cat("Track B shrunk (8 subjects)  structurally identical to kinship2:",
+  cmpBShrunk$identical, "\n")
+cat("Track C (9 subjects, dogleg) structurally identical to kinship2:",
+  cmpC$identical, "\n")
+
+## If any comparison finds a real discrepancy, print it in full rather than
+## just the boolean -- a diff staying uncaught here would otherwise be
+## silently swallowed by the summary cat() calls above.
+reportDiscrepancy <- function(label, cmp) {
+  if (isTRUE(cmp$identical)) {
+    return(invisible(NULL))
+  }
+  cat("\n!! DISCREPANCY --", label, "!!\n")
+  if (nrow(cmp$parentChildOnlyInA) > 0L) {
+    cat("parent-child edges only in kinship2:\n")
+    print(cmp$parentChildOnlyInA)
+  }
+  if (nrow(cmp$parentChildOnlyInB) > 0L) {
+    cat("parent-child edges only in nprcgenekeepr:\n")
+    print(cmp$parentChildOnlyInB)
+  }
+  if (nrow(cmp$matePairsOnlyInA) > 0L) {
+    cat("mate pairs only in kinship2:\n")
+    print(cmp$matePairsOnlyInA)
+  }
+  if (nrow(cmp$matePairsOnlyInB) > 0L) {
+    cat("mate pairs only in nprcgenekeepr:\n")
+    print(cmp$matePairsOnlyInB)
+  }
+}
+reportDiscrepancy("Track B full", cmpBFull)
+reportDiscrepancy("Track B shrunk", cmpBShrunk)
+reportDiscrepancy("Track C", cmpC)
 
 cat("\nDone. Images written to", outDir, "\n")
