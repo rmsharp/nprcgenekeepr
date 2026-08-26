@@ -62,16 +62,56 @@ toKinship2Pedigree <- function(ped) {
   kinship2::pedigree(id = ped$id, dadid = sire, momid = dam, sex = ped$sex)
 }
 
+## Which of pedK2's declared ids kinship2's own align.pedigree() actually
+## places on the plot grid (found live 2026-08-26: a fully isolated
+## individual -- no parents, never anyone's mate or parent -- is silently
+## dropped from the grid even though it is one of pedigree()'s own declared
+## `id` entries). `nid` is a matrix of 1-based row indices into pedK2$id (0
+## for "not placed"); a duplicated individual (kinship2's own crossing-
+## driven duplication, D-1) places the SAME id index at multiple grid
+## positions, which unique() collapses back to one entry, same as any other
+## individual.
+##
+## kinship2's own align.pedigree()/autohint() emits a benign internal
+## message ("Unexpected result in autohint, please contact developer") on
+## some multi-mate/duplicate-individual fixtures (confirmed directly on the
+## existing Track C dogleg fixture, scratchpad-verified this session: the
+## $nid placement result is still fully correct -- every declared id placed
+## exactly once -- despite the warning). Muffled here, at the single call
+## site, only after confirming it is exactly this known message; any other
+## warning propagates normally.
+##
+## @param pedK2 a kinship2::pedigree() object (toKinship2Pedigree()'s
+##   return value).
+## @return character vector of ids, a subset of pedK2$id.
+.kinship2DisplayedIds <- function(pedK2) {
+  al <- withCallingHandlers(
+    kinship2:::align.pedigree(pedK2),
+    warning = function(w) {
+      if (grepl("Unexpected result in autohint", conditionMessage(w),
+                fixed = TRUE)) {
+        invokeRestart("muffleWarning")
+      }
+    }
+  )
+  placedIdx <- sort(unique(floor(as.vector(al$nid[al$nid > 0]))))
+  pedK2$id[placedIdx]
+}
+
 ## Orchestrates the full cross-package comparison (plan section 3.4): builds
 ## both sides' structural extraction from the SAME nprcgenekeepr-format
 ## pedigree data.frame and diffs them via .comparePedigreeStructures()
-## (Track C's own R/ deliverable, plan section 3.3).
+## (Track C's own R/ deliverable, plan section 3.3). kinship2Struct's
+## individuals is the actually-DISPLAYED subset (.kinship2DisplayedIds()),
+## not merely pedK2's own declared id list -- found live 2026-08-26, see
+## .kinship2DisplayedIds()'s own comment above.
 ##
 ## @param ped a data.frame with id/sire/dam/sex/gen columns.
 ## @return .comparePedigreeStructures()'s own return value.
 compareAgainstKinship2 <- function(ped) {
   pedK2 <- toKinship2Pedigree(ped)
-  kinship2Struct <- nprcgenekeepr:::.extractKinship2Structure(pedK2)
+  kinship2Struct <- nprcgenekeepr:::.extractKinship2Structure(
+    pedK2, displayedIds = .kinship2DisplayedIds(pedK2))
   nprcLayout <- nprcgenekeepr:::makePedigreeMatingLayout(ped,
     edgeStyle = "direct")
   nprcStruct <- nprcgenekeepr:::.extractNprcStructure(nprcLayout)

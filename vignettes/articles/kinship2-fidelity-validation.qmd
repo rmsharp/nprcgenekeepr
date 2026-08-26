@@ -137,7 +137,7 @@ singleton, not an error.
 ::: {layout-ncol=2}
 ![kinship2's own `plot.pedigree()` on the full 16-subject fixture.](kinship2-fidelity-validation-img/trackB-kinship2-full.png){fig-alt="kinship2 pedigree diagram of the full 16-subject fixture, standard square/circle symbols connected by a strict-hierarchy layout."}
 
-![`makePedigreeMatingLayout()` + `visNetwork` on the same full 16-subject fixture.](kinship2-fidelity-validation-img/trackB-nprc-full.png){fig-alt="nprcgenekeepr pedigree diagram of the full 16-subject fixture, matching kinship2's own family groupings."}
+![`makePedigreeMatingLayout()` + `visNetwork` on the same full 16-subject fixture. Unlike kinship2's own plot, this rendering includes `P5`.](kinship2-fidelity-validation-img/trackB-nprc-full.png){fig-alt="nprcgenekeepr pedigree diagram of the full 16-subject fixture, showing all 16 declared subjects including the isolated founder P5 that kinship2's own plot omits."}
 
 ![kinship2's `pedigree.shrink()$pedObj` -- shrunk to 8 subjects. Unavailable ('?') individuals still shown, per kinship2's own convention.](kinship2-fidelity-validation-img/trackB-kinship2-shrunk.png){fig-alt="kinship2 pedigree diagram of the shrunk 8-subject pedigree, with unavailable individuals shown as unfilled nodes marked with a question mark."}
 
@@ -201,25 +201,48 @@ topological comparison
 plan](../../docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md)
 closes that gap: `.extractKinship2Structure()` and `.extractNprcStructure()`
 (both `@noRd`, zero `kinship2` dependency) pull the real-individual-level
-parent-child edge set and mate-pair set out of kinship2's own `pedigree`
-object and out of `makePedigreeMatingLayout()`'s output respectively --
-deliberately at the level of *who is related to whom*, not *which duplicate
-copy of a multi-union individual each package's layout happens to draw* (the
-two packages duplicate different individuals for the same union above: `Y`
-in kinship2's rendering, `A` in nprcgenekeepr's). `.comparePedigreeStructures()`
-then diffs the two edge sets directly.
+parent-child edge set, mate-pair set, and rendered-individual set out of
+kinship2's own `pedigree` object and out of `makePedigreeMatingLayout()`'s
+output respectively -- at the level of *who is related to whom, and who is
+shown at all*, not *which duplicate copy of a multi-union individual each
+package's layout happens to draw* (the two packages duplicate different
+individuals for the same union above: `Y` in kinship2's rendering, `A` in
+nprcgenekeepr's). `.comparePedigreeStructures()` then diffs all three sets
+directly.
 
-Run against this article's own Track B and Track C fixtures, live:
+**A real gap in this comparator was found and fixed 2026-08-26.** The
+original version diffed only the parent-child edge set and mate-pair set --
+never the set of individuals actually displayed. An individual with zero
+edges on *either* side (a fully isolated founder, like `P5` in Track B's
+full fixture, described above) is invisible to that diff: it contributed no
+rows to either table regardless of whether either package rendered it, so
+the comparator reported `identical = TRUE` on a pair of images that visibly
+differ (16 rendered nodes vs. 15). The comparator now also diffs the
+rendered-individual set on each side (`kinship2`'s side computed from
+`align.pedigree()`'s own plot-grid placement, not merely its `pedigree()`
+object's declared `id` list) -- see
+`tests/testthat/test_comparePedigreeStructure.R`'s "individuals" test block
+for the full regression coverage, including this exact Track B fixture.
+
+Run against this article's own Track B and Track C fixtures, live, with the
+fixed comparator:
 
 | Fixture | Structurally identical to kinship2? |
 |---|---|
-| Track B, full (16 subjects) | **Yes** |
+| Track B, full (16 subjects) | **No** -- nprcgenekeepr renders `P5`; kinship2's own plot omits it (see [Graphic fidelity](#sec-trackb) above) |
 | Track B, shrunk (8 subjects) | **Yes** |
 | Track C (9 subjects, consanguineous dogleg) | **Yes** |
 
-No discrepancy was found on any of the three. This is the first time any
-code -- not a caption, not a reader's own visual comparison -- has checked
-that these diagrams describe the same family structure kinship2 does.
+Track B's shrunk fixture and Track C both remain a clean, no-discrepancy
+match -- `P5` does not survive `shrinkPedigree()`'s trim (an uninformative,
+unavailable founder with no descendants), so Track B shrunk never exercises
+this case, and Track C's fixture has no isolated individuals at all. Track
+B's *full* fixture is the one genuine, real, and expected discrepancy: not a
+defect in either package, but a real difference in what gets drawn --
+kinship2's own rendering convention silently drops a disconnected singleton,
+while nprcgenekeepr's does not. For colony-management use, showing every
+declared individual (even one with no recorded relationships yet) is the
+more useful default, not a bug to reconcile away.
 
 ## Caveats carried forward {#sec-caveats}
 
@@ -252,20 +275,28 @@ that these diagrams describe the same family structure kinship2 does.
 
 ## Verdict {#sec-verdict}
 
-**PASS, all 3 tracks.** Track A's autosomal and X-linked kinship matrices
-are bit-for-bit identical to kinship2's own output across every one of 200
-compared cells (100 autosomal + 100 X-linked), including the MZ-twin
-correction and its propagation to a descendant. Track B's `shrinkPedigree()`
-reproduces kinship2's exact surviving subject set and exact `bitSize`
-trajectory, and the shrunk pedigrees are visually the same 2 family groups --
-now also confirmed by a real edge-set diff
-([Structural verification](#sec-structural)), not just a visual read. Track
-C's consanguineous-mating marker flags the same union kinship2 flags, under
-both edge styles, using an independently-converged duplicate-node convention
-for the same underlying multi-union case kinship2 also duplicates -- also
-structurally confirmed identical. All 3 tracks are cleared as faithful
-reproductions of the kinship2 supplement's own results, not just internally
-self-consistent implementations.
+**PASS, with one known and expected difference.** Track A's autosomal and
+X-linked kinship matrices are bit-for-bit identical to kinship2's own output
+across every one of 200 compared cells (100 autosomal + 100 X-linked),
+including the MZ-twin correction and its propagation to a descendant. Track
+B's `shrinkPedigree()` reproduces kinship2's exact surviving subject set and
+exact `bitSize` trajectory, and the *shrunk* pedigrees are the same 2 family
+groups -- confirmed by a real edge-set-and-individual-set diff, not just a
+visual read ([Structural verification](#sec-structural)). Track B's *full*
+16-subject fixture is the one place the diagrams genuinely differ:
+nprcgenekeepr renders the isolated founder `P5`; kinship2's own
+`plot.pedigree()` silently omits it. This is a real difference in what gets
+drawn, not a defect in either package -- and the structural comparator now
+catches it explicitly instead of reporting a false `identical = TRUE`
+(the gap that let this pass unnoticed until an owner-directed image review
+caught it live, 2026-08-26). Track C's consanguineous-mating marker flags
+the same union kinship2 flags, under both edge styles, using an
+independently-converged duplicate-node convention for the same underlying
+multi-union case kinship2 also duplicates -- structurally confirmed
+identical. Track A, Track B's shrunk fixture, and Track C are cleared as
+faithful reproductions of the kinship2 supplement's own results; Track B's
+full fixture is cleared as an *understood, correctly-detected* difference,
+not a silent one.
 
 ## References {#sec-references}
 

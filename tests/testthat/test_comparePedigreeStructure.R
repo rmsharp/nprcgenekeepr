@@ -52,19 +52,60 @@
 ## ---- input contract / return shape --------------------------------------
 
 test_that(
-  ".extractKinship2Structure returns a list with parentChildEdges/matePairs",
+  ".extractKinship2Structure returns a list with parentChildEdges/matePairs/
+   individuals",
   {
   ped <- list(id = c("F1", "M1", "C1"), findex = c(0L, 0L, 1L),
               mindex = c(0L, 0L, 2L))
   result <- .extractKinship2Structure(ped)
   expect_true(is.list(result))
-  expect_setequal(names(result), c("parentChildEdges", "matePairs"))
+  expect_setequal(names(result), c("parentChildEdges", "matePairs",
+                                    "individuals"))
   expect_true(is.data.frame(result$parentChildEdges))
   expect_true(is.data.frame(result$matePairs))
   expect_setequal(names(result$parentChildEdges), c("child", "parent",
                                                       "role"))
   expect_setequal(names(result$matePairs), c("parent1", "parent2",
                                               "nChildren"))
+  expect_true(is.character(result$individuals))
+})
+
+## ---- individuals: the full declared-vs-actually-displayed id set --------
+##
+## Found live 2026-08-26 (owner-directed correction after being shown the
+## Track B full-fixture images side by side): kinship2's own
+## align.pedigree() silently drops a fully-isolated individual (no parents,
+## never anyone's mate or parent) from the rendered plot grid, even though
+## it is one of the pedigree() object's own declared `id` entries. The prior
+## Track A/B/C design (parentChildEdges + matePairs only) is structurally
+## blind to this -- an isolated individual contributes zero rows to either
+## table on EITHER side, so its presence/absence was invisible to
+## .comparePedigreeStructures(), which reported identical = TRUE on a pair
+## of images that visibly differ (16 rendered nodes vs. 15). `individuals`
+## closes that gap: the caller supplies which ids are ACTUALLY DISPLAYED
+## (defaulting to all declared ids, so existing hand-built-fixture callers
+## that never computed a placement subset are unaffected).
+
+test_that(
+  ".extractKinship2Structure defaults individuals to every declared id when
+   displayedIds is not supplied", {
+  ped <- list(id = c("F1", "M1", "C1"), findex = c(0L, 0L, 1L),
+              mindex = c(0L, 0L, 2L))
+  result <- .extractKinship2Structure(ped)
+  expect_setequal(result$individuals, c("F1", "M1", "C1"))
+})
+
+test_that(
+  ".extractKinship2Structure uses an explicit displayedIds argument instead
+   of the full declared id set, when supplied", {
+  ped <- list(id = c("F1", "M1", "C1"), findex = c(0L, 0L, 1L),
+              mindex = c(0L, 0L, 2L))
+  ## F1 declared but never placed on the plot grid (mirrors kinship2 dropping
+  ## a disconnected singleton) -- the caller (compareAgainstKinship2()) is
+  ## responsible for computing this via align.pedigree(), not this function.
+  result <- .extractKinship2Structure(ped, displayedIds = c("M1", "C1"))
+  expect_setequal(result$individuals, c("M1", "C1"))
+  expect_false("F1" %in% result$individuals)
 })
 
 ## ---- founder-only: no known parents at all ------------------------------
@@ -403,17 +444,53 @@ test_that(
 ## ---- input contract / return shape --------------------------------------
 
 test_that(
-  ".extractNprcStructure returns a list with parentChildEdges/matePairs", {
+  ".extractNprcStructure returns a list with parentChildEdges/matePairs/
+   individuals", {
   layout <- nprcgenekeepr:::makePedigreeMatingLayout(.ped7Fixture(),
                                                        edgeStyle = "direct")
   result <- .extractNprcStructure(layout)
   expect_true(is.list(result))
-  expect_setequal(names(result), c("parentChildEdges", "matePairs"))
+  expect_setequal(names(result), c("parentChildEdges", "matePairs",
+                                    "individuals"))
   expect_true(is.data.frame(result$parentChildEdges))
   expect_true(is.data.frame(result$matePairs))
   expect_setequal(names(result$parentChildEdges), c("child", "parent"))
   expect_setequal(names(result$matePairs),
                    c("parent1", "parent2", "nChildren"))
+  expect_true(is.character(result$individuals))
+})
+
+## ---- individuals: every REAL individual rendered, no synthetic ids,
+## no duplicate-node double-counting -----------------------------------
+
+test_that(
+  ".extractNprcStructure's individuals is the full real-individual node set,
+   excluding synthetic __union_/__drop_/etc ids", {
+  layout <- nprcgenekeepr:::makePedigreeMatingLayout(.ped7Fixture(),
+                                                       edgeStyle = "direct")
+  result <- .extractNprcStructure(layout)
+  expect_setequal(result$individuals, c("A", "B", "C", "D", "X", "Y", "Z"))
+  expect_false(any(grepl("^__", result$individuals)))
+})
+
+test_that(
+  ".extractNprcStructure's individuals lists a multi-mate duplicated
+   individual (A, on the Track C dogleg fixture) exactly ONCE -- a
+   __dup_A_... node must resolve to A, never inflate the count", {
+  layout <- nprcgenekeepr:::makePedigreeMatingLayout(.pedTrackCFixture(),
+                                                       edgeStyle = "direct")
+  expect_true(any(grepl("^__dup_A_", names(layout$duplicateToReal))))
+  result <- .extractNprcStructure(layout)
+  expect_setequal(result$individuals,
+                   c("P1", "P2", "A", "Y", "X", "W", "C1", "C2", "GC"))
+  expect_equal(sum(result$individuals == "A"), 1L)
+})
+
+test_that(
+  ".extractNprcStructure's individuals is just the lone id for a founder-only
+   layout", {
+  result <- .extractNprcStructure(.emptyLayoutFixture())
+  expect_setequal(result$individuals, "F1")
 })
 
 ## ---- founder-only: no known parents at all ------------------------------
@@ -604,10 +681,39 @@ if (!exists("toKinship2Pedigree")) {
   ped
 }
 
+## Track B's own "full" fixture, verbatim from
+## data-raw/kinship2FidelityValidation.R's `pedB` (id/sire/dam/sex columns
+## only -- genotyped/affected are that script's own shrinkPedigree()
+## concern, irrelevant here). Reused here, not just referenced, because this
+## is the EXACT fixture the kinship2-fidelity-validation.qmd article
+## publishes as "structurally identical to kinship2" -- and the exact one
+## found live 2026-08-26 (owner-directed) to contain a fully isolated
+## individual (P5: no parents, never anyone's sire/dam) that kinship2's own
+## align.pedigree() drops from the plot grid while nprcgenekeepr renders it.
+.pedTrackBFixture <- function() {
+  ped <- data.frame(
+    id   = c("P1", "P2", "P3", "P4", "P5", "P6",
+             "C1", "C2", "C3", "C4", "C4a",
+             "G3", "M1", "L1", "L2", "L3"),
+    sire = c(NA, NA, NA, NA, NA, NA,
+             "P1", "P1", "P1", "P3", "C4",
+             NA, "P1", "M1", "M1", "M1"),
+    dam  = c(NA, NA, NA, NA, NA, NA,
+             "P2", "P2", "P2", "P4", "P6",
+             NA, "P2", "G3", "G3", "G3"),
+    sex  = c("M", "F", "M", "F", "F", "F",
+             "F", "M", "F", "M", "F",
+             "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+
 ## ---- .comparePedigreeStructures() pure unit tests (zero kinship2) --------
 
 test_that(
-  ".comparePedigreeStructures returns a list with the 5 documented fields", {
+  ".comparePedigreeStructures returns a list with the 7 documented fields", {
   a <- list(
     parentChildEdges = data.frame(child = "C1", parent = "F1",
                                     stringsAsFactors = FALSE),
@@ -619,8 +725,84 @@ test_that(
   expect_true(is.list(result))
   expect_setequal(names(result), c("parentChildOnlyInA", "parentChildOnlyInB",
                                      "matePairsOnlyInA", "matePairsOnlyInB",
+                                     "individualsOnlyInA", "individualsOnlyInB",
                                      "identical"))
   expect_true(is.logical(result$identical))
+})
+
+## ---- individuals diff: the isolated-individual blind spot itself --------
+##
+## Reproduces the exact defect found live 2026-08-26: an individual with
+## zero parent-child edges and zero mate pairs on EITHER side (e.g. a fully
+## isolated founder one package renders and the other silently drops) must
+## now surface as a real discrepancy, not pass silently as identical = TRUE.
+
+test_that(
+  ".comparePedigreeStructures reports identical = FALSE when one side's
+   individuals set has an id the other lacks, with NO edges/matePairs
+   difference at all (the isolated-individual case)", {
+  a <- list(
+    parentChildEdges = data.frame(child = "C1", parent = "F1",
+                                    stringsAsFactors = FALSE),
+    matePairs = data.frame(parent1 = character(), parent2 = character(),
+                             nChildren = integer()),
+    individuals = c("F1", "C1")
+  )
+  b <- list(
+    parentChildEdges = data.frame(child = "C1", parent = "F1",
+                                    stringsAsFactors = FALSE),
+    matePairs = data.frame(parent1 = character(), parent2 = character(),
+                             nChildren = integer()),
+    ## b has an extra isolated individual ("ISO") with no edges anywhere --
+    ## exactly what P5 is on the real Track B fixture.
+    individuals = c("F1", "C1", "ISO")
+  )
+  result <- .comparePedigreeStructures(a, b)
+  expect_false(result$identical)
+  expect_equal(nrow(result$parentChildOnlyInA), 0L)
+  expect_equal(nrow(result$parentChildOnlyInB), 0L)
+  expect_equal(nrow(result$matePairsOnlyInA), 0L)
+  expect_equal(nrow(result$matePairsOnlyInB), 0L)
+  expect_equal(result$individualsOnlyInA, character(0))
+  expect_equal(result$individualsOnlyInB, "ISO")
+})
+
+test_that(
+  ".comparePedigreeStructures reports identical = TRUE when both sides'
+   individuals sets match, even in different order", {
+  a <- list(
+    parentChildEdges = data.frame(child = character(), parent = character()),
+    matePairs = data.frame(parent1 = character(), parent2 = character(),
+                             nChildren = integer()),
+    individuals = c("F1", "C1")
+  )
+  b <- list(
+    parentChildEdges = data.frame(child = character(), parent = character()),
+    matePairs = data.frame(parent1 = character(), parent2 = character(),
+                             nChildren = integer()),
+    individuals = c("C1", "F1")
+  )
+  result <- .comparePedigreeStructures(a, b)
+  expect_true(result$identical)
+  expect_equal(result$individualsOnlyInA, character(0))
+  expect_equal(result$individualsOnlyInB, character(0))
+})
+
+test_that(
+  ".comparePedigreeStructures treats a missing individuals field on both
+   sides as always-matching (backward compatible with hand-built a/b
+   structures that predate this field)", {
+  a <- list(
+    parentChildEdges = data.frame(child = "C1", parent = "F1",
+                                    stringsAsFactors = FALSE),
+    matePairs = data.frame(parent1 = character(), parent2 = character(),
+                             nChildren = integer())
+  )
+  b <- a
+  result <- .comparePedigreeStructures(a, b)
+  expect_true(result$identical)
+  expect_equal(result$individualsOnlyInA, character(0))
+  expect_equal(result$individualsOnlyInB, character(0))
 })
 
 test_that(
@@ -788,4 +970,64 @@ test_that(
   )
   result <- compareAgainstKinship2(ped)
   expect_true(result$identical)
+})
+
+## ---- the isolated-individual blind spot, live against real kinship2 -----
+##
+## Reproduces, end to end through the actual public compareAgainstKinship2()
+## orchestration function (not a hand-built a/b pair), the exact defect
+## found live 2026-08-26: kinship2's own align.pedigree() drops a fully
+## isolated individual from the plot grid; nprcgenekeepr renders it.
+## Before this session's fix, BOTH tests below reported identical = TRUE
+## (a false negative) because .comparePedigreeStructures() never looked at
+## which individuals exist, only at edges.
+
+test_that(
+  "compareAgainstKinship2 reports identical = FALSE on a minimal synthetic
+   fixture with one fully isolated individual -- kinship2 drops it from the
+   plot grid, nprcgenekeepr renders it, and this is now a real, reported
+   discrepancy", {
+  skip_if_not_installed("kinship2")
+  ped <- data.frame(
+    id = c("F1", "M1", "C1", "ISO"),
+    sire = c(NA, NA, "F1", NA),
+    dam  = c(NA, NA, "M1", NA),
+    sex  = c("M", "F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  result <- compareAgainstKinship2(ped)
+  expect_false(result$identical)
+  expect_equal(nrow(result$parentChildOnlyInA), 0L)
+  expect_equal(nrow(result$parentChildOnlyInB), 0L)
+  expect_equal(nrow(result$matePairsOnlyInA), 0L)
+  expect_equal(nrow(result$matePairsOnlyInB), 0L)
+  expect_equal(result$individualsOnlyInA, character(0))
+  expect_equal(result$individualsOnlyInB, "ISO")
+})
+
+test_that(
+  "compareAgainstKinship2 reports identical = FALSE on the article's own
+   published Track B full (16-subject) fixture -- P5 is a fully isolated
+   founder that kinship2's own plot silently omits (confirmed via
+   align.pedigree() directly: P5's index is never placed on the grid) while
+   nprcgenekeepr renders it. This is the exact fixture and image pair
+   published in vignettes/articles/kinship2-fidelity-validation.qmd as
+   'structurally identical' before this session's fix -- that claim was
+   wrong, and this test is what catches it going forward.", {
+  skip_if_not_installed("kinship2")
+  ped <- .pedTrackBFixture()
+  pedK2 <- toKinship2Pedigree(ped)
+  al <- kinship2:::align.pedigree(pedK2)
+  placedIdx <- sort(unique(floor(as.vector(al$nid[al$nid > 0]))))
+  expect_false("P5" %in% pedK2$id[placedIdx])
+
+  result <- compareAgainstKinship2(ped)
+  expect_false(result$identical)
+  expect_equal(nrow(result$parentChildOnlyInA), 0L)
+  expect_equal(nrow(result$parentChildOnlyInB), 0L)
+  expect_equal(nrow(result$matePairsOnlyInA), 0L)
+  expect_equal(nrow(result$matePairsOnlyInB), 0L)
+  expect_equal(result$individualsOnlyInA, character(0))
+  expect_equal(result$individualsOnlyInB, "P5")
 })
