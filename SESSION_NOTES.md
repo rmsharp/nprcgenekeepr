@@ -18,6 +18,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 640 Did
+**Deliverable:** Check whether `R-CMD-check.yaml`'s `ubuntu-latest (oldrel-1)` `setup-r@v2` failure
+(found S638, run `32930961617`) reproduces on a fresh re-run. (IN PROGRESS)
+**Started:** 2026-08-26.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 639 Did
 **Deliverable:** Fixed `test-coverage.yaml`'s missing Chrome-provisioning steps (`BACKLOG.md` "Up
 Next" top item, found S637 incidental to watching CI, matching the already-proven

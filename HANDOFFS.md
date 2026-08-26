@@ -136,6 +136,23 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S640
+date: 2026-08-26
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Check whether R-CMD-check.yaml's ubuntu-latest (oldrel-1) setup-r@v2 failure (found
+  S638, run 32930961617) reproduces on a fresh re-run.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S639
 date: 2026-08-26
 status: complete
