@@ -28,6 +28,259 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 642 Did
+
+**Deliverable:** Owner-directed live review of
+`kinship2-fidelity-validation.qmd` (picked up in place of the rendered
+BACKLOG priorities list, per direct owner redirect: “We still do not
+have go\[od\] fidelity with pedigree drawings… A pedigree comparison… is
+not satisfactory until I have reviewed it and approved it”). Found and
+fixed a real, previously untested bug in the validation script’s own
+diagnostic reporting; found and filed (not fixed) a real rendering
+defect the owner identified directly from the images. **DONE** (the
+reporting fix, full strict TDD RED-\>GREEN, REFACTOR not separately
+gated – diff was minimal); the renderer defect is filed to `BACKLOG.md`
+for a future session, per owner choice (“both, sequenced”).
+**Started/Completed:** 2026-08-26 (single session).
+
+**What actually happened, in order:** 1. **Phase 0 orientation** (full
+protocol): clean tracked tree, same 7 pre-existing untracked items every
+recent session has triaged. Ledger reconcile found the now-familiar
+self-reference gap (S641’s own close-out commit `7c0b149d` past the
+`CHANGELOG.md` frontier) – backfilled (`f9beea94`: fixed the receipt’s
+`commit:` field, logged it). **Also found, incidentally, via the
+`gh run list` CI-status check:** `R-CMD-check.yaml` run `33006620646`
+(S640’s own close-out push, commit `d2ecc8e1`) had actually FAILED on
+`ubuntu-latest (devel)` (`read ECONNRESET` during “Set up Chrome”) – no
+prior session caught this because S641’s own check saw it as still
+`in_progress` and never circled back. Confirmed self-resolved (2
+subsequent pushes both re-ran all 5 legs clean) – reported in
+`CHANGELOG.md`, no issue filed, matching this project’s CI-break
+tracking convention. Rendered the priorities list (8 numbered items, 4
+in the `AskUserQuestion` picker); the owner’s actual reply bypassed the
+picker entirely and redirected to pedigree-diagram fidelity. 2.
+**Scoping the redirect** (2 rounds of `AskUserQuestion`, since “work on
+it until satisfactory” is not a bounded single-session deliverable):
+first asked what concrete target to use (real colony pedigree / a
+specific rendering the owner already had in mind / issue \#164’s crash
+bug) – owner picked “you already have a specific rendering in mind” but
+the actual pointer wasn’t in that answer; asked directly for it, owner
+named `kinship2-fidelity-validation.qmd`. 3. **Direct review, images
+rendered inline for the owner, not just described:** read all 8 of the
+article’s PNGs
+(`vignettes/articles/kinship2-fidelity-validation-img/*.png`) via the
+`Read` tool. Independently re-ran
+`data-raw/kinship2FidelityValidation.R` LIVE
+(kinship2/chromote/htmlwidgets all installed locally) rather than
+trusting cached output – confirmed `git status` shows zero diff on the
+regenerated images (deterministic). Live-reproduced every one of the
+article’s numeric/structural claims: Track A `max|diff| = 0` both
+matrices; Track B shrunk same 8-subject set + same `bitSize` trajectory;
+Track B full `identical = FALSE` (kinship2’s own console: “Did not plot
+the following people: P5”); Track C `identical = TRUE`, cross-checked by
+hand-tracing all 10 real parent-child edges and 4 real mating units from
+`.pedTrackCFixture()`’s raw `sire`/`dam` columns (not the picture).
+Found, independently, a discrepancy the article’s own prose gets
+imprecise: nprcgenekeepr’s Track C layout duplicates BOTH `A` and `Y` (2
+duplicate node instances: `__dup_A_1`, `__dup_Y_1`, confirmed via
+`layout$edges`/`duplicateToReal`) where kinship2 needs only 1 (`Y`) for
+the identical relationship set – not incorrect, just more visually
+complex; noted, not chased further this session (no code-level defect
+established, no owner directive to fix it). 4. **User: “In Track B,
+Numeric fidelity you have a list of individuals that does not include P5
+but the Graphic does. Fix your testing code to catch this type of
+error.”** Traced this to a real, independently-found bug: the “Numeric
+fidelity” table only ever compares the SHRUNK 8-subject set (correctly
+excluding P5); no numeric check anywhere covers the FULL 16-subject
+individual set. Separately, live-reran
+`data-raw/kinship2FidelityValidation.R` and found its own
+`reportDiscrepancy()` printed `!! DISCREPANCY -- Track B full !!` with
+NOTHING underneath – silently dropping `individualsOnlyInB: "P5"`, the
+exact field S641 added and the one the `identical = FALSE` verdict is
+based on. Root cause: that reporting logic lives only in a script
+explicitly excluded from `R CMD check` (“not part of R CMD check” per
+its own header), so no test had ever exercised it, and it silently went
+stale when S641 changed the return shape it reports on. 5. **PRE-RED
+gate** (`AskUserQuestion`): presented the finding + the fix plan
+(extract the logic into a tested helper, RED tests using the existing
+`.pedTrackBFixture()` as the red case); owner approved. 6. **RED:** 5
+new tests in `tests/testthat/test_comparePedigreeStructure.R` for a new
+`.formatStructuralDiscrepancy(label, cmp)` function (doesn’t exist yet).
+Confirmed RED: all 5 fail with “could not find function”, all
+pre-existing tests in the file still pass. 7. **RED-\>GREEN gate**
+(`AskUserQuestion`): owner approved. 8. **GREEN:** added
+`.formatStructuralDiscrepancy()` to
+`tests/testthat/helper-comparePedigreeStructure.R` (auto-loaded under
+`test_dir()`, so it now has real coverage) – returns a character string
+(not a [`cat()`](https://rdrr.io/r/base/cat.html) side effect)
+specifically so its CONTENT is assertable, covering
+`parentChildOnlyInA/B`, `matePairsOnlyInA/B`, AND `individualsOnlyInA/B`
+(the field the old local copy dropped). Updated
+`data-raw/kinship2FidelityValidation.R`’s `reportDiscrepancy()` to call
+it. All 5 new tests + 120 pre-existing tests in the file pass; re-ran
+the full script live – confirmed it now prints
+`individuals only in nprcgenekeepr: P5`. 9. **User: “You identified that
+the nprcgenekeepr graphic had P6; why did you not call that an error?”**
+– traced P6 independently at 4 levels (numeric shrunk list, live
+structural diff, kinship2’s own console message, raw fixture ground
+truth) and found no discrepancy anywhere; answered with the actual
+evidence rather than a bare assertion, and explicitly invited correction
+rather than defending the check unconditionally. 10. **User corrected:
+“I wrote P6 in my last prompt and it should have been P5, which is
+erroneously included.”** This reverses S641’s own
+`kinship2-fidelity-validation.qmd` Verdict text (“the more useful
+default, not a bug to reconcile away”) – the owner explicitly ruled it a
+defect. Surfaced the entanglement with issue \#164 (the renderer crashes
+outright when EVERY individual is isolated – suppressing isolated
+individuals could leave nothing to render) before scoping, via another
+`AskUserQuestion`. Owner chose “both, sequenced”: keep the
+already-approved `reportDiscrepancy()` fix as this session’s
+deliverable; file the larger renderer fix separately. 11. Filed the new
+`BACKLOG.md` “Up Next” item (P5-suppression, entangled with \#164, a
+narrow-rule scoping note included) rather than implementing it. 12.
+**Verified:** full clean regression (`test_dir()`) run twice – both
+times 0 failed/0 error attributable to this session’s 3 touched files.
+Found 2 UNRELATED results, both confirmed pre-existing via `git stash`
+isolation, not this session’s own diff: (a) `test_wordlist_coverage.R`
+fails locally (word `comparator`, from
+`R/comparePedigreeStructure.R:230`’s roxygen text, not yet in
+`inst/WORDLIST`) – added as a new instance to the existing “spelling
+NOTE has drifted again” `BACKLOG.md` item (now 10 words), not a new
+item; not visible on real CI (`spelling.R` passed `OK` under
+`R CMD check`’s own separate mechanism). (b) one flaky `chromote`-based
+test error (`test_positionMatingUnitForest.R`’s live-render helper) on
+one of the two full-regression runs, not the other – matches this
+project’s own long-documented Chrome/chromote flakiness pattern
+(existing `BACKLOG.md` item). `lintr::lint_package()` 0 lints on all 3
+touched files.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html):
+0 errors/1 warning/1 note (both pre-existing – non-portable filename,
+`scratchpad/` – matching S641’s own baseline exactly); `testthat.R` and
+`spelling.R` both `OK` under `R CMD check`’s own run. 13. Recorded
+`CHANGELOG.md` entries (the reconcile backfill + the fix + BACKLOG
+filing), added `PROJECT_LEARNINGS.md` Learning 674 (two-part lesson: an
+untested diagnostic/reporting layer has its own bug surface independent
+of the thing it reports on; a session’s narrative interpretation of a
+fix is a separate claim from the fix itself and needs the domain owner’s
+own sign-off, not just the fixing session’s self-consistent framing),
+updated `CLAUDE.md`’s learnings-count pointer (673-\>674,
+S641+-\>S642+). Committed in 2 commits (5-file cap): `39ef1c55` (the
+fix + BACKLOG + CHANGELOG), `f6aecbdf` (Learning 674 + CLAUDE.md
+pointer). 14. **Runtime smoke test (Phase 3E): not applicable, stated
+explicitly, not silently skipped.** This session’s deliverable is a
+test-harness reporting helper (`.formatStructuralDiscrepancy()`, used
+only by tests and an offline `data-raw/` script) plus documentation. No
+Shiny startup, service registration, dispatch, or config-resolution path
+is touched.
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
+own `R CMD check` process (which loads/attaches the package and runs the
+full test suite) is the closest available runtime exercise and passed
+clean (0 errors).
+
+**Self-assessment (Session 642): 8/10.** **Strengths:** (1) did not
+trust cached article output or the prior session’s “PASS”/“more useful
+default” framing – independently re-ran the entire validation script
+live and re-derived Track A/B/C ground truth from raw fixture data by
+hand before accepting any claim; (2) found a genuine,
+previously-undetected bug (the stale `reportDiscrepancy()`) through live
+reproduction, not speculation – proved it by showing the actual
+empty-discrepancy console output before fixing it, and the corrected
+output after; (3) held every TDD gate via `AskUserQuestion` despite the
+session’s scope shifting substantially and repeatedly (a typo correction
+that reversed the fix’s own narrative conclusion, two separate scoping
+questions); (4) did not unilaterally decide whether `P5`’s inclusion was
+correct – deferred entirely to the owner, and once they ruled it an
+error, filed rather than implemented the larger fix, correctly
+respecting both “one deliverable” scope and the real design complexity
+(issue \#164 entanglement) rather than rushing a narrow patch; (5)
+chased both incidental non-conforming full-regression results to a real
+disposition (`git stash` isolation) rather than assuming “probably
+pre-existing” without checking. **Weaknesses:** (1) **skipped Phase 1B
+again** – no “session claimed” stub was written to
+`SESSION_NOTES.md`/`HANDOFFS.md` when the owner’s redirect became this
+session’s actual task; this is now 2 consecutive sessions (S641, S642)
+with the same gap, both for a structurally similar reason (an open-ended
+owner-directed review/redirect doesn’t cleanly trigger the “receive one
+task, write a stub” flow the way a BACKLOG-item pickup does) – worth a
+future session considering whether Phase 1B needs an explicit trigger
+for this shape of session start, not just BACKLOG-item pickups; (2) made
+a small, self-caught process misstep mid-session: called
+`ScheduleWakeup` (a `/loop`-only pacing tool) twice while simply waiting
+on background `Bash` tasks outside any `/loop` context – no real harm,
+caught and reported as product feedback via `SendFeedback`, but wasted 2
+tool calls; (3) did not pin which exact prior session introduced the
+`comparator` WORDLIST word or the chromote flake’s current instability –
+confirmed both pre-existing relative to this session’s own diff
+(sufficient to establish “not my fault”) but didn’t do the
+`git blame`/`git log -S` archaeology this project’s own established
+convention sometimes applies to spelling-drift items.
+
+**Gotchas for a future session:** (1) **No Phase 1B stub exists for
+S642** – same as S641 (see weakness (1) above); this handoff and the
+`HANDOFFS.md` receipt below are the complete record. (2)
+`HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM \#28
+2,000-line cap and growing. (3) `BACKLOG.md` still has 7 accumulated
+`[x]`-checked DONE items (dashboard LOW flag, precedent S619/S625),
+untouched by this session, PLUS the new P5-suppression item this session
+added. (4) The new P5-suppression `BACKLOG.md` item is entangled with
+issue \#164 – a future session should design both together, not patch
+the isolated-individual case in ignorance of the empty-diagram case; the
+item includes a narrow-rule scoping note (literally zero edges, not “no
+mate and no children” alone) that should be re-verified, not assumed,
+before implementation. (5) Once the P5-suppression fix ships,
+`tests/testthat/test_comparePedigreeStructure.R`’s Track B full
+live-kinship2 regression test (the one asserting `identical = FALSE` /
+`individualsOnlyInB = "P5"`) will need updating – it should become
+`identical = TRUE` once the renderer no longer includes `P5`, and the
+`kinship2-fidelity- validation.qmd` Verdict/Structural-verification text
+will need correcting again to match. (6) Track C’s “nprcgenekeepr
+duplicates both A and Y where kinship2 needs only one duplicate”
+observation (this session’s own finding, step 3 above) was noted but not
+chased into a BACKLOG item or filed anywhere else – a future session
+reviewing Track C fidelity further should be aware of it (traced via
+`layout$edges`/`duplicateToReal` on `.pedTrackCFixture()`, not just
+eyeballed) even though it isn’t currently tracked as an open item. (7)
+`inst/WORDLIST` is now missing 10 words total (spelling-drift
+`BACKLOG.md` item, `comparator` added this session) – still not fixed by
+any session since S465.
+
+### Session 641 Handoff Evaluation (by Session 642)
+
+**Score: 7/10.** **What helped:** S641’s handoff was thorough and
+specific – exact commit hashes, exact file/line references, and it
+proactively flagged its own Phase 1B gap rather than leaving it for this
+session to discover unexplained. Its gotcha (3) (“Issue \#164… do not
+conflate the two”) turned out to be directly relevant this session (the
+P5-suppression finding’s own entanglement with \#164) even though S641
+wrote it for a different reason (distinguishing the comparator fix from
+the layout function itself) – a case of a well-documented boundary
+paying off in a way the author didn’t anticipate. **What was missing /
+what was wrong:** S641’s own `kinship2-fidelity-validation.qmd` Verdict
+text – “the more useful default, not a bug to reconcile away” – was
+S641’s own narrative interpretation of the fix it had just shipped,
+written in the same session, and it went completely uncontested through
+S641’s own close-out and self-assessment (scored 8/10, no flag on this
+point). This session’s owner-directed walkthrough reversed it outright
+(“P5… is erroneously included”). This isn’t really a failure of S641’s
+actual fix (Learning 673’s mechanism – extending the comparator to diff
+the displayed-individual set – is correct and unaffected by this
+reversal); it’s that S641 conflated “the comparator now correctly
+detects and reports this difference” (true, and the hard part) with
+“this difference is acceptable” (a separate, un-checked claim S641
+asserted rather than asked). Separately, S641 modified
+`.comparePedigreeStructures()`’s return shape (adding
+`individualsOnlyInA/B`) but never re-ran
+`data-raw/kinship2FidelityValidation.R` end-to-end to confirm every
+downstream consumer of that shape still worked correctly – it verified
+the fixtures directly via `compareAgainstKinship2()` calls, which is how
+the script’s own `reportDiscrepancy()` gap survived undetected. **ROI:**
+strongly positive on the mechanism (Learning 673’s fix is real,
+necessary, and unaffected by this session’s findings); the gap is
+specifically in not treating “is this difference acceptable” as its own
+claim requiring the same owner-verification discipline as “is the
+comparator now correct” – a distinction worth generalizing (see this
+session’s own Learning 674).
+
 ### What Session 641 Did
 
 **Deliverable:** Fixed a real, previously undetected defect in the

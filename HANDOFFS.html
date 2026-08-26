@@ -141,6 +141,68 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <p><strong>Archived 17 record(s), 2026-08-12 → 2026-08-13</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-13.html"><code>docs/archive/HANDOFFS-through-2026-08-13.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p><strong>Archived 21 record(s), 2026-08-13 → 2026-08-14</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-14.html"><code>docs/archive/HANDOFFS-through-2026-08-14.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p>This file currently holds <strong>18</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
+<pre class="handoff"><code>session: S642
+date: 2026-08-26
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE (the reporting fix). Fixed data-raw/kinship2FidelityValidation.R's own stale
+  reportDiscrepancy() (silently dropped individualsOnlyInA/individualsOnlyInB, added by S641, when
+  printing a discrepancy). Also found, via owner-directed live review of
+  kinship2-fidelity-validation.qmd, a real rendering defect (P5, a fully isolated founder,
+  erroneously rendered by makePedigreeMatingLayout()) that reverses S641's own "more useful
+  default" framing -- filed to BACKLOG.md, not fixed, per owner choice ("both, sequenced").
+what_was_done: Owner redirected from the rendered BACKLOG priorities list to
+  kinship2-fidelity-validation.qmd fidelity work directly ("we still do not have good fidelity...
+  not satisfactory until I have reviewed it and approved it"). Live-reran
+  data-raw/kinship2FidelityValidation.R (kinship2/chromote/htmlwidgets all installed locally) rather
+  than trusting cached article output; independently hand-traced Track C's 10 real edges/4 mating
+  units from raw fixture data. Owner: "Fix your testing code to catch this type of error" (Track B's
+  Numeric fidelity table only checks the shrunk set, never the full 16-subject set) -- traced to
+  data-raw/kinship2FidelityValidation.R's reportDiscrepancy() silently omitting
+  individualsOnlyInA/B. Full strict TDD: RED (5 new tests for .formatStructuralDiscrepancy(),
+  confirmed failing with "could not find function") -&gt; GREEN (extracted the logic into a tested
+  helper in tests/testthat/helper-comparePedigreeStructure.R, returns a string not a cat() side
+  effect; updated the data-raw script to call it; live-reran, confirmed it now prints "individuals
+  only in nprcgenekeepr: P5"). Owner then corrected a typo ("P6" -&gt; "P5") that reversed the fix's
+  own narrative: "P5... is erroneously included" -- surfaced entanglement with issue #164 (renderer
+  crashes on an all-isolated pedigree) before scoping; owner chose "both, sequenced." Filed the
+  larger fix to BACKLOG.md rather than implementing it. Verified: full regression x2 (0 failed/0
+  error attributable to this session's 3 files; 2 unrelated pre-existing results confirmed via git
+  stash -- a WORDLIST gap and a chromote flake, both traced to before this session's diff); lintr 0
+  lints; devtools::check() 0 errors/1 warning/1 note (both pre-existing, matching S641's baseline).
+  Commits: f9beea94 (Phase 0 reconcile backfill), 39ef1c55 (the fix + BACKLOG item + CHANGELOG),
+  f6aecbdf (Learning 674 + CLAUDE.md pointer).
+next_steps: Pick up the new BACKLOG.md "Up Next" item (P5-suppression in makePedigreeMatingLayout(),
+  entangled with issue #164 -- design both together, not in isolation) as a dedicated
+  design/scoping session, or one of the other standing priorities (factor-out pedigree-diagram
+  package research, context_budget.py evaluation, DESCRIPTION Suggests/Config-Needs cleanup,
+  BACKLOG.md ledger housekeeping, REUSE registration, NPRC outreach plan, issue #148 scope-narrowing,
+  the 7-item BACKLOG.md [x] sweep) -- see SESSION_NOTES.md "What Session 642 Did" step 1 for the
+  full rendered list, though the owner bypassed it entirely this session.
+key_files: tests/testthat/helper-comparePedigreeStructure.R (.formatStructuralDiscrepancy(), the
+  fix), tests/testthat/test_comparePedigreeStructure.R (5 new tests), data-raw/
+  kinship2FidelityValidation.R (now calls the tested helper), BACKLOG.md (new P5-suppression item +
+  spelling-drift count update), CHANGELOG.md, PROJECT_LEARNINGS.md (Learning 674).
+gotchas: (1) No Phase 1B claim stub exists for S642 -- 2nd consecutive session (after S641) with
+  this gap, both for a structurally similar reason (an open-ended owner redirect doesn't cleanly
+  trigger "receive one task, write a stub"); worth a future session considering whether Phase 1B
+  needs an explicit trigger for this shape of session start. (2) The new P5-suppression BACKLOG item
+  is entangled with issue #164 -- design both together. (3) Once that fix ships, Track B full's
+  live-kinship2 regression test (tests/testthat/test_comparePedigreeStructure.R) should flip to
+  identical = TRUE, and kinship2-fidelity-validation.qmd's Verdict/Structural-verification text
+  needs correcting again. (4) Track C: nprcgenekeepr duplicates BOTH A and Y (2 duplicate nodes)
+  where kinship2 needs only 1 -- not incorrect, just more visually complex; noted this session,
+  not filed anywhere, not chased further. (5) inst/WORDLIST now missing 10 words (comparator added
+  this session's finding) -- still not fixed by any session since S465. (6) HANDOFFS.md/
+  SESSION_NOTES.md/CHANGELOG.md remain past the FM #28 2,000-line cap.
+runtime_smoke: n/a, stated explicitly -- this session's deliverable is a test-harness reporting
+  helper plus documentation; no Shiny startup/dispatch/config-resolution path touched.
+  devtools::check()'s own R CMD check (loads the package, runs the full suite) is the closest
+  available runtime exercise and passed clean (0 errors).
+changelog_ref: 2026-08-26 S642 entries, CHANGELOG.md ("fix data-raw script's stale discrepancy
+  reporting; file P5-suppression renderer defect" and the reconcile-backfill entry above it)
+commit: pending</code></pre>
 <pre class="handoff"><code>session: S641
 date: 2026-08-26
 status: complete

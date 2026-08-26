@@ -17,6 +17,72 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-26 · \[ad hoc\] S642: fix data-raw/kinship2FidelityValidation.R’s own untested discrepancy-reporting gap; file the P5-suppression renderer defect
+
+- **Deliverable:** owner-directed review of
+  `kinship2-fidelity-validation.qmd`, working through Track A/B/C with
+  every image re-rendered live (not trusted from cached files) and every
+  claim traced against the raw fixture data programmatically. Two real
+  findings, one fixed this session, one scoped to `BACKLOG.md` for a
+  future session (owner chose “both, sequenced”).
+- **Fixed via full strict TDD** (RED: 5 new tests in
+  `tests/testthat/test_comparePedigreeStructure.R` for a new
+  `.formatStructuralDiscrepancy()` helper, confirmed failing with “could
+  not find function”; GREEN: minimum implementation):
+  `data-raw/kinship2FidelityValidation.R`’s own local
+  `reportDiscrepancy()` was never updated when S641 added
+  `individualsOnlyInA`/`individualsOnlyInB` to
+  `.comparePedigreeStructures()`’s return shape – confirmed live by
+  re-running the script, which printed
+  `!! DISCREPANCY -- Track B full !!` with nothing underneath, silently
+  dropping the one detail (`individualsOnlyInB: "P5"`) the
+  `identical = FALSE` verdict is based on. That reporting logic lived
+  only in a script explicitly excluded from `R CMD check` (“not part of
+  R CMD check” per its own header), so no test had ever exercised it.
+  Extracted the logic into `.formatStructuralDiscrepancy(label, cmp)` in
+  `tests/testthat/helper-comparePedigreeStructure.R` (auto-loaded under
+  `test_dir()`/[`devtools::test()`](https://devtools.r-lib.org/reference/test.html),
+  so it now has real coverage) – returns a character string (not a
+  [`cat()`](https://rdrr.io/r/base/cat.html) side effect) specifically
+  so its content is assertable. `data-raw/kinship2FidelityValidation.R`
+  now calls it; re-running the script live confirms the report now
+  correctly prints `individuals only in nprcgenekeepr: P5`. 120/120
+  pre-existing tests in the file still pass; 5 new tests pass; 0 lints
+  on all 3 touched files.
+- **Filed, not fixed this session** (owner-directed, “both, sequenced”):
+  `BACKLOG.md` “Up Next” now has a new item – `P5` (a fully isolated
+  founder: no sire, no dam, no mate, no children) is erroneously
+  rendered by
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  in the Track B full fixture; kinship2’s own `plot.pedigree()`
+  correctly omits it. The owner explicitly ruled this an error (“P5… is
+  erroneously included”), reversing S641’s own
+  `kinship2-fidelity-validation.qmd` Verdict text (“the more useful
+  default, not a bug to reconcile away”) – that framing is now known to
+  be wrong and will need correcting alongside the code fix. Entangled
+  with issue \#164 (the layout function crashes outright when every
+  individual has zero edges) – a future session needs to design
+  “suppress isolated individuals” and “what happens when suppression
+  empties the diagram” together.
+- **Also found and confirmed pre-existing** (not caused by this session,
+  verified via `git stash`): `test_wordlist_coverage.R` fails locally
+  (`comparator`, from `R/comparePedigreeStructure.R:230`’s roxygen text,
+  not yet in `inst/WORDLIST`) – added as a new instance to the existing
+  “spelling NOTE has drifted again” `BACKLOG.md` item (now 10 words),
+  not a new item. Also observed one flaky `chromote`-based test error
+  (`test_positionMatingUnitForest.R`, live-render helper) on one of two
+  full-regression runs, not the other – matches this project’s own
+  long-documented Chrome/chromote flakiness pattern (existing
+  `BACKLOG.md` item), not caused by this session’s changes.
+- **Verified:** full clean regression (`test_dir()`) 0 failed/0 error
+  attributable to this session’s 3 touched files across 2 separate runs;
+  `lintr::lint_package()` 0 lints on all 3 touched files;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors/1 warning/1 note (both pre-existing – non-portable filename,
+  `scratchpad/` – confirmed unrelated, matching S641’s own baseline),
+  `testthat.R` and `spelling.R` both `OK` under `R CMD check`’s own run.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · \[ad hoc\] S642: record CHANGELOG.md entry for S641’s HANDOFFS.md sha-fix action (reconcile-on-read)
 
 - **Deliverable:** Phase 0 reconcile found 1 commit past the
