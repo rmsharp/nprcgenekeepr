@@ -16,6 +16,15 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S638: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S636 precedent)
+- **Deliverable:** Phase 0 reconcile found `dec55f20` (S637's close-out commit, writing the final
+  `HANDOFFS.md` receipt + `SESSION_NOTES.md`) past the `CHANGELOG.md` frontier with no ledger entry —
+  the same self-reference gap this project's precedent already names (a close-out commit cannot cite
+  its own sha at write time). Fixed the S637 receipt's `commit:` field to add `dec55f20` (commit
+  `ce396c87`), and this entry logs that fix commit itself, per the established two-step pattern.
+  Commit: `ce396c87`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · [BL-N] S637: fix R-CMD-check.yaml CI break to a genuinely clean 0/0/0 baseline
 - **Deliverable:** owner-directed "broader" scope (a clean baseline, not just a green checkmark) on
   `BACKLOG.md`'s top item (found S636). Root-caused both real issues directly rather than trusting
