@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S636: record HANDOFFS.md receipt commit-sha fix for the CI-break correction (matching S607/S623/S629-S635 precedent)
+- **Deliverable:** logging this session's own `HANDOFFS.md` receipt `commit` field fix (`519a8182`
+  content correction, `80ffacbf` second close-out pass) as its own ledger entry, since the fix
+  commit (`613988c6`) is itself an action this session took. Commit: `613988c6`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · [ad hoc] S636: push Track A-D's commits (first time), discover and document R-CMD-check.yaml is red on master
 - **Deliverable:** pushed `master` (owner-approved via `AskUserQuestion`) — the first time Track
   A/B/C/D's commits (31 prior + this session's) ever reached CI. Confirmed good news first: Track
