@@ -138,17 +138,37 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S640
 date: 2026-08-26
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Check whether R-CMD-check.yaml's ubuntu-latest (oldrel-1) setup-r@v2 failure (found
-  S638, run 32930961617) reproduces on a fresh re-run.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Checked whether R-CMD-check.yaml's ubuntu-latest (oldrel-1) setup-r@v2 failure
+  (found S638, run 32930961617) reproduces on a fresh re-run. Confirmed transient -- no code or
+  workflow change made.
+what_was_done: Phase 0: backfilled a ledger gap left by S639 (2 commits past the CHANGELOG.md
+  frontier -- 805b2b83 record-Learning-672 commit + 9f2b1c16 close-out commit -- structurally new
+  because the Learning-record and CHANGELOG-touching commits were NOT the same commit this time,
+  unlike every prior instance; commits 0a79fbbc + b96521df). Investigation: gh run view on all 4
+  real R-CMD-check.yaml runs since the one documented oldrel-1 failure (32969359216, 32971663253,
+  33002411920, 33003541368) -- all show ubuntu-latest (oldrel-1) success cleanly, confirming a
+  transient GitHub Actions/r-lib setup-r infra flake, not a code/config defect. No RED/GREEN/
+  REFACTOR (PRE-RED-only, matching Track D/S636 precedent -- no defect to fix). Owner approved
+  closing via AskUserQuestion. Removed the item from BACKLOG.md, recorded full evidence in
+  CHANGELOG.md. Commits: ba3d6a68 (claim), a77d6a5c (resolve + CHANGELOG entry).
+next_steps: Pick up from the priorities list rendered this session's Phase 0 report (SESSION_NOTES.md
+  "What Session 640 Did" step 1): kinship2 CI-verification close-out (READY, S), factor-out
+  pedigree-diagram package research (READY, M), context_budget.py evaluation (READY, S),
+  DESCRIPTION Suggests/Config-Needs audit (READY, S), or the 7-item BACKLOG.md [x]-sweep (READY, S,
+  precedent S619/S625).
+key_files: BACKLOG.md (item removed), CHANGELOG.md (new entries top of "## 2026-08"),
+  HANDOFFS.md:138-153 (this receipt), SESSION_NOTES.md ACTIVE TASK (S640 write-up).
+gotchas: (1) BACKLOG.md has 7 accumulated [x]-checked DONE items awaiting a sweep (dashboard LOW
+  flag, precedent S619/S625). (2) kinship2 item's CI skip-vs-run confirmation (S639 gotcha 4)
+  likely already satisfied by the same S637-S639 CI history this session walked -- verify directly
+  rather than re-deriving. (3) HANDOFFS.md/SESSION_NOTES.md/CHANGELOG.md remain past the FM #28
+  2,000-line cap and growing across several sessions now.
+runtime_smoke: n/a -- docs-only, no code/workflow file touched this session.
+changelog_ref: 2026-08-26 S640 entries, CHANGELOG.md ("close ubuntu-latest (oldrel-1) setup-r@v2 CI
+  flake" and the reconcile-backfill entry above it)
 commit: pending
 ```
 
