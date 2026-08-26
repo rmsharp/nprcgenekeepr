@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S636: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S635 precedent)
+- **Deliverable:** logging this session's own `HANDOFFS.md` receipt `commit` field fix (`36653242`
+  mechanical, `00a1d6d2` documentation, `8463dbd9` close-out) as its own ledger entry, since the fix
+  commit (`8e7a12f6`) is itself an action this session took. Commit: `8e7a12f6`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-25/26 · [ad hoc] S636: implement Track D of the kinship2 structural-comparison plan (close the loop)
 - **Deliverable:** `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md` §4.4.
   Ported `PROJECT_LEARNINGS.md` Learning 643's `$go_to()` chromote-race fix into
