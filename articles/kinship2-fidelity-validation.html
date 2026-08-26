@@ -104,7 +104,8 @@
 <span><span class="co"># screenshots):</span></span>
 <span><span class="co">#   Rscript data-raw/kinship2FidelityValidation.R</span></span>
 <span><span class="co"># Writes PNGs to vignettes/articles/kinship2-fidelity-validation-img/ and</span></span>
-<span><span class="co"># prints the numeric summary below to the console.</span></span></code></pre></div>
+<span><span class="co"># prints the numeric and structural-comparison summary below to the</span></span>
+<span><span class="co"># console.</span></span></code></pre></div>
 </div>
 </section><section class="level2"><h2 id="sec-tracka">Track A – X-chromosome kinship (Table S2)<a class="anchor" aria-label="anchor" href="#sec-tracka"></a>
 </h2>
@@ -312,7 +313,32 @@
 </tbody>
 </table>
 <p>Both packages flag the <em>same</em> union as consanguineous, using their own independent visual conventions – a thickened doubled line in kinship2, a distinct color and width in nprcgenekeepr – and nprcgenekeepr’s marker survives the more complex rectilinear dogleg reroute exactly as it does the simple direct case.</p>
-</section></section><section class="level2"><h2 id="sec-caveats">Caveats carried forward<a class="anchor" aria-label="anchor" href="#sec-caveats"></a>
+</section></section><section class="level2"><h2 id="sec-structural">Structural verification<a class="anchor" aria-label="anchor" href="#sec-structural"></a>
+</h2>
+<p>Tracks B and C’s diagram images above are, on their own, still just two independently-rendered pictures placed side by side – a reader has to trust that they show the same family structure. The <a href="../../docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.html">kinship2 structural/ topological comparison plan</a> closes that gap: <code>.extractKinship2Structure()</code> and <code>.extractNprcStructure()</code> (both <code>@noRd</code>, zero <code>kinship2</code> dependency) pull the real-individual-level parent-child edge set and mate-pair set out of kinship2’s own <code>pedigree</code> object and out of <code><a href="../reference/makePedigreeMatingLayout.html">makePedigreeMatingLayout()</a></code>’s output respectively – deliberately at the level of <em>who is related to whom</em>, not <em>which duplicate copy of a multi-union individual each package’s layout happens to draw</em> (the two packages duplicate different individuals for the same union above: <code>Y</code> in kinship2’s rendering, <code>A</code> in nprcgenekeepr’s). <code>.comparePedigreeStructures()</code> then diffs the two edge sets directly.</p>
+<p>Run against this article’s own Track B and Track C fixtures, live:</p>
+<table class="table caption-top">
+<thead><tr class="header">
+<th>Fixture</th>
+<th>Structurally identical to kinship2?</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Track B, full (16 subjects)</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr class="even">
+<td>Track B, shrunk (8 subjects)</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr class="odd">
+<td>Track C (9 subjects, consanguineous dogleg)</td>
+<td><strong>Yes</strong></td>
+</tr>
+</tbody>
+</table>
+<p>No discrepancy was found on any of the three. This is the first time any code – not a caption, not a reader’s own visual comparison – has checked that these diagrams describe the same family structure kinship2 does.</p>
+</section><section class="level2"><h2 id="sec-caveats">Caveats carried forward<a class="anchor" aria-label="anchor" href="#sec-caveats"></a>
 </h2>
 <ul>
 <li>
@@ -325,7 +351,7 @@
 <strong><code>kinship2::pedigree()</code>’s sex-role validation is stricter than nprcgenekeepr’s own sire/dam columns.</strong> Track C’s own committed test fixture lists one individual (<code>Y</code>) as a <code>sire</code> in one row despite her declared sex being female – valid input to <code><a href="../reference/makePedigreeMatingLayout.html">makePedigreeMatingLayout()</a></code>, which does not enforce sex/column-role consistency, but rejected by <code>kinship2::pedigree()</code>, which does. The validation script swaps that one row’s 2 column values (same 2 parents, same family structure) only for the kinship2-side object; every nprcgenekeepr call in this article uses the fixture exactly as committed.</li>
 </ul></section><section class="level2"><h2 id="sec-verdict">Verdict<a class="anchor" aria-label="anchor" href="#sec-verdict"></a>
 </h2>
-<p><strong>PASS, all 3 tracks.</strong> Track A’s autosomal and X-linked kinship matrices are bit-for-bit identical to kinship2’s own output across every one of 200 compared cells (100 autosomal + 100 X-linked), including the MZ-twin correction and its propagation to a descendant. Track B’s <code><a href="../reference/shrinkPedigree.html">shrinkPedigree()</a></code> reproduces kinship2’s exact surviving subject set and exact <code>bitSize</code> trajectory, and the shrunk pedigrees are visually the same 2 family groups. Track C’s consanguineous-mating marker flags the same union kinship2 flags, under both edge styles, using an independently-converged duplicate-node convention for the same underlying multi-union case kinship2 also duplicates. All 3 tracks are cleared as faithful reproductions of the kinship2 supplement’s own results, not just internally self-consistent implementations.</p>
+<p><strong>PASS, all 3 tracks.</strong> Track A’s autosomal and X-linked kinship matrices are bit-for-bit identical to kinship2’s own output across every one of 200 compared cells (100 autosomal + 100 X-linked), including the MZ-twin correction and its propagation to a descendant. Track B’s <code><a href="../reference/shrinkPedigree.html">shrinkPedigree()</a></code> reproduces kinship2’s exact surviving subject set and exact <code>bitSize</code> trajectory, and the shrunk pedigrees are visually the same 2 family groups – now also confirmed by a real edge-set diff (<a href="#sec-structural">Structural verification</a>), not just a visual read. Track C’s consanguineous-mating marker flags the same union kinship2 flags, under both edge styles, using an independently-converged duplicate-node convention for the same underlying multi-union case kinship2 also duplicates – also structurally confirmed identical. All 3 tracks are cleared as faithful reproductions of the kinship2 supplement’s own results, not just internally self-consistent implementations.</p>
 </section><section class="level2"><h2 id="sec-references">References<a class="anchor" aria-label="anchor" href="#sec-references"></a>
 </h2>
 <p>Sinnwell, J.P., Therneau, T.M., Schaid, D.J. (2014) “The kinship2 R package for pedigree data.” <em>Human Heredity</em> 78(2):91-93.</p>

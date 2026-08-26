@@ -17,6 +17,358 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-26 · \[ad hoc\] S636: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S635 precedent)
+
+- **Deliverable:** logging this session’s own `HANDOFFS.md` receipt
+  `commit` field fix (`36653242` mechanical, `00a1d6d2` documentation,
+  `8463dbd9` close-out) as its own ledger entry, since the fix commit
+  (`8e7a12f6`) is itself an action this session took. Commit:
+  `8e7a12f6`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25/26 · \[ad hoc\] S636: implement Track D of the kinship2 structural-comparison plan (close the loop)
+
+- **Deliverable:**
+  `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md`
+  §4.4. Ported `PROJECT_LEARNINGS.md` Learning 643’s `$go_to()`
+  chromote-race fix into `data-raw/kinship2FidelityValidation.R`’s
+  `screenshot_layout()` (replacing the racy
+  `Page$navigate()`+`Page$loadEventFired()`+[`Sys.sleep()`](https://rdrr.io/r/base/Sys.sleep.html)
+  sequence). Ran the script end-to-end locally — no hang, no race —
+  regenerating all 4 nprcgenekeepr-side Track B/C images (the 4
+  kinship2-side base-R plots were byte-identical, as expected). Added a
+  Track D section sourcing
+  `tests/testthat/helper-comparePedigreeStructure.R` and running Track
+  C’s own `compareAgainstKinship2()` against the vignette’s own Track
+  B/C fixtures live: Track B full (16 subjects), Track B shrunk (8
+  subjects), and Track C (9 subjects, consanguineous dogleg) all report
+  `identical = TRUE`, no discrepancy on any of the 3. Owner-approved
+  PRE-RED framing — no RED/GREEN cycle, since no new package function
+  exists to unit-test; verified functionally instead (script completes
+  cleanly, images regenerate, comparator runs), matching Learning 643’s
+  own original verification precedent (real execution, not a unit test).
+  Removed `vignettes/articles/kinship2-fidelity-validation.qmd`’s S631
+  “not currently verified” caveat (fully supported by the 3/3 identical
+  result); added a new “Structural verification” section and updated the
+  “Verdict” section. **Genuine coverage gap found and presented, not
+  silently resolved either way (`PROJECT_LEARNINGS.md` Learning 668):**
+  `docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`
+  shares the identical S631 caveat but rests on 4 completely different
+  example pedigrees never run through the comparator — presented via
+  `AskUserQuestion`; owner chose to leave that document’s own caveat
+  standing (adding an explicit note naming the untested gap) rather than
+  following plan §4.4’s literal “remove from both” text. Added a
+  plain-language `NEWS.Rmd` entry (the plan’s own “first genuinely
+  user-facing consequence” framing). Verified: both `.qmd` files render
+  clean via `quarto render`;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors / 2 WARNINGs / 2 NOTEs, all 4 unchanged from Track C’s own
+  baseline; full clean regression 0 failed / 0 error / 39 warnings /
+  6437 passed (the previously-documented `test_wordlist_coverage.R` “1
+  pre-existing failure” did NOT reproduce this session — flagged, not
+  investigated, see Learning 668); `lintr::lint_package()` 0 lints (1
+  `undesirable_function_linter` hit on the new
+  [`source()`](https://rdrr.io/r/base/source.html) call, suppressed via
+  `# nolint start/end`, matching `data-raw/fgSEValidation.R`’s own
+  established precedent). All 4 tracks of the kinship2
+  structural-comparison plan are now DONE. Commits: `36653242`
+  (mechanical: script fix + regenerated images), `00a1d6d2`
+  (documentation: caveat removal + coverage-gap note + `NEWS.Rmd`).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S635: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S634 precedent)
+
+- **Deliverable:** logging this session’s own `HANDOFFS.md` receipt
+  `commit` field fix (`57a75044` deliverable, `73a27e11` close-out) as
+  its own ledger entry, since the fix commit (`456ca044`) is itself an
+  action this session took. Commit: `456ca044`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S635: implement Track C of the kinship2 structural-comparison plan (`.comparePedigreeStructures()`)
+
+- **Deliverable:** `R/comparePedigreeStructure.R` —
+  `.comparePedigreeStructures(a, b)`, a new zero-`kinship2`-dependency
+  internal (`@noRd`) function implementing
+  `docs/planning/ pedigree-diagram-kinship2-structural-comparison-plan.md`
+  §3.3/§4.3 (canonicalized, order-independent set-diff of two
+  `list(parentChildEdges, matePairs)` structures, agnostic to which side
+  is kinship2 vs. nprcgenekeepr). New
+  `tests/testthat/helper-comparePedigreeStructure.R` holds
+  `toKinship2Pedigree()` (D-5’s sire/dam-reversal auto-swap) and
+  `compareAgainstKinship2()` orchestration — genuinely
+  `kinship2`-dependent,
+  [`requireNamespace()`](https://rdrr.io/r/base/ns-load.html)-guarded,
+  deliberately placed outside `R/` and outside the plan’s literal
+  `data-raw/kinship2FidelityValidation.R` suggestion (owner-approved
+  deviation at the PRE-RED gate, matching the project’s own established
+  `data-raw/fgSEValidation.R` + `tests/testthat/helper-fgSEValidation.R`
+  split). New D-7 crossing-duplication fixture (10 subjects, a double
+  cross-marriage between two founder sibships) empirically confirmed,
+  via direct inspection of kinship2’s own unexported
+  `alignped1`/`alignped2`/ `alignped3` source, to trigger kinship2’s
+  real single-mate plot-time duplication (dragon 1, plan §1.3) — see
+  `PROJECT_LEARNINGS.md` Learning 667. Full strict TDD (RED: 5 pure
+  comparator unit tests confirmed failing for the right reason —
+  `could not find function ".comparePedigreeStructures"`; GREEN: passed
+  clean on the first implementation, 1 `brace_linter` style fix;
+  REFACTOR: skipped by choice, already minimal). Live-kinship2
+  end-to-end tests confirm `identical = TRUE` on the existing 9-subject
+  Track-C fixture, the new D-7 fixture, and the real 375-individual
+  bundled fixture (D-8 toy-and-real-scale discipline) — a clean pass on
+  all three, reported as a finding, not silently assumed. Verified:
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors / 2 WARNINGs (1 pre-existing non-portable filename + 1 new
+  “unstated dependencies in tests: kinship2” — Track C’s tests are the
+  only real executable `kinship2::`/`kinship2:::` calls in the codebase;
+  accepted as a documented trade-off for genuine ongoing regression
+  protection, owner-confirmed once the concrete WARNING count was in
+  hand, per `PROJECT_LEARNINGS.md` Learning 667) / 2 NOTEs (both
+  pre-existing); full clean regression 1 pre-existing failure
+  (`test_wordlist_coverage.R`, same known baseline) / 0 error;
+  `lintr::lint_package()` 0 lints on touched files. `BACKLOG.md`’s top
+  item updated: Track C marked DONE, Track D (port the `$go_to()`
+  chromote fix, regenerate images, remove the S631 caveats if the
+  comparator supports it) named as next pickup.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S634: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S633 precedent)
+
+- **Deliverable:** logging this session’s own `HANDOFFS.md` receipt
+  `commit` field fix (deliverable `b52f2058` → deliverable + close-out
+  `b52f2058 (deliverable), af67682b (close-out)`) as its own ledger
+  entry, since the fix commit (`e468e899`) is itself an action this
+  session took. Commit: `e468e899`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S634: file issue \#164 (makePedigreeMatingLayout() crashes on zero parent-child edges)
+
+- **Deliverable:** filed [issue
+  \#164](https://github.com/rmsharp/nprcgenekeepr/issues/164) for a
+  genuine, reproducible, pre-existing bug incidentally found while
+  designing a Track B founder-only test fixture —
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  throws `arguments imply differing number of rows: 0, 1` on any
+  pedigree with zero total parent-child edges (root-caused to
+  `R/makePedigreeDiagramData.R :1172`’s
+  `childEdgesOut <- data.frame(childEdges, dashes = FALSE, ...)`, which
+  cannot recycle a scalar onto a 0-row `childEdges`). Reported, not
+  fixed, per the established “found-an-unrelated- gap, report don’t fix
+  mid-session” precedent (`PROJECT_LEARNINGS.md` Learning 382). Worked
+  around in Track B’s own tests by hand-building the founder-only
+  fixture directly in `.extractNprcStructure()`’s input-contract shape.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S634: implement Track B of the kinship2 structural-comparison plan (`.extractNprcStructure()`)
+
+- **Deliverable:** `R/comparePedigreeStructure.R` —
+  `.extractNprcStructure()`, a new zero-`kinship2`-dependency internal
+  (`@noRd`) function implementing
+  `docs/planning/ pedigree-diagram-kinship2-structural-comparison-plan.md`
+  §3.2/§4.2 (hardened/vectorized, not the plan’s own illustrative loop
+  version), plus the D-2 edgeStyle-invariance property test appended to
+  `tests/testthat/test_comparePedigreeStructure.R` (7 new `test_that()`
+  blocks: return shape, founder-only, D5 single-known-parent, the
+  7-subject fixture reused from Track A, the 9-subject Track C fixture
+  with duplicates + a real consanguineous union, and 2
+  edgeStyle-invariance property tests against the Track C fixture and
+  the real 375-individual bundled fixture), plus a test-file- local
+  `.extractNprcStructureFromWaypoints()` helper (a second, independent
+  extraction walking `__drop_`/`__bar_`/`__proj_`/`__jog_` rectilinear
+  waypoint chains — the plan’s own §3.2 gives no pseudocode for this
+  half, so it was designed from scratch this session and empirically
+  prototyped/ verified in `scratchpad/` against the 9-subject fixture
+  and the real 375-individual fixture BEFORE being written into RED,
+  confirming D-2’s invariance claim holds — 502 parent-child edges / 237
+  mate pairs matched exactly on the real fixture). Full strict TDD: RED
+  (7 blocks confirmed failing for the right reason — function not found)
+  → GREEN (implementation passed clean on the first run, no bug found
+  this time) → REFACTOR skipped by owner-approved choice (the apparent
+  duplication between the production extractor and the test-only walker
+  is deliberate — plan §4.2’s own “separately-implemented” requirement —
+  not accidental; factoring it out would let a shared-logic bug silently
+  pass the invariance test on both sides). Verified:
+  `lintr::lint_package()` 0 lints (fixed 2 `string_boundary_linter`
+  hits, `grepl("^__union_", ...)` → `startsWith(..., "__union_")`); full
+  clean regression 1 pre-existing failure (`test_wordlist_coverage.R`,
+  same known baseline) / 0 error / 39 warnings;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  Status: 1 WARNING, 2 NOTEs, 0 errors, all 3 confirmed
+  pre-existing/unrelated (non-portable untracked filename, untracked
+  `scratchpad/`, `vignettes/figure/` knitr leftover), matching Track A’s
+  own baseline — the full installed-package test suite ran clean inside
+  the check (`FAIL 0 | WARN 39 | SKIP 206 | PASS 6395`). Runtime smoke
+  test: n/a — pure internal function, zero call sites (confirmed by
+  grep), no runtime/Shiny wiring changed. `BACKLOG.md`’s top item
+  updated (Track B DONE, Track C next). Commit: `b52f2058`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S633: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S632 precedent)
+
+- **Deliverable:** fixed this session’s own `HANDOFFS.md` receipt
+  `commit` field from the deliverable-only sha to include the close-out
+  commit itself (`d09a51e1` deliverable, `de9efb07` close-out). Commit:
+  `c09ac79d`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S633: implement Track A of the kinship2 structural-comparison plan (`.extractKinship2Structure()`)
+
+- **Deliverable:** `R/comparePedigreeStructure.R` (new) —
+  `.extractKinship2Structure()`, a zero-`kinship2`-dependency internal
+  (`@noRd`) function implementing
+  `docs/planning/ pedigree-diagram-kinship2-structural-comparison-plan.md`
+  §3.1/§4.1 exactly, plus
+  `tests/testthat/test_comparePedigreeStructure.R` (5 `test_that()`
+  blocks, 19 assertions across 4 synthetic fixtures: founder-only,
+  single-known-parent, multi-mate/shared-parent dedup, a combined
+  7-subject/2-mating fixture). Full strict TDD: RED (5 blocks confirmed
+  failing for the right reason — function not found) → GREEN
+  (implementation; found and fixed a real bug in the plan’s own §3.1
+  pseudocode along the way — a literal scalar `role` value fails
+  [`data.frame()`](https://rdrr.io/r/base/data.frame.html)’s recycling
+  rule against a zero-match founder mask, fixed with
+  `role = rep("father", sum(hasFather))`, see `PROJECT_LEARNINGS.md`
+  Learning 666) → REFACTOR skipped by owner-approved choice (code
+  already minimal). Verified: `lintr::lint_package()` 0 lints (after
+  fixing 2 `implicit_integer_linter` hits); full clean regression 1
+  pre-existing failure (`test_wordlist_coverage.R`, confirmed via direct
+  grep that the flagged word `bitSize` originates entirely in the
+  pre-existing `R/shrinkPedigree.R`) / 0 error;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors, 1 warning + 2 notes, all 3 confirmed pre-existing/unrelated
+  (non-portable untracked-file name, untracked `scratchpad/` dir,
+  pre-existing `vignettes/figure/` knitr leftover). Runtime smoke test:
+  n/a — pure internal function, zero call sites, no runtime/Shiny wiring
+  changed. `BACKLOG.md`’s top item updated (Track A DONE, Track B next).
+  `PROJECT_LEARNINGS.md` Learning 666. `CLAUDE.md` learnings-count
+  pointer refreshed (632+/665 -\> 633+/666). Commit: `d09a51e1`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S632: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S631 precedent)
+
+- **Deliverable:** fixed this session’s own `HANDOFFS.md` receipt
+  `commit` field from the deliverable-only sha to include the close-out
+  commit itself (`1662fa14` deliverable, `11bcf417` close-out). Commit:
+  `86fead66`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S632: design a structural/topological pedigree-diagram comparison algorithm vs kinship2 (BACKLOG.md Up Next item found S631)
+
+- **Deliverable:**
+  `docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md`
+  — an interface-first design resolving the DECISION NEEDED tag on
+  `BACKLOG.md`’s top “Up Next” item. A 5-agent research fan-out
+  (kinship2 `pedigree` object internals verified live;
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+  output/synthetic-id structure re-verified directly against source;
+  existing test/fixture inventory; prior-planning-doc “dragons”; a
+  grep-based integration-point inventory), plus this session’s own
+  direct re-verification of the 2 most load-bearing structural claims
+  (`R/makePedigreeDiagramData.R:1085-1234,460-522,355-365`), produced 8
+  numbered design decisions (forced vs. judgment call, each labeled) and
+  an interface-first design for 3 `R/` internal (`@noRd`) functions —
+  `.extractKinship2Structure()`/`.extractNprcStructure()`/
+  `.comparePedigreeStructures()` — all zero-`kinship2`-dependency by
+  construction (typed to the minimal field shape kinship2’s `pedigree`
+  object actually exposes, not its S3 class; only a thin
+  `data-raw/`-side wrapper touches `kinship2::` directly). Split into 4
+  session-sliceable tracks (A: kinship2-side extractor; B:
+  nprcgenekeepr-side extractor + an edgeStyle-invariance property test;
+  C: the diff + a new crossing-duplication fixture + live-kinship2
+  end-to-end tests against the Track-C fixture and the real
+  375-individual fixture; D: port the `$go_to()` chromote fix,
+  regenerate images, remove the S631 caveats once Track C
+  confirms/resolves parity). 4 owner- ratification questions (code
+  placement, twin-relation scope, the new fixture, Track D placement)
+  answered via `AskUserQuestion`, all exactly per the plan’s own
+  recommendation. `BACKLOG.md`’s top item updated (design DONE/RATIFIED,
+  Track A named as next pickup — not marked `[x]`, since implementation
+  hasn’t happened). `PROJECT_LEARNINGS.md` Learning 665 (the
+  typed-to-minimal-shape adapter pattern for optional-dependency
+  comparators). `CLAUDE.md` learnings-count pointer refreshed (631+/664
+  -\> 632+/665). Commit: `1662fa14`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S631: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S630 precedent)
+
+- **Deliverable:** fixed this session’s own `HANDOFFS.md` receipt
+  `commit` field from the pre-close-out commit to include the close-out
+  commit itself (`16a23c2a` correction, `35b1a23e` close-out). Commit:
+  `7b487066`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S631: stop presenting kinship2 diagram comparisons as verified equivalent (owner correction)
+
+- **Deliverable:** owner corrected this session directly – “you are
+  still publishing comparisons of kinship2 output to nprcgenekeepr
+  output as equivalent when they are clearly not… I have stated that
+  your equivalence assessments have been wrong in the past for these
+  same pedigrees.” Investigated
+  `vignettes/articles/kinship2-fidelity-validation.qmd` and
+  `docs/planning/ pedigree-diagram-kinship2-reference-comparison.qmd`:
+  found neither document’s diagram-image claims are backed by any
+  programmatic structural comparison (only Track A’s kinship-matrix
+  [`identical()`](https://rdrr.io/r/base/identical.html) and Track B’s
+  surviving-id-set [`setequal()`](https://rdrr.io/r/base/sets.html) are
+  genuinely checked); found both documents’ images are stale relative to
+  the same-row-collision-avoidance work and the Walker/BJL positioning
+  rewrite (issue \#141). Added a prominent, honest caveat to both
+  documents (not a fix) stating the diagram-equivalence claims are
+  unverified and must not be cited until a real comparison exists. Filed
+  a `BACKLOG.md` item scoping the actual fix (port the known `chromote`
+  `$go_to()` race fix into `data-raw/kinship2FidelityValidation.R`,
+  regenerate every image, build a real structural edge-set comparison)
+  as dedicated future-session work, per owner direction not to rush it
+  this session. `PROJECT_LEARNINGS.md` Learning 664 recorded;
+  user-memory `verify-diagrams-against-ground-truth.md` updated with a
+  third instance. `CLAUDE.md` learnings-count pointer refreshed
+  (630+/663 -\> 631+/664). Commit: `16a23c2a`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S630: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S629 precedent)
+
+- **Deliverable:** fixed this session’s own `HANDOFFS.md` receipt
+  `commit` field from the pre-close-out commit list to include the
+  actual close-out commit sha (`6740eba3` claim, `27cad886` RED,
+  `fcd24fdb` GREEN, `4fcdcb22` screenshots + BACKLOG.md, `ba12d1d5`
+  close-out). Commit: `0ced68d9`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-25 · \[ad hoc\] S630: fix live Diagram-tab crash found while verifying pedigree-diagram.qmd screenshots (BACKLOG.md item found S582)
+
+- **Deliverable:** verifying the pedigree-diagram.qmd article’s
+  screenshots against the current app (a `BACKLOG.md`-flagged staleness
+  item) surfaced a real, live crash instead: the Diagram tab errored
+  `Error: subscript out of bounds` under its own default (Rectilinear)
+  edge style on a realistic focal-animal trim of the real 375-individual
+  bundled fixture. Root-caused (via a fresh package reinstall + a
+  standalone
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  run with full server-log capture, ruling out a stale-build or harness
+  artifact) to `.detectStraight()` inside `.resolveEdgeNodeCollisions()`
+  (`R/makePedigreeDiagramData.R`, introduced by commit `c7bdbe4b`, issue
+  \#160 Track 2): `xOf`/`yOf` were named atomic vectors, and `[[` throws
+  on an atomic vector for an unmatched name instead of returning `NULL`
+  as the existing [`is.null()`](https://rdrr.io/r/base/NULL.html) guard
+  expected – so an edge referencing a node id absent from `nodes`
+  (exactly what a real ancestors+descendants focal-trim union can
+  produce) crashed instead of being skipped. Fixed via full strict-TDD
+  RED-\>GREEN (2 new tests: a minimal synthetic dangling-reference
+  fixture, and a real-fixture regression pinning the exact production
+  crash), `AskUserQuestion`-gated at PRE-RED/RED-\>GREEN/
+  GREEN-\>REFACTOR (no refactor needed – a 2-line change). All 5
+  screenshots regenerated against the fixed app and visually confirmed
+  correct; `pedigree-diagram.qmd` and `kinship2-fidelity-validation.qmd`
+  re-rendered to HTML and PDF for owner review (not committed –
+  regenerable review artifacts, matching the `docs/planning/*.html`
+  precedent). `BACKLOG.md` staleness item (found S582) closed `[x]`.
+  `NEWS.Rmd` Pedigree Diagram entry added (plain-language criterion).
+  `PROJECT_LEARNINGS.md` Learning 663 recorded. `CLAUDE.md`
+  learnings-count pointer refreshed (629+/662 -\> 630+/663). Not filed
+  as a GitHub issue, matching the established “found-and-fixed same
+  session” precedent. Commits: `27cad886` (RED), `fcd24fdb` (GREEN),
+  `4fcdcb22` (screenshots + BACKLOG.md).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-24 · \[ad hoc\] S629: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S628 precedent)
 
 - **Deliverable:** fixed this session’s own `HANDOFFS.md` receipt

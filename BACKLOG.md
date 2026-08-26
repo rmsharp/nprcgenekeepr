@@ -4,6 +4,248 @@
 inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 `SESSION_RUNNER.md` Phase 0.)*
 
+## Up Next
+
+**Build a real structural/topological pedigree-diagram comparison
+algorithm against kinship2 – the current “comparison” is 2 static images
+and prose, not verified equivalence** (found S631, 2026-08-25,
+owner-directed correction – “you are still publishing comparisons of
+kinship2 output to nprcgenekeepr output as equivalent when they are
+clearly not… I have stated that your equivalence assessments have been
+wrong in the past for these same pedigrees,” DECISION NEEDED on the
+comparison methodology’s actual design, Effort M-L). Two distinct,
+independently-necessary problems, both confirmed this session, not
+assumed: 1. **No programmatic structural check exists for the diagram
+claims.** `data-raw/kinship2FidelityValidation.R` genuinely verifies
+Track A (kinship-matrix
+[`identical()`](https://rdrr.io/r/base/identical.html), numeric) and
+Track B’s surviving-id-set/`bitSize`
+([`setequal()`](https://rdrr.io/r/base/sets.html), numeric) – but Track
+B’s full/shrunk pedigree PLOTS and Track C’s consanguineous-marker PLOTS
+are never diffed against kinship2’s own structure by any code.
+`vignettes/articles/ kinship2-fidelity-validation.qmd`‘s captions
+(“matching kinship2’s own family groupings,” “the same union kinship2
+flags”) are visual impressions from whoever wrote the article, not
+computed facts. Manually hand-tracing Track C’s own edge list this
+session (against directly-computed
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+ground truth: `kinship(A,Y) = 0.25`, all other pairs `0`) DID confirm
+nprcgenekeepr’s own consanguineous-marker placement is correct for that
+one fixture – but that was this session’s own ad hoc verification, not a
+repeatable check; nothing in the codebase does this automatically, for
+any fixture, ever. 2. **The committed images are stale relative to
+current code.** `kinship2-fidelity- validation-img/trackB-nprc-*.png`
+(generated S566, 2026-08-13/14, calling
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+with no explicit `edgeStyle`) show the diagonal “direct” edge style –
+the package’s default AT THE TIME, before Track 2 (S574) flipped the
+default to “rectilinear” and before the same-row-collision-avoidance
+work (Tracks 1-3, S592-S596) and the Walker/BJL positioning rewrite
+(issue \#141, S592-S621) substantially changed the layout algorithm
+itself.
+`docs/planning/pedigree-diagram-kinship2-reference- comparison.qmd`
+(generated 2026-08-08, refreshed once 2026-08-13) is staler still, and
+its own `date: today` frontmatter field hides this – every render shows
+today’s date regardless of when the content was actually verified.
+Attempting to regenerate `kinship2FidelityValidation.R`’s own
+screenshots this session hit a known, unfixed `chromote` race condition
+in its `screenshot_layout()` helper (`Page$navigate()` +
+`Page$loadEventFired()` as 2 separate calls – the exact defect class
+`PROJECT_LEARNINGS.md` Learning 643 already fixed elsewhere via
+`$go_to()`, never ported to this script). **Encouraging data point, not
+yet acted on:** despite the thrown error, one retry of the unmodified
+script this session DID successfully capture a fresh
+`trackB-nprc-full.png` before failing later – and the fresh capture
+shows clean right-angle sibship bars (matching kinship2’s own routing
+style much more closely than the stale “direct”-style image), suggesting
+the current positioning algorithm itself may already be in reasonably
+good shape; the gap is verification and fresh evidence, not necessarily
+the algorithm. Not committed (reverted to keep the working tree
+consistent with this item’s own “still stale” framing until the full
+regeneration + comparison work below is done together, not piecemeal).
+**Owner directive, to be honored until this item ships:** do not present
+a pedigree-diagram image comparison against kinship2 as
+verified/equivalent in any session output, report, or document – caveats
+warning of exactly this were added this session to both
+`vignettes/articles/kinship2-fidelity-validation.qmd` and
+`docs/planning/ pedigree-diagram-kinship2-reference-comparison.qmd`
+(2026-08-25); do not remove them until this item’s actual fix lands and
+is re-verified. **Design DONE, RATIFIED S632 (2026-08-25):**
+`docs/planning/ pedigree-diagram-kinship2-structural-comparison-plan.md`
+– a 5-agent research fan-out (kinship2 internals verified live,
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+output structure re-verified directly against source, existing
+test/fixture inventory, prior-planning-doc dragons, a grep-based
+integration-point inventory) plus this session’s own direct
+re-verification of the 2 most load-bearing structural claims produced an
+interface-first design for
+`.extractKinship2Structure()`/`.extractNprcStructure()`/
+`.comparePedigreeStructures()` (all `@noRd`, zero `kinship2` dependency
+by construction – only a thin `data-raw/`-side wrapper touches
+`kinship2::` directly) and split implementation into 4 session-sliceable
+tracks (A: kinship2-side extractor: B: nprcgenekeepr-side extractor + an
+edgeStyle-invariance property test; C: the diff itself + a new
+crossing-duplication fixture + live-kinship2 end-to-end tests against
+the Track-C fixture and the real 375-individual fixture; D: port the
+`$go_to()` fix, regenerate images, remove the caveats once Track C
+confirms/resolves parity). All 4 owner-ratification questions (code
+placement, twin-relation scope, the new fixture, whether Track D stays
+in this plan) were answered exactly per the plan’s own recommendation
+via `AskUserQuestion`. **Track A DONE – S633 (2026-08-25):**
+`.extractKinship2Structure()` implemented in new
+`R/comparePedigreeStructure.R` (`@noRd`, zero `kinship2` dependency)
+exactly per plan §3.1, via full strict TDD (RED: 5 `test_that()` blocks
+/ 19 assertions across 4 synthetic fixtures – founder-only,
+single-known-parent, multi-mate/shared-parent dedup, a combined
+7-subject/2-mating fixture – confirmed failing for the right reason;
+GREEN: minimum implementation, one real edge-case bug found and fixed
+along the way – the plan’s own §3.1 pseudocode’s literal scalar
+`role = "father"` throws when zero rows match (R’s recycling rule fills
+short-to-long, not long-to-zero), fixed with
+`role = rep("father", sum(hasFather))`, see `PROJECT_LEARNINGS.md`
+Learning 666; REFACTOR: skipped by choice, code already minimal).
+Verified:
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors (1 pre-existing warning, 2 pre-existing notes, all confirmed
+unrelated – see `CHANGELOG.md`); full clean regression 1 pre-existing
+failure (`test_wordlist_coverage.R`, confirmed via direct grep this
+session that the flagged word `bitSize` originates entirely in
+`R/shrinkPedigree.R`, not this session’s files) / 0 error;
+`lintr::lint_package()` 0 lints on touched files. **Track B DONE – S634
+(2026-08-25):** `.extractNprcStructure()` implemented in
+`R/comparePedigreeStructure.R` (`@noRd`, zero `kinship2` dependency)
+exactly per plan §3.2 (hardened/vectorized, not the plan’s own
+illustrative loop version – `nChildren` counted from the assembled
+`parentChildEdges`, never left `NA`), via full strict TDD (RED: 7
+`test_that()` blocks across 5 fixtures – 7-subject/2-mating \[reused
+from Track A\], the 9-subject Track C dogleg fixture \[duplicates + a
+real consanguineous union\], a D5 single-known-parent fixture, a
+hand-built founder-only layout, plus 2 D-2 edgeStyle- invariance
+property tests – confirmed failing for the right reason; GREEN: passed
+clean on the first implementation, no bug found this time; REFACTOR:
+skipped by choice – the apparent duplication between
+`.extractNprcStructure()` and the test-file-only rectilinear- side
+walker is deliberate, not accidental, per plan §4.2’s own
+“separately-implemented” requirement – factoring it out would let a
+shared-logic bug silently pass the invariance test on both sides). **The
+D-2 edgeStyle-invariance property test’s own second implementation**
+(`.extractNprcStructureFromWaypoints()`, test-file-local, walks
+`__drop_`/`__bar_`/`__proj_`/`__jog_` waypoint chains via jog-collapse +
+waypoint connected- components + edge-direction classification) was
+empirically prototyped and verified in `scratchpad/` against the
+9-subject fixture AND the real 375-individual bundled fixture (confirmed
+exercising real `__proj_`/`__jog_` waypoints, not just the small
+fixtures’ D1 chains) BEFORE being written into RED – D-2’s invariance
+claim holds on both. Verified:
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+and full clean regression, both confirmed matching Track A’s own
+pre-existing baseline (see `CHANGELOG.md`); `lintr::lint_package()` 0
+lints (fixed 2 `string_boundary_linter` hits, `grepl("^__union_", ...)`
+→ `startsWith(..., "__union_")`). **Incidental finding, filed not
+fixed:**
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+crashes on any pedigree with zero total parent-child edges
+(e.g. all-founder input) – [issue
+\#164](https://github.com/rmsharp/nprcgenekeepr/issues/164). **Track C
+DONE – S635 (2026-08-25):** `.comparePedigreeStructures()` implemented
+in `R/comparePedigreeStructure.R` (`@noRd`, zero `kinship2` dependency)
+exactly per plan §3.3 (canonicalized, order-independent set-diff both
+directions), via full strict TDD (RED: 5 pure unit tests on hand-built
+structures – return shape, order-independence, parentChildEdges-
+only-in-A/B, matePairs-only-in-A/B incl. an `nChildren` mismatch,
+zero-row founder-only case – confirmed failing for the right reason;
+GREEN: passed clean on the first implementation, 1 `brace_linter` style
+fix; REFACTOR: skipped by choice, already minimal, matching Track A/B’s
+own precedent). `toKinship2Pedigree()` (D-5’s sire/dam-reversal
+auto-swap) + `compareAgainstKinship2()` orchestration live in a NEW
+`tests/testthat/ helper-comparePedigreeStructure.R` – a deliberate
+deviation from plan §3.4’s literal
+“`data-raw/kinship2FidelityValidation.R`” placement (that script has
+hard top-level `chromote`/`htmlwidgets`
+[`stop()`](https://rdrr.io/r/base/stop.html)s that would break sourcing
+it from a test), matching the project’s own established
+`data-raw/fgSEValidation.R` + `tests/testthat/ helper-fgSEValidation.R`
+split instead – owner-approved at the PRE-RED gate. **New D-7 fixture**
+(a 10-subject double-cross-marriage between two founder sibships, Family
+A’s A1×B2 + Family B’s A2×B1) empirically confirmed, by directly reading
+kinship2’s own unexported `alignped1`/`alignped2`/`alignped3` source (a
+full local literate-programming checkout, not just the installed binary
+– see `PROJECT_LEARNINGS.md` Learning 667), to trigger kinship2’s real
+crossing-driven duplication of single-mate individual A1 at plot time
+(`align.pedigree()$nid`: A1’s row-index placed at 2 columns of one
+generation row) – while
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+own `duplicateToReal` never duplicates A1, proving D-1’s “resolved by
+construction” claim empirically, not merely assumed. **D-8 (toy AND real
+scale): live-kinship2 end-to-end tests pass `identical = TRUE`** on the
+existing 9-subject Track-C fixture, the new D-7 fixture, AND the real
+375-individual bundled fixture – a clean pass on the real fixture,
+itself a genuine finding worth reporting per D-8’s own framing (no
+discrepancy found, not silently assumed). **New consequence, presented
+and owner-accepted (not silently absorbed):**
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+gained a 2nd, permanent WARNING (“unstated dependencies in tests:
+kinship2”) – Track C’s tests are the only ones in the codebase with a
+REAL executable `kinship2::`/`kinship2:::` call (confirmed by grep;
+`test_kinship.R`/`test_shrinkPedigree.R` only mention kinship2 in
+comments/descriptions, never as code, per plan §1.5’s own
+hardcoded-values design). Accepted as a documented, deliberate trade-off
+for genuine ongoing regression protection (vs. a one-time
+hardcoded-value check) – see `PROJECT_LEARNINGS.md` Learning 667.
+Verified:
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors / 2 WARNINGs (1 pre-existing non-portable filename + this new
+one) / 2 NOTEs (both pre-existing); full clean regression 1 pre-existing
+failure (`test_wordlist_coverage.R`, same known baseline) / 0 error;
+`lintr::lint_package()` 0 lints on touched files. **CI skip-vs-run
+behavior to be visually confirmed once pushed** (plan §5’s own
+requirement) – not yet done as of this entry. **Track D DONE – S636
+(2026-08-25/26):** ported the `$go_to()` fix (`PROJECT_LEARNINGS.md`
+Learning 643) into `data-raw/kinship2FidelityValidation.R`’s
+`screenshot_layout()` (replacing the racy
+`Page$navigate()`+`Page$loadEventFired()`+[`Sys.sleep()`](https://rdrr.io/r/base/Sys.sleep.html)
+sequence); ran the script end-to-end locally
+(kinship2/chromote/htmlwidgets all available) – no hang, no race,
+regenerating all 4 nprcgenekeepr-side Track B/C images (the 4
+kinship2-side base-R plots were byte-identical, as expected – kinship2’s
+own plotting hasn’t changed). Added a Track D section to the script
+running Track C’s `compareAgainstKinship2()` against the vignette’s own
+fixtures live: Track B full (16 subjects), Track B shrunk (8 subjects),
+and Track C (9 subjects, consanguineous dogleg) all report
+`identical = TRUE`, no discrepancy found on any of the 3. Owner-approved
+PRE-RED framing (no RED/GREEN cycle – no new package function exists to
+unit-test; verified functionally instead, matching Learning 643’s own
+original precedent). **Genuine coverage gap found and NOT silently
+resolved either way (`PROJECT_LEARNINGS.md` Learning 668):**
+`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`
+shares the identical S631 caveat but rests on 4 completely different
+example pedigrees never run through the comparator – presented via
+`AskUserQuestion`; owner chose to remove only
+`vignettes/articles/kinship2-fidelity-validation.qmd`’s caveat (fully
+supported by the 3/3 identical result) and add an explicit untested-gap
+note to the reference-comparison document instead, rather than following
+the plan’s literal “remove from both” text. Added a new “Structural
+verification” section to the vignette documenting the comparator and its
+results; updated its “Verdict” section; added a plain-language
+`NEWS.Rmd` entry (the plan’s own “first genuinely user-facing
+consequence” framing). Verified: both `.qmd` files render clean via
+`quarto render`;
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) 0
+errors / 2 WARNINGs / 2 NOTEs, all 4 unchanged from Track C’s own
+baseline (no new warnings/notes); full clean regression 0 failed / 0
+error / 39 warnings / 6437 passed – note the previously-documented
+`test_wordlist_coverage.R` “1 pre-existing failure” did NOT reproduce
+this session (flagged, not investigated, see Learning 668);
+`lintr::lint_package()` 0 lints (1 `undesirable_function_linter` hit on
+the new [`source()`](https://rdrr.io/r/base/source.html) call,
+suppressed via `# nolint start/end`, matching
+`data-raw/fgSEValidation.R`’s own established precedent for the
+identical pattern). All 4 tracks of the kinship2 structural-comparison
+plan are now DONE. **CI skip-vs-run behavior for Track C’s live-kinship2
+tests still needs visual confirmation once these commits (plus
+S633-S635’s) are pushed** (plan §5’s own requirement) – not yet done as
+of this entry. See `CHANGELOG.md`.
+
 ## Active
 
 **Pedigree Diagram: consider hiding the mating-unit node marker to match
@@ -410,21 +652,34 @@ future session can verify the badge went green after the owner
 registers, but cannot perform the registration itself.
 
 (found S582, 2026-08-14, incidental to the `pb_diagram_legend.png`
-reshoot above, READY, Effort S – not verified)
-**`vignettes/articles/pedigree-diagram-screenshots.R`’s other 3
-non-base-fixture screenshots may have gone stale by the same
-default-flip mechanism as `pb_diagram_legend.png` above.**
-`diagram_show_names.png`, `diagram_affected_shading.png`, and
-`diagram_twin_connectors.png` are each captured without ever setting
-`pedigreeEdgeStyle` (see the script’s own “3.”, “4.”, “5.” sections) –
-like `pb_diagram_legend.png` before this session’s fix, each therefore
-renders whatever the app’s zero-interaction default is, which Track 2
-(S574) changed from “direct” to “rectilinear”. If any of these 3
-committed images still show diagonal (`direct`-style) edge routing, they
-are stale in the same way `pb_diagram_legend.png` was. Not checked this
-session (out of the pb_diagram_legend.png item’s own scope) – a future
-session should open each and confirm, reshooting via the same
-script/technique if stale.
+reshoot above) **RESOLVED S630 (2026-08-25):** the staleness fear was
+confirmed real (all 3 – plus `pb_diagram_legend.png` and
+`diagram_rectilinear_edge_style.png` – had drifted to the pre-Track-2
+“direct” default), but re-running `pedigree-diagram-screenshots.R`
+surfaced something more serious first: the Diagram tab’s own default
+(Rectilinear) edge style crashed with `Error: subscript out of bounds`
+on a realistic focal-animal trim of the real bundled fixture – a real,
+live regression, not a screenshot artifact (confirmed via a fresh
+package reinstall from current `HEAD` and a standalone
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+run with full server-log capture, ruling out both a stale-build false
+alarm and a screenshot-harness artifact). Root-caused to
+`.detectStraight()` inside `.resolveEdgeNodeCollisions()`
+(`R/makePedigreeDiagramData.R`, introduced by commit `c7bdbe4b`, issue
+\#160 Track 2): `xOf`/`yOf` were named ATOMIC vectors, and `[[` on an
+atomic vector throws for an unmatched name instead of returning `NULL`,
+so the existing `is.null(yf)`/`is.null(yt)` guard (written for list
+semantics) never fired whenever an edge referenced a node id genuinely
+absent from `nodes` – exactly what a real ancestors+descendants
+focal-trim union can produce. Fixed via full strict-TDD RED-\>GREEN (2
+new tests: a minimal synthetic dangling-reference fixture, and a
+real-fixture regression pinning the exact production crash),
+`AskUserQuestion`-gated at PRE-RED/RED-\>GREEN/GREEN-\>REFACTOR (owner
+confirmed no refactor needed – the fix is a 2-line change,
+`stats::setNames(...)` -\> `as.list(stats::setNames(...))`). All 5
+screenshots regenerated against the fixed app and confirmed correct. Not
+filed as a GitHub issue, matching the established “found-and-fixed same
+session” precedent. See `CHANGELOG.md` and `PROJECT_LEARNINGS.md`.
 
 (found S508, 2026-08-10, re-surfaced S559, 2026-08-13, **RESOLVED
 S561**. **`HANDOFFS.md`’s declared `methodology_trim.py` regenerated

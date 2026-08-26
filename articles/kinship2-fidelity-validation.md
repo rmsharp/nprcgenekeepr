@@ -63,7 +63,8 @@ recomputing them at render time.
 # screenshots):
 #   Rscript data-raw/kinship2FidelityValidation.R
 # Writes PNGs to vignettes/articles/kinship2-fidelity-validation-img/ and
-# prints the numeric summary below to the console.
+# prints the numeric and structural-comparison summary below to the
+# console.
 ```
 
 ## Track A – X-chromosome kinship (Table S2)
@@ -237,6 +238,37 @@ distinct color and width in nprcgenekeepr – and nprcgenekeepr’s marker
 survives the more complex rectilinear dogleg reroute exactly as it does
 the simple direct case.
 
+## Structural verification
+
+Tracks B and C’s diagram images above are, on their own, still just two
+independently-rendered pictures placed side by side – a reader has to
+trust that they show the same family structure. The [kinship2
+structural/ topological comparison
+plan](https://github.com/rmsharp/docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md)
+closes that gap: `.extractKinship2Structure()` and
+`.extractNprcStructure()` (both `@noRd`, zero `kinship2` dependency)
+pull the real-individual-level parent-child edge set and mate-pair set
+out of kinship2’s own `pedigree` object and out of
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+output respectively – deliberately at the level of *who is related to
+whom*, not *which duplicate copy of a multi-union individual each
+package’s layout happens to draw* (the two packages duplicate different
+individuals for the same union above: `Y` in kinship2’s rendering, `A`
+in nprcgenekeepr’s). `.comparePedigreeStructures()` then diffs the two
+edge sets directly.
+
+Run against this article’s own Track B and Track C fixtures, live:
+
+| Fixture | Structurally identical to kinship2? |
+|----|----|
+| Track B, full (16 subjects) | **Yes** |
+| Track B, shrunk (8 subjects) | **Yes** |
+| Track C (9 subjects, consanguineous dogleg) | **Yes** |
+
+No discrepancy was found on any of the three. This is the first time any
+code – not a caption, not a reader’s own visual comparison – has checked
+that these diagrams describe the same family structure kinship2 does.
+
 ## Caveats carried forward
 
 - **kinship2 is not a package dependency.** Nothing above runs at
@@ -277,12 +309,14 @@ MZ-twin correction and its propagation to a descendant. Track B’s
 [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md)
 reproduces kinship2’s exact surviving subject set and exact `bitSize`
 trajectory, and the shrunk pedigrees are visually the same 2 family
-groups. Track C’s consanguineous-mating marker flags the same union
-kinship2 flags, under both edge styles, using an independently-converged
-duplicate-node convention for the same underlying multi-union case
-kinship2 also duplicates. All 3 tracks are cleared as faithful
-reproductions of the kinship2 supplement’s own results, not just
-internally self-consistent implementations.
+groups – now also confirmed by a real edge-set diff ([Structural
+verification](#sec-structural)), not just a visual read. Track C’s
+consanguineous-mating marker flags the same union kinship2 flags, under
+both edge styles, using an independently-converged duplicate-node
+convention for the same underlying multi-union case kinship2 also
+duplicates – also structurally confirmed identical. All 3 tracks are
+cleared as faithful reproductions of the kinship2 supplement’s own
+results, not just internally self-consistent implementations.
 
 ## References
 
