@@ -16,6 +16,25 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S636: push Track A-D's commits (first time), discover and document R-CMD-check.yaml is red on master
+- **Deliverable:** pushed `master` (owner-approved via `AskUserQuestion`) — the first time Track
+  A/B/C/D's commits (31 prior + this session's) ever reached CI. Confirmed good news first: Track
+  C's 3 live-kinship2 end-to-end tests skip cleanly on every platform (`{kinship2} is not installed
+  (6): ...`), exactly as designed — the plan §5 gotcha outstanding since S635 is now resolved.
+  Also discovered, not assumed: `R-CMD-check.yaml` fails on all 5 matrix jobs, root-caused via
+  direct job-log inspection on 2 platforms to `r-lib/actions/check-r-package@v2`'s default
+  `error-on: "warning"` (not overridden in this project's workflow file) tripping on Track C's
+  already-accepted "unstated dependencies in tests: kinship2" WARNING (`PROJECT_LEARNINGS.md`
+  Learning 667) — a real, previously-unverified consequence, since these commits had never reached
+  CI before. Presented via `AskUserQuestion`; owner directed leaving CI red for a dedicated future
+  session rather than editing the workflow file this session (a process/infra decision outside
+  Track D's own scope). Initially filed as issue #165, then closed same-session per live
+  owner correction ("do not file GitHub issues for CI breaks -- those should be fixed as found or
+  deferred to a future session via the backlog") — tracked instead as a `BACKLOG.md` "Up Next"
+  item with full root-cause detail and 4 candidate fix approaches, none decided. Added
+  `PROJECT_LEARNINGS.md` Learning 669.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · [ad hoc] S636: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S635 precedent)
 - **Deliverable:** logging this session's own `HANDOFFS.md` receipt `commit` field fix (`36653242`
   mechanical, `00a1d6d2` documentation, `8463dbd9` close-out) as its own ledger entry, since the fix

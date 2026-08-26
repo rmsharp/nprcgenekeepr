@@ -4,6 +4,27 @@
 future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.md` Phase 0.)*
 
 ## Up Next
+- [ ] **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636, 2026-08-26,
+      DECISION NEEDED on the fix approach, Effort S). `r-lib/actions/check-r-package@v2`'s default
+      `error-on: "warning"` (not overridden in this project's workflow file) trips on Track C's
+      already-accepted "unstated dependencies in tests: kinship2" WARNING (`PROJECT_LEARNINGS.md`
+      Learning 667) -- the first time Track A/B/C/D's commits ever reached CI (the branch sat 31+
+      commits unpushed until S636 pushed them). Confirmed NOT a problem: Track C's live-kinship2
+      tests skip cleanly in CI on every platform, exactly as designed. Owner directed (via
+      `AskUserQuestion`, S636) to leave CI red for a dedicated future session rather than have
+      S636 itself edit the workflow file. Initially filed as issue #165, then closed same-session
+      per live owner correction ("do not file GitHub issues for CI breaks -- fix as found or defer
+      to the backlog") -- this item is the sole tracker going forward. 4 candidate fix approaches,
+      none decided: (1) add `error-on: "error"` to the `check-r-package@v2` `with:` block in
+      `.github/workflows/R-CMD-check.yaml:97-100`, overriding the default so WARNINGs no longer
+      fail CI -- matches the project's own already-ratified acceptance of this WARNING, but loosens
+      the bar for ALL future warnings, not just this one; (2) narrower allowlisting of just this one
+      WARNING message (would need custom `rcmdcheck::rcmdcheck()` scripting in place of the action,
+      a bigger change); (3) redesign Track C's kinship2 usage to avoid the WARNING entirely (e.g.
+      indirect namespace dispatch) -- already considered and explicitly rejected by the owner in
+      S635 in favor of "accept and document," so re-opening this needs a fresh owner decision; (4)
+      hold as a known state -- not sustainable long-term but not urgent-unsafe (the package itself
+      is not broken: 0 errors, both locally and in CI). See `PROJECT_LEARNINGS.md` Learning 669.
 - [ ] **Build a real structural/topological pedigree-diagram comparison algorithm against
       kinship2 -- the current "comparison" is 2 static images and prose, not verified equivalence**
       (found S631, 2026-08-25, owner-directed correction -- "you are still publishing comparisons
