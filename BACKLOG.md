@@ -28,29 +28,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `skip_if_not_installed("kinship2")` live tests flipped from *skip* to *actually run*, on all 5
       platforms, for the first time ever, with 0 failures anywhere (grepped the full run log for
       `FAIL` -- none). See `PROJECT_LEARNINGS.md` Learning 670.
-- [ ] **`test-coverage.yaml` fails intermittently on the known chromote Chrome-launch flake --
-      never received the Chrome-provisioning fix `R-CMD-check.yaml`/`R-CMD-check-scheduled.yaml`
-      both have** (found S637, 2026-08-26, incidental to watching CI for the item above -- READY,
-      Effort S, matches an already-proven pattern). Confirmed via direct job-log inspection (2
-      consecutive runs, both on the exact same commits as the item above): fails inside
-      `test_positionMatingUnitForest-1645.R`'s `getLiveRenderedPositions()` at
-      `chromote:::launch_chrome()` -> `startup()` -> `rlang::abort()`, the identical failure
-      signature S616/S618/S619/S629 already diagnosed and fixed twice elsewhere. Root cause
-      confirmed directly: `.github/workflows/test-coverage.yaml` has **zero** Chrome-provisioning
-      steps at all (no `browser-actions/setup-chrome@v2`, no `CHROMOTE_CHROME`, no
-      `chromote::find_chrome()` pre-flight assertion) -- relies entirely on ambient/unpinned Chrome
-      discovery, the exact failure mode class the other 2 workflows were fixed against. Also
-      confirmed: `tests/testthat/test_r_cmd_check_workflow_chrome_setup.R` (the regression guard for
-      this exact defect class) only loops over `c("R-CMD-check.yaml", "R-CMD-check-scheduled.yaml")`
-      -- `test-coverage.yaml` is invisible to it, so even a future fix needs the guard's own
-      `workflow_files` vector extended or it can silently regress again unguarded. A future session
-      should port the identical 3-step pattern (pinned `setup-chrome@v2` + `CHROMOTE_CHROME` +
-      `chromote::find_chrome()` pre-flight) into `test-coverage.yaml`, matching S629's own precedent
-      exactly, and add it to the guard test's `workflow_files` vector in the same session. Not fixed
-      S637 -- unrelated to that session's own negotiated scope (the `R-CMD-check.yaml` kinship2
-      WARNING/`vignettes/figure` NOTE fix above), so flagged rather than folded in, per the
-      established "report, don't fix mid-session" precedent for an incidentally-discovered,
-      unrelated gap (`PROJECT_LEARNINGS.md` Learning 382).
 - [ ] **`R-CMD-check.yaml`'s `ubuntu-latest (oldrel-1)` leg failed at the `setup-r@v2` step itself,
       before any package code ran** (found S638, 2026-08-26, incidental to watching CI while
       root-causing the temp-detritus NOTE -- not chased, Effort unknown). One real CI run
