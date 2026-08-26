@@ -18,6 +18,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 637 Did
+**Deliverable:** Fix the `R-CMD-check.yaml` CI break (`BACKLOG.md` "Up Next" top item, found S636) to
+a genuinely clean baseline — owner-directed scope: "broader" (0 errors/0 warnings/0 notes in CI, not
+just a green checkmark). (IN PROGRESS)
+**Started:** 2026-08-26
+**Status:** Session claimed. Phase 0 orientation complete; PRE-RED scope resolved via 2
+`AskUserQuestion` rounds (user first corrected the framing from "just make CI green" to "broader --
+maintain a clean base", then confirmed treating a 3rd, newly-found, unreproduced NOTE as a separate
+BACKLOG item rather than chasing it this session). Scope: (1) add `kinship2` to `DESCRIPTION`
+`Suggests:` (eliminates the "unstated dependencies in tests" WARNING — confirmed via grep it was
+simply never declared, not a rejected fix); (2) `git rm` the dead tracked `vignettes/figure/
+plot-focal-age-sex-pyramid-1.png` leftover (eliminates the long-standing knitr-leftover NOTE —
+confirmed dead via grep, the same-named vignette chunk regenerates its own plot live); (3) file the
+newly-found `org.chromium.Chromium.*` temp-detritus NOTE (ubuntu-latest oldrel-1 only, single
+occurrence, no prior documentation) as a new `BACKLOG.md` item for a future session, not fixed here.
+Work beginning: RED tests for (1) and (2) not yet written.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 635 Handoff Evaluation (by Session 636)
 **Score: 9/10.** **What helped:** `next_steps`/`active_task` named exactly what this session did
 ("Implement Track D ... port the `$go_to()` chromote fix into `data-raw/

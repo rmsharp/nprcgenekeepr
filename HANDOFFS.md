@@ -136,6 +136,25 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S637
+date: 2026-08-26
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix the R-CMD-check.yaml CI break to a genuinely clean baseline (owner-directed
+  "broader" scope -- 0 errors/0 warnings/0 notes in CI, not just a green checkmark), per
+  BACKLOG.md's "Up Next" top item (found S636).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(claim stub -- filled at close-out)
+
+```handoff
 session: S636
 date: 2026-08-25/26
 status: complete
