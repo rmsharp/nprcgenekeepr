@@ -17,6 +17,22 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-26 · \[ad hoc\] S641: record CHANGELOG.md entry for S640’s HANDOFFS.md sha-fix action (reconcile-on-read)
+
+- **Deliverable:** Phase 0 reconcile found 1 commit past the
+  `CHANGELOG.md` frontier (`a77d6a5c`) with no ledger entry: `d2ecc8e1`,
+  S640’s own close-out commit (writing the final `HANDOFFS.md` receipt +
+  `SESSION_NOTES.md`). This is the familiar self-reference gap this
+  project’s precedent already names – a close-out commit can’t cite its
+  own sha in the receipt it writes, so the receipt’s `commit:` field is
+  left `pending` and the commit itself postdates the last
+  `CHANGELOG.md`-touching commit. Backfilled: fixed the S640 receipt’s
+  `commit:` field from `pending` to `d2ecc8e1` (this session, prior to
+  this entry’s own commit). `HANDOFFS.md` frontier check found no gap
+  (`d2ecc8e1` is already its own frontier). No code, test, or workflow
+  file touched.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · \[ad hoc\] S640: close `ubuntu-latest (oldrel-1)` `setup-r@v2` CI flake – confirmed transient, no code/config change
 
 - **Deliverable:** `BACKLOG.md` “Up Next” item found S638 (incidental to

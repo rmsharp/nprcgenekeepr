@@ -205,7 +205,7 @@ gotchas: (1) BACKLOG.md has 7 accumulated [x]-checked DONE items awaiting a swee
 runtime_smoke: n/a -- docs-only, no code/workflow file touched this session.
 changelog_ref: 2026-08-26 S640 entries, CHANGELOG.md ("close ubuntu-latest (oldrel-1) setup-r@v2 CI
   flake" and the reconcile-backfill entry above it)
-commit: pending
+commit: d2ecc8e1
 ```
 
 ``` handoff
