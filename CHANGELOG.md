@@ -17,6 +17,58 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-26 · \[BL-N\] S639: provision pinned Chrome for `test-coverage.yaml`’s chromote-dependent tests
+
+- **Deliverable:** `BACKLOG.md` “Up Next” item found S637, incidental to
+  watching CI for the `R-CMD-check.yaml` fix – `test-coverage.yaml`
+  (which runs `covr::package_coverage()`, executing this package’s full
+  test suite including `test_positionMatingUnitForest.R`’s
+  `getLiveRenderedPositions()` call) never received the chromote
+  Chrome-provisioning fix
+  `R-CMD-check.yaml`/`R-CMD-check-scheduled.yaml` both have
+  (S616/S618/S619/S629), so it hit the identical
+  ambient-Chrome-discovery flake (`chromote:::launch_chrome()` -\>
+  `startup()` -\>
+  [`rlang::abort()`](https://rlang.r-lib.org/reference/abort.html)).
+  Ported the identical 3-step pattern (pinned
+  `browser-actions/setup-chrome@v2`
+  - `CHROMOTE_CHROME` export +
+    [`chromote::find_chrome()`](https://rstudio.github.io/chromote/reference/find_chrome.html)
+    pre-flight assertion), with one deliberate deviation: no `if:` guard
+    on any step, since `test-coverage.yaml` runs a single, unconditional
+    `ubuntu-latest` job with no `strategy.matrix` at all (unlike the
+    other 2 workflows) – referencing `matrix.config.os` in an `if:` on a
+    non-matrix job is an invalid GitHub Actions expression, not a
+    harmless no-op. Full strict TDD: RED (9 assertions failed for the
+    right reason) -\> GREEN (minimum implementation, 33/33 guard-test
+    expectations pass) -\> REFACTOR skipped by owner choice (diff
+    already minimal). Extended
+    `tests/testthat/test_r_cmd_check_workflow_chrome_setup.R` with 3 new
+    `test_that()` blocks – a separate section, not folded into the
+    existing `R-CMD-check.yaml`/`-scheduled.yaml` loop, for the same
+    no-matrix/different-anchor-step reasons above (that loop’s own
+    macos-latest-skip test and `check-r-package@v2` ordering anchor
+    don’t apply to this workflow). Verified: full clean regression 0
+    failed/0 error/6453 passed (unchanged baseline);
+    [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+    0 errors, 1 WARNING + 1 NOTE (both confirmed pre-existing/unrelated
+    – non-portable filename, `scratchpad/`); `lintr::lint_package()` 0
+    lints on touched files. Commit: `c6abedf5`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-26 · \[ad hoc\] S639: record CHANGELOG.md entry for the HANDOFFS.md sha-fix action itself (matching S607/S623/S629-S638 precedent)
+
+- **Deliverable:** Phase 0 reconcile found `92c717d7` (S638’s own
+  close-out commit, writing the final `HANDOFFS.md` receipt +
+  `SESSION_NOTES.md`) past the `CHANGELOG.md` frontier with no ledger
+  entry — the same self-reference gap this project’s precedent already
+  names (a close-out commit cannot cite its own sha at write time),
+  anticipated verbatim by S638’s own gotcha (3). Fixed the S638
+  receipt’s `commit:` field from `cd4f968c` to `92c717d7` (commit
+  `6e2a3fe2`), and this entry logs that fix commit itself, per the
+  established two-step pattern.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · \[BL-N\] S638: root-cause and fix the `checking for detritus in the temp directory` NOTE (`org.chromium.Chromium.*`, all 3 `ubuntu-latest` legs)
 
 - **Deliverable:** `BACKLOG.md` item found S636, confirmed reproducing

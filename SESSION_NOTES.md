@@ -28,6 +28,22 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 639 Did
+
+**Deliverable:** Fix `test-coverage.yaml`’s missing Chrome-provisioning
+steps (`BACKLOG.md` “Up Next” top item, found S637 incidental to
+watching CI, matches the already-proven
+`R-CMD-check.yaml`/`R-CMD-check-scheduled.yaml` 3-step pattern). (IN
+PROGRESS) **Started:** 2026-08-26 **Status:** Session claimed. Phase 0
+orientation complete (ledger reconcile found and fixed one gap: S638’s
+own close-out commit `92c717d7` was missing from `CHANGELOG.md`/cited
+the wrong sha in its `HANDOFFS.md` receipt – fixed via commits
+`6e2a3fe2`/`d6c06378`, the established self-reference-gap 2-commit
+pattern). User picked this item over 3 other READY candidates via
+`AskUserQuestion`. Work beginning. **Ledger:** `CHANGELOG: pending` –
+set at claim; this session’s actions are recorded in `CHANGELOG.md` at
+Phase 3F.
+
 ### What Session 638 Did
 
 **Deliverable:** Root-caused and fixed the `org.chromium.Chromium.*`
