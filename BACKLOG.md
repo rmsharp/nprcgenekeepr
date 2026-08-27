@@ -73,6 +73,48 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (banner for partial suppression, empty-state message for all-isolated) + e2e coverage,
       including the Focal-Animal-trim-to-one-isolated-individual scenario -- plan's §3 Dragon 4,
       §4 Phase 3.
+- [ ] **Mating-unit marker (dot) renders on the sire's own symbol instead of centered between sire
+      and dam; mates are not visibly spread apart, unlike kinship2** (found live 2026-08-27,
+      owner-caught via direct visual review of the corrected Track B full-fixture image pair (S645
+      post-close-out, commit `1784abf6`); root-caused by a dedicated investigation this session --
+      READY for a design/scoping session, Effort M) -- kinship2's own `align.pedigree()` spreads
+      each mated pair apart and drops the descent line to their children from the midpoint between
+      the two symbols; `makePedigreeMatingLayout()` draws each pair close together with the
+      mating-unit `__union_` node's own x essentially coincident with the sire's (the anchor's) x.
+      **Empirically confirmed across every mated pair in the Track B full fixture** (P1×P2,
+      P3×P4, C4×P6, M1×G3 all show the identical pattern): the union's x lands within 0.001 raw
+      units (a deterministic de-collision epsilon) of the anchor's own x, and the non-anchor mate
+      sits only `minSep * 0.4` raw units away (48 scaled units, vs. node `size = 25`) -- a small,
+      fixed, formula-driven offset, not a kinship2-comparable visual gap.
+      **Root cause, current code (Walker/BJL `.positionMatingUnitForest()`,
+      `R/makePedigreeDiagramData.R:627-851`, post issue #141/S620 cutover):** Tier 2
+      (`unitX[[u]] <- mean(tier1X[kids])`, `:757-760`) centers the union on the SAME child span
+      Tier 1's BJL apportioning already centers the anchor on -- so anchor-x and union-x coincide
+      by construction; Tier 3's `derivedX()` (`:792-801`) then places a "qualifying" free-pass
+      mate only `minSep * 0.4` raw units from the anchor, not at any comfortable-gap target.
+      **This is NOT a regression and NOT the same gap as prior tracks that sound related** (do not
+      cite them as "the fix that didn't work" -- they addressed different things and are gone by
+      construction): Track 3 (S571, `sweepMinSep()`/parent-span clamp) only ever guaranteed
+      no-exact-overlap among genuinely-recursively-positioned nodes, and its own mechanism is
+      explicitly deleted by the Walker/BJL rewrite (`R/makePedigreeDiagramData.R:610-615`
+      confirms "gone by construction"); Track 6 (S578, "child-centered mating-unit position") is
+      about centering the union among its OWN CHILDREN, not between its two parents -- it
+      deliberately moved away from parent-centering, and its surviving formula (Tier 2 above) is
+      what actually produces the anchor/union x-coincidence. Also distinct from 2 closed,
+      unrelated issues: [#161](https://github.com/rmsharp/nprcgenekeepr/issues/161) (the dot's
+      own visibility -- "keep the dot," S627, says nothing about position) and
+      [#145](https://github.com/rmsharp/nprcgenekeepr/issues/145) (sire/dam left-right ordering
+      convention, not gap size or centering). Not previously filed anywhere (BACKLOG.md or GitHub
+      issues) as actionable remediation -- only documented as a vignette caveat until now
+      (`vignettes/articles/kinship2-fidelity-validation.qmd` §Graphic fidelity / §Caveats carried
+      forward, S645). **A future session should treat this as a design/scoping session first**
+      (matching this project's own established practice for touching
+      `.positionMatingUnitForest()` -- Tracks 1-6 and the Walker/BJL migration itself all went
+      through dedicated planning), resolving at minimum: (a) should the union's x be genuinely
+      centered between the two PARENTS' own x rather than derived from children; (b) should Tier
+      3's `derivedX()` offset widen toward a kinship2-comparable visual gap; (c) how either change
+      interacts with Tier 1's BJL apportioning and the existing de-collision/sweep passes, and
+      Track 5's D1/D2 orthogonality invariants.
 - [x] **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636, 2026-08-26).
       **RESOLVED S637, 2026-08-26, per owner-directed "broader" scope (a genuinely clean baseline,
       not just a green checkmark):** the actual root cause was simpler than any of the 4 candidate

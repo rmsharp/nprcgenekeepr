@@ -16,6 +16,21 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S645 (post-close-out): file the mating-unit dot/mate-spacing finding as a BACKLOG remediation item, root-caused
+- Owner directed filing the graphic-fidelity gap named in the previous entry's own caption fix as
+  the next action item. A dedicated read-only investigation (Explore agent) confirmed: (1) not a
+  duplicate of Track 3 (S571, `sweepMinSep()`) or Track 6 (S578, child-centered union position) --
+  both address different things and Track 3's own mechanism is deleted by the Walker/BJL rewrite
+  (issue #141, S620); (2) not covered by closed issues #161 (dot visibility) or #145 (sire/dam
+  left-right ordering); (3) empirically reproduced across every mated pair in the Track B full
+  fixture -- the union node's x coincides with the anchor's (sire's) x to within a deterministic
+  de-collision epsilon, and the non-anchor mate sits only `minSep * 0.4` raw units away, root-caused
+  to `.positionMatingUnitForest()`'s current Tier 2/Tier 3 formulas
+  (`R/makePedigreeDiagramData.R:757-760`, `:792-801`) -- citations spot-verified directly against
+  source before trusting the agent's report. Filed to `BACKLOG.md` "Up Next" as a design/scoping
+  item (not yet implemented), matching this project's established practice for touching
+  `.positionMatingUnitForest()`.
+
 ### 2026-08-27 · [ad hoc] S645 (post-close-out): correct an overclaiming caption/prose in kinship2-fidelity-validation.qmd -- "matches kinship2's own convention" implied visual layout parity that does not exist
 - User caught this directly after S645's own close-out: the Track B full-fixture nprcgenekeepr
   image caption said "this rendering now matches kinship2's own convention," but the two packages'
