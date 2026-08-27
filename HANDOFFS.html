@@ -141,6 +141,54 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <p><strong>Archived 17 record(s), 2026-08-12 → 2026-08-13</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-13.html"><code>docs/archive/HANDOFFS-through-2026-08-13.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p><strong>Archived 21 record(s), 2026-08-13 → 2026-08-14</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-14.html"><code>docs/archive/HANDOFFS-through-2026-08-14.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p>This file currently holds <strong>19</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
+<pre class="handoff"><code>session: S646
+date: 2026-08-27
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Design/scoping document for the mating-unit dot/mate-spacing gap (BACKLOG.md
+  "Up Next", filed S645) -- docs/planning/pedigree-diagram-track7-mate-spacing-plan.md, ratified
+  by the owner via AskUserQuestion ("Ratify as scoped"). Resolves all 3 named judgment calls: (a)
+  center the union node between its two parents for qualifies()-gated pairs only; (b) widen Tier
+  3's derivedX() offset to minSep exactly (not an arbitrary constant); (c) resolved by construction
+  -- restricting the change to the pre-existing qualifies() gate means no new BJL/de-collision/
+  Track 5 D1-D2 interaction to analyze. Phase 1 implementation READY, next pickup.
+what_was_done: Read .positionMatingUnitForest()/.positionTreeApportion() directly against current
+  HEAD. Dumped and read kinship2's own installed source (alignped1/alignped3/alignped4) rather than
+  assume its algorithm. Ran 3 empirical R probes against real fixtures (Track B: 4/4 qualifying
+  units; the real 375-individual fixture: 60/237=25.3% qualifying, 22/209=10.5% polygamous
+  anchors). Drafted the design document, then ran a 4-agent adversarial-verification Workflow
+  (~390K tokens) that independently re-checked every citation/claim against primary sources before
+  presenting for ratification -- found 1 material error (kinship2's real achieved spousal
+  separation is exactly minSep=1.0, never the 1.414 the first draft claimed -- align[2] is a
+  penalty weight, not a target distance), 1 material citation error with no effect on the
+  conclusion (a D1/D2 line citation copied verbatim from Track 6's own plan, unverified), 3 minor
+  cosmetic mismatches, 0 discrepancies in the empirical numbers. Independently re-confirmed the
+  kinship2 finding myself directly (ran align.pedigree() sweeping align[2] 0.001-1000 on a
+  hand-built trio) before trusting it. Corrected the document (6 fixes), added a permanent §9
+  disclosing the correction. Ratified via AskUserQuestion (3 options: ratify as scoped / go broader
+  now / hold). Updated BACKLOG.md's own item to record the ratified scope. Commits: 0ee0b332
+  (Phase 0 ledger backfill), 9096ce76 (Phase 1B claim), plus this close-out's own commits below.
+next_steps: Phase 1 implementation of the ratified design is READY -- exact scope in
+  docs/planning/pedigree-diagram-track7-mate-spacing-plan.md §6 (Migration Path)/§7 (Verification
+  Plan). The implementing session's own Pre-RED empirical validation must resolve the
+  collision-headroom question §1.4's preliminary probe raised (live-render check, per Learning 641's
+  methodology) before shipping an exact multiplier -- this is not optional cleanup, it is the one
+  thing the design session deliberately left for implementation to verify empirically.
+key_files: docs/planning/pedigree-diagram-track7-mate-spacing-plan.md (the ratified design, all
+  10 sections), R/makePedigreeDiagramData.R:757-760/792-801 (Tier 2/Tier 3, the implementation
+  session's own starting point), BACKLOG.md (the updated item, "Design RATIFIED S646"),
+  PROJECT_LEARNINGS.md Learning 678/679 (the 2 findings from this session's own adversarial
+  verification)
+gotchas: (1) Do not re-litigate the ratified scope (qualifies()-gated only, target=minSep) --
+  Phase 1 implementation verifies it works, it does not re-decide what to build. (2) The
+  collision-headroom live-render check is a real, not-yet-resolved open question, not a formality.
+  (3) Do not generalize beyond qualifies()-gated units without a fresh dedicated measurement
+  session (Alternative B, deferred not rejected). (4) lint.yaml CI is still red (pre-existing,
+  unaffected, already-tracked Housekeeping item).
+runtime_smoke: n/a -- docs-only planning session, no R/ code changed, nothing to launch.
+changelog_ref: see CHANGELOG.md 2026-08-27 entries, S646
+commit: pending</code></pre>
 <pre class="handoff"><code>session: S645
 date: 2026-08-27
 status: complete
