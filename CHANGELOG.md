@@ -17,6 +17,112 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-27 · \[ad hoc\] S645 (post-close-out): file the mating-unit dot/mate-spacing finding as a BACKLOG remediation item, root-caused
+
+- Owner directed filing the graphic-fidelity gap named in the previous
+  entry’s own caption fix as the next action item. A dedicated read-only
+  investigation (Explore agent) confirmed: (1) not a duplicate of Track
+  3 (S571, `sweepMinSep()`) or Track 6 (S578, child-centered union
+  position) – both address different things and Track 3’s own mechanism
+  is deleted by the Walker/BJL rewrite (issue \#141, S620); (2) not
+  covered by closed issues \#161 (dot visibility) or \#145 (sire/dam
+  left-right ordering); (3) empirically reproduced across every mated
+  pair in the Track B full fixture – the union node’s x coincides with
+  the anchor’s (sire’s) x to within a deterministic de-collision
+  epsilon, and the non-anchor mate sits only `minSep * 0.4` raw units
+  away, root-caused to `.positionMatingUnitForest()`’s current Tier
+  2/Tier 3 formulas (`R/makePedigreeDiagramData.R:757-760`, `:792-801`)
+  – citations spot-verified directly against source before trusting the
+  agent’s report. Filed to `BACKLOG.md` “Up Next” as a design/scoping
+  item (not yet implemented), matching this project’s established
+  practice for touching `.positionMatingUnitForest()`.
+
+### 2026-08-27 · \[ad hoc\] S645 (post-close-out): correct an overclaiming caption/prose in kinship2-fidelity-validation.qmd – “matches kinship2’s own convention” implied visual layout parity that does not exist
+
+- User caught this directly after S645’s own close-out: the Track B
+  full-fixture nprcgenekeepr image caption said “this rendering now
+  matches kinship2’s own convention,” but the two packages’ mate-line
+  layout is visibly different (kinship2 spreads a mated pair apart with
+  the descent line centered between them; nprcgenekeepr draws pairs
+  close together with the mating-unit dot positioned at the sire’s own
+  symbol) – confirmed by directly re-viewing both images. The claim was
+  only ever meant to scope “which individuals are placed on the diagram”
+  (P5 now omitted by both), not general visual/layout convention.
+- Confirmed pre-existing and unrelated to this session’s work, not a
+  regression: Phase 1’s diff (`fc5ac928`) never touched mate-positioning
+  code (`.positionMatingUnitForest()`), and `trackB-kinship2-full.png`
+  has been unchanged since commit `d0390201` (S566, the article’s
+  original publish) – the layout difference predates the whole
+  P5-suppression plan.
+- Corrected the flagged caption + fig-alt, added an explicit caveat
+  paragraph in Track B’s own Graphic fidelity section naming the
+  specific layout difference, a new bullet in “Caveats carried forward”
+  stating it durably, and clarifying sentences in “Structural
+  verification” and “Verdict” that “structurally identical”/“PASS” refer
+  to the individual/edge/mate-pair sets, never to mate- line spacing or
+  node placement. `quarto render` clean; all referenced section anchors
+  (`#sec-trackb`, `#sec-structural`, `#sec-caveats`) confirmed to exist.
+
+### 2026-08-27 · \[issue \#164\] S645: Phase 2 – correct test_comparePedigreeStructure.R + kinship2-fidelity-validation.qmd for the P5-suppression fix
+
+- **Deliverable:** implemented Phase 2 (test/article correction) of the
+  ratified
+  `docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`
+  – following Phase 1’s already-shipped renderer fix (S644, commit
+  `fc5ac928`), this session corrected everything the plan’s own
+  §2.4/§2.5 identified as now-stale, plus one break the plan’s inventory
+  missed.
+- `tests/testthat/test_comparePedigreeStructure.R`: rewrote the 2 Track
+  B blocks §2.4 named (`identical = FALSE`/`individualsOnlyInB = "P5"`
+  -\> `identical = TRUE`/both individuals-diff fields empty;
+  `.formatStructuralDiscrepancy()`’s report -\> `expect_null()`),
+  reworded stale doc-comment prose. **Found and fixed a 3rd break not in
+  the plan’s own inventory:** a synthetic “ISO” fixture test (hand-built
+  pedigree, not `.pedTrackBFixture()`) exercises the identical isolation
+  predicate and needed the same update – a plan-inventory gap, not a
+  plan error (see `PROJECT_LEARNINGS.md` Learning 677). Full clean
+  regression after: `failed=1, error=0`, confined to the 1 pre-existing
+  unrelated `test_wordlist_coverage.R` failure – this clears the red
+  `R-CMD-check.yaml`/`test-coverage.yaml` CI that Phase 1 alone
+  predictably left red.
+- `vignettes/articles/kinship2-fidelity-validation.qmd`: corrected the 4
+  passages + 1 results-table row + 2 fig-alt captions §2.5 named,
+  changed the Verdict from “PASS, with one known and expected
+  difference” to plain “PASS” (all 3 tracks now structurally identical
+  to kinship2). `quarto render` clean.
+- `data-raw/kinship2FidelityValidation.R` re-run; regenerated only
+  `trackB-nprc-full.png` (confirmed via `git status` – every other image
+  byte-identical, unaffected), visually confirmed 15 nodes (not 16),
+  structurally matching kinship2’s own rendering.
+- **Incidentally found, NOT fixed (out of scope, Track C not Track B):**
+  the article’s Track C table claims 3 marked (vermillion) edges for
+  `rectilinear` style; a live run prints 2. Confirmed pre-existing via
+  `git status` (the committed `trackC-nprc-rectilinear.png` is
+  byte-identical to a fresh regeneration, unaffected by this session) –
+  filed to `BACKLOG.md` Housekeeping.
+- `lintr::lint_package()` (loaded first): 0 lints. `BACKLOG.md`’s
+  P5-suppression item updated (Phase 2 DONE, Phase 3 next pickup) + new
+  Housekeeping item for the Track C finding. `PROJECT_LEARNINGS.md`
+  Learning 677 recorded; `CLAUDE.md` learnings-count pointer updated
+  (676-\>677, S644+-\>S645+).
+
+### 2026-08-27 · \[ad hoc\] S645 Phase 0: HANDOFFS.md ledger reconcile (fill 2 stale `commit: pending` fields; note the S644 post-close-out addendum commit)
+
+- Phase 0 reconcile found `HANDOFFS.md`’s frontier (`44c9a15e`) one
+  commit behind `HEAD` (`7f77e2e4`, “S644 post-close-out”) –
+  `CHANGELOG.md`’s own frontier was already current (no gap there; that
+  commit documented itself). Reconciled without opening a new session
+  block, since no new session was claimed for that addendum: appended a
+  short note to the existing S644 receipt recording `7f77e2e4`’s content
+  and rationale (already fully captured in this file’s own 2026-08-27
+  post-close-out entry below). Also filled 2 stale `commit: pending`
+  answer-slots the receipt format calls “legal at write time… reconciled
+  to real shas” by the next session’s Phase 0 – S644’s own receipt
+  (commits `fc5ac928`/`be91d938`/`7c892617`/`44c9a15e`) and S643’s, left
+  unreconciled by S644 (commits
+  `5406db52`/`a2c32ec4`/`222a2afe`/`8488e6fa`/`da74266f`). No code
+  change.
+
 ### 2026-08-27 · \[BL-N\] S644 (post-close-out): recorded that master’s CI is red as a predicted consequence of Phase 1, not a regression
 
 - User asked to check CI status after S644’s close-out push.

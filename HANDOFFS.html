@@ -140,7 +140,59 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <p><strong>Archived 39 record(s), 2026-08-10 → 2026-08-12</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-12.html"><code>docs/archive/HANDOFFS-through-2026-08-12.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p><strong>Archived 17 record(s), 2026-08-12 → 2026-08-13</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-13.html"><code>docs/archive/HANDOFFS-through-2026-08-13.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p><strong>Archived 21 record(s), 2026-08-13 → 2026-08-14</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-14.html"><code>docs/archive/HANDOFFS-through-2026-08-14.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
-<p>This file currently holds <strong>18</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
+<p>This file currently holds <strong>19</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
+<pre class="handoff"><code>session: S645
+date: 2026-08-27
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Phase 2 (test/article correction) of docs/planning/pedigree-diagram-isolated-
+  individual-suppression-plan.md -- corrected test_comparePedigreeStructure.R's 2 Track B blocks
+  (plus a 3rd break the plan's own inventory missed) + stale doc-comment prose;
+  kinship2-fidelity-validation.qmd's 4 passages + 1 table row + 2 fig-alt captions + Verdict;
+  regenerated trackB-nprc-full.png. Clears the red R-CMD-check.yaml/test-coverage.yaml CI that
+  Phase 1 alone predictably left red.
+what_was_done: Empirically verified predicted post-fix values against the live Phase 1
+  implementation before writing any assertion. Rewrote Block A (identical FALSE-&gt;TRUE,
+  individualsOnlyInB "P5"-&gt;character(0)) and Block B (expect_match-&gt;expect_null()). Found and
+  fixed a 3rd break not in the plan's §2.4 inventory: a synthetic "ISO" fixture test (hand-built
+  pedigree, not .pedTrackBFixture(), so invisible to a call-site grep on that helper) exercised
+  the identical isolation predicate. Full clean regression after: failed=1/error=0, confined to
+  the 1 pre-existing unrelated test_wordlist_coverage.R failure. Corrected the article's 4
+  passages/table row/2 captions, rewrote Verdict "PASS, with one known and expected difference"
+  -&gt; plain "PASS". quarto render clean. Re-ran data-raw/kinship2FidelityValidation.R; git status
+  confirmed only trackB-nprc-full.png changed (all other images byte-identical); visually
+  confirmed (Read on both images) 15 nodes in both trackB-nprc-full.png and
+  trackB-kinship2-full.png, structurally matching. lintr::lint_package() (loaded first) 0 lints.
+  Incidental finding, reported not fixed: Track C's rectilinear marked-edge count (article claims
+  3, live run shows 2) is pre-existing since at least commit 36653242 (S636), confirmed via
+  git status showing trackC-nprc-rectilinear.png byte-identical before/after regenerating --
+  filed to BACKLOG.md Housekeeping. Commits: 302aa4ce (claim), 8eb795a1 (deliverable, 3 files),
+  4962204d (CHANGELOG+BACKLOG), 41413d09 (Learning 677+pointer).
+next_steps: Phase 3 (R/modPedigree.R Shiny UX messaging + e2e coverage, including the
+  Focal-Animal-trim-to-one-isolated scenario) is READY, exact scope in BACKLOG.md and the plan's
+  own §3 Dragon 4/§4. Separately, unrelated to P5-suppression: the new Track C
+  rectilinear-marked-edges Housekeeping item (BACKLOG.md) needs its own diagnosis session.
+key_files: tests/testthat/test_comparePedigreeStructure.R (Block A/B rewrites + the newly-found
+  ISO test, "the isolated-individual blind spot, live against real kinship2" section),
+  vignettes/articles/kinship2-fidelity-validation.qmd (passages/table/captions/Verdict),
+  vignettes/articles/kinship2-fidelity-validation-img/trackB-nprc-full.png (regenerated),
+  docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md §2.4/§2.5/§3 Dragon 4/§4
+  (Phase 3's own starting point), PROJECT_LEARNINGS.md Learning 677 (the inventory-gap finding)
+gotchas: (1) Do not re-litigate Dragons 1-5 -- Phase 3 is UI messaging only. (2) The Track C
+  rectilinear-marked-edges discrepancy (3 claimed, 2 actual, pre-existing) is a SEPARATE
+  Housekeeping item, unrelated to P5-suppression -- do not conflate when picking up either.
+  (3) lint.yaml CI is STILL red (the pre-existing data-raw/kinship2FidelityValidation.R:339
+  finding) -- unaffected by this session. (4) A plan's "confirmed by call-site grep" claim is
+  evidence, not proof of exhaustiveness -- always re-run the corrected file before trusting an
+  inventory was complete (Learning 677).
+runtime_smoke: n/a, stated explicitly -- this session's deliverable is test/article correction +
+  image regeneration; no R/ implementation code changed, no Shiny UI/runtime behavior touched.
+changelog_ref: CHANGELOG.md 2026-08-27 S645 Phase 2 entry (commit 4962204d)
+commit: 302aa4ce (claim), 8eb795a1 (deliverable), 4962204d (ledger+backlog), 41413d09
+  (learnings+pointer), cfcab1a9 (close-out), 1784abf6 (post-close-out correction, see addendum)</code></pre>
+<p><strong>Post-close-out addendum (same session, user-caught immediately after this receipt’s own close-out):</strong> the user flagged that the Track B full-fixture caption’s “this rendering now matches kinship2’s own convention” overclaimed visual layout parity – the two packages’ mate-line layout (pair spacing, mating-dot position) is visibly different and always has been, unrelated to and unchanged by Phase 1/2. Confirmed via direct image re-inspection and <code>git log</code> (<code>trackB-kinship2-full.png</code> unchanged since S566’s original publish; Phase 1’s own diff never touched positioning code). Corrected the caption/fig-alt plus added durable caveats in “Graphic fidelity,” “Structural verification,” “Caveats carried forward,” and “Verdict” scoping every “match”/“identical”/“PASS” claim to individual-inclusion and structural edge/mate-pair sets, never layout. <code>quarto render</code> clean. Commit <code>1784abf6</code>, <code>CHANGELOG.md</code> entry recorded in the same commit.</p>
+<p><strong>Second post-close-out addendum (owner-directed):</strong> filed the mating-unit dot/mate-spacing gap named in the caption fix above as a <code>BACKLOG.md</code> “Up Next” remediation item, root-caused via a dedicated read-only Explore-agent investigation (not filed on the caption fix’s own say-so) – confirmed not a duplicate of Track 3/Track 6 (both address different things, and Track 3’s own mechanism is deleted by the Walker/BJL rewrite, issue #141/S620) or of closed issues #161/#145; root-caused to <code>.positionMatingUnitForest()</code>’s current Tier 2/Tier 3 formulas (<code>R/makePedigreeDiagramData.R:757-760</code>, <code>:792-801</code>), citations spot-verified directly against source, not trusted from the agent’s report alone. Commit <code>5b97611a</code>.</p>
 <pre class="handoff"><code>session: S644
 date: 2026-08-27
 status: complete
@@ -186,8 +238,10 @@ runtime_smoke: Live shinytest2::AppDriver run against the running Diagram tab (2
   run against the existing obfuscated_rhesus_mhc_ped.csv e2e fixture (no isolated individuals)
   confirmed the normal-path rendering (1406 nodes) is unaffected.
 changelog_ref: CHANGELOG.md 2026-08-27 S644 entry (commit be91d938)
-commit: pending</code></pre>
+commit: fc5ac928 (Phase 1 implementation), be91d938 (CHANGELOG+BACKLOG), 7c892617 (learnings+handoff),
+  44c9a15e (close-out: this receipt) -- reconciled S645</code></pre>
 <p>Full session narrative, self-assessment (9/10, strengths/weaknesses), gotchas, and the Session 643 handoff evaluation (9/10) are written in full in <code>SESSION_NOTES.md</code> under “What Session 644 Did” and “Session 643 Handoff Evaluation (by Session 644)” – this receipt is the durable proxy; <code>SESSION_NOTES.md</code> is the fuller prose record.</p>
+<p><strong>S645 Phase 0 reconcile addendum:</strong> one further commit, <code>7f77e2e4</code> (2026-08-27, “S644 post-close-out”), landed after this receipt’s own close-out commit (<code>44c9a15e</code>) and before S645’s Phase 0 – a same-session CI-status follow-up requested after formal close-out (user asked to check <code>gh run list</code> on the close-out push), not a new claimed session. It updated <code>BACKLOG.md</code>/<code>CHANGELOG.md</code> only (no code) to record that <code>master</code>’s <code>R-CMD-check.yaml</code>/<code>test-coverage.yaml</code> red status is the predicted Phase 1 consequence, not a regression – fully documented in <code>CHANGELOG.md</code>’s own 2026-08-27 entry. <code>HANDOFFS.md</code>’s frontier lagged <code>HEAD</code> by this one commit at S645’s Phase 0; reconciled here rather than opening a new receipt block, since no new session was claimed for it.</p>
 <pre class="handoff"><code>session: S643
 date: 2026-08-26
 status: complete
@@ -239,7 +293,8 @@ runtime_smoke: n/a, stated explicitly -- this session's deliverable is a design 
   code changed, no runtime behavior touched.
 changelog_ref: 2026-08-26 S643 entries in CHANGELOG.md (reconcile backfill, Phase 1B claim, the
   design-plan deliverable, Learning 675)
-commit: pending</code></pre>
+commit: 5406db52 (Phase 0 reconcile backfill), a2c32ec4 (claim), 222a2afe (design doc + BACKLOG),
+  8488e6fa (Learning 675 + pointer), da74266f (close-out) -- reconciled S645</code></pre>
 <pre class="handoff"><code>session: S642
 date: 2026-08-26
 status: complete

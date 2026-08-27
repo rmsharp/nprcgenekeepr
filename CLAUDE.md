@@ -696,7 +696,7 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–644+; 676 learnings, ~2.6 MB)
+Project institutional memory (Sessions 1–645+; 677 learnings, ~2.6 MB)
 lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget
