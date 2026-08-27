@@ -138,22 +138,54 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S645
 date: 2026-08-27
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Phase 2 (test/article correction) of docs/planning/pedigree-diagram-isolated-
-  individual-suppression-plan.md -- update test_comparePedigreeStructure.R's 2 Track B blocks +
-  stale doc-comment prose; correct kinship2-fidelity-validation.qmd's 4 passages + 1 table row +
-  2 fig-alt captions; regenerate data-raw/kinship2FidelityValidation.R's Track-B-full images.
-what_was_done: pending
-next_steps: pending
-key_files: tests/testthat/test_comparePedigreeStructure.R:684-711,740-768,1009-1050,1073-1144
-  (Blocks A/B + doc-comment prose), vignettes/articles/kinship2-fidelity-validation.qmd:133-140,
-  232,240-245,286-289,297-299 (passages/table row/captions), data-raw/kinship2FidelityValidation.R
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Phase 2 (test/article correction) of docs/planning/pedigree-diagram-isolated-
+  individual-suppression-plan.md -- corrected test_comparePedigreeStructure.R's 2 Track B blocks
+  (plus a 3rd break the plan's own inventory missed) + stale doc-comment prose;
+  kinship2-fidelity-validation.qmd's 4 passages + 1 table row + 2 fig-alt captions + Verdict;
+  regenerated trackB-nprc-full.png. Clears the red R-CMD-check.yaml/test-coverage.yaml CI that
+  Phase 1 alone predictably left red.
+what_was_done: Empirically verified predicted post-fix values against the live Phase 1
+  implementation before writing any assertion. Rewrote Block A (identical FALSE->TRUE,
+  individualsOnlyInB "P5"->character(0)) and Block B (expect_match->expect_null()). Found and
+  fixed a 3rd break not in the plan's §2.4 inventory: a synthetic "ISO" fixture test (hand-built
+  pedigree, not .pedTrackBFixture(), so invisible to a call-site grep on that helper) exercised
+  the identical isolation predicate. Full clean regression after: failed=1/error=0, confined to
+  the 1 pre-existing unrelated test_wordlist_coverage.R failure. Corrected the article's 4
+  passages/table row/2 captions, rewrote Verdict "PASS, with one known and expected difference"
+  -> plain "PASS". quarto render clean. Re-ran data-raw/kinship2FidelityValidation.R; git status
+  confirmed only trackB-nprc-full.png changed (all other images byte-identical); visually
+  confirmed (Read on both images) 15 nodes in both trackB-nprc-full.png and
+  trackB-kinship2-full.png, structurally matching. lintr::lint_package() (loaded first) 0 lints.
+  Incidental finding, reported not fixed: Track C's rectilinear marked-edge count (article claims
+  3, live run shows 2) is pre-existing since at least commit 36653242 (S636), confirmed via
+  git status showing trackC-nprc-rectilinear.png byte-identical before/after regenerating --
+  filed to BACKLOG.md Housekeeping. Commits: 302aa4ce (claim), 8eb795a1 (deliverable, 3 files),
+  4962204d (CHANGELOG+BACKLOG), 41413d09 (Learning 677+pointer).
+next_steps: Phase 3 (R/modPedigree.R Shiny UX messaging + e2e coverage, including the
+  Focal-Animal-trim-to-one-isolated scenario) is READY, exact scope in BACKLOG.md and the plan's
+  own §3 Dragon 4/§4. Separately, unrelated to P5-suppression: the new Track C
+  rectilinear-marked-edges Housekeeping item (BACKLOG.md) needs its own diagnosis session.
+key_files: tests/testthat/test_comparePedigreeStructure.R (Block A/B rewrites + the newly-found
+  ISO test, "the isolated-individual blind spot, live against real kinship2" section),
+  vignettes/articles/kinship2-fidelity-validation.qmd (passages/table/captions/Verdict),
+  vignettes/articles/kinship2-fidelity-validation-img/trackB-nprc-full.png (regenerated),
+  docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md §2.4/§2.5/§3 Dragon 4/§4
+  (Phase 3's own starting point), PROJECT_LEARNINGS.md Learning 677 (the inventory-gap finding)
+gotchas: (1) Do not re-litigate Dragons 1-5 -- Phase 3 is UI messaging only. (2) The Track C
+  rectilinear-marked-edges discrepancy (3 claimed, 2 actual, pre-existing) is a SEPARATE
+  Housekeeping item, unrelated to P5-suppression -- do not conflate when picking up either.
+  (3) lint.yaml CI is STILL red (the pre-existing data-raw/kinship2FidelityValidation.R:339
+  finding) -- unaffected by this session. (4) A plan's "confirmed by call-site grep" claim is
+  evidence, not proof of exhaustiveness -- always re-run the corrected file before trusting an
+  inventory was complete (Learning 677).
+runtime_smoke: n/a, stated explicitly -- this session's deliverable is test/article correction +
+  image regeneration; no R/ implementation code changed, no Shiny UI/runtime behavior touched.
+changelog_ref: CHANGELOG.md 2026-08-27 S645 Phase 2 entry (commit 4962204d)
+commit: 302aa4ce (claim), 8eb795a1 (deliverable), 4962204d (ledger+backlog), 41413d09
+  (learnings+pointer)
 ```
 
 ```handoff

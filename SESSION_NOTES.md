@@ -21,19 +21,123 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ### What Session 645 Did
 **Deliverable:** Phase 2 (test/article correction) of the RATIFIED
 [`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md)
-§4 -- update `tests/testthat/test_comparePedigreeStructure.R`'s 2 Track B blocks + stale
-doc-comment prose; correct `vignettes/articles/kinship2-fidelity-validation.qmd`'s 4 passages +
-1 table row + 2 fig-alt captions; regenerate `data-raw/kinship2FidelityValidation.R`'s
-Track-B-full images. This is expected to clear the red `R-CMD-check.yaml`/`test-coverage.yaml`
-CI (S644's own predicted, owner-accepted consequence of shipping Phase 1 alone). (IN PROGRESS)
-**Started:** 2026-08-27.
-**Status:** Session claimed. Phase 0 orientation complete (owner picked this item from the
-priorities list via `AskUserQuestion`). Phase 0's ledger reconcile found and fixed a 1-commit
-`HANDOFFS.md` frontier lag (S644's own post-close-out addendum commit `7f77e2e4` was never
-reflected in its receipt) -- reconciled, commit `75cff423`. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+§4 -- updated `tests/testthat/test_comparePedigreeStructure.R`'s 2 Track B blocks + stale
+doc-comment prose (plus a 3rd break the plan's own inventory missed); corrected
+`vignettes/articles/kinship2-fidelity-validation.qmd`'s 4 passages + 1 table row + 2 fig-alt
+captions + Verdict; regenerated `data-raw/kinship2FidelityValidation.R`'s Track-B-full image.
+Clears the red `R-CMD-check.yaml`/`test-coverage.yaml` CI (S644's own predicted, owner-accepted
+consequence of shipping Phase 1 alone). **DONE.** **Started/Completed:** 2026-08-27 (single
+session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): clean tracked tree, same 7 pre-existing untracked
+   items. Ledger reconcile found `HANDOFFS.md`'s frontier one commit behind `HEAD` (S644's own
+   post-close-out addendum commit `7f77e2e4` was never reflected in its receipt) -- reconciled:
+   addendum note on the S644 receipt + filled 2 stale `commit: pending` answer-slots (S644's own
+   and S643's, the latter left unreconciled by S644), commit `75cff423`. `gh run list`: CI red on
+   the latest push -- `R-CMD-check.yaml`/`test-coverage.yaml` expected (Phase 1's own predicted
+   consequence), `lint.yaml` a separate pre-existing tracked issue. Rendered the priorities list
+   (3 items) via `AskUserQuestion`; owner picked Phase 2.
+2. **Phase 1B claim** (commit `302aa4ce`): stub + pending `HANDOFFS.md` receipt written before any
+   technical work.
+3. **Research/verification** (not re-delegated -- read the plan's §2.4/§2.5 inventory targets
+   directly): read `test_comparePedigreeStructure.R` and `helper-comparePedigreeStructure.R` in
+   full, confirmed every line number the plan cited still matched current `HEAD` exactly.
+   Empirically verified (not assumed) the plan's own predicted post-fix values by running the live,
+   already-shipped Phase 1 implementation against the Track B fixture and the ISO fixture directly
+   in R (not just reading code) -- `identical = TRUE`, both individuals-diff fields empty,
+   `.formatStructuralDiscrepancy()` returns `NULL`, exactly as expected.
+4. **PRE-RED→RED** (`AskUserQuestion`): rewrote the 2 Track B blocks (Block A: `identical`
+   FALSE->TRUE, `individualsOnlyInB` "P5"->`character(0)`; Block B: `expect_match` on "P5"->
+   `expect_null()`) + reworded 2 stale doc-comment blocks. Ran the file: **found a 3rd break not in
+   the plan's own §2.4 inventory** -- a synthetic "ISO" fixture test (hand-built pedigree, never
+   calling `.pedTrackBFixture()`, so invisible to a grep scoped to that helper's call sites)
+   exercises the identical isolation predicate. Fixed it the same way, verified empirically first.
+   All 3 blocks green; full clean regression `failed=1/error=0`, confined to the 1 pre-existing
+   unrelated `test_wordlist_coverage.R` failure -- 0 attributable to this session's changes.
+5. **No R/ implementation code written** -- Phase 1 (S644) already shipped the fix; this phase was
+   entirely test/doc correction, so RED and GREEN collapsed into one verification step (tests
+   passed immediately once corrected, confirming the predicted post-fix values were right).
+6. **Article correction** (non-TDD-gated, docs only): corrected the 4 passages, 1 table row, 2
+   fig-alt captions, and rewrote the Verdict from "PASS, with one known and expected difference" to
+   plain "PASS" (all 3 tracks now structurally identical). `quarto render` clean.
+7. **Image regeneration:** ran `data-raw/kinship2FidelityValidation.R` in full. `git status`
+   confirmed only `trackB-nprc-full.png` actually changed (every other image byte-identical to
+   what's committed) -- visually confirmed (`Read` on both images) 15 nodes in both
+   `trackB-nprc-full.png` and `trackB-kinship2-full.png`, structurally matching.
+8. **Incidental finding, reported not fixed:** the regeneration run printed `rectilinear-style
+   marked edges: 2` for Track C, contradicting the article's own published claim of 3 -- but
+   `git status` proved `trackC-nprc-rectilinear.png` was byte-identical before and after
+   regenerating, so this is pre-existing (dating to at least commit `36653242`, S636), not a
+   regression from this session. Filed to `BACKLOG.md` Housekeeping, matching the "report an
+   incidentally-discovered, unrelated pre-existing gap, don't fix it mid-session" precedent.
+9. **Verification:** full clean regression `failed=1/error=0` (pre-existing only); `quarto render`
+   clean; `lintr::lint_package()` (loaded first) 0 lints.
+10. **Phase 3E runtime smoke test: not applicable, stated explicitly, not silently skipped.** This
+    session's deliverable is test/article correction + image regeneration -- no `R/` implementation
+    code changed, no Shiny UI/runtime behavior touched (`R/modPedigree.R` untouched; that's Phase
+    3's own scope).
+11. **Close-out:** `NEWS.Rmd` NOT updated -- Phase 1's own entry already fully and accurately
+    describes the user-facing behavior this phase's tests/docs now correctly assert; no new
+    behavior shipped this session. `BACKLOG.md`'s P5-suppression item updated (Phase 2 DONE, Phase
+    3 next pickup, the plan-inventory-gap and Track C findings both recorded); new Housekeeping item
+    filed for the Track C discrepancy. `PROJECT_LEARNINGS.md` Learning 677 recorded (plan-inventory
+    gap + the `git status`-vs-incidental-regeneration-output discipline); `CLAUDE.md` learnings
+    pointer updated (676->677, S644+->S645+). `CHANGELOG.md` entries recorded. Committed across 4
+    commits (5-file cap): `75cff423` (Phase 0 reconcile), `302aa4ce` (Phase 1B claim), then this
+    close-out's own commits (deliverable; ledger+backlog; learnings+pointer; handoff).
+
+**Self-assessment (Session 645): 9/10.** **Strengths:** (1) did not trust the ratified plan's own
+"confirmed by call-site grep, not assumed" exhaustiveness claim at face value -- ran the corrected
+test file and found a 3rd break the plan's inventory missed, diagnosed WHY (grep scoped to a
+helper's call sites, not the underlying isolation condition), and recorded it as a reusable
+learning rather than just quietly fixing it; (2) empirically verified every predicted post-fix
+value (identical=TRUE, empty individuals-diffs, NULL report) directly in R against the live Phase 1
+implementation BEFORE writing any test assertion, rather than deriving expected values from reading
+code alone; (3) caught a real, pre-existing, unrelated finding (Track C's marked-edge count) via
+disciplined `git status` verification of what actually changed vs. what a script's console output
+merely printed -- and correctly did NOT fix it, filing it instead, matching the project's own
+established scope discipline; (4) verified the regenerated images visually (not just via node-count
+assertions) before treating the deliverable as complete, per this project's own "verify diagrams
+against ground truth" standard. **Weaknesses:** (1) did not re-render `pedigree-diagram.qmd` or
+check whether any OTHER article/vignette references the old "P5 is rendered" framing beyond the one
+file the plan named -- a targeted grep across `vignettes/**` for "P5" outside the one corrected
+file would have been cheap insurance and wasn't done; (2) the Track C finding, while correctly not
+fixed, was not investigated even briefly to narrow down WHEN it started (only bounded to "at least
+since S636" via one `git log` query) -- a `git bisect`-style narrowing was possible but judged
+out of scope for a Phase 2 session and left for whichever future session picks up the Housekeeping
+item.
+
+**Gotchas for a future session:** (1) Phase 3 (`R/modPedigree.R` Shiny UX messaging + e2e coverage,
+including the Focal-Animal-trim-to-one-isolated scenario) is READY, exact scope in `BACKLOG.md` and
+the plan's own §3 Dragon 4/§4. Do not re-litigate Dragons 1-5. (2) The Track C
+rectilinear-marked-edges discrepancy (article claims 3, live run shows 2, pre-existing since at
+least S636) is a NEW, separate Housekeeping item -- unrelated to P5-suppression, do not conflate
+the two when picking up either. (3) `lint.yaml` CI is STILL red (the pre-existing, already-tracked
+`data-raw/kinship2FidelityValidation.R:339` finding) -- unaffected by this session, still needs its
+own diagnosis per the Housekeeping item above it. (4) `HANDOFFS.md`/`SESSION_NOTES.md`/
+`CHANGELOG.md` remain past the FM #28 cap and growing -- unchanged this session, `BACKLOG.md`'s
+"ledger-size housekeeping" item is still open.
+
+### Session 644 Handoff Evaluation (by Session 645)
+**Score: 9/10.** **What helped:** the plan's own §2.4 inventory (2 blocks, exact old/new assertion
+values) transferred directly into this session's test rewrites with zero rework for those 2 blocks;
+the §2.5 article inventory (exact line numbers, exact passages) likewise transferred cleanly --
+every cited line number matched current `HEAD` exactly, zero drift despite the session boundary.
+S644's own handoff `next_steps`/`gotchas` correctly flagged that the 2 Track B blocks were an
+EXPECTED consequence, not a regression, which meant this session started from confidence rather
+than having to re-derive that framing. **What was missing:** the plan's §2.4 inventory, and S644's
+own handoff, both implicitly treated the "2 blocks" count as exhaustive (the plan's own text says
+"confirmed by call-site grep, not assumed") -- neither caught the 3rd "ISO" synthetic-fixture
+break, which this session found only by actually running the corrected file rather than trusting
+the inventory's completeness claim. This is a real, if minor, gap: a slightly broader grep (for the
+isolation CONDITION, not just one fixture-builder's call sites) at either S643 (design) or S644
+(implementation) time would have caught it earlier. **What was wrong:** nothing found -- every
+factual claim in S644's handoff (the 2 predicted blocks, the CI-red consequence, the `commit:
+pending` reconcile need) held up under this session's own independent verification. **ROI:** high --
+despite the one inventory gap, the handoff's own accurate framing of "this is expected, not a
+regression" and the plan's exact line numbers meant this session had zero time lost to
+rediscovering context, only the modest extra cost of fixing one additional block once found.
 
 ### What Session 644 Did
 **Deliverable:** Phase 1 (core renderer fix) of the RATIFIED design plan,
