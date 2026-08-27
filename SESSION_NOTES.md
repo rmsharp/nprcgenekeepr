@@ -18,6 +18,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 647 Did
+**Deliverable:** Track 7 Phase 1 implementation (mating-unit dot/mate-spacing fix in
+`.positionMatingUnitForest()`), per the design ratified S646
+(`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`). (IN PROGRESS)
+**Started:** 2026-08-27.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
+**Context this claim exists to preserve:** Phase 0 orientation (this session) found an
+**uncommitted, unstaged modification to `R/makePedigreeDiagramData.R`** already present in the
+working tree at session start (58 insertions/23 deletions), with no matching commit, no prior
+`SESSION_NOTES.md`/`HANDOFFS.md` trace, and 87 failing assertions in
+`test_positionMatingUnitForest.R` as-is. It reads as a genuine, reasoned partial attempt at this
+exact Track 7 Phase 1 fix — including a documented deviation from the ratified plan's own §6
+Migration Path step 2 ordering, justified by an in-code comment claiming empirical evidence (3
+real exact-position collisions) that this session has not yet independently verified. The owner
+was shown this finding via `AskUserQuestion` and chose "Continue the WIP as Track 7 Phase 1" —
+verify it, bring it through a real RED→GREEN cycle, and finish Phase 1. This paragraph exists so
+a crash before close-out still explains where this uncommitted code came from and what direction
+was given about it.
+
 ### What Session 646 Did
 **Deliverable:** Design/scoping document for the mating-unit dot/mate-spacing gap filed to
 `BACKLOG.md` "Up Next" by S645 (post-close-out) --

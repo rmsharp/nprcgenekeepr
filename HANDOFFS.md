@@ -136,6 +136,30 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S647
+date: 2026-08-27
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Track 7 Phase 1 implementation (mating-unit dot/mate-spacing fix in
+  .positionMatingUnitForest()), per the design ratified S646. Picking up an uncommitted,
+  unclaimed draft already present in the working tree at Phase 0 orientation (no prior
+  session/commit trace, 87 failing assertions as-is) -- owner-directed, via AskUserQuestion, to
+  continue it as this session's Phase 1 work rather than discard it.
+what_was_done: pending
+next_steps: pending
+key_files: R/makePedigreeDiagramData.R (Tier 2/Tier 3 of .positionMatingUnitForest()),
+  docs/planning/pedigree-diagram-track7-mate-spacing-plan.md (the ratified design),
+  tests/testthat/test_positionMatingUnitForest.R (the suite currently failing 87 assertions
+  against the uncommitted draft)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: filled at close-out>
+
+```handoff
 session: S646
 date: 2026-08-27
 status: complete
