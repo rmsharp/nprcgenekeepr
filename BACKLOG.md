@@ -20,46 +20,50 @@ erroneously renders fully-isolated individuals (no sire, no dam, no
 mate, no children) – reverses this project’s own prior “acceptable
 difference” framing** (found live 2026-08-26, owner-directed via direct
 visual review of `kinship2-fidelity-validation.qmd`’s Track B full
-fixture. **Design RATIFIED S643 (2026-08-26): READY for Phase 1
-implementation, Effort M/L**) – `P5` in the article’s own published
-Track B 16-subject fixture has zero edges of any kind (no parents, no
-mate, no children); kinship2’s own `plot.pedigree()` correctly omits it
-from the drawing (confirmed live: `align.pedigree()`’s own `$nid`
-placement never places it), while
+fixture. Design RATIFIED S643. **Phase 1 (core renderer fix) DONE S644
+(2026-08-27), Effort M – commit `fc5ac928`. Phase 2 (test/article
+correction) and Phase 3 (Shiny UX messaging) READY, Effort M each, next
+pickup.**) – `P5` in the article’s own published Track B 16-subject
+fixture has zero edges of any kind (no parents, no mate, no children);
+kinship2’s own `plot.pedigree()` correctly omits it from the drawing
+(confirmed live: `align.pedigree()`’s own `$nid` placement never places
+it), while
 [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-renders it as a disconnected node. **The owner has explicitly ruled this
-an error** (“P5… is erroneously included”), overriding S641’s own
-`kinship2-fidelity-validation.qmd` Verdict text, which called this “the
-more useful default, not a bug to reconcile away.” **Full design plan
-(ratified via `AskUserQuestion`, both judgment calls decided):**
+used to render it as a disconnected node. **The owner has explicitly
+ruled this an error** (“P5… is erroneously included”), overriding S641’s
+own `kinship2-fidelity-validation.qmd` Verdict text, which called this
+“the more useful default, not a bug to reconcile away.” **Full design
+plan (ratified via `AskUserQuestion`, both judgment calls decided):**
 [`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md).
 Entangled with issue \#164
 ([`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-crashes outright on an all-isolated pedigree) – the plan resolves both
-together, plus a second, narrower trigger for the same degenerate case
-this session’s research newly found: a user focal-trimming to one
-isolated individual via the Focal Animals box hits the identical “100%
-isolated” case. **Ratified decisions:** isolation predicate
-(sire/dam/never-a-parent, excluding `twinRelations`-connected ids –
-matches `P5`’s exact profile, the same narrow rule this item originally
-scoped); hook point (new shared `.findIsolatedIds()` primitive,
-pre-filters `ped` at the top of
-[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md));
-**when suppression would empty the diagram: render nothing + an explicit
-plain-language message** (not “render everyone anyway” – ratified over
-that cheaper fallback because it would re-show `P5`-like individuals
-whenever they’re 100% of what’s being rendered, the exact case just
-ruled an error); **Shiny UI messaging (`R/modPedigree.R`
-banner/empty-state text) ships in the same implementation as the core
-fix**, not deferred. 3 phases with completion criteria in the plan
-document (§4) – may be executed as one pre-declared vertical slice
-(plan’s own §10). Also update `.comparePedigreeStructures()`’s Track B
-full fixture expectation and the live-kinship2 regression test in
-`tests/testthat/test_comparePedigreeStructure.R` (today’s test asserts
-`identical = FALSE` with `individualsOnlyInB = "P5"` – once fixed, Track
-B full should become `identical = TRUE`, this time correctly) – exact
-line numbers for both affected test blocks are in the plan document’s
-§2.4.
+crashed outright on an all-isolated pedigree) – **RESOLVED by Phase 1,
+issue \#164 closed S644** citing commit `fc5ac928`. The second, narrower
+trigger this session’s research newly found (a user focal-trimming to
+one isolated individual via the Focal Animals box hits the identical
+“100% isolated” case) is also resolved by Phase 1’s same fix (both paths
+flow through
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)).
+**Ratified decisions (all shipped in Phase 1 except Shiny messaging,
+still Phase 3):** isolation predicate (sire/dam/never-a-parent,
+excluding `twinRelations`-connected ids – matches `P5`’s exact profile)
+– new `.findIsolatedIds()` primitive, pre-filters `ped` at the top of
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md);
+when suppression would empty the diagram, the function now returns a
+fully-typed empty result + `isolatedIds` instead of crashing (3B).
+**Still open (Phase 2, Effort M):**
+`tests/testthat/test_comparePedigreeStructure.R`’s 2 Track B blocks
+(today asserts `identical = FALSE`/`individualsOnlyInB = "P5"` – now
+failing, exactly as predicted by the plan’s §2.4, since `P5` is
+correctly suppressed – update to assert `identical = TRUE`), 4
+passages + 1 table row + 2 fig-alt captions in
+`vignettes/articles/kinship2-fidelity-validation.qmd`, and regenerating
+`data-raw/kinship2FidelityValidation.R`’s Track-B-full images – exact
+line numbers in the plan’s §2.4/§2.5. **Still open (Phase 3, Effort
+M):** `R/modPedigree.R` Shiny UX messaging (banner for partial
+suppression, empty-state message for all-isolated) + e2e coverage,
+including the Focal-Animal-trim-to-one-isolated-individual scenario –
+plan’s §3 Dragon 4, §4 Phase 3.
 
 **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636,
 2026-08-26). **RESOLVED S637, 2026-08-26, per owner-directed “broader”

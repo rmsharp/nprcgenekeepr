@@ -139,7 +139,16 @@ unconditionally gains <code>color</code> (see
 preserved when the edge is KEPT as-is; a marked mate edge that gets
 replaced by a D2 dogleg projection currently falls back to the
 generic routing color/width (edgeStyle = "rectilinear" propagation is
-a deferred follow-up, BACKLOG.md Housekeeping).</p>
+a deferred follow-up, BACKLOG.md Housekeeping). Also
+<code>isolatedIds</code> (issue #164 / P5-suppression plan, Dragon 2-3,
+RATIFIED S643): a character vector of ids suppressed from
+<code>nodes</code>/<code>edges</code> because they have no known parent, are
+never a parent, and are not <code>twinRelations</code>-connected –
+<code>character(0)</code> when nothing was suppressed. When every
+individual in <code>ped</code> is isolated, <code>nodes</code>/<code>edges</code> are
+both 0-row and <code>duplicateToReal</code> is empty (this is also issue
+#164's fix – the function no longer crashes on an all-isolated
+<code>ped</code>).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -172,6 +181,7 @@ FALSE</code> (grep-confirmed).</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">layout</span> <span class="op">&lt;-</span> <span class="fu">makePedigreeMatingLayout</span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> makePedigreeMatingLayout(): 255 individual(s) with no recorded parents, mates, or offspring suppressed from the pedigree diagram: N54ICI, 2ZMHG7, SUCA1F, E48W9M, NWIXPA, Z4EY74, YSRHBD, Z84KGV, DZ6FVF, BTD2NZ, JHQPAP, BPI1HF, 6GWTJD, AYHHR5, BR14AQ, JDVB5M, 70T5GR, 4RXU2E, 9YTU7S, CJA95L, MCETJ8, 9Q766V, 4YHBRW, IZPCZZ, 8TBUP5, BKB6NF, BPE9NT, PW7W9T, F240HZ, 8TS6VW, Y6NNRB, AGWJ2R, TA1CKU, NBWMEY, FDXXBI, SSNP86, XGGREU, 7PABGY, VGPK53, JWIMX8, HZ95JQ, 0J5JEH, 8QH2I1, WQS9VQ, VMB6MK, WJLVT1, SBWT9S, B6W7HJ, APW1RV, NTYCL3, CT8DTM, Y3R9SM, F0AW25, 8VL35Z, B0BD97, KB1NXJ, K1GMK0, KFRNH9, DT5M1V, CUY46M, 3BR2DG, 3HGLEN, 493GGJ, 11Q5X6, Q8667V, XZH1WD, H7BDVI, NI7QQ2, L5E0K4, PW68MV, 10JVXT, ZUUZCM, D8XU5I, Z5CDUB, A4LVZ0, DPG4MS, YCLTFI, M9WMMU, 9A08HP, 3XE6E3, KJIIRT, Q3DARJ, HKX842, DEZZCQ, ZVYH2K, 7IFLW9, 1RPPRW, 3MJ3E7, 757BLD, EC4M69, ATN2K9, HL6YG6, 15FEBR, 2TXZPV, 5JDF5N, C3223L, R850T0, 0SQP8I, 0LHU4M, 986A3D, D9GR39, EE7DQV, C0A768, G5V5TU, Z528L9, VHHDHV, A10HCV, RU11VN, 18APRC, 9G91MC, 2Y7VDA, C9IK8M, TPTUYM, NF0DLQ, 9R4FAV, JC5PB5, 02GZ4L, ZZDSNV, F1ASM9, BLHKUT, EW4L95, 093AB5, XM4GY6, EBK34A, 8FR8EA, Z4UJIC, EC702Y, 01WY5E, NLGE61, 0SPRLB, 12AM87, 4V85VF, 5JNITD, VEC97H, LV8WIM, 100PFZ, Q3J24E, IC716S, SJD499, 0M6WB4, YJBY17, IDKQ3J, I3SU3W, CS5JWC, W69TQ7, 5C63F4, R0ZLR7, AUM3I5, HWTBFV, M30ER6, A4HWDT, 2KSL1E, Q204TU, GDN0LY, 5W3X92, VVEWCE, 7RLPEJ, 40RLGE, V7UUEH, NCD01L, GUDU9H, YPHZIJ, V1H5HL, CLGRHI, ASUZAZ, Z8Q2X9, ETUF6V, 8GRDXR, 9AWTC3, 1QBKW9, RKQMGF, EWX5XV, PBRGIF, ESNTV0, B267C6, QF30SN, XN5RG3, 489C6D, V6L8GF, 77EUZ7, Y3CJ5A, DGE0LV, RGQ8WZ, 8SG2BX, 9HS6C2, SK0UDE, B2I259, 2WMICB, 9XF3PS, SDBN6F, JZNCW3, ZUPBXP, W57X0M, IBQQQD, 88GL9Z, B7BMJM, PKLXCD, M07IM7, 8C4DFM, PSIK51, DXXRLM, N5Z0XZ, VKC95C, N43TAY, V205HB, L71BK6, YGAWEQ, XSC4NB, 5KWWYA, 3JUGDQ, 0CRGND, PEW6UW, 0QD4RS, 52Y0A2, JQBLVJ, 4P6AKL, F9U4FV, SPFBTK, 16V6FW, HQAB9U, T6VYXS, VDD1VM, XP47ES, YJ1PT7, FJL59A, 601GN4, Z2SLIV, 7TPAFF, 2Q4Q8M, JDD39A, 8KES7J, WK6MQT, RRYETA, VF341U, DL5GJM, I75S2W, 4BWI4P, 3LXEDN, PUXEBU, WRVEIX, F7NIBI, 0S7LIT, FDQMS5, CXHM36, PHD9HX, B6V285, CTX15V, FVTJH1, X6AA9D, 2Z6UAC, CQ0APY, QE8FY7, M4KYW2, KYAEVV, XBFLL2</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>makePedigreeMatingLayout(): 318 same-row edge-node collision(s) could not be fully resolved (residual after the repair-pass cap, or an unconfirmed curved-connector heuristic) -- rendered output may still show a straight or curved edge passing near an unrelated node.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

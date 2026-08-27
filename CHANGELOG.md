@@ -17,6 +17,58 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-27 · \[issue \#164\] S644: Phase 1 – suppress fully-isolated individuals in makePedigreeMatingLayout(), closes issue \#164
+
+- **Deliverable:** implemented Phase 1 (core renderer fix) of the
+  ratified
+  `docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`
+  – new `.findIsolatedIds()` (Dragon 1’s predicate),
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  pre-filters isolated individuals out of `ped` (Dragon 2), an
+  early-return fully-typed empty result when every individual is
+  isolated instead of crashing (Dragon 3, ratified 3B – this is issue
+  \#164’s fix), a `childEdgesOut` defense-in-depth 0-row guard, an
+  `isolatedIds` return field, a conditional
+  [`message()`](https://rdrr.io/r/base/message.html) (Dragon 5). Scoped
+  to Phase 1 only (Phases 2/3 deferred) per owner confirmation via
+  `AskUserQuestion`, following the plan’s own §10 vertical-slice option.
+  Full strict TDD (PRE-RED/RED/GREEN/REFACTOR, each transition gated via
+  `AskUserQuestion`) – REFACTOR skipped, GREEN diff already matched
+  established patterns.
+- **Verification:** new `tests/testthat/test_findIsolatedIds.R` (8
+  cases) + 10 new/modified assertions in
+  `tests/testthat/test_makePedigreeMatingLayout.R`, 219 passed/0
+  failed/0 error; issue \#164’s exact 2-row and 1-row repros run
+  manually, confirmed non-crashing under both `edgeStyle` values;
+  `lintr::lint_package()` 0 lints (loaded first, per Learning 224) after
+  fixing 2 real findings (a `commented_code_linter` false-positive from
+  `fn()/fn()` reading as division in a prose comment, an
+  implicit-integer style issue in `character(0)`); full clean regression
+  read (`NOT_CRAN=true`, `load_all()`, `test_dir(reporter="silent")`)
+  shows exactly `failed: 6, error: 1`, confined to the 2 pre-documented
+  `test_comparePedigreeStructure.R` Track B blocks (plan §2.4’s own
+  prediction, matched exactly) plus the 1 pre-existing unrelated
+  `test_wordlist_coverage.R` failure – nothing else regressed. **Phase
+  3E runtime smoke test:** live
+  [`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+  run against the actual Diagram tab (a custom P5-style fixture)
+  confirms the isolated individual is absent from the rendered vis.js
+  node set, connected individuals render correctly, 0 JS console errors
+  – this deliverable changes the live Diagram tab’s rendering (its one
+  production call site, `R/modPedigree.R:588`), so build-clean alone was
+  not sufficient.
+- **Deferred, tracked in `BACKLOG.md`:** Phase 2 (2
+  `test_comparePedigreeStructure.R` Track B blocks now fail, exactly as
+  the plan predicted – `P5` is correctly suppressed, so the old
+  `identical = FALSE`/`individualsOnlyInB = "P5"` assertions are now
+  wrong; plus the article/ `data-raw` correction) and Phase 3
+  (`R/modPedigree.R` Shiny UX messaging + e2e coverage).
+- **Issue \#164 closed this session**, citing implementing commit
+  `fc5ac928` and the verification evidence above.
+- **Commits:** `4376adaa` (Phase 1B claim), `fc5ac928` (Phase 1
+  implementation).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · \[BL-N\] S643: ratified design plan for P5-suppression in makePedigreeMatingLayout(), entangled with issue \#164; pinned pedigree-drawing as BACKLOG.md’s standing top priority
 
 - **Deliverable:** owner picked “P5-suppression design” from the

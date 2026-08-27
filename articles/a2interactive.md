@@ -429,7 +429,7 @@ diagramData <- makePedigreeMatingLayout(demoPed, edgeStyle = "direct")
 names(diagramData)
 ```
 
-    ## [1] "nodes"           "edges"           "duplicateToReal"
+    ## [1] "nodes"           "edges"           "duplicateToReal" "isolatedIds"
 
 ``` r
 
@@ -541,7 +541,7 @@ diagramDataRectilinear <- makePedigreeMatingLayout(demoPed,
 names(diagramDataRectilinear)
 ```
 
-    ## [1] "nodes"           "edges"           "duplicateToReal"
+    ## [1] "nodes"           "edges"           "duplicateToReal" "isolatedIds"
 
 ``` r
 
@@ -1454,7 +1454,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmp22jTUs/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpI0rcqu/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2226,8 +2226,8 @@ into the de-identified table.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-08-27 00:17:53.775073. The processing
-time for this document was 22 seconds..
+The current date and time is 2026-08-27 02:27:18.615028. The processing
+time for this document was 23 seconds..
 
 ``` r
 
