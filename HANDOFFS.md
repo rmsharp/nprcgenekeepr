@@ -132,8 +132,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **18** receipt(s). Computed by `methodology_trim.py` on every
+This file currently holds **19** receipt(s). Computed by `methodology_trim.py` on every
 `--check`/`--write` run, never hand-maintained.
+
+```handoff
+session: S645
+date: 2026-08-27
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase 2 (test/article correction) of docs/planning/pedigree-diagram-isolated-
+  individual-suppression-plan.md -- update test_comparePedigreeStructure.R's 2 Track B blocks +
+  stale doc-comment prose; correct kinship2-fidelity-validation.qmd's 4 passages + 1 table row +
+  2 fig-alt captions; regenerate data-raw/kinship2FidelityValidation.R's Track-B-full images.
+what_was_done: pending
+next_steps: pending
+key_files: tests/testthat/test_comparePedigreeStructure.R:684-711,740-768,1009-1050,1073-1144
+  (Blocks A/B + doc-comment prose), vignettes/articles/kinship2-fidelity-validation.qmd:133-140,
+  232,240-245,286-289,297-299 (passages/table row/captions), data-raw/kinship2FidelityValidation.R
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
 
 ```handoff
 session: S644

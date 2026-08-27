@@ -18,6 +18,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 645 Did
+**Deliverable:** Phase 2 (test/article correction) of the RATIFIED
+[`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md)
+§4 -- update `tests/testthat/test_comparePedigreeStructure.R`'s 2 Track B blocks + stale
+doc-comment prose; correct `vignettes/articles/kinship2-fidelity-validation.qmd`'s 4 passages +
+1 table row + 2 fig-alt captions; regenerate `data-raw/kinship2FidelityValidation.R`'s
+Track-B-full images. This is expected to clear the red `R-CMD-check.yaml`/`test-coverage.yaml`
+CI (S644's own predicted, owner-accepted consequence of shipping Phase 1 alone). (IN PROGRESS)
+**Started:** 2026-08-27.
+**Status:** Session claimed. Phase 0 orientation complete (owner picked this item from the
+priorities list via `AskUserQuestion`). Phase 0's ledger reconcile found and fixed a 1-commit
+`HANDOFFS.md` frontier lag (S644's own post-close-out addendum commit `7f77e2e4` was never
+reflected in its receipt) -- reconciled, commit `75cff423`. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### What Session 644 Did
 **Deliverable:** Phase 1 (core renderer fix) of the RATIFIED design plan,
 [`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md)
