@@ -16,6 +16,25 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S645 (post-close-out): correct an overclaiming caption/prose in kinship2-fidelity-validation.qmd -- "matches kinship2's own convention" implied visual layout parity that does not exist
+- User caught this directly after S645's own close-out: the Track B full-fixture nprcgenekeepr
+  image caption said "this rendering now matches kinship2's own convention," but the two packages'
+  mate-line layout is visibly different (kinship2 spreads a mated pair apart with the descent line
+  centered between them; nprcgenekeepr draws pairs close together with the mating-unit dot
+  positioned at the sire's own symbol) -- confirmed by directly re-viewing both images. The claim
+  was only ever meant to scope "which individuals are placed on the diagram" (P5 now omitted by
+  both), not general visual/layout convention.
+- Confirmed pre-existing and unrelated to this session's work, not a regression: Phase 1's diff
+  (`fc5ac928`) never touched mate-positioning code (`.positionMatingUnitForest()`), and
+  `trackB-kinship2-full.png` has been unchanged since commit `d0390201` (S566, the article's
+  original publish) -- the layout difference predates the whole P5-suppression plan.
+- Corrected the flagged caption + fig-alt, added an explicit caveat paragraph in Track B's own
+  Graphic fidelity section naming the specific layout difference, a new bullet in "Caveats carried
+  forward" stating it durably, and clarifying sentences in "Structural verification" and "Verdict"
+  that "structurally identical"/"PASS" refer to the individual/edge/mate-pair sets, never to mate-
+  line spacing or node placement. `quarto render` clean; all referenced section anchors
+  (`#sec-trackb`, `#sec-structural`, `#sec-caveats`) confirmed to exist.
+
 ### 2026-08-27 · [issue #164] S645: Phase 2 -- correct test_comparePedigreeStructure.R + kinship2-fidelity-validation.qmd for the P5-suppression fix
 - **Deliverable:** implemented Phase 2 (test/article correction) of the ratified
   `docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md` -- following Phase 1's

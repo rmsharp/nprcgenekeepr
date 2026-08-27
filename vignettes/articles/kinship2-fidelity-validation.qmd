@@ -140,12 +140,27 @@ verification](#sec-structural) below.
 ::: {layout-ncol=2}
 ![kinship2's own `plot.pedigree()` on the full 16-subject fixture. `P5`, a fully isolated founder, is declared but not placed on the plot grid.](kinship2-fidelity-validation-img/trackB-kinship2-full.png){fig-alt="kinship2 pedigree diagram of the full 16-subject fixture (15 of 16 declared subjects placed; the isolated founder P5 is omitted), standard square/circle symbols connected by a strict-hierarchy layout."}
 
-![`makePedigreeMatingLayout()` + `visNetwork` on the same full 16-subject fixture. As of Phase 1 of the P5-suppression fix (S644, 2026-08-27), this rendering now matches kinship2's own convention and also omits `P5`.](kinship2-fidelity-validation-img/trackB-nprc-full.png){fig-alt="nprcgenekeepr pedigree diagram of the full 16-subject fixture, showing 15 of 16 declared subjects; the isolated founder P5 is suppressed to match kinship2's own convention."}
+![`makePedigreeMatingLayout()` + `visNetwork` on the same full 16-subject fixture. As of Phase 1 of the P5-suppression fix (S644, 2026-08-27), this rendering now also omits `P5`, matching kinship2's own convention of not placing a fully isolated individual on the diagram.](kinship2-fidelity-validation-img/trackB-nprc-full.png){fig-alt="nprcgenekeepr pedigree diagram of the full 16-subject fixture, showing 15 of 16 declared subjects; the isolated founder P5 is suppressed, matching kinship2's own convention of omitting it."}
 
 ![kinship2's `pedigree.shrink()$pedObj` -- shrunk to 8 subjects. Unavailable ('?') individuals still shown, per kinship2's own convention.](kinship2-fidelity-validation-img/trackB-kinship2-shrunk.png){fig-alt="kinship2 pedigree diagram of the shrunk 8-subject pedigree, with unavailable individuals shown as unfilled nodes marked with a question mark."}
 
 ![`shrinkPedigree()`'s own surviving pedigree, same 8 subjects, rendered the same way.](kinship2-fidelity-validation-img/trackB-nprc-shrunk.png){fig-alt="nprcgenekeepr pedigree diagram of the shrunk 8-subject pedigree, showing the same 2 family groups as kinship2's own shrunk diagram."}
 :::
+
+**What "matches" above means, precisely -- and what it does not.** The claim is scoped to
+*which individuals appear at all* (P5 now omitted by both) and to the structural
+parent-child/mate-pair relationships among the individuals that do appear ([Structural
+verification](#sec-structural) below) -- not to the two packages' overall visual layout. Looking at
+the full-fixture pair directly: kinship2 draws each mated pair spread apart, with the
+descent line to their children dropping from the midpoint between the two symbols;
+`makePedigreeMatingLayout()` draws each pair close together, with the mating-unit marker (the
+small dot) positioned at the sire's own symbol rather than centered between sire and dam. This is
+a real, visible difference in mate-line layout, not a rendering error -- it is the established,
+already-decided rendering convention this package uses everywhere (the marker's own visibility was
+weighed and kept as-is in [issue #161](https://github.com/rmsharp/nprcgenekeepr/issues/161)), and
+it predates this article: it is unrelated to, and unchanged by, the P5-suppression fix, which only
+changes *which* individuals are placed on the diagram, never *how* a placed pair's own mate line is
+drawn.
 
 The two shrunk diagrams show the **same 8 surviving subjects in the same 2
 family groups** -- `{P1, P2, M1, G3, L3}` and `{C4, P6, C4a}` -- confirming
@@ -211,7 +226,10 @@ shown at all*, not *which duplicate copy of a multi-union individual each
 package's layout happens to draw* (the two packages duplicate different
 individuals for the same union above: `Y` in kinship2's rendering, `A` in
 nprcgenekeepr's). `.comparePedigreeStructures()` then diffs all three sets
-directly.
+directly -- "structurally identical" in this article means identical on these three sets, never
+identical mate-line layout or node placement; see the caveat in [Graphic
+fidelity](#sec-trackb) above and [Caveats carried forward](#sec-caveats) below for the specific,
+visible layout convention the two packages do not share.
 
 **A real gap in this comparator was found and fixed 2026-08-26.** The
 original version diffed only the parent-child edge set and mate-pair set --
@@ -232,7 +250,7 @@ fixed comparator:
 
 | Fixture | Structurally identical to kinship2? |
 |---|---|
-| Track B, full (16 subjects) | **Yes** -- nprcgenekeepr now suppresses `P5` to match kinship2's own convention (see [Graphic fidelity](#sec-trackb) above) |
+| Track B, full (16 subjects) | **Yes** -- nprcgenekeepr now suppresses `P5`, matching which individuals kinship2 places on the diagram (see [Graphic fidelity](#sec-trackb) above for what this does, and does not, say about the two packages' mate-line layout) |
 | Track B, shrunk (8 subjects) | **Yes** |
 | Track C (9 subjects, consanguineous dogleg) | **Yes** |
 
@@ -252,6 +270,17 @@ P5-suppression plan, S644, 2026-08-27, closing [issue
 
 ## Caveats carried forward {#sec-caveats}
 
+- **The two packages' mate-line layout is not, and was never claimed to be, visually identical.**
+  kinship2's `align.pedigree()` spreads a mated pair apart and drops the descent line to their
+  children from the midpoint between the two symbols; `makePedigreeMatingLayout()` draws a mated
+  pair close together, with the mating-unit marker (the small dot) positioned at the sire's own
+  symbol rather than centered between sire and dam -- visible directly in Track B's full-fixture
+  image pair above. This is nprcgenekeepr's own established rendering convention, unrelated to and
+  unchanged by any track in this article (the marker's own visibility was separately weighed and
+  kept as-is in [issue #161](https://github.com/rmsharp/nprcgenekeepr/issues/161)). Every "match"/
+  "identical" claim in this article is scoped to numeric values, surviving-subject sets, or the
+  structural parent-child/mate-pair/rendered-individual sets ([Structural
+  verification](#sec-structural)) -- never to mate-line spacing or node placement.
 - **kinship2 is not a package dependency.** Nothing above runs at
   `quarto render` time or in `R CMD check` -- the numbers and images are the
   frozen output of one offline, interactively-run script, matching this
@@ -306,7 +335,9 @@ convention for the same underlying multi-union case kinship2 also
 duplicates -- structurally confirmed identical. All three tracks -- Track
 A, both of Track B's fixtures, and Track C -- are now cleared as faithful,
 structurally identical reproductions of the kinship2 supplement's own
-results.
+results. "Structurally identical" is precise, not a stand-in for "visually
+identical": the two packages' own mate-line layout conventions remain, and
+have always been, different (see [Caveats carried forward](#sec-caveats)).
 
 ## References {#sec-references}
 
