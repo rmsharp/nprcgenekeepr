@@ -16,6 +16,16 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S645 (post-close-out, reconcile-on-read): backfill HANDOFFS.md/SESSION_NOTES.md for the BACKLOG-filing addendum
+- Phase 0 ledger reconcile (S646) found `HANDOFFS.md`'s frontier one commit behind `HEAD`: commit
+  `4e63cf34` added a second post-close-out addendum note to `HANDOFFS.md`'s S645 receipt and to
+  `SESSION_NOTES.md`, documenting the mating-unit dot/mate-spacing BACKLOG-filing work that commit
+  `5b97611a` had already performed and already recorded in this ledger (see the entry directly
+  below) -- but `4e63cf34` itself, a pure documentation-reconcile commit, was never given its own
+  `CHANGELOG.md` line. Backfilled here per `SESSION_RUNNER.md` Phase 0 step 6 / failure mode #27.
+  No code or content change beyond the documentation reconcile already visible in `4e63cf34`'s own
+  diff (`HANDOFFS.md` +9/-0, `SESSION_NOTES.md` +14/-1).
+
 ### 2026-08-27 · [ad hoc] S645 (post-close-out): file the mating-unit dot/mate-spacing finding as a BACKLOG remediation item, root-caused
 - Owner directed filing the graphic-fidelity gap named in the previous entry's own caption fix as
   the next action item. A dedicated read-only investigation (Explore agent) confirmed: (1) not a
