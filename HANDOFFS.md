@@ -136,6 +136,25 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S646
+date: 2026-08-27
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Design/scoping document for the mating-unit dot/mate-spacing gap (BACKLOG.md "Up
+  Next", filed S645) -- resolving (a) union-node centering (parents vs. children), (b) Tier 3
+  mate-gap widening, (c) interaction with BJL apportioning/de-collision/Track 5 D1-D2 invariants.
+  Following ARCHITECTURE_WORKSTREAM.md, project precedent for pedigree-positioning decisions.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S645
 date: 2026-08-27
 status: complete

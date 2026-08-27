@@ -18,6 +18,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 646 Did
+**Deliverable:** Design/scoping document for the mating-unit dot/mate-spacing gap filed to
+`BACKLOG.md` "Up Next" by S645 (post-close-out) -- resolves the 3 named judgment calls: (a) center
+the `__union_*` node between the two parents' own x vs. derive it from children; (b) whether/how to
+widen Tier 3's `derivedX()` mate offset toward a kinship2-comparable visual gap; (c) interaction
+with Tier 1's BJL apportioning, existing de-collision/sweep passes, and Track 5's D1/D2
+orthogonality invariants. Following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`
+(project precedent for pedigree-diagram positioning-algorithm decisions, per
+`pedigree-diagram-track6-child-centered-union-position-plan.md`'s own header). (IN PROGRESS)
+**Started:** 2026-08-27.
+**Status:** Session claimed. Phase 0 orientation complete (found + backfilled a 1-commit
+`CHANGELOG.md` ledger gap for S645's own post-close-out reconcile commit `4e63cf34`, committed
+separately as `0ee0b332`). Research beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 645 Did
 **Deliverable:** Phase 2 (test/article correction) of the RATIFIED
 [`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md)
