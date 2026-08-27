@@ -16,6 +16,20 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S647 Phase 0: record CHANGELOG.md entry for S646's Learning-678/679 record and close-out commit (reconcile-on-read)
+- Phase 0 ledger reconcile found 2 commits since `CHANGELOG.md`'s frontier (`0952eadd`) with no
+  ledger entry of their own — the same self-reference shape this project's precedent already names
+  repeatedly (S639→S640→S641→S642→S643): `105e4700` (record Learning 678/679, update the
+  `CLAUDE.md` learnings-count pointer) and `e9554b04` (S646's own close-out commit, writing the
+  final `SESSION_NOTES.md` write-up + completing the `HANDOFFS.md` receipt). Both commits postdate
+  `0952eadd`, the commit that wrote this ledger's own S646 entry (directly below) — that entry
+  necessarily narrates the learnings-recording and close-out actions *before* the commits performing
+  them existed, so neither later commit could cite itself. The substance of both is already
+  described in the existing S646 entry below (Learning 678/679 recorded, pointer updated, close-out
+  completed); this is a pure reconcile-on-read backfill, matching the S639/S640/S641/S642 precedent
+  exactly — no code or content change beyond what `105e4700`/`e9554b04`'s own diffs already show.
+  `HANDOFFS.md`'s own frontier had no gap (`e9554b04` is already its last touching commit).
+
 ### 2026-08-27 · [BL-N] S646: ratified the Track 7 mate-spacing/union-centering design (docs/planning/pedigree-diagram-track7-mate-spacing-plan.md)
 - **Deliverable:** a design/scoping document for the mating-unit dot/mate-spacing gap (`BACKLOG.md`
   "Up Next", filed S645), following `ARCHITECTURE_WORKSTREAM.md` (project precedent for
