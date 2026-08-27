@@ -689,7 +689,10 @@ if (!exists("toKinship2Pedigree")) {
 ## publishes as "structurally identical to kinship2" -- and the exact one
 ## found live 2026-08-26 (owner-directed) to contain a fully isolated
 ## individual (P5: no parents, never anyone's sire/dam) that kinship2's own
-## align.pedigree() drops from the plot grid while nprcgenekeepr renders it.
+## align.pedigree() drops from the plot grid. As of Phase 1 of the
+## P5-suppression plan (S644, 2026-08-27, closing issue #164),
+## makePedigreeMatingLayout() now drops it too -- see the Block A/B tests
+## below, which assert the now-matching behavior.
 .pedTrackBFixture <- function() {
   ped <- data.frame(
     id   = c("P1", "P2", "P3", "P4", "P5", "P6",
@@ -977,16 +980,27 @@ test_that(
 ## Reproduces, end to end through the actual public compareAgainstKinship2()
 ## orchestration function (not a hand-built a/b pair), the exact defect
 ## found live 2026-08-26: kinship2's own align.pedigree() drops a fully
-## isolated individual from the plot grid; nprcgenekeepr renders it.
-## Before this session's fix, BOTH tests below reported identical = TRUE
-## (a false negative) because .comparePedigreeStructures() never looked at
-## which individuals exist, only at edges.
+## isolated individual from the plot grid. Before S641's fix, BOTH tests
+## below reported identical = TRUE (a false negative) because
+## .comparePedigreeStructures() never looked at which individuals exist,
+## only at edges. Between S641 and Phase 1 of the P5-suppression plan (S644,
+## 2026-08-27), nprcgenekeepr still rendered the isolated individual while
+## kinship2 did not, so both tests below asserted identical = FALSE with the
+## isolated id in individualsOnlyInB. As of Phase 1,
+## makePedigreeMatingLayout() suppresses it too (closing issue #164) --
+## found this session (not predicted by the P5-suppression plan's own §2.4
+## inventory, which named only the 2 Track B fixture blocks below this
+## section): the synthetic ISO fixture test immediately below exercises the
+## identical isolation predicate as Track B's P5 and needed the same update.
 
 test_that(
-  "compareAgainstKinship2 reports identical = FALSE on a minimal synthetic
+  "compareAgainstKinship2 reports identical = TRUE on a minimal synthetic
    fixture with one fully isolated individual -- kinship2 drops it from the
-   plot grid, nprcgenekeepr renders it, and this is now a real, reported
-   discrepancy", {
+   plot grid, and as of Phase 1 of the P5-suppression plan (S644,
+   2026-08-27, closing issue #164) nprcgenekeepr's makePedigreeMatingLayout()
+   now drops it too, matching kinship2's own convention. Before Phase 1,
+   this test asserted identical = FALSE / individualsOnlyInB = 'ISO' -- that
+   discrepancy is now resolved.", {
   skip_if_not_installed("kinship2")
   ped <- data.frame(
     id = c("F1", "M1", "C1", "ISO"),
@@ -997,24 +1011,27 @@ test_that(
   )
   ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
   result <- compareAgainstKinship2(ped)
-  expect_false(result$identical)
+  expect_true(result$identical)
   expect_equal(nrow(result$parentChildOnlyInA), 0L)
   expect_equal(nrow(result$parentChildOnlyInB), 0L)
   expect_equal(nrow(result$matePairsOnlyInA), 0L)
   expect_equal(nrow(result$matePairsOnlyInB), 0L)
   expect_equal(result$individualsOnlyInA, character(0))
-  expect_equal(result$individualsOnlyInB, "ISO")
+  expect_equal(result$individualsOnlyInB, character(0))
 })
 
 test_that(
-  "compareAgainstKinship2 reports identical = FALSE on the article's own
+  "compareAgainstKinship2 reports identical = TRUE on the article's own
    published Track B full (16-subject) fixture -- P5 is a fully isolated
    founder that kinship2's own plot silently omits (confirmed via
-   align.pedigree() directly: P5's index is never placed on the grid) while
-   nprcgenekeepr renders it. This is the exact fixture and image pair
-   published in vignettes/articles/kinship2-fidelity-validation.qmd as
-   'structurally identical' before this session's fix -- that claim was
-   wrong, and this test is what catches it going forward.", {
+   align.pedigree() directly: P5's index is never placed on the grid), and
+   as of Phase 1 of the P5-suppression plan (S644, 2026-08-27, closing issue
+   #164) makePedigreeMatingLayout() now omits it too, matching kinship2's
+   own convention. This is the exact fixture and image pair published in
+   vignettes/articles/kinship2-fidelity-validation.qmd; before Phase 1, this
+   test asserted identical = FALSE / individualsOnlyInB = 'P5' -- that
+   discrepancy is now resolved, and this test is what catches a regression
+   going forward.", {
   skip_if_not_installed("kinship2")
   ped <- .pedTrackBFixture()
   pedK2 <- toKinship2Pedigree(ped)
@@ -1023,13 +1040,13 @@ test_that(
   expect_false("P5" %in% pedK2$id[placedIdx])
 
   result <- compareAgainstKinship2(ped)
-  expect_false(result$identical)
+  expect_true(result$identical)
   expect_equal(nrow(result$parentChildOnlyInA), 0L)
   expect_equal(nrow(result$parentChildOnlyInB), 0L)
   expect_equal(nrow(result$matePairsOnlyInA), 0L)
   expect_equal(nrow(result$matePairsOnlyInB), 0L)
   expect_equal(result$individualsOnlyInA, character(0))
-  expect_equal(result$individualsOnlyInB, "P5")
+  expect_equal(result$individualsOnlyInB, character(0))
 })
 
 ## ---- .formatStructuralDiscrepancy() reporting-helper tests ---------------
@@ -1037,17 +1054,21 @@ test_that(
 ## Found live 2026-08-26: data-raw/kinship2FidelityValidation.R's own local
 ## reportDiscrepancy() function was never updated when S641 added
 ## individualsOnlyInA/individualsOnlyInB to .comparePedigreeStructures()'s
-## return shape -- re-running the script on the article's own Track B full
-## fixture printed "!! DISCREPANCY -- Track B full !!" with NOTHING
-## underneath, silently omitting the one detail (individualsOnlyInB: "P5")
-## the identical = FALSE verdict is actually based on. That reporting logic
-## lived only in a data-raw/ script explicitly excluded from R CMD check
-## ("not part of R CMD check" per its own header) -- so no test ever
-## exercised it, and it silently went stale. .formatStructuralDiscrepancy()
+## return shape -- at the time, re-running the script on the article's own
+## Track B full fixture printed "!! DISCREPANCY -- Track B full !!" with
+## NOTHING underneath, silently omitting the one detail (individualsOnlyInB:
+## "P5") that identical = FALSE verdict was actually based on. That
+## reporting logic lived only in a data-raw/ script explicitly excluded from
+## R CMD check ("not part of R CMD check" per its own header) -- so no test
+## ever exercised it, and it silently went stale. .formatStructuralDiscrepancy()
 ## is the same reporting logic, extracted into this helper (auto-loaded
 ## under test_dir()/devtools::test(), same file as compareAgainstKinship2())
 ## so it has real test coverage going forward; data-raw/
-## kinship2FidelityValidation.R now calls this instead of a local copy.
+## kinship2FidelityValidation.R now calls this instead of a local copy. (As
+## of Phase 1 of the P5-suppression plan, S644 2026-08-27, Track B full no
+## longer triggers identical = FALSE at all -- see the populated-field tests
+## below, which exercise the same reporting logic via hand-built cmp
+## structures instead.)
 ##
 ## Returns a single formatted character string describing every populated
 ## diff field, or NULL (invisibly) when cmp$identical is TRUE -- a return
@@ -1131,14 +1152,19 @@ test_that(
 })
 
 test_that(
-  ".formatStructuralDiscrepancy on the article's own published Track B full
-   (16-subject) fixture reports P5 -- the live-kinship2 integration-level
-   regression for the exact bug found this session (2026-08-26): re-running
+  ".formatStructuralDiscrepancy returns NULL (invisibly) on the article's
+   own published Track B full (16-subject) fixture -- as of Phase 1 of the
+   P5-suppression plan (S644, 2026-08-27, closing issue #164),
+   makePedigreeMatingLayout() now suppresses P5 to match kinship2's own
+   convention, so compareAgainstKinship2() reports identical = TRUE and
+   there is nothing to report. Live-kinship2 integration-level regression
+   guard: before Phase 1, this exact fixture was the live-kinship2 case for
+   the individuals-diff-reporting bug found 2026-08-26 (re-running
    data-raw/kinship2FidelityValidation.R printed an empty discrepancy block
-   for this exact fixture before this fix.", {
+   for it); it now instead guards that the discrepancy itself stays
+   resolved.", {
   skip_if_not_installed("kinship2")
   result <- compareAgainstKinship2(.pedTrackBFixture())
   report <- .formatStructuralDiscrepancy("Track B full", result)
-  expect_true(is.character(report))
-  expect_match(report, "P5", fixed = TRUE)
+  expect_null(report)
 })
