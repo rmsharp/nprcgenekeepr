@@ -44,7 +44,12 @@ test_that(
   )
   result <- makePedigreeMatingLayout(trio)
   expect_true(is.list(result))
-  expect_setequal(names(result), c("nodes", "edges", "duplicateToReal"))
+  ## isolatedIds added issue #164 / P5-suppression plan (Phase 1, S644):
+  ## always present, character(0) when nothing was suppressed (this trio
+  ## has no isolated individual).
+  expect_setequal(names(result),
+                   c("nodes", "edges", "duplicateToReal", "isolatedIds"))
+  expect_equal(result$isolatedIds, character(0))
 })
 
 ## ---- node population: one row per real individual, duplicate, union ---
@@ -1369,4 +1374,132 @@ test_that(
   expect_equal(nrow(mateEdges), 2L)
   expect_equal(mateEdges$color, rep("#D55E00", 2L))
   expect_equal(mateEdges$width, rep(4, 2L))
+})
+
+## ---- isolated-individual suppression (issue #164, Dragon 1-3, plan
+## docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md,
+## Phase 1 implemented S644) -----------------------------------------------
+##
+## An isolated individual (.findIsolatedIds() -- no known parent, never a
+## parent, not twinRelations-connected -- P5's exact profile) is no longer
+## rendered, matching kinship2's own align.pedigree() convention. When
+## suppression would empty the diagram entirely (issue #164's own crash
+## condition -- every individual isolated), the function returns a
+## fully-typed empty result instead of crashing (Dragon 3, ratified 3B).
+## edgeStyle = "direct" is used throughout this section to keep assertions
+## focused on suppression, not routing (same-row collision/jog behavior is
+## covered exhaustively elsewhere in this file).
+
+test_that(
+  "makePedigreeMatingLayout suppresses an isolated individual (P5's exact
+   profile) from an otherwise-connected pedigree, reporting it via
+   isolatedIds, leaving the connected individuals' nodes/edges unaffected",
+  {
+  ped <- data.frame(
+    id = c("P1", "P2", "C1", "P5"),
+    sire = c(NA, NA, "P1", NA), dam = c(NA, NA, "P2", NA),
+    sex = c("M", "F", "M", "F"), gen = c(0L, 0L, 1L, 0L),
+    stringsAsFactors = FALSE
+  )
+  result <- expect_message(
+    makePedigreeMatingLayout(ped, edgeStyle = "direct"), "P5"
+  )
+  expect_false("P5" %in% result$nodes$id)
+  expect_true(all(c("P1", "P2", "C1") %in% result$nodes$id))
+  expect_equal(result$isolatedIds, "P5")
+  ## C1's parent-child relationship is unaffected by P5's suppression.
+  expect_true(any(result$edges$to == "C1" | result$edges$from == "C1" |
+                     grepl("C1", result$edges$to) |
+                     grepl("C1", result$edges$from)))
+})
+
+test_that(
+  "makePedigreeMatingLayout no longer crashes on issue #164's own minimal
+   reproduction (a 2-row all-founder pedigree, every individual isolated)
+   -- returns a fully-typed empty result plus isolatedIds instead", {
+  ## Verbatim from https://github.com/rmsharp/nprcgenekeepr/issues/164
+  ped <- data.frame(
+    id = c("A", "B"), sire = c(NA, NA), dam = c(NA, NA),
+    sex = c("M", "F"), gen = c(0L, 0L),
+    stringsAsFactors = FALSE
+  )
+  result <- expect_message(
+    makePedigreeMatingLayout(ped, edgeStyle = "direct")
+  )
+  expect_equal(nrow(result$nodes), 0L)
+  expect_equal(nrow(result$edges), 0L)
+  expect_length(result$duplicateToReal, 0L)
+  expect_setequal(result$isolatedIds, c("A", "B"))
+})
+
+test_that(
+  "makePedigreeMatingLayout's issue #164 fix holds under edgeStyle =
+   'rectilinear' too -- the crash was unconditional, before the edgeStyle
+   branch, per the issue's own text", {
+  ped <- data.frame(
+    id = c("A", "B"), sire = c(NA, NA), dam = c(NA, NA),
+    sex = c("M", "F"), gen = c(0L, 0L),
+    stringsAsFactors = FALSE
+  )
+  result <- expect_message(
+    makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
+  )
+  expect_equal(nrow(result$nodes), 0L)
+  expect_equal(nrow(result$edges), 0L)
+  expect_setequal(result$isolatedIds, c("A", "B"))
+})
+
+test_that(
+  "makePedigreeMatingLayout also handles issue #164's single-individual
+   variant ('also reproduces with a single individual') -- same
+   fully-typed empty-result contract", {
+  ped <- data.frame(
+    id = "A", sire = NA_character_, dam = NA_character_,
+    sex = "M", gen = 0L, stringsAsFactors = FALSE
+  )
+  result <- expect_message(
+    makePedigreeMatingLayout(ped, edgeStyle = "direct")
+  )
+  expect_equal(nrow(result$nodes), 0L)
+  expect_equal(nrow(result$edges), 0L)
+  expect_equal(result$isolatedIds, "A")
+})
+
+test_that(
+  "makePedigreeMatingLayout does NOT suppress a twin pair that has no
+   sire, no dam, and no children -- structurally isolated by the
+   parent/child predicate alone, but genuinely connected via twinRelations
+   (found empirically S643)", {
+  ped <- data.frame(
+    id = c("TW1", "TW2"), sire = c(NA, NA), dam = c(NA, NA),
+    sex = c("F", "F"), gen = c(0L, 0L),
+    stringsAsFactors = FALSE
+  )
+  twinRelations <- data.frame(
+    id1 = "TW1", id2 = "TW2", code = "MZ twin", stringsAsFactors = FALSE
+  )
+  result <- expect_no_message(
+    makePedigreeMatingLayout(ped, edgeStyle = "direct",
+                              twinRelations = twinRelations)
+  )
+  expect_true(all(c("TW1", "TW2") %in% result$nodes$id))
+  expect_equal(result$isolatedIds, character(0))
+  connector <- result$edges[result$edges$label %in% "MZ", ]
+  expect_equal(nrow(connector), 1L)
+  expect_equal(connector$color, "#009E73")
+})
+
+test_that(
+  "makePedigreeMatingLayout emits no suppression message when nothing is
+   isolated", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  result <- expect_no_message(
+    makePedigreeMatingLayout(trio, edgeStyle = "direct")
+  )
+  expect_equal(result$isolatedIds, character(0))
 })

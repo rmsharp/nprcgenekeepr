@@ -53,7 +53,16 @@ unconditionally gains \code{color} (see
 preserved when the edge is KEPT as-is; a marked mate edge that gets
 replaced by a D2 dogleg projection currently falls back to the
 generic routing color/width (edgeStyle = "rectilinear" propagation is
-a deferred follow-up, BACKLOG.md Housekeeping).
+a deferred follow-up, BACKLOG.md Housekeeping). Also
+\code{isolatedIds} (issue #164 / P5-suppression plan, Dragon 2-3,
+RATIFIED S643): a character vector of ids suppressed from
+\code{nodes}/\code{edges} because they have no known parent, are
+never a parent, and are not \code{twinRelations}-connected --
+\code{character(0)} when nothing was suppressed. When every
+individual in \code{ped} is isolated, \code{nodes}/\code{edges} are
+both 0-row and \code{duplicateToReal} is empty (this is also issue
+#164's fix -- the function no longer crashes on an all-isolated
+\code{ped}).
 }
 \description{
 The exported wrapper for the kinship2-parity pedigree layout (Pedigree

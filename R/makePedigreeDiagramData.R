@@ -297,6 +297,48 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   df
 }
 
+#' Find fully-isolated individuals in a pedigree (issue #164 /
+#' P5-suppression plan, Dragon 1, RATIFIED S643,
+#' \code{docs/planning/pedigree-diagram-isolated-individual-suppression-
+#' plan.md})
+#'
+#' An individual is isolated iff they have no known parent (\code{sire} and
+#' \code{dam} both \code{NA}/empty) AND they are never named as anyone
+#' else's \code{sire}/\code{dam} (never a parent themselves) AND they are
+#' not connected via \code{twinRelations} -- i.e. literally zero edges,
+#' matching kinship2's own \code{align.pedigree()} convention (this
+#' package's mating-unit model only recognizes a union via a shared child,
+#' so a parent with no children is not, on its own, "mated"). A dangling
+#' parent reference (a \code{sire}/\code{dam} value with no own row in
+#' \code{ped}) still counts as having a parent edge -- a child of a
+#' trimmed-away parent is correctly not isolated. Not validated here
+#' (matches \code{\link{.buildTwinConnectorEdges}}'s own "not validated
+#' here" convention) -- called only from within
+#' \code{\link{makePedigreeMatingLayout}}, downstream of that function's
+#' own \code{is.data.frame()}/required-columns validation.
+#'
+#' @param ped data frame with (at least) \code{id}, \code{sire}, \code{dam}
+#'   columns.
+#' @param twinRelations optional data.frame with columns \code{id1},
+#'   \code{id2} (see \code{\link{checkTwinRelations}}). \code{NULL}
+#'   (default): the twin exclusion is a no-op.
+#' @return character vector of isolated ids (possibly empty).
+#' @noRd
+.findIsolatedIds <- function(ped, twinRelations = NULL) {
+  ids <- as.character(ped$id)
+  sire <- as.character(ped$sire)
+  dam <- as.character(ped$dam)
+  hasParent <- (!is.na(sire) & nzchar(sire)) | (!is.na(dam) & nzchar(dam))
+  isParent <- ids %in% c(sire[!is.na(sire) & nzchar(sire)],
+                          dam[!is.na(dam) & nzchar(dam)])
+  twinIds <- if (!is.null(twinRelations)) {
+    c(as.character(twinRelations$id1), as.character(twinRelations$id2))
+  } else {
+    character()
+  }
+  ids[!hasParent & !isParent & !(ids %in% twinIds)]
+}
+
 #' Transform a pedigree into a mating-unit forest (Option 2 layout, D1/D2)
 #'
 #' Internal helper for the kinship2-parity pedigree layout (Pedigree
@@ -883,7 +925,16 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   preserved when the edge is KEPT as-is; a marked mate edge that gets
 #'   replaced by a D2 dogleg projection currently falls back to the
 #'   generic routing color/width (edgeStyle = "rectilinear" propagation is
-#'   a deferred follow-up, BACKLOG.md Housekeeping).
+#'   a deferred follow-up, BACKLOG.md Housekeeping). Also
+#'   \code{isolatedIds} (issue #164 / P5-suppression plan, Dragon 2-3,
+#'   RATIFIED S643): a character vector of ids suppressed from
+#'   \code{nodes}/\code{edges} because they have no known parent, are
+#'   never a parent, and are not \code{twinRelations}-connected --
+#'   \code{character(0)} when nothing was suppressed. When every
+#'   individual in \code{ped} is isolated, \code{nodes}/\code{edges} are
+#'   both 0-row and \code{duplicateToReal} is empty (this is also issue
+#'   #164's fix -- the function no longer crashes on an all-isolated
+#'   \code{ped}).
 #'
 #' @examples
 #' library(nprcgenekeepr)
@@ -903,6 +954,51 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
          toString(required), ". Missing: ", toString(missingCols))
   }
   edgeStyle <- match.arg(edgeStyle)
+
+  # A fully-isolated individual (no known parent, never a parent, not
+  # twinRelations-connected) is suppressed from the diagram, matching
+  # kinship2's own align.pedigree() convention -- the P5-suppression plan,
+  # entangled with issue #164, RATIFIED S643 (Dragon 1-3, docs/planning/
+  # pedigree-diagram-isolated-individual-suppression-plan.md). Pre-
+  # filtering 'ped' here (Dragon 2) means .buildMatingUnitForest() and
+  # .positionMatingUnitForest(), and every downstream table, never see an
+  # isolated row at all -- no separate exclusion needed later.
+  isolatedIds <- .findIsolatedIds(ped, twinRelations)
+  ped <- ped[!ped$id %in% isolatedIds, , drop = FALSE]
+
+  if (length(isolatedIds) > 0L) {
+    message(sprintf(
+      paste0("makePedigreeMatingLayout(): %d individual(s) with no ",
+             "recorded parents, mates, or offspring suppressed from the ",
+             "pedigree diagram: %s"),
+      length(isolatedIds), toString(isolatedIds)
+    ))
+  }
+
+  # Dragon 3 (RATIFIED S643 as 3B): when suppression would empty the
+  # diagram entirely -- issue #164's own crash condition, every individual
+  # isolated -- return a fully-typed empty result instead of crashing.
+  # Necessary, not merely defensive: .positionMatingUnitForest() itself
+  # errors on a 0-row 'ped' (empirically confirmed S644,
+  # .buildForestChildrenOf() requires a non-empty 'rootIds'), so letting a
+  # 0-row 'ped' flow through the normal pipeline is not an option.
+  if (nrow(ped) == 0L) {
+    emptyNodes <- data.frame(id = character(), label = character(),
+                              shape = character(), title = character(),
+                              size = numeric(), stringsAsFactors = FALSE)
+    emptyNodes$color.background <- character()
+    emptyNodes$x <- numeric()
+    emptyNodes$y <- numeric()
+    emptyEdges <- data.frame(from = character(), to = character(),
+                              dashes = logical(), smooth.enabled = logical(),
+                              smooth.type = character(),
+                              smooth.roundness = numeric(),
+                              color = character(), width = numeric(),
+                              stringsAsFactors = FALSE)
+    return(list(nodes = emptyNodes, edges = emptyEdges,
+                duplicateToReal = stats::setNames(character(), character()),
+                isolatedIds = isolatedIds))
+  }
 
   forest <- .buildMatingUnitForest(ped)
   pos <- .positionMatingUnitForest(ped, forest)
@@ -1169,10 +1265,22 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
                smooth.roundness = numeric(), stringsAsFactors = FALSE)
   }
 
-  childEdgesOut <- data.frame(childEdges, dashes = FALSE,
-                               smooth.enabled = NA, smooth.type = NA_character_,
-                               smooth.roundness = NA_real_,
-                               stringsAsFactors = FALSE)
+  # Defense-in-depth (Dragon 2): the pre-filter above makes a 0-row
+  # childEdges unreachable for an all-isolated 'ped' (intercepted by the
+  # early return above instead), but this guard -- mirroring the
+  # mateEdges/dupEdges 0-row branches a few lines above/below -- protects
+  # any other future path into a 0-row childEdges (issue #164's own root
+  # cause: data.frame() cannot recycle scalar columns down to 0 rows).
+  childEdgesOut <- if (nrow(childEdges) > 0L) {
+    data.frame(childEdges, dashes = FALSE,
+               smooth.enabled = NA, smooth.type = NA_character_,
+               smooth.roundness = NA_real_,
+               stringsAsFactors = FALSE)
+  } else {
+    data.frame(from = character(), to = character(), dashes = logical(),
+               smooth.enabled = logical(), smooth.type = character(),
+               smooth.roundness = numeric(), stringsAsFactors = FALSE)
+  }
 
   # S549 Finding #2 (fixed S555): color/width now ALWAYS exist on every
   # edge type once any mating unit exists (see mateEdges above) --
@@ -1233,7 +1341,8 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     }
   }
 
-  list(nodes = nodes, edges = edges, duplicateToReal = duplicateToReal)
+  list(nodes = nodes, edges = edges, duplicateToReal = duplicateToReal,
+       isolatedIds = isolatedIds)
 }
 
 #' Insert rectilinear mate-line/sibship-bar waypoint nodes and edges

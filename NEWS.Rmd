@@ -113,6 +113,11 @@ knitr::opts_chunk$set(echo = TRUE)
   well-known reference pedigree tool) is now checked directly by code, not
   just by eye -- confirming its example diagrams show the same family
   relationships kinship2 does, in every case checked.
+- The Diagram tab no longer shows an individual as a disconnected, floating
+  box when they have no recorded parents, mates, or offspring -- matching
+  how the reference tool kinship2 draws the same family. Loading a set of
+  animals with no such relationships among any of them no longer crashes
+  the diagram (issue #164).
 ## Kinship & Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their
   computed relatedness to genetic identity, and that correction flows
