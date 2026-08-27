@@ -20,19 +20,149 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ### What Session 646 Did
 **Deliverable:** Design/scoping document for the mating-unit dot/mate-spacing gap filed to
-`BACKLOG.md` "Up Next" by S645 (post-close-out) -- resolves the 3 named judgment calls: (a) center
-the `__union_*` node between the two parents' own x vs. derive it from children; (b) whether/how to
-widen Tier 3's `derivedX()` mate offset toward a kinship2-comparable visual gap; (c) interaction
-with Tier 1's BJL apportioning, existing de-collision/sweep passes, and Track 5's D1/D2
-orthogonality invariants. Following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`
-(project precedent for pedigree-diagram positioning-algorithm decisions, per
-`pedigree-diagram-track6-child-centered-union-position-plan.md`'s own header). (IN PROGRESS)
-**Started:** 2026-08-27.
-**Status:** Session claimed. Phase 0 orientation complete (found + backfilled a 1-commit
-`CHANGELOG.md` ledger gap for S645's own post-close-out reconcile commit `4e63cf34`, committed
-separately as `0ee0b332`). Research beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+`BACKLOG.md` "Up Next" by S645 (post-close-out) --
+[`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`](docs/planning/pedigree-diagram-track7-mate-spacing-plan.md),
+resolving the 3 named judgment calls: (a) center the `__union_*` node between the two parents' own
+`x` vs. derive it from children; (b) whether/how to widen Tier 3's `derivedX()` mate offset toward
+a kinship2-comparable visual gap; (c) interaction with Tier 1's BJL apportioning, existing
+de-collision/sweep passes, and Track 5's D1/D2 orthogonality invariants. Following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md` (project precedent for pedigree-diagram
+positioning-algorithm decisions, per `pedigree-diagram-track6-...-plan.md`'s own header).
+**Ratified by the owner via `AskUserQuestion`** ("Ratify as scoped"). **DONE.** **Started/
+Completed:** 2026-08-27 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): clean tracked tree, same 7 pre-existing untracked
+   items. Ledger reconcile found `CHANGELOG.md`'s frontier one commit behind `HEAD` -- S645's own
+   post-close-out reconcile commit `4e63cf34` (HANDOFFS.md/SESSION_NOTES.md addendum) had no ledger
+   entry of its own -- backfilled, commit `0ee0b332`. `gh run list`: `lint.yaml` red (pre-existing,
+   already-tracked Housekeeping item, unaffected by this session); `R-CMD-check.yaml`/
+   `test-coverage.yaml`/`pkgdown.yaml` still `in_progress` from S645's own push at check time.
+   Rendered the priorities list (2 numbered items, both pedigree-fidelity per the standing top
+   priority); owner picked the mating-unit dot/mate-spacing item over P5-suppression Phase 3.
+2. **Phase 1B claim** (commit `9096ce76`): stub + pending `HANDOFFS.md` receipt written before any
+   research began.
+3. **Workstream selection:** chose `ARCHITECTURE_WORKSTREAM.md` over the task-to-workstream
+   mapping table's literal "Design the [X]" -> `DESIGN_WORKSTREAM.md` default, citing Track 6's own
+   plan header as direct precedent (5 prior pedigree-positioning decisions all made the same call).
+4. **Research, read directly, not delegated:** re-read `.positionMatingUnitForest()` (Tier 1/2/3,
+   `R/makePedigreeDiagramData.R:627-851`) and `.positionTreeApportion()`
+   (`R/positionTreeApportion.R`, the BJL engine's "Aesthetic 4" parent-centered-over-children rule)
+   directly against current `HEAD`, not from S645's note. Dumped and read kinship2's own installed
+   source (`alignped1`/`alignped3`/`alignped4`) via `getAnywhere()` to characterize its real
+   algorithm (a constrained quadratic program, not a local offset) rather than assume from prior
+   articles. Ran 3 empirical R probes against the real fixtures (Track B, the bundled 375-individual
+   `obfuscated_rhesus_mhc_ped.csv`): confirmed 60/237 (25.3%) anchored units satisfy the existing
+   `qualifies()` gate, 22/209 (10.5%) anchors are polygamous, and a preliminary (reported as
+   preliminary, not resolved) collision-headroom signal against unrelated third-party nodes. Read
+   Track 6's own plan (§1.3, the polygamous-anchor cross-union-centroid regression) and the
+   Walker/BJL redesign plan's Track-3-removal warning directly, to prove (not assume) the
+   recommended fix cannot reintroduce either prior regression.
+5. **Drafted the design document** (ARCHITECTURE_WORKSTREAM structure: Context/Decision/Rationale/
+   Alternatives/Impact/Migration/Verification/Out-of-Scope), recommending a `qualifies()`-gated
+   widen-Tier-3-offset + recenter-the-union fix, informed by a (then-incorrect) kinship2 comparison.
+6. **Post-draft adversarial verification (Workflow, 4 parallel agents, ~390K tokens, ~80 tool
+   calls):** independently re-checked every code citation, the kinship2 source claims, the
+   empirical numbers, and the prior-plan citations against primary sources, not the draft's own
+   prose. Found: **1 material error that changed the recommendation** -- the draft claimed
+   kinship2's QP "targets" a `sqrt(align[2]) ~= 1.414` raw-unit spousal separation; the real
+   mechanism is a penalty *weight* on a term whose minimum is distance=0, and the real achieved
+   separation is always exactly `1.0` (the ordinary adjacency floor) regardless of `align[2]`'s
+   value. **1 material citation error with no effect on the conclusion** -- a Track 5 D1/D2
+   citation (`:1533-1535, 1561-1563`) was copied verbatim from Track 6's own plan without
+   re-verifying against current source; the real invariant (still true) lives at `:1440-1487`/
+   `:1526`. 3 minor cosmetic quote mismatches (`unname()` dropped, `2` vs `2L`, a loose "mean"
+   attribution to Track 6 that Track 6 itself never specified). 0 discrepancies in the empirical
+   fixture numbers (independently reproduced exactly, cross-corroborated against an existing
+   CI-verified test assertion).
+7. **Independently re-confirmed the most consequential finding myself, directly** (not merely
+   trusted the verification agent): ran `kinship2::align.pedigree()` on a hand-built 3-person trio
+   while sweeping `align[2]` from `0.001` to `1000` -- achieved spousal separation stayed exactly
+   `1.0` in every case, confirming the agent's finding independently.
+8. **Corrected the document** (all 6 findings fixed) and added a new, permanent §9 "Post-draft
+   adversarial verification" section disclosing what the first draft got wrong and how, rather than
+   silently revising it away -- the corrected target (`minSep`, not a `0.75`-`1.4` range around a
+   wrong number) is simpler AND better-justified than the original.
+9. **Ratification** (`AskUserQuestion`, 3 options: ratify as scoped / go broader now / hold and
+   discuss) -- owner picked "ratify as scoped," no changes. §10 and the top Status line updated with
+   the ratification record.
+10. **`BACKLOG.md` updated** in place: the item's header now says "Design RATIFIED S646... Phase 1
+    implementation READY, next pickup," with the ratified scope summarized and the 3 judgment
+    calls' resolutions recorded inline (matching Track 6/P5-suppression's own precedent of updating
+    their own BACKLOG entries at each phase transition).
+11. **Phase 3E runtime smoke test: not applicable, stated explicitly, not silently skipped.** This
+    session's deliverable is a planning document -- no `R/` code changed, nothing to launch or
+    smoke-test. (Standard for a planning session, per `SESSION_RUNNER.md`'s "the plan is the
+    deliverable, do not start implementing.")
+12. **Close-out:** no `NEWS.Rmd`/citation/tutorial/pkgdown/lint checklist applies -- no code changed,
+    no new exported function, no new user-facing feature shipped this session (all gated on the
+    still-future Phase 1 implementation session). `CHANGELOG.md` entries recorded for every action
+    (the Phase 0 ledger backfill, the claim, and this close-out). Commits, in order: `0ee0b332`
+    (Phase 0 ledger backfill), `9096ce76` (Phase 1B claim), plus this close-out's own commits below.
+
+**Self-assessment (Session 646): 9/10.** **Strengths:** (1) chose the correct workstream
+(ARCHITECTURE, not the generic task-mapping table's DESIGN default) by checking actual project
+precedent rather than following the table literally; (2) did primary-source research personally --
+read the real BJL engine code, dumped and read kinship2's actual installed source, ran real
+empirical probes against real fixtures -- rather than describing from memory or delegating without
+independent verification; (3) used a dedicated adversarial-verification pass BEFORE presenting to
+the owner, which caught a real, consequential quantitative error (the kinship2 `1.414` figure) that
+would otherwise have shipped into a ratified design and, eventually, production code; (4)
+independently re-confirmed the single most consequential finding myself, directly, rather than
+trusting the verification agent's report at face value -- matching this project's own "spot-verify
+agent citations against source" standard; (5) disclosed the correction transparently in the
+document itself (a new, permanent §9) rather than quietly revising the draft, matching this
+project's own established practice around the S645 caption correction; (6) the corrected
+recommendation (`minSep` exactly) ended up simpler and more rigorously justified than the original
+hedged range -- the correction was a net improvement, not just damage control. **Weaknesses:** (1)
+the first draft's central kinship2 claim was WRONG when first written -- I read `align[2]`'s
+default value correctly but inferred its semantic role (a target distance) from the code's
+structure without actually running kinship2 to see what it does; the practical lesson (recorded as
+a learning below) is to empirically execute any "target/threshold" claim pulled from a library's
+source *before* writing it into a design document, not only after; (2) I copied Track 6's own D1/D2
+line-number citation verbatim into my own draft without re-verifying it against current source at
+draft time, despite explicitly stating elsewhere in the same document that I was re-verifying
+everything against current source, not carrying forward prior notes -- a copied citation from a
+*trusted prior document* still needs the same independent check as one from memory, and I only
+caught this via the adversarial-verification pass, not my own initial diligence; (3) the
+collision-headroom empirical probe was somewhat rushed and produced an inconclusive, unroot-caused
+result (0.0000 headroom at every tested delta, including the currently-shipped one) -- reported
+honestly as preliminary rather than over-interpreted, but a cleaner methodology (properly
+distinguishing a pair's own coincidental epsilon-tie from a genuine third-party collision) would
+have produced a more useful signal for the implementing session to build on.
+
+**Gotchas for a future session:** (1) Phase 1 (implementation of Track 7's ratified design) is
+READY -- exact scope in `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §6/§7 and
+`BACKLOG.md`. Do not re-litigate the ratified scope (`qualifies()`-gated only, target = `minSep`) --
+that decision is made; the implementing session's own Pre-RED empirical validation is about
+*verifying* it works, not re-deciding *what* to build. (2) The plan's own §7 Verification Plan
+explicitly requires a live-render collision-headroom check before shipping (per Learning 641's own
+methodology) -- this is NOT optional cleanup, it's flagged because this design session's own
+preliminary probe found a real, unroot-caused signal worth taking seriously. (3) Do not generalize
+this fix beyond `qualifies()`-gated units without a fresh, dedicated measurement session (Track 6's
+own style) -- Alternative B is explicitly deferred, not rejected outright, in case the ~25%-coverage
+boundary later proves insufficient in practice. (4) `lint.yaml` CI is still red (pre-existing,
+unaffected, already-tracked Housekeeping item) -- unrelated to this session. (5)
+`HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap, unchanged this
+session -- `BACKLOG.md`'s "ledger-size housekeeping" item is still open.
+
+### Session 645 Handoff Evaluation (by Session 646)
+**Score: 9/10.** **What helped:** S645's own post-close-out BACKLOG.md filing for this exact item
+(not its formal `next_steps` field, which recommended P5-suppression Phase 3 instead -- the owner
+picked this item from the priorities list regardless) was extraordinarily well-prepared: exact root
+cause with line numbers (Tier 2/Tier 3), exact empirical citations (Track B's 4 pairs, the
+`minSep * 0.4`/`size = 25` comparison), and the explicit "a future session should treat this as a
+design/scoping session first" framing that set this session's entire premise and workstream choice.
+Every citation in that filing checked out exactly under this session's own independent
+re-verification -- nothing in it was wrong, only less deep than what a dedicated design session
+could add (the `qualifies()` gate's own safety properties, the kinship2 QP comparison, Learning
+641's directly-relevant precedent). **What was missing:** nothing structural -- the filing was a
+BACKLOG entry, not a formal handoff `next_steps` field, and did its job (giving the next session
+enough to start from) well. **What was wrong:** nothing found -- every factual claim held up.
+**ROI:** high -- this session could skip re-deriving the root cause entirely and start directly at
+deeper verification, kinship2 comparison, and impact analysis.
+
+**Ledger:** `CHANGELOG` entries recorded (Phase 0 backfill, this close-out's own actions).
 
 ### What Session 645 Did
 **Deliverable:** Phase 2 (test/article correction) of the RATIFIED
