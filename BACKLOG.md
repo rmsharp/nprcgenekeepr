@@ -4,6 +4,15 @@
 inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 `SESSION_RUNNER.md` Phase 0.)*
 
+> **STANDING TOP PRIORITY (owner-directed, 2026-08-26, S643):**
+> pedigree-drawing fidelity work stays at the top of this list, ahead of
+> every other item below, until the owner explicitly says it’s done.
+> This overrides the normal “pick whatever’s READY” Phase 0
+> priorities-list convention for as long as this note stands — a future
+> session’s Phase 0 report should surface pedigree-drawing work first
+> regardless of other items’ tags, and should not remove this note
+> without an explicit owner sign-off that the work is complete.
+
 ## Up Next
 
 **[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
@@ -11,39 +20,46 @@ erroneously renders fully-isolated individuals (no sire, no dam, no
 mate, no children) – reverses this project’s own prior “acceptable
 difference” framing** (found live 2026-08-26, owner-directed via direct
 visual review of `kinship2-fidelity-validation.qmd`’s Track B full
-fixture, READY, Effort M/L – needs a real design decision, not a
-one-line fix) – `P5` in the article’s own published Track B 16-subject
-fixture has zero edges of any kind (no parents, no mate, no children);
-kinship2’s own `plot.pedigree()` correctly omits it from the drawing
-(confirmed live: `align.pedigree()`’s own `$nid` placement never places
-it), while
+fixture. **Design RATIFIED S643 (2026-08-26): READY for Phase 1
+implementation, Effort M/L**) – `P5` in the article’s own published
+Track B 16-subject fixture has zero edges of any kind (no parents, no
+mate, no children); kinship2’s own `plot.pedigree()` correctly omits it
+from the drawing (confirmed live: `align.pedigree()`’s own `$nid`
+placement never places it), while
 [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
 renders it as a disconnected node. **The owner has explicitly ruled this
 an error** (“P5… is erroneously included”), overriding S641’s own
 `kinship2-fidelity-validation.qmd` Verdict text, which called this “the
-more useful default, not a bug to reconcile away” – that framing is now
-known to be wrong and needs correcting in the same session as the code
-fix, not separately. **Entangled with issue \#164
+more useful default, not a bug to reconcile away.” **Full design plan
+(ratified via `AskUserQuestion`, both judgment calls decided):**
+[`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md).
+Entangled with issue \#164
 ([`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-crashes outright on a pedigree where every individual has zero
-parent-child edges, e.g. all-founder input):** if the fix is “never
-render a fully-isolated individual,” a pedigree where *every* individual
-is isolated has nothing left to draw – the same degenerate case \#164
-already can’t handle. A future session should design “suppress isolated
-individuals” and “what happens when suppression empties the diagram”
-together, not fix the isolated-individual case in ignorance of the
-empty-diagram case. **Rule scoping note (from this session’s discussion,
-not yet ratified):** the safe rule is narrow – literally zero edges (no
-sire, no dam, no mate, no children), matching `P5`’s exact profile – NOT
-“no mate and no children” alone, which would wrongly hide a real
-individual with known parents who simply hasn’t been mated/bred yet
-(colony management would want to still see that individual). Also update
-`.comparePedigreeStructures()`’s Track B full fixture expectation and
-the live-kinship2 regression test in
-`tests/testthat/test_comparePedigreeStructure.R` once the renderer no
-longer includes `P5` (today’s test asserts `identical = FALSE` with
-`individualsOnlyInB = "P5"` – once fixed, Track B full should become
-`identical = TRUE`, this time correctly).
+crashes outright on an all-isolated pedigree) – the plan resolves both
+together, plus a second, narrower trigger for the same degenerate case
+this session’s research newly found: a user focal-trimming to one
+isolated individual via the Focal Animals box hits the identical “100%
+isolated” case. **Ratified decisions:** isolation predicate
+(sire/dam/never-a-parent, excluding `twinRelations`-connected ids –
+matches `P5`’s exact profile, the same narrow rule this item originally
+scoped); hook point (new shared `.findIsolatedIds()` primitive,
+pre-filters `ped` at the top of
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md));
+**when suppression would empty the diagram: render nothing + an explicit
+plain-language message** (not “render everyone anyway” – ratified over
+that cheaper fallback because it would re-show `P5`-like individuals
+whenever they’re 100% of what’s being rendered, the exact case just
+ruled an error); **Shiny UI messaging (`R/modPedigree.R`
+banner/empty-state text) ships in the same implementation as the core
+fix**, not deferred. 3 phases with completion criteria in the plan
+document (§4) – may be executed as one pre-declared vertical slice
+(plan’s own §10). Also update `.comparePedigreeStructures()`’s Track B
+full fixture expectation and the live-kinship2 regression test in
+`tests/testthat/test_comparePedigreeStructure.R` (today’s test asserts
+`identical = FALSE` with `individualsOnlyInB = "P5"` – once fixed, Track
+B full should become `identical = TRUE`, this time correctly) – exact
+line numbers for both affected test blocks are in the plan document’s
+§2.4.
 
 **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636,
 2026-08-26). **RESOLVED S637, 2026-08-26, per owner-directed “broader”
@@ -285,6 +301,32 @@ presenting).
 (this file’s own build-equivalent) run clean after every substantive
 edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`. \##
 Housekeeping
+
+**`lint.yaml` CI failed on S642’s own close-out push, not
+self-resolved** (found live S643, 2026-08-26, via Phase 0’s mandatory
+`gh run list` CI-status check, READY, Effort S) – run `33022564528`:
+`[object_usage_linter] no visible global function definition for '.formatStructuralDiscrepancy'`
+at `data-raw/kinship2FidelityValidation.R:339`, exit code 31
+(`LINTR_ERROR_ON_LINT: true`). Contradicts S642’s own close-out claim of
+“0 lints on all 3 touched files.” `.formatStructuralDiscrepancy()` lives
+in `tests/testthat/helper-comparePedigreeStructure.R` (a `testthat`
+helper, not `R/` source), so it is outside
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)’s
+scope the way `CLAUDE.md`’s Lint close-out checklist (Learning 224)
+prescribes – most likely explanation (not yet confirmed): S642’s local
+interactive session already had `.formatStructuralDiscrepancy` bound in
+its global environment (from an earlier `test_dir()`/`test_file()` run
+in the same session) when `lintr::lint_package()` ran, masking exactly
+the gap CI’s clean environment exposed. Not fixed this session (S643’s
+own deliverable was the pedigree-drawing design plan above, per the
+standing top-priority directive) – a future session should either (a)
+confirm the stale-globalenv hypothesis and add a `# nolint` with that
+rationale if the call is structurally fine (a `testthat` helper calling
+another `testthat` helper is legitimate, just invisible to a
+package-only lint), or (b) restructure so the reporting logic lives
+somewhere `lintr::lint_package()` can see unconditionally. No GitHub
+issue filed, matching this project’s CI-break tracking convention
+(`CLAUDE.md`).
 
 **`R-CMD-check-scheduled.yaml` (the weekly-cron twin of
 `R-CMD-check.yaml`) never received the S616/S618/S619 chromote

@@ -28,6 +28,191 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 643 Did
+
+**Deliverable:** RATIFIED design document,
+[`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md),
+for suppressing fully-isolated individuals (`P5`’s exact profile) in
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
+entangled with issue \#164’s all-isolated-pedigree crash – following
+`docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`. Owner also
+directed a standing priority change: pedigree-drawing fidelity work
+stays the top of `BACKLOG.md`’s priorities until the owner says it’s
+done – pinned in `BACKLOG.md` and recorded as a project memory
+(`pedigree-drawing- standing-priority.md`). **DONE** (design only, no
+implementation – planning and implementation are separate sessions per
+`SESSION_RUNNER.md` §Planning Sessions). **Started/Completed:**
+2026-08-26 (single session).
+
+**What actually happened, in order:** 1. **Phase 0 orientation** (full
+protocol): clean tracked tree, same 7 pre-existing untracked items every
+recent session has triaged. Ledger reconcile found the now-familiar
+self-reference gap (S642’s own Learning-674 commit `f6aecbdf` AND
+close-out commit `df3ea858`, both past the `CHANGELOG.md` frontier) –
+backfilled (commit `5406db52`), including fixing the S642 `HANDOFFS.md`
+receipt’s `commit:` field from `pending` to `df3ea858`. **Also found,
+via the mandatory `gh run list` CI-status check, NOT self-resolved:**
+`lint.yaml` FAILED on S642’s own close-out push – `object_usage_linter`
+flags `.formatStructuralDiscrepancy` in
+`data-raw/kinship2FidelityValidation.R:339`, contradicting S642’s own “0
+lints” close-out claim (most likely cause: a stale-globalenv artifact
+from S642’s own interactive session, not yet confirmed). Reported, not
+fixed (this session’s own deliverable was elsewhere) – filed to
+`BACKLOG.md` Housekeeping at close-out, matching the CI-break tracking
+convention (no GitHub issue). Rendered the priorities list (5 numbered
+items + informational bucket, 4 in the `AskUserQuestion` picker); the
+owner picked item 2 (P5-suppression design) and added a standing
+directive: pedigree-drawing work stays the top of `BACKLOG.md` until the
+owner says it’s done. 2. **Phase 1B claim** (commit `a2c32ec4`): stub +
+pending `HANDOFFS.md` receipt written before any technical work,
+correcting the 2-consecutive-session gap S641/S642 both flagged. Also
+pinned the standing-priority note in `BACKLOG.md` and wrote the
+`pedigree-drawing-standing-priority.md` memory in the same commit. 3.
+**Research** (`Workflow` tool, run `wf_7e5447f1-206`, 7 agents, ~520k
+subagent tokens, ~10.5 min wall-clock): 4 parallel “Understand” readers
+(renderer source flow + issue \#164’s exact crash site; the Track B full
+test fixture and every test assertion that will break; every now-wrong
+passage in `kinship2-fidelity-validation.qmd`; a grep-based blast-radius
+inventory of every
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+call site plus the Diagram tab’s focal-individual mechanism) fed into 3
+parallel “Design” agents (minimal-guard, principled-filter-stage,
+ux-first), each producing a full candidate design. One agent
+(minimal-guard) empirically patched the live
+`R/makePedigreeDiagramData.R`, ran the real fixtures + full test suite
+against its own patch, and reverted – **independently verified clean
+afterward** (`git status --short`/`git diff --stat -- R/ tests/` both
+empty) before trusting any of its empirical claims. 4. **Key finding not
+in the original `BACKLOG.md` scoping note:** the blast-radius agent
+found `R/modPedigree.R`‘s Focal Animals + “Trim pedigree” mechanism can
+reach the identical “100%-isolated” degenerate case as issue \#164, one
+deliberate individual selection at a time – not just via a whole-colony
+all-founder load. This directly shaped Dragon 3’s recommendation (see
+below). 5. **Design document written**
+(`docs/planning/pedigree-diagram-isolated-individual-suppression- plan.md`,
+~300 lines, house style matched to
+`docs/planning/twin-relations-kinship-computation- plan.md`): isolation
+predicate ratified by convergence across all 3 designs (plus a twin-
+connector exclusion found only by empirical testing); hook point
+recommended (`.findIsolatedIds()`, pre-filter `ped`); 2 genuine judgment
+calls (Dragon 3: render-nothing-with-message vs. render-everyone when
+suppression would empty the diagram; Dragon 4: ship Shiny UI messaging
+in the same implementation as the core fix, or defer). 3-phase
+implementation plan with completion criteria, an Alternatives Considered
+table, an Impact Analysis table, and a close-out-checklist mapping for
+whichever future session implements it. 6. **Ratification**
+(`AskUserQuestion`, 2 questions): owner selected this document’s own
+recommended option for both Dragon 3 (render nothing + explicit message)
+and Dragon 4 (ship messaging in the same implementation), no changes
+requested. Design doc updated to `Status: RATIFIED` with the outcome
+recorded in its own §10 (commit `222a2afe`, alongside the `BACKLOG.md`
+update pointing the P5-suppression item at the ratified plan and filing
+the still-open `lint.yaml` CI finding). 7. **Verified:** the design
+document’s every quoted line number and code excerpt traces to this
+session’s own research agents’ direct file reads (not assumed); the
+empirical test-run numbers (§2.4) came from an agent that actually ran
+the live suite, cross-checked against the independently-derived
+test-call-site inventory from a different agent (both agree on which 2
+test blocks break). No code was changed this session –
+`git status --short` confirmed clean of `R/`/`tests/` changes
+throughout. 8. Recorded `CHANGELOG.md` entries (this session’s actions),
+added `PROJECT_LEARNINGS.md` Learning 675 (multi-angle parallel design
+research surfaces interactions a single-threaded read misses; empirical
+patch-test-revert during design research catches defects reading alone
+wouldn’t, but only when independently verified clean afterward), updated
+`CLAUDE.md`’s learnings-count pointer (674-\>675, S642+-\>S643+).
+Committed across 4 commits (5-file cap, matching the file groupings
+above): `5406db52` (ledger reconcile), `a2c32ec4` (Phase 1B claim +
+BACKLOG pin + memory), `222a2afe` (design doc + BACKLOG ratification
+update), `8488e6fa` (Learning 675 + CLAUDE.md pointer). 9. **Runtime
+smoke test (Phase 3E): not applicable, stated explicitly, not silently
+skipped.** This session’s deliverable is a design document – no code, no
+runtime behavior changed. No Shiny startup, service registration,
+dispatch, or config-resolution path was touched.
+
+**Self-assessment (Session 643): 9/10.** **Strengths:** (1) correctly
+recognized the TDD contract does not gate a planning session (declared
+“TDD Phase: N/A” at the top, per `SESSION_RUNNER.md` §Planning Sessions)
+rather than forcing an ill-fitting RED/GREEN/REFACTOR framing onto a
+docs-only deliverable; (2) used parallel multi-angle research
+deliberately, not reflexively – and it found a real gap (the
+Focal-Animal-trim second trigger) the original `BACKLOG.md` scoping note
+missed, which materially changed the recommended design (Dragon 3); (3)
+did not trust a subagent’s self-reported “patched, tested, reverted”
+claim – verified the working tree directly before using any of that
+agent’s empirical findings; (4) synthesized 3 independently-produced
+designs into one coherent recommendation rather than picking one
+wholesale or presenting all 3 unresolved to the owner, while being
+explicit in the document about which parts were forced-by-evidence
+(Dragon 1) vs. genuine judgment calls needing ratification (Dragons
+3/4); (5) completed Phase 1B correctly this session, ending the
+2-consecutive-session gap S641/S642 both left; (6) did not let the
+freshly-found `lint.yaml` CI failure become scope creep – reported it in
+Phase 0, then filed it to `BACKLOG.md` at close-out without touching the
+code, honoring “1 and done” even though fixing it would have been quick.
+**Weaknesses:** (1) did not independently verify Dragon 5
+(script-callable [`message()`](https://rdrr.io/r/base/message.html)
+emission) or the `.extractNprcStructure()` return-field-compatibility
+question flagged in §5/§6 of the design doc – both are explicitly left
+open for the implementing session rather than resolved now, which is
+defensible (out of a planning session’s own scope to write code) but
+means the design document is not 100% self-contained; (2) the design
+document’s empirical test-run numbers (§2.4, “failed: 6, error: 1”) come
+from a subagent’s self-report, cross-checked only against another
+subagent’s independent line-number inventory, not re-run directly by
+this session in the main loop – reasonable given no code was changed,
+but worth flagging as one level short of this project’s own usual
+“verified live” bar for numeric claims.
+
+**Gotchas for a future session:** (1) The design document is RATIFIED
+but UNIMPLEMENTED – Phase 1 of
+`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`
+is the next concrete step, not a fresh design round; do not re-litigate
+Dragons 1-4. (2) The 3 phases may be executed as one pre-declared
+vertical slice (plan’s own §10) since Dragon 4 was ratified as “same
+implementation” – but each phase still needs its own checkpoint commit
+and full verification per `SESSION_RUNNER.md` §Vertical Slice Sessions
+gates (b)/(c). (3) `lint.yaml` CI is still red on master (`BACKLOG.md`
+Housekeeping, new item this session) – not fixed, not self-resolving
+like S642’s prior `R-CMD-check.yaml` devel flake; a future session
+should actually diagnose it, not just re-observe it again. (4) The
+standing `BACKLOG.md` priority note (pedigree-drawing work first, until
+the owner says done) should NOT be removed by a future session without
+an explicit owner sign-off – see the memory file for the full rationale.
+(5) `HANDOFFS.md`/`SESSION_NOTES.md`/ `CHANGELOG.md` remain past the FM
+\#28 2,000-line cap and growing – unchanged this session (no
+housekeeping done on this front, `BACKLOG.md`’s own “ledger-size
+housekeeping” item, S518, is still open too). (6) This session did not
+push to `origin` until its own close-out commit – confirm `git log`
+vs. `origin/master` at the start of a future session rather than
+assuming everything up through S643 already triggered CI.
+
+### Session 642 Handoff Evaluation (by Session 643)
+
+**Score: 9/10.** **What helped:** S642’s handoff was exceptionally
+specific and directly seeded this session’s research – its `BACKLOG.md`
+item’s own “Rule scoping note… not yet ratified” (literally zero edges,
+not “no mate and no children” alone) turned out to be *exactly* the
+predicate all 3 of this session’s independent design agents converged
+on, saving real research time; its gotcha (4) named the exact
+entanglement with issue \#164 and the exact test file/line that would
+need updating once the fix ships (`test_comparePedigreeStructure.R`’s
+Track B full regression), both confirmed correct by this session’s own
+line-level inventory. Its self-reported weaknesses (repeated Phase 1B
+gap) were honest and actionable – this session closed that gap rather
+than repeating it a third time. **What was missing:** nothing
+structurally – the one thing this session found that S642 didn’t (the
+`lint.yaml` CI failure) is explainable by timing, not a handoff gap: the
+failing run had barely started when S642’s own Phase 0 check ran, and
+finished red only after S642’s report was already written. **What was
+wrong:** nothing found – every factual claim in S642’s handoff (the
+P5/#164 entanglement, the narrow-rule framing, the affected test file)
+held up under this session’s independent, evidence-based research.
+**ROI:** high – reading S642’s `BACKLOG.md` item and gotchas directly
+shaped this session’s research-agent prompts and materially sped up
+reaching a defensible Dragon 1 predicate without having to derive it
+from scratch.
+
 ### What Session 642 Did
 
 **Deliverable:** Owner-directed live review of
