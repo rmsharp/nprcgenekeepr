@@ -16,6 +16,36 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-27 · [issue #164] S645: Phase 2 -- correct test_comparePedigreeStructure.R + kinship2-fidelity-validation.qmd for the P5-suppression fix
+- **Deliverable:** implemented Phase 2 (test/article correction) of the ratified
+  `docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md` -- following Phase 1's
+  already-shipped renderer fix (S644, commit `fc5ac928`), this session corrected everything the
+  plan's own §2.4/§2.5 identified as now-stale, plus one break the plan's inventory missed.
+- `tests/testthat/test_comparePedigreeStructure.R`: rewrote the 2 Track B blocks §2.4 named
+  (`identical = FALSE`/`individualsOnlyInB = "P5"` -> `identical = TRUE`/both individuals-diff
+  fields empty; `.formatStructuralDiscrepancy()`'s report -> `expect_null()`), reworded stale
+  doc-comment prose. **Found and fixed a 3rd break not in the plan's own inventory:** a synthetic
+  "ISO" fixture test (hand-built pedigree, not `.pedTrackBFixture()`) exercises the identical
+  isolation predicate and needed the same update -- a plan-inventory gap, not a plan error (see
+  `PROJECT_LEARNINGS.md` Learning 677). Full clean regression after: `failed=1, error=0`, confined
+  to the 1 pre-existing unrelated `test_wordlist_coverage.R` failure -- this clears the red
+  `R-CMD-check.yaml`/`test-coverage.yaml` CI that Phase 1 alone predictably left red.
+- `vignettes/articles/kinship2-fidelity-validation.qmd`: corrected the 4 passages + 1 results-table
+  row + 2 fig-alt captions §2.5 named, changed the Verdict from "PASS, with one known and expected
+  difference" to plain "PASS" (all 3 tracks now structurally identical to kinship2).
+  `quarto render` clean.
+- `data-raw/kinship2FidelityValidation.R` re-run; regenerated only `trackB-nprc-full.png`
+  (confirmed via `git status` -- every other image byte-identical, unaffected), visually confirmed
+  15 nodes (not 16), structurally matching kinship2's own rendering.
+- **Incidentally found, NOT fixed (out of scope, Track C not Track B):** the article's Track C
+  table claims 3 marked (vermillion) edges for `rectilinear` style; a live run prints 2. Confirmed
+  pre-existing via `git status` (the committed `trackC-nprc-rectilinear.png` is byte-identical to a
+  fresh regeneration, unaffected by this session) -- filed to `BACKLOG.md` Housekeeping.
+- `lintr::lint_package()` (loaded first): 0 lints. `BACKLOG.md`'s P5-suppression item updated
+  (Phase 2 DONE, Phase 3 next pickup) + new Housekeeping item for the Track C finding.
+  `PROJECT_LEARNINGS.md` Learning 677 recorded; `CLAUDE.md` learnings-count pointer updated
+  (676->677, S644+->S645+).
+
 ### 2026-08-27 · [ad hoc] S645 Phase 0: HANDOFFS.md ledger reconcile (fill 2 stale `commit: pending` fields; note the S644 post-close-out addendum commit)
 - Phase 0 reconcile found `HANDOFFS.md`'s frontier (`44c9a15e`) one commit behind `HEAD`
   (`7f77e2e4`, "S644 post-close-out") -- `CHANGELOG.md`'s own frontier was already current (no

@@ -16,19 +16,17 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       framing** (found live 2026-08-26, owner-directed via direct visual review of
       `kinship2-fidelity-validation.qmd`'s Track B full fixture. Design RATIFIED S643.
       **Phase 1 (core renderer fix) DONE S644 (2026-08-27), Effort M -- commit `fc5ac928`. Phase 2
-      (test/article correction) and Phase 3 (Shiny UX messaging) READY, Effort M each, next
-      pickup.** **⚠ `master`'s CI is red as a DIRECT, PREDICTED consequence of shipping Phase 1
-      alone (confirmed live via `gh run list` on the S644 close-out push, commit `44c9a15e`):
-      `R-CMD-check.yaml` and `test-coverage.yaml` both fail -- `R CMD check` treats any test
-      failure as fatal (`Error: Test failures. Execution halted`), and Phase 1 correctly makes the
-      2 `test_comparePedigreeStructure.R` Track B blocks below fail (exactly as the plan's §2.4
-      predicted). This is expected, not a regression -- do not investigate it as one. It resolves
-      when Phase 2 updates those 2 blocks. Owner-confirmed via `AskUserQuestion` (S644,
-      2026-08-27) to leave it red rather than stopgap-`skip()` or pull Phase 2 forward.
-      `lint.yaml` is ALSO red on the same push, but that is the separate, already-tracked
-      Housekeeping item below (`data-raw/kinship2FidelityValidation.R:339`), unrelated to Phase 1
-      -- confirmed identical on 3 consecutive pushes (S642/S643/S644) now, weakening the original
-      stale-globalenv hypothesis.**) -- `P5` in the article's own published Track B 16-subject fixture has zero edges
+      (test/article correction) DONE S645 (2026-08-27), Effort M. Phase 3 (Shiny UX messaging)
+      READY, Effort M, next pickup.** `master`'s CI red (`R-CMD-check.yaml`/`test-coverage.yaml`)
+      was the DIRECT, PREDICTED consequence of shipping Phase 1 alone (owner-confirmed via
+      `AskUserQuestion`, S644, to leave it red rather than stopgap) -- **now resolved by Phase 2**:
+      the 2 `test_comparePedigreeStructure.R` Track B blocks (plus a 3rd block, a synthetic "ISO"
+      fixture test, found this session -- see below) updated to assert the correct,
+      already-shipped behavior; full clean regression 0 failed/0 error attributable, confined to
+      the 1 pre-existing unrelated `test_wordlist_coverage.R` failure. `lint.yaml` is still
+      separately red -- see the already-tracked Housekeeping item below
+      (`data-raw/kinship2FidelityValidation.R:339`), unrelated to this item.
+      -- `P5` in the article's own published Track B 16-subject fixture has zero edges
       of any kind (no parents, no mate, no children); kinship2's own `plot.pedigree()` correctly
       omits it from the drawing (confirmed live: `align.pedigree()`'s own `$nid` placement never
       places it), while `makePedigreeMatingLayout()` used to render it as a disconnected node.
@@ -48,13 +46,30 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       matches `P5`'s exact profile) -- new `.findIsolatedIds()` primitive, pre-filters `ped` at
       the top of `makePedigreeMatingLayout()`; when suppression would empty the diagram, the
       function now returns a fully-typed empty result + `isolatedIds` instead of crashing (3B).
-      **Still open (Phase 2, Effort M):** `tests/testthat/test_comparePedigreeStructure.R`'s 2
-      Track B blocks (today asserts `identical = FALSE`/`individualsOnlyInB = "P5"` -- now
-      failing, exactly as predicted by the plan's §2.4, since `P5` is correctly suppressed --
-      update to assert `identical = TRUE`), 4 passages + 1 table row + 2 fig-alt captions in
-      `vignettes/articles/kinship2-fidelity-validation.qmd`, and regenerating
-      `data-raw/kinship2FidelityValidation.R`'s Track-B-full images -- exact line numbers in the
-      plan's §2.4/§2.5. **Still open (Phase 3, Effort M):** `R/modPedigree.R` Shiny UX messaging
+      **Phase 2 (S645, 2026-08-27) -- DONE:** `tests/testthat/test_comparePedigreeStructure.R`'s
+      2 Track B blocks (§2.4) updated to assert `identical = TRUE`/both `individualsOnlyInA`,
+      `individualsOnlyInB` empty (Block A) and `expect_null()` on `.formatStructuralDiscrepancy()`'s
+      report (Block B), plus stale doc-comment prose reworded. **A 3rd break the plan's own §2.4
+      inventory did not name, found empirically this session:** a synthetic "ISO" fixture test
+      (`compareAgainstKinship2` on a hand-built 4-subject `F1/M1/C1/ISO` pedigree) exercises the
+      identical isolation predicate as Track B's `P5` and needed the same update -- not a plan
+      defect in the sense of being wrong, just an inventory gap (the plan's own grep-based
+      inventory covered `.pedTrackBFixture()` call sites, and this test builds its fixture inline
+      instead). 4 passages + 1 table row + 2 fig-alt captions in
+      `vignettes/articles/kinship2-fidelity-validation.qmd` corrected (Verdict changed from "PASS,
+      with one known and expected difference" to plain "PASS"), and
+      `data-raw/kinship2FidelityValidation.R` re-run, regenerating only
+      `trackB-nprc-full.png` (confirmed via `git status` -- every other image byte-identical,
+      confirmed unaffected) -- visually confirmed 15 nodes (not 16), structurally matching
+      kinship2's own rendering. `quarto render` clean; `lintr::lint_package()` 0 lints.
+      **Incidentally found, NOT fixed (out of this item's scope -- Track C, not Track B):** the
+      article's own Track C table claims 3 marked (vermillion) edges for the `rectilinear` edge
+      style, but a live re-run of `data-raw/kinship2FidelityValidation.R` prints 2, and the
+      committed `trackC-nprc-rectilinear.png` is byte-identical to what regenerating it produces
+      (confirmed via `git status` -- unaffected by this session's changes, so this is pre-existing,
+      not a regression from Phase 1/2). Unrelated to P5-suppression; filed as a new Housekeeping
+      item below.
+      **Still open (Phase 3, Effort M):** `R/modPedigree.R` Shiny UX messaging
       (banner for partial suppression, empty-state message for all-isolated) + e2e coverage,
       including the Focal-Animal-trim-to-one-isolated-individual scenario -- plan's §3 Dragon 4,
       §4 Phase 3.
@@ -228,6 +243,21 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `rmarkdown::render()` (this file's own build-equivalent) run clean after every
       substantive edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`.
 ## Housekeeping
+- [ ] **`kinship2-fidelity-validation.qmd`'s Track C table claims 3 marked (vermillion) edges for
+      the `rectilinear` edge style; a live run reports 2** (found incidentally S645, 2026-08-27,
+      while regenerating Track B images for the P5-suppression Phase 2 item above, READY, Effort
+      S) -- `Rscript data-raw/kinship2FidelityValidation.R` prints `rectilinear-style marked
+      edges: 2`, but the article's own table (§Track C) says `3 (A's 1 edge splits into 2 dogleg
+      segments; Y's 1 edge is unaffected)`. Confirmed pre-existing, not a regression from this
+      session's Phase 1/2 work: `git status` after regenerating shows `trackC-nprc-rectilinear.png`
+      byte-identical to the already-committed image (only `trackB-nprc-full.png` changed) -- this
+      discrepancy has been true since at least commit `36653242` (S636, the last commit to touch
+      that image) and was not caused by anything this session touched (`R/makePedigreeDiagramData.R`
+      was not edited this session). Unrelated to P5-suppression (Track C's own 9-subject dogleg
+      fixture has no isolated individuals). Not investigated further or fixed this session (out of
+      scope) -- a future session should determine whether the doubled-dogleg-segment counting logic
+      changed (e.g. during the S592-S621 same-row-collision/Walker-BJL rectilinear-routing work) or
+      the article's own "3" claim was always wrong, then correct whichever side is stale.
 - [ ] **`lint.yaml` CI failed on S642's own close-out push, not self-resolved** (found live S643,
       2026-08-26, via Phase 0's mandatory `gh run list` CI-status check, READY, Effort S) --
       run `33022564528`: `[object_usage_linter] no visible global function definition for
