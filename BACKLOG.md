@@ -24,7 +24,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `kinship2-fidelity-validation.qmd` Verdict text, which called this "the more useful default,
       not a bug to reconcile away."
       **Full design plan (ratified via `AskUserQuestion`, both judgment calls decided):**
-      [`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](../docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md).
+      [`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md).
       Entangled with issue #164 (`makePedigreeMatingLayout()` crashes outright on an
       all-isolated pedigree) -- the plan resolves both together, plus a second, narrower trigger
       for the same degenerate case this session's research newly found: a user focal-trimming to

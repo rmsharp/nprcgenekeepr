@@ -138,19 +138,55 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S643
 date: 2026-08-26
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Design document for the P5-suppression rule in makePedigreeMatingLayout(),
-  together with its interaction with issue #164 (all-isolated-pedigree crash) --
-  docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md. Owner also directed: pedigree-drawing
-  fidelity work stays the top of BACKLOG.md's priorities until the owner says it's done.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE (design only, no implementation). RATIFIED design document for suppressing
+  fully-isolated individuals in makePedigreeMatingLayout(), entangled with issue #164's
+  all-isolated-pedigree crash, at docs/planning/pedigree-diagram-isolated-individual-suppression-
+  plan.md. Both judgment-call decisions (Dragon 3: render-nothing-with-message; Dragon 4: Shiny
+  messaging ships in the same implementation) ratified via AskUserQuestion, owner picked the
+  document's own recommendation for both. Owner also directed a standing priority: pedigree-
+  drawing fidelity work stays the top of BACKLOG.md until the owner says it's done.
+what_was_done: Phase 0 found + backfilled the now-familiar CHANGELOG.md self-reference gap (S642's
+  Learning-674 commit + close-out commit, commit 5406db52) and a live, NOT self-resolved
+  lint.yaml CI failure (object_usage_linter on data-raw/kinship2FidelityValidation.R:339,
+  contradicting S642's own "0 lints" claim) -- reported, filed to BACKLOG.md at close-out, not
+  fixed. Owner picked "P5-suppression design" from the priorities list and added the standing
+  pedigree-drawing-first directive (commit a2c32ec4, Phase 1B claim + BACKLOG pin + memory).
+  Ran a 7-agent background research workflow (wf_7e5447f1-206: 4 parallel Understand readers ->
+  3 parallel Design proposals) -- found a real gap in the original BACKLOG scoping note (the
+  Focal-Animal-trim-to-one-isolated-individual path reaches the identical degenerate case as
+  issue #164), and one design agent empirically patched+ran+reverted the live renderer,
+  independently verified clean via git status before trusting its findings. Synthesized 3
+  designs into one ratified plan document (commit 222a2afe, alongside the BACKLOG.md update).
+  Recorded PROJECT_LEARNINGS.md Learning 675 + CLAUDE.md pointer update (commit 8488e6fa).
+next_steps: Implement docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md's
+  3 phases (Phase 1: core .findIsolatedIds() + makePedigreeMatingLayout() fix + issue #164 guard;
+  Phase 2: test/article correction; Phase 3: Shiny UI messaging) -- may run as one pre-declared
+  vertical slice per the plan's own §10, each phase still needing its own checkpoint commit and
+  full verification. Do not re-litigate Dragons 1-4. Separately: diagnose (not just re-observe)
+  the still-red lint.yaml CI failure (BACKLOG.md Housekeeping, new this session).
+key_files: docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md (the
+  deliverable), R/makePedigreeDiagramData.R:893-1236 (makePedigreeMatingLayout(), the future
+  implementation target, esp. line 914 realIds and lines 1172-1175 childEdgesOut),
+  R/modPedigree.R:65-70,116-119,366-378,500-561,588,729-733 (Focal Animals/Trim-pedigree
+  mechanism + the Diagram tab's future messaging target),
+  tests/testthat/test_comparePedigreeStructure.R:1009-1033,1133-1144 (the 2 test blocks that will
+  break once the fix ships), vignettes/articles/kinship2-fidelity-validation.qmd:133-135,240-245,
+  286-289,297-299 (the 4 passages that will need correcting), BACKLOG.md (ratification update +
+  new lint.yaml item).
+gotchas: (1) Design is RATIFIED but UNIMPLEMENTED -- the plan document is the next session's
+  starting point, not a fresh design round. (2) lint.yaml CI is still red on master, not
+  self-resolving -- needs actual diagnosis. (3) The BACKLOG.md standing-priority note (pedigree-
+  drawing first) should not be removed without explicit owner sign-off. (4) HANDOFFS.md/
+  SESSION_NOTES.md/CHANGELOG.md remain past the FM #28 2,000-line cap, unchanged this session.
+  (5) This session had not pushed to origin as of its own close-out commit -- confirm git log vs.
+  origin/master at the start of a future session.
+runtime_smoke: n/a, stated explicitly -- this session's deliverable is a design document; no
+  code changed, no runtime behavior touched.
+changelog_ref: 2026-08-26 S643 entries in CHANGELOG.md (reconcile backfill, Phase 1B claim, the
+  design-plan deliverable, Learning 675)
 commit: pending
 ```
 

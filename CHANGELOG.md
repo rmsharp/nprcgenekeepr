@@ -16,6 +16,63 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-N] S643: ratified design plan for P5-suppression in makePedigreeMatingLayout(), entangled with issue #164; pinned pedigree-drawing as BACKLOG.md's standing top priority
+- **Deliverable:** owner picked "P5-suppression design" from the rendered priorities list and
+  added a standing directive: pedigree-drawing fidelity work stays the top of `BACKLOG.md`'s
+  priorities, ahead of every other item, until the owner says it's done -- pinned as a note at
+  the top of `BACKLOG.md` (commit `a2c32ec4`) and recorded as a durable project memory
+  (`pedigree-drawing-standing-priority.md`). This session's own deliverable: a RATIFIED
+  architecture/design document,
+  `docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`, for suppressing
+  fully-isolated individuals (`P5`'s exact profile: no sire, no dam, never anyone's sire/dam) in
+  `makePedigreeMatingLayout()`, together with issue #164 (crashes outright on an
+  all-isolated-pedigree). Design only, no implementation -- planning and implementation are
+  separate sessions.
+- **Research:** a 7-agent background `Workflow` run (`wf_7e5447f1-206`) -- 4 parallel "Understand"
+  readers (renderer source flow incl. issue #164's exact crash site; the Track B full test
+  fixture and every assertion that will break; every now-wrong passage in
+  `kinship2-fidelity-validation.qmd`; a grep-based blast-radius inventory of every
+  `makePedigreeMatingLayout()` call site plus the Diagram tab's focal-individual mechanism) fed
+  into 3 parallel "Design" agents (minimal-guard, principled-filter-stage, ux-first), each
+  producing a full candidate design. **Found a real gap in the original `BACKLOG.md` scoping
+  note:** the blast-radius agent discovered `R/modPedigree.R`'s Focal Animals + "Trim pedigree"
+  mechanism can independently reach the identical "100%-isolated input" degenerate case as issue
+  #164, one deliberate individual selection at a time -- not just via a whole-colony all-founder
+  load. One design agent (minimal-guard) empirically patched the live
+  `R/makePedigreeDiagramData.R`, ran the real fixtures + full test suite against its own patch,
+  and reverted -- **independently verified clean afterward** (`git status --short`/`git diff
+  --stat -- R/ tests/` both empty) before any of its empirical findings (incl. a real,
+  previously-undiscovered twin-connector dangling-edge interaction) were trusted or written into
+  the design document.
+- **Ratified decisions** (`AskUserQuestion`, 2 questions, owner picked the document's own
+  recommended option both times, no changes requested): isolation predicate (sire/dam/never-a-
+  parent, excluding `twinRelations`-connected ids) and hook point (`.findIsolatedIds()`,
+  pre-filters `ped` at the top of `makePedigreeMatingLayout()`) were forced by convergence across
+  all 3 independent designs, not a judgment call. **Dragon 3 (RATIFIED):** when suppression would
+  empty the diagram, render nothing + an explicit plain-language message -- not "render everyone
+  anyway," which would re-show a `P5`-like individual whenever they're 100% of what's being
+  rendered, the exact case just ruled an error. **Dragon 4 (RATIFIED):** the `R/modPedigree.R`
+  Shiny UI messaging ships in the same implementation as the core fix, not deferred.
+- **Document structure** (house style matched to `docs/planning/twin-relations-kinship-
+  computation-plan.md`): evidence-based inventory with exact line numbers for every touched file
+  (§2), a 3-phase implementation plan with completion criteria (§4, may run as one pre-declared
+  vertical slice per §10 since Dragon 4 was ratified in-scope), an Impact Analysis table (§5), an
+  Alternatives Considered table comparing all 3 candidate designs honestly (§7), and a close-out
+  checklist mapping (§8: `NEWS.Rmd`, tutorial/article, issue #164 close-out) for whichever future
+  session implements it.
+- **`BACKLOG.md`:** the P5-suppression item updated to point at the ratified plan and summarize
+  the ratified decisions (commit `222a2afe`). Also filed (not fixed) a still-open finding from
+  this session's own Phase 0: `lint.yaml` CI failed on S642's own close-out push
+  (`object_usage_linter` on `data-raw/kinship2FidelityValidation.R:339`), contradicting S642's
+  own "0 lints" close-out claim, most likely a stale-globalenv artifact -- not yet confirmed. No
+  GitHub issue filed, matching this project's CI-break tracking convention.
+- **`PROJECT_LEARNINGS.md` Learning 675** (commit `8488e6fa`): multi-angle parallel design
+  research surfaces genuine interactions a single-threaded read misses; letting a candidate
+  design empirically patch-and-run during the research phase (not deferred to implementation)
+  catches defects reading alone wouldn't -- contingent on independently verifying the agent
+  didn't leave residue, not trusting its own "reverted" claim.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-26 · [ad hoc] S643: record CHANGELOG.md entry for S642's Learning-674 record and close-out commit (reconcile-on-read)
 - **Deliverable:** Phase 0 reconcile found 2 commits past the `CHANGELOG.md` frontier (`39ef1c55`)
   with no ledger entry, the same two-commit shape S640's own reconcile found for S639: `f6aecbdf`
