@@ -16,6 +16,18 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S645 Phase 0: HANDOFFS.md ledger reconcile (fill 2 stale `commit: pending` fields; note the S644 post-close-out addendum commit)
+- Phase 0 reconcile found `HANDOFFS.md`'s frontier (`44c9a15e`) one commit behind `HEAD`
+  (`7f77e2e4`, "S644 post-close-out") -- `CHANGELOG.md`'s own frontier was already current (no
+  gap there; that commit documented itself). Reconciled without opening a new session block, since
+  no new session was claimed for that addendum: appended a short note to the existing S644 receipt
+  recording `7f77e2e4`'s content and rationale (already fully captured in this file's own
+  2026-08-27 post-close-out entry below). Also filled 2 stale `commit: pending` answer-slots the
+  receipt format calls "legal at write time... reconciled to real shas" by the next session's
+  Phase 0 -- S644's own receipt (commits `fc5ac928`/`be91d938`/`7c892617`/`44c9a15e`) and S643's,
+  left unreconciled by S644 (commits `5406db52`/`a2c32ec4`/`222a2afe`/`8488e6fa`/`da74266f`). No
+  code change.
+
 ### 2026-08-27 · [BL-N] S644 (post-close-out): recorded that master's CI is red as a predicted consequence of Phase 1, not a regression
 - User asked to check CI status after S644's close-out push. `gh run list` on commit `44c9a15e`
   showed `R-CMD-check.yaml`/`test-coverage.yaml` both red: `R CMD check` treats the 2

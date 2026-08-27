@@ -181,12 +181,22 @@ runtime_smoke: Live shinytest2::AppDriver run against the running Diagram tab (2
   run against the existing obfuscated_rhesus_mhc_ped.csv e2e fixture (no isolated individuals)
   confirmed the normal-path rendering (1406 nodes) is unaffected.
 changelog_ref: CHANGELOG.md 2026-08-27 S644 entry (commit be91d938)
-commit: pending
+commit: fc5ac928 (Phase 1 implementation), be91d938 (CHANGELOG+BACKLOG), 7c892617 (learnings+handoff),
+  44c9a15e (close-out: this receipt) -- reconciled S645
 ```
 Full session narrative, self-assessment (9/10, strengths/weaknesses), gotchas, and the Session 643
 handoff evaluation (9/10) are written in full in `SESSION_NOTES.md` under "What Session 644 Did"
 and "Session 643 Handoff Evaluation (by Session 644)" -- this receipt is the durable proxy;
 `SESSION_NOTES.md` is the fuller prose record.
+
+**S645 Phase 0 reconcile addendum:** one further commit, `7f77e2e4` (2026-08-27, "S644 post-close-out"),
+landed after this receipt's own close-out commit (`44c9a15e`) and before S645's Phase 0 -- a
+same-session CI-status follow-up requested after formal close-out (user asked to check `gh run list`
+on the close-out push), not a new claimed session. It updated `BACKLOG.md`/`CHANGELOG.md` only (no
+code) to record that `master`'s `R-CMD-check.yaml`/`test-coverage.yaml` red status is the predicted
+Phase 1 consequence, not a regression -- fully documented in `CHANGELOG.md`'s own 2026-08-27 entry.
+`HANDOFFS.md`'s frontier lagged `HEAD` by this one commit at S645's Phase 0; reconciled here rather
+than opening a new receipt block, since no new session was claimed for it.
 
 ```handoff
 session: S643
@@ -240,7 +250,8 @@ runtime_smoke: n/a, stated explicitly -- this session's deliverable is a design 
   code changed, no runtime behavior touched.
 changelog_ref: 2026-08-26 S643 entries in CHANGELOG.md (reconcile backfill, Phase 1B claim, the
   design-plan deliverable, Learning 675)
-commit: pending
+commit: 5406db52 (Phase 0 reconcile backfill), a2c32ec4 (claim), 222a2afe (design doc + BACKLOG),
+  8488e6fa (Learning 675 + pointer), da74266f (close-out) -- reconciled S645
 ```
 
 ```handoff
