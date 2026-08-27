@@ -29,7 +29,20 @@ Clears the red `R-CMD-check.yaml`/`test-coverage.yaml` CI (S644's own predicted,
 consequence of shipping Phase 1 alone). **DONE.** **Started/Completed:** 2026-08-27 (single
 session).
 
-**What actually happened, in order:**
+**Post-close-out addendum (same session, user-caught):** immediately after close-out, the user
+flagged that the Track B full-fixture image caption ("this rendering now matches kinship2's own
+convention and also omits P5") overclaimed visual layout parity -- kinship2 spreads mated pairs
+apart with the descent line centered between them; nprcgenekeepr draws pairs close together with
+the mating-unit dot at the sire's own symbol, a real, visible, pre-existing difference unrelated to
+and unchanged by Phase 1/2 (confirmed via `git log` -- `trackB-kinship2-full.png` unchanged since
+S566's original publish -- and via Phase 1's own diff, which never touched positioning code).
+Corrected the caption/fig-alt and added durable caveats in 4 sections scoping every "match"/
+"identical"/"PASS" claim to individual-inclusion and the structural edge/mate-pair/individual sets,
+never layout. `quarto render` clean. Commit `1784abf6`; `HANDOFFS.md`'s S645 receipt and
+`CHANGELOG.md` both updated with an addendum in the same pass (not left for a future session's
+Phase 0 reconcile, unlike S644's own post-close-out gap this session had to fix).
+
+**What actually happened, in order (the Phase 2 deliverable itself, before the addendum above):**
 1. **Phase 0 orientation** (full protocol): clean tracked tree, same 7 pre-existing untracked
    items. Ledger reconcile found `HANDOFFS.md`'s frontier one commit behind `HEAD` (S644's own
    post-close-out addendum commit `7f77e2e4` was never reflected in its receipt) -- reconciled:

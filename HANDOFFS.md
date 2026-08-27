@@ -185,8 +185,19 @@ runtime_smoke: n/a, stated explicitly -- this session's deliverable is test/arti
   image regeneration; no R/ implementation code changed, no Shiny UI/runtime behavior touched.
 changelog_ref: CHANGELOG.md 2026-08-27 S645 Phase 2 entry (commit 4962204d)
 commit: 302aa4ce (claim), 8eb795a1 (deliverable), 4962204d (ledger+backlog), 41413d09
-  (learnings+pointer)
+  (learnings+pointer), cfcab1a9 (close-out), 1784abf6 (post-close-out correction, see addendum)
 ```
+
+**Post-close-out addendum (same session, user-caught immediately after this receipt's own
+close-out):** the user flagged that the Track B full-fixture caption's "this rendering now matches
+kinship2's own convention" overclaimed visual layout parity -- the two packages' mate-line layout
+(pair spacing, mating-dot position) is visibly different and always has been, unrelated to and
+unchanged by Phase 1/2. Confirmed via direct image re-inspection and `git log`
+(`trackB-kinship2-full.png` unchanged since S566's original publish; Phase 1's own diff never
+touched positioning code). Corrected the caption/fig-alt plus added durable caveats in "Graphic
+fidelity," "Structural verification," "Caveats carried forward," and "Verdict" scoping every
+"match"/"identical"/"PASS" claim to individual-inclusion and structural edge/mate-pair sets, never
+layout. `quarto render` clean. Commit `1784abf6`, `CHANGELOG.md` entry recorded in the same commit.
 
 ```handoff
 session: S644
