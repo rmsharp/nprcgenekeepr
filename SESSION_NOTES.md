@@ -18,6 +18,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 644 Did
+**Deliverable:** Phase 1 (Core renderer fix) of the RATIFIED design plan,
+[`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md)
+§4 — new `.findIsolatedIds()` primitive, pre-filter `ped` in `makePedigreeMatingLayout()`, Dragon 3's
+ratified 3B empty-result + `isolatedIds` return field, `childEdgesOut` 0-row guard. Closes issue #164.
+Owner-scoped to Phase 1 only (Phases 2/3 deferred) via `AskUserQuestion`, per the plan's own §10
+vertical-slice option. (IN PROGRESS)
+**Started:** 2026-08-27
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### What Session 643 Did
 **Deliverable:** RATIFIED design document,
 [`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md),

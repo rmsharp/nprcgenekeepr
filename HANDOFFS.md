@@ -136,6 +136,26 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S644
+date: 2026-08-27
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase 1 (core renderer fix) of docs/planning/pedigree-diagram-isolated-individual-
+  suppression-plan.md -- .findIsolatedIds(), pre-filter ped in makePedigreeMatingLayout(), Dragon 3
+  3B empty-result + isolatedIds field, childEdgesOut 0-row guard. Closes issue #164. Scoped to
+  Phase 1 only (owner-confirmed via AskUserQuestion).
+what_was_done: pending
+next_steps: pending
+key_files: R/makePedigreeDiagramData.R:893-1236 (makePedigreeMatingLayout), tests/testthat/test_makePedigreeMatingLayout.R
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(pending -- claim stub only, filled at close-out)
+
+```handoff
 session: S643
 date: 2026-08-26
 status: complete
