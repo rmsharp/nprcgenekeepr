@@ -19,16 +19,143 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ## ACTIVE TASK
 
 ### What Session 644 Did
-**Deliverable:** Phase 1 (Core renderer fix) of the RATIFIED design plan,
+**Deliverable:** Phase 1 (core renderer fix) of the RATIFIED design plan,
 [`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md`](docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md)
-§4 — new `.findIsolatedIds()` primitive, pre-filter `ped` in `makePedigreeMatingLayout()`, Dragon 3's
-ratified 3B empty-result + `isolatedIds` return field, `childEdgesOut` 0-row guard. Closes issue #164.
-Owner-scoped to Phase 1 only (Phases 2/3 deferred) via `AskUserQuestion`, per the plan's own §10
-vertical-slice option. (IN PROGRESS)
-**Started:** 2026-08-27
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+§4 — new `.findIsolatedIds()` primitive (Dragon 1), `makePedigreeMatingLayout()` pre-filters `ped`
+(Dragon 2), Dragon 3's ratified 3B empty-result + `isolatedIds` return field (fixes issue #164's
+crash), `childEdgesOut` defense-in-depth 0-row guard, conditional `message()` (Dragon 5). Owner
+scoped to Phase 1 only (Phases 2/3 deferred) via `AskUserQuestion`, per the plan's own §10
+vertical-slice option. Full strict TDD (every RED/GREEN/REFACTOR transition gated via
+`AskUserQuestion`, per this project's Development Process Contract). **DONE.** **Started/Completed:**
+2026-08-27 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): clean tracked tree, same 7 pre-existing untracked items.
+   Ledger reconcile: `CHANGELOG.md`/`HANDOFFS.md` frontiers both equal `HEAD` -- no ghost session,
+   nothing to backfill. `gh run list`: most recent completed run (S642's close-out push) showed
+   `lint.yaml` still red (already tracked, S643's own finding); the latest push (S643's close-out,
+   `HEAD` at orientation time) had all 4 workflows still `in_progress`. Rendered the priorities list
+   (4 items) via `AskUserQuestion`; owner picked P5-suppression/#164.
+2. **Pre-RED scope decision** (`AskUserQuestion`, separate from the priorities pick, per
+   `CLAUDE.md`'s "pre-RED scope decision is a separate AskUserQuestion" rule): the plan's own §10
+   flags Phases 1-3 as eligible for one vertical slice. Owner picked **Phase 1 only** -- Phases 2/3
+   explicitly deferred, not silently dropped.
+3. **Phase 1B claim** (commit `4376adaa`): stub + pending `HANDOFFS.md` receipt written before any
+   technical work.
+4. **Research/verification** (not re-delegated -- the plan's own §2 evidence-based inventory was
+   already thorough; this step re-verified it against current `HEAD` rather than re-deriving it):
+   confirmed every line number in the plan's §2.1 still matched current source exactly. Empirically
+   confirmed (not assumed) that `.positionMatingUnitForest()` itself errors on a 0-row `ped`
+   (`.buildForestChildrenOf() requires... a non-empty character vector`) -- this is why Dragon 3's
+   early-return branch is structurally necessary, not merely defensive, a fact the plan asserted but
+   this session verified directly. Resolved the plan's own flagged open question (§6 item 4):
+   `.extractNprcStructure()` never reads `layout$isolatedIds` (confirmed by reading its full
+   implementation), so the additive return field needs no consumer update.
+5. **PRE-RED→RED** (`AskUserQuestion`): wrote `tests/testthat/test_findIsolatedIds.R` (8 cases) and
+   10 new/modified assertions in `tests/testthat/test_makePedigreeMatingLayout.R` (partial
+   suppression, issue #164's exact 2-row and 1-row repros under both `edgeStyle` values, twin-pair
+   non-suppression, `message()` contract). Confirmed RED: all 10 failed for the right reason (missing
+   function or `NULL`/present-when-should-be-absent), 195 pre-existing tests in the file untouched.
+   One self-caught bug during RED confirmation: my own first `.findIsolatedIds()` P5 fixture had no
+   child row, so P1/P2 were also (correctly) flagged isolated by the real predicate -- fixed the test
+   fixture, not the implementation (verified this was a test-authoring error, not a design flaw).
+6. **RED→GREEN** (`AskUserQuestion`): implemented in `R/makePedigreeDiagramData.R`. One self-inflicted
+   mid-implementation bug: my first edit inserted `.findIsolatedIds()` in the middle of
+   `.buildMatingUnitForest()`'s own existing roxygen block, splitting it -- caught immediately by
+   re-reading the file after the edit (not assumed clean), fixed by relocating the whole new function
+   before that block's true start. All 8 + 219 target-file tests green. Also discovered and fixed 2
+   real `lintr::lint_package()` findings (loaded first, per Learning 224): a `commented_code_linter`
+   false positive from a comment reading as `fn() / fn()` (division of two function calls) once
+   parsed -- reworded, not suppressed; an implicit-integer style flag on `character(0)` -- changed to
+   bare `character()`, matching this file's own existing idiom.
+7. **Full clean regression read** (`NOT_CRAN=true`, `load_all()`, `test_dir(reporter="silent")`):
+   `sum(failed)=6, sum(error)=1`, confined to exactly the 2 `test_comparePedigreeStructure.R` Track B
+   blocks the plan's own §2.4 predicted (verbatim match to the plan's "failed: 6, error: 1") plus the
+   1 pre-existing unrelated `test_wordlist_coverage.R` failure -- nothing else regressed.
+8. **GREEN→REFACTOR** (`AskUserQuestion`): owner picked skip -- diff already minimal, matched
+   established file patterns (mateEdges/dupEdges 0-row guard style).
+9. **Phase 3E runtime smoke test (mandatory -- this deliverable changes the live Diagram tab's
+   rendering, its one production call site `R/modPedigree.R:588`):** built a one-off
+   `shinytest2::AppDriver` smoke script (scratchpad, not committed -- permanent e2e coverage is
+   Phase 3's own job per the plan) against a custom P5-style fixture (trio + one isolated
+   individual), uploaded through the real app, confirmed live: the isolated individual is absent
+   from the rendered vis.js node set (`get('P5')` → `null`), connected individuals render correctly,
+   0 JS console errors. A second smoke run against the existing `obfuscated_rhesus_mhc_ped.csv`
+   e2e fixture (no isolated individuals) confirmed the normal-path rendering (1406 nodes) is
+   unaffected.
+10. **Close-out:** `NEWS.Rmd` entry added (plain-language, no algorithm-naming, per the 2026-08-23
+    criterion) -- deliberately does NOT promise UI messaging text, since that's Phase 3's own
+    deferred scope, only the fixed crash + suppression behavior, both true and verified this
+    session. `devtools::document()` regenerated `man/makePedigreeMatingLayout.Rd` (`.findIsolatedIds`
+    is `@noRd`, no new `.Rd`/`_pkgdown.yml` entry needed). Verified cross-references
+    (`\link{checkTwinRelations}`) resolve. Issue #164 closed citing commit `fc5ac928` and this
+    session's verification evidence. `BACKLOG.md`'s P5-suppression item updated: Phase 1 DONE, Phase
+    2/3 explicitly listed as the next pickup with exact scope (not removed -- the item isn't fully
+    done). `CHANGELOG.md` entry recorded. Committed across 3 commits (5-file cap): `4376adaa` (Phase
+    1B claim), `fc5ac928` (Phase 1 implementation, exactly 5 files), `be91d938` (CHANGELOG +
+    BACKLOG).
+
+**Self-assessment (Session 644): 9/10.** **Strengths:** (1) followed the TDD contract's every gate
+without skipping or rationalizing past one, including the pre-RED scope decision as a *separate*
+`AskUserQuestion` from the priorities pick, per `CLAUDE.md`'s own explicit rule; (2) did not take
+the plan's own claims on faith where they were checkable -- re-verified line numbers, empirically
+confirmed the early-return branch's structural necessity (not just its recommendation), and
+independently resolved the plan's own flagged open question about `.extractNprcStructure()`;
+(3) caught both of its own mistakes immediately via re-reading after each edit rather than assuming
+success (the roxygen-block-splitting bug, the flawed P5 test fixture) -- neither reached GREEN
+undetected; (4) did the mandatory Phase 3E runtime smoke test for real, against the actual running
+app with a purpose-built fixture demonstrating the exact suppression behavior, not just "tests
+pass" -- and was honest that Phase 2's known test breakage was predicted, not accidental, tying it
+directly back to the plan's own numbers; (5) scoped the `NEWS.Rmd` entry accurately to what Phase 1
+alone delivers, not overclaiming the deferred UI messaging. **Weaknesses:** (1) the roxygen-splitting
+mistake, while caught, was avoidable with more careful anchor selection on the first attempt --
+cost 2 extra tool round-trips; (2) did not smoke-test the all-isolated (100%-suppressed) case live
+in the running Shiny app, only the partial-suppression case and the pre-existing normal-path fixture
+-- reasonable given Phase 3's own e2e coverage explicitly owns that scenario (plan §4 Phase 3
+Verification names it directly), but it is a real, if deliberately scoped-out, gap in this session's
+own live verification; (3) the `childEdgesOut` defense-in-depth guard shipped with no test proving
+it reachable, because it empirically is not reachable given the current predicate (verified, not
+assumed) -- correctly not fabricated a false test for it, but this should be flagged explicitly for
+whoever next touches this function, not just left implicit in a code comment.
+
+**Gotchas for a future session:** (1) Phase 2 (`test_comparePedigreeStructure.R`'s 2 Track B blocks
++ `kinship2-fidelity-validation.qmd` 4 passages/1 table row/2 captions + `data-raw/
+kinship2FidelityValidation.R` regeneration) and Phase 3 (`R/modPedigree.R` Shiny UX messaging + e2e
+coverage) are both READY, exact scope in `BACKLOG.md` and the plan's own §2.4/§2.5/§3 Dragon 4/§4.
+Do not re-litigate Dragons 1-5. (2) The 2 now-failing `test_comparePedigreeStructure.R` blocks are
+an EXPECTED, predicted consequence of Phase 1 alone, not a regression to investigate -- a future
+session's full clean regression read will show them red until Phase 2 lands; don't be alarmed,
+don't revert Phase 1. (3) The `childEdgesOut` `nrow(childEdges) > 0L` guard
+(`R/makePedigreeDiagramData.R`, right before `childEdgesOut <-`) is defense-in-depth with no
+covering test -- verified this session that it is genuinely unreachable given the current isolation
+predicate (a non-empty, non-fully-isolated `ped` always yields >=1 childEdge, proven by the plan's
+own §1.2 "iff" claim and empirically re-confirmed). If a future change to the predicate or the
+pipeline makes it reachable, it needs its own test then. (4) `lint.yaml` CI's own health as of the
+S643-close-out push is still unconfirmed at this session's own close (that run was `in_progress` at
+Phase 0) -- a future session's `gh run list` check should look at the S644 push's own result, not
+assume clean. (5) `HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 cap and
+growing -- unchanged this session, `BACKLOG.md`'s "ledger-size housekeeping" item is still open.
+
+### Session 643 Handoff Evaluation (by Session 644)
+**Score: 9/10.** **What helped:** every line number and code excerpt in the plan's §2 evidence-based
+inventory matched current `HEAD` exactly when re-verified this session -- zero drift despite a
+session boundary in between; the "Gotchas for a future session" section's item (1) ("Phase 1... is
+the next concrete step, not a fresh design round; do not re-litigate Dragons 1-4") and item (2) (the
+vertical-slice-eligibility note) directly shaped this session's own pre-RED scope question; the
+plan's §2.4 predicted full-regression numbers ("failed: 6, error: 1") matched this session's own
+live run of the SAME command **exactly**, a strong, independently-checkable confirmation the
+handoff's research was accurate, not just plausible-sounding. **What was missing:** the plan
+explicitly flagged 2 things as unresolved for the implementing session (Dragon 5's `message()`
+emission style, and the `.extractNprcStructure()` compatibility question) -- both real gaps this
+session had to close itself, but both were pre-declared as open rather than hidden, which is the
+honest way to leave a gap. Also missing: no guidance on the exact column set for Dragon 3's
+early-return empty result (nodes/edges), which this session had to derive by reading a separate
+existing test's own column-shape assertions -- a small, forgivable omission for a "design," not
+"implementation," deliverable. **What was wrong:** nothing found -- every factual claim held up
+under this session's own independent verification, including the empirically-necessary (not just
+recommended) early-return branch. **ROI:** high -- the plan's own predicate, hook point, and
+predicted test consequences all transferred directly into this session's implementation with zero
+rework, and its own numeric prediction was independently reproduced exactly.
 
 ### What Session 643 Did
 **Deliverable:** RATIFIED design document,
