@@ -16,6 +16,37 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-27 · [BL-N] S646: ratified the Track 7 mate-spacing/union-centering design (docs/planning/pedigree-diagram-track7-mate-spacing-plan.md)
+- **Deliverable:** a design/scoping document for the mating-unit dot/mate-spacing gap (`BACKLOG.md`
+  "Up Next", filed S645), following `ARCHITECTURE_WORKSTREAM.md` (project precedent for
+  pedigree-diagram positioning-algorithm decisions). Resolves the 3 named judgment calls: recenter
+  a qualifying union node between its two parents (not its children), widen Tier 3's `derivedX()`
+  offset from `minSep * 0.4` to `minSep` exactly, and confirm (by construction) this introduces no
+  new interaction with Tier 1's BJL apportioning, the existing de-collision/sweep passes, or Track
+  5's D1/D2 orthogonality invariants -- restricting the change to the pre-existing `qualifies()`
+  gate means it re-uses an already-safe boundary rather than drawing a new one.
+- Read `.positionMatingUnitForest()`/`.positionTreeApportion()` directly against current `HEAD`.
+  Dumped and read kinship2's own installed source (`alignped1`/`alignped3`/`alignped4`) to
+  characterize its real algorithm (a constrained quadratic program) rather than assume from prior
+  articles. Ran empirical R probes against the Track B fixture (4/4 mating units qualify) and the
+  real 375-individual fixture (60/237 = 25.3% qualify; 22/209 = 10.5% polygamous anchors).
+- **Ran a 4-agent adversarial-verification Workflow before presenting for ratification** (this
+  project's own "spot-verify agent citations against source" practice, applied to this session's
+  own first draft): found and corrected 1 material error (kinship2's real achieved spousal
+  separation is exactly `minSep` = `1.0` raw unit, never the `1.414` the draft originally claimed --
+  `align[2]` is a penalty weight, not a target distance, independently re-confirmed directly by this
+  session as well), 1 material citation error with no effect on the conclusion (a D1/D2 line
+  citation copied verbatim, unverified, from Track 6's own plan), and 3 minor cosmetic mismatches.
+  0 discrepancies found in the empirical fixture numbers. The correction is disclosed permanently
+  in the document's own new §9, not silently revised away.
+- **Ratified by the owner via `AskUserQuestion`** ("Ratify as scoped," no changes) -- Phase 1
+  implementation is now READY, next pickup. `BACKLOG.md`'s own item updated in place with the
+  ratified scope. `PROJECT_LEARNINGS.md` Learning 678 (empirically execute a library's own
+  "target" claim before citing it, not just read the code) and Learning 679 (a citation copied
+  from a trusted prior planning document still needs independent re-verification) recorded;
+  `CLAUDE.md` learnings-count pointer updated (677→679, S645+→S646+). No `R/` code changed this
+  session -- planning-only, Phase 3E runtime smoke test not applicable (stated explicitly).
+
 ### 2026-08-27 · [ad hoc] S645 (post-close-out, reconcile-on-read): backfill HANDOFFS.md/SESSION_NOTES.md for the BACKLOG-filing addendum
 - Phase 0 ledger reconcile (S646) found `HANDOFFS.md`'s frontier one commit behind `HEAD`: commit
   `4e63cf34` added a second post-close-out addendum note to `HANDOFFS.md`'s S645 receipt and to

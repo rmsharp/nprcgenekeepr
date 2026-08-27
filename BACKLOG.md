@@ -76,8 +76,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 - [ ] **Mating-unit marker (dot) renders on the sire's own symbol instead of centered between sire
       and dam; mates are not visibly spread apart, unlike kinship2** (found live 2026-08-27,
       owner-caught via direct visual review of the corrected Track B full-fixture image pair (S645
-      post-close-out, commit `1784abf6`); root-caused by a dedicated investigation this session --
-      READY for a design/scoping session, Effort M) -- kinship2's own `align.pedigree()` spreads
+      post-close-out, commit `1784abf6`); root-caused by a dedicated investigation S645 --
+      **Design RATIFIED S646, 2026-08-27, Effort M -- Phase 1 implementation READY, next pickup.**
+      Full design: [`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`](docs/planning/pedigree-diagram-track7-mate-spacing-plan.md)
+      (ARCHITECTURE_WORKSTREAM, matching this project's own precedent for pedigree-positioning
+      decisions). **Ratified scope (owner-picked via `AskUserQuestion`, "Ratify as scoped"):** for
+      `qualifies()`-gated pairs only (60/237 = 25.3% of anchored units on the real 375-individual
+      fixture, but 4/4 = 100% of what the owner actually observed in Track B) -- widen Tier 3's
+      `derivedX()` B1-branch offset from `minSep * 0.4` to `minSep` (drop the multiplier entirely;
+      doubly justified: this project's own existing adjacency-floor convention, AND kinship2's own
+      real, directly-measured achieved spousal separation, which the design session's own
+      adversarial verification found is exactly `minSep`-equivalent, never the `1.414` an early
+      draft mistakenly computed from a misread penalty-weight parameter), and recenter the
+      qualifying union's `x` at the true anchor/mate midpoint. Broader (drop-the-gate) and
+      kinship2-QP-porting alternatives were considered and explicitly deferred/rejected -- see the
+      plan's own §4/§8. kinship2's own `align.pedigree()` spreads
       each mated pair apart and drops the descent line to their children from the midpoint between
       the two symbols; `makePedigreeMatingLayout()` draws each pair close together with the
       mating-unit `__union_` node's own x essentially coincident with the sire's (the anchor's) x.
@@ -107,14 +120,18 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       convention, not gap size or centering). Not previously filed anywhere (BACKLOG.md or GitHub
       issues) as actionable remediation -- only documented as a vignette caveat until now
       (`vignettes/articles/kinship2-fidelity-validation.qmd` §Graphic fidelity / §Caveats carried
-      forward, S645). **A future session should treat this as a design/scoping session first**
-      (matching this project's own established practice for touching
-      `.positionMatingUnitForest()` -- Tracks 1-6 and the Walker/BJL migration itself all went
-      through dedicated planning), resolving at minimum: (a) should the union's x be genuinely
-      centered between the two PARENTS' own x rather than derived from children; (b) should Tier
-      3's `derivedX()` offset widen toward a kinship2-comparable visual gap; (c) how either change
-      interacts with Tier 1's BJL apportioning and the existing de-collision/sweep passes, and
-      Track 5's D1/D2 orthogonality invariants.
+      forward, S645). **S646's design session resolved all 3 named judgment calls** (matching this
+      project's own established practice for touching `.positionMatingUnitForest()` -- Tracks 1-6
+      and the Walker/BJL migration itself all went through dedicated planning): (a) yes, genuinely
+      center the union between its two parents' `x` -- but only for `qualifies()`-gated pairs, not
+      universally (a broader change reintroduces Track 6's own polygamous-anchor regression risk,
+      see the plan's §2.4); (b) widen to `minSep` exactly, not an arbitrary constant (§2.2); (c) the
+      `qualifies()` gate itself is the answer -- restricting the change to it means no new
+      interaction with BJL/de-collision/Track 5 D1-D2 to analyze, only a re-use of an
+      already-safe existing boundary (§2.4). **Next pickup: Phase 1 implementation**, TDD-gated,
+      per the plan's own Migration Path (§6) and Verification Plan (§7) -- including the
+      collision-headroom live-render check §7 flags as still outstanding (not resolved by the
+      design session itself, deliberately deferred to implementation's own Pre-RED validation).
 - [x] **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636, 2026-08-26).
       **RESOLVED S637, 2026-08-26, per owner-directed "broader" scope (a genuinely clean baseline,
       not just a green checkmark):** the actual root cause was simpler than any of the 4 candidate
