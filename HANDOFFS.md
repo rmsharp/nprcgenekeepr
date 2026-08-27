@@ -138,22 +138,55 @@ This file currently holds **18** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S644
 date: 2026-08-27
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Phase 1 (core renderer fix) of docs/planning/pedigree-diagram-isolated-individual-
-  suppression-plan.md -- .findIsolatedIds(), pre-filter ped in makePedigreeMatingLayout(), Dragon 3
-  3B empty-result + isolatedIds field, childEdgesOut 0-row guard. Closes issue #164. Scoped to
-  Phase 1 only (owner-confirmed via AskUserQuestion).
-what_was_done: pending
-next_steps: pending
-key_files: R/makePedigreeDiagramData.R:893-1236 (makePedigreeMatingLayout), tests/testthat/test_makePedigreeMatingLayout.R
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Phase 1 (core renderer fix) of docs/planning/pedigree-diagram-isolated-
+  individual-suppression-plan.md -- .findIsolatedIds(), pre-filter ped in
+  makePedigreeMatingLayout(), Dragon 3 3B empty-result + isolatedIds field, childEdgesOut 0-row
+  guard, conditional message(). Closes issue #164 (closed this session, citing commit fc5ac928).
+  Scoped to Phase 1 only (owner-confirmed via AskUserQuestion, separate from the priorities pick).
+  Phases 2/3 explicitly deferred, tracked in BACKLOG.md.
+what_was_done: Full strict TDD (PRE-RED/RED/GREEN/REFACTOR, every transition gated via
+  AskUserQuestion). New tests/testthat/test_findIsolatedIds.R (8 cases) + 10 new/modified
+  assertions in tests/testthat/test_makePedigreeMatingLayout.R -- 219 passed/0 failed/0 error.
+  Implemented .findIsolatedIds() and the makePedigreeMatingLayout() pre-filter/early-return/guard/
+  message() in R/makePedigreeDiagramData.R. Full clean regression: failed=6/error=1, confined to
+  exactly the plan's own §2.4-predicted test_comparePedigreeStructure.R Track B blocks + the 1
+  pre-existing unrelated test_wordlist_coverage.R failure. lintr::lint_package() 0 lints (fixed 2
+  real findings first). Live shinytest2::AppDriver smoke test against the running Diagram tab
+  confirmed correct suppression + 0 JS errors with a custom P5-style fixture, plus the existing
+  e2e fixture's normal-path rendering unaffected. devtools::document() regenerated
+  man/makePedigreeMatingLayout.Rd. NEWS.Rmd entry added (plain-language, scoped accurately to
+  Phase 1 only). Commits: 4376adaa (claim), fc5ac928 (implementation, 5 files), be91d938
+  (CHANGELOG+BACKLOG), 7c892617 (learnings+handoff).
+next_steps: Phase 2 (test/article correction) and Phase 3 (Shiny UX messaging) are both READY,
+  exact scope in BACKLOG.md's P5-suppression item and the plan's own §2.4/§2.5/§3 Dragon 4/§4 --
+  do not re-litigate Dragons 1-5. The 2 now-failing test_comparePedigreeStructure.R Track B blocks
+  are an EXPECTED consequence of Phase 1 alone, not a regression -- Phase 2 fixes them.
+key_files: R/makePedigreeDiagramData.R:327-365 (.findIsolatedIds), R/makePedigreeDiagramData.R:944-1345
+  (makePedigreeMatingLayout, pre-filter at ~966, early-return at ~985, childEdgesOut guard at
+  ~1260), tests/testthat/test_findIsolatedIds.R (new), tests/testthat/test_makePedigreeMatingLayout.R
+  (isolated-individual suppression section at file end), docs/planning/pedigree-diagram-isolated-
+  individual-suppression-plan.md (the ratified plan, §4 Phase 2/3 for the next session)
+gotchas: The childEdgesOut nrow(childEdges) > 0L guard has no covering test -- verified genuinely
+  unreachable given the current predicate (a non-isolated-filtered non-empty ped always yields
+  >=1 childEdge), not an oversight; a future predicate change should add a test if it becomes
+  reachable. The 100%-isolated (all-suppressed) case was NOT live-smoke-tested in the running
+  Shiny app this session (only unit-tested + manually repro'd in R) -- Phase 3's own e2e coverage
+  explicitly owns that scenario (plan §4 Phase 3 Verification).
+runtime_smoke: Live shinytest2::AppDriver run against the running Diagram tab (2 scripts,
+  scratchpad, not committed) -- confirmed a P5-style isolated individual is absent from the
+  rendered vis.js node set, connected individuals render correctly, 0 JS console errors; a second
+  run against the existing obfuscated_rhesus_mhc_ped.csv e2e fixture (no isolated individuals)
+  confirmed the normal-path rendering (1406 nodes) is unaffected.
+changelog_ref: CHANGELOG.md 2026-08-27 S644 entry (commit be91d938)
 commit: pending
 ```
-(pending -- claim stub only, filled at close-out)
+Full session narrative, self-assessment (9/10, strengths/weaknesses), gotchas, and the Session 643
+handoff evaluation (9/10) are written in full in `SESSION_NOTES.md` under "What Session 644 Did"
+and "Session 643 Handoff Evaluation (by Session 644)" -- this receipt is the durable proxy;
+`SESSION_NOTES.md` is the fuller prose record.
 
 ```handoff
 session: S643
