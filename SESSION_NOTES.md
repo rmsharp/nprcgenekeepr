@@ -42,7 +42,19 @@ never layout. `quarto render` clean. Commit `1784abf6`; `HANDOFFS.md`'s S645 rec
 `CHANGELOG.md` both updated with an addendum in the same pass (not left for a future session's
 Phase 0 reconcile, unlike S644's own post-close-out gap this session had to fix).
 
-**What actually happened, in order (the Phase 2 deliverable itself, before the addendum above):**
+**Second post-close-out addendum (owner-directed -- "place [this] as the next action item"):**
+ran a dedicated read-only Explore-agent investigation (not filed on say-so) to root-cause the
+mating-unit dot/mate-spacing gap before filing it, so the `BACKLOG.md` item wouldn't duplicate or
+contradict existing tracked history (Track 3/Track 6, issues #161/#145 all sound related but
+aren't the same gap). Confirmed the current root cause is `.positionMatingUnitForest()`'s Walker/
+BJL Tier 2/Tier 3 formulas (`R/makePedigreeDiagramData.R:757-760`, `:792-801`) -- Tier 2's union-x
+coincides with the anchor's own Tier-1 x (both centered on the same child span), and Tier 3's
+`derivedX()` places the non-anchor mate only `minSep * 0.4` raw units away. Spot-verified the
+agent's key citations directly against source before trusting them. Filed as a new `BACKLOG.md`
+"Up Next" item (design/scoping session first, matching this project's established practice for
+touching `.positionMatingUnitForest()`). Commit `5b97611a`.
+
+**What actually happened, in order (the Phase 2 deliverable itself, before the addenda above):**
 1. **Phase 0 orientation** (full protocol): clean tracked tree, same 7 pre-existing untracked
    items. Ledger reconcile found `HANDOFFS.md`'s frontier one commit behind `HEAD` (S644's own
    post-close-out addendum commit `7f77e2e4` was never reflected in its receipt) -- reconciled:

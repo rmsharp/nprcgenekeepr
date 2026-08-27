@@ -199,6 +199,15 @@ fidelity," "Structural verification," "Caveats carried forward," and "Verdict" s
 "match"/"identical"/"PASS" claim to individual-inclusion and structural edge/mate-pair sets, never
 layout. `quarto render` clean. Commit `1784abf6`, `CHANGELOG.md` entry recorded in the same commit.
 
+**Second post-close-out addendum (owner-directed):** filed the mating-unit dot/mate-spacing gap
+named in the caption fix above as a `BACKLOG.md` "Up Next" remediation item, root-caused via a
+dedicated read-only Explore-agent investigation (not filed on the caption fix's own say-so) --
+confirmed not a duplicate of Track 3/Track 6 (both address different things, and Track 3's own
+mechanism is deleted by the Walker/BJL rewrite, issue #141/S620) or of closed issues #161/#145;
+root-caused to `.positionMatingUnitForest()`'s current Tier 2/Tier 3 formulas
+(`R/makePedigreeDiagramData.R:757-760`, `:792-801`), citations spot-verified directly against
+source, not trusted from the agent's report alone. Commit `5b97611a`.
+
 ```handoff
 session: S644
 date: 2026-08-27
