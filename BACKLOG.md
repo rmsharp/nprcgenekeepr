@@ -23,11 +23,25 @@ visual review of `kinship2-fidelity-validation.qmd`’s Track B full
 fixture. Design RATIFIED S643. **Phase 1 (core renderer fix) DONE S644
 (2026-08-27), Effort M – commit `fc5ac928`. Phase 2 (test/article
 correction) and Phase 3 (Shiny UX messaging) READY, Effort M each, next
-pickup.**) – `P5` in the article’s own published Track B 16-subject
-fixture has zero edges of any kind (no parents, no mate, no children);
-kinship2’s own `plot.pedigree()` correctly omits it from the drawing
-(confirmed live: `align.pedigree()`’s own `$nid` placement never places
-it), while
+pickup.** **⚠ `master`’s CI is red as a DIRECT, PREDICTED consequence of
+shipping Phase 1 alone (confirmed live via `gh run list` on the S644
+close-out push, commit `44c9a15e`): `R-CMD-check.yaml` and
+`test-coverage.yaml` both fail – `R CMD check` treats any test failure
+as fatal (`Error: Test failures. Execution halted`), and Phase 1
+correctly makes the 2 `test_comparePedigreeStructure.R` Track B blocks
+below fail (exactly as the plan’s §2.4 predicted). This is expected, not
+a regression – do not investigate it as one. It resolves when Phase 2
+updates those 2 blocks. Owner-confirmed via `AskUserQuestion` (S644,
+2026-08-27) to leave it red rather than stopgap-`skip()` or pull Phase 2
+forward. `lint.yaml` is ALSO red on the same push, but that is the
+separate, already-tracked Housekeeping item below
+(`data-raw/kinship2FidelityValidation.R:339`), unrelated to Phase 1 –
+confirmed identical on 3 consecutive pushes (S642/S643/S644) now,
+weakening the original stale-globalenv hypothesis.**) – `P5` in the
+article’s own published Track B 16-subject fixture has zero edges of any
+kind (no parents, no mate, no children); kinship2’s own
+`plot.pedigree()` correctly omits it from the drawing (confirmed live:
+`align.pedigree()`’s own `$nid` placement never places it), while
 [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
 used to render it as a disconnected node. **The owner has explicitly
 ruled this an error** (“P5… is erroneously included”), overriding S641’s
@@ -315,7 +329,7 @@ at `data-raw/kinship2FidelityValidation.R:339`, exit code 31
 “0 lints on all 3 touched files.” `.formatStructuralDiscrepancy()` lives
 in `tests/testthat/helper-comparePedigreeStructure.R` (a `testthat`
 helper, not `R/` source), so it is outside
-[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)’s
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)‘s
 scope the way `CLAUDE.md`’s Lint close-out checklist (Learning 224)
 prescribes – most likely explanation (not yet confirmed): S642’s local
 interactive session already had `.formatStructuralDiscrepancy` bound in
@@ -330,7 +344,15 @@ another `testthat` helper is legitimate, just invisible to a
 package-only lint), or (b) restructure so the reporting logic lives
 somewhere `lintr::lint_package()` can see unconditionally. No GitHub
 issue filed, matching this project’s CI-break tracking convention
-(`CLAUDE.md`).
+(`CLAUDE.md`). **Confirmed identical on a 3rd consecutive push (S644,
+2026-08-27, commit `44c9a15e`, run `33033005502`) – same single finding,
+same line, same message, verbatim.** This weakens the stale-globalenv
+hypothesis (option (a) above): a genuinely stale local binding would be
+expected to vary session-to-session or eventually clear, not reproduce
+identically 3 times running across 2 different sessions’ own interactive
+work. A future session should weight option (b) (restructure) more
+heavily, or at minimum re-examine whether (a) is still plausible before
+adding a `# nolint` on that rationale.
 
 **`R-CMD-check-scheduled.yaml` (the weekly-cron twin of
 `R-CMD-check.yaml`) never received the S616/S618/S619 chromote

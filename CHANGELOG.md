@@ -17,6 +17,22 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-27 · \[BL-N\] S644 (post-close-out): recorded that master’s CI is red as a predicted consequence of Phase 1, not a regression
+
+- User asked to check CI status after S644’s close-out push.
+  `gh run list` on commit `44c9a15e` showed
+  `R-CMD-check.yaml`/`test-coverage.yaml` both red: `R CMD check` treats
+  the 2 `test_comparePedigreeStructure.R` Track B failures (already
+  predicted in S644’s own close-out and the ratified plan’s §2.4) as
+  fatal, halting the full check – a consequence not explicitly called
+  out in S644’s own close-out report. Presented 3 options via
+  `AskUserQuestion`; owner picked “leave it, Phase 2 is next.” Updated
+  `BACKLOG.md`’s P5-suppression item with an explicit warning so a
+  future session’s Phase 0 doesn’t mistake this for a surprise
+  regression, and its `lint.yaml` Housekeeping item to record a 3rd
+  consecutive identical occurrence (weakening the stale-globalenv
+  hypothesis). No code change.
+
 ### 2026-08-27 · \[issue \#164\] S644: Phase 1 – suppress fully-isolated individuals in makePedigreeMatingLayout(), closes issue \#164
 
 - **Deliverable:** implemented Phase 1 (core renderer fix) of the
