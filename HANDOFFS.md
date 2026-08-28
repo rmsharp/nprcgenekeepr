@@ -136,6 +136,25 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S649
+date: 2026-08-28
+status: pending
+self_score:
+predecessor_score:
+active_task: Implementing Track 7 Phase 2 (union-dot proximity fix, Option A) per plan
+  §12.2/§12.6, ratified S648.
+what_was_done: pending
+next_steps: pending
+key_files: R/makePedigreeDiagramData.R:981-1001 (union-position sweep to be replaced),
+  docs/planning/pedigree-diagram-track7-mate-spacing-plan.md §12
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: pending>
+
+```handoff
 session: S648
 date: 2026-08-28
 status: complete
@@ -187,7 +206,7 @@ runtime_smoke: n/a -- docs-only session (a design document + a BACKLOG.md filing
   git diff/git status/shasum after each; nothing from those patches is part of this session's
   actual deliverable or commits).
 changelog_ref: see CHANGELOG.md 2026-08-28 entries, S648
-commit: pending
+commit: c1ba804a
 ```
 <free-text prose: 6/10. Strengths: the core Pre-RED measurement and design work (plan S12.1-S12.8)
 was rigorous, independently adversarially verified, and surfaced a genuinely stronger finding than

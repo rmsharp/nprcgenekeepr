@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 649 Did
+**Deliverable:** Track 7 Phase 2 implementation (mating-union dot proximity fix -- Option A,
+radius-proportionate capped push, union side only), per the design ratified S648
+(`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §12.2/§12.6). (IN PROGRESS)
+**Started:** 2026-08-28 12:58 EDT
+**Status:** Session claimed. Work beginning -- re-running §12.1's Pre-RED measurement live against
+the current working tree next, per §12.6's own first verification-plan bullet.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 647 Handoff Evaluation (by Session 648)
 **Score: 8/10.** **What helped:** S647's handoff pointed precisely at the standing top priority
 ("Phase 2 (union-dot proximity)... is READY and the standing top priority") and named the exact

@@ -16,6 +16,16 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-28 · [BL-N] S649: claim session for Track 7 Phase 2 (union-dot proximity) implementation
+- Claimed the top-priority `BACKLOG.md` item (design ratified S648, Option A). `SESSION_NOTES.md`
+  ACTIVE TASK stub and `HANDOFFS.md` `status: pending` receipt written per Phase 1B.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-28 · [ad hoc] S649: record HANDOFFS.md receipt commit-sha fix for S648 close-out (matching S607/S623/S629-S639 precedent)
+- S648's own `HANDOFFS.md` receipt carried `commit: pending` (disclosed gap, noted in S648's own
+  handoff evaluation as never reconciled). Fixed to the real close-out sha, `c1ba804a`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-28 · [BL-N] S648: close out -- Track 7 Phase 2 design ratified (Option A)
 - Ratified the Track 7 Phase 2 design (`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`
   §12.10, via `AskUserQuestion`): Option A (radius-proportionate capped push, union side only) over
