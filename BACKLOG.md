@@ -78,8 +78,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       owner-caught via direct visual review of the corrected Track B full-fixture image pair (S645
       post-close-out, commit `1784abf6`); root-caused by a dedicated investigation S645 --
       **Design RATIFIED S646, 2026-08-27, Effort M. Phase 1 (individuals) DONE S647, 2026-08-27,
-      commit pending -- see below. Phase 2 (union-dot proximity) READY, TOP PRIORITY, next
-      pickup (standing pedigree-fidelity directive).**
+      commit pending -- see below. Phase 2 (union-dot proximity) design RATIFIED S648, 2026-08-28,
+      Effort M -- Option A (radius-proportionate capped push, union side only). Implementation
+      READY, TOP PRIORITY, next pickup (standing pedigree-fidelity directive).**
       Full design: [`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`](docs/planning/pedigree-diagram-track7-mate-spacing-plan.md)
       (ARCHITECTURE_WORKSTREAM, matching this project's own precedent for pedigree-positioning
       decisions). **Ratified scope (owner-picked via `AskUserQuestion`, "Ratify as scoped"):** for
@@ -151,18 +152,31 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       correct" overstated it.** Structurally correct (right people, right relationships, no
       overlaps) but not free of cosmetic defects -- see the 5th finding below, found within
       minutes of this claim being written.
-      **Phase 2 (union-dot proximity) -- READY, next pickup, Effort M:** found during Phase 1's
-      own visual re-verification (plan §11's 4th finding) -- a mating-UNION dot (not an
-      individual) can also land immediately adjacent to an unrelated individual (e.g. Track B
-      "shrunk" fixture's own P1×P2 union sitting 0.12px from C4's square), the same root tension
-      surfacing in the one collision shape Phase 1 deliberately left alone (§2.3's "weaker
-      guarantee for dots" posture). Deliberately NOT attempted in Phase 1 (owner-directed,
-      `AskUserQuestion`) -- 3 compounding iterations were already needed for the individual-circle
-      case, each surfacing a new problem elsewhere; a 4th in the same session risked repeating
-      that pattern blind. A future session should start with its own Pre-RED empirical
-      measurement (how many union-dot/individual near-misses exist on the real fixture, at what
-      magnitude) before choosing a fix approach, rather than assuming the same capped-search
-      pattern transfers directly.
+      **Phase 2 (union-dot proximity) -- design RATIFIED S648, 2026-08-28; implementation READY,
+      TOP PRIORITY, next pickup, Effort M:** found during Phase 1's own visual re-verification
+      (plan §11's 4th finding) -- a mating-UNION dot (not an individual) can also land immediately
+      adjacent to an unrelated individual, the same root tension surfacing in the one collision
+      shape Phase 1 deliberately left alone (§2.3's "weaker guarantee for dots" posture).
+      Deliberately NOT attempted in Phase 1 (owner-directed, `AskUserQuestion`) -- 3 compounding
+      iterations were already needed for the individual-circle case, each surfacing a new problem
+      elsewhere; a 4th in the same session risked repeating that pattern blind.
+      **S648's Pre-RED measurement (plan §12.1), independently re-verified by a 3-agent adversarial
+      workflow (§12.8):** on the real 375-individual fixture, 20/237 (8.4%) unions collide with an
+      unrelated node under current shipped code -- vs. only 1/237 BEFORE Track 7 Phase 1, meaning
+      Phase 1's own widen-to-`minSep` change caused 19 of the 20. Worst-case magnitude bounded to
+      30px (vs. Phase 1's individual-fix needing up to 660px), 15/20 at the pre-existing tie-break
+      epsilon floor, 5/20 in an 11.88-30px band. The Track B "shrunk" fixture (the already-committed
+      `trackB-nprc-shrunk.png`) is a WORSE case than the single pair originally cited -- correctly
+      measured (matching `makePedigreeMatingLayout()`'s own isolation-filtering, a methodology
+      correction found mid-session), all 3/3 of its own mating unions collide post-Phase-1, vs. 0/3
+      pre-Track-7. **Ratified design (Option A, plan §12.2/§12.10):** a capped bidirectional push
+      sized to the actual union-dot/node radii (~31px, not the flat `minSep` individuals use, which
+      a preliminary simulation and ground-truth rendering data both found displaces an unrelated
+      individual out of its own row on the shrunk Track B fixture -- Option B, rejected). Scoped to
+      the union side only; `.deCollideIndividualPoints()` and individuals/duplicates untouched.
+      **Implementing session starts from plan §12.6's verification plan**, including its MANDATORY
+      live-render D1 sibship-bar regression check (a moved union's own `__drop_` waypoint reshapes
+      its bar span -- confirmed by reading source, not assumed).
       **5th finding (owner-caught, post-close-out, 2026-08-27), documented not fixed:**
       recentering a qualifying union between its two parents decouples its `x` from its own
       children's positions, something the OLD `mean(children)` formula guaranteed could never

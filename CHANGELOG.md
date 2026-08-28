@@ -16,6 +16,16 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-28 · [BL-N] S648: close out -- Track 7 Phase 2 design ratified (Option A)
+- Ratified the Track 7 Phase 2 design (`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`
+  §12.10, via `AskUserQuestion`): Option A (radius-proportionate capped push, union side only) over
+  Option B (flat `minSep` push, rejected -- ground-truth data confirmed it displaces an unrelated
+  individual out of its own row on the shrunk Track B fixture). `BACKLOG.md`'s own item updated:
+  design ratified, implementation READY/top-priority/next-pickup. `HANDOFFS.md` receipt completed
+  (`status: complete`, self-score 6/10, predecessor S647 evaluated at 8/10). `SESSION_NOTES.md`
+  handoff notes/gotchas/self-assessment written.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-28 · [BL-N] S648: record Learnings 682/683 and update CLAUDE.md's learnings pointer
 - `PROJECT_LEARNINGS.md`: Learning 682 (calling an internal positioning function directly,
   bypassing the wrapper's own pre-filtering step, measures a pedigree the wrapper never actually

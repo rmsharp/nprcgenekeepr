@@ -18,19 +18,141 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 647 Handoff Evaluation (by Session 648)
+**Score: 8/10.** **What helped:** S647's handoff pointed precisely at the standing top priority
+("Phase 2 (union-dot proximity)... is READY and the standing top priority") and named the exact
+starting move ("Start with a dedicated Pre-RED empirical measurement... before assuming the same
+capped-search pattern from Phase 1 transfers directly") — this session followed that literally,
+and the warning was correct: Option A's own mechanism (radius-proportionate push, not a flat
+`minSep`) genuinely differs from Phase 1's individual-side fix, for exactly the reason the
+gotchas flagged (a union is a much smaller visual object). The handoff's own key-files list
+(`R/makePedigreeDiagramData.R`'s `.deCollideIndividualPoints()`, plan §11) was the correct
+starting point for understanding the existing mechanism this session extended. **What was
+missing:** the handoff's own `commit: pending` field in the `HANDOFFS.md` receipt was never
+reconciled to a real sha (a minor, disclosed gap — `status: complete` so no reconcile was
+triggered at this session's own Phase 0, per `SESSION_RUNNER.md`'s own reconcile rule; left
+unfixed here too, out of this session's own scope). **What was wrong:** the handoff's own
+`active_task` line called Phase 1 "DONE for individuals" without flagging that a specific,
+already-committed measurement in the plan document (§1.4's Track B citation) would turn out to
+need correction this session (the isolation-filter methodology gap, Learning 682) — though this
+is more a property of how deep Pre-RED research usually goes than a real omission; S647 could not
+reasonably have anticipated a gap in ITS OWN predecessor's (S646's) citation. **ROI:** strongly
+positive — re-reading the plan's §11 in full before starting avoided re-deriving the 3-iteration
+compounding-fix history and the exact reason Phase 1 deliberately left union-dot proximity alone.
+
 ### What Session 648 Did
-**Deliverable:** Track 7 Phase 2 (union-dot proximity) empirical measurement + design decision
-document, per `BACKLOG.md`'s own "Up Next" item / `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`
-§11's 4th finding. Following `ARCHITECTURE_WORKSTREAM.md` (Track 6/Track 7 Phase 1's own
-established precedent for `.positionMatingUnitForest()` decisions). **Implementation is explicitly
-NOT this session's deliverable** — the vertical-slice gate (a) requires a pre-declared contract
-from a PRIOR session, which does not yet exist for Phase 2; this session produces that contract.
-**Started:** 2026-08-27 (picked via `AskUserQuestion` at Phase 0 close, from a 2-option priorities
-list: this item vs. P5-suppression Phase 3 UX messaging).
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Track 7 Phase 2 (union-dot proximity) empirical measurement + ratified design
+decision, per `BACKLOG.md`'s own "Up Next" item / `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`
+§11's 4th finding — new §12, [`pedigree-diagram-track7-mate-spacing-plan.md`](docs/planning/pedigree-diagram-track7-mate-spacing-plan.md).
+Following `ARCHITECTURE_WORKSTREAM.md` (Track 6/Track 7 Phase 1's own established precedent).
+**Implementation is explicitly NOT this session's deliverable** — the vertical-slice gate (a)
+requires a pre-declared contract from a PRIOR session, which did not yet exist for Phase 2; this
+session produced that contract. **Ratified by the owner via `AskUserQuestion`** ("Ratify Option
+A"). **DONE. Started/Completed:** 2026-08-27–28 (single session, unusually long, extensive
+visual-comparison back-and-forth — see self-assessment).
+
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol, triggered by a bare `/workflow-authoring` invocation
+   with no accompanying task — recognized this loads reference material only and does not itself
+   authorize work, per the skill's own description, so proceeded to standard Phase 0). Rendered
+   the priorities list (2 numbered items); owner picked Track 7 Phase 2 over P5-suppression
+   Phase 3 via `AskUserQuestion`.
+2. **Phase 1B claim** (commit `95eedad4`).
+3. **Pre-RED research:** re-read `.positionMatingUnitForest()`'s union-position sweep
+   (`R/makePedigreeDiagramData.R:981-1001`) and `.deCollideIndividualPoints()` directly against
+   `HEAD`, confirming the union side only ever gets a tiny epsilon-tie nudge, never a real push
+   (the "weaker guarantee for dots" §2.3/§11 already named). Measured live (not assumed): on the
+   real 375-individual fixture, 20/237 unions collide with an unrelated node under current shipped
+   code, vs. only 1/237 under the pre-Track-7 source (temporarily checked out via `git show`,
+   restored immediately, `shasum`-verified clean each time) — Phase 1 itself caused 19 of the 20.
+   A preliminary capped-push simulation (radius-proportionate clearance, not flat `minSep`)
+   resolved 18/20 within 2 steps, all 20 within 5, with 0 new collisions.
+4. **Drafted plan §12** (Context/Decision/Rationale/Alternatives/Impact/Verification, matching
+   §1-§11's own rigor) recommending Option A (radius-proportionate capped push, union side only)
+   over Option B (reuse Phase 1's flat `minSep` push) and 3 other considered-and-rejected
+   alternatives.
+5. **Adversarial verification** (3-agent background workflow, matching §9's own established
+   practice): independently re-derived every quantitative claim from scratch and re-checked all 4
+   source citations. All CONFIRMED, with 2 minor prose-precision nuances found and corrected in
+   place (not conclusion-changing).
+6. **First ratification attempt deferred:** the owner asked to see the visual impact of Option A
+   vs. B before deciding — a legitimate request this session had not yet satisfied with real
+   images (only metrics).
+7. **Visual comparison, multiple corrected iterations** (the bulk of this session's own
+   elapsed time): (a) first render used an ad-hoc 8-node synthetic fixture with unfamiliar
+   generic labels and excess canvas whitespace — owner: "not close to a regular pedigree
+   drawing." (b) Second attempt used the real 375-individual fixture cropped tight, but the
+   crop region was too dense with unrelated crossing edges — abandoned in favor of a real,
+   natural family cluster extracted from the actual colony CSV, discovered NOT to reproduce the
+   measured collision (BJL layout position is row-context-dependent, not a fixed per-family
+   property — a real methodology lesson, not written up as its own numbered learning but folded
+   into the "measure the actual fixture, don't assume a subset preserves it" discipline already
+   established). (c) Reverted to the shrunk Track B fixture (already used for the project's own
+   committed `trackB-nprc-shrunk.png`); found and root-caused, while preparing this, that the
+   session's OWN original §12.1 Track B measurement was itself wrong — it bypassed
+   `makePedigreeMatingLayout()`'s own isolation-filter step (Learning 682) — corrected in place,
+   with the TRUE finding (3/3 unions collide, not 1/4) turning out stronger than the original.
+   (d) `visNetwork`'s default auto-fit zoom scaled each of the 3 panels differently (Option B's
+   wider layout got zoomed out more) — locked to an explicit, verified `scale=1`/fixed center via
+   `network.moveTo()`. (e) A `moveTo()`-then-screenshot race (canvas repaints one
+   `requestAnimationFrame` after the call returns) was found and fixed with a settle delay +
+   double verification. (f) Composited the 3 renders into one flat PNG (removing any remaining
+   CSS-layout risk) after ruling out embedding/hash mismatches. (g) The owner then asked why
+   nodes within one generation rendered at different heights — ground-truth `layout$nodes` data
+   showed NO real height difference; direct investigation (ruling out mouse-hover, ruling out the
+   `moveTo()` injection, then dumping node data directly) root-caused a genuine, separate,
+   pre-existing rendering defect: `.addRectilinearWaypoints()`'s `__jog_*` waypoint nodes render
+   as a full-size filled default circle instead of invisible (`shape`/`size` left `NA`, unlike the
+   D1/D2 waypoints in the same function, which are explicitly styled transparent/size-0) —
+   confirmed present, unmodified, in the already-committed `trackB-nprc-shrunk.png` itself.
+8. **Owner-directed resolution** (`AskUserQuestion`): file the jog-waypoint bug to `BACKLOG.md`
+   Housekeeping (not fixed this session, out of scope) and ratify Track 7 Phase 2 from the
+   already-verified numeric evidence rather than pursue further visual iteration.
+9. **Ratified: Option A** (`AskUserQuestion`). Recorded in plan §12.10; `BACKLOG.md`'s own item
+   updated (design ratified, implementation READY/top-priority, next pickup).
+10. **Close-out:** `PROJECT_LEARNINGS.md` Learnings 682/683 recorded (the isolation-filter
+    wrapper-bypass gap; the ground-truth-first rendering-diagnosis discipline); `CLAUDE.md`
+    pointer updated.
+
+**Self-assessment (Session 648): 6/10.** **Strengths:** (1) the core Pre-RED measurement and
+design work (§12.1-§12.8) was rigorous, independently adversarially verified, and found a
+genuinely stronger, more accurate finding than the session's own first draft (the isolation-filter
+correction); (2) every guess about the visual-rendering discrepancies was actually TESTED, not
+asserted — the auto-fit-zoom hypothesis, the `moveTo()` race, the mouse-hover hypothesis were each
+directly falsified or confirmed via a real check, never left as an unverified assumption; (3) when
+the jog-waypoint bug was found, it was correctly root-caused to an exact line range and disclosed
+rather than hand-waved, and correctly scoped as a NEW, separate, filed-not-fixed finding rather
+than either ignored or fixed out of scope. **Weaknesses:** (1) the session spent a disproportionate
+share of its own time (roughly half) iterating on visual rendering polish for what is fundamentally
+SPIKE evidence supporting a design decision, not the deliverable itself — SESSION_RUNNER's own "after
+2 failed attempts, stop and return to research" anti-pattern applied here and was recognized only
+after 3-4 rendering iterations, not sooner; a session with tighter self-discipline should have
+either succeeded in 1-2 rendering attempts or escalated to the owner sooner with the numeric
+evidence alone, deferring polished visuals; (2) the FIRST rendering attempt used an unfamiliar
+synthetic fixture instead of reaching for the project's own already-published, already-familiar
+Track B images immediately — an avoidable false start; (3) the auto-fit-zoom and `moveTo()`-race
+issues were both real methodology gaps this session itself introduced (not pre-existing), each
+requiring its own diagnostic detour; a more careful FIRST attempt at "lock the scale explicitly,
+verify before screenshotting" would have avoided 2 of the 3 re-publish cycles.
+
+**Gotchas for a future session:** (1) **Phase 2 implementation is the standing top priority, next
+pickup** — start from plan §12.2's decision and §12.6's verification plan; the design is ratified
+(§12.10), not open for re-litigation, though re-running §12.1's Pre-RED measurement live against
+the implementation's own working tree is still required (the codebase may have drifted). (2) The
+live-render D1 sibship-bar regression check (§12.6) is MANDATORY, not optional, despite Phase 2's
+smaller raw magnitude than Phase 1's own individual-circle fix — a moved union's `__drop_`
+waypoint genuinely reshapes its own bar span (confirmed by reading source, not assumed). (3) The
+`__jog_*` waypoint-styling bug (`BACKLOG.md` Housekeeping, this session) is UNRELATED to Track 7
+but affects the SAME rendering pipeline — if the Phase 2 implementing session does its own visual
+re-verification and sees an unexplained phantom circle, check that Housekeeping item before
+assuming it's a Phase-2-introduced regression. (4) When building ANY future visual comparison in
+this codebase: lock `network.moveTo({scale, position})` explicitly rather than trusting
+`visNetwork`'s auto-fit (which scales different-extent layouts differently), verify the scale
+twice (after a settle delay, and again immediately pre-screenshot — `moveTo()`'s state updates
+before the canvas actually repaints), and reach for the project's own already-published Track
+B/real-fixture images/fixtures FIRST rather than constructing a new one. (5)
+`HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap, unchanged this
+session — `BACKLOG.md`'s own "ledger-size housekeeping" item is still open.
 
 ### S647 post-close-out addendum (2026-08-27)
 Within minutes of S647's own close-out report, the owner reviewed the same regenerated

@@ -137,23 +137,72 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S648
-date: 2026-08-27
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Track 7 Phase 2 (union-dot proximity) -- Pre-RED empirical measurement + design
-  decision document, per docs/planning/pedigree-diagram-track7-mate-spacing-plan.md S11's 4th
-  finding and BACKLOG.md's own "Up Next" item (standing top priority). Implementation deferred to
-  a future session -- this session's deliverable is the measurement + ratified design contract.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+date: 2026-08-28
+status: complete
+self_score: 6
+predecessor_score: 8
+active_task: DONE -- Track 7 Phase 2 (union-dot proximity) design RATIFIED (Option A,
+  radius-proportionate capped push, union side only). Implementation is a separate future
+  session -- see plan doc S12.2/S12.6 and BACKLOG.md (READY, top priority, next pickup).
+what_was_done: Pre-RED measurement (real 375-fixture: 20/237 unions collide post-Track-7-Phase-1
+  vs 1/237 before, i.e. Phase 1 itself caused 19 of 20; shrunk Track B fixture, corrected
+  methodology: 3/3 collide vs 0/3 before). Drafted plan S12 (decision/alternatives/impact/
+  verification), independently re-verified by a 3-agent adversarial workflow (all claims
+  CONFIRMED, 2 minor prose nuances fixed). Built and iterated visual spike evidence (multiple
+  corrected rounds -- auto-fit-zoom mismatch, moveTo() race, wrong/unfamiliar fixture choice, an
+  invalid isolation-filter-bypassed measurement -- each found and fixed in turn). Found and filed
+  (not fixed) an unrelated, pre-existing rendering defect: .addRectilinearWaypoints()'s __jog_*
+  waypoint nodes render as a full-size filled default circle instead of invisible
+  (BACKLOG.md Housekeeping). Ratified Option A via AskUserQuestion (plan S12.10). Recorded
+  PROJECT_LEARNINGS.md Learnings 682/683. Commits: 95eedad4 (claim), adff7e0c (design draft
+  checkpoint), bb3c7e4b (jog-bug filing + spike-evidence correction checkpoint), this commit
+  (close-out).
+next_steps: Implement Track 7 Phase 2 following plan S12.2 (decision), S12.5 (impact analysis),
+  S12.6 (verification plan -- MANDATORY live-render D1 sibship-bar regression check, not
+  optional). Start with S12.6's own Pre-RED re-validation (re-run the collision measurement live
+  against the implementing session's own working tree, don't assume S648's numbers are still
+  current). Full TDD RED/GREEN/REFACTOR per this project's Development Process Contract.
+key_files: R/makePedigreeDiagramData.R:981-1001 (union-position sweep to be replaced),
+  R/makePedigreeDiagramData.R:866-940 (.deCollideIndividualPoints(), the individual-side pattern
+  Phase 1 used, NOT to be reused verbatim -- see plan S12.3), R/makePedigreeDiagramData.R:1642-1649
+  (__drop_ waypoint construction, the D1 bar-span dependency), R/makePedigreeDiagramData.R:2081-2127
+  (the separately-filed __jog_* styling bug), docs/planning/pedigree-diagram-track7-mate-spacing-plan.md
+  S12 (the full ratified design), PROJECT_LEARNINGS.md Learnings 682 (isolation-filter
+  wrapper-bypass gap) and 683 (ground-truth-first rendering diagnosis).
+gotchas: (1) Phase 2 implementation is ratified, not open for re-litigation -- but still re-verify
+  S12.1's numbers live before implementing, the codebase may have drifted. (2) The live-render D1
+  regression check (S12.6) is mandatory despite Phase 2's smaller magnitude than Phase 1's own fix
+  -- a moved union's __drop_ waypoint genuinely reshapes its own sibship-bar span (confirmed by
+  reading source). (3) The __jog_* waypoint bug (BACKLOG.md Housekeeping) is UNRELATED to Track 7
+  but shares the same rendering pipeline -- don't mistake it for a Phase-2-introduced regression
+  during visual re-verification. (4) For any future visual comparison in this codebase: lock
+  network.moveTo({scale, position}) explicitly (visNetwork's auto-fit scales different-extent
+  layouts differently), verify twice (post-settle-delay AND immediately pre-screenshot -- moveTo()'s
+  internal state updates before the canvas actually repaints), and reach for the project's own
+  already-published Track B/real-fixture data first. (5) HANDOFFS.md/SESSION_NOTES.md/CHANGELOG.md
+  remain past the FM #28 size cap, unchanged this session.
+runtime_smoke: n/a -- docs-only session (a design document + a BACKLOG.md filing); no R/ source
+  file was committed changed (2 temporary spike patches to R/makePedigreeDiagramData.R were
+  applied and reverted for visual-comparison rendering only, confirmed byte-identical to HEAD via
+  git diff/git status/shasum after each; nothing from those patches is part of this session's
+  actual deliverable or commits).
+changelog_ref: see CHANGELOG.md 2026-08-28 entries, S648
 commit: pending
 ```
-<free-text prose: pending -- filled at Phase 3D close-out.>
+<free-text prose: 6/10. Strengths: the core Pre-RED measurement and design work (plan S12.1-S12.8)
+was rigorous, independently adversarially verified, and surfaced a genuinely stronger finding than
+the session's own first draft (the isolation-filter correction, Learning 682); every rendering
+hypothesis was actually tested rather than asserted (auto-fit zoom, the moveTo() race, mouse-hover
+were each directly falsified or confirmed); the jog-waypoint bug was correctly root-caused to an
+exact line range, disclosed, and correctly scoped as filed-not-fixed rather than ignored or fixed
+out of scope. Weaknesses: the session spent a disproportionate share of its own time (roughly half)
+iterating on visual rendering polish for what is fundamentally spike evidence, not the deliverable
+itself -- SESSION_RUNNER's own "after 2 failed attempts, stop and return to research" anti-pattern
+applied and was recognized late, not after the first or second miss; the first rendering attempt
+used an unfamiliar synthetic fixture instead of reaching for the project's own already-published
+Track B images immediately; the auto-fit-zoom and moveTo()-race issues were both real methodology
+gaps this session itself introduced, each needing its own diagnostic detour a more careful first
+attempt would have avoided.
 
 ```handoff
 session: S647

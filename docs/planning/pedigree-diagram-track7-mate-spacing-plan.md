@@ -5,11 +5,13 @@ as scoped, no changes. **Phase 1 implementation DONE for individuals, session S6
 -- §2's core formulas shipped (widen + recenter, `qualifies()`-gated), plus a capped
 collision-avoidance fix for individual-shaped points (§11). §11's own 4th finding (union-dot
 proximity to unrelated individuals) and 5th finding (union/children decoupling) were disclosed,
-not fixed. **Phase 2 DESIGN, session S648 (2026-08-27)** -- §12: Pre-RED measurement (confirms
-Phase 1 itself introduced 19 of 20 union-dot near-misses on the real fixture, up from 1
-pre-Track-7) + a capped, radius-proportionate push design for the union side only, independently
-verified by a 3-agent adversarial workflow (§12.8). **Implementation is a separate future
-session** -- see `BACKLOG.md`.
+not fixed. **Phase 2 DESIGN, session S648 (2026-08-27), RATIFIED session S648 (2026-08-28)** (§12.10) -- §12:
+Pre-RED measurement (confirms Phase 1 itself introduced 19 of 20 union-dot near-misses on the real
+fixture, up from 1 pre-Track-7) + a capped, radius-proportionate push design for the union side
+only (Option A), independently verified by a 3-agent adversarial workflow (§12.8). An unrelated
+rendering defect found while building visual spike evidence was filed separately, not fixed here
+(`BACKLOG.md` Housekeeping, §12.9). **Implementation is a separate future session** -- see
+`BACKLOG.md`.
 
 **Origin:** `BACKLOG.md` "Up Next" (filed S645, 2026-08-27, post-close-out, owner-directed --
 "place [this] as the next action item"), itself found via direct owner visual review of the
@@ -863,7 +865,23 @@ reliability.
 
 ### 12.10 Owner ratification record (Phase 2)
 
-*(To be completed once presented via `AskUserQuestion`.)*
+**Ratified 2026-08-28, session S648, via `AskUserQuestion`.** Presented 3 options -- (A) ratify
+Option A as scoped (§12.2's radius-proportionate capped push, union side only), (B) ratify Option B
+instead (flat `minSep` push, simpler code, accepted the `P1`-detour distortion §12.9/§12.1
+demonstrated), (C) hold / discuss further. **The owner picked Option A, as scoped.**
+
+The decision rested on §12.1's own independently-re-verified numeric evidence (3-agent adversarial
+workflow, §12.8) -- the real-fixture regression count (1/237 pre-Track-7 to 20/237 post-Phase-1),
+the push-simulation resolve counts (18/20 within 2 steps, all 20 within 5, 0 new collisions), and
+the ground-truth node-position confirmation that Option B's larger push displaces `P1` outside its
+own row on the shrunk Track B fixture -- rather than on the visual renders' own pixel-level
+reliability, which §12.9's correction found was confounded by an unrelated, separately-filed
+rendering defect (`BACKLOG.md` Housekeeping, the `__jog_*` waypoint styling gap).
+
+**Status: DESIGN RATIFIED. Ready for a Phase 2 implementation session** (TDD-gated RED/GREEN/
+REFACTOR, per this project's Development Process Contract), following §12.2's decision, §12.5's
+impact analysis, and §12.6's verification plan above -- including its MANDATORY live-render D1
+regression check before shipping.
 
 ## References
 
