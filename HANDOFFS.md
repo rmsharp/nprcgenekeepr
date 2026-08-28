@@ -139,17 +139,20 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 session: S647
 date: 2026-08-27
 status: complete
-self_score: 7
+self_score: 6
 predecessor_score: 9
-active_task: DONE for individuals; Phase 2 (union-dot proximity) deliberately deferred, not a
-  fully closed feature. Track 7 Phase 1 (widen B1 offset to minSep, recenter qualifying unions at
-  the true anchor/mate midpoint) shipped via full TDD, picking up an uncommitted draft found at
-  Phase 0 orientation. Corrected the plan's own coverage figure (60/237 -> the actually-gated
-  34/237). A real collision-avoidance gap (widened offsets routinely landing on unrelated
-  individuals) took 3 owner-gated iterations to resolve without creating a worse problem
-  elsewhere -- shipped a capped bidirectional search accepting a small, bounded, disclosed
-  residual. A 4th, related pattern (union-dot proximity) found but deliberately not fixed --
-  filed to BACKLOG.md as this item's own Phase 2, top priority.
+active_task: DONE for individuals; NOT a fully closed feature. Track 7 Phase 1 (widen B1 offset
+  to minSep, recenter qualifying unions at the true anchor/mate midpoint) shipped via full TDD,
+  picking up an uncommitted draft found at Phase 0 orientation. Corrected the plan's own coverage
+  figure (60/237 -> the actually-gated 34/237). A real collision-avoidance gap (widened offsets
+  routinely landing on unrelated individuals) took 3 owner-gated iterations to resolve without
+  creating a worse problem elsewhere -- shipped a capped bidirectional search accepting a small,
+  bounded, disclosed residual. TWO further related patterns found but deliberately not fixed,
+  both filed to BACKLOG.md as this item's own Phase 2, top priority: (4th) union-dot proximity to
+  unrelated individuals, found during this session's own visual re-verification; (5th,
+  post-close-out) recentering decouples a qualifying union's x from its own children's positions
+  -- found by the OWNER, minutes after this session's own close-out called the same image
+  "confirmed correct."
 what_was_done: Verified the inherited WIP's own reordering claim empirically (false as stated,
   though the reordering itself was correct and plan-sanctioned). Root-caused and fixed a
   pre-existing gap in the Tier-3 de-collision sweep. Full RED->GREEN across
@@ -158,43 +161,65 @@ what_was_done: Verified the inherited WIP's own reordering claim empirically (fa
   test_makePedigreeMatingLayout.R (all re-measured after each of 3 collision-fix iterations).
   Regenerated and visually inspected Track B/C vignette images (chromote), including a dedicated
   close-up render for an owner decision point. Updated the plan doc's own §11, BACKLOG.md,
-  NEWS.Rmd/NEWS.md, PROJECT_LEARNINGS.md (Learning 680), CLAUDE.md's learnings pointer. Full
+  NEWS.Rmd/NEWS.md, PROJECT_LEARNINGS.md (Learnings 680/681), CLAUDE.md's learnings pointer. Full
   clean regression 0 failed/0 error (1 pre-existing unrelated test_wordlist_coverage.R failure
-  only); lintr::lint_package() 0 lints. Commits: 6d4ad111 (Phase 1B claim), plus this close-out's
-  own commits below.
-next_steps: Phase 2 (union-dot proximity) is READY and the standing top priority -- see
-  BACKLOG.md's own item and plan doc §11's 4th finding. Start with a dedicated Pre-RED empirical
-  measurement (how many cases, what magnitude, on the real fixture) before assuming the same
-  capped-search pattern from Phase 1 transfers directly -- it may not, given how differently
-  dot-vs-dot and circle-vs-circle visual severity behaves.
+  only); lintr::lint_package() 0 lints. POST-CLOSE-OUT: the owner reviewed the same regenerated
+  image this session had called "confirmed correct" and found the 5th finding above within
+  minutes -- root-caused and confirmed against kinship2's own reference rendering
+  (trackB-kinship2-full.png), documented (not fixed, owner-directed) in the plan §11, BACKLOG.md,
+  this addendum, and Learning 681. Commits: 6d4ad111 (Phase 1B claim), 60088383 (Phase 1
+  deliverable), ff19c9c0 (post-close-out addendum).
+next_steps: Phase 2 (union-dot proximity, plan §11's 4th finding) is READY and the standing top
+  priority -- see BACKLOG.md's own item. Start with a dedicated Pre-RED empirical measurement
+  (how many cases, what magnitude, on the real fixture) before assuming the same capped-search
+  pattern from Phase 1 transfers directly. The 5th finding (union/children decoupling) is a
+  SEPARATE, architectural tension (local vs. global positioning) already considered and declined
+  to fully solve in the ratified plan (§3/§4) -- a future session should read both findings
+  together before scoping any further work in this area, since a fix for one may interact with
+  the other.
 key_files: R/makePedigreeDiagramData.R (.deCollideIndividualPoints(), the Track 7 recenter, all
   within .positionMatingUnitForest()), docs/planning/pedigree-diagram-track7-mate-spacing-plan.md
-  §11 (all 3 iterations, the 4th finding), tests/testthat/test_positionMatingUnitForest.R,
-  PROJECT_LEARNINGS.md Learning 680 (the compounding-fix pattern and its countermeasure)
+  §11 (all 3 iterations, 4th and 5th findings), tests/testthat/test_positionMatingUnitForest.R,
+  PROJECT_LEARNINGS.md Learnings 680 (the compounding-fix pattern) and 681 (the verification-scope
+  gap that missed the 5th finding)
 gotchas: (1) The 27-node exact-tie residual and 5-case D1 bar-overlap residual on the real
   fixture are intentional, capped trade-offs, not bugs -- read plan §11 and Learning 680 before
   touching this area again. (2) .kMaxIndividualPush = 2 is a real magic number, not derived from
   first principles -- re-justify it if extending this area, don't assume it's principled. (3)
-  Phase 2 (union-dot proximity) is a SEPARATE collision shape from what Phase 1 fixed -- do not
-  assume the same fix transfers without its own empirical measurement first. (4) lint.yaml CI is
+  Phase 2 (union-dot proximity) and the 5th finding (union/children decoupling) are TWO SEPARATE
+  collision/tension shapes from what Phase 1 fixed and from each other -- do not assume any fix
+  transfers across them without its own empirical measurement. (4) "Visually re-verified,
+  structurally correct" is NOT the same claim as "no cosmetic defects" -- Learning 681's own
+  lesson; a verification pass must explicitly check every invariant an OLD formula guaranteed as
+  a side effect, not just the invariants the NEW code was written to satisfy. (5) lint.yaml CI is
   still red (pre-existing, unaffected, already-tracked Housekeeping item).
 runtime_smoke: Not a live Shiny app launch -- the actual rendering pathway R/modPedigree.R uses
   (makePedigreeMatingLayout() -> visNetwork()) was exercised directly and repeatedly via
   chromote, with real rendered PNGs viewed at each iteration. Stated explicitly, not silently
   treated as equivalent to launching the interactive app.
-changelog_ref: see CHANGELOG.md 2026-08-27 entries, S647
+changelog_ref: see CHANGELOG.md 2026-08-27 entries, S647 (2 entries: the Phase 1 deliverable and
+  the post-close-out addendum)
 commit: pending
 ```
-<free-text prose: 7/10. Strengths: independently verified the inherited WIP rather than trusting
-it; recognized the compounding-fix pattern while it was happening and escalated to the owner with
+<free-text prose: 6/10 (revised down from an initial 7/10 self-score after the post-close-out
+finding below). Strengths: independently verified the inherited WIP rather than trusting it;
+recognized the compounding-fix pattern while it was happening and escalated to the owner with
 concrete measured evidence each time rather than continuing blind or silently stopping; every
 numeric assertion re-derived by running the implementation; used real chromote renders to settle
-2 genuine visual-vs-numeric ambiguities. Weaknesses: the session ran far longer than typical --
-escalation after v2's large-drift finding could have come one step sooner, before also
+2 genuine visual-vs-numeric ambiguities; when the owner caught the 5th finding minutes after
+close-out, root-caused and disclosed it fully rather than downplaying it, and corrected the
+overstated "confirmed correct" claim in place. Weaknesses: the session ran far longer than
+typical -- escalation after v2's large-drift finding could have come one step sooner, before also
 characterizing its D1 bar-overlap consequence firsthand; a visual misinterpretation cost real
-time before reaching for vis.js's own getBoundingBox() API, the actually-authoritative check;
-the deliverable is explicitly partial (Phase 2 open), not a finished feature, per the owner's own
-framing at close-out.
+time before reaching for vis.js's own getBoundingBox() API, the actually-authoritative check; the
+deliverable is explicitly partial (Phase 2 open), not a finished feature, per the owner's own
+framing at close-out; **most significantly**, this session's own close-out visual re-verification
+was scoped too narrowly -- it checked for the collision classes already found this session, but
+never asked "what did the OLD formula guarantee as a side effect that the NEW one doesn't,"
+which is exactly the question that would have caught the 5th finding (single-child unions no
+longer aligning with their child, sibship bars no longer centered) before claiming the image
+"confirmed correct." The owner caught it within minutes of that claim being written, on the exact
+same image already "inspected." See Learning 681 for the generalized lesson.
 
 ```handoff
 session: S646
