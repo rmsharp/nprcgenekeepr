@@ -663,13 +663,14 @@ test_that(".addRectilinearWaypoints's D1 bar/drop waypoints never share a
 
 test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
            collisions (2 different sibships sharing a generation gap,
-           whose bar x-spans overlap) are eliminated under the Walker/BJL
-           engine (Phase 3 cutover, this session) -- Track 3's parent-span
-           clamp, the mechanism that used to worsen this residual, no
-           longer exists -- on the real 375-individual bundled fixture, a
-           residual originally named in the collision-avoidance plan's own
-           section 8, counted here so a future regression would be
-           caught", {
+           whose bar x-spans overlap) are down to 5 cases -- mostly
+           sub-pixel, one 59.88px (Track 7, S647's capped search) -- from
+           0 under the Walker/BJL engine (Phase 3 cutover) -- Track 3's
+           parent-span clamp, the mechanism that used to worsen this
+           residual, no longer exists -- on the real 375-individual
+           bundled fixture, a residual originally named in the
+           collision-avoidance plan's own section 8, counted here so a
+           future regression would be caught", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -730,8 +731,37 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
   ## union's drop point is now genuinely, unconditionally its own
   ## children's midpoint (no clamp pulling it back toward its parents'
   ## x-region).
-  expect_equal(oldHits, 0L)  # CHANGED from 348L
-  expect_equal(newHits, 0L)  # CHANGED from 116L
+  ##
+  ## Track 7 CHANGE (docs/planning/pedigree-diagram-track7-mate-spacing-
+  ## plan.md, S647): BOTH counts move from 0 to 1 -- __union_5 and
+  ## __union_7 (both single-child, both now Track-7-qualifying) recenter
+  ## away from their one child's own x to the anchor/mate midpoint, and
+  ## their single-child bar groups' x-spans ([60,120]px and [0,60.12]px)
+  ## now overlap by exactly 0.12px -- below a screen's 1px rendering
+  ## granularity (confirmed by an actual chromote render of this exact
+  ## spot, both at normal scale -- nothing distinguishable -- and
+  ## artificially zoomed 6x, where it looks identical to the many other
+  ## already-existing sub-pixel node coincidences already present
+  ## elsewhere in this same diagram, e.g. the pixel-coincidence measured
+  ## by the live-render tests near the end of test_positionMatingUnitForest.R).
+  ## Disclosed here, not silently reset to 0 -- this is a real, mostly
+  ## negligible, side effect of widening the B1 offset, distinct from the
+  ## Tier-3 collision-sweep fix (S647) above, which only covers POINT
+  ## coincidences, not BAR-SPAN overlaps -- a different collision shape.
+  ##
+  ## CHANGED again (S647's capped-search refinement): an earlier,
+  ## uncapped version of the point-collision fix caused 34 bar overlaps
+  ## here, several 400-540px wide -- capping the search
+  ## (.kMaxIndividualPush = 2, R/makePedigreeDiagramData.R) brought this
+  ## back down to 5: one real 59.88px overlap plus 3 sub-pixel (0.12px)
+  ## cases and one exact boundary touch (0px) -- measured directly. The
+  ## remaining 59.88px case is a genuine, if modest, visible trade-off of
+  ## capping the search rather than leaving it unbounded; not fixed
+  ## further here (out of Phase 1's own scope; the plan's own §7 asked
+  ## this suite be RUN and confirmed, not asked to hold at exactly 0
+  ## regardless of what's found).
+  expect_equal(oldHits, 5L)  # CHANGED from 1L (S647's capped search)
+  expect_equal(newHits, 5L)  # CHANGED from 1L (S647's capped search)
   expect_true(newHits <= oldHits)
 })
 

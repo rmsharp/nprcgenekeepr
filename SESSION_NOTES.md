@@ -21,25 +21,130 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ### What Session 647 Did
 **Deliverable:** Track 7 Phase 1 implementation (mating-unit dot/mate-spacing fix in
 `.positionMatingUnitForest()`), per the design ratified S646
-(`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`). (IN PROGRESS)
-**Started:** 2026-08-27.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+(`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`). **DONE for individuals; a related
+follow-up (union-dot proximity) deliberately deferred — see below.** **Started/Completed:**
+2026-08-27 (single session, unusually long).
 
-**Context this claim exists to preserve:** Phase 0 orientation (this session) found an
-**uncommitted, unstaged modification to `R/makePedigreeDiagramData.R`** already present in the
-working tree at session start (58 insertions/23 deletions), with no matching commit, no prior
-`SESSION_NOTES.md`/`HANDOFFS.md` trace, and 87 failing assertions in
-`test_positionMatingUnitForest.R` as-is. It reads as a genuine, reasoned partial attempt at this
-exact Track 7 Phase 1 fix — including a documented deviation from the ratified plan's own §6
-Migration Path step 2 ordering, justified by an in-code comment claiming empirical evidence (3
-real exact-position collisions) that this session has not yet independently verified. The owner
-was shown this finding via `AskUserQuestion` and chose "Continue the WIP as Track 7 Phase 1" —
-verify it, bring it through a real RED→GREEN cycle, and finish Phase 1. This paragraph exists so
-a crash before close-out still explains where this uncommitted code came from and what direction
-was given about it.
+**What actually happened, in order:**
+1. **Phase 0 orientation** (full protocol): found an **uncommitted, unstaged modification to
+   `R/makePedigreeDiagramData.R`** already in the working tree at session start (58/23
+   insertions/deletions), no matching commit, no prior `SESSION_NOTES.md`/`HANDOFFS.md` trace, 87
+   failing assertions in `test_positionMatingUnitForest.R` as-is — a genuine, reasoned partial
+   attempt at Track 7 Phase 1, including a documented ordering deviation from the plan's own §6
+   step 2, justified by an in-code comment claiming empirical evidence not yet independently
+   verified. Also reconciled a 1-commit `CHANGELOG.md` gap (S646's own post-close-out backfill,
+   already committed as `950a3e85` before this session started — no new backfill needed).
+   Presented the uncommitted-WIP finding via `AskUserQuestion`; owner chose "Continue the WIP."
+2. **Phase 1B claim** (commit `6d4ad111`).
+3. **Verified the WIP's own claim independently** (matching this project's "verify before trust"
+   standard): the WIP's reordering (recenter before Tier 2's sweep, not after per the plan's
+   literal text) IS correct and IS explicitly plan-sanctioned ("re-derive the exact control-flow
+   ordering... at implementation time"), but its comment's claim that this reordering alone
+   avoids 3 named real-fixture collisions was **empirically false** — all 3 still collided.
+   Root-caused: a **separate, pre-existing gap** the plan's own §2.3 didn't anticipate — the
+   Tier-3 de-collision sweep only ever compared Tier-3 points against each other, never against
+   real individuals (`tier1X`) or unions (`unitX`). Presented via `AskUserQuestion`; owner
+   approved fixing it now.
+4. **RED→GREEN**, TDD-gated at each transition via `AskUserQuestion`: updated/added ~20 test
+   assertions across `test_positionMatingUnitForest.R`, all values computed by actually running
+   the implementation (never hand-derived), including a new dedicated regression test for the
+   collision-sweep fix and a correction to the plan's own §1.4 evidence (naive `qualifies()`
+   measured 60/237 "qualifying" units; the actually-gated figure, matching what the shipped code
+   really does, is 34/237 — Track B, the fixture the owner observed, is unaffected either way).
+5. **3 iterations on the collision-avoidance fix itself**, each verified by re-running the FULL
+   test suite (not just the target file) — the compounding-fix pattern this project's own
+   `DEVELOPMENT_WORKSTREAM.md` names as an anti-pattern, caught and escalated to the owner rather
+   than continued blind:
+   - v1 (small `1e-3` tie-break epsilon): fixed the coordinate collision, left 2 full circles
+     visually overlapping (confirmed via an actual chromote render of the resulting vignette
+     image, `trackB-nprc-shrunk.png` — not raw-unit arithmetic alone).
+   - v2 (full `minSep` push, direction-aware, bidirectional search): fixed the visual overlap, but
+     on the real fixture's dense 173-founder row a handful of pairs cascaded through up to 23
+     pushes (drift up to 11.5 raw units) — and re-running `test_addRectilinearWaypoints.R`
+     (verification discipline, not assumption) found this created 34 NEW, much worse sibling-bar
+     overlaps (400-540px) in a completely different function.
+   - v3, shipped (capped search, `.kMaxIndividualPush = 2`, fall back to the original small
+     collision if nothing frees within the cap): brought the bar-overlap count back to 5 (mostly
+     sub-pixel) while keeping the individual-circle fix for the large majority of cases —
+     presented and approved via `AskUserQuestion` with the measured regression as evidence.
+6. **A 4th, related pattern found but NOT fixed**: mating-union dots (not individuals) can also
+   land immediately adjacent to an unrelated individual — the same root tension, in the one
+   collision shape deliberately left at the pre-existing "weaker guarantee for dots" posture.
+   Owner, informed of the 3-iteration compounding pattern already hit, chose to defer this to its
+   own future session rather than risk a 4th iteration blind — filed to `BACKLOG.md` as the
+   item's own Phase 2, top priority (standing pedigree-fidelity directive).
+7. **Full verification** (plan §7): full clean regression 0 failed/0 error (the 1 pre-existing
+   unrelated `test_wordlist_coverage.R` failure only); `lintr::lint_package()` (loaded first) 0
+   lints on all touched files; Track 5 D1/D2 regression re-confirmed (orthogonality unaffected,
+   only the separately-tracked bar-overlap count, disclosed); visual re-verification — Track
+   B/C images regenerated via `data-raw/kinship2FidelityValidation.R` and inspected directly
+   (not just re-rendered), including a dedicated chromote close-up render sent to the owner
+   for the visible-defect decision point. **Runtime smoke test (Phase 3E):** not a live Shiny
+   app launch, but the actual rendering pathway `R/modPedigree.R` uses
+   (`makePedigreeMatingLayout()` → `visNetwork()`) was exercised directly and repeatedly via
+   chromote, with real rendered PNGs viewed at each iteration — substantively satisfies the
+   intent, stated explicitly rather than silently treated as equivalent to launching the app.
+8. **Close-out:** plan doc's own §11 rewritten with the full 3-iteration narrative and the
+   4th-pattern disclosure; `BACKLOG.md` updated (Phase 1 DONE, Phase 2 READY/top-priority);
+   `NEWS.Rmd`/`NEWS.md` entry added (plain language, per the established criterion) and
+   regenerated; `PROJECT_LEARNINGS.md` Learning 680 recorded, `CLAUDE.md` pointer updated.
+
+**Self-assessment (Session 647): 7/10.** **Strengths:** (1) did not trust the inherited WIP's own
+comment at face value — independently verified its central claim and found it false, matching
+this project's established "verify agent/WIP citations against source" standard; (2) recognized
+the compounding-fix pattern (3 iterations, each surfacing a new problem) as it was happening and
+escalated to the owner via `AskUserQuestion` with concrete measured evidence each time, rather
+than either quietly continuing or quietly stopping; (3) every numeric test assertion was
+re-derived by actually running the implementation, never hand-computed, including after each of
+the 3 iterations; (4) used real chromote renders (not just raw-unit arithmetic) to settle 2
+genuine visual-vs-numeric ambiguities (the "double ring" investigation, the D1 bar-overlap
+question) rather than asserting from formulas alone; (5) caught and corrected the plan's own
+§1.4 coverage figure via direct measurement rather than carrying it forward. **Weaknesses:** (1)
+the session ran far longer than a typical implementation session — the compounding-fix pattern,
+once triggered, should arguably have been escalated to the owner one iteration sooner (after v2's
+own large-drift finding, before also discovering the D1 bar-overlap consequence empirically)
+rather than fully characterizing v2's damage first; (2) spent real time on a visual
+misinterpretation (the "double ring" appearance) before querying vis.js's own `getBoundingBox()`
+API directly — should have reached for the authoritative programmatic check sooner, matching
+this project's own "verify diagrams against ground truth programmatically" standard from the
+start rather than after an eyeballing detour; (3) the deliverable is explicitly NOT a fully
+closed feature — Phase 2 (union-dot proximity) remains open, so this is a partial, disclosed
+delivery, not a finished one, per the owner's own framing at close-out.
+
+**Gotchas for a future session:** (1) **Phase 2 (union-dot proximity) is the standing top
+priority, next pickup** — start with its OWN Pre-RED empirical measurement (how many cases, what
+magnitude, on the real fixture) before assuming the same capped-search pattern transfers; it may
+not, given how differently "dot vs. dot" and "circle vs. circle" visual severity behaves. (2) The
+27-node exact-tie residual and the 5-case D1 bar-overlap residual on the real fixture are BOTH
+intentional, capped trade-offs, not bugs — do not "fix" them without first reading plan §11 and
+Learning 680 in full; a naive fix is very likely to repeat the same compounding pattern. (3)
+`.kMaxIndividualPush = 2` is a real, if reasonable, magic number — not derived from first
+principles, chosen because it visibly worked on the one real fixture available; a future session
+extending this area should re-derive/re-justify it rather than assume it's principled. (4)
+`lint.yaml` CI is still red (pre-existing, unaffected, already-tracked Housekeeping item),
+unrelated to this session. (5) `HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM
+#28 size cap, unchanged this session — `BACKLOG.md`'s "ledger-size housekeeping" item is still
+open.
+
+### Session 646 Handoff Evaluation (by Session 647)
+**Score: 9/10.** **What helped:** S646's handoff explicitly flagged "the collision-headroom
+live-render check is a real, not-yet-resolved open question, not a formality" as a gotcha — this
+was exactly right, and this session's entire 3-iteration collision-avoidance saga is that exact
+question turning out to be far more consequential than a preliminary probe could show. The
+handoff's `next_steps` pointed precisely at the plan's own §6/§7, which were accurate and
+sufficient starting points. The ratified-scope boundary ("do not re-litigate `qualifies()`-gated
+only, target=`minSep`") was correctly never revisited this session — the actual formula (§2's
+widen+recenter) shipped exactly as ratified; only the SEPARATE collision-avoidance mechanism
+around it needed new work, which the handoff's own gotcha had already anticipated needing.
+**What was missing:** nothing structural — the design document itself (§2.3) carried an
+unverified assumption (the existing sweep "already handles" Tier-3 output) that turned out false,
+but this was a property of the RATIFIED DESIGN's own research depth, not a gap in S646's handoff
+about that design; a design session cannot fully pre-empirically-validate every downstream
+interaction without becoming an implementation session itself, and S646's own document explicitly
+deferred that specific validation to Phase 1's own Pre-RED step, which is what happened. **ROI:**
+strongly positive — re-reading the plan's §1-§8 before starting saved having to re-derive the
+`qualifies()` gate's safety argument, the kinship2 comparison, and the exact migration steps from
+scratch.
 
 ### What Session 646 Did
 **Deliverable:** Design/scoping document for the mating-unit dot/mate-spacing gap filed to

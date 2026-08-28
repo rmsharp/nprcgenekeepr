@@ -138,26 +138,63 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S647
 date: 2026-08-27
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Track 7 Phase 1 implementation (mating-unit dot/mate-spacing fix in
-  .positionMatingUnitForest()), per the design ratified S646. Picking up an uncommitted,
-  unclaimed draft already present in the working tree at Phase 0 orientation (no prior
-  session/commit trace, 87 failing assertions as-is) -- owner-directed, via AskUserQuestion, to
-  continue it as this session's Phase 1 work rather than discard it.
-what_was_done: pending
-next_steps: pending
-key_files: R/makePedigreeDiagramData.R (Tier 2/Tier 3 of .positionMatingUnitForest()),
-  docs/planning/pedigree-diagram-track7-mate-spacing-plan.md (the ratified design),
-  tests/testthat/test_positionMatingUnitForest.R (the suite currently failing 87 assertions
-  against the uncommitted draft)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: DONE for individuals; Phase 2 (union-dot proximity) deliberately deferred, not a
+  fully closed feature. Track 7 Phase 1 (widen B1 offset to minSep, recenter qualifying unions at
+  the true anchor/mate midpoint) shipped via full TDD, picking up an uncommitted draft found at
+  Phase 0 orientation. Corrected the plan's own coverage figure (60/237 -> the actually-gated
+  34/237). A real collision-avoidance gap (widened offsets routinely landing on unrelated
+  individuals) took 3 owner-gated iterations to resolve without creating a worse problem
+  elsewhere -- shipped a capped bidirectional search accepting a small, bounded, disclosed
+  residual. A 4th, related pattern (union-dot proximity) found but deliberately not fixed --
+  filed to BACKLOG.md as this item's own Phase 2, top priority.
+what_was_done: Verified the inherited WIP's own reordering claim empirically (false as stated,
+  though the reordering itself was correct and plan-sanctioned). Root-caused and fixed a
+  pre-existing gap in the Tier-3 de-collision sweep. Full RED->GREEN across
+  tests/testthat/test_positionMatingUnitForest.R (~20 assertions re-derived by running the
+  implementation) plus test_addRectilinearWaypoints.R, test_resolveEdgeNodeCollisions.R,
+  test_makePedigreeMatingLayout.R (all re-measured after each of 3 collision-fix iterations).
+  Regenerated and visually inspected Track B/C vignette images (chromote), including a dedicated
+  close-up render for an owner decision point. Updated the plan doc's own §11, BACKLOG.md,
+  NEWS.Rmd/NEWS.md, PROJECT_LEARNINGS.md (Learning 680), CLAUDE.md's learnings pointer. Full
+  clean regression 0 failed/0 error (1 pre-existing unrelated test_wordlist_coverage.R failure
+  only); lintr::lint_package() 0 lints. Commits: 6d4ad111 (Phase 1B claim), plus this close-out's
+  own commits below.
+next_steps: Phase 2 (union-dot proximity) is READY and the standing top priority -- see
+  BACKLOG.md's own item and plan doc §11's 4th finding. Start with a dedicated Pre-RED empirical
+  measurement (how many cases, what magnitude, on the real fixture) before assuming the same
+  capped-search pattern from Phase 1 transfers directly -- it may not, given how differently
+  dot-vs-dot and circle-vs-circle visual severity behaves.
+key_files: R/makePedigreeDiagramData.R (.deCollideIndividualPoints(), the Track 7 recenter, all
+  within .positionMatingUnitForest()), docs/planning/pedigree-diagram-track7-mate-spacing-plan.md
+  §11 (all 3 iterations, the 4th finding), tests/testthat/test_positionMatingUnitForest.R,
+  PROJECT_LEARNINGS.md Learning 680 (the compounding-fix pattern and its countermeasure)
+gotchas: (1) The 27-node exact-tie residual and 5-case D1 bar-overlap residual on the real
+  fixture are intentional, capped trade-offs, not bugs -- read plan §11 and Learning 680 before
+  touching this area again. (2) .kMaxIndividualPush = 2 is a real magic number, not derived from
+  first principles -- re-justify it if extending this area, don't assume it's principled. (3)
+  Phase 2 (union-dot proximity) is a SEPARATE collision shape from what Phase 1 fixed -- do not
+  assume the same fix transfers without its own empirical measurement first. (4) lint.yaml CI is
+  still red (pre-existing, unaffected, already-tracked Housekeeping item).
+runtime_smoke: Not a live Shiny app launch -- the actual rendering pathway R/modPedigree.R uses
+  (makePedigreeMatingLayout() -> visNetwork()) was exercised directly and repeatedly via
+  chromote, with real rendered PNGs viewed at each iteration. Stated explicitly, not silently
+  treated as equivalent to launching the interactive app.
+changelog_ref: see CHANGELOG.md 2026-08-27 entries, S647
 commit: pending
 ```
-<free-text prose: filled at close-out>
+<free-text prose: 7/10. Strengths: independently verified the inherited WIP rather than trusting
+it; recognized the compounding-fix pattern while it was happening and escalated to the owner with
+concrete measured evidence each time rather than continuing blind or silently stopping; every
+numeric assertion re-derived by running the implementation; used real chromote renders to settle
+2 genuine visual-vs-numeric ambiguities. Weaknesses: the session ran far longer than typical --
+escalation after v2's large-drift finding could have come one step sooner, before also
+characterizing its D1 bar-overlap consequence firsthand; a visual misinterpretation cost real
+time before reaching for vis.js's own getBoundingBox() API, the actually-authoritative check;
+the deliverable is explicitly partial (Phase 2 open), not a finished feature, per the owner's own
+framing at close-out.
 
 ```handoff
 session: S646

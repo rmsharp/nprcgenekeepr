@@ -16,6 +16,42 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-27 · [BL-N] S647: Track 7 Phase 1 -- mate-spacing fix for qualifying pairs, plus a 3-iteration collision-avoidance fix
+- Shipped the ratified Track 7 design (S646): widened `derivedX()`'s B1 branch offset from
+  `minSep * 0.4` to `minSep`, and recenter each `qualifies()`-gated union at the true anchor/mate
+  midpoint, replacing Tier 2's child-mean formula for that subset only. Picked up an uncommitted,
+  unclaimed draft found at Phase 0 orientation (no prior commit/session trace) after
+  owner-directed `AskUserQuestion` to continue rather than discard it.
+- Corrected the ratified plan's own §1.4 coverage figure: `qualifies()` alone (60/237 anchored
+  units on the real fixture) is not the real gate the shipped code uses -- the non-anchor member
+  must also be a genuine free-pass B1 individual, giving the actually-gated 34/237. Track B (the
+  fixture the owner observed) unaffected, 4/4 either way.
+- Found and fixed a real, pre-existing gap the widened offset exposed: the Tier-3 de-collision
+  sweep only ever compared its own points against each other, never against real individuals or
+  unions, so widened offsets routinely landed exactly on an unrelated individual (24 pairs on the
+  real 375-individual fixture). Resolved via 3 owner-gated iterations (each verified against the
+  FULL test suite, not just the target file, after finding earlier attempts created new,
+  differently-shaped collisions elsewhere): a small tie-break epsilon left circles visually
+  overlapping; a full-`minSep` bidirectional push fixed that but caused 34 new, much larger
+  sibling-bar overlaps (400-540px) in `.addRectilinearWaypoints()`; a capped search
+  (`.kMaxIndividualPush = 2`) shipped, accepting a small bounded residual (27 nodes, 5 bar-overlap
+  cases) rather than an unbounded drift.
+- A 4th, related pattern (mating-union dots landing adjacent to unrelated individuals) found via
+  the same visual re-verification but deliberately NOT fixed this session (owner-directed) --
+  filed to `BACKLOG.md` as this item's own Phase 2, top priority, pending its own Pre-RED
+  measurement.
+- Verification: full clean regression 0 failed/0 error (1 pre-existing unrelated
+  `test_wordlist_coverage.R` failure only); `lintr::lint_package()` 0 lints; Track 5 D1/D2
+  orthogonality re-confirmed unaffected; visual re-verification via regenerated + directly
+  inspected Track B/C vignette images and dedicated chromote close-up renders.
+- Updated: `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §11 (full 3-iteration +
+  4th-finding disclosure), `BACKLOG.md` (Phase 1 DONE / Phase 2 READY top priority),
+  `NEWS.Rmd`/`NEWS.md` (plain-language entry), `PROJECT_LEARNINGS.md` Learning 680, `CLAUDE.md`
+  learnings-count pointer.
+- Not fully delivered from the owner's own framing -- committed as verified, disclosed progress,
+  not a closed feature.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-27 · [ad hoc] S647 Phase 0: record CHANGELOG.md entry for S646's Learning-678/679 record and close-out commit (reconcile-on-read)
 - Phase 0 ledger reconcile found 2 commits since `CHANGELOG.md`'s frontier (`0952eadd`) with no
   ledger entry of their own — the same self-reference shape this project's precedent already names

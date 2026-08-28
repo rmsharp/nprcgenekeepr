@@ -1,8 +1,11 @@
 # Pedigree Diagram Track 7: mate spacing and union centering for qualifying pairs
 
 **Status:** DESIGN, session S646 (2026-08-27). **RATIFIED, session S646** (§10) -- Option A adopted
-as scoped, no changes. Implementation not yet scheduled (a separate future session, per this
-project's planning/implementation session boundary).
+as scoped, no changes. **Phase 1 implementation DONE for individuals, session S647 (2026-08-27)**
+-- §2's core formulas shipped (widen + recenter, `qualifies()`-gated), plus a capped
+collision-avoidance fix for individual-shaped points (§11). **Not yet fully delivered**: §11's own
+4th finding (union-dot proximity to unrelated individuals) is real, disclosed, and deliberately
+deferred to its own future session -- see `BACKLOG.md`.
 
 **Origin:** `BACKLOG.md` "Up Next" (filed S645, 2026-08-27, post-close-out, owner-directed --
 "place [this] as the next action item"), itself found via direct owner visual review of the
@@ -444,6 +447,76 @@ this decision -- §2's recommendation is adopted verbatim.
 **Status: DESIGN RATIFIED. Ready for a Phase 1 implementation session** (TDD-gated RED/GREEN/
 REFACTOR, per this project's Development Process Contract), following the Migration Path (§6) and
 Verification Plan (§7) above.
+
+---
+
+## 11. Post-ratification correction (Phase 1 implementation, S647)
+
+Matching this document's own §9 practice of disclosing errors rather than quietly revising them
+away: implementation found that **§1.4's "60 of 237 anchored units (25.3%) qualify" measured
+`qualifies()` in isolation**, not the actual gate the shipped mechanism uses. `derivedX()`'s Tier-3
+B1 branch (and, by the same reuse, Track 7's own recenter) has always additionally required the
+non-anchor member to be a genuine free-pass B1 individual (`for (fp in b1Ids) { if
+(qualifies(unitId)) ... }`, pre-existing, unchanged by this document) -- a member can satisfy
+`qualifies()`'s own `mateCountM == 1` conjunct while still having her own parent edge elsewhere
+(making her B2, not B1), in which case the union is `qualifies()`-shaped but is never reached by
+the recenter loop at all. Measuring the real fixture the way the code actually gates gives **34/237
+(14.3%)**, not 60/237.
+
+**What this does and does not change:** the ratified decision (Option A, §2's formulas, the
+`qualifies()` gate as the safety boundary) is unaffected -- this is a correction to a supporting
+coverage measurement, not to the approach. Track B (the fixture the owner actually observed) is
+**unaffected**: 4/4 qualify either way, confirmed directly. `PROJECT_LEARNINGS.md` records this
+finding as a session learning; `tests/testthat/test_positionMatingUnitForest.R` asserts the
+verified 34, not the plan's original 60.
+
+**A genuine new collision class, found via this implementation pass and taken through 3
+iterations before landing (all measured live, none guessed):**
+
+§2.3 assumed the existing de-collision sweep already "correctly handle[s] whatever `x` values
+Tier 2/Tier 3 hand them" -- true for Tier 2, not for Tier 3's B1 output, which no sweep had ever
+compared against `tier1X`/`unitX`. Widening the B1 offset to `minSep` (this project's own standard
+inter-node spacing) turned this pre-existing gap into a routine exact-position collision (24 pairs
+on the real fixture) -- two full-sized circles rendering almost entirely overlapping, confirmed via
+an actual chromote render (`vignettes/articles/kinship2-fidelity-validation-img/
+trackB-nprc-shrunk.png`'s own P2/C4 pair), not assumed from raw-unit arithmetic alone.
+
+1. **First attempt** -- extend the sweep's comparison set to include `tier1X`/`unitX`, using the
+   same `1e-3` tie-breaking epsilon already used elsewhere. Fixed the exact-tie case, but a `1e-3`
+   gap between two full-sized circles is visually indistinguishable from a real overlap -- it
+   solves the *coordinate* collision, not the *visual* one.
+2. **Second attempt** -- push a colliding individual-shaped point a full `minSep` away instead
+   (matching Tier 1's own `sweepMinSep()` guarantee for real individuals), always in the same
+   direction as its own formula's sign (a same-direction-only push was found, mid-session, to
+   sometimes cross a mate to the WRONG side of her anchor -- issue #145's male-left/female-right
+   convention -- so the final version searches both directions, preferring the original sign only
+   when tied). This eliminated the circle-on-circle overlaps, but on the real fixture's densely
+   packed 173-founder gen-0 row, a small number of pairs needed many consecutive pushes (up to 23,
+   drift up to 11.5 raw units) to clear -- and that displacement was found, by re-running the full
+   regression suite, to create NEW, substantially worse collisions elsewhere:
+   `.addRectilinearWaypoints()`'s separately-tracked D1 sibling-bar-vs-bar overlap count jumped
+   from 0 to 34, several 400-540px wide (confirmed via `.findEdgeNodeCollisions()`, not assumed).
+3. **Third attempt, shipped** -- cap the search at `.kMaxIndividualPush = 2` steps each direction;
+   if nothing frees up within the cap, fall back to the *original* small exact-tie collision rather
+   than an unbounded drift. This is a deliberate, owner-directed trade-off (via `AskUserQuestion`,
+   presented with the measured 34-bar-overlap regression as evidence): a small, bounded residual of
+   near-coincident individuals is preferable to occasionally spraying a founder pair across the
+   whole diagram to chase a perfect fix. Net result on the real fixture, measured directly: 27
+   nodes (13 pairs + 1 triple) still exact-tie (down from 24 pairs before this fix existed at all,
+   not zero), and the D1 bar-overlap count settles at 5 (1 real 59.88px case, 3 sub-pixel, 1
+   boundary touch) -- both disclosed in their own tests' comments, not hidden.
+
+**A fourth, related pattern found but deliberately NOT fixed this session** (owner-directed,
+`AskUserQuestion`): a mating-UNION dot (not an individual) can also land immediately adjacent to an
+unrelated individual (e.g. the Track B "shrunk" fixture's own `P1`x`P2` union sitting 0.12px from
+`C4`'s square) -- the *same* root tension (minSep-scale spacing creates frequent near-coincidences
+in a dense pedigree), surfacing in the one collision shape this session's fixes deliberately left at
+the pre-existing "weaker guarantee for dots" posture (§2.3). Given 3 iterations were already needed
+to get the individual-circle case right, and each one surfaced a new case elsewhere, this is
+filed as its own `BACKLOG.md` item (top priority, pending the standing pedigree-fidelity directive)
+for a **dedicated future session** -- not attempted inline here, to avoid a 4th compounding
+iteration in an already-long session (`SESSION_RUNNER.md`'s own "after 2 failed attempts, stop and
+return to research" anti-pattern).
 
 ---
 

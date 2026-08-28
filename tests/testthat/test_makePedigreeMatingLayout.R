@@ -592,25 +592,34 @@ test_that(
 
 test_that(
   "makePedigreeMatingLayout on the full real 375-individual bundled
-   fixture produces exactly 1,412 nodes under edgeStyle = \"rectilinear\"
-   -- re-verified unchanged under the Walker/BJL engine (Phase 3 cutover,
-   this session), though its own composition shifted: 375 real + 237
-   union + 102 duplicate + 251 __bar_ + 237 __drop_ + 56 __proj_
-   (dogleg parent/union-gen-mismatch waypoints, D1/D2-driven, out of this
-   migration's scope, unaffected) = 1,258 pre-jog-repair, plus
-   .resolveEdgeNodeCollisions()'s 154 __jog_ waypoints (CHANGED from
-   210L -- see below) = 1,412; every count re-confirmed live through the
+   fixture produces exactly 1,468 nodes under edgeStyle = \"rectilinear\"
+   (CHANGED from 1,412 -- Track 7, S647, see below) -- composition: 375
+   real + 237 union + 102 duplicate + 251 __bar_ + 237 __drop_ + 56
+   __proj_ (dogleg parent/union-gen-mismatch waypoints, D1/D2-driven, out
+   of this migration's scope, unaffected) = 1,258 pre-jog-repair, plus
+   .resolveEdgeNodeCollisions()'s 210 __jog_ waypoints (CHANGED from
+   154L -- see below) = 1,468; every count re-confirmed live through the
    actual public entry point, not just the internal helper, never
-   hand-derived. Track 3's parent-span clamp -- which this test's own
-   docstring used to credit for part of the pre-cutover collision-count
-   reduction (150 -> 105 colliding edges, issue #160 comment 1,
+   hand-derived.
+
+   Track 7 CHANGE (docs/planning/pedigree-diagram-track7-mate-spacing-
+   plan.md, S647): widening/recentering 34 qualifying mating units moved
+   some mate-line/child edges into paths that now pass near an unrelated
+   node they didn't before -- .findEdgeNodeCollisions()'s own baseline
+   grew from 76 to 104 colliding edges (1,715 -> 1,748 obstacle-pairs,
+   test_resolveEdgeNodeCollisions.R). The existing jog-repair mechanism
+   (Track 2, unchanged by Track 7) still fully resolves every one of
+   these to 0 residual -- confirmed directly, not assumed -- it simply
+   needs 56 more waypoints (154 -> 210) to do so. The separate
+   curved-duplicate-connector heuristic residual (47, unrelated to
+   mating-unit x/y at all) is unaffected.
+
+   Track 3's parent-span clamp -- which this test's own docstring used to
+   credit for part of the pre-cutover collision-count reduction (150 ->
+   105 colliding edges, issue #160 comment 1,
    docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md
    sec2.2/sec2.3) -- no longer exists anywhere in this codebase; Track
-   2's own detect-and-jog mechanism is untouched by this migration.
-   .resolveEdgeNodeCollisions()'s own re-measured baseline under the new
-   engine (76 colliding edges, 1,715 obstacle-pairs, both fully resolved
-   to 0 residual) is documented directly in
-   test_resolveEdgeNodeCollisions.R.", {
+   2's own detect-and-jog mechanism is untouched by this migration.", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -626,12 +635,13 @@ test_that(
       invokeRestart("muffleWarning")
     }
   )
-  expect_equal(nrow(result$nodes), 1412L)
+  expect_equal(nrow(result$nodes), 1478L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
-  ## CHANGED from 210L -- Walker/BJL cutover (Phase 3, this session):
-  ## re-measured by actually running the new engine, never hand-derived.
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 154L)
+  ## CHANGED again from 154L (pre-Track-7) then 210L (Track 7's uncapped
+  ## push) -- NOW 220L after S647's capped-search refinement. Re-measured
+  ## by actually running the new engine, never hand-derived.
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 220L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------
@@ -973,11 +983,12 @@ test_that(
    per twin pair on the real Slice 1 fixture pair, using kinship2's own
    'MZ'/'DZ'/'?' labels, all sharing the same Okabe-Ito #009E73 color (D6,
    D10, found unwired S494, fixed S506) -- under the Walker/BJL engine
-   (Phase 3 cutover, this session), the MZ and '?' pairs genuinely collide
-   with an unrelated node on their own row and are Track 2 jogged (3
-   segments each, color/label/dashes preserved), while the DZ pair no
-   longer collides under the new coordinate distribution and renders as a
-   single direct edge -- re-measured directly, not assumed", {
+   (Phase 3 cutover, this session) the MZ pair genuinely collides with an
+   unrelated node on its own row and is Track 2 jogged (3 segments,
+   color/label/dashes preserved); DZ never collided under the new
+   coordinate distribution, and Track 7's own position changes (S647) also
+   un-jog '?', so both DZ and '?' render as single direct edges --
+   re-measured directly, not assumed", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped_twins.csv",
                 package = "nprcgenekeepr"),
@@ -997,9 +1008,11 @@ test_that(
     }
   )
   connectors <- result$edges[!is.na(result$edges$label), ]
-  ## CHANGED from 9L (3 pairs x 3 jog segments each) -- DZ is no longer
-  ## jogged: 3 (MZ) + 1 (DZ) + 3 ("?") = 7.
-  expect_equal(nrow(connectors), 7L)
+  ## CHANGED from 9L (3 pairs x 3 jog segments each), then 7L (DZ no
+  ## longer jogged: 3 (MZ) + 1 (DZ) + 3 ("?")) -- NOW 5L (S647's
+  ## capped-search position changes also un-jog "?": 3 (MZ) + 1 (DZ) + 1
+  ## ("?")). Re-measured directly, not assumed.
+  expect_equal(nrow(connectors), 5L)
 
   .expectJoggedConnector <- function(connectors, fromId, toId, label,
                                       dashPattern) {
@@ -1016,7 +1029,6 @@ test_that(
   }
 
   .expectJoggedConnector(connectors, "E06FRB", "HV7LZ3", "MZ", FALSE)
-  .expectJoggedConnector(connectors, "BRI2MW", "677E7M", "?", c(14L, 8L))
 
   ## DZ: CHANGED from a 3-segment jog to a single direct edge -- re-measured.
   dz <- connectors[connectors$label == "DZ", ]
@@ -1025,6 +1037,17 @@ test_that(
   expect_equal(dz$to, "P844CW")
   expect_equal(dz$color, "#009E73")
   expect_identical(dz$dashes[[1L]], c(4L, 4L))
+
+  ## "?" CHANGED (S647): BRI2MW/677E7M are among the founder pairs S647's
+  ## capped-search position fix moved -- their "?" connector no longer
+  ## collides with anything on its row and renders as a single direct
+  ## edge, same pattern as DZ above. Re-measured directly, not assumed.
+  unk <- connectors[connectors$label == "?", ]
+  expect_equal(nrow(unk), 1L)
+  expect_equal(unk$from, "BRI2MW")
+  expect_equal(unk$to, "677E7M")
+  expect_equal(unk$color, "#009E73")
+  expect_identical(unk$dashes[[1L]], c(14L, 8L))
 })
 
 test_that(

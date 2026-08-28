@@ -77,7 +77,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       and dam; mates are not visibly spread apart, unlike kinship2** (found live 2026-08-27,
       owner-caught via direct visual review of the corrected Track B full-fixture image pair (S645
       post-close-out, commit `1784abf6`); root-caused by a dedicated investigation S645 --
-      **Design RATIFIED S646, 2026-08-27, Effort M -- Phase 1 implementation READY, next pickup.**
+      **Design RATIFIED S646, 2026-08-27, Effort M. Phase 1 (individuals) DONE S647, 2026-08-27,
+      commit pending -- see below. Phase 2 (union-dot proximity) READY, TOP PRIORITY, next
+      pickup (standing pedigree-fidelity directive).**
       Full design: [`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`](docs/planning/pedigree-diagram-track7-mate-spacing-plan.md)
       (ARCHITECTURE_WORKSTREAM, matching this project's own precedent for pedigree-positioning
       decisions). **Ratified scope (owner-picked via `AskUserQuestion`, "Ratify as scoped"):** for
@@ -128,10 +130,35 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       see the plan's §2.4); (b) widen to `minSep` exactly, not an arbitrary constant (§2.2); (c) the
       `qualifies()` gate itself is the answer -- restricting the change to it means no new
       interaction with BJL/de-collision/Track 5 D1-D2 to analyze, only a re-use of an
-      already-safe existing boundary (§2.4). **Next pickup: Phase 1 implementation**, TDD-gated,
-      per the plan's own Migration Path (§6) and Verification Plan (§7) -- including the
-      collision-headroom live-render check §7 flags as still outstanding (not resolved by the
-      design session itself, deliberately deferred to implementation's own Pre-RED validation).
+      already-safe existing boundary (§2.4).
+      **Phase 1 (S647, 2026-08-27) -- DONE:** shipped §2's core formulas (widen B1 offset to
+      `minSep`, recenter qualifying unions at the true anchor/mate midpoint) via full TDD.
+      Corrected the plan's own §1.4 coverage figure from a naive 60/237 to the actually-gated
+      34/237 (`qualifies()` alone isn't the real gate -- the non-anchor member must also be a
+      genuine free-pass B1 individual; Track B unaffected, 4/4 either way). The
+      collision-headroom live-render check §7 flagged found a real gap (widening to `minSep`
+      makes a mate land exactly on an unrelated individual routinely, not rarely -- 24 pairs on
+      the real fixture) and took 3 iterations to resolve without creating a worse problem
+      elsewhere (an uncapped fix caused 34 new D1 sibling-bar overlaps up to 540px) -- shipped a
+      capped bidirectional search (`.kMaxIndividualPush = 2`) that accepts a small, bounded
+      residual (27 nodes still exact-tie, down from 24 pairs, disclosed) rather than an unbounded
+      drift. Full detail, all 3 iterations and their measurements: plan §11. All touched test
+      files' pinned values re-measured live, never hand-derived; full clean regression 0
+      failed/0 error (the 1 pre-existing `test_wordlist_coverage.R` failure only);
+      `lintr::lint_package()` 0 lints. Visual re-verification: Track B/C images regenerated and
+      inspected directly (not just re-rendered) -- confirmed correct.
+      **Phase 2 (union-dot proximity) -- READY, next pickup, Effort M:** found during Phase 1's
+      own visual re-verification (plan §11's 4th finding) -- a mating-UNION dot (not an
+      individual) can also land immediately adjacent to an unrelated individual (e.g. Track B
+      "shrunk" fixture's own P1×P2 union sitting 0.12px from C4's square), the same root tension
+      surfacing in the one collision shape Phase 1 deliberately left alone (§2.3's "weaker
+      guarantee for dots" posture). Deliberately NOT attempted in Phase 1 (owner-directed,
+      `AskUserQuestion`) -- 3 compounding iterations were already needed for the individual-circle
+      case, each surfacing a new problem elsewhere; a 4th in the same session risked repeating
+      that pattern blind. A future session should start with its own Pre-RED empirical
+      measurement (how many union-dot/individual near-misses exist on the real fixture, at what
+      magnitude) before choosing a fix approach, rather than assuming the same capped-search
+      pattern transfers directly.
 - [x] **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636, 2026-08-26).
       **RESOLVED S637, 2026-08-26, per owner-directed "broader" scope (a genuinely clean baseline,
       not just a green checkmark):** the actual root cause was simpler than any of the 4 candidate

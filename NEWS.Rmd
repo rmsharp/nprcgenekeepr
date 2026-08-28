@@ -118,6 +118,12 @@ knitr::opts_chunk$set(echo = TRUE)
   how the reference tool kinship2 draws the same family. Loading a set of
   animals with no such relationships among any of them no longer crashes
   the diagram (issue #164).
+- For most simple mated pairs (one mate each, no other family
+  complications), the small mating symbol between them now sits clearly
+  between the two animals, with a visible gap, instead of sitting right on
+  top of one parent -- matching how the reference tool kinship2 draws the
+  same pairing. Pairs with more complicated family situations (a parent
+  with more than one mate, for example) are unaffected and unchanged.
 ## Kinship & Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their
   computed relatedness to genetic identity, and that correction flows

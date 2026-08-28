@@ -373,12 +373,24 @@ test_that("makePedigreeMatingLayout() wires .resolveEdgeNodeCollisions()
 ## obstacles under the new engine's own coordinate distribution). The
 ## resolve pass itself still fully clears every collision on this
 ## fixture (0 residual, confirmed below).
+##
+## Track 7 CHANGE (docs/planning/pedigree-diagram-track7-mate-spacing-
+## plan.md, S647): 76 -> 104 colliding edges, 1,715 -> 1,748 obstacle-pairs
+## -- widening/recentering 34 qualifying mating units moved some
+## mate-line/child edges into paths that now pass near a node they didn't
+## before. Re-confirmed directly (not assumed) that the resolve pass
+## still fully clears every one of these straight-edge collisions to 0
+## residual -- it just needs more __jog_ waypoints to do so (154 -> 210,
+## test_makePedigreeMatingLayout.R). The separate curved-duplicate-
+## connector heuristic residual (47, unrelated to mating-unit x/y)
+## already existed and is unaffected.
 
 test_that(".resolveEdgeNodeCollisions dramatically reduces the real
-           375-individual bundled fixture's same-row collision count (76
-           colliding edges / 1,715 obstacle-pairs pre-fix, under the
-           Walker/BJL engine), and any residual is disclosed via the
-           residuals data frame, never silently dropped", {
+           375-individual bundled fixture's same-row collision count (104
+           colliding edges / 1,748 obstacle-pairs pre-fix, under Track 7's
+           widened/recentered qualifying units, S647), and any residual is
+           disclosed via the residuals data frame, never silently
+           dropped", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -392,12 +404,14 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
 
   baseline <- .findEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   baselineEdges <- unique(baseline[, c("from", "to")])
-  ## CHANGED from 105L/1431L -- Walker/BJL cutover (Phase 3, this
-  ## session): re-measured by actually running the new engine, never
-  ## hand-derived (Track 3's parent-span clamp, part of the OLD baseline
-  ## this test's own docstring/comment above narrates, no longer exists).
-  expect_equal(nrow(baselineEdges), 76L)
-  expect_equal(nrow(baseline), 1715L)
+  ## CHANGED again from 76L/1715L (pre-Track-7) then 104L/1748L (Track 7's
+  ## uncapped push) -- NOW 109L/1762L after S647's capped-search
+  ## refinement (.kMaxIndividualPush = 2): capping trades a few more
+  ## small collisions for eliminating the much larger ones the uncapped
+  ## search caused. Re-measured by actually running the engine, never
+  ## hand-derived.
+  expect_equal(nrow(baselineEdges), 109L)
+  expect_equal(nrow(baseline), 1762L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

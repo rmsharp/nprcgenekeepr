@@ -641,6 +641,12 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 
   ped$gen[is.na(ped$gen)] <- 0L
   minSep <- 1L
+  ## S647: cap on .deCollideIndividualPoints()'s bidirectional search
+  ## (below) -- bounds how far a Track 7 widened point may be pushed to
+  ## avoid an exact-position tie, so a dense founder row cannot chain into
+  ## an unbounded (and, found live, downstream-harmful) drift. See that
+  ## function's own comment for the empirical justification.
+  .kMaxIndividualPush <- 2L
 
   matingUnits <- forest$matingUnits
   duplicates <- forest$duplicates
@@ -758,22 +764,29 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     kids <- childEdges$to[childEdges$from == u]
     unitX[[u]] <- mean(tier1X[kids])
   }
-  if (nrow(xDerivableUnits) > 0L) {
-    ord <- order(xDerivableUnits$gen, xDerivableUnits$id, method = "radix")
-    orderedUnits <- xDerivableUnits[ord, , drop = FALSE]
-    placedAtGen <- list()
-    for (i in seq_len(nrow(orderedUnits))) {
-      u <- orderedUnits$id[i]
-      g <- as.character(orderedUnits$gen[i])
-      occupied <- c(tier1X[dispGenOf == orderedUnits$gen[i]], placedAtGen[[g]])
-      while (length(occupied) > 0L && any(abs(occupied - unitX[[u]]) < 1e-9)) {
-        unitX[[u]] <- unitX[[u]] + 1e-3
-      }
-      placedAtGen[[g]] <- c(placedAtGen[[g]], unname(unitX[[u]]))
-    }
-  }
 
-  ## ---- Tier 3: B1/B3 derived points (S3.3.3, S8.1's fixed formula) -----
+  ## ---- qualifies()/B1-anchor-relative formula (S8.1, Track 7 widen) ----
+  ## qualifies() and b1AnchorRelativeX() depend only on Tier 1's
+  ## already-final tier1X, never on unitX -- safe to define, and to call
+  ## for the QUALIFYING branch, at any point below.
+  ##
+  ## S647 correction to an earlier draft of this ordering: that draft
+  ## recentered a qualifying union using b1AnchorRelativeX()'s own RAW
+  ## formula value for the mate, reasoning the union recenter "never
+  ## needs Tier 3 to have run first" since neither reads unitX or each
+  ## other. That is true in ISOLATION, but became false once the
+  ## collision-avoidance push below was added (a later addition to THIS
+  ## session's own work, not the original Track 7 design): a mate whose
+  ## raw formula value collides with an unrelated individual gets pushed
+  ## a full minSep+ away from it -- and if the union recenter still uses
+  ## the PRE-push raw value, the union ends up positioned as if the mate
+  ## were still at her old (colliding) spot, while she actually renders
+  ## far away. That mismatch produces a long, wrong-looking mate-line edge
+  ## needing its own jog detour (found live: the Track B "shrunk"
+  ## fixture's P1/P2/union_2, confirmed via chromote bounding-box queries
+  ## before and after this fix -- not merely inferred from a screenshot).
+  ## The corrected order below computes and de-collides B1's own final
+  ## positions FIRST, then recenters using that TRUE final value.
   qualifies <- function(unitId) {
     p <- anchorOf[[unitId]]
     m <- nonAnchorOf[[unitId]]
@@ -789,12 +802,16 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     mateCountP == 1L && mateCountM == 1L && !hasOwnDirectChild(p) &&
       unambiguousOppositeSex
   }
-  derivedX <- function(unitId, memberId, isB1) {
+  b1AnchorRelativeX <- function(unitId, memberId) {
     p <- anchorOf[[unitId]]
+    sign <- if (identical(sexOf[[p]], "F") &&
+                  identical(sexOf[[memberId]], "M")) -1L else 1L
+    unname(tier1X[[p]]) + sign * minSep
+  }
+  ## ---- Tier 3: B1/B3 derived points (S3.3.3, S8.1's fixed formula) -----
+  derivedX <- function(unitId, memberId, isB1) {
     if (isB1 && qualifies(unitId)) {
-      sign <- if (identical(sexOf[[p]], "F") &&
-                    identical(sexOf[[memberId]], "M")) -1L else 1L
-      unname(tier1X[[p]]) + sign * minSep * 0.4
+      b1AnchorRelativeX(unitId, memberId)
     } else {
       unname(unitX[[unitId]]) + minSep * 0.4
     }
@@ -807,35 +824,197 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     b1UnitOf[[fp]] <- setdiff(ownUnits, dupUnits)[1L]
   }
 
-  dupIds <- if (nrow(duplicates) > 0L) duplicates$id else character(0L)
-  tier3Ids <- c(b1Ids, dupIds)
-  tier3X <- stats::setNames(numeric(length(tier3Ids)), tier3Ids)
-  tier3Gen <- stats::setNames(integer(length(tier3Ids)), tier3Ids)
+  ## S647: shared de-collision pass for Tier-3 individual-representing
+  ## points (both B1 free-pass members and B3 duplicates render as a
+  ## full-sized circle standing in for a real individual). An exact tie
+  ## against a REAL INDIVIDUAL -- either a genuine Tier-1 node, or another
+  ## already-placed individual-shaped point -- is pushed a full minSep
+  ## away (the same minimum-separation guarantee Tier 1's own
+  ## sweepMinSep() backstop already gives real individuals elsewhere, not
+  ## a new constant); an exact tie against a union DOT keeps the
+  ## pre-existing tiny tie-breaking epsilon (§2.3's own weaker guarantee
+  ## for those). 'seedIndividuals' lets the later B3 call also avoid B1's
+  ## already-finalized points. 'pushSign' (default +1, matching B3's own
+  ## always-rightward +minSep*0.4 offset from the union) lets a B1 caller
+  ## push in the SAME direction its own b1AnchorRelativeX() sign already
+  ## chose -- found live (S647): pushing unconditionally rightward could
+  ## cross a female-anchor/male-mate point (sign = -1, meant to render
+  ## LEFT of the anchor, issue #145) over to the anchor's RIGHT side
+  ## instead, or even land it exactly back on the anchor itself.
+  ##
+  ## Bidirectional nearest-free-slot search (S647, second refinement):
+  ## always pushing further in ONE fixed direction, found live on the real
+  ## 375-individual fixture, can chain through an entire dense row of
+  ## founders (up to 173 at gen 0, already documented elsewhere in this
+  ## codebase) -- one pairing needed 23 consecutive same-direction pushes
+  ## (drift 11.5 raw units, ~14x the intended 1-unit gap) before this
+  ## refinement. Instead, search outward in BOTH directions at once (1
+  ## minSep, 2 minSep, ...), preferring pushSign's own direction only when
+  ## both are equally far -- this can only ever match or beat a
+  ## same-direction-only search's distance, never do worse, and on the
+  ## same fixture drops the worst-case drift from 11.5 to 5.5 raw units
+  ## (measured directly, not guessed) -- this real colony pedigree's
+  ## founder row is dense enough on BOTH sides in a few places that even
+  ## a bidirectional search cannot always reach the intended ~1-unit gap;
+  ## disclosed in test_positionMatingUnitForest.R's own Obligation 2
+  ## measurement, matching this project's established "general crowding
+  ## accepted as partial, not absolute" posture (test_
+  ## resolveEdgeNodeCollisions.R) rather than pursued further here. A
+  ## short residual repeat (the pre-existing small-epsilon pattern) still
+  ## catches any leftover union-dot tie the search itself
+  ## does not consider.
+  .deCollideIndividualPoints <- function(ids, gens,
+                                          seedIndividuals = numeric(0L),
+                                          pushSign = NULL) {
+    x <- tier3X[ids]
+    names(x) <- ids
+    if (is.null(pushSign)) {
+      pushSign <- stats::setNames(rep(1L, length(ids)), ids)
+    }
+    for (g in sort(unique(gens))) {
+      theseIds <- ids[gens == g]
+      seedGen <- tier3Gen[names(seedIndividuals)] == g
+      individualOccupied <- c(tier1X[dispGenOf == g], seedIndividuals[seedGen])
+      individualOccupied <- individualOccupied[!is.na(individualOccupied)]
+      unionOccupied <- unitX[unitIds[matingUnits$gen == g]]
+      unionOccupied <- unionOccupied[!is.na(unionOccupied)]
+      theseIds <- theseIds[order(x[theseIds], theseIds, method = "radix")]
+      placedThisGen <- numeric(0L)
+      for (i in seq_along(theseIds)) {
+        forbidden <- c(individualOccupied, placedThisGen)
+        x0 <- x[[theseIds[i]]]
+        rawX0 <- x0
+        sign <- pushSign[[theseIds[i]]]
+        if (any(abs(x0 - forbidden) < 1e-9)) {
+          ## S647 (third refinement): cap the search at .kMaxIndividualPush
+          ## steps each direction. Found live: an UNCAPPED search can still
+          ## push several minSep in a densely double-sided-occupied row
+          ## (measured up to 5.5 raw units on the real fixture), and that
+          ## displacement was itself found to create NEW, substantial D1
+          ## sibship-bar-vs-bar overlaps elsewhere (34 cases, several
+          ## 400-540px wide -- a worse defect than the one being fixed).
+          ## Capping bounds the displacement; if nothing frees up within
+          ## the cap, fall back to the ORIGINAL exact-tie value -- the same
+          ## small, already-disclosed circle-on-circle near-overlap this
+          ## fix set out to improve on, not a new or larger one.
+          k <- 1L
+          repeat {
+            candPref <- x0 + sign * k * minSep
+            if (!any(abs(candPref - forbidden) < 1e-9)) {
+              x0 <- candPref
+              break
+            }
+            candOther <- x0 - sign * k * minSep
+            if (!any(abs(candOther - forbidden) < 1e-9)) {
+              x0 <- candOther
+              break
+            }
+            if (k >= .kMaxIndividualPush) {
+              x0 <- rawX0
+              break
+            }
+            k <- k + 1L
+          }
+        }
+        ## Residual small-epsilon pass: a union dot at the chosen slot
+        ## (never considered by the search above, since unions keep the
+        ## pre-existing weaker guarantee), or -- vanishingly unlikely --
+        ## a fresh individual tie the search's own candidate introduced.
+        ## Skipped when the search above fell back to rawX0 (an
+        ## individual tie by definition) -- nudging that case would
+        ## silently reintroduce the unbounded drift the cap exists to
+        ## prevent.
+        if (!isTRUE(all.equal(x0, rawX0)) || !any(abs(x0 - forbidden) < 1e-9)) {
+          repeat {
+            tiesIndividual <- any(abs(x0 - forbidden) < 1e-9)
+            tiesUnion <- any(abs(x0 - unionOccupied) < 1e-9)
+            if (!tiesIndividual && !tiesUnion) break
+            x0 <- x0 + sign * (if (tiesIndividual) minSep else 1e-3)
+          }
+        }
+        x[[theseIds[i]]] <- x0
+        placedThisGen <- c(placedThisGen, x0)
+      }
+    }
+    x
+  }
+
+  tier3X <- stats::setNames(numeric(length(b1Ids)), b1Ids)
+  tier3Gen <- stats::setNames(integer(length(b1Ids)), b1Ids)
+  b1PushSign <- stats::setNames(rep(1L, length(b1Ids)), b1Ids)
   for (fp in b1Ids) {
     unitId <- b1UnitOf[[fp]]
     tier3X[[fp]] <- derivedX(unitId, fp, isB1 = TRUE)
     tier3Gen[[fp]] <- unname(matingUnits$gen[matingUnits$id == unitId])
+    ## Same sign b1AnchorRelativeX() itself used, so a collision push
+    ## extends further in that already-chosen direction rather than
+    ## crossing to the opposite side of the anchor (see the note above).
+    if (qualifies(unitId)) {
+      p <- anchorOf[[unitId]]
+      b1PushSign[[fp]] <- if (identical(sexOf[[p]], "F") &&
+                                identical(sexOf[[fp]], "M")) -1L else 1L
+    }
   }
-  if (nrow(duplicates) > 0L) {
+  if (length(b1Ids) > 0L) {
+    tier3X[b1Ids] <-
+      .deCollideIndividualPoints(b1Ids, tier3Gen[b1Ids], pushSign = b1PushSign)
+  }
+
+  ## ---- Track 7: recenter each QUALIFYING unit's x at the true anchor/
+  ## mate midpoint (widened B1 offset, minSep not minSep*0.4), replacing
+  ## the mean-of-children value just computed above -- gated on b1Ids
+  ## membership (not qualifies() alone): a qualifies()-SHAPED union whose
+  ## non-anchor mate is B2 (her own parent edge or own direct child) never
+  ## reaches this loop at all, so she is untouched, matching this
+  ## project's own established B2/qualifying-shaped regression tests. Uses
+  ## the mate's TRUE FINAL tier3X (post-de-collision), not the raw
+  ## b1AnchorRelativeX() formula value -- see the S647 correction note
+  ## above.
+  for (fp in b1Ids) {
+    unitId <- b1UnitOf[[fp]]
+    if (qualifies(unitId)) {
+      p <- anchorOf[[unitId]]
+      unitX[[unitId]] <- (unname(tier1X[[p]]) + unname(tier3X[[fp]])) / 2L
+    }
+  }
+
+  if (nrow(xDerivableUnits) > 0L) {
+    ord <- order(xDerivableUnits$gen, xDerivableUnits$id, method = "radix")
+    orderedUnits <- xDerivableUnits[ord, , drop = FALSE]
+    placedAtGen <- list()
+    for (i in seq_len(nrow(orderedUnits))) {
+      u <- orderedUnits$id[i]
+      g <- as.character(orderedUnits$gen[i])
+      ## S647: a Track 7 recenter can move a union to a position now
+      ## influenced by its (possibly heavily de-collided) mate, so this
+      ## sweep must also check the mate's own TRUE FINAL tier3X value at
+      ## this gen -- not just tier1X and other units, as before Track 7
+      ## ever let a union's x depend on anything but its own children.
+      b1AtGen <- tier3X[b1Ids[tier3Gen[b1Ids] == orderedUnits$gen[i]]]
+      occupied <- c(tier1X[dispGenOf == orderedUnits$gen[i]], placedAtGen[[g]],
+                    b1AtGen)
+      while (length(occupied) > 0L && any(abs(occupied - unitX[[u]]) < 1e-9)) {
+        unitX[[u]] <- unitX[[u]] + 1e-3
+      }
+      placedAtGen[[g]] <- c(placedAtGen[[g]], unname(unitX[[u]]))
+    }
+  }
+
+  dupIds <- if (nrow(duplicates) > 0L) duplicates$id else character(0L)
+  if (length(dupIds) > 0L) {
+    tier3X <- c(tier3X, stats::setNames(numeric(length(dupIds)), dupIds))
+    tier3Gen <- c(tier3Gen, stats::setNames(integer(length(dupIds)), dupIds))
     for (i in seq_len(nrow(duplicates))) {
       dupId <- duplicates$id[i]
       unitId <- duplicates$matingUnitId[i]
       tier3X[[dupId]] <- derivedX(unitId, duplicates$realId[i], isB1 = FALSE)
       tier3Gen[[dupId]] <- unname(matingUnits$gen[matingUnits$id == unitId])
     }
+    tier3X[dupIds] <-
+      .deCollideIndividualPoints(dupIds, tier3Gen[dupIds],
+                                  seedIndividuals = tier3X[b1Ids])
   }
-  if (length(tier3Ids) > 0L) {
-    for (g in sort(unique(tier3Gen))) {
-      ids <- tier3Ids[tier3Gen == g]
-      if (length(ids) < 2L) next
-      ids <- ids[order(tier3X[ids], ids, method = "radix")]
-      for (i in 2L:length(ids)) {
-        if (abs(tier3X[[ids[i]]] - tier3X[[ids[i - 1L]]]) < 1e-9) {
-          tier3X[[ids[i]]] <- tier3X[[ids[i]]] + 1e-3
-        }
-      }
-    }
-  }
+  tier3Ids <- c(b1Ids, dupIds)
 
   ## ---- Assemble output, same contract as .positionMatingUnitForest() ---
   ## B2 individuals (their own parent edge or own D5 direct child, and
