@@ -837,6 +837,30 @@ This visual evidence is additional support for Option A over Option B beyond §1
 point-distance simulation (which already found Option A's shifts gentler in magnitude) -- it shows
 the SAME conclusion manifesting as an actual rendering artifact, not just a raw-unit measurement.
 
+**Correction, found while iterating on this comparison at the owner's own request (disclosed, not
+silently revised, matching §9's own practice):** an unrelated, pre-existing rendering defect --
+`.addRectilinearWaypoints()`'s `__jog_*` straight-edge waypoint nodes render as a full-size,
+filled default vis.js circle instead of invisible (`shape`/`size` left `NA` rather than explicitly
+styled transparent/size-0, unlike the D1/D2 `__drop_`/`__bar_` waypoints added earlier in the same
+function -- `R/makePedigreeDiagramData.R:2081-2127` vs. `:1821-1829`) -- was found to be present in
+every render in this section, including the ALREADY-COMMITTED `trackB-nprc-shrunk.png` itself
+(reproduced with zero custom rendering code, confirmed under both pre-Track-7 and current source).
+On this fixture, `P1`'s own jog waypoint lands almost exactly on `P1` itself, rendering a phantom
+circle that made the comparison harder to read and was not correctly distinguished from the union-
+dot mechanism in this section's own first-draft description above (the "notch on `P2`'s boundary"
+claim, and the general framing of what was/wasn't a union dot, were written before this was
+root-caused and are not fully reliable close-reads of the pixel content -- the underlying
+STRUCTURAL claims, verified independently against ground-truth node-position data and confirmed
+by a fresh adversarial-verification workflow (§12.8), stand: Option A/B's own qualitative behavior
+difference (clean small separation vs. a cascading `P1` detour) is real and unaffected by this
+separate bug, which affects `P1`'s rendering identically in all three panels regardless of which
+union-spacing option is active). **Filed as its own `BACKLOG.md` Housekeeping item, not fixed this
+session** (out of scope for this document's own deliverable) -- owner-directed, via
+`AskUserQuestion`, to file-and-proceed rather than pursue further visual iteration or fix the bug
+inline. The ratification below rests on §12.1/§12.8's own numeric evidence (independently
+re-verified, unaffected by this rendering-layer issue), not on the visual renders' own pixel-level
+reliability.
+
 ### 12.10 Owner ratification record (Phase 2)
 
 *(To be completed once presented via `AskUserQuestion`.)*

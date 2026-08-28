@@ -393,6 +393,31 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       running across 2 different sessions' own interactive work. A future session should weight
       option (b) (restructure) more heavily, or at minimum re-examine whether (a) is still
       plausible before adding a `# nolint` on that rationale.
+- [ ] **`.addRectilinearWaypoints()`'s `__jog_*` waypoint nodes (the straight-edge jog pass) render
+      as a full-size, filled default vis.js circle instead of invisible** (found live S648,
+      2026-08-28, while building a visual comparison for the Track 7 Phase 2 design item below --
+      READY, Effort S) -- `R/makePedigreeDiagramData.R:2081-2127` constructs each `__jog_%d_a`/
+      `__jog_%d_b` node with only `id`/`x`/`y` set, then `.matchColumns()` (`:2000-2011`) fills every
+      other column (`shape`, `size`, `color.background`, `color.border`) with `NA` rather than an
+      explicit invisible style. This is inconsistent with the D1/D2 `__drop_`/`__bar_` waypoint
+      nodes added earlier in the SAME function, which are explicitly styled invisible
+      (`shape = "dot"`, `size = 0`, `color.background/color.border = "rgba(0,0,0,0)"`,
+      `:1821-1829`) -- the jog pass (added later, for perfectly-straight/overlapping edge cases) never
+      received the same treatment. With `shape`/`size` left `NA`, vis.js falls back to its own
+      default node appearance (a filled, full-size circle) instead of rendering nothing. **Visually
+      confirmed on the ALREADY-COMMITTED `trackB-nprc-shrunk.png`**: `P1`'s own edge jog waypoint
+      (`__jog_2_a`) lands at `(x=0, y=13.5)`, 13.5 raw-scaled units below `P1` itself
+      (`x=0, y=0`) -- close enough to visually overlap/fuse with `P1`'s own square, reproduced
+      identically using the project's own unmodified `screenshot_layout()` methodology (no custom
+      rendering code involved). Not a regression from anything this session touched, and unrelated
+      to Track 7's own union-position mechanism -- confirmed present under BOTH pre-Track-7 and
+      current source. Likely affects any pedigree where a jog waypoint's computed position happens
+      to land near a real node's own position, not only this one fixture. Not fixed this session
+      (out of scope for Track 7 Phase 2's own design deliverable) -- a future session should add the
+      same explicit invisible styling (`shape = "dot"`, `size = 0`, transparent
+      `color.background`/`color.border`) to the jog-node construction at `:2094-2097`, matching the
+      D1/D2 precedent exactly, then re-verify against the real 375-individual fixture and Track B
+      images for any other jog-waypoint-vs-node collisions this same gap may have hidden elsewhere.
 - [x] **`R-CMD-check-scheduled.yaml` (the weekly-cron twin of `R-CMD-check.yaml`) never
       received the S616/S618/S619 chromote Chrome-provisioning fix, and nothing guarded
       against the drift** (found live S629, 2026-08-24, via Phase 0's mandatory `gh run list`
