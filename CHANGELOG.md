@@ -16,6 +16,43 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-28 · [BL-N] S648: record Learnings 682/683 and update CLAUDE.md's learnings pointer
+- `PROJECT_LEARNINGS.md`: Learning 682 (calling an internal positioning function directly,
+  bypassing the wrapper's own pre-filtering step, measures a pedigree the wrapper never actually
+  produces -- found via this session's own Track B full-fixture measurement, corrected in
+  `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §12.1/§12.8); Learning 683 (check
+  ground-truth position data FIRST when a render doesn't match expectations, before hypothesizing
+  about the rendering pipeline -- found while root-causing the `__jog_*` waypoint bug below).
+  `CLAUDE.md`'s learnings-count pointer updated (Sessions 1-647+ -> 1-648+, 681 -> 683 learnings).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-28 · [BL-N] S648: file `__jog_*` waypoint rendering bug (ad hoc, not fixed), correct visual spike evidence
+- Found live while building visual spike evidence for the Track 7 Phase 2 design item below:
+  `.addRectilinearWaypoints()`'s `__jog_*` straight-edge waypoint nodes (`R/makePedigreeDiagramData.R:2081-2127`)
+  render as a full-size filled default vis.js circle instead of invisible (`shape`/`size` left
+  `NA`, unlike the D1/D2 `__drop_`/`__bar_` waypoints added earlier in the same function, which are
+  explicitly styled transparent/size-0, `:1821-1829`). Reproduces identically on the
+  already-committed `trackB-nprc-shrunk.png` with zero custom rendering code -- not a regression
+  from this session, unrelated to Track 7's own mechanism. Filed to `BACKLOG.md` Housekeeping
+  (owner-directed via `AskUserQuestion`: file and proceed on the already-verified numeric evidence,
+  not fix inline). Corrected `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`'s own
+  §12.9 visual-evidence section to disclose this rather than leave the earlier pixel-level
+  description standing uncorrected -- also found and corrected in the same pass, the section's
+  original Track B measurement had bypassed `makePedigreeMatingLayout()`'s own isolation filter
+  (Learning 682), giving the wrong count (1/4 unions colliding, not the true 3/3 on the correct
+  "shrunk" fixture variant).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-27 · [BL-N] S648: Track 7 Phase 2 design draft + Pre-RED measurement (checkpoint)
+- Pre-RED empirical measurement: real 375-individual fixture, 20/237 mating units collide with an
+  unrelated node under current shipped code, vs. 1/237 under the pre-Track-7 source (Phase 1 itself
+  caused 19 of the 20). Drafted `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §12
+  (decision/alternatives/impact/verification, recommending a radius-proportionate capped push
+  scoped to the union side only). Independently re-verified by a 3-agent adversarial workflow --
+  both quantitative claims and all 4 source citations CONFIRMED, 2 minor prose-precision nuances
+  corrected in place. Not yet ratified at this commit.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-27 · [ad hoc] S647: update HANDOFFS.md's own receipt with the post-close-out 5th finding
 - The durable receipt (`HANDOFFS.md`) was written before the owner's post-close-out review
   surfaced the 5th finding and corrected the "confirmed correct" visual-re-verification claim.
