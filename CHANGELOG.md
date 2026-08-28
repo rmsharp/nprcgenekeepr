@@ -16,6 +16,27 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-27 · [BL-N] S647 post-close-out: owner-caught 5th finding -- union recenter decouples from children's positions, documented not fixed
+- Within minutes of S647's own close-out, the owner reviewed the same regenerated
+  `trackB-nprc-full.png` and found 2 more real, previously-undisclosed cosmetic defects: `P3`x`P4`
+  and `C4`x`P6` (single-child unions) now need an unnecessary right-angle dogleg to reach their
+  child (a straight vertical drop, guaranteed by construction before Track 7); `M1`x`G3`'s drop
+  point lands off-center on its own sibship bar. Root cause: Track 7's recenter formula computes a
+  qualifying union's `x` from its two parents, with no reference to its children -- a relationship
+  the old `mean(children)` formula could never break.
+- Confirmed directly against `trackB-kinship2-full.png` (already committed): kinship2 avoids this
+  because its solver positions parents and children jointly; this project's engine positions
+  children first, then derives a qualifying union's position from its already-fixed parents. Same
+  architectural tension plan §3/§4 already considered and declined to fully solve -- further
+  evidence for that conclusion, not a new decision.
+- Owner-directed via `AskUserQuestion`: document as a known, disclosed limitation, no further code
+  changes this session (avoiding a 4th compounding iteration after the 3 already needed for the
+  individual-collision fix). Recorded in the plan doc's own §11 (5th finding), `BACKLOG.md`
+  (folded into the Phase 2 item), `SESSION_NOTES.md` (post-close-out addendum),
+  `PROJECT_LEARNINGS.md` Learning 681. Corrected `BACKLOG.md`'s own overstated "confirmed correct"
+  visual-re-verification claim in place, disclosed not silently revised.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-27 · [BL-N] S647: Track 7 Phase 1 -- mate-spacing fix for qualifying pairs, plus a 3-iteration collision-avoidance fix
 - Shipped the ratified Track 7 design (S646): widened `derivedX()`'s B1 branch offset from
   `minSep * 0.4` to `minSep`, and recenter each `qualifies()`-gated union at the true anchor/mate

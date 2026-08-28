@@ -146,7 +146,11 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       files' pinned values re-measured live, never hand-derived; full clean regression 0
       failed/0 error (the 1 pre-existing `test_wordlist_coverage.R` failure only);
       `lintr::lint_package()` 0 lints. Visual re-verification: Track B/C images regenerated and
-      inspected directly (not just re-rendered) -- confirmed correct.
+      inspected directly (not just re-rendered) -- **correction (found by the owner directly,
+      post-close-out, reviewing the same regenerated image this claim was based on): "confirmed
+      correct" overstated it.** Structurally correct (right people, right relationships, no
+      overlaps) but not free of cosmetic defects -- see the 5th finding below, found within
+      minutes of this claim being written.
       **Phase 2 (union-dot proximity) -- READY, next pickup, Effort M:** found during Phase 1's
       own visual re-verification (plan §11's 4th finding) -- a mating-UNION dot (not an
       individual) can also land immediately adjacent to an unrelated individual (e.g. Track B
@@ -159,6 +163,25 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       measurement (how many union-dot/individual near-misses exist on the real fixture, at what
       magnitude) before choosing a fix approach, rather than assuming the same capped-search
       pattern transfers directly.
+      **5th finding (owner-caught, post-close-out, 2026-08-27), documented not fixed:**
+      recentering a qualifying union between its two parents decouples its `x` from its own
+      children's positions, something the OLD `mean(children)` formula guaranteed could never
+      happen. On Track B: `P3`x`P4`->`C4` and `C4`x`P6`->`C4a` (single-child unions) now need a
+      right-angle dogleg to reach their child, where the descent line was always perfectly
+      straight before Track 7; `M1`x`G3`->`L1`/`L2`/`L3`'s drop point lands off-center on the
+      sibship bar (`3.5` vs. the children's own mean, `3.0`). Confirmed directly against
+      `trackB-kinship2-full.png` (already committed): kinship2 shows straight drops and a
+      centered bar for the identical fixture, because its `alignped4()` solver positions parents
+      AND children jointly and can adjust either -- this project's Walker/BJL engine positions
+      children first, then derives a qualifying union's `x` from its already-fixed parents, and
+      cannot reach back to move the children. This is the SAME tension plan §3/§4 already
+      considered and rejected fixing via kinship2's actual joint-optimization mechanism
+      (Alternative C, disproportionate) -- this finding is further evidence for that conclusion,
+      not a new decision to make. See plan §11's 5th finding for full detail. Not filed as a
+      separate item -- a future session scoping Phase 2 (or a dedicated one after it) should read
+      this alongside the union-dot-proximity finding, since both stem from the same
+      local-vs-global positioning tension and a future fix attempt should consider them together
+      rather than in isolation.
 - [x] **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636, 2026-08-26).
       **RESOLVED S637, 2026-08-26, per owner-directed "broader" scope (a genuinely clean baseline,
       not just a green checkmark):** the actual root cause was simpler than any of the 4 candidate

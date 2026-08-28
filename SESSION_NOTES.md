@@ -18,6 +18,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### S647 post-close-out addendum (2026-08-27)
+Within minutes of S647's own close-out report, the owner reviewed the same regenerated
+`trackB-nprc-full.png` this session's close-out had called "confirmed correct" and found 2 more
+real, previously-undisclosed cosmetic defects, both traced to the same root cause: **`P3`x`P4`
+->`C4` and `C4`x`P6`->`C4a` (single-child unions) now need an unnecessary right-angle dogleg to
+reach their child (a straight vertical drop before Track 7, always, by construction), and
+`M1`x`G3`->`L1`/`L2`/`L3`'s drop point lands off-center on the sibship bar.** Root cause:
+recentering a qualifying union between its two parents (§2.1) has no relationship to where its
+children sit -- the OLD `mean(children)` formula guaranteed alignment; the new formula does not.
+Confirmed directly against `trackB-kinship2-full.png` (already committed): kinship2 avoids this
+entirely because its solver positions parents AND children jointly, adjusting either -- this
+project's engine positions children first, then derives a qualifying union's `x` from its
+already-fixed parents, and cannot reach back. This is the SAME architectural tension plan §3/§4
+already considered and declined to fully solve (porting kinship2's own joint-optimization
+mechanism, rejected as disproportionate) -- this finding is further evidence for that conclusion,
+not a new one to make. Owner-directed via `AskUserQuestion`: **document as a known, disclosed
+limitation, no further code changes this session** (not a 4th compounding iteration). Recorded in
+`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §11 (5th finding) and `BACKLOG.md`
+(folded into the Phase 2 item, since both stem from the same local-vs-global tension). The
+S647 close-out's own "confirmed correct" line in `BACKLOG.md` corrected in place, not silently --
+matching this project's own disclosure practice (Learning 678's own precedent) rather than quietly
+revising the claim away. **Lesson for next time (not yet promoted to PROJECT_LEARNINGS.md, noted
+here for now):** "structurally correct + visually re-inspected" is not the same claim as "no
+cosmetic defects" -- this session's own visual re-verification checked for overlaps/collisions
+specifically, never for "does recentering introduce a bend where a straight line used to be" or
+"does the union still land at the center of its own children's span" -- a distinct question that
+needed its own explicit check, not covered by the collision-focused verification already done.
+No code changed this addendum; commits: docs-only (plan + BACKLOG.md + this note).
+
 ### What Session 647 Did
 **Deliverable:** Track 7 Phase 1 implementation (mating-unit dot/mate-spacing fix in
 `.positionMatingUnitForest()`), per the design ratified S646

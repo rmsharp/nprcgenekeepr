@@ -518,6 +518,39 @@ for a **dedicated future session** -- not attempted inline here, to avoid a 4th 
 iteration in an already-long session (`SESSION_RUNNER.md`'s own "after 2 failed attempts, stop and
 return to research" anti-pattern).
 
+**A fifth pattern, found by the owner directly reviewing the regenerated Track B image, and
+confirmed against kinship2's own reference rendering (owner-directed: document, do not fix
+this session):** recentering a qualifying union between its two parents (§2.1) decouples its `x`
+from its own children's positions -- something the OLD `mean(children)` formula guaranteed could
+never happen. Concretely, on the Track B full fixture:
+
+- `P3`x`P4` -> `C4` and `C4`x`P6` -> `C4a` (each a single-child union): before Track 7, a
+  single-child union's `x` was *always* exactly its one child's `x` (the mean of one value), so the
+  descent line was always a straight vertical drop. Track 7's recenter formula has no relationship
+  to the child's position at all -- the union now sits wherever the anchor/mate midpoint lands, and
+  `.addRectilinearWaypoints()` correctly inserts a right-angle dogleg to connect the two, because
+  they are no longer at the same `x`.
+- `M1`x`G3` -> `L1`/`L2`/`L3` (a 3-child union): the union's `x` (`3.5`, the parent-midpoint) no
+  longer equals the children's own mean (`3.0`), so the drop point lands off-center on the sibship
+  bar instead of at its middle -- no dogleg needed (the bar mechanism absorbs it), but visibly
+  off-center.
+
+**Confirmed directly against `trackB-kinship2-full.png`** (kinship2's own rendering of the
+identical fixture, already committed in this repo): kinship2 shows *perfectly straight* vertical
+drops for both single-child cases and a drop landing exactly at the `L1`/`L2`/`L3` bar's center.
+kinship2 achieves both spousal separation AND undistorted descent lines simultaneously because its
+`alignped4()` solver (§1.4) positions every individual -- parents AND children -- in one joint
+optimization; it is free to adjust where a child sits, not just where a parent sits. This project's
+Walker/BJL engine is fundamentally different: it positions children first, top-down and
+recursively (Tier 1), then derives a qualifying union's position from its *already-fixed* parents
+(Track 7's own Tier 2 override) -- it cannot reach back and move the children to match. Porting
+kinship2's actual joint-optimization mechanism to eliminate this was already considered and
+rejected in §3/§4 (Alternative C) as disproportionate to a cosmetic spacing complaint; this finding
+is evidence for, not against, that same conclusion -- the tension is structural to the chosen
+architecture, not a defect introduced by an implementation mistake, and a real (if partial) fix
+would mean reopening exactly the migration §4 already declined. Filed for disclosure alongside the
+4th finding above, not fixed this session.
+
 ---
 
 ## References
