@@ -16,6 +16,15 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S647: update HANDOFFS.md's own receipt with the post-close-out 5th finding
+- The durable receipt (`HANDOFFS.md`) was written before the owner's post-close-out review
+  surfaced the 5th finding and corrected the "confirmed correct" visual-re-verification claim.
+  Updated `active_task`/`what_was_done`/`next_steps`/`key_files`/`gotchas` to reflect both
+  post-close-out commits, and revised `self_score` from 7 to 6 with the reasoning made explicit --
+  the close-out's own visual re-verification was scoped too narrowly to catch a defect class the
+  session never explicitly checked for (Learning 681).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-27 · [BL-N] S647 post-close-out: owner-caught 5th finding -- union recenter decouples from children's positions, documented not fixed
 - Within minutes of S647's own close-out, the owner reviewed the same regenerated
   `trackB-nprc-full.png` and found 2 more real, previously-undisclosed cosmetic defects: `P3`x`P4`
