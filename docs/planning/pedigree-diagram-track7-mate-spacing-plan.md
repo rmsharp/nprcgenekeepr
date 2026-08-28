@@ -3,9 +3,13 @@
 **Status:** DESIGN, session S646 (2026-08-27). **RATIFIED, session S646** (§10) -- Option A adopted
 as scoped, no changes. **Phase 1 implementation DONE for individuals, session S647 (2026-08-27)**
 -- §2's core formulas shipped (widen + recenter, `qualifies()`-gated), plus a capped
-collision-avoidance fix for individual-shaped points (§11). **Not yet fully delivered**: §11's own
-4th finding (union-dot proximity to unrelated individuals) is real, disclosed, and deliberately
-deferred to its own future session -- see `BACKLOG.md`.
+collision-avoidance fix for individual-shaped points (§11). §11's own 4th finding (union-dot
+proximity to unrelated individuals) and 5th finding (union/children decoupling) were disclosed,
+not fixed. **Phase 2 DESIGN, session S648 (2026-08-27)** -- §12: Pre-RED measurement (confirms
+Phase 1 itself introduced 19 of 20 union-dot near-misses on the real fixture, up from 1
+pre-Track-7) + a capped, radius-proportionate push design for the union side only, independently
+verified by a 3-agent adversarial workflow (§12.8). **Implementation is a separate future
+session** -- see `BACKLOG.md`.
 
 **Origin:** `BACKLOG.md` "Up Next" (filed S645, 2026-08-27, post-close-out, owner-directed --
 "place [this] as the next action item"), itself found via direct owner visual review of the
@@ -552,6 +556,290 @@ would mean reopening exactly the migration §4 already declined. Filed for discl
 4th finding above, not fixed this session.
 
 ---
+
+## 12. Phase 2 design: union-dot proximity to unrelated nodes (session S648)
+
+**Origin:** §11's 4th finding (owner-directed defer, S647) and `BACKLOG.md`'s own "Up Next"
+item (Phase 2, standing top priority). This section is that dedicated future session, following
+this document's own `ARCHITECTURE_WORKSTREAM.md` precedent (§ header) -- a scoping/design
+session; **implementation is a separate future session** (the vertical-slice gate requires a
+pre-declared contract from a *prior* session, which this section now provides).
+
+### 12.1 Fresh evidence gathered this session (Pre-RED, not assumed from §11's single example)
+
+Measured directly via `pkgload::load_all()` + `.buildMatingUnitForest()` +
+`.positionMatingUnitForest()`, called live against current `HEAD` (commit `95eedad4`), not read
+from §11's prose:
+
+- **This is a Phase-1-introduced regression, not only a pre-existing gap.** Temporarily checking
+  out the pre-Track-7 source (`git show 6d4ad111:R/makePedigreeDiagramData.R`, the commit
+  immediately before Phase 1's own diff) and re-running the identical measurement: **only 1 of
+  237 mating unions** (`__union_162`, already the one case §1.4's own preliminary probe reported)
+  had a nearest-neighbor distance under a visual-overlap threshold. Under Phase 1's shipped code,
+  **20 of 237 (8.4%)** do. Phase 1's own widen-to-`minSep` change is the direct cause of 19 of the
+  20 -- confirmed by direct before/after comparison on the identical fixture, not inferred.
+  (File restored byte-identical to `HEAD` immediately after this comparison; `git status` clean
+  throughout, confirmed.)
+- **Threshold used:** the nearest *other* node (excluding the union's own anchor/mate, which are
+  expected to sit close post-Track-7 -- that is Phase 1's own fix) is "overlapping" when their
+  center-to-center distance is under the sum of the two nodes' own rendered radii --
+  `size = 25` for a real/duplicate node, `size = 6` for a union dot (`R/makePedigreeDiagramData.R:
+  1306/1324/1342`), i.e. 31px (0.258 raw units at `xScale = 120`) against an individual/duplicate,
+  12px (0.1 raw units) against another union.
+- **Magnitude is bounded, unlike Phase 1's own individual-circle problem.** Of the 20 overlapping
+  cases: 15 sit at the pre-existing `1e-3`-raw-unit tie-break epsilon (0.12px -- the literal "weaker
+  guarantee for dots" residual §2.3/§11 already named), 5 sit in an 11.88-30px band (a genuinely
+  different magnitude, not the epsilon floor) -- **the worst case across all 237 units is 30px**,
+  never approaching the multi-hundred-px drift Phase 1's own individual-circle fix had to cap
+  (`.kMaxIndividualPush`, up to 5.5 raw units / 660px on the real fixture). 5 of the 20 are mutual
+  union-vs-union pairs (both sides read each other as nearest); the remaining are union-vs-
+  individual/duplicate.
+- **Track B, corrected (self-correction, found while preparing visual comparisons for
+  ratification -- see below): the FULL 16-subject fixture measurement above was wrong, not
+  merely imprecise.** `makePedigreeMatingLayout()` pre-filters fully-isolated individuals
+  (`.findIsolatedIds()`, `R/makePedigreeDiagramData.R:1145-1146`, the P5-suppression item) BEFORE
+  positioning -- calling `.buildMatingUnitForest()`/`.positionMatingUnitForest()` directly on the
+  unfiltered full fixture, as this section originally did, measures a pedigree
+  `makePedigreeMatingLayout()` never actually produces. The full fixture's own `P5` is isolated
+  (zero edges, by design -- it is the P5-suppression item's own test case); once correctly
+  filtered, the full fixture has **0 of 4 unions overlapping**, not 1 -- the `__union_2`/`P5`
+  case this section originally reported is not present in anything that ships.
+  **The fixture that IS the correct point of comparison is the "shrunk" 8-subject fixture**
+  (`shrinkPedigree(pedB, ..., maxBits = 1L)$ped`, the input to the already-committed
+  `trackB-nprc-shrunk.png` -- `data-raw/kinship2FidelityValidation.R:207,244,246`), which has
+  **zero isolated ids** (confirmed directly -- no filtering discrepancy possible) and is the
+  fixture S647's own §11 4th finding actually cited. Correctly measured, matching production
+  exactly: **all 3 of 3 mating units overlap** (`__union_1` C4xP6/nearest P2, `__union_2` P1xP2/
+  nearest C4 -- the exact pair §11 cited, confirmed -- `__union_3` M1xG3/nearest C4a), all 3 at
+  the same 0.12px epsilon floor. **Pre-Track-7 baseline on this same shrunk fixture (re-verified
+  via the identical temporary-swap-and-restore method as the real-fixture check above): 0 of 3
+  overlap** (72-120px separation) -- Track 7 Phase 1 took this specific, already-visually-reviewed
+  fixture from a clean 0/3 to a uniform 3/3, a materially stronger and cleaner regression signal
+  than the real 375-fixture's own 1-in-237-to-20-in-237 finding. The real-fixture measurement
+  itself is unaffected by this correction (confirmed separately: the real fixture has 0 isolated
+  ids, so no filtering discrepancy applies there).
+- **Preliminary push simulation** (matching §1.4's own "preliminary, not a full live-render
+  check" depth, not the implementing session's own obligation below): simulating a capped
+  bidirectional push of each colliding union, at a *radius-proportionate* clearance target
+  (0.258 raw units, derived from the two node sizes above, not the flat `minSep` individuals use)
+  rather than reusing `minSep` verbatim -- **18 of 20 resolve within 2 push-steps, all 20 resolve
+  within 5**; the resulting shifts are 31-62px (worst case), an order of magnitude gentler than
+  Phase 1's individual-circle fix; **0 cases introduced a new point-level coincidence** with a
+  different same-gen node in this naive check. This is a point-distance simulation only -- it does
+  **not** check sibship-bar-span-vs-bar overlaps (`.addRectilinearWaypoints()`'s own D1 geometry,
+  which Phase 1's own v2 attempt found the hard way can regress from a seemingly-safe point-level
+  fix) -- that check is explicitly the implementing session's own obligation (§12.6), matching
+  Phase 1's own division of labor between design-stage probe and implementation-stage live-render
+  verification.
+- **A structural fact this session confirmed by reading source, not assuming:** for the common
+  case, a moved union's `x` directly repositions its own `__drop_<unionId>` sibship-bar waypoint
+  (`R/makePedigreeDiagramData.R:1642-1649`, `barPointX <- c(unname(xOf[[fromId]]), ...)`) --
+  moving a union to resolve a dot-proximity collision necessarily reshapes that union's own
+  sibship-bar span. (Precision note, found by this session's own adversarial verification: the
+  enclosing loop is `for (fromId in unique(childEdges$from))`, and per
+  `.buildMatingUnitForest()`'s own documented contract, `fromId` is a mating-unit id in the common
+  case but can be a single real individual's id under the D5 partial-parentage fallback -- so
+  "a mating union's own x" describes the common case this decision targets, not an unconditional
+  invariant of the loop itself. Does not affect this document's own scope, which only ever
+  concerns unions.) This is the same class of cross-function interaction Phase 1's own v2 attempt
+  hit for individuals (§11) and is why §12.6 requires the same live-render D1 regression check
+  Phase 1's own §7 required, not a lighter bar for this narrower-looking problem.
+- **The existing mechanism already treats unions as structurally weaker, on both sides, by
+  design, not by oversight:** `.deCollideIndividualPoints()` (the shared sweep governing B1/B3
+  individual-shaped points) never adds `unionOccupied` to its main capped-search `forbidden` set --
+  only its residual epsilon pass checks `tiesUnion`. The mirror-image union-side sweep
+  (`R/makePedigreeDiagramData.R:981-1001`) already DOES compare a union's `x` against `tier1X`,
+  B1's own final `tier3X` at that gen (added S647, `b1AtGen`), and every other already-placed
+  union at that same gen from earlier in this same loop (`placedAtGen[[g]]` -- found by this
+  session's own adversarial verification; the design's own text below undersold this, omitting
+  the `placedAtGen` term) but only ever nudges by the same `1e-3` epsilon on an exact tie -- it
+  never performs a real push. **This document's own scope is
+  the union side only** (§12.2) -- symmetric hardening of the individual side is considered and
+  rejected as disproportionate (§12.4, Alternative D).
+
+### 12.2 Decision
+
+Replace the union-position sweep's exact-tie-only epsilon nudge
+(`R/makePedigreeDiagramData.R:996-998`) with a capped bidirectional search, structurally the same
+shape as Phase 1's own `.deCollideIndividualPoints()` (§11), but:
+
+1. **Triggers on a radius-proportionate clearance threshold, not an exact-tie epsilon.** A new
+   raw-unit constant, `unionClearance`, derived transparently from the two already-existing
+   render-layer node sizes (`25` for a real/duplicate node, `6` for a union dot) and `xScale`
+   (`120`) -- `(25 + 6) / 120 = 0.2583`, rounded to a named constant with its derivation shown in
+   a comment, matching Phase 1's own "well-justified, not guessed" bar (§2.2). A union-vs-union
+   comparison uses the smaller `(6 + 6) / 120 = 0.1` -- both derived the same way, from the same
+   two existing constants, no new guess.
+2. **Pushes by that same proportionate step, not a flat `minSep`.** A union is a much smaller
+   visual object than a real/duplicate node (`size = 6` vs. `25`); reusing individuals' flat
+   `minSep` (`120`px) would move a union roughly 4x farther than the minimum needed to clear the
+   collision -- unnecessary added distortion to the sibship-bar span this union's own `__drop_`
+   point drives (§12.1's structural finding), for no additional benefit.
+3. **Capped, with a fallback to the current epsilon-nudge behavior if nothing frees up within the
+   cap** -- same disclosed-residual shape Phase 1established (§11), not a silent unbounded
+   search. §12.1's preliminary simulation resolved 18/20 real cases within 2 steps and all 20
+   within 5; the implementing session's own live-render check (§12.6) determines and empirically
+   justifies the final cap value, exactly as Phase 1's own `.kMaxIndividualPush = 2` was chosen
+   empirically, not speculatively here.
+4. **Individuals/duplicates are entirely untouched** -- `.deCollideIndividualPoints()` itself, its
+   own forbidden-set construction, and Tier 1's `sweepMinSep()` backstop are unmodified. This
+   fix is scoped to the union side only, mirroring Phase 1's own additive, single-side scoping
+   discipline (§3).
+
+### 12.3 Rationale
+
+The union sweep already reads both `tier1X` and B1's own final `tier3X` at each gen (S647) --
+the machinery to KNOW about a collision already exists; it just never acts on anything short of
+an exact tie. This decision reuses that existing detection, replacing only the response (a real,
+capped, proportionate push instead of an epsilon nudge) -- the same "widen within an existing,
+already-trusted boundary" ethos Phase 1's own §3 used, applied to the mirror-image side of the
+same sweep. A radius-proportionate target (not `minSep`) keeps the fix honestly scaled to the
+actual visual object being moved, minimizing collateral distortion to the sibship-bar geometry
+that object's own position also drives.
+
+### 12.4 Alternatives Considered
+
+| Alternative | Pros | Cons | Why Rejected / Deferred |
+|---|---|---|---|
+| **A. RECOMMENDED -- capped bidirectional push at a radius-proportionate clearance (§12.2)** | Reuses an already-detecting mechanism; smallest sufficient movement (31-62px worst case, per §12.1's simulation); scoped to the union side only | Still needs the implementing session's own full live-render D1 regression check (§12.6) before shipping, same as Phase 1 | -- (this is the recommendation) |
+| **B. Reuse the flat `minSep` push, mirroring Phase 1's individual-side mechanism verbatim** | Simpler: one shared constant, one shared code path for both sides | Moves a union ~4x farther than the minimum needed (120px vs. 31px), for a visual object 4x smaller than the individuals `minSep` was sized for -- larger, unnecessary sibship-bar-span distortion for the identical result | **Rejected** -- disproportionate to the object being moved (§12.3) |
+| **C. Shrink the union dot's own rendered `size` instead of moving any position** | Zero risk to `.positionMatingUnitForest()`, Track 5 D1/D2, or any positioning invariant | Does not fix the 15 exact-tie-epsilon cases (0.12px) at all -- a smaller dot still visually sits ON/inside an unrelated node's own circle when its center is nearly coincident with that node's; only narrows the OVERLAP AREA for the 5 non-epsilon cases, not the underlying "sits on an unrelated node" defect the owner would still see | **Rejected** -- does not address the actual complaint for the majority (15/20) of measured cases |
+| **D. Also harden the individual/duplicate side to avoid unions (`.deCollideIndividualPoints()` adds `unionOccupied` to its own forbidden set)** | Fully symmetric guarantee; would additionally resolve the case where an unrelated individual is the one that should move | Reopens a mechanism Phase 1 only just shipped and fully tested (§11) for a cosmetic dot-adjacency problem on the OTHER side of the same sweep -- disproportionate blast radius; the union side alone already resolves every case in §12.1's measurement (a union has freedom to move without displacing any real individual's own already-correct position) | **Deferred** -- not needed by the evidence gathered (§12.1); revisit only if a future measurement finds a case the union-only fix cannot resolve |
+| **E. Conditionally skip Track 7's own recenter (§2.1) for a qualifying unit whose recentered position would collide, falling back to the old child-mean formula for that unit only** | Avoids ever moving a union post-recenter at all | Reintroduces exactly the "some qualifying units recenter, others silently don't, depending on incidental collision" inconsistency Phase 1's own consistent, unconditional formula (§2.1) was built to avoid; would still leave the ONE pre-existing pre-Track-7 case (`__union_162`, §12.1) unaddressed, since that case predates recentering entirely | **Rejected** -- inconsistent, and does not even fully solve the problem it targets |
+
+### 12.5 Impact Analysis
+
+| System / surface | Impact | Action Required |
+|---|---|---|
+| Union-position sweep (`R/makePedigreeDiagramData.R:981-1001`) | Exact-tie-only epsilon nudge replaced with a capped, proportionate-clearance bidirectional push | Implementing session's own RED/GREEN |
+| `.deCollideIndividualPoints()`, Tier 1 `sweepMinSep()`, B1/B3 individual formulas | **No change** -- this decision touches only the union-side sweep | None |
+| Track 5 D1/D2 edge orthogonality | Unaffected by construction -- D1/D2 read a union's `x` generically, same proof as Phase 1's own §2.4/§1.1 | Re-confirm via the existing D1/D2 test suite, not a new analysis |
+| D1 sibship-bar geometry (`__drop_<unionId>` waypoint, `:1642-1649`) | **New interaction, not present for Phase 1's own individual-side fix**: a pushed union's `__drop_` point moves, reshaping that union's own bar span | Implementing session's own live-render D1 regression check (§12.6) -- mirrors, but does not reuse, Phase 1's own v2-attempt lesson |
+| `qualifies()`-gated recenter (§2.1) | **No change** -- this decision does not alter which unions qualify or what their pre-collision-avoidance `x` is, only whether/how far a colliding result gets nudged afterward | None |
+| `test_positionMatingUnitForest.R`'s own 27-node exact-tie regression test (§11) | The 27-count includes some of the same union-involving pairs this decision targets -- expect that count to change (likely decrease) once implemented | Implementing session: re-measure, do not assume 27 is still correct |
+| Real-colony rendering | 20/237 unions (8.4%) visibly change position by 31-62px; the remaining 217 are untouched | None -- scoped, disclosed trade-off |
+
+### 12.6 Verification Plan (for the implementing session)
+
+- **Pre-RED empirical re-validation**, matching §12.1's own methodology: re-run the identical
+  before/after measurement live against the implementation's own working tree (not carried
+  forward from this document) -- confirm the 20-case count and magnitudes are still current
+  (the codebase may have changed between this design session and implementation).
+- **Live-rendered D1 regression check, MANDATORY, not optional** (this is the one respect in
+  which Phase 2's risk profile, while smaller in raw magnitude than Phase 1's, is NOT simpler in
+  kind): render the pushed positions via the existing `chromote`-based live-render helper and
+  `.findEdgeNodeCollisions()`, checking specifically for NEW sibship-bar-vs-bar or bar-vs-node
+  overlaps the push introduces -- §12.1's own structural finding (a moved union reshapes its own
+  `__drop_` waypoint) means this is not a hypothetical risk to rule out, it is a confirmed
+  mechanism to verify against, exactly as Phase 1's own v2 attempt discovered live rather than by
+  reasoning alone.
+- **Re-run `test_positionMatingUnitForest.R`'s existing 27-exact-tie-count assertion (§11)** and
+  update it to whatever the new, empirically-measured count is -- do not assume it is unaffected.
+- **Full clean regression** -- 0 new failures/errors attributable to this change.
+- **Visual re-verification**: regenerate and visually inspect the Track B images (the 1 affected
+  union, `__union_2`), matching this project's "verify diagrams against ground truth" standard.
+  Given Learning 681's own lesson (S647 post-close-out), explicitly check for the SAME class of
+  side effect Learning 681 named -- does the push change what an OLD mechanism guaranteed as a
+  side effect (e.g. a previously-straight descent line) -- not only the collision this fix
+  targets.
+- `lintr::lint_package()` (loaded first) -- 0 new lints.
+
+### 12.7 Explicitly Out of Scope (report, don't fix here)
+
+- **§11's 5th finding** (union/children decoupling, single-child dogleg / off-center sibship bar)
+  -- a separate, already-disclosed architectural tension (local-vs-global positioning), not
+  addressed by this document; a future session should read both findings together before any
+  further work in this area, since a union-position push (this document) could interact with that
+  tension (e.g. a pushed union's descent-line dogleg direction/length) -- flagged for the
+  implementing session's own visual re-verification (§12.6), not resolved here.
+- **Symmetric individual-side hardening** (Alternative D, §12.4) -- deferred, not needed by
+  current evidence.
+- **The general epsilon-nudge/pixel-rounding pattern** elsewhere in the codebase (Learning 641,
+  carried forward from §8) -- this document resolves the one instance the owner's own
+  visual review flagged (union dots on qualifying pairs), not the general pattern.
+
+### 12.8 Post-draft adversarial verification (this session)
+
+Matching §9's own established practice: before presenting this document for ratification, a
+3-agent adversarial-verification workflow independently re-derived every quantitative claim in
+§12.1 (the pre-Track-7-vs-current regression count, the push-simulation resolve counts) from
+scratch -- own scripts, own methodology, not copying this document's own scratch scripts -- and
+independently re-checked all 4 source-code citations underpinning §12.1's structural findings.
+
+**What it found, and how each was handled:**
+
+- **Both quantitative claims CONFIRMED exactly**, including every subsidiary number (the 1/237
+  pre-Track-7 count and its specific offending pair; the 20/237 current count and its 15-epsilon/
+  5-band/5-mutual-pair breakdown; the 18-within-2-steps/20-within-5-steps/0-new-collisions push
+  simulation result), independently re-derived from a fresh implementation of the described
+  method, not by re-running this document's own scripts.
+- **All 4 citations CONFIRMED**, with 2 precision nuances in this document's own prose (not
+  factual errors in the underlying claims) -- both corrected in place above, disclosed rather than
+  silently fixed, matching this project's own standing practice (§9; the S645 caption correction,
+  `SESSION_NOTES.md`): (1) the `__drop_<unionId>` waypoint framing (§12.1) describes the common
+  case, not an unconditional invariant of the enclosing loop, which can also run over a single
+  real individual's id under `.buildMatingUnitForest()`'s own D5 partial-parentage fallback --
+  immaterial to this document's own scope, which only ever concerns unions; (2) the union sweep's
+  own `occupied` set (§12.1) also includes other already-placed unions from earlier in the same
+  per-gen loop (`placedAtGen[[g]]`), which this document's prose had omitted alongside `tier1X`
+  and B1's `tier3X`.
+- **0 discrepancies** in the empirical measurements themselves -- both the regression-count and
+  push-simulation verifications matched this document's own scratch-script results to the exact
+  distance, union id, and count, using independently-written verification code.
+
+**A separate, more significant error found AFTER this workflow ran, NOT caught by it** (disclosed
+rather than silently fixed, matching §9's own standing practice): the workflow's
+`regression-count` check was scoped, by this session's own prompt, to the REAL 375-individual
+fixture only -- it never re-checked the Track B claim, which was wrong. While preparing visual
+before/after comparisons for ratification (prompted by the owner asking to see the visual impact
+before deciding), this session found that the original §12.1 Track B measurement called
+`.buildMatingUnitForest()`/`.positionMatingUnitForest()` directly on the unfiltered FULL Track B
+fixture -- a pedigree `makePedigreeMatingLayout()` never actually produces, since it pre-filters
+`P5` (isolated, zero edges) before positioning. The correct comparison point is the "shrunk"
+Track B fixture (zero isolated ids, no filtering discrepancy possible), on which the true finding
+is **all 3 of 3 unions overlap** (not 1 of 4, and not the pair originally reported) -- see the
+corrected §12.1 bullet above for the full detail and the pre-Track-7 baseline (0 of 3) re-verified
+under it. **Lesson for this session, not yet promoted to `PROJECT_LEARNINGS.md`:** calling an
+internal positioning function directly, bypassing a wrapper's own pre-filtering step, measures a
+pedigree that wrapper never actually produces -- the same class of gap as testing a function in
+isolation from the pipeline stage that changes its input. The real-fixture numbers this workflow
+did verify are unaffected (confirmed separately: 0 isolated ids in that fixture).
+
+### 12.9 Visual spike evidence (owner-requested, before ratification)
+
+Per the owner's own request to see the visual impact of Option A vs. Option B before deciding,
+this session rendered all three states via `makePedigreeMatingLayout()` + `visNetwork` +
+`chromote` (matching `data-raw/kinship2FidelityValidation.R`'s own established rendering
+methodology) on the shrunk Track B fixture (§12.1/§12.8's corrected fixture, all 3 unions
+colliding under current shipped code). Each option was applied as a temporary, uncommitted patch
+to `R/makePedigreeDiagramData.R` (backed up first via `cp`; restored immediately after each
+render; `git diff`/`git status`/`shasum` confirmed byte-identical to `HEAD` after each restore,
+matching the discipline already used for the pre-Track-7 baseline comparisons above) -- **no code
+change from this section is committed; this is spike evidence only**, informing the ratification
+choice below, not an implementation.
+
+- **Baseline (current shipped code):** all 3 union dots render effectively fused into an
+  unrelated node's own circle -- visually indistinguishable from a rendering artifact rather than
+  a real marker (confirmed visually: a small notch/bite on the boundary of `P2`'s circle is the
+  only visible trace of a union dot that should be its own distinct marker).
+- **Option A (radius-proportionate capped push):** all 3 union dots become visible, distinct
+  circles sitting in a small, real gap next to the node they were previously fused with -- no
+  other change to the diagram's overall shape; edges route exactly as before.
+- **Option B (flat `minSep` push):** the union dots do separate from their previous host nodes,
+  but the ~4x larger push cascades into a visibly WORSE overall layout -- `P1` is pushed into
+  visible isolation at the far left of its row with a long rectilinear detour edge required to
+  reach its own child's row, an artifact not present in either the baseline or Option A's render.
+  **This is a direct, visual confirmation of §12.3's own written concern** (a flat `minSep` push
+  moves a union ~4x farther than necessary, risking collateral distortion elsewhere) -- not merely
+  a theoretical risk, an observed one on the very fixture the owner has already reviewed.
+
+This visual evidence is additional support for Option A over Option B beyond §12.1's own
+point-distance simulation (which already found Option A's shifts gentler in magnitude) -- it shows
+the SAME conclusion manifesting as an actual rendering artifact, not just a raw-unit measurement.
+
+### 12.10 Owner ratification record (Phase 2)
+
+*(To be completed once presented via `AskUserQuestion`.)*
 
 ## References
 
