@@ -136,6 +136,26 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S648
+date: 2026-08-27
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Track 7 Phase 2 (union-dot proximity) -- Pre-RED empirical measurement + design
+  decision document, per docs/planning/pedigree-diagram-track7-mate-spacing-plan.md S11's 4th
+  finding and BACKLOG.md's own "Up Next" item (standing top priority). Implementation deferred to
+  a future session -- this session's deliverable is the measurement + ratified design contract.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text prose: pending -- filled at Phase 3D close-out.>
+
+```handoff
 session: S647
 date: 2026-08-27
 status: complete

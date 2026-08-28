@@ -18,6 +18,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 648 Did
+**Deliverable:** Track 7 Phase 2 (union-dot proximity) empirical measurement + design decision
+document, per `BACKLOG.md`'s own "Up Next" item / `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`
+§11's 4th finding. Following `ARCHITECTURE_WORKSTREAM.md` (Track 6/Track 7 Phase 1's own
+established precedent for `.positionMatingUnitForest()` decisions). **Implementation is explicitly
+NOT this session's deliverable** — the vertical-slice gate (a) requires a pre-declared contract
+from a PRIOR session, which does not yet exist for Phase 2; this session produces that contract.
+**Started:** 2026-08-27 (picked via `AskUserQuestion` at Phase 0 close, from a 2-option priorities
+list: this item vs. P5-suppression Phase 3 UX messaging).
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### S647 post-close-out addendum (2026-08-27)
 Within minutes of S647's own close-out report, the owner reviewed the same regenerated
 `trackB-nprc-full.png` this session's close-out had called "confirmed correct" and found 2 more
