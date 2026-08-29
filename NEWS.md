@@ -118,7 +118,12 @@ R. Mark Sharp, Ph.D.
   on top of one parent -- matching how the reference tool kinship2 draws
   the same pairing. Pairs with more complicated family situations (a
   parent with more than one mate, for example) are unaffected and
-  unchanged. \## Kinship & Pedigree Calculations
+  unchanged.
+- When the Diagram tab leaves an animal out because it has no recorded
+  parents, mates, or offspring (see above), it now tells you so, naming
+  which animal(s) were left out -- and shows a clear message instead of
+  an empty diagram when none of the loaded animals have any such
+  relationships. \## Kinship & Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their
   computed relatedness to genetic identity, and that correction flows
   through to every other relative reached through either twin -- not
