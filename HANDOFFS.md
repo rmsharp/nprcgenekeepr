@@ -185,7 +185,7 @@ runtime_smoke: Not a live Shiny app launch, but the actual rendering pathway
   ground-truth-verifying diagnostic render) -- substantively satisfies Phase 3E, matching S647's
   own established precedent for this same rendering pathway.
 changelog_ref: see CHANGELOG.md 2026-08-29 entries, S649
-commit: pending
+commit: a7fdb0c3
 ```
 <free-text prose: 8/10. Strengths: treated the RED-phase spike's own contradictory finding (plan
 §12.1's "0 new collisions" claim not holding for duplicates) as a real, escalation-worthy result

@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [ad hoc] S649: record HANDOFFS.md receipt commit-sha fix for its own close-out (matching S607/S623/S629-S639 precedent)
+- This session's own `HANDOFFS.md` receipt carried `commit: pending` (the close-out commit's own
+  sha is only knowable after it exists). Fixed to `a7fdb0c3`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [BL-N] S649: close out (Track 7 Phase 2 shipped)
 - Regenerated and ground-truth-verified `trackB-nprc-shrunk.png` (commit `168ae52a`); recorded
   `PROJECT_LEARNINGS.md` Learnings 684/685 and updated `CLAUDE.md`'s learnings pointer (commit
