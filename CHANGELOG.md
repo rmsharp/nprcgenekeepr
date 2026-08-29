@@ -16,6 +16,23 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [BL-N] S649: Track 7 Phase 2 GREEN (union-dot proximity push) -- commits `316b605f`, `e312774f`
+- Implements plan §12.2: replaces the union-position sweep's exact-tie epsilon nudge with a capped
+  bidirectional push at a radius-proportionate clearance (union side only), `.kMaxUnionPush = 5L`.
+- 2 bugs found and fixed in GREEN (not caught by the RED-phase spike, which only checked 2
+  grounding fixtures, not the full suite): (1) the push search must exclude a union's own
+  anchor/non-anchor (a union's gen is `max(parent gens)`, so it can share its gen with a
+  structural parent) -- caused 332 spurious failures before the fix; (2) that exclusion must NOT
+  apply to the pre-existing epsilon-tie residual pass, or it silently re-introduces ~150 exact
+  ties the old code never had.
+- With both fixes, real numbers are BETTER than the spike predicted: union-vs-duplicate residual
+  is 4 (not 11), and the mandatory D1 live-render check (plan §12.6) shows the pre-jog baseline
+  SHRINKING (109->107 colliding edges), not growing. Plan §12.1/§12.11 and `BACKLOG.md` corrected
+  to the real, shipped numbers.
+- Full clean regression: 1 failed / 0 error / 6516 passed (only the pre-existing, unrelated
+  `test_wordlist_coverage.R` failure). `lintr::lint_package()` on touched files: 0 lints.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [BL-N] S649: Track 7 Phase 2 RED (union-dot proximity push, TDD) -- commit `d8645207`
 - Failing tests specify plan §12.2's ratified capped bidirectional push (radius-proportionate
   clearance, union side only): all 20 of the real-375-fixture's individual-/union-vs-union
