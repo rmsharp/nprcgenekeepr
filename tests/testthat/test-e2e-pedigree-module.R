@@ -826,7 +826,11 @@ test_that(
   on.exit(app$stop(), add = TRUE)
 
   ## A small custom studbook: A/B/C are a connected trio, ISO is a fully
-  ## isolated individual (no sire, no dam, no mate, no children).
+  ## isolated individual (no sire, no dam, no mate, no children). `birth` is
+  ## one of getRequiredCols()'s 5 required columns -- omitting it makes
+  ## qcStudbook() reject the upload and every downstream tab (Table AND
+  ## Diagram) renders empty, unrelated to isolation-suppression (confirmed
+  ## via a standalone diagnostic AppDriver run before adding this column).
   ped_csv <- tempfile(fileext = ".csv")
   utils::write.csv(
     data.frame(
@@ -834,9 +838,16 @@ test_that(
       sire = c(NA, NA, "A", NA),
       dam = c(NA, NA, "B", NA),
       sex = c("M", "F", "F", "F"),
+      birth = c("1990-01-01", "1990-01-01", "1995-01-01", "1990-01-01"),
       stringsAsFactors = FALSE
     ),
-    ped_csv, row.names = FALSE, na = ""
+    ## na = "NA" (the default), NOT "" -- read.csv()'s default na.strings is
+    ## "NA"; writing NA as an empty string round-trips as sire/dam == "" (a
+    ## literal blank id), which qcStudbook() then rejects as "both a sire
+    ## and a dam" (every empty-sire/-dam row collides on ""), not as
+    ## unknown-parent -- confirmed directly against runQcStudbook() before
+    ## settling on this fix.
+    ped_csv, row.names = FALSE
   )
   on.exit(unlink(ped_csv), add = TRUE)
 
