@@ -460,6 +460,11 @@ test_that(".positionMatingUnitForest positions the full real
   nonDup <- pos[.nodeKind(pos$id) != "duplicate", ]
   key <- paste(round(nonDup$x, 6), nonDup$gen)
   nCollidingNodes <- sum(duplicated(key) | duplicated(key, fromLast = TRUE))
+  ## Track 7 Phase 2 (S649, see the section below): re-verified live that
+  ## this exact-tie metric is UNCHANGED by Phase 2's union-side push --
+  ## it is driven entirely by the individual side's own residual, which
+  ## Phase 2 never touches (the union sweep's own pre-existing epsilon
+  ## nudge never produced exact ties in the first place).
   expect_equal(nCollidingNodes, 27L)
 })
 
@@ -1070,6 +1075,156 @@ test_that(".positionMatingUnitForest has a bounded, disclosed residual of
                info = paste("colliding ids:",
                              paste(pos$id[key %in% key[duplicated(key)]],
                                    collapse = ", ")))
+})
+
+## ---- Track 7 Phase 2: union-dot proximity to unrelated nodes ----------
+## docs/planning/pedigree-diagram-track7-mate-spacing-plan.md §12 (design
+## RATIFIED S648; implemented S649). Phase 1 (S647, above) widened B1's
+## own offset to minSep but left the UNION side's own de-collision sweep
+## (R/makePedigreeDiagramData.R:981-1001) with only an exact-tie epsilon
+## nudge -- a mating-union dot can land immediately adjacent to (not
+## exactly on) an unrelated node, close enough to visually fuse with it
+## (plan §12.9's own visual spike evidence). This replaces that epsilon
+## nudge with a capped bidirectional push at a radius-proportionate
+## clearance target, union side only (plan §12.2) -- individuals/
+## duplicates and their own sweep (.deCollideIndividualPoints()) are
+## entirely untouched; the 27-count tests above are RE-VERIFIED this
+## session (Pre-RED, not assumed) to be UNCHANGED by this fix -- that
+## metric is driven entirely by the individual side's own residual, which
+## this fix never touches.
+##
+## Node-radius-derived clearance constants (plan §12.2): size=25 for a
+## real/duplicate node, size=6 for a union dot, xScale=120 -- the same two
+## already-existing render-layer constants (R/makePedigreeDiagramData.R:
+## 1226/1306/1324/1342), not a new guess.
+.unionClearanceIndividual <- (25 + 6) / 120
+.unionClearanceUnion <- (6 + 6) / 120
+
+## Pre-RED empirical finding, S649 (verified live via a temporary,
+## immediately-reverted spike patch -- git diff/status/shasum confirmed
+## byte-identical to HEAD after each check, matching this project's own
+## established spike-and-restore discipline; never hand-derived):
+## implementing plan §12.2 exactly as ratified resolves ALL 20 of the real
+## 375-fixture's individual- and union-vs-union proximity cases (0
+## residual), but introduces 11 NEW union-vs-DUPLICATE proximity cases
+## that did not exist before. Root cause: a duplicate node's x is always
+## unitX[[itsOwnUnion]] + minSep*0.4 (R/makePedigreeDiagramData.R:816) -- a
+## fixed offset that rides along whenever a union moves -- and this
+## sweep's own occupied-set (tier1X/b1AtGen/placedAtGen) has no visibility
+## into duplicate positions, which are not computed until AFTER this loop
+## runs (a genuine data dependency, not an oversight: a duplicate's own
+## derivedX() reads the union's FINAL unitX). This contradicts plan
+## §12.1's own "0 new collisions" claim, which came from a simpler
+## point-distance simulation that did not model a duplicate's ride-along
+## relationship to its own union -- the same class of gap as Learning 682
+## (measuring a mechanism in isolation from a step that changes its
+## input); plan §12.1 corrected in place, not silently revised, matching
+## this project's disclosure practice. Owner-directed (AskUserQuestion,
+## S649): ship §12.2 as scoped -- it fully resolves the owner's own
+## directly-reviewed Track B fixture (3/3 -> 0/3, no duplicates in play
+## there at all, see the test below) -- and disclose the 11-case
+## duplicate residual as a new, separately-filed BACKLOG Housekeeping
+## item (not fixed this session), matching this project's own established
+## "file, don't fix out-of-scope findings" precedent (the __jog_*
+## waypoint bug, S648).
+
+test_that(".positionMatingUnitForest's Track 7 Phase 2 push resolves all 3
+           union-vs-individual proximity collisions on the shrunk Track B
+           fixture (the owner's own directly-reviewed fixture, plan
+           §12.1/§12.9) -- exact values re-measured live against a
+           temporary spike implementation of §12.2, never hand-derived", {
+  pedB <- data.frame(
+    id   = c("P1", "P2", "P3", "P4", "P5", "P6",
+             "C1", "C2", "C3", "C4", "C4a",
+             "G3", "M1", "L1", "L2", "L3"),
+    sire = c(NA, NA, NA, NA, NA, NA,
+             "P1", "P1", "P1", "P3", "C4",
+             NA, "P1", "M1", "M1", "M1"),
+    dam  = c(NA, NA, NA, NA, NA, NA,
+             "P2", "P2", "P2", "P4", "P6",
+             NA, "P2", "G3", "G3", "G3"),
+    sex  = c("M", "F", "M", "F", "F", "F",
+             "F", "M", "F", "M", "F",
+             "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  genotypedB <- c(P1 = TRUE, P2 = TRUE, P3 = FALSE, P4 = FALSE, P5 = TRUE,
+    P6 = TRUE, C1 = TRUE, C2 = FALSE, C3 = TRUE, C4 = TRUE, C4a = TRUE,
+    G3 = FALSE, M1 = TRUE, L1 = TRUE, L2 = TRUE, L3 = TRUE)[pedB$id]
+  affectedB <- c(P1 = NA, P2 = NA, P3 = NA, P4 = NA, P5 = NA, P6 = NA,
+    C1 = FALSE, C2 = NA, C3 = TRUE, C4 = TRUE, C4a = TRUE, G3 = NA,
+    M1 = TRUE, L1 = NA, L2 = FALSE, L3 = TRUE)[pedB$id]
+  shrunk <- shrinkPedigree(pedB, genotypedB, affected = affectedB,
+                           maxBits = 1L)$ped
+  shrunk$gen <- findGeneration(shrunk$id, shrunk$sire, shrunk$dam)
+  expect_equal(sort(shrunk$id),
+               sort(c("C4", "C4a", "G3", "L3", "M1", "P1", "P2", "P6")))
+
+  forest <- .buildMatingUnitForest(shrunk)
+  pos <- .positionMatingUnitForest(shrunk, forest)
+
+  u1 <- pos$x[pos$id == "__union_1"]  # C4 x P6, gen 0
+  u2 <- pos$x[pos$id == "__union_2"]  # P1 x P2, gen 0
+  u3 <- pos$x[pos$id == "__union_3"]  # M1 x G3, gen 1
+
+  ## BEFORE this fix (current shipped code, confirmed via a temporary
+  ## restore-and-measure this session): all 3 sit at the pre-existing
+  ## small-epsilon-tie value, 0.001 raw units from an unrelated node --
+  ## visually fused (plan §12.9's own visual spike evidence: "a small
+  ## notch/bite on the boundary of an unrelated node's circle is the only
+  ## visible trace"). This fix pushes each to the exact radius-
+  ## proportionate clearance target instead.
+  expect_equal(u1, 2.516666667, tolerance = 1e-6)
+  expect_equal(u2, 1.516666667, tolerance = 1e-6)
+  expect_equal(u3, 1.516666667, tolerance = 1e-6)
+
+  ## Each now clears every unrelated same-gen individual/duplicate node by
+  ## at least the radius-proportionate threshold (plan §12.2) -- the
+  ## actual proximity claim this fix makes, not just 3 pinned numbers in
+  ## isolation.
+  gen0Indiv <- pos[pos$gen == 0 & !grepl("^__union_", pos$id), ]
+  expect_true(all(abs(gen0Indiv$x - u1) >= .unionClearanceIndividual - 1e-9))
+  expect_true(all(abs(gen0Indiv$x - u2) >= .unionClearanceIndividual - 1e-9))
+  gen1Indiv <- pos[pos$gen == 1 & !grepl("^__union_", pos$id), ]
+  expect_true(all(abs(gen1Indiv$x - u3) >= .unionClearanceIndividual - 1e-9))
+})
+
+test_that(".positionMatingUnitForest's Track 7 Phase 2 push resolves every
+           union-vs-individual and union-vs-union proximity collision on
+           the real 375-individual bundled fixture (20/237 before this
+           fix, plan §12.1), but leaves a disclosed, NEW residual of 11
+           union-vs-DUPLICATE proximity cases this fix's own occupied-set
+           cannot see (a duplicate's x is computed AFTER this sweep runs
+           -- see this section's own header note; filed as a new
+           BACKLOG Housekeeping item, not fixed here)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  anchorOf <- stats::setNames(forest$matingUnits$anchor, forest$matingUnits$id)
+  nonAnchorOf <- stats::setNames(forest$matingUnits$nonAnchor,
+                                  forest$matingUnits$id)
+  unionRows <- pos[.nodeKind(pos$id) == "union", ]
+  counts <- c(individual = 0L, union = 0L, duplicate = 0L)
+  for (i in seq_len(nrow(unionRows))) {
+    u <- unionRows[i, ]
+    excludeIds <- c(u$id, anchorOf[[u$id]], nonAnchorOf[[u$id]])
+    cand <- pos[pos$gen == u$gen & !(pos$id %in% excludeIds), ]
+    if (nrow(cand) == 0L) next
+    d <- abs(cand$x - u$x)
+    j <- which.min(d)
+    nk <- .nodeKind(cand$id[j])
+    thresh <- if (identical(nk, "union")) .unionClearanceUnion else
+      .unionClearanceIndividual
+    if (d[j] < thresh) counts[[nk]] <- counts[[nk]] + 1L
+  }
+  expect_equal(unname(counts["individual"]), 0L)
+  expect_equal(unname(counts["union"]), 0L)
+  expect_equal(unname(counts["duplicate"]), 11L)
 })
 
 ## ---- Walker/BJL cutover (Phase 3, this session): regression coverage for

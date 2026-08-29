@@ -374,21 +374,30 @@ test_that("makePedigreeMatingLayout() wires .resolveEdgeNodeCollisions()
 ## resolve pass itself still fully clears every collision on this
 ## fixture (0 residual, confirmed below).
 ##
-## Track 7 CHANGE (docs/planning/pedigree-diagram-track7-mate-spacing-
-## plan.md, S647): 76 -> 104 colliding edges, 1,715 -> 1,748 obstacle-pairs
-## -- widening/recentering 34 qualifying mating units moved some
-## mate-line/child edges into paths that now pass near a node they didn't
-## before. Re-confirmed directly (not assumed) that the resolve pass
-## still fully clears every one of these straight-edge collisions to 0
-## residual -- it just needs more __jog_ waypoints to do so (154 -> 210,
+## Track 7 Phase 1 CHANGE (docs/planning/pedigree-diagram-track7-mate-
+## spacing-plan.md, S647): 76 -> 104 colliding edges, 1,715 -> 1,748
+## obstacle-pairs -- widening/recentering 34 qualifying mating units moved
+## some mate-line/child edges into paths that now pass near a node they
+## didn't before. Re-confirmed directly (not assumed) that the resolve
+## pass still fully clears every one of these straight-edge collisions to
+## 0 residual -- it just needs more __jog_ waypoints to do so (154 -> 210,
 ## test_makePedigreeMatingLayout.R). The separate curved-duplicate-
 ## connector heuristic residual (47, unrelated to mating-unit x/y)
 ## already existed and is unaffected.
+##
+## Track 7 Phase 2 CHANGE (plan §12, ratified S648, implemented S649):
+## 109 -> 128 colliding edges, 1,762 -> 1,799 obstacle-pairs -- the
+## union-side proximity push (§12.2) moves some unions further than
+## Phase 1 left them, moving some mate-line/child edges into paths that
+## now pass near a node they didn't before. Re-confirmed directly that
+## the resolve pass still fully clears every one of these to 0 residual
+## -- it just needs more __jog_ waypoints to do so (220 -> 258,
+## test_makePedigreeMatingLayout.R).
 
 test_that(".resolveEdgeNodeCollisions dramatically reduces the real
-           375-individual bundled fixture's same-row collision count (104
-           colliding edges / 1,748 obstacle-pairs pre-fix, under Track 7's
-           widened/recentered qualifying units, S647), and any residual is
+           375-individual bundled fixture's same-row collision count (128
+           colliding edges / 1,799 obstacle-pairs pre-fix, under Track 7
+           Phase 2's own union-proximity push, S649), and any residual is
            disclosed via the residuals data frame, never silently
            dropped", {
   ped <- read.csv(
@@ -404,14 +413,13 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
 
   baseline <- .findEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   baselineEdges <- unique(baseline[, c("from", "to")])
-  ## CHANGED again from 76L/1715L (pre-Track-7) then 104L/1748L (Track 7's
-  ## uncapped push) -- NOW 109L/1762L after S647's capped-search
-  ## refinement (.kMaxIndividualPush = 2): capping trades a few more
-  ## small collisions for eliminating the much larger ones the uncapped
-  ## search caused. Re-measured by actually running the engine, never
-  ## hand-derived.
-  expect_equal(nrow(baselineEdges), 109L)
-  expect_equal(nrow(baseline), 1762L)
+  ## CHANGED again from 76L/1715L (pre-Track-7) then 104L/1748L (Track 7
+  ## Phase 1's uncapped push) then 109L/1762L (Phase 1's capped-search
+  ## refinement, .kMaxIndividualPush = 2) -- NOW 128L/1799L after Phase
+  ## 2's own union-side push (S649). Re-measured by actually running the
+  ## engine, never hand-derived.
+  expect_equal(nrow(baselineEdges), 128L)
+  expect_equal(nrow(baseline), 1799L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

@@ -592,27 +592,44 @@ test_that(
 
 test_that(
   "makePedigreeMatingLayout on the full real 375-individual bundled
-   fixture produces exactly 1,468 nodes under edgeStyle = \"rectilinear\"
-   (CHANGED from 1,412 -- Track 7, S647, see below) -- composition: 375
-   real + 237 union + 102 duplicate + 251 __bar_ + 237 __drop_ + 56
-   __proj_ (dogleg parent/union-gen-mismatch waypoints, D1/D2-driven, out
-   of this migration's scope, unaffected) = 1,258 pre-jog-repair, plus
-   .resolveEdgeNodeCollisions()'s 210 __jog_ waypoints (CHANGED from
-   154L -- see below) = 1,468; every count re-confirmed live through the
-   actual public entry point, not just the internal helper, never
-   hand-derived.
+   fixture produces exactly 1,516 nodes under edgeStyle = \"rectilinear\"
+   (CHANGED from 1,478 -- Track 7 PHASE 2, S649, see below; the prior
+   1,412 -> 1,478 change was Phase 1, S647; this docstring's own
+   composition line previously said 1,468, a stale, uncorrected typo --
+   fixed here) -- composition: 375 real + 237 union + 102 duplicate + 251
+   __bar_ + 237 __drop_ + 56 __proj_ (dogleg parent/union-gen-mismatch
+   waypoints, D1/D2-driven, out of this migration's scope, unaffected) =
+   1,258 pre-jog-repair, plus .resolveEdgeNodeCollisions()'s 258 __jog_
+   waypoints (CHANGED from 220 -- Phase 2, see below) = 1,516; every count
+   re-confirmed live through the actual public entry point, not just the
+   internal helper, never hand-derived.
 
-   Track 7 CHANGE (docs/planning/pedigree-diagram-track7-mate-spacing-
-   plan.md, S647): widening/recentering 34 qualifying mating units moved
-   some mate-line/child edges into paths that now pass near an unrelated
-   node they didn't before -- .findEdgeNodeCollisions()'s own baseline
-   grew from 76 to 104 colliding edges (1,715 -> 1,748 obstacle-pairs,
-   test_resolveEdgeNodeCollisions.R). The existing jog-repair mechanism
-   (Track 2, unchanged by Track 7) still fully resolves every one of
-   these to 0 residual -- confirmed directly, not assumed -- it simply
-   needs 56 more waypoints (154 -> 210) to do so. The separate
-   curved-duplicate-connector heuristic residual (47, unrelated to
-   mating-unit x/y at all) is unaffected.
+   Track 7 Phase 2 CHANGE (docs/planning/pedigree-diagram-track7-mate-
+   spacing-plan.md §12, ratified S648, implemented S649): replacing the
+   union-position sweep's exact-tie epsilon nudge with a capped
+   bidirectional push at a radius-proportionate clearance (plan §12.2)
+   moves some unions further from their Phase-1 positions, moving some
+   mate-line/child edges into paths that now pass near an unrelated node
+   they didn't before -- .findEdgeNodeCollisions()'s own pre-jog-repair
+   baseline grew from 109 to 128 colliding edges (1,762 -> 1,799
+   obstacle-pairs, test_resolveEdgeNodeCollisions.R). The existing
+   jog-repair mechanism (Track 2, unchanged by Phase 2) still fully
+   resolves every one of these to 0 residual -- confirmed directly, not
+   assumed -- it simply needs 38 more waypoints (220 -> 258) to do so.
+   Union/duplicate/bar/drop/proj counts are all UNCHANGED by Phase 2
+   (re-verified live) -- Phase 2 only ever moves an already-existing
+   union's x, it adds no new union/duplicate/bar/drop/proj node.
+
+   Track 7 Phase 1 CHANGE (S647): widening/recentering 34 qualifying
+   mating units moved some mate-line/child edges into paths that now pass
+   near an unrelated node they didn't before -- .findEdgeNodeCollisions()'s
+   own baseline grew from 76 to 104 colliding edges (1,715 -> 1,748
+   obstacle-pairs). The existing jog-repair mechanism (Track 2, unchanged
+   by Track 7) still fully resolves every one of these to 0 residual --
+   confirmed directly, not assumed -- it simply needs 56 more waypoints
+   (154 -> 210) to do so. The separate curved-duplicate-connector
+   heuristic residual (47, unrelated to mating-unit x/y at all) is
+   unaffected by either Track 7 phase.
 
    Track 3's parent-span clamp -- which this test's own docstring used to
    credit for part of the pre-cutover collision-count reduction (150 ->
@@ -635,13 +652,14 @@ test_that(
       invokeRestart("muffleWarning")
     }
   )
-  expect_equal(nrow(result$nodes), 1478L)
+  expect_equal(nrow(result$nodes), 1516L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
-  ## CHANGED again from 154L (pre-Track-7) then 210L (Track 7's uncapped
-  ## push) -- NOW 220L after S647's capped-search refinement. Re-measured
-  ## by actually running the new engine, never hand-derived.
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 220L)
+  ## CHANGED again from 154L (pre-Track-7) then 210L (Track 7 Phase 1's
+  ## capped-search refinement) -- NOW 258L after Phase 2's own union-side
+  ## push (S649). Re-measured by actually running the new engine, never
+  ## hand-derived.
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 258L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------

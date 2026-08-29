@@ -627,7 +627,15 @@ from §11's prose:
   rather than reusing `minSep` verbatim -- **18 of 20 resolve within 2 push-steps, all 20 resolve
   within 5**; the resulting shifts are 31-62px (worst case), an order of magnitude gentler than
   Phase 1's individual-circle fix; **0 cases introduced a new point-level coincidence** with a
-  different same-gen node in this naive check. This is a point-distance simulation only -- it does
+  different same-gen node in this naive check -- **correction (S649, found running the real
+  algorithm, not this naive check): this "0 new collisions" claim is WRONG for union-vs-DUPLICATE
+  proximity, which this simulation never modeled.** A duplicate node's `x` is always
+  `unitX[[itsOwnUnion]] + minSep*0.4` -- a fixed offset that rides along whenever a union moves --
+  and this naive check treated every OTHER node as fixed, never re-deriving a duplicate's own
+  position after simulating a union's move. Implementing §12.2 for real (S649) found this
+  resolves all 20 individual-/union-vs-union cases (0 residual) but introduces 11 NEW
+  union-vs-duplicate proximity cases that did not exist before -- disclosed and left as a new,
+  separately-filed `BACKLOG.md` Housekeeping item (§12.11), not fixed in Phase 2's own scope. This is a point-distance simulation only -- it does
   **not** check sibship-bar-span-vs-bar overlaps (`.addRectilinearWaypoints()`'s own D1 geometry,
   which Phase 1's own v2 attempt found the hard way can regress from a seemingly-safe point-level
   fix) -- that check is explicitly the implementing session's own obligation (§12.6), matching
@@ -882,6 +890,49 @@ rendering defect (`BACKLOG.md` Housekeeping, the `__jog_*` waypoint styling gap)
 REFACTOR, per this project's Development Process Contract), following §12.2's decision, §12.5's
 impact analysis, and §12.6's verification plan above -- including its MANDATORY live-render D1
 regression check before shipping.
+
+### 12.11 Implementation session findings (S649)
+
+**Pre-RED re-validation (§12.6's own first bullet):** re-ran §12.1's exact measurement live
+against the implementing session's own working tree (commit `9a3b4ec7`) -- nothing had drifted.
+Real 375-fixture: 20/237 unions overlap (worst case 30.88px). Shrunk Track B fixture: 3/3 overlap
+(0.12px epsilon floor). Existing `27L` exact-tie pinned test values: still exactly 27.
+
+**A new finding this session's own grounding work surfaced, corrected in §12.1 above:** §12.1's
+own preliminary push simulation's "0 new collisions" claim does not hold for union-vs-DUPLICATE
+proximity once the real algorithm (not a naive point-distance simulation) is run. Implementing
+§12.2 exactly as ratified (measured via a temporary, immediately-reverted spike patch --
+`git diff`/`git status`/`shasum` confirmed byte-identical to `HEAD` after each check):
+
+- **Fully resolves** all 20 of the real-fixture's original individual- and union-vs-union
+  proximity cases (0 residual in either category), and all 3/3 of the shrunk Track B fixture's
+  cases (the owner's own directly-reviewed fixture, unaffected by the finding below -- it has no
+  duplicates in play at all).
+- **Introduces 11 NEW union-vs-duplicate proximity cases** on the real fixture that did not exist
+  before. Root cause: a duplicate node's `x` is always `unitX[[itsOwnUnion]] + minSep*0.4` -- a
+  fixed offset that rides along whenever a union moves -- and §12.2's own occupied-set
+  (`tier1X`/`b1AtGen`/`placedAtGen`) has no visibility into duplicate positions, which are not
+  computed until AFTER this sweep runs (a genuine data dependency: a duplicate's own `derivedX()`
+  reads the union's FINAL `unitX`, so duplicates cannot be computed first). The same class of gap
+  as Learning 682 (measuring/simulating a mechanism in isolation from a step that changes its
+  input).
+- **`.kMaxUnionPush = 5`** (mirroring `.kMaxIndividualPush`'s own naming) fully resolves all 20
+  original cases (matching this section's own "all 20 resolve within 5" simulation); `k = 2` (the
+  value Phase 1 chose) leaves 2 individual and 2 union-vs-union cases unresolved on this fixture --
+  a different fixture, different empirically-correct cap, exactly as §12.2 point 3 anticipated
+  ("the implementing session's own live-render check determines and empirically justifies the
+  final cap value").
+- **Live-render D1 regression check (§12.6, MANDATORY), real fixture:** pre-jog-repair baseline
+  grows from 109 to 128 colliding edges (1,762 -> 1,799 obstacle-pairs) -- the existing Track 2
+  jog-repair mechanism (unchanged by Phase 2) still fully resolves every one of these to 0
+  residual, needing 38 more `__jog_` waypoints (220 -> 258) to do so. No unresolvable regression,
+  unlike Phase 1's own v2 attempt.
+
+**Owner-directed (`AskUserQuestion`, S649):** ship §12.2 as scoped rather than widen the design to
+also avoid duplicates. Rationale: the owner's own directly-reviewed Track B fixture is fully
+resolved either way (no duplicates in play there); the 11-case duplicate residual is a real but
+narrower, disclosed trade-off, filed as its own `BACKLOG.md` Housekeeping item rather than
+expanding this phase's ratified scope.
 
 ## References
 
