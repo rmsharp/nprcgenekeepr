@@ -386,17 +386,19 @@ test_that("makePedigreeMatingLayout() wires .resolveEdgeNodeCollisions()
 ## already existed and is unaffected.
 ##
 ## Track 7 Phase 2 CHANGE (plan §12, ratified S648, implemented S649):
-## 109 -> 128 colliding edges, 1,762 -> 1,799 obstacle-pairs -- the
-## union-side proximity push (§12.2) moves some unions further than
-## Phase 1 left them, moving some mate-line/child edges into paths that
-## now pass near a node they didn't before. Re-confirmed directly that
-## the resolve pass still fully clears every one of these to 0 residual
-## -- it just needs more __jog_ waypoints to do so (220 -> 258,
+## 109 -> 107 colliding edges, 1,762 -> 1,764 obstacle-pairs -- a SMALL
+## NET REDUCTION, not a growth (unlike Phase 1's own effect above). The
+## union-side proximity push (§12.2) does move some unions, but a
+## GREEN-phase correction (excluding a union's own anchor/non-anchor
+## from the push's own occupied-set -- plan §12.11) keeps it more
+## conservative than an unscoped push would be. Re-confirmed directly
+## that the resolve pass still fully clears every one of these to 0
+## residual -- it needs 4 FEWER __jog_ waypoints to do so (220 -> 216,
 ## test_makePedigreeMatingLayout.R).
 
 test_that(".resolveEdgeNodeCollisions dramatically reduces the real
-           375-individual bundled fixture's same-row collision count (128
-           colliding edges / 1,799 obstacle-pairs pre-fix, under Track 7
+           375-individual bundled fixture's same-row collision count (107
+           colliding edges / 1,764 obstacle-pairs pre-fix, under Track 7
            Phase 2's own union-proximity push, S649), and any residual is
            disclosed via the residuals data frame, never silently
            dropped", {
@@ -415,11 +417,12 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   baselineEdges <- unique(baseline[, c("from", "to")])
   ## CHANGED again from 76L/1715L (pre-Track-7) then 104L/1748L (Track 7
   ## Phase 1's uncapped push) then 109L/1762L (Phase 1's capped-search
-  ## refinement, .kMaxIndividualPush = 2) -- NOW 128L/1799L after Phase
-  ## 2's own union-side push (S649). Re-measured by actually running the
+  ## refinement, .kMaxIndividualPush = 2) -- NOW 107L/1764L after Phase
+  ## 2's own, anchor-excluding union-side push (S649) -- a small net
+  ## reduction, not a growth. Re-measured by actually running the
   ## engine, never hand-derived.
-  expect_equal(nrow(baselineEdges), 128L)
-  expect_equal(nrow(baseline), 1799L)
+  expect_equal(nrow(baselineEdges), 107L)
+  expect_equal(nrow(baseline), 1764L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

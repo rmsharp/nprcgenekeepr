@@ -663,9 +663,10 @@ test_that(".addRectilinearWaypoints's D1 bar/drop waypoints never share a
 
 test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
            collisions (2 different sibships sharing a generation gap,
-           whose bar x-spans overlap) are down to 5 cases -- mostly
-           sub-pixel, one 59.88px (Track 7, S647's capped search) -- from
-           0 under the Walker/BJL engine (Phase 3 cutover) -- Track 3's
+           whose bar x-spans overlap) are at 6 cases -- mostly sub-pixel,
+           one 59.88px (Track 7 Phase 1, S647's capped search), plus 1
+           more from Phase 2 (S649) -- from 0 under the Walker/BJL engine
+           (Phase 3 cutover) -- Track 3's
            parent-span clamp, the mechanism that used to worsen this
            residual, no longer exists -- on the real 375-individual
            bundled fixture, a residual originally named in the
@@ -760,8 +761,17 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
   ## further here (out of Phase 1's own scope; the plan's own §7 asked
   ## this suite be RUN and confirmed, not asked to hold at exactly 0
   ## regardless of what's found).
-  expect_equal(oldHits, 5L)  # CHANGED from 1L (S647's capped search)
-  expect_equal(newHits, 5L)  # CHANGED from 1L (S647's capped search)
+  ## Track 7 Phase 2 CHANGE (plan §12, ratified S648, implemented S649):
+  ## 5 -> 6 -- the union-side proximity push moves a small number of
+  ## unions further, occasionally widening a bar-span enough to newly
+  ## overlap an adjacent one. Re-measured by actually running the new
+  ## engine, never hand-derived. Same disclosed, accepted-as-partial
+  ## posture as the Phase 1 residual above -- not fixed further here
+  ## (out of Phase 2's own scope; plan §12.6 asks this suite be RUN and
+  ## confirmed, not asked to hold at exactly 5 regardless of what's
+  ## found).
+  expect_equal(oldHits, 6L)  # CHANGED from 5L (Phase 2, S649)
+  expect_equal(newHits, 6L)  # CHANGED from 5L (Phase 2, S649)
   expect_true(newHits <= oldHits)
 })
 

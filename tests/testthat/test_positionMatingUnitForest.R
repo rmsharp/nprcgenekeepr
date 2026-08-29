@@ -1004,9 +1004,26 @@ test_that(".positionMatingUnitForest's every ANCHORED mating unit's x is
       ## deviation 0.006, not hand-derived) -- still the same pre-existing
       ## epsilon-nudge mechanism, just chained further than a single pair
       ## needs.
+      ##
+      ## Track 7 Phase 2 (S649): a union this section's own proximity
+      ## push (plan §12.2) legitimately deviates from its own formula by
+      ## a genuine, disclosed multiple of the radius-proportionate
+      ## clearance step -- not a bug, the actual behavior this phase
+      ## ships. Accepted here (generically, not by hardcoding which unit
+      ## ids) as an alternative match: the deviation is within floating
+      ## tolerance of k * ((25+6)/120) for some k in 1:5 (the same
+      ## unionClearanceIndividual/.kMaxUnionPush constants, defined
+      ## locally to this test rather than relied on from later in this
+      ## file -- see the "Track 7 Phase 2" section below for the derivation).
+      deviation <- abs(actual - formulaX)
+      pushSteps <- deviation / ((25 + 6) / 120)
+      isPhase2Push <- deviation > 1e-2 &&
+        any(abs(pushSteps - round(pushSteps)) < 1e-6) &&
+        round(pushSteps) >= 1L && round(pushSteps) <= 5L
       expect_true(
-        abs(actual - formulaX) <= 1e-2 + 1e-9,
-        info = paste("unit", uid, "formula", formulaX, "actual", actual))
+        deviation <= 1e-2 + 1e-9 || isPhase2Push,
+        info = paste("unit", uid, "formula", formulaX, "actual", actual,
+                     "deviation", deviation))
     }
   }
 
@@ -1224,7 +1241,14 @@ test_that(".positionMatingUnitForest's Track 7 Phase 2 push resolves every
   }
   expect_equal(unname(counts["individual"]), 0L)
   expect_equal(unname(counts["union"]), 0L)
-  expect_equal(unname(counts["duplicate"]), 11L)
+  ## CORRECTED (S649, found in GREEN): the capped push search must
+  ## exclude a union's own anchor/non-anchor from its own occupied-set
+  ## (a union's gen is max(parent gens), so it can share its displayed
+  ## gen with a structural parent -- not an unrelated node) -- with that
+  ## fix in place, the union-vs-duplicate residual measures 4, not the
+  ## 11 this section's own header note (and plan §12.11) originally
+  ## reported from a pre-fix spike that didn't yet have this exclusion.
+  expect_equal(unname(counts["duplicate"]), 4L)
 })
 
 ## ---- Walker/BJL cutover (Phase 3, this session): regression coverage for
@@ -2049,8 +2073,23 @@ test_that(".positionMatingUnitForest gives every ANCHORED mating unit's x
       next
     }
     kids <- childEdges$to[childEdges$from == unitId]
-    expect_equal(pos$x[pos$id == unitId], mean(pos$x[pos$id %in% kids]),
-                 tolerance = 2e-3, info = unitId)
+    formulaX <- mean(pos$x[pos$id %in% kids])
+    actual <- pos$x[pos$id == unitId]
+    ## Track 7 Phase 2 (S649): the union-side proximity push (plan §12.2)
+    ## is NOT qualifies()-gated -- it applies to every mating unit,
+    ## including non-qualifying ones, so a legitimate push here is
+    ## expected, not a defect. Accepted generically (not by hardcoding
+    ## which unit ids) as an alternative match: the deviation is within
+    ## floating tolerance of k * ((25+6)/120) for some k in 1:5 (see the
+    ## "Track 7 Phase 2" section's own derivation below).
+    deviation <- abs(actual - formulaX)
+    pushSteps <- deviation / ((25 + 6) / 120)
+    isPhase2Push <- deviation > 2e-3 &&
+      any(abs(pushSteps - round(pushSteps)) < 1e-6) &&
+      round(pushSteps) >= 1L && round(pushSteps) <= 5L
+    expect_true(deviation <= 2e-3 + 1e-9 || isPhase2Push,
+                info = paste(unitId, "formula", formulaX, "actual", actual,
+                             "deviation", deviation))
   }
   ## CORRECTION (S647, found empirically, not the plan's own cited 60):
   ## the plan's §1.4 "60 of 237 (25.3%) qualify" measured qualifies()

@@ -978,6 +978,32 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     }
   }
 
+  ## ---- Track 7 Phase 2 (S649, docs/planning/pedigree-diagram-track7-
+  ## mate-spacing-plan.md §12.2, design ratified S648): a capped
+  ## bidirectional search, structurally the mirror of
+  ## .deCollideIndividualPoints() above, but scoped to the UNION side
+  ## only and triggered on a radius-proportionate clearance threshold
+  ## instead of an exact-tie epsilon. Derived transparently from the two
+  ## already-existing render-layer node sizes (25 for a real/duplicate
+  ## node, 6 for a union dot) and xScale (120) -- this function otherwise
+  ## has no knowledge of xScale (a render-layer constant), so it is
+  ## reproduced here as a local literal, matching how minSep is already a
+  ## local raw-unit constant in this function, not shared with the render
+  ## layer. A union-vs-union comparison uses the smaller (6+6)/120 = 0.1;
+  ## a union-vs-individual/duplicate comparison uses (25+6)/120 = 0.2583.
+  unionClearanceIndividual <- (25L + 6L) / 120L
+  unionClearanceUnion <- (6L + 6L) / 120L
+  ## .kMaxUnionPush = 5 (empirically justified, plan §12.11): on the real
+  ## 375-individual fixture, resolves all 20 individual-/union-vs-union
+  ## proximity cases (0 residual); 2 (Phase 1's own individual-side cap)
+  ## leaves 4 of those 20 unresolved on this fixture -- a different
+  ## fixture, a different empirically-correct cap, as §12.2 point 3
+  ## anticipated. The live-render D1 check (plan §12.6) confirms the
+  ## existing, unchanged Track 2 jog-repair mechanism still fully
+  ## resolves every resulting same-row edge-node collision to 0 residual
+  ## at this cap.
+  .kMaxUnionPush <- 5L
+
   if (nrow(xDerivableUnits) > 0L) {
     ord <- order(xDerivableUnits$gen, xDerivableUnits$id, method = "radix")
     orderedUnits <- xDerivableUnits[ord, , drop = FALSE]
@@ -991,12 +1017,79 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       ## this gen -- not just tier1X and other units, as before Track 7
       ## ever let a union's x depend on anything but its own children.
       b1AtGen <- tier3X[b1Ids[tier3Gen[b1Ids] == orderedUnits$gen[i]]]
-      occupied <- c(tier1X[dispGenOf == orderedUnits$gen[i]], placedAtGen[[g]],
-                    b1AtGen)
-      while (length(occupied) > 0L && any(abs(occupied - unitX[[u]]) < 1e-9)) {
-        unitX[[u]] <- unitX[[u]] + 1e-3
+      individualOccupied <- c(tier1X[dispGenOf == orderedUnits$gen[i]],
+                               b1AtGen)
+      individualOccupied <- individualOccupied[!is.na(individualOccupied)]
+      ## S649 fix (found in GREEN, not anticipated by plan §12.2's own
+      ## text): a union's OWN gen is max(parent gens), so a union can
+      ## share its displayed gen with one of its own two parents -- that
+      ## parent is a structural member of this union, not an unrelated
+      ## node, and the NEW radius-proportionate push must never treat it
+      ## as something to push away from (mirrors the exclusion already
+      ## applied when MEASURING collisions, plan §12.1/§12.11). This
+      ## exclusion applies ONLY to the new push search below -- the
+      ## pre-existing epsilon-tie residual pass further below still uses
+      ## the UNFILTERED occupied set, unchanged, because a union landing
+      ## EXACTLY on its own anchor (common: e.g. a single-child union
+      ## whose child inherited the anchor's own x) already relied on that
+      ## old, harmless 0.001 nudge to avoid an exact pixel-coincidence --
+      ## found empirically in GREEN when excluding anchors from BOTH
+      ## passes silently re-introduced ~150 exact ties the old code never
+      ## had.
+      ownParents <- c(anchorOf[[u]], nonAnchorOf[[u]])
+      individualOccupiedForPush <- individualOccupied[
+        !(names(individualOccupied) %in% ownParents)]
+      unionOccupied <- placedAtGen[[g]]
+      ## Known, disclosed residual (plan §12.7/§12.11, BACKLOG.md
+      ## Housekeeping): a duplicate node's x (unitX[[itsOwnUnion]] +
+      ## minSep*0.4, computed further below, after this loop) is not yet
+      ## known here, so this search cannot see or avoid duplicates -- a
+      ## genuine data dependency, not an oversight.
+      collidesIndiv <- function(x0) {
+        length(individualOccupiedForPush) > 0L &&
+          any(abs(x0 - individualOccupiedForPush) < unionClearanceIndividual)
       }
-      placedAtGen[[g]] <- c(placedAtGen[[g]], unname(unitX[[u]]))
+      collidesUnion <- function(x0) {
+        length(unionOccupied) > 0L &&
+          any(abs(x0 - unionOccupied) < unionClearanceUnion)
+      }
+      collides <- function(x0) collidesIndiv(x0) || collidesUnion(x0)
+      x0 <- unitX[[u]]
+      rawX0 <- x0
+      if (collides(x0)) {
+        k <- 1L
+        repeat {
+          candPref <- rawX0 + k * unionClearanceIndividual
+          if (!collides(candPref)) {
+            x0 <- candPref
+            break
+          }
+          candOther <- rawX0 - k * unionClearanceIndividual
+          if (!collides(candOther)) {
+            x0 <- candOther
+            break
+          }
+          if (k >= .kMaxUnionPush) {
+            x0 <- rawX0
+            break
+          }
+          k <- k + 1L
+        }
+      }
+      ## Residual small-epsilon pass -- the CURRENT (pre-Phase-2)
+      ## epsilon-nudge behavior, kept unconditionally as the fallback
+      ## plan §12.2 point 3 requires when the capped search above cannot
+      ## free a slot (x0 == rawX0): this reproduces exactly what the old,
+      ## unconditional nudge would have done for that same input --
+      ## deliberately using the UNFILTERED individualOccupied (including
+      ## own anchor/non-anchor), matching the pre-existing behavior this
+      ## pass has always had, unchanged by Phase 2's own narrower scope.
+      occupied <- c(individualOccupied, unionOccupied)
+      while (length(occupied) > 0L && any(abs(occupied - x0) < 1e-9)) {
+        x0 <- x0 + 1e-3
+      }
+      unitX[[u]] <- x0
+      placedAtGen[[g]] <- c(placedAtGen[[g]], unname(x0))
     }
   }
 
