@@ -514,50 +514,104 @@ modPedigreeServer <- function(id, studbook) {
           )
         )
       } else {
-        # D4: no existing "home" for this control -- net-new UI layout
-        # rendered alongside the widget, inside this same uiOutput, only
-        # when a diagram is actually shown.
-        tagList(
-          radioButtons(
-            session$ns("pedigreeEdgeStyle"),
-            label = "Diagram Edge Style",
-            choices = c(Direct = "direct",
-                        "Rectilinear (kinship2-style)" = "rectilinear"),
-            selected = style,
-            inline = TRUE
-          ),
-          # Issue #136 Slice 2, decisions D3, D4, D6 -- no existing home
-          # for this control either -- same D4 net-new-UI precedent as the
-          # edge style toggle above. Off by default; has no visible effect
-          # on a pedigree with no name column.
-          #
-          # value = .currentShowNames() (NOT a hardcoded FALSE) -- found
-          # live (Phase 3E) that this renderUI() block re-executes on ANY
-          # of its dependencies changing (e.g. switching edgeStyle, which
-          # this control has nothing to do with), rebuilding the checkbox
-          # from scratch each time. A hardcoded value = FALSE silently
-          # discarded an already-on toggle the next time anything else
-          # re-rendered this UI. Self-referential value, mirroring the
-          # pre-existing edgeStyle radioButtons' own selected = style
-          # pattern immediately above, fixes it.
-          checkboxInput(
-            session$ns("pedigreeShowNames"),
-            label = "Show Names on Diagram",
-            value = .currentShowNames()
-          ),
-          # nolint start: commented_code_linter.
-          # Issue #137 Slice 3: same net-new-UI / self-referential-value
-          # precedent as the two controls above (Learning 490) -- off by
-          # default; has no visible effect unless a twinRelationsFile has
-          # also been uploaded (twinRelationsData() above).
-          # nolint end
-          checkboxInput(
-            session$ns("pedigreeShowTwinConnectors"),
-            label = "Show Twin Connectors",
-            value = .currentShowTwinConnectors()
-          ),
-          visNetwork::visNetworkOutput(session$ns("pedigreeDiagram"))
-        )
+        # Issue #164, P5-suppression plan Phase 3 (Shiny UX messaging) --
+        # makePedigreeMatingLayout() already suppresses fully-isolated
+        # individuals (no sire, no dam, no mate, no children) from the
+        # rendered diagram and reports them via isolatedIds (Phase 1);
+        # surface that here rather than silently rendering fewer nodes.
+        layout <- diagramLayout()
+        isolatedIds <- layout$isolatedIds
+        if (nrow(layout$nodes) == 0L && length(isolatedIds) > 0L) {
+          # Dragon 3 (3B ratified S643) / Dragon 4: suppression emptied
+          # the diagram entirely -- show an explicit message instead of a
+          # blank widget. Singular wording when the rendered set was
+          # exactly one individual (the Focal-Animal-trim-to-one-isolated-
+          # individual case, plan Sec 1.2's 2nd trigger); plural otherwise
+          # (the whole-colony/#164 case). Worked copy per plan Sec 3
+          # Dragon 4.
+          div(
+            class = "alert alert-info",
+            if (length(isolatedIds) == 1L) {
+              sprintf(
+                paste(
+                  "%s has no recorded parents, mates, or offspring in this",
+                  "data, so there is no pedigree relationship to diagram."
+                ),
+                isolatedIds
+              )
+            } else {
+              sprintf(
+                paste(
+                  "None of the %d loaded individuals have any recorded",
+                  "parent, mate, or offspring relationships, so there is",
+                  "nothing to diagram. (See the Table tab.)"
+                ),
+                length(isolatedIds)
+              )
+            }
+          )
+        } else {
+          # D4: no existing "home" for this control -- net-new UI layout
+          # rendered alongside the widget, inside this same uiOutput, only
+          # when a diagram is actually shown.
+          tagList(
+            if (length(isolatedIds) > 0L) {
+              # Dragon 4: partial suppression -- the diagram itself still
+              # renders below; this banner is the only signal a colony
+              # manager gets that some individuals are missing from it.
+              div(
+                class = "alert alert-info",
+                sprintf(
+                  paste(
+                    "%d individual(s) with no recorded parents, mates, or",
+                    "offspring are not shown in this diagram: %s (see the",
+                    "Table tab to find them)"
+                  ),
+                  length(isolatedIds), toString(isolatedIds)
+                )
+              )
+            },
+            radioButtons(
+              session$ns("pedigreeEdgeStyle"),
+              label = "Diagram Edge Style",
+              choices = c(Direct = "direct",
+                          "Rectilinear (kinship2-style)" = "rectilinear"),
+              selected = style,
+              inline = TRUE
+            ),
+            # Issue #136 Slice 2, decisions D3, D4, D6 -- no existing home
+            # for this control either -- same D4 net-new-UI precedent as
+            # the edge style toggle above. Off by default; has no visible
+            # effect on a pedigree with no name column.
+            #
+            # value = .currentShowNames() (NOT a hardcoded FALSE) -- found
+            # live (Phase 3E) that this renderUI() block re-executes on ANY
+            # of its dependencies changing (e.g. switching edgeStyle, which
+            # this control has nothing to do with), rebuilding the
+            # checkbox from scratch each time. A hardcoded value = FALSE
+            # silently discarded an already-on toggle the next time
+            # anything else re-rendered this UI. Self-referential value,
+            # mirroring the pre-existing edgeStyle radioButtons' own
+            # selected = style pattern immediately above, fixes it.
+            checkboxInput(
+              session$ns("pedigreeShowNames"),
+              label = "Show Names on Diagram",
+              value = .currentShowNames()
+            ),
+            # nolint start: commented_code_linter.
+            # Issue #137 Slice 3: same net-new-UI / self-referential-value
+            # precedent as the two controls above (Learning 490) -- off by
+            # default; has no visible effect unless a twinRelationsFile
+            # has also been uploaded (twinRelationsData() above).
+            # nolint end
+            checkboxInput(
+              session$ns("pedigreeShowTwinConnectors"),
+              label = "Show Twin Connectors",
+              value = .currentShowTwinConnectors()
+            ),
+            visNetwork::visNetworkOutput(session$ns("pedigreeDiagram"))
+          )
+        }
       }
     })
 

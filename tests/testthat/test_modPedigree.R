@@ -1523,10 +1523,20 @@ test_that(
 
   n <- 750L
   bigId <- sprintf("A%04d", seq_len(n))
+  sire <- rep(NA_character_, n)
+  dam <- rep(NA_character_, n)
+  ## Issue #164 / P5-suppression plan Phase 3: a fixture of ALL isolated
+  ## founders now renders the all-isolated empty-state message instead of
+  ## the widget (Phase 1 already strips them from layout$nodes) -- give one
+  ## trio a real relationship so this fixture exercises the CAP boundary
+  ## this test is actually about, not isolation-suppression's own empty-
+  ## state branch. n itself (the cap-boundary quantity) is unchanged.
+  sire[3] <- bigId[1]
+  dam[3] <- bigId[2]
   test_studbook <- data.frame(
     id = bigId,
-    sire = NA_character_,
-    dam = NA_character_,
+    sire = sire,
+    dam = dam,
     sex = rep(c("M", "F"), length.out = n),
     stringsAsFactors = FALSE
   )
@@ -1600,10 +1610,20 @@ test_that(
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
+  ## Issue #164 / P5-suppression plan Phase 3: a fixture of ALL isolated
+  ## founders now renders the all-isolated empty-state message instead of
+  ## the widget (Phase 1 already strips them from layout$nodes) -- give one
+  ## trio a real relationship so this fixture exercises the CAP boundary
+  ## this test is actually about, not isolation-suppression's own empty-
+  ## state branch. n itself (the cap-boundary quantity) is unchanged.
   makeStudbook <- function(n) {
     bigId <- sprintf("A%04d", seq_len(n))
+    sire <- rep(NA_character_, n)
+    dam <- rep(NA_character_, n)
+    sire[3] <- bigId[1]
+    dam[3] <- bigId[2]
     data.frame(
-      id = bigId, sire = NA_character_, dam = NA_character_,
+      id = bigId, sire = sire, dam = dam,
       sex = rep(c("M", "F"), length.out = n), stringsAsFactors = FALSE
     )
   }
@@ -1906,10 +1926,20 @@ test_that(
   skip_if_not_installed("shiny")
   skip_if_not_installed("visNetwork")
 
+  ## Issue #164 / P5-suppression plan Phase 3: a fixture of ALL isolated
+  ## founders now renders the all-isolated empty-state message instead of
+  ## the widget (Phase 1 already strips them from layout$nodes) -- give one
+  ## trio a real relationship so this fixture exercises the CAP boundary
+  ## this test is actually about, not isolation-suppression's own empty-
+  ## state branch. n itself (the cap-boundary quantity) is unchanged.
   makeStudbook <- function(n) {
     bigId <- sprintf("A%04d", seq_len(n))
+    sire <- rep(NA_character_, n)
+    dam <- rep(NA_character_, n)
+    sire[3] <- bigId[1]
+    dam[3] <- bigId[2]
     data.frame(
-      id = bigId, sire = NA_character_, dam = NA_character_,
+      id = bigId, sire = sire, dam = dam,
       sex = rep(c("M", "F"), length.out = n), stringsAsFactors = FALSE
     )
   }
