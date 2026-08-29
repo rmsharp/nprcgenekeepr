@@ -16,6 +16,21 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [BL-N] S650: Phase 3 (Shiny UX messaging) GREEN -- commit `61e885d0`
+- Implements plan §3 Dragon 4 / §4 Phase 3: `output$pedigreeDiagramUI` (`R/modPedigree.R`) now
+  reads `diagramLayout()$isolatedIds` and shows an `alert-info` banner naming suppressed
+  individuals (partial suppression, diagram still renders) or an `alert-info` empty-state message
+  (singular/plural worked copy) in place of the widget (suppression empties the diagram entirely).
+- 1 bug found in GREEN: 3 pre-existing node-cap-boundary tests used fully-disconnected all-founder
+  fixtures that Phase 1's own already-shipped isolation suppression made entirely isolated, so
+  Phase 3's new empty-state branch correctly fired and replaced the widget those tests expected --
+  unrelated to the cap logic they actually test. Fixed minimally (one real sire/dam relationship
+  per fixture, exact cap-boundary `n` unchanged).
+- Full clean regression: 1 failed/0 error/6531 passed -- exactly the 1 pre-existing unrelated
+  `test_wordlist_coverage.R` failure, 0 attributable to this session. `lintr::lint_package()`: 0
+  lints on touched files.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [BL-N] S650: Phase 3 (Shiny UX messaging) RED -- commit `36309f55`
 - Adds 12 new test assertions (3 `test_modPedigree.R` `shiny::testServer()` blocks + 1
   `test-e2e-pedigree-module.R` live `AppDriver` test) specifying
