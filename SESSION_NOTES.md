@@ -18,16 +18,108 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 648 Handoff Evaluation (by Session 649)
+**Score: 8/10.** **What helped:** the handoff's `next_steps`/`gotchas` pointed precisely at the
+right starting point (plan §12.2 decision, §12.6 verification plan, "re-run §12.1's numbers live,
+don't assume they're still current") and correctly flagged the MANDATORY live-render D1 check as
+not-simpler-than-Phase-1 despite the smaller raw magnitude -- both proved exactly right. The
+`key_files` list (the union-position sweep at `:981-1001`, the `.deCollideIndividualPoints()`
+pattern NOT to reuse verbatim, the `__drop_` waypoint dependency) was the correct file set with no
+gaps. **What was missing:** the handoff (and the plan document it summarized) did not anticipate
+that implementing §12.2's own algorithm would require excluding a union's own anchor/non-anchor
+from its occupied-set -- a real gap in the ratified design's own text, not something S648 could
+reasonably have caught without actually writing the code (Pre-RED design work, by its own nature,
+stops short of implementation). **What was wrong:** §12.1's own "0 new collisions" claim (already
+self-flagged by S648 as a `commit: pending` loose end, but the SUBSTANCE of the claim -- not just
+its provenance -- turned out to need correction, twice: once for the wrong fixture in Pre-RED,
+found by S648 itself, and once for the duplicate-collision blind spot, found only once this
+session ran the real algorithm). **ROI:** strongly positive -- the pre-declared algorithm shape
+(mirror `.deCollideIndividualPoints()`, radius-proportionate not `minSep`, capped with a
+disclosed-residual fallback) needed zero re-derivation; every hour this session spent was on
+finding/fixing 2 real implementation-level gaps the design phase's own scope could not have
+surfaced, not on re-litigating the design itself.
+
 ### What Session 649 Did
 **Deliverable:** Track 7 Phase 2 implementation (mating-union dot proximity fix -- Option A,
 radius-proportionate capped push, union side only), per the design ratified S648
-(`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §12.2/§12.6). (IN PROGRESS)
-**Started:** 2026-08-28 12:58 EDT
-**Status:** Session claimed. Work beginning -- re-running §12.1's Pre-RED measurement live against
-the current working tree next, per §12.6's own first verification-plan bullet.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+(`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §12.2/§12.6). **DONE.**
+**Started/Completed:** 2026-08-28 12:58 EDT -- 2026-08-29 (single session, spans midnight).
+
+**What actually happened, in order:**
+1. **Phase 1B claim** (commit `9a3b4ec7`) -- also fixed S648's own disclosed `HANDOFFS.md`
+   `commit: pending` loose end while at it (`c1ba804a`).
+2. **Pre-RED re-validation** (§12.6's own mandatory first bullet): re-ran §12.1's exact measurement
+   live against the current working tree -- nothing had drifted (20/237 real-fixture, 3/3 Track B,
+   both exactly matching S648's own numbers).
+3. **New Pre-RED finding, before writing any test:** grounding the RED-phase test literals via a
+   temporary, fully-reverted spike implementation of §12.2 found that plan §12.1's own "0 new
+   collisions" claim does not hold for union-vs-DUPLICATE proximity (a duplicate's `x` rides a
+   fixed offset off its own union's, invisible to the naive point-distance simulation that made
+   the claim). Presented to the owner via `AskUserQuestion`; owner chose to ship §12.2 as scoped
+   and file the residual rather than widen the design.
+4. **RED** (commit `d8645207`): wrote/updated 11 test assertions across 4 files specifying §12.2's
+   behavior, grounded in the spike's own measured numbers. Confirmed genuine RED: 14 failed/0
+   error/6503 passed (exactly the 11 new/updated assertions + 1 pre-existing unrelated
+   `test_wordlist_coverage.R` failure).
+5. **GREEN, 2 real bugs found and fixed** (commit `316b605f`): implementing §12.2's algorithm for
+   real (not just re-running the spike) against the FULL test suite -- not just the 2 grounding
+   fixtures -- surfaced 2 defects the spike never hit: (a) a union's own gen can coincide with its
+   own anchor's gen, so the push must exclude the union's own anchor/non-anchor from its
+   occupied-set (caused 332 spurious failures across many small fixtures before found); (b) that
+   exclusion must NOT also apply to the pre-existing epsilon-tie residual pass, or it silently
+   disables a protection that pass always had (re-introduced ~150 exact ties, caught by the
+   `nCollidingNodes` aggregate test jumping from 27 to 331). With both fixes, real numbers came out
+   BETTER than the spike predicted: union-vs-duplicate residual 4 (not 11), D1 pre-jog baseline
+   SHRINKS 109->107 (not grows to 128). All downstream pinned test values (node/jog counts,
+   baseline collision counts, `checkInvariant`'s formula-deviation tolerance) re-measured and
+   updated to match, never hand-derived. `lintr::lint_package()`: 0 lints on touched files.
+6. **Corrected the plan document and `BACKLOG.md`** (commit `e312774f`) to the real, GREEN-phase
+   numbers rather than leaving the (now superseded) spike-based numbers standing.
+7. **Skipped REFACTOR** (owner-directed via `AskUserQuestion`): code already 0-lint and mirrors
+   the existing pattern; no behavior-neutral cleanup was identified as worth a separate pass.
+8. **Visual re-verification** (plan §12.6): regenerated `trackB-nprc-shrunk.png` (the only image
+   Track A/C/D confirmed unaffected). Ground-truth node data confirmed correct clearance; a
+   color-isolated diagnostic render (union nodes recolored red at their TRUE natural size) ruled
+   out a rendering mix-up before trusting the plain screenshot -- applying Learning 683's own
+   "check ground truth, not visual impression" rule proactively this time, not after a wrong guess.
+9. **Recorded Learnings 684/685** (the anchor-exclusion scoping defect and its own scoping-of-the-
+   fix follow-up), `CLAUDE.md` pointer updated, `BACKLOG.md` Track 7 item marked DONE, new
+   Housekeeping item filed for the disclosed 4-case duplicate residual.
+
+**Self-assessment (Session 649): 8/10.** **Strengths:** (1) treated the RED-phase spike's own "0
+new collisions" contradiction as a real, escalation-worthy finding rather than silently absorbing
+it or ignoring it -- disclosed via `AskUserQuestion` before writing a single test, matching this
+project's own standing practice; (2) when GREEN surfaced 332 spurious failures, did not guess or
+patch symptomatically -- traced to the exact structural cause (union/anchor same-gen adjacency) via
+a concrete before/after comparison on real ids, then found the SECOND, subtler bug (the
+epsilon-pass over-exclusion) the same way, by re-running the full suite after each fix rather than
+declaring victory at the first improvement; (3) corrected the plan document and `BACKLOG.md` to
+match the REAL GREEN-phase numbers rather than leaving RED-phase spike numbers standing once they
+were superseded -- avoided the exact "confirmed correct" overstatement Learning 681
+(S647-adjacent) warned about; (4) visual re-verification used a ground-truth-first, diagnostic-
+render-based method proactively (Learning 683's own lesson, applied this time before iterating on
+a wrong hypothesis, not after). **Weaknesses:** (1) the RED-phase spike, while reverted and
+disclosed, did not anticipate the anchor-exclusion gap at all -- a more careful reading of plan
+§12.1's own "the union sweep already reads tier1X and other units" sentence, cross-referenced
+against `.buildMatingUnitForest()`'s own documented anchor/non-anchor contract, might have caught
+this before writing any code, rather than discovering it via 332 test failures; (2) initially wrote
+RED-phase pinned values (11 union-vs-duplicate cases, D1 128/1799) from the pre-anchor-exclusion
+spike without flagging them as provisional -- they had to be corrected once GREEN's real numbers
+came in, an avoidable extra editing pass had the RED-phase spike been built with the exclusion from
+the start.
+
+**Gotchas for a future session:** (1) The disclosed 4-case union-vs-duplicate residual (`BACKLOG.md`
+Housekeeping, this session) is a genuinely different, harder problem than Phase 2's own scope --
+fixing it requires the union sweep to know about a PROSPECTIVE duplicate offset before duplicates
+are computed, a real ordering constraint, not a quick tweak. (2) The `__jog_*` waypoint styling bug
+(`BACKLOG.md` Housekeeping, S648) remains open and unrelated to this session's own work -- still
+don't confuse it for a Phase-2 regression if a future visual check finds a phantom circle. (3) The
+isolated-individual-suppression item's own Phase 3 (Shiny UX messaging) is now the ONLY other item
+under the standing pedigree-drawing-fidelity priority banner -- likely the next pickup, though the
+owner should confirm the banner itself is ready to come down given BOTH major pedigree-fidelity
+threads (isolation-suppression, mating-unit-marker) now have their core mechanisms shipped. (4)
+`HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap, unchanged this
+session -- `BACKLOG.md`'s own "ledger-size housekeeping" item is still open.
 
 ### Session 647 Handoff Evaluation (by Session 648)
 **Score: 8/10.** **What helped:** S647's handoff pointed precisely at the standing top priority

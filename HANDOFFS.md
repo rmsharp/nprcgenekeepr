@@ -137,22 +137,69 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S649
-date: 2026-08-28
-status: pending
-self_score:
-predecessor_score:
-active_task: Implementing Track 7 Phase 2 (union-dot proximity fix, Option A) per plan
-  §12.2/§12.6, ratified S648.
-what_was_done: pending
-next_steps: pending
-key_files: R/makePedigreeDiagramData.R:981-1001 (union-position sweep to be replaced),
-  docs/planning/pedigree-diagram-track7-mate-spacing-plan.md §12
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+date: 2026-08-29
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- Track 7 Phase 2 (union-dot proximity fix, Option A) implemented and shipped
+  (plan §12.2, ratified S648). Full clean regression 0 failed/0 error attributable (1
+  pre-existing unrelated test_wordlist_coverage.R failure only); lintr 0 lints; visual
+  re-verification done. BACKLOG.md Track 7 mating-unit-marker item marked DONE.
+what_was_done: RED (commit d8645207): 11 test assertions across 4 files specifying plan §12.2's
+  capped bidirectional push. Pre-RED spike found and disclosed a real gap in plan §12.1's own "0
+  new collisions" claim (union-vs-duplicate proximity) -- owner-directed to ship as scoped, file
+  the residual. GREEN (commit 316b605f): implemented the push; found and fixed 2 real bugs
+  during GREEN (a union's own gen can coincide with its own anchor's gen -- the push must
+  exclude anchor/non-anchor from its occupied-set; that exclusion must NOT also apply to the
+  pre-existing epsilon-tie residual pass, or it silently disables an old protection). Corrected
+  plan §12.1/§12.11 and BACKLOG.md to the real GREEN numbers (commit e312774f). Regenerated and
+  ground-truth-verified trackB-nprc-shrunk.png (commit 168ae52a). Recorded Learnings 684/685
+  (commit 65d9f0c4). BACKLOG.md Track 7 item marked DONE (commit 58e74aca).
+next_steps: Pick up the OTHER pedigree-fidelity item under the standing top-priority banner:
+  isolated-individual-suppression Phase 3 (Shiny UX messaging -- banner for partial suppression,
+  empty-state message for all-isolated pedigrees, e2e coverage including the
+  Focal-Animal-trim-to-one-isolated scenario), plan's own §3 Dragon 4 / §4 Phase 3
+  (docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md). Separately, the owner
+  should be asked whether the standing pedigree-drawing-fidelity BACKLOG.md banner can come down
+  now that both major threads (isolation-suppression, mating-unit-marker) have their core
+  mechanisms shipped, or whether Phase 3 above keeps it standing.
+key_files: R/makePedigreeDiagramData.R:981-1057 (the new union-position push, replacing the old
+  exact-tie epsilon nudge at :981-1001), tests/testthat/test_positionMatingUnitForest.R (new
+  "Track 7 Phase 2" test section + 2 checkInvariant-style tolerance updates),
+  tests/testthat/test_makePedigreeMatingLayout.R / test_resolveEdgeNodeCollisions.R /
+  test_addRectilinearWaypoints.R (downstream pinned-count updates),
+  docs/planning/pedigree-diagram-track7-mate-spacing-plan.md §12.11 (implementation findings),
+  BACKLOG.md (new Housekeeping item for the disclosed 4-case duplicate residual),
+  PROJECT_LEARNINGS.md Learnings 684 (anchor-exclusion gap) and 685 (exclusion-scoping follow-up).
+gotchas: (1) The 4-case union-vs-duplicate residual is a genuinely different, harder problem than
+  Phase 2's own scope (a real ordering/data-dependency constraint, not a quick tweak) -- see the
+  new BACKLOG Housekeeping item before attempting a fix. (2) The __jog_* waypoint styling bug
+  (BACKLOG.md Housekeeping, S648) remains open and UNRELATED to this session -- don't mistake a
+  phantom circle for a Phase-2 regression. (3) When grounding RED-phase test literals via a
+  temporary spike, run the FULL test suite against the spike (not just the 2-3 grounding
+  fixtures) before trusting its numbers -- this session's own spike missed the anchor-exclusion
+  gap entirely because it was only checked against the real-375 and shrunk-Track-B fixtures.
+runtime_smoke: Not a live Shiny app launch, but the actual rendering pathway
+  makePedigreeMatingLayout() -> visNetwork() was exercised directly and repeatedly via chromote
+  (the full test suite's own live-render checks, plus a dedicated Track B regeneration and a
+  ground-truth-verifying diagnostic render) -- substantively satisfies Phase 3E, matching S647's
+  own established precedent for this same rendering pathway.
+changelog_ref: see CHANGELOG.md 2026-08-29 entries, S649
 commit: pending
 ```
-<free-text prose: pending>
+<free-text prose: 8/10. Strengths: treated the RED-phase spike's own contradictory finding (plan
+§12.1's "0 new collisions" claim not holding for duplicates) as a real, escalation-worthy result
+rather than absorbing or ignoring it; when GREEN surfaced 332 spurious test failures, traced to
+the exact structural cause via concrete before/after comparison rather than guessing, then found
+a second, subtler bug (the epsilon-pass over-exclusion) the same disciplined way; corrected the
+plan document and BACKLOG.md to the real GREEN numbers rather than leaving superseded spike
+numbers standing; used a ground-truth-first, diagnostic-render verification method proactively
+(applying Learning 683's own lesson before iterating on a wrong visual impression, not after).
+Weaknesses: the RED-phase spike did not anticipate the anchor-exclusion gap at all -- closer
+reading of the union sweep's own existing code (which already reads tier1X/other units) against
+.buildMatingUnitForest()'s documented anchor/non-anchor contract might have caught this before
+writing any code; initially wrote RED-phase pinned values from the pre-fix spike without flagging
+them as provisional, requiring a second editing pass once GREEN's real numbers came in.
 
 ```handoff
 session: S648

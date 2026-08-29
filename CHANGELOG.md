@@ -16,6 +16,14 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [BL-N] S649: close out (Track 7 Phase 2 shipped)
+- Regenerated and ground-truth-verified `trackB-nprc-shrunk.png` (commit `168ae52a`); recorded
+  `PROJECT_LEARNINGS.md` Learnings 684/685 and updated `CLAUDE.md`'s learnings pointer (commit
+  `65d9f0c4`); marked `BACKLOG.md`'s Track 7 mating-unit-marker item DONE (commit `58e74aca`).
+  `HANDOFFS.md` receipt completed (`status: complete`, self-score 8/10, predecessor S648
+  evaluated at 8/10). `SESSION_NOTES.md` handoff notes/gotchas/self-assessment written.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [BL-N] S649: Track 7 Phase 2 GREEN (union-dot proximity push) -- commits `316b605f`, `e312774f`
 - Implements plan §12.2: replaces the union-position sweep's exact-tie epsilon nudge with a capped
   bidirectional push at a radius-proportionate clearance (union side only), `.kMaxUnionPush = 5L`.
