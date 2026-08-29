@@ -433,20 +433,22 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `color.background`/`color.border`) to the jog-node construction at `:2094-2097`, matching the
       D1/D2 precedent exactly, then re-verify against the real 375-individual fixture and Track B
       images for any other jog-waypoint-vs-node collisions this same gap may have hidden elsewhere.
-- [ ] **Track 7 Phase 2's own union-side proximity push (S649) introduces 11 NEW union-vs-DUPLICATE
+- [ ] **Track 7 Phase 2's own union-side proximity push (S649) introduces 4 NEW union-vs-DUPLICATE
       proximity cases on the real 375-individual fixture that did not exist before** (found live
       S649, 2026-08-29, implementing `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`
-      §12.2 -- READY, Effort M) -- root cause: a duplicate node's `x` is always
-      `unitX[[itsOwnUnion]] + minSep*0.4` (`R/makePedigreeDiagramData.R:816`), a fixed offset that
-      rides along whenever a union moves; §12.2's own occupied-set (`tier1X`/`b1AtGen`/
-      `placedAtGen`) has no visibility into duplicate positions, which are not computed until AFTER
-      the union sweep runs (a genuine data dependency -- a duplicate's own `derivedX()` reads the
-      union's FINAL `unitX`, so duplicates cannot be positioned first). Owner-directed
-      (`AskUserQuestion`, S649): ship Phase 2 as scoped rather than widen it -- the owner's own
-      directly-reviewed Track B fixture is fully resolved either way (no duplicates in play there).
-      Full detail: plan §12.11. A future session should design a fix (likely: track each
-      already-placed unit's own prospective duplicate offset, if it has one, as an additional
-      occupied-set member during the union sweep -- bounded, not the full symmetric
+      §12.2 -- READY, Effort M; count corrected from an initial pre-fix spike's 11 after a second
+      GREEN-phase correction, plan §12.11, made the push itself more targeted) -- root cause: a
+      duplicate node's `x` is always `unitX[[itsOwnUnion]] + minSep*0.4`
+      (`R/makePedigreeDiagramData.R:816`), a fixed offset that rides along whenever a union moves;
+      §12.2's own occupied-set (`tier1X`/`b1AtGen`/`placedAtGen`) has no visibility into duplicate
+      positions, which are not computed until AFTER the union sweep runs (a genuine data dependency
+      -- a duplicate's own `derivedX()` reads the union's FINAL `unitX`, so duplicates cannot be
+      positioned first). Owner-directed (`AskUserQuestion`, S649): ship Phase 2 as scoped rather
+      than widen it -- the owner's own directly-reviewed Track B fixture is fully resolved either
+      way (no duplicates in play there). Full detail: plan §12.11. A future session should design a
+      fix (likely: track each already-placed unit's own prospective duplicate offset, if it has
+      one, as an additional occupied-set member during the union sweep -- bounded, not the full
+      symmetric
       individual-side hardening §12.4 Alternative D already rejected) and re-verify against the
       real fixture (currently 11/237 union-vs-duplicate proximity cases) and Track B.
 - [x] **`R-CMD-check-scheduled.yaml` (the weekly-cron twin of `R-CMD-check.yaml`) never

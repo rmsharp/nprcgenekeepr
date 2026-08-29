@@ -633,8 +633,10 @@ from §11's prose:
   `unitX[[itsOwnUnion]] + minSep*0.4` -- a fixed offset that rides along whenever a union moves --
   and this naive check treated every OTHER node as fixed, never re-deriving a duplicate's own
   position after simulating a union's move. Implementing §12.2 for real (S649) found this
-  resolves all 20 individual-/union-vs-union cases (0 residual) but introduces 11 NEW
-  union-vs-duplicate proximity cases that did not exist before -- disclosed and left as a new,
+  resolves all 20 individual-/union-vs-union cases (0 residual) but introduces NEW
+  union-vs-duplicate proximity cases that did not exist before (4, after a second GREEN-phase
+  correction excluding a union's own anchor/non-anchor from the push search -- §12.11 has the
+  full detail) -- disclosed and left as a new,
   separately-filed `BACKLOG.md` Housekeeping item (§12.11), not fixed in Phase 2's own scope. This is a point-distance simulation only -- it does
   **not** check sibship-bar-span-vs-bar overlaps (`.addRectilinearWaypoints()`'s own D1 geometry,
   which Phase 1's own v2 attempt found the hard way can regress from a seemingly-safe point-level
@@ -908,31 +910,48 @@ proximity once the real algorithm (not a naive point-distance simulation) is run
   proximity cases (0 residual in either category), and all 3/3 of the shrunk Track B fixture's
   cases (the owner's own directly-reviewed fixture, unaffected by the finding below -- it has no
   duplicates in play at all).
-- **Introduces 11 NEW union-vs-duplicate proximity cases** on the real fixture that did not exist
-  before. Root cause: a duplicate node's `x` is always `unitX[[itsOwnUnion]] + minSep*0.4` -- a
-  fixed offset that rides along whenever a union moves -- and §12.2's own occupied-set
-  (`tier1X`/`b1AtGen`/`placedAtGen`) has no visibility into duplicate positions, which are not
-  computed until AFTER this sweep runs (a genuine data dependency: a duplicate's own `derivedX()`
-  reads the union's FINAL `unitX`, so duplicates cannot be computed first). The same class of gap
-  as Learning 682 (measuring/simulating a mechanism in isolation from a step that changes its
-  input).
+- **Introduces NEW union-vs-duplicate proximity cases** on the real fixture that did not exist
+  before (a first, pre-GREEN-fix spike measured 11; see the correction below). Root cause: a
+  duplicate node's `x` is always `unitX[[itsOwnUnion]] + minSep*0.4` -- a fixed offset that rides
+  along whenever a union moves -- and §12.2's own occupied-set (`tier1X`/`b1AtGen`/`placedAtGen`)
+  has no visibility into duplicate positions, which are not computed until AFTER this sweep runs
+  (a genuine data dependency: a duplicate's own `derivedX()` reads the union's FINAL `unitX`, so
+  duplicates cannot be computed first). The same class of gap as Learning 682
+  (measuring/simulating a mechanism in isolation from a step that changes its input).
 - **`.kMaxUnionPush = 5`** (mirroring `.kMaxIndividualPush`'s own naming) fully resolves all 20
   original cases (matching this section's own "all 20 resolve within 5" simulation); `k = 2` (the
   value Phase 1 chose) leaves 2 individual and 2 union-vs-union cases unresolved on this fixture --
   a different fixture, different empirically-correct cap, exactly as §12.2 point 3 anticipated
   ("the implementing session's own live-render check determines and empirically justifies the
   final cap value").
-- **Live-render D1 regression check (§12.6, MANDATORY), real fixture:** pre-jog-repair baseline
-  grows from 109 to 128 colliding edges (1,762 -> 1,799 obstacle-pairs) -- the existing Track 2
-  jog-repair mechanism (unchanged by Phase 2) still fully resolves every one of these to 0
-  residual, needing 38 more `__jog_` waypoints (220 -> 258) to do so. No unresolvable regression,
-  unlike Phase 1's own v2 attempt.
+- **A second implementation gap found in GREEN (not anticipated by this section's own §12.2 text
+  or by the Pre-RED spike above, which shared the same gap):** a union's OWN gen is
+  `max(parent gens)`, so a union can share its displayed gen with one of its own two parents --
+  the capped push search must exclude that parent (the union's own anchor/non-anchor) from its
+  occupied-set, or it tries to shove a union away from a structural parent it is supposed to sit
+  near. Excluding the parent from BOTH the push search AND the pre-existing epsilon-tie residual
+  pass was tried first and found wrong: it silently re-introduced ~150 exact ties the un-fixed old
+  code never had, because a union landing EXACTLY on its own anchor (common -- e.g. a single-child
+  union whose child inherited the anchor's own x) already relied on that old, harmless 0.001 nudge
+  to avoid an exact pixel-coincidence. Corrected: the exclusion applies ONLY to the new push
+  search; the epsilon residual pass keeps using the unfiltered occupied set, exactly reproducing
+  pre-Phase-2 behavior for that case.
+- **With both GREEN-phase corrections applied, the real numbers are BETTER than the Pre-RED spike
+  predicted, not worse:** the union-vs-duplicate residual measures **4**, not 11 (a more targeted
+  push disturbs fewer duplicates). **Live-render D1 regression check (§12.6, MANDATORY), real
+  fixture:** pre-jog-repair baseline actually SHRINKS from 109 to 107 colliding edges (1,762 ->
+  1,764 obstacle-pairs) -- not grows -- needing 4 FEWER `__jog_` waypoints (220 -> 216), because
+  the corrected push moves fewer unions, and moves them more conservatively, than the pre-fix
+  spike did. The separate D1 bar-vs-bar same-row overlap residual
+  (`test_addRectilinearWaypoints.R`) grows by exactly 1 (5 -> 6, mostly sub-pixel), an accepted,
+  disclosed trade-off matching Phase 1's own established posture for this residual. No
+  unresolvable regression anywhere, unlike Phase 1's own v2 attempt.
 
 **Owner-directed (`AskUserQuestion`, S649):** ship §12.2 as scoped rather than widen the design to
 also avoid duplicates. Rationale: the owner's own directly-reviewed Track B fixture is fully
-resolved either way (no duplicates in play there); the 11-case duplicate residual is a real but
-narrower, disclosed trade-off, filed as its own `BACKLOG.md` Housekeeping item rather than
-expanding this phase's ratified scope.
+resolved either way (no duplicates in play there); the (corrected) 4-case duplicate residual is a
+real but narrower, disclosed trade-off, filed as its own `BACKLOG.md` Housekeeping item rather
+than expanding this phase's ratified scope.
 
 ## References
 
