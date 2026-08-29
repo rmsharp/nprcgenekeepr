@@ -73,7 +73,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (banner for partial suppression, empty-state message for all-isolated) + e2e coverage,
       including the Focal-Animal-trim-to-one-isolated-individual scenario -- plan's §3 Dragon 4,
       §4 Phase 3.
-- [ ] **Mating-unit marker (dot) renders on the sire's own symbol instead of centered between sire
+- [x] **Mating-unit marker (dot) renders on the sire's own symbol instead of centered between sire
       and dam; mates are not visibly spread apart, unlike kinship2** (found live 2026-08-27,
       owner-caught via direct visual review of the corrected Track B full-fixture image pair (S645
       post-close-out, commit `1784abf6`); root-caused by a dedicated investigation S645 --
@@ -152,8 +152,14 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       correct" overstated it.** Structurally correct (right people, right relationships, no
       overlaps) but not free of cosmetic defects -- see the 5th finding below, found within
       minutes of this claim being written.
-      **Phase 2 (union-dot proximity) -- design RATIFIED S648, 2026-08-28; implementation IN
-      PROGRESS S649 (2026-08-29, RED phase committed, GREEN not yet started), Effort M:** found
+      **Phase 2 (union-dot proximity) -- design RATIFIED S648, 2026-08-28; implementation DONE
+      S649, 2026-08-29 (commits `316b605f`/`e312774f`, capped bidirectional push,
+      `.kMaxUnionPush = 5L`). Full clean regression 0 failed/0 error attributable (1 pre-existing
+      unrelated `test_wordlist_coverage.R` failure only); `lintr::lint_package()` 0 lints; visual
+      re-verification (Track B shrunk image regenerated, ground-truth-confirmed). A disclosed,
+      narrower residual (4 union-vs-duplicate proximity cases the fix cannot see -- new
+      Housekeeping item above) and a +1 D1 bar-vs-bar residual (5->6,
+      `test_addRectilinearWaypoints.R`) are the only trade-offs.** Found
       during Phase 1's own visual re-verification
       (plan §11's 4th finding) -- a mating-UNION dot (not an individual) can also land immediately
       adjacent to an unrelated individual, the same root tension surfacing in the one collision
