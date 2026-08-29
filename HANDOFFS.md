@@ -178,8 +178,8 @@ runtime_smoke: PASS -- live shinytest2::AppDriver run (NPRC_RUN_E2E=true) of the
   test-e2e-pedigree-module.R suite: 0 failed/0 error/55 passed, including the new
   partial-suppression banner and singular empty-state message tests, confirmed rendering through
   a real upload -> QC -> focal-trim -> re-render round-trip.
-changelog_ref: 36309f55..ae04c3f2 (10 commits, see CHANGELOG.md's 5 S650 entries)
-commit: pending
+changelog_ref: 36309f55..35654363 (11 commits, see CHANGELOG.md's 6 S650 entries)
+commit: 35654363
 ```
 
 ```handoff
