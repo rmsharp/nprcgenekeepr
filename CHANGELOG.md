@@ -16,6 +16,17 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [BL-N] S650: Phase 3 (Shiny UX messaging) RED -- commit `36309f55`
+- Adds 12 new test assertions (3 `test_modPedigree.R` `shiny::testServer()` blocks + 1
+  `test-e2e-pedigree-module.R` live `AppDriver` test) specifying
+  `docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md` §3 Dragon 4 / §4
+  Phase 3's worked copy: partial-suppression `alert-info` banner, singular/plural all-isolated
+  empty-state messages, and a no-op regression guard.
+- Confirmed genuine RED: full clean regression 13 failed/0 error/6519 passed -- the 12 new
+  failures plus the 1 pre-existing unrelated `test_wordlist_coverage.R` failure (S649's own
+  documented baseline). `lintr::lint_package()` 0 lints on touched files.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [ad hoc] S649: record HANDOFFS.md receipt commit-sha fix for its own close-out (matching S607/S623/S629-S639 precedent)
 - This session's own `HANDOFFS.md` receipt carried `commit: pending` (the close-out commit's own
   sha is only knowable after it exists). Fixed to `a7fdb0c3`.
