@@ -16,6 +16,19 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [BL-N] S650: Phase 3E runtime smoke test -- commit `6336dabd`
+- Live `shinytest2::AppDriver` run of the new e2e test initially came back with a completely
+  empty `pedigreeDiagramUI` in both the before- and after-trim states. Diagnosed (standalone
+  `AppDriver` script + direct `runQcStudbook()` calls, not guessed): the fixture's
+  `write.csv(..., na = "")` round-trips a missing `sire`/`dam` through `read.csv()` as the literal
+  string `""` rather than `NA`; `qcStudbook()` then rejects the upload ("Animal appears as both a
+  sire and a dam" -- every blank-sire/-dam row collides on the same empty id) -- unrelated to
+  isolation-suppression or Phase 3's own code. Fixed by dropping the `na = ""` override.
+- Confirmed live post-fix: full e2e pedigree-module suite 0 failed/0 error/55 passed -- the
+  partial-suppression banner and the singular empty-state message both render correctly through a
+  real upload -> QC -> focal-trim -> re-render round-trip.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [BL-N] S650: Phase 3 (Shiny UX messaging) GREEN -- commit `61e885d0`
 - Implements plan §3 Dragon 4 / §4 Phase 3: `output$pedigreeDiagramUI` (`R/modPedigree.R`) now
   reads `diagramLayout()$isolatedIds` and shows an `alert-info` banner naming suppressed
