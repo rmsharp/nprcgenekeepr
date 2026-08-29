@@ -16,6 +16,29 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [BL-N] S649: Track 7 Phase 2 RED (union-dot proximity push, TDD) -- commit `d8645207`
+- Failing tests specify plan §12.2's ratified capped bidirectional push (radius-proportionate
+  clearance, union side only): all 20 of the real-375-fixture's individual-/union-vs-union
+  proximity cases must clear (0 residual), plus the shrunk Track B fixture's own 3/3
+  (`tests/testthat/test_positionMatingUnitForest.R`); updated the 3 downstream pinned aggregate
+  assertions this change affects (`test_makePedigreeMatingLayout.R` node/`__jog_` counts,
+  `test_resolveEdgeNodeCollisions.R` baseline collision counts).
+- Pre-RED grounding (a temporary spike patch, reverted immediately, `git diff`/`git status`/
+  `shasum`-verified byte-identical to `HEAD` throughout) found and disclosed a real gap in plan
+  §12.1's own "0 new collisions" claim: the ratified algorithm resolves all 20 original cases but
+  introduces 11 NEW union-vs-duplicate proximity cases (a duplicate's `x` rides a fixed offset off
+  its own union's, invisible to this sweep's occupied-set -- a genuine data-order dependency, not
+  an oversight). Owner-directed (`AskUserQuestion`): ship §12.2 as scoped -- the owner's own
+  directly-reviewed Track B fixture is fully resolved either way -- and file the residual as a new
+  `BACKLOG.md` Housekeeping item rather than widen this phase's scope.
+- Plan doc §12.1 corrected in place (not silently revised); new §12.11 recorded with the
+  implementation session's own findings, including the empirically-determined `.kMaxUnionPush = 5`
+  and the mandatory live-render D1 check (109->128 pre-jog colliding edges, 0 residual after the
+  existing, unchanged Track 2 jog-repair mechanism).
+- Full clean regression: 14 failed / 0 error / 6503 passed -- exactly the 11 new/updated assertions
+  plus the 1 pre-existing, unrelated `test_wordlist_coverage.R` failure. `R/` source untouched.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-28 · [BL-N] S649: claim session for Track 7 Phase 2 (union-dot proximity) implementation
 - Claimed the top-priority `BACKLOG.md` item (design ratified S648, Option A). `SESSION_NOTES.md`
   ACTIVE TASK stub and `HANDOFFS.md` `status: pending` receipt written per Phase 1B.
