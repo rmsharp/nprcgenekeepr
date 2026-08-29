@@ -136,6 +136,27 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S650
+date: 2026-08-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Phase 3 (Shiny UX messaging) of the isolated-individual-suppression plan --
+  R/modPedigree.R:500-561 gains the all-isolated empty-state message and the partial-suppression
+  alert-info banner, both reading diagramLayout()$isolatedIds, per
+  docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md Sec 3 Dragon 4 / Sec 4
+  Phase 3. Work just claimed, TDD RED not yet started.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Session claimed; close-out will overwrite this block per SESSION_RUNNER.md Phase 3D.
+
+```handoff
 session: S649
 date: 2026-08-29
 status: complete

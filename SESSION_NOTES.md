@@ -18,6 +18,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 650 Did
+**Deliverable:** Phase 3 (Shiny UX messaging) of the isolated-individual-suppression plan --
+`output$pedigreeDiagramUI` (`R/modPedigree.R:500-561`) gains the all-isolated empty-state message
+and the partial-suppression `alert-info` banner, both reading `diagramLayout()$isolatedIds`, per
+`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md` §3 Dragon 4 / §4 Phase 3.
+(IN PROGRESS)
+**Started:** 2026-08-29
+**Status:** Session claimed. Work beginning -- Pre-RED research already done (read plan §3
+Dragon 3/4 + §4 Phase 3's own completion criteria, `R/modPedigree.R:460-733` incl. the existing
+`alert-warning` cap-exceeded pattern to mirror, confirmed `.findIsolatedIds()`/
+`makePedigreeMatingLayout()`'s `isolatedIds` return field already shipped in
+`R/makePedigreeDiagramData.R` (Phase 1), and surveyed `test_modPedigree.R`/
+`test-e2e-pedigree-module.R`'s existing `shiny::testServer`/`AppDriver` conventions to mirror).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 648 Handoff Evaluation (by Session 649)
 **Score: 8/10.** **What helped:** the handoff's `next_steps`/`gotchas` pointed precisely at the
 right starting point (plan §12.2 decision, §12.6 verification plan, "re-run §12.1's numbers live,
