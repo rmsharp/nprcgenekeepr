@@ -2226,3 +2226,163 @@ test_that(
     }
   )
 })
+
+## Phase 3 (Shiny UX messaging), docs/planning/pedigree-diagram-isolated-
+## individual-suppression-plan.md Sec 3 Dragon 4 / Sec 4 Phase 3: Phase 1
+## (R/makePedigreeDiagramData.R, .findIsolatedIds()/makePedigreeMatingLayout())
+## already suppresses fully-isolated individuals (no sire, no dam, no mate, no
+## children) from the rendered diagram and returns their ids on the
+## `isolatedIds` return field -- these tests cover the still-missing UI half:
+## output$pedigreeDiagramUI must actually SURFACE that field to the user
+## (alert-info banner for partial suppression; an empty-state message,
+## singular or plural, in place of a blank widget when suppression empties
+## the diagram entirely) rather than silently rendering fewer nodes.
+
+test_that(
+  "modPedigreeServer shows an alert-info banner naming isolated
+   individuals when some (not all) are suppressed from the diagram", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  ## A/B/C are a connected trio (A, B are C's sire/dam); ISO has no sire,
+  ## no dam, no mate, and no children -- isolated per .findIsolatedIds().
+  test_studbook <- data.frame(
+    id = c("A", "B", "C", "ISO"),
+    sire = c(NA, NA, "A", NA),
+    dam = c(NA, NA, "B", NA),
+    sex = c("M", "F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ test_studbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("alert-info", html),
+                  info = "Partial suppression should show an alert-info banner")
+      expect_true(grepl("ISO", html),
+                  info = "Banner should name the suppressed individual")
+      expect_true(grepl("not shown in this diagram", html),
+                  info = "Banner should use the plan's worked partial-case copy")
+      ## The diagram itself still renders alongside the banner -- partial
+      ## suppression is not the same as the all-isolated empty state.
+      expect_true(grepl("visNetwork", html),
+                  info = "Diagram widget should still render (not empty-state)")
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer shows a singular empty-state message, not a blank
+   diagram widget, when focal-trimming to one isolated individual", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  ## Same fixture as above; this test drives the Focal-Animal-trim-to-one-
+  ## isolated-individual scenario (plan Sec 1.2's second trigger).
+  test_studbook <- data.frame(
+    id = c("A", "B", "C", "ISO"),
+    sire = c(NA, NA, "A", NA),
+    dam = c(NA, NA, "B", NA),
+    sex = c("M", "F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ test_studbook })),
+    {
+      session$setInputs(
+        displayUnknownIds = TRUE,
+        trimPedigree = TRUE,
+        clearFocalAnimals = FALSE,
+        focalAnimalIds = "ISO"
+      )
+      session$setInputs(updateFocalAnimals = 1)
+      session$flushReact()
+
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("alert-info", html),
+                  info = "All-isolated case should show an alert-info message")
+      expect_true(grepl("ISO", html),
+                  info = "Singular empty-state should name the individual")
+      expect_true(
+        grepl("no recorded parents, mates, or offspring in this data", html),
+        info = "Should use the plan's worked singular empty-state copy"
+      )
+      expect_true(grepl("no pedigree relationship to diagram", html),
+                  info = "Should use the plan's worked singular empty-state copy")
+      expect_false(grepl("visNetwork", html),
+                   info = "Should NOT render a blank diagram widget")
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer shows a plural empty-state message when every loaded
+   individual is isolated", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  ## The whole-colony/#164 case: nobody has any recorded relationship.
+  test_studbook <- data.frame(
+    id = c("ISO1", "ISO2", "ISO3"),
+    sire = NA_character_,
+    dam = NA_character_,
+    sex = c("M", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ test_studbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+
+      html <- output$pedigreeDiagramUI$html
+      expect_true(grepl("alert-info", html),
+                  info = "All-isolated case should show an alert-info message")
+      expect_true(grepl("None of the 3 loaded individuals", html),
+                  info = "Should use the plan's worked plural empty-state copy")
+      expect_true(grepl("nothing to diagram", html),
+                  info = "Should use the plan's worked plural empty-state copy")
+      expect_false(grepl("visNetwork", html),
+                   info = "Should NOT render a blank diagram widget")
+    }
+  )
+})
+
+test_that(
+  "modPedigreeServer shows no isolation banner when nothing is
+   suppressed from the diagram", {
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+
+  test_studbook <- data.frame(
+    id = c("A", "B", "C"),
+    sire = c(NA, NA, "A"),
+    dam = c(NA, NA, "B"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive({ test_studbook })),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE)
+      session$flushReact()
+
+      html <- output$pedigreeDiagramUI$html
+      expect_false(grepl("alert-info", html),
+                   info = "No isolation banner when nothing is suppressed")
+      expect_true(grepl("visNetwork", html),
+                  info = "Diagram widget should render normally")
+    }
+  )
+})

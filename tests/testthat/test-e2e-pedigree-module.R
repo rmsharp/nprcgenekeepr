@@ -803,3 +803,66 @@ test_that(
   expect_equal(nrow(diagramErrors), 0L,
                info = "No visNetwork/diagram-related console error")
 })
+
+## Phase 3 (Shiny UX messaging), docs/planning/pedigree-diagram-isolated-
+## individual-suppression-plan.md Sec 3 Dragon 4 / Sec 4 Phase 3: confirms the
+## empty-state message actually renders live in the running app -- a
+## shiny::testServer() unit test (test_modPedigree.R) proves the reactive
+## computes the right HTML string, but not that a real client round-trip
+## (file upload -> focal-animal trim -> re-render) produces it (Phase 3E,
+## SESSION_RUNNER.md).
+
+test_that(
+  "E2E: Pedigree Browser Diagram tab shows the singular empty-state
+   message, not a blank widget, when focal-trimming to one isolated
+   individual", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_if_not_installed("visNetwork")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_pedigree_diagram_isolated_focal")
+  on.exit(app$stop(), add = TRUE)
+
+  ## A small custom studbook: A/B/C are a connected trio, ISO is a fully
+  ## isolated individual (no sire, no dam, no mate, no children).
+  ped_csv <- tempfile(fileext = ".csv")
+  utils::write.csv(
+    data.frame(
+      id = c("A", "B", "C", "ISO"),
+      sire = c(NA, NA, "A", NA),
+      dam = c(NA, NA, "B", NA),
+      sex = c("M", "F", "F", "F"),
+      stringsAsFactors = FALSE
+    ),
+    ped_csv, row.names = FALSE, na = ""
+  )
+  on.exit(unlink(ped_csv), add = TRUE)
+
+  loaded <- upload_and_wait(app, ped_csv)
+  if (!loaded) skip("Upload/QC did not complete")
+
+  success <- navigate_to_tab(app, "Pedigree Browser", "Pedigree")
+  if (!success) skip("Could not navigate to Pedigree tab")
+
+  clicked <- click_element_safe(app, 'a[data-value="Diagram"]')
+  if (!clicked) skip("Could not switch to the Diagram tab")
+
+  ## Focal-trim to the isolated individual -- the exact regression scenario
+  ## named in the plan's Sec 1.2 second trigger.
+  app$set_inputs(`pedigree-focalAnimalIds` = "ISO")
+  app$set_inputs(`pedigree-trimPedigree` = TRUE)
+  app$click("pedigree-updateFocalAnimals")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  html <- get_html_safe(app, "#pedigree-pedigreeDiagramUI")
+  expect_match(html, "alert-info",
+               info = "Empty-state message should use the alert-info styling")
+  expect_match(html, "ISO",
+               info = "Empty-state message should name the isolated individual")
+  expect_match(
+    html, "no pedigree relationship to diagram",
+    info = "Should show the singular empty-state copy, not a blank widget"
+  )
+})
