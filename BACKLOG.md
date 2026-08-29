@@ -11,13 +11,26 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **`makePedigreeMatingLayout()` erroneously renders fully-isolated individuals (no sire, no
+- [x] **`makePedigreeMatingLayout()` erroneously renders fully-isolated individuals (no sire, no
       dam, no mate, no children) -- reverses this project's own prior "acceptable difference"
       framing** (found live 2026-08-26, owner-directed via direct visual review of
       `kinship2-fidelity-validation.qmd`'s Track B full fixture. Design RATIFIED S643.
       **Phase 1 (core renderer fix) DONE S644 (2026-08-27), Effort M -- commit `fc5ac928`. Phase 2
       (test/article correction) DONE S645 (2026-08-27), Effort M. Phase 3 (Shiny UX messaging)
-      READY, Effort M, next pickup.** `master`'s CI red (`R-CMD-check.yaml`/`test-coverage.yaml`)
+      DONE S650 (2026-08-29), Effort M -- commits `61e885d0`/`6336dabd`. All 3 phases shipped.**
+      `output$pedigreeDiagramUI` (`R/modPedigree.R`) now reads `diagramLayout()$isolatedIds` and
+      shows an `alert-info` banner naming suppressed individuals (partial suppression) or an
+      `alert-info` empty-state message (singular/plural worked copy, plan §3 Dragon 4) in place of
+      the widget (suppression empties the diagram entirely). Confirmed live via `shinytest2::
+      AppDriver` (Phase 3E), including the Focal-Animal-trim-to-one-isolated-individual scenario
+      (plan §1.2's 2nd trigger). Full clean regression 0 failed/0 error attributable (1
+      pre-existing unrelated `test_wordlist_coverage.R` failure only); `lintr::lint_package()` 0
+      lints. 1 bug found in GREEN (3 pre-existing node-cap-boundary tests used all-founder
+      fixtures that Phase 1's own isolation suppression made entirely isolated -- fixed minimally,
+      see `CHANGELOG.md`) and 1 bug found in Phase 3E (the new e2e fixture's own
+      `write.csv(na = "")` round-tripped a missing sire/dam as `""`, which `qcStudbook()` rejects
+      as "both a sire and a dam" -- unrelated to this item's own code, see `CHANGELOG.md`).
+      `master`'s CI red (`R-CMD-check.yaml`/`test-coverage.yaml`)
       was the DIRECT, PREDICTED consequence of shipping Phase 1 alone (owner-confirmed via
       `AskUserQuestion`, S644, to leave it red rather than stopgap) -- **now resolved by Phase 2**:
       the 2 `test_comparePedigreeStructure.R` Track B blocks (plus a 3rd block, a synthetic "ISO"
@@ -69,10 +82,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (confirmed via `git status` -- unaffected by this session's changes, so this is pre-existing,
       not a regression from Phase 1/2). Unrelated to P5-suppression; filed as a new Housekeeping
       item below.
-      **Still open (Phase 3, Effort M):** `R/modPedigree.R` Shiny UX messaging
-      (banner for partial suppression, empty-state message for all-isolated) + e2e coverage,
-      including the Focal-Animal-trim-to-one-isolated-individual scenario -- plan's §3 Dragon 4,
-      §4 Phase 3.
+      **Phase 3 (S650, 2026-08-29) -- DONE:** see the item's own top summary above.
 - [x] **Mating-unit marker (dot) renders on the sire's own symbol instead of centered between sire
       and dam; mates are not visibly spread apart, unlike kinship2** (found live 2026-08-27,
       owner-caught via direct visual review of the corrected Track B full-fixture image pair (S645
@@ -373,6 +383,15 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `rmarkdown::render()` (this file's own build-equivalent) run clean after every
       substantive edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`.
 ## Housekeeping
+- [ ] **S649's Track 7 Phase 2 (union-dot proximity fix, commits `316b605f`/`e312774f`) shipped
+      with no `NEWS.Rmd` entry** (found incidentally S650, 2026-08-29, while adding S650's own
+      Phase 3 NEWS.Rmd entry to the same Pedigree Diagram group, READY, Effort S) -- violates
+      `CLAUDE.md`'s NEWS.Rmd entry checklist (a user-facing Shiny behavior change: mating-union
+      dots now sit closer to their true midpoint instead of drifting toward one parent). Not fixed
+      here (out of this session's own scope -- a different session's gap). A future session should
+      add one plain-language bullet to the Pedigree Diagram group, in true shipping order (after
+      the Phase 1 individuals-side bullet, i.e. right before S650's own new Phase 3 bullet), then
+      regenerate `NEWS.md`.
 - [ ] **`kinship2-fidelity-validation.qmd`'s Track C table claims 3 marked (vermillion) edges for
       the `rectilinear` edge style; a live run reports 2** (found incidentally S645, 2026-08-27,
       while regenerating Track B images for the P5-suppression Phase 2 item above, READY, Effort
