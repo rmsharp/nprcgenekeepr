@@ -18,22 +18,118 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 649 Handoff Evaluation (by Session 650)
+**Score: 8/10.** **What helped:** S649's own gotcha #3 ("The isolated-individual-suppression
+item's own Phase 3 (Shiny UX messaging) is now the ONLY other item under the standing
+pedigree-drawing-fidelity priority banner -- likely the next pickup") pointed directly at this
+session's task before Phase 0 orientation needed to search `BACKLOG.md` exhaustively; the
+`BACKLOG.md` item's own "Still open (Phase 3, Effort M)" line and the plan document's own §3
+Dragon 4 / §4 Phase 3 sections (ratified S643) gave a complete, self-contained spec -- exact
+worked copy for all 3 message variants, the file/line to touch, and the verification commands --
+with zero re-derivation needed. **What was missing:** nothing S649 could reasonably have supplied
+for THIS session's own task, since Phase 3 wasn't S649's own deliverable -- the one genuine gap
+found (S649 itself shipped Track 7 Phase 2 with no `NEWS.Rmd` entry, discovered incidentally this
+session while adding this session's own entry to the same feature group) is a S649 close-out
+omission, not a handoff-content gap; filed to `BACKLOG.md` Housekeeping rather than silently
+fixed mid-session. **What was wrong:** nothing in S649's substantive claims (Track 7 Phase 2
+GREEN, commit shas, regression counts) contradicted anything this session independently observed
+via `git log`/`CHANGELOG.md`. **ROI:** strongly positive -- the `AskUserQuestion` priorities list
+built directly from `BACKLOG.md`'s own tags let this session start Pre-RED research immediately,
+with no time spent re-investigating which item to pick.
+
 ### What Session 650 Did
 **Deliverable:** Phase 3 (Shiny UX messaging) of the isolated-individual-suppression plan --
-`output$pedigreeDiagramUI` (`R/modPedigree.R:500-561`) gains the all-isolated empty-state message
-and the partial-suppression `alert-info` banner, both reading `diagramLayout()$isolatedIds`, per
-`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md` §3 Dragon 4 / §4 Phase 3.
-(IN PROGRESS)
-**Started:** 2026-08-29
-**Status:** Session claimed. Work beginning -- Pre-RED research already done (read plan §3
-Dragon 3/4 + §4 Phase 3's own completion criteria, `R/modPedigree.R:460-733` incl. the existing
-`alert-warning` cap-exceeded pattern to mirror, confirmed `.findIsolatedIds()`/
-`makePedigreeMatingLayout()`'s `isolatedIds` return field already shipped in
-`R/makePedigreeDiagramData.R` (Phase 1), and surveyed `test_modPedigree.R`/
-`test-e2e-pedigree-module.R`'s existing `shiny::testServer`/`AppDriver` conventions to mirror).
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`output$pedigreeDiagramUI` (`R/modPedigree.R`) gains the all-isolated empty-state message and the
+partial-suppression `alert-info` banner, both reading `diagramLayout()$isolatedIds`, per
+`docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md` §3 Dragon 4 / §4 Phase
+3. **DONE.**
+**Started/Completed:** 2026-08-29 (single session).
+
+**What actually happened, in order:**
+1. **Phase 1B claim** (commit `1a848e6f`), after Pre-RED research (plan §3 Dragon 3/4 + §4 Phase
+   3's completion criteria, `R/modPedigree.R:460-733`'s existing `alert-warning` cap-exceeded
+   pattern, confirmed `isolatedIds` already shipped on `makePedigreeMatingLayout()`'s return
+   contract (Phase 1), and surveyed `test_modPedigree.R`/`test-e2e-pedigree-module.R`'s existing
+   `shiny::testServer`/`AppDriver` conventions).
+2. **RED** (commit `36309f55`): 12 new test assertions across 4 `test_that` blocks (3
+   `test_modPedigree.R`, 1 `test-e2e-pedigree-module.R`) specifying the plan's exact worked copy
+   for partial-suppression, singular all-isolated, and plural all-isolated cases, plus a
+   regression guard. Confirmed genuine RED: 13 failed/0 error/6519 passed (the 12 new + 1
+   pre-existing unrelated `test_wordlist_coverage.R` failure, S649's own documented baseline).
+3. **GREEN, 1 bug found** (commit `61e885d0`): implemented the branching in
+   `output$pedigreeDiagramUI`. Full clean regression initially showed 4 NEW failures in 3
+   pre-existing node-cap-boundary tests (`~L1519/1594/1901`) -- their synthetic all-founder
+   fixtures (built purely to generate `n` widget nodes for the CAP feature) were, incidentally,
+   fully isolated, so Phase 1's own already-shipped suppression + this session's new empty-state
+   branch correctly replaced their expected widget. Fixed minimally: gave each fixture one real
+   sire/dam trio, preserving the exact cap-boundary `n`. Full clean regression after the fix: back
+   to exactly 1 failed (the same pre-existing `test_wordlist_coverage.R` baseline)/0
+   error/6531 passed. `lintr::lint_package()`: 1 false-positive (`commented_code_linter` on a
+   comment's own punctuation) resolved by rewording, 0 lints after.
+4. **Phase 3E, 1 bug found** (commit `6336dabd`): the live `shinytest2::AppDriver` run of the new
+   e2e test initially came back with a COMPLETELY EMPTY diagram tab in both the before- and
+   after-trim states. Diagnosed via a standalone `AppDriver` script + direct, non-Shiny
+   `qcStudbook()`/`runQcStudbook()` calls (not guessed): the fixture's
+   `write.csv(..., na = "")` round-trips a missing sire/dam through `read.csv()` as the literal
+   string `""`, and `qcStudbook()` rejects that as "both a sire and a dam" (every blank-parent row
+   collides on the same empty id) -- unrelated to Phase 3's own code. Fixed by dropping the
+   `na = ""` override. Confirmed live post-fix: full e2e pedigree-module suite 0 failed/0
+   error/55 passed, including the partial-suppression banner and singular empty-state message
+   both rendering correctly through a real upload -> QC -> focal-trim -> re-render round-trip.
+5. **Skipped REFACTOR** (owner-directed via `AskUserQuestion`): GREEN code already 0-lint,
+   mirrors the plan's own worked copy and the existing `if/else` UI shape verbatim -- matches
+   S649's own precedent for skipping REFACTOR when nothing behavior-neutral was identified.
+6. **NEWS.Rmd entry** (commit `f7ea096a`): one plain-language bullet added to the Pedigree
+   Diagram feature group (`CLAUDE.md`'s NEWS.Rmd checklist); `NEWS.md` regenerated via
+   `rmarkdown::render()`, clean.
+7. **`BACKLOG.md` closed out** (commit `c447df5d`): the isolated-individual-suppression item
+   marked `[x]` DONE (all 3 phases shipped); filed a new Housekeeping item for S649's own missing
+   `NEWS.Rmd` entry (found incidentally, not fixed here -- a different session's gap).
+8. **Recorded Learnings 686/687** (commit `ae04c3f2`): the cap-boundary-fixture collision, and
+   the `write.csv(na = "")` CSV round-trip pitfall; `CLAUDE.md` learnings pointer updated.
+
+**Self-assessment (Session 650): 8/10.** **Strengths:** (1) diagnosed both bugs found in
+GREEN/Phase 3E via direct, empirical tool calls (`runQcStudbook()`/`qcStudbook()` called directly
+on hand-built data frames, a standalone `AppDriver` diagnostic script) rather than guessing or
+patching symptomatically -- traced each to its precise root cause before touching any fixture;
+(2) recognized S649's own missing `NEWS.Rmd` entry as a DIFFERENT session's gap and filed it to
+`BACKLOG.md` Housekeeping rather than silently folding a fix into this session's own commit,
+matching the project's established "report an incidentally-discovered, unrelated pre-existing
+gap" precedent; (3) followed the full TDD RED->GREEN->REFACTOR gate sequence via
+`AskUserQuestion` at every transition, with the exact planned actions for each option spelled out
+in advance, per `CLAUDE.md`'s phase-gate format; (4) Phase 3E's live verification caught a real,
+non-obvious defect the `shiny::testServer()` unit tests structurally could not (a CSV-round-trip
+/ QC-pipeline interaction only reachable through a real file upload) -- concrete evidence for why
+that step is mandatory rather than a formality. **Weaknesses:** (1) the first e2e fixture attempt
+had 2 avoidable format mistakes in immediate succession (missing the required `birth` column,
+then the `na = ""` round-trip bug) -- checking `getRequiredCols()` or an existing custom-CSV
+e2e-upload fixture (e.g. `test-e2e-pedigree-tutorial.R`'s `focal_csv` pattern) before writing a
+new one would likely have caught the `birth` requirement immediately, though the `na = ""`
+pitfall was genuinely non-obvious until diagnosed; (2) each `CHANGELOG.md` entry landed in its
+own dedicated commit (5 separate `docs:` commits solely for ledger entries), matching S649's own
+established precedent deliberately but adding real commit-count overhead worth a future session
+questioning.
+
+**Gotchas for a future session:** (1) **STANDING TOP PRIORITY banner** (`BACKLOG.md`, S643): with
+this session's Phase 3 shipped, ALL 3 phases of isolated-individual-suppression AND both phases
+of Track 7 mating-unit-marker are now DONE -- per S649's own gotcha #3, the owner should be asked
+whether the banner comes down; this session does NOT remove it unilaterally (the banner's own
+text requires explicit owner sign-off). (2) New Housekeeping item: S649's Track 7 Phase 2 shipped
+with no `NEWS.Rmd` entry -- needs one plain-language bullet in the Pedigree Diagram group, in true
+shipping order (before this session's own new bullet). (3) Pre-existing Housekeeping items
+untouched this session: the `__jog_*` waypoint invisible-styling bug (S648), the Track C table
+3-vs-2 vermillion-edges discrepancy (S645), `lint.yaml` CI red for 3+ consecutive pushes (S643+),
+and Track 7 Phase 2's own 4-case union-vs-duplicate residual (S649). (4) `master` is now 32
+commits ahead of `origin/master`, unpushed (22 from before this session + 10 this session) -- not
+pushed per the standing "commit/push only when asked" convention; a future session or the user
+should decide whether/when to push. (5) `HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain
+past the FM #28 size cap, unchanged this session (same as S649's own gotcha #4) --
+`BACKLOG.md`'s "ledger-size housekeeping" item is still open. (6) A pre-existing `NEWS.Rmd`
+formatting quirk (no blank line before several `##` headings) makes `rmarkdown::render()` fold
+the heading into the prior bullet's last line as literal `\##` text in `NEWS.md`, at 3+ locations
+that predate this session (e.g. before "Kinship & Pedigree Calculations") -- cosmetic only
+(`rmarkdown::render()` itself succeeds clean), not fixed (would be an unrelated, multi-section
+cleanup).
 
 ### Session 648 Handoff Evaluation (by Session 649)
 **Score: 8/10.** **What helped:** the handoff's `next_steps`/`gotchas` pointed precisely at the

@@ -16,6 +16,14 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [BL-N] S650: close out (isolated-individual-suppression item fully DONE)
+- `BACKLOG.md` item marked `[x]` DONE (all 3 phases shipped); new Housekeeping item filed for
+  S649's own missing `NEWS.Rmd` entry (commit `c447df5d`). Recorded `PROJECT_LEARNINGS.md`
+  Learnings 686/687 and updated `CLAUDE.md`'s learnings pointer (commit `ae04c3f2`).
+  `HANDOFFS.md` receipt completed (`status: complete`, self-score 8/10, predecessor S649
+  evaluated at 8/10). `SESSION_NOTES.md` handoff notes/gotchas/self-assessment written.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [BL-N] S650: Phase 3E runtime smoke test -- commit `6336dabd`
 - Live `shinytest2::AppDriver` run of the new e2e test initially came back with a completely
   empty `pedigreeDiagramUI` in both the before- and after-trim states. Diagnosed (standalone

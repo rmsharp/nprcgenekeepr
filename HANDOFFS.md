@@ -138,23 +138,49 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S650
 date: 2026-08-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Phase 3 (Shiny UX messaging) of the isolated-individual-suppression plan --
-  R/modPedigree.R:500-561 gains the all-isolated empty-state message and the partial-suppression
-  alert-info banner, both reading diagramLayout()$isolatedIds, per
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- Phase 3 (Shiny UX messaging) of the isolated-individual-suppression plan
+  implemented and shipped. All 3 phases of that BACKLOG item now DONE. output$pedigreeDiagramUI
+  (R/modPedigree.R) reads diagramLayout()$isolatedIds and shows an alert-info banner (partial
+  suppression) or an alert-info empty-state message (singular/plural, all-isolated) in place of
+  the widget. Full clean regression 0 failed/0 error attributable (1 pre-existing unrelated
+  test_wordlist_coverage.R failure only); live e2e suite 0 failed/55 passed.
+what_was_done: RED (36309f55): 12 new test assertions (3 test_modPedigree.R + 1
+  test-e2e-pedigree-module.R) specifying the plan's worked copy. GREEN (61e885d0): implemented
+  the branching; found and fixed 3 pre-existing node-cap-boundary tests whose all-founder
+  fixtures were incidentally fully isolated by Phase 1's own already-shipped suppression.
+  Phase 3E (6336dabd): live AppDriver run initially came back completely empty; diagnosed to a
+  test-fixture bug (write.csv(na = "") round-trips NA as "", qcStudbook() rejects it), fixed,
+  confirmed live. NEWS.Rmd entry (f7ea096a). BACKLOG.md item marked DONE + new Housekeeping item
+  filed for S649's own missing NEWS.Rmd entry (c447df5d). Learnings 686/687 (ae04c3f2).
+next_steps: Ask the owner whether the STANDING TOP PRIORITY pedigree-fidelity banner
+  (BACKLOG.md, S643) comes down now that all 3 phases of isolated-individual-suppression AND
+  both phases of Track 7 mating-unit-marker are DONE (do not remove it unilaterally). Otherwise
+  pick from BACKLOG.md Housekeeping: lint.yaml CI red (3+ consecutive pushes, READY, Effort S),
+  __jog_* waypoint invisible-styling bug (S648, READY, Effort S), Track C table 3-vs-2
+  vermillion-edges discrepancy (S645, READY, Effort S), S649's missing NEWS.Rmd entry (this
+  session, READY, Effort S), or Track 7 Phase 2's own 4-case union-vs-duplicate residual (S649,
+  READY, Effort M).
+key_files: R/modPedigree.R:516-577 (output$pedigreeDiagramUI, the new isolation-messaging
+  branches); tests/testthat/test_modPedigree.R:2198-2367 (4 new test_that blocks),
+  :1524-1531/1613-1621/1909-1917 (the 3 fixed cap-boundary fixtures);
+  tests/testthat/test-e2e-pedigree-module.R:806-877 (new e2e test);
   docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md Sec 3 Dragon 4 / Sec 4
-  Phase 3. Work just claimed, TDD RED not yet started.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  Phase 3 (the spec, now fully shipped).
+gotchas: master is 32 commits ahead of origin/master, unpushed (22 pre-existing + 10 this
+  session) -- not pushed per the standing commit/push-only-when-asked convention. lint.yaml CI is
+  still red on the last PUSHED commit (S646) and this session's own work has not been through CI
+  at all yet. HANDOFFS.md/SESSION_NOTES.md/CHANGELOG.md remain past the FM #28 size cap,
+  unchanged this session.
+runtime_smoke: PASS -- live shinytest2::AppDriver run (NPRC_RUN_E2E=true) of the full
+  test-e2e-pedigree-module.R suite: 0 failed/0 error/55 passed, including the new
+  partial-suppression banner and singular empty-state message tests, confirmed rendering through
+  a real upload -> QC -> focal-trim -> re-render round-trip.
+changelog_ref: 36309f55..ae04c3f2 (10 commits, see CHANGELOG.md's 5 S650 entries)
 commit: pending
 ```
-Session claimed; close-out will overwrite this block per SESSION_RUNNER.md Phase 3D.
 
 ```handoff
 session: S649
