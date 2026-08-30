@@ -960,23 +960,25 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       .deCollideIndividualPoints(b1Ids, tier3Gen[b1Ids], pushSign = b1PushSign)
   }
 
-  ## ---- Track 7: recenter each QUALIFYING unit's x at the true anchor/
-  ## mate midpoint (widened B1 offset, minSep not minSep*0.4), replacing
-  ## the mean-of-children value just computed above -- gated on b1Ids
-  ## membership (not qualifies() alone): a qualifies()-SHAPED union whose
-  ## non-anchor mate is B2 (her own parent edge or own direct child) never
-  ## reaches this loop at all, so she is untouched, matching this
-  ## project's own established B2/qualifying-shaped regression tests. Uses
-  ## the mate's TRUE FINAL tier3X (post-de-collision), not the raw
-  ## b1AnchorRelativeX() formula value -- see the S647 correction note
-  ## above.
-  for (fp in b1Ids) {
-    unitId <- b1UnitOf[[fp]]
-    if (qualifies(unitId)) {
-      p <- anchorOf[[unitId]]
-      unitX[[unitId]] <- (unname(tier1X[[p]]) + unname(tier3X[[fp]])) / 2L
-    }
-  }
+  ## ---- Track 7 Phase 1's own union recenter (S647) lived here: it moved
+  ## each QUALIFYING unit's x to the true anchor/mate midpoint, replacing
+  ## the mean-of-children value Tier 2 computed above. It is deleted as of
+  ## session S652, per issue #166's scoped revert (see the design doc,
+  ## docs/planning/pedigree-diagram-track7-
+  ## phase3-child-centering-plan.md, sections 2.1 and 5). The recenter
+  ## decoupled a qualifying union's x from its own children, producing a
+  ## right-angle dogleg for a single-child union and an off-center
+  ## sibship bar for a multi-child one -- kinship2's own straight-drop
+  ## guarantee comes from moving the
+  ## CHILD (section 1.3 of that doc), which this project's rigid/
+  ## sequential engine cannot do (issue #159, closed as inherent). Every
+  ## qualifying unit's x now reverts, unconditionally, to Tier 2's own
+  ## mean(tier1X[kids]) -- proven bit-exact to the unit's own anchor for
+  ## every qualifying unit on the real fixture (that design doc's own
+  ## Finding B). Track 7 Phase 1's OTHER change (the widened B1 offset
+  ## just above, minSep not minSep*0.4) is KEPT -- mates stay visibly
+  ## spread apart; only the union DOT itself reverts to sitting on or near
+  ## the anchor for these units, a disclosed, owner-ratified trade-off.
 
   ## ---- Track 7 Phase 2 (S649, docs/planning/pedigree-diagram-track7-
   ## mate-spacing-plan.md §12.2, design ratified S648): a capped
