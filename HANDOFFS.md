@@ -183,7 +183,7 @@ runtime_smoke: PASS -- mandatory live-render check (design doc §5 step 3): a re
   collapse and 0 post-fix residual same-row collisions on the actual rendering pathway
   (makePedigreeMatingLayout() -> visNetwork()), not just internal x/y math.
 changelog_ref: CHANGELOG.md 2026-08-29 S652 entries (landed in ca689c3f/303b42dd/0db5e4c8/beed0b4d)
-commit: pending
+commit: d81f76bc
 ```
 Issue #166 implemented and shipped end-to-end via full TDD RED->GREEN->REFACTOR (REFACTOR
 skipped), matching the ratified design exactly. Self-score breakdown: +followed the design doc's
