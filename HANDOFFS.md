@@ -179,7 +179,7 @@ runtime_smoke: n/a -- documentation-only change (vignette article prose/table), 
   this artifact type (quarto render), per SAFEGUARDS.md.
 changelog_ref: (this session's own 3 entries, dated 2026-08-30, tag [BL-trackCRectilinearEdgeCount]
   / [ad hoc])
-commit: pending
+commit: 01b7dacc
 ```
 
 ```handoff
