@@ -136,6 +136,24 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S652
+date: 2026-08-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- implement issue #166 (Track 7 qualifying-union recenter dogleg /
+  off-center sibship-bar) per the ratified Option 1 design (scoped revert): delete
+  R/makePedigreeDiagramData.R:973-979 via full TDD RED->GREEN->REFACTOR.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S651
 date: 2026-08-29
 status: complete

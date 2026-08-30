@@ -18,6 +18,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 652 Did
+**Deliverable:** Implement [issue #166](https://github.com/rmsharp/nprcgenekeepr/issues/166) per
+the ratified Option 1 design (`docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md`)
+-- delete Track 7 Phase 1's union-recenter loop (`R/makePedigreeDiagramData.R:973-979`) via full
+TDD RED->GREEN->REFACTOR. (IN PROGRESS)
+**Started:** 2026-08-29 (session continuation)
+**Status:** Session claimed. Work beginning -- Pre-RED research (design doc re-read) complete;
+starting RED (test updates per design doc §5 step 1 / §6.3 inventory).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 650 Handoff Evaluation (by Session 651)
 **Score: 7/10.** **What helped:** S650's own record of shipping (all 3 phases of
 isolated-individual-suppression, both Track 7 phases DONE) was accurate and independently
