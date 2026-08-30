@@ -536,10 +536,10 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       reverted, not committed. **REFACTOR skipped** (owner-directed via `AskUserQuestion`): the
       change is already minimal and clean, no behavior-neutral restructuring identified, matching
       S650/S652's own precedent.
-- [ ] **`.addRectilinearWaypoints()`'s `__jog_*` waypoint nodes (the straight-edge jog pass) render
+- [x] **`.addRectilinearWaypoints()`'s `__jog_*` waypoint nodes (the straight-edge jog pass) render
       as a full-size, filled default vis.js circle instead of invisible** (found live S648,
-      2026-08-28, while building a visual comparison for the Track 7 Phase 2 design item below --
-      READY, Effort S) -- `R/makePedigreeDiagramData.R:2081-2127` constructs each `__jog_%d_a`/
+      2026-08-28, while building a visual comparison for the Track 7 Phase 2 design item below).
+      **RESOLVED S656 (2026-08-30).** `R/makePedigreeDiagramData.R:2081-2127` constructs each `__jog_%d_a`/
       `__jog_%d_b` node with only `id`/`x`/`y` set, then `.matchColumns()` (`:2000-2011`) fills every
       other column (`shape`, `size`, `color.background`, `color.border`) with `NA` rather than an
       explicit invisible style. This is inconsistent with the D1/D2 `__drop_`/`__bar_` waypoint
@@ -555,12 +555,44 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       rendering code involved). Not a regression from anything this session touched, and unrelated
       to Track 7's own union-position mechanism -- confirmed present under BOTH pre-Track-7 and
       current source. Likely affects any pedigree where a jog waypoint's computed position happens
-      to land near a real node's own position, not only this one fixture. Not fixed this session
-      (out of scope for Track 7 Phase 2's own design deliverable) -- a future session should add the
-      same explicit invisible styling (`shape = "dot"`, `size = 0`, transparent
-      `color.background`/`color.border`) to the jog-node construction at `:2094-2097`, matching the
-      D1/D2 precedent exactly, then re-verify against the real 375-individual fixture and Track B
-      images for any other jog-waypoint-vs-node collisions this same gap may have hidden elsewhere.
+      to land near a real node's own position, not only this one fixture.
+      **Root cause was actually in `.resolveEdgeNodeCollisions()` (`:2060-2272`), not
+      `.addRectilinearWaypoints()`** -- the BACKLOG title's function attribution had drifted; the
+      jog nodes are built at `:2239-2242` inside the SEPARATE Track 2 same-row-collision function,
+      confirmed by reading the actual current source (`grep` for the 2 top-level function
+      definitions) rather than trusting the stale line-number range. **Fix:** gave the `__jog_*`
+      node construction the same explicit invisible styling D1/D2 already use (`label = ""`,
+      `shape = "dot"`, `title = NA_character_`, `size = 0L`,
+      `color.background`/`color.border = "rgba(0,0,0,0)"`), an 11-line additive change. Full TDD:
+      RED (`01a0f001`) -- 2 new `test_resolveEdgeNodeCollisions.R` blocks (a hand-built fixture with
+      the full production node-styling schema, plus an extension of the real-375-fixture
+      regression test), confirmed genuinely failing (8 new intentional/0 error/41 passed
+      file-scoped; 9 failed [8 new + 1 pre-existing `test_wordlist_coverage.R`]/0 error/6572 passed
+      full regression). GREEN (`4333fa39`) -- full clean regression 1 failed (pre-existing)/0
+      error/6580 passed, 0 collateral; `lintr::lint_package()` 0 lints on both touched files;
+      `devtools::document()` 0 NAMESPACE/man changes (internal `@noRd` function). **Live chromote
+      render check** (querying vis.js's own DOM-side DataSet via
+      `g.chart.body.data.nodes.get(id)`, not just the R-side `data.frame`): all sampled `__jog_`
+      nodes on the real 375-individual fixture (198 total, unchanged) reach vis.js with
+      `shape: "dot"`/`size: 0`/fully transparent `color.background`/`color.border`, confirmed
+      through the full R -> htmlwidgets -> vis.js pipeline. REFACTOR skipped (owner-directed via
+      `AskUserQuestion`): the fix mirrors the existing D1/D2 styling block exactly, no
+      behavior-neutral restructuring identified, matching S650/S652/S653/S655's own precedent. See
+      `CHANGELOG.md`.
+- [ ] **A structural guard is needed against calling `ScheduleWakeup` while a `run_in_background`
+      task is outstanding -- 3 consecutive sessions (S654 near-miss, S655, S656) made this
+      identical mistake despite 2 rounds of prose documentation** (found S656, 2026-08-30, while
+      waiting on this session's own GREEN-phase full regression -- READY, Effort S-M, matches
+      `SESSION_RUNNER.md`'s own Degradation Detection guidance: "a health check has reported the
+      same finding for several consecutive sessions and nothing has changed -- do not add a second
+      report, add a gate") -- `PROJECT_LEARNINGS.md` Learning 695 (and its predecessor, Learning
+      694) document the recurrence in full; a fourth freestanding prose warning would repeat the
+      same failed intervention a third time. Investigate a Claude Code hook (see the
+      `update-config` skill) that intercepts a `ScheduleWakeup`/`CronCreate` call while this
+      session's own `run_in_background` task is still outstanding and blocks or warns AT THE POINT
+      OF THE CALL, not in a file the session has to remember to re-read under pressure. Not
+      investigated further this session (out of scope for this session's own jog-waypoint-styling
+      deliverable).
 - [x] **Track 7 Phase 2's own union-side proximity push (S649) introduces union-vs-DUPLICATE
       proximity cases on the real 375-individual fixture that did not exist before Phase 2** (found
       live S649, 2026-08-29, implementing `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`

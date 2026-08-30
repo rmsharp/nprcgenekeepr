@@ -16,6 +16,48 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S656: docs close-out -- NEWS.Rmd entry, Learning 695, BACKLOG.md structural-guard item
+- `NEWS.Rmd`/`NEWS.md`: added a plain-language bullet to the Pedigree Diagram group, right after
+  the existing "reroutes around the obstacle" bullet it directly improves (shipping-order
+  placement). `PROJECT_LEARNINGS.md`: recorded Learning 695 -- this session made the IDENTICAL
+  `ScheduleWakeup`-while-waiting-on-a-`run_in_background`-task mistake Learning 694 documented one
+  session earlier (a 3rd consecutive occurrence, counting S654's own near-miss), caught immediately
+  and disclosed. Per `SESSION_RUNNER.md`'s own Degradation Detection guidance ("same finding several
+  sessions running, nothing gates on it -- add a gate, not a second report"), filed a `BACKLOG.md`
+  Housekeeping item proposing a structural Claude Code hook rather than a 4th freestanding prose
+  warning. `CLAUDE.md` learnings pointer updated 694 -> 695.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [BL-jogWaypointStyling] S656: GREEN -- __jog_* waypoint invisible styling fix
+- Commit `4333fa39`. `.resolveEdgeNodeCollisions()`'s `__jog_*` node construction
+  (`R/makePedigreeDiagramData.R:2239-2242`) now sets `label`/`shape`/`title`/`size`/
+  `color.background`/`color.border` explicitly (invisible: `shape = "dot"`, `size = 0`, fully
+  transparent colors), matching `.addRectilinearWaypoints()`'s own D1/D2 waypoint styling
+  (`:1966-1973`) exactly -- an 11-line additive change.
+- Verification: `test_resolveEdgeNodeCollisions.R` 0 failed/0 error/49 passed (file-scoped); full
+  clean regression 1 failed (pre-existing `test_wordlist_coverage.R`)/0 error/6580 passed, 0
+  collateral. `lintr::lint_package()` 0 lints on both touched files. `devtools::document()` 0
+  NAMESPACE/man changes (internal `@noRd` function). **Live chromote render check**: queried vis.js's
+  own DOM-side DataSet (`g.chart.body.data.nodes.get(id)`, not just the R-side `data.frame`) against
+  the real 375-individual fixture -- all sampled `__jog_` nodes (198 total, unchanged) reach vis.js
+  with `shape: "dot"`/`size: 0`/transparent `color.background`/`color.border`, confirmed through the
+  full R -> htmlwidgets -> vis.js pipeline. REFACTOR skipped (owner-directed via `AskUserQuestion`):
+  mirrors the existing D1/D2 styling block exactly, no restructuring identified.
+- `BACKLOG.md`: marked the `__jog_*` waypoint item `[x]` DONE with full resolution detail; also
+  corrected its stale function attribution (root cause lives in `.resolveEdgeNodeCollisions()`, not
+  `.addRectilinearWaypoints()` as the original title said).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [BL-jogWaypointStyling] S656: RED -- __jog_* waypoint invisible styling fix
+- Commit `01a0f001`. Two new `test_that` blocks in `test_resolveEdgeNodeCollisions.R`: a hand-built
+  fixture with the full production node-styling schema, plus an extension of the existing
+  real-375-individual-fixture regression test -- both asserting new `__jog_` nodes get
+  `shape = "dot"`/`size = 0`/transparent `color.background`/`color.border`.
+- Confirmed genuine RED: file-scoped 8 failed/0 error/41 passed (exactly the 8 new intentional
+  assertions, 4 per block); full clean regression 9 failed (8 new + 1 pre-existing
+  `test_wordlist_coverage.R` baseline)/0 error/6572 passed -- 0 collateral.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [BL-jogWaypointStyling] S656: claim session (fix __jog_* waypoint invisible styling)
 - Session claimed. Deliverable: `.resolveEdgeNodeCollisions()`'s `__jog_*` waypoint nodes
   (`R/makePedigreeDiagramData.R:2239-2242`) currently only set `id`/`x`/`y`, so

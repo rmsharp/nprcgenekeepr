@@ -138,20 +138,67 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S656
 date: 2026-08-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix .resolveEdgeNodeCollisions()'s __jog_* waypoint nodes so they render invisible
-  (matching .addRectilinearWaypoints()'s own D1/D2 waypoint convention) instead of vis.js's
-  default filled circle (BACKLOG.md Housekeeping, found S648).
-what_was_done: pending
-next_steps: pending
-key_files: R/makePedigreeDiagramData.R:2060-2272 (.resolveEdgeNodeCollisions()), tests/testthat/test_resolveEdgeNodeCollisions.R
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: DONE -- fixed .resolveEdgeNodeCollisions()'s __jog_* waypoint nodes so they render
+  invisible (matching .addRectilinearWaypoints()'s own D1/D2 waypoint convention), full TDD
+  RED->GREEN->REFACTOR(skipped). Live chromote render check confirmed through the full
+  R -> htmlwidgets -> vis.js pipeline. BACKLOG.md item marked DONE.
+what_was_done: RED (01a0f001): 2 new test_that blocks in test_resolveEdgeNodeCollisions.R (a
+  hand-built fixture with the full production node-styling schema, plus an extension of the
+  real-375-fixture regression test); confirmed genuine RED (9 failed = 8 new + 1 pre-existing
+  / 0 error / 6572 passed). GREEN (4333fa39): gave the __jog_* node construction explicit
+  invisible styling matching D1/D2 exactly (label/shape/title/size/color.background/
+  color.border), 11-line additive change in R/makePedigreeDiagramData.R:2239-2242. Full
+  regression 1 failed (pre-existing)/0 error/6580 passed, 0 collateral; lintr 0 lints;
+  devtools::document() 0 NAMESPACE/man changes; live chromote check via
+  g.chart.body.data.nodes.get(id) confirmed 198 real __jog_ nodes reach vis.js with
+  shape='dot'/size=0/transparent colors. REFACTOR skipped (owner-directed). Docs close-out:
+  NEWS.Rmd/NEWS.md bullet added, PROJECT_LEARNINGS.md Learning 695 recorded (a 3rd consecutive
+  ScheduleWakeup-while-waiting-on-background-task mistake, Learning 694's own pattern
+  recurring), BACKLOG.md item marked DONE plus a new structural-guard Housekeeping item filed.
+next_steps: Pick the next pedigree-fidelity Housekeeping item (STANDING TOP PRIORITY still
+  applies): the Track C table discrepancy (READY, Effort S) or the NEWS.Rmd sibling-
+  consanguineous staleness question (READY, Effort S). The 6 duplicate-vs-individual
+  near-misses item needs its own design session first (Effort M). New this session: a
+  BACKLOG.md item proposing a structural Claude Code hook (via the update-config skill)
+  against the recurring ScheduleWakeup misuse (Learning 694/695, 3 consecutive sessions) --
+  investigate rather than defer again. A future session should also push master (4 commits
+  ahead as of this session's close) and confirm CI, especially lint.yaml (S653's fix still
+  unpushed).
+key_files: R/makePedigreeDiagramData.R:2226-2274 (.resolveEdgeNodeCollisions()'s __jog_* node
+  construction, the fix), tests/testthat/test_resolveEdgeNodeCollisions.R (2 new test_that
+  blocks), PROJECT_LEARNINGS.md Learning 695 (the recurring ScheduleWakeup misuse)
+gotchas: The BACKLOG item's own text had drifted (attributed to .addRectilinearWaypoints()
+  with stale line numbers; actual code lives in the separate .resolveEdgeNodeCollisions()) --
+  always verify a BACKLOG item's file/function/line pointers against current source during
+  PRE-RED, don't trust them as current. The stray editor lock file
+  (inst/extdata/reference/~$e Compounding Loop.html, matching the exact S568 precedent) was
+  flagged but NOT deleted this session -- still present.
+runtime_smoke: Live chromote render check via g.chart.body.data.nodes.get(id) against the real
+  375-individual bundled fixture, querying vis.js's own DOM-side DataSet (not just the R-side
+  data.frame): all 5 sampled __jog_ nodes (of 198 total, unchanged from before this fix) carry
+  shape='dot'/size=0/transparent color.background+color.border, confirmed through the full
+  R -> htmlwidgets -> vis.js pipeline.
+changelog_ref: CHANGELOG.md 2026-08-30 S656 claim/RED/GREEN/docs-close-out entries (commits
+  75b9f06e, 01a0f001, 4333fa39)
 commit: pending
 ```
+Fixed the `__jog_*` waypoint invisible-styling gap end to end via full TDD, correcting a stale
+BACKLOG function/line-number attribution along the way by reading actual current source rather
+than trusting the item's own text. Went beyond the data-layer test assertions with a live chromote
+check querying vis.js's own DOM-side DataSet, confirming the fix through the full
+R -> htmlwidgets -> vis.js pipeline. Repeated the Learning 694 `ScheduleWakeup`-while-waiting
+mistake for a 3rd consecutive session -- caught immediately, recorded as Learning 695, and filed
+as a `BACKLOG.md` structural-fix item rather than a 4th freestanding prose warning.
+
+**Self-score breakdown (7/10):** +2 caught and corrected the stale BACKLOG attribution via direct
+source grep rather than trusting it; +2 live chromote DOM-level verification beyond the data-layer
+test assertions; +1 zero stakeholder corrections on the technical content across all 3 TDD gates;
++1 clean CHANGELOG/BACKLOG/NEWS.Rmd/Learning close-out; +1 self-caught and corrected a
+manually-backgrounded shell process mid-session. -1 for the 3rd consecutive `ScheduleWakeup`
+misuse despite 2 prior rounds of documentation.
 
 ```handoff
 session: S655

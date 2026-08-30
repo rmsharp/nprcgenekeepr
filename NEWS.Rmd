@@ -84,6 +84,9 @@ knitr::opts_chunk$set(echo = TRUE)
   often in large, many-founder colony pedigrees -- and reroutes around
   the obstacle. A small number of curved duplicate-animal connectors get
   only a partial correction and remain a disclosed residual.
+- The small hidden markers used to bend a connector line around an
+  obstacle (see above) no longer occasionally show up as a stray dot near
+  an unrelated animal.
 - Two parents in a straightforward one-mate pairing (each mated only
   once, sex clearly recorded) are drawn with a clearer gap between them,
   matching kinship2's convention.

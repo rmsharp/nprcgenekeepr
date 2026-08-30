@@ -18,16 +18,110 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 655 Handoff Evaluation (by Session 656)
+**Score: 9/10.** **What helped:** S655's gotchas named the exact 4 remaining pedigree-fidelity
+Housekeeping items with correct READY/Effort tags (the `__jog_*` waypoint styling gap this session
+picked, the Track C table discrepancy, the `NEWS.Rmd` staleness question, and the
+duplicate-vs-individual near-misses item correctly flagged as needing its own design session first)
+-- Phase 0's priorities `AskUserQuestion` rendered immediately with zero re-derivation. The
+unpushed-commits/`lint.yaml`-still-red gotcha was accurate and let this session correctly read the
+CI status check without confusion (the red run predates S653's local, unpushed fix). **What was
+missing:** nothing in S655's own handoff -- the one gap this session found (the `__jog_*` item's
+BACKLOG text citing `.addRectilinearWaypoints()` and stale `:2081-2127`/`:2094-2097` line numbers,
+when the actual code lives in the separate `.resolveEdgeNodeCollisions()` at `:2239-2242`) is
+pre-existing text from S648's original finding that S655 never touched, not an S655 authorship gap.
+**What was wrong:** nothing. **ROI:** positive -- accurate, complete, saved a full priorities
+re-derivation.
+
 ### What Session 656 Did
-**Deliverable:** Fix `.resolveEdgeNodeCollisions()`'s `__jog_*` waypoint nodes so they render
-invisible (matching `.addRectilinearWaypoints()`'s own D1/D2 `__drop_`/`__bar_`/`__proj_`
-waypoint convention) instead of vis.js's default filled circle (BACKLOG.md Housekeeping, found
-S648, 2026-08-28) (IN PROGRESS)
-**Started:** 2026-08-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Fixed `.resolveEdgeNodeCollisions()`'s `__jog_*` waypoint nodes so they render
+invisible (matching `.addRectilinearWaypoints()`'s own D1/D2 waypoint convention) instead of
+vis.js's default filled circle (BACKLOG.md Housekeeping, found S648, 2026-08-28). **DONE**, full
+TDD RED->GREEN->REFACTOR(skipped).
+**Started/Completed:** 2026-08-30 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0:** orientation report; ledger reconcile found 0 undocumented commits (`CHANGELOG.md`/
+   `HANDOFFS.md` frontiers both == `HEAD`) -- no backfill needed. Flagged a stray LibreOffice/Word
+   editor lock file (`inst/extdata/reference/~$e Compounding Loop.html`) matching the exact S568
+   precedent, untracked evidence/scratch files (not ghost work), and `lint.yaml`'s known-red status
+   (S653's fix committed locally, not yet pushed). Priorities `AskUserQuestion` (4 pedigree-fidelity
+   Housekeeping options) -> owner picked the `__jog_*` waypoint styling item.
+2. **Phase 1B claim** (commit `75b9f06e`).
+3. **Pre-RED investigation:** read `DEVELOPMENT_WORKSTREAM.md`, then the actual current source --
+   found the BACKLOG item's own function attribution had drifted (`.addRectilinearWaypoints()` ->
+   actually `.resolveEdgeNodeCollisions()`, confirmed by grepping the file's 2 top-level function
+   definitions) and the line numbers were stale (`:2081-2127`/`:2094-2097` -> actually `:2239-2242`
+   for the node construction, `:2145-2156` for `.matchColumns()`). Read the D1/D2 invisible-styling
+   precedent (`:1966-1973`) and confirmed no existing test in `test_resolveEdgeNodeCollisions.R`
+   (542 lines, read in full) asserts styling columns on `__jog_` nodes.
+4. **`AskUserQuestion` PRE-RED->RED gate** -> owner approved proceeding as proposed.
+5. **RED** (commit `01a0f001`): 2 new `test_that` blocks -- a hand-built fixture with the full
+   production node-styling schema (modeled on the file's own "kept-mate-edge-shaped collision"
+   fixture), plus an extension of the existing real-375-fixture regression test. Confirmed genuine
+   RED: file-scoped 8 failed/0 error/41 passed; full clean regression 9 failed (8 new + 1
+   pre-existing `test_wordlist_coverage.R`)/0 error/6572 passed, 0 collateral.
+6. **`AskUserQuestion` RED->GREEN gate** -> owner approved proceeding as proposed.
+7. **GREEN** (commit `4333fa39`): gave the `__jog_*` node construction the same explicit invisible
+   styling D1/D2 already use (label/shape/title/size/color.background/color.border), an 11-line
+   additive change. Full clean regression 1 failed (pre-existing)/0 error/6580 passed, 0 collateral;
+   `lintr::lint_package()` 0 lints on both touched files; `devtools::document()` 0 NAMESPACE/man
+   changes. **Live chromote render check** (new this session: queried vis.js's own DOM-side DataSet
+   via `g.chart.body.data.nodes.get(id)`, not just the R-side `data.frame`) against the real
+   375-individual fixture -- all sampled `__jog_` nodes (198 total, unchanged) reach vis.js with
+   `shape: "dot"`/`size: 0`/transparent colors, confirmed through the full R -> htmlwidgets ->
+   vis.js pipeline.
+8. **`AskUserQuestion` GREEN->REFACTOR gate** -> owner picked "skip REFACTOR" (matching
+   S650/S652/S653/S655's own precedent -- no behavior-neutral restructuring identified).
+9. **Docs close-out:** `BACKLOG.md` marked the item `[x]` DONE with full resolution detail
+   (including correcting the stale function/line-number attribution). `NEWS.Rmd`/`NEWS.md`: added a
+   plain-language bullet in shipping-order position, right after the Track 2 "reroutes around the
+   obstacle" bullet it directly improves. `PROJECT_LEARNINGS.md`: recorded Learning 695 (see below).
+   `CLAUDE.md` learnings pointer updated 694 -> 695. `BACKLOG.md`: added a new Housekeeping item
+   proposing a structural fix for the Learning 694/695 recurrence.
+10. **`CHANGELOG.md`**: 4 entries added (claim, RED, GREEN, docs-close-out), source-tagged
+    `[BL-jogWaypointStyling]` for claim/RED/GREEN and `[ad hoc]` for docs-close-out, matching S655's
+    own tagging convention.
+11. **No GitHub issue filed/closed** -- BACKLOG.md-tracked Housekeeping item, matching convention.
+
+**Self-assessment (Session 656): 7/10.** **Strengths:** (1) caught and corrected a real,
+pre-existing BACKLOG text drift (function attribution + line numbers) via direct source grep during
+PRE-RED, rather than trusting the item's own text; (2) wrote a hand-built RED test using the file's
+own established fixture style AND extended the real-fixture regression test, giving both precision
+and end-to-end coverage; (3) went beyond the data-layer test assertions with a NEW live chromote
+check querying vis.js's own DOM-side DataSet -- confirms the fix through the full R -> htmlwidgets
+-> vis.js pipeline, not just the R-side `data.frame`, closing a verification gap the unit tests
+alone couldn't; (4) 0 stakeholder corrections on the technical implementation -- all 3 TDD phase
+gates approved exactly as proposed; (5) correctly recovered from a manually-backgrounded (`&`) shell
+process by killing it and restarting via the harness's own `run_in_background` mechanism instead of
+leaving an untracked process running. **Weaknesses:** (1) **repeated the Learning 694
+`ScheduleWakeup`-while-waiting-on-a-background-task mistake for a THIRD consecutive session**
+(counting S654's own near-miss) -- caught and disclosed immediately, but this is now a documented
+recurring pattern across 3 sessions despite 2 rounds of prose warnings; recorded as Learning 695 and
+filed as a `BACKLOG.md` item proposing a structural fix rather than a 4th freestanding warning,
+per `SESSION_RUNNER.md`'s own "add a gate, not a second report" guidance; (2) initially ran the
+full regression via a manually-backgrounded `&` shell command instead of the harness's
+`run_in_background` tool parameter, requiring a mid-session self-correction (killed the stray
+process, restarted correctly) -- should have used the correct mechanism the first time.
+
+**Gotchas for a future session:** (1) **The `__jog_*` waypoint styling fix is fully shipped, tested,
+and live-render-verified** -- no further work needed on it specifically. (2) **STANDING TOP
+PRIORITY banner still applies** -- 2 pedigree-fidelity Housekeeping items remain open: the Track C
+table discrepancy (READY, Effort S) and the `NEWS.Rmd` sibling-consanguineous staleness question
+(READY, Effort S); plus the 6 duplicate-vs-individual near-misses item (READY tag, but needs its
+own design session first, Effort M). (3) **New this session:** a `BACKLOG.md` Housekeeping item
+proposing a structural Claude Code hook against the recurring `ScheduleWakeup`-while-
+`run_in_background`-outstanding mistake (Learning 694/695, 3 consecutive sessions) -- a future
+session should investigate this via the `update-config` skill rather than defer it again. (4)
+`master` is now 4 commits ahead of where S655 left it (`75b9f06e`/`01a0f001`/`4333fa39`, plus the
+docs-close-out and self-reference commits below), unpushed per the standing convention -- a future
+session pushing should confirm CI goes green, including `lint.yaml` (S653's fix is still unpushed as
+of this session's start). (5) `HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM
+#28 size cap, unchanged this session -- `BACKLOG.md`'s "ledger-size housekeeping" item is still
+open. (6) The stray editor lock file (`inst/extdata/reference/~$e Compounding Loop.html`, flagged
+Phase 0, matching S568's exact precedent) was NOT deleted this session (out of scope for the
+jog-waypoint deliverable) -- still present, a future session (or the user directly) should delete it
+per the established precedent.
 
 ### Session 654 Handoff Evaluation (by Session 655)
 **Score: 10/10.** **What helped:** S654's `next_steps` pointed directly at the ratified design
