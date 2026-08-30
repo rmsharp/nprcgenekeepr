@@ -16,6 +16,13 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S653: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S652 precedent)
+- Commit `20d7414b` set `HANDOFFS.md`'s S653 receipt `commit:` field from `pending` to `741c2b7f`
+  (a 1-line change), the same self-reference workaround this project's sessions have made since
+  S600/S602. Logged in the same session, unlike the 19-session gap (S634-S651) this session's own
+  Phase 0 found and reported for this exact entry type.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [BL-N] S653 GREEN: move .formatStructuralDiscrepancy() into R/ (lint.yaml fix)
 - Moved `.formatStructuralDiscrepancy()` from `tests/testthat/helper-comparePedigreeStructure.R`
   into `R/comparePedigreeStructure.R` (`@noRd`), alongside its 3 siblings -- it has zero `kinship2`
