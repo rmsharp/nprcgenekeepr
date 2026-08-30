@@ -137,19 +137,61 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S653
-date: 2026-08-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Fix the lint.yaml CI break -- [object_usage_linter] no visible global function
+date: 2026-08-30
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- lint.yaml CI break fixed. [object_usage_linter] no visible global function
   definition for '.formatStructuralDiscrepancy' at data-raw/kinship2FidelityValidation.R:339
-  (BACKLOG.md Housekeeping, found S643, confirmed identical on 3 consecutive pushes).
-what_was_done: pending
-next_steps: pending
-key_files: data-raw/kinship2FidelityValidation.R:339, tests/testthat/helper-comparePedigreeStructure.R
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  (BACKLOG.md Housekeeping, found S643) resolved via full TDD RED->GREEN (REFACTOR skipped):
+  moved the function into R/comparePedigreeStructure.R. BACKLOG.md item marked DONE.
+what_was_done: Phase 0 ledger reconcile backfilled a missing CHANGELOG.md entry for S652's own
+  self-reference commit (a26aa472). Claim (81266f05). Root cause confirmed live (not assumed):
+  lint.yaml runs `Rscript -e 'lintr::lint_package()'` with no pkgload::load_all() step, so it
+  never sees .formatStructuralDiscrepancy() (defined only in a testthat helper) -- every local
+  repro this session showed 0 lints because load_all()'s own default helpers = TRUE silently
+  auto-sources testthat helpers, masking the gap deterministically (confirmed via
+  exists(..., where = asNamespace("nprcgenekeepr"), inherits = FALSE) == FALSE even after a bare
+  load_all()) -- definitively ruling out, not just weakening, BACKLOG.md's prior "stale globalenv"
+  hypothesis. Also confirmed against the already-ratified D-6 decision
+  (docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md): the function has zero
+  kinship2 dependency, so it already satisfied the criterion that routed its 3 siblings to R/.
+  RED (5779c002): new structural guard test test_lint_clean_baseline.R (test_r_cmd_check_clean_
+  baseline.R/S637 precedent) asserting namespace-level visibility; confirmed genuine RED (93 -> 2
+  failed, 0 collateral). GREEN (3be66ae9): moved the function into R/comparePedigreeStructure.R
+  (@noRd), updated 2 real call sites + stale comments; full clean regression 1 failed
+  (pre-existing)/0 error/6570 passed; lintr::lint_package() 0 lints; devtools::document() 0
+  NAMESPACE/man changes; live end-to-end run of data-raw/kinship2FidelityValidation.R (kinship2/
+  chromote/htmlwidgets all available locally) exit code 0, Track D all identical = TRUE; 4
+  incidentally-regenerated PNGs (chromote non-determinism) reverted, not committed. REFACTOR
+  skipped (owner-directed via AskUserQuestion). CHANGELOG.md/BACKLOG.md updated (84d986d4).
+  Learning 692 recorded, CLAUDE.md pointer updated (8dab37be).
+next_steps: Pick from BACKLOG.md Housekeeping (all under the standing pedigree-fidelity banner,
+  5 of 6 items now remaining): the __jog_* waypoint invisible-styling fix (READY, Effort S,
+  R/makePedigreeDiagramData.R:2081-2127/2094-2097), the Track C table discrepancy (READY, Effort
+  S), the union-vs-duplicate proximity residual design (READY, Effort M), S649's missing
+  NEWS.Rmd entry (READY, Effort S), or the NEWS.Rmd dangling-reference question (READY, Effort
+  S). A future session should also push master to origin (13+ commits ahead, unpushed) and
+  confirm lint.yaml actually goes green on real CI, not just local verification.
+key_files: R/comparePedigreeStructure.R (new .formatStructuralDiscrepancy(), appended after
+  .comparePedigreeStructures() at :305), data-raw/kinship2FidelityValidation.R:339 (call site,
+  now nprcgenekeepr:::-prefixed), tests/testthat/helper-comparePedigreeStructure.R (function
+  removed), tests/testthat/test_lint_clean_baseline.R (new guard test)
+gotchas: Local lintr::lint_package() runs (even a fresh Rscript process, even lint() on a single
+  file in isolation) CANNOT reproduce a CI-only lint.yaml gap if the missing symbol is a testthat
+  helper -- pkgload::load_all()'s own helpers = TRUE default masks it every time (Learning 692).
+  Do not trust a clean local lint run over a CI-reported failure without checking this. The
+  STANDING TOP PRIORITY banner (BACKLOG.md, S643) stays -- 5 of 6 pedigree-fidelity Housekeeping
+  items remain open. A 19-session-deep CHANGELOG gap (S634-S651, same self-reference-commit
+  entry type this session backfilled for S652) was found but not backfilled -- outside this
+  reconcile's frontier, reported only.
+runtime_smoke: n/a for the Shiny app (no app runtime behavior changed -- internal dev-tooling
+  relocation only, no exported function, no Shiny feature/control) -- but the actual runtime path
+  this fix touches WAS live-verified: a full end-to-end run of
+  data-raw/kinship2FidelityValidation.R (kinship2/chromote/htmlwidgets all available locally),
+  exit code 0, confirming the moved nprcgenekeepr:::.formatStructuralDiscrepancy() call resolves
+  correctly through the actual script, not just under testthat.
+changelog_ref: CHANGELOG.md 2026-08-30 S653 RED/GREEN entries (84d986d4)
 commit: pending
 ```
 

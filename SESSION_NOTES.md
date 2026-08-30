@@ -18,15 +18,115 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 652 Handoff Evaluation (by Session 653)
+**Score: 8/10.** **What helped:** S652 left `BACKLOG.md`/`CHANGELOG.md` in a clean, accurate state
+-- the STANDING TOP PRIORITY banner and the 6-item pedigree-fidelity Housekeeping cluster it
+correctly noted as still-open (in its own gotchas) let this session's Phase 0 orientation find and
+pick the `lint.yaml` item immediately, with zero re-derivation needed. Every claim S652 made that
+this session independently checked (git log, `BACKLOG.md`/`CHANGELOG.md` state, the union-vs-
+duplicate residual count) matched exactly. **What was missing:** S652's own close-out left one real
+gap, found by this session's own Phase 0 ledger reconcile (step 6, not something S652's handoff
+itself flagged): the `7cc9e6e4` self-reference-workaround commit (recording its own close-out
+commit sha in `HANDOFFS.md`) had no `CHANGELOG.md` entry, breaking a pattern every session had
+followed since S600/S602 -- backfilled this session before claiming the task. This is a narrow,
+mechanical miss (matches a broader, 19-session-deep pattern this session also found and reported,
+not something unique to S652's own discipline), not a substantive handoff defect -- the lint.yaml
+task itself traces to S643/S644, not S652's own scope. **What was wrong:** nothing. **ROI:**
+positive -- S652's clean handoff let this session orient and reach a concrete, well-scoped next
+task with no wasted discovery time; the one gap found cost a single Phase 0 backfill commit, not a
+redesign.
+
 ### What Session 653 Did
 **Deliverable:** Fix the `lint.yaml` CI break -- `[object_usage_linter] no visible global function
 definition for '.formatStructuralDiscrepancy'` at `data-raw/kinship2FidelityValidation.R:339`
-(BACKLOG.md Housekeeping, found S643, confirmed identical on 3 consecutive pushes). (IN PROGRESS)
-**Started:** 2026-08-29.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+(`BACKLOG.md` Housekeeping, found S643, confirmed identical on 3 consecutive pushes). **DONE.**
+**Started/Completed:** 2026-08-29 -- 2026-08-30 (single session, spanned midnight).
+
+**What actually happened, in order:**
+1. **Phase 0:** orientation report + ledger reconcile found and backfilled a missing `CHANGELOG.md`
+   entry for S652's own self-reference-workaround commit (`7cc9e6e4`) -- commit `a26aa472`. Also
+   flagged (not actioned) that the same commit type went unlogged for 19 prior sessions
+   (S634-S651), outside this reconcile's frontier.
+2. **Phase 1B claim** (commit `81266f05`).
+3. **Pre-RED investigation, root cause confirmed live, not assumed:** reproduced `lint.yaml`'s
+   exact CI invocation (`Rscript -e 'lintr::lint_package()'`, no `pkgload::load_all()`) and found
+   every local repro attempt (`lint_package()` after `load_all()`; `lint()` on the single file in
+   total isolation, fresh `Rscript` process) showed 0 lints -- traced to `pkgload::load_all()`'s
+   own default `helpers = TRUE` silently auto-sourcing `tests/testthat/helper-*.R`, confirmed via
+   `exists(".formatStructuralDiscrepancy", where = asNamespace("nprcgenekeepr"), inherits =
+   FALSE)` returning `FALSE` even after a bare `load_all()`. This definitively ruled out (not just
+   weakened) `BACKLOG.md`'s own "stale globalenv" hypothesis (S643/S644). Also confirmed the fix
+   direction against the already-ratified D-6 decision in `docs/planning/pedigree-diagram-
+   kinship2-structural-comparison-plan.md`: `.formatStructuralDiscrepancy()` has zero `kinship2`
+   dependency (unlike its 2 testthat-helper neighbors), so it already satisfied the exact criterion
+   that routed its 3 siblings to `R/` -- it was a misplacement, not a deliberate exception.
+4. **RED** (commit `5779c002`): new structural guard test `test_lint_clean_baseline.R` (matching
+   the `test_r_cmd_check_clean_baseline.R`/S637 precedent), asserting the function is defined
+   directly in the package namespace. Confirmed genuine RED: full clean regression 93 -> 2 failed
+   (1 new intentional + 1 pre-existing `test_wordlist_coverage.R` baseline)/0 error/6569 passed
+   against unmodified `HEAD`, 0 collateral.
+5. **GREEN** (commit `3be66ae9`): moved `.formatStructuralDiscrepancy()` into
+   `R/comparePedigreeStructure.R` (`@noRd`); updated the 2 real call sites
+   (`data-raw/kinship2FidelityValidation.R` now via `nprcgenekeepr:::`, matching that script's own
+   convention; `test_comparePedigreeStructure.R`'s 6 sites stay bare-name, matching that file's own
+   convention) and stale location comments. Verification: full clean regression 1 failed
+   (pre-existing)/0 error/6570 passed; `lintr::lint_package()` 0 lints; `devtools::document()` 0
+   NAMESPACE/man changes, 0 roxygen `\link` warnings; live end-to-end run of
+   `data-raw/kinship2FidelityValidation.R` (kinship2/chromote/htmlwidgets all available locally) --
+   exit code 0, Track D all 3 comparisons `identical = TRUE`. 4 incidentally-regenerated Track B/C
+   PNGs (chromote screenshot non-determinism, unrelated -- rendering pipeline untouched) reverted,
+   not committed, to keep the change scoped to exactly 4 files + 1 new test.
+6. **REFACTOR skipped** (owner-directed via `AskUserQuestion`): the change is already minimal and
+   clean, no behavior-neutral restructuring identified, matching S650/S652's own precedent.
+7. **Docs** (commit `84d986d4`): `CHANGELOG.md` RED/GREEN entries; `BACKLOG.md` item marked `[x]`
+   DONE with full resolution detail (STANDING TOP PRIORITY banner correctly left in place -- 5 of
+   the 6 pedigree-fidelity Housekeeping items remain open).
+8. **Learning 692 recorded** (commit `8dab37be`), `CLAUDE.md` learnings pointer updated (691 ->
+   692): `pkgload::load_all()`'s own `helpers = TRUE` default can mask a CI-only lint gap from
+   every local repro, not just a "stale session" artifact -- the practical rule is to check whether
+   the calling file lives outside `tests/` before trusting a clean local `lintr::lint_package()`
+   run over a CI-reported failure.
+9. **No `NEWS.Rmd` entry** (deliberately) -- this is an internal dev-tooling relocation with zero
+   user-facing behavior change (no new exported function, no Shiny feature/control), outside
+   `CLAUDE.md`'s NEWS.Rmd entry checklist scope.
+10. **No GitHub issue filed/closed** -- matches this project's CI-break tracking convention
+    (`CLAUDE.md`): fix as found (in scope, clear) rather than opening a standalone issue.
+
+**Self-assessment (Session 653): 9/10.** **Strengths:** (1) did not accept `BACKLOG.md`'s own
+"most likely explanation, not yet confirmed" at face value -- traced the actual root cause live
+(the `load_all()` `helpers = TRUE` default) with a direct `exists(..., inherits = FALSE)` probe
+rather than repeating the same "confirmed identical, weakens the hypothesis" pattern 3 prior
+sessions had already left unresolved; (2) checked the fix direction against an already-ratified
+architectural decision (D-6) before writing any code, rather than treating "move it to R/" as a
+fresh judgment call needing its own ratification; (3) caught and reverted 4 incidentally-
+regenerated PNGs before committing, keeping the change scoped exactly to the stated deliverable
+(SAFEGUARDS.md blast-radius discipline); (4) live-verified the actual runtime path this fix
+touches end-to-end (the full `data-raw/kinship2FidelityValidation.R` script), not just the unit
+tests; (5) zero stakeholder corrections needed across all 3 TDD phase-gates; (6) found and
+backfilled a genuine Phase 0 ledger gap (the `7cc9e6e4` entry) before claiming the session, rather
+than only noting it. **Weaknesses:** (1) background-process coordination cost real turns early in
+GREEN verification -- an initial `&`-inside-background-Bash mistake caused one wasted wait cycle
+before switching to a properly harness-tracked background run plus `Monitor`; (2) did not attempt
+to simulate CI's exact helper-less lint invocation locally (e.g. via an installed-package lint run)
+as a maximally rigorous final confirmation beyond the guard test -- relied on the guard test's own
+namespace-level assertion as sufficient proof instead, which is sound but one step short of a
+literal CI-invocation replay.
+
+**Gotchas for a future session:** (1) **The `lint.yaml` CI break is fully fixed** -- no further
+work needed on it specifically; a live CI push+verify was not performed this session (commit/push
+only when asked convention) -- a future session pushing should confirm `lint.yaml` actually goes
+green on the real CI run, not just trust the local verification. (2) **STANDING TOP PRIORITY
+banner** (`BACKLOG.md`, S643) still correctly stands: 5 of the 6 pedigree-fidelity Housekeeping
+items remain open (the `__jog_*` waypoint bug, the Track C table discrepancy, the union-vs-
+duplicate residual, S649's missing `NEWS.Rmd` entry, the `NEWS.Rmd` dangling-reference question) --
+this session does not remove the banner unilaterally. (3) **19-session-deep CHANGELOG gap
+(S634-S651)** found during Phase 0 reconcile, reported not backfilled (outside the current
+reconcile frontier, would exceed the "one write Phase 0 permits") -- a future session could run a
+dedicated historical-reconcile pass if this is judged worth doing. (4) `master` is now several
+commits ahead of `origin/master` (this session's own commits plus prior unpushed ones) -- not
+pushed per the standing "commit/push only when asked" convention. (5) `HANDOFFS.md`/
+`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap, unchanged this session --
+`BACKLOG.md`'s "ledger-size housekeeping" item is still open.
 
 ### Session 651 Handoff Evaluation (by Session 652)
 **Score: 8/10.** **What helped:** S651's design document (`docs/planning/pedigree-diagram-track7-
