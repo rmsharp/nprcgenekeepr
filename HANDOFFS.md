@@ -192,7 +192,7 @@ runtime_smoke: n/a for the Shiny app (no app runtime behavior changed -- interna
   exit code 0, confirming the moved nprcgenekeepr:::.formatStructuralDiscrepancy() call resolves
   correctly through the actual script, not just under testthat.
 changelog_ref: CHANGELOG.md 2026-08-30 S653 RED/GREEN entries (84d986d4)
-commit: pending
+commit: 741c2b7f
 ```
 
 ```handoff
