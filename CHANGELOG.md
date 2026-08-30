@@ -16,6 +16,33 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [BL-track7Phase4Duplicate] S654: ratified design for Track 7 Phase 4 (union-vs-duplicate proximity fix)
+- New `docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md` (commit
+  `1c99e0e4`), following `ARCHITECTURE_WORKSTREAM.md`. Reconfirmed live: 3/237 union-vs-duplicate
+  proximity cases on the real 375-individual fixture (`BACKLOG.md` Housekeeping, found S649,
+  composition updated S652). Evaluated `BACKLOG.md`'s own literal fix sketch (union-sweep-side,
+  look-backward "prospective duplicate offset") empirically -- confirmed structurally incomplete,
+  resolves only 2/3 cases (one offending duplicate's owning union sorts *after* the colliding union
+  in sweep order). Recommended and ratified instead: a duplicate-side, post-hoc, unidirectional push
+  (matching `derivedX()`'s own always-rightward B3 convention) -- resolves all 3 cases, costs
+  exactly 5 predicted pinned-test updates, 0 other regressions, fully absorbed by the existing
+  jog-repair mechanism into 0 residual beyond the pre-existing 47-row `curved-heuristic` class.
+  Owner ratified via `AskUserQuestion`. `BACKLOG.md` updated to point at the design; a new
+  Housekeeping item filed for 6 incidentally-found, unrelated duplicate-vs-individual near-misses.
+  Implementation is a separate future session.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [ad hoc] S654: record Learning 693, update CLAUDE.md learnings pointer
+- Commit `f96dd389`. The Workflow tool's `isolation: 'worktree'` can silently anchor an agent's
+  worktree to a stale base commit several commits behind the calling session's actual HEAD -- an
+  adversarial-verification agent's own self-consistent "discrepancy" (its own pinned test agreed
+  with its own wrong measurement) turned out to be measuring code 5 commits old, root-caused via
+  `git merge-base --is-ancestor`/`git show <sha>:<path>`, not assumed. Practical rule: pin any
+  worktree-isolated verification agent to an explicit commit SHA with an explicit checkout+confirm
+  first step, especially in a session carrying unpushed local commits. `CLAUDE.md` learnings pointer
+  updated 692 -> 693.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [ad hoc] S653: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S652 precedent)
 - Commit `20d7414b` set `HANDOFFS.md`'s S653 receipt `commit:` field from `pending` to `741c2b7f`
   (a 1-line change), the same self-reference workaround this project's sessions have made since

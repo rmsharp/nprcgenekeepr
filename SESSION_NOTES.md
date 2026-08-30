@@ -18,22 +18,125 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 653 Handoff Evaluation (by Session 654)
+**Score: 8/10.** **What helped:** S653's `next_steps`/gotchas accurately listed all 5 remaining
+pedigree-fidelity Housekeeping items with correct READY/Effort tags, letting this session's Phase 0
+priorities list render immediately with zero re-derivation. Every claim independently re-checked
+(git log, `gh run list`, `BACKLOG.md` state, the union-vs-duplicate residual count itself) matched
+exactly. **What was missing:** the handoff listed the union-vs-duplicate item as "READY, Effort M"
+alongside 4 other "Effort S" Housekeeping items with no signal that it -- unlike those 4 -- would
+need its own dedicated design session before any code, matching the established precedent for every
+other touch to `.positionMatingUnitForest()`. This session's own pre-RED investigation caught this
+immediately from `BACKLOG.md`'s own item text (a "future session should design a fix" framing), so
+the gap cost no real time, but a sharper handoff would have flagged the asymmetry explicitly.
+**What was wrong:** nothing. **ROI:** positive -- accurate, complete, saved a full priorities
+re-derivation; the one omission was self-correcting via the item's own BACKLOG text.
+
 ### What Session 654 Did
-**Deliverable:** Design document for the Track 7 Phase 2 union-vs-duplicate proximity residual fix
-(`BACKLOG.md` Housekeeping, found S649, currently 3/237 on the real fixture as of S652's issue #166
-revert) (IN PROGRESS)
-**Started:** 2026-08-30
-**Status:** Session claimed. Pre-RED scope decision made via `AskUserQuestion` -- owner picked
-"design session first," matching this project's established precedent that every prior touch to
-`.positionMatingUnitForest()` (Tracks 1-6, the Walker/BJL migration, Track 7 Phases 1-3) went
-through a dedicated, owner-ratified design session before implementation. Work beginning:
-investigate the BACKLOG-sketched "prospective duplicate offset in the union sweep's occupied-set"
-approach, empirically quantify impact (matching plan §12.1/§12.8's own pre-RED methodology),
-re-confirm Alternative D (symmetric individual-side hardening) stays rejected, then ratify via
-`AskUserQuestion`. No implementation this session.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** A ratified design document for the Track 7 Phase 2 union-vs-duplicate proximity
+residual fix (`BACKLOG.md` Housekeeping, found S649, composition updated S652) --
+[`docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md`](docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md).
+**DONE. No implementation this session** -- matching the pre-RED scope decision (below) and this
+project's established precedent for every touch to `.positionMatingUnitForest()`.
+**Started/Completed:** 2026-08-30 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0:** orientation report; ledger reconcile found 0 undocumented commits (`CHANGELOG.md`
+   frontier == `HEAD`) and `HANDOFFS.md`'s newest receipt already `status: complete` -- no
+   backfill needed. Ghost-session check on 6 untracked files (3 `docs/planning/*-evidence.html`
+   render outputs, an editor lock file matching an already-resolved S568 precedent, 2 gitignore-gap
+   `vignettes/articles/*.pdf` renders already flagged in `SESSION_NOTES.md:3221-3225`, the standing
+   `scratchpad/` convention) -- all cross-referenced, none a new undocumented deliverable.
+2. **Priorities list + `AskUserQuestion`** surfaced the 5 remaining pedigree-fidelity Housekeeping
+   items (standing top-priority banner, `CLAUDE.md`); owner picked the union-vs-duplicate proximity
+   residual.
+3. **Pre-RED scope decision via `AskUserQuestion`** (per `CLAUDE.md`'s phase-gate format): found the
+   item had no ratified design doc, unlike Phase 1/2/3 (every other `.positionMatingUnitForest()`
+   touch). Presented "design session first" (recommended) vs. "skip design, implement directly" --
+   **owner picked design session first.**
+4. **Phase 1B claim** (commit `2e3a05b2`).
+5. **Investigation:** read the current source (`R/makePedigreeDiagramData.R:790-1111`, the union
+   sweep, `derivedX()`/`.deCollideIndividualPoints()`) and the Phase 2 plan doc's own §12 in full.
+   Live-reproduced the residual (3 cases, exact pairs matching the pinned test) via a from-scratch
+   R script, then found the load-bearing structural fact BACKLOG's own sketch had missed: the 3
+   cases are NOT symmetric in sweep order -- 1 of 3 has its offending duplicate's owning union
+   placed AFTER the colliding union, invisible to a look-backward-only occupied-set by construction.
+6. **Spiked and measured 3 candidate directions**, each backed up via `cp`/restored/`shasum`-verified
+   byte-identical after, matching this project's own established spike discipline: (a) BACKLOG's
+   literal union-sweep-side "prospective offset" sketch -- confirmed empirically incomplete, resolves
+   only 2/3; (b) a first-drafted bidirectional duplicate-side push -- found broken (pushes a
+   duplicate newly-too-close to its OWN owning union in all 3 cases), a documented false start; (c)
+   the corrected unidirectional duplicate-side push (matching `derivedX()`'s own always-rightward B3
+   convention) -- resolves all 3 cases, 0 unexpected collateral (only 5 predicted pinned-test values
+   shift), fully absorbed by the existing jog-repair mechanism into 0 residual beyond the
+   pre-existing, unrelated 47-row `curved-heuristic` class. Also incidentally found, during this
+   grounding work, 6 pre-existing duplicate-vs-INDIVIDUAL near-misses, unrelated to and unaffected
+   by any of the 3 directions -- filed as a new `BACKLOG.md` Housekeeping item, not fixed.
+7. **Wrote the design document** (`ARCHITECTURE_WORKSTREAM.md` template: Context/Decision/
+   Rationale/Alternatives Considered/Impact Analysis/Migration Path/Verification Plan), with a
+   grep-based test/consumer inventory (5 pinned assertions across 3 files) per
+   `SESSION_RUNNER.md`'s evidence-based-inventory requirement.
+8. **3-agent adversarial-verification workflow** (matching plan §12.8's own established precedent),
+   `isolation: 'worktree'`: first run found a real methodology flaw in the workflow itself, not the
+   design -- one agent's worktree had silently checked out a stale commit (5 commits behind,
+   predating the S652 revert), producing a self-consistent-but-wrong "4, not 3" result; 2 other
+   agents failed on a transient network error. Root-caused via `git merge-base --is-ancestor`/
+   `git show <sha>:<path>` (not assumed), documented as Learning 693. Re-ran all 3 agents pinned to
+   the exact commit (`2e3a05b2`, explicit `git checkout` + SHA confirmation as each agent's first
+   step) -- **all 3 CONFIRMED** independently: the baseline (3 cases, exact pairs, exact sweep-order
+   asymmetry), the recommended fix (resolves all 3, exactly the 5 predicted test deltas, 0 other
+   regressions, 47-curved-heuristic-only residual), and the alternative's incompleteness (resolves
+   exactly 2/3, for exactly the predicted structural reason).
+9. **Ratification via `AskUserQuestion`** (matching plan §12.10's own established format): 3
+   options -- ratify the recommended duplicate-side fix, ratify the BACKLOG-literal alternative
+   anyway, or hold/discuss. **Owner picked the recommendation.** Recorded in the design doc's own
+   header (matching §12.10's "Owner ratification record" convention).
+10. **`BACKLOG.md` updated**: the union-vs-duplicate item now points to the ratified design doc and
+    corrects its own prior "likely" sketch (the BACKLOG-literal direction is now documented as
+    empirically confirmed incomplete, not just untried); a new Housekeeping item filed for the 6
+    incidentally-found duplicate-vs-individual near-misses.
+11. **Learning 693 recorded** (the Workflow `isolation: 'worktree'` stale-base-commit finding),
+    `CLAUDE.md` learnings pointer updated (692 -> 693).
+12. **No `NEWS.Rmd` entry** (deliberately) -- no code shipped this session, nothing user-facing
+    changed.
+13. **No GitHub issue filed** -- this is a `BACKLOG.md`-tracked Housekeeping item, not a live CI
+    break; matches this project's established convention for that distinction.
+
+**Self-assessment (Session 654): 9/10.** **Strengths:** (1) did not accept `BACKLOG.md`'s own
+"likely" fix sketch at face value -- built and measured it, found it structurally incomplete via a
+concrete sweep-order argument, not a hunch; (2) caught and self-corrected a broken first-draft spike
+(bidirectional push) before it ever reached the design doc, disclosed as a false start rather than
+hidden; (3) when the FIRST adversarial-verification run returned a discrepancy, root-caused it
+directly (`git merge-base`/`git show`) rather than either dismissing the agent's finding or
+panic-revising the design doc's numbers -- confirmed the discrepancy was a tooling artifact (stale
+worktree commit), fixed the actual cause, and re-ran to a clean, fully-confirmed result; (4) found
+and disclosed a genuine incidental finding (6 duplicate-vs-individual near-misses) rather than
+folding it into scope or silently dropping it; (5) every quantitative claim in the shipped design
+doc is now independently re-derived twice (once by this session, once adversarially) on the correct
+commit. **Weaknesses:** (1) the first adversarial-verification workflow launch didn't pin agents to
+an explicit commit SHA, costing one extra workflow round-trip to catch and fix -- a lesson now
+recorded (Learning 693) for future sessions, but avoidable in this one with a bit more foresight
+about `isolation: 'worktree'`'s behavior; (2) initially misused `ScheduleWakeup` (a `/loop`-specific
+tool) to wait on the background workflow, caught and reverted (`stop: true`) before it could fire
+with an inapplicable sentinel prompt -- no actual harm, but should not have been called at all in a
+non-`/loop` session.
+
+**Gotchas for a future session:** (1) **The design is ratified and READY for implementation** --
+`docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md` §6 (Migration Path)
+and §7 (Verification Plan) are written for the implementing session to follow directly; §5.3's
+5-assertion test inventory should be re-confirmed live (pre-RED) before trusting it, matching every
+prior Track 7 phase's own discipline. (2) **A NEW Housekeeping item** (6 duplicate-vs-individual
+near-misses, unrelated to Phase 4) was filed this session -- do not conflate it with the Phase 4
+fix; it needs its own future design pass on the right clearance threshold. (3) **Workflow tool
+`isolation: 'worktree'` needs an explicit commit pin** for any verification task -- see Learning
+693 before launching another adversarial-verification workflow in a session carrying unpushed local
+commits. (4) `master` is now several commits ahead of `origin/master` (unchanged this session, plus
+this session's own 2 commits) -- not pushed per the standing "commit/push only when asked"
+convention. (5) `HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap,
+unchanged this session -- `BACKLOG.md`'s "ledger-size housekeeping" item is still open. (6) The 4
+OTHER pedigree-fidelity Housekeeping items (the `__jog_*` waypoint styling gap, the Track C table
+discrepancy, S649's own missing `NEWS.Rmd` entry, the `NEWS.Rmd` dangling-reference question) are
+all still open, untouched this session.
 
 ### Session 652 Handoff Evaluation (by Session 653)
 **Score: 8/10.** **What helped:** S652 left `BACKLOG.md`/`CHANGELOG.md` in a clean, accurate state

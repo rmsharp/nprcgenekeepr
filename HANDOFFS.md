@@ -138,20 +138,57 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S654
 date: 2026-08-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Design document for the Track 7 Phase 2 union-vs-duplicate proximity residual fix
-  (BACKLOG.md Housekeeping, found S649, 3/237 on the real fixture as of S652's issue #166 revert).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- ratified design document for the Track 7 Phase 2 union-vs-duplicate
+  proximity residual fix (BACKLOG.md Housekeeping, found S649, 3/237 on the real fixture as of
+  S652's issue #166 revert). No implementation this session (pre-RED scope decision, owner-picked
+  via AskUserQuestion). docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-
+  plan.md, DESIGN RATIFIED. BACKLOG.md item updated to point at it.
+what_was_done: Phase 0 ledger reconcile: 0 undocumented commits, HANDOFFS.md receipt already
+  complete -- no backfill needed. Priorities AskUserQuestion -> owner picked the union-vs-
+  duplicate item. Pre-RED scope AskUserQuestion (item had no ratified design, unlike Phase 1/2/3)
+  -> owner picked design-session-first. Claim (2e3a05b2). Read the current source
+  (R/makePedigreeDiagramData.R:790-1111) and plan doc §12 in full; live-reproduced the 3-case
+  residual from scratch, found the load-bearing sweep-order asymmetry BACKLOG's own sketch missed
+  (1 of 3 cases has its duplicate's owning union placed AFTER the colliding union). Spiked and
+  measured 3 directions (each cp-backed-up/restored/shasum-verified): BACKLOG's literal
+  union-sweep-side sketch (confirmed incomplete, 2/3), a first-drafted bidirectional duplicate-
+  side push (found broken, disclosed as a false start), the corrected unidirectional duplicate-
+  side push (resolves all 3, 0 unexpected collateral, absorbed into 0 residual beyond the
+  pre-existing 47-row curved-heuristic class). Wrote the design doc (ARCHITECTURE_WORKSTREAM.md
+  template, grep-based test inventory). 3-agent adversarial-verification workflow (isolation:
+  worktree): first run found a real methodology flaw (one agent's worktree silently checked out a
+  stale commit, 5 behind, predating the S652 revert -- root-caused via git merge-base/git show,
+  documented as Learning 693); re-ran pinned to the exact commit -- all 3 agents CONFIRMED.
+  Ratification AskUserQuestion -> owner picked the recommended direction. BACKLOG.md updated
+  (commit 1c99e0e4); Learning 693 recorded, CLAUDE.md pointer updated (commit f96dd389).
+next_steps: Implement the ratified design -- docs/planning/pedigree-diagram-track7-phase4-union-
+  duplicate-proximity-plan.md §6 (Migration Path) and §7 (Verification Plan), full TDD RED->GREEN
+  ->REFACTOR. Re-confirm §5.3's 5-assertion pinned-test inventory live (pre-RED) before trusting
+  it. Or pick from the other 4 remaining pedigree-fidelity Housekeeping items (all READY, Effort
+  S): the __jog_* waypoint invisible-styling fix, the Track C table discrepancy, S649's own
+  missing NEWS.Rmd entry, or the NEWS.Rmd dangling-reference question. A future session should
+  also push master to origin (unpushed local commits accumulating).
+key_files: docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md (the
+  new ratified design, full doc), R/makePedigreeDiagramData.R:1098-1111 (duplicate positioning,
+  where the ratified fix's post-pass will be inserted), tests/testthat/test_positionMatingUnitForest.R:1274
+  (duplicate-residual pinned assertion, 3L -> 0L under the ratified fix)
+gotchas: A NEW BACKLOG.md Housekeeping item was filed for 6 incidentally-found, UNRELATED
+  duplicate-vs-individual near-misses (unaffected by the Phase 4 fix either direction) -- do not
+  conflate it with Phase 4's own scope. Workflow tool isolation:'worktree' needs an explicit
+  commit-SHA pin for any verification task in a session carrying unpushed local commits -- see
+  Learning 693 before launching another adversarial-verification workflow. The other 4
+  pedigree-fidelity Housekeeping items are untouched this session. HANDOFFS.md/SESSION_NOTES.md/
+  CHANGELOG.md remain past the FM #28 size cap, unchanged this session.
+runtime_smoke: n/a -- docs-only session (a ratified design document, no code changed; all
+  investigative spikes to R/makePedigreeDiagramData.R were reverted and shasum-confirmed
+  byte-identical to HEAD before this session's own commits).
+changelog_ref: CHANGELOG.md 2026-08-30 S654 design-doc and learnings entries (commits 1c99e0e4,
+  f96dd389)
 commit: pending
 ```
-(claim stub -- filled at close-out)
 
 ```handoff
 session: S653
