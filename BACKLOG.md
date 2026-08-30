@@ -213,6 +213,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       this alongside the union-dot-proximity finding, since both stem from the same
       local-vs-global positioning tension and a future fix attempt should consider them together
       rather than in isolation.
+- [ ] **Track 7's qualifying-union recenter decouples a union's `x` from its own children --
+      dogleg / off-center sibship-bar drop** (the "5th finding" above, found by the owner S647,
+      2026-08-27, documented in `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §11
+      but never given its own tracking entry until a pedigree-drawing audit surfaced the gap,
+      2026-08-29 -- filed as [issue #166](https://github.com/rmsharp/nprcgenekeepr/issues/166),
+      READY, Effort M, a dedicated design session). **Confirmed still present at HEAD `fcb4df39`
+      (audit, 2026-08-29), independently re-verified against live source.** Single-child qualifying
+      unions (`P3xP4->C4`, `C4xP6->C4a` on Track B) get a right-angle dogleg instead of a straight
+      drop; `M1xG3`'s 3-child sibship bar drops off-center (x=3.5 vs. true mean x=3.0). Root cause:
+      Tier 2's `unitX[[u]] <- mean(tier1X[kids])` (`R/makePedigreeDiagramData.R:765`) gets
+      overwritten by Track 7's anchor/mate-midpoint recenter (`:973-979`), which never reads
+      `unitX` or the union's own children. Same rigid-subtree-vs-joint-optimization tension
+      [issue #159](https://github.com/rmsharp/nprcgenekeepr/issues/159) investigated and closed as
+      "not feasible to fix generally" -- this is further evidence for that conclusion, not a new
+      question. Visible directly on already-committed images, no fixture changes needed:
+      `trackB-kinship2-full.png` (straight drops) vs. `trackB-nprc-full.png` (kinked drops).
+      Consider together with the union-vs-duplicate-proximity residual below (same local-vs-global
+      tension, also from Track 7 Phase 2) when scoping a fix.
 - [x] **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636, 2026-08-26).
       **RESOLVED S637, 2026-08-26, per owner-directed "broader" scope (a genuinely clean baseline,
       not just a green checkmark):** the actual root cause was simpler than any of the 4 candidate

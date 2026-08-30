@@ -16,6 +16,36 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [ad hoc] pedigree-drawing fidelity audit (user-directed workflow, not a numbered session)
+- Ran a 10-agent audit workflow (5 dimensions, each independently re-verified by a second agent)
+  against the standing top-priority pedigree-drawing thread. Live-reconfirmed structural fidelity
+  against kinship2 on the real 375-individual fixture (identical = TRUE, 0 discrepancies,
+  132/132 `test_comparePedigreeStructure.R` assertions passing) rather than trusting prior claims.
+  Confirmed 3 already-tracked residuals (union-vs-duplicate proximity, `__jog_` waypoint styling,
+  missing `NEWS.Rmd` entry for S649) are correctly disclosed and need no action. Found `master` was
+  34 commits ahead of `origin/master` (Track 7 Phase 2/S649 and isolated-individual-suppression
+  Phase 3/S650 had never been pushed, so CI had not run against either) — pushed
+  (`e9554b04..fcb4df39`, clean fast-forward).
+- **New finding, owner-directed to file:** Track 7's qualifying-union recenter
+  (`R/makePedigreeDiagramData.R:973-979`) overwrites Tier 2's children-mean union `x`
+  (`:765`) using only the two parents' positions — the "5th finding" the Track 7 plan doc
+  documented S647 but never gave its own tracking entry. Confirmed still present at HEAD
+  `fcb4df39`, visible directly on already-committed images (`trackB-kinship2-full.png` vs.
+  `trackB-nprc-full.png`: `P3xP4->C4`/`C4xP6->C4a` dogleg). Filed as
+  [issue #166](https://github.com/rmsharp/nprcgenekeepr/issues/166) and a new `BACKLOG.md` Up
+  Next item, cross-referencing the related, already-closed
+  [issue #159](https://github.com/rmsharp/nprcgenekeepr/issues/159) (same rigid-subtree layout
+  tension).
+- Live-regenerated `vignettes/articles/shiny_app_use/{diagram_rectilinear_edge_style,
+  diagram_show_names,diagram_affected_shading,diagram_twin_connectors,pb_diagram_legend}.png`
+  (the prior committed versions were 4 days stale, predating Track 7); confirmed
+  `vignettes/articles/kinship2-fidelity-validation-img/*.png` byte-identical on regeneration —
+  already current, not stale (owner asked specifically about Track C's `trackC-nprc-*.png` after
+  reviewing a published audit report; verified live rather than assumed).
+- Published as a private Artifact report (kinship2-vs-current diagram comparisons + live
+  screenshots) for the owner's own review; not itself part of this repo.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [BL-N] S650: close out (isolated-individual-suppression item fully DONE)
 - `BACKLOG.md` item marked `[x]` DONE (all 3 phases shipped); new Housekeeping item filed for
   S649's own missing `NEWS.Rmd` entry (commit `c447df5d`). Recorded `PROJECT_LEARNINGS.md`
