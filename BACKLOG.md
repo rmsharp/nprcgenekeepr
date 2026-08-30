@@ -475,8 +475,9 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       scope) -- a future session should determine whether the doubled-dogleg-segment counting logic
       changed (e.g. during the S592-S621 same-row-collision/Walker-BJL rectilinear-routing work) or
       the article's own "3" claim was always wrong, then correct whichever side is stale.
-- [ ] **`lint.yaml` CI failed on S642's own close-out push, not self-resolved** (found live S643,
-      2026-08-26, via Phase 0's mandatory `gh run list` CI-status check, READY, Effort S) --
+- [x] **`lint.yaml` CI failed on S642's own close-out push, not self-resolved** (found live S643,
+      2026-08-26, via Phase 0's mandatory `gh run list` CI-status check). **RESOLVED S653,
+      2026-08-30 -- see the resolution block after the original investigation history below.**
       run `33022564528`: `[object_usage_linter] no visible global function definition for
       '.formatStructuralDiscrepancy'` at `data-raw/kinship2FidelityValidation.R:339`, exit code 31
       (`LINTR_ERROR_ON_LINT: true`). Contradicts S642's own close-out claim of "0 lints on all 3
@@ -501,6 +502,40 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       running across 2 different sessions' own interactive work. A future session should weight
       option (b) (restructure) more heavily, or at minimum re-examine whether (a) is still
       plausible before adding a `# nolint` on that rationale.
+      **Resolution (S653, 2026-08-30), option (b), root cause confirmed live -- the
+      stale-globalenv hypothesis (option (a)) is definitively ruled out, not just weakened:**
+      `lint.yaml` runs `Rscript -e 'lintr::lint_package()'` with NO `pkgload::load_all()` step, so
+      it never sees `.formatStructuralDiscrepancy()` (defined only in `tests/testthat/helper-
+      comparePedigreeStructure.R`). Every local repro this session (`lint_package()`, and `lint()`
+      on the single file in total isolation, in a fresh `Rscript` process) showed 0 lints --
+      because `pkgload::load_all()`'s own default `helpers = TRUE` silently auto-sources
+      `tests/testthat/helper-*.R` files, attaching the function to the `package:nprcgenekeepr`
+      search-path entry every single time. This is deterministic, not session state: confirmed via
+      `exists(".formatStructuralDiscrepancy", where = asNamespace("nprcgenekeepr"), inherits =
+      FALSE)` returning `FALSE` even immediately after a fresh `load_all()`, while the bare-name
+      lookup still resolved via the attached search-path entry. **Fix:** moved
+      `.formatStructuralDiscrepancy()` into `R/comparePedigreeStructure.R` (`@noRd`), alongside its
+      3 siblings -- it has zero `kinship2` dependency (unlike those 3), so it already satisfied the
+      ratified D-6 criterion (`docs/planning/pedigree-diagram-kinship2-structural-comparison-
+      plan.md`) that routed its siblings to `R/`; it was simply misplaced when added later, not a
+      deliberate exception. Updated the 2 real call sites (`data-raw/kinship2FidelityValidation.R`
+      now calls it via `nprcgenekeepr:::`, matching that script's own established convention;
+      `test_comparePedigreeStructure.R`'s 6 call sites stay bare-name, matching that file's own
+      "paired test file" convention) and the stale location comments in both files. Full TDD:
+      **RED** (`5779c002`) -- a new structural guard test (`test_lint_clean_baseline.R`, matching
+      the `test_r_cmd_check_clean_baseline.R`/S637 precedent) asserting the function is defined
+      directly in the package namespace; confirmed genuinely failing (93 -> 2 failed: the 1 new
+      intentional + 1 pre-existing baseline, 0 collateral). **GREEN** (`3be66ae9`) -- moved the
+      function; full clean regression 1 failed (pre-existing `test_wordlist_coverage.R`)/0 error/
+      6570 passed; `lintr::lint_package()` 0 lints; `devtools::document()` 0 NAMESPACE/man changes
+      (`@noRd`, as expected), 0 roxygen `\link` warnings; live end-to-end run of
+      `data-raw/kinship2FidelityValidation.R` (kinship2/chromote/htmlwidgets all available
+      locally) -- exit code 0, Track D all 3 comparisons `identical = TRUE`, confirming the moved
+      `nprcgenekeepr:::.formatStructuralDiscrepancy()` call resolves correctly. 4 incidentally-
+      regenerated Track B/C PNGs (chromote screenshot non-determinism, unrelated to this change)
+      reverted, not committed. **REFACTOR skipped** (owner-directed via `AskUserQuestion`): the
+      change is already minimal and clean, no behavior-neutral restructuring identified, matching
+      S650/S652's own precedent.
 - [ ] **`.addRectilinearWaypoints()`'s `__jog_*` waypoint nodes (the straight-edge jog pass) render
       as a full-size, filled default vis.js circle instead of invisible** (found live S648,
       2026-08-28, while building a visual comparison for the Track 7 Phase 2 design item below --

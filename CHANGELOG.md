@@ -16,6 +16,35 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [BL-N] S653 GREEN: move .formatStructuralDiscrepancy() into R/ (lint.yaml fix)
+- Moved `.formatStructuralDiscrepancy()` from `tests/testthat/helper-comparePedigreeStructure.R`
+  into `R/comparePedigreeStructure.R` (`@noRd`), alongside its 3 siblings -- it has zero `kinship2`
+  dependency, so it already satisfied the ratified D-6 criterion that routed its siblings there; it
+  was simply misplaced when added later. Updated the 2 real call sites and stale location comments.
+  Commit `3be66ae9`. Full clean regression: 1 failed (pre-existing `test_wordlist_coverage.R`)/0
+  error/6570 passed; `lintr::lint_package()` 0 lints; `devtools::document()` 0 NAMESPACE/man
+  changes, 0 roxygen `\link` warnings; live end-to-end run of
+  `data-raw/kinship2FidelityValidation.R` (kinship2/chromote/htmlwidgets available locally) --
+  exit code 0, Track D all 3 comparisons `identical = TRUE`. 4 incidentally-regenerated Track B/C
+  PNGs (chromote screenshot non-determinism, unrelated) reverted, not committed. REFACTOR skipped
+  (owner-directed via `AskUserQuestion`, matching S650/S652 precedent). `BACKLOG.md` item marked
+  `[x]` DONE.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [BL-N] S653 RED: guard .formatStructuralDiscrepancy visibility (lint.yaml)
+- New structural guard test `tests/testthat/test_lint_clean_baseline.R` (matching the
+  `test_r_cmd_check_clean_baseline.R`/S637 precedent) asserting `.formatStructuralDiscrepancy` is
+  defined directly in the `nprcgenekeepr` namespace. Commit `5779c002`. Confirmed genuine RED
+  against unmodified `HEAD`: 93 -> 2 failed (1 new intentional + 1 pre-existing baseline)/0 error,
+  0 collateral. Root cause confirmed live (not assumed): `lint.yaml` runs
+  `Rscript -e 'lintr::lint_package()'` with no `pkgload::load_all()` step, so it never sees
+  `.formatStructuralDiscrepancy()`; every local repro this session (including `lint()` on the
+  single file in total isolation) showed 0 lints because `pkgload::load_all()`'s own default
+  `helpers = TRUE` silently auto-sources testthat helpers, masking the gap deterministically --
+  definitively ruling out `BACKLOG.md`'s own "stale globalenv" hypothesis (S643/S644), not just
+  weakening it.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [ad hoc] S652: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S651 precedent)
 - Backfilled reconcile-on-read (`SESSION_RUNNER.md` Phase 0 step 6) at the start of the next
   session — commit `7cc9e6e4` set `HANDOFFS.md`'s S652 receipt `commit:` field from `pending` to
