@@ -136,6 +136,24 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S653
+date: 2026-08-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix the lint.yaml CI break -- [object_usage_linter] no visible global function
+  definition for '.formatStructuralDiscrepancy' at data-raw/kinship2FidelityValidation.R:339
+  (BACKLOG.md Housekeeping, found S643, confirmed identical on 3 consecutive pushes).
+what_was_done: pending
+next_steps: pending
+key_files: data-raw/kinship2FidelityValidation.R:339, tests/testthat/helper-comparePedigreeStructure.R
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S652
 date: 2026-08-29
 status: complete

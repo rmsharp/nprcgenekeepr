@@ -18,6 +18,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 653 Did
+**Deliverable:** Fix the `lint.yaml` CI break -- `[object_usage_linter] no visible global function
+definition for '.formatStructuralDiscrepancy'` at `data-raw/kinship2FidelityValidation.R:339`
+(BACKLOG.md Housekeeping, found S643, confirmed identical on 3 consecutive pushes). (IN PROGRESS)
+**Started:** 2026-08-29.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 651 Handoff Evaluation (by Session 652)
 **Score: 8/10.** **What helped:** S651's design document (`docs/planning/pedigree-diagram-track7-
 phase3-child-centering-plan.md`) was the strongest possible starting point for implementation --
