@@ -217,20 +217,35 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       dogleg / off-center sibship-bar drop** (the "5th finding" above, found by the owner S647,
       2026-08-27, documented in `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §11
       but never given its own tracking entry until a pedigree-drawing audit surfaced the gap,
-      2026-08-29 -- filed as [issue #166](https://github.com/rmsharp/nprcgenekeepr/issues/166),
-      READY, Effort M, a dedicated design session). **Confirmed still present at HEAD `fcb4df39`
-      (audit, 2026-08-29), independently re-verified against live source.** Single-child qualifying
-      unions (`P3xP4->C4`, `C4xP6->C4a` on Track B) get a right-angle dogleg instead of a straight
-      drop; `M1xG3`'s 3-child sibship bar drops off-center (x=3.5 vs. true mean x=3.0). Root cause:
-      Tier 2's `unitX[[u]] <- mean(tier1X[kids])` (`R/makePedigreeDiagramData.R:765`) gets
-      overwritten by Track 7's anchor/mate-midpoint recenter (`:973-979`), which never reads
-      `unitX` or the union's own children. Same rigid-subtree-vs-joint-optimization tension
-      [issue #159](https://github.com/rmsharp/nprcgenekeepr/issues/159) investigated and closed as
-      "not feasible to fix generally" -- this is further evidence for that conclusion, not a new
-      question. Visible directly on already-committed images, no fixture changes needed:
-      `trackB-kinship2-full.png` (straight drops) vs. `trackB-nprc-full.png` (kinked drops).
-      Consider together with the union-vs-duplicate-proximity residual below (same local-vs-global
-      tension, also from Track 7 Phase 2) when scoping a fix.
+      2026-08-29 -- filed as [issue #166](https://github.com/rmsharp/nprcgenekeepr/issues/166)).
+      **Design RATIFIED S651, 2026-08-29 (owner-picked via `AskUserQuestion`): Option 1, a scoped
+      revert -- READY, Effort M, implementation session next (TDD RED->GREEN->REFACTOR).** Full
+      design: [`docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md`](docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md).
+      Single-child qualifying unions (`P3xP4->C4`, `C4xP6->C4a` on Track B) get a right-angle
+      dogleg instead of a straight drop; `M1xG3`'s 3-child sibship bar drops off-center (x=3.5 vs.
+      true mean x=3.0). Root cause: Tier 2's `unitX[[u]] <- mean(tier1X[kids])`
+      (`R/makePedigreeDiagramData.R:765`) gets overwritten by Track 7's anchor/mate-midpoint
+      recenter (`:973-979`), which never reads `unitX` or the union's own children. Same
+      rigid-subtree-vs-joint-optimization tension [issue #159](https://github.com/rmsharp/nprcgenekeepr/issues/159)
+      investigated and closed as "not feasible to fix generally" -- the ratified fix does not
+      reopen that investigation (it stays entirely within the existing rigid/sequential
+      architecture). **Ratified mechanism (design doc §2.1):** delete the recenter loop
+      (`:973-979`) entirely -- every qualifying union's `x` reverts to Tier 2's unconditional
+      children-mean, exactly the pre-Track-7 value (proven bit-exact to the anchor's own `x` for
+      all 34 qualifying units on the real 375-individual fixture, design doc §1.4 Finding B,
+      adversarially re-verified). Track 7 Phase 1's *other* change (the widened `minSep` B1 mate
+      offset) is kept -- mates stay visibly spread apart. **Disclosed trade-off (owner-accepted):**
+      the union DOT itself reverts to sitting on/near the anchor for these 34 units, re-introducing
+      the original (smaller) Track 7 Phase 1 dot-centering complaint for exactly that subset.
+      **Collision-avoidance impact, adversarially re-verified against the real fixture:** 0 new
+      individual-vs-union or union-vs-union collisions; the pre-existing, already-disclosed
+      union-vs-duplicate residual shifts 4->3 (1 new case, 2 resolved) -- same known interaction
+      class, not a new one. **~14 test assertions across `test_positionMatingUnitForest.R` (10
+      blocks), `test_addRectilinearWaypoints.R`, `test_makePedigreeMatingLayout.R` (2 blocks), and
+      `test_resolveEdgeNodeCollisions.R` need updating** (design doc §5/§6.3 has the full,
+      adversarially-verified inventory -- an initial pass undercounted this at 2 tests). Consider
+      together with the union-vs-duplicate-proximity residual below (same local-vs-global tension,
+      also from Track 7 Phase 2) when implementing.
 - [x] **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636, 2026-08-26).
       **RESOLVED S637, 2026-08-26, per owner-directed "broader" scope (a genuinely clean baseline,
       not just a green checkmark):** the actual root cause was simpler than any of the 4 candidate
