@@ -59,21 +59,29 @@ test_that(".positionMatingUnitForest rejects a pedigree missing required
 ## genuinely, unconditionally the midpoint of its own children's final x
 ## (Tier 2 of the new engine), never clamped toward its 2 parents.
 ##
-## Track 7 CHANGE (docs/planning/pedigree-diagram-track7-mate-spacing-
-## plan.md §2.1, S647): this fixture's own union QUALIFIES (P1/P2,
-## mate-count-1 each, no D5 direct child, unambiguous M/F) -- Track 7
-## overrides Tier 2's child-midpoint formula for exactly this subset, so
-## the union's x is now the midpoint of its two PARENTS' x instead: P1
-## stays at its own tier1X (1.0, centered over its 3 children by BJL's
-## own Tier-1 apportioning), P2's derived point widens to P1's x + minSep
-## (1.0 + 1.0 = 2.0, Track 7 §2.2), and the union recenters to their
-## midpoint, (1.0 + 2.0) / 2 = 1.5. Re-pinned by actually running the new
-## engine (never hand-derived), matching this project's own established
-## practice for formula migrations.
+## Track 7 Phase 3 CHANGE (docs/planning/pedigree-diagram-track7-phase3-
+## child-centering-plan.md §2.1, S652 -- issue #166, scoped revert): the
+## Track 7 Phase 1 recenter loop that overrode this qualifying union's x
+## to the anchor/mate midpoint (1.5) is DELETED. Tier 2's own unconditional
+## `mean(tier1X[kids])` is once again the union's only formula -- P1 stays
+## at its own tier1X (1.0, centered over its 3 children by BJL's own
+## Tier-1 apportioning, per Finding B's proven anchor/children-mean
+## identity), so mean(C1,C2,C3) == 1.0 exactly, coinciding exactly with
+## P1's own x at the same gen. The pre-existing exact-tie epsilon sweep
+## (unchanged by this revert -- the same mechanism this codebase has
+## always used for a union/genuine-node coincidence) nudges the union
+## 0.001 raw units away, landing it at 1.001, not the bare 1.0 -- measured
+## live against the reverted code (pkgload::load_all() spike, never hand-
+## derived), matching this project's own established practice. Track 7
+## Phase 1's OTHER change (P2's widened minSep offset, kept per the
+## ratified design) is unaffected -- not asserted here, this test only
+## checks childX/unionX.
 test_that(".positionMatingUnitForest positions a simple 2-parent/3-child
-           trio with the union's x as the midpoint of its two qualifying
-           parents (Track 7) -- and 3 distinct, non-overlapping child x
-           positions one gen below", {
+           trio with the union's x as the exact midpoint of its own 3
+           children (Tier 2, no Track-7-Phase-1 recenter -- issue #166
+           scoped revert) plus the pre-existing epsilon nudge from
+           exactly coinciding with the anchor's own tier1X -- and 3
+           distinct, non-overlapping child x positions one gen below", {
   trio <- data.frame(
     id = c("P1", "P2", "C1", "C2", "C3"),
     sire = c(NA, NA, "P1", "P1", "P1"), dam = c(NA, NA, "P2", "P2", "P2"),
@@ -88,7 +96,7 @@ test_that(".positionMatingUnitForest positions a simple 2-parent/3-child
 
   childX <- pos$x[pos$id %in% c("C1", "C2", "C3")]
   unionX <- pos$x[pos$id == forest$matingUnits$id]
-  expect_equal(unionX, 1.5, tolerance = 1e-6)
+  expect_equal(unionX, 1.001, tolerance = 1e-6)
 
   expect_equal(length(unique(round(childX, 6))), 3L)
   expect_true(all(pos$gen[pos$id %in% c("C1", "C2", "C3")] == 1L))
@@ -279,14 +287,20 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
   ## ties nothing here but its own midpoint math still nets a 1e-3 nudge
   ## under this fixture (unchanged).
   ##
-  ## unit1 CHANGED (Track 7, S647): it is this fixture's own only
-  ## qualifying union, so its x is no longer the midpoint of its children
-  ## (here, just 8LKBV9's own x) -- it is the midpoint of its two PARENTS'
-  ## x instead: (5A6DFT=0.5 + 8DKELJ=1.5) / 2 = 1.0. This also happens to
-  ## no longer exactly tie any real node at gen 0 (5A6DFT=0.5,
-  ## 8DKELJ=1.5, both distinct from 1.0), so -- unlike before Track 7 --
-  ## no +1e-3 tie-sweep nudge applies to unit1 any longer.
-  expectPos(unit1, 1.0, 0L)
+  ## unit1 CHANGED AGAIN (Track 7 Phase 3, S652 -- issue #166, scoped
+  ## revert, docs/planning/pedigree-diagram-track7-phase3-child-centering-
+  ## plan.md §2.1): the Phase 1 recenter loop that moved unit1's x to the
+  ## anchor/mate midpoint (1.0, the prior value here) is deleted. unit1's
+  ## x reverts to Tier 2's unconditional mean(tier1X[kids]) -- here, just
+  ## 8LKBV9's own x (0.5) -- which exactly coincides with 5A6DFT's own
+  ## tier1X (0.5) at the same gen (0), the anchor/children-mean identity
+  ## Finding B proves holds for every qualifying unit with mateCountP==1.
+  ## The pre-existing exact-tie epsilon sweep (unaffected by this revert)
+  ## nudges it 0.001 away, landing at 0.501, not the bare 0.5 -- measured
+  ## live against the reverted code, never hand-derived. Track 7 Phase 1's
+  ## OTHER change (8DKELJ's widened offset, 1.5 above) is kept, per the
+  ## ratified design.
+  expectPos(unit1, 0.501, 0L)
   expectPos(unit2, 0.0, 1L)
   expectPos(unit3, 1.0, 1L)  # no clamp under the new engine: unit3's own
                               # child 9VGCCV's x IS its exact midpoint
@@ -465,6 +479,12 @@ test_that(".positionMatingUnitForest positions the full real
   ## it is driven entirely by the individual side's own residual, which
   ## Phase 2 never touches (the union sweep's own pre-existing epsilon
   ## nudge never produced exact ties in the first place).
+  ## Track 7 Phase 3 (S652 -- issue #166, scoped revert): re-verified live
+  ## against the reverted code (pkgload::load_all() spike, never assumed)
+  ## that this metric is ALSO unchanged at 27L -- the design's own §2.1
+  ## simulation found 0 new individual-vs-union/union-vs-union collisions
+  ## post-revert, confirmed here directly rather than taken on the design
+  ## doc's word alone.
   expect_equal(nCollidingNodes, 27L)
 })
 
@@ -936,85 +956,48 @@ test_that(".positionMatingUnitForest's every ANCHORED mating unit's x is
            GA204Z/8LKBV9 loop fixture, the real 375-individual bundled
            fixture, and the P1/P2/A/Y/X/W/C1/GC/C2 consanguineous
            fixture", {
-  ## Track 7 CHANGE (S647): a QUALIFYING unit's x (docs/planning/pedigree-
-  ## diagram-track7-mate-spacing-plan.md §2.1) is no longer the midpoint
-  ## of its own children -- it is the midpoint of its two PARENTS'
-  ## final x. checkInvariant() below replicates the shipped qualifies()
-  ## gate (R/makePedigreeDiagramData.R) to pick the right formula per
-  ## unit, rather than asserting one formula unconditionally.
-  ##
-  ## Found empirically this session (not assumed): qualifies() alone is
-  ## NOT sufficient to trigger the recenter -- the shipped code also
-  ## requires the non-anchor mate to be classified as B1 (free-pass: no
-  ## own parent edge AND no own direct child), gated via b1Ids membership
-  ## rather than re-derived inside qualifies() itself. A mate can satisfy
-  ## qualifies()'s own mateCountM == 1 check while still having her OWN
-  ## parent edge elsewhere in the pedigree (making her B2, not B1) -- that
-  ## union is qualifies()-SHAPED but never reaches the recenter loop, so
-  ## it keeps Tier 2's unchanged child-midpoint formula. Confirmed by
-  ## reading R/makePedigreeDiagramData.R's own recenter loop directly
-  ## (`for (fp in b1Ids) { if (qualifies(unitId)) ... }`), then verifying
-  ## against the real 375-fixture: several qualifies()-SHAPED units keep
-  ## their OLD formula for exactly this reason.
+  ## Track 7 Phase 3 CHANGE (S652 -- issue #166, scoped revert,
+  ## docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md
+  ## §2.1/§5 step 1): the Phase 1 recenter loop that gave a QUALIFYING
+  ## unit's x the anchor/mate midpoint instead of the child-midpoint is
+  ## DELETED. checkInvariant() below no longer replicates the shipped
+  ## qualifies()/b1Ids gate at all -- there is no longer a second formula
+  ## to pick between. EVERY mating unit's x (anchored or orphan,
+  ## previously-qualifying-shaped or not) is, once again, unconditionally
+  ## the midpoint of its own real children's final x (Tier 2) -- verified
+  ## live against the reverted code (pkgload::load_all() spike, never
+  ## hand-derived): 0 exceptions across all 237 anchored units on the real
+  ## 375-individual fixture, plus the small/f1 fixtures below.
   checkInvariant <- function(ped) {
     forest <- .buildMatingUnitForest(ped)
     pos <- .positionMatingUnitForest(ped, forest)
     matingUnits <- forest$matingUnits
     childEdges <- forest$childEdges
-    realIds <- as.character(ped$id)
-    sexOf <- stats::setNames(as.character(ped$sex), realIds)
-    sireOf <- stats::setNames(as.character(ped$sire), realIds)
-    damOf <- stats::setNames(as.character(ped$dam), realIds)
-    hasParentEdge <- function(id) !is.na(sireOf[[id]]) || !is.na(damOf[[id]])
-    hasOwnDirectChild <- function(id) id %in% childEdges$from
-    anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
-    qualifies <- function(unitId) {
-      p <- matingUnits$anchor[matingUnits$id == unitId]
-      m <- matingUnits$nonAnchor[matingUnits$id == unitId]
-      if (is.na(p) || is.na(m)) return(FALSE)
-      sireId <- matingUnits$sire[matingUnits$id == unitId]
-      damId <- matingUnits$dam[matingUnits$id == unitId]
-      if (!(sireId %in% realIds) || !(damId %in% realIds)) return(FALSE)
-      mateCountP <- sum(anchoredUnits$sire == p | anchoredUnits$dam == p)
-      mateCountM <- sum(anchoredUnits$sire == m | anchoredUnits$dam == m)
-      unambig <- (identical(sexOf[[p]], "M") && identical(sexOf[[m]], "F")) ||
-        (identical(sexOf[[p]], "F") && identical(sexOf[[m]], "M"))
-      mIsB1 <- !hasParentEdge(m) && !hasOwnDirectChild(m)
-      mateCountP == 1L && mateCountM == 1L && !hasOwnDirectChild(p) &&
-        unambig && mIsB1
-    }
     for (i in seq_len(nrow(matingUnits))) {
       uid <- matingUnits$id[i]
       actual <- pos$x[pos$id == uid]
-      if (qualifies(uid)) {
-        p <- matingUnits$anchor[matingUnits$id == uid]
-        m <- matingUnits$nonAnchor[matingUnits$id == uid]
-        formulaX <- (pos$x[pos$id == p] + pos$x[pos$id == m]) / 2
-      } else {
-        kids <- childEdges$to[childEdges$from == uid]
-        kidX <- pos$x[match(kids, pos$id)]
-        formulaX <- (min(kidX) + max(kidX)) / 2
-      }
+      kids <- childEdges$to[childEdges$from == uid]
+      kidX <- pos$x[match(kids, pos$id)]
+      formulaX <- (min(kidX) + max(kidX)) / 2
       ## Absolute-difference comparison (+ a 1e-9 float-representation
-      ## buffer). Widened from 2e-3 to 1e-2 (S647): on the real
-      ## 375-individual fixture, several qualifying unions independently
-      ## recenter to the SAME or very close raw value (e.g. multiple
-      ## founder-pair unions all landing near 0), chaining up to 6
-      ## consecutive 1e-3 tie-breaking nudges (measured directly: max
-      ## deviation 0.006, not hand-derived) -- still the same pre-existing
-      ## epsilon-nudge mechanism, just chained further than a single pair
-      ## needs.
+      ## buffer). 1e-2 tolerance (unchanged from Track 7 Phase 1/2, kept
+      ## post-revert since it costs nothing and remains a valid ceiling):
+      ## the pre-existing exact-tie epsilon sweep can chain up to 6
+      ## consecutive 1e-3 nudges (max measured deviation 0.006) when
+      ## several unions independently land near the same raw value.
       ##
-      ## Track 7 Phase 2 (S649): a union this section's own proximity
-      ## push (plan §12.2) legitimately deviates from its own formula by
-      ## a genuine, disclosed multiple of the radius-proportionate
-      ## clearance step -- not a bug, the actual behavior this phase
-      ## ships. Accepted here (generically, not by hardcoding which unit
-      ## ids) as an alternative match: the deviation is within floating
-      ## tolerance of k * ((25+6)/120) for some k in 1:5 (the same
-      ## unionClearanceIndividual/.kMaxUnionPush constants, defined
+      ## Track 7 Phase 2 (S649, unaffected by this revert -- it operates
+      ## on whatever unitX value Tier 2 hands it): a union's own
+      ## proximity push (plan §12.2) legitimately deviates from its own
+      ## formula by a genuine, disclosed multiple of the radius-
+      ## proportionate clearance step -- not a bug, the actual behavior
+      ## this phase ships. Accepted here (generically, not by hardcoding
+      ## which unit ids) as an alternative match: the deviation is within
+      ## floating tolerance of k * ((25+6)/120) for some k in 1:5 (the
+      ## same unionClearanceIndividual/.kMaxUnionPush constants, defined
       ## locally to this test rather than relied on from later in this
-      ## file -- see the "Track 7 Phase 2" section below for the derivation).
+      ## file -- see the "Track 7 Phase 2" section below for the
+      ## derivation).
       deviation <- abs(actual - formulaX)
       pushSteps <- deviation / ((25 + 6) / 120)
       isPhase2Push <- deviation > 1e-2 &&
@@ -1078,7 +1061,14 @@ test_that(".positionMatingUnitForest has a bounded, disclosed residual of
            collision pressure a capped bidirectional search
            (.deCollideIndividualPoints()) resolves for most pairs, but not
            all, on this densely-packed real fixture -- see the scale-check
-           test above for the full accounting.", {
+           test above for the full accounting.
+
+           Track 7 Phase 3 (S652 -- issue #166, scoped revert): re-verified
+           live against the reverted code that this all-types count is
+           ALSO unchanged at 27L -- the union recenter's removal touches
+           only qualifying unions' own x, not the individual-side residual
+           this metric is driven by, and duplicates contribute 0 to it
+           both before and after (confirmed directly, not assumed).", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -1145,11 +1135,33 @@ test_that(".positionMatingUnitForest has a bounded, disclosed residual of
 ## "file, don't fix out-of-scope findings" precedent (the __jog_*
 ## waypoint bug, S648).
 
-test_that(".positionMatingUnitForest's Track 7 Phase 2 push resolves all 3
-           union-vs-individual proximity collisions on the shrunk Track B
-           fixture (the owner's own directly-reviewed fixture, plan
-           §12.1/§12.9) -- exact values re-measured live against a
-           temporary spike implementation of §12.2, never hand-derived", {
+## Track 7 Phase 3 CHANGE (S652 -- issue #166, scoped revert): reverting
+## the Phase 1 recenter loop moves each of these 3 qualifying unions'
+## STARTING x (before Phase 2's push runs) from the anchor/mate midpoint
+## back to the child-midpoint -- and for all 3 of these single/near-
+## single-child unions on THIS specific fixture, that starting point now
+## coincides EXACTLY with the union's own anchor (Finding B's identity).
+## Phase 2's push search correctly treats a union sitting on its own
+## anchor as expected, not something to push away from (design doc §2.1)
+## -- so it never engages, and the pre-existing small-epsilon tie-break
+## (unaffected by this revert) nudges each union 0.001 raw units off its
+## anchor instead of resolving to the radius-proportionate clearance
+## target. Confirmed live against the reverted code, never hand-derived:
+## this is the exact, disclosed §2.1 trade-off ("every qualifying union
+## will now land exactly on its own anchor's x"), now measured concretely
+## on the owner's own directly-reviewed Track B fixture specifically, not
+## just the real-375 aggregate the design's own adversarial verification
+## simulated. The union dot again sits ~0.12px from its own anchor's
+## symbol -- effectively the ORIGINAL Track 7 Phase 1 complaint,
+## re-introduced for this fixture's own 3 pairs, exactly as ratified.
+test_that(".positionMatingUnitForest's Track 7 Phase 2 push no longer
+           engages for the shrunk Track B fixture's 3 union-vs-individual
+           pairs after issue #166's scoped revert (S652) -- each union now
+           sits exactly on its own anchor (Finding B's identity) rather
+           than near an unrelated node, so the pre-existing small-epsilon
+           tie-break applies instead of Phase 2's radius-proportionate
+           push; exact values re-measured live against the reverted code,
+           never hand-derived", {
   pedB <- data.frame(
     id   = c("P1", "P2", "P3", "P4", "P5", "P6",
              "C1", "C2", "C3", "C4", "C4a",
@@ -1184,26 +1196,28 @@ test_that(".positionMatingUnitForest's Track 7 Phase 2 push resolves all 3
   u2 <- pos$x[pos$id == "__union_2"]  # P1 x P2, gen 0
   u3 <- pos$x[pos$id == "__union_3"]  # M1 x G3, gen 1
 
-  ## BEFORE this fix (current shipped code, confirmed via a temporary
-  ## restore-and-measure this session): all 3 sit at the pre-existing
-  ## small-epsilon-tie value, 0.001 raw units from an unrelated node --
-  ## visually fused (plan §12.9's own visual spike evidence: "a small
-  ## notch/bite on the boundary of an unrelated node's circle is the only
-  ## visible trace"). This fix pushes each to the exact radius-
-  ## proportionate clearance target instead.
-  expect_equal(u1, 2.516666667, tolerance = 1e-6)
-  expect_equal(u2, 1.516666667, tolerance = 1e-6)
-  expect_equal(u3, 1.516666667, tolerance = 1e-6)
+  ## Post-revert (S652): each union's starting x is now Tier 2's
+  ## unconditional child-midpoint, which coincides exactly with its own
+  ## anchor for this fixture's 3 pairs (C4 anchors __union_1, P1 anchors
+  ## __union_2, M1 anchors __union_3) -- so the pre-existing small-epsilon
+  ## tie-break applies (0.001 raw units off the anchor), not Phase 2's
+  ## radius-proportionate push. Re-measured live against the reverted
+  ## code, never hand-derived.
+  expect_equal(u1, 1.001, tolerance = 1e-6)
+  expect_equal(u2, 0.001, tolerance = 1e-6)
+  expect_equal(u3, 0.001, tolerance = 1e-6)
 
-  ## Each now clears every unrelated same-gen individual/duplicate node by
-  ## at least the radius-proportionate threshold (plan §12.2) -- the
-  ## actual proximity claim this fix makes, not just 3 pinned numbers in
-  ## isolation.
+  ## The radius-proportionate clearance claim NO LONGER HOLDS for this
+  ## fixture -- each union sits well inside .unionClearanceIndividual of
+  ## its own anchor (that IS the anchor-coincidence case, expected and
+  ## accepted per design doc §2.1, not a defect). Asserted explicitly
+  ## (not merely omitted) so a future session doesn't mistake the absence
+  ## of the old clearance check for an oversight.
   gen0Indiv <- pos[pos$gen == 0 & !grepl("^__union_", pos$id), ]
-  expect_true(all(abs(gen0Indiv$x - u1) >= .unionClearanceIndividual - 1e-9))
-  expect_true(all(abs(gen0Indiv$x - u2) >= .unionClearanceIndividual - 1e-9))
+  expect_true(any(abs(gen0Indiv$x - u1) < .unionClearanceIndividual))
+  expect_true(any(abs(gen0Indiv$x - u2) < .unionClearanceIndividual))
   gen1Indiv <- pos[pos$gen == 1 & !grepl("^__union_", pos$id), ]
-  expect_true(all(abs(gen1Indiv$x - u3) >= .unionClearanceIndividual - 1e-9))
+  expect_true(any(abs(gen1Indiv$x - u3) < .unionClearanceIndividual))
 })
 
 test_that(".positionMatingUnitForest's Track 7 Phase 2 push resolves every
@@ -1248,7 +1262,16 @@ test_that(".positionMatingUnitForest's Track 7 Phase 2 push resolves every
   ## fix in place, the union-vs-duplicate residual measures 4, not the
   ## 11 this section's own header note (and plan §12.11) originally
   ## reported from a pre-fix spike that didn't yet have this exclusion.
-  expect_equal(unname(counts["duplicate"]), 4L)
+  ##
+  ## CHANGED AGAIN (S652 -- issue #166, scoped revert): 4 -> 3. A
+  ## duplicate's x rides along with its own union's x (derivedX()'s B3
+  ## branch, unitX[[itsOwnUnion]] + minSep*0.4); reverting the recenter
+  ## moves several qualifying unions' x back toward their own anchor,
+  ## which shifts this residual's composition -- 1 new case, 2 resolved,
+  ## per the design doc's own §2.1 adversarial re-verification, confirmed
+  ## here directly against the reverted code (never hand-derived, never
+  ## taken on the design doc's word alone).
+  expect_equal(unname(counts["duplicate"]), 3L)
 })
 
 ## ---- Walker/BJL cutover (Phase 3, this session): regression coverage for
@@ -1309,10 +1332,17 @@ test_that(".positionMatingUnitForest's F1 target case (investigation doc's
            re-pinned by actually running the new engine, never
            hand-derived
 
-           Track 7 CHANGE (S647): __union_1 (P1/P2) QUALIFIES (mate-count-1
-           each, no D5 direct child, unambiguous M/F) -- it now recenters
-           to the P1/P2 midpoint (P2's own x widens to P1's x + minSep)
-           instead of the old near-coincident-with-P1 value.", {
+           Track 7 Phase 3 CHANGE (S652 -- issue #166, scoped revert;
+           found during this session's own GREEN-phase verification, not
+           named in the design doc's own §6.3 inventory -- a genuine
+           inventory gap, disclosed here rather than silently absorbed):
+           __union_1 (P1/P2) still QUALIFIES, but qualifying no longer
+           recenters the union's x -- it reverts to Tier 2's
+           child-midpoint, which coincides exactly with P1's own tier1X
+           (Finding B), landing at P1's x (150) plus the pre-existing
+           0.12px epsilon nudge (0.001 raw units * xScale 120) -- 150.12,
+           not the old anchor/mate-midpoint value of 210. P2's own widened
+           offset (Track 7 Phase 1, kept) is unaffected.", {
   f1 <- data.frame(
     id   = c("P1", "P2", "X", "A", "Y", "W", "C1", "GC", "C2"),
     sire = c(NA, NA, NA, "P1", "P1", NA, "A", "A", "W"),
@@ -1322,7 +1352,7 @@ test_that(".positionMatingUnitForest's F1 target case (investigation doc's
   )
   f1$gen <- findGeneration(f1$id, f1$sire, f1$dam)
   layout <- makePedigreeMatingLayout(f1, edgeStyle = "direct")
-  expect_equal(layout$nodes$x[layout$nodes$id == "__union_1"], 210,
+  expect_equal(layout$nodes$x[layout$nodes$id == "__union_1"], 150.12,
                tolerance = 1e-6)
 })
 
@@ -1424,16 +1454,20 @@ test_that(".positionMatingUnitForest positions an anchor whose CHILDREN() mixes
 ## ---- 2. Mating unit with >=3 real children + a true B1 free-pass mate -----------
 
 test_that(".positionMatingUnitForest positions a >=3-child union with a
-           QUALIFYING B1 free-pass mate at the anchor/mate midpoint (Track
-           7), not the midpoint of its 3 children -- and the mate's own
-           derived point at ANCH.x(FINAL) + minSep (S2, S8.1's B1 branch,
-           widened by Track 7, §2.2)
+           QUALIFYING B1 free-pass mate at the exact midpoint of its 3
+           children (Tier 2, unconditionally -- issue #166's scoped
+           revert, S652), NOT the anchor/mate midpoint Track 7 Phase 1
+           used to give it -- while the mate's own derived point stays at
+           ANCH.x(FINAL) + minSep (S2, S8.1's B1 branch, widened by Track
+           7 Phase 1 §2.2, KEPT per the ratified design)
 
-           Track 7 CHANGE (S647): this union QUALIFIES (ANCH male,
-           mateCount 1 each, no direct child, unambiguous sex) -- Tier 2's
-           child-midpoint formula no longer applies to it at all; its x is
-           now the anchor/mate midpoint instead, and MATE's offset widens
-           from minSep*0.4 to minSep.", {
+           Track 7 Phase 3 CHANGE (S652): this union QUALIFIES (ANCH male,
+           mateCount 1 each, no direct child, unambiguous sex), but
+           qualifying no longer matters for the union's OWN x -- the
+           recenter loop that used to override Tier 2's formula for
+           exactly this subset is deleted. MATE's own offset still widens
+           from minSep*0.4 to minSep (Track 7 Phase 1, unaffected by this
+           revert).", {
   ped <- data.frame(
     id = c("ANCH", "MATE", "C1", "C2", "C3"),
     sire = c(NA, NA, "ANCH", "ANCH", "ANCH"),
@@ -1448,17 +1482,21 @@ test_that(".positionMatingUnitForest positions a >=3-child union with a
   unitX <- pos$x[pos$id == unitId]
   anchX <- pos$x[pos$id == "ANCH"]
   mateX <- pos$x[pos$id == "MATE"]
+  c1X <- pos$x[pos$id == "C1"]; c2X <- pos$x[pos$id == "C2"]
+  c3X <- pos$x[pos$id == "C3"]
 
   expect_equal(nrow(forest$duplicates), 0L)  # MATE is B1, not B3 -- no __dup_ row
   ## MATE's derived point widens to ANCH's own Tier-1 x + minSep (Track 7,
   ## dropping the old *0.4 multiplier) -- unaffected by the union's own x,
   ## since the B1 formula reads tier1X directly, never unitX.
   expect_equal(mateX, anchX + 1, tolerance = 1e-9)
-  ## The union recenters to the true ANCH/MATE midpoint (Track 7 §2.1) --
-  ## no longer the mean of its 3 children (0, 1, 2 -> mean 1.0); here that
-  ## midpoint (1.5) happens not to exactly tie any other node at gen 0, so
-  ## no further tie-sweep nudge applies.
-  expect_equal(unitX, (anchX + mateX) / 2, tolerance = 1e-9)
+  ## Post-revert (S652): the union's x is once again the exact mean of its
+  ## 3 children (0, 1, 2 -> mean 1.0), which exactly coincides with ANCH's
+  ## own tier1X (1.0, Finding B's anchor/children-mean identity) -- the
+  ## pre-existing epsilon tie-break nudges it to 1.001. Re-measured live
+  ## against the reverted code, never hand-derived.
+  expect_equal(unitX, (c1X + c2X + c3X) / 3, tolerance = 2e-3)
+  expect_equal(unitX, 1.001, tolerance = 1e-9)
 })
 
 ## ---- 3. A B3 duplicate occurrence anchoring elsewhere in a different branch -----
@@ -1916,18 +1954,21 @@ test_that(".positionMatingUnitForest guarantees at least minSep between every
   }
 })
 
-test_that(".positionMatingUnitForest: every NON-QUALIFYING ANCHORED mating
-           unit's x equals the exact midpoint of its own real children's
-           final x -- one formula, no OR-branches, no clamp exceptions,
-           including a single-child union (Track 3's parent-span clamp and
-           Track 6's finalUnitX override are both gone by construction
-           under 2b)
+test_that(".positionMatingUnitForest: every ANCHORED mating unit's x
+           equals the exact midpoint of its own real children's final x --
+           one formula, no OR-branches, no clamp exceptions, including a
+           single-child union (Track 3's parent-span clamp and Track 6's
+           finalUnitX override are both gone by construction under 2b;
+           Track 7 Phase 1's own anchor/mate-midpoint override is ALSO
+           gone by construction, issue #166's scoped revert, S652)
 
-           Track 7 CHANGE (S647): BOTH units in this fixture actually
-           QUALIFY (each is a simple 2-parent, single-mate, no-direct-child
-           pair), so both are recentered to their parents' midpoint
-           instead -- this test now asserts that recentered formula, not
-           the child-midpoint one, for each.", {
+           Track 7 Phase 3 CHANGE (S652): both units in this fixture
+           actually QUALIFY (each is a simple 2-parent, single-mate,
+           no-direct-child pair) -- previously that meant BOTH recentered
+           to their parents' midpoint instead of the child-midpoint. That
+           special case no longer exists: this test now asserts the plain
+           child-midpoint formula for both, exactly as it would for any
+           non-qualifying unit.", {
   ped <- data.frame(
     id = c("P1", "P2", "C1", "C2", "C3", "P3", "P4", "C4"),
     sire = c(NA, NA, "P1", "P1", "P1", NA, NA, "P3"),
@@ -1939,15 +1980,17 @@ test_that(".positionMatingUnitForest: every NON-QUALIFYING ANCHORED mating
   forest <- .buildMatingUnitForest(ped)
   pos <- .positionMatingUnitForest(ped, forest)
   anchored <- forest$matingUnits[!is.na(forest$matingUnits$anchor), , drop = FALSE]
+  childEdges <- forest$childEdges
   for (i in seq_len(nrow(anchored))) {
     unitId <- anchored$id[i]
-    p <- anchored$anchor[i]
-    m <- anchored$nonAnchor[i]
     unitX <- pos$x[pos$id == unitId]
-    ## Both units here qualify (Track 7) -- their x is the anchor/mate
-    ## midpoint, not the child-midpoint the OLD (pre-Track-7) formula
-    ## used unconditionally.
-    formulaX <- (pos$x[pos$id == p] + pos$x[pos$id == m]) / 2
+    ## Child-midpoint formula, unconditionally -- no more qualifying
+    ## exception (S652). Both units' single child (C1/C2/C3's mean for
+    ## the first, C4 alone for the second) exactly coincides with its own
+    ## anchor's tier1X (Finding B), so a 0.001 epsilon tie-break applies;
+    ## the 2e-3 tolerance already accommodates it.
+    kids <- childEdges$to[childEdges$from == unitId]
+    formulaX <- mean(pos$x[match(kids, pos$id)])
     expect_equal(unitX, formulaX, tolerance = 2e-3, info = unitId)
   }
 })
@@ -2022,18 +2065,27 @@ test_that("getLiveRenderedPositions() (helper-live-render-positions.R)
 test_that(".positionMatingUnitForest gives every ANCHORED mating unit's x
            the exact midpoint of its own real children's final x -- one
            formula, no OR-branches, no clamp exceptions, including every
-           single-child union -- on the real 375-individual bundled
-           fixture EXCLUDING Track 7's own qualifying subset (parent
-           plan's own Phase 2 spec bullet 3; the version of this same
-           invariant above runs only on synthetic fixtures)
+           single-child union -- on ALL 237 anchored units of the real
+           375-individual bundled fixture, no exclusion (parent plan's own
+           Phase 2 spec bullet 3; the version of this same invariant above
+           runs on synthetic fixtures too)
 
-           Track 7 CHANGE (docs/planning/pedigree-diagram-track7-mate-
-           spacing-plan.md, S647): 60 of 237 anchored units on this real
-           fixture now QUALIFY (§1.4) and are recentered at their two
-           parents' midpoint instead -- excluded from this loop, which
-           still asserts the UNCHANGED child-midpoint formula for every
-           non-qualifying unit (the ~75% majority Track 7 leaves alone,
-           §1.4/§4).", {
+           Track 7 Phase 3 CHANGE (S652 -- issue #166, scoped revert,
+           docs/planning/pedigree-diagram-track7-phase3-child-centering-
+           plan.md §5 step 1): Track 7 Phase 1 used to recenter 34 of
+           these 237 units at their two parents' midpoint instead,
+           requiring this loop to exclude that 'qualifying' subset
+           entirely. That recenter is deleted -- 'qualifying' is now a
+           vacuous distinction for x-derivation purposes, so this test's
+           own structure (not just a number) is rewritten: every one of
+           the 237 anchored units, without exception, is checked against
+           the SAME plain child-midpoint formula. This is now the same
+           claim the checkInvariant() test above makes on this same
+           fixture -- kept as an independent, dedicated measurement of the
+           real-375 fixture specifically (belt-and-suspenders, matching
+           this file's own established practice of independently
+           cross-checking the same real-fixture metric more than once,
+           e.g. :425/:1067's own 27L pair).", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -2043,45 +2095,20 @@ test_that(".positionMatingUnitForest gives every ANCHORED mating unit's x
   pos <- .positionMatingUnitForest(ped, forest)
   matingUnits <- forest$matingUnits
   childEdges <- forest$childEdges
-  realIds <- as.character(ped$id)
-  sexOf <- stats::setNames(as.character(ped$sex), realIds)
-  sireOf <- stats::setNames(as.character(ped$sire), realIds)
-  damOf <- stats::setNames(as.character(ped$dam), realIds)
-  hasParentEdge <- function(id) !is.na(sireOf[[id]]) || !is.na(damOf[[id]])
-  hasOwnDirectChild <- function(id) id %in% childEdges$from
   anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
-  qualifies <- function(unitId) {
-    p <- matingUnits$anchor[matingUnits$id == unitId]
-    m <- matingUnits$nonAnchor[matingUnits$id == unitId]
-    if (is.na(p) || is.na(m)) return(FALSE)
-    sireId <- matingUnits$sire[matingUnits$id == unitId]
-    damId <- matingUnits$dam[matingUnits$id == unitId]
-    if (!(sireId %in% realIds) || !(damId %in% realIds)) return(FALSE)
-    mateCountP <- sum(anchoredUnits$sire == p | anchoredUnits$dam == p)
-    mateCountM <- sum(anchoredUnits$sire == m | anchoredUnits$dam == m)
-    unambig <- (identical(sexOf[[p]], "M") && identical(sexOf[[m]], "F")) ||
-      (identical(sexOf[[p]], "F") && identical(sexOf[[m]], "M"))
-    mIsB1 <- !hasParentEdge(m) && !hasOwnDirectChild(m)
-    mateCountP == 1L && mateCountM == 1L && !hasOwnDirectChild(p) &&
-      unambig && mIsB1
-  }
-  nQualifying <- 0L
+  expect_equal(nrow(anchoredUnits), 237L)
   for (i in seq_len(nrow(anchoredUnits))) {
     unitId <- anchoredUnits$id[i]
-    if (qualifies(unitId)) {
-      nQualifying <- nQualifying + 1L
-      next
-    }
     kids <- childEdges$to[childEdges$from == unitId]
     formulaX <- mean(pos$x[pos$id %in% kids])
     actual <- pos$x[pos$id == unitId]
-    ## Track 7 Phase 2 (S649): the union-side proximity push (plan §12.2)
-    ## is NOT qualifies()-gated -- it applies to every mating unit,
-    ## including non-qualifying ones, so a legitimate push here is
-    ## expected, not a defect. Accepted generically (not by hardcoding
-    ## which unit ids) as an alternative match: the deviation is within
-    ## floating tolerance of k * ((25+6)/120) for some k in 1:5 (see the
-    ## "Track 7 Phase 2" section's own derivation below).
+    ## Track 7 Phase 2 (S649, unaffected by this revert): the union-side
+    ## proximity push (plan §12.2) applies to every mating unit, so a
+    ## legitimate push here is expected, not a defect. Accepted
+    ## generically (not by hardcoding which unit ids) as an alternative
+    ## match: the deviation is within floating tolerance of
+    ## k * ((25+6)/120) for some k in 1:5 (see the "Track 7 Phase 2"
+    ## section's own derivation below).
     deviation <- abs(actual - formulaX)
     pushSteps <- deviation / ((25 + 6) / 120)
     isPhase2Push <- deviation > 2e-3 &&
@@ -2091,15 +2118,6 @@ test_that(".positionMatingUnitForest gives every ANCHORED mating unit's x
                 info = paste(unitId, "formula", formulaX, "actual", actual,
                              "deviation", deviation))
   }
-  ## CORRECTION (S647, found empirically, not the plan's own cited 60):
-  ## the plan's §1.4 "60 of 237 (25.3%) qualify" measured qualifies()
-  ## ALONE; the shipped mechanism additionally requires the non-anchor
-  ## mate to be a genuine free-pass B1 individual (pre-existing, gated via
-  ## b1Ids membership, unchanged by Track 7) -- the real count that
-  ## actually gets recentered is 34/237 (14.3%). See the plan doc's own
-  ## corrected §1.4 note. Track B (the fixture the owner actually
-  ## observed) is unaffected -- 4/4 either way.
-  expect_equal(nQualifying, 34L)
 })
 
 test_that(".positionMatingUnitForest re-measures the single-child-union
@@ -2168,12 +2186,22 @@ test_that(".positionMatingUnitForest measures, on the real 375-individual
            cosmetic bound, never a correctness violation of the ordering
            guarantee (sec8.2's own proof)
 
-           Track 7 CHANGE (docs/planning/pedigree-diagram-track7-mate-
-           spacing-plan.md, S647): the union no longer sits near-coincident
-           with the anchor for a qualifying pair -- it recenters to the
-           anchor/mate midpoint, so 'drift' (the union-dot/mate distance)
-           is now half of the widened minSep offset (~0.5), not the old
-           fixed 0.4*minSep.", {
+           Track 7 Phase 1 CHANGE (docs/planning/pedigree-diagram-track7-
+           mate-spacing-plan.md, S647): the union no longer sat
+           near-coincident with the anchor for a qualifying pair -- it
+           recentered to the anchor/mate midpoint, so 'drift' (the
+           union-dot/mate distance) was half of the widened minSep offset
+           (~0.5), not the old fixed 0.4*minSep.
+
+           Track 7 Phase 3 CHANGE (S652 -- issue #166, scoped revert):
+           the recenter is deleted, so the union is ONCE AGAIN
+           near-coincident with the anchor (Finding B's identity) --
+           'drift' (union-dot/mate distance) is now approximately the
+           FULL widened minSep offset (~1.0, the anchor-to-mate gap Track
+           7 Phase 1 still keeps), not half of it. Re-measured live
+           against the reverted code, never hand-derived: range
+           [0.74, 3.52], median ~1.0 -- comfortably inside the existing
+           <=6 bound below, which needs no change.", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -2223,23 +2251,13 @@ test_that(".positionMatingUnitForest measures, on the real 375-individual
     abs(pos$x[pos$id == fp] - pos$x[pos$id == unitId])
   }, numeric(1L))
 
-  ## Bound CHANGED (Track 7, S647): drift is normally ~minSep/2 (~0.5),
-  ## but the real fixture's founder row is dense enough (173 gen-0
-  ## founders) that a widened offset's exact-tie collision can need
-  ## several de-collision pushes to clear, each adding another minSep to
-  ## the union/mate distance -- measured directly (not guessed) at up to
-  ## 5.5 raw units for 1 of 34 qualifying pairs, after the bidirectional
-  ## nearest-free-slot search (R/makePedigreeDiagramData.R) already cut
-  ## the worst case roughly in half from a same-direction-only search's
-  ## 11.5. This is a disclosed, bounded trade-off -- avoiding an actual
-  ## circle-on-circle overlap costs a wider-than-intended visual gap for a
-  ## small minority of pairs in unusually dense colony regions -- matching
-  ## this project's own established "general crowding accepted as
-  ## partial, not absolute" posture (test_resolveEdgeNodeCollisions.R),
-  ## not pursued further this session (out of Phase 1's own scope, plan
-  ## §8: a fully general fix would mean either a wider search radius with
-  ## no guaranteed bound, or kinship2's own global joint-optimization
-  ## approach, explicitly rejected in the plan's §4 as disproportionate).
+  ## Bound UNCHANGED by the Phase 3 revert (S652): it was already loose
+  ## enough (<=6) to accommodate Track 7 Phase 1's own de-collision-push
+  ## outliers (up to 5.5 raw units for 1 of 34 qualifying pairs), and
+  ## post-revert the drift distribution (now centered on the FULL minSep
+  ## anchor-to-mate gap, ~1.0, instead of half of it, ~0.5) still fits
+  ## comfortably inside it -- re-measured directly (max 3.52), not
+  ## guessed, so no bound change is needed here.
   expect_true(length(drift) == 0L || all(drift <= 6),
               info = paste("max drift:",
                             if (length(drift) > 0L) max(drift) else NA))
@@ -2247,14 +2265,75 @@ test_that(".positionMatingUnitForest measures, on the real 375-individual
   message(sprintf(
     paste("Obligation 2 measurement: %d orderBySex-qualifying B1",
           "unions on the real fixture; union-dot/mate drift range [%s,",
-          "%s] (Track 7's widened offset recenters the union to the",
-          "anchor/mate midpoint; a minority in dense founder rows need",
-          "several de-collision pushes -- disclosed cosmetic, not a",
-          "correctness defect)."),
+          "%s] (issue #166's scoped revert, S652, restored the union to",
+          "near-anchor-coincidence, so drift is now approximately the",
+          "full minSep anchor/mate gap, not half of it -- disclosed",
+          "cosmetic, not a correctness defect)."),
     length(qualifyingB1),
     if (length(drift) > 0L) sprintf("%.4f", min(drift)) else "NA",
     if (length(drift) > 0L) sprintf("%.4f", max(drift)) else "NA"
   ))
+})
+
+## ---- issue #166's own named cases: direct geometry regression (S652,
+## scoped revert) -----------------------------------------------------------
+## docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md §5
+## step 1's own required addition: "no existing tests/testthat/ fixture
+## currently renders/inspects [issue #166's named] specific geometry
+## (straight-vs-dogleg rendering, bar-vs-children-mean deviation) for Track
+## B's full 16-subject fixture -- that evidence lives only in the .qmd
+## vignette's committed screenshots." This is the FULL (non-shrunk) Track B
+## pedigree -- the same structural definition used (shrunk) by the Track 7
+## Phase 2 tests above -- reproducing the exact 3 named cases from issue
+## #166 and the design doc's own §1 Context: P3xP4->C4 and C4xP6->C4a
+## (single-child qualifying unions, dogleg before this fix) and M1xG3's
+## 3-child sibship bar (off-center before this fix). Values re-measured
+## live against the reverted code, never hand-derived.
+test_that(".positionMatingUnitForest's issue #166 named cases -- P3xP4's
+           and C4xP6's single-child qualifying unions drop straight to
+           their own child (not a dogleg), and M1xG3's 3-child sibship bar
+           centers at its children's true mean (not off-center) -- on the
+           full, non-shrunk 16-subject Track B fixture", {
+  pedB <- data.frame(
+    id   = c("P1", "P2", "P3", "P4", "P5", "P6",
+             "C1", "C2", "C3", "C4", "C4a",
+             "G3", "M1", "L1", "L2", "L3"),
+    sire = c(NA, NA, NA, NA, NA, NA,
+             "P1", "P1", "P1", "P3", "C4",
+             NA, "P1", "M1", "M1", "M1"),
+    dam  = c(NA, NA, NA, NA, NA, NA,
+             "P2", "P2", "P2", "P4", "P6",
+             NA, "P2", "G3", "G3", "G3"),
+    sex  = c("M", "F", "M", "F", "F", "F",
+             "F", "M", "F", "M", "F",
+             "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  pedB$gen <- findGeneration(pedB$id, pedB$sire, pedB$dam)
+  forest <- .buildMatingUnitForest(pedB)
+  pos <- .positionMatingUnitForest(pedB, forest)
+
+  unitP3P4 <- forest$matingUnits$id[forest$matingUnits$sire == "P3" &
+                                       forest$matingUnits$dam == "P4"]
+  unitC4P6 <- forest$matingUnits$id[forest$matingUnits$sire == "C4" &
+                                       forest$matingUnits$dam == "P6"]
+  unitM1G3 <- forest$matingUnits$id[forest$matingUnits$sire == "M1" &
+                                       forest$matingUnits$dam == "G3"]
+
+  ## Straight drop: the union's x is within the pre-existing 0.001
+  ## exact-tie epsilon of its ONE child's own x -- a dogleg-sized
+  ## deviation (Track 7 Phase 1's own ~minSep/2, or worse under
+  ## collision pushes) would fail this tight tolerance.
+  expect_equal(pos$x[pos$id == unitP3P4], pos$x[pos$id == "C4"],
+               tolerance = 2e-3)
+  expect_equal(pos$x[pos$id == unitC4P6], pos$x[pos$id == "C4a"],
+               tolerance = 2e-3)
+
+  ## Centered bar: the union's x is within the same tight tolerance of
+  ## its 3 children's TRUE mean -- issue #166's own named "3.5 vs. true
+  ## mean 3.0" off-center defect no longer reproduces.
+  childrenMeanM1G3 <- mean(pos$x[pos$id %in% c("L1", "L2", "L3")])
+  expect_equal(pos$x[pos$id == unitM1G3], childrenMeanM1G3, tolerance = 2e-3)
 })
 
 ## NOTE on the 2 tests below: running them live during Phase 2b found a HARD

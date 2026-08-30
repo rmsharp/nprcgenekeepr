@@ -663,15 +663,13 @@ test_that(".addRectilinearWaypoints's D1 bar/drop waypoints never share a
 
 test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
            collisions (2 different sibships sharing a generation gap,
-           whose bar x-spans overlap) are at 6 cases -- mostly sub-pixel,
-           one 59.88px (Track 7 Phase 1, S647's capped search), plus 1
-           more from Phase 2 (S649) -- from 0 under the Walker/BJL engine
-           (Phase 3 cutover) -- Track 3's
-           parent-span clamp, the mechanism that used to worsen this
-           residual, no longer exists -- on the real 375-individual
-           bundled fixture, a residual originally named in the
-           collision-avoidance plan's own section 8, counted here so a
-           future regression would be caught", {
+           whose bar x-spans overlap) are back at 0 cases -- issue #166's
+           scoped revert (S652) deletes the Track 7 Phase 1 recenter that
+           introduced this residual in the first place, restoring the
+           Walker/BJL engine's original zero -- on the real
+           375-individual bundled fixture, a residual originally named in
+           the collision-avoidance plan's own section 8, counted here so
+           a future regression would be caught", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -733,45 +731,23 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
   ## children's midpoint (no clamp pulling it back toward its parents'
   ## x-region).
   ##
-  ## Track 7 CHANGE (docs/planning/pedigree-diagram-track7-mate-spacing-
-  ## plan.md, S647): BOTH counts move from 0 to 1 -- __union_5 and
-  ## __union_7 (both single-child, both now Track-7-qualifying) recenter
-  ## away from their one child's own x to the anchor/mate midpoint, and
-  ## their single-child bar groups' x-spans ([60,120]px and [0,60.12]px)
-  ## now overlap by exactly 0.12px -- below a screen's 1px rendering
-  ## granularity (confirmed by an actual chromote render of this exact
-  ## spot, both at normal scale -- nothing distinguishable -- and
-  ## artificially zoomed 6x, where it looks identical to the many other
-  ## already-existing sub-pixel node coincidences already present
-  ## elsewhere in this same diagram, e.g. the pixel-coincidence measured
-  ## by the live-render tests near the end of test_positionMatingUnitForest.R).
-  ## Disclosed here, not silently reset to 0 -- this is a real, mostly
-  ## negligible, side effect of widening the B1 offset, distinct from the
-  ## Tier-3 collision-sweep fix (S647) above, which only covers POINT
-  ## coincidences, not BAR-SPAN overlaps -- a different collision shape.
+  ## Track 7 Phase 1 CHANGE (docs/planning/pedigree-diagram-track7-mate-
+  ## spacing-plan.md, S647): BOTH counts had moved from 0 to 1, then to 5
+  ## after the individual-side capped-search refinement, then to 6 after
+  ## Track 7 Phase 2 (S649) -- __union_5/__union_7 and others recentered
+  ## away from their own children's x to the anchor/mate midpoint,
+  ## widening or newly creating single-child bar-span overlaps.
   ##
-  ## CHANGED again (S647's capped-search refinement): an earlier,
-  ## uncapped version of the point-collision fix caused 34 bar overlaps
-  ## here, several 400-540px wide -- capping the search
-  ## (.kMaxIndividualPush = 2, R/makePedigreeDiagramData.R) brought this
-  ## back down to 5: one real 59.88px overlap plus 3 sub-pixel (0.12px)
-  ## cases and one exact boundary touch (0px) -- measured directly. The
-  ## remaining 59.88px case is a genuine, if modest, visible trade-off of
-  ## capping the search rather than leaving it unbounded; not fixed
-  ## further here (out of Phase 1's own scope; the plan's own §7 asked
-  ## this suite be RUN and confirmed, not asked to hold at exactly 0
-  ## regardless of what's found).
-  ## Track 7 Phase 2 CHANGE (plan §12, ratified S648, implemented S649):
-  ## 5 -> 6 -- the union-side proximity push moves a small number of
-  ## unions further, occasionally widening a bar-span enough to newly
-  ## overlap an adjacent one. Re-measured by actually running the new
-  ## engine, never hand-derived. Same disclosed, accepted-as-partial
-  ## posture as the Phase 1 residual above -- not fixed further here
-  ## (out of Phase 2's own scope; plan §12.6 asks this suite be RUN and
-  ## confirmed, not asked to hold at exactly 5 regardless of what's
-  ## found).
-  expect_equal(oldHits, 6L)  # CHANGED from 5L (Phase 2, S649)
-  expect_equal(newHits, 6L)  # CHANGED from 5L (Phase 2, S649)
+  ## Track 7 Phase 3 CHANGE (S652 -- issue #166, scoped revert): the
+  ## recenter loop that caused all of the above is deleted. Every
+  ## qualifying union's x reverts to Tier 2's unconditional child-
+  ## midpoint -- for a single-child union this is (mod the pre-existing
+  ## 0.001 epsilon tie-break) exactly that child's own x, the same
+  ## identity that gave the Walker/BJL engine its original zero-overlap
+  ## result before Track 7 ever existed. Re-measured live against the
+  ## reverted code, never hand-derived: BOTH counts drop back to 0.
+  expect_equal(oldHits, 0L)  # CHANGED from 6L (issue #166 revert, S652)
+  expect_equal(newHits, 0L)  # CHANGED from 6L (issue #166 revert, S652)
   expect_true(newHits <= oldHits)
 })
 

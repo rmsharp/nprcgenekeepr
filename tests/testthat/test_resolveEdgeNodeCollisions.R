@@ -395,13 +395,22 @@ test_that("makePedigreeMatingLayout() wires .resolveEdgeNodeCollisions()
 ## that the resolve pass still fully clears every one of these to 0
 ## residual -- it needs 4 FEWER __jog_ waypoints to do so (220 -> 216,
 ## test_makePedigreeMatingLayout.R).
+##
+## Track 7 Phase 3 CHANGE (docs/planning/pedigree-diagram-track7-phase3-
+## child-centering-plan.md, S652 -- issue #166, scoped revert): 107 -> 95
+## colliding edges, 1,764 -> 1,759 obstacle-pairs -- deleting the
+## anchor/mate-midpoint recenter moves 34 qualifying unions' x back
+## toward their own children, closer to the pre-Track-7 baseline. The
+## resolve pass still fully clears every one of these to 0 residual --
+## it needs 24 FEWER __jog_ waypoints to do so (216 -> 192,
+## test_makePedigreeMatingLayout.R). Re-measured by actually running the
+## reverted engine, never hand-derived.
 
 test_that(".resolveEdgeNodeCollisions dramatically reduces the real
-           375-individual bundled fixture's same-row collision count (107
-           colliding edges / 1,764 obstacle-pairs pre-fix, under Track 7
-           Phase 2's own union-proximity push, S649), and any residual is
-           disclosed via the residuals data frame, never silently
-           dropped", {
+           375-individual bundled fixture's same-row collision count (95
+           colliding edges / 1,759 obstacle-pairs pre-fix, after issue
+           #166's scoped revert, S652), and any residual is disclosed via
+           the residuals data frame, never silently dropped", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -417,12 +426,12 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   baselineEdges <- unique(baseline[, c("from", "to")])
   ## CHANGED again from 76L/1715L (pre-Track-7) then 104L/1748L (Track 7
   ## Phase 1's uncapped push) then 109L/1762L (Phase 1's capped-search
-  ## refinement, .kMaxIndividualPush = 2) -- NOW 107L/1764L after Phase
-  ## 2's own, anchor-excluding union-side push (S649) -- a small net
-  ## reduction, not a growth. Re-measured by actually running the
-  ## engine, never hand-derived.
-  expect_equal(nrow(baselineEdges), 107L)
-  expect_equal(nrow(baseline), 1764L)
+  ## refinement) then 107L/1764L (Phase 2's own union-side push, S649) --
+  ## NOW 95L/1759L after issue #166's scoped revert (S652) deletes the
+  ## anchor/mate-midpoint recenter. Re-measured by actually running the
+  ## reverted engine, never hand-derived.
+  expect_equal(nrow(baselineEdges), 95L)
+  expect_equal(nrow(baseline), 1759L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)
