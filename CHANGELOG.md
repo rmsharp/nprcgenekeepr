@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S657: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S656 precedent)
+- Commit `f22cf2b4` set `HANDOFFS.md`'s S657 receipt `commit:` field from `pending` to `01b7dacc`
+  (a 1-line change), the same self-reference workaround this project's sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [BL-trackCRectilinearEdgeCount] S657: docs close-out -- BACKLOG.md DONE, Learning 696, CLAUDE.md pointer
 - `BACKLOG.md`: marked the Track C rectilinear-edge-count item `[x]` DONE with full root-cause and
   resolution detail (Track 4/S573 anchor-selection change, one day after the article's own S563/S566
