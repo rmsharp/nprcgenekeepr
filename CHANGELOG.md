@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S659: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S658 precedent)
+- This commit sets `HANDOFFS.md`'s S659 receipt `commit:` field from `pending` to `57d9fa61`
+  (the deliverable commit), the same self-reference workaround this project's sessions have made
+  since S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [BL-newsRmdSiblingConsang] S659: docs close-out -- BACKLOG.md DONE, Learning 698, CLAUDE.md pointer
 - `BACKLOG.md`: marked the `NEWS.Rmd` stale sibling-consanguineous-mating bullet item `[x]` DONE
   with full root-cause and resolution detail (traced to the S602 `.computeDupNudge()`/

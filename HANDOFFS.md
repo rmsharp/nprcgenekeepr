@@ -174,7 +174,7 @@ runtime_smoke: n/a -- docs-only session, NEWS.Rmd/NEWS.md have no runtime path
   clean, one directly-relevant test file re-run live and passed.
 changelog_ref: see CHANGELOG.md's 3 new 2026-08-30 S659 entries (claim / fix / docs-close-out),
   tagged [BL-newsRmdSiblingConsang].
-commit: pending
+commit: 57d9fa61
 ```
 
 ```handoff
