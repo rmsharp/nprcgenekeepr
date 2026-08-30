@@ -18,6 +18,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 654 Did
+**Deliverable:** Design document for the Track 7 Phase 2 union-vs-duplicate proximity residual fix
+(`BACKLOG.md` Housekeeping, found S649, currently 3/237 on the real fixture as of S652's issue #166
+revert) (IN PROGRESS)
+**Started:** 2026-08-30
+**Status:** Session claimed. Pre-RED scope decision made via `AskUserQuestion` -- owner picked
+"design session first," matching this project's established precedent that every prior touch to
+`.positionMatingUnitForest()` (Tracks 1-6, the Walker/BJL migration, Track 7 Phases 1-3) went
+through a dedicated, owner-ratified design session before implementation. Work beginning:
+investigate the BACKLOG-sketched "prospective duplicate offset in the union sweep's occupied-set"
+approach, empirically quantify impact (matching plan §12.1/§12.8's own pre-RED methodology),
+re-confirm Alternative D (symmetric individual-side hardening) stays rejected, then ratify via
+`AskUserQuestion`. No implementation this session.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 652 Handoff Evaluation (by Session 653)
 **Score: 8/10.** **What helped:** S652 left `BACKLOG.md`/`CHANGELOG.md` in a clean, accurate state
 -- the STANDING TOP PRIORITY banner and the 6-item pedigree-fidelity Housekeeping cluster it

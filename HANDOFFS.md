@@ -136,6 +136,24 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S654
+date: 2026-08-30
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Design document for the Track 7 Phase 2 union-vs-duplicate proximity residual fix
+  (BACKLOG.md Housekeeping, found S649, 3/237 on the real fixture as of S652's issue #166 revert).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(claim stub -- filled at close-out)
+
+```handoff
 session: S653
 date: 2026-08-30
 status: complete
