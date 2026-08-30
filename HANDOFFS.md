@@ -138,21 +138,63 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S655
 date: 2026-08-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement the ratified Track 7 Phase 4 design (union-vs-duplicate proximity fix) --
-  docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md sections 6/7, full
-  TDD RED->GREEN->REFACTOR.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 10
+active_task: DONE -- implemented the ratified Track 7 Phase 4 design (union-vs-duplicate proximity
+  fix), full TDD RED->GREEN->REFACTOR(skipped). All 5 predicted pinned-test values landed exactly;
+  mandatory live-render check confirmed. BACKLOG.md item marked DONE.
+what_was_done: RED (d52b7f83): updated 5 pinned assertions to Option-A measured values; confirmed
+  genuine RED (6 failed = 5 new + 1 pre-existing / 0 error / 6565 passed). GREEN (dcdbe84d):
+  implemented the duplicate-side post-hoc unidirectional push in R/makePedigreeDiagramData.R after
+  the existing duplicate-positioning block, reusing Phase 2's own unionClearanceIndividual/
+  .kMaxUnionPush=5. Full regression 1 failed (pre-existing)/0 error/6570 passed, all 5 values exact,
+  0 other regressions; residuals exactly 47 curved-heuristic rows; live chromote render check: 3
+  pairs now 52.0px apart, 198 jog waypoints render, 0 NA/0 collapsed ids; lintr 0 lints;
+  devtools::document() 0 NAMESPACE/man changes. REFACTOR skipped (owner-directed). Docs close-out
+  (7fe12fd4): fixed a self-caught NEWS.Rmd bullet placement error (git-blame-verified against the
+  pre-existing Housekeeping note's own instruction), marked 2 BACKLOG.md items DONE, recorded
+  Learning 694 (repeated ScheduleWakeup misuse).
+next_steps: Pick the next pedigree-fidelity Housekeeping item (STANDING TOP PRIORITY still applies):
+  the __jog_* waypoint invisible-styling fix (READY, Effort S, R/makePedigreeDiagramData.R:2094-2097),
+  the Track C table discrepancy (READY, Effort S), or the NEWS.Rmd dangling-reference staleness
+  question (READY, Effort S). The 6 duplicate-vs-individual near-misses item needs its own design
+  session first (Effort M) before code, matching S654's own established precedent. A future session
+  should also push master to origin (5 commits ahead as of this session's close) and confirm CI --
+  especially lint.yaml, still red on the last-pushed commits from before S653's (unpushed) fix.
+key_files: R/makePedigreeDiagramData.R:1098-1150 (the new Track 7 Phase 4 post-pass),
+  docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md (the design this
+  session implemented, now DONE), tests/testthat/test_positionMatingUnitForest.R:1274 (the primary
+  pinned duplicate-residual assertion, now 0L)
+gotchas: A documented gotcha in a prior handoff (S654's own ScheduleWakeup disclosure) is not, by
+  itself, a strong enough countermeasure -- this session repeated the identical mistake (Learning
+  694). The initial NEWS.Rmd bullet placement was wrong on the first attempt; verify any future
+  NEWS.Rmd edit against the file's actual git-blame history, not assumed narrative order, since this
+  file's bullets are not strictly chronological. 3 other pedigree-fidelity Housekeeping items remain
+  untouched this session.
+runtime_smoke: Live chromote render check via getLiveRenderedPositions() against the real
+  375-individual bundled fixture (matching this project's own established Phase 3E bar for any
+  .positionMatingUnitForest() change): 1456/1456 rendered rows, 0 NA positions, 0 silently-collapsed
+  ids, all 3 previously-colliding union/duplicate pairs now 52.0px apart, all 198 __jog_ waypoints
+  render.
+changelog_ref: CHANGELOG.md 2026-08-30 S655 claim/RED/GREEN/docs-close-out entries (commits
+  eab1838a, d52b7f83, dcdbe84d, 7fe12fd4)
 commit: pending
 ```
-<claim stub -- filled at close-out (Phase 3D)>
+Implemented the ratified Track 7 Phase 4 design end to end via full TDD, with every predicted
+quantitative value from the design doc landing exactly on the first implementation attempt --
+0/5 pinned-test deltas, the 3 named collision pairs, and the 47-row curved-heuristic residual all
+matched precisely. Ran the mandatory live chromote render check beyond the numeric assertions
+(52.0px separation confirmed, 0 NA/collapsed ids). Caught and self-corrected a NEWS.Rmd placement
+error before close-out by tracing the pre-existing Housekeeping note's own instruction via git
+blame, rather than leaving a plausible-but-wrong edit for a future session to find.
+
+**Self-score breakdown (8/10):** +2 pre-RED live re-validation before writing any test; +2 mandatory
+live-render check beyond numeric assertions; +2 self-caught and root-caused the NEWS.Rmd placement
+error via git blame rather than guessing; +1 zero stakeholder corrections on the technical content
+across all 3 TDD gates; +1 clean CHANGELOG/BACKLOG/Learning close-out. -2 for repeating the
+ScheduleWakeup mistake S654's own handoff explicitly flagged one session earlier, plus several
+wasted no-op Bash calls while waiting on background tasks.
 
 ```handoff
 session: S654

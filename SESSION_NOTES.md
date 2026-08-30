@@ -18,15 +18,122 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 654 Handoff Evaluation (by Session 655)
+**Score: 10/10.** **What helped:** S654's `next_steps` pointed directly at the ratified design
+doc's own §6/§7 (Migration Path/Verification Plan) and explicitly flagged the §5.3 pinned-test
+inventory as needing live re-confirmation before trusting it. Every single one of the 5 predicted
+values (0L/1456L/198L/98L/1762L) landed EXACTLY as specified, with zero deviation; the ratified
+mechanism (§2's Option A) was implementable literally as described with zero debugging or design
+ambiguity. Every claim independently spot-checked this session (pre-RED re-measurement of
+§1.2/§5.3, `BACKLOG.md`/`HANDOFFS.md` state) matched exactly. **What was missing:** the handoff
+didn't mention `forest$duplicates`'s own column structure (`id`/`realId`/`matingUnitId`), which had
+to be discovered by grepping `R/makePedigreeDiagramData.R` directly -- a minor, easily-resolved gap
+costing a few minutes, not a real cost. **What was wrong:** nothing -- every quantitative claim (the
+3 named pairs, the 5 predicted test deltas, the 47-row `curved-heuristic`-only residual) proved
+exactly correct on implementation and live-render verification. **ROI:** extremely positive -- a
+fully mechanical implementation with zero surprises and zero stakeholder corrections on the
+technical content (all 3 TDD `AskUserQuestion` gates approved exactly as proposed).
+
 ### What Session 655 Did
-**Deliverable:** Implement the ratified Track 7 Phase 4 design (union-vs-duplicate proximity fix)
--- `docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md` §6/§7, full
-TDD RED->GREEN->REFACTOR. (IN PROGRESS)
-**Started:** 2026-08-30 11:58
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Implemented the ratified Track 7 Phase 4 design (union-vs-duplicate proximity fix)
+-- `docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md` §2/§6/§7, full
+TDD RED->GREEN->REFACTOR(skipped). **DONE.**
+**Started/Completed:** 2026-08-30 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0:** orientation report; ledger reconcile found 0 undocumented commits (`CHANGELOG.md`
+   frontier == `HEAD`) and `HANDOFFS.md`'s newest receipt already `status: complete` -- no backfill
+   needed. Priorities `AskUserQuestion` (4 pedigree-fidelity Housekeeping options + informational
+   context on a 5th needing design-first) -> owner picked Track 7 Phase 4 implementation.
+2. **Phase 1B claim** (commit `eab1838a`).
+3. **Pre-RED investigation:** read the ratified design doc in full and `DEVELOPMENT_WORKSTREAM.md`;
+   read the actual current source (`R/makePedigreeDiagramData.R:930-1120`, the union sweep +
+   duplicate-positioning block) before writing any test. Live-reconfirmed §1.2's baseline via a
+   from-scratch counting script (borrowing `.nodeKind()`/`.unionClearanceIndividual` from the test
+   file itself, since `pkgload::load_all()`'s `helpers = TRUE` only sources `helper-*.R`, not
+   `test_*.R`) -- exact match to the design doc: same 3 union/duplicate pairs, same x-values/
+   distances (0.0843 vs. threshold 0.2583), same sweep-order asymmetry (`__union_14` at sweep #6 vs.
+   its colliding duplicate's owning `__union_47` at sweep #42, *after* it). Confirmed all 5 §5.3
+   pinned values unchanged (3L/1450L/192L/95L/1759L). Baseline full clean regression: 1 failed
+   (pre-existing `test_wordlist_coverage.R`)/0 error/6570 passed.
+4. **`AskUserQuestion` PRE-RED->RED gate** -> owner approved proceeding as proposed.
+5. **RED** (commit `d52b7f83`): updated the 5 pinned assertions
+   (`test_positionMatingUnitForest.R:1274`, `test_makePedigreeMatingLayout.R:651`/`658`,
+   `test_resolveEdgeNodeCollisions.R:433`/`434`) to their Option-A measured values, with updated
+   inline comments matching this project's own "CHANGED (session, reason): old -> new" convention.
+   Confirmed genuine RED: 6 failed (5 new intentional + 1 pre-existing)/0 error/6565 passed, 0
+   collateral.
+6. **`AskUserQuestion` RED->GREEN gate** -> owner approved proceeding as proposed (with the exact
+   insertion point/logic spelled out in the option preview).
+7. **GREEN** (commit `dcdbe84d`): implemented design doc §2's Option A -- a duplicate-side,
+   post-hoc, unidirectional push in `R/makePedigreeDiagramData.R`, immediately after the existing
+   duplicate-positioning + de-collision block (`:1098-1111`), reusing Phase 2's own
+   `unionClearanceIndividual` threshold and `.kMaxUnionPush = 5` cap; always rightward, matching
+   `derivedX()`'s own B3 convention. Verification: full clean regression 1 failed (pre-existing)/0
+   error/6570 passed, all 5 predicted values landed exactly; all 3 named pairs confirmed resolved to
+   0 via the test's own counting method, re-run live; `.resolveEdgeNodeCollisions()` residuals
+   exactly 47 rows, all `curved-heuristic` (0 new residual of any kind); **mandatory live chromote
+   render check** (`getLiveRenderedPositions()`, matching this project's established bar for any
+   `.positionMatingUnitForest()` touch) -- all 3 previously-colliding pairs now render 52.0px apart,
+   all 198 `__jog_` waypoints render, 0 NA positions, 0 silently-collapsed ids (1456/1456 rendered
+   rows); `lintr::lint_package()` 0 lints on all 4 touched files; `devtools::document()` 0
+   NAMESPACE/man changes. Added both `NEWS.Rmd` bullets (this fix's own + S649's still-missing Phase
+   2 bullet) and regenerated `NEWS.md` -- **initially in the wrong location** (see self-assessment
+   weakness below), corrected in step 9.
+8. **`AskUserQuestion` GREEN->REFACTOR gate** -> owner picked "skip REFACTOR" (matching
+   S650/S652/S653's own precedent -- no behavior-neutral restructuring identified).
+9. **Self-caught correction** (commit `7fe12fd4`): re-reading the pre-existing S650 Housekeeping
+   note's own placement instruction ("after the Phase 1 individuals-side bullet, i.e. right before
+   S650's own new Phase 3 bullet") found the 2 new bullets had been placed one cluster too early
+   (after the sibling-consanguineous bullet instead). Used `git blame`/`git show <sha>:NEWS.Rmd`
+   against `f7ea096a` (S650's own commit) to identify the exact intended anchor points and relocated
+   both bullets correctly; regenerated `NEWS.md` again. `BACKLOG.md`: marked the Track 7 Phase 4
+   item and S649's missing-`NEWS.Rmd`-entry item both `[x]` DONE with full resolution detail.
+   `PROJECT_LEARNINGS.md`: recorded Learning 694 (see below); `CLAUDE.md` learnings pointer updated
+   693 -> 694.
+10. **`CHANGELOG.md`**: 4 entries added (claim, RED, GREEN, docs-close-out), source-tagged
+    `[BL-track7Phase4Duplicate]` for the RED/GREEN entries and `[ad hoc]` for the claim/docs-close-out
+    entries, matching S654's own tagging convention for this item.
+11. **No GitHub issue filed/closed** -- this is a `BACKLOG.md`-tracked Housekeeping item, not a live
+    CI break; matches this project's established convention.
+
+**Self-assessment (Session 655): 8/10.** **Strengths:** (1) completed pre-RED live re-validation
+before writing any test code, confirming exact match to the design doc rather than trusting its
+numbers; (2) read the actual current source before writing implementation, not just the design
+doc's prose description; (3) ran the mandatory live-render check via chromote, not just numeric
+test assertions, matching this project's own established bar for any `.positionMatingUnitForest()`
+touch; (4) caught and self-corrected a real documentation-placement error post-GREEN by re-checking
+the pre-existing Housekeeping note's own exact instruction and using `git blame` to find the true
+intended anchor point, rather than leaving a plausible-but-wrong placement for a future session to
+find; (5) 0 stakeholder corrections on the technical implementation -- all 3 TDD phase gates
+approved exactly as proposed. **Weaknesses:** (1) called `ScheduleWakeup` (a `/loop`-only tool)
+while waiting on a `run_in_background` Bash task -- the IDENTICAL mistake S654's own handoff
+explicitly disclosed one session earlier ("should not have been called at all in a non-`/loop`
+session"), caught immediately via the tool's own validation error but recorded as Learning 694
+since a documented gotcha alone evidently wasn't a strong enough countermeasure; (2) made several
+throwaway no-op Bash calls (`sleep 1`, `true`, `:`) while waiting on background tasks, wasting turns
+without adding value -- should have simply ended the turn's tool calls and let the harness's own
+completion notification arrive, as eventually settled into by the end of the session; (3) the initial
+NEWS.Rmd bullet placement was wrong on the first attempt (found and fixed before close-out, not left
+for the next session).
+
+**Gotchas for a future session:** (1) **Track 7 Phase 4 is fully shipped, tested, and
+live-render-verified** -- no further work needed on it specifically. (2) **STANDING TOP PRIORITY
+banner still applies** -- 3 pedigree-fidelity Housekeeping items remain open: the `__jog_*`
+waypoint invisible-styling gap (READY, Effort S), the Track C table discrepancy (READY, Effort S),
+and the `NEWS.Rmd` dangling-reference staleness question (READY, Effort S); plus the 6
+duplicate-vs-individual near-misses item (READY tag, but needs its own design session first before
+code, Effort M, per S654's own finding). (3) `master` is now 4 commits ahead of where S654 left it
+(`eab1838a`/`d52b7f83`/`dcdbe84d`/`7fe12fd4`, plus the closing self-reference commit below) --
+unpushed per the standing "commit/push only when asked" convention; a future session pushing should
+confirm CI actually goes green, including `lint.yaml` (still showing red on the last-pushed commits
+from BEFORE S653's fix -- that fix is committed locally but has never been pushed/CI-verified).
+(4) `HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap, unchanged this
+session -- `BACKLOG.md`'s "ledger-size housekeeping" item is still open. (5) **Learning 694**: a
+documented gotcha in a prior session's handoff is not, by itself, a strong enough countermeasure
+against reaching for `ScheduleWakeup` out of habit while waiting on a background task -- a future
+session should treat "background task outstanding" as a hard stop on calling any scheduling tool,
+full stop, not something to recall correctly under pressure.
 
 ### Session 653 Handoff Evaluation (by Session 654)
 **Score: 8/10.** **What helped:** S653's `next_steps`/gotchas accurately listed all 5 remaining

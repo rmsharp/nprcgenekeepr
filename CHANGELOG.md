@@ -16,6 +16,55 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S655: docs close-out -- fix NEWS.Rmd bullet placement, record Learning 694
+- Commit `7fe12fd4`. `BACKLOG.md`: marked the Track 7 Phase 4 item and S649's missing `NEWS.Rmd`
+  entry both DONE. `NEWS.Rmd`/`NEWS.md`: relocated the 2 new bullets this session's own GREEN
+  commit (`dcdbe84d`) had placed after the sibling-consanguineous bullet, to the spot the S650
+  Housekeeping note actually specified -- right after Track 7 Phase 1's own "For most simple mated
+  pairs..." bullet, right before S650's own Phase 3 bullet (confirmed via `git blame` against
+  `f7ea096a`, S650's own commit).
+- `PROJECT_LEARNINGS.md`: recorded Learning 694 -- this session called `ScheduleWakeup` (a
+  `/loop`-only tool) while waiting on a `run_in_background` Bash task, the identical mistake S654's
+  own handoff explicitly disclosed and flagged as a gotcha one session earlier. Practical rule: a
+  documented gotcha is not, by itself, a strong enough countermeasure against reaching for a
+  familiar-sounding tool name out of habit -- do not call any scheduling tool while a background
+  task is outstanding; let the harness's own completion notification arrive. `CLAUDE.md` learnings
+  pointer updated 693 -> 694.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [BL-track7Phase4Duplicate] S655: GREEN -- Track 7 Phase 4 (union-vs-duplicate proximity fix)
+- Commit `dcdbe84d`. Implemented the ratified design's Option A: a duplicate-side, post-hoc,
+  unidirectional push in `R/makePedigreeDiagramData.R`, immediately after the existing
+  duplicate-positioning block, reusing Phase 2's own `unionClearanceIndividual` threshold and
+  `.kMaxUnionPush = 5` cap. Full clean regression 1 failed (pre-existing)/0 error/6570 passed -- all
+  5 predicted pinned-test values landed exactly (0L/1456L/198L/98L/1762L), 0 other regressions. All
+  3 named union/duplicate pairs confirmed resolved to 0 via the test's own counting method, re-run
+  live. `.resolveEdgeNodeCollisions()` residuals: exactly 47 rows, all `curved-heuristic` -- 0 new
+  residual of any kind. Mandatory live chromote render check: all 3 previously-colliding pairs now
+  render 52.0px apart; all 198 `__jog_` waypoints render; 0 NA positions; 0 silently-collapsed ids
+  (1456/1456 rendered rows). `lintr::lint_package()` 0 lints on all 4 touched files;
+  `devtools::document()` 0 NAMESPACE/man changes. REFACTOR skipped (owner-directed via
+  `AskUserQuestion`) -- no behavior-neutral restructuring identified, matching S650/S652/S653's own
+  precedent. Added this fix's own `NEWS.Rmd` bullet and S649's own still-missing Phase 2 bullet
+  (placement corrected in the following commit).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [BL-track7Phase4Duplicate] S655: RED -- Track 7 Phase 4 (union-vs-duplicate proximity fix)
+- Commit `d52b7f83`. Updated the 5 pinned assertions
+  (`test_positionMatingUnitForest.R:1274`, `test_makePedigreeMatingLayout.R:651`/`658`,
+  `test_resolveEdgeNodeCollisions.R:433`/`434`) to their Option-A measured values per the ratified
+  design doc's §5.3/§6. Pre-RED live re-validation confirmed exact match to the design doc's §1.2
+  baseline (same 3 union/duplicate pairs, same x-values/distances, same sweep-order asymmetry) and
+  §5.3's unchanged pinned values, against unmodified `HEAD` (`2e3a05b2`). Confirmed genuine RED: 6
+  failed (5 new intentional + 1 pre-existing `test_wordlist_coverage.R` baseline)/0 error/6565
+  passed, 0 collateral.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [ad hoc] S655: claim session (implement Track 7 Phase 4 union-vs-duplicate proximity fix)
+- Commit `eab1838a`. Phase 1B stub in `SESSION_NOTES.md`; `HANDOFFS.md` `status: pending` receipt
+  opened.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [ad hoc] S654: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S653 precedent)
 - Commit set `HANDOFFS.md`'s S654 receipt `commit:` field from `pending` to `ded809a5` (a 1-line
   change), the same self-reference workaround this project's sessions have made since S600/S602.
