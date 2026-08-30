@@ -405,12 +405,21 @@ test_that("makePedigreeMatingLayout() wires .resolveEdgeNodeCollisions()
 ## it needs 24 FEWER __jog_ waypoints to do so (216 -> 192,
 ## test_makePedigreeMatingLayout.R). Re-measured by actually running the
 ## reverted engine, never hand-derived.
+##
+## Track 7 Phase 4 CHANGE (docs/planning/pedigree-diagram-track7-phase4-
+## union-duplicate-proximity-plan.md §5.3): 95 -> 98 colliding edges,
+## 1,759 -> 1,762 obstacle-pairs -- the new duplicate-side push moves 3
+## duplicates, each introducing one new same-row obstacle edge. The
+## resolve pass still fully clears every one of these to 0 residual --
+## it needs 6 MORE __jog_ waypoints to do so (192 -> 198,
+## test_makePedigreeMatingLayout.R). Re-measured by actually running the
+## fixed engine, never hand-derived.
 
 test_that(".resolveEdgeNodeCollisions dramatically reduces the real
-           375-individual bundled fixture's same-row collision count (95
-           colliding edges / 1,759 obstacle-pairs pre-fix, after issue
-           #166's scoped revert, S652), and any residual is disclosed via
-           the residuals data frame, never silently dropped", {
+           375-individual bundled fixture's same-row collision count (98
+           colliding edges / 1,762 obstacle-pairs pre-fix, after Track 7
+           Phase 4's duplicate-side push), and any residual is disclosed
+           via the residuals data frame, never silently dropped", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -426,12 +435,15 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   baselineEdges <- unique(baseline[, c("from", "to")])
   ## CHANGED again from 76L/1715L (pre-Track-7) then 104L/1748L (Track 7
   ## Phase 1's uncapped push) then 109L/1762L (Phase 1's capped-search
-  ## refinement) then 107L/1764L (Phase 2's own union-side push, S649) --
-  ## NOW 95L/1759L after issue #166's scoped revert (S652) deletes the
-  ## anchor/mate-midpoint recenter. Re-measured by actually running the
-  ## reverted engine, never hand-derived.
-  expect_equal(nrow(baselineEdges), 95L)
-  expect_equal(nrow(baseline), 1759L)
+  ## refinement) then 107L/1764L (Phase 2's own union-side push, S649)
+  ## then 95L/1759L (issue #166's scoped revert, S652) -- NOW 98L/1762L
+  ## after Track 7 Phase 4's duplicate-side push
+  ## (docs/planning/pedigree-diagram-track7-phase4-union-duplicate-
+  ## proximity-plan.md §5.3) moves 3 duplicates, introducing 3 new
+  ## same-row obstacle edges. Re-measured by actually running the fixed
+  ## engine, never hand-derived.
+  expect_equal(nrow(baselineEdges), 98L)
+  expect_equal(nrow(baseline), 1762L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

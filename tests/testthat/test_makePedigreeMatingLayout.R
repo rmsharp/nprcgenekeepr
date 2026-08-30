@@ -648,14 +648,22 @@ test_that(
       invokeRestart("muffleWarning")
     }
   )
-  expect_equal(nrow(result$nodes), 1450L)
+  ## CHANGED from 1450L -- Track 7 Phase 4's duplicate-side push
+  ## (docs/planning/pedigree-diagram-track7-phase4-union-duplicate-
+  ## proximity-plan.md §5.3) moves 3 duplicates, introducing 3 new
+  ## same-row collisions that the existing (unchanged) jog-repair
+  ## mechanism resolves with 6 new __jog_ waypoint nodes (2 per repaired
+  ## edge) -- 1450 + 6 = 1456. Re-measured by actually running the fixed
+  ## engine, never hand-derived.
+  expect_equal(nrow(result$nodes), 1456L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
-  ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L -- issue #166's
-  ## scoped revert (S652) deletes the recenter that grew this count in
-  ## the first place. Re-measured by actually running the reverted
-  ## engine, never hand-derived.
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 192L)
+  ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L (issue #166's
+  ## scoped revert, S652), then up to 198L -- Track 7 Phase 4's
+  ## duplicate-side push adds 6 new __jog_ waypoints (192 + 6 = 198,
+  ## same cause as the node-count change above). Re-measured by actually
+  ## running the fixed engine, never hand-derived.
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 198L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------

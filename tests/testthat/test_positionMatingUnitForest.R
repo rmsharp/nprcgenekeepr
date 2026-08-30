@@ -1223,11 +1223,11 @@ test_that(".positionMatingUnitForest's Track 7 Phase 2 push no longer
 test_that(".positionMatingUnitForest's Track 7 Phase 2 push resolves every
            union-vs-individual and union-vs-union proximity collision on
            the real 375-individual bundled fixture (20/237 before this
-           fix, plan §12.1), but leaves a disclosed, NEW residual of 11
-           union-vs-DUPLICATE proximity cases this fix's own occupied-set
-           cannot see (a duplicate's x is computed AFTER this sweep runs
-           -- see this section's own header note; filed as a new
-           BACKLOG Housekeeping item, not fixed here)", {
+           fix, plan §12.1); Track 7 Phase 4's duplicate-side post-pass
+           (docs/planning/pedigree-diagram-track7-phase4-union-duplicate-
+           proximity-plan.md) now also resolves the union-vs-DUPLICATE
+           residual Phase 2's own occupied-set could not see (a
+           duplicate's x is computed AFTER this sweep runs) down to 0", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -1271,7 +1271,17 @@ test_that(".positionMatingUnitForest's Track 7 Phase 2 push resolves every
   ## per the design doc's own §2.1 adversarial re-verification, confirmed
   ## here directly against the reverted code (never hand-derived, never
   ## taken on the design doc's word alone).
-  expect_equal(unname(counts["duplicate"]), 3L)
+  ##
+  ## CHANGED AGAIN (Track 7 Phase 4, docs/planning/pedigree-diagram-
+  ## track7-phase4-union-duplicate-proximity-plan.md §2/§6): 3 -> 0. A
+  ## new duplicate-side, post-hoc, unidirectional push (run after both the
+  ## union sweep AND duplicate positions are finalized) resolves all 3
+  ## remaining cases -- this IS the design doc's own §1.2 finding,
+  ## reproduced directly via this exact counting method, not a separate
+  ## hand-derived claim. All 3 named pairs (__union_14/__dup_L31S6S_3,
+  ## __union_43/__dup_WDBGPF_2, __union_126/__dup_YPHFHF_1) confirmed
+  ## individually resolved before this aggregate assertion was updated.
+  expect_equal(unname(counts["duplicate"]), 0L)
 })
 
 ## ---- Walker/BJL cutover (Phase 3, this session): regression coverage for
