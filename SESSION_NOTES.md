@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 657 Did
+**Deliverable:** Correct `kinship2-fidelity-validation.qmd`'s Track C table/prose, which claims 3
+marked (vermillion) rectilinear-style edges while a live run of
+`data-raw/kinship2FidelityValidation.R` reports 2 (BACKLOG.md Housekeeping, found S645, 2026-08-27)
+(IN PROGRESS)
+**Started:** 2026-08-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 655 Handoff Evaluation (by Session 656)
 **Score: 9/10.** **What helped:** S655's gotchas named the exact 4 remaining pedigree-fidelity
 Housekeeping items with correct READY/Effort tags (the `__jog_*` waypoint styling gap this session

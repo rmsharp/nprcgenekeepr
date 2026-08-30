@@ -136,6 +136,26 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S657
+date: 2026-08-30
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Correct kinship2-fidelity-validation.qmd's Track C table/prose, which claims 3
+  marked (vermillion) rectilinear-style edges while a live run of
+  data-raw/kinship2FidelityValidation.R reports 2 (BACKLOG.md Housekeeping, found S645).
+what_was_done: pending
+next_steps: pending
+key_files: vignettes/articles/kinship2-fidelity-validation.qmd (Track C section),
+  tests/testthat/test_makePedigreeMatingLayout.R:1297-1368 (Track 4 comment + test already
+  documenting the current, correct behavior), data-raw/kinship2FidelityValidation.R:250-302.
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S656
 date: 2026-08-30
 status: complete
