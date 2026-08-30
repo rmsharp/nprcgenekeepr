@@ -136,6 +136,27 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S659
+date: 2026-08-30
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Correct NEWS.Rmd's stale sibling-consanguineous-mating dev-version bullet
+  (BACKLOG.md Housekeeping, found incidentally S652) -- docs-only, no TDD cycle
+  (owner-directed via AskUserQuestion, matching S657's precedent).
+what_was_done: pending
+next_steps: pending
+key_files: NEWS.Rmd (the stale bullet and the one immediately above it, corrected S652);
+  tests/testthat/test_positionMatingUnitForest.R (comments documenting the
+  Track-3-Engagement-Gate as "gone by construction" under the Walker/BJL cutover,
+  S620/S621).
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S658
 date: 2026-08-30
 status: complete

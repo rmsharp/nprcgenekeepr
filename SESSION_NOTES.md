@@ -18,6 +18,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 659 Did
+**Deliverable:** Correct `NEWS.Rmd`'s stale "For one specific pattern (a sibling-consanguineous
+mating), the trade-off above is partially mitigated..." dev-version bullet (BACKLOG.md
+Housekeeping, found incidentally S652, 2026-08-29) (IN PROGRESS). Docs-only session, no TDD
+cycle (owner-directed via `AskUserQuestion`, matching S657's precedent for the identical class
+of fix) -- investigate what (if anything) currently produces this bullet's claimed mitigation
+under the CURRENT engine, correct the bullet accordingly (or remove it if nothing does), and
+re-confirm it still reads coherently with the bullet immediately above it (corrected S652 for
+issue #166).
+**Started:** 2026-08-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 657 Handoff Evaluation (by Session 658)
 **Score: 9/10.** **What helped:** S657's gotchas named the exact 3 remaining pedigree-fidelity
 Housekeeping items with correct READY/Effort tags — the duplicate-vs-individual proximity item
