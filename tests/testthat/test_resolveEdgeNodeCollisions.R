@@ -458,10 +458,11 @@ test_that("makePedigreeMatingLayout() wires .resolveEdgeNodeCollisions()
 ## fixed engine, never hand-derived.
 
 test_that(".resolveEdgeNodeCollisions dramatically reduces the real
-           375-individual bundled fixture's same-row collision count (98
-           colliding edges / 1,762 obstacle-pairs pre-fix, after Track 7
-           Phase 4's duplicate-side push), and any residual is disclosed
-           via the residuals data frame, never silently dropped", {
+           375-individual bundled fixture's same-row collision count (100
+           colliding edges / 1,766 obstacle-pairs pre-fix, after the
+           duplicate-vs-unrelated-individual proximity fix), and any
+           residual is disclosed via the residuals data frame, never
+           silently dropped", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -478,14 +479,16 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   ## CHANGED again from 76L/1715L (pre-Track-7) then 104L/1748L (Track 7
   ## Phase 1's uncapped push) then 109L/1762L (Phase 1's capped-search
   ## refinement) then 107L/1764L (Phase 2's own union-side push, S649)
-  ## then 95L/1759L (issue #166's scoped revert, S652) -- NOW 98L/1762L
-  ## after Track 7 Phase 4's duplicate-side push
-  ## (docs/planning/pedigree-diagram-track7-phase4-union-duplicate-
-  ## proximity-plan.md §5.3) moves 3 duplicates, introducing 3 new
+  ## then 95L/1759L (issue #166's scoped revert, S652) then 98L/1762L
+  ## (Track 7 Phase 4's duplicate-side push) -- NOW 100L/1766L after the
+  ## duplicate-vs-unrelated-individual proximity fix (docs/planning/
+  ## pedigree-diagram-duplicate-individual-proximity-plan.md, design
+  ## ratified S658, Option B, implementation S660) moves 2 more duplicates
+  ## (TTE0Z7/__dup_MY1AEU_2, M0YNUR/__dup_L31S6S_5), introducing 2 new
   ## same-row obstacle edges. Re-measured by actually running the fixed
   ## engine, never hand-derived.
-  expect_equal(nrow(baselineEdges), 98L)
-  expect_equal(nrow(baseline), 1762L)
+  expect_equal(nrow(baselineEdges), 100L)
+  expect_equal(nrow(baseline), 1766L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

@@ -995,6 +995,13 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## a union-vs-individual/duplicate comparison uses (25+6)/120 = 0.2583.
   unionClearanceIndividual <- (25L + 6L) / 120L
   unionClearanceUnion <- (6L + 6L) / 120L
+  ## Duplicate-vs-unrelated-individual proximity fix (docs/planning/
+  ## pedigree-diagram-duplicate-individual-proximity-plan.md, design
+  ## ratified S658, Option B): two full-size (25px-radius) individual-
+  ## shaped nodes -- the geometrically correct clearance for a pair of
+  ## individual/duplicate/B1 render nodes, distinct from
+  ## unionClearanceIndividual above (a union DOT vs. an individual).
+  individualClearance <- (25L + 25L) / 120L
   ## .kMaxUnionPush = 5 (empirically justified, plan §12.11): on the real
   ## 375-individual fixture, resolves all 20 individual-/union-vs-union
   ## proximity cases (0 residual); 2 (Phase 1's own individual-side cap)
@@ -1128,12 +1135,35 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       unrelatedUnionsAtGen <- unitX[xDerivableUnits$id[
         xDerivableUnits$gen == g & xDerivableUnits$id != unitId]]
       unrelatedUnionsAtGen <- unrelatedUnionsAtGen[!is.na(unrelatedUnionsAtGen)]
-      if (length(unrelatedUnionsAtGen) == 0L) next
+      ## Duplicate-vs-unrelated-individual proximity fix (design doc §2):
+      ## also check nearby individual-shaped points (genuine/B1
+      ## individuals at this duplicate's gen), excluding this duplicate's
+      ## OWN mating unit's sire/dam -- the intentional, by-design
+      ## dup-own-parent offset this fix must never treat as a collision
+      ## (design doc §1.3).
+      ownParents <- c(anchorOf[[unitId]], nonAnchorOf[[unitId]])
+      unrelatedIndividualsAtGen <- c(tier1X[dispGenOf == g],
+                                      tier3X[b1Ids[tier3Gen[b1Ids] == g]])
+      unrelatedIndividualsAtGen <- unrelatedIndividualsAtGen[
+        !is.na(unrelatedIndividualsAtGen) &
+          !(names(unrelatedIndividualsAtGen) %in% ownParents)]
+      ## Widened guard (design doc §6): a duplicate in a generation with no
+      ## OTHER mating units must still be checked if a nearby unrelated
+      ## individual exists there.
+      if (length(unrelatedUnionsAtGen) == 0L &&
+            length(unrelatedIndividualsAtGen) == 0L) next
       collidesUnrelatedUnion <- function(x0) {
         any(abs(x0 - unrelatedUnionsAtGen) < unionClearanceIndividual)
       }
+      collidesUnrelatedIndividual <- function(x0) {
+        length(unrelatedIndividualsAtGen) > 0L &&
+          any(abs(x0 - unrelatedIndividualsAtGen) < individualClearance)
+      }
+      collides <- function(x0) {
+        collidesUnrelatedUnion(x0) || collidesUnrelatedIndividual(x0)
+      }
       x0 <- tier3X[[dupId]]
-      if (collidesUnrelatedUnion(x0)) {
+      if (collides(x0)) {
         rawX0 <- x0
         ## Unidirectional only (always rightward) -- matches derivedX()'s
         ## own always-rightward B3 branch convention. A first-drafted
@@ -1145,7 +1175,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
         k <- 1L
         repeat {
           cand <- rawX0 + k * unionClearanceIndividual
-          if (!collidesUnrelatedUnion(cand)) {
+          if (!collides(cand)) {
             x0 <- cand
             break
           }

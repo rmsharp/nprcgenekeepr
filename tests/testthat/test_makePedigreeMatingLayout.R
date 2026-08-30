@@ -655,7 +655,15 @@ test_that(
   ## mechanism resolves with 6 new __jog_ waypoint nodes (2 per repaired
   ## edge) -- 1450 + 6 = 1456. Re-measured by actually running the fixed
   ## engine, never hand-derived.
-  expect_equal(nrow(result$nodes), 1456L)
+  ## CHANGED AGAIN to 1460L -- the duplicate-vs-unrelated-individual
+  ## proximity fix (docs/planning/pedigree-diagram-duplicate-individual-
+  ## proximity-plan.md, design ratified S658, Option B, implementation
+  ## S660) moves 2 more duplicates (TTE0Z7/__dup_MY1AEU_2,
+  ## M0YNUR/__dup_L31S6S_5), introducing 2 new same-row collisions the
+  ## existing jog-repair mechanism resolves with 4 new __jog_ waypoint
+  ## nodes (2 per repaired edge) -- 1456 + 4 = 1460. Re-measured by
+  ## actually running the fixed engine, never hand-derived.
+  expect_equal(nrow(result$nodes), 1460L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
   ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L (issue #166's
@@ -663,7 +671,9 @@ test_that(
   ## duplicate-side push adds 6 new __jog_ waypoints (192 + 6 = 198,
   ## same cause as the node-count change above). Re-measured by actually
   ## running the fixed engine, never hand-derived.
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 198L)
+  ## CHANGED AGAIN to 202L -- same cause as the node-count change above
+  ## (198 + 4 = 202).
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 202L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------
