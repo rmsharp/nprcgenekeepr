@@ -16,6 +16,60 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [issue #166] S652: close GitHub issue #166
+- Closed citing this session's own shipped commits and verification evidence, per `CLAUDE.md`'s
+  GitHub issue close-out checklist (same session as the DONE `BACKLOG.md` mark).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · [issue #166] S652: close out (issue #166 shipped -- Track 7 Phase 3 scoped revert)
+- Session close-out: Phase 3A evaluated S651's handoff, Phase 3B self-assessed, Learnings 690/691
+  recorded (the design doc's own missed test-inventory entry; the Track B shrunk-fixture Phase 2
+  regression not anticipated by the design's real-375-only collision simulation), `CLAUDE.md`
+  learnings pointer updated, `HANDOFFS.md`/`SESSION_NOTES.md` completed.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · [issue #166] S652: `NEWS.Rmd` corrected, `BACKLOG.md` closed out, 2 Housekeeping items
+- `NEWS.Rmd`'s dev-version "mating symbol always kept within the range spanned by its own two
+  parents" bullet -- which described exactly the Track 7 Phase 1 recenter mechanism this session
+  deletes -- corrected and replaced with an accurate plain-language description of the shipped
+  (post-revert) behavior plus a new bullet naming the reversion (issue #166); `NEWS.md`
+  regenerated. `BACKLOG.md`: issue #166 item marked `[x]` DONE with full shipped-mechanism detail;
+  the pre-existing Track 7 Phase 2 union-vs-duplicate residual Housekeeping item updated from 4 to
+  3 (1 new case, 2 resolved, per this session's own live re-measurement); a new Housekeeping item
+  filed for a NEWS.Rmd dangling-reference/possible pre-existing staleness question found
+  incidentally (not fixed, out of scope). Issue #166 closed on GitHub citing this entry.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · [issue #166] S652 GREEN: delete Track 7 Phase 1's union recenter loop
+- `R/makePedigreeDiagramData.R:973-979` (7 lines) deleted per the ratified Option 1 design;
+  reworded the now-stale comment block above it to describe the revert. Every qualifying union's
+  `x` reverts, unconditionally, to Tier 2's own `mean(tier1X[kids])`; Track 7 Phase 1's other
+  change (the widened B1 mate offset) is kept. Full clean regression: 1 failed (pre-existing,
+  unrelated `test_wordlist_coverage.R`)/0 error/6569 passed -- 0 collateral damage.
+  `lintr::lint_package()`: 1 false-positive (`commented_code_linter` parsing a wrapped file-path
+  comment as an arithmetic expression) resolved by re-wrapping across 2 lines, matching this
+  codebase's own established citation convention; 0 lints after. Mandatory live-render check
+  (design doc §5 step 3): live chromote render of the real 375-individual fixture, 0 id collapse,
+  0 post-fix residual same-row collisions. REFACTOR skipped (nothing behavior-neutral identified,
+  matching S649/S650 precedent), via `AskUserQuestion`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · [issue #166] S652 RED: update/add 15 test assertions across 4 files
+- Per the ratified design's §5/§6.3 inventory, live-measured every new value against a temporary,
+  immediately-reverted spike of the GREEN change (git-diff-confirmed byte-identical to `HEAD`
+  after each check), matching this project's established spike-and-restore discipline --
+  `test_positionMatingUnitForest.R` (10 blocks changed + 1 new block reproducing issue #166's own
+  named geometry directly), `test_addRectilinearWaypoints.R` (1 block), 
+  `test_makePedigreeMatingLayout.R` (1 block), `test_resolveEdgeNodeCollisions.R` (1 block).
+  Confirmed genuine RED: full clean regression against unmodified `HEAD` showed exactly 93
+  failed/0 error/6477 passed -- the 12 intentionally-changed blocks plus the 1 pre-existing
+  `test_wordlist_coverage.R` baseline, 0 collateral. Found and flagged before writing RED (via
+  `AskUserQuestion`): the Track B shrunk fixture's own Phase 2 proximity test would newly show
+  Phase 2's push no longer engaging for that fixture's 3 pairs (each lands on its own anchor
+  instead), a disclosed trade-off already ratified in principle but not previously measured on
+  this specific, owner-reviewed fixture.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [issue #166] S651: architecture design ratified (Option 1, scoped revert)
 - Design session for issue #166 (Track 7's qualifying-union recenter decouples a union's `x` from
   its own children -- dogleg/off-center sibship-bar drop). Live-measured research (own script)

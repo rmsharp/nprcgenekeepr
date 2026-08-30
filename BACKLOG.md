@@ -213,39 +213,57 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       this alongside the union-dot-proximity finding, since both stem from the same
       local-vs-global positioning tension and a future fix attempt should consider them together
       rather than in isolation.
-- [ ] **Track 7's qualifying-union recenter decouples a union's `x` from its own children --
+- [x] **Track 7's qualifying-union recenter decouples a union's `x` from its own children --
       dogleg / off-center sibship-bar drop** (the "5th finding" above, found by the owner S647,
-      2026-08-27, documented in `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §11
-      but never given its own tracking entry until a pedigree-drawing audit surfaced the gap,
-      2026-08-29 -- filed as [issue #166](https://github.com/rmsharp/nprcgenekeepr/issues/166)).
-      **Design RATIFIED S651, 2026-08-29 (owner-picked via `AskUserQuestion`): Option 1, a scoped
-      revert -- READY, Effort M, implementation session next (TDD RED->GREEN->REFACTOR).** Full
-      design: [`docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md`](docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md).
-      Single-child qualifying unions (`P3xP4->C4`, `C4xP6->C4a` on Track B) get a right-angle
-      dogleg instead of a straight drop; `M1xG3`'s 3-child sibship bar drops off-center (x=3.5 vs.
-      true mean x=3.0). Root cause: Tier 2's `unitX[[u]] <- mean(tier1X[kids])`
-      (`R/makePedigreeDiagramData.R:765`) gets overwritten by Track 7's anchor/mate-midpoint
-      recenter (`:973-979`), which never reads `unitX` or the union's own children. Same
-      rigid-subtree-vs-joint-optimization tension [issue #159](https://github.com/rmsharp/nprcgenekeepr/issues/159)
-      investigated and closed as "not feasible to fix generally" -- the ratified fix does not
-      reopen that investigation (it stays entirely within the existing rigid/sequential
-      architecture). **Ratified mechanism (design doc §2.1):** delete the recenter loop
-      (`:973-979`) entirely -- every qualifying union's `x` reverts to Tier 2's unconditional
-      children-mean, exactly the pre-Track-7 value (proven bit-exact to the anchor's own `x` for
-      all 34 qualifying units on the real 375-individual fixture, design doc §1.4 Finding B,
-      adversarially re-verified). Track 7 Phase 1's *other* change (the widened `minSep` B1 mate
-      offset) is kept -- mates stay visibly spread apart. **Disclosed trade-off (owner-accepted):**
-      the union DOT itself reverts to sitting on/near the anchor for these 34 units, re-introducing
-      the original (smaller) Track 7 Phase 1 dot-centering complaint for exactly that subset.
-      **Collision-avoidance impact, adversarially re-verified against the real fixture:** 0 new
-      individual-vs-union or union-vs-union collisions; the pre-existing, already-disclosed
-      union-vs-duplicate residual shifts 4->3 (1 new case, 2 resolved) -- same known interaction
-      class, not a new one. **~14 test assertions across `test_positionMatingUnitForest.R` (10
-      blocks), `test_addRectilinearWaypoints.R`, `test_makePedigreeMatingLayout.R` (2 blocks), and
-      `test_resolveEdgeNodeCollisions.R` need updating** (design doc §5/§6.3 has the full,
-      adversarially-verified inventory -- an initial pass undercounted this at 2 tests). Consider
-      together with the union-vs-duplicate-proximity residual below (same local-vs-global tension,
-      also from Track 7 Phase 2) when implementing.
+      2026-08-27, documented in `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §11,
+      filed as [issue #166](https://github.com/rmsharp/nprcgenekeepr/issues/166) 2026-08-29).
+      **Design RATIFIED S651 (Option 1, scoped revert). Implemented and shipped S652, 2026-08-29,
+      full TDD RED->GREEN->REFACTOR (REFACTOR skipped, nothing behavior-neutral identified) --
+      DONE.** Full design:
+      [`docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md`](docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md).
+      **Shipped mechanism:** deleted the Track 7 Phase 1 recenter loop
+      (`R/makePedigreeDiagramData.R:973-979`, was 7 lines) -- every qualifying union's `x` now
+      reverts, unconditionally, to Tier 2's own `mean(tier1X[kids])`. Track 7 Phase 1's *other*
+      change (the widened `minSep` B1 mate offset) is KEPT -- mates stay visibly spread apart; only
+      the union dot itself reverts to sitting on/near the anchor for the 34 affected units, the
+      disclosed, owner-ratified trade-off.
+      **RED (12 assertion-level test blocks changed/added across 4 files, all confirmed genuinely
+      failing against pre-revert HEAD, 0 collateral): `test_positionMatingUnitForest.R`** --
+      trio unionX 1.5->1.001 (`:73`), GA204Z/8LKBV9 unit1 1.0->0.501 (`:227`), `checkInvariant()`
+      restructured to drop the `qualifies()` branch entirely (`:931`), Track B shrunk Phase-2 test
+      rewritten (u1/u2/u3 2.517/1.517/1.517 -> 1.001/0.001/0.001 -- Phase 2's push no longer
+      engages, see below), Phase-2 duplicate-residual count 4L->3L, >=3-child B1-mate union
+      formula/value changed, P1/P2+P3/P4 formula generalized, real-375 qualifying-exclusion test
+      restructured to a plain 237-unit check (no more excluded subset), Obligation-2 drift
+      docstring reworded (numeric bound `<=6` unchanged, still holds), plus 1 NEW test reproducing
+      issue #166's own named cases directly (`P3xP4->C4`/`C4xP6->C4a` straight drops, `M1xG3`
+      centered bar, full non-shrunk Track B fixture). **`test_addRectilinearWaypoints.R`:**
+      bar-vs-bar oldHits/newHits 6L/6L->0L/0L (full reversion to the pre-Track-7 zero).
+      **`test_makePedigreeMatingLayout.R`:** real-375 node count 1474->1450, jog count 216->192.
+      **`test_resolveEdgeNodeCollisions.R`:** baseline 107L/1764L->95L/1759L.
+      **A 15th assertion, missed by the design doc's own §6.3 inventory, found during this
+      session's own GREEN-phase verification (a genuine inventory gap, disclosed not silently
+      fixed):** the F1/Track-C fixture's outer `makePedigreeMatingLayout()` surface test
+      (`__union_1` pinned at 210) also needed updating, to 150.12 -- see
+      `PROJECT_LEARNINGS.md` for the full incident.
+      **GREEN:** deleted lines `:973-979`, reworded the now-stale comment block above them. Full
+      clean regression: 1 failed (pre-existing, unrelated `test_wordlist_coverage.R`)/0 error/6569
+      passed -- 0 collateral damage anywhere in the suite. `lintr::lint_package()`: 1
+      false-positive (`commented_code_linter` parsing a wrapped file-path-with-hyphens comment as
+      an arithmetic expression) resolved by re-wrapping across 2 lines, matching this codebase's
+      own established convention for citing this exact path elsewhere; 0 lints after.
+      **Mandatory live-render check (design doc §5 step 3 / §7 item 2, matching Track 7 Phase 1/2's
+      own established bar):** live chromote render of the real 375-individual fixture -- 0 id
+      collapse, 0 post-fix residual same-row collisions, confirmed via a real browser render, not
+      internal x/y math alone.
+      **Collision-avoidance impact, confirmed empirically (not just re-asserting the design doc's
+      own simulation):** 0 new individual-vs-union or union-vs-union collisions; the pre-existing
+      union-vs-duplicate residual shifted 4->3 (1 new case, 2 resolved) -- see the Housekeeping item
+      below, updated to match.
+      **`NEWS.Rmd` updated:** corrected the now-inaccurate "mating symbol always kept within the
+      range spanned by its own two parents" dev-version bullet (it described exactly the mechanism
+      just reverted) and added a plain-language bullet describing the reversion; `NEWS.md`
+      regenerated.
 - [x] **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636, 2026-08-26).
       **RESOLVED S637, 2026-08-26, per owner-directed "broader" scope (a genuinely clean baseline,
       not just a green checkmark):** the actual root cause was simpler than any of the 4 candidate
@@ -416,6 +434,23 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `rmarkdown::render()` (this file's own build-equivalent) run clean after every
       substantive edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`.
 ## Housekeeping
+- [ ] **`NEWS.Rmd`'s "For one specific pattern (a sibling-consanguineous mating), the trade-off
+      above is partially mitigated..." dev-version bullet may already have been stale before this
+      session, independent of issue #166** (found incidentally S652, 2026-08-29, while correcting
+      the immediately-preceding bullet for issue #166's own revert, READY, Effort S) -- git-blame
+      traces both bullets to the same S628 rewrite (2026-08-24), which predates Track 7 Phase 1
+      (S647, 2026-08-27) entirely, so "the trade-off above" cannot originally have been describing
+      Track 7 at all -- it most likely described the Track-3-Engagement-Gate mechanism (S602),
+      which multiple `tests/testthat/test_positionMatingUnitForest.R` comments already document as
+      "gone by construction" under the Walker/BJL cutover (S620/S621, itself before S628). If so,
+      this bullet has been describing a removed mechanism since before Track 7 ever existed, not a
+      new gap from this session's own edit. Not investigated further or fixed this session (out of
+      scope -- a pre-existing, unrelated NEWS.Rmd staleness question, not part of issue #166's own
+      deliverable). A future session should determine what (if anything) currently produces this
+      bullet's claimed sibling-consanguineous mitigation under the CURRENT engine, correct the
+      bullet to describe it accurately (or remove it if nothing does), and while there, re-read the
+      bullet immediately above it (corrected this session for issue #166) to confirm the two still
+      read coherently together.
 - [ ] **S649's Track 7 Phase 2 (union-dot proximity fix, commits `316b605f`/`e312774f`) shipped
       with no `NEWS.Rmd` entry** (found incidentally S650, 2026-08-29, while adding S650's own
       Phase 3 NEWS.Rmd entry to the same Pedigree Diagram group, READY, Effort S) -- violates
@@ -491,24 +526,28 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `color.background`/`color.border`) to the jog-node construction at `:2094-2097`, matching the
       D1/D2 precedent exactly, then re-verify against the real 375-individual fixture and Track B
       images for any other jog-waypoint-vs-node collisions this same gap may have hidden elsewhere.
-- [ ] **Track 7 Phase 2's own union-side proximity push (S649) introduces 4 NEW union-vs-DUPLICATE
-      proximity cases on the real 375-individual fixture that did not exist before** (found live
-      S649, 2026-08-29, implementing `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`
-      §12.2 -- READY, Effort M; count corrected from an initial pre-fix spike's 11 after a second
-      GREEN-phase correction, plan §12.11, made the push itself more targeted) -- root cause: a
-      duplicate node's `x` is always `unitX[[itsOwnUnion]] + minSep*0.4`
-      (`R/makePedigreeDiagramData.R:816`), a fixed offset that rides along whenever a union moves;
-      §12.2's own occupied-set (`tier1X`/`b1AtGen`/`placedAtGen`) has no visibility into duplicate
-      positions, which are not computed until AFTER the union sweep runs (a genuine data dependency
-      -- a duplicate's own `derivedX()` reads the union's FINAL `unitX`, so duplicates cannot be
-      positioned first). Owner-directed (`AskUserQuestion`, S649): ship Phase 2 as scoped rather
-      than widen it -- the owner's own directly-reviewed Track B fixture is fully resolved either
-      way (no duplicates in play there). Full detail: plan §12.11. A future session should design a
-      fix (likely: track each already-placed unit's own prospective duplicate offset, if it has
-      one, as an additional occupied-set member during the union sweep -- bounded, not the full
-      symmetric
-      individual-side hardening §12.4 Alternative D already rejected) and re-verify against the
-      real fixture (currently 11/237 union-vs-duplicate proximity cases) and Track B.
+- [ ] **Track 7 Phase 2's own union-side proximity push (S649) introduces union-vs-DUPLICATE
+      proximity cases on the real 375-individual fixture that did not exist before Phase 2** (found
+      live S649, 2026-08-29, implementing `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`
+      §12.2 -- READY, Effort M) -- root cause: a duplicate node's `x` is always
+      `unitX[[itsOwnUnion]] + minSep*0.4` (`R/makePedigreeDiagramData.R:816`), a fixed offset that
+      rides along whenever a union moves; §12.2's own occupied-set (`tier1X`/`b1AtGen`/`placedAtGen`)
+      has no visibility into duplicate positions, which are not computed until AFTER the union sweep
+      runs (a genuine data dependency -- a duplicate's own `derivedX()` reads the union's FINAL
+      `unitX`, so duplicates cannot be positioned first). Owner-directed (`AskUserQuestion`, S649):
+      ship Phase 2 as scoped rather than widen it -- the owner's own directly-reviewed Track B
+      fixture is fully resolved either way (no duplicates in play there). Full detail: plan §12.11.
+      **Count history:** an initial pre-fix spike found 11; a second GREEN-phase correction (plan
+      §12.11, excluding a union's own anchor/non-anchor from the push's occupied-set) narrowed it to
+      4, confirmed S649. **Updated S652 (issue #166's scoped revert, Track 7 Phase 3):** deleting the
+      anchor/mate-midpoint recenter loop moves several qualifying unions' `x` back toward their own
+      children, shifting this residual's composition again -- **now 3** (1 new case, 2 resolved from
+      the prior 4; adversarially re-verified in the ratified design doc §2.1, confirmed live by the
+      implementing session's own `test_positionMatingUnitForest.R` count). A future session should
+      design a fix (likely: track each already-placed unit's own prospective duplicate offset, if it
+      has one, as an additional occupied-set member during the union sweep -- bounded, not the full
+      symmetric individual-side hardening §12.4 Alternative D already rejected) and re-verify against
+      the real fixture (currently 3/237 union-vs-duplicate proximity cases) and Track B.
 - [x] **`R-CMD-check-scheduled.yaml` (the weekly-cron twin of `R-CMD-check.yaml`) never
       received the S616/S618/S619 chromote Chrome-provisioning fix, and nothing guarded
       against the drift** (found live S629, 2026-08-24, via Phase 0's mandatory `gh run list`

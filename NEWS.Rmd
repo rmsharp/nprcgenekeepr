@@ -84,14 +84,12 @@ knitr::opts_chunk$set(echo = TRUE)
   often in large, many-founder colony pedigrees -- and reroutes around
   the obstacle. A small number of curved duplicate-animal connectors get
   only a partial correction and remain a disclosed residual.
-- A mating symbol is always kept within the range spanned by its own two
-  parents, matching kinship2's convention -- most notably for a mating
-  with only one child, which would otherwise have no other children to
-  center between. This is a disclosed trade-off, not a free improvement:
-  for the matings it affects, the symbol can sit further from where its
-  children are actually centered, and two unrelated sibling groups' bars
-  can somewhat more often overlap visually -- both accepted costs of the
-  correct parent-centered placement.
+- Two parents in a straightforward one-mate pairing (each mated only
+  once, sex clearly recorded) are drawn with a clearer gap between them,
+  matching kinship2's convention.
+- The small mating symbol for that same kind of pairing sits near one
+  parent rather than centered between the two -- keeping the connecting
+  line down to their children straight instead of bent (issue #166).
 - For one specific pattern (a sibling-consanguineous mating), the
   trade-off above is partially mitigated -- though in the one test case
   built to exercise this, the visual change is too small to see on
