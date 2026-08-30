@@ -227,6 +227,48 @@ test_that(".resolveEdgeNodeCollisions repairs a kept-mate-edge-shaped
   expect_true(all(abs(jogRows$y) < 150))  # a *small* fraction of one gen gap
 })
 
+## ---- new __jog_ waypoint nodes get the same invisible styling as the D1/
+## D2 waypoint nodes .addRectilinearWaypoints() itself creates (found live
+## S648, 2026-08-28 -- BACKLOG.md Housekeeping) ----------------------------
+##
+## .addRectilinearWaypoints()'s own D1 (__drop_/__bar_) and D2 (__proj_)
+## waypoint nodes are explicitly styled invisible (shape = "dot", size = 0,
+## color.background/color.border = fully transparent -- see :1966-1973).
+## The __jog_ waypoint nodes THIS function adds only set id/x/y (:2239-
+## 2242) and rely on .matchColumns() to backfill every other column with
+## NA -- which leaves shape/size/color.background/color.border NA, and
+## vis.js falls back to its OWN default (a filled, full-size circle)
+## rather than nothing. Visually confirmed on the already-committed
+## trackB-nprc-shrunk.png: __jog_2_a lands 13.5 raw-scaled units below P1,
+## close enough to visually fuse with P1's own square.
+
+test_that(".resolveEdgeNodeCollisions styles new __jog_ waypoint nodes
+           invisible, matching .addRectilinearWaypoints()'s own D1/D2
+           waypoint convention exactly (shape = 'dot', size = 0, fully
+           transparent color.background/color.border)", {
+  nodes <- data.frame(
+    id = c("Anchor", "Union", "Obstacle1", "Obstacle2"),
+    x  = c(0,        300,     100,         200),
+    y  = c(0,        0,       0,           0),
+    label = "", shape = "square", title = NA_character_, size = 25L,
+    color.background = "#97C2FC", color.border = "#2B7CE9",
+    stringsAsFactors = FALSE
+  )
+  edges <- data.frame(
+    from = "Anchor", to = "Union", dashes = FALSE, color = "#2B7CE9",
+    width = NA_real_, smooth.enabled = NA, smooth.type = NA_character_,
+    smooth.roundness = NA_real_, stringsAsFactors = FALSE
+  )
+  result <- .resolveEdgeNodeCollisions(nodes, edges)
+
+  jogRows <- result$nodes[grepl("^__jog_", result$nodes$id), ]
+  expect_true(nrow(jogRows) > 0L)
+  expect_true(all(jogRows$shape == "dot"))
+  expect_true(all(jogRows$size == 0L))
+  expect_true(all(jogRows$color.background == "rgba(0,0,0,0)"))
+  expect_true(all(jogRows$color.border == "rgba(0,0,0,0)"))
+})
+
 ## ---- a genuine structural member is never flagged as an obstacle -------
 ## (the exact bug design review found in the "Row Ledger" candidate,
 ## section 4 of the plan -- a same-row edge must not flag a node directly
@@ -464,6 +506,17 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   after <- result$nodes[match(preExistingIds, result$nodes$id),
                           c("id", "x", "y")]
   expect_identical(before, after)
+
+  ## Every real __jog_ waypoint node on this fixture is styled invisible,
+  ## matching .addRectilinearWaypoints()'s own D1/D2 waypoint convention
+  ## (BACKLOG.md Housekeeping, found S648) -- confirmed end to end, not
+  ## just on the hand-built fixture above.
+  jogRows <- result$nodes[grepl("^__jog_", result$nodes$id), ]
+  expect_true(nrow(jogRows) > 0L)
+  expect_true(all(jogRows$shape == "dot"))
+  expect_true(all(jogRows$size == 0L))
+  expect_true(all(jogRows$color.background == "rgba(0,0,0,0)"))
+  expect_true(all(jogRows$color.border == "rgba(0,0,0,0)"))
 })
 
 ## ---- dangling edge-node reference: found live, S630 --------------------
