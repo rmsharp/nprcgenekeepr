@@ -178,8 +178,8 @@ gotchas: STANDING TOP PRIORITY banner (BACKLOG.md, S643) correctly stays -- issu
   session's own Phase 0 gh run list check) -- pre-existing, unrelated, already tracked.
 runtime_smoke: n/a -- docs-only planning session, no runtime behavior changed (no R/ source
   touched).
-changelog_ref: CHANGELOG.md 2026-08-29 S651 entries (see Phase 3F commit)
-commit: pending
+changelog_ref: CHANGELOG.md 2026-08-29 S651 entries (landed in 1ad27ca3)
+commit: 1ad27ca3
 ```
 Design document written and ratified; implementation deferred to a future session per
 SESSION_RUNNER.md's Planning Sessions rule ("the plan is the deliverable, implementation is a
