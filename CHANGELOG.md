@@ -16,6 +16,17 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [ad hoc] S652: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S651 precedent)
+- Backfilled reconcile-on-read (`SESSION_RUNNER.md` Phase 0 step 6) at the start of the next
+  session — commit `7cc9e6e4` set `HANDOFFS.md`'s S652 receipt `commit:` field from `pending` to
+  `d81f76bc` (a 1-line change), the same self-reference workaround this project's sessions have
+  made since S600/S602. Note for a future session: this same commit type went unlogged for
+  S634-S651 (19 sessions) — those are outside this reconcile's frontier (each session's own later
+  CHANGELOG.md edit moved the frontier past its predecessor's unlogged self-reference commit
+  before anyone's reconcile caught it) and are not backfilled here; flagged as a housekeeping
+  observation, not actioned.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [issue #166] S652: close GitHub issue #166
 - Closed citing this session's own shipped commits and verification evidence, per `CLAUDE.md`'s
   GitHub issue close-out checklist (same session as the DONE `BACKLOG.md` mark).
