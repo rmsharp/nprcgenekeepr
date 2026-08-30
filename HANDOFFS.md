@@ -136,6 +136,25 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S651
+date: 2026-08-29
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Architecture/design document for issue #166 (Track 7 qualifying-union recenter
+  decouples a union's x from its own children -- dogleg/off-center sibship-bar drop),
+  ARCHITECTURE_WORKSTREAM.md. Planning session -- no implementation this session.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Phase 1B claim stub. Filled at close-out (Phase 3D).
+
+```handoff
 session: S650
 date: 2026-08-29
 status: complete

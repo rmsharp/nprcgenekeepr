@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 651 Did
+**Deliverable:** Architecture/design document for [issue #166](https://github.com/rmsharp/nprcgenekeepr/issues/166)
+(Track 7's qualifying-union recenter decouples a union's x from its own children -- dogleg/
+off-center sibship-bar drop), following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`
+(same workstream used for the Track 7 mate-spacing plan itself, per this project's own precedent
+for pedigree-positioning decisions). Picked via the Phase 0 `AskUserQuestion` priorities list.
+(IN PROGRESS)
+**Started:** 2026-08-29.
+**Status:** Session claimed. Work beginning -- Phase 2 research not yet started.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 649 Handoff Evaluation (by Session 650)
 **Score: 8/10.** **What helped:** S649's own gotcha #3 ("The isolated-individual-suppression
 item's own Phase 3 (Shiny UX messaging) is now the ONLY other item under the standing
