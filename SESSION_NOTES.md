@@ -18,6 +18,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 655 Did
+**Deliverable:** Implement the ratified Track 7 Phase 4 design (union-vs-duplicate proximity fix)
+-- `docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md` §6/§7, full
+TDD RED->GREEN->REFACTOR. (IN PROGRESS)
+**Started:** 2026-08-30 11:58
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 653 Handoff Evaluation (by Session 654)
 **Score: 8/10.** **What helped:** S653's `next_steps`/gotchas accurately listed all 5 remaining
 pedigree-fidelity Housekeeping items with correct READY/Effort tags, letting this session's Phase 0

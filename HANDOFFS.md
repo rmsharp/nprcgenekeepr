@@ -136,6 +136,25 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S655
+date: 2026-08-30
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement the ratified Track 7 Phase 4 design (union-vs-duplicate proximity fix) --
+  docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md sections 6/7, full
+  TDD RED->GREEN->REFACTOR.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim stub -- filled at close-out (Phase 3D)>
+
+```handoff
 session: S654
 date: 2026-08-30
 status: complete
