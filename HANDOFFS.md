@@ -186,7 +186,7 @@ runtime_smoke: Live chromote render check via getLiveRenderedPositions() against
   additionally run.
 changelog_ref: see CHANGELOG.md's 2026-08-30 S660 entries (claim/RED/GREEN/close-out), tagged
   [BL-dupIndividualProximity].
-commit: pending
+commit: b9188034
 ```
 <claim-time stub -- overwritten at Phase 3D close-out>
 

@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S660: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S659 precedent)
+- This commit sets `HANDOFFS.md`'s S660 receipt `commit:` field from `pending` to `b9188034`
+  (the deliverable commit), the same self-reference workaround this project's sessions have made
+  since S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [BL-dupIndividualProximity] S660: docs close-out -- BACKLOG.md DONE, NEWS.Rmd bullet, Learning 699, CLAUDE.md pointer
 - `BACKLOG.md`: marked the duplicate-vs-unrelated-individual proximity item `[x]` DONE with full
   RED/GREEN detail (commit shas, measured pinned-value updates, chromote render check results).
