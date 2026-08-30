@@ -187,7 +187,7 @@ runtime_smoke: n/a -- docs-only session (a ratified design document, no code cha
   byte-identical to HEAD before this session's own commits).
 changelog_ref: CHANGELOG.md 2026-08-30 S654 design-doc and learnings entries (commits 1c99e0e4,
   f96dd389)
-commit: pending
+commit: ded809a5
 ```
 
 ```handoff

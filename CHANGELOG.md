@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S654: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S653 precedent)
+- Commit set `HANDOFFS.md`'s S654 receipt `commit:` field from `pending` to `ded809a5` (a 1-line
+  change), the same self-reference workaround this project's sessions have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [BL-track7Phase4Duplicate] S654: ratified design for Track 7 Phase 4 (union-vs-duplicate proximity fix)
 - New `docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md` (commit
   `1c99e0e4`), following `ARCHITECTURE_WORKSTREAM.md`. Reconfirmed live: 3/237 union-vs-duplicate
