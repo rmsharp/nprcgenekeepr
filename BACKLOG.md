@@ -460,21 +460,37 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       added the plain-language bullet to the Pedigree Diagram group, in true shipping order (right
       after Track 7 Phase 1's own "For most simple mated pairs..." bullet, right before S650's own
       Phase 3 bullet), then Phase 4's own bullet immediately after it; `NEWS.md` regenerated.
-- [ ] **`kinship2-fidelity-validation.qmd`'s Track C table claims 3 marked (vermillion) edges for
+- [x] **`kinship2-fidelity-validation.qmd`'s Track C table claims 3 marked (vermillion) edges for
       the `rectilinear` edge style; a live run reports 2** (found incidentally S645, 2026-08-27,
-      while regenerating Track B images for the P5-suppression Phase 2 item above, READY, Effort
-      S) -- `Rscript data-raw/kinship2FidelityValidation.R` prints `rectilinear-style marked
-      edges: 2`, but the article's own table (§Track C) says `3 (A's 1 edge splits into 2 dogleg
-      segments; Y's 1 edge is unaffected)`. Confirmed pre-existing, not a regression from this
-      session's Phase 1/2 work: `git status` after regenerating shows `trackC-nprc-rectilinear.png`
-      byte-identical to the already-committed image (only `trackB-nprc-full.png` changed) -- this
-      discrepancy has been true since at least commit `36653242` (S636, the last commit to touch
-      that image) and was not caused by anything this session touched (`R/makePedigreeDiagramData.R`
-      was not edited this session). Unrelated to P5-suppression (Track C's own 9-subject dogleg
-      fixture has no isolated individuals). Not investigated further or fixed this session (out of
-      scope) -- a future session should determine whether the doubled-dogleg-segment counting logic
-      changed (e.g. during the S592-S621 same-row-collision/Walker-BJL rectilinear-routing work) or
-      the article's own "3" claim was always wrong, then correct whichever side is stale.
+      while regenerating Track B images for the P5-suppression Phase 2 item above). **RESOLVED
+      S657 (2026-08-30).** `Rscript data-raw/kinship2FidelityValidation.R` prints
+      `rectilinear-style marked edges: 2`, but the article's own table (§Track C) said `3 (A's 1
+      edge splits into 2 dogleg segments; Y's 1 edge is unaffected)`. Confirmed pre-existing, not a
+      regression from S645's own Phase 1/2 work: `git status` after regenerating showed
+      `trackC-nprc-rectilinear.png` byte-identical to the already-committed image (only
+      `trackB-nprc-full.png` changed) -- this discrepancy has been true since at least commit
+      `36653242` (S636, the last commit to touch that image).
+      **Root cause confirmed live, resolving the item's own open question -- the counting logic
+      changed, not "the article was always wrong":** `tests/testthat/test_makePedigreeMatingLayout.R:1297-1318`'s
+      own "Track 4" comment already documented this in full, the same session it happened. Track 4
+      (gen-aware D2 anchor selection, S573, 2026-08-14 -- the day *after* this article was first
+      published, S563/S566, 2026-08-13) changed the D2 anchor tie-break to gen-first: the `A`-`X`
+      union's anchor flipped from `A` (gen 1) to `X` (gen 3), so `A` no longer anchors any union
+      whose generation differs from his own -- the consanguineous `A`-`Y` union is the only union
+      `A` anchors, and it already matches his own generation. Track 4's own structural invariant
+      (`genOf[[anchor]] == unitGen`, unconditionally) makes the anchor-side dogleg this fixture
+      depended on permanently unreachable, not just for this fixture. Live-verified by dumping
+      `makePedigreeMatingLayout(pedC, edgeStyle = "rectilinear")$edges` directly: exactly 2 marked
+      edges (`A -> __union_4`, `__dup_Y_1 -> __union_4`), 0 `__jog_`/`__proj_` nodes of any kind,
+      identical in structure to the `direct`-style rendering.
+      **Fix (docs-only, no production code or test changes):** corrected 4 spots in
+      `vignettes/articles/kinship2-fidelity-validation.qmd` -- the Fixture prose (`A` no longer
+      anchors the `A`-`X` union; the Track 4/S573 explanation), the Track C table's `rectilinear`
+      row (`3` -> `2`), the 3rd screenshot's caption (no longer claims a dogleg reroute), and the
+      closing paragraph after the table. `quarto render` clean (spot-checked the rendered HTML
+      shows the corrected table cell); `test_makePedigreeMatingLayout.R`'s existing Track C test
+      (unchanged) still passes -- it already asserted this exact behavior. Full clean regression 1
+      failed (pre-existing `test_wordlist_coverage.R`)/0 error, 0 collateral.
 - [x] **`lint.yaml` CI failed on S642's own close-out push, not self-resolved** (found live S643,
       2026-08-26, via Phase 0's mandatory `gh run list` CI-status check). **RESOLVED S653,
       2026-08-30 -- see the resolution block after the original investigation history below.**

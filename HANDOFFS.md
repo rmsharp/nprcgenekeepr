@@ -138,20 +138,47 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S657
 date: 2026-08-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Correct kinship2-fidelity-validation.qmd's Track C table/prose, which claims 3
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Correct kinship2-fidelity-validation.qmd's Track C table/prose, which claimed 3
   marked (vermillion) rectilinear-style edges while a live run of
-  data-raw/kinship2FidelityValidation.R reports 2 (BACKLOG.md Housekeeping, found S645).
-what_was_done: pending
-next_steps: pending
-key_files: vignettes/articles/kinship2-fidelity-validation.qmd (Track C section),
-  tests/testthat/test_makePedigreeMatingLayout.R:1297-1368 (Track 4 comment + test already
-  documenting the current, correct behavior), data-raw/kinship2FidelityValidation.R:250-302.
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  data-raw/kinship2FidelityValidation.R reports 2 (BACKLOG.md Housekeeping, found S645) -- DONE.
+what_was_done: Root cause confirmed live and cross-checked against test_makePedigreeMatingLayout.R:
+  1297-1318's own "Track 4" comment (written S573, the day this behavior changed): Track 4's
+  gen-aware D2 anchor selection flipped the A-X union's anchor from A to X, permanently
+  eliminating the anchor-side dogleg the Track C fixture depended on for its 3rd marked edge --
+  one day after the article itself was published (S563/S566, 2026-08-13; Track 4 S573,
+  2026-08-14). Docs-only fix: corrected 4 spots in kinship2-fidelity-validation.qmd (Fixture
+  prose, table row 3->2, 3rd screenshot caption, closing paragraph). Verified via quarto render
+  (clean, spot-checked rendered HTML) and the existing, unchanged Track C test (already passing).
+  Full clean regression 1 failed (pre-existing test_wordlist_coverage.R)/0 error, 0 collateral.
+next_steps: BACKLOG.md's remaining pedigree-fidelity Housekeeping items: NEWS.Rmd's stale
+  sibling-consanguineous bullet (READY, Effort S, found S652); the ScheduleWakeup/
+  run_in_background structural-guard investigation (READY, Effort S-M, found S656, Learning
+  694/695); the 6 duplicate-vs-individual proximity near-misses (READY tag but needs its own
+  design session first, Effort M, found S654). Unchanged from S656: the stray LibreOffice lock
+  file is still present, not deleted; ledger-size housekeeping (HANDOFFS.md/SESSION_NOTES.md/
+  CHANGELOG.md past FM #28 cap) still open; master unpushed, a future push should confirm
+  lint.yaml goes green.
+key_files: vignettes/articles/kinship2-fidelity-validation.qmd (Track C section, ~174-223, the 4
+  corrected spots); tests/testthat/test_makePedigreeMatingLayout.R:1297-1368 (unchanged, already
+  documented/asserted the current behavior); BACKLOG.md (item now [x]-closed); PROJECT_LEARNINGS.md
+  Learning 696.
+gotchas: The intro's Track C summary bullet (lines 31-34) still describes the marker-propagation-
+  onto-dogleg-edges capability as shipped, which remains technically true (the code path exists,
+  just currently unreachable per Track 4's invariant) -- deliberately left as-is, a judgment call
+  not an oversight. .addRectilinearWaypoints()'s D2 anchor-side dogleg loop is confirmed dead code
+  under Track 4's structural invariant (genOf[[anchor]] == unitGen, unconditionally) -- do not
+  expect any fixture to exercise it again without first changing Track 4's own invariant. This
+  session avoided the Learning 694/695 ScheduleWakeup-while-run_in_background mistake (first of 4
+  consecutive sessions to do so) -- one clean session, the structural-guard BACKLOG item remains
+  open and un-investigated.
+runtime_smoke: n/a -- documentation-only change (vignette article prose/table), zero production R
+  code or Shiny runtime behavior touched. Verified via the project's actual build-equivalent for
+  this artifact type (quarto render), per SAFEGUARDS.md.
+changelog_ref: (this session's own 3 entries, dated 2026-08-30, tag [BL-trackCRectilinearEdgeCount]
+  / [ad hoc])
 commit: pending
 ```
 

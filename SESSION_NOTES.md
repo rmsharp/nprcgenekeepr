@@ -18,16 +18,131 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 656 Handoff Evaluation (by Session 657)
+**Score: 9/10.** **What helped:** S656's gotchas named the exact remaining pedigree-fidelity
+Housekeeping items with correct READY/Effort tags -- the Track C table discrepancy this session
+picked (READY, Effort S), the `NEWS.Rmd` staleness question (READY, Effort S), and the
+duplicate-vs-individual near-misses item correctly flagged as needing its own design session first
+(READY tag, Effort M) -- plus the new `ScheduleWakeup`/`run_in_background` structural-guard item
+(Learning 694/695). Phase 0's priorities `AskUserQuestion` rendered directly from this list with no
+independent re-derivation of which items were open. The unpushed-commits/`lint.yaml`-still-red
+gotcha was accurate and prevented misreading `gh run list`'s red `lint.yaml` runs as a new break.
+**What was missing:** nothing -- S656's own deliverable (the `__jog_*` styling fix) was unrelated to
+the Track C item this session picked, so S656 had no occasion to investigate its root cause; the
+gotcha correctly scoped it as "READY, Effort S" and left the investigation to whichever future
+session picked it up, which is exactly what happened. **What was wrong:** nothing -- every claim
+checked out (jog-waypoint fix fully shipped and live-render-verified per S656's own claim; the 6
+untracked files matched exactly; `master` unpushed-commit count and `lint.yaml` red status both
+consistent with S656's own description, once accounting for further commits this session added on
+top). **ROI:** positive -- accurate, complete, no wasted verification time.
+
 ### What Session 657 Did
-**Deliverable:** Correct `kinship2-fidelity-validation.qmd`'s Track C table/prose, which claims 3
+**Deliverable:** Corrected `kinship2-fidelity-validation.qmd`'s Track C table/prose, which claimed 3
 marked (vermillion) rectilinear-style edges while a live run of
-`data-raw/kinship2FidelityValidation.R` reports 2 (BACKLOG.md Housekeeping, found S645, 2026-08-27)
-(IN PROGRESS)
-**Started:** 2026-08-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`data-raw/kinship2FidelityValidation.R` reports 2 (BACKLOG.md Housekeeping, found S645, 2026-08-27).
+**DONE**, docs-only fix (no production code or test changes -- no traditional RED/GREEN TDD cycle
+applied, gated explicitly via `AskUserQuestion` as such).
+**Started/Completed:** 2026-08-30 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0:** full orientation (`SAFEGUARDS.md`/`SESSION_RUNNER.md` read in full this session,
+   `SESSION_NOTES.md`/`HANDOFFS.md` reconciled -- 0 undocumented commits, `HEAD` `107773aa` fully
+   documented). `gh run list`: `lint.yaml` red on the last 2 pushed runs, confirmed the already-known,
+   expected consequence of S653's local fix not yet being pushed (`master` 38 commits ahead of
+   `origin/master`), not a new break. Ghost-session check: the 6 untracked files matched S656's own
+   flagged list exactly (evidence/scratch, not ghost work). `methodology_dashboard.py`: 96/100
+   health, 1 HIGH-risk (unchanged, file-size). Rendered a 4-option priorities `AskUserQuestion` from
+   `BACKLOG.md`'s remaining READY items -- **owner picked the Track C discrepancy.**
+2. **Phase 1B claim** (commit `e95f86e7`).
+3. **Pre-RED investigation:** read the article's Track C section and `data-raw/kinship2FidelityValidation.R`'s
+   marked-edge-counting logic (`isMarked()`, guarding explicitly against `NA == "#D55E00"`). Ran the
+   fixture live (`makePedigreeMatingLayout(pedC, edgeStyle = "rectilinear")`), dumped the full edge
+   and node list -- found exactly 2 marked edges, 0 `__jog_`/`__proj_`/`__drop_`/`__bar_` nodes on the
+   consanguineous edges, structurally identical to the `direct`-style rendering. Found the root cause
+   already fully documented in `tests/testthat/test_makePedigreeMatingLayout.R:1297-1318`'s own
+   "Track 4" comment (written S573, the same session that changed the behavior): Track 4's gen-aware
+   D2 anchor selection flipped the `A`-`X` union's anchor from `A` to `X`, permanently eliminating the
+   anchor-side dogleg this fixture depended on. Cross-checked publication timing via `git log`: the
+   article shipped S563/S566 (2026-08-13, commit `d0390201`), Track 4 shipped S573 (2026-08-14) --
+   one day later -- resolving the BACKLOG item's own open question (counting logic changed, not "the
+   article was always wrong").
+4. **`AskUserQuestion` PRE-RED gate** (framed as docs-only, no RED/GREEN code phases, since nothing
+   in production code or tests needed to change) -- owner approved proceeding as scoped.
+5. **Fix:** corrected 4 spots in `vignettes/articles/kinship2-fidelity-validation.qmd` in place,
+   matching this article's own established correction convention (commit `8eb795a1`'s P5-suppression
+   correction) -- the Fixture prose (`A` no longer anchors the `A`-`X` union; added the Track 4/S573
+   explanation, preserving the fixture's historical "dogleg fixture" name), the Track C table's
+   `rectilinear` row (`3` -> `2`), the 3rd screenshot's caption (no longer claims a dogleg reroute),
+   and the closing paragraph after the table.
+6. **Verification:** `quarto render kinship2-fidelity-validation.qmd --to html` succeeded cleanly;
+   spot-checked the rendered HTML directly (`grep`/Python) and confirmed the corrected table cell
+   text landed exactly as written. Removed the gitignored render artifact after inspection. Ran
+   `test_makePedigreeMatingLayout.R` standalone (all green, unchanged -- it already asserted the
+   current, correct behavior) and a full clean regression via `run_in_background` (1 failed
+   [pre-existing `test_wordlist_coverage.R`]/0 error, 0 collateral) -- waited for the background
+   task's own completion notification with no `ScheduleWakeup` call, the first of 4 consecutive
+   sessions (S654-S657) to avoid the Learning 694/695 mistake.
+7. **Close-out:** `BACKLOG.md` item marked `[x]` DONE with full root-cause/resolution detail.
+   `PROJECT_LEARNINGS.md`: recorded Learning 696 (a vignette's hardcoded expected value going stale
+   from a later, unrelated code change, with the root cause already sitting undiscovered in the
+   implementing test's own comment). `CLAUDE.md` learnings pointer updated 695 -> 696. `CHANGELOG.md`:
+   3 entries (claim, fix, docs-close-out), source-tagged `[BL-trackCRectilinearEdgeCount]` for the
+   deliverable entries and `[ad hoc]` for the claim, matching S656's own tagging convention. No
+   GitHub issue filed/closed (BACKLOG.md-tracked Housekeeping item, matching convention). No
+   `NEWS.Rmd`/tutorial-article/`a2interactive.Rmd`/`_pkgdown.yml` entries needed -- this is neither a
+   new exported function nor a new Shiny feature, it corrects existing article prose.
+
+**Runtime smoke test (Phase 3E):** N/A -- documentation-only change (a vignette article's prose and
+table), zero production R code or Shiny runtime behavior touched. Verified via the project's actual
+build-equivalent for this artifact type (`quarto render`), per `SAFEGUARDS.md`'s "Verify the Build
+Equivalent" table (Documentation projects: `quarto render`).
+
+**Self-assessment (Session 657): 9/10.** **Strengths:** (1) found the root cause was already fully
+documented in-repo (the test file's own "Track 4" comment) rather than re-deriving it from scratch --
+cross-checked it against live execution before trusting it, not just cited it; (2) correctly
+identified this as a docs-only fix with no traditional RED/GREEN cycle, and gated that framing
+explicitly via `AskUserQuestion` rather than silently skipping the TDD contract's phase-gate
+requirement; (3) verified the fix through the project's actual documentation build-equivalent
+(`quarto render`) plus a direct spot-check of the rendered HTML content, not just "the edit looks
+right"; (4) avoided the Learning 694/695 recurring `ScheduleWakeup` mistake -- the first of 4
+consecutive sessions to do so; (5) preserved the fixture's historical name/context ("the 9-subject
+dogleg fixture") while correcting the current-behavior claims, consistent with this project's
+precedent against silently erasing historical narrative. **Weaknesses:** (1) did not check whether
+this failure class (an existing, correct article going stale from a later unrelated code change) is
+common enough to warrant a new close-out checklist entry in `CLAUDE.md` -- flagged in Learning 696 as
+worth a future session's judgment, deliberately not decided this session (scope discipline); (2) the
+intro summary's Track C bullet (lines 31-34, "propagates correctly onto ... dogleg-rerouted
+projection edges") was left unedited since it describes the shipped *capability* (still true) rather
+than this specific fixture's current rendering -- a reasonable call, but not independently re-verified
+against every other Track C mention in the file beyond a full-file grep.
+
+**Next steps:** `BACKLOG.md`'s remaining pedigree-fidelity Housekeeping items, in the order this
+session's own Phase 0 presented them (none else picked): `NEWS.Rmd`'s stale sibling-consanguineous
+bullet (READY, Effort S, found S652); the `ScheduleWakeup`/`run_in_background` structural-guard
+investigation (READY, Effort S-M, found S656, Learning 694/695); the 6 duplicate-vs-individual
+proximity near-misses (READY tag but needs its own design session first, Effort M, found S654).
+Separately, unchanged from S656's own gotchas: the stray LibreOffice lock file
+(`inst/extdata/reference/~$e Compounding Loop.html`) is still present, not deleted (out of scope
+again); `HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap; `master` is
+now several more commits ahead of `origin/master`, unpushed -- a future session pushing should
+confirm CI goes fully green, including `lint.yaml`.
+
+**Key files:** `vignettes/articles/kinship2-fidelity-validation.qmd` (Track C section, lines
+~174-223, the 4 corrected spots); `tests/testthat/test_makePedigreeMatingLayout.R:1297-1368` (the
+"Track 4" comment + test that already documented and asserted the current behavior, unchanged);
+`BACKLOG.md` (item now `[x]`-closed); `PROJECT_LEARNINGS.md` Learning 696.
+
+**Gotchas for a future session:** (1) **This Track C fix is fully shipped and render-verified** -- no
+further work needed on it specifically. (2) The intro's Track C summary bullet (lines 31-34) still
+describes the marker-propagation-onto-dogleg-edges *capability* as shipped, which remains technically
+true (the code path exists, just currently unreachable per Track 4's invariant) -- if a future session
+finds this misleading in context, it's a judgment call this session made deliberately, not an
+oversight. (3) `.addRectilinearWaypoints()`'s D2 anchor-side dogleg loop is confirmed **dead code**
+under Track 4's structural invariant (`genOf[[anchor]] == unitGen`, unconditionally) -- retained only
+for defensive symmetry with the non-anchor side per the test file's own comment; do not expect any
+fixture to ever exercise it again without first changing Track 4's own invariant. (4) STANDING TOP
+PRIORITY banner still applies -- pedigree-diagram fidelity work stays the top priority per the
+owner's 2026-08-26 directive.
 
 ### Session 655 Handoff Evaluation (by Session 656)
 **Score: 9/10.** **What helped:** S655's gotchas named the exact 4 remaining pedigree-fidelity

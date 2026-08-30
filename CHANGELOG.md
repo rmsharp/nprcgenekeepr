@@ -16,6 +16,34 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [BL-trackCRectilinearEdgeCount] S657: docs close-out -- BACKLOG.md DONE, Learning 696, CLAUDE.md pointer
+- `BACKLOG.md`: marked the Track C rectilinear-edge-count item `[x]` DONE with full root-cause and
+  resolution detail (Track 4/S573 anchor-selection change, one day after the article's own S563/S566
+  publication, made the anchor-side dogleg this fixture depended on permanently unreachable).
+  `PROJECT_LEARNINGS.md`: recorded Learning 696 (a vignette's hardcoded expected value can go stale
+  the day after publication from an unrelated later change, with the root cause already documented
+  in the implementing test's own comment the whole time; also notes this session avoided the
+  Learning 694/695 `ScheduleWakeup`-while-`run_in_background` mistake for the first time in 4
+  sessions). `CLAUDE.md` learnings pointer updated 695 -> 696.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [BL-trackCRectilinearEdgeCount] S657: correct kinship2-fidelity-validation.qmd Track C rectilinear-edge-count discrepancy
+- Root cause confirmed live: Track 4 (gen-aware D2 anchor selection, S573, 2026-08-14) flipped the
+  `A`-`X` union's anchor from `A` to `X`, making the anchor-side dogleg the Track C fixture depended
+  on to produce its 3rd marked edge permanently unreachable -- already documented in
+  `tests/testthat/test_makePedigreeMatingLayout.R:1297-1318`'s own "Track 4" comment, never
+  propagated to the article. Corrected 4 spots in `vignettes/articles/kinship2-fidelity-validation.qmd`
+  (Fixture prose, Track C table `3` -> `2`, 3rd screenshot caption, closing paragraph) in place.
+  Docs-only -- no production code or test changes; the existing Track C test already asserted the
+  current, correct behavior. `quarto render` clean; full clean regression 1 failed (pre-existing
+  `test_wordlist_coverage.R`)/0 error, 0 collateral.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [ad hoc] S657: claim session (correct kinship2-fidelity-validation.qmd Track C rectilinear-edge-count discrepancy)
+- Commit `e95f86e7` opened the `SESSION_NOTES.md` stub and `HANDOFFS.md` `status: pending` receipt
+  for this session's deliverable.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [ad hoc] S656: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S655 precedent)
 - Commit `1dbb61fb` set `HANDOFFS.md`'s S656 receipt `commit:` field from `pending` to `6b7c445c`
   (a 1-line change), the same self-reference workaround this project's sessions have made since
