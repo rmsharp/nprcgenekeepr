@@ -18,17 +18,114 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 651 Handoff Evaluation (by Session 652)
+**Score: 8/10.** **What helped:** S651's design document (`docs/planning/pedigree-diagram-track7-
+phase3-child-centering-plan.md`) was the strongest possible starting point for implementation --
+its §5 Migration Path and §6.3 test inventory gave exact file/line targets, its Finding B
+(anchor/children-mean bit-exact identity) was the correct, load-bearing insight this session's own
+RED-phase measurements confirmed value-for-value on every fixture, and its own adversarial
+verification (already finding the sweepMinSep()-contingency caveat and the union-vs-duplicate 4->3
+shift) meant this session inherited an already-stress-tested design rather than a naive first
+draft. **What was missing:** the §6.3 test inventory, despite an explicit adversarial
+re-verification pass that already corrected an initial undercount from 2 to 14 assertions, still
+missed a 15th (the F1 fixture's own outer `makePedigreeMatingLayout()`-surface pin) -- found only
+because this session ran the full test files against a live GREEN spike rather than trusting the
+inventory as exhaustive (Learning 690). Separately, the design's own §2.1 collision-avoidance
+simulation ran only against the real 375-individual fixture; it did not extend the same simulation
+to the Track B shrunk fixture, so the disclosed "union lands exactly on its own anchor" trade-off
+was correct in principle but not measured on the exact fixture the owner personally reviewed until
+this session did so (Learning 691). **What was wrong:** nothing -- both gaps are inventory/scope
+gaps, not incorrect claims; every number the design doc DID commit to (Finding A/B, the
+collision-safety simulation, the 14-assertion inventory) was reproduced exactly by this session's
+own live measurements. **ROI:** strongly positive -- the design doc's own "measure live, never
+hand-derive" discipline was directly followed for 100% of this session's RED-phase values, and the
+2 gaps found cost at most 1 extra measurement pass each, not a redesign.
+
 ### What Session 652 Did
 **Deliverable:** Implement [issue #166](https://github.com/rmsharp/nprcgenekeepr/issues/166) per
-the ratified Option 1 design (`docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md`)
--- delete Track 7 Phase 1's union-recenter loop (`R/makePedigreeDiagramData.R:973-979`) via full
-TDD RED->GREEN->REFACTOR. (IN PROGRESS)
-**Started:** 2026-08-29 (session continuation)
-**Status:** Session claimed. Work beginning -- Pre-RED research (design doc re-read) complete;
-starting RED (test updates per design doc §5 step 1 / §6.3 inventory).
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+the ratified Option 1 design -- delete Track 7 Phase 1's union-recenter loop
+(`R/makePedigreeDiagramData.R:973-979`) via full TDD RED->GREEN->REFACTOR (REFACTOR skipped).
+**DONE.**
+**Started/Completed:** 2026-08-29 (single session).
+
+**What actually happened, in order:**
+1. **Phase 1B claim** (commit `19da52b2`).
+2. **Pre-RED research:** re-read the full design doc; read `.positionMatingUnitForest()`
+   (`R/makePedigreeDiagramData.R:627-1123`) directly to confirm lines 973-979 are exactly the
+   ratified deletion target; read all 4 affected test files in full.
+3. **Live-measured every RED-phase value via a temporary, immediately-reverted spike** (`sed`-deleted
+   the 7 lines, `pkgload::load_all()`, measured, `git checkout` to restore -- confirmed
+   byte-identical to `HEAD` via `git diff --quiet` after), matching this project's established
+   spike-and-restore discipline. Found the Track B shrunk fixture's own Phase 2 proximity test
+   would newly show Phase 2's push no longer engaging (each of its 3 unions lands on its own
+   anchor instead of an unrelated node) -- flagged explicitly via `AskUserQuestion` before writing
+   RED, since this is the owner's own directly-reviewed fixture, not just the real-375 aggregate.
+4. **RED** (commit `pending` -- see `changelog_ref`): 12 assertion-level changes across 4 test
+   files (10 blocks + 2 all-real-375-count blocks confirmed unaffected) plus 1 new test
+   reproducing issue #166's own named cases directly. Confirmed genuine RED: full clean regression
+   93 failed/0 error/6477 passed against unmodified `HEAD` -- exactly the 12 intentional changes
+   plus the 1 pre-existing `test_wordlist_coverage.R` baseline, 0 collateral.
+5. **GREEN, 1 gap found:** deleted `R/makePedigreeDiagramData.R:973-979`, reworded the stale
+   comment above it. Re-running the 4 touched test files found a 15th test the design doc's own
+   inventory missed (the F1 fixture's outer `makePedigreeMatingLayout()` surface pin, `210` ->
+   `150.12`) -- fixed immediately (Learning 690). Full clean regression after: 1 failed
+   (pre-existing, unrelated)/0 error/6569 passed. `lintr::lint_package()`: 1 false-positive
+   (`commented_code_linter`, a wrapped file-path comment parsing as an arithmetic expression)
+   resolved by re-wrapping across 2 lines, matching this codebase's own citation convention; 0
+   lints after. Mandatory live-render check (design doc §5 step 3): a real chromote render of the
+   375-individual fixture confirmed 0 id collapse, 0 post-fix residual same-row collisions.
+6. **REFACTOR skipped** (owner-directed via `AskUserQuestion`): the GREEN change is a pure 7-line
+   deletion plus an accurate comment reword -- no behavior-neutral restructuring identified,
+   matching S649/S650's own precedent.
+7. **`NEWS.Rmd` corrected + entry added:** the existing dev-version bullet describing "a mating
+   symbol is always kept within the range spanned by its own two parents" described exactly the
+   mechanism just deleted -- corrected to the accurate post-revert behavior, plus a new bullet
+   naming the reversion (issue #166); `NEWS.md` regenerated.
+8. **`BACKLOG.md` closed out:** issue #166 item marked `[x]` DONE with full shipped detail; the
+   pre-existing Track 7 Phase 2 union-vs-duplicate residual Housekeeping item updated 4->3 (this
+   session's own live re-measurement); a new Housekeeping item filed for a NEWS.Rmd
+   dangling-reference/possible pre-existing staleness question found incidentally (not fixed, out
+   of scope -- see gotchas).
+9. **GitHub issue #166 closed** citing this session's commits and verification evidence.
+10. **Learnings 690/691 recorded**, `CLAUDE.md` learnings pointer updated (689->691).
+
+**Self-assessment (Session 652): 9/10.** **Strengths:** (1) followed the design doc's own
+"measure live, never hand-derive" discipline for every single RED-phase value across 4 files,
+using the project's own established spike-and-restore method rather than computing values by
+formula; (2) found and transparently flagged a genuinely new empirical result (the Track B
+shrunk-fixture regression) via `AskUserQuestion` BEFORE writing it into tests, rather than
+silently encoding it; (3) caught the design doc's own 15th missed test by running full files
+against a live spike rather than trusting the inventory, and fixed it same-session rather than
+treating it as "someone else's gap"; (4) ran the MANDATORY live-render check via an actual
+chromote browser render, not just internal coordinate math, matching this project's own
+established "code correctness is not evidence of a correct rendered image" precedent; (5)
+corrected a NEWS.Rmd bullet that would otherwise have shipped a false claim about the reverted
+behavior, rather than leaving it stale; (6) zero stakeholder corrections needed across all 3 TDD
+phase-gates. **Weaknesses:** (1) the GREEN-phase F1-test discovery (step 5 above) was a real, if
+minor, RED-phase gap on this session's OWN part (not just the design doc's) -- a more exhaustive
+initial RED-phase test-file read might have caught it before the RED->GREEN transition rather
+than during GREEN verification; (2) filed, rather than resolved, the NEWS.Rmd dangling-reference
+question found incidentally -- correctly out of scope per this project's own precedent, but it
+does mean a fully-verified-accurate NEWS.Rmd remains a future task.
+
+**Gotchas for a future session:** (1) **Issue #166 is fully shipped and closed** -- no further
+work needed on it specifically. (2) **STANDING TOP PRIORITY banner** (`BACKLOG.md`, S643) still
+correctly stands: multiple Housekeeping items under the pedigree-fidelity umbrella remain open
+(the `__jog_*` waypoint bug, the Track C table discrepancy, S649's missing NEWS.Rmd entry, the
+union-vs-duplicate residual now at 3, the new NEWS.Rmd dangling-reference item) -- this session
+does not remove the banner unilaterally, matching S650's own established practice. (3) **New
+Housekeeping item:** `NEWS.Rmd`'s "For one specific pattern (a sibling-consanguineous mating)..."
+bullet may have been describing the ALREADY-REMOVED Track-3-Engagement-Gate mechanism (S602) since
+before Track 7 ever existed (git-blame: both bullets trace to the same S628 rewrite, 2026-08-24,
+which predates Track 7 Phase 1 by 3 days) -- a future session should determine what (if anything)
+currently produces this claimed mitigation and correct or remove the bullet. (4) `master` is now
+several commits ahead of `origin/master` (this session's own commits plus prior unpushed ones) --
+not pushed per the standing "commit/push only when asked" convention. (5)
+`HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap, unchanged this
+session -- `BACKLOG.md`'s "ledger-size housekeeping" item is still open. (6) The Track 7 Phase 2
+union-vs-duplicate residual (`BACKLOG.md` Housekeeping) is now 3, not 4 -- a future session fixing
+that residual should re-verify this count live rather than assume either the old 4 or this
+session's 3 still applies after any further change to `.positionMatingUnitForest()`.
 
 ### Session 650 Handoff Evaluation (by Session 651)
 **Score: 7/10.** **What helped:** S650's own record of shipping (all 3 phases of

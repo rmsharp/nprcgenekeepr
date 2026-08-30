@@ -138,20 +138,67 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S652
 date: 2026-08-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS -- implement issue #166 (Track 7 qualifying-union recenter dogleg /
-  off-center sibship-bar) per the ratified Option 1 design (scoped revert): delete
-  R/makePedigreeDiagramData.R:973-979 via full TDD RED->GREEN->REFACTOR.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- issue #166 (Track 7 qualifying-union recenter dogleg/off-center sibship-bar)
+  implemented and shipped per the ratified Option 1 design (scoped revert): deleted
+  R/makePedigreeDiagramData.R:973-979 via full TDD RED->GREEN->REFACTOR (REFACTOR skipped). GitHub
+  issue #166 closed; BACKLOG.md item marked DONE.
+what_was_done: RED (ca689c3f): 12 assertion-level test changes + 3 new/unchanged-confirmed blocks
+  across 4 files, every value live-measured against a temporary reverted spike (never hand-derived).
+  Confirmed genuine RED: 93 failed/0 error/6477 passed against unmodified HEAD (12 intentional +
+  1 pre-existing baseline). GREEN (303b42dd): deleted the 7-line recenter loop, reworded the stale
+  comment; found and fixed a 15th test the design doc's own inventory missed (F1 fixture's outer
+  makePedigreeMatingLayout() surface pin, Learning 690). Full clean regression after: 1 failed
+  (pre-existing)/0 error/6569 passed; lintr 0 lints; mandatory live-render check (real chromote
+  render) confirmed 0 id collapse/0 residual collisions. REFACTOR skipped (0db5e4c8's own commit
+  message references the AskUserQuestion decision). NEWS.Rmd/BACKLOG.md/CHANGELOG.md updated
+  (0db5e4c8): corrected a NEWS.Rmd bullet that described the just-deleted mechanism, marked issue
+  #166 DONE, updated the union-vs-duplicate residual Housekeeping item 4->3, filed 1 new
+  Housekeeping item (NEWS.Rmd dangling reference, found incidentally). GitHub issue #166 closed.
+  Learnings 690/691 recorded (beed0b4d).
+next_steps: Pick from BACKLOG.md Housekeeping (all Effort S/M, still under the standing
+  pedigree-fidelity banner): the NEWS.Rmd dangling-reference/possible pre-existing staleness item
+  (new, this session), the __jog_* waypoint invisible-styling bug (S648), the Track C table 3-vs-2
+  vermillion-edges discrepancy (S645), S649's missing NEWS.Rmd entry, the union-vs-duplicate
+  residual (now 3, S652). Otherwise ask the owner whether the standing top-priority banner comes
+  down, or pick a non-pedigree item (lint.yaml red streak, LabKey research, chromote CDP-timeout
+  fallback, methodology_trim.py config residual, or a DECISION NEEDED item).
+key_files: R/makePedigreeDiagramData.R:963-980 (the deleted recenter loop and its reworded
+  comment); docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md (the ratified
+  design); tests/testthat/test_positionMatingUnitForest.R (11 blocks touched, including the new
+  issue-#166-geometry test); tests/testthat/test_addRectilinearWaypoints.R,
+  test_makePedigreeMatingLayout.R, test_resolveEdgeNodeCollisions.R (1 block each); NEWS.Rmd:87-99
+  (corrected bullet + new bullet); BACKLOG.md (issue #166 item, Housekeeping section).
+gotchas: STANDING TOP PRIORITY banner (BACKLOG.md, S643) correctly stays -- multiple Housekeeping
+  items remain open under it. NEWS.Rmd's "sibling-consanguineous mating" bullet (immediately after
+  this session's own corrected bullet) may have been stale since S628 (predates Track 7 entirely) --
+  new Housekeeping item, not investigated further. Track 7 Phase 2's union-vs-duplicate residual is
+  now 3, not 4 -- re-verify live, don't assume either old count still applies after a future change
+  to .positionMatingUnitForest(). master is several commits ahead of origin/master, unpushed.
+  HANDOFFS.md/SESSION_NOTES.md/CHANGELOG.md remain past the FM #28 size cap, unchanged this session.
+runtime_smoke: PASS -- mandatory live-render check (design doc §5 step 3): a real chromote render
+  of the 375-individual fixture via a temporary test file (deleted after use) confirmed 0 id
+  collapse and 0 post-fix residual same-row collisions on the actual rendering pathway
+  (makePedigreeMatingLayout() -> visNetwork()), not just internal x/y math.
+changelog_ref: CHANGELOG.md 2026-08-29 S652 entries (landed in ca689c3f/303b42dd/0db5e4c8/beed0b4d)
 commit: pending
 ```
+Issue #166 implemented and shipped end-to-end via full TDD RED->GREEN->REFACTOR (REFACTOR
+skipped), matching the ratified design exactly. Self-score breakdown: +followed the design doc's
+own "measure live, never hand-derive" discipline for every RED-phase value across 4 files using a
+temporary spike-and-restore, never computing a value by formula alone; +proactively flagged a
+genuinely new empirical result (the Track B shrunk-fixture regression) via `AskUserQuestion`
+before encoding it into tests, rather than silently shipping it; +caught and fixed the design
+doc's own 15th missed test by running full files against a live spike instead of trusting an
+already-adversarially-verified inventory as exhaustive; +ran the MANDATORY live-render check via
+an actual chromote browser render, not internal coordinate math alone; +corrected a NEWS.Rmd
+bullet that would otherwise have shipped a false claim about the reverted behavior; +zero
+stakeholder corrections across all 3 TDD phase-gates; -the GREEN-phase F1-test discovery was a
+real gap on this session's own RED-phase read, not just the design doc's, though caught and fixed
+same-session; -filed rather than resolved the incidentally-found NEWS.Rmd dangling-reference
+question (correctly out of scope, but leaves a fully-accurate NEWS.Rmd as a future task).
 
 ```handoff
 session: S651
