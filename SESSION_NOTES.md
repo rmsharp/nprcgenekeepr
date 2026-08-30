@@ -18,19 +18,135 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 657 Handoff Evaluation (by Session 658)
+**Score: 9/10.** **What helped:** S657's gotchas named the exact 3 remaining pedigree-fidelity
+Housekeeping items with correct READY/Effort tags — the duplicate-vs-individual proximity item
+this session picked (READY tag, needs its own design session first, Effort M), the `NEWS.Rmd`
+staleness question (READY, Effort S), and the `ScheduleWakeup`/`run_in_background` structural-guard
+item (READY, Effort S-M, Learning 694/695) — all three matched exactly what this session's own
+Phase 0 `BACKLOG.md` grep found, with no independent re-derivation needed. The unpushed-commits/
+`lint.yaml`-still-red gotcha was accurate and prevented misreading `gh run list`'s red `lint.yaml`
+runs (S653's local fix, not yet pushed) as a new break. **What was missing:** S657 relayed the
+duplicate-vs-individual item's count ("6 duplicate-vs-individual near-misses") exactly as `BACKLOG.md`
+stated it, with no flag that the underlying measurement (S654's, not S657's own) might not survive
+a family-relationship re-check — not a fault of S657's own handoff (S657 never touched that item),
+but this session found the count materially wrong once actually investigated (see below), which a
+"needs its own design session" tag by its nature can't pre-empt. **What was wrong:** nothing in
+S657's own claims — the untracked-file list, CI status, and commit-count description all checked
+out exactly. **ROI:** positive — accurate priorities list, no wasted verification time on S657's own
+claims specifically.
+
 ### What Session 658 Did
-**Deliverable:** Design plan for BACKLOG.md's "6 pre-existing duplicate-vs-individual proximity
-near-misses" Housekeeping item (found S654) — a planning-only session per the item's own "needs its
-own design session first" tag, following `ARCHITECTURE_WORKSTREAM.md`. No implementation this
-session. (IN PROGRESS)
-**Started:** 2026-08-30.
-**Status:** Session claimed. Work beginning. *(Note: Phase 1B claim was written after some read-only
-investigation had already started, not immediately before it as SESSION_RUNNER.md Phase 1B requires
-— self-caught mid-session; no technical/write work preceded this stub, only measurement scripts run
-against the real fixture. Flagged here rather than silently corrected.)*
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Design plan for `BACKLOG.md`'s duplicate-vs-individual proximity near-misses
+Housekeeping item (found S654) — a planning-only session per the item's own "needs its own design
+session first" tag, following `ARCHITECTURE_WORKSTREAM.md`. **DONE** — design ratified, no code or
+test changes (implementation is a separate future session).
+**Started/Completed:** 2026-08-30 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0:** full orientation (`SESSION_RUNNER.md` read in full, `SAFEGUARDS.md` read in full,
+   `SESSION_NOTES.md`/`HANDOFFS.md`/`CHANGELOG.md` reconciled — 0 undocumented commits; `HANDOFFS.md`'s
+   1-commit-behind frontier confirmed as the established, intentional self-reference pattern, not a
+   gap). `gh run list`: `lint.yaml` red on the last pushed runs, confirmed the already-known,
+   expected consequence of S653's local fix not yet being pushed (`master` 43 commits ahead of
+   `origin/master`), not a new break. `methodology_dashboard.py`: 96/100 health, 1 HIGH-risk
+   (unchanged, file-size). Rendered a 3-option priorities `AskUserQuestion` from `BACKLOG.md`'s
+   remaining READY pedigree-fidelity items — **owner picked the duplicate-vs-individual
+   near-misses item.**
+2. **Phase 1B claim** (commit `48f5af2f`) — **written after several read-only measurement scripts
+   had already been run**, not immediately before starting work as `SESSION_RUNNER.md` Phase 1B
+   requires. Self-caught mid-session, disclosed rather than silently fixed (see gotchas/Learning
+   697's process note). No technical/write work preceded the correction.
+3. **Investigation:** read `ARCHITECTURE_WORKSTREAM.md` and the relevant `.positionMatingUnitForest()`/
+   `.deCollideIndividualPoints()` source (`R/makePedigreeDiagramData.R:627-1174`). Wrote and ran 3
+   successive R measurement scripts against the real 375-individual fixture, live via
+   `pkgload::load_all()` + `nprcgenekeepr:::`. **Found the original S654 count did not survive a
+   relationship check**: using the correct `individualClearance=(25+25)/120=0.4167` (not S654's
+   union-radius proxy 0.2583) surfaced 121 same-gen pairs, not 6 — 90 are a duplicate beside its own
+   parent (by design), 25 are mate pairs (Track 7's own territory), and exactly 6 are genuinely
+   unrelated. Of THOSE 6, only 2 match S654's original list; the other 4 of S654's original 6 are
+   the by-design own-parent case, and 4 *different* real-real cases (invisible to S654's narrower
+   proxy) took their place.
+4. **Adversarial verification workflow** (3 agents + 1 adversarial reviewer, background): independently
+   re-derived the same 6-pair measurement from scratch (exact match, same ids/distances); evaluated
+   Option A (widen `.deCollideIndividualPoints()`'s shared threshold) — measured 90/102 duplicates
+   would collide with their own parent, confirmed to break a pinned test directly, rejected; evaluated
+   Option B (extend Track 7 Phase 4's existing post-hoc duplicate loop) — measured exactly 2/102
+   duplicates move, proved inert against Phase 4's 3 shipped cases both by an OR-monotonicity
+   argument and byte-identical simulation; adversarially confirmed the 4 real-real cases all involve
+   a B1-tier individual (never two genuine Tier-1 individuals — `sweepMinSep()` guarantees
+   `minSep=1 > 0.4167`), a different, unaddressed code path neither option reaches.
+5. **Design doc written**: `docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`
+   (Context/Decision/Rationale/Alternatives/Impact/Out-of-Scope/Verification-Plan, matching the
+   Track 7 Phase 2/4 doc precedent).
+6. **Ratification** (`AskUserQuestion`): owner picked "Yes, ratify Option B as scoped." Design doc
+   §8 filled in.
+7. **Close-out:** `BACKLOG.md`'s item corrected in place (6→2 genuine duplicate cases, by-design
+   cases named, mechanism/ratification recorded) and a new, separate Housekeeping item filed for the
+   4 B1-vs-individual cases (explicitly deferred). `PROJECT_LEARNINGS.md` Learning 697 (the
+   measurement-correction finding, plus a process note on the Phase 1B ordering slip). `CLAUDE.md`
+   learnings pointer updated 696→697. `CHANGELOG.md`: 3 entries (claim, design-ratified, this
+   close-out), tagged `[BL-dupIndividualProximity]` for the deliverable entries.
+
+**Runtime smoke test (Phase 3E):** N/A — planning-only session, zero code or test changes, zero
+runtime behavior touched (matches `SAFEGUARDS.md`'s Documentation-projects row; no render step
+applies either, since no vignette/article was touched this session).
+
+**Self-assessment (Session 658): 8/10.** **Strengths:** (1) did not accept the predecessor
+finding's count at face value — re-derived it from scratch with the dimensionally-correct threshold
+AND a relationship classifier, catching that 4 of the original 6 cases were never defects while 4
+different genuine cases had been missed; (2) used an adversarial-verification workflow (matching
+this project's own established practice for exactly this class of pedigree-positioning decision)
+rather than trusting a single-pass measurement, and that workflow caught a real, material scope gap
+(the B1-vs-individual defect class) neither the original finding nor either candidate fix would have
+surfaced; (3) rejected Option A with concrete, measured evidence (90/102 collateral collisions, a
+directly-confirmed broken pinned test) rather than a plausibility argument; (4) correctly scoped the
+fix narrowly (2 genuine cases) and filed the broader B1 gap as a separate item rather than folding it
+in, matching this project's own repeated narrow-scoping precedent; (5) waited for the background
+workflow's own completion notification with no `ScheduleWakeup` call. **Weaknesses:** (1) the Phase
+1B claim-ordering slip (claimed after investigation had already started) — self-caught and disclosed,
+but should not have happened; (2) did not independently re-verify the workflow agents' own R
+measurements by re-running their exact scripts myself (relied on their reported numbers plus the
+adversarial cross-check between agents) — defensible given the adversarial design already provides
+independent re-derivation, but a fully solo re-run would be stronger; (3) the design doc's §2 code
+sketch is illustrative, not a literal diff against current line numbers at ratification time — the
+implementing session must re-read the actual source before writing real RED tests, not copy the
+sketch verbatim (flagged in the doc's own Verification Plan, but worth restating here). **ROI:**
+high — a session that could have rubber-stamped a plausible-sounding "widen the threshold" fix instead
+caught it would have broken a pinned test and moved 90 duplicates away from their own parents, and
+found a second defect class the original filing never named.
+
+**Next steps:** Implement the ratified Option B design
+(`docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`) — full TDD, starting from
+the doc's own §7 Verification Plan. Separately, `BACKLOG.md`'s remaining pedigree-fidelity
+Housekeeping items, unchanged from this session's own Phase 0 report (none else picked): `NEWS.Rmd`'s
+stale sibling-consanguineous bullet (READY, Effort S, found S652); the `ScheduleWakeup`/
+`run_in_background` structural-guard investigation (READY, Effort S-M, found S656, Learning 694/695);
+the new 4-case B1-vs-individual proximity item (READY tag, needs its own design pass, Effort M, found
+S658, this session). Unchanged from S657's own gotchas: the stray LibreOffice lock file
+(`inst/extdata/reference/~$e Compounding Loop.html`) is still present; `HANDOFFS.md`/
+`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap; `master` is now several more
+commits ahead of `origin/master`, unpushed.
+
+**Key files:** `docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md` (the full
+design, ratified); `R/makePedigreeDiagramData.R:1125-1160` (Track 7 Phase 4's existing post-hoc
+duplicate loop, the implementation target); `BACKLOG.md` (the corrected item + new B1-vs-individual
+item); `PROJECT_LEARNINGS.md` Learning 697.
+
+**Gotchas for a future session:** (1) The design doc's §2 code sketch shows the *shape* of the
+change (new constant, new forbidden-set var with own-family exclusion, new closure, combined `||`) —
+re-read the actual current source before writing it for real, do not copy the sketch as a diff. (2)
+The early-exit guard at `R/makePedigreeDiagramData.R:1131` (`if (length(unrelatedUnionsAtGen) ==
+0L) next`) MUST be widened to also check the new individual forbidden-set, or a duplicate in a
+generation with no other mating units silently skips the new check — doesn't bite on the current
+fixture, but needs its own dedicated RED test, not just the real-375 regression. (3) Per the design
+doc's §5 Impact Analysis, expect `test_resolveEdgeNodeCollisions.R:487-488` and
+`test_makePedigreeMatingLayout.R:658,666`'s aggregate counts to shift (2 duplicates move); re-measure
+live, do not assume unchanged. (4) The 4 B1-vs-individual cases are a SEPARATE, larger-effort item —
+do not fold them into this implementation without re-scoping (they touch the heavily-tuned `b1Ids`
+mechanism, ~20 hardcoded position assertions, and the `nColliding=27L` regression count). (5) STANDING
+TOP PRIORITY banner still applies — pedigree-diagram fidelity work stays the top priority per the
+owner's 2026-08-26 directive.
 
 ### Session 656 Handoff Evaluation (by Session 657)
 **Score: 9/10.** **What helped:** S656's gotchas named the exact remaining pedigree-fidelity

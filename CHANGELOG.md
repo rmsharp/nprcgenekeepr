@@ -16,6 +16,34 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [BL-dupIndividualProximity] S658: design ratified -- duplicate-vs-unrelated-individual proximity fix; BACKLOG.md count corrected 6 -> 2 (+ new 4-case B1-vs-individual item filed)
+- Re-measured S654's own "6 duplicate-vs-individual near-misses" finding with the geometrically
+  correct `individualClearance=(25+25)/120=0.4167` (S654 had used the union-radius proxy 0.2583)
+  and a full pedigree-relationship classifier (own-mating-unit-parent / parent-child / sibling /
+  mate / unrelated), independently re-verified by a second adversarial pass from scratch: only 2
+  of the original 6 named cases are genuine defects (4 are the duplicate sitting beside its own
+  dam -- by design, not a bug); the correct threshold also surfaced 4 *different*, previously
+  undocumented cases, confirmed to be B1-individual-vs-individual (no duplicate involved),
+  a separate, unaddressed code path.
+- Design doc: `docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`. Ratified
+  mechanism (Option B, via `AskUserQuestion`): extend Track 7 Phase 4's existing post-hoc
+  duplicate-side push loop with a combined union+individual collision check, rather than widening
+  `.deCollideIndividualPoints()`'s own shared threshold (measured and rejected: no family
+  exclusion would newly collide 90/102 duplicates with their own parent). Proven inert against
+  Phase 4's own 3 shipped cases (OR-monotonicity argument + byte-identical simulation). Measured
+  blast radius: 2/102 duplicates move, one push-step each.
+- `BACKLOG.md`: corrected the item's own count/framing in place; filed a new, separate
+  Housekeeping item for the 4 B1-vs-individual cases (explicitly deferred, own future design pass
+  needed against the heavily-tuned `b1Ids` mechanism).
+- `PROJECT_LEARNINGS.md` Learning 697. `CLAUDE.md` learnings pointer updated 696 -> 697.
+- Planning-only session (`ARCHITECTURE_WORKSTREAM.md`) -- no code or test changes.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [ad hoc] S658: claim session (design plan for duplicate-vs-individual proximity near-misses)
+- Phase 1B claim stub (`SESSION_NOTES.md`) and `status: pending` receipt (`HANDOFFS.md`), commit
+  `48f5af2f`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [ad hoc] S657: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S656 precedent)
 - Commit `f22cf2b4` set `HANDOFFS.md`'s S657 receipt `commit:` field from `pending` to `01b7dacc`
   (a 1-line change), the same self-reference workaround this project's sessions have made since

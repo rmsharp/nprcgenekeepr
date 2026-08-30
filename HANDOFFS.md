@@ -138,17 +138,43 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S658
 date: 2026-08-30
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Design plan for BACKLOG.md's "6 pre-existing duplicate-vs-individual proximity
-  near-misses" item (found S654) -- planning-only session, ARCHITECTURE_WORKSTREAM.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Design plan for BACKLOG.md's duplicate-vs-individual proximity near-misses item
+  (found S654) -- DONE, design ratified. Next: implement Option B under full TDD, starting
+  from docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md's own S7.
+what_was_done: Re-measured S654's "6 duplicate-vs-individual near-misses" with the correct
+  individualClearance=(25+25)/120=0.4167 (not S654's union-radius proxy 0.2583) plus a full
+  pedigree-relationship classifier -- found only 2 of the original 6 are genuine defects (4
+  are a duplicate beside its own parent, by design) and 4 different, previously-undocumented
+  cases exist (all B1-individual-vs-individual, no duplicate involved -- confirmed by a
+  4-agent adversarial-verification workflow). Ratified Option B (extend Track 7 Phase 4's
+  post-hoc duplicate loop) via AskUserQuestion -- measured 2/102 duplicates move, proven
+  inert against Phase 4's 3 shipped cases. Design doc:
+  docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md. BACKLOG.md item
+  corrected in place; new B1-vs-individual item filed separately. Commit `48f5af2f` (claim);
+  design/backlog/learnings/changelog commit is this receipt's own `commit:` field below.
+next_steps: Implement the ratified Option B design under full RED->GREEN->REFACTOR, starting
+  from the design doc's own S7 Verification Plan. R/makePedigreeDiagramData.R:1125-1160 is
+  the target loop. Do NOT fold in the separately-filed 4-case B1-vs-individual item (own
+  future design pass, larger blast radius against the b1Ids mechanism).
+key_files: docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md (full
+  design); R/makePedigreeDiagramData.R:1125-1160 (Track 7 Phase 4's existing loop, the
+  implementation target); R/makePedigreeDiagramData.R:1131 (the early-exit guard that MUST
+  widen -- see gotchas); BACKLOG.md (corrected item + new B1-vs-individual item);
+  PROJECT_LEARNINGS.md Learning 697.
+gotchas: (1) The design doc's S2 code sketch shows the change's shape, not a literal diff --
+  re-read current source before writing real RED tests. (2) The early-exit guard at
+  R/makePedigreeDiagramData.R:1131 must be widened to check the NEW individual forbidden-set
+  too, or a duplicate in a generation with no other mating units silently skips the new
+  check -- doesn't bite the current fixture, needs its own dedicated RED test. (3) Expect
+  test_resolveEdgeNodeCollisions.R:487-488 and test_makePedigreeMatingLayout.R:658,666's
+  aggregate counts to shift (2 duplicates move) -- re-measure live. (4) STANDING TOP PRIORITY
+  banner still applies (pedigree-diagram fidelity, owner directive 2026-08-26).
+runtime_smoke: n/a -- planning-only session, zero code/test/runtime changes.
+changelog_ref: see CHANGELOG.md's 3 new 2026-08-30 S658 entries (claim / design-ratified /
+  this close-out), tagged [BL-dupIndividualProximity].
 commit: pending
 ```
 

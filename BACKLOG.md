@@ -668,27 +668,74 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       identified, matching S650/S652/S653's own precedent. `NEWS.Rmd` updated with this fix's own
       plain-language bullet AND S649's own still-missing Phase 2 bullet (see the Housekeeping item
       below), in shipping order; `NEWS.md` regenerated. See `CHANGELOG.md`.
-- [ ] **6 pre-existing duplicate-vs-INDIVIDUAL proximity near-misses on the real 375-individual
+- [ ] **Duplicate-vs-unrelated-individual proximity near-misses on the real 375-individual
       fixture, unrelated to and unaffected by Track 7 Phase 2/4** (found incidentally S654,
-      2026-08-30, while empirically grounding the Track 7 Phase 4 design above -- READY, Effort M)
-      -- `.deCollideIndividualPoints()`'s own de-collision push only fires on an EXACT tie
+      2026-08-30, while empirically grounding the Track 7 Phase 4 design above; **design session
+      S658, 2026-08-30, materially corrected the count -- see below**) --
+      `.deCollideIndividualPoints()`'s own de-collision push only fires on an EXACT tie
       (`< 1e-9`) against `individualOccupied`/`placedThisGen`; it has no near-miss RADIUS check at
       all for individual/duplicate-shaped points (both size=25), unlike the union-side mechanism
-      Track 7 Phase 2 added for union-vs-individual proximity. Measured (using
-      `unionClearanceIndividual = (25+6)/120 = 0.2583` as a "visually close enough to matter"
-      proxy, not a claim that this is the correctly-calibrated threshold for two full-size nodes --
-      a proper individual-vs-individual clearance would be `(25+25)/120 = 0.4167`, wider still):
-      6 cases on unmodified `HEAD` (commit `2e3a05b2`) -- `__dup_MY1AEU_2` (0.0990 from `TTE0Z7`),
-      `__dup_1X40V5_2` (0.1000 from `0Q077X`), `__dup_7NBKWE_3` (0.1000 from `IM1B5T`),
-      `__dup_L31S6S_5` (0.1000 from `M0YNUR`), `__dup_M5DJVP_1` (0.1000 from `45YQV5`),
-      `__dup_KCBMY9_2` (0.1000 from `665C2Y`). Confirmed unaffected by either fix direction
-      evaluated for the Track 7 Phase 4 item above -- both only ever touch a duplicate that
-      collides with a UNION, never one merely near another individual (identical positions/
-      distances measured with and without either spike). Not investigated or fixed this session
-      (out of the Phase 4 design's own scope, design doc §1.4/§8) -- a future session should
-      determine the right clearance threshold for this comparison (likely the full `(25+25)/120`
-      individual-pair radius, not the union-calibrated one used here only as a detection proxy)
-      and design a fix, matching this project's own established radius-proportionate-push pattern.
+      Track 7 Phase 2 added for union-vs-individual proximity.
+      **S654's own original "6 duplicate-vs-individual" count does not survive a
+      family-relationship check (found S658):** S654 measured using
+      `unionClearanceIndividual = (25+6)/120 = 0.2583` (a union-radius proxy, explicitly
+      disclosed as not the correctly-calibrated value) and named 6 cases, but never excluded a
+      duplicate's own mating-unit parent from the comparison. Re-measured S658 with the correct
+      `individualClearance = (25+25)/120 = 0.4167` and full relationship classification
+      (dup-own-parent / parent-child / sibling / mate / unrelated), independently re-verified by
+      a second adversarial pass from scratch: **only 2 of the original 6 are genuine defects**
+      (`TTE0Z7`/`__dup_MY1AEU_2` at 0.099, `M0YNUR`/`__dup_L31S6S_5` at 0.100) -- the other 4
+      (`__dup_1X40V5_2`/`0Q077X`, `__dup_7NBKWE_3`/`IM1B5T`, `__dup_M5DJVP_1`/`45YQV5`,
+      `__dup_KCBMY9_2`/`665C2Y`) are each the duplicate sitting next to its OWN mating unit's dam
+      -- an intentional, formulaic `unitX + minSep*0.4` offset, not a coincidental collision.
+      **The wider, correct threshold also surfaced 4 *different*, previously-undocumented
+      near-misses the 0.2583 proxy was too narrow to see** (`D0Z114`/`S0022Z`,
+      `XEE9GT`/`JB7EW2` at 0.100; `PQX22G`/`Y7IUMX` at 0.400; `HKTQ40`/`8P17E3` at 0.401) -- but
+      confirmed (S658 adversarial verification) that **none of these 4 involve a duplicate at
+      all**: all 4 are real-individual-vs-real-individual pairs where at least one side is a
+      B1-tier "free pass" individual (positioned via the same weak exact-tie-only mechanism, a
+      different call site: `R/makePedigreeDiagramData.R:958-960`), never two genuine Tier-1
+      individuals (`sweepMinSep()` guarantees `minSep=1 > 0.4167` between those). **Net: the true
+      duplicate-vs-individual defect count is 2, not 6; the other 4 are a separate,
+      B1-vs-individual defect class filed as its own item below, not fixed by this item's own
+      design.**
+      **Design RATIFIED S658, Effort M (via `AskUserQuestion`, "Yes, ratify Option B as
+      scoped"), implementation READY, next pickup (standing pedigree-fidelity directive).** Full
+      design:
+      [`docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`](docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md).
+      **Ratified mechanism (Option B):** extend Track 7 Phase 4's existing post-hoc duplicate-side
+      push loop (`R/makePedigreeDiagramData.R:1125-1160`) with a combined union+individual
+      collision check (one new constant, one new family-excluding forbidden-set variable, one new
+      closure, one `||`), rather than widening `.deCollideIndividualPoints()`'s own shared
+      threshold (measured and rejected: doing so with no family exclusion would newly collide 90
+      of 102 duplicates with their own parent, a 45:1 collateral-to-benefit ratio, confirmed to
+      break a pinned test directly). Proven inert against Track 7 Phase 4's own 3 already-shipped
+      union-vs-duplicate cases both by an OR-monotonicity argument and by byte-identical direct
+      simulation. Measured blast radius: exactly 2 of 102 duplicates move, one clean push-step
+      each. Full detail, all measurements and the adversarial-verification record: design doc
+      §1-§5.
+- [ ] **4 B1-individual-vs-unrelated-individual proximity near-misses on the real 375-individual
+      fixture, no duplicate involved -- same root cause as the item above (`.deCollideIndividualPoints()`'s
+      exact-tie-only guard) but a different, unaddressed call site** (found S658, 2026-08-30,
+      incidentally while designing the fix for the item above -- READY tag, but explicitly
+      DEFERRED from that item's own scope, Effort M) -- `D0Z114`/`S0022Z` (0.100),
+      `XEE9GT`/`JB7EW2` (0.100), `PQX22G`/`Y7IUMX` (0.400), `HKTQ40`/`8P17E3` (0.401); confirmed
+      (adversarial verification) all 4 involve at least one B1-tier "free pass" individual (3 are
+      B1-vs-B1, 1 is B1-vs-genuine) -- a genuine Tier-1-vs-Tier-1 pair can never be this close
+      (`sweepMinSep()` guarantees `minSep=1 > individualClearance=0.4167`). Extending the item
+      above's Option B mechanism to the `b1Ids` call (`R/makePedigreeDiagramData.R:958-960`)
+      is mechanically natural but a materially larger effort than the duplicate-side fix: `b1Ids`
+      is a heavily-tuned population (Track 7 Phases 1/2, S647/S649 -- widened offset,
+      direction-preserving `pushSign`, its own empirically-derived `.kMaxIndividualPush=2` cap
+      tuned against a DIFFERENT problem, sibling-bar-overlap avoidance, not near-miss avoidance)
+      with ~20 hardcoded position assertions and the `nColliding=27L` regression count all
+      depending on its current, unmodified behavior. A future session should scope this as its
+      own dedicated design pass -- its own empirical cap re-derivation, re-verification against
+      the existing B1-position assertions and the 27L count, and re-check of the 2 downstream
+      passes that already read `tier3X[b1Ids]` (Phase 2's union sweep, Phase 4's duplicate seed) --
+      not folded into the duplicate-side fix above. Full measurement and adversarial-verification
+      record: [`docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`](docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md)
+      §1.4/§6.
 - [x] **`R-CMD-check-scheduled.yaml` (the weekly-cron twin of `R-CMD-check.yaml`) never
       received the S616/S618/S619 chromote Chrome-provisioning fix, and nothing guarded
       against the drift** (found live S629, 2026-08-24, via Phase 0's mandatory `gh run list`
