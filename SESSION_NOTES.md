@@ -18,18 +18,121 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 650 Handoff Evaluation (by Session 651)
+**Score: 7/10.** **What helped:** S650's own record of shipping (all 3 phases of
+isolated-individual-suppression, both Track 7 phases DONE) was accurate and independently
+confirmed via `git log`/`BACKLOG.md` during this session's own Phase 0 orientation -- no wrong
+claims found, and the `BACKLOG.md` state S650 left let this session's priorities list render
+correctly with no re-derivation needed. **What was missing:** nothing S650 could reasonably have
+supplied -- this session's actual task (issue #166) was filed by an ad hoc, non-numbered audit
+workflow that ran AFTER S650 closed out (2026-08-29, commit `3e904167`), so S650's own gotchas
+(the standing-banner question, the pre-existing Housekeeping residuals) named real open items but
+none of them was what this session ended up working on; the gap is a timing fact, not a handoff
+defect. **What was wrong:** nothing. **ROI:** moderately positive -- S650's accurate historical
+grounding was useful for orientation, but the specific next-task signal for this session came from
+the intervening ad hoc audit's own `CHANGELOG.md`/`BACKLOG.md` entries, not from S650's own
+`next_steps`/`gotchas` fields directly, which is why this scores 7 rather than 9-10 despite finding
+no errors.
+
 ### What Session 651 Did
 **Deliverable:** Architecture/design document for [issue #166](https://github.com/rmsharp/nprcgenekeepr/issues/166)
 (Track 7's qualifying-union recenter decouples a union's x from its own children -- dogleg/
 off-center sibship-bar drop), following `docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md`
-(same workstream used for the Track 7 mate-spacing plan itself, per this project's own precedent
-for pedigree-positioning decisions). Picked via the Phase 0 `AskUserQuestion` priorities list.
-(IN PROGRESS)
-**Started:** 2026-08-29.
-**Status:** Session claimed. Work beginning -- Phase 2 research not yet started.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+(same workstream used for the Track 7 mate-spacing plan itself). Picked via the Phase 0
+`AskUserQuestion` priorities list. **DONE -- design RATIFIED by the owner (Option 1, scoped
+revert) via `AskUserQuestion`.** No implementation this session, per `SESSION_RUNNER.md`'s
+Planning Sessions rule.
+**Started/Completed:** 2026-08-29 (single session).
+
+**What actually happened, in order:**
+1. **Phase 1B claim** (commit `2bff3e68`), after confirming the deliverable and workstream.
+2. **Live-measured research** (direct, own script): confirmed the shipped recenter's divergence
+   from children-mean on the real 375-individual fixture (mostly exactly `minSep/2 = 0.5`, up to
+   `2.275` in 7 collision-push-driven outliers) -- then, critically, measured that
+   `mean(tier1X[kids]) == tier1X[[anchor]]` to bitwise-exact precision for all 34 qualifying
+   units, proving a "clamp toward children's mean" mitigation collapses to a binary choice
+   (Track-7-recentered vs. fully reverted), not a tunable spectrum -- the key insight that shaped
+   the whole design.
+3. **4-agent research workflow** (background, `wf_1a292f09-85e`): independently reviewed the
+   Track 7 plan doc's own rejected alternatives (§4/§12.4) and prior "5th finding" disclosure
+   (§11), diagnosed exactly which of the 7 collision-outlier cases were driven by Track 7 Phase
+   2's own push mechanism (5/7, via `trace()` environment capture, not re-derivation), read
+   kinship2's actual `alignped4.R` QP solver source (already fetched into `scratchpad/` by a
+   prior session) to confirm kinship2's straight-drop guarantee comes from moving the CHILD (which
+   this project's architecture structurally cannot do, per the already-closed issue #159), and
+   built an initial consumer/test inventory.
+4. **Drafted the design document**: 3 options (scoped revert / accept-and-close / numeric-tuned
+   partial clamp), with the numeric-clamp option shown, via the live measurement, not to work as a
+   graduated compromise for this specific problem -- recommended Option 1 (scoped revert: delete
+   only the Track-7-recenter loop, keep the mate-widening change).
+5. **3-agent adversarial verification workflow** (background, `wf_8c20ad2a-500`), matching this
+   project's own established Track 7 Phase 1 §9/Phase 2 §12.8 precedent -- found 3 real gaps in
+   the draft: (a) the anchor/children-mean identity was framed as an algorithmic guarantee when
+   it is actually contingent on `sweepMinSep()` never engaging a qualifying anchor's row (proven
+   fragile via a hand-built synthetic counter-example, though true on the real fixture); (b) new,
+   reassuring collision-safety data the original argument didn't measure (0 new individual/union
+   collisions; a small, already-disclosed union-vs-duplicate residual shift); (c) the "tests that
+   need to flip" inventory undercounted by 3.5x (7+ blocks in one file alone, plus a whole missed
+   test in a different file). **All 3 findings incorporated honestly into the document, not
+   glossed over** -- Recorded as Learnings 688/689.
+6. **Ratification via `AskUserQuestion`**: presented Option 1 (recommended) / Option 2 (accept and
+   close) / hold-for-review, with the full evidence including the adversarial-verification
+   findings. **Owner picked Option 1.** Design doc updated to record the ratification;
+   `BACKLOG.md`'s issue #166 item updated with the ratified mechanism, disclosed trade-off, and
+   the corrected test inventory, marked READY for a future implementation session.
+7. **Learnings 688/689 recorded**, `CLAUDE.md` learnings pointer updated.
+
+**Self-assessment (Session 651): 9/10.** **Strengths:** (1) completed all research (live
+measurement + 2 background workflows) before drafting the document -- no creative work preceded
+grounding; (2) read the actual implementations directly (`.positionMatingUnitForest()`,
+`.addRectilinearWaypoints()`, kinship2's own `alignped4.R`) rather than working from
+descriptions; (3) proactively ran adversarial self-verification on my own draft before presenting
+it for ratification (matching, not just citing, this project's own established Track 7 design
+precedent) -- and when it found real gaps, incorporated them honestly rather than defending the
+original framing; (4) the empirical finding that "clamp toward children's mean" collapses to a
+binary choice (not a tunable cap) is a genuinely non-obvious, load-bearing insight that reframed
+the whole design away from issue #166's own initially-suggested mitigation, discovered by
+measuring rather than assuming; (5) followed the evidence-based inventory requirement
+(`SESSION_RUNNER.md`) for a plan touching shared logic, and the corrected inventory is now
+actually complete, not just plausible; (6) zero stakeholder corrections needed -- the owner
+ratified the recommended option directly. **Weaknesses:** (1) ran 2 separate background
+workflows sequentially (research, then adversarial verify) rather than exploring whether a single
+multi-phase workflow could have pipelined them -- each added several minutes of round-trip
+latency; given the second workflow's prompts depended on claims only established after the first
+workflow's results were read and a draft written, this was likely unavoidable rather than a real
+inefficiency, but a future similar session should consciously check whether phases can pipeline
+before defaulting to sequential workflows. (2) The design document itself is substantial (~540
+lines) for a genuinely complex problem -- appropriately thorough given it governs a future
+implementation session and touches ~14 test assertions, but a future session picking up
+implementation will need real time to absorb it.
+
+**Gotchas for a future session:** (1) **Issue #166's implementation is now READY** (`BACKLOG.md`
+Up Next) -- full design at
+`docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md`, ratified as Option 1
+(delete `R/makePedigreeDiagramData.R:973-979`). Start from the design doc's own §5 Migration Path
+and §6.3 test inventory (at least 14 assertions across 4 test files need updating, not the 2 an
+unverified pass would find -- see the doc's own citation list). §5 step 3's live-render regression
+check is MANDATORY, not optional, matching every prior Track 7 session's own established bar. (2)
+**STANDING TOP PRIORITY banner** (`BACKLOG.md`, S643): still correctly stands -- issue #166's
+ratified design is itself new work under this exact banner, so S650's own gotcha about asking the
+owner whether the banner comes down is now moot (there is clearly more work) and does not need
+re-raising. (3) Pre-existing Housekeeping items, still untouched: the `__jog_*` waypoint
+invisible-styling bug (S648), the Track C table 3-vs-2 vermillion-edges discrepancy (S645),
+`lint.yaml` CI red for 4+ consecutive pushes now (S643+, confirmed still red on the latest push
+per this session's own Phase 0 `gh run list` check), Track 7 Phase 2's own 4-case
+union-vs-duplicate residual (S649) -- note this session's adversarial verification independently
+re-measured this residual as 4 (matching), and separately found it would shift to 3 (with 1 new,
+2 resolved) under issue #166's own ratified fix, so a future session implementing #166 should
+re-verify this count rather than assume S649's own 4 still applies post-fix. (4) `master` is now
+several commits ahead of `origin/master` (this session's own commits plus S650's, none pushed) --
+not pushed per the standing "commit/push only when asked" convention. (5)
+`HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap, unchanged this
+session -- `BACKLOG.md`'s "ledger-size housekeeping" item is still open. (6) This session's own
+2 background workflow runs (`wf_1a292f09-85e` research, `wf_8c20ad2a-500` adversarial verify) each
+wrote read-only investigation scripts under `/private/tmp/claude-501/.../scratchpad/` (a
+session-scoped scratchpad, not this repo's own `scratchpad/` directory) -- nothing touched the
+repo's tracked files except the design doc, `BACKLOG.md`, `CLAUDE.md`, `PROJECT_LEARNINGS.md`, and
+these session-notes files.
 
 ### Session 649 Handoff Evaluation (by Session 650)
 **Score: 8/10.** **What helped:** S649's own gotcha #3 ("The isolated-individual-suppression

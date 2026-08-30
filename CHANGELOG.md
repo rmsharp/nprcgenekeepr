@@ -16,6 +16,48 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-29 · [issue #166] S651: architecture design ratified (Option 1, scoped revert)
+- Design session for issue #166 (Track 7's qualifying-union recenter decouples a union's `x` from
+  its own children -- dogleg/off-center sibship-bar drop). Live-measured research (own script)
+  proved a "clamp toward children's mean" mitigation collapses to a binary choice, not a tunable
+  spectrum: `tier1X[[anchor]] == mean(tier1X[kids])` bit-exact for all 34 qualifying units on the
+  real 375-individual fixture. A 4-agent background research workflow read the Track 7 plan doc's
+  own rejected alternatives, diagnosed the 7 divergence outliers against Track 7 Phase 2's own
+  collision push, and read kinship2's `alignped4.R` source directly to confirm its straight-drop
+  guarantee comes from moving the child (structurally unavailable to this project's architecture,
+  per the already-closed issue #159). Drafted
+  `docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md` (3 options; Option 1
+  recommended: delete the recenter loop, keep the mate-widening change). A 3-agent adversarial
+  verification workflow then found and the document now discloses 3 real gaps: the anchor/
+  children-mean identity is `sweepMinSep()`-contingent, not an algorithmic guarantee (proven
+  fragile via a synthetic counter-example); new collision-safety data (0 new individual/union
+  collisions, a small disclosed union-vs-duplicate shift); the test-inventory undercounted by
+  3.5x (corrected to >=14 assertions across 4 files). **Owner ratified Option 1 via
+  `AskUserQuestion`.**
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · [issue #166] S651: `BACKLOG.md` updated with the ratified design
+- Issue #166's `BACKLOG.md` item updated with the ratified mechanism (delete
+  `R/makePedigreeDiagramData.R:973-979`), the disclosed trade-off (union dot reverts to sitting
+  on/near the anchor for the 34 affected units), the adversarially-verified collision-safety
+  data, and the corrected (>=14-assertion) test inventory. Marked READY for a future
+  implementation session (TDD RED->GREEN->REFACTOR).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · [ad hoc] S651: record Learnings 688/689, update `CLAUDE.md` learnings pointer
+- Recorded `PROJECT_LEARNINGS.md` Learning 688 (a `qualifies()`-gated anchor's Tier-1 `x` equals
+  its own union's children-mean, but only contingent on `sweepMinSep()` not engaging that row --
+  a real-fixture-true, not algorithm-guaranteed, invariant) and Learning 689 (a keyword-only test
+  inventory undercounts when shared logic is exercised through a reused helper across multiple
+  fixtures under differently-worded `test_that()` titles). `CLAUDE.md`'s learnings pointer updated
+  (687 -> 689 learnings).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · [BL-N] S651: close out (issue #166 design document, ratified and READY)
+- `HANDOFFS.md` receipt completed (`status: complete`, self-score 9/10, predecessor S650
+  evaluated at 7/10). `SESSION_NOTES.md` handoff notes/gotchas/self-assessment written.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · [ad hoc] pedigree-drawing fidelity audit (user-directed workflow, not a numbered session)
 - Ran a 10-agent audit workflow (5 dimensions, each independently re-verified by a second agent)
   against the standing top-priority pedigree-drawing thread. Live-reconfirmed structural fidelity

@@ -138,21 +138,60 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S651
 date: 2026-08-29
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Architecture/design document for issue #166 (Track 7 qualifying-union recenter
-  decouples a union's x from its own children -- dogleg/off-center sibship-bar drop),
-  ARCHITECTURE_WORKSTREAM.md. Planning session -- no implementation this session.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: DONE -- architecture design document for issue #166 (Track 7 qualifying-union
+  recenter decouples a union's x from its own children), ARCHITECTURE_WORKSTREAM.md. Design
+  RATIFIED by the owner (Option 1, scoped revert) via AskUserQuestion. Planning session -- no
+  implementation this session, per SESSION_RUNNER.md.
+what_was_done: Live-measured research (own script) proving a "clamp toward children's mean"
+  mitigation collapses to a binary choice, not a tunable spectrum (tier1X[[anchor]] ==
+  mean(tier1X[kids]) bit-exact for all 34 qualifying units on the real fixture). 4-agent
+  background research workflow (wf_1a292f09-85e): Track 7 plan doc's rejected alternatives,
+  collision-push diagnosis for the 7 divergence outliers, kinship2 alignped4.R source read,
+  initial consumer/test inventory. Drafted docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md
+  (3 options, Option 1 recommended). 3-agent adversarial-verification workflow
+  (wf_8c20ad2a-500) found and the document now discloses 3 real gaps: the anchor/children-mean
+  identity is sweepMinSep()-contingent, not an algorithmic guarantee (synthetic counter-example
+  proves it can break); new collision-safety data (0 new individual/union collisions, a small
+  disclosed union-vs-duplicate shift); the test-inventory undercounted by 3.5x (corrected to 14
+  assertions across 4 files). Owner ratified Option 1 via AskUserQuestion. BACKLOG.md's issue
+  #166 item updated with the ratified mechanism and corrected inventory, marked READY.
+  Learnings 688/689 recorded; CLAUDE.md learnings pointer updated (687->689).
+next_steps: Implement issue #166 per the ratified design (Option 1): delete the recenter loop
+  R/makePedigreeDiagramData.R:973-979 via full TDD RED->GREEN->REFACTOR. Start from the design
+  doc's own §5 Migration Path and §6.3 test inventory (>=14 assertions, not 2 -- see the doc's
+  own citation list: test_positionMatingUnitForest.R lines 73/227/425/931/1067/1148/1209/1426/
+  1919/2022, test_addRectilinearWaypoints.R:664, test_makePedigreeMatingLayout.R:593/1005,
+  test_resolveEdgeNodeCollisions.R:399). §5 step 3's live-render regression check is MANDATORY
+  (matching every prior Track 7 session's own bar), not optional.
+key_files: docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md (the full design
+  -- §2 decision space, §5 Migration Path, §6.3 test inventory), R/makePedigreeDiagramData.R:973-979
+  (the fix site), R/makePedigreeDiagramData.R:627-1123 (.positionMatingUnitForest(), full
+  context), BACKLOG.md (issue #166 item, updated with ratified mechanism).
+gotchas: STANDING TOP PRIORITY banner (BACKLOG.md, S643) correctly stays -- issue #166 is itself
+  new work under it, so S650's own "ask the owner whether it comes down" gotcha is now moot.
+  Track 7 Phase 2's own 4-case union-vs-duplicate residual (S649) will shift to 3 (1 new case,
+  2 resolved) once issue #166's fix ships -- re-verify live, don't assume S649's own count still
+  applies post-fix. lint.yaml CI still red (S643+, 4+ consecutive pushes now, confirmed via this
+  session's own Phase 0 gh run list check) -- pre-existing, unrelated, already tracked.
+runtime_smoke: n/a -- docs-only planning session, no runtime behavior changed (no R/ source
+  touched).
+changelog_ref: CHANGELOG.md 2026-08-29 S651 entries (see Phase 3F commit)
 commit: pending
 ```
-Phase 1B claim stub. Filled at close-out (Phase 3D).
+Design document written and ratified; implementation deferred to a future session per
+SESSION_RUNNER.md's Planning Sessions rule ("the plan is the deliverable, implementation is a
+separate session"). Self-score breakdown: +full research-before-drafting discipline, +read actual
+implementations (not descriptions) including kinship2's own source, +proactive adversarial
+self-verification with 3 real findings incorporated honestly rather than defended, +a genuinely
+non-obvious empirical insight (binary not tunable) that reframed the whole design, +zero
+stakeholder corrections; -2 sequential background workflows added round-trip latency (likely
+unavoidable given the second depended on the first's results plus a drafted document), -a
+substantial (~540-line) document that will take real time for an implementing session to absorb
+(judged proportionate to the problem's genuine complexity and the stakes of governing a future
+implementation, not padding).
 
 ```handoff
 session: S650
