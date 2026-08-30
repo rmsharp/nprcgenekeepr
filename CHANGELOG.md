@@ -16,6 +16,56 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [BL-dupIndividualProximity] S660: docs close-out -- BACKLOG.md DONE, NEWS.Rmd bullet, Learning 699, CLAUDE.md pointer
+- `BACKLOG.md`: marked the duplicate-vs-unrelated-individual proximity item `[x]` DONE with full
+  RED/GREEN detail (commit shas, measured pinned-value updates, chromote render check results).
+  `NEWS.Rmd`/`NEWS.md`: added a plain-language bullet describing the fix; regenerated via
+  `rmarkdown::render("NEWS.Rmd")` (no `output_format` override, per Learnings 510/517), clean
+  insertion-only diff confirmed. `PROJECT_LEARNINGS.md`: recorded Learning 699 (a near-miss-radius
+  defect's own live-reachability is coupled to which tier the colliding point is positioned at;
+  a `sweepMinSep()`-guaranteed Tier-1 point can never produce the near-miss a duplicate/B1 point
+  is vulnerable to, and a B1 point always brings its own mating unit into the same generation --
+  together making the design doc's own §6 disclosed edge case unconstructible below real-fixture
+  scale). `CLAUDE.md` learnings pointer updated 698->699. `SESSION_NOTES.md`: S659 handoff
+  evaluation (9/10) and full S660 handoff written. `HANDOFFS.md`: S660 receipt completed.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [BL-dupIndividualProximity] S660 GREEN: duplicate-vs-unrelated-individual proximity fix (Option B)
+- `R/makePedigreeDiagramData.R`: extended Track 7 Phase 4's post-hoc duplicate-side push loop
+  (`:1125-1179`) with a combined union+individual collision check per the ratified design
+  (`docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`, S658) -- new
+  `individualClearance=(25+25)/120` constant, a family-excluding forbidden-set from
+  `tier1X`/`tier3X[b1Ids]`, a `collidesUnrelatedIndividual()` closure OR'd into the existing check,
+  the early-exit guard widened to check both forbidden-set lengths. Resolves
+  `TTE0Z7`/`__dup_MY1AEU_2` and `M0YNUR`/`__dup_L31S6S_5` to exactly 50px apart (live chromote
+  render check, vis.js DOM ground truth). Updated 2 predicted pinned-count assertions
+  (`test_makePedigreeMatingLayout.R` 1456->1460/198->202, `test_resolveEdgeNodeCollisions.R`
+  98->100/1762->1766), both re-measured live, matching the design doc's own §5 prediction exactly.
+  Full clean regression: 1 failed (pre-existing unrelated `test_wordlist_coverage.R`)/0 error/6586
+  passed, 0 collateral. `lintr::lint_package()` 0 lints; `devtools::document()` 0 NAMESPACE/man
+  diffs. REFACTOR skipped (owner-directed via `AskUserQuestion`, matching S650/S652/S653/S655
+  precedent for this exact code shape). Commit `11649f6e`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [BL-dupIndividualProximity] S660 RED: duplicate-vs-unrelated-individual proximity fix tests
+- `tests/testthat/test_positionMatingUnitForest.R`: added 3 tests -- an aggregate near-miss count
+  on the real 375-individual fixture (0, currently 2), a dedicated case-reproduction test for the
+  2 named pairs, and a regression-safety test for the ratified design doc's own §6 disclosed
+  early-exit-guard edge case. Pre-RED re-derived the design doc's own §1.2/§1.3 measurement from
+  scratch against unmodified `HEAD` -- 0 drift since S658. Investigated at length (owner-directed
+  via `AskUserQuestion`, "keep investing") whether a small synthetic fixture could reproduce an
+  actual near-miss under the §6 edge case; found 2 independent structural reasons it cannot be
+  cheaply constructed (documented inline and in `PROJECT_LEARNINGS.md` Learning 699), and wrote a
+  regression-safety test on the "quiet generation" case instead. Confirmed genuinely failing: 4
+  failed (3 new intentional + 1 pre-existing baseline)/0 error/6583 passed, 0 collateral.
+  `lintr::lint_package()` 0 lints. Commit `58157458`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [ad hoc] S660: claim session (implement ratified duplicate-vs-individual proximity fix, Option B)
+- `SESSION_NOTES.md`/`HANDOFFS.md`: Phase 1B claim stub + `status: pending` receipt, written
+  immediately after the Phase 0 priorities pick, before any investigation began. Commit `c7702a01`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [ad hoc] S659: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S658 precedent)
 - This commit sets `HANDOFFS.md`'s S659 receipt `commit:` field from `pending` to `57d9fa61`
   (the deliverable commit), the same self-reference workaround this project's sessions have made

@@ -138,19 +138,54 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S660
 date: 2026-08-30
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Implement the ratified duplicate-vs-individual proximity fix (Option B,
   docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md, standing top priority) --
-  extend Track 7 Phase 4's post-hoc duplicate-side push loop with a combined union+individual
-  collision check.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  DONE, full TDD (RED/GREEN, REFACTOR skipped owner-directed).
+what_was_done: Extended Track 7 Phase 4's post-hoc duplicate-side push loop
+  (R/makePedigreeDiagramData.R:1125-1179) with a combined union+individual collision check: new
+  individualClearance=(25+25)/120 constant, a family-excluding forbidden-set (own mating unit's
+  sire/dam) from tier1X+tier3X[b1Ids] at the duplicate's gen, collidesUnrelatedIndividual() OR'd
+  into the existing check, :1131 early-exit guard widened to check both forbidden-set lengths.
+  Resolves TTE0Z7/__dup_MY1AEU_2 (0.099->50px) and M0YNUR/__dup_L31S6S_5 (0.100->50px). Pre-RED
+  re-derived the design doc's own measurement from scratch, confirming 0 drift since S658.
+  Investigated the design doc's own §6 disclosed edge case at length (~15 fixture-construction
+  rounds) and found 2 structural reasons a genuine forced near-miss cannot be cheaply
+  synthesized -- documented inline, wrote a regression-safety test instead. RED commit
+  58157458 (3 new tests, confirmed genuinely failing: 4 failed/0 error/6583 passed). GREEN
+  commit 11649f6e (implementation + 2 predicted pinned-count updates re-measured live:
+  test_makePedigreeMatingLayout.R 1456->1460/198->202, test_resolveEdgeNodeCollisions.R
+  98->100/1762->1766; full clean regression 1 failed [pre-existing]/0 error/6586 passed, 0
+  collateral). Mandatory live chromote render check: both pairs render exactly 50px apart,
+  0 NA, 102/102 duplicate nodes. lintr::lint_package() 0 lints on all 4 touched files;
+  devtools::document() 0 NAMESPACE/man diffs.
+next_steps: BACKLOG.md's remaining pedigree-fidelity items in priority order -- (1) the 4
+  B1-individual-vs-unrelated-individual proximity near-misses (READY tag but needs its own
+  design pass first, Effort M, found S658 -- same root cause, different call site
+  R/makePedigreeDiagramData.R:958-960, larger effort since b1Ids is heavily tuned with ~20
+  hardcoded assertions); (2) the ScheduleWakeup/run_in_background structural-guard
+  investigation (READY, Effort S-M, Learning 694/695); (3) scope the pedigree-diagram package-
+  extraction research session (READY, Effort M, research-only, owner-directed 2026-08-19).
+key_files: R/makePedigreeDiagramData.R:996-1002,1125-1179; test_positionMatingUnitForest.R (3
+  new tests + §6 investigation documentation); test_makePedigreeMatingLayout.R:651-666;
+  test_resolveEdgeNodeCollisions.R:478-488; BACKLOG.md; NEWS.Rmd; PROJECT_LEARNINGS.md;
+  docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md.
+gotchas: (1) the §6 disclosed edge case remains untested by a genuine forced near-miss -- only
+  a regression-safety check on the "nothing nearby" case; test_positionMatingUnitForest.R's own
+  header comment (this session) explains why a small fixture cannot reach it (a B1 individual
+  always brings her own union; a genuine Tier-1 individual is sweepMinSep()-guaranteed >=0.6
+  away). (2) STANDING TOP PRIORITY banner still applies -- next pickup (item 1 above) needs its
+  own design session first. (3) master unpushed by a growing margin -- lint.yaml stays red on
+  pushed runs until that push happens.
+runtime_smoke: Live chromote render check via getLiveRenderedPositions() against the real
+  375-individual fixture, exercising the SAME visNetwork()/R/modPedigree.R:611-614 call path the
+  Shiny app itself uses -- both named pairs render exactly 50px apart in the DOM (vis.js ground
+  truth), 0 NA positions, 102/102 duplicate nodes present. No separate shinytest2/app-launch pass
+  additionally run.
+changelog_ref: see CHANGELOG.md's 2026-08-30 S660 entries (claim/RED/GREEN/close-out), tagged
+  [BL-dupIndividualProximity].
 commit: pending
 ```
 <claim-time stub -- overwritten at Phase 3D close-out>

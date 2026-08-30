@@ -18,19 +18,161 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 659 Handoff Evaluation (by Session 660)
+**Score: 9/10.** **What helped:** S659's `next_steps`/`HANDOFFS.md` receipt named the exact
+standing-top-priority pickup ("implement the ratified duplicate-vs-individual proximity fix,
+Option B") with the correct design-doc path, matching exactly what this session picked (owner's own
+choice via the Phase 0 `AskUserQuestion`) -- no independent re-derivation needed to find the next
+task. The unpushed-commits/`lint.yaml`-still-red gotcha was accurate and prevented misreading `gh
+run list`'s red `lint.yaml` runs as a new break. **What was missing:** nothing that mattered for
+this session's own pick -- S659's own deliverable (the `NEWS.Rmd` stale-bullet fix) was unrelated to
+this item, so it had no occasion to investigate the design doc's own content; the design doc itself
+(written S658, not S659) was complete and load-bearing on its own. **What was wrong:** nothing --
+S659's own claims (bullet removal, root-cause trace, test re-run) all checked out against `NEWS.Rmd`/
+`git log` content actually read this session, though this session did not need to re-verify them
+directly since they were outside its own scope. **ROI:** positive -- accurate priorities list and
+next-step pointer at Phase 0, zero wasted time relocating the design doc or re-deriving scope.
+
 ### What Session 660 Did
 **Deliverable:** Implement the ratified duplicate-vs-individual proximity fix (Option B,
 `docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`, design ratified S658,
 standing top priority) -- extend Track 7 Phase 4's post-hoc duplicate-side push loop
 (`R/makePedigreeDiagramData.R:1125-1160`) with a combined union+individual collision check,
 resolving the 2 confirmed duplicate-vs-unrelated-individual near-misses (`TTE0Z7`/`__dup_MY1AEU_2`,
-`M0YNUR`/`__dup_L31S6S_5`). (IN PROGRESS)
-**Started:** 2026-08-30.
-**Status:** Session claimed. Work beginning -- pre-RED empirical re-validation of the design doc's
-§1.2/§1.3 measurements against current `HEAD` next, per the design doc's own §7 Verification Plan.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`M0YNUR`/`__dup_L31S6S_5`). **DONE**, full TDD (RED/GREEN, REFACTOR skipped owner-directed).
+**Started/Completed:** 2026-08-30 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0:** full orientation (`SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+   `SESSION_NOTES.md`/`HANDOFFS.md`/`CHANGELOG.md` reconciled -- 0 undocumented commits, both
+   frontiers equal `HEAD`). `gh issue list`: 11 open, none newly filed. `gh run list`: `lint.yaml`
+   red on the last 2 pushed runs (already-known, expected -- unpushed local fix, not a new break);
+   all other workflows green. `methodology_dashboard.py`: 96/100 health, 1 HIGH-risk (unchanged,
+   file-size). 7 untracked files unchanged from S659's own characterization (render byproducts,
+   scratchpad, stray lock file) -- no ghost-session signal. Rendered a 4-option priorities
+   `AskUserQuestion` from `BACKLOG.md`'s remaining READY pedigree-fidelity items -- **owner picked
+   the duplicate-vs-individual proximity fix** (standing top priority).
+2. **Phase 1B claim** (commit `c7702a01`) -- stub in `SESSION_NOTES.md` + `status: pending`
+   `HANDOFFS.md` receipt, written before any investigation began.
+3. **Pre-RED (`AskUserQuestion` "PRE-RED->RED"):** re-derived the design doc's own §1.2/§1.3
+   measurement from scratch against unmodified `HEAD` (nothing in `R/` had changed since S658 --
+   S659 was docs-only): the exact same 6 genuine `UNRELATED` same-generation individual-pairs
+   survive full relationship classification, confirming the ratified design had not drifted.
+   Incidentally found (not new, out of scope): 15 EXACT-tie (`dist < 1e-9`) pairs traced to
+   `.deCollideIndividualPoints()`'s own already-disclosed `.kMaxIndividualPush` cap-exhaustion
+   fallback (`:912-914`) -- a different, pre-existing residual, explicitly excluded from this
+   session's own counting method.
+4. **RED** (commit `58157458`): added 3 tests to `test_positionMatingUnitForest.R` -- an aggregate
+   near-miss count (0, currently 2), a dedicated case-reproduction test for the 2 named pairs, and a
+   regression-safety test for the design doc's own §6 disclosed early-exit-guard edge case.
+   **Investigated at length (mid-session `AskUserQuestion`, user chose "keep investing" after an
+   initial infeasibility report) whether a small synthetic fixture could reproduce an ACTUAL
+   near-miss under the §6 edge case** (a duplicate's generation with zero OTHER mating units, yet a
+   nearby unrelated individual) -- found, by ~15 rounds of direct construction/measurement (not
+   guessed), two independent structural reasons this cannot be cheaply constructed: (a) any B1/
+   free-pass individual close enough to matter necessarily brings her OWN mating unit into the same
+   generation (structurally contradicting "no other units"); (b) a genuine Tier-1 individual is
+   separately guaranteed by `sweepMinSep()`'s own per-generation backstop to be >= `minSep=1` from
+   every OTHER genuine Tier-1 individual, so an unrelated one can get no closer than `minSep-0.4 =
+   0.6` to a nearby duplicate in any hand-buildable fixture -- confirmed live that both of the real
+   fixture's own 2 named cases sit in generations with 40+ other mating units already present, so
+   the widened guard is never actually hit by either of them either (a purely defensive completeness
+   path, exactly as the design doc's own §6 disclosed). Wrote the 3rd test as a regression-safety
+   check on the one case that IS cheaply constructible instead (a "quiet generation," zero other
+   units AND zero nearby individuals, confirming the widened guard's own logic doesn't regress the
+   common case), documenting the investigation's conclusion inline. Full clean regression: 4 failed
+   (3 new intentional + 1 pre-existing `test_wordlist_coverage.R` baseline), 0 error, 6583 passed, 0
+   collateral. `lintr::lint_package()` 0 lints.
+5. **GREEN** (commit `11649f6e`): implemented Option B exactly per design doc §2 -- new
+   `individualClearance = (25+25)/120` constant, a family-excluding forbidden-set (own mating unit's
+   sire/dam) built from `tier1X`/`tier3X[b1Ids]` at the duplicate's own gen, a
+   `collidesUnrelatedIndividual()` closure OR'd into the existing check, and the `:1131` early-exit
+   guard widened to check both forbidden-set lengths. Search step size/cap unchanged (reuses
+   `unionClearanceIndividual`/`.kMaxUnionPush` exactly). Full clean regression confirmed 5 failed (2
+   PREDICTED pinned-count updates, matching design doc §5 exactly -- `test_makePedigreeMatingLayout.R`
+   1456->1460/198->202, `test_resolveEdgeNodeCollisions.R` 98->100/1762->1766, both from the 2 moved
+   duplicates' new same-row collisions -- + 1 pre-existing baseline); updated both pinned tests to
+   their re-measured (never hand-derived) values, re-ran to confirm 1 failed/0 error/6586 passed, 0
+   collateral. `test_positionMatingUnitForest.R:1284`'s Phase-4 residual count (`0L`) confirmed
+   unchanged as predicted; `.resolveEdgeNodeCollisions()`'s own residual count also unchanged at 47
+   rows (pre-existing `curved-heuristic` class), 0 new residual of any kind. **Mandatory live
+   chromote render check** (vis.js DOM ground truth via `getLiveRenderedPositions()`, not R-side math
+   alone): both named pairs render exactly 50px apart (2x25px node radius), 0 NA positions, 102/102
+   duplicate nodes present -- this exercises the SAME `visNetwork()` call the app itself makes
+   (`R/modPedigree.R:611-614`), satisfying Phase 3E's runtime smoke test. `lintr::lint_package()` 0
+   lints on all 4 touched files; `devtools::document()` 0 NAMESPACE/man diffs (internal `@noRd`
+   function).
+6. **REFACTOR skipped** (owner-directed via `AskUserQuestion`): the new code mirrors Track 7 Phase
+   4's existing post-hoc push structure exactly, no behavior-neutral restructuring identified,
+   matching S650/S652/S653/S655's own established precedent.
+7. **Close-out:** `BACKLOG.md`'s duplicate-vs-individual item marked `[x]` DONE with full
+   implementation detail (commit shas, measured values). `NEWS.Rmd` plain-language bullet added.
+   `PROJECT_LEARNINGS.md` new learning (the §6 guard-widening infeasibility finding -- a
+   near-miss-radius defect's own reachability is coupled to the tier a colliding point is positioned
+   at, and to fixture scale). `CLAUDE.md` learnings pointer updated. `CHANGELOG.md`: entries for
+   claim/RED/GREEN/close-out.
+
+**Runtime smoke test (Phase 3E):** satisfied by the mandatory live chromote render check above (GREEN
+step 5) -- it renders through the exact same `visNetwork()`/`R/modPedigree.R:611-614` call path the
+Shiny app itself uses, on the real 375-individual bundled fixture, and reads back vis.js's own live
+DOM positions (not R-side math). No separate `shinytest2`/`/run` pass was additionally run.
+
+**Self-assessment (Session 660): 9/10.** **Strengths:** (1) re-derived the design doc's own
+measurement from scratch at Pre-RED rather than trusting its numbers, confirming zero drift since
+S658; (2) positively investigated (not assumed) the design doc's own §6 disclosed edge case, finding
+and documenting TWO independent structural reasons it cannot be cheaply reproduced, rather than
+either faking a misleading test or silently skipping the requirement; (3) surfaced the mid-investigation
+difficulty to the owner via `AskUserQuestion` rather than either burning unbounded budget or
+unilaterally dropping scope; (4) confirmed the design doc's own predicted pinned-test updates by
+actually re-running the fixed engine, never hand-derived, matching this project's own "never
+hand-derived" convention throughout; (5) ran the mandatory live chromote render check against the
+exact app render path, not just R-side math; (6) checked residual counts (`.resolveEdgeNodeCollisions()`
+= 47, unchanged) to confirm 0 new residual class, not just 0 failures. **Weaknesses:** (1) the §6
+edge-case investigation consumed a large fraction of session effort (~15 rounds of fixture
+construction) before settling on the regression-safety-test alternative -- a faster path might have
+been to attempt the white-box/regression-safety framing FIRST, before exhausting synthetic-fixture
+construction attempts, though the investigation itself produced a genuinely valuable, previously-
+undocumented structural finding (recorded as a `PROJECT_LEARNINGS.md` learning) that would not have
+surfaced otherwise; (2) did not additionally run a `shinytest2`-driven Shiny app smoke test beyond
+the chromote render check (judged sufficient since it exercises the identical render call, but a
+narrower verification than launching the full app). **ROI:** high -- the fix landed exactly as
+designed with 0 unpredicted side effects beyond the design doc's own explicit predictions, and the
+§6 investigation's structural finding is reusable for any FUTURE near-miss-radius fix this project
+adds to the pedigree-diagram engine (documents which tier a "nearby" point must be positioned at for
+a given edge case to be live-reachable at all).
+
+**Next steps:** `BACKLOG.md`'s remaining pedigree-fidelity items, in priority order: (1) the 4
+B1-individual-vs-unrelated-individual proximity near-misses (READY tag, but needs its own dedicated
+design pass first, Effort M, found S658 -- same root cause as this session's own fix, different call
+site `b1Ids`/`R/makePedigreeDiagramData.R:958-960`, materially larger effort since `b1Ids` is
+heavily tuned with ~20 hardcoded position assertions); (2) the `ScheduleWakeup`/`run_in_background`
+structural-guard investigation (READY, Effort S-M, found S656, Learning 694/695 -- 3 consecutive
+sessions made this mistake despite prose warnings; this session avoided it by explicitly deferring
+`ScheduleWakeup` while background regression/chromote tasks were outstanding, using `Monitor`/
+`run_in_background` instead); (3) scope the pedigree-diagram-drawing package-extraction research
+session (READY, Effort M, research/scoping only, owner-directed 2026-08-19). Unchanged gotchas: the
+stray LibreOffice lock file (`inst/extdata/reference/~$e Compounding Loop.html`) is still present;
+`HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap; `master` is further
+ahead of `origin/master`, unpushed; `lint.yaml` stays red on pushed runs until that push happens.
+
+**Key files:** `R/makePedigreeDiagramData.R:996-1002,1125-1179` (the new `individualClearance`
+constant and the widened Phase 4 post-hoc duplicate loop); `tests/testthat/test_positionMatingUnitForest.R`
+(3 new tests + the §6 investigation's own documentation comment); `tests/testthat/test_makePedigreeMatingLayout.R:651-666`,
+`tests/testthat/test_resolveEdgeNodeCollisions.R:478-488` (pinned-count updates); `BACKLOG.md`
+(item marked DONE); `NEWS.Rmd`; `PROJECT_LEARNINGS.md` (new learning); `docs/planning/
+pedigree-diagram-duplicate-individual-proximity-plan.md` (the ratified design this session
+implemented).
+
+**Gotchas for a future session:** (1) the §6 disclosed edge case (empty-`unrelatedUnionsAtGen`-but-
+nearby-individual) remains untested by a genuine forced near-miss -- only by a regression-safety
+check on the "nothing nearby" case; if a future session ever needs to actually exercise that exact
+code path, the structural findings in `test_positionMatingUnitForest.R`'s own header comment (this
+session) explain why it requires either a B1 individual (which always brings her own union, defeating
+the premise) or real-fixture-scale crowding, not a small hand-built fixture. (2) STANDING TOP
+PRIORITY banner still applies (pedigree-diagram fidelity, owner directive 2026-08-26) -- item (1) in
+Next Steps above is the next standing-priority pickup, though it needs its own design session first
+(same class as this session's own predecessor design work, S658). (3) `master` is unpushed by a
+growing margin -- consider pushing before it accumulates further.
 
 ### Session 658 Handoff Evaluation (by Session 659)
 **Score: 9/10.** **What helped:** S658's gotchas/next-steps named the exact remaining

@@ -674,7 +674,7 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       identified, matching S650/S652/S653's own precedent. `NEWS.Rmd` updated with this fix's own
       plain-language bullet AND S649's own still-missing Phase 2 bullet (see the Housekeeping item
       below), in shipping order; `NEWS.md` regenerated. See `CHANGELOG.md`.
-- [ ] **Duplicate-vs-unrelated-individual proximity near-misses on the real 375-individual
+- [x] **Duplicate-vs-unrelated-individual proximity near-misses on the real 375-individual
       fixture, unrelated to and unaffected by Track 7 Phase 2/4** (found incidentally S654,
       2026-08-30, while empirically grounding the Track 7 Phase 4 design above; **design session
       S658, 2026-08-30, materially corrected the count -- see below**) --
@@ -706,11 +706,10 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       B1-vs-individual defect class filed as its own item below, not fixed by this item's own
       design.**
       **Design RATIFIED S658, Effort M (via `AskUserQuestion`, "Yes, ratify Option B as
-      scoped"), implementation READY, next pickup (standing pedigree-fidelity directive).** Full
-      design:
+      scoped"). Implementation DONE S660 (2026-08-30), full TDD.** Full design:
       [`docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`](docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md).
-      **Ratified mechanism (Option B):** extend Track 7 Phase 4's existing post-hoc duplicate-side
-      push loop (`R/makePedigreeDiagramData.R:1125-1160`) with a combined union+individual
+      **Ratified mechanism (Option B):** extended Track 7 Phase 4's existing post-hoc duplicate-side
+      push loop (`R/makePedigreeDiagramData.R:1125-1179`) with a combined union+individual
       collision check (one new constant, one new family-excluding forbidden-set variable, one new
       closure, one `||`), rather than widening `.deCollideIndividualPoints()`'s own shared
       threshold (measured and rejected: doing so with no family exclusion would newly collide 90
@@ -720,6 +719,40 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       simulation. Measured blast radius: exactly 2 of 102 duplicates move, one clean push-step
       each. Full detail, all measurements and the adversarial-verification record: design doc
       §1-§5.
+      **Pre-RED (S660):** re-derived the design doc's own §1.2/§1.3 measurement from scratch
+      against unmodified `HEAD` -- 0 drift since S658, the same 6 genuine `UNRELATED` pairs
+      survive relationship exclusion. **RED** (`58157458`): 3 new tests in
+      `test_positionMatingUnitForest.R` -- an aggregate near-miss count, a dedicated
+      case-reproduction test for the 2 named pairs, and a regression-safety test for the design
+      doc's own §6 disclosed early-exit-guard edge case. **Investigated at length whether a small
+      synthetic fixture could reproduce an ACTUAL near-miss under the §6 edge case (a duplicate's
+      generation with zero OTHER mating units, yet a nearby unrelated individual) -- found two
+      independent structural reasons this cannot be cheaply constructed:** (a) any B1/free-pass
+      individual close enough to matter necessarily brings her OWN mating unit into the same
+      generation, contradicting "no other units" by construction; (b) a genuine Tier-1 individual
+      is separately guaranteed by `sweepMinSep()`'s own per-generation backstop to be `>= minSep=1`
+      from every other genuine Tier-1 individual, so an unrelated one can get no closer than
+      `minSep-0.4=0.6` to a nearby duplicate in any hand-buildable fixture. Confirmed live that
+      both of the real fixture's own 2 named cases sit in generations with 40+ other mating units
+      already present, so the widened guard is never actually hit by either of them either --
+      purely defensive, exactly as design doc §6 disclosed. Wrote the 3rd test as a
+      regression-safety check on the "quiet generation" case instead (documented inline). Confirmed
+      genuinely failing: 4 failed (3 new + 1 pre-existing baseline)/0 error/6583 passed. **GREEN**
+      (`11649f6e`): implemented Option B exactly per design doc §2. Confirmed 2 PREDICTED pinned-
+      count updates (design doc §5, re-measured live): `test_makePedigreeMatingLayout.R`
+      1456->1460 nodes/198->202 `__jog_` waypoints; `test_resolveEdgeNodeCollisions.R`
+      98->100 colliding edges/1762->1766 obstacle-pairs -- both from the 2 moved duplicates'
+      new same-row collisions the existing jog-repair mechanism resolves. Full clean regression
+      1 failed (pre-existing)/0 error/6586 passed, 0 collateral; `.resolveEdgeNodeCollisions()`'s
+      own residual count unchanged at 47 rows (pre-existing `curved-heuristic` class), 0 new
+      residual of any kind; `lintr::lint_package()` 0 lints on all 4 touched files;
+      `devtools::document()` 0 NAMESPACE/man diffs. **Mandatory live chromote render check**
+      (vis.js DOM ground truth via `getLiveRenderedPositions()`, the same `visNetwork()` call the
+      app itself makes): both named pairs render exactly 50px apart (2x25px node radius), 0 NA
+      positions, 102/102 duplicate nodes present. REFACTOR skipped (owner-directed via
+      `AskUserQuestion`): the new code mirrors Track 7 Phase 4's existing post-hoc push structure
+      exactly, no behavior-neutral restructuring identified, matching S650/S652/S653/S655's own
+      precedent. `NEWS.Rmd` updated with a plain-language bullet. See `CHANGELOG.md`.
 - [ ] **4 B1-individual-vs-unrelated-individual proximity near-misses on the real 375-individual
       fixture, no duplicate involved -- same root cause as the item above (`.deCollideIndividualPoints()`'s
       exact-tie-only guard) but a different, unaddressed call site** (found S658, 2026-08-30,
