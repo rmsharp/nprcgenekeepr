@@ -172,6 +172,295 @@ This file currently holds **19** receipt(s). Computed by
 hand-maintained.
 
 ``` handoff
+session: S650
+date: 2026-08-29
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- Phase 3 (Shiny UX messaging) of the isolated-individual-suppression plan
+  implemented and shipped. All 3 phases of that BACKLOG item now DONE. output$pedigreeDiagramUI
+  (R/modPedigree.R) reads diagramLayout()$isolatedIds and shows an alert-info banner (partial
+  suppression) or an alert-info empty-state message (singular/plural, all-isolated) in place of
+  the widget. Full clean regression 0 failed/0 error attributable (1 pre-existing unrelated
+  test_wordlist_coverage.R failure only); live e2e suite 0 failed/55 passed.
+what_was_done: RED (36309f55): 12 new test assertions (3 test_modPedigree.R + 1
+  test-e2e-pedigree-module.R) specifying the plan's worked copy. GREEN (61e885d0): implemented
+  the branching; found and fixed 3 pre-existing node-cap-boundary tests whose all-founder
+  fixtures were incidentally fully isolated by Phase 1's own already-shipped suppression.
+  Phase 3E (6336dabd): live AppDriver run initially came back completely empty; diagnosed to a
+  test-fixture bug (write.csv(na = "") round-trips NA as "", qcStudbook() rejects it), fixed,
+  confirmed live. NEWS.Rmd entry (f7ea096a). BACKLOG.md item marked DONE + new Housekeeping item
+  filed for S649's own missing NEWS.Rmd entry (c447df5d). Learnings 686/687 (ae04c3f2).
+next_steps: Ask the owner whether the STANDING TOP PRIORITY pedigree-fidelity banner
+  (BACKLOG.md, S643) comes down now that all 3 phases of isolated-individual-suppression AND
+  both phases of Track 7 mating-unit-marker are DONE (do not remove it unilaterally). Otherwise
+  pick from BACKLOG.md Housekeeping: lint.yaml CI red (3+ consecutive pushes, READY, Effort S),
+  __jog_* waypoint invisible-styling bug (S648, READY, Effort S), Track C table 3-vs-2
+  vermillion-edges discrepancy (S645, READY, Effort S), S649's missing NEWS.Rmd entry (this
+  session, READY, Effort S), or Track 7 Phase 2's own 4-case union-vs-duplicate residual (S649,
+  READY, Effort M).
+key_files: R/modPedigree.R:516-577 (output$pedigreeDiagramUI, the new isolation-messaging
+  branches); tests/testthat/test_modPedigree.R:2198-2367 (4 new test_that blocks),
+  :1524-1531/1613-1621/1909-1917 (the 3 fixed cap-boundary fixtures);
+  tests/testthat/test-e2e-pedigree-module.R:806-877 (new e2e test);
+  docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md Sec 3 Dragon 4 / Sec 4
+  Phase 3 (the spec, now fully shipped).
+gotchas: master is 32 commits ahead of origin/master, unpushed (22 pre-existing + 10 this
+  session) -- not pushed per the standing commit/push-only-when-asked convention. lint.yaml CI is
+  still red on the last PUSHED commit (S646) and this session's own work has not been through CI
+  at all yet. HANDOFFS.md/SESSION_NOTES.md/CHANGELOG.md remain past the FM #28 size cap,
+  unchanged this session.
+runtime_smoke: PASS -- live shinytest2::AppDriver run (NPRC_RUN_E2E=true) of the full
+  test-e2e-pedigree-module.R suite: 0 failed/0 error/55 passed, including the new
+  partial-suppression banner and singular empty-state message tests, confirmed rendering through
+  a real upload -> QC -> focal-trim -> re-render round-trip.
+changelog_ref: 36309f55..35654363 (11 commits, see CHANGELOG.md's 6 S650 entries)
+commit: 35654363
+```
+
+``` handoff
+session: S649
+date: 2026-08-29
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- Track 7 Phase 2 (union-dot proximity fix, Option A) implemented and shipped
+  (plan §12.2, ratified S648). Full clean regression 0 failed/0 error attributable (1
+  pre-existing unrelated test_wordlist_coverage.R failure only); lintr 0 lints; visual
+  re-verification done. BACKLOG.md Track 7 mating-unit-marker item marked DONE.
+what_was_done: RED (commit d8645207): 11 test assertions across 4 files specifying plan §12.2's
+  capped bidirectional push. Pre-RED spike found and disclosed a real gap in plan §12.1's own "0
+  new collisions" claim (union-vs-duplicate proximity) -- owner-directed to ship as scoped, file
+  the residual. GREEN (commit 316b605f): implemented the push; found and fixed 2 real bugs
+  during GREEN (a union's own gen can coincide with its own anchor's gen -- the push must
+  exclude anchor/non-anchor from its occupied-set; that exclusion must NOT also apply to the
+  pre-existing epsilon-tie residual pass, or it silently disables an old protection). Corrected
+  plan §12.1/§12.11 and BACKLOG.md to the real GREEN numbers (commit e312774f). Regenerated and
+  ground-truth-verified trackB-nprc-shrunk.png (commit 168ae52a). Recorded Learnings 684/685
+  (commit 65d9f0c4). BACKLOG.md Track 7 item marked DONE (commit 58e74aca).
+next_steps: Pick up the OTHER pedigree-fidelity item under the standing top-priority banner:
+  isolated-individual-suppression Phase 3 (Shiny UX messaging -- banner for partial suppression,
+  empty-state message for all-isolated pedigrees, e2e coverage including the
+  Focal-Animal-trim-to-one-isolated scenario), plan's own §3 Dragon 4 / §4 Phase 3
+  (docs/planning/pedigree-diagram-isolated-individual-suppression-plan.md). Separately, the owner
+  should be asked whether the standing pedigree-drawing-fidelity BACKLOG.md banner can come down
+  now that both major threads (isolation-suppression, mating-unit-marker) have their core
+  mechanisms shipped, or whether Phase 3 above keeps it standing.
+key_files: R/makePedigreeDiagramData.R:981-1057 (the new union-position push, replacing the old
+  exact-tie epsilon nudge at :981-1001), tests/testthat/test_positionMatingUnitForest.R (new
+  "Track 7 Phase 2" test section + 2 checkInvariant-style tolerance updates),
+  tests/testthat/test_makePedigreeMatingLayout.R / test_resolveEdgeNodeCollisions.R /
+  test_addRectilinearWaypoints.R (downstream pinned-count updates),
+  docs/planning/pedigree-diagram-track7-mate-spacing-plan.md §12.11 (implementation findings),
+  BACKLOG.md (new Housekeeping item for the disclosed 4-case duplicate residual),
+  PROJECT_LEARNINGS.md Learnings 684 (anchor-exclusion gap) and 685 (exclusion-scoping follow-up).
+gotchas: (1) The 4-case union-vs-duplicate residual is a genuinely different, harder problem than
+  Phase 2's own scope (a real ordering/data-dependency constraint, not a quick tweak) -- see the
+  new BACKLOG Housekeeping item before attempting a fix. (2) The __jog_* waypoint styling bug
+  (BACKLOG.md Housekeeping, S648) remains open and UNRELATED to this session -- don't mistake a
+  phantom circle for a Phase-2 regression. (3) When grounding RED-phase test literals via a
+  temporary spike, run the FULL test suite against the spike (not just the 2-3 grounding
+  fixtures) before trusting its numbers -- this session's own spike missed the anchor-exclusion
+  gap entirely because it was only checked against the real-375 and shrunk-Track-B fixtures.
+runtime_smoke: Not a live Shiny app launch, but the actual rendering pathway
+  makePedigreeMatingLayout() -> visNetwork() was exercised directly and repeatedly via chromote
+  (the full test suite's own live-render checks, plus a dedicated Track B regeneration and a
+  ground-truth-verifying diagnostic render) -- substantively satisfies Phase 3E, matching S647's
+  own established precedent for this same rendering pathway.
+changelog_ref: see CHANGELOG.md 2026-08-29 entries, S649
+commit: a7fdb0c3
+```
+
+\<free-text prose: 8/10. Strengths: treated the RED-phase spike’s own
+contradictory finding (plan §12.1’s “0 new collisions” claim not holding
+for duplicates) as a real, escalation-worthy result rather than
+absorbing or ignoring it; when GREEN surfaced 332 spurious test
+failures, traced to the exact structural cause via concrete before/after
+comparison rather than guessing, then found a second, subtler bug (the
+epsilon-pass over-exclusion) the same disciplined way; corrected the
+plan document and BACKLOG.md to the real GREEN numbers rather than
+leaving superseded spike numbers standing; used a ground-truth-first,
+diagnostic-render verification method proactively (applying Learning
+683’s own lesson before iterating on a wrong visual impression, not
+after). Weaknesses: the RED-phase spike did not anticipate the
+anchor-exclusion gap at all – closer reading of the union sweep’s own
+existing code (which already reads tier1X/other units) against
+.buildMatingUnitForest()’s documented anchor/non-anchor contract might
+have caught this before writing any code; initially wrote RED-phase
+pinned values from the pre-fix spike without flagging them as
+provisional, requiring a second editing pass once GREEN’s real numbers
+came in.
+
+``` handoff
+session: S648
+date: 2026-08-28
+status: complete
+self_score: 6
+predecessor_score: 8
+active_task: DONE -- Track 7 Phase 2 (union-dot proximity) design RATIFIED (Option A,
+  radius-proportionate capped push, union side only). Implementation is a separate future
+  session -- see plan doc S12.2/S12.6 and BACKLOG.md (READY, top priority, next pickup).
+what_was_done: Pre-RED measurement (real 375-fixture: 20/237 unions collide post-Track-7-Phase-1
+  vs 1/237 before, i.e. Phase 1 itself caused 19 of 20; shrunk Track B fixture, corrected
+  methodology: 3/3 collide vs 0/3 before). Drafted plan S12 (decision/alternatives/impact/
+  verification), independently re-verified by a 3-agent adversarial workflow (all claims
+  CONFIRMED, 2 minor prose nuances fixed). Built and iterated visual spike evidence (multiple
+  corrected rounds -- auto-fit-zoom mismatch, moveTo() race, wrong/unfamiliar fixture choice, an
+  invalid isolation-filter-bypassed measurement -- each found and fixed in turn). Found and filed
+  (not fixed) an unrelated, pre-existing rendering defect: .addRectilinearWaypoints()'s __jog_*
+  waypoint nodes render as a full-size filled default circle instead of invisible
+  (BACKLOG.md Housekeeping). Ratified Option A via AskUserQuestion (plan S12.10). Recorded
+  PROJECT_LEARNINGS.md Learnings 682/683. Commits: 95eedad4 (claim), adff7e0c (design draft
+  checkpoint), bb3c7e4b (jog-bug filing + spike-evidence correction checkpoint), this commit
+  (close-out).
+next_steps: Implement Track 7 Phase 2 following plan S12.2 (decision), S12.5 (impact analysis),
+  S12.6 (verification plan -- MANDATORY live-render D1 sibship-bar regression check, not
+  optional). Start with S12.6's own Pre-RED re-validation (re-run the collision measurement live
+  against the implementing session's own working tree, don't assume S648's numbers are still
+  current). Full TDD RED/GREEN/REFACTOR per this project's Development Process Contract.
+key_files: R/makePedigreeDiagramData.R:981-1001 (union-position sweep to be replaced),
+  R/makePedigreeDiagramData.R:866-940 (.deCollideIndividualPoints(), the individual-side pattern
+  Phase 1 used, NOT to be reused verbatim -- see plan S12.3), R/makePedigreeDiagramData.R:1642-1649
+  (__drop_ waypoint construction, the D1 bar-span dependency), R/makePedigreeDiagramData.R:2081-2127
+  (the separately-filed __jog_* styling bug), docs/planning/pedigree-diagram-track7-mate-spacing-plan.md
+  S12 (the full ratified design), PROJECT_LEARNINGS.md Learnings 682 (isolation-filter
+  wrapper-bypass gap) and 683 (ground-truth-first rendering diagnosis).
+gotchas: (1) Phase 2 implementation is ratified, not open for re-litigation -- but still re-verify
+  S12.1's numbers live before implementing, the codebase may have drifted. (2) The live-render D1
+  regression check (S12.6) is mandatory despite Phase 2's smaller magnitude than Phase 1's own fix
+  -- a moved union's __drop_ waypoint genuinely reshapes its own sibship-bar span (confirmed by
+  reading source). (3) The __jog_* waypoint bug (BACKLOG.md Housekeeping) is UNRELATED to Track 7
+  but shares the same rendering pipeline -- don't mistake it for a Phase-2-introduced regression
+  during visual re-verification. (4) For any future visual comparison in this codebase: lock
+  network.moveTo({scale, position}) explicitly (visNetwork's auto-fit scales different-extent
+  layouts differently), verify twice (post-settle-delay AND immediately pre-screenshot -- moveTo()'s
+  internal state updates before the canvas actually repaints), and reach for the project's own
+  already-published Track B/real-fixture data first. (5) HANDOFFS.md/SESSION_NOTES.md/CHANGELOG.md
+  remain past the FM #28 size cap, unchanged this session.
+runtime_smoke: n/a -- docs-only session (a design document + a BACKLOG.md filing); no R/ source
+  file was committed changed (2 temporary spike patches to R/makePedigreeDiagramData.R were
+  applied and reverted for visual-comparison rendering only, confirmed byte-identical to HEAD via
+  git diff/git status/shasum after each; nothing from those patches is part of this session's
+  actual deliverable or commits).
+changelog_ref: see CHANGELOG.md 2026-08-28 entries, S648
+commit: c1ba804a
+```
+
+\<free-text prose: 6/10. Strengths: the core Pre-RED measurement and
+design work (plan S12.1-S12.8) was rigorous, independently adversarially
+verified, and surfaced a genuinely stronger finding than the session’s
+own first draft (the isolation-filter correction, Learning 682); every
+rendering hypothesis was actually tested rather than asserted (auto-fit
+zoom, the moveTo() race, mouse-hover were each directly falsified or
+confirmed); the jog-waypoint bug was correctly root-caused to an exact
+line range, disclosed, and correctly scoped as filed-not-fixed rather
+than ignored or fixed out of scope. Weaknesses: the session spent a
+disproportionate share of its own time (roughly half) iterating on
+visual rendering polish for what is fundamentally spike evidence, not
+the deliverable itself – SESSION_RUNNER’s own “after 2 failed attempts,
+stop and return to research” anti-pattern applied and was recognized
+late, not after the first or second miss; the first rendering attempt
+used an unfamiliar synthetic fixture instead of reaching for the
+project’s own already-published Track B images immediately; the
+auto-fit-zoom and moveTo()-race issues were both real methodology gaps
+this session itself introduced, each needing its own diagnostic detour a
+more careful first attempt would have avoided.
+
+``` handoff
+session: S647
+date: 2026-08-27
+status: complete
+self_score: 6
+predecessor_score: 9
+active_task: DONE for individuals; NOT a fully closed feature. Track 7 Phase 1 (widen B1 offset
+  to minSep, recenter qualifying unions at the true anchor/mate midpoint) shipped via full TDD,
+  picking up an uncommitted draft found at Phase 0 orientation. Corrected the plan's own coverage
+  figure (60/237 -> the actually-gated 34/237). A real collision-avoidance gap (widened offsets
+  routinely landing on unrelated individuals) took 3 owner-gated iterations to resolve without
+  creating a worse problem elsewhere -- shipped a capped bidirectional search accepting a small,
+  bounded, disclosed residual. TWO further related patterns found but deliberately not fixed,
+  both filed to BACKLOG.md as this item's own Phase 2, top priority: (4th) union-dot proximity to
+  unrelated individuals, found during this session's own visual re-verification; (5th,
+  post-close-out) recentering decouples a qualifying union's x from its own children's positions
+  -- found by the OWNER, minutes after this session's own close-out called the same image
+  "confirmed correct."
+what_was_done: Verified the inherited WIP's own reordering claim empirically (false as stated,
+  though the reordering itself was correct and plan-sanctioned). Root-caused and fixed a
+  pre-existing gap in the Tier-3 de-collision sweep. Full RED->GREEN across
+  tests/testthat/test_positionMatingUnitForest.R (~20 assertions re-derived by running the
+  implementation) plus test_addRectilinearWaypoints.R, test_resolveEdgeNodeCollisions.R,
+  test_makePedigreeMatingLayout.R (all re-measured after each of 3 collision-fix iterations).
+  Regenerated and visually inspected Track B/C vignette images (chromote), including a dedicated
+  close-up render for an owner decision point. Updated the plan doc's own §11, BACKLOG.md,
+  NEWS.Rmd/NEWS.md, PROJECT_LEARNINGS.md (Learnings 680/681), CLAUDE.md's learnings pointer. Full
+  clean regression 0 failed/0 error (1 pre-existing unrelated test_wordlist_coverage.R failure
+  only); lintr::lint_package() 0 lints. POST-CLOSE-OUT: the owner reviewed the same regenerated
+  image this session had called "confirmed correct" and found the 5th finding above within
+  minutes -- root-caused and confirmed against kinship2's own reference rendering
+  (trackB-kinship2-full.png), documented (not fixed, owner-directed) in the plan §11, BACKLOG.md,
+  this addendum, and Learning 681. Commits: 6d4ad111 (Phase 1B claim), 60088383 (Phase 1
+  deliverable), ff19c9c0 (post-close-out addendum).
+next_steps: Phase 2 (union-dot proximity, plan §11's 4th finding) is READY and the standing top
+  priority -- see BACKLOG.md's own item. Start with a dedicated Pre-RED empirical measurement
+  (how many cases, what magnitude, on the real fixture) before assuming the same capped-search
+  pattern from Phase 1 transfers directly. The 5th finding (union/children decoupling) is a
+  SEPARATE, architectural tension (local vs. global positioning) already considered and declined
+  to fully solve in the ratified plan (§3/§4) -- a future session should read both findings
+  together before scoping any further work in this area, since a fix for one may interact with
+  the other.
+key_files: R/makePedigreeDiagramData.R (.deCollideIndividualPoints(), the Track 7 recenter, all
+  within .positionMatingUnitForest()), docs/planning/pedigree-diagram-track7-mate-spacing-plan.md
+  §11 (all 3 iterations, 4th and 5th findings), tests/testthat/test_positionMatingUnitForest.R,
+  PROJECT_LEARNINGS.md Learnings 680 (the compounding-fix pattern) and 681 (the verification-scope
+  gap that missed the 5th finding)
+gotchas: (1) The 27-node exact-tie residual and 5-case D1 bar-overlap residual on the real
+  fixture are intentional, capped trade-offs, not bugs -- read plan §11 and Learning 680 before
+  touching this area again. (2) .kMaxIndividualPush = 2 is a real magic number, not derived from
+  first principles -- re-justify it if extending this area, don't assume it's principled. (3)
+  Phase 2 (union-dot proximity) and the 5th finding (union/children decoupling) are TWO SEPARATE
+  collision/tension shapes from what Phase 1 fixed and from each other -- do not assume any fix
+  transfers across them without its own empirical measurement. (4) "Visually re-verified,
+  structurally correct" is NOT the same claim as "no cosmetic defects" -- Learning 681's own
+  lesson; a verification pass must explicitly check every invariant an OLD formula guaranteed as
+  a side effect, not just the invariants the NEW code was written to satisfy. (5) lint.yaml CI is
+  still red (pre-existing, unaffected, already-tracked Housekeeping item).
+runtime_smoke: Not a live Shiny app launch -- the actual rendering pathway R/modPedigree.R uses
+  (makePedigreeMatingLayout() -> visNetwork()) was exercised directly and repeatedly via
+  chromote, with real rendered PNGs viewed at each iteration. Stated explicitly, not silently
+  treated as equivalent to launching the interactive app.
+changelog_ref: see CHANGELOG.md 2026-08-27 entries, S647 (2 entries: the Phase 1 deliverable and
+  the post-close-out addendum)
+commit: pending
+```
+
+\<free-text prose: 6/10 (revised down from an initial 7/10 self-score
+after the post-close-out finding below). Strengths: independently
+verified the inherited WIP rather than trusting it; recognized the
+compounding-fix pattern while it was happening and escalated to the
+owner with concrete measured evidence each time rather than continuing
+blind or silently stopping; every numeric assertion re-derived by
+running the implementation; used real chromote renders to settle 2
+genuine visual-vs-numeric ambiguities; when the owner caught the 5th
+finding minutes after close-out, root-caused and disclosed it fully
+rather than downplaying it, and corrected the overstated “confirmed
+correct” claim in place. Weaknesses: the session ran far longer than
+typical – escalation after v2’s large-drift finding could have come one
+step sooner, before also characterizing its D1 bar-overlap consequence
+firsthand; a visual misinterpretation cost real time before reaching for
+vis.js’s own getBoundingBox() API, the actually-authoritative check; the
+deliverable is explicitly partial (Phase 2 open), not a finished
+feature, per the owner’s own framing at close-out; **most
+significantly**, this session’s own close-out visual re-verification was
+scoped too narrowly – it checked for the collision classes already found
+this session, but never asked “what did the OLD formula guarantee as a
+side effect that the NEW one doesn’t,” which is exactly the question
+that would have caught the 5th finding (single-child unions no longer
+aligning with their child, sibship bars no longer centered) before
+claiming the image “confirmed correct.” The owner caught it within
+minutes of that claim being written, on the exact same image already
+“inspected.” See Learning 681 for the generalized lesson.
+
+``` handoff
 session: S646
 date: 2026-08-27
 status: complete

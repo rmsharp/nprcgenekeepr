@@ -23,7 +23,27 @@ visual review of `kinship2-fidelity-validation.qmd`’s Track B full
 fixture. Design RATIFIED S643. **Phase 1 (core renderer fix) DONE S644
 (2026-08-27), Effort M – commit `fc5ac928`. Phase 2 (test/article
 correction) DONE S645 (2026-08-27), Effort M. Phase 3 (Shiny UX
-messaging) READY, Effort M, next pickup.** `master`’s CI red
+messaging) DONE S650 (2026-08-29), Effort M – commits
+`61e885d0`/`6336dabd`. All 3 phases shipped.**
+`output$pedigreeDiagramUI` (`R/modPedigree.R`) now reads
+`diagramLayout()$isolatedIds` and shows an `alert-info` banner naming
+suppressed individuals (partial suppression) or an `alert-info`
+empty-state message (singular/plural worked copy, plan §3 Dragon 4) in
+place of the widget (suppression empties the diagram entirely).
+Confirmed live via
+[`shinytest2:: AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+(Phase 3E), including the Focal-Animal-trim-to-one-isolated-individual
+scenario (plan §1.2’s 2nd trigger). Full clean regression 0 failed/0
+error attributable (1 pre-existing unrelated `test_wordlist_coverage.R`
+failure only); `lintr::lint_package()` 0 lints. 1 bug found in GREEN (3
+pre-existing node-cap-boundary tests used all-founder fixtures that
+Phase 1’s own isolation suppression made entirely isolated – fixed
+minimally, see `CHANGELOG.md`) and 1 bug found in Phase 3E (the new e2e
+fixture’s own `write.csv(na = "")` round-tripped a missing sire/dam as
+`""`, which
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+rejects as “both a sire and a dam” – unrelated to this item’s own code,
+see `CHANGELOG.md`). `master`’s CI red
 (`R-CMD-check.yaml`/`test-coverage.yaml`) was the DIRECT, PREDICTED
 consequence of shipping Phase 1 alone (owner-confirmed via
 `AskUserQuestion`, S644, to leave it red rather than stopgap) – **now
@@ -90,19 +110,20 @@ prints 2, and the committed `trackC-nprc-rectilinear.png` is
 byte-identical to what regenerating it produces (confirmed via
 `git status` – unaffected by this session’s changes, so this is
 pre-existing, not a regression from Phase 1/2). Unrelated to
-P5-suppression; filed as a new Housekeeping item below. **Still open
-(Phase 3, Effort M):** `R/modPedigree.R` Shiny UX messaging (banner for
-partial suppression, empty-state message for all-isolated) + e2e
-coverage, including the Focal-Animal-trim-to-one-isolated-individual
-scenario – plan’s §3 Dragon 4, §4 Phase 3.
+P5-suppression; filed as a new Housekeeping item below. **Phase 3 (S650,
+2026-08-29) – DONE:** see the item’s own top summary above.
 
 **Mating-unit marker (dot) renders on the sire’s own symbol instead of
 centered between sire and dam; mates are not visibly spread apart,
 unlike kinship2** (found live 2026-08-27, owner-caught via direct visual
 review of the corrected Track B full-fixture image pair (S645
 post-close-out, commit `1784abf6`); root-caused by a dedicated
-investigation S645 – **Design RATIFIED S646, 2026-08-27, Effort M –
-Phase 1 implementation READY, next pickup.** Full design:
+investigation S645 – **Design RATIFIED S646, 2026-08-27, Effort M. Phase
+1 (individuals) DONE S647, 2026-08-27, commit pending – see below. Phase
+2 (union-dot proximity) design RATIFIED S648, 2026-08-28, Effort M –
+Option A (radius-proportionate capped push, union side only).
+Implementation READY, TOP PRIORITY, next pickup (standing
+pedigree-fidelity directive).** Full design:
 [`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-track7-mate-spacing-plan.md)
 (ARCHITECTURE_WORKSTREAM, matching this project’s own precedent for
 pedigree-positioning decisions). **Ratified scope (owner-picked via
@@ -168,11 +189,94 @@ plan’s §2.4); (b) widen to `minSep` exactly, not an arbitrary constant
 (§2.2); (c) the `qualifies()` gate itself is the answer – restricting
 the change to it means no new interaction with BJL/de-collision/Track 5
 D1-D2 to analyze, only a re-use of an already-safe existing boundary
-(§2.4). **Next pickup: Phase 1 implementation**, TDD-gated, per the
-plan’s own Migration Path (§6) and Verification Plan (§7) – including
-the collision-headroom live-render check §7 flags as still outstanding
-(not resolved by the design session itself, deliberately deferred to
-implementation’s own Pre-RED validation).
+(§2.4). **Phase 1 (S647, 2026-08-27) – DONE:** shipped §2’s core
+formulas (widen B1 offset to `minSep`, recenter qualifying unions at the
+true anchor/mate midpoint) via full TDD. Corrected the plan’s own §1.4
+coverage figure from a naive 60/237 to the actually-gated 34/237
+(`qualifies()` alone isn’t the real gate – the non-anchor member must
+also be a genuine free-pass B1 individual; Track B unaffected, 4/4
+either way). The collision-headroom live-render check §7 flagged found a
+real gap (widening to `minSep` makes a mate land exactly on an unrelated
+individual routinely, not rarely – 24 pairs on the real fixture) and
+took 3 iterations to resolve without creating a worse problem elsewhere
+(an uncapped fix caused 34 new D1 sibling-bar overlaps up to 540px) –
+shipped a capped bidirectional search (`.kMaxIndividualPush = 2`) that
+accepts a small, bounded residual (27 nodes still exact-tie, down from
+24 pairs, disclosed) rather than an unbounded drift. Full detail, all 3
+iterations and their measurements: plan §11. All touched test files’
+pinned values re-measured live, never hand-derived; full clean
+regression 0 failed/0 error (the 1 pre-existing
+`test_wordlist_coverage.R` failure only); `lintr::lint_package()` 0
+lints. Visual re-verification: Track B/C images regenerated and
+inspected directly (not just re-rendered) – **correction (found by the
+owner directly, post-close-out, reviewing the same regenerated image
+this claim was based on): “confirmed correct” overstated it.**
+Structurally correct (right people, right relationships, no overlaps)
+but not free of cosmetic defects – see the 5th finding below, found
+within minutes of this claim being written. **Phase 2 (union-dot
+proximity) – design RATIFIED S648, 2026-08-28; implementation DONE S649,
+2026-08-29 (commits `316b605f`/`e312774f`, capped bidirectional push,
+`.kMaxUnionPush = 5L`). Full clean regression 0 failed/0 error
+attributable (1 pre-existing unrelated `test_wordlist_coverage.R`
+failure only); `lintr::lint_package()` 0 lints; visual re-verification
+(Track B shrunk image regenerated, ground-truth-confirmed). A disclosed,
+narrower residual (4 union-vs-duplicate proximity cases the fix cannot
+see – new Housekeeping item above) and a +1 D1 bar-vs-bar residual
+(5-\>6, `test_addRectilinearWaypoints.R`) are the only trade-offs.**
+Found during Phase 1’s own visual re-verification (plan §11’s 4th
+finding) – a mating-UNION dot (not an individual) can also land
+immediately adjacent to an unrelated individual, the same root tension
+surfacing in the one collision shape Phase 1 deliberately left alone
+(§2.3’s “weaker guarantee for dots” posture). Deliberately NOT attempted
+in Phase 1 (owner-directed, `AskUserQuestion`) – 3 compounding
+iterations were already needed for the individual-circle case, each
+surfacing a new problem elsewhere; a 4th in the same session risked
+repeating that pattern blind. **S648’s Pre-RED measurement (plan §12.1),
+independently re-verified by a 3-agent adversarial workflow (§12.8):**
+on the real 375-individual fixture, 20/237 (8.4%) unions collide with an
+unrelated node under current shipped code – vs. only 1/237 BEFORE Track
+7 Phase 1, meaning Phase 1’s own widen-to-`minSep` change caused 19 of
+the 20. Worst-case magnitude bounded to 30px (vs. Phase 1’s
+individual-fix needing up to 660px), 15/20 at the pre-existing tie-break
+epsilon floor, 5/20 in an 11.88-30px band. The Track B “shrunk” fixture
+(the already-committed `trackB-nprc-shrunk.png`) is a WORSE case than
+the single pair originally cited – correctly measured (matching
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+own isolation-filtering, a methodology correction found mid-session),
+all 3/3 of its own mating unions collide post-Phase-1, vs. 0/3
+pre-Track-7. **Ratified design (Option A, plan §12.2/§12.10):** a capped
+bidirectional push sized to the actual union-dot/node radii (~31px, not
+the flat `minSep` individuals use, which a preliminary simulation and
+ground-truth rendering data both found displaces an unrelated individual
+out of its own row on the shrunk Track B fixture – Option B, rejected).
+Scoped to the union side only; `.deCollideIndividualPoints()` and
+individuals/duplicates untouched. **Implementing session starts from
+plan §12.6’s verification plan**, including its MANDATORY live-render D1
+sibship-bar regression check (a moved union’s own `__drop_` waypoint
+reshapes its bar span – confirmed by reading source, not assumed). **5th
+finding (owner-caught, post-close-out, 2026-08-27), documented not
+fixed:** recentering a qualifying union between its two parents
+decouples its `x` from its own children’s positions, something the OLD
+`mean(children)` formula guaranteed could never happen. On Track B:
+`P3`x`P4`-\>`C4` and `C4`x`P6`-\>`C4a` (single-child unions) now need a
+right-angle dogleg to reach their child, where the descent line was
+always perfectly straight before Track 7; `M1`x`G3`-\>`L1`/`L2`/`L3`’s
+drop point lands off-center on the sibship bar (`3.5` vs. the children’s
+own mean, `3.0`). Confirmed directly against `trackB-kinship2-full.png`
+(already committed): kinship2 shows straight drops and a centered bar
+for the identical fixture, because its `alignped4()` solver positions
+parents AND children jointly and can adjust either – this project’s
+Walker/BJL engine positions children first, then derives a qualifying
+union’s `x` from its already-fixed parents, and cannot reach back to
+move the children. This is the SAME tension plan §3/§4 already
+considered and rejected fixing via kinship2’s actual joint-optimization
+mechanism (Alternative C, disproportionate) – this finding is further
+evidence for that conclusion, not a new decision to make. See plan §11’s
+5th finding for full detail. Not filed as a separate item – a future
+session scoping Phase 2 (or a dedicated one after it) should read this
+alongside the union-dot-proximity finding, since both stem from the same
+local-vs-global positioning tension and a future fix attempt should
+consider them together rather than in isolation.
 
 **`R-CMD-check.yaml` CI is red on master, all 5 platforms** (found S636,
 2026-08-26). **RESOLVED S637, 2026-08-26, per owner-directed “broader”
@@ -415,6 +519,18 @@ presenting).
 edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`. \##
 Housekeeping
 
+**S649’s Track 7 Phase 2 (union-dot proximity fix, commits
+`316b605f`/`e312774f`) shipped with no `NEWS.Rmd` entry** (found
+incidentally S650, 2026-08-29, while adding S650’s own Phase 3 NEWS.Rmd
+entry to the same Pedigree Diagram group, READY, Effort S) – violates
+`CLAUDE.md`’s NEWS.Rmd entry checklist (a user-facing Shiny behavior
+change: mating-union dots now sit closer to their true midpoint instead
+of drifting toward one parent). Not fixed here (out of this session’s
+own scope – a different session’s gap). A future session should add one
+plain-language bullet to the Pedigree Diagram group, in true shipping
+order (after the Phase 1 individuals-side bullet, i.e. right before
+S650’s own new Phase 3 bullet), then regenerate `NEWS.md`.
+
 **`kinship2-fidelity-validation.qmd`’s Track C table claims 3 marked
 (vermillion) edges for the `rectilinear` edge style; a live run reports
 2** (found incidentally S645, 2026-08-27, while regenerating Track B
@@ -470,6 +586,64 @@ identically 3 times running across 2 different sessions’ own interactive
 work. A future session should weight option (b) (restructure) more
 heavily, or at minimum re-examine whether (a) is still plausible before
 adding a `# nolint` on that rationale.
+
+**`.addRectilinearWaypoints()`’s `__jog_*` waypoint nodes (the
+straight-edge jog pass) render as a full-size, filled default vis.js
+circle instead of invisible** (found live S648, 2026-08-28, while
+building a visual comparison for the Track 7 Phase 2 design item below –
+READY, Effort S) – `R/makePedigreeDiagramData.R:2081-2127` constructs
+each `__jog_%d_a`/ `__jog_%d_b` node with only `id`/`x`/`y` set, then
+`.matchColumns()` (`:2000-2011`) fills every other column (`shape`,
+`size`, `color.background`, `color.border`) with `NA` rather than an
+explicit invisible style. This is inconsistent with the D1/D2
+`__drop_`/`__bar_` waypoint nodes added earlier in the SAME function,
+which are explicitly styled invisible (`shape = "dot"`, `size = 0`,
+`color.background/color.border = "rgba(0,0,0,0)"`, `:1821-1829`) – the
+jog pass (added later, for perfectly-straight/overlapping edge cases)
+never received the same treatment. With `shape`/`size` left `NA`, vis.js
+falls back to its own default node appearance (a filled, full-size
+circle) instead of rendering nothing. **Visually confirmed on the
+ALREADY-COMMITTED `trackB-nprc-shrunk.png`**: `P1`’s own edge jog
+waypoint (`__jog_2_a`) lands at `(x=0, y=13.5)`, 13.5 raw-scaled units
+below `P1` itself (`x=0, y=0`) – close enough to visually overlap/fuse
+with `P1`’s own square, reproduced identically using the project’s own
+unmodified `screenshot_layout()` methodology (no custom rendering code
+involved). Not a regression from anything this session touched, and
+unrelated to Track 7’s own union-position mechanism – confirmed present
+under BOTH pre-Track-7 and current source. Likely affects any pedigree
+where a jog waypoint’s computed position happens to land near a real
+node’s own position, not only this one fixture. Not fixed this session
+(out of scope for Track 7 Phase 2’s own design deliverable) – a future
+session should add the same explicit invisible styling (`shape = "dot"`,
+`size = 0`, transparent `color.background`/`color.border`) to the
+jog-node construction at `:2094-2097`, matching the D1/D2 precedent
+exactly, then re-verify against the real 375-individual fixture and
+Track B images for any other jog-waypoint-vs-node collisions this same
+gap may have hidden elsewhere.
+
+**Track 7 Phase 2’s own union-side proximity push (S649) introduces 4
+NEW union-vs-DUPLICATE proximity cases on the real 375-individual
+fixture that did not exist before** (found live S649, 2026-08-29,
+implementing
+`docs/planning/pedigree-diagram-track7-mate-spacing-plan.md` §12.2 –
+READY, Effort M; count corrected from an initial pre-fix spike’s 11
+after a second GREEN-phase correction, plan §12.11, made the push itself
+more targeted) – root cause: a duplicate node’s `x` is always
+`unitX[[itsOwnUnion]] + minSep*0.4` (`R/makePedigreeDiagramData.R:816`),
+a fixed offset that rides along whenever a union moves; §12.2’s own
+occupied-set (`tier1X`/`b1AtGen`/`placedAtGen`) has no visibility into
+duplicate positions, which are not computed until AFTER the union sweep
+runs (a genuine data dependency – a duplicate’s own `derivedX()` reads
+the union’s FINAL `unitX`, so duplicates cannot be positioned first).
+Owner-directed (`AskUserQuestion`, S649): ship Phase 2 as scoped rather
+than widen it – the owner’s own directly-reviewed Track B fixture is
+fully resolved either way (no duplicates in play there). Full detail:
+plan §12.11. A future session should design a fix (likely: track each
+already-placed unit’s own prospective duplicate offset, if it has one,
+as an additional occupied-set member during the union sweep – bounded,
+not the full symmetric individual-side hardening §12.4 Alternative D
+already rejected) and re-verify against the real fixture (currently
+11/237 union-vs-duplicate proximity cases) and Track B.
 
 **`R-CMD-check-scheduled.yaml` (the weekly-cron twin of
 `R-CMD-check.yaml`) never received the S616/S618/S619 chromote

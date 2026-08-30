@@ -108,7 +108,33 @@
   [\#141](https://github.com/rmsharp/nprcgenekeepr/issues/141)).
   [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
   has no `orderBySex` argument – the male-left/female-right convention
-  is always applied. \## Kinship & Pedigree Calculations
+  is always applied.
+- Fixed a crash in the Diagram tab: narrowing to a small set of focal
+  animals and their family could make the diagram fail to display at all
+  under the default connector style. The diagram now always displays
+  correctly for this kind of narrowed view.
+- The published article comparing pedigree diagrams against kinship2 (a
+  well-known reference pedigree tool) is now checked directly by code,
+  not just by eye – confirming its example diagrams show the same family
+  relationships kinship2 does, in every case checked.
+- The Diagram tab no longer shows an individual as a disconnected,
+  floating box when they have no recorded parents, mates, or offspring –
+  matching how the reference tool kinship2 draws the same family.
+  Loading a set of animals with no such relationships among any of them
+  no longer crashes the diagram (issue
+  [\#164](https://github.com/rmsharp/nprcgenekeepr/issues/164)).
+- For most simple mated pairs (one mate each, no other family
+  complications), the small mating symbol between them now sits clearly
+  between the two animals, with a visible gap, instead of sitting right
+  on top of one parent – matching how the reference tool kinship2 draws
+  the same pairing. Pairs with more complicated family situations (a
+  parent with more than one mate, for example) are unaffected and
+  unchanged.
+- When the Diagram tab leaves an animal out because it has no recorded
+  parents, mates, or offspring (see above), it now tells you so, naming
+  which animal(s) were left out – and shows a clear message instead of
+  an empty diagram when none of the loaded animals have any such
+  relationships. \## Kinship & Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their
   computed relatedness to genetic identity, and that correction flows
   through to every other relative reached through either twin – not just
