@@ -578,11 +578,49 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       anchor/mate-midpoint recenter loop moves several qualifying unions' `x` back toward their own
       children, shifting this residual's composition again -- **now 3** (1 new case, 2 resolved from
       the prior 4; adversarially re-verified in the ratified design doc §2.1, confirmed live by the
-      implementing session's own `test_positionMatingUnitForest.R` count). A future session should
-      design a fix (likely: track each already-placed unit's own prospective duplicate offset, if it
-      has one, as an additional occupied-set member during the union sweep -- bounded, not the full
-      symmetric individual-side hardening §12.4 Alternative D already rejected) and re-verify against
-      the real fixture (currently 3/237 union-vs-duplicate proximity cases) and Track B.
+      implementing session's own `test_positionMatingUnitForest.R` count).
+      **Design RATIFIED S654 (2026-08-30), Effort M, implementation READY, next pickup (standing
+      pedigree-fidelity directive).** Full design:
+      [`docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md`](docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md).
+      **Ratified mechanism (Option A, via `AskUserQuestion`):** a duplicate-side, post-hoc,
+      unidirectional push -- NOT the union-sweep-side "prospective offset in the occupied-set"
+      direction this item used to sketch (that direction, Option B in the design doc, was
+      implemented and adversarially re-verified this session: it resolves only 2/3 cases,
+      permanently missing `__union_14`/`__dup_L31S6S_3` because that case's owning union sorts
+      *after* it in the same-generation sweep -- a structural incompleteness, not a coding gap).
+      Option A instead runs after ALL union positions are finalized: for each duplicate that now
+      collides with an unrelated union, push it `+k*unionClearanceIndividual` (k=1..5, reusing
+      Phase 2's own `.kMaxUnionPush` cap) in the SAME rightward direction `derivedX()`'s B3 branch
+      already always uses -- never bidirectional (a first-drafted bidirectional version was tried
+      and found to push a duplicate newly-too-close to its OWN owning union in every case, design
+      doc §3.3). A 3-agent adversarial-verification workflow independently confirmed, on the exact
+      ratifying commit: Option A resolves all 3 cases to 0, costs exactly 5 predicted pinned-test
+      updates (design doc §5.3) and 0 other regressions, and is fully absorbed by the existing
+      jog-repair mechanism into 0 residual beyond the pre-existing, unrelated 47-row
+      `curved-heuristic` class. Alternative D (Phase 2's own already-rejected fully-symmetric
+      individual-side hardening) remains rejected -- not reopened by this narrower, duplicate-only
+      fix (design doc §3.2).
+- [ ] **6 pre-existing duplicate-vs-INDIVIDUAL proximity near-misses on the real 375-individual
+      fixture, unrelated to and unaffected by Track 7 Phase 2/4** (found incidentally S654,
+      2026-08-30, while empirically grounding the Track 7 Phase 4 design above -- READY, Effort M)
+      -- `.deCollideIndividualPoints()`'s own de-collision push only fires on an EXACT tie
+      (`< 1e-9`) against `individualOccupied`/`placedThisGen`; it has no near-miss RADIUS check at
+      all for individual/duplicate-shaped points (both size=25), unlike the union-side mechanism
+      Track 7 Phase 2 added for union-vs-individual proximity. Measured (using
+      `unionClearanceIndividual = (25+6)/120 = 0.2583` as a "visually close enough to matter"
+      proxy, not a claim that this is the correctly-calibrated threshold for two full-size nodes --
+      a proper individual-vs-individual clearance would be `(25+25)/120 = 0.4167`, wider still):
+      6 cases on unmodified `HEAD` (commit `2e3a05b2`) -- `__dup_MY1AEU_2` (0.0990 from `TTE0Z7`),
+      `__dup_1X40V5_2` (0.1000 from `0Q077X`), `__dup_7NBKWE_3` (0.1000 from `IM1B5T`),
+      `__dup_L31S6S_5` (0.1000 from `M0YNUR`), `__dup_M5DJVP_1` (0.1000 from `45YQV5`),
+      `__dup_KCBMY9_2` (0.1000 from `665C2Y`). Confirmed unaffected by either fix direction
+      evaluated for the Track 7 Phase 4 item above -- both only ever touch a duplicate that
+      collides with a UNION, never one merely near another individual (identical positions/
+      distances measured with and without either spike). Not investigated or fixed this session
+      (out of the Phase 4 design's own scope, design doc §1.4/§8) -- a future session should
+      determine the right clearance threshold for this comparison (likely the full `(25+25)/120`
+      individual-pair radius, not the union-calibrated one used here only as a detection proxy)
+      and design a fix, matching this project's own established radius-proportionate-push pattern.
 - [x] **`R-CMD-check-scheduled.yaml` (the weekly-cron twin of `R-CMD-check.yaml`) never
       received the S616/S618/S619 chromote Chrome-provisioning fix, and nothing guarded
       against the drift** (found live S629, 2026-08-24, via Phase 0's mandatory `gh run list`
