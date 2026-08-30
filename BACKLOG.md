@@ -451,15 +451,15 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       bullet to describe it accurately (or remove it if nothing does), and while there, re-read the
       bullet immediately above it (corrected this session for issue #166) to confirm the two still
       read coherently together.
-- [ ] **S649's Track 7 Phase 2 (union-dot proximity fix, commits `316b605f`/`e312774f`) shipped
+- [x] **S649's Track 7 Phase 2 (union-dot proximity fix, commits `316b605f`/`e312774f`) shipped
       with no `NEWS.Rmd` entry** (found incidentally S650, 2026-08-29, while adding S650's own
-      Phase 3 NEWS.Rmd entry to the same Pedigree Diagram group, READY, Effort S) -- violates
+      Phase 3 NEWS.Rmd entry to the same Pedigree Diagram group) -- violates
       `CLAUDE.md`'s NEWS.Rmd entry checklist (a user-facing Shiny behavior change: mating-union
-      dots now sit closer to their true midpoint instead of drifting toward one parent). Not fixed
-      here (out of this session's own scope -- a different session's gap). A future session should
-      add one plain-language bullet to the Pedigree Diagram group, in true shipping order (after
-      the Phase 1 individuals-side bullet, i.e. right before S650's own new Phase 3 bullet), then
-      regenerate `NEWS.md`.
+      dots now sit closer to their true midpoint instead of drifting toward one parent).
+      **RESOLVED S655 (2026-08-30), alongside this session's own Track 7 Phase 4 entry** (`dcdbe84d`):
+      added the plain-language bullet to the Pedigree Diagram group, in true shipping order (right
+      after Track 7 Phase 1's own "For most simple mated pairs..." bullet, right before S650's own
+      Phase 3 bullet), then Phase 4's own bullet immediately after it; `NEWS.md` regenerated.
 - [ ] **`kinship2-fidelity-validation.qmd`'s Track C table claims 3 marked (vermillion) edges for
       the `rectilinear` edge style; a live run reports 2** (found incidentally S645, 2026-08-27,
       while regenerating Track B images for the P5-suppression Phase 2 item above, READY, Effort
@@ -561,7 +561,7 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `color.background`/`color.border`) to the jog-node construction at `:2094-2097`, matching the
       D1/D2 precedent exactly, then re-verify against the real 375-individual fixture and Track B
       images for any other jog-waypoint-vs-node collisions this same gap may have hidden elsewhere.
-- [ ] **Track 7 Phase 2's own union-side proximity push (S649) introduces union-vs-DUPLICATE
+- [x] **Track 7 Phase 2's own union-side proximity push (S649) introduces union-vs-DUPLICATE
       proximity cases on the real 375-individual fixture that did not exist before Phase 2** (found
       live S649, 2026-08-29, implementing `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`
       §12.2 -- READY, Effort M) -- root cause: a duplicate node's `x` is always
@@ -600,6 +600,26 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `curved-heuristic` class. Alternative D (Phase 2's own already-rejected fully-symmetric
       individual-side hardening) remains rejected -- not reopened by this narrower, duplicate-only
       fix (design doc §3.2).
+      **Implementation DONE S655 (2026-08-30), full TDD.** RED (`d52b7f83`): updated the 5 pinned
+      assertions (`test_positionMatingUnitForest.R:1274`, `test_makePedigreeMatingLayout.R:651/658`,
+      `test_resolveEdgeNodeCollisions.R:433/434`) to their Option-A measured values; confirmed
+      genuine RED (6 failed -- 5 new intentional + 1 pre-existing `test_wordlist_coverage.R`
+      baseline -- 0 error, 0 collateral) against unmodified `HEAD`. GREEN (`dcdbe84d`): implemented
+      the duplicate-side post-hoc unidirectional push in `R/makePedigreeDiagramData.R`, immediately
+      after the existing duplicate-positioning block; reuses Phase 2's own `unionClearanceIndividual`
+      threshold and `.kMaxUnionPush = 5` cap. Full clean regression 1 failed (pre-existing)/0 error/
+      6570 passed -- all 5 predicted values landed exactly (0L/1456L/198L/98L/1762L), 0 other
+      regressions. All 3 named pairs confirmed resolved to 0 via the test's own counting method,
+      re-run live. `.resolveEdgeNodeCollisions()` residuals: exactly 47 rows, all
+      `curved-heuristic` -- 0 new residual of any kind. **Mandatory live chromote render check**:
+      all 3 previously-colliding pairs now render 52.0px apart (node radius 25px + union-dot radius
+      6px); all 198 `__jog_` waypoints render; 0 NA positions; 0 silently-collapsed ids.
+      `lintr::lint_package()` 0 lints on all 4 touched files; `devtools::document()` 0 NAMESPACE/man
+      changes. REFACTOR skipped (owner-directed via `AskUserQuestion`): the new post-pass mirrors
+      the existing union-side push's own style/structure, no behavior-neutral restructuring
+      identified, matching S650/S652/S653's own precedent. `NEWS.Rmd` updated with this fix's own
+      plain-language bullet AND S649's own still-missing Phase 2 bullet (see the Housekeeping item
+      below), in shipping order; `NEWS.md` regenerated. See `CHANGELOG.md`.
 - [ ] **6 pre-existing duplicate-vs-INDIVIDUAL proximity near-misses on the real 375-individual
       fixture, unrelated to and unaffected by Track 7 Phase 2/4** (found incidentally S654,
       2026-08-30, while empirically grounding the Track 7 Phase 4 design above -- READY, Effort M)

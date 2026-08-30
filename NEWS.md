@@ -89,13 +89,6 @@ R. Mark Sharp, Ph.D.
   built to exercise this, the visual change is too small to see on
   screen at normal zoom, so don't expect a visible difference in today's
   example pedigrees.
-- For mating pairs the layout can safely spread apart, the small mating
-  symbol now sits closer to the true midpoint between the two parents,
-  instead of drifting toward one parent.
-- A small number of mating symbols that could land close enough to an
-  unrelated duplicate-animal marker to visually touch, in large colony
-  pedigrees with many repeated individuals, are now kept a clear
-  distance apart.
 - Which parent a mating symbol anchors to is consistent across computers
   and regional settings: the anchor tie-break uses a locale-independent
   comparison (issue \#162).
@@ -124,6 +117,13 @@ R. Mark Sharp, Ph.D.
   the same pairing. Pairs with more complicated family situations (a
   parent with more than one mate, for example) are unaffected and
   unchanged.
+- For mating pairs the layout can safely spread apart, the small mating
+  symbol now sits closer to the true midpoint between the two parents,
+  instead of drifting toward one parent.
+- A small number of mating symbols that could land close enough to an
+  unrelated duplicate-animal marker to visually touch, in large colony
+  pedigrees with many repeated individuals, are now kept a clear
+  distance apart.
 - When the Diagram tab leaves an animal out because it has no recorded
   parents, mates, or offspring (see above), it now tells you so, naming
   which animal(s) were left out -- and shows a clear message instead of
