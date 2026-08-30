@@ -175,7 +175,7 @@ gotchas: (1) The design doc's S2 code sketch shows the change's shape, not a lit
 runtime_smoke: n/a -- planning-only session, zero code/test/runtime changes.
 changelog_ref: see CHANGELOG.md's 3 new 2026-08-30 S658 entries (claim / design-ratified /
   this close-out), tagged [BL-dupIndividualProximity].
-commit: pending
+commit: 87cb0b46
 ```
 
 ```handoff

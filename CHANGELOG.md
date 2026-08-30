@@ -16,6 +16,13 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S658: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S657 precedent)
+- This commit sets `HANDOFFS.md`'s S658 receipt `commit:` field from `pending` to `87cb0b46` (the
+  deliverable commit), the same self-reference workaround this project's sessions have made since
+  S600/S602. (Combined into one commit with this ledger entry, unlike S657's 2-commit split — the
+  net effect is the same: both the field and its own ledger entry are recorded before session end.)
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [BL-dupIndividualProximity] S658: design ratified -- duplicate-vs-unrelated-individual proximity fix; BACKLOG.md count corrected 6 -> 2 (+ new 4-case B1-vs-individual item filed)
 - Re-measured S654's own "6 duplicate-vs-individual near-misses" finding with the geometrically
   correct `individualClearance=(25+25)/120=0.4167` (S654 had used the union-radius proxy 0.2583)
