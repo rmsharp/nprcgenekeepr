@@ -171,13 +171,25 @@ just a matching id list.
 
 ### Fixture
 
-The 9-subject dogleg fixture from `test_makePedigreeMatingLayout.R` (S563):
-`A` and `Y` are full siblings (children of `P1` x `P2`) who mate with each
-other -- the consanguineous union under test -- while `A` also anchors an
-unrelated union with founder `X`, and `Y` also anchors an unrelated union
-with founder `W`. `A`'s own display generation is pulled away from the
-consanguineous union's generation by the `A` x `X` union, forcing exactly
-one `edgeStyle = "rectilinear"` "dogleg" reroute on `A`'s side only.
+The 9-subject fixture from `test_makePedigreeMatingLayout.R` (S563): `A` and
+`Y` are full siblings (children of `P1` x `P2`) who mate with each other --
+the consanguineous union under test -- while `A` also mates with founder
+`X` in an unrelated union, and `Y` also mates with founder `W` in an
+unrelated union. Originally (S563), `A` anchored the `A`-`X` union despite
+the two individuals sitting at different generations, forcing exactly one
+`edgeStyle = "rectilinear"` "dogleg" reroute on `A`'s side -- this was the
+fixture's whole point, and the name it was given ("the 9-subject dogleg
+fixture") in earlier project history. **That dogleg no longer occurs, as of
+Track 4's gen-aware anchor selection (S573, 2026-08-14, the day after this
+article was first published):** under the gen-first tie-break, `X`
+(generation 3) now anchors the `A`-`X` union instead of `A` (generation 1),
+so `A` never anchors a union whose generation differs from his own -- the
+consanguineous `A`-`Y` union is the only union `A` anchors, and it already
+matches his own generation. Track 4's own structural invariant
+(`genOf[[anchor]] == unitGen`, unconditionally) makes this specific dogleg
+permanently unreachable, not just for this fixture -- see
+`tests/testthat/test_makePedigreeMatingLayout.R`'s own "Track 4" comment and
+test (`:1297-1368`), which documents and asserts exactly this.
 
 ### Graphic fidelity
 
@@ -196,19 +208,20 @@ copied it from one another.
 
 ![`makePedigreeMatingLayout(edgeStyle = "direct")` -- the A-Y union's 2 mate edges render in vermillion (#D55E00) at width 4.](kinship2-fidelity-validation-img/trackC-nprc-direct.png){fig-alt="nprcgenekeepr pedigree diagram, direct edge style, showing the A-Y consanguineous union marked in a distinct vermillion color and greater width."}
 
-![`makePedigreeMatingLayout(edgeStyle = "rectilinear")` -- the same marker now propagates onto `A`'s dogleg-rerouted projection edges (this session's own fix), not just `Y`'s non-doglegged side.](kinship2-fidelity-validation-img/trackC-nprc-rectilinear.png){fig-alt="nprcgenekeepr pedigree diagram, rectilinear edge style, showing the consanguinity marker correctly carried onto A's right-angle dogleg reroute as well as Y's direct side."}
+![`makePedigreeMatingLayout(edgeStyle = "rectilinear")` -- as of Track 4 (S573), this fixture no longer produces a dogleg on either side, so the marker propagates onto the same 2 direct edges as the `direct` style above.](kinship2-fidelity-validation-img/trackC-nprc-rectilinear.png){fig-alt="nprcgenekeepr pedigree diagram, rectilinear edge style, showing the consanguinity marker carried onto the same 2 direct edges as the direct-style rendering, with no dogleg reroute."}
 :::
 
 | Edge style | Marked (vermillion) edges | Expected |
 |---|---|---|
 | `direct` | 2 | 2 (one edge per mate, no dogleg) |
-| `rectilinear` | 3 | 3 (`A`'s 1 edge splits into 2 dogleg segments; `Y`'s 1 edge is unaffected) |
+| `rectilinear` | 2 | 2 (identical to `direct` -- Track 4, S573, eliminated the dogleg this fixture originally forced) |
 
 Both packages flag the *same* union as consanguineous, using their own
 independent visual conventions -- a thickened doubled line in kinship2, a
 distinct color and width in nprcgenekeepr -- and nprcgenekeepr's marker
-survives the more complex rectilinear dogleg reroute exactly as it does the
-simple direct case.
+renders identically under both edge styles for this fixture, since Track 4
+(S573, 2026-08-14) eliminated the dogleg reroute this fixture originally
+exercised (see the corrected [Fixture](#sec-trackc) description above).
 
 ## Structural verification {#sec-structural}
 
