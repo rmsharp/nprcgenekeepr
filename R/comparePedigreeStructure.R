@@ -303,3 +303,76 @@
       length(indOnlyA) == 0L && length(indOnlyB) == 0L
   )
 }
+
+#' Format a structural-discrepancy report
+#'
+#' Formats \code{\link{.comparePedigreeStructures}}'s own return value into a
+#' human-readable discrepancy report, or \code{NULL} (invisibly) when
+#' \code{cmp$identical} is \code{TRUE}. Extracted from
+#' \code{data-raw/kinship2FidelityValidation.R}'s own local
+#' \code{reportDiscrepancy()} (found live 2026-08-26: that copy was never
+#' updated when \code{\link{.comparePedigreeStructures}} gained
+#' \code{individualsOnlyInA}/\code{individualsOnlyInB}, so re-running the
+#' script on the article's own Track B full fixture printed
+#' "!! DISCREPANCY -- Track B full !!" with nothing underneath, silently
+#' omitting the one detail -- \code{individualsOnlyInB: "P5"} -- the
+#' \code{identical = FALSE} verdict is actually based on).
+#'
+#' Unlike \code{\link{.extractKinship2Structure}}/
+#' \code{\link{.extractNprcStructure}}/\code{\link{.comparePedigreeStructures}}
+#' (this file's other 3 functions), this one has no \code{kinship2} dependency
+#' at all -- it only formats \code{cmp}, a plain list of data frames/vectors --
+#' so it lives in \code{R/}, not \code{tests/testthat/}, per the same D-6
+#' criterion (\code{docs/planning/pedigree-diagram-kinship2-structural-
+#' comparison-plan.md}) that already routed its 3 siblings here: no kinship2
+#' dependency, needs real regression coverage. It originally lived in
+#' \code{tests/testthat/helper-comparePedigreeStructure.R} instead (a
+#' misplacement relative to D-6, not a deliberate exception) -- moved here
+#' S653 after that misplacement caused \code{lint.yaml} to go red on CI:
+#' \code{lintr::lint_package()}'s helper-less CI invocation could not see a
+#' function defined only in a testthat helper, while every local repro looked
+#' clean because \code{pkgload::load_all()}'s own default \code{helpers =
+#' TRUE} silently auto-sources testthat helpers, masking the gap.
+#'
+#' Returns a character string, not a \code{cat()} side effect, specifically so
+#' its CONTENT is assertable -- the original's \code{cat()}-only form could
+#' not be tested at all, which is how the individuals-diff omission went
+#' unnoticed in the first place.
+#'
+#' @param label a short string identifying which comparison this is (e.g.
+#'   "Track B full"), included verbatim in the report.
+#' @param cmp \code{\link{.comparePedigreeStructures}}'s own return value.
+#' @return a single character string describing every populated diff field,
+#'   or \code{NULL} (invisibly) when \code{cmp$identical} is \code{TRUE}.
+#' @noRd
+.formatStructuralDiscrepancy <- function(label, cmp) {
+  if (isTRUE(cmp$identical)) {
+    return(invisible(NULL))
+  }
+  lines <- sprintf("!! DISCREPANCY -- %s !!", label)
+  if (nrow(cmp$parentChildOnlyInA) > 0L) {
+    lines <- c(lines, "parent-child edges only in kinship2:",
+      utils::capture.output(print(cmp$parentChildOnlyInA)))
+  }
+  if (nrow(cmp$parentChildOnlyInB) > 0L) {
+    lines <- c(lines, "parent-child edges only in nprcgenekeepr:",
+      utils::capture.output(print(cmp$parentChildOnlyInB)))
+  }
+  if (nrow(cmp$matePairsOnlyInA) > 0L) {
+    lines <- c(lines, "mate pairs only in kinship2:",
+      utils::capture.output(print(cmp$matePairsOnlyInA)))
+  }
+  if (nrow(cmp$matePairsOnlyInB) > 0L) {
+    lines <- c(lines, "mate pairs only in nprcgenekeepr:",
+      utils::capture.output(print(cmp$matePairsOnlyInB)))
+  }
+  if (length(cmp$individualsOnlyInA) > 0L) {
+    lines <- c(lines, "individuals only in kinship2:",
+      toString(cmp$individualsOnlyInA))
+  }
+  if (length(cmp$individualsOnlyInB) > 0L) {
+    lines <- c(lines, "individuals only in nprcgenekeepr:",
+      toString(cmp$individualsOnlyInB))
+  }
+  paste(lines, collapse = "\n")
+}

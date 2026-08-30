@@ -1061,11 +1061,15 @@ test_that(
 ## reporting logic lived only in a data-raw/ script explicitly excluded from
 ## R CMD check ("not part of R CMD check" per its own header) -- so no test
 ## ever exercised it, and it silently went stale. .formatStructuralDiscrepancy()
-## is the same reporting logic, extracted into this helper (auto-loaded
-## under test_dir()/devtools::test(), same file as compareAgainstKinship2())
-## so it has real test coverage going forward; data-raw/
-## kinship2FidelityValidation.R now calls this instead of a local copy. (As
-## of Phase 1 of the P5-suppression plan, S644 2026-08-27, Track B full no
+## is the same reporting logic, extracted so it has real test coverage going
+## forward; data-raw/kinship2FidelityValidation.R now calls this instead of a
+## local copy. Defined in R/comparePedigreeStructure.R (moved there S653 from
+## a testthat helper -- that misplacement is what caused lint.yaml to go red
+## on CI in the first place: a function defined only in a testthat helper is
+## invisible to lintr::lint_package()'s helper-less CI invocation, even
+## though every local repro looked clean because pkgload::load_all()'s own
+## default helpers = TRUE silently auto-sources testthat helpers). (As of
+## Phase 1 of the P5-suppression plan, S644 2026-08-27, Track B full no
 ## longer triggers identical = FALSE at all -- see the populated-field tests
 ## below, which exercise the same reporting logic via hand-built cmp
 ## structures instead.)

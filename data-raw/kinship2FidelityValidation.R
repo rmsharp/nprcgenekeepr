@@ -326,17 +326,22 @@ cat("Track C (9 subjects, dogleg) structurally identical to kinship2:",
 ## If any comparison finds a real discrepancy, print it in full rather than
 ## just the boolean -- a diff staying uncaught here would otherwise be
 ## silently swallowed by the summary cat() calls above.
-## .formatStructuralDiscrepancy() (tests/testthat/helper-
-## comparePedigreeStructure.R, sourced above) replaces this script's own
-## former local reportDiscrepancy() copy (found live 2026-08-26: that copy
-## was never updated when individualsOnlyInA/individualsOnlyInB were added
-## to compareAgainstKinship2()'s return shape, so it silently omitted the
-## one detail -- individualsOnlyInB: "P5" -- the Track B full identical =
-## FALSE verdict is actually based on; this script has no test coverage of
-## its own, being explicitly excluded from R CMD check, so the gap went
-## unnoticed until an owner-directed live rerun caught it).
+## .formatStructuralDiscrepancy() (R/comparePedigreeStructure.R -- moved
+## there S653 from tests/testthat/helper-comparePedigreeStructure.R, see that
+## function's own roxygen comment for why) replaces this script's own former
+## local reportDiscrepancy() copy (found live 2026-08-26: that copy was
+## never updated when individualsOnlyInA/individualsOnlyInB were added to
+## compareAgainstKinship2()'s return shape, so it silently omitted the one
+## detail -- individualsOnlyInB: "P5" -- the Track B full identical = FALSE
+## verdict is actually based on; this script has no test coverage of its
+## own, being explicitly excluded from R CMD check, so the gap went
+## unnoticed until an owner-directed live rerun caught it). Called via the
+## explicit nprcgenekeepr::: prefix, matching this script's own established
+## convention for calling R/-defined internal functions (see
+## compareAgainstKinship2()'s own definition, sourced above, for the same
+## pattern) -- this script is an external caller, not one of R/'s own files.
 reportDiscrepancy <- function(label, cmp) {
-  report <- .formatStructuralDiscrepancy(label, cmp)
+  report <- nprcgenekeepr:::.formatStructuralDiscrepancy(label, cmp)
   if (!is.null(report)) cat("\n", report, "\n", sep = "")
 }
 reportDiscrepancy("Track B full", cmpBFull)
