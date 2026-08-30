@@ -2236,8 +2236,19 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
       jogCounter <- jogCounter + 1L
       j1 <- sprintf("__jog_%d_a", jogCounter)
       j2 <- sprintf("__jog_%d_b", jogCounter)
+      ## Styled invisible up front (shape/size/color.background/
+      ## color.border), matching .addRectilinearWaypoints()'s own D1/D2
+      ## waypoint nodes (__drop_/__bar_/__proj_, :1966-1973) exactly --
+      ## BACKLOG.md Housekeeping, found S648 (2026-08-28). Without this,
+      ## .matchColumns() below backfills these columns with NA and vis.js
+      ## falls back to its own default (a filled, full-size circle)
+      ## instead of nothing.
       newNodeRows[[length(newNodeRows) + 1L]] <- data.frame(
         id = c(j1, j2), x = c(xf, xt), y = c(y0 + jogY, y0 + jogY),
+        label = c("", ""), shape = c("dot", "dot"),
+        title = c(NA_character_, NA_character_), size = c(0L, 0L),
+        color.background = c("rgba(0,0,0,0)", "rgba(0,0,0,0)"),
+        color.border = c("rgba(0,0,0,0)", "rgba(0,0,0,0)"),
         stringsAsFactors = FALSE
       )
       ## Preserve every other column from the ORIGINAL edge (color,
