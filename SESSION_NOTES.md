@@ -18,6 +18,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 658 Did
+**Deliverable:** Design plan for BACKLOG.md's "6 pre-existing duplicate-vs-individual proximity
+near-misses" Housekeeping item (found S654) — a planning-only session per the item's own "needs its
+own design session first" tag, following `ARCHITECTURE_WORKSTREAM.md`. No implementation this
+session. (IN PROGRESS)
+**Started:** 2026-08-30.
+**Status:** Session claimed. Work beginning. *(Note: Phase 1B claim was written after some read-only
+investigation had already started, not immediately before it as SESSION_RUNNER.md Phase 1B requires
+— self-caught mid-session; no technical/write work preceded this stub, only measurement scripts run
+against the real fixture. Flagged here rather than silently corrected.)*
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 656 Handoff Evaluation (by Session 657)
 **Score: 9/10.** **What helped:** S656's gotchas named the exact remaining pedigree-fidelity
 Housekeeping items with correct READY/Effort tags -- the Track C table discrepancy this session
