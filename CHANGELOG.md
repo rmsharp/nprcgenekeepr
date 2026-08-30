@@ -16,6 +16,16 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [BL-jogWaypointStyling] S656: claim session (fix __jog_* waypoint invisible styling)
+- Session claimed. Deliverable: `.resolveEdgeNodeCollisions()`'s `__jog_*` waypoint nodes
+  (`R/makePedigreeDiagramData.R:2239-2242`) currently only set `id`/`x`/`y`, so
+  `.matchColumns()` backfills `shape`/`size`/`color.background`/`color.border` with `NA`,
+  and vis.js falls back to its own default filled circle instead of invisible -- unlike the
+  D1/D2 waypoint nodes `.addRectilinearWaypoints()` itself styles explicitly invisible
+  (`:1966-1973`). Fix: give the `__jog_*` node construction the same explicit invisible
+  styling. BACKLOG.md Housekeeping item, found S648 (2026-08-28).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [ad hoc] S655: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S654 precedent)
 - Commit set `HANDOFFS.md`'s S655 receipt `commit:` field from `pending` to `5f43f49e` (a 1-line
   change), the same self-reference workaround this project's sessions have made since S600/S602.

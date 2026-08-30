@@ -136,6 +136,24 @@ This file currently holds **19** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S656
+date: 2026-08-30
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Fix .resolveEdgeNodeCollisions()'s __jog_* waypoint nodes so they render invisible
+  (matching .addRectilinearWaypoints()'s own D1/D2 waypoint convention) instead of vis.js's
+  default filled circle (BACKLOG.md Housekeeping, found S648).
+what_was_done: pending
+next_steps: pending
+key_files: R/makePedigreeDiagramData.R:2060-2272 (.resolveEdgeNodeCollisions()), tests/testthat/test_resolveEdgeNodeCollisions.R
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S655
 date: 2026-08-30
 status: complete

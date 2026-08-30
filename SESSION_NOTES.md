@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 656 Did
+**Deliverable:** Fix `.resolveEdgeNodeCollisions()`'s `__jog_*` waypoint nodes so they render
+invisible (matching `.addRectilinearWaypoints()`'s own D1/D2 `__drop_`/`__bar_`/`__proj_`
+waypoint convention) instead of vis.js's default filled circle (BACKLOG.md Housekeeping, found
+S648, 2026-08-28) (IN PROGRESS)
+**Started:** 2026-08-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 654 Handoff Evaluation (by Session 655)
 **Score: 10/10.** **What helped:** S654's `next_steps` pointed directly at the ratified design
 doc's own §6/§7 (Migration Path/Verification Plan) and explicitly flagged the §5.3 pinned-test
