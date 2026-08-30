@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S656: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S655 precedent)
+- Commit `1dbb61fb` set `HANDOFFS.md`'s S656 receipt `commit:` field from `pending` to `6b7c445c`
+  (a 1-line change), the same self-reference workaround this project's sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [ad hoc] S656: docs close-out -- NEWS.Rmd entry, Learning 695, BACKLOG.md structural-guard item
 - `NEWS.Rmd`/`NEWS.md`: added a plain-language bullet to the Pedigree Diagram group, right after
   the existing "reroutes around the obstacle" bullet it directly improves (shipping-order
