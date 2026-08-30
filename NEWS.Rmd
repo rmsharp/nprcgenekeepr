@@ -95,6 +95,13 @@ knitr::opts_chunk$set(echo = TRUE)
   built to exercise this, the visual change is too small to see on
   screen at normal zoom, so don't expect a visible difference in today's
   example pedigrees.
+- For mating pairs the layout can safely spread apart, the small mating
+  symbol now sits closer to the true midpoint between the two parents,
+  instead of drifting toward one parent.
+- A small number of mating symbols that could land close enough to an
+  unrelated duplicate-animal marker to visually touch, in large colony
+  pedigrees with many repeated individuals, are now kept a clear distance
+  apart.
 - Which parent a mating symbol anchors to is consistent across computers
   and regional settings: the anchor tie-break uses a locale-independent
   comparison (issue #162).

@@ -1108,6 +1108,56 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     tier3X[dupIds] <-
       .deCollideIndividualPoints(dupIds, tier3Gen[dupIds],
                                   seedIndividuals = tier3X[b1Ids])
+
+    ## ---- Track 7 Phase 4 (docs/planning/pedigree-diagram-track7-phase4-
+    ## union-duplicate-proximity-plan.md §2, design ratified S654): a
+    ## duplicate-side, post-hoc, unidirectional push resolving the
+    ## union-vs-DUPLICATE proximity residual Phase 2's own union-side push
+    ## (above) cannot see -- a duplicate's x is not yet known during that
+    ## sweep (§1.1, a genuine data dependency). Runs AFTER both the union
+    ## sweep and this function's own duplicate de-collision pass just
+    ## above, so it has full information and is order-independent (§2) --
+    ## unlike a union-sweep-side fix (BACKLOG.md's own original sketch),
+    ## which the design doc's own Alternative B found structurally
+    ## incomplete: resolves only 2/3 known cases, because one case's
+    ## owning union sorts AFTER the colliding union in the same-generation
+    ## sweep, invisible to a look-backward-only occupied-set (§3.1/§4/§9).
+    for (dupId in dupIds) {
+      unitId <- duplicates$matingUnitId[duplicates$id == dupId]
+      g <- tier3Gen[[dupId]]
+      unrelatedUnionsAtGen <- unitX[xDerivableUnits$id[
+        xDerivableUnits$gen == g & xDerivableUnits$id != unitId]]
+      unrelatedUnionsAtGen <- unrelatedUnionsAtGen[!is.na(unrelatedUnionsAtGen)]
+      if (length(unrelatedUnionsAtGen) == 0L) next
+      collidesUnrelatedUnion <- function(x0) {
+        any(abs(x0 - unrelatedUnionsAtGen) < unionClearanceIndividual)
+      }
+      x0 <- tier3X[[dupId]]
+      if (collidesUnrelatedUnion(x0)) {
+        rawX0 <- x0
+        ## Unidirectional only (always rightward) -- matches derivedX()'s
+        ## own always-rightward B3 branch convention. A first-drafted
+        ## bidirectional search (mirroring Phase 2's own union-side
+        ## mechanism exactly) was found, by live measurement, to push a
+        ## duplicate newly-too-close to its OWN owning union on all 3
+        ## known cases (design doc §3.3, a documented false start) --
+        ## rejected, not reused here.
+        k <- 1L
+        repeat {
+          cand <- rawX0 + k * unionClearanceIndividual
+          if (!collidesUnrelatedUnion(cand)) {
+            x0 <- cand
+            break
+          }
+          if (k >= .kMaxUnionPush) {
+            x0 <- rawX0
+            break
+          }
+          k <- k + 1L
+        }
+        tier3X[[dupId]] <- x0
+      }
+    }
   }
   tier3Ids <- c(b1Ids, dupIds)
 
