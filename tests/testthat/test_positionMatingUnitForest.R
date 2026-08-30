@@ -1106,6 +1106,12 @@ test_that(".positionMatingUnitForest has a bounded, disclosed residual of
 ## 1226/1306/1324/1342), not a new guess.
 .unionClearanceIndividual <- (25 + 6) / 120
 .unionClearanceUnion <- (6 + 6) / 120
+## Two full-size (25px-radius) individual-shaped nodes -- duplicate-vs-
+## unrelated-individual proximity plan (docs/planning/pedigree-diagram-
+## duplicate-individual-proximity-plan.md §1.1), the geometrically correct
+## clearance for a pair of individual/duplicate/B1 render nodes, distinct
+## from .unionClearanceIndividual above (a union DOT vs. an individual).
+.individualClearance <- (25 + 25) / 120
 
 ## Pre-RED empirical finding, S649 (verified live via a temporary,
 ## immediately-reverted spike patch -- git diff/status/shasum confirmed
@@ -1282,6 +1288,180 @@ test_that(".positionMatingUnitForest's Track 7 Phase 2 push resolves every
   ## __union_43/__dup_WDBGPF_2, __union_126/__dup_YPHFHF_1) confirmed
   ## individually resolved before this aggregate assertion was updated.
   expect_equal(unname(counts["duplicate"]), 0L)
+})
+
+## ---- Duplicate-vs-unrelated-individual proximity (docs/planning/
+## pedigree-diagram-duplicate-individual-proximity-plan.md, design ratified
+## S658, implementation S660): .deCollideIndividualPoints() intervenes ONLY
+## on an exact tie (< 1e-9) for individual-shaped points (real/B1
+## individuals and duplicates, all 25px-radius circles) -- it has no
+## near-miss RADIUS check, unlike the union-side mechanism Track 7 Phase
+## 2/4 already added. Option B (ratified) extends Track 7 Phase 4's
+## existing post-hoc duplicate-side push loop with a combined
+## union+individual collision check (own mating-unit parents excluded).
+## Pre-RED re-validation (S660, re-derived live against unmodified HEAD,
+## not assumed from the design doc): the exact same 6 genuine UNRELATED
+## same-generation individual-pairs the design doc's §1.2/§1.3 table
+## reports survive full family-relationship exclusion (dup-own-parent/
+## parent-child/sibling/mate) -- including the 2 duplicate-involving cases
+## this fix targets. (An incidental, separate, ALREADY-DISCLOSED residual
+## also surfaces in a naive sweep: 15 EXACT-tie [dist < 1e-9] pairs, traced
+## to .deCollideIndividualPoints()'s own .kMaxIndividualPush cap-exhaustion
+## fallback [:912-914, "falls back to the ORIGINAL exact-tie value"] --
+## unrelated to and unaffected by this fix, explicitly excluded from the
+## counting method below.)
+test_that(".positionMatingUnitForest's duplicate-vs-unrelated-individual
+           near-miss defect: on the real 375-individual bundled fixture,
+           exactly 2 duplicates sit within .individualClearance of an
+           unrelated (non-family) individual-shaped point before Option B's
+           fix -- 0 after", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  indivRows <- pos[.nodeKind(pos$id) %in% c("individual", "duplicate"), ]
+  dupUnitOf <- stats::setNames(forest$duplicates$matingUnitId,
+                                forest$duplicates$id)
+  unitSireOf <- stats::setNames(forest$matingUnits$sire, forest$matingUnits$id)
+  unitDamOf <- stats::setNames(forest$matingUnits$dam, forest$matingUnits$id)
+  realIdOf <- function(id) {
+    m <- match(id, forest$duplicates$id)
+    ifelse(is.na(m), id, forest$duplicates$realId[m])
+  }
+  sireOf <- stats::setNames(as.character(ped$sire), as.character(ped$id))
+  damOf <- stats::setNames(as.character(ped$dam), as.character(ped$id))
+
+  ## dup-own-parent: one side is a duplicate whose OWN mating unit's
+  ## sire/dam is the other side (the design's own family exclusion, §2).
+  isDupOwnParent <- function(idA, idB) {
+    ra <- realIdOf(idA); rb <- realIdOf(idB)
+    if (idA %in% names(dupUnitOf)) {
+      u <- dupUnitOf[[idA]]
+      if (identical(unname(unitSireOf[[u]]), rb) ||
+            identical(unname(unitDamOf[[u]]), rb)) return(TRUE)
+    }
+    if (idB %in% names(dupUnitOf)) {
+      u <- dupUnitOf[[idB]]
+      if (identical(unname(unitSireOf[[u]]), ra) ||
+            identical(unname(unitDamOf[[u]]), ra)) return(TRUE)
+    }
+    FALSE
+  }
+
+  n <- 0L
+  for (g in unique(indivRows$gen)) {
+    rows <- indivRows[indivRows$gen == g, ]
+    k <- nrow(rows)
+    if (k < 2L) next
+    for (i in seq_len(k - 1L)) {
+      for (j in (i + 1L):k) {
+        involvesDup <- grepl("^__dup_", rows$id[i]) ||
+          grepl("^__dup_", rows$id[j])
+        if (!involvesDup) next
+        d <- abs(rows$x[i] - rows$x[j])
+        if (d < 1e-9) next  ## the separate, already-disclosed exact-tie
+                            ## residual (see header note) -- out of scope
+        if (d < .individualClearance &&
+              !isDupOwnParent(rows$id[i], rows$id[j])) {
+          n <- n + 1L
+        }
+      }
+    }
+  }
+  ## Pre-fix: 2 (TTE0Z7/__dup_MY1AEU_2 at 0.099, M0YNUR/__dup_L31S6S_5 at
+  ## 0.100) -- re-measured live this session, matching the design doc's own
+  ## §1.3 table exactly. Option B (GREEN) resolves this to 0.
+  expect_equal(n, 0L)
+})
+
+test_that(".positionMatingUnitForest's Option B fix resolves the 2 named
+           duplicate-vs-unrelated-individual pairs on the real 375-
+           individual bundled fixture to >= .individualClearance apart
+           (design doc §1.3/§2) -- 0.099/0.100 raw units apart before the
+           fix", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  distTo <- function(idA, idB) {
+    abs(pos$x[pos$id == idA] - pos$x[pos$id == idB])
+  }
+  expect_true(distTo("TTE0Z7", "__dup_MY1AEU_2") >= .individualClearance)
+  expect_true(distTo("M0YNUR", "__dup_L31S6S_5") >= .individualClearance)
+})
+
+## ---- §6 disclosed edge case: the early-exit guard at
+## R/makePedigreeDiagramData.R:1131 (`if (length(unrelatedUnionsAtGen) ==
+## 0L) next`) must widen to also check the new individual forbidden-set, or
+## a duplicate in a generation with NO OTHER mating units would silently
+## skip the new check entirely (design doc §6).
+##
+## Investigated this session whether a small synthetic fixture could
+## reproduce an ACTUAL near-miss under this exact condition (a genuine RED
+## failure, matching every other case in this file) -- found, by direct
+## construction and analysis, that it cannot for two independent
+## structural reasons:
+## (1) ANY B1/free-pass individual close enough to matter necessarily
+##     brings her OWN mating unit into the SAME generation (tier3Gen is
+##     always defined as `matingUnits$gen[herOwnUnitId]`), which makes
+##     unrelatedUnionsAtGen non-empty by construction and directly
+##     contradicts the "no other mating units" premise.
+## (2) A genuine Tier-1 individual is separately guaranteed by
+##     sweepMinSep()'s own per-generation backstop (:738-749) to be >=
+##     minSep=1 from EVERY other genuine Tier-1 individual at her real
+##     gen -- so an UNRELATED one can get no closer than minSep - 0.4 =
+##     0.6 to a duplicate anchored nearby (> .individualClearance) in any
+##     hand-built fixture small enough to reason about by construction; only
+##     the real fixture's much larger, emergent cross-subtree crowding
+##     produces the kind of coincidental proximity this design's own 2
+##     genuine defects exploit.
+## Confirmed live: both of the real fixture's own 2 named cases sit in
+## generations with 40+ OTHER mating units already present (re-measured
+## this session), so the widened guard is never actually exercised by
+## either of them -- this really is a purely defensive completeness path,
+## not a live-hit one, exactly as the design doc's own §6 disclosed ("does
+## not bite on the current fixture").
+##
+## This test instead exercises the WIDENED CONDITION's own regression
+## safety on the one case that IS cheaply constructible: a duplicate whose
+## generation has genuinely ZERO other mating units and ZERO nearby
+## individuals (the ordinary, common "quiet generation" case) must be
+## completely unaffected by the widened guard -- confirming its own two-
+## forbidden-set-length check does not regress this baseline case.
+test_that(".positionMatingUnitForest's widened Phase-4 early-exit guard
+           (design doc §6) leaves a duplicate in a generation with zero
+           other mating units and zero nearby individuals completely
+           unaffected", {
+  ped <- data.frame(
+    id   = c("W1", "W2", "Z", "X", "Y", "P", "Q"),
+    sire = c(NA, NA, "W1", NA, NA, "X", "X"),
+    dam  = c(NA, NA, "W2", NA, NA, "Y", "Z"),
+    sex  = c("M", "F", "F", "M", "F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  forest <- .buildMatingUnitForest(ped)
+  expect_equal(nrow(forest$duplicates), 1L)
+  dupUnit <- forest$duplicates$matingUnitId
+  dupGen <- forest$matingUnits$gen[forest$matingUnits$id == dupUnit]
+  otherUnits <- forest$matingUnits$id[forest$matingUnits$gen == dupGen &
+                                         forest$matingUnits$id != dupUnit]
+  expect_equal(length(otherUnits), 0L)  # confirms the premise holds
+
+  pos <- .positionMatingUnitForest(ped, forest)
+  dupId <- forest$duplicates$id
+  ## Pinned value, re-measured live this session -- must stay unchanged
+  ## after the fix (GREEN), demonstrating the widened guard's own
+  ## early-exit still fires when BOTH forbidden sets are empty.
+  expect_equal(pos$x[pos$id == dupId], 0.401, tolerance = 1e-6)
 })
 
 ## ---- Walker/BJL cutover (Phase 3, this session): regression coverage for
