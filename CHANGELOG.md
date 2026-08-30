@@ -16,6 +16,11 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S655: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S654 precedent)
+- Commit set `HANDOFFS.md`'s S655 receipt `commit:` field from `pending` to `5f43f49e` (a 1-line
+  change), the same self-reference workaround this project's sessions have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [ad hoc] S655: docs close-out -- fix NEWS.Rmd bullet placement, record Learning 694
 - Commit `7fe12fd4`. `BACKLOG.md`: marked the Track 7 Phase 4 item and S649's missing `NEWS.Rmd`
   entry both DONE. `NEWS.Rmd`/`NEWS.md`: relocated the 2 new bullets this session's own GREEN
