@@ -18,6 +18,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 660 Did
+**Deliverable:** Implement the ratified duplicate-vs-individual proximity fix (Option B,
+`docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`, design ratified S658,
+standing top priority) -- extend Track 7 Phase 4's post-hoc duplicate-side push loop
+(`R/makePedigreeDiagramData.R:1125-1160`) with a combined union+individual collision check,
+resolving the 2 confirmed duplicate-vs-unrelated-individual near-misses (`TTE0Z7`/`__dup_MY1AEU_2`,
+`M0YNUR`/`__dup_L31S6S_5`). (IN PROGRESS)
+**Started:** 2026-08-30.
+**Status:** Session claimed. Work beginning -- pre-RED empirical re-validation of the design doc's
+§1.2/§1.3 measurements against current `HEAD` next, per the design doc's own §7 Verification Plan.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 658 Handoff Evaluation (by Session 659)
 **Score: 9/10.** **What helped:** S658's gotchas/next-steps named the exact remaining
 pedigree-fidelity Housekeeping items with correct READY/Effort tags -- including the `NEWS.Rmd`

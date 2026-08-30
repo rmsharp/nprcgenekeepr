@@ -136,6 +136,26 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S660
+date: 2026-08-30
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement the ratified duplicate-vs-individual proximity fix (Option B,
+  docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md, standing top priority) --
+  extend Track 7 Phase 4's post-hoc duplicate-side push loop with a combined union+individual
+  collision check.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim-time stub -- overwritten at Phase 3D close-out>
+
+```handoff
 session: S659
 date: 2026-08-30
 status: complete
