@@ -16,6 +16,37 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [BL-newsRmdSiblingConsang] S659: docs close-out -- BACKLOG.md DONE, Learning 698, CLAUDE.md pointer
+- `BACKLOG.md`: marked the `NEWS.Rmd` stale sibling-consanguineous-mating bullet item `[x]` DONE
+  with full root-cause and resolution detail (traced to the S602 `.computeDupNudge()`/
+  Track-3-Engagement-Gate introduction, the S628 carry-forward rewrite, and the Walker/BJL
+  cutover's removal of that mechanism 4 days before the rewrite). `PROJECT_LEARNINGS.md`:
+  recorded Learning 698 (a rewrite can carry forward text that was already dead at rewrite time --
+  date-order the mechanism's removal against the rewrite date, don't just check present-day
+  absence). `CLAUDE.md` learnings pointer updated 697 -> 698.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [BL-newsRmdSiblingConsang] S659: correct NEWS.Rmd stale sibling-consanguineous-mating bullet
+- Root cause confirmed via `git log -S`/blame: the bullet traced to `.computeDupNudge()`/the
+  Track-3-Engagement-Gate (introduced S602, `cdb9a16`, 2026-08-17), carried forward under new
+  wording by S628's non-technical-audience rewrite (`815274c`, 2026-08-24). The Walker/BJL
+  cutover (S620/S621, `014f0910`/`909dad20`, 2026-08-20) removed that mechanism 4 days *before*
+  S628 ever touched the file -- confirmed independently by
+  `tests/testthat/test_positionMatingUnitForest.R:1287-1300`'s own "gone by construction... makes
+  it unnecessary by construction" comment, and by a clean `grep -rn "consanguineous" R/` (only
+  unrelated consanguineous-mate-edge-coloring hits). Removed the 5-line bullet outright from
+  `NEWS.Rmd` (per its own "or remove it if nothing does" allowance); the bullet immediately above
+  it (issue #166, corrected S652) reads coherently on its own. `rmarkdown::render()` regenerated
+  `NEWS.md` to match -- symmetric 5-line removal, no other drift. Docs-only -- no production code
+  or test changes; `tests/testthat/test_effectivePopulationSizeDocs.R` (the one test file that
+  scans `NEWS.Rmd` content) re-run live, 7/7 passing.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · [ad hoc] S659: claim session (correct NEWS.Rmd stale sibling-consanguineous-mating bullet)
+- Commit `bd678e55` opened the `SESSION_NOTES.md` stub and `HANDOFFS.md` `status: pending` receipt
+  for this session's deliverable.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [ad hoc] S658: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S657 precedent)
 - This commit sets `HANDOFFS.md`'s S658 receipt `commit:` field from `pending` to `87cb0b46` (the
   deliverable commit), the same self-reference workaround this project's sessions have made since

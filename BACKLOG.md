@@ -434,23 +434,29 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `rmarkdown::render()` (this file's own build-equivalent) run clean after every
       substantive edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`.
 ## Housekeeping
-- [ ] **`NEWS.Rmd`'s "For one specific pattern (a sibling-consanguineous mating), the trade-off
+- [x] **`NEWS.Rmd`'s "For one specific pattern (a sibling-consanguineous mating), the trade-off
       above is partially mitigated..." dev-version bullet may already have been stale before this
       session, independent of issue #166** (found incidentally S652, 2026-08-29, while correcting
-      the immediately-preceding bullet for issue #166's own revert, READY, Effort S) -- git-blame
-      traces both bullets to the same S628 rewrite (2026-08-24), which predates Track 7 Phase 1
-      (S647, 2026-08-27) entirely, so "the trade-off above" cannot originally have been describing
-      Track 7 at all -- it most likely described the Track-3-Engagement-Gate mechanism (S602),
-      which multiple `tests/testthat/test_positionMatingUnitForest.R` comments already document as
-      "gone by construction" under the Walker/BJL cutover (S620/S621, itself before S628). If so,
-      this bullet has been describing a removed mechanism since before Track 7 ever existed, not a
-      new gap from this session's own edit. Not investigated further or fixed this session (out of
-      scope -- a pre-existing, unrelated NEWS.Rmd staleness question, not part of issue #166's own
-      deliverable). A future session should determine what (if anything) currently produces this
-      bullet's claimed sibling-consanguineous mitigation under the CURRENT engine, correct the
-      bullet to describe it accurately (or remove it if nothing does), and while there, re-read the
-      bullet immediately above it (corrected this session for issue #166) to confirm the two still
-      read coherently together.
+      the immediately-preceding bullet for issue #166's own revert). **RESOLVED S659 (2026-08-30),
+      docs-only fix (no production code or test changes -- gated explicitly via `AskUserQuestion`
+      as such, matching S657's precedent for the identical class of fix).** Confirmed, via
+      `git log -S`/blame, that the bullet traced to `.computeDupNudge()`/the Track-3-Engagement-Gate
+      (introduced S602, commit `cdb9a16`, 2026-08-17) and was carried forward, reworded, by S628's
+      non-technical-audience rewrite (commit `815274c`, 2026-08-24). The Walker/BJL cutover
+      (S620/S621, commits `014f0910`/`909dad20`, 2026-08-20) removed that mechanism **4 days before**
+      S628 ever touched the file -- so the bullet was never accurate as rewritten, not a gap
+      introduced later. Independently confirmed by `tests/testthat/test_positionMatingUnitForest.R:1287-1300`'s
+      own comment ("Track 3's clamp and the post-hoc duplicate-occurrence nudge are both gone by
+      construction under the new engine... makes it unnecessary by construction") and by a clean
+      `grep -rn "consanguineous" R/` turning up only unrelated consanguineous-mate-*edge-coloring*
+      logic, never anything position-derivation-specific -- nothing in the current engine produces
+      an analogous mitigation. Removed the bullet outright (per its own "or remove it if nothing
+      does" allowance) rather than rewriting it to describe non-existent behavior; the bullet
+      immediately above it (corrected S652 for issue #166) reads coherently on its own into the
+      next bullet. `rmarkdown::render()` regenerated `NEWS.md` to match (symmetric 5-line removal
+      in both files, no other drift); `tests/testthat/test_effectivePopulationSizeDocs.R` (the one
+      test file that scans `NEWS.Rmd` content) re-run live, 7/7 passing. `PROJECT_LEARNINGS.md`
+      Learning 698. See `CHANGELOG.md`.
 - [x] **S649's Track 7 Phase 2 (union-dot proximity fix, commits `316b605f`/`e312774f`) shipped
       with no `NEWS.Rmd` entry** (found incidentally S650, 2026-08-29, while adding S650's own
       Phase 3 NEWS.Rmd entry to the same Pedigree Diagram group) -- violates

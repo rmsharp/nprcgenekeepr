@@ -138,21 +138,42 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S659
 date: 2026-08-30
-status: pending
-self_score: pending
-predecessor_score: pending
+status: complete
+self_score: 9
+predecessor_score: 9
 active_task: Correct NEWS.Rmd's stale sibling-consanguineous-mating dev-version bullet
-  (BACKLOG.md Housekeeping, found incidentally S652) -- docs-only, no TDD cycle
+  (BACKLOG.md Housekeeping, found incidentally S652) -- DONE, docs-only fix, no TDD cycle
   (owner-directed via AskUserQuestion, matching S657's precedent).
-what_was_done: pending
-next_steps: pending
-key_files: NEWS.Rmd (the stale bullet and the one immediately above it, corrected S652);
-  tests/testthat/test_positionMatingUnitForest.R (comments documenting the
-  Track-3-Engagement-Gate as "gone by construction" under the Walker/BJL cutover,
-  S620/S621).
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+what_was_done: Traced the bullet via git log -S/blame to its S602 introduction
+  (.computeDupNudge()/Track-3-Engagement-Gate, cdb9a16) and its S628 carry-forward rewrite
+  (815274c). Confirmed the Walker/BJL cutover (S620/S621, 014f0910/909dad20, 2026-08-20)
+  removed that mechanism 4 days BEFORE S628's rewrite (2026-08-24) -- the bullet was never
+  accurate as rewritten. Cross-confirmed via test_positionMatingUnitForest.R:1287-1300's own
+  "gone by construction" comment and a clean grep -rn "consanguineous" R/ (only unrelated
+  edge-coloring hits). Removed the bullet outright (5 lines, NEWS.Rmd + regenerated NEWS.md,
+  symmetric diff, no other drift); re-ran test_effectivePopulationSizeDocs.R live, 7/7 passing.
+  BACKLOG.md item marked DONE; PROJECT_LEARNINGS.md Learning 698; CLAUDE.md pointer 697->698.
+  Commit `bd678e55` (claim); close-out commit is this receipt's own `commit:` field below.
+next_steps: Pick up BACKLOG.md's standing top priority: implement the ratified
+  duplicate-vs-individual proximity fix (Option B,
+  docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md). Separately READY:
+  the ScheduleWakeup/run_in_background structural-guard investigation (Effort S-M, Learning
+  694/695); scoping a design pass for the 4 B1-vs-individual proximity near-misses (Effort M,
+  found S658, needs its own design session first).
+key_files: NEWS.Rmd (the corrected Pedigree Diagram section, around the issue #166 bullet);
+  NEWS.md (regenerated); BACKLOG.md Housekeeping (item marked DONE); PROJECT_LEARNINGS.md
+  Learning 698.
+gotchas: (1) Several .claude/worktrees/wf_* directories (leftover from earlier Workflow tool
+  runs, gitignored) still carry the OLD pre-fix NEWS.Rmd text -- harmless untouched, but would
+  reintroduce the removed bullet if ever resurrected/merged. (2) STANDING TOP PRIORITY banner
+  still applies (pedigree-diagram fidelity, owner directive 2026-08-26) -- this session's own
+  pick was Housekeeping-tier, not the top-priority item. (3) master unpushed by a growing
+  margin (46+ commits) -- lint.yaml stays red on pushed runs until that push happens.
+runtime_smoke: n/a -- docs-only session, NEWS.Rmd/NEWS.md have no runtime path
+  (SAFEGUARDS.md Documentation-projects row); build-equivalent (rmarkdown::render()) ran
+  clean, one directly-relevant test file re-run live and passed.
+changelog_ref: see CHANGELOG.md's 3 new 2026-08-30 S659 entries (claim / fix / docs-close-out),
+  tagged [BL-newsRmdSiblingConsang].
 commit: pending
 ```
 

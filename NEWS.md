@@ -87,11 +87,6 @@ R. Mark Sharp, Ph.D.
 - The small mating symbol for that same kind of pairing sits near one
   parent rather than centered between the two -- keeping the connecting
   line down to their children straight instead of bent (issue \#166).
-- For one specific pattern (a sibling-consanguineous mating), the
-  trade-off above is partially mitigated -- though in the one test case
-  built to exercise this, the visual change is too small to see on
-  screen at normal zoom, so don't expect a visible difference in today's
-  example pedigrees.
 - Which parent a mating symbol anchors to is consistent across computers
   and regional settings: the anchor tie-break uses a locale-independent
   comparison (issue \#162).

@@ -18,20 +18,125 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 658 Handoff Evaluation (by Session 659)
+**Score: 9/10.** **What helped:** S658's gotchas/next-steps named the exact remaining
+pedigree-fidelity Housekeeping items with correct READY/Effort tags -- including the `NEWS.Rmd`
+stale sibling-consanguineous bullet this session picked (READY, Effort S, found S652) -- matching
+exactly what this session's own Phase 0 `BACKLOG.md` grep found, with no independent
+re-derivation needed. **What was missing:** nothing that mattered for this session's own pick --
+S658's own deliverable (the duplicate-vs-individual proximity design) was unrelated to the
+`NEWS.Rmd` item, so S658 had no occasion to investigate its root cause; the gotcha correctly left
+that investigation to a future session, which is exactly what happened here. **What was wrong:**
+nothing -- S658's own claims (design ratification, the 6->2 count correction, the new
+B1-vs-individual item filed separately, Learning 697) all checked out against `BACKLOG.md`/
+`PROJECT_LEARNINGS.md` content actually read this session. **ROI:** positive -- accurate
+priorities list at Phase 0, no wasted verification time on S658's own claims.
+
 ### What Session 659 Did
 **Deliverable:** Correct `NEWS.Rmd`'s stale "For one specific pattern (a sibling-consanguineous
 mating), the trade-off above is partially mitigated..." dev-version bullet (BACKLOG.md
-Housekeeping, found incidentally S652, 2026-08-29) (IN PROGRESS). Docs-only session, no TDD
-cycle (owner-directed via `AskUserQuestion`, matching S657's precedent for the identical class
-of fix) -- investigate what (if anything) currently produces this bullet's claimed mitigation
-under the CURRENT engine, correct the bullet accordingly (or remove it if nothing does), and
-re-confirm it still reads coherently with the bullet immediately above it (corrected S652 for
-issue #166).
-**Started:** 2026-08-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+Housekeeping, found incidentally S652, 2026-08-29). **DONE**, docs-only fix (no production code
+or test changes -- no TDD RED/GREEN/REFACTOR cycle applied, gated explicitly via
+`AskUserQuestion` as such, matching S657's precedent for the identical class of fix).
+**Started/Completed:** 2026-08-30 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0:** full orientation (`SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+   `SESSION_NOTES.md`/`HANDOFFS.md`/`CHANGELOG.md` reconciled -- 0 undocumented commits, both
+   frontiers equal `HEAD`). `gh issue list`: issue #166 already closed 2026-08-30, before this
+   session -- no orphaned issue work. `gh run list`: `lint.yaml` red on the last 2 pushed runs,
+   confirmed the already-known, expected consequence of S653's local fix not yet being pushed
+   (`master` 46 commits ahead of `origin/master`), not a new break. `methodology_dashboard.py`:
+   96/100 health, 1 HIGH-risk (unchanged, file-size). Checked the 7 untracked files against the
+   ghost-session heuristic: the 3 `docs/planning/*-spike-evidence.html` files and 2 vignette PDFs
+   are quarto/rmarkdown render byproducts of already-committed, already-documented sources
+   (S589/S590 spikes, weeks old) -- not an undocumented deliverable. Rendered a 4-option
+   priorities `AskUserQuestion` from `BACKLOG.md`'s remaining READY pedigree-fidelity items --
+   **owner picked the `NEWS.Rmd` stale-bullet item.**
+2. **Pre-RED scope `AskUserQuestion`:** confirmed docs-only, no TDD cycle -- matching S657's own
+   precedent for the identical class of fix (a stale-prose correction with no anticipated code
+   surface).
+3. **Phase 1B claim** (commit `bd678e55`) -- written immediately after the scope decision, before
+   any investigation began (avoiding S658's own self-caught claim-ordering slip).
+4. **Investigation:** `git log -S`/blame traced the bullet to its introduction at S602
+   (`.computeDupNudge()`/the Track-3-Engagement-Gate, commit `cdb9a16`, 2026-08-17) and its
+   carry-forward rewrite at S628 (commit `815274c`, 2026-08-24, part of the 58-entry
+   non-technical-audience reorganization). Read the S628 diff directly: at rewrite time "the
+   trade-off above" referred to the OLD parent-span-clamp bullet ("a mating symbol is always kept
+   within the range spanned by its own two parents"), which was itself later separately rewritten
+   again by S652 for issue #166's scoped revert -- leaving the sibling-consanguineous bullet as
+   the one survivor nobody re-touched. Confirmed the Walker/BJL cutover (S620/S621, commits
+   `014f0910`/`909dad20`, 2026-08-20) removed `.computeDupNudge()`/the Track-3-Engagement-Gate
+   **4 days before** S628's rewrite (2026-08-24) -- so the bullet was never accurate as rewritten,
+   not a gap introduced later. Cross-confirmed via
+   `tests/testthat/test_positionMatingUnitForest.R:1287-1300`'s own comment ("gone by
+   construction... makes it unnecessary by construction") and a clean `grep -rn "consanguineous"
+   R/` (only unrelated consanguineous-mate-*edge-coloring* hits, nothing position-derivation-related).
+5. **Fix:** removed the 5-line bullet outright from `NEWS.Rmd` (per its own "or remove it if
+   nothing does" allowance -- no current mechanism produces an analogous mitigation to describe);
+   confirmed the bullet immediately above it (issue #166, corrected S652) reads coherently into
+   the next bullet unaided. `rmarkdown::render()` regenerated `NEWS.md` -- symmetric 5-line
+   removal in both files, `git diff --stat` confirmed no other drift.
+   `tests/testthat/test_effectivePopulationSizeDocs.R` (the one test file that scans `NEWS.Rmd`
+   content) re-run live: 7/7 passing, no regression.
+6. **Close-out:** `BACKLOG.md`'s item marked `[x]` DONE with full root-cause/resolution detail
+   (commit shas for the S602 introduction, S628 rewrite, and S620/S621 removal all cited).
+   `PROJECT_LEARNINGS.md` Learning 698 (a rewrite can carry forward text that was already dead at
+   rewrite time -- date-order the mechanism's removal against the rewrite, don't just check
+   present-day absence). `CLAUDE.md` learnings pointer updated 697->698. `CHANGELOG.md`: 3
+   entries (claim/fix/docs-close-out), tagged `[BL-newsRmdSiblingConsang]` for the deliverable
+   entries.
+
+**Runtime smoke test (Phase 3E):** N/A -- docs-only session; `NEWS.Rmd`/`NEWS.md` are static
+release-notes text with no runtime path (matches `SAFEGUARDS.md`'s Documentation-projects row).
+The build-equivalent (`rmarkdown::render()`) ran clean; the one directly-relevant test file was
+re-run live and passed.
+
+**Self-assessment (Session 659): 9/10.** **Strengths:** (1) traced the bullet's full provenance
+via `git log -S`/blame across 3 separate commits (introduction, rewrite, removal) rather than
+guessing at what it might currently describe; (2) positively confirmed absence -- grepped current
+`R/` source for the domain term rather than inferring non-existence from failing to find evidence
+of presence; (3) date-ordered the mechanism's removal (S620/S621, Aug 20) against the rewrite
+that carried the bullet forward (S628, Aug 24), settling `BACKLOG.md`'s own open hypothesis with
+a definitive 4-day margin rather than leaving it speculative; (4) removed rather than reworded the
+bullet once confirmed nothing analogous exists, matching the item's own explicit allowance; (5)
+verified the regenerated `NEWS.md` diff was exactly symmetric with no collateral drift; (6) ran
+the one directly-relevant test live rather than assuming a docs-only change is risk-free; (7)
+locked the docs-only scope via `AskUserQuestion` before starting, avoiding an unneeded TDD cycle
+for a change with zero code/test surface; (8) claimed the session immediately, before any
+investigation, correcting the exact ordering slip S658 self-caught. **Weaknesses:** (1) did not
+run the full clean regression suite (scoped to the one directly-relevant test file -- reasonable
+given zero `.R` file changes, but a narrower verification than a full-suite run); (2) noticed but
+did not act on a tangential finding -- several stale `.claude/worktrees/wf_*` directories
+(leftover from earlier `Workflow` tool runs, gitignored, unrelated to this task) still carry the
+pre-fix `NEWS.Rmd` text; correctly out of scope for this session, but named here rather than
+silently passed over. **ROI:** high -- a plausible "reword it to describe what the mitigation
+currently does" instinct would have required inventing behavior that does not exist; the git
+archaeology instead found the bullet was already dead the day it was last rewritten.
+
+**Next steps:** Unchanged from S658's own gotchas (none else picked this session): implement the
+ratified duplicate-vs-individual proximity fix (Option B,
+`docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`, standing top priority,
+next pickup); investigate the `ScheduleWakeup`/`run_in_background` structural-guard gap (READY,
+Effort S-M, found S656, Learning 694/695); scope a dedicated design pass for the 4
+B1-vs-individual proximity near-misses (READY tag but needs its own design session first, Effort
+M, found S658). Unchanged gotchas: the stray LibreOffice lock file
+(`inst/extdata/reference/~$e Compounding Loop.html`) is still present; `HANDOFFS.md`/
+`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap; `master` is now further ahead
+of `origin/master`, unpushed; `lint.yaml` stays red on pushed runs until that push happens.
+
+**Key files:** `NEWS.Rmd` (the corrected Pedigree Diagram section, around the issue #166 bullet);
+`NEWS.md` (regenerated); `BACKLOG.md` Housekeeping (item marked DONE);
+`PROJECT_LEARNINGS.md` Learning 698.
+
+**Gotchas for a future session:** (1) Several `.claude/worktrees/wf_*` directories (leftover from
+earlier `Workflow` tool runs, gitignored, found incidentally this session) still carry the OLD
+(pre-fix) `NEWS.Rmd` text -- harmless as long as they stay untouched/gitignored, but would
+silently reintroduce the removed bullet if any were ever resurrected or merged. (2) STANDING TOP
+PRIORITY banner still applies -- pedigree-diagram fidelity work stays the top priority per the
+owner's 2026-08-26 directive; this session's own pick was a Housekeeping-tier item, not the
+top-priority item itself (owner's own choice via `AskUserQuestion`). (3) `master` is unpushed by
+a growing margin (46+ commits) -- consider pushing before it accumulates further.
 
 ### Session 657 Handoff Evaluation (by Session 658)
 **Score: 9/10.** **What helped:** S657's gotchas named the exact 3 remaining pedigree-fidelity
