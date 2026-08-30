@@ -183,7 +183,7 @@ runtime_smoke: Live chromote render check via g.chart.body.data.nodes.get(id) ag
   R -> htmlwidgets -> vis.js pipeline.
 changelog_ref: CHANGELOG.md 2026-08-30 S656 claim/RED/GREEN/docs-close-out entries (commits
   75b9f06e, 01a0f001, 4333fa39)
-commit: pending
+commit: 6b7c445c
 ```
 Fixed the `__jog_*` waypoint invisible-styling gap end to end via full TDD, correcting a stale
 BACKLOG function/line-number attribution along the way by reading actual current source rather
