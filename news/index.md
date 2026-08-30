@@ -85,19 +85,16 @@
   often in large, many-founder colony pedigrees – and reroutes around
   the obstacle. A small number of curved duplicate-animal connectors get
   only a partial correction and remain a disclosed residual.
-- A mating symbol is always kept within the range spanned by its own two
-  parents, matching kinship2’s convention – most notably for a mating
-  with only one child, which would otherwise have no other children to
-  center between. This is a disclosed trade-off, not a free improvement:
-  for the matings it affects, the symbol can sit further from where its
-  children are actually centered, and two unrelated sibling groups’ bars
-  can somewhat more often overlap visually – both accepted costs of the
-  correct parent-centered placement.
-- For one specific pattern (a sibling-consanguineous mating), the
-  trade-off above is partially mitigated – though in the one test case
-  built to exercise this, the visual change is too small to see on
-  screen at normal zoom, so don’t expect a visible difference in today’s
-  example pedigrees.
+- The small hidden markers used to bend a connector line around an
+  obstacle (see above) no longer occasionally show up as a stray dot
+  near an unrelated animal.
+- Two parents in a straightforward one-mate pairing (each mated only
+  once, sex clearly recorded) are drawn with a clearer gap between them,
+  matching kinship2’s convention.
+- The small mating symbol for that same kind of pairing sits near one
+  parent rather than centered between the two – keeping the connecting
+  line down to their children straight instead of bent (issue
+  [\#166](https://github.com/rmsharp/nprcgenekeepr/issues/166)).
 - Which parent a mating symbol anchors to is consistent across computers
   and regional settings: the anchor tie-break uses a locale-independent
   comparison (issue
@@ -130,11 +127,23 @@
   the same pairing. Pairs with more complicated family situations (a
   parent with more than one mate, for example) are unaffected and
   unchanged.
+- For mating pairs the layout can safely spread apart, the small mating
+  symbol now sits closer to the true midpoint between the two parents,
+  instead of drifting toward one parent.
+- A small number of mating symbols that could land close enough to an
+  unrelated duplicate-animal marker to visually touch, in large colony
+  pedigrees with many repeated individuals, are now kept a clear
+  distance apart.
 - When the Diagram tab leaves an animal out because it has no recorded
   parents, mates, or offspring (see above), it now tells you so, naming
   which animal(s) were left out – and shows a clear message instead of
   an empty diagram when none of the loaded animals have any such
-  relationships. \## Kinship & Pedigree Calculations
+  relationships.
+- A small number of duplicate-animal markers that could land close
+  enough to an unrelated animal (not part of the same family) to
+  visually touch, in large colony pedigrees with many repeated
+  individuals, are now kept a clear distance apart. \## Kinship &
+  Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their
   computed relatedness to genetic identity, and that correction flows
   through to every other relative reached through either twin – not just

@@ -17,6 +17,630 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-30 · \[ad hoc\] S660: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S659 precedent)
+
+- This commit sets `HANDOFFS.md`’s S660 receipt `commit:` field from
+  `pending` to `b9188034` (the deliverable commit), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-dupIndividualProximity\] S660: docs close-out – BACKLOG.md DONE, NEWS.Rmd bullet, Learning 699, CLAUDE.md pointer
+
+- `BACKLOG.md`: marked the duplicate-vs-unrelated-individual proximity
+  item `[x]` DONE with full RED/GREEN detail (commit shas, measured
+  pinned-value updates, chromote render check results).
+  `NEWS.Rmd`/`NEWS.md`: added a plain-language bullet describing the
+  fix; regenerated via `rmarkdown::render("NEWS.Rmd")` (no
+  `output_format` override, per Learnings 510/517), clean insertion-only
+  diff confirmed. `PROJECT_LEARNINGS.md`: recorded Learning 699 (a
+  near-miss-radius defect’s own live-reachability is coupled to which
+  tier the colliding point is positioned at; a
+  `sweepMinSep()`-guaranteed Tier-1 point can never produce the
+  near-miss a duplicate/B1 point is vulnerable to, and a B1 point always
+  brings its own mating unit into the same generation – together making
+  the design doc’s own §6 disclosed edge case unconstructible below
+  real-fixture scale). `CLAUDE.md` learnings pointer updated 698-\>699.
+  `SESSION_NOTES.md`: S659 handoff evaluation (9/10) and full S660
+  handoff written. `HANDOFFS.md`: S660 receipt completed.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-dupIndividualProximity\] S660 GREEN: duplicate-vs-unrelated-individual proximity fix (Option B)
+
+- `R/makePedigreeDiagramData.R`: extended Track 7 Phase 4’s post-hoc
+  duplicate-side push loop (`:1125-1179`) with a combined
+  union+individual collision check per the ratified design
+  (`docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`,
+  S658) – new `individualClearance=(25+25)/120` constant, a
+  family-excluding forbidden-set from `tier1X`/`tier3X[b1Ids]`, a
+  `collidesUnrelatedIndividual()` closure OR’d into the existing check,
+  the early-exit guard widened to check both forbidden-set lengths.
+  Resolves `TTE0Z7`/`__dup_MY1AEU_2` and `M0YNUR`/`__dup_L31S6S_5` to
+  exactly 50px apart (live chromote render check, vis.js DOM ground
+  truth). Updated 2 predicted pinned-count assertions
+  (`test_makePedigreeMatingLayout.R` 1456-\>1460/198-\>202,
+  `test_resolveEdgeNodeCollisions.R` 98-\>100/1762-\>1766), both
+  re-measured live, matching the design doc’s own §5 prediction exactly.
+  Full clean regression: 1 failed (pre-existing unrelated
+  `test_wordlist_coverage.R`)/0 error/6586 passed, 0 collateral.
+  `lintr::lint_package()` 0 lints;
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  0 NAMESPACE/man diffs. REFACTOR skipped (owner-directed via
+  `AskUserQuestion`, matching S650/S652/S653/S655 precedent for this
+  exact code shape). Commit `11649f6e`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-dupIndividualProximity\] S660 RED: duplicate-vs-unrelated-individual proximity fix tests
+
+- `tests/testthat/test_positionMatingUnitForest.R`: added 3 tests – an
+  aggregate near-miss count on the real 375-individual fixture (0,
+  currently 2), a dedicated case-reproduction test for the 2 named
+  pairs, and a regression-safety test for the ratified design doc’s own
+  §6 disclosed early-exit-guard edge case. Pre-RED re-derived the design
+  doc’s own §1.2/§1.3 measurement from scratch against unmodified `HEAD`
+  – 0 drift since S658. Investigated at length (owner-directed via
+  `AskUserQuestion`, “keep investing”) whether a small synthetic fixture
+  could reproduce an actual near-miss under the §6 edge case; found 2
+  independent structural reasons it cannot be cheaply constructed
+  (documented inline and in `PROJECT_LEARNINGS.md` Learning 699), and
+  wrote a regression-safety test on the “quiet generation” case instead.
+  Confirmed genuinely failing: 4 failed (3 new intentional + 1
+  pre-existing baseline)/0 error/6583 passed, 0 collateral.
+  `lintr::lint_package()` 0 lints. Commit `58157458`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S660: claim session (implement ratified duplicate-vs-individual proximity fix, Option B)
+
+- `SESSION_NOTES.md`/`HANDOFFS.md`: Phase 1B claim stub +
+  `status: pending` receipt, written immediately after the Phase 0
+  priorities pick, before any investigation began. Commit `c7702a01`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S659: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S658 precedent)
+
+- This commit sets `HANDOFFS.md`’s S659 receipt `commit:` field from
+  `pending` to `57d9fa61` (the deliverable commit), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-newsRmdSiblingConsang\] S659: docs close-out – BACKLOG.md DONE, Learning 698, CLAUDE.md pointer
+
+- `BACKLOG.md`: marked the `NEWS.Rmd` stale
+  sibling-consanguineous-mating bullet item `[x]` DONE with full
+  root-cause and resolution detail (traced to the S602
+  `.computeDupNudge()`/ Track-3-Engagement-Gate introduction, the S628
+  carry-forward rewrite, and the Walker/BJL cutover’s removal of that
+  mechanism 4 days before the rewrite). `PROJECT_LEARNINGS.md`: recorded
+  Learning 698 (a rewrite can carry forward text that was already dead
+  at rewrite time – date-order the mechanism’s removal against the
+  rewrite date, don’t just check present-day absence). `CLAUDE.md`
+  learnings pointer updated 697 -\> 698.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-newsRmdSiblingConsang\] S659: correct NEWS.Rmd stale sibling-consanguineous-mating bullet
+
+- Root cause confirmed via `git log -S`/blame: the bullet traced to
+  `.computeDupNudge()`/the Track-3-Engagement-Gate (introduced S602,
+  `cdb9a16`, 2026-08-17), carried forward under new wording by S628’s
+  non-technical-audience rewrite (`815274c`, 2026-08-24). The Walker/BJL
+  cutover (S620/S621, `014f0910`/`909dad20`, 2026-08-20) removed that
+  mechanism 4 days *before* S628 ever touched the file – confirmed
+  independently by
+  `tests/testthat/test_positionMatingUnitForest.R:1287-1300`’s own “gone
+  by construction… makes it unnecessary by construction” comment, and by
+  a clean `grep -rn "consanguineous" R/` (only unrelated
+  consanguineous-mate-edge-coloring hits). Removed the 5-line bullet
+  outright from `NEWS.Rmd` (per its own “or remove it if nothing does”
+  allowance); the bullet immediately above it (issue \#166, corrected
+  S652) reads coherently on its own.
+  [`rmarkdown::render()`](https://pkgs.rstudio.com/rmarkdown/reference/render.html)
+  regenerated `NEWS.md` to match – symmetric 5-line removal, no other
+  drift. Docs-only – no production code or test changes;
+  `tests/testthat/test_effectivePopulationSizeDocs.R` (the one test file
+  that scans `NEWS.Rmd` content) re-run live, 7/7 passing.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S659: claim session (correct NEWS.Rmd stale sibling-consanguineous-mating bullet)
+
+- Commit `bd678e55` opened the `SESSION_NOTES.md` stub and `HANDOFFS.md`
+  `status: pending` receipt for this session’s deliverable.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S658: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S657 precedent)
+
+- This commit sets `HANDOFFS.md`’s S658 receipt `commit:` field from
+  `pending` to `87cb0b46` (the deliverable commit), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602. (Combined into one commit with this ledger entry, unlike
+  S657’s 2-commit split — the net effect is the same: both the field and
+  its own ledger entry are recorded before session end.)
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-dupIndividualProximity\] S658: design ratified – duplicate-vs-unrelated-individual proximity fix; BACKLOG.md count corrected 6 -\> 2 (+ new 4-case B1-vs-individual item filed)
+
+- Re-measured S654’s own “6 duplicate-vs-individual near-misses” finding
+  with the geometrically correct
+  `individualClearance=(25+25)/120=0.4167` (S654 had used the
+  union-radius proxy 0.2583) and a full pedigree-relationship classifier
+  (own-mating-unit-parent / parent-child / sibling / mate / unrelated),
+  independently re-verified by a second adversarial pass from scratch:
+  only 2 of the original 6 named cases are genuine defects (4 are the
+  duplicate sitting beside its own dam – by design, not a bug); the
+  correct threshold also surfaced 4 *different*, previously undocumented
+  cases, confirmed to be B1-individual-vs-individual (no duplicate
+  involved), a separate, unaddressed code path.
+- Design doc:
+  `docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`.
+  Ratified mechanism (Option B, via `AskUserQuestion`): extend Track 7
+  Phase 4’s existing post-hoc duplicate-side push loop with a combined
+  union+individual collision check, rather than widening
+  `.deCollideIndividualPoints()`’s own shared threshold (measured and
+  rejected: no family exclusion would newly collide 90/102 duplicates
+  with their own parent). Proven inert against Phase 4’s own 3 shipped
+  cases (OR-monotonicity argument + byte-identical simulation). Measured
+  blast radius: 2/102 duplicates move, one push-step each.
+- `BACKLOG.md`: corrected the item’s own count/framing in place; filed a
+  new, separate Housekeeping item for the 4 B1-vs-individual cases
+  (explicitly deferred, own future design pass needed against the
+  heavily-tuned `b1Ids` mechanism).
+- `PROJECT_LEARNINGS.md` Learning 697. `CLAUDE.md` learnings pointer
+  updated 696 -\> 697.
+- Planning-only session (`ARCHITECTURE_WORKSTREAM.md`) – no code or test
+  changes.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S658: claim session (design plan for duplicate-vs-individual proximity near-misses)
+
+- Phase 1B claim stub (`SESSION_NOTES.md`) and `status: pending` receipt
+  (`HANDOFFS.md`), commit `48f5af2f`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S657: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S656 precedent)
+
+- Commit `f22cf2b4` set `HANDOFFS.md`’s S657 receipt `commit:` field
+  from `pending` to `01b7dacc` (a 1-line change), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-trackCRectilinearEdgeCount\] S657: docs close-out – BACKLOG.md DONE, Learning 696, CLAUDE.md pointer
+
+- `BACKLOG.md`: marked the Track C rectilinear-edge-count item `[x]`
+  DONE with full root-cause and resolution detail (Track 4/S573
+  anchor-selection change, one day after the article’s own S563/S566
+  publication, made the anchor-side dogleg this fixture depended on
+  permanently unreachable). `PROJECT_LEARNINGS.md`: recorded Learning
+  696 (a vignette’s hardcoded expected value can go stale the day after
+  publication from an unrelated later change, with the root cause
+  already documented in the implementing test’s own comment the whole
+  time; also notes this session avoided the Learning 694/695
+  `ScheduleWakeup`-while-`run_in_background` mistake for the first time
+  in 4 sessions). `CLAUDE.md` learnings pointer updated 695 -\> 696.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-trackCRectilinearEdgeCount\] S657: correct kinship2-fidelity-validation.qmd Track C rectilinear-edge-count discrepancy
+
+- Root cause confirmed live: Track 4 (gen-aware D2 anchor selection,
+  S573, 2026-08-14) flipped the `A`-`X` union’s anchor from `A` to `X`,
+  making the anchor-side dogleg the Track C fixture depended on to
+  produce its 3rd marked edge permanently unreachable – already
+  documented in
+  `tests/testthat/test_makePedigreeMatingLayout.R:1297-1318`’s own
+  “Track 4” comment, never propagated to the article. Corrected 4 spots
+  in `vignettes/articles/kinship2-fidelity-validation.qmd` (Fixture
+  prose, Track C table `3` -\> `2`, 3rd screenshot caption, closing
+  paragraph) in place. Docs-only – no production code or test changes;
+  the existing Track C test already asserted the current, correct
+  behavior. `quarto render` clean; full clean regression 1 failed
+  (pre-existing `test_wordlist_coverage.R`)/0 error, 0 collateral.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S657: claim session (correct kinship2-fidelity-validation.qmd Track C rectilinear-edge-count discrepancy)
+
+- Commit `e95f86e7` opened the `SESSION_NOTES.md` stub and `HANDOFFS.md`
+  `status: pending` receipt for this session’s deliverable.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S656: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S655 precedent)
+
+- Commit `1dbb61fb` set `HANDOFFS.md`’s S656 receipt `commit:` field
+  from `pending` to `6b7c445c` (a 1-line change), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S656: docs close-out – NEWS.Rmd entry, Learning 695, BACKLOG.md structural-guard item
+
+- `NEWS.Rmd`/`NEWS.md`: added a plain-language bullet to the Pedigree
+  Diagram group, right after the existing “reroutes around the obstacle”
+  bullet it directly improves (shipping-order placement).
+  `PROJECT_LEARNINGS.md`: recorded Learning 695 – this session made the
+  IDENTICAL `ScheduleWakeup`-while-waiting-on-a-`run_in_background`-task
+  mistake Learning 694 documented one session earlier (a 3rd consecutive
+  occurrence, counting S654’s own near-miss), caught immediately and
+  disclosed. Per `SESSION_RUNNER.md`’s own Degradation Detection
+  guidance (“same finding several sessions running, nothing gates on it
+  – add a gate, not a second report”), filed a `BACKLOG.md` Housekeeping
+  item proposing a structural Claude Code hook rather than a 4th
+  freestanding prose warning. `CLAUDE.md` learnings pointer updated 694
+  -\> 695.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-jogWaypointStyling\] S656: GREEN – \_\_jog\_\* waypoint invisible styling fix
+
+- Commit `4333fa39`. `.resolveEdgeNodeCollisions()`’s `__jog_*` node
+  construction (`R/makePedigreeDiagramData.R:2239-2242`) now sets
+  `label`/`shape`/`title`/`size`/ `color.background`/`color.border`
+  explicitly (invisible: `shape = "dot"`, `size = 0`, fully transparent
+  colors), matching `.addRectilinearWaypoints()`’s own D1/D2 waypoint
+  styling (`:1966-1973`) exactly – an 11-line additive change.
+- Verification: `test_resolveEdgeNodeCollisions.R` 0 failed/0 error/49
+  passed (file-scoped); full clean regression 1 failed (pre-existing
+  `test_wordlist_coverage.R`)/0 error/6580 passed, 0 collateral.
+  `lintr::lint_package()` 0 lints on both touched files.
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  0 NAMESPACE/man changes (internal `@noRd` function). **Live chromote
+  render check**: queried vis.js’s own DOM-side DataSet
+  (`g.chart.body.data.nodes.get(id)`, not just the R-side `data.frame`)
+  against the real 375-individual fixture – all sampled `__jog_` nodes
+  (198 total, unchanged) reach vis.js with
+  `shape: "dot"`/`size: 0`/transparent
+  `color.background`/`color.border`, confirmed through the full R -\>
+  htmlwidgets -\> vis.js pipeline. REFACTOR skipped (owner-directed via
+  `AskUserQuestion`): mirrors the existing D1/D2 styling block exactly,
+  no restructuring identified.
+- `BACKLOG.md`: marked the `__jog_*` waypoint item `[x]` DONE with full
+  resolution detail; also corrected its stale function attribution (root
+  cause lives in `.resolveEdgeNodeCollisions()`, not
+  `.addRectilinearWaypoints()` as the original title said).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-jogWaypointStyling\] S656: RED – \_\_jog\_\* waypoint invisible styling fix
+
+- Commit `01a0f001`. Two new `test_that` blocks in
+  `test_resolveEdgeNodeCollisions.R`: a hand-built fixture with the full
+  production node-styling schema, plus an extension of the existing
+  real-375-individual-fixture regression test – both asserting new
+  `__jog_` nodes get `shape = "dot"`/`size = 0`/transparent
+  `color.background`/`color.border`.
+- Confirmed genuine RED: file-scoped 8 failed/0 error/41 passed (exactly
+  the 8 new intentional assertions, 4 per block); full clean regression
+  9 failed (8 new + 1 pre-existing `test_wordlist_coverage.R`
+  baseline)/0 error/6572 passed – 0 collateral.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-jogWaypointStyling\] S656: claim session (fix \_\_jog\_\* waypoint invisible styling)
+
+- Session claimed. Deliverable: `.resolveEdgeNodeCollisions()`’s
+  `__jog_*` waypoint nodes (`R/makePedigreeDiagramData.R:2239-2242`)
+  currently only set `id`/`x`/`y`, so `.matchColumns()` backfills
+  `shape`/`size`/`color.background`/`color.border` with `NA`, and vis.js
+  falls back to its own default filled circle instead of invisible –
+  unlike the D1/D2 waypoint nodes `.addRectilinearWaypoints()` itself
+  styles explicitly invisible (`:1966-1973`). Fix: give the `__jog_*`
+  node construction the same explicit invisible styling. BACKLOG.md
+  Housekeeping item, found S648 (2026-08-28).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S655: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S654 precedent)
+
+- Commit set `HANDOFFS.md`’s S655 receipt `commit:` field from `pending`
+  to `5f43f49e` (a 1-line change), the same self-reference workaround
+  this project’s sessions have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S655: docs close-out – fix NEWS.Rmd bullet placement, record Learning 694
+
+- Commit `7fe12fd4`. `BACKLOG.md`: marked the Track 7 Phase 4 item and
+  S649’s missing `NEWS.Rmd` entry both DONE. `NEWS.Rmd`/`NEWS.md`:
+  relocated the 2 new bullets this session’s own GREEN commit
+  (`dcdbe84d`) had placed after the sibling-consanguineous bullet, to
+  the spot the S650 Housekeeping note actually specified – right after
+  Track 7 Phase 1’s own “For most simple mated pairs…” bullet, right
+  before S650’s own Phase 3 bullet (confirmed via `git blame` against
+  `f7ea096a`, S650’s own commit).
+- `PROJECT_LEARNINGS.md`: recorded Learning 694 – this session called
+  `ScheduleWakeup` (a `/loop`-only tool) while waiting on a
+  `run_in_background` Bash task, the identical mistake S654’s own
+  handoff explicitly disclosed and flagged as a gotcha one session
+  earlier. Practical rule: a documented gotcha is not, by itself, a
+  strong enough countermeasure against reaching for a familiar-sounding
+  tool name out of habit – do not call any scheduling tool while a
+  background task is outstanding; let the harness’s own completion
+  notification arrive. `CLAUDE.md` learnings pointer updated 693 -\>
+  694.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-track7Phase4Duplicate\] S655: GREEN – Track 7 Phase 4 (union-vs-duplicate proximity fix)
+
+- Commit `dcdbe84d`. Implemented the ratified design’s Option A: a
+  duplicate-side, post-hoc, unidirectional push in
+  `R/makePedigreeDiagramData.R`, immediately after the existing
+  duplicate-positioning block, reusing Phase 2’s own
+  `unionClearanceIndividual` threshold and `.kMaxUnionPush = 5` cap.
+  Full clean regression 1 failed (pre-existing)/0 error/6570 passed –
+  all 5 predicted pinned-test values landed exactly
+  (0L/1456L/198L/98L/1762L), 0 other regressions. All 3 named
+  union/duplicate pairs confirmed resolved to 0 via the test’s own
+  counting method, re-run live. `.resolveEdgeNodeCollisions()`
+  residuals: exactly 47 rows, all `curved-heuristic` – 0 new residual of
+  any kind. Mandatory live chromote render check: all 3
+  previously-colliding pairs now render 52.0px apart; all 198 `__jog_`
+  waypoints render; 0 NA positions; 0 silently-collapsed ids (1456/1456
+  rendered rows). `lintr::lint_package()` 0 lints on all 4 touched
+  files;
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  0 NAMESPACE/man changes. REFACTOR skipped (owner-directed via
+  `AskUserQuestion`) – no behavior-neutral restructuring identified,
+  matching S650/S652/S653’s own precedent. Added this fix’s own
+  `NEWS.Rmd` bullet and S649’s own still-missing Phase 2 bullet
+  (placement corrected in the following commit).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-track7Phase4Duplicate\] S655: RED – Track 7 Phase 4 (union-vs-duplicate proximity fix)
+
+- Commit `d52b7f83`. Updated the 5 pinned assertions
+  (`test_positionMatingUnitForest.R:1274`,
+  `test_makePedigreeMatingLayout.R:651`/`658`,
+  `test_resolveEdgeNodeCollisions.R:433`/`434`) to their Option-A
+  measured values per the ratified design doc’s §5.3/§6. Pre-RED live
+  re-validation confirmed exact match to the design doc’s §1.2 baseline
+  (same 3 union/duplicate pairs, same x-values/distances, same
+  sweep-order asymmetry) and §5.3’s unchanged pinned values, against
+  unmodified `HEAD` (`2e3a05b2`). Confirmed genuine RED: 6 failed (5 new
+  intentional + 1 pre-existing `test_wordlist_coverage.R` baseline)/0
+  error/6565 passed, 0 collateral.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S655: claim session (implement Track 7 Phase 4 union-vs-duplicate proximity fix)
+
+- Commit `eab1838a`. Phase 1B stub in `SESSION_NOTES.md`; `HANDOFFS.md`
+  `status: pending` receipt opened.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S654: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S653 precedent)
+
+- Commit set `HANDOFFS.md`’s S654 receipt `commit:` field from `pending`
+  to `ded809a5` (a 1-line change), the same self-reference workaround
+  this project’s sessions have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-track7Phase4Duplicate\] S654: ratified design for Track 7 Phase 4 (union-vs-duplicate proximity fix)
+
+- New
+  `docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md`
+  (commit `1c99e0e4`), following `ARCHITECTURE_WORKSTREAM.md`.
+  Reconfirmed live: 3/237 union-vs-duplicate proximity cases on the real
+  375-individual fixture (`BACKLOG.md` Housekeeping, found S649,
+  composition updated S652). Evaluated `BACKLOG.md`’s own literal fix
+  sketch (union-sweep-side, look-backward “prospective duplicate
+  offset”) empirically – confirmed structurally incomplete, resolves
+  only 2/3 cases (one offending duplicate’s owning union sorts *after*
+  the colliding union in sweep order). Recommended and ratified instead:
+  a duplicate-side, post-hoc, unidirectional push (matching
+  `derivedX()`’s own always-rightward B3 convention) – resolves all 3
+  cases, costs exactly 5 predicted pinned-test updates, 0 other
+  regressions, fully absorbed by the existing jog-repair mechanism into
+  0 residual beyond the pre-existing 47-row `curved-heuristic` class.
+  Owner ratified via `AskUserQuestion`. `BACKLOG.md` updated to point at
+  the design; a new Housekeeping item filed for 6 incidentally-found,
+  unrelated duplicate-vs-individual near-misses. Implementation is a
+  separate future session.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S654: record Learning 693, update CLAUDE.md learnings pointer
+
+- Commit `f96dd389`. The Workflow tool’s `isolation: 'worktree'` can
+  silently anchor an agent’s worktree to a stale base commit several
+  commits behind the calling session’s actual HEAD – an
+  adversarial-verification agent’s own self-consistent “discrepancy”
+  (its own pinned test agreed with its own wrong measurement) turned out
+  to be measuring code 5 commits old, root-caused via
+  `git merge-base --is-ancestor`/`git show <sha>:<path>`, not assumed.
+  Practical rule: pin any worktree-isolated verification agent to an
+  explicit commit SHA with an explicit checkout+confirm first step,
+  especially in a session carrying unpushed local commits. `CLAUDE.md`
+  learnings pointer updated 692 -\> 693.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S653: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S652 precedent)
+
+- Commit `20d7414b` set `HANDOFFS.md`’s S653 receipt `commit:` field
+  from `pending` to `741c2b7f` (a 1-line change), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602. Logged in the same session, unlike the 19-session gap
+  (S634-S651) this session’s own Phase 0 found and reported for this
+  exact entry type.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-N\] S653 GREEN: move .formatStructuralDiscrepancy() into R/ (lint.yaml fix)
+
+- Moved `.formatStructuralDiscrepancy()` from
+  `tests/testthat/helper-comparePedigreeStructure.R` into
+  `R/comparePedigreeStructure.R` (`@noRd`), alongside its 3 siblings –
+  it has zero `kinship2` dependency, so it already satisfied the
+  ratified D-6 criterion that routed its siblings there; it was simply
+  misplaced when added later. Updated the 2 real call sites and stale
+  location comments. Commit `3be66ae9`. Full clean regression: 1 failed
+  (pre-existing `test_wordlist_coverage.R`)/0 error/6570 passed;
+  `lintr::lint_package()` 0 lints;
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  0 NAMESPACE/man changes, 0 roxygen `\link` warnings; live end-to-end
+  run of `data-raw/kinship2FidelityValidation.R`
+  (kinship2/chromote/htmlwidgets available locally) – exit code 0, Track
+  D all 3 comparisons `identical = TRUE`. 4 incidentally-regenerated
+  Track B/C PNGs (chromote screenshot non-determinism, unrelated)
+  reverted, not committed. REFACTOR skipped (owner-directed via
+  `AskUserQuestion`, matching S650/S652 precedent). `BACKLOG.md` item
+  marked `[x]` DONE.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[BL-N\] S653 RED: guard .formatStructuralDiscrepancy visibility (lint.yaml)
+
+- New structural guard test `tests/testthat/test_lint_clean_baseline.R`
+  (matching the `test_r_cmd_check_clean_baseline.R`/S637 precedent)
+  asserting `.formatStructuralDiscrepancy` is defined directly in the
+  `nprcgenekeepr` namespace. Commit `5779c002`. Confirmed genuine RED
+  against unmodified `HEAD`: 93 -\> 2 failed (1 new intentional + 1
+  pre-existing baseline)/0 error, 0 collateral. Root cause confirmed
+  live (not assumed): `lint.yaml` runs
+  `Rscript -e 'lintr::lint_package()'` with no
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  step, so it never sees `.formatStructuralDiscrepancy()`; every local
+  repro this session (including `lint()` on the single file in total
+  isolation) showed 0 lints because
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)’s
+  own default `helpers = TRUE` silently auto-sources testthat helpers,
+  masking the gap deterministically – definitively ruling out
+  `BACKLOG.md`’s own “stale globalenv” hypothesis (S643/S644), not just
+  weakening it.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · \[ad hoc\] S652: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S651 precedent)
+
+- Backfilled reconcile-on-read (`SESSION_RUNNER.md` Phase 0 step 6) at
+  the start of the next session — commit `7cc9e6e4` set `HANDOFFS.md`’s
+  S652 receipt `commit:` field from `pending` to `d81f76bc` (a 1-line
+  change), the same self-reference workaround this project’s sessions
+  have made since S600/S602. Note for a future session: this same commit
+  type went unlogged for S634-S651 (19 sessions) — those are outside
+  this reconcile’s frontier (each session’s own later CHANGELOG.md edit
+  moved the frontier past its predecessor’s unlogged self-reference
+  commit before anyone’s reconcile caught it) and are not backfilled
+  here; flagged as a housekeeping observation, not actioned.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · \[issue \#166\] S652: close GitHub issue \#166
+
+- Closed citing this session’s own shipped commits and verification
+  evidence, per `CLAUDE.md`’s GitHub issue close-out checklist (same
+  session as the DONE `BACKLOG.md` mark).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · \[issue \#166\] S652: close out (issue \#166 shipped – Track 7 Phase 3 scoped revert)
+
+- Session close-out: Phase 3A evaluated S651’s handoff, Phase 3B
+  self-assessed, Learnings 690/691 recorded (the design doc’s own missed
+  test-inventory entry; the Track B shrunk-fixture Phase 2 regression
+  not anticipated by the design’s real-375-only collision simulation),
+  `CLAUDE.md` learnings pointer updated,
+  `HANDOFFS.md`/`SESSION_NOTES.md` completed.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · \[issue \#166\] S652: `NEWS.Rmd` corrected, `BACKLOG.md` closed out, 2 Housekeeping items
+
+- `NEWS.Rmd`’s dev-version “mating symbol always kept within the range
+  spanned by its own two parents” bullet – which described exactly the
+  Track 7 Phase 1 recenter mechanism this session deletes – corrected
+  and replaced with an accurate plain-language description of the
+  shipped (post-revert) behavior plus a new bullet naming the reversion
+  (issue \#166); `NEWS.md` regenerated. `BACKLOG.md`: issue \#166 item
+  marked `[x]` DONE with full shipped-mechanism detail; the pre-existing
+  Track 7 Phase 2 union-vs-duplicate residual Housekeeping item updated
+  from 4 to 3 (1 new case, 2 resolved, per this session’s own live
+  re-measurement); a new Housekeeping item filed for a NEWS.Rmd
+  dangling-reference/possible pre-existing staleness question found
+  incidentally (not fixed, out of scope). Issue \#166 closed on GitHub
+  citing this entry.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · \[issue \#166\] S652 GREEN: delete Track 7 Phase 1’s union recenter loop
+
+- `R/makePedigreeDiagramData.R:973-979` (7 lines) deleted per the
+  ratified Option 1 design; reworded the now-stale comment block above
+  it to describe the revert. Every qualifying union’s `x` reverts,
+  unconditionally, to Tier 2’s own `mean(tier1X[kids])`; Track 7 Phase
+  1’s other change (the widened B1 mate offset) is kept. Full clean
+  regression: 1 failed (pre-existing, unrelated
+  `test_wordlist_coverage.R`)/0 error/6569 passed – 0 collateral damage.
+  `lintr::lint_package()`: 1 false-positive (`commented_code_linter`
+  parsing a wrapped file-path comment as an arithmetic expression)
+  resolved by re-wrapping across 2 lines, matching this codebase’s own
+  established citation convention; 0 lints after. Mandatory live-render
+  check (design doc §5 step 3): live chromote render of the real
+  375-individual fixture, 0 id collapse, 0 post-fix residual same-row
+  collisions. REFACTOR skipped (nothing behavior-neutral identified,
+  matching S649/S650 precedent), via `AskUserQuestion`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · \[issue \#166\] S652 RED: update/add 15 test assertions across 4 files
+
+- Per the ratified design’s §5/§6.3 inventory, live-measured every new
+  value against a temporary, immediately-reverted spike of the GREEN
+  change (git-diff-confirmed byte-identical to `HEAD` after each check),
+  matching this project’s established spike-and-restore discipline –
+  `test_positionMatingUnitForest.R` (10 blocks changed + 1 new block
+  reproducing issue \#166’s own named geometry directly),
+  `test_addRectilinearWaypoints.R` (1 block),
+  `test_makePedigreeMatingLayout.R` (1 block),
+  `test_resolveEdgeNodeCollisions.R` (1 block). Confirmed genuine RED:
+  full clean regression against unmodified `HEAD` showed exactly 93
+  failed/0 error/6477 passed – the 12 intentionally-changed blocks plus
+  the 1 pre-existing `test_wordlist_coverage.R` baseline, 0 collateral.
+  Found and flagged before writing RED (via `AskUserQuestion`): the
+  Track B shrunk fixture’s own Phase 2 proximity test would newly show
+  Phase 2’s push no longer engaging for that fixture’s 3 pairs (each
+  lands on its own anchor instead), a disclosed trade-off already
+  ratified in principle but not previously measured on this specific,
+  owner-reviewed fixture.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · \[issue \#166\] S651: architecture design ratified (Option 1, scoped revert)
+
+- Design session for issue \#166 (Track 7’s qualifying-union recenter
+  decouples a union’s `x` from its own children – dogleg/off-center
+  sibship-bar drop). Live-measured research (own script) proved a “clamp
+  toward children’s mean” mitigation collapses to a binary choice, not a
+  tunable spectrum: `tier1X[[anchor]] == mean(tier1X[kids])` bit-exact
+  for all 34 qualifying units on the real 375-individual fixture. A
+  4-agent background research workflow read the Track 7 plan doc’s own
+  rejected alternatives, diagnosed the 7 divergence outliers against
+  Track 7 Phase 2’s own collision push, and read kinship2’s
+  `alignped4.R` source directly to confirm its straight-drop guarantee
+  comes from moving the child (structurally unavailable to this
+  project’s architecture, per the already-closed issue \#159). Drafted
+  `docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md`
+  (3 options; Option 1 recommended: delete the recenter loop, keep the
+  mate-widening change). A 3-agent adversarial verification workflow
+  then found and the document now discloses 3 real gaps: the anchor/
+  children-mean identity is `sweepMinSep()`-contingent, not an
+  algorithmic guarantee (proven fragile via a synthetic
+  counter-example); new collision-safety data (0 new individual/union
+  collisions, a small disclosed union-vs-duplicate shift); the
+  test-inventory undercounted by 3.5x (corrected to \>=14 assertions
+  across 4 files). **Owner ratified Option 1 via `AskUserQuestion`.**
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · \[issue \#166\] S651: `BACKLOG.md` updated with the ratified design
+
+- Issue \#166’s `BACKLOG.md` item updated with the ratified mechanism
+  (delete `R/makePedigreeDiagramData.R:973-979`), the disclosed
+  trade-off (union dot reverts to sitting on/near the anchor for the 34
+  affected units), the adversarially-verified collision-safety data, and
+  the corrected (\>=14-assertion) test inventory. Marked READY for a
+  future implementation session (TDD RED-\>GREEN-\>REFACTOR).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · \[ad hoc\] S651: record Learnings 688/689, update `CLAUDE.md` learnings pointer
+
+- Recorded `PROJECT_LEARNINGS.md` Learning 688 (a `qualifies()`-gated
+  anchor’s Tier-1 `x` equals its own union’s children-mean, but only
+  contingent on `sweepMinSep()` not engaging that row – a
+  real-fixture-true, not algorithm-guaranteed, invariant) and Learning
+  689 (a keyword-only test inventory undercounts when shared logic is
+  exercised through a reused helper across multiple fixtures under
+  differently-worded `test_that()` titles). `CLAUDE.md`’s learnings
+  pointer updated (687 -\> 689 learnings).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-29 · \[BL-N\] S651: close out (issue \#166 design document, ratified and READY)
+
+- `HANDOFFS.md` receipt completed (`status: complete`, self-score 9/10,
+  predecessor S650 evaluated at 7/10). `SESSION_NOTES.md` handoff
+  notes/gotchas/self-assessment written.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-29 · \[ad hoc\] pedigree-drawing fidelity audit (user-directed workflow, not a numbered session)
 
 - Ran a 10-agent audit workflow (5 dimensions, each independently

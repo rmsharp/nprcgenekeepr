@@ -140,7 +140,481 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <p><strong>Archived 39 record(s), 2026-08-10 → 2026-08-12</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-12.html"><code>docs/archive/HANDOFFS-through-2026-08-12.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p><strong>Archived 17 record(s), 2026-08-12 → 2026-08-13</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-13.html"><code>docs/archive/HANDOFFS-through-2026-08-13.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
 <p><strong>Archived 21 record(s), 2026-08-13 → 2026-08-14</strong> into <a href="docs/archive/HANDOFFS-through-2026-08-14.html"><code>docs/archive/HANDOFFS-through-2026-08-14.md</code></a> — same format, same order, frozen. Losslessness is proved by <a href="docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh"><code>docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh</code></a>, which re-derives L1/L2/L3 from git; run it rather than trusting this sentence. Written by <code>methodology_trim.py</code> v1.1.2.</p>
-<p>This file currently holds <strong>19</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
+<p>This file currently holds <strong>20</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
+<pre class="handoff"><code>session: S660
+date: 2026-08-30
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Implement the ratified duplicate-vs-individual proximity fix (Option B,
+  docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md, standing top priority) --
+  DONE, full TDD (RED/GREEN, REFACTOR skipped owner-directed).
+what_was_done: Extended Track 7 Phase 4's post-hoc duplicate-side push loop
+  (R/makePedigreeDiagramData.R:1125-1179) with a combined union+individual collision check: new
+  individualClearance=(25+25)/120 constant, a family-excluding forbidden-set (own mating unit's
+  sire/dam) from tier1X+tier3X[b1Ids] at the duplicate's gen, collidesUnrelatedIndividual() OR'd
+  into the existing check, :1131 early-exit guard widened to check both forbidden-set lengths.
+  Resolves TTE0Z7/__dup_MY1AEU_2 (0.099-&gt;50px) and M0YNUR/__dup_L31S6S_5 (0.100-&gt;50px). Pre-RED
+  re-derived the design doc's own measurement from scratch, confirming 0 drift since S658.
+  Investigated the design doc's own §6 disclosed edge case at length (~15 fixture-construction
+  rounds) and found 2 structural reasons a genuine forced near-miss cannot be cheaply
+  synthesized -- documented inline, wrote a regression-safety test instead. RED commit
+  58157458 (3 new tests, confirmed genuinely failing: 4 failed/0 error/6583 passed). GREEN
+  commit 11649f6e (implementation + 2 predicted pinned-count updates re-measured live:
+  test_makePedigreeMatingLayout.R 1456-&gt;1460/198-&gt;202, test_resolveEdgeNodeCollisions.R
+  98-&gt;100/1762-&gt;1766; full clean regression 1 failed [pre-existing]/0 error/6586 passed, 0
+  collateral). Mandatory live chromote render check: both pairs render exactly 50px apart,
+  0 NA, 102/102 duplicate nodes. lintr::lint_package() 0 lints on all 4 touched files;
+  devtools::document() 0 NAMESPACE/man diffs.
+next_steps: BACKLOG.md's remaining pedigree-fidelity items in priority order -- (1) the 4
+  B1-individual-vs-unrelated-individual proximity near-misses (READY tag but needs its own
+  design pass first, Effort M, found S658 -- same root cause, different call site
+  R/makePedigreeDiagramData.R:958-960, larger effort since b1Ids is heavily tuned with ~20
+  hardcoded assertions); (2) the ScheduleWakeup/run_in_background structural-guard
+  investigation (READY, Effort S-M, Learning 694/695); (3) scope the pedigree-diagram package-
+  extraction research session (READY, Effort M, research-only, owner-directed 2026-08-19).
+key_files: R/makePedigreeDiagramData.R:996-1002,1125-1179; test_positionMatingUnitForest.R (3
+  new tests + §6 investigation documentation); test_makePedigreeMatingLayout.R:651-666;
+  test_resolveEdgeNodeCollisions.R:478-488; BACKLOG.md; NEWS.Rmd; PROJECT_LEARNINGS.md;
+  docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md.
+gotchas: (1) the §6 disclosed edge case remains untested by a genuine forced near-miss -- only
+  a regression-safety check on the "nothing nearby" case; test_positionMatingUnitForest.R's own
+  header comment (this session) explains why a small fixture cannot reach it (a B1 individual
+  always brings her own union; a genuine Tier-1 individual is sweepMinSep()-guaranteed &gt;=0.6
+  away). (2) STANDING TOP PRIORITY banner still applies -- next pickup (item 1 above) needs its
+  own design session first. (3) master unpushed by a growing margin -- lint.yaml stays red on
+  pushed runs until that push happens.
+runtime_smoke: Live chromote render check via getLiveRenderedPositions() against the real
+  375-individual fixture, exercising the SAME visNetwork()/R/modPedigree.R:611-614 call path the
+  Shiny app itself uses -- both named pairs render exactly 50px apart in the DOM (vis.js ground
+  truth), 0 NA positions, 102/102 duplicate nodes present. No separate shinytest2/app-launch pass
+  additionally run.
+changelog_ref: see CHANGELOG.md's 2026-08-30 S660 entries (claim/RED/GREEN/close-out), tagged
+  [BL-dupIndividualProximity].
+commit: b9188034</code></pre>
+<p>&lt;claim-time stub – overwritten at Phase 3D close-out&gt;</p>
+<pre class="handoff"><code>session: S659
+date: 2026-08-30
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Correct NEWS.Rmd's stale sibling-consanguineous-mating dev-version bullet
+  (BACKLOG.md Housekeeping, found incidentally S652) -- DONE, docs-only fix, no TDD cycle
+  (owner-directed via AskUserQuestion, matching S657's precedent).
+what_was_done: Traced the bullet via git log -S/blame to its S602 introduction
+  (.computeDupNudge()/Track-3-Engagement-Gate, cdb9a16) and its S628 carry-forward rewrite
+  (815274c). Confirmed the Walker/BJL cutover (S620/S621, 014f0910/909dad20, 2026-08-20)
+  removed that mechanism 4 days BEFORE S628's rewrite (2026-08-24) -- the bullet was never
+  accurate as rewritten. Cross-confirmed via test_positionMatingUnitForest.R:1287-1300's own
+  "gone by construction" comment and a clean grep -rn "consanguineous" R/ (only unrelated
+  edge-coloring hits). Removed the bullet outright (5 lines, NEWS.Rmd + regenerated NEWS.md,
+  symmetric diff, no other drift); re-ran test_effectivePopulationSizeDocs.R live, 7/7 passing.
+  BACKLOG.md item marked DONE; PROJECT_LEARNINGS.md Learning 698; CLAUDE.md pointer 697-&gt;698.
+  Commit `bd678e55` (claim); close-out commit is this receipt's own `commit:` field below.
+next_steps: Pick up BACKLOG.md's standing top priority: implement the ratified
+  duplicate-vs-individual proximity fix (Option B,
+  docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md). Separately READY:
+  the ScheduleWakeup/run_in_background structural-guard investigation (Effort S-M, Learning
+  694/695); scoping a design pass for the 4 B1-vs-individual proximity near-misses (Effort M,
+  found S658, needs its own design session first).
+key_files: NEWS.Rmd (the corrected Pedigree Diagram section, around the issue #166 bullet);
+  NEWS.md (regenerated); BACKLOG.md Housekeeping (item marked DONE); PROJECT_LEARNINGS.md
+  Learning 698.
+gotchas: (1) Several .claude/worktrees/wf_* directories (leftover from earlier Workflow tool
+  runs, gitignored) still carry the OLD pre-fix NEWS.Rmd text -- harmless untouched, but would
+  reintroduce the removed bullet if ever resurrected/merged. (2) STANDING TOP PRIORITY banner
+  still applies (pedigree-diagram fidelity, owner directive 2026-08-26) -- this session's own
+  pick was Housekeeping-tier, not the top-priority item. (3) master unpushed by a growing
+  margin (46+ commits) -- lint.yaml stays red on pushed runs until that push happens.
+runtime_smoke: n/a -- docs-only session, NEWS.Rmd/NEWS.md have no runtime path
+  (SAFEGUARDS.md Documentation-projects row); build-equivalent (rmarkdown::render()) ran
+  clean, one directly-relevant test file re-run live and passed.
+changelog_ref: see CHANGELOG.md's 3 new 2026-08-30 S659 entries (claim / fix / docs-close-out),
+  tagged [BL-newsRmdSiblingConsang].
+commit: 57d9fa61</code></pre>
+<pre class="handoff"><code>session: S658
+date: 2026-08-30
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Design plan for BACKLOG.md's duplicate-vs-individual proximity near-misses item
+  (found S654) -- DONE, design ratified. Next: implement Option B under full TDD, starting
+  from docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md's own S7.
+what_was_done: Re-measured S654's "6 duplicate-vs-individual near-misses" with the correct
+  individualClearance=(25+25)/120=0.4167 (not S654's union-radius proxy 0.2583) plus a full
+  pedigree-relationship classifier -- found only 2 of the original 6 are genuine defects (4
+  are a duplicate beside its own parent, by design) and 4 different, previously-undocumented
+  cases exist (all B1-individual-vs-individual, no duplicate involved -- confirmed by a
+  4-agent adversarial-verification workflow). Ratified Option B (extend Track 7 Phase 4's
+  post-hoc duplicate loop) via AskUserQuestion -- measured 2/102 duplicates move, proven
+  inert against Phase 4's 3 shipped cases. Design doc:
+  docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md. BACKLOG.md item
+  corrected in place; new B1-vs-individual item filed separately. Commit `48f5af2f` (claim);
+  design/backlog/learnings/changelog commit is this receipt's own `commit:` field below.
+next_steps: Implement the ratified Option B design under full RED-&gt;GREEN-&gt;REFACTOR, starting
+  from the design doc's own S7 Verification Plan. R/makePedigreeDiagramData.R:1125-1160 is
+  the target loop. Do NOT fold in the separately-filed 4-case B1-vs-individual item (own
+  future design pass, larger blast radius against the b1Ids mechanism).
+key_files: docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md (full
+  design); R/makePedigreeDiagramData.R:1125-1160 (Track 7 Phase 4's existing loop, the
+  implementation target); R/makePedigreeDiagramData.R:1131 (the early-exit guard that MUST
+  widen -- see gotchas); BACKLOG.md (corrected item + new B1-vs-individual item);
+  PROJECT_LEARNINGS.md Learning 697.
+gotchas: (1) The design doc's S2 code sketch shows the change's shape, not a literal diff --
+  re-read current source before writing real RED tests. (2) The early-exit guard at
+  R/makePedigreeDiagramData.R:1131 must be widened to check the NEW individual forbidden-set
+  too, or a duplicate in a generation with no other mating units silently skips the new
+  check -- doesn't bite the current fixture, needs its own dedicated RED test. (3) Expect
+  test_resolveEdgeNodeCollisions.R:487-488 and test_makePedigreeMatingLayout.R:658,666's
+  aggregate counts to shift (2 duplicates move) -- re-measure live. (4) STANDING TOP PRIORITY
+  banner still applies (pedigree-diagram fidelity, owner directive 2026-08-26).
+runtime_smoke: n/a -- planning-only session, zero code/test/runtime changes.
+changelog_ref: see CHANGELOG.md's 3 new 2026-08-30 S658 entries (claim / design-ratified /
+  this close-out), tagged [BL-dupIndividualProximity].
+commit: 87cb0b46</code></pre>
+<pre class="handoff"><code>session: S657
+date: 2026-08-30
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Correct kinship2-fidelity-validation.qmd's Track C table/prose, which claimed 3
+  marked (vermillion) rectilinear-style edges while a live run of
+  data-raw/kinship2FidelityValidation.R reports 2 (BACKLOG.md Housekeeping, found S645) -- DONE.
+what_was_done: Root cause confirmed live and cross-checked against test_makePedigreeMatingLayout.R:
+  1297-1318's own "Track 4" comment (written S573, the day this behavior changed): Track 4's
+  gen-aware D2 anchor selection flipped the A-X union's anchor from A to X, permanently
+  eliminating the anchor-side dogleg the Track C fixture depended on for its 3rd marked edge --
+  one day after the article itself was published (S563/S566, 2026-08-13; Track 4 S573,
+  2026-08-14). Docs-only fix: corrected 4 spots in kinship2-fidelity-validation.qmd (Fixture
+  prose, table row 3-&gt;2, 3rd screenshot caption, closing paragraph). Verified via quarto render
+  (clean, spot-checked rendered HTML) and the existing, unchanged Track C test (already passing).
+  Full clean regression 1 failed (pre-existing test_wordlist_coverage.R)/0 error, 0 collateral.
+next_steps: BACKLOG.md's remaining pedigree-fidelity Housekeeping items: NEWS.Rmd's stale
+  sibling-consanguineous bullet (READY, Effort S, found S652); the ScheduleWakeup/
+  run_in_background structural-guard investigation (READY, Effort S-M, found S656, Learning
+  694/695); the 6 duplicate-vs-individual proximity near-misses (READY tag but needs its own
+  design session first, Effort M, found S654). Unchanged from S656: the stray LibreOffice lock
+  file is still present, not deleted; ledger-size housekeeping (HANDOFFS.md/SESSION_NOTES.md/
+  CHANGELOG.md past FM #28 cap) still open; master unpushed, a future push should confirm
+  lint.yaml goes green.
+key_files: vignettes/articles/kinship2-fidelity-validation.qmd (Track C section, ~174-223, the 4
+  corrected spots); tests/testthat/test_makePedigreeMatingLayout.R:1297-1368 (unchanged, already
+  documented/asserted the current behavior); BACKLOG.md (item now [x]-closed); PROJECT_LEARNINGS.md
+  Learning 696.
+gotchas: The intro's Track C summary bullet (lines 31-34) still describes the marker-propagation-
+  onto-dogleg-edges capability as shipped, which remains technically true (the code path exists,
+  just currently unreachable per Track 4's invariant) -- deliberately left as-is, a judgment call
+  not an oversight. .addRectilinearWaypoints()'s D2 anchor-side dogleg loop is confirmed dead code
+  under Track 4's structural invariant (genOf[[anchor]] == unitGen, unconditionally) -- do not
+  expect any fixture to exercise it again without first changing Track 4's own invariant. This
+  session avoided the Learning 694/695 ScheduleWakeup-while-run_in_background mistake (first of 4
+  consecutive sessions to do so) -- one clean session, the structural-guard BACKLOG item remains
+  open and un-investigated.
+runtime_smoke: n/a -- documentation-only change (vignette article prose/table), zero production R
+  code or Shiny runtime behavior touched. Verified via the project's actual build-equivalent for
+  this artifact type (quarto render), per SAFEGUARDS.md.
+changelog_ref: (this session's own 3 entries, dated 2026-08-30, tag [BL-trackCRectilinearEdgeCount]
+  / [ad hoc])
+commit: 01b7dacc</code></pre>
+<pre class="handoff"><code>session: S656
+date: 2026-08-30
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: DONE -- fixed .resolveEdgeNodeCollisions()'s __jog_* waypoint nodes so they render
+  invisible (matching .addRectilinearWaypoints()'s own D1/D2 waypoint convention), full TDD
+  RED-&gt;GREEN-&gt;REFACTOR(skipped). Live chromote render check confirmed through the full
+  R -&gt; htmlwidgets -&gt; vis.js pipeline. BACKLOG.md item marked DONE.
+what_was_done: RED (01a0f001): 2 new test_that blocks in test_resolveEdgeNodeCollisions.R (a
+  hand-built fixture with the full production node-styling schema, plus an extension of the
+  real-375-fixture regression test); confirmed genuine RED (9 failed = 8 new + 1 pre-existing
+  / 0 error / 6572 passed). GREEN (4333fa39): gave the __jog_* node construction explicit
+  invisible styling matching D1/D2 exactly (label/shape/title/size/color.background/
+  color.border), 11-line additive change in R/makePedigreeDiagramData.R:2239-2242. Full
+  regression 1 failed (pre-existing)/0 error/6580 passed, 0 collateral; lintr 0 lints;
+  devtools::document() 0 NAMESPACE/man changes; live chromote check via
+  g.chart.body.data.nodes.get(id) confirmed 198 real __jog_ nodes reach vis.js with
+  shape='dot'/size=0/transparent colors. REFACTOR skipped (owner-directed). Docs close-out:
+  NEWS.Rmd/NEWS.md bullet added, PROJECT_LEARNINGS.md Learning 695 recorded (a 3rd consecutive
+  ScheduleWakeup-while-waiting-on-background-task mistake, Learning 694's own pattern
+  recurring), BACKLOG.md item marked DONE plus a new structural-guard Housekeeping item filed.
+next_steps: Pick the next pedigree-fidelity Housekeeping item (STANDING TOP PRIORITY still
+  applies): the Track C table discrepancy (READY, Effort S) or the NEWS.Rmd sibling-
+  consanguineous staleness question (READY, Effort S). The 6 duplicate-vs-individual
+  near-misses item needs its own design session first (Effort M). New this session: a
+  BACKLOG.md item proposing a structural Claude Code hook (via the update-config skill)
+  against the recurring ScheduleWakeup misuse (Learning 694/695, 3 consecutive sessions) --
+  investigate rather than defer again. A future session should also push master (4 commits
+  ahead as of this session's close) and confirm CI, especially lint.yaml (S653's fix still
+  unpushed).
+key_files: R/makePedigreeDiagramData.R:2226-2274 (.resolveEdgeNodeCollisions()'s __jog_* node
+  construction, the fix), tests/testthat/test_resolveEdgeNodeCollisions.R (2 new test_that
+  blocks), PROJECT_LEARNINGS.md Learning 695 (the recurring ScheduleWakeup misuse)
+gotchas: The BACKLOG item's own text had drifted (attributed to .addRectilinearWaypoints()
+  with stale line numbers; actual code lives in the separate .resolveEdgeNodeCollisions()) --
+  always verify a BACKLOG item's file/function/line pointers against current source during
+  PRE-RED, don't trust them as current. The stray editor lock file
+  (inst/extdata/reference/~$e Compounding Loop.html, matching the exact S568 precedent) was
+  flagged but NOT deleted this session -- still present.
+runtime_smoke: Live chromote render check via g.chart.body.data.nodes.get(id) against the real
+  375-individual bundled fixture, querying vis.js's own DOM-side DataSet (not just the R-side
+  data.frame): all 5 sampled __jog_ nodes (of 198 total, unchanged from before this fix) carry
+  shape='dot'/size=0/transparent color.background+color.border, confirmed through the full
+  R -&gt; htmlwidgets -&gt; vis.js pipeline.
+changelog_ref: CHANGELOG.md 2026-08-30 S656 claim/RED/GREEN/docs-close-out entries (commits
+  75b9f06e, 01a0f001, 4333fa39)
+commit: 6b7c445c</code></pre>
+<p>Fixed the <code>__jog_*</code> waypoint invisible-styling gap end to end via full TDD, correcting a stale BACKLOG function/line-number attribution along the way by reading actual current source rather than trusting the item’s own text. Went beyond the data-layer test assertions with a live chromote check querying vis.js’s own DOM-side DataSet, confirming the fix through the full R -&gt; htmlwidgets -&gt; vis.js pipeline. Repeated the Learning 694 <code>ScheduleWakeup</code>-while-waiting mistake for a 3rd consecutive session – caught immediately, recorded as Learning 695, and filed as a <code>BACKLOG.md</code> structural-fix item rather than a 4th freestanding prose warning.</p>
+<p><strong>Self-score breakdown (7/10):</strong> +2 caught and corrected the stale BACKLOG attribution via direct source grep rather than trusting it; +2 live chromote DOM-level verification beyond the data-layer test assertions; +1 zero stakeholder corrections on the technical content across all 3 TDD gates; +1 clean CHANGELOG/BACKLOG/NEWS.Rmd/Learning close-out; +1 self-caught and corrected a manually-backgrounded shell process mid-session. -1 for the 3rd consecutive <code>ScheduleWakeup</code> misuse despite 2 prior rounds of documentation.</p>
+<pre class="handoff"><code>session: S655
+date: 2026-08-30
+status: complete
+self_score: 8
+predecessor_score: 10
+active_task: DONE -- implemented the ratified Track 7 Phase 4 design (union-vs-duplicate proximity
+  fix), full TDD RED-&gt;GREEN-&gt;REFACTOR(skipped). All 5 predicted pinned-test values landed exactly;
+  mandatory live-render check confirmed. BACKLOG.md item marked DONE.
+what_was_done: RED (d52b7f83): updated 5 pinned assertions to Option-A measured values; confirmed
+  genuine RED (6 failed = 5 new + 1 pre-existing / 0 error / 6565 passed). GREEN (dcdbe84d):
+  implemented the duplicate-side post-hoc unidirectional push in R/makePedigreeDiagramData.R after
+  the existing duplicate-positioning block, reusing Phase 2's own unionClearanceIndividual/
+  .kMaxUnionPush=5. Full regression 1 failed (pre-existing)/0 error/6570 passed, all 5 values exact,
+  0 other regressions; residuals exactly 47 curved-heuristic rows; live chromote render check: 3
+  pairs now 52.0px apart, 198 jog waypoints render, 0 NA/0 collapsed ids; lintr 0 lints;
+  devtools::document() 0 NAMESPACE/man changes. REFACTOR skipped (owner-directed). Docs close-out
+  (7fe12fd4): fixed a self-caught NEWS.Rmd bullet placement error (git-blame-verified against the
+  pre-existing Housekeeping note's own instruction), marked 2 BACKLOG.md items DONE, recorded
+  Learning 694 (repeated ScheduleWakeup misuse).
+next_steps: Pick the next pedigree-fidelity Housekeeping item (STANDING TOP PRIORITY still applies):
+  the __jog_* waypoint invisible-styling fix (READY, Effort S, R/makePedigreeDiagramData.R:2094-2097),
+  the Track C table discrepancy (READY, Effort S), or the NEWS.Rmd dangling-reference staleness
+  question (READY, Effort S). The 6 duplicate-vs-individual near-misses item needs its own design
+  session first (Effort M) before code, matching S654's own established precedent. A future session
+  should also push master to origin (5 commits ahead as of this session's close) and confirm CI --
+  especially lint.yaml, still red on the last-pushed commits from before S653's (unpushed) fix.
+key_files: R/makePedigreeDiagramData.R:1098-1150 (the new Track 7 Phase 4 post-pass),
+  docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md (the design this
+  session implemented, now DONE), tests/testthat/test_positionMatingUnitForest.R:1274 (the primary
+  pinned duplicate-residual assertion, now 0L)
+gotchas: A documented gotcha in a prior handoff (S654's own ScheduleWakeup disclosure) is not, by
+  itself, a strong enough countermeasure -- this session repeated the identical mistake (Learning
+  694). The initial NEWS.Rmd bullet placement was wrong on the first attempt; verify any future
+  NEWS.Rmd edit against the file's actual git-blame history, not assumed narrative order, since this
+  file's bullets are not strictly chronological. 3 other pedigree-fidelity Housekeeping items remain
+  untouched this session.
+runtime_smoke: Live chromote render check via getLiveRenderedPositions() against the real
+  375-individual bundled fixture (matching this project's own established Phase 3E bar for any
+  .positionMatingUnitForest() change): 1456/1456 rendered rows, 0 NA positions, 0 silently-collapsed
+  ids, all 3 previously-colliding union/duplicate pairs now 52.0px apart, all 198 __jog_ waypoints
+  render.
+changelog_ref: CHANGELOG.md 2026-08-30 S655 claim/RED/GREEN/docs-close-out entries (commits
+  eab1838a, d52b7f83, dcdbe84d, 7fe12fd4)
+commit: 5f43f49e</code></pre>
+<p>Implemented the ratified Track 7 Phase 4 design end to end via full TDD, with every predicted quantitative value from the design doc landing exactly on the first implementation attempt – 0/5 pinned-test deltas, the 3 named collision pairs, and the 47-row curved-heuristic residual all matched precisely. Ran the mandatory live chromote render check beyond the numeric assertions (52.0px separation confirmed, 0 NA/collapsed ids). Caught and self-corrected a NEWS.Rmd placement error before close-out by tracing the pre-existing Housekeeping note’s own instruction via git blame, rather than leaving a plausible-but-wrong edit for a future session to find.</p>
+<p><strong>Self-score breakdown (8/10):</strong> +2 pre-RED live re-validation before writing any test; +2 mandatory live-render check beyond numeric assertions; +2 self-caught and root-caused the NEWS.Rmd placement error via git blame rather than guessing; +1 zero stakeholder corrections on the technical content across all 3 TDD gates; +1 clean CHANGELOG/BACKLOG/Learning close-out. -2 for repeating the ScheduleWakeup mistake S654’s own handoff explicitly flagged one session earlier, plus several wasted no-op Bash calls while waiting on background tasks.</p>
+<pre class="handoff"><code>session: S654
+date: 2026-08-30
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- ratified design document for the Track 7 Phase 2 union-vs-duplicate
+  proximity residual fix (BACKLOG.md Housekeeping, found S649, 3/237 on the real fixture as of
+  S652's issue #166 revert). No implementation this session (pre-RED scope decision, owner-picked
+  via AskUserQuestion). docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-
+  plan.md, DESIGN RATIFIED. BACKLOG.md item updated to point at it.
+what_was_done: Phase 0 ledger reconcile: 0 undocumented commits, HANDOFFS.md receipt already
+  complete -- no backfill needed. Priorities AskUserQuestion -&gt; owner picked the union-vs-
+  duplicate item. Pre-RED scope AskUserQuestion (item had no ratified design, unlike Phase 1/2/3)
+  -&gt; owner picked design-session-first. Claim (2e3a05b2). Read the current source
+  (R/makePedigreeDiagramData.R:790-1111) and plan doc §12 in full; live-reproduced the 3-case
+  residual from scratch, found the load-bearing sweep-order asymmetry BACKLOG's own sketch missed
+  (1 of 3 cases has its duplicate's owning union placed AFTER the colliding union). Spiked and
+  measured 3 directions (each cp-backed-up/restored/shasum-verified): BACKLOG's literal
+  union-sweep-side sketch (confirmed incomplete, 2/3), a first-drafted bidirectional duplicate-
+  side push (found broken, disclosed as a false start), the corrected unidirectional duplicate-
+  side push (resolves all 3, 0 unexpected collateral, absorbed into 0 residual beyond the
+  pre-existing 47-row curved-heuristic class). Wrote the design doc (ARCHITECTURE_WORKSTREAM.md
+  template, grep-based test inventory). 3-agent adversarial-verification workflow (isolation:
+  worktree): first run found a real methodology flaw (one agent's worktree silently checked out a
+  stale commit, 5 behind, predating the S652 revert -- root-caused via git merge-base/git show,
+  documented as Learning 693); re-ran pinned to the exact commit -- all 3 agents CONFIRMED.
+  Ratification AskUserQuestion -&gt; owner picked the recommended direction. BACKLOG.md updated
+  (commit 1c99e0e4); Learning 693 recorded, CLAUDE.md pointer updated (commit f96dd389).
+next_steps: Implement the ratified design -- docs/planning/pedigree-diagram-track7-phase4-union-
+  duplicate-proximity-plan.md §6 (Migration Path) and §7 (Verification Plan), full TDD RED-&gt;GREEN
+  -&gt;REFACTOR. Re-confirm §5.3's 5-assertion pinned-test inventory live (pre-RED) before trusting
+  it. Or pick from the other 4 remaining pedigree-fidelity Housekeeping items (all READY, Effort
+  S): the __jog_* waypoint invisible-styling fix, the Track C table discrepancy, S649's own
+  missing NEWS.Rmd entry, or the NEWS.Rmd dangling-reference question. A future session should
+  also push master to origin (unpushed local commits accumulating).
+key_files: docs/planning/pedigree-diagram-track7-phase4-union-duplicate-proximity-plan.md (the
+  new ratified design, full doc), R/makePedigreeDiagramData.R:1098-1111 (duplicate positioning,
+  where the ratified fix's post-pass will be inserted), tests/testthat/test_positionMatingUnitForest.R:1274
+  (duplicate-residual pinned assertion, 3L -&gt; 0L under the ratified fix)
+gotchas: A NEW BACKLOG.md Housekeeping item was filed for 6 incidentally-found, UNRELATED
+  duplicate-vs-individual near-misses (unaffected by the Phase 4 fix either direction) -- do not
+  conflate it with Phase 4's own scope. Workflow tool isolation:'worktree' needs an explicit
+  commit-SHA pin for any verification task in a session carrying unpushed local commits -- see
+  Learning 693 before launching another adversarial-verification workflow. The other 4
+  pedigree-fidelity Housekeeping items are untouched this session. HANDOFFS.md/SESSION_NOTES.md/
+  CHANGELOG.md remain past the FM #28 size cap, unchanged this session.
+runtime_smoke: n/a -- docs-only session (a ratified design document, no code changed; all
+  investigative spikes to R/makePedigreeDiagramData.R were reverted and shasum-confirmed
+  byte-identical to HEAD before this session's own commits).
+changelog_ref: CHANGELOG.md 2026-08-30 S654 design-doc and learnings entries (commits 1c99e0e4,
+  f96dd389)
+commit: ded809a5</code></pre>
+<pre class="handoff"><code>session: S653
+date: 2026-08-30
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- lint.yaml CI break fixed. [object_usage_linter] no visible global function
+  definition for '.formatStructuralDiscrepancy' at data-raw/kinship2FidelityValidation.R:339
+  (BACKLOG.md Housekeeping, found S643) resolved via full TDD RED-&gt;GREEN (REFACTOR skipped):
+  moved the function into R/comparePedigreeStructure.R. BACKLOG.md item marked DONE.
+what_was_done: Phase 0 ledger reconcile backfilled a missing CHANGELOG.md entry for S652's own
+  self-reference commit (a26aa472). Claim (81266f05). Root cause confirmed live (not assumed):
+  lint.yaml runs `Rscript -e 'lintr::lint_package()'` with no pkgload::load_all() step, so it
+  never sees .formatStructuralDiscrepancy() (defined only in a testthat helper) -- every local
+  repro this session showed 0 lints because load_all()'s own default helpers = TRUE silently
+  auto-sources testthat helpers, masking the gap deterministically (confirmed via
+  exists(..., where = asNamespace("nprcgenekeepr"), inherits = FALSE) == FALSE even after a bare
+  load_all()) -- definitively ruling out, not just weakening, BACKLOG.md's prior "stale globalenv"
+  hypothesis. Also confirmed against the already-ratified D-6 decision
+  (docs/planning/pedigree-diagram-kinship2-structural-comparison-plan.md): the function has zero
+  kinship2 dependency, so it already satisfied the criterion that routed its 3 siblings to R/.
+  RED (5779c002): new structural guard test test_lint_clean_baseline.R (test_r_cmd_check_clean_
+  baseline.R/S637 precedent) asserting namespace-level visibility; confirmed genuine RED (93 -&gt; 2
+  failed, 0 collateral). GREEN (3be66ae9): moved the function into R/comparePedigreeStructure.R
+  (@noRd), updated 2 real call sites + stale comments; full clean regression 1 failed
+  (pre-existing)/0 error/6570 passed; lintr::lint_package() 0 lints; devtools::document() 0
+  NAMESPACE/man changes; live end-to-end run of data-raw/kinship2FidelityValidation.R (kinship2/
+  chromote/htmlwidgets all available locally) exit code 0, Track D all identical = TRUE; 4
+  incidentally-regenerated PNGs (chromote non-determinism) reverted, not committed. REFACTOR
+  skipped (owner-directed via AskUserQuestion). CHANGELOG.md/BACKLOG.md updated (84d986d4).
+  Learning 692 recorded, CLAUDE.md pointer updated (8dab37be).
+next_steps: Pick from BACKLOG.md Housekeeping (all under the standing pedigree-fidelity banner,
+  5 of 6 items now remaining): the __jog_* waypoint invisible-styling fix (READY, Effort S,
+  R/makePedigreeDiagramData.R:2081-2127/2094-2097), the Track C table discrepancy (READY, Effort
+  S), the union-vs-duplicate proximity residual design (READY, Effort M), S649's missing
+  NEWS.Rmd entry (READY, Effort S), or the NEWS.Rmd dangling-reference question (READY, Effort
+  S). A future session should also push master to origin (13+ commits ahead, unpushed) and
+  confirm lint.yaml actually goes green on real CI, not just local verification.
+key_files: R/comparePedigreeStructure.R (new .formatStructuralDiscrepancy(), appended after
+  .comparePedigreeStructures() at :305), data-raw/kinship2FidelityValidation.R:339 (call site,
+  now nprcgenekeepr:::-prefixed), tests/testthat/helper-comparePedigreeStructure.R (function
+  removed), tests/testthat/test_lint_clean_baseline.R (new guard test)
+gotchas: Local lintr::lint_package() runs (even a fresh Rscript process, even lint() on a single
+  file in isolation) CANNOT reproduce a CI-only lint.yaml gap if the missing symbol is a testthat
+  helper -- pkgload::load_all()'s own helpers = TRUE default masks it every time (Learning 692).
+  Do not trust a clean local lint run over a CI-reported failure without checking this. The
+  STANDING TOP PRIORITY banner (BACKLOG.md, S643) stays -- 5 of 6 pedigree-fidelity Housekeeping
+  items remain open. A 19-session-deep CHANGELOG gap (S634-S651, same self-reference-commit
+  entry type this session backfilled for S652) was found but not backfilled -- outside this
+  reconcile's frontier, reported only.
+runtime_smoke: n/a for the Shiny app (no app runtime behavior changed -- internal dev-tooling
+  relocation only, no exported function, no Shiny feature/control) -- but the actual runtime path
+  this fix touches WAS live-verified: a full end-to-end run of
+  data-raw/kinship2FidelityValidation.R (kinship2/chromote/htmlwidgets all available locally),
+  exit code 0, confirming the moved nprcgenekeepr:::.formatStructuralDiscrepancy() call resolves
+  correctly through the actual script, not just under testthat.
+changelog_ref: CHANGELOG.md 2026-08-30 S653 RED/GREEN entries (84d986d4)
+commit: 741c2b7f</code></pre>
+<pre class="handoff"><code>session: S652
+date: 2026-08-29
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- issue #166 (Track 7 qualifying-union recenter dogleg/off-center sibship-bar)
+  implemented and shipped per the ratified Option 1 design (scoped revert): deleted
+  R/makePedigreeDiagramData.R:973-979 via full TDD RED-&gt;GREEN-&gt;REFACTOR (REFACTOR skipped). GitHub
+  issue #166 closed; BACKLOG.md item marked DONE.
+what_was_done: RED (ca689c3f): 12 assertion-level test changes + 3 new/unchanged-confirmed blocks
+  across 4 files, every value live-measured against a temporary reverted spike (never hand-derived).
+  Confirmed genuine RED: 93 failed/0 error/6477 passed against unmodified HEAD (12 intentional +
+  1 pre-existing baseline). GREEN (303b42dd): deleted the 7-line recenter loop, reworded the stale
+  comment; found and fixed a 15th test the design doc's own inventory missed (F1 fixture's outer
+  makePedigreeMatingLayout() surface pin, Learning 690). Full clean regression after: 1 failed
+  (pre-existing)/0 error/6569 passed; lintr 0 lints; mandatory live-render check (real chromote
+  render) confirmed 0 id collapse/0 residual collisions. REFACTOR skipped (0db5e4c8's own commit
+  message references the AskUserQuestion decision). NEWS.Rmd/BACKLOG.md/CHANGELOG.md updated
+  (0db5e4c8): corrected a NEWS.Rmd bullet that described the just-deleted mechanism, marked issue
+  #166 DONE, updated the union-vs-duplicate residual Housekeeping item 4-&gt;3, filed 1 new
+  Housekeeping item (NEWS.Rmd dangling reference, found incidentally). GitHub issue #166 closed.
+  Learnings 690/691 recorded (beed0b4d).
+next_steps: Pick from BACKLOG.md Housekeeping (all Effort S/M, still under the standing
+  pedigree-fidelity banner): the NEWS.Rmd dangling-reference/possible pre-existing staleness item
+  (new, this session), the __jog_* waypoint invisible-styling bug (S648), the Track C table 3-vs-2
+  vermillion-edges discrepancy (S645), S649's missing NEWS.Rmd entry, the union-vs-duplicate
+  residual (now 3, S652). Otherwise ask the owner whether the standing top-priority banner comes
+  down, or pick a non-pedigree item (lint.yaml red streak, LabKey research, chromote CDP-timeout
+  fallback, methodology_trim.py config residual, or a DECISION NEEDED item).
+key_files: R/makePedigreeDiagramData.R:963-980 (the deleted recenter loop and its reworded
+  comment); docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md (the ratified
+  design); tests/testthat/test_positionMatingUnitForest.R (11 blocks touched, including the new
+  issue-#166-geometry test); tests/testthat/test_addRectilinearWaypoints.R,
+  test_makePedigreeMatingLayout.R, test_resolveEdgeNodeCollisions.R (1 block each); NEWS.Rmd:87-99
+  (corrected bullet + new bullet); BACKLOG.md (issue #166 item, Housekeeping section).
+gotchas: STANDING TOP PRIORITY banner (BACKLOG.md, S643) correctly stays -- multiple Housekeeping
+  items remain open under it. NEWS.Rmd's "sibling-consanguineous mating" bullet (immediately after
+  this session's own corrected bullet) may have been stale since S628 (predates Track 7 entirely) --
+  new Housekeeping item, not investigated further. Track 7 Phase 2's union-vs-duplicate residual is
+  now 3, not 4 -- re-verify live, don't assume either old count still applies after a future change
+  to .positionMatingUnitForest(). master is several commits ahead of origin/master, unpushed.
+  HANDOFFS.md/SESSION_NOTES.md/CHANGELOG.md remain past the FM #28 size cap, unchanged this session.
+runtime_smoke: PASS -- mandatory live-render check (design doc §5 step 3): a real chromote render
+  of the 375-individual fixture via a temporary test file (deleted after use) confirmed 0 id
+  collapse and 0 post-fix residual same-row collisions on the actual rendering pathway
+  (makePedigreeMatingLayout() -&gt; visNetwork()), not just internal x/y math.
+changelog_ref: CHANGELOG.md 2026-08-29 S652 entries (landed in ca689c3f/303b42dd/0db5e4c8/beed0b4d)
+commit: d81f76bc</code></pre>
+<p>Issue #166 implemented and shipped end-to-end via full TDD RED-&gt;GREEN-&gt;REFACTOR (REFACTOR skipped), matching the ratified design exactly. Self-score breakdown: +followed the design doc’s own “measure live, never hand-derive” discipline for every RED-phase value across 4 files using a temporary spike-and-restore, never computing a value by formula alone; +proactively flagged a genuinely new empirical result (the Track B shrunk-fixture regression) via <code>AskUserQuestion</code> before encoding it into tests, rather than silently shipping it; +caught and fixed the design doc’s own 15th missed test by running full files against a live spike instead of trusting an already-adversarially-verified inventory as exhaustive; +ran the MANDATORY live-render check via an actual chromote browser render, not internal coordinate math alone; +corrected a NEWS.Rmd bullet that would otherwise have shipped a false claim about the reverted behavior; +zero stakeholder corrections across all 3 TDD phase-gates; -the GREEN-phase F1-test discovery was a real gap on this session’s own RED-phase read, not just the design doc’s, though caught and fixed same-session; -filed rather than resolved the incidentally-found NEWS.Rmd dangling-reference question (correctly out of scope, but leaves a fully-accurate NEWS.Rmd as a future task).</p>
+<pre class="handoff"><code>session: S651
+date: 2026-08-29
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: DONE -- architecture design document for issue #166 (Track 7 qualifying-union
+  recenter decouples a union's x from its own children), ARCHITECTURE_WORKSTREAM.md. Design
+  RATIFIED by the owner (Option 1, scoped revert) via AskUserQuestion. Planning session -- no
+  implementation this session, per SESSION_RUNNER.md.
+what_was_done: Live-measured research (own script) proving a "clamp toward children's mean"
+  mitigation collapses to a binary choice, not a tunable spectrum (tier1X[[anchor]] ==
+  mean(tier1X[kids]) bit-exact for all 34 qualifying units on the real fixture). 4-agent
+  background research workflow (wf_1a292f09-85e): Track 7 plan doc's rejected alternatives,
+  collision-push diagnosis for the 7 divergence outliers, kinship2 alignped4.R source read,
+  initial consumer/test inventory. Drafted docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md
+  (3 options, Option 1 recommended). 3-agent adversarial-verification workflow
+  (wf_8c20ad2a-500) found and the document now discloses 3 real gaps: the anchor/children-mean
+  identity is sweepMinSep()-contingent, not an algorithmic guarantee (synthetic counter-example
+  proves it can break); new collision-safety data (0 new individual/union collisions, a small
+  disclosed union-vs-duplicate shift); the test-inventory undercounted by 3.5x (corrected to 14
+  assertions across 4 files). Owner ratified Option 1 via AskUserQuestion. BACKLOG.md's issue
+  #166 item updated with the ratified mechanism and corrected inventory, marked READY.
+  Learnings 688/689 recorded; CLAUDE.md learnings pointer updated (687-&gt;689).
+next_steps: Implement issue #166 per the ratified design (Option 1): delete the recenter loop
+  R/makePedigreeDiagramData.R:973-979 via full TDD RED-&gt;GREEN-&gt;REFACTOR. Start from the design
+  doc's own §5 Migration Path and §6.3 test inventory (&gt;=14 assertions, not 2 -- see the doc's
+  own citation list: test_positionMatingUnitForest.R lines 73/227/425/931/1067/1148/1209/1426/
+  1919/2022, test_addRectilinearWaypoints.R:664, test_makePedigreeMatingLayout.R:593/1005,
+  test_resolveEdgeNodeCollisions.R:399). §5 step 3's live-render regression check is MANDATORY
+  (matching every prior Track 7 session's own bar), not optional.
+key_files: docs/planning/pedigree-diagram-track7-phase3-child-centering-plan.md (the full design
+  -- §2 decision space, §5 Migration Path, §6.3 test inventory), R/makePedigreeDiagramData.R:973-979
+  (the fix site), R/makePedigreeDiagramData.R:627-1123 (.positionMatingUnitForest(), full
+  context), BACKLOG.md (issue #166 item, updated with ratified mechanism).
+gotchas: STANDING TOP PRIORITY banner (BACKLOG.md, S643) correctly stays -- issue #166 is itself
+  new work under it, so S650's own "ask the owner whether it comes down" gotcha is now moot.
+  Track 7 Phase 2's own 4-case union-vs-duplicate residual (S649) will shift to 3 (1 new case,
+  2 resolved) once issue #166's fix ships -- re-verify live, don't assume S649's own count still
+  applies post-fix. lint.yaml CI still red (S643+, 4+ consecutive pushes now, confirmed via this
+  session's own Phase 0 gh run list check) -- pre-existing, unrelated, already tracked.
+runtime_smoke: n/a -- docs-only planning session, no runtime behavior changed (no R/ source
+  touched).
+changelog_ref: CHANGELOG.md 2026-08-29 S651 entries (landed in 1ad27ca3)
+commit: 1ad27ca3</code></pre>
+<p>Design document written and ratified; implementation deferred to a future session per SESSION_RUNNER.md’s Planning Sessions rule (“the plan is the deliverable, implementation is a separate session”). Self-score breakdown: +full research-before-drafting discipline, +read actual implementations (not descriptions) including kinship2’s own source, +proactive adversarial self-verification with 3 real findings incorporated honestly rather than defended, +a genuinely non-obvious empirical insight (binary not tunable) that reframed the whole design, +zero stakeholder corrections; -2 sequential background workflows added round-trip latency (likely unavoidable given the second depended on the first’s results plus a drafted document), -a substantial (~540-line) document that will take real time for an implementing session to absorb (judged proportionate to the problem’s genuine complexity and the stakes of governing a future implementation, not padding).</p>
 <pre class="handoff"><code>session: S650
 date: 2026-08-29
 status: complete
