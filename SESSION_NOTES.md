@@ -18,6 +18,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 661 Did
+**Deliverable:** Scope/design session (no code) for the 4 B1-individual-vs-unrelated-individual
+proximity near-misses on the real 375-individual fixture (`D0Z114`/`S0022Z`, `XEE9GT`/`JB7EW2`,
+`PQX22G`/`Y7IUMX`, `HKTQ40`/`8P17E3`, found S658, `BACKLOG.md` Up Next -- standing pedigree-fidelity
+top priority) -- same root cause as S660's shipped duplicate-vs-individual fix
+(`.deCollideIndividualPoints()`'s exact-tie-only guard), different call site (`b1Ids`,
+`R/makePedigreeDiagramData.R:958-960`), following `ARCHITECTURE_WORKSTREAM.md` per this project's
+own precedent for pedigree-positioning design docs (S646/S648/S658). (IN PROGRESS)
+**Started:** 2026-08-31.
+**Status:** Session claimed. Work beginning -- re-deriving the 4-case measurement from scratch
+against current `HEAD` next, per this project's own "never trust a stated count without
+re-measuring" convention (S658's own Pre-RED precedent).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 659 Handoff Evaluation (by Session 660)
 **Score: 9/10.** **What helped:** S659's `next_steps`/`HANDOFFS.md` receipt named the exact
 standing-top-priority pickup ("implement the ratified duplicate-vs-individual proximity fix,

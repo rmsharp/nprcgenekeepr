@@ -136,6 +136,26 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S661
+date: 2026-08-31
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Scope/design session (no code) for the 4 B1-individual-vs-unrelated-individual
+  proximity near-misses on the real 375-individual fixture (BACKLOG.md Up Next, standing
+  pedigree-fidelity top priority) -- same root cause as S660's shipped duplicate-vs-individual
+  fix, different call site (b1Ids, R/makePedigreeDiagramData.R:958-960). ARCHITECTURE_WORKSTREAM.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<claim-time stub -- overwritten at Phase 3D close-out>
+
+```handoff
 session: S660
 date: 2026-08-30
 status: complete
