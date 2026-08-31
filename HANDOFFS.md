@@ -177,8 +177,9 @@ gotchas: (1) the §6 disclosed edge case remains untested by a genuine forced ne
   header comment (this session) explains why a small fixture cannot reach it (a B1 individual
   always brings her own union; a genuine Tier-1 individual is sweepMinSep()-guaranteed >=0.6
   away). (2) STANDING TOP PRIORITY banner still applies -- next pickup (item 1 above) needs its
-  own design session first. (3) master unpushed by a growing margin -- lint.yaml stays red on
-  pushed runs until that push happens.
+  own design session first. (3) RESOLVED post-close-out: owner-directed git push origin master
+  (54 commits, 3e904167..5c73f2fe) -- all 4 push-triggered workflows confirmed green, including
+  lint.yaml (S653's fix now live). master/origin/master back in sync.
 runtime_smoke: Live chromote render check via getLiveRenderedPositions() against the real
   375-individual fixture, exercising the SAME visNetwork()/R/modPedigree.R:611-614 call path the
   Shiny app itself uses -- both named pairs render exactly 50px apart in the DOM (vis.js ground

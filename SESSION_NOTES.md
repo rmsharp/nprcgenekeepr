@@ -152,8 +152,11 @@ sessions made this mistake despite prose warnings; this session avoided it by ex
 `run_in_background` instead); (3) scope the pedigree-diagram-drawing package-extraction research
 session (READY, Effort M, research/scoping only, owner-directed 2026-08-19). Unchanged gotchas: the
 stray LibreOffice lock file (`inst/extdata/reference/~$e Compounding Loop.html`) is still present;
-`HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap; `master` is further
-ahead of `origin/master`, unpushed; `lint.yaml` stays red on pushed runs until that push happens.
+`HANDOFFS.md`/`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap. **RESOLVED this
+session, post-close-out:** owner-directed `git push origin master` (54 commits, `3e904167..5c73f2fe`)
+-- all 4 push-triggered workflows (`R-CMD-check.yaml`, `test-coverage.yaml`, `pkgdown.yaml`,
+`lint.yaml`) confirmed green, resolving the multi-session `lint.yaml` red streak (S653's local fix
+now live). `master`/`origin/master` back in sync.
 
 **Key files:** `R/makePedigreeDiagramData.R:996-1002,1125-1179` (the new `individualClearance`
 constant and the widened Phase 4 post-hoc duplicate loop); `tests/testthat/test_positionMatingUnitForest.R`

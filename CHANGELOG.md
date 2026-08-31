@@ -16,6 +16,17 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S660: push master (owner-directed), all 4 workflows confirmed green
+- **Deliverable:** pushed `master` (owner-directed, post-close-out) — `git push origin master`,
+  54 commits (`3e904167..5c73f2fe`), the first time this session's own commits and the prior
+  several sessions' back-catalog reached CI. All 4 push-triggered workflows confirmed green:
+  `R-CMD-check.yaml`, `test-coverage.yaml`, `pkgdown.yaml`, and `lint.yaml` — the last of these
+  resolving the multi-session `lint.yaml` red streak documented since S653 (that session's local
+  fix, `.formatStructuralDiscrepancy()` moved into `R/`, was never pushed until now).
+  `master`/`origin/master` back in sync. `SESSION_NOTES.md`/`HANDOFFS.md` S660 gotchas updated to
+  reflect this (no longer "unpushed"/"lint.yaml red").
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [ad hoc] S660: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S659 precedent)
 - This commit sets `HANDOFFS.md`'s S660 receipt `commit:` field from `pending` to `b9188034`
   (the deliverable commit), the same self-reference workaround this project's sessions have made
