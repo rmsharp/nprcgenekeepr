@@ -185,9 +185,9 @@ runtime_smoke: Live chromote render check via getLiveRenderedPositions() against
   Shiny app itself uses -- both named pairs render exactly 50px apart in the DOM (vis.js ground
   truth), 0 NA positions, 102/102 duplicate nodes present. No separate shinytest2/app-launch pass
   additionally run.
-changelog_ref: see CHANGELOG.md's 2026-08-30 S660 entries (claim/RED/GREEN/close-out), tagged
+changelog_ref: see CHANGELOG.md's 2026-08-30 S660 entries (claim/RED/GREEN/close-out/push), tagged
   [BL-dupIndividualProximity].
-commit: b9188034
+commit: 70072a26
 ```
 <claim-time stub -- overwritten at Phase 3D close-out>
 
