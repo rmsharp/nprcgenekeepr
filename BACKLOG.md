@@ -753,47 +753,55 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `AskUserQuestion`): the new code mirrors Track 7 Phase 4's existing post-hoc push structure
       exactly, no behavior-neutral restructuring identified, matching S650/S652/S653/S655's own
       precedent. `NEWS.Rmd` updated with a plain-language bullet. See `CHANGELOG.md`.
-- [ ] **B1-individual-vs-unrelated-individual proximity near-misses on the real 375-individual
+- [x] **B1-individual-vs-unrelated-individual proximity near-misses on the real 375-individual
       fixture, no duplicate involved -- same root cause as the item above (`.deCollideIndividualPoints()`'s
       exact-tie-only guard) but a different, unaddressed call site** (found S658, 2026-08-30,
-      incidentally while designing the fix for the item above. **Design RATIFIED S661
-      (2026-08-31), Effort M, implementation READY, next pickup (standing pedigree-fidelity
-      directive).**) **Corrected S661: the true scope is 19 pairs, not 4** -- BACKLOG's original
-      "4" (`D0Z114`/`S0022Z` 0.100, `XEE9GT`/`JB7EW2` 0.100, `PQX22G`/`Y7IUMX` 0.400,
-      `HKTQ40`/`8P17E3` 0.401) are all confirmed accurate, but re-deriving the count with this
-      project's own established own-mating-unit exclusion (the same exclusion the shipped
-      duplicate-side fix already applies) surfaces **15 more, previously-undocumented pairs, all
-      EXACT coordinate ties (distance = 0.000000), not "near"** -- same relationship-and-visual
-      defect shape, just not previously surfaced because the original scan looked only for
-      strictly-positive distances. (A fully literal same-generation-pair-under-threshold reading,
-      with no relationship exclusion at all, adds a further 25 "mates" pairs -- confirmed by-design,
-      not a defect: a B1 individual and her own anchor, the intentional Track 7 Phase 1 offset
-      itself.) Of the 19 in-scope pairs: 4 are B1-vs-B1, 15 are genuine-vs-B1, 0 are
-      genuine-vs-genuine (impossible by construction, `sweepMinSep()` guarantees
-      `minSep=1 > individualClearance=0.4167` between genuine Tier-1 individuals).
-      **Design (docs/planning/pedigree-diagram-b1-individual-proximity-plan.md): a new, additive,
-      per-generation near-miss/tie-repair pass over `b1Ids`, placed between
-      `R/makePedigreeDiagramData.R:1014` and `:1016` (before the union sweep begins) -- reuses the
-      already-shipped `individualClearance` constant and the existing `b1PushSign` direction
-      signal; needs one new, empirically-derived `.kMaxB1ProximityPush` cap (NOT
-      `.kMaxIndividualPush=2`, which was tuned against a different problem -- sibling-bar-overlap
-      avoidance, not near-miss avoidance).** Simpler alternatives were measured and rejected:
-      widening the shared `.deCollideIndividualPoints()` threshold with no family exclusion would
-      false-positive on 25/67 (37.3%) of B1 members' own intentional anchor-offset (independently
-      re-verified twice this session); mechanically copying Track 7 Phase 4's post-hoc pattern
-      verbatim is structurally incomplete for the 4 B1-vs-B1 pairs (self-collision within the very
-      population being placed, a case Phase 4's frozen-snapshot pattern was never designed to
-      catch). **Contrary to this item's own original concern, the 2 downstream passes that read
-      `tier3X[b1Ids]` (Phase 2's union sweep, Phase 4's duplicate seed) need ZERO code changes** --
-      the chosen placement means both transparently see the corrected values; only
-      re-verification, not a code change, is needed there. 13 pinned test assertions are at some
-      risk of needing re-pinning (2 confirmed High risk: the `nColliding=27L` counts at
-      `test_positionMatingUnitForest.R:488,1081`), down from the "~20" original informal estimate
-      (11 hard `b1Ids`-dependent assertions + 2 aggregate counts in that file, +2 more indirect
-      aggregate counts in `test_makePedigreeMatingLayout.R`), plus a `test_resolveEdgeNodeCollisions.R:490-491`
-      ripple this item's own original text did not name. Full measurement, rejected-alternatives
-      table, and verification record:
-      [`docs/planning/pedigree-diagram-b1-individual-proximity-plan.md`](docs/planning/pedigree-diagram-b1-individual-proximity-plan.md).
+      incidentally while designing the fix for the item above. Design RATIFIED S661 (2026-08-31).
+      **Implemented S662 (2026-08-31), Effort M -- commit range starting `60fff15c` (RED).** True
+      scope corrected S661: 19 pairs, not the originally-recorded 4 -- BACKLOG's original "4"
+      (`D0Z114`/`S0022Z` 0.100, `XEE9GT`/`JB7EW2` 0.100, `PQX22G`/`Y7IUMX` 0.400, `HKTQ40`/`8P17E3`
+      0.401) are all confirmed accurate, but re-deriving the count with this project's own
+      established own-mating-unit exclusion (the same exclusion the shipped duplicate-side fix
+      already applies) surfaced **15 more, previously-undocumented pairs, all EXACT coordinate ties
+      (distance = 0.000000), not "near"** -- same relationship-and-visual defect shape, just not
+      previously surfaced because the original scan looked only for strictly-positive distances. (A
+      fully literal same-generation-pair-under-threshold reading, with no relationship exclusion at
+      all, adds a further 25 "mates" pairs -- confirmed by-design, not a defect: a B1 individual and
+      her own anchor, the intentional Track 7 Phase 1 offset itself.) Of the 19 in-scope pairs: 4
+      are B1-vs-B1, 15 are genuine-vs-B1, 0 are genuine-vs-genuine (impossible by construction,
+      `sweepMinSep()` guarantees `minSep=1 > individualClearance=0.4167` between genuine Tier-1
+      individuals). **Shipped (docs/planning/pedigree-diagram-b1-individual-proximity-plan.md): a
+      new, additive, per-generation near-miss/tie-repair pass over `b1Ids`
+      (`R/makePedigreeDiagramData.R:1016-1073`), placed between the already-shipped
+      `individualClearance` constant (`:1004`) and the union sweep (before the former `:1016`) --
+      reuses `individualClearance` and the existing `b1PushSign` direction signal;
+      `.kMaxB1ProximityPush = 2L` (same value as `.kMaxIndividualPush`, empirically confirmed
+      sufficient -- resolved all 19 pairs on the first candidate, no owner-gated cap escalation
+      needed).** Simpler alternatives were measured and rejected: widening the shared
+      `.deCollideIndividualPoints()` threshold with no family exclusion would false-positive on
+      25/67 (37.3%) of B1 members' own intentional anchor-offset (independently re-verified twice
+      pre-implementation, and directly pinned in a dedicated regression test); mechanically copying
+      Track 7 Phase 4's post-hoc pattern verbatim would have been structurally incomplete for the 4
+      B1-vs-B1 pairs (self-collision within the very population being placed) -- the shipped
+      mechanism's incremental `pushedThisGen` tracking resolves all 4. **Confirmed: the 2 downstream
+      passes that read `tier3X[b1Ids]` (Phase 2's union sweep, Phase 4's duplicate seed) needed ZERO
+      code changes** -- the chosen placement means both transparently see the corrected values.
+      Full TDD: RED (4 new tests, 8 assertions, confirmed failing against unmodified `HEAD`) ->
+      GREEN (all 4 new tests pass; the `nColliding=27L` pins at
+      `test_positionMatingUnitForest.R:488,1081` re-measured and re-pinned to **0L** -- the entire
+      27-node exact-tie residual was composed of B1-related ties this fix resolves; 2 more ripples
+      re-measured and re-pinned: `test_makePedigreeMatingLayout.R` node/jog counts 1460/202 ->
+      1450/192 [5 fewer same-row collisions needing jog repair] and
+      `test_resolveEdgeNodeCollisions.R:490-491` 100/1766 -> 95/1761 [same cause]; plus one
+      additional, previously-undocumented ripple found live this session -- the twins fixture's own
+      "?" zygosity connector re-jogs since `BRI2MW` moves, `test_makePedigreeMatingLayout.R:1047-1082`
+      re-pinned). Full clean regression 0 failed/0 error attributable (1 pre-existing unrelated
+      `test_wordlist_coverage.R` failure only), 6603 passed, 0 collateral;
+      `lintr::lint_package()` 0 lints on all 4 touched files; `devtools::document()` 0 NAMESPACE/man
+      diffs (internal `@noRd` function). **Mandatory live chromote render check**
+      (`getLiveRenderedPositions()`, the same `visNetwork()` call the app itself makes): all 19
+      resolved pairs render >= 50px apart (2x25px node radius, min observed 50px), 0 NA positions,
+      102/102 duplicate nodes present. See `CHANGELOG.md`.
 - [x] **`R-CMD-check-scheduled.yaml` (the weekly-cron twin of `R-CMD-check.yaml`) never
       received the S616/S618/S619 chromote Chrome-provisioning fix, and nothing guarded
       against the drift** (found live S629, 2026-08-24, via Phase 0's mandatory `gh run list`

@@ -18,18 +18,141 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 661 Handoff Evaluation (by Session 662)
+**Score: 9/10.** **What helped:** S661's `next_steps` named the exact standing-top-priority
+pickup (implement the ratified B1-individual proximity design) with the precise starting point
+(the design doc's own §8 Pre-RED re-validation) and correctly flagged this as full TDD, matching
+`CLAUDE.md`'s Development Process Contract. The design doc itself (`docs/planning/pedigree-
+diagram-b1-individual-proximity-plan.md`) was exceptionally thorough -- §2.2's mechanism, §2.3's
+exact placement (with real, re-verified line numbers), and §6's Impact Analysis table (13 named
+at-risk assertions, correctly triaged by risk level) all matched reality closely enough that
+implementation required zero design deviations. Pre-RED re-validation (this session, against
+`HEAD` `0699e127`) reproduced the design's own 19/25/44 counts, 25/67 own-anchor collateral, and
+0/19 co-anchor false-negative findings exactly -- the design had not drifted. **What was
+missing:** the design's own §6 Impact Analysis, though unusually thorough, did not (and could not
+easily have) anticipated the twin-connector ripple in `obfuscated_rhesus_mhc_ped_twins.csv` --
+a DIFFERENT fixture file than the one the inventory was built from, discovered only because it
+happens to reuse some of the same real ids (see `PROJECT_LEARNINGS.md` Learning 702). This is not
+a fault of S661's own work (the coupling is invisible to a code/doc-level inventory), but it does
+mean the design's own "13 pinned assertions at risk" count undercounted by 1 in practice. **What
+was wrong:** nothing -- every claim in the design doc that this session checked (line numbers,
+formula citations, the `.kMaxB1ProximityPush` cap needing empirical derivation, the "0 downstream
+code changes needed" claim for the union sweep and duplicate seed) held exactly as stated. **ROI:**
+very high -- the design's own rigor meant this session spent its effort on TDD execution and
+verification rather than re-deriving or correcting the plan, and the one gap found (the twin-
+fixture ripple) was caught by the full regression run exactly as the process is designed to catch
+such gaps, not by a deeper flaw in the design itself.
+
 ### What Session 662 Did
-**Deliverable:** Implement the RATIFIED B1-individual-vs-unrelated-individual proximity fix
-(`docs/planning/pedigree-diagram-b1-individual-proximity-plan.md`, design ratified S661) -- 19
-in-scope pairs, new additive per-generation pass in `R/makePedigreeDiagramData.R` between
-`:1014`-`:1016`. (IN PROGRESS)
-**Started:** 2026-08-31
-**Status:** Session claimed. Work beginning -- full TDD (Pre-RED re-validation of the 19-pair
-count against current `HEAD`, per the design's own §8 Verification Plan, then RED -> GREEN ->
-REFACTOR gated via `AskUserQuestion` per `CLAUDE.md`'s Development Process Contract).
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Implemented the RATIFIED B1-individual-vs-unrelated-individual proximity fix
+(`docs/planning/pedigree-diagram-b1-individual-proximity-plan.md`, design ratified S661) -- all 19
+in-scope pairs resolved via a new additive per-generation pass in `R/makePedigreeDiagramData.R`
+(`:1016-1073`). **DONE**, full TDD (RED `60fff15c` -> GREEN `4a303b3b`, REFACTOR skipped via
+owner-directed `AskUserQuestion`, matching S650/S652/S653/S655/S660 precedent). **Started/
+Completed:** 2026-08-31 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0:** full orientation (`SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full,
+   `SESSION_NOTES.md` ACTIVE TASK section read, `CHANGELOG.md`/`HANDOFFS.md` reconciled -- 0
+   undocumented commits, both frontiers equal `HEAD`). `gh issue list`: 11 open, none new. `gh run
+   list`: all 4 push-triggered workflows green on the latest push. `methodology_dashboard.py`:
+   96/100 health, 1 HIGH risk (unchanged -- the 3 mandated-read files past the FM #28 size cap).
+   Rendered a 3-option priorities `AskUserQuestion` -- **owner picked the B1-individual proximity
+   fix** (the standing top priority's own next pickup, per S661's `next_steps`).
+2. **Phase 1B claim** (commit `0699e127`) -- stub in `SESSION_NOTES.md` + `status: pending`
+   `HANDOFFS.md` receipt, written before any investigation began.
+3. **PRE-RED:** re-ran `scratchpad/b1-proximity-measure.R`/`b1-design-verification.R` against
+   unmodified `HEAD` (`0699e127`, no local `R/` modifications) -- reproduced the design's own
+   44-total/25-mates/19-unrelated/4-B1-vs-B1 breakdown and the 25/67 own-anchor, 0/19 co-anchor
+   findings exactly, confirming zero drift since S661. `AskUserQuestion` PRE-RED->RED gate:
+   approved.
+4. **RED** (commit `60fff15c`): added 4 tests to `test_positionMatingUnitForest.R` -- an aggregate
+   near-miss property test (19 -> 0), a named-pair case-reproduction test (7 pairs incl. 3 of 4
+   B1-vs-B1 pairs), and 2 regression-safety tests using a hand-constructed synthetic fixture
+   (`scratchpad/probe_coanchor_final.R`, kept) proving (a) the co-anchor B1-sibling edge case
+   (design §7) is structurally infeasible to force a genuine near-miss for in a small fixture --
+   documented inline, mirroring S660's own precedent for an analogous edge case -- and (b) the
+   own-anchor exclusion correctly leaves a by-design-close B1 mate (0.1 raw units from her own
+   anchor) unperturbed. Full clean regression: 9 failed (8 new intentional + 1 pre-existing
+   unrelated `test_wordlist_coverage.R`), 0 error, 6594 passed, 0 collateral; 0 lints.
+   `AskUserQuestion` RED->GREEN gate: approved.
+5. **GREEN** (commit `4a303b3b`): implemented the design's §2.2 mechanism at the exact §2.3
+   placement. `.kMaxB1ProximityPush = 2L` resolved all 19 pairs on the first candidate -- no
+   owner-gated cap escalation needed (unlike Track 7 Phase 1's own 3-iteration precedent). Full
+   clean regression surfaced 3 ripples beyond the 4 new tests, all re-measured live and re-pinned,
+   never assumed: both `nColliding==27L` pins -> `0L` (the entire pre-existing 27-node exact-tie
+   residual was composed of B1-related ties); `test_makePedigreeMatingLayout.R` node/jog counts
+   1460/202 -> 1450/192 (5 fewer same-row collisions needing jog repair);
+   `test_resolveEdgeNodeCollisions.R:490-491` 100/1766 -> 95/1761 (same cause); **plus one
+   previously-undocumented ripple this session found live** -- the twins fixture's own "?"
+   zygosity connector re-jogs because `BRI2MW` (one of the 19 in-scope B1 ids) moves, breaking a
+   pinned assertion in a THIRD test file the design's own inventory never named (see
+   `PROJECT_LEARNINGS.md` Learning 702). Mandatory live chromote render check
+   (`getLiveRenderedPositions()`, full R -> htmlwidgets -> vis.js pipeline via
+   `makePedigreeMatingLayout()`): all 19 pairs render >= 50px apart, 0 NA positions, 102/102
+   duplicate nodes present. Full clean regression: 1 failed (pre-existing unrelated baseline), 0
+   error, 6603 passed, 0 collateral; 0 lints on all 4 touched files; `devtools::document()` 0
+   diffs. `AskUserQuestion` GREEN->REFACTOR gate: skip approved.
+6. **Close-out:** `BACKLOG.md` item marked DONE with full RED/GREEN detail. `NEWS.Rmd`/`NEWS.md`
+   plain-language bullet added, regenerated clean. `PROJECT_LEARNINGS.md` Learning 702 (the
+   cross-fixture ripple discovery). `CLAUDE.md` learnings-pointer count updated (701->702, session
+   count 661->662).
+
+**Runtime smoke test (Phase 3E):** N/A in the traditional sense (no Shiny startup/service-
+registration/config-resolution change) -- but this fix changes RENDERED VISUAL OUTPUT the app's
+Diagram tab produces on the real fixture, so the equivalent, non-negotiable verification is the
+mandatory live chromote render check (step 5 above), which was performed and passed: all 19
+resolved pairs confirmed >= 50px apart in the actual vis.js DOM, not just R-side x-values.
+
+**Self-assessment (Session 662): 9/10.** **Strengths:** (1) followed the TDD phase-gate protocol
+exactly -- 3 `AskUserQuestion` gates (PRE-RED->RED, RED->GREEN, GREEN->REFACTOR), each with the
+concrete next-phase actions spelled out per `CLAUDE.md`'s phase-gate format, not a prose
+approximation; (2) Pre-RED re-validation was a genuine re-derivation (re-ran the actual scripts
+against current `HEAD`), not a trust-the-design-doc assumption; (3) caught a real,
+previously-undocumented ripple (the twins-fixture "?" connector) that the design's own thorough
+Impact Analysis had no way to anticipate, via the full clean regression run rather than assuming
+the design's own inventory was exhaustive -- and traced its root cause (shared real ids across 2
+fixture files) precisely enough to write a genuinely reusable `PROJECT_LEARNINGS.md` entry (702);
+(4) the mandatory live chromote render check was not skipped or treated as optional despite the
+change being "just" an internal position-computation fix -- confirmed the fix's effect in the
+actual rendered DOM, matching this project's own repeated "code-level correctness is not evidence
+of a correct rendered image" discipline; (5) `.kMaxB1ProximityPush`'s value was empirically
+derived (tried 2, confirmed sufficient via the full regression + live render), never assumed equal
+to `.kMaxIndividualPush` just because the same number resulted. **Weaknesses:** (1) constructing
+the co-anchor synthetic fixture (RED test 3) took several iterations of direct trial-and-error
+before landing on a working construction (documented inline in the test file, and the throwaway
+intermediate scripts were cleaned up) -- a real time cost, though the final artifact and its
+documented reasoning are solid; (2) did not run a full `devtools::check()`/R CMD check pass in
+this session (matched S660's own established precedent of relying on full regression + lint +
+`devtools::document()` as the per-commit gate, reserving full package check for a less frequent
+cadence) -- worth naming explicitly as a scope boundary, not a silent omission. **ROI:** high --
+the ratified design's own rigor meant implementation proceeded with zero rework; the one genuine
+discovery (the cross-fixture ripple) was caught before it could ship broken and is now a
+documented, reusable pattern for future position-changing fixes to check for.
+
+**Next steps:** the standing pedigree-fidelity priority has no further items freshly identified
+by this session's own work -- `BACKLOG.md`'s remaining READY items are unchanged from S661's own
+list: (1) the `ScheduleWakeup`/`run_in_background` structural-guard investigation (READY, Effort
+S-M, found S656, Learning 694/695); (2) scope the pedigree-diagram-drawing package-extraction
+research session (READY, Effort M, research/scoping only). A future session doing ANY further
+position-changing fix in `R/makePedigreeDiagramData.R` should apply this session's own Learning
+702: grep every example/test fixture (not just the one the design doc's own inventory names) for
+any id the fix names as in-scope, before treating the design's own Impact Analysis as complete.
+Unchanged gotchas: the stray LibreOffice lock file
+(`inst/extdata/reference/~$e Compounding Loop.html`) is still present; `HANDOFFS.md`/
+`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap; `master` is now well ahead of
+`origin/master` (this session added 4 commits on top of S661's 3 unpushed commits) -- a future
+session should push per the established owner-directed cadence.
+
+**Key files:** `R/makePedigreeDiagramData.R:1016-1073` (the new B1-vs-unrelated-individual pass);
+`tests/testthat/test_positionMatingUnitForest.R` (4 new tests + 2 re-pinned aggregate assertions);
+`tests/testthat/test_makePedigreeMatingLayout.R` (3 re-pinned assertions, including the
+cross-fixture twin-connector ripple); `tests/testthat/test_resolveEdgeNodeCollisions.R:490-491`
+(re-pinned); `docs/planning/pedigree-diagram-b1-individual-proximity-plan.md` (the design this
+session implemented, unmodified); `BACKLOG.md` (item marked DONE); `NEWS.Rmd`/`NEWS.md` (new
+plain-language bullet); `PROJECT_LEARNINGS.md` (Learning 702); `scratchpad/probe_coanchor3.R`,
+`scratchpad/probe_coanchor_final.R` (kept, untracked scratch scripts documenting the co-anchor
+synthetic-fixture construction, cited in the RED test's own comments).
 
 ### Session 660 Handoff Evaluation (by Session 661)
 **Score: 9/10.** **What helped:** S660's `next_steps` named the exact standing-top-priority
