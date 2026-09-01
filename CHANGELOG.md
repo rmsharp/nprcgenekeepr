@@ -17,6 +17,180 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-08-31 · \[ad hoc\] S662: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S661 precedent)
+
+- This commit sets `HANDOFFS.md`’s S662 receipt `commit:` field from
+  `pending` to `06962989` (the close-out deliverable commit), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-31 · \[BL-b1IndividualProximity\] S662: close-out – B1-individual proximity fix DONE
+
+- `BACKLOG.md`: item marked `[x]` DONE with full RED/GREEN detail
+  (implementation summary, cap value, all re-pinned counts, live
+  chromote render results).
+- `NEWS.Rmd`/`NEWS.md`: plain-language bullet added (a B1/“free pass”
+  individual too close to an unrelated animal is now kept a clear
+  distance apart), regenerated clean via
+  `rmarkdown::render("NEWS.Rmd")`.
+- `PROJECT_LEARNINGS.md`: Learning 702 (a position-fix’s file-based
+  Impact Analysis inventory can miss a ripple in a DIFFERENT, unlisted
+  fixture that reuses the same real ids – found live this session in the
+  twins-fixture “?” zygosity connector).
+- `CLAUDE.md`: learnings pointer 701-\>702, session count 661-\>662.
+- `SESSION_NOTES.md`: Session 661 handoff evaluation (9/10) + full
+  Session 662 handoff.
+- `HANDOFFS.md`: S662 receipt completed (`status: pending` -\>
+  `complete`).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-31 · \[BL-b1IndividualProximity\] S662 GREEN: B1-individual-vs-unrelated-individual proximity fix implemented, all 19 pairs resolved
+
+- **Deliverable:** commit `4a303b3b`. New additive per-generation
+  near-miss/tie-repair pass over `b1Ids`
+  (`R/makePedigreeDiagramData.R:1016-1073`), per the ratified design
+  (S661). Placed between the already-shipped `individualClearance`
+  constant and the union sweep, reusing
+  `individualClearance`/`b1PushSign`/`anchorOf`/`b1UnitOf`.
+  `.deCollideIndividualPoints()` itself untouched.
+- `.kMaxB1ProximityPush = 2L` – empirically confirmed sufficient on the
+  first candidate (no owner-gated cap escalation needed, unlike Track 7
+  Phase 1’s own 3-iteration precedent).
+- Resolved all 19 confirmed pairs (4 strictly-positive near-misses + 15
+  exact ties, 4 B1-vs-B1). Mandatory live chromote render check: all 19
+  pairs render \>= 50px apart (2x25px node radius), 0 NA positions,
+  102/102 duplicate nodes present.
+- 3 pinned-count updates, all re-measured live: both `nColliding==27L`
+  pins (`test_positionMatingUnitForest.R:488,1081`) -\> `0L`;
+  `test_makePedigreeMatingLayout.R` node/jog counts 1460/202 -\>
+  1450/192; `test_resolveEdgeNodeCollisions.R:490-491` 100/1766 -\>
+  95/1761.
+- **1 additional, previously-undocumented ripple found live this
+  session** (not in the design’s own §6 inventory): the twins fixture’s
+  own “?” zygosity connector (`obfuscated_rhesus_mhc_ped_ twins.csv`)
+  re-jogs because `BRI2MW` (one of the 19 in-scope ids) moves –
+  `test_makePedigreeMatingLayout.R:1013-1082` re-pinned. See
+  `PROJECT_LEARNINGS.md` Learning 702.
+- Full clean regression: 1 failed (pre-existing unrelated
+  `test_wordlist_coverage.R`), 0 error, 6603 passed, 0 collateral.
+  `lintr::lint_package()` 0 lints on all 4 touched files.
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  0 NAMESPACE/man diffs (internal `@noRd` function).
+- REFACTOR skipped (owner-directed via `AskUserQuestion`): the design’s
+  own §3.1-3.3 already evaluated and rejected merging this pass into
+  `.deCollideIndividualPoints()` for blast-radius/ correctness reasons,
+  not style; no behavior-neutral restructuring identified within the new
+  code itself, matching S650/S652/S653/S655/S660 precedent.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-31 · \[BL-b1IndividualProximity\] S662 RED: B1-individual-vs-unrelated-individual proximity fix – 4 new tests, confirmed failing
+
+- **Deliverable:** commit `60fff15c`. 4 new tests added to
+  `test_positionMatingUnitForest.R` per the ratified design (S661): (1)
+  an aggregate near-miss property test on the real 375-fixture (19
+  in-scope pairs -\> 0); (2) a case-reproduction test for a 7-pair
+  representative sample incl. 3 of the 4 B1-vs-B1 pairs; (3)/(4) 2
+  regression-safety tests on a hand-constructed co-anchor synthetic
+  fixture (`scratchpad/probe_coanchor_final.R`), proving the §7
+  co-anchor edge case is structurally infeasible to force in a small
+  fixture (documented inline, mirroring S660’s own precedent) and that
+  the own-anchor exclusion correctly leaves a by-design-close B1 mate
+  unperturbed.
+- Pre-RED re-validation (this session): re-ran
+  `scratchpad/b1-proximity-measure.R`/ `b1-design-verification.R`
+  against unmodified `HEAD` (`0699e127`) – reproduced the design’s own
+  44/25/19/4 counts and 25/67 own-anchor, 0/19 co-anchor findings
+  exactly, confirming zero drift since S661.
+- Full clean regression: 9 failed (8 new intentional + 1 pre-existing
+  unrelated baseline), 0 error, 6594 passed, 0 collateral.
+  `lintr::lint_package()` 0 lints on the touched file.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-31 · \[BL-b1IndividualProximity\] S662: claim session (implement RATIFIED B1-individual proximity fix)
+
+- Commit `0699e127`. Stub in `SESSION_NOTES.md` + `status: pending`
+  `HANDOFFS.md` receipt, written before any investigation began, per
+  Phase 1B.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-31 · \[ad hoc\] S661: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S660 precedent)
+
+- This commit sets `HANDOFFS.md`’s S661 receipt `commit:` field from
+  `pending` to `1bfac78c` (the close-out deliverable commit), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-31 · \[BL-b1IndividualProximity\] S661: design ratified – B1-individual-vs-unrelated-individual proximity fix; BACKLOG.md count corrected 4 -\> 19
+
+- **Deliverable:**
+  `docs/planning/pedigree-diagram-b1-individual-proximity-plan.md`
+  (`ARCHITECTURE_WORKSTREAM.md` planning session, no code/test changes).
+  Ratified via `AskUserQuestion` (“Yes, ratify as recommended”), zero
+  revisions requested.
+- Produced by a 7-agent `Workflow` (4 parallel research agents + 1
+  synthesis draft + 2 adversarial verify agents, both `CONFIRMED`), then
+  independently spot-checked a second time by the main session directly
+  (re-ran `scratchpad/b1-design-verification.R`, confirmed source/test
+  line citations, confirmed the issue-#158 citation via
+  `gh issue view`).
+- **Scope correction:** re-derivation found `BACKLOG.md`’s “4
+  near-misses” claim did not survive re-derivation with this project’s
+  own established own-mating-unit exclusion (the same exclusion the
+  shipped duplicate-side fix already uses) – true in-scope count is
+  **19** (4 original strictly-positive near-misses + 15
+  previously-undocumented exact-tie pairs); a further 25 “mates” pairs
+  are confirmed by-design, not a defect.
+- **Mechanism (recommended, ratified):** a new, additive, per-generation
+  near-miss/tie-repair pass over `b1Ids`, placed between
+  `R/makePedigreeDiagramData.R:1014` and `:1016` (before the union sweep
+  begins), reusing the already-shipped `individualClearance` constant
+  and the existing `b1PushSign` direction signal; needs one new,
+  empirically-derived `.kMaxB1ProximityPush` cap. Simpler alternatives
+  measured and rejected: naive shared-threshold widening false-positives
+  on 25/67 (37.3%) of B1 members’ own intentional anchor-offset; a
+  verbatim copy of Track 7 Phase 4’s frozen-snapshot pattern is
+  structurally incomplete for the 4 B1-vs-B1 self-referential pairs. The
+  2 downstream passes (union sweep, duplicate seed) need zero code
+  changes under this placement.
+- `BACKLOG.md` item corrected with the full 19/25/44 breakdown and
+  design-doc link. `PROJECT_LEARNINGS.md` Learnings 700
+  (exact-tie-vs-resolved-tie count-scoping pitfall) and 701
+  (frozen-snapshot post-hoc patterns are unsound for self-referential
+  populations) added. `CLAUDE.md` learnings-pointer count updated (699
+  -\> 701).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-31 · \[ad hoc\] S661: claim session (design plan for B1-individual proximity near-misses)
+
+- Phase 1B stub in `SESSION_NOTES.md` + `status: pending` `HANDOFFS.md`
+  receipt, written before any investigation began. Commit `2fc8f578`.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S660: record push+CI-confirmation commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S660 precedent)
+
+- This commit sets `HANDOFFS.md`’s S660 receipt `commit:` field from
+  `b9188034` to `70072a26` (the deliverable commit for the push + CI
+  confirmation), the same self-reference workaround this project’s
+  sessions have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-30 · \[ad hoc\] S660: push master (owner-directed), all 4 workflows confirmed green
+
+- **Deliverable:** pushed `master` (owner-directed, post-close-out) —
+  `git push origin master`, 54 commits (`3e904167..5c73f2fe`), the first
+  time this session’s own commits and the prior several sessions’
+  back-catalog reached CI. All 4 push-triggered workflows confirmed
+  green: `R-CMD-check.yaml`, `test-coverage.yaml`, `pkgdown.yaml`, and
+  `lint.yaml` — the last of these resolving the multi-session
+  `lint.yaml` red streak documented since S653 (that session’s local
+  fix, `.formatStructuralDiscrepancy()` moved into `R/`, was never
+  pushed until now). `master`/`origin/master` back in sync.
+  `SESSION_NOTES.md`/`HANDOFFS.md` S660 gotchas updated to reflect this
+  (no longer “unpushed”/“lint.yaml red”).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · \[ad hoc\] S660: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S659 precedent)
 
 - This commit sets `HANDOFFS.md`’s S660 receipt `commit:` field from

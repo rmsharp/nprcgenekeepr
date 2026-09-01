@@ -142,8 +142,12 @@
 - A small number of duplicate-animal markers that could land close
   enough to an unrelated animal (not part of the same family) to
   visually touch, in large colony pedigrees with many repeated
-  individuals, are now kept a clear distance apart. \## Kinship &
-  Pedigree Calculations
+  individuals, are now kept a clear distance apart.
+- A small number of animals shown without their own parents (a “free
+  pass” placement used when an animal’s mate already anchors the family
+  tree) that could land close enough to an unrelated animal to visually
+  touch or overlap, in large colony pedigrees, are now kept a clear
+  distance apart. \## Kinship & Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their
   computed relatedness to genetic identity, and that correction flows
   through to every other relative reached through either twin – not just
