@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-31 · [ad hoc] S662: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S661 precedent)
+- This commit sets `HANDOFFS.md`'s S662 receipt `commit:` field from `pending` to `06962989`
+  (the close-out deliverable commit), the same self-reference workaround this project's sessions
+  have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-31 · [BL-b1IndividualProximity] S662: close-out -- B1-individual proximity fix DONE
 - `BACKLOG.md`: item marked `[x]` DONE with full RED/GREEN detail (implementation summary, cap
   value, all re-pinned counts, live chromote render results).

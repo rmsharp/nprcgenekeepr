@@ -190,9 +190,8 @@ runtime_smoke: N/A in the traditional startup/service-registration sense, but th
   pairs confirmed >= 50px apart in the actual vis.js DOM via getLiveRenderedPositions(), not just
   R-side x-values.
 changelog_ref: see CHANGELOG.md entries dated 2026-08-31 for S662 (claim/RED/GREEN/close-out)
-commit: pending
+commit: 06962989
 ```
-(commit sha filled by a follow-up self-reference commit, matching S600/S602-S661 precedent)
 
 **Self-score breakdown (+9/-1):** +1 exact TDD phase-gate protocol followed (3 AskUserQuestion
 gates, concrete actions per gate); +1 genuine Pre-RED re-validation (re-ran scripts, not assumed);
