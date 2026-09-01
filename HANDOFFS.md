@@ -183,7 +183,7 @@ gotchas: (1) the design's own cap value (.kMaxB1ProximityPush) is undetermined -
 runtime_smoke: n/a -- docs-only planning session, no runtime/code changes shipped.
 changelog_ref: see CHANGELOG.md entries dated 2026-08-31 (claim, workflow/ratification,
   close-out).
-commit: pending
+commit: 1bfac78c
 ```
 <claim-time stub -- overwritten at Phase 3D close-out>
 
