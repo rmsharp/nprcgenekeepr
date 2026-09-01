@@ -663,7 +663,16 @@ test_that(
   ## existing jog-repair mechanism resolves with 4 new __jog_ waypoint
   ## nodes (2 per repaired edge) -- 1456 + 4 = 1460. Re-measured by
   ## actually running the fixed engine, never hand-derived.
-  expect_equal(nrow(result$nodes), 1460L)
+  ## CHANGED AGAIN to 1450L -- the B1-individual-vs-unrelated-individual
+  ## proximity fix (docs/planning/pedigree-diagram-b1-individual-
+  ## proximity-plan.md, design ratified S661, implementation S662) moves
+  ## 19 B1/genuine individuals apart, and (unlike the duplicate-side fix
+  ## above) this REMOVES same-row collisions rather than adding them: 5
+  ## edges that previously needed a jog repair no longer collide with
+  ## anything on their row once their endpoint moves, each removing 2
+  ## __jog_ waypoint nodes -- 1460 - 10 = 1450. Re-measured by actually
+  ## running the fixed engine, never hand-derived.
+  expect_equal(nrow(result$nodes), 1450L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
   ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L (issue #166's
@@ -673,7 +682,10 @@ test_that(
   ## running the fixed engine, never hand-derived.
   ## CHANGED AGAIN to 202L -- same cause as the node-count change above
   ## (198 + 4 = 202).
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 202L)
+  ## CHANGED AGAIN to 192L -- same cause as the node-count change above
+  ## (202 - 10 = 192): the B1-individual-vs-unrelated-individual proximity
+  ## fix removes 5 jog repairs (10 waypoints) it makes unnecessary.
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 192L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------
@@ -1041,10 +1053,16 @@ test_that(
   )
   connectors <- result$edges[!is.na(result$edges$label), ]
   ## CHANGED from 9L (3 pairs x 3 jog segments each), then 7L (DZ no
-  ## longer jogged: 3 (MZ) + 1 (DZ) + 3 ("?")) -- NOW 5L (S647's
-  ## capped-search position changes also un-jog "?": 3 (MZ) + 1 (DZ) + 1
-  ## ("?")). Re-measured directly, not assumed.
-  expect_equal(nrow(connectors), 5L)
+  ## longer jogged: 3 (MZ) + 1 (DZ) + 3 ("?")), then 5L (S647's
+  ## capped-search position changes also un-jogged "?": 3 (MZ) + 1 (DZ) +
+  ## 1 ("?")) -- NOW BACK TO 7L (B1-individual-vs-unrelated-individual
+  ## proximity fix, S662, docs/planning/pedigree-diagram-b1-individual-
+  ## proximity-plan.md: BRI2MW/677E7M was one of the 15 previously-
+  ## undocumented exact-tie pairs the fix resolves on the real fixture
+  ## this twins fixture shares ids with; moving BRI2MW re-collides its own
+  ## "?" connector with an unrelated node on its row, so it re-jogs: 3
+  ## (MZ) + 1 (DZ) + 3 ("?")). Re-measured directly, not assumed.
+  expect_equal(nrow(connectors), 7L)
 
   .expectJoggedConnector <- function(connectors, fromId, toId, label,
                                       dashPattern) {
@@ -1070,16 +1088,15 @@ test_that(
   expect_equal(dz$color, "#009E73")
   expect_identical(dz$dashes[[1L]], c(4L, 4L))
 
-  ## "?" CHANGED (S647): BRI2MW/677E7M are among the founder pairs S647's
-  ## capped-search position fix moved -- their "?" connector no longer
-  ## collides with anything on its row and renders as a single direct
-  ## edge, same pattern as DZ above. Re-measured directly, not assumed.
-  unk <- connectors[connectors$label == "?", ]
-  expect_equal(nrow(unk), 1L)
-  expect_equal(unk$from, "BRI2MW")
-  expect_equal(unk$to, "677E7M")
-  expect_equal(unk$color, "#009E73")
-  expect_identical(unk$dashes[[1L]], c(14L, 8L))
+  ## "?" CHANGED AGAIN (S662, B1-individual-vs-unrelated-individual
+  ## proximity fix): S647 had left this connector un-jogged (a single
+  ## direct BRI2MW->677E7M edge). This session's fix moves BRI2MW to
+  ## resolve its own exact tie with an unrelated individual on the real
+  ## fixture this twins fixture shares ids with -- the moved position
+  ## newly collides with a different node on its row, so the "?"
+  ## connector re-jogs into 3 segments, same pattern as MZ above.
+  ## Re-measured directly, not assumed.
+  .expectJoggedConnector(connectors, "BRI2MW", "677E7M", "?", c(14L, 8L))
 })
 
 test_that(

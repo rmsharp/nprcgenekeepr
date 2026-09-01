@@ -480,15 +480,22 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   ## Phase 1's uncapped push) then 109L/1762L (Phase 1's capped-search
   ## refinement) then 107L/1764L (Phase 2's own union-side push, S649)
   ## then 95L/1759L (issue #166's scoped revert, S652) then 98L/1762L
-  ## (Track 7 Phase 4's duplicate-side push) -- NOW 100L/1766L after the
-  ## duplicate-vs-unrelated-individual proximity fix (docs/planning/
+  ## (Track 7 Phase 4's duplicate-side push) then 100L/1766L (the
+  ## duplicate-vs-unrelated-individual proximity fix, docs/planning/
   ## pedigree-diagram-duplicate-individual-proximity-plan.md, design
-  ## ratified S658, Option B, implementation S660) moves 2 more duplicates
-  ## (TTE0Z7/__dup_MY1AEU_2, M0YNUR/__dup_L31S6S_5), introducing 2 new
-  ## same-row obstacle edges. Re-measured by actually running the fixed
-  ## engine, never hand-derived.
-  expect_equal(nrow(baselineEdges), 100L)
-  expect_equal(nrow(baseline), 1766L)
+  ## ratified S658, Option B, implementation S660, moves 2 more duplicates
+  ## [TTE0Z7/__dup_MY1AEU_2, M0YNUR/__dup_L31S6S_5], introducing 2 new
+  ## same-row obstacle edges) -- NOW 95L/1761L after the B1-individual-
+  ## vs-unrelated-individual proximity fix (docs/planning/pedigree-
+  ## diagram-b1-individual-proximity-plan.md, design ratified S661,
+  ## implementation S662): this fix REMOVES same-row obstacle edges rather
+  ## than adding them (an unconfirmed-but-plausible ripple the design
+  ## doc's own §6 flagged, matching the same shape of change the
+  ## duplicate-side design's own Impact Analysis found for this exact
+  ## file) -- 5 fewer colliding edges (100 -> 95). Re-measured by actually
+  ## running the fixed engine, never hand-derived.
+  expect_equal(nrow(baselineEdges), 95L)
+  expect_equal(nrow(baseline), 1761L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

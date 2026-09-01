@@ -1013,6 +1013,64 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## at this cap.
   .kMaxUnionPush <- 5L
 
+  ## B1-individual-vs-unrelated-individual proximity fix (docs/planning/
+  ## pedigree-diagram-b1-individual-proximity-plan.md, design ratified
+  ## S661, implemented S662): a second, separate pass over b1Ids, run
+  ## after the existing exact-tie call above (:958-960) and before the
+  ## union sweep begins below (:1016), so every union sees this pass's
+  ## fully-corrected B1 positions as its own baseline (design doc §2.3).
+  ## Reuses the already-shipped individualClearance (:1004) -- no new
+  ## threshold constant needed. Needs its OWN cap: NOT .kMaxIndividualPush
+  ## (tuned against a different problem) and NOT assumed equal to
+  ## .kMaxUnionPush either -- empirically derived (design doc §8/§9).
+  .kMaxB1ProximityPush <- 2L
+
+  if (length(b1Ids) > 0L) {
+    for (g in sort(unique(tier3Gen[b1Ids]))) {
+      theseIds <- b1Ids[tier3Gen[b1Ids] == g]
+      theseIds <- theseIds[order(tier3X[theseIds], theseIds, method = "radix")]
+      pushedThisGen <- numeric(0L)          # incremental: sibling B1s
+                                             # already processed THIS
+                                             # generation, so a B1-vs-B1
+                                             # pair is seen by whichever
+                                             # member is processed second
+                                             # (design doc §3.3).
+      for (fp in theseIds) {
+        ownAnchor <- anchorOf[[b1UnitOf[[fp]]]]
+        forbidden <- c(tier1X[dispGenOf == g], pushedThisGen)
+        forbidden <- forbidden[!is.na(forbidden) &
+                                  names(forbidden) != ownAnchor]
+        x0 <- tier3X[[fp]]
+        if (length(forbidden) > 0L &&
+              any(abs(x0 - forbidden) < individualClearance)) {
+          rawX0 <- x0
+          sign <- b1PushSign[[fp]]          # reuse existing direction
+                                             # (design doc §3.4)
+          k <- 1L
+          repeat {
+            candPref <- rawX0 + sign * k * individualClearance
+            if (!any(abs(candPref - forbidden) < individualClearance)) {
+              x0 <- candPref
+              break
+            }
+            candOther <- rawX0 - sign * k * individualClearance
+            if (!any(abs(candOther - forbidden) < individualClearance)) {
+              x0 <- candOther
+              break
+            }
+            if (k >= .kMaxB1ProximityPush) {
+              x0 <- rawX0
+              break
+            }
+            k <- k + 1L
+          }
+          tier3X[[fp]] <- x0
+        }
+        pushedThisGen <- c(pushedThisGen, stats::setNames(tier3X[[fp]], fp))
+      }
+    }
+  }
+
   if (nrow(xDerivableUnits) > 0L) {
     ord <- order(xDerivableUnits$gen, xDerivableUnits$id, method = "radix")
     orderedUnits <- xDerivableUnits[ord, , drop = FALSE]

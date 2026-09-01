@@ -468,9 +468,10 @@ test_that(".positionMatingUnitForest positions the full real
   ## found before this fix existed at all) rather than an unbounded drift
   ## -- deliberately: an uncapped search was found live to cause much
   ## larger, worse D1 sibship-bar-vs-bar overlaps elsewhere (up to
-  ## 540px). 13 pairs plus 1 triple-collision (27 nodes total) remain, down from 24 pairs before this
-  ## session's Tier-3 sweep existed at all -- a real reduction, not zero,
-  ## measured directly and disclosed here rather than asserted away.
+  ## 540px). 13 pairs plus 1 triple-collision (27 nodes total) remained,
+  ## down from 24 pairs before this session's Tier-3 sweep existed at all
+  ## -- a real reduction, not zero, measured directly and disclosed here
+  ## rather than asserted away.
   nonDup <- pos[.nodeKind(pos$id) != "duplicate", ]
   key <- paste(round(nonDup$x, 6), nonDup$gen)
   nCollidingNodes <- sum(duplicated(key) | duplicated(key, fromLast = TRUE))
@@ -485,7 +486,13 @@ test_that(".positionMatingUnitForest positions the full real
   ## simulation found 0 new individual-vs-union/union-vs-union collisions
   ## post-revert, confirmed here directly rather than taken on the design
   ## doc's word alone.
-  expect_equal(nCollidingNodes, 27L)
+  ## CHANGED to 0L (B1-individual-vs-unrelated-individual proximity fix,
+  ## docs/planning/pedigree-diagram-b1-individual-proximity-plan.md,
+  ## design ratified S661, implementation S662): the entire 27-node exact-
+  ## tie residual was composed of B1-vs-unrelated-individual ties this
+  ## fix's new pass resolves -- re-measured directly by actually running
+  ## the fixed engine, never hand-derived.
+  expect_equal(nCollidingNodes, 0L)
 })
 
 ## ---- gen semantics: every node's gen matches its source-of-truth ------
@@ -1068,7 +1075,15 @@ test_that(".positionMatingUnitForest has a bounded, disclosed residual of
            ALSO unchanged at 27L -- the union recenter's removal touches
            only qualifying unions' own x, not the individual-side residual
            this metric is driven by, and duplicates contribute 0 to it
-           both before and after (confirmed directly, not assumed).", {
+           both before and after (confirmed directly, not assumed).
+
+           CHANGED to 0L (B1-individual-vs-unrelated-individual proximity
+           fix, docs/planning/pedigree-diagram-b1-individual-proximity-
+           plan.md, design ratified S661, implementation S662): the entire
+           27-node exact-tie residual was composed of B1-vs-unrelated-
+           individual ties this fix's new pass resolves -- re-measured
+           directly by actually running the fixed engine, never
+           hand-derived.", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -1078,7 +1093,7 @@ test_that(".positionMatingUnitForest has a bounded, disclosed residual of
   pos <- .positionMatingUnitForest(ped, forest)
   key <- paste(round(pos$x, 6), pos$gen)
   nColliding <- sum(duplicated(key) | duplicated(key, fromLast = TRUE))
-  expect_equal(nColliding, 27L,
+  expect_equal(nColliding, 0L,
                info = paste("colliding ids:",
                              paste(pos$id[key %in% key[duplicated(key)]],
                                    collapse = ", ")))
