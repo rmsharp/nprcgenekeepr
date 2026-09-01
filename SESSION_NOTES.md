@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 662 Did
+**Deliverable:** Implement the RATIFIED B1-individual-vs-unrelated-individual proximity fix
+(`docs/planning/pedigree-diagram-b1-individual-proximity-plan.md`, design ratified S661) -- 19
+in-scope pairs, new additive per-generation pass in `R/makePedigreeDiagramData.R` between
+`:1014`-`:1016`. (IN PROGRESS)
+**Started:** 2026-08-31
+**Status:** Session claimed. Work beginning -- full TDD (Pre-RED re-validation of the 19-pair
+count against current `HEAD`, per the design's own §8 Verification Plan, then RED -> GREEN ->
+REFACTOR gated via `AskUserQuestion` per `CLAUDE.md`'s Development Process Contract).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 660 Handoff Evaluation (by Session 661)
 **Score: 9/10.** **What helped:** S660's `next_steps` named the exact standing-top-priority
 pickup (the B1-individual proximity item) as its own first-listed item, with the correct call

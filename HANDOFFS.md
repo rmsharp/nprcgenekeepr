@@ -136,6 +136,26 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S662
+date: 2026-08-31
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement the RATIFIED B1-individual-vs-unrelated-individual proximity fix
+  (docs/planning/pedigree-diagram-b1-individual-proximity-plan.md, design ratified S661) --
+  19 in-scope pairs, new additive per-generation pass in R/makePedigreeDiagramData.R between
+  :1014-:1016.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(claim stub -- filled at close-out)
+
+```handoff
 session: S661
 date: 2026-08-31
 status: complete
