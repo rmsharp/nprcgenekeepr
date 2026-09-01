@@ -18,21 +18,147 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 660 Handoff Evaluation (by Session 661)
+**Score: 9/10.** **What helped:** S660's `next_steps` named the exact standing-top-priority
+pickup (the B1-individual proximity item) as its own first-listed item, with the correct call
+site (`b1Ids`, `R/makePedigreeDiagramData.R:958-960`) and an accurate directional flag ("materially
+larger effort... heavily tuned... ~20 hardcoded position assertions") that turned out to be a fair
+estimate (this session's own inventory found 13 live assertions, not ~20, but S660 correctly
+flagged it as needing re-verification rather than stating it as fact -- exactly right). The
+`lint.yaml`-red-streak-resolved gotcha was accurate and confirmed independently by this session's
+own Phase 0 `gh run list` check. **What was missing:** S660's `next_steps` repeated `BACKLOG.md`'s
+own "4 near-misses" framing without flagging that this count itself might not survive
+re-verification -- unlike S658's own precedent (which explicitly re-derived its predecessor's
+count before designing), S660 had no occasion to investigate this item's own count directly (out
+of its own scope), so this is a gap in what was available to hand off, not a claim that turned out
+wrong. This session's own re-derivation (§ below) found the true scope is 19 pairs, not 4. **What
+was wrong:** nothing checked this session -- S660's own claims about its own shipped work (Option
+B implementation, pinned-test updates, chromote render check, the resolved `lint.yaml` streak)
+were outside this session's own scope to re-verify, but nothing in this session's independent
+Phase 0 orientation (ledger reconcile, `gh run list`, dashboard) contradicted them. **ROI:**
+positive -- accurate priorities pointer and correct gotchas saved Phase 0 time; the one gap (the
+inherited, un-flagged "4" count) is exactly the kind of thing this project's own re-derivation
+discipline exists to catch, and did.
+
 ### What Session 661 Did
-**Deliverable:** Scope/design session (no code) for the 4 B1-individual-vs-unrelated-individual
-proximity near-misses on the real 375-individual fixture (`D0Z114`/`S0022Z`, `XEE9GT`/`JB7EW2`,
-`PQX22G`/`Y7IUMX`, `HKTQ40`/`8P17E3`, found S658, `BACKLOG.md` Up Next -- standing pedigree-fidelity
-top priority) -- same root cause as S660's shipped duplicate-vs-individual fix
-(`.deCollideIndividualPoints()`'s exact-tie-only guard), different call site (`b1Ids`,
-`R/makePedigreeDiagramData.R:958-960`), following `ARCHITECTURE_WORKSTREAM.md` per this project's
-own precedent for pedigree-positioning design docs (S646/S648/S658). (IN PROGRESS)
-**Started:** 2026-08-31.
-**Status:** Session claimed. Work beginning -- re-deriving the 4-case measurement from scratch
-against current `HEAD` next, per this project's own "never trust a stated count without
-re-measuring" convention (S658's own Pre-RED precedent).
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Scope/design session (no code) for the B1-individual-vs-unrelated-individual
+proximity near-misses on the real 375-individual fixture (found S658, `BACKLOG.md` Up Next --
+standing pedigree-fidelity top priority) -- same root cause as S660's shipped
+duplicate-vs-individual fix (`.deCollideIndividualPoints()`'s exact-tie-only guard), different call
+site (`b1Ids`, `R/makePedigreeDiagramData.R:958-960`). **DONE**, `ARCHITECTURE_WORKSTREAM.md`
+planning session (design doc is the deliverable; no code/test changes, matching this project's
+own precedent for pedigree-positioning design docs, S646/S648/S658). **Started/Completed:**
+2026-08-31 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0:** full orientation (`SESSION_RUNNER.md`/`SAFEGUARDS.md` read in full, `SESSION_NOTES.md`
+   ACTIVE TASK section read, `CHANGELOG.md`/`HANDOFFS.md` reconciled -- 0 undocumented commits, both
+   frontiers equal `HEAD`). `gh issue list`: 11 open, none newly filed (issue #166, filed/closed
+   entirely before S659/S660 started, is not new). `gh run list`: all 4 push-triggered workflows on
+   the latest push green, confirming S660's own claimed `lint.yaml` resolution. `methodology_dashboard.py`:
+   96/100 health, 1 HIGH risk (unchanged -- `SESSION_NOTES.md`/`HANDOFFS.md`/`CHANGELOG.md` all past
+   the 2,000-line FM #28 cap). 7 untracked files, unchanged from S659/S660's own characterization --
+   no ghost-session signal. Rendered a 4-option priorities `AskUserQuestion` from `BACKLOG.md`'s
+   remaining READY items -- **owner picked the B1-individual proximity design session.**
+2. **Phase 1B claim** (commit `2fc8f578`) -- stub in `SESSION_NOTES.md` + `status: pending`
+   `HANDOFFS.md` receipt, written before any investigation began.
+3. **Research (7-agent background `Workflow`, ~29 min wall-clock, 706K subagent tokens):** 4
+   parallel research agents (empirical re-measurement against current `HEAD`; grep-based inventory
+   of the `b1Ids` mechanism, tuning history, and dependent test assertions; full review of the S658
+   duplicate-side precedent doc + Track 7 history + issue #159's verdict; downstream data-dependency
+   tracing for the union sweep and duplicate seed) fed one synthesis/drafting pass, followed by 2
+   independent adversarial verification agents (ordering-correctness, independent re-measurement).
+   **Both verifications returned `CONFIRMED`.** The re-measurement agent found `BACKLOG.md`'s "4"
+   count did not survive re-derivation: the same 4 named pairs are accurate, but applying this
+   project's own established own-mating-unit exclusion (the same exclusion the shipped duplicate-side
+   fix already uses) surfaces **15 more, previously-undocumented pairs -- all exact coordinate ties**,
+   for a true in-scope count of **19** (a further 25 "mates" pairs, confirmed by-design, are out of
+   scope). Root cause of the 15: `.deCollideIndividualPoints()`'s own disclosed capped-search
+   fallback (`:912-914`) can revert to the original still-colliding position without resolving an
+   exact tie -- "detected" and "resolved" are not the same fact (`PROJECT_LEARNINGS.md` Learning 700).
+4. **My own independent spot-check** (not just re-reading the agents' claims): re-ran
+   `scratchpad/b1-design-verification.R` myself and reproduced, byte-for-byte, the 25/67 own-anchor
+   collateral count and the 0-co-anchor-collision finding; independently confirmed the cited
+   `individualClearance`/`b1PushSign`/placement-boundary line numbers against the actual source;
+   confirmed the `nColliding==27L` and `test_resolveEdgeNodeCollisions.R:490-491` citations against
+   the actual test files; confirmed the doc's issue-#158-is-unrelated citation-correction via
+   `gh issue view 158`. Zero discrepancies found.
+5. **Ratification (`AskUserQuestion` "Ratify this B1-individual proximity design?"):** owner chose
+   "Yes, ratify as recommended" -- 19-pair scope, the new additive per-generation pass placed
+   between `R/makePedigreeDiagramData.R:1014` and `:1016` (before the union sweep begins), reusing
+   the already-shipped `individualClearance` constant and the existing `b1PushSign` direction
+   signal. Simpler alternatives were measured and rejected: naively widening the shared
+   `.deCollideIndividualPoints()` threshold would false-positive on 25/67 (37.3%) of B1 members' own
+   intentional anchor-offset; mechanically copying Track 7 Phase 4's frozen-snapshot post-hoc
+   pattern verbatim is structurally incomplete for the 4 B1-vs-B1 pairs -- a self-referential
+   collision within the very population being placed, which that pattern was never designed to
+   catch (`PROJECT_LEARNINGS.md` Learning 701).
+6. **Close-out:** design doc written to
+   `docs/planning/pedigree-diagram-b1-individual-proximity-plan.md` (status updated to RATIFIED,
+   full verification-provenance record added to §10). `BACKLOG.md`'s item corrected (the "4" framing
+   replaced with the 19/25/44 breakdown, ratified-design summary, and doc link). 2 new
+   `PROJECT_LEARNINGS.md` entries (700, 701). `CLAUDE.md` learnings-pointer count updated.
+   `CHANGELOG.md`: entries for claim/workflow/ratification/close-out.
+
+**Runtime smoke test (Phase 3E):** N/A -- docs-only planning session, no runtime/code changes
+shipped. (Per Phase 3E's own rule, stating this explicitly rather than silently omitting it.)
+
+**Self-assessment (Session 661): 9/10.** **Strengths:** (1) instructed the research workflow to
+re-derive the measurement "from scratch," which is what caught a real, previously-undocumented
+scope-count error in `BACKLOG.md` (4 -> 19) -- a genuine value-add beyond mechanically designing
+around a possibly-wrong number; (2) applied adversarial refutation to the workflow's OWN output,
+not just the primary research (2 independent verify agents, both `CONFIRMED`, plus my own
+from-scratch spot-check reproducing the key numbers myself); (3) the chosen mechanism/placement is
+not a mechanical copy of the S658 precedent -- the downstream-impact research and synthesis
+correctly identified that an EARLY pass (unlike the duplicate-side fix's late, post-hoc placement)
+is required here, with concrete ordering evidence, and that a self-referential population (B1-vs-B1)
+needs an incremental-tracking design, not a frozen-snapshot one; (4) ratification obtained cleanly
+via `AskUserQuestion` with zero revision cycles, suggesting the draft's own rigor matched what the
+owner needed to decide confidently; (5) 2 distinct, genuinely reusable structural learnings
+recorded, not just a narrative log. **Weaknesses:** (1) meaningful token/wall-clock cost (706K
+subagent tokens, ~29 min) for a planning-only deliverable -- justified under this session's
+ultracode directive and the design's standing-top-priority stakes, but worth naming as a real cost,
+not a free good; (2) the cap value (`.kMaxB1ProximityPush`) is explicitly left undetermined,
+deferred to the implementing session's own empirical derivation -- correct per this project's own
+"never hand-derive" discipline, but it means the design's own effort estimate carries real
+uncertainty until that happens. **ROI:** high -- the design is ready for immediate implementation
+pickup with no further scoping needed, and the scope-count correction alone (4 -> 19) prevents a
+future implementing session from shipping a fix that appears complete against the wrong target.
+
+**Next steps:** implement this session's ratified design
+(`docs/planning/pedigree-diagram-b1-individual-proximity-plan.md`) as its own dedicated session,
+full TDD (Pre-RED re-validation of the 19-pair count against `HEAD` at implementation time, per
+the design's own §8 Verification Plan) -- standing pedigree-fidelity top priority, next pickup.
+Other `BACKLOG.md` items unchanged from S660's own list: (2) the `ScheduleWakeup`/
+`run_in_background` structural-guard investigation (READY, Effort S-M, found S656, Learning
+694/695); (3) scope the pedigree-diagram-drawing package-extraction research session (READY,
+Effort M, research/scoping only). Unchanged gotchas: the stray LibreOffice lock file
+(`inst/extdata/reference/~$e Compounding Loop.html`) is still present; `HANDOFFS.md`/
+`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap; `master` was 2 commits ahead of
+`origin/master` at this session's Phase 0 (both S660 self-reference receipt commits) -- now more,
+unpushed, see below.
+
+**Key files:** `docs/planning/pedigree-diagram-b1-individual-proximity-plan.md` (the new, ratified
+design, this session's deliverable); `BACKLOG.md` (item corrected with the 19/25/44 breakdown and
+doc link); `PROJECT_LEARNINGS.md` (Learnings 700, 701); `R/makePedigreeDiagramData.R:942-1017`
+(the `b1Ids`/`tier3X` computation and the exact placement boundary, `:1014`-`:1016`, the design's
+own new pass will occupy); `scratchpad/b1-proximity-measure.R`, `scratchpad/b1-design-verification.R`,
+`scratchpad/b1-proximity-verify.R` (untracked scratch scripts this session's workflow agents wrote
+and this session independently re-ran -- not committed, matching this project's scratch-space
+convention, but a future implementing session may find them a useful starting point for its own
+Pre-RED re-validation script).
+
+**Gotchas for a future session:** (1) the ratified design's own cap value
+(`.kMaxB1ProximityPush`) is undetermined -- the implementing session must empirically derive it
+against the same D1 sibship-bar-overlap regression class `.kMaxIndividualPush=2` was originally
+tuned against (design doc §5/§8), not assume a starting value, and should expect this may take
+more than one iteration (Track 7 Phase 1's own 3-iteration precedent). (2) 2 of the 13 pinned test
+assertions are confirmed **High** risk of needing a new (not just re-confirmed) value: the
+`nColliding==27L` counts at `test_positionMatingUnitForest.R:488,1081` -- design doc §6 has the
+full risk table. (3) STANDING TOP PRIORITY banner still applies (pedigree-diagram fidelity, owner
+directive 2026-08-26) -- this design's own implementation is the next standing-priority pickup.
+(4) `master` is unpushed by a growing margin (`origin/master` was 2 commits behind at this
+session's Phase 0, more now) -- consider pushing.
 
 ### Session 659 Handoff Evaluation (by Session 660)
 **Score: 9/10.** **What helped:** S659's `next_steps`/`HANDOFFS.md` receipt named the exact

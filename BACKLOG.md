@@ -753,28 +753,47 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `AskUserQuestion`): the new code mirrors Track 7 Phase 4's existing post-hoc push structure
       exactly, no behavior-neutral restructuring identified, matching S650/S652/S653/S655's own
       precedent. `NEWS.Rmd` updated with a plain-language bullet. See `CHANGELOG.md`.
-- [ ] **4 B1-individual-vs-unrelated-individual proximity near-misses on the real 375-individual
+- [ ] **B1-individual-vs-unrelated-individual proximity near-misses on the real 375-individual
       fixture, no duplicate involved -- same root cause as the item above (`.deCollideIndividualPoints()`'s
       exact-tie-only guard) but a different, unaddressed call site** (found S658, 2026-08-30,
-      incidentally while designing the fix for the item above -- READY tag, but explicitly
-      DEFERRED from that item's own scope, Effort M) -- `D0Z114`/`S0022Z` (0.100),
-      `XEE9GT`/`JB7EW2` (0.100), `PQX22G`/`Y7IUMX` (0.400), `HKTQ40`/`8P17E3` (0.401); confirmed
-      (adversarial verification) all 4 involve at least one B1-tier "free pass" individual (3 are
-      B1-vs-B1, 1 is B1-vs-genuine) -- a genuine Tier-1-vs-Tier-1 pair can never be this close
-      (`sweepMinSep()` guarantees `minSep=1 > individualClearance=0.4167`). Extending the item
-      above's Option B mechanism to the `b1Ids` call (`R/makePedigreeDiagramData.R:958-960`)
-      is mechanically natural but a materially larger effort than the duplicate-side fix: `b1Ids`
-      is a heavily-tuned population (Track 7 Phases 1/2, S647/S649 -- widened offset,
-      direction-preserving `pushSign`, its own empirically-derived `.kMaxIndividualPush=2` cap
-      tuned against a DIFFERENT problem, sibling-bar-overlap avoidance, not near-miss avoidance)
-      with ~20 hardcoded position assertions and the `nColliding=27L` regression count all
-      depending on its current, unmodified behavior. A future session should scope this as its
-      own dedicated design pass -- its own empirical cap re-derivation, re-verification against
-      the existing B1-position assertions and the 27L count, and re-check of the 2 downstream
-      passes that already read `tier3X[b1Ids]` (Phase 2's union sweep, Phase 4's duplicate seed) --
-      not folded into the duplicate-side fix above. Full measurement and adversarial-verification
-      record: [`docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md`](docs/planning/pedigree-diagram-duplicate-individual-proximity-plan.md)
-      §1.4/§6.
+      incidentally while designing the fix for the item above. **Design RATIFIED S661
+      (2026-08-31), Effort M, implementation READY, next pickup (standing pedigree-fidelity
+      directive).**) **Corrected S661: the true scope is 19 pairs, not 4** -- BACKLOG's original
+      "4" (`D0Z114`/`S0022Z` 0.100, `XEE9GT`/`JB7EW2` 0.100, `PQX22G`/`Y7IUMX` 0.400,
+      `HKTQ40`/`8P17E3` 0.401) are all confirmed accurate, but re-deriving the count with this
+      project's own established own-mating-unit exclusion (the same exclusion the shipped
+      duplicate-side fix already applies) surfaces **15 more, previously-undocumented pairs, all
+      EXACT coordinate ties (distance = 0.000000), not "near"** -- same relationship-and-visual
+      defect shape, just not previously surfaced because the original scan looked only for
+      strictly-positive distances. (A fully literal same-generation-pair-under-threshold reading,
+      with no relationship exclusion at all, adds a further 25 "mates" pairs -- confirmed by-design,
+      not a defect: a B1 individual and her own anchor, the intentional Track 7 Phase 1 offset
+      itself.) Of the 19 in-scope pairs: 4 are B1-vs-B1, 15 are genuine-vs-B1, 0 are
+      genuine-vs-genuine (impossible by construction, `sweepMinSep()` guarantees
+      `minSep=1 > individualClearance=0.4167` between genuine Tier-1 individuals).
+      **Design (docs/planning/pedigree-diagram-b1-individual-proximity-plan.md): a new, additive,
+      per-generation near-miss/tie-repair pass over `b1Ids`, placed between
+      `R/makePedigreeDiagramData.R:1014` and `:1016` (before the union sweep begins) -- reuses the
+      already-shipped `individualClearance` constant and the existing `b1PushSign` direction
+      signal; needs one new, empirically-derived `.kMaxB1ProximityPush` cap (NOT
+      `.kMaxIndividualPush=2`, which was tuned against a different problem -- sibling-bar-overlap
+      avoidance, not near-miss avoidance).** Simpler alternatives were measured and rejected:
+      widening the shared `.deCollideIndividualPoints()` threshold with no family exclusion would
+      false-positive on 25/67 (37.3%) of B1 members' own intentional anchor-offset (independently
+      re-verified twice this session); mechanically copying Track 7 Phase 4's post-hoc pattern
+      verbatim is structurally incomplete for the 4 B1-vs-B1 pairs (self-collision within the very
+      population being placed, a case Phase 4's frozen-snapshot pattern was never designed to
+      catch). **Contrary to this item's own original concern, the 2 downstream passes that read
+      `tier3X[b1Ids]` (Phase 2's union sweep, Phase 4's duplicate seed) need ZERO code changes** --
+      the chosen placement means both transparently see the corrected values; only
+      re-verification, not a code change, is needed there. 13 pinned test assertions are at some
+      risk of needing re-pinning (2 confirmed High risk: the `nColliding=27L` counts at
+      `test_positionMatingUnitForest.R:488,1081`), down from the "~20" original informal estimate
+      (11 hard `b1Ids`-dependent assertions + 2 aggregate counts in that file, +2 more indirect
+      aggregate counts in `test_makePedigreeMatingLayout.R`), plus a `test_resolveEdgeNodeCollisions.R:490-491`
+      ripple this item's own original text did not name. Full measurement, rejected-alternatives
+      table, and verification record:
+      [`docs/planning/pedigree-diagram-b1-individual-proximity-plan.md`](docs/planning/pedigree-diagram-b1-individual-proximity-plan.md).
 - [x] **`R-CMD-check-scheduled.yaml` (the weekly-cron twin of `R-CMD-check.yaml`) never
       received the S616/S618/S619 chromote Chrome-provisioning fix, and nothing guarded
       against the drift** (found live S629, 2026-08-24, via Phase 0's mandatory `gh run list`

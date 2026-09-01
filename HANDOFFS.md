@@ -138,19 +138,51 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S661
 date: 2026-08-31
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Scope/design session (no code) for the 4 B1-individual-vs-unrelated-individual
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- scope/design session (no code) for the B1-individual-vs-unrelated-individual
   proximity near-misses on the real 375-individual fixture (BACKLOG.md Up Next, standing
-  pedigree-fidelity top priority) -- same root cause as S660's shipped duplicate-vs-individual
-  fix, different call site (b1Ids, R/makePedigreeDiagramData.R:958-960). ARCHITECTURE_WORKSTREAM.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  pedigree-fidelity top priority). Design RATIFIED via AskUserQuestion. Implementation is a
+  separate future session (this session's own deliverable was the design doc only).
+what_was_done: Ran a 7-agent research/synthesis/verify Workflow (4 parallel research agents,
+  1 synthesis draft, 2 adversarial verify agents, both CONFIRMED) that re-derived BACKLOG's
+  "4 near-misses" claim from scratch and found the true in-scope count is 19 (4 original +
+  15 previously-undocumented exact-tie pairs), with a further 25 by-design "mates" pairs
+  correctly excluded. Independently spot-checked the workflow's own key claims myself
+  (re-ran scratchpad/b1-design-verification.R, confirmed 25/67 and 0-co-anchor findings
+  byte-for-byte; confirmed all cited source/test line numbers against actual files; confirmed
+  the issue-#158 citation via `gh issue view`). Owner ratified the recommended mechanism (a
+  new additive per-generation pass at R/makePedigreeDiagramData.R:1014-1016, reusing
+  individualClearance/b1PushSign) via AskUserQuestion, zero revisions requested. Wrote
+  docs/planning/pedigree-diagram-b1-individual-proximity-plan.md, corrected BACKLOG.md's item
+  text, added PROJECT_LEARNINGS.md Learnings 700/701, updated CLAUDE.md's learnings-pointer
+  count. Commit: pending (this receipt ships in the close-out commit whose sha it would name;
+  see the self-reference workaround note below, matching S600/S602-S660 precedent).
+next_steps: Implement this session's ratified design
+  (docs/planning/pedigree-diagram-b1-individual-proximity-plan.md) as its own dedicated
+  session, full TDD, starting with the design's own §8 Pre-RED re-validation of the 19-pair
+  count against HEAD at implementation time -- standing pedigree-fidelity top priority, next
+  pickup. Then: (2) the ScheduleWakeup/run_in_background structural-guard investigation
+  (READY, Effort S-M, found S656, Learning 694/695); (3) scope the pedigree-diagram-drawing
+  package-extraction research session (READY, Effort M, research/scoping only).
+key_files: docs/planning/pedigree-diagram-b1-individual-proximity-plan.md (new, ratified
+  design); BACKLOG.md (item corrected); PROJECT_LEARNINGS.md (Learnings 700, 701);
+  R/makePedigreeDiagramData.R:942-1017 (the b1Ids/tier3X computation and the :1014-:1016
+  placement boundary the new pass will occupy); scratchpad/b1-proximity-measure.R,
+  scratchpad/b1-design-verification.R, scratchpad/b1-proximity-verify.R (untracked scratch
+  scripts, not committed, may help a future implementing session's own Pre-RED script).
+gotchas: (1) the design's own cap value (.kMaxB1ProximityPush) is undetermined -- must be
+  empirically derived at GREEN, not assumed, and may take more than one iteration (Track 7
+  Phase 1's own 3-iteration precedent). (2) 2 of 13 pinned test assertions are confirmed High
+  risk of needing a NEW value, not just re-confirmation: nColliding==27L at
+  test_positionMatingUnitForest.R:488,1081 (design doc §6 has the full risk table).
+  (3) master was unpushed by a growing margin at this session's own Phase 0 (2 commits ahead
+  of origin, both S660 self-reference receipts) -- more now; consider pushing.
+  (4) HANDOFFS.md/SESSION_NOTES.md/CHANGELOG.md remain past the FM #28 size cap, unchanged.
+runtime_smoke: n/a -- docs-only planning session, no runtime/code changes shipped.
+changelog_ref: see CHANGELOG.md entries dated 2026-08-31 (claim, workflow/ratification,
+  close-out).
 commit: pending
 ```
 <claim-time stub -- overwritten at Phase 3D close-out>

@@ -16,6 +16,39 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-08-31 · [BL-b1IndividualProximity] S661: design ratified -- B1-individual-vs-unrelated-individual proximity fix; BACKLOG.md count corrected 4 -> 19
+- **Deliverable:** `docs/planning/pedigree-diagram-b1-individual-proximity-plan.md` (`ARCHITECTURE_WORKSTREAM.md`
+  planning session, no code/test changes). Ratified via `AskUserQuestion` ("Yes, ratify as
+  recommended"), zero revisions requested.
+- Produced by a 7-agent `Workflow` (4 parallel research agents + 1 synthesis draft + 2 adversarial
+  verify agents, both `CONFIRMED`), then independently spot-checked a second time by the main
+  session directly (re-ran `scratchpad/b1-design-verification.R`, confirmed source/test line
+  citations, confirmed the issue-#158 citation via `gh issue view`).
+- **Scope correction:** re-derivation found `BACKLOG.md`'s "4 near-misses" claim did not survive
+  re-derivation with this project's own established own-mating-unit exclusion (the same exclusion
+  the shipped duplicate-side fix already uses) -- true in-scope count is **19** (4 original
+  strictly-positive near-misses + 15 previously-undocumented exact-tie pairs); a further 25 "mates"
+  pairs are confirmed by-design, not a defect.
+- **Mechanism (recommended, ratified):** a new, additive, per-generation near-miss/tie-repair pass
+  over `b1Ids`, placed between `R/makePedigreeDiagramData.R:1014` and `:1016` (before the union
+  sweep begins), reusing the already-shipped `individualClearance` constant and the existing
+  `b1PushSign` direction signal; needs one new, empirically-derived `.kMaxB1ProximityPush` cap.
+  Simpler alternatives measured and rejected: naive shared-threshold widening false-positives on
+  25/67 (37.3%) of B1 members' own intentional anchor-offset; a verbatim copy of Track 7 Phase 4's
+  frozen-snapshot pattern is structurally incomplete for the 4 B1-vs-B1 self-referential pairs.
+  The 2 downstream passes (union sweep, duplicate seed) need zero code changes under this
+  placement.
+- `BACKLOG.md` item corrected with the full 19/25/44 breakdown and design-doc link.
+  `PROJECT_LEARNINGS.md` Learnings 700 (exact-tie-vs-resolved-tie count-scoping pitfall) and 701
+  (frozen-snapshot post-hoc patterns are unsound for self-referential populations) added.
+  `CLAUDE.md` learnings-pointer count updated (699 -> 701).
+- **Model:** Claude Sonnet 5.
+
+### 2026-08-31 · [ad hoc] S661: claim session (design plan for B1-individual proximity near-misses)
+- Phase 1B stub in `SESSION_NOTES.md` + `status: pending` `HANDOFFS.md` receipt, written before
+  any investigation began. Commit `2fc8f578`.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-30 · [ad hoc] S660: record push+CI-confirmation commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S660 precedent)
 - This commit sets `HANDOFFS.md`'s S660 receipt `commit:` field from `b9188034` to `70072a26`
   (the deliverable commit for the push + CI confirmation), the same self-reference workaround
