@@ -1464,6 +1464,224 @@ test_that(".positionMatingUnitForest's widened Phase-4 early-exit guard
   expect_equal(pos$x[pos$id == dupId], 0.401, tolerance = 1e-6)
 })
 
+## ---- B1-individual-vs-unrelated-individual proximity (docs/planning/
+## pedigree-diagram-b1-individual-proximity-plan.md, design ratified S661,
+## implementation S662): the sibling call path to the fix immediately
+## above (b1Ids, R/makePedigreeDiagramData.R:958-960) shares the same root
+## cause (.deCollideIndividualPoints() intervenes ONLY on an exact tie, and
+## its own capped bidirectional search [.kMaxIndividualPush = 2] can fall
+## back to the ORIGINAL still-colliding position, :912-914) but was
+## explicitly OUT of scope for the fix above (design doc §1.1): at least
+## one side of every affected pair here is a B1 "free-pass" individual,
+## never two genuine Tier-1 individuals (sweepMinSep() already guarantees
+## minSep=1 between those). Pre-RED re-validation (S662, re-derived live
+## against unmodified HEAD, not assumed from the design doc): the same 19
+## "unrelated" pairs the design doc's §1.2 table reports survive full
+## family-relationship exclusion (own-mating-unit/mate proximity excluded
+## as by-design, matching the fix above's own dup-own-parent exclusion) --
+## 4 strictly-positive near-misses (BACKLOG's original count) + 15
+## previously-undocumented EXACT ties (dist = 0.000000), of which 4 pairs
+## are B1-vs-B1 (a self-referential case within the very population this
+## design's own pass finalizes, design doc §3.3). A further 25 "mates"
+## pairs (a B1 individual and her own anchor, the intentional Track 7
+## Phase 1 widened-offset formula -- 37.3% of all 67 b1Ids members,
+## re-measured live this session) are confirmed by-design, not a defect
+## (design doc §1.2/§3.2), and excluded from the counting method below.
+test_that(".positionMatingUnitForest's B1-individual-vs-unrelated-individual
+           near-miss defect: on the real 375-individual bundled fixture,
+           exactly 19 B1-vs-unrelated-individual pairs (4 strictly-positive
+           near-misses + 15 exact ties) sit within .individualClearance of
+           each other before this design's fix -- 0 after (design doc
+           §1.2/§2.1; the 25 own-anchor 'mates' pairs are excluded here as
+           by-design, matching the design's own own-anchor exclusion)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  matingUnits <- forest$matingUnits
+  childEdges <- forest$childEdges
+  realIds <- as.character(ped$id)
+  anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
+  everAnchor <- unique(anchoredUnits$anchor)
+  nonAnchorSides <- c(anchoredUnits$sire, anchoredUnits$dam)
+  neverAnchorIds <- setdiff(unique(nonAnchorSides), everAnchor)
+  directChildrenOf <- function(id) {
+    childEdges$to[childEdges$from == id & childEdges$from %in% realIds]
+  }
+  hasOwnDirectChild <- function(id) length(directChildrenOf(id)) > 0L
+  sireOf <- stats::setNames(as.character(ped$sire), realIds)
+  damOf <- stats::setNames(as.character(ped$dam), realIds)
+  hasParentEdge <- function(id) !is.na(sireOf[[id]]) || !is.na(damOf[[id]])
+  b1Ids <- Filter(function(id) {
+    id %in% realIds && !hasOwnDirectChild(id) && !hasParentEdge(id)
+  }, neverAnchorIds)
+  expect_equal(length(b1Ids), 67L)  # confirms the premise holds (design §1.2)
+
+  ## Same-mating-unit ("mates") check -- the by-design exclusion this
+  ## design's own §2.2 own-anchor check applies (design doc §1.2/§3.2).
+  isSameMatingUnit <- function(idA, idB) {
+    any((matingUnits$sire == idA & matingUnits$dam == idB) |
+          (matingUnits$sire == idB & matingUnits$dam == idA))
+  }
+
+  indiv <- pos[pos$id %in% realIds, , drop = FALSE]
+  n <- 0L
+  for (g in unique(indiv$gen)) {
+    rows <- indiv[indiv$gen == g, , drop = FALSE]
+    k <- nrow(rows)
+    if (k < 2L) next
+    for (i in seq_len(k - 1L)) {
+      for (j in (i + 1L):k) {
+        involvesB1 <- rows$id[i] %in% b1Ids || rows$id[j] %in% b1Ids
+        if (!involvesB1) next   # sweepMinSep() already guarantees
+                                 # genuine-vs-genuine pairs are >= minSep
+                                 # apart (design doc §1.2)
+        d <- abs(rows$x[i] - rows$x[j])
+        if (d < .individualClearance &&
+              !isSameMatingUnit(rows$id[i], rows$id[j])) {
+          n <- n + 1L
+        }
+      }
+    }
+  }
+  ## Pre-fix: 19 (design doc §1.2 -- 4 strictly-positive near-misses + 15
+  ## exact ties, re-verified live this session against unmodified HEAD).
+  ## This design's new pass (§2.2) resolves this to 0.
+  expect_equal(n, 0L)
+})
+
+test_that(".positionMatingUnitForest's new B1-vs-unrelated-individual pass
+           resolves a representative sample of the 19 in-scope pairs
+           (design doc §1.2) to >= .individualClearance apart, including 3
+           of the 4 B1-vs-B1 self-referential pairs (design doc §3.3)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  distTo <- function(idA, idB) {
+    abs(pos$x[pos$id == idA] - pos$x[pos$id == idB])
+  }
+  ## genuine/B1 exact ties (0.000 raw units apart before the fix)
+  expect_true(distTo("GQUCRY", "WS6D1B") >= .individualClearance)
+  expect_true(distTo("6VUC6R", "UWJKEQ") >= .individualClearance)
+  ## B1-vs-B1 exact tie -- self-referential within the population this
+  ## design's own pass finalizes (design doc §3.3)
+  expect_true(distTo("UWJKEQ", "ZZ646X") >= .individualClearance)
+  ## the 4 strictly-positive near-misses BACKLOG originally named
+  expect_true(distTo("D0Z114", "S0022Z") >= .individualClearance)
+  expect_true(distTo("XEE9GT", "JB7EW2") >= .individualClearance)  # B1-vs-B1
+  expect_true(distTo("PQX22G", "Y7IUMX") >= .individualClearance)  # B1-vs-B1
+  expect_true(distTo("HKTQ40", "8P17E3") >= .individualClearance)  # B1-vs-B1
+})
+
+## ---- §7 co-anchor edge case: a polygamous anchor's 2 different B1 mates
+## in 2 different mating units -- confirmed absent from all 19 currently-
+## known real-fixture pairs (design doc §3.5), but not structurally
+## prevented by the own-anchor-ONLY exclusion (§2.2's `forbidden <-
+## forbidden[... names(forbidden) != ownAnchor]` excludes only the
+## processed member's OWN anchor by name, never a SIBLING sharing that
+## anchor -- a same-generation B1 sibling is instead caught, if at all,
+## via the incremental `pushedThisGen` accumulator, exactly like any other
+## B1-vs-B1 pair).
+##
+## Investigated this session whether a small synthetic fixture could
+## reproduce an ACTUAL forced near-miss between 2 co-anchor B1 siblings
+## specifically (as opposed to a general B1-vs-B1 pair, already covered
+## above) -- found, by direct construction (a polygamous male anchor P
+## with 2 B1 mates M1/M2, `scratchpad/probe_coanchor_final.R`), that it
+## reliably produces one of two outcomes, neither a genuine forced
+## near-miss:
+## (1) when both mates share the SAME `b1PushSign` (the common case), the
+##     raw formula ties them EXACTLY -- already resolved to a full
+##     minSep=1 gap by the PRE-EXISTING `.deCollideIndividualPoints(b1Ids,
+##     ...)` exact-tie call (:958-960), well clear of
+##     .individualClearance, before this design's own new pass ever runs;
+## (2) the `qualifies()` non-qualifying fallback (`minSep*0.4` from each
+##     member's OWN mating-unit x, :816) that DOES land a member within
+##     .individualClearance does so relative to her OWN anchor/union, not
+##     relative to her sibling's independently-computed union x -- the 2
+##     mates' own union dots are themselves subject to Track 7 Phase 2's
+##     union-spacing sweep, which (on this and every attempted small
+##     fixture) keeps them farther apart than .individualClearance.
+## Matches this project's own established precedent for a structurally
+## infeasible-to-force small-fixture edge case (see the widened
+## early-exit-guard test above, "§6 disclosed edge case"): this fixture
+## instead pins the REGRESSION-SAFETY property that IS directly
+## constructible and load-bearing -- confirming the mechanism does not
+## mistake "shares my anchor" for "is my anchor" (excluding only the OWN
+## anchor by name, §2.2), on the SAME fixture used by the own-anchor
+## exclusion test immediately below.
+test_that(".positionMatingUnitForest's new B1-vs-unrelated-individual pass
+           does not treat a co-anchor SIBLING (a different B1 mate of the
+           same polygamous anchor) as excluded -- only the member's OWN
+           anchor is excluded (design doc §2.2/§3.5)", {
+  ped <- data.frame(
+    id   = c("PPS", "PPD", "P", "M1", "C1", "M2", "C2"),
+    sire = c(NA, NA, "PPS", NA, "P",  NA, "P"),
+    dam  = c(NA, NA, "PPD", NA, "M1", NA, "M2"),
+    sex  = c("M", "F", "M", "F", "F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  ## Confirms the premise: M1 and M2 are both B1, sharing anchor P.
+  anchoredUnits <- forest$matingUnits[!is.na(forest$matingUnits$anchor), ]
+  expect_equal(anchoredUnits$anchor[anchoredUnits$sire == "P" |
+                                       anchoredUnits$dam == "P"],
+               c("P", "P"))
+
+  m1X <- pos$x[pos$id == "M1"]
+  m2X <- pos$x[pos$id == "M2"]
+  ## Pinned, re-measured live this session: already >= .individualClearance
+  ## apart via the PRE-EXISTING mechanism (see header note) -- this
+  ## design's new pass must leave that untouched, not perturb it further.
+  expect_equal(m1X, 0.4, tolerance = 1e-6)
+  expect_equal(m2X, 1.4, tolerance = 1e-6)
+  expect_true(abs(m1X - m2X) >= .individualClearance)
+})
+
+test_that(".positionMatingUnitForest's new B1-vs-unrelated-individual pass
+           does NOT perturb a B1 individual positioned within
+           .individualClearance of her OWN anchor (the by-design 'mates'
+           proximity case, design doc §1.2/§3.2/§3.5) -- collateral damage
+           this design's own-anchor exclusion exists specifically to
+           prevent (37.3% of all 67 b1Ids members on the real fixture sit
+           this close to their own anchor)", {
+  ped <- data.frame(
+    id   = c("PPS", "PPD", "P", "M1", "C1", "M2", "C2"),
+    sire = c(NA, NA, "PPS", NA, "P",  NA, "P"),
+    dam  = c(NA, NA, "PPD", NA, "M1", NA, "M2"),
+    sex  = c("M", "F", "M", "F", "F", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  pX <- pos$x[pos$id == "P"]
+  m1X <- pos$x[pos$id == "M1"]
+  ## Pinned, re-measured live this session: M1 sits 0.1 from her own
+  ## anchor P -- WELL within .individualClearance (0.41667) -- the
+  ## intentional minSep*0.4-fallback offset (:816, non-qualifying unit,
+  ## since P has 2 mates), not a defect. If the own-anchor exclusion were
+  ## missing or wrong, this design's own new pass would push M1 away from
+  ## P, moving m1X off 0.4 -- exactly the 37.3% false-positive collateral
+  ## the design doc's §3.2 measurement warns against.
+  expect_equal(pX, 0.5, tolerance = 1e-6)
+  expect_equal(m1X, 0.4, tolerance = 1e-6)
+  expect_true(abs(pX - m1X) < .individualClearance)
+})
+
 ## ---- Walker/BJL cutover (Phase 3, this session): regression coverage for
 ## 3 structurally-interesting fixtures (single-child duplicate chains,
 ## nested/consanguineous unions) originally built to exercise the NOW-
