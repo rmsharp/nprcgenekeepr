@@ -179,17 +179,18 @@ key_files: R/makePedigreeDiagramData.R:1016-1073 (the new pass);
   tests/testthat/test_resolveEdgeNodeCollisions.R:490-491 (re-pinned);
   docs/planning/pedigree-diagram-b1-individual-proximity-plan.md (design implemented, unmodified);
   PROJECT_LEARNINGS.md Learning 702.
-gotchas: master is now well ahead of origin/master (this session added 4 commits atop S661's 3
-  unpushed) -- a future session should push per the established owner-directed cadence. The twin-
-  connector cross-fixture ripple (Learning 702) is a class of ripple a design's own file-based
-  Impact Analysis inventory cannot see -- check for it explicitly on any future position-changing
-  fix, don't rely on the design doc alone. Stray LibreOffice lock file
+gotchas: master pushed (owner-directed, post-close-out) and back in sync with origin/master --
+  no longer "unpushed" (corrected from the claim-time note). The twin-connector cross-fixture
+  ripple (Learning 702) is a class of ripple a design's own file-based Impact Analysis inventory
+  cannot see -- check for it explicitly on any future position-changing fix, don't rely on the
+  design doc alone. Stray LibreOffice lock file
   (inst/extdata/reference/~$e Compounding Loop.html) still present, unrelated to this session.
 runtime_smoke: N/A in the traditional startup/service-registration sense, but the equivalent for
   a rendering fix (the mandatory live chromote render check) was performed and passed -- all 19
   pairs confirmed >= 50px apart in the actual vis.js DOM via getLiveRenderedPositions(), not just
   R-side x-values.
-changelog_ref: see CHANGELOG.md entries dated 2026-08-31 for S662 (claim/RED/GREEN/close-out)
+changelog_ref: see CHANGELOG.md's 2026-08-31/2026-09-01 S662 entries (claim/RED/GREEN/close-out/
+  push), tagged [BL-b1IndividualProximity].
 commit: 06962989
 ```
 

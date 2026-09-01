@@ -16,6 +16,13 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-01 · [ad hoc] S662: push master (owner-directed), all 4 workflows confirmed green
+- **Deliverable:** pushed `master` (owner-directed, post-close-out) — `git push origin master`,
+  10 commits (`5c73f2fe..f07c0544`). All 4 push-triggered workflows confirmed green:
+  `lint.yaml` (4m24s), `pkgdown.yaml` (6m48s), `test-coverage.yaml` (8m9s), `R-CMD-check.yaml`
+  (20m20s). `master`/`origin/master` back in sync.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-31 · [ad hoc] S662: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S661 precedent)
 - This commit sets `HANDOFFS.md`'s S662 receipt `commit:` field from `pending` to `06962989`
   (the close-out deliverable commit), the same self-reference workaround this project's sessions
