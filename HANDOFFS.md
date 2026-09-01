@@ -191,7 +191,7 @@ runtime_smoke: N/A in the traditional startup/service-registration sense, but th
   R-side x-values.
 changelog_ref: see CHANGELOG.md's 2026-08-31/2026-09-01 S662 entries (claim/RED/GREEN/close-out/
   push), tagged [BL-b1IndividualProximity].
-commit: 06962989
+commit: b8514e9b
 ```
 
 **Self-score breakdown (+9/-1):** +1 exact TDD phase-gate protocol followed (3 AskUserQuestion

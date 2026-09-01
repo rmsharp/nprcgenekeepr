@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-01 · [ad hoc] S662: record push+CI-confirmation commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S661 precedent)
+- This commit sets `HANDOFFS.md`'s S662 receipt `commit:` field from `06962989` to `b8514e9b`
+  (the deliverable commit for the push + CI confirmation), the same self-reference workaround
+  this project's sessions have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-01 · [ad hoc] S662: push master (owner-directed), all 4 workflows confirmed green
 - **Deliverable:** pushed `master` (owner-directed, post-close-out) — `git push origin master`,
   10 commits (`5c73f2fe..f07c0544`). All 4 push-triggered workflows confirmed green:
