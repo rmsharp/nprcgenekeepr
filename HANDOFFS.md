@@ -172,7 +172,7 @@ runtime_smoke: n/a in the traditional Shiny-app sense -- equivalent verification
   strongest available short of live-invoking ScheduleWakeup/CronCreate itself (deliberately not
   done, real side effects).
 changelog_ref: CHANGELOG.md 2026-09-01 S663 entry (BL-scheduleWakeupGuard)
-commit: pending
+commit: 3d5c42fd
 ```
 This session investigated and shipped the ScheduleWakeup/run_in_background structural guard
 (BACKLOG.md standing pedigree-fidelity-cluster READY item, found S656). The deliverable is Claude
