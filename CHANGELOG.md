@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-01 · [ad hoc] S663: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S662 precedent)
+- This commit sets `HANDOFFS.md`'s S663 receipt `commit:` field from `pending` to `3d5c42fd`
+  (the close-out deliverable commit), the same self-reference workaround this project's sessions
+  have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-01 · [BL-scheduleWakeupGuard] S663: ScheduleWakeup/run_in_background structural guard -- shipped as a Claude Code hook (outside this repo)
 - **Deliverable:** investigated and shipped (owner-directed via `AskUserQuestion`: global scope,
   hard block) a Claude Code `settings.json` hook that blocks `ScheduleWakeup`/`CronCreate` while a
