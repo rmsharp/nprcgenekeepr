@@ -16,6 +16,16 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-02 · [ad hoc] S664: regenerate Track B/C nprcgenekeepr validation images (commit `a0892589`)
+- Re-ran `data-raw/kinship2FidelityValidation.R` fresh, replacing `trackB-nprc-full.png`,
+  `trackB-nprc-shrunk.png`, `trackC-nprc-direct.png`, `trackC-nprc-rectilinear.png`.
+  `trackB-nprc-shrunk.png` specifically replaces a previously-committed image (S649) found
+  severely corrupted (overlapping unlabeled circles, unrelated to current code) and unreviewed
+  for 3 days. All 4 visually inspected and edge-traced this session; faithfully reflect current
+  shipped behavior, including the still-open disconnected-component interleaving defect (not
+  fixed by this commit — see `BACKLOG.md` Up Next).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-02 · [ad hoc] S664: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S663 precedent)
 - This commit sets `HANDOFFS.md`'s S664 receipt `commit:` field from `pending` to `86a00d48`
   (the close-out deliverable commit), the same self-reference workaround this project's sessions
