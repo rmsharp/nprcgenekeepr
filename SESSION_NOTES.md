@@ -18,20 +18,150 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 664 Handoff Evaluation (by Session 665)
+**Score: 6/10.** **What helped:** the plan doc's "ITEM 4 CONFIRMED TO FAIL" section gave
+exact `kinship2::align.pedigree()` ground-truth numbers for Track B shrunk (`P1=0, M1=0.5,
+L3=1.0, P2=1.0, G3=1.5, C4=2.0, C4a=2.5, P6=3.0`), the exact fixture structure/topology, and
+correctly identified `scratchpad/alignped4.R` as the concrete kinship2 reference to read —
+all directly reused this session and load-bearing for the actual re-derivation
+(`BACKLOG.md`'s own pointer to the plan doc and its "read ITEM 4 before touching this"
+instruction were both accurate and sufficient to orient immediately, no re-discovery
+needed). **What was missing:** the central claim ("Applying Option 3's two cases
+independently... produces... M1=0... wrong") was recorded with high-confidence language
+("CONFIRMED TO FAIL") without the handoff flagging that this rested on an informal, never
+independently re-verified hand-simulation — no note saying "re-derive this from scratch
+before trusting it," which is exactly what this session had to do anyway to catch the 2
+arithmetic bugs underneath it. **What was wrong:** the core diagnostic conclusion itself
+was incorrect, not just underspecified — traced this session to 2 concrete arithmetic
+errors in S664's own scratch script (an asymmetric anchor-only shift where the ratified
+text says "shift both parents equally"; an inconsistent mate-position value that cascaded
+into a wrong child-shift target) — see this session's own "CHAIN RULE — RESOLVED" section
+in the plan doc for the full diagnosis with numbers. Had this session trusted the
+"CONFIRMED TO FAIL" framing at face value and gone straight to inventing a new chain-
+specific algorithm (the exact candidates the handoff itself suggested — bottom-up
+resolution, iterative relaxation), it would have spent the session solving a problem that
+does not exist. **ROI:** net positive but mixed — the surrounding evidence (ground-truth
+numbers, fixture topology, correct kinship2-source pointer, accurate architecture notes on
+Tier 1/2/3) saved real time and was directly reusable; the headline conclusion was wrong
+and had to be fully re-derived from first principles rather than built upon, which is a
+materially different, larger correction than a typical "gap" would have needed.
+
 ### What Session 665 Did
-**Deliverable:** Design a general rule for a chain of 2+ nested qualifying pairs sharing a
-single child in `.positionMatingUnitForest()`'s mating-union midpoint placement, per
-`BACKLOG.md`'s top Up Next item (found live S664) — an update/ratification of
-`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`'s "ITEM 4 CONFIRMED TO
-FAIL" section. Design-only session (owner-directed via `AskUserQuestion`, following this
-item's own "needs its own dedicated design session, NOT a continuation of S664" framing and
-this project's established split between pedigree-positioning design and implementation
-sessions, e.g. Track 7 Phases 1-4). No `R/`/`tests/` changes this session. (IN PROGRESS)
-**Started:** 2026-09-02.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Design session (owner-confirmed scope via `AskUserQuestion`) for
+`BACKLOG.md`'s top Up Next item — the chain-case rule S664 left "CONFIRMED TO FAIL." Working
+from kinship2's own `alignped4.R` QP source (read in full this session) and this project's
+own real, unmodified `.buildMatingUnitForest()`/`.positionTreeApportion()` output (never
+assumed/hand-simulated values), re-derived the chain case from scratch and found **S664's
+"CONFIRMED TO FAIL" finding was itself wrong** — traced to 2 concrete arithmetic bugs in
+that session's own ad hoc scratch script (documented with exact numbers in the plan doc's
+new "CHAIN RULE — RESOLVED" section). **No new chain-specific rule is needed:** the
+already-ratified Option 3 (root anchor → shift both parents to match children-mean;
+non-root anchor → shift children to match true parent midpoint), applied to every
+qualifying pair in ascending-generation order and always reading each anchor's CURRENT
+(not stale/cached) position, already reproduces kinship2 exactly — verified bit-exact
+against: (a) Track B shrunk's real 2-link chain, using this project's own real raw
+`tier1X`/`unitX` values (not assumed); (b) a synthetic 3-level chain (`F1×F2→A→A×B→C→C×D→
+children`), confirming the one genuinely new requirement — generation-ordered processing
+with live anchor values, needed for 3+-link chains though not exercised by either Track B
+fixture; (c) a kinship2-QP algebraic derivation (spousal + per-child family penalty terms,
+solved by hand for the isolated-chain case) showing the result is independent of child
+count/weight, cross-checked empirically for `m`=1..4 real kinship2 runs. Also confirmed,
+by direct computation (not assumed), that the previously-flagged disconnected-component
+collision risk is real even under the arithmetically-correct rule (`P2`/`C4` land on the
+identical x on Track B shrunk) — the "route corrected targets through collision-avoidance,
+never bypass it" requirement from S664's own plan stands, now with a concrete confirming
+example rather than a hypothetical one. **Owner-ratified via `AskUserQuestion`** after the
+finding was presented with full evidence. Updated
+`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md` (new "CHAIN RULE —
+RESOLVED" section; old "ITEM 4" section left unedited as historical record, matching this
+doc's own precedent for the superseded Option 1) and `BACKLOG.md`'s top item (design
+RATIFIED, implementation READY, 7-step action list for the next session). **No `R/`/
+`tests/` changes this session** (confirmed via `git status`/`git diff`, both clean on those
+paths) — every number came from either a real `kinship2::align.pedigree()` run or a direct
+call into this project's own real, unmodified internal functions.
+**Started:** 2026-09-02. **Completed:** 2026-09-02.
+**Status:** DONE (design-only scope, as ratified at claim). Implementation is a separate,
+future session per this project's established pedigree-positioning design/implementation
+split.
+**Ledger:** `CHANGELOG: pending` — set at claim; recorded at Phase 3F below.
+
+**Self-assessment (Session 665): 9/10.** **Strengths:** (1) never took S664's "CONFIRMED TO
+FAIL" language at face value — re-derived the chain case fully from scratch, against 3
+independent sources (kinship2's own QP source read directly, empirical kinship2 runs on
+synthetic fixtures, and this project's own real code's raw output), before accepting or
+rejecting the prior finding; (2) when the re-derivation contradicted the prior session,
+diagnosed the SPECIFIC arithmetic errors with numbers rather than just asserting
+disagreement, so a future session (or the owner) can independently check the diagnosis
+rather than trust it on authority; (3) found and disclosed a real limit of the corrected
+rule (3+-link chains need live-value/generation-ordered composition; verified this
+specifically rather than assuming a 2-link success generalizes) instead of over-claiming
+full generality from the one case that mattered for Track B; (4) confirmed the
+disconnected-component collision risk empirically on the exact fixture rather than leaving
+it as an unverified carry-forward note; (5) used the actual project code
+(`.buildMatingUnitForest()`/`.positionTreeApportion()`) to get real raw values instead of
+reconstructing them by hand, avoiding exactly the class of error that caused S664's own
+mistake. **Weaknesses:** (1) did not attempt the real 375-individual fixture this session
+(explicitly out of scope for a design-only session per the plan's own item 6, but it is the
+fixture most likely to contain a 3+-link chain, so the generation-ordering requirement's
+real-world frequency is still unmeasured); (2) subtree-rigid translation for a non-leaf
+shifted child remains completely untested (explicitly flagged, not silently assumed, but
+still a real gap the implementing session inherits); (3) the kinship2-QP algebraic
+derivation, while cross-checked empirically for `m`=1..4, was not extended to verify
+polygamous/multi-mate anchors or a chain where the SAME node is a chain link on both sides
+(anchor of one qualifying pair AND non-anchor mate of another) — not present in either
+Track B fixture, not tested, and not currently flagged in the plan doc's own limitations
+list (a gap in this session's own write-up, noted here so it isn't lost).
+**ROI:** high — averted what would likely have been a much larger, unnecessary
+"invent a new chain algorithm" implementation effort in a future session, and produced a
+smaller, precisely-scoped 7-step implementation list in its place, fully evidenced rather
+than asserted.
+
+**Next steps:** implement per the plan doc's "What the implementing session needs to do"
+7-step list (also mirrored in `BACKLOG.md`'s top item): (1) a single generation-ordered
+pass over qualifying units in `.positionMatingUnitForest()`, reading live anchor values;
+(2) route corrected targets through `.deCollideIndividualPoints()`/Track 7 Phase 2, never
+around them; (3) verify subtree-rigid translation for a non-leaf shifted child (untested by
+this session); (4) re-verify Track B full stays bit-exact; (5) re-verify Track B shrunk
+matches kinship2 exactly (`P1=0, M1=0.5, L3=1.0, P2=1.0, G3=1.5, C4=2.0, C4a=2.5, P6=3.0`);
+(6) re-verify against the real 375-individual fixture (untested this session, most likely
+to contain a 3+-link chain); (7) then RED/GREEN/REFACTOR. Read
+`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`'s "CHAIN RULE —
+RESOLVED (Session 665)" section in full first — NOT "ITEM 4 CONFIRMED TO FAIL", which it
+corrects and supersedes (left in place only as historical record, per this doc's own
+precedent for the superseded Option 1).
+**Gotchas:** (1) do not re-read "ITEM 4 CONFIRMED TO FAIL" as current guidance — it is
+superseded, wrong on its central claim, and kept only as historical record; (2) the
+generation-ordering requirement is not optional even though it happens not to matter for
+either Track B fixture (M1 in the 2-link case is never itself shifted by any correction, so
+staleness never bites there) — the 3-level synthetic-chain verification in the plan doc
+shows it DOES matter in general, and the real 375-fixture is untested for this specifically;
+(3) `qualifies()` (`R/makePedigreeDiagramData.R:790-804`) gates purely on mate-count/sex,
+not on root-vs-chain status — confirmed this session by reading it directly — so no change
+to that predicate is needed, only to what target value gets computed once a unit qualifies;
+(4) when reconstructing Track B shrunk's real raw values for verification, `founderIds` must
+have `b1Ids` (free-pass mates) subtracted before building `rootIds`/the forest — an early
+version of this session's own probe script omitted that and got a materially different (and
+wrong) raw-value picture; the corrected version (`/tmp/probe_chain2.R`-equivalent logic) is
+what the plan doc's numbers come from. Unchanged from S664: the stray LibreOffice lock file
+(`inst/extdata/reference/~$e Compounding Loop.html`) is still present; `HANDOFFS.md`/
+`SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM #28 size cap; `master` was ahead of
+`origin/master` at this session's Phase 0 (16 commits, then 17 after this session's claim
+commit) — push per the established cadence.
+**Key files:**
+`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md` (the live, authoritative
+record — read the new "CHAIN RULE — RESOLVED" section, not this summary, before starting);
+`R/makePedigreeDiagramData.R:627-866` (`.positionMatingUnitForest()`, untouched this
+session, the eventual edit site — `qualifies()`/`b1AnchorRelativeX()`/`derivedX()` at
+:790-818 are the existing Tier-3 mechanisms the new pass composes with); `BACKLOG.md` Up
+Next (top item, updated this session with the ratified finding and 7-step action list);
+`scratchpad/alignped4.R` (kinship2's real QP solver source, read in full this session — the
+concrete reference for the algebraic derivation).
+**Runtime smoke test (Phase 3E):** not applicable — this session's deliverable is a design
+document with no shipped runtime behavior change (confirmed via `git status`/`git diff` on
+`R/`/`tests/`: both clean). The equivalent verification actually performed was numeric: every
+claimed-correct value was checked against a real `kinship2::align.pedigree()` run and/or
+this project's own real (unmodified) internal function output, never asserted from formula
+alone or by hand-simulation.
 
 ### Session 663 Handoff Evaluation (by Session 664)
 **Score: 9/10.** **What helped:** S663's `next_steps` correctly named the remaining pedigree-

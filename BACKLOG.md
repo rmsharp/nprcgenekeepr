@@ -12,34 +12,54 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 - [ ] **Mating-union dot not at the true parent midpoint; single-child chains of nested
-      qualifying pairs mis-positioned** (found live S664, 2026-09-01/09-02, READY, Effort L --
-      real algorithm work on `.positionMatingUnitForest()`, needs its own dedicated design
-      session, NOT a continuation of S664) -- owner directly reviewed `trackB-nprc-full.png`
-      (previously wrongly called "clean" this same session) and caught that every mating-union
-      dot sits on the anchor parent's own symbol instead of centered between the two parents.
-      Root-caused to the already-known, already-ratified Track 7 Phase 3 trade-off (issue #166,
-      S652) -- NOT a new bug in itself, but the owner overrode that prior "hard binary, accept
-      the trade-off" ratification (matching this project's own precedent for the P5-isolated-
-      individual case). Owner-directed "conditional shift" rule (verified bit-exact against
-      `kinship2::align.pedigree()` on Track B's full 16-subject fixture) directly overturns the
-      Track 7 Phase 3 design doc's own §1.4 "no intermediate value" conclusion -- but is
-      confirmed WRONG for Track B's own **shrunk** fixture (a single-child chain of 2 nested
-      qualifying pairs, `P1×P2 -> M1 -> M1×G3`, where kinship2's real joint solver reaches a
-      value -- `M1=0.5` -- neither of the rule's 2 cases alone produces), and a naive
-      independent-per-pair application of the rule was separately found to reintroduce/worsen
-      the disconnected-component visual-overlap problem (the now-superseded `pedigree-diagram-
-      disconnected-component-separation-plan.md`) by bypassing the project's existing
-      collision-avoidance machinery. **Full design doc, evidence, exact numbers, and the
-      precise next-session action list:**
+      qualifying pairs mis-positioned** (found live S664, 2026-09-01/09-02; **design
+      RATIFIED S665, 2026-09-02 -- implementation READY, TOP PRIORITY, next pickup**,
+      Effort L) -- owner directly reviewed `trackB-nprc-full.png` (previously wrongly
+      called "clean") and caught that every mating-union dot sits on the anchor parent's
+      own symbol instead of centered between the two parents. Root-caused to the
+      already-known, already-ratified Track 7 Phase 3 trade-off (issue #166, S652) -- NOT
+      a new bug in itself, but the owner overrode that prior "hard binary, accept the
+      trade-off" ratification (matching this project's own precedent for the
+      P5-isolated-individual case). Owner-directed "conditional shift" rule (Option 3:
+      root anchor -> shift both parents to match children-mean; non-root anchor -> shift
+      children to match true parent midpoint) verified bit-exact against
+      `kinship2::align.pedigree()` on Track B's full 16-subject fixture.
+      **S664 found this rule "CONFIRMED TO FAIL" on Track B's shrunk fixture (a
+      single-child chain, `P1×P2 -> M1 -> M1×G3`) -- S665 re-derived from scratch (kinship2's
+      own `alignped4.R` QP source, read in full, plus this project's own real
+      `.buildMatingUnitForest()`/`.positionTreeApportion()` output, never assumed values)
+      and found that finding was ITSELF WRONG** -- 2 concrete arithmetic bugs in S664's own
+      ad hoc scratch script (an asymmetric anchor-only shift instead of splitting the delta
+      between anchor and mate; an inconsistent mate-position value that cascaded into the
+      child-shift target), not a real gap in Option 3. **No new chain-specific rule is
+      needed** -- Option 3's existing 2 cases, applied to every qualifying pair in
+      ascending-generation order and always reading each anchor's CURRENT (not stale/cached)
+      position, already reproduce kinship2 exactly for both Track B fixtures AND a
+      synthetic 3-level chain (bit-exact, verified against real `kinship2::align.pedigree()`
+      runs). The only genuinely new requirement (needed for 3+-link chains, not exercised by
+      either Track B fixture): process qualifying units in generation order and read each
+      anchor's live/current value, never a Tier-1 raw value cached before an outer
+      correction may have moved it. **Owner-ratified via `AskUserQuestion`, S665.**
+      **Full design doc, all evidence, exact numbers, and the precise 7-step
+      implementation action list:**
       [`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`](docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md)
-      -- read its "ITEM 4 CONFIRMED TO FAIL" section before touching this. No `R/` code was
-      changed this session (every demonstration was an in-process, never-committed monkey-patch
-      in a scratch script) -- `git status`/`git diff` on `R/` are clean. Next session's job, in
-      order: (1) design a general rule for a chain of 2+ nested qualifying pairs (kinship2's own
-      `alignped4.R` QP source, already read once, is the concrete reference, not a guess);
-      (2) integrate that rule's corrected targets THROUGH the existing collision-avoidance
-      passes, never bypassing them; (3) re-verify Track B full stays bit-exact; (4) re-verify
-      Track B shrunk matches kinship2 exactly; (5) only then RED/GREEN/REFACTOR.
+      -- read its "CHAIN RULE -- RESOLVED (Session 665)" section (NOT "ITEM 4 CONFIRMED TO
+      FAIL", which that section corrects and which is left only as historical record). No
+      `R/` code was changed S664 or S665 (every number in both sessions came from either
+      kinship2 run directly or this project's own real, unmodified internal functions) --
+      `git status`/`git diff` on `R/` are clean. Implementing session's job, in order:
+      (1) implement the rule (a single pass over qualifying units in ascending-`gen` order,
+      reading live anchor values -- no chain detection needed); (2) feed corrected targets
+      THROUGH the existing collision-avoidance machinery
+      (`.deCollideIndividualPoints()`/Track 7 Phase 2), never around it -- S665 confirmed
+      this is still necessary (the arithmetically-correct rule still produces a real
+      `P2`/`C4` collision on Track B shrunk, unrelated families landing on the same x);
+      (3) subtree-rigid translation for a non-leaf shifted child (untested by S665, still
+      RED's job); (4) re-verify Track B full stays bit-exact; (5) re-verify Track B shrunk
+      matches kinship2 exactly (`P1=0, M1=0.5, L3=1.0, P2=1.0, G3=1.5, C4=2.0, C4a=2.5,
+      P6=3.0`); (6) re-verify against the real 375-individual fixture (not attempted by
+      S665 -- the fixture most likely to contain a 3+-link chain); (7) then
+      RED/GREEN/REFACTOR.
 - [x] **`makePedigreeMatingLayout()` erroneously renders fully-isolated individuals (no sire, no
       dam, no mate, no children) -- reverses this project's own prior "acceptable difference"
       framing** (found live 2026-08-26, owner-directed via direct visual review of

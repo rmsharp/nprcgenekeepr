@@ -1,11 +1,15 @@
 # Pedigree Diagram: Symmetric Parent Placement Plan
 
-**Status: PAUSED, session 664 (2026-09-01/09-02) — needs a dedicated future design
-session, not a continuation.** No code in `R/` was touched this session (every rendering
-in this file's own evidence was a throwaway in-process monkey-patch in a scratch script,
-never applied to the package source). Read **"ITEM 4 CONFIRMED TO FAIL"** below before
-doing anything else with this plan — the rule below is verified correct for exactly one
-fixture shape and verified WRONG for a second, real one.
+**Status: DESIGN RATIFIED, session 665 (2026-09-02, owner-confirmed via `AskUserQuestion`
+after the finding below was presented with full evidence).** Read **"CHAIN RULE — RESOLVED
+(Session 665)"** below before "ITEM 4 CONFIRMED TO FAIL" — it corrects that section's own
+conclusion with a code-and-kinship2-verified re-derivation. No code in `R/` was touched
+this session either (every number below comes from either kinship2's own `align.pedigree()`
+run directly, or from calling this project's own real, unmodified internal functions
+— `.buildMatingUnitForest()`, `.positionTreeApportion()` — to read their actual raw output,
+never from hand-simulated/assumed values). **Ready for implementation (RED/GREEN/REFACTOR)
+in a future session** — see "What the implementing session needs to do" at the end of the
+new section.
 
 Original ratified choice (Option 1, "symmetric half-offset") was **incomplete**: it only
 specified the root-anchor case and left the current, on-anchor union position for a
@@ -58,7 +62,219 @@ in the diagnosis.
 
 ---
 
+## CHAIN RULE — RESOLVED (Session 665, 2026-09-02)
+
+**Finding: no new chain-specific rule is needed. Option 3's existing two cases (root /
+non-root), applied to every qualifying pair in ascending-generation order and always
+reading each anchor's *current* (possibly already-corrected) position rather than a cached
+Tier-1 value, already reproduce kinship2 exactly — including Track B shrunk, the very
+fixture "ITEM 4" below found this rule wrong for.** The "wrong" result recorded there
+(`M1=0` where kinship2 gives `0.5`) traces to arithmetic errors in that session's own naive
+hand-simulation, not a gap in the rule. Both are diagnosed below with real numbers so a
+future session does not need to take this claim on faith.
+
+### Why "ITEM 4" got M1 wrong — diagnosed, not guessed
+
+ITEM 4's naive result: `P1=-1, C4=0, M1=0, P2=1, C4a=1, L3=1, P6=2, G3=2`. Two concrete
+arithmetic errors, found by comparing against what Option 3's own ratified text actually
+specifies:
+
+1. **The root case's own text says "shift BOTH parents equally"** — the naive computation
+   shifted only the anchor (`P1: 0→-1`, `C4: 1→0`, both by a full `-1*minSep`) and left
+   the mate entirely at her raw Tier-3 value (`P2` stayed `1`, `P6` stayed `2`). A correct
+   symmetric split moves the anchor by half the needed delta and the mate by the same half
+   in the same direction — e.g. `P1: 0→-0.5`, `P2: 1→0.5` (verified below) — never moves
+   only one side, and never by a full `minSep`.
+2. **`G3` (M1's Tier-3-derived mate) was computed inconsistently with M1's own naive
+   value** — the existing, unmodified Tier-3 formula is `G3 = M1 + sign*minSep`; with the
+   naive session's own `M1=0` that gives `G3=1`, not the `G3=2` it recorded. `L3=1`
+   (naive) is exactly `mean(M1=0, G3=2)` — i.e. the child-shift step correctly followed
+   *its own* (already-wrong) `G3`, so this is a downstream consequence of error 2, not a
+   third independent bug.
+
+Neither error is a property of the rule itself — both are places the ad hoc, never-tested
+monkey-patch script deviated from what "shift both parents equally" / "the union's own
+Tier-3 mate formula" already say. This is exactly the kind of claim `SESSION_RUNNER.md`
+Failure Mode #11 (gaps from memory) warns against carrying forward uncritically — re-derived
+from scratch this session, against real numbers, rather than trusted.
+
+### Re-derivation: kinship2's own QP, read directly
+
+`scratchpad/alignped4.R` (kinship2's real `alignped4()`, extracted a prior session, read in
+full this session) builds one joint quadratic program over ALL individuals at once:
+- a **spousal term** per mated pair, weight `sqrt(align[2])` (default `align[2]=2`),
+  penalizing `pos[spouse1] - pos[spouse2]` — wants mates coincident, but a **hard**
+  ordering constraint (`cmat`/`dvec`) forces every pair of same-level adjacent nodes
+  `>= 1` (`= minSep`) apart, so in practice mates always land pinned at exactly that floor
+  (matching this project's own already-established, already-verified "achieved spousal
+  separation is exactly `minSep`-equivalent" finding, `BACKLOG.md`'s Track 7 design record).
+- a **family term**, one row *per child*, weight `sqrt(k^-align1)` (`k` = that family's
+  child count, default `align1=1.5`), penalizing `child - mean(parent1, parent2)` — wants
+  each child at the true parent midpoint.
+
+Solving this system by hand for an isolated chain (`A×B → sole child C → C×D →
+children`), with the spousal constraint active (`d = c + minSep`, matching the
+already-established finding above) collapses cleanly: **the child-family term's own
+first-order condition always sets the children's mean to exactly `(c+d)/2`, for *any*
+weight and *any* child count `m`** (the cross term vanishes because `mean(children)` is a
+free variable coupled to `(c+d)/2` by nothing else) — which in turn means the *children*
+term contributes nothing to `c`'s own gradient at the optimum, leaving `c`'s value set
+purely by upstream terms. Concretely, when `A×B` are anchored (their own position fixed by
+context elsewhere in the pedigree), **`C` lands exactly at `mean(A,B)` regardless of `m`,
+`k`, or the weight formula** — confirmed empirically (not just algebraically) against real
+`kinship2::align.pedigree()` runs, `m` = 1..4:
+
+```
+m=1: A=0.0 B=1.0 C=0.5 D=1.5 E1=1.0
+m=2: A=0.0 B=1.0 C=0.5 D=1.5 E1=0.5 E2=1.5
+m=3: A=0.0 B=1.0 C=0.5 D=1.5 E1=0.0 E2=1.0 E3=2.0
+```
+(`m=4` breaks this — the children's own level becomes *wider* than the parents' level,
+flipping which level kinship2's QP anchors near zero. This is a kinship2-QP-internal
+artifact of its single global joint optimization; it doesn't transfer to this project's
+own architecture, which never does a global joint solve — see "Why this doesn't need a
+kinship2-style QP" below. Noted as a theoretical corner case, not required for this
+design: the real target fixture always has other width at the anchoring level.)
+
+### Re-derivation: through this project's own real code, not assumed values
+
+Calling this project's real, unmodified `.buildMatingUnitForest()` +
+`.positionTreeApportion()` on the actual Track B shrunk fixture (reconstructed via
+`shrinkPedigree()`, byte-identical to `data-raw/kinship2FidelityValidation.R`) gives the
+real raw values feeding into any correction — not assumed ones:
+
+```
+Raw tier1X:  M1=0  C4a=1  L3=0  C4=1  P1=0        (P2/P6/G3 are B1 free-pass mates —
+Raw unitX:   __union_1(C4xP6)=1  __union_2(P1xP2)=0  __union_3(M1xG3)=0     excluded from Tier 1 entirely)
+```
+
+Applying Option 3's own two cases, unmodified, in ascending-generation order (`__union_2`
+gen 0 before `__union_3` gen 1), reading each anchor's live value:
+
+| Unit | Case | Computation | Result |
+|---|---|---|---|
+| `__union_2` (`P1×P2`) | root | shift both by `childrenMean(0) - (rawP1(0)+0.5) = -0.5` | `P1=-0.5, P2=0.5` |
+| `__union_3` (`M1×G3`) | non-root | `M1` untouched by any correction (only ever a "child" argument for shift, never a root's own pair-member) → stays raw `0`; `G3 = M1+minSep = 1`; `trueMid = 0.5`; shift `L3` by `0.5 - unitX(0) = +0.5` | `M1=0` (unchanged), `G3=1`, `L3=0.5` |
+
+Aligning to kinship2's own coordinate origin (`P1=0`, i.e. adding `0.5` to every value
+above): `P1=0, P2=1.0, M1=0.5, G3=1.5, L3=1.0` — **bit-exact match to the kinship2 ground
+truth this whole investigation started from** (`P1=0, M1=0.5, L3=1.0, P2=1.0, G3=1.5`).
+No chain-specific logic was used — `M1` simply never moves, and by construction the
+corrected `P1`/`P2` midpoint always equals `M1`'s raw value already (`childrenMean` in the
+root case *is* `M1`'s raw `tier1X`, since `M1` is `P1`'s sole child) — the two cases already
+compose correctly for this depth.
+
+**Why a real chain rule is still needed for 3+ links, even though 2 links worked above:**
+`M1` above was never itself the target of a shift (only ever read). In a 3-link chain
+(`F1×F2(root) → A → A×B → C → C×D → children`), the *middle* link (`A`) **is** shifted —
+she's one of `A×B`'s own children being moved by the `F1×F2` correction. If the `A×B`
+non-root correction then reads `A`'s **stale, pre-shift** raw value instead of her
+already-corrected one, the result is wrong. Verified directly, both ways, using this
+project's own real raw values (`F1=0.5(collapsed with A/C at raw 0.5 pre-correction, W1/W2
+providing width), rootIds=F1,W1,W2`):
+
+```
+ROOT   __union_1 (F1xF2): shift both -0.5  -> F1=0.0,  F2=1.0
+NON-ROOT __union_2 (AxB):  A read FRESH (0.5, unshifted by the F1 correction since A
+                            was never one of F1xF2's own two parent-members) -> B=1.5,
+                            trueMid=1.0 -> shift C (A's child) to 1.0
+NON-ROOT __union_3 (CxD):  C read FRESH (1.0, the JUST-corrected value from the line
+                            above, not C's stale raw 0.5) -> D=2.0, trueMid=1.5 ->
+                            shift E1,E2 to 1.0,2.0
+```
+Result: `A=0.5, C=1.0, F1=0, F2=1, B=1.5, D=2, E1=1, E2=2` — **bit-exact match against a
+real `kinship2::align.pedigree()` run of the identical structure** (`F1=0,F2=1,A=0.5,
+B=1.5,C=1.0,D=2.0,E1=1.0,E2=2.0`). Using `C`'s *stale* raw value (0.5) instead of the
+just-corrected one (1.0) in the third step would have produced a visibly wrong `D`/child
+placement — this is the one genuinely chain-specific requirement, and it generalizes to
+any chain depth by the same generation-ascending, always-read-current-value discipline.
+
+### General rule (supersedes "ITEM 4"'s per-pair-independent framing)
+
+**Process every qualifying unit once, in ascending order of the anchor's `gen`. For each,
+read the anchor's *current* position (its Tier-1 raw value, or an already-updated value
+from an earlier iteration of this same pass — never a cached/stale copy) and apply
+Option 3's existing two cases unmodified:**
+- **Root anchor:** shift anchor and mate by the same amount, in the same direction, so
+  their midpoint equals the union's existing children-mean (`unitX`, Tier 2). Children
+  are not touched.
+- **Non-root anchor:** compute the mate's position from the anchor's *current* value via
+  the existing, unmodified Tier-3 formula (`anchor + sign*minSep`); shift the union's real
+  children — each child's entire subtree, rigidly (untested by this session, see below) —
+  so their mean equals the true parent midpoint (`mean(anchor, mate)`). The anchor and
+  mate are not touched by this case.
+- After either case, the union's own rendered `x` (Tier 2's `unitX`) must be recomputed
+  from the (possibly now-shifted) children, so the dot continues to track its own
+  children exactly (the pre-existing Track 6 invariant) — a mechanical consequence, not a
+  new decision.
+
+Since generation number already totally orders any chain (a chain parent is always a
+strictly lower generation than the pair she anchors), sorting by `gen` ascending and
+processing each qualifying unit exactly once is sufficient — no separate "detect a chain"
+step is needed; the ordering alone makes "root" and "non-root, using a fresh anchor value"
+compose correctly at any depth.
+
+### Why this doesn't need a kinship2-style joint QP
+
+kinship2 solves one global optimization; this project's architecture never does (Tier 1 is
+a local, recursive, generation-by-generation apportion, not a joint solve). The rule above
+stays entirely inside that existing architecture — it only asks that the correction pass
+walk qualifying units in generation order and read live values, which is a straightforward,
+local, single-pass computation (no QP, no solver dependency), not the "compound couple
+node in tree apportion" Option 2 this plan's own Alternatives table already flagged as
+higher-risk. Confirms Option 3 (not Option 2) remains the right choice.
+
+### A real, separate problem this rule does NOT fix — confirmed, not assumed
+
+Applying the corrected rule to *both* of Track B shrunk's qualifying pairs (the chain
+`P1×P2 → M1 → M1×G3` above, AND the disconnected `C4×P6` root pair, independently
+computed via the identical root case: `C4` raw `1` → shift `-0.5` → `C4=0.5, P6=1.5`)
+produces **`P2=0.5` and `C4=0.5` — an exact collision between two unrelated families at
+the same generation**, confirmed by direct computation, not assumed. kinship2 itself never
+hits this (its one global joint solve spaces the whole level via a single hard ordering
+constraint spanning every node, not per-family). This is exactly why the plan's own
+"what a future session needs to do" item 2 (below) already says the corrected targets
+must flow **through** `.deCollideIndividualPoints()`/Track 7 Phase 2's push-search, never
+around them — this session's own arithmetic-correct rule still produces this exact
+collision on this exact fixture, confirming that requirement is real and necessary, not
+speculative.
+
+### What the implementing session needs to do
+
+1. Implement the rule above in `.positionMatingUnitForest()`: a single pass over
+   qualifying units in ascending-`gen` order, reading live anchor values (no chain
+   detection needed — see "General rule" above).
+2. Feed the corrected targets **through** the existing collision-avoidance machinery
+   (`.deCollideIndividualPoints()`, Track 7 Phase 2's push-search) — never write them
+   directly to the final position table, confirmed necessary by this session's own
+   `P2`/`C4` collision finding above.
+3. Subtree-rigid translation for a shifted child who is not a leaf (this session tested
+   only leaf children and one further sole-child link, both cases already covered by
+   "shift the whole subtree" in the original ratified text — a real non-leaf, multi-
+   descendant shifted child is still untested and is RED's job, not assumed to already
+   work).
+4. Re-verify Track B full stays bit-exact (already proven achievable, S664; do not
+   regress it — full's `M1` has 3 siblings, so `k_top>1`, meaning it is NEVER a chain
+   link under this rule's own root/non-root gate; only the ordering/live-value discipline
+   is new, not the cases themselves).
+5. Re-verify Track B shrunk matches kinship2 exactly using the ACTUAL implementation (not
+   this session's by-hand recomputation) — target: `P1=0, M1=0.5, L3=1.0, P2=1.0,
+   G3=1.5, C4=2.0, C4a=2.5, P6=3.0` (order/scale as originally recorded; this session's
+   own relative-offset check above already confirms the shape is right).
+6. Re-verify against the real 375-individual production fixture (not attempted this
+   session — this project's own established discipline for any change to this
+   function, and the fixture most likely to contain a 3+-link chain this session's
+   2-fixture verification did not exercise).
+7. Then RED/GREEN/REFACTOR.
+
+---
+
 ## ITEM 4 CONFIRMED TO FAIL — session paused here, 2026-09-02, handed to a future session
+
+**Corrected by "CHAIN RULE — RESOLVED" above (Session 665) — left unedited below as the
+historical record of what S664 found, matching this file's own precedent for the
+superseded Option 1. Do not re-read this section as current guidance; read the section
+above first.**
 
 **Do not re-attempt "Option 3 as specified above" without reading this section first.** It
 is verified correct only for a qualifying pair with normal sibling width (Track B full). It

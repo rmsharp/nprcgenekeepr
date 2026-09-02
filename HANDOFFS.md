@@ -138,21 +138,48 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S665
 date: 2026-09-02
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Design a general rule for a chain of 2+ nested qualifying pairs sharing a
-  single child in .positionMatingUnitForest()'s mating-union midpoint placement (BACKLOG.md
-  top Up Next item, found S664). Design-only session, owner-confirmed via AskUserQuestion.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 6
+active_task: DONE (design-only scope, as ratified at claim). Design session for the
+  BACKLOG.md top Up Next item (chain-case rule for mating-union midpoint placement,
+  found S664). Implementation is a separate future session.
+what_was_done: Re-derived the chain-case rule from scratch (kinship2's own alignped4.R QP
+  source, read in full, plus this project's own real .buildMatingUnitForest()/
+  .positionTreeApportion() output -- never assumed values) and found S664's "CONFIRMED TO
+  FAIL" finding was itself wrong, traced to 2 concrete arithmetic bugs in that session's own
+  scratch script. No new chain-specific rule is needed -- Option 3's existing 2 cases,
+  applied in ascending-generation order reading each anchor's CURRENT position, already
+  reproduce kinship2 exactly (verified bit-exact against Track B shrunk's real 2-link chain
+  and a synthetic 3-level chain). Confirmed the disconnected-component collision risk is
+  still real even under the corrected rule. Owner-ratified via AskUserQuestion. Updated
+  docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md (new "CHAIN RULE --
+  RESOLVED" section) and BACKLOG.md's top item. No R/ or tests/ changes. Claim commit
+  94e9870e; close-out commit pending (this receipt's own commit, reconciled next session
+  per this project's established self-reference-workaround precedent).
+next_steps: Implement per the plan doc's 7-step "What the implementing session needs to
+  do" list (mirrored in BACKLOG.md's top item) -- SESSION_NOTES.md.
+key_files: docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md ("CHAIN RULE
+  -- RESOLVED" section); R/makePedigreeDiagramData.R:627-866
+  (.positionMatingUnitForest(), untouched, the eventual edit site); BACKLOG.md Up Next top
+  item; scratchpad/alignped4.R (kinship2's real QP source, read in full).
+gotchas: Do not re-read "ITEM 4 CONFIRMED TO FAIL" in the plan doc as current guidance --
+  superseded, wrong on its central claim, kept only as historical record. The
+  generation-ordering/live-value requirement is real for 3+-link chains even though it
+  doesn't bite on either Track B fixture -- untested against the real 375-individual
+  fixture. qualifies() (R/makePedigreeDiagramData.R:790-804) gates on mate-count/sex only,
+  not root-vs-chain status -- no change needed there.
+runtime_smoke: n/a -- docs-only design session, no shipped runtime behavior change
+  (confirmed via git status/diff on R/ and tests/, both clean). Verification performed was
+  numeric: every claimed value checked against a real kinship2::align.pedigree() run or
+  this project's own real internal function output, never hand-simulated.
+changelog_ref: pending -- recorded at Phase 3F, this session's own commit.
 commit: pending
 ```
-(stub — filled at close-out, Phase 3D)
+Full self-score breakdown, and the Session 664 handoff evaluation this session's
+`predecessor_score` reflects, are in `SESSION_NOTES.md` under "Session 664 Handoff
+Evaluation (by Session 665)" and "What Session 665 Did" -- read those, not just this
+receipt, for the complete record.
 
 ```handoff
 session: S664

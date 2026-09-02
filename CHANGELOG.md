@@ -16,6 +16,35 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-02 · [BL-pedigreeParentSymmetricPlacement] S665: re-derived and ratified the chain-case rule for mating-union midpoint placement; overturned S664's "CONFIRMED TO FAIL" finding
+- **Deliverable:** design session for `BACKLOG.md`'s top Up Next item. Working from
+  kinship2's own `alignped4.R` QP source (read in full) and this project's own real
+  `.buildMatingUnitForest()`/`.positionTreeApportion()` output (never assumed values),
+  re-derived the chain case from scratch and found S664's "CONFIRMED TO FAIL" finding was
+  itself wrong — traced to 2 concrete arithmetic bugs in that session's own scratch script
+  (an asymmetric anchor-only shift where the ratified text says "shift both parents
+  equally"; an inconsistent mate-position value that cascaded into a wrong child-shift
+  target).
+- **No new chain-specific rule is needed:** the already-ratified Option 3 (root anchor →
+  shift both parents to match children-mean; non-root anchor → shift children to match
+  true parent midpoint), applied to every qualifying pair in ascending-generation order and
+  always reading each anchor's CURRENT (not stale/cached) position, already reproduces
+  kinship2 exactly — verified bit-exact against Track B shrunk's real 2-link chain (using
+  this project's own real raw values) and a synthetic 3-level chain (confirming the one
+  genuinely new requirement: generation-ordered processing with live anchor values, needed
+  for 3+-link chains, not exercised by either Track B fixture).
+- Confirmed, by direct computation, that the previously-flagged disconnected-component
+  collision risk is real even under the arithmetically-correct rule (`P2`/`C4` land on the
+  identical x on Track B shrunk) — the existing plan requirement to route corrected targets
+  through collision-avoidance, never around it, stands.
+- **Owner-ratified via `AskUserQuestion`** after the finding was presented with full
+  evidence. Updated `docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`
+  (new "CHAIN RULE — RESOLVED" section; old "ITEM 4" section left unedited as historical
+  record) and `BACKLOG.md`'s top item (design RATIFIED, implementation READY, 7-step
+  action list). No `R/`/`tests/` changes (confirmed via `git status`/`git diff`, both
+  clean).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-02 · [ad hoc] S664: regenerate Track B/C nprcgenekeepr validation images (commit `a0892589`)
 - Re-ran `data-raw/kinship2FidelityValidation.R` fresh, replacing `trackB-nprc-full.png`,
   `trackB-nprc-shrunk.png`, `trackC-nprc-direct.png`, `trackC-nprc-rectilinear.png`.
