@@ -173,8 +173,8 @@ runtime_smoke: n/a -- docs-only design session, no shipped runtime behavior chan
   (confirmed via git status/diff on R/ and tests/, both clean). Verification performed was
   numeric: every claimed value checked against a real kinship2::align.pedigree() run or
   this project's own real internal function output, never hand-simulated.
-changelog_ref: pending -- recorded at Phase 3F, this session's own commit.
-commit: pending
+changelog_ref: CHANGELOG.md 2026-09-02 S665 entry, this commit.
+commit: bce3f565
 ```
 Full self-score breakdown, and the Session 664 handoff evaluation this session's
 `predecessor_score` reflects, are in `SESSION_NOTES.md` under "Session 664 Handoff

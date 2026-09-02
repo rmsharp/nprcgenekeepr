@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-02 · [ad hoc] S665: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S664 precedent)
+- This commit sets `HANDOFFS.md`'s S665 receipt `commit:` field from `pending` to `bce3f565`
+  (the close-out deliverable commit), the same self-reference workaround this project's
+  sessions have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-02 · [BL-pedigreeParentSymmetricPlacement] S665: re-derived and ratified the chain-case rule for mating-union midpoint placement; overturned S664's "CONFIRMED TO FAIL" finding
 - **Deliverable:** design session for `BACKLOG.md`'s top Up Next item. Working from
   kinship2's own `alignped4.R` QP source (read in full) and this project's own real
