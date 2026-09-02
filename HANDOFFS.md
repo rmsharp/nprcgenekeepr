@@ -136,6 +136,28 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S666
+date: 2026-09-02
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Implement the S665-ratified conditional-shift rule (chain-case,
+  generation-ascending, live-anchor-value read) for pedigree mating-union midpoint placement
+  in .positionMatingUnitForest() (BACKLOG.md top Up Next item). Full 7-step scope per
+  docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md's "CHAIN RULE --
+  RESOLVED" section, full TDD RED->GREEN->REFACTOR. Owner-directed: check in before
+  accepting/rejecting the finished result.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(stub — filled at close-out, Phase 3D)
+
+```handoff
 session: S665
 date: 2026-09-02
 status: complete

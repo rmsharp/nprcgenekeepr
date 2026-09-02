@@ -18,6 +18,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 666 Did
+**Deliverable:** Implement the S665-ratified "conditional shift" rule (chain-case,
+generation-ascending, live-anchor-value read) for pedigree mating-union midpoint placement in
+`.positionMatingUnitForest()`, per `BACKLOG.md`'s top Up Next item and
+`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`'s "What the implementing
+session needs to do" 7-step list (§"CHAIN RULE — RESOLVED"): implement the rule; route
+corrected targets through the existing collision-avoidance machinery
+(`.deCollideIndividualPoints()`/Track 7 Phase 2), never around it; subtree-rigid translation
+for a shifted non-leaf child; re-verify Track B full stays bit-exact; re-verify Track B shrunk
+matches kinship2 exactly; re-verify against the real 375-individual production fixture; full
+TDD RED→GREEN→REFACTOR. **Full 7-step scope in one session** (owner-picked via
+`AskUserQuestion`, matching S620's own "may run long" precedent) — **owner also directed:
+check in before accepting/rejecting the finished result**, not a unilateral close-out call.
+(IN PROGRESS)
+**Started:** 2026-09-02.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 664 Handoff Evaluation (by Session 665)
 **Score: 6/10.** **What helped:** the plan doc's "ITEM 4 CONFIRMED TO FAIL" section gave
 exact `kinship2::align.pedigree()` ground-truth numbers for Track B shrunk (`P1=0, M1=0.5,
