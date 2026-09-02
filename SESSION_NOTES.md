@@ -18,6 +18,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 663 Did
+**Deliverable:** Investigate a Claude Code `settings.json` hook that blocks/warns a
+`ScheduleWakeup`/`CronCreate` call while a `run_in_background` task is outstanding (found S656,
+`BACKLOG.md` Up Next, `PROJECT_LEARNINGS.md` Learning 694/695 -- 3 consecutive sessions made the
+identical mistake despite 2 rounds of prose documentation) -- implement a small, low-risk hook this
+session if feasible; otherwise produce a decision/design doc for a future session. (IN PROGRESS)
+**Started:** 2026-09-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 661 Handoff Evaluation (by Session 662)
 **Score: 9/10.** **What helped:** S661's `next_steps` named the exact standing-top-priority
 pickup (implement the ratified B1-individual proximity design) with the precise starting point
