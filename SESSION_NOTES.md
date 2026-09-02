@@ -18,6 +18,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 664 Did
+**Deliverable:** Owner pushed back at Phase 0: the standing pedigree-fidelity checklist in
+`BACKLOG.md` reads fully `[x]` through S662, but the owner has not personally seen a demonstration
+in several sessions and does not consider the work verified on that basis alone. Owner-directed via
+`AskUserQuestion`: (1) first, re-run `data-raw/kinship2FidelityValidation.R` fresh, send the owner
+the actual regenerated Track A/B/C images, and independently confirm the Track D
+structural-comparison-against-kinship2 result; (2) if that holds up, proceed to a live Shiny app
+demo of the Diagram tab (staged -- owner said "try 2 first, if it works we will try 1", where their
+option 2 = vignette re-render, option 1 = live app demo). (IN PROGRESS)
+**Started:** 2026-09-01
+**Status:** Session claimed. Work beginning on stage 1 (vignette re-render + fresh image demo).
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 662 Handoff Evaluation (by Session 663)
 **Score: 9/10.** **What helped:** S662's `next_steps` named this item as option (1) of exactly 2
 remaining READY items -- "the `ScheduleWakeup`/`run_in_background` structural-guard investigation

@@ -136,6 +136,26 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S664
+date: 2026-09-01
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Owner does not consider pedigree-diagram fidelity verified by BACKLOG.md checkboxes
+  alone (no demonstration seen in several sessions). Stage 1: re-run
+  data-raw/kinship2FidelityValidation.R fresh, send owner the actual images, confirm Track D
+  ground-truth structural comparison. Stage 2 (if stage 1 holds): live Shiny app demo.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(claim stub -- filled at close-out)
+
+```handoff
 session: S663
 date: 2026-09-01
 status: complete
