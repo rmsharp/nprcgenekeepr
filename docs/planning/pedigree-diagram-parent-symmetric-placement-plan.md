@@ -1,8 +1,54 @@
 # Pedigree Diagram: Symmetric Parent Placement Plan
 
-**Status:** Fix approach RATIFIED (owner-directed via `AskUserQuestion`, Session 664,
-2026-09-01): **Option 1 — symmetric half-offset, keep the Tier 1 / Tier 3 split.**
-Implementation (RED/GREEN/REFACTOR) not yet started.
+**Status:** Fix approach SUPERSEDED AGAIN, same session (2026-09-01/09-02), before
+implementation started. Original ratified choice (Option 1, "symmetric half-offset") was
+**incomplete**: it only specified the root-anchor case and left the current, on-anchor
+union position for a NESTED qualifying pair unaddressed, which is exactly where the
+dogleg/off-center-bar problem actually lives once fixed for roots.
+
+**Owner-directed correction (live, via direct visual review of the "recentered simulation"
+image): "Conditional shift" — RATIFIED, verified bit-exact against kinship2 ground truth.**
+For every qualifying union, the union point must equal both (a) the true parent midpoint
+and (b) the mean of the union's real children — today these coincide only by accident (an
+unconstrained root anchor). Shift whichever side is not pinned by an outside constraint:
+
+- **Anchor is a root** (no parent of her own, free to move): shift **both** parents equally
+  so their midpoint lands exactly on the (unchanged) children's mean.
+- **Anchor is NOT a root** (already positioned as someone else's real child elsewhere in
+  the tree): shift the union's own children instead — in general, each child's **entire
+  subtree, rigidly** — so their mean lands exactly on the (unchanged) true parent midpoint.
+
+**Verified, same session:** applied by hand (a safe return-value-override monkey-patch —
+`.positionMatingUnitForest()`'s real, unmodified computation is called first, then only
+the specific rows this rule identifies are corrected) to Track B's full 16-subject
+fixture: `P1/P2` and `P3/P4` (root anchors) shift `-0.5`; `L1/L2/L3` and `C4a` (children of
+the two NESTED qualifying pairs, `M1×G3` and `C4×P6`) shift `+0.5`; every other node
+(`C1/C2/C3/C4/G3/M1/P6`) is untouched. Result, measured from the actual final rendered
+node table (not an intermediate value — Learning from this same session's own `P4`
+measurement mistake, see below): **max abs diff vs. `kinship2::align.pedigree()` = 1.8e-7
+(floating-point noise) across all 15 placed individuals.** Rendered image confirms every
+union dot centered and every descent line straight, including the `M1×G3` sibling bar.
+
+**This directly overturns the prior Track 7 Phase 3 design doc's own §1.4 conclusion**
+("a hard binary... no intermediate value achieves partial descent-line fidelity without
+proportionally re-approaching the same original defect") — that analysis considered only
+moving the union marker itself; it did not consider moving the parent pair or the
+children instead. Not a flaw in that session's rigor (Finding A/B were real, measured
+facts about the union-marker-only formula) — a gap in the SOLUTION SPACE it searched, not
+in the diagnosis.
+
+**Not yet verified — explicitly the RED phase's job, not assumed to already work:**
+1. Every shifted child in this fixture is a childless leaf. A general implementation must
+   translate a shifted child's **entire subtree** rigidly, not just her own point —
+   untested here.
+2. Re-verification against the real 375-individual production fixture
+   (`inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv`) — this project's own established
+   discipline for any change to this function, and not optional given how many of this
+   session's own earlier measurements needed correction along the way.
+3. Interaction with Track 7 Phase 2's union-vs-node collision-avoidance push, and with B3
+   duplicate nodes — both untouched by this fixture's own qualifying units.
+4. A chain of 2+ nested qualifying pairs (a shifted child who is herself the root of
+   another qualifying pair further down) — not present in this fixture.
 
 **Supersedes:**
 [`pedigree-diagram-disconnected-component-separation-plan.md`](pedigree-diagram-disconnected-component-separation-plan.md)
@@ -63,9 +109,26 @@ chain, but not the only way, and not the actual mechanism.
    collision-bump, which has no awareness that the resulting displacement is far larger
    than the symmetric placement kinship2 uses would have ever needed.
 
-## Decision (options — not yet ratified)
+## Decision (options)
 
-### Option 1 — Symmetric half-offset, keep the Tier 1 / Tier 3 split (narrower, lower risk)
+**Superseded — Option 1 below was ratified first, then found incomplete before any code was
+written (see the status notice at the top of this file): it specified only the root-anchor
+case and left the nested-qualifying-pair case (the on-anchor union position) unaddressed.
+Left unedited as the historical record of what was tried first.**
+
+### Option 3 — Conditional shift (RATIFIED, replaces Option 1)
+
+For every qualifying union: shift whichever side is not pinned by an outside constraint so
+the true parent midpoint and the children's mean become the same point again.
+- Anchor is a root → shift both parents equally toward the (unchanged) children's mean.
+- Anchor is not a root → shift the union's own children (whole subtree, rigidly) toward the
+  (unchanged) true parent midpoint.
+
+See the status notice at the top of this file for the full mechanism, the verification
+already done (bit-exact against kinship2 on Track B full), and the 4 items the RED phase
+still owes before this is more than "works on one hand-built fixture."
+
+### Option 1 — Symmetric half-offset, keep the Tier 1 / Tier 3 split (SUPERSEDED — see above)
 
 Change the anchor's own Tier 1 position, for any anchor with a qualifying B1 mate, to sit
 `0.5 * minSep` off the raw children-midpoint (toward the side opposite the mate), and place
@@ -107,7 +170,9 @@ formula for this case at all.
   production fixture referenced throughout this file's commit history. Larger change
   surface for RED/GREEN to cover.
 
-**RATIFIED: Option 1** (owner-directed via `AskUserQuestion`, Session 664, 2026-09-01).
+**RATIFIED: Option 3** (owner-directed live, via direct visual review, Session 664,
+2026-09-01/09-02 — supersedes the earlier Option 1 ratification, before any code was
+written).
 
 ## Alternatives Considered
 
