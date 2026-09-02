@@ -1,9 +1,25 @@
 # Pedigree Diagram: Disconnected-Component Separation Plan
 
-**Status:** Fix approach RATIFIED (owner-directed via `AskUserQuestion`, Session 664,
-2026-09-01): **Option C — post-hoc rigid separation of disconnected components.**
-Implementation (RED/GREEN/REFACTOR) not yet started; see the session's own handoff for
-whether it was picked up same-session or deferred.
+**Status: SUPERSEDED, same session (2026-09-01, Session 664), before implementation
+started.** See
+[`pedigree-diagram-parent-symmetric-placement-plan.md`](pedigree-diagram-parent-symmetric-placement-plan.md).
+
+This plan's own root-cause analysis was incomplete: it was written *before* comparing
+nprcgenekeepr's coordinates against kinship2's own `align.pedigree()` numbers directly.
+That comparison (done immediately afterward, same session, owner-directed) found the same
+collision-and-bump symptom occurring in a **fully connected** pedigree with no disconnected
+families at all (Track B full's `P3`/`P4`/`C4`/`P6` — see the superseding plan's evidence
+table), which this plan's "disconnected components" framing cannot explain. The real,
+shared root cause is a more fundamental asymmetry in how a mating pair is placed relative
+to their children's center — fixing that may resolve this exact fixture's symptom without
+the post-hoc translation pass proposed below. Left in place, unedited beyond this notice,
+as the historical record of what was diagnosed first and why it wasn't sufficient — per
+this project's own convention of not rewriting a session's prior reasoning after the fact.
+
+**Original status line (superseded):** Fix approach RATIFIED (owner-directed via
+`AskUserQuestion`, Session 664, 2026-09-01): **Option C — post-hoc rigid separation of
+disconnected components.** Implementation (RED/GREEN/REFACTOR) not yet started; see the
+session's own handoff for whether it was picked up same-session or deferred.
 
 **Found:** 2026-09-01, Session 664, live during an owner-directed re-verification of
 pedigree-diagram fidelity (the owner had not seen a fresh demonstration in several
