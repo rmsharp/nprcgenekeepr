@@ -672,7 +672,14 @@ test_that(
   ## anything on their row once their endpoint moves, each removing 2
   ## __jog_ waypoint nodes -- 1460 - 10 = 1450. Re-measured by actually
   ## running the fixed engine, never hand-derived.
-  expect_equal(nrow(result$nodes), 1450L)
+  ## CHANGED AGAIN to 1446L -- S666's conditional-shift rule (mating-union
+  ## true-midpoint placement, docs/planning/pedigree-diagram-parent-
+  ## symmetric-placement-plan.md) repositions the real fixture's qualifying
+  ## unions/parents, removing 2 more same-row collisions that previously
+  ## needed a jog repair (each removing 2 __jog_ waypoint nodes) --
+  ## 1450 - 4 = 1446. Re-measured by actually running the fixed engine,
+  ## never hand-derived.
+  expect_equal(nrow(result$nodes), 1446L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
   ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L (issue #166's
@@ -685,7 +692,10 @@ test_that(
   ## CHANGED AGAIN to 192L -- same cause as the node-count change above
   ## (202 - 10 = 192): the B1-individual-vs-unrelated-individual proximity
   ## fix removes 5 jog repairs (10 waypoints) it makes unnecessary.
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 192L)
+  ## CHANGED AGAIN to 188L -- same cause as the node-count change above
+  ## (192 - 4 = 188): S666's conditional-shift rule removes 2 more jog
+  ## repairs it makes unnecessary.
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 188L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------

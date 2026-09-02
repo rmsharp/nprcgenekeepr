@@ -702,6 +702,29 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     id %in% realIds && !hasOwnDirectChild(id) && !hasParentEdge(id)
   }, neverAnchorIds)
 
+  ## qualifies() (S8.1) -- relocated here from its original position just
+  ## before Tier 3 (S666) so the new conditional-shift correction pass
+  ## below can call it: it depends only on structural fields already
+  ## defined above (anchorOf/nonAnchorOf/matingUnits/anchoredUnits/sexOf/
+  ## realIds/hasOwnDirectChild), never on tier1X or unitX, so this move is
+  ## a pure relocation with no behavior change. Still used, unchanged, by
+  ## Tier 3's derivedX()/b1AnchorRelativeX() below.
+  qualifies <- function(unitId) {
+    p <- anchorOf[[unitId]]
+    m <- nonAnchorOf[[unitId]]
+    if (is.na(p) || is.na(m)) return(FALSE)
+    sireId <- matingUnits$sire[matingUnits$id == unitId]
+    damId <- matingUnits$dam[matingUnits$id == unitId]
+    if (!(sireId %in% realIds) || !(damId %in% realIds)) return(FALSE)
+    mateCountP <- sum(anchoredUnits$sire == p | anchoredUnits$dam == p)
+    mateCountM <- sum(anchoredUnits$sire == m | anchoredUnits$dam == m)
+    unambiguousOppositeSex <-
+      (identical(sexOf[[p]], "M") && identical(sexOf[[m]], "F")) ||
+      (identical(sexOf[[p]], "F") && identical(sexOf[[m]], "M"))
+    mateCountP == 1L && mateCountM == 1L && !hasOwnDirectChild(p) &&
+      unambiguousOppositeSex
+  }
+
   founderIds <- Filter(function(id) !hasParentEdge(id), realIds)
   ## issue #154 (both-dangling case): a mating unit whose anchor is NA
   ## (BOTH sire and dam dangling -- no real row for either) has no real
@@ -732,21 +755,108 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   tier1X <- tier1X[names(tier1X) != "__super_root__"]
 
   ## S3.1.1: reinstated sweepMinSep() backstop, gen-grouped, real
-  ## individuals only, run ONCE -- same push semantics as the shipped
-  ## sweepMinSep() above, including its exact
-  ## order(x, ids, method = "radix") tie-break.
+  ## individuals only -- same push semantics as the shipped sweepMinSep()
+  ## above, including its exact order(x, ids, method = "radix") tie-break.
+  ## Factored into a closure (S666) so it can run a SECOND time, after the
+  ## conditional-shift correction pass below -- that pass can move a real
+  ## Tier 1 individual (a shifted child's whole subtree) into an exact tie
+  ## with an unrelated, unshifted Tier 1 individual at the same gen, a
+  ## collision class .deCollideIndividualPoints() (Tier 3, B1-only) never
+  ## sees. Reusing this SAME existing mechanism -- not a new one -- is
+  ## exactly the plan doc's own "route corrected targets through the
+  ## existing collision-avoidance machinery, never around it" requirement,
+  ## generalized from the B1 case it names to this Tier 1 case (found live
+  ## this session: 8 new exact ties on the real 375-individual fixture
+  ## without this second pass).
   dispGenOf <- genOf[names(tier1X)]
-  for (g in sort(unique(dispGenOf))) {
-    rowIds <- names(tier1X)[dispGenOf == g]
-    if (length(rowIds) < 2L) next
-    rowIds <- rowIds[order(tier1X[rowIds], rowIds, method = "radix")]
-    for (i in 2L:length(rowIds)) {
-      prevX <- tier1X[[rowIds[i - 1L]]]
-      if (tier1X[[rowIds[i]]] < prevX + minSep) {
-        tier1X[[rowIds[i]]] <- prevX + minSep
+  sweepMinSepBackstop <- function() {
+    for (g in sort(unique(dispGenOf))) {
+      rowIds <- names(tier1X)[dispGenOf == g]
+      if (length(rowIds) < 2L) next
+      rowIds <- rowIds[order(tier1X[rowIds], rowIds, method = "radix")]
+      for (i in 2L:length(rowIds)) {
+        prevX <- tier1X[[rowIds[i - 1L]]]
+        if (tier1X[[rowIds[i]]] < prevX + minSep) {
+          tier1X[[rowIds[i]]] <<- prevX + minSep
+        }
       }
     }
   }
+  sweepMinSepBackstop()
+
+  ## ---- S666: conditional-shift rule (Option 3, chain-case) --------------
+  ## docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md's
+  ## "CHAIN RULE -- RESOLVED (Session 665)" section. Runs on tier1X BEFORE
+  ## Tier 2 derives any union's x, so Tier 2 (below, unchanged) and Tier 3/
+  ## collision-avoidance (further below, also unchanged) mechanically
+  ## inherit the corrected values -- this is the only edit site the rule
+  ## needs. Processes every qualifying unit with >=1 real child exactly
+  ## once, in ascending order of the ANCHOR's own gen (a chain parent is
+  ## always a strictly lower generation than the pair she anchors, so this
+  ## ordering alone makes "root" and "non-root, using a fresh anchor value"
+  ## compose correctly at any chain depth -- no separate chain-detection
+  ## step is needed). tier1X is mutated in place and always read live
+  ## (never a cached/stale copy) -- the one genuinely chain-specific
+  ## requirement a single-link case cannot exercise.
+  ## Found live on the real 375-individual fixture (55/60 qualifying units
+  ## initially wrong, some by 20+ raw units): qualifies() alone is NOT
+  ## sufficient here. In the ORIGINAL (pre-S652) Track 7 Phase 1 code,
+  ## qualifies() was only ever called from inside a `for (fp in b1Ids)`
+  ## loop, so "the mate IS a genuine B1 free-pass point" was always true
+  ## by construction of the CALLER, never checked by qualifies() itself.
+  ## This new pass calls qualifies() in a different context (over ALL
+  ## anchored units, not just B1-derived ones), where that guarantee no
+  ## longer holds automatically -- e.g. __union_196's own "mate" (270UK6)
+  ## has a real parent edge and renders at her own genuine Tier 1 position
+  ## 2 gens away, not via the B1 anchor-relative formula at all, so the
+  ## formula-derived "mateFresh" below would be meaningless for her.
+  ## Require nonAnchorOf %in% b1Ids explicitly, matching the established
+  ## qualifyingB1 <- Filter(qualifies, b1Ids) pattern already used
+  ## elsewhere in this file (e.g. the Obligation 2 test).
+  ## subtreeIds() returns id plus every descendant reachable via
+  ## childrenOf() (real tree children only) -- used to translate a
+  ## shifted non-root child's whole subtree rigidly via a single
+  ## vectorized tier1X update in the caller, rather than a self-mutating
+  ## <<- recursion.
+  subtreeIds <- function(id) {
+    kids <- childrenOf(id)
+    c(id, unlist(lapply(kids, subtreeIds), use.names = FALSE))
+  }
+  correctableUnitIds <- Filter(
+    function(u) qualifies(u) && nonAnchorOf[[u]] %in% b1Ids,
+    intersect(anchoredUnits$id, unique(childEdges$from))
+  )
+  correctionOrder <- correctableUnitIds[
+    order(genOf[anchorOf[correctableUnitIds]], correctableUnitIds,
+          method = "radix")
+  ]
+  for (u in correctionOrder) {
+    p <- anchorOf[[u]]
+    m <- nonAnchorOf[[u]]
+    sign <- if (identical(sexOf[[p]], "F") &&
+                  identical(sexOf[[m]], "M")) -1L else 1L
+    kids <- childEdges$to[childEdges$from == u]
+    if (hasParentEdge(p)) {
+      ## Non-root anchor (already positioned as someone else's real
+      ## child): shift the union's own children -- each child's entire
+      ## subtree, rigidly -- so their mean lands on the true parent
+      ## midpoint (anchor unchanged; mate freshly derived from the
+      ## anchor's CURRENT value, not touched directly here).
+      mateFresh <- tier1X[[p]] + sign * minSep
+      trueMid <- mean(c(tier1X[[p]], mateFresh))
+      delta <- trueMid - mean(tier1X[kids])
+      ids <- unlist(lapply(kids, subtreeIds), use.names = FALSE)
+      tier1X[ids] <- tier1X[ids] + delta
+    } else {
+      ## Root anchor (free to move): shift anchor and mate equally so
+      ## their midpoint lands on the (unchanged) children's mean.
+      childrenMean <- mean(tier1X[kids])
+      mateRaw <- tier1X[[p]] + sign * minSep
+      shift <- childrenMean - mean(c(tier1X[[p]], mateRaw))
+      tier1X[[p]] <- tier1X[[p]] + shift
+    }
+  }
+  sweepMinSepBackstop()
 
   ## ---- Tier 2: union-point derivation + exact-tie sweep (S3.3.3/S3.4) --
   ## Includes every unit with >=1 real child -- not just anchoredUnits --
@@ -757,6 +867,11 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## a Tier-3 B1 formula's own qualifying anchor (its anchorOf is NA, the
   ## qualifies() gate's own first check already excludes it), so this
   ## broadening is scoped to x-derivation only, no Tier-3 behavior change.
+  ## Reads the S666-corrected tier1X above -- every qualifying union's own
+  ## unitX, AND every non-qualifying unit downstream of a shifted
+  ## individual (e.g. a shifted child's own further, non-qualifying
+  ## mating), mechanically picks up the correction here, no special-casing
+  ## needed.
   unitX <- stats::setNames(rep(NA_real_, length(unitIds)), unitIds)
   xDerivableUnits <- matingUnits[matingUnits$id %in%
                                     unique(childEdges$from), , drop = FALSE]
@@ -765,10 +880,12 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     unitX[[u]] <- mean(tier1X[kids])
   }
 
-  ## ---- qualifies()/B1-anchor-relative formula (S8.1, Track 7 widen) ----
-  ## qualifies() and b1AnchorRelativeX() depend only on Tier 1's
-  ## already-final tier1X, never on unitX -- safe to define, and to call
-  ## for the QUALIFYING branch, at any point below.
+  ## ---- B1-anchor-relative formula (S8.1, Track 7 widen) ----------------
+  ## b1AnchorRelativeX() depends only on Tier 1's already-final (and, as of
+  ## S666, already-corrected) tier1X, never on unitX -- safe to define,
+  ## and to call for the QUALIFYING branch, at any point below. qualifies()
+  ## itself now lives earlier (S666, see above) -- still used, unchanged,
+  ## by derivedX() just below.
   ##
   ## S647 correction to an earlier draft of this ordering: that draft
   ## recentered a qualifying union using b1AnchorRelativeX()'s own RAW
@@ -786,22 +903,10 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## fixture's P1/P2/union_2, confirmed via chromote bounding-box queries
   ## before and after this fix -- not merely inferred from a screenshot).
   ## The corrected order below computes and de-collides B1's own final
-  ## positions FIRST, then recenters using that TRUE final value.
-  qualifies <- function(unitId) {
-    p <- anchorOf[[unitId]]
-    m <- nonAnchorOf[[unitId]]
-    if (is.na(p) || is.na(m)) return(FALSE)
-    sireId <- matingUnits$sire[matingUnits$id == unitId]
-    damId <- matingUnits$dam[matingUnits$id == unitId]
-    if (!(sireId %in% realIds) || !(damId %in% realIds)) return(FALSE)
-    mateCountP <- sum(anchoredUnits$sire == p | anchoredUnits$dam == p)
-    mateCountM <- sum(anchoredUnits$sire == m | anchoredUnits$dam == m)
-    unambiguousOppositeSex <-
-      (identical(sexOf[[p]], "M") && identical(sexOf[[m]], "F")) ||
-      (identical(sexOf[[p]], "F") && identical(sexOf[[m]], "M"))
-    mateCountP == 1L && mateCountM == 1L && !hasOwnDirectChild(p) &&
-      unambiguousOppositeSex
-  }
+  ## positions FIRST, then recenters using that TRUE final value. (This
+  ## note describes the pre-existing Tier-3-vs-collision-avoidance
+  ## ordering rationale, unrelated to S666's own, separate union-recenter
+  ## mechanism above, which runs even earlier, before Tier 2.)
   b1AnchorRelativeX <- function(unitId, memberId) {
     p <- anchorOf[[unitId]]
     sign <- if (identical(sexOf[[p]], "F") &&

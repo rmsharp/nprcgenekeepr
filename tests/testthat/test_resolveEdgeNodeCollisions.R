@@ -492,10 +492,15 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   ## than adding them (an unconfirmed-but-plausible ripple the design
   ## doc's own §6 flagged, matching the same shape of change the
   ## duplicate-side design's own Impact Analysis found for this exact
-  ## file) -- 5 fewer colliding edges (100 -> 95). Re-measured by actually
+  ## file) -- 5 fewer colliding edges (100 -> 95).
+  ## CHANGED AGAIN to 93L/1758L -- S666's conditional-shift rule
+  ## (mating-union true-midpoint placement, docs/planning/pedigree-
+  ## diagram-parent-symmetric-placement-plan.md) repositions the real
+  ## fixture's qualifying unions/parents, removing 2 more colliding edges
+  ## (95 -> 93, 1761 -> 1758 obstacle-pairs). Re-measured by actually
   ## running the fixed engine, never hand-derived.
-  expect_equal(nrow(baselineEdges), 95L)
-  expect_equal(nrow(baseline), 1761L)
+  expect_equal(nrow(baselineEdges), 93L)
+  expect_equal(nrow(baseline), 1758L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)
