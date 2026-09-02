@@ -2759,6 +2759,279 @@ test_that(".positionMatingUnitForest's issue #166 named cases -- P3xP4's
   expect_equal(pos$x[pos$id == unitM1G3], childrenMeanM1G3, tolerance = 2e-3)
 })
 
+## ---- S666 RED: conditional-shift rule (chain-case, Option 3) ------------
+## docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md's "CHAIN
+## RULE -- RESOLVED (Session 665)" section, implementing session's own
+## 7-step list. Every target value below comes from a fresh
+## kinship2::align.pedigree() run on the identical structure (re-confirmed
+## this session, never assumed/copied on faith) or from an internal
+## structural invariant the rule itself guarantees by construction --
+## matching this project's own "verify by execution" discipline (Learning
+## from S664's arithmetic errors, corrected S665).
+test_that(".positionMatingUnitForest's conditional-shift rule recenters a
+           root-anchor qualifying pair's own parents around their
+           unchanged children's mean -- P1xP2 (4 real children, including
+           the nested M1xG3 anchor) and P3xP4 (1 real child), full,
+           non-shrunk 16-subject Track B fixture", {
+  pedB <- data.frame(
+    id   = c("P1", "P2", "P3", "P4", "P5", "P6",
+             "C1", "C2", "C3", "C4", "C4a",
+             "G3", "M1", "L1", "L2", "L3"),
+    sire = c(NA, NA, NA, NA, NA, NA,
+             "P1", "P1", "P1", "P3", "C4",
+             NA, "P1", "M1", "M1", "M1"),
+    dam  = c(NA, NA, NA, NA, NA, NA,
+             "P2", "P2", "P2", "P4", "P6",
+             NA, "P2", "G3", "G3", "G3"),
+    sex  = c("M", "F", "M", "F", "F", "F",
+             "F", "M", "F", "M", "F",
+             "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  pedB$gen <- findGeneration(pedB$id, pedB$sire, pedB$dam)
+  forest <- .buildMatingUnitForest(pedB)
+  pos <- .positionMatingUnitForest(pedB, forest)
+
+  childrenMeanP1P2 <- mean(pos$x[pos$id %in% c("C1", "C2", "C3", "M1")])
+  expect_equal(mean(pos$x[pos$id %in% c("P1", "P2")]), childrenMeanP1P2,
+               tolerance = 1e-6)
+  expect_equal(mean(pos$x[pos$id %in% c("P3", "P4")]), pos$x[pos$id == "C4"],
+               tolerance = 1e-6)
+})
+
+test_that(".positionMatingUnitForest's conditional-shift rule shifts a
+           non-root qualifying pair's own real children -- whole subtree,
+           rigidly -- to the true anchor/mate midpoint, leaving the anchor
+           and mate themselves untouched -- C4xP6 (1 child) and M1xG3 (3
+           children), full Track B fixture", {
+  pedB <- data.frame(
+    id   = c("P1", "P2", "P3", "P4", "P5", "P6",
+             "C1", "C2", "C3", "C4", "C4a",
+             "G3", "M1", "L1", "L2", "L3"),
+    sire = c(NA, NA, NA, NA, NA, NA,
+             "P1", "P1", "P1", "P3", "C4",
+             NA, "P1", "M1", "M1", "M1"),
+    dam  = c(NA, NA, NA, NA, NA, NA,
+             "P2", "P2", "P2", "P4", "P6",
+             NA, "P2", "G3", "G3", "G3"),
+    sex  = c("M", "F", "M", "F", "F", "F",
+             "F", "M", "F", "M", "F",
+             "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  pedB$gen <- findGeneration(pedB$id, pedB$sire, pedB$dam)
+  forest <- .buildMatingUnitForest(pedB)
+  pos <- .positionMatingUnitForest(pedB, forest)
+
+  expect_equal(pos$x[pos$id == "C4a"],
+               mean(pos$x[pos$id %in% c("C4", "P6")]), tolerance = 1e-6)
+  childrenMeanM1G3 <- mean(pos$x[pos$id %in% c("L1", "L2", "L3")])
+  expect_equal(childrenMeanM1G3, mean(pos$x[pos$id %in% c("M1", "G3")]),
+               tolerance = 1e-6)
+})
+
+test_that(".positionMatingUnitForest's union dot sits at the true
+           anchor/mate midpoint -- not merely at the children's mean, which
+           holds trivially by Tier 2's own pre-existing invariant -- for
+           every one of the 4 qualifying pairs, full Track B fixture", {
+  pedB <- data.frame(
+    id   = c("P1", "P2", "P3", "P4", "P5", "P6",
+             "C1", "C2", "C3", "C4", "C4a",
+             "G3", "M1", "L1", "L2", "L3"),
+    sire = c(NA, NA, NA, NA, NA, NA,
+             "P1", "P1", "P1", "P3", "C4",
+             NA, "P1", "M1", "M1", "M1"),
+    dam  = c(NA, NA, NA, NA, NA, NA,
+             "P2", "P2", "P2", "P4", "P6",
+             NA, "P2", "G3", "G3", "G3"),
+    sex  = c("M", "F", "M", "F", "F", "F",
+             "F", "M", "F", "M", "F",
+             "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  pedB$gen <- findGeneration(pedB$id, pedB$sire, pedB$dam)
+  forest <- .buildMatingUnitForest(pedB)
+  pos <- .positionMatingUnitForest(pedB, forest)
+
+  pairs <- list(c("P1", "P2"), c("P3", "P4"), c("C4", "P6"), c("M1", "G3"))
+  for (pr in pairs) {
+    unitId <- forest$matingUnits$id[forest$matingUnits$sire == pr[1] &
+                                       forest$matingUnits$dam == pr[2]]
+    expect_equal(pos$x[pos$id == unitId], mean(pos$x[pos$id %in% pr]),
+                 tolerance = 1e-6, label = paste(pr, collapse = "x"))
+  }
+})
+
+test_that(".positionMatingUnitForest reproduces kinship2::align.pedigree()
+           exactly on Track B shrunk's single-child chain
+           (P1xP2 -> M1 -> M1xG3) plus the disconnected C4xP6 root pair --
+           the fixture the chain-case rule (S665/S666) was specifically
+           designed for. Target values re-confirmed live this session via a
+           fresh kinship2::align.pedigree() run on the identical structure
+           (matches docs/planning/pedigree-diagram-parent-symmetric-
+           placement-plan.md's own independently-derived numbers,
+           bit-exact, not copied on faith)", {
+  pedB <- data.frame(
+    id   = c("P1", "P2", "P3", "P4", "P5", "P6",
+             "C1", "C2", "C3", "C4", "C4a",
+             "G3", "M1", "L1", "L2", "L3"),
+    sire = c(NA, NA, NA, NA, NA, NA,
+             "P1", "P1", "P1", "P3", "C4",
+             NA, "P1", "M1", "M1", "M1"),
+    dam  = c(NA, NA, NA, NA, NA, NA,
+             "P2", "P2", "P2", "P4", "P6",
+             NA, "P2", "G3", "G3", "G3"),
+    sex  = c("M", "F", "M", "F", "F", "F",
+             "F", "M", "F", "M", "F",
+             "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  genotypedB <- c(P1 = TRUE, P2 = TRUE, P3 = FALSE, P4 = FALSE, P5 = TRUE,
+    P6 = TRUE, C1 = TRUE, C2 = FALSE, C3 = TRUE, C4 = TRUE, C4a = TRUE,
+    G3 = FALSE, M1 = TRUE, L1 = TRUE, L2 = TRUE, L3 = TRUE)[pedB$id]
+  affectedB <- c(P1 = NA, P2 = NA, P3 = NA, P4 = NA, P5 = NA, P6 = NA,
+    C1 = FALSE, C2 = NA, C3 = TRUE, C4 = TRUE, C4a = TRUE, G3 = NA,
+    M1 = TRUE, L1 = NA, L2 = FALSE, L3 = TRUE)[pedB$id]
+  shrunk <- shrinkPedigree(pedB, genotypedB, affected = affectedB,
+                           maxBits = 1L)$ped
+  shrunk$gen <- findGeneration(shrunk$id, shrunk$sire, shrunk$dam)
+  forest <- .buildMatingUnitForest(shrunk)
+  pos <- .positionMatingUnitForest(shrunk, forest)
+
+  rel <- pos$x - pos$x[pos$id == "P1"]
+  names(rel) <- pos$id
+  target <- c(P1 = 0, M1 = 0.5, L3 = 1.0, P2 = 1.0, G3 = 1.5, C4 = 2.0,
+              C4a = 2.5, P6 = 3.0)
+  expect_equal(unname(rel[names(target)]), unname(target), tolerance = 1e-6)
+
+  ## S665's own confirmed finding (plan doc, "A real, separate problem this
+  ## rule does NOT fix"): the corrected RAW targets for P2 and C4
+  ## independently coincide before collision-avoidance runs. Assert the
+  ## FINAL rendered positions do not coincide -- proving the corrected
+  ## targets are routed THROUGH .deCollideIndividualPoints()/Track 7 Phase
+  ## 2, never written directly to the output table.
+  expect_false(isTRUE(all.equal(pos$x[pos$id == "P2"], pos$x[pos$id == "C4"])))
+})
+
+test_that(".positionMatingUnitForest's conditional-shift rule generalizes to
+           a 3-level chain of nested qualifying pairs
+           (F1xF2 -> A -> AxB -> C -> CxD -> E1,E2) by reading each anchor's
+           CURRENT, possibly-already-corrected position rather than a
+           cached Tier-1 value -- the one genuinely chain-specific
+           requirement (plan doc's own 'Why a real chain rule is still
+           needed for 3+ links' section). Target values from a fresh
+           kinship2::align.pedigree() run on the identical structure,
+           independently cross-checked by hand against Option 3's own 2
+           cases and confirmed bit-exact this session", {
+  chain <- data.frame(
+    id   = c("F1", "F2", "A", "B", "C", "D", "E1", "E2"),
+    sire = c(NA, NA, "F1", NA, "B", NA, "C", "C"),
+    dam  = c(NA, NA, "F2", NA, "A", NA, "D", "D"),
+    sex  = c("M", "F", "F", "M", "M", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+  chain$gen <- findGeneration(chain$id, chain$sire, chain$dam)
+  forest <- .buildMatingUnitForest(chain)
+  pos <- .positionMatingUnitForest(chain, forest)
+
+  rel <- pos$x - pos$x[pos$id == "F1"]
+  names(rel) <- pos$id
+  target <- c(F1 = 0, F2 = 1.0, A = 0.5, B = -0.5, C = 0.0, D = 1.0,
+              E1 = 0.0, E2 = 1.0)
+  expect_equal(unname(rel[names(target)]), unname(target), tolerance = 1e-6)
+})
+
+test_that(".positionMatingUnitForest translates a shifted non-root-case
+           child's entire subtree rigidly -- not just her own point -- when
+           she is not a leaf. L1 is M1xG1's shifted child AND has her own
+           further descendants N1/N2 via 2 DISQUALIFYING (polygamous)
+           mates of her own, so N1/N2 are reached only by ordinary tree
+           structure, never independently re-targeted by another
+           qualifying-pair correction -- the one fixture shape that
+           actually discriminates this bug (a single-qualifying-child
+           chain self-heals regardless of whether the intermediate point is
+           dragged along, confirmed this session before writing this
+           test). Target values for the backbone (R1/R2/M1/G1/L1/N1/N2)
+           from a fresh kinship2::align.pedigree() run; X1/X2 are NOT
+           expected to match kinship2 -- L1's own polygamous unions are
+           out of this fix's scope (qualifies()-gated only, per the plan's
+           own restriction) -- asserted instead against the existing,
+           unchanged non-qualifying B1 formula applied to the now-shifted
+           N1/N2", {
+  nl <- data.frame(
+    id   = c("R1", "R2", "M1", "G1", "L1", "X1", "N1", "X2", "N2"),
+    sire = c(NA, NA, "R1", NA, "G1", NA, "X1", NA, "X2"),
+    dam  = c(NA, NA, "R2", NA, "M1", NA, "L1", NA, "L1"),
+    sex  = c("M", "F", "F", "M", "F", "M", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+  nl$gen <- findGeneration(nl$id, nl$sire, nl$dam)
+  forest <- .buildMatingUnitForest(nl)
+  pos <- .positionMatingUnitForest(nl, forest)
+
+  rel <- pos$x - pos$x[pos$id == "R1"]
+  names(rel) <- pos$id
+  target <- c(R1 = 0, R2 = 1.0, M1 = 0.5, G1 = -0.5, L1 = 0.0,
+              N1 = -0.5, N2 = 0.5)
+  expect_equal(unname(rel[names(target)]), unname(target), tolerance = 1e-6)
+
+  unitX1L1 <- forest$matingUnits$id[forest$matingUnits$sire == "X1" &
+                                       forest$matingUnits$dam == "L1"]
+  unitX2L1 <- forest$matingUnits$id[forest$matingUnits$sire == "X2" &
+                                       forest$matingUnits$dam == "L1"]
+  expect_equal(pos$x[pos$id == "X1"], pos$x[pos$id == "N1"] + 0.4,
+               tolerance = 1e-6)
+  expect_equal(pos$x[pos$id == "X2"], pos$x[pos$id == "N2"] + 0.4,
+               tolerance = 1e-6)
+})
+
+test_that(".positionMatingUnitForest's conditional-shift rule holds for
+           every qualifying unit on the real 375-individual production
+           fixture -- union x equals the true anchor/mate midpoint, not
+           just the children's mean -- re-verification per the plan doc's
+           own step 6 (this project's established discipline for any
+           change to this function)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  matingUnits <- forest$matingUnits
+  childEdges <- forest$childEdges
+  pos <- .positionMatingUnitForest(ped, forest)
+  realIds <- as.character(ped$id)
+  sexOf <- stats::setNames(as.character(ped$sex), realIds)
+
+  anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
+  hasOwnDirectChild <- function(id) id %in% childEdges$from
+  qualifiesUnit <- function(unitId) {
+    p <- matingUnits$anchor[matingUnits$id == unitId]
+    m <- matingUnits$nonAnchor[matingUnits$id == unitId]
+    sireId <- matingUnits$sire[matingUnits$id == unitId]
+    damId <- matingUnits$dam[matingUnits$id == unitId]
+    if (is.na(p) || is.na(m)) return(FALSE)
+    if (!(sireId %in% realIds) || !(damId %in% realIds)) return(FALSE)
+    mateCountP <- sum(anchoredUnits$sire == p | anchoredUnits$dam == p)
+    mateCountM <- sum(anchoredUnits$sire == m | anchoredUnits$dam == m)
+    unambig <- (identical(sexOf[[p]], "M") && identical(sexOf[[m]], "F")) ||
+      (identical(sexOf[[p]], "F") && identical(sexOf[[m]], "M"))
+    mateCountP == 1L && mateCountM == 1L && !hasOwnDirectChild(p) && unambig
+  }
+  qualifyingUnits <- Filter(qualifiesUnit, anchoredUnits$id)
+  expect_true(length(qualifyingUnits) > 0L)
+
+  for (u in qualifyingUnits) {
+    anchor <- matingUnits$anchor[matingUnits$id == u]
+    mate <- matingUnits$nonAnchor[matingUnits$id == u]
+    expect_equal(pos$x[pos$id == u], mean(pos$x[pos$id %in% c(anchor, mate)]),
+                 tolerance = 1e-6, label = paste("union", u))
+  }
+  message(sprintf(
+    "S666 conditional-shift rule: %d qualifying unions verified at true midpoint on the real fixture.",
+    length(qualifyingUnits)))
+})
+
 ## NOTE on the 2 tests below: running them live during Phase 2b found a HARD
 ## zero rendered-pixel-coincidence gate is unachievable by EITHER algorithm,
 ## for a reason with nothing to do with this migration's own correctness:

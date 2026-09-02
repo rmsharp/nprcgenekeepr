@@ -1575,3 +1575,67 @@ test_that(
   )
   expect_equal(result$isolatedIds, character(0))
 })
+
+## ---- S666 RED: conditional-shift rule, end-to-end vs kinship2 -----------
+## docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md's own
+## Impact Analysis table: "end-to-end assertion using Track B full itself,
+## compared numerically against kinship2::align.pedigree() (the exact
+## method used to find this defect) rather than only structural edge-list
+## comparison." kinship2 ground truth is computed INLINE, live, in this
+## test -- not a hardcoded literal -- so it can never drift from whatever
+## kinship2 version is actually installed.
+test_that("makePedigreeMatingLayout's rendered x positions match a fresh
+           kinship2::align.pedigree() run, individual-for-individual (up to
+           a constant origin shift), on the full, non-shrunk 16-subject
+           Track B fixture -- the exact numeric-comparison method S664/S665
+           used to find and diagnose the original union-midpoint defect", {
+  skip_if_not_installed("kinship2")
+  pedB <- data.frame(
+    id   = c("P1", "P2", "P3", "P4", "P5", "P6",
+             "C1", "C2", "C3", "C4", "C4a",
+             "G3", "M1", "L1", "L2", "L3"),
+    sire = c(NA, NA, NA, NA, NA, NA,
+             "P1", "P1", "P1", "P3", "C4",
+             NA, "P1", "M1", "M1", "M1"),
+    dam  = c(NA, NA, NA, NA, NA, NA,
+             "P2", "P2", "P2", "P4", "P6",
+             NA, "P2", "G3", "G3", "G3"),
+    sex  = c("M", "F", "M", "F", "F", "F",
+             "F", "M", "F", "M", "F",
+             "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  pedB$gen <- findGeneration(pedB$id, pedB$sire, pedB$dam)
+  result <- makePedigreeMatingLayout(pedB, edgeStyle = "direct")
+  nodes <- result$nodes[!grepl("^__union_", result$nodes$id), ]
+
+  sexCode <- c(M = 1, F = 2)[pedB$sex]
+  kPed <- kinship2::pedigree(id = pedB$id, dadid = pedB$sire,
+                              momid = pedB$dam, sex = sexCode,
+                              missid = NA_character_)
+  al <- kinship2::align.pedigree(kPed)
+  kX <- stats::setNames(numeric(0), character(0))
+  for (r in seq_len(nrow(al$nid))) {
+    for (c in seq_len(ncol(al$nid))) {
+      n <- al$nid[r, c]
+      if (!is.na(n) && n > 0) kX[pedB$id[n]] <- al$pos[r, c]
+    }
+  }
+  ## P5 is fully isolated (no sire/dam/mate/children) -- suppressed from
+  ## the diagram by design (BACKLOG.md's isolated-individual item,
+  ## S643-S650) and never placed by kinship2 either; excluded from both
+  ## sides of the comparison, not a gap in it.
+  common <- intersect(nodes$id, names(kX))
+  expect_setequal(common, setdiff(pedB$id, "P5"))
+
+  ## The render layer scales raw internal units by xScale = 120 (the same
+  ## constant .positionMatingUnitForest()'s own comments document, e.g. the
+  ## Track 7 Phase 2 clearance thresholds) -- divide back out to compare
+  ## against kinship2's own raw-unit coordinates.
+  xScale <- 120
+  ours <- (nodes$x[match(common, nodes$id)] -
+             nodes$x[match("P1", nodes$id)]) / xScale
+  theirs <- kX[common] - kX[["P1"]]
+  names(ours) <- common
+  expect_equal(unname(ours[common]), unname(theirs[common]), tolerance = 1e-6)
+})
