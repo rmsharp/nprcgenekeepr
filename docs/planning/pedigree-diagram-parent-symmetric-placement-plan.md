@@ -1,7 +1,8 @@
 # Pedigree Diagram: Symmetric Parent Placement Plan
 
-**Status:** DRAFT — root cause confirmed against kinship2 ground truth; fix approach not
-yet ratified.
+**Status:** Fix approach RATIFIED (owner-directed via `AskUserQuestion`, Session 664,
+2026-09-01): **Option 1 — symmetric half-offset, keep the Tier 1 / Tier 3 split.**
+Implementation (RED/GREEN/REFACTOR) not yet started.
 
 **Supersedes:**
 [`pedigree-diagram-disconnected-component-separation-plan.md`](pedigree-diagram-disconnected-component-separation-plan.md)
@@ -106,9 +107,7 @@ formula for this case at all.
   production fixture referenced throughout this file's commit history. Larger change
   surface for RED/GREEN to cover.
 
-**No recommendation stated here — deferred to the owner's ratification**, given this
-session's own pattern of declaring a root cause and a preferred option before checking
-deeply enough, twice already today.
+**RATIFIED: Option 1** (owner-directed via `AskUserQuestion`, Session 664, 2026-09-01).
 
 ## Alternatives Considered
 
