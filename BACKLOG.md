@@ -601,20 +601,29 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `AskUserQuestion`): the fix mirrors the existing D1/D2 styling block exactly, no
       behavior-neutral restructuring identified, matching S650/S652/S653/S655's own precedent. See
       `CHANGELOG.md`.
-- [ ] **A structural guard is needed against calling `ScheduleWakeup` while a `run_in_background`
+- [x] **A structural guard is needed against calling `ScheduleWakeup` while a `run_in_background`
       task is outstanding -- 3 consecutive sessions (S654 near-miss, S655, S656) made this
-      identical mistake despite 2 rounds of prose documentation** (found S656, 2026-08-30, while
-      waiting on this session's own GREEN-phase full regression -- READY, Effort S-M, matches
-      `SESSION_RUNNER.md`'s own Degradation Detection guidance: "a health check has reported the
-      same finding for several consecutive sessions and nothing has changed -- do not add a second
-      report, add a gate") -- `PROJECT_LEARNINGS.md` Learning 695 (and its predecessor, Learning
-      694) document the recurrence in full; a fourth freestanding prose warning would repeat the
-      same failed intervention a third time. Investigate a Claude Code hook (see the
-      `update-config` skill) that intercepts a `ScheduleWakeup`/`CronCreate` call while this
-      session's own `run_in_background` task is still outstanding and blocks or warns AT THE POINT
-      OF THE CALL, not in a file the session has to remember to re-read under pressure. Not
-      investigated further this session (out of scope for this session's own jog-waypoint-styling
-      deliverable).
+      identical mistake despite 2 rounds of prose documentation** (found S656, 2026-08-30 --
+      `PROJECT_LEARNINGS.md` Learning 695/694 document the recurrence). **RESOLVED S663
+      (2026-09-01):** a Claude Code `settings.json` hook, investigated and shipped the same
+      session (owner-directed, `AskUserQuestion`: global scope, hard block). **This is Claude
+      Code tooling config, not R package code -- lives entirely outside this repo
+      (`~/.claude/settings.json` + `~/.claude/hooks/*.sh`), so there is no in-repo diff/commit for
+      the mechanism itself; this entry and `CHANGELOG.md`/`PROJECT_LEARNINGS.md` Learning 703 are
+      the durable record.** Mechanism (3 hooks, empirically verified against real, not synthetic,
+      payloads at every step -- see Learning 703 for the full investigation trail): `PostToolUse`
+      on `Bash` records a `run_in_background` call's `backgroundTaskId` to a per-session state file
+      the instant it's created (no hook fires on background-task *completion* -- tested directly,
+      twice, against the `TaskCreated`/`TaskCompleted`/`Notification` events, none fire for this
+      case); `PreToolUse` on `ScheduleWakeup|CronCreate` denies the call outright
+      (`permissionDecision: "deny"`) when that state file is non-empty; `Stop` clears the state file
+      at natural turn-end, since after Claude yields, the harness's own background-task notification
+      already owns "waking it back up." One link was deliberately NOT live-fired end-to-end: actually
+      invoking `ScheduleWakeup`/`CronCreate` for real just to prove the harness's matcher-routing
+      dispatch, since both have real side effects (one persistent) -- that link rests on the
+      documented, already-standard `"matcher": "Write|Edit"`-style alternation pattern plus the
+      generically-proven `PreToolUse` dispatch mechanism (proven live against `Bash`), not a live
+      in-vivo trigger; disclosed as a reasoned, not fully live-proven, inference.
 - [x] **Track 7 Phase 2's own union-side proximity push (S649) introduces union-vs-DUPLICATE
       proximity cases on the real 375-individual fixture that did not exist before Phase 2** (found
       live S649, 2026-08-29, implementing `docs/planning/pedigree-diagram-track7-mate-spacing-plan.md`

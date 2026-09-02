@@ -138,20 +138,58 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S663
 date: 2026-09-01
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Investigate a Claude Code settings.json hook that blocks/warns ScheduleWakeup/
-  CronCreate while a run_in_background task is outstanding (found S656, Learning 694/695).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE -- investigated and shipped a Claude Code settings.json hook (global, hard
+  block, owner-directed) that denies ScheduleWakeup/CronCreate while a run_in_background task
+  started this turn is still outstanding. Lives entirely outside this git repo.
+what_was_done: Loaded update-config skill, tested hooks empirically (not doc-only). Found
+  TaskCreated/TaskCompleted/Notification never fire on run_in_background completion (tested
+  live, twice); PostToolUse/Bash reliably fires at creation with tool_response.backgroundTaskId;
+  Stop fires reliably at turn-end. Built 3 hooks (~/.claude/hooks/bg-task-{track,gate,clear}.sh),
+  merged into ~/.claude/settings.json via jq (backed up first), pipe-tested against real captured
+  payloads, then proved live end-to-end against the real installed hooks (real backgroundTaskId
+  written, real gate script denies, real clear script clears). Deliberately did not live-invoke
+  ScheduleWakeup/CronCreate itself (real side effects) -- disclosed as a reasoned, not fully
+  live-proven, inference. Caught and fixed own JSON-corrupting edit mistake in
+  .claude/settings.local.json (gitignored, never committed) via jq -e re-validation.
+next_steps: BACKLOG.md's remaining pedigree-cluster READY item is the package-extraction
+  research/scoping session (Effort M, now unblocked -- Walker/BJL redesign complete). Do NOT
+  re-attempt TaskCreated/TaskCompleted for any similar background-task-lifecycle hook need --
+  Learning 703 is a confirmed dead end. master was 2 commits ahead of origin at this session's
+  Phase 0 (unrelated to this session, not pushed) -- push per established cadence.
+key_files: ~/.claude/settings.json (hooks.PostToolUse/PreToolUse/Stop, outside this repo);
+  ~/.claude/hooks/bg-task-track.sh, bg-task-gate.sh, bg-task-clear.sh (outside this repo);
+  BACKLOG.md (item marked DONE); PROJECT_LEARNINGS.md (Learning 703).
+gotchas: The guard is now LIVE and GLOBAL -- every Claude Code session on this machine, not just
+  nprcgenekeepr, will have ScheduleWakeup/CronCreate denied while a same-turn run_in_background
+  task is outstanding. A genuine dual-need case (not yet observed) will need to wait for the
+  background task's own notification, or revisit hard-block-vs-soft-warn. Unchanged: stray
+  LibreOffice lock file still present; HANDOFFS.md/SESSION_NOTES.md/CHANGELOG.md past FM #28 cap.
+runtime_smoke: n/a in the traditional Shiny-app sense -- equivalent verification is the live
+  end-to-end proof against the real installed global hooks (SESSION_NOTES.md step 6), the
+  strongest available short of live-invoking ScheduleWakeup/CronCreate itself (deliberately not
+  done, real side effects).
+changelog_ref: CHANGELOG.md 2026-09-01 S663 entry (BL-scheduleWakeupGuard)
 commit: pending
 ```
-(claim stub -- filled at close-out)
+This session investigated and shipped the ScheduleWakeup/run_in_background structural guard
+(BACKLOG.md standing pedigree-fidelity-cluster READY item, found S656). The deliverable is Claude
+Code tooling configuration living entirely outside this repository -- 3 hook scripts plus a
+settings.json merge, empirically verified end-to-end against real payloads at every step except
+one deliberately-undone live trigger (invoking ScheduleWakeup/CronCreate for real, which would
+itself have caused unwanted side effects). Self-score 9/10: +empirical-first investigation found a
+genuine dead end (TaskCreated/TaskCompleted never fire for run_in_background completion) that
+trusting event names alone would have missed; +explained rather than re-phrased when the first
+AskUserQuestion drew a request for plain language; +pipe-tested against real, not guessed, payload
+shapes before writing to settings.json; +disclosed the one unproven link explicitly rather than
+hiding it or unsafely proving it; +caught and fixed its own JSON-corrupting mistake immediately.
+-1 for that same mistake happening at all (a more surgical Edit would have avoided it, even though
+it was self-caught and had zero real-world impact); -0 (not deducted further) for the
+out-of-repo-deliverable judgment call on how Phase 3F applies, flagged explicitly rather than
+silently assumed. Predecessor (S662) scored 9/10: accurate, correctly-tagged, directly-actionable
+next_steps pointer that needed zero re-derivation before this session could start.
 
 ```handoff
 session: S662

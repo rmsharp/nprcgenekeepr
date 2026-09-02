@@ -16,6 +16,25 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-01 · [BL-scheduleWakeupGuard] S663: ScheduleWakeup/run_in_background structural guard -- shipped as a Claude Code hook (outside this repo)
+- **Deliverable:** investigated and shipped (owner-directed via `AskUserQuestion`: global scope,
+  hard block) a Claude Code `settings.json` hook that blocks `ScheduleWakeup`/`CronCreate` while a
+  `run_in_background` Bash task started this turn is still outstanding (`BACKLOG.md` Up Next, found
+  S656, `PROJECT_LEARNINGS.md` Learning 694/695). **This is Claude Code tooling configuration, not
+  R package code — nothing in this repo changes as a result of the mechanism itself** (it lives in
+  `~/.claude/settings.json` + `~/.claude/hooks/*.sh`, outside any git repo); this entry, the
+  `BACKLOG.md` DONE marker, and `PROJECT_LEARNINGS.md` Learning 703 are the durable record. No TDD
+  RED/GREEN/REFACTOR phase gates applied (flagged to the owner at Phase 1, no objection) — no
+  testthat coverage exists for shell hook scripts outside the package.
+- 3 hooks, installed and empirically verified against real (not only synthetic) payloads at every
+  step: `PostToolUse`/`Bash` records a `run_in_background` call's `backgroundTaskId` to a
+  per-session state file the instant it's created; `PreToolUse`/`ScheduleWakeup|CronCreate` denies
+  the call when that file is non-empty; `Stop` clears the file at natural turn-end. Investigation
+  found no hook fires on background-task *completion* (`TaskCreated`/`TaskCompleted`/`Notification`
+  all tested directly, twice, none fire) — full trail in `PROJECT_LEARNINGS.md` Learning 703.
+- Backlog item marked `[x]` DONE in the same commit.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-01 · [ad hoc] S662: record push+CI-confirmation commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S661 precedent)
 - This commit sets `HANDOFFS.md`'s S662 receipt `commit:` field from `06962989` to `b8514e9b`
   (the deliverable commit for the push + CI confirmation), the same self-reference workaround
