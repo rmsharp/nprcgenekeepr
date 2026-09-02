@@ -11,6 +11,35 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
+- [ ] **Mating-union dot not at the true parent midpoint; single-child chains of nested
+      qualifying pairs mis-positioned** (found live S664, 2026-09-01/09-02, READY, Effort L --
+      real algorithm work on `.positionMatingUnitForest()`, needs its own dedicated design
+      session, NOT a continuation of S664) -- owner directly reviewed `trackB-nprc-full.png`
+      (previously wrongly called "clean" this same session) and caught that every mating-union
+      dot sits on the anchor parent's own symbol instead of centered between the two parents.
+      Root-caused to the already-known, already-ratified Track 7 Phase 3 trade-off (issue #166,
+      S652) -- NOT a new bug in itself, but the owner overrode that prior "hard binary, accept
+      the trade-off" ratification (matching this project's own precedent for the P5-isolated-
+      individual case). Owner-directed "conditional shift" rule (verified bit-exact against
+      `kinship2::align.pedigree()` on Track B's full 16-subject fixture) directly overturns the
+      Track 7 Phase 3 design doc's own §1.4 "no intermediate value" conclusion -- but is
+      confirmed WRONG for Track B's own **shrunk** fixture (a single-child chain of 2 nested
+      qualifying pairs, `P1×P2 -> M1 -> M1×G3`, where kinship2's real joint solver reaches a
+      value -- `M1=0.5` -- neither of the rule's 2 cases alone produces), and a naive
+      independent-per-pair application of the rule was separately found to reintroduce/worsen
+      the disconnected-component visual-overlap problem (the now-superseded `pedigree-diagram-
+      disconnected-component-separation-plan.md`) by bypassing the project's existing
+      collision-avoidance machinery. **Full design doc, evidence, exact numbers, and the
+      precise next-session action list:**
+      [`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`](docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md)
+      -- read its "ITEM 4 CONFIRMED TO FAIL" section before touching this. No `R/` code was
+      changed this session (every demonstration was an in-process, never-committed monkey-patch
+      in a scratch script) -- `git status`/`git diff` on `R/` are clean. Next session's job, in
+      order: (1) design a general rule for a chain of 2+ nested qualifying pairs (kinship2's own
+      `alignped4.R` QP source, already read once, is the concrete reference, not a guess);
+      (2) integrate that rule's corrected targets THROUGH the existing collision-avoidance
+      passes, never bypassing them; (3) re-verify Track B full stays bit-exact; (4) re-verify
+      Track B shrunk matches kinship2 exactly; (5) only then RED/GREEN/REFACTOR.
 - [x] **`makePedigreeMatingLayout()` erroneously renders fully-isolated individuals (no sire, no
       dam, no mate, no children) -- reverses this project's own prior "acceptable difference"
       framing** (found live 2026-08-26, owner-directed via direct visual review of

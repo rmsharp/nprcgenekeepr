@@ -1,10 +1,16 @@
 # Pedigree Diagram: Symmetric Parent Placement Plan
 
-**Status:** Fix approach SUPERSEDED AGAIN, same session (2026-09-01/09-02), before
-implementation started. Original ratified choice (Option 1, "symmetric half-offset") was
-**incomplete**: it only specified the root-anchor case and left the current, on-anchor
-union position for a NESTED qualifying pair unaddressed, which is exactly where the
-dogleg/off-center-bar problem actually lives once fixed for roots.
+**Status: PAUSED, session 664 (2026-09-01/09-02) — needs a dedicated future design
+session, not a continuation.** No code in `R/` was touched this session (every rendering
+in this file's own evidence was a throwaway in-process monkey-patch in a scratch script,
+never applied to the package source). Read **"ITEM 4 CONFIRMED TO FAIL"** below before
+doing anything else with this plan — the rule below is verified correct for exactly one
+fixture shape and verified WRONG for a second, real one.
+
+Original ratified choice (Option 1, "symmetric half-offset") was **incomplete**: it only
+specified the root-anchor case and left the current, on-anchor union position for a
+NESTED qualifying pair unaddressed, which is exactly where the dogleg/off-center-bar
+problem actually lives once fixed for roots.
 
 **Owner-directed correction (live, via direct visual review of the "recentered simulation"
 image): "Conditional shift" — RATIFIED, verified bit-exact against kinship2 ground truth.**
@@ -49,6 +55,75 @@ in the diagnosis.
    duplicate nodes — both untouched by this fixture's own qualifying units.
 4. A chain of 2+ nested qualifying pairs (a shifted child who is herself the root of
    another qualifying pair further down) — not present in this fixture.
+
+---
+
+## ITEM 4 CONFIRMED TO FAIL — session paused here, 2026-09-02, handed to a future session
+
+**Do not re-attempt "Option 3 as specified above" without reading this section first.** It
+is verified correct only for a qualifying pair with normal sibling width (Track B full). It
+is verified WRONG for Track B **shrunk** — the fixture that started this entire
+investigation — because `shrinkPedigree()` collapses `P1×P2`'s four children down to a
+single surviving child, `M1`, and `M1` is simultaneously the anchor of her own nested
+qualifying pair (`M1×G3`). This is exactly the "chain of 2+ nested qualifying pairs" case
+item 4 above flagged as untested, found by actually testing it rather than assuming it
+would generalize.
+
+**Ground truth (`kinship2::align.pedigree()`) for Track B shrunk:**
+`P1=0, M1=0.5, L3=1.0, P2=1.0, G3=1.5, C4=2.0, C4a=2.5, P6=3.0`.
+
+**Applying Option 3's two cases independently ("root shifts to match children" /
+"nested pair's children shift to match parents") to each qualifying pair separately
+produces:** `P1=-1, C4=0, M1=0, P2=1, C4a=1, L3=1, P6=2, G3=2`.
+
+`M1` is wrong (`0`, not kinship2's `0.5`) — proof the two-case rule does not fully solve a
+single-child chain. kinship2's real joint solver resolves the whole `P1×P2 → M1 → M1×G3`
+chain together and lands on a different, better-optimized value than treating the two
+qualifying pairs as independent problems reaches. **Why the full fixture didn't show this:**
+there, `P1×P2` has 4 children, giving `P1`'s position enough slack to decouple cleanly from
+`M1`'s specifically — the chain-coupling only bites when an anchor's position is *entirely*
+determined by a single child who is herself a nested anchor.
+
+**Second, independent problem, found rendering the above to check it visually:** applying
+the two per-pair corrections **independently, with no cross-pair awareness**, and writing
+the result directly into the final position table (bypassing this project's own existing
+collision-avoidance machinery — Track 7 Phase 2's push-search, `.deCollideIndividualPoints()`
+— which normally runs *before* that point and would never see these post-hoc overrides) put
+`P1×P2`'s union dot exactly on top of `C4`'s own position, and `C4×P6`'s union dot exactly
+on top of `P2`'s own position — two completely unrelated families visually merging. Rendered
+image: see this session's own transcript (`trackB-shrunk-NAIVE-rule.png`, not committed —
+a throwaway diagnostic, not evidence of a real regression, since it was never run through
+the real collision-avoidance pipeline at all). This reintroduces, in a new form, the exact
+problem the original superseded plan
+([`pedigree-diagram-disconnected-component-separation-plan.md`](pedigree-diagram-disconnected-component-separation-plan.md))
+set out to fix — confirming that fixing union-midpoint placement and keeping disconnected
+components visually separated are **not independent problems for this fixture**; a real fix
+needs to address both together, not sequentially.
+
+**What a future session needs to do, in order:**
+1. Design a general rule for a chain of 2+ nested qualifying pairs sharing a single-child
+   link — not yet attempted. Candidates not yet evaluated: resolving bottom-up (innermost
+   nested pair first, propagating each result up the chain); an iterative relaxation:
+   reading kinship2's own `alignped4.R` QP formulation directly (already read once this
+   session's history, `pedigree-diagram-track7-phase3-child-centering-plan.md` §1.3) for
+   how it actually weights/resolves a shared-child chain, rather than guessing.
+2. Decide how this rule integrates with (not bypasses) the existing collision-avoidance
+   machinery — the corrected raw targets must feed INTO
+   `.deCollideIndividualPoints()`/Track 7 Phase 2's push-search, not override their output.
+3. Re-verify Track B full is still bit-exact after any change to (1)/(2) — do not regress
+   the one case already proven correct.
+4. Re-verify Track B shrunk matches kinship2 exactly (the actual target: `P1=0, M1=0.5,
+   L3=1.0, P2=1.0, G3=1.5, C4=2.0, C4a=2.5, P6=3.0`).
+5. Only then proceed to items 1–3 of the original "not yet verified" list above (subtree-
+   rigid translation, the real 375-individual fixture, B3/Phase-2 interaction) and RED.
+
+**This is a genuinely bigger design problem than originally scoped** — discovered only by
+insisting on checking the rule against a second real fixture and a rendered image, not by
+assuming a mechanism verified on one case generalizes. Treat this as its own PRE-RED design
+question for a future session, not a continuation of "Option 3 as ratified" — that
+ratification covered only the case it was tested against.
+
+---
 
 **Supersedes:**
 [`pedigree-diagram-disconnected-component-separation-plan.md`](pedigree-diagram-disconnected-component-separation-plan.md)

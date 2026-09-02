@@ -16,6 +16,18 @@ the post-hoc translation pass proposed below. Left in place, unedited beyond thi
 as the historical record of what was diagnosed first and why it wasn't sufficient — per
 this project's own convention of not rewriting a session's prior reasoning after the fact.
 
+**Late update, same session (2026-09-02): this plan's original concern is NOT dead.**
+The superseding plan's own "conditional shift" fix, applied naively (each qualifying pair
+corrected independently, with no cross-pair awareness) to Track B's **shrunk** fixture —
+the exact fixture this plan was originally written against — reintroduced a disconnected-
+component visual overlap (`P1×P2`'s union dot landing exactly on `C4`'s position, and vice
+versa), because that naive application bypassed the existing collision-avoidance machinery
+this plan never proposed touching. See the superseding plan's own "ITEM 4 CONFIRMED TO
+FAIL" section. Whether this plan's own post-hoc rigid-translation mechanism (Option C) ends
+up being part of the eventual fix, or is superseded by folding component-separation into
+the existing collision-avoidance pass instead, is an open question for whichever future
+session designs the real fix — not resolved by either plan alone.
+
 **Original status line (superseded):** Fix approach RATIFIED (owner-directed via
 `AskUserQuestion`, Session 664, 2026-09-01): **Option C — post-hoc rigid separation of
 disconnected components.** Implementation (RED/GREEN/REFACTOR) not yet started; see the
