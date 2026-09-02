@@ -177,7 +177,7 @@ runtime_smoke: n/a -- no runtime code changed (git status/diff on R/ and tests/ 
   confirmed immediately before this receipt). Verification performed was numeric (vs.
   kinship2::align.pedigree()) and visual (chromote renders), not a package build/test run.
 changelog_ref: see CHANGELOG.md entries dated 2026-09-01/09-02, S664
-commit: pending
+commit: 86a00d48
 ```
 Self-score 8/10 breakdown: +checked every claim against kinship2 ground truth rather than visual
 impression, catching 2 of its own measurement errors mid-session (Track B full "clean" call; the

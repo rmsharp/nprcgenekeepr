@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-02 · [ad hoc] S664: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S663 precedent)
+- This commit sets `HANDOFFS.md`'s S664 receipt `commit:` field from `pending` to `86a00d48`
+  (the close-out deliverable commit), the same self-reference workaround this project's sessions
+  have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-02 · [BL-pedigreeParentSymmetricPlacement] S664: investigated and root-caused mating-union dot centering defect; paused before implementation, owner-directed
 - **Deliverable:** owner rejected `BACKLOG.md`'s `[x]`-checkbox pedigree-fidelity claim as
   insufficient proof and directed a real, image-based re-verification. Regenerated
