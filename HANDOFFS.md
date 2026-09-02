@@ -137,23 +137,59 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S664
-date: 2026-09-01
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Owner does not consider pedigree-diagram fidelity verified by BACKLOG.md checkboxes
-  alone (no demonstration seen in several sessions). Stage 1: re-run
-  data-raw/kinship2FidelityValidation.R fresh, send owner the actual images, confirm Track D
-  ground-truth structural comparison. Stage 2 (if stage 1 holds): live Shiny app demo.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+date: 2026-09-02
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: PAUSED, owner-directed, handed to a future session. Investigated pedigree-diagram
+  fidelity per owner demand for real evidence (not BACKLOG.md checkboxes); found and fixed the
+  diagnosis for a real union-dot-centering defect through 3 rounds of owner-verified rescoping;
+  found the ratified fix (Option 3, "conditional shift") is verified correct on Track B full but
+  WRONG on Track B shrunk (a single-child chain of nested qualifying pairs) and unsafe when
+  applied naively (reintroduces a disconnected-component overlap). No R/ or tests/ code changed.
+what_was_done: 3 plan docs written/revised (disconnected-component-separation, now superseded;
+  parent-symmetric-placement, now paused with a full "ITEM 4 CONFIRMED TO FAIL" section).
+  Regenerated and visually inspected Track A/B/C validation images live. Root-caused the
+  union-centering defect to the already-known, already-reverted Track 7 Phase 1 mechanism
+  (git show 303b42dd) before it could be silently re-shipped. Verified the owner's own proposed
+  "conditional shift" rule bit-exact (1.8e-7) against kinship2::align.pedigree() on Track B full,
+  then found it fails on Track B shrunk via the same ground-truth method. BACKLOG.md Up Next
+  updated with the full current state (item left [ ], not done).
+next_steps: Read the plan doc's "ITEM 4 CONFIRMED TO FAIL" section in full before any code change.
+  In order: (1) design a general rule for a chain of 2+ nested qualifying pairs (read kinship2's
+  alignped4.R QP source directly, not a guess); (2) integrate corrected targets THROUGH existing
+  collision-avoidance, never bypassing it; (3) re-verify Track B full stays bit-exact; (4)
+  re-verify Track B shrunk matches kinship2 (P1=0, M1=0.5, L3=1.0, P2=1.0, G3=1.5, C4=2.0,
+  C4a=2.5, P6=3.0); (5) only then the 3 remaining original open items + RED. Do NOT re-propose
+  Option 1 or unmodified Option 3 -- both are disproven, not merely unexplored.
+key_files: docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md (authoritative,
+  read this not this receipt); docs/planning/pedigree-diagram-disconnected-component-separation-plan.md
+  (superseded, but see its late-update notice); R/makePedigreeDiagramData.R:627-1263
+  (.positionMatingUnitForest(), untouched, the eventual edit site); BACKLOG.md Up Next (top item).
+gotchas: Always measure from makePedigreeMatingLayout()'s final nodes table, never
+  .positionMatingUnitForest()'s return value directly (downstream steps can move things further --
+  cost this session a real, retracted measurement error on P4). pkgload::load_all() +
+  assignInNamespace(): a bare top-level call to a patched internal function resolves via a stale
+  global-env copy, not the namespace binding -- only a call reached through another
+  package-internal function sees the patch. A fix verified on one fixture is not proven on
+  another -- Track B full, Track B shrunk, and the real 375-fixture are 3 separate checks.
+runtime_smoke: n/a -- no runtime code changed (git status/diff on R/ and tests/ both clean,
+  confirmed immediately before this receipt). Verification performed was numeric (vs.
+  kinship2::align.pedigree()) and visual (chromote renders), not a package build/test run.
+changelog_ref: see CHANGELOG.md entries dated 2026-09-01/09-02, S664
 commit: pending
 ```
-(claim stub -- filled at close-out)
+Self-score 8/10 breakdown: +checked every claim against kinship2 ground truth rather than visual
+impression, catching 2 of its own measurement errors mid-session (Track B full "clean" call; the
+`.positionMatingUnitForest()`-vs-final-render gap on `P4`); +found and avoided re-shipping an
+already-reverted regression (Track 7 Phase 1) by reading this file's own planning history before
+committing to a fix; +stopped and paused rather than rushing a fix once the chain-case gap and the
+component-overlap risk were found, accepting direct owner correction without defensiveness.
+-the same "declared complete after checking only some properties" pattern recurred 3 times before
+fully correcting; a fix proposal for this specific function should have started with a grep of its
+own prior planning docs, not ended with one. No shipped fix this session -- a materially different,
+lower-throughput outcome than the session's own original framing, though the right one given what
+was found.
 
 ```handoff
 session: S663

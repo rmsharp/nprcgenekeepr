@@ -16,6 +16,38 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-02 · [BL-pedigreeParentSymmetricPlacement] S664: investigated and root-caused mating-union dot centering defect; paused before implementation, owner-directed
+- **Deliverable:** owner rejected `BACKLOG.md`'s `[x]`-checkbox pedigree-fidelity claim as
+  insufficient proof and directed a real, image-based re-verification. Regenerated
+  `data-raw/kinship2FidelityValidation.R`'s Track A/B/C images live; found Track B **shrunk**
+  visually interleaves two disconnected surviving families (deterministic, confirmed via 2
+  independent re-renders + a full coordinate trace), and separately found the 3-day-old
+  *committed* evidence image for that exact fixture was itself severely corrupted and unreviewed.
+- Root-caused the shrunk-fixture symptom to a more fundamental defect the owner spotted live in
+  `trackB-nprc-full.png` (previously miscalled "clean" this session): every mating-union dot sits
+  on the anchor parent's own symbol instead of the true parent midpoint. Traced this to an
+  already-known, already-ratified trade-off (`git show 303b42dd`, Track 7 Phase 3, issue #166,
+  S651/S652) — the owner overrode that prior ratification directly, matching this project's own
+  precedent for the P5-isolated-individual case.
+- Wrote and ratified 2 successive fix plans, each superseded before any code was written once
+  checked against `kinship2::align.pedigree()` ground truth: (1) "disconnected-component
+  separation" — superseded when the same symptom reproduced in a fully-connected pedigree; (2)
+  "symmetric half-offset" (Option 1) — superseded on discovering it was the already-reverted Track
+  7 Phase 1 mechanism. Owner then derived and the session verified bit-exact (1.8e-7 vs. kinship2)
+  a third design, "conditional shift" (Option 3), on Track B's full 16-subject fixture — directly
+  overturning the prior Track 7 Phase 3 design doc's own "hard binary" conclusion.
+- Verifying Option 3 against a **second** fixture (Track B shrunk, owner-directed) found it
+  incomplete: a single-child chain of 2 nested qualifying pairs needs a value kinship2's real
+  joint solver reaches that neither of Option 3's 2 cases alone produces; a naive per-pair
+  application was also shown, via a rendered image, to reintroduce the disconnected-component
+  overlap by bypassing this project's own collision-avoidance machinery. **Session paused here,
+  owner-directed, rather than rushed to a fix** — full evidence, exact numbers, and an ordered
+  next-session action list recorded in
+  `docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`'s "ITEM 4 CONFIRMED TO FAIL"
+  section. `BACKLOG.md` Up Next updated with the current state; item left open (not DONE). No
+  `R/`/`tests/` source touched — confirmed clean via `git status`/`git diff` before close-out.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-01 · [ad hoc] S663: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S662 precedent)
 - This commit sets `HANDOFFS.md`'s S663 receipt `commit:` field from `pending` to `3d5c42fd`
   (the close-out deliverable commit), the same self-reference workaround this project's sessions
