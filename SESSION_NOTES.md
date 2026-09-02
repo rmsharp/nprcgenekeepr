@@ -18,6 +18,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 665 Did
+**Deliverable:** Design a general rule for a chain of 2+ nested qualifying pairs sharing a
+single child in `.positionMatingUnitForest()`'s mating-union midpoint placement, per
+`BACKLOG.md`'s top Up Next item (found live S664) — an update/ratification of
+`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`'s "ITEM 4 CONFIRMED TO
+FAIL" section. Design-only session (owner-directed via `AskUserQuestion`, following this
+item's own "needs its own dedicated design session, NOT a continuation of S664" framing and
+this project's established split between pedigree-positioning design and implementation
+sessions, e.g. Track 7 Phases 1-4). No `R/`/`tests/` changes this session. (IN PROGRESS)
+**Started:** 2026-09-02.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 663 Handoff Evaluation (by Session 664)
 **Score: 9/10.** **What helped:** S663's `next_steps` correctly named the remaining pedigree-
 cluster READY item (package-extraction scoping) and explicitly warned not to re-attempt the

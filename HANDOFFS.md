@@ -136,6 +136,25 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S665
+date: 2026-09-02
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Design a general rule for a chain of 2+ nested qualifying pairs sharing a
+  single child in .positionMatingUnitForest()'s mating-union midpoint placement (BACKLOG.md
+  top Up Next item, found S664). Design-only session, owner-confirmed via AskUserQuestion.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(stub — filled at close-out, Phase 3D)
+
+```handoff
 session: S664
 date: 2026-09-02
 status: complete
