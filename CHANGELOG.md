@@ -16,6 +16,31 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S670: characterize kinship2's `align.pedigree()` joint-positioning mechanism — verified structural cause of the S669 cascade, costed a port at Effort L, does not decide A vs C
+- **Deliverable:** [`docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md`](docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md)
+  + throwaway `data-raw/kinship2AlignPedigreeJointSolverProbe.R` (owner-confirmed via
+  `AskUserQuestion`: no production `R/` change, no TDD gate, matching the S667/S668/S669
+  audit-workstream precedent). Verified the local 2017 kinship2 v1.6.4 literate-programming
+  source (`noweb/align.Rnw`/`align2.Rnw`) still describes the installed 1.9.6.2 dependency
+  byte-for-byte (`deparse()`-diff of the exact installed function bodies vs. the 2017 source)
+  before trusting its commentary. Characterized the mechanism as 2 phases: Phase A
+  (`alignped1/2/3`, heuristic sequential row/order determination — the same shape as this
+  project's own Tier 1 + S667 component packing) and Phase B (`alignped4`, ONE global
+  `quadprog::solve.QP()` call positioning every row of every family simultaneously, subject to a
+  hard `>= 1`-unit adjacent-pair constraint). Verified empirically via `assignInNamespace()`:
+  exactly 1 QP call per pedigree regardless of family count (520 variables/529 constraints on
+  the real 375 fixture's 5 disconnected families); swept `align=c(a,b)` 18 ways each on Track C
+  and the real 375 (36 total calls) — every run achieved a same-row minimum gap of exactly
+  1.000000, confirming the floor is a hard constraint the solver cannot violate, structurally
+  why kinship2 never hits the S669 cascade. Costed a port at Effort L (new direct `quadprog`
+  `Imports` dependency; a translation layer from this project's node/edge/forest tables to the
+  QP's flat parameterization; a new QP variable+penalty for the union-dot node kinship2 has no
+  analogue for; generalizing the uniform 1-unit constraint to this project's radius-based
+  `minSep`). Documented that kinship2 does not solve this project's own duplicate-proximity
+  class (d) either (145 vs 102 duplicates on the real 375, S668 census). `BACKLOG.md` Up Next
+  item marked DONE with the result; the A-vs-C decision (item 1) itself is not made. Lint 0 (10
+  fixed). See `SESSION_NOTES.md`/`HANDOFFS.md`/`PROJECT_LEARNINGS.md` for the full record.
+
 ### 2026-09-02 · [ad hoc] Queued a BACKLOG.md research item at owner's direction: characterize kinship2's `align.pedigree()` joint-positioning mechanism to quantify the (C) joint-solver option
 - Post-close-out of S669, the owner asked whether a future session should investigate what
   kinship2 does structurally to avoid the cascade the S669 spike found. Owner picked "queue it in

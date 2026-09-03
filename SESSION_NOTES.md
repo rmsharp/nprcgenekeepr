@@ -18,15 +18,175 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 669 Handoff Evaluation (by Session 670)
+**Score: 9/10.** **What helped:** `key_files` pointed straight at
+`R/makePedigreeDiagramData.R:759-1529` with exact tier-boundary line anchors (Tier 2 union `x` at
+`:1041`, `derivedX()` at `:1078-1084`, disconnected-component recursion at `:801-810`) -- this
+session re-read the docstring at `:713-733` (the "three strictly ordered tiers" description) on
+top of those anchors and cited both directly in the new report's contrast section, with no
+independent re-derivation needed. The `assignInNamespace()`/`on.exit()` namespace-swap technique
+S669's gotchas documented for reaching an internal call site transferred directly: this session
+used the identical pattern to trace kinship2's OWN `alignped4()` call count live, rather than
+having to discover that `assignInNamespace()` works against a `pkgload::load_all()`-loaded/attached
+namespace from scratch. The headline cascade numbers ((a)+(b) 464->215, (c2) 414->1,425 +3.4x)
+were load-bearing facts this session's report cited verbatim in its own §2.3/§5 rather than
+re-measuring. **What was missing:** nothing that should have been anticipated -- S669's own
+`next_steps` correctly named the two untested (A) alternatives and the still-open decision, but
+could not have named the specific "characterize kinship2's mechanism" research task, which was
+queued in a separate, later ad hoc commit (`b3c5e395`, after S669's own close-out) rather than by
+S669's own handoff; that is not a fault of S669's handoff. **What was wrong:** nothing found
+inaccurate -- every line-number/mechanism citation this session re-verified against current
+source matched exactly. **ROI:** high -- precise file/line anchors and a directly-reusable
+technique (the namespace-swap pattern) both paid off immediately in a different investigation.
+
 ### What Session 670 Did
 **Deliverable:** research report characterizing kinship2's `align.pedigree()` joint-positioning
-mechanism (`alignped4.R` and its supporting chain) to quantify option (C) for the still-open A-vs-C
-pedigree-drawing decision (`BACKLOG.md` Up Next item 2, owner-directed 2026-09-02) (IN PROGRESS)
-**Started:** 2026-09-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+mechanism (`alignped4.R` and its supporting chain) to quantify option (C) for the still-open
+A-vs-C pedigree-drawing decision (`BACKLOG.md` Up Next item 2, owner-directed 2026-09-02, after
+reviewing the S669 spike result) -- **DONE.** Does not decide A vs C.
+`docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md` +
+`data-raw/kinship2AlignPedigreeJointSolverProbe.R` (throwaway empirical-verification script, no
+production `R/` change, no TDD gate -- owner-confirmed via `AskUserQuestion`, matching the
+S667/S668/S669 audit-workstream precedent).
+**Started/Completed:** 2026-09-03 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0** -- SAFEGUARDS/notes/issues/dashboard/`gh run list` (all green; CI all `completed
+   success` against the last-pushed S666 commit -- S667-S669 not yet pushed, 15 commits ahead of
+   `origin/master`, noted not acted on). Health 96/100, same FM #28 ledger-size high-risk flag as
+   S668/S669, reported not re-acted-on. Ledger reconcile: `CHANGELOG.md` frontier = HEAD (the
+   most recent commit, `b3c5e395`, an ad hoc post-S669 BACKLOG addition, touched it directly);
+   `HANDOFFS.md` frontier 1 commit behind, explained by that same commit being a lightweight,
+   self-recorded, non-session ad hoc action (not a full session claim) -- no backfill owed.
+   Rendered the priorities list + `AskUserQuestion` picker per `CLAUDE.md`; owner picked "kinship2
+   align.pedigree() research" (item 2, READY, queued by that same ad hoc commit).
+2. **Pre-RED/approach scope (`AskUserQuestion`):** research report, no TDD gate, `docs/research/`
+   placement (matching the LabKey-research/package-split-scoping precedent over the literal
+   census/spike `docs/audits/` precedent) -- owner picked this over the audits-directory
+   alternative.
+3. **Groundwork found already in place, before any new work:** a full 2017-era kinship2 v1.6.4
+   source checkout with literate-programming commentary (`noweb/align.Rnw`/`align2.Rnw`) at
+   `/Users/rmsharp/Documents/Development/R/r_workspace/kinship2/`; untracked `scratchpad/` copies
+   of the same source files and two prior co-anchor probe scripts from an earlier session; and
+   directly-relevant prior findings already in `PROJECT_LEARNINGS.md` (Learning 678: `align[2]`
+   is a weight, not a target, achieved gap pinned at 1.0 unit; Learning 681: `alignped4()`
+   positions parents and children JOINTLY, this project's engine positions children first and
+   can't reach back).
+4. **Verified the 2017 literate source still describes the INSTALLED 1.9.6.2 dependency**
+   (not assumed): `deparse()`-extracted the exact installed function bodies via `getAnywhere()`,
+   parsed the 2017 source identically, and diffed bodies only (signature-line differences
+   excluded). `alignped2`/`alignped3`/`alignped4` (the QP step itself)/`besthint`/`autohint` are
+   byte-identical in logic; `align.pedigree`/`alignped1` differ only in 2 hardening fixes
+   (S4-class check, zero-length safety), not algorithm changes.
+5. **Read `noweb/align.Rnw` (752 lines) and `noweb/align2.Rnw` (514 lines) in full** -- the
+   two-phase structure (Phase A: `alignped1`/`alignped2`/`alignped3` recursive row/order
+   determination; Phase B: `alignped4`'s single global QP solve) and the exact penalty/constraint
+   construction in `alignped4`.
+6. **Re-read `.positionMatingUnitForest()`'s current docstring** (`R/makePedigreeDiagramData.R
+   :705-753`) rather than trusting SESSION_NOTES' second-hand description -- confirmed the
+   "three strictly ordered tiers, each fully reconciled before the next tier reads it" framing
+   verbatim, plus the collision-repair caps (`.kMaxIndividualPush = 2`, `.kMaxUnionPush = 5`,
+   "Unidirectional only (always rightward)").
+7. **Built and ran `data-raw/kinship2AlignPedigreeJointSolverProbe.R`** (reuses the census
+   script's fixture definitions and kinship2-prep helper verbatim, copied not sourced): traced
+   `alignped4()`'s call count via `assignInNamespace()`/`on.exit()` (1 QP call per fixture,
+   including the real 375's 5 disconnected families -- 520 variables/529 constraints), then swept
+   `align=c(a,b)` 18 ways each on Track C and the real 375 (36 total `align.pedigree()` calls) --
+   every single run achieved a same-row minimum gap of exactly 1.000000, confirming the floor is
+   a hard QP constraint, never violated regardless of objective weighting. Lint 0 (10 fixed: 1
+   `nonportable_path_linter`, 9 `implicit_integer_linter`). Deterministic across 2 full reruns
+   (byte-identical stdout).
+8. **Report + close-out:** the research document (TL;DR, mechanism, verified contrast with this
+   project's own tiered engine, cost estimate, decision-feed section, caveats, reproduction),
+   `BACKLOG.md` (item marked DONE with a result summary, decision NOT made), `CHANGELOG.md`,
+   `PROJECT_LEARNINGS.md`, this file, `HANDOFFS.md`.
+
+**Headline findings:** kinship2's mechanism is two phases: Phase A (heuristic, sequential,
+order-only -- structurally the same shape as this project's own Tier 1 + S667 component packing)
+and Phase B (`alignped4`, ONE global `quadprog::solve.QP()` call solving every row's numeric
+position simultaneously, subject to a hard `>= 1` unit adjacent-pair constraint). Verified live:
+1 QP call per pedigree regardless of family count; achieved minimum same-row gap is exactly 1.0
+at every one of 36 tested weight settings across 9 orders of magnitude. This is structurally why
+kinship2 never hits the S669 cascade: feasibility is a hard constraint the solver cannot violate,
+not an emergent property of a one-way, tier-at-a-time pipeline where later tiers treat earlier
+tiers' output as fixed. Costed a port: Effort L (new direct `quadprog` `Imports` dependency,
+currently absent even transitively as a direct dep; a translation layer from this project's node/
+edge/forest tables to the QP's flat parameterization; a new QP variable+penalty for this
+project's own union-dot node, which kinship2 has no concept of at all; generalizing the uniform
+1-unit constraint to this project's radius-based `minSep`). Kinship2 does NOT solve this
+project's own duplicate-proximity class (d) either (145 vs 102 duplicates on the real 375
+fixture, S668 census) -- porting the QP does not inherit a fix for that class regardless of path.
+
+**Runtime smoke test (Phase 3E):** n/a for package runtime -- no `R/` change, matching the
+S668/S669 precedent for this deliverable shape. The deliverable is the report plus a
+verification script: ran deterministically across 2 full reruns (byte-identical stdout), lint 0,
+`git diff --stat -- R/` empty throughout.
+
+**Close-out checklist mapping (`CLAUDE.md`):** citation N/A; tutorial/article N/A (no Shiny
+change); `NEWS.Rmd` N/A (no user-facing change, no shipped code); `a2interactive.Rmd` N/A;
+`_pkgdown.yml` N/A; GitHub issue close-out N/A (no issue tied to this item); lint DONE
+(`lintr::lint()` on the new script 10 -> 0; no other `.R` touched); CI-break N/A.
+
+**Self-assessment (Session 670): 9/10.** **Strengths:** (1) did not trust the 2017 literate
+source at face value against a newer installed dependency -- verified byte-identical logic first,
+which is what makes every mechanism claim in the report trustworthy rather than merely plausible;
+(2) matched this project's own established discipline (Learning 678's lesson) by RUNNING the
+mechanism against real fixtures rather than stopping at reading source, and the sweep result (36/
+36 runs at exactly the 1.0 floor) is a genuinely strong, previously-unmeasured-at-this-scale
+confirmation, not a restatement of what Learning 678 already showed on toy fixtures; (3) the cost
+estimate is itemized and concrete (specific new dependency, specific translation-layer tasks,
+specific new QP variable) rather than a vague "would take some work," directly answering what the
+BACKLOG item asked for; (4) explicitly separated what kinship2's mechanism DOES structurally solve
+from what it does NOT (duplicate proximity, twins, the union-dot concept), so the report doesn't
+overclaim that porting the QP is a complete fix for every census-measured class. **Weaknesses:**
+(1) no end-to-end spike of an actual ported joint-solve engine against this project's own
+fixtures -- the cost estimate is a scoped analysis, not a working prototype, so an unknown
+complication in the translation layer remains possible; (2) did not independently verify
+`quadprog::solve.QP`'s argument contract against its own documentation, only against how kinship2
+uses it (low risk given kinship2's own multi-year dependency on it unchanged, but not
+independently confirmed); (3) the `align` sweep tested only 2 of kinship2's parameters (the
+weights) at their defaults' order of magnitude and beyond -- did not attempt to construct an
+adversarial fixture designed to try to break QP feasibility (e.g. a pathological width/level
+combination), though the constraint's algebraic structure (a linear inequality `solve.QP` cannot
+violate) makes this a low-value gap, not an unexamined risk. **ROI:** high -- the owner's A-vs-C
+decision now has a verified mechanism explanation (not just a plausible one) and a concrete,
+itemized cost, matching what the queued BACKLOG item specifically asked for.
+
+**Next steps (specific):** the owner still decides A vs C (`BACKLOG.md` Up Next item 1) --
+neither this session nor S669 made that call. This session's report (§5) states what it adds to
+that decision: (C)'s no-cascade property is now verified rather than assumed, and its cost is
+Effort L with a named task list, not an unknown. If the owner leans toward (C), the next
+concrete step is the architecture/design session named in the report's §4 (spec the exact QP
+formulation: penalty terms, the union-node treatment, the `minSep` constraint generalization)
+BEFORE any implementation session -- per `SESSION_RUNNER.md`'s planning/implementation
+boundary (FM #18/#19), do not let a future session bundle that design work with code. If the
+owner leans toward (A) instead, the two untested variants S669's own report named (a narrower
+gate; a jog/collision-repair re-run against the new spacing) are still live and unattempted.
+Independent of A/C, the S668 census's other 2 outstanding items still stand: raise the jog offset
+above the 25-px symbol radius, and answer the row-policy question (census Finding #5).
+
+**Key files:** `docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md` (the
+report -- TL;DR at the top states the core finding and cost in ~2 paragraphs);
+`data-raw/kinship2AlignPedigreeJointSolverProbe.R` (the empirical verification script -- Probe 1
+traces QP call count/size via `assignInNamespace()`, Probe 2 sweeps `align` weights);
+`R/makePedigreeDiagramData.R:705-753` (`.positionMatingUnitForest()`'s docstring, the "three
+strictly ordered tiers" framing re-verified this session); `/Users/rmsharp/Documents/Development/
+R/r_workspace/kinship2/noweb/align.Rnw` and `align2.Rnw` (the literate-programming source read in
+full -- not part of this repo, a sibling checkout on this machine).
+
+**Gotchas for a future session:** (1) the 2017 kinship2 checkout's literate `.Rnw` commentary is
+verified-accurate for the CURRENTLY installed 1.9.6.2 dependency ONLY for the 7 functions this
+session checked (`align.pedigree`, `alignped1-4`, `besthint`, `autohint`) -- if kinship2 is ever
+upgraded past 1.9.6.2, or a different function from that source needs trusting, re-verify with the
+same `deparse()`-diff technique (§Method/§7 of the report) before relying on the commentary again;
+(2) `assignInNamespace()` against an ATTACHED package's namespace (not just a `pkgload::load_all()`
+-loaded one, S669's use case) is confirmed to work the same way -- useful precedent beyond this
+specific investigation; (3) this probe script is throwaway by design, matching the spike/census
+convention -- safe to delete once the owner's A-vs-C decision is made, no runtime dependency from
+anything else; (4) local branch is 15 commits ahead of `origin/master` as of this session's start
+(S667-S669 unpushed) -- CI has not verified that work yet; a future session should consider
+pushing before it grows further.
 
 ### Session 668 Handoff Evaluation (by Session 669)
 **Score: 9/10.** **What helped:** the census report's Recommendation 1 gave the exact spike to

@@ -138,21 +138,62 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S670
 date: 2026-09-03
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Research report characterizing kinship2's align.pedigree() joint-positioning
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Research report characterizing kinship2's align.pedigree() joint-positioning
   mechanism (alignped4.R and its supporting chain) to quantify option (C) for the still-open
-  A-vs-C pedigree-drawing decision (BACKLOG.md Up Next item 2, owner-directed 2026-09-02, after
-  reviewing the S669 spike result). No production R/ change, no TDD gate (owner-confirmed via
-  AskUserQuestion). IN PROGRESS.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+  A-vs-C pedigree-drawing decision (BACKLOG.md Up Next item 2). No production R/ change, no TDD
+  gate (owner-confirmed via AskUserQuestion). Does not decide A vs C -- owner's decision still
+  pending.
+what_was_done: docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md +
+  data-raw/kinship2AlignPedigreeJointSolverProbe.R (throwaway verification script). Verified the
+  local 2017 kinship2 v1.6.4 literate-programming source (noweb/align.Rnw, align2.Rnw) still
+  describes the installed 1.9.6.2 dependency byte-for-byte (deparse-diff of the exact installed
+  function bodies vs. the 2017 source, parsed identically) before trusting its commentary.
+  Characterized the mechanism as 2 phases: Phase A (alignped1/2/3, heuristic sequential row/order
+  determination -- structurally the same shape as this project's own Tier 1 + S667 component
+  packing) and Phase B (alignped4, ONE global quadprog::solve.QP() call positioning every row
+  simultaneously, subject to a hard >=1-unit adjacent-pair constraint). Verified empirically, not
+  just read: assignInNamespace()-traced alignped4() call count (exactly 1 per pedigree, including
+  the real 375's 5 disconnected families -- 520 QP variables/529 constraints) and swept
+  align=c(a,b) 18 ways each on Track C and the real 375 (36 calls) -- every run achieved a
+  same-row minimum gap of exactly 1.000000, confirming the floor is a hard constraint the solver
+  cannot violate, structurally why kinship2 never hits the S669 cascade (a one-way, tier-at-a-time
+  pipeline where later tiers treat earlier tiers as fixed). Costed a port: Effort L (new direct
+  quadprog Imports dependency, currently absent even transitively as a direct dep; a translation
+  layer from this project's node/edge/forest tables to the QP's flat parameterization; a new QP
+  variable+penalty for this project's own union-dot node, which kinship2 has no concept of;
+  generalizing the uniform 1-unit constraint to this project's radius-based minSep). Documented
+  that kinship2 does NOT solve this project's own duplicate-proximity class (d) either (145 vs
+  102 duplicates on the real 375, S668 census) -- porting the QP does not inherit a fix for that
+  class regardless of path. Lint 0 (10 fixed). Deterministic across 2 full reruns.
+next_steps: Owner still decides A vs C (BACKLOG.md Up Next item 1) -- neither this session nor
+  S669 made that call. If leaning (C): the next concrete step is the architecture/design session
+  named in the report's Section 4 (spec the exact QP formulation -- penalty terms, union-node
+  treatment, minSep constraint generalization) BEFORE any implementation session (FM #18/#19 --
+  do not bundle design with code). If leaning (A): S669's 2 untested variants (a narrower gate; a
+  jog/collision-repair re-run against the new spacing) remain live and unattempted. Independent
+  of A/C: raise the jog offset above the 25-px symbol radius, and answer the row-policy question
+  (census Finding #5). Also: local branch was 15 commits ahead of origin/master at this session's
+  start (S667-S669 unpushed, CI unverified on that work) -- consider pushing soon.
+key_files: docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md (the
+  report); data-raw/kinship2AlignPedigreeJointSolverProbe.R (Probe 1: QP call-count/size trace via
+  assignInNamespace(); Probe 2: align-weight sweep); R/makePedigreeDiagramData.R:705-753
+  (.positionMatingUnitForest()'s docstring, the "three strictly ordered tiers" framing re-verified
+  this session); /Users/rmsharp/Documents/Development/R/r_workspace/kinship2/noweb/align.Rnw and
+  align2.Rnw (literate-programming source read in full -- not part of this repo).
+gotchas: The 2017 kinship2 checkout's literate .Rnw commentary is verified-accurate for the
+  installed 1.9.6.2 dependency ONLY for the 7 functions this session checked -- re-verify with the
+  same deparse-diff technique before trusting it again if kinship2 is ever upgraded past 1.9.6.2.
+  assignInNamespace() against an ATTACHED package's namespace (not just a pkgload::load_all()
+  -loaded one) is confirmed to work the same way as S669's use case -- useful precedent beyond
+  this investigation. This probe script is throwaway by design, matching the spike/census
+  convention -- safe to delete once the owner's A-vs-C decision is made.
+runtime_smoke: n/a for package runtime (no R/ change). The script ran deterministically across 2
+  full reruns (byte-identical stdout), lint 0, git diff --stat -- R/ empty throughout.
+changelog_ref: CHANGELOG.md 2026-09-03 S670 entry, the close-out commit.
+commit: 9009ed25
 ```
 
 ```handoff

@@ -53,23 +53,30 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       only -- but does not by itself decide (A) vs (C): a narrower gate, or the same two edits
       followed by a re-run of jog/collision repair against the new spacing, is untested and remains
       a live (A) variant. Owner's decision; not made S669.
-- [ ] **Research: characterize kinship2's `align.pedigree()` joint-positioning mechanism
+- [x] **Research: characterize kinship2's `align.pedigree()` joint-positioning mechanism
       (`alignped4.R`) to quantify the (C) joint-solver option** (owner-directed 2026-09-02, after
-      reviewing the S669 spike result; READY, Effort M -- a research/audit session, no TDD gate,
-      matching the census/spike precedent) -- the S669 spike found that widening spacing/recentring
-      the CURRENT sequential engine (Tier 1 tree -> Tier 2 union -> Tier 3 mate offset -> collision
-      repair) cascades into new overlaps, because each tier can only push positions FORWARD and
-      never revisits an earlier tier's placement. kinship2's own `align.pedigree()` achieves 0
-      same-row overlaps on the same fixtures (S668 census baseline) by positioning parents and
-      children JOINTLY and adjusting either side -- structurally why it does not hit this cascade,
-      not yet verified against its actual source. A future session should read kinship2's real
-      `alignped4.R` (and whatever internals it calls), characterize the mechanism concretely: what
-      it optimizes, what constraints it enforces, how it differs structurally from this project's
-      tiered/sequential approach, and what porting or reimplementing an equivalent joint-
-      optimization pass would plausibly cost -- data structures, iteration/convergence approach,
-      and interaction with things kinship2 does not have to solve (this project's duplicate/twin/
-      isolated-individual handling). Report findings; feed a real, costed option into the still-open
-      A-vs-C decision above. Does not decide A vs C itself.
+      reviewing the S669 spike result; **DONE S670, 2026-09-03**, Effort M, one session) --
+      [`docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md`](docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md)
+      + `data-raw/kinship2AlignPedigreeJointSolverProbe.R`. **Mechanism, verified (not just
+      read):** kinship2 is 2 phases -- Phase A (`alignped1/2/3`, heuristic sequential row/order
+      determination, the same shape as this project's own Tier 1 + S667 component packing) and
+      Phase B (`alignped4`, ONE global `quadprog::solve.QP()` call positioning every row of every
+      family simultaneously, subject to a hard `>= 1`-unit adjacent-pair constraint). Traced live
+      via `assignInNamespace()`: exactly 1 QP call per pedigree regardless of family count
+      (520 variables/529 constraints on the real 375 fixture's 5 disconnected families). Swept
+      `align=c(a,b)` 18 ways each on Track C and the real 375 (36 total calls): every run achieved
+      a same-row minimum gap of exactly 1.000000 -- the floor is a hard constraint the solver
+      cannot violate, structurally why kinship2 never hits the S669 cascade (a one-way,
+      tier-at-a-time pipeline where later tiers treat earlier tiers' output as fixed). **Costed
+      port: Effort L** (new direct `quadprog` `Imports` dependency, currently absent even
+      transitively as a direct dep; a translation layer from this project's node/edge/forest
+      tables to the QP's flat parameterization; a new QP variable+penalty for this project's own
+      union-dot node, a concept kinship2 has no analogue for at all; generalizing the uniform
+      1-unit constraint to this project's radius-based `minSep`) -- comparable in scale to the
+      Walker/BJL apportioning redesign (issue #141), not a bigger undertaking. **Kinship2 does
+      NOT solve this project's own duplicate-proximity class (d) either** (145 vs 102 duplicates
+      on the real 375, S668 census) -- porting the QP does not inherit a fix for that class
+      regardless of path. Owner's A-vs-C decision above still not made.
 - [x] **Pedigree-drawing error census across every fixture** (owner-directed S667 via
       `AskUserQuestion` -- "b", census first; **DONE S668, 2026-09-02**, Effort M, one session) --
       `data-raw/pedigreeDrawingErrorCensus.R` (fresh, independent measurement code -- the pinned
