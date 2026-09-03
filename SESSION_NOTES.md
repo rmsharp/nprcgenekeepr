@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 671 Did
+**Deliverable:** Facilitate and record the owner's A-vs-C pedigree-drawing decision
+(`BACKLOG.md` Up Next item 1, DECISION NEEDED -- TOP PRIORITY under the standing
+pedigree-fidelity directive) using the S668 census, S669 spike, and S670 kinship2-mechanism
+research already in hand. Not a planning or implementation session for whichever path is
+chosen -- that is explicitly a separate future session per the item's own text. (IN PROGRESS)
+**Started:** 2026-09-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F.
+
 ### Session 669 Handoff Evaluation (by Session 670)
 **Score: 9/10.** **What helped:** `key_files` pointed straight at
 `R/makePedigreeDiagramData.R:759-1529` with exact tier-boundary line anchors (Tier 2 union `x` at

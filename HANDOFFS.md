@@ -136,6 +136,25 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S671
+date: 2026-09-03
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS. Facilitate and record the owner's A-vs-C pedigree-drawing decision
+  (BACKLOG.md Up Next item 1, DECISION NEEDED -- TOP PRIORITY) using the S668 census, S669
+  spike, and S670 kinship2-mechanism research already in hand. Not the follow-on planning/
+  implementation session for whichever path is chosen.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S670
 date: 2026-09-03
 status: complete
