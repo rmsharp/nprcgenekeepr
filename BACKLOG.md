@@ -11,10 +11,11 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **DECIDE from the S668 census: pedigree drawing -- (A) bounded per-defect fixes, or (C) a
-      joint solver** (DECISION NEEDED -- owner; TOP PRIORITY under the standing pedigree-fidelity
-      directive; the decision itself is Effort S, then one planning session for whichever path)
-      -- evidence:
+- [x] **DECIDE from the S668 census: pedigree drawing -- (A) bounded per-defect fixes, or (C) a
+      joint solver** (**DECIDED S671, 2026-09-03: (C) -- joint solver**, owner via
+      `AskUserQuestion`, after this session presented both options' evidence, costs, and the
+      GPL-dependency note in full prose; TOP PRIORITY under the standing pedigree-fidelity
+      directive stands unchanged, now scoped to executing (C)) -- evidence:
       [`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md`](docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md)
       (scoreboard, per-class root causes, kinship2 baseline; every finding row with ids in the
       companion `_findings.csv`; reproduce with `Rscript data-raw/pedigreeDrawingErrorCensus.R`).
@@ -53,6 +54,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       only -- but does not by itself decide (A) vs (C): a narrower gate, or the same two edits
       followed by a re-run of jog/collision repair against the new spacing, is untested and remains
       a live (A) variant. Owner's decision; not made S669.
+      **DECIDED S671, 2026-09-03: (C).** Owner picked "joint solver" over "bounded fixes," "not
+      ready," and "defer" via `AskUserQuestion`, after this session laid out both paths' evidence
+      (S669's cascade result for A; S670's verified no-cascade mechanism and Effort L cost for C),
+      what each does/does not solve (neither solves duplicate-proximity class (d)), and the
+      GPL-dependency note (`quadprog`/`kinship2` are `GPL (>= 2)`, this project is `MIT + file
+      LICENSE`; an `Imports`-level runtime dependency on a GPL package is common, accepted CRAN
+      practice, not a blocker). **Next step (a separate future session, per `SESSION_RUNNER.md`'s
+      planning/implementation boundary, FM #18/#19 -- do NOT bundle with code): the
+      architecture/design session named in the S670 report's Section 4 -- spec the exact QP
+      formulation (penalty terms, the union-node QP variable, the `minSep` radius-based constraint
+      generalization) before any implementation session begins.** Independent of A/C, two items
+      still stand and were not resolved by this decision: the jog offset must be raised above the
+      25-px symbol radius (census Finding #3), and the row-policy question (census Finding #5 --
+      row = generation vs. kinship2's spouse-row-alignment) needs an explicit answer, since (C)
+      would otherwise silently adopt kinship2's policy.
 - [x] **Research: characterize kinship2's `align.pedigree()` joint-positioning mechanism
       (`alignped4.R`) to quantify the (C) joint-solver option** (owner-directed 2026-09-02, after
       reviewing the S669 spike result; **DONE S670, 2026-09-03**, Effort M, one session) --
@@ -76,7 +92,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Walker/BJL apportioning redesign (issue #141), not a bigger undertaking. **Kinship2 does
       NOT solve this project's own duplicate-proximity class (d) either** (145 vs 102 duplicates
       on the real 375, S668 census) -- porting the QP does not inherit a fix for that class
-      regardless of path. Owner's A-vs-C decision above still not made.
+      regardless of path. **Owner's A-vs-C decision above: DECIDED S671, 2026-09-03 -- (C).**
 - [x] **Pedigree-drawing error census across every fixture** (owner-directed S667 via
       `AskUserQuestion` -- "b", census first; **DONE S668, 2026-09-02**, Effort M, one session) --
       `data-raw/pedigreeDrawingErrorCensus.R` (fresh, independent measurement code -- the pinned

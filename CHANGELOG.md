@@ -16,6 +16,29 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S671: DECIDED the A-vs-C pedigree-drawing question — (C), a joint solver
+- **Deliverable:** facilitated and recorded the owner's decision on `BACKLOG.md` Up Next item 1
+  (DECISION NEEDED, TOP PRIORITY under the standing pedigree-fidelity directive) using the
+  S668 census, S669 spike, and S670 kinship2-mechanism research already in hand — not a
+  planning or implementation session for (C) itself. No `R/` change, no TDD gate (decision/
+  discussion deliverable, matching the audit-workstream precedent for non-code sessions).
+  Re-read both source reports' decision-relevant sections fresh (S670 §4/§5, S668
+  Recommendations) and independently verified the one open cost item neither report resolved:
+  `quadprog`/`kinship2` are both `GPL (>= 2)` (`packageDescription()$License`) against this
+  project's `MIT + file LICENSE` (`DESCRIPTION:84`) — an `Imports`-level runtime dependency on a
+  GPL package from an MIT package is standard, accepted CRAN practice, not a blocker. Presented
+  both options in full prose (per an explicit mid-session user request) — (A)'s S669 cascade
+  result and its 2 untested variants; (C)'s S670-verified no-cascade mechanism, its Effort L
+  itemized cost, and what it does/does not solve (not class (d), duplicate proximity) — then ran
+  the actual decision via `AskUserQuestion` (4 real options: choose A / choose C / not ready /
+  defer). **Owner picked (C).** Recorded in `BACKLOG.md`: item 1 marked `[x]` DECIDED with the
+  reasoning trail, the license note, and the concrete next step (a separate future
+  architecture/design session to spec the QP formulation — `SESSION_RUNNER.md` FM #18/#19, not
+  bundled with code); corrected the adjacent S670 item's now-stale "still not made" line. Two
+  items independent of A/C remain open and unresolved by this decision: the jog offset (census
+  Finding #3) and the row-policy question (census Finding #5). `PROJECT_LEARNINGS.md` Learning
+  716. See `SESSION_NOTES.md`/`HANDOFFS.md` for the full record.
+
 ### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S670: characterize kinship2's `align.pedigree()` joint-positioning mechanism — verified structural cause of the S669 cascade, costed a port at Effort L, does not decide A vs C
 - **Deliverable:** [`docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md`](docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md)
   + throwaway `data-raw/kinship2AlignPedigreeJointSolverProbe.R` (owner-confirmed via
