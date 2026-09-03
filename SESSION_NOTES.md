@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 674 Did
+**Deliverable:** Migration Path Phase 2 of the QP joint-solver plan
+(`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path, "Cutover on small
+fixtures only") -- wire `.solveJointQP()` into `.positionMatingUnitForest()`, replacing the 5
+collision-avoidance passes, verified against Track B full/shrunk, Track C, D1-D3 ONLY (NOT the
+real 375-fixture -- that's Phase 3). Full TDD RED/GREEN/REFACTOR. Following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`. (IN PROGRESS)
+**Started:** 2026-09-03.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 672 Handoff Evaluation (by Session 673)
 **Score: 9/10.** **What helped:** `next_steps` named this session's exact scope almost verbatim --
 "Migration Path Phase 1 (plan doc's own section) -- an implementation session, full TDD

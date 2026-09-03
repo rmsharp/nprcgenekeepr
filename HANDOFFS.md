@@ -136,6 +136,27 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S674
+date: 2026-09-03
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Migration Path Phase 2 of the QP joint-solver plan
+  (docs/planning/pedigree-diagram-joint-qp-solver-plan.md) -- wire .solveJointQP() into
+  .positionMatingUnitForest(), replacing the 5 collision-avoidance passes; verify against
+  Track B full/shrunk, Track C, D1-D3 only (not the real 375-fixture). Full TDD
+  RED/GREEN/REFACTOR.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<prose pending -- filled at close-out>
+
+```handoff
 session: S673
 date: 2026-09-03
 status: complete
