@@ -1,6 +1,14 @@
 # Pedigree Diagram: Disconnected-Component Separation Plan
 
-**Status: SUPERSEDED, same session (2026-09-01, Session 664), before implementation
+**Status (S667, 2026-09-02): REVIVED with a REVISED mechanism — see the "REVISED DESIGN —
+Session 667" section at the end of this file.** The concern this plan was written for survived
+the S666 parent-symmetry fix (that plan's own impact table said "re-verify, do not assume"; S666
+re-verified and confirmed the interleaving remains). The revised mechanism separates components
+*before* Tier 3, not after it as Option C below proposed — measured this session, a post-hoc
+translation cannot undo the collision pushes that have already happened by then. Ratification
+state is recorded in that section. The historical notice below is left as written.
+
+**Status (historical): SUPERSEDED, same session (2026-09-01, Session 664), before implementation
 started.** See
 [`pedigree-diagram-parent-symmetric-placement-plan.md`](pedigree-diagram-parent-symmetric-placement-plan.md).
 
@@ -208,3 +216,136 @@ from kinship2 (already investigated this session, found structurally correct —
 alternate layout choice, not a defect); any other pedigree-diagram fidelity question not
 raised by this specific finding; the live Shiny app demo (deferred until this fix is
 designed/ratified, per the owner's own staged request this session).
+
+---
+
+## REVISED DESIGN — Session 667 (2026-09-02): component-aware layout, measured against kinship2
+
+**Status: RATIFIED by the owner via `AskUserQuestion` (S667, 2026-09-02) — "implement now,
+full TDD" scope.** Owner-directed pickup: the owner named "Track B shrunk interleaving" as this session's
+pedigree-drawing target after reviewing the S666-regenerated images. Every number below is from
+a live run this session against `HEAD` (`94ae26c8` + docs-only commits) or a fresh
+`kinship2::align.pedigree()` call on the identical fixture — none is hand-derived (S664's own
+lesson, `PROJECT_LEARNINGS.md`).
+
+### 1. What the current engine does on the shrunk fixture (measured)
+
+`.positionMatingUnitForest()` output, whole pedigree, raw x (gen in parentheses):
+
+```
+P1@-0.5  __union_2@0  C4@0.5  __union_1@1  P2@1.5  P6@2.5      (gen 0)
+M1@0     __union_3@0.5  C4a@1  G3@2                             (gen 1)
+L3@0.5                                                          (gen 2)
+```
+
+Both families share every row and interleave — `P1 · C4 · P2 · P6` — exactly the committed
+`trackB-nprc-shrunk.png`. The mechanism is the one this plan's original root-cause section
+describes (roots `{P1, C4}` are adjacent super-root siblings; each B1 mate's `anchor + minSep`
+target lands on the other family; `.deCollideIndividualPoints()` pushes her further in), and it
+persists after S666 because S666 corrected *where* a pair sits relative to its children, not
+*which nodes a family's B1 targets can collide with*. The current test
+`tests/testthat/test_positionMatingUnitForest.R:2879-2973` pins this state (`P2 = P1 + 2`,
+`G3 = M1 + 2`, `P6 = C4 + 2`) and explicitly declares the left/right question out of scope.
+
+### 2. Why Option C as ratified in S664 (translate *after* Tier 3) is not enough
+
+The pushes are already in the numbers above: `P2` sits 2 units from `P1` because `C4` occupied
+her `+1` slot. A rigid post-Tier-3 translation of `C4`'s family would leave `P2` at `P1 + 2`,
+`G3` at `M1 + 2`, `P6` at `C4 + 2` — the union dots off-center again (the S666 defect,
+reintroduced). Separation therefore has to happen **before** Tier 3 runs, i.e. before any
+cross-family collision is possible. Option C's *intent* (rigid blocks, kinship2's own treatment
+of unrelated families) is kept; its *placement in the pipeline* moves.
+
+### 3. The revised rule
+
+Inside `.positionMatingUnitForest()`, immediately after input validation and before any tier:
+
+1. **Partition** the drawn graph into weakly-connected components. Nodes: every real id in
+   `ped` plus every `forest$matingUnits$id`. Edges: mating unit ↔ its real sire, mating unit ↔ its
+   real dam, and every `forest$childEdges` row (`from` is a unit or a real parent, `to` a real
+   child). A duplicate rides with its `realId`'s component. (Union-find; the same
+   connectedness the layout actually draws — an orphan unit's siblings, issue #154, are joined
+   through their unit even though no real parent row exists.)
+2. **Order** components by the smallest `ped` row index among their real members — kinship2's
+   own convention, confirmed on the 3-family fixture D2 below.
+3. **Lay out each component alone** by calling `.positionMatingUnitForest()` recursively on the
+   `ped` rows and `forest` subset (`matingUnits` by `id ∈ members`, `duplicates` by `id ∈
+   members`, `childEdges` by `to ∈ members`) — the three tiers, the S666 correction pass, and
+   every collision-avoidance mechanism run *unchanged* on each family.
+4. **Pack** left → right by **per-row contour**: for component *i* ≥ 2,
+   `shift_i = max over rows g present in both (max x_placed(g) + minSep − min x_i(g))`, where
+   every already-placed node (real, union, duplicate) participates; if the two share no row, fall
+   back to whole-extent `max(x_placed) + minSep − min(x_i)`. `minSep = 1L`, the engine's own
+   sibling gap — this is exactly kinship2's spacing (bit-exact below), not a larger "family gap".
+5. **One component → the existing code path, untouched** (`Track C`, and any connected pedigree).
+
+Three new `@noRd` helpers (`.forestComponents()`, `.subsetForest()`, `.packComponents()`) plus a
+~10-line dispatch at the top of `.positionMatingUnitForest()`. Tier 1/2/3, the S666 correction
+pass, `.deCollideIndividualPoints()`, `sweepMinSep()`, `.addRectilinearWaypoints()`,
+`.resolveEdgeNodeCollisions()`: **no edits**.
+
+### 4. Evidence — the rule vs. fresh `kinship2::align.pedigree()` runs (this session)
+
+| Fixture | Components | Result under the rule | vs. kinship2 |
+|---|---|---|---|
+| **Track B shrunk** (`P1×P2→M1→M1×G3→L3` ∥ `C4×P6→C4a`) | 2 | `P1=0, P2=1, M1=0.5, G3=1.5, L3=1, C4=2, P6=3, C4a=2.5` | **bit-exact, all 8** (the plan doc's own long-standing target values) |
+| D1 — left family wide at a *deep* row (`F1×M1→A1; A1×S1→K1..K4`) ∥ trio (`F2×M2→B1`) | 2 | `F1=0, M1=1, F2=2, M2=3; S1=-0.5, A1=0.5, B1=2.5; K1..K4=-1.5..1.5` | **bit-exact**. A whole-extent rule gives `F2=2.5` — wrong; kinship2 packs per row |
+| D2 — three trios in `ped` order A, B, C | 3 | `A1=0, A2=1, B1=2, B2=3, C1=4, C2=5; A3=0.5, B3=2.5, C3=4.5` | **bit-exact, including family order** |
+| D3 — trio ∥ 3-generation chain | 2 | `A1=0, A2=1, B1=2, B2=3; A3=0.5, B3=2.5, B5=3.5; B4=3` | **bit-exact** |
+| **Track B full** (P5 suppressed upstream) | 2 (`{P1,P2,C1-3,M1,G3,L1-3}`, `{P3,P4,C4,P6,C4a}`) | identical to the current engine up to translation (`all.equal` TRUE) | 1.2e-7, unchanged — S666's tests stay green with no edits |
+| Track C (consanguineous `A×Y`) | 1 | untouched code path | n/a |
+| Isolated-founder unit-test fixture (`test_positionMatingUnitForest.R:377`) | 2 | `ISOLATED=0; P1=1, P2=2, C1=1.5` | no overlap, no NA — that test stays green |
+| **Real 375-individual fixture** (`inst/extdata/examples/obfuscated_rhesus_mhc_ped.csv`) | **5** (11 / 5 / 3 / 13 / 343 real individuals) | packed x-ranges `[-1.5,2] [2.5,4] [4.5,5.5] [6.5,11.5] [12.5,85.1]` (disjoint); min same-row gap between nodes of different families **0.4167 → 1.0** | kinship2 not run (375 subjects; the fidelity target is the rule, verified above) |
+
+Real-fixture detail, disclosed not hidden: today the four small families **interleave among
+themselves** (current x-ranges `[1.58,6.42]`, `[4,5.42]`, `[-1.5,0]`, `[-1,6.5]` overlap) and sit
+0.5 units from the main family; under the rule they become four separate blocks to the left of
+the main family (their real ids precede its in `ped` row order). Within the main 343-animal
+family, **19 nodes move** (9 real individuals — `GYQNV5, RXPJPP, HDJ52R, P87V3K, Y7IUMX, 8933XB,
+PQX22G, UCXEK5, UTU9S7` — 5 unions, 5 duplicates), by at most 1.25 raw units: these are the nodes
+the unrelated families' collision pushes were displacing at the boundary rows. Every other main-
+family node is identical up to translation. Node id set identical (714 = 714).
+
+### 5. Impact — what changes, what must be re-pinned
+
+| Surface | Impact |
+|---|---|
+| `R/makePedigreeDiagramData.R` | 3 new `@noRd` helpers + dispatch at the top of `.positionMatingUnitForest()` (`:641`, after validation, before `minSep`) |
+| `test_positionMatingUnitForest.R:2879-2973` (Track B shrunk) | rewritten: all 8 individuals bit-exact vs a **fresh inline** `kinship2::align.pedigree()` run from a single origin (`P1`) — the per-component normalization and the `+1+1` push assertions go away, exactly as that test's own comment anticipated |
+| new tests | D1 (per-row vs whole-extent discriminator), D2 (3-family order), D3 (unequal depth) — each vs a fresh inline kinship2 run; real-fixture invariants: 5 components, pairwise-disjoint x-ranges, min same-row cross-family gap ≥ `minSep`; component-count/identity of the isolated-founder fixture |
+| real-fixture pinned counts | expected to change and **re-measured live during GREEN, never hand-derived**, each with a dated rationale comment (established precedent S647-S666): `test_makePedigreeMatingLayout.R:509` (714L nodes, direct — likely unchanged), `:682` (1446L nodes, rectilinear — jog count depends on collisions), `test_resolveEdgeNodeCollisions.R:338/349/360/502/503/605`, `test_addRectilinearWaypoints.R:546/553/622/626`, `test_positionMatingUnitForest.R:451/490/759/768/1091/1265/1266/1293/1381/1525/1557/2536/2589` (most are structural counts — 237 anchored units, 67 B1 ids, 224 single-child units — and should not move; the collision/residual counts may) |
+| Track B full tests (S666) | no edits expected (identical positions) — verified by the full run, not assumed |
+| `data-raw/kinship2FidelityValidation.R` images | `trackB-nprc-shrunk.png` regenerates; `trackB-nprc-full.png`, `trackC-*.png` expected byte-identical (single/unchanged components) — confirmed via `git status` after regeneration |
+| `NEWS.Rmd` | one plain-language bullet (unrelated families drawn side by side) |
+| `vignettes/articles/kinship2-fidelity-validation.qmd` | any prose describing the shrunk rendering's crowding as a known difference is corrected |
+
+### 6. Verification plan
+
+1. RED: the new/rewritten tests above fail against unmodified `HEAD` (confirmed by a full clean
+   regression read, counting the failures and attributing every one).
+2. GREEN: full clean regression 0 failed / 0 error attributable (the 1 pre-existing
+   `test_wordlist_coverage.R` failure and the 2 order-dependent marker-genetics timing flakes
+   excepted, each re-run in isolation); `lintr::lint_package()` 0 findings on touched files.
+3. Live `chromote` render of the real 375 fixture through `makePedigreeMatingLayout()` (the
+   `helper-live-render-positions.R` harness): 0 NA positions, 0 collapsed ids, and the rendered
+   same-row gap between nodes of different families ≥ `minSep × xScale` px.
+4. Regenerate the Track B/C images and inspect them directly — the shrunk image must show two
+   separate blocks with no mate-line through an unrelated symbol; full and Track C byte-identical.
+
+### 7. Alternatives re-weighed against the measured engine
+
+| Alternative | Why not |
+|---|---|
+| Option C as ratified (post-Tier-3 rigid translation) | §2 — cannot undo pushes already applied; leaves the S666-fixed asymmetry reintroduced |
+| Option A (pre-widen root siblings at Tier 1) | Root-level only; needs an excursion bound coupled to `.kMaxIndividualPush`; the real fixture's small families collide at non-root rows too |
+| Option B (component-aware `.deCollideIndividualPoints()`) | Edits the file's most regression-prone function (S647's three iterations); still leaves the BJL super-root packing blind to B1 mates, so roots stay adjacent |
+| A larger "family gap" than `minSep` | kinship2 uses exactly `minSep` per row (bit-exact on 4 fixtures); a larger gap would break fidelity with no legibility gain at `xScale = 120` (70 px clear between symbols) |
+
+### 8. Scope boundary
+
+**In scope:** disconnected-component interleaving, everywhere (not only the shrunk fixture).
+**Out of scope:** Track C's union-on-anchor for non-qualifying pairs and its duplicate/founder
+placement; any change to the tiers, the correction pass, or collision avoidance; the live Shiny
+demo. **Left as a design choice, disclosed:** the no-shared-row fallback (whole-extent + `minSep`)
+is kinship2-unverified because no fixture with row-disjoint families was built — it only affects
+families at entirely different depths and errs toward *more* separation.
