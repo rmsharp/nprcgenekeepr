@@ -16,6 +16,42 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S672: architecture/design doc — QP formulation for pedigree-drawing option (C)
+- **Deliverable:** `docs/planning/pedigree-diagram-joint-qp-solver-plan.md` — the design session
+  S671 named as the next step after deciding (C). Specs one joint `quadprog::solve.QP()` call per
+  weakly-connected component, replacing `.positionMatingUnitForest()`'s Tier 2/Tier 3
+  collision-avoidance passes (`.deCollideIndividualPoints()`, the Track 7 Phase 2/4 union and
+  duplicate proximity pushes) while keeping Tier 1 (BJL apportionment), `.forestComponents()`/
+  `.packComponents()`, `.buildMatingUnitForest()`, and the rendering-layer waypoint/jog code
+  unchanged. Follows `ARCHITECTURE_WORKSTREAM.md`; `docs/planning/` placement and no-TDD-gate
+  scope both owner-confirmed via `AskUserQuestion` before drafting. No `R/`/`tests/` change —
+  design only.
+- **Key design moves:** (1) order/value separation — Tier 2/Tier 3's existing (known-defective)
+  formulas are reused, unmodified, purely to fix each row's provisional left-to-right order; the
+  QP replaces only the VALUE computation, mirroring kinship2's own two-phase structure (Phase A
+  order-only heuristic, Phase B one global QP). (2) two new objective terms beyond a straight
+  kinship2 port: a union-dot centering penalty (targets census Finding #1, the dot-on-anchor
+  defect, directly) and a duplicate-proximity penalty (targets class (d), which kinship2 itself
+  does not solve). (3) `minSep` generalized from kinship2's uniform 1-unit constraint to this
+  project's existing 3-value radius-based clearance table, repurposed from soft capped-push
+  thresholds into hard QP constraint right-hand sides — no new constants invented. (4)
+  `quadprog::solve.QP()`'s argument contract independently verified against the installed
+  package's own `args()`/Rd documentation this session, closing S670 report §6's open caveat #3.
+- **Two items S671 left open, resolved by this design (both via `AskUserQuestion`):** the
+  row-policy question (census Finding #5) — decided to keep row = generation (status quo,
+  owner-ratified); and the duplicate-proximity penalty term (class (d)) — included in the
+  objective from the start rather than deferred further.
+- **Evidence-Based Inventory run** (`SESSION_RUNNER.md` Planning Sessions requirement for a plan
+  replacing/deleting code): grep-confirmed 2 production call sites, 6,635 lines across 4 test
+  files pinning `.positionMatingUnitForest()`'s exact output, 0 existing `quadprog`/`solve.QP`
+  references anywhere in `R/`/`NAMESPACE`/`DESCRIPTION`.
+- **Migration Path:** 4 phased implementation sessions with per-phase DONE criteria and
+  verification commands (plan doc §Migration Path) — next pickup is Phase 1 (standalone
+  `.solveJointQP()` + `quadprog` `Imports` dependency), a separate future session
+  (`SESSION_RUNNER.md` FM #18/#19, not bundled with this one). `BACKLOG.md` Up Next item 1 updated
+  with the design's outcome and the corrected next-step pointer. `PROJECT_LEARNINGS.md` Learnings
+  717–718. See `SESSION_NOTES.md`/`HANDOFFS.md` for the full record.
+
 ### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S671: DECIDED the A-vs-C pedigree-drawing question — (C), a joint solver
 - **Deliverable:** facilitated and recorded the owner's decision on `BACKLOG.md` Up Next item 1
   (DECISION NEEDED, TOP PRIORITY under the standing pedigree-fidelity directive) using the

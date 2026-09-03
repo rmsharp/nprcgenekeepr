@@ -60,15 +60,39 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       what each does/does not solve (neither solves duplicate-proximity class (d)), and the
       GPL-dependency note (`quadprog`/`kinship2` are `GPL (>= 2)`, this project is `MIT + file
       LICENSE`; an `Imports`-level runtime dependency on a GPL package is common, accepted CRAN
-      practice, not a blocker). **Next step (a separate future session, per `SESSION_RUNNER.md`'s
-      planning/implementation boundary, FM #18/#19 -- do NOT bundle with code): the
-      architecture/design session named in the S670 report's Section 4 -- spec the exact QP
-      formulation (penalty terms, the union-node QP variable, the `minSep` radius-based constraint
-      generalization) before any implementation session begins.** Independent of A/C, two items
-      still stand and were not resolved by this decision: the jog offset must be raised above the
-      25-px symbol radius (census Finding #3), and the row-policy question (census Finding #5 --
-      row = generation vs. kinship2's spouse-row-alignment) needs an explicit answer, since (C)
-      would otherwise silently adopt kinship2's policy.
+      practice, not a blocker).
+      **Design session DONE S672, 2026-09-03** (Effort M, one session, `ARCHITECTURE_WORKSTREAM.md`,
+      no TDD gate -- design doc only, no `R/` change):
+      [`docs/planning/pedigree-diagram-joint-qp-solver-plan.md`](docs/planning/pedigree-diagram-joint-qp-solver-plan.md).
+      Specs one joint `quadprog::solve.QP()` call per weakly-connected component, replacing
+      `.positionMatingUnitForest()`'s Tier 2/Tier 3 collision-avoidance passes (5 capped-push
+      mechanisms) while keeping Tier 1 (BJL), `.forestComponents()`/`.packComponents()`,
+      `.buildMatingUnitForest()`, and the rendering-layer waypoint/jog code all unchanged --
+      Tier 2/Tier 3's existing formulas are reused, unmodified, purely to fix provisional row
+      order (their known-defective VALUES are discarded once the QP runs). Objective: kinship2's
+      own spousal-pull + child-centering terms, PLUS two new terms this project needs that
+      kinship2 has no analogue for -- a union-dot centering penalty (targets census Finding #1
+      directly) and a duplicate-proximity penalty (targets class (d), which kinship2 itself does
+      not solve either). Constraints: `minSep` generalized from kinship2's uniform 1-unit floor to
+      this project's 3-value radius-based clearance table (already-existing render-layer
+      constants, repurposed from soft capped-push thresholds to hard QP constraint RHS values, no
+      new constants invented). `quadprog::solve.QP()`'s argument contract independently verified
+      against the installed package's own docs this session (closing S670 report §6 caveat #3).
+      **Both items S671 left open, resolved by this design:** the row-policy question (census
+      Finding #5) -- **decided: keep row = generation** (status quo; owner-ratified via
+      `AskUserQuestion`; a non-founder mate keeps her own row, the existing D2 dogleg still
+      renders the connection, unchanged) -- and the duplicate-proximity penalty term (class (d)) --
+      **included** in the QP objective from the start (mechanically free once the QP skeleton
+      exists, per S670's own costing). Migration Path: 4 phased implementation sessions (standalone
+      `.solveJointQP()` + `quadprog` dependency -> cutover on small fixtures -> real-375-fixture
+      cutover + full pinned-suite re-derivation + owner visual review -> cleanup), each with its
+      own DONE criteria and verification commands in the plan doc. **Next step (a separate future
+      session, per `SESSION_RUNNER.md`'s planning/implementation boundary, FM #18/#19 -- do NOT
+      bundle with code): Migration Path Phase 1** (the plan doc's own §Migration Path). Independent
+      of this design, one item still stands, unresolved by either the A-vs-C decision or this
+      design session: the jog offset must be raised above the 25-px symbol radius (census
+      Finding #3) -- a bounded fix any future session could pick up at any time, with no ordering
+      dependency on the QP work either way.
 - [x] **Research: characterize kinship2's `align.pedigree()` joint-positioning mechanism
       (`alignped4.R`) to quantify the (C) joint-solver option** (owner-directed 2026-09-02, after
       reviewing the S669 spike result; **DONE S670, 2026-09-03**, Effort M, one session) --
