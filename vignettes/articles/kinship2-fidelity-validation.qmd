@@ -144,7 +144,7 @@ verification](#sec-structural) below.
 
 ![kinship2's `pedigree.shrink()$pedObj` -- shrunk to 8 subjects. Unavailable ('?') individuals still shown, per kinship2's own convention.](kinship2-fidelity-validation-img/trackB-kinship2-shrunk.png){fig-alt="kinship2 pedigree diagram of the shrunk 8-subject pedigree, with unavailable individuals shown as unfilled nodes marked with a question mark."}
 
-![`shrinkPedigree()`'s own surviving pedigree, same 8 subjects, rendered the same way.](kinship2-fidelity-validation-img/trackB-nprc-shrunk.png){fig-alt="nprcgenekeepr pedigree diagram of the shrunk 8-subject pedigree, showing the same 2 family groups as kinship2's own shrunk diagram."}
+![`shrinkPedigree()`'s own surviving pedigree, same 8 subjects, rendered the same way. As of the disconnected-component separation fix (S667, 2026-09-02), the two unrelated surviving families are drawn as separate side-by-side blocks with the same one-unit gap kinship2 uses -- every individual's horizontal position matches kinship2's own `align.pedigree()` exactly.](kinship2-fidelity-validation-img/trackB-nprc-shrunk.png){fig-alt="nprcgenekeepr pedigree diagram of the shrunk 8-subject pedigree, showing the same 2 family groups as kinship2's own shrunk diagram, drawn side by side as separate blocks."}
 :::
 
 **What "matches" above means, precisely -- and what it does not.** The claim is scoped to

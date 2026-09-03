@@ -679,7 +679,15 @@ test_that(
   ## needed a jog repair (each removing 2 __jog_ waypoint nodes) --
   ## 1450 - 4 = 1446. Re-measured by actually running the fixed engine,
   ## never hand-derived.
-  expect_equal(nrow(result$nodes), 1446L)
+  ## CHANGED AGAIN to 1436L -- S667's disconnected-component separation
+  ## (docs/planning/pedigree-diagram-disconnected-component-separation-
+  ## plan.md "REVISED DESIGN"): the real fixture's 5 unrelated families are
+  ## now laid out as separate blocks (the 4 small ones no longer interleave
+  ## with each other), removing 5 more same-row collisions that previously
+  ## needed a jog repair (each removing 2 __jog_ waypoint nodes) --
+  ## 1446 - 10 = 1436. Re-measured by actually running the fixed engine,
+  ## never hand-derived.
+  expect_equal(nrow(result$nodes), 1436L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
   ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L (issue #166's
@@ -695,7 +703,10 @@ test_that(
   ## CHANGED AGAIN to 188L -- same cause as the node-count change above
   ## (192 - 4 = 188): S666's conditional-shift rule removes 2 more jog
   ## repairs it makes unnecessary.
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 188L)
+  ## CHANGED AGAIN to 178L -- same cause as the node-count change above
+  ## (188 - 10 = 178): S667's disconnected-component separation removes 5
+  ## more jog repairs it makes unnecessary.
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 178L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------

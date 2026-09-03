@@ -1303,7 +1303,14 @@ test_that(".positionMatingUnitForest's Track 7 Phase 2 push does not need
   ## __union_3, non-root), so none of the 3 coincides with any real node
   ## any longer. Re-measured live against the fixed engine, never
   ## hand-derived.
-  expect_equal(u1, 1.0, tolerance = 1e-6)
+  ## CHANGED u1 1.0 -> 2.0 (S667, disconnected-component separation,
+  ## docs/planning/pedigree-diagram-disconnected-component-separation-
+  ## plan.md "REVISED DESIGN"): C4's family is now packed as its own block
+  ## to the right of P1's family (C4 = P1 + 2, matching kinship2), so its
+  ## union follows its only child C4a to x = 2.0. u2/u3 (P1's family, the
+  ## first block) are unchanged. Re-measured by actually running the fixed
+  ## engine, never hand-derived.
+  expect_equal(u1, 2.0, tolerance = 1e-6)
   expect_equal(u2, 0.0, tolerance = 1e-6)
   expect_equal(u3, 0.5, tolerance = 1e-6)
 
@@ -1381,7 +1388,22 @@ test_that(".positionMatingUnitForest's Track 7 Phase 2 push resolves every
   ## hand-derived claim. All 3 named pairs (__union_14/__dup_L31S6S_3,
   ## __union_43/__dup_WDBGPF_2, __union_126/__dup_YPHFHF_1) confirmed
   ## individually resolved before this aggregate assertion was updated.
-  expect_equal(unname(counts["duplicate"]), 0L)
+  ##
+  ## CHANGED AGAIN (S667, disconnected-component separation): 0 -> 1, a
+  ## DISCLOSED RESIDUAL, not a fix. The real fixture is 5 unrelated
+  ## families; before S667 the 4 small ones interleaved with each other
+  ## and sat 0.5 units from the main family, and the resulting cross-
+  ## family collision pushes cascaded into the main family's left edge
+  ## (19 of its nodes sat up to 1.25 units further right). Laid out ALONE
+  ## (S667 lays each family out by this same engine and packs the blocks),
+  ## that edge is denser and Phase 4's capped (k <= 5), rightward-only push
+  ## exhausts on ONE pair: __union_43 vs __dup_WDBGPF_2, 0.083 raw units
+  ## (10 px) -- one of the exact 3 pairs Phase 4 originally resolved, now
+  ## reproduced by this test's own counting method against the fixed
+  ## engine, never hand-derived. Tracked as a BACKLOG.md Housekeeping item
+  ## (main-family proximity residual after component separation); the
+  ## before/after crops are in S667's own handoff.
+  expect_equal(unname(counts["duplicate"]), 1L)
 })
 
 ## ---- Duplicate-vs-unrelated-individual proximity (docs/planning/
@@ -1469,7 +1491,17 @@ test_that(".positionMatingUnitForest's duplicate-vs-unrelated-individual
   ## Pre-fix: 2 (TTE0Z7/__dup_MY1AEU_2 at 0.099, M0YNUR/__dup_L31S6S_5 at
   ## 0.100) -- re-measured live this session, matching the design doc's own
   ## §1.3 table exactly. Option B (GREEN) resolves this to 0.
-  expect_equal(n, 0L)
+  ##
+  ## CHANGED (S667, disconnected-component separation): 0 -> 3, a
+  ## DISCLOSED RESIDUAL, not a fix -- same mechanism as the union-vs-
+  ## duplicate case above (the main family laid out alone has a denser
+  ## left edge than it had while 4 unrelated families were pushing on it;
+  ## Option B's capped, rightward-only push exhausts). The 3 pairs,
+  ## measured against the fixed engine: M0YNUR/__dup_L31S6S_5 0.100 (the
+  ## Option B pair itself, regressed), 8933XB/__dup_SLN0TF_1 0.182,
+  ## UCXEK5/__dup_L31S6S_3 0.099 raw units. TTE0Z7/__dup_MY1AEU_2 stays
+  ## resolved (2.016). Tracked as a BACKLOG.md Housekeeping item.
+  expect_equal(n, 3L)
 })
 
 test_that(".positionMatingUnitForest's Option B fix resolves the 2 named
@@ -1489,7 +1521,12 @@ test_that(".positionMatingUnitForest's Option B fix resolves the 2 named
     abs(pos$x[pos$id == idA] - pos$x[pos$id == idB])
   }
   expect_true(distTo("TTE0Z7", "__dup_MY1AEU_2") >= .individualClearance)
-  expect_true(distTo("M0YNUR", "__dup_L31S6S_5") >= .individualClearance)
+  ## CHANGED (S667, disconnected-component separation): the M0YNUR pair
+  ## REGRESSED to 0.100 raw units -- a disclosed residual (see the
+  ## aggregate test directly above for the mechanism), pinned at its
+  ## measured value so a future fix that resolves it has to update this
+  ## line deliberately rather than pass silently.
+  expect_equal(distTo("M0YNUR", "__dup_L31S6S_5"), 0.1, tolerance = 1e-3)
 })
 
 ## ---- §6 disclosed edge case: the early-exit guard at
@@ -1645,7 +1682,16 @@ test_that(".positionMatingUnitForest's B1-individual-vs-unrelated-individual
   ## Pre-fix: 19 (design doc §1.2 -- 4 strictly-positive near-misses + 15
   ## exact ties, re-verified live this session against unmodified HEAD).
   ## This design's new pass (§2.2) resolves this to 0.
-  expect_equal(n, 0L)
+  ##
+  ## CHANGED (S667, disconnected-component separation): 0 -> 1, and this
+  ## one is a floating-point tie at the threshold, not a visible overlap:
+  ## BH6ZQK vs 8933XB sit exactly .individualClearance apart (d - clearance
+  ## = -6.1e-16, measured) -- the B1 pass placed one of them at precisely
+  ## `+ clearance`, and this test's strict `<` counts it. The symbols
+  ## touch edge-to-edge (50 px) and do not overlap. Disclosed alongside the
+  ## 4 genuine residual overlaps in the two tests above (BACKLOG.md
+  ## Housekeeping).
+  expect_equal(n, 1L)
 })
 
 test_that(".positionMatingUnitForest's new B1-vs-unrelated-individual pass

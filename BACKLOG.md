@@ -11,6 +11,57 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
+- [ ] **Pedigree-drawing error census across every fixture, then decide: keep fixing
+      defect-by-defect, or move to a joint solver** (owner-directed S667, 2026-09-02, via
+      `AskUserQuestion` — "b", census first; READY, TOP PRIORITY under the standing
+      pedigree-fidelity directive, Effort M, one session) -- the owner reviewed all current
+      drawings (Track B full/shrunk, Track C, the real 375-animal fixture) and observed that every
+      one still has multiple errors. S667's own fix (below) showed the pattern behind that: the
+      engine positions the tree of individuals first and bolts mates, union dots and duplicates on
+      afterwards with formulas plus capped collision pushes, so each local fix moves the residual
+      elsewhere (S667's structural fix immediately exposed 5 near-misses the old interleaving had
+      masked) -- ~24 sessions since 2026-08-26 and 41 commits on `R/makePedigreeDiagramData.R` in
+      30 days. **Deliverable:** an automated scoreboard (a `data-raw/` script and/or test helper)
+      that, for every fixture -- Track B full, Track B shrunk, Track C, the real 375-animal
+      pedigree, and the S667 synthetic multi-family fixtures D1/D2/D3 -- reports counts AND
+      offending ids for each error class: (a) overlapping symbols (same-row centre distance below
+      the sum of the two nodes' radii, by node kind); (b) mating-union dots not centred between
+      their two mates; (c) edges passing through unrelated symbols; (d) a duplicate drawn adjacent
+      to / overlapping its own real occurrence; (e) a founder drawn on a row other than its mate's;
+      (f) family interleaving (component x-ranges overlapping). Most of the measurement code
+      already exists in `tests/testthat/test_positionMatingUnitForest.R` (proximity metrics) and
+      `test_comparePedigreeStructure.R`. Write the results up as a `docs/audits/` report with the
+      per-class root-cause attribution. **Decision the census feeds (NOT made this session):** (A)
+      continue one defect per session, or (C) replace the local-patch positioning with a joint
+      solver -- either `Imports: kinship2` and use `kinship2::align.pedigree()` for x positions
+      while keeping this package's visNetwork rendering layer (kinship2 is GPL-2|3, nprcgenekeepr
+      MIT: *importing* is fine, copying its code is not; Terry Therneau is a co-author of
+      nprcgenekeepr per `DESCRIPTION`, so a permission route also exists; ggpedigree's authors
+      describe kinship2 as facing deprecation, though CRAN shows no notice as of 2026-09-02), or a
+      clean-room relaxation pass. S667's prior leans (C) because the remaining classes share the
+      root; the census should test that, not assume it (S664's lesson).
+- [x] **Track B shrunk fixture draws two unrelated families interleaved -- disconnected-component
+      separation** (owner-named pickup S667, 2026-09-02, after reviewing the regenerated images;
+      design REVISED and RATIFIED S667; **implemented and shipped S667, full TDD RED (`40d33804`)
+      -> GREEN, DONE**, Effort M) -- the S664 "Option C" plan (superseded that same session)
+      proposed a post-Tier-3 rigid translation; measured this session, that cannot work: the
+      collision pushes (`P2 = P1 + 2`) have already happened by then. Revised mechanism, all in
+      `.positionMatingUnitForest()`: partition the drawn graph into weakly-connected components
+      (real ids + mating units; duplicates ride with their unit), lay each family out ALONE through
+      the unchanged 3-tier engine (recursive call on `ped`/`forest` subsets), then pack the blocks
+      left-to-right in ped row order with a per-row `minSep` gap -- exactly `kinship2::
+      align.pedigree()`'s treatment of unrelated families, **bit-exact against fresh kinship2 runs
+      on Track B shrunk (all 8 individuals from a single origin) and 3 new synthetic multi-family
+      fixtures** (D1 discriminates per-row from whole-extent packing; D2 confirms kinship2's
+      ped-row family order; D3 unequal depths). Track B full (itself 2 components) and Track C
+      unchanged -- images byte-identical. Real 375 fixture: 5 families; the 4 small ones no longer
+      interleave (min cross-family gap 0.42 -> 1.0), 5 fewer jog repairs. **Disclosed residual,
+      owner-accepted:** the main family laid out alone has a denser left edge and the existing
+      capped proximity passes leave 5 near-misses there (4 genuine 10-22 px overlaps + 1
+      floating-point tie) that the old interleaving had masked -- re-pinned with dated comments,
+      Housekeeping item below, to be folded into the census above. Full design + GREEN findings:
+      [`docs/planning/pedigree-diagram-disconnected-component-separation-plan.md`](docs/planning/pedigree-diagram-disconnected-component-separation-plan.md)
+      "REVISED DESIGN -- Session 667".
 - [x] **Mating-union dot not at the true parent midpoint; single-child chains of nested
       qualifying pairs mis-positioned** (found live S664, 2026-09-01/09-02; design
       RATIFIED S665, 2026-09-02; **implemented and shipped S666, 2026-09-02, DONE**,
@@ -464,6 +515,14 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       (reuse potential outside this project, cleaner dependency graph, and versioning/release
       overhead, cross-package test/CI complexity, `@noRd`/internal-function visibility loss across
       a package boundary, etc.) before any decision to split.
+      **Scoping analysis DONE S667 (2026-09-02) as a side artifact** -- the session was first
+      (mis-)pointed at this item before the owner redirected it to pedigree drawing:
+      [`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`](docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md)
+      (`findGlobals()`-measured coupling: the layout core reaches back into the package at exactly
+      one point, `kinship()`; only `modPedigreeServer()` consumes it; the Shiny module cannot move;
+      recommendation **do not split now**, with 3 revisit conditions and 3 optional in-place prep
+      steps). **Owner disposition pending** -- the item stays open until the owner accepts or
+      rejects the recommendation; nothing else to do here until then.
 - [x] **Simplify `NEWS.Rmd` entries for a non-technical audience, reorganized by feature
       not chronologically, with guardrails against recurrence** (found 2026-08-20,
       owner-directed, READY, Effort L) -- a prior session (S538, 2026-08-12) already
@@ -511,6 +570,33 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `rmarkdown::render()` (this file's own build-equivalent) run clean after every
       substantive edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`.
 ## Housekeeping
+- [ ] **Main-family proximity residual on the real 375-animal fixture after S667's
+      disconnected-component separation** (found S667, 2026-09-02, during GREEN; owner-accepted
+      as a disclosed residual via `AskUserQuestion`; READY, Effort M -- but fold it into the
+      pedigree-drawing census item at the top of Up Next rather than patching it alone) -- laid
+      out alone, the main 343-animal family's left edge is denser than it was while 4 unrelated
+      families' collision pushes cascaded into it, and the existing capped (`.kMaxUnionPush = 5`,
+      `.kMaxIndividualPush = 2`), rightward-only proximity passes (Track 7 Phase 2/4, Option B, the
+      B1 pass) exhaust on 5 pairs: `__union_43`/`__dup_WDBGPF_2` (0.083 raw units), `M0YNUR`/
+      `__dup_L31S6S_5` (0.100), `8933XB`/`__dup_SLN0TF_1` (0.182), `UCXEK5`/`__dup_L31S6S_3`
+      (0.099) -- four genuine 10-22 px symbol overlaps -- plus `BH6ZQK`/`8933XB`, a floating-point
+      tie at exactly `.individualClearance` (symbols touch, no overlap). The prior 0-residual on
+      this fixture rested on the interleaving artefact, not on the passes being complete.
+      Candidate fixes, none evaluated: re-run the proximity passes once more after packing; raise
+      the push caps (S647 found uncapped pushes cause worse D1 bar overlaps -- measure, don't
+      assume); or the joint-solver direction the census will weigh. Pinned at the measured values
+      in `tests/testthat/test_positionMatingUnitForest.R` (`:1406`, `:1504`, `:1529`, `:1694`) with
+      dated comments; before/after chromote crops in S667's handoff.
+- [ ] **`vignettes/articles/kinship2-fidelity-validation.qmd:150-163` still says
+      `makePedigreeMatingLayout()` draws "the mating-unit marker ... at the sire's own symbol
+      rather than centered between sire and dam"** (found S667, 2026-09-02, incidental while
+      updating the shrunk-figure caption; READY, Effort S) -- obsolete since S666's conditional-
+      shift rule: on Track B full every union dot is now centred between the pair and the descent
+      line drops from the true midpoint (the regenerated `trackB-nprc-full.png` shows it). That
+      paragraph's "real, visible difference in mate-line layout" framing should be rewritten to
+      describe the current behaviour (and what still differs: non-qualifying pairs -- polygamous
+      or duplicate-involving -- keep the dot on the anchor). Not fixed S667: outside that
+      session's deliverable, per the established report-don't-fix precedent (Learning 382).
 - [x] **`NEWS.Rmd`'s "For one specific pattern (a sibling-consanguineous mating), the trade-off
       above is partially mitigated..." dev-version bullet may already have been stale before this
       session, independent of issue #166** (found incidentally S652, 2026-08-29, while correcting

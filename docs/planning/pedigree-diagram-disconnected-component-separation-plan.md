@@ -221,8 +221,9 @@ designed/ratified, per the owner's own staged request this session).
 
 ## REVISED DESIGN — Session 667 (2026-09-02): component-aware layout, measured against kinship2
 
-**Status: RATIFIED by the owner via `AskUserQuestion` (S667, 2026-09-02) — "implement now,
-full TDD" scope.** Owner-directed pickup: the owner named "Track B shrunk interleaving" as this session's
+**Status: IMPLEMENTED S667 (2026-09-02) — RATIFIED by the owner via `AskUserQuestion`,
+"implement now, full TDD" scope; RED `40d33804`, GREEN in the S667 close-out commit. Shipped with
+one disclosed residual — see "GREEN findings" at the end of this section.** Owner-directed pickup: the owner named "Track B shrunk interleaving" as this session's
 pedigree-drawing target after reviewing the S666-regenerated images. Every number below is from
 a live run this session against `HEAD` (`94ae26c8` + docs-only commits) or a fresh
 `kinship2::align.pedigree()` call on the identical fixture — none is hand-derived (S664's own
@@ -349,3 +350,32 @@ placement; any change to the tiers, the correction pass, or collision avoidance;
 demo. **Left as a design choice, disclosed:** the no-shared-row fallback (whole-extent + `minSep`)
 is kinship2-unverified because no fixture with row-disjoint families was built — it only affects
 families at entirely different depths and errs toward *more* separation.
+
+### 9. GREEN findings (S667) — what the implementation actually did, and the disclosed residual
+
+- **Defect found by the existing suite, fixed in GREEN:** a duplicate whose parent is *dangling*
+  (no own `ped` row, S461) has a `realId` that is not a node, so assigning duplicates by `realId`
+  dropped it from every component (3 assertions of the pre-existing dangling-parent duplicate test).
+  Duplicates now ride with their **mating unit** (`matingUnitId`), which is the same assignment for
+  every non-dangling duplicate. The test-local mirror helper was corrected identically.
+- **Bit-exact results held** on Track B shrunk and D1/D2/D3 (live kinship2 cross-checks pass);
+  Track B full and Track C images byte-identical after regeneration; only
+  `trackB-nprc-shrunk.png` changed.
+- **Real 375 fixture — the win:** the 4 small families no longer interleave with each other
+  (min same-row cross-family gap 0.4167 → 1.0 raw units); 5 fewer same-row edge collisions need
+  a jog repair (`__jog_` waypoints 188 → 178; rectilinear nodes 1,446 → 1,436; baseline
+  colliding edges 93 → 88, obstacle pairs 1,758 → 1,751).
+- **Real 375 fixture — the disclosed residual (owner-accepted, "ship; disclose"):** laid out
+  alone, the main 343-animal family's left edge is denser than it was while 4 unrelated families'
+  collision pushes cascaded into it (19 of its nodes sat up to 1.25 units further right). The
+  existing capped/unidirectional proximity passes exhaust on 5 pairs there: `__union_43` vs
+  `__dup_WDBGPF_2` (0.083 raw units), `M0YNUR` vs `__dup_L31S6S_5` (0.100), `8933XB` vs
+  `__dup_SLN0TF_1` (0.182), `UCXEK5` vs `__dup_L31S6S_3` (0.099) — four genuine symbol overlaps
+  (10–22 px) — plus `BH6ZQK` vs `8933XB`, a floating-point tie at exactly `.individualClearance`
+  (d − clearance = −6.1e-16; symbols touch, do not overlap). Before/after chromote crops of the
+  region are in S667's handoff. The old 0-residual state on this fixture depended on the
+  interleaving artefact, not on the passes being complete. Re-pinned in
+  `test_positionMatingUnitForest.R` with dated comments; tracked as a `BACKLOG.md` Housekeeping
+  item, to be folded into the owner's chosen next step (a drawing-error census across all
+  fixtures, then a decision between further local fixes and a joint solver) rather than patched
+  in isolation.

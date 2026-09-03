@@ -499,8 +499,16 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   ## fixture's qualifying unions/parents, removing 2 more colliding edges
   ## (95 -> 93, 1761 -> 1758 obstacle-pairs). Re-measured by actually
   ## running the fixed engine, never hand-derived.
-  expect_equal(nrow(baselineEdges), 93L)
-  expect_equal(nrow(baseline), 1758L)
+  ## CHANGED AGAIN to 88L/1751L -- S667's disconnected-component
+  ## separation (docs/planning/pedigree-diagram-disconnected-component-
+  ## separation-plan.md "REVISED DESIGN"): the real fixture's 5 unrelated
+  ## families are laid out as separate blocks, so the 4 small families no
+  ## longer interleave with each other -- 5 fewer colliding edges
+  ## (93 -> 88, 1758 -> 1751 obstacle-pairs), the same 5 jog repairs
+  ## test_makePedigreeMatingLayout.R no longer needs. Re-measured by
+  ## actually running the fixed engine, never hand-derived.
+  expect_equal(nrow(baselineEdges), 88L)
+  expect_equal(nrow(baseline), 1751L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

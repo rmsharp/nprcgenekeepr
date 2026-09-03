@@ -138,25 +138,61 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S667
 date: 2026-09-02
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: RE-SCOPED by the owner mid-session. Deliverable: pedigree-drawing fidelity --
-  fix (or design the fix for) the Track B shrunk fixture's disconnected-component
-  interleaving (trackB-nprc-shrunk.png; two unrelated families share rows, mate-lines run
-  through unrelated symbols; kinship2 draws them side by side). Scope decided PRE-RED via
-  AskUserQuestion. Side artifact committed before the pivot (f1936c40):
-  docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md (the package-split
-  scoping this session was first mis-pointed at; complete, not this session's deliverable).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE. Disconnected-component separation for the pedigree layout (the Track B
+  shrunk fixture's two unrelated families interleaved; kinship2 draws them side by side).
+  Owner-named pickup after Phase 0 was mis-pointed at the package-split scoping item (that
+  analysis was completed and committed as a side artifact, f1936c40, disposition pending).
+  Design revised against the current engine, owner-ratified, full TDD RED (40d33804) ->
+  GREEN (checkpoint 9d3c27ef + close-out commit). Shipped with one owner-accepted, disclosed
+  residual on the real 375 fixture.
+what_was_done: Each weakly-connected family is now laid out ALONE by the unchanged 3-tier
+  engine (recursive call in .positionMatingUnitForest() on ped/forest subsets) and the blocks
+  are packed left-to-right in ped row order with a per-row minSep gap -- kinship2's own rule,
+  bit-exact vs fresh align.pedigree() runs on Track B shrunk (all 8 from one origin) and 3 new
+  synthetic multi-family fixtures; Track B full/Track C byte-identical. Measured, not assumed:
+  the S664 Option C (translate after Tier 3) cannot work because the collision pushes precede
+  it. GREEN caught a dangling-parent duplicate defect (duplicates now ride with their unit).
+  Real 375: 4 small families un-tangled (cross-family gap 0.42 -> 1.0), 5 fewer jog repairs;
+  RESIDUAL: the main family alone has a denser left edge and the capped proximity passes leave
+  5 near-misses (4 real overlaps, 1 epsilon tie) the old interleaving had masked -- traced by
+  diffing the old engine vs new on the same nodes, rendered before/after, presented to the
+  owner, accepted, re-pinned with dated comments, Housekeeping item filed. Owner also chose
+  the next approach: a drawing-error census across all fixtures before deciding between more
+  local fixes and a joint solver (BACKLOG.md Up Next top item). Full clean regression 1
+  failed/0 error (pre-existing wordlist only); lint 0; NEWS.Rmd bullet + NEWS.md re-rendered;
+  fidelity-article caption updated. Detail: SESSION_NOTES.md "What Session 667 Did".
+next_steps: Pick up BACKLOG.md Up Next item 1: the pedigree-drawing error census (scoreboard
+  over Track B full/shrunk, Track C, real 375, D1-D3; six error classes; docs/audits/ report),
+  then the A (per-defect) vs C (joint solver: Imports kinship2 align.pedigree(), or clean-room
+  relaxation) decision. Do NOT patch the 5-pair main-family residual alone -- fold it into the
+  census. Package-split scoping doc awaits owner disposition. Stale fidelity-article paragraph
+  (:150-163) is a separate Housekeeping item.
+key_files: R/makePedigreeDiagramData.R (.forestComponents()/.subsetForest()/
+  .packComponents() immediately before .positionMatingUnitForest(); dispatch after
+  .kMaxIndividualPush); tests/testthat/test_positionMatingUnitForest.R (helpers at top beside
+  .expectNoOverlap(); rewritten shrunk test :3016; "S667 RED" section :3367 to end; re-pins
+  at :1313/:1406/:1504/:1529/:1694); test_makePedigreeMatingLayout.R:690/:709;
+  test_resolveEdgeNodeCollisions.R:510-511; docs/planning/pedigree-diagram-disconnected-
+  component-separation-plan.md ("REVISED DESIGN -- Session 667" + section 9);
+  docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md.
+gotchas: .positionMatingUnitForest() is now recursive per family -- anything needing the WHOLE
+  pedigree must live in .packComponents() or after the dispatch's early return. Duplicates
+  belong to their mating unit's component, not their realId's (dangling parents). A test helper
+  that calls skip_if_not_installed() must be the LAST assertion. The real fixture's proximity
+  counts rest on family layout -- re-measure after any layout change, never carry forward.
+  NEWS.Rmd needs a blank line before each `##` or github_document glues the heading to the
+  last bullet (2 older instances remain).
+runtime_smoke: Live chromote render of the real 375 fixture (rectilinear): 1436/1436 nodes,
+  0 NA, 0 collapsed ids, rendered cross-family same-row gap exactly 120 px, family x-ranges
+  disjoint; regenerated trackB-nprc-shrunk.png inspected directly; six before/after region
+  crops inspected and sent to the owner.
+changelog_ref: CHANGELOG.md 2026-09-02 S667 entries, this commit.
 commit: pending
 ```
-(stub — filled at close-out, Phase 3D)
+(receipt complete, Phase 3D — `commit:` reconciled by the follow-up sha commit per the S600/S602-S666 precedent)
 
 ```handoff
 session: S666

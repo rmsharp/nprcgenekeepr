@@ -18,28 +18,165 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 666 Handoff Evaluation (by Session 667)
+**Score: 8/10.** **What helped:** `key_files` and `gotchas` were accurate and directly
+load-bearing: `R/makePedigreeDiagramData.R:627-866` was exactly the edit site (the new dispatch
+sits at the top of `.positionMatingUnitForest()`), the "`sweepMinSep()` runs twice" and
+"`qualifies()` ≠ B1" gotchas oriented the reading of the correction pass in minutes, and
+`next_steps` was right in the way that mattered most: it said no numbered pedigree item was READY
+and that the shrunk fixture's disconnected-component crowding was pre-existing and deliberately
+*not* filed — "do not assume it needs fixing without the owner raising it again." The owner
+raised it, and that note is what let this session identify the defect and its history
+immediately. The handoff's own verification discipline (fresh kinship2 runs, never hand-derived
+values) was reused verbatim and caught the one hand-simulation error this session nearly made
+(the S664 Option C "translate after Tier 3" idea, disproved by the current numbers in one probe).
+**What was missing:** no pointer to `docs/planning/pedigree-diagram-disconnected-component-
+separation-plan.md` — a ratified-then-superseded design for exactly this defect, with a "not
+dead" notice — which had to be found via the planning-directory listing; `NEWS.md` was not
+regenerated after S666's `NEWS.Rmd` edit (found only because this session's render diff picked
+up S666's issue #166 bullet); `vignettes/articles/kinship2-fidelity-validation.qmd:150-163`
+still describes the union dot as sitting on the sire's symbol, which S666 made false for Track B
+full (filed as Housekeeping). **What was wrong:** nothing found inaccurate. **ROI:** high — a
+short read that removed all discovery cost on the code side; the misses were all on the
+documentation side.
+
 ### What Session 667 Did
-**Deliverable (RE-SCOPED by the owner mid-session):** pedigree-drawing fidelity — the Track B
-**shrunk** fixture's disconnected-component interleaving (`trackB-nprc-shrunk.png`: the two
-unrelated families `P1×P2→M1→M1×G3→L3` and `C4×P6→C4a` share rows and interleave — gen 0 reads
-`P1 · C4 · P2 · P6`, gen 1 reads `M1 · C4a · G3`, three mate-lines run through unrelated symbols
-— where kinship2 draws the families side by side). Standing top-priority pedigree work. Scope
-(design-only vs. implement) decided PRE-RED via `AskUserQuestion`. (IN PROGRESS)
-**Side artifact, committed before the pivot (`f1936c40`):**
-`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` — the package-split
-scoping analysis this session was *first* (mis-)pointed at. Complete and citation-verified;
-recommendation "do not split now" with 3 revisit conditions. **Not** this session's deliverable;
-its `BACKLOG.md` item is left untouched for the owner to dispose of.
-**Orientation error to record (PROJECT_LEARNINGS):** my Phase 0 priorities list put the
-package-split scoping item as option 1 because no numbered pedigree item was tagged READY; the
-owner's "option 1" meant pedigree drawing. While `BACKLOG.md`'s STANDING TOP PRIORITY note
-stands, option 1 must be "continue pedigree-drawing fidelity — owner names the next defect",
-even with nothing tagged READY.
-**Started:** 2026-09-02
-**Status:** Session re-claimed for the pedigree deliverable. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** pedigree-drawing fidelity — the Track B **shrunk** fixture's
+disconnected-component interleaving, **implemented and shipped (DONE)**: two unrelated families
+(`P1×P2→M1→M1×G3→L3` and `C4×P6→C4a`) had shared rows and interleaved (`P1 · C4 · P2 · P6`), with
+mate-lines through unrelated symbols; they now render as side-by-side blocks, bit-exact vs
+kinship2. Owner-named pickup after this session's Phase 0 was mis-pointed (see the orientation
+error below). Full TDD: RED `40d33804` → GREEN (checkpoint `9d3c27ef`, close-out commit).
+**Started/Completed:** 2026-09-02 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0** — SAFEGUARDS/notes/issues/dashboard/`gh run list` (CI in progress for S666's
+   last push; previous green). Ledger frontiers = HEAD, nothing to backfill. Rendered the
+   priorities list with the package-split scoping item as option 1 because no numbered pedigree
+   item was tagged READY. **Orientation error:** the owner's "option 1" meant pedigree drawing
+   (the STANDING TOP PRIORITY); I claimed the scoping item (`b28883e7`) and produced it.
+2. **Side artifact (`f1936c40`):** `docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`
+   — a complete, citation-verified `codetools::findGlobals()`-based coupling analysis
+   (recommendation: do not split now; 3 revisit conditions; 3 optional prep steps). The owner
+   redirected before any decision: "This is not what you are to be working on. We are working on
+   drawing pedigrees." Committed as a side artifact; its `BACKLOG.md` item notes the owner's
+   disposition is pending.
+3. **Pivot** — re-claimed (`3b4944da`); looked at all 7 fidelity images directly and listed the
+   visible defects per fixture; the owner picked "Track B shrunk interleaving".
+4. **Design, measured not assumed** — read the superseded S664 plan (Option C, post-Tier-3
+   translation) and the S664/S665 superseding plan's "re-verify, don't assume" clause. Probes
+   (fresh `kinship2::align.pedigree()` every time): (a) the current engine interleaves exactly as
+   rendered; (b) each family laid out ALONE is already bit-exact with kinship2; (c) per-row
+   contour packing of those blocks reproduces kinship2's full answer; (d) Option C as ratified
+   cannot work — the collision pushes (`P2 = P1 + 2`) precede any post-pass; (e) three synthetic
+   fixtures (D1 per-row-vs-extent discriminator, D2 three-family order, D3 unequal depth) all
+   bit-exact; (f) Track B full is itself 2 components and comes out identical up to translation;
+   (g) the real 375 fixture is **5** components whose 4 small ones interleave today. Wrote
+   "REVISED DESIGN — Session 667" into the superseded plan doc (`f09206d5`); **owner ratified,
+   "implement now, full TDD."**
+5. **RED (`40d33804`)** — rewrote the shrunk test to 8 bit-exact values from one origin; added
+   D1/D2/D3 (pinned literals + a live kinship2 cross-check via `.expectKinship2Agrees()`, called
+   last because a skip ends the test); added real-375 invariants (5 families, disjoint x-ranges,
+   min same-row cross-family gap ≥ minSep). One RED-phase bug of my own: helpers defined *below*
+   their first use (testthat sources top-down) → moved beside `.expectNoOverlap()`. Full clean
+   regression 6 failed/0 error = the 5 new tests + the wordlist baseline, 0 collateral.
+6. **GREEN** — `.forestComponents()` (vectorized min-label propagation, no `<<-`),
+   `.subsetForest()`, `.packComponents()` + a dispatch after `.kMaxIndividualPush` in
+   `.positionMatingUnitForest()`; no tier/pass/waypoint code touched. **Defect caught by the
+   existing suite:** a dangling parent's duplicate (`realId` not a node) vanished — duplicates
+   now ride with their mating unit. Images regenerated: only `trackB-nprc-shrunk.png` changed
+   (full + Track C byte-identical, as predicted). Sent the corrected image to the owner on
+   request.
+7. **The residual, traced not guessed** — 5 other real-fixture tests failed. Sourced the OLD
+   engine from `git show HEAD:` into an env parented on the namespace and compared pair by pair:
+   all 5 near-misses are inside the main 343-animal family; in the old run the interleaved small
+   families' collision pushes cascaded into its left edge (19 nodes up to 1.25 units right),
+   which incidentally gave the capped proximity passes room; alone, that edge is denser and the
+   passes exhaust: 4 genuine overlaps (10–22 px) + 1 floating-point tie at exactly the threshold
+   (d − clearance = −6.1e-16). Rendered before/after chromote crops of three regions (small
+   families: clear win; left edge and `M0YNUR`: the cost) and put them in front of the owner.
+8. **Owner decisions** — asked "one drawing at a time or another way?"; answered with the
+   architectural diagnosis (mates/unions/duplicates bolted on after the tree with capped local
+   pushes; kinship2 solves jointly; ~24 sessions of residual-shifting) and three options; the
+   owner chose **B: a drawing-error census across all fixtures first, then decide between more
+   local fixes and a joint solver** (queued as the next pickup) and the fix shipped with the
+   residual disclosed.
+9. **Re-pins, all live-measured with dated comments:** shrunk `u1` 1.0→2.0; union-vs-dup 0→1;
+   dup-vs-individual 0→3; `M0YNUR` pair pinned at its measured 0.100; B1-vs-individual 0→1
+   (the epsilon tie); rectilinear nodes 1,446→1,436 and jogs 188→178; collision baseline
+   93/1,758→88/1,751. Lint 3 findings (a >80-char roxygen path, `numeric(1)`, a path-as-code
+   comment) fixed → 0 package-wide. `NEWS.Rmd` bullet (plain language) + `NEWS.md` re-rendered
+   (also picking up S666's un-rendered bullet; fixed the blank-line-before-heading glue for the
+   Pedigree Diagram group). Article caption updated. `devtools::document()`: no drift.
+10. **Full clean regression:** 2,339 tests, **1 failed / 0 errors** — the pre-existing
+    `test_wordlist_coverage.R` baseline only.
+
+**Runtime smoke test (Phase 3E):** live chromote render of the real 375-animal fixture through
+`makePedigreeMatingLayout(edgeStyle = "rectilinear")`: 1,436/1,436 nodes rendered, 0 NA, 0
+collapsed ids, rendered min same-row gap between nodes of different families exactly 120 px
+(= minSep × xScale), family x-ranges disjoint; plus the regenerated, directly-inspected
+`trackB-nprc-shrunk.png` and the six before/after region crops.
+
+**Close-out checklist mapping (`CLAUDE.md`):** citation checklist N/A (no new statistic).
+Tutorial/article checklist: no new Shiny control; the fidelity article's shrunk-figure caption
+updated, and its stale S666-era paragraph filed as Housekeeping (not fixed — outside this
+deliverable). `NEWS.Rmd` checklist DONE (plain-language bullet, `NEWS.md` regenerated).
+`a2interactive.Rmd`: N/A (no new exported function/parameter). `_pkgdown.yml`: N/A. GitHub
+issue close-out: N/A (no issue; tracked in `BACKLOG.md`). Lint checklist DONE (0 package-wide).
+
+**Self-assessment (Session 667): 7/10.** **Strengths:** (1) every layout claim was measured
+against a fresh kinship2 run or a real engine probe — including disproving the previously
+ratified Option C in one probe and predicting exactly which images would change; (2) the
+residual was found, traced to its mechanism by diffing the old engine against the new on the
+same nodes, rendered, quantified in px, and put in front of the owner as a decision rather than
+re-pinned quietly; (3) the existing suite's dangling-duplicate catch was fixed at the root
+(duplicates follow their unit) and mirrored in the test helper; (4) the owner's strategy
+question got a real answer with an evidence-based recommendation. **Weaknesses:** (1) the
+first ~third of the session went to the wrong deliverable because my Phase 0 picker did not
+put the standing pedigree priority as option 1 — a protocol/judgment error, recorded as a
+learning; (2) two self-inflicted RED-phase stumbles (helpers below their use; a probe that
+crashed on unassigned duplicates) each cost a round trip; (3) the shipped state adds 4 real
+overlaps to the production fixture's main family — owner-accepted and disclosed, but a
+regression on that fixture nonetheless. **ROI:** high for the fixture the owner asked about
+(bit-exact), moderate for the production fixture (net: 4 families un-tangled, 4 pairs newly
+overlapping), and the strategy decision (census first) is the more valuable outcome.
+
+**Next steps (specific):** pick up `BACKLOG.md` Up Next's first item — the **pedigree-drawing
+error census** (scoreboard across Track B full/shrunk, Track C, real 375, D1-D3; six error
+classes; `docs/audits/` report) — then the A-vs-C decision. Do not patch the 5-pair residual in
+isolation; fold it into the census. The package-split scoping doc awaits the owner's
+disposition (its `BACKLOG.md` item says so). The stale fidelity-article paragraph is a separate
+Housekeeping item (Effort S).
+
+**Key files:** `R/makePedigreeDiagramData.R` — `.forestComponents()`/`.subsetForest()`/
+`.packComponents()` (new, immediately before `.positionMatingUnitForest()`'s roxygen block) and
+the dispatch at the top of `.positionMatingUnitForest()` (after `.kMaxIndividualPush <- 2L`);
+`tests/testthat/test_positionMatingUnitForest.R` — helpers beside `.expectNoOverlap()` (top),
+the rewritten shrunk test (`:3016`), the "S667 RED" section (`:3367` to end of file), and the 5
+re-pinned proximity assertions (`:1313`, `:1406`, `:1504`, `:1529`, `:1694`);
+`tests/testthat/test_makePedigreeMatingLayout.R:690/:709`;
+`tests/testthat/test_resolveEdgeNodeCollisions.R:510-511`;
+`docs/planning/pedigree-diagram-disconnected-component-separation-plan.md` ("REVISED DESIGN —
+Session 667", §9 GREEN findings); `docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`.
+Before/after crops (scratch, not committed): `scratchpad/crops/{old,new}-{smallfamilies,leftedge,m0ynur}.png`
+under this session's harness scratchpad — regenerate with the chromote recipe in step 7 if needed.
+
+**Gotchas for a future session:** (1) `.positionMatingUnitForest()` is now recursive: with >1
+component it calls itself per family on `ped`/`forest` subsets — anything added to the function
+body runs per family, and anything that must see the WHOLE pedigree has to go into
+`.packComponents()` or after the dispatch's early `return`. (2) Duplicates belong to their
+mating unit's component, not their `realId`'s (dangling parents). (3) A test helper that calls
+`skip_if_not_installed()` must be the test's last assertion. (4) The old "0 residual" numbers on
+the real fixture rested on cross-family push cascades; any change to how families are laid out
+will move those counts again — re-measure, never carry forward. (5) `NEWS.Rmd` groups need a
+blank line before the next `##` or github_document glues the heading onto the last bullet (two
+older instances remain: before `## Cross-Center Identity Matching` and `## Genetic Value
+Analysis`).
+
+**Orientation error to record (PROJECT_LEARNINGS):** while `BACKLOG.md`'s STANDING TOP PRIORITY
+note stands, the Phase 0 picker's option 1 must be "continue pedigree-drawing fidelity — owner
+names the next defect", even when no numbered pedigree item is tagged READY.
 
 ### Session 665 Handoff Evaluation (by Session 666)
 **Score: 9/10.** **What helped:** `key_files`/`gotchas` were directly usable and confirmed

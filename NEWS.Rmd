@@ -142,6 +142,13 @@ knitr::opts_chunk$set(echo = TRUE)
   tree) that could land close enough to an unrelated animal to visually
   touch or overlap, in large colony pedigrees, are now kept a clear
   distance apart.
+- When a pedigree contains families that are not related to each other,
+  each family is now drawn as its own block, side by side with a clear gap
+  between blocks -- the same way kinship2 draws them. Previously two
+  unrelated families could be drawn interleaved on the same rows, with a
+  mate line running through an unrelated animal's symbol, so two strangers
+  could look related.
+
 ## Kinship & Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their
   computed relatedness to genetic identity, and that correction flows

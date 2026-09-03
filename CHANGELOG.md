@@ -16,6 +16,84 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-02 · [BL-disconnectedComponentSeparation] S667: implemented and shipped disconnected-component separation for the pedigree layout (Track B shrunk interleaving, DONE); owner chose "census first" as the next approach
+- **Deliverable:** `.positionMatingUnitForest()` now partitions the drawn graph into
+  weakly-connected families (`.forestComponents()`, vectorized min-label propagation; duplicates
+  ride with their mating unit), lays each family out ALONE by the unchanged 3-tier engine
+  (recursive call on `ped`/`forest` subsets, `.subsetForest()`), and packs the blocks
+  left-to-right in ped row order with a per-row `minSep` gap (`.packComponents()`) — kinship2's
+  own treatment of unrelated families. Bit-exact vs fresh `kinship2::align.pedigree()` runs on
+  Track B shrunk (all 8 individuals from one origin) and three new synthetic multi-family
+  fixtures (D1 per-row-vs-extent discriminator, D2 three-family ped-row order, D3 unequal depth);
+  Track B full and Track C images byte-identical. RED `40d33804`; GREEN checkpoint `9d3c27ef`
+  + this commit.
+- **Measured, not assumed:** the S664-ratified Option C (rigid translation *after* Tier 3)
+  cannot work — the collision pushes (`P2 = P1 + 2`) precede any post-pass — so separation
+  happens before Tier 3 (design section "REVISED DESIGN — Session 667" in
+  `docs/planning/pedigree-diagram-disconnected-component-separation-plan.md`, owner-ratified).
+- **GREEN findings:** the existing dangling-parent duplicate test caught a real defect
+  (`realId` not a node → duplicate dropped) — fixed by assigning duplicates via `matingUnitId`.
+  Real 375 fixture: 5 families; the 4 small ones no longer interleave (min same-row
+  cross-family gap 0.4167 → 1.0), 5 fewer jog repairs (rectilinear nodes 1,446 → 1,436, jogs
+  188 → 178, collision baseline 93/1,758 → 88/1,751). **Disclosed residual, owner-accepted via
+  `AskUserQuestion`:** laid out alone, the main 343-animal family's left edge is denser than
+  while 4 unrelated families' pushes cascaded into it, and the capped proximity passes leave 5
+  near-misses (4 genuine 10–22 px overlaps + 1 floating-point tie at the threshold) — traced by
+  diffing the old engine (sourced from `git show HEAD:`) against the new on the same nodes,
+  rendered before/after with chromote, presented with images; re-pinned with dated comments;
+  `BACKLOG.md` Housekeeping item filed.
+- **Verified:** full clean regression 2,339 tests, 1 failed / 0 errors (the pre-existing
+  `test_wordlist_coverage.R` baseline only); `lintr::lint_package()` 0 findings package-wide
+  (3 in new code fixed); `devtools::document()` no drift; Phase 3E live chromote render of the
+  real fixture 1,436/1,436 nodes, 0 NA, 0 collapsed ids, rendered cross-family gap 120 px.
+- **Docs:** `NEWS.Rmd` plain-language bullet + `NEWS.md` re-rendered (also picks up S666's
+  issue #166 bullet, which had not been re-rendered; blank line added before `## Kinship`);
+  `vignettes/articles/kinship2-fidelity-validation.qmd` shrunk-figure caption updated;
+  `BACKLOG.md`: this item DONE, two Housekeeping items (the residual; the stale article
+  paragraph at `:150-163`), and — **owner decision, non-commit action:** asked "one drawing at
+  a time or another way?", the owner chose a **pedigree-drawing error census across every
+  fixture first**, then a decision between further per-defect fixes and a joint solver
+  (`Imports: kinship2` `align.pedigree()` for x positions, or a clean-room relaxation) —
+  recorded as the new top Up Next item.
+- **Model:** Claude Fable 5.1.
+
+### 2026-09-02 · [ad hoc] S667: RED for disconnected-component separation (commit `40d33804`)
+- Rewrote the Track B shrunk test to 8 bit-exact kinship2 values from a single origin; added
+  D1/D2/D3 fixtures (pinned literals + live kinship2 cross-check via a new
+  `.expectKinship2Agrees()` helper, called last since a skip ends the test) and real-375
+  separation invariants; test-local `.forestComponentsForTest()`/`.minCrossComponentRowGap()`.
+  Genuine RED confirmed: full clean regression 6 failed / 0 errors = the 5 new tests + the
+  wordlist baseline, 0 collateral. One RED-phase bug of the session's own (helpers defined
+  below their first use) fixed before commit.
+- **Model:** Claude Fable 5.1.
+
+### 2026-09-02 · [ad hoc] S667: revised design for disconnected-component separation, ratified (commit `f09206d5`)
+- Appended "REVISED DESIGN — Session 667" to the superseded S664 plan: probe evidence (current
+  interleaving numbers; per-family layouts already kinship2-exact; per-row packing reproduces
+  kinship2 on 4 fixtures; Track B full unchanged; real 375 = 5 families), the rule, impact table,
+  verification plan, alternatives. Owner ratified with "implement now, full TDD" scope.
+- **Model:** Claude Fable 5.1.
+
+### 2026-09-02 · [ad hoc] S667: re-claim session after owner redirect to pedigree drawing (commit `3b4944da`)
+- Owner: "This is not what you are to be working on. We are working on drawing pedigrees." Stub
+  and pending receipt re-scoped; all 7 fidelity images reviewed directly and the visible
+  defects listed per fixture; owner picked "Track B shrunk interleaving".
+- **Model:** Claude Fable 5.1.
+
+### 2026-09-02 · [ad hoc] S667: pedigree-diagram package-split scoping research — side artifact (commit `f1936c40`)
+- `docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`: `codetools::findGlobals()`
+  coupling inventory (layout core reaches back into the package at one point, `kinship()`; one
+  consumer, `modPedigreeServer()`; the Shiny module cannot move), test/fixture/doc/CI/CRAN
+  impact, churn (41 of 86 `R/` commits in 30 days), ecosystem (CRAN pages verified),
+  recommendation "do not split now" with 3 revisit conditions and 3 optional prep steps. Produced
+  because this session's Phase 0 picker mis-ranked it as option 1; **not** the session's
+  deliverable — owner disposition pending (`BACKLOG.md` item annotated).
+- **Model:** Claude Fable 5.1.
+
+### 2026-09-02 · [ad hoc] S667: claim session (commit `b28883e7`)
+- Session claimed for the package-split scoping item (later redirected, above).
+- **Model:** Claude Fable 5.1.
+
 ### 2026-09-02 · [ad hoc] S666: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S665 precedent)
 - This commit sets `HANDOFFS.md`'s S666 receipt `commit:` field from `pending` to `1f44315d`
   (the close-out deliverable commit), the same self-reference workaround this project's

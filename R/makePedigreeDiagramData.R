@@ -568,8 +568,9 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' Weakly-connected components of the drawn pedigree graph
 #'
 #' Internal helper for the disconnected-component separation fix (S667,
-#' \code{docs/planning/pedigree-diagram-disconnected-component-separation-plan.md},
-#' "REVISED DESIGN -- Session 667"). Partitions the nodes the layout
+#' \code{docs/planning/pedigree-diagram-disconnected-component-
+#' separation-plan.md}, "REVISED DESIGN -- Session 667"). Partitions the
+#' nodes the layout
 #' actually draws -- every real id in \code{ped} plus every mating-unit id
 #' in \code{forest$matingUnits} -- into weakly-connected components over the
 #' edges it actually draws: mating unit <-> its real sire, mating unit <->
@@ -582,7 +583,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' Components are ordered by the smallest \code{ped} row index among their
 #' real members: kinship2's own family order (\code{align.pedigree()} lays
 #' unrelated families out in pedigree order -- verified bit-exact on a
-#' 3-family fixture, \code{test_positionMatingUnitForest.R}). Labelling is
+#' 3-family fixture, \code{test_positionMatingUnitForest.R}). Labeling is
 #' vectorized min-label propagation to a fixed point (no closure state).
 #'
 #' @param ped data frame with at least an \code{id} column.
@@ -684,7 +685,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     shift <- if (length(sharedGens) > 0L) {
       max(vapply(sharedGens, function(g) {
         max(placed$x[placed$gen == g]) + minSep - min(nxt$x[nxt$gen == g])
-      }, numeric(1)))
+      }, numeric(1L)))
     } else {
       max(placed$x) + minSep - min(nxt$x)
     }
@@ -780,8 +781,10 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   .kMaxIndividualPush <- 2L
 
   ## ---- S667: disconnected-component separation --------------------------
-  ## docs/planning/pedigree-diagram-disconnected-component-separation-plan.md,
-  ## "REVISED DESIGN -- Session 667". Two or more weakly-connected families
+  ## docs/planning/pedigree-diagram-disconnected-component-
+  ## separation-plan.md, "REVISED DESIGN -- Session 667" (path wrapped so
+  ## commented_code_linter does not parse it as arithmetic, S652 precedent).
+  ## Two or more weakly-connected families
   ## are each laid out ALONE by this same engine (recursively: every tier,
   ## the S666 correction pass, and every collision-avoidance mechanism run
   ## unchanged per family), then packed left-to-right in ped row order with
