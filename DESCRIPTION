@@ -49,6 +49,7 @@ Imports:
     Matrix,
     openxlsx,
     plotrix,
+    quadprog,
     readxl,
     Rlabkey (>= 3.2.0),
     sessioninfo,

@@ -696,6 +696,34 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   placed
 }
 
+#' Build a non-anchor-node resolver for one \code{forest}
+#'
+#' A mating unit's non-anchor party (\code{matingUnits$nonAnchor}) may be
+#' rendered either as her own real id, or -- if this occurrence is her
+#' duplicated occurrence (\code{forest$duplicates}) -- as the
+#' \code{__dup_*} placeholder node standing in for her at this unit. Both
+#' \code{.addRectilinearWaypoints()}'s D2 dogleg block and
+#' \code{.solveJointQP()} (QP joint-solver plan, Decision 4) need this same
+#' resolution; factored out here (Migration Path Phase 1) so neither
+#' duplicates the lookup. \code{dupKey} is built once, matching the
+#' pre-extraction code's own performance characteristic (computed outside
+#' any per-unit loop).
+#'
+#' @param duplicates the \code{duplicates} data frame from
+#'   \code{\link{.buildMatingUnitForest}} (\code{id}, \code{realId},
+#'   \code{matingUnitId}).
+#' @return A function \code{(nonAnchorRealId, unitId)} returning the id of
+#'   the node actually rendered for that non-anchor party at that unit --
+#'   \code{nonAnchorRealId} itself, or the matching \code{__dup_*} id.
+#' @noRd
+.nonAnchorNodeResolver <- function(duplicates) {
+  dupKey <- paste0(duplicates$realId, duplicates$matingUnitId)
+  function(nonAnchorRealId, unitId) {
+    dupIdx <- match(paste0(nonAnchorRealId, unitId), dupKey)
+    if (is.na(dupIdx)) nonAnchorRealId else duplicates$id[dupIdx]
+  }
+}
+
 
 #' Position a mating-unit forest via a genuine Buchheim-Junger-Leipert
 #' apportioning engine (Option 2 layout, D3/D4/D5)
@@ -1528,6 +1556,196 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   data.frame(id = ids, x = x, gen = gen, stringsAsFactors = FALSE)
 }
 
+#' Joint QP solve for one weakly-connected pedigree component (Option C)
+#'
+#' Migration Path Phase 1 of \code{docs/planning/
+#' pedigree-diagram-joint-qp-solver-plan.md} -- one \code{quadprog::
+#' solve.QP()} call positioning every node of one component simultaneously,
+#' replacing \code{.positionMatingUnitForest()}'s five collision-avoidance
+#' passes (still present and unchanged as of Phase 1 -- this function is
+#' standalone, not yet wired into \code{.positionMatingUnitForest()}, per
+#' the plan's own Phase 1/Phase 2 session boundary).
+#'
+#' \strong{Decision 1 (two phases):} \code{provisionalPos} is
+#' \code{.positionMatingUnitForest()}'s OWN, unmodified output for this
+#' component -- Phase A. Its \code{x} values fix each row's (gen's)
+#' left-to-right order (Decision 3); its \code{gen} column is reused
+#' unchanged as the row key (Decision 5: row = generation, unmodified by
+#' this design). \strong{Decision 2 (variable set):} one QP variable per
+#' node already in \code{provisionalPos$id} -- no node is added or removed.
+#' Node \code{kind} is two-valued: \code{"union"} for an id in
+#' \code{matingUnits$id}, \code{"individual"} for everything else (genuine,
+#' B1 free-pass, and duplicate nodes all render as the same 25px shape and
+#' share one clearance value). \strong{Decision 3 (constraints):} within
+#' each row, sorted by \code{provisionalPos$x} (ties broken by id, radix --
+#' the same tie-break \code{sweepMinSepBackstop()} uses), each adjacent
+#' pair gets one hard inequality \code{x[i+1] - x[i] >= minSepFor(kind_i,
+#' kind_{i+1})}, using this project's own radius-based clearance constants
+#' (repurposed, same values, from soft capped-push thresholds to hard QP
+#' constraint right-hand sides). \strong{Decision 4 (objective):} spousal
+#' pull + child centering (kinship2's own two terms, ported) plus two terms
+#' kinship2 has no analogue for -- union centering (targets census Finding
+#' #1) and duplicate proximity (targets class (d)) -- plus one
+#' anti-degeneracy row breaking translation invariance, matching kinship2's
+#' own fix. \code{Nnode()} resolution (a unit's non-anchor party's actually
+#' -rendered node, real or duplicate) is shared with
+#' \code{.addRectilinearWaypoints()}'s D2 block via
+#' \code{\link{.nonAnchorNodeResolver}}.
+#'
+#' An orphan mating unit (\code{matingUnits$anchor} is \code{NA} -- issue
+#' #154, both sire and dam dangling) still gets a QP variable and adjacency
+#' constraints like every other node, but no spousal-pull/child-centering/
+#' union-centering term applies to it (no real anchor/non-anchor pair
+#' exists) -- an edge case kinship2 sidesteps via its own \code{fixParents()}
+#' pre-processing, which this project has no equivalent for (Impact
+#' Analysis, plan doc).
+#'
+#' @param provisionalPos data frame (\code{id}, \code{x}, \code{gen}) --
+#'   \code{.positionMatingUnitForest()}'s own unmodified output for this
+#'   component, supplying both the row/order-fixing input and this
+#'   function's full node population (Decision 2).
+#' @param matingUnits the \code{matingUnits} data frame from
+#'   \code{\link{.buildMatingUnitForest}} (\code{id}, \code{sire},
+#'   \code{dam}, \code{anchor}, \code{nonAnchor}, \code{gen}).
+#' @param duplicates the \code{duplicates} data frame from
+#'   \code{\link{.buildMatingUnitForest}} (\code{id}, \code{realId},
+#'   \code{matingUnitId}).
+#' @param childEdges the \code{childEdges} data frame from
+#'   \code{\link{.buildMatingUnitForest}} (\code{from}, \code{to}).
+#' @param wSpouse spousal-pull weight (default \code{2}, kinship2's own
+#'   default, ported directly).
+#' @param alignChild child-centering weight exponent (default \code{1.5},
+#'   kinship2's own default; a unit with \code{k} real children weights its
+#'   own child-centering rows by \code{k^-alignChild}).
+#' @param wUnion union-centering weight (default \code{2}, the same order
+#'   as the spousal term it structurally mirrors) -- a NEW term, no
+#'   kinship2 analogue.
+#' @param wDup duplicate-proximity weight (default \code{1}, a lower-
+#'   priority nice-to-have) -- a NEW term, no kinship2 analogue.
+#' @return A data frame (\code{id}, \code{x}, \code{gen}) with exactly the
+#'   same \code{id} set as \code{provisionalPos} (Decision 2) -- \code{gen}
+#'   unchanged from \code{provisionalPos} (Decision 5), \code{x} the QP's
+#'   own solution.
+#' @noRd
+.solveJointQP <- function(provisionalPos, matingUnits, duplicates,
+                           childEdges, wSpouse = 2.0, alignChild = 1.5,
+                           wUnion = 2.0, wDup = 1.0) {
+  ids <- provisionalPos$id
+  n <- length(ids)
+  varIndex <- stats::setNames(seq_len(n), ids)
+  isUnion <- ids %in% matingUnits$id
+  kind <- stats::setNames(ifelse(isUnion, "union", "individual"), ids)
+
+  ## Decision 3: radius-based minSep, repurposed unchanged from the
+  ## soft-push thresholds .positionMatingUnitForest() already uses
+  ## (individualClearance/unionClearanceIndividual/unionClearanceUnion).
+  unionClearanceIndividual <- (25L + 6L) / 120L
+  unionClearanceUnion <- (6L + 6L) / 120L
+  individualClearance <- (25L + 25L) / 120L
+  minSepFor <- function(k1, k2) {
+    if (k1 == "union" && k2 == "union") return(unionClearanceUnion)
+    if (k1 == "union" || k2 == "union") return(unionClearanceIndividual)
+    individualClearance
+  }
+
+  amatCols <- list()
+  bvec <- numeric(0L)
+  for (g in sort(unique(provisionalPos$gen))) {
+    rowIds <- ids[provisionalPos$gen == g]
+    if (length(rowIds) < 2L) next
+    rowX <- provisionalPos$x[match(rowIds, ids)]
+    rowIds <- rowIds[order(rowX, rowIds, method = "radix")]
+    for (i in seq_len(length(rowIds) - 1L)) {
+      a <- rowIds[i]
+      b <- rowIds[i + 1L]
+      col <- numeric(n)
+      col[[varIndex[[b]]]] <- 1.0
+      col[[varIndex[[a]]]] <- -1.0
+      amatCols[[length(amatCols) + 1L]] <- col
+      bvec <- c(bvec, minSepFor(kind[[a]], kind[[b]]))
+    }
+  }
+  Amat <- if (length(amatCols) > 0L) {
+    do.call(cbind, amatCols)
+  } else {
+    matrix(numeric(0L), nrow = n, ncol = 0L)
+  }
+
+  ## Decision 4: objective. e(id) is the unit basis vector at id's own
+  ## column; pmatRows accumulates one row per penalty term, squared later
+  ## via t(pmat) %*% pmat (kinship2's alignped4 builds its own pmat the
+  ## same way).
+  e <- function(id) {
+    v <- numeric(n)
+    v[[varIndex[[id]]]] <- 1.0
+    v
+  }
+  resolveNnode <- .nonAnchorNodeResolver(duplicates)
+  anchoredUnits <- matingUnits[!is.na(matingUnits$anchor), , drop = FALSE]
+  pmatRows <- list()
+  for (i in seq_len(nrow(anchoredUnits))) {
+    u <- anchoredUnits$id[i]
+    anchor <- anchoredUnits$anchor[i]
+    Nnode <- resolveNnode(anchoredUnits$nonAnchor[i], u)
+
+    ## Term 1: spousal pull (kinship2's own align[2] term).
+    pmatRows[[length(pmatRows) + 1L]] <-
+      sqrt(wSpouse) * (e(anchor) - e(Nnode))
+
+    ## Term 3 (NEW): union centering -- targets census Finding #1.
+    pmatRows[[length(pmatRows) + 1L]] <-
+      sqrt(wUnion) * (e(u) - 0.5 * e(anchor) - 0.5 * e(Nnode))
+
+    ## Term 2: child centering (kinship2's own align[1] term) -- one row
+    ## per real child, weighted by sibship size k^-alignChild.
+    kids <- childEdges$to[childEdges$from == u]
+    kids <- kids[kids %in% ids]
+    k <- length(kids)
+    if (k > 0L) {
+      childWeight <- sqrt(k^(-alignChild))
+      for (child in kids) {
+        pmatRows[[length(pmatRows) + 1L]] <-
+          childWeight * (e(child) - 0.5 * e(anchor) - 0.5 * e(Nnode))
+      }
+    }
+  }
+
+  ## Term 4 (NEW): duplicate proximity -- targets census class (d).
+  ## kinship2 has no analogue (S670 report Sec. 3) -- free to build once
+  ## the QP skeleton exists (same shape as term 1).
+  if (nrow(duplicates) > 0L) {
+    for (i in seq_len(nrow(duplicates))) {
+      dupId <- duplicates$id[i]
+      realId <- duplicates$realId[i]
+      pmatRows[[length(pmatRows) + 1L]] <-
+        sqrt(wDup) * (e(dupId) - e(realId))
+    }
+  }
+
+  ## Term 5: anti-degeneracy, breaking translation invariance (pmat alone
+  ## has a 0 unconstrained minimum at "shift everything by the same
+  ## constant") -- matches kinship2's own identical fix. Reference
+  ## variable: the widest row's first node in provisional order (radix
+  ## tie-break), an arbitrary but deterministic choice.
+  genCounts <- table(provisionalPos$gen)
+  widestGen <- as.numeric(names(genCounts))[which.max(genCounts)]
+  widestRowIds <- ids[provisionalPos$gen == widestGen]
+  widestRowX <- provisionalPos$x[match(widestRowIds, ids)]
+  refId <- widestRowIds[order(widestRowX, widestRowIds, method = "radix")][1L]
+  antiDeg <- numeric(n)
+  antiDeg[[varIndex[[refId]]]] <- 1e-5
+  pmatRows[[length(pmatRows) + 1L]] <- antiDeg
+
+  pmat <- do.call(rbind, pmatRows)
+  Dmat <- t(pmat) %*% pmat + 1e-8 * diag(n)
+
+  fit <- quadprog::solve.QP(Dmat = Dmat, dvec = rep(0.0, n), Amat = Amat,
+                             bvec = bvec, meq = 0L)
+
+  data.frame(id = ids, x = fit$solution, gen = provisionalPos$gen,
+             stringsAsFactors = FALSE)
+}
+
 #' Combine the Option 2 mating-unit forest into visNetwork-ready diagram data
 #'
 #' The exported wrapper for the kinship2-parity pedigree layout (Pedigree
@@ -2185,7 +2403,11 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
   projColor <- character()
   projWidth <- numeric()
   if (nrow(matingUnits) > 0L) {
-    dupKey <- paste0(duplicates$realId, duplicates$matingUnitId)
+    ## Migration Path Phase 1 (QP joint-solver plan, Decision 4): the
+    ## dupKey/dupIdx/Nnode lookup this block used to inline is now shared
+    ## with .solveJointQP() via .nonAnchorNodeResolver() -- no behavior
+    ## change, same dupKey-computed-once-outside-the-loop shape as before.
+    resolveNnode <- .nonAnchorNodeResolver(duplicates)
     for (i in seq_len(nrow(matingUnits))) {
       U <- matingUnits$id[i]
       A <- matingUnits$anchor[i]
@@ -2193,8 +2415,7 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
       ## no real anchor/non-anchor side exists to dogleg at all.
       if (is.na(A)) next
       Nreal <- matingUnits$nonAnchor[i]
-      dupIdx <- match(paste0(Nreal, U), dupKey)
-      Nnode <- if (is.na(dupIdx)) Nreal else duplicates$id[dupIdx]
+      Nnode <- resolveNnode(Nreal, U)
       Ugen <- matingUnits$gen[i]
 
       sides <- list(list(nodeId = A, gen = sideGen(A)),

@@ -86,13 +86,37 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       exists, per S670's own costing). Migration Path: 4 phased implementation sessions (standalone
       `.solveJointQP()` + `quadprog` dependency -> cutover on small fixtures -> real-375-fixture
       cutover + full pinned-suite re-derivation + owner visual review -> cleanup), each with its
-      own DONE criteria and verification commands in the plan doc. **Next step (a separate future
+      own DONE criteria and verification commands in the plan doc.
+      **Migration Path Phase 1 DONE S673, 2026-09-03, full TDD RED->GREEN (REFACTOR skipped,
+      nothing behavior-neutral identified beyond GREEN's own lint fixes)** -- new internal
+      `.solveJointQP(provisionalPos, matingUnits, duplicates, childEdges, wSpouse, alignChild,
+      wUnion, wDup)` (`R/makePedigreeDiagramData.R`) implements Decisions 2-4 in full: one
+      `quadprog::solve.QP()` call per component, the 2-value union/individual kind split, the
+      radius-based `minSep` adjacency constraints, and the 5-term objective (spousal pull, child
+      centering, union centering, duplicate proximity, anti-degeneracy). Verified standalone
+      against Track B full/shrunk, Track C, D1-D3 (9 RED test blocks,
+      `tests/testthat/test_solveJointQP.R`) -- NOT wired into `.positionMatingUnitForest()`
+      (Phase 2's job) and NOT run against the real 375-fixture (Phase 3's job). `quadprog`
+      promoted to `DESCRIPTION` `Imports:`; `renv::snapshot(dev = TRUE)` confirms consistent (the
+      package was already present as a transitive record). Extracted a shared
+      `.nonAnchorNodeResolver()` helper from `.addRectilinearWaypoints()`'s D2 dogleg block
+      (:2195-2197 pre-extraction) so both it and `.solveJointQP()` share one lookup -- no
+      behavior change, confirmed by `test_addRectilinearWaypoints.R`'s own 102/102 pass. The
+      wUnion/wDup weight sweep Decision 4 flagged as "not assumed here" was run for real (0.01 to
+      100, Track C + Track B full): the minSep floor sits at exactly the constraint boundary at
+      every setting (slack ~0), extending Learning 678/715's kinship2 finding to this project's
+      own 2 new terms. Full clean regression: 2348 blocks, 6893 passed, 1 failed/0 error (the
+      pre-existing `test_wordlist_coverage.R` baseline only) -- 0 collateral. `lintr` 0 findings
+      (7 `implicit_integer_linter` fixes folded into GREEN). **Next step (a separate future
       session, per `SESSION_RUNNER.md`'s planning/implementation boundary, FM #18/#19 -- do NOT
-      bundle with code): Migration Path Phase 1** (the plan doc's own §Migration Path). Independent
-      of this design, one item still stands, unresolved by either the A-vs-C decision or this
-      design session: the jog offset must be raised above the 25-px symbol radius (census
-      Finding #3) -- a bounded fix any future session could pick up at any time, with no ordering
-      dependency on the QP work either way.
+      bundle with code): Migration Path Phase 2** (cutover on small fixtures only -- wire
+      `.solveJointQP()` into `.positionMatingUnitForest()`, replacing the 5 collision-avoidance
+      passes, re-deriving `test_positionMatingUnitForest.R`'s small-fixture assertions against the
+      new engine's actual output; still NOT the real 375-fixture). Independent of this design, one
+      item still stands, unresolved by either the A-vs-C decision or this design/Phase-1 work: the
+      jog offset must be raised above the 25-px symbol radius (census Finding #3) -- a bounded fix
+      any future session could pick up at any time, with no ordering dependency on the QP work
+      either way.
 - [x] **Research: characterize kinship2's `align.pedigree()` joint-positioning mechanism
       (`alignped4.R`) to quantify the (C) joint-solver option** (owner-directed 2026-09-02, after
       reviewing the S669 spike result; **DONE S670, 2026-09-03**, Effort M, one session) --

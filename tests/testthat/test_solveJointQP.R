@@ -1,0 +1,275 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
+## Tests for .solveJointQP() -- Pedigree Diagram Joint QP Solver (Option C),
+## Migration Path Phase 1 (docs/planning/pedigree-diagram-joint-qp-solver-plan.md
+## Sec. "Migration Path" > "Phase 1 -- .solveJointQP() standalone, not yet wired
+## into production").
+##
+## Phase 1's own DONE criteria (plan doc): a standalone .solveJointQP() verified
+## against small fixtures that carry NO known census defect (Track B full/shrunk,
+## Track C, D1-D3) -- this phase's job is confirming the QP reproduces
+## feasibility/order (Decision 3's hard minSep constraint is never violated,
+## regardless of objective weighting), NOT fixing a defect and NOT pinning exact
+## output x-values. Unlike most of this codebase's other pedigree-diagram tests,
+## there is no independent ground-truth oracle (kinship2 has no equivalent joint
+## solve over this project's own union/duplicate node set) to hand-derive a pinned
+## target against -- so these tests assert the QP's own structural guarantees
+## (Decisions 2/3/4), not specific coordinates. .solveJointQP() is NOT wired into
+## .positionMatingUnitForest() at this phase (Phase 2's job) -- every fixture
+## below is run through the UNCHANGED .positionMatingUnitForest() first, to
+## produce the provisionalPos input .solveJointQP() consumes, exactly matching
+## Decision 1's "Phase A output feeds Phase B" contract.
+
+## ---- fixture builders (inline data.frames, matching this codebase's own
+## convention -- no shared external fixture file exists; see
+## test_positionMatingUnitForest.R) -------------------------------------------
+
+## Track B full: 16-subject fixture (test_positionMatingUnitForest.R's own
+## "full, non-shrunk 16-subject Track B fixture"). 4 qualifying anchored units,
+## no duplicates.
+.qpTrackBFull <- function() {
+  ped <- data.frame(
+    id   = c("P1", "P2", "P3", "P4", "P5", "P6",
+             "C1", "C2", "C3", "C4", "C4a",
+             "G3", "M1", "L1", "L2", "L3"),
+    sire = c(NA, NA, NA, NA, NA, NA,
+             "P1", "P1", "P1", "P3", "C4",
+             NA, "P1", "M1", "M1", "M1"),
+    dam  = c(NA, NA, NA, NA, NA, NA,
+             "P2", "P2", "P2", "P4", "P6",
+             NA, "P2", "G3", "G3", "G3"),
+    sex  = c("M", "F", "M", "F", "F", "F",
+             "F", "M", "F", "M", "F",
+             "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+
+## Track B shrunk: the same origin, shrunk to 8 individuals in 2 disconnected
+## families (test_positionMatingUnitForest.R's own S667 fixture).
+.qpTrackBShrunk <- function() {
+  pedB <- .qpTrackBFull()
+  genotypedB <- c(P1 = TRUE, P2 = TRUE, P3 = FALSE, P4 = FALSE, P5 = TRUE,
+    P6 = TRUE, C1 = TRUE, C2 = FALSE, C3 = TRUE, C4 = TRUE, C4a = TRUE,
+    G3 = FALSE, M1 = TRUE, L1 = TRUE, L2 = TRUE, L3 = TRUE)[pedB$id]
+  affectedB <- c(P1 = NA, P2 = NA, P3 = NA, P4 = NA, P5 = NA, P6 = NA,
+    C1 = FALSE, C2 = NA, C3 = TRUE, C4 = TRUE, C4a = TRUE, G3 = NA,
+    M1 = TRUE, L1 = NA, L2 = FALSE, L3 = TRUE)[pedB$id]
+  shrunk <- shrinkPedigree(pedB, genotypedB, affected = affectedB,
+                           maxBits = 1L)$ped
+  shrunk$gen <- findGeneration(shrunk$id, shrunk$sire, shrunk$dam)
+  shrunk
+}
+
+## Track C: half-sib-mating convergent loop (F1 doubly-mated: F1xF2 -> A,
+## F1xF3 -> B, AxB -> C). F1 never anchors (F2/F3 win anchor by lower
+## mate-count), so F1 is a B1 free-pass individual via F1xF2 (its first,
+## free non-anchor occurrence) and a real duplicate (__dup_F1_1) via F1xF3
+## (its second) -- the only fixture below with both a B1 individual AND a
+## real duplicate node, needed for the wDup sweep (case 4).
+.qpTrackC <- function() {
+  data.frame(
+    id = c("F1", "F2", "F3", "A", "B", "C"),
+    sire = c(NA, NA, NA, "F1", "F1", "A"),
+    dam = c(NA, NA, NA, "F2", "F3", "B"),
+    sex = c("M", "F", "F", "M", "F", "M"),
+    gen = c(0L, 0L, 0L, 1L, 1L, 2L),
+    stringsAsFactors = FALSE
+  )
+}
+
+## D1/D2/D3: the 3 synthetic multi-family (disconnected-component) fixtures
+## from test_positionMatingUnitForest.R's own S667 section.
+.qpD1 <- function() {
+  ped <- data.frame(
+    id   = c("F1", "M1", "A1", "S1", "K1", "K2", "K3", "K4", "F2", "M2", "B1"),
+    sire = c(NA, NA, "F1", NA, "S1", "S1", "S1", "S1", NA, NA, "F2"),
+    dam  = c(NA, NA, "M1", NA, "A1", "A1", "A1", "A1", NA, NA, "M2"),
+    sex  = c("M", "F", "F", "M", "M", "F", "M", "F", "M", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+
+.qpD2 <- function() {
+  ped <- data.frame(
+    id   = c("A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3"),
+    sire = c(NA, NA, "A1", NA, NA, "B1", NA, NA, "C1"),
+    dam  = c(NA, NA, "A2", NA, NA, "B2", NA, NA, "C2"),
+    sex  = c("M", "F", "F", "M", "F", "M", "M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+
+.qpD3 <- function() {
+  ped <- data.frame(
+    id   = c("A1", "A2", "A3", "B1", "B2", "B3", "B4", "B5"),
+    sire = c(NA, NA, "A1", NA, NA, "B1", "B3", NA),
+    dam  = c(NA, NA, "A2", NA, NA, "B2", "B5", NA),
+    sex  = c("M", "F", "F", "M", "F", "M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+
+## Issue #154 orphan-unit fixture (both sire AND dam dangling) --
+## test_positionMatingUnitForest.R's own fixture, reused verbatim (case 5).
+.qpOrphanUnit <- function() {
+  data.frame(
+    id = "CHILD",
+    sire = "DANGLING_SIRE",
+    dam = "DANGLING_DAM",
+    sex = "F",
+    gen = 0L,
+    stringsAsFactors = FALSE
+  )
+}
+
+.qpSmallFixtures <- list(
+  trackBFull = .qpTrackBFull,
+  trackBShrunk = .qpTrackBShrunk,
+  trackC = .qpTrackC,
+  d1 = .qpD1,
+  d2 = .qpD2,
+  d3 = .qpD3
+)
+
+## Builds forest + provisionalPos (Decision 1's Phase A output, UNCHANGED --
+## .positionMatingUnitForest() itself is not modified by Phase 1) for a given
+## ped-building function.
+.qpProvisional <- function(pedFn) {
+  ped <- pedFn()
+  forest <- .buildMatingUnitForest(ped)
+  list(ped = ped, forest = forest,
+       provisionalPos = .positionMatingUnitForest(ped, forest))
+}
+
+## ---- shared assertion helpers -----------------------------------------
+
+## Decision 3's clearance table, reproduced here (not shared with R/ code --
+## GREEN's own .solveJointQP() computes these independently; a test-side
+## re-derivation, matching this codebase's own "assert against an
+## independent computation, not the same formula" discipline elsewhere,
+## e.g. .expectKinship2Agrees()).
+.qpUnionClearanceIndividual <- (25 + 6) / 120
+.qpUnionClearanceUnion <- (6 + 6) / 120
+.qpIndividualClearance <- (25 + 25) / 120
+
+.qpMinSepFor <- function(k1, k2) {
+  if (k1 == "union" && k2 == "union") return(.qpUnionClearanceUnion)
+  if (k1 == "union" || k2 == "union") return(.qpUnionClearanceIndividual)
+  .qpIndividualClearance
+}
+
+## Case 3: the hard adjacent-pair minSep floor (Decision 3) is never
+## violated, for every row (grouped by gen), in the fixed left-to-right
+## order .solveJointQP()'s own output implies (sorted by its OWN x -- the
+## QP may reorder relative spacing but Decision 3's own constraint
+## construction is keyed to the PROVISIONAL order, so re-sorting by the
+## solved x and checking adjacent gaps is the correct post-hoc check: if
+## the QP is feasible, the solved order must match the provisional order
+## exactly, and every adjacent gap must clear the floor).
+.expectMinSepFloorHeld <- function(pos, matingUnits) {
+  kind <- ifelse(pos$id %in% matingUnits$id, "union", "individual")
+  names(kind) <- pos$id
+  for (g in sort(unique(pos$gen))) {
+    rowIds <- pos$id[pos$gen == g]
+    if (length(rowIds) < 2L) next
+    rowIds <- rowIds[order(pos$x[match(rowIds, pos$id)], rowIds,
+                            method = "radix")]
+    for (i in seq_len(length(rowIds) - 1L)) {
+      a <- rowIds[i]
+      b <- rowIds[i + 1L]
+      gap <- pos$x[pos$id == b] - pos$x[pos$id == a]
+      req <- .qpMinSepFor(kind[[a]], kind[[b]])
+      testthat::expect_gte(gap, req - 1e-6)
+    }
+  }
+}
+
+## ---- case 6: dependency wired ------------------------------------------
+
+test_that("quadprog is installed and solve.QP resolves (DESCRIPTION Imports:
+           promotion, Migration Path Phase 1)", {
+  expect_true(requireNamespace("quadprog", quietly = TRUE))
+  expect_true(is.function(quadprog::solve.QP))
+})
+
+## ---- cases 1-3: node-set preservation / no-error / minSep floor, every
+## small fixture ------------------------------------------------------------
+
+for (fixtureName in names(.qpSmallFixtures)) {
+  local({
+    thisFixture <- fixtureName
+    pedFn <- .qpSmallFixtures[[thisFixture]]
+
+    test_that(sprintf(
+      ".solveJointQP() preserves the provisional node set, runs without
+       error, and never violates Decision 3's minSep floor -- %s fixture",
+      thisFixture), {
+      built <- .qpProvisional(pedFn)
+      solved <- expect_error(
+        .solveJointQP(built$provisionalPos, built$forest$matingUnits,
+                      built$forest$duplicates, built$forest$childEdges),
+        NA)
+
+      ## Case 1: node-set preservation (Decision 2).
+      expect_setequal(solved$id, built$provisionalPos$id)
+      expect_equal(nrow(solved), nrow(built$provisionalPos))
+      expect_true(all(is.finite(solved$x)))
+
+      ## Case 3: minSep floor.
+      .expectMinSepFloorHeld(solved, built$forest$matingUnits)
+    })
+  })
+}
+
+## ---- case 4: weight-sweep regression guard for wUnion/wDup (Decision 4's
+## own "not assumed here" caveat; mirrors Learning 678's sweep methodology)
+## --------------------------------------------------------------------------
+
+test_that(".solveJointQP()'s minSep floor holds at every wUnion/wDup setting
+           swept across several orders of magnitude -- Track C (has both a
+           B1 individual and a real duplicate, __dup_F1_1) and Track B full",
+          {
+  sweepWeights <- c(0.01, 0.1, 1, 2, 10, 100)
+  for (fixtureName in c("trackC", "trackBFull")) {
+    built <- .qpProvisional(.qpSmallFixtures[[fixtureName]])
+    for (w in sweepWeights) {
+      solved <- expect_error(
+        .solveJointQP(built$provisionalPos, built$forest$matingUnits,
+                      built$forest$duplicates, built$forest$childEdges,
+                      wUnion = w, wDup = w),
+        NA,
+        info = sprintf("fixture=%s wUnion=wDup=%s", fixtureName, w))
+      .expectMinSepFloorHeld(solved, built$forest$matingUnits)
+    }
+  }
+})
+
+## ---- case 5: orphan-unit edge case (issue #154, Impact Analysis risk) ---
+
+test_that(".solveJointQP() does not error on an orphan mating unit (both
+           sire AND dam dangling, anchorOf NA) -- no spousal-pull/child-
+           centering/union-centering terms apply to it (no real anchor/
+           non-anchor pair exists), but its node is still present and
+           finite, and the minSep floor still holds", {
+  built <- .qpProvisional(.qpOrphanUnit)
+  expect_true(is.na(built$forest$matingUnits$anchor[[1L]]))
+
+  solved <- expect_error(
+    .solveJointQP(built$provisionalPos, built$forest$matingUnits,
+                  built$forest$duplicates, built$forest$childEdges),
+    NA)
+
+  expect_setequal(solved$id, built$provisionalPos$id)
+  expect_true(all(is.finite(solved$x)))
+  .expectMinSepFloorHeld(solved, built$forest$matingUnits)
+})

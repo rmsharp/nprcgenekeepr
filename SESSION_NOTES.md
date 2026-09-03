@@ -18,18 +18,167 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 672 Handoff Evaluation (by Session 673)
+**Score: 9/10.** **What helped:** `next_steps` named this session's exact scope almost verbatim --
+"Migration Path Phase 1 (plan doc's own section) -- an implementation session, full TDD
+RED/GREEN/REFACTOR: build .solveJointQP() standalone (not yet wired into
+.positionMatingUnitForest()), promote quadprog to DESCRIPTION's Imports: (renv::snapshot(dev =
+TRUE) after), verify against Track B full/shrunk, Track C, D1-D3 only" -- used directly as this
+session's own stated deliverable with no scope reconstruction needed. `key_files` correctly named
+the plan doc as "the next session's literal starting point"; this session read Decisions 1-4 and
+the Migration Path/Impact Analysis sections in full before writing any test. `gotchas` (1) (the
+orphan-mating-unit edge case must be explicitly characterized) was directly actionable and became
+RED test case 5. **What was missing/imprecise:** `gotchas` (3) (the ~714-variable estimate is
+unmeasured, "Phase 1's first real solve.QP() run... is the actual measurement") slightly
+overstated what Phase 1 itself covers -- Phase 1's own DONE criteria targets only the SMALL
+fixtures (Track B/C/D1-D3), not the real-375-fixture scale the ~714 estimate describes; that
+measurement is actually Phase 3's job. Minor, not misleading enough to cost meaningful time.
+**What was wrong:** nothing found inaccurate on direct re-verification -- every citation (Decision
+2-4 text, the D2 block's exact line range, the Migration Path Phase 1 DONE criteria/verification
+commands) matched the plan doc on fresh read. **ROI:** high -- the handoff's own precision (a
+design session that had already resolved every open question before handing off) is very likely
+why GREEN passed on the first attempt (`PROJECT_LEARNINGS.md` Learning 719) -- there was no
+ambiguity left for this session to accidentally resolve wrong.
+
 ### What Session 673 Did
 **Deliverable:** Migration Path Phase 1 of the QP joint-solver plan
 (`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path Phase 1) -- build
-`.solveJointQP()` standalone (NOT yet wired into `.positionMatingUnitForest()`), promote
-`quadprog` to `DESCRIPTION`'s `Imports:`, verify against Track B full/shrunk, Track C, D1-D3
-only. Full TDD RED/GREEN/REFACTOR. Following `docs/methodology/workstreams/
-DEVELOPMENT_WORKSTREAM.md`. (IN PROGRESS)
-**Started:** 2026-09-03.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+`.solveJointQP()` standalone, NOT yet wired into `.positionMatingUnitForest()`. Full TDD
+RED->GREEN (REFACTOR gate posed, skipped -- nothing behavior-neutral identified). **DONE.**
+**Started/Completed:** 2026-09-03 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0** -- SAFEGUARDS/SESSION_NOTES/GitHub issues/BACKLOG/dashboard/`gh run list` (all CI
+   green against the last-pushed S666 commit; local branch 24 commits ahead of `origin/master`,
+   S667-S672 unpushed, noted not acted on). Health 96/100, same FM #28 ledger-size HIGH-risk flags
+   as recent sessions, reported not re-acted-on. Ledger reconcile: `CHANGELOG.md` frontier 1 commit
+   behind HEAD, explained (S672's own close-out commit touched only `HANDOFFS.md`/
+   `SESSION_NOTES.md`, no ledger-worthy content) -- no backfill owed; `HANDOFFS.md` frontier = HEAD,
+   `status: complete`. Rendered the priorities list + `AskUserQuestion` picker; owner picked
+   "QP Migration Phase 1."
+2. **Claimed the session (Phase 1B):** stub to `SESSION_NOTES.md` + `status: pending` receipt to
+   `HANDOFFS.md`, committed (`2a96d42d`).
+3. **Research (`DEVELOPMENT_WORKSTREAM.md` Phase 2), read fresh:** `.buildMatingUnitForest()`
+   (389-565, the `matingUnits`/`duplicates`/`childEdges` schema), `.positionMatingUnitForest()`'s
+   full body (759-1528, every tier plus all 5 collision-avoidance passes Phase 2/3 will eventually
+   replace), the D2 dogleg's `Nnode`/`dupKey`/`dupIdx` resolution (2167-2236), `DESCRIPTION`'s
+   current `Imports:` block, and the plan doc's Decisions 1-6/Migration Path/Impact Analysis in
+   full. Confirmed this codebase's own fixture convention (inline `data.frame` literals per test,
+   no shared fixture helper) and located exact Track B full/shrunk, Track C, and D1-D3
+   definitions plus the issue #154 orphan-unit fixture, all reused verbatim from
+   `test_positionMatingUnitForest.R`.
+4. **PRE-RED->RED gate (`AskUserQuestion`):** presented a 6-case RED test plan (node-set
+   preservation, no-error/feasibility, the minSep-floor structural guarantee, a wUnion/wDup weight
+   sweep, the orphan-unit edge case, the `quadprog` dependency check) -- deliberately NOT
+   hand-deriving pinned output coordinates, since no independent ground-truth oracle exists for the
+   joint QP the way kinship2 serves elsewhere in this codebase. Owner approved the full 6-case plan.
+5. **RED:** wrote `tests/testthat/test_solveJointQP.R` (9 test blocks). Confirmed RED: 8/9 blocks
+   fail for the right reason (`could not find function ".solveJointQP"`); the 9th (dependency
+   check) trivially passed because `quadprog` happened to already be installed locally, not yet
+   declared in `DESCRIPTION`.
+6. **RED->GREEN gate (`AskUserQuestion`):** presented the exact implementation plan (DESCRIPTION
+   edit, `.solveJointQP()` per Decisions 2-4, the shared `.nonAnchorNodeResolver()` extraction).
+   Owner approved.
+7. **GREEN:** added `quadprog` to `DESCRIPTION` `Imports:`. Implemented `.solveJointQP()` in
+   `R/makePedigreeDiagramData.R` (after `.positionMatingUnitForest()`) and extracted
+   `.nonAnchorNodeResolver()` (after `.packComponents()`), rewiring `.addRectilinearWaypoints()`'s
+   D2 block to use it. All 9 RED blocks passed on the FIRST implementation attempt (248/248
+   expectations) -- a first for this codebase's pedigree-diagram TDD history
+   (`PROJECT_LEARNINGS.md` Learning 719). Fixed 7 `implicit_integer_linter` findings (weight
+   defaults/QP-vector literals as explicit doubles); re-ran, still 248/248, 0 lints.
+8. **Verification:** `test_addRectilinearWaypoints.R` alone (the file most at risk from the helper
+   extraction) 102/102 pass. Full clean regression (background, ~large suite): 2348 blocks, 6893
+   passed, 1 failed/0 error -- the pre-existing, already-documented `test_wordlist_coverage.R`
+   baseline failure only, 0 collateral. `renv::snapshot(dev = TRUE)`: consistent (`quadprog` was
+   already present as a transitive record; `renv::status(dev = TRUE)` reports no issues). Measured
+   (not assumed) the wUnion/wDup weight sweep directly (0.01-100, Track C + Track B full): the
+   minSep floor sits at exactly the constraint boundary at every setting, extending Learning
+   678/715's kinship2 finding to this project's own 2 new terms (`PROJECT_LEARNINGS.md`
+   Learning 720).
+9. **GREEN->REFACTOR gate (`AskUserQuestion`):** posed; owner picked "skip REFACTOR, close out" --
+   0 lints, no duplication beyond the intended extraction, nothing behavior-neutral identified.
+10. **Close-out:** this handoff evaluation, self-assessment, `PROJECT_LEARNINGS.md` Learnings
+    719-720, `BACKLOG.md` Up Next item 1 updated with Phase 1's outcome + Phase 2 pointer,
+    `CHANGELOG.md`, this file's handoff, `HANDOFFS.md` receipt complete.
+
+**Self-assessment (Session 673): 9/10.** **Strengths:** (1) followed every TDD phase-gate
+precisely (PRE-RED->RED, RED->GREEN, GREEN->REFACTOR), each via `AskUserQuestion` with the exact
+planned actions spelled out, matching `CLAUDE.md`'s Phase-gate format; (2) designed RED tests
+around the QP's own STRUCTURAL guarantees rather than attempting to hand-simulate `quadprog::
+solve.QP()`'s output -- a deliberate, disclosed methodological choice (no oracle exists for this
+mechanism, unlike this codebase's usual kinship2-comparison discipline) that appears to be
+DIRECTLY why GREEN passed cleanly on the first attempt, with no debugging/rework cycle (see
+Learning 719 for the full argument); (3) ran the actual wUnion/wDup weight sweep with real
+`Rscript` execution rather than asserting the plan doc's own un-verified caveat away -- closes
+Decision 4's explicit "not assumed here" note with measured numbers, not inference; (4) verified
+the shared-helper extraction's blast radius directly (`test_addRectilinearWaypoints.R` in
+isolation, then the full suite) rather than assuming "no behavior change" from code inspection
+alone; (5) stayed strictly within Phase 1's own scope boundary -- `.solveJointQP()` is NOT wired
+into `.positionMatingUnitForest()`, the real 375-fixture was not touched, none of the 5
+collision-avoidance passes being replaced were deleted; (6) correctly identified that the
+`NEWS.Rmd`/`_pkgdown.yml`/`a2interactive.Rmd`/citation close-out checklists (`CLAUDE.md`) all
+DON'T apply this session -- `.solveJointQP()` is `@noRd`, unexported, and has zero user-visible
+effect (not wired into any call path) -- rather than either skipping the check silently or
+over-applying it. **Weaknesses:** (1) no runtime/live-app smoke test (Phase 3E) -- correctly
+identified as inapplicable (nothing wired into any call path, so a live render would not exercise
+`.solveJointQP()` at all) rather than silently skipped, but worth flagging explicitly per FM #24;
+(2) did not measure/report the actual QP variable/constraint COUNT even for the small fixtures
+tested -- not required by Phase 1's own DONE criteria (that measurement is Phase 3's job, against
+the real fixture), but would have been a cheap additional data point; (3) the anti-degeneracy
+reference-variable selection ("widest row's first node") is implemented but has no test asserting
+WHICH node gets picked -- exercised only indirectly through every other test passing, a minor
+coverage gap on a term whose effect is negligible by design (1e-5 weight). **ROI:** high -- Phase 1
+is genuinely complete per its own DONE criteria and verification commands, with real measured
+evidence (not assumption) for the one explicit open caveat (Decision 4's weight-sweep), and the
+next session has an unambiguous, narrowly-scoped Phase 2 to start from.
+
+**Next steps (specific):** the next session on this thread is **Migration Path Phase 2**
+(`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path, "Cutover on small
+fixtures only") -- an **implementation** session, full TDD RED/GREEN/REFACTOR: wire
+`.solveJointQP()` into `.positionMatingUnitForest()`, replacing the 5 collision-avoidance passes
+(`.deCollideIndividualPoints()`, the B1-vs-unrelated-individual proximity pass, Track 7 Phase 2's
+union sweep, the duplicate de-collision + Track 7 Phase 4 pass -- all still present, unchanged, as
+of this session's own end) on Track B full/shrunk, Track C, D1-D3 ONLY -- still NOT the real
+375-fixture (that's Phase 3). `test_positionMatingUnitForest.R`'s small-fixture assertions must be
+RE-DERIVED against the new engine's actual output, never assumed compatible with the old formulas
+(matching the S666 precedent's own documented gotcha). Verification command per the plan doc:
+`Rscript data-raw/pedigreeDrawingErrorCensus.R` re-run -- Track B/Track C/D1-D3 rows must stay at 0
+on every class already 0, AND Track C's own Finding #1/#2/#7-carrying rows (5 (a), 3 (b), 1 (d))
+must now read 0 for (a)/(b), the exact classes Decision 3's constraints structurally guarantee. Do
+NOT bundle Phase 2 with Phase 3 (cutover) in the same session -- each Migration Path phase is its
+own session boundary, FM #18/#19 applies exactly as it did to the plan-vs-code boundary. Independent
+of this thread: local branch is now 26+ commits ahead of `origin/master` as of this session's end
+(S667-S673 unpushed, CI unverified on any of it) -- a future session should seriously consider
+pushing before it grows further; census Finding #3 (jog offset) remains open and unscoped, pickable
+at any time with no ordering dependency on the QP work.
+
+**Key files:** `docs/planning/pedigree-diagram-joint-qp-solver-plan.md` (the design, in full --
+§Migration Path Phase 2 is the next session's literal starting point); `R/makePedigreeDiagramData.R
+:1630-1747` (`.solveJointQP()`, this session's new function, `@noRd`); `R/makePedigreeDiagramData.R
+:719-732` (`.nonAnchorNodeResolver()`, the shared helper, also used by `.addRectilinearWaypoints()`'s
+D2 block); `R/makePedigreeDiagramData.R:787-1628` (`.positionMatingUnitForest()`, Phase 2's actual
+edit target -- the 5 collision-avoidance passes to replace are named individually in the plan doc's
+"Current state" table; re-grep line numbers before editing, they will have shifted again once
+Phase 2 lands); `tests/testthat/test_solveJointQP.R` (this session's new test file, in
+full -- its fixture builders (`.qpTrackBFull()` etc.) are reusable for Phase 2's own re-derivation
+work); `DESCRIPTION:53` (`quadprog` now in `Imports:`).
+
+**Gotchas for a future session:** (1) Phase 2's own RED must explicitly verify Track C's Finding
+#1/(a)/(b) rows actually reach 0 once wired in -- this session confirmed the STRUCTURAL guarantee
+(minSep floor) on Track C standalone, but never ran the cutover itself, so the census-row
+prediction is inference from the design, not yet measured; (2) `.solveJointQP()`'s own signature
+takes `(provisionalPos, matingUnits, duplicates, childEdges, wSpouse, alignChild, wUnion, wDup)`
+with weight DEFAULTS from Decision 4 (`wSpouse=2, alignChild=1.5, wUnion=2, wDup=1`) -- Phase 2
+should call it with defaults unless a specific small-fixture regression motivates otherwise, not
+re-derive new defaults from scratch; (3) `.positionMatingUnitForest()`'s per-component recursive
+self-call (inside the `if (length(components) > 1L)` block near the top of the function -- re-grep,
+line numbers shift) means Phase 2's wiring point is INSIDE that recursion, not at the top level, so
+`.solveJointQP()` runs once per weakly-connected component exactly as `.positionMatingUnitForest()`
+itself already does (Decision 6: `.packComponents()` stays unchanged, untouched by the QP); (4)
+this session's own `.qpSmallFixtures` builders in `test_solveJointQP.R` are function-based (not
+shared external fixtures) matching this codebase's own convention -- Phase 2 can call them directly
+rather than re-typing the same `data.frame` literals a third time.
 
 ### Session 671 Handoff Evaluation (by Session 672)
 **Score: 9/10.** **What helped:** `next_steps` named the exact scope of this session precisely --

@@ -138,22 +138,76 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S673
 date: 2026-09-03
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Migration Path Phase 1 of the QP joint-solver plan
-  (docs/planning/pedigree-diagram-joint-qp-solver-plan.md) -- build .solveJointQP() standalone,
-  not yet wired into .positionMatingUnitForest(); promote quadprog to Imports; verify against
-  Track B full/shrunk, Track C, D1-D3 only. Full TDD RED/GREEN/REFACTOR.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Migration Path Phase 1 of the QP joint-solver plan
+  (docs/planning/pedigree-diagram-joint-qp-solver-plan.md) -- built .solveJointQP() standalone,
+  not yet wired into .positionMatingUnitForest() (Phase 2's job). Full TDD RED->GREEN (REFACTOR
+  gate posed, skipped -- nothing behavior-neutral identified).
+what_was_done: New internal .solveJointQP(provisionalPos, matingUnits, duplicates, childEdges,
+  wSpouse, alignChild, wUnion, wDup) in R/makePedigreeDiagramData.R, implementing Decisions 2-4
+  in full (variable set, radius-based minSep constraints, the 5-term objective via
+  quadprog::solve.QP()). Extracted .nonAnchorNodeResolver() as a shared helper from
+  .addRectilinearWaypoints()'s D2 dogleg block -- no behavior change, confirmed by
+  test_addRectilinearWaypoints.R's own 102/102 pass. quadprog added to DESCRIPTION Imports;
+  renv::snapshot(dev = TRUE) confirms consistent. New tests/testthat/test_solveJointQP.R (9
+  blocks): node-set preservation, no-error/feasibility, the minSep-floor structural guarantee,
+  a wUnion/wDup weight sweep (0.01-100), the issue #154 orphan-unit edge case, the quadprog
+  dependency check -- all 9 passed on the FIRST implementation attempt (248/248 expectations).
+  Measured (not assumed) the weight sweep directly: floor sits at exactly the constraint
+  boundary at every setting. Fixed 7 implicit_integer_linter findings; 0 lints after. Full clean
+  regression: 2348 blocks, 6893 passed, 1 failed/0 error (pre-existing test_wordlist_coverage.R
+  baseline only) -- 0 collateral. Commit b8a2658e-equivalent (see changelog_ref/commit below).
+next_steps: Migration Path Phase 2 (plan doc's own section, "Cutover on small fixtures only") --
+  an implementation session, full TDD RED/GREEN/REFACTOR: wire .solveJointQP() into
+  .positionMatingUnitForest(), replacing the 5 collision-avoidance passes, on Track B full/shrunk,
+  Track C, D1-D3 ONLY (still not the real 375-fixture -- that's Phase 3). Re-derive
+  test_positionMatingUnitForest.R's small-fixture assertions against the new engine's actual
+  output, never assumed compatible with the old formulas. Verification: Rscript
+  data-raw/pedigreeDrawingErrorCensus.R re-run -- Track B/C/D1-D3 stay at 0 on every already-0
+  class, AND Track C's own Finding #1/#2/#7 rows (5 (a), 3 (b), 1 (d)) must now read 0 for
+  (a)/(b). Do NOT bundle Phase 2 with Phase 3 -- each Migration Path phase is its own session
+  boundary (FM #18/#19). Independent of this thread: local branch is 26+ commits ahead of
+  origin/master, unpushed (S667-S673); census Finding #3 (jog offset) remains open, unscoped,
+  pickable any time with no ordering dependency on the QP work.
+key_files: docs/planning/pedigree-diagram-joint-qp-solver-plan.md (Migration Path Phase 2 is the
+  next literal starting point); R/makePedigreeDiagramData.R:1630-1747 (.solveJointQP(), @noRd);
+  R/makePedigreeDiagramData.R:719-732 (.nonAnchorNodeResolver(), the shared helper);
+  R/makePedigreeDiagramData.R:787-1628 (.positionMatingUnitForest(), Phase 2's actual edit
+  target -- re-grep line numbers, they will shift again); tests/testthat/test_solveJointQP.R (new
+  file, in full -- fixture builders reusable for Phase 2); DESCRIPTION:53 (quadprog in Imports).
+gotchas: (1) Phase 2's own RED must explicitly verify Track C's Finding #1/(a)/(b) rows actually
+  reach 0 once wired in -- this session confirmed the structural minSep-floor guarantee on Track C
+  standalone but never ran the cutover, so the census-row prediction is inference, not yet
+  measured; (2) .solveJointQP()'s signature is (provisionalPos, matingUnits, duplicates,
+  childEdges, wSpouse, alignChild, wUnion, wDup) with Decision 4's own defaults (wSpouse=2,
+  alignChild=1.5, wUnion=2, wDup=1) -- use defaults unless a specific regression motivates
+  otherwise; (3) the wiring point is INSIDE .positionMatingUnitForest()'s own per-component
+  recursive self-call, not at the top level -- .solveJointQP() must run once per
+  weakly-connected component, matching .packComponents()'s own unchanged treatment (Decision 6);
+  (4) test_solveJointQP.R's .qpSmallFixtures builders are function-based, reusable directly by
+  Phase 2 rather than re-typed.
+runtime_smoke: n/a -- .solveJointQP() is not wired into any call path this phase (deliberately, by
+  design), so there is no runtime behavior for a live app render to exercise; Phase 2/3's own job.
+changelog_ref: CHANGELOG.md 2026-09-03 S673 entry (BL-pedigreeDrawingErrorCensus)
 commit: pending
 ```
-<prose pending -- filled at close-out>
+<prose>
+Self-score breakdown (9/10): +for full TDD phase-gate discipline via AskUserQuestion at every
+transition; +for RED tests built around the QP's own structural guarantees rather than
+hand-simulated pinned values (no ground-truth oracle exists for this mechanism) -- directly
+credited with GREEN passing 248/248 on the first attempt, a first for this codebase's
+pedigree-diagram TDD history; +for measuring the wUnion/wDup sweep with real execution rather than
+leaving Decision 4's "not assumed here" caveat unresolved; +for verifying the shared-helper
+extraction's blast radius both narrowly (test_addRectilinearWaypoints.R alone) and broadly (full
+suite); +for correctly identifying that none of CLAUDE.md's NEWS.Rmd/_pkgdown.yml/a2interactive.Rmd/
+citation close-out checklists apply (nothing exported, nothing user-visible). -1 for no dedicated
+test of the anti-degeneracy reference-variable selection and no reported QP variable/constraint
+count even for the small fixtures (neither required by Phase 1's own DONE criteria, both cheap
+data points that were available). Predecessor (S672) scored 9/10: the handoff's own precision left
+essentially no ambiguity for this session to resolve incorrectly.
+</prose>
 
 ```handoff
 session: S672

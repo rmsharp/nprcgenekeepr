@@ -16,6 +16,46 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S673: Migration Path Phase 1 — `.solveJointQP()` standalone
+- **Deliverable:** new internal `.solveJointQP(provisionalPos, matingUnits, duplicates, childEdges,
+  wSpouse, alignChild, wUnion, wDup)` (`R/makePedigreeDiagramData.R`), implementing Decisions 2–4
+  of `docs/planning/pedigree-diagram-joint-qp-solver-plan.md` in full: one `quadprog::solve.QP()`
+  call per component, the union/individual kind split, radius-based `minSep` adjacency constraints,
+  and the 5-term objective (spousal pull, child centering, union centering, duplicate proximity,
+  anti-degeneracy). NOT wired into `.positionMatingUnitForest()` (Phase 2's job) and NOT run
+  against the real 375-fixture (Phase 3's job) — verified standalone against Track B full/shrunk,
+  Track C, D1–D3 only, per Phase 1's own DONE criteria. Follows `DEVELOPMENT_WORKSTREAM.md`, full
+  TDD RED→GREEN (REFACTOR skipped — nothing behavior-neutral identified beyond GREEN's own lint
+  fixes).
+- **RED:** 9 test blocks, `tests/testthat/test_solveJointQP.R` (new file) — node-set preservation,
+  no-error/feasibility, the minSep-floor structural guarantee (Decision 3), a wUnion/wDup weight
+  sweep (Decision 4's own "not assumed here" caveat), the issue #154 orphan-unit edge case, and the
+  `quadprog` dependency check. Deliberately assert the QP's own structural guarantees rather than
+  hand-derived pinned coordinates — no independent ground-truth oracle exists for the joint QP the
+  way kinship2 serves elsewhere in this codebase (`PROJECT_LEARNINGS.md` Learning 719). Confirmed
+  RED (8/9 blocks fail for the right reason — `could not find function ".solveJointQP"`) before
+  implementing.
+- **GREEN:** implementation passed all 9 blocks (248/248 expectations) on the first attempt — a
+  first for this codebase's pedigree-diagram positioning-engine TDD history (Learning 719). Also
+  extracted a shared `.nonAnchorNodeResolver()` helper from `.addRectilinearWaypoints()`'s D2
+  dogleg block (`dupKey`/`dupIdx`/`Nnode`, pre-extraction :2195–2197), used by both functions — no
+  behavior change, confirmed by `test_addRectilinearWaypoints.R`'s own 102/102 pass. `quadprog`
+  added to `DESCRIPTION` `Imports:`; `renv::snapshot(dev = TRUE)` confirms consistent (already
+  present as a transitive record). Fixed 7 `implicit_integer_linter` findings (weight defaults and
+  QP-vector literals now explicit doubles); `lintr::lint_package()`-equivalent 0 findings on both
+  touched files after.
+- **Measured, not assumed:** the wUnion/wDup weight sweep (0.01–100, Track C + Track B full) —
+  the minSep floor sits at exactly the constraint boundary at every setting (slack ≈ 0), extending
+  Learning 678/715's kinship2 finding to this project's own 2 new terms
+  (`PROJECT_LEARNINGS.md` Learning 720).
+- **Verification:** full clean regression 2348 blocks, 6893 passed, 1 failed/0 error (the
+  pre-existing, already-documented `test_wordlist_coverage.R` baseline only) — 0 collateral. No
+  runtime/live-app smoke test — `.solveJointQP()` is not wired into any call path this phase, so
+  there is no runtime behavior for a live render to exercise (Phase 2/3's own job).
+  `BACKLOG.md` Up Next item 1 updated with Phase 1's outcome and the Phase 2 next-step pointer.
+  `PROJECT_LEARNINGS.md` Learnings 719–720. See `SESSION_NOTES.md`/`HANDOFFS.md` for the full
+  record.
+
 ### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S672: architecture/design doc — QP formulation for pedigree-drawing option (C)
 - **Deliverable:** `docs/planning/pedigree-diagram-joint-qp-solver-plan.md` — the design session
   S671 named as the next step after deciding (C). Specs one joint `quadprog::solve.QP()` call per
