@@ -136,6 +136,27 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S668
+date: 2026-09-02
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS. Pedigree-drawing error census across every fixture (Track B
+  full/shrunk, Track C, real 375, D1/D2/D3): a data-raw/ scoreboard script (fresh, independent
+  measurement code; no shipped-behavior change; no TDD gate -- owner-confirmed) reporting counts
+  and offending ids for six error classes, written up as a docs/audits/ report with per-class
+  root-cause attribution. Feeds, does not make, the A (per-defect) vs C (joint solver) decision.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+(claim stub, Phase 1B — overwritten at Phase 3D)
+
+```handoff
 session: S667
 date: 2026-09-02
 status: complete

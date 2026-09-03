@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 668 Did
+**Deliverable:** pedigree-drawing error census across every fixture (Track B full/shrunk, Track C,
+the real 375-animal pedigree, S667's synthetic D1/D2/D3) — an automated scoreboard
+(`data-raw/` script, fresh independent measurement code, no shipped-behavior change, no TDD gate —
+owner-confirmed via `AskUserQuestion`) reporting counts AND offending ids for six error classes,
+written up as a `docs/audits/` report with per-class root-cause attribution, feeding (not making)
+the A-vs-C decision (IN PROGRESS)
+**Started:** 2026-09-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 666 Handoff Evaluation (by Session 667)
 **Score: 8/10.** **What helped:** `key_files` and `gotchas` were accurate and directly
 load-bearing: `R/makePedigreeDiagramData.R:627-866` was exactly the edit site (the new dispatch
