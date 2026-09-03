@@ -28,6 +28,94 @@
   testthat::expect_false(any(duplicated(key)))
 }
 
+## S667 (disconnected-component separation) helpers -- used by the Track B
+## shrunk test and the "S667 RED" section at the end of this file.
+
+## Named vector of kinship2's own x per individual for 'ped' (sex M/F
+## only), from a live kinship2::align.pedigree() run. Mirrors
+## test_makePedigreeMatingLayout.R:1622-1633 exactly.
+.kinship2X <- function(ped) {
+  sexCode <- c(M = 1, F = 2)[ped$sex]
+  kPed <- kinship2::pedigree(id = ped$id, dadid = ped$sire,
+                              momid = ped$dam, sex = sexCode,
+                              missid = NA_character_)
+  al <- kinship2::align.pedigree(kPed)
+  kX <- stats::setNames(numeric(0), character(0))
+  for (r in seq_len(nrow(al$nid))) {
+    for (c in seq_len(ncol(al$nid))) {
+      n <- al$nid[r, c]
+      if (!is.na(n) && n > 0 && !(ped$id[n] %in% names(kX))) {
+        kX[ped$id[n]] <- al$pos[r, c]
+      }
+    }
+  }
+  kX
+}
+
+## Assert that the pinned 'target' (relative to 'origin') equals a fresh
+## kinship2 run on the same 'ped' -- skipped, not silently passed, when
+## kinship2 is unavailable. Call it LAST in a test: a skip ends the test.
+.expectKinship2Agrees <- function(ped, target, origin) {
+  testthat::skip_if_not_installed("kinship2")
+  kX <- .kinship2X(ped)
+  theirs <- kX[names(target)] - kX[[origin]]
+  testthat::expect_equal(unname(theirs), unname(target), tolerance = 1e-6,
+                         info = "pinned target must equal the installed kinship2's own layout")
+}
+
+## Weakly-connected components of the DRAWN graph: real ids + mating-unit
+## ids, joined by unit <-> real sire/dam and every childEdges row; a
+## duplicate rides with its realId. Ordered by the smallest ped row index
+## among each component's real members (kinship2's own family order).
+## Test-local mirror of the production rule, so the real-fixture
+## invariants are computed from the data, never pinned by id.
+.forestComponentsForTest <- function(ped, forest) {
+  nodes <- c(as.character(ped$id), forest$matingUnits$id)
+  parent <- stats::setNames(nodes, nodes)
+  find <- function(i) {
+    while (parent[[i]] != i) i <- parent[[i]]
+    i
+  }
+  unite <- function(a, b) {
+    ra <- find(a)
+    rb <- find(b)
+    if (ra != rb) parent[[ra]] <<- rb
+  }
+  mu <- forest$matingUnits
+  for (u in seq_len(nrow(mu))) {
+    for (p in c(mu$sire[u], mu$dam[u])) if (p %in% nodes) unite(mu$id[u], p)
+  }
+  ce <- forest$childEdges
+  for (e in seq_len(nrow(ce))) if (ce$from[e] %in% nodes) unite(ce$from[e], ce$to[e])
+  roots <- vapply(nodes, find, character(1))
+  firstRow <- match(nodes, as.character(ped$id))
+  comps <- split(nodes, roots)
+  ord <- order(vapply(comps, function(m) min(firstRow[nodes %in% m], na.rm = TRUE),
+                      numeric(1)))
+  comps <- unname(comps[ord])
+  d <- forest$duplicates
+  lapply(comps, function(m) c(m, d$id[d$realId %in% m]))
+}
+
+## Smallest same-row x gap between two nodes of DIFFERENT components
+## (Inf when no row holds nodes of two components).
+.minCrossComponentRowGap <- function(pos, comps) {
+  compOf <- stats::setNames(rep(seq_along(comps), lengths(comps)), unlist(comps))
+  pos$comp <- compOf[pos$id]
+  testthat::expect_false(anyNA(pos$comp),
+                         info = "every positioned node belongs to a component")
+  gap <- Inf
+  for (g in unique(pos$gen)) {
+    r <- pos[pos$gen == g, ]
+    r <- r[order(r$x), ]
+    if (nrow(r) < 2L) next
+    d <- diff(r$x)
+    cross <- r$comp[-1L] != r$comp[-nrow(r)]
+    if (any(cross)) gap <- min(gap, d[cross])
+  }
+  gap
+}
+
 ## ---- input validation ---------------------------------------------------
 
 test_that(".positionMatingUnitForest rejects non-data-frame 'ped'", {
@@ -2876,34 +2964,32 @@ test_that(".positionMatingUnitForest's union dot sits at the true
   }
 })
 
-test_that(".positionMatingUnitForest correctly resolves Track B shrunk's
-           single-child chain (P1xP2 -> M1 -> M1xG3) plus the disconnected
-           C4xP6 root pair -- the fixture the chain-case rule (S665/S666)
-           was specifically designed for.
+test_that(".positionMatingUnitForest lays out Track B shrunk's two
+           disconnected families (P1xP2 -> M1 -> M1xG3 -> L3, and
+           C4xP6 -> C4a) as separate side-by-side blocks, bit-exact vs
+           kinship2 for all 8 individuals from a SINGLE origin -- the
+           disconnected-component separation fix (S667, revised design in
+           docs/planning/pedigree-diagram-disconnected-component-
+           separation-plan.md).
 
-           GREEN-phase correction to this test's own original RED-phase
-           premise (found this session, matching this project's own
-           established 'RED-phase test bug found during GREEN' precedent):
-           the plan doc's own bit-exact-vs-kinship2 claim for this fixture
-           did not anticipate 2 REAL collisions the fully-correct,
-           routed-through-collision-avoidance implementation actually
-           produces here (traced by direct execution, not guessed): (1)
-           P2's raw formula target (P1's corrected x + minSep) lands
-           exactly on C4's own independently-corrected x -- the ONE
-           collision the plan doc's own text already named and expected.
-           (2) G3's raw formula target (M1's x + minSep) ALSO lands
-           exactly on C4a's own real Tier-1 position -- a SECOND collision
-           the plan doc's own simpler simulation did not catch. Both are
-           genuine instances of the plan's own explicit requirement
-           (corrected targets must route THROUGH
-           .deCollideIndividualPoints()/Track 7 Phase 2, never around
-           them) -- kinship2 itself never hits either, since its one
-           global joint solve has no equivalent per-pair collision to
-           resolve. The parts untouched by any collision (P1/M1/L3, the
-           C4/C4a pair) DO still match kinship2 bit-exact; P2/G3/P6 are
-           verified instead against the actual, execution-traced formula
-           + push chain (never hand-derived), and confirmed collision-free
-           in their final rendered positions.", {
+           History: S666 pinned this fixture with each family normalized
+           to its OWN origin and P2/G3/P6 asserted against a collision-
+           push chain (P2 = P1 + 2, G3 = M1 + 2, P6 = C4 + 2), explicitly
+           declaring 'which family lands left vs. right' out of that fix's
+           scope. Those pushes were the interleaving defect itself: the two
+           families shared every row, each B1 mate's anchor + minSep target
+           landed on the OTHER family, and .deCollideIndividualPoints()
+           shoved her further into it (P1 . C4 . P2 . P6 across gen 0).
+           kinship2 never faces any such collision because it lays each
+           family out on its own and packs the blocks. Under S667's rule --
+           each weakly-connected component laid out alone by the unchanged
+           3-tier engine, then packed left-to-right in ped row order with a
+           per-row minSep gap -- the engine reproduces kinship2 exactly,
+           including the family order (P1's family is first in ped row
+           order) and including the mates, with no push chain left to
+           explain away. Target literals pinned from this session's fresh
+           kinship2::align.pedigree() run and, when kinship2 is installed,
+           re-derived live so they can never silently drift.", {
   pedB <- data.frame(
     id   = c("P1", "P2", "P3", "P4", "P5", "P6",
              "C1", "C2", "C3", "C4", "C4a",
@@ -2931,45 +3017,26 @@ test_that(".positionMatingUnitForest correctly resolves Track B shrunk's
   forest <- .buildMatingUnitForest(shrunk)
   pos <- .positionMatingUnitForest(shrunk, forest)
 
-  ## Untouched by any collision -- bit-exact vs. kinship2, per component
-  ## (which of the 2 disconnected components lands left vs. right is out
-  ## of this fix's own scope, per the plan doc's "Scope boundary"; each is
-  ## normalized to its own family instead of a single shared origin).
-  relChain <- pos$x - pos$x[pos$id == "P1"]
-  names(relChain) <- pos$id
-  targetChain <- c(P1 = 0, M1 = 0.5, L3 = 1.0)
-  expect_equal(unname(relChain[names(targetChain)]), unname(targetChain),
-               tolerance = 1e-6)
+  ## All 8 individuals from ONE origin (P1) -- the two families are
+  ## separate blocks, P1's family first (ped row order), C4's family
+  ## packed to its right with exactly minSep between P2 and C4 on gen 0
+  ## and between G3 and C4a on gen 1. These are kinship2's own numbers
+  ## (the plan doc's long-standing target: P1=0, M1=0.5, L3=1.0, P2=1.0,
+  ## G3=1.5, C4=2.0, C4a=2.5, P6=3.0), re-derived live below.
+  rel <- pos$x - pos$x[pos$id == "P1"]
+  names(rel) <- pos$id
+  target <- c(P1 = 0, P2 = 1.0, M1 = 0.5, G3 = 1.5, L3 = 1.0,
+              C4 = 2.0, P6 = 3.0, C4a = 2.5)
+  expect_equal(unname(rel[names(target)]), unname(target), tolerance = 1e-6)
 
-  relC4 <- pos$x - pos$x[pos$id == "C4"]
-  names(relC4) <- pos$id
-  targetC4 <- c(C4 = 0, C4a = 0.5)
-  expect_equal(unname(relC4[names(targetC4)]), unname(targetC4),
-               tolerance = 1e-6)
-
-  ## P2 and G3: each collides with an unrelated node at her own raw
-  ## formula target (P2 with C4; G3 with C4a) and is pushed away by the
-  ## pre-existing B1 de-collision search -- verified against the actual,
-  ## execution-traced formula + push chain, not kinship2 (which never
-  ## faces this collision) and not hand-derived. P1 is corrected before
-  ## P2's target is computed, so P2's formula target already reads P1's
-  ## FINAL x.
-  expect_equal(pos$x[pos$id == "P2"],
-               pos$x[pos$id == "P1"] + 1 + 1, tolerance = 1e-6)
-  expect_equal(pos$x[pos$id == "G3"],
-               pos$x[pos$id == "M1"] + 1 + 1, tolerance = 1e-6)
-  ## P6 (C4xP6's own mate): her own raw formula target (C4's x + minSep)
-  ## coincides with P2's own already-placed final position (both reach
-  ## 1.5), so she is pushed a further minSep away in turn.
-  expect_equal(pos$x[pos$id == "P6"],
-               pos$x[pos$id == "C4"] + 1 + 1, tolerance = 1e-6)
-
-  ## No 2 real/B1-shaped points coincide -- the collision-avoidance
-  ## routing requirement (plan doc's own item 2), confirmed for the exact
-  ## pairs this fixture is known to stress.
-  expect_false(isTRUE(all.equal(pos$x[pos$id == "P2"], pos$x[pos$id == "C4"])))
-  expect_false(isTRUE(all.equal(pos$x[pos$id == "G3"], pos$x[pos$id == "C4a"])))
-  expect_false(isTRUE(all.equal(pos$x[pos$id == "P6"], pos$x[pos$id == "P2"])))
+  ## The families' x-ranges are disjoint: nothing of C4's family sits
+  ## inside P1's family's span on any row (the literal defect).
+  fam1 <- c("P1", "P2", "M1", "G3", "L3")
+  fam2 <- c("C4", "P6", "C4a")
+  expect_lt(max(pos$x[pos$id %in% fam1]), min(pos$x[pos$id %in% fam2]))
+  .expectNoOverlap(pos)
+  ## Last: skips (never silently passes) when kinship2 is unavailable.
+  .expectKinship2Agrees(shrunk, target, origin = "P1")
 })
 
 test_that(".positionMatingUnitForest's conditional-shift rule generalizes to
@@ -3246,5 +3313,133 @@ test_that(".positionMatingUnitForest's positions render with no id
      pixel-coincident (see the NOTE above these 2 tests; historical OLD-
      algorithm baseline measured during Phase 2b: 368/714).",
     nCoincident, nrow(nodes)))
+})
+
+## ---- S667 RED: disconnected-component separation ------------------------
+## docs/planning/pedigree-diagram-disconnected-component-separation-plan.md,
+## "REVISED DESIGN -- Session 667". Two or more weakly-connected families in
+## one pedigree must render as separate side-by-side blocks, each laid out
+## by the unchanged 3-tier engine on its own and then packed left-to-right
+## (ped row order) with a per-row minSep gap -- which is exactly what
+## kinship2::align.pedigree() does (verified bit-exact this session on
+## every fixture below). Before S667 the families shared rows and
+## interleaved: each B1 mate's anchor + minSep target landed on the other
+## family and the de-collision search pushed her further into it.
+##
+## Every target vector below is pinned from a fresh kinship2 run made this
+## session AND, when kinship2 is installed, re-derived live by
+## .expectKinship2Agrees() so the pins can never silently drift from the
+## installed kinship2's own behavior (test_makePedigreeMatingLayout.R's
+## S666 end-to-end test established the inline-kinship2 pattern). The
+## helpers (.kinship2X(), .expectKinship2Agrees(), .forestComponentsForTest(),
+## .minCrossComponentRowGap()) live at the top of this file beside
+## .expectNoOverlap() -- the rewritten Track B shrunk test above also uses
+## them, and testthat sources a file top-down.
+
+test_that(".positionMatingUnitForest packs disconnected families by PER-ROW
+           contour, not by whole extent: a left family that is wide only at
+           a DEEP row (F1xM1 -> A1; A1xS1 -> K1..K4) lets a shallower right
+           family (F2xM2 -> B1) tuck in above its wide row, exactly as
+           kinship2 does (F2 = 2.0, not the 2.5 a whole-extent rule gives)", {
+  d1 <- data.frame(
+    id   = c("F1", "M1", "A1", "S1", "K1", "K2", "K3", "K4", "F2", "M2", "B1"),
+    sire = c(NA, NA, "F1", NA, "S1", "S1", "S1", "S1", NA, NA, "F2"),
+    dam  = c(NA, NA, "M1", NA, "A1", "A1", "A1", "A1", NA, NA, "M2"),
+    sex  = c("M", "F", "F", "M", "M", "F", "M", "F", "M", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+  d1$gen <- findGeneration(d1$id, d1$sire, d1$dam)
+  forest <- .buildMatingUnitForest(d1)
+  expect_length(.forestComponentsForTest(d1, forest), 2L)
+  pos <- .positionMatingUnitForest(d1, forest)
+
+  rel <- pos$x - pos$x[pos$id == "F1"]
+  names(rel) <- pos$id
+  target <- c(F1 = 0, M1 = 1.0, F2 = 2.0, M2 = 3.0,
+              S1 = -0.5, A1 = 0.5, B1 = 2.5,
+              K1 = -1.5, K2 = -0.5, K3 = 0.5, K4 = 1.5)
+  expect_equal(unname(rel[names(target)]), unname(target), tolerance = 1e-6)
+  .expectNoOverlap(pos)
+  .expectKinship2Agrees(d1, target, origin = "F1")
+})
+
+test_that(".positionMatingUnitForest orders disconnected families by ped
+           row order and packs each with a minSep gap -- three trios A, B,
+           C land A1=0..C2=5 on gen 0 and A3/B3/C3 centered under each pair,
+           exactly as kinship2 does", {
+  d2 <- data.frame(
+    id   = c("A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3"),
+    sire = c(NA, NA, "A1", NA, NA, "B1", NA, NA, "C1"),
+    dam  = c(NA, NA, "A2", NA, NA, "B2", NA, NA, "C2"),
+    sex  = c("M", "F", "F", "M", "F", "M", "M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  d2$gen <- findGeneration(d2$id, d2$sire, d2$dam)
+  forest <- .buildMatingUnitForest(d2)
+  expect_length(.forestComponentsForTest(d2, forest), 3L)
+  pos <- .positionMatingUnitForest(d2, forest)
+
+  rel <- pos$x - pos$x[pos$id == "A1"]
+  names(rel) <- pos$id
+  target <- c(A1 = 0, A2 = 1.0, B1 = 2.0, B2 = 3.0, C1 = 4.0, C2 = 5.0,
+              A3 = 0.5, B3 = 2.5, C3 = 4.5)
+  expect_equal(unname(rel[names(target)]), unname(target), tolerance = 1e-6)
+  .expectNoOverlap(pos)
+  .expectKinship2Agrees(d2, target, origin = "A1")
+})
+
+test_that(".positionMatingUnitForest packs disconnected families of unequal
+           depth (a trio beside a 3-generation chain B1xB2 -> B3; B3xB5 ->
+           B4) with the deeper family's extra row unconstrained by the
+           shallower one, exactly as kinship2 does", {
+  d3 <- data.frame(
+    id   = c("A1", "A2", "A3", "B1", "B2", "B3", "B4", "B5"),
+    sire = c(NA, NA, "A1", NA, NA, "B1", "B3", NA),
+    dam  = c(NA, NA, "A2", NA, NA, "B2", "B5", NA),
+    sex  = c("M", "F", "F", "M", "F", "M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  d3$gen <- findGeneration(d3$id, d3$sire, d3$dam)
+  forest <- .buildMatingUnitForest(d3)
+  expect_length(.forestComponentsForTest(d3, forest), 2L)
+  pos <- .positionMatingUnitForest(d3, forest)
+
+  rel <- pos$x - pos$x[pos$id == "A1"]
+  names(rel) <- pos$id
+  target <- c(A1 = 0, A2 = 1.0, B1 = 2.0, B2 = 3.0,
+              A3 = 0.5, B3 = 2.5, B5 = 3.5, B4 = 3.0)
+  expect_equal(unname(rel[names(target)]), unname(target), tolerance = 1e-6)
+  .expectNoOverlap(pos)
+  .expectKinship2Agrees(d3, target, origin = "A1")
+})
+
+test_that(".positionMatingUnitForest keeps the real 375-individual fixture's
+           5 disconnected families (11/5/3/13/343 real individuals) as
+           separate blocks: pairwise-disjoint x-ranges, and no two nodes of
+           different families closer than minSep on any row -- before
+           S667 the four small families interleaved among themselves
+           (overlapping x-ranges) and the smallest same-row cross-family
+           gap was 0.4167", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  comps <- .forestComponentsForTest(ped, forest)
+  expect_length(comps, 5L)
+  nReal <- vapply(comps, function(m) sum(!grepl("^__", m)), integer(1))
+  expect_equal(nReal, c(11L, 5L, 3L, 13L, 343L))
+
+  pos <- .positionMatingUnitForest(ped, forest)
+  ranges <- t(vapply(comps, function(m) range(pos$x[pos$id %in% m]), numeric(2)))
+  ## Packed in component order: each family's whole span lies strictly
+  ## right of the previous family's.
+  for (i in seq_len(nrow(ranges))[-1L]) {
+    expect_lt(ranges[i - 1L, 2L], ranges[i, 1L],
+              label = sprintf("family %d max x", i - 1L),
+              expected.label = sprintf("family %d min x", i))
+  }
+  expect_gte(.minCrossComponentRowGap(pos, comps), 1 - 1e-9)
 })
 
