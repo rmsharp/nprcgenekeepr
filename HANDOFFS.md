@@ -138,20 +138,65 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S671
 date: 2026-09-03
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS. Facilitate and record the owner's A-vs-C pedigree-drawing decision
-  (BACKLOG.md Up Next item 1, DECISION NEEDED -- TOP PRIORITY) using the S668 census, S669
-  spike, and S670 kinship2-mechanism research already in hand. Not the follow-on planning/
-  implementation session for whichever path is chosen.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Facilitated and recorded the owner's A-vs-C pedigree-drawing decision
+  (BACKLOG.md Up Next item 1, DECISION NEEDED -- TOP PRIORITY under the standing pedigree-
+  fidelity directive) using the S668 census, S669 spike, and S670 kinship2-mechanism research
+  already in hand. DECISION: (C), a joint solver. Not the follow-on planning/implementation
+  session for (C) -- that is explicitly a separate future session.
+what_was_done: Re-read S670 report Sections 4/5 and the S668 census's Recommendations section
+  fresh (not from the SESSION_NOTES summary). Independently verified the one open cost item
+  neither prior report resolved: quadprog/kinship2 are both GPL (>= 2)
+  (packageDescription()$License), this project is MIT + file LICENSE (DESCRIPTION:84) -- an
+  Imports-level runtime dependency on a GPL package from an MIT package is standard, accepted
+  CRAN practice, not a blocker. Presented both options in full prose per an explicit mid-session
+  user request: (A) -- S669's naive-version cascade result ((c2) rose 3.4x) and its 2 untested
+  variants; (C) -- S670's verified no-cascade mechanism (36/36 runs at the exact 1.0 constraint
+  floor), Effort L itemized cost, and what it does/does not solve (not class (d), duplicate
+  proximity). Ran the actual decision via AskUserQuestion (4 real options: choose A / choose C /
+  not ready / defer). Owner picked (C). Recorded in BACKLOG.md: item 1 marked [x] DECIDED S671
+  with the reasoning trail, the license note, and the concrete next step (a separate future
+  architecture/design session, FM #18/#19 -- not bundled with code); corrected the adjacent
+  S670 item's now-stale "still not made" cross-reference. CHANGELOG.md entry added.
+  PROJECT_LEARNINGS.md Learning 716 (DECISION NEEDED items as a legitimate one-session
+  deliverable; the GPL-dependency verdict).
+next_steps: The next session on this thread is an architecture/design session (not
+  implementation) to spec the exact QP formulation for (C): penalty terms, the union-node QP
+  variable + centering penalty (S670 report Sec. 4 item 2), the minSep radius-based constraint
+  generalization (Sec. 4 item 3), and the translation layer from this project's forest/nodes/
+  edges tables to the QP's flat parameterization (Sec. 4 item 1). That design session must also
+  resolve two items this decision left explicitly open: the row-policy question (census
+  Finding #5 -- kinship2's spouse-row-alignment vs. this project's current row-per-generation-
+  with-dogleg policy, which (C) would otherwise silently adopt) and the duplicate-proximity
+  penalty term (class (d), which neither kinship2 nor a direct port solves -- S670 report
+  Sec. 3/Sec. 4 item 4). Do NOT bundle that design session with code (FM #18/#19). Independent
+  of the QP work: the jog offset still needs raising above the 25-px symbol radius (census
+  Finding #3) -- a bounded fix any future session could pick up without waiting on the design
+  session. Also open: local branch is 19 commits ahead of origin/master as of this session's end
+  (S667-S671 unpushed, CI unverified on that work) -- consider pushing soon.
+key_files: BACKLOG.md Up Next item 1 (the decision record, now [x] DECIDED S671: (C)) and the
+  adjacent S670 research item (corrected cross-reference); docs/research/
+  kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md Sec. 4 (costed estimate -- the
+  task list the next design session should start from) and Sec. 5 (decision-feed section,
+  re-presented this session); docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md
+  (Recommendations section, Findings #3/#5 -- the two independent-of-A/C items still open).
+gotchas: The design session for (C) should re-read S670's Sec. 6 caveats before specing --
+  quadprog::solve.QP()'s API was read from kinship2's usage, not independently verified against
+  quadprog's own docs. quadprog/kinship2 are both GPL (>= 2) against this project's MIT + file
+  LICENSE -- confirmed this session as a non-blocking, standard Imports-level dependency
+  pattern; no further license research needed unless the actual implementation departs from a
+  plain Imports: declaration (e.g. vendoring/copying GPL source directly -- a different, NOT yet
+  cleared question). The engine (C) replaces is .positionMatingUnitForest(),
+  R/makePedigreeDiagramData.R:759-1529 (~770 lines) -- expect to re-derive
+  test_positionMatingUnitForest.R/test_resolveEdgeNodeCollisions.R against the new engine's
+  actual output (S670 estimate: 2-4 TDD implementation sessions after design, comparable to the
+  Walker/BJL redesign, issue #141).
+runtime_smoke: n/a for package runtime -- no R/ change (decision/discussion session, matching
+  the S667-S670 non-code-deliverable precedent).
+changelog_ref: CHANGELOG.md 2026-09-03 S671 entry.
+commit: dbf92066
 ```
 
 ```handoff

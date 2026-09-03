@@ -18,16 +18,131 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 670 Handoff Evaluation (by Session 671)
+**Score: 9/10.** **What helped:** the report's own §5 ("What this means for the still-open
+A-vs-C decision") was written exactly as decision-ready prose -- it stated what verified/costed
+and what still wasn't solved by (C), in language this session could re-present almost verbatim
+to the owner rather than having to re-derive a decision framing from the raw mechanism sections.
+`next_steps` correctly named the concrete post-decision step (an architecture/design session to
+spec the QP formulation) and the FM #18/#19 boundary not to bundle it with code -- this session
+cited that boundary directly when scoping its own deliverable. The §4 costed itemization (new
+`quadprog` Imports dependency; translation layer; union-node QP variable; `minSep`
+generalization) was concrete enough to present to the owner as a real cost, not a vague "some
+work." **What was missing:** the census's own "a GPL import or a permission route" phrase
+(carried into the decision item's evidence trail) was never resolved to a concrete verdict by
+S668, S669, or S670 -- this session had to check `packageDescription()$License` itself
+(`quadprog`/`kinship2` both `GPL (>= 2)`, this project `MIT + file LICENSE`) rather than finding
+that already answered; a one-line license check would have been cheap for S670 to add alongside
+its other verified facts. **What was wrong:** nothing found inaccurate -- every cited number
+(520 variables/529 constraints, 36/36 runs at the 1.0 floor, Effort L itemization) matched the
+source report on re-read. **ROI:** high -- the report made this session's actual job (present
+clearly, get a real decision) fast; the one gap (license) took a single `Rscript` call to close.
+
 ### What Session 671 Did
 **Deliverable:** Facilitate and record the owner's A-vs-C pedigree-drawing decision
 (`BACKLOG.md` Up Next item 1, DECISION NEEDED -- TOP PRIORITY under the standing
 pedigree-fidelity directive) using the S668 census, S669 spike, and S670 kinship2-mechanism
-research already in hand. Not a planning or implementation session for whichever path is
-chosen -- that is explicitly a separate future session per the item's own text. (IN PROGRESS)
-**Started:** 2026-09-03
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F.
+research already in hand -- **DONE. Decision: (C), a joint solver.** Not a planning or
+implementation session for (C) -- that is explicitly a separate future session (BACKLOG.md's own
+"Next step" text, `SESSION_RUNNER.md` FM #18/#19). No `R/` change, no TDD gate (a decision/
+discussion session, matching the audit-workstream precedent for non-code deliverables).
+**Started/Completed:** 2026-09-03 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0** -- SAFEGUARDS/SESSION_NOTES/GitHub issues/dashboard/`gh run list` (all green; CI
+   all `completed success` against the last-pushed S666 commit; local branch 18 commits ahead of
+   `origin/master`, S667-S670 unpushed, noted not acted on). Health 96/100; same FM #28 ledger-
+   size HIGH-risk flags as S668-S670 (`SESSION_NOTES.md`/`HANDOFFS.md`/`CHANGELOG.md`/
+   `BACKLOG.md` all past the 2,000-line read cap), reported not re-acted-on. Checked untracked
+   files for a ghost session (per `CLAUDE.md`'s S479 checklist): all traced to already-documented
+   work -- `docs/planning/*-spike-evidence.html` are local renders of tracked/committed `.qmd`
+   sources; `vignettes/articles/*.pdf` are gitignored vignette-render byproducts; `scratchpad/`
+   holds throwaway S667-S670 exploration scripts; the stray `~$e Compounding Loop.html` is an
+   unrelated Office lock file. No ghost session. Ledger reconcile: `CHANGELOG.md`/`HANDOFFS.md`
+   frontiers both = HEAD (`411bae96`) -- nothing to backfill. Rendered the priorities list +
+   `AskUserQuestion` picker per `CLAUDE.md`; owner picked "Decide A vs C (pedigree)."
+2. **Claimed the session (Phase 1B):** stub to `SESSION_NOTES.md` + `status: pending` receipt to
+   `HANDOFFS.md`, committed (`ee91b83e`).
+3. **Re-read the decision-relevant sections of both reports** (not from the SESSION_NOTES
+   summary): S670's report §4 (costed estimate) and §5 (decision-feed section) in full; S668
+   census's Recommendations section in full. Independently verified the one open cost item
+   neither report resolved -- license compatibility -- via
+   `packageDescription("quadprog")$License` / `packageDescription("kinship2")$License` (both
+   `GPL (>= 2)`) against `DESCRIPTION:84` (`MIT + file LICENSE`): an `Imports`-level runtime
+   dependency on a GPL package from an MIT package is standard, accepted CRAN practice, not a
+   blocker.
+4. **Presented both options in full prose** (not just report links) per an explicit user request
+   mid-session -- what (A) is, what S669's spike found (naive version cascades: (c2) rose 3.4x),
+   the two untested (A) variants; what (C) is, what S670 verified (36/36 runs at the exact 1.0
+   constraint floor), what it does/does not solve (not class (d), duplicate proximity), its
+   Effort L itemized cost, and the license note.
+5. **Ran the decision itself via `AskUserQuestion`** (4 real options: choose A / choose C / not
+   ready -- need more evidence / defer) rather than a prose question -- owner picked **(C)**.
+6. **Recorded the decision in `BACKLOG.md`** (Up Next item 1: `[ ]` -> `[x]`, "DECIDED S671,
+   2026-09-03: (C)" with the reasoning trail, the license note, and the concrete next step named
+   explicitly as a separate future architecture/design session; corrected the now-stale "still
+   not made" line in the adjacent S670 research item).
+7. **Close-out:** this handoff evaluation, self-assessment, `PROJECT_LEARNINGS.md` Learning 716,
+   `CHANGELOG.md`, this file's handoff, `HANDOFFS.md` receipt complete.
+
+**Self-assessment (Session 671): 9/10.** **Strengths:** (1) treated a `DECISION NEEDED` backlog
+item as a legitimate, narrowly-scoped session deliverable in its own right (present + decide +
+record) rather than either skipping it as "not pickable" or overreaching into the design session
+it explicitly does not license (FM #18/#19 respected: the design/implementation step is named as
+future work, not started); (2) did not let the AskUserQuestion be the whole job -- re-read both
+source reports' decision-relevant sections fresh rather than trusting the SESSION_NOTES second-
+hand summary, and closed the one real gap (license compatibility) the prior 3 sessions left open,
+with a verifiable check rather than an assumption; (3) corrected a second stale cross-reference
+(the S670 item's own "still not made" line) in the same edit rather than leaving one accurate and
+one stale statement of the same fact in the same file. **Weaknesses:** (1) did not re-verify
+`quadprog`'s own `solve.QP()` argument contract independently of kinship2's usage -- S670's own
+caveat #3 remains open and is now inherited by whichever future session specs the QP formulation;
+(2) the row-policy question (census Finding #5) and the jog-offset fix remain unresolved and
+un-scoped beyond being named as "still stand" -- this session's deliverable was the A-vs-C call
+specifically, not a full re-scope of every adjacent open item, so this is a scope boundary
+choice, not an oversight, but worth flagging explicitly rather than silently deferring.
+**ROI:** high -- the owner now has a made decision on the standing top-priority item, with the
+reasoning trail and the concrete next step recorded where the next session (whoever specs the QP
+design) will find it.
+
+**Next steps (specific):** the next session on this thread is an **architecture/design session**
+(not implementation) to spec the exact QP formulation for (C): the penalty terms, the union-node
+QP variable + centering penalty (S670 report §4 item 2), the `minSep` radius-based constraint
+generalization (§4 item 3), and the translation layer from this project's `forest`/`nodes`/
+`edges` tables to the QP's flat parameterization (§4 item 1). That design session should also
+make the two items BACKLOG.md's decision entry explicitly named as still-open: the row-policy
+question (census Finding #5 -- kinship2's spouse-row-alignment vs. this project's current
+row-per-generation-with-dogleg policy, which (C) would otherwise silently adopt) and the
+duplicate-proximity penalty term (class (d), which neither kinship2 nor a direct port solves --
+S670 report §3/§4 item 4). Do NOT let that design session bundle into code -- FM #18/#19,
+`SESSION_RUNNER.md` Planning Sessions section. Independent of the QP work: the jog offset still
+needs raising above the 25-px symbol radius (census Finding #3) -- this is a bounded fix that
+does not depend on the A-vs-C outcome and could be picked up by any future session without
+waiting on the design session. Also still open: local branch is 19 commits ahead of
+`origin/master` as of this session's end (S667-S671 unpushed) -- a future session should consider
+pushing before it grows further.
+
+**Key files:** `BACKLOG.md` Up Next item 1 (the decision record, now `[x] DECIDED S671: (C)`)
+and the adjacent S670 research item (corrected cross-reference); `docs/research/
+kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md` §4 (costed estimate -- the task
+list the next design session should start from) and §5 (decision-feed section, re-presented this
+session); `docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md` (Recommendations section,
+Findings #3/#5 -- the two independent-of-A/C items still open).
+
+**Gotchas for a future session:** (1) the design session for (C) should re-read S670's §6
+caveats before specing -- the `quadprog::solve.QP()` API was read from kinship2's usage, not
+independently verified against `quadprog`'s own docs; (2) `quadprog`/`kinship2` are both
+`GPL (>= 2)` against this project's `MIT + file LICENSE` -- confirmed this session as a non-
+blocking, standard `Imports`-level dependency pattern; no further license research is needed
+unless the actual implementation departs from a plain `Imports:` declaration (e.g. vendoring or
+copying GPL source directly, which would be a different and NOT yet cleared question); (3) the
+"three strictly ordered tiers" engine this design replaces is `.positionMatingUnitForest()`,
+`R/makePedigreeDiagramData.R:759-1529` (~770 lines) -- the design session should expect to
+re-derive `test_positionMatingUnitForest.R`/`test_resolveEdgeNodeCollisions.R` against the new
+engine's actual output, not assume compatibility (S670 report §4's own estimate: 2-4 TDD
+implementation sessions after the design session, comparable to the Walker/BJL redesign,
+issue #141).
 
 ### Session 669 Handoff Evaluation (by Session 670)
 **Score: 9/10.** **What helped:** `key_files` pointed straight at
