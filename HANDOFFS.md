@@ -138,22 +138,62 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S669
 date: 2026-09-02
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS. Spike the S668 census's recommended two-constant change
-  (recentre every anchored union on its mate midpoint; full minSep instead of
-  minSep * 0.4 for B1/duplicate mates) via a throwaway measurement script, no
-  production R/ change, no TDD gate (owner-confirmed via AskUserQuestion,
-  matching S668's audit-workstream precedent) -- to give the owner evidence for
-  the A-vs-C pedigree-drawing decision (BACKLOG.md Up Next item 1).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE. Spiked the S668 census's recommended two-constant change (recentre
+  every anchored union on its mate midpoint; full minSep instead of minSep * 0.4 for
+  B1/duplicate mates) via a throwaway measurement script, no production R/ change, no
+  TDD gate (owner-confirmed via AskUserQuestion). Result: cascades (c2 up 3.4x while
+  (a)+(b) fall 54%) -- does not decide A vs C (BACKLOG.md Up Next item 1); owner's
+  decision still pending.
+what_was_done: data-raw/pedigreeDrawingSpikeTwoConstantFix.R -- a full copy of
+  .positionMatingUnitForest() with the census's own 2 literal edits (minSep*0.4 ->
+  minSep; a new universal union-recenter pass after Tier 3, generalizing S666's
+  qualifying-only correction to every unit) plus a renamed recursive self-call;
+  reaches makePedigreeMatingLayout()'s internal call site via a temporary
+  assignInNamespace() swap restored by on.exit(). R/ untouched throughout (git diff
+  --stat -- R/ empty). Caught and fixed a real bug before trusting any number: a
+  first draft's positions never reached the rendered nodes because
+  makePedigreeMatingLayout() recomputes positions internally with the SHIPPED engine
+  -- byte-identical before/after detector counts despite nMoved > 0 was the tell.
+  Results across 7 fixtures: (a)+(b) 464 -> 215 (-54%); (c2) 414 -> 1,425 (+3.4x);
+  net hard-class findings (excluding the labelled curved-chord heuristic) 935 ->
+  1,697. Track B/D1-D3: 0 movement (idempotent -- already qualifies()-gated and
+  S666-corrected); only Track C and the real 375 fixture exercise the new path.
+  Deterministic across 3 runs; lint 0. docs/audits/
+  PEDIGREE_DRAWING_SPIKE_TWO_CONSTANT_FIX_2026-09-02.md has the full scoreboard,
+  interpretation against the census's own decision criteria, and caveats.
+next_steps: Owner still decides A vs C (BACKLOG.md Up Next item 1) -- not attempted
+  this session by design (owner picked "run the spike first," not "decide now"). Two
+  untested options if pursuing (A) further: (1) gate the two edits to a narrower
+  class of units than "every unit" and re-measure; (2) keep the two edits but re-run
+  jog/collision repair against the new spacing to see how much of the c2 regression
+  that recovers. Independent of A/C: raise the jog offset above the 25-px symbol
+  radius, and answer the row-policy question (census Finding #5).
+key_files: data-raw/pedigreeDrawingSpikeTwoConstantFix.R (.positionMatingUnitForestSpike
+  with edits marked "SPIKE EDIT" inline; runPipelineSpike()'s assignInNamespace()/
+  on.exit() pattern); docs/audits/PEDIGREE_DRAWING_SPIKE_TWO_CONSTANT_FIX_2026-09-02.md;
+  R/makePedigreeDiagramData.R:759-1529 (.positionMatingUnitForest(), unchanged -- Tier 2
+  union x at :1041, derivedX() at :1078-1084, disconnected-component recursion at
+  :801-810); R/makePedigreeDiagramData.R:1682 (makePedigreeMatingLayout()'s internal
+  call site -- the reason a spike needs the namespace-swap pattern, not just a
+  separately-computed pos).
+gotchas: makePedigreeMatingLayout() calls .positionMatingUnitForest() INTERNALLY
+  (:1682) -- a spike that computes positions separately and calls the exported
+  function will silently render with the SHIPPED engine regardless; patch the
+  namespace binding or copy that function too. Always diff raw-value deltas (nMoved)
+  against detector-level deltas before trusting either -- byte-identical detector
+  output despite nonzero raw movement is exactly this bug. Track B/D1-D3 showing 0
+  change under a real edit is not itself suspicious here -- their units are all
+  already qualifies()-gated. This spike script is throwaway by design (its own
+  header says so) -- safe to delete once the owner's A-vs-C decision is made.
+runtime_smoke: n/a for package runtime (no R/ change). The script ran end-to-end 3x
+  (exit 0), its own internal self-check (rectilinear-while-patched vs. the manually
+  replicated pipeline) passed on all 7 fixtures every run, byte-identical CSV md5
+  across runs 2-3.
+changelog_ref: CHANGELOG.md 2026-09-02 S669 entry, the close-out commit.
+commit: 20f509cc
 ```
 
 ```handoff

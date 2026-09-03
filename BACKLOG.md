@@ -41,7 +41,18 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       residue); if it cascades into Tier 1, that is the evidence for (C), whose cost is now
       quantified. Independent of A/C: the jog offset must exceed the 25-px symbol radius (report
       Finding #3), and the row-policy question (Finding #5) needs an explicit answer either way.
-      Owner's decision; not made S668.
+      **Spike run S669, 2026-09-02** (throwaway `data-raw/pedigreeDrawingSpikeTwoConstantFix.R`, no
+      TDD gate, `R/` untouched -- see
+      [`docs/audits/PEDIGREE_DRAWING_SPIKE_TWO_CONSTANT_FIX_2026-09-02.md`](docs/audits/PEDIGREE_DRAWING_SPIKE_TWO_CONSTANT_FIX_2026-09-02.md)):
+      **not the ~24 scenario -- it cascades.** (a)+(b) fell 464 -> 215 (54%, a real reduction) but
+      (c2) rose 414 -> 1,425 (3.4x); net hard-class findings (excluding the labelled curved-chord
+      heuristic) rose 935 -> 1,697. Track B/D1-D3 showed 0 movement (the spike is idempotent where
+      S666's `qualifies()`-gated correction already applies; only Track C and the real 375 fixture
+      exercise the newly-widened path). This rules out the NAIVE, ungated version of (A) as a clean
+      win -- consistent with why S646-S652 originally scoped the same mechanism to qualifying units
+      only -- but does not by itself decide (A) vs (C): a narrower gate, or the same two edits
+      followed by a re-run of jog/collision repair against the new spacing, is untested and remains
+      a live (A) variant. Owner's decision; not made S669.
 - [x] **Pedigree-drawing error census across every fixture** (owner-directed S667 via
       `AskUserQuestion` -- "b", census first; **DONE S668, 2026-09-02**, Effort M, one session) --
       `data-raw/pedigreeDrawingErrorCensus.R` (fresh, independent measurement code -- the pinned

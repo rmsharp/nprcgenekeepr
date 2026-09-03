@@ -16,6 +16,29 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-02 · [BL-pedigreeDrawingErrorCensus] S669: spike the census's recommended two-constant fix (recentre every union on its mate midpoint; full minSep for every pair) — cascades, does not decide A vs C
+- **Deliverable:** throwaway `data-raw/pedigreeDrawingSpikeTwoConstantFix.R` (owner-confirmed via
+  `AskUserQuestion`: no production `R/` change, no TDD gate, matching S668's audit-workstream
+  precedent) and `docs/audits/PEDIGREE_DRAWING_SPIKE_TWO_CONSTANT_FIX_2026-09-02.md`. A full copy
+  of `.positionMatingUnitForest()` with the census's own two literal edits applied (`minSep * 0.4`
+  → `minSep`; a new universal union-recenter pass, generalizing S666's qualifying-only correction
+  to every unit); reaches `makePedigreeMatingLayout()`'s internal call site via a temporary
+  `assignInNamespace()` swap, restored on exit of each pipeline run. `git diff --stat -- R/` clean
+  throughout.
+- **Bug caught before trusting any number:** a first draft computed the spiked positions but still
+  called the exported `makePedigreeMatingLayout()` for the "direct" layout step, which internally
+  re-derives positions with the SHIPPED engine — every detector class came back byte-identical
+  before/after despite nodes visibly moving (`nMoved > 0`), the tell that the moved values never
+  reached what the detectors measure. See `PROJECT_LEARNINGS.md` Learning 712.
+- **Results (real 375 fixture; Track B/D1-D3 showed 0 movement, idempotent where S666's existing
+  correction already applies):** (a)+(b) fell 464 → 215 (54%) but (c2) rose 414 → 1,425 (3.4x); net
+  hard-class findings (excluding the labelled curved-chord heuristic) rose 935 → 1,697. Rules out
+  the naive/ungated version of (A) as a clean win; does not decide A vs C — a narrower gate or a
+  jog/collision-repair re-run against the new spacing is untested. See `PROJECT_LEARNINGS.md`
+  Learning 713. `BACKLOG.md` Up Next item 1 updated with the result; owner's decision still pending.
+- Full clean regression / lint: N/A for production code (no `R/` change); the spike script itself
+  lints 0, runs deterministically across 3 independent runs.
+
 ### 2026-09-02 · [BL-pedigreeDrawingErrorCensus] S668: pedigree-drawing error census across every fixture — scoreboard script + audit report, DONE; the A-vs-C decision teed up for the owner (commit `85aa38bc`; ledgers in the close-out commit that follows)
 - **Deliverable:** `data-raw/pedigreeDrawingErrorCensus.R` (fresh, independent measurement code;
   owner-directed via `AskUserQuestion`: a `data-raw/` audit script with no TDD gate, reimplemented

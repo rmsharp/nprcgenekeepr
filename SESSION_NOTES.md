@@ -18,19 +18,134 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 668 Handoff Evaluation (by Session 669)
+**Score: 9/10.** **What helped:** the census report's Recommendation 1 gave the exact spike to
+run, in exact formula terms ("recentre every union on its mate midpoint; 1.0-unit spousal
+separation for every pair... re-run the census") and the exact decision criterion ("if (a)+(b)
+fall to ~24 with no other class rising... if it cascades, that is evidence for (C)") -- this
+session implemented that literally with almost no design work of its own. `key_files` pointed
+straight at the two target constants (`derivedX()`'s `minSep * 0.4` branch; Tier 2's
+`mean(tier1X[kids])`) inside `.positionMatingUnitForest()` with the right line anchor
+(`:759+`). The BEFORE numbers this session's own baseline pipeline reproduced (a=293, b=171
+total across fixtures) matched the S668 report's own published figures (288+5, 168+3) exactly,
+which was the strongest possible confirmation the spike's baseline was wired correctly.
+**What was missing:** nothing that should have been anticipated -- the
+`makePedigreeMatingLayout()`-recomputes-positions-internally pitfall this session hit (Learning
+712) is specific to how a spike of an internal function gets its effect to the rendered output,
+not something S668's own census (which never needed to modify the engine) would have surfaced.
+**What was wrong:** nothing found inaccurate. **ROI:** very high -- a report with a named,
+literal experiment and a numeric decision threshold turns a "go run some experiment" task into
+"execute this specific thing and compare to this specific number."
+
 ### What Session 669 Did
-**Deliverable:** spike the S668 census's recommended two-constant change (recentre every
-anchored union on its mate midpoint; full `minSep` instead of `minSep * 0.4` for B1/duplicate
-mates) to give the owner measured evidence for the A-vs-C pedigree-drawing decision
-(`BACKLOG.md` Up Next item 1) -- (IN PROGRESS)
-**Started:** 2026-09-02
-**Status:** Session claimed. Owner-confirmed via `AskUserQuestion`: audit-workstream approach
-matching S668's precedent -- a throwaway spike script (a modified copy of
-`data-raw/pedigreeDrawingErrorCensus.R`'s pipeline replica), no production `R/` change, no TDD
-gate. Owner explicitly picked "run the spike first," not "decide A vs C now." Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** spike the S668 census's recommended two-constant fix -- **DONE.** Not the A-vs-C
+decision itself (owner explicitly chose "run the spike first," not "decide now").
+`data-raw/pedigreeDrawingSpikeTwoConstantFix.R` (throwaway, no TDD gate, `R/` untouched -- owner-
+confirmed via `AskUserQuestion`, matching S668's audit-workstream precedent) +
+`docs/audits/PEDIGREE_DRAWING_SPIKE_TWO_CONSTANT_FIX_2026-09-02.md`.
+**Started/Completed:** 2026-09-02 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0** -- SAFEGUARDS/notes/issues/dashboard/`gh run list` (all green; CI all `completed
+   success`, health 96/100, same FM #28 ledger-size flags as S668, reported not re-acted-on).
+   Ledger frontiers = HEAD, nothing to backfill. Rendered the priorities list + `AskUserQuestion`
+   picker per `CLAUDE.md`; owner picked item 1 (the standing-priority A-vs-C decision), then a
+   second `AskUserQuestion` on HOW to approach it -- "run the recommended spike first," not
+   decide from existing evidence or discuss first.
+2. **Pre-RED/approach scope (`AskUserQuestion`):** throwaway spike script, no TDD gate, matching
+   S668's audit-workstream precedent -- owner picked this over "live edit R/ under full TDD then
+   revert."
+3. **Read `.positionMatingUnitForest()` in full** (`R/makePedigreeDiagramData.R:759-1529`, current
+   post-S667/S668 state -- the BACKLOG.md text describing the two constants predates 4 rounds of
+   changes since, so the exact current line numbers/mechanism had to be re-read, not assumed).
+   Found the census's own `runPipeline()` calls the position engine directly
+   (`nprcgenekeepr:::.positionMatingUnitForest`), which is why a naive spike copy alone would not
+   affect what `makePedigreeMatingLayout()` itself renders.
+4. **Built the spike** as a full copy of the function with 3 edits (minSep*0.4 -> minSep;
+   universal union recenter added after Tier 3; recursive self-call renamed) -- reused the
+   census's own fixtures/detectors verbatim (copied, not sourced, so this file has no runtime
+   dependency on the census script).
+5. **Run 1 exposed the `makePedigreeMatingLayout()`-recomputes-positions-internally bug**
+   (byte-identical before/after class counts despite `nMoved > 0` on the same fixtures) --
+   verified live that `assignInNamespace()` works on a `pkgload::load_all()`-loaded package and
+   fixed via a temporary namespace swap restored by `on.exit()`. See `PROJECT_LEARNINGS.md`
+   Learning 712 for the full mechanism.
+6. **Run 2 = the real numbers**, reproduced identically across 3 total runs; lint 0 (1
+   `implicit_integer_linter` fixed). Sanity-checked Track C's 4 individual finding rows by hand
+   before trusting the aggregate scoreboard.
+7. **Report + close-out:** `docs/audits/PEDIGREE_DRAWING_SPIKE_TWO_CONSTANT_FIX_2026-09-02.md`
+   (scoreboard, interpretation against the census's own decision criteria, caveats on the
+   untested narrower-gate/jog-repair-follow-on alternatives), `BACKLOG.md` (Up Next item 1
+   updated with the result, decision NOT made), `CHANGELOG.md`, `PROJECT_LEARNINGS.md` 712-713,
+   this file, `HANDOFFS.md`.
+
+**Headline numbers:** across all 7 fixtures, (a)+(b) 464 -> 215 (-54%); (c2) 414 -> 1,425
+(+3.4x); (cCurved, heuristic) 1,743 -> 1,849; (d)/(e)/(f) unchanged. Net hard-class findings
+(excluding cCurved): 935 -> 1,697 (+762). Track B full/shrunk and D1-D3: 0 movement, 0 change
+(idempotent -- those fixtures' units are all already `qualifies()`-gated and S666-corrected).
+Track C and the real 375 fixture are the only ones the spike's new code paths touch.
+
+**Runtime smoke test (Phase 3E):** n/a for package runtime -- no `R/` change, matching S668's own
+precedent for this deliverable shape. The deliverable is the script: ran deterministically
+across 3 independent runs (byte-identical CSV md5 across runs 2-3), lint 0, `git diff --stat --
+R/` empty throughout.
+
+**Close-out checklist mapping (`CLAUDE.md`):** citation N/A; tutorial/article N/A (no Shiny
+change); `NEWS.Rmd` N/A (no user-facing change, no shipped code); `a2interactive.Rmd` N/A;
+`_pkgdown.yml` N/A; GitHub issue close-out N/A (no issue tied to this item); lint DONE
+(`lintr::lint()` on the new script 1 -> 0; no other `.R` touched); CI-break N/A.
+
+**Self-assessment (Session 669): 8/10.** **Strengths:** (1) caught a real methodology bug (moved
+positions never reaching the rendered nodes) via a first-principles consistency check
+(`nMoved` vs. class-count deltas) before trusting a "no effect" result, rather than accepting it
+at face value; (2) the spike's BEFORE baseline reproduced S668's own published numbers exactly,
+independently confirming both this session's wiring and S668's own census; (3) the report
+explicitly separates the measured result from the decision itself, and names the untested
+narrower-gate/jog-repair-follow-on alternatives rather than overclaiming "cascades = must be
+(C)"; (4) deterministic, lint-clean, reproducible by one command, matching the project's
+established audit-script bar. **Weaknesses:** (1) tested only the literal, most naive version of
+the fix (every unit, no re-gating) -- a narrower variant that might avoid the cascade was named
+as a caveat but not attempted, so the session answers "does the naive version work" rather than
+"is there ANY version of (A) that works"; (2) no rendered/chromote visual of the real-375
+before/after (numbers only) -- repeats a gap S668 also flagged in its own self-assessment;
+(3) did not attempt a jog/collision-repair re-run against the new spacing, which could recover
+some of the c2 regression -- explicitly out of scope to keep the two edits' effect legible, but
+means the "1,697" ceiling is an upper bound on the naive fix's cost, not necessarily its final
+cost under a complete (A) implementation. **ROI:** high -- the owner's decision now has a
+concrete, measured answer to the specific question the census itself posed, and a clear caveat
+about what remains untested.
+
+**Next steps (specific):** the owner still decides A vs C (`BACKLOG.md` Up Next item 1) -- this
+session deliberately did not make that call. Two live options, neither attempted: (1) a narrower
+(A) variant -- gate the two edits to a wider-but-still-restricted class of units rather than
+every unit, and re-measure; (2) the same two edits followed by a jog/collision-repair re-run
+against the new spacing (`.resolveEdgeNodeCollisions()`/the same-row repair pass), to see how
+much of the c2 regression that recovers. Either would need its own spike before being trusted --
+do not assume either helps without measuring. Independent of A/C, the report's other 2 items
+stand: raise the jog offset above the 25-px symbol radius, and answer the row-policy question
+(census Finding #5).
+
+**Key files:** `data-raw/pedigreeDrawingSpikeTwoConstantFix.R` (the spike engine
+`.positionMatingUnitForestSpike()` with edits marked "SPIKE EDIT" inline; `runPipelineSpike()`'s
+`assignInNamespace()`/`on.exit()` pattern for reaching `makePedigreeMatingLayout()`'s internal
+call site); `docs/audits/PEDIGREE_DRAWING_SPIKE_TWO_CONSTANT_FIX_2026-09-02.md` (scoreboard,
+interpretation, caveats); `R/makePedigreeDiagramData.R:759-1529` (`.positionMatingUnitForest()`,
+unchanged -- read in full this session since the BACKLOG's own description predates S667/S668):
+Tier 2 union x at `:1041`, `derivedX()` at `:1078-1084`, disconnected-component recursion at
+`:801-810`.
+
+**Gotchas for a future session:** (1) `makePedigreeMatingLayout()` calls
+`.positionMatingUnitForest()` INTERNALLY (`:1682`) -- any spike that computes positions
+separately and then calls the exported function will silently use the SHIPPED engine for
+rendering regardless; either patch the namespace binding (this session's approach) or copy
+`makePedigreeMatingLayout()` too; (2) always diff `nMoved`-style raw-value deltas against the
+detector-level deltas before trusting either -- byte-identical detector output despite nonzero
+raw movement is the tell of exactly this class of bug; (3) Track B/D1-D3 showing 0 change under
+a real edit is not itself suspicious -- confirm WHY (here: those fixtures' units are all already
+`qualifies()`-gated) before treating 0 as a red flag; (4) this spike script is throwaway by
+design (per its own header) -- safe to delete once the owner's A-vs-C decision is made, it has
+no runtime dependency from anything else.
 
 ### Session 667 Handoff Evaluation (by Session 668)
 **Score: 9/10.** **What helped:** `next_steps` was exactly right and specific ("pick up Up Next
