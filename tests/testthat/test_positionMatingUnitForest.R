@@ -93,8 +93,11 @@
   ord <- order(vapply(comps, function(m) min(firstRow[nodes %in% m], na.rm = TRUE),
                       numeric(1)))
   comps <- unname(comps[ord])
+  ## Duplicates ride with their mating unit (a dangling parent's duplicate
+  ## has a realId with no own row -- GREEN-phase correction, S667, matching
+  ## the production helper).
   d <- forest$duplicates
-  lapply(comps, function(m) c(m, d$id[d$realId %in% m]))
+  lapply(comps, function(m) c(m, d$id[d$matingUnitId %in% m]))
 }
 
 ## Smallest same-row x gap between two nodes of DIFFERENT components

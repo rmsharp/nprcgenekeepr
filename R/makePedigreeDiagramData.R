@@ -565,6 +565,137 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 }
 
 
+#' Weakly-connected components of the drawn pedigree graph
+#'
+#' Internal helper for the disconnected-component separation fix (S667,
+#' \code{docs/planning/pedigree-diagram-disconnected-component-separation-plan.md},
+#' "REVISED DESIGN -- Session 667"). Partitions the nodes the layout
+#' actually draws -- every real id in \code{ped} plus every mating-unit id
+#' in \code{forest$matingUnits} -- into weakly-connected components over the
+#' edges it actually draws: mating unit <-> its real sire, mating unit <->
+#' its real dam, and every \code{forest$childEdges} row (a unit or a real
+#' parent -> a real child). A duplicate node rides with its \code{realId}.
+#' An orphan unit's siblings (issue #154, both parents dangling) are joined
+#' through their unit even though no real parent row exists -- exactly as
+#' they are drawn.
+#'
+#' Components are ordered by the smallest \code{ped} row index among their
+#' real members: kinship2's own family order (\code{align.pedigree()} lays
+#' unrelated families out in pedigree order -- verified bit-exact on a
+#' 3-family fixture, \code{test_positionMatingUnitForest.R}). Labelling is
+#' vectorized min-label propagation to a fixed point (no closure state).
+#'
+#' @param ped data frame with at least an \code{id} column.
+#' @param forest the list returned by \code{\link{.buildMatingUnitForest}}
+#'   for this same \code{ped}.
+#' @return A list of character vectors, one per component in display
+#'   order, each holding that component's real ids, mating-unit ids, and
+#'   duplicate ids.
+#' @noRd
+.forestComponents <- function(ped, forest) {
+  realIds <- as.character(ped$id)
+  nodes <- c(realIds, forest$matingUnits$id)
+  ## Label = index into 'nodes'; real ids come first in ped row order, so a
+  ## component's minimum label IS its first real member's ped row.
+  label <- stats::setNames(seq_along(nodes), nodes)
+
+  mu <- forest$matingUnits
+  ce <- forest$childEdges
+  edgeA <- c(rep(mu$id, 2L), ce$from)
+  edgeB <- c(mu$sire, mu$dam, ce$to)
+  keep <- edgeA %in% nodes & edgeB %in% nodes
+  edgeA <- edgeA[keep]
+  edgeB <- edgeB[keep]
+
+  if (length(edgeA) > 0L) {
+    repeat {
+      before <- label
+      shared <- pmin(label[edgeA], label[edgeB])
+      minA <- tapply(shared, edgeA, min)
+      minB <- tapply(shared, edgeB, min)
+      label[names(minA)] <- pmin(label[names(minA)], minA)
+      label[names(minB)] <- pmin(label[names(minB)], minB)
+      if (identical(label, before)) break
+    }
+  }
+
+  comps <- split(nodes, label)
+  comps <- unname(comps[order(as.integer(names(comps)))])
+  ## A duplicate rides with the mating unit it duplicates INTO, not its
+  ## realId: a dangling parent's duplicate (S461 -- the parent has no own
+  ## row, so realId is not a node at all) would otherwise belong to no
+  ## component and vanish from the output. Found by the pre-existing
+  ## dangling-parent duplicate test during GREEN (S667). A real parent's
+  ## unit is always in that parent's own component, so this is the same
+  ## assignment for every non-dangling duplicate.
+  dups <- forest$duplicates
+  lapply(comps, function(members) {
+    c(members, dups$id[dups$matingUnitId %in% members])
+  })
+}
+
+#' Restrict a mating-unit forest to one component's members
+#'
+#' Internal helper for the disconnected-component separation fix (S667).
+#' Keeps \code{matingUnits}/\code{duplicates} whose \code{id} and
+#' \code{childEdges} whose \code{to} are in \code{members}, so unit ids stay
+#' identical to the caller's forest (which \code{makePedigreeMatingLayout()}
+#' keeps using for its edges after positioning).
+#'
+#' @param forest the list returned by \code{\link{.buildMatingUnitForest}}.
+#' @param members one element of \code{\link{.forestComponents}}' result.
+#' @return A forest list of the same shape, restricted to \code{members}.
+#' @noRd
+.subsetForest <- function(forest, members) {
+  list(
+    matingUnits = forest$matingUnits[forest$matingUnits$id %in% members, ,
+                                     drop = FALSE],
+    duplicates = forest$duplicates[forest$duplicates$id %in% members, ,
+                                   drop = FALSE],
+    childEdges = forest$childEdges[forest$childEdges$to %in% members, ,
+                                   drop = FALSE]
+  )
+}
+
+#' Pack independently-positioned components left to right, per-row
+#'
+#' Internal helper for the disconnected-component separation fix (S667).
+#' Each component keeps its own internal layout; component \code{i} is
+#' translated right by the smallest shift that leaves at least
+#' \code{minSep} between the rightmost already-placed node and its own
+#' leftmost node on EVERY row (gen) the two share -- per-row contour
+#' packing, which is exactly what \code{kinship2::align.pedigree()} does
+#' (a family wide only at a deep row lets a shallower family tuck in above
+#' it; bit-exact on the D1 fixture, \code{test_positionMatingUnitForest.R}).
+#' When two components share no row at all, the whole extents are
+#' separated by \code{minSep} instead (kinship2-unverified, disclosed in
+#' the design doc; errs toward more separation).
+#'
+#' @param positions a list of position data frames (\code{id}, \code{x},
+#'   \code{gen}), one per component, in display order.
+#' @param minSep the engine's own minimum same-row separation.
+#' @return One position data frame, all components combined.
+#' @noRd
+.packComponents <- function(positions, minSep) {
+  placed <- positions[[1L]]
+  for (i in seq_along(positions)[-1L]) {
+    nxt <- positions[[i]]
+    sharedGens <- intersect(unique(placed$gen), unique(nxt$gen))
+    shift <- if (length(sharedGens) > 0L) {
+      max(vapply(sharedGens, function(g) {
+        max(placed$x[placed$gen == g]) + minSep - min(nxt$x[nxt$gen == g])
+      }, numeric(1)))
+    } else {
+      max(placed$x) + minSep - min(nxt$x)
+    }
+    nxt$x <- nxt$x + shift
+    placed <- rbind(placed, nxt)
+  }
+  rownames(placed) <- NULL
+  placed
+}
+
+
 #' Position a mating-unit forest via a genuine Buchheim-Junger-Leipert
 #' apportioning engine (Option 2 layout, D3/D4/D5)
 #'
@@ -647,6 +778,33 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## an unbounded (and, found live, downstream-harmful) drift. See that
   ## function's own comment for the empirical justification.
   .kMaxIndividualPush <- 2L
+
+  ## ---- S667: disconnected-component separation --------------------------
+  ## docs/planning/pedigree-diagram-disconnected-component-separation-plan.md,
+  ## "REVISED DESIGN -- Session 667". Two or more weakly-connected families
+  ## are each laid out ALONE by this same engine (recursively: every tier,
+  ## the S666 correction pass, and every collision-avoidance mechanism run
+  ## unchanged per family), then packed left-to-right in ped row order with
+  ## a per-row minSep gap -- kinship2::align.pedigree()'s own treatment of
+  ## unrelated families (bit-exact on Track B shrunk and 3 synthetic
+  ## multi-family fixtures, test_positionMatingUnitForest.R). Before this,
+  ## all families shared the super-root's sibling packing with no notion of
+  ## family: each B1 mate's anchor + minSep target landed on the OTHER
+  ## family and .deCollideIndividualPoints() pushed her further into it
+  ## (Track B shrunk rendered P1 . C4 . P2 . P6 across one row). A single
+  ## component takes the unchanged path below; Track B full (2 components)
+  ## is identical either way, up to translation. Runs after the gen-NA fix
+  ## above so every per-component call sees consistent gens.
+  components <- .forestComponents(ped, forest)
+  if (length(components) > 1L) {
+    perComponent <- lapply(components, function(members) {
+      .positionMatingUnitForest(
+        ped[as.character(ped$id) %in% members, , drop = FALSE],
+        .subsetForest(forest, members)
+      )
+    })
+    return(.packComponents(perComponent, minSep))
+  }
 
   matingUnits <- forest$matingUnits
   duplicates <- forest$duplicates
