@@ -138,20 +138,58 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S672
 date: 2026-09-03
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Architecture/design document specifying the QP formulation for pedigree-drawing
-  option (C) -- penalty terms, union-node QP variable + centering penalty, minSep radius-based
-  constraint generalization, forest/nodes/edges translation layer, and the row-policy question
-  (census Finding #5). Following ARCHITECTURE_WORKSTREAM.md. No R/ code this session.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Architecture/design document specifying the QP formulation for
+  pedigree-drawing option (C), following ARCHITECTURE_WORKSTREAM.md (S671's named next step).
+  No R/ code this session -- implementation is a separate future session (FM #18/#19).
+what_was_done: Read fresh, not from memory: the S670 research report and S668 census in full,
+  .positionMatingUnitForest()'s full ~825-line body plus .buildMatingUnitForest() and the D2
+  dogleg block; independently verified quadprog::solve.QP()'s argument contract against the
+  installed package's own docs (closing S670 report Sec.6 caveat #3); ran the grep-based
+  Evidence-Based Inventory SESSION_RUNNER.md mandates (2 production call sites, 6,635 lines
+  across 4 test files pinning exact output, 0 existing quadprog references). Posed 2
+  AskUserQuestion decisions before drafting: doc placement (docs/planning/, matching the
+  ~25-document precedent) and row policy (census Finding #5 -- owner picked keep row=generation).
+  Wrote docs/planning/pedigree-diagram-joint-qp-solver-plan.md: a 6-item Decision section
+  (two-phase order/value separation reusing Tier 1-3's existing formulas for provisional order
+  only; the QP variable set; radius-based minSep constraint generalization, repurposing existing
+  render-layer constants; a 5-term objective including 2 new terms beyond a straight kinship2
+  port -- union centering [targets census Finding #1] and duplicate proximity [targets class d,
+  which kinship2 itself doesn't solve]; the row-policy ratification; keeping .packComponents()
+  rather than folding disconnected-family packing into one global QP), a 4-row Alternatives
+  Considered table, a 4-phase Migration Path (each phase with DONE criteria + verification
+  commands + an explicit session boundary), Impact Analysis, Verification Plan, 3 Open Questions.
+  BACKLOG.md Up Next item 1 updated with the design's outcome. PROJECT_LEARNINGS.md Learnings
+  717-718. Commit b8a2658e.
+next_steps: Migration Path Phase 1 (plan doc's own section) -- an implementation session, full
+  TDD RED/GREEN/REFACTOR: build .solveJointQP() standalone (not yet wired into
+  .positionMatingUnitForest()), promote quadprog to DESCRIPTION's Imports: (renv::snapshot(dev =
+  TRUE) after), verify against Track B full/shrunk, Track C, D1-D3 only -- not the real 375
+  fixture yet (that's Phase 3). Do NOT bundle Phase 1 with Phase 2 in the same session --
+  Migration Path phases are session boundaries, FM #18/#19 applies to them exactly as it applies
+  to the plan-vs-code boundary. Independent of this thread: local branch is 22+ commits ahead of
+  origin/master, unpushed; census Finding #3 (jog offset) remains open, unscoped, pickable any
+  time with no ordering dependency on the QP work.
+key_files: docs/planning/pedigree-diagram-joint-qp-solver-plan.md (the design, in full --
+  Migration Path Phase 1 is the literal starting point); R/makePedigreeDiagramData.R:759-1529
+  (.positionMatingUnitForest(), the engine being partially replaced -- the plan doc's own
+  "Current state" table maps every sub-range to unchanged/repurposed/replaced);
+  R/makePedigreeDiagramData.R:2167-2236 (.addRectilinearWaypoints()'s D2 dogleg, unchanged);
+  DESCRIPTION (quadprog needs promoting to Imports: in Phase 1).
+gotchas: Phase 1's RED tests must explicitly characterize the orphan-mating-unit edge case
+  (anchorOf NA, issue #154) -- the objective's spousal/child/union-centering terms don't apply
+  (no real anchor/non-anchor pair); existing test cases exist to build from
+  (test_positionMatingUnitForest.R:751). The QP's row/order grouping is keyed by gen, unchanged
+  (row-policy Decision 5) -- don't conflate with Finding #3 (jog offset), unrelated
+  rendering-layer code. The ~714-variable/~700-constraint problem-size estimate is unmeasured --
+  Phase 1's first real solve.QP() run is the actual measurement, expect drift from the estimate.
+runtime_smoke: n/a -- docs-only deliverable, no R/ change (matching the S668/S669/S670/S671
+  precedent for measurement/research/decision/design sessions with no package code touched).
+  git diff --stat -- R/ tests/ empty throughout this session (confirmed).
+changelog_ref: b8a2658e
+commit: b8a2658e
 ```
 
 ```handoff

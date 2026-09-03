@@ -18,21 +18,137 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 671 Handoff Evaluation (by Session 672)
+**Score: 9/10.** **What helped:** `next_steps` named the exact scope of this session precisely --
+"spec the exact QP formulation for (C): penalty terms, the union-node QP variable + centering
+penalty (S670 report Sec. 4 item 2), the minSep radius-based constraint generalization (Sec. 4
+item 3), and the translation layer... (Sec. 4 item 1)" plus "must also resolve... the row-policy
+question (census Finding #5)... and the duplicate-proximity penalty term (class (d))" -- this
+session went straight into research with no scope reconstruction needed. `key_files` pointed
+directly at the source documents (S670 report Sec. 4/Sec. 5, S668 census Recommendations,
+Findings #3/#5) used verbatim. `gotchas` flagged `quadprog::solve.QP()`'s API as read from
+kinship2's usage, not independently verified -- directly actionable; this session closed that
+exact gap via the installed package's own `args()`/Rd docs. **What was missing:** a minor gap --
+`docs/architecture/` (a real, if sparsely-used, alternative placement directory) existed and
+wasn't flagged, so this session had to discover it itself before the doc-placement
+`AskUserQuestion` could be posed; S671's own deliverable was the decision, not scoping this
+session's placement question, so this is forgivable, not a real omission. **What was wrong:**
+nothing found inaccurate -- every citation (S670 report Sec. 4 items 1-3, census Finding #3/#5,
+the license verdict) matched the source documents on direct re-read. **ROI:** high -- the handoff
+made this session's actual research fast and correctly targeted; effort went into genuinely new
+synthesis (the QP formulation itself), not rediscovering scope or re-verifying settled facts.
+
 ### What Session 672 Did
-**Deliverable:** Architecture/design document specifying the exact QP formulation for pedigree-
-drawing option (C) -- a joint solver -- following `docs/methodology/workstreams/
-ARCHITECTURE_WORKSTREAM.md` (S671's named next step: penalty terms, the union-node QP variable +
-centering penalty, the `minSep` radius-based constraint generalization, the translation layer
-from this project's `forest`/`nodes`/`edges` tables to the QP's flat parameterization, and
-resolving the row-policy question, census Finding #5). No `R/` code this session -- implementation
-is a separate future session (FM #18/#19). (IN PROGRESS)
-**Started:** 2026-09-03.
-**Status:** Session claimed. Pre-RED/approach scope confirmed via `AskUserQuestion`:
-`docs/planning/` placement (matching ~25 prior pedigree-diagram-*-plan.md precedent), no TDD gate
-(doc-only deliverable). Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Architecture/design document specifying the exact QP formulation for
+pedigree-drawing option (C) -- a joint solver -- following `docs/methodology/workstreams/
+ARCHITECTURE_WORKSTREAM.md` (S671's named next step). **DONE.**
+[`docs/planning/pedigree-diagram-joint-qp-solver-plan.md`](docs/planning/pedigree-diagram-joint-qp-solver-plan.md).
+No `R/`/`tests/` code this session -- implementation is a separate future session (FM #18/#19).
+**Started/Completed:** 2026-09-03 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0** -- SAFEGUARDS/SESSION_NOTES/GitHub issues/dashboard/`gh run list` (all green; CI
+   all `completed success`; local branch 21 commits ahead of `origin/master`, S667-S671 unpushed,
+   noted not acted on). Health 96/100, same FM #28 ledger-size flags as recent sessions. Ledger
+   reconcile: `CHANGELOG.md` frontier 1 commit behind HEAD, explained (S671's own close-out commit
+   touched no ledger-worthy content beyond what its own earlier commit already recorded) -- no
+   backfill owed; `HANDOFFS.md` frontier = HEAD, `status: complete`. Rendered the priorities list +
+   `AskUserQuestion` picker; owner picked "Spec the QP formulation (C)."
+2. **Phase 1:** stated the deliverable/workstream back to the owner; one `AskUserQuestion` for the
+   pre-RED scope decision (`docs/planning/` vs. the little-used `docs/architecture/`; no TDD
+   gate) -- owner picked `docs/planning/`, matching the ~25-document precedent for this exact
+   problem domain.
+3. **Claimed the session (Phase 1B):** stub to `SESSION_NOTES.md` + `status: pending` receipt to
+   `HANDOFFS.md`, committed (`5f7a2136`).
+4. **Research (`ARCHITECTURE_WORKSTREAM.md` Phase 2), read fresh, not from memory:** the S670
+   research report in full (416 lines); the S668 census in full (386 lines, all 7 findings);
+   `.positionMatingUnitForest()`'s full body (`R/makePedigreeDiagramData.R:759-1529`, ~825 lines
+   across 4 Read calls) plus `.buildMatingUnitForest()` (:389-565) for the exact `forest` table
+   schema and `.addRectilinearWaypoints()`'s D2 dogleg block (:2167-2236) for the row-policy
+   rendering mechanism; independently verified `quadprog::solve.QP()`'s argument contract against
+   the installed package's own `args()` output and `Rd2txt` documentation (closing S670 report
+   Sec. 6 caveat #3); grep-based Evidence-Based Inventory (2 production call sites, 6,635 lines
+   across 4 test files pinning exact output, 0 existing `quadprog` references anywhere).
+5. **Two decisions posed via `AskUserQuestion` before drafting, both flagged by prior sessions/the
+   census as the owner's call:** row policy (census Finding #5) -- owner picked "keep row =
+   generation" (status quo) over adopting kinship2's spouse-row-alignment.
+6. **Wrote the design document** (`docs/planning/pedigree-diagram-joint-qp-solver-plan.md`):
+   Context, a 6-item Decision section (two-phase structure reusing Tier 1-3's formulas for
+   provisional order only; the QP variable set; the radius-based `minSep` constraint
+   generalization; the 5-term objective including 2 new terms beyond a straight kinship2 port --
+   union centering and duplicate proximity; the row-policy ratification; keeping
+   `.packComponents()` rather than folding disconnected-family packing into one global QP),
+   Rationale, a 4-row Alternatives Considered table, the Evidence-Based Inventory, a 4-phase
+   Migration Path (each phase with DONE criteria + verification commands + an explicit session
+   boundary), Impact Analysis (what changes/doesn't/might break), Verification Plan, and 3 Open
+   Questions. Spot-verified every file:line citation against direct `Read` output before
+   finalizing (not computed from memory) -- caught and confirmed one range (`:2167-2236`) that had
+   been estimated rather than directly read.
+7. **Close-out:** this handoff evaluation, self-assessment, `PROJECT_LEARNINGS.md` Learnings
+   717-718, `BACKLOG.md` Up Next item 1 updated with the design's outcome, `CHANGELOG.md`, this
+   file's handoff, `HANDOFFS.md` receipt complete.
+
+**Self-assessment (Session 672): 9/10.** **Strengths:** (1) research read every source document
+fresh and in full rather than trusting `SESSION_NOTES.md`'s own prior summaries -- caught and
+independently verified the one caveat a prior session (S670) had explicitly left open
+(`quadprog::solve.QP()`'s argument contract); (2) made 6 concrete, evidence-cited design decisions
+(not a vague sketch) with an honest 4-row Alternatives Considered table, including one alternative
+(folding `.packComponents()` into a single global QP) that would have been architecturally purer
+but was explicitly rejected on risk/scope grounds rather than silently adopted because it looked
+cleaner; (3) surfaced and resolved, via `AskUserQuestion` rather than unilateral author judgment,
+the one embedded product-level decision the census itself named as the owner's call (row policy),
+matching and extending Learning 716's own precedent one level down into a design session's own
+internal forks; (4) ran the grep-based Evidence-Based Inventory `SESSION_RUNNER.md` mandates for
+any plan that replaces/deletes code, not skipped as "obviously not needed here"; (5) stayed
+strictly within the design-session boundary -- no `R/` code written despite having enough detail
+to start, respecting FM #18/#19 even though "just prototype it to check" would have been easy to
+rationalize. **Weaknesses:** (1) no throwaway spike/prototype of `.solveJointQP()` was built to
+empirically test the design before writing it down -- inherent to a design-only session (the point
+is to design before implementing), but the QP formulation is a well-evidenced SPEC, not yet a
+verified implementation, and this should not be read as more proven than it is; (2) the ~714-
+variable problem-size estimate is derived from the census's own per-fixture counts, not measured
+directly -- disclosed explicitly in the doc (Rationale + Impact Analysis) as Phase 1's own job to
+confirm, not silently presented as settled; (3) the new duplicate-proximity penalty term has no
+kinship2 precedent to lean on and was not spiked or swept at all this session -- flagged as needing
+its own empirical weight sweep in Phase 1, but it remains the least-verified part of the design.
+**ROI:** high -- the owner now has a concrete, buildable, evidence-cited spec for the top-priority
+pedigree work, with both open policy questions (row policy, duplicate-proximity scope) resolved
+rather than left dangling for a future session to rediscover.
+
+**Next steps (specific):** the next session on this thread is **Migration Path Phase 1**
+(`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path) -- an
+**implementation** session, full TDD RED/GREEN/REFACTOR: build `.solveJointQP()` standalone
+(NOT yet wired into `.positionMatingUnitForest()`), promote `quadprog` to `DESCRIPTION`'s
+`Imports:` (`renv::snapshot(dev = TRUE)` after), verify against Track B full/shrunk, Track C,
+D1-D3 only. That phase's own DONE criteria and verification commands are written out in the plan
+doc -- do not re-derive them from scratch. Do NOT bundle Phase 1 with Phase 2 (cutover) in the
+same session -- each Migration Path phase is its own session boundary, FM #18/#19 applies to
+migration phases exactly as it applies to the plan-vs-code boundary. Independent of this thread:
+local branch is now 22+ commits ahead of `origin/master` as of this session's end (S667-S672
+unpushed, CI unverified on that work) -- a future session should consider pushing before it grows
+further; census Finding #3 (jog offset) remains open and unscoped by any of S671/S672, pickable at
+any time with no ordering dependency on the QP work.
+
+**Key files:** `docs/planning/pedigree-diagram-joint-qp-solver-plan.md` (the design, in full --
+§Migration Path Phase 1 is the next session's literal starting point); `R/makePedigreeDiagramData.R
+:759-1529` (`.positionMatingUnitForest()`, the engine being partially replaced -- the plan doc's
+own "Current state" table maps every sub-range to "unchanged"/"repurposed"/"replaced");
+`R/makePedigreeDiagramData.R:2167-2236` (`.addRectilinearWaypoints()`'s D2 dogleg block, unchanged,
+relevant to why the row-policy decision doesn't touch this code); `DESCRIPTION` (Imports:/
+Suggests: -- `quadprog` needs promoting in Phase 1).
+
+**Gotchas for a future session:** (1) Phase 1's own RED tests must explicitly characterize the
+orphan-mating-unit edge case (`anchorOf` NA, issue #154) -- the design's spousal-pull/
+child-centering/union-centering objective terms don't apply to it (no real anchor/non-anchor pair
+exists), an edge case kinship2 sidesteps entirely via its own `fixParents()` pre-processing that
+this project has no equivalent for; existing dedicated test cases already exist in
+`test_positionMatingUnitForest.R` (e.g. `:751`) to build from; (2) the QP's own row/order grouping
+is keyed by `gen`, unchanged from today (row-policy Decision 5) -- do not conflate this with the
+census's OTHER open item, the jog offset (Finding #3), which is unrelated rendering-layer code;
+(3) the ~714-variable/~700-constraint problem-size estimate in the design doc is unmeasured --
+Phase 1's first real `solve.QP()` run on a real fixture-scale problem is the actual measurement,
+expect it to differ somewhat from the estimate without treating that as a design defect.
 
 ### Session 670 Handoff Evaluation (by Session 671)
 **Score: 9/10.** **What helped:** the report's own §5 ("What this means for the still-open
