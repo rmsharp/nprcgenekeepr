@@ -107,16 +107,57 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       every setting (slack ~0), extending Learning 678/715's kinship2 finding to this project's
       own 2 new terms. Full clean regression: 2348 blocks, 6893 passed, 1 failed/0 error (the
       pre-existing `test_wordlist_coverage.R` baseline only) -- 0 collateral. `lintr` 0 findings
-      (7 `implicit_integer_linter` fixes folded into GREEN). **Next step (a separate future
-      session, per `SESSION_RUNNER.md`'s planning/implementation boundary, FM #18/#19 -- do NOT
-      bundle with code): Migration Path Phase 2** (cutover on small fixtures only -- wire
-      `.solveJointQP()` into `.positionMatingUnitForest()`, replacing the 5 collision-avoidance
-      passes, re-deriving `test_positionMatingUnitForest.R`'s small-fixture assertions against the
-      new engine's actual output; still NOT the real 375-fixture). Independent of this design, one
-      item still stands, unresolved by either the A-vs-C decision or this design/Phase-1 work: the
-      jog offset must be raised above the 25-px symbol radius (census Finding #3) -- a bounded fix
-      any future session could pick up at any time, with no ordering dependency on the QP work
-      either way.
+      (7 `implicit_integer_linter` fixes folded into GREEN).
+      **Migration Path Phase 2 DONE S674, 2026-09-03, full TDD RED->GREEN (REFACTOR skipped, 0
+      lints, nothing behavior-neutral identified)** -- `.positionMatingUnitForest()`'s five
+      collision-avoidance passes (the Evidence-Based Inventory list: `.deCollideIndividualPoints()`,
+      the B1-vs-unrelated-individual pass, Track 7 Phase 2's union sweep, the duplicate
+      de-collision + Track 7 Phase 4 pass) DELETED outright -- Decision 1 stops Phase A at the raw
+      Tier 2/Tier 3 formula values, so these passes had nothing left to call; the project's own
+      0-lint close-out gate forced deleting the now-dead code this session rather than waiting for
+      the plan's own nominal Phase 4. Replaced by one `provisionalPos -> .solveJointQP()` call per
+      component. **2 real bugs found and fixed live in Phase 1's own `.solveJointQP()`** (a shape
+      absent from its 6 fixtures + 1 orphan-unit case, but present in production and even some
+      pre-existing small test fixtures): a unit whose non-anchor is a dangling parent's FREE
+      occurrence, and a duplicate whose own `realId` is a dangling parent -- both crashed `e()`;
+      both fixed by generalizing the existing orphan-unit exclusion, and both given new dedicated
+      RED cases in `test_solveJointQP.R` (11 blocks now, up from 9). **Test-suite update, all
+      measured against the real (not probe-corrupted) engine:** 22 tests retired (formula-exactness
+      /deleted-mechanism premises Decision 1/3/4 permanently supersede -- exact-midpoint
+      invariants, kinship2-bit-match, Track-7-pass-specific measurements -- each replaced by an
+      explanatory comment, not silently deleted), 12 re-derived (small-fixture structural
+      properties, new measured pinned values), 3 skipped with a cited `testthat::skip()` pointing
+      at Phase 3 (real-375-fixture node/collision counts, deferred by design). Full clean
+      regression: failed=1/error=0 (pre-existing wordlist baseline only) across the WHOLE suite,
+      0 collateral; `lintr` 0 findings; `renv::status(dev = TRUE)` clean (no new deps). **Runtime
+      smoke test (Phase 3E, applies this session unlike Phase 1):** all 16 live
+      `shinytest2::AppDriver` E2E pedigree-Diagram-tab tests pass against the QP-wired production
+      code (`NPRC_RUN_E2E=true`). **Census re-run
+      (`data-raw/pedigreeDrawingErrorCensus.R`):** Track B full/shrunk and D1-D3 stay at 0 on every
+      already-0 class (no regression). Track C's own class (a) reaches 0 as the design's hard
+      minSep constraint guarantees; class (b) does NOT fully reach 0 (1 residual,
+      `__union_3`/W/Y, 0.4667 raw units off-centre) -- measured directly (not assumed) that this is
+      constraint-bound, not weight-tunable: swept `wUnion` 2->5000 (2500x default), deviation held
+      bit-identical at every setting, while the union's own real child (pulled by the same term's
+      child-centering counterpart) landed exactly at the true midpoint in the identical solve. A
+      genuine, disclosed shortfall against the design doc's own optimistic Rationale prediction,
+      not a bug -- Decision 4's union-centering term is a SOFT objective term, and a crowded
+      5-node minSep-constrained row can out-compete it; Phase 3 will very likely hit this same
+      trade-off more often at real-fixture scale, on far more crowded rows.
+      Naming gotcha for any future session touching "Track C": `test_solveJointQP.R`'s own
+      `.qpTrackC()` (6 individuals, F1/F2/F3/A/B/C) and
+      `data-raw/pedigreeDrawingErrorCensus.R`'s own `pedC` (9 individuals, P1/P2/A/Y/X/W/C1/C2/GC,
+      "verbatim from kinship2FidelityValidation.R") are TWO DIFFERENT fixtures sharing one label --
+      always re-derive which file's own definition a "Track C" reference means.
+      **Next step (a separate future session, per `SESSION_RUNNER.md`'s planning/implementation
+      boundary, FM #18/#19 -- do NOT bundle with code): Migration Path Phase 3** (real-375-fixture
+      cutover + full pinned-suite re-derivation across the 4 pinned test files' real-fixture-
+      specific assertions, the 3 tests skipped this session, plus owner visual review of the
+      regenerated reference images before close-out, per the plan doc's own explicit requirement --
+      not optional for this phase). Independent of this design, one item still stands, unresolved
+      by either the A-vs-C decision or Phases 1-2's work: the jog offset must be raised above the
+      25-px symbol radius (census Finding #3) -- a bounded fix any future session could pick up at
+      any time, with no ordering dependency on the QP work either way.
 - [x] **Research: characterize kinship2's `align.pedigree()` joint-positioning mechanism
       (`alignped4.R`) to quantify the (C) joint-solver option** (owner-directed 2026-09-02, after
       reviewing the S669 spike result; **DONE S670, 2026-09-03**, Effort M, one session) --

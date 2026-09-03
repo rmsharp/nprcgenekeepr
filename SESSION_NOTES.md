@@ -18,18 +18,184 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 673 Handoff Evaluation (by Session 674)
+**Score: 8/10.** **What helped:** `next_steps` named this session's exact scope precisely --
+"Migration Path Phase 2... wire `.solveJointQP()` into `.positionMatingUnitForest()`, replacing the
+5 collision-avoidance passes... Track B full/shrunk, Track C, D1-D3 ONLY" -- used directly with no
+scope reconstruction. `key_files` correctly pointed at the exact function/line ranges (though, as
+its own gotcha (3) warned, they had shifted -- re-grepped fresh each time, never trusted stale).
+Gotcha (3) ("wiring point is INSIDE `.positionMatingUnitForest()`'s own per-component recursive
+self-call") was exactly right and shaped the whole implementation. Gotcha (4) (`.qpSmallFixtures`
+builders reusable) was accurate and the fixtures were reused verbatim for the 2 new dangling-parent
+RED cases. **What was missing:** two gaps, both real cost: (1) no flag that Phase 1's own 6
+fixtures + 1 orphan case never exercised a SINGLE-dangling-parent unit -- a shape this session found
+crashes `.solveJointQP()` live, on fixtures already sitting in `test_positionMatingUnitForest.R`;
+(2) no disambiguation that `test_solveJointQP.R`'s own `.qpTrackC()` and
+`data-raw/pedigreeDrawingErrorCensus.R`'s own `pedC` are two DIFFERENT fixtures sharing the "Track
+C" label -- cost real investigation time tracing a census residual back to the wrong mental model of
+which pedigree was being discussed (`PROJECT_LEARNINGS.md` Learning 724). Neither is really a
+handoff-QUALITY failure -- both were undiscoverable before Phase 2 actually ran the wider input
+population and the actual census script -- but both are exactly the kind of thing worth flagging
+explicitly once found, for whichever future session next touches this thread. **What was wrong:**
+gotcha (1)'s framing ("the census-row prediction is inference from the design, not yet measured")
+was honest and correctly hedged -- and turned out HALF right once measured: class (a) reached 0
+exactly as predicted, class (b) did not (a genuine, disclosed shortfall against the DESIGN DOC's own
+Rationale, not against this handoff, which never over-claimed). **ROI:** high -- the handoff's own
+precision on scope and the wiring-point gotcha meant zero time lost to scope reconstruction; all
+time cost this session came from genuinely new discoveries (2 bugs, a probe-methodology dead end,
+the Track-C naming collision, a much larger test-suite blast radius than either the handoff or the
+design doc anticipated) that no handoff could have pre-empted without having already done Phase 2's
+own work.
+
 ### What Session 674 Did
 **Deliverable:** Migration Path Phase 2 of the QP joint-solver plan
 (`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path, "Cutover on small
 fixtures only") -- wire `.solveJointQP()` into `.positionMatingUnitForest()`, replacing the 5
-collision-avoidance passes, verified against Track B full/shrunk, Track C, D1-D3 ONLY (NOT the
-real 375-fixture -- that's Phase 3). Full TDD RED/GREEN/REFACTOR. Following
-`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`. (IN PROGRESS)
-**Started:** 2026-09-03.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+collision-avoidance passes. Full TDD RED->GREEN (REFACTOR gate posed, skipped -- 0 lints, nothing
+behavior-neutral identified). **DONE.**
+**Started/Completed:** 2026-09-03 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0** -- SAFEGUARDS/SESSION_NOTES/GitHub issues/BACKLOG/dashboard/`gh run list` (all CI
+   green; local branch ahead of `origin/master`, unpushed, noted not acted on). Rendered the
+   priorities list + `AskUserQuestion` picker; owner picked "QP Migration Phase 2."
+2. **Claimed the session (Phase 1B):** stub to `SESSION_NOTES.md` + `status: pending` receipt to
+   `HANDOFFS.md`, committed (`ebcf794e`).
+3. **Research (`DEVELOPMENT_WORKSTREAM.md` Phase 2):** re-read `.positionMatingUnitForest()`'s full
+   body, `.solveJointQP()`, `.buildMatingUnitForest()`, and the plan doc in full. Designed the exact
+   Phase-A-stops-before-collision-avoidance replacement.
+4. **PRE-RED scope decision #1 (`AskUserQuestion`):** how to handle the ~27 real-375-fixture pinned
+   assertions the cutover breaks, given Phase 3 (not this session) does real-fixture re-derivation
+   -- owner picked "unconditional cutover + disclosed skips" over a flag-gated alternative.
+5. **Research deepened:** a spike probe (scratchpad, `assignInNamespace`-based, no TDD gate, matching
+   this project's own precedent) measured the QP-wired engine's real output against every existing
+   pinned test, initially finding 22 broken (later found to be probe-artifact-contaminated, see
+   below).
+6. **Found and fixed 2 real Phase 1 bugs live** (before RED): `.solveJointQP()` crashes on a
+   single-dangling-parent unit (non-anchor unresolved) and on a duplicate whose own `realId` is
+   dangling -- both reproduced directly, both fixed by generalizing the existing orphan-unit
+   exclusion.
+7. **PRE-RED scope decision #2 (`AskUserQuestion`):** the retire-bucket size grew from an initial
+   ~3-test estimate to ~20 once fully measured (most of `test_positionMatingUnitForest.R`'s pinned
+   assertions pin OLD formula-exact output, not just fixture-structure) -- owner confirmed proceeding
+   at the larger, accurately-measured scale rather than narrowing to skip-everything-for-later.
+8. **RED:** added 2 new edge-case tests to `test_solveJointQP.R` (dangling-non-anchor,
+   dangling-duplicate-realId); confirmed both fail for the right reason against unmodified `R/`.
+9. **Discovered the probe methodology was itself flawed** (`PROJECT_LEARNINGS.md` Learning 721): an
+   `assignInNamespace`-patched function called via a production wrapper (`makePedigreeMatingLayout()`)
+   gave silently different results than called directly, despite `identical()` on the bound function
+   succeeding. Abandoned the probe; re-measured by editing `R/` directly (git-revertible) via normal
+   `pkgload::load_all()` -- immediately self-consistent, and this became the trustworthy source for
+   every re-derived pinned value used below.
+10. **GREEN:** rewired `.positionMatingUnitForest()` (deleted the 5 collision-avoidance passes and the
+    now-dead `.kMaxIndividualPush` constant; Phase A stops at raw Tier 2/3 formula values; builds
+    `provisionalPos`; calls `.solveJointQP()`); applied both `.solveJointQP()` bug fixes. Re-classified
+    all 37 actually-broken tests (using the clean, real-engine measurement) into 22 retire / 12
+    re-derive / 3 skip -- more than double the original 22/3/8/11-shaped estimate, since the probe
+    artifact had both hidden and fabricated breakage. Edited all 4 pinned test files accordingly.
+11. **Verification:** full clean regression failed=1/error=0 (wordlist baseline only) across the
+    WHOLE suite; `lintr::lint_package()` 0 findings; `renv::status(dev = TRUE)` clean. Census
+    (`data-raw/pedigreeDrawingErrorCensus.R`) re-run: Track B/Track B shrunk/D1-D3 all 0 on
+    every already-0 class; Track C class (a) reaches 0, class (b) has 1 residual -- traced directly
+    to row-crowding/minSep displacement (the union's own real child lands exactly at the true
+    midpoint in the identical solve; the union itself does not) and confirmed weight-independent
+    (`wUnion` swept 2->5000, deviation bit-identical throughout) -- a genuine, disclosed shortfall
+    against the design doc's own Rationale, not a bug (`PROJECT_LEARNINGS.md` Learnings 722-724).
+12. **Runtime smoke test (Phase 3E, applies this session unlike Phase 1):** used the `run` skill;
+    found and ran the project's own existing `test-e2e-pedigree-module.R` (16 blocks) live via
+    `shinytest2::AppDriver` (`NPRC_RUN_E2E=true NOT_CRAN=true`) -- all 16 pass against the QP-wired
+    production code, including Diagram-tab rendering, consanguineous-mating marking, twin
+    connectors, show-names toggle, click-to-navigate, and the empty-state message.
+13. **GREEN->REFACTOR gate (`AskUserQuestion`):** posed; owner picked "skip REFACTOR, close out."
+14. **Close-out:** this handoff evaluation, self-assessment, `PROJECT_LEARNINGS.md` Learnings
+    721-724, `BACKLOG.md` Up Next item 1 updated with Phase 2's outcome + Phase 3 pointer,
+    `CHANGELOG.md`, this file's handoff, `HANDOFFS.md` receipt complete.
+
+**Self-assessment (Session 674): 8/10.** **Strengths:** (1) found and fixed 2 real, previously-latent
+bugs in already-shipped Phase 1 code via direct reproduction (crash before/after, not inference);
+(2) caught its OWN measurement methodology being wrong mid-session (the `assignInNamespace` probe
+artifact) rather than either trusting corrupted numbers or giving up -- diagnosed the root cause
+(direct calls vs. calls through a production wrapper diverge silently) and pivoted to a reliable
+direct-source measurement; (3) did not trust the design doc's own optimistic Rationale prediction
+for the census's Track C class (b) -- measured it, found a genuine shortfall, and characterized it
+rigorously (traced to row-crowding via the sibling child-centering comparison; confirmed
+weight-independence via a real sweep) rather than either silently declaring success or vaguely
+flagging "might not be perfect"; (4) followed full TDD phase-gate discipline throughout (5
+`AskUserQuestion` gates: 2 PRE-RED scope decisions, the RED-plan confirmation, and GREEN->REFACTOR),
+each with the CLAUDE.md-required exact-actions format; (5) classified all 37 broken tests by
+genuine analysis of WHAT Decision 1/3/4 permanently supersedes vs. what's still meaningful, not by
+mechanically re-pinning everything or blanket-skipping; (6) ran a REAL live E2E browser-automation
+smoke test (16 blocks) rather than treating "unit tests pass" as sufficient for a pedigree-drawing
+engine now on the production call path. **Weaknesses:** (1) a large chunk of session time went into
+the `assignInNamespace` probe dead-end before pivoting to the reliable approach -- a more direct
+first instinct (edit `R/` directly for any spike needing more than one interdependent function
+override) would have avoided it entirely; (2) the scope estimate presented to the owner grew twice
+during execution (22->37 broken tests once corrected for the probe artifact, ~3->~22 retire-bucket
+size once each test was actually read rather than title-classified) -- each expansion was disclosed
+transparently and re-confirmed, but a cleaner first measurement would have avoided presenting an
+inaccurate initial estimate at all; (3) did not exhaustively rule out a fix for the Track C class
+(b) residual beyond the wUnion sweep (e.g., a targeted constraint relaxation) -- reasonable to leave
+for Phase 3 given it's a real-375-fixture-scale question anyway, but not literally exhausted.
+**ROI:** high -- Phase 2 is genuinely complete per its own DONE criteria (collision-avoidance passes
+replaced, verified on the small-fixture set, 0 collateral regression suite-wide, live E2E
+confirmed), with the one shortfall against the design doc's own Rationale prediction measured and
+explained rather than glossed over, and Phase 3 has an unambiguous, evidence-grounded starting point
+plus 2 concrete gotchas (the dangling-parent shape class, the Track-C naming collision) it would
+otherwise have had to rediscover independently.
+
+**Next steps (specific):** the next session on this thread is **Migration Path Phase 3**
+(`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path) -- an **implementation**
+session, full TDD RED/GREEN/REFACTOR: route the real 375-individual fixture through the new engine;
+re-derive the bulk of the 6,635 lines identified in the plan's own Evidence-Based Inventory,
+including the 3 tests this session skipped (`test_addRectilinearWaypoints.R`'s D1 bar-vs-bar count,
+`test_makePedigreeMatingLayout.R`'s 1,450-node composition, `test_resolveEdgeNodeCollisions.R`'s
+same-row collision count) plus every other real-fixture-pinned assertion across the 4 files;
+regenerate committed reference images (`trackB-nprc-full.png`, `trackC-nprc-rectilinear.png`, the
+real-fixture render) and get **owner visual review before close-out** -- not optional, the plan
+doc's own explicit requirement for this phase, matching the S666/S667 precedent. Verification per
+the plan doc: `Rscript data-raw/pedigreeDrawingErrorCensus.R` on the real fixture -- classes
+(a)/(b)/(c1) should read 0 (structurally guaranteed by Decision 3, EXCEPT class (b) should be
+expected to show SOME residual given this session's own Track C finding that a soft objective term
+can be blocked by row-crowding -- do not treat a nonzero (b) count as an automatic regression
+without first checking whether it's a genuine defect or the same structural trade-off); class (e)
+unchanged at 56; class (f) unchanged at 0; full clean regression 0 failed/0 error attributable;
+`lintr` 0 findings. Do NOT bundle Phase 3 with Phase 4 (cleanup) in the same session. Independent of
+this thread: local branch is further ahead of `origin/master`, unpushed -- a future session should
+seriously consider pushing before it grows further; census Finding #3 (jog offset) remains open and
+unscoped, pickable at any time with no ordering dependency on the QP work.
+
+**Key files:** `docs/planning/pedigree-diagram-joint-qp-solver-plan.md` (the design, in full --
+§Migration Path Phase 3 is the next session's literal starting point); `R/makePedigreeDiagramData.R`
+(`.positionMatingUnitForest()` now ends with `provisionalPos <- data.frame(...); .solveJointQP(...)`
+-- re-grep line numbers, this session's own edits already shifted every earlier session's cited
+ranges); `.solveJointQP()` (2 new dangling-parent guards, `if (!(Nnode %in% ids)) next` and
+`if (!(realId %in% ids)) next`); `tests/testthat/test_solveJointQP.R` (11 blocks now, the 2 new
+dangling-parent cases at the end); `tests/testthat/test_positionMatingUnitForest.R`,
+`test_makePedigreeMatingLayout.R`, `test_addRectilinearWaypoints.R`,
+`test_resolveEdgeNodeCollisions.R` (this session's 37 edits -- retired blocks carry a `## RETIRED
+(Migration Path Phase 2...)` comment explaining why, findable by grepping "RETIRED"; skipped blocks
+carry a cited `skip(paste(...))` findable by grepping "Migration Path Phase 2.*wires
+.solveJointQP"); `data-raw/pedigreeDrawingErrorCensus.R:100-108` (the census's OWN "Track C" `pedC`
+definition -- DIFFERENT from `test_solveJointQP.R`'s `.qpTrackC()`, see the gotcha below).
+
+**Gotchas for a future session:** (1) **"Track C" is two different fixtures across two files** --
+`test_solveJointQP.R`'s `.qpTrackC()` (6 individuals) vs. `data-raw/pedigreeDrawingErrorCensus.R`'s
+`pedC` (9 individuals, "verbatim from kinship2FidelityValidation.R") -- always re-derive which
+file's own definition a "Track C" reference means before trusting it (`PROJECT_LEARNINGS.md`
+Learning 724); (2) Phase 3's own real-fixture census re-run should EXPECT some nonzero class (b)
+residual as a possible, disclosed, structurally-legitimate outcome (row-crowding can block the
+soft union-centering term even at very high `wUnion`) -- don't assume any nonzero (b) count is
+automatically a regression to chase; (3) never use `assignInNamespace()` to patch more than one
+function that calls into another patched function, or to measure behavior reached THROUGH a
+production wrapper rather than by direct call -- edit `R/` directly (git-revertible) for any spike
+needing that (`PROJECT_LEARNINGS.md` Learning 721); (4) the retired tests' own comments cite the
+specific Decision (1/3/4) their premise violates -- read those before assuming a retired test's
+old assertion style should be revived for Phase 3; (5) `test-e2e-pedigree-module.R` (16 blocks,
+`NPRC_RUN_E2E=true NOT_CRAN=true`) is the fastest live-render check available for any future
+pedigree-diagram engine change -- already covers Diagram-tab rendering, consanguineous marking,
+twin connectors, show-names, click-to-navigate, and empty-state, all against whatever engine is
+currently wired in.
 
 ### Session 672 Handoff Evaluation (by Session 673)
 **Score: 9/10.** **What helped:** `next_steps` named this session's exact scope almost verbatim --

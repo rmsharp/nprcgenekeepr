@@ -16,6 +16,40 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S674: Migration Path Phase 2 — wire `.solveJointQP()` into production
+- **Deliverable:** `.positionMatingUnitForest()`'s five collision-avoidance passes deleted outright
+  (Decision 1 stops Phase A at raw Tier 2/Tier 3 formula values, leaving them nothing to call; the
+  project's 0-lint close-out gate forced deleting the dead code now rather than at the plan's
+  nominal Phase 4), replaced by one `provisionalPos -> .solveJointQP()` call per component. Follows
+  `DEVELOPMENT_WORKSTREAM.md`, full TDD RED→GREEN (REFACTOR skipped — 0 lints, nothing
+  behavior-neutral identified).
+- **Bug fixes (found live wiring Phase 1's own `.solveJointQP()` into production):** 2 crashes on a
+  single-dangling-parent shape absent from Phase 1's own fixture set — a unit whose non-anchor is a
+  dangling parent's free occurrence, and a duplicate whose own `realId` is dangling — both fixed by
+  generalizing the existing orphan-unit exclusion; both given new dedicated RED cases in
+  `test_solveJointQP.R` (11 blocks now, up from 9).
+- **Test-suite update** (all 37 broken tests measured against the real, uncorrupted engine — an
+  earlier `assignInNamespace`-based probe measurement was found mid-session to be internally
+  inconsistent and discarded, `PROJECT_LEARNINGS.md` Learning 721): 22 tests retired
+  (formula-exactness/deleted-mechanism premises Decision 1/3/4 permanently supersede — exact-
+  midpoint invariants, kinship2-bit-match, Track-7-pass-specific measurements — each replaced by an
+  explanatory comment), 12 re-derived (small-fixture structural properties, new measured pinned
+  values), 3 skipped with a cited `testthat::skip()` deferring to Phase 3 (real-375-fixture node/
+  collision counts).
+- **Verification:** full clean regression failed=1/error=0 (pre-existing `test_wordlist_coverage.R`
+  baseline only) across the whole suite, 0 collateral; `lintr::lint_package()` 0 findings;
+  `renv::status(dev = TRUE)` clean. Runtime smoke test (Phase 3E, applies this session unlike
+  Phase 1): all 16 live `shinytest2::AppDriver` E2E pedigree-Diagram-tab tests pass against the
+  QP-wired production code. Census re-run (`data-raw/pedigreeDrawingErrorCensus.R`): Track B full/
+  shrunk and D1–D3 stay at 0 on every already-0 class; Track C's class (a) reaches 0 (the hard
+  minSep constraint, guaranteed by design); class (b) has 1 residual, measured directly to be
+  constraint-bound (not weight-tunable — `wUnion` swept 2→5000 with the deviation held bit-
+  identical) rather than a bug, disclosed as a genuine shortfall against the design doc's own
+  Rationale prediction (`PROJECT_LEARNINGS.md` Learnings 722–724).
+- **Next:** Migration Path Phase 3 (real-375-fixture cutover, full pinned-suite re-derivation
+  including the 3 tests skipped this session, owner visual review before close-out per the plan
+  doc's own requirement) — separate future session, `BACKLOG.md` Up Next item 1.
+
 ### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S673: Migration Path Phase 1 — `.solveJointQP()` standalone
 - **Deliverable:** new internal `.solveJointQP(provisionalPos, matingUnits, duplicates, childEdges,
   wSpouse, alignChild, wUnion, wDup)` (`R/makePedigreeDiagramData.R`), implementing Decisions 2–4

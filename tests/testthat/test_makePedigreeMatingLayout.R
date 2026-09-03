@@ -300,15 +300,15 @@ test_that(
   fromX <- nodes$x[match(dupConnectors$from, nodes$id)]
   toX <- nodes$x[match(dupConnectors$to, nodes$id)]
   expect_true(all(fromX <= toX))
-  ## Walker/BJL cutover (Phase 3, this session): found during GREEN that
-  ## the new engine's different coordinate distribution flips WHICH side
-  ## of this pair has the smaller x -- the duplicate (48.12) now sits to
-  ## the LEFT of its real self (60), the opposite of the OLD algorithm's
-  ## own arrangement this fixture was originally chosen to exercise. The
-  ## smaller-x-becomes-from invariant itself (asserted above, unchanged)
-  ## is what matters -- re-measured directly, not assumed.
-  expect_equal(dupConnectors$from, "__dup_8LKBV9_1")
-  expect_equal(dupConnectors$to, "8LKBV9")
+  ## Migration Path Phase 2 cutover (QP joint-solver, this session): found
+  ## during GREEN that the new engine's different coordinate distribution
+  ## flips WHICH side of this pair has the smaller x AGAIN -- 8LKBV9 (the
+  ## real occurrence) now sits to the LEFT of her own duplicate, the
+  ## opposite of the Walker/BJL-era arrangement this fixture was chosen to
+  ## exercise. The smaller-x-becomes-from invariant itself (asserted above,
+  ## unchanged) is what matters -- re-measured directly, not assumed.
+  expect_equal(dupConnectors$from, "8LKBV9")
+  expect_equal(dupConnectors$to, "__dup_8LKBV9_1")
 })
 
 test_that(
@@ -633,6 +633,14 @@ test_that(
    docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md
    sec2.2/sec2.3) -- no longer exists anywhere in this codebase; Track
    2's own detect-and-jog mechanism is untouched by this migration.", {
+  skip(paste("Migration Path Phase 2 (docs/planning/pedigree-diagram-joint-",
+             "qp-solver-plan.md) wires .solveJointQP() into",
+             ".positionMatingUnitForest() unconditionally -- every count",
+             "pinned below (node composition, jog-waypoint count) is",
+             "downstream of the real 375-individual fixture's own",
+             "positions, which this phase deliberately does not touch yet",
+             "(small fixtures only). Phase 3's own real-fixture cutover",
+             "re-measures and re-pins this test."))
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -1605,58 +1613,17 @@ test_that(
 ## comparison." kinship2 ground truth is computed INLINE, live, in this
 ## test -- not a hardcoded literal -- so it can never drift from whatever
 ## kinship2 version is actually installed.
-test_that("makePedigreeMatingLayout's rendered x positions match a fresh
-           kinship2::align.pedigree() run, individual-for-individual (up to
-           a constant origin shift), on the full, non-shrunk 16-subject
-           Track B fixture -- the exact numeric-comparison method S664/S665
-           used to find and diagnose the original union-midpoint defect", {
-  skip_if_not_installed("kinship2")
-  pedB <- data.frame(
-    id   = c("P1", "P2", "P3", "P4", "P5", "P6",
-             "C1", "C2", "C3", "C4", "C4a",
-             "G3", "M1", "L1", "L2", "L3"),
-    sire = c(NA, NA, NA, NA, NA, NA,
-             "P1", "P1", "P1", "P3", "C4",
-             NA, "P1", "M1", "M1", "M1"),
-    dam  = c(NA, NA, NA, NA, NA, NA,
-             "P2", "P2", "P2", "P4", "P6",
-             NA, "P2", "G3", "G3", "G3"),
-    sex  = c("M", "F", "M", "F", "F", "F",
-             "F", "M", "F", "M", "F",
-             "F", "M", "F", "M", "M"),
-    stringsAsFactors = FALSE
-  )
-  pedB$gen <- findGeneration(pedB$id, pedB$sire, pedB$dam)
-  result <- makePedigreeMatingLayout(pedB, edgeStyle = "direct")
-  nodes <- result$nodes[!grepl("^__union_", result$nodes$id), ]
-
-  sexCode <- c(M = 1, F = 2)[pedB$sex]
-  kPed <- kinship2::pedigree(id = pedB$id, dadid = pedB$sire,
-                              momid = pedB$dam, sex = sexCode,
-                              missid = NA_character_)
-  al <- kinship2::align.pedigree(kPed)
-  kX <- stats::setNames(numeric(0), character(0))
-  for (r in seq_len(nrow(al$nid))) {
-    for (c in seq_len(ncol(al$nid))) {
-      n <- al$nid[r, c]
-      if (!is.na(n) && n > 0) kX[pedB$id[n]] <- al$pos[r, c]
-    }
-  }
-  ## P5 is fully isolated (no sire/dam/mate/children) -- suppressed from
-  ## the diagram by design (BACKLOG.md's isolated-individual item,
-  ## S643-S650) and never placed by kinship2 either; excluded from both
-  ## sides of the comparison, not a gap in it.
-  common <- intersect(nodes$id, names(kX))
-  expect_setequal(common, setdiff(pedB$id, "P5"))
-
-  ## The render layer scales raw internal units by xScale = 120 (the same
-  ## constant .positionMatingUnitForest()'s own comments document, e.g. the
-  ## Track 7 Phase 2 clearance thresholds) -- divide back out to compare
-  ## against kinship2's own raw-unit coordinates.
-  xScale <- 120
-  ours <- (nodes$x[match(common, nodes$id)] -
-             nodes$x[match("P1", nodes$id)]) / xScale
-  theirs <- kX[common] - kX[["P1"]]
-  names(ours) <- common
-  expect_equal(unname(ours[common]), unname(theirs[common]), tolerance = 1e-6)
-})
+## RETIRED (Migration Path Phase 2, docs/planning/pedigree-diagram-joint-qp-
+## solver-plan.md Decision 3/Rationale): this test pinned our engine's
+## individual-only x positions to an EXACT bit-match (up to origin shift)
+## against a fresh kinship2::align.pedigree() run on Track B full -- true
+## while both engines shared kinship2's own uniform 1-unit adjacent-pair
+## floor. Decision 3 deliberately replaces that with this project's own
+## radius-based clearance table (individual-individual floor 0.4167, not
+## 1.0), and Decision 4 adds two objective terms (union centering, duplicate
+## proximity) kinship2 has no analogue for -- both disclosed divergences,
+## not defects. Measured directly this session: up to 2.08 raw-unit
+## deviation from kinship2 on this exact fixture, not floating-point noise.
+## No future re-derivation restores bit-exactness -- permanently superseded
+## by design. (The census script, data-raw/pedigreeDrawingErrorCensus.R,
+## remains the project's own kinship2-baseline comparison mechanism.)

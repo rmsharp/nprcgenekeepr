@@ -273,3 +273,85 @@ test_that(".solveJointQP() does not error on an orphan mating unit (both
   expect_true(all(is.finite(solved$x)))
   .expectMinSepFloorHeld(solved, built$forest$matingUnits)
 })
+
+## ---- cases 7-8: single-dangling-parent edge cases (Migration Path Phase 2,
+## found live during wiring -- Phase 1's own 6 fixtures + the case-5 orphan
+## (BOTH parents dangling) never exercised a unit with EXACTLY ONE dangling
+## parent, a shape .positionMatingUnitForest()'s own production mating-unit
+## population legitimately contains (test_positionMatingUnitForest.R:690's
+## own dangling-parent fixture, reused verbatim below). anchoredUnits$anchor
+## is always a real, rendered id (.buildMatingUnitForest() only ever assigns
+## a real party as anchor), but nonAnchor can be a dangling id with no
+## rendered node at all -- .nonAnchorNodeResolver() then returns that
+## unresolved dangling id itself, outside the QP's own variable set. ------
+
+## A single unit, anchor real, non-anchor a dangling parent's FREE (only)
+## occurrence -- no duplicate entry exists for her at all.
+.qpDanglingNonAnchor <- function() {
+  data.frame(
+    id = c("REAL_SIRE", "CHILD"),
+    sire = c(NA, "REAL_SIRE"),
+    dam = c(NA, "DANGLING_DAM"),
+    sex = c("M", "F"),
+    gen = c(0L, 1L),
+    stringsAsFactors = FALSE
+  )
+}
+
+test_that(".solveJointQP() does not error when a unit's non-anchor party is
+           a dangling parent's FREE (non-duplicated) occurrence -- Nnode
+           resolves to an id with no rendered node at all, so terms
+           1/2/3 (spousal pull/child centering/union centering) must be
+           skipped for that unit, mirroring the already-established
+           orphan-unit exclusion (anchor == NA) generalized to \"anchor OR
+           Nnode has no rendered node\"", {
+  built <- .qpProvisional(.qpDanglingNonAnchor)
+  expect_false("DANGLING_DAM" %in% built$provisionalPos$id)
+
+  solved <- expect_error(
+    .solveJointQP(built$provisionalPos, built$forest$matingUnits,
+                  built$forest$duplicates, built$forest$childEdges),
+    NA)
+
+  expect_setequal(solved$id, built$provisionalPos$id)
+  expect_true(all(is.finite(solved$x)))
+  .expectMinSepFloorHeld(solved, built$forest$matingUnits)
+})
+
+## The SAME dangling parent at 2 mating units -- test_positionMatingUnitForest
+## .R:690's own fixture, reused verbatim (matching this codebase's own reuse
+## convention). Her 2nd occurrence gets a real __dup_* node whose own realId
+## is the dangling, unrendered id -- term 4 (duplicate proximity) must skip
+## that duplicate too.
+.qpDanglingDuplicateRealId <- function() {
+  data.frame(
+    id = c("SIRE1", "SIRE2", "CHILD1", "CHILD2"),
+    sire = c(NA, NA, "SIRE1", "SIRE2"),
+    dam = c(NA, NA, "DANGLING_DAM", "DANGLING_DAM"),
+    sex = c("M", "M", "F", "M"),
+    gen = c(0L, 0L, 1L, 1L),
+    stringsAsFactors = FALSE
+  )
+}
+
+test_that(".solveJointQP() does not error when a duplicate node's own realId
+           is a dangling parent with no rendered node (her FREE occurrence
+           contributes no node at all, per .buildMatingUnitForest()'s own
+           contract) -- term 4 (duplicate proximity) must skip that
+           duplicate, and the OTHER unit's non-anchor (her duplicated
+           occurrence) resolves to the __dup_* node, exercising both the
+           dangling-non-anchor fix and the dangling-duplicate-realId fix in
+           one fixture", {
+  built <- .qpProvisional(.qpDanglingDuplicateRealId)
+  expect_equal(nrow(built$forest$duplicates), 1L)
+  expect_false("DANGLING_DAM" %in% built$provisionalPos$id)
+
+  solved <- expect_error(
+    .solveJointQP(built$provisionalPos, built$forest$matingUnits,
+                  built$forest$duplicates, built$forest$childEdges),
+    NA)
+
+  expect_setequal(solved$id, built$provisionalPos$id)
+  expect_true(all(is.finite(solved$x)))
+  .expectMinSepFloorHeld(solved, built$forest$matingUnits)
+})

@@ -801,12 +801,6 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 
   ped$gen[is.na(ped$gen)] <- 0L
   minSep <- 1L
-  ## S647: cap on .deCollideIndividualPoints()'s bidirectional search
-  ## (below) -- bounds how far a Track 7 widened point may be pushed to
-  ## avoid an exact-position tie, so a dense founder row cannot chain into
-  ## an unbounded (and, found live, downstream-harmful) drift. See that
-  ## function's own comment for the empirical justification.
-  .kMaxIndividualPush <- 2L
 
   ## ---- S667: disconnected-component separation --------------------------
   ## docs/planning/pedigree-diagram-disconnected-component-
@@ -1126,7 +1120,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## away (the same minimum-separation guarantee Tier 1's own
   ## sweepMinSep() backstop already gives real individuals elsewhere, not
   ## a new constant); an exact tie against a union DOT keeps the
-  ## pre-existing tiny tie-breaking epsilon (§2.3's own weaker guarantee
+  ## pre-existing tiny tie-breaking epsilon (2.3's own weaker guarantee
   ## for those). 'seedIndividuals' lets the later B3 call also avoid B1's
   ## already-finalized points. 'pushSign' (default +1, matching B3's own
   ## always-rightward +minSep*0.4 offset from the union) lets a B1 caller
@@ -1157,301 +1151,28 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## short residual repeat (the pre-existing small-epsilon pattern) still
   ## catches any leftover union-dot tie the search itself
   ## does not consider.
-  .deCollideIndividualPoints <- function(ids, gens,
-                                          seedIndividuals = numeric(0L),
-                                          pushSign = NULL) {
-    x <- tier3X[ids]
-    names(x) <- ids
-    if (is.null(pushSign)) {
-      pushSign <- stats::setNames(rep(1L, length(ids)), ids)
-    }
-    for (g in sort(unique(gens))) {
-      theseIds <- ids[gens == g]
-      seedGen <- tier3Gen[names(seedIndividuals)] == g
-      individualOccupied <- c(tier1X[dispGenOf == g], seedIndividuals[seedGen])
-      individualOccupied <- individualOccupied[!is.na(individualOccupied)]
-      unionOccupied <- unitX[unitIds[matingUnits$gen == g]]
-      unionOccupied <- unionOccupied[!is.na(unionOccupied)]
-      theseIds <- theseIds[order(x[theseIds], theseIds, method = "radix")]
-      placedThisGen <- numeric(0L)
-      for (i in seq_along(theseIds)) {
-        forbidden <- c(individualOccupied, placedThisGen)
-        x0 <- x[[theseIds[i]]]
-        rawX0 <- x0
-        sign <- pushSign[[theseIds[i]]]
-        if (any(abs(x0 - forbidden) < 1e-9)) {
-          ## S647 (third refinement): cap the search at .kMaxIndividualPush
-          ## steps each direction. Found live: an UNCAPPED search can still
-          ## push several minSep in a densely double-sided-occupied row
-          ## (measured up to 5.5 raw units on the real fixture), and that
-          ## displacement was itself found to create NEW, substantial D1
-          ## sibship-bar-vs-bar overlaps elsewhere (34 cases, several
-          ## 400-540px wide -- a worse defect than the one being fixed).
-          ## Capping bounds the displacement; if nothing frees up within
-          ## the cap, fall back to the ORIGINAL exact-tie value -- the same
-          ## small, already-disclosed circle-on-circle near-overlap this
-          ## fix set out to improve on, not a new or larger one.
-          k <- 1L
-          repeat {
-            candPref <- x0 + sign * k * minSep
-            if (!any(abs(candPref - forbidden) < 1e-9)) {
-              x0 <- candPref
-              break
-            }
-            candOther <- x0 - sign * k * minSep
-            if (!any(abs(candOther - forbidden) < 1e-9)) {
-              x0 <- candOther
-              break
-            }
-            if (k >= .kMaxIndividualPush) {
-              x0 <- rawX0
-              break
-            }
-            k <- k + 1L
-          }
-        }
-        ## Residual small-epsilon pass: a union dot at the chosen slot
-        ## (never considered by the search above, since unions keep the
-        ## pre-existing weaker guarantee), or -- vanishingly unlikely --
-        ## a fresh individual tie the search's own candidate introduced.
-        ## Skipped when the search above fell back to rawX0 (an
-        ## individual tie by definition) -- nudging that case would
-        ## silently reintroduce the unbounded drift the cap exists to
-        ## prevent.
-        if (!isTRUE(all.equal(x0, rawX0)) || !any(abs(x0 - forbidden) < 1e-9)) {
-          repeat {
-            tiesIndividual <- any(abs(x0 - forbidden) < 1e-9)
-            tiesUnion <- any(abs(x0 - unionOccupied) < 1e-9)
-            if (!tiesIndividual && !tiesUnion) break
-            x0 <- x0 + sign * (if (tiesIndividual) minSep else 1e-3)
-          }
-        }
-        x[[theseIds[i]]] <- x0
-        placedThisGen <- c(placedThisGen, x0)
-      }
-    }
-    x
-  }
-
+  ## ---- Migration Path Phase 2 (docs/planning/pedigree-diagram-joint-qp-
+  ## solver-plan.md, "Cutover on small fixtures only"): the five collision-
+  ## avoidance passes formerly here (.deCollideIndividualPoints() for B1/B3
+  ## exact ties; the B1-vs-unrelated-individual proximity pass, S661/S662;
+  ## the Track 7 Phase 2 union sweep, S648/S649; the duplicate de-collision
+  ## + Track 7 Phase 4 union-vs-duplicate push, S654/S658) are REPLACED by
+  ## one joint .solveJointQP() call below (Decision 1/2 of the plan doc) --
+  ## deleted here, not merely bypassed, since Decision 1 stops Phase A
+  ## (this function) at the raw Tier 2/Tier 3 FORMULA values, before any of
+  ## these passes would run; a call site with nothing left to call is dead
+  ## code by construction, and this project's own 0-lint close-out gate
+  ## (CLAUDE.md) forces removing it now rather than at the plan's own
+  ## nominal Phase 4 boundary. tier3X below is therefore each B1/B3
+  ## occurrence's RAW derivedX() value -- never de-collided -- used only to
+  ## fix provisional left-to-right rank for the QP's own row constraints
+  ## (Decision 3), its magnitude discarded once Phase B runs.
   tier3X <- stats::setNames(numeric(length(b1Ids)), b1Ids)
   tier3Gen <- stats::setNames(integer(length(b1Ids)), b1Ids)
-  b1PushSign <- stats::setNames(rep(1L, length(b1Ids)), b1Ids)
   for (fp in b1Ids) {
     unitId <- b1UnitOf[[fp]]
     tier3X[[fp]] <- derivedX(unitId, fp, isB1 = TRUE)
     tier3Gen[[fp]] <- unname(matingUnits$gen[matingUnits$id == unitId])
-    ## Same sign b1AnchorRelativeX() itself used, so a collision push
-    ## extends further in that already-chosen direction rather than
-    ## crossing to the opposite side of the anchor (see the note above).
-    if (qualifies(unitId)) {
-      p <- anchorOf[[unitId]]
-      b1PushSign[[fp]] <- if (identical(sexOf[[p]], "F") &&
-                                identical(sexOf[[fp]], "M")) -1L else 1L
-    }
-  }
-  if (length(b1Ids) > 0L) {
-    tier3X[b1Ids] <-
-      .deCollideIndividualPoints(b1Ids, tier3Gen[b1Ids], pushSign = b1PushSign)
-  }
-
-  ## ---- Track 7 Phase 1's own union recenter (S647) lived here: it moved
-  ## each QUALIFYING unit's x to the true anchor/mate midpoint, replacing
-  ## the mean-of-children value Tier 2 computed above. It is deleted as of
-  ## session S652, per issue #166's scoped revert (see the design doc,
-  ## docs/planning/pedigree-diagram-track7-
-  ## phase3-child-centering-plan.md, sections 2.1 and 5). The recenter
-  ## decoupled a qualifying union's x from its own children, producing a
-  ## right-angle dogleg for a single-child union and an off-center
-  ## sibship bar for a multi-child one -- kinship2's own straight-drop
-  ## guarantee comes from moving the
-  ## CHILD (section 1.3 of that doc), which this project's rigid/
-  ## sequential engine cannot do (issue #159, closed as inherent). Every
-  ## qualifying unit's x now reverts, unconditionally, to Tier 2's own
-  ## mean(tier1X[kids]) -- proven bit-exact to the unit's own anchor for
-  ## every qualifying unit on the real fixture (that design doc's own
-  ## Finding B). Track 7 Phase 1's OTHER change (the widened B1 offset
-  ## just above, minSep not minSep*0.4) is KEPT -- mates stay visibly
-  ## spread apart; only the union DOT itself reverts to sitting on or near
-  ## the anchor for these units, a disclosed, owner-ratified trade-off.
-
-  ## ---- Track 7 Phase 2 (S649, docs/planning/pedigree-diagram-track7-
-  ## mate-spacing-plan.md §12.2, design ratified S648): a capped
-  ## bidirectional search, structurally the mirror of
-  ## .deCollideIndividualPoints() above, but scoped to the UNION side
-  ## only and triggered on a radius-proportionate clearance threshold
-  ## instead of an exact-tie epsilon. Derived transparently from the two
-  ## already-existing render-layer node sizes (25 for a real/duplicate
-  ## node, 6 for a union dot) and xScale (120) -- this function otherwise
-  ## has no knowledge of xScale (a render-layer constant), so it is
-  ## reproduced here as a local literal, matching how minSep is already a
-  ## local raw-unit constant in this function, not shared with the render
-  ## layer. A union-vs-union comparison uses the smaller (6+6)/120 = 0.1;
-  ## a union-vs-individual/duplicate comparison uses (25+6)/120 = 0.2583.
-  unionClearanceIndividual <- (25L + 6L) / 120L
-  unionClearanceUnion <- (6L + 6L) / 120L
-  ## Duplicate-vs-unrelated-individual proximity fix (docs/planning/
-  ## pedigree-diagram-duplicate-individual-proximity-plan.md, design
-  ## ratified S658, Option B): two full-size (25px-radius) individual-
-  ## shaped nodes -- the geometrically correct clearance for a pair of
-  ## individual/duplicate/B1 render nodes, distinct from
-  ## unionClearanceIndividual above (a union DOT vs. an individual).
-  individualClearance <- (25L + 25L) / 120L
-  ## .kMaxUnionPush = 5 (empirically justified, plan §12.11): on the real
-  ## 375-individual fixture, resolves all 20 individual-/union-vs-union
-  ## proximity cases (0 residual); 2 (Phase 1's own individual-side cap)
-  ## leaves 4 of those 20 unresolved on this fixture -- a different
-  ## fixture, a different empirically-correct cap, as §12.2 point 3
-  ## anticipated. The live-render D1 check (plan §12.6) confirms the
-  ## existing, unchanged Track 2 jog-repair mechanism still fully
-  ## resolves every resulting same-row edge-node collision to 0 residual
-  ## at this cap.
-  .kMaxUnionPush <- 5L
-
-  ## B1-individual-vs-unrelated-individual proximity fix (docs/planning/
-  ## pedigree-diagram-b1-individual-proximity-plan.md, design ratified
-  ## S661, implemented S662): a second, separate pass over b1Ids, run
-  ## after the existing exact-tie call above (:958-960) and before the
-  ## union sweep begins below (:1016), so every union sees this pass's
-  ## fully-corrected B1 positions as its own baseline (design doc §2.3).
-  ## Reuses the already-shipped individualClearance (:1004) -- no new
-  ## threshold constant needed. Needs its OWN cap: NOT .kMaxIndividualPush
-  ## (tuned against a different problem) and NOT assumed equal to
-  ## .kMaxUnionPush either -- empirically derived (design doc §8/§9).
-  .kMaxB1ProximityPush <- 2L
-
-  if (length(b1Ids) > 0L) {
-    for (g in sort(unique(tier3Gen[b1Ids]))) {
-      theseIds <- b1Ids[tier3Gen[b1Ids] == g]
-      theseIds <- theseIds[order(tier3X[theseIds], theseIds, method = "radix")]
-      pushedThisGen <- numeric(0L)          # incremental: sibling B1s
-                                             # already processed THIS
-                                             # generation, so a B1-vs-B1
-                                             # pair is seen by whichever
-                                             # member is processed second
-                                             # (design doc §3.3).
-      for (fp in theseIds) {
-        ownAnchor <- anchorOf[[b1UnitOf[[fp]]]]
-        forbidden <- c(tier1X[dispGenOf == g], pushedThisGen)
-        forbidden <- forbidden[!is.na(forbidden) &
-                                  names(forbidden) != ownAnchor]
-        x0 <- tier3X[[fp]]
-        if (length(forbidden) > 0L &&
-              any(abs(x0 - forbidden) < individualClearance)) {
-          rawX0 <- x0
-          sign <- b1PushSign[[fp]]          # reuse existing direction
-                                             # (design doc §3.4)
-          k <- 1L
-          repeat {
-            candPref <- rawX0 + sign * k * individualClearance
-            if (!any(abs(candPref - forbidden) < individualClearance)) {
-              x0 <- candPref
-              break
-            }
-            candOther <- rawX0 - sign * k * individualClearance
-            if (!any(abs(candOther - forbidden) < individualClearance)) {
-              x0 <- candOther
-              break
-            }
-            if (k >= .kMaxB1ProximityPush) {
-              x0 <- rawX0
-              break
-            }
-            k <- k + 1L
-          }
-          tier3X[[fp]] <- x0
-        }
-        pushedThisGen <- c(pushedThisGen, stats::setNames(tier3X[[fp]], fp))
-      }
-    }
-  }
-
-  if (nrow(xDerivableUnits) > 0L) {
-    ord <- order(xDerivableUnits$gen, xDerivableUnits$id, method = "radix")
-    orderedUnits <- xDerivableUnits[ord, , drop = FALSE]
-    placedAtGen <- list()
-    for (i in seq_len(nrow(orderedUnits))) {
-      u <- orderedUnits$id[i]
-      g <- as.character(orderedUnits$gen[i])
-      ## S647: a Track 7 recenter can move a union to a position now
-      ## influenced by its (possibly heavily de-collided) mate, so this
-      ## sweep must also check the mate's own TRUE FINAL tier3X value at
-      ## this gen -- not just tier1X and other units, as before Track 7
-      ## ever let a union's x depend on anything but its own children.
-      b1AtGen <- tier3X[b1Ids[tier3Gen[b1Ids] == orderedUnits$gen[i]]]
-      individualOccupied <- c(tier1X[dispGenOf == orderedUnits$gen[i]],
-                               b1AtGen)
-      individualOccupied <- individualOccupied[!is.na(individualOccupied)]
-      ## S649 fix (found in GREEN, not anticipated by plan §12.2's own
-      ## text): a union's OWN gen is max(parent gens), so a union can
-      ## share its displayed gen with one of its own two parents -- that
-      ## parent is a structural member of this union, not an unrelated
-      ## node, and the NEW radius-proportionate push must never treat it
-      ## as something to push away from (mirrors the exclusion already
-      ## applied when MEASURING collisions, plan §12.1/§12.11). This
-      ## exclusion applies ONLY to the new push search below -- the
-      ## pre-existing epsilon-tie residual pass further below still uses
-      ## the UNFILTERED occupied set, unchanged, because a union landing
-      ## EXACTLY on its own anchor (common: e.g. a single-child union
-      ## whose child inherited the anchor's own x) already relied on that
-      ## old, harmless 0.001 nudge to avoid an exact pixel-coincidence --
-      ## found empirically in GREEN when excluding anchors from BOTH
-      ## passes silently re-introduced ~150 exact ties the old code never
-      ## had.
-      ownParents <- c(anchorOf[[u]], nonAnchorOf[[u]])
-      individualOccupiedForPush <- individualOccupied[
-        !(names(individualOccupied) %in% ownParents)]
-      unionOccupied <- placedAtGen[[g]]
-      ## Known, disclosed residual (plan §12.7/§12.11, BACKLOG.md
-      ## Housekeeping): a duplicate node's x (unitX[[itsOwnUnion]] +
-      ## minSep*0.4, computed further below, after this loop) is not yet
-      ## known here, so this search cannot see or avoid duplicates -- a
-      ## genuine data dependency, not an oversight.
-      collidesIndiv <- function(x0) {
-        length(individualOccupiedForPush) > 0L &&
-          any(abs(x0 - individualOccupiedForPush) < unionClearanceIndividual)
-      }
-      collidesUnion <- function(x0) {
-        length(unionOccupied) > 0L &&
-          any(abs(x0 - unionOccupied) < unionClearanceUnion)
-      }
-      collides <- function(x0) collidesIndiv(x0) || collidesUnion(x0)
-      x0 <- unitX[[u]]
-      rawX0 <- x0
-      if (collides(x0)) {
-        k <- 1L
-        repeat {
-          candPref <- rawX0 + k * unionClearanceIndividual
-          if (!collides(candPref)) {
-            x0 <- candPref
-            break
-          }
-          candOther <- rawX0 - k * unionClearanceIndividual
-          if (!collides(candOther)) {
-            x0 <- candOther
-            break
-          }
-          if (k >= .kMaxUnionPush) {
-            x0 <- rawX0
-            break
-          }
-          k <- k + 1L
-        }
-      }
-      ## Residual small-epsilon pass -- the CURRENT (pre-Phase-2)
-      ## epsilon-nudge behavior, kept unconditionally as the fallback
-      ## plan §12.2 point 3 requires when the capped search above cannot
-      ## free a slot (x0 == rawX0): this reproduces exactly what the old,
-      ## unconditional nudge would have done for that same input --
-      ## deliberately using the UNFILTERED individualOccupied (including
-      ## own anchor/non-anchor), matching the pre-existing behavior this
-      ## pass has always had, unchanged by Phase 2's own narrower scope.
-      occupied <- c(individualOccupied, unionOccupied)
-      while (length(occupied) > 0L && any(abs(occupied - x0) < 1e-9)) {
-        x0 <- x0 + 1e-3
-      }
-      unitX[[u]] <- x0
-      placedAtGen[[g]] <- c(placedAtGen[[g]], unname(x0))
-    }
   }
 
   dupIds <- if (nrow(duplicates) > 0L) duplicates$id else character(0L)
@@ -1464,96 +1185,23 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       tier3X[[dupId]] <- derivedX(unitId, duplicates$realId[i], isB1 = FALSE)
       tier3Gen[[dupId]] <- unname(matingUnits$gen[matingUnits$id == unitId])
     }
-    tier3X[dupIds] <-
-      .deCollideIndividualPoints(dupIds, tier3Gen[dupIds],
-                                  seedIndividuals = tier3X[b1Ids])
-
-    ## ---- Track 7 Phase 4 (docs/planning/pedigree-diagram-track7-phase4-
-    ## union-duplicate-proximity-plan.md §2, design ratified S654): a
-    ## duplicate-side, post-hoc, unidirectional push resolving the
-    ## union-vs-DUPLICATE proximity residual Phase 2's own union-side push
-    ## (above) cannot see -- a duplicate's x is not yet known during that
-    ## sweep (§1.1, a genuine data dependency). Runs AFTER both the union
-    ## sweep and this function's own duplicate de-collision pass just
-    ## above, so it has full information and is order-independent (§2) --
-    ## unlike a union-sweep-side fix (BACKLOG.md's own original sketch),
-    ## which the design doc's own Alternative B found structurally
-    ## incomplete: resolves only 2/3 known cases, because one case's
-    ## owning union sorts AFTER the colliding union in the same-generation
-    ## sweep, invisible to a look-backward-only occupied-set (§3.1/§4/§9).
-    for (dupId in dupIds) {
-      unitId <- duplicates$matingUnitId[duplicates$id == dupId]
-      g <- tier3Gen[[dupId]]
-      unrelatedUnionsAtGen <- unitX[xDerivableUnits$id[
-        xDerivableUnits$gen == g & xDerivableUnits$id != unitId]]
-      unrelatedUnionsAtGen <- unrelatedUnionsAtGen[!is.na(unrelatedUnionsAtGen)]
-      ## Duplicate-vs-unrelated-individual proximity fix (design doc §2):
-      ## also check nearby individual-shaped points (genuine/B1
-      ## individuals at this duplicate's gen), excluding this duplicate's
-      ## OWN mating unit's sire/dam -- the intentional, by-design
-      ## dup-own-parent offset this fix must never treat as a collision
-      ## (design doc §1.3).
-      ownParents <- c(anchorOf[[unitId]], nonAnchorOf[[unitId]])
-      unrelatedIndividualsAtGen <- c(tier1X[dispGenOf == g],
-                                      tier3X[b1Ids[tier3Gen[b1Ids] == g]])
-      unrelatedIndividualsAtGen <- unrelatedIndividualsAtGen[
-        !is.na(unrelatedIndividualsAtGen) &
-          !(names(unrelatedIndividualsAtGen) %in% ownParents)]
-      ## Widened guard (design doc §6): a duplicate in a generation with no
-      ## OTHER mating units must still be checked if a nearby unrelated
-      ## individual exists there.
-      if (length(unrelatedUnionsAtGen) == 0L &&
-            length(unrelatedIndividualsAtGen) == 0L) next
-      collidesUnrelatedUnion <- function(x0) {
-        any(abs(x0 - unrelatedUnionsAtGen) < unionClearanceIndividual)
-      }
-      collidesUnrelatedIndividual <- function(x0) {
-        length(unrelatedIndividualsAtGen) > 0L &&
-          any(abs(x0 - unrelatedIndividualsAtGen) < individualClearance)
-      }
-      collides <- function(x0) {
-        collidesUnrelatedUnion(x0) || collidesUnrelatedIndividual(x0)
-      }
-      x0 <- tier3X[[dupId]]
-      if (collides(x0)) {
-        rawX0 <- x0
-        ## Unidirectional only (always rightward) -- matches derivedX()'s
-        ## own always-rightward B3 branch convention. A first-drafted
-        ## bidirectional search (mirroring Phase 2's own union-side
-        ## mechanism exactly) was found, by live measurement, to push a
-        ## duplicate newly-too-close to its OWN owning union on all 3
-        ## known cases (design doc §3.3, a documented false start) --
-        ## rejected, not reused here.
-        k <- 1L
-        repeat {
-          cand <- rawX0 + k * unionClearanceIndividual
-          if (!collides(cand)) {
-            x0 <- cand
-            break
-          }
-          if (k >= .kMaxUnionPush) {
-            x0 <- rawX0
-            break
-          }
-          k <- k + 1L
-        }
-        tier3X[[dupId]] <- x0
-      }
-    }
   }
   tier3Ids <- c(b1Ids, dupIds)
 
-  ## ---- Assemble output, same contract as .positionMatingUnitForest() ---
-  ## B2 individuals (their own parent edge or own D5 direct child, and
-  ## non-anchor somewhere) get NO derived point -- they render at their
-  ## own genuine Tier-1 x, already present in tier1X/genuineIds below.
+  ## ---- Phase B: one joint QP solve replaces this function's own former
+  ## final assembly (the old return statement) as the FINAL x for every
+  ## node in this component (Decision 1/2). provisionalPos below is
+  ## exactly the vector the old return statement used to build -- its
+  ## values now feed .solveJointQP() as provisional order/rank input only.
   genuineIds <- names(tier1X)
   ids <- c(genuineIds, unitIds, tier3Ids)
   x <- c(unname(tier1X[genuineIds]), unname(unitX[unitIds]),
          unname(tier3X[tier3Ids]))
   gen <- c(unname(dispGenOf[genuineIds]), unname(matingUnits$gen),
            unname(tier3Gen[tier3Ids]))
-  data.frame(id = ids, x = x, gen = gen, stringsAsFactors = FALSE)
+  provisionalPos <- data.frame(id = ids, x = x, gen = gen,
+                                stringsAsFactors = FALSE)
+  .solveJointQP(provisionalPos, matingUnits, duplicates, childEdges)
 }
 
 #' Joint QP solve for one weakly-connected pedigree component (Option C)
@@ -1687,6 +1335,16 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     u <- anchoredUnits$id[i]
     anchor <- anchoredUnits$anchor[i]
     Nnode <- resolveNnode(anchoredUnits$nonAnchor[i], u)
+    ## Migration Path Phase 2 fix (found live wiring this function into
+    ## production): a dangling non-anchor's FREE (non-duplicated)
+    ## occurrence has no rendered node at all (.buildMatingUnitForest()'s
+    ## own contract) -- resolveNnode() then returns the dangling id
+    ## itself, unresolved, outside this QP's own variable set. Generalizes
+    ## the already-established orphan-unit exclusion (anchoredUnits itself
+    ## already excludes anchor == NA) to "anchor OR Nnode has no rendered
+    ## node": skip terms 1-3 for this unit entirely -- its children get no
+    ## centering pull from this unit, matching the orphan-unit treatment.
+    if (!(Nnode %in% ids)) next
 
     ## Term 1: spousal pull (kinship2's own align[2] term).
     pmatRows[[length(pmatRows) + 1L]] <-
@@ -1717,6 +1375,11 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     for (i in seq_len(nrow(duplicates))) {
       dupId <- duplicates$id[i]
       realId <- duplicates$realId[i]
+      ## Migration Path Phase 2 fix (companion to the dangling-non-anchor
+      ## fix above): a duplicate whose own realId is a dangling parent's
+      ## FREE occurrence has no rendered node to pull toward either --
+      ## skip this duplicate's proximity term.
+      if (!(realId %in% ids)) next
       pmatRows[[length(pmatRows) + 1L]] <-
         sqrt(wDup) * (e(dupId) - e(realId))
     }
