@@ -191,7 +191,7 @@ gotchas: (1) Phase 2's own RED must explicitly verify Track C's Finding #1/(a)/(
 runtime_smoke: n/a -- .solveJointQP() is not wired into any call path this phase (deliberately, by
   design), so there is no runtime behavior for a live app render to exercise; Phase 2/3's own job.
 changelog_ref: CHANGELOG.md 2026-09-03 S673 entry (BL-pedigreeDrawingErrorCensus)
-commit: pending
+commit: 2cd89eee
 ```
 <prose>
 Self-score breakdown (9/10): +for full TDD phase-gate discipline via AskUserQuestion at every
