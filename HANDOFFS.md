@@ -181,7 +181,7 @@ runtime_smoke: Regenerated, directly-inspected PNG images (real visNetwork rende
   direct/rectilinear, plus the real-375-fixture regression test -- not just internal x/gen
   math.
 changelog_ref: CHANGELOG.md 2026-09-02 S666 entry, this commit.
-commit: pending
+commit: 1f44315d
 ```
 (stub — filled at close-out, Phase 3D)
 

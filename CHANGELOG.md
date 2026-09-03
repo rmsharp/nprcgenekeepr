@@ -16,6 +16,12 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-02 · [ad hoc] S666: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S665 precedent)
+- This commit sets `HANDOFFS.md`'s S666 receipt `commit:` field from `pending` to `1f44315d`
+  (the close-out deliverable commit), the same self-reference workaround this project's
+  sessions have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-02 · [BL-pedigreeParentSymmetricPlacement] S666: implemented and shipped the conditional-shift rule for pedigree mating-union midpoint placement (BACKLOG.md top item, DONE)
 - **Deliverable:** full RED→GREEN TDD cycle implementing S665's ratified "CHAIN RULE"
   (docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md) in
