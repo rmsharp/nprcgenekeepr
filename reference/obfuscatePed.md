@@ -89,7 +89,7 @@ ped
 obfuscatedPed
 #>       id   sire    dam sex gen      birth exit  age recordStatus
 #> 1 SN7TLJ   <NA>   <NA>   F   0 2003-05-12 <NA> 23.3     original
-#> 2 2ZFC1W   <NA>   <NA>   F   0 2002-06-02 <NA> 24.2     original
+#> 2 2ZFC1W   <NA>   <NA>   F   0 2002-06-02 <NA> 24.3     original
 #> 3 FCDNFK   <NA>   <NA>   M   0 2000-08-05 <NA> 26.1     original
 #> 4 GJGR1A   <NA>   <NA>   M   0 2005-05-24 <NA> 21.3     original
 #> 5 T5NBEL FCDNFK SN7TLJ   F   1 2015-01-29 <NA> 11.6     original

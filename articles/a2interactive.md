@@ -1454,7 +1454,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpdSNqkU/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpNUss9j/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2226,7 +2226,7 @@ into the de-identified table.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-09-01 03:30:02.928096. The processing
+The current date and time is 2026-09-03 00:18:40.554744. The processing
 time for this document was 22 seconds..
 
 ``` r
@@ -2277,8 +2277,8 @@ sessionInfo()
     ## [41] digest_0.6.39        dplyr_1.2.1          labeling_0.4.3       fastmap_1.2.0       
     ## [45] grid_4.6.1           cli_3.6.6            magrittr_2.0.5       withr_3.0.3         
     ## [49] shinyBS_0.65.0       scales_1.4.0         promises_1.5.0       backports_1.5.1     
-    ## [53] plotrix_3.8-14       lubridate_1.9.5      timechange_0.4.0     rmarkdown_2.31      
-    ## [57] lambda.r_1.2.4       httr_1.4.8           otel_0.2.0           futile.logger_1.4.9 
+    ## [53] plotrix_3.8-14       lubridate_1.9.5      timechange_0.4.0     rmarkdown_2.32      
+    ## [57] lambda.r_1.2.4       httr_1.4.9           otel_0.2.0           futile.logger_1.4.9 
     ## [61] cellranger_1.1.0     ragg_1.5.2           openxlsx_4.2.8.1     shiny_1.14.0        
     ## [65] evaluate_1.0.5       rlang_1.3.0          futile.options_1.0.1 Rcpp_1.1.2          
     ## [69] xtable_1.8-8         glue_1.8.1           formatR_1.14         renv_1.2.3          

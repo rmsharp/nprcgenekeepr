@@ -28,6 +28,894 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 665 Handoff Evaluation (by Session 666)
+
+**Score: 9/10.** **What helped:** `key_files`/`gotchas` were directly
+usable and confirmed accurate on re-read:
+`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`’s
+“CHAIN RULE — RESOLVED” section, `R/makePedigreeDiagramData.R:627-866`
+(`.positionMatingUnitForest()`, the eventual edit site, line numbers
+close enough after S665’s own docs-only changes to orient immediately),
+and — most valuable of all — `scratchpad/alignped4.R` (kinship2’s real
+QP source), which this session reused directly to build fresh
+ground-truth fixtures rather than re-extracting it from scratch. The
+“generation-ordering/live-value requirement is real for 3+-link chains”
+gotcha was directly validated: this session’s own synthetic 3-level
+chain test is exactly the fixture that requirement predicts is needed,
+and it discriminates correctly. **What was missing:** the handoff’s own
+confidence that Option 3’s 2 cases “already reproduce kinship2 exactly”
+for Track B shrunk did not anticipate a SECOND real collision (G3 vs
+C4a) the fully-correct, collision-routed implementation actually
+produces on that exact fixture — found only by implementing and running
+the real code, not by further hand-derivation. This is not a repeat of
+S664’s error (S665’s own numbers, where checked, were exactly right —
+P1/M1/L3 and C4/C4a both landed bit-exact); it is a gap in COVERAGE (the
+collision-avoidance interaction wasn’t modeled in S665’s own by-hand
+verification), not a computational mistake. **What was wrong:** nothing
+found inaccurate in what S665 actually computed — every specific number
+it reported checked out; the gap was in what it didn’t check. **ROI:**
+high — S665’s design work was the necessary foundation this session
+built directly on top of, and its own disclosed “not yet verified” list
+(subtree-rigid translation, the real 375-fixture, the collision
+interaction) named exactly the areas that needed the most care this
+session.
+
+### What Session 666 Did
+
+**Deliverable:** Implement the S665-ratified “conditional shift” rule
+(chain-case, generation-ascending, live-anchor-value read) for pedigree
+mating-union midpoint placement in `.positionMatingUnitForest()`, per
+`BACKLOG.md`’s top Up Next item and the plan doc’s own 7-step “What the
+implementing session needs to do” list. **DONE.** Full 7-step scope in
+one session (owner-picked via `AskUserQuestion` over a phased-split
+alternative). **Started/ Completed:** 2026-09-02 (single session).
+
+**What actually happened, in order:**
+
+1.  **Phase 0 orientation** — read `SAFEGUARDS.md`/git
+    status/log/diff-stat/`gh run list` (all green)/`gh issue list` (11
+    open, none pedigree-related)/`methodology_dashboard.py` (96/100).
+    **Ghost-session finding, reported not fixed:** 3 large (~1.5MB)
+    untracked `docs/planning/pedigree-diagram-*-spike-evidence.html`
+    files dated 2026-08-15, plus a stray
+    `inst/extdata/reference/~$e Compounding Loop.html` Office lock file
+    and 2 untracked build-artifact PDFs in `vignettes/articles/` — all
+    flagged in the Phase 0 report, none acted on (out of scope for this
+    session’s own deliverable). Rendered the priorities list (3 numbered
+    `AskUserQuestion` options) — **user picked the pedigree chain-case
+    implementation** (the standing top-priority item).
+2.  **Phase 1B claimed** (`453be90b`) — `SESSION_NOTES.md` stub +
+    `HANDOFFS.md` `status: pending` receipt.
+3.  **PRE-RED scope decision** (`AskUserQuestion`): full 7-step plan
+    scope in one session (vs. a Phase-A/Phase-B split) — owner picked
+    full scope, **adding an explicit condition: check in before
+    accepting/rejecting the finished result**, not a unilateral
+    close-out call. Read the plan doc’s “CHAIN RULE — RESOLVED” section
+    in full, the relevant `R/makePedigreeDiagramData.R` code (Tier
+    1/2/3, `qualifies()`, `b1AnchorRelativeX()`,
+    `.deCollideIndividualPoints()`), and the existing test file’s own
+    Track B fixtures/pinned baseline values before writing any test
+    code.
+4.  **Ground-truth derivation** (scratchpad probes, never assumed): ran
+    a fresh
+    [`kinship2::align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html)
+    against Track B full, Track B shrunk, a new synthetic 3-level chain
+    (`F1×F2→A→A×B→C→C×D→E1,E2`), and a new non-leaf-shifted-child
+    fixture (`R1×R2→M1→M1×G1→L1`, `L1` polygamous with her own real
+    child `N1`/`N2` via 2 disqualifying mates) — cross-checked Track B
+    shrunk’s numbers bit-exact against the plan doc’s own
+    independently-derived values, and hand-verified the chain/non-leaf
+    fixtures’ expected results against Option 3’s own rule before
+    pinning them.
+5.  **PRE-RED→RED gate** (`AskUserQuestion`): presented the exact 8-test
+    plan; approved.
+6.  **RED** (`6c637430`) — 8 new tests (7 in
+    `test_positionMatingUnitForest.R`, 1 end-to-end in
+    `test_makePedigreeMatingLayout.R` against a FRESH, inline kinship2
+    run, not a hardcoded literal). Verified genuine RED: full clean
+    regression 73 failed/0 error — exactly the 72 new assertions plus
+    the 1 pre-existing `test_wordlist_coverage.R` baseline, 0
+    collateral.
+7.  **RED→GREEN gate** (`AskUserQuestion`): presented the exact
+    implementation plan (insert one correction pass between Tier 1 and
+    Tier 2, relocate `qualifies()`, include a defensive zero-children
+    guard); approved over the stricter “omit the guard” alternative.
+8.  **GREEN** (`402eb53d`) — implemented as planned. **2 real defects
+    found and fixed during GREEN, neither visible from the plan doc
+    alone:**
+    - `qualifies()` alone is not sufficient to gate the correction — it
+      never checks that the mate is actually a B1 free-pass point (the
+      ORIGINAL, pre-S652 Track 7 Phase 1 code never needed to check
+      this, since it only ever called `qualifies()` from inside a
+      `for (fp in b1Ids)` loop — that guarantee doesn’t hold when
+      `qualifies()` is called in a new context over ALL anchored units).
+      Found live: 55/60 of the real fixture’s “qualifying” units had a
+      mate who is actually a real Tier-1 individual elsewhere in the
+      tree (one example, `__union_196`, off by 22+ raw units) — fixed by
+      also requiring `nonAnchorOf %in% b1Ids`, matching the file’s own
+      established `qualifyingB1 <- Filter(qualifies, b1Ids)` pattern.
+    - A second collision on Track B shrunk (G3 vs C4a) that the plan
+      doc’s own by-hand verification did not anticipate — traced by
+      direct execution (not guessed): G3’s raw formula target coincides
+      with C4a’s real position, and the pre-existing B1 de-collision
+      search correctly pushes G3 away. The RED test’s own
+      bit-exact-vs-kinship2 assertion for P2/G3/P6 was corrected to
+      check the actual, execution-traced formula + push chain instead
+      (P1/M1/L3 and C4/C4a — the parts untouched by any collision — DO
+      still match kinship2 bit-exact).
+    - Also found: a real Tier-1-vs-Tier-1 collision class the correction
+      pass can introduce (a shifted subtree landing exactly on an
+      unrelated individual) that `.deCollideIndividualPoints()`
+      (B1-only) never sees — fixed by factoring `sweepMinSep()` into a
+      closure and running it a second time after the correction.
+    - Also found: comparing Track B shrunk’s 2 disconnected families
+      against a SINGLE shared origin is itself unsound (which family
+      lands left vs. right is unspecified/arbitrary, per the plan’s own
+      “Scope boundary”) — fixed by comparing each component against its
+      own origin independently.
+    - 9 pre-existing tests re-pinned (their premise was the OLD “union
+      coincides with its anchor” behavior this session intentionally
+      supersedes) — every new value re-measured live, never
+      hand-derived, each with a dated rationale comment.
+9.  **Lint** (folded into GREEN): `assignment_linter` (a `<<-` recursion
+    → replaced with a `subtreeIds()` helper doing a single vectorized
+    update) and `if_not_else_linter` (branch order swapped) — both found
+    via `lintr::lint_package()`, both fixed; 0 findings on every touched
+    file, package-wide unaffected.
+10. **Full clean regression** — 0 failed/0 error attributable: the 1
+    pre-existing `test_wordlist_coverage.R` failure, plus 2 pre-existing
+    order-dependent marker-genetics timing-benchmark failures
+    (`test_markerKinship.R`/`test_markerParentageLikelihood.R`) — both
+    re-run in isolation and confirmed passing, matching this project’s
+    own documented “order-dependent flakiness” pattern for exactly this
+    test class (S620’s own handoff named the identical pattern).
+11. **Images regenerated** (`e7860c80`,
+    `data-raw/kinship2FidelityValidation.R`) and **visually inspected,
+    not just re-rendered**: Track B full now matches kinship2’s own
+    layout almost exactly (every union dot centered, every descent line
+    straight). Track B shrunk’s literal defect (dot exactly on a parent)
+    is fixed, but diffing against the PRIOR committed image showed the
+    disconnected-component visual crowding there pre-dates this session
+    — not caused or worsened by this fix, and explicitly out of its own
+    scope per the plan’s “Scope boundary.” Track C’s P1 case fixed; its
+    other pre-existing dot artifacts (non-qualifying pairs) correctly
+    left untouched (also confirmed by diffing against prior images).
+12. **Owner check-in** (`AskUserQuestion`, per the owner’s own PRE-RED
+    condition): presented the visual findings plainly, including the
+    pre-existing crowding. **Owner accepted, directed skipping REFACTOR,
+    and approved close-out.**
+13. **Close-out:** `BACKLOG.md`’s top item marked `[x]` DONE with the
+    full progress narrative; `CHANGELOG.md` entry added; `NEWS.Rmd`’s
+    issue \#166 entry updated in place to describe the new, final
+    behavior (plain-language checklist applied); this handoff written.
+
+**Runtime smoke test (Phase 3E):** the deliverable changes runtime
+rendering behavior directly (every qualifying mating union’s own
+placement). Verified via the regenerated, directly-inspected PNG images
+(real visNetwork rendering through the full
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+pipeline, not just internal x/gen math) for Track B full/shrunk and
+Track C direct/rectilinear, plus the full 8-test RED suite and the
+real-375-fixture regression test — matching this project’s own
+established “live-render, not just internal math” precedent.
+
+**Close-out checklist mapping** (`CLAUDE.md`): citation checklist
+**N/A** — no new statistic. Tutorial/article checklist **N/A** — no new
+Shiny tab/control, an existing exported function’s internal rendering
+correctness fix (matching the Walker/BJL migration’s own S620/ S621
+precedent for “diagrams look different” internal-engine changes).
+`NEWS.Rmd` checklist **DONE** — the issue \#166 entry updated in place
+(plain-language criterion applied: no algorithm names, describes what
+changed for a colony-manager reader). `a2interactive.Rmd` checklist
+**N/A this session, per its own explicit deferred policy** —
+`.positionMatingUnitForest()` is `@noRd`, not script-callable, and
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+gained no new parameter. `_pkgdown.yml` checklist **N/A** — no new
+exported function. GitHub issue close-out **N/A** — this work was
+tracked entirely via `BACKLOG.md`/the plan doc, no GitHub issue exists
+for it (`gh issue list --search` confirmed). Lint checklist **DONE** (0
+lints, package-wide).
+
+**Self-assessment (Session 666): 9/10.** **Strengths:** (1) Found 2
+real, non-obvious defects during GREEN by testing against the real
+375-fixture and a second real collision, neither of which the (careful,
+but by-hand) design session could have caught — matching this project’s
+own “verify by execution, never assume” discipline at every step,
+including deriving every RED-phase target value from a fresh
+[`kinship2::align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html)
+run or a real internal-function probe, never copied from the plan doc on
+faith. (2) Diagnosed the `qualifies()`-vs-`b1Ids` gap and the second
+Track-B-shrunk collision by direct execution and targeted probing
+(checking sex/gen/parent-edge fields on the actual colliding
+real-fixture individual) rather than pattern-matching against the plan
+doc’s own framing. (3) Built a genuinely discriminating non-leaf-subtree
+test (found, and avoided, a first fixture design that would have
+“self-healed” a real subtree-shift bug via an unrelated
+absolute-retarget mechanism — confirmed by hand-tracing why before
+committing to the second, correct design). (4) Went beyond the numeric
+verification the RED tests required and regenerated + visually inspected
+the actual rendered images before presenting them, catching that Track B
+shrunk’s literal defect is fixed but a pre-existing, unrelated crowding
+issue remains visible — then diffed against the PRIOR images
+specifically to confirm that crowding predates this session, rather than
+asserting it either way. (5) Surfaced 3 genuine decision points (pre-RED
+scope, RED test plan, GREEN implementation plan) via dedicated
+`AskUserQuestion`s before writing code each time, plus a final owner
+check-in before close-out, per the owner’s own explicit condition.
+**Weaknesses:** (1) The initial RED-phase test for the real 375-fixture
+asserted exact equality for every `qualifies()`-passing unit without yet
+knowing about the `b1Ids`-gate gap — a defensible RED-phase choice
+(matching this project’s own established “3 RED-phase test bugs found
+during GREEN” precedent, not a process violation), but a closer read of
+`derivedX()`’s own calling convention before writing that test might
+have caught it one step earlier. (2) This session ran long (the full
+plan-scoped 7 steps in one sitting, as the owner explicitly chose) — no
+session-boundary violation, but a genuinely large amount of ground
+covered in one continuous session. **ROI:** very high — the BACKLOG.md
+top item (owner’s own standing pedigree-fidelity priority since
+2026-08-26) is fully closed, 2 real defects the shipped code would
+otherwise have carried are fixed, and the diagnostic techniques
+(fresh-kinship2-per-fixture ground truth; the non-leaf-subtree fixture
+design that avoids self-healing; diffing regenerated images against
+prior committed ones to separate new-vs-pre-existing visual issues) are
+directly reusable for any future pedigree-positioning session.
+
+**Next steps:** the pedigree mating-union midpoint item is fully closed.
+`BACKLOG.md`’s “STANDING TOP PRIORITY” note (pedigree-drawing fidelity
+work stays first) is **left standing** — the owner has not said the
+overall pedigree-fidelity effort is done, only that this specific item
+is. No other numbered pedigree item is currently READY; a future
+session’s Phase 0 should check `BACKLOG.md`’s Housekeeping section and
+the “Lower priority” items next. The disconnected-component visual
+crowding seen in `trackB-nprc-shrunk.png` is a known, pre-existing,
+explicitly out-of-scope limitation (per the plan doc’s own “Scope
+boundary”) — the owner chose not to file it as a new tracked item this
+session; a future session should not assume it needs fixing without the
+owner raising it again.
+
+**Key files:** `R/makePedigreeDiagramData.R:627-866`
+(`.positionMatingUnitForest()` — the correction pass and relocated
+`qualifies()` are the only new/moved code; Tier 2/Tier 3/
+collision-avoidance/final assembly are byte-for-byte unchanged);
+`tests/testthat/ test_positionMatingUnitForest.R` (8 new tests near the
+file’s end, 9 pre-existing tests re-pinned throughout);
+`tests/testthat/test_makePedigreeMatingLayout.R` and
+`tests/testthat/ test_resolveEdgeNodeCollisions.R` (1 new / 1 re-pinned
+real-fixture test each);
+`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md` (the
+ratified design, now shipped);
+`vignettes/articles/kinship2-fidelity-validation-img/trackB-nprc-{full,shrunk}.png`,
+`trackC-nprc-{direct,rectilinear}.png` (regenerated).
+
+**Gotchas for a future session:** (1) `qualifies()` alone does NOT mean
+“the mate renders via the B1 anchor-relative formula” — always also
+check `nonAnchorOf[[u]] %in% b1Ids` before assuming a qualifying pair’s
+mate has a meaningful formula-derived position; a non-B1 mate (has her
+own parent edge) renders at her own genuine Tier-1 position instead,
+unrelated to the anchor at all. (2) The correction pass’s own formula
+always uses the mate’s RAW, pre-collision-avoidance target when
+computing a shift — using her eventual post-push value would be circular
+(the push itself depends on where the anchor already is). A residual
+between the “true midpoint” and a pair’s FINAL rendered positions is
+expected and bounded when collision-avoidance intervenes, not a bug —
+see the real-375-fixture test’s own disclosed range. (3) A fixture where
+a shifted child’s own further mating ALSO qualifies for correction will
+“self-heal” a subtree-shift bug via that inner correction’s own
+absolute-retarget — a genuine subtree-shift test needs a DISQUALIFYING
+(e.g. polygamous) further mate to actually discriminate the bug, as this
+session’s own non-leaf fixture does. (4) `sweepMinSep()` now runs twice
+(before and after the correction pass) — do not assume a single pass is
+authoritative if extending this function further; any new pass that
+moves a real Tier-1 individual should consider whether a subsequent
+minSep sweep is also needed.
+
+### Session 664 Handoff Evaluation (by Session 665)
+
+**Score: 6/10.** **What helped:** the plan doc’s “ITEM 4 CONFIRMED TO
+FAIL” section gave exact
+[`kinship2::align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html)
+ground-truth numbers for Track B shrunk
+(`P1=0, M1=0.5, L3=1.0, P2=1.0, G3=1.5, C4=2.0, C4a=2.5, P6=3.0`), the
+exact fixture structure/topology, and correctly identified
+`scratchpad/alignped4.R` as the concrete kinship2 reference to read —
+all directly reused this session and load-bearing for the actual
+re-derivation (`BACKLOG.md`’s own pointer to the plan doc and its “read
+ITEM 4 before touching this” instruction were both accurate and
+sufficient to orient immediately, no re-discovery needed). **What was
+missing:** the central claim (“Applying Option 3’s two cases
+independently… produces… M1=0… wrong”) was recorded with high-confidence
+language (“CONFIRMED TO FAIL”) without the handoff flagging that this
+rested on an informal, never independently re-verified hand-simulation —
+no note saying “re-derive this from scratch before trusting it,” which
+is exactly what this session had to do anyway to catch the 2 arithmetic
+bugs underneath it. **What was wrong:** the core diagnostic conclusion
+itself was incorrect, not just underspecified — traced this session to 2
+concrete arithmetic errors in S664’s own scratch script (an asymmetric
+anchor-only shift where the ratified text says “shift both parents
+equally”; an inconsistent mate-position value that cascaded into a wrong
+child-shift target) — see this session’s own “CHAIN RULE — RESOLVED”
+section in the plan doc for the full diagnosis with numbers. Had this
+session trusted the “CONFIRMED TO FAIL” framing at face value and gone
+straight to inventing a new chain- specific algorithm (the exact
+candidates the handoff itself suggested — bottom-up resolution,
+iterative relaxation), it would have spent the session solving a problem
+that does not exist. **ROI:** net positive but mixed — the surrounding
+evidence (ground-truth numbers, fixture topology, correct
+kinship2-source pointer, accurate architecture notes on Tier 1/2/3)
+saved real time and was directly reusable; the headline conclusion was
+wrong and had to be fully re-derived from first principles rather than
+built upon, which is a materially different, larger correction than a
+typical “gap” would have needed.
+
+### What Session 665 Did
+
+**Deliverable:** Design session (owner-confirmed scope via
+`AskUserQuestion`) for `BACKLOG.md`’s top Up Next item — the chain-case
+rule S664 left “CONFIRMED TO FAIL.” Working from kinship2’s own
+`alignped4.R` QP source (read in full this session) and this project’s
+own real, unmodified
+`.buildMatingUnitForest()`/`.positionTreeApportion()` output (never
+assumed/hand-simulated values), re-derived the chain case from scratch
+and found **S664’s “CONFIRMED TO FAIL” finding was itself wrong** —
+traced to 2 concrete arithmetic bugs in that session’s own ad hoc
+scratch script (documented with exact numbers in the plan doc’s new
+“CHAIN RULE — RESOLVED” section). **No new chain-specific rule is
+needed:** the already-ratified Option 3 (root anchor → shift both
+parents to match children-mean; non-root anchor → shift children to
+match true parent midpoint), applied to every qualifying pair in
+ascending-generation order and always reading each anchor’s CURRENT (not
+stale/cached) position, already reproduces kinship2 exactly — verified
+bit-exact against: (a) Track B shrunk’s real 2-link chain, using this
+project’s own real raw `tier1X`/`unitX` values (not assumed); (b) a
+synthetic 3-level chain (`F1×F2→A→A×B→C→C×D→ children`), confirming the
+one genuinely new requirement — generation-ordered processing with live
+anchor values, needed for 3+-link chains though not exercised by either
+Track B fixture; (c) a kinship2-QP algebraic derivation (spousal +
+per-child family penalty terms, solved by hand for the isolated-chain
+case) showing the result is independent of child count/weight,
+cross-checked empirically for `m`=1..4 real kinship2 runs. Also
+confirmed, by direct computation (not assumed), that the
+previously-flagged disconnected-component collision risk is real even
+under the arithmetically-correct rule (`P2`/`C4` land on the identical x
+on Track B shrunk) — the “route corrected targets through
+collision-avoidance, never bypass it” requirement from S664’s own plan
+stands, now with a concrete confirming example rather than a
+hypothetical one. **Owner-ratified via `AskUserQuestion`** after the
+finding was presented with full evidence. Updated
+`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md` (new
+“CHAIN RULE — RESOLVED” section; old “ITEM 4” section left unedited as
+historical record, matching this doc’s own precedent for the superseded
+Option 1) and `BACKLOG.md`’s top item (design RATIFIED, implementation
+READY, 7-step action list for the next session). **No `R/`/ `tests/`
+changes this session** (confirmed via `git status`/`git diff`, both
+clean on those paths) — every number came from either a real
+[`kinship2::align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html)
+run or a direct call into this project’s own real, unmodified internal
+functions. **Started:** 2026-09-02. **Completed:** 2026-09-02.
+**Status:** DONE (design-only scope, as ratified at claim).
+Implementation is a separate, future session per this project’s
+established pedigree-positioning design/implementation split.
+**Ledger:** `CHANGELOG: pending` — set at claim; recorded at Phase 3F
+below.
+
+**Self-assessment (Session 665): 9/10.** **Strengths:** (1) never took
+S664’s “CONFIRMED TO FAIL” language at face value — re-derived the chain
+case fully from scratch, against 3 independent sources (kinship2’s own
+QP source read directly, empirical kinship2 runs on synthetic fixtures,
+and this project’s own real code’s raw output), before accepting or
+rejecting the prior finding; (2) when the re-derivation contradicted the
+prior session, diagnosed the SPECIFIC arithmetic errors with numbers
+rather than just asserting disagreement, so a future session (or the
+owner) can independently check the diagnosis rather than trust it on
+authority; (3) found and disclosed a real limit of the corrected rule
+(3+-link chains need live-value/generation-ordered composition; verified
+this specifically rather than assuming a 2-link success generalizes)
+instead of over-claiming full generality from the one case that mattered
+for Track B; (4) confirmed the disconnected-component collision risk
+empirically on the exact fixture rather than leaving it as an unverified
+carry-forward note; (5) used the actual project code
+(`.buildMatingUnitForest()`/`.positionTreeApportion()`) to get real raw
+values instead of reconstructing them by hand, avoiding exactly the
+class of error that caused S664’s own mistake. **Weaknesses:** (1) did
+not attempt the real 375-individual fixture this session (explicitly out
+of scope for a design-only session per the plan’s own item 6, but it is
+the fixture most likely to contain a 3+-link chain, so the
+generation-ordering requirement’s real-world frequency is still
+unmeasured); (2) subtree-rigid translation for a non-leaf shifted child
+remains completely untested (explicitly flagged, not silently assumed,
+but still a real gap the implementing session inherits); (3) the
+kinship2-QP algebraic derivation, while cross-checked empirically for
+`m`=1..4, was not extended to verify polygamous/multi-mate anchors or a
+chain where the SAME node is a chain link on both sides (anchor of one
+qualifying pair AND non-anchor mate of another) — not present in either
+Track B fixture, not tested, and not currently flagged in the plan doc’s
+own limitations list (a gap in this session’s own write-up, noted here
+so it isn’t lost). **ROI:** high — averted what would likely have been a
+much larger, unnecessary “invent a new chain algorithm” implementation
+effort in a future session, and produced a smaller, precisely-scoped
+7-step implementation list in its place, fully evidenced rather than
+asserted.
+
+**Next steps:** implement per the plan doc’s “What the implementing
+session needs to do” 7-step list (also mirrored in `BACKLOG.md`’s top
+item): (1) a single generation-ordered pass over qualifying units in
+`.positionMatingUnitForest()`, reading live anchor values; (2) route
+corrected targets through `.deCollideIndividualPoints()`/Track 7 Phase
+2, never around them; (3) verify subtree-rigid translation for a
+non-leaf shifted child (untested by this session); (4) re-verify Track B
+full stays bit-exact; (5) re-verify Track B shrunk matches kinship2
+exactly
+(`P1=0, M1=0.5, L3=1.0, P2=1.0, G3=1.5, C4=2.0, C4a=2.5, P6=3.0`); (6)
+re-verify against the real 375-individual fixture (untested this
+session, most likely to contain a 3+-link chain); (7) then
+RED/GREEN/REFACTOR. Read
+`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`’s
+“CHAIN RULE — RESOLVED (Session 665)” section in full first — NOT “ITEM
+4 CONFIRMED TO FAIL”, which it corrects and supersedes (left in place
+only as historical record, per this doc’s own precedent for the
+superseded Option 1). **Gotchas:** (1) do not re-read “ITEM 4 CONFIRMED
+TO FAIL” as current guidance — it is superseded, wrong on its central
+claim, and kept only as historical record; (2) the generation-ordering
+requirement is not optional even though it happens not to matter for
+either Track B fixture (M1 in the 2-link case is never itself shifted by
+any correction, so staleness never bites there) — the 3-level
+synthetic-chain verification in the plan doc shows it DOES matter in
+general, and the real 375-fixture is untested for this specifically; (3)
+`qualifies()` (`R/makePedigreeDiagramData.R:790-804`) gates purely on
+mate-count/sex, not on root-vs-chain status — confirmed this session by
+reading it directly — so no change to that predicate is needed, only to
+what target value gets computed once a unit qualifies; (4) when
+reconstructing Track B shrunk’s real raw values for verification,
+`founderIds` must have `b1Ids` (free-pass mates) subtracted before
+building `rootIds`/the forest — an early version of this session’s own
+probe script omitted that and got a materially different (and wrong)
+raw-value picture; the corrected version
+(`/tmp/probe_chain2.R`-equivalent logic) is what the plan doc’s numbers
+come from. Unchanged from S664: the stray LibreOffice lock file
+(`inst/extdata/reference/~$e Compounding Loop.html`) is still present;
+`HANDOFFS.md`/ `SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM \#28
+size cap; `master` was ahead of `origin/master` at this session’s Phase
+0 (16 commits, then 17 after this session’s claim commit) — push per the
+established cadence. **Key files:**
+`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md` (the
+live, authoritative record — read the new “CHAIN RULE — RESOLVED”
+section, not this summary, before starting);
+`R/makePedigreeDiagramData.R:627-866` (`.positionMatingUnitForest()`,
+untouched this session, the eventual edit site —
+`qualifies()`/`b1AnchorRelativeX()`/`derivedX()` at :790-818 are the
+existing Tier-3 mechanisms the new pass composes with); `BACKLOG.md` Up
+Next (top item, updated this session with the ratified finding and
+7-step action list); `scratchpad/alignped4.R` (kinship2’s real QP solver
+source, read in full this session — the concrete reference for the
+algebraic derivation). **Runtime smoke test (Phase 3E):** not applicable
+— this session’s deliverable is a design document with no shipped
+runtime behavior change (confirmed via `git status`/`git diff` on
+`R/`/`tests/`: both clean). The equivalent verification actually
+performed was numeric: every claimed-correct value was checked against a
+real
+[`kinship2::align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html)
+run and/or this project’s own real (unmodified) internal function
+output, never asserted from formula alone or by hand-simulation.
+
+### Session 663 Handoff Evaluation (by Session 664)
+
+**Score: 9/10.** **What helped:** S663’s `next_steps` correctly named
+the remaining pedigree- cluster READY item (package-extraction scoping)
+and explicitly warned not to re-attempt the
+`TaskCreated`/`TaskCompleted` dead end for any future
+background-task-lifecycle need – both accurate, neither needed by this
+session, but the warning would have saved real time had this session
+drifted there. **What was missing:** nothing material to this session’s
+actual path – S663’s own deliverable (the `ScheduleWakeup` guard) was
+unrelated to pedigree work, so it could not have anticipated the owner’s
+Phase 0 pushback that redirected this session entirely. **What was
+wrong:** nothing checked this session contradicted S663’s claims.
+**ROI:** high but moot – this session’s actual work was determined by a
+live owner directive at Phase 0, not by picking from S663’s `next_steps`
+menu; the handoff’s accuracy was real but not the deciding factor here.
+
+### What Session 664 Did
+
+**Deliverable, as it evolved (owner-redirected multiple times, each time
+based on newly-verified evidence, not on a whim):** Started as
+“demonstrate pedigree-diagram fidelity with real images, staged, per
+owner request” (see the original claim stub this replaces). Evolved
+through 3 rounds of owner-directed rescoping, each one triggered by
+actually checking the previous round’s claim against ground truth rather
+than trusting it: 1. **Stage 1 (vignette re-render):** re-ran
+`data-raw/kinship2FidelityValidation.R` fresh, sent the owner the real
+regenerated Track A/B/C images. Track A/B(full)/C looked clean by
+inspection; Track B **shrunk** showed a real, reproducible defect – two
+disconnected surviving families (`P1/P2/M1/G3/L3` and `C4/P6/C4a`)
+render as visually interleaved/connected, confirmed deterministic via 2
+independent re-renders and a full node/edge coordinate trace. Also found
+the image previously *committed* for this exact fixture (3 days old,
+S649) was separately, severely corrupted (overlapping unlabeled circles)
+and nobody had looked since. 2. **First plan, superseded same session:**
+wrote and got ratified (`AskUserQuestion`) a “disconnected-component
+post-hoc separation” plan
+(`docs/planning/pedigree-diagram-disconnected-component-separation-plan.md`).
+Superseded before any code was written, immediately after actually
+comparing nprcgenekeepr’s coordinates against
+[`kinship2::align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html)
+numbers directly (owner-directed) – the owner spotted, live, that
+`trackB-nprc-full.png` (a fixture this session had already wrongly
+called “clean”) has every union dot sitting on the anchor parent instead
+of centered between the pair, a defect the disconnected-component
+framing could not explain (it reproduces in a fully-connected pedigree
+too). 3. **Second plan, superseded same session:** wrote and got
+ratified a “symmetric half-offset” fix (Option 1). Before writing any
+RED tests, grepped this file’s own prior planning history and found the
+exact fix had already been built (Track 7 Phase 1, S647), found to cause
+a real, worse-to-live-with defect (crooked descent lines / off-center
+sibling bars, mathematically proven unavoidable for these cases), and
+deliberately reverted (Track 7 Phase 3, issue \#166, S651/S652) – Option
+1 would have silently re-shipped an already-rejected regression. 4.
+**Third design, “conditional shift” (Option 3), owner-derived:** after
+the owner reviewed a rendered “what would the old Track 7 Phase 1
+behavior look like” simulation image and proposed the exact fix by
+inspection (shift specific named nodes left/right by 0.5, remove the
+slant) – verified, by hand, bit-exact against
+[`kinship2::align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html)
+for Track B’s full 16-subject fixture (max diff 1.8e-7). This directly
+overturns the prior Track 7 Phase 3 design doc’s own §1.4 “hard binary,
+no intermediate value” conclusion – that analysis never considered
+moving the parent pair or the children, only the union marker. 5.
+**Verification against a SECOND fixture (owner-directed, “show me…
+before deciding”), found Option 3 as ratified is incomplete:** Track B
+**shrunk** – the original trigger fixture – contains a single-child
+chain of 2 nested qualifying pairs (`P1×P2 -> M1 -> M1×G3`) that
+kinship2’s real joint solver resolves to a value (`M1=0.5`) neither of
+Option 3’s 2 cases alone produces. A naive independent-per-pair
+application of the rule was also shown, via a rendered image, to
+reintroduce the disconnected-component overlap problem from the
+(by-then-superseded) first plan, because it bypassed this project’s own
+existing collision-avoidance machinery. Owner directly called out that
+this was a repeat of an earlier mistake in this same session (showing
+something not run through full scaffolding) – correct: showing that
+image before fully labeling it as a bypass-of-collision-avoidance wasted
+a round trip; the label came only when asked to explain the overlap, not
+before. 6. **Session paused, owner-directed, rather than pushed
+further:** asked directly “do you need a new session,” answered yes –
+the chain-case rule isn’t designed yet (only its target *output* is
+known, from kinship2, not a derivable *algorithm*), and integrating any
+fix through (not around) the existing collision-avoidance machinery is
+real, careful implementation work on the most heavily-scarred function
+in this file. Everything verified this session is written up precisely
+in `docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`’s
+“ITEM 4 CONFIRMED TO FAIL” section, with exact numbers and a concrete,
+ordered next-session action list. **DONE for this session’s own scope (a
+paused, fully-documented investigation) – NOT DONE as a shipped fix.**
+No `R/` or `tests/` source was touched at any point (confirmed via
+`git status`/`git diff` immediately before close-out) – every rendered
+image this session came from an in-process, never-committed monkey-patch
+in a throwaway script. **Started:** 2026-09-01. **Completed (paused):**
+2026-09-02. **Status:** Session claimed, investigated extensively,
+explicitly paused rather than rushed. `BACKLOG.md` Up Next item left as
+`[ ]` (not done), with the full state and next steps recorded there and
+in the plan doc. **Ledger:** `CHANGELOG: pending` – set at claim;
+recorded at Phase 3F below.
+
+**Self-assessment (Session 664): 8/10.** **Strengths:** (1) never
+declared something “correct” without checking it against `kinship2`
+ground truth first, and when a check *was* incomplete (measuring
+`.positionMatingUnitForest()`’s intermediate output instead of the final
+rendered position; assuming a fix verified on one fixture would
+generalize to a second), caught and corrected it in the same session
+rather than letting it stand; (2) found and used the project’s own prior
+planning history (`git log`, `git show`) before shipping a fix, avoiding
+silently re- introducing an already-reverted regression (Track 7 Phase
+1); (3) when the owner proposed the “conditional shift” rule, verified
+it numerically and visually rather than taking it on trust, and that
+verification is what surfaced the chain-case gap; (4) stopped and asked
+rather than pushing through when the fix’s scope kept expanding, and
+accepted the owner’s direct “you keep replicating similar mistakes” and
+“this is a repeat, don’t show me unfinished scaffolding” corrections
+without being defensive, adjusting behavior each time rather than
+repeating the same category of shortcut a third time. **Weaknesses:**
+(1) the core pattern the owner named – declaring a check complete after
+verifying only *some* properties – happened at least 3 times before it
+was fully internalized (Track B full’s “clean” call; the
+`.positionMatingUnitForest()`-vs-final-render measurement; the first
+“recentered simulation” image shown without yet knowing whether it used
+full scaffolding); each one was caught, but a more careful default
+posture (assume incomplete until every property is checked, not just the
+one currently in focus) would have caught them before showing the owner
+anything, not after; (2) this session never produced a shipped fix – the
+deliverable is a thoroughly-verified, precisely-documented PAUSE, which
+is the right outcome given what was found, but it is a materially
+different, lower-throughput result than the session’s original framing
+promised; (3) should have grepped this file’s own Track 7 planning
+history BEFORE proposing the first “symmetric half-offset” fix, not
+after it was already ratified – the search that found the
+already-reverted Track 7 Phase 1 mechanism was straightforward and
+should have been step one of any fix proposal for this specific
+function, given how extensively it’s been touched before. **ROI:** high
+despite no shipped code – the session prevented 2 different regressions
+from reaching `master` (re-shipping Track 7 Phase 1’s reverted
+mechanism; a naive fix that would have reintroduced the
+disconnected-component overlap) purely through insisting on ground-truth
+verification before ratifying anything, and leaves the next session a
+fully-scoped, numerically- precise starting point instead of a vague
+“make it look right” task.
+
+**Next steps:** read
+[`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md)’s
+“ITEM 4 CONFIRMED TO FAIL” section first, in full, before touching
+`R/makePedigreeDiagramData.R`. In order: (1) design a general rule for a
+chain of 2+ nested qualifying pairs sharing a single child (kinship2’s
+own `alignped4.R` QP source is the concrete reference to read, not a
+guess – this session read it once for a narrower question,
+`pedigree-diagram-track7-phase3-child- centering-plan.md` §1.3); (2)
+integrate the corrected targets THROUGH
+`.deCollideIndividualPoints()`/Track 7 Phase 2’s push-search, never
+bypassing them the way this session’s own diagnostic scripts did; (3)
+re-verify Track B full stays bit-exact against
+[`kinship2::align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html)
+(already proven achievable, do not regress it); (4) re-verify Track B
+shrunk matches kinship2 exactly
+(`P1=0, M1=0.5, L3=1.0, P2=1.0, G3=1.5, C4=2.0, C4a=2.5, P6=3.0`); (5)
+only then the 3 remaining original open items (subtree-rigid translation
+for a non-leaf shifted child, the real 375-individual fixture, Track 7
+Phase 2/B3-duplicate interaction) and RED. Do NOT re-propose “Option 1”
+(symmetric half-offset, no nested case) or “Option 3 exactly as first
+ratified” (no chain handling) – both are disproven, not merely
+unexplored, and re-deriving either from scratch would repeat this
+session’s own first two mistakes. **Gotchas:** (1) always measure from
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+actual final `nodes` table, never from `.positionMatingUnitForest()`’s
+return value directly – `.resolveEdgeNodeCollisions()` and other
+downstream steps can and do further move positions after that function
+returns (found live this session on `P4`’s position, a real measurement
+error this session made and had to retract); (2) a fix verified correct
+on Track B *full* is not proven correct on Track B *shrunk*, or on the
+real 375-individual fixture – these are 3 separate,
+independently-necessary checks, not one; (3)
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html) +
+[`assignInNamespace()`](https://rdrr.io/r/utils/getFromNamespace.html):
+a bare top-level call to an internal function in a script’s own global
+environment resolves via a stale copy from load time, NOT the namespace
+binding
+[`assignInNamespace()`](https://rdrr.io/r/utils/getFromNamespace.html)
+just updated – only a call reached THROUGH another package-internal
+function (lexical scoping via the namespace) sees the patch; found live
+this session, cost real time to diagnose. Unchanged from S663: the stray
+LibreOffice lock file
+(`inst/extdata/reference/~$e Compounding Loop.html`) is still present;
+`HANDOFFS.md`/ `SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM \#28
+size cap; `master` was ahead of `origin/master` by 6 commits at this
+session’s Phase 0, unrelated to this session’s own work – push per the
+established cadence, now even further ahead with this session’s own
+commits added. **Key files:**
+`docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md` (the
+live, authoritative record – read this, not this summary, before
+starting);
+`docs/planning/pedigree- diagram-disconnected-component-separation-plan.md`
+(superseded, but its own concern resurfaced – see its late-update
+notice); `R/makePedigreeDiagramData.R:627-1263`
+(`.positionMatingUnitForest()`, untouched this session, the eventual
+edit site); `data-raw/kinship2FidelityValidation.R` (the fixture source
+– Track B’s images will need regenerating once a real fix lands);
+`BACKLOG.md` Up Next (top item, full current-state summary). **Runtime
+smoke test (Phase 3E):** not applicable in the usual sense – this
+session’s deliverable is a paused design investigation with no shipped
+runtime behavior change (confirmed via `git status`/`git diff` on
+`R/`/`tests/`: both clean). The equivalent verification actually
+performed was numeric/visual: every claimed-correct number was checked
+against
+[`kinship2::align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html)’s
+real output and, where practical, against an actual `chromote` render,
+not asserted from formula alone.
+
+### Session 662 Handoff Evaluation (by Session 663)
+
+**Score: 9/10.** **What helped:** S662’s `next_steps` named this item as
+option (1) of exactly 2 remaining READY items – “the
+`ScheduleWakeup`/`run_in_background` structural-guard investigation
+(READY, Effort S-M, found S656, Learning 694/695)” – with the correct
+provenance (found S656) and the correct project convention it matches
+(`SESSION_RUNNER.md`’s own Degradation Detection guidance: “a health
+check has reported the same finding for several consecutive sessions…
+add a gate”). This was accurate and directly actionable: no
+re-derivation was needed before starting, and the owner picked it first
+when presented as one of 2 options (the other being the pedigree-diagram
+package-extraction scoping session). **What was missing:** nothing
+material – S662’s own deliverable (the B1-individual proximity fix) was
+unrelated to this item, so there was no investigation-relevant detail
+S662 could have added beyond correctly flagging it as still open. **What
+was wrong:** nothing checked this session – S662’s claims about its own
+shipped work were outside this session’s scope to re-verify, and this
+session’s own Phase 0 ledger reconcile (0 undocumented commits, both
+`CHANGELOG.md`/`HANDOFFS.md` frontiers equal `HEAD`) found nothing
+contradicting them. **ROI:** high – an accurate, correctly-tagged
+backlog pointer meant zero Phase 0/1 time spent re-deriving scope; the
+entire session went directly into investigation.
+
+### What Session 663 Did
+
+**Deliverable:** Investigated and shipped the ratified structural guard
+against calling `ScheduleWakeup`/`CronCreate` while a
+`run_in_background` task is outstanding (`BACKLOG.md` Up Next, found
+S656, Learning 694/695 – 3 consecutive sessions, S654-S656, made the
+identical mistake). **DONE.** Owner-directed via `AskUserQuestion`
+(after a clarifying round – the owner asked to have the question
+explained in plain language first): global scope
+(`~/.claude/settings.json`, applies to every project), hard block (deny,
+not warn). **Started/Completed:** 2026-09-01 (single session).
+
+**This deliverable is Claude Code tooling configuration, not R package
+code.** It lives entirely outside this git repository
+(`~/.claude/settings.json` + 3 new scripts in `~/.claude/hooks/`) –
+there is no in-repo diff for the mechanism itself. `CLAUDE.md`’s
+Development Process Contract (TDD RED/GREEN/REFACTOR, testthat coverage)
+was flagged to the owner at Phase 1 as not mechanically applicable here
+(no R code, no testthat harness for shell hook scripts) and no objection
+was raised; this session’s own verification discipline substituted live,
+empirical proof against real payloads at every step, documented below,
+in place of a test suite.
+
+**What actually happened, in order:** 1. **Phase 0:** full orientation
+per `SESSION_RUNNER.md` (`SAFEGUARDS.md` read in full,
+`SESSION_NOTES.md` ACTIVE TASK read, `CHANGELOG.md`/`HANDOFFS.md`
+reconciled – 0 undocumented commits, both frontiers equal `HEAD`
+`045facb8`). `gh issue list`: 11 open, none new since S662.
+`gh run list`: all push-triggered + scheduled workflows green.
+`methodology_dashboard.py`: 96/100 health, 1 HIGH risk (unchanged –
+mandated-read files past the FM \#28 size cap). 7 untracked files, all
+pre-existing and already characterized by S659-S662, no ghost-session
+signal. Rendered a 2-option priorities `AskUserQuestion` (the
+pedigree-fidelity visual-defect cluster is now fully `[x]` through S662;
+the standing top-priority note’s own remaining live items were this
+guard investigation and the package-extraction scoping session) –
+**owner picked the ScheduleWakeup guard.** 2. **Phase 1B claim** (commit
+`4cbc4319`) – stub in `SESSION_NOTES.md` + `status: pending`
+`HANDOFFS.md` receipt, written before any investigation began. 3.
+**Investigation (empirical, not documentation-only):** loaded the
+`update-config` skill (the backlog item’s own named entry point) for the
+hooks schema, then tested live rather than trusted the docs alone.
+Found: (a) `PreToolUse` can intercept any named tool and deny it
+(`hookSpecificOutput.permissionDecision: "deny"`) – proven live against
+`Bash`; (b) no hook fires on `run_in_background` task *completion* –
+`TaskCreated`/`TaskCompleted`/`Notification` were each wired to a debug
+hook and none fired across 2 separate real background-task completions,
+even though the `<task-notification>` itself demonstrably arrived; (c)
+`PostToolUse`/`Bash` DOES reliably fire at task *creation* and its
+`tool_response. backgroundTaskId` names the exact task – proven live;
+(d) `Stop` fires reliably at every natural turn-end and its own payload
+already carries `background_tasks`/`session_crons` arrays (though
+`PreToolUse` does not get those fields – checked directly). Full trail:
+`PROJECT_LEARNINGS.md` Learning 703. 4. **Scope/approach
+`AskUserQuestion`** (after the owner asked for a plain-language
+explanation of the first attempt, which was answered before re-asking):
+**global scope, hard block** picked from 3 options. 5.
+**Implementation:** 3 scripts written to `~/.claude/hooks/`
+(`bg-task-track.sh`, `bg-task-gate.sh`, `bg-task-clear.sh`); merged into
+`~/.claude/settings.json` via `jq` (preserving the existing
+`SessionStart` hook), backed up first (`settings.json.bak-s663`).
+Verified with `jq -e` schema checks, then pipe-tested against synthetic
+payloads matching the exact real shapes captured in step 3, in an
+isolated `$TESTHOME` sandbox (4/4 tests passed: track-then-gate-denies,
+gate-allows-with-no-state, gate-allows-for-a-different-session,
+clear-then-gate-allows-again). 6. **Live end-to-end proof against the
+real installed hooks** (not just the sandbox): triggered a real
+`run_in_background` Bash task – the real `PostToolUse` hook fired and
+wrote the real `backgroundTaskId` to the real state file; piped a
+synthetic `ScheduleWakeup` payload (same real `session_id`) through the
+real installed `bg-task-gate.sh` – correctly denied; piped the real
+`Stop`-shaped payload through the real installed `bg-task-clear.sh` –
+correctly cleared, and a re-check then correctly allowed. **One link
+deliberately not live-fired:** actually invoking
+`ScheduleWakeup`/`CronCreate` for real, since both have genuine side
+effects (one persistent) and doing so purely to prove the harness’s own
+matcher-routing dispatch would itself have been an inappropriate
+test-only tool invocation – this link rests on the documented,
+already-standard `"matcher": "Write|Edit"`-style alternation pattern
+(confirmed present in the skill’s own “Common Patterns” examples) plus
+the generically-proven `PreToolUse` dispatch mechanism (proven live
+against `Bash`), disclosed explicitly as a reasoned inference, not a
+live-proven fact. 7. **Self-caught mistake:** while removing the
+temporary debug/logging hooks from `.claude/settings.local.json`
+(project-local, personal, gitignored – used only for the live
+investigation), an `Edit` left a stray unmatched `}`, making the file
+invalid JSON. Caught immediately by re-validating with `jq -e` (the same
+discipline used throughout this session, not a one-off check), fixed in
+the next edit, re-validated clean. The file is gitignored and was never
+committed, so this never touched repo history – but it is a real gotcha
+worth naming (see below). 8. **Close-out:** `BACKLOG.md` item marked
+DONE. `PROJECT_LEARNINGS.md` Learning 703. `CLAUDE.md` learnings-pointer
+count updated (702-\>703, session count 662-\>663). `CHANGELOG.md` entry
+added. No `NEWS.Rmd` entry (not a package feature) and no `_pkgdown.yml`
+change (no new exported R function) – neither checklist applies to this
+deliverable.
+
+**Runtime smoke test (Phase 3E):** this deliverable changes Claude
+Code’s own runtime behavior (hook dispatch), not the nprcgenekeepr Shiny
+app’s – the applicable equivalent is the live end-to-end proof in step 6
+above, performed against the real installed global hooks (not a mock or
+sandbox), which is the strongest verification available for this class
+of change short of the one link explicitly named as not live-fired in
+step 6.
+
+**Self-assessment (Session 663): 9/10.** **Strengths:** (1) tested every
+claim empirically rather than trusting the `update-config` skill’s
+documentation alone – the `TaskCreated`/`TaskCompleted` dead-end was
+found by actually starting real background tasks and watching for real
+hook firings, not by reading event names and assuming; (2) when the
+first `AskUserQuestion` attempt drew a request to explain rather than an
+answer, stopped and gave a plain-language explanation before re-asking,
+rather than re-phrasing the same jargon-dense question; (3) pipe-tested
+every hook command against the REAL captured payload shapes (not
+hand-guessed ones) before writing anything into `settings.json`, per the
+`update-config` skill’s own “Constructing a Hook” discipline; (4)
+explicitly disclosed the one link not live end-to-end proven (harness
+routing to the `ScheduleWakeup`/`CronCreate` matcher specifically)
+rather than either skipping the caveat or unsafely triggering a real
+scheduled wakeup / persistent cron job just to close the gap; (5) caught
+and fixed its own JSON-corrupting edit mistake via the same `jq -e`
+validation discipline used throughout, before it could cause any
+downstream confusion. **Weaknesses:** (1) the stray-brace mistake in
+`.claude/settings.local.json` (step 7) should not have happened – a more
+surgical Edit (matching only the `"hooks": { ... }` block including its
+own closing brace, rather than trusting line-based recall of what came
+after the matched text) would have avoided it entirely, even though it
+was caught immediately and had zero real-world impact (gitignored,
+uncommitted); (2) this session’s deliverable, being outside the git
+repo, does not fit this project’s `SESSION_RUNNER.md` Phase 3F “record
+every action… for each commit” framing cleanly – handled by treating
+`CHANGELOG.md`/`BACKLOG.md`/`PROJECT_LEARNINGS.md` as the durable record
+of an out-of-repo action, which is a reasonable interpretation but is
+itself a judgment call this handoff should flag explicitly for a future
+session that hits a similarly out-of-repo deliverable, rather than
+assume it obviously generalizes. **ROI:** high – a genuine,
+previously-undocumented finding (`TaskCreated`/`TaskCompleted` do not
+fire for `run_in_background` tasks) that a documentation-only
+“investigation” would very plausibly have missed (the event names read
+as if they’d cover this case), caught by insisting on live proof over
+plausible-sounding hook-event names.
+
+**Next steps:** `BACKLOG.md`’s remaining READY item from the standing
+pedigree-fidelity cluster is now just the 1 that wasn’t picked this
+session: (1) the pedigree-diagram-drawing package-extraction
+research/scoping session (READY, Effort M – research/scoping only, no
+implementation; investigate splitting the pedigree layout/rendering
+code + Shiny Diagram-tab module into its own standalone R package; now
+unblocked since the Walker/BJL redesign it was deferred behind is
+complete). Beyond that cluster, `BACKLOG.md` carries several
+longer-standing READY/BLOCKED/DECISION-NEEDED items with their own full
+write-ups (LabKey integration recommendations – BLOCKED on a live
+server; REUSE badge registration – owner’s own one-time external action;
+`BACKLOG.md`’s own ledger-size housekeeping – READY, Effort L, partially
+done; NPRC outreach & announcement plan – owner review/edit/send) – see
+the priorities list in this session’s own Phase 0 report for full
+context. **A future session should NOT re-attempt the
+`TaskCreated`/`TaskCompleted` route** for any similar
+background-task-lifecycle hook need – Learning 703 documents this is a
+confirmed dead end, not an unexplored option. **Gotcha:** the guard is
+now LIVE and GLOBAL – every Claude Code session on this machine (not
+just nprcgenekeepr sessions) will have `ScheduleWakeup`/`CronCreate`
+denied outright whenever a `run_in_background` Bash task from the same
+turn is still outstanding; a future session that has a genuine,
+deliberate reason to do both at once (not observed to exist yet, but the
+`AskUserQuestion` scope decision anticipated the possibility) will need
+to either wait for the background task’s own completion notification
+first, or revisit the hard-block-vs-soft-warn decision. Unchanged
+gotchas carried from S662: the stray LibreOffice lock file
+(`inst/extdata/reference/~$e Compounding Loop.html`) is still present;
+`HANDOFFS.md`/ `SESSION_NOTES.md`/`CHANGELOG.md` remain past the FM \#28
+size cap; `master` was ahead of `origin/master` by 2 commits at this
+session’s Phase 0 (unrelated to this session’s own work, not pushed this
+session – a future session should push per the established
+owner-directed cadence).
+
+**Key files (all outside this git repo – Claude Code global config, not
+package code):** `~/.claude/settings.json` (merged
+`hooks.PostToolUse`/`hooks.PreToolUse`/`hooks.Stop` entries, backed up
+as `settings.json.bak-s663` in the same directory before editing);
+`~/.claude/hooks/bg-task-track.sh`, `~/.claude/hooks/bg-task-gate.sh`,
+`~/.claude/hooks/bg-task-clear.sh` (the 3 shipped scripts). In-repo:
+`BACKLOG.md` (item marked DONE), `PROJECT_LEARNINGS.md` (Learning 703),
+`CHANGELOG.md` (new entry), `CLAUDE.md` (pointer count updated).
+
 ### Session 661 Handoff Evaluation (by Session 662)
 
 **Score: 9/10.** **What helped:** S661’s `next_steps` named the exact

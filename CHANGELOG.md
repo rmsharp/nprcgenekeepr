@@ -17,6 +17,230 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-09-02 · \[ad hoc\] S666: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S665 precedent)
+
+- This commit sets `HANDOFFS.md`’s S666 receipt `commit:` field from
+  `pending` to `1f44315d` (the close-out deliverable commit), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-02 · \[BL-pedigreeParentSymmetricPlacement\] S666: implemented and shipped the conditional-shift rule for pedigree mating-union midpoint placement (BACKLOG.md top item, DONE)
+
+- **Deliverable:** full RED→GREEN TDD cycle implementing S665’s ratified
+  “CHAIN RULE”
+  (docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md) in
+  `.positionMatingUnitForest()` (`R/makePedigreeDiagramData.R`). Full
+  7-step plan scope in one session (owner-picked via `AskUserQuestion`
+  over a phased split).
+- **RED** (commit `6c637430`): 8 new tests across
+  `test_positionMatingUnitForest.R` (7) and
+  `test_makePedigreeMatingLayout.R` (1) — root/non-root true-midpoint
+  invariants on Track B full; Track B shrunk bit-exact vs. a freshly-run
+  [`kinship2::align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html);
+  a new synthetic 3-level chain fixture (the live-vs-stale-anchor-value
+  discriminator); a new non-leaf shifted-child fixture (proves
+  subtree-rigid translation, not just a point); the real 375-individual
+  production fixture. Every target value re-derived live this session,
+  never assumed.
+- **GREEN** (commit `402eb53d`): correction pass inserted between Tier 1
+  and Tier 2, `qualifies()` relocated earlier (pure move),
+  `sweepMinSep()` re-run a second time after the correction (catches a
+  new Tier-1-vs-Tier-1 collision class the fix can introduce). 2 real
+  defects found and fixed during GREEN (not visible from the plan doc
+  alone): (1) `qualifies()` alone let the correction run against a mate
+  who is actually a real Tier 1 individual, not a B1 point — 55/60
+  real-fixture qualifying units were wrong, some by 20+ raw units, until
+  gated on `nonAnchorOf %in% b1Ids` too; (2) the plan doc’s own Track B
+  shrunk “bit-exact vs kinship2” claim missed a second real collision
+  (G3 vs C4a) the fully-correct implementation actually produces —
+  re-derived and the RED test corrected to match. 9 pre-existing tests
+  re-pinned (their premise was the OLD “union coincides with its anchor”
+  behavior this session supersedes), every value re-measured live, never
+  hand-derived.
+- **Verified:** full clean regression 0 failed/0 error attributable (1
+  pre-existing `test_wordlist_coverage.R` failure + 2 pre-existing
+  order-dependent marker-genetics timing flakes, both confirmed passing
+  in isolation); `lintr::lint_package()` 0 findings (a `subtreeIds()`
+  helper replaces a `<<-` recursion to satisfy `assignment_linter`).
+- **Images** (commit `e7860c80`): regenerated
+  `data-raw/kinship2FidelityValidation.R`’s Track B/C images. Visually
+  confirmed Track B full now matches kinship2’s own rendering almost
+  exactly. Track B shrunk’s literal defect (dot exactly on parent) is
+  fixed; the disconnected-component visual crowding visible there is
+  pre-existing (confirmed unchanged by diffing against the prior
+  committed image) and explicitly out of this fix’s scope per the plan
+  doc’s own “Scope boundary” — disclosed to the owner, not silently
+  absorbed.
+- `NEWS.Rmd`’s issue \#166 entry updated in place to describe the new,
+  final behavior (centered symbol AND a straight line, not one at the
+  cost of the other).
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-02 · \[ad hoc\] S665: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S664 precedent)
+
+- This commit sets `HANDOFFS.md`’s S665 receipt `commit:` field from
+  `pending` to `bce3f565` (the close-out deliverable commit), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-02 · \[BL-pedigreeParentSymmetricPlacement\] S665: re-derived and ratified the chain-case rule for mating-union midpoint placement; overturned S664’s “CONFIRMED TO FAIL” finding
+
+- **Deliverable:** design session for `BACKLOG.md`’s top Up Next item.
+  Working from kinship2’s own `alignped4.R` QP source (read in full) and
+  this project’s own real
+  `.buildMatingUnitForest()`/`.positionTreeApportion()` output (never
+  assumed values), re-derived the chain case from scratch and found
+  S664’s “CONFIRMED TO FAIL” finding was itself wrong — traced to 2
+  concrete arithmetic bugs in that session’s own scratch script (an
+  asymmetric anchor-only shift where the ratified text says “shift both
+  parents equally”; an inconsistent mate-position value that cascaded
+  into a wrong child-shift target).
+- **No new chain-specific rule is needed:** the already-ratified Option
+  3 (root anchor → shift both parents to match children-mean; non-root
+  anchor → shift children to match true parent midpoint), applied to
+  every qualifying pair in ascending-generation order and always reading
+  each anchor’s CURRENT (not stale/cached) position, already reproduces
+  kinship2 exactly — verified bit-exact against Track B shrunk’s real
+  2-link chain (using this project’s own real raw values) and a
+  synthetic 3-level chain (confirming the one genuinely new requirement:
+  generation-ordered processing with live anchor values, needed for
+  3+-link chains, not exercised by either Track B fixture).
+- Confirmed, by direct computation, that the previously-flagged
+  disconnected-component collision risk is real even under the
+  arithmetically-correct rule (`P2`/`C4` land on the identical x on
+  Track B shrunk) — the existing plan requirement to route corrected
+  targets through collision-avoidance, never around it, stands.
+- **Owner-ratified via `AskUserQuestion`** after the finding was
+  presented with full evidence. Updated
+  `docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`
+  (new “CHAIN RULE — RESOLVED” section; old “ITEM 4” section left
+  unedited as historical record) and `BACKLOG.md`’s top item (design
+  RATIFIED, implementation READY, 7-step action list). No `R/`/`tests/`
+  changes (confirmed via `git status`/`git diff`, both clean).
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-02 · \[ad hoc\] S664: regenerate Track B/C nprcgenekeepr validation images (commit `a0892589`)
+
+- Re-ran `data-raw/kinship2FidelityValidation.R` fresh, replacing
+  `trackB-nprc-full.png`, `trackB-nprc-shrunk.png`,
+  `trackC-nprc-direct.png`, `trackC-nprc-rectilinear.png`.
+  `trackB-nprc-shrunk.png` specifically replaces a previously-committed
+  image (S649) found severely corrupted (overlapping unlabeled circles,
+  unrelated to current code) and unreviewed for 3 days. All 4 visually
+  inspected and edge-traced this session; faithfully reflect current
+  shipped behavior, including the still-open disconnected-component
+  interleaving defect (not fixed by this commit — see `BACKLOG.md` Up
+  Next).
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-02 · \[ad hoc\] S664: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S663 precedent)
+
+- This commit sets `HANDOFFS.md`’s S664 receipt `commit:` field from
+  `pending` to `86a00d48` (the close-out deliverable commit), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-02 · \[BL-pedigreeParentSymmetricPlacement\] S664: investigated and root-caused mating-union dot centering defect; paused before implementation, owner-directed
+
+- **Deliverable:** owner rejected `BACKLOG.md`’s `[x]`-checkbox
+  pedigree-fidelity claim as insufficient proof and directed a real,
+  image-based re-verification. Regenerated
+  `data-raw/kinship2FidelityValidation.R`’s Track A/B/C images live;
+  found Track B **shrunk** visually interleaves two disconnected
+  surviving families (deterministic, confirmed via 2 independent
+  re-renders + a full coordinate trace), and separately found the
+  3-day-old *committed* evidence image for that exact fixture was itself
+  severely corrupted and unreviewed.
+- Root-caused the shrunk-fixture symptom to a more fundamental defect
+  the owner spotted live in `trackB-nprc-full.png` (previously miscalled
+  “clean” this session): every mating-union dot sits on the anchor
+  parent’s own symbol instead of the true parent midpoint. Traced this
+  to an already-known, already-ratified trade-off (`git show 303b42dd`,
+  Track 7 Phase 3, issue \#166, S651/S652) — the owner overrode that
+  prior ratification directly, matching this project’s own precedent for
+  the P5-isolated-individual case.
+- Wrote and ratified 2 successive fix plans, each superseded before any
+  code was written once checked against
+  [`kinship2::align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html)
+  ground truth: (1) “disconnected-component separation” — superseded
+  when the same symptom reproduced in a fully-connected pedigree; (2)
+  “symmetric half-offset” (Option 1) — superseded on discovering it was
+  the already-reverted Track 7 Phase 1 mechanism. Owner then derived and
+  the session verified bit-exact (1.8e-7 vs. kinship2) a third design,
+  “conditional shift” (Option 3), on Track B’s full 16-subject fixture —
+  directly overturning the prior Track 7 Phase 3 design doc’s own “hard
+  binary” conclusion.
+- Verifying Option 3 against a **second** fixture (Track B shrunk,
+  owner-directed) found it incomplete: a single-child chain of 2 nested
+  qualifying pairs needs a value kinship2’s real joint solver reaches
+  that neither of Option 3’s 2 cases alone produces; a naive per-pair
+  application was also shown, via a rendered image, to reintroduce the
+  disconnected-component overlap by bypassing this project’s own
+  collision-avoidance machinery. **Session paused here, owner-directed,
+  rather than rushed to a fix** — full evidence, exact numbers, and an
+  ordered next-session action list recorded in
+  `docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`’s
+  “ITEM 4 CONFIRMED TO FAIL” section. `BACKLOG.md` Up Next updated with
+  the current state; item left open (not DONE). No `R/`/`tests/` source
+  touched — confirmed clean via `git status`/`git diff` before
+  close-out.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-01 · \[ad hoc\] S663: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S662 precedent)
+
+- This commit sets `HANDOFFS.md`’s S663 receipt `commit:` field from
+  `pending` to `3d5c42fd` (the close-out deliverable commit), the same
+  self-reference workaround this project’s sessions have made since
+  S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-01 · \[BL-scheduleWakeupGuard\] S663: ScheduleWakeup/run_in_background structural guard – shipped as a Claude Code hook (outside this repo)
+
+- **Deliverable:** investigated and shipped (owner-directed via
+  `AskUserQuestion`: global scope, hard block) a Claude Code
+  `settings.json` hook that blocks `ScheduleWakeup`/`CronCreate` while a
+  `run_in_background` Bash task started this turn is still outstanding
+  (`BACKLOG.md` Up Next, found S656, `PROJECT_LEARNINGS.md` Learning
+  694/695). **This is Claude Code tooling configuration, not R package
+  code — nothing in this repo changes as a result of the mechanism
+  itself** (it lives in `~/.claude/settings.json` +
+  `~/.claude/hooks/*.sh`, outside any git repo); this entry, the
+  `BACKLOG.md` DONE marker, and `PROJECT_LEARNINGS.md` Learning 703 are
+  the durable record. No TDD RED/GREEN/REFACTOR phase gates applied
+  (flagged to the owner at Phase 1, no objection) — no testthat coverage
+  exists for shell hook scripts outside the package.
+- 3 hooks, installed and empirically verified against real (not only
+  synthetic) payloads at every step: `PostToolUse`/`Bash` records a
+  `run_in_background` call’s `backgroundTaskId` to a per-session state
+  file the instant it’s created;
+  `PreToolUse`/`ScheduleWakeup|CronCreate` denies the call when that
+  file is non-empty; `Stop` clears the file at natural turn-end.
+  Investigation found no hook fires on background-task *completion*
+  (`TaskCreated`/`TaskCompleted`/`Notification` all tested directly,
+  twice, none fire) — full trail in `PROJECT_LEARNINGS.md` Learning 703.
+- Backlog item marked `[x]` DONE in the same commit.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-01 · \[ad hoc\] S662: record push+CI-confirmation commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S661 precedent)
+
+- This commit sets `HANDOFFS.md`’s S662 receipt `commit:` field from
+  `06962989` to `b8514e9b` (the deliverable commit for the push + CI
+  confirmation), the same self-reference workaround this project’s
+  sessions have made since S600/S602.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-01 · \[ad hoc\] S662: push master (owner-directed), all 4 workflows confirmed green
+
+- **Deliverable:** pushed `master` (owner-directed, post-close-out) —
+  `git push origin master`, 10 commits (`5c73f2fe..f07c0544`). All 4
+  push-triggered workflows confirmed green: `lint.yaml` (4m24s),
+  `pkgdown.yaml` (6m48s), `test-coverage.yaml` (8m9s),
+  `R-CMD-check.yaml` (20m20s). `master`/`origin/master` back in sync.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-08-31 · \[ad hoc\] S662: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S661 precedent)
 
 - This commit sets `HANDOFFS.md`’s S662 receipt `commit:` field from
