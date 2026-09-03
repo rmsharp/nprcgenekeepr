@@ -16,6 +16,13 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-02 · [ad hoc] Queued a BACKLOG.md research item at owner's direction: characterize kinship2's `align.pedigree()` joint-positioning mechanism to quantify the (C) joint-solver option
+- Post-close-out of S669, the owner asked whether a future session should investigate what
+  kinship2 does structurally to avoid the cascade the S669 spike found. Owner picked "queue it in
+  `BACKLOG.md`" over starting a new session now. Added as a new Up Next item (READY, Effort M,
+  research/audit workstream, no TDD gate) directly below the still-open A-vs-C decision item it
+  feeds — not itself a decision, and not a session deliverable this session claimed or closed.
+
 ### 2026-09-02 · [BL-pedigreeDrawingErrorCensus] S669: spike the census's recommended two-constant fix (recentre every union on its mate midpoint; full minSep for every pair) — cascades, does not decide A vs C
 - **Deliverable:** throwaway `data-raw/pedigreeDrawingSpikeTwoConstantFix.R` (owner-confirmed via
   `AskUserQuestion`: no production `R/` change, no TDD gate, matching S668's audit-workstream

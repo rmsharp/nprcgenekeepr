@@ -53,6 +53,23 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       only -- but does not by itself decide (A) vs (C): a narrower gate, or the same two edits
       followed by a re-run of jog/collision repair against the new spacing, is untested and remains
       a live (A) variant. Owner's decision; not made S669.
+- [ ] **Research: characterize kinship2's `align.pedigree()` joint-positioning mechanism
+      (`alignped4.R`) to quantify the (C) joint-solver option** (owner-directed 2026-09-02, after
+      reviewing the S669 spike result; READY, Effort M -- a research/audit session, no TDD gate,
+      matching the census/spike precedent) -- the S669 spike found that widening spacing/recentring
+      the CURRENT sequential engine (Tier 1 tree -> Tier 2 union -> Tier 3 mate offset -> collision
+      repair) cascades into new overlaps, because each tier can only push positions FORWARD and
+      never revisits an earlier tier's placement. kinship2's own `align.pedigree()` achieves 0
+      same-row overlaps on the same fixtures (S668 census baseline) by positioning parents and
+      children JOINTLY and adjusting either side -- structurally why it does not hit this cascade,
+      not yet verified against its actual source. A future session should read kinship2's real
+      `alignped4.R` (and whatever internals it calls), characterize the mechanism concretely: what
+      it optimizes, what constraints it enforces, how it differs structurally from this project's
+      tiered/sequential approach, and what porting or reimplementing an equivalent joint-
+      optimization pass would plausibly cost -- data structures, iteration/convergence approach,
+      and interaction with things kinship2 does not have to solve (this project's duplicate/twin/
+      isolated-individual handling). Report findings; feed a real, costed option into the still-open
+      A-vs-C decision above. Does not decide A vs C itself.
 - [x] **Pedigree-drawing error census across every fixture** (owner-directed S667 via
       `AskUserQuestion` -- "b", census first; **DONE S668, 2026-09-02**, Effort M, one session) --
       `data-raw/pedigreeDrawingErrorCensus.R` (fresh, independent measurement code -- the pinned
