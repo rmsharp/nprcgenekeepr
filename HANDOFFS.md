@@ -190,7 +190,7 @@ runtime_smoke: Live chromote render of the real 375 fixture (rectilinear): 1436/
   disjoint; regenerated trackB-nprc-shrunk.png inspected directly; six before/after region
   crops inspected and sent to the owner.
 changelog_ref: CHANGELOG.md 2026-09-02 S667 entries, this commit.
-commit: pending
+commit: b0614ed2
 ```
 (receipt complete, Phase 3D — `commit:` reconciled by the follow-up sha commit per the S600/S602-S666 precedent)
 
