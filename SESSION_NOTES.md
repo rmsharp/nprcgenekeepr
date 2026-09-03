@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 673 Did
+**Deliverable:** Migration Path Phase 1 of the QP joint-solver plan
+(`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path Phase 1) -- build
+`.solveJointQP()` standalone (NOT yet wired into `.positionMatingUnitForest()`), promote
+`quadprog` to `DESCRIPTION`'s `Imports:`, verify against Track B full/shrunk, Track C, D1-D3
+only. Full TDD RED/GREEN/REFACTOR. Following `docs/methodology/workstreams/
+DEVELOPMENT_WORKSTREAM.md`. (IN PROGRESS)
+**Started:** 2026-09-03.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 671 Handoff Evaluation (by Session 672)
 **Score: 9/10.** **What helped:** `next_steps` named the exact scope of this session precisely --
 "spec the exact QP formulation for (C): penalty terms, the union-node QP variable + centering
