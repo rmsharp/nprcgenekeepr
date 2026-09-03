@@ -18,6 +18,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 667 Did
+**Deliverable:** Research/scoping session for `BACKLOG.md`'s "Investigate factoring out the
+pedigree-diagram drawing functionality into a separate R package" item (Up Next, READY, Effort M)
+— produce the advantages/disadvantages analysis with a grep-based evidence inventory of what
+would actually move and what depends on it, following `ARCHITECTURE_WORKSTREAM.md`. Output:
+`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`. Decision-support only —
+no split decision is made this session, no `R/`/`tests/` code changes (research-spike precedent,
+TDD gates do not apply). (IN PROGRESS)
+**Started:** 2026-09-02
+**Status:** Session claimed. Work beginning. Owner picked this item via `AskUserQuestion` at
+Phase 0 (option 1 of 4). Note: the item's own "probably after the Walker/BJL redesign (issue
+#141)" caveat is lifted — #141 was closed 2026-08-21.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 665 Handoff Evaluation (by Session 666)
 **Score: 9/10.** **What helped:** `key_files`/`gotchas` were directly usable and confirmed
 accurate on re-read: `docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md`'s
