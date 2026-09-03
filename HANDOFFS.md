@@ -206,7 +206,7 @@ runtime_smoke: PASS -- all 16 live shinytest2::AppDriver E2E tests in
   production code: Diagram-tab rendering, consanguineous-mating marking, twin connectors,
   show-names toggle, click-to-navigate, empty-state message.
 changelog_ref: CHANGELOG.md 2026-09-03 S674 entry (BL-pedigreeDrawingErrorCensus)
-commit: pending
+commit: b5e2f07d
 ```
 <prose>
 Self-score breakdown (8/10): +for finding and fixing 2 real bugs in already-shipped Phase 1 code
