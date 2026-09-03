@@ -18,6 +18,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 672 Did
+**Deliverable:** Architecture/design document specifying the exact QP formulation for pedigree-
+drawing option (C) -- a joint solver -- following `docs/methodology/workstreams/
+ARCHITECTURE_WORKSTREAM.md` (S671's named next step: penalty terms, the union-node QP variable +
+centering penalty, the `minSep` radius-based constraint generalization, the translation layer
+from this project's `forest`/`nodes`/`edges` tables to the QP's flat parameterization, and
+resolving the row-policy question, census Finding #5). No `R/` code this session -- implementation
+is a separate future session (FM #18/#19). (IN PROGRESS)
+**Started:** 2026-09-03.
+**Status:** Session claimed. Pre-RED/approach scope confirmed via `AskUserQuestion`:
+`docs/planning/` placement (matching ~25 prior pedigree-diagram-*-plan.md precedent), no TDD gate
+(doc-only deliverable). Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 670 Handoff Evaluation (by Session 671)
 **Score: 9/10.** **What helped:** the report's own §5 ("What this means for the still-open
 A-vs-C decision") was written exactly as decision-ready prose -- it stated what verified/costed

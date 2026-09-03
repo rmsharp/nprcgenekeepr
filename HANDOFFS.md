@@ -136,6 +136,25 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S672
+date: 2026-09-03
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Architecture/design document specifying the QP formulation for pedigree-drawing
+  option (C) -- penalty terms, union-node QP variable + centering penalty, minSep radius-based
+  constraint generalization, forest/nodes/edges translation layer, and the row-policy question
+  (census Finding #5). Following ARCHITECTURE_WORKSTREAM.md. No R/ code this session.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S671
 date: 2026-09-03
 status: complete
