@@ -141,11 +141,13 @@ date: 2026-09-02
 status: pending
 self_score: pending
 predecessor_score: pending
-active_task: Research/scoping session for BACKLOG.md's "Investigate factoring out the
-  pedigree-diagram drawing functionality into a separate R package" item (Up Next, READY,
-  Effort M). Deliverable: docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md
-  -- an advantages/disadvantages analysis with a grep-based evidence inventory, per
-  ARCHITECTURE_WORKSTREAM.md. Decision-support only; no split decision, no R/ or tests/ code.
+active_task: RE-SCOPED by the owner mid-session. Deliverable: pedigree-drawing fidelity --
+  fix (or design the fix for) the Track B shrunk fixture's disconnected-component
+  interleaving (trackB-nprc-shrunk.png; two unrelated families share rows, mate-lines run
+  through unrelated symbols; kinship2 draws them side by side). Scope decided PRE-RED via
+  AskUserQuestion. Side artifact committed before the pivot (f1936c40):
+  docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md (the package-split
+  scoping this session was first mis-pointed at; complete, not this session's deliverable).
 what_was_done: pending
 next_steps: pending
 key_files: pending

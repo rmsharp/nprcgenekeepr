@@ -19,17 +19,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ## ACTIVE TASK
 
 ### What Session 667 Did
-**Deliverable:** Research/scoping session for `BACKLOG.md`'s "Investigate factoring out the
-pedigree-diagram drawing functionality into a separate R package" item (Up Next, READY, Effort M)
-— produce the advantages/disadvantages analysis with a grep-based evidence inventory of what
-would actually move and what depends on it, following `ARCHITECTURE_WORKSTREAM.md`. Output:
-`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`. Decision-support only —
-no split decision is made this session, no `R/`/`tests/` code changes (research-spike precedent,
-TDD gates do not apply). (IN PROGRESS)
+**Deliverable (RE-SCOPED by the owner mid-session):** pedigree-drawing fidelity — the Track B
+**shrunk** fixture's disconnected-component interleaving (`trackB-nprc-shrunk.png`: the two
+unrelated families `P1×P2→M1→M1×G3→L3` and `C4×P6→C4a` share rows and interleave — gen 0 reads
+`P1 · C4 · P2 · P6`, gen 1 reads `M1 · C4a · G3`, three mate-lines run through unrelated symbols
+— where kinship2 draws the families side by side). Standing top-priority pedigree work. Scope
+(design-only vs. implement) decided PRE-RED via `AskUserQuestion`. (IN PROGRESS)
+**Side artifact, committed before the pivot (`f1936c40`):**
+`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` — the package-split
+scoping analysis this session was *first* (mis-)pointed at. Complete and citation-verified;
+recommendation "do not split now" with 3 revisit conditions. **Not** this session's deliverable;
+its `BACKLOG.md` item is left untouched for the owner to dispose of.
+**Orientation error to record (PROJECT_LEARNINGS):** my Phase 0 priorities list put the
+package-split scoping item as option 1 because no numbered pedigree item was tagged READY; the
+owner's "option 1" meant pedigree drawing. While `BACKLOG.md`'s STANDING TOP PRIORITY note
+stands, option 1 must be "continue pedigree-drawing fidelity — owner names the next defect",
+even with nothing tagged READY.
 **Started:** 2026-09-02
-**Status:** Session claimed. Work beginning. Owner picked this item via `AskUserQuestion` at
-Phase 0 (option 1 of 4). Note: the item's own "probably after the Walker/BJL redesign (issue
-#141)" caveat is lifted — #141 was closed 2026-08-21.
+**Status:** Session re-claimed for the pedigree deliverable. Work beginning.
 **Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
 `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
 session's reconcile.
