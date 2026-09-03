@@ -11,9 +11,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **Mating-union dot not at the true parent midpoint; single-child chains of nested
-      qualifying pairs mis-positioned** (found live S664, 2026-09-01/09-02; **design
-      RATIFIED S665, 2026-09-02 -- implementation READY, TOP PRIORITY, next pickup**,
+- [x] **Mating-union dot not at the true parent midpoint; single-child chains of nested
+      qualifying pairs mis-positioned** (found live S664, 2026-09-01/09-02; design
+      RATIFIED S665, 2026-09-02; **implemented and shipped S666, 2026-09-02, DONE**,
       Effort L) -- owner directly reviewed `trackB-nprc-full.png` (previously wrongly
       called "clean") and caught that every mating-union dot sits on the anchor parent's
       own symbol instead of centered between the two parents. Root-caused to the
@@ -60,6 +60,34 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       P6=3.0`); (6) re-verify against the real 375-individual fixture (not attempted by
       S665 -- the fixture most likely to contain a 3+-link chain); (7) then
       RED/GREEN/REFACTOR.
+      **Implemented and shipped S666, 2026-09-02, full TDD RED (`6c637430`) ->
+      GREEN (`402eb53d`) -- REFACTOR skipped, nothing behavior-neutral identified beyond
+      what GREEN itself already folded in (a `subtreeIds()` helper in place of a `<<-`
+      recursion, to satisfy `assignment_linter`).** 2 real defects found and fixed during
+      GREEN, neither visible from the plan doc alone: (1) `qualifies()` alone is not
+      sufficient to gate the correction -- it doesn't confirm the mate is actually a B1
+      free-pass point, and 55/60 of the real fixture's "qualifying" units had a mate who is
+      really a genuine Tier-1 individual elsewhere in the tree (some off by 20+ raw units)
+      until also gated on `nonAnchorOf %in% b1Ids`; (2) the plan doc's own "bit-exact vs
+      kinship2" claim for Track B shrunk missed a SECOND real collision (G3 vs C4a) the
+      fully-correct, collision-routed implementation actually produces -- re-derived and
+      the RED test corrected to match, never hand-derived. All 7 of the plan's own steps
+      done, including the real-375-fixture re-verification (a disclosed, bounded residual
+      where a later collision-avoidance push moves a mate off her raw formula target,
+      matching this project's own established "general crowding accepted as partial, not
+      absolute" posture -- see the plan's own step 2). Full clean regression 0 failed/0
+      error attributable (1 pre-existing `test_wordlist_coverage.R` failure + 2 pre-existing
+      order-dependent marker-genetics timing flakes, both confirmed passing in isolation);
+      `lintr::lint_package()` 0 findings. Images regenerated (`e7860c80`) and visually
+      re-verified: Track B full now matches kinship2's own rendering almost exactly; Track B
+      shrunk's literal defect (dot on parent) is fixed, but the disconnected-component
+      visual crowding visible there is PRE-EXISTING (confirmed unchanged by diffing against
+      the prior committed image), not caused or worsened by this fix, and remains explicitly
+      out of this fix's own scope per the plan doc's "Scope boundary" -- not filed as a new
+      item (a pre-existing, already-disclosed limitation, not a new finding).
+      `NEWS.Rmd`'s issue #166 entry updated in place to describe the new, final behavior.
+      Owner reviewed the regenerated images and approved closing this out (`AskUserQuestion`,
+      S666).
 - [x] **`makePedigreeMatingLayout()` erroneously renders fully-isolated individuals (no sire, no
       dam, no mate, no children) -- reverses this project's own prior "acceptable difference"
       framing** (found live 2026-08-26, owner-directed via direct visual review of

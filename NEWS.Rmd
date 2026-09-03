@@ -90,9 +90,10 @@ knitr::opts_chunk$set(echo = TRUE)
 - Two parents in a straightforward one-mate pairing (each mated only
   once, sex clearly recorded) are drawn with a clearer gap between them,
   matching kinship2's convention.
-- The small mating symbol for that same kind of pairing sits near one
-  parent rather than centered between the two -- keeping the connecting
-  line down to their children straight instead of bent (issue #166).
+- The small mating symbol for that same kind of pairing sits centered
+  between the two parents, and the connecting line down to their children
+  stays straight -- both at once, not one at the cost of the other
+  (issue #166).
 - Which parent a mating symbol anchors to is consistent across computers
   and regional settings: the anchor tie-break uses a locale-independent
   comparison (issue #162).

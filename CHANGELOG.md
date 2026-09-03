@@ -16,6 +16,43 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-02 · [BL-pedigreeParentSymmetricPlacement] S666: implemented and shipped the conditional-shift rule for pedigree mating-union midpoint placement (BACKLOG.md top item, DONE)
+- **Deliverable:** full RED→GREEN TDD cycle implementing S665's ratified "CHAIN RULE"
+  (docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md) in
+  `.positionMatingUnitForest()` (`R/makePedigreeDiagramData.R`). Full 7-step plan scope in
+  one session (owner-picked via `AskUserQuestion` over a phased split).
+- **RED** (commit `6c637430`): 8 new tests across `test_positionMatingUnitForest.R` (7) and
+  `test_makePedigreeMatingLayout.R` (1) — root/non-root true-midpoint invariants on Track B
+  full; Track B shrunk bit-exact vs. a freshly-run `kinship2::align.pedigree()`; a new
+  synthetic 3-level chain fixture (the live-vs-stale-anchor-value discriminator); a new
+  non-leaf shifted-child fixture (proves subtree-rigid translation, not just a point); the
+  real 375-individual production fixture. Every target value re-derived live this session,
+  never assumed.
+- **GREEN** (commit `402eb53d`): correction pass inserted between Tier 1 and Tier 2, `qualifies()`
+  relocated earlier (pure move), `sweepMinSep()` re-run a second time after the correction
+  (catches a new Tier-1-vs-Tier-1 collision class the fix can introduce). 2 real defects found
+  and fixed during GREEN (not visible from the plan doc alone): (1) `qualifies()` alone let
+  the correction run against a mate who is actually a real Tier 1 individual, not a B1 point —
+  55/60 real-fixture qualifying units were wrong, some by 20+ raw units, until gated on
+  `nonAnchorOf %in% b1Ids` too; (2) the plan doc's own Track B shrunk "bit-exact vs kinship2"
+  claim missed a second real collision (G3 vs C4a) the fully-correct implementation actually
+  produces — re-derived and the RED test corrected to match. 9 pre-existing tests re-pinned
+  (their premise was the OLD "union coincides with its anchor" behavior this session
+  supersedes), every value re-measured live, never hand-derived.
+- **Verified:** full clean regression 0 failed/0 error attributable (1 pre-existing
+  `test_wordlist_coverage.R` failure + 2 pre-existing order-dependent marker-genetics timing
+  flakes, both confirmed passing in isolation); `lintr::lint_package()` 0 findings (a
+  `subtreeIds()` helper replaces a `<<-` recursion to satisfy `assignment_linter`).
+- **Images** (commit `e7860c80`): regenerated `data-raw/kinship2FidelityValidation.R`'s Track
+  B/C images. Visually confirmed Track B full now matches kinship2's own rendering almost
+  exactly. Track B shrunk's literal defect (dot exactly on parent) is fixed; the
+  disconnected-component visual crowding visible there is pre-existing (confirmed unchanged
+  by diffing against the prior committed image) and explicitly out of this fix's scope per the
+  plan doc's own "Scope boundary" — disclosed to the owner, not silently absorbed.
+- `NEWS.Rmd`'s issue #166 entry updated in place to describe the new, final behavior
+  (centered symbol AND a straight line, not one at the cost of the other).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-02 · [ad hoc] S665: record close-out commit sha in HANDOFFS.md receipt (self-reference workaround, matching S600/S602-S664 precedent)
 - This commit sets `HANDOFFS.md`'s S665 receipt `commit:` field from `pending` to `bce3f565`
   (the close-out deliverable commit), the same self-reference workaround this project's

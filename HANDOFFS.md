@@ -138,21 +138,49 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S666
 date: 2026-09-02
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Implement the S665-ratified conditional-shift rule (chain-case,
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Implemented the S665-ratified conditional-shift rule (chain-case,
   generation-ascending, live-anchor-value read) for pedigree mating-union midpoint placement
-  in .positionMatingUnitForest() (BACKLOG.md top Up Next item). Full 7-step scope per
-  docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md's "CHAIN RULE --
-  RESOLVED" section, full TDD RED->GREEN->REFACTOR. Owner-directed: check in before
-  accepting/rejecting the finished result.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+  in .positionMatingUnitForest() (BACKLOG.md top Up Next item, now closed [x]). Full 7-step
+  plan scope in one session, full TDD RED->GREEN->REFACTOR (REFACTOR skipped, owner-directed).
+what_was_done: RED (6c637430): 8 new tests, every target value from a fresh
+  kinship2::align.pedigree() run or a real internal-function probe. GREEN (402eb53d):
+  correction pass inserted between Tier 1/Tier 2; found and fixed 2 real defects during
+  GREEN -- qualifies() alone doesn't confirm the mate is B1 (55/60 real-fixture units wrong,
+  fixed via nonAnchorOf %in% b1Ids), and a second real collision (G3 vs C4a) on Track B
+  shrunk the plan doc's own verification missed. sweepMinSep() now runs twice (catches a
+  new Tier-1-vs-Tier-1 collision class). 9 pre-existing tests re-pinned, all live-measured.
+  Full clean regression 0 failed/0 error attributable (1 pre-existing + 2 pre-existing
+  order-dependent timing flakes, both confirmed passing in isolation); lintr 0 findings.
+  Images regenerated (e7860c80) and visually verified against kinship2 and against the
+  prior committed images (separating this session's real fix from a pre-existing,
+  out-of-scope disconnected-component crowding issue). Owner reviewed and approved
+  close-out via AskUserQuestion. Full detail: SESSION_NOTES.md "What Session 666 Did."
+next_steps: Pedigree mating-union midpoint item fully closed. BACKLOG.md's STANDING TOP
+  PRIORITY note (pedigree-drawing fidelity) stays standing -- no other numbered pedigree
+  item is currently READY; check Housekeeping/Lower-priority items next. The
+  disconnected-component crowding in trackB-nprc-shrunk.png is pre-existing and
+  deliberately NOT filed as a new item (owner's own call) -- do not assume it needs fixing
+  without the owner raising it again.
+key_files: R/makePedigreeDiagramData.R:627-866 (.positionMatingUnitForest()); tests/testthat/
+  test_positionMatingUnitForest.R (8 new + 9 re-pinned); test_makePedigreeMatingLayout.R,
+  test_resolveEdgeNodeCollisions.R (1 new / 1 re-pinned real-fixture test each);
+  docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md (shipped);
+  vignettes/articles/kinship2-fidelity-validation-img/trackB-*.png, trackC-*.png.
+gotchas: qualifies() alone != "mate renders via the B1 formula" -- always also check
+  nonAnchorOf %in% b1Ids. The correction always uses the mate's RAW pre-push target (using
+  her final value would be circular) -- a bounded residual when collision-avoidance
+  intervenes is expected, not a bug. A subtree-shift test needs a DISQUALIFYING further
+  mate to actually discriminate the bug (a qualifying one self-heals via its own
+  absolute-retarget). sweepMinSep() now runs twice -- any future pass moving a real Tier-1
+  individual should consider whether a subsequent minSep sweep is needed too.
+runtime_smoke: Regenerated, directly-inspected PNG images (real visNetwork rendering
+  through the full makePedigreeMatingLayout() pipeline) for Track B full/shrunk and Track C
+  direct/rectilinear, plus the real-375-fixture regression test -- not just internal x/gen
+  math.
+changelog_ref: CHANGELOG.md 2026-09-02 S666 entry, this commit.
 commit: pending
 ```
 (stub — filled at close-out, Phase 3D)
