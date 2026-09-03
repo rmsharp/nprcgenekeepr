@@ -136,6 +136,26 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S670
+date: 2026-09-03
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Research report characterizing kinship2's align.pedigree() joint-positioning
+  mechanism (alignped4.R and its supporting chain) to quantify option (C) for the still-open
+  A-vs-C pedigree-drawing decision (BACKLOG.md Up Next item 2, owner-directed 2026-09-02, after
+  reviewing the S669 spike result). No production R/ change, no TDD gate (owner-confirmed via
+  AskUserQuestion). IN PROGRESS.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S669
 date: 2026-09-02
 status: complete

@@ -18,6 +18,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 670 Did
+**Deliverable:** research report characterizing kinship2's `align.pedigree()` joint-positioning
+mechanism (`alignped4.R` and its supporting chain) to quantify option (C) for the still-open A-vs-C
+pedigree-drawing decision (`BACKLOG.md` Up Next item 2, owner-directed 2026-09-02) (IN PROGRESS)
+**Started:** 2026-09-03
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 668 Handoff Evaluation (by Session 669)
 **Score: 9/10.** **What helped:** the census report's Recommendation 1 gave the exact spike to
 run, in exact formula terms ("recentre every union on its mate midpoint; 1.0-unit spousal
