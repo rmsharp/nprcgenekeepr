@@ -18,6 +18,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 669 Did
+**Deliverable:** spike the S668 census's recommended two-constant change (recentre every
+anchored union on its mate midpoint; full `minSep` instead of `minSep * 0.4` for B1/duplicate
+mates) to give the owner measured evidence for the A-vs-C pedigree-drawing decision
+(`BACKLOG.md` Up Next item 1) -- (IN PROGRESS)
+**Started:** 2026-09-02
+**Status:** Session claimed. Owner-confirmed via `AskUserQuestion`: audit-workstream approach
+matching S668's precedent -- a throwaway spike script (a modified copy of
+`data-raw/pedigreeDrawingErrorCensus.R`'s pipeline replica), no production `R/` change, no TDD
+gate. Owner explicitly picked "run the spike first," not "decide A vs C now." Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 667 Handoff Evaluation (by Session 668)
 **Score: 9/10.** **What helped:** `next_steps` was exactly right and specific ("pick up Up Next
 item 1: the census ... six error classes ... do NOT patch the 5-pair residual alone"), so Phase 1

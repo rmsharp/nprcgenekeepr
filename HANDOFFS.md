@@ -136,6 +136,27 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S669
+date: 2026-09-02
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS. Spike the S668 census's recommended two-constant change
+  (recentre every anchored union on its mate midpoint; full minSep instead of
+  minSep * 0.4 for B1/duplicate mates) via a throwaway measurement script, no
+  production R/ change, no TDD gate (owner-confirmed via AskUserQuestion,
+  matching S668's audit-workstream precedent) -- to give the owner evidence for
+  the A-vs-C pedigree-drawing decision (BACKLOG.md Up Next item 1).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S668
 date: 2026-09-02
 status: complete
