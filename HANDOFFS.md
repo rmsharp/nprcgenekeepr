@@ -138,23 +138,60 @@ This file currently holds **20** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S668
 date: 2026-09-02
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: IN PROGRESS. Pedigree-drawing error census across every fixture (Track B
-  full/shrunk, Track C, real 375, D1/D2/D3): a data-raw/ scoreboard script (fresh, independent
-  measurement code; no shipped-behavior change; no TDD gate -- owner-confirmed) reporting counts
-  and offending ids for six error classes, written up as a docs/audits/ report with per-class
-  root-cause attribution. Feeds, does not make, the A (per-defect) vs C (joint solver) decision.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE. Pedigree-drawing error census across every fixture (Track B full/shrunk,
+  Track C, real 375, D1/D2/D3): data-raw/pedigreeDrawingErrorCensus.R (fresh, independent
+  measurement code, no TDD gate, owner-confirmed) + docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_
+  2026-09-02.md + _findings.csv (2,734 rows with ids). The A (per-defect) vs C (joint solver)
+  decision is teed up for the owner as BACKLOG.md Up Next item 1 (DECISION NEEDED), not made.
+what_was_done: Six exact px predicates on the rendered tables, run on 7 fixtures through a
+  pipeline replica asserted identical to makePedigreeMatingLayout(rectilinear)'s own output.
+  Track B full/shrunk and D1-D3 clean on every class. Real 375: (a) 288 overlapping symbols,
+  (b) 168 off-midpoint union dots, (c1) 84 -> 0 across the repair pass but (c2) 414 segments
+  still inside a symbol (33/89 jogs at 9-18 px vs 25-px radius), (d) 0, (e) 56 non-founder
+  cross-generation mates on their own row (founders 0; S470 had 147), (f) 0; Track C 5/3/1.
+  Two formula constants explain 264/288 (a) and 132/168 (b): union at the children's midpoint ==
+  the anchor's own x (157/157 measured: anchor == (min+max)/2 of the unit's children, union ==
+  that + 0.001) and the non-qualifying mate offset minSep*0.4 (107 pairs at 0.400/0.401).
+  kinship2 baseline on the same fixtures: 0 same-row pairs < 1 unit everywhere; 145 vs 102
+  duplicates on the real fixture; an autohint warning. Two detector defects caught on the
+  known-clean fixtures before trusting numbers (class (e) double count; class (f) whole-extent
+  vs per-row); one drafted mechanism claim refuted by an engine probe and replaced. Lint 21 -> 0.
+  Owner shown the Track C image pair; their live review added a rows-drawn metric (Track C's
+  5 rows vs kinship2's 3 is the fixture's hand-set gen, measured). Claim fab7fde9;
+  deliverable 85aa38bc; ledgers in the close-out commit that follows.
+next_steps: Owner decides A vs C (BACKLOG.md Up Next item 1). First, whichever way: spike the
+  two-constant change in .positionMatingUnitForest() (recentre EVERY anchored union on its mate
+  midpoint; minSep, not minSep*0.4, for every B1/duplicate mate) and re-run
+  data-raw/pedigreeDrawingErrorCensus.R -- (a)+(b) on the real fixture should fall toward ~24
+  with (c2)/(f) not rising; cascades into Tier 1 are the evidence for (C). Independent of A/C:
+  raise the jog offset above the 25-px symbol radius (jogFraction, R/makePedigreeDiagramData.R
+  ~2423) and switch the edge acceptance metric to c2; answer the row-policy question (report
+  Finding #5) explicitly. The census script is the acceptance gate for every layout change.
+key_files: data-raw/pedigreeDrawingErrorCensus.R:156 (runPipeline + self-check), :187-292
+  (node/relation helpers), :293-620 (detectors, censusOverlaps first), :633 (kinship2Baseline),
+  :726-end (driver); docs/audits/
+  PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md (Findings #1-#7, Recommendations);
+  docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv; R/makePedigreeDiagramData.R:759
+  (.positionMatingUnitForest Tier 2/3, duplicate offset minSep*0.4), :2423 (jogFraction), :2131
+  (sibshipBarFraction); tests/testthat/test_resolveEdgeNodeCollisions.R:20 (stale "0 D2
+  projections" comment, filed as Housekeeping, not touched).
+gotchas: The engine's "midpoint" is (min+max)/2 of the children, not the mean. Class (f) must
+  be judged per row -- whole extents of separate families legitimately touch (D1 proves it). Any
+  detector hit on Track B full/shrunk or D1-D3 is a detector bug, not a finding -- null-check
+  there first. A 9-px jog satisfies the c1 centre-line predicate and still crosses a 25-px
+  symbol -- measure with c2. kinship2 needs fixParents() + a sex-role swap for Track C's C2 and
+  warns from autohint on the real fixture. lintr covers data-raw/ (integer L suffixes; no
+  mapply/ifelse/sapply; "a/b" strings trip the path linter).
+runtime_smoke: n/a for package runtime (no R/ change). The script ran end-to-end 3x (exit 0),
+  its stopifnot() self-check against the exported function passed on all 7 fixtures, runs 2 and
+  3 byte-identical apart from one wording change; all report numbers are the script's output.
+changelog_ref: CHANGELOG.md 2026-09-02 S668 entries, the close-out commit.
+commit: 85aa38bc
 ```
-(claim stub, Phase 1B — overwritten at Phase 3D)
+(receipt complete, Phase 3D — `commit:` names the deliverable commit; the ledgers landed in a separate close-out commit to stay under the 5-file cap, so no self-reference follow-up commit was needed)
 
 ```handoff
 session: S667

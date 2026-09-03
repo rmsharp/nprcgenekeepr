@@ -16,6 +16,50 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-02 · [BL-pedigreeDrawingErrorCensus] S668: pedigree-drawing error census across every fixture — scoreboard script + audit report, DONE; the A-vs-C decision teed up for the owner (commit `85aa38bc`; ledgers in the close-out commit that follows)
+- **Deliverable:** `data-raw/pedigreeDrawingErrorCensus.R` (fresh, independent measurement code;
+  owner-directed via `AskUserQuestion`: a `data-raw/` audit script with no TDD gate, reimplemented
+  rather than refactored out of the pinned test helpers) and
+  `docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md` + `_findings.csv` (2,734 finding rows
+  with ids). Seven fixtures (Track B full/shrunk, Track C, real 375, D1/D2/D3) × six error
+  classes, each an exact px predicate on the rendered tables; the pipeline replica asserts its
+  final nodes/edges identical to `makePedigreeMatingLayout(edgeStyle = "rectilinear")`'s own.
+- **Results:** Track B full/shrunk and D1–D3 clean on every class. Real 375: (a) 288 overlapping
+  symbols, (b) 168 off-midpoint union dots, (c1) 84 → 0 across the repair pass but (c2) 414
+  segments still inside a symbol (33 of 89 jogs at 9–18 px vs the 25-px radius), (e) 56
+  non-founder cross-generation mates on their own row (founders 0; S470 had 147), (f) 0, (d) 0;
+  Track C 5 (a) / 3 (b) / 1 (d). **Two formula constants explain 264/288 (a) and 132/168 (b):**
+  union at the children's midpoint = the anchor's own Tier-1 x (157/157 measured: anchor ==
+  (min+max)/2 of the unit's children, union == that + 0.001 tie-epsilon) and the non-qualifying
+  mate offset `minSep * 0.4` (107 pairs at exactly 0.400/0.401). kinship2 baseline on the same
+  fixtures: 0 same-row pairs < 1 unit everywhere; 145 duplicates vs our 102 on the real fixture;
+  an `autohint` warning. **Owner's live review of the Track C image** added a rows-drawn metric
+  (ours vs kinship2, every fixture): Track C's 5 rows vs kinship2's 3 is the fixture's hand-set
+  `gen` (X = 3, C1 = 4) — with `findGeneration()` the engine draws the same 3 rows as kinship2
+  (measured; real 375 is 9 rows both ways) — while the dot-on-parent and 0.4-unit mate overlap
+  in the same image are the engine's (Findings #1/#2). The owner's question "what prevents
+  placing the dot halfway between the mates?" is answered in Finding #1 (nothing structural;
+  the dot's second role as the top of the children's drop, S646's gate and S652's revert).
+- **Method discipline:** two detector defects found on the known-clean fixtures before trusting
+  any number (class (e) double count; class (f) whole-extent vs per-row); one drafted mechanism
+  claim ("union at the mean of its children") refuted by a direct engine probe (0/157) and
+  replaced by the measured one. Runs 2 and 3 byte-identical apart from a wording change.
+  `lintr::lint()` on the script: 21 findings fixed → 0. No `R/` or `tests/` file touched, so no
+  regression run was owed; `NEWS.Rmd`/`_pkgdown.yml`/`a2interactive.Rmd`/citation checklists N/A.
+- **Non-commit action:** sent the owner the committed Track C image pair (nprcgenekeepr vs
+  kinship2) as the smallest drawing showing Findings #1/#2/#7.
+- **Docs:** `BACKLOG.md` — census item DONE; new top Up Next item **DECISION NEEDED** (A vs C)
+  carrying the census evidence and the recommended two-constant spike; Housekeeping item for
+  the stale "0 D2 projections" comment in `test_resolveEdgeNodeCollisions.R:20-29` (56 `__proj_`
+  nodes exist on the real fixture). `PROJECT_LEARNINGS.md` Learnings 709–711.
+- **Model:** Claude Fable 5.1.
+
+### 2026-09-02 · [ad hoc] S668: session claim (commit `fab7fde9`)
+- Phase 1B stub in `SESSION_NOTES.md` and a `status: pending` receipt in `HANDOFFS.md` for the
+  census deliverable, after the owner confirmed the approach (audit script, no TDD gate; fresh
+  measurement code).
+- **Model:** Claude Fable 5.1.
+
 ### 2026-09-02 · [BL-disconnectedComponentSeparation] S667: implemented and shipped disconnected-component separation for the pedigree layout (Track B shrunk interleaving, DONE); owner chose "census first" as the next approach
 - **Deliverable:** `.positionMatingUnitForest()` now partitions the drawn graph into
   weakly-connected families (`.forestComponents()`, vectorized min-label propagation; duplicates

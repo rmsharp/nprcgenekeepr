@@ -11,35 +11,54 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **Pedigree-drawing error census across every fixture, then decide: keep fixing
-      defect-by-defect, or move to a joint solver** (owner-directed S667, 2026-09-02, via
-      `AskUserQuestion` — "b", census first; READY, TOP PRIORITY under the standing
-      pedigree-fidelity directive, Effort M, one session) -- the owner reviewed all current
-      drawings (Track B full/shrunk, Track C, the real 375-animal fixture) and observed that every
-      one still has multiple errors. S667's own fix (below) showed the pattern behind that: the
-      engine positions the tree of individuals first and bolts mates, union dots and duplicates on
-      afterwards with formulas plus capped collision pushes, so each local fix moves the residual
-      elsewhere (S667's structural fix immediately exposed 5 near-misses the old interleaving had
-      masked) -- ~24 sessions since 2026-08-26 and 41 commits on `R/makePedigreeDiagramData.R` in
-      30 days. **Deliverable:** an automated scoreboard (a `data-raw/` script and/or test helper)
-      that, for every fixture -- Track B full, Track B shrunk, Track C, the real 375-animal
-      pedigree, and the S667 synthetic multi-family fixtures D1/D2/D3 -- reports counts AND
-      offending ids for each error class: (a) overlapping symbols (same-row centre distance below
-      the sum of the two nodes' radii, by node kind); (b) mating-union dots not centred between
-      their two mates; (c) edges passing through unrelated symbols; (d) a duplicate drawn adjacent
-      to / overlapping its own real occurrence; (e) a founder drawn on a row other than its mate's;
-      (f) family interleaving (component x-ranges overlapping). Most of the measurement code
-      already exists in `tests/testthat/test_positionMatingUnitForest.R` (proximity metrics) and
-      `test_comparePedigreeStructure.R`. Write the results up as a `docs/audits/` report with the
-      per-class root-cause attribution. **Decision the census feeds (NOT made this session):** (A)
-      continue one defect per session, or (C) replace the local-patch positioning with a joint
-      solver -- either `Imports: kinship2` and use `kinship2::align.pedigree()` for x positions
-      while keeping this package's visNetwork rendering layer (kinship2 is GPL-2|3, nprcgenekeepr
-      MIT: *importing* is fine, copying its code is not; Terry Therneau is a co-author of
-      nprcgenekeepr per `DESCRIPTION`, so a permission route also exists; ggpedigree's authors
-      describe kinship2 as facing deprecation, though CRAN shows no notice as of 2026-09-02), or a
-      clean-room relaxation pass. S667's prior leans (C) because the remaining classes share the
-      root; the census should test that, not assume it (S664's lesson).
+- [ ] **DECIDE from the S668 census: pedigree drawing -- (A) bounded per-defect fixes, or (C) a
+      joint solver** (DECISION NEEDED -- owner; TOP PRIORITY under the standing pedigree-fidelity
+      directive; the decision itself is Effort S, then one planning session for whichever path)
+      -- evidence:
+      [`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md`](docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md)
+      (scoreboard, per-class root causes, kinship2 baseline; every finding row with ids in the
+      companion `_findings.csv`; reproduce with `Rscript data-raw/pedigreeDrawingErrorCensus.R`).
+      **What the census established:** the two owner-reviewed Track B drawings and the D1-D3
+      fixtures are clean on all six classes; Track C and the real 375 fixture carry every error.
+      On the real fixture, **two formula constants explain 264 of 288 overlapping-symbol rows and
+      132 of 168 off-centre union dots** -- (1) Tier 2 puts the union at the children's midpoint,
+      which Tier 1 has already given to the anchor, so the dot sits ON the anchor's symbol for 157
+      of 237 units (measured: anchor == (min+max)/2 of the unit's children and union == that
+      + 0.001 tie-epsilon, 157/157); (2) the non-qualifying mate offset `minSep * 0.4` draws 107
+      mate pairs 48 px apart with 50-px symbols. Both constants date from when the union stood
+      *between* the mates (pre-S652); S646's plan deferred changing them for un-measured cascade
+      risk. The residue is 24 search-level near-misses (the 4 S667 disclosed + 20 mate/own-union
+      partial overlaps) plus 36 long-mate-line unions; the same-row repair pass clears its own
+      predicate (c1 84 -> 0) but 33 of 89 jogs still cross the symbol (9-18 px offset vs 25 px
+      radius); 56 non-founder cross-generation mates draw with doglegs (row = generation policy;
+      founders 0, down from S470's 147 wrong-row occurrences). kinship2's `align.pedigree()` on the
+      same 375 animals: 0 same-row pairs closer than 1 unit, at the cost of 145 duplicates vs our
+      102, a pre-processing layer (dangling parents, sex-role swaps), and an `autohint` warning.
+      **Recommended next step before choosing (A) or (C)** (report Recommendation 1): spike the
+      two-constant change (recentre every union on its mate midpoint; 1.0-unit spousal separation
+      for every pair) and re-run the census -- if (a)+(b) fall to ~24 with no other class rising,
+      (A) is three bounded changes from a clean production drawing (that, the jog offset, the
+      residue); if it cascades into Tier 1, that is the evidence for (C), whose cost is now
+      quantified. Independent of A/C: the jog offset must exceed the 25-px symbol radius (report
+      Finding #3), and the row-policy question (Finding #5) needs an explicit answer either way.
+      Owner's decision; not made S668.
+- [x] **Pedigree-drawing error census across every fixture** (owner-directed S667 via
+      `AskUserQuestion` -- "b", census first; **DONE S668, 2026-09-02**, Effort M, one session) --
+      `data-raw/pedigreeDrawingErrorCensus.R` (fresh, independent measurement code -- the pinned
+      test helpers were read as the geometric reference but deliberately not touched or shared,
+      owner-directed; the pipeline replica asserts its final node/edge tables identical to
+      `makePedigreeMatingLayout(edgeStyle = "rectilinear")`'s own output; lint 0) +
+      [`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md`](docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md)
+      + `_findings.csv` (2,734 rows). Six classes: (a) overlapping symbols by radius sum; (b)
+      union dot off the mate midpoint (on-a-mate / outside-span / off-centre); (c) c1 = the
+      production same-row predicate before/after repair, c2 = any straight segment inside a
+      symbol disc, curved chords as a labelled heuristic; (d) duplicate overlapping/adjacent to
+      its real occurrence; (e) mate off its union's row, founder vs not; (f) per-row family
+      interleaving. Two detector defects caught on the known-clean fixtures before any number was
+      trusted (class (e) double-counted units; class (f) compared whole extents, which per-row
+      packing legitimately lets touch). Both dominant attributions verified against the engine's
+      raw positions, one drafted claim refuted by that probe and replaced. Owner shown the Track C
+      image pair. See the decision item above and `CHANGELOG.md`.
 - [x] **Track B shrunk fixture draws two unrelated families interleaved -- disconnected-component
       separation** (owner-named pickup S667, 2026-09-02, after reviewing the regenerated images;
       design REVISED and RATIFIED S667; **implemented and shipped S667, full TDD RED (`40d33804`)
@@ -570,6 +589,18 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `rmarkdown::render()` (this file's own build-equivalent) run clean after every
       substantive edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`.
 ## Housekeeping
+- [ ] **`tests/testthat/test_resolveEdgeNodeCollisions.R:20-29` says D2 dogleg projections are
+      "CURRENTLY STRUCTURALLY UNREACHABLE via the real pipeline" (citing
+      `test_addRectilinearWaypoints.R:517-546`) -- the real 375 fixture renders 56 `__proj_`
+      nodes today** (found S668, 2026-09-02, by the pedigree-drawing census, Finding #5; READY,
+      Effort S) -- the comment (and possibly that sibling test's own framing) is stale: every
+      non-founder non-anchor mate with a generation of its own is drawn on its own row with a
+      D2 dogleg to the union (56 units, `docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md`
+      Finding #5 lists them). Its own sibling already pins the fact: `test_makePedigreeMatingLayout.R:598`
+      counts "56 `__proj_` (dogleg parent/union-gen-mismatch waypoints)" on this fixture. Fix the
+      comment to describe the real reachability, and check whether
+      `test_addRectilinearWaypoints.R:517-546`'s "0 D2 projections" test is fixture-specific or
+      wrongly general. Not touched S668 (owner-directed: the pinned tests stay as they are).
 - [ ] **Main-family proximity residual on the real 375-animal fixture after S667's
       disconnected-component separation** (found S667, 2026-09-02, during GREEN; owner-accepted
       as a disclosed residual via `AskUserQuestion`; READY, Effort M -- but fold it into the

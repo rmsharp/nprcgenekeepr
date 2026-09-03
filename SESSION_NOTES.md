@@ -18,18 +18,139 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 667 Handoff Evaluation (by Session 668)
+**Score: 9/10.** **What helped:** `next_steps` was exactly right and specific ("pick up Up Next
+item 1: the census ... six error classes ... do NOT patch the 5-pair residual alone"), so Phase 1
+had no discovery cost; `key_files` pointed straight at the two test files whose helpers
+(`test_positionMatingUnitForest.R:20-120, 1197-1215`; `test_resolveEdgeNodeCollisions.R:60-108`)
+were the geometric reference for every detector; the gotcha "the real fixture's proximity counts
+rest on family layout -- re-measure, never carry forward" was the working rule of the whole
+session; the disclosed 4-genuine-overlaps + 1-tie residual reconciled exactly with the census
+(the same four ids; the tie correctly not counted). The `BACKLOG.md` item S667 wrote was a
+complete specification -- classes, fixtures, deliverable shape, the decision it feeds and the
+lean it must test rather than assume. **What was missing:** nothing needed for this deliverable;
+the item's "most of the measurement code already exists in the tests" was true but the owner
+chose fresh code anyway. **What was wrong:** nothing found inaccurate. **ROI:** very high -- the
+session went from claim to a running scoreboard without re-deriving anything.
+
 ### What Session 668 Did
-**Deliverable:** pedigree-drawing error census across every fixture (Track B full/shrunk, Track C,
-the real 375-animal pedigree, S667's synthetic D1/D2/D3) — an automated scoreboard
-(`data-raw/` script, fresh independent measurement code, no shipped-behavior change, no TDD gate —
-owner-confirmed via `AskUserQuestion`) reporting counts AND offending ids for six error classes,
-written up as a `docs/audits/` report with per-class root-cause attribution, feeding (not making)
-the A-vs-C decision (IN PROGRESS)
-**Started:** 2026-09-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** pedigree-drawing error census across every fixture -- **DONE.**
+`data-raw/pedigreeDrawingErrorCensus.R` (scoreboard, fresh independent measurement code, lint 0)
++ `docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md` + `_findings.csv` (2,734 rows with
+ids). Owner-confirmed approach via `AskUserQuestion`: an audit deliverable (AUDIT_WORKSTREAM),
+no TDD gate, reimplemented rather than refactored out of the pinned tests. Claim `fab7fde9`;
+deliverable `85aa38bc` (script + report + CSV); the five ledgers in a separate close-out commit
+(5-file cap per commit -- this also removes the need for the self-reference sha follow-up).
+**Started/Completed:** 2026-09-02 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0** -- SAFEGUARDS/notes/issues/dashboard/`gh run list` (all green). Ledger frontiers:
+   only the S667 self-reference sha commit after `CHANGELOG.md`'s frontier (the documented
+   precedent), nothing to backfill. Untracked files all accounted for (S588-S590 spike HTML
+   renders, article PDFs, an Office lock file, `scratchpad/`). Dashboard 96/100; FM #28 flags on
+   the four ledgers (SESSION_NOTES 7,527 / HANDOFFS 5,534 / CHANGELOG 4,316 / BACKLOG 2,066
+   lines), reported not acted on. Picker option 1 = the census (standing pedigree priority);
+   owner picked it.
+2. **Pre-RED scope (`AskUserQuestion`):** `data-raw/` script with no TDD gate (recommended,
+   chosen); measurement code fresh and independent vs consolidating the test helpers -- owner:
+   "Reimplement fresh, independent -- don't touch the pinned tests."
+3. **Research:** read `makePedigreeMatingLayout()` end to end, the forest/positions contracts,
+   `.addRectilinearWaypoints()`'s bar-row placement (bar at 0.4 of the parent->child gap, so it
+   never shares a symbol row), `.resolveEdgeNodeCollisions()`'s jog geometry (`jogFraction 0.15`
+   × the nearest other row), the test helpers as reference, and `AUDIT_WORKSTREAM.md`.
+4. **Script:** pipeline replica (isolated pre-filter -> forest -> positions -> direct -> waypoints
+   -> repair) with a `stopifnot()` that its final nodes/edges equal the exported function's
+   rectilinear output; six detectors; per-fixture breakdown tables; kinship2 baseline (optional,
+   `fixParents()` + sex-role swap, `tryCatch`); CSV of every row. **Run 1 exposed two detector
+   defects on the known-clean fixtures:** class (e) counted each unit twice; class (f) compared
+   whole-extent x-ranges, which kinship2's per-row contour packing legitimately lets touch
+   (Track B full flagged, D1 is the test that proves per-row is the rule). Fixed before any
+   number was trusted. Run 2 = the numbers; run 3 after 21 lint fixes byte-identical apart from
+   one wording change.
+5. **Mechanism probes against the engine's raw positions** (not the CSV): 157/157 "dot on
+   anchor" unions are exactly anchor + 0.001, and the anchor is exactly (min+max)/2 of the unit's
+   own children; 107 mate pairs at exactly 0.400/0.401 units. **A drafted claim was refuted by
+   the first probe** -- "union at the MEAN of its children" was 0/157 (the engine's midpoint is
+   the extremes' midpoint, and later passes move children); the report says so and carries the
+   measured statement instead.
+6. **Report** per the AUDIT_WORKSTREAM template: 7 findings + 1 incidental, structural
+   observations, kinship2 baseline table, comparison with S470/S595/S667, recommendations that
+   tee up (not make) the A-vs-C decision, with a concrete spike to run first. Sent the owner the
+   committed Track C image pair (nprc vs kinship2) as the smallest drawing showing three classes.
+   **Owner, live:** "trackC-nprc-rectilinear.png is clearly wrong ... comparing to the kinship2
+   image" -- measured the one difference the six classes do not count: 5 rows vs kinship2's 3
+   is the fixture's hand-set `gen` (X = 3, C1 = 4); with `findGeneration()` the engine draws the
+   same 3 rows as kinship2 (probe, run 4 adds a rows-drawn column to the baseline; findings CSV
+   md5 unchanged). Owner's second question -- "what prevents placing the mating node halfway
+   between the mates?" -- answered in the report's Finding #1 (nothing structural; the dot also
+   tops the children's drop; S646 gate + S652 revert) and in chat.
+7. **Close-out:** `BACKLOG.md` (census DONE; new top DECISION NEEDED item; Housekeeping item for
+   the stale "0 D2 projections" comment), `CHANGELOG.md` (2 entries), `PROJECT_LEARNINGS.md`
+   709-711, this file, `HANDOFFS.md`.
+
+**Headline numbers (real 375):** (a) 288 = 157 dot-on-anchor + 107 mates at 0.4 + 24 residue;
+(b) 168 = 132 on-a-mate + 36 off-centre/outside-span (up to 16.5 units); (c1) 84 -> 0 but (c2)
+414 (33/89 jogs at 9-18 px inside a 25-px symbol; 32 vertical); curved chords 1,743 pairs on 47
+connectors (heuristic); (d) 0; (e) 56 non-founder cross-generation mates (founders 0; S470 had
+147); (f) 0. Track C: 5/3/0/1/0/0. Track B full/shrunk, D1-D3: all 0. kinship2: 0 tight pairs
+on all 7; 145 vs 102 duplicates on the real fixture; autohint warning.
+
+**Runtime smoke test (Phase 3E):** n/a for package runtime (no `R/` change). The deliverable
+is the script: run end-to-end three times (exit 0 each), its self-check against the exported
+function passed on all 7 fixtures, and the report's every number is the script's own output.
+
+**Close-out checklist mapping (`CLAUDE.md`):** citation N/A; tutorial/article N/A (no Shiny
+change); `NEWS.Rmd` N/A (no user-facing change); `a2interactive.Rmd` N/A; `_pkgdown.yml` N/A;
+GitHub issue close-out N/A; lint DONE (`lintr::lint()` on the new script 21 -> 0; no other `.R`
+touched); CI-break N/A.
+
+**Self-assessment (Session 668): 8/10.** **Strengths:** (1) every number is reproducible by one
+command and the replica is asserted equal to production output; (2) the known-clean fixtures
+were used as a null check and caught two detector bugs before any finding was written; (3) the
+two dominant classes were attributed to their exact formulas by direct probes, and the census
+turned "every drawing has multiple errors" into "two constants + a 24-pair residue + a jog
+parameter + a policy question" with kinship2's alternative quantified on the same data; (4) the
+owner got an image, a scoreboard and a concrete next spike, not a lean. **Weaknesses:** (1) one
+mechanism sentence was drafted before its probe and had to be replaced -- the probe should have
+come first; (2) the curved-connector chord metric is a heuristic I could not verify without
+rendering, and it is the largest raw count in the table -- labelled, but a reader could
+over-weight it; (3) no rendered before/after of the real fixture this session (the memory
+directive to show images was met with the committed Track C pair only). **ROI:** high -- the
+decision the owner asked for now has measured inputs and a cheap experiment that discriminates
+between the two paths.
+
+**Next steps (specific):** the owner decides A vs C (`BACKLOG.md` Up Next item 1). Whichever
+way: (1) run the recommended spike first -- in `.positionMatingUnitForest()` recentre EVERY
+anchored union on the mate midpoint and use `minSep` (not `minSep * 0.4`) for every B1/duplicate
+mate, then `Rscript data-raw/pedigreeDrawingErrorCensus.R` and compare the real-375 row: (a)+(b)
+should fall toward ~24 with (c2)/(f) not rising; (2) independent of A/C, raise the jog offset
+above the 25-px symbol radius (`jogFraction`, `R/makePedigreeDiagramData.R` ~2423) and switch
+the acceptance metric to c2; (3) answer the row-policy question (Finding #5) explicitly. Treat
+the census script as the acceptance gate for every layout change from now on.
+
+**Key files:** `data-raw/pedigreeDrawingErrorCensus.R` (fixtures :70-150; pipeline replica
+`runPipeline()` :155-185; detectors `censusOverlaps()` / `censusUnionCentring()` /
+`sameRowInteriorHits()` / `segmentDiscHits()` / `censusDuplicatePlacement()` /
+`censusMateRows()` / `censusInterleaving()`; `kinship2Baseline()`; driver at the end);
+`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md` (Findings #1-#7, Recommendations);
+`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv` (columns fixture, class,
+subclass, idA, idB, idC, row, value, limit, relation, note); `R/makePedigreeDiagramData.R` --
+Tier 2/Tier 3 in `.positionMatingUnitForest()` (:759+), duplicate offset `minSep * 0.4`,
+`jogFraction` in `.resolveEdgeNodeCollisions()` (:2414+), `sibshipBarFraction 0.4`
+(`.addRectilinearWaypoints()` :2131).
+
+**Gotchas for a future session:** (1) the engine's "midpoint" is `(min + max) / 2` of the
+children, not their mean -- a mean-based check finds 0 matches; (2) class (f) must be judged per
+row -- whole-extent ranges of separate families legitimately touch under per-row packing, and
+D1 is the fixture that proves it; (3) a detector that flags anything on Track B full/shrunk or
+D1-D3 has a bug, those are pinned bit-exact to kinship2 -- use them as the null check first;
+(4) the c1 predicate (strict interior on the centre line) is satisfied by a 9-px jog that still
+crosses a 25-px symbol -- measure with c2 (segment-vs-disc); (5) kinship2 needs
+`fixParents()` for one-parent rows and dad-male/mom-female roles (Track C's `C2` needs a swap),
+and warns from `autohint` on the real fixture; (6) `lintr` treats `data-raw/` as in scope --
+integer literals need `L`, `mapply`/`ifelse`/`sapply` are undesirable, `"a/b"` strings trip the
+path linter.
 
 ### Session 666 Handoff Evaluation (by Session 667)
 **Score: 8/10.** **What helped:** `key_files` and `gotchas` were accurate and directly
