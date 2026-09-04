@@ -158,9 +158,23 @@
 ## re-derivation, matching this codebase's own "assert against an
 ## independent computation, not the same formula" discipline elsewhere,
 ## e.g. .expectKinship2Agrees()).
-.qpUnionClearanceIndividual <- (25 + 6) / 120
-.qpUnionClearanceUnion <- (6 + 6) / 120
-.qpIndividualClearance <- (25 + 25) / 120
+##
+## S675 AMENDMENT (Migration Path Phase 3, owner-ratified via
+## AskUserQuestion after seeing the real 375-fixture render): the floors are
+## SPACING values keyed to the engine's own minSep = 1, NOT the render-layer
+## symbol-tangent clearances Decision 3 originally repurposed ((25+25)/120,
+## (25+6)/120, (6+6)/120). Under those tangent floors the QP objective
+## compressed 90% of the real fixture's adjacent individuals to exactly 50 px
+## centre-to-centre (symbols touching, labels overlapping into a band) and
+## the census's class (a) read 90 sub-microscopic (<= 1.3e-6 px) shortfalls
+## at its 1e-9 px epsilon. kinship2's own alignped4 uses a uniform 1-unit
+## floor; this table mirrors it: individual-individual = minSep (1.0),
+## individual-union = minSep / 2 (the S666 qualifying-pair geometry, mates
+## 1.0 apart with the dot centred), union-union = minSep / 4.
+.qpMinSep <- 1
+.qpUnionClearanceIndividual <- .qpMinSep / 2
+.qpUnionClearanceUnion <- .qpMinSep / 4
+.qpIndividualClearance <- .qpMinSep
 
 .qpMinSepFor <- function(k1, k2) {
   if (k1 == "union" && k2 == "union") return(.qpUnionClearanceUnion)
@@ -355,3 +369,56 @@ test_that(".solveJointQP() does not error when a duplicate node's own realId
   expect_true(all(is.finite(solved$x)))
   .expectMinSepFloorHeld(solved, built$forest$matingUnits)
 })
+
+## ---- S675: Migration Path Phase 3 -- kinship2-parity floor amendment ----
+
+## The adjacent-pair gaps of one solved component, by pair kind, in the
+## solved left-to-right order per row (same walk as .expectMinSepFloorHeld,
+## returning the gaps rather than asserting on them).
+.qpAdjacentGaps <- function(pos, matingUnits) {
+  kind <- ifelse(pos$id %in% matingUnits$id, "U", "I")
+  names(kind) <- pos$id
+  out <- list(II = numeric(0L), IU = numeric(0L), UU = numeric(0L))
+  for (g in sort(unique(pos$gen))) {
+    rowIds <- pos$id[pos$gen == g]
+    if (length(rowIds) < 2L) next
+    rowIds <- rowIds[order(pos$x[match(rowIds, pos$id)], rowIds,
+                            method = "radix")]
+    x <- pos$x[match(rowIds, pos$id)]
+    for (i in seq_len(length(rowIds) - 1L)) {
+      k <- paste(sort(c(kind[[rowIds[i]]], kind[[rowIds[i + 1L]]])),
+                 collapse = "")
+      out[[k]] <- c(out[[k]], x[i + 1L] - x[i])
+    }
+  }
+  out
+}
+
+for (fixtureName in c("trackC", "trackBFull")) {
+  local({
+    thisFixture <- fixtureName
+    pedFn <- .qpSmallFixtures[[thisFixture]]
+
+    test_that(sprintf(
+      ".solveJointQP() spaces adjacent individuals at least minSep = 1.0
+       apart (kinship2's own uniform floor), individual-union pairs at
+       least 0.5, union-union pairs at least 0.25 -- and the binding
+       individual-individual gap sits exactly on that 1.0 floor (the
+       objective still compresses to the constraint, as S673's sweep
+       found for the original floors) -- S675 amendment to Decision 3,
+       %s fixture", thisFixture), {
+      built <- .qpProvisional(pedFn)
+      solved <- .solveJointQP(built$provisionalPos,
+                              built$forest$matingUnits,
+                              built$forest$duplicates,
+                              built$forest$childEdges)
+      gaps <- .qpAdjacentGaps(solved, built$forest$matingUnits)
+      expect_gt(length(gaps$II), 0L)
+      expect_gt(length(gaps$IU), 0L)
+      expect_true(all(gaps$II >= 1.0 - 1e-9))
+      expect_true(all(gaps$IU >= 0.5 - 1e-9))
+      expect_true(all(gaps$UU >= 0.25 - 1e-9))
+      expect_equal(min(gaps$II), 1.0, tolerance = 1e-6)
+    })
+  })
+}

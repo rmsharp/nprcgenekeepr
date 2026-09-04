@@ -633,14 +633,6 @@ test_that(
    docs/planning/pedigree-diagram-same-row-collision-avoidance-plan.md
    sec2.2/sec2.3) -- no longer exists anywhere in this codebase; Track
    2's own detect-and-jog mechanism is untouched by this migration.", {
-  skip(paste("Migration Path Phase 2 (docs/planning/pedigree-diagram-joint-",
-             "qp-solver-plan.md) wires .solveJointQP() into",
-             ".positionMatingUnitForest() unconditionally -- every count",
-             "pinned below (node composition, jog-waypoint count) is",
-             "downstream of the real 375-individual fixture's own",
-             "positions, which this phase deliberately does not touch yet",
-             "(small fixtures only). Phase 3's own real-fixture cutover",
-             "re-measures and re-pins this test."))
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),

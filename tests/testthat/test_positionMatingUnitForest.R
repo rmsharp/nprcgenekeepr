@@ -563,6 +563,87 @@ test_that(".positionMatingUnitForest positions the full real
   expect_equal(nCollidingNodes, 0L)
 })
 
+## ---- Migration Path Phase 3 (S675): the real 375 fixture through the QP
+## engine, production path (5 weakly-connected families, each solved by its
+## own .solveJointQP() call, then .packComponents()) -----------------------
+
+test_that(".positionMatingUnitForest holds the S675 kinship2-parity QP floor
+           on every adjacent same-row pair of the full real 375-individual
+           bundled fixture, and the rendered layout has ZERO overlapping
+           same-row symbols at the census's own 1e-9 px epsilon (census
+           class (a) = 0 -- Migration Path Phase 3's own acceptance
+           criterion, docs/planning/pedigree-diagram-joint-qp-solver-
+           plan.md)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  ## S675 amendment to Decision 3 (owner-ratified via AskUserQuestion after
+  ## seeing this fixture rendered under the original symbol-tangent floors,
+  ## (25+25)/120 etc.): the QP's adjacent-pair floors are SPACING values
+  ## keyed to the engine's own minSep = 1 -- individual-individual 1.0
+  ## (kinship2's own uniform floor), individual-union 0.5, union-union 0.25.
+  ## Under the tangent floors the objective compressed 684 of this
+  ## fixture's 705 adjacent pairs to exactly the floor (symbols touching,
+  ## labels overlapping into a band) and the census's class (a) read 90
+  ## sub-microscopic (<= 1.3e-6 px) shortfalls at its 1e-9 px epsilon.
+  ## Re-derived here, not shared with R/.
+  minSep <- 1
+  kind <- ifelse(pos$id %in% forest$matingUnits$id, "U", "I")
+  names(kind) <- pos$id
+  floorFor <- function(a, b) {
+    both <- paste(sort(c(kind[[a]], kind[[b]])), collapse = "")
+    if (both == "UU") minSep / 4 else if (both == "IU") minSep / 2 else minSep
+  }
+  shortfall <- numeric(0L)
+  for (g in sort(unique(pos$gen))) {
+    rowIds <- pos$id[pos$gen == g]
+    if (length(rowIds) < 2L) next
+    rowIds <- rowIds[order(pos$x[match(rowIds, pos$id)], rowIds,
+                            method = "radix")]
+    x <- pos$x[match(rowIds, pos$id)]
+    for (i in seq_len(length(rowIds) - 1L)) {
+      shortfall <- c(shortfall,
+                     floorFor(rowIds[i], rowIds[i + 1L]) - (x[i + 1L] - x[i]))
+    }
+  }
+  ## 714 nodes across 9 rows -> 705 adjacent pairs (measured S675).
+  expect_equal(length(shortfall), 705L)
+  expect_equal(sum(shortfall > 1e-9), 0L)
+
+  ## Census class (a), restated independently of data-raw/
+  ## pedigreeDrawingErrorCensus.R: two VISIBLE nodes on one rendered row
+  ## whose centre distance is below the sum of their symbol radii (25 px
+  ## individual/duplicate, 6 px union dot -- the layout's own 'size'
+  ## column) at the census's own eps = 1e-9 px. The 1e-6 px tolerance the
+  ## floor check above allows is irrelevant here: with a 1.0-unit (120 px)
+  ## floor between 50 px symbols the margin is 70 px, so a solver-precision
+  ## shortfall can never produce an overlap.
+  layout <- suppressWarnings(
+    makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")
+  )
+  vis <- layout$nodes[layout$nodes$size > 0, c("id", "x", "y", "size")]
+  overlaps <- 0L
+  for (y in unique(vis$y)) {
+    r <- vis[vis$y == y, , drop = FALSE]
+    r <- r[order(r$x), , drop = FALSE]
+    n <- nrow(r)
+    if (n < 2L) next
+    for (i in seq_len(n - 1L)) {
+      for (j in (i + 1L):n) {
+        d <- r$x[j] - r$x[i]
+        if (d >= 2 * max(vis$size)) break
+        if (d < r$size[i] + r$size[j] - 1e-9) overlaps <- overlaps + 1L
+      }
+    }
+  }
+  expect_equal(overlaps, 0L)
+})
+
 ## ---- gen semantics: every node's gen matches its source-of-truth ------
 
 test_that(".positionMatingUnitForest's gen column matches each occurrence's

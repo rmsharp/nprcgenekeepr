@@ -670,13 +670,6 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
            375-individual bundled fixture, a residual originally named in
            the collision-avoidance plan's own section 8, counted here so
            a future regression would be caught", {
-  skip(paste("Migration Path Phase 2 (docs/planning/pedigree-diagram-joint-",
-             "qp-solver-plan.md) wires .solveJointQP() into",
-             ".positionMatingUnitForest() unconditionally -- this count is",
-             "downstream of the real 375-individual fixture's own",
-             "positions, which this phase deliberately does not touch yet",
-             "(small fixtures only). Phase 3's own real-fixture cutover",
-             "re-measures and re-pins this test."))
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
