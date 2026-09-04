@@ -138,23 +138,65 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S675
 date: 2026-09-03
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Migration Path Phase 3 of the QP joint-solver plan
-  (docs/planning/pedigree-diagram-joint-qp-solver-plan.md) -- route the real 375-individual
-  fixture through the QP-wired engine; re-derive the real-fixture-pinned assertions across the
-  4 pinned test files (incl. the 3 tests S674 skipped); regenerate committed reference images
-  and get owner visual review before close-out. Full TDD RED/GREEN/REFACTOR.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE. Migration Path Phase 3 of the QP joint-solver plan
+  (docs/planning/pedigree-diagram-joint-qp-solver-plan.md) -- real-375-fixture cutover, pinned-
+  suite re-derivation, reference images regenerated, owner visual review PASSED. Decision 3
+  AMENDED (kinship2-parity floors minSep / minSep/2 / minSep/4), owner-ratified. Full TDD
+  RED->GREEN (REFACTOR gate posed, skipped). Close-out 2026-09-04.
+what_was_done: Found (PRE-RED, from a 100%-scale chromote render of the real fixture) that the
+  design's symbol-tangent QP floors put 684/705 adjacent pairs at exactly the floor (symbols
+  touching, labels overlapping); traced census (a)=90 to <=1.3e-6 px solver-precision shortfalls
+  and (b)=46 + the 3x jog growth to Phase A's provisional ORDER (floor-invariant). Spiked 3 floor
+  sets (renders + measured test blast radius), owner picked kinship2-parity. RED 7d81e8d1 (test-
+  side parity table, S675 blocks, real-375 floor + census-(a)=0 guard, 3 skips removed); GREEN
+  13e4bf27 (.solveJointQP() gains minSep, floors derived from it; 13 pins re-measured incl.
+  1792/534, 266/2549, 312/312 and kinship2-exact packing targets); docs+census 2c33fc95; images
+  5b6f6a93. Census real 375: a 0, b 47, c1 post 0, c2 587, d 0, e 56, f 0; width 13,680 px. Full
+  clean regression failed=1 (wordlist baseline)/error=0; lint 0; renv clean; live E2E 16/16.
+  Owner visual review approved via AskUserQuestion. Learnings 725-727; BACKLOG item 1 Phase 3
+  DONE + new provisional-order design item; NEWS.Rmd entry; CHANGELOG entry.
+next_steps: (A) Design session on the QP's provisional ORDER (BACKLOG.md Up Next, new item under
+  item 1; ARCHITECTURE_WORKSTREAM.md, design only): start from PROJECT_LEARNINGS.md Learning
+  727's breakdown (8 polygamous anchors / 11 two-unit anchors seeded one-sided / 26 far-away
+  genuine mates) and data-raw/pedigreeDrawingErrorCensus.R; do NOT add objective terms or tune
+  weights. (B) Migration Path Phase 4 cleanup, Effort S: grep R/ doc-comments for the deleted
+  passes and .kMax* constants, mark BACKLOG item 1 DONE. Independent: push the branch (36
+  commits ahead, CI has never run any QP work); kinship2-fidelity-validation.qmd prose stale vs
+  its regenerated images (Housekeeping item open); census Finding #3 (jog offset) open.
+key_files: R/makePedigreeDiagramData.R:1298 (amended floors in .solveJointQP(); signature
+  :1289; caller :1205); tests/testthat/test_solveJointQP.R:174 and :373;
+  tests/testthat/test_positionMatingUnitForest.R:571 (real-375 guard; 10 re-pins carry a
+  CHANGED S675 comment); tests/testthat/test_makePedigreeMatingLayout.R:690;
+  tests/testthat/test_addRectilinearWaypoints.R:749; tests/testthat/test_resolveEdgeNodeCollisions.R:510;
+  docs/planning/pedigree-diagram-joint-qp-solver-plan.md:167 (Decision 3 AMENDED) and :416
+  (Phase 3 record); BACKLOG.md:175; PROJECT_LEARNINGS.md:2159. Re-grep before trusting.
+gotchas: (1) census eps 1e-9 px vs solve.QP() precision ~1e-6 px -- an exact-tie "must be 0"
+  reads nonzero; check shortfall magnitudes first. (2) (b), crossings and D1 bar overlaps are
+  order-driven; floors/weights cannot move them. (3) small packing fixtures are pinned at
+  kinship2's exact geometry -- any floor change breaks ~9 blocks at once, by design. (4) the
+  test-side floor tables are deliberate re-derivations, not shared with R/. (5) "Track C" names
+  two different fixtures (Learning 724). (6) image regeneration: data-raw/kinship2FidelityValidation.R
+  and NOT_CRAN=true Rscript vignettes/articles/pedigree-diagram-screenshots.R. (7) to run the OLD
+  engine side by side use git worktree + pkgload::load_all(<worktree>) in a separate Rscript,
+  never assignInNamespace (Learning 721).
+runtime_smoke: live shinytest2 E2E test-e2e-pedigree-module.R (NPRC_RUN_E2E=true NOT_CRAN=true):
+  16/16 blocks, 55 expectations pass against the amended engine; plus 5 Diagram-tab screenshots
+  regenerated from the live app and owner-reviewed.
+changelog_ref: CHANGELOG.md "2026-09-03 · [BL-pedigreeDrawingErrorCensus] S675"
 commit: pending
 ```
-<prose pending -- filled at close-out>
+S675 delivered Migration Path Phase 3 end to end and, in doing so, amended the design's Decision 3:
+the symbol-tangent floors that Phases 1-2 could not see fail on small fixtures produced a touching,
+unreadable real-fixture layout, and a kinship2-parity floor set (owner-chosen from renders + measured
+cost) fixes it while returning the packing fixtures to kinship2's exact geometry. Census (a) is 0 for
+real; the residuals that remain -- 47 off-centre unions, ~3x same-row crossings (all still repaired),
+312 sibship-bar overlaps -- are all order-driven and are scoped as the next design session.
+Self-score 8: +real-fixture render before RED, +epsilon diagnosis, +order/value separation,
++full verification incl. E2E/images/owner review; -RED tolerance needed a GREEN correction,
+-2 wasted round trips, -audit doc/CSV drift carried forward.
 
 ```handoff
 session: S674

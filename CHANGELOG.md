@@ -16,6 +16,55 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S675: Migration Path Phase 3 — real-375-fixture cutover, Decision 3 amended (kinship2-parity QP floors), owner visual review passed
+- **Deliverable:** Phase 3 of `docs/planning/pedigree-diagram-joint-qp-solver-plan.md` DONE
+  (close-out 2026-09-04). Follows `DEVELOPMENT_WORKSTREAM.md`, full TDD RED (`7d81e8d1`) →
+  GREEN (`13e4bf27`; REFACTOR gate posed, skipped — 0 lints, nothing behavior-neutral). Claim
+  `d1f4cee6`; docs/census `2c33fc95`; images `5b6f6a93`.
+- **Finding that reshaped the phase (PRE-RED research, `PROJECT_LEARNINGS.md` Learning 725):**
+  the real fixture rendered under Decision 3's symbol-tangent floors had 684 of 705 adjacent pairs
+  at exactly the floor — symbols touching, labels overlapping into a band, width 6,676 px (old
+  engine 10,395). The old engine's typical spacing came from Tier 1's `minSep = 1`, which Decision
+  1 stopped applying; the clearance constants were only ever collision thresholds. Spiked three
+  floor sets via a temporary, reverted `getOption()` hook (renders + measured test blast radius
+  each); **owner picked kinship2-parity floors via `AskUserQuestion`:** individual–individual
+  `minSep` (1.0), individual–union `minSep / 2`, union–union `minSep / 4`. `.solveJointQP()` gains
+  a `minSep` argument (default 1) and derives its floors from it; `.positionMatingUnitForest()`
+  passes its own `minSep`. Plan doc: "Decision 3 — AMENDED (Session 675)" + a Phase 3 record.
+- **Census (`data-raw/pedigreeDrawingErrorCensus.R`, CSV committed), real 375 fixture:** class (a)
+  90 → **0** (the 90 were ≤ 1.3e-6 px solver-precision shortfalls at the census's 1e-9 px eps,
+  Learning 726 — now 0 with zero tangent pairs, no snap needed); (b) 46 → 47 (order-driven,
+  floor-invariant: 8 polygamous anchors, 11 two-union anchors seeded on one side, the rest far-away
+  genuine mates — Learning 727); (c1) after repair 0; (c2) 642 → 587 (pre-QP 414); (d) 0; (e) 56;
+  (f) 0; jog repairs 267 (pre-QP 89). Track B full/shrunk, D1–D3 all 0; Track C (b) 1 / (d) 1
+  unchanged from S674. Width 13,680 px. Small packing fixtures (Track B shrunk, D1–D3) are back to
+  **bit-exact kinship2 `align.pedigree()` geometry** (the S665/S667 targets).
+- **Tests:** RED — joint-QP file's test-side Decision 3 table switched to parity floors (12/13
+  blocks fail against the tangent engine) + one explicit S675-amendment block per Track C/Track B
+  full; new real-375 block in `test_positionMatingUnitForest.R` (parity floor on all 705 adjacent
+  pairs at 1e-6 raw + census-style class (a) = 0 at 1e-9 px through `makePedigreeMatingLayout()`);
+  the 3 Phase-2 `skip()`s removed. GREEN — 13 pins re-measured, never hand-derived: GA204Z loop
+  (13 values), nested/notover/f1 union x, Track B shrunk + D1/D2/D3 packing targets, the
+  conditional-shift bound made solver-precision-robust (`<= 2 + 1e-6`), and the 3 real-fixture
+  pins: 1,792 nodes / 534 `__jog_` (was 1,436 / 178), 266 colliding edges / 2,549 obstacle pairs
+  pre-repair (was 88 / 1,751), 312 D1 bar-vs-bar overlaps (was 0) — each with a dated in-file
+  CHANGED comment naming the order-driven mechanism.
+- **Verification:** 5 pinned files green (143 blocks); full clean regression 2,331 blocks,
+  failed=1 (pre-existing `test_wordlist_coverage.R` baseline only)/error=0; `lintr` 0 findings on
+  all touched files (2 `implicit_integer_linter` fixes folded in); `renv::status(dev = TRUE)`
+  clean. Runtime smoke (Phase 3E): live `shinytest2` `test-e2e-pedigree-module.R` 16/16 blocks,
+  55 expectations. Images regenerated: `data-raw/kinship2FidelityValidation.R` (4 nprcgenekeepr
+  PNGs changed, kinship2/Track A PNGs byte-identical) and `vignettes/articles/pedigree-diagram-
+  screenshots.R` (5 Diagram-tab screenshots). **Owner visual review passed** (`AskUserQuestion`,
+  "Approve, close out Phase 3") on the regenerated Track B/C images, full-width + 100%-scale crops
+  of the real fixture, and the app screenshot.
+- **Owner decisions this session (all `AskUserQuestion`):** floors = kinship2-parity; PRE-RED→RED;
+  RED→GREEN; visual review approved; GREEN→REFACTOR skipped.
+- **Next:** Phase 4 cleanup (small: NEWS entry landed this session per `CLAUDE.md`'s checklist;
+  verify no stale doc-comments reference the deleted passes; mark `BACKLOG.md` item DONE) and a
+  **design session on provisional ordering** (the floor-invariant (b)/crossing/bar residuals —
+  new `BACKLOG.md` Up Next item). Census Finding #3 (jog offset) still independent and open.
+
 ### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S674: Migration Path Phase 2 — wire `.solveJointQP()` into production
 - **Deliverable:** `.positionMatingUnitForest()`'s five collision-avoidance passes deleted outright
   (Decision 1 stops Phase A at raw Tier 2/Tier 3 formula values, leaving them nothing to call; the

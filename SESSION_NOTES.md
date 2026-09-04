@@ -18,20 +18,136 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 674 Handoff Evaluation (by Session 675)
+**Score: 8/10.** **What helped:** `next_steps` named this session's scope exactly (Phase 3: real
+fixture through the engine, re-derive the real-fixture pins incl. the 3 skipped, regenerate
+images, owner visual review, the census verification line, and -- crucially -- "EXPECT some
+nonzero class (b) residual ... do not treat a nonzero (b) count as an automatic regression"),
+which is precisely how (b) = 46/47 was handled: characterized, not chased. Gotcha (5)
+(`test-e2e-pedigree-module.R` as the fastest live check) was used verbatim for Phase 3E. Key
+files were accurate; the `RETIRED`/`skip(paste(...))` grep handles found all 3 skipped tests in
+one command. **What was missing:** (1) the handoff reported only the Track C census numbers --
+the committed findings CSV already carried the real fixture's (a) = 90, (b) = 46 and jogs 269
+(vs 89 pre-QP), the three signals that reshaped this whole phase; one sentence would have
+flagged them. (2) Nobody had rendered the real fixture under the QP engine -- Phase 2's scope
+was small fixtures, so understandable, but the E2E smoke test drove the Diagram tab on the real
+fixture and a single screenshot would have shown the touching symbols. **What was wrong:**
+nothing inaccurate; "route the real fixture through the new engine" framed as Phase 3 work was
+already true after Phase 2's unconditional cutover (minor framing, cost nothing). **ROI:** high
+-- zero scope reconstruction; every hour of this session went to genuinely new findings (the
+floor-spacing defect, the epsilon artifact, the order/value separation).
+
 ### What Session 675 Did
 **Deliverable:** Migration Path Phase 3 of the QP joint-solver plan
-(`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path, "Real-375-fixture
-cutover + full pinned-suite re-derivation") -- route the real 375-individual fixture through the
-QP-wired engine; re-derive the real-fixture-pinned assertions across the 4 pinned test files
-(including the 3 tests S674 skipped with a cited `testthat::skip()`); regenerate the committed
-reference images and get owner visual review before close-out (the plan doc's own explicit,
-non-optional requirement for this phase). Full TDD RED/GREEN/REFACTOR. Following
-`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`. (IN PROGRESS)
-**Started:** 2026-09-03.
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+(`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path) -- real-375-fixture
+cutover + pinned-suite re-derivation + reference images + owner visual review. Full TDD
+RED->GREEN (REFACTOR gate posed, skipped -- 0 lints, nothing behavior-neutral). **DONE, owner
+visual review PASSED.** Decision 3 AMENDED (kinship2-parity floors), owner-ratified.
+**Started:** 2026-09-03. **Completed:** 2026-09-04 (single session).
+
+**What actually happened, in order:**
+
+1. **Phase 0** -- SAFEGUARDS/SESSION_NOTES/issues/BACKLOG/dashboard/`gh run list` (CI all green,
+   still against S666's push; branch 30 commits ahead unpushed). Ledger: `CHANGELOG.md` frontier
+   one self-reconcile commit behind HEAD (no backfill owed), `HANDOFFS.md` at HEAD/complete.
+   Priorities list + `AskUserQuestion`; owner picked "QP Migration Phase 3".
+2. **Claimed (1B):** stub + `status: pending` receipt, `d1f4cee6`.
+3. **Research:** census re-run (CSV byte-identical to S674's commit): real fixture (a) = 90,
+   (b) = 46, c1 post 0, c2 642, e 56, f 0, jogs 269 -- against the plan's "(a)/(b)/(c1) must be
+   0". Traced (a): all 90 rows are pairs AT the tangent floor short by 1.0e-9..1.3e-6 px
+   (census eps 1e-9 px) -- solver precision, not geometry (own adjacency check at 1e-6 raw: 0
+   violations). Traced (b): 45 same-row cases = 8 polygamous anchors + 11 two-unit anchors seeded
+   on one side + 26 far-away genuine mates; invariant to floors. Rendered the real fixture at
+   100% via chromote (a scratch worktree at S673's commit gave the pre-QP engine for
+   side-by-side): 684/705 adjacent pairs at exactly the floor, symbols touching, labels
+   overlapping, width 6,676 px vs 10,395 old. Spiked 3 floor sets via a temporary
+   `getOption()` hook in `R/` (reverted clean): mid 0.667/0.375/0.15 (9,860 px) and
+   kinship2-parity 1.0/0.5/0.25 (13,680 px) both give (a) = 0 with 0 tangent pairs; (b) and
+   jogs unchanged (order-driven); test blast radius measured at 8 and 9 pinned blocks.
+4. **PRE-RED scope decision (`AskUserQuestion`, 7 renders sent):** owner picked kinship2-parity
+   floors (recommended).
+5. **PRE-RED->RED gate (`AskUserQuestion`):** approved. **RED (`7d81e8d1`):** joint-QP file's
+   test-side Decision 3 table -> parity floors (12/13 blocks RED) + an explicit S675 block per
+   Track C/Track B full; new real-375 block (parity floor on 705 adjacent pairs + census-style
+   (a) = 0); the 3 Phase-2 `skip()`s removed. Every target failed for the right reason.
+6. **RED->GREEN gate (`AskUserQuestion`):** approved. **GREEN (`13e4bf27`):** `.solveJointQP()`
+   gains `minSep` (default 1), floors = `minSep`/`minSep/2`/`minSep/4`; caller passes its own
+   `minSep`; roxygen/inline comments record the amendment (and fixed the stale "not yet wired"
+   Phase 1 sentence). 13 pins re-measured, never hand-derived (GA204Z loop x13, nested/notover/
+   f1 union x, Track B shrunk + D1/D2/D3 targets -- now kinship2's own integer geometry -- the
+   conditional-shift bound `<= 2 + 1e-6`, the real-375 floor tolerance 1e-6 raw [max shortfall
+   6.8e-8], and the 3 real-fixture pins 1792/534, 266/2549, 312/312). 2 implicit-integer lints
+   fixed.
+7. **Verification:** 5 pinned files green (143 blocks); full clean regression 2,331 blocks,
+   failed=1 (wordlist baseline)/error=0; lint 0; `renv::status(dev = TRUE)` clean; census re-run
+   (Real 375: a 0, b 47, c1 post 0, c2 587, d 0, e 56, f 0; Track C b 1/d 1 as S674). **Phase
+   3E:** live `shinytest2` E2E pedigree module 16/16 blocks, 55 expectations.
+8. **Images (`5b6f6a93`):** `data-raw/kinship2FidelityValidation.R` (4 nprcgenekeepr PNGs changed,
+   kinship2/Track A byte-identical) + `vignettes/articles/pedigree-diagram-screenshots.R` (5
+   screenshots). Plan doc amended (`2c33fc95`): "Decision 3 -- AMENDED (Session 675)" + a Phase 3
+   record; census CSV committed.
+9. **Owner visual review (`AskUserQuestion`, 7 images sent):** "Approve, close out Phase 3."
+10. **GREEN->REFACTOR gate (`AskUserQuestion`):** owner picked "skip REFACTOR, close out."
+11. **Close-out:** this evaluation, self-assessment, Learnings 725-727, `BACKLOG.md` (item 1
+    Phase 3 DONE + new provisional-order design item), `NEWS.Rmd` entry (CLAUDE.md checklist),
+    `CHANGELOG.md`, `HANDOFFS.md` receipt, scratch worktree removed.
+
+**Self-assessment (Session 675): 8/10.** **Strengths:** (1) rendered the real fixture at 100%
+scale BEFORE writing any test -- the one step that caught the floor-spacing defect the design
+doc and two prior phases could not see on small fixtures; (2) diagnosed (a) = 90 as a
+1e-9-px-epsilon artifact from the shortfall distribution rather than treating it as geometry;
+(3) separated order-driven from value-driven residuals with a floor sweep plus an
+anchor-unit-count breakdown of (b), so the follow-up is scoped as a design item, not weight
+tuning; (4) presented the floor decision with side-by-side renders AND each option's measured
+test blast radius, so the owner chose with full cost information; (5) kept every TDD gate (5
+`AskUserQuestion`s) and the plan's own visual-review gate, with all verification actually run
+(E2E, images, census, full suite). **Weaknesses:** (1) the RED real-375 block's floor tolerance
+(1e-9 raw) was tighter than `solve.QP()`'s precision and had to be corrected to 1e-6 in GREEN --
+disclosed in-file, but a RED test should not need a GREEN correction; (2) one wasted round trip
+from a mis-anchored edit (the bar-overlap assertions carry trailing comments) and one from a
+scratch script saving its RDS beside the repo; (3) the S668 census audit doc still describes the
+pre-QP state while its findings CSV (S674/S675) is post-QP -- carried forward, not resolved;
+(4) explained the 3x crossing growth at mechanism level (union centred on parents) without
+quantifying which edge kinds drive it -- deferred to the follow-up design item.
+
+**Next steps (specific):** two candidates, both under the standing pedigree-fidelity directive:
+(A) **Design session: provisional ORDER for the QP** (`BACKLOG.md` Up Next, the new `- [ ]` item
+directly under item 1; `ARCHITECTURE_WORKSTREAM.md`, design doc only) -- the (b)/crossing/bar
+residuals are all order-driven; start from `PROJECT_LEARNINGS.md` Learning 727's breakdown and
+the census script; do NOT add objective terms or tune weights. (B) **Migration Path Phase 4
+cleanup** (Effort S): grep `R/` doc-comments for the deleted passes/`.kMax*` constants, mark
+`BACKLOG.md` item 1 DONE -- can ride along with any session. Independent: push the branch (now
+36 commits ahead of `origin/master`; CI has never seen any QP work -- S673-S675 all unpushed);
+`vignettes/articles/kinship2-fidelity-validation.qmd`'s prose is now doubly stale vs its
+regenerated images (Housekeeping item already open); census Finding #3 (jog offset) still open.
+
+**Key files:** `R/makePedigreeDiagramData.R:1298` (the amended floors block inside
+`.solveJointQP()`, signature at :1289, caller passes `minSep` at :1205);
+`tests/testthat/test_solveJointQP.R:174` (test-side parity table) and :373 (S675 block);
+`tests/testthat/test_positionMatingUnitForest.R:571` (real-375 floor + census-(a) block; the
+10 re-pinned blocks each carry a `CHANGED S675` comment -- grep it);
+`tests/testthat/test_makePedigreeMatingLayout.R:690`, `test_addRectilinearWaypoints.R:749`,
+`test_resolveEdgeNodeCollisions.R:510` (the 3 un-skipped real-fixture pins);
+`docs/planning/pedigree-diagram-joint-qp-solver-plan.md:167` (Decision 3 AMENDED) and :416
+(Phase 3 record); `BACKLOG.md:175` (new design item); `PROJECT_LEARNINGS.md:2159` (725-727).
+Re-grep before trusting any of these -- this session's own edits shifted earlier citations.
+
+**Gotchas for a future session:** (1) the census's eps is 1e-9 px while `solve.QP()`'s
+precision is ~1e-8 raw (~1e-6 px): any "must be 0" that rests on an exact tie will read nonzero
+-- check shortfall magnitudes first (Learning 726); (2) (b), the crossing count and the D1 bar
+overlaps are ORDER-driven: floors and weights cannot move them (Learnings 723/727); (3) the
+small packing fixtures are pinned at kinship2's exact geometry again -- any future floor change
+breaks ~9 blocks in `test_positionMatingUnitForest.R` at once, by design; (4) the test files'
+`.qpMinSep`/`.qpMinSepFor()` and the real-375 block's `floorFor()` are deliberate test-side
+re-derivations, not shared with `R/` -- change both sides on purpose; (5) "Track C" still names
+two different fixtures (Learning 724); (6) regenerating images: `Rscript data-raw/
+kinship2FidelityValidation.R` (kinship2 + chromote, ~1 min) and `NOT_CRAN=true Rscript
+vignettes/articles/pedigree-diagram-screenshots.R` (~3 min); a 100%-scale full-width render is
+a ~40-line chromote script (visNetwork widget sized to the layout's extent, `cliprect` crops
+around chosen ids via `network.canvasToDOM(getPositions())`) -- not committed, rebuild from
+Learning 725's description if needed; (7) `git worktree add` at an old commit +
+`pkgload::load_all(<worktree>)` in a separate Rscript is the clean way to run the OLD engine
+side by side (no `assignInNamespace`, Learning 721).
 
 ### Session 673 Handoff Evaluation (by Session 674)
 **Score: 8/10.** **What helped:** `next_steps` named this session's exact scope precisely --

@@ -149,15 +149,49 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `data-raw/pedigreeDrawingErrorCensus.R`'s own `pedC` (9 individuals, P1/P2/A/Y/X/W/C1/C2/GC,
       "verbatim from kinship2FidelityValidation.R") are TWO DIFFERENT fixtures sharing one label --
       always re-derive which file's own definition a "Track C" reference means.
-      **Next step (a separate future session, per `SESSION_RUNNER.md`'s planning/implementation
-      boundary, FM #18/#19 -- do NOT bundle with code): Migration Path Phase 3** (real-375-fixture
-      cutover + full pinned-suite re-derivation across the 4 pinned test files' real-fixture-
-      specific assertions, the 3 tests skipped this session, plus owner visual review of the
-      regenerated reference images before close-out, per the plan doc's own explicit requirement --
-      not optional for this phase). Independent of this design, one item still stands, unresolved
-      by either the A-vs-C decision or Phases 1-2's work: the jog offset must be raised above the
-      25-px symbol radius (census Finding #3) -- a bounded fix any future session could pick up at
-      any time, with no ordering dependency on the QP work either way.
+      **Migration Path Phase 3 DONE S675, 2026-09-03/04, full TDD RED->GREEN (REFACTOR skipped,
+      0 lints), owner visual review PASSED** -- the real 375 fixture rendered under Decision 3's
+      symbol-tangent floors had 684/705 adjacent pairs at exactly the floor (symbols touching,
+      labels overlapping; `PROJECT_LEARNINGS.md` Learning 725): the old engine's typical spacing
+      came from Tier 1's `minSep = 1`, which Decision 1 stopped applying, and the clearance
+      constants were only ever collision thresholds. **Decision 3 AMENDED (owner via
+      `AskUserQuestion`, from side-by-side renders of 3 floor sets + each set's measured test blast
+      radius): kinship2-parity floors** -- individual-individual `minSep` (1.0), individual-union
+      `minSep / 2`, union-union `minSep / 4`; `.solveJointQP()` gains a `minSep` argument. Census
+      on the real fixture: (a) 90 -> 0 (the 90 were <= 1.3e-6 px solver-precision shortfalls,
+      Learning 726), (b) 47, (c1) post 0, (c2) 587, (d) 0, (e) 56, (f) 0; width 13,680 px (+32%
+      vs the pre-QP 10,395); Track B shrunk/D1-D3 back to bit-exact kinship2 geometry. The 3
+      Phase-2-skipped pins re-measured (1,792 nodes/534 jogs; 266/2,549 collision baseline; 312 D1
+      bar-vs-bar overlaps) plus 10 small-fixture pins; full clean regression 0 collateral; live E2E
+      16/16; Track B/C reference images + 5 Diagram-tab screenshots regenerated. Plan doc carries
+      "Decision 3 -- AMENDED (Session 675)" and a Phase 3 record. See `CHANGELOG.md`.
+      **Next step: Migration Path Phase 4 cleanup** (READY, Effort S -- the dead passes were
+      already deleted S674 and the `NEWS.Rmd` entry landed S675; remaining: grep `R/` doc-comments
+      for references to the deleted tiers/passes and `.kMax*` constants, then mark this item DONE).
+      The floor-invariant residuals ((b), crossings, bar overlaps) are the SEPARATE design item
+      directly below. Independent of all of this, one item still stands: the jog offset must be
+      raised above the 25-px symbol radius (census Finding #3) -- a bounded fix any future session
+      could pick up at any time, with no ordering dependency on the QP work either way.
+- [ ] **Design session: provisional ORDER for the QP joint-solver (Phase A seeding)** (found S675,
+      2026-09-03; READY, Effort M -- `ARCHITECTURE_WORKSTREAM.md`, design doc only, no `R/` change;
+      standing pedigree-fidelity directive) -- every residual left after Phase 3 is invariant to
+      the QP's floors and weights and traces to the provisional left-to-right row order Phase A
+      hands the QP as a fixed input (Decision 1; `PROJECT_LEARNINGS.md` Learning 727): (1) census
+      class (b), 47 of 237 unions off their mate midpoint on the real fixture -- 8 polygamous
+      anchors (structural: one anchor node flanks at most two unions; kinship2 duplicates the
+      spouse), 11 two-unit anchors whose Tier 2/3 provisional values put BOTH unions on the same
+      side (fixable by smarter seeding), 26 monogamous units whose genuine non-B1 mate sits far
+      away under her own parents (a duplicate-policy question); (2) same-row crossings before jog
+      repair 88 -> 266 colliding edges (all still resolved by the unchanged repair pass) and (3) 312
+      D1 sibship-bar x-overlaps (was 0) -- both because the union dot is now centred between its
+      parents rather than on its children's mean, so drop points and mate lines span other nodes.
+      Candidate directions, none evaluated: seed a union's provisional x from its anchor/mate
+      midpoint (not the children's mean) and a B1 mate adjacent to the anchor; port kinship2's
+      `alignped1-3` order heuristics; kinship2-style spouse duplication for far-away genuine mates.
+      Design the order stage, do not add objective terms or tune weights (Learning 723/727 both
+      showed those cannot move an order-bound residual). Measurement harness ready-made:
+      `data-raw/pedigreeDrawingErrorCensus.R` + the S675 real-375 breakdown script pattern
+      (anchor unit-count x subclass) in `PROJECT_LEARNINGS.md` Learning 727.
 - [x] **Research: characterize kinship2's `align.pedigree()` joint-positioning mechanism
       (`alignped4.R`) to quantify the (C) joint-solver option** (owner-directed 2026-09-02, after
       reviewing the S669 spike result; **DONE S670, 2026-09-03**, Effort M, one session) --
