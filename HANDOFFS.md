@@ -136,6 +136,17 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S676
+date: 2026-09-04
+status: pending
+active_task: Design document for the QP joint-solver's provisional ORDER stage (Phase A
+  seeding) -- BACKLOG.md Up Next design item (found S675); ARCHITECTURE_WORKSTREAM.md; design
+  doc only, no R/ changes, no objective terms, no weight tuning. Claimed 2026-09-04.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S675
 date: 2026-09-03
 status: complete

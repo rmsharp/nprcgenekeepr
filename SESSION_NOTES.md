@@ -18,6 +18,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 676 Did
+**Deliverable:** Design document for the QP joint-solver's provisional ORDER stage (Phase A
+seeding) — `BACKLOG.md` Up Next design item (found S675); `ARCHITECTURE_WORKSTREAM.md`; design
+doc only, no `R/` changes, no objective terms, no weight tuning. (IN PROGRESS)
+**Started:** 2026-09-04
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 674 Handoff Evaluation (by Session 675)
 **Score: 8/10.** **What helped:** `next_steps` named this session's scope exactly (Phase 3: real
 fixture through the engine, re-derive the real-fixture pins incl. the 3 skipped, regenerate
