@@ -18,6 +18,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 675 Did
+**Deliverable:** Migration Path Phase 3 of the QP joint-solver plan
+(`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path, "Real-375-fixture
+cutover + full pinned-suite re-derivation") -- route the real 375-individual fixture through the
+QP-wired engine; re-derive the real-fixture-pinned assertions across the 4 pinned test files
+(including the 3 tests S674 skipped with a cited `testthat::skip()`); regenerate the committed
+reference images and get owner visual review before close-out (the plan doc's own explicit,
+non-optional requirement for this phase). Full TDD RED/GREEN/REFACTOR. Following
+`docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`. (IN PROGRESS)
+**Started:** 2026-09-03.
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 673 Handoff Evaluation (by Session 674)
 **Score: 8/10.** **What helped:** `next_steps` named this session's exact scope precisely --
 "Migration Path Phase 2... wire `.solveJointQP()` into `.positionMatingUnitForest()`, replacing the
