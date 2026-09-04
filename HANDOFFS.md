@@ -186,7 +186,7 @@ runtime_smoke: live shinytest2 E2E test-e2e-pedigree-module.R (NPRC_RUN_E2E=true
   16/16 blocks, 55 expectations pass against the amended engine; plus 5 Diagram-tab screenshots
   regenerated from the live app and owner-reviewed.
 changelog_ref: CHANGELOG.md "2026-09-03 · [BL-pedigreeDrawingErrorCensus] S675"
-commit: pending
+commit: 85de2a84
 ```
 S675 delivered Migration Path Phase 3 end to end and, in doing so, amended the design's Decision 3:
 the symbol-tangent floors that Phases 1-2 could not see fail on small fixtures produced a touching,
