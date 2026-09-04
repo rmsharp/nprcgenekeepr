@@ -1201,7 +1201,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
            unname(tier3Gen[tier3Ids]))
   provisionalPos <- data.frame(id = ids, x = x, gen = gen,
                                 stringsAsFactors = FALSE)
-  .solveJointQP(provisionalPos, matingUnits, duplicates, childEdges)
+  .solveJointQP(provisionalPos, matingUnits, duplicates, childEdges,
+                minSep = minSep)
 }
 
 #' Joint QP solve for one weakly-connected pedigree component (Option C)
@@ -1209,10 +1210,10 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' Migration Path Phase 1 of \code{docs/planning/
 #' pedigree-diagram-joint-qp-solver-plan.md} -- one \code{quadprog::
 #' solve.QP()} call positioning every node of one component simultaneously,
-#' replacing \code{.positionMatingUnitForest()}'s five collision-avoidance
-#' passes (still present and unchanged as of Phase 1 -- this function is
-#' standalone, not yet wired into \code{.positionMatingUnitForest()}, per
-#' the plan's own Phase 1/Phase 2 session boundary).
+#' replacing \code{.positionMatingUnitForest()}'s five former collision-
+#' avoidance passes (deleted at Migration Path Phase 2, S674, when this
+#' function was wired in as that function's final assembly step -- one
+#' call per weakly-connected component).
 #'
 #' \strong{Decision 1 (two phases):} \code{provisionalPos} is
 #' \code{.positionMatingUnitForest()}'s OWN, unmodified output for this
@@ -1228,9 +1229,15 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' each row, sorted by \code{provisionalPos$x} (ties broken by id, radix --
 #' the same tie-break \code{sweepMinSepBackstop()} uses), each adjacent
 #' pair gets one hard inequality \code{x[i+1] - x[i] >= minSepFor(kind_i,
-#' kind_{i+1})}, using this project's own radius-based clearance constants
-#' (repurposed, same values, from soft capped-push thresholds to hard QP
-#' constraint right-hand sides). \strong{Decision 4 (objective):} spousal
+#' kind_{i+1})}. \strong{Decision 3 as amended at Migration Path Phase 3
+#' (S675, owner-ratified):} the floors are SPACING values keyed to the
+#' engine's own \code{minSep} (1 raw unit = 120 px, kinship2's own uniform
+#' \code{alignped4} floor) -- individual-individual \code{minSep},
+#' individual-union \code{minSep / 2}, union-union \code{minSep / 4} --
+#' not the render-layer symbol-tangent clearances the design originally
+#' repurposed: under those, the objective compressed 684 of the real
+#' 375-fixture's 705 adjacent pairs to exactly the floor (symbols
+#' touching, labels overlapping). \strong{Decision 4 (objective):} spousal
 #' pull + child centering (kinship2's own two terms, ported) plus two terms
 #' kinship2 has no analogue for -- union centering (targets census Finding
 #' #1) and duplicate proximity (targets class (d)) -- plus one
@@ -1260,6 +1267,10 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   \code{matingUnitId}).
 #' @param childEdges the \code{childEdges} data frame from
 #'   \code{\link{.buildMatingUnitForest}} (\code{from}, \code{to}).
+#' @param minSep the engine's own minimum same-row spacing in raw units
+#'   (default \code{1}, \code{.positionMatingUnitForest()}'s Tier-1
+#'   spacing); the three adjacent-pair floors are derived from it (S675
+#'   amendment to Decision 3, above).
 #' @param wSpouse spousal-pull weight (default \code{2}, kinship2's own
 #'   default, ported directly).
 #' @param alignChild child-centering weight exponent (default \code{1.5},
@@ -1277,23 +1288,34 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' @noRd
 .solveJointQP <- function(provisionalPos, matingUnits, duplicates,
                            childEdges, wSpouse = 2.0, alignChild = 1.5,
-                           wUnion = 2.0, wDup = 1.0) {
+                           wUnion = 2.0, wDup = 1.0, minSep = 1.0) {
   ids <- provisionalPos$id
   n <- length(ids)
   varIndex <- stats::setNames(seq_len(n), ids)
   isUnion <- ids %in% matingUnits$id
   kind <- stats::setNames(ifelse(isUnion, "union", "individual"), ids)
 
-  ## Decision 3: radius-based minSep, repurposed unchanged from the
-  ## soft-push thresholds .positionMatingUnitForest() already uses
-  ## (individualClearance/unionClearanceIndividual/unionClearanceUnion).
-  unionClearanceIndividual <- (25L + 6L) / 120L
-  unionClearanceUnion <- (6L + 6L) / 120L
-  individualClearance <- (25L + 25L) / 120L
+  ## Decision 3 as AMENDED S675 (Migration Path Phase 3, owner-ratified via
+  ## AskUserQuestion after seeing the real 375-fixture render): the floors
+  ## are SPACING values keyed to the engine's own minSep (1 raw unit = 120
+  ## px -- .positionMatingUnitForest()'s Tier-1 spacing and kinship2's own
+  ## uniform alignped4 floor), NOT the render-layer symbol-tangent
+  ## clearances the design originally repurposed ((25+25)/120, (25+6)/120,
+  ## (6+6)/120 -- still what .resolveEdgeNodeCollisions() uses, for what
+  ## they are: collision thresholds). Under the tangent floors the
+  ## objective compressed 684 of the real fixture's 705 adjacent pairs to
+  ## exactly the floor -- symbols touching, labels overlapping into a band
+  ## -- and the census's class (a) read 90 sub-microscopic (<= 1.3e-6 px)
+  ## solver shortfalls at its 1e-9 px epsilon. Individual-individual =
+  ## minSep; individual-union = minSep / 2 (the S666 qualifying-pair
+  ## geometry: mates 1.0 apart, dot centred); union-union = minSep / 4.
+  floorIndividualIndividual <- minSep
+  floorIndividualUnion <- minSep / 2.0
+  floorUnionUnion <- minSep / 4.0
   minSepFor <- function(k1, k2) {
-    if (k1 == "union" && k2 == "union") return(unionClearanceUnion)
-    if (k1 == "union" || k2 == "union") return(unionClearanceIndividual)
-    individualClearance
+    if (k1 == "union" && k2 == "union") return(floorUnionUnion)
+    if (k1 == "union" || k2 == "union") return(floorIndividualUnion)
+    floorIndividualIndividual
   }
 
   amatCols <- list()

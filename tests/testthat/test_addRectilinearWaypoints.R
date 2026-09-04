@@ -746,8 +746,23 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
   ## identity that gave the Walker/BJL engine its original zero-overlap
   ## result before Track 7 ever existed. Re-measured live against the
   ## reverted code, never hand-derived: BOTH counts drop back to 0.
-  expect_equal(oldHits, 0L)  # CHANGED from 6L (issue #166 revert, S652)
-  expect_equal(newHits, 0L)  # CHANGED from 6L (issue #166 revert, S652)
+  ## CHANGED S675 to 312L/312L (from 0L/0L, issue #166 revert, S652) --
+  ## Migration Path Phase 3 (QP joint-solver with the owner-ratified
+  ## kinship2-parity floors, docs/planning/pedigree-diagram-joint-qp-
+  ## solver-plan.md Decision 3 as amended): the QP centres every union
+  ## between its parents (Decision 4 term 3) rather than on its children's
+  ## mean, so a sibship's D1 drop point (the union's own x) now routinely
+  ## sits OUTSIDE its children's x-span, extending the bar; bars of
+  ## different sibships sharing one inter-row y then overlap in x -- 312
+  ## pairs on this fixture, identical under Track 1's y assignment and the
+  ## pre-Track-1 one (the overlap is x-driven, not y-driven). kinship2's own
+  ## drawing has the same long horizontal connectors. Not something the
+  ## jog-repair mechanism sees (bars are not same-row edges); recorded for
+  ## the owner's visual review and as a candidate for the provisional-order
+  ## follow-up. Re-measured by actually running the amended engine, never
+  ## hand-derived.
+  expect_equal(oldHits, 312L)
+  expect_equal(newHits, 312L)
   expect_true(newHits <= oldHits)
 })
 

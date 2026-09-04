@@ -507,8 +507,19 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   ## (93 -> 88, 1758 -> 1751 obstacle-pairs), the same 5 jog repairs
   ## test_makePedigreeMatingLayout.R no longer needs. Re-measured by
   ## actually running the fixed engine, never hand-derived.
-  expect_equal(nrow(baselineEdges), 88L)
-  expect_equal(nrow(baseline), 1751L)
+  ## CHANGED AGAIN to 266L/2549L -- Migration Path Phase 3 (S675, QP
+  ## joint-solver with the owner-ratified kinship2-parity floors,
+  ## docs/planning/pedigree-diagram-joint-qp-solver-plan.md Decision 3 as
+  ## amended): the QP centres every union between its parents (Decision 4
+  ## term 3) instead of on its children's mean, and honours Phase A's
+  ## provisional row order (Decision 1), so mate lines and drop segments
+  ## now span unrelated same-row nodes ~3x as often (88 -> 266 colliding
+  ## edges, 1751 -> 2549 obstacle-pairs). Every one is still resolved by
+  ## this unchanged repair pass (0 same-row residual after repair, census
+  ## class (c1); the 47 curved-connector heuristic residuals are unchanged).
+  ## Re-measured by actually running the amended engine, never hand-derived.
+  expect_equal(nrow(baselineEdges), 266L)
+  expect_equal(nrow(baseline), 2549L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

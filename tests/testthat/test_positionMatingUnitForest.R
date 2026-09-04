@@ -355,31 +355,36 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
   ## this test used to pin, these are NOT expected to reproduce any single
   ## Phase-A formula exactly (Decision 1: Phase A formulas are provisional
   ## input only); they are simply this fixture's actual result.
-  expectPos("5A6DFT", -0.20529080, 0L)
-  expectPos("8DKELJ", 0.31137587, 0L)
-  expectPos("G8EBU9", -0.36362413, 1L)
-  expectPos("8P17E3", 0.56970920, 1L)  # gen unaffected: issue #143's
+  ## CHANGED S675 (Migration Path Phase 3 -- kinship2-parity QP floors,
+  ## the owner-ratified amendment to Decision 3: individual-individual
+  ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
+  ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
+  ## actually running the amended engine, never hand-derived.
+  expectPos("5A6DFT", -0.34511914, 0L)
+  expectPos("8DKELJ", 0.65488086, 0L)
+  expectPos("G8EBU9", -0.84511913, 1L)
+  expectPos("8P17E3", 1.15488087, 1L)  # gen unaffected: issue #143's
                                  # non-anchor override (she no longer
                                  # anchors unit3, 8LKBV9 does -- Track 4)
-  expectPos("8LKBV9", 0.05304253, 1L)
-  expectPos("FJIB3R", -0.41362413, 2L)
-  expectPos("9VGCCV", 0.51970920, 2L)
-  expectPos("GA204Z", -0.15529080, 3L)
+  expectPos("8LKBV9", 0.15488087, 1L)
+  expectPos("FJIB3R", -0.84511913, 2L)
+  expectPos("9VGCCV", 1.15488087, 2L)
+  expectPos("GA204Z", -0.34511913, 3L)
 
   unit1 <- forest$matingUnits$id[forest$matingUnits$sire == "5A6DFT"]
   unit2 <- forest$matingUnits$id[forest$matingUnits$dam == "G8EBU9"]
   unit3 <- forest$matingUnits$id[forest$matingUnits$dam == "8P17E3"]
   unit4 <- forest$matingUnits$id[forest$matingUnits$dam == "FJIB3R"]
-  expectPos(unit1, 0.05304253, 0L)
-  expectPos(unit2, -0.62195747, 1L)
-  expectPos(unit3, 0.31137587, 1L)
-  expectPos(unit4, -0.15529080, 2L)
+  expectPos(unit1, 0.15488086, 0L)
+  expectPos(unit2, -1.34511913, 1L)
+  expectPos(unit3, 0.65488087, 1L)
+  expectPos(unit4, -0.34511913, 2L)
 
   dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
   ## unit3 no longer has a duplicate (8LKBV9 anchors it directly now).
   expect_equal(forest$duplicates$matingUnitId[
     forest$duplicates$realId == "8LKBV9"], unit4)
-  expectPos(dupAt4, 0.10304253, 2L)
+  expectPos(dupAt4, 0.15488087, 2L)
 })
 
 ## ---- Track 3: minimum mate-spacing guarantee (kinship2 fidelity
@@ -611,9 +616,13 @@ test_that(".positionMatingUnitForest holds the S675 kinship2-parity QP floor
                      floorFor(rowIds[i], rowIds[i + 1L]) - (x[i + 1L] - x[i]))
     }
   }
-  ## 714 nodes across 9 rows -> 705 adjacent pairs (measured S675).
+  ## 714 nodes across 9 rows -> 705 adjacent pairs (measured S675). The
+  ## tolerance is quadprog::solve.QP()'s own solver precision (measured
+  ## max shortfall on this fixture 6.8e-8 raw = 8e-6 px; the same 1e-6 the
+  ## joint-QP file's .expectMinSepFloorHeld() allows) -- NOT a geometric
+  ## allowance: the census-style overlap check below is exact.
   expect_equal(length(shortfall), 705L)
-  expect_equal(sum(shortfall > 1e-9), 0L)
+  expect_equal(sum(shortfall > 1e-6), 0L)
 
   ## Census class (a), restated independently of data-raw/
   ## pedigreeDrawingErrorCensus.R: two VISIBLE nodes on one rendered row
@@ -1366,7 +1375,12 @@ test_that("makePedigreeMatingLayout positions a nested single-child
   layout <- makePedigreeMatingLayout(nested, edgeStyle = "direct")
   ## Migration Path Phase 2 (QP joint-solver, this session): re-pinned by
   ## actually running the new engine, never hand-derived.
-  expect_equal(layout$nodes$x[layout$nodes$id == "__union_2"], -17.66167,
+  ## CHANGED S675 (Migration Path Phase 3 -- kinship2-parity QP floors,
+  ## the owner-ratified amendment to Decision 3: individual-individual
+  ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
+  ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
+  ## actually running the amended engine, never hand-derived.
+  expect_equal(layout$nodes$x[layout$nodes$id == "__union_2"], -34.175588,
                tolerance = 1e-5)
 })
 
@@ -1386,7 +1400,12 @@ test_that("makePedigreeMatingLayout positions a nested single-child
   layout <- makePedigreeMatingLayout(notover, edgeStyle = "direct")
   ## Migration Path Phase 2 (QP joint-solver, this session): re-pinned by
   ## actually running the new engine, never hand-derived.
-  expect_equal(layout$nodes$x[layout$nodes$id == "__union_3"], 25.65908,
+  ## CHANGED S675 (Migration Path Phase 3 -- kinship2-parity QP floors,
+  ## the owner-ratified amendment to Decision 3: individual-individual
+  ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
+  ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
+  ## actually running the amended engine, never hand-derived.
+  expect_equal(layout$nodes$x[layout$nodes$id == "__union_3"], 56.768463,
                tolerance = 1e-5)
 })
 
@@ -1405,7 +1424,12 @@ test_that(".positionMatingUnitForest's F1 target case (investigation doc's
   )
   f1$gen <- findGeneration(f1$id, f1$sire, f1$dam)
   layout <- makePedigreeMatingLayout(f1, edgeStyle = "direct")
-  expect_equal(layout$nodes$x[layout$nodes$id == "__union_1"], 5.522485,
+  ## CHANGED S675 (Migration Path Phase 3 -- kinship2-parity QP floors,
+  ## the owner-ratified amendment to Decision 3: individual-individual
+  ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
+  ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
+  ## actually running the amended engine, never hand-derived.
+  expect_equal(layout$nodes$x[layout$nodes$id == "__union_1"], 17.344755,
                tolerance = 1e-5)
 })
 
@@ -2276,8 +2300,17 @@ test_that(".positionMatingUnitForest lays out Track B shrunk's two
   ## never hand-derived.
   rel <- pos$x - pos$x[pos$id == "P1"]
   names(rel) <- pos$id
-  target <- c(P1 = 0, P2 = 0.516667, M1 = 0.258333, G3 = 0.775,
-              L3 = 0.516667, C4 = 1.516667, P6 = 2.033333, C4a = 1.775)
+  ## CHANGED S675 (Migration Path Phase 3 -- kinship2-parity QP floors,
+  ## the owner-ratified amendment to Decision 3: individual-individual
+  ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
+  ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
+  ## actually running the amended engine, never hand-derived.
+  ## These are kinship2::align.pedigree()'s OWN values for this fixture
+  ## again (the S665 target: P1=0, M1=0.5, L3=1.0, P2=1.0, G3=1.5, C4=2.0,
+  ## C4a=2.5, P6=3.0) -- the parity floors restore the bit-exact agreement
+  ## the Phase 2 paragraph above disclosed as lost under the tangent floors.
+  target <- c(P1 = 0, P2 = 1, M1 = 0.5, G3 = 1.5,
+              L3 = 1, C4 = 2, P6 = 3, C4a = 2.5)
   expect_equal(unname(rel[names(target)]), unname(target), tolerance = 1e-5)
 
   ## The families' x-ranges are disjoint: nothing of C4's family sits
@@ -2384,7 +2417,12 @@ test_that(".positionMatingUnitForest's conditional-shift rule holds for
     mate <- matingUnits$nonAnchor[matingUnits$id == u]
     pos$x[pos$id == u] - mean(pos$x[pos$id %in% c(anchor, mate)])
   }, numeric(1L))
-  expect_true(all(abs(diffs) <= 2),
+  ## S675: under the kinship2-parity QP floors one qualifying unit's
+  ## residual is exactly 2 raw units up to solver precision
+  ## (2.000000000007 -- quadprog's own ~1e-8 slack, see the real-375 floor
+  ## test's own tolerance note); the bound is unchanged, only made robust
+  ## to that representation.
+  expect_true(all(abs(diffs) <= 2 + 1e-6),
               info = paste("max residual:", max(abs(diffs))))
 
   message(sprintf(
@@ -2548,9 +2586,16 @@ test_that(".positionMatingUnitForest packs disconnected families by PER-ROW
 
   rel <- pos$x - pos$x[pos$id == "F1"]
   names(rel) <- pos$id
-  target <- c(F1 = 0, M1 = 0.516667, F2 = 1.516667, M2 = 2.033333,
-              S1 = -0.258333, A1 = 0.258333, B1 = 1.775,
-              K1 = -0.625, K2 = -0.208333, K3 = 0.208333, K4 = 0.625)
+  ## CHANGED S675 (Migration Path Phase 3 -- kinship2-parity QP floors,
+  ## the owner-ratified amendment to Decision 3: individual-individual
+  ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
+  ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
+  ## actually running the amended engine, never hand-derived.
+  ## kinship2's own uniform 1-unit geometry again (S667 verified this
+  ## fixture bit-exact against a live kinship2 run under the pre-QP engine).
+  target <- c(F1 = 0, M1 = 1, F2 = 2, M2 = 3,
+              S1 = -0.5, A1 = 0.5, B1 = 2.5,
+              K1 = -1.5, K2 = -0.5, K3 = 0.5, K4 = 1.5)
   expect_equal(unname(rel[names(target)]), unname(target), tolerance = 1e-5)
   .expectNoOverlap(pos)
 })
@@ -2574,9 +2619,14 @@ test_that(".positionMatingUnitForest orders disconnected families by ped
 
   rel <- pos$x - pos$x[pos$id == "A1"]
   names(rel) <- pos$id
-  target <- c(A1 = 0, A2 = 0.516667, B1 = 1.516667, B2 = 2.033333,
-              C1 = 3.033333, C2 = 3.55, A3 = 0.258333, B3 = 1.775,
-              C3 = 3.291667)
+  ## CHANGED S675 (Migration Path Phase 3 -- kinship2-parity QP floors,
+  ## the owner-ratified amendment to Decision 3: individual-individual
+  ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
+  ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
+  ## actually running the amended engine, never hand-derived.
+  target <- c(A1 = 0, A2 = 1, B1 = 2, B2 = 3,
+              C1 = 4, C2 = 5, A3 = 0.5, B3 = 2.5,
+              C3 = 4.5)
   expect_equal(unname(rel[names(target)]), unname(target), tolerance = 1e-5)
   .expectNoOverlap(pos)
 })
@@ -2601,8 +2651,13 @@ test_that(".positionMatingUnitForest packs disconnected families of unequal
 
   rel <- pos$x - pos$x[pos$id == "A1"]
   names(rel) <- pos$id
-  target <- c(A1 = 0, A2 = 0.516667, B1 = 1.516667, B2 = 2.033333,
-              A3 = 0.258333, B3 = 1.775, B5 = 2.291667, B4 = 2.033333)
+  ## CHANGED S675 (Migration Path Phase 3 -- kinship2-parity QP floors,
+  ## the owner-ratified amendment to Decision 3: individual-individual
+  ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
+  ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
+  ## actually running the amended engine, never hand-derived.
+  target <- c(A1 = 0, A2 = 1, B1 = 2, B2 = 3,
+              A3 = 0.5, B3 = 2.5, B5 = 3.5, B4 = 3)
   expect_equal(unname(rel[names(target)]), unname(target), tolerance = 1e-5)
   .expectNoOverlap(pos)
 })

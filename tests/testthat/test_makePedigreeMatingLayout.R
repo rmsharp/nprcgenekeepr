@@ -687,7 +687,21 @@ test_that(
   ## needed a jog repair (each removing 2 __jog_ waypoint nodes) --
   ## 1446 - 10 = 1436. Re-measured by actually running the fixed engine,
   ## never hand-derived.
-  expect_equal(nrow(result$nodes), 1436L)
+  ## CHANGED AGAIN to 1792L -- Migration Path Phase 3 (S675, QP joint-solver
+  ## with the owner-ratified kinship2-parity floors, docs/planning/
+  ## pedigree-diagram-joint-qp-solver-plan.md Decision 3 as amended): the
+  ## QP centres every union between its parents (Decision 4 term 3) instead
+  ## of on its children's mean, so mate lines and sibship bars now span
+  ## other same-row nodes far more often -- 266 same-row colliding edges
+  ## pre-repair vs 88 (test_resolveEdgeNodeCollisions.R), every one still
+  ## resolved by the unchanged jog-repair mechanism, at 534 __jog_ waypoints
+  ## (267 repairs, 2 per edge) instead of 178: 1258 + 534 = 1792. The
+  ## 375/237/102/251/237/56 real/union/duplicate/bar/drop/proj counts are
+  ## all UNCHANGED (the QP adds or removes no node). Re-measured by actually
+  ## running the amended engine, never hand-derived; the 3x jog growth is a
+  ## disclosed, order-driven consequence of Decision 1 (the QP honours Phase
+  ## A's provisional order), recorded for the owner's visual review.
+  expect_equal(nrow(result$nodes), 1792L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
   ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L (issue #166's
@@ -706,7 +720,9 @@ test_that(
   ## CHANGED AGAIN to 178L -- same cause as the node-count change above
   ## (188 - 10 = 178): S667's disconnected-component separation removes 5
   ## more jog repairs it makes unnecessary.
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 178L)
+  ## CHANGED AGAIN to 534L -- same cause as the node-count change above
+  ## (Migration Path Phase 3, S675: 267 jog repairs x 2 waypoints).
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 534L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------
