@@ -182,8 +182,8 @@ gotchas: Phase order is load-bearing (seeding-only is an edge-class regression, 
   fixtures.
 runtime_smoke: n/a -- docs-only deliverable (net tracked diff); spike revert verified by
   re-running tests/testthat/test_solveJointQP.R green post-revert.
-changelog_ref: see CHANGELOG.md 2026-09-04 S676 entry (this commit)
-commit: pending
+changelog_ref: see CHANGELOG.md 2026-09-04 S676 entry (0af16c2c)
+commit: 0af16c2c
 ```
 
 ```handoff
