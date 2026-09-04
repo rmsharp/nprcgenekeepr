@@ -164,6 +164,42 @@ constraint is an inequality, matching kinship2 exactly — no equality constrain
 **No row-width bound** (§Context, Constraints) — kinship2's 2-per-row width constraints are
 dropped entirely, a disclosed divergence.
 
+#### Decision 3 — AMENDED (Session 675, Migration Path Phase 3, owner-ratified via `AskUserQuestion`)
+
+The table above is **superseded**. Phase 3's first real-fixture render under those floors showed
+why: the QP objective (Decision 4) pulls every adjacent pair down to its floor, and the floors
+above are the render layer's *symbol-tangent* distances — so 684 of the real 375 fixture's 705
+adjacent pairs landed at exactly the floor, symbols touching and labels overlapping into a
+continuous band (measured S675: 90% of adjacent individuals at exactly 50 px centre-to-centre;
+width 6,676 px). The census's class (a) also read 90 "overlaps" that were sub-microscopic
+(≤ 1.3e-6 px) `solve.QP()` precision shortfalls at its 1e-9 px epsilon, not geometry. The
+constants were designed as *collision thresholds* for the old capped-push passes (fire only when
+something is already too close), never as the typical spacing — that role belonged to Tier 1's
+`minSep = 1`, which Decision 1 stopped applying.
+
+**Amended floors, keyed to the engine's own `minSep` (1 raw unit = 120 px, kinship2's own uniform
+`alignped4` floor) — no new constant introduced:**
+
+| Pair kind | Value | Source |
+|---|---:|---|
+| individual–individual, individual–duplicate, duplicate–duplicate | `minSep` = 1.0 | `.positionMatingUnitForest()`'s Tier-1 spacing; kinship2's uniform floor |
+| individual–union, duplicate–union | `minSep / 2` = 0.5 | the S666 qualifying-pair geometry: mates 1.0 apart, dot centred |
+| union–union | `minSep / 4` = 0.25 | derived |
+
+`.solveJointQP()` takes `minSep` as an argument (default 1) and derives the three floors from it;
+`.positionMatingUnitForest()` passes its own `minSep`. Measured consequences on the real fixture
+(S675): census class (a) 90 → **0** with zero tangent pairs (no exact-floor snap needed — a 70 px
+margin absorbs solver precision), width 6,676 → 13,680 px (+32% vs the pre-QP engine's 10,395),
+class (b) unchanged at 46/47 and the jog-repair count unchanged at ~267 (both are order-driven,
+see the Phase 3 record below), and the small packing fixtures (Track B shrunk, D1–D3) return to
+**bit-exact agreement with kinship2's own `align.pedigree()` values** (the S665/S667 targets), which
+the tangent floors had broken. Alternatives measured and shown to the owner as renders before the
+decision: keep tangent + exact-floor snap (legibility unchanged), an intermediate 0.667/0.375/0.15
+(9,860 px, labels tight), and this parity set.
+
+The original constants stay in force where they belong — `.resolveEdgeNodeCollisions()`'s same-row
+collision thresholds are untouched.
+
 ### Decision 4 — Objective (items 2 and "duplicate-proximity" of S670 §4's costed list)
 
 One penalty row per term below, accumulated into `pmat` exactly as kinship2's `alignped4` builds
@@ -376,6 +412,26 @@ does not touch the jog/dogleg rendering layer — §Impact Analysis); full clean
 `CLAUDE.md`'s Build/Test/Verify) 0 failed/0 error attributable; `lintr::lint_package()` 0 findings.
 **Session boundary:** close out here. Phase 4 is a separate session (may be skipped/folded into
 Phase 3's own close-out if that session's scope allows — not pre-committed here).
+
+**Phase 3 record (Session 675, 2026-09-03):** DONE with one amendment (Decision 3, above) and two
+findings the verification line above did not anticipate. (1) **Class (b) is not reachable by the
+constraints** — Learning 723's point, now measured at real-fixture scale: 46 of 237 unions stay
+off their mate midpoint under every floor setting because the QP honours Phase A's provisional
+*order* (Decision 1). S675 separated the 45 same-row cases: 8 polygamous anchors (structural —
+one anchor node can flank only two unions), 11 two-union anchors whose Tier 2/3 provisional
+values put both unions on the same side, and the rest units whose genuine (non-B1) mate sits far
+away under her own parents. (2) **Order-driven crossing growth**: same-row colliding edges before
+jog repair 88 → 266 (obstacle pairs 1,751 → 2,549; jog repairs 89 → 267), and D1 sibship bars
+sharing an inter-row y now overlap in x for 312 pairs (was 0) — both because the union dot is now
+centred between its parents (Decision 4 term 3) rather than sitting on its children's mean, so
+drop points and mate lines span other nodes. All same-row crossings are still resolved by the
+unchanged repair pass (class (c1) after repair = 0); class (c2) 414 → 587. Both findings trace to
+the *provisional order* Phase A hands the QP, not to the QP itself — the natural follow-up is a
+design session on provisional ordering (kinship2's `alignped1–3` order heuristics and/or spouse
+duplication), recorded in `BACKLOG.md`. Verification actually run: full clean regression 0
+failed/0 error attributable, `lintr` 0 findings, live `shinytest2` E2E Diagram-tab suite, census
+re-run (Real 375: a 0, b 47, c1 post 0, c2 587, d 0, e 56, f 0), images regenerated and
+owner-reviewed (see the S675 handoff for the review outcome).
 
 ### Phase 4 — Cleanup
 
