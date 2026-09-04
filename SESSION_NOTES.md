@@ -18,15 +18,105 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 675 Handoff Evaluation (by Session 676)
+**Score: 9/10.** **What helped:** `next_steps` named this session's deliverable exactly, with
+the two concrete starting points (Learning 727's 8/11/26 breakdown, the census script) that
+became the design's problem statement — the breakdown re-measured within a couple of counts on
+the first harness run. Gotcha (1) (census eps vs `solve.QP()` precision) predicted the exact
+dust-row pattern the endpoint measurement then hit (5 of the final 12 (b) rows are ≤ 2.4e-6 px
+shortfalls); gotcha (2) ("(b)/crossings/bars are ORDER-driven; floors and weights cannot move
+them") is the sentence this whole session executed against. Key-file citations were exact
+(`BACKLOG.md:175` was the item, to the line). **What was missing:** only what could not have
+been known — that the two candidate levers interact non-monotonically (seeding alone is an
+edge-class regression; found by this session's ablations, now Learning 728); and the S675
+breakdown script itself was not committed, so the anchor-unit-count × subclass table was
+re-derived from Learning 727's prose (adequate, ~20 minutes). **What was wrong:** nothing
+material. **ROI:** high — zero scope reconstruction; the session went straight from orientation
+to measurement.
+
 ### What Session 676 Did
 **Deliverable:** Design document for the QP joint-solver's provisional ORDER stage (Phase A
-seeding) — `BACKLOG.md` Up Next design item (found S675); `ARCHITECTURE_WORKSTREAM.md`; design
-doc only, no `R/` changes, no objective terms, no weight tuning. (IN PROGRESS)
-**Started:** 2026-09-04
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+seeding) — `docs/planning/pedigree-diagram-provisional-order-plan.md`. `ARCHITECTURE_
+WORKSTREAM.md`, design only: production `R/` untouched at close-out (spike reverted clean,
+QP test file re-run green), no objective term added, no weight tuned (S675 mandate upheld).
+**DONE.** **Started/completed:** 2026-09-04 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0** — SAFEGUARDS/SESSION_NOTES/issues/BACKLOG/dashboard/`gh run list` (CI green, but
+   still against S666's push — no QP work has ever run in CI); ledger reconcile: frontier one
+   self-reconcile commit behind HEAD (established no-backfill pattern), HANDOFFS at HEAD
+   `complete`. Priorities + `AskUserQuestion`; owner picked the provisional-order design session.
+2. **Claimed (1B)** `c3f18a83`; read `ARCHITECTURE_WORKSTREAM.md`, the QP plan doc, Learnings
+   678/720–727, kinship2's `alignped1/2/3`/`autohint` sources (scratchpad copies), the census's
+   (b)/(d) detectors, `.buildMatingUnitForest()`'s duplicate policy, and the current Phase A
+   seed formulas — code, not summaries.
+3. **Spike** (temporary `getOption("nprcgenekeepr.orderSeedSpike")` hook in `R/`, Learning
+   721/725 pattern): harness = scratchpad census copy (CSV redirected, kinship2 baseline
+   skipped) + a Learning-727 breakdown script + the bar-overlap pin metric replicated.
+   **Baseline validated bit-for-bit against S675's committed numbers before any candidate was
+   trusted** (b 47, c2 587, e 56, jogs 267, bars 312, width 13,680, dups 102).
+4. **Four seeding iterations, each diagnosed from evidence:** fixed ±minSep insets tie with
+   integer founder positions (b→70); ε-inset (0.9) fixes ties but facing anchors < 1.8 apart
+   overshoot into inverted nesting — diagnosed via a provisional-seed dump after a px→raw
+   hand-conversion error briefly "proved" the QP inverts ranks (impossible; Learning 729);
+   gap-proportional inset `min(0.9·minSep, 0.45·gap)` removes the class (b→40); + duplication
+   → the combined endpoint.
+5. **Ablations** (Learning 728): seeding-only REGRESSES edges (jogs 326, c2 804, bars 487);
+   duplication-only improves everything but (b) (c2 94, e 0); combined: **b 12, c1Pre 10 edges/
+   13 pairs, jogs 165, c2 116, bars 234, e 0, d 1, width 13,710, dups 170** (kinship2's own:
+   145). Five kinship2-parity packing fixtures byte-identical under the full candidate; Track
+   C's Learning-723 residual → 0.
+6. **Renders:** baseline-vs-candidate overview PNGs (chromote, `kinship2FidelityValidation.R`
+   pattern) — mid-row tangle visibly resolves into local anchor–dot–mate triples; sent to owner.
+7. **Deliverable written and committed:** the design doc (context/order-stage contract/evidence/
+   4 decisions/rationale/6 alternatives/inventory/3-phase migration path with measured per-phase
+   targets/impact/verification/5 open questions/spike appendix). Spike reverted
+   (`git checkout`), diff preserved at `scratchpad/orderSpikeDiff.patch`.
+8. **Close-out:** this evaluation, self-assessment, Learnings 728–729, `BACKLOG.md` (design item
+   DONE + new implementation item), `CHANGELOG.md` entry, `HANDOFFS.md` receipt.
+
+**Self-assessment (Session 676): 9/10.** **Strengths:** (1) validated the measurement harness
+against the committed baseline before trusting any candidate number; (2) every design claim in
+the doc is a measurement on the real fixture, including the migration path's per-phase targets
+(each phase's expected census row is its own ablation run); (3) the ablation inverted the
+intuitive phase order — the design's single most consequential finding (Learning 728); (4) the
+packing-fixture byte-identity check turned "blast radius" from an estimate into a bound; (5)
+scope discipline: no production change shipped, spike reverted and verified green, mandate
+(no terms/weights) honoured. **Weaknesses:** (1) one diagnostic round wasted on a px→raw
+conversion error that momentarily "proved" the impossible (Learning 729); (2) the spike breadth
+(4 variants + 2 ablations + renders) is at the outer edge of a design session, though squarely
+inside the S675 spike precedent and all of it landed as evidence in the doc; (3) no full clean
+regression at close-out — net tracked diff is docs-only and the reverted file's own test suite
+was re-run green, but stating it is better than assuming it; (4) overview renders only, no
+100%-scale crop (the implementing sessions own the visual gate).
+
+**Next steps (specific):** (A) **Implement Phase 1 — duplication policy** (`BACKLOG.md` Up Next,
+the new implementation item; `DEVELOPMENT_WORKSTREAM.md`, full TDD; PRE-RED gate ratifies
+Decision 2): edit site `R/makePedigreeDiagramData.R:509–541`, expected census row in the item;
+forest tests re-derived; owner visual review. Phase 2 (seeding) only after. (B) Independent:
+push the branch (38 commits ahead; CI has never seen ANY QP work); `kinship2-fidelity-
+validation.qmd` prose still stale (Housekeeping); census Finding #3 (jog offset) still open.
+
+**Key files:** `docs/planning/pedigree-diagram-provisional-order-plan.md` (the deliverable —
+read §Evidence and §Migration Path first); `scratchpad/orderSpikeDiff.patch` (spike reference
+implementation — UNTRACKED, take it before cleaning scratchpad) and `scratchpad/
+census_spike_{off,s4,s4nd,s2}.csv` + `census_*.log`/`breakdown_*.log` (raw measurements);
+`BACKLOG.md:175` (implementation item); `PROJECT_LEARNINGS.md:2165` (Learnings 728–729);
+`R/makePedigreeDiagramData.R:509–541` (Decision 2 edit site), `:1058–1106`/`:1170–1202`
+(Decision 1 edit sites) — verified post-revert this session.
+
+**Gotchas for the implementing sessions:** (1) **phase order is load-bearing** — seeding
+without duplication ships an edge-class regression (Learning 728; the doc's ablation table is
+the proof); (2) the census (b) gate (1e-6 px) counts solver dust once deviations get small —
+use Learning 726's two-assertion pattern in RED, and expect ~5 dust rows in the endpoint; (3)
+the five packing fixtures (Track B full/shrunk, D1–D3) must stay BYTE-IDENTICAL in both phases
+— any drift is a defect in your implementation, not a pin to re-derive; (4) the renv
+"out-of-sync" banner every `Rscript` run prints is the documented Suggests-only artifact
+(Learnings 473/476) — `renv::status(dev = TRUE)` verified clean this session; (5) marry-in
+chains are where the 4 residual crowding cases live — keep `__union_97/128/179/228` in Phase
+2's RED fixtures; (6) the overview-render script pattern is `scratchpad/orderSpikeRender.R`
+(chromote, `screenshot_layout()` clone) — cheap to rebuild from
+`data-raw/kinship2FidelityValidation.R:79–105` if scratchpad is gone.
 
 ### Session 674 Handoff Evaluation (by Session 675)
 **Score: 8/10.** **What helped:** `next_steps` named this session's scope exactly (Phase 3: real

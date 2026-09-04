@@ -138,11 +138,51 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S676
 date: 2026-09-04
-status: pending
-active_task: Design document for the QP joint-solver's provisional ORDER stage (Phase A
-  seeding) -- BACKLOG.md Up Next design item (found S675); ARCHITECTURE_WORKSTREAM.md; design
-  doc only, no R/ changes, no objective terms, no weight tuning. Claimed 2026-09-04.
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Design doc for the QP joint-solver's provisional ORDER stage (Phase A
+  seeding) -- docs/planning/pedigree-diagram-provisional-order-plan.md. Design only:
+  production R/ untouched (spike reverted clean, QP test file green), no objective term
+  added, no weight tuned (S675 mandate upheld). Close-out 2026-09-04.
+what_was_done: Measured all three S675 candidate directions through a temporary
+  getOption()-gated spike in R/ (Learning 721/725 pattern; reverted; diff preserved at
+  scratchpad/orderSpikeDiff.patch) with the census harness validated bit-for-bit against
+  S675's committed baseline first. Four seeding iterations (fixed insets tie with integer
+  founders; eps-insets overshoot between facing anchors < 1.8 raw apart into inverted
+  nesting -- Learning 729; gap-proportional min(0.9*minSep, 0.45*gap) fixes it) plus
+  ablations (Learning 728: seeding alone REGRESSES edge classes -- jogs 326/c2 804/bars 487;
+  duplication alone improves all but (b); combined endpoint on Real 375: b 47->12, c1Pre
+  86->10 edges, jogs 267->165, c2 587->116, bars 312->234, e 56->0, d 1, dups 102->170 vs
+  kinship2's 145, width unchanged). Five kinship2-parity packing fixtures byte-identical
+  under the full candidate; Track C's Learning-723 residual -> 0. Design: duplication for
+  B2-shaped non-anchors (Phase 1), objective-ideal gap-proportional seeding (Phase 2), in
+  that order (load-bearing); alignped1-3/autohint port rejected (autohint punts on this very
+  fixture, S670). Baseline-vs-candidate overview renders produced and sent to owner.
+  Learnings 728-729; BACKLOG design item DONE + new implementation item; CHANGELOG entry.
+next_steps: Implement Phase 1 (duplication policy) per the design doc's Migration Path --
+  DEVELOPMENT_WORKSTREAM.md, full TDD, PRE-RED AskUserQuestion gate ratifies Decision 2; edit
+  site R/makePedigreeDiagramData.R:509-541; expected census row and byte-identity invariant
+  in BACKLOG.md's implementation item. Phase 2 (seeding) only after Phase 1. Independent:
+  push the branch (38 commits ahead, CI has never run any QP work);
+  kinship2-fidelity-validation.qmd prose stale (Housekeeping); census Finding #3 (jog
+  offset) open.
+key_files: docs/planning/pedigree-diagram-provisional-order-plan.md (deliverable; read
+  Evidence + Migration Path first); scratchpad/orderSpikeDiff.patch (UNTRACKED spike
+  reference impl) + scratchpad/census_spike_*.csv (raw measurements);
+  BACKLOG.md:175 (implementation item); PROJECT_LEARNINGS.md:2165 (Learnings 728-729);
+  R/makePedigreeDiagramData.R:509-541 and :1058-1106/:1170-1202 (edit sites, verified
+  post-revert).
+gotchas: Phase order is load-bearing (seeding-only is an edge-class regression, Learning
+  728). Census (b) 1e-6 px gate counts ~5 solver-dust rows at the endpoint -- use Learning
+  726's two-assertion pattern in RED. The five packing fixtures must stay BYTE-IDENTICAL in
+  both phases; drift = implementation defect, not a pin to re-derive. renv "out-of-sync"
+  banner is the documented Suggests-only artifact (Learning 473/476); status(dev=TRUE)
+  verified clean this session. Keep __union_97/128/179/228 (marry-in chains) in Phase 2 RED
+  fixtures.
+runtime_smoke: n/a -- docs-only deliverable (net tracked diff); spike revert verified by
+  re-running tests/testthat/test_solveJointQP.R green post-revert.
+changelog_ref: see CHANGELOG.md 2026-09-04 S676 entry (this commit)
 commit: pending
 ```
 

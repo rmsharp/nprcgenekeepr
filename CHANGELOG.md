@@ -16,6 +16,38 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-04 · [BL-provisionalOrderDesign] S676: Design — provisional ORDER for the QP joint solver (Phase A seeding), spike-measured, committed
+- **Deliverable:** [`docs/planning/pedigree-diagram-provisional-order-plan.md`](docs/planning/pedigree-diagram-provisional-order-plan.md)
+  (`ARCHITECTURE_WORKSTREAM.md`; the `BACKLOG.md` design item found S675). Design only —
+  production `R/` untouched at close-out: candidate rules measured through a temporary
+  `getOption("nprcgenekeepr.orderSeedSpike")` hook (Learning 721/725 pattern), reverted clean
+  (`test_solveJointQP.R` re-run green), full diff preserved at `scratchpad/orderSpikeDiff.patch`
+  and distilled in the doc's Appendix. No objective term added, no weight tuned (S675 mandate).
+- **Method:** census harness (scratchpad copy, CSV redirected, kinship2 baseline skipped)
+  validated bit-for-bit against S675's committed Real-375 numbers before any candidate was
+  trusted; Learning-727 breakdown script + the bar-overlap pin metric replicated; four seeding
+  iterations each diagnosed from evidence (integer-seed ties; facing-anchor overshoot inversion
+  diagnosed from a provisional-seed dump — Learning 729); single-lever ablations (Learning 728).
+- **Design chosen:** kinship2's two order mechanisms transplanted — (Phase 1) spouse duplication
+  for B2-shaped non-anchors (`.buildMatingUnitForest()` free-occurrence grant restricted to
+  B1-shaped mates), then (Phase 2) objective-ideal seeding (mate adjacent at gap-proportional
+  inset `min(0.9·minSep, 0.45·gap)`, union at half, children-side rule, two-unit L/R split).
+  **Phase order load-bearing:** seeding alone measured as a net edge-class regression (jogs +22%,
+  c2 +37%, bars +56%). Full `alignped1–3`/`autohint` port rejected — kinship2's own `autohint`
+  punts on this very fixture (S670).
+- **Measured endpoint (Real 375, combined):** (b) 47 → 12 (max deviation 25 → 1.0 raw;
+  outside-mate-span 13 → 0; ~5 of the 12 are ≤ 2.4e-6 px solver dust, 3 sit on one polygamous
+  anchor — the disclosed structural floor), pre-repair colliding edges 86 → 10 (obstacle pairs
+  1,730 → 13), jogs 267 → 165, c2 587 → 116, D1 bar overlaps 312 → 234, class (e) 56 → 0
+  (rendered mates all on their union's row; row policy for real individuals unchanged), (d) 1,
+  duplicates 102 → 170 (kinship2's own: 145), width unchanged. Track C's Learning-723
+  constraint-bound residual → 0. **Five kinship2-parity packing fixtures byte-identical** —
+  blast radius bounded to Real-375/Track C pins + forest tests. Baseline-vs-candidate overview
+  renders produced (chromote) and sent to the owner.
+- **Records:** Learnings 728–729; `BACKLOG.md` design item DONE + new implementation item
+  (Phase 1 duplication first, with measured per-phase census targets); `SESSION_NOTES.md`
+  handoff; `HANDOFFS.md` receipt. Claim `c3f18a83`.
+
 ### 2026-09-03 · [BL-pedigreeDrawingErrorCensus] S675: Migration Path Phase 3 — real-375-fixture cutover, Decision 3 amended (kinship2-parity QP floors), owner visual review passed
 - **Deliverable:** Phase 3 of `docs/planning/pedigree-diagram-joint-qp-solver-plan.md` DONE
   (close-out 2026-09-04). Follows `DEVELOPMENT_WORKSTREAM.md`, full TDD RED (`7d81e8d1`) →

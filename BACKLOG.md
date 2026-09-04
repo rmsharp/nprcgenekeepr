@@ -172,26 +172,39 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       directly below. Independent of all of this, one item still stands: the jog offset must be
       raised above the 25-px symbol radius (census Finding #3) -- a bounded fix any future session
       could pick up at any time, with no ordering dependency on the QP work either way.
-- [ ] **Design session: provisional ORDER for the QP joint-solver (Phase A seeding)** (found S675,
-      2026-09-03; READY, Effort M -- `ARCHITECTURE_WORKSTREAM.md`, design doc only, no `R/` change;
-      standing pedigree-fidelity directive) -- every residual left after Phase 3 is invariant to
-      the QP's floors and weights and traces to the provisional left-to-right row order Phase A
-      hands the QP as a fixed input (Decision 1; `PROJECT_LEARNINGS.md` Learning 727): (1) census
-      class (b), 47 of 237 unions off their mate midpoint on the real fixture -- 8 polygamous
-      anchors (structural: one anchor node flanks at most two unions; kinship2 duplicates the
-      spouse), 11 two-unit anchors whose Tier 2/3 provisional values put BOTH unions on the same
-      side (fixable by smarter seeding), 26 monogamous units whose genuine non-B1 mate sits far
-      away under her own parents (a duplicate-policy question); (2) same-row crossings before jog
-      repair 88 -> 266 colliding edges (all still resolved by the unchanged repair pass) and (3) 312
-      D1 sibship-bar x-overlaps (was 0) -- both because the union dot is now centred between its
-      parents rather than on its children's mean, so drop points and mate lines span other nodes.
-      Candidate directions, none evaluated: seed a union's provisional x from its anchor/mate
-      midpoint (not the children's mean) and a B1 mate adjacent to the anchor; port kinship2's
-      `alignped1-3` order heuristics; kinship2-style spouse duplication for far-away genuine mates.
-      Design the order stage, do not add objective terms or tune weights (Learning 723/727 both
-      showed those cannot move an order-bound residual). Measurement harness ready-made:
-      `data-raw/pedigreeDrawingErrorCensus.R` + the S675 real-375 breakdown script pattern
-      (anchor unit-count x subclass) in `PROJECT_LEARNINGS.md` Learning 727.
+- [ ] **Implement the provisional-order design: Phase 1 (duplication policy), then Phase 2
+      (order-consistent seeding)** (design ratified-for-implementation pending each phase's own
+      PRE-RED gate; READY, Effort M per phase; standing pedigree-fidelity directive) --
+      [`docs/planning/pedigree-diagram-provisional-order-plan.md`](docs/planning/pedigree-diagram-provisional-order-plan.md)
+      (S676) specs both phases with measured per-phase census targets from a validated spike:
+      **Phase 1** -- `.buildMatingUnitForest()` grants the free non-anchor occurrence only to
+      B1-shaped individuals (kinship2-style spouse duplication; dups 102 -> 170 vs kinship2's own
+      145); expect Real 375 b 56, c1Pre 24, c2 94, jogs 183, e **0**, bars 240; packing fixtures
+      (Track B full/shrunk, D1-D3) byte-identical -- any drift is a defect. **Phase 2** -- Tier
+      2/3 seed formulas replaced by objective-ideal seeds (mate adjacent at a gap-proportional
+      inset `min(0.9*minSep, 0.45*gap)`, union at half, children-side rule, two-unit L/R split);
+      expect Real 375 b 12 (~5 solver-precision dust + 3 on one polygamous anchor), c1Pre 10,
+      c2 116, jogs 165, bars 234. **Phase order is load-bearing** (seeding without duplication
+      measured as a net edge-class regression -- jogs +22%, c2 +37%, bars +56%). Do NOT add
+      objective terms or tune weights (S675 mandate, upheld); the wDup-vs-spousal-pull tension on
+      the new duplicates is a Phase-1 RED sweep question, and the doc's Open Questions hold the
+      deferred refinements (dup collapse-when-adjacent, sibling order, polygamous anchors,
+      census-(b) epsilon).
+- [x] **Design session: provisional ORDER for the QP joint-solver (Phase A seeding)** (found S675,
+      2026-09-03; **DONE S676, 2026-09-04**, Effort M, one session, design doc only -- production
+      `R/` untouched, spike reverted clean) --
+      [`docs/planning/pedigree-diagram-provisional-order-plan.md`](docs/planning/pedigree-diagram-provisional-order-plan.md).
+      All three candidate directions from this item MEASURED (not just compared on paper) through
+      a temporary `getOption()`-gated spike (Learning 721/725 pattern) + the census harness,
+      baseline validated bit-for-bit against S675's committed numbers first. Chosen design:
+      kinship2's two order mechanisms transplanted -- (1) spouse duplication for B2-shaped
+      non-anchors, (2) objective-ideal seeding with gap-proportional insets -- in that order;
+      the full `alignped1-3`/`autohint` port REJECTED (kinship2's own `autohint` punts on this
+      very fixture, S670). Combined endpoint measured on Real 375: (b) 47 -> 12 (max deviation
+      25 -> 1.0 raw, outside-mate-span 13 -> 0), pre-repair colliding edges 86 -> 10, jogs
+      267 -> 165, c2 587 -> 116, bars 312 -> 234, class (e) 56 -> 0, width unchanged; Track C's
+      Learning-723 constraint-bound residual -> 0; five kinship2-parity packing fixtures
+      byte-identical. See the implementation item directly above and `CHANGELOG.md`.
 - [x] **Research: characterize kinship2's `align.pedigree()` joint-positioning mechanism
       (`alignped4.R`) to quantify the (C) joint-solver option** (owner-directed 2026-09-02, after
       reviewing the S669 spike result; **DONE S670, 2026-09-03**, Effort M, one session) --
