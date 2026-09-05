@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 677 Did
+**Deliverable:** Implement provisional-order design Phase 1 — duplication policy
+(`.buildMatingUnitForest()` grants the free non-anchor occurrence only to B1-shaped
+individuals; `docs/planning/pedigree-diagram-provisional-order-plan.md`,
+`DEVELOPMENT_WORKSTREAM.md`, full TDD, PRE-RED gate ratifies Decision 2). (IN PROGRESS)
+**Started:** 2026-09-04
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 675 Handoff Evaluation (by Session 676)
 **Score: 9/10.** **What helped:** `next_steps` named this session's deliverable exactly, with
 the two concrete starting points (Learning 727's 8/11/26 breakdown, the census script) that

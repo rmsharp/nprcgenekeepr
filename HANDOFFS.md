@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S677
+date: 2026-09-04
+status: pending
+active_task: Implement provisional-order design Phase 1 (duplication policy) — .buildMatingUnitForest() grants the free non-anchor occurrence only to B1-shaped individuals; docs/planning/pedigree-diagram-provisional-order-plan.md, DEVELOPMENT_WORKSTREAM.md, full TDD, PRE-RED gate ratifies Decision 2
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S676
 date: 2026-09-04
 status: complete
