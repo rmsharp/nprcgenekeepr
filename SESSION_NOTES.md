@@ -18,13 +18,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
-### What Session 677 Did
+### What Session 678 Did
 **Deliverable:** Implement provisional-order design Phase 1 — duplication policy
 (`.buildMatingUnitForest()` grants the free non-anchor occurrence only to B1-shaped
 individuals; `docs/planning/pedigree-diagram-provisional-order-plan.md`,
 `DEVELOPMENT_WORKSTREAM.md`, full TDD, PRE-RED gate ratifies Decision 2). (IN PROGRESS)
-**Started:** 2026-09-04
-**Status:** Session claimed. Work beginning.
+**Started:** 2026-09-07
+**Status:** Session claimed. Work beginning. (Phase 0 found Session 677 was a ghost: it
+claimed this same deliverable 2026-09-04, commit `ef8a6c54`, then left no further trace —
+reconciled at `b109eee3`: CHANGELOG backfill + HANDOFFS receipt marked `reconciled`. No
+work from S677 exists to build on; this session starts the deliverable from scratch.)
 **Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
 `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
 session's reconcile.
