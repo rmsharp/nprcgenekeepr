@@ -16,6 +16,18 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-07 · [ad hoc] Backfilled (reconcile-on-read): S677 ghost session — claim commit `ef8a6c54` only, no work
+- Session 677 claimed its deliverable on 2026-09-04 (`chore: S677 -- claim session (implement
+  provisional-order Phase 1: duplication policy; DEVELOPMENT_WORKSTREAM.md, full TDD)`) and left
+  no further trace: no work commits, no tracked-file changes, `SESSION_NOTES.md` stub still
+  `CHANGELOG: pending`, `HANDOFFS.md` receipt still `status: pending`. The session evidently
+  ended before any technical work began. The claimed deliverable (provisional-order Phase 1 —
+  duplication policy, `BACKLOG.md` Up Next) remains fully open.
+- Reconciled by Session 678's Phase 0: this ledger entry backfilled; the S677 `HANDOFFS.md`
+  receipt reconstructed from `git log` and marked `status: reconciled`.
+- (`692e92f8`, S676's record-close-out-sha self-reconcile commit, is covered by S676's own
+  entry below — the established one-commit-behind frontier pattern, no backfill owed.)
+
 ### 2026-09-04 · [BL-provisionalOrderDesign] S676: Design — provisional ORDER for the QP joint solver (Phase A seeding), spike-measured, committed
 - **Deliverable:** [`docs/planning/pedigree-diagram-provisional-order-plan.md`](docs/planning/pedigree-diagram-provisional-order-plan.md)
   (`ARCHITECTURE_WORKSTREAM.md`; the `BACKLOG.md` design item found S675). Design only —

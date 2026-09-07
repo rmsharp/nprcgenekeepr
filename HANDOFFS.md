@@ -138,10 +138,10 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S677
 date: 2026-09-04
-status: pending
+status: reconciled
 active_task: Implement provisional-order design Phase 1 (duplication policy) — .buildMatingUnitForest() grants the free non-anchor occurrence only to B1-shaped individuals; docs/planning/pedigree-diagram-provisional-order-plan.md, DEVELOPMENT_WORKSTREAM.md, full TDD, PRE-RED gate ratifies Decision 2
-what_was_done: pending
-commit: pending
+what_was_done: Claim only — commit ef8a6c54 (Phase 1B stub in SESSION_NOTES.md + this receipt as status pending). No work commits, no tracked-file changes, no further trace; the session ended before any technical work began. The claimed deliverable (provisional-order Phase 1, duplication policy) remains fully open in BACKLOG.md. Reconstructed from git log by Session 678's Phase 0 reconcile, 2026-09-07.
+commit: ef8a6c54
 ```
 
 ```handoff
