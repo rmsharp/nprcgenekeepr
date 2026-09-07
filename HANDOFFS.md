@@ -148,7 +148,7 @@ key_files: R/makePedigreeDiagramData.R:531 (isB2Shaped(), loop :546-563); tests/
 gotchas: Phase 2 measures against THIS session's census row (the new baseline), not S675's; design-doc Decision-1 line citations are ~+22 lines stale — re-grep; census (b) gate counts <=2.4e-6 px solver dust (Learning 726 two-assertion pattern, ~5 dust rows expected); the 5 packing fixtures must stay byte-identical through Phase 2; __proj_ doglegs are extinct and their ABSENCE is pinned — a reappearing projection is a Decision 2 regression; test_solveJointQP.R should need no Phase-2 changes (structural assertions only).
 runtime_smoke: live shinytest2 E2E pedigree module (NPRC_RUN_E2E=true): 16/16 blocks, 55 expectations, 0 failed/0 error against the shipped policy
 changelog_ref: 2026-09-07 S678 entry (BL-provisionalOrderPhase1)
-commit: pending
+commit: 29fdb7bd
 ```
 
 ```handoff
