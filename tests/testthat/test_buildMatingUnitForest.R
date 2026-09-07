@@ -285,8 +285,9 @@ test_that(".buildMatingUnitForest resolves the real GA204Z/8LKBV9 loop:
 ## half-sib coefficient cited in that session).
 
 test_that(".buildMatingUnitForest resolves a half-sib-mating convergent
-           loop via the same duplication mechanism, duplicating only the
-           doubly-mated founder (F1), not A, B, or C", {
+           loop via the same duplication mechanism, duplicating the
+           doubly-mated founder (F1) and the B2-shaped non-anchor mate
+           (B, her own parent edge -- Decision 2, S678), not A or C", {
   ped <- data.frame(
     id = c("F1", "F2", "F3", "A", "B", "C"),
     sire = c(NA, NA, NA, "F1", "F1", "A"),
@@ -297,8 +298,17 @@ test_that(".buildMatingUnitForest resolves a half-sib-mating convergent
   )
   result <- .buildMatingUnitForest(ped)
   expect_equal(nrow(result$matingUnits), 3L)
-  expect_equal(nrow(result$duplicates), 1L)
-  expect_equal(result$duplicates$realId, "F1")
+  ## CHANGED S678 from 1L (F1 only) -- provisional-order design Decision 2
+  ## (docs/planning/pedigree-diagram-provisional-order-plan.md): B is a
+  ## B2-shaped non-anchor (own parent edge, sire F1/dam F3) at the A x B
+  ## unit A anchors, so she no longer gets the free un-duplicated
+  ## occurrence there; her real node keeps rendering under her own
+  ## parents, and a __dup_ node stands in for her at the unit.
+  expect_equal(nrow(result$duplicates), 2L)
+  expect_setequal(result$duplicates$realId, c("F1", "B"))
+  bDup <- result$duplicates[result$duplicates$realId == "B", ]
+  unitAB <- result$matingUnits$id[result$matingUnits$sire == "A"]
+  expect_equal(bDup$matingUnitId, unitAB)
   expect_equal(nrow(result$childEdges), 3L)
   expect_true(all(grepl("^__union_", result$childEdges$from)))
 })
@@ -323,7 +333,11 @@ test_that(".buildMatingUnitForest resolves the real anchor-collision case
   ## (§1.4/§5: 128 -> 103 predicted, 102 confirmed against the live
   ## full-pipeline implementation, off by 1 from the predicted figure for
   ## the reason §1.4 itself already documents).
-  expect_equal(nrow(result$duplicates), 102L)
+  ## CHANGED S678 from 102L -- provisional-order design Decision 2
+  ## (kinship2-style spouse duplication): every B2-shaped non-anchor
+  ## occurrence is duplicated, no free pass. 170 vs kinship2's own 145 on
+  ## this same fixture (design doc §Evidence, re-measured live S678).
+  expect_equal(nrow(result$duplicates), 170L)
 
   ## Every mating unit has exactly one anchor, chosen from its own two
   ## parents (the invariant that always holds unconditionally by
@@ -416,7 +430,9 @@ test_that(".buildMatingUnitForest's dangling-reference handling does not
   ## anchor-collision test above); this test's own point (dangling
   ## references don't change anchor assignment for a fully self-contained
   ## pedigree) is unaffected by which specific figure is current.
-  expect_equal(nrow(result$duplicates), 102L)
+  ## CHANGED S678 from 102L -- Decision 2 spouse duplication (see the
+  ## anchor-collision test above); same current-figure note applies.
+  expect_equal(nrow(result$duplicates), 170L)
 })
 
 test_that(".buildMatingUnitForest does not select a dangling parent as
@@ -441,4 +457,89 @@ test_that(".buildMatingUnitForest does not select a dangling parent as
   ## gen falls back to 0L, not NA -- pmax(NA, NA, na.rm = TRUE) returns NA,
   ## not the -Inf the pre-existing is.infinite() guard assumed would fire.
   expect_equal(result$matingUnits$gen, 0L)
+})
+
+## ---- Decision 2 (S678): kinship2-style spouse duplication -------------
+## Provisional-order design (docs/planning/pedigree-diagram-provisional-
+## order-plan.md, S676; PRE-RED-ratified S678): the free un-duplicated
+## non-anchor occurrence is granted ONLY to a B1-shaped individual -- no
+## own parent edge and no own single-parent direct child, the same
+## structural test .positionMatingUnitForest()'s b1Ids applies, evaluated
+## from 'ped' at forest-build time. A B2-shaped non-anchor gets a __dup_
+## node at EVERY non-anchor occurrence; her real node keeps rendering on
+## its own gen row under her own parents. A dangling non-anchor (no own
+## row) is NOT B2-shaped -- the pre-existing free-pass/duplicate logic
+## still governs it (the dangling-reference tests above are the guard).
+## The B2-via-parent-edge shape is covered by the half-sib loop test
+## above (B duplicated at A x B); the two tests below cover the
+## B2-via-own-single-parent-direct-child shape and the policy's full
+## real-fixture coverage.
+
+test_that(".buildMatingUnitForest duplicates a B2-shaped non-anchor whose
+           B2 shape comes ONLY from her own single-parent direct child
+           (no parent edge of her own) -- Decision 2's second structural
+           disqualifier, evaluated from 'ped' at forest-build time", {
+  ## W is a founder (no parent edge) with a single-parent direct child S
+  ## (dam-only, D5 fallback edge) -- B2-shaped via the child alone. Her
+  ## mate X has deeper gen (own parents G1 x G2), so X anchors their unit
+  ## and W is its non-anchor.
+  ped <- data.frame(
+    id = c("G1", "G2", "X", "W", "S", "C"),
+    sire = c(NA, NA, "G1", NA, NA, "X"),
+    dam = c(NA, NA, "G2", NA, "W", "W"),
+    sex = c("M", "F", "M", "F", "F", "F"),
+    gen = c(0L, 0L, 1L, 0L, 1L, 2L),
+    stringsAsFactors = FALSE
+  )
+  result <- .buildMatingUnitForest(ped)
+  expect_equal(nrow(result$matingUnits), 2L)
+  unitXW <- result$matingUnits[result$matingUnits$sire == "X", ]
+  expect_equal(unitXW$anchor, "X")
+  expect_equal(unitXW$nonAnchor, "W")
+  ## W's ONLY non-anchor occurrence is duplicated -- no free pass. G2
+  ## (B1-shaped: founder, no single-parent direct child) keeps hers at
+  ## the G1 x G2 unit, so W's is the fixture's only duplicate.
+  expect_equal(nrow(result$duplicates), 1L)
+  expect_equal(result$duplicates$realId, "W")
+  expect_equal(result$duplicates$matingUnitId, unitXW$id)
+  ## S's D5 single-parent fallback edge from W directly is unchanged.
+  expect_true(any(result$childEdges$from == "W" &
+                    result$childEdges$to == "S"))
+})
+
+test_that(".buildMatingUnitForest grants no free occurrence to ANY
+           B2-shaped non-anchor on the full real 375-individual fixture
+           -- every mating unit whose non-anchor has its own parent edge
+           or own single-parent direct child carries a duplicate at that
+           unit (Decision 2's coverage property, asserted per-unit rather
+           than only via the 170 total)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  result <- .buildMatingUnitForest(ped)
+
+  ## Test-side re-derivation of the B2 structural test from raw ped
+  ## columns (not shared with R/ -- the assert-against-an-independent-
+  ## computation discipline).
+  hasSire <- !is.na(ped$sire)
+  hasDam <- !is.na(ped$dam)
+  hasParentEdge <- stats::setNames(hasSire | hasDam, ped$id)
+  singleParentOf <- c(ped$sire[hasSire & !hasDam], ped$dam[!hasSire & hasDam])
+  isB2 <- function(id) {
+    if (is.na(id) || !(id %in% ped$id)) return(FALSE)
+    isTRUE(hasParentEdge[[id]]) || id %in% singleParentOf
+  }
+
+  mu <- result$matingUnits
+  b2Units <- mu[vapply(mu$nonAnchor, isB2, logical(1L)), , drop = FALSE]
+  ## This fixture has a substantial B2 non-anchor population (the census's
+  ## class-(e) rows all traced to it) -- guard against a vacuous pass.
+  expect_gt(nrow(b2Units), 50L)
+  hasDupAtUnit <- vapply(seq_len(nrow(b2Units)), function(i) {
+    any(result$duplicates$realId == b2Units$nonAnchor[i] &
+          result$duplicates$matingUnitId == b2Units$id[i])
+  }, logical(1L))
+  expect_true(all(hasDupAtUnit))
 })

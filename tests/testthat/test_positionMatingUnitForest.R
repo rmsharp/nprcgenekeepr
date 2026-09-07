@@ -2692,3 +2692,48 @@ test_that(".positionMatingUnitForest keeps the real 375-individual fixture's
   expect_gte(.minCrossComponentRowGap(pos, comps), 1 - 1e-9)
 })
 
+## ---- Decision 2 (S678): every rendered mate on its union's row --------
+## Provisional-order design (docs/planning/pedigree-diagram-provisional-
+## order-plan.md, S676; PRE-RED-ratified S678): with every B2-shaped
+## non-anchor duplicated at every non-anchor occurrence
+## (.buildMatingUnitForest() Decision 2), the node that RENDERS as the
+## mate at any anchored unit -- the B1 individual's own derived point, or
+## a __dup_ node -- always carries the unit's own gen (Tier 3 assigns
+## tier3Gen from the unit). The census's class (e) ("a mate drawn on a
+## row other than its union's row") empties BY CONSTRUCTION, while every
+## real individual still renders on its own gen row (QP plan Decision 5's
+## row policy, untouched). Before Decision 2 this fails with exactly the
+## 56 B2 free occurrences the census counted (each resolving to the real
+## B2 node at her own deeper/shallower gen).
+
+test_that(".positionMatingUnitForest's every ANCHORED unit resolves its
+           non-anchor to a node on the unit's own gen row, on the full
+           real 375-individual fixture -- census class (e) = 0 by
+           construction (Decision 2, S678)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  resolveNn <- .nonAnchorNodeResolver(forest$duplicates)
+  mu <- forest$matingUnits
+  anchored <- mu[!is.na(mu$anchor), , drop = FALSE]
+  genOf <- stats::setNames(pos$gen, pos$id)
+
+  mismatches <- character(0L)
+  for (i in seq_len(nrow(anchored))) {
+    nn <- resolveNn(anchored$nonAnchor[i], anchored$id[i])
+    ## A dangling non-anchor resolves to an id with no rendered node at
+    ## all -- skip (this fixture has none; the guard keeps the test's
+    ## predicate honest rather than erroring on other fixtures' shapes).
+    if (!(nn %in% names(genOf))) next
+    if (genOf[[nn]] != genOf[[anchored$id[i]]]) {
+      mismatches <- c(mismatches, anchored$id[i])
+    }
+  }
+  expect_equal(mismatches, character(0L))
+})
+
