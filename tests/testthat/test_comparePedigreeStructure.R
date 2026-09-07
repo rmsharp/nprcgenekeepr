@@ -599,8 +599,9 @@ test_that(
    extraction on the real 375-individual bundled fixture -- the D-8
    toy-AND-real-scale validation discipline (PROJECT_LEARNINGS.md Learning
    596) applied to D-2's own invariance claim, confirmed exercising real
-   __proj_ dogleg and __jog_ collision waypoints (not just the D1 sibship
-   chains the small fixtures above cover)", {
+   __jog_ collision waypoints (not just the D1 sibship chains the small
+   fixtures above cover; __proj_ doglegs are extinct under Decision 2 --
+   see the CHANGED S678 note below)", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -615,10 +616,19 @@ test_that(
       invokeRestart("muffleWarning")
     }
   )
-  ## Confirm this run actually exercised both waypoint families the small
+  ## Confirm this run actually exercised the jog waypoint family the small
   ## fixtures above cannot reach -- an empty/mocked/skipped run would pass
   ## the equality checks below vacuously.
-  expect_true(any(grepl("^__proj_", rectilinear$nodes$id)))
+  ## CHANGED S678: the __proj_ exercised-guard is inverted -- Decision 2
+  ## (spouse duplication, provisional-order design Phase 1) makes the D2
+  ## dogleg structurally dead: every unit's resolved mate node (B1 derived
+  ## point or __dup_) now carries the unit's own gen, so no projection
+  ## waypoint can be produced any more (56 -> 0 on this fixture, 0 on
+  ## every fixture). The test-side walker above keeps its generic __proj_
+  ## handling (a singleton pass-through, id-name-agnostic) in case a
+  ## dogleg ever reappears; here the absence IS the expectation, pinned so
+  ## a reappearing dogleg (a Decision 2 regression) is caught.
+  expect_false(any(grepl("^__proj_", rectilinear$nodes$id)))
   expect_true(any(grepl("^__jog_", rectilinear$nodes$id)))
 
   fromDirect <- .extractNprcStructure(direct)

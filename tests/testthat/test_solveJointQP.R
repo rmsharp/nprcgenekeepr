@@ -69,7 +69,11 @@
 ## mate-count), so F1 is a B1 free-pass individual via F1xF2 (its first,
 ## free non-anchor occurrence) and a real duplicate (__dup_F1_1) via F1xF3
 ## (its second) -- the only fixture below with both a B1 individual AND a
-## real duplicate node, needed for the wDup sweep (case 4).
+## real duplicate node, needed for the wDup sweep (case 4). S678
+## (Decision 2, spouse duplication): B -- a B2-shaped non-anchor at the
+## A x B unit (her own parent edge) -- now also gets __dup_B_1 there, so
+## the case-4 sweep additionally exercises a kinship2-style
+## spouse-duplicate against the wDup term.
 .qpTrackC <- function() {
   data.frame(
     id = c("F1", "F2", "F3", "A", "B", "C"),
