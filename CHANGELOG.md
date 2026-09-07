@@ -16,6 +16,34 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-07 · [BL-provisionalOrderPhase1] S678: Provisional-order Phase 1 — duplication policy (Decision 2) implemented, owner visual review passed
+- **Deliverable:** Phase 1 of [`docs/planning/pedigree-diagram-provisional-order-plan.md`](docs/planning/pedigree-diagram-provisional-order-plan.md)
+  §Migration Path DONE (`BACKLOG.md` Up Next item updated; Phase 2 remains, next pickup).
+  `DEVELOPMENT_WORKSTREAM.md`, full TDD RED (`e98f29b4`) → GREEN (`13301db0` + `2d9d4634`;
+  REFACTOR gate posed, owner skipped — 0 lints). Decision 2 PRE-RED-ratified via
+  `AskUserQuestion`; owner visual review of the before/after renders PASSED. Claim `2d5dc111`.
+- **Change:** `.buildMatingUnitForest()` grants the free un-duplicated non-anchor occurrence
+  only to a B1-shaped individual (no own parent edge, no own single-parent direct child, from
+  `ped`); a B2-shaped non-anchor gets a `__dup_` node at every occurrence (kinship2-style
+  spouse duplication). Dangling non-anchors keep the pre-existing policy.
+- **Measured outcome (verification census, matched the design's spike row exactly):** Real 375 —
+  duplicates 102 → 170 (kinship2's own: 145), jogs 267 → 183, (a) 0, (b) 47 → 56 (the design's
+  disclosed Phase-1 cost until Phase 2 seeds the duplicates adjacent), c1Pre 86 → 24 / c1Post 0,
+  c2 587 → 94, (d) 0, (e) 56 → **0 by construction** (the D2 dogleg is structurally dead —
+  `__proj_` waypoints extinct, absence pinned), (f) 0, D1 bars 312 → 240. Track C +1 duplicate,
+  its Learning-723 constraint-bound (b) residual → 0. Track B full/shrunk + D1–D3: all classes
+  0, five kinship2-parity packing pins byte-identical (0 failures — the design's bound held).
+- **Verification:** PRE-RED blast radius measured by direct edit + full-suite run (17 blocks /
+  6 files), all re-pinned from live measurement with `CHANGED S678` comments; full clean
+  regression failed=1 (pre-existing wordlist baseline)/error=0, 6,393 passed, 0 collateral;
+  `lintr` 0; census findings CSV re-run and committed (2,498 → 2,170 rows);
+  `renv::status(dev = TRUE)` clean; live `shinytest2` E2E pedigree module 16/16 blocks,
+  55 expectations; GREEN render byte-identical to the owner-approved PRE-RED candidate.
+- **Records:** Learnings 730–731; `SESSION_NOTES.md` handoff; `HANDOFFS.md` receipt.
+  `NEWS.Rmd` + reference-image regeneration deliberately deferred to the design's own Phase 3
+  (docs), covering both phases at once — recorded here so the same-session checklists read as
+  consciously deferred, not skipped.
+
 ### 2026-09-07 · [ad hoc] Backfilled (reconcile-on-read): S677 ghost session — claim commit `ef8a6c54` only, no work
 - Session 677 claimed its deliverable on 2026-09-04 (`chore: S677 -- claim session (implement
   provisional-order Phase 1: duplication policy; DEVELOPMENT_WORKSTREAM.md, full TDD)`) and left

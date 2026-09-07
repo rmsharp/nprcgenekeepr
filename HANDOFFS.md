@@ -138,9 +138,16 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S678
 date: 2026-09-07
-status: pending
-active_task: Implement provisional-order design Phase 1 (duplication policy) — .buildMatingUnitForest() grants the free non-anchor occurrence only to B1-shaped individuals; docs/planning/pedigree-diagram-provisional-order-plan.md, DEVELOPMENT_WORKSTREAM.md, full TDD, PRE-RED gate ratifies Decision 2. (Re-claim of the deliverable ghost-session S677 claimed 2026-09-04 and never started.)
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Provisional-order design Phase 1 (duplication policy, Decision 2) implemented — .buildMatingUnitForest() grants the free non-anchor occurrence only to B1-shaped individuals (kinship2-style spouse duplication; dangling non-anchors keep the pre-existing policy). Full TDD, Decision 2 PRE-RED-ratified, owner visual review PASSED, REFACTOR gate posed and owner-skipped. Phase 2 (order-consistent seeding) is the open remainder.
+what_was_done: Phase 0 found and reconciled ghost S677 (claim ef8a6c54 only; backfill + receipt reconciled, b109eee3; Learning 730). PRE-RED research measured the live census bit-for-bit against the design's spike row (Real 375 dups 170, jogs 183, a 0, b 56, c1Pre 24, c2 94, d 0, e 0; Track C +1 dup, Learning-723 residual 0; packing fixtures untouched) and the full-suite blast radius (17 blocks/6 files) by direct edit + revert. RED e98f29b4 (10 failures verified for the right reason). GREEN 13301db0 + 2d9d4634: isB2Shaped() policy + 14 downstream pins re-measured live (CHANGED S678). Verification: full clean regression failed=1 (wordlist baseline)/error=0, 6,393 passed, 0 collateral; lintr 0; census CSV committed; renv dev-status clean; live E2E 16/16 blocks 55 expectations; GREEN render byte-identical to the owner-approved candidate.
+next_steps: Phase 2 (order-consistent seeding, Decision 1) per BACKLOG.md:175 — edit sites re-derived post-Phase-1: R/makePedigreeDiagramData.R:1087, :1117/:1124, :1198/:1209; endpoint targets b 12/c1Pre 10/c2 116/jogs 165/bars 234; RED needs the rank-betweenness + no-facing-seed-inversion structural assertions and the __union_97/128/179/228 marry-in fixtures. Independent: push the branch (47 commits ahead, CI has never seen QP work); design Phase 3 (NEWS.Rmd + reference images) after Phase 2.
+key_files: R/makePedigreeDiagramData.R:531 (isB2Shaped(), loop :546-563); tests/testthat/test_buildMatingUnitForest.R:462 (Decision-2 section); tests/testthat/test_positionMatingUnitForest.R:2728 (class-(e) structural test); docs/planning/pedigree-diagram-provisional-order-plan.md (Phase 2 spec); BACKLOG.md:175 (updated item); scratchpad/orderSpikeDiff.patch (UNTRACKED Phase-2 seeding reference)
+gotchas: Phase 2 measures against THIS session's census row (the new baseline), not S675's; design-doc Decision-1 line citations are ~+22 lines stale — re-grep; census (b) gate counts <=2.4e-6 px solver dust (Learning 726 two-assertion pattern, ~5 dust rows expected); the 5 packing fixtures must stay byte-identical through Phase 2; __proj_ doglegs are extinct and their ABSENCE is pinned — a reappearing projection is a Decision 2 regression; test_solveJointQP.R should need no Phase-2 changes (structural assertions only).
+runtime_smoke: live shinytest2 E2E pedigree module (NPRC_RUN_E2E=true): 16/16 blocks, 55 expectations, 0 failed/0 error against the shipped policy
+changelog_ref: 2026-09-07 S678 entry (BL-provisionalOrderPhase1)
 commit: pending
 ```
 

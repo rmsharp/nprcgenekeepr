@@ -18,19 +18,139 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 676 Handoff Evaluation (by Session 678)
+*(Session 677 was a ghost — claim commit `ef8a6c54` only, no work, no handoff to evaluate;
+reconciled by this session's Phase 0 at `b109eee3`. S676's handoff is the one that prepared
+this session's work.)*
+**Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable verbatim —
+edit site `R/makePedigreeDiagramData.R:509–541` was exact, and the `BACKLOG.md` item's
+expected census row matched the live engine bit-for-bit on the first PRE-RED research run
+(every class, including Track C's +1 dup and its Learning-723 residual → 0), collapsing
+PRE-RED research into confirmation. `scratchpad/orderSpikeDiff.patch` settled the one
+semantic ambiguity the design doc's prose left open (a dangling non-anchor is NOT B2-shaped —
+the patch's `is.na(match(p, ids)) → FALSE` guard), exactly the "preserved for the
+implementing sessions to re-derive, never to paste" use it was kept for. Gotcha (3) (packing
+fixtures byte-identical, drift = defect) held perfectly: 0 parity-pin failures. Gotcha (4)
+(renv banner) pre-empted a false diagnosis; the render-script pattern (6) was reused nearly
+verbatim for the visual gate. **What was missing:** the design's file-level inventory could
+not name the 4 small-fixture blocks that also broke (two `qualifies()`-B2 fixtures, the
+nested duplicate-chain pin, the twin DZ connector) nor the `__proj_`-exercised guard that
+INVERTS (the dogleg dies structurally, not just "in practice") — all cheap to find by the
+S674 direct-edit measurement, but one sentence ("grep small fixtures for B2-shaped
+non-anchors; expect non-vacuity guards on the dogleg to flip") would have predicted them
+(now Learning 731). **What was wrong:** nothing material. **ROI:** very high — the session
+went orientation → measured confirmation → gates with zero scope reconstruction.
+
 ### What Session 678 Did
-**Deliverable:** Implement provisional-order design Phase 1 — duplication policy
-(`.buildMatingUnitForest()` grants the free non-anchor occurrence only to B1-shaped
-individuals; `docs/planning/pedigree-diagram-provisional-order-plan.md`,
-`DEVELOPMENT_WORKSTREAM.md`, full TDD, PRE-RED gate ratifies Decision 2). (IN PROGRESS)
-**Started:** 2026-09-07
-**Status:** Session claimed. Work beginning. (Phase 0 found Session 677 was a ghost: it
-claimed this same deliverable 2026-09-04, commit `ef8a6c54`, then left no further trace —
-reconciled at `b109eee3`: CHANGELOG backfill + HANDOFFS receipt marked `reconciled`. No
-work from S677 exists to build on; this session starts the deliverable from scratch.)
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Provisional-order design **Phase 1 — duplication policy (Decision 2)**,
+implemented (`docs/planning/pedigree-diagram-provisional-order-plan.md` §Migration Path
+Phase 1; `DEVELOPMENT_WORKSTREAM.md`, full TDD RED → GREEN, REFACTOR gate posed and
+owner-skipped — 0 lints, nothing behavior-neutral identified). **DONE, owner visual review
+PASSED, Decision 2 PRE-RED-ratified.** **Started/completed:** 2026-09-07 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0** — SAFEGUARDS/SESSION_NOTES/issues/BACKLOG/dashboard (96/100)/`gh run list`
+   (all green, but push-triggered CI still at S666's push — 42 commits unpushed, no QP work
+   ever in CI). **Ghost session found:** S677 claimed this exact deliverable 2026-09-04
+   (`ef8a6c54`) and left no other trace; reconciled per protocol (`b109eee3`: `[ad hoc]`
+   CHANGELOG backfill + receipt → `status: reconciled`; Learning 730). Priorities +
+   `AskUserQuestion`; owner picked re-claiming Phase 1.
+2. **Claimed (1B)** `2d5dc111`; read `DEVELOPMENT_WORKSTREAM.md`, the design doc in full,
+   `.buildMatingUnitForest()`'s duplicate loop, `b1Ids` (:884–886), the spike patch, the
+   forest/QP test files — code, not summaries.
+3. **PRE-RED research (measured, S674 direct-edit precedent):** applied the minimal
+   Decision-2 edit to `R/` (marked temporary), ran the census — **matched the design's
+   spike row exactly** (Real 375: dups 170, jogs 183, a 0, b 56, c1Pre 24, c1Post 0, c2 94,
+   d 0, e 0, f 0; Track C +1 dup, (b) → 0; Track B/D1–D3 all 0) — and the FULL suite:
+   blast radius = **17 failing blocks / 29 expectations / 0 errors in 6 files** (the 14
+   downstream pins + forest tests; parity packing pins all held). Reverted clean (baseline
+   re-render reproduced S675's 1,792 nodes). Consumer-insurance grep: same 5 count-agnostic
+   `__dup_` sites, no new consumers. Baseline + candidate overview renders sent to owner.
+4. **PRE-RED→RED gate (`AskUserQuestion`, ratifying Decision 2):** approved. **RED
+   (`e98f29b4`):** half-sib forest test re-derived (B duplicated: 1 → 2 dups), real-375
+   forest pins 102 → 170 (2 sites), new B2-via-single-parent-direct-child fixture, new
+   real-375 per-unit coverage test, new structural class-(e)=0 test (resolver-side; fails
+   with the 56 B2 free occurrences). 10 failures verified for the right reason, nothing
+   else broken; dangling free-pass tests stay green as the negative guard.
+5. **RED→GREEN gate:** approved. **GREEN (`13301db0` + `2d9d4634`):** `isB2Shaped()` in the
+   duplicate loop (own parent edge, or own single-parent direct child, from `ped`; dangling
+   excluded) + block comment + roxygen; 14 downstream blocks re-pinned from live
+   measurement with `CHANGED S678` comments (positions 714→782 nodes/705→773 pairs; row
+   mismatches 56→0; layout 1,792→1,636 nodes, jogs 534→366, `__proj_` 56→**0**; D1 bars
+   312→240; collision baseline 266/2,549→183/530; curved connectors 102→170, heuristic
+   residuals 47→59; DZ connector re-jogs; nested `__union_2` re-pin; 2 `qualifies()`-B2
+   fixtures gain their measured dup; `__proj_` guard inverted to an absence pin).
+6. **Verification:** full clean regression **failed=1 (pre-existing wordlist baseline)/
+   error=0, 6,393 passed, 0 collateral**; `lintr::lint_package()` 0 (1 line-length fixed);
+   verification census re-run — identical scoreboard, findings CSV committed (2,498→2,170
+   rows); `renv::status(dev = TRUE)` clean; wDup question: the QP file's case-4 sweep now
+   exercises a spouse-duplicate (`__dup_B_1`) green across wDup 0.01–100, census (d)=0 at
+   defaults — no weight tuned (S675 mandate upheld). **Phase 3E:** live `shinytest2` E2E
+   pedigree module **16/16 blocks, 55 expectations, 0 failed**.
+7. **Visual gate:** GREEN render byte-identical to the PRE-RED candidate the owner saw;
+   owner approved via `AskUserQuestion`. **GREEN→REFACTOR gate:** owner skipped.
+8. **Close-out:** this evaluation, self-assessment, Learnings 730–731, `BACKLOG.md`
+   (Phase 1 DONE recorded in the item, Phase 2 scoped as next pickup with re-derived edit
+   sites), `CHANGELOG.md` entry, `HANDOFFS.md` receipt.
+
+**Self-assessment (Session 678): 9/10.** **Strengths:** (1) PRE-RED research measured
+everything the gates would need — census fidelity confirmed bit-for-bit and the whole-suite
+blast radius enumerated by running, so no estimate ever grew mid-session (the S674 failure
+mode explicitly avoided); (2) full TDD discipline: 4 `AskUserQuestion` gates (PRE-RED→RED
+ratifying Decision 2, RED→GREEN, visual review, GREEN→REFACTOR), RED verified failing for
+the right reasons before any production change; (3) every re-pin measured live, never
+hand-derived, each with a `CHANGED S678` trail comment; (4) the shipped GREEN render is
+byte-identical to the candidate render the owner approved — what was reviewed is provably
+what shipped; (5) the ghost-session reconcile was handled exactly per protocol before any
+task work (Learning 730). **Weaknesses:** (1) one factual error in a commit message (census
+CSV row delta) caught only after committing — amended immediately (`2d9d4634`), but a
+faithfulness slip that should have been checked before writing; (2) an early draft of the
+`__proj_` guard comment claimed extractor unit-test coverage that does not exist — caught
+by my own pre-commit grep and corrected, but it was written from assumption first; (3) the
+GREEN change spanned 8 files and was split 5+3 to respect the per-commit blast-radius cap,
+leaving the intermediate commit momentarily red on one file (disclosed here; RED commits
+share that property by design); (4) the S668 census audit DOC still describes the pre-QP
+engine while its findings CSV is now two engines newer — carried forward again (was S675
+weakness (3)), not resolved.
+
+**Next steps (specific):** (A) **Implement Phase 2 — order-consistent seeding** (`BACKLOG.md`
+Up Next item, updated this session with re-derived edit sites; `DEVELOPMENT_WORKSTREAM.md`,
+full TDD; PRE-RED gate ratifies Decision 1): edit sites `R/makePedigreeDiagramData.R:1087`
+(Tier-2 orphan branch), `:1117`/`:1124` (`b1AnchorRelativeX()`/`derivedX()`), `:1198`/`:1209`
+(tier3X seed loops); expected endpoint census row in the item (b 12, c1Pre 10, c2 116,
+jogs 165, bars 234); RED must include the two structural order assertions (rank-betweenness,
+no facing-seed inversion) and the marry-in chains `__union_97/128/179/228`. (B) Independent:
+push the branch (now 47 commits ahead — CI has still never seen ANY QP work, S673–S678 all
+unpushed; 4 workflows fire on push, fix-or-defer per the CI-break convention);
+`kinship2-fidelity-validation.qmd` prose stale (Housekeeping); census Finding #3 (jog offset)
+still open; the design's Phase 3 (docs: NEWS.Rmd entry covering both phases + reference-image
+regeneration) fires after Phase 2.
+
+**Key files:** `R/makePedigreeDiagramData.R:531` (`isB2Shaped()`, the shipped policy;
+duplicate loop at :546–:563) — Decision 1 sites shifted +~22 lines from the design doc's
+citations, re-derived above; `tests/testthat/test_buildMatingUnitForest.R:462+` (the S678
+Decision-2 section); `tests/testthat/test_positionMatingUnitForest.R:2728+` (the class-(e)
+structural test) and the `CHANGED S678` grep across the 6 pinned files (10/6/3/4/2/1 hits);
+`docs/planning/pedigree-diagram-provisional-order-plan.md` §Migration Path Phase 2 (the next
+deliverable's spec); `BACKLOG.md:175` (the updated item); `PROJECT_LEARNINGS.md` tail
+(Learnings 730–731); `scratchpad/orderSpikeDiff.patch` (still the Phase 2 seeding reference —
+UNTRACKED, take it before cleaning scratchpad).
+
+**Gotchas for the next session:** (1) **Phase 2's census targets are the COMBINED endpoint**
+— measure against THIS session's committed census row (the new baseline), not S675's; (2)
+the design-doc/S676-handoff line citations for the Decision 1 edit sites are stale by ~+22
+lines (this session's insertion) — the re-derived numbers above were verified by grep at
+close-out, but re-grep anyway (they shift again the moment anything above them changes); (3)
+the census (b) gate counts ≤2.4e-6 px solver dust once deviations get small — Learning 726's
+two-assertion pattern in RED, ~5 dust rows expected at the endpoint; (4) the five packing
+fixtures must stay BYTE-IDENTICAL through Phase 2 too — any drift is a defect, not a
+re-derivation; (5) `test_solveJointQP.R` should need NO changes in Phase 2 (its assertions
+are structural; it was fully green under Phase 1 untouched except a fixture comment); (6)
+the renv "out-of-sync" banner on every `Rscript` run is the documented Suggests-only
+artifact (Learnings 473/476) — `renv::status(dev = TRUE)` verified clean this session; (7)
+the D2 dogleg (`__proj_`) is structurally dead and its absence is PINNED
+(`test_comparePedigreeStructure.R`) — if Phase 2 work ever resurrects a projection waypoint,
+that is a Decision 2 regression, not a pin to update.
 
 ### Session 675 Handoff Evaluation (by Session 676)
 **Score: 9/10.** **What helped:** `next_steps` named this session's deliverable exactly, with

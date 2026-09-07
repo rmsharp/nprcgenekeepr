@@ -172,22 +172,45 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       directly below. Independent of all of this, one item still stands: the jog offset must be
       raised above the 25-px symbol radius (census Finding #3) -- a bounded fix any future session
       could pick up at any time, with no ordering dependency on the QP work either way.
-- [ ] **Implement the provisional-order design: Phase 1 (duplication policy), then Phase 2
-      (order-consistent seeding)** (design ratified-for-implementation pending each phase's own
+- [ ] **Implement the provisional-order design: Phase 1 (duplication policy) DONE S678 -- Phase 2
+      (order-consistent seeding) remains** (design ratified-for-implementation pending each phase's own
       PRE-RED gate; READY, Effort M per phase; standing pedigree-fidelity directive) --
       [`docs/planning/pedigree-diagram-provisional-order-plan.md`](docs/planning/pedigree-diagram-provisional-order-plan.md)
       (S676) specs both phases with measured per-phase census targets from a validated spike:
-      **Phase 1** -- `.buildMatingUnitForest()` grants the free non-anchor occurrence only to
-      B1-shaped individuals (kinship2-style spouse duplication; dups 102 -> 170 vs kinship2's own
-      145); expect Real 375 b 56, c1Pre 24, c2 94, jogs 183, e **0**, bars 240; packing fixtures
-      (Track B full/shrunk, D1-D3) byte-identical -- any drift is a defect. **Phase 2** -- Tier
+      **Phase 1 -- DONE S678, 2026-09-07, full TDD RED (`e98f29b4`) -> GREEN (`13301db0` +
+      `2d9d4634`; REFACTOR gate posed, owner skipped -- 0 lints), owner visual review PASSED,
+      Decision 2 PRE-RED-ratified** -- `.buildMatingUnitForest()` grants the free non-anchor
+      occurrence only to B1-shaped individuals (kinship2-style spouse duplication; dangling
+      non-anchors keep the pre-existing policy). Verification census MATCHED the design's spike
+      row exactly: Real 375 dups 170 (vs kinship2's own 145), a 0, b 56, c1Pre 24/c1Post 0,
+      c2 94, d **0**, e **0**, f 0, jogs 183, bars 240; Track C +1 dup with its Learning-723
+      constraint-bound (b) residual -> 0; packing fixtures (Track B full/shrunk, D1-D3)
+      byte-identical as the design bounded (0 parity-pin failures). Blast radius measured
+      PRE-RED by direct edit + full-suite run (17 blocks / 6 files, incl. 4 small-fixture
+      blocks outside the design's file-level inventory); all re-pinned live with `CHANGED S678`
+      comments. Class (e) is now 0 BY CONSTRUCTION (the D2 dogleg is structurally dead --
+      `__proj_` waypoints extinct, absence pinned in test_comparePedigreeStructure.R). Full
+      clean regression failed=1 (wordlist baseline)/error=0, 0 collateral; live E2E 16/16;
+      lintr 0; renv clean. The (b) 47 -> 56 rise is the design's disclosed Phase-1 cost --
+      the 170 duplicates still sit at the old `0.4*minSep` seed offsets until Phase 2 seeds
+      them adjacent. NEWS.Rmd + reference-image regeneration deliberately deferred to the
+      design's Phase 3 (docs) -- not an overlooked checklist item.
+      **Phase 2 (next pickup)** -- Tier
       2/3 seed formulas replaced by objective-ideal seeds (mate adjacent at a gap-proportional
       inset `min(0.9*minSep, 0.45*gap)`, union at half, children-side rule, two-unit L/R split);
       expect Real 375 b 12 (~5 solver-precision dust + 3 on one polygamous anchor), c1Pre 10,
-      c2 116, jogs 165, bars 234. **Phase order is load-bearing** (seeding without duplication
+      c2 116, jogs 165, bars 234. Edit sites (re-derived S678 post-Phase-1 numbering):
+      `R/makePedigreeDiagramData.R:1087` (Tier-2 orphan-branch children's-mean),
+      `:1117`/`:1124` (`b1AnchorRelativeX()`/`derivedX()`), `:1198`/`:1209` (tier3X seed
+      loops); RED should assert the two structural order properties directly (no anchored
+      dot outside its rendered mates' span; no facing-seed nesting inversion) and keep the
+      marry-in chains `__union_97/128/179/228` as fixtures. **Phase order is load-bearing**
+      (seeding without duplication
       measured as a net edge-class regression -- jogs +22%, c2 +37%, bars +56%). Do NOT add
-      objective terms or tune weights (S675 mandate, upheld); the wDup-vs-spousal-pull tension on
-      the new duplicates is a Phase-1 RED sweep question, and the doc's Open Questions hold the
+      objective terms or tune weights (S675 mandate, upheld S678); the wDup-vs-spousal-pull
+      tension on the new duplicates was covered S678 (the QP file's case-4 sweep now exercises
+      a spouse-duplicate green across wDup 0.01-100 at the floors, and census (d) = 0 at the
+      defaults), and the doc's Open Questions hold the
       deferred refinements (dup collapse-when-adjacent, sibling order, polygamous anchors,
       census-(b) epsilon).
 - [x] **Design session: provisional ORDER for the QP joint-solver (Phase A seeding)** (found S675,
