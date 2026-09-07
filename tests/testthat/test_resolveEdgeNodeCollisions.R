@@ -335,7 +335,10 @@ test_that(".resolveEdgeNodeCollisions applies a disclosed smooth.roundness
 
   curved <- waypoints$edges[!is.na(waypoints$edges$smooth.enabled) &
                                 waypoints$edges$smooth.enabled == TRUE, ]
-  expect_equal(nrow(curved), 102L)
+  ## CHANGED S678 from 102L -- Decision 2 spouse duplication: one curved
+  ## connector per duplicate, 102 -> 170 (test_buildMatingUnitForest.R's
+  ## own updated figure).
+  expect_equal(nrow(curved), 170L)
   expect_true(all(curved$smooth.roundness == 0.2))
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
@@ -346,7 +349,8 @@ test_that(".resolveEdgeNodeCollisions applies a disclosed smooth.roundness
   ## confirmed by rendered-image inspection in REFACTOR.
   fixedCurved <- result$edges[!is.na(result$edges$smooth.enabled) &
                                   result$edges$smooth.enabled == TRUE, ]
-  expect_equal(nrow(fixedCurved), 102L)
+  ## CHANGED S678 from 102L -- same cause as the curved count above.
+  expect_equal(nrow(fixedCurved), 170L)
   ## One concrete, named pair re-measured directly, not hand-derived.
   one <- fixedCurved[fixedCurved$from == "__dup_28XSME_1" &
                         fixedCurved$to == "28XSME", ]
@@ -357,7 +361,11 @@ test_that(".resolveEdgeNodeCollisions applies a disclosed smooth.roundness
   ## coordinate math), distinct from a rectilinear (fully-proven) repair.
   curvedResiduals <- result$residuals[result$residuals$kind ==
                                           "curved-heuristic", ]
-  expect_equal(nrow(curvedResiduals), 47L)
+  ## CHANGED S678 from 47L -- Decision 2's 68 extra duplicates add 68
+  ## curved connectors on denser rows; 59 of the 170 collide with an
+  ## unrelated node and take the roundness nudge (up from 47 of 102).
+  ## Re-measured live (matches the census's own 59 pipeline residuals).
+  expect_equal(nrow(curvedResiduals), 59L)
 
   ## Every pre-existing node's x/y is byte-identical.
   before <- waypoints$nodes[, c("id", "x", "y")]
@@ -518,8 +526,15 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   ## this unchanged repair pass (0 same-row residual after repair, census
   ## class (c1); the 47 curved-connector heuristic residuals are unchanged).
   ## Re-measured by actually running the amended engine, never hand-derived.
-  expect_equal(nrow(baselineEdges), 266L)
-  expect_equal(nrow(baseline), 2549L)
+  ## CHANGED AGAIN to 183L/530L -- Decision 2 spouse duplication (S678,
+  ## provisional-order design Phase 1): every B2-shaped non-anchor now
+  ## renders through a mate-adjacent same-row __dup_ node, so the long
+  ## off-row mate lines that spanned unrelated nodes disappear (266 -> 183
+  ## colliding edges, 2549 -> 530 obstacle-pairs -- most of the S675
+  ## growth undone). Still resolved to 0 same-row residual by this
+  ## unchanged repair pass. Re-measured live.
+  expect_equal(nrow(baselineEdges), 183L)
+  expect_equal(nrow(baseline), 530L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

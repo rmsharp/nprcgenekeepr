@@ -493,9 +493,11 @@ test_that(
 
 test_that(
   "makePedigreeMatingLayout on the full real 375-individual bundled
-   fixture produces exactly the 714 nodes established by Track 4 (CHANGED
-   from 740L -- gen-first D2 selection drops the duplicate count), with
-   no NA x/y and the expected edge composition", {
+   fixture produces exactly the 782 nodes established by Track 4 as
+   amended by Decision 2 (CHANGED from 740L -- gen-first D2 selection
+   drops the duplicate count to 102; CHANGED S678 from 714L -- spouse
+   duplication raises it to 170), with no NA x/y and the expected edge
+   composition", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -503,10 +505,11 @@ test_that(
   )
   forest <- .buildMatingUnitForest(ped)
   ## Track 2 flips the default to "rectilinear" -- pin "direct" explicitly,
-  ## since 714 is specifically the direct-style node count (Track 4).
+  ## since 782 is specifically the direct-style node count (375 real +
+  ## 170 duplicates + 237 mating units).
   result <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
 
-  expect_equal(nrow(result$nodes), 714L)
+  expect_equal(nrow(result$nodes), 782L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
 
@@ -701,7 +704,16 @@ test_that(
   ## running the amended engine, never hand-derived; the 3x jog growth is a
   ## disclosed, order-driven consequence of Decision 1 (the QP honours Phase
   ## A's provisional order), recorded for the owner's visual review.
-  expect_equal(nrow(result$nodes), 1792L)
+  ## CHANGED AGAIN to 1636L -- Decision 2 spouse duplication (S678,
+  ## provisional-order design Phase 1): every B2-shaped non-anchor
+  ## occurrence now renders through a same-row __dup_ node, so the long
+  ## off-row mate lines and D2 dogleg projections disappear -- __proj_
+  ## 56 -> 0 (the dogleg no longer fires in practice), jog repairs
+  ## 267 -> 183 (534 -> 366 waypoints), duplicates 102 -> 170:
+  ## 375 + 237 + 170 + 251 + 237 + 0 + 366 = 1636. Composition
+  ## re-measured by actually running the changed engine, never
+  ## hand-derived.
+  expect_equal(nrow(result$nodes), 1636L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
   ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L (issue #166's
@@ -722,7 +734,9 @@ test_that(
   ## more jog repairs it makes unnecessary.
   ## CHANGED AGAIN to 534L -- same cause as the node-count change above
   ## (Migration Path Phase 3, S675: 267 jog repairs x 2 waypoints).
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 534L)
+  ## CHANGED AGAIN to 366L -- same cause as the node-count change above
+  ## (Decision 2, S678: 183 jog repairs x 2 waypoints).
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 366L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------
@@ -1066,9 +1080,10 @@ test_that(
    D10, found unwired S494, fixed S506) -- under the Walker/BJL engine
    (Phase 3 cutover, this session) the MZ pair genuinely collides with an
    unrelated node on its own row and is Track 2 jogged (3 segments,
-   color/label/dashes preserved); DZ never collided under the new
-   coordinate distribution, and Track 7's own position changes (S647) also
-   un-jog '?', so both DZ and '?' render as single direct edges --
+   color/label/dashes preserved); DZ and '?' have re-jogged and un-jogged
+   across engine changes (see the CHANGED trail below) -- under Decision 2
+   spouse duplication (S678) all three connectors collide on the denser
+   duplicate-populated rows and render as 3-segment jogs --
    re-measured directly, not assumed", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped_twins.csv",
@@ -1099,7 +1114,10 @@ test_that(
   ## this twins fixture shares ids with; moving BRI2MW re-collides its own
   ## "?" connector with an unrelated node on its row, so it re-jogs: 3
   ## (MZ) + 1 (DZ) + 3 ("?")). Re-measured directly, not assumed.
-  expect_equal(nrow(connectors), 7L)
+  ## CHANGED S678 BACK TO 9L (Decision 2 spouse duplication): the new
+  ## same-row duplicates re-collide the DZ connector too, so all 3
+  ## connectors jog: 3 (MZ) + 3 (DZ) + 3 ("?"). Re-measured directly.
+  expect_equal(nrow(connectors), 9L)
 
   .expectJoggedConnector <- function(connectors, fromId, toId, label,
                                       dashPattern) {
@@ -1117,13 +1135,10 @@ test_that(
 
   .expectJoggedConnector(connectors, "E06FRB", "HV7LZ3", "MZ", FALSE)
 
-  ## DZ: CHANGED from a 3-segment jog to a single direct edge -- re-measured.
-  dz <- connectors[connectors$label == "DZ", ]
-  expect_equal(nrow(dz), 1L)
-  expect_equal(dz$from, "8GSXTQ")
-  expect_equal(dz$to, "P844CW")
-  expect_equal(dz$color, "#009E73")
-  expect_identical(dz$dashes[[1L]], c(4L, 4L))
+  ## DZ: CHANGED from a 3-segment jog to a single direct edge, then
+  ## CHANGED S678 back to a 3-segment jog (Decision 2's same-row
+  ## duplicates re-collide it) -- re-measured each time.
+  .expectJoggedConnector(connectors, "8GSXTQ", "P844CW", "DZ", c(4L, 4L))
 
   ## "?" CHANGED AGAIN (S662, B1-individual-vs-unrelated-individual
   ## proximity fix): S647 had left this connector un-jogged (a single

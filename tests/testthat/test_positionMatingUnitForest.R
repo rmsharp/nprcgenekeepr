@@ -526,7 +526,10 @@ test_that(".positionMatingUnitForest positions the full real
   ## CHANGED from 740L (375 + 128 + 237) -- Track 4's gen-first D2
   ## redistribution drops the duplicate count to 102 (see
   ## test_buildMatingUnitForest.R's own updated figure): 375 + 102 + 237.
-  expect_equal(nrow(pos), 714L)
+  ## CHANGED S678 from 714L -- Decision 2 spouse duplication raises the
+  ## duplicate count to 170 (test_buildMatingUnitForest.R's own updated
+  ## figure): 375 + 170 + 237.
+  expect_equal(nrow(pos), 782L)
   expect_false(any(is.na(pos$x)))
   expect_false(any(is.na(pos$gen)))
   ## Track 7 CHANGE (S647): widening the B1 offset to minSep exposed a
@@ -621,7 +624,9 @@ test_that(".positionMatingUnitForest holds the S675 kinship2-parity QP floor
   ## max shortfall on this fixture 6.8e-8 raw = 8e-6 px; the same 1e-6 the
   ## joint-QP file's .expectMinSepFloorHeld() allows) -- NOT a geometric
   ## allowance: the census-style overlap check below is exact.
-  expect_equal(length(shortfall), 705L)
+  ## CHANGED S678 from 705L -- Decision 2's 68 extra duplicates (714 ->
+  ## 782 nodes) add 68 adjacent pairs across the same 9 rows.
+  expect_equal(length(shortfall), 773L)
   expect_equal(sum(shortfall > 1e-6), 0L)
 
   ## Census class (a), restated independently of data-raw/
@@ -877,7 +882,10 @@ test_that(".positionMatingUnitForest's every NON-ANCHOR row mismatch on
            point -- the render layer already points at her own,
            already-final genuine x'), not a regression. Re-verified
            directly (probe execution): all 56 non-anchor mismatches on
-           this fixture are B2-classified, none unexplained.", {
+           this fixture were B2-classified, none unexplained. Decision 2
+           (S678, spouse duplication) then emptied that population -- the
+           count below is 0 by construction, the classification assertion
+           kept as the regression guard.", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -919,7 +927,16 @@ test_that(".positionMatingUnitForest's every NON-ANCHOR row mismatch on
   nonAnchorMismatches <- sideRows[sideRows$mismatched & !sideRows$isAnchor, ]
   expect_true(all(vapply(nonAnchorMismatches$personId, isB2, logical(1L))),
               info = "every non-anchor mismatch must be B2-classified")
-  expect_equal(nrow(nonAnchorMismatches), 56L)  # re-measured, not hand-derived
+  ## CHANGED S678 from 56L -- Decision 2 (spouse duplication,
+  ## provisional-order design): every B2-shaped non-anchor occurrence now
+  ## renders through a __dup_ node carrying the unit's own gen, so the
+  ## whole 56-row B2 free-occurrence mismatch population this block
+  ## documented empties by construction (the dedicated class-(e) test at
+  ## the end of this file asserts the same property from the resolver
+  ## side). The all-B2 classification assertion above becomes vacuous but
+  ## stays as the guard: any FUTURE nonzero count must still be
+  ## B2-explained or it is a regression.
+  expect_equal(nrow(nonAnchorMismatches), 0L)
 
   ## CHANGED from 51L -- issue #144's effGenOf fix (Candidate B) resolves
   ## every anchor-side mismatch on this fixture (no anchor here anchors
@@ -1380,7 +1397,10 @@ test_that("makePedigreeMatingLayout positions a nested single-child
   ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
   ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
   ## actually running the amended engine, never hand-derived.
-  expect_equal(layout$nodes$x[layout$nodes$id == "__union_2"], -34.175588,
+  ## CHANGED S678 (Decision 2 spouse duplication): GC2 (own parent edge)
+  ## now also duplicates at the GC1 x GC2 unit she does not anchor, so
+  ## the component's QP solve changes. Re-measured live.
+  expect_equal(layout$nodes$x[layout$nodes$id == "__union_2"], -55.882746,
                tolerance = 1e-5)
 })
 
@@ -1625,7 +1645,15 @@ test_that(".positionMatingUnitForest's qualifies() gate excludes a B2 non-anchor
                                      forest$matingUnits$dam == "X"]
   expect_equal(forest$matingUnits$anchor[forest$matingUnits$id == unitId], "X")
   expect_equal(forest$matingUnits$nonAnchor[forest$matingUnits$id == unitId], "MOM")
-  expect_equal(nrow(forest$duplicates), 0L)
+  ## CHANGED S678 from 0L (Decision 2 spouse duplication): MOM's B2 shape
+  ## (her own GP1/GP2 parent edge) now means her non-anchor occurrence at
+  ## X's unit is duplicated rather than rendered by projection to her own
+  ## off-row real node. The block's original point is UNCHANGED and still
+  ## asserted below: her real position gets exactly one write, untouched
+  ## by the union she does not anchor.
+  expect_equal(nrow(forest$duplicates), 1L)
+  expect_equal(forest$duplicates$realId, "MOM")
+  expect_equal(forest$duplicates$matingUnitId, unitId)
 
   pos <- .positionMatingUnitForest(ped, forest)
   momRows <- pos[pos$id == "MOM", ]
@@ -1716,7 +1744,12 @@ test_that(".positionMatingUnitForest excludes a qualifying-shaped union from
                                        forest2$matingUnits$dam == "YALE"]
   expect_equal(forest2$matingUnits$anchor[forest2$matingUnits$id == unitId2], "YALE")
   expect_equal(forest2$matingUnits$nonAnchor[forest2$matingUnits$id == unitId2], "MIA")
-  expect_equal(nrow(forest2$duplicates), 0L)  # B2 never gets a __dup_ entry
+  ## CHANGED S678 from 0L (Decision 2 spouse duplication): MIA's B2 shape
+  ## now earns a __dup_ node at YALE's unit instead of no entry at all;
+  ## her real node's single untouched write (the block's point) is still
+  ## asserted below.
+  expect_equal(nrow(forest2$duplicates), 1L)
+  expect_equal(forest2$duplicates$realId, "MIA")
 
   pos2 <- .positionMatingUnitForest(ped2, forest2)
   miaRows <- pos2[pos2$id == "MIA", ]

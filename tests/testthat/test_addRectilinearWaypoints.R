@@ -543,14 +543,20 @@ test_that(".addRectilinearWaypoints applied to the full real
     stringsAsFactors = FALSE
   )
   inputs <- .buildLayoutAndForest(ped)
-  expect_equal(nrow(inputs$nodes), 714L)  # unchanged, Walker/BJL cutover
-                                           # (structural, D1/D2/D4 untouched)
+  ## CHANGED S678 from 714L -- Decision 2 spouse duplication (provisional-
+  ## order design Phase 1): 375 real + 170 duplicates + 237 units.
+  expect_equal(nrow(inputs$nodes), 782L)
 
   result <- .addRectilinearWaypoints(inputs$nodes, inputs$edges,
                                       inputs$forest, inputs$pos)
   ## CHANGED from 1202L -- Walker/BJL cutover (Phase 3, this session):
   ## re-measured by actually running the new engine, never hand-derived.
-  expect_equal(nrow(result$nodes), 1258L)
+  ## CHANGED S678 from 1258L (= 714 + 251 bars + 237 drops + 56 projs):
+  ## Decision 2 adds 68 duplicates and empties the D2 projection
+  ## population (every unit's rendered mate is now on the union's own
+  ## row, so the dogleg never fires): 782 + 251 + 237 + 0 = 1270.
+  ## Re-measured live.
+  expect_equal(nrow(result$nodes), 1270L)
 
   ## No NA coordinates or duplicate (id, waypoint) collisions among the
   ## new waypoint nodes.
@@ -761,8 +767,13 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
   ## the owner's visual review and as a candidate for the provisional-order
   ## follow-up. Re-measured by actually running the amended engine, never
   ## hand-derived.
-  expect_equal(oldHits, 312L)
-  expect_equal(newHits, 312L)
+  ## CHANGED S678 to 240L/240L -- Decision 2 spouse duplication
+  ## (provisional-order design Phase 1): mate-adjacent duplicates pull
+  ## many unions back toward their own children's spans, shortening the
+  ## bars. The design's Phase 2 (order-consistent seeding) targets a
+  ## further reduction to ~234. Re-measured live.
+  expect_equal(oldHits, 240L)
+  expect_equal(newHits, 240L)
   expect_true(newHits <= oldHits)
 })
 

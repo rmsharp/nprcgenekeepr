@@ -351,7 +351,13 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' sire and dam), and creates a duplicate node for every individual
 #' occurrence beyond their own first (free) mating-unit occurrence --
 #' resolving both multi-mate/half-sib fan-out and inbreeding-loop safety
-#' via the same mechanism (D1). Anchor selection (D2) is deterministic,
+#' via the same mechanism (D1). The free occurrence is granted only to a
+#' B1-shaped non-anchor (no own parent edge, no own single-parent direct
+#' child); a B2-shaped non-anchor is duplicated at every occurrence, so
+#' her real node keeps its own place in the tree while a same-row
+#' duplicate stands in at each of her units (kinship2-style spouse
+#' duplication -- provisional-order design Decision 2, S678).
+#' Anchor selection (D2) is deterministic,
 #' not searched: prefer a non-founder parent over a founder; if tied,
 #' prefer the parent with fewer total distinct mating units; remaining
 #' ties broken by ascending id sort. A rare structural collision (both
@@ -506,13 +512,29 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       stringsAsFactors = FALSE
     )
 
-    # Duplicate assignment: an individual who never anchors any of their
-    # own mating units gets their first (deterministic-order) non-anchor
-    # occurrence for free; every occurrence beyond that -- and every
-    # non-anchor occurrence at all, once they DO anchor somewhere -- is
-    # duplicated. Combinatorially, exactly (mateCount - 1) duplicates per
-    # individual in the common case; the rare double-anchor collision
-    # above grants an extra free slot to whoever it affects.
+    # Duplicate assignment: the free (un-duplicated) non-anchor occurrence
+    # is granted ONLY to a B1-shaped individual -- no own parent edge and
+    # no own single-parent direct child, the same structural test Phase
+    # A's b1Ids applies, evaluated from 'ped' here at forest-build time
+    # (provisional-order design Decision 2, docs/planning/pedigree-
+    # diagram-provisional-order-plan.md, kinship2-style spouse
+    # duplication: a marry-in mate with her own place in the tree is
+    # plotted twice). A B2-shaped non-anchor gets a __dup_ node at EVERY
+    # non-anchor occurrence; her real node keeps rendering on its own gen
+    # row under her own parents, connected by the curved duplicate
+    # connectors. A dangling non-anchor (no own row) is not B2-shaped and
+    # keeps the pre-existing policy: first (deterministic-order)
+    # non-anchor occurrence free unless they anchor somewhere, every
+    # occurrence beyond that duplicated -- as does any B1-shaped
+    # individual (for whom the rare double-anchor collision above still
+    # grants an extra free slot to whoever it affects).
+    isB2Shaped <- function(p) {
+      i <- match(p, ids)
+      if (is.na(i)) return(FALSE)
+      if (hasSire[i] || hasDam[i]) return(TRUE)
+      any((hasSire & !hasDam & sire == p) | (!hasSire & hasDam & dam == p),
+          na.rm = TRUE)
+    }
     hasAnchorAnywhere <- stats::setNames(parentIds %in% unique(anchorOf),
                                    parentIds)
     freeConsumed <- stats::setNames(rep(FALSE, length(parentIds)), parentIds)
@@ -523,7 +545,9 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     for (u in seq_len(nUnits)) {
       for (p in c(unitSire[u], unitDam[u])) {
         if (identical(anchorOf[u], p)) next
-        needsDuplicate <- if (hasAnchorAnywhere[[p]]) {
+        needsDuplicate <- if (isB2Shaped(p)) {
+          TRUE
+        } else if (hasAnchorAnywhere[[p]]) {
           TRUE
         } else if (freeConsumed[[p]]) {
           TRUE
