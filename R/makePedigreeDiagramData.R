@@ -778,18 +778,27 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'     exact-tie sweep (gen, id radix order) among all ANCHORED units +
 #'     genuine nodes at the same gen (S3.3.3/S3.4).
 #'   \item \strong{Tier 3} -- for every B1/B3 non-anchor occurrence, a
-#'     derived point off its own unit's FINAL x. B1's qualifying case
-#'     folds the OLD \code{orderBySex} post-hoc swap directly into the
-#'     formula (S8.1), unconditionally -- there is no parameter to disable
-#'     it (the Phase 1b design note found this "restructured, not
-#'     preserved unchanged"): anchored on the anchor's own FINAL Tier-1 x
-#'     (\code{P.x}), never the union's (\code{U.x(FINAL)}) -- S8's own
-#'     fix, proven correct for any \code{sweepMinSep()}-induced drift
-#'     where the OLD (\code{U.x(FINAL)}-anchored) formula was not (S8.2).
-#'     B2 (M has her own parent edge or her own D5 direct child) gets NO
-#'     derived point -- the render layer already points at her own,
-#'     already-final genuine x.
+#'     fallback derived point off its own unit's FINAL x
+#'     (\code{unitX + 0.4 * minSep}). B2 (M has her own parent edge or
+#'     her own D5 direct child) gets NO derived point of her own -- since
+#'     Decision 2 (S678) she is duplicated at every non-anchor
+#'     occurrence, so the node rendered at the unit is a \code{__dup_*}
+#'     point.
 #' }
+#'
+#' \strong{Order-consistent seeding (Decision 1, S679)} -- \code{docs/
+#' planning/pedigree-diagram-provisional-order-plan.md} Migration Path
+#' Phase 2: after the tier seeds above, every anchored unit's union dot
+#' and rendered mate-node are RE-seeded at the QP objective's own ideal
+#' points (mate adjacent to its anchor at a gap-proportional inset,
+#' union at half the inset, side from the unit's own children's mean,
+#' two-unit anchors split left/right; a 3+-unit anchor's extra units
+#' keep the tier fallback seeds). \code{\link{.solveJointQP}} -- which
+#' this function hands its assembled provisional positions to as its
+#' final step -- discards every provisional MAGNITUDE and preserves only
+#' each row's left-to-right RANK, so the seeds' one job is giving the QP
+#' an order whose anchor--dot--mate triples are locally contiguous
+#' wherever the mate-node is placeable.
 #'
 #' Track 3 (the parent-span clamp on a union's finalUnitX) and the
 #' Track-3-Engagement-Gate post-hoc duplicate-occurrence nudge
@@ -1087,46 +1096,26 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     unitX[[u]] <- mean(tier1X[kids])
   }
 
-  ## ---- B1-anchor-relative formula (S8.1, Track 7 widen) ----------------
-  ## b1AnchorRelativeX() depends only on Tier 1's already-final (and, as of
-  ## S666, already-corrected) tier1X, never on unitX -- safe to define,
-  ## and to call for the QUALIFYING branch, at any point below. qualifies()
-  ## itself now lives earlier (S666, see above) -- still used, unchanged,
-  ## by derivedX() just below.
-  ##
-  ## S647 correction to an earlier draft of this ordering: that draft
-  ## recentered a qualifying union using b1AnchorRelativeX()'s own RAW
-  ## formula value for the mate, reasoning the union recenter "never
-  ## needs Tier 3 to have run first" since neither reads unitX or each
-  ## other. That is true in ISOLATION, but became false once the
-  ## collision-avoidance push below was added (a later addition to THIS
-  ## session's own work, not the original Track 7 design): a mate whose
-  ## raw formula value collides with an unrelated individual gets pushed
-  ## a full minSep+ away from it -- and if the union recenter still uses
-  ## the PRE-push raw value, the union ends up positioned as if the mate
-  ## were still at her old (colliding) spot, while she actually renders
-  ## far away. That mismatch produces a long, wrong-looking mate-line edge
-  ## needing its own jog detour (found live: the Track B "shrunk"
-  ## fixture's P1/P2/union_2, confirmed via chromote bounding-box queries
-  ## before and after this fix -- not merely inferred from a screenshot).
-  ## The corrected order below computes and de-collides B1's own final
-  ## positions FIRST, then recenters using that TRUE final value. (This
-  ## note describes the pre-existing Tier-3-vs-collision-avoidance
-  ## ordering rationale, unrelated to S666's own, separate union-recenter
-  ## mechanism above, which runs even earlier, before Tier 2.)
-  b1AnchorRelativeX <- function(unitId, memberId) {
-    p <- anchorOf[[unitId]]
-    sign <- if (identical(sexOf[[p]], "F") &&
-                  identical(sexOf[[memberId]], "M")) -1L else 1L
-    unname(tier1X[[p]]) + sign * minSep
-  }
-  ## ---- Tier 3: B1/B3 derived points (S3.3.3, S8.1's fixed formula) -----
-  derivedX <- function(unitId, memberId, isB1) {
-    if (isB1 && qualifies(unitId)) {
-      b1AnchorRelativeX(unitId, memberId)
-    } else {
-      unname(unitX[[unitId]]) + minSep * 0.4
-    }
+  ## ---- Tier 3: B1/B3 fallback seeds (S3.3.3; Decision 1, S679) ---------
+  ## Decision 1 of the provisional-order design (docs/planning/pedigree-
+  ## diagram-provisional-order-plan.md, Migration Path Phase 2,
+  ## PRE-RED-ratified S679) replaces the Tier-3 SEED formulas: the
+  ## order-consistent seeding loop below re-seeds every anchored unit's
+  ## union and rendered mate at the QP objective's own ideal points, so
+  ## only their within-row RANK survives into .solveJointQP()'s adjacent-
+  ## pair constraints. This fallback keeps the pre-Decision-1 children's-
+  ## mean offset only for the occurrences that loop deliberately does not
+  ## seed: a 3+-unit anchor's extra units beyond the two-unit left/right
+  ## split (the design's disclosed polygamous exception) and any unit
+  ## whose anchor carries no Tier-1 position. The old qualifying branch
+  ## (b1AnchorRelativeX(), anchor +/- minSep, S8.1/Track 7) is deleted
+  ## rather than bypassed: qualifies() demands a single-unit anchor
+  ## (mateCountP == 1L), and the seeding loop always re-seeds single- and
+  ## two-unit anchors, so that branch could never fire again --
+  ## qualifies() itself stays, unchanged, for the S666 conditional-shift
+  ## pass above.
+  derivedX <- function(unitId) {
+    unname(unitX[[unitId]]) + minSep * 0.4
   }
 
   b1UnitOf <- stats::setNames(character(length(b1Ids)), b1Ids)
@@ -1195,7 +1184,7 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   tier3Gen <- stats::setNames(integer(length(b1Ids)), b1Ids)
   for (fp in b1Ids) {
     unitId <- b1UnitOf[[fp]]
-    tier3X[[fp]] <- derivedX(unitId, fp, isB1 = TRUE)
+    tier3X[[fp]] <- derivedX(unitId)
     tier3Gen[[fp]] <- unname(matingUnits$gen[matingUnits$id == unitId])
   }
 
@@ -1206,11 +1195,102 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     for (i in seq_len(nrow(duplicates))) {
       dupId <- duplicates$id[i]
       unitId <- duplicates$matingUnitId[i]
-      tier3X[[dupId]] <- derivedX(unitId, duplicates$realId[i], isB1 = FALSE)
+      tier3X[[dupId]] <- derivedX(unitId)
       tier3Gen[[dupId]] <- unname(matingUnits$gen[matingUnits$id == unitId])
     }
   }
   tier3Ids <- c(b1Ids, dupIds)
+
+  ## ---- Decision 1 (S679): order-consistent seeding ---------------------
+  ## docs/planning/pedigree-diagram-provisional-order-plan.md, Migration
+  ## Path Phase 2 (PRE-RED-ratified S679). .solveJointQP() below discards
+  ## every provisional MAGNITUDE and keeps only each row's left-to-right
+  ## RANK (the row becomes a fixed chain of hard adjacent-pair
+  ## constraints), so the one job left to these seeds is handing the QP
+  ## an order its objective can actually centre: anchor, union dot and
+  ## rendered mate locally contiguous wherever the mate-node is
+  ## placeable. Per anchor, its units ordered by their children's mean
+  ## (ties by id, radix):
+  ##   * side -- one unit: the side of the unit's own children's mean
+  ##     relative to the anchor (falling back to the existing sex rule,
+  ##     female anchor + male mate renders left, on an exact tie); two
+  ##     units: leftmost-children unit left, the other right (kinship2's
+  ##     lspouse/rspouse split); 3+ units: first two as above, extras
+  ##     keep their Tier 2/Tier 3 fallback seeds (the design's disclosed
+  ##     polygamous exception -- see the class-(b) structural-residual
+  ##     test in test_positionMatingUnitForest.R).
+  ##   * inset -- mateOff = min(0.9 * minSep, 0.45 * gap), gap = distance
+  ##     from the anchor to the nearest same-row genuine node on the
+  ##     chosen side (post-S666 tier1X). The 0.9 keeps a seed strictly
+  ##     inside the anchor's own >= minSep gap so it can never tie a
+  ##     genuine node's integer position; the 0.45 * gap cap keeps two
+  ##     facing insets from overshooting across each other into inverted
+  ##     nesting (both failure modes measured -- design doc, Evidence).
+  ##     No same-row genuine neighbour on that side: mateOff stays
+  ##     0.9 * minSep.
+  ##   * seeds -- placeable mate-node (a B1 derived point or a __dup_*
+  ##     node): mate at anchor + side * mateOff, union at half the
+  ##     inset. Genuine same-row mate (her own Tier-1 position): union
+  ##     at the true midpoint -- structurally unreachable while
+  ##     Decision 2 (S678) duplicates every B2-shaped non-anchor, kept
+  ##     for robustness exactly like the D2 dogleg it parallels.
+  ##     Dangling, unrendered mate: the union alone takes the inset
+  ##     midpoint.
+  ## Tier 1 (BJL + sweepMinSepBackstop() + the S666 conditional shift) is
+  ## untouched -- genuine individuals' seeds and ranks are exactly as
+  ## before; orphan units (anchor NA, issue #154) keep their children's-
+  ## mean seeds.
+  resolveNnode <- .nonAnchorNodeResolver(duplicates)
+  unitsByAnchor <- split(anchoredUnits$id, anchoredUnits$anchor)
+  for (a in names(unitsByAnchor)) {
+    if (!(a %in% names(tier1X))) next
+    us <- unitsByAnchor[[a]]
+    ux <- unitX[us]
+    ux[is.na(ux)] <- tier1X[[a]]
+    us <- us[order(ux, us, method = "radix")]
+    for (k in seq_along(us)) {
+      u <- us[k]
+      m <- nonAnchorOf[[u]]
+      nn <- if (!is.na(m)) resolveNnode(m, u) else NA_character_
+      sexSide <- if (identical(sexOf[[a]], "F") && !is.na(m) &&
+                       m %in% realIds && identical(sexOf[[m]], "M")) {
+        -1
+      } else {
+        1
+      }
+      side <- if (length(us) == 1L) {
+        childSide <- sign(unitX[[u]] - tier1X[[a]])
+        if (childSide == 0) sexSide else childSide
+      } else if (k == 1L) {
+        -1
+      } else if (k == 2L) {
+        1
+      } else {
+        0
+      }
+      if (side == 0) next
+      mateOff <- 0.9 * minSep
+      uGen <- matingUnits$gen[matingUnits$id == u]
+      rowX <- tier1X[names(dispGenOf)[dispGenOf == uGen]]
+      beyond <- if (side > 0) {
+        rowX[rowX > tier1X[[a]] + 1e-9]
+      } else {
+        rowX[rowX < tier1X[[a]] - 1e-9]
+      }
+      if (length(beyond) > 0L) {
+        mateOff <- min(mateOff, 0.45 * min(abs(beyond - tier1X[[a]])))
+      }
+      unionOff <- mateOff / 2
+      if (!is.na(nn) && nn %in% names(tier1X)) {
+        unitX[[u]] <- (tier1X[[a]] + tier1X[[nn]]) / 2
+      } else if (!is.na(nn) && nn %in% names(tier3X)) {
+        tier3X[[nn]] <- tier1X[[a]] + side * mateOff
+        unitX[[u]] <- tier1X[[a]] + side * unionOff
+      } else {
+        unitX[[u]] <- tier1X[[a]] + side * unionOff
+      }
+    }
+  }
 
   ## ---- Phase B: one joint QP solve replaces this function's own former
   ## final assembly (the old return statement) as the FINAL x for every
