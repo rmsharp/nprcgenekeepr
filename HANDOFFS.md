@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S679
+date: 2026-09-07
+status: pending
+active_task: Implement provisional-order design Phase 2 (order-consistent seeding, Decision 1) — Tier 2/3 seed formulas replaced by objective-ideal seeds (mate adjacent at gap-proportional inset min(0.9*minSep, 0.45*gap), union at half, children-side rule, two-unit L/R split); docs/planning/pedigree-diagram-provisional-order-plan.md §Migration Path Phase 2, DEVELOPMENT_WORKSTREAM.md, full TDD, PRE-RED gate ratifies Decision 1
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S678
 date: 2026-09-07
 status: complete

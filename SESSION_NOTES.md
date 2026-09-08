@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 679 Did
+**Deliverable:** Implement provisional-order design **Phase 2 — order-consistent seeding**
+(Decision 1) per `docs/planning/pedigree-diagram-provisional-order-plan.md` §Migration Path
+Phase 2 and `BACKLOG.md:175`; `DEVELOPMENT_WORKSTREAM.md`, full TDD, PRE-RED gate ratifies
+Decision 1. (IN PROGRESS)
+**Started:** 2026-09-07
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 676 Handoff Evaluation (by Session 678)
 *(Session 677 was a ghost — claim commit `ef8a6c54` only, no work, no handoff to evaluate;
 reconciled by this session's Phase 0 at `b109eee3`. S676's handoff is the one that prepared
