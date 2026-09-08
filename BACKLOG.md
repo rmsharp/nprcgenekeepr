@@ -172,9 +172,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       directly below. Independent of all of this, one item still stands: the jog offset must be
       raised above the 25-px symbol radius (census Finding #3) -- a bounded fix any future session
       could pick up at any time, with no ordering dependency on the QP work either way.
-- [ ] **Implement the provisional-order design: Phase 1 (duplication policy) DONE S678 -- Phase 2
-      (order-consistent seeding) remains** (design ratified-for-implementation pending each phase's own
-      PRE-RED gate; READY, Effort M per phase; standing pedigree-fidelity directive) --
+      (S679 addendum, owner visual-gate question: the same jog-render convention also produces
+      small "ascender" stubs above sibship bars -- detour corridors nest 9 px below bar level
+      (y 249/258/267 vs bars at 240) and each climbs 9-27 px back up to its bar node, which
+      for narrow/single-child bars reads as a dangling stub ending in mid-air. Cosmetic,
+      pre-existing; fix candidates: rejoin at the child's descent x instead of via the bar
+      node, or suppress the riser when the bar has zero width. Same territory as the
+      Finding #3 fix.)
+- [ ] **Implement the provisional-order design: Phases 1 (duplication policy, S678) and 2
+      (order-consistent seeding, S679) DONE -- Phase 3 (docs) remains** (READY, Effort S;
+      standing pedigree-fidelity directive) --
       [`docs/planning/pedigree-diagram-provisional-order-plan.md`](docs/planning/pedigree-diagram-provisional-order-plan.md)
       (S676) specs both phases with measured per-phase census targets from a validated spike:
       **Phase 1 -- DONE S678, 2026-09-07, full TDD RED (`e98f29b4`) -> GREEN (`13301db0` +
@@ -195,24 +202,55 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the 170 duplicates still sit at the old `0.4*minSep` seed offsets until Phase 2 seeds
       them adjacent. NEWS.Rmd + reference-image regeneration deliberately deferred to the
       design's Phase 3 (docs) -- not an overlooked checklist item.
-      **Phase 2 (next pickup)** -- Tier
-      2/3 seed formulas replaced by objective-ideal seeds (mate adjacent at a gap-proportional
-      inset `min(0.9*minSep, 0.45*gap)`, union at half, children-side rule, two-unit L/R split);
-      expect Real 375 b 12 (~5 solver-precision dust + 3 on one polygamous anchor), c1Pre 10,
-      c2 116, jogs 165, bars 234. Edit sites (re-derived S678 post-Phase-1 numbering):
-      `R/makePedigreeDiagramData.R:1087` (Tier-2 orphan-branch children's-mean),
-      `:1117`/`:1124` (`b1AnchorRelativeX()`/`derivedX()`), `:1198`/`:1209` (tier3X seed
-      loops); RED should assert the two structural order properties directly (no anchored
-      dot outside its rendered mates' span; no facing-seed nesting inversion) and keep the
-      marry-in chains `__union_97/128/179/228` as fixtures. **Phase order is load-bearing**
-      (seeding without duplication
-      measured as a net edge-class regression -- jogs +22%, c2 +37%, bars +56%). Do NOT add
-      objective terms or tune weights (S675 mandate, upheld S678); the wDup-vs-spousal-pull
-      tension on the new duplicates was covered S678 (the QP file's case-4 sweep now exercises
-      a spouse-duplicate green across wDup 0.01-100 at the floors, and census (d) = 0 at the
-      defaults), and the doc's Open Questions hold the
-      deferred refinements (dup collapse-when-adjacent, sibling order, polygamous anchors,
-      census-(b) epsilon).
+      **Phase 2 -- DONE S679, 2026-09-07, full TDD RED (`7cdb975d`) -> GREEN (`d180158c` +
+      `c7d808bc` + `cbf926bb`; REFACTOR gate posed, owner skipped -- 0 lints), owner visual
+      review APPROVED after a substantive review round, Decision 1 PRE-RED-ratified** -- the
+      Tier 2/3 seed formulas replaced by the per-anchor order-consistent seeding loop
+      (children's-mean side rule with sex-rule tie-break, two-unit L/R split, gap-proportional
+      insets `min(0.9*minSep, 0.45*gap)`); `derivedX()`'s qualifying branch deleted as
+      provably dead. Verification census matched the design's combined endpoint on every
+      class -- Real 375 dups 170, jogs 165, a 0, **b 12** (5 solver-dust rows + 3 on
+      polygamous `WCPXHD` + 4 marry-in crowding at `__union_97/128/179/228`, exactly as
+      predicted; max deviation 25 -> 1.0 raw across the two phases), c1Pre 10/c1Post 0,
+      **c2 105** (better than the predicted 116; the 11-row delta is one jog no longer
+      crossing a dense region, 0 new rows), d 1, e 0, f 0, bars 233 (predicted 234), width
+      13,710 px, 1,600 rendered nodes -- and the 5 packing fixtures stayed byte-identical
+      (0 parity-pin failures). RED added 3 structural blocks (dot-in-mates-span 31 -> 0;
+      facing-crossings among <=2-unit anchors 2 -> 0; the Learning-726 two-assertion
+      off-centre gate NAMING the 7 disclosed residual unions). Full clean regression
+      failed=1 (wordlist baseline)/error=0, 6,397 passed, 0 collateral; lintr 0; live E2E
+      16/16; renv clean; GREEN render byte-identical to the PRE-RED candidate. The owner's
+      visual-gate finding (jogged progeny connectors) was root-caused to the wDup term --
+      measured pre-existing, filed as its own Up Next item directly below.
+      **Phase 3 (docs, the remaining piece):** `NEWS.Rmd` plain-language entry covering both
+      phases (S628 criterion), regenerate the committed reference images
+      (`data-raw/kinship2FidelityValidation.R`) and Diagram-tab screenshots, then mark this
+      item DONE; decide/record the design's Open Questions dispositions surfaced during
+      implementation (Q2 now has its own item below).
+- [ ] **wDup on spouse-duplicates: the duplicate-proximity term drags marry-in triples away
+      from their own children's parents (owner visual-gate finding, S679)** (READY -- but the
+      change is QP-objective behavior, so it needs its own PRE-RED `AskUserQuestion` gate
+      ratifying an amendment to the S675 no-weight-tuning mandate; Effort M; standing
+      pedigree-fidelity directive; design doc Open Question 2 made concrete) -- **Root cause,
+      measured S679:** on the flagged `P49ZD1` family (children `A792ZU`/`F3QIL7` at row 4,
+      x~4535/4775 vs their parents' unions at x~3585/3705 -- ~950-px jogged drop lines), the
+      children's row is EMPTY for ~950 px to their left (no rank obstacle), and a temporary
+      `wDup = 0` experiment collapsed the offsets to -0.57/+0.43 raw units (~60 px): QP term 4
+      pulls each child's marry-in mate's `__dup_*` node toward the mate's distant real
+      occurrence, dragging the whole child triple with it, and term 2's child-centering loses.
+      The same mechanism drives much of the remaining long-jog "bus" pattern (census jogs 165,
+      c2 105, bars 233). **Candidate fixes to evaluate:** exclude spouse-duplicates
+      (Decision-2 dups) from term 4; re-weight term 4 for them; or keep term 4 only for the
+      pre-Phase-1 duplicate population. **Risks to re-measure (not optional):** term 4 is
+      ALSO what keeps a duplicate from landing on top of its own real occurrence -- census
+      class (d) was 1 at defaults and must be re-measured under any change, along with the
+      full census row, the 5 byte-identical packing fixtures, and the pinned suite
+      (`CHANGED S679` sites). The `wDup = 0` experiment measured POSITIONS ONLY -- no census
+      classes were re-measured under it; treat the 950 px -> 60 px figure as headroom, not a
+      promised outcome. Evidence and tooling: `SESSION_NOTES.md` S679 record;
+      `scratchpad/renderCrop2S679.R` (100%-scale crop renderer, Learning 732) +
+      `scratchpad/s679_crop_{baseline,green}_P49ZD1.png` (the owner-reviewed pair);
+      `PROJECT_LEARNINGS.md` Learning 733 (the diagnosis chain).
 - [x] **Design session: provisional ORDER for the QP joint-solver (Phase A seeding)** (found S675,
       2026-09-03; **DONE S676, 2026-09-04**, Effort M, one session, design doc only -- production
       `R/` untouched, spike reverted clean) --

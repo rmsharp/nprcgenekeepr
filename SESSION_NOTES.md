@@ -18,16 +18,149 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 678 Handoff Evaluation (by Session 679)
+**Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable verbatim,
+and every re-derived edit site (`R/makePedigreeDiagramData.R:1087`, `:1117`/`:1124`,
+`:1198`/`:1209`) was exact; the expected endpoint census row matched the live engine on
+every class the design predicted (b 12, c1Pre 10, jogs 165, bars within 1) on the first
+PRE-RED run. Gotcha (1) (measure against S678's committed row, not S675's) framed the whole
+measurement correctly; gotcha (3) (Learning-726 dust pattern, ~5 dust rows) predicted the
+exact 5 sub-1e-7 rows and shaped RED test 3's two-assertion form; gotcha (5)
+(`test_solveJointQP.R` needs no changes) was exactly right — zero failures there; gotcha (7)
+(`__proj_` absence is PINNED) held green throughout. **What was missing:** a ready-made
+100%-scale crop renderer. The inherited overview-render convention (1800×700 auto-fit,
+~0.13× scale) was insufficient for the owner's visual gate — the owner correctly said
+"cannot evaluate," and this session spent several mid-gate rounds discovering that
+vis-network element screenshots re-trigger the widget's fit-on-resize (fixed via raw CDP
+`captureScreenshot(captureBeyondViewport = FALSE)` after `moveTo`; tool preserved at
+`scratchpad/renderCrop2S679.R`). S676's own weakness list flagged "no 100%-scale crop" —
+it cost this session real time. **What was wrong:** nothing material. **ROI:** very high.
+
 ### What Session 679 Did
-**Deliverable:** Implement provisional-order design **Phase 2 — order-consistent seeding**
-(Decision 1) per `docs/planning/pedigree-diagram-provisional-order-plan.md` §Migration Path
-Phase 2 and `BACKLOG.md:175`; `DEVELOPMENT_WORKSTREAM.md`, full TDD, PRE-RED gate ratifies
-Decision 1. (IN PROGRESS)
-**Started:** 2026-09-07
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Provisional-order design **Phase 2 — order-consistent seeding (Decision 1)**,
+implemented (`docs/planning/pedigree-diagram-provisional-order-plan.md` §Migration Path
+Phase 2; `DEVELOPMENT_WORKSTREAM.md`, full TDD RED → GREEN, REFACTOR gate posed and
+owner-skipped — 0 lints). **DONE, owner visual review APPROVED** (after a real review round —
+see below), Decision 1 PRE-RED-ratified. **Started/completed:** 2026-09-07 (single session).
+
+**What actually happened, in order:**
+1. **Phase 0** — SAFEGUARDS/SESSION_NOTES/issues/BACKLOG/dashboard (96/100, HIGH flag =
+   SESSION_NOTES size)/`gh run list` (all green; push-triggered CI still at S666's push — 48
+   commits unpushed then, 55 now). No ghost sessions; ledger/receipt frontiers clean.
+   Priorities + `AskUserQuestion`; owner picked Phase 2.
+2. **Claimed (1B)** `f250689d`; read `DEVELOPMENT_WORKSTREAM.md`, the design doc in full, the
+   seed-formula code (`qualifies()`/`b1Ids`/S666 pass/Tier 2/Tier 3), the spike patch.
+   Confirmed structurally that `qualifies()` (requires `mateCountP == 1L`) can only fire for
+   single-unit anchors — exactly the units Decision 1 always re-seeds — validating the
+   design's "drop the old gate" claim before measuring.
+3. **PRE-RED research (measured, S674/S678 direct-edit precedent):** minimal Decision-1 edit
+   applied to `R/` (marked temporary), census run — **matched the design's combined endpoint
+   on every class** (dups 170, jogs 165, a 0, b 12 — decomposing exactly as predicted: 5 dust
+   + 3 polygamous `WCPXHD` + 4 crowding on the named `__union_97/128/179/228`; c1Pre 10/
+   c1Post 0, d 1 `__dup_QZVTGJ_1`, e 0, f 0, width 13,710 px, 1,600 nodes) except **c2 105 vs
+   predicted 116 — strictly better** (all 11 delta rows = one jog `__jog_111` no longer
+   crossing a dense region; 0 new rows). Full-suite blast radius: **9 blocks / 25
+   expectations / 0 errors in 5 files** (4 small-fixture x-pin blocks, node-count pin,
+   connector from/to id pins, D1 bar pin, collision-baseline + heuristic-residual pins).
+   Structural assertions measured both ways: dot-outside-span 31 → 0; facing-crossings among
+   ≤2-unit anchors 2 → 0. Reverted clean (baseline re-rendered 1,636 nodes). Renders sent.
+4. **PRE-RED→RED gate (`AskUserQuestion`, ratifying Decision 1):** approved. **RED
+   (`7cdb975d`):** 3 structural blocks in `test_positionMatingUnitForest.R` — dot-in-span,
+   scoped no-crossing, and the Learning-726 two-assertion off-centre gate naming the 7
+   disclosed residual unions; all 4 expectations verified failing for the measured reasons,
+   0 collateral.
+5. **RED→GREEN gate:** approved. **GREEN (`d180158c` + `c7d808bc` + `cbf926bb`):** the
+   per-anchor seeding loop (children's-mean side rule + sex-rule tie-break, two-unit L/R
+   split, gap-proportional insets `min(0.9*minSep, 0.45*gap)`, genuine-mate midpoint branch
+   kept for robustness); `derivedX()` reduced to the fallback (qualifying branch +
+   `b1AnchorRelativeX()` deleted as provably dead); roxygen amended. 11 lints fixed
+   (bit-identical `* 0.5` forms; structural metrics re-verified unchanged). 9 blast-radius
+   blocks re-pinned live with `CHANGED S679` comments (nodes 1636→1600, jogs 366→330
+   waypoints, bars 240→233, collisions 183/530→165/495, curved residuals 59→58, loop-fixture
+   13 pins, 3 union-x pins, connector from/to flip).
+6. **Verification:** full clean regression **failed=1 (wordlist baseline)/error=0, 6,397
+   passed, 0 collateral**; `lintr::lint_package()` 0; census re-run committed (2,170→2,116
+   rows), scoreboard bit-identical to the PRE-RED candidate; `renv::status(dev = TRUE)`
+   clean; **Phase 3E:** live `shinytest2` E2E pedigree module **16/16 blocks, 55
+   expectations, 0 failed**; GREEN render **byte-identical** to the PRE-RED candidate.
+7. **Visual gate — a real review round, not a rubber stamp.** The owner flagged (a) an
+   "unneeded shift of progeny connector" in the lower-left and (b) unusable overview
+   resolution. Diagnosed in-session, all measured: the flagged structure is `P49ZD1`'s
+   family — his children sit ~950 px right of his unions, the drop lines jog sideways.
+   **Pre-existing** (same jogs, same spans, measured against the checked-out S678 engine,
+   which additionally drew the union dot OUTSIDE its mates' span); the children's row is
+   EMPTY to their left (no rank obstacle); root cause proven by experiment: **`wDup = 0`
+   collapses the offset 950 px → ~60 px** — the duplicate-proximity term drags each
+   marry-in mate's dup (and the whole child triple) toward the mate's distant real
+   occurrence. This is the design's fenced Open Question 2 → filed as a new BACKLOG Up Next
+   item. Also answered: the "small ascenders" above sibship bars are the jog-repair rejoin
+   risers (jog corridors nest 9 px below bar level at y 249/258/267; each detour climbs
+   9–27 px back up to its bar node) — pre-existing, cosmetic, noted on the Finding #3 jog
+   item. 100%-scale crop tooling built (`scratchpad/renderCrop2S679.R`); crops delivered.
+   **Owner APPROVED** (with the wDup follow-up filed). **GREEN→REFACTOR gate:** owner
+   skipped.
+8. **Close-out:** this evaluation, self-assessment, Learnings 732–733, `BACKLOG.md` (Phase 2
+   DONE in the item; Phase 3 docs pass remains; new wDup item; ascender note), `CHANGELOG.md`
+   entry, `HANDOFFS.md` receipt.
+
+**Self-assessment (Session 679): 9/10.** **Strengths:** (1) PRE-RED measured everything —
+census fidelity, full-suite blast radius, and both structural-assertion counts under both
+engines — so every gate presented confirmations, not estimates; (2) full TDD discipline: 4
+`AskUserQuestion` gates, RED verified failing for the measured reasons; (3) every re-pin
+measured live with a `CHANGED S679` trail; the shipped GREEN render is byte-identical to the
+measured candidate; (4) the owner's visual-gate finding was answered with a measured
+root-cause chain (baseline checkout comparison → empty-row disproof of a rank obstacle →
+one-parameter `wDup = 0` experiment) instead of hand-waving, and it produced a
+quantified follow-up item without violating the no-tuning mandate. **Weaknesses:** (1) the
+first render delivery never reached the owner and the initial gate evidence was 0.13×-scale
+overviews — the owner had to say "cannot evaluate" before this session built proper crop
+tooling (should have been built BEFORE the gate; S676's weakness list even flagged it);
+(2) several mid-gate rounds burned discovering the vis-network fit-on-resize screenshot trap
+(now Learning 732); (3) first E2E attempt used a wrong test-file name (`test-e2e-pedigree-
+diagram.R` vs `test-e2e-pedigree-module.R`); (4) the S668 census audit DOC still describes
+the pre-QP engine while its findings CSV is now three engines newer — carried forward again
+(was S675 weakness (3), S678 weakness (4)), still unresolved.
+
+**Next steps (specific):** (A) **wDup-on-spouse-duplicates follow-up** (new `BACKLOG.md` Up
+Next item; needs its own PRE-RED gate since it changes QP objective behavior — the S675
+mandate requires ratification): evidence in the item — excluding spouse-dups from term 4 (or
+re-weighting) collapses the flagged family's parent→child displacement 950 px → 60 px;
+census + full pinned-suite re-measure required (watch class (d): term 4 is also what keeps a
+dup AWAY from overlapping its real occurrence — d was 1 at defaults). (B) **Design Phase 3
+(docs):** `NEWS.Rmd` plain-language entry covering Phases 1+2 (S628 criterion) +
+reference-image regeneration (`data-raw/kinship2FidelityValidation.R`) + Diagram-tab
+screenshots — the deferred docs pass, now unblocked. (C) Independent: **push the branch (55
+commits ahead — CI has never seen ANY QP work, S673–S679 all unpushed**; 4 workflows fire on
+push, fix-or-defer per the CI-break convention); census Finding #3 (jog offset above the
+25-px radius) still open, now annotated with the ascender-riser cosmetics;
+`kinship2-fidelity-validation.qmd` prose stale (Housekeeping).
+
+**Key files:** `R/makePedigreeDiagramData.R:1194+` (the Decision-1 seeding loop; Tier-3
+fallback comment block just above it explains what remains and why);
+`tests/testthat/test_positionMatingUnitForest.R:2774+` (the 3 S679 structural blocks — the
+7-union disclosed-residual set lives in the third); `CHANGED S679` grep across the 5 re-pin
+files; `docs/planning/pedigree-diagram-provisional-order-plan.md` §Open Questions 1–5 (the
+follow-up map); `BACKLOG.md` Up Next (the updated Phase item + the new wDup item);
+`scratchpad/renderCrop2S679.R` + `scratchpad/structuralMeasureS679.R` (UNTRACKED session
+tools — the 100%-crop renderer and the structural-assertion measurer; take them before
+cleaning scratchpad); `scratchpad/s679_crop_{baseline,green}_P49ZD1.png` (the visual-gate
+evidence pair).
+
+**Gotchas for the next session:** (1) **vis-network screenshot trap (Learning 732):**
+`chromote`'s element/`cliprect` screenshots resize the viewport, the htmlwidget refits, and
+you silently capture the fit view while `getViewPosition()` still reports your `moveTo` —
+use `Page$captureScreenshot(captureBeyondViewport = FALSE)`; (2) the wDup item's 60-px
+residual under `wDup = 0` is NOT zero — do not promise straight drops, and the experiment
+was positioning-only (census classes not re-measured under it); (3) census (b)'s 7 real
+residual rows are now NAMED in a test (`test_positionMatingUnitForest.R`, the two-assertion
+block) — a future improvement that clears one must update the disclosed set, and a
+regression that adds one will be caught there, not just in the census; (4) the five packing
+fixtures stayed byte-identical through Phase 2 (0 parity-pin failures) — same hard invariant
+for any future order/weight work; (5) the renv "out-of-sync" banner is still the documented
+Suggests-only artifact (Learnings 473/476); (6) bars measured 233 vs the design's 234 and c2
+105 vs 116 — both strictly better, both traced to the same one-jog neighbourhood drift;
+treat S679's committed census row as the new baseline (same rule as gotcha (1) last
+session).
 
 ### Session 676 Handoff Evaluation (by Session 678)
 *(Session 677 was a ghost — claim commit `ef8a6c54` only, no work, no handoff to evaluate;

@@ -16,6 +16,50 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-07 · [BL-provisionalOrderPhase2] S679: Provisional-order Phase 2 — order-consistent seeding (Decision 1) implemented, owner visual review approved after a substantive review round
+- **Deliverable:** Phase 2 of [`docs/planning/pedigree-diagram-provisional-order-plan.md`](docs/planning/pedigree-diagram-provisional-order-plan.md)
+  §Migration Path DONE (`BACKLOG.md` Up Next item updated; the design's Phase 3 docs pass remains).
+  `DEVELOPMENT_WORKSTREAM.md`, full TDD RED (`7cdb975d`) → GREEN (`d180158c` + `c7d808bc` +
+  `cbf926bb`; REFACTOR gate posed, owner skipped — 0 lints). Decision 1 PRE-RED-ratified via
+  `AskUserQuestion`. Claim `f250689d`.
+- **Change:** `.positionMatingUnitForest()`'s union/B1/duplicate seed formulas replaced by a
+  per-anchor order-consistent seeding loop — children's-mean side rule (sex-rule tie-break),
+  two-unit left/right split, gap-proportional insets `min(0.9*minSep, 0.45*gap)`, midpoint
+  branch for genuine same-row mates (structurally dead under Decision 2, kept for robustness);
+  3+-unit anchors' extra units keep fallback seeds (the disclosed polygamous exception).
+  `derivedX()`'s qualifying branch and `b1AnchorRelativeX()` deleted as provably dead
+  (`qualifies()` demands a single-unit anchor; the loop always re-seeds those). Only RANK
+  survives into `.solveJointQP()` — magnitudes were already discarded.
+- **Measured outcome (census matched the design's combined endpoint; PRE-RED candidate,
+  GREEN engine, and shipped render all bit-identical):** Real 375 — (b) 56 → **12** (5
+  solver-dust rows + 3 on polygamous `WCPXHD` + 4 marry-in crowding at
+  `__union_97/128/179/228`, exactly the design's decomposition; max deviation 25 → 1.0 raw
+  across both phases), jogs 183 → 165, c1Pre 24 → 10 / c1Post 0, c2 94-era baseline → **105
+  vs predicted 116** (the 11-row improvement is one jog no longer crossing a dense region, 0
+  new rows), d 1 (`__dup_QZVTGJ_1`, the design's disclosed case), e 0, f 0, D1 bars 240 →
+  233 (predicted 234), width 13,710 px, rendered nodes 1,636 → 1,600. Five packing fixtures
+  byte-identical (0 parity-pin failures). RED added 3 structural blocks (dot-in-mates-span
+  31 → 0; facing-crossings among ≤2-unit anchors 2 → 0; Learning-726 two-assertion gate
+  naming the 7 disclosed residual unions).
+- **Verification:** PRE-RED blast radius by direct edit + full-suite run (9 blocks / 25
+  expectations / 5 files), all re-pinned live with `CHANGED S679` comments; full clean
+  regression failed=1 (pre-existing wordlist baseline)/error=0, 6,397 passed, 0 collateral;
+  `lintr` 0; census findings CSV re-run and committed (2,170 → 2,116 rows);
+  `renv::status(dev = TRUE)` clean; live `shinytest2` E2E pedigree module 16/16 blocks, 55
+  expectations.
+- **Visual gate (a real review round):** the owner flagged a jogged progeny connector and
+  unusable overview resolution. Diagnosed in-session: pre-existing (same jogs measured in
+  the checked-out S678 engine, whose union dot additionally sat OUTSIDE its mates' span);
+  root-caused by a `wDup = 0` experiment (parent→child displacement 950 px → ~60 px — QP
+  term 4 drags marry-in dups toward their real occurrences) → new `BACKLOG.md` Up Next item
+  (design Open Question 2 made concrete, mandate-gated). The owner's "small ascenders"
+  question answered from data (jog-repair rejoin risers, 9-px-nested corridors) → recorded
+  on the census Finding #3 BACKLOG line. 100%-scale crop tooling built after finding the
+  vis-network fit-on-resize screenshot trap (Learning 732); owner APPROVED.
+- **Records:** Learnings 732–733; `SESSION_NOTES.md` handoff; `HANDOFFS.md` receipt.
+  `NEWS.Rmd` + reference-image regeneration remain the design's Phase 3 (docs) — consciously
+  deferred again, now the item's only remaining piece.
+
 ### 2026-09-07 · [BL-provisionalOrderPhase1] S678: Provisional-order Phase 1 — duplication policy (Decision 2) implemented, owner visual review passed
 - **Deliverable:** Phase 1 of [`docs/planning/pedigree-diagram-provisional-order-plan.md`](docs/planning/pedigree-diagram-provisional-order-plan.md)
   §Migration Path DONE (`BACKLOG.md` Up Next item updated; Phase 2 remains, next pickup).
