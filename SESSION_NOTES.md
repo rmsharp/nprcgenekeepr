@@ -18,16 +18,104 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 679 Handoff Evaluation (by Session 680)
+**Score: 8/10.** **What helped:** `next_steps` (C) named this session's deliverable with the
+exact operating rule ("4 workflows fire on push, fix-or-defer per the CI-break convention"),
+and the S679-committed state was byte-verified clean at pickup — zero reconstruction.
+The gotchas that mattered transferred (the census row as new baseline; the packing-fixture
+invariant). **What was missing — the one real gap:** S679 (like S675–S678 before it)
+labelled the wordlist test failure "failed=1 (pre-existing wordlist baseline)" in every
+verification summary, including its own handoff, without asking WHY it existed or noting
+that CI's `NOT_CRAN=true` + `error-on: "warning"` check would treat it as a hard ERROR on
+the next push. The failure was a latent CI break introduced by S675's NEWS entry
+(`85de2a84`) — the local evidence to predict today's red 5-job matrix existed in every one
+of those sessions. "Push will surface anything CI dislikes" was in the handoff; "the
+standing baseline IS what CI will dislike" was derivable and absent. **What was wrong:**
+nothing stated was inaccurate. **ROI:** high.
+
 ### What Session 680 Did
 **Deliverable:** Push `master` to `origin` (55 unpushed commits, S673–S679 — all QP
-joint-solver and provisional-order work; CI has never seen any of it) and shepherd the 4
-push-triggered workflows (`R-CMD-check`/`lint`/`pkgdown`/`test-coverage`) to green,
-fix-or-defer per the CI-break convention (CLAUDE.md, S636/Learning 669). (IN PROGRESS)
-**Started:** 2026-09-08
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+joint-solver and provisional-order work; CI had never seen any of it) and shepherd the 4
+push-triggered workflows to green, fix-or-defer per the CI-break convention. **DONE** —
+push landed, the one real break found and fixed same-session, R-CMD-check's full 5-job
+matrix green on the fix. **Started/completed:** 2026-09-08 (single session).
+
+**What actually happened, in order:**
+1. **State re-check** (same conversation as S679; tree byte-clean at `4b4f3970`, 55 ahead,
+   origin drift only on `gh-pages`). **Claimed (1B)** `ec76a6db`; that claim commit rode the
+   push: `94ae26c8..ec76a6db`, 56 commits.
+2. **Push-triggered CI, round 1:** lint 4m36s ✓, test-coverage 8m46s ✓, pkgdown ✓,
+   **R-CMD-check RED — all 5 matrix jobs, one cause** (verified across every job's failed
+   log): `test_wordlist_coverage.R:121` flags `centres`/`neighbouring` (NEWS.md:146).
+3. **Diagnosis (run in parallel with round 1, so the fix was ready when the verdict
+   landed):** a local `devtools::check()` reproduced the ERROR and showed the other two
+   findings are local-only (the untracked `~$e Compounding Loop.html` portability WARNING
+   and `scratchpad` NOTE — neither is in git, so CI never sees them). Traced the words to
+   **S675's NEWS entry (`85de2a84`)** — committed AFTER S666's push, so the last green CI
+   never saw them; they are the package's only British spellings (house style is US — 9
+   center/centering uses). The "failed=1 pre-existing wordlist baseline" every session
+   S675–S679 disclosed as noise was this latent break aging for five sessions (Learning
+   669's exact class: first push of the introducing commits).
+4. **Fix (`741b2764`), CI-break convention (fix as found):** `neighbouring→neighboring`,
+   `centres→centers` in `NEWS.Rmd` + `NEWS.md`. Fixing those surfaced a third source-tree
+   flag CI cannot see (`comparator`, in the pkgdown-only
+   `vignettes/articles/kinship2-fidelity-validation.qmd`, `.Rbuildignore`d from the built
+   check) — a legitimate technical term, added to `inst/WORDLIST` in sorted position (NOT
+   via `spelling::update_wordlist()`, which would rewrite the whole platform-dependent
+   list). `test_wordlist_coverage.R` now PASSES: **the standing failed=1 baseline is gone —
+   clean regressions should read failed=0 from now on, and ANY failure is real.**
+5. **CI round 2 (fix push):** test-coverage ✓, pkgdown ✓, **R-CMD-check ✓ — all 5 matrix
+   jobs green.** lint stalled as an infra artifact: `in_progress` 1h+ inside
+   `setup-r-dependencies` (4m36s total an hour earlier on identical dep set; the Lint step
+   never started). Cancelled it; `gh run rerun` refused ("cannot be rerun; its workflow
+   file may be broken" — gh's catch-all; the workflow has no `workflow_dispatch`, so no
+   manual trigger exists). Lint's code signal for this tree is the round-1 green (the fix
+   touched no `.R` file); the close-out push below gives it a fresh run, watched to
+   conclusion before the final report.
+6. **Close-out:** this evaluation, self-assessment, Learning 734, `CHANGELOG.md` entry,
+   `HANDOFFS.md` receipt.
+
+**Self-assessment (Session 680): 9/10.** **Strengths:** (1) ran the local
+`devtools::check()` in parallel with round 1 as diagnostic insurance — when CI went red the
+root cause, its introduction commit, its scope (which findings CI can/cannot see), and the
+fix decision were already in hand; (2) verified the break was ONE cause across all 5 matrix
+jobs before fixing (never assumed the first log spoke for the rest); (3) chose the
+root-cause fix (house-style spelling) over the enshrine-it fix (WORDLIST entries for
+British variants), and used the WORDLIST only for the genuine false positive; (4) treated
+the stalled lint runner as infrastructure, with step-level evidence, rather than
+re-diagnosing the code. **Weaknesses:** (1) the cancel/rerun handling cost a round trip
+(`gh run rerun` needs the run fully settled AND then still refused; should have checked for
+`workflow_dispatch` first); (2) lint's fresh-run confirmation rides the close-out push
+rather than having landed pre-close-out — sequenced deliberately (no other trigger exists)
+but it leaves one workflow's bookkeeping green to land after the receipt is written
+(disclosed here and watched before the final report).
+
+**Next steps (specific):** (A) **wDup-on-spouse-duplicates** (BACKLOG Up Next, evidence in
+the item) — needs its own PRE-RED gate amending the S675 mandate. (B) **Provisional-order
+Phase 3 docs pass** (BACKLOG Up Next): NEWS.Rmd plain-language entry for Phases 1+2 +
+reference-image regeneration; note NEWS edits now must keep US spellings or extend
+inst/WORDLIST deliberately. (C) **Clean-regression expectation reset:** any handoff/summary
+template still saying "failed=1 (wordlist baseline)" is stale — expect failed=0.
+(D) Informational: scheduled workflows (`shinytest2`, `R-CMD-check-scheduled`, `rhub`) will
+take their first QP-era runs on their own cadence — next orientation's `gh run list` check
+covers them.
+
+**Key files:** `NEWS.Rmd`/`NEWS.md` (the two-word fix), `inst/WORDLIST:273` (`comparator`),
+`.github/workflows/R-CMD-check.yaml` (5-job matrix, `check-r-package@v2` defaults =
+`NOT_CRAN=true` + `error-on: "warning"` — the reason a "test failure" is a CI ERROR),
+`tests/testthat/test_wordlist_coverage.R:112–121` (`skip_on_cran()` only — it RUNS on CI),
+`PROJECT_LEARNINGS.md` Learning 734.
+
+**Gotchas for the next session:** (1) **failed=0 is the new clean-regression expectation**
+— the wordlist baseline is fixed, so any failure in a clean read is a real regression, and
+"pre-existing baseline" is no longer a valid label for anything without a WHY attached;
+(2) the built-tree (CI) and source-tree (local test_dir) spell-check populations DIFFER —
+`.Rbuildignore`d articles are checked locally but not on CI, so a green CI does not prove
+the local wordlist test passes, and vice versa for build-only content; (3) `gh run rerun`
+on this repo's workflows can refuse with a misleading "workflow file may be broken" — none
+of the 4 push workflows has `workflow_dispatch`, so the only re-trigger is a push;
+(4) lint run 34253116776 shows `cancelled` in history — that is S680's kill of the stalled
+runner, not a lint failure; the adjacent runs on the same tree are its real signal.
 
 ### Session 678 Handoff Evaluation (by Session 679)
 **Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable verbatim,
