@@ -1226,8 +1226,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ##     genuine node's integer position; the 0.45 * gap cap keeps two
   ##     facing insets from overshooting across each other into inverted
   ##     nesting (both failure modes measured -- design doc, Evidence).
-  ##     No same-row genuine neighbour on that side: mateOff stays
-  ##     0.9 * minSep.
+  ##     No same-row genuine neighbour on that side: the full 0.9 inset
+  ##     applies uncapped.
   ##   * seeds -- placeable mate-node (a B1 derived point or a __dup_*
   ##     node): mate at anchor + side * mateOff, union at half the
   ##     inset. Genuine same-row mate (her own Tier-1 position): union
@@ -1254,25 +1254,25 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       nn <- if (!is.na(m)) resolveNnode(m, u) else NA_character_
       sexSide <- if (identical(sexOf[[a]], "F") && !is.na(m) &&
                        m %in% realIds && identical(sexOf[[m]], "M")) {
-        -1
+        -1.0
       } else {
-        1
+        1.0
       }
       side <- if (length(us) == 1L) {
         childSide <- sign(unitX[[u]] - tier1X[[a]])
-        if (childSide == 0) sexSide else childSide
+        if (childSide == 0.0) sexSide else childSide
       } else if (k == 1L) {
-        -1
+        -1.0
       } else if (k == 2L) {
-        1
+        1.0
       } else {
-        0
+        0.0
       }
-      if (side == 0) next
+      if (side == 0.0) next
       mateOff <- 0.9 * minSep
       uGen <- matingUnits$gen[matingUnits$id == u]
       rowX <- tier1X[names(dispGenOf)[dispGenOf == uGen]]
-      beyond <- if (side > 0) {
+      beyond <- if (side > 0.0) {
         rowX[rowX > tier1X[[a]] + 1e-9]
       } else {
         rowX[rowX < tier1X[[a]] - 1e-9]
@@ -1280,9 +1280,11 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       if (length(beyond) > 0L) {
         mateOff <- min(mateOff, 0.45 * min(abs(beyond - tier1X[[a]])))
       }
-      unionOff <- mateOff / 2
+      ## * 0.5 rather than / 2: bit-identical (both operands are exact
+      ## powers of two) and clean under implicit_integer_linter.
+      unionOff <- mateOff * 0.5
       if (!is.na(nn) && nn %in% names(tier1X)) {
-        unitX[[u]] <- (tier1X[[a]] + tier1X[[nn]]) / 2
+        unitX[[u]] <- (tier1X[[a]] + tier1X[[nn]]) * 0.5
       } else if (!is.na(nn) && nn %in% names(tier3X)) {
         tier3X[[nn]] <- tier1X[[a]] + side * mateOff
         unitX[[u]] <- tier1X[[a]] + side * unionOff
