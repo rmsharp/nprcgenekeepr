@@ -2770,3 +2770,169 @@ test_that(".positionMatingUnitForest's every ANCHORED unit resolves its
   expect_equal(mismatches, character(0L))
 })
 
+## ---- Decision 1 (S679): order-consistent seeding ----------------------
+## Provisional-order design (docs/planning/pedigree-diagram-provisional-
+## order-plan.md, S676; PRE-RED-ratified S679): the union/B1/duplicate
+## provisional SEEDS are replaced by seeds at the QP objective's own
+## ideal points (mate adjacent to its anchor at a gap-proportional inset
+## min(0.9*minSep, 0.45*gap), union at half the inset, side from the
+## unit's own children's mean, two-unit anchors split left/right).
+## Magnitudes are discarded by the QP -- only the RANK survives -- so
+## these tests assert the order-stage contract directly on the solved
+## positions (rank is preserved exactly), the design's own two
+## structural properties plus its disclosed residual bound, rather than
+## re-deriving census counts. PRE-RED measurements (S679, direct edit +
+## revert): dot-outside-span 31 -> 0; facing-mate crossings among
+## <=2-unit anchors 2 -> 0; off-midpoint rows > 1e-3 raw: 56 -> 7, all
+## seven the design's own disclosed structural floor (3 on the
+## polygamous 5-unit anchor WCPXHD -- extras beyond a two-unit split
+## keep their children's-mean seeds by design -- and 4 marry-in-chain
+## crowding cases at ~0.5 raw). Anchors with 3+ units are the design's
+## explicit unseeded-extras exception, so the crossing assertion scopes
+## itself to pairs whose anchors both carry <= 2 units.
+
+test_that(".positionMatingUnitForest's union dot never renders outside
+           the span of its own anchor and rendered mate, for every
+           same-row anchored unit on the full real 375-individual
+           fixture (Decision 1, S679: a dot ranked outside its mates'
+           span can never be centred by the QP)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  resolveNn <- .nonAnchorNodeResolver(forest$duplicates)
+  mu <- forest$matingUnits
+  anchored <- mu[!is.na(mu$anchor), , drop = FALSE]
+  xOf <- stats::setNames(pos$x, pos$id)
+  genOf <- stats::setNames(pos$gen, pos$id)
+  eps <- 1e-6
+
+  outside <- character(0L)
+  for (i in seq_len(nrow(anchored))) {
+    u <- anchored$id[i]
+    a <- anchored$anchor[i]
+    nn <- resolveNn(anchored$nonAnchor[i], u)
+    if (!(nn %in% names(xOf)) || !(a %in% names(xOf))) next
+    if (genOf[[nn]] != genOf[[a]]) next
+    lo <- min(xOf[[a]], xOf[[nn]])
+    hi <- max(xOf[[a]], xOf[[nn]])
+    if (xOf[[u]] < lo - eps || xOf[[u]] > hi + eps) {
+      outside <- c(outside, u)
+    }
+  }
+  expect_equal(outside, character(0L))
+})
+
+test_that(".positionMatingUnitForest never crosses two same-row
+           anchor--mate intervals whose four nodes are distinct and
+           whose anchors each carry at most two units, on the full real
+           375-individual fixture (Decision 1, S679: the
+           gap-proportional inset keeps two facing mate seeds from
+           overshooting across each other; anchors with 3+ units keep
+           unseeded children's-mean extras by design and are excluded)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  resolveNn <- .nonAnchorNodeResolver(forest$duplicates)
+  mu <- forest$matingUnits
+  anchored <- mu[!is.na(mu$anchor), , drop = FALSE]
+  unitsOfAnchor <- table(anchored$anchor)
+  xOf <- stats::setNames(pos$x, pos$id)
+  genOf <- stats::setNames(pos$gen, pos$id)
+  eps <- 1e-6
+
+  triples <- data.frame(u = character(0L), a = character(0L),
+                        nn = character(0L), row = integer(0L),
+                        stringsAsFactors = FALSE)
+  for (i in seq_len(nrow(anchored))) {
+    u <- anchored$id[i]
+    a <- anchored$anchor[i]
+    nn <- resolveNn(anchored$nonAnchor[i], u)
+    if (!(nn %in% names(xOf)) || !(a %in% names(xOf))) next
+    if (genOf[[nn]] != genOf[[a]]) next
+    if (unitsOfAnchor[[a]] > 2L) next
+    triples <- rbind(triples, data.frame(
+      u = u, a = a, nn = nn, row = genOf[[a]], stringsAsFactors = FALSE
+    ))
+  }
+
+  crossed <- character(0L)
+  byRow <- split(seq_len(nrow(triples)), triples$row)
+  for (rr in byRow) {
+    if (length(rr) < 2L) next
+    for (ii in seq_along(rr)[-length(rr)]) {
+      for (jj in (ii + 1L):length(rr)) {
+        t1 <- triples[rr[ii], ]
+        t2 <- triples[rr[jj], ]
+        if (anyDuplicated(c(t1$a, t1$nn, t2$a, t2$nn)) > 0L) next
+        lo1 <- min(xOf[[t1$a]], xOf[[t1$nn]])
+        hi1 <- max(xOf[[t1$a]], xOf[[t1$nn]])
+        lo2 <- min(xOf[[t2$a]], xOf[[t2$nn]])
+        hi2 <- max(xOf[[t2$a]], xOf[[t2$nn]])
+        m1Inside2 <- xOf[[t1$nn]] > lo2 + eps && xOf[[t1$nn]] < hi2 - eps
+        m2Inside1 <- xOf[[t2$nn]] > lo1 + eps && xOf[[t2$nn]] < hi1 - eps
+        if (m1Inside2 && m2Inside1) {
+          crossed <- c(crossed, paste(t1$u, t2$u))
+        }
+      }
+    }
+  }
+  expect_equal(crossed, character(0L))
+})
+
+test_that(".positionMatingUnitForest centres every same-row union dot on
+           its anchor/rendered-mate midpoint up to the design's seven
+           disclosed structural residuals, on the full real
+           375-individual fixture (Decision 1, S679; Learning 726's
+           two-assertion pattern: rows above a meaningful floor are
+           bounded and NAMED, sub-precision solver dust is not counted
+           against the gate) -- the four marry-in-chain crowding cases
+           __union_97/128/179/228 stay under ~0.5 raw and the polygamous
+           anchor WCPXHD's three units under ~1.0 raw", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  resolveNn <- .nonAnchorNodeResolver(forest$duplicates)
+  mu <- forest$matingUnits
+  anchored <- mu[!is.na(mu$anchor), , drop = FALSE]
+  xOf <- stats::setNames(pos$x, pos$id)
+  genOf <- stats::setNames(pos$gen, pos$id)
+
+  dev <- numeric(0L)
+  for (i in seq_len(nrow(anchored))) {
+    u <- anchored$id[i]
+    a <- anchored$anchor[i]
+    nn <- resolveNn(anchored$nonAnchor[i], u)
+    if (!(nn %in% names(xOf)) || !(a %in% names(xOf))) next
+    if (genOf[[nn]] != genOf[[a]]) next
+    dev[u] <- abs(xOf[[u]] - (xOf[[a]] + xOf[[nn]]) / 2)
+  }
+  ## Assertion 1 of the pattern: every row above the meaningful floor
+  ## (1e-3 raw units -- solver dust measures ~1e-8 raw, five orders
+  ## below) belongs to the design's disclosed structural set.
+  disclosed <- c("__union_97", "__union_114", "__union_128", "__union_130",
+                 "__union_137", "__union_179", "__union_228")
+  realRows <- names(dev)[dev > 1e-3]
+  expect_true(all(realRows %in% disclosed))
+  ## Assertion 2 of the pattern: even the disclosed rows stay bounded --
+  ## ~0.5 raw for the marry-in-chain crowding cases, ~1.0 raw for the
+  ## polygamous anchor's units -- never the unseeded magnitudes (max
+  ## 2.0 raw under the Phase-1 engine this RED was written against,
+  ## up to 25 raw before Phase 1's duplication policy).
+  expect_lte(max(dev[realRows], 0), 1.05)
+})
+
