@@ -143,10 +143,17 @@ when it reconstructs a receipt a crashed session never completed — you never w
 <p>This file currently holds <strong>21</strong> receipt(s). Computed by <code>methodology_trim.py</code> on every <code>--check</code>/<code>--write</code> run, never hand-maintained.</p>
 <pre class="handoff"><code>session: S680
 date: 2026-09-08
-status: pending
-active_task: Push master to origin (55 unpushed commits, S673-S679, all QP joint-solver + provisional-order work) and shepherd the 4 push-triggered workflows (R-CMD-check/lint/pkgdown/test-coverage) to green; fix-or-defer any break per the CI-break convention (no standalone issue)
-what_was_done: pending
-commit: pending</code></pre>
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE. Pushed master (94ae26c8..ec76a6db, 56 commits — all QP-era work S673-S679 + the claim) and shepherded CI: the one real break fixed same-session (741b2764), R-CMD-check's full 5-job matrix green on the fix; lint's fresh confirmation rides the close-out push (its round-1 green on identical R/ content already stands).
+what_was_done: Round-1 CI: lint/test-coverage/pkgdown green; R-CMD-check RED on all 5 matrix jobs, single cause verified per-job (test_wordlist_coverage.R flags centres/neighbouring, NEWS.md:146). A parallel local devtools::check() had pre-reproduced it and cleared the two other findings as untracked-local artifacts. Root cause: S675's NEWS entry (85de2a84) landed after S666's last-green push; the test skips only ON CRAN and check-r-package defaults (NOT_CRAN=true, error-on warning) turn its failure into a check ERROR — the "failed=1 pre-existing wordlist baseline" disclosed S675-S679 was this latent break (Learning 669's class). Fix 741b2764: neighbouring-&gt;neighboring, centres-&gt;centers in NEWS.Rmd+NEWS.md (US house style); comparator (legitimate term, pkgdown-only article, invisible to CI's built check) added to inst/WORDLIST by sorted insert. Wordlist test now PASSES — the standing failed=1 baseline is GONE. Round-2 CI: test-coverage/pkgdown/R-CMD-check (all 5 jobs) green; lint stalled 1h+ in setup-r-dependencies (infra — 4m36s on identical tree an hour prior), cancelled (run 34253116776), gh run rerun refused (no workflow_dispatch anywhere — pushes are the only trigger). Learning 734; CHANGELOG entry.
+next_steps: (A) wDup-on-spouse-duplicates (BACKLOG Up Next, evidence in the item; PRE-RED gate must amend the S675 mandate). (B) Provisional-order Phase 3 docs pass (BACKLOG Up Next: NEWS.Rmd entry for Phases 1+2 + reference-image regeneration) — keep NEWS to US spellings or extend inst/WORDLIST deliberately. (C) Expectation reset: clean regressions now read failed=0; any failure is real. (D) Scheduled workflows (shinytest2/R-CMD-check-scheduled/rhub) take their first QP-era runs on their own cadence — next orientation's unconditional gh run list covers them.
+key_files: NEWS.Rmd + NEWS.md (two-word fix); inst/WORDLIST:273 (comparator); .github/workflows/R-CMD-check.yaml (5-job matrix; check-r-package defaults are why a test failure is a CI ERROR); tests/testthat/test_wordlist_coverage.R:112 (skip_on_cran only — runs on CI); PROJECT_LEARNINGS.md Learning 734
+gotchas: failed=0 is the new clean-regression expectation — "pre-existing baseline" is no longer a valid label without an attached root cause and a CI-visibility statement. Built-tree (CI) vs source-tree (local) spell-check populations DIFFER (.Rbuildignore'd articles are local-only), so each side can be green while the other is red. gh run rerun can refuse with the misleading "workflow file may be broken"; no push workflow has workflow_dispatch — re-trigger by pushing. Lint run 34253116776 reads cancelled in history: that is S680's kill of a stalled runner, not a lint failure.
+runtime_smoke: n/a — docs/ops session (push + NEWS/WORDLIST spelling fix); the CI matrix itself (5-job R CMD check incl. full test suite, green) is the run evidence.
+changelog_ref: 2026-09-08 S680 entry (ad hoc)
+commit: deffbce2</code></pre>
 <pre class="handoff"><code>session: S679
 date: 2026-09-07
 status: complete

@@ -17,6 +17,45 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-09-08 · \[ad hoc\] S680: Pushed the QP-era branch (56 commits, S673–S680 claim) and cleared the R-CMD-check break the push exposed (Learning 669’s class); all pipelines green on the fix
+
+- **Deliverable (owner-directed, S679 next-step C):**
+  `git push origin master` (`94ae26c8..ec76a6db`, 56 commits — every QP
+  joint-solver and provisional-order commit, S673–S679, none previously
+  seen by CI) + shepherd the 4 push-triggered workflows, fix-or-defer
+  per the CI-break convention. Claim `ec76a6db` (rode the push).
+- **Round 1:** lint ✓ (4m36s), test-coverage ✓, pkgdown ✓; **R-CMD-check
+  RED — all 5 matrix jobs, one cause** (verified in every job’s log):
+  `test_wordlist_coverage.R:121` flags `centres`/`neighbouring`
+  (`NEWS.md:146`). Root cause: S675’s NEWS entry (`85de2a84`) introduced
+  the package’s only British spellings AFTER S666’s last-green push; the
+  test skips only ON CRAN, and `check-r-package@v2` defaults
+  (`NOT_CRAN=true`, `error-on: "warning"`) make its failure a check
+  ERROR. The “failed=1 pre-existing wordlist baseline” disclosed by
+  every session S675–S679 was this latent break — a local
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  run in parallel with round 1 had already reproduced it and cleared the
+  other two local findings as untracked-file artifacts CI never sees.
+- **Fix (`741b2764`):** `neighbouring→neighboring`, `centres→centers` in
+  `NEWS.Rmd` + `NEWS.md` (house style is US — 9 center/centering uses);
+  plus `comparator` (legitimate term in the `.Rbuildignore`d pkgdown
+  article `kinship2-fidelity-validation.qmd`, visible only to
+  source-tree runs) inserted into `inst/WORDLIST` in sorted position.
+  `test_wordlist_coverage.R` now PASSES — **the standing failed=1
+  clean-regression baseline is gone; failed=0 is the expectation from
+  here on.**
+- **Round 2 (fix push):** test-coverage ✓, pkgdown ✓, **R-CMD-check ✓ —
+  full 5-job matrix green.** lint stalled 1h+ inside
+  `setup-r-dependencies` (infra, not code — 4m36s on the identical tree
+  an hour earlier; the Lint step never started): cancelled (non-commit
+  action; run 34253116776 shows `cancelled` for this reason);
+  `gh run rerun` refused (no `workflow_dispatch` on any push workflow —
+  the only re-trigger is a push), so lint’s fresh run rides this
+  close-out push, watched to conclusion before the session report.
+- **Records:** Learning 734 (the accepted-baseline-without-a-why
+  anti-pattern + the built-tree vs source-tree spell-check split + the
+  rerun caveat); `SESSION_NOTES.md` handoff; `HANDOFFS.md` receipt.
+
 ### 2026-09-07 · \[BL-provisionalOrderPhase2\] S679: Provisional-order Phase 2 — order-consistent seeding (Decision 1) implemented, owner visual review approved after a substantive review round
 
 - **Deliverable:** Phase 2 of
