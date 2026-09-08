@@ -148,7 +148,7 @@ key_files: NEWS.Rmd + NEWS.md (two-word fix); inst/WORDLIST:273 (comparator); .g
 gotchas: failed=0 is the new clean-regression expectation — "pre-existing baseline" is no longer a valid label without an attached root cause and a CI-visibility statement. Built-tree (CI) vs source-tree (local) spell-check populations DIFFER (.Rbuildignore'd articles are local-only), so each side can be green while the other is red. gh run rerun can refuse with the misleading "workflow file may be broken"; no push workflow has workflow_dispatch — re-trigger by pushing. Lint run 34253116776 reads cancelled in history: that is S680's kill of a stalled runner, not a lint failure.
 runtime_smoke: n/a — docs/ops session (push + NEWS/WORDLIST spelling fix); the CI matrix itself (5-job R CMD check incl. full test suite, green) is the run evidence.
 changelog_ref: 2026-09-08 S680 entry (ad hoc)
-commit: pending
+commit: deffbce2
 ```
 
 ```handoff
