@@ -772,8 +772,13 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
   ## many unions back toward their own children's spans, shortening the
   ## bars. The design's Phase 2 (order-consistent seeding) targets a
   ## further reduction to ~234. Re-measured live.
-  expect_equal(oldHits, 240L)
-  expect_equal(newHits, 240L)
+  ## CHANGED S679 to 233L/233L -- Decision 1 order-consistent seeding
+  ## (the Phase 2 the comment above anticipated): measured one below the
+  ## design's own spike figure of 234, the same one-jog neighbourhood
+  ## drift as census (c2) 116 -> 105 (see the S679 CHANGELOG entry).
+  ## Re-measured live.
+  expect_equal(oldHits, 233L)
+  expect_equal(newHits, 233L)
   expect_true(newHits <= oldHits)
 })
 

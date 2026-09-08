@@ -307,8 +307,12 @@ test_that(
   ## opposite of the Walker/BJL-era arrangement this fixture was chosen to
   ## exercise. The smaller-x-becomes-from invariant itself (asserted above,
   ## unchanged) is what matters -- re-measured directly, not assumed.
-  expect_equal(dupConnectors$from, "8LKBV9")
-  expect_equal(dupConnectors$to, "__dup_8LKBV9_1")
+  ## CHANGED S679 (Decision 1, order-consistent seeding): the duplicate
+  ## is now seeded ADJACENT to its unit's anchor, which on this fixture
+  ## lands it back to the LEFT of the real 8LKBV9 -- the pair flips
+  ## again, the invariant above still holds. Re-measured live.
+  expect_equal(dupConnectors$from, "__dup_8LKBV9_1")
+  expect_equal(dupConnectors$to, "8LKBV9")
 })
 
 test_that(
@@ -713,7 +717,14 @@ test_that(
   ## 375 + 237 + 170 + 251 + 237 + 0 + 366 = 1636. Composition
   ## re-measured by actually running the changed engine, never
   ## hand-derived.
-  expect_equal(nrow(result$nodes), 1636L)
+  ## CHANGED S679 to 1600L -- Decision 1 order-consistent seeding
+  ## (provisional-order design Phase 2): locally-contiguous
+  ## anchor--dot--mate ranks shorten the same-row edges the jog-repair
+  ## pass has to detour around, jog repairs 183 -> 165 (366 -> 330
+  ## waypoints): 375 + 237 + 170 + 251 + 237 + 0 + 330 = 1600. Every
+  ## other component count unchanged (the seeding adds or removes no
+  ## node). Re-measured live.
+  expect_equal(nrow(result$nodes), 1600L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
   ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L (issue #166's
@@ -736,7 +747,9 @@ test_that(
   ## (Migration Path Phase 3, S675: 267 jog repairs x 2 waypoints).
   ## CHANGED AGAIN to 366L -- same cause as the node-count change above
   ## (Decision 2, S678: 183 jog repairs x 2 waypoints).
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 366L)
+  ## CHANGED AGAIN to 330L -- same cause as the node-count change above
+  ## (Decision 1, S679: 165 jog repairs x 2 waypoints).
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 330L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------

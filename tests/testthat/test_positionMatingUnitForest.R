@@ -360,31 +360,36 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
   ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
   ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
   ## actually running the amended engine, never hand-derived.
-  expectPos("5A6DFT", -0.34511914, 0L)
-  expectPos("8DKELJ", 0.65488086, 0L)
-  expectPos("G8EBU9", -0.84511913, 1L)
-  expectPos("8P17E3", 1.15488087, 1L)  # gen unaffected: issue #143's
+  ## CHANGED S679 (Decision 1, order-consistent seeding, provisional-
+  ## order design Phase 2): the re-seeded provisional order hands the QP
+  ## locally-contiguous anchor--dot--mate triples, e.g. gen 2 now solves
+  ## to __dup_8LKBV9_1 (-0.92) < unit4's dot (-0.42) < FJIB3R (0.08)
+  ## with the dot at the exact midpoint. Re-measured live.
+  expectPos("5A6DFT", -0.42236741, 0L)
+  expectPos("8DKELJ", 0.57763259, 0L)
+  expectPos("G8EBU9", -0.92236741, 1L)
+  expectPos("8P17E3", 1.07763259, 1L)  # gen unaffected: issue #143's
                                  # non-anchor override (she no longer
                                  # anchors unit3, 8LKBV9 does -- Track 4)
-  expectPos("8LKBV9", 0.15488087, 1L)
-  expectPos("FJIB3R", -0.84511913, 2L)
-  expectPos("9VGCCV", 1.15488087, 2L)
-  expectPos("GA204Z", -0.34511913, 3L)
+  expectPos("8LKBV9", 0.07763259, 1L)
+  expectPos("FJIB3R", 0.07763259, 2L)
+  expectPos("9VGCCV", 1.07763259, 2L)
+  expectPos("GA204Z", -0.42236741, 3L)
 
   unit1 <- forest$matingUnits$id[forest$matingUnits$sire == "5A6DFT"]
   unit2 <- forest$matingUnits$id[forest$matingUnits$dam == "G8EBU9"]
   unit3 <- forest$matingUnits$id[forest$matingUnits$dam == "8P17E3"]
   unit4 <- forest$matingUnits$id[forest$matingUnits$dam == "FJIB3R"]
-  expectPos(unit1, 0.15488086, 0L)
-  expectPos(unit2, -1.34511913, 1L)
-  expectPos(unit3, 0.65488087, 1L)
-  expectPos(unit4, -0.34511913, 2L)
+  expectPos(unit1, 0.07763259, 0L)
+  expectPos(unit2, -0.42236741, 1L)
+  expectPos(unit3, 0.57763259, 1L)
+  expectPos(unit4, -0.42236741, 2L)
 
   dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
   ## unit3 no longer has a duplicate (8LKBV9 anchors it directly now).
   expect_equal(forest$duplicates$matingUnitId[
     forest$duplicates$realId == "8LKBV9"], unit4)
-  expectPos(dupAt4, 0.15488087, 2L)
+  expectPos(dupAt4, -0.92236741, 2L)
 })
 
 ## ---- Track 3: minimum mate-spacing guarantee (kinship2 fidelity
@@ -1400,7 +1405,10 @@ test_that("makePedigreeMatingLayout positions a nested single-child
   ## CHANGED S678 (Decision 2 spouse duplication): GC2 (own parent edge)
   ## now also duplicates at the GC1 x GC2 unit she does not anchor, so
   ## the component's QP solve changes. Re-measured live.
-  expect_equal(layout$nodes$x[layout$nodes$id == "__union_2"], -55.882746,
+  ## CHANGED S679 (Decision 1, order-consistent seeding): the duplicate
+  ## and union seeds move to the anchor-adjacent insets, changing the
+  ## provisional rank order the QP receives. Re-measured live.
+  expect_equal(layout$nodes$x[layout$nodes$id == "__union_2"], -23.864093,
                tolerance = 1e-5)
 })
 
@@ -1425,7 +1433,10 @@ test_that("makePedigreeMatingLayout positions a nested single-child
   ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
   ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
   ## actually running the amended engine, never hand-derived.
-  expect_equal(layout$nodes$x[layout$nodes$id == "__union_3"], 56.768463,
+  ## CHANGED S679 (Decision 1, order-consistent seeding): the B1/dup and
+  ## union seeds move to the anchor-adjacent insets, changing the
+  ## provisional rank order the QP receives. Re-measured live.
+  expect_equal(layout$nodes$x[layout$nodes$id == "__union_3"], 59.207322,
                tolerance = 1e-5)
 })
 
@@ -1449,7 +1460,10 @@ test_that(".positionMatingUnitForest's F1 target case (investigation doc's
   ## 1.0 = minSep, individual-union 0.5, union-union 0.25, replacing the
   ## symbol-tangent 0.4167/0.2583/0.1 floors S674 shipped). Re-measured by
   ## actually running the amended engine, never hand-derived.
-  expect_equal(layout$nodes$x[layout$nodes$id == "__union_1"], 17.344755,
+  ## CHANGED S679 (Decision 1, order-consistent seeding): the B1/dup and
+  ## union seeds move to the anchor-adjacent insets, changing the
+  ## provisional rank order the QP receives. Re-measured live.
+  expect_equal(layout$nodes$x[layout$nodes$id == "__union_1"], 55.888649,
                tolerance = 1e-5)
 })
 

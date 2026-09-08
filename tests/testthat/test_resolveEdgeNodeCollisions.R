@@ -365,7 +365,11 @@ test_that(".resolveEdgeNodeCollisions applies a disclosed smooth.roundness
   ## curved connectors on denser rows; 59 of the 170 collide with an
   ## unrelated node and take the roundness nudge (up from 47 of 102).
   ## Re-measured live (matches the census's own 59 pipeline residuals).
-  expect_equal(nrow(curvedResiduals), 59L)
+  ## CHANGED S679 to 58L -- Decision 1 order-consistent seeding
+  ## (provisional-order design Phase 2): the tighter local
+  ## anchor--dot--mate packing clears one curved-connector collision
+  ## (matches the census's own 58 pipeline residuals). Re-measured live.
+  expect_equal(nrow(curvedResiduals), 58L)
 
   ## Every pre-existing node's x/y is byte-identical.
   before <- waypoints$nodes[, c("id", "x", "y")]
@@ -533,8 +537,14 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   ## colliding edges, 2549 -> 530 obstacle-pairs -- most of the S675
   ## growth undone). Still resolved to 0 same-row residual by this
   ## unchanged repair pass. Re-measured live.
-  expect_equal(nrow(baselineEdges), 183L)
-  expect_equal(nrow(baseline), 530L)
+  ## CHANGED AGAIN to 165L/495L -- Decision 1 order-consistent seeding
+  ## (S679, provisional-order design Phase 2): locally-contiguous
+  ## anchor--dot--mate ranks shorten the remaining same-row mate lines
+  ## (183 -> 165 colliding edges, 530 -> 495 obstacle-pairs; census
+  ## c1Pre 24 -> 10 edges). Still resolved to 0 same-row residual by
+  ## this unchanged repair pass. Re-measured live.
+  expect_equal(nrow(baselineEdges), 165L)
+  expect_equal(nrow(baseline), 495L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)
