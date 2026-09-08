@@ -143,8 +143,8 @@ R. Mark Sharp, Ph.D.
   unrelated families could be drawn interleaved on the same rows, with a
   mate line running through an unrelated animal's symbol, so two
   strangers could look related.
-- The Diagram tab now keeps every neighbouring pair of symbols on a row
-  at least one full symbol width apart and centres each mating dot
+- The Diagram tab now keeps every neighboring pair of symbols on a row
+  at least one full symbol width apart and centers each mating dot
   between the two parents, following kinship2's own spacing convention,
   so symbols no longer overlap in large colony pedigrees. Diagrams are
   wider as a result; pan and zoom as needed.
