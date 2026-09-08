@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 680 Did
+**Deliverable:** Push `master` to `origin` (55 unpushed commits, S673–S679 — all QP
+joint-solver and provisional-order work; CI has never seen any of it) and shepherd the 4
+push-triggered workflows (`R-CMD-check`/`lint`/`pkgdown`/`test-coverage`) to green,
+fix-or-defer per the CI-break convention (CLAUDE.md, S636/Learning 669). (IN PROGRESS)
+**Started:** 2026-09-08
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 678 Handoff Evaluation (by Session 679)
 **Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable verbatim,
 and every re-derived edit site (`R/makePedigreeDiagramData.R:1087`, `:1117`/`:1124`,

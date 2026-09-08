@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S680
+date: 2026-09-08
+status: pending
+active_task: Push master to origin (55 unpushed commits, S673-S679, all QP joint-solver + provisional-order work) and shepherd the 4 push-triggered workflows (R-CMD-check/lint/pkgdown/test-coverage) to green; fix-or-defer any break per the CI-break convention (no standalone issue)
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S679
 date: 2026-09-07
 status: complete
