@@ -436,14 +436,14 @@ names(diagramData)
 nrow(diagramData$nodes)
 ```
 
-    ## [1] 48
+    ## [1] 56
 
 ``` r
 
 nrow(diagramData$edges)
 ```
 
-    ## [1] 53
+    ## [1] 61
 
 **makePedigreeMatingLayout** returns a list of three elements: *nodes*
 (one row per real animal – shaped by sex, dot = Female, square = Male,
@@ -531,7 +531,7 @@ diagramDataRectilinear <- makePedigreeMatingLayout(demoPed,
                                                      edgeStyle = "rectilinear")
 ```
 
-    ## Warning: makePedigreeMatingLayout(): 2 same-row edge-node collision(s) could
+    ## Warning: makePedigreeMatingLayout(): 9 same-row edge-node collision(s) could
     ## not be fully resolved (residual after the repair-pass cap, or an unconfirmed
     ## curved-connector heuristic) -- rendered output may still show a straight or
     ## curved edge passing near an unrelated node.
@@ -548,16 +548,16 @@ names(diagramDataRectilinear)
 nrow(diagramDataRectilinear$nodes)
 ```
 
-    ## [1] 98
+    ## [1] 102
 
 ``` r
 
 nrow(diagramDataRectilinear$edges)
 ```
 
-    ## [1] 103
+    ## [1] 107
 
-98 nodes and 103 edges here, versus 48 and 53 for the same 33-animal
+102 nodes and 107 edges here, versus 56 and 61 for the same 33-animal
 *demoPed* under the *direct* style above – the difference is entirely
 extra invisible “waypoint” nodes/edges that carry out the right-angle
 routing (zero size, transparent color, excluded from the **Select by
@@ -1454,7 +1454,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpNUss9j/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpltgNPp/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2226,8 +2226,8 @@ into the de-identified table.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-09-03 00:18:40.554744. The processing
-time for this document was 22 seconds..
+The current date and time is 2026-09-08 16:28:13.053871. The processing
+time for this document was 16 seconds..
 
 ``` r
 
@@ -2260,30 +2260,30 @@ sessionInfo()
     ## [1] stats     graphics  grDevices datasets  utils     methods   base     
     ## 
     ## other attached packages:
-    ## [1] nprcgenekeepr_2.0.0.9000 knitr_1.51               ggplot2_4.0.3           
+    ## [1] nprcgenekeepr_2.0.0.9000 knitr_1.52               ggplot2_4.0.3           
     ## [4] stringi_1.8.9           
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.60            bslib_0.12.0        
-    ##  [5] visNetwork_2.1.4     htmlwidgets_1.6.4    lattice_0.22-9       vctrs_0.7.3         
-    ##  [9] tools_4.6.1          generics_0.1.4       tibble_3.3.1         pkgconfig_2.0.3     
-    ## [13] Matrix_1.7-5         data.table_1.18.6.1  checkmate_2.3.4      RColorBrewer_1.1-3  
-    ## [17] S7_0.2.2             desc_1.4.3           readxl_1.5.0         lifecycle_1.0.5     
-    ## [21] compiler_4.6.1       farver_2.1.2         stringr_1.6.0        textshaping_1.0.5   
-    ## [25] Rlabkey_3.5.0        httpuv_1.6.17        htmltools_0.5.9      sass_0.4.10         
-    ## [29] yaml_2.3.12          htmlTable_2.5.0      later_1.4.8          pillar_1.11.1       
-    ## [33] pkgdown_2.2.1        jquerylib_0.1.4      DT_0.34.0            cachem_1.1.0        
-    ## [37] sessioninfo_1.2.4    mime_0.13            tidyselect_1.2.1     zip_3.0.2           
-    ## [41] digest_0.6.39        dplyr_1.2.1          labeling_0.4.3       fastmap_1.2.0       
-    ## [45] grid_4.6.1           cli_3.6.6            magrittr_2.0.5       withr_3.0.3         
-    ## [49] shinyBS_0.65.0       scales_1.4.0         promises_1.5.0       backports_1.5.1     
-    ## [53] plotrix_3.8-14       lubridate_1.9.5      timechange_0.4.0     rmarkdown_2.32      
-    ## [57] lambda.r_1.2.4       httr_1.4.9           otel_0.2.0           futile.logger_1.4.9 
-    ## [61] cellranger_1.1.0     ragg_1.5.2           openxlsx_4.2.8.1     shiny_1.14.0        
-    ## [65] evaluate_1.0.5       rlang_1.3.0          futile.options_1.0.1 Rcpp_1.1.2          
-    ## [69] xtable_1.8-8         glue_1.8.1           formatR_1.14         renv_1.2.3          
-    ## [73] rstudioapi_0.19.0    jsonlite_2.0.0       R6_2.6.1             systemfonts_1.3.2   
-    ## [77] fs_2.1.0
+    ##  [5] visNetwork_2.1.4     htmlwidgets_1.6.4    lattice_0.22-9       quadprog_1.5-8      
+    ##  [9] vctrs_0.7.3          tools_4.6.1          generics_0.1.4       tibble_3.3.1        
+    ## [13] pkgconfig_2.0.3      Matrix_1.7-5         data.table_1.18.6.1  checkmate_2.3.4     
+    ## [17] RColorBrewer_1.1-3   S7_0.2.2             desc_1.4.3           readxl_1.5.0        
+    ## [21] lifecycle_1.0.5      compiler_4.6.1       farver_2.1.2         stringr_1.6.0       
+    ## [25] textshaping_1.0.5    Rlabkey_3.5.0        httpuv_1.6.17        htmltools_0.5.9     
+    ## [29] sass_0.4.10          yaml_2.3.12          htmlTable_2.5.0      later_1.4.8         
+    ## [33] pillar_1.11.1        pkgdown_2.2.1        jquerylib_0.1.4      DT_0.34.0           
+    ## [37] cachem_1.1.0         sessioninfo_1.2.4    mime_0.13            tidyselect_1.2.1    
+    ## [41] zip_3.0.2            digest_0.6.39        dplyr_1.2.1          labeling_0.4.3      
+    ## [45] fastmap_1.2.0        grid_4.6.1           cli_3.6.6            magrittr_2.0.5      
+    ## [49] withr_3.0.3          shinyBS_0.65.0       scales_1.4.0         promises_1.5.0      
+    ## [53] backports_1.5.1      plotrix_3.8-14       lubridate_1.9.5      timechange_0.4.0    
+    ## [57] rmarkdown_2.32       lambda.r_1.2.4       httr_1.4.9           otel_0.2.0          
+    ## [61] futile.logger_1.4.9  cellranger_1.1.0     ragg_1.5.2           openxlsx_4.2.9      
+    ## [65] shiny_1.14.0         evaluate_1.0.5       rlang_1.3.0          futile.options_1.0.1
+    ## [69] Rcpp_1.1.2           xtable_1.8-8         glue_1.8.1           formatR_1.14        
+    ## [73] renv_1.2.3           rstudioapi_0.19.0    jsonlite_2.0.0       R6_2.6.1            
+    ## [77] systemfonts_1.3.2    fs_2.1.0
 
 [^1]: Setting *minDamAge* to 3.5 and above will cause an error along
     with the creation of a file *~/lowParentAge.csv* that will list the

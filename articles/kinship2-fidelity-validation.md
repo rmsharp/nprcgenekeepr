@@ -177,11 +177,16 @@ Unavailable (‘?’) individuals still shown, per kinship2’s own
 convention.
 
 ![nprcgenekeepr pedigree diagram of the shrunk 8-subject pedigree,
-showing the same 2 family groups as kinship2's own shrunk
-diagram.](kinship2-fidelity-validation-img/trackB-nprc-shrunk.png)
+showing the same 2 family groups as kinship2's own shrunk diagram, drawn
+side by side as separate
+blocks.](kinship2-fidelity-validation-img/trackB-nprc-shrunk.png)
 
 [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md)’s
-own surviving pedigree, same 8 subjects, rendered the same way.
+own surviving pedigree, same 8 subjects, rendered the same way. As of
+the disconnected-component separation fix (S667, 2026-09-02), the two
+unrelated surviving families are drawn as separate side-by-side blocks
+with the same one-unit gap kinship2 uses – every individual’s horizontal
+position matches kinship2’s own `align.pedigree()` exactly.
 
 **What “matches” above means, precisely – and what it does not.** The
 claim is scoped to *which individuals appear at all* (P5 now omitted by

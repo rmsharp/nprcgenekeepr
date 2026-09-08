@@ -15,6 +15,423 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
+**DECIDE from the S668 census: pedigree drawing – (A) bounded per-defect
+fixes, or (C) a joint solver** (**DECIDED S671, 2026-09-03: (C) – joint
+solver**, owner via `AskUserQuestion`, after this session presented both
+options’ evidence, costs, and the GPL-dependency note in full prose; TOP
+PRIORITY under the standing pedigree-fidelity directive stands
+unchanged, now scoped to executing (C)) – evidence:
+[`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md`](https://github.com/rmsharp/nprcgenekeepr/docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md)
+(scoreboard, per-class root causes, kinship2 baseline; every finding row
+with ids in the companion `_findings.csv`; reproduce with
+`Rscript data-raw/pedigreeDrawingErrorCensus.R`). **What the census
+established:** the two owner-reviewed Track B drawings and the D1-D3
+fixtures are clean on all six classes; Track C and the real 375 fixture
+carry every error. On the real fixture, **two formula constants explain
+264 of 288 overlapping-symbol rows and 132 of 168 off-centre union
+dots** – (1) Tier 2 puts the union at the children’s midpoint, which
+Tier 1 has already given to the anchor, so the dot sits ON the anchor’s
+symbol for 157 of 237 units (measured: anchor == (min+max)/2 of the
+unit’s children and union == that + 0.001 tie-epsilon, 157/157); (2) the
+non-qualifying mate offset `minSep * 0.4` draws 107 mate pairs 48 px
+apart with 50-px symbols. Both constants date from when the union stood
+*between* the mates (pre-S652); S646’s plan deferred changing them for
+un-measured cascade risk. The residue is 24 search-level near-misses
+(the 4 S667 disclosed + 20 mate/own-union partial overlaps) plus 36
+long-mate-line unions; the same-row repair pass clears its own predicate
+(c1 84 -\> 0) but 33 of 89 jogs still cross the symbol (9-18 px offset
+vs 25 px radius); 56 non-founder cross-generation mates draw with
+doglegs (row = generation policy; founders 0, down from S470’s 147
+wrong-row occurrences). kinship2’s `align.pedigree()` on the same 375
+animals: 0 same-row pairs closer than 1 unit, at the cost of 145
+duplicates vs our 102, a pre-processing layer (dangling parents,
+sex-role swaps), and an `autohint` warning. **Recommended next step
+before choosing (A) or (C)** (report Recommendation 1): spike the
+two-constant change (recentre every union on its mate midpoint; 1.0-unit
+spousal separation for every pair) and re-run the census – if (a)+(b)
+fall to ~24 with no other class rising, (A) is three bounded changes
+from a clean production drawing (that, the jog offset, the residue); if
+it cascades into Tier 1, that is the evidence for (C), whose cost is now
+quantified. Independent of A/C: the jog offset must exceed the 25-px
+symbol radius (report Finding \#3), and the row-policy question (Finding
+\#5) needs an explicit answer either way. **Spike run S669, 2026-09-02**
+(throwaway `data-raw/pedigreeDrawingSpikeTwoConstantFix.R`, no TDD gate,
+`R/` untouched – see
+[`docs/audits/PEDIGREE_DRAWING_SPIKE_TWO_CONSTANT_FIX_2026-09-02.md`](https://github.com/rmsharp/nprcgenekeepr/docs/audits/PEDIGREE_DRAWING_SPIKE_TWO_CONSTANT_FIX_2026-09-02.md)):
+**not the ~24 scenario – it cascades.** (a)+(b) fell 464 -\> 215 (54%, a
+real reduction) but (c2) rose 414 -\> 1,425 (3.4x); net hard-class
+findings (excluding the labelled curved-chord heuristic) rose 935 -\>
+1,697. Track B/D1-D3 showed 0 movement (the spike is idempotent where
+S666’s `qualifies()`-gated correction already applies; only Track C and
+the real 375 fixture exercise the newly-widened path). This rules out
+the NAIVE, ungated version of (A) as a clean win – consistent with why
+S646-S652 originally scoped the same mechanism to qualifying units only
+– but does not by itself decide (A) vs (C): a narrower gate, or the same
+two edits followed by a re-run of jog/collision repair against the new
+spacing, is untested and remains a live (A) variant. Owner’s decision;
+not made S669. **DECIDED S671, 2026-09-03: (C).** Owner picked “joint
+solver” over “bounded fixes,” “not ready,” and “defer” via
+`AskUserQuestion`, after this session laid out both paths’ evidence
+(S669’s cascade result for A; S670’s verified no-cascade mechanism and
+Effort L cost for C), what each does/does not solve (neither solves
+duplicate-proximity class (d)), and the GPL-dependency note
+(`quadprog`/`kinship2` are `GPL (>= 2)`, this project is
+`MIT + file LICENSE`; an `Imports`-level runtime dependency on a GPL
+package is common, accepted CRAN practice, not a blocker). **Design
+session DONE S672, 2026-09-03** (Effort M, one session,
+`ARCHITECTURE_WORKSTREAM.md`, no TDD gate – design doc only, no `R/`
+change):
+[`docs/planning/pedigree-diagram-joint-qp-solver-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-joint-qp-solver-plan.md).
+Specs one joint
+[`quadprog::solve.QP()`](https://rdrr.io/pkg/quadprog/man/solve.QP.html)
+call per weakly-connected component, replacing
+`.positionMatingUnitForest()`’s Tier 2/Tier 3 collision-avoidance passes
+(5 capped-push mechanisms) while keeping Tier 1 (BJL),
+`.forestComponents()`/`.packComponents()`, `.buildMatingUnitForest()`,
+and the rendering-layer waypoint/jog code all unchanged – Tier 2/Tier
+3’s existing formulas are reused, unmodified, purely to fix provisional
+row order (their known-defective VALUES are discarded once the QP runs).
+Objective: kinship2’s own spousal-pull + child-centering terms, PLUS two
+new terms this project needs that kinship2 has no analogue for – a
+union-dot centering penalty (targets census Finding \#1 directly) and a
+duplicate-proximity penalty (targets class (d), which kinship2 itself
+does not solve either). Constraints: `minSep` generalized from
+kinship2’s uniform 1-unit floor to this project’s 3-value radius-based
+clearance table (already-existing render-layer constants, repurposed
+from soft capped-push thresholds to hard QP constraint RHS values, no
+new constants invented).
+[`quadprog::solve.QP()`](https://rdrr.io/pkg/quadprog/man/solve.QP.html)’s
+argument contract independently verified against the installed package’s
+own docs this session (closing S670 report §6 caveat \#3). **Both items
+S671 left open, resolved by this design:** the row-policy question
+(census Finding \#5) – **decided: keep row = generation** (status quo;
+owner-ratified via `AskUserQuestion`; a non-founder mate keeps her own
+row, the existing D2 dogleg still renders the connection, unchanged) –
+and the duplicate-proximity penalty term (class (d)) – **included** in
+the QP objective from the start (mechanically free once the QP skeleton
+exists, per S670’s own costing). Migration Path: 4 phased implementation
+sessions (standalone `.solveJointQP()` + `quadprog` dependency -\>
+cutover on small fixtures -\> real-375-fixture cutover + full
+pinned-suite re-derivation + owner visual review -\> cleanup), each with
+its own DONE criteria and verification commands in the plan doc.
+**Migration Path Phase 1 DONE S673, 2026-09-03, full TDD RED-\>GREEN
+(REFACTOR skipped, nothing behavior-neutral identified beyond GREEN’s
+own lint fixes)** – new internal
+`.solveJointQP(provisionalPos, matingUnits, duplicates, childEdges, wSpouse, alignChild, wUnion, wDup)`
+(`R/makePedigreeDiagramData.R`) implements Decisions 2-4 in full: one
+[`quadprog::solve.QP()`](https://rdrr.io/pkg/quadprog/man/solve.QP.html)
+call per component, the 2-value union/individual kind split, the
+radius-based `minSep` adjacency constraints, and the 5-term objective
+(spousal pull, child centering, union centering, duplicate proximity,
+anti-degeneracy). Verified standalone against Track B full/shrunk, Track
+C, D1-D3 (9 RED test blocks, `tests/testthat/test_solveJointQP.R`) – NOT
+wired into `.positionMatingUnitForest()` (Phase 2’s job) and NOT run
+against the real 375-fixture (Phase 3’s job). `quadprog` promoted to
+`DESCRIPTION` `Imports:`; `renv::snapshot(dev = TRUE)` confirms
+consistent (the package was already present as a transitive record).
+Extracted a shared `.nonAnchorNodeResolver()` helper from
+`.addRectilinearWaypoints()`’s D2 dogleg block (:2195-2197
+pre-extraction) so both it and `.solveJointQP()` share one lookup – no
+behavior change, confirmed by `test_addRectilinearWaypoints.R`’s own
+102/102 pass. The wUnion/wDup weight sweep Decision 4 flagged as “not
+assumed here” was run for real (0.01 to 100, Track C + Track B full):
+the minSep floor sits at exactly the constraint boundary at every
+setting (slack ~0), extending Learning 678/715’s kinship2 finding to
+this project’s own 2 new terms. Full clean regression: 2348 blocks, 6893
+passed, 1 failed/0 error (the pre-existing `test_wordlist_coverage.R`
+baseline only) – 0 collateral. `lintr` 0 findings (7
+`implicit_integer_linter` fixes folded into GREEN). **Migration Path
+Phase 2 DONE S674, 2026-09-03, full TDD RED-\>GREEN (REFACTOR skipped, 0
+lints, nothing behavior-neutral identified)** –
+`.positionMatingUnitForest()`’s five collision-avoidance passes (the
+Evidence-Based Inventory list: `.deCollideIndividualPoints()`, the
+B1-vs-unrelated-individual pass, Track 7 Phase 2’s union sweep, the
+duplicate de-collision + Track 7 Phase 4 pass) DELETED outright –
+Decision 1 stops Phase A at the raw Tier 2/Tier 3 formula values, so
+these passes had nothing left to call; the project’s own 0-lint
+close-out gate forced deleting the now-dead code this session rather
+than waiting for the plan’s own nominal Phase 4. Replaced by one
+`provisionalPos -> .solveJointQP()` call per component. **2 real bugs
+found and fixed live in Phase 1’s own `.solveJointQP()`** (a shape
+absent from its 6 fixtures + 1 orphan-unit case, but present in
+production and even some pre-existing small test fixtures): a unit whose
+non-anchor is a dangling parent’s FREE occurrence, and a duplicate whose
+own `realId` is a dangling parent – both crashed `e()`; both fixed by
+generalizing the existing orphan-unit exclusion, and both given new
+dedicated RED cases in `test_solveJointQP.R` (11 blocks now, up from 9).
+**Test-suite update, all measured against the real (not probe-corrupted)
+engine:** 22 tests retired (formula-exactness /deleted-mechanism
+premises Decision 1/3/4 permanently supersede – exact-midpoint
+invariants, kinship2-bit-match, Track-7-pass-specific measurements –
+each replaced by an explanatory comment, not silently deleted), 12
+re-derived (small-fixture structural properties, new measured pinned
+values), 3 skipped with a cited
+[`testthat::skip()`](https://testthat.r-lib.org/reference/skip.html)
+pointing at Phase 3 (real-375-fixture node/collision counts, deferred by
+design). Full clean regression: failed=1/error=0 (pre-existing wordlist
+baseline only) across the WHOLE suite, 0 collateral; `lintr` 0 findings;
+`renv::status(dev = TRUE)` clean (no new deps). **Runtime smoke test
+(Phase 3E, applies this session unlike Phase 1):** all 16 live
+[`shinytest2::AppDriver`](https://rstudio.github.io/shinytest2/reference/AppDriver.html)
+E2E pedigree-Diagram-tab tests pass against the QP-wired production code
+(`NPRC_RUN_E2E=true`). **Census re-run
+(`data-raw/pedigreeDrawingErrorCensus.R`):** Track B full/shrunk and
+D1-D3 stay at 0 on every already-0 class (no regression). Track C’s own
+class (a) reaches 0 as the design’s hard minSep constraint guarantees;
+class (b) does NOT fully reach 0 (1 residual, `__union_3`/W/Y, 0.4667
+raw units off-centre) – measured directly (not assumed) that this is
+constraint-bound, not weight-tunable: swept `wUnion` 2-\>5000 (2500x
+default), deviation held bit-identical at every setting, while the
+union’s own real child (pulled by the same term’s child-centering
+counterpart) landed exactly at the true midpoint in the identical solve.
+A genuine, disclosed shortfall against the design doc’s own optimistic
+Rationale prediction, not a bug – Decision 4’s union-centering term is a
+SOFT objective term, and a crowded 5-node minSep-constrained row can
+out-compete it; Phase 3 will very likely hit this same trade-off more
+often at real-fixture scale, on far more crowded rows. Naming gotcha for
+any future session touching “Track C”: `test_solveJointQP.R`’s own
+`.qpTrackC()` (6 individuals, F1/F2/F3/A/B/C) and
+`data-raw/pedigreeDrawingErrorCensus.R`’s own `pedC` (9 individuals,
+P1/P2/A/Y/X/W/C1/C2/GC, “verbatim from kinship2FidelityValidation.R”)
+are TWO DIFFERENT fixtures sharing one label – always re-derive which
+file’s own definition a “Track C” reference means. **Migration Path
+Phase 3 DONE S675, 2026-09-03/04, full TDD RED-\>GREEN (REFACTOR
+skipped, 0 lints), owner visual review PASSED** – the real 375 fixture
+rendered under Decision 3’s symbol-tangent floors had 684/705 adjacent
+pairs at exactly the floor (symbols touching, labels overlapping;
+`PROJECT_LEARNINGS.md` Learning 725): the old engine’s typical spacing
+came from Tier 1’s `minSep = 1`, which Decision 1 stopped applying, and
+the clearance constants were only ever collision thresholds. **Decision
+3 AMENDED (owner via `AskUserQuestion`, from side-by-side renders of 3
+floor sets + each set’s measured test blast radius): kinship2-parity
+floors** – individual-individual `minSep` (1.0), individual-union
+`minSep / 2`, union-union `minSep / 4`; `.solveJointQP()` gains a
+`minSep` argument. Census on the real fixture: (a) 90 -\> 0 (the 90 were
+\<= 1.3e-6 px solver-precision shortfalls, Learning 726), (b) 47, (c1)
+post 0, (c2) 587, (d) 0, (e) 56, (f) 0; width 13,680 px (+32% vs the
+pre-QP 10,395); Track B shrunk/D1-D3 back to bit-exact kinship2
+geometry. The 3 Phase-2-skipped pins re-measured (1,792 nodes/534 jogs;
+266/2,549 collision baseline; 312 D1 bar-vs-bar overlaps) plus 10
+small-fixture pins; full clean regression 0 collateral; live E2E 16/16;
+Track B/C reference images + 5 Diagram-tab screenshots regenerated. Plan
+doc carries “Decision 3 – AMENDED (Session 675)” and a Phase 3 record.
+See `CHANGELOG.md`. **Next step: Migration Path Phase 4 cleanup**
+(READY, Effort S – the dead passes were already deleted S674 and the
+`NEWS.Rmd` entry landed S675; remaining: grep `R/` doc-comments for
+references to the deleted tiers/passes and `.kMax*` constants, then mark
+this item DONE). The floor-invariant residuals ((b), crossings, bar
+overlaps) are the SEPARATE design item directly below. Independent of
+all of this, one item still stands: the jog offset must be raised above
+the 25-px symbol radius (census Finding \#3) – a bounded fix any future
+session could pick up at any time, with no ordering dependency on the QP
+work either way. (S679 addendum, owner visual-gate question: the same
+jog-render convention also produces small “ascender” stubs above sibship
+bars – detour corridors nest 9 px below bar level (y 249/258/267 vs bars
+at 240) and each climbs 9-27 px back up to its bar node, which for
+narrow/single-child bars reads as a dangling stub ending in mid-air.
+Cosmetic, pre-existing; fix candidates: rejoin at the child’s descent x
+instead of via the bar node, or suppress the riser when the bar has zero
+width. Same territory as the Finding \#3 fix.)
+
+**Implement the provisional-order design: Phases 1 (duplication policy,
+S678) and 2 (order-consistent seeding, S679) DONE – Phase 3 (docs)
+remains** (READY, Effort S; standing pedigree-fidelity directive) –
+[`docs/planning/pedigree-diagram-provisional-order-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-provisional-order-plan.md)
+(S676) specs both phases with measured per-phase census targets from a
+validated spike: **Phase 1 – DONE S678, 2026-09-07, full TDD RED
+(`e98f29b4`) -\> GREEN (`13301db0` + `2d9d4634`; REFACTOR gate posed,
+owner skipped – 0 lints), owner visual review PASSED, Decision 2
+PRE-RED-ratified** – `.buildMatingUnitForest()` grants the free
+non-anchor occurrence only to B1-shaped individuals (kinship2-style
+spouse duplication; dangling non-anchors keep the pre-existing policy).
+Verification census MATCHED the design’s spike row exactly: Real 375
+dups 170 (vs kinship2’s own 145), a 0, b 56, c1Pre 24/c1Post 0, c2 94, d
+**0**, e **0**, f 0, jogs 183, bars 240; Track C +1 dup with its
+Learning-723 constraint-bound (b) residual -\> 0; packing fixtures
+(Track B full/shrunk, D1-D3) byte-identical as the design bounded (0
+parity-pin failures). Blast radius measured PRE-RED by direct edit +
+full-suite run (17 blocks / 6 files, incl. 4 small-fixture blocks
+outside the design’s file-level inventory); all re-pinned live with
+`CHANGED S678` comments. Class (e) is now 0 BY CONSTRUCTION (the D2
+dogleg is structurally dead – `__proj_` waypoints extinct, absence
+pinned in test_comparePedigreeStructure.R). Full clean regression
+failed=1 (wordlist baseline)/error=0, 0 collateral; live E2E 16/16;
+lintr 0; renv clean. The (b) 47 -\> 56 rise is the design’s disclosed
+Phase-1 cost – the 170 duplicates still sit at the old `0.4*minSep` seed
+offsets until Phase 2 seeds them adjacent. NEWS.Rmd + reference-image
+regeneration deliberately deferred to the design’s Phase 3 (docs) – not
+an overlooked checklist item. **Phase 2 – DONE S679, 2026-09-07, full
+TDD RED (`7cdb975d`) -\> GREEN (`d180158c` + `c7d808bc` + `cbf926bb`;
+REFACTOR gate posed, owner skipped – 0 lints), owner visual review
+APPROVED after a substantive review round, Decision 1 PRE-RED-ratified**
+– the Tier 2/3 seed formulas replaced by the per-anchor order-consistent
+seeding loop (children’s-mean side rule with sex-rule tie-break,
+two-unit L/R split, gap-proportional insets
+`min(0.9*minSep, 0.45*gap)`); `derivedX()`’s qualifying branch deleted
+as provably dead. Verification census matched the design’s combined
+endpoint on every class – Real 375 dups 170, jogs 165, a 0, **b 12** (5
+solver-dust rows + 3 on polygamous `WCPXHD` + 4 marry-in crowding at
+`__union_97/128/179/228`, exactly as predicted; max deviation 25 -\> 1.0
+raw across the two phases), c1Pre 10/c1Post 0, **c2 105** (better than
+the predicted 116; the 11-row delta is one jog no longer crossing a
+dense region, 0 new rows), d 1, e 0, f 0, bars 233 (predicted 234),
+width 13,710 px, 1,600 rendered nodes – and the 5 packing fixtures
+stayed byte-identical (0 parity-pin failures). RED added 3 structural
+blocks (dot-in-mates-span 31 -\> 0; facing-crossings among \<=2-unit
+anchors 2 -\> 0; the Learning-726 two-assertion off-centre gate NAMING
+the 7 disclosed residual unions). Full clean regression failed=1
+(wordlist baseline)/error=0, 6,397 passed, 0 collateral; lintr 0; live
+E2E 16/16; renv clean; GREEN render byte-identical to the PRE-RED
+candidate. The owner’s visual-gate finding (jogged progeny connectors)
+was root-caused to the wDup term – measured pre-existing, filed as its
+own Up Next item directly below. **Phase 3 (docs, the remaining
+piece):** `NEWS.Rmd` plain-language entry covering both phases (S628
+criterion), regenerate the committed reference images
+(`data-raw/kinship2FidelityValidation.R`) and Diagram-tab screenshots,
+then mark this item DONE; decide/record the design’s Open Questions
+dispositions surfaced during implementation (Q2 now has its own item
+below).
+
+**wDup on spouse-duplicates: the duplicate-proximity term drags marry-in
+triples away from their own children’s parents (owner visual-gate
+finding, S679)** (READY – but the change is QP-objective behavior, so it
+needs its own PRE-RED `AskUserQuestion` gate ratifying an amendment to
+the S675 no-weight-tuning mandate; Effort M; standing pedigree-fidelity
+directive; design doc Open Question 2 made concrete) – **Root cause,
+measured S679:** on the flagged `P49ZD1` family (children
+`A792ZU`/`F3QIL7` at row 4, x~4535/4775 vs their parents’ unions at
+x~3585/3705 – ~950-px jogged drop lines), the children’s row is EMPTY
+for ~950 px to their left (no rank obstacle), and a temporary `wDup = 0`
+experiment collapsed the offsets to -0.57/+0.43 raw units (~60 px): QP
+term 4 pulls each child’s marry-in mate’s `__dup_*` node toward the
+mate’s distant real occurrence, dragging the whole child triple with it,
+and term 2’s child-centering loses. The same mechanism drives much of
+the remaining long-jog “bus” pattern (census jogs 165, c2 105, bars
+233). **Candidate fixes to evaluate:** exclude spouse-duplicates
+(Decision-2 dups) from term 4; re-weight term 4 for them; or keep term 4
+only for the pre-Phase-1 duplicate population. **Risks to re-measure
+(not optional):** term 4 is ALSO what keeps a duplicate from landing on
+top of its own real occurrence – census class (d) was 1 at defaults and
+must be re-measured under any change, along with the full census row,
+the 5 byte-identical packing fixtures, and the pinned suite
+(`CHANGED S679` sites). The `wDup = 0` experiment measured POSITIONS
+ONLY – no census classes were re-measured under it; treat the 950 px -\>
+60 px figure as headroom, not a promised outcome. Evidence and tooling:
+`SESSION_NOTES.md` S679 record; `scratchpad/renderCrop2S679.R`
+(100%-scale crop renderer, Learning 732) +
+`scratchpad/s679_crop_{baseline,green}_P49ZD1.png` (the owner-reviewed
+pair); `PROJECT_LEARNINGS.md` Learning 733 (the diagnosis chain).
+
+**Design session: provisional ORDER for the QP joint-solver (Phase A
+seeding)** (found S675, 2026-09-03; **DONE S676, 2026-09-04**, Effort M,
+one session, design doc only – production `R/` untouched, spike reverted
+clean) –
+[`docs/planning/pedigree-diagram-provisional-order-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-provisional-order-plan.md).
+All three candidate directions from this item MEASURED (not just
+compared on paper) through a temporary
+[`getOption()`](https://rdrr.io/r/base/options.html)-gated spike
+(Learning 721/725 pattern) + the census harness, baseline validated
+bit-for-bit against S675’s committed numbers first. Chosen design:
+kinship2’s two order mechanisms transplanted – (1) spouse duplication
+for B2-shaped non-anchors, (2) objective-ideal seeding with
+gap-proportional insets – in that order; the full
+`alignped1-3`/`autohint` port REJECTED (kinship2’s own `autohint` punts
+on this very fixture, S670). Combined endpoint measured on Real 375: (b)
+47 -\> 12 (max deviation 25 -\> 1.0 raw, outside-mate-span 13 -\> 0),
+pre-repair colliding edges 86 -\> 10, jogs 267 -\> 165, c2 587 -\> 116,
+bars 312 -\> 234, class (e) 56 -\> 0, width unchanged; Track C’s
+Learning-723 constraint-bound residual -\> 0; five kinship2-parity
+packing fixtures byte-identical. See the implementation item directly
+above and `CHANGELOG.md`.
+
+**Research: characterize kinship2’s `align.pedigree()` joint-positioning
+mechanism (`alignped4.R`) to quantify the (C) joint-solver option**
+(owner-directed 2026-09-02, after reviewing the S669 spike result;
+**DONE S670, 2026-09-03**, Effort M, one session) –
+[`docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md`](https://github.com/rmsharp/nprcgenekeepr/docs/research/kinship2-alignped4-joint-positioning-mechanism-2026-09-03.md) +
+`data-raw/kinship2AlignPedigreeJointSolverProbe.R`. **Mechanism,
+verified (not just read):** kinship2 is 2 phases – Phase A
+(`alignped1/2/3`, heuristic sequential row/order determination, the same
+shape as this project’s own Tier 1 + S667 component packing) and Phase B
+(`alignped4`, ONE global
+[`quadprog::solve.QP()`](https://rdrr.io/pkg/quadprog/man/solve.QP.html)
+call positioning every row of every family simultaneously, subject to a
+hard `>= 1`-unit adjacent-pair constraint). Traced live via
+[`assignInNamespace()`](https://rdrr.io/r/utils/getFromNamespace.html):
+exactly 1 QP call per pedigree regardless of family count (520
+variables/529 constraints on the real 375 fixture’s 5 disconnected
+families). Swept `align=c(a,b)` 18 ways each on Track C and the real 375
+(36 total calls): every run achieved a same-row minimum gap of exactly
+1.000000 – the floor is a hard constraint the solver cannot violate,
+structurally why kinship2 never hits the S669 cascade (a one-way,
+tier-at-a-time pipeline where later tiers treat earlier tiers’ output as
+fixed). **Costed port: Effort L** (new direct `quadprog` `Imports`
+dependency, currently absent even transitively as a direct dep; a
+translation layer from this project’s node/edge/forest tables to the
+QP’s flat parameterization; a new QP variable+penalty for this project’s
+own union-dot node, a concept kinship2 has no analogue for at all;
+generalizing the uniform 1-unit constraint to this project’s
+radius-based `minSep`) – comparable in scale to the Walker/BJL
+apportioning redesign (issue \#141), not a bigger undertaking.
+**Kinship2 does NOT solve this project’s own duplicate-proximity class
+(d) either** (145 vs 102 duplicates on the real 375, S668 census) –
+porting the QP does not inherit a fix for that class regardless of path.
+**Owner’s A-vs-C decision above: DECIDED S671, 2026-09-03 – (C).**
+
+**Pedigree-drawing error census across every fixture** (owner-directed
+S667 via `AskUserQuestion` – “b”, census first; **DONE S668,
+2026-09-02**, Effort M, one session) –
+`data-raw/pedigreeDrawingErrorCensus.R` (fresh, independent measurement
+code – the pinned test helpers were read as the geometric reference but
+deliberately not touched or shared, owner-directed; the pipeline replica
+asserts its final node/edge tables identical to
+`makePedigreeMatingLayout(edgeStyle = "rectilinear")`’s own output; lint
+0) +
+[`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md`](https://github.com/rmsharp/nprcgenekeepr/docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md) +
+`_findings.csv` (2,734 rows). Six classes: (a) overlapping symbols by
+radius sum; (b) union dot off the mate midpoint (on-a-mate /
+outside-span / off-centre); (c) c1 = the production same-row predicate
+before/after repair, c2 = any straight segment inside a symbol disc,
+curved chords as a labelled heuristic; (d) duplicate
+overlapping/adjacent to its real occurrence; (e) mate off its union’s
+row, founder vs not; (f) per-row family interleaving. Two detector
+defects caught on the known-clean fixtures before any number was trusted
+(class (e) double-counted units; class (f) compared whole extents, which
+per-row packing legitimately lets touch). Both dominant attributions
+verified against the engine’s raw positions, one drafted claim refuted
+by that probe and replaced. Owner shown the Track C image pair. See the
+decision item above and `CHANGELOG.md`.
+
+**Track B shrunk fixture draws two unrelated families interleaved –
+disconnected-component separation** (owner-named pickup S667,
+2026-09-02, after reviewing the regenerated images; design REVISED and
+RATIFIED S667; **implemented and shipped S667, full TDD RED (`40d33804`)
+-\> GREEN, DONE**, Effort M) – the S664 “Option C” plan (superseded that
+same session) proposed a post-Tier-3 rigid translation; measured this
+session, that cannot work: the collision pushes (`P2 = P1 + 2`) have
+already happened by then. Revised mechanism, all in
+`.positionMatingUnitForest()`: partition the drawn graph into
+weakly-connected components (real ids + mating units; duplicates ride
+with their unit), lay each family out ALONE through the unchanged 3-tier
+engine (recursive call on `ped`/`forest` subsets), then pack the blocks
+left-to-right in ped row order with a per-row `minSep` gap – exactly
+[`kinship2:: align.pedigree()`](https://rdrr.io/pkg/kinship2/man/align.pedigree.html)’s
+treatment of unrelated families, **bit-exact against fresh kinship2 runs
+on Track B shrunk (all 8 individuals from a single origin) and 3 new
+synthetic multi-family fixtures** (D1 discriminates per-row from
+whole-extent packing; D2 confirms kinship2’s ped-row family order; D3
+unequal depths). Track B full (itself 2 components) and Track C
+unchanged – images byte-identical. Real 375 fixture: 5 families; the 4
+small ones no longer interleave (min cross-family gap 0.42 -\> 1.0), 5
+fewer jog repairs. **Disclosed residual, owner-accepted:** the main
+family laid out alone has a denser left edge and the existing capped
+proximity passes leave 5 near-misses there (4 genuine 10-22 px
+overlaps + 1 floating-point tie) that the old interleaving had masked –
+re-pinned with dated comments, Housekeeping item below, to be folded
+into the census above. Full design + GREEN findings:
+[`docs/planning/pedigree-diagram-disconnected-component-separation-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-disconnected-component-separation-plan.md)
+“REVISED DESIGN – Session 667”.
+
 **Mating-union dot not at the true parent midpoint; single-child chains
 of nested qualifying pairs mis-positioned** (found live S664,
 2026-09-01/09-02; design RATIFIED S665, 2026-09-02; **implemented and
@@ -611,7 +1028,21 @@ boundary); a future session should produce the actual
 advantages/disadvantages analysis (reuse potential outside this project,
 cleaner dependency graph, and versioning/release overhead, cross-package
 test/CI complexity, `@noRd`/internal-function visibility loss across a
-package boundary, etc.) before any decision to split.
+package boundary, etc.) before any decision to split. **Scoping analysis
+DONE S667 (2026-09-02) as a side artifact** – the session was first
+(mis-)pointed at this item before the owner redirected it to pedigree
+drawing:
+[`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`](https://github.com/rmsharp/nprcgenekeepr/docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md)
+(`findGlobals()`-measured coupling: the layout core reaches back into
+the package at exactly one point,
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md);
+only
+[`modPedigreeServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeServer.md)
+consumes it; the Shiny module cannot move; recommendation **do not split
+now**, with 3 revisit conditions and 3 optional in-place prep steps).
+**Owner disposition pending** – the item stays open until the owner
+accepts or rejects the recommendation; nothing else to do here until
+then.
 
 **Simplify `NEWS.Rmd` entries for a non-technical audience, reorganized
 by feature not chronologically, with guardrails against recurrence**
@@ -674,6 +1105,63 @@ presenting).
 (this file’s own build-equivalent) run clean after every substantive
 edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`. \##
 Housekeeping
+
+**`tests/testthat/test_resolveEdgeNodeCollisions.R:20-29` says D2 dogleg
+projections are “CURRENTLY STRUCTURALLY UNREACHABLE via the real
+pipeline” (citing `test_addRectilinearWaypoints.R:517-546`) – the real
+375 fixture renders 56 `__proj_` nodes today** (found S668, 2026-09-02,
+by the pedigree-drawing census, Finding \#5; READY, Effort S) – the
+comment (and possibly that sibling test’s own framing) is stale: every
+non-founder non-anchor mate with a generation of its own is drawn on its
+own row with a D2 dogleg to the union (56 units,
+`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md` Finding \#5
+lists them). Its own sibling already pins the fact:
+`test_makePedigreeMatingLayout.R:598` counts “56 `__proj_` (dogleg
+parent/union-gen-mismatch waypoints)” on this fixture. Fix the comment
+to describe the real reachability, and check whether
+`test_addRectilinearWaypoints.R:517-546`’s “0 D2 projections” test is
+fixture-specific or wrongly general. Not touched S668 (owner-directed:
+the pinned tests stay as they are).
+
+**Main-family proximity residual on the real 375-animal fixture after
+S667’s disconnected-component separation** (found S667, 2026-09-02,
+during GREEN; owner-accepted as a disclosed residual via
+`AskUserQuestion`; READY, Effort M – but fold it into the
+pedigree-drawing census item at the top of Up Next rather than patching
+it alone) – laid out alone, the main 343-animal family’s left edge is
+denser than it was while 4 unrelated families’ collision pushes cascaded
+into it, and the existing capped (`.kMaxUnionPush = 5`,
+`.kMaxIndividualPush = 2`), rightward-only proximity passes (Track 7
+Phase 2/4, Option B, the B1 pass) exhaust on 5 pairs:
+`__union_43`/`__dup_WDBGPF_2` (0.083 raw units), `M0YNUR`/
+`__dup_L31S6S_5` (0.100), `8933XB`/`__dup_SLN0TF_1` (0.182),
+`UCXEK5`/`__dup_L31S6S_3` (0.099) – four genuine 10-22 px symbol
+overlaps – plus `BH6ZQK`/`8933XB`, a floating-point tie at exactly
+`.individualClearance` (symbols touch, no overlap). The prior 0-residual
+on this fixture rested on the interleaving artefact, not on the passes
+being complete. Candidate fixes, none evaluated: re-run the proximity
+passes once more after packing; raise the push caps (S647 found uncapped
+pushes cause worse D1 bar overlaps – measure, don’t assume); or the
+joint-solver direction the census will weigh. Pinned at the measured
+values in `tests/testthat/test_positionMatingUnitForest.R` (`:1406`,
+`:1504`, `:1529`, `:1694`) with dated comments; before/after chromote
+crops in S667’s handoff.
+
+**`vignettes/articles/kinship2-fidelity-validation.qmd:150-163` still
+says
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+draws “the mating-unit marker … at the sire’s own symbol rather than
+centered between sire and dam”** (found S667, 2026-09-02, incidental
+while updating the shrunk-figure caption; READY, Effort S) – obsolete
+since S666’s conditional- shift rule: on Track B full every union dot is
+now centred between the pair and the descent line drops from the true
+midpoint (the regenerated `trackB-nprc-full.png` shows it). That
+paragraph’s “real, visible difference in mate-line layout” framing
+should be rewritten to describe the current behaviour (and what still
+differs: non-qualifying pairs – polygamous or duplicate-involving – keep
+the dot on the anchor). Not fixed S667: outside that session’s
+deliverable, per the established report-don’t-fix precedent (Learning
+382).
 
 **`NEWS.Rmd`’s “For one specific pattern (a sibling-consanguineous
 mating), the trade-off above is partially mitigated…” dev-version bullet

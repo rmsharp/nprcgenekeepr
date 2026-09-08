@@ -91,9 +91,10 @@
 - Two parents in a straightforward one-mate pairing (each mated only
   once, sex clearly recorded) are drawn with a clearer gap between them,
   matching kinship2’s convention.
-- The small mating symbol for that same kind of pairing sits near one
-  parent rather than centered between the two – keeping the connecting
-  line down to their children straight instead of bent (issue
+- The small mating symbol for that same kind of pairing sits centered
+  between the two parents, and the connecting line down to their
+  children stays straight – both at once, not one at the cost of the
+  other (issue
   [\#166](https://github.com/rmsharp/nprcgenekeepr/issues/166)).
 - Which parent a mating symbol anchors to is consistent across computers
   and regional settings: the anchor tie-break uses a locale-independent
@@ -147,7 +148,21 @@
   pass” placement used when an animal’s mate already anchors the family
   tree) that could land close enough to an unrelated animal to visually
   touch or overlap, in large colony pedigrees, are now kept a clear
-  distance apart. \## Kinship & Pedigree Calculations
+  distance apart.
+- When a pedigree contains families that are not related to each other,
+  each family is now drawn as its own block, side by side with a clear
+  gap between blocks – the same way kinship2 draws them. Previously two
+  unrelated families could be drawn interleaved on the same rows, with a
+  mate line running through an unrelated animal’s symbol, so two
+  strangers could look related.
+- The Diagram tab now keeps every neighbouring pair of symbols on a row
+  at least one full symbol width apart and centres each mating dot
+  between the two parents, following kinship2’s own spacing convention,
+  so symbols no longer overlap in large colony pedigrees. Diagrams are
+  wider as a result; pan and zoom as needed.
+
+### Kinship & Pedigree Calculations
+
 - Declaring a pair of animals as identical (MZ) twins now corrects their
   computed relatedness to genetic identity, and that correction flows
   through to every other relative reached through either twin – not just
