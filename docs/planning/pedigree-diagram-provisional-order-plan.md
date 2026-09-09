@@ -399,6 +399,27 @@ during implementation.
    inside the census itself for class (b), now that sub-precision deviations are its dominant
    residual rows on a healthy layout.
 
+### Dispositions (recorded S681, 2026-09-08 — the design's Phase 3 close-out)
+
+1. **Collapse-when-adjacent** — NOT PURSUED. Phase 1's owner visual review (S678) and
+   Phase 2's substantive review round (S679) raised no adjacent-duplicate confusion; census
+   (d) stood at 1 at defaults after Phase 2. Revisit only if a future visual review flags it.
+2. **wDup applicability to spouse-duplicates** — PROMOTED to its own `BACKLOG.md` Up Next
+   item (S679, owner visual-gate finding: term 4 drags marry-in triples ~950 px; measured
+   → ~60 px headroom under `wDup = 0`). The fenced RED-sweep decision now carries its own
+   PRE-RED gate requirement amending the S675 no-weight-tuning mandate.
+3. **Sibling order within sibships** — OPEN, deliberately unmeasured. The Phase 2 endpoint
+   beat this design's own prediction (c2 105 vs 116, bars 233 vs 234), and the one structure
+   the owner flagged at the Phase 2 visual gate root-caused to Q2 (wDup), not sibling order.
+   Measure owner appetite only after the wDup item ships.
+4. **Polygamous anchors** — ACCEPTED RESIDUAL. The 3 class-(b) rows on `WCPXHD` are named in
+   `test_positionMatingUnitForest.R`'s disclosed-residual set (S679 RED); a full fix needs
+   its own anchor-side-duplication design; kinship2 parity does not require it.
+5. **Census (b) detector epsilon** — OPEN, no dedicated session. The Learning-726
+   two-assertion pattern already guards the test side (S679 RED); the census script still
+   counts ~5 sub-precision dust rows in (b) at the endpoint. Adopt inside the census the
+   next time `data-raw/pedigreeDrawingErrorCensus.R` is touched for its own reasons.
+
 ---
 
 ## Appendix — spike reference implementation
