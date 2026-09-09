@@ -148,7 +148,7 @@ key_files: BACKLOG.md (top Up Next item, full crash chain); R/makePedigreeDiagra
 gotchas: The screenshot script's shot() tolerates app error states — "All steps succeeded" does not mean healthy; read the images. diagram_twin_connectors.png is deliberately S675-era-stale until the fix ships — do not regenerate before then. The crash needs the app's trim pipeline; the untrimmed fixture does NOT crash (LUPGF8 has an own row there). Fix layer (a)'s zero-census-impact expectation is VERIFY-don't-assume. failed=0 stays the clean-regression expectation.
 runtime_smoke: Docs-only for code; the screenshot pass itself drove the live app via shinytest2::AppDriver (4 healthy captures verified) — that run is also what exposed the deferred crash.
 changelog_ref: 2026-09-08 S681 entry (BL-provisionalOrderPhase3)
-commit: pending
+commit: 694b6972
 ```
 <free-text: S681 closed the provisional-order design end-to-end (Phases 1-3) with one disclosed, owner-ratified exception, and converted a would-have-shipped error-state screenshot into a fully-measured, deferred crash item. self_score 9: +every artifact read before commit (the discipline that caught the bug), +evidence-first scope gate (bisection + 3-layer chain before asking), +read-only diagnosis in a docs session; −regression gate sequenced at close-out rather than pre-commit, −the tolerant-shot() tooling gap noted but left, −Effort S session grew to M-sized by the inline diagnosis. predecessor_score 9: S680's cautions were both load-bearing; nothing wrong; the crash was undiscoverable from its vantage.>
 
