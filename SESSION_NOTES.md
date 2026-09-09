@@ -18,11 +18,108 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 680 Handoff Evaluation (by Session 681)
+**Score: 9/10.** **What helped:** `next_steps` (B) named this session's deliverable exactly,
+and both of its attached cautions were load-bearing: "keep NEWS to US spellings or extend
+inst/WORDLIST deliberately" shaped the entry as written (wordlist test passed first try),
+and (C)'s failed=0 expectation reset became this session's verification gate directly.
+Gotcha (2) (built-tree vs source-tree spell-check populations differ) correctly framed why
+the local single-file wordlist run was the check that mattered for a NEWS edit. The
+inherited unconditional `gh run list` orientation step confirmed all-green in one step.
+**What was missing:** nothing that hurt this session's own scope. The screenshot-
+regeneration crash this session found was undiscoverable from S680's vantage — no session
+since S675 had run the screenshot script, and every surface S680 could see (CI, full suite,
+E2E) was green; not a handoff gap. **What was wrong:** nothing. **ROI:** high.
+
 ### What Session 681 Did
-**Deliverable:** Provisional-order design **Phase 3 — docs pass** (`docs/planning/pedigree-diagram-provisional-order-plan.md` §Migration Path Phase 3; owner-picked via `AskUserQuestion` at Phase 0): `NEWS.Rmd` plain-language entry covering Phases 1+2 (S628 criterion; US spellings or deliberate `inst/WORDLIST` extension), regenerate the committed reference images (`data-raw/kinship2FidelityValidation.R`) and Diagram-tab screenshots, decide/record the design's §Open Questions dispositions surfaced during implementation, then mark the `BACKLOG.md` Up Next item DONE. (IN PROGRESS)
-**Started:** 2026-09-08
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Provisional-order design **Phase 3 — docs pass** (owner-picked via
+`AskUserQuestion` at Phase 0; `docs/planning/pedigree-diagram-provisional-order-plan.md`
+§Migration Path Phase 3). **DONE with one owner-ratified disclosed exception** (the twin
+screenshot, blocked by a live crash found and deferred this session — see below).
+**Started/completed:** 2026-09-08 (single session). Claim `8b2ff22b`.
+
+**What actually happened, in order:**
+1. **NEWS (`dbec9570`):** two plain-language bullets in `NEWS.Rmd`'s Pedigree Diagram
+   section covering Phase 1 (kinship2-style duplicate markers replacing cross-generation
+   bent mate lines) and Phase 2 (mating symbols between parents, pairs on the children's
+   side, straighter drop lines); `NEWS.md` re-rendered; US spellings kept;
+   `test_wordlist_coverage.R` PASSES (the S680 failed=0 expectation held).
+2. **Reference images (`d0bd636a`):** `Rscript data-raw/kinship2FidelityValidation.R` —
+   only the two Track C nprc renders changed (Phase 1's +1 spouse duplicate for Y beside
+   W), Track B full/shrunk re-rendered pixel-identical (layouts byte-identical as pinned),
+   kinship2-side and Track A images untouched; Track D structural comparison TRUE on all 3
+   fixtures; both changed images visually inspected before commit.
+3. **Screenshots (`615bc236`) — and the session's big finding:** the live-app screenshot
+   script reported all 5 captures OK, but reading the images showed
+   `diagram_twin_connectors.png` had captured an app ERROR state ("subscript out of
+   bounds", no diagram). Diagnosed read-only to a full measured chain: (1) the forest's
+   duplicate loop mints `__dup_LUPGF8_1` for a DANGLING polygamous parent whose real
+   occurrence never renders (pre-existing, S675-identical); (2) `dupEdges`
+   (`R/makePedigreeDiagramData.R:1938`) match→NA→ifelse yields a curved edge with
+   from=NA/to=NA; (3) `.resolveEdgeNodeCollisions()`'s curved pass (:2661) uses atomic
+   named vectors under NULL-semantics guards (S630's class, fixed only in
+   `.detectStraight`); (4) bisected via worktrees: S675 benign (the NA edge degraded to an
+   inert all-NA row), S678 Phase-1 engine fatal. Crash is rectilinear-only (default
+   style!), twin-independent, and invisible to CI/suite/E2E. **Owner chose (via
+   `AskUserQuestion`): defer the fix, finish docs.** The 4 healthy screenshots committed
+   (each visually verified); the twin screenshot restored to its committed S675-era
+   version, staleness disclosed.
+4. **Crash filed + item closed (`6f58b593`):** new TOP `BACKLOG.md` Up Next item with the
+   full root-cause chain, candidate fix layers (forest guard / dupEdges guard / atomic→list
+   passes), and the owed verification (incl. a trimmed-fixture RED test — the suite's
+   proven blind spot); repro preserved at `scratchpad/reproTwinCrashS681.R` (UNTRACKED).
+   Provisional-order item marked **DONE** with the Phase 3 record; §Open Questions 1–5
+   dispositions recorded in the design doc (Q1 not pursued, Q2 promoted to the wDup item,
+   Q3 open pending wDup, Q4 accepted residual, Q5 open/opportunistic).
+5. **Verification:** full clean regression, unfiltered (`NOT_CRAN=true`, load_all first):
+   **failed=0 / error=0, 6,398 passed, 182 skipped, 2,337 blocks** — the S680 failed=0
+   expectation HELD; `NOT_CRAN` wordlist single-file test green; no tracked `.R` file
+   modified (lint checklist not triggered); renv untouched.
+6. **Close-out:** this evaluation, self-assessment, Learning 735, `CHANGELOG.md` entry,
+   `HANDOFFS.md` receipt.
+
+**Self-assessment (Session 681): 9/10.** **Strengths:** (1) read every regenerated image
+before committing — exactly the discipline that caught the error-state capture the script's
+own summary called OK; (2) the crash was root-caused to a measured 3-layer chain with a
+2-worktree bisection BEFORE the owner was asked, so the scope gate offered evidence and 3
+concrete options, not a vague alarm; (3) scope discipline held throughout — diagnosis was
+read-only, no production code touched in a docs session, the deferral carries the full
+repro; (4) every commit ≤5 files, each artifact verified before its commit.
+**Weaknesses:** (1) the full-regression read was started at close-out rather than before
+the last docs commit (sequenced deliberately — docs edits don't touch the suite — but the
+gate belongs earlier; watched to completion before the final report); (2) the screenshot
+script's own tolerant-shot() design (which made the error capture look OK) was left as-is —
+noted in Learning 735 rather than fixed, correct for scope but a second session must
+remember it lies; (3) diagnosis depth (~40 min) on what a docs pass "should" not contain —
+justified because the other 4 screenshots' trustworthiness depended on knowing the blast
+radius, but it made the session bigger than its Effort S tag.
+
+**Next steps (specific):** (A) **Fix the rectilinear trimmed-pedigree crash** (new TOP
+`BACKLOG.md` Up Next item, READY, Effort M; full TDD with its own PRE-RED gate on the fix-
+layer choice): start from `scratchpad/reproTwinCrashS681.R`, RED must include a
+trimmed-fixture test, and the fix session re-captures `diagram_twin_connectors.png` +
+verifies census/packing/pinned-suite/E2E per the item. (B) **wDup-on-spouse-duplicates**
+(Up Next, READY, Effort M, needs the S675-mandate-amending PRE-RED gate). (C) Informational:
+scheduled workflows' first QP-era runs still pending on their own cadence; the S668 census
+audit DOC remains engine-stale (carried since S675).
+
+**Key files:** `BACKLOG.md` (top Up Next item — the crash's full chain lives there);
+`R/makePedigreeDiagramData.R:531` (`isB2Shaped()`/duplicate loop, fix layer a), `:1938`
+(`dupEdges`, layer b), `:2470` vs `:2534`/`:2661` (the S630 list fix vs its two unfixed
+atomic siblings, layer c); `scratchpad/reproTwinCrashS681.R` (repro, UNTRACKED);
+`docs/planning/pedigree-diagram-provisional-order-plan.md` §Open Questions → Dispositions;
+`NEWS.Rmd` (the two new bullets, end of the Pedigree Diagram section);
+`PROJECT_LEARNINGS.md` Learning 735.
+
+**Gotchas for the next session:** (1) the screenshot script's `shot()` tolerates app error
+states — its "All steps succeeded" does NOT mean the app was healthy; read the images;
+(2) the committed `diagram_twin_connectors.png` is deliberately S675-era-stale until the
+crash fix ships — do not "helpfully" regenerate it before then (you'll commit an error
+banner); (3) the crash needs the app's own trim pipeline to reproduce — the untrimmed twin
+fixture does NOT crash (LUPGF8 has an own row there), which is why the suite never saw it;
+(4) fix layer (a) likely has zero census impact (census fixtures are untrimmed) but that is
+stated as VERIFY-don't-assume in the item; (5) failed=0 remains the clean-regression
+expectation (S680's reset held this session).
 
 ### Session 679 Handoff Evaluation (by Session 680)
 **Score: 8/10.** **What helped:** `next_steps` (C) named this session's deliverable with the

@@ -138,11 +138,19 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S681
 date: 2026-09-08
-status: pending
-active_task: Provisional-order design Phase 3 — docs pass (NEWS.Rmd plain-language entry for Phases 1+2, reference-image + Diagram-tab screenshot regeneration, Open-Questions disposition record, BACKLOG item marked DONE). Claimed; work beginning.
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE (one owner-ratified disclosed exception). Provisional-order design Phase 3 docs pass complete: NEWS.Rmd entry, reference images, 4/5 Diagram-tab screenshots, Open-Questions dispositions, BACKLOG item marked DONE. The 5th screenshot (diagram_twin_connectors.png) is blocked by a live rectilinear-engine crash found this session — owner chose defer-fix-finish-docs; the crash is filed as the TOP BACKLOG Up Next item with full measured root cause.
+what_was_done: NEWS.Rmd two plain-language bullets for Phases 1+2 + NEWS.md re-render, wordlist test green at the failed=0 expectation (dbec9570). Track C reference images regenerated — only the 2 nprc renders changed, Track D structural comparison TRUE on all 3 fixtures (d0bd636a). 4 of 5 screenshots regenerated and visually verified (615bc236); the twin capture exposed a crash: makePedigreeMatingLayout(trimmed, edgeStyle="rectilinear") throws subscript-out-of-bounds on the 6-twin strict-lineal narrow — measured chain: dangling-parent duplicate with unrenderable realId (pre-existing) -> dupEdges NA-endpoint curved edge (R/makePedigreeDiagramData.R:1938) -> atomic yOf[[NA]] in .resolveEdgeNodeCollisions (:2661, S630's class unfixed at 2 sibling sites); bisected S675 benign / S678 fatal via worktrees. Crash filed + provisional-order item closed + design-doc Dispositions (6f58b593). Learning 735.
+next_steps: (A) Fix the rectilinear trimmed-pedigree crash (TOP Up Next item, READY, Effort M, full TDD; PRE-RED gate picks fix layers a/b/c; RED must include a trimmed-fixture test; re-capture diagram_twin_connectors.png after). Start from scratchpad/reproTwinCrashS681.R. (B) wDup-on-spouse-duplicates (Up Next, READY, Effort M, PRE-RED gate amending the S675 mandate). (C) Informational: scheduled workflows' first QP-era runs pending; S668 census audit DOC still engine-stale.
+key_files: BACKLOG.md (top Up Next item, full crash chain); R/makePedigreeDiagramData.R:531 (duplicate loop, fix layer a), R/makePedigreeDiagramData.R:1938 (dupEdges, layer b), R/makePedigreeDiagramData.R:2470 vs 2534/2661 (S630 list fix vs 2 unfixed atomic siblings, layer c); scratchpad/reproTwinCrashS681.R (UNTRACKED repro); docs/planning/pedigree-diagram-provisional-order-plan.md (Dispositions); NEWS.Rmd (new bullets); PROJECT_LEARNINGS.md Learning 735
+gotchas: The screenshot script's shot() tolerates app error states — "All steps succeeded" does not mean healthy; read the images. diagram_twin_connectors.png is deliberately S675-era-stale until the fix ships — do not regenerate before then. The crash needs the app's trim pipeline; the untrimmed fixture does NOT crash (LUPGF8 has an own row there). Fix layer (a)'s zero-census-impact expectation is VERIFY-don't-assume. failed=0 stays the clean-regression expectation.
+runtime_smoke: Docs-only for code; the screenshot pass itself drove the live app via shinytest2::AppDriver (4 healthy captures verified) — that run is also what exposed the deferred crash.
+changelog_ref: 2026-09-08 S681 entry (BL-provisionalOrderPhase3)
 commit: pending
 ```
+<free-text: S681 closed the provisional-order design end-to-end (Phases 1-3) with one disclosed, owner-ratified exception, and converted a would-have-shipped error-state screenshot into a fully-measured, deferred crash item. self_score 9: +every artifact read before commit (the discipline that caught the bug), +evidence-first scope gate (bisection + 3-layer chain before asking), +read-only diagnosis in a docs session; −regression gate sequenced at close-out rather than pre-commit, −the tolerant-shot() tooling gap noted but left, −Effort S session grew to M-sized by the inline diagnosis. predecessor_score 9: S680's cautions were both load-bearing; nothing wrong; the crash was undiscoverable from its vantage.>
 
 ```handoff
 session: S680

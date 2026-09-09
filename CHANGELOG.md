@@ -16,6 +16,37 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-08 · [BL-provisionalOrderPhase3] S681: Provisional-order Phase 3 docs pass DONE (NEWS entry, reference images, 4/5 screenshots, Open-Questions dispositions) — and a live rectilinear trimmed-pedigree crash found, measured, and deferred per owner direction
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0):** the design's Phase 3
+  (`docs/planning/pedigree-diagram-provisional-order-plan.md` §Migration Path). Claim
+  `8b2ff22b`.
+- **NEWS (`dbec9570`):** two plain-language Pedigree Diagram bullets covering Phases 1+2
+  (S628 criterion, US spellings); `NEWS.md` re-rendered; `test_wordlist_coverage.R` green
+  at the S680 failed=0 expectation.
+- **Reference images (`d0bd636a`):** `data-raw/kinship2FidelityValidation.R` re-run — only
+  the two Track C nprc renders changed (Phase 1's +1 spouse duplicate); Track B re-rendered
+  pixel-identical; Track D structural comparison TRUE on all 3 fixtures; images inspected
+  before commit.
+- **Screenshots (`615bc236`):** 4 of 5 regenerated via the live-app script, each verified
+  healthy by reading the image. The 5th capture (`diagram_twin_connectors.png`) exposed a
+  live crash: `makePedigreeMatingLayout(trimmed, edgeStyle = "rectilinear")` (app default)
+  throws `subscript out of bounds` on the 6-twin strict-lineal narrow. Measured chain:
+  dangling-parent `__dup_` with unrenderable realId (pre-existing, S675-identical) →
+  `dupEdges` NA-endpoint curved edge (`R/makePedigreeDiagramData.R:1938`) → atomic
+  `yOf[[NA]]` in `.resolveEdgeNodeCollisions()` (:2661; S630's defect class, unfixed at 2
+  sibling sites). Bisected via worktrees: S675 benign, S678 (Phase 1) fatal. Invisible to
+  CI, the full suite, and E2E. **Owner chose defer-fix-finish-docs** (`AskUserQuestion`);
+  the committed S675-era twin capture stays, disclosed as stale.
+- **Filing + close (`6f58b593`):** crash filed as the TOP `BACKLOG.md` Up Next item (full
+  chain, 3 candidate fix layers, owed verification incl. a trimmed-fixture RED test); repro
+  preserved at `scratchpad/reproTwinCrashS681.R` (untracked); provisional-order item marked
+  **DONE** (Phases 1–3); §Open Questions 1–5 dispositions recorded in the design doc.
+- **Verification:** full unfiltered clean regression at close-out (result in the
+  `SESSION_NOTES.md` self-assessment/final report); no tracked `.R` modified (lint
+  checklist not triggered); renv untouched.
+- **Records:** Learning 735 (screenshot pass as a de-facto E2E surface; guard-class fixes
+  must be grepped to sibling sites); `SESSION_NOTES.md` handoff; `HANDOFFS.md` receipt.
+
 ### 2026-09-08 · [ad hoc] S680: Pushed the QP-era branch (56 commits, S673–S680 claim) and cleared the R-CMD-check break the push exposed (Learning 669's class); all pipelines green on the fix
 - **Deliverable (owner-directed, S679 next-step C):** `git push origin master`
   (`94ae26c8..ec76a6db`, 56 commits — every QP joint-solver and provisional-order commit,
