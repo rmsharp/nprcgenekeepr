@@ -153,6 +153,17 @@ knitr::opts_chunk$set(echo = TRUE)
   the two parents, following kinship2's own spacing convention, so
   symbols no longer overlap in large colony pedigrees. Diagrams are wider
   as a result; pan and zoom as needed.
+- When a mate also belongs to another family drawn elsewhere in the
+  diagram, that mate now appears as a duplicate marker directly beside
+  their partner -- the same duplication convention kinship2 uses --
+  instead of a bent connector line reaching across generations to their
+  other appearance. Large colony diagrams show more duplicate markers as
+  a result, and the bent cross-generation mate lines are gone.
+- Every mating symbol now sits between the two parents it connects, and
+  each mated pair is drawn on the side of the family nearest their
+  children, so the lines from parents down to their children run
+  straighter, with fewer sideways detours, especially in large or
+  tangled colony pedigrees.
 
 ## Kinship & Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their
