@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S682
+date: 2026-09-09
+status: pending
+active_task: Fix the rectilinear trimmed-pedigree crash (TOP BACKLOG Up Next item, found S681) — full TDD per DEVELOPMENT_WORKSTREAM.md; PRE-RED gate picks fix layer(s) a/b/c; RED must include a trimmed-fixture test; owes census re-run + packing byte-identity + pinned suite + live E2E + re-capture of diagram_twin_connectors.png.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S681
 date: 2026-09-08
 status: complete

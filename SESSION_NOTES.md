@@ -18,6 +18,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 682 Did
+**Deliverable:** Fix the rectilinear trimmed-pedigree crash (TOP `BACKLOG.md` Up Next item,
+found S681: `makePedigreeMatingLayout(trimmed, edgeStyle = "rectilinear")` throws
+`subscript out of bounds` on the 6-twin strict-lineal narrow — dangling-parent `__dup_` →
+NA-endpoint dupEdge → atomic `yOf[[NA]]`). Full TDD per `DEVELOPMENT_WORKSTREAM.md`;
+PRE-RED gate picks fix layer(s) a/b/c. (IN PROGRESS)
+**Started:** 2026-09-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 680 Handoff Evaluation (by Session 681)
 **Score: 9/10.** **What helped:** `next_steps` (B) named this session's deliverable exactly,
 and both of its attached cautions were load-bearing: "keep NEWS to US spellings or extend
