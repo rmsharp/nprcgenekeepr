@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S681
+date: 2026-09-08
+status: pending
+active_task: Provisional-order design Phase 3 — docs pass (NEWS.Rmd plain-language entry for Phases 1+2, reference-image + Diagram-tab screenshot regeneration, Open-Questions disposition record, BACKLOG item marked DONE). Claimed; work beginning.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S680
 date: 2026-09-08
 status: complete

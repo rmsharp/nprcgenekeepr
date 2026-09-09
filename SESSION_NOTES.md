@@ -18,6 +18,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 681 Did
+**Deliverable:** Provisional-order design **Phase 3 — docs pass** (`docs/planning/pedigree-diagram-provisional-order-plan.md` §Migration Path Phase 3; owner-picked via `AskUserQuestion` at Phase 0): `NEWS.Rmd` plain-language entry covering Phases 1+2 (S628 criterion; US spellings or deliberate `inst/WORDLIST` extension), regenerate the committed reference images (`data-raw/kinship2FidelityValidation.R`) and Diagram-tab screenshots, decide/record the design's §Open Questions dispositions surfaced during implementation, then mark the `BACKLOG.md` Up Next item DONE. (IN PROGRESS)
+**Started:** 2026-09-08
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 679 Handoff Evaluation (by Session 680)
 **Score: 8/10.** **What helped:** `next_steps` (C) named this session's deliverable with the
 exact operating rule ("4 workflows fire on push, fix-or-defer per the CI-break convention"),
