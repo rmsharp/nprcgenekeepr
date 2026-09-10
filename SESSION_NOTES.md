@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 683 Did
+**Deliverable:** wDup on spouse-duplicates — QP term-4 duplicate-proximity fix for
+marry-in triples dragged away from their own children's parents (owner visual-gate
+finding S679; top READY Up Next item under the standing pedigree-fidelity directive).
+Full TDD per `DEVELOPMENT_WORKSTREAM.md`; opens with PRE-RED measurement of the
+candidate fixes, then the owner-gated PRE-RED→RED `AskUserQuestion` ratifying an
+amendment to the S675 no-weight-tuning mandate. (IN PROGRESS)
+**Started:** 2026-09-09
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 681 Handoff Evaluation (by Session 682)
 **Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable verbatim,
 with the PRE-RED-gate-picks-fix-layers framing that structured the whole session; the

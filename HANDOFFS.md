@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S683
+date: 2026-09-09
+status: pending
+active_task: wDup on spouse-duplicates (QP term-4 duplicate-proximity fix for marry-in triples, owner visual-gate finding S679; top READY Up Next item, standing pedigree-fidelity directive). Full TDD; PRE-RED measurement then the owner-gated S675-mandate-amending PRE-RED gate.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S682
 date: 2026-09-09
 status: complete
