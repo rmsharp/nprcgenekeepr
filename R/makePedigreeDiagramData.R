@@ -356,7 +356,11 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' child); a B2-shaped non-anchor is duplicated at every occurrence, so
 #' her real node keeps its own place in the tree while a same-row
 #' duplicate stands in at each of her units (kinship2-style spouse
-#' duplication -- provisional-order design Decision 2, S678).
+#' duplication -- provisional-order design Decision 2, S678). A dangling
+#' parent (no own row in \code{ped}) mints no duplicate at all (S682):
+#' no occurrence of a dangling individual ever renders, so a
+#' \code{__dup_} whose \code{realId} never renders would be a broken
+#' connector endpoint, not a second occurrence.
 #' Anchor selection (D2) is deterministic,
 #' not searched: prefer a non-founder parent over a founder; if tied,
 #' prefer the parent with fewer total distinct mating units; remaining
@@ -522,12 +526,19 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     # plotted twice). A B2-shaped non-anchor gets a __dup_ node at EVERY
     # non-anchor occurrence; her real node keeps rendering on its own gen
     # row under her own parents, connected by the curved duplicate
-    # connectors. A dangling non-anchor (no own row) is not B2-shaped and
-    # keeps the pre-existing policy: first (deterministic-order)
-    # non-anchor occurrence free unless they anchor somewhere, every
-    # occurrence beyond that duplicated -- as does any B1-shaped
-    # individual (for whom the rare double-anchor collision above still
-    # grants an extra free slot to whoever it affects).
+    # connectors. A DANGLING non-anchor (no own row in 'ped') mints NO
+    # duplicate at any occurrence (S682, replacing the S461-era
+    # free-first-then-duplicate policy): no occurrence of a dangling
+    # individual ever renders, so a __dup_ whose realId never renders is
+    # not a second occurrence but a broken connector endpoint -- dupEdges
+    # would mint its curved connector with from = NA/to = NA, which
+    # crashed .resolveEdgeNodeCollisions()'s curved pass live under the
+    # app's DEFAULT Rectilinear style (found S681, the strict-lineal
+    # twin-fixture trim). A B1-shaped individual keeps the free-slot
+    # policy: first (deterministic-order) non-anchor occurrence free
+    # unless they anchor somewhere, every occurrence beyond that
+    # duplicated (the rare double-anchor collision above still grants an
+    # extra free slot to whoever it affects).
     isB2Shaped <- function(p) {
       i <- match(p, ids)
       if (is.na(i)) return(FALSE)
@@ -545,6 +556,9 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     for (u in seq_len(nUnits)) {
       for (p in c(unitSire[u], unitDam[u])) {
         if (identical(anchorOf[u], p)) next
+        # S682: a dangling parent renders no occurrence at all -- never
+        # mint a __dup_ for one (see the policy comment above).
+        if (is.na(match(p, ids))) next
         needsDuplicate <- if (isB2Shaped(p)) {
           TRUE
         } else if (hasAnchorAnywhere[[p]]) {
@@ -652,7 +666,10 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## component and vanish from the output. Found by the pre-existing
   ## dangling-parent duplicate test during GREEN (S667). A real parent's
   ## unit is always in that parent's own component, so this is the same
-  ## assignment for every non-dangling duplicate.
+  ## assignment for every non-dangling duplicate. (Since S682 the forest
+  ## mints no dangling-realId duplicates at all, so every duplicate's
+  ## realId is now a rendered node -- the matingUnitId assignment rule
+  ## stays, both as the correct grouping and as robustness.)
   dups <- forest$duplicates
   lapply(comps, function(members) {
     c(members, dups$id[dups$matingUnitId %in% members])
@@ -2530,8 +2547,14 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     if (length(hitRows) == 0L || pass > maxPasses) {
       break
     }
-    xOf <- stats::setNames(nodes$x, nodes$id)
-    yOf <- stats::setNames(nodes$y, nodes$id)
+    ## Named LISTS, matching .detectStraight() above (S630 rationale;
+    ## applied to this pass S682): `[[` on a named atomic vector throws
+    ## "subscript out of bounds" for an unmatched or NA name instead of
+    ## returning NULL. hitRows' endpoints are pre-verified resolvable by
+    ## .detectStraight(), so this site is guard-class parity/defence in
+    ## depth -- unlike the curved pass below, which crashed live (S681).
+    xOf <- as.list(stats::setNames(nodes$x, nodes$id))
+    yOf <- as.list(stats::setNames(nodes$y, nodes$id))
     distinctYs <- sort(unique(nodes$y))
 
     ## jogUnit is computed PER ROW (this edge's own y0's nearest distinct
@@ -2658,8 +2681,16 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
 
   ## Curved duplicate-connector heuristic branch.
   if (nrow(edges) > 0L && "smooth.enabled" %in% names(edges)) {
-    xOf <- stats::setNames(nodes$x, nodes$id)
-    yOf <- stats::setNames(nodes$y, nodes$id)
+    ## Named LISTS, matching .detectStraight() (S630 rationale; applied
+    ## to this pass S682): the is.null() guards below need list `[[`
+    ## NULL semantics. With the atomic vectors used here until S682, a
+    ## curved edge whose endpoint is NA or absent from 'nodes' threw
+    ## "subscript out of bounds" before the guard could fire -- found
+    ## live S681 (a dupEdges row minted from = NA/to = NA for a dangling
+    ## parent's duplicate, crashing the Diagram tab's default
+    ## Rectilinear style on the app's own strict-lineal twin trim).
+    xOf <- as.list(stats::setNames(nodes$x, nodes$id))
+    yOf <- as.list(stats::setNames(nodes$y, nodes$id))
     adj <- .adjacency(edges)
     byRow <- split(nodes$id, nodes$y)
     isCurved <- !is.na(edges$smooth.enabled) & edges$smooth.enabled
