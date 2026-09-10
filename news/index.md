@@ -160,6 +160,30 @@
   between the two parents, following kinship2’s own spacing convention,
   so symbols no longer overlap in large colony pedigrees. Diagrams are
   wider as a result; pan and zoom as needed.
+- When a mate also belongs to another family drawn elsewhere in the
+  diagram, that mate now appears as a duplicate marker directly beside
+  their partner – the same duplication convention kinship2 uses –
+  instead of a bent connector line reaching across generations to their
+  other appearance. Large colony diagrams show more duplicate markers as
+  a result, and the bent cross-generation mate lines are gone.
+- Every mating symbol now sits between the two parents it connects, and
+  each mated pair is drawn on the side of the family nearest their
+  children, so the lines from parents down to their children run
+  straighter, with fewer sideways detours, especially in large or
+  tangled colony pedigrees.
+- Fixed an error in the Diagram tab that appeared for some trimmed
+  pedigrees under the default Rectilinear connector style: when trimming
+  to focal animals kept an animal’s children but dropped that animal’s
+  own record, the tab showed an error message instead of a diagram. The
+  diagram now draws normally, leaving out the parent who has no record
+  to draw.
+- When a mate appears as a duplicate marker beside their partner
+  (because that mate also belongs to another family drawn elsewhere in
+  the diagram), the pair and their children now stay directly above and
+  below one another instead of the whole group drifting sideways toward
+  the mate’s other appearance. Lines from parents down to their children
+  run straighter, with far fewer sideways detours, especially in large
+  colony pedigrees.
 
 ### Kinship & Pedigree Calculations
 

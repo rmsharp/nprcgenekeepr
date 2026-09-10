@@ -15,6 +15,85 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
+**Rectilinear Diagram-tab crash on a strict-lineal-trimmed pedigree
+containing a dangling polygamous parent: a duplicate node is created for
+an individual whose real occurrence never renders (found S681,
+2026-09-08, while regenerating the Phase 3 Diagram-tab screenshots)**
+(**DONE S682, 2026-09-09** – full TDD, owner-gated at every transition;
+fix layers (a)+(c) chosen at the PRE-RED gate from measured evidence,
+layer (b) rejected as dead code under (a). Implemented: (a) the forest’s
+duplicate loop never mints a `__dup_` for a dangling parent (no
+occurrence of theirs ever renders; roxygen + policy comments amended);
+(c) the straight-repair and curved passes’ xOf/yOf became named lists,
+completing the S630 guard-class fix at both remaining sibling sites. RED
+(`c3999d26`): 2 crash tests (curved-pass unit test; the hardcoded-64-id
+twin-trim integration test – the trimmed-fixture blind spot now has
+standing coverage) + 3 old-policy pins re-pinned, all verified failing
+at HEAD for the measured reasons; `test_solveJointQP.R`’s term-4
+dangling-realId skip retained via hand-built legacy inputs (Learning
+736). GREEN (`bd71f2e5`): all owed verification passed – full clean
+regression failed=0/error=0 (2,340 blocks, 6,411 passed), census
+findings CSV re-run BIT-IDENTICAL (git-silent; PRE-RED forest digests
+predicted this and the run confirmed it), 5 packing-fixture
+byte-identity via the pinned suite, live E2E 16/16 blocks 55
+expectations, lint 0 on all touched files. `diagram_twin_connectors.png`
+re-captured via the live app’s own section-5 flow and READ healthy
+before commit (`4f9f6194`) – the S675-era staleness disclosure is
+closed. NEWS.Rmd plain-language entry shipped (`38102c3c`). REFACTOR
+gate posed, owner-skipped – nothing behavior-neutral identified.) –
+**Symptom:**
+`makePedigreeMatingLayout(trimmed, edgeStyle = "rectilinear")` (the
+app’s DEFAULT style) throws `subscript out of bounds`; the Diagram tab
+shows a red error and no diagram. Reproduce:
+`obfuscated_rhesus_mhc_ped_twins.csv` through the app’s own
+qcStudbook/setPopulation/findPedigreeNumber/trim pipeline
+(modPedigree.R:355-379) narrowed to the 6 declared twins
+(E06FRB/HV7LZ3/8GSXTQ/P844CW/BRI2MW/677E7M) – the exact
+`vignettes/articles/pedigree-diagram-screenshots.R` twin step; repro
+script preserved at `scratchpad/reproTwinCrashS681.R` (UNTRACKED – take
+it before cleaning scratchpad). Independent of twinRelations (crashes
+with or without; `"direct"` style renders fine, 111 nodes). **Root cause
+chain, all measured S681:** (1) `.buildMatingUnitForest()`’s duplicate
+loop hands a DANGLING non-anchor (no own row in the trimmed ped – here
+LUPGF8, sire of children by 2 rendered dams via
+`__union_23`/`__union_26`) the freeConsumed policy meant for rendered
+individuals: occurrence 1 “free” (but a dangling individual never
+renders ANY occurrence), occurrence 2 duplicated -\> `__dup_LUPGF8_1`
+with realId LUPGF8 unrenderable. Pre-existing at S675 (identical dup row
+measured there in a worktree). (2) `dupEdges`
+(`R/makePedigreeDiagramData.R:1938-1943`) does `match(realId, nodes$id)`
+-\> NA -\> `ifelse(NA, ...)` -\> a curved dup connector with
+from=NA/to=NA. (3) `.resolveEdgeNodeCollisions()`’s curved pass
+(:2661-2662) and straight-repair pass (:2534) build xOf/yOf as named
+ATOMIC vectors, so `yOf[[NA]]` throws before their own
+[`is.null()`](https://rdrr.io/r/base/NULL.html) guards can run – the
+S630 defect class, fixed at :2470 (`.detectStraight`, lists) and never
+applied to the two later passes. (4) Why newly fatal: bisected S681 via
+worktrees – at S675 the NA edge accidentally degraded to an inert ALL-NA
+row (even its constant dashes/smooth columns NA, an `edges[NA, ]`
+indexing artifact somewhere in the old path) so every pass skipped it;
+under the S678 Phase-1 engine it survives with `smooth.enabled=TRUE`
+intact and reaches the curved pass. Invisible to CI, the full suite (the
+twin unit test uses the UNTRIMMED fixture, where LUPGF8 has an own row),
+and live E2E 16/16 (different narrowings). **Candidate fix layers
+(decide in the fix session’s PRE-RED gate):** (a) root cause – the
+duplicate loop should never create a `__dup_` for a dangling non-anchor
+(no occurrence renders; matches the established “dangling, unrendered”
+seed policy; likely zero census impact since the census fixtures are
+untrimmed and the app’s processed pedigrees normally carry rows for all
+parents – VERIFY, don’t assume); (b) defensive – `dupEdges` skips rows
+whose realId/dup id is not a rendered node; (c) robustness – the two
+atomic xOf/yOf passes become lists, matching `.detectStraight`’s S630
+fix so their existing NULL-guards go live. **Verification the fix
+session owes:** a RED test reproducing the trimmed-fixture crash (a
+trimmed-pedigree fixture is the suite’s measured blind spot this bug
+proves), full census re-run + 5 packing-fixture byte-identity + pinned
+suite, live E2E, and re-capture of `diagram_twin_connectors.png` via
+`vignettes/articles/pedigree-diagram-screenshots.R` (ALL DELIVERED S682
+– see the DONE record above; the twin screenshot is current again, so
+the S675-era staleness caveat in the Phase 3 DONE record below is
+closed).
+
 **DECIDE from the S668 census: pedigree drawing – (A) bounded per-defect
 fixes, or (C) a joint solver** (**DECIDED S671, 2026-09-03: (C) – joint
 solver**, owner via `AskUserQuestion`, after this session presented both
@@ -234,8 +313,8 @@ instead of via the bar node, or suppress the riser when the bar has zero
 width. Same territory as the Finding \#3 fix.)
 
 **Implement the provisional-order design: Phases 1 (duplication policy,
-S678) and 2 (order-consistent seeding, S679) DONE – Phase 3 (docs)
-remains** (READY, Effort S; standing pedigree-fidelity directive) –
+S678), 2 (order-consistent seeding, S679), and 3 (docs, S681) all DONE**
+(standing pedigree-fidelity directive) –
 [`docs/planning/pedigree-diagram-provisional-order-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-provisional-order-plan.md)
 (S676) specs both phases with measured per-phase census targets from a
 validated spike: **Phase 1 – DONE S678, 2026-09-07, full TDD RED
@@ -284,39 +363,75 @@ the 7 disclosed residual unions). Full clean regression failed=1
 E2E 16/16; renv clean; GREEN render byte-identical to the PRE-RED
 candidate. The owner’s visual-gate finding (jogged progeny connectors)
 was root-caused to the wDup term – measured pre-existing, filed as its
-own Up Next item directly below. **Phase 3 (docs, the remaining
-piece):** `NEWS.Rmd` plain-language entry covering both phases (S628
-criterion), regenerate the committed reference images
-(`data-raw/kinship2FidelityValidation.R`) and Diagram-tab screenshots,
-then mark this item DONE; decide/record the design’s Open Questions
-dispositions surfaced during implementation (Q2 now has its own item
-below).
+own Up Next item directly below. **Phase 3 – DONE S681, 2026-09-08
+(docs-only session, owner-picked at Phase 0):** `NEWS.Rmd`
+plain-language entry covering both phases added (S628 criterion, US
+spellings kept, wordlist test passing at the new failed=0 expectation;
+`dbec9570`); reference images regenerated via
+`data-raw/kinship2FidelityValidation.R` – only the two Track C nprc
+renders changed (Phase 1’s +1 spouse duplicate), Track B re-rendered
+pixel-identical, Track D structural comparison TRUE on all 3 fixtures
+(`d0bd636a`); Diagram-tab screenshots regenerated 4 of 5 via
+`vignettes/articles/pedigree-diagram-screenshots.R`, each verified to
+show a healthy rendered diagram before commit (`615bc236`). **Disclosed
+exception:** `diagram_twin_connectors.png` NOT regenerated – its capture
+hits the live rectilinear-engine crash filed with full root cause as the
+top Up Next item above (owner-directed defer, S681); the committed
+S675-era capture stays until that fix ships. Open Questions 1-5
+dispositions recorded in the design doc’s own §Open Questions (dated
+S681).
 
 **wDup on spouse-duplicates: the duplicate-proximity term drags marry-in
 triples away from their own children’s parents (owner visual-gate
-finding, S679)** (READY – but the change is QP-objective behavior, so it
-needs its own PRE-RED `AskUserQuestion` gate ratifying an amendment to
-the S675 no-weight-tuning mandate; Effort M; standing pedigree-fidelity
-directive; design doc Open Question 2 made concrete) – **Root cause,
-measured S679:** on the flagged `P49ZD1` family (children
-`A792ZU`/`F3QIL7` at row 4, x~4535/4775 vs their parents’ unions at
-x~3585/3705 – ~950-px jogged drop lines), the children’s row is EMPTY
-for ~950 px to their left (no rank obstacle), and a temporary `wDup = 0`
-experiment collapsed the offsets to -0.57/+0.43 raw units (~60 px): QP
-term 4 pulls each child’s marry-in mate’s `__dup_*` node toward the
-mate’s distant real occurrence, dragging the whole child triple with it,
-and term 2’s child-centering loses. The same mechanism drives much of
-the remaining long-jog “bus” pattern (census jogs 165, c2 105, bars
-233). **Candidate fixes to evaluate:** exclude spouse-duplicates
-(Decision-2 dups) from term 4; re-weight term 4 for them; or keep term 4
-only for the pre-Phase-1 duplicate population. **Risks to re-measure
-(not optional):** term 4 is ALSO what keeps a duplicate from landing on
-top of its own real occurrence – census class (d) was 1 at defaults and
-must be re-measured under any change, along with the full census row,
-the 5 byte-identical packing fixtures, and the pinned suite
-(`CHANGED S679` sites). The `wDup = 0` experiment measured POSITIONS
-ONLY – no census classes were re-measured under it; treat the 950 px -\>
-60 px figure as headroom, not a promised outcome. Evidence and tooling:
+finding, S679)** (**DONE S683, 2026-09-10** – full TDD, owner-gated at
+every transition (candidate pick amending the S675 no-weight-tuning
+mandate + PRE-RED→RED + RED→GREEN, all via `AskUserQuestion`). PRE-RED
+measured ALL THREE candidate fixes through a temp spike + the census
+harness: **exclude dominated** (jogs 165→95, c2 105→29, **d 1→0**, b
+unchanged 12; P49ZD1 drop-jogs 950/1190 px → 60/180 px; re-weight ×0.1
+and old-population-only left most of the defect and oldpop worsened b to
+14) – and the risk note below INVERTED under measurement: term 4
+*caused* the one class-(d) dup-adjacent case rather than preventing it
+(every candidate cleared it). Owner ratified exclude. RED (`0bf7822f`):
+B2-inertness pin on a new marry-in fixture + B1-retention boundary guard
+on a new slack-row polygamy fixture (the gate-planned Track C mixed pin
+dropped as measured-vacuous – Track C is constraint-saturated, wDup
+moves nothing there even at HEAD) + the P49ZD1 drop-jog guard + 19
+re-pins across 4 files, all verified failing at HEAD for the measured
+reasons. GREEN (`6df5fba5`): childEdges-derived B2 skip in
+`.solveJointQP()` term 4 only (the `duplicates` argument contract
+unchanged, Learning 736’s consumer-robustness concern honoured); GREEN
+layouts bit-identical to the PRE-RED candidate on all 7 census fixtures.
+Verification: full clean regression **failed=0/error=0** (2,343 blocks,
+6,423 passed); census findings CSV re-run and committed (`29c46f56`); 5
+packing fixtures byte-identical; Track B reference images
+pixel-identical, Track C regenerated + read healthy, Track D structural
+TRUE ×3; 3 of 5 Diagram-tab screenshots re-captured
+(changed-vs-unchanged determined by digesting each trimmed layout
+pre-GREEN vs GREEN in a worktree; the 2 digest-identical captures
+deliberately untouched) each read healthy before commit (`4853639f`);
+live E2E pedigree module green; `lintr::lint_package()` 0; NEWS.Rmd
+plain-language entry + wordlist green (`679dca4c`). Design doc Open
+Question 2 marked RESOLVED.) – **Root cause, measured S679:** on the
+flagged `P49ZD1` family (children `A792ZU`/`F3QIL7` at row 4,
+x~4535/4775 vs their parents’ unions at x~3585/3705 – ~950-px jogged
+drop lines), the children’s row is EMPTY for ~950 px to their left (no
+rank obstacle), and a temporary `wDup = 0` experiment collapsed the
+offsets to -0.57/+0.43 raw units (~60 px): QP term 4 pulls each child’s
+marry-in mate’s `__dup_*` node toward the mate’s distant real
+occurrence, dragging the whole child triple with it, and term 2’s
+child-centering loses. The same mechanism drives much of the remaining
+long-jog “bus” pattern (census jogs 165, c2 105, bars 233). **Candidate
+fixes to evaluate:** exclude spouse-duplicates (Decision-2 dups) from
+term 4; re-weight term 4 for them; or keep term 4 only for the
+pre-Phase-1 duplicate population. **Risks to re-measure (not
+optional):** term 4 is ALSO what keeps a duplicate from landing on top
+of its own real occurrence – census class (d) was 1 at defaults and must
+be re-measured under any change, along with the full census row, the 5
+byte-identical packing fixtures, and the pinned suite (`CHANGED S679`
+sites). The `wDup = 0` experiment measured POSITIONS ONLY – no census
+classes were re-measured under it; treat the 950 px -\> 60 px figure as
+headroom, not a promised outcome. Evidence and tooling:
 `SESSION_NOTES.md` S679 record; `scratchpad/renderCrop2S679.R`
 (100%-scale crop renderer, Learning 732) +
 `scratchpad/s679_crop_{baseline,green}_P49ZD1.png` (the owner-reviewed

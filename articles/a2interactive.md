@@ -548,16 +548,16 @@ names(diagramDataRectilinear)
 nrow(diagramDataRectilinear$nodes)
 ```
 
-    ## [1] 102
+    ## [1] 94
 
 ``` r
 
 nrow(diagramDataRectilinear$edges)
 ```
 
-    ## [1] 107
+    ## [1] 99
 
-102 nodes and 107 edges here, versus 56 and 61 for the same 33-animal
+94 nodes and 99 edges here, versus 56 and 61 for the same 33-animal
 *demoPed* under the *direct* style above – the difference is entirely
 extra invisible “waypoint” nodes/edges that carry out the right-angle
 routing (zero size, transparent color, excluded from the **Select by
@@ -1454,7 +1454,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpZepTVm/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmpae75bO/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2226,7 +2226,7 @@ into the de-identified table.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-09-08 18:09:36.402467. The processing
+The current date and time is 2026-09-10 22:34:37.851268. The processing
 time for this document was 22 seconds..
 
 ``` r
@@ -2236,7 +2236,7 @@ sessionInfo()
 
     ## R version 4.6.1 (2026-06-24)
     ## Platform: x86_64-pc-linux-gnu
-    ## Running under: Ubuntu 24.04.4 LTS
+    ## Running under: Ubuntu 24.04.5 LTS
     ## 
     ## Matrix products: default
     ## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
