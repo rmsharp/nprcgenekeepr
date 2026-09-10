@@ -365,31 +365,41 @@ test_that(".positionMatingUnitForest's exact x/gen values for the real
   ## locally-contiguous anchor--dot--mate triples, e.g. gen 2 now solves
   ## to __dup_8LKBV9_1 (-0.92) < unit4's dot (-0.42) < FJIB3R (0.08)
   ## with the dot at the exact midpoint. Re-measured live.
-  expectPos("5A6DFT", -0.42236741, 0L)
-  expectPos("8DKELJ", 0.57763259, 0L)
-  expectPos("G8EBU9", -0.92236741, 1L)
-  expectPos("8P17E3", 1.07763259, 1L)  # gen unaffected: issue #143's
+  ## CHANGED S683 (spouse-duplicate term-4 skip, the owner-ratified
+  ## amendment to the S675 no-weight-tuning mandate): 8LKBV9 has his own
+  ## parent edge (5A6DFT x 8DKELJ), so __dup_8LKBV9_1 at unit4 is a
+  ## spouse (B2) duplicate and loses its term-4 pull toward 8LKBV9's
+  ## real occurrence on the row above. Rows 0-1 relax +0.192 while the
+  ## gen 2-3 triple slides -0.308 (the dup no longer dragged right);
+  ## every within-row gap and the dot-midpoint identity are unchanged,
+  ## e.g. gen 2 still solves to __dup_8LKBV9_1 (-1.23) < unit4's dot
+  ## (-0.73) < FJIB3R (-0.23) with the dot at the exact midpoint.
+  ## Re-measured live, never hand-derived.
+  expectPos("5A6DFT", -0.23020756, 0L)
+  expectPos("8DKELJ", 0.76979244, 0L)
+  expectPos("G8EBU9", -0.73020755, 1L)
+  expectPos("8P17E3", 1.26979245, 1L)  # gen unaffected: issue #143's
                                  # non-anchor override (she no longer
                                  # anchors unit3, 8LKBV9 does -- Track 4)
-  expectPos("8LKBV9", 0.07763259, 1L)
-  expectPos("FJIB3R", 0.07763259, 2L)
-  expectPos("9VGCCV", 1.07763259, 2L)
-  expectPos("GA204Z", -0.42236741, 3L)
+  expectPos("8LKBV9", 0.26979245, 1L)
+  expectPos("FJIB3R", -0.23020754, 2L)
+  expectPos("9VGCCV", 0.76979246, 2L)
+  expectPos("GA204Z", -0.73020753, 3L)
 
   unit1 <- forest$matingUnits$id[forest$matingUnits$sire == "5A6DFT"]
   unit2 <- forest$matingUnits$id[forest$matingUnits$dam == "G8EBU9"]
   unit3 <- forest$matingUnits$id[forest$matingUnits$dam == "8P17E3"]
   unit4 <- forest$matingUnits$id[forest$matingUnits$dam == "FJIB3R"]
-  expectPos(unit1, 0.07763259, 0L)
-  expectPos(unit2, -0.42236741, 1L)
-  expectPos(unit3, 0.57763259, 1L)
-  expectPos(unit4, -0.42236741, 2L)
+  expectPos(unit1, 0.26979244, 0L)
+  expectPos(unit2, -0.23020755, 1L)
+  expectPos(unit3, 0.76979245, 1L)
+  expectPos(unit4, -0.73020754, 2L)
 
   dupAt4 <- forest$duplicates$id[forest$duplicates$matingUnitId == unit4]
   ## unit3 no longer has a duplicate (8LKBV9 anchors it directly now).
   expect_equal(forest$duplicates$matingUnitId[
     forest$duplicates$realId == "8LKBV9"], unit4)
-  expectPos(dupAt4, -0.92236741, 2L)
+  expectPos(dupAt4, -1.23020754, 2L)
 })
 
 ## ---- Track 3: minimum mate-spacing guarantee (kinship2 fidelity
@@ -2949,5 +2959,43 @@ test_that(".positionMatingUnitForest centres every same-row union dot on
   ## 2.0 raw under the Phase-1 engine this RED was written against,
   ## up to 25 raw before Phase 1's duplication policy).
   expect_lte(max(dev[realRows], 0), 1.05)
+})
+
+## ---- S683: wDup on spouse-duplicates (owner visual-gate finding, S679) --
+## The owner-ratified amendment to the S675 no-weight-tuning mandate (the
+## wDup-on-spouse-duplicates BACKLOG item; provisional-order design Open
+## Question 2 resolved): .solveJointQP()'s term 4 (duplicate proximity)
+## skips spouse (B2) duplicates. Measured S679/S683: the pull dragged each
+## marry-in mate's __dup_* node toward the mate's distant real occurrence,
+## taking the whole anchor--dot--mate triple with it -- on the flagged
+## P49ZD1 family the children's drop lines jogged ~7.9/9.9 raw units
+## (~950/1190 px) across a row that is EMPTY to their left. With the term
+## skipped, term 2's child centering wins: 0.5/1.5 raw measured. The
+## policy split itself (B2 inert, B1 kept) is pinned in
+## test_solveJointQP.R's own S683 section; this test guards the
+## engine-level outcome on the real fixture.
+
+test_that(".positionMatingUnitForest hangs the owner-flagged P49ZD1
+           family's children within 2.0 raw units of their own parent
+           unit on the full real 375-individual fixture (S683: term 4
+           skips spouse duplicates, so the marry-in mates' duplicate
+           pull no longer drags A792ZU/F3QIL7 ~7.9/9.9 raw units off
+           their parents' unions; 0.5/1.5 raw measured after)", {
+  ped <- read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+
+  xOf <- stats::setNames(pos$x, pos$id)
+  ce <- forest$childEdges
+  for (k in c("A792ZU", "F3QIL7")) {
+    u <- ce$from[ce$to == k]
+    expect_length(u, 1L)
+    expect_true(u %in% names(xOf))
+    expect_lte(abs(xOf[[k]] - xOf[[u]]), 2.0)
+  }
 })
 

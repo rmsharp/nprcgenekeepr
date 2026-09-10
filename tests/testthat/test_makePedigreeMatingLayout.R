@@ -724,7 +724,16 @@ test_that(
   ## waypoints): 375 + 237 + 170 + 251 + 237 + 0 + 330 = 1600. Every
   ## other component count unchanged (the seeding adds or removes no
   ## node). Re-measured live.
-  expect_equal(nrow(result$nodes), 1600L)
+  ## CHANGED S683 to 1460L -- term 4 (duplicate proximity) now skips
+  ## spouse (B2) duplicates (owner-ratified amendment to the S675
+  ## no-weight-tuning mandate; the wDup-on-spouse-duplicates BACKLOG
+  ## item): marry-in triples hang over their own children's parents
+  ## again, shortening the same-row edges the jog-repair pass detours
+  ## around -- jog repairs 165 -> 95 (330 -> 190 waypoints):
+  ## 375 + 237 + 170 + 251 + 237 + 0 + 190 = 1460. Every other
+  ## component count unchanged (the term skip adds or removes no node).
+  ## Re-measured live.
+  expect_equal(nrow(result$nodes), 1460L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
   ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L (issue #166's
@@ -749,7 +758,9 @@ test_that(
   ## (Decision 2, S678: 183 jog repairs x 2 waypoints).
   ## CHANGED AGAIN to 330L -- same cause as the node-count change above
   ## (Decision 1, S679: 165 jog repairs x 2 waypoints).
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 330L)
+  ## CHANGED AGAIN to 190L -- same cause as the node-count change above
+  ## (S683 spouse-duplicate term-4 skip: 95 jog repairs x 2 waypoints).
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 190L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------

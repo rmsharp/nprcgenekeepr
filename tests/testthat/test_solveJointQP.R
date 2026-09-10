@@ -441,3 +441,109 @@ for (fixtureName in c("trackC", "trackBFull")) {
     })
   })
 }
+
+## ---- S683: term 4 skips spouse (B2) duplicates -------------------------
+## Owner-ratified amendment to the S675 no-weight-tuning mandate (the
+## wDup-on-spouse-duplicates BACKLOG item; provisional-order design Open
+## Question 2 resolved): the duplicate-proximity term applies ONLY to
+## polygamy (B1) duplicates -- a duplicate whose realId is B2-shaped (an
+## own parent edge, or an own single-parent direct child; the same
+## structural test .buildMatingUnitForest()'s Decision-2 spouse
+## duplication applies at mint time) contributes NO term-4 row. Measured
+## S683 on the real 375 fixture: the pull dragged marry-in triples toward
+## the mate's distant real occurrence (the owner-flagged ~950/1190 px
+## P49ZD1 drop jogs) and CAUSED the census's one class-(d)
+## dup-adjacent-to-real case rather than preventing it -- jogs 165 -> 95,
+## c2 105 -> 29, d 1 -> 0, b unchanged, the 5 packing fixtures
+## byte-identical. kinship2 has no duplicate-proximity term at all (S670
+## report Sec. 3); the curved connector, not proximity, links a spouse
+## duplicate to its real occurrence.
+##
+## NOTE on the small-fixture choice below: Track C and the un-widened
+## polygamy shape are constraint-saturated -- their solved rows sit fully
+## on the minSep floors, so wDup measurably moves NOTHING there even at
+## the pre-S683 engine (probed directly, max |delta| ~1e-8). The two
+## fixtures below are built with row slack so the term's presence or
+## absence is actually observable.
+
+## Marry-in fixture whose ONLY duplicate is a spouse (B2) duplicate: M has
+## her own parent edge (G1 x G2), marries A (own parents A1 x A2), child
+## C. A anchors (same gen, 1 unit each, "A" < "M" radix), so M's
+## occurrence at the A x M unit renders as __dup_M_1 while her real node
+## renders under G1/G2.
+.qpSpouseDupMarryIn <- function() {
+  ped <- data.frame(
+    id   = c("G1", "G2", "M", "A1", "A2", "A", "C"),
+    sire = c(NA, NA, "G1", NA, NA, "A1", "A"),
+    dam  = c(NA, NA, "G2", NA, NA, "A2", "M"),
+    sex  = c("M", "F", "F", "M", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+
+test_that(".solveJointQP()'s duplicate-proximity term is INERT for a
+           spouse (B2) duplicate -- wDup = 1 and wDup = 0 solve to
+           identical positions on a marry-in fixture whose only
+           duplicate is B2-shaped (S683: term 4 skips spouse
+           duplicates; at the pre-S683 engine the two solves differed
+           by up to 0.64 raw units on this fixture, the drag mechanism
+           in miniature)", {
+  built <- .qpProvisional(.qpSpouseDupMarryIn)
+  dups <- built$forest$duplicates
+  ## Fixture-shape guard: exactly one duplicate, the B2-shaped M.
+  expect_equal(dups$id, "__dup_M_1")
+  expect_equal(dups$realId, "M")
+
+  s1 <- .solveJointQP(built$provisionalPos, built$forest$matingUnits,
+                      dups, built$forest$childEdges, wDup = 1.0)
+  s0 <- .solveJointQP(built$provisionalPos, built$forest$matingUnits,
+                      dups, built$forest$childEdges, wDup = 0.0)
+  expect_equal(s1$x[match(s0$id, s1$id)], s0$x, tolerance = 1e-7)
+})
+
+## Polygamy fixture whose ONLY duplicate is a B1 duplicate, with enough
+## row slack (two 3-child sibships widening gen 2) for the term to be
+## observable: founder F (no parent edge, never a single parent -- both
+## children of each union carry both parents) mates W1 and W2, each of
+## whom has her own parents and anchors her unit (deeper gen). F's first
+## non-anchor occurrence is free; the second mints __dup_F_1.
+.qpPolygamyWideB1 <- function() {
+  ped <- data.frame(
+    id   = c("F", "D1a", "D1b", "D2a", "D2b", "W1", "W2",
+             "K1a", "K1b", "K1c", "K2a", "K2b", "K2c"),
+    sire = c(NA, NA, NA, NA, NA, "D1a", "D2a",
+             "F", "F", "F", "F", "F", "F"),
+    dam  = c(NA, NA, NA, NA, NA, "D1b", "D2b",
+             "W1", "W1", "W1", "W2", "W2", "W2"),
+    sex  = c("M", "M", "F", "M", "F", "F", "F",
+             "M", "F", "M", "F", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+  ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
+  ped
+}
+
+test_that(".solveJointQP()'s duplicate-proximity term stays ACTIVE for a
+           polygamy (B1) duplicate -- wDup = 1 vs wDup = 0 move
+           __dup_F_1 by more than 0.1 raw units on a slack-row polygamy
+           fixture (guards the S683 exclusion's boundary: the skip must
+           not widen to B1 duplicates, whose pull keeps one
+           individual's occurrences near each other; this pin holds at
+           the pre-S683 engine too, by design -- a boundary guard, not
+           a failing-RED case)", {
+  built <- .qpProvisional(.qpPolygamyWideB1)
+  dups <- built$forest$duplicates
+  ## Fixture-shape guard: exactly one duplicate, the B1-shaped F.
+  expect_equal(dups$id, "__dup_F_1")
+  expect_equal(dups$realId, "F")
+
+  s1 <- .solveJointQP(built$provisionalPos, built$forest$matingUnits,
+                      dups, built$forest$childEdges, wDup = 1.0)
+  s0 <- .solveJointQP(built$provisionalPos, built$forest$matingUnits,
+                      dups, built$forest$childEdges, wDup = 0.0)
+  d1 <- s1$x[s1$id == "__dup_F_1"]
+  d0 <- s0$x[s0$id == "__dup_F_1"]
+  expect_gt(abs(d1 - d0), 0.1)
+})

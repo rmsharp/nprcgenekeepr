@@ -543,8 +543,16 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   ## (183 -> 165 colliding edges, 530 -> 495 obstacle-pairs; census
   ## c1Pre 24 -> 10 edges). Still resolved to 0 same-row residual by
   ## this unchanged repair pass. Re-measured live.
-  expect_equal(nrow(baselineEdges), 165L)
-  expect_equal(nrow(baseline), 495L)
+  ## CHANGED AGAIN to 95L/192L -- S683 spouse-duplicate term-4 skip
+  ## (owner-ratified amendment to the S675 no-weight-tuning mandate; the
+  ## wDup-on-spouse-duplicates BACKLOG item): marry-in triples no longer
+  ## dragged toward the mate's distant real occurrence, so the long
+  ## same-row mate lines and drop segments the drag created disappear
+  ## (165 -> 95 colliding edges, 495 -> 192 obstacle-pairs). Still
+  ## resolved to 0 same-row residual by this unchanged repair pass.
+  ## Re-measured live.
+  expect_equal(nrow(baselineEdges), 95L)
+  expect_equal(nrow(baseline), 192L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

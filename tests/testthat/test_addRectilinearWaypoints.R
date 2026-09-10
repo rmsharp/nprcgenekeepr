@@ -777,8 +777,16 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
   ## design's own spike figure of 234, the same one-jog neighbourhood
   ## drift as census (c2) 116 -> 105 (see the S679 CHANGELOG entry).
   ## Re-measured live.
-  expect_equal(oldHits, 233L)
-  expect_equal(newHits, 233L)
+  ## CHANGED S683 to 88L/88L -- term 4 (duplicate proximity) now skips
+  ## spouse (B2) duplicates (owner-ratified amendment to the S675
+  ## no-weight-tuning mandate; the wDup-on-spouse-duplicates BACKLOG
+  ## item): marry-in triples no longer dragged toward the mate's distant
+  ## real occurrence, so unions sit over their own children's spans far
+  ## more often and the extended-bar overlaps drop 233 -> 88 (census on
+  ## the same engine: jogs 165 -> 95, c2 105 -> 29, d 1 -> 0).
+  ## Re-measured live, never hand-derived.
+  expect_equal(oldHits, 88L)
+  expect_equal(newHits, 88L)
   expect_true(newHits <= oldHits)
 })
 
