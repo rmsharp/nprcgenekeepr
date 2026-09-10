@@ -18,17 +18,72 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 683 Handoff Evaluation (by Session 684)
+**Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable verbatim —
+including the "4 workflows fire on push" fact and the fix-or-defer-per-CI-break-convention
+pointer that became the session's operating rule; the unpushed-commit inventory (whose
+sessions, what work) made the scope and stakes instantly clear with zero discovery; the
+gotchas were framed for code sessions and correctly didn't need exercising here (no code
+touched). **What was missing:** nothing material for this scope. **What was wrong:** only a
+self-referentially unavoidable off-by-one — the receipt says "22 commits ahead," but its own
+final receipt-sha commit made it 23 (24 pushed with S684's claim); cosmetic. **ROI:** high —
+orientation to push-ready in minutes.
+
 ### What Session 684 Did
-**Deliverable:** Push the 23 unpushed commits (S681 crash fix + S682 crash fix + S683 wDup
-change) to `origin/master` and shepherd the 4 push-triggered workflows (R-CMD-check, lint,
-test-coverage, pkgdown) — fix-or-defer any break per the CI-break convention (no standalone
-issue). Owner-picked via `AskUserQuestion` at Phase 0 (option A of S683's next steps).
-(IN PROGRESS)
-**Started:** 2026-09-10
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Push the unpushed S681–S683 backlog to `origin/master` and shepherd the 4
+push-triggered workflows, fix-or-defer any break per the CI-break convention (owner-picked
+via `AskUserQuestion` at Phase 0; S683 next-step A). **DONE** — ops-only session, no code
+touched. **Started/completed:** 2026-09-10 (single session). Claim `3f2c1f46`.
+
+**What actually happened, in order:**
+1. **Push:** `git push origin master` → `eab545be..3f2c1f46`, **24 commits** (23 inherited:
+   S681 diagnosis/screenshots, S682 rectilinear trimmed-crash fix, S683 QP term-4 B2 skip;
+   + the S684 claim). The largest-ever local/CI gap of the QP era, first CI exposure for
+   all three sessions' work.
+2. **CI shepherded to terminal** via a background monitor polling `gh run list` on the
+   pushed sha (all terminal states covered, not just success): **all 4 green first-try** —
+   lint 4m37s (run 34536782874), test-coverage 8m40s (34536782980), pkgdown 18m04s
+   (34536782802), R-CMD-check 33m40s (34536782830). **No fix-or-defer action owed.**
+3. **Close-out:** this evaluation, self-assessment, `CHANGELOG.md` entry (`1133cb11`),
+   `HANDOFFS.md` receipt, then a final close-out push (which re-triggers the 4 workflows on
+   docs-only commits — deliberately not shepherded to terminal; next session's Phase 0
+   unconditional CI check is the designed net; risk judged negligible, root-level session
+   records are `.Rbuildignore`d territory and the same workflows just ran green).
+
+**Self-assessment (Session 684): 9/10.** **Strengths:** (1) full Phase 0 with clean ledger/
+HANDOFFS reconcile and the untracked-file ghost-session check before any action; (2) CI
+outcomes observed to terminal, not assumed — the monitor emitted every workflow's
+conclusion; (3) single-deliverable discipline held: QP Phase 4 cleanup, the SESSION_NOTES
+trim, and the stale-dashboard-copy finding were all left untouched and re-surfaced in next
+steps instead. **Weaknesses:** (1) the close-out push's own CI runs end this session
+in_progress (disclosed above, mitigated by the Phase 0 unconditional check); (2) no
+`PROJECT_LEARNINGS.md` entry — deliberate: an ops session with a first-try-green outcome
+produced nothing non-obvious beyond what the CHANGELOG entry records; disclosed rather than
+padded.
+
+**Next steps (specific):** (A) **QP Migration Path Phase 4 cleanup** (READY, Effort S): grep
+`R/` doc-comments for the deleted tiers/passes and `.kMax*` constants, then mark the
+joint-solver BACKLOG item DONE (item's own "Next step" block, `BACKLOG.md:232`). (B)
+**SESSION_NOTES.md trim** (READY, Effort S-M): 9,500+ lines / ~805 KB, the dashboard's HIGH
+flag; archiving proven clean since S527/S528; expect a possible SRF_RED false-refusal
+needing owner-directed `--force`. (C) **Pedigree fidelity next lever** (DECISION NEEDED):
+sibling-order (design Open Question 3) past the current engine floor (census jogs 95 / c2
+29 / d 0 / b 12), or the bounded census Finding #3 jog-offset fix (READY, no ordering
+dependency). (D) Informational: verify the close-out push's 4 runs at Phase 0 (they were
+in_progress at session end); local `methodology_dashboard.py` copy is stale (v2.14.0 vs
+canonical v2.17.0); `scratchpad/` still holds the untracked `s683_*.R` tooling.
+
+**Key files:** `CHANGELOG.md` (S684 entry, `1133cb11`); `HANDOFFS.md` (S684 receipt);
+no code, tests, or package docs touched.
+
+**Gotchas for the next session:** (1) **origin/master now equals local master** as of the
+close-out push — the push-cadence debt is cleared; if commits re-accumulate, that is a
+choice being made, not a leftover; (2) failed=0 remains the clean-regression expectation
+(2,343 blocks — unchanged, no code touched this session); (3) the close-out push's 4
+workflow runs were in_progress at session end — the Phase 0 unconditional `gh run list`
+check will see them; a red there would be a docs-only-commit anomaly worth root-causing,
+not waving off; (4) all S683 gotchas (census baseline numbers, childEdges-derived B2 skip,
+packing-fixture byte-identity, do-not-freshen screenshots) still stand untouched.
 
 ### Session 682 Handoff Evaluation (by Session 683)
 **Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable
