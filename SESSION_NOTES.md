@@ -18,18 +18,118 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 682 Handoff Evaluation (by Session 683)
+**Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable
+verbatim, with the exact operating constraints (its own PRE-RED gate amending the S675
+mandate; re-measure census class (d) + full row + packing fixtures + pinned suite) that
+became PRE-RED's outline; gotcha (5) (packing fixtures byte-identical — "same hard
+invariant for the wDup work") held and was verified twice (digests + pinned suite);
+gotcha (1) (failed=0 expectation) was the verification gate and held at 2,343 blocks;
+the BACKLOG item's evidence block (the wDup=0 experiment, `renderCrop2S679.R`, the
+P49ZD1 ids and coordinates) reproduced S679's exact measurements on the first run; the
+item's own "positions only — treat 950→60 px as headroom, not a promised outcome"
+caveat was precisely right (the census re-measures were the real evidence). **What was
+missing:** nothing material. The item's risk-note mechanism ("term 4 is ALSO what keeps
+a duplicate from landing on top of its real occurrence") measured exactly backwards —
+but it was inherited S679 text, not S682's authorship, and the item's own
+"VERIFY-don't-assume" framing already carried the countermeasure; a one-line flag of
+the tension (a proximity term vs an adjacency-error class) would have been cheap.
+**What was wrong:** nothing S682 itself claimed. **ROI:** very high.
+
 ### What Session 683 Did
-**Deliverable:** wDup on spouse-duplicates — QP term-4 duplicate-proximity fix for
-marry-in triples dragged away from their own children's parents (owner visual-gate
-finding S679; top READY Up Next item under the standing pedigree-fidelity directive).
-Full TDD per `DEVELOPMENT_WORKSTREAM.md`; opens with PRE-RED measurement of the
-candidate fixes, then the owner-gated PRE-RED→RED `AskUserQuestion` ratifying an
-amendment to the S675 no-weight-tuning mandate. (IN PROGRESS)
-**Started:** 2026-09-09
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** wDup on spouse-duplicates — QP term 4 (duplicate proximity) now skips
+spouse (B2) duplicates (top READY Up Next item, standing pedigree-fidelity directive;
+owner visual-gate finding S679; design Open Question 2). **DONE** — full TDD per
+`DEVELOPMENT_WORKSTREAM.md`, owner-gated at every transition (candidate pick amending
+the S675 no-weight-tuning mandate + PRE-RED→RED + RED→GREEN + GREEN→REFACTOR, all via
+`AskUserQuestion`; REFACTOR owner-skipped at 0 lints). **Started/completed:**
+2026-09-09→10 (single session). Claim `f65b460a`.
+
+**What actually happened, in order:**
+1. **PRE-RED (temp `getOption()`-gated spike, reverted before RED):** ALL THREE of the
+   item's candidate fixes measured through the census harness — exclude dominated
+   (jogs 165→95, c2 105→29, d 1→0, b 12 unchanged) over re-weight ×0.1 (151/53) and
+   old-population-only (158/65, b worsens to 14; the flagged mates anchor elsewhere so
+   their dups stay pulled). The risk note INVERTED under measurement: term 4 *caused*
+   the one class-(d) case. B2 classification equivalence (ped-based vs
+   childEdges-derived) IDENTICAL over all 113 dup realIds; packing fixtures
+   digest-identical; blast radius exactly 19 expectations/4 blocks/4 files/0 collateral;
+   A/B crop pair sent to the owner (P49ZD1 drop-jogs 950/1190 → 60/180 px). Owner
+   ratified exclude.
+2. **RED (`0bf7822f`):** B2-inertness pin (new marry-in fixture, wDup=1 ≡ wDup=0;
+   0.64-raw delta at HEAD) + B1-retention boundary guard (new slack-row polygamy
+   fixture, 0.50-raw delta, passes at HEAD by design — disclosed) + P49ZD1 drop-jog
+   guard (≤2.0 raw; 7.9/9.9 at HEAD) + 19 re-pins. The gate-planned Track C mixed pin
+   DROPPED as measured-vacuous (constraint-saturated, ~1e-8 — Learning 737); disclosed
+   at the commit. All failing at HEAD for the measured reasons (22 expectations).
+3. **GREEN (`6df5fba5`):** childEdges-derived B2 skip in `.solveJointQP()` term 4 only;
+   `duplicates` argument contract unchanged (Learning 736); roxygen amended. GREEN
+   layouts bit-identical to the spike on all 7 census fixtures.
+4. **Verification (all owed):** 5 RED files green; full clean regression **failed=0 /
+   error=0 (2,343 blocks, 6,423 passed, 182 skipped)**; census CSV re-run + committed
+   with the 2 changed Track C reference images, read healthy (`29c46f56`; Track B
+   pixel-identical, Track D TRUE ×3); 3 of 5 screenshots re-captured — which ones
+   decided by digesting each capture's trimmed layout pre-GREEN (worktree at the RED
+   commit, main renv cache via R_LIBS) vs GREEN; 2 digest-identical captures untouched;
+   each image READ healthy (`4853639f`); live E2E **16/16 blocks, 55 expectations, 0
+   failed**; `lint_package()` **0**; NEWS.Rmd plain-language bullet + re-render +
+   wordlist green (`679dca4c`).
+5. **Close-out:** this evaluation, self-assessment, Learning 737, BACKLOG item DONE,
+   design doc Open Question 2 RESOLVED, `CHANGELOG.md` entry, `HANDOFFS.md` receipt.
+
+**Self-assessment (Session 683): 9/10.** **Strengths:** (1) every gate carried
+measurements — all three candidates had full census rows before the owner chose, and
+the recommendation was evidence-ranked, not asserted; (2) the vacuous-pin probe caught
+a gate-approved RED test that could never have failed under the old behavior, and the
+deviation was disclosed rather than silently absorbed; (3) screenshot churn avoided by
+deciding changed-vs-unchanged from trimmed-layout digests instead of re-capturing all
+5; (4) GREEN was proven bit-identical to the measured spike before any further
+verification spend; (5) every commit ≤5 files, every regenerated artifact read before
+its commit. **Weaknesses:** (1) repeated S682's exact inline-`Rscript -e` string-escape
+bug (`'\s'`) even though it was named in the predecessor's own weakness list — cost one
+re-run; (2) the 4-file re-pin actuals needed a second spike application after RED
+planning — capturing failure messages (not just counts) during the PRE-RED blast-radius
+run would have saved ~7 minutes; (3) 22 commits now unpushed (14 inherited + 8 this
+session) — CI has seen neither S681/S682's crash fix nor this change; deliberately left
+per the push-cadence precedent.
+
+**Next steps (specific):** (A) **Push** (22 commits ahead, READY, Effort S): the
+biggest-ever gap between local and CI under the QP-era engine; 4 workflows fire on
+push — fix-or-defer per the CI-break convention (no standalone issue). (B) **QP
+Migration Path Phase 4 cleanup** (READY, Effort S): grep `R/` doc-comments for the
+deleted tiers/passes and `.kMax*` constants, then mark the joint-solver BACKLOG item
+DONE. (C) **SESSION_NOTES.md trim** (Housekeeping, Effort S-M): 9,500+ lines, the
+dashboard's HIGH flag; archiving is proven clean since S527/S528 — expect a possible
+SRF_RED false-refusal needing owner-directed `--force`. (D) Informational: census
+Finding #3 (jog offset above the 25-px radius) still open; S668 census audit DOC still
+engine-stale; the census (b)=12 residual and c2=29 are the current engine floor —
+sibling-order (design Q3) is the next lever if the owner wants more.
+
+**Key files:** `R/makePedigreeDiagramData.R:1516-1560` (term 4 with the S683 policy
+comment and B2 skip; roxygen at `:1405`); `tests/testthat/test_solveJointQP.R:445+`
+(S683 section — the two policy fixtures/pins); `tests/testthat/
+test_positionMatingUnitForest.R:2955+` (P49ZD1 guard) and `:363` block (the 13
+re-pins); `tests/testthat/test_addRectilinearWaypoints.R:780`, `tests/testthat/
+test_makePedigreeMatingLayout.R:727+752`, `tests/testthat/
+test_resolveEdgeNodeCollisions.R:554` (count re-pins); `PROJECT_LEARNINGS.md` Learning
+737; `docs/planning/pedigree-diagram-provisional-order-plan.md` §Dispositions 2;
+`scratchpad/s683_*.R` (spike/probe/digest/screenshot tooling, UNTRACKED — take before
+cleaning scratchpad).
+
+**Gotchas for the next session:** (1) **failed=0 remains the clean-regression
+expectation** — held again (2,343 blocks; +3 new blocks this session); (2) census
+baseline is now jogs 95 / c2 29 / d 0 / b 12 on Real 375 — the committed findings CSV
+and every count pin reflect it; don't "restore" old numbers from stale docs (the S668
+audit DOC still carries pre-QP numbers, a separate known-stale item); (3) the term-4
+B2 skip is derived from childEdges INSIDE `.solveJointQP()` — the forest's
+`duplicates` df deliberately gained no column; if a future session adds one, keep the
+QP's derivation or replace both coherently, and re-run the S683 equivalence assertion;
+(4) small QP fixtures are often constraint-saturated — probe that a parameter moves
+anything at all before pinning differential behavior (Learning 737); (5) the 5 packing
+fixtures stayed byte-identical through this change — same hard invariant for whatever
+touches the QP next; (6) `show_names`/`affected_shading` screenshots were deliberately
+NOT re-captured (digest-identical layouts) — do not "freshen" them without a layout
+change.
 
 ### Session 681 Handoff Evaluation (by Session 682)
 **Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable verbatim,

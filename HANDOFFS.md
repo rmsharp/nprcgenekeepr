@@ -137,12 +137,25 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 
 ```handoff
 session: S683
-date: 2026-09-09
-status: pending
-active_task: wDup on spouse-duplicates (QP term-4 duplicate-proximity fix for marry-in triples, owner visual-gate finding S679; top READY Up Next item, standing pedigree-fidelity directive). Full TDD; PRE-RED measurement then the owner-gated S675-mandate-amending PRE-RED gate.
-what_was_done: pending
+date: 2026-09-10
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. QP term 4 (duplicate proximity) now skips spouse (B2) duplicates — the S679 owner-flagged marry-in drag fixed (top READY Up Next item, standing pedigree-fidelity directive; design Open Question 2 RESOLVED). Full TDD, owner-gated at every transition; the S675 no-weight-tuning mandate amended by owner ratification from measured evidence; REFACTOR posed and owner-skipped at 0 lints.
+what_was_done: PRE-RED measured ALL THREE candidate fixes through the census harness via a temp getOption spike (reverted clean): exclude dominated (jogs 165->95, c2 105->29, d 1->0, b 12 unchanged; P49ZD1 drop-jogs 950/1190 px -> 60/180 px) vs re-weight x0.1 and old-population-only; the item's class-(d) risk note INVERTED under measurement (term 4 CAUSED the one (d) case); B2-classification equivalence asserted identical over all 113 dup realIds; blast radius exactly 19 expectations/4 files/0 collateral; A/B crops sent to owner. RED 0bf7822f: B2-inertness pin + B1-retention boundary guard on two new purpose-built slack-row fixtures (the gate-planned Track C mixed pin dropped as measured-vacuous — constraint-saturated, disclosed; Learning 737) + P49ZD1 drop-jog guard + 19 re-pins, all verified failing at HEAD. GREEN 6df5fba5: childEdges-derived B2 skip in .solveJointQP() term 4 only, duplicates-argument contract unchanged (Learning 736); GREEN bit-identical to the spike on all 7 census fixtures. Verification: full clean regression failed=0/error=0 (2,343 blocks, 6,423 passed); census CSV + 2 Track C reference images committed read-healthy 29c46f56 (Track B pixel-identical, Track D TRUE x3); 3 of 5 screenshots re-captured (changed set decided by pre-GREEN-vs-GREEN trimmed-layout digests via worktree; 2 digest-identical captures untouched), each read healthy, 4853639f; live E2E 16/16 blocks 55 expectations 0 failed; lint_package 0; NEWS.Rmd plain-language entry + wordlist green 679dca4c.
+next_steps: (A) Push — 22 commits ahead (S681's 7 + S682's 7 + this session's 8), CI has seen neither the S682 crash fix nor this change; 4 workflows fire on push, fix-or-defer per the CI-break convention. (B) QP Migration Path Phase 4 cleanup (READY, Effort S): grep R/ doc-comments for deleted tiers/passes and .kMax* constants, then mark the joint-solver item DONE. (C) SESSION_NOTES.md trim (Housekeeping; 9,500+ lines, the dashboard HIGH flag; archiving proven clean since S527/S528, expect a possible SRF_RED false-refusal needing owner --force). (D) Informational: census Finding #3 (jog offset) open; S668 census audit DOC engine-stale; census floor now jogs 95/c2 29/b 12 — sibling order (design Q3) is the next lever.
+key_files: R/makePedigreeDiagramData.R:1516 (term-4 policy comment + B2 skip; roxygen :1405); tests/testthat/test_solveJointQP.R:445 (S683 policy fixtures/pins); tests/testthat/test_positionMatingUnitForest.R:2955 (P49ZD1 guard) and tests/testthat/test_positionMatingUnitForest.R:363 (13 re-pins); tests/testthat/test_addRectilinearWaypoints.R:780, tests/testthat/test_makePedigreeMatingLayout.R:727, tests/testthat/test_resolveEdgeNodeCollisions.R:554 (count re-pins); PROJECT_LEARNINGS.md Learning 737; docs/planning/pedigree-diagram-provisional-order-plan.md (Dispositions 2 RESOLVED); BACKLOG.md (item DONE record)
+gotchas: failed=0 remains the clean-regression expectation (held, 2,343 blocks). Census baseline is NOW jogs 95/c2 29/d 0/b 12 — the committed CSV and every count pin reflect it; the S668 audit DOC still carries pre-QP numbers (separate known-stale item). The B2 skip is derived from childEdges INSIDE .solveJointQP(); the duplicates df deliberately gained no column — keep the derivation or replace both coherently. Small QP fixtures are often constraint-saturated: probe that a parameter moves anything before pinning differential behavior (Learning 737). The 5 packing fixtures stayed byte-identical — same hard invariant next time. show_names/affected_shading screenshots deliberately NOT re-captured (digest-identical) — do not freshen them without a layout change.
+runtime_smoke: live shinytest2 E2E pedigree module (NPRC_RUN_E2E=true): 16/16 blocks, 55 expectations, 0 failed/0 error against the shipped change; plus 3 live-app screenshot re-captures read healthy before commit.
+changelog_ref: 2026-09-10 S683 entry (BL wDup spouse-dups)
 commit: pending
 ```
+**Self-score breakdown (9/10):** +all three candidates fully measured before the owner chose;
++caught and disclosed a gate-approved-but-vacuous RED pin before writing it (probe-first);
++screenshot churn avoided via trimmed-layout digest comparison; +GREEN proven bit-identical to
+the measured spike; +every artifact read before commit. -repeated S682's documented inline-Rscript
+escape bug; -re-pin actuals needed a second spike application that better PRE-RED capture would
+have avoided; -22 commits unpushed, CI exposure deferred again (deliberate, but compounding).
 
 ```handoff
 session: S682
