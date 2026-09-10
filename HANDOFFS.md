@@ -174,16 +174,26 @@ hand-maintained.
 ``` handoff
 session: S684
 date: 2026-09-10
-status: pending
-active_task: Push the 23 unpushed commits (S681 + S682 crash fixes, S683 wDup change) to origin/master; shepherd the 4 push-triggered workflows (R-CMD-check, lint, test-coverage, pkgdown); fix-or-defer any break per the CI-break convention (no standalone issue). Owner-picked at Phase 0.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Pushed the S681-S683 backlog to origin/master and shepherded the 4 push-triggered workflows to terminal — all green first-try, no CI break to fix or defer (owner-picked at Phase 0; S683 next-step A). Ops-only session, no code touched.
+what_was_done: git push origin master, eab545be..3f2c1f46 — 24 commits (23 inherited: S681 diagnosis/screenshots, S682 rectilinear trimmed-crash fix, S683 QP term-4 B2 skip; plus the S684 claim 3f2c1f46). The largest-ever local/CI gap of the QP era, first CI exposure for all three sessions' work. CI shepherded via a background monitor polling gh run list on the pushed sha (all terminal states covered): lint success 4m37s (run 34536782874), test-coverage success 8m40s (34536782980), pkgdown success 18m04s (34536782802), R-CMD-check success 33m40s (34536782830). No fix-or-defer action owed under the CI-break convention. CHANGELOG entry 1133cb11. Close-out commits pushed at the end (re-triggers the 4 workflows on docs-only changes — deliberately not shepherded; next Phase 0's unconditional CI check is the net).
+next_steps: (A) QP Migration Path Phase 4 cleanup (READY, Effort S) — grep R/ doc-comments for the deleted tiers/passes and .kMax* constants, then mark the joint-solver BACKLOG item DONE (BACKLOG.md:232). (B) SESSION_NOTES.md trim (READY, Effort S-M) — 9,500+ lines, dashboard HIGH flag; expect a possible SRF_RED false-refusal needing owner --force. (C) Pedigree fidelity next lever (DECISION NEEDED) — sibling-order (design Q3) past the engine floor (jogs 95/c2 29/d 0/b 12), or the bounded census Finding #3 jog-offset fix (READY). (D) Verify the close-out push's 4 runs at Phase 0 (in_progress at session end); dashboard copy stale (v2.14.0 vs v2.17.0); scratchpad still holds untracked s683_*.R tooling.
+key_files: CHANGELOG.md (S684 entry, 1133cb11); HANDOFFS.md (this receipt); SESSION_NOTES.md (S684 handoff + S683 evaluation). No code, tests, or package docs touched.
+gotchas: origin/master now equals local master — the push-cadence debt is cleared; re-accumulation is a choice, not a leftover. failed=0 remains the clean-regression expectation (2,343 blocks; no code touched). The close-out push's 4 runs were in_progress at session end — a red there would be a docs-only-commit anomaly worth root-causing, not waving off. All S683 gotchas (census baselines, childEdges-derived B2 skip, packing-fixture byte-identity, do-not-freshen screenshots) stand untouched.
+runtime_smoke: n/a — ops-only (push + CI shepherding); no runtime behavior changed. CI's own R-CMD-check ran the full suite green on the pushed commit 3f2c1f46.
+changelog_ref: 2026-09-10 S684 entry (ad hoc, push + 4 green workflows)
+commit: 7307a9eb
 ```
+
+**Self-score breakdown (9/10):** +full Phase 0 with clean
+ledger/HANDOFFS reconcile before any action; +CI conclusions observed to
+terminal via monitor, never assumed; +single-deliverable discipline held
+(QP cleanup, NOTES trim, stale-dashboard finding all deferred to next
+steps). -close-out push’s own CI runs end the session in_progress
+(disclosed, Phase 0 check is the net); -no PROJECT_LEARNINGS entry —
+deliberate for a first-try-green ops session, disclosed not padded.
 
 ``` handoff
 session: S683

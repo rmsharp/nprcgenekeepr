@@ -17,6 +17,27 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-09-10 · \[ad hoc\] S684: pushed the 24-commit S681–S684 backlog to origin/master — all 4 push-triggered workflows green first-try, no CI break to fix or defer
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0, S683
+  next-step A):** clear the largest-ever local/CI gap of the QP era —
+  `git push origin master` (`eab545be..3f2c1f46`, 24 commits: 23
+  inherited spanning S681’s diagnosis/screenshot work, S682’s
+  rectilinear trimmed-pedigree crash fix, and S683’s QP term-4 B2 skip,
+  plus the S684 claim commit `3f2c1f46`). First CI exposure for all
+  three sessions’ work.
+- **CI shepherded to terminal on `3f2c1f46` (monitor-polled, every
+  workflow’s conclusion observed, not assumed):** lint success 4m37s
+  (run 34536782874), test-coverage success 8m40s (34536782980), pkgdown
+  success 18m04s (34536782802), R-CMD-check success 33m40s
+  (34536782830). **No fix-or-defer action owed** under the CI-break
+  tracking convention (`CLAUDE.md`, S636) — nothing broke.
+- Ops-only session: no code, tests, or docs-content touched beyond the
+  session records; no `BACKLOG.md` item consumed (the push was a handoff
+  next-step, not a ledgered item).
+- **Model:** Claude Fable 5 (first session on the Claude 5 family in
+  this project).
+
 ### 2026-09-10 · \[BL-wDupSpouseDups\] S683: QP term 4 skips spouse (B2) duplicates — the owner-flagged marry-in drag fixed, full TDD, all three candidates measured before the gate, class-(d) risk note inverted by measurement
 
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0):** the
