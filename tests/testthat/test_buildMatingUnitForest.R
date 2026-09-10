@@ -398,9 +398,16 @@ test_that(".buildMatingUnitForest does not error when a mating unit's
   expect_equal(result$matingUnits$nonAnchor, "DANGLING_DAM")
 })
 
-test_that(".buildMatingUnitForest assigns a duplicate node (not a crash)
-           when a dangling parent reference appears at more than one
-           mating unit", {
+test_that(".buildMatingUnitForest mints NO duplicate for a dangling
+           parent reference appearing at more than one mating unit -- a
+           dangling individual renders no occurrence at all, so a __dup_
+           whose realId never renders is not a second occurrence but a
+           broken connector endpoint (S682, replacing the S461-era
+           free-pass/duplicate policy this block previously pinned:
+           found live S681, the __dup_ minted here fed dupEdges an
+           NA-endpoint curved connector that crashed the Diagram tab's
+           default Rectilinear style on the app's own strict-lineal
+           trim -- see test_resolveEdgeNodeCollisions.R's S682 section)", {
   ped <- data.frame(
     id = c("SIRE1", "SIRE2", "CHILD1", "CHILD2"),
     sire = c(NA, NA, "SIRE1", "SIRE2"),
@@ -411,8 +418,24 @@ test_that(".buildMatingUnitForest assigns a duplicate node (not a crash)
   )
   result <- expect_error(.buildMatingUnitForest(ped), NA)
   expect_equal(nrow(result$matingUnits), 2L)
-  expect_equal(nrow(result$duplicates), 1L)
-  expect_equal(result$duplicates$realId, "DANGLING_DAM")
+  expect_equal(nrow(result$duplicates), 0L)
+})
+
+test_that(".buildMatingUnitForest mints NO duplicate when a BOTH-dangling
+           (orphan-unit, issue #154 shape) parent appears at more than
+           one mating unit -- the same S682 policy: no occurrence ever
+           renders for any dangling parent, anchored or orphaned", {
+  ped <- data.frame(
+    id = c("CHILD1", "CHILD2"),
+    sire = c("DANGLING_SIRE", "DANGLING_SIRE"),
+    dam = c("DANGLING_DAM_A", "DANGLING_DAM_B"),
+    sex = c("F", "M"),
+    gen = c(0L, 0L),
+    stringsAsFactors = FALSE
+  )
+  result <- expect_error(.buildMatingUnitForest(ped), NA)
+  expect_equal(nrow(result$matingUnits), 2L)
+  expect_equal(nrow(result$duplicates), 0L)
 })
 
 test_that(".buildMatingUnitForest's dangling-reference handling does not

@@ -769,11 +769,14 @@ test_that(".positionMatingUnitForest positions the mating unit whose
   .expectNoOverlap(pos)
 })
 
-test_that(".positionMatingUnitForest positions a dangling parent's
-           duplicate node (appearing at more than one mating unit)
-           without error, using its mating unit's own gen as the
-           fallback -- the dangling parent's FREE (non-duplicate)
-           occurrence still gets no node of its own", {
+test_that(".positionMatingUnitForest positions a dangling parent
+           appearing at more than one mating unit without error and
+           WITHOUT any duplicate node -- S682: the forest mints no
+           __dup_ for a dangling parent (no occurrence of theirs ever
+           renders), so NONE of the dangling parent's occurrences gets a
+           node (was: 'positions the dangling parent's duplicate node',
+           the S461-era policy replaced this session -- see
+           test_buildMatingUnitForest.R's own amended policy block)", {
   ped <- data.frame(
     id = c("SIRE1", "SIRE2", "CHILD1", "CHILD2"),
     sire = c(NA, NA, "SIRE1", "SIRE2"),
@@ -783,14 +786,12 @@ test_that(".positionMatingUnitForest positions a dangling parent's
     stringsAsFactors = FALSE
   )
   forest <- .buildMatingUnitForest(ped)
-  expect_equal(nrow(forest$duplicates), 1L)
+  expect_equal(nrow(forest$duplicates), 0L)
   pos <- expect_error(.positionMatingUnitForest(ped, forest), NA)
 
   expect_false("DANGLING_DAM" %in% pos$id)
-  dupRow <- pos[pos$id == forest$duplicates$id, ]
-  expect_equal(nrow(dupRow), 1L)
-  expect_false(is.na(dupRow$gen))
-  expect_false(is.na(dupRow$x))
+  expect_false(any(grepl("^__dup_", pos$id)))
+  expect_equal(nrow(pos), nrow(ped) + nrow(forest$matingUnits))
   ## found S555: see the free-pass dangling-parent test above.
   expect_type(pos$gen, "integer")
   .expectNoOverlap(pos)

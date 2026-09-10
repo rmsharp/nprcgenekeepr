@@ -337,10 +337,13 @@ test_that(".solveJointQP() does not error when a unit's non-anchor party is
 })
 
 ## The SAME dangling parent at 2 mating units -- test_positionMatingUnitForest
-## .R:690's own fixture, reused verbatim (matching this codebase's own reuse
-## convention). Her 2nd occurrence gets a real __dup_* node whose own realId
-## is the dangling, unrendered id -- term 4 (duplicate proximity) must skip
-## that duplicate too.
+## .R's own fixture, reused verbatim (matching this codebase's own reuse
+## convention). S682: the forest no longer mints a __dup_ for a dangling
+## parent (see test_buildMatingUnitForest.R's amended policy block), so the
+## dangling-realId duplicate shape is hand-built below instead --
+## .solveJointQP() takes 'duplicates' as a plain argument, and term 4's
+## dangling-realId skip (S673) must stay robust to a direct caller handing
+## it that legacy shape.
 .qpDanglingDuplicateRealId <- function() {
   data.frame(
     id = c("SIRE1", "SIRE2", "CHILD1", "CHILD2"),
@@ -353,23 +356,35 @@ test_that(".solveJointQP() does not error when a unit's non-anchor party is
 }
 
 test_that(".solveJointQP() does not error when a duplicate node's own realId
-           is a dangling parent with no rendered node (her FREE occurrence
-           contributes no node at all, per .buildMatingUnitForest()'s own
-           contract) -- term 4 (duplicate proximity) must skip that
-           duplicate, and the OTHER unit's non-anchor (her duplicated
-           occurrence) resolves to the __dup_* node, exercising both the
-           dangling-non-anchor fix and the dangling-duplicate-realId fix in
-           one fixture", {
+           is a dangling parent with no rendered node -- the S682 forest
+           policy no longer produces this shape (asserted here), but term
+           4's dangling-realId skip (S673) stays exercised with the legacy
+           duplicates row and its positioned node hand-built, since
+           .solveJointQP() accepts 'duplicates' directly", {
   built <- .qpProvisional(.qpDanglingDuplicateRealId)
-  expect_equal(nrow(built$forest$duplicates), 1L)
+  ## S682 policy: no __dup_ minted for the dangling parent at 2 units.
+  expect_equal(nrow(built$forest$duplicates), 0L)
   expect_false("DANGLING_DAM" %in% built$provisionalPos$id)
 
+  ## Hand-build the legacy shape the pre-S682 forest produced: a __dup_
+  ## node at the second unit whose realId is the dangling, unrendered id.
+  unit2Id <- built$forest$matingUnits$id[2L]
+  legacyDups <- data.frame(id = "__dup_DANGLING_DAM_1",
+                           realId = "DANGLING_DAM",
+                           matingUnitId = unit2Id,
+                           stringsAsFactors = FALSE)
+  dupNodeRow <- built$provisionalPos[
+    built$provisionalPos$id == unit2Id, , drop = FALSE]
+  dupNodeRow$id <- legacyDups$id
+  dupNodeRow$x <- dupNodeRow$x + 1
+  pos <- rbind(built$provisionalPos, dupNodeRow)
+
   solved <- expect_error(
-    .solveJointQP(built$provisionalPos, built$forest$matingUnits,
-                  built$forest$duplicates, built$forest$childEdges),
+    .solveJointQP(pos, built$forest$matingUnits,
+                  legacyDups, built$forest$childEdges),
     NA)
 
-  expect_setequal(solved$id, built$provisionalPos$id)
+  expect_setequal(solved$id, pos$id)
   expect_true(all(is.finite(solved$x)))
   .expectMinSepFloorHeld(solved, built$forest$matingUnits)
 })

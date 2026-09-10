@@ -652,3 +652,93 @@ test_that("makePedigreeMatingLayout() does not error on the real
   expect_true(is.data.frame(result$nodes))
   expect_true(is.data.frame(result$edges))
 })
+
+## ---- S682: the S630 guard-class at the 2 sibling passes ----------------
+##
+## S630 fixed the atomic-vector `[[` crash ONLY in .detectStraight(); the
+## straight-repair pass and the curved duplicate-connector pass kept named
+## ATOMIC xOf/yOf vectors, so their own is.null() guards can never fire --
+## `[[` on a named atomic vector THROWS "subscript out of bounds" for an
+## unmatched (or NA_character_) name instead of returning NULL the way
+## `[[` on a list would. Found live S681 (BACKLOG.md Up Next, fixed this
+## session): the app's own strict-lineal focal trim of the twin fixture
+## handed the curved pass a duplicate connector minted with
+## from = NA/to = NA (a dangling polygamous parent's __dup_ whose realId
+## never renders -- see the forest-policy tests in
+## test_buildMatingUnitForest.R), reaching yOf[[NA]] and crashing the
+## Diagram tab under its DEFAULT edge style.
+
+test_that(".resolveEdgeNodeCollisions does not error when a CURVED
+           (smooth.enabled) edge references a node id absent from
+           'nodes', or carries NA endpoints -- the curved pass must skip
+           such an edge exactly as .detectStraight() (S630) does", {
+  nodes <- data.frame(id = c("A", "B", "M"), x = c(0, 100, 50),
+                       y = c(0, 0, 0), stringsAsFactors = FALSE)
+  curved <- function(from, to) data.frame(
+    from = from, to = to, dashes = TRUE, color = NA_character_,
+    width = NA_real_, smooth.enabled = TRUE, smooth.type = "curvedCW",
+    smooth.roundness = 0.2, stringsAsFactors = FALSE)
+  resGhost <- expect_error(
+    .resolveEdgeNodeCollisions(nodes, curved("GHOST", "A")), NA)
+  expect_equal(nrow(resGhost$edges), 1L)
+  resNA <- expect_error(
+    .resolveEdgeNodeCollisions(nodes,
+                                curved(NA_character_, NA_character_)), NA)
+  expect_equal(nrow(resNA$edges), 1L)
+})
+
+test_that("makePedigreeMatingLayout() does not error on the twin fixture
+           trimmed to the 6 declared twins' ancestors+descendants subset
+           under edgeStyle = 'rectilinear' (found live, S681: the app's
+           own qcStudbook/setPopulation/trim pipeline narrowed to the 6
+           declared twins -- vignettes/articles/pedigree-diagram-
+           screenshots.R's exact twin step -- crashed the Diagram tab's
+           DEFAULT edge style with 'subscript out of bounds'; the id
+           subset is hardcoded so this test needs no Shiny/E2E harness,
+           matching the S630 focal-trim precedent above; the trimmed-
+           pedigree shape was this suite's measured blind spot -- the
+           untrimmed fixture does NOT crash, since every parent has an
+           own row there)", {
+  ped <- read.csv(
+    system.file("extdata", "examples",
+                "obfuscated_rhesus_mhc_ped_twins.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  trimIds <- c(
+    "0BNY0G", "28XSME", "2DA5K8", "2EHR2W", "306H5X",
+    "36W7XS", "4CHDK1", "5A6DFT", "677E7M", "6WG3MZ",
+    "6XYG9B", "7U5NJD", "8GSXTQ", "8LWCAD", "97Y192",
+    "9RHBJ9", "BD7MNF", "BRI2MW", "BT0V1U", "BYWXJB",
+    "C2YD43", "C3IFT0", "C6E1D9", "D0Z114", "D8FYZV",
+    "DA82MT", "DGLT2F", "DKDP5B", "DPUHBA", "E06FRB",
+    "E2D59U", "E80KU8", "GBANSD", "GZFGFQ", "H16EC4",
+    "H6GMER", "HCY8QM", "HH66K6", "HJ555Y", "HV7LZ3",
+    "I67LRJ", "IX0KKP", "J1SX9Q", "K93DCQ", "KNIBZ7",
+    "KUENM8", "LDTVKR", "LT00CV", "MAW987", "MQ0ZWN",
+    "P844CW", "PQX22G", "QWUKUY", "SLN0TF", "TFSCLL",
+    "TTE0Z7", "TXIF7D", "UCXEK5", "UZCIN5", "WDBGPF",
+    "WUPTU8", "XH80WV", "XL7AVE", "XW778S"
+  )
+  trimmed <- ped[ped$id %in% trimIds, ]
+  expect_equal(nrow(trimmed), 64L)
+  ## LUPGF8 is the dangling polygamous parent: sire at 2 units, no own
+  ## row in the subset -- the exact crash shape.
+  expect_false("LUPGF8" %in% trimmed$id)
+  expect_equal(sum(trimmed$sire == "LUPGF8", na.rm = TRUE), 2L)
+
+  ## suppressWarnings: this dense trim legitimately discloses a few
+  ## unresolved-collision residuals -- not this test's subject.
+  result <- expect_error(
+    suppressWarnings(
+      makePedigreeMatingLayout(trimmed, edgeStyle = "rectilinear")
+    ),
+    NA
+  )
+  expect_true(is.data.frame(result$nodes))
+  expect_true(is.data.frame(result$edges))
+  ## The dangling parent renders NOTHING: no phantom duplicate marker
+  ## (forest policy, S682) and no NA-endpoint connector edge.
+  expect_false(any(grepl("^__dup_LUPGF8", result$nodes$id)))
+  expect_false(any(is.na(result$edges$from) | is.na(result$edges$to)))
+})
