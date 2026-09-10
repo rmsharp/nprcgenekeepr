@@ -18,6 +18,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 684 Did
+**Deliverable:** Push the 23 unpushed commits (S681 crash fix + S682 crash fix + S683 wDup
+change) to `origin/master` and shepherd the 4 push-triggered workflows (R-CMD-check, lint,
+test-coverage, pkgdown) — fix-or-defer any break per the CI-break convention (no standalone
+issue). Owner-picked via `AskUserQuestion` at Phase 0 (option A of S683's next steps).
+(IN PROGRESS)
+**Started:** 2026-09-10
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 682 Handoff Evaluation (by Session 683)
 **Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable
 verbatim, with the exact operating constraints (its own PRE-RED gate amending the S675

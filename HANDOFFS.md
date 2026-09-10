@@ -136,6 +136,20 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S684
+date: 2026-09-10
+status: pending
+active_task: Push the 23 unpushed commits (S681 + S682 crash fixes, S683 wDup change) to origin/master; shepherd the 4 push-triggered workflows (R-CMD-check, lint, test-coverage, pkgdown); fix-or-defer any break per the CI-break convention (no standalone issue). Owner-picked at Phase 0.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S683
 date: 2026-09-10
 status: complete
