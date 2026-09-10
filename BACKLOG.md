@@ -300,11 +300,33 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (owner-directed defer, S681); the committed S675-era capture stays until that fix
       ships. Open Questions 1-5 dispositions recorded in the design doc's own §Open
       Questions (dated S681).
-- [ ] **wDup on spouse-duplicates: the duplicate-proximity term drags marry-in triples away
-      from their own children's parents (owner visual-gate finding, S679)** (READY -- but the
-      change is QP-objective behavior, so it needs its own PRE-RED `AskUserQuestion` gate
-      ratifying an amendment to the S675 no-weight-tuning mandate; Effort M; standing
-      pedigree-fidelity directive; design doc Open Question 2 made concrete) -- **Root cause,
+- [x] **wDup on spouse-duplicates: the duplicate-proximity term drags marry-in triples away
+      from their own children's parents (owner visual-gate finding, S679)** (**DONE S683,
+      2026-09-10** -- full TDD, owner-gated at every transition (candidate pick amending the
+      S675 no-weight-tuning mandate + PRE-RED→RED + RED→GREEN, all via `AskUserQuestion`).
+      PRE-RED measured ALL THREE candidate fixes through a temp spike + the census harness:
+      **exclude dominated** (jogs 165→95, c2 105→29, **d 1→0**, b unchanged 12; P49ZD1
+      drop-jogs 950/1190 px → 60/180 px; re-weight ×0.1 and old-population-only left most
+      of the defect and oldpop worsened b to 14) -- and the risk note below INVERTED under
+      measurement: term 4 *caused* the one class-(d) dup-adjacent case rather than
+      preventing it (every candidate cleared it). Owner ratified exclude. RED (`0bf7822f`):
+      B2-inertness pin on a new marry-in fixture + B1-retention boundary guard on a new
+      slack-row polygamy fixture (the gate-planned Track C mixed pin dropped as
+      measured-vacuous -- Track C is constraint-saturated, wDup moves nothing there even at
+      HEAD) + the P49ZD1 drop-jog guard + 19 re-pins across 4 files, all verified failing
+      at HEAD for the measured reasons. GREEN (`6df5fba5`): childEdges-derived B2 skip in
+      `.solveJointQP()` term 4 only (the `duplicates` argument contract unchanged, Learning
+      736's consumer-robustness concern honoured); GREEN layouts bit-identical to the
+      PRE-RED candidate on all 7 census fixtures. Verification: full clean regression
+      **failed=0/error=0** (2,343 blocks, 6,423 passed); census findings CSV re-run and
+      committed (`29c46f56`); 5 packing fixtures byte-identical; Track B reference images
+      pixel-identical, Track C regenerated + read healthy, Track D structural TRUE ×3;
+      3 of 5 Diagram-tab screenshots re-captured (changed-vs-unchanged determined by
+      digesting each trimmed layout pre-GREEN vs GREEN in a worktree; the 2
+      digest-identical captures deliberately untouched) each read healthy before commit
+      (`4853639f`); live E2E pedigree module green; `lintr::lint_package()` 0; NEWS.Rmd
+      plain-language entry + wordlist green (`679dca4c`). Design doc Open Question 2
+      marked RESOLVED.) -- **Root cause,
       measured S679:** on the flagged `P49ZD1` family (children `A792ZU`/`F3QIL7` at row 4,
       x~4535/4775 vs their parents' unions at x~3585/3705 -- ~950-px jogged drop lines), the
       children's row is EMPTY for ~950 px to their left (no rank obstacle), and a temporary

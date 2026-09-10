@@ -408,6 +408,16 @@ during implementation.
    item (S679, owner visual-gate finding: term 4 drags marry-in triples ~950 px; measured
    → ~60 px headroom under `wDup = 0`). The fenced RED-sweep decision now carries its own
    PRE-RED gate requirement amending the S675 no-weight-tuning mandate.
+   **RESOLVED S683 (2026-09-10, owner-ratified via `AskUserQuestion`): EXCLUDE.** All
+   three candidates (exclude / re-weight ×0.1 / pre-Phase-1 population only) measured
+   through a temp spike + the census harness before the gate; exclusion dominated on every
+   axis (jogs 165→95, c2 105→29, d 1→0, b unchanged 12, the 5 packing fixtures
+   byte-identical, P49ZD1 drop-jogs 950/1190 px → 60/180 px) — and the risk note's framing
+   inverted under measurement: term 4 *caused* the one class-(d) dup-adjacent case, it did
+   not prevent it. Shipped as a childEdges-derived B2 skip inside `.solveJointQP()` term 4
+   (the `duplicates` argument contract unchanged); the polygamy (B1) pull is retained and
+   boundary-guarded in `test_solveJointQP.R`'s S683 section. Full TDD record in
+   `CHANGELOG.md`'s S683 entry.
 3. **Sibling order within sibships** — OPEN, deliberately unmeasured. The Phase 2 endpoint
    beat this design's own prediction (c2 105 vs 116, bars 233 vs 234), and the one structure
    the owner flagged at the Phase 2 visual gate root-caused to Q2 (wDup), not sibling order.

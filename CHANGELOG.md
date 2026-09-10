@@ -16,6 +16,48 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-10 · [BL-wDupSpouseDups] S683: QP term 4 skips spouse (B2) duplicates — the owner-flagged marry-in drag fixed, full TDD, all three candidates measured before the gate, class-(d) risk note inverted by measurement
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0):** the top READY Up Next
+  item under the standing pedigree-fidelity directive — term 4 (duplicate proximity)
+  dragged each marry-in mate's `__dup_*` node (and its whole anchor–dot–mate triple)
+  toward the mate's distant real occurrence, beating child centering (S679's owner
+  visual-gate finding: ~950/1190 px P49ZD1 drop jogs). Claim `f65b460a`. Full TDD
+  (`DEVELOPMENT_WORKSTREAM.md`), owner-gated: candidate pick ratifying the amendment to
+  the S675 no-weight-tuning mandate, PRE-RED→RED, RED→GREEN, GREEN→REFACTOR.
+- **PRE-RED (all measured via a temp `getOption()`-gated spike, reverted before RED):**
+  ALL THREE of the item's candidate fixes run through the census harness — exclude
+  (jogs 165→95, c2 105→29, d 1→0, b 12 unchanged), re-weight ×0.1 (151/53/0/12),
+  old-population-only (158/65/0/**14**); exclude dominated every axis and the owner
+  ratified it. The item's risk note **inverted under measurement**: term 4 *caused* the
+  census's one class-(d) dup-adjacent-to-real case (a proximity term pulls dup toward
+  real; (d) *is* dup-near-real), it never prevented one. B2-classification equivalence
+  (ped-based `isB2Shaped()` vs childEdges-derived) asserted IDENTICAL over all 113 dup
+  realIds; 5 packing fixtures digest-identical; blast radius exactly 19 expectations /
+  4 blocks / 4 files / 0 collateral (2,340 blocks); A/B crop pair rendered and sent to
+  the owner (P49ZD1 drop-jogs 950/1190 px → 60/180 px).
+- **RED (`0bf7822f`):** B2-inertness pin (new marry-in fixture; wDup=1 ≡ wDup=0) +
+  B1-retention boundary guard (new slack-row polygamy fixture; passes at HEAD by design,
+  disclosed) + P49ZD1 drop-jog guard (≤ 2.0 raw) + the 19 re-pins, all verified failing
+  at HEAD for the measured reasons. The gate-planned Track C mixed pin was dropped as
+  measured-vacuous (Track C is constraint-saturated — wDup moves nothing there even at
+  HEAD, ~1e-8) — deviation disclosed at the commit (Learning 737).
+- **GREEN (`6df5fba5`):** childEdges-derived B2 skip inside `.solveJointQP()` term 4 only
+  — the `duplicates` argument contract unchanged for direct callers (Learning 736);
+  roxygen amended. GREEN layouts bit-identical to the PRE-RED candidate on all 7 census
+  fixtures.
+- **Verification (every owed item):** full clean regression **failed=0 / error=0** (2,343
+  blocks, 6,423 passed, 182 skipped); census findings CSV re-run and committed with the
+  two changed Track C reference images, both read healthy (`29c46f56`; Track B
+  pixel-identical, Track D structural TRUE ×3); 3 of 5 Diagram-tab screenshots
+  re-captured — changed-vs-unchanged decided by digesting each capture's trimmed layout
+  pre-GREEN (worktree at the RED commit) vs GREEN, the 2 digest-identical captures
+  deliberately untouched — each image read healthy before commit (`4853639f`); live E2E
+  pedigree module **16/16 blocks, 55 expectations, 0 failed/0 error**
+  (`NPRC_RUN_E2E=true`); `lintr::lint_package()` **0**; NEWS.Rmd
+  plain-language entry + NEWS.md re-render, wordlist test green (`679dca4c`).
+- **Records:** `BACKLOG.md` item marked DONE; design doc Open Question 2 RESOLVED;
+  Learning 737; `SESSION_NOTES.md` handoff; `HANDOFFS.md` receipt.
+
 ### 2026-09-09 · [BL-rectilinearTrimCrash] S682: Rectilinear trimmed-pedigree crash FIXED (root cause + S630 guard-class completion), full TDD, all owed verification delivered, twin screenshot current again
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0):** the TOP `BACKLOG.md` Up
   Next item S681 filed — `makePedigreeMatingLayout(trimmed, edgeStyle = "rectilinear")`
