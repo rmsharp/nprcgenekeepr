@@ -164,6 +164,12 @@ knitr::opts_chunk$set(echo = TRUE)
   children, so the lines from parents down to their children run
   straighter, with fewer sideways detours, especially in large or
   tangled colony pedigrees.
+- Fixed an error in the Diagram tab that appeared for some trimmed
+  pedigrees under the default Rectilinear connector style: when trimming
+  to focal animals kept an animal's children but dropped that animal's
+  own record, the tab showed an error message instead of a diagram. The
+  diagram now draws normally, leaving out the parent who has no record
+  to draw.
 
 ## Kinship & Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their
