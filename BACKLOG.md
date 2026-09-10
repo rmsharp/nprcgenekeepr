@@ -11,11 +11,28 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **Rectilinear Diagram-tab crash on a strict-lineal-trimmed pedigree containing a
+- [x] **Rectilinear Diagram-tab crash on a strict-lineal-trimmed pedigree containing a
       dangling polygamous parent: a duplicate node is created for an individual whose real
       occurrence never renders (found S681, 2026-09-08, while regenerating the Phase 3
-      Diagram-tab screenshots)** (READY, Effort M; standing pedigree-fidelity directive;
-      fix deferred per owner direction S681 -- needs its own full-TDD session with gates) --
+      Diagram-tab screenshots)** (**DONE S682, 2026-09-09** -- full TDD, owner-gated at
+      every transition; fix layers (a)+(c) chosen at the PRE-RED gate from measured
+      evidence, layer (b) rejected as dead code under (a). Implemented: (a) the forest's
+      duplicate loop never mints a `__dup_` for a dangling parent (no occurrence of theirs
+      ever renders; roxygen + policy comments amended); (c) the straight-repair and curved
+      passes' xOf/yOf became named lists, completing the S630 guard-class fix at both
+      remaining sibling sites. RED (`c3999d26`): 2 crash tests (curved-pass unit test; the
+      hardcoded-64-id twin-trim integration test -- the trimmed-fixture blind spot now has
+      standing coverage) + 3 old-policy pins re-pinned, all verified failing at HEAD for
+      the measured reasons; `test_solveJointQP.R`'s term-4 dangling-realId skip retained
+      via hand-built legacy inputs (Learning 736). GREEN (`bd71f2e5`): all owed
+      verification passed -- full clean regression failed=0/error=0 (2,340 blocks, 6,411
+      passed), census findings CSV re-run BIT-IDENTICAL (git-silent; PRE-RED forest
+      digests predicted this and the run confirmed it), 5 packing-fixture byte-identity
+      via the pinned suite, live E2E 16/16 blocks 55 expectations, lint 0 on all touched
+      files. `diagram_twin_connectors.png` re-captured via the live app's own section-5
+      flow and READ healthy before commit (`4f9f6194`) -- the S675-era staleness
+      disclosure is closed. NEWS.Rmd plain-language entry shipped (`38102c3c`). REFACTOR
+      gate posed, owner-skipped -- nothing behavior-neutral identified.) --
       **Symptom:** `makePedigreeMatingLayout(trimmed, edgeStyle = "rectilinear")` (the app's
       DEFAULT style) throws `subscript out of bounds`; the Diagram tab shows a red error and
       no diagram. Reproduce: `obfuscated_rhesus_mhc_ped_twins.csv` through the app's own
@@ -55,9 +72,9 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       crash (a trimmed-pedigree fixture is the suite's measured blind spot this bug
       proves), full census re-run + 5 packing-fixture byte-identity + pinned suite, live
       E2E, and re-capture of `diagram_twin_connectors.png` via
-      `vignettes/articles/pedigree-diagram-screenshots.R` (the committed S675-era capture
-      is deliberately stale until then -- S681 left it untouched, disclosed in the Phase 3
-      DONE record below).
+      `vignettes/articles/pedigree-diagram-screenshots.R` (ALL DELIVERED S682 -- see the
+      DONE record above; the twin screenshot is current again, so the S675-era staleness
+      caveat in the Phase 3 DONE record below is closed).
 - [x] **DECIDE from the S668 census: pedigree drawing -- (A) bounded per-defect fixes, or (C) a
       joint solver** (**DECIDED S671, 2026-09-03: (C) -- joint solver**, owner via
       `AskUserQuestion`, after this session presented both options' evidence, costs, and the

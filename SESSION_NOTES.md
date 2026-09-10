@@ -18,17 +18,117 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 681 Handoff Evaluation (by Session 682)
+**Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable verbatim,
+with the PRE-RED-gate-picks-fix-layers framing that structured the whole session; the
+repro script (`scratchpad/reproTwinCrashS681.R`) reproduced the crash on the first run;
+every key-file line number was exact (`:531` duplicate loop, `:1938` dupEdges, `:2470` vs
+`:2534`/`:2661` for the S630 fix and its 2 atomic siblings); gotcha (3) (the untrimmed
+fixture does NOT crash — LUPGF8 has an own row there) directly shaped the RED test design
+(subset the raw CSV by the trimmed id set); gotcha (4) ("layer (a) zero census impact —
+VERIFY, don't assume") became this session's forest-digest measurement, which upgraded
+the gate's claim from assumption to proof; gotcha (5) (failed=0 expectation) held at both
+the PRE-RED baseline and the GREEN regression. The `BACKLOG.md` item's 3 candidate fix
+layers and the owed-verification list were the session's outline, unmodified. **What was
+missing:** the 3 S461-era test blocks that PIN the old dangling-dup policy
+(`test_buildMatingUnitForest.R:401`, `test_positionMatingUnitForest.R:772`,
+`test_solveJointQP.R:~365`) — cheap to find by grep (~10 min) but a one-line "expect the
+S461 dangling-dup pins to invert" would have pre-drawn the full blast radius. **What was
+wrong:** nothing. **ROI:** very high.
+
 ### What Session 682 Did
-**Deliverable:** Fix the rectilinear trimmed-pedigree crash (TOP `BACKLOG.md` Up Next item,
-found S681: `makePedigreeMatingLayout(trimmed, edgeStyle = "rectilinear")` throws
-`subscript out of bounds` on the 6-twin strict-lineal narrow — dangling-parent `__dup_` →
-NA-endpoint dupEdge → atomic `yOf[[NA]]`). Full TDD per `DEVELOPMENT_WORKSTREAM.md`;
-PRE-RED gate picks fix layer(s) a/b/c. (IN PROGRESS)
-**Started:** 2026-09-09
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Fix the rectilinear trimmed-pedigree crash (TOP `BACKLOG.md` Up Next
+item, found S681). **DONE** — full TDD per `DEVELOPMENT_WORKSTREAM.md`, owner-gated at
+every transition (fix-layer scope pick + PRE-RED→RED + RED→GREEN + GREEN→REFACTOR, all
+via `AskUserQuestion`; REFACTOR owner-skipped, nothing behavior-neutral identified).
+**Started/completed:** 2026-09-09 (single session). Claim `97208641`.
+
+**What actually happened, in order:**
+1. **PRE-RED (all measured, temp edits reverted before RED):** crash confirmed at HEAD
+   via the app-pipeline repro AND a raw 64-id CSV subset (no qc pipeline — the S630
+   hardcoded-trim-id pattern applies); `__dup_LUPGF8_1` confirmed the only dangling-realId
+   dup; a direct probe confirmed BOTH NA and absent-id curved endpoints crash
+   `.resolveEdgeNodeCollisions()` at HEAD. Candidate (a) (dangling guard in the dup
+   loop): healthy render (227 nodes/247 edges, sent to owner), census-fixture forests
+   digest-IDENTICAL to HEAD, full-suite blast radius exactly 3 old-policy blocks / 7
+   expectations / 0 collateral in 2,334 other blocks. Candidate (c) (atomic→list at the
+   2 sibling passes): independently un-crashes with 0 test fallout but keeps the phantom
+   dup marker. Owner picked **(a)+(c)**; layer (b) rejected as dead code under (a).
+2. **RED (`c3999d26`):** 2 new crash tests in `test_resolveEdgeNodeCollisions.R` (curved
+   GHOST/NA unit test; the hardcoded-64-id twin-trim integration test — standing coverage
+   for the trimmed-fixture blind spot) + the 3 old-policy pins re-pinned to the new
+   policy (forest mints NO `__dup_` for a dangling parent; both-dangling orphan edge case
+   added; `test_solveJointQP.R`'s term-4 dangling-realId skip RETAINED via hand-built
+   legacy inputs since `.solveJointQP()` takes `duplicates` as an argument — Learning
+   736). All verified failing at HEAD for the measured reasons.
+3. **GREEN (`bd71f2e5`):** the dangling guard (`if (is.na(match(p, ids))) next`) in the
+   duplicate loop + policy comment/roxygen amendments; `as.list()` xOf/yOf at the
+   straight-repair (`:2533`) and curved (`:2661`) passes — the S630 guard-class fix now
+   complete at all 3 sites; `.forestComponents()` prose note (dangling-realId dups
+   extinct, assignment rule unchanged).
+4. **Verification (all owed items delivered):** 4 RED files green; repro renders (227/
+   247, matching the PRE-RED candidate); full clean regression **failed=0 / error=0
+   (2,340 blocks, 6,411 passed, 182 skipped)**; census findings CSV re-run
+   **bit-identical** (git-silent, every scoreboard class unchanged — the digests
+   predicted it, the run confirmed it); 5 packing-fixture byte-identity via the pinned
+   suite; live E2E pedigree module **16/16 blocks, 55 expectations, 0 failed**; lint 0 on
+   all 5 touched files (full `lint_package()` run at close-out); wordlist test green.
+5. **Docs (`38102c3c`):** plain-language NEWS.Rmd bullet (S628 criterion, US spellings) +
+   NEWS.md re-render. **Screenshot (`4f9f6194`):** `diagram_twin_connectors.png`
+   re-captured via the live app (script section-5 flow replicated to avoid churning the 4
+   healthy S681 captures), image READ and verified healthy before commit — the S675-era
+   staleness disclosure is closed.
+6. **Close-out:** this evaluation, self-assessment, Learning 736, `BACKLOG.md` item DONE,
+   `CHANGELOG.md` entry, `HANDOFFS.md` receipt.
+
+**Self-assessment (Session 682): 9/10.** **Strengths:** (1) every gate carried
+measurements, not estimates — the fix-layer pick had the full-suite blast radius, a
+digest-proof of zero census impact, and a healthy render in hand; (2) the temp-edit/
+measure/revert discipline stayed clean (tree verified clean before RED); (3) consumer
+robustness was preserved, not deleted, when the producer policy changed (the QP term-4
+hand-built-legacy-inputs rework); (4) every commit ≤5 files, each verified before its
+commit; (5) the deliberately-stale screenshot was regenerated through the app's own flow
+and read before commit. **Weaknesses:** (1) the PRE-RED full-suite run's inline reporter
+had an R string-escaping bug (`'\s'`), so attributing the 7 failures needed a 3-file
+re-run — minor, self-inflicted; (2) the reworked QP test's at-HEAD behavior was messier
+than designed (the hand-built dup id collided with the forest's still-minted dup,
+producing an ERROR on top of the intended pin failure) — acceptable RED, but the
+collision was anticipated in-flight rather than designed for; (3) 14 commits now sit
+unpushed (7 from S681 + 7 from this session) — CI has seen none of the fix; deliberately
+left for the owner/next session per the push-cadence precedent rather than pushed
+unilaterally.
+
+**Next steps (specific):** (A) **wDup-on-spouse-duplicates** (now the top READY Up Next
+item, Effort M): QP-objective change — needs its own PRE-RED `AskUserQuestion` gate
+ratifying an amendment to the S675 no-weight-tuning mandate; evidence in the item
+(wDup=0 collapses the flagged 950-px displacement to ~60 px); re-measure census class
+(d) + full row + packing fixtures + pinned suite under any change. (B) **QP Migration
+Path Phase 4 cleanup** (READY, Effort S): grep `R/` doc-comments for references to the
+deleted tiers/passes and `.kMax*` constants, then mark the joint-solver item DONE.
+(C) **Push** (14 commits ahead): 4 workflows fire on push, fix-or-defer per the CI-break
+convention — the fix's first CI exposure. (D) Informational: census Finding #3 (jog
+offset above the 25-px radius) still open; S668 census audit DOC still engine-stale;
+scheduled workflows' first QP-era runs still pending on their own cadence.
+
+**Key files:** `R/makePedigreeDiagramData.R:545-553` (the dangling guard in the
+duplicate loop; policy comment above it), `:2540` and `:2680` region (the two `as.list()`
+conversions with their S630/S682 comments); `tests/testthat/test_resolveEdgeNodeCollisions.R`
+(S682 section at the end — the 2 crash tests incl. the 64-id fixture);
+`tests/testthat/test_buildMatingUnitForest.R:401` (the inverted policy pin + orphan edge
+case); `tests/testthat/test_solveJointQP.R` (the hand-built-legacy-inputs rework);
+`PROJECT_LEARNINGS.md` Learning 736; `BACKLOG.md` (item DONE record).
+
+**Gotchas for the next session:** (1) **failed=0 remains the clean-regression
+expectation** — held again this session (2,340 blocks); (2) the twin screenshot is
+CURRENT again — the S681 "do not regenerate" caveat is dead; regenerating all 5 via the
+full script is safe but churns 4 healthy S681 captures for no reason; (3) a dangling
+parent now renders NOTHING anywhere (no phantom dup marker) — if a future session wants
+dangling parents visible, that is kinship2's add-them-as-founders pre-processing
+question (census scoreboard note), not a revert of this fix; (4) `.solveJointQP()` still
+accepts and skips dangling-realId duplicates handed to it directly — that robustness is
+deliberate and tested, do not "simplify" it away because the forest no longer produces
+the shape; (5) the 5 packing fixtures stayed byte-identical through this fix — same hard
+invariant for the wDup work next.
 
 ### Session 680 Handoff Evaluation (by Session 681)
 **Score: 9/10.** **What helped:** `next_steps` (B) named this session's deliverable exactly,

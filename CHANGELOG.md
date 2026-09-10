@@ -16,6 +16,39 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-09 · [BL-rectilinearTrimCrash] S682: Rectilinear trimmed-pedigree crash FIXED (root cause + S630 guard-class completion), full TDD, all owed verification delivered, twin screenshot current again
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0):** the TOP `BACKLOG.md` Up
+  Next item S681 filed — `makePedigreeMatingLayout(trimmed, edgeStyle = "rectilinear")`
+  (the app default) threw `subscript out of bounds` on a strict-lineal trim containing a
+  dangling polygamous parent. Claim `97208641`. Full TDD (`DEVELOPMENT_WORKSTREAM.md`),
+  owner-gated: fix-layer scope pick, PRE-RED→RED, RED→GREEN, GREEN→REFACTOR (skipped —
+  nothing behavior-neutral identified).
+- **PRE-RED (measured, temp-edit + revert):** crash confirmed via the app pipeline AND a
+  raw 64-id CSV subset (no qc pipeline needed); candidate (a)'s census-fixture forests
+  digest-IDENTICAL to HEAD; full-suite blast radius exactly 3 S461-era policy-pin blocks /
+  7 expectations / 0 collateral (2,337 blocks); candidate (c) independently un-crashes
+  with 0 fallout. Owner ratified **(a)+(c)**; (b) rejected as dead code under (a).
+- **RED (`c3999d26`):** curved-pass GHOST/NA unit test + the hardcoded-64-id twin-trim
+  integration test (standing coverage for the suite's measured trimmed-fixture blind
+  spot) + the 3 old-policy pins inverted; `test_solveJointQP.R`'s term-4 dangling-realId
+  skip retained via hand-built legacy inputs (Learning 736). All verified failing at HEAD
+  for the measured reasons.
+- **GREEN (`bd71f2e5`):** the duplicate loop never mints a `__dup_` for a dangling parent
+  (no occurrence of theirs ever renders); xOf/yOf became named lists at the
+  straight-repair and curved passes — the S630 guard-class fix now complete at all 3
+  sites; roxygen/policy comments amended.
+- **Verification (every owed item):** full clean regression **failed=0 / error=0** (2,340
+  blocks, 6,411 passed, 182 skipped); census findings CSV re-run **bit-identical**
+  (git-silent, scoreboard unchanged on every class); 5 packing-fixture byte-identity via
+  the pinned suite; live E2E pedigree module 16/16 blocks, 55 expectations, 0 failed;
+  `lintr::lint_package()` 0; wordlist test green; renv untouched.
+- **Docs (`38102c3c`):** plain-language NEWS.Rmd bullet + NEWS.md re-render.
+  **Screenshot (`4f9f6194`):** `diagram_twin_connectors.png` re-captured via the live
+  app's own flow, image READ and verified healthy before commit — the S675-era staleness
+  disclosure (S681) is closed.
+- **Records:** `BACKLOG.md` item marked DONE; Learning 736; `SESSION_NOTES.md` handoff;
+  `HANDOFFS.md` receipt.
+
 ### 2026-09-08 · [BL-provisionalOrderPhase3] S681: Provisional-order Phase 3 docs pass DONE (NEWS entry, reference images, 4/5 screenshots, Open-Questions dispositions) — and a live rectilinear trimmed-pedigree crash found, measured, and deferred per owner direction
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0):** the design's Phase 3
   (`docs/planning/pedigree-diagram-provisional-order-plan.md` §Migration Path). Claim
