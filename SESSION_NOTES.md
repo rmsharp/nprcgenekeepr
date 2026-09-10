@@ -18,6 +18,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 685 Did
+**Deliverable:** Census Finding #3 — raise the jog offset above the 25-px symbol radius
+(pedigree fidelity, standing top priority; owner-picked via `AskUserQuestion` at Phase 0;
+S684 next-step C's READY branch). Includes the S679 ascender-stub addendum territory
+(`BACKLOG.md:236-245`). Full TDD per `DEVELOPMENT_WORKSTREAM.md`, owner-gated transitions.
+(IN PROGRESS)
+**Started:** 2026-09-10
+**Status:** Session claimed. PRE-RED investigation beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 683 Handoff Evaluation (by Session 684)
 **Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable verbatim —
 including the "4 workflows fire on push" fact and the fix-or-defer-per-CI-break-convention

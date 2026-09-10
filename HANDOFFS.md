@@ -136,6 +136,20 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S685
+date: 2026-09-10
+status: pending
+active_task: Census Finding #3 — raise the jog offset above the 25-px symbol radius (pedigree fidelity, standing top priority; owner-picked via AskUserQuestion at Phase 0; S684 next-step C's READY branch; BACKLOG.md:236-245 incl. the S679 ascender-stub addendum). Full TDD per DEVELOPMENT_WORKSTREAM.md, owner-gated transitions. Session claimed; PRE-RED investigation beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S684
 date: 2026-09-10
 status: complete
