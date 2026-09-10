@@ -148,7 +148,7 @@ key_files: R/makePedigreeDiagramData.R:1516 (term-4 policy comment + B2 skip; ro
 gotchas: failed=0 remains the clean-regression expectation (held, 2,343 blocks). Census baseline is NOW jogs 95/c2 29/d 0/b 12 — the committed CSV and every count pin reflect it; the S668 audit DOC still carries pre-QP numbers (separate known-stale item). The B2 skip is derived from childEdges INSIDE .solveJointQP(); the duplicates df deliberately gained no column — keep the derivation or replace both coherently. Small QP fixtures are often constraint-saturated: probe that a parameter moves anything before pinning differential behavior (Learning 737). The 5 packing fixtures stayed byte-identical — same hard invariant next time. show_names/affected_shading screenshots deliberately NOT re-captured (digest-identical) — do not freshen them without a layout change.
 runtime_smoke: live shinytest2 E2E pedigree module (NPRC_RUN_E2E=true): 16/16 blocks, 55 expectations, 0 failed/0 error against the shipped change; plus 3 live-app screenshot re-captures read healthy before commit.
 changelog_ref: 2026-09-10 S683 entry (BL wDup spouse-dups)
-commit: pending
+commit: af42a6db
 ```
 **Self-score breakdown (9/10):** +all three candidates fully measured before the owner chose;
 +caught and disclosed a gate-approved-but-vacuous RED pin before writing it (probe-first);
