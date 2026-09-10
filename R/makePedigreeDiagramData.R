@@ -1403,7 +1403,11 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   as the spousal term it structurally mirrors) -- a NEW term, no
 #'   kinship2 analogue.
 #' @param wDup duplicate-proximity weight (default \code{1}, a lower-
-#'   priority nice-to-have) -- a NEW term, no kinship2 analogue.
+#'   priority nice-to-have) -- a NEW term, no kinship2 analogue. Applies
+#'   to polygamy (B1) duplicates ONLY: a spouse (B2) duplicate
+#'   contributes no term-4 row at any weight (S683, the owner-ratified
+#'   amendment to the S675 no-weight-tuning mandate -- see the term-4
+#'   policy comment in the body).
 #' @return A data frame (\code{id}, \code{x}, \code{gen}) with exactly the
 #'   same \code{id} set as \code{provisionalPos} (Decision 2) -- \code{gen}
 #'   unchanged from \code{provisionalPos} (Decision 5), \code{x} the QP's
@@ -1513,10 +1517,37 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     }
   }
 
-  ## Term 4 (NEW): duplicate proximity -- targets census class (d).
-  ## kinship2 has no analogue (S670 report Sec. 3) -- free to build once
-  ## the QP skeleton exists (same shape as term 1).
+  ## Term 4 (NEW): duplicate proximity -- polygamy (B1) duplicates ONLY.
+  ## kinship2 has no analogue (S670 report Sec. 3). S683 (the
+  ## owner-ratified amendment to the S675 no-weight-tuning mandate; the
+  ## wDup-on-spouse-duplicates BACKLOG item, design Open Question 2):
+  ## a spouse (B2) duplicate -- one whose realId has its own place in
+  ## the tree (an own parent edge, or an own single-parent direct
+  ## child) -- contributes NO proximity row. Measured on the real 375
+  ## fixture, the pull dragged each marry-in mate's __dup_* node (and
+  ## its whole anchor--dot--mate triple) toward the mate's distant real
+  ## occurrence, beating term 2's child centering (the owner-flagged
+  ## ~950/1190 px P49ZD1 drop jogs), and CAUSED the census's one class-
+  ## (d) dup-adjacent-to-real case rather than preventing it (d 1 -> 0,
+  ## jogs 165 -> 95, c2 105 -> 29 under the skip). The curved duplicate
+  ## connector, not proximity, links a spouse duplicate to its real
+  ## occurrence -- exactly kinship2's own convention. The pull stays
+  ## for polygamy (B1) duplicates, keeping one individual's occurrences
+  ## near each other (test_solveJointQP.R's S683 boundary guard).
+  ##
+  ## B2-shape is derived from this component's own childEdges -- realId
+  ## has an own parent edge (a childEdges$to entry) or is itself a
+  ## single parent with a direct child edge (a non-union
+  ## childEdges$from) -- the same structural test
+  ## .buildMatingUnitForest()'s Decision-2 spouse duplication applies
+  ## to 'ped' at mint time, re-expressed over the arguments this
+  ## function actually receives (asserted identical over every dup
+  ## realId of the real fixture, S683); deriving it here keeps the
+  ## 'duplicates' argument contract unchanged for direct callers
+  ## handing hand-built legacy shapes (Learning 736).
   if (nrow(duplicates) > 0L) {
+    singleParents <- setdiff(childEdges$from, matingUnits$id)
+    b2Set <- unique(c(childEdges$to, singleParents))
     for (i in seq_len(nrow(duplicates))) {
       dupId <- duplicates$id[i]
       realId <- duplicates$realId[i]
@@ -1525,6 +1556,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
       ## FREE occurrence has no rendered node to pull toward either --
       ## skip this duplicate's proximity term.
       if (!(realId %in% ids)) next
+      ## S683: spouse (B2) duplicate -- no proximity row (see above).
+      if (realId %in% b2Set) next
       pmatRows[[length(pmatRows) + 1L]] <-
         sqrt(wDup) * (e(dupId) - e(realId))
     }
