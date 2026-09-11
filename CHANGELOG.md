@@ -16,6 +16,37 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-11 · [BL-siblingOrderAppetite] S686: sibling-order appetite measured — every order lever reduces to ped row order, the naive autohint analogue measured WORSE, a real optimizer reclaims −33% of connector ink; owner ratified the Shape-A design item
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0, resolving S685 next-step C's
+  DECISION-NEEDED fork toward sibling-order over the ascender-stub cosmetic; standing
+  pedigree-fidelity directive):** the design Open Question 3 appetite measurement —
+  evidence doc
+  [`docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md`](docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md)
+  + rendered A/B visual evidence (owner-requested medium, delivered mid-session at both
+  checkpoints), ending in an owner appetite decision. Claim `baab9cbd`, deliverable
+  `3df67613`. No engine change shipped — measurement only, all spikes ran as pure ped-row
+  permutations through the UNMODIFIED engine (zero package edits, zero reverts owed).
+- **Findings (all measured on Real 375, census harness copy proved byte-faithful by
+  `identical()` on the committed findings CSV):** (a) every sibling-order lever — sibship
+  child order, root-subtree order, polygamous unit order, family packing — reduces to ped
+  ROW order; (b) the literal within-sibship lever is ~empty (13 multi-child sibships, 5
+  inversions, 0.2% of connector ink intra-subtree); (c) 99.8% of the 570,645 px of curved
+  connector ink is cross-root-subtree, 644/1,485 pulled-root pairs inverted; (d) the naive
+  kinship2-autohint barycenter analogue measured WORSE every iteration (570k → 635k px) —
+  a dense minimum-linear-arrangement instance, not kinship2's sparse case; (e) a
+  width-aware proxy optimizer (spectral seed + swap/move local search, recalibrated per
+  round, converged round 3) achieved TRUE −33% ink (382,911 px), census cCurved −36%
+  (1,996 → 1,278), chord crossings −24/−35%, every error class unchanged (b 12,
+  a/c2/d/e/f 0), jogs +7, width unchanged; (f) fixture safety: identity permutation on
+  Track B/D + D1–D3 by construction, Track C a measured tie — packing-fixture
+  byte-identity plausibly preservable with a prefer-current-order tie-break.
+- **Decision (owner, via `AskUserQuestion`): Shape A — design the engine's pre-layout
+  ordering pass.** New top `BACKLOG.md` Up Next item (DESIGN SESSION NEEDED, Effort M)
+  carries the full design-question list (objective, tie-break, `__union_N` renumbering /
+  pin / screenshot churn, ~2× layout cost); Shapes B (utility) / C (decline) recorded as
+  fallbacks. Learning 739.
+- **Model:** Claude Fable 5.
+
 ### 2026-09-10 · [BL-censusFinding3JogOffset] S685: jog offsets are now disc-aware — census c2 29 → 0, the audit's own literal recommendation measured 5× worse and rejected, zero collateral anywhere
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; S684 next-step C's READY
   branch, standing pedigree-fidelity directive):** census Finding #3 — jog-repair corridors
