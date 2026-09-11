@@ -2434,10 +2434,15 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
 #' with \code{J1}/\code{J2} at \code{(x[u], y0 + jogY)}/\code{(x[v],
 #' y0 + jogY)} -- a short vertical step, a horizontal run at the offset
 #' row (clearing every obstacle in the original span in a single step,
-#' not one jog per obstacle), then back down. \code{jogY} is a small
-#' fraction of the smallest real row-to-row gap actually present in
-#' \code{nodes} -- never a hardcoded \code{yScale}, so the repair stays
-#' correct if \code{xScale}/\code{yScale} are ever retuned. New waypoint
+#' not one jog per obstacle), then back down. \code{jogY} is derived
+#' from the local row geometry, never a hardcoded \code{yScale}, so the
+#' repair stays correct if \code{xScale}/\code{yScale} are ever retuned:
+#' a fraction of the jogged row's own nearest row gap, floored above the
+#' row's own largest disc radius (\code{nodes$size}) and capped -- as a
+#' whole per-row level ladder, compressed uniformly on overflow -- above
+#' the nearest disc row below, so a corridor clears the \emph{discs} it
+#' detours around, not merely their centre line (census Finding #3,
+#' S685). New waypoint
 #' ids use the \code{__jog_} prefix (joining the existing reserved-prefix
 #' set documented at \code{vignettes/a2interactive.Rmd:500}). Detection
 #' and repair repeat for up to 3 passes (the new offset row can, rarely,
@@ -2609,10 +2614,6 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     }
     hitY0s <- unique(vapply(hitRows, function(i) yOf[[edges$from[[i]]]],
                              numeric(1L)))
-    jogUnitOf <- stats::setNames(
-      jogFraction * vapply(hitY0s, .localGap, numeric(1L)),
-      as.character(hitY0s)
-    )
 
     ## Interval-schedule same-row colliding edges onto distinct offset
     ## LEVELS (greedy graph coloring by x-span overlap), rather than
@@ -2644,6 +2645,56 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
         levelOf[[as.character(h$i)]] <- lvl
       }
     }
+
+    ## Per-row offset UNIT, disc-aware (census Finding #3, fixed S685):
+    ## the fraction-of-localGap unit alone ignored disc geometry in BOTH
+    ## directions, measured live on the real 375-individual fixture --
+    ## (a) a symbol-row corridor at 9/18 px sat inside its own row's
+    ## 25-px discs (the repair satisfied its centre-line predicate but
+    ## not the symbol), and (b) a bar-row ladder's level-4 corridor at
+    ## 36 px descended to 24 px from the child row's discs 60 px below.
+    ## So the unit gets a FLOOR -- the jogged row's own max disc radius
+    ## (nodes$size: individuals 25, union dots 6, waypoints 0) + 1 -- and
+    ## the row's whole level ladder gets a CAP: it must stay above the
+    ## nearest disc row below (that row's top edge - 1), compressed
+    ## uniformly on overflow so levels stay DISTINCT (the S595
+    ## level-separation property; a shared offset row is what created
+    ## 132 new jog-vs-jog collisions before levels existed). The floor
+    ## wins over compression in the (geometrically unreachable today)
+    ## case where a band cannot fit the ladder at all. A blanket
+    ## fraction raise instead of this band was measured and rejected:
+    ## it drove census c2 29 -> 161 + 16 new c2-vertical, because every
+    ## bar-row corridor at level >= 2 then entered the child row's
+    ## discs. Needs the per-row MAX level, so it is computed after the
+    ## level assignment above.
+    sizeVec <- if ("size" %in% names(nodes)) {
+      as.numeric(nodes$size)
+    } else {
+      rep(0.0, nrow(nodes))
+    }
+    sizeVec[is.na(sizeVec)] <- 0.0
+    rowMaxR <- vapply(split(sizeVec, nodes$y), max, numeric(1L))
+    rowYs <- as.numeric(names(rowMaxR))
+    maxLevelAt <- vapply(byY0, function(grp) {
+      max(vapply(grp, function(h) levelOf[[as.character(h$i)]],
+                 integer(1L)))
+    }, integer(1L))
+    jogUnitOf <- stats::setNames(vapply(hitY0s, function(y0) {
+      key <- as.character(y0)
+      ownR <- rowMaxR[[key]]
+      unit <- max(jogFraction * .localGap(y0), ownR + 1.0)
+      below <- rowYs > y0 & rowMaxR > 0.0
+      bandHi <- if (any(below)) {
+        min(rowYs[below] - rowMaxR[below]) - y0 - 1.0
+      } else {
+        Inf
+      }
+      lvl <- maxLevelAt[[key]]
+      if (is.finite(bandHi) && lvl * unit > bandHi) {
+        unit <- max(bandHi / lvl, ownR + 1.0)
+      }
+      unit
+    }, numeric(1L)), as.character(hitY0s))
 
     newNodeRows <- list()
     newEdgeRows <- list()
