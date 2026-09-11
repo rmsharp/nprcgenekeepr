@@ -172,6 +172,12 @@ R. Mark Sharp, Ph.D.
   the mate's other appearance. Lines from parents down to their children
   run straighter, with far fewer sideways detours, especially in large
   colony pedigrees.
+- When a connector line detours around an animal it would otherwise
+  cross (see the rerouting entry above), the detour now passes clearly
+  outside the animal's symbol instead of still cutting through it, and a
+  detour running between two rows no longer clips the symbols of the row
+  below. Most detours are unchanged; only the ones that touched a symbol
+  moved.
 
 ## Kinship & Pedigree Calculations
 
