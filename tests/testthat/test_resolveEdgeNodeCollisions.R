@@ -750,3 +750,200 @@ test_that("makePedigreeMatingLayout() does not error on the twin fixture
   expect_false(any(grepl("^__dup_LUPGF8", result$nodes$id)))
   expect_false(any(is.na(result$edges$from) | is.na(result$edges$to)))
 })
+
+## ---- S685: census Finding #3 -- the jog offset must respect disc
+## geometry (PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md Finding #3;
+## BACKLOG.md "the jog offset must be raised above the 25-px symbol
+## radius") ----------------------------------------------------------------
+##
+## PRE-RED empirical findings (S685, measured live via the census harness
+## and a temp option-gated spike, never assumed):
+##
+## 1. All 95 jog corridors on the census fixtures live on the Real 375
+##    fixture (every other fixture: 0 jogs). TWO failure geometries were
+##    measured, not the one the census doc's own recommendation names:
+##    (a) 9 corridors jog off SYMBOL rows at 9/18 px -- inside their own
+##    row's 25-px discs (offset too SMALL); (b) 3 corridors jog off BAR
+##    rows at level 4 (36 px) -- descended to 24 px from the child row's
+##    symbol centres 60 px below (offset too LARGE). Together: the 29
+##    committed c2-horizontal-offset-row census rows.
+## 2. The census doc's literal parameter-level recommendation (raise
+##    jogFraction so level 1 exceeds the radius; 0.45 measured) makes c2
+##    WORSE, 29 -> 161 + 16 new c2-vertical: every bar-row corridor at
+##    level >= 2 descends into the child row's disc band. Rejected on
+##    measurement.
+## 3. The owner-ratified fix (band candidate): per-row disc-aware offset
+##    unit -- floor above the jogged row's own max disc radius (from
+##    nodes$size: individuals 25, union dots 6, waypoints 0), capped so
+##    the row's whole level ladder stays above the nearest disc row
+##    below (uniform compression on overflow, preserving level
+##    distinctness -- the S595 anti-collision property). Measured: c2
+##    29 -> 0, every other census class byte-identical, 0 of 2,343
+##    existing test blocks move, all 5 Diagram-tab screenshot layouts
+##    digest-identical (the only screenshot fixture with jogs -- the
+##    twins trim -- has 8 jog waypoints, all on <= 3-level bar rows,
+##    which the fix deliberately leaves untouched).
+
+## Shared segment-vs-disc checker for the S685 blocks: for every __jog_
+## corridor (the horizontal j_a -> j_b run), count disc nodes (size > 0)
+## whose disc the corridor passes through -- the census c2 predicate
+## (nearest point on the segment closer to the disc centre than its
+## radius), written independently of the production code.
+.jogDiscViolations <- function(nodes) {
+  jogIds <- grep("^__jog_\\d+_a$", nodes$id, value = TRUE)
+  discs <- nodes[!is.na(nodes$size) & nodes$size > 0, , drop = FALSE]
+  violations <- 0L
+  for (ja in jogIds) {
+    jb <- sub("_a$", "_b", ja)
+    ax <- nodes$x[nodes$id == ja]
+    bx <- nodes$x[nodes$id == jb]
+    jy <- nodes$y[nodes$id == ja]
+    lo <- min(ax, bx)
+    hi <- max(ax, bx)
+    for (d in seq_len(nrow(discs))) {
+      cx <- discs$x[d]
+      dx <- if (cx < lo) lo - cx else if (cx > hi) cx - hi else 0
+      dy <- discs$y[d] - jy
+      if (sqrt(dx^2 + dy^2) < discs$size[d]) {
+        violations <- violations + 1L
+      }
+    }
+  }
+  violations
+}
+
+test_that(".resolveEdgeNodeCollisions jogs a symbol-row edge clear of the
+           row's own discs, not merely off its centre line (census
+           Finding #3 geometry (a))", {
+  ## Symbol-row shape: a mate-edge-like span over a size-25 obstacle,
+  ## with a second row 60 px away reproducing the real fixture's
+  ## bar-to-symbol localGap (at HEAD: jogY = 0.15 * 60 = 9, inside the
+  ## obstacle's 25-px disc).
+  nodes <- data.frame(
+    id   = c("Anchor", "Union", "Obstacle", "FarWaypoint"),
+    x    = c(0,        300,     150,        0),
+    y    = c(0,        0,       0,          60),
+    size = c(25,       6,       25,         0),
+    stringsAsFactors = FALSE
+  )
+  edges <- data.frame(
+    from = "Anchor", to = "Union", dashes = FALSE, color = "#2B7CE9",
+    width = NA_real_, smooth.enabled = NA, smooth.type = NA_character_,
+    smooth.roundness = NA_real_, stringsAsFactors = FALSE
+  )
+  result <- .resolveEdgeNodeCollisions(nodes, edges)
+
+  newIds <- setdiff(result$nodes$id, nodes$id)
+  expect_true(all(grepl("^__jog_", newIds)))
+  jogRows <- result$nodes[result$nodes$id %in% newIds, ]
+  expect_true(nrow(jogRows) > 0L)
+
+  ## The corridor must clear the 25-px disc it was jogged around: its
+  ## vertical offset from the jogged row must exceed the row's own max
+  ## disc radius. (At HEAD: |9| <= 25 -- the repair satisfies its own
+  ## centre-line predicate but not the symbol, Finding #3's exact words.)
+  expect_true(all(abs(jogRows$y) > 25))
+  expect_identical(.jogDiscViolations(result$nodes), 0L)
+
+  ## Never moves an existing node (Track 2 invariant, unchanged).
+  before <- nodes[, c("id", "x", "y")]
+  after <- result$nodes[match(nodes$id, result$nodes$id), c("id", "x", "y")]
+  expect_identical(before, after)
+})
+
+test_that(".resolveEdgeNodeCollisions keeps a bar-row level ladder above
+           the child row's discs when the ladder would otherwise descend
+           into them (census Finding #3 geometry (b))", {
+  ## Bar-row shape: a radius-0 waypoint row with FOUR mutually-overlapping
+  ## colliding edges (greedy interval colouring -> levels 1..4) and a
+  ## size-25 child row 60 px below -- the real fixture's exact bar-row
+  ## geometry. At HEAD the level-4 corridor lands at 9 * 4 = 36, i.e.
+  ## 24 px from the child centres: inside their discs.
+  nodes <- data.frame(
+    id   = c("A1", "B1", "A2", "B2", "A3", "B3", "A4", "B4",
+             "O",  "Child1", "Child2"),
+    x    = c(0, 400, 50, 350, 100, 300, 150, 250,
+             200, 120, 280),
+    y    = c(0, 0, 0, 0, 0, 0, 0, 0,
+             0, 60, 60),
+    size = c(0, 0, 0, 0, 0, 0, 0, 0,
+             0, 25, 25),
+    stringsAsFactors = FALSE
+  )
+  edges <- data.frame(
+    from = c("A1", "A2", "A3", "A4"),
+    to   = c("B1", "B2", "B3", "B4"),
+    dashes = FALSE, color = "#2B7CE9", width = NA_real_,
+    smooth.enabled = NA, smooth.type = NA_character_,
+    smooth.roundness = NA_real_, stringsAsFactors = FALSE
+  )
+  result <- .resolveEdgeNodeCollisions(nodes, edges)
+
+  jogRows <- result$nodes[grepl("^__jog_", result$nodes$id), ]
+  ## 4 corridors (8 waypoints), on 4 DISTINCT offset rows -- the S595
+  ## level-separation property must survive any offset change.
+  expect_equal(nrow(jogRows), 8L)
+  expect_equal(length(unique(jogRows$y)), 4L)
+  expect_true(all(jogRows$y != 0))
+
+  ## No corridor may enter the child row's disc band: every corridor's
+  ## distance to the child row (y = 60) must exceed the 25-px radius.
+  ## (At HEAD: the level-4 corridor at 36 is 24 px from the children.)
+  expect_true(all(60 - jogRows$y > 25))
+  expect_identical(.jogDiscViolations(result$nodes), 0L)
+})
+
+test_that(".resolveEdgeNodeCollisions leaves a <= 3-level bar-row ladder
+           at its established 9/18 px offsets (no cosmetic churn for the
+           corridors Finding #3 does not implicate)", {
+  ## Boundary guard, PASSES at HEAD by design (disclosed): two
+  ## overlapping edges on a radius-0 row with the same 60-px child-row
+  ## band -- the shape of 74 of the real fixture's 95 corridors (levels
+  ## <= 3 on bar rows, no disc contact either direction). The fix must
+  ## not move these: 0.15 * 60 * {1, 2} = {9, 18}, exactly as at HEAD.
+  nodes <- data.frame(
+    id   = c("A1", "B1", "A2", "B2", "O", "Child1"),
+    x    = c(0, 400, 50, 350, 200, 120),
+    y    = c(0, 0, 0, 0, 0, 60),
+    size = c(0, 0, 0, 0, 0, 25),
+    stringsAsFactors = FALSE
+  )
+  edges <- data.frame(
+    from = c("A1", "A2"),
+    to   = c("B1", "B2"),
+    dashes = FALSE, color = "#2B7CE9", width = NA_real_,
+    smooth.enabled = NA, smooth.type = NA_character_,
+    smooth.roundness = NA_real_, stringsAsFactors = FALSE
+  )
+  result <- .resolveEdgeNodeCollisions(nodes, edges)
+
+  jogRows <- result$nodes[grepl("^__jog_", result$nodes$id), ]
+  expect_equal(nrow(jogRows), 4L)
+  expect_setequal(unique(jogRows$y), c(9, 18))
+})
+
+test_that("no jog corridor on the real 375-individual fixture's
+           rectilinear layout passes through any disc -- the census c2
+           acceptance metric as a standing suite invariant (Finding #3's
+           own recommendation)", {
+  ped <- utils::read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+      package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  layout <- suppressWarnings(suppressMessages(
+    makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")))
+
+  ## The fixture must still be exercising the repair at scale, or this
+  ## guard is vacuous (Learning 737: probe that the subject moves at all).
+  expect_true(sum(grepl("^__jog_\\d+_a$", layout$nodes$id)) > 50L)
+
+  ## At HEAD: 38 corridor-disc violations -- the committed census CSV's
+  ## 29 c2-horizontal-offset-row pairs (10 own-row at 9/18 px, 19
+  ## child-row at 24 px) PLUS 9 own-endpoint attachment cases this
+  ## checker deliberately also counts (a 9/18-px corridor sits inside
+  ## its own anchor's disc too; the census's pair exclusion skips
+  ## those). Both classes clear once the offset exceeds the disc
+  ## radius. The repair must clear the DISC, not just the centre line.
+  expect_identical(.jogDiscViolations(layout$nodes), 0L)
+})
