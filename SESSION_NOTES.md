@@ -18,6 +18,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 686 Did
+**Deliverable:** Sibling-order appetite measurement (design Open Question 3, the `autohint`
+shift analogue) — instrument what within-sibship reordering would buy at the current engine
+floor (Real 375: jogs 95 / c2 0 / d 0 / b 12), deliver an evidence doc in `docs/planning/`
+plus rendered A/B visual evidence (owner asked for rendered pedigree drawings as the
+progress medium — baseline crops early, A/B pairs before any appetite gate), ending in an
+owner appetite decision via `AskUserQuestion`. No engine change ships this session.
+(IN PROGRESS; owner-picked via `AskUserQuestion` at Phase 0 — pedigree lever fork resolved
+to sibling-order over the ascender-stub cosmetic.)
+**Started:** 2026-09-11
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 684 Handoff Evaluation (by Session 685)
 **Score: 9/10.** **What helped:** next-step (C) named this session's deliverable with both
 branches, the right tag (Finding #3 READY, no ordering dependency), and the BACKLOG line

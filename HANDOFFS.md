@@ -136,6 +136,20 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S686
+date: 2026-09-11
+status: pending
+active_task: Sibling-order appetite measurement (design Open Question 3, autohint shift analogue) — instrument what within-sibship reordering buys at the current engine floor (Real 375: jogs 95 / c2 0 / d 0 / b 12); evidence doc in docs/planning/ + rendered A/B visual evidence (owner-requested medium); ends in an owner appetite decision via AskUserQuestion. No engine change this session. Owner-picked at Phase 0 over the ascender-stub cosmetic.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S685
 date: 2026-09-10
 status: complete
