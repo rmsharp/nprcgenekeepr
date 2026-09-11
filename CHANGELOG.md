@@ -16,6 +16,19 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-11 · [ad hoc] S686 addendum: owner ratified the BACKLOG completed-item removal convention — never mark `[x]` inline, always remove; detail flows forward into open items, the record lives here
+- **Trigger (owner, post-close-out chat):** the owner spotted `BACKLOG.md`'s 28 retained
+  `[x]` DONE blocks (~44% of items, majority of the file's 2,473 lines) and, on the
+  diagnosis that they had become de-facto reference documentation, ratified the stronger
+  rule: that pattern is a *weaker* record than (1) enriching the `CHANGELOG.md` entry,
+  (2) writing any needed detail INTO the live open item's own description, (3) extracting
+  still-open sub-threads as standalone items, and (4) deleting the DONE block entirely.
+- **Recorded:** prospective rule in `CLAUDE.md` "Additional close-out checks" (applies
+  from S687 on); one-time backfill campaign as a new `BACKLOG.md` Housekeeping item
+  (READY, Effort M, method spelled out per block). No blocks relocated yet — this entry
+  records the decision and the standing convention only.
+- **Model:** Claude Fable 5.
+
 ### 2026-09-11 · [BL-siblingOrderAppetite] S686: sibling-order appetite measured — every order lever reduces to ped row order, the naive autohint analogue measured WORSE, a real optimizer reclaims −33% of connector ink; owner ratified the Shape-A design item
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0, resolving S685 next-step C's
   DECISION-NEEDED fork toward sibling-order over the ascender-stub cosmetic; standing

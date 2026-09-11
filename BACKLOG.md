@@ -965,6 +965,27 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `rmarkdown::render()` (this file's own build-equivalent) run clean after every
       substantive edit; `NEWS.md` regenerated to match. See `CHANGELOG.md`.
 ## Housekeeping
+- [ ] **Remove all 28 `[x]` DONE blocks from this file per the owner-ratified
+      completed-item convention** (owner-directed, 2026-09-11, S686 post-close-out chat;
+      READY, Effort M). The file's own header says "open, actionable work only" and
+      `SESSION_RUNNER.md` Phase 3F says a completed item is REMOVED in the same commit —
+      but 28 items (enumerate with `grep -n "^- \[x\]" BACKLOG.md`) were instead marked
+      `[x]` inline with full verification records, becoming de-facto reference
+      documentation. The owner ratified that this is a WEAKER record than the proper flow,
+      and the relocation method, per DONE block: (1) verify the corresponding
+      `CHANGELOG.md` entry carries the completed record — enrich it if the BACKLOG block
+      holds load-bearing detail the ledger lacks (terse is fine; lost is not); (2) any
+      detail a LIVE open item needs is written INTO that open item's own description
+      (forward-carrying context, never a pointer back at a DONE block); (3) any still-open
+      sub-thread inside a DONE block (e.g. the census Finding #3 passage's ascender-stub
+      addendum; the joint-solver item's Phase 4 cleanup next-step) is extracted as its own
+      standalone item FIRST; (4) delete the DONE block entirely. Cross-check
+      `docs/planning/` doc links before deleting a block that is a link's only inline
+      context. This also shrinks a Phase-0 mandated read substantially (2,473 lines today,
+      DONE blocks the majority of the bytes — the FM #28 compounding term). The
+      prospective rule (never mark `[x]`, always remove) is recorded in `CLAUDE.md`
+      "Additional close-out checks" (same date) and applies from S687 on; this item is
+      only the backfill.
 - [ ] **`tests/testthat/test_resolveEdgeNodeCollisions.R:20-29` says D2 dogleg projections are
       "CURRENTLY STRUCTURALLY UNREACHABLE via the real pipeline" (citing
       `test_addRectilinearWaypoints.R:517-546`) -- the real 375 fixture renders 56 `__proj_`
