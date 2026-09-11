@@ -138,16 +138,24 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S685
 date: 2026-09-10
-status: pending
-active_task: Census Finding #3 — raise the jog offset above the 25-px symbol radius (pedigree fidelity, standing top priority; owner-picked via AskUserQuestion at Phase 0; S684 next-step C's READY branch; BACKLOG.md:236-245 incl. the S679 ascender-stub addendum). Full TDD per DEVELOPMENT_WORKSTREAM.md, owner-gated transitions. Session claimed; PRE-RED investigation beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Census Finding #3 fixed — jog-repair corridors now clear the discs they detour around, not just the centre line (pedigree fidelity, standing top priority; owner-picked at Phase 0). Full TDD, owner-gated at every transition; REFACTOR owner-skipped at 0 lints.
+what_was_done: PRE-RED instrumentation found TWO failure geometries (9 symbol-row corridors at 9/18 px inside their own row's 25-px discs; 3 bar-row level-4 corridors at 36 px only 24 px above the child row's discs) — the census doc's literal fraction-raise recommendation measured 5x WORSE (c2 29 -> 161 + 16 c2-vertical) and was rejected; the owner ratified the band candidate (floor above the jogged row's own max disc radius from nodes$size, per-row level ladder capped above the nearest disc row below, uniform compression on overflow). RED 21ccb47b (4 blocks incl. the Real-375 zero-corridor-disc-violations acceptance guard as a standing suite invariant + a 9/18-px inertness pin for the corridors NOT implicated). GREEN d30ea5fb, proven byte-identical to the measured spike. Census CSV committed with exactly the 29 c2 rows deleted (01674a73); NEWS entry 2db53e25; Learning 738; BACKLOG Finding #3 passage DONE (ascender-stub addendum left OPEN). Verification: full clean regression failed=0/error=0 (2,347 blocks, 6,437 passed); live E2E 16/16 blocks 55 expectations; lint 0; 0 screenshots/reference images touched (digest-proof).
+next_steps: (A) QP Migration Path Phase 4 cleanup (READY, Effort S) — grep R/ doc-comments for deleted tiers/passes and .kMax* constants, then mark the joint-solver BACKLOG item DONE (BACKLOG.md:232). (B) SESSION_NOTES.md trim (READY, Effort S-M) — ~9,600 lines, dashboard HIGH flag; expect possible SRF_RED false-refusal needing owner --force. (C) Pedigree next lever (DECISION NEEDED) — sibling-order appetite measurement (design Open Question 3); Finding #3 closed; S679 ascender-stub cosmetic stays open with candidates named in BACKLOG. (D) Push decision — this session deliberately left its commits unpushed (re-accumulation-is-a-choice, S684 gotcha); 4 workflows fire on push, fix-or-defer per the CI-break convention. (E) Informational: dashboard copy stale (v2.14.0 vs v2.17.0); scratchpad holds untracked s683_*/s685_* tooling.
+key_files: R/makePedigreeDiagramData.R:2652 (disc-aware jogUnitOf block; roxygen :2432); tests/testthat/test_resolveEdgeNodeCollisions.R:755 (S685 section — .jogDiscViolations checker + 4 blocks); docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv (29 c2 rows gone); NEWS.Rmd; PROJECT_LEARNINGS.md Learning 738; scratchpad/s685_*.R (UNTRACKED tooling).
+gotchas: failed=0 expectation is now 2,347 blocks (+4). Census baseline on Real 375 is jogs 95 / c2 0 / d 0 / b 12 — do not "restore" the 29 c2 rows from the stale S668 census MD doc. Jog offsets read nodes$size, so they retune with symbol sizes; the Real-375 zero-violations guard is the tripwire. The <=3-level bar-row corridors are PINNED at exactly 9/18 px (inertness guard) — an intentional-change session must update that pin knowingly. The ascender-stub addendum is deliberately NOT fixed. All S683 gotchas stand.
+runtime_smoke: live E2E pedigree module (NPRC_RUN_E2E=true) 16/16 blocks, 55 expectations, 0 failed — the app renders the Diagram tab through the changed code; A/B live-render crops confirmed formerly-sliced symbols now clean.
+changelog_ref: 2026-09-10 S685 entry (BL-censusFinding3JogOffset)
 commit: pending
 ```
+**Self-score breakdown (9/10):** +audit recommendation measured before being trusted (it was
+5x worse; Learning 738); +zero-collateral proven not asserted (census byte-identity, digest
+screenshots, 0 pins moved, GREEN bit-equal to spike); +acceptance metric now a standing suite
+invariant. -full regression ran against pre-lint-fix GREEN (delta provably behavior-neutral,
+S685 file re-run green on final code; disclosed); -RED checker's 38-vs-29 reconciliation done
+after the first failure output instead of before.
 
 ```handoff
 session: S684

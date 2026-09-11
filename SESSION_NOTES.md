@@ -18,17 +18,95 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 684 Handoff Evaluation (by Session 685)
+**Score: 9/10.** **What helped:** next-step (C) named this session's deliverable with both
+branches, the right tag (Finding #3 READY, no ordering dependency), and the BACKLOG line
+range; gotcha (3) (the close-out push's 4 in-progress runs) was checked at Phase 0 and again
+at close-out — all 4 completed green, exactly the designed net working; gotcha (1) (origin ==
+local, "re-accumulation is a choice") correctly framed this session's own leave-unpushed
+decision as a decision; the failed=0 / 2,343-block expectation was the verification gate and
+held. **What was missing:** nothing material — an ops session couldn't have known Finding
+#3's second failure geometry (the census doc itself missed it). **What was wrong:** nothing.
+**ROI:** high.
+
 ### What Session 685 Did
-**Deliverable:** Census Finding #3 — raise the jog offset above the 25-px symbol radius
-(pedigree fidelity, standing top priority; owner-picked via `AskUserQuestion` at Phase 0;
-S684 next-step C's READY branch). Includes the S679 ascender-stub addendum territory
-(`BACKLOG.md:236-245`). Full TDD per `DEVELOPMENT_WORKSTREAM.md`, owner-gated transitions.
-(IN PROGRESS)
-**Started:** 2026-09-10
-**Status:** Session claimed. PRE-RED investigation beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Census Finding #3 — jog-repair corridors must clear the *discs* they detour
+around, not just the centre line (pedigree fidelity, standing top priority; owner-picked via
+`AskUserQuestion` at Phase 0; S684 next-step C's READY branch). **DONE** — full TDD per
+`DEVELOPMENT_WORKSTREAM.md`, owner-gated at every transition (candidate pick + PRE-RED→RED +
+RED→GREEN + GREEN→REFACTOR, all via `AskUserQuestion`; REFACTOR owner-skipped at 0 lints).
+**Started/completed:** 2026-09-10 (single session). Claim `5a02bd78`.
+
+**What actually happened, in order:**
+1. **PRE-RED (instrumentation + option-gated spike, reverted before RED):** every corridor
+   on the 7 census fixtures dumped by row kind/level/obstacle radii — all 95 live on Real
+   375; TWO failure geometries, not the census doc's one: 9 symbol-row corridors at 9/18 px
+   inside their own row's 25-px discs (too SMALL) and 3 bar-row level-4 corridors at 36 px
+   only 24 px above the child row's discs (too LARGE). The doc's literal fraction raise
+   (0.45) measured c2 29→161 + 16 new c2-vertical — rejected; the band candidate (floor =
+   own row's max disc radius + 1 from `nodes$size`; ladder cap above the nearest disc row
+   below; uniform compression on overflow) measured c2 29→0, all else byte-identical, 0 of
+   2,343 blocks moved, all 5 screenshot layouts digest-identical. A/B crops sent to the
+   owner; owner ratified band.
+2. **RED (`21ccb47b`):** 4 blocks — symbol-row clearance, bar-row band cap (forced 4-level
+   ladder), ≤3-level 9/18-px inertness guard (passes at HEAD by design, disclosed), and the
+   Real-375 zero-violations acceptance guard (census c2 as a standing suite invariant;
+   fails at HEAD with 38 = 29 census pairs + 9 own-endpoint cases, reconciled in-comment).
+3. **GREEN (`d30ea5fb`):** band scheme unconditional in `.resolveEdgeNodeCollisions()`,
+   roxygen amended; proven byte-identical to the spike (census CSV + digests).
+4. **Verification:** full clean regression **failed=0 / error=0 (2,347 blocks, 6,437
+   passed, 182 skipped)**; census CSV committed, diff exactly the 29 c2 rows deleted
+   (`01674a73`); live E2E 16/16 blocks 55 expectations 0 failed; lint 0; NEWS.Rmd
+   plain-language entry + render, wordlist green (`2db53e25`); 0 screenshots or reference
+   images touched (digest-proof; Track B/C have 0 jogs).
+5. **Close-out:** this evaluation, self-assessment, Learning 738, BACKLOG Finding #3
+   passage DONE (ascender-stub addendum left OPEN), `CHANGELOG.md` entry, `HANDOFFS.md`
+   receipt. Phase 0 also confirmed all 4 of S684's close-out-push runs completed green.
+
+**Self-assessment (Session 685): 9/10.** **Strengths:** (1) the audit's literal
+recommendation was measured before being trusted — it was 5× worse, and the shipped design
+came from instrumenting the actual corridor population (Learning 738); (2) zero-collateral
+fix, proven not asserted: census byte-identity, digest-identical screenshots, 0 existing
+pins moved, GREEN bit-equal to the spike; (3) the acceptance metric (census c2 for jogs) is
+now a standing suite invariant, so a regression fails the suite, not just a census re-run.
+**Weaknesses:** (1) the full regression ran against pre-lint-fix GREEN; the delta
+(`1`→`1.0` literals + `as.numeric()` on an already-double column) is provably
+behavior-neutral and the S685 test file re-ran green on final code, but strictly the full
+suite did not re-run on the exact committed sha — disclosed; (2) the RED checker's 38-vs-29
+count difference (own-endpoint discs) was reconciled only after seeing the first failure
+output — a dry-run of the checker before writing the count into the comment would have
+avoided one wrong draft.
+
+**Next steps (specific):** (A) **QP Migration Path Phase 4 cleanup** (READY, Effort S):
+grep `R/` doc-comments for the deleted tiers/passes and `.kMax*` constants, then mark the
+joint-solver BACKLOG item DONE (`BACKLOG.md:232`). (B) **SESSION_NOTES.md trim** (READY,
+Effort S-M): ~9,600 lines, the dashboard's HIGH flag; expect a possible SRF_RED
+false-refusal needing owner-directed `--force`. (C) **Pedigree fidelity next lever**
+(DECISION NEEDED): sibling-order appetite measurement (design Open Question 3) — Finding
+#3 is now closed; the S679 ascender-stub cosmetic stays open with candidates named in the
+BACKLOG passage. (D) **Push decision** (6+ commits ahead after close-out): deliberately
+left unpushed per the re-accumulation-is-a-choice framing; 4 workflows fire on push,
+fix-or-defer per the CI-break convention. (E) Informational: dashboard copy still stale
+(v2.14.0 vs v2.17.0); `scratchpad/` holds untracked `s683_*`/`s685_*` tooling.
+
+**Key files:** `R/makePedigreeDiagramData.R:2652-2697` (the disc-aware jogUnitOf block;
+roxygen at `:2432-2444`); `tests/testthat/test_resolveEdgeNodeCollisions.R:755-950` (S685
+section: `.jogDiscViolations()` checker + 4 blocks); `docs/audits/
+PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv` (29 c2 rows gone); `NEWS.Rmd`
+(detour entry); `PROJECT_LEARNINGS.md` Learning 738; `scratchpad/s685_*.R`
+(instrumentation/digest/crop tooling, UNTRACKED — take before cleaning scratchpad).
+
+**Gotchas for the next session:** (1) **failed=0 expectation is now 2,347 blocks** (+4
+this session); (2) census baseline on Real 375 is now jogs 95 / c2 **0** / d 0 / b 12 —
+the committed findings CSV reflects it; don't "restore" the 29 c2 rows from stale docs
+(the census MD doc still describes the S668-era engine; known-stale, unchanged); (3) the
+jog offset now reads `nodes$size` — if node sizes ever change, offsets retune themselves,
+and the S685 suite guard (zero corridor-disc violations on Real 375) is the tripwire; (4)
+the ≤3-level bar-row corridors are PINNED at exactly 9/18 px by the S685 inertness guard —
+an intentional-change session must update that pin knowingly; (5) the ascender-stub
+addendum (BACKLOG, S679) is deliberately NOT fixed — its corridors are the unchanged ones;
+(6) all S683 gotchas (childEdges-derived B2 skip, packing-fixture byte-identity,
+do-not-freshen screenshots) still stand.
 
 ### Session 683 Handoff Evaluation (by Session 684)
 **Score: 9/10.** **What helped:** `next_steps` (A) was this session's deliverable verbatim —
