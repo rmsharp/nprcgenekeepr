@@ -16,6 +16,44 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-10 · [BL-censusFinding3JogOffset] S685: jog offsets are now disc-aware — census c2 29 → 0, the audit's own literal recommendation measured 5× worse and rejected, zero collateral anywhere
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; S684 next-step C's READY
+  branch, standing pedigree-fidelity directive):** census Finding #3 — jog-repair corridors
+  cleared the obstacle's *centre line* but not its *disc* (`BACKLOG.md`'s "raise the jog
+  offset above the 25-px symbol radius"). Claim `5a02bd78`. Full TDD
+  (`DEVELOPMENT_WORKSTREAM.md`), owner-gated: candidate pick + PRE-RED→RED + RED→GREEN +
+  GREEN→REFACTOR (REFACTOR owner-skipped at 0 lints), all via `AskUserQuestion`.
+- **PRE-RED (instrumented + option-gated spike, reverted before RED):** all 95 corridors
+  live on the Real 375 fixture; TWO failure geometries measured, not the one the census doc
+  named — 9 symbol-row corridors at 9/18 px inside their own row's 25-px discs (too SMALL),
+  and 3 bar-row level-4 corridors at 36 px descended to 24 px from the child row's discs
+  (too LARGE). The doc's literal fraction raise (0.15→0.45) measured c2 29 → **161** + 16
+  new c2-vertical and was rejected; the ratified **band** candidate (floor above the jogged
+  row's own max disc radius from `nodes$size`, per-row level ladder capped above the
+  nearest disc row below, uniform compression on overflow, S595 level-distinctness kept)
+  measured c2 29 → **0**, every other class byte-identical, 0 of 2,343 blocks moved, all 5
+  screenshot layouts digest-identical. A/B crops sent to the owner (31UG06/7KWRZK/1W4GNT
+  no longer sliced).
+- **RED (`21ccb47b`):** 4 blocks — symbol-row clearance (fails: 9 px vs 25), bar-row band
+  cap under a forced 4-level ladder (fails: 24 px from child discs), ≤3-level inertness
+  guard at exactly 9/18 px (passes at HEAD by design, disclosed), and the Real-375
+  zero-corridor-disc-violations acceptance guard, the census c2 metric as a standing suite
+  invariant (fails: 38 = the 29 census pairs + 9 own-endpoint attachment cases the census's
+  pair-exclusion skips — reconciliation documented in the test).
+- **GREEN (`d30ea5fb`):** the band scheme unconditional in `.resolveEdgeNodeCollisions()`;
+  roxygen amended. Proven byte-identical to the measured spike (census CSV + screenshot
+  digests).
+- **Verification (every owed item):** 4 RED blocks green; full clean regression **failed=0 /
+  error=0 (2,347 blocks, 6,437 passed, 182 skipped)**; census CSV re-run + committed, diff
+  exactly the 29 c2 rows deleted (`01674a73`); 0 screenshots re-captured (digest-proof); live
+  E2E pedigree module **16/16 blocks, 55 expectations, 0 failed**; `lintr` 0 on touched
+  files; NEWS.Rmd plain-language entry + re-render, wordlist green (`2db53e25`).
+- **Records:** `BACKLOG.md` Finding #3 passage marked DONE (S679 ascender-stub addendum
+  explicitly left OPEN — cosmetic, untouched, pinned inert); Learning 738;
+  `SESSION_NOTES.md` handoff; `HANDOFFS.md` receipt. Also resolved at Phase 0: all 4 of
+  S684's close-out-push workflow runs completed green (the disclosed in-progress residual).
+- **Model:** Claude Fable 5.
+
 ### 2026-09-10 · [ad hoc] S684: pushed the 24-commit S681–S684 backlog to origin/master — all 4 push-triggered workflows green first-try, no CI break to fix or defer
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0, S683 next-step A):** clear
   the largest-ever local/CI gap of the QP era — `git push origin master`

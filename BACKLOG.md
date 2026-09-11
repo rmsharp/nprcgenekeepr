@@ -233,16 +233,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       already deleted S674 and the `NEWS.Rmd` entry landed S675; remaining: grep `R/` doc-comments
       for references to the deleted tiers/passes and `.kMax*` constants, then mark this item DONE).
       The floor-invariant residuals ((b), crossings, bar overlaps) are the SEPARATE design item
-      directly below. Independent of all of this, one item still stands: the jog offset must be
-      raised above the 25-px symbol radius (census Finding #3) -- a bounded fix any future session
-      could pick up at any time, with no ordering dependency on the QP work either way.
-      (S679 addendum, owner visual-gate question: the same jog-render convention also produces
-      small "ascender" stubs above sibship bars -- detour corridors nest 9 px below bar level
-      (y 249/258/267 vs bars at 240) and each climbs 9-27 px back up to its bar node, which
-      for narrow/single-child bars reads as a dangling stub ending in mid-air. Cosmetic,
+      directly below. The census Finding #3 jog-offset item that used to stand here is **DONE
+      S685 (2026-09-10)** -- full TDD, owner-gated; jog offsets are now disc-aware per row
+      (floor above the jogged row's own max disc radius from `nodes$size`, level ladder capped
+      above the nearest disc row below, uniform compression on overflow): census c2 29 -> 0,
+      every other class byte-identical, 0 existing test pins moved, 0 screenshots re-captured
+      (all 5 trimmed layouts digest-identical), the c2-for-jogs metric now a standing suite
+      invariant (`tests/testthat/test_resolveEdgeNodeCollisions.R` S685 section). The audit's
+      own literal fraction-raise recommendation was measured 5x WORSE (c2 29 -> 161 + 16 new
+      c2-vertical) and rejected -- see `PROJECT_LEARNINGS.md` Learning 738 and the S685
+      `CHANGELOG.md` entry.
+      (S679 addendum, owner visual-gate question, STILL OPEN -- cosmetic, deliberately
+      untouched by the S685 fix, whose inertness guard pins the <= 3-level bar-row corridors
+      at their exact 9/18 px offsets: the jog-render convention produces small "ascender"
+      stubs above sibship bars -- detour corridors nest 9 px below bar level (y 249/258/267
+      vs bars at 240) and each climbs 9-27 px back up to its bar node, which for
+      narrow/single-child bars reads as a dangling stub ending in mid-air. Cosmetic,
       pre-existing; fix candidates: rejoin at the child's descent x instead of via the bar
-      node, or suppress the riser when the bar has zero width. Same territory as the
-      Finding #3 fix.)
+      node, or suppress the riser when the bar has zero width.)
 - [x] **Implement the provisional-order design: Phases 1 (duplication policy, S678), 2
       (order-consistent seeding, S679), and 3 (docs, S681) all DONE** (standing
       pedigree-fidelity directive) --
