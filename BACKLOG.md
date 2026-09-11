@@ -11,6 +11,31 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
+- [ ] **Design the root-subtree ordering pass (Shape A) — reclaim a measured third of the
+      curved-connector ink by reordering which founder subtrees are adjacent** (standing
+      pedigree-fidelity directive; owner-ratified S686, 2026-09-11, via `AskUserQuestion`
+      from the sibling-order appetite measurement; **DESIGN SESSION NEEDED, Effort M** —
+      ARCHITECTURE_WORKSTREAM, matching every prior `.positionMatingUnitForest()` decision).
+      Evidence: [`docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md`](docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md)
+      (S686) — every sibling-order lever reduces to ped ROW order, so the whole change is
+      a pre-layout input permutation; measured on Real 375 via a proxy optimizer (spectral
+      seed + local search, recalibrated per round, converged round 3): connector ink
+      570,645 → 382,911 px (−33%), census cCurved 1,996 → 1,278 (−36%), chord×chord
+      crossings 931 → 604, chord×straight 1,740 → 1,316, b/a/c2/d/e/f unchanged
+      (12/0/0/0/0/0), jogs 95 → 102 (+7), width unchanged. **The naive kinship2-autohint
+      barycenter analogue measured WORSE every iteration (570k → 635k) — do not reach for
+      it; this fixture is a dense minimum-linear-arrangement instance.** Design must
+      resolve: (a) objective (proxy vs true evaluations) and determinism; (b) a
+      prefer-current-order tie-break — with it, the optimizer is an identity no-op on
+      Track B/D + D1-D3 by construction and Track C's permutation is a measured tie, so
+      packing-fixture byte-identity is plausibly preservable (verify, don't assume);
+      (c) the `__union_N` renumbering / test-pin / 5-screenshot churn inventory (any row
+      permutation renumbers units by first appearance); (d) the ~2× layout-cost budget
+      (Real 375 ~5 s → ~10 s + optimizer). Measurement tooling in `scratchpad/s686_*.R`
+      (untracked — take before cleaning). Shapes B (exported utility) / C (decline) are
+      the recorded fallbacks. The dome thins, it does not vanish: ordering's measured
+      ceiling leaves mean span ~2,250 px; removing the rest needs a different mechanism
+      (routing or duplicate policy), out of this item's scope.
 - [x] **Rectilinear Diagram-tab crash on a strict-lineal-trimmed pedigree containing a
       dangling polygamous parent: a duplicate node is created for an individual whose real
       occurrence never renders (found S681, 2026-09-08, while regenerating the Phase 3
