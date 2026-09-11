@@ -148,7 +148,7 @@ key_files: R/makePedigreeDiagramData.R:2652 (disc-aware jogUnitOf block; roxygen
 gotchas: failed=0 expectation is now 2,347 blocks (+4). Census baseline on Real 375 is jogs 95 / c2 0 / d 0 / b 12 — do not "restore" the 29 c2 rows from the stale S668 census MD doc. Jog offsets read nodes$size, so they retune with symbol sizes; the Real-375 zero-violations guard is the tripwire. The <=3-level bar-row corridors are PINNED at exactly 9/18 px (inertness guard) — an intentional-change session must update that pin knowingly. The ascender-stub addendum is deliberately NOT fixed. All S683 gotchas stand.
 runtime_smoke: live E2E pedigree module (NPRC_RUN_E2E=true) 16/16 blocks, 55 expectations, 0 failed — the app renders the Diagram tab through the changed code; A/B live-render crops confirmed formerly-sliced symbols now clean.
 changelog_ref: 2026-09-10 S685 entry (BL-censusFinding3JogOffset)
-commit: pending
+commit: 8ad74dfc
 ```
 **Self-score breakdown (9/10):** +audit recommendation measured before being trusted (it was
 5x worse; Learning 738); +zero-collateral proven not asserted (census byte-identity, digest
