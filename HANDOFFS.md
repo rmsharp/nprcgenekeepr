@@ -148,7 +148,7 @@ key_files: docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md:1 (
 gotchas: failed=0 expectation unchanged at 2,347 blocks (no code/tests touched). A/B evidence images are NOT committed — regenerate via s686_crop.R + s686_ped_best.csv or re-run s686_order_iterate.R (~2 min). Any row permutation renumbers __union_N ids (first-appearance order) — Shape-A design must inventory pin/screenshot churn. Proxy ties can permute without effect (Track C) — design needs a prefer-current-order tie-break for packing-fixture byte-identity. All S685 gotchas stand.
 runtime_smoke: n/a — measurement/docs-only session, no runtime behavior changed; the live render path (makePedigreeMatingLayout -> visNetwork -> chromote) was exercised repeatedly in-session producing the delivered A/B renders.
 changelog_ref: 2026-09-11 S686 entry (BL-siblingOrderAppetite), cddc0e77
-commit: pending
+commit: 6cb9cb82
 ```
 **Self-score breakdown (9/10):** +negative result (naive autohint fails) measured, kept,
 and written into the BACKLOG item; +permutation-spike pattern: stronger evidence than an
