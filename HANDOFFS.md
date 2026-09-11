@@ -138,16 +138,25 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S686
 date: 2026-09-11
-status: pending
-active_task: Sibling-order appetite measurement (design Open Question 3, autohint shift analogue) — instrument what within-sibship reordering buys at the current engine floor (Real 375: jogs 95 / c2 0 / d 0 / b 12); evidence doc in docs/planning/ + rendered A/B visual evidence (owner-requested medium); ends in an owner appetite decision via AskUserQuestion. No engine change this session. Owner-picked at Phase 0 over the ascender-stub cosmetic.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Sibling-order appetite measurement (design Open Question 3) — evidence doc + rendered A/B visual evidence + owner appetite decision, owner-gated at the Phase 0 lever fork and the appetite gate (both AskUserQuestion). Measurement only; no engine change shipped.
+what_was_done: Instrumented the current engine and proved every sibling-order lever reduces to ped ROW order (R/makePedigreeDiagramData.R:594-599,961-987,426-433,621-625), so all spikes ran as pure input permutations through the UNMODIFIED engine — zero package edits. Measured on Real 375: the literal within-sibship lever is ~empty (13 multi-child sibships, 5 inversions, 0.2% of connector ink); 99.8% of the 570,645 px of curved-connector ink is cross-root-subtree. The naive kinship2-autohint barycenter analogue measured WORSE every iteration (570k -> 635k px, kept as the documented negative result); a width-aware proxy optimizer (spectral seed + local search, recalibrated per round, converged round 3) achieved TRUE -33% ink (382,911 px), census cCurved -36% (1,996 -> 1,278), chord crossings -24/-35%, all error classes unchanged (b 12, a/c2/d/e/f 0), jogs 95 -> 102, width unchanged; census harness copy proved byte-faithful via identical() on the committed findings CSV; optimizer is identity on Track B/D + D1-D3, Track C a measured tie. Owner ratified Shape A (design the engine's pre-layout ordering pass). Evidence doc docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md + top BACKLOG Up Next design item (3df67613); Learning 739 + CHANGELOG entry (cddc0e77). Baseline pair + 4-image A/B set delivered via SendUserFile per the owner's mid-turn visual-evidence directive.
+next_steps: (A) Shape-A design session (NEW top pedigree item, DESIGN SESSION NEEDED, Effort M, BACKLOG.md:14) — needs scratchpad/s686_order_lib.R + s686_ped_best.csv (UNTRACKED, take before cleaning scratchpad). (B) QP Migration Path Phase 4 cleanup (READY, Effort S, BACKLOG.md:257). (C) SESSION_NOTES.md trim (READY, Effort S-M, ~9,700 lines, dashboard HIGH flag; possible SRF_RED false-refusal needing owner --force). (D) Push decision — ~12 commits ahead after close-out; 4 workflows fire on push, fix-or-defer per the CI-break convention. (E) Informational: ascender-stub cosmetic open; dashboard copy stale (v2.14.0 vs v2.17.0); census MD doc S668-era stale.
+key_files: docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md:1 (deliverable); BACKLOG.md:14 (Shape-A item); scratchpad/s686_order_lib.R:1 (buildFacts/trueMetrics/realizeOptimized); scratchpad/s686_ped_best.csv (converged permutation); scratchpad/s686_crop.R:1 (ped-parameterized render tooling); PROJECT_LEARNINGS.md:2184 (Learning 739).
+gotchas: failed=0 expectation unchanged at 2,347 blocks (no code/tests touched). A/B evidence images are NOT committed — regenerate via s686_crop.R + s686_ped_best.csv or re-run s686_order_iterate.R (~2 min). Any row permutation renumbers __union_N ids (first-appearance order) — Shape-A design must inventory pin/screenshot churn. Proxy ties can permute without effect (Track C) — design needs a prefer-current-order tie-break for packing-fixture byte-identity. All S685 gotchas stand.
+runtime_smoke: n/a — measurement/docs-only session, no runtime behavior changed; the live render path (makePedigreeMatingLayout -> visNetwork -> chromote) was exercised repeatedly in-session producing the delivered A/B renders.
+changelog_ref: 2026-09-11 S686 entry (BL-siblingOrderAppetite), cddc0e77
 commit: pending
 ```
+**Self-score breakdown (9/10):** +negative result (naive autohint fails) measured, kept,
+and written into the BACKLOG item; +permutation-spike pattern: stronger evidence than an
+option-gated code spike at zero blast radius; +census-harness fidelity proven
+(identical()), not assumed; +visual evidence delivered mid-session at both checkpoints per
+the owner's directive. -barycenter spike ran before the within-sibship emptiness was fully
+digested (became the documented negative result by luck, not planning); -proxy calibration
+coarse (2.7x vs true, cluster overlap unmodeled; disclosed as a design question).
 
 ```handoff
 session: S685

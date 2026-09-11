@@ -18,20 +18,92 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 685 Handoff Evaluation (by Session 686)
+**Score: 9/10.** **What helped:** next-step (C) named this session's fork exactly (sibling-
+order appetite measurement, design Open Question 3, DECISION NEEDED, with the ascender-stub
+alternative) — both the Phase 0 pick and the lever fork came straight from it; the census
+baseline (jogs 95 / c2 0 / d 0 / b 12) was the floor every measurement anchored on and
+reproduced exactly on a fresh baseline census run; gotcha (2) (don't restore the 29 c2 rows
+from the stale MD doc) prevented a wrong baseline read; key-files' `scratchpad/s685_crop.R`
+pointer became this session's render tooling in minutes. **What was missing:** nothing
+material — the handoff could not have known the within-sibship lever would measure empty
+(that is this session's finding). **What was wrong:** nothing. **ROI:** high.
+
 ### What Session 686 Did
-**Deliverable:** Sibling-order appetite measurement (design Open Question 3, the `autohint`
-shift analogue) — instrument what within-sibship reordering would buy at the current engine
-floor (Real 375: jogs 95 / c2 0 / d 0 / b 12), deliver an evidence doc in `docs/planning/`
-plus rendered A/B visual evidence (owner asked for rendered pedigree drawings as the
-progress medium — baseline crops early, A/B pairs before any appetite gate), ending in an
-owner appetite decision via `AskUserQuestion`. No engine change ships this session.
-(IN PROGRESS; owner-picked via `AskUserQuestion` at Phase 0 — pedigree lever fork resolved
-to sibling-order over the ascender-stub cosmetic.)
-**Started:** 2026-09-11
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Sibling-order appetite measurement (design Open Question 3) — evidence doc
++ rendered A/B visual evidence + owner appetite decision. **DONE** — measurement only, no
+engine change; owner-gated at Phase 0 (lever fork) and at the appetite decision (both via
+`AskUserQuestion`); mid-turn owner directive ("provide visual evidence as rendered pedigree
+drawings") honored at two checkpoints (baseline pair, then a 4-image A/B set, via
+SendUserFile). **Started/completed:** 2026-09-11 (single session). Claim `baab9cbd`;
+deliverable `3df67613` (evidence doc + BACKLOG Shape-A item); records `cddc0e77`.
+
+**What actually happened, in order:**
+1. **Instrumented the current engine** (`scratchpad/s686_sibling_instrument.R` /
+   `s686_root_analysis.R`): every sibling-order lever reduces to ped ROW order
+   (`R/makePedigreeDiagramData.R:594-599,961-987,426-433,621-625`), so all spikes ran as
+   pure input permutations through the UNMODIFIED engine — zero package edits. The literal
+   within-sibship lever measured ~empty (13 multi-child sibships, 5 inversions, 0.2% of
+   connector ink); 99.8% of the 570,645 px of curved-connector ink is cross-root-subtree
+   (57 roots, 168 connectors, 644/1,485 pulled-pair inversions).
+2. **Negative result, kept:** the naive kinship2-autohint barycenter analogue measured
+   WORSE every iteration (570k → 635k px over 3) — dense minimum-linear-arrangement, not
+   kinship2's sparse case (`s686_spike_permute.R`).
+3. **Positive result:** width-aware proxy optimizer (spectral seed + swap/move local
+   search, recalibrated per round; `s686_order_lib.R` + `s686_order_iterate.R`), converged
+   round 3: TRUE −33% ink (382,911 px), census cCurved −36% (1,996 → 1,278), chord
+   crossings −24/−35%, all error classes unchanged (b 12, a/c2/d/e/f 0), jogs 95 → 102,
+   width unchanged. Census verification through a harness copy proved byte-faithful
+   (`identical()` on the committed findings CSV). Fixture safety: identity on Track B/D +
+   D1–D3 by construction; Track C permutes but measures identical (tie).
+4. **Owner decision (`AskUserQuestion`): Shape A — design the engine's pre-layout ordering
+   pass.** Evidence doc `docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md`
+   committed with the decision recorded; new top BACKLOG Up Next item (DESIGN SESSION
+   NEEDED, Effort M) carries the design-question list; Shapes B/C recorded fallbacks.
+5. **Close-out:** this evaluation, self-assessment, Learning 739, CHANGELOG entry,
+   HANDOFFS receipt.
+
+**Self-assessment (Session 686): 9/10.** **Strengths:** (1) the honest negative result
+(naive autohint fails) was measured, kept, and written into the BACKLOG item — the design
+session cannot walk into the obvious wrong mechanism; (2) the permutation-spike pattern
+gave stronger evidence than an option-gated code spike at zero blast radius; (3) census
+harness fidelity was proven (`identical()`), not assumed, before any spike number was
+trusted; (4) visual evidence delivered mid-session at both checkpoints, per the owner's
+directive. **Weaknesses:** (1) the first barycenter spike ran before the within-sibship
+emptiness was fully digested — it became the documented negative result, but the run order
+was luck, not planning; (2) the proxy's absolute calibration is coarse (2.7× vs true —
+overlap between packed clusters is unmodeled); good enough for an appetite ranking,
+disclosed as a design-session question; (3) crossing counts treat curved connectors as
+chords (the census's own disclosed heuristic), so chord-crossing deltas are indicative,
+not exact.
+
+**Next steps (specific):** (A) **Shape-A design session** (NEW, top pedigree item, DESIGN
+SESSION NEEDED, Effort M): `BACKLOG.md:14` — needs `scratchpad/s686_order_lib.R` +
+`s686_ped_best.csv` (UNTRACKED — take before cleaning scratchpad). (B) **QP Migration Path
+Phase 4 cleanup** (READY, Effort S): `BACKLOG.md:257`. (C) **SESSION_NOTES.md trim**
+(READY, Effort S-M): ~9,700 lines, dashboard HIGH flag; possible SRF_RED false-refusal
+needing owner `--force`. (D) **Push decision:** now 12 commits ahead after close-out
+(estimate — count at push time); 4 workflows fire on push, fix-or-defer per the CI-break
+convention. (E) Informational: ascender-stub cosmetic still open; dashboard copy stale
+(v2.14.0 vs v2.17.0); census MD doc still S668-era stale.
+
+**Key files:** `docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md` (the
+deliverable); `BACKLOG.md:14` (Shape-A item); `scratchpad/s686_order_lib.R` (buildFacts /
+trueMetrics / realizeOptimized — the optimizer the design session starts from);
+`scratchpad/s686_ped_best.csv` (the converged permutation); `scratchpad/s686_census_best.R`
++ `s686_census_base.R` (patched census copies, findings in scratchpad);
+`scratchpad/s686_crop.R` (ped-parameterized render tooling); `PROJECT_LEARNINGS.md`
+Learning 739.
+
+**Gotchas for the next session:** (1) **failed=0 expectation is unchanged at 2,347 blocks**
+— no code or tests touched this session; (2) the A/B evidence images are NOT committed
+(delivered in-session only) — regenerate via `s686_crop.R` + `s686_ped_best.csv`, or re-run
+`s686_order_iterate.R` (~2 min) if scratchpad was cleaned; (3) any row permutation
+renumbers `__union_N` ids (first-appearance order) — the Shape-A design must inventory pin
+and screenshot churn before implementation; (4) the optimizer's proxy ties can permute
+without effect (Track C) — the design needs a prefer-current-order tie-break for
+packing-fixture byte-identity; (5) all S685 gotchas (disc-aware jog offsets read
+`nodes$size`, 9/18-px inertness pin, ascender-stub deliberately open) still stand.
 
 ### Session 684 Handoff Evaluation (by Session 685)
 **Score: 9/10.** **What helped:** next-step (C) named this session's deliverable with both
