@@ -77,15 +77,21 @@ disclosed as a design-session question; (3) crossing counts treat curved connect
 chords (the census's own disclosed heuristic), so chord-crossing deltas are indicative,
 not exact.
 
-**Next steps (specific):** (A) **Shape-A design session** (NEW, top pedigree item, DESIGN
-SESSION NEEDED, Effort M): `BACKLOG.md:14` — needs `scratchpad/s686_order_lib.R` +
-`s686_ped_best.csv` (UNTRACKED — take before cleaning scratchpad). (B) **QP Migration Path
-Phase 4 cleanup** (READY, Effort S): `BACKLOG.md:257`. (C) **SESSION_NOTES.md trim**
-(READY, Effort S-M): ~9,700 lines, dashboard HIGH flag; possible SRF_RED false-refusal
-needing owner `--force`. (D) **Push decision:** now 12 commits ahead after close-out
-(estimate — count at push time); 4 workflows fire on push, fix-or-defer per the CI-break
-convention. (E) Informational: ascender-stub cosmetic still open; dashboard copy stale
-(v2.14.0 vs v2.17.0); census MD doc still S668-era stale.
+**Next steps (specific — (A) is OWNER-DIRECTED for the next session, post-close-out chat
+2026-09-11):** (A) **BACKLOG `[x]`-block backfill** (READY, Effort M, `BACKLOG.md`
+Housekeeping, its top item): relocate all 28 DONE blocks per the owner-ratified convention
+(enrich CHANGELOG entry → write live detail into open items → extract open sub-threads
+[ascender-stub addendum, QP Phase 4 cleanup step] → delete block). The owner explicitly
+designated this the next session's deliverable, taking precedence over the standing
+pedigree-fidelity pickup for that one session. (B) **Shape-A design session** (top
+pedigree item, DESIGN SESSION NEEDED, Effort M, `BACKLOG.md:14`) — needs
+`scratchpad/s686_order_lib.R` + `s686_ped_best.csv` (UNTRACKED — take before cleaning
+scratchpad). (C) **QP Migration Path Phase 4 cleanup** (READY, Effort S — note the
+backfill session may extract/restate this item). (D) **SESSION_NOTES.md trim** (READY,
+Effort S-M, dashboard HIGH flag; possible SRF_RED false-refusal needing owner `--force`).
+(E) **Push decision:** 14 commits ahead after this close-out; 4 workflows fire on push,
+fix-or-defer per the CI-break convention. (F) Informational: ascender-stub cosmetic open;
+dashboard copy stale (v2.14.0 vs v2.17.0); census MD doc S668-era stale.
 
 **Key files:** `docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md` (the
 deliverable); `BACKLOG.md:14` (Shape-A item); `scratchpad/s686_order_lib.R` (buildFacts /

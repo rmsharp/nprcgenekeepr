@@ -26,7 +26,10 @@ it is failure mode #27.
 - **Recorded:** prospective rule in `CLAUDE.md` "Additional close-out checks" (applies
   from S687 on); one-time backfill campaign as a new `BACKLOG.md` Housekeeping item
   (READY, Effort M, method spelled out per block). No blocks relocated yet — this entry
-  records the decision and the standing convention only.
+  records the decision and the standing convention only. **The owner then designated the
+  backfill the NEXT session's deliverable** (taking precedence over the standing
+  pedigree-fidelity pickup for that one session; Shape-A design follows) — recorded in
+  the S686 handoff's next_steps.
 - **Model:** Claude Fable 5.
 
 ### 2026-09-11 · [BL-siblingOrderAppetite] S686: sibling-order appetite measured — every order lever reduces to ped row order, the naive autohint analogue measured WORSE, a real optimizer reclaims −33% of connector ink; owner ratified the Shape-A design item
