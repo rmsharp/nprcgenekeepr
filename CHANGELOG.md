@@ -16,6 +16,42 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-14 · [BL-backlogXBlockBackfill] S687: BACKLOG `[x]`-block backfill — all 28 DONE blocks (1,309 lines) relocated per the owner-ratified completed-item convention; file halved (2,494 → 1,247 lines)
+- **Deliverable (owner-designated S686 post-close-out chat, confirmed via `AskUserQuestion`
+  at Phase 0):** the one-time backfill campaign from the S686-ratified convention — the
+  top `BACKLOG.md` Housekeeping item, taking precedence over the standing
+  pedigree-fidelity pickup for this one session. Claim `9c7a7f0b`; deliverable `9ae0c99c`.
+  Docs-only; no code, tests, or package files touched.
+- **Method executed per block, all 4 steps:** (1) every block read in full and its
+  `CHANGELOG.md` entry verified to carry the completed record (16+ entry bodies read
+  directly; every `docs/planning|research|audits` doc linked from a DONE block
+  grep-confirmed to survive in the ledger). Exactly ONE ledger gap found and enriched:
+  the S663 ScheduleWakeup-guard entry named the about-to-be-deleted `BACKLOG.md` DONE
+  marker as a leg of its own durable record AND lacked the block's disclosed
+  not-fully-live-proven matcher-dispatch caveat — both fixed in the entry (dated as S687
+  relocations). (2) Forward-carry into 3 live Housekeeping items: the D2-dogleg comment
+  item (premise stale — S678 made `__proj_` waypoints extinct), the main-family proximity
+  residual (premise stale — the QP migration S674 deleted the capped passes it describes;
+  its "fold into the census item" pointer closed), and the fidelity-qmd union-dot passage
+  (engine superseded twice since filing — S652 revert, then the QP). (3) Both open
+  sub-threads extracted as standalone Up Next items FIRST: the S679 ascender-stub cosmetic
+  (READY, Effort M, low priority) and the QP Migration Path Phase 4 cleanup (READY,
+  Effort S). (4) All 28 blocks deleted (recomputed ranges, blank-line seams preserved).
+- **Verification (mechanical, not eyeballed):** `[x]` count 28 → 0; `[ ]` count 37 → 37
+  (+3 new items = 40 at close-out); `## ` header count 11 → 11; spatial-cross-reference
+  grep per Learning 658 (every "above/below" pointer resolves to a still-present item);
+  full-file end-to-end re-read of the changed regions and every deletion seam.
+- **Second population found, filed not fixed (DECISION NEEDED Housekeeping item):** ~14
+  `[ ]`-marked items whose own text says RESOLVED/FIXED/DONE (the S529–S531 short-pointer
+  compressions) — the same defect class the convention targets, missed by its `[x]` grep;
+  extending the convention to them is the owner's call. Also noted, left alone: the
+  macos-chromote item's "fallback fix below" pointer was already dangling before this
+  session (its target went in S625's sweep) — pre-existing, not created here.
+- **Records:** Learning 740; this entry; the completed backfill item removed from
+  `BACKLOG.md` in this same commit (the convention's own flow, applied to itself);
+  `SESSION_NOTES.md` handoff; `HANDOFFS.md` receipt.
+- **Model:** Claude Fable 5.
+
 ### 2026-09-11 · [ad hoc] S686 addendum: owner ratified the BACKLOG completed-item removal convention — never mark `[x]` inline, always remove; detail flows forward into open items, the record lives here
 - **Trigger (owner, post-close-out chat):** the owner spotted `BACKLOG.md`'s 28 retained
   `[x]` DONE blocks (~44% of items, majority of the file's 2,473 lines) and, on the
