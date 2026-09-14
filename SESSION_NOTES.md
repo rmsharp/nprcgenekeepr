@@ -18,6 +18,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 687 Did
+**Deliverable:** BACKLOG `[x]`-block backfill (owner-directed S686 post-close-out chat;
+READY, Effort M, top Housekeeping item) — relocate all 28 DONE blocks per the
+owner-ratified completed-item convention: enrich CHANGELOG entry → write live detail into
+open items' own descriptions → extract open sub-threads (ascender-stub addendum, QP Phase 4
+cleanup step) → delete block; cross-check `docs/planning/` links. (IN PROGRESS)
+**Started:** 2026-09-14
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 685 Handoff Evaluation (by Session 686)
 **Score: 9/10.** **What helped:** next-step (C) named this session's fork exactly (sibling-
 order appetite measurement, design Open Question 3, DECISION NEEDED, with the ascender-stub

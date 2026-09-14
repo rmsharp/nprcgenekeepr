@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S687
+date: 2026-09-14
+status: pending
+active_task: BACKLOG [x]-block backfill (owner-directed S686 post-close-out chat; READY, Effort M, top Housekeeping item) — relocate all 28 DONE blocks per the owner-ratified completed-item convention: enrich CHANGELOG entry, write live detail into open items' own descriptions, extract open sub-threads (ascender-stub addendum, QP Phase 4 cleanup step) first, delete block; cross-check docs/planning/ links.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S686
 date: 2026-09-11
 status: complete
