@@ -865,8 +865,9 @@ it is failure mode #27.
   `run_in_background` Bash task started this turn is still outstanding (`BACKLOG.md` Up Next, found
   S656, `PROJECT_LEARNINGS.md` Learning 694/695). **This is Claude Code tooling configuration, not
   R package code — nothing in this repo changes as a result of the mechanism itself** (it lives in
-  `~/.claude/settings.json` + `~/.claude/hooks/*.sh`, outside any git repo); this entry, the
-  `BACKLOG.md` DONE marker, and `PROJECT_LEARNINGS.md` Learning 703 are the durable record. No TDD
+  `~/.claude/settings.json` + `~/.claude/hooks/*.sh`, outside any git repo); this entry and
+  `PROJECT_LEARNINGS.md` Learning 703 are the durable record (a `BACKLOG.md` DONE marker was
+  originally the third leg; the S687 backfill relocated its detail here and removed it). No TDD
   RED/GREEN/REFACTOR phase gates applied (flagged to the owner at Phase 1, no objection) — no
   testthat coverage exists for shell hook scripts outside the package.
 - 3 hooks, installed and empirically verified against real (not only synthetic) payloads at every
@@ -875,6 +876,13 @@ it is failure mode #27.
   the call when that file is non-empty; `Stop` clears the file at natural turn-end. Investigation
   found no hook fires on background-task *completion* (`TaskCreated`/`TaskCompleted`/`Notification`
   all tested directly, twice, none fire) — full trail in `PROJECT_LEARNINGS.md` Learning 703.
+- **Disclosed verification caveat (relocated here by the S687 backfill from the deleted
+  `BACKLOG.md` DONE block):** one link was deliberately NOT live-fired end-to-end — actually
+  invoking `ScheduleWakeup`/`CronCreate` for real just to prove the harness's matcher-routing
+  dispatch, since both have real side effects (one persistent). That link rests on the
+  documented `"matcher": "Write|Edit"`-style alternation pattern plus the generically-proven
+  `PreToolUse` dispatch mechanism (proven live against `Bash`), not a live in-vivo trigger — a
+  reasoned, not fully live-proven, inference, disclosed at ship time.
 - Backlog item marked `[x]` DONE in the same commit.
 - **Model:** Claude Sonnet 5.
 
