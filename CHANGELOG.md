@@ -38,7 +38,8 @@ it is failure mode #27.
   (READY, Effort M, low priority) and the QP Migration Path Phase 4 cleanup (READY,
   Effort S). (4) All 28 blocks deleted (recomputed ranges, blank-line seams preserved).
 - **Verification (mechanical, not eyeballed):** `[x]` count 28 → 0; `[ ]` count 37 → 37
-  (+3 new items = 40 at close-out); `## ` header count 11 → 11; spatial-cross-reference
+  at the deliverable commit (+3 new items, −1 the backfill item's own close-out removal =
+  39 final); `## ` header count 11 → 11; spatial-cross-reference
   grep per Learning 658 (every "above/below" pointer resolves to a still-present item);
   full-file end-to-end re-read of the changed regions and every deletion seam.
 - **Second population found, filed not fixed (DECISION NEEDED Housekeeping item):** ~14

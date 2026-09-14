@@ -138,11 +138,27 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 ```handoff
 session: S687
 date: 2026-09-14
-status: pending
-active_task: BACKLOG [x]-block backfill (owner-directed S686 post-close-out chat; READY, Effort M, top Housekeeping item) — relocate all 28 DONE blocks per the owner-ratified completed-item convention: enrich CHANGELOG entry, write live detail into open items' own descriptions, extract open sub-threads (ascender-stub addendum, QP Phase 4 cleanup step) first, delete block; cross-check docs/planning/ links.
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. BACKLOG [x]-block backfill (owner-designated S686 post-close-out chat, confirmed via AskUserQuestion at Phase 0) — all 28 DONE blocks (1,309 lines) relocated per the owner-ratified completed-item convention; BACKLOG.md 2,494 → 1,226 lines. Docs-only session; no code, tests, or package files touched.
+what_was_done: Verified every block's CHANGELOG.md entry carries the completed record before deleting anything (16+ entry bodies read directly; every plan/research/audit doc linked from a DONE block grep-confirmed to survive in the ledger). Exactly one ledger gap found and enriched: the S663 entry named the about-to-be-deleted BACKLOG DONE marker as a leg of its own durable record AND lacked the block's disclosed not-fully-live-proven matcher-dispatch caveat. Extracted the 2 open sub-threads as standalone Up Next items FIRST (ascender-stub cosmetic, READY Effort M low priority, carrying the S685 inertness-pin warning; QP Migration Path Phase 4 cleanup, READY Effort S). Forward-carried dated notes into 3 live Housekeeping items — 2 of the 3 had ENGINE-STALE PREMISES, not just dangling pointers (D2-dogleg item: S678 made __proj_ extinct; proximity-residual item: the QP migration S674 deleted the capped passes it describes; fidelity-qmd item: engine superseded twice, S652 revert then the QP). Deleted all 28 blocks with seams preserved; mechanical verification ([x] 28→0, [ ] 37→37 at the deliverable commit, +3 new −1 backfill removal = 39 final, headers 11→11, Learning-658 spatial-reference grep clean, every seam re-read). Second population found and FILED not fixed (~14 [ ]-marked-but-RESOLVED pointer blocks from the S529-S531 compressions — DECISION NEEDED Housekeeping item; extending the convention is the owner's call). Commits: claim 9c7a7f0b, deliverable 9ae0c99c, records 20fd9c08 (CHANGELOG entry + Learning 740 + backfill item removed per its own convention).
+next_steps: (A) Shape-A root-subtree ordering design session (top pedigree item, DESIGN SESSION NEEDED, Effort M, BACKLOG.md:14) — the standing pedigree-fidelity pickup resumes; needs scratchpad/s686_order_lib.R + s686_ped_best.csv (UNTRACKED, take before cleaning scratchpad). (B) QP Migration Path Phase 4 cleanup (READY, Effort S, now its own Up Next item, BACKLOG.md:53). (C) SESSION_NOTES.md trim (READY, Effort S-M, dashboard HIGH flag; possible SRF_RED false-refusal needing owner --force). (D) [ ]-but-RESOLVED pointer sweep (DECISION NEEDED, top Housekeeping item — owner ratification gate first). (E) Push decision: 18 commits ahead after close-out; 4 workflows fire on push, fix-or-defer per the CI-break convention. (F) Informational: dashboard copy stale (v2.14.0 vs v2.17.0); census MD doc S668-era stale; the macos-chromote item's "fallback fix below" pointer was dangling BEFORE this session (target went in S625's sweep).
+key_files: BACKLOG.md:13 (Up Next — Shape-A + the 2 extracted items through :60); BACKLOG.md:149 (new sweep item, top Housekeeping); BACKLOG.md:176 (the 3 forward-carry notes through :227); CHANGELOG.md (S687 entry at top; enriched S663 entry — search "S687 backfill"); PROJECT_LEARNINGS.md:2185 (Learning 740).
+gotchas: failed=0 expectation unchanged at 2,347 blocks (no code/tests touched). BACKLOG.md line references in older handoffs/receipts (e.g. "BACKLOG.md:232") predate the deletion — re-grep, never trust stored line numbers. The 3 forward-carry notes deliberately KEPT the items' original stale text and corrected via dated notes — do not "fix" the originals without the re-measurement the notes call for. The prospective convention applies from S687 on: never mark [x]; remove the completed block in the same commit as its CHANGELOG entry. All S686 Shape-A gotchas (union renumbering, tie-break, A/B images not committed) still stand.
+runtime_smoke: n/a — docs-only (BACKLOG.md/CHANGELOG.md/PROJECT_LEARNINGS.md and session records; no runtime behavior exists to verify).
+changelog_ref: 2026-09-14 S687 entry (BL-backlogXBlockBackfill), 20fd9c08
 commit: pending
 ```
+**Self-score breakdown (9/10):** +verification preceded every deletion (the one real
+ledger gap, S663, was found by reading, not luck — exactly the "terse is fine; lost is
+not" class); +forward-carry went beyond pointer-fixing to premise-checking, catching two
+QP-migration-invalidated item premises; +all structural checks mechanical (counts,
+greps, seam re-reads); +scope held (second population filed as DECISION NEEDED, not
+swept unilaterally). -deletion script reused the inventory's own boundary logic rather
+than an independent recount (seams verified after, not proven before); -a count error
+in the CHANGELOG entry draft (40 vs 39) was caught only after the records commit;
+-the ~14-block second-population figure is a scan estimate, not an exact count.
 
 ```handoff
 session: S686

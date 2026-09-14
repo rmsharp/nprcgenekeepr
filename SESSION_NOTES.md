@@ -18,17 +18,95 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 686 Handoff Evaluation (by Session 687)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, owner-
+designated, with the complete 4-step relocation method already spelled out in the
+Housekeeping item itself — zero method discovery needed; the two named sub-threads to
+extract (ascender-stub, QP Phase 4 cleanup) were exactly the two that existed; the
+priorities-list rendering carried straight into Phase 0 and the `AskUserQuestion` pick.
+**What was missing:** the item's "enumerate with `grep '^- \[x\]'`" framing implied the
+grep captures the whole problem — a one-line flag that the S529-S531 `[ ]`-marked pointer
+compressions are a separate, out-of-scope population would have pre-drawn the boundary
+this session had to discover mid-read (cheap discovery, since the method required a full
+read anyway). **What was wrong:** nothing material (the item's "2,473 lines today" was a
+pre-S686-additions snapshot; 2,494 at pickup). **ROI:** high.
+
 ### What Session 687 Did
-**Deliverable:** BACKLOG `[x]`-block backfill (owner-directed S686 post-close-out chat;
-READY, Effort M, top Housekeeping item) — relocate all 28 DONE blocks per the
-owner-ratified completed-item convention: enrich CHANGELOG entry → write live detail into
-open items' own descriptions → extract open sub-threads (ascender-stub addendum, QP Phase 4
-cleanup step) → delete block; cross-check `docs/planning/` links. (IN PROGRESS)
-**Started:** 2026-09-14
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** BACKLOG `[x]`-block backfill (owner-designated S686 post-close-out chat,
+confirmed via `AskUserQuestion` at Phase 0) — all 28 DONE blocks (1,309 lines) relocated
+per the owner-ratified completed-item convention. **DONE** — docs-only session; no code,
+tests, or package files touched. **Started/completed:** 2026-09-14 (single session).
+Claim `9c7a7f0b`; deliverable `9ae0c99c`; records `20fd9c08`.
+**Ledger:** recorded — S687 entry in `CHANGELOG.md` (`20fd9c08`).
+
+**What actually happened, in order:**
+1. **Verified before deleting:** every block read in full; its `CHANGELOG.md` entry
+   checked to carry the completed record (16+ entry bodies read directly; every plan/
+   research/audit doc linked from a DONE block grep-confirmed to survive in the ledger).
+   Exactly ONE ledger gap found: the S663 entry named the about-to-be-deleted BACKLOG
+   DONE marker as a leg of its own "durable record" AND lacked the block's disclosed
+   not-fully-live-proven matcher-dispatch caveat — both enriched in place, dated S687.
+2. **Extracted the 2 open sub-threads first** as standalone Up Next items: ascender-stub
+   cosmetic (READY, Effort M, low priority; carries the S685 inertness-pin warning) and
+   QP Migration Path Phase 4 cleanup (READY, Effort S).
+3. **Forward-carried into 3 live Housekeeping items** — and found 2 of the 3 had
+   ENGINE-STALE PREMISES, not just dangling pointers: the D2-dogleg comment item (S678
+   made `__proj_` extinct; its "56 nodes today" is stale), the main-family proximity
+   residual (the QP migration S674 deleted the capped passes it describes; census (a)=0
+   since S675), and the fidelity-qmd union-dot passage (engine superseded twice: S652
+   revert, then the QP). Each got a dated forward-carry note, original text kept.
+4. **Deleted all 28 blocks** (recomputed ranges, blank-line seams preserved), then
+   verified mechanically: `[x]` 28→0, `[ ]` 37→37 (+3 new −1 backfill removal = 39
+   final), `##` headers 11→11, Learning-658 spatial-reference grep clean, every seam
+   re-read. `BACKLOG.md` 2,494 → 1,226 lines (~51% smaller; the FM #28 term cut).
+5. **Second population found, filed not fixed:** ~14 `[ ]`-marked items whose text says
+   RESOLVED/FIXED/DONE (S529-S531 pointer compressions) — new DECISION NEEDED
+   Housekeeping item; extending the convention to them is the owner's call.
+6. **Close-out:** this evaluation, self-assessment, Learning 740, `CHANGELOG.md` entry +
+   backfill item removed in the same commit, `HANDOFFS.md` receipt.
+
+**Self-assessment (Session 687): 9/10.** **Strengths:** (1) verification preceded every
+deletion — the one real ledger gap (S663) was found by reading, not luck, and is exactly
+the "terse is fine; lost is not" class the method exists for; (2) forward-carry went
+beyond pointer-fixing to premise-checking, catching that the QP migration had silently
+invalidated two S667/S668-era item premises; (3) all structural checks were mechanical
+counts/greps, not eyeballing; (4) scope held — the second population was filed, not
+swept, since the S686 ratification's own scope was the `[x]` population.
+**Weaknesses:** (1) the deletion script reused the inventory's own boundary logic rather
+than an independent recount — seams were verified after the fact, not proven before;
+(2) the initial CHANGELOG entry draft had a count error (40 vs 39 final open items),
+caught and corrected before the close-out commit but after the records commit; (3) the
+~14-block estimate for the second population is a scan estimate, not an exact count.
+
+**Next steps (specific):** (A) **Shape-A root-subtree ordering design session** (top
+pedigree item, DESIGN SESSION NEEDED, Effort M, `BACKLOG.md:14`) — the standing
+pedigree-fidelity pickup resumes now that the owner-directed backfill is done; needs
+`scratchpad/s686_order_lib.R` + `s686_ped_best.csv` (UNTRACKED — take before cleaning
+scratchpad). (B) **QP Migration Path Phase 4 cleanup** (READY, Effort S, now its own
+Up Next item at `BACKLOG.md:53`). (C) **SESSION_NOTES.md trim** (READY, Effort S-M,
+dashboard HIGH flag; possible SRF_RED false-refusal needing owner `--force`). (D)
+**`[ ]`-but-RESOLVED pointer sweep** (DECISION NEEDED, top Housekeeping item) — needs an
+owner ratification gate first. (E) **Push decision:** 18 commits ahead after this
+close-out; 4 workflows fire on push, fix-or-defer per the CI-break convention. (F)
+Informational: dashboard copy stale (v2.14.0 vs v2.17.0); census MD doc S668-era stale;
+the macos-chromote item's "fallback fix below" pointer was dangling BEFORE this session
+(its target went in S625's sweep) — pre-existing, left alone.
+
+**Key files:** `BACKLOG.md:13-60` (Up Next: Shape-A + the 2 extracted items);
+`BACKLOG.md:149-163` (new sweep item, now top Housekeeping); `BACKLOG.md:176-227`
+(the 3 forward-carry notes); `CHANGELOG.md` S687 entry + the enriched S663 entry
+(search "S687 backfill"); `PROJECT_LEARNINGS.md:2185` (Learning 740).
+
+**Gotchas for the next session:** (1) **failed=0 expectation unchanged at 2,347 blocks**
+— no code or tests touched this session; (2) `BACKLOG.md` line references in older
+handoffs/receipts (e.g. "BACKLOG.md:232") predate the 1,268-line deletion — re-grep, do
+not trust stored line numbers; (3) the 3 forward-carry notes deliberately KEPT the
+items' original (stale) text and corrected via dated notes — do not "fix" the originals
+without doing the re-measurement the notes call for; (4) the prospective convention
+applies from S687 on: never mark `[x]`, always remove the completed block in the same
+commit as its CHANGELOG entry; (5) all S686 gotchas for the Shape-A design session
+(`__union_N` renumbering, prefer-current-order tie-break, A/B images not committed)
+still stand.
 
 ### Session 685 Handoff Evaluation (by Session 686)
 **Score: 9/10.** **What helped:** next-step (C) named this session's fork exactly (sibling-
