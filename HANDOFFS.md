@@ -148,7 +148,7 @@ key_files: BACKLOG.md:13 (Up Next — Shape-A + the 2 extracted items through :6
 gotchas: failed=0 expectation unchanged at 2,347 blocks (no code/tests touched). BACKLOG.md line references in older handoffs/receipts (e.g. "BACKLOG.md:232") predate the deletion — re-grep, never trust stored line numbers. The 3 forward-carry notes deliberately KEPT the items' original stale text and corrected via dated notes — do not "fix" the originals without the re-measurement the notes call for. The prospective convention applies from S687 on: never mark [x]; remove the completed block in the same commit as its CHANGELOG entry. All S686 Shape-A gotchas (union renumbering, tie-break, A/B images not committed) still stand.
 runtime_smoke: n/a — docs-only (BACKLOG.md/CHANGELOG.md/PROJECT_LEARNINGS.md and session records; no runtime behavior exists to verify).
 changelog_ref: 2026-09-14 S687 entry (BL-backlogXBlockBackfill), 20fd9c08
-commit: pending
+commit: 57c101e9
 ```
 **Self-score breakdown (9/10):** +verification preceded every deletion (the one real
 ledger gap, S663, was found by reading, not luck — exactly the "terse is fine; lost is
