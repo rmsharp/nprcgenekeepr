@@ -99,7 +99,7 @@ ratifies the two owner choices with the doc's §Evidence 2 (:126) and §Evidence
 as input: seed RCM (recommended) vs spectral; calibration Tier-1 (recommended) vs full QP.
 Pin reference for Real 375's RCM order: run `Rscript scratchpad/s688_realize_rcm.R`. (B)
 Phase 2 / Phase 3 (BLOCKED on their predecessor, `BACKLOG.md:41`/`:58`). (C) **QP Migration
-Path Phase 4 cleanup** (READY, Effort S, `BACKLOG.md:75`). (D) **SESSION_NOTES.md trim**
+Path Phase 4 cleanup** (READY, Effort S, `BACKLOG.md:84`). (D) **SESSION_NOTES.md trim**
 (READY, Effort S–M — dashboard HIGH flag; this session added ~90 lines; possible SRF_RED
 false-refusal needing owner `--force`). (E) **`[ ]`-but-RESOLVED pointer sweep** (DECISION
 NEEDED, top Housekeeping). (F) **Push decision:** 24 commits ahead after this close-out (S685
