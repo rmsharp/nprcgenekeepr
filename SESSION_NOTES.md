@@ -18,18 +18,118 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 687 Handoff Evaluation (by Session 688)
+**Score: 8/10.** **What helped:** next-step (A) named this session's deliverable exactly, with
+the BACKLOG line and the workstream; key-files' `scratchpad/s686_order_lib.R` +
+`s686_ped_best.csv` ("UNTRACKED — take before cleaning") became this session's calibration
+and verification tooling within minutes — `buildFacts()`/`trueMetrics()` were reused verbatim
+and the converged permutation was the input to the session's first load-bearing check; the
+priorities-list rendering and the `AskUserQuestion` pick carried straight into Phase 0; gotcha
+(2) ("re-grep, do not trust stored line numbers") was right — every engine line reference in
+the S676/S672 plan docs had drifted. **What was missing:** the S686 gotcha set (union
+renumbering, tie-break, uncommitted A/B images) was relayed as-is; a one-line "verify these
+before designing around them" flag would have pre-drawn the boundary this session found in its
+first hour. **What was wrong:** the inherited "any row permutation renumbers `__union_N`"
+gotcha is false for the root-only permutation class Shape A actually uses (forest tables
+`identical()` under S686's own permutation), and the item's "~5 s → ~10 s" cost figure was
+stale (1.86 s measured, 94% of it the QP). Both were cheap to check and consequential if
+trusted. **ROI:** high.
+
 ### What Session 688 Did
-**Deliverable:** Design the root-subtree ordering pass (Shape A) — one design document in
-`docs/planning/` (ARCHITECTURE_WORKSTREAM; top pedigree Up Next item, DESIGN SESSION NEEDED,
-Effort M; owner-picked via `AskUserQuestion` at Phase 0). Resolve the item's design questions:
-(a) objective + determinism, (b) prefer-current-order tie-break, (c) `__union_N` renumbering /
-test-pin / screenshot churn inventory, (d) layout-cost budget. Design only — no `R/` changes
-ship. (IN PROGRESS)
-**Started:** 2026-09-16
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Design of the root-subtree ordering pass (Shape A) —
+[`docs/planning/pedigree-diagram-root-subtree-ordering-plan.md`](docs/planning/pedigree-diagram-root-subtree-ordering-plan.md)
+(681 lines, ARCHITECTURE_WORKSTREAM; owner-picked via `AskUserQuestion` at Phase 0; standing
+pedigree-fidelity directive). **DONE** — design only; no `R/`/`tests/` change; every number
+measured through the unmodified engine. **Started/completed:** 2026-09-16 (single session).
+Claim `4f9f4783`; deliverable `d32c9182`; records `5ab332d2`.
+**Ledger:** recorded — S688 entry in `CHANGELOG.md:19` (`5ab332d2`).
+
+**What actually happened, in order:**
+1. **Read the engine, not the docs** (`R/makePedigreeDiagramData.R` in full,
+   `R/positionTreeApportion.R`, the S672 QP plan, the S676 provisional-order design, the S686
+   evidence + optimizer library): root order enters at exactly one line — `rootIds` (:983) →
+   the super-root's child list (:985) → BJL discovery order. Nothing else reads it.
+2. **Overturned the inherited gotcha:** rebuilt the forest on S686's converged permutation
+   (50 founder rows moved) — `matingUnits`/`duplicates`/`childEdges`/components all
+   `identical()`. `__union_N` is numbered among rows WITH parents (:426-447); founders never
+   enter. Design question (c) collapsed to "positions change, ids do not".
+3. **Measured the cost anatomy** (`trace()` on `.solveJointQP()`): positioning 1.74 s of a
+   1.86 s layout; the QP is 94% of positioning; Tier-1 BJL is 0.01 s.
+4. **Ran the 2×2 (calibration × seed), one round**, realized as founder-row permutations
+   through the unmodified engine: QP-calibrated current −31.0% / spectral −33.5%; Tier-1-
+   calibrated current −27.5% / RCM −27.8% / spectral −31.0% (ink; baseline 570,645 px). Tier-1
+   calibration costs ~3 points and saves the second QP. Iterating at the Tier-1 level DIVERGES
+   (+9.3% at round 2); at the QP level one round = 94% of S686's converged gain.
+5. **Fixture safety at the output level:** identity permutation on Track B full/shrunk +
+   D1–D3; Track C's order changes but its full-layout positions are identical (`all.equal`).
+6. **Census on every realized candidate** (S686's byte-faithful harness copy): RCM jogs 93 /
+   b 8 / cCurved 1,667 (−16%) / d 1; spectral jogs 114 / b 17 / cCurved 1,343 (−33%) / d 0;
+   a/c1Post/c2/e/f 0 everywhere. **This corrected the doc's own first draft**, which had
+   written "b must stay 12" as an invariant — b is order-sensitive (Learning 727).
+7. **Wrote the design:** in-engine `rootIds` reorder (new pure `.orderRootSubtrees()`
+   between :983 and :985), Tier-1 calibration, reverse Cuthill–McKee seed + first-improvement
+   swap/move search, strict acceptance, one round, explicit fence; 10-row alternatives table
+   (spectral and QP-calibration recorded as owner-gated upgrades with their census profiles);
+   grep inventory of every pin that does and does not move; 3-phase migration path; census
+   expectations split into invariants vs order-sensitive.
+8. **Close-out:** this evaluation, self-assessment, Learning 741, `CHANGELOG.md` entry, the
+   design item replaced in `BACKLOG.md` by the 3 phase items (completed-item convention),
+   `HANDOFFS.md` receipt; measurement scripts copied to `scratchpad/s688_*` with
+   project-relative paths.
+
+**Self-assessment (Session 688): 9/10.** **Strengths:** (1) every inherited claim was checked
+mechanically before it shaped a decision — the renumbering gotcha fell to 5 lines of R, the
+cost figure to `trace()`; (2) the design matrix was measured in full (both calibrations × three
+seeds, iteration at both levels) rather than extrapolated from S686's one variant; (3) the
+census — the acceptance gate — was run on every realized candidate, which is what caught the
+false "b = 12 invariant" in the session's own draft; (4) Track C was checked at the output
+level (positions), not the permutation level, which is the level pins care about; (5) scope
+held — no `R/` edits, no spike code in the package, no weight/term change. **Weaknesses:**
+(1) the document was drafted before the census runs finished, so a false invariant was
+written and then corrected — measure-then-write is the right order and the session did it
+backwards for one section; (2) the seed recommendation (RCM) chooses between two
+non-dominating census profiles — disclosed and gated, not resolved; (3) scaling at the #138
+cap is analysed (O(k²·m·sweeps)) but not measured — no fixture; (4) the proxy mis-ranked
+"current" over RCM when both were searched, so the design constrains the seed set instead of
+fixing the proxy — a known coarse instrument (S686: 2.7×) left coarse.
+
+**Next steps (specific):** (A) **Phase 1 — `.orderRootSubtrees()` standalone** (READY, Effort
+M, `BACKLOG.md:14`, DEVELOPMENT_WORKSTREAM, full TDD). Its PRE-RED `AskUserQuestion` gate
+ratifies the two owner choices with the doc's §Evidence 2 (:126) and §Evidence 7 (:200) tables
+as input: seed RCM (recommended) vs spectral; calibration Tier-1 (recommended) vs full QP.
+Pin reference for Real 375's RCM order: run `Rscript scratchpad/s688_realize_rcm.R`. (B)
+Phase 2 / Phase 3 (BLOCKED on their predecessor, `BACKLOG.md:41`/`:58`). (C) **QP Migration
+Path Phase 4 cleanup** (READY, Effort S, `BACKLOG.md:75`). (D) **SESSION_NOTES.md trim**
+(READY, Effort S–M — dashboard HIGH flag; this session added ~90 lines; possible SRF_RED
+false-refusal needing owner `--force`). (E) **`[ ]`-but-RESOLVED pointer sweep** (DECISION
+NEEDED, top Housekeeping). (F) **Push decision:** 24 commits ahead after this close-out (S685
+code fix `d30ea5fb` + tests still unpushed); 4 workflows fire on push, fix-or-defer per the
+CI-break convention. (G) Informational: dashboard copy stale (v2.14.0 vs v2.17.0); untracked
+`inst/extdata/reference/~$e Compounding Loop.html` is an Office lock file (2026-08-18) —
+probably safe to delete, not this session's call; `tests/testthat/_problems/` +
+`testthat-problems.rds` are S685 testthat leftovers.
+
+**Key files:** `docs/planning/pedigree-diagram-root-subtree-ordering-plan.md:50` (the
+renumbering correction), `:126` (the 2×2 matrix), `:200` (census table), `:241-345`
+(Decisions 1–5), `:405` (alternatives), `:422` (grep inventory of pins that move / don't),
+`:513-557` (Phases 1–3), `:626` (open questions); `BACKLOG.md:14/:41/:58` (the 3 phase items);
+`CHANGELOG.md:19` (S688 entry); `PROJECT_LEARNINGS.md:2186` (Learning 741);
+`scratchpad/s688_m5.R` (structFacts / tier1Xof / rcmOrder / optimizeRoots — the reference
+algorithm), `s688_realize_rcm.R` (pinned RCM order + permuted CSVs), `s688_census_{rcm,
+spectral}.R` + `_findings.csv` (census runs), `s688_timing.log`/`s688_seed.log` (raw numbers);
+`R/makePedigreeDiagramData.R:983-985` (the insertion point).
+
+**Gotchas for the next session:** (1) **failed=0 expectation unchanged at 2,347 blocks** — no
+code or tests touched; (2) every engine line reference in the design is `master` at
+`4f9f4783` — re-grep before editing; (3) `scratchpad/s688_m6.R` and `s688_realize_rcm.R`
+`eval(parse())` the definitions half of `s688_m5.R`, and every `s688_*` script sources
+`scratchpad/s686_order_lib.R` — all untracked, keep them together, run from the package root;
+(4) the census harness copies write their findings CSVs into `scratchpad/`, not `docs/audits/`;
+(5) **class (b) is order-sensitive** — never pin its count as an invariant; the invariants are
+a / c1Post / c2 / e / f; (6) Track C is output-identical to `expect_equal` tolerance but its
+`rootIds` order changes — a digest-style `identical()` check may differ at 1e-15 (doc Open
+Question 5); (7) the Tier-1 pass must stay free of `eigen()`/`solve.QP()` to keep its bitwise
+cross-platform reproducibility — that property is the design's main argument.
 
 ### Session 686 Handoff Evaluation (by Session 687)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, owner-
