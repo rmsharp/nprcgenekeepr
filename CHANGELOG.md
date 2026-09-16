@@ -16,6 +16,52 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-16 · [BL-rootSubtreeOrderingDesign] S688: Design — the root-subtree ordering pass (Shape A): reorder `rootIds` in-engine, calibrated from Tier-1 BJL alone, deterministic RCM seed, one round; the S686 "ids renumber" gotcha measured FALSE; census run on every realized candidate
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0 — the top pedigree Up Next
+  item, DESIGN SESSION NEEDED, standing pedigree-fidelity directive):**
+  [`docs/planning/pedigree-diagram-root-subtree-ordering-plan.md`](docs/planning/pedigree-diagram-root-subtree-ordering-plan.md)
+  (681 lines, ARCHITECTURE_WORKSTREAM; `d32c9182`). Design only — no `R/`/`tests/` change;
+  every number measured through the UNMODIFIED engine (Learning 739's permutation-spike
+  pattern plus direct calls into unmodified internal functions); no QP term/weight change
+  (S675 mandate). Decisions are recommendations for the implementing sessions' PRE-RED gates
+  (S676 precedent). Claim `4f9f4783`.
+- **Decisions:** (1) placement — one new pure internal `.orderRootSubtrees()` called between
+  `R/makePedigreeDiagramData.R:983` (`rootIds` assembly) and `:985` (`.buildForestChildrenOf()`),
+  per component by inheritance from the S667 recursion, never touching `ped`; (2)
+  calibration from **Tier-1 BJL geometry only** (0.01 s) — not the QP-solved layout (the QP is
+  94% of positioning, 1.38 s, measured via `trace()`); (3) **reverse Cuthill–McKee** seed +
+  first-improvement swap/move local search on the rigid-block proxy, strict `−1e-9` acceptance,
+  `maxSweeps = 20`, incoming order kept unless strictly beaten; (4) **one round** — Tier-1-level
+  recalibration measured to DIVERGE (+9.3% worse than baseline at round 2); (5) explicit fence:
+  forest builder, components/packing, Tier 1–3, seeding, `.solveJointQP()`, waypoints, jog
+  repair, row policy, contracts, UI all unchanged.
+- **Load-bearing findings:** (a) the S686/S687 gotcha "any row permutation renumbers
+  `__union_N`" is **false for root-only permutations** — S686's own converged permutation (50
+  founder rows) leaves `matingUnits`/`duplicates`/`childEdges`/components `identical()`
+  (numbering is by first appearance among rows WITH parents, `:426-447`); the in-engine
+  placement makes id stability a guarantee. (b) The 2×2 matrix (calibration × seed, one
+  round, Real 375 connector ink): QP-calibrated current −31.0% / spectral −33.5%; Tier-1
+  current −27.5% / RCM −27.8% / spectral −31.0%; baseline 570,645 px; S686's 3-round −33%.
+  (c) Fixture safety: identity permutation on Track B full/shrunk, D1–D3; Track C's order
+  changes (P1,X,W → X,P1,W) but its full-layout positions are identical (`all.equal`). (d)
+  **Census on the realized orders** (S686's byte-faithful harness copy): RCM jogs 93 / b 8
+  (2 dust) / c1Pre 6 / cCurved 1,667 (−16%) / d 1 (`__dup_SLN0TF_2`–`SLN0TF`); spectral
+  jogs 114 / b 17 / c1Pre 8 / cCurved 1,343 (−33%) / d 0; a/c1Post/c2/e/f 0 in every run.
+  **Class (b) is order-sensitive** (moved 12→8 vs 12→17) — S686's "b unchanged at 12" was a
+  coincidence, and this session's own first draft had written it in as an invariant before
+  the census run corrected it. (e) Determinism: RCM over exact IEEE-double Tier-1 arithmetic
+  is bitwise reproducible; spectral needs 4 `eigen()` guards — recorded as an owner-gated
+  upgrade (+3 ink points, cCurved −33%, but b +5, jogs +19), not taken.
+- **Measurement tooling:** `scratchpad/s688_{timing,seed,m5,m6,realize_rcm,census_rcm,census_spectral}.R`
+  + `s688_ped_{rcm,spectral}.csv` + logs/findings CSVs (untracked, project `scratchpad/`,
+  paths made project-relative; take before cleaning). The RCM order for Real 375's 50-root
+  component is printed by `s688_realize_rcm.R` (the Phase-1 pin reference).
+- **Records:** Learning 741; the Shape-A design item removed from `BACKLOG.md` and replaced by
+  the three implementation-phase items the design produced (Phase 1 READY / Phases 2–3
+  BLOCKED on their predecessor), per the completed-item convention; `SESSION_NOTES.md`
+  handoff; `HANDOFFS.md` receipt.
+- **Model:** Claude Fable 5.1.
+
 ### 2026-09-14 · [BL-backlogXBlockBackfill] S687: BACKLOG `[x]`-block backfill — all 28 DONE blocks (1,309 lines) relocated per the owner-ratified completed-item convention; file halved (2,494 → 1,247 lines)
 - **Deliverable (owner-designated S686 post-close-out chat, confirmed via `AskUserQuestion`
   at Phase 0):** the one-time backfill campaign from the S686-ratified convention — the

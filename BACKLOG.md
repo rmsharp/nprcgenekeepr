@@ -11,31 +11,62 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **Design the root-subtree ordering pass (Shape A) — reclaim a measured third of the
-      curved-connector ink by reordering which founder subtrees are adjacent** (standing
-      pedigree-fidelity directive; owner-ratified S686, 2026-09-11, via `AskUserQuestion`
-      from the sibling-order appetite measurement; **DESIGN SESSION NEEDED, Effort M** —
-      ARCHITECTURE_WORKSTREAM, matching every prior `.positionMatingUnitForest()` decision).
-      Evidence: [`docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md`](docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md)
-      (S686) — every sibling-order lever reduces to ped ROW order, so the whole change is
-      a pre-layout input permutation; measured on Real 375 via a proxy optimizer (spectral
-      seed + local search, recalibrated per round, converged round 3): connector ink
-      570,645 → 382,911 px (−33%), census cCurved 1,996 → 1,278 (−36%), chord×chord
-      crossings 931 → 604, chord×straight 1,740 → 1,316, b/a/c2/d/e/f unchanged
-      (12/0/0/0/0/0), jogs 95 → 102 (+7), width unchanged. **The naive kinship2-autohint
-      barycenter analogue measured WORSE every iteration (570k → 635k) — do not reach for
-      it; this fixture is a dense minimum-linear-arrangement instance.** Design must
-      resolve: (a) objective (proxy vs true evaluations) and determinism; (b) a
-      prefer-current-order tie-break — with it, the optimizer is an identity no-op on
-      Track B/D + D1-D3 by construction and Track C's permutation is a measured tie, so
-      packing-fixture byte-identity is plausibly preservable (verify, don't assume);
-      (c) the `__union_N` renumbering / test-pin / 5-screenshot churn inventory (any row
-      permutation renumbers units by first appearance); (d) the ~2× layout-cost budget
-      (Real 375 ~5 s → ~10 s + optimizer). Measurement tooling in `scratchpad/s686_*.R`
-      (untracked — take before cleaning). Shapes B (exported utility) / C (decline) are
-      the recorded fallbacks. The dome thins, it does not vanish: ordering's measured
-      ceiling leaves mean span ~2,250 px; removing the rest needs a different mechanism
-      (routing or duplicate policy), out of this item's scope.
+- [ ] **Root-subtree ordering pass (Shape A) — Phase 1: `.orderRootSubtrees()` standalone,
+      not yet wired** (standing pedigree-fidelity directive; design DONE S688, 2026-09-16 —
+      [`docs/planning/pedigree-diagram-root-subtree-ordering-plan.md`](docs/planning/pedigree-diagram-root-subtree-ordering-plan.md),
+      §Migration Path Phase 1; **READY, Effort M** — DEVELOPMENT_WORKSTREAM, full TDD). Build
+      the new pure internal function (Decisions 1–4: input `rootIds` + the `childrenOf`
+      closure + this component's `matingUnits`/`duplicates` + `minSep`; output a permutation
+      of `rootIds`; Tier-1 BJL calibration via `.positionTreeApportion()`, rigid-block
+      connector-span proxy, reverse Cuthill–McKee seed, first-improvement swap/move local
+      search, strict `−1e-9` acceptance, `maxSweeps = 20`, incoming order returned unless
+      strictly beaten) with its own test file. RED must assert: identity on Track B full/
+      shrunk + D1–D3 (`identical()`); Track C → `X,P1,W` (or identity if the gate picks the
+      doc's Open Question 5 guard); on Real 375's 50-root component a permutation with a
+      strictly lower proxy equal to the pinned RCM order (`scratchpad/s688_realize_rcm.R`
+      prints it); determinism (two calls identical); the sweep cap; the `stop()` contract;
+      k ≤ 2 / no-connector early exits. **The PRE-RED `AskUserQuestion` gate also ratifies
+      the design's two owner-choice decisions** with the doc's §Evidence 2 and §Evidence 7
+      tables as input: seed **RCM (recommended: deterministic; census jogs 93 / b 8 /
+      cCurved −16% / d 1)** vs spectral (+3 ink points, cCurved −33%, but b 17, jogs 114,
+      needs 4 `eigen()` guards), and calibration Tier-1 (recommended, +0.3 s) vs full
+      pass-1 QP (+3 points, +1.4 s, ~cubic toward the #138 cap). Gotchas: the S686/S687
+      "`__union_N` ids renumber" warning is FALSE for root-only reordering (verified S688 —
+      ids, duplicates, edges, components all `identical()`), so no id-based pin churns;
+      iterating the calibration at the Tier-1 level DIVERGES (measured +9.3% at round 2) —
+      one round only; Tier-1 arithmetic is exact IEEE double, keep it free of `eigen()`/
+      `solve.QP()` so the pass stays bitwise reproducible across the 3-OS CI matrix.
+      Tooling: `scratchpad/s688_*.R` + `scratchpad/s686_order_lib.R` (untracked — take
+      before cleaning).
+- [ ] **Root-subtree ordering pass (Shape A) — Phase 2: wire into
+      `.positionMatingUnitForest()`, re-derive Real-375 pins, census, owner visual review**
+      (BLOCKED — on Phase 1 above; Effort M; DEVELOPMENT_WORKSTREAM, full TDD). One-line
+      insertion between `R/makePedigreeDiagramData.R:983` and `:985` (line numbers S688 —
+      re-grep). Re-derive the Real-375 position pins listed in the design's §Evidence-Based
+      Inventory (test_positionMatingUnitForest.R 15 loads incl. the class-(b) disclosed set
+      `:2952` — its COUNT is the expectation, its membership may change; test_resolveEdge
+      NodeCollisions.R :326/:397/:479/:643/:930; test_makePedigreeMatingLayout.R :323/:506/
+      :644; test_addRectilinearWaypoints.R :541/:596/:680) — the structural guards (:2819
+      never-outside-span, :2855 no same-row crossing, :930 zero corridor-disc violations)
+      must still PASS as invariants. Five packing fixtures `identical()` to pre-change
+      output; Track C `expect_equal`. Census re-run: invariants a/c1Post/c2/e/f = 0;
+      order-sensitive expectations for the seed the gate chose — RCM ≈ (jogs 93, b 8 of
+      which 2 dust, c1Pre 6, cCurved 1,667, d 1 = `__dup_SLN0TF_2`/`SLN0TF`), spectral ≈
+      (114, 17, 8, 1,343, 0). Before/after Real-375 overview + meso render pair to the
+      owner before close-out (S666/S667/S675/S686 visual-gate precedent). Expected layout
+      cost +≈0.3 s on Real 375.
+- [ ] **Root-subtree ordering pass (Shape A) — Phase 3: docs & follow-ups** (BLOCKED — on
+      Phase 2 above; Effort S; may fold into Phase 2's close-out if scope allows).
+      `NEWS.Rmd` plain-language entry (S628 criterion — what changed for a colony manager:
+      related founder families now sit next to each other, so the long curved lines that
+      connect an animal's repeated appearances are shorter and cross less); regenerate the
+      5 Diagram-tab screenshots (`scratchpad/s683_screenshotDigests.R`/`s685_*` digest
+      scripts identify which change; owner-reviewed); reference images `trackB-nprc-*`/
+      `trackC-nprc-*` need NO regeneration (identity / identical layout); no
+      `a2interactive.Rmd` change (no new export or parameter); record the design's
+      Open-Question dispositions (spectral upgrade, adaptive QP calibration, kill-switch
+      option, scaling at the #138 cap, Track C bitwise identity, the ~2,300 px mean-span
+      ceiling that only routing/duplicate-policy work can lower).
 - [ ] **Ascender-stub cosmetic on jog-repair corridors: small "ascender" stubs above
       sibship bars read as dangling lines ending in mid-air** (found S679, 2026-09-07,
       owner visual-gate question; extracted S687 from the census Finding #3 DONE record
