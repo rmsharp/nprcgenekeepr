@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 688 Did
+**Deliverable:** Design the root-subtree ordering pass (Shape A) — one design document in
+`docs/planning/` (ARCHITECTURE_WORKSTREAM; top pedigree Up Next item, DESIGN SESSION NEEDED,
+Effort M; owner-picked via `AskUserQuestion` at Phase 0). Resolve the item's design questions:
+(a) objective + determinism, (b) prefer-current-order tie-break, (c) `__union_N` renumbering /
+test-pin / screenshot churn inventory, (d) layout-cost budget. Design only — no `R/` changes
+ship. (IN PROGRESS)
+**Started:** 2026-09-16
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 686 Handoff Evaluation (by Session 687)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, owner-
 designated, with the complete 4-step relocation method already spelled out in the

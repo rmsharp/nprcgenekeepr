@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S688
+date: 2026-09-16
+status: pending
+active_task: Design the root-subtree ordering pass (Shape A) — one design document in docs/planning/ (ARCHITECTURE_WORKSTREAM; top pedigree Up Next item, DESIGN SESSION NEEDED, Effort M; owner-picked via AskUserQuestion at Phase 0) resolving objective/determinism, prefer-current-order tie-break, __union_N renumbering/pin/screenshot churn inventory, and layout-cost budget. Design only.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S687
 date: 2026-09-14
 status: complete
