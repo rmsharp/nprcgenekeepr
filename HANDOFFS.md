@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S695
+date: 2026-09-17
+status: pending
+active_task: Root-subtree ordering pass (Shape A) Phase 3 docs & follow-ups (BACKLOG.md Up Next item 1): NEWS.Rmd plain-language entry, regenerate the 5 Diagram-tab screenshots (digest scripts identify which change; owner-reviewed), record the design's Open-Question dispositions. Owner-picked via AskUserQuestion at Phase 0 under the standing pedigree-fidelity directive; DEVELOPMENT_WORKSTREAM, docs-only.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S694
 date: 2026-09-17
 status: complete

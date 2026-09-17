@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 695 Did
+**Deliverable:** Root-subtree ordering pass (Shape A) — Phase 3: docs & follow-ups
+(`BACKLOG.md` Up Next item 1): NEWS.Rmd plain-language entry, regenerate the 5
+Diagram-tab screenshots (digest scripts identify which change; owner-reviewed), record
+the design's Open-Question dispositions. Owner-picked via `AskUserQuestion` at Phase 0
+under the standing pedigree-fidelity directive; DEVELOPMENT_WORKSTREAM, docs-only
+(S692/S694 precedent — no TDD phases). (IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 693 Handoff Evaluation (by Session 694)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
 BACKLOG item plus the forward-carried facts were a near-complete spec: every id/φ/F fact
