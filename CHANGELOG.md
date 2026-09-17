@@ -16,6 +16,16 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-17 · [ad hoc] S700 Phase 0: record CHANGELOG.md entry for S699's close-out commits (reconcile-on-read)
+- Phase 0 ledger reconcile found 2 commits since `CHANGELOG.md`'s frontier (`8127201d`) with no
+  ledger entry of their own — the same self-reference shape this project's precedent already
+  names repeatedly (S639→S643, S647, S698, S699): `87dfb4dc` (S699's own close-out commit,
+  writing the final `SESSION_NOTES.md` handoff + S698 evaluation and completing the
+  `HANDOFFS.md` receipt) and `4901c0f4` (recording that close-out commit's sha in the receipt's
+  `commit:` field, self-reconcile). Both postdate `8127201d`, the commit that wrote the ledger's
+  own S699 entry — that entry already describes the session's work; this is a pure
+  reconcile-on-read backfill so the frontier is clean.
+
 ### 2026-09-17 · [ad hoc] S699: standing pedigree-drawing top-priority directive retired by owner sign-off; the 3 measured census residuals itemized at ordinary priority
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; decision/grooming session,
   docs-only — no TDD phases):** S698's next-step (A) executed — with the tagged
