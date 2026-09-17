@@ -22,6 +22,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 701 Did
+**Deliverable:** `HANDOFFS.md` archive pass via `methodology_trim.py` (S700 next-step A;
+BACKLOG Housekeeping item first half; owner-picked via `AskUserQuestion` at Phase 0;
+docs-only maintenance session — no TDD phases, S700/S594/S539 archive-pass precedent)
+(IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; the claim entry itself ships in this
+commit (Learning 752: the claim commit must be ledgered before the first `--write`).
+This session's remaining actions are recorded in `CHANGELOG.md` at Phase 3F. Until
+close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 699 Handoff Evaluation (by Session 700)
 **Score: 8/10.** **What helped:** next-step (A) WAS this session's deliverable, pre-scoped
 with accurate size figures (~11,140 lines estimated; 11,181 at claim) and the "no known

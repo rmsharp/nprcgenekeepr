@@ -18,6 +18,14 @@ it is failure mode #27.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-Housekeeping] S701 claim: HANDOFFS.md archive pass (pre-trim claim entry, clears the tool's P1_UNDOCUMENTED gate)
+- Session claimed (Phase 1B stub in `SESSION_NOTES.md`, `status: pending` receipt in
+  `HANDOFFS.md`, this entry — one commit, so the ledger frontier sits at HEAD before the
+  first `--write`, per Learning 752 / the BACKLOG item's procedure note 1). Deliverable:
+  the `methodology_trim.py` archive pass on `HANDOFFS.md` (6,563 lines / 590,437 B at
+  orient, HIGH past the 2,000-line read cap). The `CHANGELOG.md` pass remains a separate
+  session (same BACKLOG item, second half).
+
 ### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits c0b7ec81..d86c576a — S700 close-out self-reference commits
 - The recurring close-out shape (same as S699's `87dfb4dc`/`4901c0f4`, backfilled
   `af664d43`): after S700's ledger-recording commit `c179897a`, two further commits
