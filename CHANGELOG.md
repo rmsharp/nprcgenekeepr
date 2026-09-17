@@ -18,6 +18,15 @@ it is failure mode #27.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-Housekeeping] S702 claim: CHANGELOG.md archive pass (session claimed, work beginning)
+- Phase 1B claim for the `CHANGELOG.md` archive pass via `methodology_trim.py` — the
+  BACKLOG Housekeeping item's remaining half (the `HANDOFFS.md` half was DONE S701);
+  owner-picked via `AskUserQuestion` at Phase 0; docs-only maintenance session, no TDD
+  phases (S700/S701/S594/S539 archive-pass precedent). This claim entry ships IN the
+  claim commit so the ledger frontier sits at HEAD before the tool's first `--write`
+  (`P1_UNDOCUMENTED` gate; Learnings 752/754). Stub in `SESSION_NOTES.md`, pending
+  receipt in `HANDOFFS.md`, this entry — one commit.
+
 ### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits 79b6003b..8c0097fb — S701 close-out self-reference commits
 - The recurring close-out shape (same as S700's `c0b7ec81`/`d86c576a`, backfilled
   `21d09bca`): after S701's ledger-recording commit `1a8aeb20`, two further commits

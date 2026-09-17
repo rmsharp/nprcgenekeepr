@@ -22,6 +22,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 702 Did
+**Deliverable:** `CHANGELOG.md` archive pass via `methodology_trim.py` (S701 next-step A;
+BACKLOG Housekeeping item's remaining half; owner-picked via `AskUserQuestion` at Phase 0;
+docs-only maintenance session — no TDD phases, S700/S701/S594/S539 archive-pass
+precedent). (IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning.
+**Ledger:** claim entry shipped IN this claim commit (Learnings 752/754) — frontier at
+HEAD; the close-out entry lands at Phase 3F. Until close-out, this stub is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 700 Handoff Evaluation (by Session 701)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, with a
 complete and exact procedure: shipping the claim ledger entry per Learning 752 — applied
