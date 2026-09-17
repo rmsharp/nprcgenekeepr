@@ -1,0 +1,12 @@
+"id","sire","dam","sex","gen"
+"BP",NA,NA,"M",0
+"BQ",NA,NA,"F",0
+"BR","BP","BQ","F",1
+"BR2","BP","BQ","M",1
+"BR3","BP","BQ","F",1
+"BC1","BP","BR","F",2
+"BC2","BP","BR","M",2
+"BC3","BP","BR","F",2
+"BU",NA,NA,"M",0
+"BO1","BU","BC1","F",3
+"BO2","BU","BC1","M",3

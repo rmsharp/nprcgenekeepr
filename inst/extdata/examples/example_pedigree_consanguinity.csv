@@ -1,0 +1,15 @@
+"id","sire","dam","sex","gen"
+"CGS",NA,NA,"M",0
+"CGD",NA,NA,"F",0
+"CS1","CGS","CGD","M",1
+"CD1","CGS","CGD","F",1
+"CS2","CGS","CGD","M",1
+"CD2","CGS","CGD","F",1
+"CI1","CS1","CD1","F",2
+"CI2","CS1","CD1","M",2
+"CUM",NA,NA,"M",0
+"CO1","CUM","CI1","F",3
+"CO2","CUM","CI1","M",3
+"CUF",NA,NA,"F",0
+"CO3","CI2","CUF","F",3
+"CO4","CI2","CUF","M",3

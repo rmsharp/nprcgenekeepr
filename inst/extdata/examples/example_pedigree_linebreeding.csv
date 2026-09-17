@@ -1,0 +1,15 @@
+"id","sire","dam","sex","gen"
+"LK",NA,NA,"M",0
+"LW1",NA,NA,"F",0
+"LW2",NA,NA,"F",0
+"LA1","LK","LW1","M",1
+"LA3","LK","LW1","F",1
+"LB1","LK","LW2","F",1
+"LB3","LK","LW2","M",1
+"LX1",NA,NA,"F",0
+"LY1",NA,NA,"M",0
+"LA2","LA1","LX1","F",2
+"LB2","LY1","LB1","M",2
+"LL1","LB2","LA2","F",3
+"LL2","LB2","LA2","M",3
+"LL3","LB2","LA2","F",3

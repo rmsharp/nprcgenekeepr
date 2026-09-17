@@ -1,0 +1,13 @@
+"id","sire","dam","sex","gen"
+"FGS",NA,NA,"M",0
+"FGD",NA,NA,"F",0
+"FS1","FGS","FGD","M",1
+"FS2","FGS","FGD","F",1
+"FU1",NA,NA,"F",0
+"FU2",NA,NA,"M",0
+"FC1","FS1","FU1","M",2
+"FC3","FS1","FU1","F",2
+"FC2","FU2","FS2","F",2
+"FC4","FU2","FS2","M",2
+"FF1","FC1","FC2","F",3
+"FF2","FC1","FC2","M",3

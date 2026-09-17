@@ -1,0 +1,13 @@
+"id","sire","dam","sex","gen"
+"HS",NA,NA,"M",0
+"HD1",NA,NA,"F",0
+"HD2",NA,NA,"F",0
+"HA1","HS","HD1","M",1
+"HA2","HS","HD1","F",1
+"HB1","HS","HD2","F",1
+"HB2","HS","HD2","M",1
+"HC1","HA1","HB1","F",2
+"HC2","HA1","HB1","M",2
+"HU",NA,NA,"M",0
+"HO1","HU","HC1","F",3
+"HO2","HU","HC1","M",3
