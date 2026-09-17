@@ -18,6 +18,14 @@ it is failure mode #27.
 
 ## 2026-09
 
+### 2026-09-17 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-17.md` (116 record(s), 590,777 B → 31,315 B)
+
+**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
+Moved the oldest **116** record(s) (2026-08-14 → 2026-09-17) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-17.md`](docs/archive/HANDOFFS-through-2026-09-17.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-17.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-17.md.verify.sh)
+rather than trusting a digest printed here. Live file 590,777 B → 31,315 B (−94.7%).
+
 ### 2026-09-17 · [BL-Housekeeping] S701 claim: HANDOFFS.md archive pass (pre-trim claim entry, clears the tool's P1_UNDOCUMENTED gate)
 - Session claimed (Phase 1B stub in `SESSION_NOTES.md`, `status: pending` receipt in
   `HANDOFFS.md`, this entry — one commit, so the ledger frontier sits at HEAD before the
