@@ -16,6 +16,48 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-17 · [BL-shapeAPhase3] S695: Shape A Phase 3 — docs & follow-ups (closes the root-subtree ordering chain: design S688, Phase 1 S689, Phase 2 S690, Phase 3 S695)
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
+  directive; DEVELOPMENT_WORKSTREAM, docs-only — no TDD phases, per the S692/S694
+  precedent):** the design's own Phase 3 spec discharged in full. Commits `52a9b7da`
+  (screenshot), `1d33729b` (NEWS), `9727c210` (dispositions).
+- **Screenshots — digest-driven minimal recapture:** layout digests
+  (`scratchpad/s683_screenshotDigests.R`) run at HEAD and, via a temporary git worktree
+  with `R_LIBS` pointed at the renv cache library, at `4853639f` (S683's recapture — the
+  commit at which all 5 Diagram-tab screenshots were last current). Only the twins trim
+  changed (both edge styles); base/show_names/affected trims digest-identical, so only
+  `diagram_twin_connectors.png` was recaptured (the other 4 untouched, no spurious PNG
+  churn). The new layout was ground-truth-verified before the gate: all 42 parent-child
+  triples reconstruct exactly from the rendered union edges (sex-free pair trace — the
+  S691 helper's M/F assumption false-alarms on this fixture's NA-sex parent `EE4BJC`),
+  and all 39 rectilinear routing nets confine to one union's family. Owner visual review:
+  **accepted**. Reference images `trackB-nprc-*`/`trackC-nprc-*` untouched per the item
+  (S690 re-proved identity / bitwise-identical layout). See Learning 748.
+- **NEWS.Rmd:** plain-language entry (S628 criterion) appended to the Pedigree Diagram
+  section — branches sharing animals now sit near each other, curved duplicate
+  connectors about a quarter shorter and crossing less, a fraction of a second more
+  layout time on very large pedigrees; `NEWS.md` re-rendered (diff = the entry only);
+  `spelling::spell_check_package()` clean, no WORDLIST change needed.
+- **Open-Question dispositions** recorded in
+  `docs/planning/pedigree-diagram-root-subtree-ordering-plan.md` (new `### Dispositions`
+  section, matching the provisional-order plan's precedent): spectral seed NOT TAKEN
+  (S689 gate chose RCM); adaptive QP calibration NOT PURSUED; kill switch DECLINED
+  (unconditional pass; S690/S691 visual gates found no worsened shape); 1,500-node-cap
+  scaling OPEN (no fixture); Track C bitwise identity RESOLVED (guard declined S689,
+  then measured max |dx| = 0 at S690); ~2,300 px mean-span ceiling ACCEPTED RESIDUAL
+  (routing/duplicate-policy work, out of scope). Plus the forward-carried SLN0TF
+  class-(d) acceptance / alignped3-stays-NOT-PURSUED note from the removed BACKLOG
+  blocks.
+- **Checklists:** `a2interactive.Rmd`, citation, `_pkgdown.yml`, lint — all N/A by
+  inspection (no new export, statistic, or tracked `.R` change). NEWS same-session
+  checklist discharged above. `BACKLOG.md`: the Shape A Phase 3 block removed per the
+  completed-item convention (this entry + the design doc's Dispositions section are the
+  durable record). After this session no open BACKLOG item depends on scratchpad files.
+- **Verification:** full clean regression (unfiltered, `NOT_CRAN`) — **2,364 blocks,
+  failed=0, error=0**, exactly the S694 baseline (no test file touched); the screenshot
+  recapture itself exercised the live app end-to-end (AppDriver: upload, QC, navigate,
+  focal-trim, capture) under the wired Shape A engine.
+
 ### 2026-09-17 · [BL-exemplarArticle] S694: "Reading classic breeding structures" — the 5 exemplar pedigrees added to the pedigree-diagram article (closes the S691 follow-up chain)
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
   directive; DEVELOPMENT_WORKSTREAM, docs-only — no TDD phases, per the S692 data+docs

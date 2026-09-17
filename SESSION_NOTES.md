@@ -18,6 +18,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 694 Handoff Evaluation (by Session 695)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
+BACKLOG item was a near-complete spec — the digest scripts named by path (and still in
+scratchpad thanks to gotcha (4)'s explicit don't-clean constraint), the
+reference-images-need-NO-regeneration fact, the NEWS wording seed, and the exact
+six-item Open-Question list to disposition. Gotcha (6) (spell check reaches article
+prose) prompted running the wordlist gate before the NEWS commit — clean, but checked
+rather than assumed. The screenshots' last-recapture provenance was one `git log`
+command away. **What was missing:** the item said "regenerate the 5 Diagram-tab
+screenshots" when its own cited digest method shows only 1 of 5 changed — accurate
+mechanism, oversized framing; nothing recorded WHERE dispositions should be written
+(the provisional-order plan's `### Dispositions` precedent had to be found
+independently); the digest-baseline choice (the last-recapture commit `4853639f`, not
+"before S690") was left to this session to reason out. **What was wrong:** nothing
+material. **ROI:** high.
+
 ### What Session 695 Did
 **Deliverable:** Root-subtree ordering pass (Shape A) — Phase 3: docs & follow-ups
 (`BACKLOG.md` Up Next item 1): NEWS.Rmd plain-language entry, regenerate the 5

@@ -11,29 +11,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **Root-subtree ordering pass (Shape A) — Phase 3: docs & follow-ups** (**READY** —
-      Phase 2 DONE S690, 2026-09-16, visual gate APPROVED by the owner; Effort S).
-      `NEWS.Rmd` plain-language entry (S628 criterion — what changed for a colony manager:
-      related founder families now sit next to each other, so the long curved lines that
-      connect an animal's repeated appearances are shorter and cross less); regenerate the
-      5 Diagram-tab screenshots (`scratchpad/s683_screenshotDigests.R`/`s685_*` digest
-      scripts identify which change; owner-reviewed); reference images `trackB-nprc-*`/
-      `trackC-nprc-*` need NO regeneration (identity / identical layout — S690 re-proved
-      both: five packing fixtures byte-`identical()`, Track C bitwise identical, max
-      |dx| = 0); no `a2interactive.Rmd` change (no new export or parameter); record the
-      design's Open-Question dispositions (spectral upgrade, adaptive QP calibration,
-      kill-switch option, scaling at the #138 cap, Track C bitwise identity, the ~2,300 px
-      mean-span ceiling that only routing/duplicate-policy work can lower).
-      **Phase 2 outcomes forward-carried (S690):** wired at
-      `R/makePedigreeDiagramData.R:985-992` (pointer comment + the one call; engine passes
-      `minSep`, omits `maxSweeps`); census matched the design's RCM row on every number
-      (jogs 93, b 8 of which 2 dust, c1Pre 6, cCurved 1,667, d 1 =
-      `__dup_SLN0TF_2`/`SLN0TF`; invariants a/c1Post/c2/e/f = 0); Real-375 rectilinear
-      layout 2.16 s warm median (was 1.86 s). The one new class-(d) adjacent pair
-      (`SLN0TF`) was disclosed at the visual gate and accepted — the alignped3
-      collapse-when-adjacent refinement stays NOT PURSUED unless a later review reopens
-      it. Fresh S690 before/after render evidence: `scratchpad/s690_{baseline,wired}_
-      {overview,meso}.png`.
 - [ ] **Ascender-stub cosmetic on jog-repair corridors: small "ascender" stubs above
       sibship bars read as dangling lines ending in mid-air** (found S679, 2026-09-07,
       owner visual-gate question; extracted S687 from the census Finding #3 DONE record
