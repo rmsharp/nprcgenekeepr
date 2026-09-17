@@ -16,6 +16,50 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-17 · [BL-pedRemeasure] S698: pedigree-drawing housekeeping re-measure pass — D2-dogleg comment re-derived, 5-pair proximity residual closed resolved-by-construction, fidelity-article mate-line paragraphs rewritten to the QP engine
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; DEVELOPMENT_WORKSTREAM,
+  docs/comments-only — no TDD phases, S692/S694/S695/S697 precedent):** the three standing
+  pedigree-fidelity Housekeeping re-measures, each re-derived live under the current QP engine
+  before any edit (`scratchpad/s698_remeasure.R`, kept on disk per the don't-clean precedent).
+  Commits: claim `3daa4001`, deliverable `262c65be`.
+- **(A) D2-dogleg reachability (`test_resolveEdgeNodeCollisions.R:20-29`):** live re-derivation
+  confirms 0 `__proj_` nodes among the real 375 fixture's 1,456 rectilinear nodes — the dogleg
+  is structurally unreachable again, but by S678's Decision 2 mechanism (every resolved mate
+  node carries its unit's own gen), not the Track-4-era invariant the comment cited. Finding 1
+  rewritten with its full falsification history (true as written 2026-08-15 → falsified in the
+  Walker/BJL era, the S668 census measured 56 `__proj_` nodes → dead again S678, absence pinned
+  at `test_comparePedigreeStructure.R:687`), dated S698. The item's second question answered:
+  the sibling `test_addRectilinearWaypoints.R` 0-projection expectation is general (0 on every
+  fixture, by construction), not fixture-specific — its S678 CHANGED note already states the
+  current mechanism, so no edit was needed there.
+- **(B) 5-pair proximity residual (found S667) closed resolved-by-construction:** all 5 named
+  pairs re-measured under the QP engine by real-id occurrence sweep (S667's `__dup_X_n` indices
+  are allocation-order artifacts and no longer denote the same occurrences — Learning 751):
+  minimum same-row named-pair distance is now 480 px (`M0YNUR` vs `__dup_L31S6S_4`) against a
+  25 px radius-sum limit — the four S667-measured 10–22 px overlaps and the exact-clearance tie
+  are gone; `__union_43` vs every `WDBGPF` occurrence ≥ 3,540 px. An independent global
+  class (a) scan found 0 same-row visible-symbol overlaps on the whole fixture, agreeing with
+  the committed S696 census baseline (a=0, b=8 off-centre, c all curved-chord/c1=c2=0, d=1
+  adjacent-only). No code change — the item's own S687 forward-carry anticipated exactly this
+  close.
+- **(C) `vignettes/articles/kinship2-fidelity-validation.qmd` mate-line claims (2 sites — the
+  Track B "what matches" paragraph, lines 150–163, AND the same claim repeated in Caveats):**
+  live-measured on the Track B 16-subject fixture: all 4 union dots sit at exactly the midpoint
+  of their two mates (union − midpoint = 0.00 px; mates 120 px = 1 minSep apart), matching the
+  committed S675 QP-era `trackB-nprc-full.png` — which the prose directly contradicted ("at the
+  sire's own symbol"). Both sites rewritten: the two packages' mate-line conventions now agree
+  (side-by-side pair, midpoint descent); the remaining differences are the union-dot marker
+  itself (kinship2 draws none; visibility kept per issue #161) and the off-centre residual
+  where minSep floors bind (8 of 237 unions on the real 375 fixture, census baseline).
+- **Verification:** spell check clean; `test_wordlist_coverage.R` green directly (run before
+  the full suite per Learning 750); `lintr` 0 on the touched test file (package loaded);
+  edited test file green; full unfiltered clean regression **2,370 blocks, failed=0, error=0,
+  skipped=182** (the S696/S697 baseline exactly). 3 `BACKLOG.md` Housekeeping
+  blocks removed per the completed-item convention. No GitHub issue was ever filed for any of
+  the three items → no issue close owed. NEWS/citation/tutorial/a2interactive/`_pkgdown`
+  checklists N/A by inspection (no behavior change, no new export, statistic, or user-facing
+  control; the article edit IS the tutorial/article checklist's own artifact, corrected).
+
 ### 2026-09-17 · [ad hoc] S698 Phase 0: record CHANGELOG.md entry for S697's close-out commits (reconcile-on-read)
 - Phase 0 ledger reconcile found 2 commits since `CHANGELOG.md`'s frontier (`20088807`) with no
   ledger entry of their own — the same self-reference shape this project's precedent already
