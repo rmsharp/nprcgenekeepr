@@ -16,6 +16,18 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-17 · [ad hoc] S699 Phase 0: record CHANGELOG.md entry for S698's close-out commits (reconcile-on-read)
+- Phase 0 ledger reconcile found 2 commits since `CHANGELOG.md`'s frontier (`efd67743`) with no
+  ledger entry of their own — the same self-reference shape this project's precedent already
+  names repeatedly (S639→S643, S647, S698): `49ae8ac1` (S698's own close-out commit, writing the
+  final `SESSION_NOTES.md` handoff + S697 evaluation and completing the `HANDOFFS.md` receipt)
+  and `ddfa0dae` (recording that close-out commit's sha in the receipt's `commit:` field,
+  self-reconcile). Both postdate `efd67743`, the commit that wrote the ledger's own S698 entry —
+  that entry already describes the session's work; this is a pure reconcile-on-read backfill —
+  no content beyond what `49ae8ac1`/`ddfa0dae`'s own diffs already show. `HANDOFFS.md`'s own
+  frontier has no gap (`ddfa0dae` is already its last touching commit; receipt
+  `status: complete`).
+
 ### 2026-09-17 · [BL-pedRemeasure] S698: pedigree-drawing housekeeping re-measure pass — D2-dogleg comment re-derived, 5-pair proximity residual closed resolved-by-construction, fidelity-article mate-line paragraphs rewritten to the QP engine
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; DEVELOPMENT_WORKSTREAM,
   docs/comments-only — no TDD phases, S692/S694/S695/S697 precedent):** the three standing
