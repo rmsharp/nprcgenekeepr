@@ -18,17 +18,136 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 689 Handoff Evaluation (by Session 690)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, with the
+complete verification checklist (RCM census numbers, invariants, packing fixtures, Track C,
+visual gate) — the PRE-RED gate and the GREEN verification list were composed directly from
+it; the forward-carried gate outcomes in the BACKLOG item meant zero re-ratification; gotcha
+(2) ("the pinned orders are CONTRACT pins — do NOT re-derive when wiring") prevented a
+category error; gotcha (3) (omit `maxSweeps`, pass the engine's `minSep = 1L`) was the exact
+call signature; gotcha (1)'s 2,354-block expectation matched the measured baseline; every
+design-§Inventory pin-site line number had zero drift. **What was missing:** nothing said
+the `.findEdgeNodeCollisions()` obstacle-PAIR count (192) could move OPPOSITE to its edge
+count — the +13 rise to 205 (while edges fell 95→93) was the one number this session judged
+without design guidance; and the census-vs-suite unit map (jogs = colliding edges =
+corridors; ×2 = `__jog_` nodes; class-(b) "meaningful" = the 1e-3-floor rows) had to be
+reconstructed before the numbers would reconcile. **What was wrong:** nothing material —
+two predictions were conservative (Track C measured bitwise identical, max |dx| = 0, better
+than "to tolerance"; the +≈0.3 s cost measured +0.30 s median). **ROI:** high.
+
 ### What Session 690 Did
-**Deliverable:** Shape A root-subtree ordering — Phase 2: wire `.orderRootSubtrees()` into
-`.positionMatingUnitForest()`, re-derive Real-375 position pins, census re-run (RCM row),
-packing fixtures `identical()`, Track C `expect_equal`, owner visual review
-(DEVELOPMENT_WORKSTREAM, full TDD; owner-picked via `AskUserQuestion` at Phase 0;
-standing pedigree-fidelity directive). (IN PROGRESS)
-**Started:** 2026-09-16
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** Shape A root-subtree ordering — **Phase 2: `.orderRootSubtrees()` wired
+into `.positionMatingUnitForest()`**, the 5 order-sensitive Real-375 pin blocks re-derived,
+census verified against the design's RCM row, owner visual gate APPROVED
+(DEVELOPMENT_WORKSTREAM, full TDD; owner-picked via `AskUserQuestion` at Phase 0; standing
+pedigree-fidelity directive). **DONE.** **Started/completed:** 2026-09-16 (single session).
+Claim `e5f9288f`; RED `b3742d59`; GREEN `5313289c`; records `10750df6`.
+**Ledger:** recorded — S690 entry at the top of `CHANGELOG.md` (`10750df6`).
+
+**What actually happened, in order:**
+1. **Baseline before RED:** full clean regression re-measured at 2,354 blocks failed=0
+   error=0; CI all green (unconditional Phase 0 check); engine anchors re-grepped — zero
+   drift (:983/:985/:853 exactly as S688/S689 recorded).
+2. **Wired-engine instrument (pre-RED, zero file edits):** the EXACT GREEN edit runtime-
+   patched into the namespace (`deparse` + insert at the anchored line +
+   `assignInNamespace`; `scratchpad/s690_wired_engine.R`). Proved: five packing fixtures
+   byte-`identical()`; Track C bitwise identical (max |dx| = 0); realized 50-root order ==
+   the Phase 1 pinned RCM order; node ids/row order/counts/gens unchanged; 733/782
+   x-positions move. Before/after layouts captured to RDS.
+3. **RED-set enumeration:** FULL suite under the patch (`s690_red_set.R`) — exactly 5
+   blocks / 11 assertions fail (of ~26 inventory candidates), 0 errors; every structural
+   invariant (never-outside-span :2855-region guards, no same-row crossing, zero
+   corridor-disc violations, P49ZD1 bound) passes BEFORE any test edit. Detail values via
+   `s690_red_details.R`; union-centering membership + roundness-bump set via
+   `s690_derive_b.R`. Render pair generated pre-RED from the patched instrument
+   (`s690_crop.R`).
+4. **PRE-RED gate** (one `AskUserQuestion`; S689 gate outcomes forward-carried, so no
+   re-ratification): approved, with the two regressing numbers disclosed (WCPXHD max dev
+   1.05→1.50; extended-bar overlaps 88→97).
+5. **RED (`b3742d59`):** the 5 blocks re-pinned to the derived values, each with a dated
+   CHANGED note; verified failing for the right reason against the unmodified engine
+   (`s690_red_check.R`), everything else passing.
+6. **RED→GREEN gate, then GREEN (`5313289c`):** the one-line insertion (+ pointer comment)
+   at `R/makePedigreeDiagramData.R:985-992`. Verified: the 4 RED files pass; full clean
+   regression 2,354 blocks failed=0 error=0; shipped outputs `identical()` to the
+   instrument capture (`s690_green_identity.R` — the pin-faithfulness loop closed); lint 0
+   (package loaded); `document()` no-op; census re-run matched the design's RCM row on
+   EVERY number (jogs 93, b 8 of which 2 dust = the 6-member disclosed set, c1Pre 6,
+   cCurved 1,667, d 1 = `__dup_SLN0TF_2`/`SLN0TF`; invariants a/c1Post/c2/e/f = 0); every
+   non-Real-375 findings-CSV row byte-identical (frozen artifact restored); layout 2.16 s
+   warm median (design ≈2.2 s).
+7. **GREEN→REFACTOR gate:** REFACTOR skipped, owner-approved (GREEN diff is 9 lines, lint
+   0, comment already plain).
+8. **Visual gate:** owner interrupted the first question to request a small-pedigree
+   exemplar suite (20 ± 10 individuals; consanguinity, linebreeding, backcross, cousin,
+   half-sib), anticipating a new session; question reformulated per the harness guidance;
+   **APPROVED** ("very well laid out"), with the suite filed as the new top BACKLOG Up
+   Next item rather than started (1-and-done).
+9. **Close-out:** this evaluation, self-assessment, Learning 743, CHANGELOG entry, Phase 2
+   BACKLOG block removed per the completed-item convention + Phase 3 flipped READY with
+   outcomes forward-carried + the owner-requested suite item added (`10750df6`), HANDOFFS
+   receipt.
+
+**Self-assessment (Session 690): 9/10.** **Strengths:** (1) the RED set was ENUMERATED by
+running the full suite under the exact GREEN edit, not assumed from the inventory — which
+both shrank the candidate list (26→5) and surfaced the one pin no design table tracked
+(obstacle-pairs 192→205); (2) the pin-faithfulness loop was closed at the whole-engine
+level (pins from the instrument capture; shipped edit proven `identical()` to that capture);
+(3) census matched the design's RCM row number-for-number, with the census-vs-suite unit
+map written down; (4) scope held exactly — one call + comment in production, 5 test blocks,
+nothing else; (5) the owner's mid-gate feature request became a fully-specified BACKLOG
+item, not scope creep. **Weaknesses:** (1) the meso crop pair centers on Q8MRCZ, which the
+change itself MOVES, so the two crops show different neighborhoods — fixed-region crops
+would have been better comparative evidence (folded into Learning 743); (2) the baseline
+regression and the RED-set enumeration ran concurrently early on, inflating wall times and
+risking chromote contention (none materialized, but sequential would have been cleaner);
+(3) the first timing sample was taken under that load (2.35 s) and had to be re-measured
+(2.16 s median of 3).
+
+**Next steps (specific):** (A) **Small-pedigree exemplar suite** (READY, top Up Next,
+`BACKLOG.md:14`, Effort M, owner-requested at this session's visual gate): build ~5 small
+pedigrees (20 ± 10 individuals) covering consanguinity, linebreeding, backcross,
+first-cousin and half-sib matings; render both `edgeStyle`s (`scratchpad/s690_crop.R`
+reusable); scoping `AskUserQuestion` FIRST (bundled example CSVs vs test fixtures vs
+vignette material — user-facing shipping triggers the tutorial/article + NEWS checklists).
+(B) **Shape A Phase 3 — docs & follow-ups** (READY, `BACKLOG.md:35`, Effort S): NEWS.Rmd
+plain-language entry, regenerate the 5 Diagram-tab screenshots (digest scripts named in the
+item), record Open-Question dispositions. (C) Ascender-stub cosmetic (READY, Effort M).
+(D) QP Migration Path Phase 4 cleanup (READY, Effort S). (E) SESSION_NOTES.md trim (READY,
+dashboard HIGH; this session added ~110 lines). (F) `[ ]`-but-RESOLVED pointer sweep
+(DECISION NEEDED, top Housekeeping). (G) **Push decision:** ~38 commits ahead after this
+close-out; 4 workflows fire on push; S690's code is CI-clean locally by construction (full
+suite + lint); fix-or-defer per the CI-break convention applies to whatever the push
+surfaces. (H) Informational: dashboard copy stale (v2.14.0 vs v2.18.0); the untracked
+Office lock file and S685 `tests/testthat/_problems/` leftovers remain (owner's call).
+
+**Key files:** `R/makePedigreeDiagramData.R:985-992` (the wired pass: comment :985-990,
+call :991-992); `tests/testthat/test_makePedigreeMatingLayout.R:745` (nodes 1456), `:774`
+(jogs 186); `test_resolveEdgeNodeCollisions.R:363` (new named pair `__dup_1X40V5_1`),
+`:384` (curved residuals 56), `:576-577` (93 edges / 205 rows);
+`test_positionMatingUnitForest.R:2964` (6-member disclosed set), `:2973` (1.55 bound);
+`test_addRectilinearWaypoints.R:797-798` (bar overlaps 97); `BACKLOG.md:14` (the
+owner-requested suite item), `:35` (Phase 3, READY, forward-carry note at its end);
+`CHANGELOG.md:19` (S690 entry); `PROJECT_LEARNINGS.md:2188` (Learning 743);
+`scratchpad/s690_*` (instruments, captures, renders, census log/findings — untracked).
+
+**Gotchas for the next session:** (1) **failed=0 expectation stays 2,354 blocks** — pins
+re-derived in place, no new test blocks. (2) The s690 patch instruments
+(`s690_wired_engine.R`/`s690_red_set.R`/`s690_derive_b.R`/`s690_red_details.R`) were built
+for the PRE-wiring engine: their anchor line still matches at HEAD, so re-running them now
+would stack a SECOND ordering pass (not idempotent — the pass re-seeds from whatever order
+it receives); treat them as historical, use `s690_crop.R` (baseline mode reflects HEAD's
+wired engine now — its "baseline" flag simply skips the patch, so at HEAD both modes are
+wired and identical). (3) The frozen census CSV
+(`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv`) still holds
+PRE-wiring Real-375 rows — deliberately restored; only non-Real-375 rows remain live
+byte-comparisons; S690's post-wiring findings are `scratchpad/s690_census_findings.csv`; a
+future census run will re-show the same Real-375 diff — it is not a regression. (4) The
+union-centering disclosed set (6 members, bound 1.55) is order-sensitive BY DESIGN — any
+future ordering/seed change re-derives membership; count-and-bound is the expectation,
+never the id list. (5) BACKLOG line numbers shifted again (Phase 2 block removed, suite
+item added) — re-grep, don't trust S689-era numbers. (6) When rendering comparison crops,
+center on a FIXED region or family, not on a node id the change moves (Learning 743).
 
 ### Session 688 Handoff Evaluation (by Session 689)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, named with
