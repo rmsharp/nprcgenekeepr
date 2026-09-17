@@ -16,6 +16,38 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-17 · [BL-qpPhase4] S697: QP Migration Path Phase 4 cleanup — `R/` doc-comments describe the QP engine (closes the joint-QP-solver migration plan's 4-phase path)
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; DEVELOPMENT_WORKSTREAM,
+  docs-only — no TDD phases, per the S692/S694/S695 precedent):** the migration plan's
+  last open scope discharged. Phase 4's nominal code/constant deletion and NEWS entry
+  had already landed at earlier boundaries (S674 deleted the five passes, their `.kMax*`
+  constants, and every dead call site at the Phase 2 cutover; the NEWS entry landed
+  S675), leaving the doc-comment sweep. Commits: claim `b81bfecc`, deliverable
+  `43ed9a24`.
+- **Sweep (7 stale sites, all `R/makePedigreeDiagramData.R`):** the S667 component
+  comment ("every collision-avoidance mechanism run unchanged per family" + a named
+  deleted-pass reference); the `qualifies()` relocation comment (claimed the deleted
+  `b1AnchorRelativeX()` branch still calls it — it is now the S666 conditional-shift
+  pass's only caller); the second-`sweepMinSepBackstop()` rationale (named the deleted
+  pass); the S666 chain-rule comment ("Tier 3/collision-avoidance ... also unchanged");
+  the orphaned 39-line S647 block describing the deleted shared de-collision pass in
+  present tense (removed; its identity folded into the Phase 2 replacement comment,
+  which no longer names the deleted symbol); and `makePedigreeMatingLayout()`'s
+  exported roxygen (attributed the issue-#145 male-left rule to the deleted "Tier 3
+  formula (S8.1)"; now describes the seeding rules + `.solveJointQP()` row-order
+  preservation actually enforcing it — `man/makePedigreeMatingLayout.Rd` regenerated).
+  Explicitly historical enumerations keep their past-tense pass vocabulary.
+- **Verification:** the plan's own Phase 4 gate grep
+  (`deCollideIndividualPoints|kMaxUnionPush|kMaxB1ProximityPush` in `R/`) returns
+  nothing; `lintr` 0 on the touched file (package loaded); full clean regression
+  **2,370 blocks, failed=0, error=0, skipped=182** (the S696 baseline exactly) — the
+  first unfiltered run caught failed=1 in `test_wordlist_coverage.R` because the
+  roxygen rewrite's "QP" was the acronym's first exported-roxygen (Rd-rendered) use;
+  `QP` added to `inst/WORDLIST` (BJL/LOD precedent), gate re-run green (Learning 750).
+  Phase 4 record written into the plan doc §Migration Path; `BACKLOG.md` Up Next item
+  removed per the completed-item convention. No GitHub issue was ever filed for the
+  implementation, so no issue close is owed.
+
 ### 2026-09-17 · [ad hoc] S696: pushed the 76-commit S685–S696 backlog to origin/master — all 4 push-triggered workflows green first-try, no CI break to fix or defer
 - **Owner-directed post-close-out action** ("push", next-step D of the S696 handoff):
   `git push origin master` (`ab00ea49..86e852d1`, 76 commits) — first CI exposure for

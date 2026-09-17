@@ -11,14 +11,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **QP Migration Path Phase 4 cleanup -- the joint-solver migration's last step**
-      (from `docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path;
-      Phases 1-3 DONE S673/S674/S675 -- the dead Tier 2/3 passes were already deleted
-      S674 and the NEWS.Rmd entry landed S675; extracted S687 from the DONE record per
-      the completed-item convention; READY, Effort S). Remaining: grep `R/` doc-comments
-      for stale references to the deleted tiers/passes and the `.kMax*` constants and
-      update them to describe the QP engine; that closes the migration plan's own
-      4-phase path.
 
 ## Active
 
