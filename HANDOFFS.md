@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S691
+date: 2026-09-16
+status: pending
+active_task: Small demonstration pedigrees (20 ± 10 individuals) exercising the classic complex mating structures (consanguinity, linebreeding, backcross, first-cousin, half-sib), rendered through makePedigreeMatingLayout() (both edgeStyles) for owner review — top BACKLOG Up Next item, owner-requested at S690's visual gate, owner-picked via AskUserQuestion at Phase 0. Scoping AskUserQuestion (example CSVs vs test fixtures vs vignette material) precedes any RED work.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S690
 date: 2026-09-16
 status: complete

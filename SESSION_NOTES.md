@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 691 Did
+**Deliverable:** Small demonstration pedigrees (20 ± 10 individuals) exercising the classic
+complex mating structures (consanguinity, linebreeding, backcross, first-cousin, half-sib),
+rendered through `makePedigreeMatingLayout()` (both `edgeStyle`s) for owner review — the top
+BACKLOG Up Next item, owner-requested at S690's visual gate; owner-picked via
+`AskUserQuestion` at Phase 0. (IN PROGRESS)
+**Started:** 2026-09-16
+**Status:** Session claimed. Scoping `AskUserQuestion` (bundled example CSVs vs test
+fixtures vs vignette material) comes next, before any RED work.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 689 Handoff Evaluation (by Session 690)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, with the
 complete verification checklist (RCM census numbers, invariants, packing fixtures, Track C,
