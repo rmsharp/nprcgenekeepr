@@ -22,6 +22,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 703 Did
+**Deliverable:** Issue #148 MHC haplotype scoping document (S702 next-step A; owner-picked
+via `AskUserQuestion` at Phase 0; the genetic-metrics sequencing audit's last open item;
+scope-narrowing decision first per audit Finding #4 — a scoping/planning session, docs-only,
+no TDD phases). (IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning.
+**Ledger:** claim entry recorded in `CHANGELOG.md` with this commit (Learnings 752/754
+convention); the session's remaining actions are recorded at Phase 3F. Until close-out,
+this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 701 Handoff Evaluation (by Session 702)
 **Score: 8/10.** **What helped:** next-step (A) WAS this session's deliverable with a
 complete procedure: claim-entry-IN-the-claim-commit (Learnings 752/754) meant

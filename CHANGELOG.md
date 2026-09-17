@@ -22,6 +22,15 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [issue #148] S703 claim: MHC haplotype scoping document (session claimed, work beginning)
+- Phase 1B claim for the issue #148 scope-narrowing/scoping session (S702 next-step A;
+  owner-picked via `AskUserQuestion` at Phase 0; the genetic-metrics sequencing audit's
+  last open item, `GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md` Finding #4 —
+  the issue is filed as a full feature while the audit recommends design-first
+  treatment). Deliverable: one scoping document; the scope decision goes to the owner
+  via `AskUserQuestion` mid-session. Docs-only planning session — no TDD phases.
+  Claim entry ships in the claim commit (Learnings 752/754 convention).
+
 ### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits 5a8bb047..43b29508 — S702 close-out self-reference commits
 - The recurring close-out shape (same as S701's `79b6003b`/`8c0097fb`, backfilled
   `cd2ba39f`): after S702's ledger-recording commit `922350bd`, two further commits
