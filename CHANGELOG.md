@@ -16,6 +16,16 @@ it is failure mode #27.
 
 ## 2026-08
 
+## 2026-09
+
+### 2026-09-17 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-17.md` (170 record(s), 931,481 B → 2,560 B)
+
+**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
+Moved the oldest **170** record(s) (2026-08-19 → 2026-09-17) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-17.md`](docs/archive/SESSION_NOTES-through-2026-09-17.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-17.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-17.md.verify.sh)
+rather than trusting a digest printed here. Live file 931,481 B → 2,560 B (−99.7%).
+
 ### 2026-09-17 · [ad hoc] S700: session claimed — SESSION_NOTES.md trim (in progress)
 - Claim commit `86c1bc6a` (SESSION_NOTES.md stub + HANDOFFS.md pending receipt). Deliverable:
   the `methodology_trim.py` archive pass on `SESSION_NOTES.md` (S699 next-step A; the
