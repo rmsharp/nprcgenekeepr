@@ -18,6 +18,15 @@ it is failure mode #27.
 
 ## 2026-09
 
+### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits 79b6003b..8c0097fb — S701 close-out self-reference commits
+- The recurring close-out shape (same as S700's `c0b7ec81`/`d86c576a`, backfilled
+  `21d09bca`): after S701's ledger-recording commit `1a8aeb20`, two further commits
+  landed that by construction cannot ledger themselves — `79b6003b` (SESSION_NOTES
+  handoff + S700 evaluation, HANDOFFS receipt completed) and `8c0097fb` (close-out
+  commit sha recorded into the HANDOFFS receipt, self-reconcile). Both are S701
+  close-out bookkeeping, fully described by the S701 entry below; no work product is
+  missing. Backfilled by the next session's Phase 0 reconcile-on-read.
+
 ### 2026-09-17 · [BL-Housekeeping] S701 close-out: HANDOFFS.md archive pass DONE (116 receipts archived, verified lossless); 1 learning; BACKLOG item narrowed to the CHANGELOG.md half
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; docs-only maintenance
   session — no TDD phases, S700/S594/S539 archive-pass precedent):** the
