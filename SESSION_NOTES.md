@@ -18,17 +18,102 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 691 Handoff Evaluation (by Session 692)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
+BACKLOG item was a complete spec — target directory, the literal-`NA` warning (Learning
+744), the S628 NEWS criterion pointer, and the explicit "no `_pkgdown.yml`/
+`a2interactive.Rmd` obligation" scoping note, so zero checklist re-derivation was needed;
+the structural count table in follow-up item B (direct 19/21/15/17/18, rectilinear
+33/35/26/33/30, dups 1/2/1/1/2) enabled this session's engine-count verification of the
+shipped copies without re-deriving anything; gotcha (2) (CSVs are UNTRACKED — copy before
+scratchpad cleanup) correctly framed the urgency; gotcha (6) (BACKLOG line drift —
+re-grep) held again. **What was missing:** nothing recorded that the linebreeding and
+half-sib rectilinear layouts emit a "2 same-row edge-node collision(s)" warning — S691
+rendered exactly those layouts but its render script didn't capture warnings, and the
+fixture follow-up would have hit them as unexpected-condition failures (found this
+session, forward-carried into item B; Learning 745). **What was wrong:** nothing
+material. **ROI:** high.
+
 ### What Session 692 Did
-**Deliverable:** Ship the 5 owner-approved S691 exemplar pedigree CSVs as bundled example
-CSVs (`inst/extdata/examples/`) + plain-language `NEWS.Rmd` entry (IN PROGRESS —
-`BACKLOG.md` top Up Next item, follow-up 1 of 3 from S691; owner-picked via
-`AskUserQuestion` at Phase 0; standing pedigree-fidelity directive; DEVELOPMENT_WORKSTREAM,
-data + docs only — the full-TDD fixture work is deliberately the separate follow-up 2).
-**Started:** 2026-09-16
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** The 5 owner-approved exemplar pedigrees SHIPPED as bundled example CSVs
+— `inst/extdata/examples/example_pedigree_{consanguinity,linebreeding,backcross,
+first_cousin,half_sib}.csv` — plus the plain-language `NEWS.Rmd` entry (follow-up 1 of 3
+from S691; owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
+directive; DEVELOPMENT_WORKSTREAM, data + docs only — full-TDD fixture work is the
+separate follow-up 2, now READY). **DONE.** **Started 2026-09-16, closed 2026-09-17**
+(crossed midnight at close-out). Claim `c8d67f68`; ship `121a4ccd`; NEWS `af0996dc`;
+records `60302c09`.
+**Ledger:** recorded — S692 entry at the top of `CHANGELOG.md` (`60302c09`).
+
+**What actually happened, in order:**
+1. **Copied the 5 approved CSVs** from scratchpad into `inst/extdata/examples/`, renamed
+   from `s691_ped_*` to the directory's established `example_*` convention (content
+   untouched — the owner approved content, not filenames; rename disclosed in the report).
+2. **Verified the SHIPPED copies, not the sources:** `cmp` byte-identity ×5; 44/44
+   ground-truth checks (columns, no `""` phantom parents, founders' `NA` intact,
+   `system.file()` resolution, every φ/F exact to theory, F = 0 for all other
+   non-founders); all 10 structural layout counts through the HEAD engine match the
+   owner-approved layouts. Committed `121a4ccd` (5 files, at the blast-radius cap).
+3. **NEWS.Rmd entry** at the end of the Pedigree Diagram section, S628 plain-language
+   criterion; `NEWS.md` re-rendered (diff = only the new entry). The wordlist coverage
+   test flagged `linebreeding` → added to `inst/WORDLIST` (Learning 669's CI class,
+   caught locally pre-push). Committed `af0996dc`.
+4. **Found + forward-carried:** linebreeding and half-sib rectilinear layouts each emit
+   a "2 same-row edge-node collision(s) could not be fully resolved" warning — present
+   at S691 approval (same engine) but recorded nowhere; written into fixture item B's
+   BACKLOG description + Learning 745.
+5. **Full clean regression (background, unfiltered, `NOT_CRAN`):** 2,354 blocks
+   failed=0 error=0 — exactly the S691 baseline (no test file touched).
+6. **Close-out:** records `60302c09` (CHANGELOG entry, Learning 745, shipped item's
+   BACKLOG block removed per the completed-item convention, follow-ups 2–3 flipped
+   READY with shipped paths forward-carried), this handoff, HANDOFFS receipt.
+
+**Self-assessment (Session 692): 9/10.** **Strengths:** (1) every verification ran on
+the shipped artifacts through the exact loading route users and fixture tests will use
+(`system.file()`), not on the scratchpad sources; (2) the warning discovery turned a
+future red-test surprise into a specified decision for the fixture session; (3) scope
+held exactly — no fixture code, no article work, both deliberately left to their own
+sessions; (4) the wordlist gate ran before commit, not after a CI break. **Weaknesses:**
+(1) the shipped filenames were chosen unilaterally (convention-following, byte-identity
+proved, but the owner hasn't seen the names — disclosed in the report); (2) the
+verification scripts lived in the ephemeral session scratchpad rather than the project
+scratchpad — acceptable since fixture item B re-implements them as tests from
+`scratchpad/s691_pedigrees.R`'s helpers, but a crash would have lost them.
+
+**Next steps (specific):** (A) **Pin the 5 exemplars as test fixtures**
+(`BACKLOG.md:14`, now READY, Effort M, full TDD — top standing-priority item):
+structural pins only; load via `system.file("extdata", "examples",
+"example_pedigree_<name>.csv", package = "nprcgenekeepr")`; MUST handle the
+linebreeding/half-sib rectilinear warnings deliberately (item B names them).
+(B) **Article/tutorial section** (`BACKLOG.md:39`, now READY, Effort M): point
+`scratchpad/s691_render.R` at the shipped paths; the approved PNGs are still
+scratchpad-only. (C) Shape A Phase 3 docs (READY, Effort S). (D) Ascender-stub
+cosmetic (READY, Effort M). (E) QP Phase 4 cleanup (READY, Effort S).
+(F) SESSION_NOTES.md trim (READY, dashboard HIGH; this session added ~120 lines).
+(G) Push decision: ~46 commits ahead after this close-out — S692's additions are
+CI-safe by construction (full suite + wordlist green locally). (H) Informational:
+dashboard copy still stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged.
+
+**Key files:** `inst/extdata/examples/example_pedigree_consanguinity.csv:1` and its 4
+siblings (the shipped artifacts); `NEWS.Rmd:185` (the new entry; `NEWS.md:181`
+rendered); `inst/WORDLIST:399` (`linebreeding`); `BACKLOG.md:14` (fixtures item B, READY,
+warning forward-carry at its end), `:39` (article item C, READY); `CHANGELOG.md:19`
+(S692 entry); `PROJECT_LEARNINGS.md:2190` (Learning 745);
+`scratchpad/s691_pedigrees.R:132/:175` (`verifyDirectEdges()`/`verifyRectiNets()`,
+reusable as fixture-test helpers — still UNTRACKED).
+
+**Gotchas for the next session:** (1) **failed=0 expectation stays 2,354 blocks** — no
+test file touched; item A adds blocks when it lands. (2) The fixture file must pin or
+suppress the linebreeding/half-sib rectilinear warnings (item B's forward-carry names
+the exact message) or those calls fail as unexpected warnings. (3) The approved renders
+(`scratchpad/s691_<ped>_{rectilinear,direct}.png`) and `s691_pedigrees.R`/
+`s691_render.R` are STILL untracked scratchpad files — the article session needs them
+(or regenerates from shipped CSVs); don't clean scratchpad before then. (4) The retired
+`scratchpad/s691_ped_*.csv` sources remain in scratchpad but the shipped copies are
+canonical now — edit nothing in scratchpad expecting it to ship. (5) `NEWS.md` is
+RENDERED from `NEWS.Rmd` (`rmarkdown::render("NEWS.Rmd")`) — never edit `NEWS.md`
+directly. (6) BACKLOG line numbers shifted again (shipped block removed, net −4 lines
+at the top) — re-grep, don't trust S691-era numbers.
 
 ### Session 690 Handoff Evaluation (by Session 691)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
