@@ -9,7 +9,7 @@
 ## reverse Cuthill-McKee (not spectral), calibration = Tier-1 BJL geometry
 ## only (not the QP-solved pass-1 layout) -- and declined Open Question 5's
 ## "<4 roots" guard, so Track C's order is expected to change (its full-layout
-## positions are identical either way, design SSEvidence 4).
+## positions are identical either way, design Evidence 4).
 ##
 ## Contract under test (design Decision 1's interface table + Decisions 2-4):
 ## .orderRootSubtrees(rootIds, childrenOf, matingUnits, duplicates, minSep,
@@ -90,8 +90,8 @@ tier1ConnectorSpan <- function(rootIds, childrenOf, matingUnits, duplicates) {
 }
 
 ## The real 375-animal bundled fixture's 50-root component: the design's
-## measured target (SSEvidence 6: components 2/1/1/3/50 roots; every pinned
-## order below is for this component, incoming order = ped row order).
+## measured target (design Evidence 6: components 2/1/1/3/50 roots; every
+## pinned order below is for this component, incoming = ped row order).
 real375BigComponentInputs <- function() {
   ped <- utils::read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
@@ -218,7 +218,7 @@ test_that(".orderRootSubtrees() returns its input order unchanged --
 test_that(".orderRootSubtrees() reorders Track C's three roots P1,X,W to
            X,P1,W -- the S688-measured searched order (Tier-1-level span
            600 -> 360 px; the full layout's positions are identical either
-           way, design SSEvidence 4, so no Open-Question-5 guard is
+           way, design Evidence 4, so no Open-Question-5 guard is
            applied)", {
   pedC <- data.frame(
     id   = c("P1", "P2", "A", "Y", "X", "W", "C1", "C2", "GC"),

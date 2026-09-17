@@ -20,10 +20,10 @@
 #' The left-to-right order of a component's founder subtrees is inherited
 #' from ped row order -- an arbitrary input property -- and on real colony
 #' pedigrees nearly all curved duplicate-connector ink is cross-root-subtree
-#' (design \verb{SS}Context: 125 of Real 375's 127 connectors). This pass
-#' permutes \code{rootIds} so that subtrees joined by many connectors sit
-#' near each other, and returns the incoming order untouched whenever there
-#' is nothing to gain.
+#' (the design's Context section: 125 of Real 375's 127 connectors). This
+#' pass permutes \code{rootIds} so that subtrees joined by many connectors
+#' sit near each other, and returns the incoming order untouched whenever
+#' there is nothing to gain.
 #'
 #' Method (design Decisions 2-4): calibrate block widths and connector
 #' endpoints once from a Tier-1 BJL layout of the \emph{incoming} order
@@ -34,7 +34,7 @@
 #' first-improvement swap/move sweeps (at most \code{maxSweeps}); accept
 #' only on strict (\code{-1e-9}) proxy improvement over the incoming order.
 #' One round -- the pass never recalibrates on its own output (measured to
-#' diverge, design \verb{SS}Evidence 3).
+#' diverge, design Evidence 3).
 #'
 #' @param rootIds character vector, the component's root ids in incoming
 #'   (ped row) order.
