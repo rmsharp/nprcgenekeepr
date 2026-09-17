@@ -1454,7 +1454,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmphJqbvx/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmpy9jLT8/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2226,8 +2226,8 @@ into the de-identified table.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-09-17 18:26:03.03056. The processing
-time for this document was 22 seconds..
+The current date and time is 2026-09-17 18:59:46.890549. The processing
+time for this document was 21 seconds..
 
 ``` r
 

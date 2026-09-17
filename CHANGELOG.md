@@ -17,6 +17,24 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-09-17 · \[ad hoc\] S696: pushed the 76-commit S685–S696 backlog to origin/master — all 4 push-triggered workflows green first-try, no CI break to fix or defer
+
+- **Owner-directed post-close-out action** (“push”, next-step D of the
+  S696 handoff): `git push origin master` (`ab00ea49..86e852d1`, 76
+  commits) — first CI exposure for everything since S684’s push,
+  spanning S685’s disc-aware jog offsets, S688–S690’s Shape A
+  root-subtree ordering chain, the S691–S695 exemplar/article/docs
+  sessions, and this session’s ascender-stub fix.
+- **CI shepherded to terminal on `86e852d1` (poll-observed, every
+  conclusion seen, not assumed):** lint success (run 35257056404),
+  test-coverage success (35257056632), pkgdown success (35257056707),
+  R-CMD-check success (35257056403). **No fix-or-defer action owed**
+  under the CI-break tracking convention (`CLAUDE.md`, S636).
+- This ledger-entry commit itself rides a follow-up push; its own 4
+  workflow runs are the disclosed in-progress residual for the next
+  session’s Phase 0 CI check (the same shape S684’s push entry left for
+  S685).
+
 ### 2026-09-17 · \[BL-ascenderStub\] S696: ascender-stub cosmetic fix — jog corridors rejoin the kid directly (found S679, owner visual gate)
 
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing
