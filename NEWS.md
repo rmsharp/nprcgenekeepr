@@ -199,6 +199,10 @@ R. Mark Sharp, Ph.D.
   cross each other less often, making large colony pedigrees with many
   repeated individuals easier to follow. Very large pedigrees take a
   fraction of a second longer to lay out.
+- On crowded diagrams, the short detours that route a family's sibling
+  line around unrelated animals no longer leave small dangling line ends
+  hanging above the detour. Each detour now joins the child's own line
+  directly, so what is drawn is only ink that connects somewhere.
 
 ## Kinship & Pedigree Calculations
 
