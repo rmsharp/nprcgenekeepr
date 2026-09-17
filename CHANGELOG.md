@@ -18,6 +18,15 @@ it is failure mode #27.
 
 ## 2026-09
 
+### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits c0b7ec81..d86c576a — S700 close-out self-reference commits
+- The recurring close-out shape (same as S699's `87dfb4dc`/`4901c0f4`, backfilled
+  `af664d43`): after S700's ledger-recording commit `c179897a`, two further commits
+  landed that by construction cannot ledger themselves — `c0b7ec81` (SESSION_NOTES
+  handoff + S699 evaluation, HANDOFFS receipt completed) and `d86c576a` (close-out
+  commit sha recorded into the HANDOFFS receipt, self-reconcile). Both are S700
+  close-out bookkeeping, fully described by the S700 entry below; no work product is
+  missing. Backfilled by the next session's Phase 0 reconcile-on-read.
+
 ### 2026-09-17 · [ad hoc] S700 close-out: SESSION_NOTES.md trim DONE (170 records archived, verified lossless); 2 learnings; HANDOFFS/CHANGELOG trim item queued
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; docs-only maintenance
   session — no TDD phases, S539/S594 archive-pass precedent):** the `methodology_trim.py`
