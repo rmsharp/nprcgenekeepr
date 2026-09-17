@@ -148,7 +148,7 @@ key_files: R/orderRootSubtrees.R:56 (the function; stop() guard :59, early exits
 gotchas: failed=0 expectation is now 2,354 blocks (was 2,347 — the 7 new test_orderRootSubtrees.R blocks). The pinned orders in test_orderRootSubtrees.R are CONTRACT pins for the standalone function — Phase 2's wiring does not change them (same inputs, same function); only the Real-375 POSITION pins in the design's SS-Inventory re-derive. The engine call should omit maxSweeps (default 20L) and pass the engine's own minSep (1L raw units, R/makePedigreeDiagramData.R:853). Engine line references (:983/:985/:853) un-drifted as of ae85f1cf but re-grep before editing. The s689_* scratchpad instruments parse/mirror s688_m5.R and every s68x script chain sources scratchpad/s686_order_lib.R — all untracked, keep the s686_/s688_/s689_ set together. BACKLOG line numbers shifted again (-27 lines at the top) — re-grep, never trust stored numbers from S688-era receipts.
 runtime_smoke: n/a — standalone internal function, not wired; engine runtime behavior unchanged by construction (nothing calls it). The function itself was exercised dozens of times in-session (test suite, wall-time measurement, derivation cross-checks), all clean; full regression 2,354 blocks failed=0 error=0.
 changelog_ref: 2026-09-16 S689 entry (BL-rootSubtreeOrderingPhase1), 4272ed4b
-commit: pending
+commit: dcfb4a32
 ```
 **Self-score breakdown (9/10):** +every pin derived by execution AND the test-side input
 construction proven equivalent to the deriving instrument before RED (Learning 742) — GREEN
