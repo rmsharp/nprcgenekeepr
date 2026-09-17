@@ -18,18 +18,113 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 690 Handoff Evaluation (by Session 691)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
+BACKLOG item S690 filed contained the complete spec — the five structures with their
+genetic definitions, the duplicate-node-policy review question, and the exact scoping
+`AskUserQuestion` (CSVs vs fixtures vs vignette + which checklists each triggers), which
+was posed almost verbatim; the `scratchpad/s690_crop.R` pointer was exactly right —
+`s691_render.R` is a light adaptation (no patching, fit from both extents); gotcha (5)
+(BACKLOG line numbers shifted — re-grep) held. **What was missing:** nothing said the
+bundled-example CSV format uses literal `NA` parent fields — a one-line "match
+`obfuscated_rhesus_mhc_ped.csv`'s format exactly" would have prevented the `na = ""`
+round-trip corruption that cost one full render cycle (Learning 744). **What was wrong:**
+nothing material. **ROI:** high.
+
 ### What Session 691 Did
-**Deliverable:** Small demonstration pedigrees (20 ± 10 individuals) exercising the classic
-complex mating structures (consanguinity, linebreeding, backcross, first-cousin, half-sib),
-rendered through `makePedigreeMatingLayout()` (both `edgeStyle`s) for owner review — the top
-BACKLOG Up Next item, owner-requested at S690's visual gate; owner-picked via
-`AskUserQuestion` at Phase 0. (IN PROGRESS)
-**Started:** 2026-09-16
-**Status:** Session claimed. Scoping `AskUserQuestion` (bundled example CSVs vs test
-fixtures vs vignette material) comes next, before any RED work.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Small demonstration pedigrees exercising the 5 classic complex mating
+structures — built, ground-truth-verified, rendered both `edgeStyle`s, **owner visual gate
+APPROVED ("all 5 legible")** (owner-picked via `AskUserQuestion` at Phase 0;
+owner-requested at S690's visual gate; standing pedigree-fidelity directive). **DONE** —
+review-only per the scoping gate: scratchpad artifacts only, no package file touched.
+**Started/completed:** 2026-09-16 (single session). Claim `b9e0c2fa`; records `f028ff9e`.
+**Ledger:** recorded — S691 entry at the top of `CHANGELOG.md` (`f028ff9e`).
+
+**What actually happened, in order:**
+1. **Scoping gate (`AskUserQuestion`):** the owner selected ALL THREE shipping targets
+   (bundled example CSVs, test fixtures, vignette material) plus review-only, and asked
+   how test fixtures would be used (answered: automatic regression tripwires — testthat
+   loads the CSVs and re-checks pinned expectations on every run, never operated by
+   hand). Decomposed review-first per 1-and-done: this session reviews; three follow-up
+   items ship, filed at close-out.
+2. **Authored 5 pedigrees (11–14 individuals each)** in `scratchpad/s691_pedigrees.R`:
+   consanguinity (full-sib CS1×CD1, F = 1/4), linebreeding (LK through 2 distinct lines,
+   F = 1/32), backcross (BR × her own sire BP, F = 1/4), first-cousin (FC1×FC2,
+   F = 1/16), half-sib (HA1×HB1 shared sire, F = 1/8); `gen` from `findGeneration()`.
+3. **Ground truth verified before rendering:** every φ/F matches theory exactly (plus
+   F = 0 for every other individual); sexes consistent; distinct-lines walk proves the
+   linebreeding claim; every rendered (child, sire, dam) triple reconstructed from the
+   `__union_*` edges (resolving `__dup_*`) is set-identical to the CSV (direct style);
+   every rectilinear waypoint routing net confined to one union's family. All passed
+   first run in memory.
+4. **Defect caught:** first CSV write used `na = ""` → `read.csv` returned `""`
+   phantom-parent ids → the first 10 renders were corrupted (consang direct 23 nodes vs
+   the verified 19 — the count mismatch was the tripwire). Rebuilt with the `na = "NA"`
+   default + `identical()` round-trip assertion + defensive `"" -> NA` in the renderer;
+   re-rendered; all counts match the verified layouts (Learning 744).
+5. **Rendered 10 PNGs** (`s691_<ped>_{rectilinear,direct}.png`, 5 pedigrees × 2 styles)
+   and inspected each personally before presenting; opened all 10 in Preview for the
+   owner with a structure/ground-truth table.
+6. **Visual gate APPROVED** ("all 5 legible") — the duplicate-node policy reads legibly
+   for every structure in both styles; each pedigree shows its 1 consanguineous union in
+   vermillion (including the subtle 1/32 linebred case).
+7. **Close-out:** this evaluation, self-assessment, Learning 744, CHANGELOG entry, suite
+   BACKLOG block removed per the completed-item convention + 3 shipping follow-ups filed
+   carrying the verdict (`f028ff9e`), HANDOFFS receipt.
+
+**Self-assessment (Session 691): 9/10.** **Strengths:** (1) ground truth was verified
+BEFORE rendering — kinship to exact theory values, a full edge trace, and rectilinear
+net confinement — and that discipline caught the CSV round-trip corruption via a
+node-count mismatch before the owner ever saw a wrong image; (2) scope held exactly:
+the owner selected all three shipping targets at the scoping gate and all three were
+filed as follow-ups, not started; (3) the owner's "how would fixtures be used?" question
+was answered concretely in-session; (4) both edge styles were rendered AND personally
+inspected before presenting. **Weaknesses:** (1) the round-trip assertion should have
+been in the build script from the start — write-then-read-back is a known defect class
+and one full render cycle (10 chromote runs) was spent on corrupted CSVs; (2) pedigree
+sizes sit at the lower end of the requested 20 ± 10 (11–14) — a legibility-first
+judgment call the approval implicitly ratified, but it was never explicitly surfaced as
+a choice; (3) the CI-status Phase 0 check could not run (GitHub API rate limit) and was
+reported rather than retried to completion.
+
+**Next steps (specific):** (A) **Ship the exemplar CSVs + NEWS.Rmd entry**
+(`BACKLOG.md:14`, READY, Effort S, follow-up 1 of 3): copy the 5 approved
+`scratchpad/s691_ped_*.csv` into `inst/extdata/examples/` (literal `NA` parents — never
+`na = ""`), plain-language NEWS entry per the S628 criterion. (B) **Pin as test
+fixtures** (`BACKLOG.md:30`, BLOCKED on A, Effort M, full TDD): structural pins only
+(counts, dup counts, consanguineous-union flags, edge-trace identity), never raw
+x-positions; `verifyDirectEdges()`/`verifyRectiNets()` in `s691_pedigrees.R` are
+reusable helpers. (C) **Vignette/tutorial section** (`BACKLOG.md:45`, BLOCKED on A,
+Effort M): `s691_render.R` regenerates the images from shipped CSVs. (D) Shape A
+Phase 3 docs (`BACKLOG.md:55`, READY, Effort S). (E) Ascender-stub cosmetic
+(`BACKLOG.md:78`, READY, Effort M). (F) QP Phase 4 cleanup (`BACKLOG.md:92`, READY,
+Effort S). (G) SESSION_NOTES.md trim (READY, dashboard HIGH; this session added ~100
+lines). (H) Push decision: ~41 commits ahead after this close-out. (I) Informational:
+the Phase 0 CI check hit a GitHub API rate limit this session (5,000/hr shared) — run
+it early next session; dashboard copy still stale (v2.14.0 vs v2.18.0).
+
+**Key files:** `scratchpad/s691_pedigrees.R:1` (build + ground-truth harness;
+`linesOfDescent()` :107, `verifyDirectEdges()` :132, `verifyRectiNets()` :175, the
+expectations table :81); `scratchpad/s691_render.R:1` (render one CSV × style to PNG,
+no patching); `scratchpad/s691_ped_{consang,linebreed,backcross,cousin,halfsib}.csv`
+(the owner-approved pedigrees — UNTRACKED, take before cleaning scratchpad);
+`scratchpad/s691_<ped>_{rectilinear,direct}.png` (the 10 approved renders);
+`BACKLOG.md:14/:30/:45` (the 3 follow-ups); `CHANGELOG.md:19` (S691 entry);
+`PROJECT_LEARNINGS.md:2189` (Learning 744).
+
+**Gotchas for the next session:** (1) **failed=0 expectation stays 2,354 blocks** — no
+package or test file touched this session. (2) The exemplar CSVs and renders are
+UNTRACKED scratchpad files — the shipping sessions (A/B/C above) must copy them into the
+package before any scratchpad cleanup loses them; the CSVs are the owner-approved
+artifacts, so re-authoring is re-review. (3) Never write pedigree CSVs with `na = ""`
+(Learning 744) — literal `NA` matching `obfuscated_rhesus_mhc_ped.csv`, and assert the
+round-trip. (4) Fixture pins (item B) must be STRUCTURAL (counts/flags/trace identity):
+raw x-position pins on these pedigrees would be order-sensitive and break on any future
+ordering/seed change (S688/S690 precedent — same reason class (b) is never pinned).
+(5) The direct-vs-rectilinear node-count table for the pins is already in the BACKLOG
+item B text — derived from the approved layouts, not to be re-derived from scratch.
+(6) BACKLOG line numbers shifted again (suite block → 3 follow-ups, net +30 lines at
+the top) — re-grep, don't trust S690-era numbers.
 
 ### Session 689 Handoff Evaluation (by Session 690)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, with the
