@@ -16,6 +16,15 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-17 · [ad hoc] S700: session claimed — SESSION_NOTES.md trim (in progress)
+- Claim commit `86c1bc6a` (SESSION_NOTES.md stub + HANDOFFS.md pending receipt). Deliverable:
+  the `methodology_trim.py` archive pass on `SESSION_NOTES.md` (S699 next-step A; the
+  dashboard's one HIGH flag, ~11,181 lines / 931,481 B against the 65,536 B budget; line
+  headroom −140 records). Recorded pre-trim because the tool's own `P1_UNDOCUMENTED` gate
+  (correctly) refuses to trim while any commit sits past the ledger frontier — the trim
+  commit would advance the frontier and hide it. Outcome recorded in the S700 close-out
+  entry above/below at Phase 3F.
+
 ### 2026-09-17 · [ad hoc] S700 Phase 0: record CHANGELOG.md entry for S699's close-out commits (reconcile-on-read)
 - Phase 0 ledger reconcile found 2 commits since `CHANGELOG.md`'s frontier (`8127201d`) with no
   ledger entry of their own — the same self-reference shape this project's precedent already
