@@ -11,36 +11,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **Root-subtree ordering pass (Shape A) — Phase 1: `.orderRootSubtrees()` standalone,
-      not yet wired** (standing pedigree-fidelity directive; design DONE S688, 2026-09-16 —
-      [`docs/planning/pedigree-diagram-root-subtree-ordering-plan.md`](docs/planning/pedigree-diagram-root-subtree-ordering-plan.md),
-      §Migration Path Phase 1; **READY, Effort M** — DEVELOPMENT_WORKSTREAM, full TDD). Build
-      the new pure internal function (Decisions 1–4: input `rootIds` + the `childrenOf`
-      closure + this component's `matingUnits`/`duplicates` + `minSep`; output a permutation
-      of `rootIds`; Tier-1 BJL calibration via `.positionTreeApportion()`, rigid-block
-      connector-span proxy, reverse Cuthill–McKee seed, first-improvement swap/move local
-      search, strict `−1e-9` acceptance, `maxSweeps = 20`, incoming order returned unless
-      strictly beaten) with its own test file. RED must assert: identity on Track B full/
-      shrunk + D1–D3 (`identical()`); Track C → `X,P1,W` (or identity if the gate picks the
-      doc's Open Question 5 guard); on Real 375's 50-root component a permutation with a
-      strictly lower proxy equal to the pinned RCM order (`scratchpad/s688_realize_rcm.R`
-      prints it); determinism (two calls identical); the sweep cap; the `stop()` contract;
-      k ≤ 2 / no-connector early exits. **The PRE-RED `AskUserQuestion` gate also ratifies
-      the design's two owner-choice decisions** with the doc's §Evidence 2 and §Evidence 7
-      tables as input: seed **RCM (recommended: deterministic; census jogs 93 / b 8 /
-      cCurved −16% / d 1)** vs spectral (+3 ink points, cCurved −33%, but b 17, jogs 114,
-      needs 4 `eigen()` guards), and calibration Tier-1 (recommended, +0.3 s) vs full
-      pass-1 QP (+3 points, +1.4 s, ~cubic toward the #138 cap). Gotchas: the S686/S687
-      "`__union_N` ids renumber" warning is FALSE for root-only reordering (verified S688 —
-      ids, duplicates, edges, components all `identical()`), so no id-based pin churns;
-      iterating the calibration at the Tier-1 level DIVERGES (measured +9.3% at round 2) —
-      one round only; Tier-1 arithmetic is exact IEEE double, keep it free of `eigen()`/
-      `solve.QP()` so the pass stays bitwise reproducible across the 3-OS CI matrix.
-      Tooling: `scratchpad/s688_*.R` + `scratchpad/s686_order_lib.R` (untracked — take
-      before cleaning).
 - [ ] **Root-subtree ordering pass (Shape A) — Phase 2: wire into
       `.positionMatingUnitForest()`, re-derive Real-375 pins, census, owner visual review**
-      (BLOCKED — on Phase 1 above; Effort M; DEVELOPMENT_WORKSTREAM, full TDD). One-line
+      (**READY** — Phase 1 DONE S689, 2026-09-16, see the forward-carry note at the end of
+      this item; Effort M; DEVELOPMENT_WORKSTREAM, full TDD). One-line
       insertion between `R/makePedigreeDiagramData.R:983` and `:985` (line numbers S688 —
       re-grep). Re-derive the Real-375 position pins listed in the design's §Evidence-Based
       Inventory (test_positionMatingUnitForest.R 15 loads incl. the class-(b) disclosed set
@@ -55,6 +29,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (114, 17, 8, 1,343, 0). Before/after Real-375 overview + meso render pair to the
       owner before close-out (S666/S667/S675/S686 visual-gate precedent). Expected layout
       cost +≈0.3 s on Real 375.
+      **Phase 1 DONE S689 (2026-09-16), gate outcomes forward-carried:** the PRE-RED
+      `AskUserQuestion` gate ratified seed = **RCM**, calibration = **Tier-1 BJL**, and
+      **declined** Open Question 5's "<4 roots" guard — so when wired, Track C's `rootIds`
+      order WILL change to `X,P1,W` (full-layout positions identical to `expect_equal`
+      tolerance, design Evidence 4), and the census expectations to use are the **RCM row**
+      above. The function is `.orderRootSubtrees(rootIds, childrenOf, matingUnits,
+      duplicates, minSep, maxSweeps = 20L)` in `R/orderRootSubtrees.R` (the engine call
+      should omit `maxSweeps`, i.e. use the default); the pinned RCM converged / seed-only /
+      1-sweep orders and the strict-improvement span check live in
+      `tests/testthat/test_orderRootSubtrees.R` — they are CONTRACT pins for the standalone
+      function and must NOT be re-derived when wiring (only the Real-375 POSITION pins in
+      the design's §Inventory change). Measured pass wall time 0.45 s cold / 0.31 s warm on
+      Real 375's 50-root component (so the item's +≈0.3 s cost estimate above stands).
 - [ ] **Root-subtree ordering pass (Shape A) — Phase 3: docs & follow-ups** (BLOCKED — on
       Phase 2 above; Effort S; may fold into Phase 2's close-out if scope allows).
       `NEWS.Rmd` plain-language entry (S628 criterion — what changed for a colony manager:

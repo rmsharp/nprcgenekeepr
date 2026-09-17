@@ -16,6 +16,43 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-16 · [BL-rootSubtreeOrderingPhase1] S689: Shape A Phase 1 — `.orderRootSubtrees()` standalone (full TDD): PRE-RED gate ratified RCM seed + Tier-1 calibration, declined the OQ5 guard; RED pins derived by execution; GREEN 26/26 first run; full regression 2,354 blocks failed=0
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
+  directive; the BACKLOG "Root-subtree ordering pass (Shape A) — Phase 1" item):** new
+  internal `.orderRootSubtrees(rootIds, childrenOf, matingUnits, duplicates, minSep,
+  maxSweeps = 20L)` (`@noRd`) in `R/orderRootSubtrees.R` +
+  `tests/testthat/test_orderRootSubtrees.R` (7 blocks / 26 assertions), implementing the
+  S688 design's Decisions 1–4 (Tier-1 BJL calibration from the incoming order, rigid-block
+  proxy with anchor-proxied endpoints, reverse Cuthill–McKee seed, first-improvement
+  swap/move sweeps, strict `−1e-9` acceptance, one round). **NOT wired** — Phase 2 makes
+  the one-line insertion at `R/makePedigreeDiagramData.R:983-985`.
+- **Gates (all `AskUserQuestion`):** PRE-RED ratified seed = **RCM** (over spectral) and
+  calibration = **Tier-1 BJL** (over full pass-1 QP), and **declined** Open Question 5's
+  "<4 roots" guard (Track C's root order changes to `X,P1,W`; its full-layout positions are
+  identical either way, design Evidence 4). RED→GREEN and GREEN→REFACTOR gated; REFACTOR
+  was comments-only (`ae85f1cf`).
+- **RED pins derived by execution (never hand-derived):** `scratchpad/s688_realize_rcm.R`
+  plus two new instruments (`scratchpad/s689_sweepcap_derive.R`, `s689_subset_derive.R`)
+  proved the engine-style per-component construction (subset ped + `.subsetForest()`)
+  reproduces S688's global-restriction numbers exactly — rigid-block proxy incoming
+  3742.375 → RCM seed 2968.875 → 1-sweep 2112.875 → converged 1935.875 raw units
+  (5 sweeps), identical 50-root pinned order — before any pin was trusted. Pinned:
+  converged order, seed-only (`maxSweeps = 0`) and 1-sweep anytime cutoffs, Track C
+  `X,P1,W`, identity on Track B full/shrunk + D1–D3, determinism, the `stop()` contract,
+  dropped intra-root/anchorless-unit connectors. RED confirmed all 7 blocks failing for
+  the right reason (2 passing assertions are fixture preconditions), Learning 742.
+- **Verification:** new file 26/26 green on the first GREEN run; full clean regression
+  **2,354 blocks, failed=0, error=0** (baseline 2,347 re-measured this session + exactly
+  the 7 new blocks; 182 skips unchanged; `NOT_CRAN` set); `lintr` 0 on
+  `R/orderRootSubtrees.R` (package loaded first, Learning 224); `devtools::document()`
+  no-op (internal, no NAMESPACE/man change); pass wall time on Real 375's 50-root
+  component 0.45 s cold / 0.31 s warm (design target ≤ 0.5 s). Runtime smoke n/a —
+  standalone/unwired, engine output unchanged by construction (full suite green).
+- **Commits:** claim `75844730`, RED `a65796d7`, GREEN `f72b3a66`, REFACTOR `ae85f1cf`,
+  records + close-out follow. Phase 1's BACKLOG block removed in this commit per the
+  completed-item convention; the Phase 2 item flipped to READY with the gate outcomes
+  forward-carried into its own description.
+
 ### 2026-09-16 · [BL-rootSubtreeOrderingDesign] S688: Design — the root-subtree ordering pass (Shape A): reorder `rootIds` in-engine, calibrated from Tier-1 BJL alone, deterministic RCM seed, one round; the S686 "ids renumber" gotcha measured FALSE; census run on every realized candidate
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0 — the top pedigree Up Next
   item, DESIGN SESSION NEEDED, standing pedigree-fidelity directive):**
