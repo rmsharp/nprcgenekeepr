@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S698
+date: 2026-09-17
+status: pending
+active_task: Pedigree-drawing housekeeping re-measure pass (standing pedigree-fidelity family, owner-picked via AskUserQuestion at Phase 0; 3 BACKLOG Housekeeping items, each READY, Effort S-M): (A) re-derive the D2-dogleg reachability comment (test_resolveEdgeNodeCollisions.R:20-29 + check test_addRectilinearWaypoints.R:517-546's framing); (B) re-measure the 5-pair proximity residual on the real 375 fixture under the QP engine, close as resolved-by-construction if clear; (C) rewrite kinship2-fidelity-validation.qmd:150-163's mating-marker paragraph against live current QP behavior. Docs/comments-only expected (S692/S694/S695 precedent -- no TDD phases unless a code change emerges). DEVELOPMENT_WORKSTREAM.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S697
 date: 2026-09-17
 status: complete

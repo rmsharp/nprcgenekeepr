@@ -18,6 +18,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 698 Did
+**Deliverable:** Pedigree-drawing housekeeping re-measure pass (standing
+pedigree-fidelity family, owner-picked via `AskUserQuestion` at Phase 0; 3 BACKLOG
+Housekeeping items): (A) D2-dogleg reachability comment re-derivation, (B) 5-pair
+proximity residual re-measure under the QP engine, (C)
+`kinship2-fidelity-validation.qmd:150-163` mating-marker paragraph rewrite.
+(IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning. Phase 0 backfill already committed
+(`3c11df28`, S697 close-out commits reconcile).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
+the next session's reconcile.
+
 ### Session 696 Handoff Evaluation (by Session 697)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
 BACKLOG item was a precise, honest spec — it named the grep targets (deleted
