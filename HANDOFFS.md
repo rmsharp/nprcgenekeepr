@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S699
+date: 2026-09-17
+status: pending
+active_task: Standing pedigree-drawing directive decision (S698 next-step A) -- pose the owner decision (directive satisfied -> remove the standing note, or itemize the measured census residuals as new fidelity items), record the outcome in BACKLOG.md + ledger.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S698
 date: 2026-09-17
 status: complete

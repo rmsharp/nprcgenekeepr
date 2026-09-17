@@ -18,6 +18,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 699 Did
+**Deliverable:** Standing pedigree-drawing directive decision (S698 next-step A) — pose the
+owner decision (directive satisfied → remove the standing note, or itemize the measured census
+residuals as new fidelity items), record the outcome in `BACKLOG.md` + ledger (IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile. (Phase 0 backfill `6ca5efdd` already recorded.)
+
 ### Session 697 Handoff Evaluation (by Session 698)
 **Score: 9/10.** **What helped:** next-step (B) WAS this session's deliverable, and
 each of the three items' BACKLOG blocks carried S687 forward-carries that predicted
