@@ -18,6 +18,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 693 Did
+**Deliverable:** Pin the 5 exemplar pedigrees as test fixtures with layout expectations
+(BACKLOG.md:14, READY, Effort M, full TDD; follow-up 2 of 3 from S691; standing
+pedigree-fidelity directive; owner-picked via `AskUserQuestion` at Phase 0). (IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning — DEVELOPMENT_WORKSTREAM, PRE-RED.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 691 Handoff Evaluation (by Session 692)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
 BACKLOG item was a complete spec — target directory, the literal-`NA` warning (Learning

@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S693
+date: 2026-09-17
+status: pending
+active_task: Pin the 5 exemplar pedigrees as test fixtures with layout expectations (BACKLOG.md:14, READY, Effort M, full TDD; follow-up 2 of 3 from S691; standing pedigree-fidelity directive; owner-picked via AskUserQuestion at Phase 0). DEVELOPMENT_WORKSTREAM. Work beginning.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S692
 date: 2026-09-16
 status: complete
