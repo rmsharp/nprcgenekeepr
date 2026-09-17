@@ -18,19 +18,119 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 697 Handoff Evaluation (by Session 698)
+**Score: 9/10.** **What helped:** next-step (B) WAS this session's deliverable, and
+each of the three items' BACKLOG blocks carried S687 forward-carries that predicted
+the outcome exactly — "re-derive CURRENT reachability first (the comment may now be
+true again)" and "re-measure the 5 named pairs and, if they clear, close as
+resolved-by-construction rather than fix anything" were both precisely what happened.
+Gotcha (1)'s 2,370-block failed=0 expectation held exactly; gotcha (2) (first Up Next
+section empty, line shift) accurate; gotcha (3) (spell gate before full suite,
+Learning 750) was applied and the ordering cost nothing; gotcha (5) ("5 5" print
+noise) matched. **What was missing:** the qmd item's forward-carry cited census
+(b) = 12 rows — the S696-refreshed committed CSV says 8; the figure was S687-era and
+nothing flagged that the census numbers in BACKLOG forward-carries predate the S696
+refresh. Caught by re-grepping the committed CSV rather than quoting the item (FM
+#11). **What was wrong:** nothing material. **ROI:** high.
+
 ### What Session 698 Did
 **Deliverable:** Pedigree-drawing housekeeping re-measure pass (standing
-pedigree-fidelity family, owner-picked via `AskUserQuestion` at Phase 0; 3 BACKLOG
-Housekeeping items): (A) D2-dogleg reachability comment re-derivation, (B) 5-pair
-proximity residual re-measure under the QP engine, (C)
-`kinship2-fidelity-validation.qmd:150-163` mating-marker paragraph rewrite.
-(IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning. Phase 0 backfill already committed
-(`3c11df28`, S697 close-out commits reconcile).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
-the next session's reconcile.
+pedigree-fidelity family, owner-picked via `AskUserQuestion` at Phase 0;
+DEVELOPMENT_WORKSTREAM, docs/comments-only — no TDD phases, S692/S694/S695/S697
+precedent): 3 BACKLOG Housekeeping items re-derived live under the QP engine and
+closed. **DONE.** **Started/completed:** 2026-09-17 (single session).
+Phase 0 backfill `3c11df28` (S697 close-out commits, reconcile-on-read); claim
+`3daa4001`; deliverable `262c65be`; records `efd67743`.
+**Ledger:** recorded as the S698 entry at the top of `CHANGELOG.md` (`efd67743`),
+plus the Phase 0 backfill entry (`3c11df28`).
+
+**What actually happened, in order:**
+1. **Measured before editing** (`scratchpad/s698_remeasure.R`, kept per the
+   don't-clean precedent): (A) real 375 rectilinear rebuild → **0 `__proj_` nodes**
+   among 1,456 — the D2 dogleg is structurally unreachable again, mechanism = S678
+   Decision 2 (every resolved mate node carries its unit's own gen), pinned at
+   `test_comparePedigreeStructure.R:687`. (B) all 5 S667 pairs re-measured by
+   REAL-id occurrence sweep (the S667 `__dup_X_n` indices are allocation-order
+   artifacts — Learning 751): minimum same-row named-pair distance **480 px vs a
+   25 px radius-sum limit** (`M0YNUR` vs `__dup_L31S6S_4`); `__union_43` vs every
+   `WDBGPF` occurrence ≥ 3,540 px; independent global class (a) scan **0 overlaps**,
+   agreeing with the committed S696 census CSV (a=0, b=8, c1/c2=0, d=1 adjacent).
+   (C) Track B 16-subject fixture live: **all 4 union dots exactly centered**
+   (union − midpoint = 0.00 px; mates 120 px = 1 minSep apart), matching the
+   committed S675 QP-era `trackB-nprc-full.png` that the prose contradicted.
+2. **The edits:** `test_resolveEdgeNodeCollisions.R` finding-1 comment rewritten
+   with its full falsification history (true 2026-08-15 → S668 census measured 56 →
+   dead again S678), dated S698; the item's second question answered with NO edit —
+   the sibling `test_addRectilinearWaypoints.R` 0-projection expectation is general
+   (0 on every fixture by construction) and its S678 CHANGED note already states the
+   current mechanism. Both stale article sites rewritten
+   (`kinship2-fidelity-validation.qmd:150` paragraph + the `:294` caveats bullet):
+   mate-line conventions now agree (side-by-side pair, midpoint descent); remaining
+   differences = the union-dot marker itself (kinship2 draws none, issue #161) and
+   the off-centre residual where minSep floors bind (8 of 237 unions, census
+   baseline). Item (B) needed no file change — closed resolved-by-construction.
+3. **Verification:** spell check clean; `test_wordlist_coverage.R` green directly
+   (run BEFORE the full suite, Learning 750); `lintr` 0 on the touched test file
+   (package loaded, Learning 224); edited test file green; full unfiltered clean
+   regression **2,370 blocks, failed=0, error=0, skipped=182** (S696/S697 baseline
+   exactly).
+4. **Close-out:** CHANGELOG S698 entry + Learning 751 + 3 BACKLOG blocks removed
+   per the completed-item convention (records `efd67743`); this handoff; HANDOFFS
+   receipt. No GitHub issue was ever filed for any of the three → no issue close
+   owed. Checklists N/A by inspection: NEWS (no user-facing behavior change),
+   citation (no new statistic), tutorial/article (the article edit IS the corrected
+   artifact), `a2interactive.Rmd` (no export surface change), `_pkgdown.yml` (no new
+   export).
+
+**Self-assessment (Session 698): 9/10.** **Strengths:** (1) every rewritten claim is
+live-derived this session or re-grepped from a committed artifact — which is what
+caught the stale census b=12 (real: 8) before it entered the article. (2) The
+real-id occurrence sweep sidestepped the duplicate-index drift trap entirely
+(Learning 751). (3) The committed S675 figure was visually cross-checked against the
+live coordinates before the paragraph was rewritten to match "its own image."
+(4) Gates run in the Learning-750 order (spell → wordlist → lint → targeted → full),
+zero collateral. **Weaknesses:** (1) the measurement script's first run errored on
+the missing `gen` column — reading the census script's fixture usage first would
+have avoided one wasted cycle. (2) The rewritten article paragraph embeds session
+numbers and census figures; consistent with the article's established style, but it
+deepens the article's coupling to internal project records.
+
+**Next steps (specific):** (A) **The tagged pedigree-fidelity queue is now EMPTY** —
+the standing top-priority note (BACKLOG lines 6-11) requires pedigree-drawing work
+to be surfaced first until the owner explicitly says it's done, but no READY
+fidelity item remains. The next session's Phase 0 should ask the owner directly:
+is the standing directive satisfied (owner sign-off to remove the note), or should
+the remaining measured residuals become items (census baseline: b=8 off-centre
+unions, 1,667 c-curved-chord findings on the real 375 fixture — both disclosed
+heuristics/residuals, never itemized)? (B) **SESSION_NOTES.md trim** (READY, Effort
+S; the dashboard's one HIGH flag; ~11,050 lines after this handoff; no known
+blocking defect). (C) Issue #148 MHC haplotype reporting (genetic-metrics
+sequencing audit's last open item). (D) Push decision (owner call): 11 commits
+ahead after this close-out; local full regression clean; last pushed state CI-green
+all 4 workflows. (E) Informational: Learning 749's body still duplicated as a stray
+bullet (`PROJECT_LEARNINGS.md:2195`, S696 paste artifact, report-don't-fix);
+dashboard copy still stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged.
+
+**Key files:** `tests/testthat/test_resolveEdgeNodeCollisions.R:20-40` (rewritten
+finding 1), `vignettes/articles/kinship2-fidelity-validation.qmd:150-172` (rewritten
+mate-line paragraph) and `:294-306` (rewritten caveats bullet),
+`scratchpad/s698_remeasure.R` (the re-measure harness — real-id occurrence sweep +
+Track B union-centering probe, reusable), `CHANGELOG.md:19` (S698 entry),
+`PROJECT_LEARNINGS.md:2198` (Learning 751).
+
+**Gotchas for the next session:** (1) **failed=0 expectation stays 2,370 blocks**
+(comments/prose only; no block added or removed). (2) BACKLOG Housekeeping shrank
+by 3 blocks (net −63 lines) — re-grep rather than trusting old line numbers; the
+standing top-priority note itself is UNTOUCHED and must not be removed without
+owner sign-off. (3) The rewritten article paragraph is now the freshest prose
+description of QP union-dot behavior and embeds live-measured values (0.00 px
+centering, 8-of-237 residual) — any future union-positioning change must re-verify
+that paragraph, and the census (b) count cited there tracks the committed CSV
+(currently 8, NOT the 12 some older forward-carries quote). (4) The finding-1
+comment in `test_resolveEdgeNodeCollisions.R` deliberately preserves its
+falsification history (stale → re-derived) — do not "simplify" it back to a bare
+present-tense claim. (5) The "5 5" lines in silent suite output remain pre-existing
+print noise.
 
 ### Session 696 Handoff Evaluation (by Session 697)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
