@@ -148,7 +148,7 @@ key_files: tests/testthat/test_resolveEdgeNodeCollisions.R:20-40 (rewritten find
 gotchas: failed=0 expectation stays 2,370 blocks. BACKLOG Housekeeping shrank by 3 blocks (net -63 lines) -- re-grep line numbers; the standing top-priority note is UNTOUCHED and needs owner sign-off to remove. The rewritten article paragraph embeds live-measured values (0.00 px centering, 8-of-237 residual) -- re-verify it after any union-positioning change; the census (b) count is 8 per the committed CSV, NOT the 12 some older forward-carries quote. The finding-1 comment deliberately preserves its falsification history -- do not simplify it to a bare present-tense claim. "5 5" suite output lines are pre-existing print noise.
 runtime_smoke: n/a -- docs-only (test comments and article prose; no runtime behavior change)
 changelog_ref: 2026-09-17 S698 entry (BL-pedRemeasure), efd67743
-commit: pending
+commit: 49ae8ac1
 ```
 
 ```handoff
