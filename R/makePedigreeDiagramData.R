@@ -2451,7 +2451,18 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
 #' whole per-row level ladder, compressed uniformly on overflow -- above
 #' the nearest disc row below, so a corridor clears the \emph{discs} it
 #' detours around, not merely their centre line (census Finding #3,
-#' S685). New waypoint
+#' S685). When a flagged edge's endpoint is an \emph{invisible} point
+#' (size 0/NA) whose only surviving edge is a single vertical descent to
+#' a node below -- a sibship bar point whose bar-level ink is entirely
+#' rerouted -- the corridor rejoins that descent's target directly and
+#' the redundant riser + descent are dropped, instead of climbing back
+#' up to ink that no longer connects to anything (the "ascender stub"
+#' ending mid-air at bar level, found at S679's owner visual gate, fixed
+#' S696). The bypassed point stays in the returned \code{nodes},
+#' unreferenced and unmoved. A visible endpoint is never bypassed, and
+#' kid-adjacent replacement segments always run waypoint -> kid so
+#' structural consumers can keep reading edge direction as
+#' parent-side/child-side attachment. New waypoint
 #' ids use the \code{__jog_} prefix (joining the existing reserved-prefix
 #' set documented at \code{vignettes/a2interactive.Rmd:500}). Detection
 #' and repair repeat for up to 3 passes (the new offset row can, rarely,
@@ -2708,6 +2719,60 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     newNodeRows <- list()
     newEdgeRows <- list()
     dropRows <- rep(FALSE, nrow(edges))
+    ## Ascender-stub direct rejoin (S679's owner visual-gate finding,
+    ## fixed S696): when a rerouted edge's endpoint is an INVISIBLE
+    ## point (size 0/NA) whose only surviving edge is a single
+    ## strict-vertical DOWNWARD edge to a non-jog node (a sibship bar
+    ## point whose bar-level ink is entirely rerouted, left holding
+    ## only its kid's descent), climbing back up to it draws dead ink:
+    ## the riser and the descent top are collinear duplicates spanning
+    ## [barY, corridorY], ending mid-air at the bar row (84 such stubs
+    ## measured on the real 375-individual fixture, crop-verified).
+    ## The corridor instead rejoins the kid directly and the endpoint's
+    ## descent joins the drop set; the endpoint itself is left in
+    ## place, unreferenced -- never moved, so the Track 2 invariant is
+    ## untouched. A VISIBLE endpoint is never bypassed (its disc is the
+    ## connection target), an endpoint with surviving bar-level or
+    ## upward ink is never bypassed (its riser tops out on continuous
+    ## ink -- a __drop_'s union descent, a bar's surviving chain
+    ## segment), and decisions are made ONCE per endpoint against the
+    ## pass's surviving graph so two corridors sharing an endpoint
+    ## agree. All rows rerouted this pass are marked up front for the
+    ## same reason.
+    for (i in hitRows) {
+      dropRows[[i]] <- TRUE
+    }
+    sizeOf <- if ("size" %in% names(nodes)) {
+      as.list(stats::setNames(as.numeric(nodes$size), nodes$id))
+    } else {
+      list()
+    }
+    surviving <- edges[!dropRows, , drop = FALSE]
+    endpointIds <- unique(c(edges$from[hitRows], edges$to[hitRows]))
+    bypassOf <- vapply(endpointIds, function(e) {
+      sz <- sizeOf[[e]]
+      invisible0 <- is.null(sz) || is.na(sz) || sz == 0.0
+      if (startsWith(e, "__jog_") || !invisible0) {
+        return(NA_character_)
+      }
+      idx <- which(surviving$from == e | surviving$to == e)
+      if (length(idx) != 1L) {
+        return(NA_character_)
+      }
+      k <- if (surviving$from[[idx]] == e) {
+        surviving$to[[idx]]
+      } else {
+        surviving$from[[idx]]
+      }
+      xk <- xOf[[k]]
+      yk <- yOf[[k]]
+      if (!startsWith(k, "__jog_") && !is.null(xk) && !is.null(yk) &&
+            isTRUE(xk == xOf[[e]]) && isTRUE(yk > yOf[[e]])) {
+        k
+      } else {
+        NA_character_
+      }
+    }, character(1L))
     for (i in hitRows) {
       f <- edges$from[[i]]
       t <- edges$to[[i]]
@@ -2748,13 +2813,45 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
       ## color (S465's own Pre-RED finding).
       origRow <- edges[i, , drop = FALSE]
       segRows <- origRow[rep(1L, 3L), , drop = FALSE]
-      segRows$from <- c(f, j1, j2)
-      segRows$to <- c(j1, j2, t)
+      ## Segment DIRECTION is load-bearing for structural consumers (a
+      ## terminal -> waypoint edge reads as a parent-side attachment,
+      ## waypoint -> terminal as a child-side one -- the D1 convention
+      ## test_comparePedigreeStructure.R's D-2 walker relies on), so a
+      ## bypassed side's kid-adjacent segment always runs
+      ## waypoint -> kid. With only the FROM side bypassed the corridor
+      ## is emitted in reversed orientation (t -> J2 -> J1 -> kid) so
+      ## every jog node keeps exactly 1 in + 1 out where possible; with
+      ## BOTH sides bypassed that is unattainable and the emission is
+      ## (J1 -> kidF, J1 -> J2, J2 -> kidT).
+      kf <- bypassOf[[f]]
+      kt <- bypassOf[[t]]
+      if (!is.na(kf)) {
+        dropRows <- dropRows |
+          ((edges$from == f & edges$to == kf) |
+             (edges$from == kf & edges$to == f))
+      }
+      if (!is.na(kt)) {
+        dropRows <- dropRows |
+          ((edges$from == t & edges$to == kt) |
+             (edges$from == kt & edges$to == t))
+      }
+      if (is.na(kf) && is.na(kt)) {
+        segRows$from <- c(f, j1, j2)
+        segRows$to <- c(j1, j2, t)
+      } else if (is.na(kf)) {
+        segRows$from <- c(f, j1, j2)
+        segRows$to <- c(j1, j2, kt)
+      } else if (is.na(kt)) {
+        segRows$from <- c(t, j2, j1)
+        segRows$to <- c(j2, j1, kf)
+      } else {
+        segRows$from <- c(j1, j1, j2)
+        segRows$to <- c(kf, j2, kt)
+      }
       if ("color" %in% names(segRows) && is.na(origRow$color[[1L]])) {
         segRows$color <- waypointColor
       }
       newEdgeRows[[length(newEdgeRows) + 1L]] <- segRows
-      dropRows[[i]] <- TRUE
     }
 
     addedNodes <- .matchColumns(do.call(rbind, newNodeRows), nodes)

@@ -207,7 +207,13 @@
     consanguineousMating = c("FC1", "FC2"),
     duplicated = "FC2",
     directNodes = 17L, directEdges = 17L,
-    rectilinearNodes = 33L, rectilinearEdges = 33L,
+    ## CHANGED S696 (rectilinearEdges 33 -> 31): the ascender-stub
+    ## direct rejoin replaces riser + descent with one segment at each
+    ## of this fixture's 2 bypassed bar points (its 2 jog corridors both
+    ## rejoin a bar point holding only its kid's descent). Node count is
+    ## unchanged -- the bypassed bar points stay, unreferenced.
+    ## Re-measured through the engine, re-render owner-reviewed S696.
+    rectilinearNodes = 33L, rectilinearEdges = 31L,
     rectilinearCollisionWarning = FALSE
   ),
   half_sib = list(

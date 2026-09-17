@@ -274,6 +274,19 @@ test_that(
 ##     node (verified directly against the real 375-individual fixture's
 ##     154 jog waypoints this session) -- collapsed first, unconditionally,
 ##     before anything else runs.
+##     CHANGED S696 (ascender-stub direct rejoin): a corridor whose BOTH
+##     endpoints are bypassed straight to their kids is emitted as
+##     (j1 -> kidF, j1 -> j2, j2 -> kidT), so j1 there has 2 outgoing +
+##     0 incoming edges. The collapse below now splices only 1-in/1-out
+##     jog nodes; any other jog node joins the waypoint-component walk
+##     (isWaypoint includes __jog_), where its waypoint -> kid edges
+##     read as ordinary child-side attachments. A component left with
+##     child-side attachments but NO parent side (that both-bypassed
+##     corridor's shape -- its ends touch only kids) is bridged into the
+##     component sharing one of its kid terminals (a kid has exactly one
+##     union family, so the bridge is family-internal by construction),
+##     and each component's child list is de-duplicated (one bar point
+##     bypassed by two corridors reaches its kid twice).
 ##   - __proj_<side>_<unit> (.addRectilinearWaypoints() D2, mate-line
 ##     dogleg): always a standalone 2-edge unit (side -> proj -> union),
 ##     never chained to another __drop_/__bar_/__proj_ node directly.
@@ -299,16 +312,28 @@ test_that(
   }
 
   isJog <- function(x) grepl("^__jog_", x)
-  isWaypoint <- function(x) grepl("^__drop_|^__bar_|^__proj_", x)
+  ## CHANGED S696: __jog_ joins the waypoint families, so a jog node the
+  ## collapse below cannot splice (a both-bypassed corridor's corner)
+  ## participates in the component walk instead of being lost.
+  isWaypoint <- function(x) grepl("^__drop_|^__bar_|^__proj_|^__jog_", x)
 
-  ## Step 1: collapse __jog_ pass-through pairs (always exactly 1 incoming +
-  ## 1 outgoing edge, by .resolveEdgeNodeCollisions()'s own construction).
+  ## Step 1: collapse __jog_ pass-through pairs (exactly 1 incoming +
+  ## 1 outgoing edge, by .resolveEdgeNodeCollisions()'s own construction
+  ## -- CHANGED S696: no longer ALWAYS true; see the header note. A jog
+  ## node with any other degree is skipped here, and degrees never
+  ## change under a neighbour's splice, so the skip set is stable).
+  skip <- character(0L)
   repeat {
-    jogIds <- unique(c(e$from[isJog(e$from)], e$to[isJog(e$to)]))
+    jogIds <- setdiff(unique(c(e$from[isJog(e$from)], e$to[isJog(e$to)])),
+                       skip)
     if (length(jogIds) == 0L) break
     j <- jogIds[[1L]]
     inRow <- which(e$to == j)
     outRow <- which(e$from == j)
+    if (length(inRow) != 1L || length(outRow) != 1L) {
+      skip <- c(skip, j)
+      next
+    }
     newRow <- e[inRow, , drop = FALSE]
     newRow$to <- e$to[outRow]
     e <- rbind(e[-c(inRow, outRow), , drop = FALSE], newRow)
@@ -361,14 +386,45 @@ test_that(
     }
   }
 
+  ## Step 3.5 (CHANGED S696): bridge a parentless component into the
+  ## component sharing one of its kid terminals. A both-bypassed
+  ## corridor's ends touch only kids, so its component has child-side
+  ## attachments and no parent side; the family's union reaches those
+  ## kids through a sibling component instead. A kid belongs to exactly
+  ## one union family, so the merge is family-internal by construction.
+  repeat {
+    parentless <- setdiff(names(childSide), names(parentSide))
+    merged <- FALSE
+    for (comp in parentless) {
+      kids <- childSide[[comp]][!grepl("^__union_", childSide[[comp]])]
+      host <- NULL
+      for (other in setdiff(names(childSide), comp)) {
+        if (any(kids %in% childSide[[other]])) {
+          host <- other
+          break
+        }
+      }
+      if (!is.null(host)) {
+        childSide[[host]] <- c(childSide[[host]], childSide[[comp]])
+        childSide[[comp]] <- NULL
+        merged <- TRUE
+        break
+      }
+    }
+    if (!merged) break
+  }
+
   ## Step 4: classify each component -- a single child-side terminal that
   ## is itself a union id is a recovered (dogleg'd) mate edge; anything
-  ## else is a recovered (D1) sibling group's child edges.
+  ## else is a recovered (D1) sibling group's child edges. (CHANGED
+  ## S696: the child list is de-duplicated -- a bar point bypassed by
+  ## two corridors reaches its kid once per corridor, and a Step 3.5
+  ## merge re-adds the shared kid.)
   recoveredMate <- list()
   recoveredChild <- list()
   for (comp in names(childSide)) {
     p <- parentSide[[comp]]
-    ch <- childSide[[comp]]
+    ch <- unique(childSide[[comp]])
     if (length(ch) == 1L && grepl("^__union_", ch)) {
       recoveredMate[[length(recoveredMate) + 1L]] <-
         data.frame(from = p, to = ch, stringsAsFactors = FALSE)
