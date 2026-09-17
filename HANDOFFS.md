@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S696
+date: 2026-09-17
+status: pending
+active_task: Ascender-stub cosmetic fix on jog-repair corridors (BACKLOG.md Up Next item 1, standing pedigree-fidelity family; owner-picked via AskUserQuestion at Phase 0). DEVELOPMENT_WORKSTREAM under the strict TDD contract; must knowingly update the S685 inertness pin in test_resolveEdgeNodeCollisions.R.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S695
 date: 2026-09-17
 status: complete

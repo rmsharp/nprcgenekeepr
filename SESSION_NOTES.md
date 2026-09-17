@@ -18,6 +18,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 696 Did
+**Deliverable:** Ascender-stub cosmetic fix on jog-repair corridors — small "ascender"
+stubs above narrow sibship bars read as dangling lines ending in mid-air (BACKLOG.md
+Up Next item 1, standing pedigree-fidelity family; owner-picked via `AskUserQuestion`
+at Phase 0). (IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning. DEVELOPMENT_WORKSTREAM under the strict
+TDD contract; pre-RED investigation of the two S679 fix candidates (rejoin at the
+child's descent x vs suppress the riser on zero-width bars) comes first, then the
+approach `AskUserQuestion`, then the phase gates. Must knowingly update the S685
+inertness pin in `tests/testthat/test_resolveEdgeNodeCollisions.R`.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded
+in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
+the next session's reconcile.
+
 ### Session 694 Handoff Evaluation (by Session 695)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
 BACKLOG item was a near-complete spec — the digest scripts named by path (and still in
