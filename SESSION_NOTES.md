@@ -18,20 +18,132 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 695 Handoff Evaluation (by Session 696)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
+BACKLOG item was a strong spec — defect coordinates (9/18/27 px corridors, bars at 240),
+both S679 fix candidates named, and the S685 pin warning. The preserved scratchpad tools
+were decisive: `s683_screenshotDigests.R` answered "which screenshots change" in one run
+each engine state, and `s695_twin_screenshot.R` was reused verbatim for the recapture —
+gotcha (4)'s don't-clean constraint paid off twice. Gotcha (2) (digest baseline = any
+commit ≥ `52a9b7da`) prevented a wrong-baseline comparison; gotcha (5) (BACKLOG line
+shift, re-grep) was accurate. **What was missing:** nothing pointed at
+`test_comparePedigreeStructure.R`'s D-2 walker as the real blast-radius surface — the
+direction-convention dependency (terminal→waypoint = parent side) had to be discovered
+by root-causing a spike failure; a one-line "structural consumers read edge direction"
+note would have saved that cycle. **What was wrong:** the item's "must knowingly update
+the S685 inertness pin" over-predicted — the pin never moves under the shipped fix
+(topology, not offsets; its fixtures' endpoints are degree-0, which the bypass
+excludes). Reasonable as a warning, but it aimed this session at the wrong test file.
+**ROI:** high.
+
 ### What Session 696 Did
-**Deliverable:** Ascender-stub cosmetic fix on jog-repair corridors — small "ascender"
-stubs above narrow sibship bars read as dangling lines ending in mid-air (BACKLOG.md
-Up Next item 1, standing pedigree-fidelity family; owner-picked via `AskUserQuestion`
-at Phase 0). (IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning. DEVELOPMENT_WORKSTREAM under the strict
-TDD contract; pre-RED investigation of the two S679 fix candidates (rejoin at the
-child's descent x vs suppress the riser on zero-width bars) comes first, then the
-approach `AskUserQuestion`, then the phase gates. Must knowingly update the S685
-inertness pin in `tests/testthat/test_resolveEdgeNodeCollisions.R`.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
-the next session's reconcile.
+**Deliverable:** Ascender-stub cosmetic fix on jog-repair corridors (found S679, owner
+visual gate; BACKLOG Up Next item 1, standing pedigree-fidelity family; owner-picked
+via `AskUserQuestion` at Phase 0). `.resolveEdgeNodeCollisions()` corridors now rejoin
+a stranded bar point's kid directly instead of climbing back to bar level and leaving
+9–27 px of dangling duplicate ink. DEVELOPMENT_WORKSTREAM, full TDD RED → GREEN
+(REFACTOR gate posed, owner-skipped); approach + all phase gates owner-ratified via
+`AskUserQuestion`; owner visual gate ACCEPTED. **DONE.** **Started/completed:**
+2026-09-17 (single session). Claim `2e5eee98`; RED `d3e15162`; GREEN `e6fb81a7`;
+renders `eeae9914`; census `eeacd06c`; NEWS `05c3313e`.
+**Ledger:** recorded as the S696 entry at the top of `CHANGELOG.md`.
+
+**What actually happened, in order:**
+1. **PRE-RED root cause (located in data, then crop-verified):** built the real-375
+   rectilinear layout, enumerated every riser: all 91 `__bar_`-rejoin risers are
+   collinearly covered by kid descents, all 83 `__drop_`-rejoins continue into the
+   union line (crop: clean elbow). The dangling ink is the [barY, corridorY] span drawn
+   TWICE (riser + descent top) at bar points with NO surviving bar-level or upward
+   edge: **84 stubs** (crop-confirmed at `__bar_J33BE0`). Candidate 2 ("suppress riser
+   on zero-width bars") refuted: zero-width bars have empty interior spans and can
+   never jog.
+2. **PRE-RED spike (applied, measured, reverted; patch kept at
+   `scratchpad/s696_spike.patch`):** direct rejoin → stubs 84→0, nodes 1,456 unchanged
+   (zero movement), edges 1,569→1,485 (−84), census findings byte-identical to the
+   S690 baseline, full suite failed=4 in exactly 2 blocks (D-2 walker direction/
+   collapse assumptions; first_cousin edge-count pin), digests: only the twins-trim
+   rectilinear screenshot affected. S685 inertness pin passed untouched.
+3. **Approach gate** (direct rejoin, recommended) and **PRE-RED→RED gate** approved.
+   **RED (`d3e15162`):** 6 blocks in `test_resolveEdgeNodeCollisions.R` — TO-side,
+   FROM-side (reversed orientation), BOTH-sides (shared endpoint), 2 disclosed
+   boundary guards (riser kept when bar ink survives; visible endpoints never
+   bypassed), real-fixture `.danglingAscenderStubs == 0` invariant. Verified failing
+   for the measured reasons (13 failing expectations; guards pass as disclosed), zero
+   collateral.
+4. **RED→GREEN gate approved. GREEN (`e6fb81a7`):** the bypass (invisible endpoint +
+   exactly one surviving downward vertical → corridor connects to the kid; descent
+   dropped; bar point left unreferenced/unmoved) with direction-coherent emission
+   (waypoint→kid always; corridor reversed for FROM-side-only so jogs stay 1-in/1-out;
+   both-sides = (J1→kf, J1→J2, J2→kt)); roxygen amended. D-2 walker: collapse only
+   1-in/1-out jogs, jogs join components, parentless components bridge through shared
+   kids, child lists de-duplicated. `first_cousin` rectilinearEdges 33→31
+   (`CHANGED S696`). Lint restructure (cache → up-front vapply): 0 lints, digests
+   bit-identical.
+5. **Verification:** full clean regression **2,370 blocks (2,364 + 6 new), failed=0,
+   error=0, skipped=182** (the 182 = the opt-in E2E gate, baseline-normal); census CSV
+   refreshed (byte-identical data; also folds in S690's never-committed deltas);
+   ground truth pre-gate: 42/42 twins triples via sex-free pair trace, 39/39 nets, S691
+   exemplar validation ALL PASS (cousin at 31 edges); **Phase 3E:** twins screenshot
+   recaptured live through the app + explicit `NPRC_RUN_E2E=true` E2E pedigree module
+   run **16/16 blocks, 55 expectations, 0 failed** (S679 baseline exactly).
+6. **Owner visual gate ACCEPTED:** twins screenshot pixel diff purely subtractive
+   (red = removed stub ticks, zero added ink); first_cousin exemplar re-render (other 4
+   byte-identical, pinned warnings exact). NEWS.Rmd plain-language entry, NEWS.md
+   rendered (diff = entry), spell check clean.
+7. **Close-out:** records commit (CHANGELOG S696 entry, Learning 749, BACKLOG block
+   removed per the completed-item convention, this S695 evaluation), handoff,
+   HANDOFFS receipt.
+
+**Self-assessment (Session 696): 9/10.** **Strengths:** (1) the four-step Learning-733
+chain ran in full — located in data (riser-cover probe), crop-verified, candidate 2
+refuted by measurement, spike quantified everything BEFORE any gate — so every
+`AskUserQuestion` presented confirmations, not estimates. (2) The spike surfaced the
+D-2 walker as the true blast radius and the failure was root-caused to the direction
+convention, which became a pinned design constraint (RED FROM-side block) rather than a
+patch. (3) Full TDD discipline: 5 gates posed, RED verified failing for measured
+reasons, zero collateral. (4) All checklists ran locally pre-commit (lint 0, NEWS,
+spell check, census, screenshots; citation/tutorial/a2interactive/_pkgdown N/A by
+inspection — no new export, statistic, or user-facing control). **Weaknesses:** (1) the
+spike's naive segment direction cost one full-suite cycle before the walker failure was
+root-caused — the direction convention was discoverable by reading the walker header
+FIRST. (2) One `AskUserQuestion` option description shipped with two stray CJK
+characters (typo; cosmetic). (3) The 84-stub probe initially mislabeled drop-rejoins
+"exposed" (geometric cover ≠ visual dangling) — one probe iteration wasted before the
+duplicate-ink insight.
+
+**Next steps (specific):** (A) **QP Migration Path Phase 4 cleanup** (now BACKLOG Up
+Next item 1; READY, Effort S: grep `R/` doc-comments for stale deleted-tier/`.kMax*`
+references, update to describe the QP engine; closes the migration plan). (B)
+SESSION_NOTES.md trim (READY; the dashboard's one HIGH flag; ~10,900 lines after this
+handoff). (C) Issue #148 MHC haplotype reporting (genetic-metrics sequencing audit's
+last open item). (D) Push decision (owner call): ~76 commits ahead after this
+close-out; everything local passed the full regression and the last pushed state is
+CI-green. (E) Informational: dashboard copy still stale (v2.14.0 vs v2.18.0);
+untracked leftovers unchanged; the committed census CSV is now current with HEAD for
+the first time since S685.
+
+**Key files:** `R/makePedigreeDiagramData.R:2708` (bypass + emission; roxygen at
+:2454), `tests/testthat/test_resolveEdgeNodeCollisions.R:973` (S696 section, 6 blocks
++ `.danglingAscenderStubs`), `tests/testthat/test_comparePedigreeStructure.R:301`
+(walker: guarded collapse, jog-as-waypoint, Step 3.5 bridging),
+`tests/testthat/test_examplePedigreeFixtures.R:203` (first_cousin re-pin),
+`vignettes/articles/shiny_app_use/diagram_twin_connectors.png` +
+`vignettes/articles/pedigree-diagram-img/exemplar-first_cousin-rectilinear.png` (the 2
+owner-accepted renders), `scratchpad/s696_spike.patch` (the measured spike),
+`scratchpad/s696_twin_diff.png` (gate evidence), `PROJECT_LEARNINGS.md` (Learning 749).
+
+**Gotchas for the next session:** (1) **failed=0 expectation is now 2,370 blocks**
+(2,364 + 6 new S696 blocks). (2) All 5 Diagram-tab screenshots are current as of THIS
+session's HEAD — digest baseline moves to any commit ≥ `eeae9914` (Learning 748's
+last-recapture rule; note a layout digest hashes edge from/to, so orientation-only
+changes alter digests without changing ink — Learning 749 (5)). (3) Waypoint edge
+DIRECTION is load-bearing: terminal→waypoint = parent-side, waypoint→terminal =
+child-side; any new corridor/waypoint emission must preserve it or the D-2 walker
+misclassifies (Learning 749 (3)). (4) Orphaned (degree-0, size-0) bar points now exist
+in rectilinear layouts by design — code iterating "all bar points have descents" would
+be wrong; the census/detection semantics are unaffected (measured byte-identical).
+(5) BACKLOG line numbers shifted again (ascender block removed, net −15 at the top);
+re-grep.
 
 ### Session 694 Handoff Evaluation (by Session 695)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
