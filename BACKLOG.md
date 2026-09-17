@@ -24,6 +24,26 @@ regen left behind (S367 origin, flagged S368/S369) is now also RESOLVED --
 S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 
 ## Up Next
+- [ ] **Write the issue #148 MHC haplotype-reporting design plan** (scope-narrowing DONE S703,
+      2026-09-17, owner-directed via `AskUserQuestion`: design-first, same issue, no sub-issue
+      split; READY, Effort M -- a planning session: the plan doc is the whole deliverable, no
+      implementation, deepest reasoning mode per `SESSION_RUNNER.md` §Planning Sessions).
+      Write `docs/planning/issue148-mhc-haplotype-reporting-plan.md` in the #152/#153 mold
+      (numbered ratified decisions, vertical-slice list, per-slice completion criteria; each
+      slice later one strict-TDD session). Start from the decision record
+      `docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md`: §3 is the grep-verified
+      evidence inventory (vocabulary reservation `R/modMarkerGenetics.R:6-9`; sibling-validator
+      pattern `checkLinkageMarkerGenotypeFile.R`/`checkSequenceGenotypeFile.R`;
+      `.markerAlleleFrequencyTable` at `R/markerAlleleFrequency.R:26`; #150 export gate;
+      example data `rhesusGenotypes` = `inst/extdata/examples/
+      obfuscated_rhesus_mhc_breeder_genotypes.csv`, 31 animals, wide format, `?`-suffixed
+      uncertain calls) and §4 lists the 8 open design questions to ratify (Q1 input
+      designation, Q2 uncertain calls, Q3 rarity semantics, Q4 affected-animal shape, Q5
+      export gating, Q6 descriptive-only caveat, Q7 surface placement, Q8 slice
+      decomposition). Hard constraints regardless of answers: `checkMarkerGenotypeFile()`'s
+      biallelic gate untouchable (`R/checkMarkerGenotypeFile.R:68-77`, KING-robust
+      correctness); bare "haplotype" belongs to #148, "block" to #153; no MHC inference from
+      arbitrary locus names (issue-body hard requirement).
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional
@@ -1104,8 +1124,11 @@ this compression:** 2 audit-table High-priority rows -- "Longitudinal genetic-he
 "Ancestry guardrails in breeding decisions" -- have no corresponding GitHub issue, despite ranking
 above every Medium/Deferred item in this batch (Finding #1/Recommendation 2); a future triage session
 should file both. **Every Tier 1/2/3 item (#147, #149, #146, #151, #150) plus Deferred-tier #152 and #153 are now
-fully shipped and closed** -- see the compressed entry below. #148 remains unstarted, still
-needing its scope-narrowing conversation. See `CHANGELOG.md`.
+fully shipped and closed** -- see the compressed entry below. #148's scope-narrowing
+conversation is DONE (S703, 2026-09-17, owner via `AskUserQuestion`: design-first, same issue —
+decision record `docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md`, issue comment
+posted); its design plan and implementation remain open — see the Up Next item. See
+`CHANGELOG.md`.
 
 **Progress, issue #152 (whole-genome/whole-exome sequence input + sequence-based genetic
 metrics) -- DONE, closed (design S517 through close-out S535, Sessions 517-535).** Design

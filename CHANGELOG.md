@@ -22,6 +22,32 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [issue #148] S703 close-out: scope-narrowing decision record DONE (owner: design-first, same issue); design-plan BACKLOG item queued; 1 learning
+- **Deliverable (`fcf94807`):** `docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md` —
+  the scope-narrowing conversation audit Finding #4 required before any #148 work. Owner
+  decision via `AskUserQuestion`: **design-first, same issue** (rejected: sub-issue split,
+  implement-as-filed, defer — all recorded with reasons). The doc carries the grep-verified
+  evidence inventory (all Finding #4 preconditions now satisfied by the shipped #146–#153
+  siblings: vocabulary reservation in code, sibling-validator pattern as the landmine
+  defusal, allele-frequency helper, #150 export gate, `rhesusGenotypes` example data) and
+  Q1–Q8, the open design questions the future plan session must ratify. Citations
+  line-verified before commit (one off-by-one caught and fixed).
+- **Records:** BACKLOG.md — new top Up Next item (write
+  `docs/planning/issue148-mhc-haplotype-reporting-plan.md` in the #152/#153 mold; READY,
+  Effort M, planning session) with full forward-carried context; the genetic-metrics batch
+  narrative's "#148 remains unstarted" line updated to point at the decision record.
+  Learning 756 (re-derive an audit finding's claims against HEAD at pick-up — the
+  preconditions had dissolved while the gate stayed valid). No suite run: docs-only; the
+  S696–S698 baseline (2,370 blocks, failed=0, error=0, skipped=182) carries forward by
+  inheritance.
+
+### 2026-09-17 · [issue #148] S703: scope-narrowing comment posted to GitHub issue #148 (non-commit action)
+- Comment `issuecomment-5721771731` records the owner decision on the issue itself: the
+  full-feature body is now read through the design-first gate — plan doc ratified first,
+  implementation slices after; hard constraints restated (biallelic gate untouchable,
+  sibling validator, vocabulary reservation, no MHC inference from locus names). Issue
+  stays OPEN through design and implementation.
+
 ### 2026-09-17 · [issue #148] S703 claim: MHC haplotype scoping document (session claimed, work beginning)
 - Phase 1B claim for the issue #148 scope-narrowing/scoping session (S702 next-step A;
   owner-picked via `AskUserQuestion` at Phase 0; the genetic-metrics sequencing audit's
