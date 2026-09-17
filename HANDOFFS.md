@@ -148,7 +148,7 @@ key_files: BACKLOG.md:1-13 (note gone); BACKLOG.md:96-140 approx (3 new Housekee
 gotchas: The standing top-priority note is GONE -- older handoffs/forward-carries/learnings referencing it are historical, not live. BACKLOG Housekeeping gained 3 blocks at its top (net +36 lines) -- re-grep line numbers. Census counts going forward: c curved-chord 1,668 total (1,667 Real-375-only), d 2 total (1 Real-375-only) -- older "1,667"/"d=1" are Real-375-scoped. failed=0 expectation stays 2,370 blocks but is INHERITED from S698, not re-measured -- do not cite S699 as a fresh baseline. The class-b item's 2-noise/6-real split couples to both the census predicate and the article's "8 of 237" figure; both couplings are flagged inside the item.
 runtime_smoke: n/a -- docs-only (BACKLOG/ledger/notes/memory edits; no runtime behavior change)
 changelog_ref: 2026-09-17 S699 entry (ad hoc), 8127201d
-commit: pending
+commit: 87dfb4dc
 ```
 Owner decision session: the S643 standing pedigree-drawing top-priority directive is retired by explicit owner sign-off; residual fidelity work continues at ordinary priority via 3 new self-contained Housekeeping items. Self-score 9: + decision grounded in a live CSV re-tally (surfaced the class-b noise/real split and the Real-375 scoping of older counts before they entered the items wrong); + items written as archaeology-free specs; + memory loop closed same-session; - the 2-vs-6 class-b split was derived after the owner heard "8" in the decision brief; - no independent re-render to confirm today's engine state matches eeacd06c (relied on S698's day-old live measures).
 
