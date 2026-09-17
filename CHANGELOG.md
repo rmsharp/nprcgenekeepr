@@ -22,6 +22,16 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits 5a8bb047..43b29508 — S702 close-out self-reference commits
+- The recurring close-out shape (same as S701's `79b6003b`/`8c0097fb`, backfilled
+  `cd2ba39f`): after S702's ledger-recording commit `922350bd`, two further commits
+  landed that by construction cannot ledger themselves — `5a8bb047` (SESSION_NOTES
+  handoff + S701 evaluation, HANDOFFS receipt completed) and `43b29508` (close-out
+  commit sha recorded into the HANDOFFS receipt, self-reconcile). Both are S702
+  close-out bookkeeping, fully described by the S702 entry below; no work product is
+  missing. Backfilled by the next session's Phase 0 reconcile-on-read, exactly as
+  S702's gotcha 3 predicted.
+
 ### 2026-09-17 · [BL-Housekeeping] S702 close-out: CHANGELOG.md archive pass DONE (328 records archived, verified lossless); 1 learning; BACKLOG item removed (both halves done)
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; docs-only maintenance
   session — no TDD phases, S700/S701/S594/S539 archive-pass precedent):** the
