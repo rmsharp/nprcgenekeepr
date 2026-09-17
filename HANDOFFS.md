@@ -148,7 +148,7 @@ key_files: docs/archive/SESSION_NOTES-through-2026-09-17.md (+.verify.sh -- run 
 gotchas: SESSION_NOTES.md now holds ONLY S700's records -- pre-S700 context lives in the archive shards (newest: through-2026-09-17). failed=0 expectation stays 2,370 blocks but is INHERITED from S698 (S699/S700 both docs-only, no suite run) -- do not cite S700 as a fresh baseline. A trim session must ledger its claim commit BEFORE --write (P1_UNDOCUMENTED) and treat SRF_RED as an owner decision. Dashboard "High+ Risk: N" counts PROJECTS -- extract the flag list from dashboard.html; HANDOFFS.md front matter's "21 receipt(s)" is stale (real: 122). The tool inserted a "## 2026-09" month header into CHANGELOG.md; older 2026-09-dated entries still sit under "## 2026-08" -- pre-existing cosmetic mislabeling, leave it unless tasked.
 runtime_smoke: n/a -- docs-only (archive relocation + ledger/notes/backlog records; no runtime behavior change)
 changelog_ref: 2026-09-17 S700 close-out entry (ad hoc), c179897a
-commit: pending
+commit: c0b7ec81
 ```
 Maintenance session: the dashboard's SESSION_NOTES.md HIGH flag is cleared by a verified-lossless 170-record archive pass; the two sibling ledger files' own overdue trims are measured and queued with procedure notes. Self-score 9: + deliverable verified two independent ways and re-measured (trigger-clear, dashboard); + both refusal gates resolved by their governing rules (reconcile, owner decision) rather than forced or abandoned; + a multi-session orientation under-count caught, measured, and converted into a self-contained queued item; - Phase 0 repeated the inherited "1 HIGH flag" claim instead of extracting the flag list at orientation; - one extra commit cycle discovering P1_UNDOCUMENTED.
 
