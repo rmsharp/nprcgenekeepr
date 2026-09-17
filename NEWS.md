@@ -178,6 +178,15 @@ R. Mark Sharp, Ph.D.
   detour running between two rows no longer clips the symbols of the row
   below. Most detours are unchanged; only the ones that touched a symbol
   moved.
+- The package now includes five small example pedigrees, one for each
+  classic mating structure a colony manager may need to recognize: a
+  brother-sister mating, linebreeding back to a single influential
+  ancestor, a daughter bred back to her own sire, a first-cousin mating,
+  and a mating of half-siblings who share a sire. Each is small enough
+  (11-14 animals) to read at a glance on the Diagram tab, and each
+  contains exactly one consanguineous mating for the diagram to
+  highlight (`example_pedigree_*.csv` in the package's
+  `extdata/examples` folder).
 
 ## Kinship & Pedigree Calculations
 
