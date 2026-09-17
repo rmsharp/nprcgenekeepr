@@ -18,15 +18,121 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 692 Handoff Evaluation (by Session 693)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable and the
+BACKLOG item was a near-complete spec. The direct/rectilinear node-count table and the
+`__dup_*` counts reproduced exactly on the first measurement. The warning forward-carry
+(exact message, which 2 pedigrees, rectilinear only) turned a would-be red test into a
+design decision made at PRE-RED. The `verifyDirectEdges()`/`verifyRectiNets()` line
+pointers (`s691_pedigrees.R:132/:175`) were exact, and the kinship expectations table
+ported straight into the spec list. Gotcha (1)'s 2,354-block baseline matched the measured
+regression. **What was missing:** the item asked for "node/edge counts" but supplied only
+node counts (edges turned out equal to nodes in all 10 layouts, a one-run measurement). It
+also said nothing about the fact that rectilinear routing nets attach only to a union's
+children, so the ported `verifyRectiNets()` "family" check was looser than its description
+(found by mutation, Learning 746). **What was wrong:** nothing material; the handoff's
+suggestion to pin the warning "with `expect_warning()`" was right in spirit, but the
+codebase's own `withCallingHandlers` idiom cannot fail on absence, which neither session
+had noticed. **ROI:** high.
+
 ### What Session 693 Did
-**Deliverable:** Pin the 5 exemplar pedigrees as test fixtures with layout expectations
-(BACKLOG.md:14, READY, Effort M, full TDD; follow-up 2 of 3 from S691; standing
-pedigree-fidelity directive; owner-picked via `AskUserQuestion` at Phase 0). (IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning — DEVELOPMENT_WORKSTREAM, PRE-RED.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** The 5 bundled exemplar pedigrees pinned as structural test fixtures:
+new `tests/testthat/test_examplePedigreeFixtures.R` (10 `test_that` blocks). This was
+follow-up 2 of 3 from S691, owner-picked via `AskUserQuestion` at Phase 0 under the
+standing pedigree-fidelity directive, run as DEVELOPMENT_WORKSTREAM with full TDD and all
+three phase gates posed. **DONE.** **Started/completed:** 2026-09-17 (single session).
+Claim `c4e452b6`; RED `c5435906`; records `708ae7f3`. No `R/` change: GREEN needed no
+implementation, and the owner chose to skip REFACTOR at the gate.
+**Ledger:** recorded as the S693 entry at the top of `CHANGELOG.md` (`708ae7f3`).
+
+**What actually happened, in order:**
+1. **PRE-RED:** read the S691 harness and the existing structural-pin conventions
+   (`system.file()` loading, the `withCallingHandlers` warning idiom). Re-measured every
+   pin value live on the shipped CSVs: node/edge counts (edges = nodes in all 10),
+   drawn-twice animals, full warning text, and vermillion-edge endpoints (in every
+   exemplar the marked pair runs from one mate's duplicate occurrence to the
+   consanguineous union). PRE→RED gate approved.
+2. **RED:** wrote the file with local helpers ported from `s691_pedigrees.R` and a spec
+   list. The pins cover preconditions (CSV shape, literal-`NA` founders, φ/F exact,
+   F = 0 elsewhere, linebreeding's two lines of descent) and, in both styles, counts,
+   drawn-twice ids, the one consanguineous union (by real parents and inbred children),
+   the direct edge trace, rectilinear net confinement and known waypoint kinds. The
+   warning is pinned as a captured vector with an asserted length, not the idiom. All
+   blocks passed on unmodified source (characterization), so must-fail was discharged
+   by **10 mutation checks**, each confirmed failing in the intended block for the right
+   reason.
+3. **The mutations found 2 test-side defects, fixed before commit:** (a) the first net
+   mutation did not fail. Diagnosis showed the mutation itself was flawed (drops feed
+   bars, never animals), AND that the ported check accepted a bar wired to the union's
+   own parent. Tightened to children-exactly plus every-union-reached, then re-mutated
+   (unrelated animal, own parent, unrouted union all fail with the right message).
+   (b) The trace helper errored instead of failing when no triple survived; it now
+   returns an empty frame. 0 lints. RED committed `c5435906`. RED→GREEN gate approved.
+4. **GREEN (no code):** the full clean regression (unfiltered, `NOT_CRAN`) gave **2,364
+   blocks, failed=0, error=0** (2,354 + 10). The first `devtools::check()` could not start
+   because the Xcode license had not been accepted (`make`/`xcrun` exit 69). The owner
+   accepted it mid-session; the retry (with `pkgbuild.has_compiler = TRUE`, harmless with
+   no `src/`) finished with 0 errors, 1 warning and 1 note, both from untracked local
+   clutter (`~$e Compounding Loop.html`, `scratchpad/`). GREEN→REFACTOR gate: owner chose
+   skip.
+5. **Close-out:** records `708ae7f3`: the CHANGELOG entry; Learning 746 (mutation as RED
+   evidence, the looser-than-named helper, and the warning idiom that cannot fail on
+   absence, verified empirically); the fixture BACKLOG block removed, with the measured
+   reading-guide facts and the render-chunk warning gotcha forward-carried into the
+   article item.
+
+**Self-assessment (Session 693): 9/10.** **Strengths:** (1) every pin value was measured
+on the shipped CSVs through `system.file()` before any assertion was written, never
+copied from the handoff table. (2) RED's must-fail was earned by per-block right-reason
+mutation evidence rather than asserted, and that same run caught a genuinely loose check
+inherited from S691 plus a warning idiom that could not detect absence. (3) Scope held:
+one test file, no engine change, no article work, no refactor of the existing
+warning-idiom tests (recorded as a learning, not acted on). (4) Useful facts for the
+article session were forward-carried while they were fresh. **Weaknesses:** (1) the first
+M3 mutation was badly aimed (it targeted an edge shape that does not exist), costing one
+extra mutation cycle; the boundary-edge inspection should have come before writing
+layout mutations. (2) Pinning the drawn-twice animal ids and tightening the net check to
+children-exactly go slightly beyond the gate's wording ("dup counts", "net confinement").
+Both are structural facts of the approved renders and are disclosed, but the owner did
+not ratify those specifics. (3) `devtools::check()` needed an owner action mid-session;
+running the toolchain probe at PRE-RED would have surfaced the Xcode license earlier.
+
+**Next steps (specific):** (A) **Article/tutorial section for the exemplars**
+(`BACKLOG.md:14`, READY, Effort M, the last S691 follow-up): point
+`scratchpad/s691_render.R` at the shipped `inst/extdata/examples/` paths. The item now
+carries the test-pinned reading-guide facts and the render-chunk warning gotcha. It
+triggers the article + NEWS checklists. (B) Shape A Phase 3 docs (`BACKLOG.md:40`, READY,
+Effort S). (C) Ascender-stub cosmetic (`BACKLOG.md:63`, READY, Effort M; must knowingly
+update the S685 inertness pin). (D) QP Phase 4 cleanup (`BACKLOG.md:77`, READY,
+Effort S). (E) SESSION_NOTES.md trim (READY; the dashboard's one HIGH flag, now past
+10,400 lines). (F) Push decision: 53 commits ahead after this close-out (48 at Phase 0 + 5 S693
+commits). S693 adds only a
+test file and docs; the new tests passed under `R CMD check`. (G) Informational: the
+dashboard copy is still stale (v2.14.0 vs v2.18.0); untracked leftovers are unchanged.
+
+**Key files:** `tests/testthat/test_examplePedigreeFixtures.R:1` (the deliverable, 436
+lines), with `:172` the spec list (every pinned value), `:98` `.rectilinearNetViolations()`
+(children-exactly net check), `:56` `.traceDirectTriples()`, `:35`
+`.layoutCapturingWarnings()`, `:89` the known waypoint-kind pattern, and `:380` the
+deliberate warning pin with its dated comment. Also `BACKLOG.md:14` (article item with the
+forward-carried facts), `CHANGELOG.md:19` (S693 entry), and
+`PROJECT_LEARNINGS.md:2191` (Learning 746).
+
+**Gotchas for the next session:** (1) **failed=0 expectation is now 2,364 blocks.**
+(2) If any engine change moves an exemplar's counts, drawn-twice set, marker placement or
+collision warning, `test_examplePedigreeFixtures.R` fails ON PURPOSE. Re-measure by
+running the engine, get the render re-reviewed, then update the spec list; never
+hand-derive a new value (the file header says so). (3) The spec's waypoint pattern is
+`^__(bar|drop|jog)_`: a new routing node kind fails the known-kinds block first, which is
+deliberate, so extend the pattern only after confirming the net check still reads the new
+kind correctly. (4) The existing `withCallingHandlers`+`expect_match` blocks in
+`test_makePedigreeMatingLayout.R` (e.g. `:651`) tolerate the collision warning but would
+not notice it vanishing; converting them is NOT an open item (Learning 746 frames it as
+acceptable for "tolerate" intent), so don't pick it up without an owner decision.
+(5) The approved renders and `s691_render.R` are STILL untracked scratchpad files needed
+by the article session, so don't clean scratchpad yet. (6) BACKLOG line numbers shifted
+(the fixture block was removed and the article item grew, net −12 lines at the top);
+re-grep.
 
 ### Session 691 Handoff Evaluation (by Session 692)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
