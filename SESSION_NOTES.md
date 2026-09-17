@@ -22,17 +22,102 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 700 Handoff Evaluation (by Session 701)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, with a
+complete and exact procedure: shipping the claim ledger entry per Learning 752 — applied
+here IN the claim commit itself — meant `P1_UNDOCUMENTED` never fired (zero wasted
+cycles vs S700's one); `SRF_RED` arrived exactly as predicted with the S594/S700
+precedent making the owner question immediate; "stale front-matter self-corrects"
+confirmed (21 → 6, `FRONTMATTER_FIELD_REGENERATED`); the 122-receipt count matched the
+tool's partition exactly. The Learning 753 gotcha (extract the flag list from
+`dashboard.html`) was applied at orientation, avoiding the inherited under-count.
+**What was missing:** only expectation-shaping — no note that a HANDOFFS cut would
+retain multiple receipts and land near the 32,768 B hysteresis stop (−94.7%, not
+SESSION_NOTES's −99.7%); now Learning 754. **What was wrong:** nothing found — every
+load-bearing claim checked out. **ROI:** high.
+
 ### What Session 701 Did
 **Deliverable:** `HANDOFFS.md` archive pass via `methodology_trim.py` (S700 next-step A;
 BACKLOG Housekeeping item first half; owner-picked via `AskUserQuestion` at Phase 0;
-docs-only maintenance session — no TDD phases, S700/S594/S539 archive-pass precedent)
-(IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; the claim entry itself ships in this
-commit (Learning 752: the claim commit must be ledgered before the first `--write`).
-This session's remaining actions are recorded in `CHANGELOG.md` at Phase 3F. Until
-close-out, this line is the crash breadcrumb for the next session's reconcile.
+docs-only maintenance session — no TDD phases, S700/S594/S539 archive-pass precedent).
+116 receipts (2026-08-14 → 2026-09-17) archived to
+`docs/archive/HANDOFFS-through-2026-09-17.md`, live file 590,777 B → 31,315 B (−94.7%),
+both triggers cleared, L1/L2/L3/P1A verified twice (tool assertions + the generated
+`verify.sh` re-deriving from git: "122 = 6 retained + 116 archived"). **DONE.**
+**Started/completed:** 2026-09-17 (single session). Phase 0 backfill `21d09bca` (S700
+close-out self-reference commits); claim `f51210bb` (stub + pending receipt + claim
+ledger entry in ONE commit); deliverable `9b551c8b`; records `1a8aeb20`.
+**Ledger:** S701 close-out entry at the top of `CHANGELOG.md` (`1a8aeb20`), the
+tool-written trim entry below it, the claim entry (in `f51210bb`), and the Phase 0
+backfill entry (`21d09bca`).
+
+**What actually happened, in order:**
+1. **Phase 0:** standard orient; reconcile backfilled S700's 2 close-out
+   self-reference commits (`c0b7ec81`/`d86c576a`, the recurring shape) as `21d09bca`.
+   CI green (4 push workflows on the S696 push + scheduled shinytest2 9/16 & 9/17).
+   Flag list extracted from `dashboard.html` at orientation (Learning 753 applied):
+   HANDOFFS.md + CHANGELOG.md HIGH. Owner picked the HANDOFFS pass from the 4-option
+   picker.
+2. **Gates:** `P1_UNDOCUMENTED` never fired — claim ledger entry shipped in the claim
+   commit, frontier at HEAD. `--write` refused `SRF_RED` (5.0215 vs the tiny 21-receipt
+   2026-08-14 boundary; 0.6989 vs the largest-drop boundary — the small-denominator
+   shape); owner chose `--force` via `AskUserQuestion` (S594/S700 precedent).
+3. **The trim (`9b551c8b`):** 116 of 122 receipts archived (6 retained — the tool cuts
+   minimally to the stop conditions, Learning 754); all four assertions OK; independent
+   `verify.sh` green; re-`--check` "trigger does not fire" (31,315 B, headroom 113).
+4. **Post-trim verification:** dashboard flag list re-extracted — HANDOFFS flags GONE;
+   `CHANGELOG.md` (5,562 lines / 461,077 B) is the only remaining flag, already queued.
+   `bin/check-handoff` shard-check N/A — checker not present in this project
+   (canonical-only), stated rather than silently skipped.
+5. **Close-out:** CHANGELOG S701 entry + Learning 754 + BACKLOG item narrowed to its
+   CHANGELOG.md half (records `1a8aeb20`); this handoff; HANDOFFS receipt completed.
+   Checklists N/A by inspection: no package-path file touched
+   (NEWS/citation/tutorial/a2interactive/_pkgdown/lint). Full suite NOT run — docs-only;
+   the S696–S698 baseline (2,370 blocks, failed=0, error=0, skipped=182) carries forward
+   by inheritance, not fresh measurement.
+
+**Self-assessment (Session 701): 9/10.** **Strengths:** (1) zero gate-discovery waste —
+both predecessor learnings (752/753) applied at the right moments instead of being
+re-derived. (2) Deliverable verified two independent ways plus a post-trim dashboard
+re-measure. (3) Both refusal-gate paths resolved by their governing rules (frontier at
+HEAD by construction; owner decision for `SRF_RED`). **Weaknesses:** (1) low degree of
+difficulty — a precedent-following maintenance pass; the score reflects clean execution,
+not novelty. (2) The shard-checker step exists in HANDOFFS.md's own guidance but is
+unrunnable here (no `bin/check-handoff` copy); recorded as N/A rather than resolved —
+adopting the checker remains undone and unqueued (deliberately: adopting a canonical
+tool is its own decision, cf. the `context_budget.py` BACKLOG item).
+
+**Next steps (specific):** (A) **CHANGELOG.md archive pass** (READY, Effort S — the
+BACKLOG Housekeeping item's remaining half, top of section; ship the claim ledger entry
+IN the claim commit per Learnings 752/754; SRF likely GREEN here — the most recent
+boundary on that file is S547's ~934 KB legacy relocation — but if RED it is an owner
+decision; expect the post-trim level near the 32,768 B stop, not near-zero).
+(B) Issue #148 MHC haplotype scoping (audit Finding #4: scope decision first).
+(C) The 3 census-residual items (d-adjacent smallest, Effort S). (D) **Push decision**
+(owner call): ~29 commits ahead after this close-out; last pushed state CI-green all 4
+workflows; the unpushed span is believed docs/prose-only — verify with
+`git diff origin/master..HEAD --stat` before pushing (estimate, not measured this
+session either). (E) Informational: package-split disposition still awaiting owner
+accept/reject; dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged;
+Learning 749 duplicate at `PROJECT_LEARNINGS.md:2195`.
+
+**Key files:** `docs/archive/HANDOFFS-through-2026-09-17.md` (+ its `.verify.sh` — run
+it rather than trusting claims), `HANDOFFS.md:135-141` (new shard pointer + regenerated
+count "6"), `CHANGELOG.md:19-50` approx. (S701 close-out entry + tool trim entry),
+`PROJECT_LEARNINGS.md:2204` (Learning 754), `BACKLOG.md:96-117` approx. (narrowed
+CHANGELOG.md item — re-grep, lines drift).
+
+**Gotchas for the next session:** (1) **HANDOFFS.md sits at 31,315 B — 1,453 B under
+the half-budget stop**; at ~5 KB/receipt the byte trigger (fires > 65,536 B) re-fires
+in roughly 7 sessions — a recurring cadence, not an anomaly (Learning 754). (2)
+failed=0 expectation stays 2,370 blocks but is INHERITED from S698 (S699–S701 all
+docs-only) — a session touching package files needs a fresh baseline. (3) The two S701
+close-out self-reference commits (this handoff commit + the sha-recording commit) will
+sit past the CHANGELOG frontier — the recurring shape; next session's Phase 0 backfills
+them exactly as S701 did for S700's. (4) Archived receipts (pre-2026-08-14 shards +
+the new through-2026-09-17 shard) are where pre-S696 handoff context now lives —
+`HANDOFFS.md` itself holds only S696–S701. (5) The CHANGELOG `## 2026-08`/`## 2026-09`
+month-header mislabeling persists (cosmetic, pre-existing — leave unless tasked).
 
 ### Session 699 Handoff Evaluation (by Session 700)
 **Score: 8/10.** **What helped:** next-step (A) WAS this session's deliverable, pre-scoped
