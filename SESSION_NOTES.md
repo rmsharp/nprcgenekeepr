@@ -22,16 +22,102 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 702 Handoff Evaluation (by Session 703)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable with an
+accurate one-line frame ("scope decision first per audit Finding #4") that routed straight
+to the right document and section; gotcha 3 predicted the exact Phase 0 backfill shape
+(`5a8bb047`/`43b29508`, backfilled `4658a4cc`); the ~36-commits-ahead estimate matched the
+measured count exactly (36); the "no HIGH flags anywhere" claim reproduced on flag-list
+extraction (Learning 753 method); CI-green claim verified against `gh run list`. **What was
+missing:** nothing material — the handoff correctly left the audit-claim re-derivation to
+this session (that re-derivation IS what a scoping session is for; it became Learning 756).
+**What was wrong:** nothing found — every load-bearing claim checked out. **ROI:** high.
+
 ### What Session 703 Did
-**Deliverable:** Issue #148 MHC haplotype scoping document (S702 next-step A; owner-picked
-via `AskUserQuestion` at Phase 0; the genetic-metrics sequencing audit's last open item;
-scope-narrowing decision first per audit Finding #4 — a scoping/planning session, docs-only,
-no TDD phases). (IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning.
-**Ledger:** claim entry recorded in `CHANGELOG.md` with this commit (Learnings 752/754
-convention); the session's remaining actions are recorded at Phase 3F. Until close-out,
-this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Issue #148 MHC haplotype scope-narrowing decision record (S702 next-step A;
+owner-picked via `AskUserQuestion` at Phase 0; the genetic-metrics sequencing audit's last
+open item; audit Finding #4's required gate; scoping/decision session, docs-only — no TDD
+phases). `docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md` committed
+(`fcf94807`); owner decision via `AskUserQuestion`: **design-first, same issue** (rejected
+alternatives recorded: sub-issue split, implement-as-filed, defer); scope-narrowing comment
+posted to issue #148 (`issuecomment-5721771731`, non-commit action, ledgered); BACKLOG
+design-plan item queued at the top of Up Next with forward-carried context. **DONE.**
+**Started/completed:** 2026-09-17 (single session). Phase 0 backfill `4658a4cc` (S702
+close-out self-reference commits); claim `1a93a315` (stub + pending receipt + claim ledger
+entry in ONE commit); deliverable `fcf94807`; records `f1dd7e62`.
+**Ledger:** S703 close-out entry + issue-comment entry at the top of `CHANGELOG.md`
+(`f1dd7e62`), the claim entry (in `1a93a315`), and the Phase 0 backfill entry (`4658a4cc`).
+
+**What actually happened, in order:**
+1. **Phase 0:** standard orient; reconcile backfilled S702's 2 close-out self-reference
+   commits as `4658a4cc` (the recurring shape). CI green (S696 push workflows + scheduled
+   shinytest2 9/16 & 9/17). Flag list extracted from `dashboard.html` at orientation
+   (Learning 753): no HIGH flags; only pre-existing MEDIUM (jspdf artifact) + LOW
+   (9 branches). Owner picked #148 scoping from the 4-option picker.
+2. **Evidence pass BEFORE the owner question:** re-derived audit Finding #4's claims
+   against HEAD — found all its preconditions satisfied by the shipped #146–#153 siblings
+   (vocabulary reservation `R/modMarkerGenetics.R:6-9`; sibling-validator defusal pattern
+   `checkLinkageMarkerGenotypeFile.R`/`checkSequenceGenotypeFile.R`;
+   `.markerAlleleFrequencyTable`; #150 export gate; `rhesusGenotypes` example data with
+   `?`-suffixed uncertain calls), while the biallelic gate itself
+   (`R/checkMarkerGenotypeFile.R:68-77`) remains correctly untouchable. Became Learning 756.
+3. **The decision (`AskUserQuestion`, 4 options):** owner chose "Design-first, same issue"
+   — next #148 session writes `docs/planning/issue148-mhc-haplotype-reporting-plan.md`
+   (the #152/#153 mold), implementation slices only after ratification, no sub-issue.
+4. **The deliverable (`fcf94807`):** decision record with §1 decision + rejected
+   alternatives, §2 verbatim issue body + Finding #4 context, §3 grep-verified evidence
+   inventory table, §4 open design questions Q1–Q8 + hard constraints, §5 next actions.
+   All file:line citations verified in-session (one off-by-one caught and fixed pre-commit).
+5. **Close-out:** issue #148 comment posted; BACKLOG Up Next item + batch-narrative update;
+   CHANGELOG entries + Learning 756 (records `f1dd7e62`); this handoff; HANDOFFS receipt.
+   Checklists N/A by inspection: no package-path file touched
+   (NEWS/citation/tutorial/a2interactive/_pkgdown/lint); no BACKLOG item marked DONE naming
+   an issue to close (#148 deliberately stays open). Full suite NOT run — docs-only; the
+   S696–S698 baseline (2,370 blocks, failed=0, error=0, skipped=182) carries forward by
+   inheritance, not fresh measurement.
+
+**Self-assessment (Session 703): 9/10.** **Strengths:** (1) the audit's load-bearing claims
+were re-derived against HEAD BEFORE the owner question, so the 4 options were priced against
+current reality, not the audit's 41-day-old snapshot (Learning 756). (2) The decision is
+recorded with rejected alternatives and grep-verified citations — a future session cannot
+re-litigate from scratch, and the plan session starts from a verified inventory. (3) All
+outward-facing actions (issue comment) were pre-authorized by the option text the owner
+picked. **Weaknesses:** (1) low technical difficulty — a docs-only decision session.
+(2) Two of the 4 scope options (design-first vs sub-issue split) differed only in ceremony;
+a sharper question might have collapsed them and presented 3 cleaner contrasts.
+
+**Next steps (specific):** (A) **Write the issue #148 design plan** (READY, Effort M — new
+top Up Next item in `BACKLOG.md`; a PLANNING session: the plan doc is the whole deliverable,
+no implementation, FM #18/#19; deepest reasoning mode per `SESSION_RUNNER.md` §Planning
+Sessions; ratify Q1–Q8 from the scoping doc §4 as numbered decisions with a vertical-slice
+list and per-slice completion criteria). (B) Census class (d): 2 duplicate-adjacent findings
+(READY, Effort S). (C) Census class (b) union dots (READY, Effort M) and the curved-chord
+measurement pass (READY, Effort M). (D) **Push decision** (owner call): ~42 commits ahead
+after this close-out (estimate — count with `git rev-list --count origin/master..HEAD`);
+last pushed state CI-green all 4 workflows; the unpushed span is believed docs/prose-only —
+verify with `git diff origin/master..HEAD --stat` before pushing (estimate, not measured
+this session either). (E) Informational: package-split disposition still awaiting owner
+accept/reject; dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged;
+Learning 749 duplicate at `PROJECT_LEARNINGS.md:2195`; H4 rate item open; CHANGELOG.md
+re-fire cadence ~4-5 sessions from S702's 33,503 B (this session added ~5 entries).
+
+**Key files:** `docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md` (the decision
+record — §3 evidence inventory, §4 Q1–Q8 for the plan session), `BACKLOG.md:27-46` approx.
+(new top Up Next item — re-grep, lines drift), `BACKLOG.md:~1105` (batch narrative update),
+`CHANGELOG.md` top (S703 entries), `PROJECT_LEARNINGS.md:2208` (Learning 756), issue #148
+(`issuecomment-5721771731`), `HANDOFFS.md` (S703 receipt).
+
+**Gotchas for the next session:** (1) **The scoping doc is NOT the design plan** — the next
+#148 session's deliverable is `issue148-mhc-haplotype-reporting-plan.md` ONLY (FM #18/#19:
+close out after the plan; implementation is separate sessions). (2) The two S703 close-out
+self-reference commits will sit past the CHANGELOG frontier — the recurring shape; next
+Phase 0 backfills them exactly as S703 did for S702's. (3) failed=0 expectation stays 2,370
+blocks but is INHERITED from S698 (S699–S703 all docs-only) — a session touching package
+files needs a fresh baseline. (4) Issue #148 stays OPEN through design AND implementation —
+do not close it at plan ratification. (5) Any enumeration over CHANGELOG entries must span
+`CHANGELOG.md docs/archive/CHANGELOG-*.md` (post-split rule). (6) The empty `## 2026-08`
+month header at the top of `CHANGELOG.md` persists (cosmetic, pre-existing; leave unless
+tasked).
 
 ### Session 701 Handoff Evaluation (by Session 702)
 **Score: 8/10.** **What helped:** next-step (A) WAS this session's deliverable with a
