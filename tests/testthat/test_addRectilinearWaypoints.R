@@ -785,8 +785,17 @@ test_that(".addRectilinearWaypoints's D1 bar-vs-bar same-row x-overlap
   ## more often and the extended-bar overlaps drop 233 -> 88 (census on
   ## the same engine: jogs 165 -> 95, c2 105 -> 29, d 1 -> 0).
   ## Re-measured live, never hand-derived.
-  expect_equal(oldHits, 88L)
-  expect_equal(newHits, 88L)
+  ## CHANGED S690 to 97L/97L -- root-subtree ordering pass wired in
+  ## (docs/planning/pedigree-diagram-root-subtree-ordering-plan.md,
+  ## Phase 2): packing related founder subtrees adjacent compresses the
+  ## big component horizontally, so more sibship bars share x-span on a
+  ## common inter-row y (88 -> 97, +9). An order-sensitive disclosed
+  ## count like census class (b) -- recorded for the owner's visual
+  ## review, not an invariant (bars are not same-row edges; the
+  ## jog-repair layer never sees them). Re-measured live, never
+  ## hand-derived.
+  expect_equal(oldHits, 97L)
+  expect_equal(newHits, 97L)
   expect_true(newHits <= oldHits)
 })
 

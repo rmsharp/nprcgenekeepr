@@ -352,8 +352,16 @@ test_that(".resolveEdgeNodeCollisions applies a disclosed smooth.roundness
   ## CHANGED S678 from 102L -- same cause as the curved count above.
   expect_equal(nrow(fixedCurved), 170L)
   ## One concrete, named pair re-measured directly, not hand-derived.
-  one <- fixedCurved[fixedCurved$from == "__dup_28XSME_1" &
-                        fixedCurved$to == "28XSME", ]
+  ## CHANGED S690: the previously-pinned pair (__dup_28XSME_1 -> 28XSME)
+  ## no longer collides with any unrelated node once the root-subtree
+  ## ordering pass places related founder subtrees adjacent (Shape A
+  ## Phase 2; the design's own inventory flagged this pin as
+  ## order-sensitive: "roundness bump depends on same-row obstacles --
+  ## re-derive"). Re-derived live from the wired engine: the bumped set
+  ## has 56 members; __dup_1X40V5_1 -> 1X40V5 is pinned as the named
+  ## representative (first bumped pair in from/to order).
+  one <- fixedCurved[fixedCurved$from == "__dup_1X40V5_1" &
+                        fixedCurved$to == "1X40V5", ]
   expect_equal(nrow(one), 1L)
   expect_equal(one$smooth.roundness, 0.5)
 
@@ -369,7 +377,11 @@ test_that(".resolveEdgeNodeCollisions applies a disclosed smooth.roundness
   ## (provisional-order design Phase 2): the tighter local
   ## anchor--dot--mate packing clears one curved-connector collision
   ## (matches the census's own 58 pipeline residuals). Re-measured live.
-  expect_equal(nrow(curvedResiduals), 58L)
+  ## CHANGED S690 to 56L -- root-subtree ordering pass wired in (Shape A
+  ## Phase 2): adjacent founder subtrees shorten the curved duplicate
+  ## connectors, clearing 2 more collisions (matches the render
+  ## warning's own 58 -> 56). Re-measured live.
+  expect_equal(nrow(curvedResiduals), 56L)
 
   ## Every pre-existing node's x/y is byte-identical.
   before <- waypoints$nodes[, c("id", "x", "y")]
@@ -551,8 +563,18 @@ test_that(".resolveEdgeNodeCollisions dramatically reduces the real
   ## (165 -> 95 colliding edges, 495 -> 192 obstacle-pairs). Still
   ## resolved to 0 same-row residual by this unchanged repair pass.
   ## Re-measured live.
-  expect_equal(nrow(baselineEdges), 95L)
-  expect_equal(nrow(baseline), 192L)
+  ## CHANGED AGAIN to 93L/205L -- S690 root-subtree ordering pass wired
+  ## in (docs/planning/pedigree-diagram-root-subtree-ordering-plan.md,
+  ## Phase 2: .orderRootSubtrees() reorders each component's rootIds
+  ## before .buildForestChildrenOf()): related founder subtrees sit
+  ## adjacent, clearing 2 colliding edges (95 -> 93, matching the
+  ## census's own jogs 95 -> 93) while the denser packing raises the
+  ## obstacle-PAIR count on the edges that remain (192 -> 205 -- an
+  ## edge-vs-node pair count, not an edge count; order-sensitive,
+  ## disclosed). Still resolved to 0 same-row residual by this
+  ## unchanged repair pass. Re-measured live, never hand-derived.
+  expect_equal(nrow(baselineEdges), 93L)
+  expect_equal(nrow(baseline), 205L)
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
   afterFix <- .findEdgeNodeCollisions(result$nodes, result$edges)

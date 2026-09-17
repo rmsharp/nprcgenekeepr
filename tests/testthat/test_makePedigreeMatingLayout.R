@@ -733,7 +733,16 @@ test_that(
   ## 375 + 237 + 170 + 251 + 237 + 0 + 190 = 1460. Every other
   ## component count unchanged (the term skip adds or removes no node).
   ## Re-measured live.
-  expect_equal(nrow(result$nodes), 1460L)
+  ## CHANGED S690 to 1456L -- Shape A root-subtree ordering pass wired in
+  ## (docs/planning/pedigree-diagram-root-subtree-ordering-plan.md,
+  ## Phase 2: .orderRootSubtrees() reorders each component's rootIds
+  ## before .buildForestChildrenOf()): related founder subtrees now sit
+  ## adjacent, shortening the same-row edges the jog-repair pass detours
+  ## around -- jog repairs 95 -> 93 (190 -> 186 waypoints):
+  ## 375 + 237 + 170 + 251 + 237 + 0 + 186 = 1456. Every other
+  ## component count unchanged (the reorder adds or removes no node).
+  ## Re-measured live, never hand-derived.
+  expect_equal(nrow(result$nodes), 1456L)
   expect_false(any(is.na(result$nodes$x)))
   expect_false(any(is.na(result$nodes$y)))
   ## CHANGED from 216L (Track 7 Phase 1+2) down to 192L (issue #166's
@@ -760,7 +769,9 @@ test_that(
   ## (Decision 1, S679: 165 jog repairs x 2 waypoints).
   ## CHANGED AGAIN to 190L -- same cause as the node-count change above
   ## (S683 spouse-duplicate term-4 skip: 95 jog repairs x 2 waypoints).
-  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 190L)
+  ## CHANGED AGAIN to 186L -- same cause as the node-count change above
+  ## (S690 root-subtree ordering: 93 jog repairs x 2 waypoints).
+  expect_equal(sum(grepl("^__jog_", result$nodes$id)), 186L)
 })
 
 ## ---- orderBySex parameter: REMOVED (Walker/BJL cutover, Phase 3) -------

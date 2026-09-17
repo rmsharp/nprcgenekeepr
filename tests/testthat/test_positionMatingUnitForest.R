@@ -2915,14 +2915,17 @@ test_that(".positionMatingUnitForest never crosses two same-row
 })
 
 test_that(".positionMatingUnitForest centres every same-row union dot on
-           its anchor/rendered-mate midpoint up to the design's seven
-           disclosed structural residuals, on the full real
-           375-individual fixture (Decision 1, S679; Learning 726's
-           two-assertion pattern: rows above a meaningful floor are
-           bounded and NAMED, sub-precision solver dust is not counted
-           against the gate) -- the four marry-in-chain crowding cases
-           __union_97/128/179/228 stay under ~0.5 raw and the polygamous
-           anchor WCPXHD's three units under ~1.0 raw", {
+           its anchor/rendered-mate midpoint up to six disclosed
+           structural residuals, on the full real 375-individual fixture
+           (Decision 1, S679; Learning 726's two-assertion pattern: rows
+           above a meaningful floor are bounded and NAMED, sub-precision
+           solver dust is not counted against the gate; membership
+           re-derived S690 under the root-subtree ordering pass -- the
+           design's own risk assessment names this set's membership as
+           order-sensitive, count-and-bound as the expectation) -- the
+           marry-in-chain crowding cases __union_97/114/228 stay at
+           ~0.5 raw, __union_130/191 at ~1.0 raw, and the polygamous
+           5-unit anchor WCPXHD's __union_137 at ~1.5 raw", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -2947,18 +2950,27 @@ test_that(".positionMatingUnitForest centres every same-row union dot on
     dev[u] <- abs(xOf[[u]] - (xOf[[a]] + xOf[[nn]]) / 2)
   }
   ## Assertion 1 of the pattern: every row above the meaningful floor
-  ## (1e-3 raw units -- solver dust measures ~1e-8 raw, five orders
-  ## below) belongs to the design's disclosed structural set.
-  disclosed <- c("__union_97", "__union_114", "__union_128", "__union_130",
-                 "__union_137", "__union_179", "__union_228")
+  ## (1e-3 raw units -- solver dust measures ~1e-7 raw, four-plus orders
+  ## below) belongs to the disclosed structural set.
+  ## CHANGED S690 -- root-subtree ordering pass wired in (Shape A
+  ## Phase 2): membership re-derived live against the wired engine
+  ## (never hand-derived): __union_128/__union_179 leave the set (their
+  ## neighbourhoods decompress once related founder subtrees sit
+  ## adjacent), __union_191 (3-unit anchor HV7LZ3) enters, and
+  ## WCPXHD's __union_137 widens 1.0 -> 1.5 raw (its 5-unit chain packs
+  ## against a new neighbour). Matches the census RCM row's class (b):
+  ## 8 rows of which 2 dust = 6 meaningful.
+  disclosed <- c("__union_97", "__union_114", "__union_130",
+                 "__union_137", "__union_191", "__union_228")
   realRows <- names(dev)[dev > 1e-3]
   expect_true(all(realRows %in% disclosed))
   ## Assertion 2 of the pattern: even the disclosed rows stay bounded --
-  ## ~0.5 raw for the marry-in-chain crowding cases, ~1.0 raw for the
-  ## polygamous anchor's units -- never the unseeded magnitudes (max
-  ## 2.0 raw under the Phase-1 engine this RED was written against,
-  ## up to 25 raw before Phase 1's duplication policy).
-  expect_lte(max(dev[realRows], 0), 1.05)
+  ## ~0.5 raw for the marry-in-chain crowding cases, ~1.0-1.5 raw for
+  ## the polygamous/multi-unit anchors' units (1.50 measured S690) --
+  ## never the unseeded magnitudes (max 2.0 raw under the Phase-1
+  ## engine the original RED was written against, up to 25 raw before
+  ## Phase 1's duplication policy).
+  expect_lte(max(dev[realRows], 0), 1.55)
 })
 
 ## ---- S683: wDup on spouse-duplicates (owner visual-gate finding, S679) --
