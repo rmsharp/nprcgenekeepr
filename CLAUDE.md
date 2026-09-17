@@ -551,6 +551,22 @@ Learning 495 for the adjacent
 [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
 verification discipline this same session established.
 
+**BACKLOG completed-item removal checklist (owner-directed, 2026-09-11,
+S686 post-close-out chat):** a session that completes a `BACKLOG.md`
+item REMOVES the item’s block entirely in the same commit (the base
+Phase 3F rule — never an inline `[x]` marking): the completed record
+goes to `CHANGELOG.md` (enriched with any load-bearing verification
+detail the block held); any detail a live open item needs is written
+INTO that open item’s own description (forward-carrying context, never a
+pointer back at a DONE block); any still-open sub-thread is extracted as
+its own standalone item first. Rationale (owner-ratified): a `[x]` DONE
+block kept as de-facto reference documentation is a *weaker* record —
+findable only by someone who already knows it’s there, frozen rather
+than maintained, and it compounds a Phase-0 mandated read
+(`SESSION_RUNNER.md` FM \#28’s “compounding term with no decay term”).
+The 28 pre-existing `[x]` blocks are a one-time Housekeeping backfill
+item (2026-09-11), not license to keep the pattern.
+
 **CHANGELOG.md ledger-format resolution (2026-07-08, Session 325 —
 “freeze legacy, go forward”):** canonical v3.1+ defines `CHANGELOG.md`
 as an “Authoritative Action Ledger” — dated

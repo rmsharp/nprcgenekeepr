@@ -17,6 +17,618 @@ missed. Taking an action and not recording it is failure mode \#27.
 
 ## 2026-08
 
+### 2026-09-17 · \[BL-ascenderStub\] S696: ascender-stub cosmetic fix — jog corridors rejoin the kid directly (found S679, owner visual gate)
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing
+  pedigree-fidelity directive; DEVELOPMENT_WORKSTREAM, full TDD RED →
+  GREEN, REFACTOR gate posed and owner-skipped):**
+  `.resolveEdgeNodeCollisions()` no longer draws dangling “ascender”
+  stubs above sibship bars. Root cause located in data and
+  crop-verified: a corridor rejoining an invisible `__bar_<kid>` point
+  whose bar-level ink was entirely rerouted drew the riser collinear
+  with the kid descent’s top — 9–27 px of duplicate ink ending mid-air
+  at bar level (84 stubs on the real 375 fixture; 15 on the twins trim;
+  2 on the first_cousin exemplar). S679’s candidate 2 (“suppress the
+  riser on zero-width bars”) refuted by measurement — a zero-width bar
+  can never jog. Approach (direct rejoin) and all TDD phase transitions
+  owner-ratified via `AskUserQuestion`; owner visual gate ACCEPTED both
+  changed renders. Commits: claim `2e5eee98`, RED `d3e15162`, GREEN
+  `e6fb81a7`, renders `eeae9914`, census `eeacd06c`, NEWS `05c3313e`.
+- **Fix (spike-measured PRE-RED, then TDD):** when a rerouted edge’s
+  endpoint is invisible (size 0/NA) and its only surviving edge is one
+  vertical descent to a non-jog node, the corridor connects straight to
+  the kid; riser + descent dropped, bar point left unreferenced and
+  unmoved. Kid-adjacent segments always run waypoint → kid (the
+  parent/child-side direction convention); the corridor is emitted
+  reversed when only the FROM side is bypassed so jog nodes keep
+  1-in/1-out. Suite-side: the D-2 walker collapses only 1-in/1-out jogs
+  and bridges parentless components through their shared kid;
+  `first_cousin` rectilinearEdges re-pinned 33 → 31 (`CHANGED S696`).
+- **Verification:** stubs 84 → 0 (new standing suite invariant, 6 new
+  test blocks); zero node movement; census findings byte-identical (CSV
+  refreshed — also folds in S690’s never-committed deltas); full clean
+  regression **2,370 blocks, failed=0, error=0**; the S685 inertness pin
+  passed UNCHANGED (bypass excludes degree-0 endpoints); `lintr` 0 on
+  touched files; spell check clean; live E2E pedigree module 16/16
+  blocks, 55 expectations, 0 failed (`NPRC_RUN_E2E=true`); twins
+  screenshot recaptured through the real app (pixel diff purely
+  subtractive); NEWS.Rmd plain-language entry. BACKLOG item removed per
+  the completed-item convention; Learning 749.
+
+### 2026-09-17 · \[BL-shapeAPhase3\] S695: Shape A Phase 3 — docs & follow-ups (closes the root-subtree ordering chain: design S688, Phase 1 S689, Phase 2 S690, Phase 3 S695)
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing
+  pedigree-fidelity directive; DEVELOPMENT_WORKSTREAM, docs-only — no
+  TDD phases, per the S692/S694 precedent):** the design’s own Phase 3
+  spec discharged in full. Commits `52a9b7da` (screenshot), `1d33729b`
+  (NEWS), `9727c210` (dispositions).
+- **Screenshots — digest-driven minimal recapture:** layout digests
+  (`scratchpad/s683_screenshotDigests.R`) run at HEAD and, via a
+  temporary git worktree with `R_LIBS` pointed at the renv cache
+  library, at `4853639f` (S683’s recapture — the commit at which all 5
+  Diagram-tab screenshots were last current). Only the twins trim
+  changed (both edge styles); base/show_names/affected trims
+  digest-identical, so only `diagram_twin_connectors.png` was recaptured
+  (the other 4 untouched, no spurious PNG churn). The new layout was
+  ground-truth-verified before the gate: all 42 parent-child triples
+  reconstruct exactly from the rendered union edges (sex-free pair trace
+  — the S691 helper’s M/F assumption false-alarms on this fixture’s
+  NA-sex parent `EE4BJC`), and all 39 rectilinear routing nets confine
+  to one union’s family. Owner visual review: **accepted**. Reference
+  images `trackB-nprc-*`/`trackC-nprc-*` untouched per the item (S690
+  re-proved identity / bitwise-identical layout). See Learning 748.
+- **NEWS.Rmd:** plain-language entry (S628 criterion) appended to the
+  Pedigree Diagram section — branches sharing animals now sit near each
+  other, curved duplicate connectors about a quarter shorter and
+  crossing less, a fraction of a second more layout time on very large
+  pedigrees; `NEWS.md` re-rendered (diff = the entry only);
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  clean, no WORDLIST change needed.
+- **Open-Question dispositions** recorded in
+  `docs/planning/pedigree-diagram-root-subtree-ordering-plan.md` (new
+  `### Dispositions` section, matching the provisional-order plan’s
+  precedent): spectral seed NOT TAKEN (S689 gate chose RCM); adaptive QP
+  calibration NOT PURSUED; kill switch DECLINED (unconditional pass;
+  S690/S691 visual gates found no worsened shape); 1,500-node-cap
+  scaling OPEN (no fixture); Track C bitwise identity RESOLVED (guard
+  declined S689, then measured max \|dx\| = 0 at S690); ~2,300 px
+  mean-span ceiling ACCEPTED RESIDUAL (routing/duplicate-policy work,
+  out of scope). Plus the forward-carried SLN0TF class-(d) acceptance /
+  alignped3-stays-NOT-PURSUED note from the removed BACKLOG blocks.
+- **Checklists:** `a2interactive.Rmd`, citation, `_pkgdown.yml`, lint —
+  all N/A by inspection (no new export, statistic, or tracked `.R`
+  change). NEWS same-session checklist discharged above. `BACKLOG.md`:
+  the Shape A Phase 3 block removed per the completed-item convention
+  (this entry + the design doc’s Dispositions section are the durable
+  record). After this session no open BACKLOG item depends on scratchpad
+  files.
+- **Verification:** full clean regression (unfiltered, `NOT_CRAN`) —
+  **2,364 blocks, failed=0, error=0**, exactly the S694 baseline (no
+  test file touched); the screenshot recapture itself exercised the live
+  app end-to-end (AppDriver: upload, QC, navigate, focal-trim, capture)
+  under the wired Shape A engine.
+
+### 2026-09-17 · \[BL-exemplarArticle\] S694: “Reading classic breeding structures” — the 5 exemplar pedigrees added to the pedigree-diagram article (closes the S691 follow-up chain)
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing
+  pedigree-fidelity directive; DEVELOPMENT_WORKSTREAM, docs-only — no
+  TDD phases, per the S692 data+docs precedent):** new
+  `vignettes/articles/pedigree-diagram.qmd` section walking through each
+  classic structure’s Rectilinear diagram (full-sibling, backcross,
+  half-sibling, first-cousin, linebreeding) with a plain-language
+  reading guide per structure — the dashed duplicate-occurrence line and
+  the vermillion consanguineous mate-line pair — plus a
+  [`system.file()`](https://rdrr.io/r/base/system.file.html) snippet for
+  loading an exemplar into the app and a See-also line. Every stated
+  id/φ/F fact comes from the S693 test-pinned spec (F = 0.25, 0.25,
+  0.125, 0.0625, 0.03125), never hand-derived; the prose claims no
+  crossing-free rendering for linebreeding/half-sib (their collision
+  warning was owner-accepted at S691’s visual gate). Commits `811160a8`
+  (images), `b8ada1d9` (article + regeneration script), `10337bb5`
+  (NEWS/WORDLIST).
+- **Images regenerated, not copied — and byte-identical to the approved
+  renders:** the new tracked script
+  `vignettes/articles/pedigree-diagram-exemplar-renders.R` (adapted from
+  the untracked `scratchpad/s691_render.R`) renders the 5 shipped
+  `inst/extdata/examples/example_pedigree_*.csv` files through the HEAD
+  engine into `vignettes/articles/pedigree-diagram-img/`; all five PNGs
+  proved byte-identical (`cmp`) to the S691 owner-approved scratchpad
+  renders, so the S691 visual approval carries over with no re-review,
+  and node/edge counts matched the pinned table (33/35/26/33/30) at
+  render time. The script documents the exactly-two expected collision
+  warnings (linebreeding, half_sib) so any other warning set reads as an
+  engine change requiring re-review before committing images. The
+  article session’s dependency on the untracked scratchpad renders is
+  now over.
+- **Checklists:** tutorial/article (this session IS it) and NEWS.Rmd
+  same-session both discharged — plain-language entry (S628 criterion)
+  appended to the Pedigree Diagram section, `NEWS.md` re-rendered with
+  the entry as the only diff; wordlist gate run locally pre-push:
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  flagged 13 words in the new article prose (the exemplar animal-id
+  alphabetic prefixes plus “backcross”), added to `inst/WORDLIST`, test
+  green (Learning 747). N/A by inspection: citation checklist (no new
+  statistic), `a2interactive.Rmd`/`_pkgdown.yml` reference coverage (no
+  new export; the article itself was already registered at
+  `_pkgdown.yml:63`).
+- **Verification:** `quarto render` clean (twice, after the final prose
+  pass);
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  fully clean; full clean regression (unfiltered, `NOT_CRAN`) **2,364
+  blocks, failed=0, error=0** — exactly the S693 baseline (no test file
+  touched).
+
+### 2026-09-17 · \[BL-pinExemplarFixtures\] S693: The 5 bundled exemplar pedigrees pinned as structural test fixtures (`tests/testthat/test_examplePedigreeFixtures.R`, 10 blocks)
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing
+  pedigree-fidelity directive; follow-up 2 of 3 from S691; full TDD with
+  all three phase gates posed):** one test file loading each shipped
+  `example_pedigree_*.csv` via
+  [`system.file()`](https://rdrr.io/r/base/system.file.html) and pinning
+  what the owner approved at S691’s visual gate — CSV shape with literal
+  `NA` founder parents; every φ/F exact to theory plus F = 0 elsewhere;
+  linebreeding’s two distinct lines of descent from LK; per `edgeStyle`,
+  node/edge counts (direct 19/21/15/17/18, rectilinear 33/35/26/33/30 —
+  edges equal nodes in all 10 layouts), which animals are drawn twice
+  (CS1; LB2+LK; BP; FC2; HB1+HS), exactly one vermillion width-4
+  mate-line pair on the union of the expected consanguineous mating
+  whose children are exactly the inbred animals; the direct (child,
+  sire, dam) trace; rectilinear routing nets each carrying one union’s
+  descent to exactly its own children; only known waypoint node kinds.
+  No raw x-positions pinned. RED commit `c5435906`; no `R/` change
+  (GREEN needed no implementation — the pins characterize shipped
+  behavior).
+- **Warning pinned, not suppressed:** exactly one “2 same-row edge-node
+  collision(s)” warning for linebreeding/half-sib rectilinear, zero
+  warnings everywhere else (dated comment). Pinned by capturing the
+  warning vector and asserting its length — the codebase’s existing
+  `withCallingHandlers` + `expect_match` idiom passes silently when the
+  warning disappears (Learning 746).
+- **RED must-fail discharged by 10 mutation checks** (phantom `""`
+  parents, rewired child edge, unrelated animal / own parent on a
+  routing net, unrouted union, stripped marker, warning
+  expected-but-absent and present-but-unexpected, unknown waypoint kind,
+  broken consanguinity in input, changed duplicate policy), each
+  confirmed failing in the intended block for the right reason. The run
+  found and fixed two test-side defects before commit: the S691-derived
+  net check accepted a sibship bar wired to the union’s own parent
+  (“family” = parents + children; tightened to children-exactly, plus
+  every-union-reached), and the trace helper errored instead of failing
+  when no triple survived.
+- **Verification:** single-file run green; full clean regression
+  (unfiltered, `NOT_CRAN`) 2,364 blocks failed=0 error=0 (= 2,354
+  baseline + 10);
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors / 1 warning / 1 note, both from untracked local clutter CI
+  never sees (the `~$e Compounding Loop.html` Word temp file; the
+  `scratchpad/` dir); `lintr` 0 lints. The first check attempt could not
+  start (Xcode license not accepted — `make`/`xcrun` exit 69); the owner
+  accepted the license in-session, and the retried check (run with
+  `options(pkgbuild.has_compiler = TRUE)`, harmless — no `src/`)
+  completed.
+- **BACKLOG:** fixture item’s block removed per the completed-item
+  convention; the measured reading-guide facts (drawn-twice animals,
+  marker placement from the duplicate occurrence, inbred-children
+  identity) and the render-chunk warning gotcha forward-carried into the
+  article item’s own description.
+
+### 2026-09-16 · \[BL-shipExemplarCSVs\] S692: The 5 owner-approved exemplar pedigrees shipped as bundled example CSVs (`inst/extdata/examples/example_pedigree_*.csv`) + plain-language `NEWS.Rmd` entry
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing
+  pedigree-fidelity directive; follow-up 1 of 3 from S691):**
+  byte-identical copies of the S691 owner-approved scratchpad CSVs
+  (visual gate “all 5 legible”) shipped as
+  `example_pedigree_{consanguinity,linebreeding,backcross,first_cousin,half_sib}.csv`,
+  renamed from the session-numbered `s691_ped_*` names to the
+  directory’s established `example_*` convention — content untouched,
+  literal `NA` parents preserved (Learning 744). Ship commit `121a4ccd`.
+- **Verification ran on the SHIPPED copies, not the sources:** `cmp`
+  byte-identity ×5; 44/44 ground-truth checks (columns
+  `id,sire,dam,sex,gen`, no `""` phantom parents, founders’ `NA` parents
+  intact, [`system.file()`](https://rdrr.io/r/base/system.file.html)
+  resolution, every φ/F exact to theory — full-sib 1/4,
+  linebreed-through-two-lines 1/32, backcross 1/4, first-cousin 1/16,
+  half-sib 1/8 — plus F = 0 for every other non-founder); all 10
+  structural layout counts through the HEAD engine match the
+  owner-approved layouts (direct 19/21/15/17/18 nodes, rectilinear
+  33/35/26/33/30, `__dup_*` 1/2/1/1/2, exactly 1 consanguineous
+  mate-line pair each); full clean regression 2,354 blocks failed=0
+  error=0 (`NOT_CRAN` set, unfiltered).
+- **`NEWS.Rmd` entry (S628 plain-language criterion)** at the end of the
+  Pedigree Diagram section (what a colony manager gets: five small
+  ready-to-read pedigrees, one per classic mating structure, each with
+  exactly one consanguineous mating for the Diagram tab to highlight);
+  `NEWS.md` re-rendered (only the new entry changed); `linebreeding`
+  added to `inst/WORDLIST` (legitimate domain term — the S680/Learning
+  669 CI class, caught locally by the wordlist coverage test before any
+  push). Commit `af0996dc`.
+- **Found and forward-carried (Learning 745):** the linebreeding and
+  half-sib exemplars each emit a “2 same-row edge-node collision(s)
+  could not be fully resolved” warning under `edgeStyle = "rectilinear"`
+  — present at S691 approval time (same engine, same inputs) but
+  recorded nowhere; now written into the fixture follow-up’s
+  `BACKLOG.md` item so its testthat file pins or suppresses the
+  condition deliberately instead of hitting it as a red test.
+- **BACKLOG:** the shipped item’s block removed per the completed-item
+  convention; follow-ups 2 (test fixtures) and 3 (article/tutorial
+  section) flipped BLOCKED→READY with the shipped paths forward-carried
+  into their own descriptions. Records committed 2026-09-17 (close-out
+  crossed midnight).
+
+### 2026-09-16 · \[BL-smallDemoPedigrees\] S691: Small demonstration pedigrees (11–14 individuals each) exercising the 5 classic complex mating structures — built, ground-truth-verified, rendered both `edgeStyle`s, owner visual gate APPROVED (“all 5 legible”)
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0;
+  owner-requested at S690’s visual gate; standing pedigree-fidelity
+  directive):** 5 authored exemplar pedigrees — consanguinity (full-sib
+  mating, F = 1/4), linebreeding (ancestor LK through 2 distinct lines,
+  F = 1/32), backcross (daughter × own sire, F = 1/4), first-cousin (F =
+  1/16), half-sib (shared sire, F = 1/8) — as
+  `scratchpad/s691_ped_{consang,linebreed,backcross, cousin,halfsib}.csv`
+  plus 10 owner-reviewed renders
+  (`s691_<ped>_{rectilinear,direct}.png`). Review-only this session per
+  the scoping gate; nothing shipped into the package.
+- **Scoping gate (`AskUserQuestion`, pre-work):** owner selected ALL
+  THREE shipping targets (bundled example CSVs, test fixtures with
+  pinned layouts, vignette material) plus review-first — decomposed per
+  1-and-done into three BACKLOG follow-up items carrying the approved
+  verdict, filed at close-out, not started.
+- **Ground truth verified before rendering (Learning 744,
+  `scratchpad/s691_pedigrees.R`):** every kinship/inbreeding coefficient
+  matches theory exactly (φ and F values above, and F = 0 for every
+  other individual); sexes consistent; `gen` from
+  [`findGeneration()`](https://github.com/rmsharp/nprcgenekeepr/reference/findGeneration.md);
+  a distinct-lines-of-descent walk proves the linebreeding claim; every
+  rendered (child, sire, dam) triple reconstructed from the `__union_*`
+  edges (resolving `__dup_*`) is set-identical to the CSV in the direct
+  style, and every rectilinear waypoint routing net is confined to one
+  union’s family. Each pedigree triggers exactly 1 consanguineous union
+  (vermillion mate-line, including the 1/32 linebred case) and 1–2
+  `__dup_*` duplicate occurrences.
+- **Defect caught in-session:** first CSV write used `na = ""`, which
+  `read.csv` returns as `""` phantom-parent ids — the first 10 renders
+  were of corrupted pedigrees, caught by the node-count mismatch against
+  the verified in-memory layouts (Learning 744). Rebuilt with the
+  `na = "NA"` default + an
+  [`identical()`](https://rdrr.io/r/base/identical.html) round-trip
+  assertion; re-rendered; all counts match.
+- **Owner visual gate APPROVED** (“all 5 legible”) on the 10 renders —
+  the duplicate-node policy (repeated appearance as a `__dup_*` node
+  with dashed curved connector) reads legibly for every structure in
+  both `edgeStyle`s.
+- **Records:** the BACKLOG suite item removed per the completed-item
+  convention; 3 shipping follow-ups filed (example CSVs + NEWS → READY;
+  pinned test fixtures and vignette material → BLOCKED on the CSVs’
+  shipped location); Learning 744. No package file touched
+  (scratchpad-only session): no NEWS/lint/pkgdown/citation checklist
+  fires. Claim `b9e0c2fa`.
+
+### 2026-09-16 · \[BL-rootSubtreeOrderingPhase2\] S690: Shape A Phase 2 — `.orderRootSubtrees()` wired into `.positionMatingUnitForest()` (full TDD): RED set enumerated by full suite under a runtime-patched exact-GREEN instrument (5 blocks), census matched the design’s RCM row on every number, owner visual gate APPROVED
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing
+  pedigree-fidelity directive; the BACKLOG “Root-subtree ordering pass
+  (Shape A) — Phase 2” item):** the design’s one-line insertion at
+  `R/makePedigreeDiagramData.R:991-992` (pointer comment :985-990) —
+  each component’s `rootIds` are reordered by `.orderRootSubtrees()`
+  (RCM seed, Tier-1 calibration, the S689-ratified choices) before
+  `.buildForestChildrenOf()` — plus the 5 order-sensitive Real-375 pin
+  blocks re-derived by execution. Claim `e5f9288f`; RED `b3742d59`;
+  GREEN `5313289c`.
+- **Method (Learning 743):** pre-RED, the exact GREEN edit was
+  runtime-patched into the namespace (`deparse` + insert +
+  `assignInNamespace`, zero file edits) and the FULL suite run under it
+  — enumerating the true RED set (5 blocks / 11 assertions of the ~26
+  inventory candidates; one changed number, obstacle-pairs 192→205, was
+  in no design table) and proving every structural invariant
+  (never-outside-span, no same-row crossing, zero corridor-disc
+  violations, P49ZD1 bound) passes before any test edit. After GREEN,
+  the shipped engine’s outputs were proven
+  [`identical()`](https://rdrr.io/r/base/identical.html) to the
+  instrument’s captured layouts, closing the pin-faithfulness loop.
+- **RED pins (all derived live):** nodes 1460→1456, `__jog_` 190→186 (93
+  corridors), colliding edges 95→93, collision rows 192→205, curved
+  residuals 58→56, named roundness pair
+  `__dup_28XSME_1`→`__dup_1X40V5_1` (the old pair no longer collides —
+  the design’s own inventory flagged that pin as order-sensitive),
+  union-centering disclosed set 7→6 members (`__union_191` in,
+  `128`/`179` out; bound 1.05→1.55 for WCPXHD’s measured 1.50),
+  extended-bar overlaps 88→97 (disclosed). RED failed for the right
+  reason against the unmodified engine; GREEN passed everything.
+- **Verification:** full clean regression 2,354 blocks failed=0 error=0
+  (baseline re-measured identically pre-RED); census re-run matched the
+  design’s RCM row on every number — jogs 93, b 8 (2 dust; the 6
+  meaningful = the RED disclosed set), c1Pre 6, cCurved 1,667, d 1 =
+  `__dup_SLN0TF_2`/`SLN0TF` — invariants a/c1Post/c2/e/f = 0; every
+  non-Real-375 findings-CSV row byte-identical (frozen 2026-09-02
+  artifact restored, run kept in `scratchpad/s690_census_findings.csv`);
+  five packing fixtures
+  byte-[`identical()`](https://rdrr.io/r/base/identical.html); Track C
+  bitwise identical (max \|dx\| = 0); realized big-component order ==
+  the Phase 1 pinned RCM order; lint 0; `document()` no-op; layout 2.16
+  s warm median (design ≈2.2 s).
+- **Owner visual gate APPROVED** on the before/after overview + meso
+  render pair (`scratchpad/s690_{baseline,wired}_{overview,meso}.png`,
+  produced pre-RED from the patched instrument, pixel-source-identical
+  to the shipped engine). At the gate the owner requested a
+  **small-pedigree exemplar suite** (20 ± 10 individuals: consanguinity,
+  linebreeding, backcross, cousin, half-sib) — filed as the new top
+  BACKLOG Up Next item, deliberately NOT started this session
+  (1-and-done; the owner anticipated a new session).
+- **Records:** Phase 2 BACKLOG block removed per the completed-item
+  convention; Phase 3 flipped READY with Phase 2 outcomes
+  forward-carried; Learning 743.
+
+### 2026-09-16 · \[BL-rootSubtreeOrderingPhase1\] S689: Shape A Phase 1 — `.orderRootSubtrees()` standalone (full TDD): PRE-RED gate ratified RCM seed + Tier-1 calibration, declined the OQ5 guard; RED pins derived by execution; GREEN 26/26 first run; full regression 2,354 blocks failed=0
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing
+  pedigree-fidelity directive; the BACKLOG “Root-subtree ordering pass
+  (Shape A) — Phase 1” item):** new internal
+  `.orderRootSubtrees(rootIds, childrenOf, matingUnits, duplicates, minSep, maxSweeps = 20L)`
+  (`@noRd`) in `R/orderRootSubtrees.R` +
+  `tests/testthat/test_orderRootSubtrees.R` (7 blocks / 26 assertions),
+  implementing the S688 design’s Decisions 1–4 (Tier-1 BJL calibration
+  from the incoming order, rigid-block proxy with anchor-proxied
+  endpoints, reverse Cuthill–McKee seed, first-improvement swap/move
+  sweeps, strict `−1e-9` acceptance, one round). **NOT wired** — Phase 2
+  makes the one-line insertion at `R/makePedigreeDiagramData.R:983-985`.
+- **Gates (all `AskUserQuestion`):** PRE-RED ratified seed = **RCM**
+  (over spectral) and calibration = **Tier-1 BJL** (over full pass-1
+  QP), and **declined** Open Question 5’s “\<4 roots” guard (Track C’s
+  root order changes to `X,P1,W`; its full-layout positions are
+  identical either way, design Evidence 4). RED→GREEN and GREEN→REFACTOR
+  gated; REFACTOR was comments-only (`ae85f1cf`).
+- **RED pins derived by execution (never hand-derived):**
+  `scratchpad/s688_realize_rcm.R` plus two new instruments
+  (`scratchpad/s689_sweepcap_derive.R`, `s689_subset_derive.R`) proved
+  the engine-style per-component construction (subset ped +
+  `.subsetForest()`) reproduces S688’s global-restriction numbers
+  exactly — rigid-block proxy incoming 3742.375 → RCM seed 2968.875 →
+  1-sweep 2112.875 → converged 1935.875 raw units (5 sweeps), identical
+  50-root pinned order — before any pin was trusted. Pinned: converged
+  order, seed-only (`maxSweeps = 0`) and 1-sweep anytime cutoffs, Track
+  C `X,P1,W`, identity on Track B full/shrunk + D1–D3, determinism, the
+  [`stop()`](https://rdrr.io/r/base/stop.html) contract, dropped
+  intra-root/anchorless-unit connectors. RED confirmed all 7 blocks
+  failing for the right reason (2 passing assertions are fixture
+  preconditions), Learning 742.
+- **Verification:** new file 26/26 green on the first GREEN run; full
+  clean regression **2,354 blocks, failed=0, error=0** (baseline 2,347
+  re-measured this session + exactly the 7 new blocks; 182 skips
+  unchanged; `NOT_CRAN` set); `lintr` 0 on `R/orderRootSubtrees.R`
+  (package loaded first, Learning 224);
+  [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+  no-op (internal, no NAMESPACE/man change); pass wall time on Real
+  375’s 50-root component 0.45 s cold / 0.31 s warm (design target ≤ 0.5
+  s). Runtime smoke n/a — standalone/unwired, engine output unchanged by
+  construction (full suite green).
+- **Commits:** claim `75844730`, RED `a65796d7`, GREEN `f72b3a66`,
+  REFACTOR `ae85f1cf`, records + close-out follow. Phase 1’s BACKLOG
+  block removed in this commit per the completed-item convention; the
+  Phase 2 item flipped to READY with the gate outcomes forward-carried
+  into its own description.
+
+### 2026-09-16 · \[BL-rootSubtreeOrderingDesign\] S688: Design — the root-subtree ordering pass (Shape A): reorder `rootIds` in-engine, calibrated from Tier-1 BJL alone, deterministic RCM seed, one round; the S686 “ids renumber” gotcha measured FALSE; census run on every realized candidate
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0 — the top
+  pedigree Up Next item, DESIGN SESSION NEEDED, standing
+  pedigree-fidelity directive):**
+  [`docs/planning/pedigree-diagram-root-subtree-ordering-plan.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-root-subtree-ordering-plan.md)
+  (681 lines, ARCHITECTURE_WORKSTREAM; `d32c9182`). Design only — no
+  `R/`/`tests/` change; every number measured through the UNMODIFIED
+  engine (Learning 739’s permutation-spike pattern plus direct calls
+  into unmodified internal functions); no QP term/weight change (S675
+  mandate). Decisions are recommendations for the implementing sessions’
+  PRE-RED gates (S676 precedent). Claim `4f9f4783`.
+- **Decisions:** (1) placement — one new pure internal
+  `.orderRootSubtrees()` called between
+  `R/makePedigreeDiagramData.R:983` (`rootIds` assembly) and `:985`
+  (`.buildForestChildrenOf()`), per component by inheritance from the
+  S667 recursion, never touching `ped`; (2) calibration from **Tier-1
+  BJL geometry only** (0.01 s) — not the QP-solved layout (the QP is 94%
+  of positioning, 1.38 s, measured via
+  [`trace()`](https://rdrr.io/r/base/trace.html)); (3) **reverse
+  Cuthill–McKee** seed + first-improvement swap/move local search on the
+  rigid-block proxy, strict `−1e-9` acceptance, `maxSweeps = 20`,
+  incoming order kept unless strictly beaten; (4) **one round** —
+  Tier-1-level recalibration measured to DIVERGE (+9.3% worse than
+  baseline at round 2); (5) explicit fence: forest builder,
+  components/packing, Tier 1–3, seeding, `.solveJointQP()`, waypoints,
+  jog repair, row policy, contracts, UI all unchanged.
+- **Load-bearing findings:** (a) the S686/S687 gotcha “any row
+  permutation renumbers `__union_N`” is **false for root-only
+  permutations** — S686’s own converged permutation (50 founder rows)
+  leaves `matingUnits`/`duplicates`/`childEdges`/components
+  [`identical()`](https://rdrr.io/r/base/identical.html) (numbering is
+  by first appearance among rows WITH parents, `:426-447`); the
+  in-engine placement makes id stability a guarantee. (b) The 2×2 matrix
+  (calibration × seed, one round, Real 375 connector ink): QP-calibrated
+  current −31.0% / spectral −33.5%; Tier-1 current −27.5% / RCM −27.8% /
+  spectral −31.0%; baseline 570,645 px; S686’s 3-round −33%.
+  3.  Fixture safety: identity permutation on Track B full/shrunk,
+      D1–D3; Track C’s order changes (P1,X,W → X,P1,W) but its
+      full-layout positions are identical (`all.equal`). (d) **Census on
+      the realized orders** (S686’s byte-faithful harness copy): RCM
+      jogs 93 / b 8 (2 dust) / c1Pre 6 / cCurved 1,667 (−16%) / d 1
+      (`__dup_SLN0TF_2`–`SLN0TF`); spectral jogs 114 / b 17 / c1Pre 8 /
+      cCurved 1,343 (−33%) / d 0; a/c1Post/c2/e/f 0 in every run.
+      **Class (b) is order-sensitive** (moved 12→8 vs 12→17) — S686’s “b
+      unchanged at 12” was a coincidence, and this session’s own first
+      draft had written it in as an invariant before the census run
+      corrected it. (e) Determinism: RCM over exact IEEE-double Tier-1
+      arithmetic is bitwise reproducible; spectral needs 4
+      [`eigen()`](https://rdrr.io/r/base/eigen.html) guards — recorded
+      as an owner-gated upgrade (+3 ink points, cCurved −33%, but b +5,
+      jogs +19), not taken.
+- **Measurement tooling:**
+  `scratchpad/s688_{timing,seed,m5,m6,realize_rcm,census_rcm,census_spectral}.R`
+  - `s688_ped_{rcm,spectral}.csv` + logs/findings CSVs (untracked,
+    project `scratchpad/`, paths made project-relative; take before
+    cleaning). The RCM order for Real 375’s 50-root component is printed
+    by `s688_realize_rcm.R` (the Phase-1 pin reference).
+- **Records:** Learning 741; the Shape-A design item removed from
+  `BACKLOG.md` and replaced by the three implementation-phase items the
+  design produced (Phase 1 READY / Phases 2–3 BLOCKED on their
+  predecessor), per the completed-item convention; `SESSION_NOTES.md`
+  handoff; `HANDOFFS.md` receipt.
+- **Model:** Claude Fable 5.1.
+
+### 2026-09-14 · \[BL-backlogXBlockBackfill\] S687: BACKLOG `[x]`-block backfill — all 28 DONE blocks (1,309 lines) relocated per the owner-ratified completed-item convention; file halved (2,494 → 1,247 lines)
+
+- **Deliverable (owner-designated S686 post-close-out chat, confirmed
+  via `AskUserQuestion` at Phase 0):** the one-time backfill campaign
+  from the S686-ratified convention — the top `BACKLOG.md` Housekeeping
+  item, taking precedence over the standing pedigree-fidelity pickup for
+  this one session. Claim `9c7a7f0b`; deliverable `9ae0c99c`. Docs-only;
+  no code, tests, or package files touched.
+- **Method executed per block, all 4 steps:** (1) every block read in
+  full and its `CHANGELOG.md` entry verified to carry the completed
+  record (16+ entry bodies read directly; every
+  `docs/planning|research|audits` doc linked from a DONE block
+  grep-confirmed to survive in the ledger). Exactly ONE ledger gap found
+  and enriched: the S663 ScheduleWakeup-guard entry named the
+  about-to-be-deleted `BACKLOG.md` DONE marker as a leg of its own
+  durable record AND lacked the block’s disclosed not-fully-live-proven
+  matcher-dispatch caveat — both fixed in the entry (dated as S687
+  relocations). (2) Forward-carry into 3 live Housekeeping items: the
+  D2-dogleg comment item (premise stale — S678 made `__proj_` waypoints
+  extinct), the main-family proximity residual (premise stale — the QP
+  migration S674 deleted the capped passes it describes; its “fold into
+  the census item” pointer closed), and the fidelity-qmd union-dot
+  passage (engine superseded twice since filing — S652 revert, then the
+  QP). (3) Both open sub-threads extracted as standalone Up Next items
+  FIRST: the S679 ascender-stub cosmetic (READY, Effort M, low priority)
+  and the QP Migration Path Phase 4 cleanup (READY, Effort S). (4) All
+  28 blocks deleted (recomputed ranges, blank-line seams preserved).
+- **Verification (mechanical, not eyeballed):** `[x]` count 28 → 0;
+  `[ ]` count 37 → 37 at the deliverable commit (+3 new items, −1 the
+  backfill item’s own close-out removal = 39 final); `##` header count
+  11 → 11; spatial-cross-reference grep per Learning 658 (every
+  “above/below” pointer resolves to a still-present item); full-file
+  end-to-end re-read of the changed regions and every deletion seam.
+- **Second population found, filed not fixed (DECISION NEEDED
+  Housekeeping item):** ~14 `[ ]`-marked items whose own text says
+  RESOLVED/FIXED/DONE (the S529–S531 short-pointer compressions) — the
+  same defect class the convention targets, missed by its `[x]` grep;
+  extending the convention to them is the owner’s call. Also noted, left
+  alone: the macos-chromote item’s “fallback fix below” pointer was
+  already dangling before this session (its target went in S625’s sweep)
+  — pre-existing, not created here.
+- **Records:** Learning 740; this entry; the completed backfill item
+  removed from `BACKLOG.md` in this same commit (the convention’s own
+  flow, applied to itself); `SESSION_NOTES.md` handoff; `HANDOFFS.md`
+  receipt.
+- **Model:** Claude Fable 5.
+
+### 2026-09-11 · \[ad hoc\] S686 addendum: owner ratified the BACKLOG completed-item removal convention — never mark `[x]` inline, always remove; detail flows forward into open items, the record lives here
+
+- **Trigger (owner, post-close-out chat):** the owner spotted
+  `BACKLOG.md`’s 28 retained `[x]` DONE blocks (~44% of items, majority
+  of the file’s 2,473 lines) and, on the diagnosis that they had become
+  de-facto reference documentation, ratified the stronger rule: that
+  pattern is a *weaker* record than (1) enriching the `CHANGELOG.md`
+  entry,
+  2.  writing any needed detail INTO the live open item’s own
+      description, (3) extracting still-open sub-threads as standalone
+      items, and (4) deleting the DONE block entirely.
+- **Recorded:** prospective rule in `CLAUDE.md` “Additional close-out
+  checks” (applies from S687 on); one-time backfill campaign as a new
+  `BACKLOG.md` Housekeeping item (READY, Effort M, method spelled out
+  per block). No blocks relocated yet — this entry records the decision
+  and the standing convention only. **The owner then designated the
+  backfill the NEXT session’s deliverable** (taking precedence over the
+  standing pedigree-fidelity pickup for that one session; Shape-A design
+  follows) — recorded in the S686 handoff’s next_steps.
+- **Model:** Claude Fable 5.
+
+### 2026-09-11 · \[BL-siblingOrderAppetite\] S686: sibling-order appetite measured — every order lever reduces to ped row order, the naive autohint analogue measured WORSE, a real optimizer reclaims −33% of connector ink; owner ratified the Shape-A design item
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0,
+  resolving S685 next-step C’s DECISION-NEEDED fork toward sibling-order
+  over the ascender-stub cosmetic; standing pedigree-fidelity
+  directive):** the design Open Question 3 appetite measurement —
+  evidence doc
+  [`docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md`](https://github.com/rmsharp/nprcgenekeepr/docs/planning/pedigree-diagram-sibling-order-appetite-evidence.md)
+  - rendered A/B visual evidence (owner-requested medium, delivered
+    mid-session at both checkpoints), ending in an owner appetite
+    decision. Claim `baab9cbd`, deliverable `3df67613`. No engine change
+    shipped — measurement only, all spikes ran as pure ped-row
+    permutations through the UNMODIFIED engine (zero package edits, zero
+    reverts owed).
+- **Findings (all measured on Real 375, census harness copy proved
+  byte-faithful by
+  [`identical()`](https://rdrr.io/r/base/identical.html) on the
+  committed findings CSV):** (a) every sibling-order lever — sibship
+  child order, root-subtree order, polygamous unit order, family packing
+  — reduces to ped ROW order; (b) the literal within-sibship lever is
+  ~empty (13 multi-child sibships, 5 inversions, 0.2% of connector ink
+  intra-subtree); (c) 99.8% of the 570,645 px of curved connector ink is
+  cross-root-subtree, 644/1,485 pulled-root pairs inverted; (d) the
+  naive kinship2-autohint barycenter analogue measured WORSE every
+  iteration (570k → 635k px) — a dense minimum-linear-arrangement
+  instance, not kinship2’s sparse case; (e) a width-aware proxy
+  optimizer (spectral seed + swap/move local search, recalibrated per
+  round, converged round 3) achieved TRUE −33% ink (382,911 px), census
+  cCurved −36% (1,996 → 1,278), chord crossings −24/−35%, every error
+  class unchanged (b 12, a/c2/d/e/f 0), jogs +7, width unchanged; (f)
+  fixture safety: identity permutation on Track B/D + D1–D3 by
+  construction, Track C a measured tie — packing-fixture byte-identity
+  plausibly preservable with a prefer-current-order tie-break.
+- **Decision (owner, via `AskUserQuestion`): Shape A — design the
+  engine’s pre-layout ordering pass.** New top `BACKLOG.md` Up Next item
+  (DESIGN SESSION NEEDED, Effort M) carries the full design-question
+  list (objective, tie-break, `__union_N` renumbering / pin / screenshot
+  churn, ~2× layout cost); Shapes B (utility) / C (decline) recorded as
+  fallbacks. Learning 739.
+- **Model:** Claude Fable 5.
+
+### 2026-09-10 · \[BL-censusFinding3JogOffset\] S685: jog offsets are now disc-aware — census c2 29 → 0, the audit’s own literal recommendation measured 5× worse and rejected, zero collateral anywhere
+
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; S684
+  next-step C’s READY branch, standing pedigree-fidelity directive):**
+  census Finding \#3 — jog-repair corridors cleared the obstacle’s
+  *centre line* but not its *disc* (`BACKLOG.md`’s “raise the jog offset
+  above the 25-px symbol radius”). Claim `5a02bd78`. Full TDD
+  (`DEVELOPMENT_WORKSTREAM.md`), owner-gated: candidate pick +
+  PRE-RED→RED + RED→GREEN + GREEN→REFACTOR (REFACTOR owner-skipped at 0
+  lints), all via `AskUserQuestion`.
+- **PRE-RED (instrumented + option-gated spike, reverted before RED):**
+  all 95 corridors live on the Real 375 fixture; TWO failure geometries
+  measured, not the one the census doc named — 9 symbol-row corridors at
+  9/18 px inside their own row’s 25-px discs (too SMALL), and 3 bar-row
+  level-4 corridors at 36 px descended to 24 px from the child row’s
+  discs (too LARGE). The doc’s literal fraction raise (0.15→0.45)
+  measured c2 29 → **161** + 16 new c2-vertical and was rejected; the
+  ratified **band** candidate (floor above the jogged row’s own max disc
+  radius from `nodes$size`, per-row level ladder capped above the
+  nearest disc row below, uniform compression on overflow, S595
+  level-distinctness kept) measured c2 29 → **0**, every other class
+  byte-identical, 0 of 2,343 blocks moved, all 5 screenshot layouts
+  digest-identical. A/B crops sent to the owner (31UG06/7KWRZK/1W4GNT no
+  longer sliced).
+- **RED (`21ccb47b`):** 4 blocks — symbol-row clearance (fails: 9 px vs
+  25), bar-row band cap under a forced 4-level ladder (fails: 24 px from
+  child discs), ≤3-level inertness guard at exactly 9/18 px (passes at
+  HEAD by design, disclosed), and the Real-375
+  zero-corridor-disc-violations acceptance guard, the census c2 metric
+  as a standing suite invariant (fails: 38 = the 29 census pairs + 9
+  own-endpoint attachment cases the census’s pair-exclusion skips —
+  reconciliation documented in the test).
+- **GREEN (`d30ea5fb`):** the band scheme unconditional in
+  `.resolveEdgeNodeCollisions()`; roxygen amended. Proven byte-identical
+  to the measured spike (census CSV + screenshot digests).
+- **Verification (every owed item):** 4 RED blocks green; full clean
+  regression **failed=0 / error=0 (2,347 blocks, 6,437 passed, 182
+  skipped)**; census CSV re-run + committed, diff exactly the 29 c2 rows
+  deleted (`01674a73`); 0 screenshots re-captured (digest-proof); live
+  E2E pedigree module **16/16 blocks, 55 expectations, 0 failed**;
+  `lintr` 0 on touched files; NEWS.Rmd plain-language entry + re-render,
+  wordlist green (`2db53e25`).
+- **Records:** `BACKLOG.md` Finding \#3 passage marked DONE (S679
+  ascender-stub addendum explicitly left OPEN — cosmetic, untouched,
+  pinned inert); Learning 738; `SESSION_NOTES.md` handoff; `HANDOFFS.md`
+  receipt. Also resolved at Phase 0: all 4 of S684’s close-out-push
+  workflow runs completed green (the disclosed in-progress residual).
+- **Model:** Claude Fable 5.
+
 ### 2026-09-10 · \[ad hoc\] S684: pushed the 24-commit S681–S684 backlog to origin/master — all 4 push-triggered workflows green first-try, no CI break to fix or defer
 
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0, S683
@@ -1088,11 +1700,13 @@ missed. Taking an action and not recording it is failure mode \#27.
   694/695). **This is Claude Code tooling configuration, not R package
   code — nothing in this repo changes as a result of the mechanism
   itself** (it lives in `~/.claude/settings.json` +
-  `~/.claude/hooks/*.sh`, outside any git repo); this entry, the
-  `BACKLOG.md` DONE marker, and `PROJECT_LEARNINGS.md` Learning 703 are
-  the durable record. No TDD RED/GREEN/REFACTOR phase gates applied
-  (flagged to the owner at Phase 1, no objection) — no testthat coverage
-  exists for shell hook scripts outside the package.
+  `~/.claude/hooks/*.sh`, outside any git repo); this entry and
+  `PROJECT_LEARNINGS.md` Learning 703 are the durable record (a
+  `BACKLOG.md` DONE marker was originally the third leg; the S687
+  backfill relocated its detail here and removed it). No TDD
+  RED/GREEN/REFACTOR phase gates applied (flagged to the owner at Phase
+  1, no objection) — no testthat coverage exists for shell hook scripts
+  outside the package.
 - 3 hooks, installed and empirically verified against real (not only
   synthetic) payloads at every step: `PostToolUse`/`Bash` records a
   `run_in_background` call’s `backgroundTaskId` to a per-session state
@@ -1102,6 +1716,16 @@ missed. Taking an action and not recording it is failure mode \#27.
   Investigation found no hook fires on background-task *completion*
   (`TaskCreated`/`TaskCompleted`/`Notification` all tested directly,
   twice, none fire) — full trail in `PROJECT_LEARNINGS.md` Learning 703.
+- **Disclosed verification caveat (relocated here by the S687 backfill
+  from the deleted `BACKLOG.md` DONE block):** one link was deliberately
+  NOT live-fired end-to-end — actually invoking
+  `ScheduleWakeup`/`CronCreate` for real just to prove the harness’s
+  matcher-routing dispatch, since both have real side effects (one
+  persistent). That link rests on the documented
+  `"matcher": "Write|Edit"`-style alternation pattern plus the
+  generically-proven `PreToolUse` dispatch mechanism (proven live
+  against `Bash`), not a live in-vivo trigger — a reasoned, not fully
+  live-proven, inference, disclosed at ship time.
 - Backlog item marked `[x]` DONE in the same commit.
 - **Model:** Claude Sonnet 5.
 

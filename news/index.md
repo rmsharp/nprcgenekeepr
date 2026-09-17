@@ -184,6 +184,37 @@
   the mate’s other appearance. Lines from parents down to their children
   run straighter, with far fewer sideways detours, especially in large
   colony pedigrees.
+- When a connector line detours around an animal it would otherwise
+  cross (see the rerouting entry above), the detour now passes clearly
+  outside the animal’s symbol instead of still cutting through it, and a
+  detour running between two rows no longer clips the symbols of the row
+  below. Most detours are unchanged; only the ones that touched a symbol
+  moved.
+- The package now includes five small example pedigrees, one for each
+  classic mating structure a colony manager may need to recognize: a
+  brother-sister mating, linebreeding back to a single influential
+  ancestor, a daughter bred back to her own sire, a first-cousin mating,
+  and a mating of half-siblings who share a sire. Each is small enough
+  (11-14 animals) to read at a glance on the Diagram tab, and each
+  contains exactly one consanguineous mating for the diagram to
+  highlight (`example_pedigree_*.csv` in the package’s
+  `extdata/examples` folder).
+- The Pedigree Diagram article on the package website now walks through
+  those five example pedigrees one diagram at a time, with a short guide
+  to reading each structure on the diagram: how the dashed line marks an
+  animal drawn twice, and how the vermillion mate-line marks each
+  pedigree’s one consanguineous mating.
+- Within each family, the branches descending from different founding
+  animals are now arranged left to right so that branches sharing
+  animals sit near each other. The long curved lines that connect an
+  animal’s repeated appearances are about a quarter shorter overall and
+  cross each other less often, making large colony pedigrees with many
+  repeated individuals easier to follow. Very large pedigrees take a
+  fraction of a second longer to lay out.
+- On crowded diagrams, the short detours that route a family’s sibling
+  line around unrelated animals no longer leave small dangling line ends
+  hanging above the detour. Each detour now joins the child’s own line
+  directly, so what is drawn is only ink that connects somewhere.
 
 ### Kinship & Pedigree Calculations
 

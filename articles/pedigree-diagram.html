@@ -110,7 +110,51 @@
 </h2>
 <p>When a mating pairs two blood-related animals (their kinship coefficient is greater than zero), the two connector lines joining that pair to their shared mating point render thicker and in a distinct, colorblind-safe vermillion (<code>#D55E00</code>) – the doubled/thickened mate-line convention traditional pedigree charts use to flag a consanguineous mating at a glance. This marker needs no optional column and no toggle – it is detected directly from the pedigree’s own sire/dam data, via the same kinship computation the rest of the package uses (including any uploaded Twin/Zygosity Relations file described below, for correctness parity). It applies under both edge styles above.</p>
 <p>The marker is a real, if visually subtle, cue: the two marked segments sit immediately between each parent’s own icon and the small mating dot next to it, so in a dense, busy diagram it can be easy to miss at a glance even though it renders correctly – the bundled 375-animal example fixture used elsewhere in this article has 28 such consanguineous unions, each contributing its own pair of marked segments. Looking for a specific known relationship, or zooming into one region of a large diagram, makes it much easier to spot than scanning the whole population at once.</p>
-</section><section class="level2"><h2 id="sec-affected">Affected-status shading<a class="anchor" aria-label="anchor" href="#sec-affected"></a>
+</section><section class="level2"><h2 id="sec-classic-structures">Reading classic breeding structures<a class="anchor" aria-label="anchor" href="#sec-classic-structures"></a>
+</h2>
+<p>The package bundles five small example pedigrees, one for each classic mating structure a colony manager may need to recognize at a glance (<code>example_pedigree_*.csv</code> in the package’s <code>extdata/examples</code> folder). Each is small enough (11–14 animals) to read in full on this tab, and each contains exactly one consanguineous mating, so together they are practice material for the two cues introduced above: the <strong>curved dashed line</strong> joining an animal’s repeated appearances, and the <strong>vermillion mate-line pair</strong> flagging a mating between blood relatives. To try one in the app, ask R for the file’s location on disk and upload it like any pedigree file:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"example_pedigree_consanguinity.csv"</span>,</span>
+<span>            package <span class="op">=</span> <span class="st">"nprcgenekeepr"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<p>The diagrams below use the default Rectilinear edge style; the Direct style shows exactly the same animals and relationships. In each one, follow the dashed line first – it tells you the two occurrences are the <em>same animal</em>, which is always the key to seeing why the vermillion mating is consanguineous. (In the two busiest examples, half-sibling and linebreeding, the dashed line’s sweep passes close to other connectors; the relationships remain unambiguous.)</p>
+<section class="level3"><h3 id="full-sibling-mating">Full-sibling mating<a class="anchor" aria-label="anchor" href="#full-sibling-mating"></a>
+</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="pedigree-diagram-img/exemplar-consanguinity-rectilinear.png" alt="Pedigree diagram of a full-sibling mating: founders CGS and CGD at top; their four children in the second row, where CS1 appears twice joined by a curved dashed line; a thick vermillion mate-line joins CS1's second occurrence to his full sister CD1; their children CI1 and CI2 below each mate an unrelated animal in the bottom rows."></p>
+<figcaption>The full-sibling example (<code>example_pedigree_consanguinity.csv</code>): CS1 appears twice, joined by the dashed line; the vermillion mate-lines mark his mating with his full sister CD1.</figcaption></figure>
+</div>
+<p>Brother and sister CS1 and CD1 are both children of the founder pair CGS and CGD. CS1 is drawn twice – once among his siblings, and once next to his mate – with the dashed line joining the two occurrences. The vermillion mate-lines mark the CS1 x CD1 mating, and its children CI1 and CI2 are the inbred animals: each has an inbreeding coefficient of F = 0.25, the highest a mating between two non-inbred animals can produce. Every other animal in the pedigree, including CI1’s and CI2’s own offspring by unrelated mates, has F = 0.</p>
+</section><section class="level3"><h3 id="parent-offspring-backcross">Parent-offspring backcross<a class="anchor" aria-label="anchor" href="#parent-offspring-backcross"></a>
+</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="pedigree-diagram-img/exemplar-backcross-rectilinear.png" alt="Pedigree diagram of a parent-offspring backcross: founders BP and BQ at top; BP appears a second time in the next row, joined to his first occurrence by a curved dashed line, with a thick vermillion mate-line to his daughter BR; their children BC1, BC2, and BC3 below; BC1 mates unrelated BU with children BO1 and BO2 at bottom."></p>
+<figcaption>The backcross example (<code>example_pedigree_backcross.csv</code>): sire BP appears twice; the vermillion mate-lines mark his mating with his own daughter BR.</figcaption></figure>
+</div>
+<p>Founder BP mates BQ, then is bred back to his own daughter BR. His second occurrence sits one row down, next to BR, with the dashed line climbing back to his founder-row occurrence – an animal reappearing <em>below</em> its own first occurrence is the tell-tale of a cross-generation mating, and here the vermillion marker confirms the mates are also blood relatives. The vermillion mating’s children BC1–BC3 each have F = 0.25, the same as a full-sibling mating – the two structures concentrate ancestry equally. BC1’s own children by the unrelated male BU are back to F = 0.</p>
+</section><section class="level3"><h3 id="half-sibling-mating">Half-sibling mating<a class="anchor" aria-label="anchor" href="#half-sibling-mating"></a>
+</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="pedigree-diagram-img/exemplar-half_sib-rectilinear.png" alt="Pedigree diagram of a half-sibling mating: sire HS appears twice at top, once with dam HD1 and once with dam HD2, the two occurrences joined by a curved dashed line; in the second row a thick vermillion mate-line joins HA1 to HB1, who also appears twice; their children HC1 and HC2 below; HC1 mates unrelated HU with children HO1 and HO2 at bottom."></p>
+<figcaption>The half-sibling example (<code>example_pedigree_half_sib.csv</code>): shared sire HS appears twice, once per dam; the vermillion mate-lines mark the half-sibling mating HA1 x HB1.</figcaption></figure>
+</div>
+<p>One sire, HS, appears at the top twice – once with each of his two unrelated dams – and the dashed line joining the two occurrences is what says the two families below share a father. HA1 (from HD1) and HB1 (from HD2) are therefore half siblings, and their vermillion-marked mating produces HC1 and HC2 at F = 0.125 – half the full-sibling value, because the mates share only one parent.</p>
+</section><section class="level3"><h3 id="first-cousin-mating">First-cousin mating<a class="anchor" aria-label="anchor" href="#first-cousin-mating"></a>
+</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="pedigree-diagram-img/exemplar-first_cousin-rectilinear.png" alt="Pedigree diagram of a first-cousin mating: founders FGS and FGD at top; their full-sibling children FS1 and FS2 each mate an unrelated founder in the second row; in the third row a thick vermillion mate-line joins the cousins FC1 and FC2, with FC2 appearing twice joined by a curved dashed line; their children FF1 and FF2 at bottom."></p>
+<figcaption>The first-cousin example (<code>example_pedigree_first_cousin.csv</code>): FC2 appears twice; the vermillion mate-lines mark the first-cousin mating FC1 x FC2.</figcaption></figure>
+</div>
+<p>The full siblings FS1 and FS2 each mate an unrelated animal, and their children FC1 and FC2 are first cousins. FC2 is drawn twice – once among her own siblings under FS2, once next to her mate – and the vermillion mating’s children FF1 and FF2 have F = 0.0625 – mild enough to be easy to miss in a table of kinship values, and the marker catches it just as it catches the closer matings above.</p>
+</section><section class="level3"><h3 id="linebreeding">Linebreeding<a class="anchor" aria-label="anchor" href="#linebreeding"></a>
+</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="pedigree-diagram-img/exemplar-linebreeding-rectilinear.png" alt="Pedigree diagram of linebreeding: founder LK appears twice at top, once with dam LW1 and once with dam LW2, joined by a curved dashed line; his descendants through each dam form two family branches; in a lower row a thick vermillion mate-line joins LB2 to LA2, with LB2 appearing twice joined by a long curved dashed line; their children LL1, LL2, and LL3 at bottom."></p>
+<figcaption>The linebreeding example (<code>example_pedigree_linebreeding.csv</code>): influential founder LK appears twice, as does his descendant LB2; the vermillion mate-lines mark the mating LB2 x LA2, which unites two lines of descent from LK.</figcaption></figure>
+</div>
+<p>Linebreeding deliberately concentrates one influential ancestor – here the founder LK, drawn twice at the top, once per dam. His grandchildren LA2 (through son LA1) and LB2 (through daughter LB1) carry his ancestry down two separate lines, and the vermillion-marked LB2 x LA2 mating reunites those lines: that mating is consanguineous <em>only</em> because both mates trace back to LK. Its children LL1–LL3 have F = 0.03125 – mild on paper, but the structure is the thing to recognize, because repeating it generation after generation compounds the concentration.</p>
+</section></section><section class="level2"><h2 id="sec-affected">Affected-status shading<a class="anchor" aria-label="anchor" href="#sec-affected"></a>
 </h2>
 <p>If the pedigree data includes an optional <code>affected</code> column, an individual marked affected renders filled with a distinct color (<code>#CC79A7</code>), with a matching “Affected” entry in the legend; individuals marked unaffected, or with unknown/missing affected status, render open/unfilled (white) – matching the standard pedigree-drawing convention that only a filled node means “affected.” Pedigrees without an <code>affected</code> column render every node unshaded, as before.</p>
 <div class="quarto-figure quarto-figure-center">
@@ -159,6 +203,7 @@
 <code><a href="../reference/makePedigreeDiagramData.html">makePedigreeDiagramData()</a></code> – the simpler, one-node-per-animal alternative.</li>
 <li>
 <code><a href="../reference/checkTwinRelations.html">checkTwinRelations()</a></code> / <code><a href="../reference/readTwinRelations.html">readTwinRelations()</a></code> – validate and read a Twin/Zygosity Relations file.</li>
+<li>The five classic-structure example pedigrees (<code>example_pedigree_*.csv</code> in the package’s <code>extdata/examples</code> folder) – see “Reading classic breeding structures” above.</li>
 <li>
 <code><a href="../reference/kinship.html">kinship()</a></code> – pairwise kinship coefficients from a pedigree, including the <code>twinRelations</code> correction described above.</li>
 <li>

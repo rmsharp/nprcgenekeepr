@@ -531,7 +531,7 @@ diagramDataRectilinear <- makePedigreeMatingLayout(demoPed,
                                                      edgeStyle = "rectilinear")
 ```
 
-    ## Warning: makePedigreeMatingLayout(): 9 same-row edge-node collision(s) could
+    ## Warning: makePedigreeMatingLayout(): 10 same-row edge-node collision(s) could
     ## not be fully resolved (residual after the repair-pass cap, or an unconfirmed
     ## curved-connector heuristic) -- rendered output may still show a straight or
     ## curved edge passing near an unrelated node.
@@ -1454,7 +1454,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpYplQhU/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmphJqbvx/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2226,8 +2226,8 @@ into the de-identified table.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-09-10 23:11:48.443129. The processing
-time for this document was 23 seconds..
+The current date and time is 2026-09-17 18:26:03.03056. The processing
+time for this document was 22 seconds..
 
 ``` r
 
@@ -2264,11 +2264,11 @@ sessionInfo()
     ## [4] stringi_1.8.9           
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.60            bslib_0.12.0        
+    ##  [1] gtable_0.3.6         anytime_0.3.13       xfun_0.61            bslib_0.12.0        
     ##  [5] visNetwork_2.1.4     htmlwidgets_1.6.4    lattice_0.22-9       quadprog_1.5-8      
     ##  [9] vctrs_0.7.3          tools_4.6.1          generics_0.1.4       tibble_3.3.1        
     ## [13] pkgconfig_2.0.3      Matrix_1.7-5         data.table_1.18.6.1  checkmate_2.3.4     
-    ## [17] RColorBrewer_1.1-3   S7_0.2.2             desc_1.4.3           readxl_1.5.0        
+    ## [17] RColorBrewer_1.1-3   S7_0.2.2             desc_1.4.3           readxl_1.5.0.1      
     ## [21] lifecycle_1.0.5      compiler_4.6.1       farver_2.1.2         stringr_1.6.0       
     ## [25] textshaping_1.0.5    Rlabkey_3.5.0        httpuv_1.6.17        htmltools_0.5.9     
     ## [29] sass_0.4.10          yaml_2.3.12          htmlTable_2.5.0      later_1.4.8         
