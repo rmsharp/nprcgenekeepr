@@ -18,16 +18,111 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 688 Handoff Evaluation (by Session 689)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, named with
+the BACKLOG line, the workstream, and the exact two gate decisions to ratify with their
+evidence-table references — the PRE-RED gate was composed almost verbatim from it; the
+"run `Rscript scratchpad/s688_realize_rcm.R`" instruction produced the pinned RCM order in
+one command; gotcha (7) (keep the pass free of `eigen()`/`solve.QP()`) shaped the
+implementation directly; gotcha (3) (the `s688_*` script dependency chain, run from the
+package root) was exactly right; the design doc's appendix reference algorithm +
+`s688_m5.R` made deriving every RED pin mechanical. **What was missing:** nothing said
+whether the engine-style per-component construction (what Phase 1's standalone tests must
+use) reproduces the global-restriction instrument's numbers — this session had to build a
+second derivation (`s689_subset_derive.R`) to prove that equivalence before the pins could
+be trusted as test expectations (it does, bit-for-bit; Learning 742). **What was wrong:**
+nothing material; the design's "Real 375 needs ~10 sweeps" measured 5 (immaterial — well
+under the cap either way). **ROI:** high.
+
 ### What Session 689 Did
-**Deliverable:** Shape A root-subtree ordering — Phase 1: `.orderRootSubtrees()` standalone,
-not yet wired (`BACKLOG.md:14`; DEVELOPMENT_WORKSTREAM, full TDD; owner-picked via
-`AskUserQuestion` at Phase 0; standing pedigree-fidelity directive). (IN PROGRESS)
-**Started:** 2026-09-16
-**Status:** Session claimed. Work beginning. PRE-RED — the gate must ratify seed
-(RCM vs spectral) and calibration (Tier-1 vs full QP) before any test is written.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Shape A root-subtree ordering — **Phase 1: `.orderRootSubtrees()`
+standalone, not yet wired** (DEVELOPMENT_WORKSTREAM, full TDD; owner-picked via
+`AskUserQuestion` at Phase 0; standing pedigree-fidelity directive). **DONE** — new
+internal function + its test file only; no engine wiring, no other file touched.
+**Started/completed:** 2026-09-16 (single session). Claim `75844730`; RED `a65796d7`;
+GREEN `f72b3a66`; REFACTOR `ae85f1cf`; records `4272ed4b`.
+**Ledger:** recorded — S689 entry at the top of `CHANGELOG.md` (`4272ed4b`).
+
+**What actually happened, in order:**
+1. **Baseline before RED:** full clean regression re-measured at 2,347 blocks failed=0
+   error=0 (the last local code change `d30ea5fb` is unpushed, so CI green alone did not
+   cover it); design-doc engine anchors re-grepped — zero drift since `4f9f4783`.
+2. **Pre-RED derivations (reference instrument, unmodified engine):**
+   `scratchpad/s689_sweepcap_derive.R` measured the search needs 5 sweeps (cap observable:
+   maxSweeps=1 differs from converged) and `s689_subset_derive.R` proved the engine-style
+   per-component construction (subset ped + `.subsetForest()`) reproduces S688's
+   global-restriction numbers bit-for-bit — proxy incoming 3742.375 → seed 2968.875 →
+   1-sweep 2112.875 → converged 1935.875 raw units, identical 50-root pinned order.
+3. **PRE-RED gate (one `AskUserQuestion`, 4 questions):** ratified seed = RCM, calibration
+   = Tier-1 BJL, declined the OQ5 "<4 roots" guard (Track C pins `X,P1,W`), approved RED.
+4. **RED (`a65796d7`):** `tests/testthat/test_orderRootSubtrees.R` — 7 blocks: identity on
+   Track B full/shrunk + D1–D3; Track C `X,P1,W`; Real 375 pinned converged order + strict
+   realized-Tier-1-span improvement; determinism; maxSweeps anytime cutoffs (pinned seed-only
+   and 1-sweep incumbents); `stop()` contract; k≤2/dropped-connector early exits. All 7
+   blocks failed for the right reason (the 2 passing assertions are fixture preconditions).
+5. **RED→GREEN gate, then GREEN (`f72b3a66`):** `R/orderRootSubtrees.R` (~215 lines,
+   `@noRd`) — 26/26 on the first run. Full regression 2,354 blocks failed=0 error=0
+   (baseline + exactly the 7 new); lint 0 (after fixing 2 implicit-integer style lints);
+   `devtools::document()` no-op; pass wall time 0.45 s cold / 0.31 s warm (target ≤0.5 s).
+6. **GREEN→REFACTOR gate, then REFACTOR (`ae85f1cf`):** comments-only — replaced the
+   ASCII section-sign placeholders with plain words; re-verified 26/26, lint 0, pure ASCII.
+7. **Close-out:** this evaluation, self-assessment, Learning 742, CHANGELOG entry, Phase 1
+   BACKLOG block removed + Phase 2 flipped READY with the gate outcomes forward-carried
+   (`4272ed4b`), HANDOFFS receipt.
+
+**Self-assessment (Session 689): 9/10.** **Strengths:** (1) every pin was derived by
+execution AND the test-side input construction was proven equivalent to the deriving
+instrument before RED — GREEN then passed 26/26 and the full suite passed clean on the
+first run each; (2) all four TDD gates ran via `AskUserQuestion` with the design's evidence
+as decision input, per the contract; (3) scope held exactly — standalone function, no
+wiring, no other file touched; (4) the maxSweeps formal made the sweep cap a pinnable
+contract rather than an unobservable constant (disclosed at the gate). **Weaknesses:**
+(1) the RED file shipped with awkward ASCII placeholder wording that cost a REFACTOR
+commit to clean — authoring it plainly the first time was possible; (2) two
+implicit-integer lints surfaced post-implementation (trivial, but a second pass); (3) the
+maxSweeps formal is an interface elaboration the design's input table did not enumerate —
+disclosed and gate-approved, but it is a deviation to keep visible.
+
+**Next steps (specific):** (A) **Phase 2 — wire into `.positionMatingUnitForest()`**
+(READY, top Up Next item, `BACKLOG.md:14`, Effort M, DEVELOPMENT_WORKSTREAM, full TDD):
+one-line insertion between `R/makePedigreeDiagramData.R:983` and `:985` (re-grep first),
+re-derive the Real-375 position pins per the design's §Inventory, census re-run against
+the RCM row (jogs 93, b 8 of which 2 dust, c1Pre 6, cCurved 1,667, d 1 —
+`__dup_SLN0TF_2`/`SLN0TF`), invariants a/c1Post/c2/e/f = 0, five packing fixtures
+`identical()`, Track C `expect_equal`, owner visual review of a before/after render pair.
+The gate outcomes are forward-carried in the item itself. (B) Phase 3 (BLOCKED on Phase 2,
+`BACKLOG.md:45`). (C) QP Migration Path Phase 4 cleanup (READY, Effort S). (D)
+SESSION_NOTES.md trim (READY, dashboard HIGH; this session added ~95 lines). (E)
+`[ ]`-but-RESOLVED pointer sweep (DECISION NEEDED, top Housekeeping). (F) Push decision:
+32 commits ahead after this close-out (S685 code fix + S689's new code among them); 4
+workflows fire on push — the new code is CI-clean by construction locally (full suite,
+lint), but fix-or-defer per the CI-break convention applies to whatever the push surfaces.
+(G) Informational: dashboard copy stale (v2.14.0 vs v2.17.0); the untracked Office lock
+file and S685 `tests/testthat/_problems/` leftovers remain (owner's call).
+
+**Key files:** `R/orderRootSubtrees.R:56` (the function; stop() guard :59, early exits
+:66/:100, Tier-1 calibration :105, seed BFS ending :172, sweep loop :178, acceptance
+:208); `tests/testthat/test_orderRootSubtrees.R:35` (orderPassInputs — the engine-mirror
+helper), `:81` (tier1ConnectorSpan), `:95` (real375BigComponentInputs), `:115-148` (the 3
+pinned orders), `:149` (the 7 test blocks begin); `BACKLOG.md:14` (Phase 2, READY, with
+the forward-carry note at its end); `CHANGELOG.md:19` (S689 entry);
+`PROJECT_LEARNINGS.md:2187` (Learning 742); `scratchpad/s689_subset_derive.R` +
+`s689_sweepcap_derive.R` (untracked instruments; both parse or mirror `s688_m5.R`, run
+from the package root);
+`docs/planning/pedigree-diagram-root-subtree-ordering-plan.md:513` (Phase 1 spec, DONE)
+/ `:528` (Phase 2 spec, next).
+
+**Gotchas for the next session:** (1) **failed=0 expectation is now 2,354 blocks** (was
+2,347 — the 7 new `test_orderRootSubtrees.R` blocks); (2) the pinned orders in
+`test_orderRootSubtrees.R` are CONTRACT pins for the standalone function — wiring (Phase 2)
+does not change them (same inputs, same function); only the Real-375 POSITION pins listed
+in the design's §Inventory re-derive; (3) the engine call in Phase 2 should omit
+`maxSweeps` (use the 20L default) and pass the engine's own `minSep` (1L, raw units —
+`R/makePedigreeDiagramData.R:853`); (4) engine line references (:983/:985/:853) are still
+un-drifted as of `ae85f1cf`, but re-grep before editing (S688 gotcha, still true); (5) the
+`s689_*` scratchpad instruments source/parse `s688_m5.R` and the test file — untracked,
+keep the whole `s686_*`/`s688_*`/`s689_*` set together; (6) BACKLOG line numbers shifted
+again (−27 lines at the top) — re-grep, don't trust stored numbers from S688-era receipts.
 
 ### Session 687 Handoff Evaluation (by Session 688)
 **Score: 8/10.** **What helped:** next-step (A) named this session's deliverable exactly, with
