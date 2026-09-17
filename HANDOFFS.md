@@ -136,6 +136,20 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S690
+date: 2026-09-16
+status: pending
+active_task: Shape A root-subtree ordering — Phase 2: wire .orderRootSubtrees() into .positionMatingUnitForest(), re-derive Real-375 position pins, census re-run (RCM row), packing fixtures identical(), Track C expect_equal, owner visual review (DEVELOPMENT_WORKSTREAM, full TDD; owner-picked via AskUserQuestion at Phase 0; standing pedigree-fidelity directive). IN PROGRESS.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S689
 date: 2026-09-16
 status: complete

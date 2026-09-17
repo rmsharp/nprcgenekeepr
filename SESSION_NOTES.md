@@ -18,6 +18,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 690 Did
+**Deliverable:** Shape A root-subtree ordering — Phase 2: wire `.orderRootSubtrees()` into
+`.positionMatingUnitForest()`, re-derive Real-375 position pins, census re-run (RCM row),
+packing fixtures `identical()`, Track C `expect_equal`, owner visual review
+(DEVELOPMENT_WORKSTREAM, full TDD; owner-picked via `AskUserQuestion` at Phase 0;
+standing pedigree-fidelity directive). (IN PROGRESS)
+**Started:** 2026-09-16
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 688 Handoff Evaluation (by Session 689)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, named with
 the BACKLOG line, the workstream, and the exact two gate decisions to ratify with their
