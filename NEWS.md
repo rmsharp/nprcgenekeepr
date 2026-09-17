@@ -192,6 +192,13 @@ R. Mark Sharp, Ph.D.
   to reading each structure on the diagram: how the dashed line marks an
   animal drawn twice, and how the vermillion mate-line marks each
   pedigree's one consanguineous mating.
+- Within each family, the branches descending from different founding
+  animals are now arranged left to right so that branches sharing
+  animals sit near each other. The long curved lines that connect an
+  animal's repeated appearances are about a quarter shorter overall and
+  cross each other less often, making large colony pedigrees with many
+  repeated individuals easier to follow. Very large pedigrees take a
+  fraction of a second longer to lay out.
 
 ## Kinship & Pedigree Calculations
 
