@@ -11,20 +11,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **Ascender-stub cosmetic on jog-repair corridors: small "ascender" stubs above
-      sibship bars read as dangling lines ending in mid-air** (found S679, 2026-09-07,
-      owner visual-gate question; extracted S687 from the census Finding #3 DONE record
-      per the completed-item convention; READY, Effort M -- cosmetic, low priority,
-      standing pedigree-fidelity family). The jog-render convention nests detour
-      corridors 9 px below bar level (y 249/258/267 vs bars at 240) and each corridor
-      climbs 9-27 px back up to its bar node; for narrow/single-child bars that riser
-      reads as a dangling stub ending in mid-air. Cosmetic, pre-existing; deliberately
-      untouched by S685's disc-aware jog-offset fix, whose inertness guard PINS the
-      <= 3-level bar-row corridors at their exact 9/18 px offsets
-      (`tests/testthat/test_resolveEdgeNodeCollisions.R`, S685 section) -- a session
-      fixing this must update that pin knowingly, not fight it. Fix candidates (named
-      S679, none evaluated): rejoin at the child's descent x instead of via the bar
-      node, or suppress the riser when the bar has zero width.
 - [ ] **QP Migration Path Phase 4 cleanup -- the joint-solver migration's last step**
       (from `docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path;
       Phases 1-3 DONE S673/S674/S675 -- the dead Tier 2/3 passes were already deleted

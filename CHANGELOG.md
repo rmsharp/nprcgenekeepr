@@ -16,6 +16,37 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-17 · [BL-ascenderStub] S696: ascender-stub cosmetic fix — jog corridors rejoin the kid directly (found S679, owner visual gate)
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
+  directive; DEVELOPMENT_WORKSTREAM, full TDD RED → GREEN, REFACTOR gate posed and
+  owner-skipped):** `.resolveEdgeNodeCollisions()` no longer draws dangling "ascender"
+  stubs above sibship bars. Root cause located in data and crop-verified: a corridor
+  rejoining an invisible `__bar_<kid>` point whose bar-level ink was entirely rerouted
+  drew the riser collinear with the kid descent's top — 9–27 px of duplicate ink ending
+  mid-air at bar level (84 stubs on the real 375 fixture; 15 on the twins trim; 2 on the
+  first_cousin exemplar). S679's candidate 2 ("suppress the riser on zero-width bars")
+  refuted by measurement — a zero-width bar can never jog. Approach (direct rejoin) and
+  all TDD phase transitions owner-ratified via `AskUserQuestion`; owner visual gate
+  ACCEPTED both changed renders. Commits: claim `2e5eee98`, RED `d3e15162`, GREEN
+  `e6fb81a7`, renders `eeae9914`, census `eeacd06c`, NEWS `05c3313e`.
+- **Fix (spike-measured PRE-RED, then TDD):** when a rerouted edge's endpoint is
+  invisible (size 0/NA) and its only surviving edge is one vertical descent to a
+  non-jog node, the corridor connects straight to the kid; riser + descent dropped, bar
+  point left unreferenced and unmoved. Kid-adjacent segments always run waypoint → kid
+  (the parent/child-side direction convention); the corridor is emitted reversed when
+  only the FROM side is bypassed so jog nodes keep 1-in/1-out. Suite-side: the D-2
+  walker collapses only 1-in/1-out jogs and bridges parentless components through their
+  shared kid; `first_cousin` rectilinearEdges re-pinned 33 → 31 (`CHANGED S696`).
+- **Verification:** stubs 84 → 0 (new standing suite invariant, 6 new test blocks);
+  zero node movement; census findings byte-identical (CSV refreshed — also folds in
+  S690's never-committed deltas); full clean regression **2,370 blocks, failed=0,
+  error=0**; the S685 inertness pin passed UNCHANGED (bypass excludes degree-0
+  endpoints); `lintr` 0 on touched files; spell check clean; live E2E pedigree module
+  16/16 blocks, 55 expectations, 0 failed (`NPRC_RUN_E2E=true`); twins screenshot
+  recaptured through the real app (pixel diff purely subtractive); NEWS.Rmd
+  plain-language entry. BACKLOG item removed per the completed-item convention;
+  Learning 749.
+
 ### 2026-09-17 · [BL-shapeAPhase3] S695: Shape A Phase 3 — docs & follow-ups (closes the root-subtree ordering chain: design S688, Phase 1 S689, Phase 2 S690, Phase 3 S695)
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
   directive; DEVELOPMENT_WORKSTREAM, docs-only — no TDD phases, per the S692/S694
