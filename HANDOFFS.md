@@ -136,6 +136,20 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S692
+date: 2026-09-16
+status: pending
+active_task: Ship the 5 owner-approved S691 exemplar pedigree CSVs into inst/extdata/examples/ + plain-language NEWS.Rmd entry (BACKLOG top Up Next, follow-up 1 of 3 from S691; owner-picked via AskUserQuestion at Phase 0; standing pedigree-fidelity directive; data + docs only — full-TDD fixture work is the separate follow-up 2). Claimed, work beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S691
 date: 2026-09-16
 status: complete

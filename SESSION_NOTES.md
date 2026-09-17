@@ -18,6 +18,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 692 Did
+**Deliverable:** Ship the 5 owner-approved S691 exemplar pedigree CSVs as bundled example
+CSVs (`inst/extdata/examples/`) + plain-language `NEWS.Rmd` entry (IN PROGRESS —
+`BACKLOG.md` top Up Next item, follow-up 1 of 3 from S691; owner-picked via
+`AskUserQuestion` at Phase 0; standing pedigree-fidelity directive; DEVELOPMENT_WORKSTREAM,
+data + docs only — the full-TDD fixture work is deliberately the separate follow-up 2).
+**Started:** 2026-09-16
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 690 Handoff Evaluation (by Session 691)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
 BACKLOG item S690 filed contained the complete spec — the five structures with their
