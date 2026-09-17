@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S694
+date: 2026-09-17
+status: pending
+active_task: Add the exemplar-pedigrees section to the pedigree-diagram article (vignettes/articles/pedigree-diagram.qmd or matching tutorial component): the 5 classic structures' rendered diagrams + plain-language reading guides from the S693 test-pinned facts, handling the collision-warning render-chunk gotcha, plus the same-session NEWS.Rmd entry. BACKLOG Up Next item 1, last S691 follow-up, standing pedigree-fidelity family; DEVELOPMENT_WORKSTREAM, docs-only.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S693
 date: 2026-09-17
 status: complete

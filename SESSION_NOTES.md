@@ -18,6 +18,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 694 Did
+**Deliverable:** Add the exemplar-pedigrees section to the pedigree-diagram article
+(`vignettes/articles/pedigree-diagram.qmd` or matching tutorial component): each of the 5
+classic structures' rendered diagram + plain-language reading guide, using the S693
+test-pinned facts; handle the collision-warning render-chunk gotcha; same-session NEWS.Rmd
+entry (S628 plain-language criterion). BACKLOG "Up Next" item 1, the last S691 follow-up;
+owner-picked via `AskUserQuestion` at Phase 0 under the standing pedigree-fidelity
+directive. DEVELOPMENT_WORKSTREAM, docs-only (S692 precedent — no TDD phases for prose).
+(IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 692 Handoff Evaluation (by Session 693)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable and the
 BACKLOG item was a near-complete spec. The direct/rectilinear node-count table and the
