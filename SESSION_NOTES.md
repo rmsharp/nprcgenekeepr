@@ -22,16 +22,107 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 701 Handoff Evaluation (by Session 702)
+**Score: 8/10.** **What helped:** next-step (A) WAS this session's deliverable with a
+complete procedure: claim-entry-IN-the-claim-commit (Learnings 752/754) meant
+`P1_UNDOCUMENTED` never fired; the "post-trim level near the 32,768 B stop, not
+near-zero" expectation held exactly (33,503 B); "SRF RED is an owner decision" was
+immediately applicable; gotcha 3 predicted the exact Phase 0 backfill shape
+(`79b6003b`/`8c0097fb`, backfilled `cd2ba39f`). **What was missing:** nothing
+significant. **What was wrong:** the load-bearing "SRF likely GREEN here — the most
+recent boundary on that file is S547's ~934 KB legacy relocation" claim. False: S579's
+smaller 2026-08-14 pass (`66d5aa5`) postdates S547, and the tool measures against the
+MOST RECENT boundary — `SRF_RED` fired at 6.3072. Stated as a derivation but never
+checked (one `--check` run would have shown both boundaries); now Learning 755. Cost was
+small only because the RED fallback was fully specified. **ROI:** high.
+
 ### What Session 702 Did
 **Deliverable:** `CHANGELOG.md` archive pass via `methodology_trim.py` (S701 next-step A;
-BACKLOG Housekeeping item's remaining half; owner-picked via `AskUserQuestion` at Phase 0;
-docs-only maintenance session — no TDD phases, S700/S701/S594/S539 archive-pass
-precedent). (IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning.
-**Ledger:** claim entry shipped IN this claim commit (Learnings 752/754) — frontier at
-HEAD; the close-out entry lands at Phase 3F. Until close-out, this stub is the crash
-breadcrumb for the next session's reconcile.
+the BACKLOG Housekeeping item's remaining half; owner-picked via `AskUserQuestion` at
+Phase 0; docs-only maintenance session — no TDD phases, S700/S701/S594/S539 archive-pass
+precedent). 328 records (2026-08-14 → 2026-09-17) archived to
+`docs/archive/CHANGELOG-through-2026-09-17.md`, live file 464,522 B → 33,503 B (−92.8%),
+both triggers cleared, L1/L2/L3/P1A verified twice (tool assertions + the generated
+`verify.sh` re-deriving from git: "347 = 19 retained + 328 archived"). **DONE.**
+**Started/completed:** 2026-09-17 (single session). Phase 0 backfill `cd2ba39f` (S701
+close-out self-reference commits); claim `78dbd8ce` (stub + pending receipt + claim
+ledger entry in ONE commit); deliverable `6bac092f`; records `922350bd`.
+**Ledger:** S702 close-out entry at the top of `CHANGELOG.md` (`922350bd`), the
+tool-written trim entry below it, the claim entry (in `78dbd8ce`), and the Phase 0
+backfill entry (`cd2ba39f`).
+
+**What actually happened, in order:**
+1. **Phase 0:** standard orient; reconcile backfilled S701's 2 close-out self-reference
+   commits (`79b6003b`/`8c0097fb`, the recurring shape) as `cd2ba39f`. CI green (4 push
+   workflows on the S696 push + scheduled shinytest2 9/16 & 9/17). Flag list extracted
+   from `dashboard.html` (Learning 753): CHANGELOG.md HIGH (read cap) + MEDIUM (trigger).
+   Owner picked the CHANGELOG pass from the 4-option picker.
+2. **Gates:** `P1_UNDOCUMENTED` never fired — claim ledger entry shipped in the claim
+   commit, frontier at HEAD. `--write` refused `SRF_RED` (6.3072 vs S579's 2026-08-14
+   boundary `66d5aa5` — NOT S547's relocation as the item predicted; 0.4739 vs the
+   largest-drop boundary — the small-denominator shape a fourth time); owner chose
+   `--force` via `AskUserQuestion` (S594/S700/S701 precedent). The wrong carried
+   prediction became Learning 755.
+3. **The trim (`6bac092f`):** 328 of 347 records archived (19 retained — minimal cut,
+   Learning 754); all four assertions OK; independent `verify.sh` green; re-`--check`
+   "trigger does not fire" (33,503 B; the line metric abstains post-split).
+4. **Post-trim verification:** dashboard flag list re-extracted — BOTH CHANGELOG flags
+   GONE; only the pre-existing MEDIUM (`.Rproj.user` jspdf artifact) and LOW (9 branches)
+   remain. No HIGH flags anywhere for the first time since the flag-list method began.
+5. **Close-out:** CHANGELOG S702 entry + Learning 755 + BACKLOG item removed entirely —
+   both halves done (records `922350bd`); this handoff; HANDOFFS receipt completed.
+   Checklists N/A by inspection: no package-path file touched
+   (NEWS/citation/tutorial/a2interactive/_pkgdown/lint); no GitHub issue named by the
+   item. Full suite NOT run — docs-only; the S696–S698 baseline (2,370 blocks, failed=0,
+   error=0, skipped=182) carries forward by inheritance, not fresh measurement.
+
+**Self-assessment (Session 702): 9/10.** **Strengths:** (1) zero gate-discovery waste —
+Learnings 752/753/754 all applied at the right moments. (2) Deliverable verified two
+independent ways plus a post-trim dashboard re-measure. (3) The wrong carried SRF
+prediction was caught, surfaced accurately to the owner at the decision point, and
+converted into Learning 755 rather than silently absorbed. **Weaknesses:** (1) my own
+Phase 0 report and picker description REPEATED the "SRF likely GREEN" claim unverified —
+the correction only came when the tool's `--check` ran (FM #11-adjacent, same shape S700
+self-flagged); a 2-second `--check` at orientation would have caught it pre-picker.
+(2) Low degree of difficulty — third consecutive precedent-following archive pass; the
+score reflects clean execution, not novelty.
+
+**Next steps (specific):** (A) Issue #148 MHC haplotype scoping (READY, Effort M —
+genetic-metrics sequencing audit's last open item; scope decision first per audit
+Finding #4). (B) Census class (d): 2 duplicate-adjacent findings (READY, Effort S —
+smallest census residual; render both sites, judge, close-or-scope). (C) Census class
+(b) union dots (READY, Effort M) and the curved-chord measurement pass (READY, Effort
+M). (D) **Push decision** (owner call): ~36 commits ahead after this close-out
+(estimate — count with `git rev-list --count origin/master..HEAD`); last pushed state
+CI-green all 4 workflows; the unpushed span is believed docs/prose-only — verify with
+`git diff origin/master..HEAD --stat` before pushing (estimate, not measured this
+session either). (E) Informational: package-split disposition still awaiting owner
+accept/reject; dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged;
+Learning 749 duplicate at `PROJECT_LEARNINGS.md:2195`; the H4 ~4-entries-per-session
+rate item remains open (the archive pass fixed the level, not the rate).
+
+**Key files:** `docs/archive/CHANGELOG-through-2026-09-17.md` (+ its `.verify.sh` — run
+it rather than trusting claims), `CHANGELOG.md:21-23` (new shard pointer) and `:25-49`
+approx. (S702 close-out entry above the tool trim entry), `PROJECT_LEARNINGS.md:2206`
+(Learning 755), `BACKLOG.md:96` approx. (Housekeeping now opens with the census class
+(b) item), `HANDOFFS.md` (S702 receipt).
+
+**Gotchas for the next session:** (1) **All three ledger files now have
+through-2026-09-17 shards** — pre-trim context lives in `docs/archive/`; the live
+`CHANGELOG.md` holds only 19 records (all 2026-09-17-dated, S700–S702 era). (2)
+`CHANGELOG.md` sits at 33,503 B — just ABOVE the 32,768 B half-budget stop; at the H4
+~4-entries-per-session rate the 65,536 B trigger re-fires in roughly 5 sessions
+(estimate), and `HANDOFFS.md` re-fires in ~7 (Learning 754) — recurring cadences, not
+anomalies. (3) The two S702 close-out self-reference commits (this handoff commit + the
+sha-recording commit) will sit past the CHANGELOG frontier — the recurring shape; next
+Phase 0 backfills them exactly as S702 did for S701's. (4) failed=0 expectation stays
+2,370 blocks but is INHERITED from S698 (S699–S702 all docs-only) — a session touching
+package files needs a fresh baseline. (5) Anything that enumerates CHANGELOG entries
+(e.g. the audit grep `grep -E '\[(issue #|BL-|ad hoc)'`) must span
+`CHANGELOG.md docs/archive/CHANGELOG-*.md` or it counts a shrunken population. (6) The
+empty `## 2026-08` month header at the top of `CHANGELOG.md` persists (cosmetic,
+pre-existing); the new shard's name is a span label, not a day boundary
+(`CUT_STRADDLES_DAY` — 2026-09-17 records sit on both sides of the cut).
 
 ### Session 700 Handoff Evaluation (by Session 701)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, with a
