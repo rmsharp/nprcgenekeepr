@@ -147,8 +147,8 @@ next_steps: (A) QP Migration Path Phase 4 cleanup (now BACKLOG Up Next item 1; R
 key_files: R/makePedigreeDiagramData.R:2708 (bypass + emission; roxygen :2454); tests/testthat/test_resolveEdgeNodeCollisions.R:973 (S696 section); tests/testthat/test_comparePedigreeStructure.R:301 (walker changes); tests/testthat/test_examplePedigreeFixtures.R:203 (first_cousin re-pin); vignettes/articles/shiny_app_use/diagram_twin_connectors.png + vignettes/articles/pedigree-diagram-img/exemplar-first_cousin-rectilinear.png (owner-accepted renders); scratchpad/s696_spike.patch, scratchpad/s696_twin_diff.png (evidence); PROJECT_LEARNINGS.md (Learning 749).
 gotchas: failed=0 expectation is now 2,370 blocks (was 2,364). Screenshot digest baseline moves to any commit >= eeae9914; a layout digest hashes edge from/to, so an orientation-only change alters the digest without changing ink (Learning 749). Waypoint edge DIRECTION is load-bearing (terminal->waypoint = parent-side, waypoint->terminal = child-side) -- new corridor emissions must preserve it or the D-2 walker misclassifies. Orphaned degree-0 size-0 bar points now exist in rectilinear layouts by design. BACKLOG line numbers shifted (ascender block removed); re-grep.
 runtime_smoke: Twins screenshot recaptured live through the real app (upload, QC, twin sidecar, focal trim, Diagram render) under the fixed engine; explicit NPRC_RUN_E2E=true run of test-e2e-pedigree-module.R: 16/16 blocks, 55 expectations, 0 failed (exactly the S679 baseline); full clean regression 2,370 blocks failed=0 error=0.
-changelog_ref: 2026-09-17 S696 entry (BL-ascenderStub), records commit
-commit: pending
+changelog_ref: 2026-09-17 S696 entry (BL-ascenderStub), d9da420a
+commit: 77ba72ec
 ```
 
 ```handoff
