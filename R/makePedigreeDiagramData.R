@@ -982,6 +982,15 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   }
   rootIds <- union(setdiff(founderIds, b1Ids), orphanChildIds)
 
+  ## Root-subtree ordering pass (Shape A, S690 -- docs/planning/
+  ## pedigree-diagram-root-subtree-ordering-plan.md): permute rootIds so
+  ## subtrees joined by many duplicate connectors sit near each other.
+  ## Per-component scope is inherited from the recursion above; the
+  ## engine's own minSep is the rigid-proxy gap and maxSweeps stays at
+  ## the function's default.
+  rootIds <- .orderRootSubtrees(rootIds, childrenOf, matingUnits,
+                                duplicates, minSep)
+
   forestChildrenOf <- .buildForestChildrenOf(rootIds, childrenOf,
                                               superRootId = "__super_root__")
   tier1X <- .positionTreeApportion("__super_root__", forestChildrenOf)
