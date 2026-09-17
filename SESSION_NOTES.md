@@ -18,6 +18,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 689 Did
+**Deliverable:** Shape A root-subtree ordering — Phase 1: `.orderRootSubtrees()` standalone,
+not yet wired (`BACKLOG.md:14`; DEVELOPMENT_WORKSTREAM, full TDD; owner-picked via
+`AskUserQuestion` at Phase 0; standing pedigree-fidelity directive). (IN PROGRESS)
+**Started:** 2026-09-16
+**Status:** Session claimed. Work beginning. PRE-RED — the gate must ratify seed
+(RCM vs spectral) and calibration (Tier-1 vs full QP) before any test is written.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 687 Handoff Evaluation (by Session 688)
 **Score: 8/10.** **What helped:** next-step (A) named this session's deliverable exactly, with
 the BACKLOG line and the workstream; key-files' `scratchpad/s686_order_lib.R` +

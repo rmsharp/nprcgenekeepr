@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S689
+date: 2026-09-16
+status: pending
+active_task: Shape A root-subtree ordering — Phase 1: .orderRootSubtrees() standalone, not yet wired (BACKLOG.md:14; DEVELOPMENT_WORKSTREAM, full TDD; owner-picked via AskUserQuestion at Phase 0; standing pedigree-fidelity directive). PRE-RED gate ratifies seed (RCM vs spectral) and calibration (Tier-1 vs full QP) per docs/planning/pedigree-diagram-root-subtree-ordering-plan.md.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S688
 date: 2026-09-16
 status: complete
