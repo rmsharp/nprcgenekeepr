@@ -16,6 +16,20 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-17 · [ad hoc] S698 Phase 0: record CHANGELOG.md entry for S697's close-out commits (reconcile-on-read)
+- Phase 0 ledger reconcile found 2 commits since `CHANGELOG.md`'s frontier (`20088807`) with no
+  ledger entry of their own — the same self-reference shape this project's precedent already
+  names repeatedly (S639→S643, S647): `daafea9f` (S697's own close-out commit, writing the final
+  `SESSION_NOTES.md` handoff + S696 evaluation and completing the `HANDOFFS.md` receipt) and
+  `44f1642a` (recording that close-out commit's sha in the receipt's `commit:` field,
+  self-reconcile). Both postdate `20088807`, the commit that wrote the ledger's own S697 entry
+  (directly below) — that entry necessarily narrates the close-out actions *before* the commits
+  performing them existed, so neither later commit could cite itself. The substance of both is
+  already described in the existing S697 entry; this is a pure reconcile-on-read backfill — no
+  content beyond what `daafea9f`/`44f1642a`'s own diffs already show. `HANDOFFS.md`'s own
+  frontier has no gap (`44f1642a` is already its last touching commit; receipt
+  `status: complete`).
+
 ### 2026-09-17 · [BL-qpPhase4] S697: QP Migration Path Phase 4 cleanup — `R/` doc-comments describe the QP engine (closes the joint-QP-solver migration plan's 4-phase path)
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; DEVELOPMENT_WORKSTREAM,
   docs-only — no TDD phases, per the S692/S694/S695 precedent):** the migration plan's
