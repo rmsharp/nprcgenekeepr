@@ -136,6 +136,15 @@ This file currently holds **21** receipt(s). Computed by `methodology_trim.py` o
 `--check`/`--write` run, never hand-maintained.
 
 ```handoff
+session: S697
+date: 2026-09-17
+status: pending
+active_task: QP Migration Path Phase 4 cleanup (BACKLOG Up Next item 1; READY, Effort S) -- grep R/ doc-comments for stale references to the deleted Tier 2/3 passes and the .kMax* constants, update them to describe the QP engine; closes the joint-QP-solver migration plan's 4-phase path. Owner-picked via AskUserQuestion at Phase 0. Docs-only (S692/S694/S695 precedent -- no TDD phases). DEVELOPMENT_WORKSTREAM.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S696
 date: 2026-09-17
 status: complete

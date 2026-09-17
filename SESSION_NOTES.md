@@ -18,6 +18,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 697 Did
+**Deliverable:** QP Migration Path Phase 4 cleanup (BACKLOG Up Next item 1; READY,
+Effort S) — grep `R/` doc-comments for stale references to the deleted Tier 2/3
+passes and the `.kMax*` constants, update them to describe the QP engine; closes the
+joint-QP-solver migration plan's 4-phase path
+(`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path). (IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning. Owner-picked via `AskUserQuestion` at
+Phase 0. Docs-only (S692/S694/S695 precedent — no TDD phases). DEVELOPMENT_WORKSTREAM.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 695 Handoff Evaluation (by Session 696)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
 BACKLOG item was a strong spec — defect coordinates (9/18/27 px corridors, bars at 240),
