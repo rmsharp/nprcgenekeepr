@@ -11,49 +11,48 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **Root-subtree ordering pass (Shape A) — Phase 2: wire into
-      `.positionMatingUnitForest()`, re-derive Real-375 pins, census, owner visual review**
-      (**READY** — Phase 1 DONE S689, 2026-09-16, see the forward-carry note at the end of
-      this item; Effort M; DEVELOPMENT_WORKSTREAM, full TDD). One-line
-      insertion between `R/makePedigreeDiagramData.R:983` and `:985` (line numbers S688 —
-      re-grep). Re-derive the Real-375 position pins listed in the design's §Evidence-Based
-      Inventory (test_positionMatingUnitForest.R 15 loads incl. the class-(b) disclosed set
-      `:2952` — its COUNT is the expectation, its membership may change; test_resolveEdge
-      NodeCollisions.R :326/:397/:479/:643/:930; test_makePedigreeMatingLayout.R :323/:506/
-      :644; test_addRectilinearWaypoints.R :541/:596/:680) — the structural guards (:2819
-      never-outside-span, :2855 no same-row crossing, :930 zero corridor-disc violations)
-      must still PASS as invariants. Five packing fixtures `identical()` to pre-change
-      output; Track C `expect_equal`. Census re-run: invariants a/c1Post/c2/e/f = 0;
-      order-sensitive expectations for the seed the gate chose — RCM ≈ (jogs 93, b 8 of
-      which 2 dust, c1Pre 6, cCurved 1,667, d 1 = `__dup_SLN0TF_2`/`SLN0TF`), spectral ≈
-      (114, 17, 8, 1,343, 0). Before/after Real-375 overview + meso render pair to the
-      owner before close-out (S666/S667/S675/S686 visual-gate precedent). Expected layout
-      cost +≈0.3 s on Real 375.
-      **Phase 1 DONE S689 (2026-09-16), gate outcomes forward-carried:** the PRE-RED
-      `AskUserQuestion` gate ratified seed = **RCM**, calibration = **Tier-1 BJL**, and
-      **declined** Open Question 5's "<4 roots" guard — so when wired, Track C's `rootIds`
-      order WILL change to `X,P1,W` (full-layout positions identical to `expect_equal`
-      tolerance, design Evidence 4), and the census expectations to use are the **RCM row**
-      above. The function is `.orderRootSubtrees(rootIds, childrenOf, matingUnits,
-      duplicates, minSep, maxSweeps = 20L)` in `R/orderRootSubtrees.R` (the engine call
-      should omit `maxSweeps`, i.e. use the default); the pinned RCM converged / seed-only /
-      1-sweep orders and the strict-improvement span check live in
-      `tests/testthat/test_orderRootSubtrees.R` — they are CONTRACT pins for the standalone
-      function and must NOT be re-derived when wiring (only the Real-375 POSITION pins in
-      the design's §Inventory change). Measured pass wall time 0.45 s cold / 0.31 s warm on
-      Real 375's 50-root component (so the item's +≈0.3 s cost estimate above stands).
-- [ ] **Root-subtree ordering pass (Shape A) — Phase 3: docs & follow-ups** (BLOCKED — on
-      Phase 2 above; Effort S; may fold into Phase 2's close-out if scope allows).
+- [ ] **Small demonstration pedigrees (20 ± 10 individuals) exercising the classic
+      complex mating structures, rendered for owner review** (owner-requested S690,
+      2026-09-16, at the Shape A Phase 2 visual gate; READY, Effort M; standing
+      pedigree-fidelity family; likely its own session — the owner said so when asking).
+      Build a small suite (one pedigree per structure, or a few combined) covering:
+      **consanguinity** (an inbred mating with a nonzero inbreeding coefficient),
+      **linebreeding** (one ancestor reachable through 2+ distinct lines of descent),
+      **backcrossing** (offspring × its own parent), **first-cousin mating**, and
+      **half-sib mating** (shared sire or shared dam). Render each through
+      `makePedigreeMatingLayout()` (both `edgeStyle`s; `scratchpad/s690_crop.R` is
+      reusable render tooling) and present the images to the owner — these are small,
+      human-checkable exemplars complementing the 375-animal fixture, which is too large
+      to verify by eye. The engine draws loops via its duplicate-node policy (a repeated
+      appearance renders as a `__dup_*` node joined by a curved connector), so the review
+      question is whether each structure reads legibly under that policy. Scoping
+      decisions for the picking session (ask the owner via `AskUserQuestion` before RED):
+      whether the pedigrees ship as bundled example CSVs (`inst/extdata/examples/`), as
+      test fixtures with pinned layouts, and/or as vignette/tutorial material — shipping
+      them anywhere user-facing triggers the tutorial/article + NEWS checklists.
+- [ ] **Root-subtree ordering pass (Shape A) — Phase 3: docs & follow-ups** (**READY** —
+      Phase 2 DONE S690, 2026-09-16, visual gate APPROVED by the owner; Effort S).
       `NEWS.Rmd` plain-language entry (S628 criterion — what changed for a colony manager:
       related founder families now sit next to each other, so the long curved lines that
       connect an animal's repeated appearances are shorter and cross less); regenerate the
       5 Diagram-tab screenshots (`scratchpad/s683_screenshotDigests.R`/`s685_*` digest
       scripts identify which change; owner-reviewed); reference images `trackB-nprc-*`/
-      `trackC-nprc-*` need NO regeneration (identity / identical layout); no
-      `a2interactive.Rmd` change (no new export or parameter); record the design's
-      Open-Question dispositions (spectral upgrade, adaptive QP calibration, kill-switch
-      option, scaling at the #138 cap, Track C bitwise identity, the ~2,300 px mean-span
-      ceiling that only routing/duplicate-policy work can lower).
+      `trackC-nprc-*` need NO regeneration (identity / identical layout — S690 re-proved
+      both: five packing fixtures byte-`identical()`, Track C bitwise identical, max
+      |dx| = 0); no `a2interactive.Rmd` change (no new export or parameter); record the
+      design's Open-Question dispositions (spectral upgrade, adaptive QP calibration,
+      kill-switch option, scaling at the #138 cap, Track C bitwise identity, the ~2,300 px
+      mean-span ceiling that only routing/duplicate-policy work can lower).
+      **Phase 2 outcomes forward-carried (S690):** wired at
+      `R/makePedigreeDiagramData.R:985-992` (pointer comment + the one call; engine passes
+      `minSep`, omits `maxSweeps`); census matched the design's RCM row on every number
+      (jogs 93, b 8 of which 2 dust, c1Pre 6, cCurved 1,667, d 1 =
+      `__dup_SLN0TF_2`/`SLN0TF`; invariants a/c1Post/c2/e/f = 0); Real-375 rectilinear
+      layout 2.16 s warm median (was 1.86 s). The one new class-(d) adjacent pair
+      (`SLN0TF`) was disclosed at the visual gate and accepted — the alignped3
+      collapse-when-adjacent refinement stays NOT PURSUED unless a later review reopens
+      it. Fresh S690 before/after render evidence: `scratchpad/s690_{baseline,wired}_
+      {overview,meso}.png`.
 - [ ] **Ascender-stub cosmetic on jog-repair corridors: small "ascender" stubs above
       sibship bars read as dangling lines ending in mid-air** (found S679, 2026-09-07,
       owner visual-gate question; extracted S687 from the census Finding #3 DONE record

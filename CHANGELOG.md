@@ -16,6 +16,46 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-16 · [BL-rootSubtreeOrderingPhase2] S690: Shape A Phase 2 — `.orderRootSubtrees()` wired into `.positionMatingUnitForest()` (full TDD): RED set enumerated by full suite under a runtime-patched exact-GREEN instrument (5 blocks), census matched the design's RCM row on every number, owner visual gate APPROVED
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
+  directive; the BACKLOG "Root-subtree ordering pass (Shape A) — Phase 2" item):** the
+  design's one-line insertion at `R/makePedigreeDiagramData.R:991-992` (pointer comment
+  :985-990) — each component's `rootIds` are reordered by `.orderRootSubtrees()` (RCM seed,
+  Tier-1 calibration, the S689-ratified choices) before `.buildForestChildrenOf()` — plus
+  the 5 order-sensitive Real-375 pin blocks re-derived by execution. Claim `e5f9288f`;
+  RED `b3742d59`; GREEN `5313289c`.
+- **Method (Learning 743):** pre-RED, the exact GREEN edit was runtime-patched into the
+  namespace (`deparse` + insert + `assignInNamespace`, zero file edits) and the FULL suite
+  run under it — enumerating the true RED set (5 blocks / 11 assertions of the ~26
+  inventory candidates; one changed number, obstacle-pairs 192→205, was in no design
+  table) and proving every structural invariant (never-outside-span, no same-row crossing,
+  zero corridor-disc violations, P49ZD1 bound) passes before any test edit. After GREEN,
+  the shipped engine's outputs were proven `identical()` to the instrument's captured
+  layouts, closing the pin-faithfulness loop.
+- **RED pins (all derived live):** nodes 1460→1456, `__jog_` 190→186 (93 corridors),
+  colliding edges 95→93, collision rows 192→205, curved residuals 58→56, named roundness
+  pair `__dup_28XSME_1`→`__dup_1X40V5_1` (the old pair no longer collides — the design's
+  own inventory flagged that pin as order-sensitive), union-centering disclosed set 7→6
+  members (`__union_191` in, `128`/`179` out; bound 1.05→1.55 for WCPXHD's measured 1.50),
+  extended-bar overlaps 88→97 (disclosed). RED failed for the right reason against the
+  unmodified engine; GREEN passed everything.
+- **Verification:** full clean regression 2,354 blocks failed=0 error=0 (baseline
+  re-measured identically pre-RED); census re-run matched the design's RCM row on every
+  number — jogs 93, b 8 (2 dust; the 6 meaningful = the RED disclosed set), c1Pre 6,
+  cCurved 1,667, d 1 = `__dup_SLN0TF_2`/`SLN0TF` — invariants a/c1Post/c2/e/f = 0; every
+  non-Real-375 findings-CSV row byte-identical (frozen 2026-09-02 artifact restored, run
+  kept in `scratchpad/s690_census_findings.csv`); five packing fixtures byte-`identical()`;
+  Track C bitwise identical (max |dx| = 0); realized big-component order == the Phase 1
+  pinned RCM order; lint 0; `document()` no-op; layout 2.16 s warm median (design ≈2.2 s).
+- **Owner visual gate APPROVED** on the before/after overview + meso render pair
+  (`scratchpad/s690_{baseline,wired}_{overview,meso}.png`, produced pre-RED from the
+  patched instrument, pixel-source-identical to the shipped engine). At the gate the owner
+  requested a **small-pedigree exemplar suite** (20 ± 10 individuals: consanguinity,
+  linebreeding, backcross, cousin, half-sib) — filed as the new top BACKLOG Up Next item,
+  deliberately NOT started this session (1-and-done; the owner anticipated a new session).
+- **Records:** Phase 2 BACKLOG block removed per the completed-item convention; Phase 3
+  flipped READY with Phase 2 outcomes forward-carried; Learning 743.
+
 ### 2026-09-16 · [BL-rootSubtreeOrderingPhase1] S689: Shape A Phase 1 — `.orderRootSubtrees()` standalone (full TDD): PRE-RED gate ratified RCM seed + Tier-1 calibration, declined the OQ5 guard; RED pins derived by execution; GREEN 26/26 first run; full regression 2,354 blocks failed=0
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
   directive; the BACKLOG "Root-subtree ordering pass (Shape A) — Phase 1" item):** new
