@@ -35,17 +35,101 @@ independently); the digest-baseline choice (the last-recapture commit `4853639f`
 material. **ROI:** high.
 
 ### What Session 695 Did
-**Deliverable:** Root-subtree ordering pass (Shape A) — Phase 3: docs & follow-ups
-(`BACKLOG.md` Up Next item 1): NEWS.Rmd plain-language entry, regenerate the 5
-Diagram-tab screenshots (digest scripts identify which change; owner-reviewed), record
-the design's Open-Question dispositions. Owner-picked via `AskUserQuestion` at Phase 0
-under the standing pedigree-fidelity directive; DEVELOPMENT_WORKSTREAM, docs-only
-(S692/S694 precedent — no TDD phases). (IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** Root-subtree ordering pass (Shape A) — **Phase 3: docs & follow-ups**,
+closing the whole Shape A chain (design S688, Phase 1 S689, Phase 2 S690, Phase 3 S695):
+digest-driven screenshot recapture (1 of 5 changed, owner-accepted), NEWS.Rmd
+plain-language entry, and the design's six Open-Question dispositions recorded.
+Owner-picked via `AskUserQuestion` at Phase 0 under the standing pedigree-fidelity
+directive; DEVELOPMENT_WORKSTREAM, docs-only (S692/S694 precedent — no TDD phases).
+**DONE.** **Started/completed:** 2026-09-17 (single session). Claim `7c8f9608`;
+screenshot `52a9b7da`; NEWS `1d33729b`; dispositions `9727c210`; records `0bb93756`.
+**Ledger:** recorded as the S695 entry at the top of `CHANGELOG.md` (`0bb93756`).
+
+**What actually happened, in order:**
+1. **Digest comparison (which screenshots are stale):** ran
+   `scratchpad/s683_screenshotDigests.R` at HEAD and — via a temporary git worktree with
+   `R_LIBS` pointed at the renv cache library — at `4853639f` (S683's recapture, the
+   commit at which all 5 Diagram-tab screenshots were last current, so the delta
+   accumulates BOTH the S685 jog fix and the S690 Shape A wiring). Only the twins trim
+   changed (both edge styles); base/show_names/affected digest-identical. So exactly 1 of
+   5 screenshots was stale (Learning 748).
+2. **Recapture + ground truth:** re-captured `diagram_twin_connectors.png` via a
+   twins-only extract of `vignettes/articles/pedigree-diagram-screenshots.R`
+   (`scratchpad/s695_twin_screenshot.R`; live AppDriver against the real app). Before
+   the gate, verified the new layout programmatically: all 42 parent-child triples
+   reconstruct exactly from the rendered union edges (sex-free pair trace — the S691
+   `verifyDirectEdges()` helper false-alarms here because parent `EE4BJC` has NA sex),
+   and all 39 rectilinear routing nets confine to one union's family
+   (`verifyRectiNets()` unchanged). **Owner visual gate: ACCEPTED.** The other 4
+   screenshots untouched; `trackB-nprc-*`/`trackC-nprc-*` reference images untouched per
+   the item (S690 re-proved identity / bitwise-identical layout).
+3. **NEWS.Rmd entry** (S628 plain-language criterion) appended to the Pedigree Diagram
+   section — branches sharing animals sit near each other, curved duplicate connectors
+   about a quarter shorter and crossing less, a fraction of a second more layout time on
+   very large pedigrees; `NEWS.md` re-rendered (diff = the entry only);
+   `spelling::spell_check_package()` fully clean, no WORDLIST change.
+4. **Open-Question dispositions** recorded in the design doc
+   (`docs/planning/pedigree-diagram-root-subtree-ordering-plan.md`, new `### Dispositions`
+   section per the provisional-order plan's precedent): spectral NOT TAKEN (S689 gate
+   chose RCM); adaptive QP calibration NOT PURSUED; kill switch DECLINED; #138-cap
+   scaling OPEN (no fixture); Track C bitwise identity RESOLVED (guard declined S689,
+   measured max |dx| = 0 at S690); mean-span ceiling ACCEPTED RESIDUAL. Plus the
+   forward-carried SLN0TF class-(d)/alignped3-stays-NOT-PURSUED note from the removed
+   BACKLOG blocks. Every cited fact re-verified against its source before writing
+   (verification also surfaced that the S689 gate had explicitly declined the OQ5 guard —
+   folded in).
+5. **Verification:** full clean regression (background, unfiltered, `NOT_CRAN`):
+   **2,364 blocks, failed=0, error=0** — exactly the S694 baseline (no test file
+   touched). Checklists N/A by inspection: citation, `a2interactive.Rmd`, `_pkgdown.yml`,
+   lint (no new export, statistic, or tracked `.R` change).
+6. **Close-out:** records `0bb93756` (CHANGELOG entry, Learning 748, Shape A Phase 3
+   BACKLOG block removed per the completed-item convention, S694 evaluation), this
+   handoff, HANDOFFS receipt.
+
+**Self-assessment (Session 695): 9/10.** **Strengths:** (1) the digest method kept the
+recapture minimal and evidence-based — 1 stale screenshot identified mechanically, 4
+spurious PNG churns avoided, and the baseline was chosen at the last-RECAPTURE commit so
+no earlier un-recaptured drift could hide. (2) The recaptured layout was
+ground-truth-verified programmatically BEFORE the owner gate (42/42 triples, 39/39
+nets), per the standing verify-against-ground-truth rule. (3) Disposition claims were
+each verified against the record they cite, and that verification improved the record
+(the S689 OQ5-guard decline). (4) All gates ran locally pre-commit. **Weaknesses:**
+(1) the first ground-truth trace used the S691 helper unmodified and false-alarmed on
+the NA-sex parent — one wasted verification cycle, root-caused and written into
+Learning 748. (2) The NEWS entry's "about a quarter shorter" cites the design's
+S688-measured −27.8% ink figure (S690-confirmed by census); this session did not
+independently re-measure it.
+
+**Next steps (specific):** (A) **Ascender-stub cosmetic** (`BACKLOG.md` Up Next item 1
+after this session's removal — re-grep; READY, Effort M; must knowingly update the S685
+inertness pin in `test_resolveEdgeNodeCollisions.R`). (B) QP Migration Path Phase 4
+cleanup (READY, Effort S: grep `R/` doc-comments for stale deleted-tier/`.kMax*`
+references). (C) SESSION_NOTES.md trim (READY; the dashboard's one HIGH flag; the file
+is ~10,700 lines after this handoff). (D) Issue #148 (MHC haplotype reporting — the
+genetic-metrics sequencing audit's last open item). (E) Push decision (owner call):
+67 commits ahead after this close-out (60 at Phase 0 + 7 S695 commits); everything
+local passed the full regression and the last pushed state is CI-green.
+(F) Informational: dashboard copy still stale (v2.14.0 vs v2.18.0); untracked leftovers
+unchanged.
+
+**Key files:** `vignettes/articles/shiny_app_use/diagram_twin_connectors.png` (the
+recaptured shot), `NEWS.Rmd:198` (the entry; `NEWS.md` rendered),
+`docs/planning/pedigree-diagram-root-subtree-ordering-plan.md:649` (the Dispositions
+section), `scratchpad/s695_twin_screenshot.R:1` (targeted recapture script),
+`scratchpad/s695_twin_connectors_OLD.png` (pre-change copy for comparison),
+`CHANGELOG.md:19` (S695 entry), `PROJECT_LEARNINGS.md:2193` (Learning 748).
+
+**Gotchas for the next session:** (1) **failed=0 expectation stays 2,364 blocks** — no
+test file touched. (2) All 5 Diagram-tab screenshots are current as of this session's
+HEAD; a future staleness check compares digests against THIS engine state (any commit
+≥ `52a9b7da`), per Learning 748's baseline rule. (3) The S691 scratchpad
+`verifyDirectEdges()` helper assumes one M + one F parent per union — it false-alarms
+on real fixtures with NA-sex parents; use the sex-free pair trace (Learning 748) for
+real-data trims. (4) **No open BACKLOG item depends on scratchpad files anymore**
+(Shape A Phase 3 was the last consumer of the s683/s685 digest scripts) — but a
+scratchpad bulk-clean is still the owner's call, and the S691 direct-style approved
+renders exist ONLY there. (5) BACKLOG line numbers shifted again (Shape A block
+removed, net −24 at the top); re-grep.
 
 ### Session 693 Handoff Evaluation (by Session 694)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
