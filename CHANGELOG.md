@@ -16,6 +16,41 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-16 · [BL-smallDemoPedigrees] S691: Small demonstration pedigrees (11–14 individuals each) exercising the 5 classic complex mating structures — built, ground-truth-verified, rendered both `edgeStyle`s, owner visual gate APPROVED ("all 5 legible")
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; owner-requested at S690's
+  visual gate; standing pedigree-fidelity directive):** 5 authored exemplar pedigrees —
+  consanguinity (full-sib mating, F = 1/4), linebreeding (ancestor LK through 2 distinct
+  lines, F = 1/32), backcross (daughter × own sire, F = 1/4), first-cousin (F = 1/16),
+  half-sib (shared sire, F = 1/8) — as `scratchpad/s691_ped_{consang,linebreed,backcross,
+  cousin,halfsib}.csv` plus 10 owner-reviewed renders (`s691_<ped>_{rectilinear,direct}.png`).
+  Review-only this session per the scoping gate; nothing shipped into the package.
+- **Scoping gate (`AskUserQuestion`, pre-work):** owner selected ALL THREE shipping targets
+  (bundled example CSVs, test fixtures with pinned layouts, vignette material) plus
+  review-first — decomposed per 1-and-done into three BACKLOG follow-up items carrying the
+  approved verdict, filed at close-out, not started.
+- **Ground truth verified before rendering (Learning 744,
+  `scratchpad/s691_pedigrees.R`):** every kinship/inbreeding coefficient matches theory
+  exactly (φ and F values above, and F = 0 for every other individual); sexes consistent;
+  `gen` from `findGeneration()`; a distinct-lines-of-descent walk proves the linebreeding
+  claim; every rendered (child, sire, dam) triple reconstructed from the `__union_*` edges
+  (resolving `__dup_*`) is set-identical to the CSV in the direct style, and every
+  rectilinear waypoint routing net is confined to one union's family. Each pedigree
+  triggers exactly 1 consanguineous union (vermillion mate-line, including the 1/32
+  linebred case) and 1–2 `__dup_*` duplicate occurrences.
+- **Defect caught in-session:** first CSV write used `na = ""`, which `read.csv` returns
+  as `""` phantom-parent ids — the first 10 renders were of corrupted pedigrees, caught by
+  the node-count mismatch against the verified in-memory layouts (Learning 744). Rebuilt
+  with the `na = "NA"` default + an `identical()` round-trip assertion; re-rendered; all
+  counts match.
+- **Owner visual gate APPROVED** ("all 5 legible") on the 10 renders — the duplicate-node
+  policy (repeated appearance as a `__dup_*` node with dashed curved connector) reads
+  legibly for every structure in both `edgeStyle`s.
+- **Records:** the BACKLOG suite item removed per the completed-item convention; 3 shipping
+  follow-ups filed (example CSVs + NEWS → READY; pinned test fixtures and vignette
+  material → BLOCKED on the CSVs' shipped location); Learning 744. No package file
+  touched (scratchpad-only session): no NEWS/lint/pkgdown/citation checklist fires.
+  Claim `b9e0c2fa`.
+
 ### 2026-09-16 · [BL-rootSubtreeOrderingPhase2] S690: Shape A Phase 2 — `.orderRootSubtrees()` wired into `.positionMatingUnitForest()` (full TDD): RED set enumerated by full suite under a runtime-patched exact-GREEN instrument (5 blocks), census matched the design's RCM row on every number, owner visual gate APPROVED
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
   directive; the BACKLOG "Root-subtree ordering pass (Shape A) — Phase 2" item):** the
