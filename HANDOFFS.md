@@ -148,7 +148,7 @@ key_files: vignettes/articles/shiny_app_use/diagram_twin_connectors.png (recaptu
 gotchas: failed=0 expectation stays 2,364 blocks. All 5 Diagram-tab screenshots are current as of this session's HEAD -- a future staleness check compares digests against any commit >= 52a9b7da (Learning 748's last-recapture baseline rule). The S691 verifyDirectEdges() scratchpad helper assumes one M + one F parent per union and false-alarms on real fixtures with NA-sex parents; use the sex-free pair trace for real-data trims. No open BACKLOG item depends on scratchpad files anymore (Shape A Phase 3 was the last consumer of the s683/s685 digest scripts), but a scratchpad bulk-clean is still the owner's call and the S691 direct-style approved renders exist only there. BACKLOG line numbers shifted (net -24 at the top); re-grep.
 runtime_smoke: The screenshot recapture ran the real app end-to-end (AppDriver: upload, QC, navigate, focal-trim, capture) under the wired Shape A engine; full clean regression 2,364 blocks failed=0 error=0; NEWS.md render clean. No runtime code changed (docs-only).
 changelog_ref: 2026-09-17 S695 entry (BL-shapeAPhase3), 0bb93756
-commit: pending
+commit: 6f28ff55
 ```
 <free-text prose: see SESSION_NOTES.md "What Session 695 Did" for the +/- self-score breakdown: strengths -- digest-driven minimal recapture with the last-recapture baseline, programmatic ground truth before the owner gate, source-verified dispositions; weaknesses -- one wasted verification cycle on the S691 helper's M/F assumption, and the NEWS "about a quarter shorter" figure cited from the design's measurement rather than re-measured.>
 
