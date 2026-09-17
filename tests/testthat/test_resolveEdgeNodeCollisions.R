@@ -17,16 +17,26 @@
 ## PRE-RED empirical findings (this session, verified live against current
 ## HEAD via pkgload::load_all(), not assumed):
 ##
-## 1. D2's dogleg leg is CURRENTLY STRUCTURALLY UNREACHABLE via the real
-##    pipeline: Track 4's matingUnits$gen == genOf[[anchor]] invariant plus
-##    issue #143's non-anchor on-row override together guarantee BOTH
-##    sides of every mating unit render on-row, confirmed by this file's
-##    own sibling test (test_addRectilinearWaypoints.R:517-546, "0 D2
-##    projections... now as a structural invariant"). The "D2-dogleg-leg
-##    collision" fixture below is therefore a hand-built, synthetic
-##    (nodes, edges) pair exercising the general detector defensively --
-##    matching the plan's own "synthetic fixtures" wording -- not a
-##    real-pedigree reproduction.
+## 1. D2's dogleg leg is STRUCTURALLY UNREACHABLE via the real pipeline
+##    (re-derived and re-verified S698, 2026-09-17: 0 __proj_ nodes among
+##    the real 375-individual fixture's 1,456 rectilinear nodes, live).
+##    The reachability history matters because this claim went stale once
+##    already: as originally written (Track 2, 2026-08-15) it rested on
+##    Track 4's matingUnits$gen == genOf[[anchor]] invariant plus issue
+##    #143's non-anchor on-row override; the Walker/BJL cutover era then
+##    made the dogleg reachable again (the S668 census measured 56 __proj_
+##    nodes on the real fixture), and Decision 2 spouse duplication (S678,
+##    provisional-order design Phase 1) finally made it structurally dead
+##    by a different mechanism: every unit's resolved mate node (B1
+##    derived point or __dup_) carries the unit's own gen, so the D2
+##    projection can never fire -- 0 on every fixture, pinned as an
+##    absence expectation in test_comparePedigreeStructure.R (:687), and
+##    general, not fixture-specific (the sibling node-count test in
+##    test_addRectilinearWaypoints.R carries the same 0 in its S678
+##    CHANGED note). The "D2-dogleg-leg collision" fixture below is
+##    therefore a hand-built, synthetic (nodes, edges) pair exercising
+##    the general detector defensively -- matching the plan's own
+##    "synthetic fixtures" wording -- not a real-pedigree reproduction.
 ## 2. The GitHub issue #160 comment-1 P1/P2/X/A/Y/W/C1/GC/C2 fixture,
 ##    reproduced live: neither the D1 bar chain nor any KEPT straight mate
 ##    edge actually collides in this specific small fixture (every
