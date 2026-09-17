@@ -18,18 +18,118 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 696 Handoff Evaluation (by Session 697)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
+BACKLOG item was a precise, honest spec — it named the grep targets (deleted
+tiers/passes + `.kMax*`), correctly recorded that the deletion and NEWS entry had
+already landed (S674/S675), and its Effort S held. Gotcha (1)'s exact failed=0
+expectation (2,370 blocks) made this session's failed=1 instantly legible as a real
+delta rather than baseline drift — that one number saved a diagnosis cycle. Next-step
+(D)'s push decision had been executed post-handoff (0 ahead, all 4 workflows green
+first-try), so orientation had nothing unpushed to weigh. **What was missing:** nothing
+material to the item itself; the one surprise (the wordlist gate reaching the
+exported-roxygen rewrite — Learning 750) was a generic project gate S696 had no reason
+to foresee for a "grep doc-comments" item, though a "one of the stale sites is EXPORTED
+roxygen" note would have pre-armed it. **What was wrong:** nothing. **ROI:** high.
+
 ### What Session 697 Did
-**Deliverable:** QP Migration Path Phase 4 cleanup (BACKLOG Up Next item 1; READY,
-Effort S) — grep `R/` doc-comments for stale references to the deleted Tier 2/3
-passes and the `.kMax*` constants, update them to describe the QP engine; closes the
-joint-QP-solver migration plan's 4-phase path
-(`docs/planning/pedigree-diagram-joint-qp-solver-plan.md` §Migration Path). (IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning. Owner-picked via `AskUserQuestion` at
-Phase 0. Docs-only (S692/S694/S695 precedent — no TDD phases). DEVELOPMENT_WORKSTREAM.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** QP Migration Path Phase 4 cleanup — the joint-QP-solver migration's
+last step (BACKLOG Up Next item 1, owner-picked via `AskUserQuestion` at Phase 0;
+DEVELOPMENT_WORKSTREAM, docs-only — no TDD phases, S692/S694/S695 precedent). All 7
+stale doc-comment sites in `R/makePedigreeDiagramData.R` now describe the QP engine;
+the plan doc carries a dated Phase 4 record; **the 4-phase migration path is CLOSED.**
+**DONE.** **Started/completed:** 2026-09-17 (single session). Claim `b81bfecc`;
+deliverable `43ed9a24`; records `20088807`.
+**Ledger:** recorded as the S697 entry at the top of `CHANGELOG.md` (`20088807`).
+
+**What actually happened, in order:**
+1. **Inventory before editing:** ran the plan's own Phase 4 gate grep (3 hits, all
+   comments) plus a broadened sweep (`.kMax*` already zero; Tier 2/3, Track 7,
+   `b1AnchorRelativeX`, de-collision vocabulary), then read every hit's context and
+   classified each as live (Tier 1–3 provisional-seed labels, `orderRootSubtrees`'s
+   Tier-1 references), explicitly historical past tense (the pre-S652 Track 7 Phase 1
+   note, the `.computeDupNudge` deletion note — left as-is), or stale (7 sites).
+2. **The 7 edits:** S667 component comment (mechanism list → tiers + S666 pass +
+   Decision-1 seeding + per-family QP solve; deleted pass de-named); `qualifies()`
+   relocation comment (deleted `b1AnchorRelativeX()` branch no longer "still" calls
+   it — the S666 conditional-shift pass is its only caller, verified against the one
+   real call site at `:1072`); second-`sweepMinSepBackstop()` rationale (de-named,
+   past tense); S666 chain-rule comment ("Tier 3/collision-avoidance (also
+   unchanged)" → current pipeline); the orphaned 39-line S647 block describing the
+   deleted shared de-collision pass in PRESENT tense — removed, identity folded into
+   the Phase 2 replacement comment, which no longer names the deleted symbol; and
+   `makePedigreeMatingLayout()`'s exported roxygen — the issue-#145 male-left rule
+   re-attributed from the deleted "Tier 3 formula (S8.1)" to the S666 sex-sign rule +
+   Decision-1 side rule + `.solveJointQP()` row-order preservation (behavioral claim
+   kept — it is pinned by `test_positionMatingUnitForest.R:303`'s swap test; only the
+   mechanism description changed). `devtools::document()` regenerated
+   `man/makePedigreeMatingLayout.Rd` (the only Rd delta, as expected).
+3. **Verification + the one surprise:** gate grep returns nothing; `lintr` 0 on the
+   touched file (package loaded, Learning 224). First unfiltered full regression:
+   2,370 blocks, **failed=1** — `test_wordlist_coverage.R`, because "QP" reached a
+   rendered Rd for the first time (exported roxygen; `@noRd`/`## ` comments never hit
+   the spell gate). Added `QP` to `inst/WORDLIST` (sorted; BJL/LOD acronym precedent),
+   targeted re-run green, then a final unfiltered full run: **2,370 blocks, failed=0,
+   error=0, skipped=182** — the S696 baseline exactly. Learning 750.
+4. **Close-out:** Phase 4 record in the plan doc (§Migration Path, matching the Phase
+   3 record convention); records commit (CHANGELOG S697 entry, Learning 750, BACKLOG
+   block removed per the completed-item convention); this handoff; HANDOFFS receipt.
+   No GitHub issue was ever filed for the implementation → no issue close owed.
+   Checklists N/A by inspection: citation, NEWS (no user-facing change; the migration
+   NEWS entry landed S675), tutorial/article, `a2interactive.Rmd` (no new/changed
+   export surface — parameter set untouched), `_pkgdown.yml` (no new export).
+
+**Self-assessment (Session 697): 9/10.** **Strengths:** (1) inventory-then-classify
+before any edit — the item's own grep list was honored but broadened, which is what
+surfaced the two sites the item didn't enumerate (the orphaned S647 block and the
+exported-roxygen misattribution). (2) The roxygen rewrite's behavioral claim was
+verified against the pinned test before rewording, not assumed. (3) The failed=1 was
+root-caused to a one-word first-exposure mechanism (and generalized into Learning 750)
+rather than patched blind. (4) Full verification bar ran locally pre-commit (gate
+grep, loaded lint, 2 full suites + 1 targeted). **Weaknesses:** (1) the spell-gate
+collateral was foreseeable — S694's gotcha already said the spell check reaches
+article prose; generalizing that to exported roxygen BEFORE the first full run would
+have saved one ~7-minute suite cycle. (2) One full-suite run was launched before the
+plan-doc record was drafted, so the record's "full clean regression" line cites the
+session records rather than embedding the number — cosmetic, but a self-contained
+record would have been cleaner.
+
+**Next steps (specific):** (A) **SESSION_NOTES.md trim** (READY, Effort S; the
+dashboard's one HIGH flag; ~10,930 lines after this handoff; no known blocking defect
+— last archives S539/S594 were clean). (B) **Pedigree-drawing housekeeping re-measures**
+(standing pedigree-fidelity directive; each READY, Effort S–M): D2-dogleg reachability
+comment re-derivation (`test_resolveEdgeNodeCollisions.R:20-29`), the 5-pair proximity
+residual re-measure under the QP engine (likely resolved-by-construction), the
+`kinship2-fidelity-validation.qmd:150-163` mating-marker paragraph rewrite. (C) Issue
+#148 MHC haplotype reporting (genetic-metrics sequencing audit's last open item).
+(D) Push decision (owner call): 4 commits ahead after this close-out; local full
+regression clean; last pushed state CI-green. (E) Informational: Learning 749's body
+is DUPLICATED as a stray trailing bullet in `PROJECT_LEARNINGS.md:2195` (S696 paste
+artifact — reported per report-don't-fix, Learning 382); dashboard copy still stale
+(v2.14.0 vs v2.18.0); untracked leftovers unchanged (the `tests/testthat/_problems/`
+files are Sep-10-dated clutter predating the S696 baseline, not today's).
+
+**Key files:** `R/makePedigreeDiagramData.R:869,948,1011,1038,1162,1596` (the 7 sites
+post-edit), `man/makePedigreeMatingLayout.Rd` (regenerated),
+`inst/WORDLIST:168` (`QP`),
+`docs/planning/pedigree-diagram-joint-qp-solver-plan.md:448` (Phase 4 record),
+`CHANGELOG.md:19` (S697 entry), `PROJECT_LEARNINGS.md:2196` (Learning 750).
+
+**Gotchas for the next session:** (1) **failed=0 expectation stays 2,370 blocks** (no
+test blocks added or removed; the wordlist fix changes data, not block count).
+(2) `BACKLOG.md`'s FIRST `## Up Next` section is now EMPTY (the QP item was its only
+block); the LabKey and package-split items live under the SECOND `## Up Next` header —
+a tag grep still finds everything, but a "read the first Up Next section" shortcut now
+reads nothing; line numbers shifted net −8. (3) A NEW acronym or coined term in
+EXPORTED roxygen will fail `test_wordlist_coverage.R` in the full suite even when the
+same word is already all over internal comments — run
+`spelling::spell_check_package()` before the full suite when touching exported roxygen
+(Learning 750). (4) The joint-QP-solver plan is CLOSED — the Phase 2 replacement
+comment and the pre-S652 note deliberately KEEP past-tense pass vocabulary ("Track 7
+Phase 2 union sweep", "de-collision pass"); the Phase 4 gate greps only the 3 symbol
+names, so do not "finish the cleanup" by stripping historical vocabulary. (5) The
+`5 5` lines printed during silent full-suite runs are pre-existing test print noise,
+present in S696-era runs too — not a new signal.
 
 ### Session 695 Handoff Evaluation (by Session 696)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
