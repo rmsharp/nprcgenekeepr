@@ -18,15 +18,107 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 698 Handoff Evaluation (by Session 699)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable and
+pre-scoped it exactly — "ask the owner directly: directive satisfied (sign-off to remove
+the note), or should the remaining measured residuals become items" is precisely the
+question posed, and the census-baseline figures it named seeded the decision brief.
+Gotcha (2)'s "the standing note is UNTOUCHED and must not be removed without owner
+sign-off" framed the deliverable correctly; gotcha (3)'s b=8-not-12 correction was
+confirmed by the live CSV re-tally. The committed-CSV pointer (`eeacd06c`) was accurate
+and the re-grep-don't-quote discipline it modeled is what this session applied. **What
+was missing:** the residual enumeration was Real-375-scoped without saying so — "1,667
+c-curved-chord findings" (full-CSV total: 1,668, +1 Track C) and "d=1 adjacent"
+(full-CSV: 2, +1 Track C). Caught by re-tallying the CSV before writing the items (FM
+#11); scoping was implicit, not wrong. **What was wrong:** nothing material. **ROI:**
+high.
+
 ### What Session 699 Did
-**Deliverable:** Standing pedigree-drawing directive decision (S698 next-step A) — pose the
-owner decision (directive satisfied → remove the standing note, or itemize the measured census
-residuals as new fidelity items), record the outcome in `BACKLOG.md` + ledger (IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile. (Phase 0 backfill `6ca5efdd` already recorded.)
+**Deliverable:** Standing pedigree-drawing directive decision (S698 next-step A;
+decision/grooming session, docs-only — no TDD phases). Owner sign-off obtained via
+`AskUserQuestion` ("Sign off + itemize residuals"): the S643 standing top-priority note
+REMOVED from `BACKLOG.md`; the 3 measured census residuals itemized as ordinary-priority
+Housekeeping items; agent memory updated to RETIRED. **DONE.** **Started/completed:**
+2026-09-17 (single session). Phase 0 backfill `6ca5efdd` (S698 close-out commits,
+reconcile-on-read); claim `1ed16e63`; deliverable `d6e23e40`; records `8127201d`.
+**Ledger:** recorded as the S699 entry at the top of `CHANGELOG.md` (`8127201d`), plus
+the Phase 0 backfill entry (`6ca5efdd`).
+
+**What actually happened, in order:**
+1. **Phase 0:** standard orient; ledger reconcile backfilled S698's 2 close-out
+   self-reference commits (`49ae8ac1`/`ddfa0dae`, the recurring precedent shape) as
+   `6ca5efdd`. CI green (4 push workflows + scheduled shinytest2); dashboard 96/100,
+   1 HIGH flag (SESSION_NOTES.md size). Owner picked the directive decision from the
+   4-option priorities picker.
+2. **Grounded before posing:** re-tallied the committed S696 census CSV live rather than
+   quoting handoffs — full-CSV totals: a/c1/c2/e/f = 0 everywhere; b = 8 (all Real 375,
+   all "off-centre" subclass); c curved-chord = 1,668 (1,667 Real 375 + 1 Track C);
+   d = 2 adjacent (1 per fixture). New finding recorded nowhere before: the 8 class-b
+   rows split into 2 numerical-noise rows (`__union_75` −2.3e-07 units, `__union_132`
+   8.7e-09 units — artifacts of the exact > 1e-6 px predicate) and 6 real 0.5–1.5-unit
+   (60–180 px) minSep-bound offsets.
+3. **The decision:** 4-option `AskUserQuestion` (sign off + itemize [recommended] / sign
+   off only / keep directive + itemize / hold). Owner: **sign off + itemize.**
+4. **The edits (`d6e23e40`):** standing note (BACKLOG.md:6–11) removed; 3 new Housekeeping
+   items added at section top, each carrying CSV row ids, the noise/real split, coupled
+   article-prose warnings, and READY/Effort tags (b-investigation M; arc-modelling
+   measurement pass M; d-adjacent assessment S).
+5. **Memory:** `pedigree-drawing-standing-priority.md` rewritten to RETIRED (+ index line)
+   so stale handoffs can't resurrect the override; fidelity *standard* (visual review vs
+   ground truth) explicitly noted as unchanged.
+6. **Close-out:** CHANGELOG S699 entry (`8127201d`; no PROJECT_LEARNINGS entry owed — the
+   one non-obvious finding is forward-carried in the live class-b item per the
+   completed-item convention); this handoff; HANDOFFS receipt. Checklists N/A by
+   inspection: no package-path file touched (NEWS/citation/tutorial/a2interactive/
+   _pkgdown/lint). Full suite NOT re-run — docs-only, no file in the package build/test
+   path changed; the S696–S698 baseline (2,370 blocks, failed=0, error=0, skipped=182)
+   carries forward by inheritance, not fresh measurement.
+
+**Self-assessment (Session 699): 9/10.** **Strengths:** (1) the decision was grounded in
+a live CSV re-tally, which surfaced the class-b noise/real split and the Real-375-scoping
+of older counts before either could enter the new items wrong. (2) The items are written
+as self-contained specs (ids, magnitudes, coupled-prose warnings, first-step framing) —
+the picking session needs no archaeology. (3) Memory updated in the same session the
+directive died, closing the stale-recall loop. (4) Small, clean, single-intent session
+with the full close-out. **Weaknesses:** (1) the class-b noise rows suggest the article's
+"8 of 237" figure mildly overstates *visible* residuals — flagged inside the item rather
+than fixed or separately surfaced to the owner this session (defensible scope hold, but
+the owner heard "8" in the decision brief without the 2-vs-6 split, which was only
+derived afterward while drafting the items). (2) No independent verification beyond the
+CSV that the QP engine state today matches `eeacd06c` (no re-render); relied on S698's
+day-old live re-measures.
+
+**Next steps (specific):** (A) **SESSION_NOTES.md trim** (READY, Effort S; the
+dashboard's one HIGH flag; ~11,140 lines after this handoff; no known blocking defect —
+S539/S594 archive passes clean). (B) **Issue #148 MHC haplotype reporting** (READY; the
+genetic-metrics sequencing audit's last open item). (C) The 3 new census-residual items
+(ordinary priority, READY — d-adjacent assessment is the smallest at Effort S).
+(D) **Push decision** (owner call): 17 commits ahead after this close-out; last pushed
+state CI-green all 4 workflows; nothing in the unpushed span touches package code
+(docs/comments/article prose only since `262c65be`'s test-comment + qmd edits — estimate,
+verify with `git diff origin/master..HEAD --stat` before pushing). (E) Informational:
+Learning 749's body still duplicated at `PROJECT_LEARNINGS.md:2195` (report-don't-fix);
+dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged; package-split
+scoping disposition still awaiting owner accept/reject (BACKLOG Up Next).
+
+**Key files:** `BACKLOG.md:1-13` (note gone; header now flows straight into `## Up
+Next`), `BACKLOG.md:96-140` approx. (the 3 new Housekeeping items — re-grep, lines will
+drift), `CHANGELOG.md:19` (S699 entry), `docs/audits/
+PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv` (the grounding artifact),
+`~/.claude/projects/-Users-rmsharp-Development-nprcgenekeepr/memory/
+pedigree-drawing-standing-priority.md` (RETIRED), `HANDOFFS.md` (S699 receipt).
+
+**Gotchas for the next session:** (1) **The standing top-priority note is GONE** — Phase 0
+renders a normal priorities list; references to the directive in older handoffs,
+forward-carries, and PROJECT_LEARNINGS are historical, not live. (2) BACKLOG Housekeeping
+gained 3 blocks at its top (net +36 lines) — re-grep rather than trusting old line
+numbers. (3) Census counts to quote going forward: class-c curved-chord **1,668** total /
+1,667 Real-375-only; class-d **2** total / 1 Real-375-only — older "1,667"/"d=1" records
+are Real-375-scoped, not wrong. (4) **failed=0 expectation stays 2,370 blocks**, but it is
+INHERITED (S698's run), not re-measured — this session ran no suite; a session touching
+package files should not cite S699 as a fresh baseline. (5) The class-b item's noise/real
+split (2 vs 6) couples to the census predicate AND the article's "8 of 237" — a tolerance
+added to the predicate changes both; both couplings are flagged inside the item.
 
 ### Session 697 Handoff Evaluation (by Session 698)
 **Score: 9/10.** **What helped:** next-step (B) WAS this session's deliverable, and
