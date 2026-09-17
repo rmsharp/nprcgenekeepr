@@ -969,3 +969,290 @@ test_that("no jog corridor on the real 375-individual fixture's
   ## radius. The repair must clear the DISC, not just the centre line.
   expect_identical(.jogDiscViolations(layout$nodes), 0L)
 })
+
+## ---- S696: ascender-stub cosmetic -- a corridor rejoining an invisible
+## bar point whose bar-level ink is entirely rerouted leaves the kid's
+## descent top ending in mid-air (BACKLOG.md "Ascender-stub cosmetic on
+## jog-repair corridors", found S679, owner visual gate; approach
+## "direct rejoin" ratified S696 via AskUserQuestion) --------------------
+##
+## PRE-RED empirical findings (S696, measured live via a temporary
+## direct-edit spike against HEAD, reverted before RED -- never assumed):
+##
+## 1. On the real 375-individual fixture, 84 corridors rejoin at a
+##    __bar_<kid> point with NO remaining bar-level edge and NO edge
+##    above: the riser [barY, corY] and the descent top [barY, corY] are
+##    collinear duplicates, so the drawn ink climbs 9-27 px above the
+##    corridor and ends mid-air at the bar row (crop-verified at
+##    __bar_J33BE0). A __drop_ rejoin never dangles -- the union descent
+##    continues upward from bar level (crop-verified), so the elbow is
+##    continuous.
+## 2. S679's other named candidate ("suppress the riser when the bar has
+##    zero width") is refuted by measurement: a zero-width bar has an
+##    empty interior span (lo == hi), so .detectStraight() can never flag
+##    it -- all 84 stubs sit on nonzero-width bars.
+## 3. The ratified fix (direct rejoin): when a rerouted edge's endpoint
+##    is INVISIBLE (size 0/NA) and its only surviving edge is a single
+##    strict-vertical DOWNWARD edge to a non-jog node (its kid), the
+##    corridor connects to the kid directly; the redundant riser and
+##    descent are dropped and the bar point is left in place,
+##    unreferenced (never moved -- the Track 2 invariant is untouched).
+##    Spike-measured: stubs 84 -> 0; nodes 1,456 unchanged with zero
+##    coordinate movement; edges 1,569 -> 1,485 (-84, one per stub);
+##    census findings CSV byte-identical to the S690 HEAD-engine
+##    baseline (all six classes); the S685 disc-offset pins above pass
+##    unchanged (their endpoints are degree-0 after the drop, which the
+##    bypass condition deliberately excludes).
+## 4. Segment DIRECTION is load-bearing for the D-2 invariance walker
+##    (test_comparePedigreeStructure.R): a terminal -> waypoint edge
+##    reads as a parent-side attachment, so every kid-adjacent segment
+##    must run waypoint -> kid. With only the FROM side bypassed the
+##    corridor is emitted in reversed orientation (t -> j2, j2 -> j1,
+##    j1 -> kid) so every jog node keeps exactly 1 in + 1 out where
+##    possible; with BOTH sides bypassed the emission is (j1 -> kidF,
+##    j1 -> j2, j2 -> kidT).
+
+## Test-local checker for the standing invariant: a dangling ascender
+## stub is a non-jog INVISIBLE node with at least one corridor
+## attachment, no surviving same-row (bar-level) non-jog edge, and no
+## surviving non-jog edge above it -- written independently of the
+## production code (the S696 probe's own predicate).
+.danglingAscenderStubs <- function(nodes, edges) {
+  yOf <- as.list(stats::setNames(nodes$y, nodes$id))
+  sizeVec <- if ("size" %in% names(nodes)) as.numeric(nodes$size) else
+    rep(0.0, nrow(nodes))
+  sizeVec[is.na(sizeVec)] <- 0.0
+  invisibleIds <- nodes$id[sizeVec == 0 & !grepl("^__jog_", nodes$id)]
+  stubs <- 0L
+  for (p in invisibleIds) {
+    idx <- which(edges$from == p | edges$to == p)
+    if (length(idx) == 0L) next
+    others <- ifelse(edges$from[idx] == p, edges$to[idx], edges$from[idx])
+    jogs <- sum(grepl("^__jog_", others))
+    if (jogs == 0L) next
+    nonJog <- others[!grepl("^__jog_", others)]
+    py <- yOf[[p]]
+    oy <- unlist(lapply(nonJog, function(o) yOf[[o]]))
+    horiz <- sum(!is.na(oy) & oy == py)
+    up <- sum(!is.na(oy) & oy < py)
+    if (horiz == 0L && up == 0L) stubs <- stubs + 1L
+  }
+  stubs
+}
+
+.s696Edges <- function(from, to) {
+  data.frame(
+    from = from, to = to, dashes = FALSE, color = "#2B7CE9",
+    width = NA_real_, smooth.enabled = NA, smooth.type = NA_character_,
+    smooth.roundness = NA_real_, stringsAsFactors = FALSE
+  )
+}
+
+.s696HasEdge <- function(edges, f, t) {
+  any(edges$from == f & edges$to == t)
+}
+
+test_that(".resolveEdgeNodeCollisions rejoins a corridor directly at the
+           kid when the invisible bar point's bar-level ink is entirely
+           rerouted (ascender-stub fix, TO side)", {
+  ## Single-kid offset-union D1 shape: the union sits 200 px left of its
+  ## only child, so the chain edge Drop -> Bar has nonzero width; an
+  ## unrelated waypoint sits inside the span. Rows 0/90/150 reproduce
+  ## the real fixture's bar-row geometry (localGap 60 -> jogY 9,
+  ## corridor at y = 99).
+  nodes <- data.frame(
+    id   = c("Union", "Drop", "Bar", "Kid", "Obst"),
+    x    = c(0,       0,      200,   200,   100),
+    y    = c(0,       90,     90,    150,   90),
+    size = c(6,       0,      0,     25,    0),
+    stringsAsFactors = FALSE
+  )
+  edges <- .s696Edges(
+    from = c("Union", "Drop", "Bar"),
+    to   = c("Drop",  "Bar",  "Kid")
+  )
+  result <- .resolveEdgeNodeCollisions(nodes, edges)
+
+  jogRows <- result$nodes[grepl("^__jog_", result$nodes$id), ]
+  expect_equal(nrow(jogRows), 2L)
+  expect_true(all(jogRows$y == 99))
+
+  ## The Drop side keeps its riser (its one surviving edge goes UP to
+  ## the union, so the elbow is continuous ink -- never bypassed); the
+  ## Bar side is bypassed: the corridor connects straight to Kid.
+  e <- result$edges
+  expect_true(.s696HasEdge(e, "Drop", "__jog_1_a"))
+  expect_true(.s696HasEdge(e, "__jog_1_a", "__jog_1_b"))
+  expect_true(.s696HasEdge(e, "__jog_1_b", "Kid"))
+  expect_false(.s696HasEdge(e, "Bar", "Kid"))
+  expect_false(any(e$from == "Bar" | e$to == "Bar"))
+
+  ## The bar point is left in place, unreferenced -- never moved,
+  ## never removed (Track 2 invariant unchanged).
+  before <- nodes[, c("id", "x", "y")]
+  after <- result$nodes[match(nodes$id, result$nodes$id), c("id", "x", "y")]
+  expect_identical(before, after)
+  expect_identical(nrow(result$residuals), 0L)
+})
+
+test_that(".resolveEdgeNodeCollisions emits the corridor in reversed
+           orientation when only the FROM side is bypassed, keeping
+           every kid-adjacent segment waypoint -> kid (ascender-stub
+           fix, FROM side)", {
+  ## Mirror image of the block above: the bar point is the chain edge's
+  ## FROM endpoint (left of the drop), so the bypass lands on the f
+  ## side. The kid-adjacent segment must still run waypoint -> kid --
+  ## the D-2 walker reads terminal -> waypoint as a PARENT-side
+  ## attachment, so a Kid -> jog segment would misclassify the kid as
+  ## a parent (PRE-RED finding 4).
+  nodes <- data.frame(
+    id   = c("Union", "Drop", "Bar", "Kid", "Obst"),
+    x    = c(200,     200,    0,     0,     100),
+    y    = c(0,       90,     90,    150,   90),
+    size = c(6,       0,      0,     25,    0),
+    stringsAsFactors = FALSE
+  )
+  edges <- .s696Edges(
+    from = c("Union", "Bar", "Bar"),
+    to   = c("Drop",  "Drop", "Kid")
+  )
+  result <- .resolveEdgeNodeCollisions(nodes, edges)
+
+  jogRows <- result$nodes[grepl("^__jog_", result$nodes$id), ]
+  expect_equal(nrow(jogRows), 2L)
+  expect_true(all(jogRows$y == 99))
+
+  e <- result$edges
+  expect_true(.s696HasEdge(e, "Drop", "__jog_1_b"))
+  expect_true(.s696HasEdge(e, "__jog_1_b", "__jog_1_a"))
+  expect_true(.s696HasEdge(e, "__jog_1_a", "Kid"))
+  expect_false(any(e$from == "Kid"))
+  expect_false(any(e$from == "Bar" | e$to == "Bar"))
+
+  before <- nodes[, c("id", "x", "y")]
+  after <- result$nodes[match(nodes$id, result$nodes$id), c("id", "x", "y")]
+  expect_identical(before, after)
+})
+
+test_that(".resolveEdgeNodeCollisions bypasses both endpoints of one
+           corridor independently, dropping a shared endpoint's descent
+           exactly once (ascender-stub fix, BOTH sides)", {
+  ## One family whose union sits right of both kids: chain BarA -> BarB
+  ## -> Drop with an unrelated obstacle inside EACH chain segment, so
+  ## both segments jog at the same level (spans touch at x = 150) and
+  ## BarA and BarB both lose all bar-level ink. Emission (PRE-RED
+  ## finding 4): both-bypassed corridor 1 is (j1 -> KidA, j1 -> j2,
+  ## j2 -> KidB); f-only-bypassed corridor 2 is reversed
+  ## (Drop -> j2, j2 -> j1, j1 -> KidB).
+  nodes <- data.frame(
+    id   = c("Union", "Drop", "BarA", "KidA", "BarB", "KidB",
+             "Obst1", "Obst2"),
+    x    = c(300,     300,    0,      0,      150,    150,
+             75,      225),
+    y    = c(0,       90,     90,     150,    90,     150,
+             90,      90),
+    size = c(6,       0,      0,      25,     0,      25,
+             0,       0),
+    stringsAsFactors = FALSE
+  )
+  edges <- .s696Edges(
+    from = c("Union", "BarA", "BarB", "BarA", "BarB"),
+    to   = c("Drop",  "BarB", "Drop", "KidA", "KidB")
+  )
+  result <- .resolveEdgeNodeCollisions(nodes, edges)
+
+  jogRows <- result$nodes[grepl("^__jog_", result$nodes$id), ]
+  expect_equal(nrow(jogRows), 4L)
+  expect_true(all(jogRows$y == 99))
+
+  e <- result$edges
+  ## Corridor 1 (BarA -> BarB, both bypassed):
+  expect_true(.s696HasEdge(e, "__jog_1_a", "KidA"))
+  expect_true(.s696HasEdge(e, "__jog_1_a", "__jog_1_b"))
+  expect_true(.s696HasEdge(e, "__jog_1_b", "KidB"))
+  ## Corridor 2 (BarB -> Drop, FROM side bypassed, reversed):
+  expect_true(.s696HasEdge(e, "Drop", "__jog_2_b"))
+  expect_true(.s696HasEdge(e, "__jog_2_b", "__jog_2_a"))
+  expect_true(.s696HasEdge(e, "__jog_2_a", "KidB"))
+  ## Both bar points fully unreferenced; each descent dropped once.
+  expect_false(any(e$from %in% c("BarA", "BarB") |
+                     e$to %in% c("BarA", "BarB")))
+  expect_false(any(e$from %in% c("KidA", "KidB")))
+
+  before <- nodes[, c("id", "x", "y")]
+  after <- result$nodes[match(nodes$id, result$nodes$id), c("id", "x", "y")]
+  expect_identical(before, after)
+})
+
+test_that(".resolveEdgeNodeCollisions keeps the riser when the bar point
+           retains other bar-level ink (boundary guard -- PASSES at HEAD
+           by design, disclosed)", {
+  ## BarA keeps its clean chain segment to BarB, so its descent top
+  ## connects to surviving bar ink at bar level -- no mid-air ending,
+  ## no bypass. The riser and the descent must both survive.
+  nodes <- data.frame(
+    id   = c("Union", "Drop", "BarA", "KidA", "BarB", "KidB", "Obst"),
+    x    = c(0,       0,      200,    200,    300,    300,    100),
+    y    = c(0,       90,     90,     150,    90,     150,    90),
+    size = c(6,       0,      0,      25,     0,      25,     0),
+    stringsAsFactors = FALSE
+  )
+  edges <- .s696Edges(
+    from = c("Union", "Drop", "BarA", "BarA", "BarB"),
+    to   = c("Drop",  "BarA", "BarB", "KidA", "KidB")
+  )
+  result <- .resolveEdgeNodeCollisions(nodes, edges)
+
+  e <- result$edges
+  expect_true(.s696HasEdge(e, "__jog_1_b", "BarA"))
+  expect_true(.s696HasEdge(e, "BarA", "KidA"))
+  expect_false(.s696HasEdge(e, "__jog_1_b", "KidA"))
+  expect_true(.s696HasEdge(e, "BarA", "BarB"))
+})
+
+test_that(".resolveEdgeNodeCollisions never bypasses a VISIBLE endpoint,
+           even when it has exactly one surviving downward vertical
+           (boundary guard -- PASSES at HEAD by design, disclosed)", {
+  ## A real individual's disc IS the connection target: rerouting the
+  ## corridor past it to whatever hangs below would detach the drawn
+  ## line from the symbol. Size 25 must veto the bypass even though
+  ## the degree/direction conditions match.
+  nodes <- data.frame(
+    id   = c("RealP", "UnionU", "Obst", "Below"),
+    x    = c(0,       300,      150,    0),
+    y    = c(0,       0,        0,      150),
+    size = c(25,      6,        25,     0),
+    stringsAsFactors = FALSE
+  )
+  edges <- .s696Edges(
+    from = c("RealP", "RealP"),
+    to   = c("UnionU", "Below")
+  )
+  result <- .resolveEdgeNodeCollisions(nodes, edges)
+
+  e <- result$edges
+  expect_true(.s696HasEdge(e, "RealP", "__jog_1_a"))
+  expect_true(.s696HasEdge(e, "RealP", "Below"))
+  expect_false(.s696HasEdge(e, "__jog_1_a", "Below"))
+})
+
+test_that("no dangling ascender stub survives on the real 375-individual
+           fixture's rectilinear layout -- the S696 stub predicate as a
+           standing suite invariant", {
+  ped <- utils::read.csv(
+    system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+      package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE
+  )
+  layout <- suppressWarnings(suppressMessages(
+    makePedigreeMatingLayout(ped, edgeStyle = "rectilinear")))
+
+  ## The fixture must still be exercising the repair at scale, or this
+  ## guard is vacuous (Learning 737: probe that the subject moves at all).
+  expect_true(sum(grepl("^__jog_\\d+_a$", layout$nodes$id)) > 50L)
+
+  ## At HEAD: 84 -- every one an invisible __bar_<kid> point whose
+  ## bar-level ink was fully rerouted below while its kid descent still
+  ## anchors at bar level (PRE-RED finding 1).
+  expect_identical(.danglingAscenderStubs(layout$nodes, layout$edges), 0L)
+})
