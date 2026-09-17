@@ -11,47 +11,44 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **Ship the 5 owner-approved exemplar pedigrees as bundled example CSVs**
-      (`inst/extdata/examples/`) **+ `NEWS.Rmd` entry** (READY, Effort S; standing
-      pedigree-fidelity family; follow-up 1 of 3 from S691, 2026-09-16 — the owner
-      selected all three shipping targets at the scoping gate and the visual gate
-      APPROVED all 5 renders, "all 5 legible"). The approved CSVs are
-      `scratchpad/s691_ped_{consang,linebreed,backcross,cousin,halfsib}.csv`
-      (columns `id,sire,dam,sex,gen`; gen from `findGeneration()`; **literal `NA`
-      parents — never write with `na = ""`, which round-trips founders' NA parents
-      back as `""` phantom-parent ids, Learning 744**). Structures + verified ground
-      truth: consanguinity CS1×CD1 full-sib (F(CI*) = 1/4), linebreeding LK through
-      2 distinct lines (F(LL*) = 1/32), backcross BP×BR daughter-to-sire
-      (F(BC*) = 1/4), first-cousin FC1×FC2 (F(FF*) = 1/16), half-sib HA1×HB1 shared
-      sire (F(HC*) = 1/8). Shipping is user-facing → plain-language `NEWS.Rmd` entry
-      (S628 criterion) in the same session; no new export, so no `_pkgdown.yml`/
-      `a2interactive.Rmd` obligation (a demonstration pass there remains the standing
-      deferred checklist if functions later gain examples using these).
 - [ ] **Pin the 5 exemplar pedigrees as test fixtures with layout expectations**
-      (**BLOCKED — needs the exemplar CSVs' shipped location, previous item**, Effort M;
-      standing pedigree-fidelity family; follow-up 2 of 3 from S691; full TDD). One
-      testthat file loading each shipped CSV via `system.file()`, running
-      `makePedigreeMatingLayout()` (both `edgeStyle`s) and pinning STRUCTURAL facts of
-      the owner-approved layouts, not raw x-positions (positions are order-sensitive —
-      S688/S690 precedent): node/edge counts (direct 19/21/15/17/18 nodes for
-      consang/linebreed/backcross/cousin/halfsib; rectilinear 33/35/26/33/30),
-      `__dup_*` counts (1/2/1/1/2), exactly 1 consanguineous union each (the
-      `"#D55E00"`/width-4 mate-line pair, including the 1/32 linebred case), the
-      (child, sire, dam) edge-trace set-identity with the CSV, and the rectilinear
-      routing-net confinement — `verifyDirectEdges()`/`verifyRectiNets()` in
-      `scratchpad/s691_pedigrees.R` are reusable as test helpers, and the kinship
-      ground-truth checks (φ/F values) belong in the same file as fixture
-      preconditions.
+      (**READY** — the exemplar CSVs shipped S692, 2026-09-16, as
+      `inst/extdata/examples/example_pedigree_{consanguinity,linebreeding,backcross,
+      first_cousin,half_sib}.csv`, byte-identical to the owner-approved S691
+      artifacts; Effort M; standing pedigree-fidelity family; follow-up 2 of 3 from
+      S691; full TDD). One testthat file loading each shipped CSV via
+      `system.file()`, running `makePedigreeMatingLayout()` (both `edgeStyle`s) and
+      pinning STRUCTURAL facts of the owner-approved layouts, not raw x-positions
+      (positions are order-sensitive — S688/S690 precedent): node/edge counts
+      (direct 19/21/15/17/18 nodes for consang/linebreed/backcross/cousin/halfsib;
+      rectilinear 33/35/26/33/30 — S692 re-verified all 10 counts against the
+      shipped copies through the HEAD engine), `__dup_*` counts (1/2/1/1/2),
+      exactly 1 consanguineous union each (the `"#D55E00"`/width-4 mate-line pair,
+      including the 1/32 linebred case), the (child, sire, dam) edge-trace
+      set-identity with the CSV, and the rectilinear routing-net confinement —
+      `verifyDirectEdges()`/`verifyRectiNets()` in `scratchpad/s691_pedigrees.R`
+      are reusable as test helpers, and the kinship ground-truth checks (φ/F
+      values) belong in the same file as fixture preconditions. **Warning
+      forward-carry (found S692):** the linebreeding and half-sib pedigrees each
+      emit a "2 same-row edge-node collision(s) could not be fully resolved"
+      warning under `edgeStyle = "rectilinear"` (present at S691 approval time —
+      same engine — and the owner approved those renders as legible); the fixture
+      file must handle it deliberately (pin it with `expect_warning()` or
+      suppress it with a dated comment), or those two calls will fail as
+      unexpected-warning conditions.
 - [ ] **Add the exemplar pedigrees to the pedigree-diagram article/tutorial**
-      (**BLOCKED — needs the exemplar CSVs' shipped location, first item**, Effort M;
-      standing pedigree-fidelity family; follow-up 3 of 3 from S691). A section in
+      (**READY** — the exemplar CSVs shipped S692, 2026-09-16, as
+      `inst/extdata/examples/example_pedigree_{consanguinity,linebreeding,backcross,
+      first_cousin,half_sib}.csv`; Effort M; standing pedigree-fidelity family;
+      follow-up 3 of 3 from S691). A section in
       `vignettes/articles/pedigree-diagram.qmd` (or the matching tutorial component)
       showing each classic structure's rendered diagram with a short plain-language
       reading guide (what the dashed duplicate arc and the vermillion mate-line mean,
       per structure) — the owner-approved renders are
       `scratchpad/s691_<ped>_{rectilinear,direct}.png` and `scratchpad/s691_render.R`
-      regenerates them from the shipped CSVs. Triggers the tutorial/article + NEWS
-      checklists in its shipping session.
+      regenerates them (point it at the shipped `inst/extdata/examples/` paths, not
+      the retired `scratchpad/s691_ped_*.csv` names). Triggers the tutorial/article +
+      NEWS checklists in its shipping session.
 - [ ] **Root-subtree ordering pass (Shape A) — Phase 3: docs & follow-ups** (**READY** —
       Phase 2 DONE S690, 2026-09-16, visual gate APPROVED by the owner; Effort S).
       `NEWS.Rmd` plain-language entry (S628 criterion — what changed for a colony manager:

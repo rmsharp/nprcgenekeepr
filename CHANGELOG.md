@@ -16,6 +16,40 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-16 · [BL-shipExemplarCSVs] S692: The 5 owner-approved exemplar pedigrees shipped as bundled example CSVs (`inst/extdata/examples/example_pedigree_*.csv`) + plain-language `NEWS.Rmd` entry
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
+  directive; follow-up 1 of 3 from S691):** byte-identical copies of the S691 owner-approved
+  scratchpad CSVs (visual gate "all 5 legible") shipped as
+  `example_pedigree_{consanguinity,linebreeding,backcross,first_cousin,half_sib}.csv`,
+  renamed from the session-numbered `s691_ped_*` names to the directory's established
+  `example_*` convention — content untouched, literal `NA` parents preserved (Learning
+  744). Ship commit `121a4ccd`.
+- **Verification ran on the SHIPPED copies, not the sources:** `cmp` byte-identity ×5;
+  44/44 ground-truth checks (columns `id,sire,dam,sex,gen`, no `""` phantom parents,
+  founders' `NA` parents intact, `system.file()` resolution, every φ/F exact to theory —
+  full-sib 1/4, linebreed-through-two-lines 1/32, backcross 1/4, first-cousin 1/16,
+  half-sib 1/8 — plus F = 0 for every other non-founder); all 10 structural layout counts
+  through the HEAD engine match the owner-approved layouts (direct 19/21/15/17/18 nodes,
+  rectilinear 33/35/26/33/30, `__dup_*` 1/2/1/1/2, exactly 1 consanguineous mate-line
+  pair each); full clean regression 2,354 blocks failed=0 error=0 (`NOT_CRAN` set,
+  unfiltered).
+- **`NEWS.Rmd` entry (S628 plain-language criterion)** at the end of the Pedigree Diagram
+  section (what a colony manager gets: five small ready-to-read pedigrees, one per classic
+  mating structure, each with exactly one consanguineous mating for the Diagram tab to
+  highlight); `NEWS.md` re-rendered (only the new entry changed); `linebreeding` added to
+  `inst/WORDLIST` (legitimate domain term — the S680/Learning 669 CI class, caught locally
+  by the wordlist coverage test before any push). Commit `af0996dc`.
+- **Found and forward-carried (Learning 745):** the linebreeding and half-sib exemplars
+  each emit a "2 same-row edge-node collision(s) could not be fully resolved" warning
+  under `edgeStyle = "rectilinear"` — present at S691 approval time (same engine, same
+  inputs) but recorded nowhere; now written into the fixture follow-up's `BACKLOG.md`
+  item so its testthat file pins or suppresses the condition deliberately instead of
+  hitting it as a red test.
+- **BACKLOG:** the shipped item's block removed per the completed-item convention;
+  follow-ups 2 (test fixtures) and 3 (article/tutorial section) flipped BLOCKED→READY
+  with the shipped paths forward-carried into their own descriptions. Records committed
+  2026-09-17 (close-out crossed midnight).
+
 ### 2026-09-16 · [BL-smallDemoPedigrees] S691: Small demonstration pedigrees (11–14 individuals each) exercising the 5 classic complex mating structures — built, ground-truth-verified, rendered both `edgeStyle`s, owner visual gate APPROVED ("all 5 legible")
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; owner-requested at S690's
   visual gate; standing pedigree-fidelity directive):** 5 authored exemplar pedigrees —
