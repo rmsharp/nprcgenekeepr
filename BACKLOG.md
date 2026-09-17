@@ -11,32 +11,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 > without an explicit owner sign-off that the work is complete.
 
 ## Up Next
-- [ ] **Add the exemplar pedigrees to the pedigree-diagram article/tutorial**
-      (**READY** — the exemplar CSVs shipped S692, 2026-09-16, as
-      `inst/extdata/examples/example_pedigree_{consanguinity,linebreeding,backcross,
-      first_cousin,half_sib}.csv`; their drawn structure is pinned by
-      `tests/testthat/test_examplePedigreeFixtures.R` since S693; Effort M; standing
-      pedigree-fidelity family; the last open follow-up of the 3 from S691). A section in
-      `vignettes/articles/pedigree-diagram.qmd` (or the matching tutorial component)
-      showing each classic structure's rendered diagram with a short plain-language
-      reading guide (what the dashed duplicate arc and the vermillion mate-line mean,
-      per structure) — the owner-approved renders are
-      `scratchpad/s691_<ped>_{rectilinear,direct}.png` and `scratchpad/s691_render.R`
-      regenerates them (point it at the shipped `inst/extdata/examples/` paths, not
-      the retired `scratchpad/s691_ped_*.csv` names). Triggers the tutorial/article +
-      NEWS checklists in its shipping session. **Reading-guide facts measured S693
-      (test-pinned, so safe to state; if a pin changes, revisit the prose):** the
-      animals drawn twice are CS1 (consanguinity), LK and LB2 (linebreeding), BP
-      (backcross), FC2 (first cousin), HS and HB1 (half sib); in every exemplar the
-      vermillion width-4 mate-line pair joins the union of exactly the consanguineous
-      mating (CS1×CD1, LB2×LA2, BP×BR, FC1×FC2, HA1×HB1), with one of the two
-      mate-lines drawn from that mate's duplicate occurrence, and that union's
-      children are exactly the inbred animals. **Render-chunk gotcha:** the
-      linebreeding and half-sib rectilinear layouts each emit a "2 same-row edge-node
-      collision(s) could not be fully resolved" warning (owner-accepted at S691's
-      visual gate) — a `.qmd` chunk rendering them will print it into the article
-      unless the chunk handles it deliberately, and the prose must not claim those
-      two drawings are crossing-free.
 - [ ] **Root-subtree ordering pass (Shape A) — Phase 3: docs & follow-ups** (**READY** —
       Phase 2 DONE S690, 2026-09-16, visual gate APPROVED by the owner; Effort S).
       `NEWS.Rmd` plain-language entry (S628 criterion — what changed for a colony manager:

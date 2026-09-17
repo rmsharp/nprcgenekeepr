@@ -16,6 +16,43 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-17 · [BL-exemplarArticle] S694: "Reading classic breeding structures" — the 5 exemplar pedigrees added to the pedigree-diagram article (closes the S691 follow-up chain)
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
+  directive; DEVELOPMENT_WORKSTREAM, docs-only — no TDD phases, per the S692 data+docs
+  precedent):** new `vignettes/articles/pedigree-diagram.qmd` section walking through each
+  classic structure's Rectilinear diagram (full-sibling, backcross, half-sibling,
+  first-cousin, linebreeding) with a plain-language reading guide per structure — the
+  dashed duplicate-occurrence line and the vermillion consanguineous mate-line pair — plus
+  a `system.file()` snippet for loading an exemplar into the app and a See-also line.
+  Every stated id/φ/F fact comes from the S693 test-pinned spec (F = 0.25, 0.25, 0.125,
+  0.0625, 0.03125), never hand-derived; the prose claims no crossing-free rendering for
+  linebreeding/half-sib (their collision warning was owner-accepted at S691's visual
+  gate). Commits `811160a8` (images), `b8ada1d9` (article + regeneration script),
+  `10337bb5` (NEWS/WORDLIST).
+- **Images regenerated, not copied — and byte-identical to the approved renders:** the new
+  tracked script `vignettes/articles/pedigree-diagram-exemplar-renders.R` (adapted from
+  the untracked `scratchpad/s691_render.R`) renders the 5 shipped
+  `inst/extdata/examples/example_pedigree_*.csv` files through the HEAD engine into
+  `vignettes/articles/pedigree-diagram-img/`; all five PNGs proved byte-identical (`cmp`)
+  to the S691 owner-approved scratchpad renders, so the S691 visual approval carries over
+  with no re-review, and node/edge counts matched the pinned table (33/35/26/33/30) at
+  render time. The script documents the exactly-two expected collision warnings
+  (linebreeding, half_sib) so any other warning set reads as an engine change requiring
+  re-review before committing images. The article session's dependency on the untracked
+  scratchpad renders is now over.
+- **Checklists:** tutorial/article (this session IS it) and NEWS.Rmd same-session both
+  discharged — plain-language entry (S628 criterion) appended to the Pedigree Diagram
+  section, `NEWS.md` re-rendered with the entry as the only diff; wordlist gate run
+  locally pre-push: `spelling::spell_check_package()` flagged 13 words in the new article
+  prose (the exemplar animal-id alphabetic prefixes plus "backcross"), added to
+  `inst/WORDLIST`, test green (Learning 747). N/A by inspection: citation checklist (no
+  new statistic), `a2interactive.Rmd`/`_pkgdown.yml` reference coverage (no new export;
+  the article itself was already registered at `_pkgdown.yml:63`).
+- **Verification:** `quarto render` clean (twice, after the final prose pass);
+  `spelling::spell_check_package()` fully clean; full clean regression (unfiltered,
+  `NOT_CRAN`) **2,364 blocks, failed=0, error=0** — exactly the S693 baseline (no test
+  file touched).
+
 ### 2026-09-17 · [BL-pinExemplarFixtures] S693: The 5 bundled exemplar pedigrees pinned as structural test fixtures (`tests/testthat/test_examplePedigreeFixtures.R`, 10 blocks)
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
   directive; follow-up 2 of 3 from S691; full TDD with all three phase gates posed):** one
