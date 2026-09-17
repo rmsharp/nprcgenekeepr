@@ -18,20 +18,111 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 693 Handoff Evaluation (by Session 694)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable, and the
+BACKLOG item plus the forward-carried facts were a near-complete spec: every id/φ/F fact
+stated in the article came straight off the pinned spec list
+(`test_examplePedigreeFixtures.R:172`) with zero re-derivation, and the render printed
+node/edge counts matching the pinned table (33/35/26/33/30) on the first run. The
+render-chunk warning gotcha shaped both the regeneration script's design (expected-warning
+documentation) and the prose constraint (no crossing-free claim) before either was
+written. Gotcha (5) — don't clean scratchpad — is what made the byte-identity proof
+against the owner-approved renders possible at all. **What was missing:** the item's
+"point `s691_render.R` at the shipped paths" implied editing the untracked scratchpad
+script; the durable form actually needed (a tracked regeneration script + committed PNGs,
+per the kinship2-fidelity-validation-img precedent) was left to this session to infer, as
+were image directory/naming and the one-style-vs-both choice. **What was wrong:** nothing
+material. **ROI:** high.
+
 ### What Session 694 Did
-**Deliverable:** Add the exemplar-pedigrees section to the pedigree-diagram article
-(`vignettes/articles/pedigree-diagram.qmd` or matching tutorial component): each of the 5
-classic structures' rendered diagram + plain-language reading guide, using the S693
-test-pinned facts; handle the collision-warning render-chunk gotcha; same-session NEWS.Rmd
-entry (S628 plain-language criterion). BACKLOG "Up Next" item 1, the last S691 follow-up;
-owner-picked via `AskUserQuestion` at Phase 0 under the standing pedigree-fidelity
-directive. DEVELOPMENT_WORKSTREAM, docs-only (S692 precedent — no TDD phases for prose).
-(IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** "Reading classic breeding structures" — the 5 exemplar pedigrees added
+to `vignettes/articles/pedigree-diagram.qmd` with per-structure plain-language reading
+guides, 5 committed Rectilinear renders, a tracked regeneration script, the same-session
+NEWS.Rmd entry, and 13 WORDLIST additions. This closes the S691 follow-up chain (ship
+S692 → pin S693 → article S694). Owner-picked via `AskUserQuestion` at Phase 0 under the
+standing pedigree-fidelity directive; DEVELOPMENT_WORKSTREAM, docs-only (S692 precedent
+— no TDD phases for prose). **DONE.** **Started/completed:** 2026-09-17 (single
+session). Claim `89daa4f1`; images `811160a8`; article + script `b8ada1d9`;
+NEWS/WORDLIST `10337bb5`; records `8595ffd7`.
+**Ledger:** recorded as the S694 entry at the top of `CHANGELOG.md` (`8595ffd7`).
+
+**What actually happened, in order:**
+1. **Research:** read the article and its figure conventions (static PNGs +
+   sibling regeneration script; `kinship2-fidelity-validation-img/` dir precedent),
+   viewed all 5 owner-approved rectilinear renders, cross-checked the 5 shipped CSVs
+   against the pinned facts, and pulled exact φ/F values from the S693 spec list rather
+   than deriving any number.
+2. **Renders:** wrote `vignettes/articles/pedigree-diagram-exemplar-renders.R` (tracked;
+   adapted from `scratchpad/s691_render.R`; documents the exactly-two expected collision
+   warnings), rendered the 5 shipped CSVs through the HEAD engine — counts matched the
+   pinned table, only the two expected warnings fired — and proved all five PNGs
+   **byte-identical (`cmp`)** to the S691 owner-approved renders, so the visual approval
+   carries over without re-review (Learning 747).
+3. **Article:** new section after "Consanguineous mating marker" — intro (what the five
+   are, `system.file()` loading snippet, no crossing-free claim for the two
+   warning-affected layouts) + 5 subsections, each an image with fig-alt plus a reading
+   guide (dashed duplicate line first, then the vermillion pair, then the pinned F
+   value in plain language); See-also line added. Rectilinear-only by author choice
+   (the app default and the article's framing). Proofread pass caught an overclaim
+   ("visual signature of a backcross" → cross-generation-mating tell-tale) and a
+   mate-order inconsistency before commit. `quarto render` clean (run twice).
+4. **Gates:** `spelling::spell_check_package()` flagged 13 words in the new prose
+   (exemplar id alphabetic prefixes + "backcross") → added to `inst/WORDLIST` at their
+   sorted positions in the file's second run; wordlist test green. NEWS.Rmd
+   plain-language entry (S628) appended to the Pedigree Diagram section; `NEWS.md`
+   re-rendered, diff = the entry only. N/A by inspection: citation checklist,
+   `a2interactive.Rmd`, `_pkgdown.yml` (no new statistic, no new export; article already
+   registered at `_pkgdown.yml:63`).
+5. **Verification:** full clean regression (background, unfiltered, `NOT_CRAN`):
+   **2,364 blocks, failed=0, error=0** — exactly the S693 baseline (no test touched).
+6. **Close-out:** records `8595ffd7` (CHANGELOG entry, Learning 747, article item's
+   BACKLOG block removed per the completed-item convention), this handoff, HANDOFFS
+   receipt.
+
+**Self-assessment (Session 694): 9/10.** **Strengths:** (1) the byte-identity chain
+(shipped CSVs → HEAD engine → `cmp` against owner-approved renders) is the strongest
+possible carry-over of the S691 visual gate — no fresh judgment call stands between the
+approved pixels and the committed images. (2) Every factual claim in the prose traces to
+a test-pinned value; nothing was hand-derived. (3) The warning gotcha was handled at both
+layers deliberately (script documents the expected set; prose avoids the crossing-free
+claim). (4) The wordlist gate ran locally before any push (Learning 669's CI class,
+avoided again). **Weaknesses:** (1) several authoring choices (rectilinear-only images,
+section placement, image dir/file naming) were made unilaterally — all
+convention-following and disclosed, but the owner has not seen the rendered section.
+(2) The first draft overclaimed once ("visual signature of a backcross") — caught in
+self-proofread, but it shows prose drift past the pinned facts is a live risk in
+reading-guide writing. (3) One wasted verification cycle from a zsh word-splitting
+mistake in the first byte-compare attempt.
+
+**Next steps (specific):** (A) **Shape A Phase 3 docs** (`BACKLOG.md:14` after this
+session's removal — re-grep; READY, Effort S): NEWS entry, regenerate the 5 Diagram-tab
+screenshots, record Open-Question dispositions. (B) Ascender-stub cosmetic (READY,
+Effort M; must knowingly update the S685 inertness pin). (C) QP Phase 4 cleanup (READY,
+Effort S). (D) SESSION_NOTES.md trim (READY; the dashboard's one HIGH flag — the file
+is now past 10,500 lines). (E) Push decision (owner call): 60 commits ahead after this
+close-out (53 at Phase 0 + 7 S694 commits); everything local passed the full regression
+and the last pushed state is CI-green. (F) Informational: dashboard copy still stale
+(v2.14.0 vs v2.18.0); untracked leftovers unchanged.
+
+**Key files:** `vignettes/articles/pedigree-diagram.qmd:95` (the new section),
+`vignettes/articles/pedigree-diagram-exemplar-renders.R:1` (regeneration script; its
+header is the regeneration contract), `vignettes/articles/pedigree-diagram-img/` (5
+PNGs), `NEWS.Rmd:193` (new entry), `inst/WORDLIST` (13 additions),
+`CHANGELOG.md:19` (S694 entry), `PROJECT_LEARNINGS.md:2192` (Learning 747).
+
+**Gotchas for the next session:** (1) failed=0 expectation is still **2,364 blocks**.
+(2) If an engine change moves an exemplar layout, `test_examplePedigreeFixtures.R`
+fails first (on purpose); the article images must then be regenerated via the tracked
+script and byte-compared — identity means prior approval carries, any difference needs
+owner eyes, and the script header says exactly this. (3) The committed article images
+are Rectilinear-only; the Direct renders exist only in untracked scratchpad. (4)
+**Scratchpad still cannot be bulk-cleaned:** this session ended the article chain's
+dependency on the `s691_*` files, but Shape A Phase 3 (next-step A) still needs
+`scratchpad/s683_screenshotDigests.R`/`s685_*` digest scripts. (5) BACKLOG line numbers
+shifted again (article block removed, net −27 lines at the top); re-grep. (6)
+`spelling::spell_check_package()` scans `vignettes/articles/*.qmd` despite
+`.Rbuildignore` — any article prose naming synthetic ids owes the wordlist gate before
+commit (Learning 747).
 
 ### Session 692 Handoff Evaluation (by Session 693)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable and the
