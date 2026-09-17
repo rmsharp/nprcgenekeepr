@@ -16,6 +16,40 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-17 · [ad hoc] S699: standing pedigree-drawing top-priority directive retired by owner sign-off; the 3 measured census residuals itemized at ordinary priority
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; decision/grooming session,
+  docs-only — no TDD phases):** S698's next-step (A) executed — with the tagged
+  pedigree-fidelity queue empty, the owner was asked directly whether the S643 standing
+  top-priority directive is satisfied. Owner decision (via `AskUserQuestion`, "Sign off +
+  itemize residuals"): the directive is **retired** — the pinned `BACKLOG.md` note
+  (owner-directed 2026-08-26, S643) removed — and the three remaining measured residuals
+  become **ordinary-priority** Housekeeping items. Commits: claim `1ed16e63`, deliverable
+  `d6e23e40`.
+- **Grounding (re-tallied live from the committed S696 census CSV, not quoted from
+  handoffs):** classes a/c1/c2/e/f = 0 on every fixture; class b = 8 off-centre unions —
+  the re-tally found **2 of the 8 are numerical-noise magnitude** (`__union_75` −2.3e-07
+  units, `__union_132` 8.7e-09 units, caught only by the census's exact > 1e-6 px predicate)
+  and 6 are real 0.5–1.5-unit (60–180 px) minSep-bound offsets, a split recorded nowhere
+  before; class c curved-chord heuristic = **1,668** total (1,667 Real 375 + 1 Track C — the
+  "1,667" in older records is the Real-375-only count); class d = **2** adjacent (1 per
+  fixture — "d=1" in older records was Real-375-scoped).
+- **The 3 new items** (`BACKLOG.md` Housekeeping, each carrying the CSV row ids and coupled
+  prose pointers): (1) class-b investigation — noise-tolerance decision for the 2 predicate
+  artifacts + structurally-forced-or-reducible analysis for the 6 real offsets, article
+  coupling flagged (READY, Effort M); (2) arc-modelling measurement pass replacing the
+  curved-chord upper bound with a real count (READY, Effort M); (3) class-d 2-adjacent
+  visual assessment (READY, Effort S).
+- **Agent memory:** the persistent standing-priority memory note rewritten to RETIRED (and
+  its index line updated) so stale handoffs/forward-carries can't resurrect the override.
+- No new `PROJECT_LEARNINGS.md` entry: the session's one non-obvious finding (the class-b
+  noise/real split) is forward-carried in the live item itself, per the completed-item
+  convention's "detail a live open item needs is written INTO that item."
+- No GitHub issue involved; NEWS/citation/tutorial/`a2interactive`/`_pkgdown` checklists N/A
+  by inspection (no package-path file touched). Full-suite regression not re-run this
+  session: no file in the package build/test path changed (BACKLOG/CHANGELOG/SESSION_NOTES/
+  HANDOFFS only); the S696–S698 baseline (2,370 blocks, failed=0, error=0, skipped=182)
+  carries forward.
+
 ### 2026-09-17 · [ad hoc] S699 Phase 0: record CHANGELOG.md entry for S698's close-out commits (reconcile-on-read)
 - Phase 0 ledger reconcile found 2 commits since `CHANGELOG.md`'s frontier (`efd67743`) with no
   ledger entry of their own — the same self-reference shape this project's precedent already
