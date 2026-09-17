@@ -93,26 +93,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       steps). **Owner disposition pending** -- the item stays open until the owner accepts or
       rejects the recommendation; nothing else to do here until then.
 ## Housekeeping
-- [ ] **`CHANGELOG.md` archive pass — past the 2,000-line agent read cap and its trim
-      triggers fire** (found S700, 2026-09-17; the sibling `HANDOFFS.md` half of the
-      original two-file item was DONE S701 — see `CHANGELOG.md`; READY, Effort S, same
-      shape as the S700/S701 passes) — measured at S701's close: 5,562 lines / 461,077 B
-      against a 65,536 B budget (dashboard flags HIGH for the silent-truncation read cap,
-      MEDIUM for line headroom −214; the only remaining dashboard flag). Procedure notes
-      for the picking session: (1) ship the session's claim `CHANGELOG.md` entry IN the
-      Phase 1B claim commit so the ledger frontier sits at HEAD — the tool's
-      `P1_UNDOCUMENTED` gate refuses while any commit sits past the frontier (Learning
-      752; S701 confirmed the in-claim-commit pattern costs zero extra cycles, Learning
-      754); (2) `SRF_RED` is *likely GREEN here*, unlike the S700/S701 passes — the most
-      recent archive boundary on this file is S547's legacy-footer relocation (954,673 B →
-      20,929 B, a ~934 KB denominator; see CLAUDE.md's S547 note) — but if RED fires it is
-      an owner decision via `AskUserQuestion`, never a self-serve `--force` (S594/S700/
-      S701 precedent, Learnings 549/586/587); (3) verify with the generated
-      `docs/archive/<shard>.verify.sh` after the write; (4) the related-but-distinct H4
-      receipt-inflation *rate* question for `CHANGELOG.md` already has its own item below
-      ("~4-entries-per-session ledger convention") — the archive pass is the *level* fix
-      and does not close that item; (5) expect the post-trim level near the 32,768 B
-      hysteresis stop, not near-zero — the tool cuts minimally (Learning 754).
 - [ ] **Census class (b): investigate the 8 off-centre union dots on the real 375 fixture**
       (found S668 census, re-confirmed on the S696 baseline CSV `eeacd06c`; itemized S699 at
       the owner's directive sign-off — ordinary priority, the S643 standing top-priority note

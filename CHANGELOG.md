@@ -22,6 +22,32 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [BL-Housekeeping] S702 close-out: CHANGELOG.md archive pass DONE (328 records archived, verified lossless); 1 learning; BACKLOG item removed (both halves done)
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; docs-only maintenance
+  session — no TDD phases, S700/S701/S594/S539 archive-pass precedent):** the
+  `methodology_trim.py` archive pass on `CHANGELOG.md` — 328 records (2026-08-14 →
+  2026-09-17) moved to `docs/archive/CHANGELOG-through-2026-09-17.md`, live file
+  464,522 B → 33,503 B (−92.8%), both triggers cleared. L1/L2/L3/P1A asserted by the
+  tool AND re-derived independently by the generated `verify.sh` ("OK: L1,
+  L2/front-matter, L3 hold"; 347 = 19 retained + 328 archived). Trim commit `6bac092f`.
+- **Gates:** `P1_UNDOCUMENTED` never fired — the claim ledger entry shipped IN the
+  Phase 1B claim commit (`78dbd8ce`; Learnings 752/754). `SRF_RED` DID fire, contrary
+  to the item's carried "likely GREEN" prediction — the actual most-recent archive
+  boundary is S579's 2026-08-14 pass (`66d5aa5`), not S547's ~934 KB relocation
+  (SRF 6.3072 vs S579; 0.4739 vs S547's largest-drop boundary — the small-denominator
+  shape a fourth time); owner-directed `--force` via `AskUserQuestion` (S594/S700/S701
+  precedent). The wrong carried prediction is now Learning 755.
+- **Post-trim verification:** dashboard re-run and flag list extracted (Learning 753
+  method) — the `CHANGELOG.md` HIGH read-cap flag and MEDIUM trigger flag are GONE;
+  only the pre-existing MEDIUM (`.Rproj.user` jspdf artifact) and LOW (9 branches)
+  flags remain. Live file lands near the 32,768 B hysteresis stop, not near-zero, as
+  Learning 754 predicts (19 records retained).
+- BACKLOG Housekeeping item removed entirely (completed-item removal convention) —
+  both halves done (HANDOFFS S701, CHANGELOG S702); the distinct H4
+  ~4-entries-per-session *rate* item remains open, unchanged. No suite run: docs-only;
+  the S696–S698 baseline (2,370 blocks, failed=0, error=0, skipped=182) carries
+  forward by inheritance.
+
 ### 2026-09-17 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-17.md` (328 record(s), 464,522 B → 33,503 B)
 
 **Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
