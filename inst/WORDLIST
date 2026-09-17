@@ -244,15 +244,19 @@ al
 alleleFreq
 allelic
 autosome
+backcross
 baseUrl
 biallelic
 birthdate
 bottlenecked
 bp
+BQ
 buildMarkerGenotypeMatrix
 byID
 caTools
 calculateSexRatio
+CGD
+CGS
 changedCols
 checkChangedColsLst
 checkCrossCenterMapping
@@ -314,8 +318,10 @@ examplePedigree
 expectConfigFile
 failedDatabaseConnection
 fallbacks
+FC
 femaleFounders
 femaleSires
+FGD
 fillBins
 fillGroupMembers
 fillGroupMembersWithSexRatio
@@ -328,6 +334,7 @@ folderPath
 founderIds
 fromCenter
 fromcenter
+FS
 funder
 gapless
 gdata
@@ -365,6 +372,9 @@ guThresh
 hasBothParents
 hasChangedCols
 hasErrors
+HB
+HC
+HD
 herm
 heterozygosity
 heterozygote
@@ -378,6 +388,7 @@ homozygous
 hovertext
 http
 https
+HU
 hyb
 idA
 idB
@@ -398,8 +409,10 @@ labkey
 lifecycle
 linebreeding
 lintr
+LK
 lowParentAge
 lubridate
+LW
 magrittr
 makeExamplePedigreeFile
 makeGeneticDiversityDashboard

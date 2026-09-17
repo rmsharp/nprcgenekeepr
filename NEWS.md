@@ -187,6 +187,11 @@ R. Mark Sharp, Ph.D.
   contains exactly one consanguineous mating for the diagram to
   highlight (`example_pedigree_*.csv` in the package's
   `extdata/examples` folder).
+- The Pedigree Diagram article on the package website now walks through
+  those five example pedigrees one diagram at a time, with a short guide
+  to reading each structure on the diagram: how the dashed line marks an
+  animal drawn twice, and how the vermillion mate-line marks each
+  pedigree's one consanguineous mating.
 
 ## Kinship & Pedigree Calculations
 
