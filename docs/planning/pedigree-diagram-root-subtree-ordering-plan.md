@@ -646,6 +646,49 @@ reported split in Phase 2's verification line is the rule for reading it.
 6. **Mean span ceiling.** Ordering leaves ~2,300 px mean connector span (S686 §5); the
    remaining dome is a routing / duplicate-policy question, a separate design.
 
+### Dispositions (recorded S695, 2026-09-17 — the design's Phase 3 close-out)
+
+1. **Spectral seed upgrade** — NOT TAKEN. The PRE-RED gate (S689, forward-carried to
+   S690's wiring without re-ratification) chose the RCM seed; the shipped pass is RCM +
+   first-improvement local search, and the S690 census matched this design's own RCM row
+   number-for-number at GREEN (jogs 93, b 8 of which 2 dust, c1Pre 6, cCurved 1,667,
+   d 1). Remains the measured upgrade path (+3 points of ink; cCurved −33% vs −16%) at
+   the price of the four `eigen()` determinism guards and the b/jog regressions
+   (§Alternatives 2); revisit only on an owner call after living with the shipped result.
+2. **QP-calibration upgrade for small pedigrees** — NOT PURSUED. The shipped pass
+   calibrates from Tier-1 geometry only; no adaptive rule was added at either
+   implementing session. Still contingent on knowing the app's real pedigree sizes;
+   nothing since has changed the "two code paths" cost assessment.
+3. **Kill switch** — DECLINED, per this design's own recommendation. The pass shipped
+   unconditional (S690's GREEN is a 9-line diff: pointer comment + the one call at
+   `R/makePedigreeDiagramData.R:985-992`; the engine passes `minSep` and omits
+   `maxSweeps`, taking the function's default). The S690 owner visual gate approved the
+   Real-375 before/after ("very well laid out") and found no pedigree shape the pass
+   makes worse; the five S691 exemplar pedigrees, rendered under the wired engine, were
+   likewise approved ("all 5 legible"). Revisit only if a future visual review finds a
+   worsened shape.
+4. **Scaling at the 1,500-node cap** — OPEN, deliberately unmeasured. No ~200-root
+   synthetic fixture exists; S690 measured Real 375 only (2.16 s warm median, against
+   this design's ≈2.2 s prediction). The windowed-moves / vectorized-swap fallback stays
+   the named remedy; measure if issue #138's cap work is ever picked up or a fixture
+   that size appears.
+5. **Track C bitwise identity** — RESOLVED: guard DECLINED at the S689 PRE-RED gate
+   (owner-ratified), then made moot by measurement. S690's wired-engine instrument
+   proved Track C **bitwise identical** (max |dx| = 0) — stronger than this design's
+   own 1.5e-8 expectation; the QP reaches literally the same solution under the
+   reordered Tier-1 input. If a digest-style `identical()` check ever regresses this,
+   the "< 4 roots" skip named above remains the cheapest remedy.
+6. **Mean span ceiling** — ACCEPTED RESIDUAL. The dome thinned (cCurved −16%, ink
+   −27.8%) but the ~2,300 px mean connector span stands, as this design predicted; the
+   remainder is a routing / duplicate-policy design, not an ordering one, and lives
+   under the standing pedigree-fidelity directive rather than a filed item.
+
+*Cross-design note (forward-carried from the Phase 2/3 `BACKLOG.md` blocks before their
+removal): the one new class-(d) adjacent pair under RCM (`__dup_SLN0TF_2`/`SLN0TF`) was
+disclosed at the S690 visual gate and accepted; the provisional-order design's Open
+Question 1 (kinship2's `alignped3` collapse-when-adjacent refinement) therefore stays
+NOT PURSUED unless a later review reopens it.*
+
 ---
 
 ## Appendix — reference algorithm (measurement instrument, not shippable code)
