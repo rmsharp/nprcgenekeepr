@@ -148,7 +148,7 @@ key_files: R/makePedigreeDiagramData.R:869,948,1011,1038,1162,1596 (the 7 sites 
 gotchas: failed=0 expectation stays 2,370 blocks. BACKLOG.md's FIRST Up Next section is now EMPTY (the QP item was its only block) -- LabKey/package-split live under the SECOND Up Next header; line numbers shifted net -8. A NEW acronym in EXPORTED roxygen fails test_wordlist_coverage.R even when the word is all over internal comments -- run spelling::spell_check_package() before the full suite when touching exported roxygen (Learning 750). The QP plan is CLOSED; the Phase 2 replacement comment deliberately KEEPS past-tense pass vocabulary (gate greps only the 3 symbol names) -- do not strip it as "unfinished cleanup". The "5 5" lines in silent suite output are pre-existing print noise.
 runtime_smoke: n/a -- docs-only (comments, one regenerated Rd, one WORDLIST line; no runtime behavior change)
 changelog_ref: 2026-09-17 S697 entry (BL-qpPhase4), 20088807
-commit: pending
+commit: daafea9f
 ```
 
 ```handoff
