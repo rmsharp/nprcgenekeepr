@@ -18,6 +18,28 @@ it is failure mode #27.
 
 ## 2026-09
 
+### 2026-09-17 · [ad hoc] S700 close-out: SESSION_NOTES.md trim DONE (170 records archived, verified lossless); 2 learnings; HANDOFFS/CHANGELOG trim item queued
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; docs-only maintenance
+  session — no TDD phases, S539/S594 archive-pass precedent):** the `methodology_trim.py`
+  archive pass on `SESSION_NOTES.md` — 170 records (2026-08-19 → 2026-09-17) moved to
+  `docs/archive/SESSION_NOTES-through-2026-09-17.md`, live file 931,481 B → 2,560 B
+  (−99.7%), both triggers cleared. L1/L2/L3 asserted by the tool AND re-derived
+  independently by the generated `verify.sh` (both green). Trim commit `6f722e25`.
+- **Two gates hit, both resolved by their own rules:** `P1_UNDOCUMENTED` (the session's own
+  claim commit was unledgered — reconciled by the mid-session claim entry `c75269bb`, per
+  the gate's instruction; Learning 752) and `SRF_RED` (2.3879 vs the most recent, small,
+  S594-era archive boundary but 0.1422 vs the largest-drop boundary — owner-directed
+  `--force` via `AskUserQuestion`, the S594 precedent exactly).
+- **Finding (report-don't-fix):** `HANDOFFS.md` (6,555 lines / 586,022 B; 122 real receipts
+  vs the stale front-matter "21") and `CHANGELOG.md` (5,515 lines / 457,092 B) are ALSO past
+  the 2,000-line read cap with triggers firing, and were already over at S699's close — the
+  "1 HIGH flag" orientation framing was an under-count (the dashboard summary counts
+  projects, not flags; Learning 753). Queued as one new `BACKLOG.md` Housekeeping item
+  (READY, Effort S each, one file per session) carrying the full procedure notes.
+- Learnings 752–753 appended to `PROJECT_LEARNINGS.md`. No suite run: docs-only, nothing in
+  the package build/test path changed; the S696–S698 baseline (2,370 blocks, failed=0,
+  error=0, skipped=182) carries forward by inheritance.
+
 ### 2026-09-17 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-17.md` (170 record(s), 931,481 B → 2,560 B)
 
 **Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
