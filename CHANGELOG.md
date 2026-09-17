@@ -16,6 +16,46 @@ it is failure mode #27.
 
 ## 2026-08
 
+### 2026-09-17 · [BL-pinExemplarFixtures] S693: The 5 bundled exemplar pedigrees pinned as structural test fixtures (`tests/testthat/test_examplePedigreeFixtures.R`, 10 blocks)
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
+  directive; follow-up 2 of 3 from S691; full TDD with all three phase gates posed):** one
+  test file loading each shipped `example_pedigree_*.csv` via `system.file()` and pinning
+  what the owner approved at S691's visual gate — CSV shape with literal `NA` founder
+  parents; every φ/F exact to theory plus F = 0 elsewhere; linebreeding's two distinct
+  lines of descent from LK; per `edgeStyle`, node/edge counts (direct 19/21/15/17/18,
+  rectilinear 33/35/26/33/30 — edges equal nodes in all 10 layouts), which animals are
+  drawn twice (CS1; LB2+LK; BP; FC2; HB1+HS), exactly one vermillion width-4 mate-line
+  pair on the union of the expected consanguineous mating whose children are exactly the
+  inbred animals; the direct (child, sire, dam) trace; rectilinear routing nets each
+  carrying one union's descent to exactly its own children; only known waypoint node
+  kinds. No raw x-positions pinned. RED commit `c5435906`; no `R/` change (GREEN needed
+  no implementation — the pins characterize shipped behavior).
+- **Warning pinned, not suppressed:** exactly one "2 same-row edge-node collision(s)"
+  warning for linebreeding/half-sib rectilinear, zero warnings everywhere else (dated
+  comment). Pinned by capturing the warning vector and asserting its length — the
+  codebase's existing `withCallingHandlers` + `expect_match` idiom passes silently when
+  the warning disappears (Learning 746).
+- **RED must-fail discharged by 10 mutation checks** (phantom `""` parents, rewired child
+  edge, unrelated animal / own parent on a routing net, unrouted union, stripped marker,
+  warning expected-but-absent and present-but-unexpected, unknown waypoint kind, broken
+  consanguinity in input, changed duplicate policy), each confirmed failing in the
+  intended block for the right reason. The run found and fixed two test-side defects
+  before commit: the S691-derived net check accepted a sibship bar wired to the union's
+  own parent ("family" = parents + children; tightened to children-exactly, plus
+  every-union-reached), and the trace helper errored instead of failing when no triple
+  survived.
+- **Verification:** single-file run green; full clean regression (unfiltered,
+  `NOT_CRAN`) 2,364 blocks failed=0 error=0 (= 2,354 baseline + 10); `devtools::check()`
+  0 errors / 1 warning / 1 note, both from untracked local clutter CI never sees (the
+  `~$e Compounding Loop.html` Word temp file; the `scratchpad/` dir); `lintr` 0 lints.
+  The first check attempt could not start (Xcode license not accepted — `make`/`xcrun`
+  exit 69); the owner accepted the license in-session, and the retried check (run with
+  `options(pkgbuild.has_compiler = TRUE)`, harmless — no `src/`) completed.
+- **BACKLOG:** fixture item's block removed per the completed-item convention; the
+  measured reading-guide facts (drawn-twice animals, marker placement from the duplicate
+  occurrence, inbred-children identity) and the render-chunk warning gotcha
+  forward-carried into the article item's own description.
+
 ### 2026-09-16 · [BL-shipExemplarCSVs] S692: The 5 owner-approved exemplar pedigrees shipped as bundled example CSVs (`inst/extdata/examples/example_pedigree_*.csv`) + plain-language `NEWS.Rmd` entry
 - **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; standing pedigree-fidelity
   directive; follow-up 1 of 3 from S691):** byte-identical copies of the S691 owner-approved
