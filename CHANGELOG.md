@@ -18,6 +18,31 @@ it is failure mode #27.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-Housekeeping] S701 close-out: HANDOFFS.md archive pass DONE (116 receipts archived, verified lossless); 1 learning; BACKLOG item narrowed to the CHANGELOG.md half
+- **Deliverable (owner-picked via `AskUserQuestion` at Phase 0; docs-only maintenance
+  session — no TDD phases, S700/S594/S539 archive-pass precedent):** the
+  `methodology_trim.py` archive pass on `HANDOFFS.md` — 116 receipts (2026-08-14 →
+  2026-09-17) moved to `docs/archive/HANDOFFS-through-2026-09-17.md`, live file
+  590,777 B → 31,315 B (−94.7%), both triggers cleared, stale front-matter receipt count
+  regenerated 21 → 6. L1/L2/L3/P1A asserted by the tool AND re-derived independently by
+  the generated `verify.sh` ("OK: L1, L2/front-matter, L3 hold"; 122 = 6 retained + 116
+  archived). Trim commit `9b551c8b`.
+- **Gates:** `P1_UNDOCUMENTED` never fired — the claim ledger entry shipped IN the Phase
+  1B claim commit (`f51210bb`), keeping the frontier at HEAD (Learning 752 applied; zero
+  wasted cycles, Learning 754). `SRF_RED` fired as predicted (5.0215 vs the tiny
+  21-receipt 2026-08-14 boundary, 0.6989 vs the largest-drop boundary — the S594/S700
+  small-denominator shape exactly); owner-directed `--force` via `AskUserQuestion`.
+- **Post-trim verification:** dashboard re-run and flag list extracted (Learning 753
+  method) — the `HANDOFFS.md` flags are gone; `CHANGELOG.md` (5,562 lines / 461,077 B)
+  is the only remaining flag, already queued. `bin/check-handoff` does not exist in this
+  project (canonical-only, never copied) — the shard-checker step is N/A, stated rather
+  than silently skipped.
+- Learning 754 appended to `PROJECT_LEARNINGS.md` (minimal-cut → per-file re-fire
+  cadence; ~7-session HANDOFFS recurrence estimate). `BACKLOG.md` Housekeeping item
+  rewritten to its remaining `CHANGELOG.md` half with forward-carried procedure notes
+  (completed-item removal convention). No suite run: docs-only; the S696–S698 baseline
+  (2,370 blocks, failed=0, error=0, skipped=182) carries forward by inheritance.
+
 ### 2026-09-17 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-17.md` (116 record(s), 590,777 B → 31,315 B)
 
 **Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
