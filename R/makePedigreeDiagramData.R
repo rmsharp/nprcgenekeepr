@@ -858,14 +858,16 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## commented_code_linter does not parse it as arithmetic, S652 precedent).
   ## Two or more weakly-connected families
   ## are each laid out ALONE by this same engine (recursively: every tier,
-  ## the S666 correction pass, and every collision-avoidance mechanism run
-  ## unchanged per family), then packed left-to-right in ped row order with
+  ## the S666 correction pass, the Decision-1 seeding, and the final joint
+  ## .solveJointQP() solve all run per family), then packed left-to-right
+  ## in ped row order with
   ## a per-row minSep gap -- kinship2::align.pedigree()'s own treatment of
   ## unrelated families (bit-exact on Track B shrunk and 3 synthetic
   ## multi-family fixtures, test_positionMatingUnitForest.R). Before this,
   ## all families shared the super-root's sibling packing with no notion of
   ## family: each B1 mate's anchor + minSep target landed on the OTHER
-  ## family and .deCollideIndividualPoints() pushed her further into it
+  ## family and the then-live B1/B3 de-collision pass (deleted by the QP
+  ## migration -- see the Phase 2 note below Tier 3) pushed her further into it
   ## (Track B shrunk rendered P1 . C4 . P2 . P6 across one row). A single
   ## component takes the unchanged path below; Track B full (2 components)
   ## is identical either way, up to translation. Runs after the gen-NA fix
@@ -940,8 +942,10 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## below can call it: it depends only on structural fields already
   ## defined above (anchorOf/nonAnchorOf/matingUnits/anchoredUnits/sexOf/
   ## realIds/hasOwnDirectChild), never on tier1X or unitX, so this move is
-  ## a pure relocation with no behavior change. Still used, unchanged, by
-  ## Tier 3's derivedX()/b1AnchorRelativeX() below.
+  ## a pure relocation with no behavior change. Its original Tier-3 caller
+  ## (the b1AnchorRelativeX() qualifying branch) was later deleted by
+  ## Decision 1's order-consistent seeding (see the Tier 3 comment below),
+  ## leaving that conditional-shift pass as qualifies()'s only caller.
   qualifies <- function(unitId) {
     p <- anchorOf[[unitId]]
     m <- nonAnchorOf[[unitId]]
@@ -1003,8 +1007,9 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## conditional-shift correction pass below -- that pass can move a real
   ## Tier 1 individual (a shifted child's whole subtree) into an exact tie
   ## with an unrelated, unshifted Tier 1 individual at the same gen, a
-  ## collision class .deCollideIndividualPoints() (Tier 3, B1-only) never
-  ## sees. Reusing this SAME existing mechanism -- not a new one -- is
+  ## collision class the old Tier-3 B1-only de-collision pass (deleted by
+  ## the QP migration -- see the Phase 2 note below Tier 3) never
+  ## saw. Reusing this SAME existing mechanism -- not a new one -- is
   ## exactly the plan doc's own "route corrected targets through the
   ## existing collision-avoidance machinery, never around it" requirement,
   ## generalized from the B1 case it names to this Tier 1 case (found live
@@ -1029,8 +1034,9 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
   ## ---- S666: conditional-shift rule (Option 3, chain-case) --------------
   ## docs/planning/pedigree-diagram-parent-symmetric-placement-plan.md's
   ## "CHAIN RULE -- RESOLVED (Session 665)" section. Runs on tier1X BEFORE
-  ## Tier 2 derives any union's x, so Tier 2 (below, unchanged) and Tier 3/
-  ## collision-avoidance (further below, also unchanged) mechanically
+  ## Tier 2 derives any union's x, so Tier 2 (below), the Tier-3/Decision-1
+  ## provisional seeding, and the final joint .solveJointQP() solve
+  ## (further below) mechanically
   ## inherit the corrected values -- this is the only edit site the rule
   ## needs. Processes every qualifying unit with >=1 real child exactly
   ## once, in ascending order of the ANCHOR's own gen (a chain parent is
@@ -1151,49 +1157,11 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
     b1UnitOf[[fp]] <- setdiff(ownUnits, dupUnits)[1L]
   }
 
-  ## S647: shared de-collision pass for Tier-3 individual-representing
-  ## points (both B1 free-pass members and B3 duplicates render as a
-  ## full-sized circle standing in for a real individual). An exact tie
-  ## against a REAL INDIVIDUAL -- either a genuine Tier-1 node, or another
-  ## already-placed individual-shaped point -- is pushed a full minSep
-  ## away (the same minimum-separation guarantee Tier 1's own
-  ## sweepMinSep() backstop already gives real individuals elsewhere, not
-  ## a new constant); an exact tie against a union DOT keeps the
-  ## pre-existing tiny tie-breaking epsilon (2.3's own weaker guarantee
-  ## for those). 'seedIndividuals' lets the later B3 call also avoid B1's
-  ## already-finalized points. 'pushSign' (default +1, matching B3's own
-  ## always-rightward +minSep*0.4 offset from the union) lets a B1 caller
-  ## push in the SAME direction its own b1AnchorRelativeX() sign already
-  ## chose -- found live (S647): pushing unconditionally rightward could
-  ## cross a female-anchor/male-mate point (sign = -1, meant to render
-  ## LEFT of the anchor, issue #145) over to the anchor's RIGHT side
-  ## instead, or even land it exactly back on the anchor itself.
-  ##
-  ## Bidirectional nearest-free-slot search (S647, second refinement):
-  ## always pushing further in ONE fixed direction, found live on the real
-  ## 375-individual fixture, can chain through an entire dense row of
-  ## founders (up to 173 at gen 0, already documented elsewhere in this
-  ## codebase) -- one pairing needed 23 consecutive same-direction pushes
-  ## (drift 11.5 raw units, ~14x the intended 1-unit gap) before this
-  ## refinement. Instead, search outward in BOTH directions at once (1
-  ## minSep, 2 minSep, ...), preferring pushSign's own direction only when
-  ## both are equally far -- this can only ever match or beat a
-  ## same-direction-only search's distance, never do worse, and on the
-  ## same fixture drops the worst-case drift from 11.5 to 5.5 raw units
-  ## (measured directly, not guessed) -- this real colony pedigree's
-  ## founder row is dense enough on BOTH sides in a few places that even
-  ## a bidirectional search cannot always reach the intended ~1-unit gap;
-  ## disclosed in test_positionMatingUnitForest.R's own Obligation 2
-  ## measurement, matching this project's established "general crowding
-  ## accepted as partial, not absolute" posture (test_
-  ## resolveEdgeNodeCollisions.R) rather than pursued further here. A
-  ## short residual repeat (the pre-existing small-epsilon pattern) still
-  ## catches any leftover union-dot tie the search itself
-  ## does not consider.
   ## ---- Migration Path Phase 2 (docs/planning/pedigree-diagram-joint-qp-
   ## solver-plan.md, "Cutover on small fixtures only"): the five collision-
-  ## avoidance passes formerly here (.deCollideIndividualPoints() for B1/B3
-  ## exact ties; the B1-vs-unrelated-individual proximity pass, S661/S662;
+  ## avoidance passes formerly here (the shared B1/B3 exact-tie
+  ## de-collision pass with its bidirectional nearest-free-slot search,
+  ## S647; the B1-vs-unrelated-individual proximity pass, S661/S662;
   ## the Track 7 Phase 2 union sweep, S648/S649; the duplicate de-collision
   ## + Track 7 Phase 4 union-vs-duplicate push, S654/S658) are REPLACED by
   ## one joint .solveJointQP() call below (Decision 1/2 of the plan doc) --
@@ -1624,9 +1592,15 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' parent mating unit (mate-count exactly 1 each, unambiguous
 #' \code{"M"}/\code{"F"} sex codes, neither parent with a D5 direct child
 #' of their own) renders with the male parent to the left of the female
-#' parent -- is now unconditional, folded directly into the Walker/BJL
-#' positioning engine's own Tier 3 formula (\code{.positionMatingUnitForest()},
-#' an internal function, S8.1). The former \code{orderBySex}
+#' parent -- is now unconditional, folded directly into the positioning
+#' engine's own provisional-seeding rules
+#' (\code{.positionMatingUnitForest()}, an internal function -- the S666
+#' conditional-shift pass's sex-sign rule and Decision 1's
+#' order-consistent seeding side rule); since the QP migration
+#' (\code{docs/planning/pedigree-diagram-joint-qp-solver-plan.md}) the
+#' final x for every node comes from \code{.solveJointQP()}, which
+#' preserves each row's provisional left-to-right order, so the rule
+#' survives into the rendered layout. The former \code{orderBySex}
 #' parameter that toggled this is removed: the Phase 1b design note found
 #' the mechanism "restructured, not preserved unchanged -- eliminated
 #' as a separate pass," with no way to disable it in the new engine, and

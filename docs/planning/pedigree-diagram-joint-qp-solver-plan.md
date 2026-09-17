@@ -445,6 +445,29 @@ implementation, per `CLAUDE.md`'s close-out checklist) closed.
 R/` returns nothing; full clean regression + lint, same bar as Phase 3.
 **Session boundary:** close out here.
 
+**Phase 4 record (Session 697, 2026-09-17):** DONE — this closes the migration path. Most of this
+phase's nominal scope had already landed at earlier boundaries: the five passes, their `.kMax*`
+constants, and every dead call site were deleted at the Phase 2 cutover itself (S674 — the
+project's own 0-lint close-out gate forced removing dead code then rather than deferring to this
+phase), and the plain-language `NEWS.Rmd` entry landed with Phase 3 (S675). The remaining scope was
+the doc-comment sweep: 7 stale sites, all in `R/makePedigreeDiagramData.R`, updated to describe the
+QP engine — the S667 component comment's "every collision-avoidance mechanism run unchanged per
+family" and its named de-collision-pass reference; the `qualifies()` relocation comment's claim
+that the deleted `b1AnchorRelativeX()` branch still called it; the second-`sweepMinSepBackstop()`
+rationale's named reference to the deleted pass; the S666 chain-rule comment's "Tier 3/
+collision-avoidance (also unchanged)" framing; the orphaned 39-line S647 block that described the
+deleted shared de-collision pass in present tense (removed; its identity folded into the Phase 2
+replacement comment, which no longer names the deleted symbol); and `makePedigreeMatingLayout()`'s
+exported roxygen, which attributed the issue-#145 male-left rule to the deleted "Tier 3 formula
+(S8.1)" and now describes the seeding rules + QP order preservation actually enforcing it
+(`man/makePedigreeMatingLayout.Rd` regenerated). Explicitly historical enumerations (the Phase 2
+replacement comment's pass list, the pre-S652 Track 7 Phase 1 note) keep their past-tense
+vocabulary — the verification grep gates the three symbol names, which now return nothing in `R/`.
+Verification actually run: the grep above returns nothing; `lintr` 0 findings on the touched file
+(package loaded); full clean regression (see the S697 session records). No GitHub issue was ever
+filed for the implementation, so no issue close applies; the `BACKLOG.md` Up Next item is removed
+per the completed-item convention in the same close-out.
+
 ---
 
 ## Impact Analysis
