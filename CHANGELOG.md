@@ -22,6 +22,14 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-18.md` (19 record(s), 87,984 B → 4,771 B)
+
+**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
+Moved the oldest **19** record(s) (2026-08-14 → 2026-09-18) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-18.md`](docs/archive/SESSION_NOTES-through-2026-09-18.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-18.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-18.md.verify.sh)
+rather than trusting a digest printed here. Live file 87,984 B → 4,771 B (−94.6%).
+
 ### 2026-09-18 · [ad hoc] S710 claim: ledger archive pass — trim SESSION_NOTES.md, HANDOFFS.md, and CHANGELOG.md
 - Session claimed (stub + pending HANDOFFS receipt + this entry, one commit). S709
   next-step A, owner-picked via `AskUserQuestion` at Phase 0: all three ledger byte
