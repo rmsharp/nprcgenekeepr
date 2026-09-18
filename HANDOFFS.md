@@ -146,11 +146,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S714
 date: 2026-09-18
-status: pending
-active_task: Census curved-chord arc-modelling measurement pass (BACKLOG Housekeeping item, owner-picked via AskUserQuestion at Phase 0) — model drawn arc geometry, count true pass-inside-symbol defects vs the 1,668-chord upper bound, reproducible via data-raw/; recommend fix item or not
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Census curved-chord arc-modelling measurement pass — DONE, owner-ratified; follow-up fix item filed (arc-verified roundness selection, READY, M). No open work from this session beyond that item.
+what_was_done: Modelled the arc vis-network actually paints (curvedCW quadratic Bezier; via formula transcribed from the bundled vis-network.min.js and verified against the LIVE widget to 1.1e-13 px over all 173 curved edges). Result — the 1,668-row chord heuristic was 100 percent false positives AND blind to every true hit; the true population is 587 arc-inside-symbol events on 117 of 170 Real-375 connectors (Track C arc-clean): 485 events on cross-row connectors nothing ever checked, 102 from bumped arcs crossing upper rows; the +0.3 roundness bump is net-negative on Real 375 (21 arcs hit at 0.2, 24 at 0.5). Census script extended with the exact c-arc-inside predicate (chord subclass retired, lint 0), re-run committed as the 2026-09-18 CSV (595 rows; class b = 6 at its first post-S713 re-run); article "8 of 237" updated to 6 of 237 per the S713 forward-carry; audit doc written. Incidental discovery: vis-network parseInt-truncates predefined node coordinates (Learning 763). Commits: backfill 9a096ed6, claim 88f563de, deliverable 318c32da, records commit after this receipt.
+next_steps: (A) Curved-connector fix item (READY, M, strict TDD) — the new BACKLOG block carries the full brief (R/makePedigreeDiagramData.R curved branch, roundnessBump; port curvedCwVia()/bezierMinDistTo()/arcDiscHits() from the census script; re-derive test_resolveEdgeNodeCollisions.R pins 170/56/0.5; constraints S577 arc convention + S675 no-weight-tuning). (B) MHC polish (Housekeeping, S). (C) Push decision (owner) — 12 commits ahead at close-out, recount first. (D) Owner decisions pending: package-split, pointer-block sweep, REUSE registration.
+key_files: docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md:1 (audit report), data-raw/pedigreeDrawingErrorCensus.R:441 (arc predicate), docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_findings.csv:1 (new baseline), vignettes/articles/kinship2-fidelity-validation.qmd:164 (6-of-237 site), BACKLOG.md:109 (the fix item), tests/testthat/test_resolveEdgeNodeCollisions.R:394 (56L pin), scratchpad/s714_probe.R:1 (evidence)
+gotchas: Baseline still 2,434 blocks failed=0 error=0 (no package files touched). cArc/cArcEdges (587/117) is a NEW metric — never compare against the frozen 1,668 as same-metric. 2026-09-02 census artifacts stay frozen; 2026-09-18 CSV is the standing baseline. Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0. The article's "6 of 237" re-obligates only on a class-(b) change, not on cArc changes. vis-network renders node coords parseInt-truncated (whole px) — pixel-exact reasoning must expect that.
+runtime_smoke: n/a — measurement/docs session; no package runtime behavior changed (data-raw script + audit doc + article prose). The live-widget chromote verification doubled as a rendered-app check of the arc geometry itself.
+changelog_ref: S714 entries at the top of CHANGELOG.md (claim + close-out, 2026-09-18)
 commit: pending
 ```
+S714 self-score 9/10: continuity-first (frozen 1,668 reproduced to the row before any new claim), live-renderer verification of the model plus border-trim/quantization/jitter sensitivities before quoting counts, exact overlap join for the inversion finding, recommendation anchored to the measured net-negative bump; weaknesses — crops do not pixel-isolate a single offending arc (programmatic geometry, disclosed), and the audit doc briefly claimed the article edit before it landed (in-session ordering slip, corrected). Predecessor (S713) scored 9/10: exact deliverable pointer, forward-carry spelled out, frozen-CSV framing precise; stale "47 residuals" figure in the BACKLOG item and no vis-network.min.js breadcrumb were the only gaps.
+
+```handoff
+session: S713
+date: 2026-09-18
+status: complete
+self_score: 9
 
 ```handoff
 session: S713

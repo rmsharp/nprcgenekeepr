@@ -26,19 +26,143 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 713 Handoff Evaluation (by Session 714)
+**Score: 9/10.** **What helped:** next-step A was this session's exact deliverable
+with the item pointer (`BACKLOG.md:109`) and the forward-carry spelled out (article
+"8 of 237" sites + Track B centering — both discharged exactly as written when the
+re-run landed and reported 6); gotcha 4 predicted the 1-commit backfill shape and
+it measured exactly 1 (`35a33905`); gotcha 2 ("census CSV frozen, do NOT fix it;
+the 6-row count exists only in a future re-run, which owes the article update")
+framed this session's obligations precisely; the S712 key-file chain
+(`s712_layouts.rds` + `s712_crop.R`) carried through S713's handoff was reused
+directly for the live-widget verification and both site crops, zero failed render
+iterations; gotcha 3 (cache valid unless an engine commit lands — none had) saved
+a recompute decision. **What was missing:** the BACKLOG item's "47
+curved-heuristic residuals" figure was stale (live count 56 + 1, pinned at 56L by
+`test_resolveEdgeNodeCollisions.R:394` since S690 — S712's own handoff even quoted
+"1 on Track C, 56 on Real 375"); cost one test-file read to reconcile. No pointer
+to the bundled `vis-network.min.js` as the arc-geometry ground truth — the S577
+doc-comment in `R/makePedigreeDiagramData.R` was the needed breadcrumb, found by
+grep; low cost. **What was wrong:** nothing found; every checked claim held
+(frozen 1,667+1 reproduced to the row; b=6 at the re-run as predicted). **ROI:**
+high — orientation to owner pick in one pass.
+
 ### What Session 714 Did
-**Deliverable:** Census curved-chord arc-modelling measurement pass (IN PROGRESS)
-— model the actually-drawn arc geometry and count how many drawn duplicate-connector
-arcs truly pass inside a visible unrelated symbol, replacing the census's
-1,668-chord upper bound (class `c` / subclass `c-curved-chord`), reproducibly via
-`data-raw/`; recommend whether a fix item is warranted. Carries the S713
-forward-carry if a census re-run lands (article "8 of 237" sites + Track B
-centering re-verify).
-**Started:** 2026-09-18
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** Census curved-chord arc-modelling measurement pass — **DONE,
+owner-ratified follow-up fix item filed** (S713 next-step A / BACKLOG curved-chord
+item, owner-picked via `AskUserQuestion` at Phase 0; measurement/audit session —
+`data-raw/` census extension + audit doc + mandated article update; no package
+code, no TDD phases).
+**Started/completed:** 2026-09-18 (single session). Phase 0 backfill `9a096ed6`;
+claim `88f563de`; deliverable `318c32da`; records commit follows this handoff.
+**Ledger:** claim + close-out entries in `CHANGELOG.md`; curved-chord BACKLOG
+block replaced in the records commit by the ratified fix item (the FM #28
+reduction is the block swap; all three ledgers are far under budget, nothing else
+to trim).
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile backfilled 1 commit (`35a33905`, S713's self-reconcile —
+   the predicted recurring shape, measured 1). CI 4/4 green + scheduled shinytest2
+   green (origin head unchanged; local now 12 ahead incl. this session). Dashboard
+   96/100, no HIGH flags. Owner picked curved-chord from the 4-option picker.
+2. **Ground truth:** transcribed the arc geometry from the bundled
+   `vis-network.min.js` (`_getViaCoordinates()` curvedCW branch; `_bezierCurve()`
+   = single-via quadraticCurveTo), then verified the transcription against the
+   LIVE widget via chromote (`edgeType.getViaNode()` + `options.smooth.*` per
+   edge): max |via(model) − via(live)| = 1.1e-13 px over all 173 curved edges;
+   per-edge roundness overrides (0.2 / bumped 0.5) confirmed applied
+   (`scratchpad/s714_verify_via.R`).
+3. **Probe (`scratchpad/s714_probe.R`):** chord predicate reproduced the frozen
+   census to the row (1,667 Real + 1 Track C) before any new claim; exact
+   point-to-quadratic min distance (cubic root solve); overlap join: **0 of 1,667
+   chord pairs are true hits, and all 587 true hits (117 of 170 arcs, Real 375
+   only) are outside the chord test's sight** (485 events on cross-row connectors
+   nothing ever checked; 102 from bumped arcs crossing upper rows). Bump audit:
+   21 arcs hit at 0.2, 24 at the shipped 0.5 — the blind +0.3 bump is
+   net-negative on Real 375. Sensitivities: border-trimmed endpoints change
+   nothing; parseInt quantization 587→586; ±1-px jitter 588–596 events with the
+   arc count 117 in all 10 draws. Incidental discovery: vis-network parseInt
+   -truncates predefined node coordinates (whole-px; the 1-px "drift" anomaly
+   chased to root cause; Learning 763).
+4. **Census extended** (`data-raw/pedigreeDrawingErrorCensus.R`): `c-arc-inside`
+   predicate (exact via + cubic solve) replaces the retired chord heuristic;
+   scoreboard `cArc`/`cArcEdges`; new CSV
+   `docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_findings.csv` (595 rows);
+   frozen 2026-09-02 artifacts untouched. lint 0; re-run after lint fixes
+   byte-identical. **Class (b) = 6 at its first post-S713 re-run** (forward-carry
+   trigger), units = 237.
+5. **Coupled prose discharged:** article mate-line paragraph now cites 6 of 237
+   (`vignettes/articles/kinship2-fidelity-validation.qmd`); caveats bullet is
+   count-free, verified accurate as written; Track B centering re-verified (b=0
+   both Track B fixtures at re-run; S713 live measurement stands).
+6. **Audit doc:** `docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md`
+   (method, verification evidence, findings, scoreboard vs frozen baseline,
+   recommendation). Crops of the two deepest sites
+   (`scratchpad/s714_crop_site{1,2}_*.png`, Learning 732 recipe).
+7. **Owner gate:** recommendation ratified (option 1) — new BACKLOG fix item
+   filed: arc-verified roundness selection replacing the blind bump (READY, M,
+   strict TDD); curved-chord measurement block removed in the same records
+   commit. Corpus sweep for stale counts: test comments' "47" are frozen
+   CHANGED-history (live pin is 56L — correct); no other live site.
+8. **Close-out:** Learning 763 appended; this evaluation + handoff; receipt;
+   ledger entries.
+
+**Self-assessment (Session 714): 9/10.** **Strengths:** (1) continuity before new
+claims — the frozen 1,668 reproduced exactly first; (2) the model was verified
+against the live renderer, not just a source read — and the 1-px anomaly it
+surfaced was chased to a real root cause (parseInt) instead of waved off; (3) the
+inversion finding (100% false-positive AND blind to every true hit) is an exact
+overlap join, not an impression; (4) sensitivity analyses (border trim,
+quantization, jitter) ran before any count was quoted; (5) the recommendation is
+anchored to a measured net-negative effect of the existing heuristic, and the fix
+item carries the full brief including which test pins must be re-derived.
+**Weaknesses:** (1) the crops show chord clutter at neighbourhood zoom but do not
+pixel-isolate a single offending arc (geometry established programmatically,
+matching the S712/S713 disclosure pattern); (2) the audit doc briefly claimed the
+article update before that edit landed — an in-session ordering slip, corrected
+within minutes, but drafting prose ahead of the fact is exactly how stale claims
+are born.
+
+**Next steps (specific):** (A) Curved-connector fix item (READY, M, strict TDD):
+arc-verified roundness selection — the new BACKLOG block carries the full brief
+(mechanism, code pointers `R/makePedigreeDiagramData.R` curved branch /
+`roundnessBump`, the census predicate functions to port, which
+`test_resolveEdgeNodeCollisions.R` pins re-derive, constraints S577/S675).
+(B) MHC polish (Housekeeping, S). (C) Push decision (owner): now 12 commits ahead
+of origin (S712 4 + S713 5 + this session's 3 by close-out; recount with
+`git rev-list --count origin/master..HEAD`) — package delta since last green CI
+head is data-raw + docs + one article page; the pkgdown article render is CI's to
+validate. (D) Owner decisions pending: package-split disposition, pointer-block
+sweep ratification, REUSE registration. (E) Informational: dashboard copy stale
+(v2.14.0 vs v2.18.0); untracked leftovers unchanged (+ this session's s714_*
+scratchpad files, same class); LabKey remainder BLOCKED.
+
+**Key files:** `docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md` (the
+audit report), `data-raw/pedigreeDrawingErrorCensus.R:441` (arc predicate,
+`curvedCwVia()` onward), `docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_findings.csv`
+(595-row re-run), `vignettes/articles/kinship2-fidelity-validation.qmd:164` (6 of
+237 site), `BACKLOG.md:109` (the new fix item), `scratchpad/s714_probe.R` /
+`s714_verify_via.R` / `s714_sensitivity.R` / `s714_probe_results.rds` /
+`s714_census_rerun_output.md` / `s714_crop_site*.png` (evidence),
+`tests/testthat/test_resolveEdgeNodeCollisions.R:394` (the 56L residual pin the
+fix item will re-derive).
+
+**Gotchas for the next session:** (1) **The fresh baseline is still 2,434 blocks**
+(failed=0, error=0, skipped=184, warning=48) — this session touched no package
+files (data-raw + docs + article prose only); S709's gotchas still apply (read
+them in `docs/archive/SESSION_NOTES-through-2026-09-18.md`). (2) The census's
+class-(c) curved measurement is now `cArc`/`cArcEdges` (587/117 on Real 375) —
+the old `c-curved-chord` subclass no longer exists in the script; do not compare
+new `cArc` numbers against the frozen 1,668 as if same-metric (the audit doc
+holds the mapping). (3) The 2026-09-02 CSV/doc stay frozen; the 2026-09-18 CSV is
+the new standing baseline. (4) Expect ~1 self-reference commit past the CHANGELOG
+frontier at next Phase 0 (the recurring shape); measure it. (5) The article now
+cites "6 of 237" tied to the 2026-09-18 re-run — the NEXT census re-run after the
+curved-connector fix will change `cArc` but NOT class (b) (unless the engine
+moves nodes); only class-(b) changes re-obligate that sentence. (6) vis-network
+parseInt-truncates node coordinates at render (Learning 763d) — any future
+pixel-exact reasoning about rendered positions must expect whole-px symbol
+centers.
 
 ### Session 712 Handoff Evaluation (by Session 713)
 **Score: 9/10.** **What helped:** next-step A was this session's exact deliverable

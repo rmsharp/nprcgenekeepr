@@ -106,26 +106,33 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       still says "no Shiny screen yet" though the tab now ships (the #152
       `computeGenomicROH()` entry has the same stale phrase); re-render `NEWS.md` in the
       same commit, plain-language criterion.
-- [ ] **Census curved-chord heuristic: arc-modelling measurement pass (1,668 findings, upper
-      bound)** (found S668 census, re-confirmed on the S696 baseline; itemized S699 at the
-      owner's directive sign-off; READY, Effort M — a measurement/scoping session, not a fix
-      session) — the census flags a curved duplicate-connector when the straight **chord**
-      between its endpoints passes inside a visible unrelated symbol (1,667 Real-375 rows +
-      1 Track C row, class `c`, subclass `c-curved-chord`); the census doc itself discloses
-      "heuristic, arc not modelled," so this is an upper bound, not a count of confirmed
-      visible defects. Deliverable: model the actually-drawn arc geometry (the render layer's
-      curved connectors + the roundness bump applied to duplicate connectors — the pipeline's
-      own 47 `curved-heuristic` residuals are the related disclosed set) and count how many
-      drawn arcs truly pass inside a symbol, extending
-      `data-raw/pedigreeDrawingErrorCensus.R` (or a committed sibling script) so the number
-      is reproducible; then recommend whether a fix item is warranted, with the real count
-      replacing the 1,668 chord upper bound in any future report. **Forward-carry from the
-      S713 class-(b) close:** any census re-run after S713 will report 6 (not 8) class-(b)
-      rows — S713 ratified the test suite's 1e-3 raw-unit (0.12 px) solver-dust floor into
-      the class-(b) predicate — so the same pass must update the fidelity article's
-      "8 of 237" citation sites (`vignettes/articles/kinship2-fidelity-validation.qmd`,
-      mate-line paragraph + caveats bullet) to the re-run's own count, and re-verify the
-      0.00-px Track B centering claim there (S713 re-measured it: max residual 1.9e-11 px).
+- [ ] **Curved duplicate-connectors: replace the blind +0.3 roundness bump with arc-verified
+      roundness selection** (found S714 arc census, owner-ratified same session via
+      `AskUserQuestion`; READY, Effort M — package-code fix, strict TDD). The S714 arc census
+      (`docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md`) modelled the arc
+      vis-network actually paints (quadratic Bézier; `curvedCW` via formula verified against
+      the bundled `vis-network.min.js` AND the live widget to 1.1e-13 px over all 173 curved
+      edges) and measured the true class-(c) curved population: **587 arc-inside-symbol
+      events on 117 of 170 Real-375 connectors** (Track C arc-clean; the old 1,668-row chord
+      heuristic was 100% false positives while blind to every true hit — 485 events on
+      cross-row connectors it never checked, 102 from bumped arcs swinging into upper rows).
+      **The current repair heuristic is net-negative on Real 375:** of the 56 arcs
+      `.resolveEdgeNodeCollisions()` bumps 0.2 → 0.5 (`R/makePedigreeDiagramData.R`, curved
+      branch, `roundnessBump <- 0.3`), 21 would hit ≥1 symbol at 0.2 but 24 hit at the
+      shipped 0.5. Fix shape (recommended, ratified): per colliding connector, try a small
+      roundness ladder (e.g. 0.05–0.6), score TRUE arc-disc hits with the census's own exact
+      predicate (`curvedCwVia()`/`bezierMinDistTo()`/`arcDiscHits()` in
+      `data-raw/pedigreeDrawingErrorCensus.R` — port into the engine as internal helpers),
+      keep the best, and keep the `curved-heuristic` residual disclosure for arcs no step
+      clears. Constraints: the kinship2 arc convention stays (no rectilinear rerouting of
+      curved connectors, S577), no QP/weight changes (S675 mandate). Verification: census
+      re-run's `cArc`/`cArcEdges` should drop materially from 587/117;
+      `test_resolveEdgeNodeCollisions.R`'s pinned 170/56/0.5 values will need re-derivation
+      to the new mechanism (the pins are deliberate live-measured values, per that file's
+      own CHANGED-comment convention); full suite + lint. Note: the render layer truncates
+      node coordinates to whole px (vis-network `parseInt`, measured S714) — counts are
+      stable under that quantization (117 arcs in every ±1-px sensitivity draw), so the
+      engine-side scoring can stay on layout coordinates.
 - [ ] **Sweep the `[ ]`-marked-but-fully-RESOLVED pointer blocks per the completed-item
       convention** (found S687, 2026-09-14, while executing the 28-block `[x]` backfill;
       DECISION NEEDED -- the S686 ratification covered the `[x]` population; confirm the

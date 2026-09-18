@@ -26,6 +26,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL] S714 close-out: curved-chord upper bound REPLACED by the true arc census — 1,668 chord rows were 100% false positives; real population 587 events / 117 arcs; fix item ratified and filed
+- **Deliverable (`318c32da`; curved-chord BACKLOG block replaced by the ratified
+  fix item in this commit):** the census now measures the arc vis-network
+  actually paints. The `curvedCW` via formula was transcribed from the bundled
+  `vis-network.min.js` and verified against the LIVE widget via chromote
+  (`edgeType.getViaNode()`): max |via(model) − via(live)| = 1.1e-13 px over all
+  173 curved edges, per-edge roundness overrides (0.2 / bumped 0.5) confirmed
+  applied. Exact point-to-quadratic distances (cubic root solve), no sampling.
+- **Findings (audit doc `docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_
+  2026-09-18.md`):** (1) overlap join: 0 of the frozen 1,667+1 chord pairs are
+  true hits — the arc bows over every same-row chord obstacle; (2) the true
+  population, 587 events on 117 of 170 Real-375 connectors (Track C arc-clean),
+  sits entirely where no predicate ever looked: 485 events on cross-row
+  connectors (`c1` was same-row-only, `c2` skipped curved), 102 from bumped arcs
+  crossing upper rows; median penetration 10.9 px of a 25-px radius; (3) the
+  repair pass's blind +0.3 roundness bump is net-negative on Real 375 (21 arcs
+  hit at 0.2 → 24 at the shipped 0.5); (4) incidental: vis-network
+  parseInt-truncates predefined node coordinates — counts stable under that
+  quantization (587→586 events, 117 arcs in every ±1-px jitter draw)
+  (Learning 763). Census script extended (`c-arc-inside`, scoreboard
+  `cArc`/`cArcEdges`, chord subclass retired, lint 0, post-lint re-run
+  byte-identical); new baseline CSV
+  `docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_findings.csv` (595
+  rows); frozen 2026-09-02 artifacts untouched.
+- **S713 forward-carry discharged:** the re-run reports class (b) = 6 (first
+  post-S713 confirmation of the ratified dust floor); the fidelity article's
+  mate-line paragraph now cites 6 of 237 (`vignettes/articles/
+  kinship2-fidelity-validation.qmd`), the caveats bullet verified count-free,
+  Track B centering re-verified (b = 0 on both Track B fixtures).
+- **Owner gate (recommended option taken):** fix item filed — arc-verified
+  roundness selection replacing the blind bump (BACKLOG, READY, Effort M,
+  strict TDD; full brief in the block, incl. which
+  `test_resolveEdgeNodeCollisions.R` pins re-derive). Corpus sweep: the test
+  comments' "47" figures are frozen CHANGED-history (live pin 56L, correct);
+  the only stale live "47" was in the removed BACKLOG block.
+
 ### 2026-09-18 · [BL] S714 claim: census curved-chord arc-modelling measurement pass
 - BACKLOG Housekeeping "Census curved-chord heuristic" item (S713 next-step A),
   owner-picked via `AskUserQuestion` at Phase 0. Deliverable: model the
