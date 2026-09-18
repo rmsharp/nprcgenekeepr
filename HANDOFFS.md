@@ -140,6 +140,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-17.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S709
+date: 2026-09-18
+status: pending
+active_task: Fix the LD-block and Genomic ROH export-preview session-disconnect crash (top BACKLOG Up Next item, found S708; strict-TDD bug-fix session): port the MHC tab's mhcExportMissingIds pre-check to the ldBlockExportPreview and sequenceExportPreview observers, and fold in the MHC malformed-upload residual.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S708
 date: 2026-09-18
 status: complete

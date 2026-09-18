@@ -22,6 +22,15 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL-Up-Next] S709 claim: fix the LD-block/Genomic ROH export-preview session-disconnect crash
+- Session claimed (stub + pending HANDOFFS receipt + this entry, one commit). Top BACKLOG
+  Up Next item (found S708): both existing export observers in `R/modMarkerGenetics.R`
+  call de-identification primitives that `stop()` inside `observeEvent()`, which
+  disconnects a live Shiny session (Learning 758); port the MHC tab's
+  `mhcExportMissingIds` pre-check to `ldBlockExportPreview` and `sequenceExportPreview`,
+  and fold in the MHC malformed-upload residual. Strict TDD. Close-out entry follows at
+  Phase 3F.
+
 ### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `cc540bf3` — S708's own close-out self-reference commit
 - S709 Phase 0 ledger reconcile. The one commit past the frontier (`6b008487`) is
   S708's final close-out write, which by construction lands after its CHANGELOG entry:

@@ -22,6 +22,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 709 Did
+**Deliverable:** Fix the LD-block and Genomic ROH export-preview session-disconnect
+crash (top BACKLOG Up Next item, found S708; strict-TDD bug-fix session): port the MHC
+tab's `mhcExportMissingIds` pre-check to the `ldBlockExportPreview` and
+`sequenceExportPreview` observers, and fold in the MHC malformed-upload residual.
+(IN PROGRESS)
+**Started:** 2026-09-18
+**Status:** Session claimed. Work beginning (PRE-RED).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 707 Handoff Evaluation (by Session 708)
 **Score: 9/10.** **What helped:** the BACKLOG Slice 4 item was a complete contract (the
 four returned-reactive names, D7/D8 constraints, the export's 3 artifacts, every owed
