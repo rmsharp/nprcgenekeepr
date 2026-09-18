@@ -22,6 +22,62 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [issue #148] S708 closed issue #148 on GitHub (all 4 slices shipped)
+- `gh issue close 148 --reason completed` with a comment listing the four slices' commits
+  and S708's verification evidence (closed 2026-09-18T05:23:31Z,
+  https://github.com/rmsharp/nprcgenekeepr/issues/148). Non-commit action, per the issue
+  close-out checklist (close in the same session the last BACKLOG item ships).
+
+### 2026-09-18 · [issue #148] S708 close-out: Slice 4 DONE — the "MHC Haplotype Reporting" tab, confirm-gate export, docs; issue #148 complete
+- **Deliverable (RED `13514854`, GREEN `91a0c1e0`, wording `3ebba670`, docs `cddb7eae`,
+  CI group `b7a55729`):** the ratified plan's last slice. An 8th `modMarkerGenetics` tab
+  with its own `mhcHaplotypeFile` upload (D2/D8), two visible rarity-threshold inputs
+  (D4, defaults 0.01 / 2), a persistent descriptive-only caveat (D7), a
+  counts/denominator line, a pedigree-coverage line, summary + rare-carrier DT tables (D5),
+  and a confirm-gated export of summary, carrier list aliased through
+  `obfuscateMhcHaplotypes()`, and the new internal `.buildMhcExportManifest()` (D6; the
+  summary is gated too, Dragon 4). Four new returned reactives; the server `@return` now
+  documents all 23 (was a stale "fourteen", with the 5 #152 sequence-export reactives
+  undocumented). Existing 7 tabs / 4 uploads / 19 reactives untouched (D8). TDD gates
+  owner-approved via `AskUserQuestion` (PRE-RED→RED, RED→GREEN, and GREEN→skip-REFACTOR —
+  the last asked late, at close-out, after the session caught its own slip; nothing
+  shipped ungated). Three PRE-RED approach decisions owner-picked:
+  (1) Dragon 5 — Generate Preview pre-checks that every MHC-file animal is in the loaded
+  pedigree and, if not, builds nothing and says why (an uncaught `stop()` inside the
+  observer would disconnect the session — verified live on a minimal app, Learning 758);
+  (2) the carrier table lists rare haplotypes only; (3) a doc-coverage test pins that
+  every returned reactive appears in the man page's Value section.
+- **Verification:** fresh baseline before any test file (2,405 blocks, failed=0, error=0,
+  skipped=182, warning=42 — S707's numbers exactly). RED honest: all 22 new blocks fail;
+  one spurious pass caught and tightened (a "descriptive" caveat check matched the LD-block
+  caveat — Learning 492's trap); the only other passing expectations in new blocks are 14
+  D8 existing-state guards. GREEN: target files green first run (78 blocks); live E2E in
+  headless Chrome against the running app with the bundled pedigree + MHC file — 20
+  assertions, upload through all 3 de-identified downloads, zero console errors (the
+  Phase 3E runtime smoke). Full suite ONCE on final source: 2,427 blocks = baseline + the
+  22 new, skipped 183 (+1, the opt-in E2E), warnings unchanged, failed=1 — the
+  `test_shinytest2_workflow_coverage.R` guard correctly flagging the new E2E file as in no
+  CI group; registered in `shinytest2.yaml` (`b7a55729`) and all 3 tests that read that
+  workflow re-run green. `devtools::check()`: 0 errors; 1 WARNING (non-portable name
+  `inst/extdata/reference/~$e Compounding Loop.html`) + 1 NOTE (top-level `scratchpad/`),
+  both from untracked local files present before this session — not in git, so CI's
+  fresh checkout never sees them. Lint clean; `devtools::document()` = 1 man page, NAMESPACE
+  unchanged; spell check clean (no WORDLIST additions); Dragon 3 vocabulary grep clean;
+  DESCRIPTION unchanged.
+- **Checklists (same session):** `NEWS.Rmd` plain-language entry + `NEWS.md` rendered;
+  tutorial/article — new section in `vignettes/articles/colony-manager-guide.qmd` with a
+  screenshot captured from the running app
+  (`vignettes/articles/shiny_app_use/marker_genetics_mhc_haplotype.png`); citation (issue
+  #120) — `population_genetics_terms.html` "MHC Haplotype and Rare-Haplotype Flag" entry
+  (Wiseman 2013, Kanthaswamy 2026, Hurley 2020, Allendorf 1986); `_pkgdown.yml` n/a (no new
+  export); `a2interactive.Rmd` deferred per its standing rule.
+- **Records:** BACKLOG.md — completed Slice 4 item removed (this entry is its record); new
+  Up Next item for the same observer-crash class in the LD-block and Genomic ROH export
+  previews (plus the MHC tab's malformed-upload residual); new Housekeeping polish item
+  (frequency display rounding, stale UI `@return`, stale "no Shiny screen yet" NEWS
+  phrases); batch narrative updated (#146-#153 all shipped and closed). New Learning 758
+  (`testServer` swallows observer errors; a live app disconnects).
+
 ### 2026-09-17 · [issue #148] S708 session claim: Slice 4 — MHC UI tab, confirm-gate export, documentation (IN PROGRESS)
 - Session claimed at Phase 1B (stub + pending `HANDOFFS.md` receipt + this entry, one
   commit — Learnings 752/754). Deliverable: the ratified plan's §4 last row / §5 Slice 4

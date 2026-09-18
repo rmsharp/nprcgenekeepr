@@ -22,13 +22,138 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 707 Handoff Evaluation (by Session 708)
+**Score: 9/10.** **What helped:** the BACKLOG Slice 4 item was a complete contract (the
+four returned-reactive names, D7/D8 constraints, the export's 3 artifacts, every owed
+checklist, the Phase 3E bar), so PRE-RED opened the plan only to confirm; gotcha 5
+(Dragon 5, the export-guidance precondition) is what led straight to the design question
+that became this session's main finding; gotchas 3 and 4 (a real Phase 3E, and repairing
+the stale "fourteen" `@return` inside Slice 4's own roxygen work) were exactly right;
+gotcha 1's baseline (2,405 blocks, failed=0, error=0, skipped=182, warning=42) reproduced
+exactly on a fresh measurement; key-file pointers (the module's 860 lines, the stale
+`@return`) were accurate. **What was missing:** that a new `test-e2e-*.R` file must be
+registered in `.github/workflows/shinytest2.yaml`'s group list, or
+`test_shinytest2_workflow_coverage.R` fails. The #152/#153 E2E precedent existed, but no
+handoff named it, and it cost one full-suite failure plus a fix commit. **What was wrong:**
+gotcha 2 predicted a 2-commit backfill, but it measured 1 (`4c32634e`), because S707's
+records commit `cacabe0f` staged the CHANGELOG together with SESSION_NOTES/HANDOFFS. It
+was labeled an expectation, so the cost was zero. **ROI:** high.
+
 ### What Session 708 Did
-**Deliverable:** Issue #148 Slice 4 — MHC haplotype UI tab (8th `modMarkerGenetics` tab),
-confirm-gate de-identified export (`.buildMhcExportManifest()`), documentation; the LAST
-#148 slice (IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning (strict TDD, PRE-RED).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Issue #148 **Slice 4 — DONE, and issue #148 CLOSED** (all 4 slices
+shipped). The 8th Marker Genetics tab, "MHC Haplotype Reporting", has its own upload,
+visible rarity thresholds, a persistent caveat, counts and pedigree-coverage lines,
+summary and rare-carrier tables, and a confirm-gated de-identified export of 3 files
+through the new internal `.buildMhcExportManifest()`. Docs shipped too. Strict TDD, with
+every gate owner-approved via `AskUserQuestion`: PRE-RED approach (3 decisions),
+PRE-RED→RED, RED→GREEN, and GREEN→skip-REFACTOR-and-close-out. That last gate was asked
+late, at close-out (see Self-assessment).
+**Started/completed:** 2026-09-17 → 2026-09-18 (single session). Phase 0 backfill
+`1b2569ef`; claim `fa449312`; RED `13514854`; GREEN `91a0c1e0`; wording `3ebba670`; docs
+`cddb7eae`; CI group `b7a55729`; records commit follows this handoff. Issue #148 closed
+2026-09-18T05:23:31Z (non-commit action, ledgered).
+**Ledger:** S708 close-out entry and issue-close entry at the top of `CHANGELOG.md`, plus
+the claim entry (`fa449312`) and the backfill entry (`1b2569ef`).
+
+**What actually happened, in order:**
+1. **Phase 0:** the reconcile backfilled 1 commit (`4c32634e`, S707's sha self-reconcile).
+   On CI, lint, test-coverage and pkgdown were green on `955f6f19`, and R-CMD-check was
+   still running. The dashboard showed 96/100 with no HIGH flags; the MEDIUM flags were
+   the HANDOFFS.md trigger (fired) and the old jspdf artifact. Owner picked Slice 4 from
+   the 4-option picker.
+2. **PRE-RED:** read the plan's §2.4/§3/§4/§5/§7, the whole 860-line module, the #152
+   E2E precedent and the contract test. Probes established three facts: `testServer`
+   can read `downloadHandler` outputs; `testServer` does NOT propagate observer errors;
+   and the bundled `obfuscated_rhesus_mhc_ped.csv` (375 animals) covers all 31 MHC ids.
+   Fresh baseline launched before any test file existed: 2,405 / 0 / 0 / 182 / 42.
+   Owner decided 3 approach questions: **(1)** pre-check missing pedigree ids at
+   Generate Preview and show the reason, rather than letting `obfuscateMhcHaplotypes()`
+   `stop()` inside the observer; **(2)** the carrier table shows rare haplotypes only;
+   **(3)** add a doc-coverage test for `@return`.
+3. **RED (`13514854`):** 17 new `testServer` blocks, 4 new contract names, a new
+   `test_buildMhcExportManifest.R` (4 blocks) and a new opt-in E2E file. One spurious
+   pass was caught and tightened: my "descriptive" caveat check matched the LD caveat.
+   Confirmed that every new block fails; the only passing expectations inside new blocks
+   are 14 D8 existing-state guards. The E2E fails at the missing tab.
+4. **GREEN (`91a0c1e0`):** implementation lives only in `R/modMarkerGenetics.R`. The
+   target files passed first run (78 blocks); the live E2E passed 20 assertions (the
+   Phase 3E smoke); lint clean. Then the checklists: NEWS entry + NEWS.md render, a guide
+   section with a live screenshot, and a terms-page entry with citations. Spell check
+   forced two rewordings, and the Dragon 3 vocabulary grep came back clean.
+5. **Verification:** one full-suite run on the final source gave 2,427 blocks, failed=1.
+   The failure was the CI-group guard flagging the new E2E file. I registered the file
+   (`b7a55729`) and all 3 workflow-reading tests re-ran green. `devtools::check()`:
+   0 errors; its 1 WARNING and 1 NOTE come only from the untracked `~$e Compounding
+   Loop.html` and `scratchpad/`.
+6. **Live probe:** confirmed that an observer `stop()` disconnects a real session
+   (`isConnected` TRUE → FALSE), which became Learning 758. The same latent crash exists
+   in the LD-block and ROH export observers; it's queued as a BACKLOG Up Next item and
+   not fixed (D8).
+7. **Close-out:** closed issue #148 with an evidence comment. BACKLOG: the Slice 4 item
+   was removed; two new items were added (the crash follow-up in Up Next, polish in
+   Housekeeping); the batch narrative now shows all of #146–#153 closed. Also wrote the
+   CHANGELOG entries, this handoff and the HANDOFFS receipt.
+
+**Self-assessment (Session 708): 9/10.** **Strengths:** (1) caught a real crash path at
+PRE-RED that the ratified plan had accepted as "the mold's loud failure". I verified
+both halves empirically before putting it to the owner, and the guard is tested through
+the one `testServer`-observable difference (the guidance text). (2) Honest RED: the
+spurious pass was caught by inspecting per-expectation results. (3) Runtime
+verification went further than "build clean": a live E2E with real data through all 3
+downloads, a screenshot from the running app, and the disconnect probe. **Weaknesses:**
+(1) the CI-group registration should have been anticipated at RED, since both sibling
+E2E files had group lines. I read the E2E precedent but not the workflow it runs in,
+which cost a full-suite failure and an extra commit. (2) The frequency column's
+unreadable full-precision display only surfaced from the screenshot; a PRE-RED look at
+how a colony manager reads the table would have put it in scope. (3) a TDD-gate slip.
+The session went from GREEN verification into close-out without the GREEN→REFACTOR
+`AskUserQuestion` that CLAUDE.md requires. I caught it while writing this
+self-assessment, acknowledged it, and asked before the records commit; the owner chose
+"skip REFACTOR, close out". Nothing shipped ungated, but the gate came late.
+
+**Next steps (specific):** (A) **Fix the export-preview crash in the LD-block and
+Genomic ROH tabs** (READY, Effort S; top Up Next item in `BACKLOG.md` with full
+context). Strict TDD: port the MHC tab's `mhcExportMissingIds` pre-check to
+`ldBlockExportPreview` and `sequenceExportPreview`, and fold in the MHC malformed-upload
+residual. Assert on the guidance text, because `testServer` can't see a disconnect.
+(B) Census items unchanged: class (d) (READY, S), class (b) (READY, M), curved-chord
+(READY, M). (C) **HANDOFFS.md archive pass** (READY, S). The trigger is firing, and this
+receipt puts the file around 70 KB; `--check` reported SRF 0.063 at Phase 0, so expect
+an owner `--force` decision. CHANGELOG.md is at 61,550 B against its 65,536 B trigger,
+about one session away. (D) **Push decision** (owner call): 15 commits ahead now, about
+17 after this close-out (recount with `git rev-list --count origin/master..HEAD`). The
+span includes Slices 3 and 4 and the `shinytest2.yaml` group line. The local full suite
+and `devtools::check()` were clean on this state, apart from the untracked-file
+warning and note. (E) MHC polish item (Housekeeping, S). Also still pending: the
+package-split disposition, a dashboard copy that's out of date, and the same untracked
+leftovers.
+
+**Key files:** `R/modMarkerGenetics.R:301` (MHC tabPanel), `:834` (server section:
+`mhcHaplotype`/`mhcThresholds`/`mhcFrequency`/`mhcCarriers`), `:897`
+(`mhcExportMissingIds`, the pre-check pattern next step A ports), `:140`
+(`.buildMhcExportManifest`), `:440` (repaired `@return`);
+`tests/testthat/test_modMarkerGenetics.R:1139` (Slice 4 section);
+`tests/testthat/test-e2e-marker-genetics-mhc-haplotype-module.R`;
+`tests/testthat/test_buildMhcExportManifest.R`; `.github/workflows/shinytest2.yaml:148`
+(new group line); `vignettes/articles/colony-manager-guide.qmd:801`;
+`inst/extdata/ui_guidance/population_genetics_terms.html:449`; `BACKLOG.md:27` (next
+step A) and `:124` (polish); `PROJECT_LEARNINGS.md:2212` (Learning 758).
+
+**Gotchas for the next session:** (1) **The fresh baseline is now 2,427 blocks**
+(failed=0 once the guard fix landed, error=0, skipped=183, warning=42). Skipped rose by 1
+because the new E2E file is opt-in; run it with `NPRC_RUN_E2E=true`. (2) **Any new
+`test-e2e-*.R`/`test-app-*.R` file needs its own group line in
+`.github/workflows/shinytest2.yaml`**, or `test_shinytest2_workflow_coverage.R` fails.
+(3) `shiny::testServer()` swallows observer errors (Learning 758), so for next step A a
+"stays NULL" assertion cannot tell the crash path from the fixed path. Assert on the
+guidance text, and consider a live `AppDriver` check. (4) `devtools::check()` will keep
+showing 1 WARNING + 1 NOTE until the untracked `inst/extdata/reference/~$e Compounding
+Loop.html` and `scratchpad/` are removed. They are local-only and not mine to delete, so
+leave them unless the owner says otherwise; CI never sees them. (5) S708's records
+commit is expected to stage CHANGELOG together with SESSION_NOTES/HANDOFFS (the S707
+shape), so expect about 1 self-reference commit past the frontier at the next Phase 0;
+measure it, don't assume. (6) Run the Dragon 3 vocabulary grep with `grep -i` pipes, not
+`awk /…/i`: awk has no `/i` flag and silently matches every line.
 
 ### Session 706 Handoff Evaluation (by Session 707)
 **Score: 9/10.** **What helped:** the BACKLOG Slice 3 item was again a complete,
