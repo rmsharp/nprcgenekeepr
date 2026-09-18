@@ -188,11 +188,32 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 ``` handoff
 session: S711
 date: 2026-09-18
-status: pending
-active_task: Owner-directed push of local master commits to origin/master (S710 next-step A, owner-picked at Phase 0); verify the 4 on-push CI workflows go green and record the outcome. 33 commits ahead at claim (32 at start + Phase 0 backfill 83618479); the claim commit makes 34. Process/ops action, no code changes, no TDD phases.
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Owner-directed push to origin/master (S710 next-step A, owner-picked via AskUserQuestion at Phase 0): 34 commits pushed (955f6f19..afd33514), spanning S708 MHC Slice 4, the S709 export-preview crash fix, and the S710 ledger archive pass. All 4 on-push CI workflows green on afd33514 -- lint 5m43s, test-coverage 9m58s, pkgdown 16m52s, R-CMD-check 33m22s (runs 35386636842/857/853/874), watched to completion in-session and confirmed directly. Process/ops action, no code changes, no TDD phases.
+what_was_done: Phase 0 backfill 83618479 (1 commit, 0f7f94fe -- the predicted self-reconcile shape, measured exactly 1); claim afd33514 written BEFORE the push so the pushed head carries the session's own breadcrumb. Push executed, background watcher polled to matrix completion, conclusions re-verified via gh run list before recording. Close-out records committed and pushed immediately after (second push; its CI round is next Phase 0's to verify, per the S706 precedent). Nothing removed from BACKLOG.md (the push was a handoff next-step, not a BACKLOG block); no new learning appended (routine session, no signal -- stated explicitly, not silently). FM 28 reduction check: nothing to trim, all three ledgers remain sparse from S710's cuts.
+next_steps: (A) Census class (d) (READY, S): render the 2 duplicate-adjacent sites and judge acceptability. (B) Census class (b) (READY, M): decide the census-predicate tolerance for the 2 noise rows, then assess whether the 6 real 60-180 px union-dot offsets are minSep-forced or QP-reducible (R/makePedigreeDiagramData.R, .solveJointQP()); re-verify the coupled fidelity-article prose. (C) Census curved-chord (READY, M): arc-modelling measurement pass replacing the 1,668-chord upper bound. (D) MHC polish (Housekeeping, S). (E) Owner decisions pending: package-split disposition, pointer-block sweep ratification, REUSE registration. (F) Informational: dashboard copy stale (v2.14.0 vs v2.18.0); R/appServer.R:168 re-throw observer reported-not-changed; untracked leftovers unchanged; LabKey remainder BLOCKED.
+key_files: HANDOFFS.md:146 (this receipt), CHANGELOG.md:29 (S711 entries), docs/archive/SESSION_NOTES-through-2026-09-18.md:1 (S709 gotchas, still applicable), BACKLOG.md:109 (census class b), BACKLOG.md:128 (curved-chord), BACKLOG.md:142 (census class d)
+gotchas: (1) Fresh baseline still 2,434 blocks (failed=0, error=0, skipped=184, warning=48) -- neither S710 nor S711 touched package files; S709's gotchas apply verbatim, read them in docs/archive/SESSION_NOTES-through-2026-09-18.md. (2) The close-out push triggers one more CI round on the records/self-reconcile head -- expect completed success at Phase 0's gh run list; if red, that is NEW information (docs-only delta), report-don't-fix per the standing convention. (3) Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0 (the recurring shape); measure it. (4) origin/master is now in sync -- the long-running "N commits ahead" informational item is gone; don't re-report it from stale handoffs.
+runtime_smoke: n/a -- docs-only local changes; the deliverable's own verification IS the CI matrix on real runners (R CMD check, lint, coverage, pkgdown all green on the pushed head afd33514)
+changelog_ref: 827a7e67
+commit: 827a7e67
 ```
+
+Self-score 9/10: + claim-before-push left the pushed head
+self-describing (a crash mid-watch would still have left origin carrying
+the session claim); + waited for the full matrix and re-verified the
+watcher’s claim directly before recording it; + clean
+precedent-following scope, no package files touched, no scope creep. -
+The close-out push’s own CI round is deliberately unwatched (S706
+precedent, docs-only delta on a just-verified tree) – a defensible but
+real open loop handed to the next Phase 0; - a routine session yields no
+learning row, correct but worth stating. Predecessor 9/10: next-step A
+was the exact deliverable – the ~32 recount measured 32 exactly, the
+span description and clean-state assurance made the decision presentable
+with zero re-derivation, and gotcha 5’s 1-commit backfill shape measured
+exactly 1; nothing material missing for this scope; nothing wrong found.
 
 ``` handoff
 session: S710

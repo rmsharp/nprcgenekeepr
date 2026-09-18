@@ -42,18 +42,104 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 710 Handoff Evaluation (by Session 711)
+
+**Score: 9/10.** **What helped:** next-step A was this session’s exact
+deliverable — its “~32 commits ahead, recount with
+`git rev-list --count origin/master..HEAD`” measured 32 exactly at
+session start; its span description (S708 MHC Slice 4, S709 crash fix,
+S710 archive pass) and clean-state assurance (“no package files touched
+since the S709-verified clean state”) made the push decision presentable
+to the owner with zero re-derivation; gotcha 5 predicted the 1-commit
+backfill shape and it measured exactly 1 (`0f7f94fe`); gotcha 2
+(“sparseness is not a ghost session”) pre-empted exactly the misread the
+freshly-trimmed ledgers invite. **What was missing:** nothing material
+for this session’s scope — a push session touches no package internals,
+so the handoff’s depth was sufficient by construction. **What was
+wrong:** nothing found; every checked claim held. **ROI:** high —
+orientation to owner-decision took one pass.
+
 ### What Session 711 Did
 
-**Deliverable:** Owner-directed push of local `master` commits to
-`origin/master` (S710 next-step A, owner-picked via `AskUserQuestion` at
-Phase 0), then verify the 4 on-push CI workflows go green and record the
-outcome. Process/ops action, no code changes, no TDD phases. (IN
-PROGRESS) **Started:** 2026-09-18 **Status:** Session claimed. Work
-beginning. At claim time: 33 commits ahead (32 at session start + Phase
-0 backfill `83618479`); this claim commit makes 34. **Ledger:**
-`CHANGELOG: pending` — set at claim; this session’s actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session’s reconcile.
+**Deliverable:** Owner-directed push to `origin/master` — **DONE** (S710
+next-step A, owner-picked via `AskUserQuestion` at Phase 0; process/ops
+action, no code changes, no TDD phases). Pushed 34 commits
+(`955f6f19..afd33514`: 32 at session start + Phase 0 backfill
+`83618479` + claim `afd33514`), spanning S708 MHC Slice 4, the S709
+export-preview crash fix, and the S710 ledger archive pass. **All 4
+on-push CI workflows green on `afd33514`:** lint 5m43s, test-coverage
+9m58s, pkgdown 16m52s, R-CMD-check 33m22s (run ids
+35386636842/857/853/874). Watched to completion in-session, then
+confirmed via `gh run list` directly. **Started/completed:** 2026-09-18
+(single session). Phase 0 backfill `83618479`; claim `afd33514`; records
+commit follows this handoff, then a self-reconcile sha commit, both
+pushed immediately (second push — its own CI round is verified at the
+next session’s unconditional Phase 0 CI check, per the S706 precedent).
+**Ledger:** claim entry + push-outcome entry in `CHANGELOG.md` (this
+close-out).
+
+**What actually happened, in order:** 1. **Phase 0:** reconcile
+backfilled 1 commit (`0f7f94fe`, S710’s self-reconcile — the predicted
+recurring shape, measured 1, commit `83618479`). HANDOFFS fully
+reconciled, no pending receipt. CI all green pre-push. Dashboard 96/100,
+no HIGH flags. Owner picked the push from the 4-option picker. 2.
+**Claim** `afd33514` (stub + pending receipt + claim ledger entry) —
+deliberately made before the push so the pushed head itself carries the
+session claim. 3. **Push** `955f6f19..afd33514` (34 commits), then a
+background watcher polled every 2 min until all 4 workflows completed;
+all green; confirmed directly. 4. **Close-out:** this evaluation +
+handoff; receipt completed; ledger entries; records + self-reconcile
+commits pushed. Nothing removed from `BACKLOG.md` (the push was a
+handoff next-step, not a BACKLOG block). FM \#28 reduction check:
+nothing to trim — all three ledgers were cut to sparse by S710 and
+remain far under budget.
+
+**Self-assessment (Session 711): 9/10.** **Strengths:** (1)
+claim-before-push meant the pushed head carries the session’s own
+breadcrumb — a crash mid-watch would have left origin self-describing;
+(2) waited for the full matrix rather than declaring success at push
+time, and re-verified the watcher’s claim directly before recording it;
+(3) clean, precedent-following scope — no package files touched, no
+scope creep. **Weaknesses:** (1) the close-out push’s own CI round is
+deliberately not watched (S706 precedent, docs-only delta on a
+just-verified tree) — a defensible but real open loop handed to the next
+session’s Phase 0; (2) a routine session yields no new learning, so
+`PROJECT_LEARNINGS.md` gains nothing — correct (no signal), but worth
+stating explicitly rather than silently.
+
+**Next steps (specific):** (A) Census class (d) (READY, S): render the 2
+duplicate-adjacent sites (`__dup_Y_2` vs `Y`, `__dup_SLN0TF_2` vs
+`SLN0TF`) and judge acceptability — see the BACKLOG block for the
+crop-verification precedent. (B) Census class (b) (READY, M): decide the
+census-predicate tolerance for the 2 noise rows, then assess whether the
+6 real 60–180 px offsets are minSep-forced or QP-reducible
+(`R/makePedigreeDiagramData.R`, `.solveJointQP()`); re-verify the
+coupled fidelity article prose. (C) Census curved-chord (READY, M):
+measurement pass replacing the 1,668-chord upper bound. (D) MHC polish
+(Housekeeping, S). (E) Decisions pending (owner): package-split
+disposition; pointer-block sweep ratification; REUSE registration. (F)
+Informational: dashboard copy stale (v2.14.0 vs v2.18.0);
+`R/appServer.R:168` re-throw observer reported-not-changed; untracked
+leftovers unchanged; LabKey remainder BLOCKED.
+
+**Key files:** `HANDOFFS.md:146` (S711 receipt), `CHANGELOG.md:29` (S711
+entries), `docs/archive/SESSION_NOTES-through-2026-09-18.md` (S709
+gotchas, still applicable),
+`BACKLOG.md:109`/`BACKLOG.md:128`/`BACKLOG.md:142` (the three census
+items).
+
+**Gotchas for the next session:** (1) **The fresh baseline is still
+2,434 blocks** (failed=0, error=0, skipped=184, warning=48) — neither
+S710 nor S711 touched package files; S709’s gotchas 1–4 and 6 still
+apply verbatim (read them in
+`docs/archive/SESSION_NOTES-through-2026-09-18.md`). (2) The close-out
+push triggers one more CI round on the records/self-reconcile head —
+expect it `completed success` at Phase 0’s `gh run list`; if it is red,
+that is NEW information (docs-only delta), report-don’t-fix per the
+standing convention. (3) Expect ~1 self-reference commit past the
+CHANGELOG frontier at next Phase 0 (the recurring shape); measure it.
+(4) origin/master is now in sync — the long-running “N commits ahead”
+informational item is gone; don’t re-report it from stale handoffs.
 
 ### Session 709 Handoff Evaluation (by Session 710)
 
