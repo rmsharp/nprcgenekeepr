@@ -22,6 +22,13 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits 2be33272..aec3b514 — S703 close-out self-reference commits
+- The recurring shape (predicted by S703's own gotcha 2): the two commits that record a
+  session's close-out (`2be33272` SESSION_NOTES handoff + HANDOFFS receipt complete;
+  `aec3b514` close-out sha self-reconcile into the receipt) necessarily land AFTER that
+  session's Phase 3F ledger entry, so they sit past the frontier until the next session's
+  Phase 0 reconcile records them. No untracked work — both are S703's own documentation.
+
 ### 2026-09-17 · [issue #148] S703 close-out: scope-narrowing decision record DONE (owner: design-first, same issue); design-plan BACKLOG item queued; 1 learning
 - **Deliverable (`fcf94807`):** `docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md` —
   the scope-narrowing conversation audit Finding #4 required before any #148 work. Owner
