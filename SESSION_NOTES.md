@@ -142,14 +142,14 @@ the
 mold (`R/obfuscateTwinRelations.R`); stop() on unknown id, labels
 byte-identical; NEWS + pkgdown + lint checklists. (B) Census items
 unchanged: class (d) (READY, S), class (b) (READY, M), curved-chord
-(READY, M). (C) **Push decision** (owner call): ~64 commits ahead after
-this close-out (estimate — recount with
-`git rev-list --count origin/master..HEAD`); the span includes Slices 1
-AND 2 (real package changes); local suite green on exactly this state;
-CI runs full R-CMD-check on push. (D) Informational: package-split
-disposition pending; dashboard copy stale; untracked leftovers
-unchanged; CHANGELOG re-fire ~1-2 sessions out (S703-S706 added ~16
-entries on S702’s 33,503 B base — re-check with
+(READY, M). (C) **Push DONE (owner-directed, this session,
+post-close-out):** 65 commits pushed (`6e5b9215..d3b9dec9`, S697–S706
+span incl. #148 Slices 1-2); all 4 on-push workflows `completed success`
+on `d3b9dec9` (R-CMD-check, lint, test-coverage, pkgdown), confirmed by
+this session’s own watch — no push decision pending. (D) Informational:
+package-split disposition pending; dashboard copy stale; untracked
+leftovers unchanged; CHANGELOG re-fire ~1-2 sessions out (S703-S706
+added ~16 entries on S702’s 33,503 B base — re-check with
 `python3 methodology_trim.py --file CHANGELOG.md --check`).
 
 **Key files:** `R/mhcHaplotypeFrequency.R:102`
@@ -166,9 +166,11 @@ receipt).
 **Gotchas for the next session:** (1) **The fresh baseline is now 2,400
 blocks** (failed=0, error=0, skipped=182, warning=42) — measured this
 session on shipped source; Slice 3 measures its own anyway (it touches
-package files). (2) The two S706 close-out self-reference commits will
-sit past the CHANGELOG frontier — next Phase 0 backfills them (recurring
-shape). (3) Slice 3’s
+package files). (2) Unusually, NO commits should sit past the CHANGELOG
+frontier at next Phase 0 — the final post-push records commit co-staged
+CHANGELOG and was itself pushed, so the recurring 2-commit backfill
+shape does NOT apply this time; an empty reconcile gap is the expected
+finding, not a miss. (3) Slice 3’s
 [`stop()`](https://rdrr.io/r/base/stop.html)-on-unknown-id is the mold’s
 core contract — read
 [`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)’s

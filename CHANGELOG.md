@@ -42,6 +42,9 @@ sentence. Written by `methodology_trim.py` v1.1.2.
   (`R-CMD-check.yaml`/`lint.yaml`/`pkgdown.yaml`/`test-coverage.yaml`) —
   the first CI read of both Slice 1 and Slice 2; next session’s Phase 0
   CI check (or this session’s own post-push watch) confirms the runs.
+  **Outcome (this session’s watch):** all 4 workflows
+  `completed success` on `d3b9dec9` — R-CMD-check, lint, test-coverage,
+  pkgdown all green; the push is fully verified, no CI follow-up owed.
 
 ### 2026-09-17 · \[issue \#148\] S706 close-out: Slice 2 DONE — `mhcHaplotypeFrequency()` + `mhcHaplotypeCarriers()` shipped under strict TDD; Slice 3 BACKLOG item queued
 
