@@ -338,7 +338,12 @@ censusUnionCentring <- function(nodes, forest, ped) {
     if (yOf[[a]] != yOf[[unit]] || yOf[[m]] != yOf[[unit]]) next
     mid <- (xOf[[a]] + xOf[[m]]) / 2L
     dev <- xOf[[unit]] - mid
-    if (abs(dev) < 1e-6) next
+    ## Meaningful floor: 1e-3 raw units (0.12 px), the same solver-dust
+    ## line test_positionMatingUnitForest.R's class-(b) structural-residual
+    ## test draws (Learning 726 two-assertion pattern) -- owner-ratified
+    ## S713 (2026-09-18) after the exact 1e-6 px skip pulled 2 sub-precision
+    ## rows (~2.8e-5 px, ~1.0e-6 px) into the 2026-09-02 census as class (b).
+    if (abs(dev) < 1e-3 * xScale) next
     lo <- min(xOf[[a]], xOf[[m]])
     hi <- max(xOf[[a]], xOf[[m]])
     sub <- if (abs(xOf[[unit]] - xOf[[a]]) < dotClear ||
