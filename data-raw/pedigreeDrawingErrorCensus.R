@@ -21,7 +21,22 @@
 ##       test on every straight edge of any orientation (catches a jogged
 ##       edge that still crosses the symbol it was jogged around, a vertical
 ##       drop through an intermediate row, ...); plus the curved duplicate
-##       connectors, whose chord is checked as a disclosed heuristic;
+##       connectors, modelled since S714 (2026-09-18) as the exact arc
+##       vis-network paints -- a quadratic Bezier whose control point is
+##       the bundled vis-network.min.js curvedCW via formula (verified
+##       byte-for-byte against that source AND against the live rendered
+##       widget: max |via(model) - via(live)| = 1.1e-13 px over all 173
+##       curved edges of the two duplicate-bearing fixtures). This replaces
+##       the pre-S714 chord heuristic, whose 1,668 flagged pairs were ALL
+##       false positives (the drawn arc bows over every same-row chord
+##       obstacle) while missing every true hit: the arc test checks every
+##       curved edge (same-row AND cross-row, which the chord test never
+##       saw) against every visible disc. Subclass c-arc-inside; value =
+##       min arc-to-centre distance (px), limit = disc radius. The render
+##       layer truncates node coordinates to integers (vis-network applies
+##       parseInt() to predefined x/y -- measured live S714), which moves
+##       the event count by ~1 in 587; the census stays on unquantized
+##       layout coordinates, its convention for every class;
 ##   (d) a duplicate drawn overlapping (< 50 px) or adjacent to (same row,
 ##       <= minSep, nothing between) its own real occurrence;
 ##   (e) a mate drawn on a row other than its union's row (and the two
@@ -45,8 +60,10 @@
 ##   Rscript data-raw/pedigreeDrawingErrorCensus.R
 ##
 ## Prints a markdown scoreboard + per-fixture offending-id tables to the
-## console (transcribed into docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_
-## 2026-09-02.md) and writes every finding row to the CSV named in
+## console (2026-09-02 baseline transcribed into docs/audits/
+## PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md; the S714 arc-model re-run
+## is recorded in docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_
+## 2026-09-18.md) and writes every finding row to the CSV named in
 ## findingsCsv below. kinship2 is OPTIONAL: when it is installed locally
 ## (never a package dependency -- see the fidelity script's header), a
 ## kinship2 baseline is computed for the same fixtures so class (a) can be
@@ -55,7 +72,7 @@
 suppressMessages(pkgload::load_all(".", quiet = TRUE))
 
 findingsCsv <- file.path("docs", "audits",
-  "PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv")
+  "PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_findings.csv")
 
 ## Render-layer constants, mirrored from makePedigreeMatingLayout() (the
 ## script reads the radii off nodes$size directly; these two are only
@@ -380,9 +397,11 @@ isCurved <- function(edges) {
   }
 }
 
-## c1: same-row straight edge with a visible, unrelated node strictly
+## c1: same-row STRAIGHT edge with a visible, unrelated node strictly
 ## inside its x-span (the production repair pass's own predicate,
-## reimplemented here).
+## reimplemented here). Curved edges are excluded since S714 -- the arc
+## test below (arcDiscHits) measures them against the geometry actually
+## painted, replacing the retired c-curved-chord chord heuristic.
 sameRowInteriorHits <- function(nodes, edges) {
   xOf <- as.list(stats::setNames(nodes$x, nodes$id))
   yOf <- as.list(stats::setNames(nodes$y, nodes$id))
@@ -397,6 +416,7 @@ sameRowInteriorHits <- function(nodes, edges) {
     yf <- yOf[[f]]
     yt <- yOf[[t]]
     if (is.null(yf) || is.null(yt) || !isTRUE(yf == yt)) next
+    if (curved[[i]]) next
     cands <- setdiff(byRow[[as.character(yf)]], c(f, t))
     if (length(cands) == 0L) next
     cx <- unlist(xOf[cands])
@@ -405,10 +425,94 @@ sameRowInteriorHits <- function(nodes, edges) {
     inside <- cands[cx > lo & cx < hi]
     inside <- setdiff(inside, union(adj[[f]], adj[[t]]))
     for (o in inside) {
-      rows[[length(rows) + 1L]] <- finding("c",
-        if (curved[[i]]) "c-curved-chord" else "c1-samerow-interior",
+      rows[[length(rows) + 1L]] <- finding("c", "c1-samerow-interior",
         f, t, o, row = yf / yScale,
         note = paste(nodeKind(f), nodeKind(t), nodeKind(o), sep = "-"))
+    }
+  }
+  bindFindings(rows)
+}
+
+## The exact via (Bezier control) point vis-network computes for a
+## smooth.type = "curvedCW" edge -- transcribed from the bundled
+## vis-network.min.js _getViaCoordinates() (canvas coordinates, y down)
+## and verified this replica matches the LIVE widget's own
+## edgeType.getViaNode() to 1.1e-13 px on all 173 curved edges of the
+## duplicate-bearing fixtures (S714).
+curvedCwVia <- function(x1, y1, x2, y2, roundness) {
+  dx <- x2 - x1
+  dy <- y1 - y2
+  len <- sqrt(dx * dx + dy * dy)
+  fac <- 0.5 * roundness + 0.5
+  g <- (atan2(dy, dx) + fac * pi) %% (2L * pi)
+  c(x = x1 + fac * len * sin(g), y = y1 + fac * len * cos(g))
+}
+
+bezierPointAt <- function(t, p0, v, p1) {
+  cbind(
+    (1L - t)^2L %o% p0[1L] + (2L * t * (1L - t)) %o% v[1L] +
+      t^2L %o% p1[1L],
+    (1L - t)^2L %o% p0[2L] + (2L * t * (1L - t)) %o% v[2L] +
+      t^2L %o% p1[2L]
+  )
+}
+
+## Exact min distance from point (cx, cy) to the quadratic Bezier
+## (p0, v, p1): stationary points of the squared distance are roots of a
+## cubic; evaluate those in (0, 1) plus both endpoints.
+bezierMinDistTo <- function(cx, cy, p0, v, p1) {
+  a <- v - p0
+  b <- p1 - 2L * v + p0
+  d <- p0 - c(cx, cy)
+  co <- c(sum(d * a), sum(d * b) + 2L * sum(a * a), 3L * sum(a * b),
+    sum(b * b))
+  ts <- c(0L, 1L)
+  if (abs(co[[4L]]) > 0L || abs(co[[3L]]) > 0L || abs(co[[2L]]) > 0L) {
+    r <- polyroot(co)
+    re <- Re(r)[abs(Im(r)) < 1e-7]
+    ts <- c(ts, re[re > 0L & re < 1L])
+  }
+  pts <- bezierPointAt(ts, p0, v, p1)
+  min(sqrt((pts[, 1L] - cx)^2L + (pts[, 2L] - cy)^2L))
+}
+
+## c-arc-inside: the drawn curved duplicate-connector arc (any row
+## relationship between its endpoints) passing inside the disc of a
+## visible node that is neither an endpoint nor graph-adjacent to one --
+## same exclusions as c1/c2. The modelled curve runs node centre to node
+## centre; the painted ink is border-trimmed along the same curve, which
+## changes no count (border-trim sensitivity, S714 probe).
+arcDiscHits <- function(nodes, edges) {
+  xOf <- as.list(stats::setNames(nodes$x, nodes$id))
+  yOf <- as.list(stats::setNames(nodes$y, nodes$id))
+  vis <- nodes[nodes$size > 0L, , drop = FALSE]
+  adj <- adjacencyOf(edges)
+  curved <- isCurved(edges)
+  rmax <- max(vis$size)
+  rows <- list()
+  for (i in which(curved)) {
+    f <- edges$from[[i]]
+    t <- edges$to[[i]]
+    if (is.null(xOf[[f]]) || is.null(xOf[[t]])) next
+    p0 <- c(xOf[[f]], yOf[[f]])
+    p1 <- c(xOf[[t]], yOf[[t]])
+    v <- curvedCwVia(p0[1L], p0[2L], p1[1L], p1[2L],
+      edges$smooth.roundness[[i]])
+    samp <- bezierPointAt(seq(0L, 1L, length.out = 64L), p0, v, p1)
+    cand <- vis[vis$x >= min(samp[, 1L]) - rmax &
+                  vis$x <= max(samp[, 1L]) + rmax &
+                  vis$y >= min(samp[, 2L]) - rmax &
+                  vis$y <= max(samp[, 2L]) + rmax, , drop = FALSE]
+    cand <- cand[!cand$id %in% c(f, t, adj[[f]], adj[[t]]), , drop = FALSE]
+    for (k in seq_len(nrow(cand))) {
+      dd <- bezierMinDistTo(cand$x[[k]], cand$y[[k]], p0, v, p1)
+      if (dd < cand$size[[k]] - eps) {
+        rows[[length(rows) + 1L]] <- finding("c", "c-arc-inside",
+          f, t, cand$id[[k]], row = cand$y[[k]] / yScale, value = dd,
+          limit = cand$size[[k]],
+          note = paste(nodeKind(f), nodeKind(t), nodeKind(cand$id[[k]]),
+            sep = "-"))
+      }
     }
   }
   bindFindings(rows)
@@ -747,11 +851,12 @@ for (name in names(fixtures)) {
   c1Pre <- c1Pre[c1Pre$subclass == "c1-samerow-interior", , drop = FALSE]
   fcRow <- sameRowInteriorHits(nodes, p$edges)
   fcSeg <- segmentDiscHits(nodes, p$edges)
+  fcArc <- arcDiscHits(nodes, p$edges)
   fd <- censusDuplicatePlacement(nodes, forest)
   fe <- censusMateRows(nodes, forest, p$ped)
   ff <- censusInterleaving(p$pos, comps)
 
-  f <- rbind(fa, fb, fcRow, fcSeg, fd, fe, ff)
+  f <- rbind(fa, fb, fcRow, fcSeg, fcArc, fd, fe, ff)
   f$fixture <- rep(name, nrow(f))
   allFindings[[name]] <- f
 
@@ -774,7 +879,8 @@ for (name in names(fixtures)) {
     c1Post = nrow(unique(fcRow[fcRow$subclass == "c1-samerow-interior",
       c("idA", "idB")])),
     c2 = nrow(fcSeg),
-    cCurved = sum(fcRow$subclass == "c-curved-chord"),
+    cArc = nrow(fcArc),
+    cArcEdges = nrow(unique(fcArc[, c("idA", "idB")])),
     d = nrow(fd),
     e = sum(fe$subclass != "mates-on-different-rows"),
     f = nrow(ff),
@@ -833,10 +939,13 @@ for (name in names(fixtures)) {
   cat(sprintf("(c1 before the repair pass: %d colliding edge(s), %d ",
     nrow(unique(c1Pre[, c("idA", "idB")])), nrow(c1Pre)),
     "edge-obstacle pair(s))\n\n", sep = "")
-  show("(c) same-row interior + curved chord, AFTER the repair pass", fcRow,
+  show("(c) straight same-row interior, AFTER the repair pass", fcRow,
     c("subclass", "idA", "idB", "idC", "note", "row"))
   show("(c2) segment inside a symbol disc, any orientation (px)", fcSeg,
     c("subclass", "idA", "idB", "idC", "note", "row", "value", "limit"))
+  show("(c-arc) drawn duplicate-connector arc inside a symbol disc (px)",
+    fcArc, c("subclass", "idA", "idB", "idC", "note", "row", "value",
+      "limit"))
   show("(d) duplicate overlapping or adjacent to its real occurrence (px)",
     fd, c("subclass", "idA", "idB", "idC", "row", "value", "limit"))
   show("(e) mate off its union's row (gens)", fe,
@@ -860,7 +969,7 @@ cat("\n\n## Scoreboard\n\n")
 summaryDf <- do.call(rbind, summaryRows)
 mdTable(summaryDf[, c("fixture", "individuals", "units", "duplicates",
   "families", "jogs", "residuals", "a", "aTouch", "b", "c1Pre", "c1Post",
-  "c2", "cCurved", "d", "e", "f")])
+  "c2", "cArc", "cArcEdges", "d", "e", "f")])
 cat("\n### kinship2 baseline\n\n")
 mdTable(summaryDf[, c("fixture", "rows", "k2Rows", "duplicates", "k2Dups",
   "a", "k2Tight", "k2Note")])
