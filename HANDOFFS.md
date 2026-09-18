@@ -142,18 +142,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S706
 date: 2026-09-17
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #148 Slice 2 -- MHC haplotype statistics: mhcHaplotypeFrequency() + mhcHaplotypeCarriers() per plan sec 4 rows 3-4 / sec 5 Slice 2 (S705 next-step A; owner-picked via AskUserQuestion at Phase 0). Strict TDD, AskUserQuestion-gated phases. IN PROGRESS -- session claimed, work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Issue #148 Slice 2 -- mhcHaplotypeFrequency() (per-haplotype summary + file-level counts, D4 dual <= rarity criterion, certain-call 2N denominator) + mhcHaplotypeCarriers() (carrier detail with provisional-carrier disclosure) shipped under strict TDD per the ratified plan sec 4 rows 3-4 / sec 5 Slice 2 (S705 next-step A; owner-picked via AskUserQuestion at Phase 0). All TDD gates owner-approved (PRE-RED->RED, RED->GREEN, GREEN->skip-REFACTOR-close-out). Slice 3 (de-id primitive) queued at top of BACKLOG Up Next. Issue #148 stays OPEN (Slices 3-4 remain).
+what_was_done: PRE-RED resolved two contract micro-semantics BY MEASUREMENT before any test existed: the real file's uncertain A002a_B015 has no certain counterpart (uncertain-only labels get no summary row), and counting the one provisional carrier (0F4FY1, A008_B015b) in nCarriers would flag 25 not the ratified 26 (nCarriers counts certain carriers only). Fresh pre-change baseline 2,384 blocks failed=0 error=0 (reproduces S705 exactly). RED e8a63f05: 16 blocks, 0 passing -- after catching 12 pattern-less expect_error() assertions passing spuriously (Learning 492 trap, re-applied) and tightening them to parameter-naming messages. GREEN 930536e8: 2 R files + NAMESPACE + 2 man pages, 102 assertions green first run; checklists 4a03fff3: _pkgdown.yml (guard green), NEWS.Rmd plain-language entry + NEWS.md rendered same-commit (+ pre-existing heading-blank-line wart fixed), 13 WORDLIST additions, package-loaded lint clean. All 6 roxygen @references verified by an independent agent (Crossref/PubMed; Hurley 2020 = HLA 95(6):516-531, Lacy 2012 = MEE 3(2):433-437 recovered). Full suite ONCE on final source: 2,400 blocks = baseline + exactly the 16 new, failed=0, error=0. Vocabulary grep clean (Dragon 3). Phase 0 backfill 8812e34b; claim 2a9cceda; records f22d581e. No new numbered learning (Learning 492 re-applied, not re-minted).
+next_steps: (A) Implement issue #148 Slice 3 (READY, Effort S, top BACKLOG Up Next item, full contract there): obfuscateMhcHaplotypes(carriers, map) per plan sec 4 row 5; strict TDD; the obfuscateTwinRelations() mold (stop on unknown id, labels byte-identical); NEWS + pkgdown + lint checklists. (B) Census class (d) (READY, S), class (b) (READY, M), curved-chord (READY, M) -- unchanged. (C) Push decision (owner call): ~64 commits ahead (estimate -- recount with git rev-list --count origin/master..HEAD); span includes Slices 1 AND 2 (real package changes); local suite green on exactly this state; CI runs full R-CMD-check on push. (D) Informational: package-split disposition pending, dashboard copy stale, untracked leftovers, CHANGELOG trim re-fire ~1-2 sessions out (re-check with methodology_trim.py --check).
+key_files: R/mhcHaplotypeFrequency.R:102 (mhcHaplotypeFrequency; .checkMhcRareThreshold at :9), R/mhcHaplotypeCarriers.R:62 (mhcHaplotypeCarriers -- Slice 3 input shape), tests/testthat/test_mhcHaplotypeFrequency.R:179 (real-data pins), tests/testthat/test_mhcHaplotypeCarriers.R:123 (carrier pins), R/obfuscateTwinRelations.R:1 (Slice 3 mold), docs/planning/issue148-mhc-haplotype-reporting-plan.md:518 (sec 4 row 5 = Slice 3 contract, lines drift), BACKLOG.md:27 (Slice 3 item, lines drift), CHANGELOG.md:25 (S706 entries)
+gotchas: (1) Fresh baseline is now 2,400 blocks (failed=0, error=0, skipped=182, warning=42) on shipped source; Slice 3 measures its own anyway. (2) The 2 S706 close-out self-reference commits sit past the CHANGELOG frontier -- next Phase 0 backfills them (recurring shape). (3) Slice 3: read obfuscateTwinRelations()'s own tests for the round-trip mold BEFORE RED; stop-on-unknown-id is the core contract. (4) Pattern-less expect_error() is Learning 492's trap -- every stops-on-X RED assertion needs a rule-specific regexp. (5) NEWS.Rmd edits ship with re-rendered NEWS.md same commit; the spell-check test reads man/ pages, so devtools::document() after any roxygen edit before re-checking spelling. (6) Vocabulary grep at every slice close-out (Dragon 3); CHANGELOG enumerations span shards.
+runtime_smoke: n/a -- script-callable additions only, no Shiny wiring changed (UI arrives at Slice 4)
+changelog_ref: f22d581e
 commit: pending
 ```
+Self-score 9/10: + contract ambiguity resolved by measurement against the ratified pin before RED (tests encode a derived fact, not a guess), + honest RED (12 spurious passes caught by per-expectation inspection, tightened before commit), + single full-suite run on final source (S705's lesson applied), + all 6 citations independently verified with exact metadata; - the RED draft initially violated Learning 492 (caught in-session, zero shipped cost), - two extra document()/spell-check round-trips from post-generation roxygen edits. Predecessor 9/10: the BACKLOG brief + gotchas made execution near-mechanical and every claim verified true; sole gap was the nCarriers provisional-carrier semantics, resolvable only by this session's own measurement.
 
 ```handoff
 session: S705

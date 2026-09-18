@@ -22,15 +22,119 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 705 Handoff Evaluation (by Session 706)
+**Score: 9/10.** **What helped:** the BACKLOG Slice 2 item was again a complete,
+self-sufficient brief — the full interface contract, the ratified D4/D3 semantics, the
+pinned real-data expectations (33/60/26-via-carrier-leg/freq-leg-0, all reproduced
+exactly), and every owed checklist; gotcha 3 (`<=` not `<`, don't drift the operator)
+directly shaped the boundary-equality RED tests; gotcha 4 (citation checklist, re-verify
+every §2.8 source, don't resurrect the 5 dropped ones) framed the independent
+verification agent that confirmed all 6 citations; gotcha 5 (NEWS.md renders same-commit)
+applied without rediscovery; gotcha 1's baseline (2,384 blocks) reproduced exactly on the
+fresh pre-change measurement; gotcha 2 predicted the exact Phase 0 backfill shape
+(`2f83a6e2`/`ba5bcde8`, backfilled `8812e34b`). The S705 weakness note (lint before the
+first full-suite launch) was applied directly and saved a ~10-minute second run.
+**What was missing:** the Slice 2 contract (plan + BACKLOG item) left one semantic
+genuinely open — whether `nCarriers` counts provisional (uncertain-only) carriers — and
+whether an uncertain-only label gets a summary row; both were resolvable only by
+measuring the real data against the ratified 26-flagged pin (cheap: one script), but a
+sentence in the handoff would have made RED design purely mechanical. **What was wrong:**
+nothing found (next-step C's "~57 commits ahead" estimate measured 56, labeled an
+estimate, cost zero). **ROI:** high.
+
 ### What Session 706 Did
-**Deliverable:** Issue #148 Slice 2 — MHC haplotype statistics: `mhcHaplotypeFrequency()` +
-`mhcHaplotypeCarriers()` per plan §4 rows 3-4 / §5 Slice 2, strict TDD,
-`AskUserQuestion`-gated phases (IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Issue #148 **Slice 2 — DONE.** `mhcHaplotypeFrequency()` (per-haplotype
+summary + file-level counts, D4 dual `<=` rarity criterion, certain-call 2N denominator)
++ `mhcHaplotypeCarriers()` (carrier detail with provisional-carrier disclosure) shipped
+under strict TDD, per the ratified plan §4 rows 3-4 / §5 Slice 2 (S705 next-step A;
+owner-picked via `AskUserQuestion` at Phase 0). All TDD gates owner-approved: PRE-RED→RED,
+RED→GREEN, GREEN→skip-REFACTOR-and-close-out (no structural cleanup warranted — both
+functions mirror the family molds; threshold validation already factored).
+**Started/completed:** 2026-09-17 (single session). Phase 0 backfill `8812e34b`; claim
+`2a9cceda`; RED `e8a63f05` (2 test files, 16 blocks, 0 passing, missing-symbol failures
+only); GREEN `930536e8` (2 R files + NAMESPACE + 2 man pages, 102 assertions green);
+checklists `4a03fff3` (_pkgdown, NEWS.Rmd + NEWS.md, WORDLIST); records `f22d581e`.
+**Ledger:** S706 close-out entry at the top of `CHANGELOG.md` (`f22d581e`), the claim
+entry (in `2a9cceda`), and the Phase 0 backfill entry (`8812e34b`).
+
+**What actually happened, in order:**
+1. **Phase 0:** standard orient; backfill `8812e34b` (S705's close-out self-reference
+   commits, the recurring shape); CI green; owner picked Slice 2 from the 4-option picker.
+2. **PRE-RED:** plan §2-§5 + Slice 1 code/tests read in full; two contract micro-semantics
+   RESOLVED BY MEASUREMENT before any test was written: (a) the real file's uncertain
+   `A002a_B015` has no certain counterpart → uncertain-only labels get no summary row;
+   (b) counting the one provisional carrier (`0F4FY1` on `A008_B015b`) in `nCarriers`
+   would give 3 carriers and flag only 25 haplotypes, contradicting the ratified 26 →
+   `nCarriers` counts certain carriers only. Exact carrier-table pins measured (61 rows
+   all / 32 rare / 0F4FY1 the sole provisional row). Fresh full-suite baseline launched
+   BEFORE any new test file existed: **2,384 blocks, failed=0, error=0, skipped=182,
+   warning=42** (reproduces S705's numbers exactly). Citation-verification agent
+   launched (all 6 sources verified, exact metadata, 2 missing volume/pages recovered).
+3. **RED (gate approved):** `test_mhcHaplotypeFrequency.R` (9 blocks) +
+   `test_mhcHaplotypeCarriers.R` (7 blocks). First run exposed 12 pattern-less
+   `expect_error()` assertions passing spuriously (Learning 492's exact trap) —
+   tightened to require the parameter name in the message; final RED state 0 passing
+   expectations, failures only from the two missing symbols; committed `e8a63f05`.
+4. **GREEN (gate approved):** minimal implementations (`.checkMhcRareThreshold` internal
+   `@noRd` helper; carriers delegates rare-flagging to frequency); 102 assertions green
+   first run. Checklists BEFORE the one full-suite launch (S705's lesson): `_pkgdown.yml`
+   entries (guard green), 13 WORDLIST additions + one British-spelling reword (regenerate
+   man pages after roxygen edits — the spell check reads `man/`), NEWS.Rmd plain-language
+   entry + NEWS.md render (which surfaced a pre-existing missing-blank-line heading wart;
+   fixed), package-loaded lint (one implicit-integer fix). Full suite ONCE on final
+   source: **2,400 blocks = baseline + exactly the 16 new, failed=0, error=0,
+   skipped/warnings unchanged.** Vocabulary grep clean (Dragon 3). Committed `930536e8` +
+   `4a03fff3` (5-file cap respected).
+5. **Close-out:** BACKLOG Slice 2 item removed, Slice 3 item queued with full contract,
+   batch narrative updated; CHANGELOG close-out entry (records `f22d581e`); this handoff;
+   HANDOFFS receipt. Runtime smoke n/a — script-callable additions only, no Shiny wiring
+   (arrives at Slice 4). No new numbered learning — the one trap hit was Learning 492's,
+   already recorded (re-applied, not re-minted). Issue #148 stays OPEN.
+
+**Self-assessment (Session 706): 9/10.** **Strengths:** (1) contract ambiguity resolved
+by measurement against the ratified pin BEFORE RED, so the tests encode a derived fact,
+not a guess; (2) honest RED — the spurious-pass trap was caught by inspecting
+per-expectation results, and the fix (parameter-naming messages) made the GREEN error
+contract stricter; (3) verification discipline — fresh baseline predates the RED files,
+single full-suite run on the final source, all 6 citations independently verified.
+**Weaknesses:** (1) the RED draft initially violated Learning 492 — a pre-RED skim of
+the learnings index would have avoided the round-trip (caught in-session, zero shipped
+cost); (2) two extra document()/spell-check round-trips from editing roxygen after the
+first man-page generation.
+
+**Next steps (specific):** (A) **Implement issue #148 Slice 3** (READY, Effort S — top
+Up Next item in `BACKLOG.md` with full contract): `obfuscateMhcHaplotypes(carriers, map)`
+per plan §4 row 5; strict TDD; the `obfuscateTwinRelations()` mold
+(`R/obfuscateTwinRelations.R`); stop() on unknown id, labels byte-identical; NEWS +
+pkgdown + lint checklists. (B) Census items unchanged: class (d) (READY, S), class (b)
+(READY, M), curved-chord (READY, M). (C) **Push decision** (owner call): ~64 commits
+ahead after this close-out (estimate — recount with
+`git rev-list --count origin/master..HEAD`); the span includes Slices 1 AND 2 (real
+package changes); local suite green on exactly this state; CI runs full R-CMD-check on
+push. (D) Informational: package-split disposition pending; dashboard copy stale;
+untracked leftovers unchanged; CHANGELOG re-fire ~1-2 sessions out (S703-S706 added
+~16 entries on S702's 33,503 B base — re-check with
+`python3 methodology_trim.py --file CHANGELOG.md --check`).
+
+**Key files:** `R/mhcHaplotypeFrequency.R:102` (`mhcHaplotypeFrequency` + the
+`.checkMhcRareThreshold` helper at `:9`), `R/mhcHaplotypeCarriers.R:62`
+(`mhcHaplotypeCarriers` — Slice 3's input shape), `tests/testthat/test_mhcHaplotypeFrequency.R:179`
+(real-data pins), `tests/testthat/test_mhcHaplotypeCarriers.R:123` (carrier pins),
+`R/obfuscateTwinRelations.R` (Slice 3's mold), `docs/planning/issue148-mhc-haplotype-reporting-plan.md`
+(§4 row 5 = Slice 3's contract), `BACKLOG.md:27` approx. (Slice 3 item — re-grep, lines
+drift), `CHANGELOG.md` top (S706 entries), `HANDOFFS.md` (S706 receipt).
+
+**Gotchas for the next session:** (1) **The fresh baseline is now 2,400 blocks**
+(failed=0, error=0, skipped=182, warning=42) — measured this session on shipped source;
+Slice 3 measures its own anyway (it touches package files). (2) The two S706 close-out
+self-reference commits will sit past the CHANGELOG frontier — next Phase 0 backfills
+them (recurring shape). (3) Slice 3's `stop()`-on-unknown-id is the mold's core
+contract — read `obfuscateTwinRelations()`'s own tests for the round-trip shape before
+RED. (4) Pattern-less `expect_error()` is Learning 492's trap — every "stops on X" RED
+assertion needs a regexp tied to the specific rule. (5) NEWS.Rmd edits ship with a
+re-rendered NEWS.md in the same commit; the spell-check test reads `man/` pages, so
+re-run `devtools::document()` after any roxygen edit before re-checking. (6) Vocabulary
+grep at every slice close-out (Dragon 3); CHANGELOG enumerations must span shards.
 
 ### Session 704 Handoff Evaluation (by Session 705)
 **Score: 9/10.** **What helped:** the BACKLOG Slice 1 item was a complete,
