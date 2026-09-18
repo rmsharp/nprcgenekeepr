@@ -26,6 +26,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] S710 close-out: ledger archive pass DONE — all three byte triggers cleared
+- **Deliverable (trims `7fbe17b7`/`3dbe15f3`/`447f2beb`):** S709 next-step A. All three
+  ledger files trimmed into `docs/archive/*-through-2026-09-18.md` shards, L1/L2/L3
+  verified by each shard's own `verify.sh`: `SESSION_NOTES.md` 87,984 → 4,771 B
+  (19 records), `HANDOFFS.md` 78,503 → 16,481 B (13 receipts, never zero),
+  `CHANGELOG.md` 68,117 → 9,471 B (40 records, trimmed last so the two earlier
+  trim-injected entries landed inside its cut). Final `--check` on all three: no
+  trigger fires.
+- **Findings:** the default cut on every file collided with the existing
+  `-through-2026-09-17` shards (S704–S708 all share that date) — legal retained counts
+  were quantized (SESSION_NOTES ≥15 or ≤2; HANDOFFS ≤2; CHANGELOG ≤8) and probed with
+  dry-run `--cut N` before any write (Learning 761). The predicted small-denominator
+  SRF refusals (Learnings 549/586/594) never fired — no `--force`, no owner gate
+  needed. Docs-only; no package files touched; runtime smoke n/a.
+
 ### 2026-09-18 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-18.md` (40 record(s), 68,117 B → 9,471 B)
 
 **Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a session's judgment.
