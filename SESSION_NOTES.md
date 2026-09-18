@@ -22,6 +22,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 710 Did
+**Deliverable:** Ledger archive pass — trim `SESSION_NOTES.md`, `HANDOFFS.md`, and
+`CHANGELOG.md`, whose byte triggers ALL fire (measured this session: 87,140 B /
+78,117 B / 65,829 B vs the 65,536 B budget; CHANGELOG crossed with this session's own
+Phase 0 backfill). S709 next-step A, owner-picked via `AskUserQuestion`. (IN PROGRESS)
+**Started:** 2026-09-18
+**Status:** Session claimed. Work beginning. Expect small-denominator SRF refusals
+needing an owner `--force` (Learnings 549/586/594); each comes back to the owner via
+`AskUserQuestion` before any force. Docs-only maintenance session — no TDD phases.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile.
+
 ### Session 708 Handoff Evaluation (by Session 709)
 **Score: 9/10.** **What helped:** the BACKLOG item was again a complete brief — crash
 mechanism, the `mhcExportMissingIds` fix-pattern pointer (`R/modMarkerGenetics.R:897`

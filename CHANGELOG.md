@@ -22,6 +22,15 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] S710 claim: ledger archive pass — trim SESSION_NOTES.md, HANDOFFS.md, and CHANGELOG.md
+- Session claimed (stub + pending HANDOFFS receipt + this entry, one commit). S709
+  next-step A, owner-picked via `AskUserQuestion` at Phase 0: all three ledger byte
+  triggers fire (`SESSION_NOTES.md` 87,140 B, `HANDOFFS.md` 78,117 B, `CHANGELOG.md`
+  65,829 B — it crossed its 65,536 B budget with this session's own Phase 0 backfill).
+  Run `methodology_trim.py --write` per file with L1/L2/L3 losslessness verification;
+  any small-denominator SRF refusal goes to the owner via `AskUserQuestion` before a
+  `--force` (Learnings 549/586/594). Docs-only maintenance; no TDD phases apply.
+
 ### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `710fea78` — S709's own close-out self-reference commit
 - S710 Phase 0 ledger reconcile. The one commit past the frontier (`33b0a556`) is
   S709's final close-out write, which by construction lands after its CHANGELOG entry:

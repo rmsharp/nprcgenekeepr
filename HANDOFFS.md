@@ -140,6 +140,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-17.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S710
+date: 2026-09-18
+status: pending
+active_task: Ledger archive pass -- trim SESSION_NOTES.md (87,140 B), HANDOFFS.md (78,117 B) and CHANGELOG.md (65,829 B), all three byte triggers firing against the 65,536 B budget; S709 next-step A, owner-picked. Expect SRF refusals needing an owner --force (Learnings 549/586/594).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S709
 date: 2026-09-18
 status: complete
