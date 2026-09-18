@@ -22,6 +22,37 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL-Up-Next] S709 close-out: export-preview session-crash fix DONE — the Marker Genetics observers survive missing pedigree ids and failed-validation uploads
+- **Deliverable (RED `cd63250c`, GREEN `310c731d`, NEWS `76807b2a`+`61c544a3`):** the top
+  BACKLOG Up Next item (found S708). Every upstream read inside the LD-block, sequence,
+  and MHC export-preview observers in `R/modMarkerGenetics.R` now goes through
+  `safeRead()` + `req()`, so a malformed upload's validation error or an erroring
+  `pedigree()` aborts the preview quietly instead of ending the user's session (Learning
+  758); the sequence observer ports the MHC tab's Dragon 5 pre-check
+  (`sequenceExportMissingIds`: build nothing, show the count + alias-map precondition in
+  the guidance); the three guidance renderUIs name the could-not-be-processed state.
+  Strict TDD, all gates owner-approved via `AskUserQuestion` (3 PRE-RED approach
+  decisions, PRE-RED→RED, RED→GREEN, GREEN→skip-REFACTOR-and-close-out).
+- **Two evidence-driven scope rulings (owner-ratified):** the LD-block missing-id
+  pre-check was deliberately NOT ported — `markerLdBlock()` subsets its matrix to
+  `founderIds` drawn from the same pedigree (`R/markerLdBlock.R:236`), so `idsUsed` can
+  never carry a non-pedigree id and the branch would be untestable dead code; and the
+  RED tests exposed a SECOND, unknown crash path fixed in the same GREEN — the module's
+  eager E2E data-ready `observe()` re-threw a malformed shared upload's validation error
+  with no export click at all (Learning 759).
+- **Verification:** fresh pre-change baseline 2,405→S708-shape reproduced (2,427 blocks,
+  failed=0). RED honest: 5 new `testServer` blocks fail via `shiny.destroyed.error`
+  (Learning 759's refinement: the destroyed module session IS directly assertable),
+  1 guard passes by design; the new live E2E reproduced the disconnect on the real tab
+  pre-fix (`Shiny.shinyapp.isConnected()` FALSE). GREEN: target file 66/66; both live
+  E2E tests pass (Phase 3E smoke — session survives, guidance shows the reason,
+  pre-existing full export flow unchanged); package-loaded lint 0; full suite once on
+  final source 2,434 blocks = baseline + the 7 new, failed=3 all triaged (2 wall-clock
+  benchmarks green on quiet re-run — CPU contention, Learning 760; 1 spelling fixed by
+  rewording the NEWS entry, re-run green); `devtools::check()` 0 errors, 1 W + 1 N both
+  the known untracked-local-file artifacts. Learnings 759/760 appended; BACKLOG item
+  removed.
+
 ### 2026-09-18 · [BL-Up-Next] S709 claim: fix the LD-block/Genomic ROH export-preview session-disconnect crash
 - Session claimed (stub + pending HANDOFFS receipt + this entry, one commit). Top BACKLOG
   Up Next item (found S708): both existing export observers in `R/modMarkerGenetics.R`

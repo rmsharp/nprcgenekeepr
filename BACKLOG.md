@@ -24,34 +24,6 @@ regen left behind (S367 origin, flagged S368/S369) is now also RESOLVED --
 S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 
 ## Up Next
-- [ ] **Stop the LD-block and Genomic ROH export previews from ending the user's session
-      when an uploaded genotype id is not in the loaded pedigree** (found S708, 2026-09-18,
-      while implementing issue #148 Slice 4's Dragon 5 guard; READY, Effort S -- a
-      strict-TDD bug-fix session). Both existing export observers in
-      `R/modMarkerGenetics.R` call a de-identification primitive directly inside
-      `observeEvent()`: `obfuscateLdBlocks()` (the `ldBlockExportPreview` observer) and
-      `obfuscateGenotypeMatrix()`/`obfuscateGenomicROH()` (the `sequenceExportPreview`
-      observer). Each primitive `stop()`s on an id absent from the pedigree's alias map
-      (by design -- the #150 mold). An uncaught error inside an observer **disconnects
-      the Shiny session** in a running app -- verified live S708 on a minimal app
-      (`Shiny.shinyapp.isConnected()` TRUE before, FALSE after an observer `stop()`),
-      though NOT reproduced on these two tabs themselves; `shiny::testServer()` does
-      NOT propagate observer errors (it only prints them), so the module's existing
-      `testServer` tests cannot catch this (Learning 758). The #152 E2E test's own header
-      already notes its fixture pedigree must cover the genotype ids for exactly this
-      reason. Fix pattern already shipped next door: the MHC tab's preview observer
-      (issue #148 Slice 4, same file, search `mhcExportMissingIds`) pre-checks
-      `setdiff(<uploaded ids>, pedigree()$id)`, builds nothing, and shows the count +
-      reason in the tab's export guidance. Test it by asserting the guidance text (the
-      only `testServer`-observable difference) and, ideally, a live E2E disconnect check.
-      **Same residual in the MHC tab itself:** its preview observer's
-      `req(mhcFrequency())` re-throws a malformed-upload validation error inside the
-      observer (same disconnect mechanism, not live-reproduced) -- a malformed MHC file
-      already shows its error in the tab's tables, so this needs a Preview click after
-      a visible error to trigger; fold it into the same session (e.g. `safeRead()` the
-      reactive inside the observer). D8 kept all three untouched this session
-      deliberately: the existing tabs were out of scope, and the MHC residual mirrors
-      its siblings.
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional

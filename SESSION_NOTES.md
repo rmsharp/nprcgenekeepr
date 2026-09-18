@@ -22,17 +22,134 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 708 Handoff Evaluation (by Session 709)
+**Score: 9/10.** **What helped:** the BACKLOG item was again a complete brief — crash
+mechanism, the `mhcExportMissingIds` fix-pattern pointer (`R/modMarkerGenetics.R:897`
+at the time), the MHC residual, and the test strategy were all pre-analyzed, so PRE-RED
+went straight to the right code; gotcha 3 (testServer swallows observer errors; assert
+guidance text; "ideally a live E2E disconnect check") shaped the whole test design —
+the suggested E2E became the test that reproduced the crash live; gotcha 1's baseline
+(2,427/0/0/183/42) reproduced exactly; gotcha 5 predicted the 1-commit backfill
+exactly; gotcha 4's devtools::check 1 W + 1 N matched verbatim. **What was missing:**
+the "guidance text is the ONLY testServer-observable difference" claim understated the
+observable surface — a destroyed module session makes every later read raise
+`shiny.destroyed.error`, so session survival is directly assertable (Learning 759); and
+the module's eager data-ready `observe()` was not flagged as the same crash class (it
+turned out to crash on upload alone, no click). Both discoverable only by doing; low
+cost. **What was wrong:** "port the pre-check to BOTH observers" — the LD-block
+missing-id path is structurally unreachable (`markerLdBlock()` subsets to founder ids,
+`R/markerLdBlock.R:236`); evidence-checked and owner re-ratified as defusal-only.
+**ROI:** high.
+
 ### What Session 709 Did
-**Deliverable:** Fix the LD-block and Genomic ROH export-preview session-disconnect
-crash (top BACKLOG Up Next item, found S708; strict-TDD bug-fix session): port the MHC
-tab's `mhcExportMissingIds` pre-check to the `ldBlockExportPreview` and
-`sequenceExportPreview` observers, and fold in the MHC malformed-upload residual.
-(IN PROGRESS)
-**Started:** 2026-09-18
-**Status:** Session claimed. Work beginning (PRE-RED).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile.
+**Deliverable:** Export-preview session-crash fix — **DONE** (top BACKLOG Up Next item,
+found S708; strict-TDD bug-fix session). Every upstream read inside the LD-block,
+sequence, and MHC export-preview observers goes through `safeRead()` + `req()`; the
+sequence observer ports the MHC Dragon 5 pre-check (`sequenceExportMissingIds` — build
+nothing, say why); the three guidance renderUIs name the could-not-be-processed state
+and the sequence guidance names the missing-animals state + alias-map precondition. The
+RED tests also exposed and GREEN fixed a second, unknown crash: the eager E2E
+data-ready `observe()` re-threw a malformed shared upload's validation error — a
+session-ending crash with NO click at all. All TDD gates owner-approved via
+`AskUserQuestion`: 3 PRE-RED approach decisions (LD defusal-only with evidence;
+guidance branches; extend the existing E2E file), PRE-RED→RED, RED→GREEN,
+GREEN→skip-REFACTOR-and-close-out.
+**Started/completed:** 2026-09-18 (single session). Phase 0 backfill `148cccaa`; claim
+`cf97540e`; RED `cd63250c`; GREEN `310c731d`; NEWS `76807b2a` + reword `61c544a3`;
+records commit follows this handoff.
+**Ledger:** S709 close-out entry at the top of `CHANGELOG.md`, plus the claim entry
+(`cf97540e`) and the Phase 0 backfill entry (`148cccaa`).
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile backfilled 1 commit (`cc540bf3`, the S708 self-reconcile —
+   gotcha 5's predicted shape, measured 1). CI all green including the R-CMD-check that
+   was in progress at S708 close-out. Dashboard 96/100, no HIGH flags. NEW finding:
+   BOTH `HANDOFFS.md` (72,242 B) and `SESSION_NOTES.md` (77,442 B) byte triggers now
+   fire. Owner picked the crash fix from the 4-option picker.
+2. **PRE-RED:** read the three observers, the MHC mold, the primitives, and
+   `markerLdBlock()`. Probes established: the sequence missing-id crash is REACHABLE
+   (Probe A); the LD missing-id crash is STRUCTURALLY UNREACHABLE (`markerLdBlock()`
+   subsets to founderIds — `R/markerLdBlock.R:236`); and testServer DESTROYS the module
+   session on an observer error, so survival is directly assertable (Probe B, Learning
+   759). Fresh baseline before any test: 2,427 / 0 / 0 / 183 / 42 (S708's numbers
+   exactly). Owner ratified 3 approach decisions.
+3. **RED (`cd63250c`):** 6 new testServer blocks + 1 live E2E test (added to the
+   already-registered ROH E2E file — no new file, no shinytest2.yaml change). Honest
+   failures verified: 5 blocks fail via `shiny.destroyed.error`; the guard passes by
+   design; the E2E reproduced the live disconnect on the real tab (`isConnected` FALSE
+   after the click) — the first live reproduction on these tabs.
+4. **GREEN (`310c731d`):** implementation only in `R/modMarkerGenetics.R`. The RED
+   malformed-upload block kept dying at UPLOAD time — traced to the eager data-ready
+   `observe({ req(comparison()) ... })`, a real no-click production crash, fixed with
+   `req(safeRead(comparison))` (GREEN-minimal: the approved RED test demanded the flow
+   survive). Target file 66/66; both live E2E tests green (Phase 3E smoke); lint 0.
+5. **Checklists + suite:** NEWS.Rmd plain-language entry + NEWS.md rendered
+   (`76807b2a`); vocabulary grep clean. Full suite once on final source: 2,434 blocks =
+   2,427 + the 7 new, failed=3, all triaged — 2 wall-clock benchmark blocks failed
+   under CPU contention (suite ran beside lint/render; both files re-ran green quietly;
+   Learning 760), 1 real spelling flag ("unbuilt") fixed by rewording (`61c544a3`),
+   wordlist test re-run green. Warnings 42→48: the i152 fixture's documented
+   markerKinship NA warnings × 3 new module instances, not a regression.
+   `devtools::check()`: 0 errors; 1 W + 1 N = the known untracked-local-file artifacts.
+6. **Close-out:** BACKLOG item removed (nothing residual — all four components of the
+   item shipped or were evidence-retired); Learnings 759/760 appended; CHANGELOG
+   close-out entry; this handoff; HANDOFFS receipt. No GitHub issue involved.
+
+**Self-assessment (Session 709): 9/10.** **Strengths:** (1) PRE-RED probes overturned
+two load-bearing assumptions from the brief BEFORE any test existed (LD unreachability;
+destroyed-session observability), turning both into owner decisions and stronger RED
+design instead of mid-session surprises. (2) The RED honest-failure check surfaced a
+second real crash the brief didn't know about (upload-time, no click) — found precisely
+because a "wrong-time" failure was investigated rather than worked around. (3) Runtime
+verification at the user boundary: the E2E reproduced the disconnect pre-fix and proved
+survival post-fix on the real app. **Weaknesses:** (1) ran lint/render beside the
+single full-suite launch to save wall-clock, causing 2 spurious benchmark failures and
+a re-triage cycle — the S706 "checklists BEFORE the launch" ordering exists for exactly
+this (Learning 760). (2) The NEWS spell-check flag surfaced only in the full suite; a
+pre-suite spell check would have serialized it. (3) Fixing the data-ready observer
+mid-GREEN was decided solo (justified as GREEN-minimal for an approved RED test, and
+disclosed in the GREEN commit + gate), but a one-line mid-session flag to the owner
+would have been cleaner.
+
+**Next steps (specific):** (A) **Archive pass** (READY, Effort S): BOTH `HANDOFFS.md`
+and `SESSION_NOTES.md` byte triggers are firing (72,242 B / 77,442 B vs 65,536 B), and
+`CHANGELOG.md` was 62,816 B BEFORE this close-out's entries — measure it first; expect
+small-denominator `SRF` refusals needing an owner `--force` (the Learning 549/586/594
+pattern). (B) Census items unchanged: class (d) (READY, S), class (b) (READY, M),
+curved-chord (READY, M). (C) **Push decision** (owner call): ~25 commits ahead after
+close-out (recount with `git rev-list --count origin/master..HEAD`); span includes
+S708's Slice 4 + this fix; local suite + check clean apart from the untracked-file
+artifacts. (D) MHC polish (Housekeeping, S). (E) Informational: `R/appServer.R:168`'s
+`observe({ shared$currentStudbook <- req(inputResults$cleanedStudbook()) })` is the
+same observer-crash class but carries a DELIBERATE design comment ("any other error is
+a genuine contract violation and now surfaces") — reported here, not changed, owner's
+call whether Learning 758 changes that judgment; package-split disposition pending;
+dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged.
+
+**Key files:** `R/modMarkerGenetics.R:740` (LD observer), `:816` (sequence observer +
+pre-check), `:807` (`sequenceExportMissingIds`), `:929` (MHC observer), `:1261` (fixed
+data-ready observe), `:1036`/`:1075`/`:1182` (the three guidance renderUIs);
+`tests/testthat/test_modMarkerGenetics.R:1554` (S709 section);
+`tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R:192` (disconnect E2E);
+`PROJECT_LEARNINGS.md` Learnings 759/760 (file tail); `NEWS.Rmd:374` (General Fixes
+entry).
+
+**Gotchas for the next session:** (1) **The fresh baseline is now 2,434 blocks**
+(failed=0, error=0, skipped=184, warning=48). Skipped +1 = the new opt-in E2E test;
+warnings +6 = the i152 fixture's documented markerKinship NA warnings in 3 new
+testServer instances — expected, not a regression signal. (2) **Never run heavy jobs
+beside the full suite** — the 2 wall-clock benchmark blocks (`test_markerKinship.R`,
+`test_markerParentageLikelihood.R`) fail under CPU contention; re-run the file alone
+before treating as a regression (Learning 760). (3) Observer-crash tests can assert
+session survival DIRECTLY: click the path, then read any module state —
+`shiny.destroyed.error` is the honest RED signal (Learning 759); `req(x())` does NOT
+guard against `x()` erroring, only NULL. (4) `devtools::check()` keeps showing 1 W +
+1 N from the untracked `~$e Compounding Loop.html` and `scratchpad/` until the owner
+removes them; CI never sees them. (5) The records commit stages CHANGELOG with
+SESSION_NOTES/HANDOFFS — expect ~1 self-reference commit past the frontier at next
+Phase 0; measure it. (6) Both E2E tests in the ROH file share
+`makeGenomicRohE2ePedigreeFile(dropIds =)`; the partial variant writes a DIFFERENT
+filename so the two tests cannot clobber each other's fixture.
 
 ### Session 707 Handoff Evaluation (by Session 708)
 **Score: 9/10.** **What helped:** the BACKLOG Slice 4 item was a complete contract (the
