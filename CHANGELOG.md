@@ -22,6 +22,15 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits `2f83a6e2`..`ba5bcde8` — S705's own close-out self-reference commits
+- S706 Phase 0 ledger reconcile. The two commits past the frontier are S705's final
+  close-out writes, which by construction land after its CHANGELOG entry (`5d3146cf`):
+  `2f83a6e2` (SESSION_NOTES handoff + S704 evaluation, HANDOFFS receipt completed) and
+  `ba5bcde8` (close-out commit sha recorded in the HANDOFFS receipt, self-reconcile).
+  The recurring shape S705's gotcha 2 predicted; no work is missing, the record is
+  simply being trued up. HANDOFFS.md frontier is HEAD with a `status: complete`
+  receipt — nothing to reconcile there.
+
 ### 2026-09-17 · [issue #148] S705 close-out: Slice 1 DONE — `checkMhcHaplotypeFile()` + `.parseMhcHaplotypeCalls()` shipped under strict TDD; Slice 2 BACKLOG item queued
 - **Deliverable (RED `5c0f359b`, GREEN `e6b548c6`, checklists `2ea1962d`):** the ratified
   plan's Slice 1. `checkMhcHaplotypeFile()` (exported): wide per-animal MHC haplotype
