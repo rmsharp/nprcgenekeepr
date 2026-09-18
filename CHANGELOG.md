@@ -26,6 +26,11 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit 1788e2b8 — S711 close-out self-reconcile
+- S711's final commit recorded its own close-out commit sha into the completed
+  `HANDOFFS.md` receipt (the recurring 1-commit self-reference shape its handoff
+  gotcha 3 predicted; measured exactly 1). Backfilled at S712 Phase 0 reconcile.
+
 ### 2026-09-18 · [ad hoc] S711 close-out: owner-directed push DONE — 34 commits to origin/master, all 4 CI workflows green
 - **Push (non-commit action):** `955f6f19..afd33514`, 34 commits (32 at session start
   + Phase 0 backfill `83618479` + claim `afd33514`), spanning S708 MHC Slice 4, the
