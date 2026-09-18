@@ -22,6 +22,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 705 Did
+**Deliverable:** Issue #148 Slice 1 — `checkMhcHaplotypeFile()` (exported validator) +
+`.parseMhcHaplotypeCalls()` (internal parse rule), per the ratified design plan
+(`docs/planning/issue148-mhc-haplotype-reporting-plan.md` §4 rows 1-2, §5 Slice 1;
+S704 next-step A; owner-picked via `AskUserQuestion` at Phase 0). STRICT-TDD
+implementation session — declared phases, `AskUserQuestion`-gated transitions. Owed
+same-session: NEWS.Rmd, _pkgdown.yml, lint, fresh full-suite baseline (S704 gotcha 3).
+(IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. PRE-RED beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile. (Claim entry itself ships in the claim commit per Learnings
+752/754.)
+
 ### Session 703 Handoff Evaluation (by Session 704)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable with the
 complete frame (planning session, plan-is-the-whole-deliverable, FM #18/#19, the

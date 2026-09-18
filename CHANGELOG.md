@@ -22,6 +22,16 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [issue #148] S705 claim: Slice 1 — MHC haplotype validator + parse rule (session claimed, work beginning)
+- Phase 1B claim for the issue #148 Slice 1 implementation session (S704 next-step A;
+  owner-picked via `AskUserQuestion` at Phase 0; the ratified design plan's first
+  implementation slice). Deliverable: `checkMhcHaplotypeFile()` (exported) +
+  `.parseMhcHaplotypeCalls()` (internal) with tests-first strict TDD, per plan §4 rows
+  1-2 / §5 Slice 1; fixtures = bundled real pair + synthetic edge cases (plan Dragons
+  6/7). Same-session checklists: NEWS.Rmd, _pkgdown.yml, lint, fresh full-suite
+  baseline (the S696–S698 baseline is inherited and this session touches package
+  files). Claim entry ships in the claim commit (Learnings 752/754 convention).
+
 ### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits 52676abe..49af9123 — S704 close-out self-reference commits
 - The recurring shape (predicted by S704's own gotcha 2): the two commits that record a
   session's close-out (`52676abe` SESSION_NOTES handoff + HANDOFFS receipt complete;
