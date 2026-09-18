@@ -156,7 +156,7 @@ key_files: docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md:1 (audit
 gotchas: Baseline still 2,434 blocks failed=0 error=0 (no package files touched). cArc/cArcEdges (587/117) is a NEW metric — never compare against the frozen 1,668 as same-metric. 2026-09-02 census artifacts stay frozen; 2026-09-18 CSV is the standing baseline. Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0. The article's "6 of 237" re-obligates only on a class-(b) change, not on cArc changes. vis-network renders node coords parseInt-truncated (whole px) — pixel-exact reasoning must expect that.
 runtime_smoke: n/a — measurement/docs session; no package runtime behavior changed (data-raw script + audit doc + article prose). The live-widget chromote verification doubled as a rendered-app check of the arc geometry itself.
 changelog_ref: S714 entries at the top of CHANGELOG.md (claim + close-out, 2026-09-18)
-commit: pending
+commit: 8c717ee6
 ```
 S714 self-score 9/10: continuity-first (frozen 1,668 reproduced to the row before any new claim), live-renderer verification of the model plus border-trim/quantization/jitter sensitivities before quoting counts, exact overlap join for the inversion finding, recommendation anchored to the measured net-negative bump; weaknesses — crops do not pixel-isolate a single offending arc (programmatic geometry, disclosed), and the audit doc briefly claimed the article edit before it landed (in-session ordering slip, corrected). Predecessor (S713) scored 9/10: exact deliverable pointer, forward-carry spelled out, frozen-CSV framing precise; stale "47 residuals" figure in the BACKLOG item and no vis-network.min.js breadcrumb were the only gaps.
 
