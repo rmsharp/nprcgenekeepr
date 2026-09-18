@@ -152,7 +152,7 @@ key_files: R/checkMhcHaplotypeFile.R:47 (validator), R/parseMhcHaplotypeCalls.R:
 gotchas: (1) Fresh baseline is now 2,384 blocks (failed=0, error=0, skipped=182, warning=42), measured on shipped source; Slice 2 measures its own anyway. (2) The 2 S705 close-out self-reference commits sit past the CHANGELOG frontier -- next Phase 0 backfills them (recurring shape). (3) Slice 2 isRare uses RATIFIED D4 semantics: frequency <= 0.01 OR carriers <= 2 -- <= not <, do not drift the operator. (4) Citation checklist fires at Slice 2: re-verify every plan sec 2.8 source before use; 5 draft citations were dropped as unverifiable in S704 -- do not resurrect them. (5) NEWS.Rmd edits ship with re-rendered NEWS.md in the same commit. (6) Vocabulary grep at every slice close-out (plan Dragon 3); CHANGELOG enumerations span shards.
 runtime_smoke: n/a -- script-callable additions only, no Shiny wiring changed (UI arrives at Slice 4)
 changelog_ref: 5d3146cf
-commit: pending
+commit: 2f83a6e2
 ```
 Self-score 9/10: + clean strict-TDD cycle (RED committed at 0 passing, minimal GREEN, every transition owner-gated), + honest verification (baseline predates RED files; suite re-run on final post-lint-fix source), + plan-to-test fidelity (all Dragon 6/7 edges, real-data pins reproduce); - linting before the first full-suite launch would have saved a second ~10-min run, - no learning minted (surprise-free session, stated rather than padded). Predecessor 9/10: the BACKLOG brief made execution near-mechanical and every claim verified true; sole gap was the undocumented NEWS.md-render convention (one git log to discover).
 
