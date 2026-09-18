@@ -26,6 +26,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL] S713 claim: census class (b) off-centre union-dot assessment
+- S712 next-step A / BACKLOG "Census class (b)" item, owner-picked via
+  `AskUserQuestion` at Phase 0. Deliverable: (i) decide whether the 2
+  numerical-noise rows (`__union_75` −2.3e-07 units, `__union_132` 8.7e-09 units)
+  belong in the census (the visible-offset tolerance question for the census
+  predicate); (ii) determine whether the 6 real 60–180 px offsets
+  (`__union_97/114/130/137/191/228`) are minSep-forced or QP-reducible
+  (`R/makePedigreeDiagramData.R`, `.solveJointQP()`); (iii) re-verify the coupled
+  fidelity-article prose ("8 of 237", 0.00-px Track B centering). Assessment
+  session. Stub + pending receipt written with this entry.
+
 ### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit ed79261f — S712 close-out self-reconcile
 - S712's final commit recorded its own close-out commit sha into the completed
   `HANDOFFS.md` receipt (the recurring 1-commit self-reference shape its handoff

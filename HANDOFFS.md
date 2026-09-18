@@ -144,6 +144,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S713
+date: 2026-09-18
+status: pending
+active_task: Census class (b) assessment (S712 next-step A, owner-picked via AskUserQuestion at Phase 0): (i) decide whether the 2 numerical-noise rows (__union_75 -2.3e-07 units, __union_132 8.7e-09 units) belong in the census, i.e. the visible-offset tolerance question for the census predicate; (ii) determine whether the 6 real 60-180 px offsets (__union_97/114/130/137/191/228) are minSep-forced or QP-reducible (R/makePedigreeDiagramData.R, .solveJointQP()); (iii) re-verify the coupled fidelity-article prose ("8 of 237", 0.00-px Track B centering). Assessment session, no TDD phases expected unless package files are touched.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S712
 date: 2026-09-18
 status: complete

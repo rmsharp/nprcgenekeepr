@@ -26,6 +26,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 713 Did
+**Deliverable:** Census class (b) assessment — the 8 off-centre union dots on the
+Real 375 fixture (S712 next-step A / BACKLOG "Census class (b)" item, owner-picked
+via `AskUserQuestion` at Phase 0): (i) decide the census-predicate tolerance
+question for the 2 numerical-noise rows, (ii) determine whether the 6 real
+60–180 px offsets are minSep-forced or QP-reducible, (iii) re-verify the coupled
+fidelity-article prose. (IN PROGRESS)
+**Started:** 2026-09-18
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 711 Handoff Evaluation (by Session 712)
 **Score: 9/10.** **What helped:** next-step A was this session's exact deliverable,
 with both site ids, the ~120-px values, the S696 crop-precedent pointer, and
