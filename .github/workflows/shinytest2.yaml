@@ -145,6 +145,7 @@ jobs:
             "^e2e-input-"
             "^e2e-marker-genetics-genomic-roh-module"
             "^e2e-marker-genetics-ld-block-module"
+            "^e2e-marker-genetics-mhc-haplotype-module"
             "^e2e-mate-pair-analysis-module"
             "^e2e-orip-module"
             "^e2e-pedigree-"
