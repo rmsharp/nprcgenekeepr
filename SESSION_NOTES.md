@@ -26,6 +26,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 715 Did
+**Deliverable:** Curved duplicate-connectors fix — replace the blind +0.3 roundness
+bump in `.resolveEdgeNodeCollisions()` with arc-verified roundness selection
+(BACKLOG Housekeeping item filed S714, owner-picked via `AskUserQuestion` at
+Phase 0; package-code fix, strict TDD) (IN PROGRESS)
+**Started:** 2026-09-18
+**Status:** Session claimed. Work beginning (PRE-RED investigation).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 713 Handoff Evaluation (by Session 714)
 **Score: 9/10.** **What helped:** next-step A was this session's exact deliverable
 with the item pointer (`BACKLOG.md:109`) and the forward-carry spelled out (article

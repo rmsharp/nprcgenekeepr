@@ -144,6 +144,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S715
+date: 2026-09-18
+status: pending
+active_task: Curved duplicate-connectors fix (BACKLOG Housekeeping item filed S714, owner-picked via AskUserQuestion at Phase 0) — replace the blind +0.3 roundness bump in .resolveEdgeNodeCollisions() (R/makePedigreeDiagramData.R, curved branch) with arc-verified roundness selection using the census's exact arc predicates; strict TDD; re-derive the test_resolveEdgeNodeCollisions.R pins; verify via census re-run (cArc/cArcEdges should drop materially from 587/117), full suite, lint
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S714
 date: 2026-09-18
 status: complete
@@ -159,12 +168,6 @@ changelog_ref: S714 entries at the top of CHANGELOG.md (claim + close-out, 2026-
 commit: 8c717ee6
 ```
 S714 self-score 9/10: continuity-first (frozen 1,668 reproduced to the row before any new claim), live-renderer verification of the model plus border-trim/quantization/jitter sensitivities before quoting counts, exact overlap join for the inversion finding, recommendation anchored to the measured net-negative bump; weaknesses — crops do not pixel-isolate a single offending arc (programmatic geometry, disclosed), and the audit doc briefly claimed the article edit before it landed (in-session ordering slip, corrected). Predecessor (S713) scored 9/10: exact deliverable pointer, forward-carry spelled out, frozen-CSV framing precise; stale "47 residuals" figure in the BACKLOG item and no vis-network.min.js breadcrumb were the only gaps.
-
-```handoff
-session: S713
-date: 2026-09-18
-status: complete
-self_score: 9
 
 ```handoff
 session: S713

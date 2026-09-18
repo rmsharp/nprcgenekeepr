@@ -26,6 +26,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL] S715 claim: curved duplicate-connectors fix — arc-verified roundness selection replacing the blind +0.3 bump
+- Session claimed (stub + pending receipt + this entry). Owner picked the
+  S714-filed BACKLOG Housekeeping item via the Phase 0 `AskUserQuestion` picker.
+  Scope: `.resolveEdgeNodeCollisions()`'s curved branch
+  (`R/makePedigreeDiagramData.R`) gains arc-verified roundness selection using
+  the census's exact predicates (ported as internal helpers); strict TDD;
+  `test_resolveEdgeNodeCollisions.R` pins re-derived; census re-run + full
+  suite + lint at verification.
+- **Ledger repair (ad hoc, disclosed):** removed a 5-line truncated duplicate
+  S713 receipt header (an unclosed ` ```handoff ` fence, no unique content)
+  that S714's records commit `8c717ee6` accidentally inserted into
+  `HANDOFFS.md` between the S714 prose and the real S713 receipt.
+
 ### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `0b4d84bb` — S714 close-out self-reference
 - S714's final commit recorded its own records-commit sha (`8c717ee6`) into the
   `HANDOFFS.md` receipt after the ledger entry was written — the recurring
