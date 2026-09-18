@@ -10,9 +10,10 @@
 ## same-row edge whose x-span strictly contains an unrelated node, and
 ## repairs it with a small rectilinear "step" detour -- never moving any
 ## pre-existing node. The curved duplicate-connector arc gets its own,
-## separate disclosed-heuristic branch (a smooth.roundness bump), since it
-## cannot be rerouted through rectilinear waypoints without destroying its
-## already-shipped arc styling (S577/S468/S469).
+## separate branch (arc-verified roundness selection since S715; a blind
+## smooth.roundness bump before that), since it cannot be rerouted through
+## rectilinear waypoints without destroying its already-shipped arc styling
+## (S577/S468/S469).
 ##
 ## PRE-RED empirical findings (this session, verified live against current
 ## HEAD via pkgload::load_all(), not assumed):
@@ -310,28 +311,140 @@ test_that(".resolveEdgeNodeCollisions does not flag a node that is
   expect_equal(nrow(result$residuals), 0L)
 })
 
-## ---- curved duplicate connector: separate disclosed-heuristic branch --
-## GitHub issue #160 comment 1's original reproduction (P1xP2's 2 children
-## A and Y; Y duplicated, mating both A -- consanguineous -- and W) exactly
+## ---- curved duplicate connector: arc-verified roundness selection -----
+## History: GitHub issue #160 comment 1's original reproduction exactly
 ## isolated the curved-connector-behind-W collision under the OLD
-## algorithm. Walker/BJL cutover (Phase 3, this session): found during
-## GREEN that this small synthetic fixture no longer collides under the
-## new engine's different coordinate distribution -- W's own x (288.12)
-## now falls OUTSIDE the __dup_Y_1/Y chord (168-240), confirmed directly
-## (probe execution); the fixture and its own .commentOneFixture() helper
-## are removed as dead code rather than kept unused. The curved-heuristic
-## mechanism itself (.resolveEdgeNodeCollisions(), untouched by this
-## migration) still fires reliably on real data -- 47 curved-heuristic
-## collisions measured on the
-## real 375-individual bundled fixture (down from 102 curved connectors
-## total, all initially at roundness 0.2) -- so this test is rewritten to
-## exercise it there instead of via a now-inert small fixture, rather than
-## engineering a new synthetic shape to force a specific collision under
-## an unrelated coordinate system.
-test_that(".resolveEdgeNodeCollisions applies a disclosed smooth.roundness
-           heuristic to curved duplicate connectors that collide with an
-           unrelated node, on the real 375-individual bundled fixture",
-          {
+## algorithm; the Walker/BJL cutover (Phase 3) found that small synthetic
+## fixture inert under the new engine's coordinates and rewrote this test
+## against the real 375-individual bundled fixture (47 -> 59 -> 58 -> 56
+## chord-heuristic residuals across S678/S679/S690, each re-measured
+## live).
+## CHANGED S715 (rewritten): the S714 arc census
+## (docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md) proved
+## the same-row chord predicate this branch used was 100% false positives
+## (0 of 1,667 flagged pairs truly hit -- the arc bows over its same-row
+## chord obstacles) while BLIND to every true hit (587 arc-inside-symbol
+## events on 117 arcs, mostly cross-row connectors it never examined), and
+## the blind +0.3 roundness bump was net-negative (21 arcs hit at 0.2 but
+## 24 at the shipped 0.5). The branch now scores TRUE arc-disc hits with
+## the census's own exact predicate (quadratic-Bezier via + cubic-solve
+## min distance, ported as internal helpers) and picks, per truly
+## colliding connector, the roundness-ladder step (0.05-0.60 by 0.05)
+## with the fewest true hits (tie -> closest to the kinship2-convention
+## base 0.2, tie -> smaller); "curved-heuristic" residuals now disclose
+## exactly the arcs no ladder step fully clears.
+
+## Local census-replica arc geometry (verbatim from
+## data-raw/pedigreeDrawingErrorCensus.R, the S714-verified transcription
+## of the bundled vis-network.min.js -- max |via(model) - via(live)| =
+## 1.1e-13 px over all 173 curved edges). Deliberately NOT sharing code
+## with the production internals, matching .findEdgeNodeCollisions()
+## above: the test verifies actual geometry, not "the same logic agrees
+## with itself."
+.censusCurvedVia <- function(x1, y1, x2, y2, roundness) {
+  dx <- x2 - x1
+  dy <- y1 - y2
+  len <- sqrt(dx * dx + dy * dy)
+  fac <- 0.5 * roundness + 0.5
+  g <- (atan2(dy, dx) + fac * pi) %% (2L * pi)
+  c(x = x1 + fac * len * sin(g), y = y1 + fac * len * cos(g))
+}
+.censusBezierPointAt <- function(t, p0, v, p1) {
+  cbind(
+    (1L - t)^2L %o% p0[1L] + (2L * t * (1L - t)) %o% v[1L] +
+      t^2L %o% p1[1L],
+    (1L - t)^2L %o% p0[2L] + (2L * t * (1L - t)) %o% v[2L] +
+      t^2L %o% p1[2L]
+  )
+}
+.censusBezierMinDist <- function(cx, cy, p0, v, p1) {
+  a <- v - p0
+  b <- p1 - 2L * v + p0
+  d <- p0 - c(cx, cy)
+  co <- c(sum(d * a), sum(d * b) + 2L * sum(a * a), 3L * sum(a * b),
+          sum(b * b))
+  ts <- c(0L, 1L)
+  if (abs(co[[4L]]) > 0L || abs(co[[3L]]) > 0L || abs(co[[2L]]) > 0L) {
+    r <- polyroot(co)
+    re <- Re(r)[abs(Im(r)) < 1e-7]
+    ts <- c(ts, re[re > 0L & re < 1L])
+  }
+  pts <- .censusBezierPointAt(ts, p0, v, p1)
+  min(sqrt((pts[, 1L] - cx)^2L + (pts[, 2L] - cy)^2L))
+}
+## True arc-disc hit count for edge row i at a given roundness: visible
+## nodes (size > 0) that are neither an endpoint nor graph-adjacent to
+## one, whose disc the modelled painted arc passes strictly inside --
+## the census's own c-arc-inside convention.
+.arcTrueHitCount <- function(nodes, edges, i, roundness) {
+  xOf <- as.list(stats::setNames(nodes$x, nodes$id))
+  yOf <- as.list(stats::setNames(nodes$y, nodes$id))
+  vis <- nodes[!is.na(nodes$size) & nodes$size > 0L, , drop = FALSE]
+  adjPairs <- split(c(edges$to, edges$from), c(edges$from, edges$to))
+  f <- edges$from[[i]]
+  t <- edges$to[[i]]
+  p0 <- c(xOf[[f]], yOf[[f]])
+  p1 <- c(xOf[[t]], yOf[[t]])
+  v <- .censusCurvedVia(p0[1L], p0[2L], p1[1L], p1[2L], roundness)
+  rmax <- max(vis$size)
+  samp <- .censusBezierPointAt(seq(0L, 1L, length.out = 64L), p0, v, p1)
+  cand <- vis[vis$x >= min(samp[, 1L]) - rmax &
+                vis$x <= max(samp[, 1L]) + rmax &
+                vis$y >= min(samp[, 2L]) - rmax &
+                vis$y <= max(samp[, 2L]) + rmax, , drop = FALSE]
+  cand <- cand[!cand$id %in% c(f, t, adjPairs[[f]], adjPairs[[t]]), ,
+               drop = FALSE]
+  if (nrow(cand) == 0L) {
+    return(0L)
+  }
+  dd <- vapply(seq_len(nrow(cand)), function(k) {
+    .censusBezierMinDist(cand$x[[k]], cand$y[[k]], p0, v, p1)
+  }, numeric(1L))
+  sum(dd < cand$size - 1e-9)
+}
+
+test_that(".curvedCwVia reproduces the verified vis-network curvedCW via
+           formula", {
+  ## Hand-derived from the S714-verified transcription, not from the
+  ## implementation: for a horizontal x-ordered pair (0,0) -> (100,0),
+  ## fac = 0.5 * r + 0.5, g = fac * pi, via = fac * 100 * (sin g, cos g).
+  ## r = 0.2: fac 0.6, via = (57.06339098, -18.54101966) -- the arc bows
+  ## UP (canvas y is down). r = 0.5: fac 0.75, via = (53.03300859,
+  ## -53.03300859).
+  v02 <- .curvedCwVia(0, 0, 100, 0, 0.2)
+  expect_equal(unname(v02[1L]), 57.06339098, tolerance = 1e-8)
+  expect_equal(unname(v02[2L]), -18.54101966, tolerance = 1e-8)
+  v05 <- .curvedCwVia(0, 0, 100, 0, 0.5)
+  expect_equal(unname(v05[1L]), 53.03300859, tolerance = 1e-8)
+  expect_equal(unname(v05[2L]), -53.03300859, tolerance = 1e-8)
+  ## Transcription equality against the census replica on a
+  ## non-horizontal pair (cross-row duplicate connectors are the census's
+  ## main true-hit population).
+  expect_equal(.curvedCwVia(10, 200, -50, 80, 0.2),
+               .censusCurvedVia(10, 200, -50, 80, 0.2),
+               tolerance = 1e-12)
+})
+
+test_that(".bezierMinDistTo computes exact point-to-quadratic distances", {
+  p0 <- c(0, 0)
+  v <- c(50, -50)
+  p1 <- c(100, 0)
+  ## The curve is x(t) = 100 t, y(t) = -100 t (1 - t); apex (50, -25).
+  ## Distance from the chord midpoint (50, 0): 25 exactly (stationary
+  ## point at t = 0.5). From the apex itself: 0. From (-30, 40): the
+  ## nearest curve point is the endpoint (0, 0), distance 50.
+  expect_equal(.bezierMinDistTo(50, 0, p0, v, p1), 25, tolerance = 1e-9)
+  expect_equal(.bezierMinDistTo(50, -25, p0, v, p1), 0, tolerance = 1e-9)
+  expect_equal(.bezierMinDistTo(-30, 40, p0, v, p1), 50, tolerance = 1e-9)
+  ## Agreement with the census replica at an asymmetric probe point.
+  expect_equal(.bezierMinDistTo(72, -11, p0, v, p1),
+               .censusBezierMinDist(72, -11, p0, v, p1),
+               tolerance = 1e-12)
+})
+
+test_that(".resolveEdgeNodeCollisions selects arc-verified roundness for
+           curved duplicate connectors on the real 375-individual bundled
+           fixture", {
   ped <- read.csv(
     system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
                 package = "nprcgenekeepr"),
@@ -353,45 +466,67 @@ test_that(".resolveEdgeNodeCollisions applies a disclosed smooth.roundness
 
   result <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
 
-  ## The heuristic bumps roundness on each colliding curved edge -- a
-  ## disclosed nudge, not a closed-form clearance proof (plan section
-  ## 2.2). Confirmed only mechanically here; the actual visual effect is
-  ## confirmed by rendered-image inspection in REFACTOR.
   fixedCurved <- result$edges[!is.na(result$edges$smooth.enabled) &
                                   result$edges$smooth.enabled == TRUE, ]
   ## CHANGED S678 from 102L -- same cause as the curved count above.
   expect_equal(nrow(fixedCurved), 170L)
-  ## One concrete, named pair re-measured directly, not hand-derived.
-  ## CHANGED S690: the previously-pinned pair (__dup_28XSME_1 -> 28XSME)
-  ## no longer collides with any unrelated node once the root-subtree
-  ## ordering pass places related founder subtrees adjacent (Shape A
-  ## Phase 2; the design's own inventory flagged this pin as
-  ## order-sensitive: "roundness bump depends on same-row obstacles --
-  ## re-derive"). Re-derived live from the wired engine: the bumped set
-  ## has 56 members; __dup_1X40V5_1 -> 1X40V5 is pinned as the named
-  ## representative (first bumped pair in from/to order).
+
+  ## True hits per curved edge, measured with the census-replica exact
+  ## predicate at the shipped (final) roundness and at the base 0.2.
+  finalHits <- vapply(seq_len(nrow(fixedCurved)), function(k) {
+    i <- which(result$edges$from == fixedCurved$from[[k]] &
+                 result$edges$to == fixedCurved$to[[k]])[[1L]]
+    .arcTrueHitCount(result$nodes, result$edges, i,
+                     result$edges$smooth.roundness[[i]])
+  }, integer(1L))
+  baseHits <- vapply(seq_len(nrow(fixedCurved)), function(k) {
+    i <- which(result$edges$from == fixedCurved$from[[k]] &
+                 result$edges$to == fixedCurved$to[[k]])[[1L]]
+    .arcTrueHitCount(result$nodes, result$edges, i, 0.2)
+  }, integer(1L))
+
+  ## Never-worse: no connector's TRUE hit count may exceed its base-0.2
+  ## count -- the property the retired blind +0.3 bump measurably
+  ## violated (S714 census Finding 3: 21 arcs hit at 0.2, 24 at 0.5).
+  expect_true(all(finalHits <= baseHits))
+
+  ## A chord-heuristic false positive keeps the kinship2-convention base
+  ## roundness: __dup_1X40V5_1 -> 1X40V5 (the S690 pin) has ZERO true
+  ## arc hits at 0.2 (its same-row chord obstacle sits under the arc's
+  ## bow), so the new mechanism must leave it untouched.
   one <- fixedCurved[fixedCurved$from == "__dup_1X40V5_1" &
                         fixedCurved$to == "1X40V5", ]
   expect_equal(nrow(one), 1L)
-  expect_equal(one$smooth.roundness, 0.5)
+  expect_equal(one$smooth.roundness, 0.2)
 
-  ## Recorded in the residuals data frame as a heuristic (unconfirmed by
-  ## coordinate math), distinct from a rectilinear (fully-proven) repair.
+  ## A truly colliding, ladder-clearable connector is cleared:
+  ## __dup_0L5AWR_1 -> 0L5AWR has 6 true hits at 0.2 (S715 probe,
+  ## re-derived here via the replica predicate) and 0 at roundness 0.5 --
+  ## the ladder's fewest-hits pick. Re-measured live, never hand-derived.
+  two <- fixedCurved[fixedCurved$from == "__dup_0L5AWR_1" &
+                        fixedCurved$to == "0L5AWR", ]
+  expect_equal(nrow(two), 1L)
+  expect_equal(two$smooth.roundness, 0.5)
+  twoIdx <- which(fixedCurved$from == "__dup_0L5AWR_1" &
+                    fixedCurved$to == "0L5AWR")
+  expect_equal(finalHits[[twoIdx]], 0L)
+  expect_equal(baseHits[[twoIdx]], 6L)
+
+  ## Residual correspondence: "curved-heuristic" residuals disclose
+  ## exactly the connectors with >= 1 TRUE arc hit at their final
+  ## roundness -- no false positives (the old chord set was 100% false),
+  ## no silent misses.
   curvedResiduals <- result$residuals[result$residuals$kind ==
                                           "curved-heuristic", ]
-  ## CHANGED S678 from 47L -- Decision 2's 68 extra duplicates add 68
-  ## curved connectors on denser rows; 59 of the 170 collide with an
-  ## unrelated node and take the roundness nudge (up from 47 of 102).
-  ## Re-measured live (matches the census's own 59 pipeline residuals).
-  ## CHANGED S679 to 58L -- Decision 1 order-consistent seeding
-  ## (provisional-order design Phase 2): the tighter local
-  ## anchor--dot--mate packing clears one curved-connector collision
-  ## (matches the census's own 58 pipeline residuals). Re-measured live.
-  ## CHANGED S690 to 56L -- root-subtree ordering pass wired in (Shape A
-  ## Phase 2): adjacent founder subtrees shorten the curved duplicate
-  ## connectors, clearing 2 more collisions (matches the render
-  ## warning's own 58 -> 56). Re-measured live.
-  expect_equal(nrow(curvedResiduals), 56L)
+  resPairs <- paste(curvedResiduals$from, curvedResiduals$to)
+  hitPairs <- paste(fixedCurved$from, fixedCurved$to)[finalHits > 0L]
+  expect_setequal(resPairs, hitPairs)
+  ## CHANGED S715 from 56L -- arc-verified selection replaces the chord
+  ## heuristic: 114 of 170 connectors truly collide at base 0.2, the
+  ## ladder fully clears 42, leaving 72 disclosed residuals (events
+  ## 587 -> 149 on the S715 probe; the census re-run at close-out is the
+  ## standing record). Re-measured live, never hand-derived.
+  expect_equal(nrow(curvedResiduals), 72L)
 
   ## Every pre-existing node's x/y is byte-identical.
   before <- waypoints$nodes[, c("id", "x", "y")]

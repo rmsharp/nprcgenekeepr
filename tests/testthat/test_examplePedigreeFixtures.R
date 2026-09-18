@@ -188,7 +188,12 @@
     duplicated = c("LB2", "LK"),
     directNodes = 21L, directEdges = 21L,
     rectilinearNodes = 35L, rectilinearEdges = 35L,
-    rectilinearCollisionWarning = TRUE
+    ## CHANGED S715 (TRUE -> FALSE): arc-verified roundness selection --
+    ## this fixture's 2 chord-flagged connectors resolve to 1 TRUE
+    ## arc-disc collision (the other was a chord false positive), which
+    ## the roundness ladder fully clears, so no residual warning fires.
+    ## Re-render owner-reviewed at the S715 GREEN gate.
+    rectilinearCollisionWarning = FALSE
   ),
   backcross = list(
     nRows = 11L, nFounders = 3L,
@@ -224,7 +229,11 @@
     duplicated = c("HB1", "HS"),
     directNodes = 18L, directEdges = 18L,
     rectilinearNodes = 30L, rectilinearEdges = 30L,
-    rectilinearCollisionWarning = TRUE
+    ## CHANGED S715 (TRUE -> FALSE): arc-verified roundness selection --
+    ## both of this fixture's 2 TRUE arc-disc collisions are fully
+    ## cleared by the roundness ladder, so no residual warning fires.
+    ## Re-render owner-reviewed at the S715 GREEN gate.
+    rectilinearCollisionWarning = FALSE
   )
 )
 
@@ -383,16 +392,21 @@ test_that(
 })
 
 test_that(
-  "the rectilinear collision warning is pinned deliberately: exactly one
-   '2 same-row edge-node collision(s)' warning for the linebreeding and
-   half-sib exemplars, and no warning for the other three", {
+  "the rectilinear collision warning is pinned deliberately: no warning
+   for any of the five exemplars", {
   ## Found S692 (2026-09-16), pinned S693 (2026-09-17): the linebreeding and
-  ## half-sib rectilinear layouts each report 2 unresolved same-row
+  ## half-sib rectilinear layouts each reported 2 unresolved same-row
   ## edge-node collisions. The warning was already present when the owner
   ## approved these exact renders as legible at S691's visual gate, so it
-  ## is pinned as accepted behavior, not suppressed. If a routing change
+  ## was pinned as accepted behavior, not suppressed. If a routing change
   ## resolves (or adds) collisions, this test fails on purpose: re-render,
   ## get the drawing re-reviewed, then update the expectation.
+  ## CHANGED S715: arc-verified roundness selection retires the chord
+  ## heuristic -- of the 4 pinned residuals, 1 was a chord false positive
+  ## and the other 3 TRUE arc-disc collisions are fully cleared by the
+  ## roundness ladder, so all five exemplars now render warning-free
+  ## (specs' rectilinearCollisionWarning flipped to FALSE; renders
+  ## owner-re-reviewed at the S715 GREEN gate per the rule above).
   for (name in names(.exemplarSpecs)) {
     spec <- .exemplarSpecs[[name]]
     ped <- .readExemplarPedigree(name)
