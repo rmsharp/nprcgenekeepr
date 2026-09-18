@@ -142,17 +142,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S704
 date: 2026-09-17
-status: pending
-active_task: Issue #148 MHC haplotype-reporting design plan (docs/planning/issue148-mhc-haplotype-reporting-plan.md, the #152/#153 mold; S703 next-step A; owner-picked via AskUserQuestion at Phase 0; PLANNING session -- plan doc is the whole deliverable, no implementation, FM #18/#19; docs-only, no TDD phases). Ratify Q1-Q8 from the S703 scoping doc as numbered decisions with a vertical-slice list and per-slice completion criteria.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Issue #148 MHC haplotype-reporting design plan RATIFIED (docs/planning/issue148-mhc-haplotype-reporting-plan.md; S703 next-step A; owner-picked via AskUserQuestion at Phase 0; PLANNING session, docs-only, no TDD phases, zero R//tests//man changes). Q1-Q8 resolved as ten decisions D1-D10; owner ratified all 4 judgment calls at the recommended option in one AskUserQuestion round (D2 dedicated wide upload behind checkMhcHaplotypeFile(), D3 exclude-and-disclose uncertain ?-calls, D4 dual rarity criterion freq<=0.01 OR carriers<=2, D8 eighth tab in modMarkerGenetics). Four future strict-TDD slices with per-slice completion criteria. Slice 1 queued at top of BACKLOG Up Next.
+what_was_done: Direct reads of every load-bearing file (modMarkerGenetics.R in full, all validators, Pathway A end to end, obfuscateTwinRelations mold, the bundled CSV); measured the real data's frequency distribution (31 animals / 62 calls / 0 missing / 2 uncertain / 33 distinct over denominator 60 / freq<0.05 flags 26, <=0.01 flags 0, carriers<=2 flags 26 / 27 of 31 unique unordered pairs) -- the <=0.01-flags-0 finding reshaped D4 into the dual criterion; one background domain-research agent with DIRECT/INFERENCE/UNVERIFIED tagging (Wiseman 2013 label convention, CIWD dual-criterion precedent, 2N denominators, identifiability); a verify pass caught 1 unmeasured "measured" claim and 5 wrong-or-unverifiable draft citations before ratification (Learning 757). Incidental finding routed into the plan, not fixed: modMarkerGeneticsServer() @return says "fourteen" reactives, actual 19 -- repair scheduled inside Slice 4. Phase 0 backfill 45bd4061; claim b1aa58c9; deliverable f66ee459; records 1435ae20 (CHANGELOG close-out entry, Learning 757, BACKLOG Slice 1 item + completed item removed + batch narrative). No suite run: docs-only; S696-S698 baseline (2,370 blocks, failed=0) inherited.
+next_steps: (A) Implement issue #148 Slice 1 (READY, Effort M, top BACKLOG Up Next item, full context there): checkMhcHaplotypeFile() + .parseMhcHaplotypeCalls() per plan sec 4 rows 1-2 and sec 5 Slice 1 done-when; STRICT TDD with AskUserQuestion-gated phases -- the first #148 session where TDD applies. (B) Census class (d) (READY, S), class (b) union dots (READY, M), curved-chord pass (READY, M) -- unchanged. (C) Push decision (owner call): ~48 commits ahead (estimate -- recount with git rev-list --count origin/master..HEAD); span includes S697/S698 package-path comment-level changes (MEASURED this session, correcting S703's docs-only estimate). (D) Informational: package-split disposition pending, dashboard copy stale, untracked leftovers, CHANGELOG re-fire ~3-4 sessions out.
+key_files: docs/planning/issue148-mhc-haplotype-reporting-plan.md:1 (ratified plan -- sec 4 interface catalog, sec 5 slices, sec 7 dragons, sec 11 ratification), BACKLOG.md:27 (Slice 1 item, lines drift), CHANGELOG.md:25 (S704 entries), PROJECT_LEARNINGS.md:2210 (Learning 757, lines drift), docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md:85 (Q1-Q8 the plan resolved), R/modMarkerGenetics.R:136 (the 7-tab surface Slice 4 extends)
+gotchas: (1) Slice 1 is strict-TDD -- declare phases, gate transitions via AskUserQuestion (S703/S704 were docs-only exceptions). (2) The 2 S704 close-out self-reference commits sit past the CHANGELOG frontier -- next Phase 0 backfills them (recurring shape). (3) failed=0 baseline (2,370 blocks) INHERITED from S698; Slice 1 touches package files -- measure fresh BEFORE claiming regression deltas. (4) Plan decisions are RATIFIED -- do not re-litigate D4's 0.01/2 defaults; pinned measured numbers (33/60/26-via-carrier-leg/freq-leg-0) are Slice 2's test expectations. (5) Vocabulary grep at every slice close-out (plan Dragon 3). (6) CHANGELOG enumerations must span shards.
+runtime_smoke: n/a -- docs-only (design plan; zero R//tests//man changes)
+changelog_ref: 1435ae20
 commit: pending
 ```
-Claim stub — overwritten to `status: complete` at Phase 3D.
+Self-score 9/10: + measurement-driven D4 (the <=0.01-cannot-fire finding), + verify pass caught both fabrication classes pre-ratification (Learning 757), + clean planning boundary (zero package changes, incidental find routed not fixed), + owner ratified all 4 recommendations unchanged; - the draft was written before the research agent returned, planting the citation errors the verify pass then had to catch, - deepest-reasoning-mode directive is a harness setting the session cannot set itself. Predecessor 9/10: next-step (A) was this session's deliverable with a complete frame and a fully-verified evidence inventory; sole wrong claim (unpushed span "believed docs/prose-only") was honestly labeled an estimate, cost zero.
 
 ```handoff
 session: S703

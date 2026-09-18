@@ -22,18 +22,125 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 703 Handoff Evaluation (by Session 704)
+**Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable with the
+complete frame (planning session, plan-is-the-whole-deliverable, FM #18/#19, the
+#152/#153 mold, deepest-reasoning directive) and the BACKLOG item carried the full
+evidence inventory forward — every file:line citation in it checked out on direct
+re-read (only cosmetic drift: the vocabulary comment is `:6-13` incl. nolint markers vs
+the cited `:6-9`); gotcha 2 predicted the exact Phase 0 backfill shape
+(`2be33272`/`aec3b514`, backfilled `45bd4061`); gotcha 1 (scoping doc ≠ design plan;
+close out after the plan) framed scope correctly; the scoping doc's Q1–Q8 mapped 1:1
+onto this plan's decisions. **What was missing:** nothing material. **What was wrong:**
+next-step (D)'s "the unpushed span is believed docs/prose-only" — measured this
+session, the span includes `R/makePedigreeDiagramData.R`,
+`tests/testthat/test_resolveEdgeNodeCollisions.R`, `man/makePedigreeMatingLayout.Rd`,
+and `inst/WORDLIST` (S697/S698 comment-level changes). It was honestly labeled an
+estimate per the derive-or-label rule, so the cost was zero — but the guess itself was
+wrong, worth knowing for the push decision. **ROI:** high.
+
 ### What Session 704 Did
-**Deliverable:** Issue #148 MHC haplotype-reporting design plan
-(`docs/planning/issue148-mhc-haplotype-reporting-plan.md`, the #152/#153 mold; S703
-next-step A; owner-picked via `AskUserQuestion` at Phase 0; PLANNING session — the plan
-doc is the whole deliverable, no implementation, FM #18/#19; docs-only, no TDD phases)
-(IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile. (Claim entry itself ships in the claim commit per Learnings
-752/754.)
+**Deliverable:** Issue #148 MHC haplotype-reporting design plan — **RATIFIED**
+(`docs/planning/issue148-mhc-haplotype-reporting-plan.md`; S703 next-step A;
+owner-picked via `AskUserQuestion` at Phase 0; PLANNING session, docs-only, no TDD
+phases, FM #18/#19 respected: zero `R/`/`tests/`/`man/` changes). Q1–Q8 resolved as ten
+decisions D1–D10; the owner ratified all 4 judgment calls at the recommended option via
+one `AskUserQuestion` round: **D2** dedicated wide upload (`id, haplotype1, haplotype2`
+behind a new `checkMhcHaplotypeFile()`; designation-by-upload; biallelic gate never
+adjacent), **D3** exclude-and-disclose `?`-uncertain calls, **D4** dual rarity criterion
+(frequency ≤ 0.01 OR carriers ≤ 2, both configurable), **D8** eighth tab in
+`modMarkerGenetics`, zero changes to the existing seven. Four future strict-TDD slices
+(validator → statistics → de-id primitive → UI/export/docs) with per-slice completion
+criteria and owed checklists. **DONE.**
+**Started/completed:** 2026-09-17 (single session). Phase 0 backfill `45bd4061` (S703
+close-out self-reference commits, the recurring shape); claim `b1aa58c9` (stub + pending
+receipt + claim ledger entry in ONE commit, Learnings 752/754); deliverable `f66ee459`;
+records `1435ae20`.
+**Ledger:** S704 close-out entry at the top of `CHANGELOG.md` (`1435ae20`), the claim
+entry (in `b1aa58c9`), and the Phase 0 backfill entry (`45bd4061`).
+
+**What actually happened, in order:**
+1. **Phase 0:** standard orient; reconcile backfilled S703's 2 close-out self-reference
+   commits as `45bd4061`. CI green (S696-push workflows + scheduled shinytest2 9/16 &
+   9/17). Flags unchanged: no HIGH, pre-existing MEDIUM (jspdf artifact) + LOW (9
+   branches). One correction surfaced in the report: the unpushed span is NOT docs-only
+   (see the S703 evaluation above). Owner picked the #148 design plan from the 4-option
+   picker.
+2. **Evidence:** direct reads of every load-bearing file (all 860 lines of
+   `modMarkerGenetics.R`, all validators, Pathway A end to end, the de-id mold, the
+   bundled CSV); measured the real data's frequency distribution (31 animals / 62 calls
+   / 0 missing / 2 uncertain / 33 distinct over denominator 60 / freq<0.05 flags 26,
+   ≤0.01 flags 0, carriers≤2 flags 26 / 27 of 31 unique unordered pairs) — the ≤0.01-
+   flags-0 measurement reshaped D4 into the dual criterion. One background domain-
+   research agent (DIRECT/INFERENCE/UNVERIFIED tagging) grounded nomenclature (Wiseman
+   2013 explains the label grammar incl. the `b` variant suffix), the CIWD dual-criterion
+   precedent, 2N denominators, and identifiability.
+3. **Verify pass (became Learning 757):** caught 1 draft claim written as "measured"
+   that had never been computed (27/31 unique pairs — computed, happened to be right)
+   and dropped/replaced 5 wrong-or-unverifiable draft citations against the agent's
+   verified set (incl. a real paper attached to a wrong claim — Hurley 2020 is the CIWD
+   catalogue, not a reporting standard).
+4. **Ratification (`AskUserQuestion`, 4 questions, one round):** owner picked all 4
+   recommendations; outcome recorded in the plan §11; deliverable committed `f66ee459`.
+5. **Close-out:** BACKLOG completed item REMOVED per convention, Slice 1 item queued at
+   top of Up Next with full forward-carried context, batch narrative updated; CHANGELOG
+   close-out entry + Learning 757 (records `1435ae20`); this handoff; HANDOFFS receipt.
+   Checklists N/A by inspection: docs-only (no NEWS/citation/tutorial/_pkgdown/lint
+   targets); no issue closed (#148 stays open). Incidental finding routed into the plan,
+   not fixed: `modMarkerGeneticsServer()`'s `@return` says "fourteen" reactives, actual
+   19 — repair scheduled inside Slice 4's own `@return` work. Full suite NOT run —
+   docs-only; the S696–S698 baseline (2,370 blocks, failed=0, error=0, skipped=182)
+   carries forward by inheritance.
+
+**Self-assessment (Session 704): 9/10.** **Strengths:** (1) the measurement pass turned
+the rarity decision from taste into evidence (the ≤0.01-cannot-fire-at-2N=60 finding is
+what makes the dual criterion honest); (2) the verify pass caught both fabrication
+classes before ratification (Learning 757) — the plan's "no claim rests on unverified
+evidence" promise is actually true; (3) all four votes were priced with real declined
+alternatives and the owner changed nothing; (4) clean planning-session boundary: zero
+package-path changes, incidental find routed into planned work. **Weaknesses:** (1) the
+draft was written before the research agent returned, planting the exact citation
+failures the verify pass then had to catch — writing §2.8 after the agent's report
+would have been cleaner than draft-then-repair; (2) §Planning Sessions' deepest-
+reasoning-mode directive is a harness setting the session cannot set for itself — noted,
+not mechanically satisfied.
+
+**Next steps (specific):** (A) **Implement issue #148 Slice 1** (READY, Effort M — top
+Up Next item in `BACKLOG.md` with full context; a STRICT-TDD implementation session:
+declare phases, `AskUserQuestion`-gated transitions; start from the plan's §4 interface
+catalog rows 1-2 and §5 Slice 1 "done when"; fixtures = bundled real pair + the
+synthetic edge cases Dragons 6/7 name). (B) Census items unchanged: class (d) (READY,
+Effort S), class (b) union dots (READY, Effort M), curved-chord measurement pass (READY,
+Effort M). (C) **Push decision** (owner call): ~48 commits ahead after this close-out
+(estimate — count with `git rev-list --count origin/master..HEAD`); the span includes
+S697/S698 package-path comment-level changes (MEASURED this session, correcting S703's
+docs-only estimate) — local baseline was green on that state, CI green at last push.
+(D) Informational: package-split disposition still awaiting owner accept/reject;
+dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged; Learning 749
+duplicate at `PROJECT_LEARNINGS.md:2195`; H4 rate item open; CHANGELOG.md re-fire
+cadence ~3-4 sessions from S702's 33,503 B (S703 added ~5 entries, S704 ~4).
+
+**Key files:** `docs/planning/issue148-mhc-haplotype-reporting-plan.md` (the ratified
+plan — §4 interface catalog, §5 per-slice criteria, §7 dragons, §11 ratification),
+`BACKLOG.md:27-46` approx. (Slice 1 item — re-grep, lines drift), `CHANGELOG.md` top
+(S704 entries), `PROJECT_LEARNINGS.md` Learning 757 (after :2208),
+`docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md` (the S703 context the plan
+builds on), `HANDOFFS.md` (S704 receipt).
+
+**Gotchas for the next session:** (1) **Slice 1 is the first #148 session where strict
+TDD applies** — S703/S704 were docs-only; the implementing session declares phases and
+gates transitions via `AskUserQuestion` (PRE-RED→RED→GREEN→REFACTOR). (2) The two S704
+close-out self-reference commits will sit past the CHANGELOG frontier — next Phase 0
+backfills them exactly as S704 did for S703's (recurring shape). (3) failed=0
+expectation stays 2,370 blocks but is INHERITED from S698 (S699–S704 all docs-only) —
+Slice 1 touches package files, so measure a fresh baseline BEFORE claiming any
+regression delta. (4) The plan's D-decisions are RATIFIED — do not re-litigate D4's
+0.01/2 defaults at Slice 2; the pinned measured numbers (33 distinct / denominator 60 /
+26 flagged via the carrier leg / frequency leg 0) are the test expectations. (5)
+Vocabulary grep at every slice close-out (plan Dragon 3: "haplotype" never lands on
+#153's LD surfaces, "block" never here). (6) Any enumeration over CHANGELOG entries
+must span `CHANGELOG.md docs/archive/CHANGELOG-*.md` (post-split rule); the empty
+`## 2026-08` header at the top persists (cosmetic, leave unless tasked).
 
 ### Session 702 Handoff Evaluation (by Session 703)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable with an
