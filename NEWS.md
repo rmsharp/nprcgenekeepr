@@ -308,6 +308,13 @@ R. Mark Sharp, Ph.D.
   haplotype. Haplotype names are left exactly as written; an id the
   de-identification never covered stops with an error rather than
   slipping through (issue \#148).
+- The Marker Genetics tab includes an **MHC Haplotype Reporting** tab:
+  upload a file of MHC haplotype designations to see how common each
+  haplotype is, which ones are rare, and which animals carry the rare
+  ones. The two rarity thresholds sit next to the tables so you can
+  adjust them. After you confirm, you can download a de-identified
+  summary, carrier list, and a record of the settings used; every animal
+  in the file must be in the loaded pedigree first (issue \#148).
 
 ## Cross-Center Identity Matching
 
