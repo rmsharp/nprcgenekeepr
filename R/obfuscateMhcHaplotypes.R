@@ -1,0 +1,59 @@
+## Copyright(c) 2017-2026 R. Mark Sharp
+## This file is part of nprcgenekeepr
+
+#' De-identify an MHC haplotype carrier table
+#'
+#' Remaps the \code{id} column of a \code{\link{mhcHaplotypeCarriers}}
+#' table through the same alias vector \code{\link{obfuscatePed}(..., map
+#' = TRUE)} already returns. \code{\link{obfuscatePed}} scrubs exactly
+#' one pedigree data frame and cannot reach a second, sidecar object --
+#' this is the companion scrub an MHC carrier table needs so an
+#' "obfuscated" export never leaks real animal ids while the main
+#' pedigree is de-identified.
+#'
+#' Haplotype labels are left byte-identical: an MHC haplotype name is a
+#' shared nomenclature term, not an animal identifier, and there is no
+#' validity-preserving way to obfuscate one. Only \code{id} is ever
+#' remapped -- a map entry whose name happens to match a haplotype label
+#' never touches the \code{haplotype} column. The \code{uncertain}
+#' disclosure column passes through unchanged.
+#'
+#' A row whose \code{id} is absent from \code{map} \code{stop()}s rather
+#' than silently dropping or leaking the real id.
+#'
+#' @param carriers data.frame with columns \code{haplotype}, \code{id},
+#' \code{uncertain} as returned by \code{\link{mhcHaplotypeCarriers}}.
+#' @param map named character vector of aliases, keyed by the original id
+#' -- the \code{map} element of \code{\link{obfuscatePed}(..., map =
+#' TRUE)}'s return value.
+#' @return \code{carriers} with \code{id} replaced by its alias;
+#' \code{haplotype} and \code{uncertain} are unchanged.
+#' @family obfuscation
+#' @seealso \code{\link{mhcHaplotypeCarriers}}, \code{\link{obfuscatePed}}
+#' @export
+#' @examples
+#' ped <- data.frame(
+#'   id = c("F1", "F2", "S1", "S2"),
+#'   sire = c(NA, NA, "F1", "F1"),
+#'   dam = c(NA, NA, "F2", "F2"),
+#'   sex = c("M", "F", "F", "F"),
+#'   stringsAsFactors = FALSE
+#' )
+#' genotype <- data.frame(
+#'   id = c("S1", "S2"),
+#'   haplotype1 = c("A001_B001", "A001_B001"),
+#'   haplotype2 = c("A002_B012", "A008_B015b"),
+#'   stringsAsFactors = FALSE
+#' )
+#' carriers <- mhcHaplotypeCarriers(genotype, rareOnly = FALSE)
+#' obfuscated <- obfuscatePed(ped, map = TRUE)
+#' obfuscateMhcHaplotypes(carriers, obfuscated$map)
+obfuscateMhcHaplotypes <- function(carriers, map) {
+  unknown <- setdiff(unique(carriers$id), names(map))
+  if (length(unknown) > 0L) {
+    stop("MHC carrier id(s) not found in the de-identification map: ",
+      toString(unknown), ".")
+  }
+  carriers$id <- unname(map[carriers$id])
+  carriers
+}
