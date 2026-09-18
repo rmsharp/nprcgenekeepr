@@ -22,6 +22,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 706 Did
+**Deliverable:** Issue #148 Slice 2 — MHC haplotype statistics: `mhcHaplotypeFrequency()` +
+`mhcHaplotypeCarriers()` per plan §4 rows 3-4 / §5 Slice 2, strict TDD,
+`AskUserQuestion`-gated phases (IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 704 Handoff Evaluation (by Session 705)
 **Score: 9/10.** **What helped:** the BACKLOG Slice 1 item was a complete,
 self-sufficient brief — validator contract, parse-rule semantics, fixture list, owed

@@ -140,6 +140,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-17.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S706
+date: 2026-09-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #148 Slice 2 -- MHC haplotype statistics: mhcHaplotypeFrequency() + mhcHaplotypeCarriers() per plan sec 4 rows 3-4 / sec 5 Slice 2 (S705 next-step A; owner-picked via AskUserQuestion at Phase 0). Strict TDD, AskUserQuestion-gated phases. IN PROGRESS -- session claimed, work beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S705
 date: 2026-09-17
 status: complete

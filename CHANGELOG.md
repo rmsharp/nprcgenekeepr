@@ -22,6 +22,16 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [issue #148] S706 claim: Slice 2 — MHC haplotype statistics (session claimed, work beginning)
+- Phase 1B claim for the issue #148 Slice 2 implementation session (S705 next-step A;
+  owner-picked via `AskUserQuestion` at Phase 0). Deliverable: `mhcHaplotypeFrequency()`
+  (exported: `list(summary, counts)`, ratified D4 dual rarity criterion — frequency ≤ 0.01
+  OR carriers ≤ 2) + `mhcHaplotypeCarriers()` (exported: carrier detail), per plan §4 rows
+  3-4 / §5 Slice 2, strict TDD with `AskUserQuestion`-gated phases, building on Slice 1's
+  `.parseMhcHaplotypeCalls()`. Same-session checklists: NEWS.Rmd + NEWS.md render,
+  `_pkgdown.yml`, lint, citation checklist (issue #120 — re-verify every plan §2.8 source),
+  fresh full-suite baseline (Slice 2 touches package files), vocabulary grep at close-out.
+
 ### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits `2f83a6e2`..`ba5bcde8` — S705's own close-out self-reference commits
 - S706 Phase 0 ledger reconcile. The two commits past the frontier are S705's final
   close-out writes, which by construction land after its CHANGELOG entry (`5d3146cf`):
