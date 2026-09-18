@@ -24,26 +24,25 @@ regen left behind (S367 origin, flagged S368/S369) is now also RESOLVED --
 S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 
 ## Up Next
-- [ ] **Write the issue #148 MHC haplotype-reporting design plan** (scope-narrowing DONE S703,
-      2026-09-17, owner-directed via `AskUserQuestion`: design-first, same issue, no sub-issue
-      split; READY, Effort M -- a planning session: the plan doc is the whole deliverable, no
-      implementation, deepest reasoning mode per `SESSION_RUNNER.md` §Planning Sessions).
-      Write `docs/planning/issue148-mhc-haplotype-reporting-plan.md` in the #152/#153 mold
-      (numbered ratified decisions, vertical-slice list, per-slice completion criteria; each
-      slice later one strict-TDD session). Start from the decision record
-      `docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md`: §3 is the grep-verified
-      evidence inventory (vocabulary reservation `R/modMarkerGenetics.R:6-9`; sibling-validator
-      pattern `checkLinkageMarkerGenotypeFile.R`/`checkSequenceGenotypeFile.R`;
-      `.markerAlleleFrequencyTable` at `R/markerAlleleFrequency.R:26`; #150 export gate;
-      example data `rhesusGenotypes` = `inst/extdata/examples/
-      obfuscated_rhesus_mhc_breeder_genotypes.csv`, 31 animals, wide format, `?`-suffixed
-      uncertain calls) and §4 lists the 8 open design questions to ratify (Q1 input
-      designation, Q2 uncertain calls, Q3 rarity semantics, Q4 affected-animal shape, Q5
-      export gating, Q6 descriptive-only caveat, Q7 surface placement, Q8 slice
-      decomposition). Hard constraints regardless of answers: `checkMarkerGenotypeFile()`'s
-      biallelic gate untouchable (`R/checkMarkerGenotypeFile.R:68-77`, KING-robust
-      correctness); bare "haplotype" belongs to #148, "block" to #153; no MHC inference from
-      arbitrary locus names (issue-body hard requirement).
+- [ ] **Implement issue #148 Slice 1: MHC haplotype validator + parse rule** (design plan
+      RATIFIED S704, 2026-09-17 -- `docs/planning/issue148-mhc-haplotype-reporting-plan.md`,
+      all ten decisions D1-D10 ratified, owner picked all 4 recommended judgment calls via one
+      `AskUserQuestion` round; READY, Effort M -- a strict-TDD implementation session,
+      `AskUserQuestion`-gated phases). Build `checkMhcHaplotypeFile()` (exported: exactly 3
+      columns, `id` first, unique ids, names forced to `id, haplotype1, haplotype2`;
+      `NA`/empty cells pass -- missing is the statistics layer's concern) and internal
+      `.parseMhcHaplotypeCalls()` (long call table `id, haplotype, uncertain, missing`;
+      trailing `?` = uncertain call of the stripped haplotype, never a distinct label -- plan
+      D3). Fixtures: the bundled real pair (`rhesusGenotypes` +
+      `inst/extdata/examples/obfuscated_rhesus_mhc_breeder_genotypes.csv`, 31 animals, 2
+      `?`-calls, 0 missing) plus synthetic edge fixtures the real file lacks (missing calls,
+      duplicate ids, wrong column counts, all-uncertain animal, homozygote) -- plan §5 Slice 1
+      "done when" + Dragon 6/7. Same-session checklists: `NEWS.Rmd` + `_pkgdown.yml` (new
+      export), lint. Hard constraints: the marker family's validators and biallelic gate are
+      never touched or adjacent (plan D2 -- the wide format has no locus column); bare
+      "haplotype" is #148's term, never "block" (plan D1, grep at close-out per Dragon 3).
+      Slices 2 (statistics), 3 (de-id primitive), 4 (eighth tab + gated export + docs) follow,
+      one session each, per plan §5. Issue #148 stays OPEN until the last slice ships.
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional
@@ -1127,7 +1126,9 @@ should file both. **Every Tier 1/2/3 item (#147, #149, #146, #151, #150) plus De
 fully shipped and closed** -- see the compressed entry below. #148's scope-narrowing
 conversation is DONE (S703, 2026-09-17, owner via `AskUserQuestion`: design-first, same issue —
 decision record `docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md`, issue comment
-posted); its design plan and implementation remain open — see the Up Next item. See
+posted) and its design plan is RATIFIED (S704, 2026-09-17 —
+`docs/planning/issue148-mhc-haplotype-reporting-plan.md`, D1-D10, owner picked all 4
+recommended judgment calls); implementation Slices 1-4 remain open — see the Up Next item. See
 `CHANGELOG.md`.
 
 **Progress, issue #152 (whole-genome/whole-exome sequence input + sequence-based genetic

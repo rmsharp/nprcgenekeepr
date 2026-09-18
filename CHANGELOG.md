@@ -22,6 +22,35 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [issue #148] S704 close-out: MHC haplotype-reporting design plan RATIFIED (D1-D10; owner picked all 4 recommended judgment calls); Slice 1 BACKLOG item queued; 1 learning
+- **Deliverable (`f66ee459`):** `docs/planning/issue148-mhc-haplotype-reporting-plan.md` —
+  the #152/#153-mold design plan the S703 scope decision required, resolving the scoping
+  doc's Q1–Q8 as ten numbered decisions. Owner ratified all 4 judgment calls at their
+  recommended option via one `AskUserQuestion` round: **D2** dedicated wide upload
+  (`id, haplotype1, haplotype2` behind a new `checkMhcHaplotypeFile()` — designation-by-
+  upload, the biallelic gate never adjacent); **D3** exclude-and-disclose uncertain
+  `?`-calls (never a distinct haplotype); **D4** dual rarity criterion (frequency ≤ 0.01
+  OR carriers ≤ 2, both configurable — measured on the bundled file: the frequency leg
+  alone flags 0 at 2N=60, the carrier leg 26/33, hence the dual OR); **D8** eighth tab in
+  `modMarkerGenetics`, zero changes to the existing seven. Forced: D1 vocabulary, D5 both
+  report shapes, D6 all-exports-gated + manifest, D7 persistent caveat, D9 opaque labels,
+  D10 four slices (validator → statistics → de-id primitive → UI/export/docs), each a
+  future strict-TDD session with per-slice completion criteria and owed checklists mapped.
+  Evidence: direct reads of every load-bearing file, measured frequency distribution of
+  `rhesusGenotypes`, and a DIRECT/INFERENCE/UNVERIFIED-tagged domain-research pass
+  (IPD-MHC nomenclature, Wiseman 2013 label convention, CIWD dual-criterion precedent,
+  2N-chromosome denominators).
+- **Records:** BACKLOG.md — completed design-plan item removed (this entry is its record);
+  new top Up Next item queued (implement Slice 1, READY, Effort M, full forward-carried
+  context); batch narrative updated (#148 design RATIFIED, Slices 1-4 open). Learning 757
+  (verify "measured" claims and draft citations independently — 1 unmeasured measurement
+  and 5 wrong-or-unverifiable citations caught pre-ratification). Incidental finding
+  routed into the plan, not fixed (Learning 382 precedent): `modMarkerGeneticsServer()`'s
+  roxygen `@return` says "fourteen reactive elements" but the return list has 19 — repair
+  scheduled as part of Slice 4's own documented `@return` additions. No suite run:
+  docs-only; the S696–S698 baseline (2,370 blocks, failed=0, error=0, skipped=182)
+  carries forward by inheritance.
+
 ### 2026-09-17 · [issue #148] S704 claim: MHC haplotype-reporting design plan (session claimed, work beginning)
 - Phase 1B claim for the issue #148 design-plan session (S703 next-step A; owner-picked
   via `AskUserQuestion` at Phase 0; the design-first gate the S703 scope-narrowing
