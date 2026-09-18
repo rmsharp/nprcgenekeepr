@@ -22,6 +22,18 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [ad hoc] S706 owner-directed push: 65 commits (S697–S706 span) to `origin/master`
+- Owner directive ("push"), discharging the standing push decision carried since S703's
+  next-steps. The span includes the first real package changes since the last push
+  (S696): issue #148 Slices 1 AND 2 (`checkMhcHaplotypeFile()`,
+  `.parseMhcHaplotypeCalls()`, `mhcHaplotypeFrequency()`, `mhcHaplotypeCarriers()`, with
+  tests/man/NAMESPACE/pkgdown/NEWS/WORDLIST), plus the S697–S706 docs/records commits.
+  Local full suite green on exactly this state (2,400 blocks, failed=0, error=0,
+  measured S706 close-out). Push triggers the 4 on-push workflows
+  (`R-CMD-check.yaml`/`lint.yaml`/`pkgdown.yaml`/`test-coverage.yaml`) — the first CI
+  read of both Slice 1 and Slice 2; next session's Phase 0 CI check (or this session's
+  own post-push watch) confirms the runs.
+
 ### 2026-09-17 · [issue #148] S706 close-out: Slice 2 DONE — `mhcHaplotypeFrequency()` + `mhcHaplotypeCarriers()` shipped under strict TDD; Slice 3 BACKLOG item queued
 - **Deliverable (RED `e8a63f05`, GREEN `930536e8`, checklists `4a03fff3`):** the ratified
   plan's Slice 2 statistics. `mhcHaplotypeFrequency()` (exported): per-haplotype
