@@ -26,6 +26,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] S711 claim: owner-directed push of local master to origin/master
+- S710 next-step A, owner-picked via `AskUserQuestion` at Phase 0. 33 commits ahead at
+  claim (32 at session start + the Phase 0 backfill `83618479`); the claim commit
+  itself makes 34. Deliverable: push, then verify the 4 on-push CI workflows
+  (R-CMD-check / lint / pkgdown / test-coverage) green and record the outcome.
+  Stub + pending receipt written with this entry.
+
 ### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit 0f7f94fe — S710 close-out self-reconcile
 - S710's final commit recorded its own close-out commit sha into the completed
   `HANDOFFS.md` receipt (the recurring 1-commit self-reference shape its handoff
