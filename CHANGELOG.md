@@ -22,6 +22,12 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `cc540bf3` — S708's own close-out self-reference commit
+- S709 Phase 0 ledger reconcile. The one commit past the frontier (`6b008487`) is
+  S708's final close-out write, which by construction lands after its CHANGELOG entry:
+  `cc540bf3` (close-out commit sha recorded in the HANDOFFS receipt, self-reconcile).
+  S708's gotcha 5 predicted about 1 self-reference commit; it measured as exactly 1.
+
 ### 2026-09-18 · [issue #148] S708 closed issue #148 on GitHub (all 4 slices shipped)
 - `gh issue close 148 --reason completed` with a comment listing the four slices' commits
   and S708's verification evidence (closed 2026-09-18T05:23:31Z,
