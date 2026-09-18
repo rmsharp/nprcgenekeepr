@@ -377,7 +377,7 @@ knitr::opts_chunk$set(echo = TRUE)
   responding -- when the uploaded genotype file included an animal missing
   from the loaded pedigree, or when an uploaded file had failed its format
   check (in that case even uploading the file could end the session). The
-  app now stays connected, leaves the preview unbuilt, and explains why
+  app now stays connected, skips building the preview, and explains why
   next to the export controls.
 - Fixed: the sort order in a few tables (the Genetic Value Analysis tiers,
   the main pedigree table, and the Breeding Group member table) could vary
