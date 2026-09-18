@@ -26,6 +26,11 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit 0f7f94fe — S710 close-out self-reconcile
+- S710's final commit recorded its own close-out commit sha into the completed
+  `HANDOFFS.md` receipt (the recurring 1-commit self-reference shape its handoff
+  gotcha 5 predicted; measured exactly 1). Backfilled at S711 Phase 0 reconcile.
+
 ### 2026-09-18 · [ad hoc] S710 close-out: ledger archive pass DONE — all three byte triggers cleared
 - **Deliverable (trims `7fbe17b7`/`3dbe15f3`/`447f2beb`):** S709 next-step A. All three
   ledger files trimmed into `docs/archive/*-through-2026-09-18.md` shards, L1/L2/L3
