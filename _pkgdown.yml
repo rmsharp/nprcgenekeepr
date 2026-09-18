@@ -358,6 +358,7 @@ reference:
   - '`obfuscateGenotypeMatrix`'
   - '`obfuscateId`'
   - '`obfuscateLdBlocks`'
+  - '`obfuscateMhcHaplotypes`'
   - '`obfuscatePed`'
   - '`obfuscateTwinRelations`'
   - '`offspringCounts`'

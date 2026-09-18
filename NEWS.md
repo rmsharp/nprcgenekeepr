@@ -302,6 +302,12 @@ R. Mark Sharp, Ph.D.
   haplotype (or every haplotype), including provisionally typed
   carriers, so a manager can see which animals to consider before a rare
   haplotype is lost from the colony (issue \#148).
+- New `obfuscateMhcHaplotypes()` replaces the animal ids in a haplotype
+  carrier list with the same aliases used to de-identify the pedigree,
+  so a shared report never reveals which real animals carry a rare
+  haplotype. Haplotype names are left exactly as written; an id the
+  de-identification never covered stops with an error rather than
+  slipping through (issue \#148).
 
 ## Cross-Center Identity Matching
 
