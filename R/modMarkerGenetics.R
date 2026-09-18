@@ -727,12 +727,23 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
     ldBlockExportRaw <- reactiveVal(NULL)
     ldBlockConfirmed <- reactiveVal(FALSE)
 
+    ## S709: every upstream read here is error-safe. An uncaught error
+    ## inside an observeEvent() ends the user's Shiny session (Learning
+    ## 758), so a malformed upload's validation error -- re-thrown by a
+    ## bare req(reactive()) -- or an erroring pedigree() must abort the
+    ## preview quietly instead; the tab's own outputs already display the
+    ## validation error itself. (The missing-id pre-check the sequence
+    ## observer ports below is NOT needed here: markerLdBlock() subsets
+    ## its matrix to founderIds drawn from the same pedigree, so idsUsed
+    ## can never carry a non-pedigree id; obfuscateLdBlocks()'s own
+    ## stop() remains the defensive backstop.)
     observeEvent(input$ldBlockExportPreview, {
-      req(ldBlock())
-      req(pedigree())
+      blockTable <- safeRead(ldBlock)
+      ped <- safeRead(pedigree)
+      req(blockTable, ped)
       ldBlockConfirmed(FALSE)
-      map <- obfuscatePed(pedigree(), map = TRUE)$map
-      ldBlockExportRaw(obfuscateLdBlocks(ldBlock(), map))
+      map <- obfuscatePed(ped, map = TRUE)$map
+      ldBlockExportRaw(obfuscateLdBlocks(blockTable, map))
     })
 
     observeEvent(input$ldBlockConfirmExport, {
@@ -793,15 +804,30 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
     ## slice's own Pre-RED Q3 ratification.
     sequenceExportRaw <- reactiveVal(NULL)
     sequenceExportConfirmed <- reactiveVal(FALSE)
+    sequenceExportMissingIds <- reactiveVal(character(0L))
 
+    ## S709: ports the MHC tab's Dragon 5 pattern (S708) -- the uploaded
+    ## genotype ids are arbitrary, so an animal absent from the loaded
+    ## pedigree would make obfuscateGenotypeMatrix()/obfuscateGenomicROH()
+    ## stop() inside this observer and end the user's session (Learning
+    ## 758). Pre-check the ids, build nothing, and show the reason in the
+    ## export guidance instead. Upstream reads are error-safe for the same
+    ## reason (see the LD-block observer above).
     observeEvent(input$sequenceExportPreview, {
-      req(genotypeMatrixR())
-      req(sequenceRohTable())
-      req(pedigree())
+      gmat <- safeRead(genotypeMatrixR)
+      rohTable <- safeRead(sequenceRohTable)
+      ped <- safeRead(pedigree)
+      req(gmat, rohTable, ped)
       sequenceExportConfirmed(FALSE)
-      map <- obfuscatePed(pedigree(), map = TRUE)$map
-      deidGenotype <- obfuscateGenotypeMatrix(genotypeMatrixR(), map)
-      deidRoh <- obfuscateGenomicROH(sequenceRohTable(), map)
+      sequenceExportRaw(NULL)
+      missingIds <- setdiff(rownames(gmat), ped$id)
+      sequenceExportMissingIds(missingIds)
+      if (length(missingIds) > 0L) {
+        return()
+      }
+      map <- obfuscatePed(ped, map = TRUE)$map
+      deidGenotype <- obfuscateGenotypeMatrix(gmat, map)
+      deidRoh <- obfuscateGenomicROH(rohTable, map)
       minSnp <- if (!is.null(input$rohMinSnp)) input$rohMinSnp else 50L
       minBp <- if (!is.null(input$rohMinBp)) input$rohMinBp else 1000000.0
       manifest <- .buildSequenceExportManifest(
@@ -896,28 +922,33 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
     mhcExportConfirmed <- reactiveVal(FALSE)
     mhcExportMissingIds <- reactiveVal(character(0L))
 
+    ## S709: upstream reads are error-safe -- a malformed MHC upload's
+    ## validation error, re-thrown by a bare req(mhcFrequency()), would
+    ## otherwise end the session exactly like the Dragon 5 stop() this
+    ## observer already pre-checks (see the LD-block observer above).
     observeEvent(input$mhcExportPreview, {
-      req(mhcFrequency())
-      req(mhcCarriers())
-      req(pedigree())
+      frequency <- safeRead(mhcFrequency)
+      carriers <- safeRead(mhcCarriers)
+      genotype <- safeRead(mhcHaplotype)
+      ped <- safeRead(pedigree)
+      req(frequency, carriers, genotype, ped)
       mhcExportConfirmed(FALSE)
       mhcExportRaw(NULL)
-      missingIds <- setdiff(mhcHaplotype()$id, pedigree()$id)
+      missingIds <- setdiff(genotype$id, ped$id)
       mhcExportMissingIds(missingIds)
       if (length(missingIds) > 0L) {
         return()
       }
-      map <- obfuscatePed(pedigree(), map = TRUE)$map
-      frequency <- mhcFrequency()
+      map <- obfuscatePed(ped, map = TRUE)$map
       thresholds <- mhcThresholds()
-      carriers <- obfuscateMhcHaplotypes(mhcCarriers(), map)
+      deidCarriers <- obfuscateMhcHaplotypes(carriers, map)
       manifest <- .buildMhcExportManifest(
-        frequency$summary, carriers, frequency$counts,
+        frequency$summary, deidCarriers, frequency$counts,
         rareFrequencyThreshold = thresholds$frequency,
         rareCarrierThreshold = thresholds$carriers,
         warningText = .mhcExportWarningText
       )
-      mhcExportRaw(list(summary = frequency$summary, carriers = carriers,
+      mhcExportRaw(list(summary = frequency$summary, carriers = deidCarriers,
                         manifest = manifest))
     })
 
@@ -1003,10 +1034,22 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
     })
 
     output$ldBlockExportGuidance <- renderUI({
+      ## S709: an upload whose validation failed can never produce an
+      ## export preview (the observer above declines quietly), so say so
+      ## here instead of still prompting for a preview.
+      uploadErrored <- tryCatch({
+        ldBlock()
+        FALSE
+      }, error = function(e) TRUE)
       if (is.null(safeRead(pedigree))) {
         div(class = "alert alert-warning",
             "Load a pedigree before generating a de-identified LD block",
             "metrics export.")
+      } else if (uploadErrored) {
+        div(class = "alert alert-warning",
+            "The uploaded files for this tab could not be processed, so",
+            "no export preview was generated; correct the upload error",
+            "shown on this tab first.")
       } else if (!ldBlockConfirmed()) {
         div(class = "alert alert-info",
             "Generate a preview, then confirm the export to unlock the",
@@ -1030,10 +1073,31 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
     })
 
     output$sequenceExportGuidance <- renderUI({
+      ## S709: mirrors the MHC guidance below -- names the blocked states
+      ## the preview observer now declines quietly (a failed-validation
+      ## upload, or genotype animals absent from the pedigree).
+      uploadErrored <- tryCatch({
+        sequenceRohTable()
+        FALSE
+      }, error = function(e) TRUE)
+      missingIds <- sequenceExportMissingIds()
       if (is.null(safeRead(pedigree))) {
         div(class = "alert alert-warning",
             "Load a pedigree before generating a de-identified sequence",
             "export.")
+      } else if (uploadErrored) {
+        div(class = "alert alert-warning",
+            "The uploaded files for this tab could not be processed, so",
+            "no export preview was generated; correct the upload error",
+            "shown on this tab first.")
+      } else if (length(missingIds) > 0L) {
+        div(class = "alert alert-warning",
+            paste0(length(missingIds), " animal(s) in the uploaded",
+                   " genotype file are not in the loaded pedigree, so the",
+                   " export was not generated."),
+            "Every animal in the uploaded genotype file must be in the",
+            "loaded pedigree, because ids are de-identified through the",
+            "pedigree's alias map.")
       } else if (!sequenceExportConfirmed()) {
         div(class = "alert alert-info",
             "Generate a preview, then confirm the export to unlock the",
@@ -1122,10 +1186,21 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
         "alias map."
       )
       missingIds <- mhcExportMissingIds()
+      ## S709: same failed-validation guidance as the LD-block and
+      ## sequence tabs above.
+      uploadErrored <- tryCatch({
+        mhcFrequency()
+        FALSE
+      }, error = function(e) TRUE)
       if (is.null(safeRead(pedigree))) {
         div(class = "alert alert-warning",
             "Load a pedigree before generating a de-identified MHC",
             "haplotype export.", precondition)
+      } else if (uploadErrored) {
+        div(class = "alert alert-warning",
+            "The uploaded file for this tab could not be processed, so",
+            "no export preview was generated; correct the upload error",
+            "shown on this tab first.", precondition)
       } else if (length(missingIds) > 0L) {
         div(class = "alert alert-warning",
             paste0(length(missingIds), " animal(s) in the MHC haplotype",
@@ -1178,9 +1253,12 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
     })
 
     # Signal data-ready when the comparison table is available (for E2E
-    # testing).
+    # testing). S709: the read is error-safe -- this plain observe() runs
+    # on every upload, so a malformed shared genotype file's validation
+    # error re-thrown here would end the user's session with no export
+    # click at all (Learning 758; found by this session's RED tests).
     observe({
-      req(comparison())
+      req(safeRead(comparison))
       session$sendCustomMessage("setDataReady", list(
         selector = paste0("#", session$ns("moduleContainer")),
         ready = TRUE
