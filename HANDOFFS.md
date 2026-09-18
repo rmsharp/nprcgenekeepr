@@ -144,6 +144,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S714
+date: 2026-09-18
+status: pending
+active_task: Census curved-chord arc-modelling measurement pass (BACKLOG Housekeeping item, owner-picked via AskUserQuestion at Phase 0) — model drawn arc geometry, count true pass-inside-symbol defects vs the 1,668-chord upper bound, reproducible via data-raw/; recommend fix item or not
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S713
 date: 2026-09-18
 status: complete

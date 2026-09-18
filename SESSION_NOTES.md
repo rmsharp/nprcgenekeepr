@@ -26,6 +26,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 714 Did
+**Deliverable:** Census curved-chord arc-modelling measurement pass (IN PROGRESS)
+— model the actually-drawn arc geometry and count how many drawn duplicate-connector
+arcs truly pass inside a visible unrelated symbol, replacing the census's
+1,668-chord upper bound (class `c` / subclass `c-curved-chord`), reproducibly via
+`data-raw/`; recommend whether a fix item is warranted. Carries the S713
+forward-carry if a census re-run lands (article "8 of 237" sites + Track B
+centering re-verify).
+**Started:** 2026-09-18
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 712 Handoff Evaluation (by Session 713)
 **Score: 9/10.** **What helped:** next-step A was this session's exact deliverable
 with both populations enumerated (the 2 noise rows with exact magnitudes, the 6

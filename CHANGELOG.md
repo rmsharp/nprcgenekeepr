@@ -26,6 +26,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL] S714 claim: census curved-chord arc-modelling measurement pass
+- BACKLOG Housekeeping "Census curved-chord heuristic" item (S713 next-step A),
+  owner-picked via `AskUserQuestion` at Phase 0. Deliverable: model the
+  actually-drawn arc geometry (render layer's curved connectors + the roundness
+  bump applied to duplicate connectors) and count how many drawn arcs truly pass
+  inside a visible unrelated symbol — replacing the 1,667 Real-375 + 1 Track C
+  `c-curved-chord` chord-heuristic upper bound — reproducibly, by extending
+  `data-raw/pedigreeDrawingErrorCensus.R` or a committed sibling script; then
+  recommend whether a fix item is warranted. Carries the S713 forward-carry
+  (article "8 of 237" sites + Track B centering) if a census re-run lands.
+  Measurement/scoping session, no TDD phases unless package code turns out to be
+  touched. Stub + pending receipt written with this entry.
+
 ### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit 35a33905 — S713 close-out self-reconcile
 - S713's final commit recorded its own close-out commit sha (`f67830a1`) into the
   completed `HANDOFFS.md` receipt — the recurring self-reference shape S713's own
