@@ -144,6 +144,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S712
+date: 2026-09-18
+status: pending
+active_task: Census class (d) assessment (S711 next-step A, owner-picked via AskUserQuestion at Phase 0): render the 2 duplicate-adjacent sites (__dup_Y_2 vs Y on Track C, __dup_SLN0TF_2 vs SLN0TF on Real 375, both at ~1 minSep) per the S696 crop-verification precedent, verify local geometry programmatically, judge visual acceptability; close the BACKLOG item with a dated note or scope a separation follow-up. Assessment session, no TDD phases expected.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S711
 date: 2026-09-18
 status: complete

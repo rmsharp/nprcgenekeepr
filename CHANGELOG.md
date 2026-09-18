@@ -26,6 +26,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL] S712 claim: census class (d) duplicate-adjacent assessment
+- S711 next-step A / BACKLOG "Census class (d)" item, owner-picked via
+  `AskUserQuestion` at Phase 0. Deliverable: render the 2 duplicate-adjacent sites
+  (`__dup_Y_2` vs `Y`, Track C; `__dup_SLN0TF_2` vs `SLN0TF`, Real 375) as crops,
+  verify local geometry programmatically, judge acceptability, and close the item
+  with a dated note or scope a follow-up. Stub + pending receipt written with this
+  entry.
+
 ### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit 1788e2b8 — S711 close-out self-reconcile
 - S711's final commit recorded its own close-out commit sha into the completed
   `HANDOFFS.md` receipt (the recurring 1-commit self-reference shape its handoff
