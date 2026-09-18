@@ -22,6 +22,15 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `4c32634e` — S707's own close-out self-reference commit
+- S708 Phase 0 ledger reconcile. The one commit past the frontier (`cacabe0f`) is
+  S707's final close-out write, which by construction lands after its CHANGELOG entry:
+  `4c32634e` (close-out commit sha recorded in the HANDOFFS receipt, self-reconcile).
+  S707's gotcha 2 predicted the recurring 2-commit shape; it measured as 1 commit this
+  time because S707's records commit (`cacabe0f`) co-staged the SESSION_NOTES handoff
+  and HANDOFFS receipt with the CHANGELOG entry. No work is missing. HANDOFFS.md
+  frontier is HEAD with a `status: complete` S707 receipt — no receipt gap.
+
 ### 2026-09-17 · [issue #148] S707 close-out: Slice 3 DONE — `obfuscateMhcHaplotypes()` de-identification primitive shipped under strict TDD; Slice 4 BACKLOG item queued
 - **Deliverable (RED `8319be0d`, GREEN `a5654501`, man-collateral `b6f66eea`/`33c526db`,
   checklists `8cee1dfb`):** the ratified plan's Slice 3. `obfuscateMhcHaplotypes(carriers,
