@@ -55,6 +55,7 @@ Other obfuscation:
 [`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md),
 [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md),
 [`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md),
+[`obfuscateMhcHaplotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateMhcHaplotypes.md),
 [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
 
 ## Examples
@@ -73,5 +74,5 @@ twinRelations <- data.frame(
 obfuscated <- obfuscatePed(ped, map = TRUE)
 obfuscateTwinRelations(twinRelations, obfuscated$map)
 #>      id1    id2    code
-#> 1 832J19 KN3CMQ MZ twin
+#> 1 0SC2P9 J4C6RD MZ twin
 ```

@@ -353,6 +353,22 @@
   including provisionally typed carriers, so a manager can see which
   animals to consider before a rare haplotype is lost from the colony
   (issue [\#148](https://github.com/rmsharp/nprcgenekeepr/issues/148)).
+- New
+  [`obfuscateMhcHaplotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateMhcHaplotypes.md)
+  replaces the animal ids in a haplotype carrier list with the same
+  aliases used to de-identify the pedigree, so a shared report never
+  reveals which real animals carry a rare haplotype. Haplotype names are
+  left exactly as written; an id the de-identification never covered
+  stops with an error rather than slipping through (issue
+  [\#148](https://github.com/rmsharp/nprcgenekeepr/issues/148)).
+- The Marker Genetics tab includes an **MHC Haplotype Reporting** tab:
+  upload a file of MHC haplotype designations to see how common each
+  haplotype is, which ones are rare, and which animals carry the rare
+  ones. The two rarity thresholds sit next to the tables so you can
+  adjust them. After you confirm, you can download a de-identified
+  summary, carrier list, and a record of the settings used; every animal
+  in the file must be in the loaded pedigree first (issue
+  [\#148](https://github.com/rmsharp/nprcgenekeepr/issues/148)).
 
 ### Cross-Center Identity Matching
 
@@ -441,6 +457,13 @@
 
 ### General Fixes
 
+- Fixed: on the Marker Genetics tab, generating a de-identified export
+  preview could abruptly end the session – the app grayed out and
+  stopped responding – when the uploaded genotype file included an
+  animal missing from the loaded pedigree, or when an uploaded file had
+  failed its format check (in that case even uploading the file could
+  end the session). The app now stays connected, skips building the
+  preview, and explains why next to the export controls.
 - Fixed: the sort order in a few tables (the Genetic Value Analysis
   tiers, the main pedigree table, and the Breeding Group member table)
   could vary depending on the server’s own regional settings, purely

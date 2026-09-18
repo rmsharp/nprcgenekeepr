@@ -29,35 +29,6 @@ behind (S367 origin, flagged S368/S369) is now also RESOLVED – S370
 
 ## Up Next
 
-**Implement issue \#148 Slice 3: MHC de-identification primitive**
-(Slice 2 DONE S706, 2026-09-17 –
-[`mhcHaplotypeFrequency()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeFrequency.md) +
-[`mhcHaplotypeCarriers()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeCarriers.md)
-shipped, RED `e8a63f05` / GREEN `930536e8`; READY, Effort S – a
-strict-TDD implementation session, `AskUserQuestion`-gated phases).
-Build `obfuscateMhcHaplotypes(carriers, map)` (exported): alias the `id`
-column of a
-[`mhcHaplotypeCarriers()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeCarriers.md)
-table through the alias map from `obfuscatePed(..., map = TRUE)$map`;
-[`stop()`](https://rdrr.io/r/base/stop.html) on any id absent from the
-map (the
-[`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)
-mold, `R/obfuscateTwinRelations.R` – never silently drop or leak a real
-id); haplotype labels stay byte-identical (D6: there is no
-validity-preserving obfuscation of an MHC type) – plan §4 row 5, §5
-Slice 3 (`docs/planning/issue148-mhc-haplotype-reporting-plan.md`). Done
-when it round-trips the
-[`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)
-test mold: aliases every id through the standard map,
-[`stop()`](https://rdrr.io/r/base/stop.html)s on an unknown id, leaves
-haplotype labels unchanged. Same-session checklists: `NEWS.Rmd` +
-`NEWS.md` render (same commit), `_pkgdown.yml`, lint. Vocabulary grep at
-close-out (Dragon 3). Slice 4 (eighth tab + confirm-gate export +
-`.buildMhcExportManifest()` + docs incl. the module `@return` repair and
-the citation checklist’s `population_genetics_terms.html` entry)
-follows, one session, per plan §5. Issue \#148 stays OPEN until the last
-slice ships.
-
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —
 research pass DONE
@@ -163,6 +134,26 @@ now**, with 3 revisit conditions and 3 optional in-place prep steps).
 **Owner disposition pending** – the item stays open until the owner
 accepts or rejects the recommendation; nothing else to do here until
 then. \## Housekeeping
+
+**MHC Haplotype Reporting follow-up polish** (found S708, 2026-09-18,
+issue \#148 Slice 4 close-out; READY, Effort S; lower priority – nothing
+is wrong, all three are readability/staleness). (1) The tab’s
+`frequency` column displays full-precision doubles
+(`0.0333333333333333`, visible in
+`vignettes/articles/shiny_app_use/marker_genetics_mhc_haplotype.png`) –
+round the DISPLAY only
+(e.g. [`DT::formatRound()`](https://rdrr.io/pkg/DT/man/formatCurrency.html)
+in `output$mhcSummaryTable`, `R/modMarkerGenetics.R`), never the
+returned `mhcHaplotypeSummaryTable` reactive or the export (tests pin
+those exactly); strict TDD. (2)
+[`modMarkerGeneticsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsUI.md)’s
+`@return` still describes only the first tab (upload control, guidance
+area, comparison table) – predates Slices 4-5 of \#152/#153 too. (3)
+`NEWS.Rmd`’s \#148 Slice 1 entry still says “no Shiny screen yet” though
+the tab now ships (the \#152
+[`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
+entry has the same stale phrase); re-render `NEWS.md` in the same
+commit, plain-language criterion.
 
 **Census class (b): investigate the 8 off-centre union dots on the real
 375 fixture** (found S668 census, re-confirmed on the S696 baseline CSV
@@ -1481,8 +1472,14 @@ rule) shipped S705 (2026-09-17, strict TDD,
 Slice 2 (statistics) shipped S706 (2026-09-17, strict TDD,
 [`mhcHaplotypeFrequency()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeFrequency.md) +
 [`mhcHaplotypeCarriers()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeCarriers.md));
-implementation Slices 3-4 remain open — see the Up Next item. See
-`CHANGELOG.md`.
+Slice 3 (de-identification primitive) shipped S707 (2026-09-17, strict
+TDD,
+[`obfuscateMhcHaplotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateMhcHaplotypes.md));
+Slice 4 (the 8th Marker Genetics tab “MHC Haplotype Reporting” +
+confirm-gate export + `.buildMhcExportManifest()` + tutorial/terms/NEWS
+docs) shipped S708 (2026-09-18, strict TDD, live E2E) – **issue \#148 is
+DONE and closed**, so every issue in this batch (#146-#153) is now
+shipped and closed. See `CHANGELOG.md`.
 
 **Progress, issue \#152 (whole-genome/whole-exome sequence input +
 sequence-based genetic metrics) – DONE, closed (design S517 through

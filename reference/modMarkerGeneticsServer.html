@@ -173,7 +173,7 @@ upstream analysis has not yet been run.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with fourteen reactive elements: <code>markerGenotype</code>, the
+    <p>A named list of reactive elements: <code>markerGenotype</code>, the
 raw uploaded genotype data frame (or <code>NULL</code> before upload);
 <code>markerKinshipMatrix</code>, the marker-based <code>id</code> x <code>id</code>
 kinship matrix (or <code>NULL</code>); <code>comparisonTable</code>, the per-animal
@@ -204,9 +204,29 @@ uploaded, or before a pedigree is available if the founders-only
 restriction is checked); <code>ldBlockExportTable</code>, the
 <code><a href="obfuscateLdBlocks.html">obfuscateLdBlocks</a></code>-de-identified export preview (or
 <code>NULL</code> before "Generate De-Identified Export Preview" is clicked
-with both <code>ldBlockTable</code> and <code>pedigree</code> available); and
+with both <code>ldBlockTable</code> and <code>pedigree</code> available);
 <code>ldBlockExportConfirmed</code>, <code>FALSE</code> until the confirm-gate
-modal's own Confirm button is clicked for the current export preview.</p>
+modal's own Confirm button is clicked for the current export preview;
+<code>sequenceRohTable</code>, the <code><a href="computeGenomicROH.html">computeGenomicROH</a></code> output (or
+<code>NULL</code> before a genotype file and a locus-metadata file are both
+uploaded, or while a threshold input is invalid);
+<code>sequenceExportGenotypeMatrix</code>, <code>sequenceExportRohTable</code>
+and <code>sequenceExportManifest</code>, the de-identified genotype matrix,
+de-identified F_ROH table and export manifest captured at
+"Generate De-Identified Export Preview" (each <code>NULL</code> before
+then); <code>sequenceExportConfirmed</code>, <code>FALSE</code> until that
+export's confirm-gate modal is accepted for the current preview;
+<code>mhcHaplotypeSummaryTable</code>, the <code><a href="mhcHaplotypeFrequency.html">mhcHaplotypeFrequency</a></code>
+<code>summary</code> data frame (or <code>NULL</code> before an MHC haplotype file
+is uploaded, or while a rarity threshold is invalid);
+<code>mhcHaplotypeCarrierTable</code>, the <code><a href="mhcHaplotypeCarriers.html">mhcHaplotypeCarriers</a></code>
+rare-haplotype carrier data frame (same <code>NULL</code> conditions);
+<code>mhcExportTables</code>, a list of the <code>summary</code>, de-identified
+<code>carriers</code> and <code>manifest</code> data frames captured at "Generate
+De-Identified Export Preview" (or <code>NULL</code> before then, without a
+pedigree, or while any MHC-file animal is absent from the pedigree);
+and <code>mhcExportConfirmed</code>, <code>FALSE</code> until the MHC export's
+confirm-gate modal is accepted for the current preview.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -231,6 +251,23 @@ plan). Validated through the multiallelic-tolerant sibling validator
 table is de-identified (<code><a href="obfuscateLdBlocks.html">obfuscateLdBlocks</a></code>) behind a
 curator confirm-gate reusing <code><a href="modDeidentifiedExportServer.html">modDeidentifiedExportServer</a></code>'s
 tested Generate-Preview -&gt; Confirm -&gt; Confirm-OK pattern (D9).</p>
+<p>A seventh tab, "Genomic ROH (F_ROH)" (issue #152 Slice 5), computes
+<code><a href="computeGenomicROH.html">computeGenomicROH</a></code> from the shared genotype and
+locus-metadata uploads, with the same confirm-gated, de-identified
+export pattern (genotype matrix, F_ROH table, manifest).</p>
+<p>An eighth tab, "MHC Haplotype Reporting" (issue #148 Slice 4), reads its
+OWN dedicated <code>mhcHaplotypeFile</code> upload (validated by
+<code><a href="checkMhcHaplotypeFile.html">checkMhcHaplotypeFile</a></code>) and reports
+<code><a href="mhcHaplotypeFrequency.html">mhcHaplotypeFrequency</a></code>'s per-haplotype summary and
+<code><a href="mhcHaplotypeCarriers.html">mhcHaplotypeCarriers</a></code>'s rare-haplotype carrier list at the
+two rarity thresholds shown next to the tables, with a persistent
+descriptive-only caveat, the call counts and frequency denominator, and
+(when <code>pedigree</code> is available) how many pedigree animals have a
+designation. Its export (summary, carrier list aliased through
+<code><a href="obfuscateMhcHaplotypes.html">obfuscateMhcHaplotypes</a></code>, and a manifest) goes through the
+same confirm gate. The alias map covers pedigree animals only, so the
+export is not generated – with the reason shown – while any animal in
+the MHC file is absent from the loaded pedigree.</p>
 <p>This module never touches the existing single-locus genotype path
 (<code>checkGenotypeFile</code>/<code>addGenotype</code>/<code>hasGenotype</code>/
 <code>getGVGenotype</code>/<code>geneDrop</code>) – the D1 long-format schema is a

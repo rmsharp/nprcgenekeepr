@@ -996,6 +996,56 @@ export’s own timestamp, package version, and the SNP-count/base-pair
 thresholds used, mirroring the De-Identified Export tab’s own manifest
 convention below.
 
+An eighth **MHC Haplotype Reporting** tab (issue
+[\#148](https://github.com/rmsharp/nprcgenekeepr/issues/148)) reports
+how common each MHC haplotype is in the colony, which haplotypes are
+rare, and which animals carry the rare ones – so a manager can see which
+animals matter before a rare haplotype is lost. It has its own upload,
+separate from the marker genotype files above: a CSV with one row per
+animal, an id column first, then that animal’s two haplotype
+designations (the bundled `obfuscated_rhesus_mhc_breeder_genotypes.csv`
+example is exactly this shape). Designations are used exactly as
+written; a trailing `?` marks a provisional call, which is counted and
+shown but left out of the frequencies. A persistent banner states that
+this is descriptive reporting of the designations you supply, not a
+replacement for the pedigree-based statistics elsewhere in the app.
+
+A haplotype is flagged rare when its frequency is at or below the first
+threshold (default 0.01) **or** it is carried by no more than the second
+(default 2 animals). Both thresholds sit next to the tables and can be
+changed. The carrier rule matters most in small colonies: with 31
+animals no haplotype can reach a frequency as low as 0.01, so on the
+bundled example it is the carrier rule that flags 26 of the 33
+haplotypes. A line above the tables gives the counts behind the
+frequencies (animals, missing and provisional designations, and the
+number of certain designations used), and, once a pedigree is loaded,
+how many pedigree animals have a designation.
+
+![Marker Genetics MHC Haplotype Reporting tab showing an orange
+descriptive-only banner, a file upload control, rarity threshold inputs
+set to 0.01 and 2, a gray line reading 31 animals, 62 haplotype
+designations, 0 missing, 2 uncertain, frequencies use 60 certain
+designations, a gray line reading 31 of 375 pedigree animals have MHC
+haplotype designations, and a Haplotype Summary table listing each
+haplotype with its copy count, carrier count, uncertain count,
+frequency, and rare
+flag.](shiny_app_use/marker_genetics_mhc_haplotype.png)
+
+The MHC Haplotype Reporting tab with the bundled 31-animal example file
+and its pedigree loaded: the persistent descriptive-only banner, the two
+rarity thresholds, the counts line (60 certain designations, 2
+provisional), the pedigree-coverage line (31 of 375 pedigree animals),
+and the start of the per-haplotype summary table.
+
+Exports from this tab go through the same curator confirm-gate as the
+tabs above: generate a preview, confirm in the dialog, then download the
+haplotype summary, the rare-haplotype carrier list with animal ids
+replaced by the pedigree’s de-identification aliases, and a manifest
+recording the thresholds and counts in force. The summary is gated too,
+because a paired MHC type can identify an animal on its own. Every
+animal in the MHC file must be in the loaded pedigree before exporting;
+if any is missing, the tab says so and does not build the export.
+
 ### Cross-Center Identity
 
 The **Cross-Center Identity** tab (issue

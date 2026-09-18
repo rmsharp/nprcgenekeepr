@@ -64,14 +64,14 @@ modMarkerGeneticsServer(id, kinshipMatrix, pedigree)
 
 ## Value
 
-A list with fourteen reactive elements: `markerGenotype`, the raw
-uploaded genotype data frame (or `NULL` before upload);
-`markerKinshipMatrix`, the marker-based `id` x `id` kinship matrix (or
-`NULL`); `comparisonTable`, the per-animal
-`indivMeanKin`/`markerMeanKin` comparison data frame (or `NULL`);
-`heterozygosityTable`, the per-animal `ho`/`he` heterozygosity data
-frame (`he` is the population-wide mean expected heterozygosity,
-repeated per row) (or `NULL`); `exclusionTable`, the
+A named list of reactive elements: `markerGenotype`, the raw uploaded
+genotype data frame (or `NULL` before upload); `markerKinshipMatrix`,
+the marker-based `id` x `id` kinship matrix (or `NULL`);
+`comparisonTable`, the per-animal `indivMeanKin`/`markerMeanKin`
+comparison data frame (or `NULL`); `heterozygosityTable`, the per-animal
+`ho`/`he` heterozygosity data frame (`he` is the population-wide mean
+expected heterozygosity, repeated per row) (or `NULL`);
+`exclusionTable`, the
 [`markerParentageExclusion`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
 flagged-pairs data frame (or `NULL` before a genotype file and a
 pedigree are both available); `crossCenterGenotypeB`, the raw uploaded
@@ -97,9 +97,32 @@ both uploaded, or before a pedigree is available if the founders-only
 restriction is checked); `ldBlockExportTable`, the
 [`obfuscateLdBlocks`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md)-de-identified
 export preview (or `NULL` before "Generate De-Identified Export Preview"
-is clicked with both `ldBlockTable` and `pedigree` available); and
+is clicked with both `ldBlockTable` and `pedigree` available);
 `ldBlockExportConfirmed`, `FALSE` until the confirm-gate modal's own
-Confirm button is clicked for the current export preview.
+Confirm button is clicked for the current export preview;
+`sequenceRohTable`, the
+[`computeGenomicROH`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
+output (or `NULL` before a genotype file and a locus-metadata file are
+both uploaded, or while a threshold input is invalid);
+`sequenceExportGenotypeMatrix`, `sequenceExportRohTable` and
+`sequenceExportManifest`, the de-identified genotype matrix,
+de-identified F_ROH table and export manifest captured at "Generate
+De-Identified Export Preview" (each `NULL` before then);
+`sequenceExportConfirmed`, `FALSE` until that export's confirm-gate
+modal is accepted for the current preview; `mhcHaplotypeSummaryTable`,
+the
+[`mhcHaplotypeFrequency`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeFrequency.md)
+`summary` data frame (or `NULL` before an MHC haplotype file is
+uploaded, or while a rarity threshold is invalid);
+`mhcHaplotypeCarrierTable`, the
+[`mhcHaplotypeCarriers`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeCarriers.md)
+rare-haplotype carrier data frame (same `NULL` conditions);
+`mhcExportTables`, a list of the `summary`, de-identified `carriers` and
+`manifest` data frames captured at "Generate De-Identified Export
+Preview" (or `NULL` before then, without a pedigree, or while any
+MHC-file animal is absent from the pedigree); and `mhcExportConfirmed`,
+`FALSE` until the MHC export's confirm-gate modal is accepted for the
+current preview.
 
 ## Details
 
@@ -130,6 +153,30 @@ Any exported LD-block table is de-identified
 behind a curator confirm-gate reusing
 [`modDeidentifiedExportServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modDeidentifiedExportServer.md)'s
 tested Generate-Preview -\> Confirm -\> Confirm-OK pattern (D9).
+
+A seventh tab, "Genomic ROH (F_ROH)" (issue \#152 Slice 5), computes
+[`computeGenomicROH`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
+from the shared genotype and locus-metadata uploads, with the same
+confirm-gated, de-identified export pattern (genotype matrix, F_ROH
+table, manifest).
+
+An eighth tab, "MHC Haplotype Reporting" (issue \#148 Slice 4), reads
+its OWN dedicated `mhcHaplotypeFile` upload (validated by
+[`checkMhcHaplotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMhcHaplotypeFile.md))
+and reports
+[`mhcHaplotypeFrequency`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeFrequency.md)'s
+per-haplotype summary and
+[`mhcHaplotypeCarriers`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeCarriers.md)'s
+rare-haplotype carrier list at the two rarity thresholds shown next to
+the tables, with a persistent descriptive-only caveat, the call counts
+and frequency denominator, and (when `pedigree` is available) how many
+pedigree animals have a designation. Its export (summary, carrier list
+aliased through
+[`obfuscateMhcHaplotypes`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateMhcHaplotypes.md),
+and a manifest) goes through the same confirm gate. The alias map covers
+pedigree animals only, so the export is not generated – with the reason
+shown – while any animal in the MHC file is absent from the loaded
+pedigree.
 
 This module never touches the existing single-locus genotype path
 (`checkGenotypeFile`/`addGenotype`/`hasGenotype`/

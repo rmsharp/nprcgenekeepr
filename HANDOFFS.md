@@ -167,7 +167,7 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **6** receipt(s). Computed by
+This file currently holds **2** receipt(s). Computed by
 `methodology_trim.py` on every `--check`/`--write` run, never
 hand-maintained.
 
@@ -178,281 +178,81 @@ hand-maintained.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
+**Archived 13 record(s), 2026-09-17 → 2026-09-18** into
+[`docs/archive/HANDOFFS-through-2026-09-18.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-18.md)
+— same format, same order, frozen. Losslessness is proved by
+[`docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh),
+which re-derives L1/L2/L3 from git; run it rather than trusting this
+sentence. Written by `methodology_trim.py` v1.1.2.
+
 ``` handoff
-session: S706
-date: 2026-09-17
+session: S711
+date: 2026-09-18
+status: pending
+active_task: Owner-directed push of local master commits to origin/master (S710 next-step A, owner-picked at Phase 0); verify the 4 on-push CI workflows go green and record the outcome. 33 commits ahead at claim (32 at start + Phase 0 backfill 83618479); the claim commit makes 34. Process/ops action, no code changes, no TDD phases.
+what_was_done: pending
+commit: pending
+```
+
+``` handoff
+session: S710
+date: 2026-09-18
 status: complete
 self_score: 9
 predecessor_score: 9
-active_task: DONE. Issue #148 Slice 2 -- mhcHaplotypeFrequency() (per-haplotype summary + file-level counts, D4 dual <= rarity criterion, certain-call 2N denominator) + mhcHaplotypeCarriers() (carrier detail with provisional-carrier disclosure) shipped under strict TDD per the ratified plan sec 4 rows 3-4 / sec 5 Slice 2 (S705 next-step A; owner-picked via AskUserQuestion at Phase 0). All TDD gates owner-approved (PRE-RED->RED, RED->GREEN, GREEN->skip-REFACTOR-close-out). Slice 3 (de-id primitive) queued at top of BACKLOG Up Next. Issue #148 stays OPEN (Slices 3-4 remain).
-what_was_done: PRE-RED resolved two contract micro-semantics BY MEASUREMENT before any test existed: the real file's uncertain A002a_B015 has no certain counterpart (uncertain-only labels get no summary row), and counting the one provisional carrier (0F4FY1, A008_B015b) in nCarriers would flag 25 not the ratified 26 (nCarriers counts certain carriers only). Fresh pre-change baseline 2,384 blocks failed=0 error=0 (reproduces S705 exactly). RED e8a63f05: 16 blocks, 0 passing -- after catching 12 pattern-less expect_error() assertions passing spuriously (Learning 492 trap, re-applied) and tightening them to parameter-naming messages. GREEN 930536e8: 2 R files + NAMESPACE + 2 man pages, 102 assertions green first run; checklists 4a03fff3: _pkgdown.yml (guard green), NEWS.Rmd plain-language entry + NEWS.md rendered same-commit (+ pre-existing heading-blank-line wart fixed), 13 WORDLIST additions, package-loaded lint clean. All 6 roxygen @references verified by an independent agent (Crossref/PubMed; Hurley 2020 = HLA 95(6):516-531, Lacy 2012 = MEE 3(2):433-437 recovered). Full suite ONCE on final source: 2,400 blocks = baseline + exactly the 16 new, failed=0, error=0. Vocabulary grep clean (Dragon 3). Phase 0 backfill 8812e34b; claim 2a9cceda; records f22d581e. No new numbered learning (Learning 492 re-applied, not re-minted). POST-CLOSE-OUT (owner-directed): pushed 65 commits (6e5b9215..d3b9dec9, S697-S706 span); all 4 on-push workflows completed success on d3b9dec9 (R-CMD-check, lint, test-coverage, pkgdown), confirmed by this session's watch.
-next_steps: (A) Implement issue #148 Slice 3 (READY, Effort S, top BACKLOG Up Next item, full contract there): obfuscateMhcHaplotypes(carriers, map) per plan sec 4 row 5; strict TDD; the obfuscateTwinRelations() mold (stop on unknown id, labels byte-identical); NEWS + pkgdown + lint checklists. (B) Census class (d) (READY, S), class (b) (READY, M), curved-chord (READY, M) -- unchanged. (C) Push DONE this session (owner-directed, post-close-out): 65 commits pushed, all 4 workflows success on d3b9dec9 -- no push decision pending. (D) Informational: package-split disposition pending, dashboard copy stale, untracked leftovers, CHANGELOG trim re-fire ~1-2 sessions out (re-check with methodology_trim.py --check).
-key_files: R/mhcHaplotypeFrequency.R:102 (mhcHaplotypeFrequency; .checkMhcRareThreshold at :9), R/mhcHaplotypeCarriers.R:62 (mhcHaplotypeCarriers -- Slice 3 input shape), tests/testthat/test_mhcHaplotypeFrequency.R:179 (real-data pins), tests/testthat/test_mhcHaplotypeCarriers.R:123 (carrier pins), R/obfuscateTwinRelations.R:1 (Slice 3 mold), docs/planning/issue148-mhc-haplotype-reporting-plan.md:518 (sec 4 row 5 = Slice 3 contract, lines drift), BACKLOG.md:27 (Slice 3 item, lines drift), CHANGELOG.md:25 (S706 entries)
-gotchas: (1) Fresh baseline is now 2,400 blocks (failed=0, error=0, skipped=182, warning=42) on shipped source; Slice 3 measures its own anyway. (2) Unusually, NO commits should sit past the CHANGELOG frontier at next Phase 0 -- the final post-push records commit co-staged CHANGELOG and was itself pushed; an empty reconcile gap is the expected finding (the recurring 2-commit backfill shape does NOT apply this time). (3) Slice 3: read obfuscateTwinRelations()'s own tests for the round-trip mold BEFORE RED; stop-on-unknown-id is the core contract. (4) Pattern-less expect_error() is Learning 492's trap -- every stops-on-X RED assertion needs a rule-specific regexp. (5) NEWS.Rmd edits ship with re-rendered NEWS.md same commit; the spell-check test reads man/ pages, so devtools::document() after any roxygen edit before re-checking spelling. (6) Vocabulary grep at every slice close-out (Dragon 3); CHANGELOG enumerations span shards.
-runtime_smoke: n/a -- script-callable additions only, no Shiny wiring changed (UI arrives at Slice 4)
-changelog_ref: f22d581e
-commit: ef4d6e81
+active_task: DONE. Ledger archive pass (S709 next-step A, owner-picked): all three ledger byte triggers were firing and all three now clear with wide headroom -- SESSION_NOTES.md 87,984 -> 4,771 B (19 records), HANDOFFS.md 78,503 -> 16,481 B (13 receipts), CHANGELOG.md 68,117 -> 9,471 B (40 records), each into its own docs/archive/*-through-2026-09-18.md shard, L1/L2/L3 verified by each shard's verify.sh. Docs-only maintenance; no package files touched.
+what_was_done: Phase 0 backfill 7ab986e2 (1 commit, 710fea78 -- the predicted self-reconcile shape, measured exactly 1); claim 852b5292. Cut-boundary discovery: the default cut on every file collided with the existing -through-2026-09-17 shards (S704-S708 all share that date), so legal retained counts were probed with dry-run --cut N -- SESSION_NOTES only >=15 or <=2, HANDOFFS only <=2, CHANGELOG only <=8 (Learning 761). Trims committed one file per commit, largest non-colliding retention satisfying both stop conditions: SESSION_NOTES retain 2 (7fbe17b7), HANDOFFS retain 2 -- the pending S710 stub + S709's complete receipt, never zero (3dbe15f3), CHANGELOG retain 8, trimmed LAST so the two earlier trim-injected P1A entries landed before its cut (447f2beb). No --force needed anywhere: the Learning 549/586/594 SRF refusals never fired (large post-2026-09-17-archive denominators). Receipt-count sentence regenerated to 2 by the tool. Learning 761 appended; records commit follows this receipt.
+next_steps: (A) Push decision (owner call): ~32 commits ahead after close-out (recount with git rev-list --count origin/master..HEAD); span includes S708 MHC Slice 4, the S709 crash fix, and this archive pass; no package files touched since the S709-verified clean state. (B) Census class (d) S, class (b) M, curved-chord M -- unchanged. (C) MHC polish (Housekeeping, S). (D) Informational: package-split disposition pending; dashboard copy stale; untracked leftovers unchanged; R/appServer.R:168's deliberate re-throw observer reported-not-changed (S709 next-step E).
+key_files: docs/archive/SESSION_NOTES-through-2026-09-18.md:1 (S709's full handoff lives here now), docs/archive/HANDOFFS-through-2026-09-18.md:1 (S696-S708 receipts), docs/archive/CHANGELOG-through-2026-09-18.md:1 (S697-S708 ledger records), PROJECT_LEARNINGS.md:2217 (Learning 761), HANDOFFS.md:135 (regenerated receipt-count sentence)
+gotchas: (1) Baseline still 2,434 blocks (failed=0, error=0, skipped=184, warning=48) -- no package files touched; S709's gotchas still apply verbatim, read them in docs/archive/SESSION_NOTES-through-2026-09-18.md. (2) The live ledgers are deliberately sparse now -- older context is one hop away via the front-matter shard pointers; sparseness is not a ghost session. (3) The NEXT archive pass hits the same SHARD_EXISTS collision on the 2026-09-18 boundary -- probe legal cuts with dry-run --cut N first (Learning 761). (4) Every methodology_trim.py --write injects its own entry into CHANGELOG.md -- trim CHANGELOG last in any multi-file pass. (5) Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0; measure it.
+runtime_smoke: n/a -- docs-only (ledger files and docs/archive shards; zero R/, tests/, man/, vignettes/ changes)
+changelog_ref: a6b26716
+commit: a6b26716
 ```
 
-Self-score 9/10: + contract ambiguity resolved by measurement against
-the ratified pin before RED (tests encode a derived fact, not a
-guess), + honest RED (12 spurious passes caught by per-expectation
-inspection, tightened before commit), + single full-suite run on final
-source (S705’s lesson applied), + all 6 citations independently verified
-with exact metadata; - the RED draft initially violated Learning 492
-(caught in-session, zero shipped cost), - two extra
-document()/spell-check round-trips from post-generation roxygen edits.
-Predecessor 9/10: the BACKLOG brief + gotchas made execution
-near-mechanical and every claim verified true; sole gap was the
-nCarriers provisional-carrier semantics, resolvable only by this
-session’s own measurement.
+Self-score 9/10: + dry-run probes before every write meant no rollback
+was ever needed; + CHANGELOG trimmed last so the tool’s own injected
+entries stayed inside the trimmed budget; + every shard verified via its
+own verify.sh before its commit, and a final –check on all three files
+confirms no trigger fires. - The deep SESSION_NOTES cut archived S709’s
+handoff record mid-session (before this handoff existed), briefly
+leaving the live ACTIVE TASK stub-only – lossless but a crash in that
+window would have cost the next session an archive hop; - pre-announced
+an owner –force gate the evidence never required. Predecessor 9/10:
+next-step A was the exact deliverable with measured sizes and the
+“measure CHANGELOG first” instruction that proved out; the shard-name
+collision constraint – the pass’s dominant obstacle – was unflagged
+(discoverable only by doing); the predicted SRF refusals never fired
+(labeled expectation, zero cost).
 
 ``` handoff
-session: S705
-date: 2026-09-17
+session: S709
+date: 2026-09-18
 status: complete
 self_score: 9
 predecessor_score: 9
-active_task: DONE. Issue #148 Slice 1 -- checkMhcHaplotypeFile() (exported wide per-animal MHC haplotype validator) + .parseMhcHaplotypeCalls() (internal D3 parse rule) shipped under strict TDD per the ratified plan sec 4 rows 1-2 / sec 5 Slice 1 (S704 next-step A; owner-picked via AskUserQuestion at Phase 0). All TDD gates owner-approved (PRE-RED->RED, RED->GREEN, GREEN->skip-REFACTOR-close-out). Slice 2 (statistics) queued at top of BACKLOG Up Next. Issue #148 stays OPEN (Slices 2-4 remain).
-what_was_done: Fresh pre-change baseline measured BEFORE any test file existed (2,370 blocks, failed=0, error=0, skipped=182 -- ends the S699-S704 inherited-baseline chain). RED 5c0f359b: test_checkMhcHaplotypeFile.R (6 blocks) + test_parseMhcHaplotypeCalls.R (8 blocks incl. real-data pins 62 calls / 2 uncertain / 0 missing / 33 distinct / 60 certain), confirmed 0 passing with missing-symbol failures only. GREEN e6b548c6: minimal implementations, both files green (15 + 36 assertions); devtools::document() verified (1 NAMESPACE line + 2 man pages); checklists 2ea1962d: _pkgdown.yml catch-all entry (coverage guard green), NEWS.Rmd plain-language entry (new MHC Haplotype Reporting subsection) + NEWS.md rendered same-commit, package-loaded lint clean after one nzchar style fix. Full suite run TWICE, second on final source: 2,384 blocks = baseline + exactly the 14 new blocks, failed=0, error=0. Phase 0 backfill e9fce09a; claim 44142832; records 5d3146cf (CHANGELOG close-out, BACKLOG Slice 1 removed + Slice 2 queued + batch narrative). No new numbered learning -- plan followed without surprises.
-next_steps: (A) Implement issue #148 Slice 2 (READY, Effort M, top BACKLOG Up Next item, full contract there): mhcHaplotypeFrequency() + mhcHaplotypeCarriers() per plan sec 4 rows 3-4; strict TDD; builds on .parseMhcHaplotypeCalls(); pinned real-data expectations (33 distinct / denominator 60 / 26 flagged via carrier leg / frequency leg 0); citation checklist owed (re-verify every plan sec 2.8 source before roxygen @references). (B) Census class (d) (READY, S), class (b) (READY, M), curved-chord (READY, M) -- unchanged. (C) Push decision (owner call): ~57 commits ahead (estimate -- recount with git rev-list --count origin/master..HEAD); span now includes REAL package changes (Slice 1 functions + tests), local suite green on exactly this state, CI runs full R-CMD-check on push. (D) Informational: package-split disposition pending, dashboard copy stale, untracked leftovers, CHANGELOG re-fire ~2-3 sessions out.
-key_files: R/checkMhcHaplotypeFile.R:47 (validator), R/parseMhcHaplotypeCalls.R:26 (.parseMhcHaplotypeCalls -- Slice 2 builds on this), tests/testthat/test_parseMhcHaplotypeCalls.R:105 (real-data pins Slice 2 extends), docs/planning/issue148-mhc-haplotype-reporting-plan.md:509 (sec 4 rows 3-4 = Slice 2 contract, lines drift), BACKLOG.md:27 (Slice 2 item, lines drift), CHANGELOG.md:25 (S705 entries)
-gotchas: (1) Fresh baseline is now 2,384 blocks (failed=0, error=0, skipped=182, warning=42), measured on shipped source; Slice 2 measures its own anyway. (2) The 2 S705 close-out self-reference commits sit past the CHANGELOG frontier -- next Phase 0 backfills them (recurring shape). (3) Slice 2 isRare uses RATIFIED D4 semantics: frequency <= 0.01 OR carriers <= 2 -- <= not <, do not drift the operator. (4) Citation checklist fires at Slice 2: re-verify every plan sec 2.8 source before use; 5 draft citations were dropped as unverifiable in S704 -- do not resurrect them. (5) NEWS.Rmd edits ship with re-rendered NEWS.md in the same commit. (6) Vocabulary grep at every slice close-out (plan Dragon 3); CHANGELOG enumerations span shards.
-runtime_smoke: n/a -- script-callable additions only, no Shiny wiring changed (UI arrives at Slice 4)
-changelog_ref: 5d3146cf
-commit: 2f83a6e2
+active_task: DONE. Export-preview session-crash fix (top BACKLOG Up Next item, found S708): the LD-block, sequence, and MHC export-preview observers in R/modMarkerGenetics.R read every upstream reactive through safeRead() + req(); the sequence observer ports the MHC Dragon 5 missing-id pre-check (sequenceExportMissingIds -- build nothing, say why); the three guidance renderUIs name the could-not-be-processed state; the eager E2E data-ready observe() (a second, unknown, NO-CLICK crash the RED tests exposed) is defused too. Strict TDD, every gate owner-approved via AskUserQuestion.
+what_was_done: Phase 0 backfill 148cccaa (1 commit, cc540bf3); claim cf97540e. PRE-RED probes: sequence missing-id crash reachable; LD missing-id crash structurally unreachable (markerLdBlock subsets to founderIds, R/markerLdBlock.R:236 -- owner re-ratified defusal-only); testServer DESTROYS the module session on an observer error so survival is directly assertable (Learning 759, refining 758). Fresh baseline before any test: 2,427/0/0/183/42 (S708 exactly). RED cd63250c: 6 testServer blocks + 1 live E2E in the already-registered ROH E2E file; 5 blocks fail via shiny.destroyed.error, guard passes by design, E2E reproduces the live disconnect on the real tab (isConnected FALSE). GREEN 310c731d (R/modMarkerGenetics.R only): the RED malformed-upload block dying at UPLOAD time exposed the eager data-ready observe({req(comparison())}) as a real no-click crash, fixed with req(safeRead(comparison)); target file 66/66; both live E2E tests green (Phase 3E); lint 0. NEWS 76807b2a + spell-check reword 61c544a3. Full suite once on final source: 2,434 = 2,427 + the 7 new; failed=3 all triaged (2 wall-clock benchmarks = CPU contention from running lint/render beside the suite, both files green on quiet re-run, Learning 760; 1 spelling fixed, re-run green); warnings 42->48 = the i152 fixture's documented markerKinship NA warnings x 3 new instances. devtools::check 0 errors, 1 W + 1 N = the known untracked-local-file artifacts. BACKLOG item removed; Learnings 759/760 appended; records commit follows this receipt.
+next_steps: (A) Archive pass (READY, S): HANDOFFS.md (72,242 B) and SESSION_NOTES.md (77,442 B) byte triggers BOTH firing; CHANGELOG.md was 62,816 B before this close-out -- measure; expect SRF small-denominator refusals needing an owner --force (Learnings 549/586/594). (B) Census class (d) S, class (b) M, curved-chord M -- unchanged. (C) Push decision (owner call): ~25 commits ahead after close-out (recount with git rev-list --count origin/master..HEAD); local suite + check clean apart from the untracked-file artifacts. (D) MHC polish (Housekeeping, S). (E) Informational: R/appServer.R:168's observe re-throws cleanedStudbook errors by DELIBERATE design comment -- same crash class as Learning 758, reported not changed, owner's call; package-split disposition pending; dashboard copy stale; untracked leftovers unchanged.
+key_files: R/modMarkerGenetics.R:740 (LD observer), R/modMarkerGenetics.R:816 (sequence observer + pre-check), R/modMarkerGenetics.R:807 (sequenceExportMissingIds), R/modMarkerGenetics.R:929 (MHC observer), R/modMarkerGenetics.R:1261 (fixed data-ready observe), R/modMarkerGenetics.R:1036 + :1075 + :1182 (guidance renderUIs), tests/testthat/test_modMarkerGenetics.R:1554 (S709 section), tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R:192 (disconnect E2E), PROJECT_LEARNINGS.md tail (Learnings 759/760), NEWS.Rmd:374 (General Fixes entry)
+gotchas: (1) Fresh baseline now 2,434 blocks (failed=0, error=0, skipped=184, warning=48); skipped +1 = new opt-in E2E; warnings +6 = documented fixture warnings, not a regression. (2) Never run heavy jobs beside the full suite -- the 2 wall-clock benchmark files fail under CPU contention; re-run alone before treating as a regression (Learning 760). (3) Observer-crash tests assert session survival directly: click, then read any module state -- shiny.destroyed.error is the honest RED signal; req(x()) does NOT guard against x() erroring (Learning 759). (4) devtools::check keeps 1 W + 1 N from the untracked local files; CI never sees them. (5) Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0; measure it. (6) Both ROH E2E tests share makeGenomicRohE2ePedigreeFile(dropIds=); the partial variant writes a different filename so the fixtures cannot clobber each other.
+runtime_smoke: live shinytest2 E2E in headless Chrome, both tests: the pre-existing full export flow (8 assertions, upload -> preview -> confirm -> unlock) unchanged, and the new disconnect check -- pedigree missing S050, Generate Preview clicked, Shiny.shinyapp.isConnected() TRUE, guidance names "1 animal ... not in the loaded pedigree"
+changelog_ref: 33b0a556
+commit: 33b0a556
 ```
 
-Self-score 9/10: + clean strict-TDD cycle (RED committed at 0 passing,
-minimal GREEN, every transition owner-gated), + honest verification
-(baseline predates RED files; suite re-run on final post-lint-fix
-source), + plan-to-test fidelity (all Dragon 6/7 edges, real-data pins
-reproduce); - linting before the first full-suite launch would have
-saved a second ~10-min run, - no learning minted (surprise-free session,
-stated rather than padded). Predecessor 9/10: the BACKLOG brief made
-execution near-mechanical and every claim verified true; sole gap was
-the undocumented NEWS.md-render convention (one git log to discover).
-
-``` handoff
-session: S704
-date: 2026-09-17
-status: complete
-self_score: 9
-predecessor_score: 9
-active_task: DONE. Issue #148 MHC haplotype-reporting design plan RATIFIED (docs/planning/issue148-mhc-haplotype-reporting-plan.md; S703 next-step A; owner-picked via AskUserQuestion at Phase 0; PLANNING session, docs-only, no TDD phases, zero R//tests//man changes). Q1-Q8 resolved as ten decisions D1-D10; owner ratified all 4 judgment calls at the recommended option in one AskUserQuestion round (D2 dedicated wide upload behind checkMhcHaplotypeFile(), D3 exclude-and-disclose uncertain ?-calls, D4 dual rarity criterion freq<=0.01 OR carriers<=2, D8 eighth tab in modMarkerGenetics). Four future strict-TDD slices with per-slice completion criteria. Slice 1 queued at top of BACKLOG Up Next.
-what_was_done: Direct reads of every load-bearing file (modMarkerGenetics.R in full, all validators, Pathway A end to end, obfuscateTwinRelations mold, the bundled CSV); measured the real data's frequency distribution (31 animals / 62 calls / 0 missing / 2 uncertain / 33 distinct over denominator 60 / freq<0.05 flags 26, <=0.01 flags 0, carriers<=2 flags 26 / 27 of 31 unique unordered pairs) -- the <=0.01-flags-0 finding reshaped D4 into the dual criterion; one background domain-research agent with DIRECT/INFERENCE/UNVERIFIED tagging (Wiseman 2013 label convention, CIWD dual-criterion precedent, 2N denominators, identifiability); a verify pass caught 1 unmeasured "measured" claim and 5 wrong-or-unverifiable draft citations before ratification (Learning 757). Incidental finding routed into the plan, not fixed: modMarkerGeneticsServer() @return says "fourteen" reactives, actual 19 -- repair scheduled inside Slice 4. Phase 0 backfill 45bd4061; claim b1aa58c9; deliverable f66ee459; records 1435ae20 (CHANGELOG close-out entry, Learning 757, BACKLOG Slice 1 item + completed item removed + batch narrative). No suite run: docs-only; S696-S698 baseline (2,370 blocks, failed=0) inherited.
-next_steps: (A) Implement issue #148 Slice 1 (READY, Effort M, top BACKLOG Up Next item, full context there): checkMhcHaplotypeFile() + .parseMhcHaplotypeCalls() per plan sec 4 rows 1-2 and sec 5 Slice 1 done-when; STRICT TDD with AskUserQuestion-gated phases -- the first #148 session where TDD applies. (B) Census class (d) (READY, S), class (b) union dots (READY, M), curved-chord pass (READY, M) -- unchanged. (C) Push decision (owner call): ~48 commits ahead (estimate -- recount with git rev-list --count origin/master..HEAD); span includes S697/S698 package-path comment-level changes (MEASURED this session, correcting S703's docs-only estimate). (D) Informational: package-split disposition pending, dashboard copy stale, untracked leftovers, CHANGELOG re-fire ~3-4 sessions out.
-key_files: docs/planning/issue148-mhc-haplotype-reporting-plan.md:1 (ratified plan -- sec 4 interface catalog, sec 5 slices, sec 7 dragons, sec 11 ratification), BACKLOG.md:27 (Slice 1 item, lines drift), CHANGELOG.md:25 (S704 entries), PROJECT_LEARNINGS.md:2210 (Learning 757, lines drift), docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md:85 (Q1-Q8 the plan resolved), R/modMarkerGenetics.R:136 (the 7-tab surface Slice 4 extends)
-gotchas: (1) Slice 1 is strict-TDD -- declare phases, gate transitions via AskUserQuestion (S703/S704 were docs-only exceptions). (2) The 2 S704 close-out self-reference commits sit past the CHANGELOG frontier -- next Phase 0 backfills them (recurring shape). (3) failed=0 baseline (2,370 blocks) INHERITED from S698; Slice 1 touches package files -- measure fresh BEFORE claiming regression deltas. (4) Plan decisions are RATIFIED -- do not re-litigate D4's 0.01/2 defaults; pinned measured numbers (33/60/26-via-carrier-leg/freq-leg-0) are Slice 2's test expectations. (5) Vocabulary grep at every slice close-out (plan Dragon 3). (6) CHANGELOG enumerations must span shards.
-runtime_smoke: n/a -- docs-only (design plan; zero R//tests//man changes)
-changelog_ref: 1435ae20
-commit: 52676abe
-```
-
-Self-score 9/10: + measurement-driven D4 (the \<=0.01-cannot-fire
-finding), + verify pass caught both fabrication classes pre-ratification
-(Learning 757), + clean planning boundary (zero package changes,
-incidental find routed not fixed), + owner ratified all 4
-recommendations unchanged; - the draft was written before the research
-agent returned, planting the citation errors the verify pass then had to
-catch, - deepest-reasoning-mode directive is a harness setting the
-session cannot set itself. Predecessor 9/10: next-step (A) was this
-session’s deliverable with a complete frame and a fully-verified
-evidence inventory; sole wrong claim (unpushed span “believed
-docs/prose-only”) was honestly labeled an estimate, cost zero.
-
-``` handoff
-session: S703
-date: 2026-09-17
-status: complete
-self_score: 9
-predecessor_score: 9
-active_task: DONE. Issue #148 MHC haplotype scope-narrowing decision record (S702 next-step A; owner-picked via AskUserQuestion at Phase 0; the sequencing audit's last open item; audit Finding #4's required gate; scoping/decision session, docs-only -- no TDD phases). docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md committed; owner decision via AskUserQuestion: design-first, same issue (rejected: sub-issue split, implement-as-filed, defer -- all recorded with reasons); scope-narrowing comment posted to issue #148; BACKLOG design-plan item queued at top of Up Next.
-what_was_done: Evidence pass BEFORE the owner question re-derived Finding #4's claims against HEAD and found all its preconditions satisfied by the shipped #146-#153 siblings (vocabulary reservation R/modMarkerGenetics.R:6-9; sibling-validator defusal pattern checkLinkageMarkerGenotypeFile.R/checkSequenceGenotypeFile.R; .markerAlleleFrequencyTable at R/markerAlleleFrequency.R:26; #150 export gate; rhesusGenotypes example data incl ?-suffixed uncertain calls) while the biallelic gate (R/checkMarkerGenotypeFile.R:68-77) stays correctly untouchable -- now Learning 756. Owner chose design-first-same-issue from 4 options; deliverable fcf94807 records the decision, rejected alternatives, grep-verified evidence inventory, open design questions Q1-Q8, and hard constraints. Issue comment issuecomment-5721771731 posted (non-commit action, ledgered). Phase 0 backfill 4658a4cc (S702 close-out self-reference commits, the recurring shape); claim 1a93a315; deliverable fcf94807; records f1dd7e62 (CHANGELOG entries, Learning 756, BACKLOG item + batch-narrative update). No suite run: docs-only; S696-S698 baseline (2,370 blocks, failed=0) inherited.
-next_steps: (A) Write the issue #148 design plan (READY, Effort M -- new top Up Next item; PLANNING session, the plan doc is the whole deliverable, no implementation, FM #18/#19, deepest reasoning mode; ratify Q1-Q8 from the scoping doc sec 4 as numbered decisions with a slice list and per-slice completion criteria, the #152/#153 mold). (B) Census class (d) duplicate-adjacent assessment (READY, Effort S). (C) Census class (b) union dots (READY, Effort M) and curved-chord measurement pass (READY, Effort M). (D) Push decision (owner call): ~42 commits ahead after close-out (estimate -- count with git rev-list --count origin/master..HEAD); unpushed span believed docs/prose-only -- verify with git diff origin/master..HEAD --stat before pushing (estimate, not measured). (E) Informational: package-split disposition awaiting owner; dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged; Learning 749 duplicate at PROJECT_LEARNINGS.md:2195; H4 rate item open; CHANGELOG.md re-fire cadence ~4-5 sessions from 33,503 B.
-key_files: docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md (decision record -- sec 3 evidence inventory, sec 4 Q1-Q8); BACKLOG.md:27-46 approx (new top Up Next item, re-grep); BACKLOG.md:1105 approx (batch narrative update); CHANGELOG.md top (S703 close-out + issue-comment entries); PROJECT_LEARNINGS.md:2208 (Learning 756); issue #148 comment issuecomment-5721771731; SESSION_NOTES.md (full S703 handoff + S702 evaluation).
-gotchas: The scoping doc is NOT the design plan -- the next #148 session ships issue148-mhc-haplotype-reporting-plan.md ONLY (FM #18/#19; implementation is separate later sessions). The two S703 close-out self-reference commits will sit past the CHANGELOG frontier -- the recurring shape, next Phase 0 backfills them. failed=0 expectation stays 2,370 blocks, INHERITED from S698 (S699-S703 all docs-only) -- a package-touching session needs a fresh baseline. Issue #148 stays OPEN through design AND implementation -- do not close at plan ratification. Enumerations over CHANGELOG entries must span CHANGELOG.md docs/archive/CHANGELOG-*.md. The empty 2026-08 month header persists (cosmetic).
-runtime_smoke: n/a -- docs-only (decision record + ledger/notes/backlog records + issue comment; no runtime behavior change)
-changelog_ref: 2026-09-17 S703 close-out entry (issue #148), f1dd7e62
-commit: 2be33272
-```
-
-Decision session: the sequencing audit’s last open gate is discharged –
-issue \#148 is scope-narrowed (owner: design-first, same issue) with a
-committed decision record, a queued plan-session BACKLOG item carrying
-the full verified evidence inventory, and the narrowing posted to the
-issue itself. Self-score 9: + audit claims re-derived against HEAD
-before the owner question, so options were priced against current
-reality (Learning 756); + decision recorded with rejected alternatives
-and line-verified citations (one off-by-one caught pre-commit); +
-outward-facing issue comment pre-authorized by the picked option’s own
-text. - Low degree of difficulty (docs-only decision session); - two of
-the four scope options differed only in ceremony (design-first vs
-sub-issue split) and could have been collapsed. Predecessor (S702)
-scored 9/10: every load-bearing claim checked out (backfill shape,
-commits-ahead count, flag list, CI state); nothing material missing.
-
-``` handoff
-session: S702
-date: 2026-09-17
-status: complete
-self_score: 9
-predecessor_score: 8
-active_task: DONE. CHANGELOG.md archive pass via methodology_trim.py (S701 next-step A; BACKLOG Housekeeping item's remaining half; owner-picked via AskUserQuestion at Phase 0; docs-only maintenance session -- no TDD phases, S700/S701/S594/S539 archive-pass precedent). 328 records (2026-08-14 -> 2026-09-17) archived to docs/archive/CHANGELOG-through-2026-09-17.md; live file 464,522 B -> 33,503 B (-92.8%); both triggers cleared; L1/L2/L3/P1A verified twice (tool assertions + the generated verify.sh re-deriving from git: 347 = 19 retained + 328 archived).
-what_was_done: P1_UNDOCUMENTED never fired -- the claim ledger entry shipped IN the Phase 1B claim commit (78dbd8ce), frontier at HEAD (Learnings 752/754 applied, zero wasted gate cycles). SRF_RED fired CONTRARY to the item's carried "likely GREEN" prediction -- the actual most-recent archive boundary is S579's 2026-08-14 pass (66d5aa5), not S547's ~934 KB relocation (6.3072 vs S579, 0.4739 vs the largest-drop boundary -- the small-denominator shape a fourth time); owner-directed --force via AskUserQuestion (S594/S700/S701 precedent); the wrong carried prediction is now Learning 755. Trim committed 6bac092f per the tool's one-ledger-one-shard-one-entry-one-commit instruction; independent verify.sh green; re-check "trigger does not fire" (33,503 B, line metric abstains post-split). Post-trim dashboard flag list re-extracted (Learning 753 method): BOTH CHANGELOG flags GONE; only pre-existing MEDIUM (.Rproj.user jspdf artifact) and LOW (9 branches) remain -- no HIGH flags anywhere. Phase 0 backfill cd2ba39f (S701 close-out self-reference commits); claim 78dbd8ce; deliverable 6bac092f; records 922350bd (CHANGELOG close-out entry, Learning 755, BACKLOG item removed entirely -- both halves done; the H4 rate item stays open). No suite run: docs-only, nothing in the package build/test path changed.
-next_steps: (A) Issue #148 MHC haplotype scoping (READY, Effort M -- sequencing audit's last open item; scope decision first per audit Finding #4). (B) Census class (d) duplicate-adjacent assessment (READY, Effort S -- smallest census residual). (C) Census class (b) union dots (READY, Effort M) and the curved-chord measurement pass (READY, Effort M). (D) Push decision (owner call): ~36 commits ahead after close-out (estimate -- count with git rev-list --count origin/master..HEAD); last pushed state CI-green; unpushed span believed docs/prose-only -- verify with git diff origin/master..HEAD --stat before pushing (estimate, not measured). (E) Informational: package-split disposition awaiting owner; dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged; Learning 749 duplicate at PROJECT_LEARNINGS.md:2195.
-key_files: docs/archive/CHANGELOG-through-2026-09-17.md (+.verify.sh -- run it rather than trusting claims); CHANGELOG.md:21-23 (new shard pointer) and :25-49 approx (S702 close-out entry above the tool trim entry); PROJECT_LEARNINGS.md:2206 (Learning 755); BACKLOG.md:96 approx (Housekeeping now opens with census class (b)); SESSION_NOTES.md (full S702 handoff + S701 evaluation).
-gotchas: All three ledger files now have through-2026-09-17 shards -- pre-trim context lives in docs/archive/; live CHANGELOG.md holds only 19 records (2026-09-17-dated, S700-S702 era). CHANGELOG.md sits at 33,503 B, just ABOVE the 32,768 B half-budget stop; at the H4 ~4-entries-per-session rate the trigger re-fires in ~5 sessions (estimate); HANDOFFS.md re-fires in ~7 (Learning 754) -- recurring cadences. The two S702 close-out self-reference commits will sit past the CHANGELOG frontier -- next Phase 0 backfills them, the recurring shape. failed=0 expectation stays 2,370 blocks, INHERITED from S698 (S699-S702 all docs-only). Any enumeration over CHANGELOG entries must span CHANGELOG.md docs/archive/CHANGELOG-*.md. The empty 2026-08 month header persists (cosmetic); the shard name is a span label, not a day boundary (CUT_STRADDLES_DAY).
-runtime_smoke: n/a -- docs-only (archive relocation + ledger/notes/backlog records; no runtime behavior change)
-changelog_ref: 2026-09-17 S702 close-out entry (BL-Housekeeping), 922350bd
-commit: 5a8bb047
-```
-
-Maintenance session: the last flagged ledger file is cleared by a
-verified-lossless 328-record archive pass – no HIGH dashboard flags
-remain, and the two-file BACKLOG Housekeeping item is fully done and
-removed. Self-score 9: + zero gate-discovery waste (Learnings
-752/753/754 applied at the right moments); + deliverable verified two
-independent ways plus a post-trim dashboard re-measure; + the wrong
-carried SRF prediction caught, surfaced accurately at the owner decision
-point, and converted into Learning 755. - My own Phase 0 report and
-picker description repeated the “SRF likely GREEN” claim unverified (FM
-\#11-adjacent; a –check at orientation would have caught it
-pre-picker); - low degree of difficulty (third consecutive
-precedent-following archive pass). Predecessor (S701) scored 8/10:
-complete and exact procedure, one wrong load-bearing claim (the
-S547-boundary SRF prediction, stated as derived but never checked –
-Learning 755).
-
-``` handoff
-session: S701
-date: 2026-09-17
-status: complete
-self_score: 9
-predecessor_score: 9
-active_task: DONE. HANDOFFS.md archive pass via methodology_trim.py (S700 next-step A; BACKLOG Housekeeping item first half; owner-picked via AskUserQuestion at Phase 0; docs-only maintenance session -- no TDD phases, S700/S594/S539 archive-pass precedent). 116 receipts (2026-08-14 -> 2026-09-17) archived to docs/archive/HANDOFFS-through-2026-09-17.md; live file 590,777 B -> 31,315 B (-94.7%); both triggers cleared; stale front-matter count regenerated 21 -> 6; L1/L2/L3/P1A verified twice (tool assertions + the generated verify.sh re-deriving from git: 122 = 6 retained + 116 archived).
-what_was_done: P1_UNDOCUMENTED never fired -- the claim ledger entry shipped IN the Phase 1B claim commit (f51210bb), keeping the frontier at HEAD (Learning 752 applied; zero wasted gate cycles vs S700's one, Learning 754). SRF_RED fired as predicted (5.0215 vs the tiny 21-receipt 2026-08-14 boundary, 0.6989 vs the largest-drop boundary -- the S594/S700 small-denominator shape exactly); owner-directed --force via AskUserQuestion. Trim committed 9b551c8b per the tool's one-ledger-one-shard-one-entry-one-commit instruction; independent verify.sh green; re-check reports trigger does not fire (31,315 B, headroom 113). Post-trim dashboard flag list re-extracted (Learning 753 method): HANDOFFS flags GONE; CHANGELOG.md (5,562 lines / 461,077 B) is the only remaining flag, already queued as the BACKLOG item's second half. bin/check-handoff shard-check N/A -- checker not present in this project (canonical-only), stated rather than silently skipped. Phase 0 backfill 21d09bca (S700 close-out self-reference commits); claim f51210bb; deliverable 9b551c8b; records 1a8aeb20 (CHANGELOG close-out entry, Learning 754, BACKLOG item narrowed to CHANGELOG.md half). No suite run: docs-only, nothing in the package build/test path changed.
-next_steps: (A) CHANGELOG.md archive pass (READY, Effort S -- the BACKLOG item's remaining half; ship the claim ledger entry IN the claim commit per Learnings 752/754; SRF likely GREEN there -- most recent boundary is S547's ~934 KB legacy relocation -- but if RED it is an owner decision; expect the post-trim level near the 32,768 B stop, not near-zero). (B) Issue #148 MHC haplotype scoping (audit Finding #4: scope decision first). (C) The 3 census-residual items (d-adjacent smallest, Effort S). (D) Push decision (owner call): ~29 commits ahead after close-out; last pushed state CI-green; unpushed span believed docs/prose-only -- verify with git diff origin/master..HEAD --stat before pushing (estimate, not measured). (E) Informational: package-split disposition awaiting owner; dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged; Learning 749 duplicate at PROJECT_LEARNINGS.md:2195.
-key_files: docs/archive/HANDOFFS-through-2026-09-17.md (+.verify.sh -- run it rather than trusting claims); HANDOFFS.md:135-141 (new shard pointer + regenerated count 6); CHANGELOG.md:19-50 approx (S701 close-out entry + tool trim entry); PROJECT_LEARNINGS.md:2204 (Learning 754); BACKLOG.md:96-117 approx (narrowed CHANGELOG.md item, re-grep).
-gotchas: HANDOFFS.md sits at 31,315 B -- 1,453 B under the half-budget stop; at ~5 KB/receipt the byte trigger (fires > 65,536 B) re-fires in roughly 7 sessions, a recurring cadence, not an anomaly (Learning 754). failed=0 expectation stays 2,370 blocks but is INHERITED from S698 (S699-S701 all docs-only) -- a session touching package files needs a fresh baseline. The two S701 close-out self-reference commits will sit past the CHANGELOG frontier -- the recurring shape; next Phase 0 backfills them exactly as S701 did for S700's. HANDOFFS.md itself now holds only S696-S701; older receipts live in the shards (newest: through-2026-09-17). The CHANGELOG month-header mislabeling (2026-09 entries under 2026-08) persists -- cosmetic, leave unless tasked.
-runtime_smoke: n/a -- docs-only (archive relocation + ledger/notes/backlog records; no runtime behavior change)
-changelog_ref: 2026-09-17 S701 close-out entry (BL-Housekeeping), 1a8aeb20
-commit: 79b6003b
-```
-
-Maintenance session: the dashboard’s HANDOFFS.md HIGH flag is cleared by
-a verified-lossless 116-receipt archive pass, leaving CHANGELOG.md as
-the sole remaining flagged file (its pass already queued with sharpened
-procedure notes). Self-score 9: + zero gate-discovery waste (Learnings
-752/753 applied at the right moments instead of re-derived); +
-deliverable verified two independent ways plus a post-trim dashboard
-re-measure; + both refusal-gate paths resolved by their governing
-rules; - low degree of difficulty (precedent-following maintenance; the
-score reflects clean execution, not novelty); - the shard-checker step
-in this file’s own guidance is unrunnable here (no bin/check-handoff
-copy) and was recorded N/A rather than resolved. Predecessor (S700)
-scored 9/10: procedure notes complete and exact, nothing wrong found;
-only miss was expectation-shaping on the post-trim level (now Learning
-754).
-
-``` handoff
-session: S700
-date: 2026-09-17
-status: complete
-self_score: 9
-predecessor_score: 8
-active_task: DONE. SESSION_NOTES.md trim via methodology_trim.py (S699 next-step A; owner-picked via AskUserQuestion at Phase 0; docs-only maintenance session -- no TDD phases, S539/S594 archive-pass precedent). 170 records (2026-08-19 -> 2026-09-17) archived to docs/archive/SESSION_NOTES-through-2026-09-17.md; live file 931,481 B -> 2,560 B (-99.7%); both triggers cleared; L1/L2/L3 verified twice (tool assertions + the generated verify.sh re-deriving from git).
-what_was_done: Two tool gates hit and resolved by their own rules: P1_UNDOCUMENTED (the session's own claim commit 86c1bc6a was unledgered -- wrote the claim CHANGELOG entry c75269bb per the gate's "reconcile first, then trim"; Learning 752) and SRF_RED (2.3879 vs the most recent small S594-era archive boundary, 0.1422 vs the largest-drop boundary -- owner-directed --force via AskUserQuestion, S594 precedent exactly). Trim committed 6f722e25 per the tool's one-ledger-one-shard-one-entry-one-commit instruction; independent verify.sh green; re-check reports trigger does not fire. Post-trim dashboard verification found HANDOFFS.md (6,555 lines / 586,022 B; 122 real receipts vs the stale front-matter "21") and CHANGELOG.md (5,515 lines / 457,092 B) ALSO HIGH-flagged past the 2,000-line read cap, both already over at S699's close -- the "1 HIGH flag" orientation framing was an under-count (the dashboard summary counts projects, not flags; Learning 753); queued as one new BACKLOG Housekeeping item (READY, Effort S each, one file per session) with full procedure notes, report-don't-fix. Phase 0 backfill af664d43 (S699 close-out commits); claim 86c1bc6a; claim-ledger c75269bb; deliverable 6f722e25; records c179897a (CHANGELOG close-out entry, Learnings 752-753, BACKLOG item). No suite run: docs-only, nothing in the package build/test path changed.
-next_steps: (A) HANDOFFS.md archive pass (READY, Effort S -- new Housekeeping item at section top; claim CHANGELOG entry BEFORE the first --write per Learning 752; expect possible SRF_RED -> owner decision). (B) CHANGELOG.md archive pass (READY, Effort S -- same item, separate session). (C) Issue #148 MHC haplotype scoping (audit Finding #4: scope decision first). (D) The 3 census-residual items (d-adjacent smallest, Effort S). (E) Push decision (owner call): ~24 commits ahead after close-out; last pushed state CI-green; unpushed span believed docs/prose-only -- verify with git diff origin/master..HEAD --stat before pushing (estimate, not measured). (F) Informational: Learning 749 duplicate at PROJECT_LEARNINGS.md:2195; dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged; package-split disposition still awaiting owner.
-key_files: docs/archive/SESSION_NOTES-through-2026-09-17.md (+.verify.sh -- run it rather than trusting claims); SESSION_NOTES.md:17-19 (new archive pointer block); CHANGELOG.md:21 (S700 close-out entry, tool trim entry below); PROJECT_LEARNINGS.md:2200-2202 (Learnings 752/753); BACKLOG.md:96-119 approx (new trim item, re-grep).
-gotchas: SESSION_NOTES.md now holds ONLY S700's records -- pre-S700 context lives in the archive shards (newest: through-2026-09-17). failed=0 expectation stays 2,370 blocks but is INHERITED from S698 (S699/S700 both docs-only, no suite run) -- do not cite S700 as a fresh baseline. A trim session must ledger its claim commit BEFORE --write (P1_UNDOCUMENTED) and treat SRF_RED as an owner decision. Dashboard "High+ Risk: N" counts PROJECTS -- extract the flag list from dashboard.html; HANDOFFS.md front matter's "21 receipt(s)" is stale (real: 122). The tool inserted a "## 2026-09" month header into CHANGELOG.md; older 2026-09-dated entries still sit under "## 2026-08" -- pre-existing cosmetic mislabeling, leave it unless tasked.
-runtime_smoke: n/a -- docs-only (archive relocation + ledger/notes/backlog records; no runtime behavior change)
-changelog_ref: 2026-09-17 S700 close-out entry (ad hoc), c179897a
-commit: c0b7ec81
-```
-
-Maintenance session: the dashboard’s SESSION_NOTES.md HIGH flag is
-cleared by a verified-lossless 170-record archive pass; the two sibling
-ledger files’ own overdue trims are measured and queued with procedure
-notes. Self-score 9: + deliverable verified two independent ways and
-re-measured (trigger-clear, dashboard); + both refusal gates resolved by
-their governing rules (reconcile, owner decision) rather than forced or
-abandoned; + a multi-session orientation under-count caught, measured,
-and converted into a self-contained queued item; - Phase 0 repeated the
-inherited “1 HIGH flag” claim instead of extracting the flag list at
-orientation; - one extra commit cycle discovering P1_UNDOCUMENTED.
-
-``` handoff
-session: S699
-date: 2026-09-17
-status: complete
-self_score: 9
-predecessor_score: 9
-active_task: DONE. Standing pedigree-drawing directive decision (S698 next-step A; decision/grooming session, docs-only -- no TDD phases). Owner sign-off via AskUserQuestion ("Sign off + itemize residuals"): the S643 standing top-priority note REMOVED from BACKLOG.md; the 3 measured census residuals itemized as ordinary-priority Housekeeping items; agent memory updated to RETIRED.
-what_was_done: Grounded the decision by re-tallying the committed S696 census CSV live (not quoting handoffs): full-CSV totals a/c1/c2/e/f=0 everywhere, b=8 (all Real 375, all off-centre), c curved-chord=1,668 (1,667 Real 375 + 1 Track C), d=2 adjacent (1 per fixture). New finding: the 8 class-b rows split into 2 numerical-noise rows (__union_75 -2.3e-07 units, __union_132 8.7e-09 units -- artifacts of the exact >1e-6 px predicate) and 6 real 0.5-1.5-unit (60-180 px) minSep-bound offsets. Posed a 4-option AskUserQuestion; owner picked sign off + itemize. Removed the standing note (BACKLOG.md:6-11), added 3 self-contained Housekeeping items (b-investigation READY M, arc-modelling measurement pass READY M, d-adjacent assessment READY S) each with CSV row ids and coupled article-prose warnings. Rewrote the agent-side standing-priority memory to RETIRED. Phase 0 backfill 6ca5efdd (S698 close-out commits); claim 1ed16e63; deliverable d6e23e40; records 8127201d (CHANGELOG S699 entry; no PROJECT_LEARNINGS entry owed -- the finding is forward-carried in the live item). No suite run: docs-only, nothing in the package build/test path changed.
-next_steps: (A) SESSION_NOTES.md trim (READY, Effort S; the dashboard's one HIGH flag; ~11,140 lines). (B) Issue #148 MHC haplotype reporting (genetic-metrics sequencing audit's last open item). (C) The 3 new census-residual items (ordinary priority; d-adjacent is smallest, Effort S). (D) Push decision (owner call): 17 commits ahead after close-out; last pushed state CI-green; unpushed span believed docs/comments/prose-only -- verify with git diff origin/master..HEAD --stat before pushing (estimate, not measured). (E) Informational: Learning 749 duplicate at PROJECT_LEARNINGS.md:2195; dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged; package-split disposition still awaiting owner.
-key_files: BACKLOG.md:1-13 (note gone); BACKLOG.md:96-140 approx (3 new Housekeeping items, re-grep); CHANGELOG.md:19 (S699 entry); docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv (grounding artifact); ~/.claude/projects/-Users-rmsharp-Development-nprcgenekeepr/memory/pedigree-drawing-standing-priority.md (RETIRED).
-gotchas: The standing top-priority note is GONE -- older handoffs/forward-carries/learnings referencing it are historical, not live. BACKLOG Housekeeping gained 3 blocks at its top (net +36 lines) -- re-grep line numbers. Census counts going forward: c curved-chord 1,668 total (1,667 Real-375-only), d 2 total (1 Real-375-only) -- older "1,667"/"d=1" are Real-375-scoped. failed=0 expectation stays 2,370 blocks but is INHERITED from S698, not re-measured -- do not cite S699 as a fresh baseline. The class-b item's 2-noise/6-real split couples to both the census predicate and the article's "8 of 237" figure; both couplings are flagged inside the item.
-runtime_smoke: n/a -- docs-only (BACKLOG/ledger/notes/memory edits; no runtime behavior change)
-changelog_ref: 2026-09-17 S699 entry (ad hoc), 8127201d
-commit: 87dfb4dc
-```
-
-Owner decision session: the S643 standing pedigree-drawing top-priority
-directive is retired by explicit owner sign-off; residual fidelity work
-continues at ordinary priority via 3 new self-contained Housekeeping
-items. Self-score 9: + decision grounded in a live CSV re-tally
-(surfaced the class-b noise/real split and the Real-375 scoping of older
-counts before they entered the items wrong); + items written as
-archaeology-free specs; + memory loop closed same-session; - the 2-vs-6
-class-b split was derived after the owner heard “8” in the decision
-brief; - no independent re-render to confirm today’s engine state
-matches eeacd06c (relied on S698’s day-old live measures).
-
-``` handoff
-session: S698
-date: 2026-09-17
-status: complete
-self_score: 9
-predecessor_score: 9
-active_task: DONE. Pedigree-drawing housekeeping re-measure pass (standing pedigree-fidelity family, owner-picked via AskUserQuestion at Phase 0; DEVELOPMENT_WORKSTREAM, docs/comments-only -- no TDD phases, S692/S694/S695/S697 precedent). All 3 BACKLOG Housekeeping items re-derived live under the QP engine and closed: D2-dogleg comment rewritten with its falsification history, 5-pair proximity residual closed resolved-by-construction with no code change, both stale article mate-line sites rewritten.
-what_was_done: Measured before editing (scratchpad/s698_remeasure.R, kept): (A) 0 __proj_ nodes among the real 375 fixture's 1,456 rectilinear nodes -- D2 dogleg structurally unreachable again via S678 Decision 2 (pinned test_comparePedigreeStructure.R:687); finding-1 comment in test_resolveEdgeNodeCollisions.R rewritten with the full history (true 2026-08-15 -> S668 census 56 -> dead S678), dated S698; the sibling test_addRectilinearWaypoints.R 0-projection expectation confirmed general (no edit needed). (B) all 5 S667 pairs re-measured by REAL-id occurrence sweep (indices are allocation-order artifacts, Learning 751): min same-row named-pair distance 480 px vs 25 px limit; independent global class (a) scan 0, agreeing with the committed S696 census CSV (a=0, b=8, c1/c2=0, d=1 adjacent); closed resolved-by-construction. (C) Track B live: all 4 union dots exactly centered (0.00 px from midpoint, mates 120 px apart), matching the committed S675 figure the prose contradicted; kinship2-fidelity-validation.qmd:150 paragraph + :294 caveats bullet rewritten (remaining differences: the union-dot marker itself, issue #161, and the 8-of-237 off-centre residual where minSep floors bind). Verification: spell clean, wordlist gate green directly (before the suite, Learning 750), lint 0 on touched test file (loaded), full unfiltered regression 2,370 blocks failed=0 error=0 skipped=182 (S696/S697 baseline exactly). Phase 0 backfill 3c11df28; claim 3daa4001; deliverable 262c65be; records efd67743 (CHANGELOG entry, Learning 751, 3 BACKLOG blocks removed).
-next_steps: (A) The tagged pedigree-fidelity queue is now EMPTY -- the standing top-priority note (BACKLOG:6-11) still stands; next Phase 0 should ask the owner whether the directive is satisfied (sign-off to remove the note) or whether the remaining measured residuals (census b=8 off-centre unions, 1,667 c-curved-chord findings) should become items. (B) SESSION_NOTES.md trim (READY, Effort S; the dashboard's one HIGH flag; ~11,050 lines). (C) Issue #148 MHC haplotype reporting. (D) Push decision (owner call): 11 commits ahead after close-out; local regression clean; last pushed state CI-green. (E) Informational: Learning 749 duplicate at PROJECT_LEARNINGS.md:2195; dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged.
-key_files: tests/testthat/test_resolveEdgeNodeCollisions.R:20-40 (rewritten finding 1); vignettes/articles/kinship2-fidelity-validation.qmd:150-172 and :294-306 (rewritten sites); scratchpad/s698_remeasure.R (reusable re-measure harness); CHANGELOG.md:19 (S698 entry); PROJECT_LEARNINGS.md:2198 (Learning 751).
-gotchas: failed=0 expectation stays 2,370 blocks. BACKLOG Housekeeping shrank by 3 blocks (net -63 lines) -- re-grep line numbers; the standing top-priority note is UNTOUCHED and needs owner sign-off to remove. The rewritten article paragraph embeds live-measured values (0.00 px centering, 8-of-237 residual) -- re-verify it after any union-positioning change; the census (b) count is 8 per the committed CSV, NOT the 12 some older forward-carries quote. The finding-1 comment deliberately preserves its falsification history -- do not simplify it to a bare present-tense claim. "5 5" suite output lines are pre-existing print noise.
-runtime_smoke: n/a -- docs-only (test comments and article prose; no runtime behavior change)
-changelog_ref: 2026-09-17 S698 entry (BL-pedRemeasure), efd67743
-commit: 49ae8ac1
-```
-
-``` handoff
-session: S697
-date: 2026-09-17
-status: complete
-self_score: 9
-predecessor_score: 9
-active_task: DONE. QP Migration Path Phase 4 cleanup (BACKLOG Up Next item 1, owner-picked via AskUserQuestion at Phase 0; DEVELOPMENT_WORKSTREAM, docs-only -- no TDD phases, S692/S694/S695 precedent). All 7 stale doc-comment sites in R/makePedigreeDiagramData.R now describe the QP engine; the plan doc carries a dated Phase 4 record; the joint-QP-solver migration's 4-phase path is CLOSED.
-what_was_done: Inventoried before editing (the plan's own gate grep -- 3 comment hits -- plus a broadened sweep over .kMax*/Tier/Track-7/b1AnchorRelativeX/de-collision vocabulary; every hit read and classified live vs explicitly-historical vs stale). Fixed the 7 stale sites: the S667 component comment's mechanism list and named deleted pass; the qualifies() relocation comment's claim the deleted b1AnchorRelativeX() branch still calls it (the S666 conditional-shift pass is its only caller, verified at the one real call site); the second-sweepMinSepBackstop() rationale's named deleted pass; the S666 chain-rule "Tier 3/collision-avoidance (also unchanged)" framing; the orphaned 39-line present-tense S647 block (removed; identity folded into the Phase 2 replacement comment, deleted symbol de-named); makePedigreeMatingLayout()'s exported roxygen re-attributing the issue-#145 male-left rule from the deleted "Tier 3 formula (S8.1)" to the seeding rules + QP row-order preservation (behavioral claim kept -- pinned by test_positionMatingUnitForest.R:303). devtools::document() regenerated man/makePedigreeMatingLayout.Rd only. First full regression failed=1 (wordlist gate: "QP" first reached a rendered Rd); QP added to inst/WORDLIST (BJL/LOD precedent); final unfiltered run 2,370 blocks failed=0 error=0 skipped=182 (S696 baseline exactly); gate grep returns nothing; lint 0 (loaded). Phase 4 record written into the plan doc. Claim b81bfecc; deliverable 43ed9a24; records 20088807 (CHANGELOG entry, Learning 750, BACKLOG block removed).
-next_steps: (A) SESSION_NOTES.md trim (READY, Effort S; the dashboard's one HIGH flag; ~10,930 lines). (B) Pedigree-drawing housekeeping re-measures (standing directive; READY, Effort S-M each): D2-dogleg reachability comment, 5-pair proximity residual re-measure under QP, kinship2-fidelity-validation.qmd:150-163 rewrite. (C) Issue #148 MHC haplotype reporting. (D) Push decision (owner call): 4 commits ahead after close-out; local regression clean; last pushed state CI-green. (E) Informational: Learning 749's body duplicated as a stray bullet at PROJECT_LEARNINGS.md:2195 (S696 paste artifact, reported not fixed); dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged.
-key_files: R/makePedigreeDiagramData.R:869,948,1011,1038,1162,1596 (the 7 sites post-edit); man/makePedigreeMatingLayout.Rd (regenerated); inst/WORDLIST:168 (QP); docs/planning/pedigree-diagram-joint-qp-solver-plan.md:448 (Phase 4 record); CHANGELOG.md:19 (S697 entry); PROJECT_LEARNINGS.md:2196 (Learning 750).
-gotchas: failed=0 expectation stays 2,370 blocks. BACKLOG.md's FIRST Up Next section is now EMPTY (the QP item was its only block) -- LabKey/package-split live under the SECOND Up Next header; line numbers shifted net -8. A NEW acronym in EXPORTED roxygen fails test_wordlist_coverage.R even when the word is all over internal comments -- run spelling::spell_check_package() before the full suite when touching exported roxygen (Learning 750). The QP plan is CLOSED; the Phase 2 replacement comment deliberately KEEPS past-tense pass vocabulary (gate greps only the 3 symbol names) -- do not strip it as "unfinished cleanup". The "5 5" lines in silent suite output are pre-existing print noise.
-runtime_smoke: n/a -- docs-only (comments, one regenerated Rd, one WORDLIST line; no runtime behavior change)
-changelog_ref: 2026-09-17 S697 entry (BL-qpPhase4), 20088807
-commit: daafea9f
-```
-
-``` handoff
-session: S696
-date: 2026-09-17
-status: complete
-self_score: 9
-predecessor_score: 9
-active_task: DONE. Ascender-stub cosmetic fix (found S679, owner visual gate; standing pedigree-fidelity family; owner-picked via AskUserQuestion at Phase 0). .resolveEdgeNodeCollisions() corridors now rejoin a stranded bar point's kid directly instead of climbing back to bar level and leaving 9-27 px of dangling duplicate ink. DEVELOPMENT_WORKSTREAM, full TDD RED -> GREEN (REFACTOR posed, owner-skipped); approach + all gates owner-ratified; owner visual gate ACCEPTED both changed renders.
-what_was_done: PRE-RED located the defect in data and crop-verified it -- the dangling ink is the [barY, corridorY] span drawn TWICE (riser + kid-descent top) at invisible bar points with no surviving bar-level or upward edge (84 on the real 375 fixture); drop rejoins never dangle (continuous with the union line). S679's candidate 2 (zero-width bars) refuted: they can never jog. A measured spike (applied, quantified, reverted; scratchpad/s696_spike.patch) proved the direct rejoin: stubs 84 -> 0, zero node movement, census byte-identical, blast radius exactly 2 test blocks + 1 screenshot. RED (d3e15162): 6 new blocks incl. the FROM-side reversed-orientation pin and the real-fixture zero-stubs invariant, verified failing for measured reasons, zero collateral. GREEN (e6fb81a7): the bypass (invisible endpoint + exactly one surviving downward vertical -> corridor connects to the kid, descent dropped, bar point left unreferenced/unmoved) with direction-coherent emission; D-2 walker generalized (collapse only 1-in/1-out jogs, parentless components bridge through shared kids); first_cousin rectilinearEdges 33 -> 31 CHANGED S696. Full clean regression 2,370 blocks failed=0 error=0; lint 0; ground truth pre-gate 42/42 twins triples + 39/39 nets + S691 exemplar validation ALL PASS; twins screenshot recaptured live (pixel diff purely subtractive) + first_cousin exemplar re-rendered (other 4 byte-identical), both owner-accepted (eeae9914); census CSV refreshed (eeacd06c, also folds in S690's never-committed deltas); NEWS plain-language entry (05c3313e), spell check clean. Claim 2e5eee98.
-next_steps: (A) QP Migration Path Phase 4 cleanup (now BACKLOG Up Next item 1; READY, Effort S: grep R/ doc-comments for stale deleted-tier/.kMax* references). (B) SESSION_NOTES.md trim (READY; the dashboard's one HIGH flag; ~10,900 lines). (C) Issue #148 MHC haplotype reporting (genetic-metrics sequencing audit's last open item). (D) Push decision (owner call): ~76 commits ahead after this close-out; local full regression clean, last pushed state CI-green. (E) Informational: dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged.
-key_files: R/makePedigreeDiagramData.R:2708 (bypass + emission; roxygen :2454); tests/testthat/test_resolveEdgeNodeCollisions.R:973 (S696 section); tests/testthat/test_comparePedigreeStructure.R:301 (walker changes); tests/testthat/test_examplePedigreeFixtures.R:203 (first_cousin re-pin); vignettes/articles/shiny_app_use/diagram_twin_connectors.png + vignettes/articles/pedigree-diagram-img/exemplar-first_cousin-rectilinear.png (owner-accepted renders); scratchpad/s696_spike.patch, scratchpad/s696_twin_diff.png (evidence); PROJECT_LEARNINGS.md (Learning 749).
-gotchas: failed=0 expectation is now 2,370 blocks (was 2,364). Screenshot digest baseline moves to any commit >= eeae9914; a layout digest hashes edge from/to, so an orientation-only change alters the digest without changing ink (Learning 749). Waypoint edge DIRECTION is load-bearing (terminal->waypoint = parent-side, waypoint->terminal = child-side) -- new corridor emissions must preserve it or the D-2 walker misclassifies. Orphaned degree-0 size-0 bar points now exist in rectilinear layouts by design. BACKLOG line numbers shifted (ascender block removed); re-grep.
-runtime_smoke: Twins screenshot recaptured live through the real app (upload, QC, twin sidecar, focal trim, Diagram render) under the fixed engine; explicit NPRC_RUN_E2E=true run of test-e2e-pedigree-module.R: 16/16 blocks, 55 expectations, 0 failed (exactly the S679 baseline); full clean regression 2,370 blocks failed=0 error=0.
-changelog_ref: 2026-09-17 S696 entry (BL-ascenderStub), d9da420a
-commit: 77ba72ec
-```
+Self-score 9/10: + PRE-RED probes overturned two load-bearing brief
+assumptions (LD unreachability; destroyed-session observability) before
+any test existed; + the RED honest-failure discipline surfaced a second
+real no-click crash the brief didn’t know about; + user-boundary runtime
+verification (live disconnect reproduced pre-fix, survival proved
+post-fix); - ran lint/render beside the single full-suite launch,
+causing 2 spurious benchmark failures and a re-triage cycle (Learning
+760); - the NEWS spell-check flag surfaced only in the full suite; - the
+mid-GREEN data-ready-observer fix was decided solo (disclosed in
+commit + gate, but a mid-session owner flag would have been cleaner).
+Predecessor 9/10: complete brief with the fix-pattern pointer and the
+E2E suggestion that became the key test; the “guidance text is the ONLY
+observable” claim understated the destroyed-session surface, and the
+eager data-ready observer wasn’t flagged; “port to BOTH observers” was
+evidence-retired for LD.

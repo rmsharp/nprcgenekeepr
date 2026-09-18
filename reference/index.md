@@ -577,6 +577,8 @@ Funtions designed for interactive use
   : Create ID aliases of a specified length
 - [`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md)
   : De-identify a markerLdBlock() result table
+- [`obfuscateMhcHaplotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateMhcHaplotypes.md)
+  : De-identify an MHC haplotype carrier table
 - [`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
   : Obfuscate a pedigree by aliasing IDs and shifting dates
 - [`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)

@@ -68,6 +68,7 @@ Other obfuscation:
 [`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md),
 [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md),
 [`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md),
+[`obfuscateMhcHaplotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateMhcHaplotypes.md),
 [`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)
 
 ## Examples
@@ -88,12 +89,12 @@ ped
 #> 8 o4   s2   d2   M   1 2008-04-13 <NA> 18.4     original
 obfuscatedPed
 #>       id   sire    dam sex gen      birth exit  age recordStatus
-#> 1 SN7TLJ   <NA>   <NA>   F   0 2003-05-12 <NA> 23.4     original
-#> 2 2ZFC1W   <NA>   <NA>   F   0 2002-06-02 <NA> 24.3     original
-#> 3 FCDNFK   <NA>   <NA>   M   0 2000-08-05 <NA> 26.1     original
-#> 4 GJGR1A   <NA>   <NA>   M   0 2005-05-24 <NA> 21.3     original
-#> 5 T5NBEL FCDNFK SN7TLJ   F   1 2015-01-29 <NA> 11.6     original
-#> 6 FEHHE9 FCDNFK 2ZFC1W   F   1 2009-02-23 <NA> 17.6     original
-#> 7 LSYDEB GJGR1A 2ZFC1W   F   1 2012-03-23 <NA> 14.5     original
-#> 8 7YDSRN GJGR1A 2ZFC1W   M   1 2008-05-03 <NA> 18.4     original
+#> 1 T5NBEL   <NA>   <NA>   F   0 2003-04-28 <NA> 23.4     original
+#> 2 FEHHE9   <NA>   <NA>   F   0 2002-07-21 <NA> 24.2     original
+#> 3 LSYDEB   <NA>   <NA>   M   0 2000-07-05 <NA> 26.2     original
+#> 4 7YDSRN   <NA>   <NA>   M   0 2005-06-12 <NA> 21.3     original
+#> 5 9G3CPE LSYDEB T5NBEL   F   1 2015-02-22 <NA> 11.6     original
+#> 6 G40JSC LSYDEB FEHHE9   F   1 2009-02-19 <NA> 17.6     original
+#> 7 M8WYKP 7YDSRN FEHHE9   F   1 2012-04-02 <NA> 14.5     original
+#> 8 94832J 7YDSRN FEHHE9   M   1 2008-04-09 <NA> 18.4     original
 ```
