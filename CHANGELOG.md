@@ -26,6 +26,11 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit ed79261f — S712 close-out self-reconcile
+- S712's final commit recorded its own close-out commit sha into the completed
+  `HANDOFFS.md` receipt (the recurring 1-commit self-reference shape its handoff
+  gotcha 4 predicted; measured exactly 1). Backfilled at S713 Phase 0 reconcile.
+
 ### 2026-09-18 · [BL] S712 close-out: census class (d) CLOSED — both duplicate-adjacent sites assessed acceptable (owner-ratified)
 - **Deliverable (this commit; BACKLOG "Census class (d)" block removed in it):** the
   census's 2 class-(d) "adjacent" rows (`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_
