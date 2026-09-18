@@ -26,6 +26,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit 35a33905 — S713 close-out self-reconcile
+- S713's final commit recorded its own close-out commit sha (`f67830a1`) into the
+  completed `HANDOFFS.md` receipt — the recurring self-reference shape S713's own
+  handoff predicted (gotcha 4, "expect ~1"). Measured: exactly 1 commit past the
+  frontier. No other action in the gap.
+
 ### 2026-09-18 · [BL] S713 close-out: census class (b) CLOSED — 6 real rows accepted as minSep-forced structural residuals, 2 dust rows ratified out of the predicate (both owner-ratified)
 - **Deliverable (BACKLOG "Census class (b)" block removed in this commit):** the
   census's 8 class-(b) rows are fully dispositioned. The **6 real 60–180 px rows**
