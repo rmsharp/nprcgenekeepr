@@ -22,6 +22,13 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits 52676abe..49af9123 — S704 close-out self-reference commits
+- The recurring shape (predicted by S704's own gotcha 2): the two commits that record a
+  session's close-out (`52676abe` SESSION_NOTES handoff + HANDOFFS receipt complete;
+  `49af9123` close-out sha self-reconcile into the receipt) necessarily land AFTER that
+  session's Phase 3F ledger entry, so they sit past the frontier until the next session's
+  Phase 0 reconcile records them. No untracked work — both are S704's own documentation.
+
 ### 2026-09-17 · [issue #148] S704 close-out: MHC haplotype-reporting design plan RATIFIED (D1-D10; owner picked all 4 recommended judgment calls); Slice 1 BACKLOG item queued; 1 learning
 - **Deliverable (`f66ee459`):** `docs/planning/issue148-mhc-haplotype-reporting-plan.md` —
   the #152/#153-mold design plan the S703 scope decision required, resolving the scoping
