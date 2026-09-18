@@ -22,6 +22,34 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [issue #148] S705 close-out: Slice 1 DONE — `checkMhcHaplotypeFile()` + `.parseMhcHaplotypeCalls()` shipped under strict TDD; Slice 2 BACKLOG item queued
+- **Deliverable (RED `5c0f359b`, GREEN `e6b548c6`, checklists `2ea1962d`):** the ratified
+  plan's Slice 1. `checkMhcHaplotypeFile()` (exported): wide per-animal MHC haplotype
+  designation validator — exactly 3 columns, id-like first column, unique ids, names
+  forced to `id, haplotype1, haplotype2`; `NA`/empty cells pass (missing is the
+  statistics layer's concern); the bundled `rhesusGenotypes` loads unchanged.
+  `.parseMhcHaplotypeCalls()` (internal): the D3 parse rule — `NA`/empty = missing,
+  trailing `?` = uncertain call of the stripped label, labels otherwise opaque (bare
+  `"?"` is a certain opaque label, pinned). All TDD gates owner-approved via
+  `AskUserQuestion` (PRE-RED→RED, RED→GREEN, GREEN→skip-REFACTOR-close-out).
+- **Verification:** fresh pre-change baseline measured (2,370 blocks, failed=0, error=0,
+  skipped=182 — ending the S699–S704 inherited-baseline chain), RED confirmed 0 passing
+  for the right reasons, GREEN suite run TWICE (the second on the final post-lint-fix
+  source): 2,384 blocks = baseline + exactly the 14 new blocks, failed=0, error=0,
+  skipped/warnings unchanged. Real-data pins reproduce the plan's measured numbers
+  (62 calls / 2 uncertain / 0 missing / 33 distinct / 60 certain).
+  `devtools::document()` verified (1 NAMESPACE line + 2 expected man pages);
+  same-session checklists: `_pkgdown.yml` catch-all entry (coverage guard green),
+  `NEWS.Rmd` plain-language entry (new "MHC Haplotype Reporting" subsection) +
+  `NEWS.md` rendered, package-loaded lint clean on all 4 touched files (one
+  `nzchar` style fix). Vocabulary grep clean (plan Dragon 3). Runtime smoke n/a —
+  script-callable additions only, no Shiny wiring (that arrives at Slice 4).
+- **Records:** BACKLOG.md — completed Slice 1 item removed (this entry is its record);
+  Slice 2 item queued at the top of Up Next (statistics: `mhcHaplotypeFrequency()` +
+  `mhcHaplotypeCarriers()`, plan §4 rows 3-4). No new numbered learning — the session
+  followed the ratified plan without surprises. Issue #148 stays OPEN (Slices 2-4
+  remain).
+
 ### 2026-09-17 · [issue #148] S705 claim: Slice 1 — MHC haplotype validator + parse rule (session claimed, work beginning)
 - Phase 1B claim for the issue #148 Slice 1 implementation session (S704 next-step A;
   owner-picked via `AskUserQuestion` at Phase 0; the ratified design plan's first
