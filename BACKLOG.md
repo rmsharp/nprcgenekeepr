@@ -24,28 +24,23 @@ regen left behind (S367 origin, flagged S368/S369) is now also RESOLVED --
 S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 
 ## Up Next
-- [ ] **Implement issue #148 Slice 2: MHC haplotype statistics** (Slice 1 DONE S705,
-      2026-09-17 -- `checkMhcHaplotypeFile()` + `.parseMhcHaplotypeCalls()` shipped, RED
-      `5c0f359b` / GREEN `e6b548c6`; READY, Effort M -- a strict-TDD implementation session,
-      `AskUserQuestion`-gated phases). Build `mhcHaplotypeFrequency(genotype,
-      rareFrequencyThreshold = 0.01, rareCarrierThreshold = 2L)` (exported: returns
-      `list(summary, counts)` -- `summary` one row per distinct certain haplotype with
-      `haplotype, nCopies, nCarriers, nUncertain, frequency, isRare`; `isRare` = frequency
-      <= threshold OR carriers <= threshold, the ratified D4 dual criterion; `counts` =
-      `nAnimals, nCalls, nMissing, nUncertain, denominator`) and `mhcHaplotypeCarriers(
-      genotype, rareOnly = TRUE, ...)` (carrier detail `haplotype, id, uncertain`) -- plan
-      §4 rows 3-4, §5 Slice 2 (`docs/planning/issue148-mhc-haplotype-reporting-plan.md`).
-      Semantics ratified: denominator = certain calls among genotyped animals (2N − missing
-      − uncertain, the D3 exclude-and-disclose rule); a homozygote adds 2 copies / 1
-      carrier; build on Slice 1's `.parseMhcHaplotypeCalls()`. Test expectations: hand-
-      computed small fixture (with missing + uncertain + homozygote present) AND the pinned
-      real-data numbers (33 distinct / denominator 60 / 26 flagged at the defaults, all via
-      the carrier leg -- the frequency leg flags 0 at 2N=60; plan §2.1). Same-session
-      checklists: `NEWS.Rmd` + `NEWS.md` render, `_pkgdown.yml`, lint, AND the citation
-      checklist (issue #120) -- roxygen `@references` from plan §2.8's verified sources
-      (re-verify each before use, plan §10). Vocabulary grep at close-out (Dragon 3).
-      Slices 3 (de-id primitive) and 4 (eighth tab + gated export + docs) follow, one
-      session each, per plan §5. Issue #148 stays OPEN until the last slice ships.
+- [ ] **Implement issue #148 Slice 3: MHC de-identification primitive** (Slice 2 DONE S706,
+      2026-09-17 -- `mhcHaplotypeFrequency()` + `mhcHaplotypeCarriers()` shipped, RED
+      `e8a63f05` / GREEN `930536e8`; READY, Effort S -- a strict-TDD implementation session,
+      `AskUserQuestion`-gated phases). Build `obfuscateMhcHaplotypes(carriers, map)`
+      (exported): alias the `id` column of a `mhcHaplotypeCarriers()` table through the
+      alias map from `obfuscatePed(..., map = TRUE)$map`; `stop()` on any id absent from
+      the map (the `obfuscateTwinRelations()` mold, `R/obfuscateTwinRelations.R` -- never
+      silently drop or leak a real id); haplotype labels stay byte-identical (D6: there is
+      no validity-preserving obfuscation of an MHC type) -- plan §4 row 5, §5 Slice 3
+      (`docs/planning/issue148-mhc-haplotype-reporting-plan.md`). Done when it round-trips
+      the `obfuscateTwinRelations()` test mold: aliases every id through the standard map,
+      `stop()`s on an unknown id, leaves haplotype labels unchanged. Same-session
+      checklists: `NEWS.Rmd` + `NEWS.md` render (same commit), `_pkgdown.yml`, lint.
+      Vocabulary grep at close-out (Dragon 3). Slice 4 (eighth tab + confirm-gate export +
+      `.buildMhcExportManifest()` + docs incl. the module `@return` repair and the
+      citation checklist's `population_genetics_terms.html` entry) follows, one session,
+      per plan §5. Issue #148 stays OPEN until the last slice ships.
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional
@@ -1132,8 +1127,9 @@ decision record `docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md`, is
 posted) and its design plan is RATIFIED (S704, 2026-09-17 —
 `docs/planning/issue148-mhc-haplotype-reporting-plan.md`, D1-D10, owner picked all 4
 recommended judgment calls); Slice 1 (validator + parse rule) shipped S705 (2026-09-17,
-strict TDD, `checkMhcHaplotypeFile()` + `.parseMhcHaplotypeCalls()`); implementation
-Slices 2-4 remain open — see the Up Next item. See `CHANGELOG.md`.
+strict TDD, `checkMhcHaplotypeFile()` + `.parseMhcHaplotypeCalls()`); Slice 2 (statistics)
+shipped S706 (2026-09-17, strict TDD, `mhcHaplotypeFrequency()` + `mhcHaplotypeCarriers()`);
+implementation Slices 3-4 remain open — see the Up Next item. See `CHANGELOG.md`.
 
 **Progress, issue #152 (whole-genome/whole-exome sequence input + sequence-based genetic
 metrics) -- DONE, closed (design S517 through close-out S535, Sessions 517-535).** Design

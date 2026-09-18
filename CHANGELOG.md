@@ -22,6 +22,50 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [issue #148] S706 close-out: Slice 2 DONE — `mhcHaplotypeFrequency()` + `mhcHaplotypeCarriers()` shipped under strict TDD; Slice 3 BACKLOG item queued
+- **Deliverable (RED `e8a63f05`, GREEN `930536e8`, checklists `4a03fff3`):** the ratified
+  plan's Slice 2 statistics. `mhcHaplotypeFrequency()` (exported): per-haplotype
+  `summary` (nCopies, nCarriers, nUncertain, frequency, isRare) + one-row file-level
+  `counts`; certain-call 2N denominator (D3 exclude-and-disclose); D4 dual `<=` rarity
+  criterion (frequency 0.01 / carriers 2, both configurable); an uncertain-only label
+  gets no summary row. `mhcHaplotypeCarriers()` (exported): carrier detail
+  (haplotype, id, uncertain), `rareOnly = TRUE` default; provisional carriers (all calls
+  of the haplotype uncertain) listed and flagged, never counted in `nCarriers`. All TDD
+  gates owner-approved via `AskUserQuestion` (PRE-RED→RED, RED→GREEN,
+  GREEN→skip-REFACTOR-close-out).
+- **Semantics fixed by measurement (S706, pre-RED):** the real file's uncertain
+  `A002a_B015` call has NO certain counterpart (pins the no-summary-row rule), and
+  counting the one provisional carrier (`0F4FY1`, `A008_B015b`) in `nCarriers` would
+  move that haplotype to 3 carriers and break the plan's ratified 26-flagged pin —
+  so `nCarriers` counts certain carriers only.
+- **Verification:** fresh pre-change baseline measured before any test file existed
+  (2,384 blocks, failed=0, error=0, skipped=182, warning=42 — reproducing S705's
+  shipped-source numbers exactly). RED confirmed honest: 12 pattern-less
+  `expect_error()` assertions initially passed spuriously (Learning 492's exact trap,
+  re-applied not re-minted) and were tightened to parameter-naming messages before the
+  RED commit — final RED state 16 blocks, 0 passing expectations, failures only from
+  the two missing symbols. GREEN: 102 assertions green; full suite run ONCE on the
+  final post-lint post-checklist source (S705's own lesson applied): 2,400 blocks =
+  baseline + exactly the 16 new, failed=0, error=0, skipped/warnings unchanged.
+  Real-data pins reproduce the plan's measured numbers (33 distinct / denominator 60 /
+  26 flagged all via the carrier leg / 61 + 32 carrier rows). `devtools::document()`
+  verified (2 NAMESPACE lines + 2 man pages, no collateral). Citation checklist
+  (issue #120): all 6 roxygen `@references` sources verified by an independent
+  research agent against Crossref/PubMed — exact metadata confirmed incl. the two
+  previously-unverified volume/pages (Hurley 2020 = HLA 95(6):516-531; Lacy 2012 =
+  MEE 3(2):433-437); Doxiadis prose kept to the paper's own figures; Allendorf
+  attribution kept mild (primary text inaccessible, secondary-source-supported).
+  Same-session checklists: `_pkgdown.yml` catch-all entries (coverage guard green),
+  `NEWS.Rmd` plain-language entry + `NEWS.md` rendered same-commit (plus a
+  pre-existing missing-blank-line heading wart the render surfaced, fixed), 13
+  citation surnames/acronyms to `inst/WORDLIST` (S564 precedent), package-loaded lint
+  clean (one implicit-integer style fix). Vocabulary grep clean (Dragon 3). Runtime
+  smoke n/a — script-callable additions only, no Shiny wiring (arrives at Slice 4).
+- **Records:** BACKLOG.md — completed Slice 2 item removed (this entry is its record);
+  Slice 3 item queued at the top of Up Next (`obfuscateMhcHaplotypes()`, plan §4 row 5);
+  batch narrative updated. No new numbered learning — the one trap hit was Learning
+  492's, already recorded. Issue #148 stays OPEN (Slices 3-4 remain).
+
 ### 2026-09-17 · [issue #148] S706 claim: Slice 2 — MHC haplotype statistics (session claimed, work beginning)
 - Phase 1B claim for the issue #148 Slice 2 implementation session (S705 next-step A;
   owner-picked via `AskUserQuestion` at Phase 0). Deliverable: `mhcHaplotypeFrequency()`
