@@ -1135,3 +1135,396 @@ test_that("modMarkerGenetics's sequenceExportConfirmed becomes TRUE after the fu
     expect_true(result$sequenceExportConfirmed())
   })
 })
+
+## RED (issue #148 Slice 4): the module gains an 8th tab, "MHC Haplotype
+## Reporting" (plan D8), with its OWN dedicated upload (`mhcHaplotypeFile`
+## -- designation-by-upload, D2; never the shared genotypeFile input, per
+## the #153 Slice 5 empirical lesson), two visible rarity-threshold inputs
+## (D4, Dragon 1), a persistent descriptive-only caveat (D7), summary +
+## rare-carrier tables (D5), a counts/denominator line, a pedigree
+## -coverage line, and a confirm-gated de-identified export (D6: ALL MHC
+## exports gated, Dragon 4) of 3 artifacts -- summary, aliased carrier
+## list, manifest. Owner-ratified at PRE-RED (S708): (1) Generate Preview
+## pre-checks that every MHC-file animal is in the loaded pedigree and, if
+## not, builds nothing and says why -- never letting
+## obfuscateMhcHaplotypes()'s stop() end the session (Dragon 5); (2) the
+## carrier table lists rare haplotypes only (the function's own default);
+## (3) a doc-coverage test pins that every returned reactive is documented
+## in the server's @return (repairing the stale "fourteen" count).
+## Existing 7 tabs / 4 uploads / 19 returned reactives: untouched (D8).
+
+i148MhcFilePath <- system.file(
+  "extdata", "examples", "obfuscated_rhesus_mhc_breeder_genotypes.csv",
+  package = "nprcgenekeepr"
+)
+i148MhcIds <- rhesusGenotypes$id
+i148ExpectedSummary <- mhcHaplotypeFrequency(rhesusGenotypes)$summary
+i148ExpectedCarriers <- mhcHaplotypeCarriers(rhesusGenotypes)
+
+## Founders-only pedigrees built solely to give obfuscatePed(map = TRUE) a
+## real alias map (the i152RohPed convention above): one covering all 31
+## MHC-file animals, one missing the first two (Dragon 5's precondition).
+i148FullPed <- data.frame(
+  id = i148MhcIds,
+  sire = NA_character_,
+  dam = NA_character_,
+  stringsAsFactors = FALSE
+)
+i148PartialPed <- i148FullPed[-(1L:2L), ]
+
+i148MalformedFilePath <- tempfile(fileext = ".csv")
+write.csv(data.frame(id = "A1", haplotype1 = "H1", haplotype2 = "H2",
+                     extra = "X"),
+          i148MalformedFilePath, row.names = FALSE)
+
+i148Upload <- function(session, path = i148MhcFilePath) {
+  session$setInputs(mhcHaplotypeFile = list(
+    name = "obfuscated_rhesus_mhc_breeder_genotypes.csv", datapath = path
+  ))
+}
+
+i148Html <- function(x) paste(unlist(x), collapse = " ")
+
+test_that("modMarkerGeneticsUI has an MHC Haplotype Reporting tab with its controls; the existing tabs and uploads are unchanged", {
+  ui_html <- as.character(modMarkerGeneticsUI("test"))
+
+  expect_true(grepl("MHC Haplotype Reporting", ui_html, fixed = TRUE))
+  for (control in c("mhcHaplotypeFile", "mhcRareFrequencyThreshold",
+                    "mhcRareCarrierThreshold", "mhcCountsSummary",
+                    "mhcPedigreeCoverage", "mhcSummaryTable",
+                    "mhcCarrierTable", "mhcExportPreview",
+                    "mhcExportGuidance", "mhcConfirmExport",
+                    "downloadMhcSummary", "downloadMhcCarriers",
+                    "downloadMhcManifest")) {
+    expect_true(grepl(paste0("test-", control), ui_html, fixed = TRUE),
+                info = control)
+  }
+  ## D7: the persistent caveat is static markup, not a dismissable alert.
+  expect_true(grepl("descriptive haplotype reporting", ui_html,
+                    fixed = TRUE))
+  expect_true(grepl("performs no MHC inference", ui_html, fixed = TRUE))
+
+  ## D8 zero-changes: the existing 7 tabs and 4 uploads are all still here.
+  for (tab in c("Kinship Comparison", "Heterozygosity",
+                "Parentage Exclusion", "Cross-Center",
+                "Candidate Parent Assignment",
+                "Linkage and LD Block Metrics", "Genomic ROH (F_ROH)")) {
+    expect_true(grepl(tab, ui_html, fixed = TRUE), info = tab)
+  }
+  for (upload in c("genotypeFile", "genotypeFileB", "linkageGenotypeFile",
+                   "locusMetadataFile")) {
+    expect_true(grepl(paste0("\"test-", upload, "\""), ui_html,
+                      fixed = TRUE), info = upload)
+  }
+})
+
+test_that("modMarkerGenetics's MHC tables are not ready before an MHC file is uploaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(i148FullPed)), {
+    result <- session$getReturned()
+    expect_null(result$mhcHaplotypeSummaryTable())
+    expect_null(result$mhcHaplotypeCarrierTable())
+  })
+})
+
+test_that("modMarkerGenetics's MHC tables match mhcHaplotypeFrequency/Carriers on the bundled file at the D4 defaults", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    i148Upload(session)
+
+    summary <- result$mhcHaplotypeSummaryTable()
+    expect_identical(summary, i148ExpectedSummary)
+    expect_identical(nrow(summary), 33L)
+    expect_identical(sum(summary$isRare), 26L)
+
+    ## Rare haplotypes only (owner-ratified, S708): the function default.
+    carriers <- result$mhcHaplotypeCarrierTable()
+    expect_identical(carriers, i148ExpectedCarriers)
+    expect_identical(nrow(carriers), 32L)
+  })
+})
+
+test_that("modMarkerGenetics's MHC rarity flags follow the two threshold inputs", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    i148Upload(session)
+
+    ## Carrier leg off: the frequency leg alone flags 0 at 2N = 60 (D4).
+    session$setInputs(mhcRareFrequencyThreshold = 0.01,
+                      mhcRareCarrierThreshold = 0)
+    expect_identical(sum(result$mhcHaplotypeSummaryTable()$isRare), 0L)
+    expect_identical(nrow(result$mhcHaplotypeCarrierTable()), 0L)
+
+    ## Frequency leg wide open: every haplotype is rare, every carrier row
+    ## (61 on the bundled file, pinned S706) is listed.
+    session$setInputs(mhcRareFrequencyThreshold = 1,
+                      mhcRareCarrierThreshold = 0)
+    expect_identical(sum(result$mhcHaplotypeSummaryTable()$isRare), 33L)
+    expect_identical(nrow(result$mhcHaplotypeCarrierTable()), 61L)
+  })
+})
+
+test_that("modMarkerGenetics's MHC tables are not ready while a threshold input is invalid", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    i148Upload(session)
+
+    session$setInputs(mhcRareFrequencyThreshold = -0.5,
+                      mhcRareCarrierThreshold = 2)
+    expect_null(result$mhcHaplotypeSummaryTable())
+    expect_null(result$mhcHaplotypeCarrierTable())
+
+    session$setInputs(mhcRareFrequencyThreshold = 0.01,
+                      mhcRareCarrierThreshold = NA)
+    expect_null(result$mhcHaplotypeSummaryTable())
+    expect_null(result$mhcHaplotypeCarrierTable())
+  })
+})
+
+test_that("modMarkerGenetics surfaces a malformed MHC upload as a real reactive error", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    i148Upload(session, path = i148MalformedFilePath)
+    expect_error(result$mhcHaplotypeSummaryTable(),
+                 "exactly three columns")
+  })
+})
+
+test_that("modMarkerGenetics keeps the MHC upload and the shared marker upload independent (D8)", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    i148Upload(session)
+    expect_null(result$markerGenotype())
+    expect_null(result$comparisonTable())
+  })
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "marker_genotypes.csv", datapath = genotypeFilePath
+    ))
+    expect_false(is.null(result$comparisonTable()))
+    expect_null(result$mhcHaplotypeSummaryTable())
+  })
+})
+
+test_that("modMarkerGenetics reports the MHC counts and frequency denominator", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(NULL)), {
+    i148Upload(session)
+    countsHtml <- i148Html(output$mhcCountsSummary)
+    expect_match(countsHtml, "31 animals", fixed = TRUE)
+    expect_match(countsHtml, "2 uncertain", fixed = TRUE)
+    expect_match(countsHtml, "60 certain", fixed = TRUE)
+  })
+})
+
+test_that("modMarkerGenetics reports pedigree coverage of the MHC file, flagging animals absent from the pedigree", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(rhesusPedigree)), {
+    i148Upload(session)
+    coverageHtml <- i148Html(output$mhcPedigreeCoverage)
+    expect_match(coverageHtml, "31 of 375", fixed = TRUE)
+    expect_false(grepl("not in the loaded pedigree", coverageHtml,
+                       fixed = TRUE))
+  })
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(i148PartialPed)), {
+    i148Upload(session)
+    coverageHtml <- i148Html(output$mhcPedigreeCoverage)
+    expect_match(coverageHtml, "29 of 29", fixed = TRUE)
+    expect_match(coverageHtml, "not in the loaded pedigree", fixed = TRUE)
+  })
+})
+
+test_that("modMarkerGenetics's MHC export is not ready and not confirmed before Generate Preview", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(i148FullPed)), {
+    result <- session$getReturned()
+    expect_false(result$mhcExportConfirmed())
+    i148Upload(session)
+    expect_null(result$mhcExportTables())
+    ## Dragon 5: the guidance names the pedigree precondition up front.
+    guidanceHtml <- i148Html(output$mhcExportGuidance)
+    expect_match(guidanceHtml, "in the loaded pedigree", fixed = TRUE)
+  })
+})
+
+test_that("modMarkerGenetics's MHC export aliases every id, keeps haplotype labels, and builds a manifest", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(i148FullPed)), {
+    result <- session$getReturned()
+    i148Upload(session)
+    session$setInputs(mhcExportPreview = 1)
+
+    exported <- result$mhcExportTables()
+    expect_named(exported, c("summary", "carriers", "manifest"),
+                 ignore.order = TRUE)
+
+    displayed <- result$mhcHaplotypeCarrierTable()
+    expect_identical(nrow(exported$carriers), nrow(displayed))
+    expect_false(any(exported$carriers$id %in% i148MhcIds))
+    expect_identical(exported$carriers$haplotype, displayed$haplotype)
+    expect_identical(exported$carriers$uncertain, displayed$uncertain)
+
+    ## D6/Dragon 4: the summary is gated too; it carries no ids to alias.
+    expect_identical(exported$summary, result$mhcHaplotypeSummaryTable())
+
+    manifest <- exported$manifest
+    expect_s3_class(manifest, "data.frame")
+    expect_identical(nrow(manifest), 1L)
+    expect_identical(manifest$rareFrequencyThreshold, 0.01)
+    expect_identical(as.numeric(manifest$rareCarrierThreshold), 2)
+    expect_identical(as.integer(manifest$denominator), 60L)
+  })
+})
+
+test_that("modMarkerGenetics's MHC export is a snapshot taken at Generate Preview", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(i148FullPed)), {
+    result <- session$getReturned()
+    i148Upload(session)
+    session$setInputs(mhcRareFrequencyThreshold = 0.01,
+                      mhcRareCarrierThreshold = 2)
+    session$setInputs(mhcExportPreview = 1)
+    session$setInputs(mhcRareCarrierThreshold = 0)
+
+    expect_identical(nrow(result$mhcHaplotypeCarrierTable()), 0L)
+    expect_identical(nrow(result$mhcExportTables()$carriers), 32L)
+    expect_identical(
+      as.numeric(result$mhcExportTables()$manifest$rareCarrierThreshold), 2
+    )
+  })
+})
+
+test_that("modMarkerGenetics's MHC export stays NULL after Generate Preview with no pedigree loaded", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+    i148Upload(session)
+    session$setInputs(mhcExportPreview = 1)
+    expect_null(result$mhcExportTables())
+  })
+})
+
+test_that("modMarkerGenetics blocks the MHC export, and says why, when MHC-file animals are absent from the pedigree", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(i148PartialPed)), {
+    result <- session$getReturned()
+    i148Upload(session)
+    session$setInputs(mhcExportPreview = 1)
+
+    expect_null(result$mhcExportTables())
+    guidanceHtml <- i148Html(output$mhcExportGuidance)
+    expect_match(guidanceHtml, "not in the loaded pedigree", fixed = TRUE)
+    expect_match(guidanceHtml, "2 animal", fixed = TRUE)
+  })
+})
+
+test_that("modMarkerGenetics's MHC export confirm sequence sets mhcExportConfirmed; a new preview resets it", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(i148FullPed)), {
+    result <- session$getReturned()
+    i148Upload(session)
+    session$setInputs(mhcExportPreview = 1)
+    session$setInputs(mhcConfirmExport = 1)
+    session$setInputs(mhcConfirmExportOk = 1)
+    expect_true(result$mhcExportConfirmed())
+
+    session$setInputs(mhcExportPreview = 2)
+    expect_false(result$mhcExportConfirmed())
+  })
+})
+
+test_that("modMarkerGenetics's three MHC downloads write the previewed, de-identified artifacts", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(i148FullPed)), {
+    i148Upload(session)
+    session$setInputs(mhcExportPreview = 1)
+    session$setInputs(mhcConfirmExport = 1)
+    session$setInputs(mhcConfirmExportOk = 1)
+
+    summaryCsv <- read.csv(output$downloadMhcSummary,
+                           stringsAsFactors = FALSE)
+    expect_identical(nrow(summaryCsv), 33L)
+    expect_identical(summaryCsv$haplotype, i148ExpectedSummary$haplotype)
+
+    carriersCsv <- read.csv(output$downloadMhcCarriers,
+                            stringsAsFactors = FALSE)
+    expect_identical(nrow(carriersCsv), 32L)
+    expect_false(any(carriersCsv$id %in% i148MhcIds))
+
+    manifestCsv <- read.csv(output$downloadMhcManifest,
+                            stringsAsFactors = FALSE)
+    expect_identical(nrow(manifestCsv), 1L)
+    expect_identical(as.integer(manifestCsv$denominator), 60L)
+    expect_false(any(unlist(manifestCsv) %in% i148MhcIds))
+  })
+})
+
+test_that("modMarkerGeneticsServer's @return documents every reactive it returns", {
+  rdPath <- testthat::test_path("..", "..", "man",
+                                "modMarkerGeneticsServer.Rd")
+  skip_if(!file.exists(rdPath), "man/*.Rd not available (installed package)")
+  skip_if_not_installed("shiny")
+
+  rd <- tools::parse_Rd(rdPath)
+  tags <- vapply(rd, function(x) attr(x, "Rd_tag"), character(1L))
+  valueSection <- rd[[which(tags == "\\value")]]
+  codeTerms <- function(x) {
+    if (!is.list(x)) {
+      return(character(0L))
+    }
+    if (identical(attr(x, "Rd_tag"), "\\code")) {
+      return(paste(unlist(x), collapse = ""))
+    }
+    unlist(lapply(x, codeTerms))
+  }
+  documented <- codeTerms(valueSection)
+
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(NULL)), {
+    returned <- names(session$getReturned())
+    undocumented <- setdiff(returned, documented)
+    expect_identical(undocumented, character(0L),
+                     info = paste(undocumented, collapse = ", "))
+  })
+})
