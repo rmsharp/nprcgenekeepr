@@ -1528,3 +1528,172 @@ test_that("modMarkerGeneticsServer's @return documents every reactive it returns
                      info = paste(undocumented, collapse = ", "))
   })
 })
+
+## ---------------------------------------------------------------------
+## RED (S709, BACKLOG Up Next): an uncaught error inside an export-preview
+## observeEvent() ends the user's Shiny session (Learning 758). Three
+## reachable crash paths exist: (1) the sequence export preview calls
+## obfuscateGenotypeMatrix()/obfuscateGenomicROH(), which stop() on a
+## genotype id absent from the pedigree's alias map; (2) every preview
+## observer re-throws an uploaded file's validation error through
+## req(<validating reactive>()); (3) req(pedigree()) re-throws an upstream
+## pedigree error (every OTHER pedigree read in this module already goes
+## through safeRead()). The fix ports the MHC tab's owner-ratified Dragon 5
+## pattern (S708): pre-check missing ids, build nothing, and say why in the
+## tab's export guidance; and reads every upstream reactive error-safely
+## inside the three observers. The LD-block tab's own missing-id path is
+## structurally unreachable (markerLdBlock() subsets its matrix to
+## founderIds drawn from the same pedigree -- R/markerLdBlock.R:236), so it
+## gets the error-defusal only, no dead pre-check (owner-ratified S709).
+## Learning 758 refinement (S709 probe): shiny::testServer() swallows the
+## observer error at setInputs() time but DESTROYS the module session, so
+## any later reactive read errors with "module session has been destroyed"
+## -- the blocks below therefore pin session survival directly, plus the
+## guidance text.
+
+s709PartialRohPed <- i152RohPed[i152RohPed$id != "I3", ]
+
+s709MalformedGenotypePath <- tempfile(fileext = ".csv")
+write.csv(data.frame(id = "I1", locus = "L1", allele1 = "A",
+                     stringsAsFactors = FALSE),
+          s709MalformedGenotypePath, row.names = FALSE)
+
+test_that("modMarkerGenetics's sequence export preview blocks, says why, and survives when genotype animals are absent from the pedigree", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(s709PartialRohPed)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+    session$setInputs(sequenceExportPreview = 1)
+
+    ## Session survival: on the unfixed code, obfuscateGenotypeMatrix()'s
+    ## stop() destroys the module session and every read below errors.
+    expect_null(result$sequenceExportGenotypeMatrix())
+    expect_null(result$sequenceExportRohTable())
+    expect_null(result$sequenceExportManifest())
+    guidanceHtml <- i148Html(output$sequenceExportGuidance)
+    expect_match(guidanceHtml, "not in the loaded pedigree", fixed = TRUE)
+    expect_match(guidanceHtml, "1 animal", fixed = TRUE)
+    expect_match(guidanceHtml, "export was not generated", fixed = TRUE)
+  })
+})
+
+test_that("modMarkerGenetics's sequence export preview survives a malformed genotype upload and says the files could not be processed", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i152RohPed)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "malformed_genotype.csv", datapath = s709MalformedGenotypePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+    session$setInputs(sequenceExportPreview = 1)
+
+    expect_null(result$sequenceExportGenotypeMatrix())
+    guidanceHtml <- i148Html(output$sequenceExportGuidance)
+    expect_match(guidanceHtml, "could not be processed", fixed = TRUE)
+    expect_match(guidanceHtml, "no export preview", fixed = TRUE)
+  })
+})
+
+test_that("modMarkerGenetics's sequence export preview survives an erroring pedigree reactive", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(stop("pedigree not ready"))), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+    session$setInputs(sequenceExportPreview = 1)
+
+    expect_null(result$sequenceExportGenotypeMatrix())
+    guidanceHtml <- i148Html(output$sequenceExportGuidance)
+    expect_match(guidanceHtml, "Load a pedigree", fixed = TRUE)
+  })
+})
+
+test_that("modMarkerGenetics's LD block export preview survives a malformed linkage upload and says the files could not be processed", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i153FoundersPed)), {
+    result <- session$getReturned()
+    session$setInputs(linkageGenotypeFile = list(
+      name = "malformed_genotype.csv", datapath = s709MalformedGenotypePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "example_locus_metadata.csv", datapath = i153LocusMetadataFilePath
+    ))
+    session$setInputs(ldBlockExportPreview = 1)
+
+    expect_null(result$ldBlockExportTable())
+    guidanceHtml <- i148Html(output$ldBlockExportGuidance)
+    expect_match(guidanceHtml, "could not be processed", fixed = TRUE)
+    expect_match(guidanceHtml, "no export preview", fixed = TRUE)
+  })
+})
+
+test_that("modMarkerGenetics's MHC export preview survives a malformed MHC upload and says the file could not be processed", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(i148FullPed)), {
+    result <- session$getReturned()
+    i148Upload(session, path = i148MalformedFilePath)
+    session$setInputs(mhcExportPreview = 1)
+
+    expect_null(result$mhcExportTables())
+    guidanceHtml <- i148Html(output$mhcExportGuidance)
+    expect_match(guidanceHtml, "could not be processed", fixed = TRUE)
+    expect_match(guidanceHtml, "no export preview", fixed = TRUE)
+  })
+})
+
+## Existing-state guard (passes by design on unfixed source): a valid
+## upload with a fully-covering pedigree must never show the new blocked
+## states, and the preview must still build -- pins that the pre-check and
+## the error-defusal cannot false-positive on the happy path.
+test_that("modMarkerGenetics's sequence export preview still builds, with no blocked-state guidance, on valid input", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
+                pedigree = shiny::reactive(i152RohPed)), {
+    result <- session$getReturned()
+    session$setInputs(genotypeFile = list(
+      name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
+    ))
+    session$setInputs(locusMetadataFile = list(
+      name = "i152_roh_locus_metadata.csv",
+      datapath = i152RohLocusMetadataFilePath
+    ))
+    session$setInputs(rohMinSnp = 3, rohMinBp = 1000000)
+    session$setInputs(sequenceExportPreview = 1)
+
+    expect_false(is.null(result$sequenceExportGenotypeMatrix()))
+    guidanceHtml <- i148Html(output$sequenceExportGuidance)
+    expect_match(guidanceHtml, "confirm the export", fixed = TRUE)
+    expect_false(grepl("not in the loaded pedigree", guidanceHtml,
+                       fixed = TRUE))
+    expect_false(grepl("could not be processed", guidanceHtml,
+                       fixed = TRUE))
+  })
+})

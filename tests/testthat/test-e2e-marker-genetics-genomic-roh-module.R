@@ -44,7 +44,7 @@ library(testthat)
 ## Includes `birth` (required by columnSchema.R's required-column list) --
 ## its omission was the actual root cause of S535's misdiagnosed "harness
 ## limitation" (see file header).
-makeGenomicRohE2ePedigreeFile <- function() {
+makeGenomicRohE2ePedigreeFile <- function(dropIds = character(0L)) {
   ped <- data.frame(
     id = sprintf("S%03d", 1L:50L),
     sire = NA_character_,
@@ -54,7 +54,13 @@ makeGenomicRohE2ePedigreeFile <- function() {
                               length.out = 50L)),
     stringsAsFactors = FALSE
   )
-  path <- file.path(tempdir(), "GenomicRohE2E_Pedigree.csv")
+  ped <- ped[!ped$id %in% dropIds, , drop = FALSE]
+  fileName <- if (length(dropIds) == 0L) {
+    "GenomicRohE2E_Pedigree.csv"
+  } else {
+    "GenomicRohE2E_PartialPedigree.csv"
+  }
+  path <- file.path(tempdir(), fileName)
   write.csv(ped, path, row.names = FALSE)
   path
 }
@@ -174,4 +180,72 @@ test_that("E2E: Marker Genetics' Genomic ROH (F_ROH) tab computes at genome scal
   guidanceAfter <- get_html_safe(app, "#markerGenetics-sequenceExportGuidance")
   expect_false(grepl("alert", guidanceAfter, fixed = TRUE),
                info = "sequenceExportGuidance should render no alert once the export is confirmed")
+})
+
+## RED (S709, BACKLOG Up Next): before the fix, clicking Generate Preview
+## with a genotype animal absent from the loaded pedigree let
+## obfuscateGenotypeMatrix()'s stop() escape inside the preview
+## observeEvent(), which ENDS the user's Shiny session (Learning 758 --
+## verified live S708 on a minimal app; this test reproduces it on the
+## real tab). The fixed observer pre-checks the ids, builds nothing, and
+## says why in the export guidance, with the session still connected.
+test_that("E2E: a genotype animal absent from the pedigree blocks the export preview without ending the session", {
+  skip_if_not_installed("shinytest2")
+  skip_if_not_installed("chromote")
+  skip_on_cran()
+
+  app_dir <- create_test_app()
+  app <- create_app_driver(app_dir, "e2e_marker_genetics_roh_missing_id",
+                           height = 1000, width = 1400)
+  on.exit(app$stop(), add = TRUE)
+
+  # ---- Load a pedigree that is missing one of the genotype fixture's ids --
+  if (!navigate_to_tab(app, "Input")) skip("Could not navigate to Input")
+  pedFile <- makeGenomicRohE2ePedigreeFile(dropIds = "S050")
+  do.call(app$upload_file,
+          stats::setNames(list(pedFile), "dataInput-pedigreeFileOne"))
+  app$click("dataInput-getData")
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  # ---- Upload the genome-scale fixture, whose S050 the pedigree lacks ----
+  if (!navigate_to_tab(app, "Marker Genetics")) {
+    skip("Could not navigate to Marker Genetics")
+  }
+  genoPath <- system.file(
+    "extdata", "examples", "example_sequence_genotypes.csv",
+    package = "nprcgenekeepr"
+  )
+  locusMetadataPath <- system.file(
+    "extdata", "examples", "example_sequence_locus_metadata.csv",
+    package = "nprcgenekeepr"
+  )
+  do.call(app$upload_file,
+          stats::setNames(list(genoPath), "markerGenetics-genotypeFile"))
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+  do.call(app$upload_file,
+          stats::setNames(list(locusMetadataPath),
+                           "markerGenetics-locusMetadataFile"))
+  app$wait_for_idle(timeout = E2E_TIMEOUT)
+
+  if (!click_element_safe(app, "a[data-value='Genomic ROH (F_ROH)']")) {
+    skip("Could not switch to Genomic ROH (F_ROH) tab")
+  }
+  if (!wait_for_element(app, "#markerGenetics-sequenceRohTable",
+                        timeout = E2E_TIMEOUT)) {
+    skip("sequenceRohTable did not render")
+  }
+
+  # ---- Generate Preview: the click that used to end the session ----------
+  app$click("markerGenetics-sequenceExportPreview")
+  Sys.sleep(3)
+
+  connected <- app$get_js("Shiny.shinyapp.isConnected()")
+  expect_true(isTRUE(connected),
+              info = "The Shiny session must survive a Generate Preview click when a genotype animal is absent from the pedigree")
+
+  guidanceHtml <- get_html_safe(app, "#markerGenetics-sequenceExportGuidance")
+  expect_match(guidanceHtml, "not in the loaded pedigree",
+               info = "The export guidance must say why the preview was not generated")
+  expect_match(guidanceHtml, "1 animal",
+               info = "The export guidance must count the missing animals")
 })
