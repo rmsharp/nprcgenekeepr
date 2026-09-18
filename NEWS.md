@@ -285,8 +285,15 @@ R. Mark Sharp, Ph.D.
   genotype file's animal ids. No Shiny screen yet (issue \#152).
 - The Marker Genetics tab includes a **Genomic ROH (F_ROH)** tab: the
   sequence-based inbreeding calculation above, with de-identified export
-  (new `obfuscateGenomicROH()`) (issue \#152). \## Cross-Center Identity
-  Matching
+  (new `obfuscateGenomicROH()`) (issue \#152). \## MHC Haplotype
+  Reporting
+- New `checkMhcHaplotypeFile()` validates a file of MHC haplotype
+  designations -- two named haplotypes per animal, one row per animal,
+  like the bundled `rhesusGenotypes` example data. Designations are
+  taken exactly as written (a trailing `?` marks a provisional call).
+  This is the first step toward MHC haplotype frequency and
+  rare-haplotype reporting; no Shiny screen yet (issue \#148). \##
+  Cross-Center Identity Matching
 - New `resolveCrossCenterIds()` merges pedigree records for the same
   animals held by two different centers, using a curator-confirmed
   id-matching table.

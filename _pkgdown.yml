@@ -208,6 +208,7 @@ reference:
   - '`checkLinkageMarkerGenotypeFile`'
   - '`checkLocusMetadata`'
   - '`checkMarkerGenotypeFile`'
+  - '`checkMhcHaplotypeFile`'
   - '`checkParentAge`'
   - '`checkRequiredCols`'
   - '`checkSequenceGenotypeFile`'
