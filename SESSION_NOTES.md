@@ -22,6 +22,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 708 Did
+**Deliverable:** Issue #148 Slice 4 — MHC haplotype UI tab (8th `modMarkerGenetics` tab),
+confirm-gate de-identified export (`.buildMhcExportManifest()`), documentation; the LAST
+#148 slice (IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning (strict TDD, PRE-RED).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 706 Handoff Evaluation (by Session 707)
 **Score: 9/10.** **What helped:** the BACKLOG Slice 3 item was again a complete,
 self-sufficient brief — the full interface contract (mold, `stop()`-on-unknown-id,

@@ -22,6 +22,14 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [issue #148] S708 session claim: Slice 4 — MHC UI tab, confirm-gate export, documentation (IN PROGRESS)
+- Session claimed at Phase 1B (stub + pending `HANDOFFS.md` receipt + this entry, one
+  commit — Learnings 752/754). Deliverable: the ratified plan's §4 last row / §5 Slice 4
+  (8th `modMarkerGenetics` tab, confirm-gate export via `.buildMhcExportManifest()`,
+  tutorial/terms/NEWS docs), strict TDD with `AskUserQuestion`-gated transitions, Phase 3E
+  live shinytest2 smoke required. The S708 close-out entry above this one records the
+  outcome.
+
 ### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `4c32634e` — S707's own close-out self-reference commit
 - S708 Phase 0 ledger reconcile. The one commit past the frontier (`cacabe0f`) is
   S707's final close-out write, which by construction lands after its CHANGELOG entry:

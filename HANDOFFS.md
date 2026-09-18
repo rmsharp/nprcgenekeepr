@@ -140,6 +140,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-17.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S708
+date: 2026-09-17
+status: pending
+active_task: Issue #148 Slice 4 -- MHC haplotype UI tab (8th modMarkerGenetics tab), confirm-gate de-identified export, documentation; the LAST #148 slice. Strict TDD.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S707
 date: 2026-09-17
 status: complete
