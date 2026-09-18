@@ -22,16 +22,127 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 706 Handoff Evaluation (by Session 707)
+**Score: 9/10.** **What helped:** the BACKLOG Slice 3 item was again a complete,
+self-sufficient brief — the full interface contract (mold, `stop()`-on-unknown-id,
+byte-identical labels per D6, owed checklists) meant the plan was opened only to
+confirm; gotcha 2 predicted the unusual EMPTY reconcile gap exactly (frontier at HEAD,
+no backfill owed — correctly flagged as the expected finding, not a miss); gotcha 3
+(read `obfuscateTwinRelations()`'s own tests before RED) shaped PRE-RED directly;
+gotcha 4 (rule-specific `expect_error()` regexps) was applied at RED *design* so
+Learning 492's trap never fired at all this time; gotcha 1's baseline (2,400 blocks)
+reproduced exactly on the fresh pre-change measurement; the S706 carrier pins (61 rows
+at `rareOnly = FALSE`, `0F4FY1` the sole provisional row) went straight into the
+real-data round-trip test. **What was missing:** nothing material — one minor
+unflagged surprise: `@family obfuscation` on the new roxygen regenerates 8 sibling man
+pages (Slices 1-2 never hit this; the mhc* functions don't use `@family`), forcing
+5-file-cap commit splits. **What was wrong:** nothing found. **ROI:** high.
+
 ### What Session 707 Did
-**Deliverable:** Implement issue #148 Slice 3 — `obfuscateMhcHaplotypes(carriers, map)`
-de-identification primitive, strict TDD (IN PROGRESS)
-**Started:** 2026-09-17
-**Status:** Session claimed. Work beginning (PRE-RED: plan §4 row 5 / §5 Slice 3 +
-`obfuscateTwinRelations()` mold reads, fresh baseline).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
-`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
-next session's reconcile. (Claim ledger entry ships in this claim commit per Learnings
-752/754.)
+**Deliverable:** Issue #148 **Slice 3 — DONE.** `obfuscateMhcHaplotypes(carriers, map)`
+(exported MHC de-identification primitive, D6) shipped under strict TDD per the
+ratified plan §4 row 5 / §5 Slice 3 (S706 next-step A; owner-picked via
+`AskUserQuestion` at Phase 0). All TDD gates owner-approved: PRE-RED→RED, RED→GREEN,
+GREEN→skip-REFACTOR-and-close-out (no structural cleanup warranted — the 9-line
+function mirrors the `obfuscateTwinRelations()` mold exactly).
+**Started/completed:** 2026-09-17 (single session). No Phase 0 backfill (empty
+reconcile gap, as S706 predicted); claim `3f2f3add`; RED `8319be0d` (1 test file,
+5 blocks, 0 passing, missing-symbol failures only); GREEN `a5654501` (R file +
+NAMESPACE + man page) + man-collateral `b6f66eea`/`33c526db` + checklists `8cee1dfb`
+(_pkgdown, NEWS.Rmd + NEWS.md).
+**Ledger:** S707 close-out entry at the top of `CHANGELOG.md` (records commit) and the
+claim entry (in `3f2f3add`).
+
+**What actually happened, in order:**
+1. **Phase 0:** standard orient; reconcile found the predicted EMPTY gap (both
+   frontiers at HEAD `955f6f19` — no backfill, first time in the recurring-shape era);
+   CI green on `d3b9dec9`, the 4 push runs on `955f6f19` in progress at orient
+   (3 of 4 green by close-out, R-CMD-check still running — docs-only commit); owner
+   picked Slice 3 from the 4-option picker.
+2. **PRE-RED:** plan §4 row 5 / §5 Slice 3 + Dragons re-read; mold read in full
+   (`R/obfuscateTwinRelations.R` + its 2-block test file); `mhcHaplotypeCarriers()`
+   output shape + `obfuscatePed()` map format confirmed; NO existing
+   `obfuscateMhcHaplotypes` symbols anywhere. Fresh full-suite baseline launched in
+   background BEFORE any test file existed: **2,400 blocks, failed=0, error=0,
+   skipped=182, warning=42** (reproduces S706's numbers exactly).
+3. **RED (gate approved):** `test_obfuscateMhcHaplotypes.R`, 5 blocks — mold round-trip,
+   D6 map-key/haplotype-label collision guard, loud-stop with rule-specific regexps
+   ("not found in the de-identification map" + the unknown id), zero-row structure
+   pass-through, real-data round-trip (61-row pin, no real id survives, provisional
+   flag preserved under alias). Confirmed 0 passing, failures only from the missing
+   symbol (the two `expect_error()` blocks fail honestly — their regexps don't match
+   "could not find function"). Committed `8319be0d`.
+4. **GREEN (gate approved):** mold-minimal implementation (setdiff vs `names(map)`,
+   `stop()` naming unknown ids, `unname(map[id])`); all 5 blocks / 15 assertions green
+   first run; `devtools::document()` = exactly 1 NAMESPACE line + 1 new man page
+   (+ 8 family cross-link regens, split across 2 collateral commits for the 5-file
+   cap). Checklists BEFORE the one full-suite launch: `_pkgdown.yml` catch-all entry,
+   `NEWS.Rmd` plain-language entry + `NEWS.md` rendered same-commit, spell check clean
+   (zero WORDLIST additions needed), package-loaded lint clean on both new files.
+   Full suite ONCE on final source: **2,405 blocks = baseline + exactly the 5 new,
+   failed=0, error=0, skipped/warnings unchanged.** Vocabulary grep clean (Dragon 3);
+   DESCRIPTION unchanged.
+5. **Close-out:** BACKLOG Slice 3 item removed, Slice 4 item queued with full
+   contract, batch narrative updated; CHANGELOG close-out entry; this handoff;
+   HANDOFFS receipt. Runtime smoke n/a — script-callable addition only, no Shiny
+   wiring (arrives at Slice 4). No new numbered learning — no new trap fired
+   (Learning 492 applied at design, not hit). Issue #148 stays OPEN (Slice 4 remains).
+
+**Self-assessment (Session 707): 9/10.** **Strengths:** (1) cleanest RED of the
+slice chain — the Learning 492 discipline was designed in from the start, so the
+honest-failure check passed first time; (2) verification discipline held: baseline
+predates the RED file, single suite run on final source, checklists before the
+launch; (3) the D6 collision-guard test goes beyond the mold's own coverage (a map
+key colliding with a haplotype label can never remap the label). **Weaknesses:**
+(1) low novelty — Effort S, near-mechanical against a complete brief; (2) the
+`@family` man-page regen collateral was discovered at document() time rather than
+anticipated at PRE-RED, costing two ceremony commits mid-GREEN.
+
+**Next steps (specific):** (A) **Implement issue #148 Slice 4** (READY, Effort M/L —
+top Up Next item in `BACKLOG.md` with full contract): the 8th tab in
+`modMarkerGeneticsUI`/`Server` per plan §4 last row + §5 Slice 4 — file input + two
+threshold inputs, D7 caveat div, summary/carrier DT tables, pedigree-coverage line,
+confirm-gate export (3 downloads incl. `.buildMhcExportManifest()`), module `@return`
+repair; strict TDD; **Phase 3E runtime smoke REQUIRED** (live shinytest2, the
+cluster's bar — first #148 slice with Shiny wiring); tutorial/article +
+`population_genetics_terms.html` citation checklists owed; closes issue #148 when
+shipped (issue close-out checklist: `gh issue close` same session). (B) Census items
+unchanged: class (d) (READY, S), class (b) (READY, M), curved-chord (READY, M).
+(C) **Push decision** (owner call): 8 commits ahead after close-out (count with
+`git rev-list --count origin/master..HEAD`); span includes Slice 3's package changes;
+local suite green on exactly this state. (D) Informational: R-CMD-check on `955f6f19`
+was still in progress at close-out (3/4 green; docs-only commit — next Phase 0
+confirms); HANDOFFS.md at ~63.5 KB after this receipt (byte trigger 65,536 — likely
+fires next session; re-check with `methodology_trim.py --file HANDOFFS.md --check`);
+CHANGELOG ~55 KB (~2 sessions out); package-split disposition pending; dashboard copy
+stale; untracked leftovers unchanged.
+
+**Key files:** `R/obfuscateMhcHaplotypes.R:51` (the function),
+`tests/testthat/test_obfuscateMhcHaplotypes.R:65` (real-data round-trip pins),
+`docs/planning/issue148-mhc-haplotype-reporting-plan.md:520` approx. (§4 last row =
+Slice 4's contract; §5 Slice 4 "done when"; §7 Dragons 1/4/5 all bear on Slice 4),
+`R/modMarkerGenetics.R` (the module Slice 4 extends — 860 lines, rules 1-6, stale
+"fourteen" `@return`), `R/mhcHaplotypeFrequency.R` / `R/mhcHaplotypeCarriers.R`
+(the tables the tab renders), `BACKLOG.md:27` approx. (Slice 4 item — re-grep),
+`CHANGELOG.md` top (S707 entries), `HANDOFFS.md` (S707 receipt).
+
+**Gotchas for the next session:** (1) **The fresh baseline is now 2,405 blocks**
+(failed=0, error=0, skipped=182, warning=42) — measured this session on shipped
+source; Slice 4 measures its own anyway. (2) The S707 close-out self-reference
+commits WILL sit past the CHANGELOG frontier — the recurring 2-commit backfill shape
+RETURNS this session (no in-session push); expect to backfill them. (3) Slice 4 is
+the FIRST #148 slice where Phase 3E applies for real — live shinytest2 smoke with
+zero console errors is the cluster's bar; "build clean" is not sufficient (FM #24).
+(4) D8's zero-changes constraint: the existing 7 tabs / 4 file inputs / 19 returned
+reactives must be untouched — the module-contract test enforces documentation of the
+4 new reactives, and the stale "fourteen" `@return` gets repaired as part of Slice
+4's own roxygen work, not before. (5) Dragon 5: the alias map covers pedigree ids
+only — `obfuscateMhcHaplotypes()` `stop()`s at export for an animal absent from the
+loaded pedigree; the export-guidance text must name this precondition. (6) Any
+roxygen edit to an obfuscation-family function regenerates 8+ family man pages
+(`@family` cross-links) — plan 5-file-cap commit splits for the collateral. (7)
+Vocabulary grep at every slice close-out (Dragon 3); CHANGELOG enumerations span
+shards; NEWS.Rmd edits ship with re-rendered NEWS.md same commit.
 
 ### Session 705 Handoff Evaluation (by Session 706)
 **Score: 9/10.** **What helped:** the BACKLOG Slice 2 item was again a complete,

@@ -24,23 +24,42 @@ regen left behind (S367 origin, flagged S368/S369) is now also RESOLVED --
 S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 
 ## Up Next
-- [ ] **Implement issue #148 Slice 3: MHC de-identification primitive** (Slice 2 DONE S706,
-      2026-09-17 -- `mhcHaplotypeFrequency()` + `mhcHaplotypeCarriers()` shipped, RED
-      `e8a63f05` / GREEN `930536e8`; READY, Effort S -- a strict-TDD implementation session,
-      `AskUserQuestion`-gated phases). Build `obfuscateMhcHaplotypes(carriers, map)`
-      (exported): alias the `id` column of a `mhcHaplotypeCarriers()` table through the
-      alias map from `obfuscatePed(..., map = TRUE)$map`; `stop()` on any id absent from
-      the map (the `obfuscateTwinRelations()` mold, `R/obfuscateTwinRelations.R` -- never
-      silently drop or leak a real id); haplotype labels stay byte-identical (D6: there is
-      no validity-preserving obfuscation of an MHC type) -- plan §4 row 5, §5 Slice 3
-      (`docs/planning/issue148-mhc-haplotype-reporting-plan.md`). Done when it round-trips
-      the `obfuscateTwinRelations()` test mold: aliases every id through the standard map,
-      `stop()`s on an unknown id, leaves haplotype labels unchanged. Same-session
-      checklists: `NEWS.Rmd` + `NEWS.md` render (same commit), `_pkgdown.yml`, lint.
-      Vocabulary grep at close-out (Dragon 3). Slice 4 (eighth tab + confirm-gate export +
-      `.buildMhcExportManifest()` + docs incl. the module `@return` repair and the
-      citation checklist's `population_genetics_terms.html` entry) follows, one session,
-      per plan §5. Issue #148 stays OPEN until the last slice ships.
+- [ ] **Implement issue #148 Slice 4: MHC UI tab, confirm-gate export, documentation —
+      the LAST slice** (Slice 3 DONE S707, 2026-09-17 -- `obfuscateMhcHaplotypes()`
+      shipped, RED `8319be0d` / GREEN `a5654501`; READY, Effort M/L -- a strict-TDD
+      implementation session, `AskUserQuestion`-gated phases). Build the 8th tab in
+      `modMarkerGeneticsUI`/`Server` per plan §4 last row + §5 Slice 4
+      (`docs/planning/issue148-mhc-haplotype-reporting-plan.md`): new `fileInput`
+      (`mhcHaplotypeFile`, CSV) + two `numericInput`s (the D4 thresholds, both visible
+      next to the table per Dragon 1); D7 caveat div; summary + carrier DT tables; a
+      pedigree-coverage line when the module's existing `pedigree` reactive is available
+      ("N of M pedigree animals have MHC designations" -- module-level `setdiff`, no new
+      exported function); confirm-gate export (preview → confirm modal → 3 downloads:
+      summary, carrier list, manifest) using new internals `.buildMhcExportManifest()`
+      (the `.buildSequenceExportManifest()` mold) and `.mhcExportWarningText`; export
+      applies `obfuscateMhcHaplotypes()` (D6 gates ALL MHC exports incl. the summary --
+      Dragon 4; the alias map covers pedigree ids only, so the export-guidance text must
+      name that precondition -- Dragon 5). New returned reactives
+      `mhcHaplotypeSummaryTable`/`mhcHaplotypeCarrierTable`/`mhcExportTables`/
+      `mhcExportConfirmed` added to the return list AND the `@return` roxygen, repairing
+      its stale "fourteen" count (plan §2.4). D8 zero-changes constraint: the existing 7
+      tabs / 4 file inputs / 19 returned reactives untouched; module-contract rules 1-6;
+      malformed upload surfaces as a real reactive error (no blanket `tryCatch`). Done
+      when the tab works end to end in a running app with the bundled file (upload →
+      tables → rare flags at visible thresholds → confirm-gated de-identified export
+      downloading all 3 artifacts) with zero console errors -- live `shinytest2` smoke,
+      Phase 3E REQUIRED (first #148 slice with Shiny wiring; FM #24 applies).
+      Same-session checklists: module-contract test green with the new reactives
+      documented; `NEWS.Rmd` + `NEWS.md` render (same commit, plain-language criterion --
+      user-facing feature); tutorial/article checklist
+      (`vignettes/articles/colony-manager-guide.qmd`); UI-guidance/terms page entry
+      (`inst/extdata/ui_guidance/population_genetics_terms.html` -- "MHC haplotype,"
+      rarity-flag semantics; the citation checklist, issue #120); `_pkgdown.yml` for any
+      new export; `devtools::check()` clean; lint. Vocabulary grep at close-out (Dragon
+      3). Gotcha: any roxygen edit to an obfuscation-family function regenerates 8+
+      `@family` cross-linked man pages -- plan 5-file-cap commit splits. **Shipping this
+      slice completes issue #148 -- close it same-session (`gh issue close --reason
+      completed` citing the CHANGELOG entries, per the issue close-out checklist).**
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional
@@ -1129,7 +1148,9 @@ posted) and its design plan is RATIFIED (S704, 2026-09-17 —
 recommended judgment calls); Slice 1 (validator + parse rule) shipped S705 (2026-09-17,
 strict TDD, `checkMhcHaplotypeFile()` + `.parseMhcHaplotypeCalls()`); Slice 2 (statistics)
 shipped S706 (2026-09-17, strict TDD, `mhcHaplotypeFrequency()` + `mhcHaplotypeCarriers()`);
-implementation Slices 3-4 remain open — see the Up Next item. See `CHANGELOG.md`.
+Slice 3 (de-identification primitive) shipped S707 (2026-09-17, strict TDD,
+`obfuscateMhcHaplotypes()`); implementation Slice 4 (UI tab + confirm-gate export + docs,
+the last slice) remains open — see the Up Next item. See `CHANGELOG.md`.
 
 **Progress, issue #152 (whole-genome/whole-exome sequence input + sequence-based genetic
 metrics) -- DONE, closed (design S517 through close-out S535, Sessions 517-535).** Design

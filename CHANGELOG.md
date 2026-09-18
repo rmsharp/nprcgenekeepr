@@ -22,6 +22,38 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [issue #148] S707 close-out: Slice 3 DONE — `obfuscateMhcHaplotypes()` de-identification primitive shipped under strict TDD; Slice 4 BACKLOG item queued
+- **Deliverable (RED `8319be0d`, GREEN `a5654501`, man-collateral `b6f66eea`/`33c526db`,
+  checklists `8cee1dfb`):** the ratified plan's Slice 3. `obfuscateMhcHaplotypes(carriers,
+  map)` (exported): aliases the `id` column of a `mhcHaplotypeCarriers()` table through
+  the alias vector from `obfuscatePed(..., map = TRUE)$map` — the
+  `obfuscateTwinRelations()` mold; `stop()` naming any id absent from the map (never
+  silently drop or leak); haplotype labels byte-identical (D6 — a map key colliding with
+  a haplotype label never remaps the label, guarded by its own test); `uncertain`
+  disclosure column passes through. All TDD gates owner-approved via `AskUserQuestion`
+  (PRE-RED→RED, RED→GREEN, GREEN→skip-REFACTOR-close-out).
+- **Verification:** fresh pre-change baseline launched before any test file existed
+  (2,400 blocks, failed=0, error=0, skipped=182, warning=42 — reproducing S706's
+  shipped-source numbers exactly). RED honest by construction: 5 blocks, 0 passing,
+  failures only from the missing symbol — the `expect_error()` regexps are
+  rule-specific (Learning 492 applied at design; the trap never fired). GREEN: 15
+  assertions green first run; `devtools::document()` = exactly 1 NAMESPACE line + 1 man
+  page (+ 8 `@family obfuscation` cross-link regens, committed in 2 collateral commits
+  for the 5-file cap). Full suite ONCE on final source: 2,405 blocks = baseline +
+  exactly the 5 new, failed=0, error=0, skipped/warnings unchanged. Real-data pin: the
+  61-row `rareOnly = FALSE` carrier table round-trips with no real id surviving and
+  `0F4FY1`'s provisional flag preserved under its alias. Same-session checklists:
+  `_pkgdown.yml` catch-all entry (coverage guard green), `NEWS.Rmd` plain-language
+  entry + `NEWS.md` rendered same-commit, spell check clean (zero WORDLIST additions),
+  package-loaded lint clean on both new files. Vocabulary grep clean (Dragon 3);
+  DESCRIPTION unchanged. Runtime smoke n/a — script-callable addition only, no Shiny
+  wiring (arrives at Slice 4).
+- **Records:** BACKLOG.md — completed Slice 3 item removed (this entry is its record);
+  Slice 4 item queued at the top of Up Next (8th tab + confirm-gate export +
+  `.buildMhcExportManifest()` + docs, plan §4 last row / §5 Slice 4); batch narrative
+  updated. No new numbered learning — no new trap fired. Issue #148 stays OPEN
+  (Slice 4 remains).
+
 ### 2026-09-17 · [issue #148] S707 session claim: Slice 3 — `obfuscateMhcHaplotypes()` de-identification primitive (IN PROGRESS)
 - Session claimed at Phase 1B (stub + pending `HANDOFFS.md` receipt + this entry, one
   commit — Learnings 752/754). Deliverable: `obfuscateMhcHaplotypes(carriers, map)` per
