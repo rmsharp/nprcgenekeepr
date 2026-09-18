@@ -142,17 +142,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S705
 date: 2026-09-17
-status: pending
-active_task: Issue #148 Slice 1 -- checkMhcHaplotypeFile() (exported validator) + .parseMhcHaplotypeCalls() (internal parse rule), per the ratified design plan docs/planning/issue148-mhc-haplotype-reporting-plan.md sec 4 rows 1-2 and sec 5 Slice 1 (S704 next-step A; owner-picked via AskUserQuestion at Phase 0). STRICT-TDD implementation session, AskUserQuestion-gated phases. Owed same-session: NEWS.Rmd, _pkgdown.yml, lint, fresh full-suite baseline.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE. Issue #148 Slice 1 -- checkMhcHaplotypeFile() (exported wide per-animal MHC haplotype validator) + .parseMhcHaplotypeCalls() (internal D3 parse rule) shipped under strict TDD per the ratified plan sec 4 rows 1-2 / sec 5 Slice 1 (S704 next-step A; owner-picked via AskUserQuestion at Phase 0). All TDD gates owner-approved (PRE-RED->RED, RED->GREEN, GREEN->skip-REFACTOR-close-out). Slice 2 (statistics) queued at top of BACKLOG Up Next. Issue #148 stays OPEN (Slices 2-4 remain).
+what_was_done: Fresh pre-change baseline measured BEFORE any test file existed (2,370 blocks, failed=0, error=0, skipped=182 -- ends the S699-S704 inherited-baseline chain). RED 5c0f359b: test_checkMhcHaplotypeFile.R (6 blocks) + test_parseMhcHaplotypeCalls.R (8 blocks incl. real-data pins 62 calls / 2 uncertain / 0 missing / 33 distinct / 60 certain), confirmed 0 passing with missing-symbol failures only. GREEN e6b548c6: minimal implementations, both files green (15 + 36 assertions); devtools::document() verified (1 NAMESPACE line + 2 man pages); checklists 2ea1962d: _pkgdown.yml catch-all entry (coverage guard green), NEWS.Rmd plain-language entry (new MHC Haplotype Reporting subsection) + NEWS.md rendered same-commit, package-loaded lint clean after one nzchar style fix. Full suite run TWICE, second on final source: 2,384 blocks = baseline + exactly the 14 new blocks, failed=0, error=0. Phase 0 backfill e9fce09a; claim 44142832; records 5d3146cf (CHANGELOG close-out, BACKLOG Slice 1 removed + Slice 2 queued + batch narrative). No new numbered learning -- plan followed without surprises.
+next_steps: (A) Implement issue #148 Slice 2 (READY, Effort M, top BACKLOG Up Next item, full contract there): mhcHaplotypeFrequency() + mhcHaplotypeCarriers() per plan sec 4 rows 3-4; strict TDD; builds on .parseMhcHaplotypeCalls(); pinned real-data expectations (33 distinct / denominator 60 / 26 flagged via carrier leg / frequency leg 0); citation checklist owed (re-verify every plan sec 2.8 source before roxygen @references). (B) Census class (d) (READY, S), class (b) (READY, M), curved-chord (READY, M) -- unchanged. (C) Push decision (owner call): ~57 commits ahead (estimate -- recount with git rev-list --count origin/master..HEAD); span now includes REAL package changes (Slice 1 functions + tests), local suite green on exactly this state, CI runs full R-CMD-check on push. (D) Informational: package-split disposition pending, dashboard copy stale, untracked leftovers, CHANGELOG re-fire ~2-3 sessions out.
+key_files: R/checkMhcHaplotypeFile.R:47 (validator), R/parseMhcHaplotypeCalls.R:26 (.parseMhcHaplotypeCalls -- Slice 2 builds on this), tests/testthat/test_parseMhcHaplotypeCalls.R:105 (real-data pins Slice 2 extends), docs/planning/issue148-mhc-haplotype-reporting-plan.md:509 (sec 4 rows 3-4 = Slice 2 contract, lines drift), BACKLOG.md:27 (Slice 2 item, lines drift), CHANGELOG.md:25 (S705 entries)
+gotchas: (1) Fresh baseline is now 2,384 blocks (failed=0, error=0, skipped=182, warning=42), measured on shipped source; Slice 2 measures its own anyway. (2) The 2 S705 close-out self-reference commits sit past the CHANGELOG frontier -- next Phase 0 backfills them (recurring shape). (3) Slice 2 isRare uses RATIFIED D4 semantics: frequency <= 0.01 OR carriers <= 2 -- <= not <, do not drift the operator. (4) Citation checklist fires at Slice 2: re-verify every plan sec 2.8 source before use; 5 draft citations were dropped as unverifiable in S704 -- do not resurrect them. (5) NEWS.Rmd edits ship with re-rendered NEWS.md in the same commit. (6) Vocabulary grep at every slice close-out (plan Dragon 3); CHANGELOG enumerations span shards.
+runtime_smoke: n/a -- script-callable additions only, no Shiny wiring changed (UI arrives at Slice 4)
+changelog_ref: 5d3146cf
 commit: pending
 ```
-Claim stub — overwritten to `status: complete` at Phase 3D.
+Self-score 9/10: + clean strict-TDD cycle (RED committed at 0 passing, minimal GREEN, every transition owner-gated), + honest verification (baseline predates RED files; suite re-run on final post-lint-fix source), + plan-to-test fidelity (all Dragon 6/7 edges, real-data pins reproduce); - linting before the first full-suite launch would have saved a second ~10-min run, - no learning minted (surprise-free session, stated rather than padded). Predecessor 9/10: the BACKLOG brief made execution near-mechanical and every claim verified true; sole gap was the undocumented NEWS.md-render convention (one git log to discover).
 
 ```handoff
 session: S704
