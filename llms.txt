@@ -476,6 +476,8 @@ Funtions designed for interactive use
   : Check a locus-metadata sidecar table and classify per-locus coverage
 - [`checkMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
   : Check a long-format multi-locus marker genotype file
+- [`checkMhcHaplotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMhcHaplotypeFile.md)
+  : Check a wide-format MHC haplotype designation file
 - [`checkParentAge()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.md)
   : Check parent ages against a minimum age
 - [`checkRequiredCols()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.md)
@@ -711,6 +713,10 @@ Funtions designed for interactive use
   kinship
 - [`meanKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/meanKinship.md)
   : Calculate mean kinship for each animal in a kinship matrix
+- [`mhcHaplotypeCarriers()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeCarriers.md)
+  : List the animals carrying each MHC haplotype
+- [`mhcHaplotypeFrequency()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeFrequency.md)
+  : Summarize MHC haplotype frequencies and flag rare haplotypes
 - [`modBreedingGroupsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md)
   : Breeding Groups Module - Server Function
 - [`modBreedingGroupsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.md)

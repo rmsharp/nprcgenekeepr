@@ -4,26 +4,7 @@
 inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 `SESSION_RUNNER.md` Phase 0.)*
 
-> **STANDING TOP PRIORITY (owner-directed, 2026-08-26, S643):**
-> pedigree-drawing fidelity work stays at the top of this list, ahead of
-> every other item below, until the owner explicitly says it’s done.
-> This overrides the normal “pick whatever’s READY” Phase 0
-> priorities-list convention for as long as this note stands — a future
-> session’s Phase 0 report should surface pedigree-drawing work first
-> regardless of other items’ tags, and should not remove this note
-> without an explicit owner sign-off that the work is complete.
-
 ## Up Next
-
-**QP Migration Path Phase 4 cleanup – the joint-solver migration’s last
-step** (from `docs/planning/pedigree-diagram-joint-qp-solver-plan.md`
-§Migration Path; Phases 1-3 DONE S673/S674/S675 – the dead Tier 2/3
-passes were already deleted S674 and the NEWS.Rmd entry landed S675;
-extracted S687 from the DONE record per the completed-item convention;
-READY, Effort S). Remaining: grep `R/` doc-comments for stale references
-to the deleted tiers/passes and the `.kMax*` constants and update them
-to describe the QP engine; that closes the migration plan’s own 4-phase
-path.
 
 ## Active
 
@@ -47,6 +28,35 @@ behind (S367 origin, flagged S368/S369) is now also RESOLVED – S370
 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 
 ## Up Next
+
+**Implement issue \#148 Slice 3: MHC de-identification primitive**
+(Slice 2 DONE S706, 2026-09-17 –
+[`mhcHaplotypeFrequency()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeFrequency.md) +
+[`mhcHaplotypeCarriers()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeCarriers.md)
+shipped, RED `e8a63f05` / GREEN `930536e8`; READY, Effort S – a
+strict-TDD implementation session, `AskUserQuestion`-gated phases).
+Build `obfuscateMhcHaplotypes(carriers, map)` (exported): alias the `id`
+column of a
+[`mhcHaplotypeCarriers()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeCarriers.md)
+table through the alias map from `obfuscatePed(..., map = TRUE)$map`;
+[`stop()`](https://rdrr.io/r/base/stop.html) on any id absent from the
+map (the
+[`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)
+mold, `R/obfuscateTwinRelations.R` – never silently drop or leak a real
+id); haplotype labels stay byte-identical (D6: there is no
+validity-preserving obfuscation of an MHC type) – plan §4 row 5, §5
+Slice 3 (`docs/planning/issue148-mhc-haplotype-reporting-plan.md`). Done
+when it round-trips the
+[`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md)
+test mold: aliases every id through the standard map,
+[`stop()`](https://rdrr.io/r/base/stop.html)s on an unknown id, leaves
+haplotype labels unchanged. Same-session checklists: `NEWS.Rmd` +
+`NEWS.md` render (same commit), `_pkgdown.yml`, lint. Vocabulary grep at
+close-out (Dragon 3). Slice 4 (eighth tab + confirm-gate export +
+`.buildMhcExportManifest()` + docs incl. the module `@return` repair and
+the citation checklist’s `population_genetics_terms.html` entry)
+follows, one session, per plan §5. Issue \#148 stays OPEN until the last
+slice ships.
 
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —
@@ -154,6 +164,62 @@ now**, with 3 revisit conditions and 3 optional in-place prep steps).
 accepts or rejects the recommendation; nothing else to do here until
 then. \## Housekeeping
 
+**Census class (b): investigate the 8 off-centre union dots on the real
+375 fixture** (found S668 census, re-confirmed on the S696 baseline CSV
+`eeacd06c`; itemized S699 at the owner’s directive sign-off — ordinary
+priority, the S643 standing top-priority note is retired; READY, Effort
+M) — the committed census
+(`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv`,
+class `b`) lists 8 of 237 unions whose dot is off the mate midpoint, all
+subclass “off-centre” (the worse on-a-mate / outside-mate-span
+subclasses are gone under the QP engine). The 8 split into two distinct
+populations a fix session should treat differently: **2 rows at
+numerical-noise magnitude** (`__union_75` −2.3e-07 units, `__union_132`
+8.7e-09 units — caught only because the census predicate is exact, \>
+1e-6 **px**; first decide whether these belong in the census at all,
+i.e. add a visible-offset tolerance to the predicate) and **6 rows with
+real 0.5–1.5-unit (60–180 px) offsets**
+(`__union_97/114/130/137/ 191/228`; 4 tagged relation B1, 2 genuine)
+where minSep floors bind — determine whether these are structurally
+forced by the binding constraints or reducible via the QP objective
+(`R/makePedigreeDiagramData.R`, `.solveJointQP()`). **Coupled prose:**
+the fidelity article’s caveats bullet and mate-line paragraph
+(`vignettes/articles/kinship2-fidelity-validation.qmd`, S698 rewrite)
+embed the “8 of 237” census figure and 0.00-px Track B centering — any
+change here must re-verify both sites and re-run the census CSV (S698
+gotcha 3).
+
+**Census curved-chord heuristic: arc-modelling measurement pass (1,668
+findings, upper bound)** (found S668 census, re-confirmed on the S696
+baseline; itemized S699 at the owner’s directive sign-off; READY, Effort
+M — a measurement/scoping session, not a fix session) — the census flags
+a curved duplicate-connector when the straight **chord** between its
+endpoints passes inside a visible unrelated symbol (1,667 Real-375
+rows + 1 Track C row, class `c`, subclass `c-curved-chord`); the census
+doc itself discloses “heuristic, arc not modelled,” so this is an upper
+bound, not a count of confirmed visible defects. Deliverable: model the
+actually-drawn arc geometry (the render layer’s curved connectors + the
+roundness bump applied to duplicate connectors — the pipeline’s own 47
+`curved-heuristic` residuals are the related disclosed set) and count
+how many drawn arcs truly pass inside a symbol, extending
+`data-raw/pedigreeDrawingErrorCensus.R` (or a committed sibling script)
+so the number is reproducible; then recommend whether a fix item is
+warranted, with the real count replacing the 1,668 chord upper bound in
+any future report.
+
+**Census class (d): assess the 2 duplicate-adjacent findings** (found
+S668 census, re-confirmed on the S696 baseline; itemized S699 at the
+owner’s directive sign-off; READY, Effort S) — 2 rows where a duplicate
+sits ≤ 120 px (exactly 1 minSep, nothing between) from its own real
+occurrence on the same row: `__dup_Y_2` vs `Y` (Track C, 120 px) and
+`__dup_SLN0TF_2` vs `SLN0TF` (Real 375, ~120 px), subclass “adjacent” —
+not overlapping (\< 50 px would be the overlap subclass, count 0).
+Deliverable: render both sites (crop, per the S696 crop-verification
+precedent) and judge whether adjacent-at-minSep duplicate/real pairs are
+visually acceptable (they are separated by the layout’s own minimum and
+connected by a curved connector) — if acceptable, close this item with a
+dated note; if not, scope a separation approach as a follow-up item.
+
 **Sweep the `[ ]`-marked-but-fully-RESOLVED pointer blocks per the
 completed-item convention** (found S687, 2026-09-14, while executing the
 28-block `[x]` backfill; DECISION NEEDED – the S686 ratification covered
@@ -171,92 +237,6 @@ backfill (verify/enrich `CHANGELOG.md`, forward-carry into live items,
 extract any still-open sub-thread first, delete). Genuinely OPEN `[ ]`
 items in the same sections (iCloud duplicate-file, spelling drift, the
 10-to-15-warnings item, etc.) are NOT part of this population.
-
-**`tests/testthat/test_resolveEdgeNodeCollisions.R:20-29` says D2 dogleg
-projections are “CURRENTLY STRUCTURALLY UNREACHABLE via the real
-pipeline” (citing `test_addRectilinearWaypoints.R:517-546`) – the real
-375 fixture renders 56 `__proj_` nodes today** (found S668, 2026-09-02,
-by the pedigree-drawing census, Finding \#5; READY, Effort S) – the
-comment (and possibly that sibling test’s own framing) is stale: every
-non-founder non-anchor mate with a generation of its own is drawn on its
-own row with a D2 dogleg to the union (56 units,
-`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02.md` Finding \#5
-lists them). Its own sibling already pins the fact:
-`test_makePedigreeMatingLayout.R:598` counts “56 `__proj_` (dogleg
-parent/union-gen-mismatch waypoints)” on this fixture. Fix the comment
-to describe the real reachability, and check whether
-`test_addRectilinearWaypoints.R:517-546`’s “0 D2 projections” test is
-fixture-specific or wrongly general. Not touched S668 (owner-directed:
-the pinned tests stay as they are). **Premise updated (S687
-forward-carry):** S678’s duplication-policy change made the D2 dogleg
-structurally dead – `__proj_` waypoints are extinct, class (e) = 0 by
-construction, absence pinned in `test_comparePedigreeStructure.R` (see
-the S678 `CHANGELOG.md` entry) – so this item’s own “56 `__proj_` nodes
-today” figure is now S668-era stale too. The fix session should
-re-derive CURRENT reachability first (the “structurally unreachable”
-comment may now be true again) and write whatever the current engine
-actually does, dated – not restore the S668 count.
-
-**Main-family proximity residual on the real 375-animal fixture after
-S667’s disconnected-component separation** (found S667, 2026-09-02,
-during GREEN; owner-accepted as a disclosed residual via
-`AskUserQuestion`; READY, Effort M – but fold it into the
-pedigree-drawing census item at the top of Up Next rather than patching
-it alone) – laid out alone, the main 343-animal family’s left edge is
-denser than it was while 4 unrelated families’ collision pushes cascaded
-into it, and the existing capped (`.kMaxUnionPush = 5`,
-`.kMaxIndividualPush = 2`), rightward-only proximity passes (Track 7
-Phase 2/4, Option B, the B1 pass) exhaust on 5 pairs:
-`__union_43`/`__dup_WDBGPF_2` (0.083 raw units), `M0YNUR`/
-`__dup_L31S6S_5` (0.100), `8933XB`/`__dup_SLN0TF_1` (0.182),
-`UCXEK5`/`__dup_L31S6S_3` (0.099) – four genuine 10-22 px symbol
-overlaps – plus `BH6ZQK`/`8933XB`, a floating-point tie at exactly
-`.individualClearance` (symbols touch, no overlap). The prior 0-residual
-on this fixture rested on the interleaving artefact, not on the passes
-being complete. Candidate fixes, none evaluated: re-run the proximity
-passes once more after packing; raise the push caps (S647 found uncapped
-pushes cause worse D1 bar overlaps – measure, don’t assume); or the
-joint-solver direction the census will weigh. Pinned at the measured
-values in `tests/testthat/test_positionMatingUnitForest.R` (`:1406`,
-`:1504`, `:1529`, `:1694`) with dated comments; before/after chromote
-crops in S667’s handoff. **Engine superseded (S687 forward-carry):** the
-capped proximity passes this item describes were DELETED by the QP
-migration (S674,
-`docs/planning/pedigree-diagram-joint-qp-solver-plan.md`) –
-`.solveJointQP()` now enforces hard radius-based minSep constraints, and
-the census has measured class (a) = 0 on the real 375 fixture since S675
-(current baseline: a 0 / b 12 / c2 0 / d 0). The “fold into the
-pedigree-drawing census item” pointer above is closed (census DONE S668;
-record in `CHANGELOG.md`), and the cited test line numbers are S667-era.
-A future session should re-measure the 5 named pairs under the current
-engine and, if they clear, close this item as resolved-by-construction
-rather than fix anything.
-
-**`vignettes/articles/kinship2-fidelity-validation.qmd:150-163` still
-says
-[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-draws “the mating-unit marker … at the sire’s own symbol rather than
-centered between sire and dam”** (found S667, 2026-09-02, incidental
-while updating the shrunk-figure caption; READY, Effort S) – obsolete
-since S666’s conditional- shift rule: on Track B full every union dot is
-now centred between the pair and the descent line drops from the true
-midpoint (the regenerated `trackB-nprc-full.png` shows it). That
-paragraph’s “real, visible difference in mate-line layout” framing
-should be rewritten to describe the current behaviour (and what still
-differs: non-qualifying pairs – polygamous or duplicate-involving – keep
-the dot on the anchor). Not fixed S667: outside that session’s
-deliverable, per the established report-don’t-fix precedent (Learning
-382). **Engine superseded again since this was filed (S687
-forward-carry):** S652 (issue \#166) reverted the qualifying-union
-recenter S666 shipped, and the QP joint solver (S673-S675,
-`docs/planning/pedigree-diagram-joint-qp-solver-plan.md`) then replaced
-union positioning wholesale – a union’s x now comes from a soft
-union-centering objective term under hard minSep floors (census (b)
-residual: 12 rows on the real 375 fixture, the current baseline). The
-rewrite should describe the CURRENT QP behavior, verified against a live
-render first, not S666’s conditional-shift rule – and the parenthetical
-above about which pairs “keep the dot on the anchor” is S667-era and
-must be re-derived, not copied.
 
 **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing
 binary hangs on `macos-latest`’s `ChromoteSession$new()` bootstrap**
@@ -1488,8 +1468,21 @@ corresponding GitHub issue, despite ranking above every Medium/Deferred
 item in this batch (Finding \#1/Recommendation 2); a future triage
 session should file both. **Every Tier 1/2/3 item (#147, \#149, \#146,
 \#151, \#150) plus Deferred-tier \#152 and \#153 are now fully shipped
-and closed** – see the compressed entry below. \#148 remains unstarted,
-still needing its scope-narrowing conversation. See `CHANGELOG.md`.
+and closed** – see the compressed entry below. \#148’s scope-narrowing
+conversation is DONE (S703, 2026-09-17, owner via `AskUserQuestion`:
+design-first, same issue — decision record
+`docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md`, issue
+comment posted) and its design plan is RATIFIED (S704, 2026-09-17 —
+`docs/planning/issue148-mhc-haplotype-reporting-plan.md`, D1-D10, owner
+picked all 4 recommended judgment calls); Slice 1 (validator + parse
+rule) shipped S705 (2026-09-17, strict TDD,
+[`checkMhcHaplotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMhcHaplotypeFile.md) +
+[`.parseMhcHaplotypeCalls()`](https://github.com/rmsharp/nprcgenekeepr/reference/dot-parseMhcHaplotypeCalls.md));
+Slice 2 (statistics) shipped S706 (2026-09-17, strict TDD,
+[`mhcHaplotypeFrequency()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeFrequency.md) +
+[`mhcHaplotypeCarriers()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeCarriers.md));
+implementation Slices 3-4 remain open — see the Up Next item. See
+`CHANGELOG.md`.
 
 **Progress, issue \#152 (whole-genome/whole-exome sequence input +
 sequence-based genetic metrics) – DONE, closed (design S517 through

@@ -193,20 +193,30 @@ claim is scoped to *which individuals appear at all* (P5 now omitted by
 both) and to the structural parent-child/mate-pair relationships among
 the individuals that do appear ([Structural
 verification](#sec-structural) below) – not to the two packages’ overall
-visual layout. Looking at the full-fixture pair directly: kinship2 draws
-each mated pair spread apart, with the descent line to their children
-dropping from the midpoint between the two symbols;
+visual layout. That said, looking at the full-fixture pair directly, the
+two mate-line conventions now agree more closely than when this article
+was first published: both packages draw a mated pair side by side and
+drop the descent line to their children from the midpoint between the
+two symbols. The visible difference that remains is the mating-unit
+marker itself – the small dot
 [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-draws each pair close together, with the mating-unit marker (the small
-dot) positioned at the sire’s own symbol rather than centered between
-sire and dam. This is a real, visible difference in mate-line layout,
-not a rendering error – it is the established, already-decided rendering
-convention this package uses everywhere (the marker’s own visibility was
-weighed and kept as-is in [issue
-\#161](https://github.com/rmsharp/nprcgenekeepr/issues/161)), and it
-predates this article: it is unrelated to, and unchanged by, the
-P5-suppression fix, which only changes *which* individuals are placed on
-the diagram, never *how* a placed pair’s own mate line is drawn.
+draws at that midpoint, which kinship2 does not draw at all (the
+marker’s own visibility was weighed and kept as-is in [issue
+\#161](https://github.com/rmsharp/nprcgenekeepr/issues/161)). Under the
+joint-solver positioning engine (S673–S675, 2026-09), a union dot’s
+placement comes from a soft centering objective under hard
+minimum-separation floors: the dot sits at the exact midpoint between
+its two rendered mates wherever spacing allows – on this fixture, all
+four union dots are exactly centered (live-measured, S698) – while on a
+crowded colony-scale pedigree a small off-center residual can remain
+where the separation floors bind (8 of 237 unions on the bundled
+375-individual fixture, per the project’s standing drawing-error census
+baseline). An earlier revision of this paragraph described the dot as
+positioned at the sire’s own symbol; that was accurate for the engine at
+the time (through S667) and is superseded by the joint-solver engine.
+All of this is unrelated to, and unchanged by, the P5-suppression fix,
+which only changes *which* individuals are placed on the diagram, never
+*how* a placed pair’s own mate line is drawn.
 
 The two shrunk diagrams show the **same 8 surviving subjects in the same
 2 family groups** – `{P1, P2, M1, G3, L3}` and `{C4, P6, C4a}` –
@@ -359,22 +369,23 @@ new isolation pre-filter, Phase 1 of the P5-suppression plan, S644,
 
 ## Caveats carried forward
 
-- **The two packages’ mate-line layout is not, and was never claimed to
-  be, visually identical.** kinship2’s `align.pedigree()` spreads a
-  mated pair apart and drops the descent line to their children from the
-  midpoint between the two symbols;
+- **The two packages’ overall layout is not, and was never claimed to
+  be, visually identical.** Their mate-line conventions now largely
+  agree – both draw a mated pair side by side with the descent line
+  dropping from the midpoint (visible directly in Track B’s full-fixture
+  image pair above) – but
   [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-  draws a mated pair close together, with the mating-unit marker (the
-  small dot) positioned at the sire’s own symbol rather than centered
-  between sire and dam – visible directly in Track B’s full-fixture
-  image pair above. This is nprcgenekeepr’s own established rendering
-  convention, unrelated to and unchanged by any track in this article
-  (the marker’s own visibility was separately weighed and kept as-is in
-  [issue \#161](https://github.com/rmsharp/nprcgenekeepr/issues/161)).
-  Every “match”/ “identical” claim in this article is scoped to numeric
-  values, surviving-subject sets, or the structural
-  parent-child/mate-pair/rendered-individual sets ([Structural
-  verification](#sec-structural)) – never to mate-line spacing or node
+  additionally marks the union with a small dot at that midpoint, which
+  kinship2 does not draw (the marker’s own visibility was separately
+  weighed and kept as-is in [issue
+  \#161](https://github.com/rmsharp/nprcgenekeepr/issues/161)), and on a
+  crowded colony-scale pedigree the dot’s exact centering is a soft
+  objective that can leave a small off-center residual where the
+  engine’s separation floors bind (see the rewritten mate-line paragraph
+  in [Track B](#sec-trackb) above). Every “match”/“identical” claim in
+  this article is scoped to numeric values, surviving-subject sets, or
+  the structural parent-child/mate-pair/rendered-individual sets
+  ([Structural verification](#sec-structural)) – never to exact node
   placement.
 - **kinship2 is not a package dependency.** Nothing above runs at
   `quarto render` time or in `R CMD check` – the numbers and images are

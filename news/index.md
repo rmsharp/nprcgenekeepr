@@ -331,7 +331,31 @@
   (new
   [`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md))
   (issue [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152)).
-  \## Cross-Center Identity Matching
+  \## MHC Haplotype Reporting
+- New
+  [`checkMhcHaplotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMhcHaplotypeFile.md)
+  validates a file of MHC haplotype designations – two named haplotypes
+  per animal, one row per animal, like the bundled `rhesusGenotypes`
+  example data. Designations are taken exactly as written (a trailing
+  `?` marks a provisional call). This is the first step toward MHC
+  haplotype frequency and rare-haplotype reporting; no Shiny screen yet
+  (issue [\#148](https://github.com/rmsharp/nprcgenekeepr/issues/148)).
+- New
+  [`mhcHaplotypeFrequency()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeFrequency.md)
+  summarizes how common each MHC haplotype is in a colony: copies,
+  carriers, and frequency per haplotype, with missing and provisional
+  calls disclosed rather than silently dropped. A haplotype is flagged
+  rare when its frequency is 0.01 or lower or it has 2 or fewer
+  carriers; both thresholds are adjustable.
+- New
+  [`mhcHaplotypeCarriers()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeCarriers.md)
+  lists the animals carrying each rare haplotype (or every haplotype),
+  including provisionally typed carriers, so a manager can see which
+  animals to consider before a rare haplotype is lost from the colony
+  (issue [\#148](https://github.com/rmsharp/nprcgenekeepr/issues/148)).
+
+### Cross-Center Identity Matching
+
 - New
   [`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
   merges pedigree records for the same animals held by two different

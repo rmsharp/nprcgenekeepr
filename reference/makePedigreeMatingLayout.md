@@ -98,9 +98,14 @@ Male-left/female-right ordering (issue \#145) – every simple two-real-
 parent mating unit (mate-count exactly 1 each, unambiguous `"M"`/`"F"`
 sex codes, neither parent with a D5 direct child of their own) renders
 with the male parent to the left of the female parent – is now
-unconditional, folded directly into the Walker/BJL positioning engine's
-own Tier 3 formula (`.positionMatingUnitForest()`, an internal function,
-S8.1). The former `orderBySex` parameter that toggled this is removed:
+unconditional, folded directly into the positioning engine's own
+provisional-seeding rules (`.positionMatingUnitForest()`, an internal
+function – the S666 conditional-shift pass's sex-sign rule and Decision
+1's order-consistent seeding side rule); since the QP migration
+(`docs/planning/pedigree-diagram-joint-qp-solver-plan.md`) the final x
+for every node comes from `.solveJointQP()`, which preserves each row's
+provisional left-to-right order, so the rule survives into the rendered
+layout. The former `orderBySex` parameter that toggled this is removed:
 the Phase 1b design note found the mechanism "restructured, not
 preserved unchanged – eliminated as a separate pass," with no way to
 disable it in the new engine, and this function had zero real callers
