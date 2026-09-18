@@ -22,6 +22,12 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `710fea78` — S709's own close-out self-reference commit
+- S710 Phase 0 ledger reconcile. The one commit past the frontier (`33b0a556`) is
+  S709's final close-out write, which by construction lands after its CHANGELOG entry:
+  `710fea78` (close-out commit sha recorded in the HANDOFFS receipt, self-reconcile).
+  S709's gotcha 5 predicted about 1 self-reference commit; it measured as exactly 1.
+
 ### 2026-09-18 · [BL-Up-Next] S709 close-out: export-preview session-crash fix DONE — the Marker Genetics observers survive missing pedigree ids and failed-validation uploads
 - **Deliverable (RED `cd63250c`, GREEN `310c731d`, NEWS `76807b2a`+`61c544a3`):** the top
   BACKLOG Up Next item (found S708). Every upstream read inside the LD-block, sequence,
