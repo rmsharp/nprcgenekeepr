@@ -22,6 +22,14 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [issue #148] S707 session claim: Slice 3 — `obfuscateMhcHaplotypes()` de-identification primitive (IN PROGRESS)
+- Session claimed at Phase 1B (stub + pending `HANDOFFS.md` receipt + this entry, one
+  commit — Learnings 752/754). Deliverable: `obfuscateMhcHaplotypes(carriers, map)` per
+  the ratified plan §4 row 5 / §5 Slice 3, strict TDD with `AskUserQuestion`-gated
+  transitions; the `obfuscateTwinRelations()` mold (`stop()` on unknown id, haplotype
+  labels byte-identical per D6). The S707 close-out entry above this one records the
+  outcome.
+
 ### 2026-09-17 · [ad hoc] S706 owner-directed push: 65 commits (S697–S706 span) to `origin/master`
 - Owner directive ("push"), discharging the standing push decision carried since S703's
   next-steps. The span includes the first real package changes since the last push

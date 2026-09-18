@@ -22,6 +22,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 707 Did
+**Deliverable:** Implement issue #148 Slice 3 — `obfuscateMhcHaplotypes(carriers, map)`
+de-identification primitive, strict TDD (IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning (PRE-RED: plan §4 row 5 / §5 Slice 3 +
+`obfuscateTwinRelations()` mold reads, fresh baseline).
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile. (Claim ledger entry ships in this claim commit per Learnings
+752/754.)
+
 ### Session 705 Handoff Evaluation (by Session 706)
 **Score: 9/10.** **What helped:** the BACKLOG Slice 2 item was again a complete,
 self-sufficient brief — the full interface contract, the ratified D4/D3 semantics, the
