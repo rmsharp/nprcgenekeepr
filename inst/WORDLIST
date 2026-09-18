@@ -1,6 +1,7 @@
 Acuna
 AlleleTable
 Allelic
+Allendorf
 anonymization
 API's
 AppDriver
@@ -20,6 +21,7 @@ CEPH
 CERVUS
 chrom
 CICD
+CIWD
 CLI
 cM
 CMD
@@ -41,6 +43,7 @@ discoverable
 dismissable
 dizygotic
 DOM
+Doxiadis
 Dprime
 DT
 Daly
@@ -77,9 +80,12 @@ Hedrick
 Hedrick's
 Heijmans
 HEVL
+histocompatibility
+HLA
 IACUC
 IBD
 ICAR
+Immunogenetics
 indivMeanKin
 ISAG
 js
@@ -90,6 +96,7 @@ Joanes
 Jonquera
 Joshi
 Kalinowski
+Kanthaswamy
 Kimura
 Kinships
 Kruuk
@@ -107,6 +114,7 @@ matings
 Maller
 markerMeanKin
 MAXGROUPS
+Mazas
 Meagher
 merge's
 md's
@@ -151,6 +159,8 @@ pkgdown's
 PLINK
 PLINK's
 PMC
+PMx
+Pollak
 pos
 POSIXct
 Pearson
@@ -163,6 +173,7 @@ Pedscope's
 Ph
 Pre
 prefilled
+Primatology
 QC'd
 QDN
 QP
@@ -199,6 +210,7 @@ Schaid
 Sinauer
 Sinnwell
 Slatkin
+Solberg
 Sortable
 Springer
 STR
@@ -209,6 +221,7 @@ TJ
 Therneau's
 Therneau’s
 totalRohLength
+Tsai
 tunable
 UI
 UIDs

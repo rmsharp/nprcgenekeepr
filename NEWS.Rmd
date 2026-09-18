@@ -292,6 +292,16 @@ knitr::opts_chunk$set(echo = TRUE)
   exactly as written (a trailing `?` marks a provisional call). This is
   the first step toward MHC haplotype frequency and rare-haplotype
   reporting; no Shiny screen yet (issue #148).
+- New `mhcHaplotypeFrequency()` summarizes how common each MHC haplotype
+  is in a colony: copies, carriers, and frequency per haplotype, with
+  missing and provisional calls disclosed rather than silently dropped.
+  A haplotype is flagged rare when its frequency is 0.01 or lower or it
+  has 2 or fewer carriers; both thresholds are adjustable.
+- New `mhcHaplotypeCarriers()` lists the animals carrying each rare
+  haplotype (or every haplotype), including provisionally typed
+  carriers, so a manager can see which animals to consider before a
+  rare haplotype is lost from the colony (issue #148).
+
 ## Cross-Center Identity Matching
 - New `resolveCrossCenterIds()` merges pedigree records for the same
   animals held by two different centers, using a curator-confirmed

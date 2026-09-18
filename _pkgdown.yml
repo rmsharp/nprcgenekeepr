@@ -323,6 +323,8 @@ reference:
   - '`markerParentageLikelihood`'
   - '`markerRealizedRelatednessVariance`'
   - '`meanKinship`'
+  - '`mhcHaplotypeCarriers`'
+  - '`mhcHaplotypeFrequency`'
   - '`modBreedingGroupsServer`'
   - '`modBreedingGroupsUI`'
   - '`modCrossCenterIdentityServer`'
