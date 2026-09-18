@@ -18,7 +18,7 @@ upstream analysis has not yet been run.}
 upstream analysis has not yet been run.}
 }
 \value{
-A list with fourteen reactive elements: \code{markerGenotype}, the
+A named list of reactive elements: \code{markerGenotype}, the
 raw uploaded genotype data frame (or \code{NULL} before upload);
 \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
@@ -49,9 +49,29 @@ uploaded, or before a pedigree is available if the founders-only
 restriction is checked); \code{ldBlockExportTable}, the
 \code{\link{obfuscateLdBlocks}}-de-identified export preview (or
 \code{NULL} before "Generate De-Identified Export Preview" is clicked
-with both \code{ldBlockTable} and \code{pedigree} available); and
+with both \code{ldBlockTable} and \code{pedigree} available);
 \code{ldBlockExportConfirmed}, \code{FALSE} until the confirm-gate
-modal's own Confirm button is clicked for the current export preview.
+modal's own Confirm button is clicked for the current export preview;
+\code{sequenceRohTable}, the \code{\link{computeGenomicROH}} output (or
+\code{NULL} before a genotype file and a locus-metadata file are both
+uploaded, or while a threshold input is invalid);
+\code{sequenceExportGenotypeMatrix}, \code{sequenceExportRohTable}
+and \code{sequenceExportManifest}, the de-identified genotype matrix,
+de-identified F_ROH table and export manifest snapshotted at
+"Generate De-Identified Export Preview" (each \code{NULL} before
+then); \code{sequenceExportConfirmed}, \code{FALSE} until that
+export's confirm-gate modal is accepted for the current preview;
+\code{mhcHaplotypeSummaryTable}, the \code{\link{mhcHaplotypeFrequency}}
+\code{summary} data frame (or \code{NULL} before an MHC haplotype file
+is uploaded, or while a rarity threshold is invalid);
+\code{mhcHaplotypeCarrierTable}, the \code{\link{mhcHaplotypeCarriers}}
+rare-haplotype carrier data frame (same \code{NULL} conditions);
+\code{mhcExportTables}, a list of the \code{summary}, de-identified
+\code{carriers} and \code{manifest} data frames snapshotted at "Generate
+De-Identified Export Preview" (or \code{NULL} before then, without a
+pedigree, or while any MHC-file animal is absent from the pedigree);
+and \code{mhcExportConfirmed}, \code{FALSE} until the MHC export's
+confirm-gate modal is accepted for the current preview.
 }
 \description{
 Reads an uploaded long-format marker genotype file (D1 format: \code{id},
@@ -109,6 +129,25 @@ plan). Validated through the multiallelic-tolerant sibling validator
 table is de-identified (\code{\link{obfuscateLdBlocks}}) behind a
 curator confirm-gate reusing \code{\link{modDeidentifiedExportServer}}'s
 tested Generate-Preview -> Confirm -> Confirm-OK pattern (D9).
+
+A seventh tab, "Genomic ROH (F_ROH)" (issue #152 Slice 5), computes
+\code{\link{computeGenomicROH}} from the shared genotype and
+locus-metadata uploads, with the same confirm-gated, de-identified
+export pattern (genotype matrix, F_ROH table, manifest).
+
+An eighth tab, "MHC Haplotype Reporting" (issue #148 Slice 4), reads its
+OWN dedicated \code{mhcHaplotypeFile} upload (validated by
+\code{\link{checkMhcHaplotypeFile}}) and reports
+\code{\link{mhcHaplotypeFrequency}}'s per-haplotype summary and
+\code{\link{mhcHaplotypeCarriers}}'s rare-haplotype carrier list at the
+two rarity thresholds shown next to the tables, with a persistent
+descriptive-only caveat, the call counts and frequency denominator, and
+(when \code{pedigree} is available) how many pedigree animals have a
+designation. Its export (summary, carrier list aliased through
+\code{\link{obfuscateMhcHaplotypes}}, and a manifest) goes through the
+same confirm gate. The alias map covers pedigree animals only, so the
+export is not generated -- with the reason shown -- while any animal in
+the MHC file is absent from the loaded pedigree.
 
 This module never touches the existing single-locus genotype path
 (\code{checkGenotypeFile}/\code{addGenotype}/\code{hasGenotype}/

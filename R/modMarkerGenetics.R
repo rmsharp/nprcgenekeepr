@@ -86,6 +86,78 @@
   )
 }
 
+## Issue #148 D7: persistent and non-dismissable, rendered as static markup
+## exactly like .linkageLdBlockCaveatText above.
+.mhcHaplotypeCaveatText <- paste(
+  "This tab is descriptive haplotype reporting from curator-supplied MHC",
+  "haplotype designations -- counts, frequencies, missing and uncertain",
+  "designations, and rarity flags. It is not a replacement for the",
+  "pedigree-based kinship, founder-representation, or genome-uniqueness",
+  "metrics elsewhere in this application, and it performs no MHC",
+  "inference of its own."
+)
+
+## Issue #148 D6: every MHC export (carrier list AND summary) routes through
+## the issue #150 confirm gate. Like .sequenceExportWarningText, it says
+## the designations themselves are never altered.
+.mhcExportWarningText <- paste(
+  "This export replaces animal ids in the carrier list with aliases from",
+  "the loaded pedigree's de-identification map -- MHC haplotype",
+  "designations themselves are never altered, since there is no",
+  "scientifically-valid way to obscure an MHC type while preserving its",
+  "meaning, and a paired type can identify an animal on its own.",
+  "Confirming that your institution's data-sharing and authorization",
+  "policies permit this export and its intended recipient(s) is your",
+  "responsibility, not this tool's."
+)
+
+#' Build the MHC haplotype export's transformation manifest (issue #148
+#' Slice 4)
+#'
+#' A non-sensitive record of how a de-identified MHC haplotype export was
+#' produced -- the \code{.buildSequenceExportManifest} mold: timestamp,
+#' package version, the exported tables' sizes, the rarity thresholds in
+#' force, the call counts and frequency denominator, and the confirm-gate
+#' warning text. Without the thresholds and denominator an exported
+#' rare-haplotype report cannot be interpreted. Never includes an id or the
+#' id map.
+#'
+#' @param summary the exported \code{\link{mhcHaplotypeFrequency}}
+#' \code{summary} table.
+#' @param carriers the exported (already de-identified)
+#' \code{\link{mhcHaplotypeCarriers}} table -- only its row count is used.
+#' @param counts the \code{\link{mhcHaplotypeFrequency}} \code{counts} table.
+#' @param rareFrequencyThreshold,rareCarrierThreshold the rarity thresholds
+#' used to produce \code{summary} and \code{carriers}.
+#' @param warningText the D6 warning text shown at the confirm gate.
+#' @return A one-row data.frame with columns \code{timestamp},
+#' \code{packageVersion}, \code{nHaplotypes}, \code{nRareHaplotypes},
+#' \code{nCarrierRows}, \code{rareFrequencyThreshold},
+#' \code{rareCarrierThreshold}, \code{nAnimals}, \code{nCalls},
+#' \code{nMissing}, \code{nUncertain}, \code{denominator},
+#' \code{warningText}.
+#' @noRd
+.buildMhcExportManifest <- function(summary, carriers, counts,
+                                    rareFrequencyThreshold,
+                                    rareCarrierThreshold, warningText) {
+  data.frame(
+    timestamp = format(Sys.time()),
+    packageVersion = getVersion(date = FALSE),
+    nHaplotypes = nrow(summary),
+    nRareHaplotypes = sum(summary$isRare),
+    nCarrierRows = nrow(carriers),
+    rareFrequencyThreshold = rareFrequencyThreshold,
+    rareCarrierThreshold = rareCarrierThreshold,
+    nAnimals = counts$nAnimals,
+    nCalls = counts$nCalls,
+    nMissing = counts$nMissing,
+    nUncertain = counts$nUncertain,
+    denominator = counts$denominator,
+    warningText = warningText,
+    stringsAsFactors = FALSE
+  )
+}
+
 #' Marker Genetics Module - UI Function
 #'
 #' @param id character vector of length 1. Module namespace identifier.
@@ -225,7 +297,51 @@ modMarkerGeneticsUI <- function(id) {
                         downloadButton(
                           ns("downloadSequenceManifest"),
                           "Download Export Manifest"
-                        ))
+                        )),
+               tabPanel("MHC Haplotype Reporting",
+                        div(class = "alert alert-warning",
+                            .mhcHaplotypeCaveatText),
+                        fileInput(ns("mhcHaplotypeFile"),
+                                  paste("Select MHC Haplotype File (CSV: an",
+                                        "id column, then two haplotype",
+                                        "columns)"),
+                                  accept = ".csv"),
+                        fluidRow(
+                          column(6L,
+                                 numericInput(
+                                   ns("mhcRareFrequencyThreshold"),
+                                   "Rare if frequency is at or below:",
+                                   value = 0.01, min = 0.0, step = 0.005
+                                 )),
+                          column(6L,
+                                 numericInput(
+                                   ns("mhcRareCarrierThreshold"),
+                                   paste("Rare if carried by this many",
+                                         "animals or fewer:"),
+                                   value = 2L, min = 0L, step = 1L
+                                 ))
+                        ),
+                        uiOutput(ns("mhcCountsSummary")),
+                        uiOutput(ns("mhcPedigreeCoverage")),
+                        h4("Haplotype Summary"),
+                        DT::DTOutput(ns("mhcSummaryTable")),
+                        h4("Rare-Haplotype Carriers"),
+                        DT::DTOutput(ns("mhcCarrierTable")),
+                        actionButton(
+                          ns("mhcExportPreview"),
+                          "Generate De-Identified Export Preview"
+                        ),
+                        uiOutput(ns("mhcExportGuidance")),
+                        actionButton(ns("mhcConfirmExport"),
+                                     "Confirm Export"),
+                        downloadButton(ns("downloadMhcSummary"),
+                                       "Download Haplotype Summary"),
+                        downloadButton(
+                          ns("downloadMhcCarriers"),
+                          "Download De-Identified Carrier List"
+                        ),
+                        downloadButton(ns("downloadMhcManifest"),
+                                       "Download Export Manifest"))
              )
       )
     )
@@ -289,6 +405,25 @@ modMarkerGeneticsUI <- function(id) {
 #' curator confirm-gate reusing \code{\link{modDeidentifiedExportServer}}'s
 #' tested Generate-Preview -> Confirm -> Confirm-OK pattern (D9).
 #'
+#' A seventh tab, "Genomic ROH (F_ROH)" (issue #152 Slice 5), computes
+#' \code{\link{computeGenomicROH}} from the shared genotype and
+#' locus-metadata uploads, with the same confirm-gated, de-identified
+#' export pattern (genotype matrix, F_ROH table, manifest).
+#'
+#' An eighth tab, "MHC Haplotype Reporting" (issue #148 Slice 4), reads its
+#' OWN dedicated \code{mhcHaplotypeFile} upload (validated by
+#' \code{\link{checkMhcHaplotypeFile}}) and reports
+#' \code{\link{mhcHaplotypeFrequency}}'s per-haplotype summary and
+#' \code{\link{mhcHaplotypeCarriers}}'s rare-haplotype carrier list at the
+#' two rarity thresholds shown next to the tables, with a persistent
+#' descriptive-only caveat, the call counts and frequency denominator, and
+#' (when \code{pedigree} is available) how many pedigree animals have a
+#' designation. Its export (summary, carrier list aliased through
+#' \code{\link{obfuscateMhcHaplotypes}}, and a manifest) goes through the
+#' same confirm gate. The alias map covers pedigree animals only, so the
+#' export is not generated -- with the reason shown -- while any animal in
+#' the MHC file is absent from the loaded pedigree.
+#'
 #' This module never touches the existing single-locus genotype path
 #' (\code{checkGenotypeFile}/\code{addGenotype}/\code{hasGenotype}/
 #' \code{getGVGenotype}/\code{geneDrop}) -- the D1 long-format schema is a
@@ -302,7 +437,7 @@ modMarkerGeneticsUI <- function(id) {
 #'   (columns \code{id}, \code{sire}, \code{dam}), or \code{NULL} while
 #'   upstream analysis has not yet been run.
 #'
-#' @return A list with fourteen reactive elements: \code{markerGenotype}, the
+#' @return A named list of reactive elements: \code{markerGenotype}, the
 #'   raw uploaded genotype data frame (or \code{NULL} before upload);
 #'   \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 #'   kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
@@ -333,9 +468,29 @@ modMarkerGeneticsUI <- function(id) {
 #'   restriction is checked); \code{ldBlockExportTable}, the
 #'   \code{\link{obfuscateLdBlocks}}-de-identified export preview (or
 #'   \code{NULL} before "Generate De-Identified Export Preview" is clicked
-#'   with both \code{ldBlockTable} and \code{pedigree} available); and
+#'   with both \code{ldBlockTable} and \code{pedigree} available);
 #'   \code{ldBlockExportConfirmed}, \code{FALSE} until the confirm-gate
-#'   modal's own Confirm button is clicked for the current export preview.
+#'   modal's own Confirm button is clicked for the current export preview;
+#'   \code{sequenceRohTable}, the \code{\link{computeGenomicROH}} output (or
+#'   \code{NULL} before a genotype file and a locus-metadata file are both
+#'   uploaded, or while a threshold input is invalid);
+#'   \code{sequenceExportGenotypeMatrix}, \code{sequenceExportRohTable}
+#'   and \code{sequenceExportManifest}, the de-identified genotype matrix,
+#'   de-identified F_ROH table and export manifest snapshotted at
+#'   "Generate De-Identified Export Preview" (each \code{NULL} before
+#'   then); \code{sequenceExportConfirmed}, \code{FALSE} until that
+#'   export's confirm-gate modal is accepted for the current preview;
+#'   \code{mhcHaplotypeSummaryTable}, the \code{\link{mhcHaplotypeFrequency}}
+#'   \code{summary} data frame (or \code{NULL} before an MHC haplotype file
+#'   is uploaded, or while a rarity threshold is invalid);
+#'   \code{mhcHaplotypeCarrierTable}, the \code{\link{mhcHaplotypeCarriers}}
+#'   rare-haplotype carrier data frame (same \code{NULL} conditions);
+#'   \code{mhcExportTables}, a list of the \code{summary}, de-identified
+#'   \code{carriers} and \code{manifest} data frames snapshotted at "Generate
+#'   De-Identified Export Preview" (or \code{NULL} before then, without a
+#'   pedigree, or while any MHC-file animal is absent from the pedigree);
+#'   and \code{mhcExportConfirmed}, \code{FALSE} until the MHC export's
+#'   confirm-gate modal is accepted for the current preview.
 #'
 #' @seealso \code{\link{modMarkerGeneticsUI}}
 #' @importFrom shiny moduleServer reactive renderUI observe req div
@@ -676,6 +831,115 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       removeModal()
     })
 
+    ## --- Issue #148 Slice 4: MHC Haplotype Reporting ----------------------
+
+    ## A DEDICATED upload (plan D2/D8), for the linkageGenotypeFile reason
+    ## above: a malformed MHC file can only break this tab's own outputs.
+    mhcHaplotype <- reactive({
+      if (is.null(input$mhcHaplotypeFile)) {
+        return(NULL)
+      }
+      raw <- getGenotypes(input$mhcHaplotypeFile$datapath, sep = ",")
+      checkMhcHaplotypeFile(raw)
+    })
+
+    ## Falls back to the D4 defaults when the numericInputs' own defaults
+    ## have not reached input$... (shiny::testServer()), mirroring
+    ## realizedRelatedness(); a cleared or negative threshold is
+    ## not-ready (NULL), not an error.
+    mhcThresholds <- reactive({
+      frequency <- if (!is.null(input$mhcRareFrequencyThreshold)) {
+        input$mhcRareFrequencyThreshold
+      } else {
+        0.01
+      }
+      carriers <- if (!is.null(input$mhcRareCarrierThreshold)) {
+        input$mhcRareCarrierThreshold
+      } else {
+        2L
+      }
+      if (is.na(frequency) || is.na(carriers) || frequency < 0.0 ||
+            carriers < 0.0) {
+        return(NULL)
+      }
+      list(frequency = frequency, carriers = carriers)
+    })
+
+    mhcFrequency <- reactive({
+      genotype <- mhcHaplotype()
+      thresholds <- mhcThresholds()
+      if (is.null(genotype) || is.null(thresholds)) {
+        return(NULL)
+      }
+      mhcHaplotypeFrequency(genotype,
+                            rareFrequencyThreshold = thresholds$frequency,
+                            rareCarrierThreshold = thresholds$carriers)
+    })
+
+    mhcCarriers <- reactive({
+      genotype <- mhcHaplotype()
+      thresholds <- mhcThresholds()
+      if (is.null(genotype) || is.null(thresholds)) {
+        return(NULL)
+      }
+      mhcHaplotypeCarriers(genotype, rareOnly = TRUE,
+                           rareFrequencyThreshold = thresholds$frequency,
+                           rareCarrierThreshold = thresholds$carriers)
+    })
+
+    ## D6: summary, de-identified carrier list and manifest snapshotted
+    ## together at Generate Preview. Dragon 5: the alias map covers pedigree
+    ## ids only, so an MHC-file animal absent from the pedigree blocks the
+    ## export with a stated reason here -- obfuscateMhcHaplotypes() would
+    ## otherwise stop() inside this observer and end the user's session.
+    mhcExportRaw <- reactiveVal(NULL)
+    mhcExportConfirmed <- reactiveVal(FALSE)
+    mhcExportMissingIds <- reactiveVal(character(0L))
+
+    observeEvent(input$mhcExportPreview, {
+      req(mhcFrequency())
+      req(mhcCarriers())
+      req(pedigree())
+      mhcExportConfirmed(FALSE)
+      mhcExportRaw(NULL)
+      missingIds <- setdiff(mhcHaplotype()$id, pedigree()$id)
+      mhcExportMissingIds(missingIds)
+      if (length(missingIds) > 0L) {
+        return()
+      }
+      map <- obfuscatePed(pedigree(), map = TRUE)$map
+      frequency <- mhcFrequency()
+      thresholds <- mhcThresholds()
+      carriers <- obfuscateMhcHaplotypes(mhcCarriers(), map)
+      manifest <- .buildMhcExportManifest(
+        frequency$summary, carriers, frequency$counts,
+        rareFrequencyThreshold = thresholds$frequency,
+        rareCarrierThreshold = thresholds$carriers,
+        warningText = .mhcExportWarningText
+      )
+      mhcExportRaw(list(summary = frequency$summary, carriers = carriers,
+                        manifest = manifest))
+    })
+
+    observeEvent(input$mhcConfirmExport, {
+      req(mhcExportRaw())
+      showModal(modalDialog(
+        title = "Confirm De-Identified MHC Haplotype Export",
+        p(.mhcExportWarningText),
+        footer = tagList(
+          modalButton("Cancel"),
+          actionButton(session$ns("mhcConfirmExportOk"), "Confirm Export",
+                       class = "btn-success")
+        )
+      ))
+    })
+
+    observeEvent(input$mhcConfirmExportOk, {
+      req(mhcExportRaw())
+      mhcExportConfirmed(TRUE)
+      removeModal()
+    })
+
     output$comparisonTable <- DT::renderDT({
       tbl <- comparison()
       req(tbl)
@@ -804,6 +1068,103 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
       }
     )
 
+    output$mhcCountsSummary <- renderUI({
+      frequency <- mhcFrequency()
+      if (is.null(frequency)) {
+        return(div(class = "alert alert-info",
+                   "Upload an MHC haplotype file and enter rarity thresholds",
+                   "of zero or more to see haplotype frequencies and",
+                   "rare-haplotype carriers."))
+      }
+      counts <- frequency$counts
+      div(class = "alert alert-secondary",
+          paste0(counts$nAnimals, " animals, ", counts$nCalls,
+                 " haplotype designations: ", counts$nMissing, " missing, ",
+                 counts$nUncertain, " uncertain (marked with a trailing ?",
+                 " and excluded from frequencies). Frequencies use ",
+                 counts$denominator, " certain designations."))
+    })
+
+    output$mhcPedigreeCoverage <- renderUI({
+      genotype <- mhcHaplotype()
+      ped <- safeRead(pedigree)
+      req(genotype, ped)
+      coverage <- paste0(sum(ped$id %in% genotype$id), " of ", nrow(ped),
+                         " pedigree animals have MHC haplotype designations.")
+      missingIds <- setdiff(genotype$id, ped$id)
+      if (length(missingIds) > 0L) {
+        div(class = "alert alert-warning", coverage,
+            paste0(length(missingIds), " animal(s) in the MHC haplotype",
+                   " file are not in the loaded pedigree; a de-identified",
+                   " export needs every animal in the file to be in the",
+                   " pedigree."))
+      } else {
+        div(class = "alert alert-secondary", coverage)
+      }
+    })
+
+    output$mhcSummaryTable <- DT::renderDT({
+      tbl <- mhcFrequency()$summary
+      req(tbl)
+      tbl
+    })
+
+    output$mhcCarrierTable <- DT::renderDT({
+      tbl <- mhcCarriers()
+      req(tbl)
+      tbl
+    })
+
+    output$mhcExportGuidance <- renderUI({
+      precondition <- paste(
+        "Every animal in the MHC haplotype file must be in the loaded",
+        "pedigree, because ids are de-identified through the pedigree's",
+        "alias map."
+      )
+      missingIds <- mhcExportMissingIds()
+      if (is.null(safeRead(pedigree))) {
+        div(class = "alert alert-warning",
+            "Load a pedigree before generating a de-identified MHC",
+            "haplotype export.", precondition)
+      } else if (length(missingIds) > 0L) {
+        div(class = "alert alert-warning",
+            paste0(length(missingIds), " animal(s) in the MHC haplotype",
+                   " file are not in the loaded pedigree, so the export was",
+                   " not generated."), precondition)
+      } else if (!mhcExportConfirmed()) {
+        div(class = "alert alert-info",
+            "Generate a preview, then confirm the export to unlock the",
+            "downloads.", precondition)
+      }
+    })
+
+    output$downloadMhcSummary <- downloadHandler(
+      filename = function() {
+        paste0("mhc_haplotype_summary_", Sys.Date(), ".csv")
+      },
+      content = function(file) {
+        write.csv(mhcExportRaw()$summary, file, row.names = FALSE)
+      }
+    )
+
+    output$downloadMhcCarriers <- downloadHandler(
+      filename = function() {
+        paste0("mhc_haplotype_carriers_", Sys.Date(), ".csv")
+      },
+      content = function(file) {
+        write.csv(mhcExportRaw()$carriers, file, row.names = FALSE)
+      }
+    )
+
+    output$downloadMhcManifest <- downloadHandler(
+      filename = function() {
+        paste0("mhc_export_manifest_", Sys.Date(), ".csv")
+      },
+      content = function(file) {
+        write.csv(mhcExportRaw()$manifest, file, row.names = FALSE)
+      }
+    )
+
     output$guidance <- renderUI({
       if (is.null(comparison())) {
         div(
@@ -854,7 +1215,14 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
         raw <- sequenceExportRaw()
         if (is.null(raw)) NULL else raw$manifest
       }),
-      sequenceExportConfirmed = reactive(sequenceExportConfirmed())
+      sequenceExportConfirmed = reactive(sequenceExportConfirmed()),
+      mhcHaplotypeSummaryTable = reactive({
+        frequency <- mhcFrequency()
+        if (is.null(frequency)) NULL else frequency$summary
+      }),
+      mhcHaplotypeCarrierTable = reactive(mhcCarriers()),
+      mhcExportTables = reactive(mhcExportRaw()),
+      mhcExportConfirmed = reactive(mhcExportConfirmed())
     )
   })
 }
