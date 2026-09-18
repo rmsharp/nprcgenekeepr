@@ -139,16 +139,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `data-raw/pedigreeDrawingErrorCensus.R` (or a committed sibling script) so the number
       is reproducible; then recommend whether a fix item is warranted, with the real count
       replacing the 1,668 chord upper bound in any future report.
-- [ ] **Census class (d): assess the 2 duplicate-adjacent findings** (found S668 census,
-      re-confirmed on the S696 baseline; itemized S699 at the owner's directive sign-off;
-      READY, Effort S) — 2 rows where a duplicate sits ≤ 120 px (exactly 1 minSep, nothing
-      between) from its own real occurrence on the same row: `__dup_Y_2` vs `Y` (Track C,
-      120 px) and `__dup_SLN0TF_2` vs `SLN0TF` (Real 375, ~120 px), subclass "adjacent" —
-      not overlapping (< 50 px would be the overlap subclass, count 0). Deliverable: render
-      both sites (crop, per the S696 crop-verification precedent) and judge whether
-      adjacent-at-minSep duplicate/real pairs are visually acceptable (they are separated by
-      the layout's own minimum and connected by a curved connector) — if acceptable, close
-      this item with a dated note; if not, scope a separation approach as a follow-up item.
 - [ ] **Sweep the `[ ]`-marked-but-fully-RESOLVED pointer blocks per the completed-item
       convention** (found S687, 2026-09-14, while executing the 28-block `[x]` backfill;
       DECISION NEEDED -- the S686 ratification covered the `[x]` population; confirm the

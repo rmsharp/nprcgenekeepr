@@ -26,6 +26,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL] S712 close-out: census class (d) CLOSED — both duplicate-adjacent sites assessed acceptable (owner-ratified)
+- **Deliverable (this commit; BACKLOG "Census class (d)" block removed in it):** the
+  census's 2 class-(d) "adjacent" rows (`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_
+  2026-09-02_findings.csv` rows 3 and 1679 — the CSV itself is a frozen audit record,
+  unchanged) are **closed as visually acceptable**, owner-ratified via
+  `AskUserQuestion` with all 6 crops presented.
+- **Evidence:** fresh current-engine layouts of both fixtures (default rectilinear;
+  `scratchpad/s712_probe.R`, cached at `scratchpad/s712_layouts.rds`) reproduce the
+  census to the digit — Track C `__dup_Y_2`/`Y` dx = 120.0 px exactly, Real 375
+  `__dup_SLN0TF_2`/`SLN0TF` dx = 119.9999999992 px; both pairs same-row with ZERO
+  nodes strictly between; the dashed duplicate-connector is present in the edge frame
+  at both sites. Crops (100% / 2.2x / context per site, Learning 732 recipe,
+  `scratchpad/s712_crop_*.png`): Track C plainly legible (70-px rim gap, connector
+  visible); Real 375 structurally identical, its short connector visually obscured
+  only by unrelated long-range dashed chords — the class-(c) curved-chord density
+  issue tracked in its own BACKLOG item, not an adjacency defect.
+- **Rationale for acceptance:** adjacent-at-minSep (1 raw unit = 120 px, the engine's
+  own same-row minimum) is the same spacing as any other adjacent pair on the row;
+  the overlap subclass (< 50 px) has count 0; adjacency minimizes duplicate-connector
+  length, and added separation would lengthen the connector and feed the very class-c
+  clutter that is the only legibility concern observed. No separation follow-up
+  scoped. Coupled-prose check: `vignettes/articles/kinship2-fidelity-validation.qmd`
+  contains zero class-(d)/"adjacent" references (grep-verified), so no prose update
+  was owed.
+- **Also closed in-session:** S711's open CI loop — R-CMD-check on the S711
+  close-out head completed green (run 35390065689, 33m33s; that head is now 4/4).
+
 ### 2026-09-18 · [BL] S712 claim: census class (d) duplicate-adjacent assessment
 - S711 next-step A / BACKLOG "Census class (d)" item, owner-picked via
   `AskUserQuestion` at Phase 0. Deliverable: render the 2 duplicate-adjacent sites

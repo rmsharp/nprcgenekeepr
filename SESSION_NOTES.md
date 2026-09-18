@@ -26,17 +26,112 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 711 Handoff Evaluation (by Session 712)
+**Score: 9/10.** **What helped:** next-step A was this session's exact deliverable,
+with both site ids, the ~120-px values, the S696 crop-precedent pointer, and
+`BACKLOG.md:142` pointing exactly at the item; gotcha 3 predicted the 1-commit
+backfill shape and it measured exactly 1 (`1788e2b8`); gotcha 2 pre-framed the
+in-progress R-CMD-check correctly (it completed green in-session, 33m33s — the S711
+open loop is closed); gotcha 4 ("origin in sync, don't re-report from stale
+handoffs") held (0/0 at orientation). **What was missing:** nothing material — the
+working crop recipe itself (Learning 732 / `scratchpad/s696_crop.R`) wasn't named in
+the handoff, but the BACKLOG item's "S696 precedent" phrase found it in one grep.
+**What was wrong:** nothing found. **ROI:** high — orientation to owner pick took
+one pass.
+
 ### What Session 712 Did
-**Deliverable:** Census class (d) — assess the 2 duplicate-adjacent findings
-(`__dup_Y_2` vs `Y`, Track C; `__dup_SLN0TF_2` vs `SLN0TF`, Real 375): render both
-sites as crops (S696 precedent), verify local geometry programmatically, judge
-acceptability, close the BACKLOG item with a dated note or scope a follow-up.
-(IN PROGRESS)
-**Started:** 2026-09-18
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for
-the next session's reconcile.
+**Deliverable:** Census class (d) duplicate-adjacent assessment — **DONE, item
+CLOSED as acceptable** (S711 next-step A / BACKLOG "Census class (d)" item,
+owner-picked via `AskUserQuestion` at Phase 0; assessment session, no package files
+touched, no TDD phases; owner ratified the verdict via a second `AskUserQuestion`
+with all 6 crops in front of them).
+**Started/completed:** 2026-09-18 (single session). Phase 0 backfill `e099a6f9`;
+claim `7a3a49f4`; close-out records commit follows this handoff.
+**Ledger:** claim entry + close-out entry (the dated assessment note) in
+`CHANGELOG.md`; BACKLOG block removed in the close-out commit per the S686
+completed-item convention.
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile backfilled 1 commit (`1788e2b8`, S711's self-reconcile —
+   the predicted recurring shape, measured 1). CI: 3/4 green on the S711 close-out
+   head, R-CMD-check in progress; completed green in-session (4/4, run 35390065689).
+   Dashboard 96/100, no HIGH flags. Owner picked class (d) from the 4-option picker.
+2. **Probe (`scratchpad/s712_probe.R`):** recomputed BOTH fixture layouts fresh with
+   the current engine (default rectilinear) rather than trusting the cached
+   `s696_layout.rds` (engine file's last commit, S697 doc-comments, postdates that
+   cache). Census rows reproduced to the digit: Track C `__dup_Y_2`/`Y` dx=120.0
+   exactly; Real 375 `__dup_SLN0TF_2`/`SLN0TF` dx=119.9999999992; both same-row,
+   ZERO nodes strictly between; dashed duplicate-connector present in the edge frame
+   at both sites (Track C dup also carries the consanguineous-marked union edge).
+3. **Crops (`scratchpad/s712_crop.R`, Learning 732 recipe — moveTo + raw-viewport
+   capture):** 6 renders (100% + 2.2x zoom + context, both sites),
+   `scratchpad/s712_crop_{trackC,real375}_*.png`. Track C reads cleanly (70-px rim
+   gap, connector plainly visible; adjacency minimizes connector length). Real 375
+   structurally identical but the short connector is hard to isolate amid unrelated
+   long-range dashed chords — that obscuring is the class (c) curved-chord density
+   issue, not an adjacency defect; extra separation would LENGTHEN the connector and
+   add to that clutter.
+4. **Verdict (owner-ratified):** acceptable — adjacent-at-minSep is the same spacing
+   as any other adjacent same-row pair; overlap subclass count is 0; adjacency is
+   arguably the optimal duplicate placement. Item closed; no separation follow-up
+   scoped. Coupled-prose check: the fidelity article contains zero class-(d)/
+   "adjacent" references (grep-verified), so no prose re-verification was owed.
+5. **Close-out:** this evaluation + handoff; receipt completed; ledger entries;
+   BACKLOG block removed (the FM #28 reduction for this session). No new learning
+   appended — routine assessment on existing recipes (Learning 732's crop path,
+   Learning 707's owner-gate discipline), no new signal; stated explicitly rather
+   than silently, per the S711 precedent.
+
+**Self-assessment (Session 712): 9/10.** **Strengths:** (1) fresh layouts instead of
+the stale cache, closing the engine-drift question before it could taint the
+evidence; (2) programmatic verification BEFORE rendering — the census values
+reproduced to the digit, so the crops illustrate a measured fact rather than stand
+in for one; (3) proven recipe reuse — zero failed render iterations; (4) tight
+scope — no fixes attempted, the class-(c) legibility concern routed to its existing
+item rather than expanding this one. **Weaknesses:** (1) the Real-375 zoom could not
+positively isolate the short dup connector amid the chord clutter — its presence is
+established programmatically (edge frame) but not pixel-confirmed at that site;
+disclosed to the owner at the gate; (2) no new learning row (correct — no signal —
+but stated, not silent).
+
+**Next steps (specific):** (A) Census class (b) (READY, M): decide the
+census-predicate tolerance for the 2 noise rows, then assess whether the 6 real
+60–180 px union-dot offsets are minSep-forced or QP-reducible
+(`R/makePedigreeDiagramData.R`, `.solveJointQP()`); re-verify the coupled fidelity
+article prose ("8 of 237", 0.00-px Track B centering). `scratchpad/s712_layouts.rds`
+holds fresh current-engine layouts of both fixtures — reusable, and
+`scratchpad/s712_crop.R` renders crops from it by fixture key. (B) Census
+curved-chord (READY, M): arc-modelling measurement pass replacing the 1,668-chord
+upper bound — this session's Real-375 site is a concrete motivating example (a
+legitimate short connector visually buried by unrelated chords). (C) MHC polish
+(Housekeeping, S). (D) Owner decisions pending: package-split disposition,
+pointer-block sweep ratification, REUSE registration. (E) Informational: dashboard
+copy stale (v2.14.0 vs v2.18.0); `R/appServer.R:168` re-throw observer
+reported-not-changed; untracked leftovers unchanged (+ this session's s712_*
+scratchpad files, same class); LabKey remainder BLOCKED; local is ahead of origin by
+this session's commits (backfill + claim + close-out) — push decision is the
+owner's, per the standing convention.
+
+**Key files:** `scratchpad/s712_probe.R` (the geometry probe),
+`scratchpad/s712_crop.R` + `scratchpad/s712_layouts.rds` (reusable crop path),
+`scratchpad/s712_crop_*.png` (the 6 crops), `CHANGELOG.md:29` (S712 entries),
+`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv:3` + `:1679` (the
+2 closed rows — CSV unchanged, it is a frozen audit record), `BACKLOG.md:109` (class
+b, now the top census item), `BACKLOG.md:128` (curved-chord).
+
+**Gotchas for the next session:** (1) **The fresh baseline is still 2,434 blocks**
+(failed=0, error=0, skipped=184, warning=48) — this session touched no package
+files; S709's gotchas 1–4 and 6 still apply verbatim (read them in
+`docs/archive/SESSION_NOTES-through-2026-09-18.md`). (2) `s712_layouts.rds` was
+computed at S712 — if any session commits a layout-engine change, recompute before
+reusing it (the probe script rebuilds both layouts in ~3 s total; the old ~2-min
+figure in `s696_crop.R`'s header predates the QP engine's current speed). (3) The
+census CSV is a frozen audit artifact — a closed class does NOT get edited out of
+it; closure lives in `CHANGELOG.md`. (4) Expect ~1 self-reference commit past the
+CHANGELOG frontier at next Phase 0 (the recurring shape); measure it. (5) The
+`makePedigreeMatingLayout()` unresolved-collision warning (1 on Track C, 56 on
+Real 375) is the documented class-(c)-adjacent residual disclosure, not a
+regression signal.
 
 ### Session 710 Handoff Evaluation (by Session 711)
 **Score: 9/10.** **What helped:** next-step A was this session's exact deliverable —
