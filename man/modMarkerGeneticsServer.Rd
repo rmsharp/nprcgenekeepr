@@ -57,7 +57,7 @@ modal's own Confirm button is clicked for the current export preview;
 uploaded, or while a threshold input is invalid);
 \code{sequenceExportGenotypeMatrix}, \code{sequenceExportRohTable}
 and \code{sequenceExportManifest}, the de-identified genotype matrix,
-de-identified F_ROH table and export manifest snapshotted at
+de-identified F_ROH table and export manifest captured at
 "Generate De-Identified Export Preview" (each \code{NULL} before
 then); \code{sequenceExportConfirmed}, \code{FALSE} until that
 export's confirm-gate modal is accepted for the current preview;
@@ -67,7 +67,7 @@ is uploaded, or while a rarity threshold is invalid);
 \code{mhcHaplotypeCarrierTable}, the \code{\link{mhcHaplotypeCarriers}}
 rare-haplotype carrier data frame (same \code{NULL} conditions);
 \code{mhcExportTables}, a list of the \code{summary}, de-identified
-\code{carriers} and \code{manifest} data frames snapshotted at "Generate
+\code{carriers} and \code{manifest} data frames captured at "Generate
 De-Identified Export Preview" (or \code{NULL} before then, without a
 pedigree, or while any MHC-file animal is absent from the pedigree);
 and \code{mhcExportConfirmed}, \code{FALSE} until the MHC export's

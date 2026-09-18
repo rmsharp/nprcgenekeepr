@@ -476,7 +476,7 @@ modMarkerGeneticsUI <- function(id) {
 #'   uploaded, or while a threshold input is invalid);
 #'   \code{sequenceExportGenotypeMatrix}, \code{sequenceExportRohTable}
 #'   and \code{sequenceExportManifest}, the de-identified genotype matrix,
-#'   de-identified F_ROH table and export manifest snapshotted at
+#'   de-identified F_ROH table and export manifest captured at
 #'   "Generate De-Identified Export Preview" (each \code{NULL} before
 #'   then); \code{sequenceExportConfirmed}, \code{FALSE} until that
 #'   export's confirm-gate modal is accepted for the current preview;
@@ -486,7 +486,7 @@ modMarkerGeneticsUI <- function(id) {
 #'   \code{mhcHaplotypeCarrierTable}, the \code{\link{mhcHaplotypeCarriers}}
 #'   rare-haplotype carrier data frame (same \code{NULL} conditions);
 #'   \code{mhcExportTables}, a list of the \code{summary}, de-identified
-#'   \code{carriers} and \code{manifest} data frames snapshotted at "Generate
+#'   \code{carriers} and \code{manifest} data frames captured at "Generate
 #'   De-Identified Export Preview" (or \code{NULL} before then, without a
 #'   pedigree, or while any MHC-file animal is absent from the pedigree);
 #'   and \code{mhcExportConfirmed}, \code{FALSE} until the MHC export's
@@ -889,8 +889,8 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
 
     ## D6: summary, de-identified carrier list and manifest snapshotted
     ## together at Generate Preview. Dragon 5: the alias map covers pedigree
-    ## ids only, so an MHC-file animal absent from the pedigree blocks the
-    ## export with a stated reason here -- obfuscateMhcHaplotypes() would
+    ## ids only, so an MHC-file animal absent from the pedigree prevents the
+    ## export here, with the reason shown -- obfuscateMhcHaplotypes() would
     ## otherwise stop() inside this observer and end the user's session.
     mhcExportRaw <- reactiveVal(NULL)
     mhcExportConfirmed <- reactiveVal(FALSE)
