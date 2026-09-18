@@ -26,6 +26,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `0b4d84bb` — S714 close-out self-reference
+- S714's final commit recorded its own records-commit sha (`8c717ee6`) into the
+  `HANDOFFS.md` receipt after the ledger entry was written — the recurring
+  self-reconcile shape (predicted "~1" by the S714 handoff; measured 1).
+  Backfilled at Session 715 Phase 0.
+
 ### 2026-09-18 · [BL] S714 close-out: curved-chord upper bound REPLACED by the true arc census — 1,668 chord rows were 100% false positives; real population 587 events / 117 arcs; fix item ratified and filed
 - **Deliverable (`318c32da`; curved-chord BACKLOG block replaced by the ratified
   fix item in this commit):** the census now measures the arc vis-network
