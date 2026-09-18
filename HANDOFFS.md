@@ -140,6 +140,21 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-17.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S704
+date: 2026-09-17
+status: pending
+active_task: Issue #148 MHC haplotype-reporting design plan (docs/planning/issue148-mhc-haplotype-reporting-plan.md, the #152/#153 mold; S703 next-step A; owner-picked via AskUserQuestion at Phase 0; PLANNING session -- plan doc is the whole deliverable, no implementation, FM #18/#19; docs-only, no TDD phases). Ratify Q1-Q8 from the S703 scoping doc as numbered decisions with a vertical-slice list and per-slice completion criteria.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Claim stub — overwritten to `status: complete` at Phase 3D.
+
+```handoff
 session: S703
 date: 2026-09-17
 status: complete

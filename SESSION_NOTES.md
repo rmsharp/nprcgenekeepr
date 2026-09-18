@@ -22,6 +22,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 704 Did
+**Deliverable:** Issue #148 MHC haplotype-reporting design plan
+(`docs/planning/issue148-mhc-haplotype-reporting-plan.md`, the #152/#153 mold; S703
+next-step A; owner-picked via `AskUserQuestion` at Phase 0; PLANNING session — the plan
+doc is the whole deliverable, no implementation, FM #18/#19; docs-only, no TDD phases)
+(IN PROGRESS)
+**Started:** 2026-09-17
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in
+`CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the
+next session's reconcile. (Claim entry itself ships in the claim commit per Learnings
+752/754.)
+
 ### Session 702 Handoff Evaluation (by Session 703)
 **Score: 9/10.** **What helped:** next-step (A) WAS this session's deliverable with an
 accurate one-line frame ("scope decision first per audit Finding #4") that routed straight

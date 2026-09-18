@@ -22,6 +22,15 @@ it is failure mode #27.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-17 · [issue #148] S704 claim: MHC haplotype-reporting design plan (session claimed, work beginning)
+- Phase 1B claim for the issue #148 design-plan session (S703 next-step A; owner-picked
+  via `AskUserQuestion` at Phase 0; the design-first gate the S703 scope-narrowing
+  decision established). Deliverable: `docs/planning/issue148-mhc-haplotype-reporting-plan.md`
+  in the #152/#153 mold — ratify Q1–Q8 from the scoping doc §4 as numbered decisions,
+  vertical-slice list, per-slice completion criteria. PLANNING session: the plan doc is
+  the whole deliverable, no implementation (FM #18/#19). Docs-only — no TDD phases.
+  Claim entry ships in the claim commit (Learnings 752/754 convention).
+
 ### 2026-09-17 · [ad hoc] Backfilled (reconcile-on-read): undocumented commits 2be33272..aec3b514 — S703 close-out self-reference commits
 - The recurring shape (predicted by S703's own gotcha 2): the two commits that record a
   session's close-out (`2be33272` SESSION_NOTES handoff + HANDOFFS receipt complete;
