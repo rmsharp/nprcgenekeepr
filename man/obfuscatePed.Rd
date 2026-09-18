@@ -61,6 +61,7 @@ Other obfuscation:
 \code{\link[=obfuscateGenotypeMatrix]{obfuscateGenotypeMatrix()}},
 \code{\link[=obfuscateId]{obfuscateId()}},
 \code{\link[=obfuscateLdBlocks]{obfuscateLdBlocks()}},
+\code{\link[=obfuscateMhcHaplotypes]{obfuscateMhcHaplotypes()}},
 \code{\link[=obfuscateTwinRelations]{obfuscateTwinRelations()}}
 }
 \concept{obfuscation}

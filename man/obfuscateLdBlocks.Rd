@@ -64,6 +64,7 @@ Other obfuscation:
 \code{\link[=obfuscateGenomicROH]{obfuscateGenomicROH()}},
 \code{\link[=obfuscateGenotypeMatrix]{obfuscateGenotypeMatrix()}},
 \code{\link[=obfuscateId]{obfuscateId()}},
+\code{\link[=obfuscateMhcHaplotypes]{obfuscateMhcHaplotypes()}},
 \code{\link[=obfuscatePed]{obfuscatePed()}},
 \code{\link[=obfuscateTwinRelations]{obfuscateTwinRelations()}}
 }
