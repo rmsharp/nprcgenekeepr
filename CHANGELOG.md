@@ -26,6 +26,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL] S713 close-out: census class (b) CLOSED — 6 real rows accepted as minSep-forced structural residuals, 2 dust rows ratified out of the predicate (both owner-ratified)
+- **Deliverable (BACKLOG "Census class (b)" block removed in this commit):** the
+  census's 8 class-(b) rows are fully dispositioned. The **6 real 60–180 px rows**
+  (`__union_97/114/130/137/191/228`) are **accepted as structural residuals, no fix
+  item**; the **2 numerical-noise rows** (`__union_75` ≈ 2.8e-5 px, `__union_132`
+  ≈ 1.0e-6 px) are solver dust, and the census predicate now skips below the test
+  suite's own 1e-3 raw-unit (0.12 px) meaningful floor
+  (`data-raw/pedigreeDrawingErrorCensus.R`, commit `de4e6ce8`) so future runs report 6.
+  The frozen 2026-09-02 census CSV is untouched (audit record; closure lives here).
+- **Evidence — forced vs reducible (the item's own question), both instruments
+  agreeing (`scratchpad/s713_probe.R`/`s713_probe2.R`, results in
+  `scratchpad/s713_probe_results.rds`):** (1) binding-chain analysis: every
+  adjacent pair between each of the 6 unions' rendered mates is BINDING at its
+  floor, and the chain-implied minimum offset given the solved mate span equals the
+  observed offset exactly (0.5/0.5/1.0/1.5/1.0/0.5 raw units) — marry-in-chain /
+  polygamous-anchor crowding (WCPXHD's 5-unit chain, HV7LZ3's 3-unit anchor);
+  (2) wUnion sweep 2 → 2e5 on trace()-captured QP inputs (target component: 733
+  variables): offsets shrink only by stretching mate spans (`__union_137`
+  480 → 1,787 px; `__union_130` 360 → 834 px) — i.e. **minSep-forced at the
+  owner-ratified S675 weights**; centering by weight escalation degrades the layout
+  and would contradict the no-weight-tuning mandate. The 6 are already disclosed,
+  named, and bounded (≤ 1.55 u) by the committed structural-residual test
+  (`tests/testthat/test_positionMatingUnitForest.R`, Learning 726 pattern), whose
+  own comment reads "8 rows of which 2 dust = 6 meaningful" — the predicate change
+  aligns the census with that same dust line (Learning 762).
+- **Continuity:** frozen census reproduced to the digit from `s712_layouts.rds`
+  (max |diff| ≈ 2e-15 u on all 8 rows) and from a fresh current-engine run (6 real
+  rows to 1e-12) before any counterfactual was trusted. Predicate edit verified:
+  old skip reproduces the frozen 8 on the current layout; new floor yields exactly
+  the disclosed 6, dropping exactly the 2 dust rows. `lintr::lint_package()` (loaded
+  per Learning 224): 0 lints. Crops of all 4 neighbourhoods
+  (`scratchpad/s713_crop_*.png`): each "off-centre" dot sits adjacent to its distal
+  marry-in mate — the conventional multiple-marriage-chain rendering.
+- **Coupled prose re-verified (no edit owed now):** Track B "all four union dots
+  exactly centered" re-measured live (max residual 1.9e-11 px); the article's
+  "8 of 237 ... where the separation floors bind" stays accurate as a citation of
+  the standing frozen baseline — the count becomes 6 only at the next census
+  re-run, an obligation forward-carried into the curved-chord BACKLOG item.
+
 ### 2026-09-18 · [BL] S713 claim: census class (b) off-centre union-dot assessment
 - S712 next-step A / BACKLOG "Census class (b)" item, owner-picked via
   `AskUserQuestion` at Phase 0. Deliverable: (i) decide whether the 2

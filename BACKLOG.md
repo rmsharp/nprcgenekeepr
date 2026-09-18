@@ -106,25 +106,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       still says "no Shiny screen yet" though the tab now ships (the #152
       `computeGenomicROH()` entry has the same stale phrase); re-render `NEWS.md` in the
       same commit, plain-language criterion.
-- [ ] **Census class (b): investigate the 8 off-centre union dots on the real 375 fixture**
-      (found S668 census, re-confirmed on the S696 baseline CSV `eeacd06c`; itemized S699 at
-      the owner's directive sign-off — ordinary priority, the S643 standing top-priority note
-      is retired; READY, Effort M) — the committed census
-      (`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv`, class `b`) lists
-      8 of 237 unions whose dot is off the mate midpoint, all subclass "off-centre" (the
-      worse on-a-mate / outside-mate-span subclasses are gone under the QP engine). The 8
-      split into two distinct populations a fix session should treat differently: **2 rows at
-      numerical-noise magnitude** (`__union_75` −2.3e-07 units, `__union_132` 8.7e-09 units —
-      caught only because the census predicate is exact, > 1e-6 **px**; first decide whether
-      these belong in the census at all, i.e. add a visible-offset tolerance to the predicate)
-      and **6 rows with real 0.5–1.5-unit (60–180 px) offsets** (`__union_97/114/130/137/
-      191/228`; 4 tagged relation B1, 2 genuine) where minSep floors bind — determine whether
-      these are structurally forced by the binding constraints or reducible via the QP
-      objective (`R/makePedigreeDiagramData.R`, `.solveJointQP()`). **Coupled prose:** the
-      fidelity article's caveats bullet and mate-line paragraph
-      (`vignettes/articles/kinship2-fidelity-validation.qmd`, S698 rewrite) embed the
-      "8 of 237" census figure and 0.00-px Track B centering — any change here must re-verify
-      both sites and re-run the census CSV (S698 gotcha 3).
 - [ ] **Census curved-chord heuristic: arc-modelling measurement pass (1,668 findings, upper
       bound)** (found S668 census, re-confirmed on the S696 baseline; itemized S699 at the
       owner's directive sign-off; READY, Effort M — a measurement/scoping session, not a fix
@@ -138,7 +119,13 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       drawn arcs truly pass inside a symbol, extending
       `data-raw/pedigreeDrawingErrorCensus.R` (or a committed sibling script) so the number
       is reproducible; then recommend whether a fix item is warranted, with the real count
-      replacing the 1,668 chord upper bound in any future report.
+      replacing the 1,668 chord upper bound in any future report. **Forward-carry from the
+      S713 class-(b) close:** any census re-run after S713 will report 6 (not 8) class-(b)
+      rows — S713 ratified the test suite's 1e-3 raw-unit (0.12 px) solver-dust floor into
+      the class-(b) predicate — so the same pass must update the fidelity article's
+      "8 of 237" citation sites (`vignettes/articles/kinship2-fidelity-validation.qmd`,
+      mate-line paragraph + caveats bullet) to the re-run's own count, and re-verify the
+      0.00-px Track B centering claim there (S713 re-measured it: max residual 1.9e-11 px).
 - [ ] **Sweep the `[ ]`-marked-but-fully-RESOLVED pointer blocks per the completed-item
       convention** (found S687, 2026-09-14, while executing the 28-block `[x]` backfill;
       DECISION NEEDED -- the S686 ratification covered the `[x]` population; confirm the

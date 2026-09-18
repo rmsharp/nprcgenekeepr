@@ -26,18 +26,118 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 712 Handoff Evaluation (by Session 713)
+**Score: 9/10.** **What helped:** next-step A was this session's exact deliverable
+with both populations enumerated (the 2 noise rows with exact magnitudes, the 6
+real rows with ids and offsets) and the exact code pointers
+(`R/makePedigreeDiagramData.R`, `.solveJointQP()`); `s712_layouts.rds` reproduced
+the frozen census TO THE DIGIT (max |diff| ≈ 2e-15 u on all 8 rows — probe2), so
+continuity cost one script instead of a re-derivation; `s712_crop.R` rendered all
+4 site crops with zero failed iterations; gotcha 4 predicted the 1-commit backfill
+shape and it measured exactly 1 (`ed79261f`); gotcha 2 (recompute if the engine
+changed) framed the cache-trust decision precisely — verified no `R/` commits
+since, cache reused; gotcha 5 pre-empted misreading the
+`makePedigreeMatingLayout()` collision warnings during verification runs. **What
+was missing:** the committed structural-residual test
+(`test_positionMatingUnitForest.R` line 2917) — which already NAMES the exact 6
+unions, bounds them at ≤1.55 u, and draws the 1e-3 raw-unit dust line ("8 rows of
+which 2 dust = 6 meaningful") — was this session's single most decisive context
+and went unmentioned; found only via the engine doc-comment's cross-reference.
+**What was wrong:** nothing found; every checked claim held. **ROI:** high —
+orientation to owner pick in one pass, probe built directly on the named targets.
+
 ### What Session 713 Did
-**Deliverable:** Census class (b) assessment — the 8 off-centre union dots on the
-Real 375 fixture (S712 next-step A / BACKLOG "Census class (b)" item, owner-picked
-via `AskUserQuestion` at Phase 0): (i) decide the census-predicate tolerance
-question for the 2 numerical-noise rows, (ii) determine whether the 6 real
-60–180 px offsets are minSep-forced or QP-reducible, (iii) re-verify the coupled
-fidelity-article prose. (IN PROGRESS)
-**Started:** 2026-09-18
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** Census class (b) assessment — **DONE, class CLOSED both ways,
+owner-ratified** (S712 next-step A / BACKLOG "Census class (b)" item, owner-picked
+via `AskUserQuestion` at Phase 0; assessment session + one ratified data-raw
+predicate edit; no package files touched, no TDD phases — `data-raw/` measurement
+script only).
+**Started/completed:** 2026-09-18 (single session). Phase 0 backfill `47905f6a`;
+claim `8e769e30`; deliverable `de4e6ce8`; records commit follows this handoff.
+**Ledger:** claim + close-out entries in `CHANGELOG.md`; BACKLOG class-(b) block
+removed in the records commit (the FM #28 reduction), with the census-re-run
+consequence forward-carried into the curved-chord item.
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile backfilled 1 commit (`ed79261f`, S712's self-reconcile —
+   the predicted recurring shape, measured 1). CI 4/4 green on origin head
+   `1788e2b8`. Dashboard 96/100, no HIGH flags. Owner picked class (b) from the
+   4-option picker.
+2. **Probe (`scratchpad/s713_probe.R` + `s713_probe2.R`):** continuity first
+   (census reproduced to the digit from the S712 cache AND a fresh run), then
+   trace()-captured `.solveJointQP()` inputs (5 components; target component 733
+   variables), baseline re-solve reproduction check, then the two instruments:
+   binding-chain analysis (every between-mates gap BINDING at its floor; chain
+   minimum == observed offset exactly for all 6) and a wUnion sweep 2 → 2e5
+   (offsets reducible ONLY via mate-span stretch: `__union_137` 480 → 1,787 px).
+   Verdict: **minSep-forced at the ratified S675 weights**; weight escalation
+   would degrade the layout and contradict the no-weight-tuning mandate.
+3. **Dust rows:** `__union_75` (≈2.8e-5 px) is not even pinned (gaps 0.97 u,
+   non-binding — residual is solver epsilon); `__union_132` (≈1.0e-6 px) is the
+   centred mates-1.0-apart geometry with float noise over the exact 1e-6 px skip.
+   The committed test's 1e-3 raw-unit floor already calls both "dust."
+4. **Crops (Learning 732 recipe, `scratchpad/s713_crop_{A_wcpxhd,B_u97,C_u191,
+   D_u228}.png`):** all 4 neighbourhoods (covering all 6 sites) — each dot sits
+   adjacent to its distal marry-in mate, i.e. the conventional multiple-marriage
+   chain; nothing reads as a defect.
+5. **Owner gate (2 questions, both recommended options taken):** (a) 6 real rows
+   accepted as structural residuals, CLOSED, no fix item; (b) census predicate
+   adopts the 1e-3 raw-unit floor NOW — `data-raw/pedigreeDrawingErrorCensus.R`
+   edited (`de4e6ce8`), verified old-skip→8 / new-floor→exactly-the-6, lint 0.
+6. **Coupled prose re-verified (no edit owed):** Track B centering re-measured
+   live (max 1.9e-11 px); "8 of 237" stays accurate as a frozen-baseline citation;
+   the count changes to 6 only at the next census re-run — obligation
+   forward-carried into the curved-chord BACKLOG item.
+7. **Close-out:** Learning 762 appended (threshold alignment across measurement
+   artifacts + the trace()-capture/re-solve probe instrument + the silent
+   NULL-propagation skip corollary, mechanism verified before recording).
+
+**Self-assessment (Session 713): 9/10.** **Strengths:** (1) continuity before
+counterfactuals — baseline re-solve had to reproduce production devs before any
+weight sweep was trusted; (2) two independent instruments agreeing exactly (chain
+minimums == observed offsets to 9 decimals) makes the verdict measurement, not
+judgment; (3) the escape route's COST was quantified (span stretch 3.7×) rather
+than asserted; (4) the tolerance recommendation was anchored to an existing
+committed constant (the test's own floor) instead of inventing a new one; (5)
+predicate edit verified against both old and new thresholds on the real layout.
+**Weaknesses:** (1) probe v1's 1a continuity section skipped silently (NULL
+propagation, zero output, zero error) — caught by noticing absent rows, fixed in
+probe2, mechanism verified and recorded in Learning 762; (2) the crops show the
+sites at neighbourhood zoom; no pixel-ruler measurement in the rendered image
+(the geometry is established programmatically, matching the S712 disclosure
+pattern).
+
+**Next steps (specific):** (A) Census curved-chord (READY, M): arc-modelling
+measurement pass replacing the 1,668-chord upper bound — now carries the
+forward-carried obligation to update the article's "8 of 237" sites at the next
+census re-run (see the BACKLOG block). (B) MHC polish (Housekeeping, S). (C)
+Owner decisions pending: package-split disposition, pointer-block sweep
+ratification, REUSE registration. (D) Informational: dashboard copy stale
+(v2.14.0 vs v2.18.0); untracked leftovers unchanged (+ this session's s713_*
+scratchpad files, same class); LabKey remainder BLOCKED; local ahead of origin
+by this session's commits — push decision is the owner's, per the standing
+convention.
+
+**Key files:** `scratchpad/s713_probe.R` + `s713_probe2.R` (the two-instrument
+probe; results `scratchpad/s713_probe_results.rds`), `scratchpad/s713_crop_*.png`
+(4 site crops), `data-raw/pedigreeDrawingErrorCensus.R:346` (the ratified floor,
+commit `de4e6ce8`), `tests/testthat/test_positionMatingUnitForest.R:2917` (the
+structural-residual test naming the same 6), `CHANGELOG.md` (S713 close-out
+entry), `BACKLOG.md:109` (curved-chord, now the top census item, with the
+forward-carry).
+
+**Gotchas for the next session:** (1) **The fresh baseline is still 2,434 blocks**
+(failed=0, error=0, skipped=184, warning=48) — this session touched no package
+files (data-raw only); S709's gotchas still apply (read them in
+`docs/archive/SESSION_NOTES-through-2026-09-18.md`). (2) The census CSV remains
+frozen at 8 class-(b) rows — do NOT "fix" it; the 6-row count exists only in a
+future re-run, and that re-run owes the article-figure update (BACKLOG
+forward-carry). (3) `s712_layouts.rds` remains valid (no engine commits since
+S697); recompute if any session commits a layout-engine change. (4) Expect ~1
+self-reference commit past the CHANGELOG frontier at next Phase 0 (the recurring
+shape); measure it. (5) The trace()-capture probe technique (Learning 762) needs
+`capEnv` in globalenv and a translation-invariant comparison (per-component
+packing shifts absolute x).
 
 ### Session 711 Handoff Evaluation (by Session 712)
 **Score: 9/10.** **What helped:** next-step A was this session's exact deliverable,
