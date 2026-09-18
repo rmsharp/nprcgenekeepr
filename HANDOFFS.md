@@ -152,7 +152,7 @@ key_files: docs/planning/issue148-mhc-haplotype-reporting-plan.md:1 (ratified pl
 gotchas: (1) Slice 1 is strict-TDD -- declare phases, gate transitions via AskUserQuestion (S703/S704 were docs-only exceptions). (2) The 2 S704 close-out self-reference commits sit past the CHANGELOG frontier -- next Phase 0 backfills them (recurring shape). (3) failed=0 baseline (2,370 blocks) INHERITED from S698; Slice 1 touches package files -- measure fresh BEFORE claiming regression deltas. (4) Plan decisions are RATIFIED -- do not re-litigate D4's 0.01/2 defaults; pinned measured numbers (33/60/26-via-carrier-leg/freq-leg-0) are Slice 2's test expectations. (5) Vocabulary grep at every slice close-out (plan Dragon 3). (6) CHANGELOG enumerations must span shards.
 runtime_smoke: n/a -- docs-only (design plan; zero R//tests//man changes)
 changelog_ref: 1435ae20
-commit: pending
+commit: 52676abe
 ```
 Self-score 9/10: + measurement-driven D4 (the <=0.01-cannot-fire finding), + verify pass caught both fabrication classes pre-ratification (Learning 757), + clean planning boundary (zero package changes, incidental find routed not fixed), + owner ratified all 4 recommendations unchanged; - the draft was written before the research agent returned, planting the citation errors the verify pass then had to catch, - deepest-reasoning-mode directive is a harness setting the session cannot set itself. Predecessor 9/10: next-step (A) was this session's deliverable with a complete frame and a fully-verified evidence inventory; sole wrong claim (unpushed span "believed docs/prose-only") was honestly labeled an estimate, cost zero.
 
