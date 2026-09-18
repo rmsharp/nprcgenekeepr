@@ -26,6 +26,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [ad hoc] S711 close-out: owner-directed push DONE — 34 commits to origin/master, all 4 CI workflows green
+- **Push (non-commit action):** `955f6f19..afd33514`, 34 commits (32 at session start
+  + Phase 0 backfill `83618479` + claim `afd33514`), spanning S708 MHC Slice 4, the
+  S709 export-preview crash fix, and the S710 ledger archive pass. Claim was committed
+  BEFORE the push so the pushed head carries the session's own breadcrumb.
+- **Outcome:** all 4 on-push workflows green on `afd33514` — lint 5m43s,
+  test-coverage 9m58s, pkgdown 16m52s, R-CMD-check 33m22s (runs
+  35386636842/35386636857/35386636853/35386636874); watched to completion in-session,
+  then re-verified via `gh run list` before recording. Close-out records + the
+  self-reconcile sha commit are pushed immediately after this entry (second push);
+  that round's verification belongs to the next session's unconditional Phase 0 CI
+  check (S706 precedent). Docs-only local changes; runtime smoke n/a — the
+  deliverable's verification IS the CI matrix on real runners.
+
 ### 2026-09-18 · [ad hoc] S711 claim: owner-directed push of local master to origin/master
 - S710 next-step A, owner-picked via `AskUserQuestion` at Phase 0. 33 commits ahead at
   claim (32 at session start + the Phase 0 backfill `83618479`); the claim commit
