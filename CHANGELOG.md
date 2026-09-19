@@ -26,6 +26,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S717 claim: owner-directed push to `origin/master` (S716 next-step A, owner-picked via `AskUserQuestion` at Phase 0)
+- Process/ops session, no TDD phases (S711 precedent): push the ~33 pending
+  commits (S712–S716, incl. real package code — the S715 curved-connector
+  fix and the S716 MHC display rounding, both never yet seen by CI), then
+  watch all 4 on-push workflows to completion. Claim made BEFORE the push
+  so the pushed head carries the session's own breadcrumb. Stub + pending
+  receipt committed with this entry.
+
 ### 2026-09-19 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `b229a305` — S716's close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt), the documented recurring 1-commit shape; backfilled by the next session's Phase 0 reconcile
 
 ### 2026-09-18 · [BL] S716 close-out: MHC Haplotype Reporting polish DONE — display-only 4-decimal frequency rounding, `@return` rewritten, NEWS stale-phrase sweep + heading repair, article screenshot re-captured

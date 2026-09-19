@@ -26,6 +26,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 717 Did
+**Deliverable:** Owner-directed push to `origin/master` (S716 next-step A,
+owner-picked via `AskUserQuestion` at Phase 0) — ~33 commits spanning
+S712–S716 (incl. real package code: S715 curved-connector fix, S716 MHC
+display rounding), then watch all 4 on-push CI workflows to completion.
+(IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Push follows this claim commit so the pushed
+head carries it.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 715 Handoff Evaluation (by Session 716)
 **Score: 9/10.** **What helped:** next-step A was this session's exact
 deliverable, and the BACKLOG block was a complete brief — all three polish

@@ -144,6 +144,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S717
+date: 2026-09-19
+status: pending
+active_task: Owner-directed push to origin/master (S716 next-step A) — ~33 commits spanning S712–S716 incl. real package code (S715 curved-connector fix, S716 MHC display rounding); watch all 4 on-push CI workflows to completion. Claimed, push follows this commit.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S716
 date: 2026-09-18
 status: complete
