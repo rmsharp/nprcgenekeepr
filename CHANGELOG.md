@@ -30,6 +30,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S720 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `7e8ebc5f`; carries its own entry, so no self-reference gap is left for Phase 0
+- Final S720 commit. Post-trim state at write time, all under `--budget-bytes 65536`:
+  `SESSION_NOTES.md` 10,295 B, `HANDOFFS.md` ~15 KB, `CHANGELOG.md` ~55 KB — none firing.
+  Expect 0 undocumented commits past the frontier at next Phase 0; measure it. S720 total:
+  6 commits (claim `572562f1`, adoption `bc6be1d0`, SESSION_NOTES trim `c079c27a`, records
+  `7e8ebc5f`, HANDOFFS trim `d05e8573`, this one); ahead of `origin/master` by 7 including
+  S719's pre-existing `c0002e04` — push is the owner's call.
+
 ### 2026-09-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-19.md` (11 record(s), 66,229 B → 14,869 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

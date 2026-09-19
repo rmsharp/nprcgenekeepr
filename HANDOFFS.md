@@ -164,6 +164,6 @@ key_files: .context-budget.json:1 (calibrated config, derivations inline), CLAUD
 gotchas: Phase 0's python3 context_budget.py exits 2 with CLAUDE.md + resident red BY DESIGN until the reduction campaign lands — only NEW reds are findings; a SESSION_NOTES.md red means exactly one thing, a --budget-bytes 65536 trim is owed. The per-clone hook refuses any commit growing CLAUDE.md — shrink or --no-verify with the rationale recorded; fresh clones re-run install-hook. Every methodology_trim.py run needs --budget-bytes 65536. HANDOFFS.md was 62,667 B before this receipt and is within ~3 KB of the budget — this close-out measures it after appending and trims if it fires (result in the close-out ledger entry). The dashboard's SESSION_NOTES.md HIGH-flag text (trimmer answers NO_CONFIG) overstates — stock-class hardcoding vs the local extension; act on the size, not the text.
 runtime_smoke: The deliverable IS tooling: post-config context_budget.py run shows exactly the intended reds and both sync-drift checks ok; --selftest passes (refuse paths observed there); hook observed live passing the shrink path on c079c27a and bypassed with recorded rationale on bc6be1d0; trimmer verify.sh L1/L2/L3 OK pre-commit. R package untouched; full suite re-run at close-out as insurance.
 changelog_ref: bc6be1d0
-commit: pending
+commit: 7e8ebc5f
 ```
 
