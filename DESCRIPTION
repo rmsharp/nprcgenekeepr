@@ -59,9 +59,7 @@ Imports:
     visNetwork
 Suggests:
     chromote,
-    devtools,
     dplyr,
-    grid,
     shinytest2,
     htmltools,
     htmlwidgets,
@@ -71,12 +69,8 @@ Suggests:
     markdown,
     mockery,
     pkgdown,
-    png,
-    quarto,
     rmarkdown,
-    roxygen2 (>= 8.0.0),
     shinyBS,
-    shinyWidgets,
     spelling,
     testthat,
     withr
@@ -89,4 +83,5 @@ Roxygen: list(markdown = TRUE)
 Config/renv/profiles/dev/dependencies: checkhelper, devtools, httpuv, qpdf, markdown, pak, roxygen2, spelling, usethis
 Config/Needs/website: quarto
 Config/Needs/coverage: covr
+Config/Needs/dev: devtools, roxygen2
 Config/roxygen2/version: 8.0.0

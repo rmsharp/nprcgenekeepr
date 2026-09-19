@@ -30,6 +30,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S721: `Suggests:` audit DONE — 6 entries relocated/removed from `DESCRIPTION`, new `Config/Needs/dev` group, `renv.lock` re-snapshotted; 0 new `devtools::check()` warnings/notes (BACKLOG Housekeeping item removed this commit)
+- **Audit method:** grep-based inventory of all 22 `Suggests:` entries across `R/`, `tests/`,
+  `vignettes/` (real vignettes vs `articles/` distinguished), `man/`, `inst/`, `data-raw/`,
+  with every thin hit READ for code-vs-comment before classification.
+- **Stayed (16, each with a real load site):** chromote/shinytest2/mockery/testthat/withr/
+  htmltools/htmlwidgets/spelling (test code), pkgdown (**real test code** —
+  `pkgdown::as_pkgdown()` in `test_pkgdown_reference_config.R:25`; the item's own
+  "pkgdown-belongs-in-Config/Needs/website" suspicion REFUTED), dplyr (roxygen `@examples` +
+  tests), kinship2 + shinyBS (package `R/` code), knitr (`VignetteBuilder` + engines),
+  rmarkdown (vignette engines/outputs), **markdown (`a3manual.{Rmd,md}` use the
+  `knitr::knitr` engine, which renders through the markdown package — NOT unused)**,
+  kableExtra (`gvaConvergence.Rmd`/`simulatedKValues.Rmd`).
+- **Removed (6, owner-ratified via two `AskUserQuestion` gates, both recommended options
+  picked):** devtools + roxygen2 → new `Config/Needs/dev: devtools, roxygen2` (their only
+  tests/vignettes hits are comments and `eval = FALSE` install instructions that tangle to
+  commented lines, `vignettes/a3manual.R:5-10`; both also remain in
+  `Config/renv/profiles/dev/dependencies`; roxygen2's `(>= 8.0.0)` constraint superseded by
+  `Config/roxygen2/version: 8.0.0`); quarto → dropped (already `Config/Needs/website`;
+  `pkgdown.yaml` already passes `needs: website`, CI-safe); grid + png + shinyWidgets →
+  deleted outright (zero uses anywhere; vestiges of `c1138a6e`/`22f5914d`-era features).
+- **`renv.lock`:** `renv::snapshot(dev = TRUE)` per the standing CLAUDE.md rule and the S637
+  precedent (`526c7fec`) — 21 packages dropped (the 5 removed + transitive closures incl.
+  usethis/pak/rcmdcheck/profvis); `renv::status(dev = TRUE)` now "No issues found". Matches
+  the S615 covr precedent (covr likewise absent from the lock, CI installs it itself).
+- **Verification:** full clean regression read `blocks=2437 failed=0 error=0 skipped=184
+  warning=40` — equals the S718–S720 baseline exactly. Full `devtools::check()` (21m52s):
+  0 errors; all dependency gates OK (unstated deps in examples/tests/vignettes, deps in R
+  code, vignette rebuild incl. the `knitr::knitr`→markdown path); the 1 WARNING
+  (non-portable `inst/extdata/reference/~$e Compounding Loop.html`) and 1 NOTE (top-level
+  `scratchpad/`) both name UNTRACKED working-tree clutter present since before this session
+  (in the session-start `git status`), unreachable by this diff — **0 new warnings/notes**.
+
 ### 2026-09-19 · [ad hoc] S721: filed owner-requested BACKLOG item — measure package growth attributable to the pedigree-drawing feature (rough ±20% estimate sufficient)
 - Owner request arrived mid-session (during the `Suggests:` audit's research phase); recorded
   as a `BACKLOG.md` Housekeeping item (READY, Effort S) for a future session, not acted on

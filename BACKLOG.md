@@ -143,28 +143,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       (`budget:protected` -- the tool refuses its removal), the TDD contract, Build/Test/Verify,
       and each adaptation's operative RULE (only the narrative moves). Not a mechanical trim --
       each block needs a judgement call about what the rule actually is; wants its own session.
-- [ ] **`DESCRIPTION`'s `Suggests:` mixes real test/example/vignette dependencies with
-      dev-tooling-only packages that belong in a `Config/Needs/...` field instead** (found
-      2026-08-20, incidental to S615's own DESCRIPTION edit, owner-directed via chat, READY,
-      Effort S) -- owner-stated rule: `Suggests:` is for packages optional code in `tests/`,
-      `man/examples`, or `vignettes/` actually loads; anything needed only by dev tooling (website
-      building, linting, coverage, release scripts) belongs in its own `Config/Needs/<name>:`
-      field instead (`pak` and similar tools understand these named dev-dependency groups), kept
-      out of `Suggests:` entirely. This session already fixed one instance directly (`covr` moved
-      to the new `Config/Needs/coverage: covr`, matching the file's own pre-existing `Config/Needs/
-      website: quarto` precedent and confirmed via `.github/workflows/test-coverage.yaml:27`
-      already installing `covr` itself via `extra-packages: any::covr`, independent of
-      `DESCRIPTION`). Not fixed this session (out of Phase 2b's own scope, flagged not touched
-      per owner direction): `devtools` and `roxygen2` are also listed in `Config/renv/profiles/
-      dev/dependencies` (line 88) as well as `Suggests` -- redundant, or intentionally dual-listed
-      for a reason not investigated this session; `pkgdown` sits in `Suggests` with no matching
-      `Config/Needs/website` entry even though `quarto` (already `Config/Needs/website`) is ALSO
-      still separately listed in `Suggests` -- looks like the same pkgdown-belongs-in-Config/Needs/
-      website gap, not confirmed. A future session should audit every `Suggests:` entry against
-      "does any file under `tests/`, `vignettes/`, or a roxygen `@examples` block actually load
-      this via `library()`/`::`" and relocate anything that fails that test to the matching
-      `Config/Needs/<name>` group, verifying `devtools::check()` still reports 0 new
-      warnings/notes after.
 - [ ] **Register `rmsharp/nprcgenekeepr` with api.reuse.software so the REUSE badge renders its
       real compliance status** (found S607, 2026-08-18, DECISION NEEDED / owner action, Effort S)
       -- the badge added above currently renders gray **"unregistered,"** not green: hitting
