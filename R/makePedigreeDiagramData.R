@@ -2411,7 +2411,7 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
 }
 
 #' Points along the quadratic Bezier (p0, v, p1) at parameter values t
-#' @param t numeric vector of curve parameters in [0, 1].
+#' @param t numeric vector of curve parameters in \[0, 1\].
 #' @param p0,v,p1 length-2 numerics: endpoints and control point.
 #' @return a length(t) x 2 matrix of (x, y) curve points.
 #' @noRd

@@ -34,6 +34,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S723: roxygen unresolved-link warning fixed — `R/makePedigreeDiagramData.R:2414` `[0, 1]` escaped to `\[0, 1\]`; `document()`/RStudio-Install runs now warning-free
+- **Trigger:** the owner's RStudio-button Install (S722 follow-up A) succeeded end-to-end —
+  verifying S722's fix on the live GUI surface — with this pre-existing `@noRd` cosmetic
+  warning the only remaining output noise; owner picked this fix via `AskUserQuestion`.
+- **Fix:** one comment-line edit — roxygen2's markdown mode parsed `[0, 1]` in
+  `.bezierPointAt()`'s `@param t` prose as a link to a topic named "0, 1"; the escaped
+  `\[0, 1\]` reads identically and resolves nothing. `@noRd`, so no `.Rd` output was ever
+  affected — the warning was pure noise on every `document()`/Install run.
+- **Verified:** (1) pre/post stash test — the warning reproduces on unfixed HEAD via
+  `devtools::document(roclets = c("rd","collate","namespace"))` and is absent with the fix
+  (the first post-fix check was re-run without `suppressMessages()`, which would have hidden
+  the very warning line under test); (2) zero collateral — `man/`/`NAMESPACE` untouched,
+  diff is exactly the one comment line; (3) lint clean on the touched file (package loaded
+  first, Learning 224); (4) full clean regression read `blocks=2437 failed=0 error=0
+  skipped=184 warning=40` — equals the S718–S722 baseline exactly.
+- Mid-session owner report (markerKinship NA warnings in RStudio test runs) triaged to the
+  existing BACKLOG Housekeeping baseline-warnings item — annotation follows as its own
+  commit, not folded into this fix.
+
 ### 2026-09-19 · [ad hoc] S723 claim: fix the roxygen unresolved-link warning at `R/makePedigreeDiagramData.R:2414` (`[0, 1]` parsed as a markdown link to topic "0, 1") *(in progress)*
 - Owner-picked via `AskUserQuestion` after reporting their RStudio-button Install (S722
   follow-up A): the Install now succeeds end-to-end (all 4 vignettes rebuilt including
