@@ -26,6 +26,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [BL] S718 deliverable: pointer-block sweep RATIFIED and executed — all 15 `[ ]`-marked-but-fully-RESOLVED blocks removed from `BACKLOG.md` (429 lines, 1,119 → 690)
+- Owner ratified "remove all 15" via `AskUserQuestion` (over a keep-S457/S458
+  variant and a hold), extending the S686 completed-item convention to the
+  S529–S531-era population the S687 item flagged. Verification before the
+  gate: every resolving session has dated ledger entries in the CHANGELOG
+  corpus (live + `docs/archive/CHANGELOG-*` shards; 3–7 headings each;
+  **0 FM #27 gaps** — unlike S529's sweep, which found 2); depth spot-checked
+  on the densest block (S565 Track B — the shard entry carries all of the
+  block's verification detail); no open sub-threads (the S568 block's
+  untitled-folder finding already stands as its own item, which stays); zero
+  live cross-references from `CLAUDE.md`/`SESSION_NOTES.md`/`HANDOFFS.md`
+  into the population.
+- Removed (block → resolving sessions): S508-found HANDOFFS front-matter
+  field → S561; `genOf` integer-widening fix → S556; repository branch
+  cleanup → S557/S558; kinship2-supplement reproducibility audit + PDF
+  classification → S549/S567; twinRelations-into-`kinship()` (3 slices) →
+  S551–S553; consanguineous-mating marker + rectilinear propagation →
+  S555/S563; kinship2-supplement full-reproduction plan + fidelity article +
+  issues #156–#158 → S562/S566; Track A X-chromosome kinship → S564; Track B
+  `shrinkPedigree()` → S565; affected-status shading fix → S554; stale
+  `pb_diagram_legend.png` regeneration → S560; `pedigree-diagram.qmd`
+  article → S560; Compounding-Loop tarball exclusion → S568; Option-2
+  feasibility pointer → S457; Option-2 design pointer → S458.
+- Deletion executed by a guarded line-range script (first/last-line anchors
+  verified on every range before writing; diff confirmed deletion-only,
+  429 deletions / 0 insertions). Full block text remains recoverable at the
+  pre-sweep tree, commit `f058a8de` (`git show f058a8de:BACKLOG.md`). The
+  completed sweep item itself (S687) is removed in this same commit per the
+  convention. The 18 genuinely-open `[ ]` items are untouched; the
+  borderline S518 BACKLOG-compression item was excluded as a
+  recurring-maintenance item per its own S606 correction.
+
 ### 2026-09-19 · [BL] S718 claim: pointer-block sweep ratification + (if ratified) execution (BACKLOG Housekeeping item, owner-picked via `AskUserQuestion` at Phase 0)
 - Docs-only maintenance session, no TDD phases (S686/S687 precedent). Plan:
   inventory the S529–S531-era `[ ]`-marked-but-fully-RESOLVED pointer blocks
