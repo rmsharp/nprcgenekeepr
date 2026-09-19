@@ -30,6 +30,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S720 claim: `context_budget.py` adoption evaluation + trim-budget decision (`BACKLOG.md:119`) *(in progress)*
+- Owner-picked via `AskUserQuestion` at Phase 0 (over the `Suggests:` audit, the
+  package-split disposition, and the chromote research item). Phase 0 reconcile found 0
+  undocumented commits past both frontiers (S719's gotcha predicted 0; measured 0); CI
+  10/10 green on `4565c39d`; dashboard 96/100. Stub + pending `HANDOFFS.md` receipt ride
+  this commit. Docs/process tooling — no TDD phases; close-out adds its own entries.
+
 ### 2026-09-19 · [ad hoc] S719 push to `origin/master` DONE (owner: "push") — 16 commits (`4cfe2dad..4565c39d`), all 4 on-push CI workflows green on the pushed head
 - Pushed after `git fetch` confirmed 16 ahead / 0 behind (only `gh-pages`, CI's own branch,
   had moved). The 16 are S718's 5 commits plus S719's 11. CI on `4565c39d`, watched to

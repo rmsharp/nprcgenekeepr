@@ -148,6 +148,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S720
+date: 2026-09-19
+status: pending
+active_task: context_budget.py adoption evaluation (calibrate-and-adopt or delete) + settle the methodology_trim.py byte budget (196,608 B default vs 65,536 B) — BACKLOG.md:119, owner-picked at Phase 0. Docs/process tooling, no TDD phases.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S719
 date: 2026-09-19
 status: complete

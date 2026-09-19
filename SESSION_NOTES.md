@@ -26,6 +26,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 720 Did
+**Deliverable:** `context_budget.py` adoption evaluation + settle the ledger-trigger
+byte budget (`BACKLOG.md:119`, READY, Effort S; owner-picked via `AskUserQuestion`
+at Phase 0). Docs/process tooling, no TDD phases. (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 718 Handoff Evaluation (by Session 719)
 **Score: 8/10.** **What helped:** gotcha "expect ~1 self-reference commit past the
 `CHANGELOG.md` frontier; measure it" held exactly (`312996b0`, 1 commit); the
