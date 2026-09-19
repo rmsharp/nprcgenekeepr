@@ -644,36 +644,66 @@ Learnings 549/550 diagnosed. See `PROJECT_LEARNINGS.md` for the full
 verification record.
 
 **`methodology_trim.py` local-customization checklist (found S518,
-2026-08-11; corrected S617, 2026-08-20):** `methodology_trim.py` is
-**not actually part of real upstream `KJ5HST/methodology`** — confirmed
-absent from every tagged release, v1.0.0 through v3.7, by direct
-inspection of each tag’s tree (S617’s v3.7 sync session). The tool (and
-`FRAMEWORK_LEARNINGS.md`, similarly absent from every tag) reached this
-project via the 2026-08-10 sync (`18d8e3c7`), which — because
-`bin/sync --source=local` uses whatever the sibling checkout has
-currently checked out — ran against `rmsharp/methodology`’s `main`
-branch at `v3.6-255-gc43e7ee` (255 commits past the v3.6 *tag*,
-i.e. unreleased fork-ahead work), not an official release. So the
-original framing here (“a canonical-overlay file per `BOOTSTRAP.md`’s
-sync table”) was wrong: a sync against an actual version *tag* (as S617
-ran, for v3.7) never touches this file at all — it isn’t in
-`bin/_manifest.py`’s `DISTRIBUTION` list for any tagged release, so it
-is simply skipped, neither updated nor deleted. It is, in practice, a
-**local, project-owned tool** now, same footing as
-`PROJECT_LEARNINGS.md`. The real residual risk this checklist originally
-named still applies, narrowed to its actual trigger: **if a future
-session ever re-syncs specifically against the `rmsharp/methodology`
-fork’s unreleased `main` branch** (not a tagged release) and that
-branch’s own `methodology_trim.py` has diverged, re-diff before
-overwriting and re-add this project’s local `SESSION_NOTES.md`
-`LedgerSpec` entry (and its `_session_notes_date` helper) if the sync
-dropped it — check `git log -p --follow -- methodology_trim.py` for the
-S518 commit
-(`feat(methodology): add local SESSION_NOTES.md ledger config`) if it’s
-unclear what was lost. A `NO_CONFIG` result on
-`python3 methodology_trim.py --file SESSION_NOTES.md --check` after such
-a sync is the signal this happened. A tagged-release sync (the normal
-case from here on) needs no such caution — it never reaches this file.
+2026-08-11; corrected S617, 2026-08-20; corrected again S719,
+2026-09-19):** `methodology_trim.py` was **not** part of real upstream
+`KJ5HST/methodology` in any tagged release through v3.7 (S617 confirmed
+this by inspecting each tag’s tree), and reached this project via the
+2026-08-10 sync (`18d8e3c7`) from the `rmsharp/methodology` fork’s
+unreleased `main` (`v3.6-255-gc43e7ee`). **That is no longer true of the
+fork’s `main`, which now distributes it** (`bin/_manifest.py`, the
+`starter-kit/methodology_trim.py` entry): the S719 sync (BL-57 P10, from
+`v3.7-964-gce14b3f`) rewrote it, taking it from 1.1.2 to 1.5.0. A sync
+against an official *tag* still never touches it. The file carries **one
+local modification** — this project’s `SESSION_NOTES.md` `LedgerSpec`
+entry and its `_session_notes_date` helper (49 lines, from S518
+`c75bb9da` and S528 `9bfc8bb4`); the canonical tool has no config for
+that ledger, and a **`NO_CONFIG` result** from
+`python3 methodology_trim.py --file SESSION_NOTES.md --check` is the
+signal a sync dropped it. **Every future sync from the fork’s `main`
+therefore has this shape:** `bin/sync` refuses the locally modified file
+(exit 2), so (1) save the extension first —
+`git diff <previous-sync-commit> HEAD -- methodology_trim.py > extension.patch`
+(after S719 the sync commit is `b773ddb6` and the extension’s own
+re-apply commit is `63b3286f`, so
+`git show 63b3286f -- methodology_trim.py` is the patch); (2)
+`bin/sync --force` and commit exactly the files the dry run listed; (3)
+`git apply --check` then `git apply` the patch, in its own commit; (4)
+confirm `--check` no longer says `NO_CONFIG` and that
+`--file SESSION_NOTES.md --cut 1 --force` (a dry run) prints `L1_OK`,
+`L2_OK` and `L3_OK`. This stays until the framework settles how a
+project supplies a ledger config of its own (BL-32 in the fork).
+**Trigger budget (S719):** the 1.5.0 default byte budget is 196,608 B
+(1.1.2’s was 65,536 B), and this project takes the tool’s default — the
+synced `HANDOFFS.md` “Size” section states no size of its own and defers
+to the tool’s trigger. At S719 `SESSION_NOTES.md` (71,192 B) was over
+the old budget and under the new one, and `HANDOFFS.md` and
+`CHANGELOG.md` were under both. To restore the old cadence, pass
+`--budget-bytes 65536` on every `methodology_trim.py` run (the tool
+keeps no per-project setting). Whether to keep the old cadence is an
+open owner decision.
+
+**`CHANGELOG.md` legacy forms under the current ledger rules (S719,
+2026-09-19):** the ledger was brought to `ledger-format: 2` (the
+pointer-and-marker paragraph above `## 2026-08`); the rules themselves
+now live in the synced `docs/methodology/FRAMEWORK_APPARATUS.md` §The
+Action Ledger, not in this file. Two pre-existing shapes are left as
+written, per that section’s own “entries written before a project
+adopted this vocabulary stay as written; nothing already written is
+retrofitted”: (a) **13 headings use a bare `[BL]` source tag**, which
+the anchored audit
+(`grep -E '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[(issue #[0-9]+|BL-[^]]+|ad hoc)\]'`)
+does not count — that gap is expected, not a defect. New entries use the
+closed vocabulary: `[issue #<N>]`, `[BL-<id>]` (this project’s own
+backlog ids only; the methodology fork’s `BL-57` is not one — such work
+is `[ad hoc]`), or `[ad hoc]`. (b) **`## 2026-08` (empty) sits above
+`## 2026-09`**, the reverse of the rules’ newest-month-on-top order, so
+“prepend under the topmost `## YYYY-MM`” read literally would file
+September entries under August. Prepend under the pointer blocks beneath
+`## 2026-09` (the month the entry belongs to); when a new month starts,
+open its heading above `## 2026-08`, as the rules say. The rules also
+want a claim commit’s entry marked *(in progress)* and close-out to add
+its own entry rather than edit the claim’s — an entry once committed is
+never edited.
 
 **`SESSION_NOTES.md` archive fence-scanner defect (found S518,
 2026-08-11; RESOLVED S527/S528, 2026-08-12) — historical, not current

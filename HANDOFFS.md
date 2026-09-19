@@ -69,15 +69,16 @@ it would name); the next session reconciles them to real shas.
 
 ## Size, and when to archive
 
-This file gains a receipt every session and Phase 0 reads it every
-session, so it carries the same size discipline as `CHANGELOG.md`: **two
-caps, two distinct failure modes, fire if either fires, stop only when
-both stop conditions hold.**
+handoffs-format: 2 — keep this marker, and bring it across with this
+section; `bin/status` reads it.
 
-| Cap | Protects against | Form | Fire when | Cut until |
-|----|----|----|----|----|
-| **Lines** — ~2,000, the agent `Read` truncation cap | **silent truncation**: a read past the cap returns no error and no marker | a **rate** | headroom \< **15** receipts | headroom \> **30** |
-| **Bytes** — a per-file budget, default **65,536 B** (64 KB) | **context tax**: every session pays for the whole file, every time | a **level with hysteresis** | `size > budget` | `size ≤ ½ × budget` |
+This file gains a receipt every session and nothing removes one, so it
+grows without bound. The protocol never asks a session to read it whole:
+Phase 0 reconciles it against `git log` and checks the newest receipt,
+and a session reads that receipt at the top — past the harness’s
+default-read refusal, with an offset and a limit. Archive it when the
+trimmer’s trigger fires. The tool states the trigger, and this file
+names no size of its own.
 
 **Run this rather than estimating it:**
 
@@ -85,8 +86,8 @@ both stop conditions hold.**
 python3 methodology_trim.py --file HANDOFFS.md --check
 ```
 
-`--check` evaluates both conditions and never writes. `--write` performs
-the trim, refuses unless it can prove the split lossless, and **neither
+`--check` evaluates the trigger and never writes. `--write` performs the
+trim, refuses unless it can prove the split lossless, and **neither
 commits nor stages** — it leaves this file modified and the new shard
 *untracked*, and leaves the commit to you
 (`git add HANDOFFS.md docs/archive/`).
@@ -105,13 +106,21 @@ newest-on-top order.
   must not restate a forward-looking rule: a shard is frozen, so a rule
   copied into one cannot be corrected when the live rule moves.
 - **After a split, anything that enumerates receipts must span both** —
-  `HANDOFFS.md docs/archive/HANDOFFS-*.md` — or it silently counts a
-  shrunken population.
+  `HANDOFFS.md $(git ls-files 'docs/archive/HANDOFFS-*.md')` — or it
+  silently counts a shrunken population. Enumerate the shards with
+  `git ls-files`, never as a bare glob: zsh aborts a command whose glob
+  matches nothing, so before the first split the bare form counts
+  nothing at all — the same reason the ledger’s audit is written that
+  way.
 
-If a `CHANGELOG.md` sits beside this file, its own **Size, and when to
-archive** section carries the reasoning both files share: why the line
-cap must be a rate, why the byte cap cannot be one, and how to choose
-the budget. Everything needed to *act* is here.
+The reasoning this file shares with `CHANGELOG.md` — how a ledger is
+read, why the tool is the only statement of its trigger, and what a
+split must conserve — is in the *Reading and archiving* subsection of
+[§The Action
+Ledger](https://github.com/rmsharp/nprcgenekeepr/docs/methodology/FRAMEWORK_APPARATUS.html#the-action-ledger).
+That subsection makes archiving optional for `CHANGELOG.md`; this file
+keeps its own rule, above — archive it when the trimmer’s trigger fires.
+Everything needed to *act* is here.
 
 What is specific to *this* file, and gets receipts wrong if assumed:
 
@@ -184,6 +193,69 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh),
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
+
+``` handoff
+session: S719
+date: 2026-09-19
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: BL-57 P10 for this project (methodology fork plan `changelog-rules-contradictions-plan.md`, P10 row) — DONE. Framework files synced to v3.7-964-gce14b3f, the local SESSION_NOTES.md trimmer extension re-applied, CHANGELOG.md and HANDOFFS.md at the current ledger rules (bin/status reads present for both), CLAUDE.md corrected. Docs/process only, no TDD phases, no push. Open: owner decisions on push, the trim-budget cadence, and context_budget.py adoption.
+what_was_done: Phase 0 backfill 74243f04 (1 commit, 312996b0). Claim d064993a. 00b8a4ca build/ignore (6 .Rbuildignore patterns, 2 .gitignore entries). b773ddb6 forced sync (13 written, 2 created; trimmer 1.1.2 to 1.5.0). 63b3286f trimmer extension re-applied (49 lines; --check no longer NO_CONFIG; dry run L1_OK-L3_OK). ba1f0135 CHANGELOG.md seed paragraph (13 ins, 0 del, all 540 old lines survive in order). 47364f51 HANDOFFS.md Size section replaced (17 ins, 13 del; section 9.8 with bounds 62 117 printed only the block changed; lines 1-61 and the 208-line tail identical). 2f451d1d CLAUDE.md corrected. f88afcb2 BACKLOG.md context_budget item re-scoped. Verification: trimmer dry runs L1_OK-L3_OK on all three ledgers (43/11/20 records); R CMD build tarball ships none of the tooling or ledger files; full suite blocks=2437 failed=0 error=0 skipped=184 warning=40 (4.3 min, equals baseline). Records commit follows this receipt, then a self-reconcile sha commit.
+next_steps: (A) Owner push decision, about 16 commits ahead after close-out (recount with git rev-list --count origin/master..HEAD; the last two are an estimate). (B) BACKLOG.md:119 — calibrate/adopt or delete context_budget.py and settle the trim budget (196,608 B default vs the old 65,536 B). (C) Suggests: audit (READY, S, BACKLOG.md:140). (D) Owner decisions pending: package-split disposition (BACKLOG.md:71), REUSE registration (BACKLOG.md:162).
+key_files: CLAUDE.md:277 (per-sync procedure for the locally modified trimmer), CLAUDE.md:279 (ledger legacy forms), methodology_trim.py:377 (the local SESSION_NOTES.md LedgerSpec), CHANGELOG.md:17 (rules pointer and ledger-format 2 marker), HANDOFFS.md:64 (handoffs-format 2 marker), BACKLOG.md:119 (re-scoped item), SESSION_NOTES.md:29 (full S719 handoff)
+gotchas: Next plain bin/sync refuses methodology_trim.py (exit 2) — procedure at CLAUDE.md:277, patch is git show 63b3286f -- methodology_trim.py. The push is the first CI validation of P10; R-CMD-check runs error-on warning and I ran only the tarball listing plus the test suite, not a full R CMD check — estimate green (no package file changed), if red report don't fix inline. The final sha commit carries its own CHANGELOG entry, so expect 0 undocumented commits past the CHANGELOG frontier at next Phase 0; measure it. context_budget.py is installed but uncalibrated (seed ceilings are the fork's), quality_ratchet.py reports 0/0 gates — do not read either as a P10 defect. Under the new rules a claim entry is marked in progress and entries are never edited. S718's claim that all three ledgers were verified not firing is wrong on its committed head: SESSION_NOTES.md fired under 1.1.2 (70,138 B vs 65,536 B). Baseline is still 2,437 blocks.
+runtime_smoke: n/a — docs/process only (zero R/, tests/, man/, vignettes/ changes); evidence is the untouched full suite at baseline, the tarball listing, and the trimmer dry runs. quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured (no gates declared)
+changelog_ref: S719 entries at the top of CHANGELOG.md (claim, steps 2-7, BACKLOG follow-through, close-out, 2026-09-19)
+commit: a095f4be
+```
+
+S719 self-score 9/10: + measured before acting and saved the patch the
+sync would have destroyed; + every rewrite guarded by anchored asserts
+and ordered-survival / byte-identity / section 9.8 checks, the one guard
+that fired did so before a write; + each claim written into CLAUDE.md
+and BACKLOG.md was run first; + tight scope (no push, no trim, no
+context_budget adoption). - The claim entry lacks the in-progress marker
+the newly synced rules ask for (the rules arrived after the claim; a
+committed entry is never edited); - HANDOFFS.md still differs from the
+current seed (longer front matter, two later sections the P10 steps do
+not ask for); - took the tool’s byte-budget default without an owner ask
+(sanctioned by the prompt, flagged open). Predecessor (S718) scored
+8/10: its gotchas held (1-commit backfill, ahead-count, untracked list,
+2,437-block baseline) but its ledger claim that all three trim-managed
+ledgers were verified trigger-not-firing at close-out is wrong on the
+committed head — SESSION_NOTES.md fired under the 1.1.2 trimmer (70,138
+B vs 65,536 B), verified in an isolated worktree.
+
+``` handoff
+session: S718
+date: 2026-09-19
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Pointer-block sweep — DONE, owner-ratified. All 15 `[ ]`-marked-but-fully-RESOLVED pointer blocks removed from BACKLOG.md (429 lines) plus the completed sweep item itself (15 lines): 1,119 → 675 lines. Docs-only maintenance, no TDD phases. No open work from this session.
+what_was_done: Phase 0 backfill 94b39dc7 (1 commit, 4cfe2dad — the predicted recurring self-reconcile shape, measured 1). Claim f058a8de. Census: full BACKLOG.md read → 15-block population (the item's "e.g." list named 13; the S545/S549 audit and S568 Compounding-Loop blocks completed it). Pre-gate verification: every resolving session (S457–S568) has dated ledger entries across CHANGELOG.md + shards (0 FM #27 gaps, vs. the 2 S529 found); depth spot-check on S565 Track B; no open sub-threads; zero live cross-references. Owner ratified "remove all 15" via AskUserQuestion (over keep-S457/S458 and hold). Execution b7cc2508: guarded line-range script (scratchpad/s718_sweep.py, anchors verified per range; the guard fired once, correctly, on a wrap-boundary anchor); diff deletion-only 429/0; sweep item removed same commit; CHANGELOG deliverable entry maps every block to its resolving session(s) and cites git show f058a8de:BACKLOG.md for full-text provenance. CI: the 3 runs in-flight at orientation completed green in-session (+ scheduled shinytest2) — S717's open loop closed. Records commit follows this receipt.
+next_steps: (A) Suggests: audit (READY, S, BACKLOG.md:133 — now the top READY Housekeeping item). (B) context_budget.py evaluation (READY, S, BACKLOG.md:119). (C) Push decision (owner): ~5 commits ahead after close-out (recount with git rev-list --count origin/master..HEAD); docs-only delta. (D) Owner decisions pending: package-split disposition (BACKLOG.md:71), REUSE registration (BACKLOG.md:155).
+key_files: BACKLOG.md:1 (post-sweep 675-line file), CHANGELOG.md:29 (S718 entries incl. the per-block removal map), scratchpad/s718_sweep.py:1 (guarded deletion script), SESSION_NOTES.md:29 (full S718 handoff)
+gotchas: Fresh baseline still 2,437 blocks (failed=0 error=0 skipped=184 warning=40) — no package files touched; S716's gotchas 2–5 (e2e opt-in via NPRC_RUN_E2E, serialization-coupled formatter greps, NEWS \## render check, screenshot recipe) apply verbatim. BACKLOG.md's new sparseness is not a ghost session — removed-block full text is at git show f058a8de:BACKLOG.md. Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0; measure it. The chromote item's "CDP-timeout fallback fix below" phrase was stale before this sweep — fix opportunistically if that item is picked up. This session did not push.
+runtime_smoke: n/a — docs-only (BACKLOG.md/CHANGELOG.md/SESSION_NOTES.md/HANDOFFS.md + an untracked scratchpad script; zero R/, tests/, man/, vignettes/ changes)
+changelog_ref: S718 entries at the top of CHANGELOG.md (claim + deliverable + close-out, 2026-09-19)
+commit: f2922cfc
+```
+
+S718 self-score 9/10: + census-first — the ratification gate presented a
+measured 15-block population with per-block ledger verification, not the
+item’s own unverified enumeration; + the anchor-guarded deletion script
+refused once for the right reason and never wrote a bad state; + tight
+scope — zero package files, the borderline S518 recurring-maintenance
+item deliberately excluded. - Depth spot-check covered 1 of 15 blocks
+(existence verified for all 15; full content diffs judged
+disproportionate, disclosed at the gate); - one wasted script iteration
+on a wrap-boundary anchor. Predecessor (S717) scored 9/10: next-step A
+named this exact deliverable with the BACKLOG pointer; the
+backfill-shape and CI-round predictions both measured exactly; nothing
+wrong found; only the item’s non-exhaustive “e.g.” enumeration was left
+to the census to discover.
 
 ``` handoff
 session: S717

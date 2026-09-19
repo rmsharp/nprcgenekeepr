@@ -88,7 +88,7 @@
 <td>Every disaster becomes a <code>git checkout</code> instead of a multi-hour recovery</td>
 </tr><tr><td>
 <strong>Never touch more than 5 files without committing first</strong> — the cap is <em>per-commit</em>, not per-session</td>
-<td>Forces incremental, recoverable progress. A pre-declared vertical slice (<code>SESSION_RUNNER.md</code> §Vertical Slice Sessions) may touch more than 5 files across a session, but never more than 5 between checkpoint commits.</td>
+<td>Forces incremental, recoverable progress. A pre-declared vertical slice (<code>SESSION_RUNNER.md</code> §Vertical Slice Sessions) may touch more than 5 files across a session, but never more than 5 between checkpoint commits. A committed-mode <code>bin/sync</code> run is one commit, whatever its file count (<a href="BOOTSTRAP.html"><code>BOOTSTRAP.md</code></a>).</td>
 </tr><tr><td><strong>Never refactor across module boundaries without plan mode</strong></td>
 <td>Cross-module refactoring is Architect Mode work, period</td>
 </tr><tr><td><strong>Never delete a file without verifying it’s committed</strong></td>
@@ -98,6 +98,9 @@
 <td>Renames cascade. They are never quick.</td>
 </tr><tr><td><strong>“Refactoring” always requires plan mode approval</strong></td>
 <td>Refactoring is not a “just do it” activity. Ever.</td>
+</tr><tr><td>
+<strong>Never loosen a declared quality threshold to make a change pass</strong> — loosening requires plan mode approval; tightening never does</td>
+<td>A threshold that can be lowered under pressure is a suggestion. The ratchet is what makes “wouldn’t make it through today” true a year later. Declared in <code>.quality-gates.json</code>, held by <code>quality_ratchet.py --precommit</code>; <code>--no-verify</code> is a recorded bypass, not an exemption. Removing the manifest is the loosest loosening and is refused the same way. Merge and rebase commits skip the hook (as they skip the ledger hook): a loosening resolved into a merge is caught by the dashboard’s read of the manifest’s history, not by the hook.</td>
 </tr></tbody></table></div>
 <div class="section level3">
 <h3 id="scope-creep-red-flags">Scope Creep Red Flags<a class="anchor" aria-label="anchor" href="#scope-creep-red-flags"></a></h3>
@@ -250,7 +253,11 @@
 <li>
 <strong>Soft-remind, not hard-block</strong> by default — surface the incomplete receipt and let the agent finish it, rather than refusing to stop (which risks a livelock).</li>
 <li>The methodology ships no such hook — it is external harness configuration, in the same class as agent-level memory. See <a href="BOOTSTRAP.html"><code>BOOTSTRAP.md</code></a> Step 10.</li>
-</ul><hr></div>
+</ul></div>
+<div class="section level3">
+<h3 id="disclosure-hook-failure-mode-16--the-agent-never-takes-credit">Disclosure Hook (failure mode #16 — the agent never takes credit)<a class="anchor" aria-label="anchor" href="#disclosure-hook-failure-mode-16--the-agent-never-takes-credit"></a></h3>
+<p>The human is the author of every commit and owns it. When an AI agent drove the commit, the message must say so — a <code>Co-Authored-By: &lt;agent name&gt; &lt;agent email&gt;</code> trailer — so no reader of the history is misled about how the work was produced. That is <strong>disclosure, never credit.</strong> It is also an instruction a session must remember on every commit, so the canonical repo makes it a gate: <a href="https://github.com/KJ5HST/methodology/blob/main/.githooks/commit-msg" class="external-link"><code>.githooks/commit-msg</code></a> refuses an undisclosed commit <strong>only when an agent harness is detectable in the environment</strong> (<code>AI_AGENT</code>, <code>CLAUDECODE</code>, <code>CLAUDE_CODE_SESSION_ID</code>; <code>METHODOLOGY_REQUIRE_COAUTHOR=1</code> forces it, <code>=0</code> disables) — a human committing by hand is never asked to disclose an agent that was not there. Canonical-only, like the ledger hook: copy it if you want it; <code>--selftest</code> checks it; <code>--no-verify</code> bypasses once.</p>
+<hr></div>
 </div>
 <div class="section level2">
 <h2 id="what-the-user-should-do">What the User Should Do<a class="anchor" aria-label="anchor" href="#what-the-user-should-do"></a></h2>

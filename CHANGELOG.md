@@ -15,6 +15,12 @@ missed. Taking an action and not recording it is failure mode \#27.
 > “Changelog”) live in `NEWS.md` / `NEWS.Rmd`. This file tracks the
 > development *process* and methodology history, not package releases.
 
+**The rules** — how to add an entry, source tags, reading and archiving
+— are in [§The Action
+Ledger](https://github.com/rmsharp/nprcgenekeepr/docs/methodology/FRAMEWORK_APPARATUS.html#the-action-ledger),
+which `bin/sync` keeps current. ledger-format: 2 — keep this marker;
+`bin/status` reads it.
+
 ## 2026-08
 
 ## 2026-09
@@ -32,6 +38,238 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh),
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
+
+### 2026-09-19 · \[ad hoc\] S719 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `a095f4be`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Under the current rules every commit carries its own entry, so this
+  self-reconcile commit is recorded here instead of being left for the
+  next Phase 0 to backfill (S717/S718’s recurring 1-commit shape).
+  **Count note (correction of the close-out entry above, which is not
+  edited):** that entry’s “37 → 45 / 24 → 32” was measured before this
+  entry existed; the final counts are `###` 46 and the anchored audit 33
+  (+9 from the claim commit, all `[ad hoc]`). The handoff’s gotcha
+  predicting a 1-commit gap at next Phase 0 is updated to expect 0.
+
+### 2026-09-19 · \[ad hoc\] S719 close-out: BL-57 P10 DONE for this project — session records (SESSION_NOTES handoff + S718 evaluation 8/10, HANDOFFS receipt complete) and the verification results
+
+- **Verification:** `bin/status` reads `present` for `CHANGELOG.md` and
+  `HANDOFFS.md` (only `methodology_trim.py` stays `locally modified`, by
+  design). §9.8 with bounds `62 117 HANDOFFS.md` printed *only the block
+  changed*; the `CHANGELOG.md` step is insertion-only (13 ins / 0 del,
+  all 540 old lines in order). `methodology_trim.py --cut 1 --force`
+  (dry run) prints `L1_OK`–`L3_OK` on all three ledgers (43 / 11 / 20
+  records). `R CMD build` ships none of the tooling or ledger files; the
+  full suite equals the S718 baseline (2,437 blocks, 0 failed, 0 error,
+  184 skipped, 40 warning, 4.3 min). `quality_ratchet.py --run`: 0/0
+  gates declared. Entry counts: `###` 37 → 45 and the anchored audit 24
+  → 32 from the claim commit, i.e. +8 = the entries this phase adds
+  (steps 2–7, the BACKLOG follow-through, this one), all `[ad hoc]`,
+  none using bare `[BL]`.
+- **Correction to S718’s entry (a committed entry is never edited, so it
+  is named here):** S718’s close-out entry and handoff say all three
+  trim-managed ledgers were “verified trigger-not-firing at close-out”.
+  On the committed close-out head (`312996b0`) trimmer 1.1.2 reports
+  `SESSION_NOTES.md` FIRES (70,138 B against 65,536 B; re-run in an
+  isolated worktree this session); `HANDOFFS.md` and `CHANGELOG.md` did
+  not fire. Likely the check ran before the handoff text was appended —
+  an estimate, not recorded. No consequence here: the sync replaced the
+  trimmer and its budget.
+- **Deviations from the launch prompt’s facts:** the source version
+  printed `v3.7-964-gce14b3f` (one docs-only fork commit past the
+  prompt’s `c20d6ab`, touching no distributed file); `bin/_manifest.py`
+  lists `methodology_trim.py` at `:50`, not `:45`; the claim entry lacks
+  the *(in progress)* marker the newly synced rules ask for (they
+  arrived after the claim). FM \#28 reduction: none this session —
+  stated, not silent; a `SESSION_NOTES.md` trim is left as an owner
+  decision (`BACKLOG.md:119`). No new learning appended (routine
+  application of a decided route; the durable knowledge is in
+  `CLAUDE.md:277`, not a row). No push (owner’s call).
+
+### 2026-09-19 · \[ad hoc\] S719 BL-57 P10 follow-through: `BACKLOG.md`’s `context_budget.py` evaluation item re-scoped — its “never adopted, `bin/status` reports missing/absent” premise was made false by the sync
+
+- The item (found S617) said the tool and its seed config were absent
+  from this project. The S719 forced sync installed both (plus
+  `quality_ratchet.py` and an empty `.quality-gates.json`), so the item
+  now records the real state — installed, build-ignored, uncalibrated,
+  never run; seed ceilings are the fork’s own and `CLAUDE.md` is far
+  over the seed’s — and the remaining decision (calibrate and adopt, or
+  delete; whether to track `.context-budget-history.jsonl`). It also
+  carries the `methodology_trim.py` byte-budget decision (1.5.0 default
+  196,608 B vs 1.1.2’s 65,536 B; S719 took the default) so the owner
+  sees it in one place. Text edit in place; no item added or removed
+  (the S686 removal convention is for *completed* items).
+
+### 2026-09-19 · \[ad hoc\] S719 BL-57 P10 step 7: `CLAUDE.md` updated — `methodology_trim.py` checklist corrected, ledger legacy forms and the trigger-budget choice recorded
+
+- The `methodology_trim.py` local-customization paragraph said the tool
+  was project-owned and that a sync “never reaches” it; the fork’s
+  `main` now distributes it (`bin/_manifest.py` lists
+  `starter-kit/methodology_trim.py`) and the S719 sync rewrote it (1.1.2
+  → 1.5.0). It now states the actual per-sync procedure: save the
+  extension patch, `--force`, re-apply, confirm `L1_OK`–`L3_OK` (the
+  re-apply commit `63b3286f` is itself the patch). A new paragraph
+  records the two legacy ledger shapes left as written — 13 bare `[BL]`
+  headings the anchored audit does not count, and the empty `## 2026-08`
+  above `## 2026-09` — plus the rule for new entries. Budget: the tool
+  default (196,608 B) is taken instead of the old 65,536 B; measured at
+  this commit `SESSION_NOTES.md` is 71,192 B (fires only under the old
+  budget), `HANDOFFS.md` 57,509 B and `CHANGELOG.md` 43,018 B (under
+  both). Left as an open owner decision in the handoff. Each claim in
+  the new text was checked against a run first (plain dry-run sync exits
+  2 on `methodology_trim.py`; bare-`[BL]` count is 13).
+
+### 2026-09-19 · \[ad hoc\] S719 BL-57 P10 step 6: `HANDOFFS.md` brought to handoffs-format 2 — its `## Size, and when to archive` section replaced with the current seed’s
+
+- Old `:62`–`:117` (56 lines) replaced by the seed’s `:89`–`:148` (56
+  lines; its `:91` is the `handoffs-format: 2` marker, now at `:64`); 17
+  insertions, 13 deletions. Everything else is unchanged: front matter,
+  the four-backtick worked example, the shard pointer blocks, the
+  regenerated “currently holds 2 receipt(s)” sentence and every receipt.
+  The new section states no size of its own and defers to the trimmer’s
+  trigger, which is the reason the budget is left at the tool’s default.
+  The seed also carries two later sections
+  (`Three files, three questions, one shared key`;
+  `Citing the gate run`) and a longer front matter; the P10 steps do not
+  ask for them, so they are not brought across.
+
+### 2026-09-19 · \[ad hoc\] S719 BL-57 P10 step 5: `CHANGELOG.md` brought to ledger-format 2 — the current seed’s pointer-and-marker paragraph inserted
+
+- Three lines (the seed’s “**The rules** … ledger-format: 2 — keep this
+  marker; `bin/status` reads it.”, copied from
+  `starter-kit/CHANGELOG.md:10-12`) plus one blank, placed after the
+  intro and its Note and before `## 2026-08`. A pure insertion; no
+  existing line changed. The rules block that once lived in this file
+  was already in the frozen shard
+  `docs/archive/CHANGELOG-through-2026-09-17.md`
+  (`## How to add an entry`) after S700/S710’s trims, so it stays there.
+  The rules now live in the synced
+  `docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger`.
+
+### 2026-09-19 · \[ad hoc\] S719 BL-57 P10 step 4: re-apply the local `SESSION_NOTES.md` extension to the synced `methodology_trim.py` (v1.5.0), 49 lines
+
+- `git apply` of the patch saved before the sync
+  (`git diff 18d8e3c7 HEAD -- methodology_trim.py`; `--check` passed
+  first): `_session_notes_date` plus the
+  `"SESSION_NOTES.md": LedgerSpec(...)` entry, 49 lines added, 0
+  removed. Before: `--check` on `SESSION_NOTES.md` answered `NO_CONFIG`.
+  After: it reads the ledger, and
+  `--file SESSION_NOTES.md --cut 1 --force` (dry run) prints `L1_OK`,
+  `L2_OK`, `L3_OK`, 20 records, would archive 19, 71,192 B → 4,018 B.
+  The file stays locally modified against canonical, so every later
+  plain sync refuses it until the framework settles that (BL-32 in the
+  fork); `CLAUDE.md` already prescribes the re-add. Byte budget is now
+  the tool’s default 196,608 B (was 65,536 B under 1.1.2) — recorded in
+  `CLAUDE.md` in the `CLAUDE.md` commit of this phase.
+
+### 2026-09-19 · \[ad hoc\] S719 BL-57 P10 step 3: forced framework sync from the methodology fork (`v3.7-964-gce14b3f`, local source) — 13 files written, 2 created
+
+- `python3 ../methodology/bin/sync --force .` (forced because
+  `methodology_trim.py` carried this project’s 49-line
+  `SESSION_NOTES.md` extension, which the plain sync refuses to
+  overwrite). Written: `SESSION_RUNNER.md`, `FRAMEWORK_LEARNINGS.md`,
+  `SAFEGUARDS.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`,
+  `methodology_trim.py` (1.1.2 → 1.5.0), `context_budget.py`,
+  `quality_ratchet.py`,
+  `docs/methodology/{ITERATIVE_METHODOLOGY, HOW_TO_USE,FRAMEWORK_APPARATUS}.md`,
+  `docs/methodology/workstreams/{DEVELOPMENT,AUDIT}_WORKSTREAM.md`;
+  created `.context-budget.json`, `.quality-gates.json`. The four seeds
+  (`SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, `ROADMAP.md`) were
+  left as they are. The extension is deliberately absent from this
+  commit; it is re-applied in the next one from the patch saved before
+  the sync (`git diff 18d8e3c7 HEAD -- methodology_trim.py`).
+
+### 2026-09-19 · \[ad hoc\] S719 BL-57 P10 step 2: build and ignore files for the tools the sync installs — 6 `.Rbuildignore` patterns, 2 `.gitignore` entries
+
+- `.Rbuildignore`: `context_budget.py`, `quality_ratchet.py`,
+  `.context-budget.json`, `.quality-gates.json` (the sync installs them)
+  and `.context-budget-history.jsonl`, `.quality-gates-results.json`
+  (written when the tools run) — none matched an existing pattern, so
+  `R CMD check` would have noted them. Committed before the sync so no
+  commit ships the new files into the package build.
+  `FRAMEWORK_APPARATUS.md` is covered by `^docs$`. `.gitignore`: both
+  run-time outputs ignored, matching this project’s own
+  `dashboard_history.jsonl`; the methodology repo tracks
+  `.context-budget-history.jsonl` for its growth-run trigger, which this
+  project has not adopted (BACKLOG carries the `context_budget.py`
+  evaluation), so that choice is left to the evaluation.
+
+### 2026-09-19 · \[ad hoc\] S719 claim: BL-57 P10 — bring this project’s ledgers to the current methodology’s rules (operator-picked via `AskUserQuestion` at Phase 0)
+
+- Docs/process session, no TDD phases, no push. Source is the
+  methodology fork’s `changelog-rules-contradictions-plan.md` (P10 row)
+  and its launch prompt; route decided by the operator at the fork’s
+  S194: forced sync, then re-apply the local `SESSION_NOTES.md`
+  extension to `methodology_trim.py` in its own commit. Planned commits:
+  build/ignore files, forced sync, extension re-apply, `CHANGELOG.md`
+  migration, `HANDOFFS.md` migration, `CLAUDE.md`, close-out. Stub +
+  pending receipt committed with this entry. (Tag is `[ad hoc]` because
+  `BL-57` is the methodology fork’s backlog id, not this project’s.)
+
+### 2026-09-19 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `312996b0` — S718’s close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt, 1 line changed), the documented recurring 1-commit shape; backfilled by the next session’s Phase 0 reconcile
+
+### 2026-09-19 · \[BL\] S718 close-out: pointer-block sweep session records — SESSION_NOTES handoff + S717 evaluation (9/10), HANDOFFS receipt complete, ledger triggers verified not firing
+
+- CI note: the 3 workflows in-flight at orientation on the S717
+  close-out head completed green in-session (test-coverage 12m48s,
+  pkgdown 18m36s, R-CMD-check 31m32s; lint was already green), plus the
+  scheduled shinytest2 run green — 5/5; S717’s deliberately-unwatched
+  docs-only CI round is closed. FM \#28 reduction this session = the
+  deliverable itself (444 lines out of `BACKLOG.md`, 1,119 → 675);
+  `methodology_trim.py --check` verified the
+  SESSION_NOTES/HANDOFFS/CHANGELOG byte triggers all clear at close-out.
+  No new learning appended (routine application of the S686 convention,
+  no new signal — stated, not silent, per the S711/S712 precedent). No
+  push (owner’s call, per the standing convention).
+
+### 2026-09-19 · \[BL\] S718 deliverable: pointer-block sweep RATIFIED and executed — all 15 `[ ]`-marked-but-fully-RESOLVED blocks removed from `BACKLOG.md` (429 lines, 1,119 → 690)
+
+- Owner ratified “remove all 15” via `AskUserQuestion` (over a
+  keep-S457/S458 variant and a hold), extending the S686 completed-item
+  convention to the S529–S531-era population the S687 item flagged.
+  Verification before the gate: every resolving session has dated ledger
+  entries in the CHANGELOG corpus (live + `docs/archive/CHANGELOG-*`
+  shards; 3–7 headings each; **0 FM \#27 gaps** — unlike S529’s sweep,
+  which found 2); depth spot-checked on the densest block (S565 Track B
+  — the shard entry carries all of the block’s verification detail); no
+  open sub-threads (the S568 block’s untitled-folder finding already
+  stands as its own item, which stays); zero live cross-references from
+  `CLAUDE.md`/`SESSION_NOTES.md`/`HANDOFFS.md` into the population.
+- Removed (block → resolving sessions): S508-found HANDOFFS front-matter
+  field → S561; `genOf` integer-widening fix → S556; repository branch
+  cleanup → S557/S558; kinship2-supplement reproducibility audit + PDF
+  classification → S549/S567;
+  twinRelations-into-[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  (3 slices) → S551–S553; consanguineous-mating marker + rectilinear
+  propagation → S555/S563; kinship2-supplement full-reproduction plan +
+  fidelity article + issues \#156–#158 → S562/S566; Track A X-chromosome
+  kinship → S564; Track B
+  [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md)
+  → S565; affected-status shading fix → S554; stale
+  `pb_diagram_legend.png` regeneration → S560; `pedigree-diagram.qmd`
+  article → S560; Compounding-Loop tarball exclusion → S568; Option-2
+  feasibility pointer → S457; Option-2 design pointer → S458.
+- Deletion executed by a guarded line-range script (first/last-line
+  anchors verified on every range before writing; diff confirmed
+  deletion-only, 429 deletions / 0 insertions). Full block text remains
+  recoverable at the pre-sweep tree, commit `f058a8de`
+  (`git show f058a8de:BACKLOG.md`). The completed sweep item itself
+  (S687) is removed in this same commit per the convention. The 18
+  genuinely-open `[ ]` items are untouched; the borderline S518
+  BACKLOG-compression item was excluded as a recurring-maintenance item
+  per its own S606 correction.
+
+### 2026-09-19 · \[BL\] S718 claim: pointer-block sweep ratification + (if ratified) execution (BACKLOG Housekeeping item, owner-picked via `AskUserQuestion` at Phase 0)
+
+- Docs-only maintenance session, no TDD phases (S686/S687 precedent).
+  Plan: inventory the S529–S531-era `[ ]`-marked-but-fully-RESOLVED
+  pointer blocks in `BACKLOG.md`, verify each has a complete
+  `CHANGELOG.md` (or archive-shard) record, present the concrete
+  population at the ratification gate, then — if ratified — apply the
+  S686 4-step relocation (verify/enrich ledger, forward-carry live
+  context, extract open sub-threads, delete). Stub + pending receipt
+  committed with this entry.
+
+### 2026-09-19 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `4cfe2dad` — S717’s close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt), the documented recurring 1-commit shape; backfilled by the next session’s Phase 0 reconcile
 
 ### 2026-09-19 · \[ad hoc\] S717 close-out: push to `origin/master` DONE — 33 commits (`1788e2b8..047d7f74`), all 4 CI workflows green on the pushed head
 

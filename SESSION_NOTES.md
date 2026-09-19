@@ -42,6 +42,252 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 718 Handoff Evaluation (by Session 719)
+
+**Score: 8/10.** **What helped:** gotcha “expect ~1 self-reference
+commit past the `CHANGELOG.md` frontier; measure it” held exactly
+(`312996b0`, 1 commit); the `BACKLOG.md:133`/`:119` pointers and “~5
+commits ahead, recount with `git rev-list`” both measured true at
+orientation (5); the untracked-leftovers list matched `git status` line
+for line; the 2,437-block baseline (failed=0 error=0 skipped=184
+warning=40) re-measured identically this session (4.3 min); S718’s claim
+commit (stub + pending receipt + claim entry) was a ready template.
+**What was missing:** nothing this deliverable needed — it was
+operator-directed from the methodology fork, so next-steps (A)–(E) did
+not apply by design. **What was wrong:** one claim. The handoff’s Ledger
+line and the close-out `CHANGELOG.md` entry say all three trim-managed
+ledgers were “verified trigger-not-firing at close-out”, but on the
+committed close-out head (`312996b0`) trimmer 1.1.2 reports
+`SESSION_NOTES.md` FIRES (70,138 B against 65,536 B; re-run this session
+in an isolated worktree — `HANDOFFS.md` 56,781 B and `CHANGELOG.md`
+37,090 B did not fire). Likely the check ran before the handoff text was
+appended (an estimate; the order is not recorded). Low impact — the P10
+sync replaced the trimmer and its budget, so no trim was ever due — but
+a session trusting it would have skipped an owed trim; corrected by this
+session’s own ledger entry, since a committed entry is never edited.
+**ROI:** high.
+
+### What Session 719 Did
+
+**Deliverable:** BL-57 phase P10 for this project — **DONE**
+(operator-directed via the methodology fork’s
+`bl57-p10-nprcgenekeepr-launch-prompt.md`; confirmed via
+`AskUserQuestion` at Phase 0; docs/process only, no TDD phases, no
+push). The framework files are synced to the current methodology
+(`v3.7-964-gce14b3f`, local source), this project’s `SESSION_NOTES.md`
+extension to `methodology_trim.py` is re-applied, and `CHANGELOG.md` /
+`HANDOFFS.md` are at the current ledger rules (`bin/status` reads
+`present` for both). **Started/completed:** 2026-09-19 (single session).
+**Ledger:** one `CHANGELOG.md` entry per commit (steps 2–7, the BACKLOG
+re-scope, this close-out). FM \#28 reduction: none this session —
+`SESSION_NOTES.md` (71,192 B) is over the *old* 65,536 B budget but
+under the new default; a trim is one dry-run-verified command away
+(`--cut 1 --force`: L1–L3 OK, → 4,018 B) and is left as an owner
+decision (`BACKLOG.md:119`), not done here (scope).
+
+**What actually happened, in order:** 1. **Phase 0:** reconcile
+backfilled 1 commit (`74243f04` for `312996b0`, the predicted shape). CI
+10/10 green. Dashboard 96/100. Picker → P10. Claim `d064993a`. 2.
+**Measure:** saved the trimmer patch before the sync (49 added, 0
+removed); `bin/status` and the `--force` dry run matched the prompt’s
+facts (13 written, 2 created). Only differences: source version printed
+`v3.7-964-gce14b3f` (one docs-only fork commit past the prompt’s
+`c20d6ab`, touching no distributed file), and `bin/_manifest.py` lists
+`methodology_trim.py` at `:50`, not `:45`. 3. **`00b8a4ca`** six
+`.Rbuildignore` patterns + two `.gitignore` entries (both tool outputs
+ignored, matching `dashboard_history.jsonl`). **`b773ddb6`** forced
+sync, exactly the 15 listed files; `NO_CONFIG` confirmed. **`63b3286f`**
+patch re-applied (`git apply --check` first): `--check` no longer
+`NO_CONFIG`; dry run `L1_OK`–`L3_OK`. 4. **`ba1f0135`** `CHANGELOG.md`:
+3-line seed paragraph + blank, 0 deletions, all 540 old lines survive in
+order. **`47364f51`** `HANDOFFS.md`: `:62`–`:117` replaced by seed
+`:89`–`:148` (17 ins / 13 del); §9.8 with `62 117 HANDOFFS.md` printed
+*only the block changed*; lines 1–61 and the 208-line tail
+byte-identical. (My first attempt’s anchor assert fired before any write
+— the real last line has a 2-space indent.) 5. **`2f451d1d`**
+`CLAUDE.md`: the `methodology_trim.py` checklist corrected (the fork’s
+`main` now distributes it), the per-sync procedure written out, the
+bare-`[BL]` and empty-`## 2026-08` legacy forms recorded, budget choice
+recorded. Every new claim was run first. **`f88afcb2`** `BACKLOG.md:119`
+re-scoped (its “never adopted” premise was made false by the sync). 6.
+**Verification:** trimmer dry runs `L1_OK`–`L3_OK` on all three ledgers
+(43 / 11 / 20 records); `R CMD build` tarball contains none of the
+tooling or ledger files; full suite = baseline exactly (blocks=2437
+failed=0 error=0 skipped=184 warning=40, 4.3 min); no CI file references
+any touched path.
+
+**Self-assessment (Session 719): 9/10.** **Strengths:** (1) measured
+before acting and saved the irreplaceable input (the patch) before the
+sync overwrote it; (2) every rewrite was guarded — anchored asserts,
+ordered-survival and byte-identity checks, the prompt’s own §9.8 — and
+the one guard that fired did so before a write; (3) each claim written
+into `CLAUDE.md`/`BACKLOG.md` was run first (plain-sync exit 2,
+bare-`[BL]` count 13, each ledger’s size against both budgets); (4)
+tight scope — no push, no trim, no `context_budget.py` adoption, S718’s
+own inaccuracy reported not silently fixed. **Weaknesses:** (1) the
+claim entry lacks the *(in progress)* marker the newly synced rules ask
+for — the rules arrived after the claim, and a committed entry is never
+edited; (2) `HANDOFFS.md` still differs from the current seed — the seed
+has a longer front matter and two later sections (`Three files…`,
+`Citing the gate run`) that the P10 steps do not ask for, so they were
+left out; by instruction, but a residual divergence; (3) took the tool’s
+byte-budget default without an owner ask (sanctioned as “this project’s
+call”, flagged as open).
+
+**Next steps (specific):** (A) **Owner: push decision** — ~16 commits
+ahead after close-out (recount:
+`git rev-list --count origin/master..HEAD`; 5 at orientation, 14 at this
+handoff’s write, plus the records and sha commits — the last two are an
+estimate). The push is the first CI validation of the new root files and
+build patterns (gotcha 2). (B) **Owner decision + evaluation:**
+`BACKLOG.md:119` — calibrate/adopt or delete `context_budget.py`, and
+settle the trim budget (196,608 B default vs 65,536 B). (C) `Suggests:`
+audit (READY, S, `BACKLOG.md:140`). (D) Owner decisions pending:
+package-split disposition (`BACKLOG.md:71`), REUSE registration
+(`BACKLOG.md:162`). (E) Informational: the dashboard copy is now current
+(v2.18.0; the sync fixed the v2.14.0 staleness S718 flagged); untracked
+leftovers unchanged; LabKey remainder BLOCKED.
+
+**Key files:** `CLAUDE.md:277` (per-sync procedure) and `:279` (ledger
+legacy forms), `methodology_trim.py:301` and `:377` (the local
+extension), `CHANGELOG.md:17` (rules pointer + `ledger-format: 2`),
+`HANDOFFS.md:62`/`:64` (Size section + `handoffs-format: 2`),
+`BACKLOG.md:119` (re-scoped item), `HANDOFFS.md:150` (S719 receipt).
+
+**Gotchas for the next session:** (1) **The next plain `bin/sync`
+refuses `methodology_trim.py`** (locally modified, exit 2) — the
+four-step procedure is at `CLAUDE.md:277`;
+`git show 63b3286f -- methodology_trim.py` is the patch. (2) **The push
+is the first CI validation of P10.** `R-CMD-check.yaml` runs
+`error-on: "warning"` (Learning 669: a
+[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+warning once passed locally and tripped CI). I did not run a full
+`R CMD check` — only the tarball listing (none of the new files ship)
+and the full test suite; no `.R` file was touched, so the lint checklist
+did not apply. My *estimate*, not a measurement: green, since zero
+package files changed. If red, that is new information — report, don’t
+fix inline. (3) The final sha commit carries its own `CHANGELOG.md`
+entry, so expect 0 undocumented commits past the frontier at next Phase
+0 (unlike S717/S718’s 1); measure it. (4) `context_budget.py` is
+installed but uncalibrated — do **not** run `--status` and read red
+findings as P10 defects; the seed ceilings are the fork’s own.
+`quality_ratchet.py --run` reports `0/0` (no gates declared). (5) Under
+the new rules a claim commit’s entry is marked *(in progress)* and
+close-out adds its own entry; entries are never edited. (6) The fresh
+baseline is still 2,437 blocks (4.3 min). (7) `git worktree list` shows
+5 `.claude/worktrees/wf_*` entries this session did not create —
+untouched (my own temporary worktree was removed).
+
+### Session 717 Handoff Evaluation (by Session 718)
+
+**Score: 9/10.** **What helped:** next-step A named this session’s exact
+deliverable with the `BACKLOG.md:96` pointer; gotcha 3 predicted the
+1-commit backfill shape and it measured exactly 1 (`4cfe2dad`); gotcha 2
+pre-framed the in-flight docs-only CI round precisely (lint green + 3 in
+progress at orientation; all completed green in-session — the S717 open
+loop is closed); gotcha 4 (origin in sync; recount before re-reporting
+an ahead-count) held (0 ahead at orientation). **What was missing:**
+nothing material — the item was DECISION NEEDED, so the population
+census was this session’s own work by design; the only unflagged wrinkle
+was that the S687 item’s “e.g.” enumeration was non-exhaustive (the
+census found 15 blocks, incl. the S568 Compounding-Loop block it didn’t
+name) — discoverable only by the census itself, low cost. **What was
+wrong:** nothing found; every checked claim held. **ROI:** high —
+orientation to owner pick in one pass.
+
+### What Session 718 Did
+
+**Deliverable:** Pointer-block sweep — **DONE, owner-ratified**
+(S687-filed BACKLOG Housekeeping item, DECISION NEEDED; owner-picked via
+`AskUserQuestion` at Phase 0, then “remove all 15” ratified via a second
+`AskUserQuestion` at the gate, over a keep-S457/S458 variant and a hold;
+docs-only maintenance, no TDD phases). All 15
+`[ ]`-marked-but-fully-RESOLVED pointer blocks removed from `BACKLOG.md`
+(429 lines) plus the completed sweep item itself (15 lines): 1,119 → 675
+lines. **Started/completed:** 2026-09-19 (single session). Phase 0
+backfill `94b39dc7`; claim `f058a8de`; deliverable `b7cc2508`; records
+commit follows this handoff, then a self-reconcile sha commit.
+**Ledger:** claim + deliverable + close-out entries in `CHANGELOG.md`;
+the sweep item removed in the deliverable commit. FM \#28 reduction: the
+deliverable IS the reduction (444 lines out of a Phase-0-adjacent
+mandated read); all three trim-managed ledgers verified
+trigger-not-firing at close-out.
+
+**What actually happened, in order:** 1. **Phase 0:** reconcile
+backfilled 1 commit (`4cfe2dad`, the predicted recurring self-reconcile
+shape, measured 1). CI at orientation: lint green + 3 in-progress on the
+S717 close-out head; all completed green in-session, plus scheduled
+shinytest2 green — 5/5, S717’s open loop closed. Dashboard 96/100. Owner
+picked the sweep from the 4-option picker. 2. **Census:** full
+`BACKLOG.md` read (all 1,119 lines) → population = 15
+`[ ]`-marked-but-RESOLVED blocks (the item’s “e.g.” list named 13; the
+S545/S549 audit block and the S568 Compounding-Loop block completed it).
+The 18 genuinely-open `[ ]` items excluded; the borderline S518
+BACKLOG-compression item excluded as recurring-maintenance per its own
+S606 correction. 3. **Verification before the gate:** every resolving
+session (S457–S568) has dated ledger entries across `CHANGELOG.md` +
+shards (3–7 headings each; 0 FM \#27 gaps — vs. the 2 that S529’s sweep
+found); depth spot-check on the densest block (S565 Track B) confirmed
+the shard entry carries the block’s full verification detail; no open
+sub-threads (S568’s untitled-folder finding already stands as its own
+item, which stays); zero live cross-references from
+`CLAUDE.md`/`SESSION_NOTES.md`/`HANDOFFS.md`. 4. **Gate:** owner
+ratified “remove all 15.” 5. **Execution `b7cc2508`:** guarded
+line-range script (`scratchpad/s718_sweep.py` — first/last-line anchors
+verified per range before writing; the guard genuinely fired once on a
+wrong wrap-boundary anchor and refused, then passed after correction);
+diff verified deletion-only (429/0); the completed sweep item removed in
+the same commit; the `CHANGELOG.md` deliverable entry maps every removed
+block to its resolving session(s) and cites
+`git show f058a8de:BACKLOG.md` for full-text provenance. 6.
+**Close-out:** no new learning appended (routine application of the S686
+convention + existing verification discipline, no new signal — stated,
+not silent, per the S711/S712 precedent); this evaluation + handoff;
+receipt; ledger entries.
+
+**Self-assessment (Session 718): 9/10.** **Strengths:** (1) census-first
+— the ratification gate presented a measured population (15 blocks,
+per-block ledger verification) rather than the item’s own unverified
+enumeration; (2) the anchor-guarded deletion script refused once for the
+right reason and never wrote a bad state; (3) tight scope — zero package
+files, the borderline S518 item deliberately excluded rather than swept
+in. **Weaknesses:** (1) the depth spot-check covered 1 of 15 blocks
+(existence was verified for all 15, but full block-vs-ledger content
+diffs were judged disproportionate — disclosed at the gate); (2) one
+wasted script iteration on the wrap-boundary anchor.
+
+**Next steps (specific):** (A) `Suggests:` audit (READY, S — now the top
+READY Housekeeping item, `BACKLOG.md:133`). (B) `context_budget.py`
+evaluation (READY, S, `BACKLOG.md:119`). (C) Push decision (owner): ~5
+commits ahead after close-out (recount with
+`git rev-list --count origin/master..HEAD`); docs-only delta, so the
+next push’s CI round is docs-only validation. (D) Owner decisions
+pending: package-split disposition (`BACKLOG.md:71`), REUSE registration
+(`BACKLOG.md:155`). (E) Informational: dashboard copy stale (v2.14.0 vs
+v2.18.0); untracked leftovers unchanged (+ this session’s
+`s718_sweep.py`, same class); LabKey remainder BLOCKED; chromote
+root-cause optional.
+
+**Key files:** `BACKLOG.md` (post-sweep 675-line file),
+`CHANGELOG.md:29` (S718 entries incl. the per-block removal map),
+`HANDOFFS.md:146` (S718 receipt), `scratchpad/s718_sweep.py:1` (the
+guarded deletion script).
+
+**Gotchas for the next session:** (1) **The fresh full-suite baseline is
+still 2,437 blocks** (failed=0, error=0, skipped=184, warning=40) — this
+session touched no package files; S716’s gotchas 2–5 (e2e opt-in via
+`NPRC_RUN_E2E`, serialization-coupled formatter greps, NEWS `\##` render
+check, screenshot recipe) apply verbatim. (2) `BACKLOG.md` at 675 lines
+is deliberately sparse — the full text of any removed block is one
+command away (`git show f058a8de:BACKLOG.md`); sparseness is not a ghost
+session. (3) Expect ~1 self-reference commit past the CHANGELOG frontier
+at next Phase 0 (the recurring shape); measure it. (4) The chromote
+item’s “CDP-timeout fallback fix below” phrase was stale BEFORE this
+sweep (the referenced block is long gone) — a one-word staleness to fix
+opportunistically if that item is ever picked up. (5) This session did
+not push; the close-out state is local-only until the owner directs a
+push.
+
 ### Session 716 Handoff Evaluation (by Session 717)
 
 **Score: 9/10.** **What helped:** next-step A was this session’s exact
