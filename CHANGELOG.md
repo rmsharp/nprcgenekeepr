@@ -26,6 +26,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 3: forced framework sync from the methodology fork (`v3.7-964-gce14b3f`, local source) — 13 files written, 2 created
+- `python3 ../methodology/bin/sync --force .` (forced because `methodology_trim.py` carried
+  this project's 49-line `SESSION_NOTES.md` extension, which the plain sync refuses to
+  overwrite). Written: `SESSION_RUNNER.md`, `FRAMEWORK_LEARNINGS.md`, `SAFEGUARDS.md`,
+  `BOOTSTRAP.md`, `methodology_dashboard.py`, `methodology_trim.py` (1.1.2 → 1.5.0),
+  `context_budget.py`, `quality_ratchet.py`, `docs/methodology/{ITERATIVE_METHODOLOGY,
+  HOW_TO_USE,FRAMEWORK_APPARATUS}.md`, `docs/methodology/workstreams/{DEVELOPMENT,AUDIT}_WORKSTREAM.md`;
+  created `.context-budget.json`, `.quality-gates.json`. The four seeds
+  (`SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, `ROADMAP.md`) were left as they are.
+  The extension is deliberately absent from this commit; it is re-applied in the next one
+  from the patch saved before the sync (`git diff 18d8e3c7 HEAD -- methodology_trim.py`).
+
 ### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 2: build and ignore files for the tools the sync installs — 6 `.Rbuildignore` patterns, 2 `.gitignore` entries
 - `.Rbuildignore`: `context_budget.py`, `quality_ratchet.py`, `.context-budget.json`,
   `.quality-gates.json` (the sync installs them) and `.context-budget-history.jsonl`,

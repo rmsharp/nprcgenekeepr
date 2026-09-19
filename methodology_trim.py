@@ -5,15 +5,14 @@ Moves the oldest records out of a grow-and-must-be-read ledger into a frozen sha
 `docs/archive/`, and refuses to do it unless the move is provably lossless.
 
 Implements the ledger-trimmer design (S35). `bin/sync` installs this file at your project root
-and does NOT install that design, which lives only in the methodology repository as
-`docs/planning/ledger-trimmer-design.md` — deliberately, since it is a working document for the
-tool's authors rather than something an adopter operates. No URL is given for it on purpose: it
-has not been published to a public remote, and a link that 404s is worse than a path plus the
-repository's name. The design is the spec and this file does not re-open it; whoever changes this
-module reads its §2 (the three-zone record model), §4 (the three assertions) and §5 (the trigger)
-first, from a checkout of that repository. Nothing mechanical protects this reference:
-`bin/check-links` validates only the distributed *markdown*, so a dangling citation inside this
-module is never reported.
+and does NOT install that design, a working document for the tool's authors rather than something
+an adopter operates. It is `docs/planning/ledger-trimmer-design.md` in the rmsharp/methodology
+fork, linked here at the commit that last changed it, so the link cannot drift:
+https://github.com/rmsharp/methodology/blob/979dc7382702be0963b0534846e3dd23d5b6d4ca/docs/planning/ledger-trimmer-design.md
+The design is the spec and this file does not re-open it; whoever changes this module reads its
+§2 (the three-zone record model), §4 (the three assertions) and §5 (the trigger) first. Nothing
+mechanical protects this reference: `bin/check-links` validates only the distributed *markdown*,
+so a dangling citation inside this module is never reported.
 
 WHY THREE ASSERTIONS AND NOT ONE
     The manual procedure this replaces proved whole-file byte identity under concatenation, and
@@ -30,8 +29,8 @@ WHY THREE ASSERTIONS AND NOT ONE
 
 DEFAULTS THAT ARE INVERTED ON PURPOSE
     Dry run is the default; `--write` is required to touch anything. The tool never commits, and
-    it never runs `git mv` (design P2 — `--no-renames` in the FM #27 pre-commit hook means a
-    rename-shaped trim passes a gate meant to notice it).
+    it never runs `git mv` (design P2): a trim writes a new shard and edits the live ledger in
+    place, so the ledger keeps its path and its history.
 
 Python 3 stdlib only, cross-platform — this file is destined for adopter roots (design §6.1).
 """
@@ -47,7 +46,56 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.1.2"   # 1.1.2: BL-27 — the GENERATED .verify.sh had two false-positive triggers
+TRIM_VERSION = "1.5.0"   # 1.5.0: Phase C2 — the Class A archive threshold, and the byte budget
+                         # raised to meet it. An adopter's ROOT CHANGELOG.md/HANDOFFS.md now fires
+                         # at 196,608 B instead of 65,536 and cuts back to 98,304 instead of
+                         # 32,768, so a ledger that reported FIRES yesterday can report
+                         # NOTHING_TO_DO today and a trim that does run archives fewer records.
+                         # A NESTED ledger of the same name is unchanged: it keeps the 56,750 B
+                         # one-read arm, which is new behaviour where before all paths were equal.
+                         # The TRIGGER_READ row's text changes shape for a root ledger. Changed
+                         # behaviour on a distributed tool, no finding code removed: MINOR.
+                         #
+                         # 1.4.0: Phase B — the read cap is RE-DENOMINATED from lines onto bytes,
+                         # and the line RATE is removed rather than re-tuned. Two finding codes
+                         # change on the CLI (TRIGGER_LINES and LINE_METRIC_ABSTAINS are gone,
+                         # TRIGGER_READ replaces them), `stops()` loses its rate arms and
+                         # LINE_FIRE_BELOW/LINE_STOP_ABOVE are deleted, so an adopter's next trim
+                         # can cut to a different depth than it would have yesterday. New finding
+                         # code and changed behaviour on a distributed tool: MINOR, not patch.
+                         # READ_CAP_LINES' third job (seed plausibility) keeps the value 2000
+                         # under its own name, SEED_PLAUSIBLE_MAX_LINES — no behaviour change.
+                         # 1.3.0: BL-41 — the shard name is derived from a RECORD DATE while
+                         # the cut is POSITIONAL, so it is NOT injective: whenever two records share
+                         # a date, distinct cuts derive one name. The write-once rule then refused
+                         # every admissible cut, and the tool's own advice ("Disambiguate with
+                         # --cut") had no solution — that date both selects the records AND becomes
+                         # the key, so there is no second knob. A live ledger sat 14,317 B over its
+                         # ceiling with no reachable remedy. A taken name is now DISAMBIGUATED with
+                         # a numeric suffix instead of refused. MINOR: nothing is ever overwritten
+                         # (write-once is unchanged, and still REFUSES past SHARD_SUFFIX_MAX), but
+                         # a run that previously exited 2 now writes a shard, and its name can
+                         # carry a suffix — so a reader comparing two archives must be able to tell
+                         # which rule each ran under.
+                         #
+                         # 1.2.0: BL-36 — the GENERATED .verify.sh identified the records the trim
+                         # COMMIT added by a constant baked in at generation time (`INJECTED`, a
+                         # 0/1 flag) and skipped that many POSITIONS. A commit bundling any second
+                         # ledger write therefore failed by construction with zero data loss — four
+                         # of this repo's six shipped proofs did. The injected set is now measured
+                         # from record CONTENT at verification time and `INJECTED` is gone from the
+                         # template. MINOR, not patch: what a generated proof reports changes (a
+                         # bundled add is no longer a failure; missing/added records are named), so
+                         # a reader comparing two proofs must be able to tell which rules each ran
+                         # under. Losses, edits and reorders still fail, unchanged.
+                         #
+                         # 1.1.3: BL-28 — the GENERATED .verify.sh's L2 "missing front-matter line"
+                         # check compared by substring (`ln not in afront`) instead of exact-line-
+                         # set membership, so an append-style edit that kept the original line as a
+                         # literal prefix of the new one evaded detection. No new finding code or
+                         # exit-code change: patch, not minor — a correctness fix to what the tool
+                         # WRITES, same class as 1.1.2.
+                         # 1.1.2: BL-27 — the GENERATED .verify.sh had two false-positive triggers
                          # the internal --check/--write assertions do not share: a declared
                          # front-matter regen field (e.g. HANDOFFS.md's receipt count) read as L2
                          # data loss, and a same-commit close-out bundling (this repo's own
@@ -59,14 +107,102 @@ TRIM_VERSION = "1.1.2"   # 1.1.2: BL-27 — the GENERATED .verify.sh had two fal
                          # a new exit status on a distributed tool, so: minor, not patch.
 
 # --- Tunables, all of them judgment, all of them labelled as such in the design ---------------
-READ_CAP_LINES = 2000          # agent `Read` truncation cap — harness behaviour, not a repo property
-DEFAULT_BUDGET_BYTES = 64 * 1024   # design §5.4: calibrated to the three sizes this repo operated at
-LINE_FIRE_BELOW = 15           # design §5.2, the published rate rule, kept verbatim
-LINE_STOP_ABOVE = 30
+# THE AGENT READ CAP, RE-DENOMINATED — Phase B, 2026-08-26. The cap is TOKEN-denominated and
+# always was. The 2,000-line proxy that stood here was wrong on the axis, and measured across the
+# fleet it was STRICTLY DOMINATED: over 18 watched ledgers in 5 repos it fired on 3 and stayed
+# silent on 8 that a byte threshold at ANY point in the measured ratio band catches, while
+# catching nothing a byte threshold misses. So the axis choice does not rest on picking the right
+# constant. It is NOT published as one opaque number — a number goes stale when the harness moves
+# and the command does not — but DERIVED from two inputs that each carry their own re-measurement.
+READ_CAP_TOKENS = 25_000       # [M] stated verbatim by the tool itself: "exceeds maximum allowed
+                               # tokens (25000)". Harness behaviour, not a repo property.
+MIN_BYTES_PER_TOKEN = 2.27     # [M] the FLOOR of the band 2.2705–3.0300 B/token measured over 9
+                               # real markdown files in 5 repos. The floor and not the mean,
+                               # because a guard that must not stay silent on a truncating file
+                               # has to assume the densest content it will meet. Deliberately NOT
+                               # context_budget.py's `bytes_per_token`: that is calibrated on
+                               # OPENING CONTEXT against CLAUDE.md's size, a different quantity —
+                               # and re-running its own --calibrate today returns 2.46 at R² 0.59,
+                               # a value that predicts FRAMEWORK_LEARNINGS.md truncates when a
+                               # probe shows it comes back whole. Re-derive with Appendix A.
+READ_CAP_BYTES = int(READ_CAP_TOKENS * MIN_BYTES_PER_TOKEN)   # 56,750 B — computed, never written
+READ_REFUSE_BYTES = 256 * 1024 # [M] a SECOND and HARDER boundary, and it is NOT truncation: past
+                               # it a default Read is refused outright with ZERO content —
+                               # "File content (256.1KB) exceeds maximum allowed size (256KB)".
+                               # So "truncation is ordered top-down, and the prefix a session
+                               # needs still arrives" is true only BETWEEN the two boundaries.
+                               # Past this one nothing arrives at all, front matter included.
+                               # 5 of the 18 watched fleet ledgers are already past it.
+# --- Phase C2, 2026-08-26: the CLASS A pair, and the budget moved to meet it ------------------
+# WHAT CHANGED AND WHY, stated here because both numbers below are judgment and the next session
+# must be able to re-open them on the reasoning rather than on taste.
+#
+# Phase C1 established that the watched population is TWO CLASSES, and that the class this tool
+# can act on -- the names in LEDGERS -- is exactly Class A. For those two files READ_CAP_BYTES is
+# the wrong thing to FIRE on. It is a true statement about them ("one Read does not deliver this
+# whole file") and it stays in the --check report for that reason, but it is not a fault: these
+# ledgers are newest-on-top and delivery is an ORDERED PREFIX, so truncation removes the OLDEST
+# records, which is the end nothing was reading. Measured across 85 transcripts of this repo, each
+# root ledger was read WHOLE exactly ONCE and in PART 1,696 times. What front matter + the newest
+# record costs is 30-32% of one read, with ~40 KB of growth headroom (plan §3).
+#
+# The failure that DOES matter is READ_REFUSE_BYTES, where the prefix stops existing and a default
+# Read returns nothing at all -- front matter included. So the Class A arm is denominated against
+# the REFUSAL, not against the cap, and it fires BELOW it rather than at it: a trigger set at the
+# refusal parks the file exactly on the edge where degradation stops being graceful (plan §3
+# caveat 1). 192 KiB leaves 64 KiB of margin under the refusal; 96 KiB is the stop, which is the
+# `level with hysteresis` shape ledger-trimmer-design.md §5.2 prescribes for a threshold sitting at
+# operating size, and NOT the rate form that was deleted for being unsatisfiable.
+#
+# ⚠ SCOPED TO THE REPO ROOT, and this was an operator decision made on a measurement. LEDGERS is
+# resolved by BASENAME at any depth (`LEDGERS.get(path.name)`, :1674+), so an unscoped relaxation
+# would hand the 192 KiB arm to any */CHANGELOG.md or */HANDOFFS.md -- 3.38x READ_CAP_BYTES -- for
+# a file the dashboard never classified as anything (its read_cap_class() is a repo-relative PATH
+# lookup and answers None for a nested one). A nested ledger keeps READ_CAP_BYTES. See
+# Trigger.class_a and evaluate_trigger.
+CLASS_A_FIRE_BYTES = 192 * 1024   # 196,608 — fire above this, for a ROOT Class A ledger only
+CLASS_A_STOP_BYTES = 96 * 1024    # 98,304 — cut back to at or under this. Deliberately equal to
+                                  # int(DEFAULT_BUDGET_BYTES * BYTE_STOP_FRACTION) today, and
+                                  # deliberately NOT written as that expression: the two arms
+                                  # answer different questions (see the Trigger comment below) and
+                                  # deriving one from the other would assert they are one question.
+                                  # The coincidence is asserted by a test as INTENTIONAL, so that
+                                  # moving one without the other is a decision and not an accident.
+
+# RAISED 64 KiB -> 192 KiB at Phase C2 (option C1), by operator decision, in the SAME change as the
+# Class A arm above because separately each is inert: `fires` is `read_fires or byte_fires`, so a
+# relaxed read arm changes nothing while a 64 KiB byte arm fires first (plan §5, §10 dragon 1).
+# THE OLD JUSTIFICATION IS RETIRED, NOT CARRIED FORWARD. It read "design §5.4: calibrated to the
+# three sizes this repo operated at" -- 52,927 / 53,512 / 49,382 B, the post-archive resets of
+# 2026-08. Those are no longer the sizes this repo operates at (81,070 and 111,388 B at this
+# commit), and the campaign that measured them adjudicated the growth as costing nothing anyone
+# reads. A calibration whose basis has moved is not a baseline; it is a stale number with a
+# citation. ⚠ A DERIVATION NOTE THE PLAN GOT WRONG AND A SUCCESSOR SHOULD NOT INHERIT: it is
+# widely written that this constant is "the number BL-9/BL-32/BL-36/S87/S89 have all measured
+# against". That is impossible for BL-9, which CLOSED 2026-08-01 against a constant first written
+# 2026-08-03 (df381ea); §5.4's 52,927 B is BL-9's own output commit 7a71df0, so BL-9 is this
+# constant's INPUT. The other four were not re-derived and are claimed neither way.
+DEFAULT_BUDGET_BYTES = 192 * 1024  # 196,608 — the per-file byte budget, still overridable
+                                   # per LedgerSpec and per run via --budget-bytes
+
+# LINE_FIRE_BELOW / LINE_STOP_ABOVE ARE GONE, DELIBERATELY. This note is the record of why, so a
+# later session re-adds them on purpose or not at all. They were "archive when headroom falls
+# below 15 RECORDS; cut until it is back above 30" — denominated in records of headroom TO the
+# cap. Measured at Phase B: a one-read CHANGELOG.md holds 20.9 records and a one-read HANDOFFS.md
+# holds 4.3, so a rule demanding 30 records of headroom is UNSATISFIABLE ON BOTH AT EVERY HONEST
+# CAP, and `choose_cut` falls through to `return 1` — retaining ONE record with every test in the
+# repo still green. It only ever looked satisfiable because 2,000 lines granted CHANGELOG.md 2.32×
+# and HANDOFFS.md 8.75× more capacity than a real read. design §5.2 states the reason itself: the
+# units-of-headroom form is well-formed only while the cap "sits far above normal operating size",
+# and at operating size that design prescribes "a level with hysteresis, not a rate — the form
+# that terminates". `byte_fires` + BYTE_STOP_FRACTION below is already that form, so the read cap
+# now takes it too. Re-deriving the two thresholds was considered and rejected on the measurement
+# rather than on taste; the arithmetic is in read-cap-premise-correction-plan.md, Phase B.
 BYTE_STOP_FRACTION = 0.5       # hysteresis — stops a trim re-firing on the next record
 SRF_RED = 1.00                 # plan §3.3 H3: at or above this, a reset is the wrong move
 ARCHIVE_DIR = "docs/archive"
 REBASE_PREFIX = "../../"       # docs/archive/<shard>.md -> repo root is exactly two levels
+SHARD_SUFFIX_MAX = 99          # BL-41 — bound on collision disambiguation; past it, refuse
 
 # --- "is this plausibly a fresh seed?" — a DIFFERENT question from "is it over its budget" ----
 # Deliberately its own literal rather than an alias of DEFAULT_BUDGET_BYTES, and deliberately not
@@ -75,6 +211,16 @@ REBASE_PREFIX = "../../"       # docs/archive/<shard>.md -> repo root is exactly
 # tells you your ledger grammar is wrong — and a budget set below 12,124 B would declare the seed
 # we ship to be unreadable. The two numbers may drift apart; nothing should couple them.
 SEED_PLAUSIBLE_MAX_BYTES = 64 * 1024
+SEED_PLAUSIBLE_MAX_LINES = 2000
+# ^ THE VALUE IS UNCHANGED AND THE NAME IS NEW, and that is the whole point (Phase B, J3). This
+# line count used to be READ_CAP_LINES, borrowed. But the question here is not "does one Read
+# deliver this file?" — it is "is a file THIS LONG plausibly a fresh, empty seed, or is my grammar
+# wrong?" Nothing about truncation bears on it. Sharing the name meant a correction made for the
+# reporter's reasons would silently move the REFUSAL boundary: at a corrected cap, a record-less
+# file of 700–2,000 lines would newly refuse with GRAMMAR_MISMATCH instead of reporting NO_RECORDS,
+# and no test in this repo would have caught it. The byte disjunct beside it already covers "big
+# file"; this one uniquely covers LONG BUT SMALL — say 3,000 lines averaging 20 B. Re-tune it, if
+# ever, on seed plausibility and on nothing else.
 
 
 # =============================================================================================
@@ -152,21 +298,6 @@ def _handoff_date(text):
     return m.group(1) if m else None
 
 
-def _session_notes_date(text):
-    # Best-effort, not authoritative: unlike CHANGELOG.md/HANDOFFS.md, a session's own write-up
-    # carries no single canonical date field. Tried first: this project's own labelled convention
-    # (**Started/Completed:**, **Started:**, **Completed:**, or the older **Date:**) — covers 243 of
-    # ~512 records by direct count. Falls back to the first bare YYYY-MM-DD substring anywhere in the
-    # record for the rest. Used only to LABEL a shard's span in its own header/pointer text — never
-    # compared against anything, so an imprecise date on an unlabelled record costs nothing L1/L2/L3
-    # would notice.
-    m = re.search(r"\*\*(?:Started(?:/Completed)?|Completed|Date)\s*:\*\*\s*(\d{4}-\d{2}-\d{2})", text)
-    if m:
-        return m.group(1)
-    m = re.search(r"\d{4}-\d{2}-\d{2}", text)
-    return m.group(0) if m else None
-
-
 LEDGERS = {
     "CHANGELOG.md": LedgerSpec(
         basename="CHANGELOG.md",
@@ -219,50 +350,17 @@ LEDGERS = {
         # not a dated heading. Fence-aware, so the seed's wrapped example does not count itself.
         seed_negation=re.compile(r"^session:\s"),
     ),
-    # --- LOCAL ADDITION (nprcgenekeepr, S518, 2026-08-11) --------------------------------------
-    # methodology_trim.py is a canonical-OVERLAY file per BOOTSTRAP.md's sync table ("Tracked
-    # (canonical owns them) ... overlay — replace with the latest"), and the design doc that ships
-    # this LEDGERS table documents no mechanism for a project-local entry to survive that overlay.
-    # This entry is a real, working config — verified directly against this project's own
-    # SESSION_NOTES.md (577 record-start headings; every one checked for shape variance against the
-    # two patterns below, zero found) — but it WILL be silently dropped by the next
-    # `chore(methodology): sync framework update from canonical` overlay unless that session re-adds
-    # it first. See CLAUDE.md's "Additional close-out checks" for the standing reminder to do so.
-    "SESSION_NOTES.md": LedgerSpec(
-        basename="SESSION_NOTES.md",
-        record_kind="heading",
-        # One session's own write-up is TWO adjacent records under this grammar: the evaluation of
-        # its predecessor's handoff (absent for the ~447 oldest sessions, before Phase 3A existed)
-        # and its own "what I did". Splitting them (rather than pairing them into one record) needs
-        # no special-casing for the old, evaluation-less region — "What Session N Did" alone is
-        # present for all 512 sessions on its own, so no format-transition boundary need be declared.
-        # `\b` guards only the "Did" branch (S528 fix) -- the "Handoff Evaluation ...)" branch
-        # already ends unambiguously in a literal `)`, and a trailing `\b` placed after the whole
-        # alternation binds per-branch: `)` is a non-word char immediately followed by end-of-line,
-        # so no word/non-word transition ever exists there and `\b` can never fire on that branch
-        # (found S527, PROJECT_LEARNINGS.md Learning 533). Moving `\b` inside the "Did" branch keeps
-        # its original purpose (reject a hypothetical "Didn't"-style false match) without breaking
-        # the branch that never needed it.
-        record_start=re.compile(
-            r"^### (?:Session \d+ Handoff Evaluation \(by Session \d+\)|What Session \d+ Did\b)"),
-        # Confirmed by direct inspection: the file ends mid-record (Session 1's own self-assessment
-        # bullets) — no standalone '---' with trailing content after the last record start anywhere.
-        footer_mode="none",
-        date_of_record=_session_notes_date,
-        regenerated=(),
-        content_probe=re.compile(r"^(#{1,6} |\|).*\d{4}-\d{2}-\d{2}"),
-        seed_negation=None,
-    ),
 }
 
 
 # =============================================================================================
 # Fence tracking — mandatory, and the seed files are the proof.
 #
-# `starter-kit/CHANGELOG.md` holds 3 `^### YYYY-MM-DD` lines and ALL 3 are inside fenced
-# documentation examples; `starter-kit/HANDOFFS.md` holds 1 ```handoff and it is inside a
-# 4-backtick wrapper. A trimmer that is not fence-aware trims an adopter's freshly seeded
-# ledger on day one (design §2.2).
+# A `CHANGELOG.md` seeded before ledger-format 2 holds 3 `^### YYYY-MM-DD` lines and ALL 3 are
+# inside fenced documentation examples — every adopter seeded that early still carries them,
+# though the current seed points at FRAMEWORK_APPARATUS.md §The Action Ledger instead;
+# `starter-kit/HANDOFFS.md` holds 1 ```handoff and it is inside a 4-backtick wrapper. A trimmer
+# that is not fence-aware trims an adopter's freshly seeded ledger on day one (design §2.2).
 # =============================================================================================
 
 _FENCE = re.compile(r"^(`{3,}|~{3,})(.*)$")
@@ -418,6 +516,17 @@ def classify_zones(text, spec, result):
 def _safe_cut_key(key):
     """A cut key must be a flat filename fragment — no separator, no leading dot."""
     return bool(re.match(r"^[A-Za-z0-9][A-Za-z0-9._-]*$", key or ""))
+
+
+def shard_name_taken(shard_path):
+    """True if EITHER half of the pair this name would write already exists.
+
+    A trim writes `<shard>.md` and `<shard>.md.verify.sh` together. An interrupted or partially
+    reverted run can leave the proof behind without its shard, and a check that looked only at the
+    shard would then report the name free and overwrite a frozen proof — the same corruption the
+    write-once rule exists to exclude, one file over. The pair is the unit, so the pair is the test.
+    """
+    return shard_path.exists() or Path(str(shard_path) + ".verify.sh").exists()
 
 
 def _indent(s, pad="    | "):
@@ -698,28 +807,72 @@ def lines_at(repo, sha, relpath):
 
 
 # =============================================================================================
-# The trigger — two metrics, because there are two distinct failure modes.
+# The trigger — two metrics, because there are two distinct failure modes. BOTH ARE NOW LEVELS
+# WITH HYSTERESIS on the same axis (bytes), and that is the Phase B change: what used to be a
+# line-denominated RATE is now a byte-denominated LEVEL.
 #
-#   Lines protect against SILENT TRUNCATION (a Read past the cap returns no error and no marker).
-#   Bytes protect against CONTEXT TAX (G1, the operator's stated goal).
+#   READ DELIVERY — does one `Read` still return this file? The cap is TOKEN-denominated
+#   (~25,000), truncation is ANNOUNCED rather than silent, and there is a SECOND boundary at
+#   256 KiB past which a default read is REFUSED with zero content. READ_CAP_BYTES converts the
+#   token cap at the densest content measured, so the guard is conservative by construction.
+#   Re-measure with Appendix A of docs/planning/read-cap-premise-correction-plan.md; nothing in
+#   this repo can falsify it, because nothing here can invoke the agent's Read tool.
 #
-# The two take different FORMS and transplanting one onto the other does not work: "cut until back
-# above 30" is unreachable on the byte metric at EVERY budget, even trimming to a single record.
-# =============================================================================================
-
+#   AND THE METRIC MEASURES A CONDITION IT MAY NOT REMEDY (BL-52, open, and Phase B did not close
+#   it). Truncation is ordered top-down and these ledgers are newest-on-top, so between the two
+#   boundaries the records a cut removes are ones a whole-file read was NOT DELIVERING ANYWAY:
+#   the delivered prefix is the same before and after, and what changes is that the reader stops
+#   being WARNED. Two things narrow that caveat rather than dissolve it. Past READ_REFUSE_BYTES
+#   there IS no delivered prefix, so a cut back under it turns nothing into something. And below
+#   the cap the whole file is delivered and every byte is paid for, so a cut moves a file from
+#   truncated to fully delivered. The caveat bites hardest well past the cap and not at all near
+#   it. Do not read this metric as a settled argument for cutting; do not read it as no argument.
+#
+#   CONTEXT TAX — G1, the operator's stated goal. Bytes, against a per-file budget. A separate
+#   claim, not covered by the caveat above, and untouched by Phase B.
+#
+# The two are deliberately NOT deduplicated here even though they now share an axis: they answer
+# different questions and their thresholds have unrelated provenance. Whether the dashboard should
+# still report them as two rows is S38's residual 1, still open (Phase C).
 class Trigger:
     def __init__(self):
-        self.line_headroom = None
-        self.line_abstains = None      # reason string when the rate cannot be computed
         self.size_bytes = 0
         self.budget = DEFAULT_BUDGET_BYTES
+        # PHASE C2. False is the CONSERVATIVE default and that is deliberate: a caller that never
+        # sets it gets the tighter READ_CAP_BYTES arm, so forgetting to classify errs toward
+        # firing early rather than toward silence. evaluate_trigger sets it from the file's
+        # repo-relative path -- never from its basename, which is the distinction the scoping
+        # decision turns on.
+        self.class_a = False
         self.srf = None                # (value, boundary_sha) for the most recent archive
         self.srf_largest = None        # (value, boundary_sha) for H3's own largest-drop boundary
         self.srf_abstains = None
 
     @property
-    def line_fires(self):
-        return self.line_headroom is not None and self.line_headroom < LINE_FIRE_BELOW
+    def read_fire_at(self):
+        """The read arm's threshold for THIS file. One place, so fire and stop cannot diverge.
+
+        A root Class A ledger is denominated against the REFUSAL (CLASS_A_FIRE_BYTES); everything
+        else keeps the one-read cap. The two are not degrees of the same thing: below the refusal
+        a Class A read still delivers front matter and the newest records, and past it no read
+        delivers anything."""
+        return CLASS_A_FIRE_BYTES if self.class_a else READ_CAP_BYTES
+
+    @property
+    def read_stop_at(self):
+        """The read arm's STOP for this file — the half `stops()` reads.
+
+        SEPARATE FROM read_fire_at ON PURPOSE, and this is the trap Phase C2 was written to avoid.
+        Before C2 the fire and the stop were the SAME constant (READ_CAP_BYTES), so moving "the
+        read arm's threshold" read like one edit. It is two. Moving only the fire leaves
+        `choose_cut` still cutting back to 56,750 B -- silently, with every test green, because
+        nothing asserted what a trim cuts BACK to. Both are named here so a future move of one is
+        visibly a move of one."""
+        return CLASS_A_STOP_BYTES if self.class_a else READ_CAP_BYTES
+
+    @property
+    def read_fires(self):
+        return self.size_bytes > self.read_fire_at
 
     @property
     def byte_fires(self):
@@ -727,17 +880,30 @@ class Trigger:
 
     @property
     def fires(self):
-        return self.line_fires or self.byte_fires
+        return self.read_fires or self.byte_fires
 
-    def stops(self, size_bytes, line_count, de, dl):
-        """Both stop conditions must hold. Fire if EITHER fires; stop only when BOTH stop."""
+    def stops(self, size_bytes, unused_line_count=None, unused_de=None, unused_dl=None):
+        """Both stop conditions must hold. Fire if EITHER fires; stop only when BOTH stop.
+
+        Both are LEVELS now, so both terminate — which is the property the deleted line rate did
+        not have. `read_ok` is written out rather than left implicit because `--budget-bytes` is an
+        adopter-facing knob and a raised budget must not quietly let a file stop above the read
+        arm's stop.
+
+        ⚠ WHICH ARM BINDS MOVED AT PHASE C2, and the direction is worth stating. At the old budget
+        `byte_ok` was the tighter of the two (32,768 B against READ_CAP_BYTES' 56,750). At the
+        raised budget the two COINCIDE for a root Class A ledger — 98,304 B on both sides — and for
+        everything else `read_ok` (56,750) is now the tighter. So a nested ledger, or any file
+        whose class was not established, still stops at the one-read cap no matter what the budget
+        says. That is the conservative direction, and it is the reason `class_a` defaults False.
+
+        When this returns False at EVERY retained count, `choose_cut` still falls through to
+        `return 1` — but that now means what it says: trimming genuinely cannot satisfy the goal,
+        e.g. the front matter alone is over. It is no longer reachable by a rule that was
+        unsatisfiable by construction, which is what the line rate had become."""
         byte_ok = size_bytes <= int(self.budget * BYTE_STOP_FRACTION)
-        if de and dl and de > 0 and dl > 0:
-            headroom = (READ_CAP_LINES - line_count) * de // dl
-            line_ok = headroom > LINE_STOP_ABOVE
-        else:
-            line_ok = True         # the rate abstains; it cannot veto a stop it cannot compute
-        return byte_ok and line_ok
+        read_ok = size_bytes <= self.read_stop_at
+        return byte_ok and read_ok
 
 
 def archive_events(repo, spec):
@@ -778,47 +944,35 @@ def archive_events(repo, spec):
     return events
 
 
+def is_root_class_a(repo, path, spec):
+    """Is this file a Class A ledger AT THE REPOSITORY ROOT?
+
+    PHASE C2, and the whole point is that this asks a different question from `LEDGERS.get(name)`.
+    That lookup is by BASENAME at any depth, so `starter-kit/CHANGELOG.md` and a hypothetical
+    `docs/x/HANDOFFS.md` both resolve to a spec and get a fully evaluated trigger. Having a
+    grammar is what makes a file TRIMMABLE; sitting at the root is what makes it the ledger the
+    protocol actually reads, and only the latter earns the relaxed Class A arm.
+
+    This mirrors methodology_dashboard.py's read_cap_class(), which is a repo-relative PATH lookup
+    and answers None -- neither A nor B -- for a nested one. The two tools were already asking
+    different questions here; before C2 the difference cost nothing because both arms used the
+    same constant. Returns False on anything it cannot resolve, which routes the caller to the
+    tighter arm."""
+    try:
+        rel = path.resolve().relative_to(repo).as_posix()
+    except (ValueError, OSError):
+        return False
+    return rel == spec.basename
+
+
 def evaluate_trigger(repo, path, spec, zones, budget, result):
     t = Trigger()
     t.budget = budget
+    t.class_a = is_root_class_a(repo, path, spec)
     text = read_text(path)
     t.size_bytes = len(text.encode("utf-8"))
-    line_count = text.count("\n")
-    rel = path.relative_to(repo).as_posix()
 
     events = archive_events(repo, spec)
-
-    # --- the line rate, re-derived from the file every read, abstaining out loud ---------------
-    de = dl = None
-    if not events:
-        t.line_abstains = "no prior archive of this ledger — the rate has no baseline"
-    else:
-        split = events[-1][0]
-        base_lines = lines_at(repo, split, rel)
-        base_text = git_bytes(repo, "show", "%s:%s" % (split, rel))
-        if base_lines is None or base_text is None:
-            t.line_abstains = "the baseline blob %s:%s is unreadable" % (split[:7], rel)
-        else:
-            base_zones = classify_zones(base_text.decode("utf-8"), spec, Result(path))
-            # classify_zones returns None on a REFUSAL — that is not a count of zero. Treating it
-            # as zero makes `de` the whole current record count and prints a confidently inflated
-            # headroom for a baseline the tool would itself refuse to read.
-            if base_zones is None:
-                t.line_abstains = ("the baseline blob %s:%s does not classify under this ledger's "
-                                   "declared grammar — abstaining rather than assuming it held zero "
-                                   "records" % (split[:7], rel))
-                base_records = None
-            else:
-                base_records = len(base_zones.starts)
-            dl = line_count - base_lines
-            de = None if base_records is None else len(zones.starts) - base_records
-            if de is not None and de > 0 and dl > 0:
-                t.line_headroom = (READ_CAP_LINES - line_count) * de // dl
-            elif de is None:
-                pass                                   # already abstaining, with a stated reason
-            else:
-                t.line_abstains = ("fewer than one record written since the last split "
-                                   "(%s records, %s lines)" % (de, dl))
 
     # --- SRF: reported for BOTH boundaries, because they differ by 3x on the same file ---------
     if not events:
@@ -833,7 +987,7 @@ def evaluate_trigger(repo, path, spec, zones, budget, result):
         t.srf_largest = (srf(largest[1], largest[2]), largest[0])
 
     result.plan_trigger = t
-    return t, de, dl
+    return t
 
 
 # =============================================================================================
@@ -857,7 +1011,7 @@ class TrimPlan:
         self.pointer_block = None
 
 
-def choose_cut(zones, spec, trigger, de, dl, explicit, spec_date, result):
+def choose_cut(zones, spec, trigger, explicit, spec_date, result):
     """Pick how many records to retain. Cuts are by POSITION in file order, never by sorting on a
     parsed key: this ledger interleaves two independent S<N> sequences that collide, and a calendar
     day straddles the existing cut (design §2.3)."""
@@ -882,7 +1036,7 @@ def choose_cut(zones, spec, trigger, de, dl, explicit, spec_date, result):
 
     for k in range(n - 1, 0, -1):
         b, l = resulting(k)
-        if trigger.stops(b, l, de, dl):
+        if trigger.stops(b):
             return k
     return 1
 
@@ -1077,11 +1231,11 @@ set -u
 cd "$(git rev-parse --show-toplevel)" || exit 3
 LIVE=@@LIVE@@
 SHARD=@@SHARD@@
-INJECTED=@@INJECTED@@
 TRIM_SHA="$(git log --diff-filter=A -1 --format=%H -- "$SHARD" 2>/dev/null)"
-export LIVE SHARD INJECTED TRIM_SHA
+export LIVE SHARD TRIM_SHA
 python3 - <<'PYEOF_VERIFY'
 import os, re, subprocess, sys
+from collections import Counter
 
 RECORD_KIND = "@@KIND@@"
 RECORD_START = r"@@START@@"
@@ -1221,7 +1375,7 @@ def readf(path):
 
 
 LIVE, SHARD = os.environ["LIVE"], os.environ["SHARD"]
-TRIM, INJ = os.environ["TRIM_SHA"], int(os.environ["INJECTED"])
+TRIM = os.environ["TRIM_SHA"]
 if TRIM:
     before, after, shard = show(TRIM + "^", LIVE), show(TRIM, LIVE), show(TRIM, SHARD)
     origin = "the trim commit " + TRIM[:7]
@@ -1232,13 +1386,76 @@ else:
 bfront, br, bfoot = zones(before)
 afront, ar, afoot = zones(after)
 sfront, sr, _sfoot = zones(shard)
-ar_cmp = ar[INJ:]
+sr_inv = [invert(r) for r in sr]
 fails = []
 ran = []
 
+
+def anchor(rec):
+    # The record's own first content line — its heading for a heading-kind ledger, its first
+    # key: value line for a fence-kind one. Used only to LABEL records in the report; nothing
+    # below decides pass or fail from it.
+    for ln in rec.splitlines():
+        s = ln.rstrip()
+        if s.strip() and not FENCE.match(s):
+            return s.strip()
+    return ""
+
+
+# --- What the TRIM COMMIT introduced, MEASURED rather than assumed (BL-36) -------------------
+#
+# This script re-derives from git at commit granularity, and a commit may legitimately carry more
+# than the trim: this repository's own close-out practice writes the trim's ledger entry, that
+# session's other entries, and the archive move in one commit. Those extra records are new
+# content. They were never in `before`, so they make no claim whatsoever about whether an
+# archived record survived — and they must not be able to fail a losslessness proof.
+#
+# The shipped versions of this script skipped them POSITIONALLY, via a constant `INJECTED` baked
+# in at generation time as `1 if trims_the_ledger else 0`. That is a 0/1 flag, not a count: it is
+# structurally incapable of modelling a commit that lands two records instead of one, so every
+# bundled trim failed by construction with zero data loss. Four of this repo's six shipped proofs
+# failed exactly that way while an independent identity-keyed re-derivation measured 0 records
+# missing at every trim (docs/audits/2026-08-15-bl36-archive-losslessness.md).
+#
+# So the injected set is measured HERE, from record content: the records present in
+# `after + shard` and absent from `before`. This is a different function of the same three
+# artifacts — never the difference L1/L3 are about to assert on — so it cannot make those
+# assertions vacuous: delete an archived record and it is missing from `have` no matter what else
+# the commit added. Occurrences are removed one-for-one, preserving order, so L1 still compares
+# bytes in sequence and a REORDER is still a failure.
+#
+# It deliberately does NOT excuse a record EDITED inside the trim commit. Such a record's
+# pre-trim bytes exist nowhere afterwards; it is reported as MISSING and the proof stays red,
+# which is BL-27's judgement and is still correct — a real loss has that same shape.
+# NAMES: `absent_records` / `added_records`, not the obvious `missing` / `added`. This is a flat
+# script -- every binding here is a module global -- and L2's front-matter clause below already
+# binds `missing` for its own, unrelated meaning (front-matter LINES that vanished). Calling this
+# one `missing` silently rebinds it before L3 reads it, and because L2 usually finds nothing the
+# rebind is to [], so L3 skips its own clause and reports a downstream symptom instead. That is
+# not hypothetical: it is what the first build of this fix did, and the narrowed loss control
+# caught it. Anything added here needs the same namespace check.
+have = Counter(ar) + Counter(sr_inv)
+added_records = list((have - Counter(br)).elements())
+absent_records = list((Counter(br) - have).elements())
+
+
+def drop_added(seq, remaining):
+    out = []
+    for r in seq:
+        if remaining.get(r, 0) > 0:
+            remaining[r] -= 1
+        else:
+            out.append(r)
+    return out
+
+
+still_to_drop = dict(Counter(added_records))
+ar_cmp = drop_added(ar, still_to_drop)
+sr_cmp = drop_added(sr_inv, still_to_drop)
+
 # --- L1: records-zone concatenation ---------------------------------------------------------
 ran.append("L1")
-rebuilt = list(ar_cmp) + [invert(r) for r in sr]
+rebuilt = ar_cmp + sr_cmp
 if "".join(rebuilt) != "".join(br):
     fails.append("L1 records-zone concatenation is not byte-identical")
 
@@ -1277,8 +1494,15 @@ def field_reversible(missing_line):
     return False
 
 
+# BL-28 fix: exact-line-set membership, not substring containment. `ln not in afront` tested
+# whether `ln` occurs anywhere in the whole front-matter TEXT — an append-style edit that keeps
+# the original line as a literal prefix of a new, longer line leaves that substring intact and
+# reads as "found," so a real change to the line evaded detection. Comparing against the SET of
+# exact lines in the new front matter closes that gap without touching field_reversible's own
+# separate, correct line-by-line carve-out for the declared regenerated fields.
+afront_lines = set(afront.splitlines())
 missing = [ln for ln in bfront.splitlines()
-           if ln.strip() and ln not in afront and not field_reversible(ln)]
+           if ln.strip() and ln not in afront_lines and not field_reversible(ln)]
 if missing:
     fails.append("L2 FRONT MATTER lost %d line(s), first: %r" % (len(missing), missing[0][:70]))
 leaked = [ln for ln in bfront.splitlines()
@@ -1290,12 +1514,18 @@ if leaked:
 # --- L3: record partition ---------------------------------------------------------------------
 ran.append("L3")
 bad = None
-if len(rebuilt) != len(br):
-    fails.append("L3 record count %d != %d" % (len(rebuilt), len(br)))
+if absent_records:
+    # The only way a record from `before` fails to appear in `after + shard`: it was dropped, or
+    # it was edited (in which case its pre-trim bytes are gone and an edited twin shows up in
+    # `added_records`). Both are real; neither is excused. A count mismatch cannot occur here
+    # without this firing first — len(rebuilt) is len(br) - len(absent_records) by construction —
+    # so there is no separate count clause to state, and none that could ever run.
+    fails.append("L3 %d record(s) present before the trim are MISSING from live+shard afterwards"
+                 % len(absent_records))
 else:
     bad = [i for i, (x, y) in enumerate(zip(br, rebuilt)) if x != y]
     if bad:
-        fails.append("L3 record(s) not byte-identical across the move: %s" % bad)
+        fails.append("L3 record(s) out of order across the move: %s" % bad)
 
 # BL-27 fix 2: a same-commit close-out bundling (this repo's own established practice — a
 # session's own frontier receipt going status: pending -> complete, committed together with the
@@ -1303,19 +1533,34 @@ else:
 # itself. NOT an exemption — this stays a FAIL, loud, because a real loss can have this exact
 # shape too — only a NOTE naming the known pattern, so a reader does not mistake it for an
 # unqualified loss. Narrow on purpose: any OTHER record differing (bad != [0]) gets no such note.
+#
+# BL-36 re-expressed the gate in the new vocabulary. It was `bad == [0]` — the record-ALTERED
+# shape under the old positional comparison — which is why it never fired for the busier ledger,
+# whose bundling produced a count mismatch instead and so failed with no explanation at all
+# (audit Finding #4). Additions no longer fail, so that half is gone; what remains is the edit,
+# which now presents as exactly one MISSING record that was the frontier, paired with an added
+# record carrying the same anchor. Still narrow on purpose: an edit to any other record, or one
+# whose anchor changed, gets no such note.
 notes = []
-if fails and bad == [0]:
+frontier_edit = (len(absent_records) == 1 and br and absent_records[0] == br[0]
+                 and anchor(absent_records[0]) != ""
+                 and any(anchor(a) == anchor(absent_records[0]) for a in added_records))
+if fails and frontier_edit:
     notes.append(
-        "only the frontier record (position 0, newest) differs, across L1 and L3 -- matches a "
-        "known, accepted pattern (BL-27): this repository's own practice bundles a session's "
-        "close-out finalize edit into the same commit as an archive write, so the frontier "
-        "record can legitimately differ between this commit's parent and itself. This does NOT "
-        "confirm losslessness -- manually diff record 0 by hand to be sure it is a receipt "
-        "finalize, not real data loss.")
+        "the only missing record is the frontier one (position 0, newest), and an added record "
+        "carries the same anchor -- matches a known, accepted pattern (BL-27): this repository's "
+        "own practice bundles a session's close-out finalize edit into the same commit as an "
+        "archive write, so the frontier record can legitimately differ between this commit's "
+        "parent and itself. This does NOT confirm losslessness -- manually diff record 0 by hand "
+        "to be sure it is a receipt finalize, not real data loss.")
 
 print("source : %s" % origin)
-print("records: %d before = %d retained + %d archived (%d entry injected by the trim)"
-      % (len(br), len(ar_cmp), len(sr), INJ))
+print("records: %d before = %d retained + %d archived; added by the trim commit: %d"
+      % (len(br), len(ar_cmp), len(sr_cmp), len(added_records)))
+for m in absent_records:
+    print("   MISSING: %s" % anchor(m)[:100])
+for a in added_records:
+    print("   added  : %s" % anchor(a)[:100])
 print("checked: %s" % ", ".join(ran))
 for f in fails:
     print("FAIL:", f)
@@ -1330,7 +1575,7 @@ PYEOF_VERIFY
 """
 
 
-def build_verify(spec, live_rel, shard_rel, injected):
+def build_verify(spec, live_rel, shard_rel):
     # REGEN travels as a repr()'d list of plain (non-raw) pattern strings, not a wrapped r-string
     # like @@START@@ — spec.regenerated is 0-or-more patterns, and an r-string wrapper only ever
     # holds one. repr() doubles each backslash; the generated script parses that back as a normal
@@ -1340,7 +1585,7 @@ def build_verify(spec, live_rel, shard_rel, injected):
     regen_patterns = repr([rx.pattern for _name, rx, _fn in spec.regenerated])
     out = VERIFY_TEMPLATE
     for key, val in (("@@SHARD@@", shard_rel), ("@@LIVE@@", live_rel), ("@@VER@@", TRIM_VERSION),
-                     ("@@INJECTED@@", str(injected)), ("@@KIND@@", spec.record_kind),
+                     ("@@KIND@@", spec.record_kind),
                      ("@@START@@", spec.record_start.pattern if spec.record_start else ""),
                      ("@@INFO@@", spec.fence_info or ""), ("@@FOOTER@@", spec.footer_mode),
                      ("@@REGEN@@", regen_patterns)):
@@ -1502,7 +1747,8 @@ def classify_empty(path, text, spec, result):
     # is stated rather than hidden: an adopter who adds a dated `##` heading or a dated table row to
     # their own front matter, while holding no records, gets a loud false refusal. Loud and wrong is
     # recoverable; quiet and wrong is what this whole finding is about.
-    if not (size_bytes > SEED_PLAUSIBLE_MAX_BYTES or line_count > READ_CAP_LINES or evidence):
+    if not (size_bytes > SEED_PLAUSIBLE_MAX_BYTES or line_count > SEED_PLAUSIBLE_MAX_LINES
+            or evidence):
         result.add("NO_RECORDS",
                    "%s holds zero records under its declared grammar — nothing to archive. (A "
                    "freshly seeded ledger looks exactly like this, and must not be trimmed.)"
@@ -1579,14 +1825,38 @@ def evaluate(path, opts, result):
         return result
 
     budget = opts.budget_bytes or spec.budget_bytes
-    trigger, de, dl = evaluate_trigger(repo, path, spec, zones, budget, result)
+    trigger = evaluate_trigger(repo, path, spec, zones, budget, result)
     result.trigger = trigger
 
-    if trigger.line_abstains:
-        result.add("LINE_METRIC_ABSTAINS", trigger.line_abstains)
+    # PHASE C2: this row now reports the threshold ACTUALLY IN FORCE for this file, and names which
+    # arm it is. Reporting READ_CAP_BYTES unconditionally, as it did before, would have printed a
+    # number the trigger no longer keys on for a root Class A ledger -- a row that is arithmetic
+    # about a threshold nothing uses. The one-read cap is still stated for Class A, because "one
+    # Read does not deliver this whole file" stays TRUE and is the reason a reader might still want
+    # an explicit offset/limit; it is simply no longer the fault condition.
+    if trigger.class_a:
+        read_row = ("%s B against a %s B Class A archive threshold (this file is a ROOT ledger the "
+                    "trimmer can act on, so the arm is denominated against the %s B hard refusal, "
+                    "not against the one-read cap). FOR REFERENCE AND NOT AS A FAULT: it is also "
+                    "past the %s B one-read cap, so a whole-file read comes back truncated — but "
+                    "delivery is an ordered prefix and this ledger is newest-on-top, so what "
+                    "truncates is the OLDEST records" %
+                    ("{:,}".format(trigger.size_bytes), "{:,}".format(CLASS_A_FIRE_BYTES),
+                     "{:,}".format(READ_REFUSE_BYTES), "{:,}".format(READ_CAP_BYTES))
+                    if trigger.size_bytes > READ_CAP_BYTES else
+                    "%s B against a %s B Class A archive threshold (ROOT ledger; the arm is "
+                    "denominated against the %s B hard refusal, not the %s B one-read cap)" %
+                    ("{:,}".format(trigger.size_bytes), "{:,}".format(CLASS_A_FIRE_BYTES),
+                     "{:,}".format(READ_REFUSE_BYTES), "{:,}".format(READ_CAP_BYTES)))
     else:
-        result.add("TRIGGER_LINES",
-                   "line headroom %d record(s) (fires below %d)" % (trigger.line_headroom, LINE_FIRE_BELOW))
+        read_row = ("%s B against a %s B one-read cap (%s tokens x %s B/token, the measured floor)"
+                    % ("{:,}".format(trigger.size_bytes), "{:,}".format(READ_CAP_BYTES),
+                       "{:,}".format(READ_CAP_TOKENS), MIN_BYTES_PER_TOKEN))
+    result.add("TRIGGER_READ",
+               read_row +
+               ("" if trigger.size_bytes <= READ_REFUSE_BYTES else
+                " — AND PAST THE %s B HARD REFUSAL: a default Read of this file returns NO CONTENT "
+                "AT ALL, front matter included" % "{:,}".format(READ_REFUSE_BYTES)))
     result.add("TRIGGER_BYTES", "%s B against a %s B budget" %
                ("{:,}".format(trigger.size_bytes), "{:,}".format(budget)))
     if trigger.srf_abstains:
@@ -1634,7 +1904,7 @@ def evaluate(path, opts, result):
         return result
 
     records = zones.records()
-    k = choose_cut(zones, spec, trigger, de, dl, opts.cut, repo, result)
+    k = choose_cut(zones, spec, trigger, opts.cut, repo, result)
     if k is None:
         return result
     if k <= 0:
@@ -1682,20 +1952,45 @@ def evaluate(path, opts, result):
             "--cut <earlier date> if you want a clean calendar seam." % cut_key)
 
     stem = spec.basename[:-3]
-    shard_rel = "%s/%s-through-%s.md" % (ARCHIVE_DIR, stem, cut_key)
+    base_rel = "%s/%s-through-%s.md" % (ARCHIVE_DIR, stem, cut_key)
+
+    # Write-once, and it stays write-once: overwriting would destroy the earlier shard's records
+    # while L1/L2/L3 all still pass — they quantify only over THIS run's triple, so it is the one
+    # corruption the three assertions cannot see.
+    #
+    # But REFUSING was the wrong way to enforce it (BL-41). The name is a function of a RECORD
+    # DATE while the cut is POSITIONAL, so it is not injective: when two records share a date,
+    # distinct cuts derive one name. The old advice — "Disambiguate with --cut" — had no solution,
+    # because a date cut key both SELECTS the records and BECOMES the key; there is no second knob
+    # to turn. On this repo's own receipt ledger every admissible cut derived the same taken name,
+    # and the file sat 14,317 B over its ceiling with no reachable remedy.
+    #
+    # So a taken name is resolved, not refused. Nothing is overwritten — the loop only ever moves
+    # to a name that does not exist — and the rename is REPORTED, because a shard whose name no
+    # longer uniquely says "through this date" must not arrive silently.
+    shard_rel, suffix = base_rel, 1
+    while shard_name_taken(repo / shard_rel):
+        suffix += 1
+        if suffix > SHARD_SUFFIX_MAX:
+            result.add("SHARD_EXISTS",
+                       "%s and every disambiguation up to -%d are taken. Refusing to overwrite: a "
+                       "collision destroys the earlier shard's records while all three assertions "
+                       "still pass, because none of them quantifies over any other file in %s. "
+                       "Archive by hand, or clear the stale names."
+                       % (base_rel, SHARD_SUFFIX_MAX, ARCHIVE_DIR), exit_code=2)
+            return result
+        shard_rel = "%s/%s-through-%s-%d.md" % (ARCHIVE_DIR, stem, cut_key, suffix)
+
+    if shard_rel != base_rel:
+        result.add("SHARD_NAME_DISAMBIGUATED",
+                   "%s was taken, so this shard is %s. The date in a shard name is a SPAN LABEL, "
+                   "not a unique key — cuts are positional (§2.3) and two records can share a "
+                   "date, so more than one shard may legitimately end on the same day. The "
+                   "earlier shard is untouched."
+                   % (base_rel, shard_rel))
+
     shard_path = repo / shard_rel
     verify_rel = shard_rel + ".verify.sh"
-
-    # Write-once. Two runs can resolve to the same cut key, and overwriting would destroy the first
-    # shard's records while L1/L2/L3 all still pass — they quantify only over THIS run's triple.
-    # The one corruption the three assertions cannot see, so it is excluded by construction.
-    if shard_path.exists():
-        result.add("SHARD_EXISTS",
-                   "%s already exists. Refusing to overwrite: a collision destroys the earlier "
-                   "shard's records while all three assertions still pass, because none of them "
-                   "quantifies over any other file in %s. Disambiguate with --cut."
-                   % (shard_rel, ARCHIVE_DIR), exit_code=2)
-        return result
 
     live_rel = path.relative_to(repo).as_posix()
     plan = TrimPlan()
@@ -1747,8 +2042,7 @@ def evaluate(path, opts, result):
                        "the new entry before committing — the tool will not reorder a heading it "
                        "cannot prove is safe to move, and it never commits."
                        % (month_heading.strip(), prior[-1]))
-    plan.verify_text = build_verify(spec, live_rel, shard_rel,
-                                    injected=1 if trims_the_ledger else 0)
+    plan.verify_text = build_verify(spec, live_rel, shard_rel)
     result.plan = plan
 
     # --- THE ASSERTIONS RUN ON THE ARTIFACTS, NOT ON THE INPUT PARTITION ------------------------
@@ -1769,6 +2063,14 @@ def evaluate(path, opts, result):
                    "the text this run would write does not parse under its own declared grammar — "
                    "refusing to write something the proof could not read back.", exit_code=2)
         return result
+    # BL-36 replaced the EXPORTED proof's identically-shaped constant with a measured set, and
+    # deliberately left this one alone. The two look alike and are not the same claim. Here the
+    # operand is `plan.live_after` — text this function just built — so the count is not an
+    # estimate of what some commit will contain: this run injects exactly one ledger entry when
+    # it trims the ledger and none otherwise, and it knows which. The exported script has no such
+    # knowledge, because it re-derives from a commit that may carry a whole session's other
+    # writes. Do not "make this consistent" with the template; consistency here would replace a
+    # fact with an inference.
     injected = 1 if trims_the_ledger else 0
     after_records = live_zones.records()[injected:]
     shard_records = shard_zones.records()
