@@ -144,6 +144,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S716
+date: 2026-09-18
+status: pending
+active_task: MHC Haplotype Reporting follow-up polish (BACKLOG Housekeeping item, issue #148 Slice 4 close-out) — display-only frequency rounding in output$mhcSummaryTable (strict TDD), modMarkerGeneticsUI() @return update, two stale "no Shiny screen yet" NEWS.Rmd phrases + NEWS.md re-render. Claimed, work beginning.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S715
 date: 2026-09-18
 status: complete

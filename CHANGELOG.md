@@ -26,6 +26,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL] S716 claim: MHC Haplotype Reporting follow-up polish (BACKLOG Housekeeping item, issue #148 Slice 4 close-out; owner-picked via `AskUserQuestion` at Phase 0)
+- Three-part polish, strict TDD for the code part: (1) display-only rounding of
+  the `frequency` column in `output$mhcSummaryTable` (`R/modMarkerGenetics.R`;
+  the `mhcHaplotypeSummaryTable` reactive and the export stay untouched — tests
+  pin those exactly), (2) `modMarkerGeneticsUI()`'s `@return` updated to cover
+  the tabs shipped by #148 Slice 4 / #152 / #153, (3) the two stale "no Shiny
+  screen yet" `NEWS.Rmd` phrases fixed + `NEWS.md` re-rendered (plain-language
+  criterion). Stub + pending receipt committed with this entry.
+
 ### 2026-09-18 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `56c705b8` — S715's close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt), the documented recurring 1-commit shape; backfilled by the next session's Phase 0 reconcile
 
 ### 2026-09-18 · [BL] S715 close-out: curved duplicate-connectors FIXED — arc-verified roundness selection ships; cArc 587 → 149 events, 117 → 72 arcs; exemplar + Track C warnings cleared, owner-ratified renders

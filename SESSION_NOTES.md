@@ -26,6 +26,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 716 Did
+**Deliverable:** MHC Haplotype Reporting follow-up polish (BACKLOG Housekeeping
+item, found S708, issue #148 Slice 4 close-out; owner-picked via
+`AskUserQuestion` at Phase 0) — (1) display-only rounding of the `frequency`
+column in `output$mhcSummaryTable` (`R/modMarkerGenetics.R`, strict TDD; the
+`mhcHaplotypeSummaryTable` reactive and export stay untouched), (2) update
+`modMarkerGeneticsUI()`'s stale `@return`, (3) fix the two stale "no Shiny
+screen yet" `NEWS.Rmd` phrases + re-render `NEWS.md`. (IN PROGRESS)
+**Started:** 2026-09-18
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 714 Handoff Evaluation (by Session 715)
 **Score: 8/10.** **What helped:** next-step A was this session's exact deliverable,
 and the BACKLOG block was a complete brief — mechanism, code pointers
