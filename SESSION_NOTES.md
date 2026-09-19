@@ -42,17 +42,79 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 716 Handoff Evaluation (by Session 717)
+
+**Score: 9/10.** **What helped:** next-step A was this session’s exact
+deliverable, with the recount command (measured 31 at orientation, 33
+pushed including the backfill + claim) and the “first remote validation
+of S715+S716 package code” framing that made the decision presentable in
+one line; gotcha 6 predicted the 1-commit backfill shape and it measured
+exactly 1 (`b229a305`). **What was missing:** nothing material — a push
+session touches no package internals, so the handoff’s depth was
+sufficient by construction. **What was wrong:** nothing found; every
+checked claim held (baseline, CI state, ahead-count). **ROI:** high —
+orientation to owner pick in one pass.
+
 ### What Session 717 Did
 
-**Deliverable:** Owner-directed push to `origin/master` (S716 next-step
-A, owner-picked via `AskUserQuestion` at Phase 0) — ~33 commits spanning
-S712–S716 (incl. real package code: S715 curved-connector fix, S716 MHC
-display rounding), then watch all 4 on-push CI workflows to completion.
-(IN PROGRESS) **Started:** 2026-09-19 **Status:** Session claimed. Push
-follows this claim commit so the pushed head carries it. **Ledger:**
-`CHANGELOG: pending` — set at claim; this session’s actions are recorded
-in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session’s reconcile.
+**Deliverable:** Owner-directed push to `origin/master` — **DONE** (S716
+next-step A, owner-picked via `AskUserQuestion` at Phase 0; process/ops
+session, no code changes, no TDD phases; S711 precedent). Pushed 33
+commits (`1788e2b8..047d7f74`), spanning S712–S716: the census
+assessments, the S715 curved-connector arc-verified roundness fix, the
+S716 MHC display rounding + docs, and five sessions of records. **All 4
+on-push CI workflows green on `047d7f74`:** lint 4m41s, test-coverage
+10m26s, pkgdown 18m40s, R-CMD-check 34m16s (run ids
+35425960304/340/312/299). Watched to completion via a 2-min background
+poller, then confirmed via `gh run list` directly — this was the FIRST
+remote validation of the S715 and S716 package code.
+**Started/completed:** 2026-09-19 (single session). Phase 0 backfill
+`aa003382`; claim `047d7f74` (deliberately before the push so the pushed
+head carries the session claim); records commit follows this handoff,
+then a self-reconcile sha commit, both pushed immediately (their own
+docs-only CI round is verified at the next session’s unconditional Phase
+0 CI check, per the S706/S711 precedent). **Ledger:** claim entry +
+push-outcome entry in `CHANGELOG.md` (this close-out). Nothing removed
+from `BACKLOG.md` (the push was a handoff next-step, not a BACKLOG
+block). FM \#28 reduction check: nothing to trim — all three ledgers
+verified under budget at the S716 close-out and gained only this
+session’s entries.
+
+**Self-assessment (Session 717): 9/10.** **Strengths:** (1)
+claim-before-push kept the pushed head self-describing; (2) waited for
+the full 4-workflow matrix and re-verified the watcher’s claim directly
+before recording it; (3) tight scope — no package files touched.
+**Weaknesses:** (1) the close-out push’s own CI round is deliberately
+not watched (docs-only delta on a just-verified tree) — a defensible but
+real open loop handed to the next session’s Phase 0; (2) a routine push
+session yields no new learning — correct (no signal), stated explicitly
+rather than silently.
+
+**Next steps (specific):** (A) Pointer-block sweep ratification
+(DECISION NEEDED, M — see the BACKLOG Housekeeping block). (B)
+`Suggests:` audit (READY, S). (C) Owner decisions pending: package-split
+disposition, REUSE registration. (D) Lower priority: `context_budget.py`
+evaluation (READY, S), chromote pinned-Chrome root-cause (optional, M).
+(E) Informational: dashboard copy stale (v2.14.0 vs v2.18.0); untracked
+leftovers unchanged; LabKey remainder BLOCKED; origin/master now in sync
+— don’t re-report the “N commits ahead” item from stale handoffs.
+
+**Key files:** `HANDOFFS.md` (S717 receipt), `CHANGELOG.md` (S717
+entries), `BACKLOG.md:96` (pointer-block sweep, now the top DECISION
+NEEDED item), `BACKLOG.md:148` (`Suggests:` audit).
+
+**Gotchas for the next session:** (1) **The fresh full-suite baseline is
+still 2,437 blocks** (failed=0, error=0, skipped=184, warning=40) —
+neither this session nor the push touched package files; S716’s gotchas
+2–5 (e2e opt-in, serialization-coupled greps, NEWS `\##` check,
+screenshot recipe) still apply verbatim. (2) The close-out push triggers
+one more CI round on the records/self-reconcile head — expect
+`completed success` at Phase 0’s `gh run list`; if red, that is NEW
+information (docs-only delta), report-don’t-fix per the standing
+convention. (3) Expect ~1 self-reference commit past the CHANGELOG
+frontier at next Phase 0 (the recurring shape); measure it. (4)
+origin/master is in sync as of this session — recount before ever
+re-reporting an ahead-count.
 
 ### Session 715 Handoff Evaluation (by Session 716)
 

@@ -33,6 +33,19 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · \[ad hoc\] S717 close-out: push to `origin/master` DONE — 33 commits (`1788e2b8..047d7f74`), all 4 CI workflows green on the pushed head
+
+- First remote validation of the S715 curved-connector arc-verified
+  roundness fix and the S716 MHC display rounding (plus the S712–S714
+  census assessments and five sessions of records). CI on `047d7f74`:
+  lint 4m41s, test-coverage 10m26s, pkgdown 18m40s, R-CMD-check 34m16s
+  (run ids 35425960304/340/312/299), all `completed success` — watched
+  to completion in-session via a 2-min poller, then confirmed directly
+  via `gh run list`. The records + self-reconcile commits that follow
+  are pushed immediately; their own docs-only CI round is verified at
+  the next session’s unconditional Phase 0 CI check (S706/S711
+  precedent).
+
 ### 2026-09-19 · \[ad hoc\] S717 claim: owner-directed push to `origin/master` (S716 next-step A, owner-picked via `AskUserQuestion` at Phase 0)
 
 - Process/ops session, no TDD phases (S711 precedent): push the ~33
