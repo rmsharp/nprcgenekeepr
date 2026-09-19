@@ -30,6 +30,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S722 close-out: session records (SESSION_NOTES handoff + S721 evaluation 9/10, HANDOFFS receipt complete, `PROJECT_LEARNINGS.md` Learning 767) and post-append verification measurements
+- **Trigger states, measured AFTER the handoff/receipt/learning text was appended**, all under
+  `--budget-bytes 65536`: `SESSION_NOTES.md` 24,174 B (does not fire), `HANDOFFS.md` does not
+  fire, **`CHANGELOG.md` FIRES** — the routine trim S721's heads-up predicted is owed and is
+  executed as this close-out's own next commit (FM #28 reduction performed, not deferred).
+- **`context_budget.py` post-append run:** exactly the documented expected state — `CLAUDE.md`
+  43,348 B / resident total over (red by design, remedy filed), `SESSION_NOTES.md` ok.
+- **Close-out checklists:** no `.R` files touched → lint N/A; no new exports/statistics/Shiny
+  features → NEWS/pkgdown/citation/tutorial/`a2interactive` N/A (the fix is developer-workflow
+  metadata, not a user-facing package change); the completed BACKLOG item named no GitHub
+  issue → issue close-out N/A; CI green all session, no CI break found.
+- **Report-only finding (not fixed, Learning 382 precedent):** `HANDOFFS.md` carries a
+  pre-existing truncated duplicate S720 stub block (an unclosed `handoff` fence holding only
+  session/date/status lines) directly above the real S720 receipt — a future session should
+  repair it deliberately.
+- Trim commit and sha self-reconcile commit follow, each with its own entry; expect 0
+  undocumented commits past the frontier at next Phase 0.
+
 ### 2026-09-19 · [ad hoc] S722: RStudio-Install vignette-encoding fix DONE — `%\VignetteEncoding{UTF-8}` added to all 5 built vignettes; RStudio's exact roclet call now succeeds end-to-end (BACKLOG Up Next item removed this commit)
 - **Fix:** one line added inside each `vignette:` block — `vignettes/a2interactive.Rmd`,
   `a3manual.Rmd`, `gvaConvergence.Rmd`, `simulatedKValues.Rmd` (the 4 tracked files).

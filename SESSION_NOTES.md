@@ -30,13 +30,97 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 721 Handoff Evaluation (by Session 722)
+**Score: 9/10.** **What helped:** the BACKLOG Up Next item S721 filed was a ready-to-execute
+plan — root cause, exact file list, the fix line, the verification recipe (RStudio's exact
+roclet call + regression read + cleanup), and the owner follow-up — so this session spent
+zero time on diagnosis; gotcha (5)'s full-suite baseline (2437/0/0/184/40) was directly
+load-bearing (this session's read matched it exactly); gotcha (2) pre-explained the renv
+"project is out-of-sync" banner that now prints on every `Rscript` start (dev tooling
+deliberately absent from the lock — no time lost chasing it); the next-steps priority list
+matched the Phase 0 picker one-for-one. **What was missing:** the item counted
+`vignettes/a3manual.md` among "the 5 built vignettes" without noting it is gitignored
+(`.gitignore:18` — the `knitr::knitr` intermediate), discovered here when `git diff --stat`
+showed only 4 files; cost ~1 minute. **What was wrong:** nothing found — every checked claim
+held, including the failure fingerprint (leftover build products had every `.html` except
+`a2interactive.html`). **ROI:** high.
+
 ### What Session 722 Did
-**Deliverable:** RStudio-Install vignette-encoding fix — add `%\VignetteEncoding{UTF-8}` to the
-5 built vignettes so RStudio's `vignette`-roclet Install path stops failing on
-`a2interactive.Rmd`'s non-ASCII content (BACKLOG Up Next item, READY, S) (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Work beginning. No TDD phases expected (vignette metadata, no `.R` files).
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** RStudio-Install vignette-encoding fix — **DONE.** `%\VignetteEncoding{UTF-8}`
+added inside the `vignette:` block of all 4 tracked built vignettes (`a2interactive.Rmd`,
+`a3manual.Rmd`, `gvaConvergence.Rmd`, `simulatedKValues.Rmd`); the item's 5th file
+(`a3manual.md`) is the gitignored `knitr::knitr` intermediate and regenerates WITH the line
+from the `.Rmd`'s YAML (verified at its line 14 post-run). No TDD phases (vignette metadata,
+no `.R` files — S720/S721 precedent). BACKLOG Up Next item removed in the deliverable commit.
+**Started/completed:** 2026-09-19 (single session). Claim `f93a6ce2`; deliverable `10934a2f`;
+records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per commit; deliverable entry carries the full
+verification record.
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile clean (0 undocumented commits, predicted 0); CI 10/10 green (on the
+   S719 commit — the 13 then-unpushed commits have never seen CI); dashboard 96/100;
+   context-budget reds by-design only. Owner picked this item from the 4-option picker.
+   Claim `f93a6ce2`.
+2. **Fix:** one line per file after the `%\usepackage[UTF-8]{inputenc}` boilerplate (which the
+   roclet path ignores — the item's diagnosis, confirmed).
+3. **Mechanism verification (seconds, no rebuild):** `tools:::.getVignetteEncoding()` returns
+   `'non-ASCII'` on the pre-fix HEAD copy of `a2interactive.Rmd` (exactly the value that trips
+   `tools::buildVignette()`'s stop) and `'UTF-8'` post-fix.
+4. **End-to-end verification (RStudio's exact call):** `devtools::document(roclets = c('rd',
+   'collate','namespace','vignette'))` exited 0; all 4 `.Rmd` vignettes rebuilt including the
+   previously-failing `a2interactive.Rmd` (its `.html` produced — its absence among the
+   leftover build products was the failure fingerprint). `man/` untouched (zero collateral
+   `.Rd` churn). Build products then cleaned per the item's recipe.
+5. **Regression read:** `blocks=2437 failed=0 error=0 skipped=184 warning=40` — equals the
+   S718–S721 baseline exactly. (`devtools::check()` not re-run — the item's verify recipe
+   doesn't call for it, S721 ran a full check on effectively this tree yesterday, and CI's
+   R-CMD-check will exercise the batch vignette path on push.)
+6. **Mid-session owner question** answered (why `vignettes/` retains `.md`/`.R`/`.html`
+   files): in-place roclet builds + `.gitignore:18-22` hiding them; no file changes.
+
+**Self-assessment (Session 722): 9/10.** **Strengths:** (1) mechanism-level pre/post
+verification added beyond the recipe — proved the fix on the exact reader the failing path
+uses before spending minutes on the full rebuild; (2) zero collateral — diff is exactly 4
+one-line insertions, `man/` untouched; (3) the gitignored-5th-file wrinkle was detected and
+resolved (regeneration verified) rather than claiming "5 files committed" when only 4 could
+be. **Weaknesses:** (1) edited `a3manual.md` as if durable before noticing it was gitignored
+— caught by `git diff --stat`, cost one check; (2) the actual RStudio Install *button* was
+not exercised (no GUI in this environment) — terminal-side proof is complete, but the live
+surface remains the owner's follow-up, stated explicitly rather than claimed.
+
+**Next steps (specific):** (A) **Owner: the item's own follow-up** — restart R, Install via
+the RStudio button, re-run the appServer tests; if anything still fails, capture the output
+as its own finding (most likely stale-installed-copy collateral, already refreshed by S721's
+terminal install). (B) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~17 expected after close-out: 13 pre-existing +
+claim + deliverable + records + sha; the last two are an estimate at write time). Note the
+fix only reaches other clones/machines once pushed. (C) Priorities: `CLAUDE.md` reduction
+campaign (READY, M); pedigree-growth measurement (READY, S, owner-requested S721); owner
+decisions pending: package-split disposition, REUSE registration. (D) Report-only finding:
+`HANDOFFS.md:171-175` holds a truncated duplicate S720 stub block (an unclosed `handoff`
+fence with only session/date/status lines immediately above the real S720 receipt) —
+pre-existing, not touched this session (Learning 382 precedent); a future session should
+repair it deliberately.
+
+**Key files:** `vignettes/a2interactive.Rmd:12` (the load-bearing new line; siblings at
+`a3manual.Rmd:14`, `gvaConvergence.Rmd:13`, `simulatedKValues.Rmd:13`), `.gitignore:18`
+(why `vignettes/` build products are invisible to git), `CHANGELOG.md` S722 deliverable
+entry (full verification record), `PROJECT_LEARNINGS.md` Learning 767.
+
+**Gotchas for the next session:** (1) **The RStudio-button click itself is still unverified**
+— everything terminal-side is green, but the button runs in the owner's GUI session; treat
+the owner follow-up in next-step (A) as the remaining verification surface. (2) Every
+RStudio-button Install (vignette roclet) will keep depositing gitignored build products in
+`vignettes/` — harmless, regenerable; `a3manual.md` persists by design. (3) Pre-existing
+roxygen warning on every `document()` run: `R/makePedigreeDiagramData.R:2414` `@param t ...
+in [0, 1].` parses as a link to topic "0, 1" (`@noRd`, warning-only, no output effect) — not
+a regression; escape the brackets if it ever needs silencing. (4) Standing gotchas carry
+forward: context-budget reds by design until the CLAUDE.md reduction campaign; every
+`methodology_trim.py` run needs `--budget-bytes 65536`; the stray `~$e Compounding Loop.html`
+still makes `devtools::check()` warn and exit 1 non-interactively; `renv.lock` carries no dev
+tooling (the `Rscript` out-of-sync banner is expected). (5) Full-suite baseline re-confirmed
+this session: 2437/0/0/184/40.
 
 ### Session 720 Handoff Evaluation (by Session 721)
 **Score: 9/10.** **What helped:** next-step (B) named this session's exact deliverable with a
