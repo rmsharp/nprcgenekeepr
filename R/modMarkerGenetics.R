@@ -1170,7 +1170,9 @@ modMarkerGeneticsServer <- function(id, kinshipMatrix, pedigree) {
     output$mhcSummaryTable <- DT::renderDT({
       tbl <- mhcFrequency()$summary
       req(tbl)
-      tbl
+      ## Display-only rounding (S716 polish): the summary reactive and the
+      ## CSV export keep full precision; only the on-screen cells round.
+      DT::formatRound(DT::datatable(tbl), "frequency", digits = 4L)
     })
 
     output$mhcCarrierTable <- DT::renderDT({
