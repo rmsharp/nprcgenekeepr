@@ -34,6 +34,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S723 close-out: session records (SESSION_NOTES handoff + S722 evaluation 9/10, HANDOFFS receipt complete, `PROJECT_LEARNINGS.md` Learning 768) and post-append verification measurements
+- **Trigger states, measured AFTER the handoff/receipt/learning text was appended**, all under
+  `--budget-bytes 65536`: `SESSION_NOTES.md` 30,599 B (does not fire), `HANDOFFS.md` does not
+  fire, `CHANGELOG.md` does not fire — no trim owed this session.
+- **`context_budget.py` post-append run:** exactly the documented expected state — `CLAUDE.md`
+  43,348 B / resident total over (red by design, remedy filed), `SESSION_NOTES.md` ok.
+- **Close-out checklists:** lint DONE (touched `.R` file clean, package loaded first); no new
+  exports/statistics/Shiny features → NEWS/pkgdown/citation/tutorial/`a2interactive` N/A (a
+  roxygen comment on a `@noRd` internal changes no user-facing surface); no BACKLOG item
+  completed and none names a GitHub issue → issue close-out N/A; CI green all session, no CI
+  break found; quality_ratchet cited in the receipt (0/0, manifest empty by design).
+- Sha self-reconcile commit follows with its own entry; expect 0 undocumented commits past the
+  frontier at next Phase 0.
+
 ### 2026-09-19 · [ad hoc] S723: BACKLOG baseline-warnings item annotated — owner-reported RStudio test warnings triaged to it; block list marked stale (10 → 15 → 40), re-derive-the-inventory instruction added
 - Mid-session owner report: `markerKinship()` "share no heterozygous locus" warnings at
   `test_modMarkerGenetics.R:1649`/`:1712` (issue #152 sequence-export-preview tests, S535's

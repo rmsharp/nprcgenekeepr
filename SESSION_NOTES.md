@@ -30,17 +30,87 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 722 Handoff Evaluation (by Session 723)
+**Score: 9/10.** **What helped:** gotcha (3) WAS this session's deliverable, pre-diagnosed in
+full — file:line, root cause (roxygen markdown parses `[0, 1]` as a link to topic "0, 1"),
+scope (`@noRd`, warning-only, no output effect), and the remedy ("escape the brackets") — zero
+diagnosis time; follow-up (A)'s framing predicted exactly how the session would open (the owner
+pasting RStudio Install output); the full-suite baseline (2437/0/0/184/40) matched this
+session's regression read exactly; "expect 0 undocumented commits; measure it" measured 0; the
+truncated-S720-stub report-only finding was accurate in substance. **What was missing:**
+nothing material. **What was wrong:** one minor stale anchor — the truncated-stub pointer said
+`HANDOFFS.md:171-175`, but S722's own receipt (prepended after the note was written) shifted it
+to ~188-192 by read time; locate it by grep/structure, not line number. **ROI:** high.
+
 ### What Session 723 Did
-**Deliverable:** Fix the roxygen unresolved-link warning at `R/makePedigreeDiagramData.R:2414`
-(`@param t ... in [0, 1].` parses as a markdown link to topic "0, 1") so RStudio
-Install/`document()` runs are warning-free. (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Work beginning. Owner-picked via `AskUserQuestion` after reporting
-their RStudio-button Install (S722 follow-up A) succeeded end-to-end with this pre-existing
-`@noRd` cosmetic warning the only remaining output noise.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** roxygen unresolved-link warning fix — **DONE.** `R/makePedigreeDiagramData.R:2414`
+`@param t ... in [0, 1].` escaped to `\[0, 1\]`, so `devtools::document()`/RStudio-Install runs
+are warning-free. Session trigger: the owner's RStudio-button Install (S722 follow-up A)
+succeeded end-to-end — S722's encoding fix verified on the live GUI surface — with this warning
+the only remaining noise; owner picked the fix via `AskUserQuestion`. No TDD phases (docs-only
+roxygen comment, S720–S722 precedent); lint checklist applied (tracked `.R` file touched).
+**Started/completed:** 2026-09-19 (single session). Claim `3980cc31`; deliverable `d2a43162`;
+BACKLOG annotation `e2a91424`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per commit; deliverable entry carries the verification record.
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile clean (0 undocumented commits, predicted 0); CI 10/10 green (still on
+   the S719 commit — now 18+ unpushed commits have never seen CI); dashboard 96/100;
+   context-budget reds by-design only. Incidental finding: the iCloud duplicate `.R` files are
+   gone and the repo now lives outside iCloud — that Housekeeping item's close condition looks
+   satisfiable (confirm-and-close, future session).
+2. **Task pick:** owner clarified via their pasted Install output; picked the warning fix from a
+   4-option `AskUserQuestion`. Claim `3980cc31`.
+3. **Fix + verification (`d2a43162`):** one-line escape. (1) Pre/post stash test — the warning
+   reproduces on unfixed HEAD via `document(roclets = c("rd","collate","namespace"))`, absent
+   with the fix; the first post-fix check was INVALID (run under `suppressMessages()`, which
+   hides roxygen's cli-emitted warning) and was caught and re-run unsuppressed. (2) Zero
+   collateral: `man/`/`NAMESPACE` untouched. (3) Lint: no lints (package loaded first,
+   Learning 224). (4) Full clean regression read `blocks=2437 failed=0 error=0 skipped=184
+   warning=40` — equals the S718–S722 baseline exactly.
+4. **Mid-session owner report** (markerKinship NA warnings in RStudio test runs,
+   `test_modMarkerGenetics.R:1649`/`:1712`) triaged to the existing BACKLOG baseline-warnings
+   Housekeeping item — those 2 blocks are NOT in its stale 3-block list; source confirmed
+   `R/markerKinship.R:135` (documented NA path, working as designed). Annotated the item
+   (`e2a91424`): count 10→15→40, re-derive-the-inventory instruction added. No fix (1-and-done).
+
+**Self-assessment (Session 723): 9/10.** **Strengths:** (1) caught its own unsound verification
+— the `suppressMessages()` first check would have claimed "warning gone" on a channel that
+could not see the warning — and re-proved unsuppressed with a pre/post stash test on the exact
+surface; (2) zero collateral, exact-baseline suite; (3) the owner's mid-session warning report
+was triaged to the tracked item with a verified annotation instead of scope-creeping into a fix.
+**Weaknesses:** (1) that first invalid check happened at all — absence-of-output must never be
+verified under suppression; (2) a noisy sibling-instance grep was run before realizing roxygen's
+own output IS the exhaustive unresolved-link inventory (one wasted step).
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~23 expected after close-out: 18 pre-existing +
+claim + fix + annotation + records + sha; the last two are an estimate at write time). The
+warning fix reaches other clones only once pushed. (B) **Warning-cleanup session** (READY,
+Effort S) — the annotated baseline-warnings item; owner showed active interest this session;
+start by re-deriving the full warning-emitting block inventory from a fresh suite run, then
+apply Learning 273(d) `suppressWarnings()` or fixture completion per the item. (C) Priorities:
+`CLAUDE.md` reduction campaign (READY, M); pedigree-growth measurement (READY, S,
+owner-requested S721); owner decisions pending: package-split disposition, REUSE registration.
+(D) Report-only standing findings: HANDOFFS.md truncated duplicate S720 stub (locate by grep
+for two adjacent `session: S720` blocks — line numbers drift); iCloud Housekeeping item now
+closable pending a duplicates-stay-gone confirmation.
+
+**Key files:** `R/makePedigreeDiagramData.R:2414` (the escaped line),
+`R/markerKinship.R:135` (the NA-warning emission the owner asked about),
+`BACKLOG.md` baseline-warnings item (S723 annotation at its tail), `CHANGELOG.md` S723
+entries, `PROJECT_LEARNINGS.md` Learning 768.
+
+**Gotchas for the next session:** (1) **Never verify absence-of-warning under
+`suppressMessages()`** — roxygen2 (and cli-based tooling generally) emits warnings as messages;
+a clean result under suppression is unsound (Learning 768). (2) The 40 suite warnings are ALL
+the tracked baseline item's class — suite green 0F/0E; re-derive the block inventory, don't
+trust the item's enumeration. (3) Standing gotchas carry forward: context-budget reds by design
+until the CLAUDE.md reduction campaign; every `methodology_trim.py` run needs
+`--budget-bytes 65536`; the stray `~$e Compounding Loop.html` still makes `devtools::check()`
+warn and exit 1 non-interactively; `renv.lock` carries no dev tooling (the `Rscript`
+out-of-sync banner is expected). (4) Full-suite baseline re-confirmed this session:
+2437/0/0/184/40.
 
 ### Session 721 Handoff Evaluation (by Session 722)
 **Score: 9/10.** **What helped:** the BACKLOG Up Next item S721 filed was a ready-to-execute
