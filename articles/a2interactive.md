@@ -529,15 +529,6 @@ R package uses, and matching **makePedigreeMatingLayout**’s own default
 
 diagramDataRectilinear <- makePedigreeMatingLayout(demoPed,
                                                      edgeStyle = "rectilinear")
-```
-
-    ## Warning: makePedigreeMatingLayout(): 10 same-row edge-node collision(s) could
-    ## not be fully resolved (residual after the repair-pass cap, or an unconfirmed
-    ## curved-connector heuristic) -- rendered output may still show a straight or
-    ## curved edge passing near an unrelated node.
-
-``` r
-
 names(diagramDataRectilinear)
 ```
 
@@ -1454,7 +1445,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpSups85/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpZZnClI/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1490,7 +1481,7 @@ ped[ped$id %in% c("s2", "d2", "o3", "o4"), ]
 
     ##   id sire  dam sex gen      birth exit  age recordStatus
     ## 2 d2 <NA> <NA>   F   0 2006-04-13 <NA> 20.4     original
-    ## 4 s2 <NA> <NA>   M   0 2006-06-19 <NA> 20.2     original
+    ## 4 s2 <NA> <NA>   M   0 2006-06-19 <NA> 20.3     original
     ## 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.4     original
     ## 8 o4   s2   d2   M   1 2015-09-16 <NA> 11.0     original
 
@@ -2226,8 +2217,8 @@ into the de-identified table.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-09-18 20:26:54.847954. The processing
-time for this document was 22 seconds..
+The current date and time is 2026-09-19 06:28:53.150236. The processing
+time for this document was 23 seconds..
 
 ``` r
 

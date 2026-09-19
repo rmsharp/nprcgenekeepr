@@ -33,6 +33,323 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · \[ad hoc\] S717 claim: owner-directed push to `origin/master` (S716 next-step A, owner-picked via `AskUserQuestion` at Phase 0)
+
+- Process/ops session, no TDD phases (S711 precedent): push the ~33
+  pending commits (S712–S716, incl. real package code — the S715
+  curved-connector fix and the S716 MHC display rounding, both never yet
+  seen by CI), then watch all 4 on-push workflows to completion. Claim
+  made BEFORE the push so the pushed head carries the session’s own
+  breadcrumb. Stub + pending receipt committed with this entry.
+
+### 2026-09-19 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `b229a305` — S716’s close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt), the documented recurring 1-commit shape; backfilled by the next session’s Phase 0 reconcile
+
+### 2026-09-18 · \[BL\] S716 close-out: MHC Haplotype Reporting polish DONE — display-only 4-decimal frequency rounding, `@return` rewritten, NEWS stale-phrase sweep + heading repair, article screenshot re-captured
+
+- **Deliverable (strict TDD for the code part, every gate owner-approved
+  via `AskUserQuestion`; BACKLOG item removed in this commit):**
+  `output$mhcSummaryTable` (`R/modMarkerGenetics.R:1170`) now renders
+  `DT::formatRound(DT::datatable(tbl), "frequency", digits = 4L)` — a
+  client-side display renderer gated on `type !== 'display'`, so the
+  `mhcHaplotypeSummaryTable` reactive, the CSV export, and DT’s own
+  sorting/filtering keep full precision. RED `27d06c97` (3 formatter
+  grepls failing at HEAD for the right reason + reactive-identity and
+  pre-upload pins), GREEN `dbd68126` (3-line edit). REFACTOR judged
+  unnecessary at the owner-approved GREEN exit gate.
+- **Docs (owner-scoped pre-RED):**
+  [`modMarkerGeneticsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsUI.md)
+  `@return` rewritten to the real 8-sub-tab UI (`c4fb69f3`, `document()`
+  scope-checked); NEWS.Rmd sweep removed all 8 verified-stale “no Shiny
+  screen yet” phrases (owner-ratified beyond the 2 the item named; the 2
+  accurate ones stay) and repaired 2 pre-existing swallowed section
+  headings (`## MHC Haplotype Reporting`, `## Genetic Value Analysis`
+  rendered as literal `\##` for want of a preceding blank line); NEWS
+  plain-language entry for the rounding (`37d17a55`);
+  colony-manager-guide MHC screenshot re-captured live at the original
+  framing (`476372e6`) — re-obligated by this session’s own display
+  change.
+- **Verification:** full clean regression 2,437 blocks 0 failed / 0
+  error (+1 = the new test block; warnings 40 unchanged);
+  `lintr::lint_package()` 0; wordlist/moduleContract/pkgdown guards
+  green; Phase 3E live smoke: all rendered page-1 frequency cells
+  exactly 4 decimals, no module console errors; full MHC e2e green under
+  `NPRC_RUN_E2E=true` incl. the full-precision CSV download pins;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors + the known pre-existing 1 W / 1 N untracked-file artifacts.
+  Learning 765 appended (DT 0.34.0 formatX seam + the NEWS
+  render-diff/`\##` reflex + the e2e opt-in corollary).
+
+### 2026-09-18 · \[BL\] S716 claim: MHC Haplotype Reporting follow-up polish (BACKLOG Housekeeping item, issue \#148 Slice 4 close-out; owner-picked via `AskUserQuestion` at Phase 0)
+
+- Three-part polish, strict TDD for the code part: (1) display-only
+  rounding of the `frequency` column in `output$mhcSummaryTable`
+  (`R/modMarkerGenetics.R`; the `mhcHaplotypeSummaryTable` reactive and
+  the export stay untouched — tests pin those exactly), (2)
+  [`modMarkerGeneticsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsUI.md)’s
+  `@return` updated to cover the tabs shipped by \#148 Slice 4 / \#152 /
+  \#153, (3) the two stale “no Shiny screen yet” `NEWS.Rmd` phrases
+  fixed + `NEWS.md` re-rendered (plain-language criterion). Stub +
+  pending receipt committed with this entry.
+
+### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `56c705b8` — S715’s close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt), the documented recurring 1-commit shape; backfilled by the next session’s Phase 0 reconcile
+
+### 2026-09-18 · \[BL\] S715 close-out: curved duplicate-connectors FIXED — arc-verified roundness selection ships; cArc 587 → 149 events, 117 → 72 arcs; exemplar + Track C warnings cleared, owner-ratified renders
+
+- **Deliverable (strict TDD, every gate owner-approved via
+  `AskUserQuestion`; BACKLOG item removed in this commit):**
+  `.resolveEdgeNodeCollisions()`’s curved branch
+  (`R/makePedigreeDiagramData.R`) now scores each connector’s PAINTED
+  arc for TRUE disc hits — `.curvedCwVia()` (the S714-verified
+  vis-network `curvedCW` transcription), `.bezierPointAt()`,
+  `.bezierMinDistTo()` (exact cubic solve), `.arcDiscHitCount()` (a
+  conservative Lipschitz-bound sampled prefilter keeps the exact solve
+  to near-boundary candidates; counts provably unchanged, resolve 0.21 →
+  0.95 s instead of +4.4 s unoptimized) — and walks the roundness ladder
+  `seq(0.05, 0.60, 0.05)` in preference order (fewest true hits, tie →
+  closest to base 0.2, tie → smaller). `curved-heuristic` residuals now
+  disclose exactly the arcs no step fully clears. RED `d39c66eb` (7
+  assertions failing for the right reasons, incl. the never-worse
+  property the old bump measurably violated), GREEN `704d7c4c`.
+- **Verification:** target file + exemplar file green; full clean
+  regression 2,436 blocks, 0 failed / 0 error (warnings 48 → 40 = the
+  cleared collision warnings); `lintr::lint_package()` 0;
+  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+  0 errors + the known pre-existing 1 W / 1 N untracked-local-file
+  artifacts; census re-run `69152999` (postfix CSV; frozen 2026-09-02
+  and 2026-09-18 baselines untouched): \*\*cArc 587 → 149 events,
+  cArcEdges 117 → 72; Track C fully arc-clean; class
+  2.  = 6 unchanged\*\*, so the fidelity article’s “6 of 237” is NOT
+      re-obligated. Test pins re-derived: residuals 56 → 72 (the true
+      population, no longer chord false positives), the S690 named pair
+      `__dup_1X40V5_1 → 1X40V5` now pins UNCHANGED 0.2 (it was a false
+      positive), `__dup_0L5AWR_1 → 0L5AWR` pins cleared-at-0.5 (6 → 0
+      hits).
+- **Exemplar warning pins (owner-ratified at the GREEN gate, per the
+  S693 pin’s own re-render rule):** linebreeding + half_sib now render
+  warning-free (their 4 pinned residuals = 1 chord false positive + 3
+  true collisions, all cleared by the ladder);
+  `test_examplePedigreeFixtures.R` specs flipped, renders
+  `scratchpad/s715_render_{linebreeding,half_sib}_after.png` approved.
+- **Incidental (`fa4ec9ad`):** S714’s article edit left
+  `test_wordlist_coverage.R` failing on `px` (that session touched no
+  package files and carried the baseline forward — the carried-baseline
+  heuristic has a hole for `.qmd`-fed tests, Learning 764); fixed via
+  `inst/WORDLIST` per the S564/S565 precedent. NEWS.Rmd plain-language
+  entry + NEWS.md render in `69152999`.
+- **Runtime evidence (Phase 3E):** live chromote renders through the
+  app’s own widget construction (the S712/S714 verified path) — 2
+  exemplar full views + Real-375 before/after site crops
+  (`scratchpad/s715_render_site_0L5AWR_{before,after}_zoom.png`).
+
+### 2026-09-18 · \[BL\] S715 claim: curved duplicate-connectors fix — arc-verified roundness selection replacing the blind +0.3 bump
+
+- Session claimed (stub + pending receipt + this entry). Owner picked
+  the S714-filed BACKLOG Housekeeping item via the Phase 0
+  `AskUserQuestion` picker. Scope: `.resolveEdgeNodeCollisions()`’s
+  curved branch (`R/makePedigreeDiagramData.R`) gains arc-verified
+  roundness selection using the census’s exact predicates (ported as
+  internal helpers); strict TDD; `test_resolveEdgeNodeCollisions.R` pins
+  re-derived; census re-run + full suite + lint at verification.
+- **Ledger repair (ad hoc, disclosed):** removed a 5-line truncated
+  duplicate S713 receipt header (an unclosed ```` ```handoff ```` fence,
+  no unique content) that S714’s records commit `8c717ee6` accidentally
+  inserted into `HANDOFFS.md` between the S714 prose and the real S713
+  receipt.
+
+### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `0b4d84bb` — S714 close-out self-reference
+
+- S714’s final commit recorded its own records-commit sha (`8c717ee6`)
+  into the `HANDOFFS.md` receipt after the ledger entry was written —
+  the recurring self-reconcile shape (predicted “~1” by the S714
+  handoff; measured 1). Backfilled at Session 715 Phase 0.
+
+### 2026-09-18 · \[BL\] S714 close-out: curved-chord upper bound REPLACED by the true arc census — 1,668 chord rows were 100% false positives; real population 587 events / 117 arcs; fix item ratified and filed
+
+- **Deliverable (`318c32da`; curved-chord BACKLOG block replaced by the
+  ratified fix item in this commit):** the census now measures the arc
+  vis-network actually paints. The `curvedCW` via formula was
+  transcribed from the bundled `vis-network.min.js` and verified against
+  the LIVE widget via chromote (`edgeType.getViaNode()`): max
+  \|via(model) − via(live)\| = 1.1e-13 px over all 173 curved edges,
+  per-edge roundness overrides (0.2 / bumped 0.5) confirmed applied.
+  Exact point-to-quadratic distances (cubic root solve), no sampling.
+- **Findings (audit doc
+  `docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_ 2026-09-18.md`):** (1)
+  overlap join: 0 of the frozen 1,667+1 chord pairs are true hits — the
+  arc bows over every same-row chord obstacle; (2) the true population,
+  587 events on 117 of 170 Real-375 connectors (Track C arc-clean), sits
+  entirely where no predicate ever looked: 485 events on cross-row
+  connectors (`c1` was same-row-only, `c2` skipped curved), 102 from
+  bumped arcs crossing upper rows; median penetration 10.9 px of a 25-px
+  radius; (3) the repair pass’s blind +0.3 roundness bump is
+  net-negative on Real 375 (21 arcs hit at 0.2 → 24 at the shipped
+  0.5); (4) incidental: vis-network parseInt-truncates predefined node
+  coordinates — counts stable under that quantization (587→586 events,
+  117 arcs in every ±1-px jitter draw) (Learning 763). Census script
+  extended (`c-arc-inside`, scoreboard `cArc`/`cArcEdges`, chord
+  subclass retired, lint 0, post-lint re-run byte-identical); new
+  baseline CSV
+  `docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_findings.csv`
+  (595 rows); frozen 2026-09-02 artifacts untouched.
+- **S713 forward-carry discharged:** the re-run reports class (b) = 6
+  (first post-S713 confirmation of the ratified dust floor); the
+  fidelity article’s mate-line paragraph now cites 6 of 237
+  (`vignettes/articles/ kinship2-fidelity-validation.qmd`), the caveats
+  bullet verified count-free, Track B centering re-verified (b = 0 on
+  both Track B fixtures).
+- **Owner gate (recommended option taken):** fix item filed —
+  arc-verified roundness selection replacing the blind bump (BACKLOG,
+  READY, Effort M, strict TDD; full brief in the block, incl. which
+  `test_resolveEdgeNodeCollisions.R` pins re-derive). Corpus sweep: the
+  test comments’ “47” figures are frozen CHANGED-history (live pin 56L,
+  correct); the only stale live “47” was in the removed BACKLOG block.
+
+### 2026-09-18 · \[BL\] S714 claim: census curved-chord arc-modelling measurement pass
+
+- BACKLOG Housekeeping “Census curved-chord heuristic” item (S713
+  next-step A), owner-picked via `AskUserQuestion` at Phase 0.
+  Deliverable: model the actually-drawn arc geometry (render layer’s
+  curved connectors + the roundness bump applied to duplicate
+  connectors) and count how many drawn arcs truly pass inside a visible
+  unrelated symbol — replacing the 1,667 Real-375 + 1 Track C
+  `c-curved-chord` chord-heuristic upper bound — reproducibly, by
+  extending `data-raw/pedigreeDrawingErrorCensus.R` or a committed
+  sibling script; then recommend whether a fix item is warranted.
+  Carries the S713 forward-carry (article “8 of 237” sites + Track B
+  centering) if a census re-run lands. Measurement/scoping session, no
+  TDD phases unless package code turns out to be touched. Stub + pending
+  receipt written with this entry.
+
+### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 35a33905 — S713 close-out self-reconcile
+
+- S713’s final commit recorded its own close-out commit sha (`f67830a1`)
+  into the completed `HANDOFFS.md` receipt — the recurring
+  self-reference shape S713’s own handoff predicted (gotcha 4, “expect
+  ~1”). Measured: exactly 1 commit past the frontier. No other action in
+  the gap.
+
+### 2026-09-18 · \[BL\] S713 close-out: census class (b) CLOSED — 6 real rows accepted as minSep-forced structural residuals, 2 dust rows ratified out of the predicate (both owner-ratified)
+
+- **Deliverable (BACKLOG “Census class (b)” block removed in this
+  commit):** the census’s 8 class-(b) rows are fully dispositioned. The
+  **6 real 60–180 px rows** (`__union_97/114/130/137/191/228`) are
+  **accepted as structural residuals, no fix item**; the **2
+  numerical-noise rows** (`__union_75` ≈ 2.8e-5 px, `__union_132` ≈
+  1.0e-6 px) are solver dust, and the census predicate now skips below
+  the test suite’s own 1e-3 raw-unit (0.12 px) meaningful floor
+  (`data-raw/pedigreeDrawingErrorCensus.R`, commit `de4e6ce8`) so future
+  runs report 6. The frozen 2026-09-02 census CSV is untouched (audit
+  record; closure lives here).
+- **Evidence — forced vs reducible (the item’s own question), both
+  instruments agreeing (`scratchpad/s713_probe.R`/`s713_probe2.R`,
+  results in `scratchpad/s713_probe_results.rds`):** (1) binding-chain
+  analysis: every adjacent pair between each of the 6 unions’ rendered
+  mates is BINDING at its floor, and the chain-implied minimum offset
+  given the solved mate span equals the observed offset exactly
+  (0.5/0.5/1.0/1.5/1.0/0.5 raw units) — marry-in-chain /
+  polygamous-anchor crowding (WCPXHD’s 5-unit chain, HV7LZ3’s 3-unit
+  anchor);
+  2.  wUnion sweep 2 → 2e5 on trace()-captured QP inputs (target
+      component: 733 variables): offsets shrink only by stretching mate
+      spans (`__union_137` 480 → 1,787 px; `__union_130` 360 → 834 px) —
+      i.e. **minSep-forced at the owner-ratified S675 weights**;
+      centering by weight escalation degrades the layout and would
+      contradict the no-weight-tuning mandate. The 6 are already
+      disclosed, named, and bounded (≤ 1.55 u) by the committed
+      structural-residual test
+      (`tests/testthat/test_positionMatingUnitForest.R`, Learning 726
+      pattern), whose own comment reads “8 rows of which 2 dust = 6
+      meaningful” — the predicate change aligns the census with that
+      same dust line (Learning 762).
+- **Continuity:** frozen census reproduced to the digit from
+  `s712_layouts.rds` (max \|diff\| ≈ 2e-15 u on all 8 rows) and from a
+  fresh current-engine run (6 real rows to 1e-12) before any
+  counterfactual was trusted. Predicate edit verified: old skip
+  reproduces the frozen 8 on the current layout; new floor yields
+  exactly the disclosed 6, dropping exactly the 2 dust rows.
+  `lintr::lint_package()` (loaded per Learning 224): 0 lints. Crops of
+  all 4 neighbourhoods (`scratchpad/s713_crop_*.png`): each “off-centre”
+  dot sits adjacent to its distal marry-in mate — the conventional
+  multiple-marriage-chain rendering.
+- **Coupled prose re-verified (no edit owed now):** Track B “all four
+  union dots exactly centered” re-measured live (max residual 1.9e-11
+  px); the article’s “8 of 237 … where the separation floors bind” stays
+  accurate as a citation of the standing frozen baseline — the count
+  becomes 6 only at the next census re-run, an obligation
+  forward-carried into the curved-chord BACKLOG item.
+
+### 2026-09-18 · \[BL\] S713 claim: census class (b) off-centre union-dot assessment
+
+- S712 next-step A / BACKLOG “Census class (b)” item, owner-picked via
+  `AskUserQuestion` at Phase 0. Deliverable: (i) decide whether the 2
+  numerical-noise rows (`__union_75` −2.3e-07 units, `__union_132`
+  8.7e-09 units) belong in the census (the visible-offset tolerance
+  question for the census predicate); (ii) determine whether the 6 real
+  60–180 px offsets (`__union_97/114/130/137/191/228`) are minSep-forced
+  or QP-reducible (`R/makePedigreeDiagramData.R`,
+  `.solveJointQP()`); (iii) re-verify the coupled fidelity-article prose
+  (“8 of 237”, 0.00-px Track B centering). Assessment session. Stub +
+  pending receipt written with this entry.
+
+### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit ed79261f — S712 close-out self-reconcile
+
+- S712’s final commit recorded its own close-out commit sha into the
+  completed `HANDOFFS.md` receipt (the recurring 1-commit self-reference
+  shape its handoff gotcha 4 predicted; measured exactly 1). Backfilled
+  at S713 Phase 0 reconcile.
+
+### 2026-09-18 · \[BL\] S712 close-out: census class (d) CLOSED — both duplicate-adjacent sites assessed acceptable (owner-ratified)
+
+- **Deliverable (this commit; BACKLOG “Census class (d)” block removed
+  in it):** the census’s 2 class-(d) “adjacent” rows
+  (`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_ 2026-09-02_findings.csv`
+  rows 3 and 1679 — the CSV itself is a frozen audit record, unchanged)
+  are **closed as visually acceptable**, owner-ratified via
+  `AskUserQuestion` with all 6 crops presented.
+- **Evidence:** fresh current-engine layouts of both fixtures (default
+  rectilinear; `scratchpad/s712_probe.R`, cached at
+  `scratchpad/s712_layouts.rds`) reproduce the census to the digit —
+  Track C `__dup_Y_2`/`Y` dx = 120.0 px exactly, Real 375
+  `__dup_SLN0TF_2`/`SLN0TF` dx = 119.9999999992 px; both pairs same-row
+  with ZERO nodes strictly between; the dashed duplicate-connector is
+  present in the edge frame at both sites. Crops (100% / 2.2x / context
+  per site, Learning 732 recipe, `scratchpad/s712_crop_*.png`): Track C
+  plainly legible (70-px rim gap, connector visible); Real 375
+  structurally identical, its short connector visually obscured only by
+  unrelated long-range dashed chords — the class-(c) curved-chord
+  density issue tracked in its own BACKLOG item, not an adjacency
+  defect.
+- **Rationale for acceptance:** adjacent-at-minSep (1 raw unit = 120 px,
+  the engine’s own same-row minimum) is the same spacing as any other
+  adjacent pair on the row; the overlap subclass (\< 50 px) has count 0;
+  adjacency minimizes duplicate-connector length, and added separation
+  would lengthen the connector and feed the very class-c clutter that is
+  the only legibility concern observed. No separation follow-up scoped.
+  Coupled-prose check:
+  `vignettes/articles/kinship2-fidelity-validation.qmd` contains zero
+  class-(d)/“adjacent” references (grep-verified), so no prose update
+  was owed.
+- **Also closed in-session:** S711’s open CI loop — R-CMD-check on the
+  S711 close-out head completed green (run 35390065689, 33m33s; that
+  head is now 4/4).
+
+### 2026-09-18 · \[BL\] S712 claim: census class (d) duplicate-adjacent assessment
+
+- S711 next-step A / BACKLOG “Census class (d)” item, owner-picked via
+  `AskUserQuestion` at Phase 0. Deliverable: render the 2
+  duplicate-adjacent sites (`__dup_Y_2` vs `Y`, Track C;
+  `__dup_SLN0TF_2` vs `SLN0TF`, Real 375) as crops, verify local
+  geometry programmatically, judge acceptability, and close the item
+  with a dated note or scope a follow-up. Stub + pending receipt written
+  with this entry.
+
+### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 1788e2b8 — S711 close-out self-reconcile
+
+- S711’s final commit recorded its own close-out commit sha into the
+  completed `HANDOFFS.md` receipt (the recurring 1-commit self-reference
+  shape its handoff gotcha 3 predicted; measured exactly 1). Backfilled
+  at S712 Phase 0 reconcile.
+
 ### 2026-09-18 · \[ad hoc\] S711 close-out: owner-directed push DONE — 34 commits to origin/master, all 4 CI workflows green
 
 - **Push (non-commit action):** `955f6f19..afd33514`, 34 commits (32 at

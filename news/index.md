@@ -215,6 +215,16 @@
   line around unrelated animals no longer leave small dangling line ends
   hanging above the detour. Each detour now joins the child’s own line
   directly, so what is drawn is only ink that connects somewhere.
+- The long curved connectors that link an animal’s repeated appearances
+  now choose their curve height by checking the drawn curve itself
+  against every symbol in its path, keeping the curve closest to the
+  standard look that avoids passing through other animals’ symbols. The
+  previous adjustment nudged a crowded connector by a fixed amount
+  without checking the result, which sometimes made the crossing worse.
+  On the bundled 375-animal example this cuts symbol crossings by
+  roughly three quarters; connectors that cannot fully avoid every
+  symbol on a crowded chart remain and are disclosed in the layout
+  warning.
 
 ### Kinship & Pedigree Calculations
 
@@ -283,25 +293,25 @@
   ([`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)):
   reports, for each marker locus, whether its chromosome/position data
   is complete, partial, or missing – PLINK-style. New example files
-  included. No Shiny screen yet (issue
+  included (issue
   [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153)).
 - New
   [`checkLinkageMarkerGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md)
   validates marker panels with more than 2 alleles per locus
   (e.g. STR/microsatellite markers), alongside the existing 2-allele
-  check. No Shiny screen yet (issue
+  check (issue
   [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153)).
 - New
   [`markerRealizedRelatednessVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
   estimates how much a pair’s actual DNA-based relatedness can vary
-  around what the pedigree alone would predict. No Shiny screen yet
-  (issue [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153)).
+  around what the pedigree alone would predict (issue
+  [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153)).
 - New
   [`markerLdBlock()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md)
   reports which nearby markers on the same chromosome tend to be
   inherited together, with a matching
   [`obfuscateLdBlocks()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md)
-  for de-identified export. No Shiny screen yet (issue
+  for de-identified export (issue
   [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153)).
 - The Marker Genetics tab includes a **Linkage and LD Block Metrics**
   sub-tab, combining the locus-coverage, relatedness-variance, and
@@ -309,37 +319,36 @@
   (issue [\#153](https://github.com/rmsharp/nprcgenekeepr/issues/153)).
 - New sequence-scale marker genotype check
   ([`checkSequenceGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.md)),
-  for genotype files with far more markers than a standard panel. No
-  Shiny screen yet (issue
+  for genotype files with far more markers than a standard panel (issue
   [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152)).
 - The DNA-relatedness and candidate-parent calculations
   ([`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)/[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md))
   are optimized to handle large marker panels efficiently (issue
   [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152)).
 - New: computes each animal’s inbreeding level directly from large-scale
-  sequence data (runs of homozygosity), not just from the pedigree. No
-  Shiny screen yet. New
+  sequence data (runs of homozygosity), not just from the pedigree. New
   [`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
   (issue [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152)).
 - New
   [`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md)
-  de-identifies a sequence-scale genotype file’s animal ids. No Shiny
-  screen yet (issue
+  de-identifies a sequence-scale genotype file’s animal ids (issue
   [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152)).
 - The Marker Genetics tab includes a **Genomic ROH (F_ROH)** tab: the
   sequence-based inbreeding calculation above, with de-identified export
   (new
   [`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md))
   (issue [\#152](https://github.com/rmsharp/nprcgenekeepr/issues/152)).
-  \## MHC Haplotype Reporting
+
+### MHC Haplotype Reporting
+
 - New
   [`checkMhcHaplotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMhcHaplotypeFile.md)
   validates a file of MHC haplotype designations – two named haplotypes
   per animal, one row per animal, like the bundled `rhesusGenotypes`
   example data. Designations are taken exactly as written (a trailing
   `?` marks a provisional call). This is the first step toward MHC
-  haplotype frequency and rare-haplotype reporting; no Shiny screen yet
-  (issue [\#148](https://github.com/rmsharp/nprcgenekeepr/issues/148)).
+  haplotype frequency and rare-haplotype reporting (issue
+  [\#148](https://github.com/rmsharp/nprcgenekeepr/issues/148)).
 - New
   [`mhcHaplotypeFrequency()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeFrequency.md)
   summarizes how common each MHC haplotype is in a colony: copies,
@@ -369,6 +378,10 @@
   summary, carrier list, and a record of the settings used; every animal
   in the file must be in the loaded pedigree first (issue
   [\#148](https://github.com/rmsharp/nprcgenekeepr/issues/148)).
+- The MHC haplotype summary’s frequency column now shows four decimal
+  places on screen instead of long full-precision numbers; downloaded
+  files keep the exact values (issue
+  [\#148](https://github.com/rmsharp/nprcgenekeepr/issues/148)).
 
 ### Cross-Center Identity Matching
 
@@ -385,8 +398,10 @@
 - New **Cross-Center Identity** tab: walks a curator through matching
   and merging records from two centers, with a preview and downloadable
   results behind a confirmation step (issue
-  [\#149](https://github.com/rmsharp/nprcgenekeepr/issues/149)). \##
-  Genetic Value Analysis
+  [\#149](https://github.com/rmsharp/nprcgenekeepr/issues/149)).
+
+### Genetic Value Analysis
+
 - The Genetic Value Analysis tab gained a configurable **Ranking
   Scheme** control: choose a priority-tier ranking alongside the
   existing combined kinship/uniqueness score (issue

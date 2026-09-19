@@ -207,16 +207,20 @@ joint-solver positioning engine (S673–S675, 2026-09), a union dot’s
 placement comes from a soft centering objective under hard
 minimum-separation floors: the dot sits at the exact midpoint between
 its two rendered mates wherever spacing allows – on this fixture, all
-four union dots are exactly centered (live-measured, S698) – while on a
-crowded colony-scale pedigree a small off-center residual can remain
-where the separation floors bind (8 of 237 unions on the bundled
-375-individual fixture, per the project’s standing drawing-error census
-baseline). An earlier revision of this paragraph described the dot as
-positioned at the sire’s own symbol; that was accurate for the engine at
-the time (through S667) and is superseded by the joint-solver engine.
-All of this is unrelated to, and unchanged by, the P5-suppression fix,
-which only changes *which* individuals are placed on the diagram, never
-*how* a placed pair’s own mate line is drawn.
+four union dots are exactly centered (live-measured, S698; re-verified
+at the 2026-09-18 census re-run) – while on a crowded colony-scale
+pedigree a small off-center residual can remain where the separation
+floors bind (6 of 237 unions on the bundled 375-individual fixture, per
+the project’s standing drawing-error census: the 2026-09-18 re-run,
+whose class-(b) predicate now skips solver-precision dust below an
+invisible 0.12-px floor, leaving the 6 genuinely floor-bound unions the
+structural-residual test also names). An earlier revision of this
+paragraph described the dot as positioned at the sire’s own symbol; that
+was accurate for the engine at the time (through S667) and is superseded
+by the joint-solver engine. All of this is unrelated to, and unchanged
+by, the P5-suppression fix, which only changes *which* individuals are
+placed on the diagram, never *how* a placed pair’s own mate line is
+drawn.
 
 The two shrunk diagrams show the **same 8 surviving subjects in the same
 2 family groups** – `{P1, P2, M1, G3, L3}` and `{C4, P6, C4a}` –
