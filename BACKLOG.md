@@ -93,6 +93,18 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       steps). **Owner disposition pending** -- the item stays open until the owner accepts or
       rejects the recommendation; nothing else to do here until then.
 ## Housekeeping
+- [ ] **Measure how much this R package has grown due to the pedigree-drawing feature —
+      a rough estimate (±20%) is sufficient** (owner-requested mid-S721, 2026-09-19, READY,
+      Effort S) -- quantify the package-size growth attributable to the pedigree-diagram/
+      drawing capability (issue #129's Diagram tab, S433/S434, through the S643-S699
+      pedigree-drawing campaign): e.g. lines/bytes of the feature's own source and test
+      files (the layout core in `R/makePedigreeDiagramData.R`, the Diagram-tab Shiny module,
+      `R/comparePedigreeStructure.R`, their `tests/testthat/` files, and the pedigree-diagram
+      vignettes/articles) vs. package totals, and/or a before/after comparison against a
+      pre-feature commit (~2026-07-29, before S433). The file-level coupling inventory in
+      `docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` already names the
+      feature's file set and is a good starting point. Owner explicitly accepts a rough ±20%
+      estimate -- shared-infrastructure attribution does not need to be precise.
 - [ ] **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing binary hangs on
       `macos-latest`'s `ChromoteSession$new()` bootstrap** (found S619, 2026-08-20, incidental to
       the chromote CDP-timeout fallback fix below, READY, Effort M -- research only, not

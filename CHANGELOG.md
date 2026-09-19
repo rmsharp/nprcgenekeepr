@@ -30,6 +30,11 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S721: filed owner-requested BACKLOG item — measure package growth attributable to the pedigree-drawing feature (rough ±20% estimate sufficient)
+- Owner request arrived mid-session (during the `Suggests:` audit's research phase); recorded
+  as a `BACKLOG.md` Housekeeping item (READY, Effort S) for a future session, not acted on
+  now (1-and-done: this session's deliverable remains the `Suggests:` audit).
+
 ### 2026-09-19 · [ad hoc] S721 claim: `Suggests:` audit (BACKLOG Housekeeping item, owner-picked via `AskUserQuestion`) — SESSION_NOTES stub + pending HANDOFFS receipt committed *(in progress)*
 - Phase 0 reconcile was clean: 0 undocumented commits past both frontiers (`ba09899c`), exactly
   as S720's close-out entry predicted. CI 10/10 green; dashboard 96/100; `context_budget.py`
