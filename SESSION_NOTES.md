@@ -26,19 +26,108 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 717 Handoff Evaluation (by Session 718)
+**Score: 9/10.** **What helped:** next-step A named this session's exact
+deliverable with the `BACKLOG.md:96` pointer; gotcha 3 predicted the 1-commit
+backfill shape and it measured exactly 1 (`4cfe2dad`); gotcha 2 pre-framed the
+in-flight docs-only CI round precisely (lint green + 3 in progress at
+orientation; all completed green in-session — the S717 open loop is closed);
+gotcha 4 (origin in sync; recount before re-reporting an ahead-count) held
+(0 ahead at orientation). **What was missing:** nothing material — the item was
+DECISION NEEDED, so the population census was this session's own work by
+design; the only unflagged wrinkle was that the S687 item's "e.g." enumeration
+was non-exhaustive (the census found 15 blocks, incl. the S568 Compounding-Loop
+block it didn't name) — discoverable only by the census itself, low cost.
+**What was wrong:** nothing found; every checked claim held. **ROI:** high —
+orientation to owner pick in one pass.
+
 ### What Session 718 Did
-**Deliverable:** Pointer-block sweep ratification + (if ratified) execution — the
-S687-found second population of `[ ]`-marked-but-fully-RESOLVED pointer blocks in
-`BACKLOG.md` (DECISION NEEDED, Effort M; owner-picked via `AskUserQuestion` at
-Phase 0). (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Work beginning: inventory the population, verify
-`CHANGELOG.md` coverage per block, present the ratification gate, then (if
-ratified) apply the S686 4-step relocation convention. Docs-only maintenance,
-no TDD phases.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** Pointer-block sweep — **DONE, owner-ratified** (S687-filed
+BACKLOG Housekeeping item, DECISION NEEDED; owner-picked via `AskUserQuestion`
+at Phase 0, then "remove all 15" ratified via a second `AskUserQuestion` at the
+gate, over a keep-S457/S458 variant and a hold; docs-only maintenance, no TDD
+phases). All 15 `[ ]`-marked-but-fully-RESOLVED pointer blocks removed from
+`BACKLOG.md` (429 lines) plus the completed sweep item itself (15 lines):
+1,119 → 675 lines.
+**Started/completed:** 2026-09-19 (single session). Phase 0 backfill
+`94b39dc7`; claim `f058a8de`; deliverable `b7cc2508`; records commit follows
+this handoff, then a self-reconcile sha commit.
+**Ledger:** claim + deliverable + close-out entries in `CHANGELOG.md`; the
+sweep item removed in the deliverable commit. FM #28 reduction: the deliverable
+IS the reduction (444 lines out of a Phase-0-adjacent mandated read); all three
+trim-managed ledgers verified trigger-not-firing at close-out.
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile backfilled 1 commit (`4cfe2dad`, the predicted
+   recurring self-reconcile shape, measured 1). CI at orientation: lint green +
+   3 in-progress on the S717 close-out head; all completed green in-session,
+   plus scheduled shinytest2 green — 5/5, S717's open loop closed. Dashboard
+   96/100. Owner picked the sweep from the 4-option picker.
+2. **Census:** full `BACKLOG.md` read (all 1,119 lines) → population = 15
+   `[ ]`-marked-but-RESOLVED blocks (the item's "e.g." list named 13; the
+   S545/S549 audit block and the S568 Compounding-Loop block completed it).
+   The 18 genuinely-open `[ ]` items excluded; the borderline S518
+   BACKLOG-compression item excluded as recurring-maintenance per its own
+   S606 correction.
+3. **Verification before the gate:** every resolving session (S457–S568) has
+   dated ledger entries across `CHANGELOG.md` + shards (3–7 headings each;
+   0 FM #27 gaps — vs. the 2 that S529's sweep found); depth spot-check on the
+   densest block (S565 Track B) confirmed the shard entry carries the block's
+   full verification detail; no open sub-threads (S568's untitled-folder
+   finding already stands as its own item, which stays); zero live
+   cross-references from `CLAUDE.md`/`SESSION_NOTES.md`/`HANDOFFS.md`.
+4. **Gate:** owner ratified "remove all 15."
+5. **Execution `b7cc2508`:** guarded line-range script
+   (`scratchpad/s718_sweep.py` — first/last-line anchors verified per range
+   before writing; the guard genuinely fired once on a wrong wrap-boundary
+   anchor and refused, then passed after correction); diff verified
+   deletion-only (429/0); the completed sweep item removed in the same commit;
+   the `CHANGELOG.md` deliverable entry maps every removed block to its
+   resolving session(s) and cites `git show f058a8de:BACKLOG.md` for
+   full-text provenance.
+6. **Close-out:** no new learning appended (routine application of the S686
+   convention + existing verification discipline, no new signal — stated, not
+   silent, per the S711/S712 precedent); this evaluation + handoff; receipt;
+   ledger entries.
+
+**Self-assessment (Session 718): 9/10.** **Strengths:** (1) census-first — the
+ratification gate presented a measured population (15 blocks, per-block ledger
+verification) rather than the item's own unverified enumeration; (2) the
+anchor-guarded deletion script refused once for the right reason and never
+wrote a bad state; (3) tight scope — zero package files, the borderline S518
+item deliberately excluded rather than swept in. **Weaknesses:** (1) the depth
+spot-check covered 1 of 15 blocks (existence was verified for all 15, but full
+block-vs-ledger content diffs were judged disproportionate — disclosed at the
+gate); (2) one wasted script iteration on the wrap-boundary anchor.
+
+**Next steps (specific):** (A) `Suggests:` audit (READY, S — now the top READY
+Housekeeping item, `BACKLOG.md:133`). (B) `context_budget.py` evaluation
+(READY, S, `BACKLOG.md:119`). (C) Push decision (owner): ~5 commits ahead
+after close-out (recount with `git rev-list --count origin/master..HEAD`);
+docs-only delta, so the next push's CI round is docs-only validation.
+(D) Owner decisions pending: package-split disposition (`BACKLOG.md:71`),
+REUSE registration (`BACKLOG.md:155`). (E) Informational: dashboard copy stale
+(v2.14.0 vs v2.18.0); untracked leftovers unchanged (+ this session's
+`s718_sweep.py`, same class); LabKey remainder BLOCKED; chromote root-cause
+optional.
+
+**Key files:** `BACKLOG.md` (post-sweep 675-line file), `CHANGELOG.md:29`
+(S718 entries incl. the per-block removal map), `HANDOFFS.md:146` (S718
+receipt), `scratchpad/s718_sweep.py:1` (the guarded deletion script).
+
+**Gotchas for the next session:** (1) **The fresh full-suite baseline is still
+2,437 blocks** (failed=0, error=0, skipped=184, warning=40) — this session
+touched no package files; S716's gotchas 2–5 (e2e opt-in via `NPRC_RUN_E2E`,
+serialization-coupled formatter greps, NEWS `\##` render check, screenshot
+recipe) apply verbatim. (2) `BACKLOG.md` at 675 lines is deliberately sparse —
+the full text of any removed block is one command away
+(`git show f058a8de:BACKLOG.md`); sparseness is not a ghost session. (3) Expect
+~1 self-reference commit past the CHANGELOG frontier at next Phase 0 (the
+recurring shape); measure it. (4) The chromote item's "CDP-timeout fallback fix
+below" phrase was stale BEFORE this sweep (the referenced block is long gone) —
+a one-word staleness to fix opportunistically if that item is ever picked up.
+(5) This session did not push; the close-out state is local-only until the
+owner directs a push.
 
 ### Session 716 Handoff Evaluation (by Session 717)
 **Score: 9/10.** **What helped:** next-step A was this session's exact

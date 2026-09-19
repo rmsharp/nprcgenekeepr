@@ -146,11 +146,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 ```handoff
 session: S718
 date: 2026-09-19
-status: pending
-active_task: Pointer-block sweep (BACKLOG Housekeeping, DECISION NEEDED, M): inventory the S529–S531-era `[ ]`-marked-but-fully-RESOLVED pointer blocks, verify CHANGELOG coverage, present the ratification gate, then (if ratified) apply the S686 4-step relocation convention. Docs-only maintenance, no TDD phases.
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Pointer-block sweep — DONE, owner-ratified. All 15 `[ ]`-marked-but-fully-RESOLVED pointer blocks removed from BACKLOG.md (429 lines) plus the completed sweep item itself (15 lines): 1,119 → 675 lines. Docs-only maintenance, no TDD phases. No open work from this session.
+what_was_done: Phase 0 backfill 94b39dc7 (1 commit, 4cfe2dad — the predicted recurring self-reconcile shape, measured 1). Claim f058a8de. Census: full BACKLOG.md read → 15-block population (the item's "e.g." list named 13; the S545/S549 audit and S568 Compounding-Loop blocks completed it). Pre-gate verification: every resolving session (S457–S568) has dated ledger entries across CHANGELOG.md + shards (0 FM #27 gaps, vs. the 2 S529 found); depth spot-check on S565 Track B; no open sub-threads; zero live cross-references. Owner ratified "remove all 15" via AskUserQuestion (over keep-S457/S458 and hold). Execution b7cc2508: guarded line-range script (scratchpad/s718_sweep.py, anchors verified per range; the guard fired once, correctly, on a wrap-boundary anchor); diff deletion-only 429/0; sweep item removed same commit; CHANGELOG deliverable entry maps every block to its resolving session(s) and cites git show f058a8de:BACKLOG.md for full-text provenance. CI: the 3 runs in-flight at orientation completed green in-session (+ scheduled shinytest2) — S717's open loop closed. Records commit follows this receipt.
+next_steps: (A) Suggests: audit (READY, S, BACKLOG.md:133 — now the top READY Housekeeping item). (B) context_budget.py evaluation (READY, S, BACKLOG.md:119). (C) Push decision (owner): ~5 commits ahead after close-out (recount with git rev-list --count origin/master..HEAD); docs-only delta. (D) Owner decisions pending: package-split disposition (BACKLOG.md:71), REUSE registration (BACKLOG.md:155).
+key_files: BACKLOG.md:1 (post-sweep 675-line file), CHANGELOG.md:29 (S718 entries incl. the per-block removal map), scratchpad/s718_sweep.py:1 (guarded deletion script), SESSION_NOTES.md:29 (full S718 handoff)
+gotchas: Fresh baseline still 2,437 blocks (failed=0 error=0 skipped=184 warning=40) — no package files touched; S716's gotchas 2–5 (e2e opt-in via NPRC_RUN_E2E, serialization-coupled formatter greps, NEWS \## render check, screenshot recipe) apply verbatim. BACKLOG.md's new sparseness is not a ghost session — removed-block full text is at git show f058a8de:BACKLOG.md. Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0; measure it. The chromote item's "CDP-timeout fallback fix below" phrase was stale before this sweep — fix opportunistically if that item is picked up. This session did not push.
+runtime_smoke: n/a — docs-only (BACKLOG.md/CHANGELOG.md/SESSION_NOTES.md/HANDOFFS.md + an untracked scratchpad script; zero R/, tests/, man/, vignettes/ changes)
+changelog_ref: S718 entries at the top of CHANGELOG.md (claim + deliverable + close-out, 2026-09-19)
 commit: pending
 ```
+S718 self-score 9/10: + census-first — the ratification gate presented a measured 15-block population with per-block ledger verification, not the item's own unverified enumeration; + the anchor-guarded deletion script refused once for the right reason and never wrote a bad state; + tight scope — zero package files, the borderline S518 recurring-maintenance item deliberately excluded. - Depth spot-check covered 1 of 15 blocks (existence verified for all 15; full content diffs judged disproportionate, disclosed at the gate); - one wasted script iteration on a wrap-boundary anchor. Predecessor (S717) scored 9/10: next-step A named this exact deliverable with the BACKLOG pointer; the backfill-shape and CI-round predictions both measured exactly; nothing wrong found; only the item's non-exhaustive "e.g." enumeration was left to the census to discover.
 
 ```handoff
 session: S717

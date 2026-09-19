@@ -26,6 +26,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [BL] S718 close-out: pointer-block sweep session records — SESSION_NOTES handoff + S717 evaluation (9/10), HANDOFFS receipt complete, ledger triggers verified not firing
+- CI note: the 3 workflows in-flight at orientation on the S717 close-out
+  head completed green in-session (test-coverage 12m48s, pkgdown 18m36s,
+  R-CMD-check 31m32s; lint was already green), plus the scheduled shinytest2
+  run green — 5/5; S717's deliberately-unwatched docs-only CI round is
+  closed. FM #28 reduction this session = the deliverable itself (444 lines
+  out of `BACKLOG.md`, 1,119 → 675); `methodology_trim.py --check` verified
+  the SESSION_NOTES/HANDOFFS/CHANGELOG byte triggers all clear at close-out.
+  No new learning appended (routine application of the S686 convention, no
+  new signal — stated, not silent, per the S711/S712 precedent). No push
+  (owner's call, per the standing convention).
+
 ### 2026-09-19 · [BL] S718 deliverable: pointer-block sweep RATIFIED and executed — all 15 `[ ]`-marked-but-fully-RESOLVED blocks removed from `BACKLOG.md` (429 lines, 1,119 → 690)
 - Owner ratified "remove all 15" via `AskUserQuestion` (over a keep-S457/S458
   variant and a hold), extending the S686 completed-item convention to the
