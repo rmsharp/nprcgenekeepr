@@ -2053,9 +2053,10 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
       warning(sprintf(
         paste0("makePedigreeMatingLayout(): %d same-row edge-node ",
                "collision(s) could not be fully resolved (residual after ",
-               "the repair-pass cap, or an unconfirmed curved-connector ",
-               "heuristic) -- rendered output may still show a straight ",
-               "or curved edge passing near an unrelated node."),
+               "the repair-pass cap, or a curved connector whose arc no ",
+               "roundness step fully clears) -- rendered output may still ",
+               "show a straight or curved edge passing near an unrelated ",
+               "node."),
         nrow(resolved$residuals)
       ), call. = FALSE)
     }
@@ -2383,6 +2384,130 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
   list(nodes = finalNodes, edges = finalEdges)
 }
 
+#' The exact via (Bezier control) point vis-network computes for a
+#' \code{smooth.type = "curvedCW"} edge
+#'
+#' Verbatim transcription of the bundled \code{vis-network.min.js}
+#' \code{_getViaCoordinates()} \code{curvedCW} branch (canvas
+#' coordinates, y down), verified against the LIVE widget's own
+#' \code{edgeType.getViaNode()} to 1.1e-13 px over all 173 curved edges
+#' of the duplicate-bearing fixtures (S714 arc census,
+#' \code{docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md}).
+#' The painted ink is a single \code{quadraticCurveTo(via, to)} along
+#' this control point (\code{_bezierCurve()}, same bundle).
+#'
+#' @param x1,y1 the edge's from-node centre.
+#' @param x2,y2 the edge's to-node centre.
+#' @param roundness the edge's \code{smooth.roundness}.
+#' @return \code{c(x = , y = )} -- the quadratic Bezier control point.
+#' @noRd
+.curvedCwVia <- function(x1, y1, x2, y2, roundness) {
+  dx <- x2 - x1
+  dy <- y1 - y2
+  len <- sqrt(dx * dx + dy * dy)
+  fac <- 0.5 * roundness + 0.5
+  g <- (atan2(dy, dx) + fac * pi) %% (2L * pi)
+  c(x = x1 + fac * len * sin(g), y = y1 + fac * len * cos(g))
+}
+
+#' Points along the quadratic Bezier (p0, v, p1) at parameter values t
+#' @param t numeric vector of curve parameters in [0, 1].
+#' @param p0,v,p1 length-2 numerics: endpoints and control point.
+#' @return a length(t) x 2 matrix of (x, y) curve points.
+#' @noRd
+.bezierPointAt <- function(t, p0, v, p1) {
+  cbind(
+    (1L - t)^2L %o% p0[1L] + (2L * t * (1L - t)) %o% v[1L] +
+      t^2L %o% p1[1L],
+    (1L - t)^2L %o% p0[2L] + (2L * t * (1L - t)) %o% v[2L] +
+      t^2L %o% p1[2L]
+  )
+}
+
+#' Exact minimum distance from a point to the quadratic Bezier (p0, v, p1)
+#'
+#' Stationary points of the squared distance are the real roots of a
+#' cubic; those in (0, 1) plus both endpoints are evaluated -- exact, not
+#' sampled (the census's own \code{c-arc-inside} method, S714).
+#'
+#' @param cx,cy the query point (a disc centre).
+#' @param p0,v,p1 length-2 numerics: endpoints and control point.
+#' @return the minimum Euclidean distance.
+#' @noRd
+.bezierMinDistTo <- function(cx, cy, p0, v, p1) {
+  a <- v - p0
+  b <- p1 - 2L * v + p0
+  d <- p0 - c(cx, cy)
+  co <- c(sum(d * a), sum(d * b) + 2L * sum(a * a), 3L * sum(a * b),
+          sum(b * b))
+  ts <- c(0L, 1L)
+  if (abs(co[[4L]]) > 0L || abs(co[[3L]]) > 0L || abs(co[[2L]]) > 0L) {
+    r <- polyroot(co)
+    re <- Re(r)[abs(Im(r)) < 1e-7]
+    ts <- c(ts, re[re > 0L & re < 1L])
+  }
+  pts <- .bezierPointAt(ts, p0, v, p1)
+  min(sqrt((pts[, 1L] - cx)^2L + (pts[, 2L] - cy)^2L))
+}
+
+#' Count TRUE arc-disc hits for one curved connector at a given roundness
+#'
+#' A hit is a candidate disc the painted arc passes \emph{strictly
+#' inside} (min distance < radius - 1e-9) -- the S714 census's
+#' \code{c-arc-inside} convention. \code{cand} must already be
+#' exclusion-filtered (visible nodes only, minus the edge's endpoints
+#' and their graph-adjacent nodes). A conservative sampled prefilter
+#' keeps the exact cubic solve to near-boundary candidates: with 64
+#' curve samples, any curve point lies within
+#' \code{max(|v - p0|, |p1 - v|) / 63} of its nearest sample (curve
+#' speed \code{|B'(t)| <= 2 max(|v - p0|, |p1 - v|)}, half a parameter
+#' step to the nearest sample), so a candidate whose sampled min
+#' distance exceeds its radius by that margin is provably clear, and a
+#' sampled point already strictly inside is a proven hit -- the exact
+#' solve runs only in the remaining ambiguous band, changing no count.
+#'
+#' @param p0,p1 length-2 numerics: the connector's node centres.
+#' @param roundness the \code{smooth.roundness} to score.
+#' @param cand data frame with \code{x}, \code{y}, \code{size} for each
+#'   candidate obstacle disc.
+#' @return integer hit count.
+#' @noRd
+.arcDiscHitCount <- function(p0, p1, roundness, cand) {
+  if (nrow(cand) == 0L) {
+    return(0L)
+  }
+  v <- .curvedCwVia(p0[[1L]], p0[[2L]], p1[[1L]], p1[[2L]], roundness)
+  samp <- .bezierPointAt(seq(0L, 1L, length.out = 64L), p0, v, p1)
+  rmax <- max(cand$size)
+  keep <- cand$x >= min(samp[, 1L]) - rmax &
+    cand$x <= max(samp[, 1L]) + rmax &
+    cand$y >= min(samp[, 2L]) - rmax &
+    cand$y <= max(samp[, 2L]) + rmax
+  cand <- cand[keep, , drop = FALSE]
+  if (nrow(cand) == 0L) {
+    return(0L)
+  }
+  dxm <- outer(cand$x, samp[, 1L], "-")
+  dym <- outer(cand$y, samp[, 2L], "-")
+  sampMin <- sqrt(do.call(pmin, as.data.frame(dxm * dxm + dym * dym)))
+  margin <- max(sqrt(sum((v - p0)^2L)), sqrt(sum((p1 - v)^2L))) / 63L
+  hits <- 0L
+  for (k in seq_len(nrow(cand))) {
+    if (sampMin[[k]] - margin >= cand$size[[k]]) {
+      next  ## provably clear without the cubic
+    }
+    if (sampMin[[k]] < cand$size[[k]] - 1e-9) {
+      hits <- hits + 1L  ## a sampled curve point is already inside
+      next
+    }
+    dd <- .bezierMinDistTo(cand$x[[k]], cand$y[[k]], p0, v, p1)
+    if (dd < cand$size[[k]] - 1e-9) {
+      hits <- hits + 1L
+    }
+  }
+  hits
+}
+
 #' Detect and repair same-row straight-edge/unrelated-node collisions
 #' (Pedigree Diagram, Track 2, issue #160 comment 1)
 #'
@@ -2449,13 +2574,24 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
 #' The curved duplicate-connector arc (\code{smooth.enabled == TRUE}) is
 #' never rerouted through rectilinear waypoints -- that would destroy its
 #' already-shipped, separately-tuned arc styling (S577/S468/S469).
-#' Instead it gets its own same-row check (its \code{gen} can differ from
-#' its real occurrence's \code{gen}, so it is only sometimes same-row)
-#' and, on a collision, a disclosed heuristic nudge (increasing
-#' \code{smooth.roundness}) with no closed-form clearance proof -- always
-#' recorded in \code{residuals} with \code{kind == "curved-heuristic"}
-#' when applied, since its actual effect is confirmed only by rendered-
-#' image inspection, not by coordinate math alone.
+#' Instead it gets \emph{arc-verified roundness selection} (S715,
+#' replacing the earlier blind +0.3 \code{smooth.roundness} bump that the
+#' S714 arc census measured as 100\% false-positive-triggered AND
+#' net-negative, \code{docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_
+#' 2026-09-18.md}): each curved connector's \emph{painted} arc -- the
+#' quadratic Bezier vis-network actually draws, via
+#' \code{\link{.curvedCwVia}}, the S714-verified transcription of the
+#' bundled renderer -- is scored for TRUE hits (passing strictly inside
+#' the disc of a visible node that is neither an endpoint nor
+#' graph-adjacent to one, any row, exact cubic-solve min distance). A
+#' connector with no true hit at its base roundness is left untouched
+#' (the kinship2-convention 0.2 look, S577). A truly colliding connector
+#' tries the roundness ladder \code{seq(0.05, 0.60, by = 0.05)} and keeps
+#' the step with the fewest true hits (tie -> closest to its base
+#' roundness, tie -> smaller); only a connector no step fully clears is
+#' recorded in \code{residuals} with \code{kind == "curved-heuristic"} --
+#' the residual set is now exactly the arcs with a proven remaining
+#' collision, not a chord guess.
 #'
 #' \strong{Never moves an existing node:} every pre-existing node's own
 #' \code{x}/\code{y} is byte-identical before/after -- only new waypoint
@@ -2482,7 +2618,7 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
 
   maxPasses <- 3L
   jogFraction <- 0.15
-  roundnessBump <- 0.3
+  roundnessLadder <- seq(0.05, 0.60, by = 0.05)
   waypointColor <- "#2B7CE9"
 
   .adjacency <- function(edges) {
@@ -2843,7 +2979,9 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     }
   }
 
-  ## Curved duplicate-connector heuristic branch.
+  ## Curved duplicate-connector branch: arc-verified roundness selection
+  ## (S715, replacing the blind same-row-chord +0.3 bump the S714 arc
+  ## census measured as 100% false-positive-triggered and net-negative).
   if (nrow(edges) > 0L && "smooth.enabled" %in% names(edges)) {
     ## Named LISTS, matching .detectStraight() (S630 rationale; applied
     ## to this pass S682): the is.null() guards below need list `[[`
@@ -2856,40 +2994,66 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
     xOf <- as.list(stats::setNames(nodes$x, nodes$id))
     yOf <- as.list(stats::setNames(nodes$y, nodes$id))
     adj <- .adjacency(edges)
-    byRow <- split(nodes$id, nodes$y)
     isCurved <- !is.na(edges$smooth.enabled) & edges$smooth.enabled
     curvedIdx <- which(isCurved)
-    for (i in curvedIdx) {
-      f <- edges$from[[i]]
-      t <- edges$to[[i]]
-      yf <- yOf[[f]]
-      yt <- yOf[[t]]
-      if (is.null(yf) || is.null(yt) || is.na(yf) || is.na(yt) ||
-            !isTRUE(yf == yt)) {
-        next
+    if (length(curvedIdx) > 0L) {
+      sizeNum <- if ("size" %in% names(nodes)) {
+        as.numeric(nodes$size)
+      } else {
+        rep(0.0, nrow(nodes))
       }
-      xf <- xOf[[f]]
-      xt <- xOf[[t]]
-      lo <- min(xf, xt)
-      hi <- max(xf, xt)
-      candidates <- setdiff(byRow[[as.character(yf)]], c(f, t))
-      if (length(candidates) == 0L) {
-        next
-      }
-      cx <- xOf[candidates]
-      inside <- candidates[cx > lo & cx < hi]
-      if (length(inside) == 0L) {
-        next
-      }
-      structMembers <- union(adj[[f]], adj[[t]])
-      trueObstacles <- setdiff(inside, structMembers)
-      if (length(trueObstacles) > 0L) {
-        edges$smooth.roundness[[i]] <- edges$smooth.roundness[[i]] +
-          roundnessBump
-        residualList[[length(residualList) + 1L]] <- data.frame(
-          from = f, to = t, kind = "curved-heuristic",
-          stringsAsFactors = FALSE
-        )
+      sizeNum[is.na(sizeNum)] <- 0.0
+      vis <- data.frame(id = nodes$id, x = nodes$x, y = nodes$y,
+                        size = sizeNum,
+                        stringsAsFactors = FALSE)[sizeNum > 0.0, ,
+                                                  drop = FALSE]
+      for (i in curvedIdx) {
+        f <- edges$from[[i]]
+        t <- edges$to[[i]]
+        xf <- xOf[[f]]
+        yf <- yOf[[f]]
+        xt <- xOf[[t]]
+        yt <- yOf[[t]]
+        if (is.null(xf) || is.null(xt) || is.na(xf) || is.na(xt) ||
+              is.na(yf) || is.na(yt)) {
+          next
+        }
+        p0 <- c(xf, yf)
+        p1 <- c(xt, yt)
+        cand <- vis[!vis$id %in% c(f, t, adj[[f]], adj[[t]]),
+                    c("x", "y", "size"), drop = FALSE]
+        base <- edges$smooth.roundness[[i]]
+        baseHits <- .arcDiscHitCount(p0, p1, base, cand)
+        if (baseHits == 0L) {
+          next  ## the base arc provably clears everything -- untouched
+        }
+        ## Preference-ordered ladder walk: fewest TRUE hits wins; ties
+        ## go to the step closest to the base roundness (the
+        ## kinship2-convention look, S577), then to the smaller step.
+        ## Walking in that preference order means the first strict
+        ## improvement encountered is the preferred one, and the first
+        ## fully-clearing step can stop the walk early.
+        pref <- roundnessLadder[order(abs(roundnessLadder - base),
+                                      roundnessLadder)]
+        bestR <- base
+        bestHits <- baseHits
+        for (r in pref) {
+          h <- .arcDiscHitCount(p0, p1, r, cand)
+          if (h < bestHits) {
+            bestHits <- h
+            bestR <- r
+          }
+          if (bestHits == 0L) {
+            break
+          }
+        }
+        edges$smooth.roundness[[i]] <- bestR
+        if (bestHits > 0L) {
+          residualList[[length(residualList) + 1L]] <- data.frame(
+            from = f, to = t, kind = "curved-heuristic",
+            stringsAsFactors = FALSE
+          )
+        }
       }
     }
   }
