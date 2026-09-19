@@ -152,6 +152,16 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S722
+date: 2026-09-19
+status: pending
+active_task: RStudio-Install vignette-encoding fix — add %\VignetteEncoding{UTF-8} to the 5 built vignettes (a2interactive.Rmd, a3manual.Rmd, a3manual.md, gvaConvergence.Rmd, simulatedKValues.Rmd); verify with RStudio's exact call devtools::document(roclets = c('rd','collate','namespace','vignette')) plus the standard clean regression read (BACKLOG Up Next item, filed post-close-out S721)
+what_was_done: pending
+commit: pending
+```
+<free-text: Phase 1B claim stub — crash breadcrumb. Overwritten to status: complete at Phase 3D.>
+
+```handoff
 session: S721
 date: 2026-09-19
 status: complete

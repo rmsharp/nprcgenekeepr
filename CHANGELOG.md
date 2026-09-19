@@ -30,6 +30,11 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S722 claim: RStudio-Install vignette-encoding fix (BACKLOG Up Next item, filed post-close-out S721) — stub + pending receipt + this entry *(in progress)*
+- Deliverable: add `%\VignetteEncoding{UTF-8}` to the 5 built vignettes; verify with RStudio's
+  exact `devtools::document(roclets = c('rd','collate','namespace','vignette'))` call plus the
+  standard clean regression read. Close-out records the rest.
+
 ### 2026-09-19 · [ad hoc] S721 post-close-out: owner-reported RStudio Install break root-caused (vignette-encoding defect, dormant since S541 `95609eeb`) and DEFERRED to a `BACKLOG.md` Up Next item per owner direction — no fix applied
 - Owner reported "appserver tests failing in RStudio," then "a simple Install fails in
   RStudio," after S721's close-out. Diagnosis (read-only, plus two terminal installs as

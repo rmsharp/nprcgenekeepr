@@ -30,6 +30,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 722 Did
+**Deliverable:** RStudio-Install vignette-encoding fix — add `%\VignetteEncoding{UTF-8}` to the
+5 built vignettes so RStudio's `vignette`-roclet Install path stops failing on
+`a2interactive.Rmd`'s non-ASCII content (BACKLOG Up Next item, READY, S) (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning. No TDD phases expected (vignette metadata, no `.R` files).
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 720 Handoff Evaluation (by Session 721)
 **Score: 9/10.** **What helped:** next-step (B) named this session's exact deliverable with a
 `BACKLOG.md` pointer whose "recount after any BACKLOG edit" caveat proved necessary (the item
