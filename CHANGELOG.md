@@ -30,6 +30,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-19.md` (11 record(s), 66,229 B → 14,869 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **11** record(s) (2026-09-18 → 2026-09-19) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-19.md`](docs/archive/HANDOFFS-through-2026-09-19.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh)
+rather than trusting a digest printed here. Live file 66,229 B → 14,869 B (−77.5%).
+
 ### 2026-09-19 · [ad hoc] S720 close-out: session records (SESSION_NOTES handoff + S719 evaluation 9/10, HANDOFFS receipt complete) and the post-append verification results
 - **Trigger states, measured AFTER the handoff/receipt text was appended** (the S718 lesson —
   a pre-append check certifies the wrong content): under `--budget-bytes 65536`,
