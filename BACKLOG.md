@@ -93,19 +93,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       steps). **Owner disposition pending** -- the item stays open until the owner accepts or
       rejects the recommendation; nothing else to do here until then.
 ## Housekeeping
-- [ ] **MHC Haplotype Reporting follow-up polish** (found S708, 2026-09-18, issue #148
-      Slice 4 close-out; READY, Effort S; lower priority -- nothing is wrong, all three are
-      readability/staleness). (1) The tab's `frequency` column displays full-precision
-      doubles (`0.0333333333333333`, visible in
-      `vignettes/articles/shiny_app_use/marker_genetics_mhc_haplotype.png`) -- round the
-      DISPLAY only (e.g. `DT::formatRound()` in `output$mhcSummaryTable`,
-      `R/modMarkerGenetics.R`), never the returned `mhcHaplotypeSummaryTable` reactive or
-      the export (tests pin those exactly); strict TDD. (2) `modMarkerGeneticsUI()`'s
-      `@return` still describes only the first tab (upload control, guidance area, comparison
-      table) -- predates Slices 4-5 of #152/#153 too. (3) `NEWS.Rmd`'s #148 Slice 1 entry
-      still says "no Shiny screen yet" though the tab now ships (the #152
-      `computeGenomicROH()` entry has the same stale phrase); re-render `NEWS.md` in the
-      same commit, plain-language criterion.
 - [ ] **Sweep the `[ ]`-marked-but-fully-RESOLVED pointer blocks per the completed-item
       convention** (found S687, 2026-09-14, while executing the 28-block `[x]` backfill;
       DECISION NEEDED -- the S686 ratification covered the `[x]` population; confirm the

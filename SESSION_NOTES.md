@@ -26,19 +26,137 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 715 Handoff Evaluation (by Session 716)
+**Score: 9/10.** **What helped:** next-step A was this session's exact
+deliverable, and the BACKLOG block was a complete brief — all three polish
+items with exact pointers (`DT::formatRound()` in `output$mhcSummaryTable`,
+the "never the reactive or export, tests pin those" constraint that shaped
+the whole RED design, the two named NEWS phrases); gotcha 5 predicted the
+1-commit backfill shape (measured exactly 1, `56c705b8`); gotcha 1's baseline
+(2,436/0/0/184/40) reproduced as 2,437 with exactly this session's +1 test
+block; gotcha 2 (an `.Rmd` prose edit owes `test_wordlist_coverage.R`) was
+applied directly before carrying anything forward. **What was missing:**
+(1) no note that every `test-e2e-*` block is OPT-IN via `NPRC_RUN_E2E=true`
+— the "full clean regression" baseline includes them only as skips, so the
+suite alone could never validate this session's rendered-surface change;
+cost one failed smoke invocation to discover (long-documented elsewhere,
+but absent from the handoff chain's recurring gotchas). (2) The item's
+`DT::formatRound()` suggestion predates DT 0.34.0's actual seam (columnDefs
+render fn, not rowCallback) — found by the PRE-RED probe, low cost.
+**What was wrong:** nothing found; every checked claim held. **ROI:** high.
+
 ### What Session 716 Did
-**Deliverable:** MHC Haplotype Reporting follow-up polish (BACKLOG Housekeeping
-item, found S708, issue #148 Slice 4 close-out; owner-picked via
-`AskUserQuestion` at Phase 0) — (1) display-only rounding of the `frequency`
-column in `output$mhcSummaryTable` (`R/modMarkerGenetics.R`, strict TDD; the
-`mhcHaplotypeSummaryTable` reactive and export stay untouched), (2) update
-`modMarkerGeneticsUI()`'s stale `@return`, (3) fix the two stale "no Shiny
-screen yet" `NEWS.Rmd` phrases + re-render `NEWS.md`. (IN PROGRESS)
-**Started:** 2026-09-18
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** MHC Haplotype Reporting follow-up polish — **DONE,
+owner-ratified at every gate** (S708-filed BACKLOG Housekeeping item,
+owner-picked via `AskUserQuestion` at Phase 0; strict TDD for the code part:
+PRE-RED probe → RED → GREEN, REFACTOR judged unnecessary at the
+owner-approved GREEN exit gate; docs parts owner-scoped pre-RED).
+**Started/completed:** 2026-09-18 (single session). Phase 0 backfill
+`edab0fdd`; claim `d0cf1f09`; RED `27d06c97`; GREEN `dbd68126`; docs
+`c4fb69f3`; NEWS entry `37d17a55`; screenshot `476372e6`; records commit
+follows this handoff.
+**Ledger:** claim + close-out entries in `CHANGELOG.md`; MHC-polish BACKLOG
+block removed in the records commit (the FM #28 reduction; all ledgers
+otherwise far under budget).
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile backfilled 1 commit (`56c705b8`, the predicted
+   recurring self-reconcile shape, measured 1). CI 4/4 green + scheduled
+   shinytest2 green (S712–S715 work unpushed; CI head is S711's). Dashboard
+   96/100. Owner picked MHC polish from the 4-option picker.
+2. **PRE-RED probe (`scratchpad/s716_probe.R`):** DT 0.34.0's formatRound
+   lands as a columnDefs render fn gated on `type !== 'display'` (NOT the
+   guessed rowCallback); testServer's renderDT output is a class-"json"
+   character; server-side payload carries no row data (so full-precision
+   pins live on the reactive/export, not the payload). Two owner scope
+   decisions taken pre-RED: NEWS sweep = all 8 verified-stale phrases (not
+   just the 2 named); display digits = 4.
+3. **RED `27d06c97`:** 3 formatter grepls (`"targets":5,"render"`,
+   `DTWidget.formatRound(data, 4`, the display-type gate) + the
+   reactive-identity and pre-upload-not-ready pins; confirmed failing at
+   HEAD exactly on the 3 formatter assertions.
+4. **GREEN `dbd68126`** (3-line edit, `R/modMarkerGenetics.R:1170`):
+   `DT::formatRound(DT::datatable(tbl), "frequency", digits = 4L)`. Target
+   file green; full clean regression 2,437 blocks 0 failed / 0 error
+   (+1 = the new block; warnings 40 unchanged); `lintr::lint_package()` 0.
+5. **Docs `c4fb69f3`:** `modMarkerGeneticsUI()` `@return` rewritten to the
+   real UI (4 uploads, guidance, all 8 sub-tabs); `document()` scope-checked
+   (only `man/modMarkerGeneticsUI.Rd`, NAMESPACE untouched). NEWS.Rmd: all
+   8 stale "no Shiny screen yet" phrases removed (the 2 accurate ones stay)
+   + owner-ratified same-commit repair of 2 pre-existing swallowed section
+   headings (`## MHC Haplotype Reporting`, `## Genetic Value Analysis`
+   rendered as literal `\##` text for want of a preceding blank line —
+   found by diff-checking the render). NEWS.md re-rendered, diff = exactly
+   the edits. Wordlist + moduleContract + pkgdown guards green.
+6. **NEWS entry `37d17a55`:** plain-language bullet for the user-visible
+   rounding change (NEWS.Rmd checklist), render diff = only the bullet.
+7. **Phase 3E:** live-app smoke (`scratchpad/s716_smoke.R`,
+   `NPRC_RUN_E2E=true`): every page-1 frequency cell renders exactly 4
+   decimals (0.0500/0.0333/0.0167/0.1000/0.0667), zero full-precision runs,
+   no module console errors; the full MHC e2e file green (20 assertions
+   incl. the full-precision CSV download pins). `devtools::check()`
+   0 errors + the known pre-existing 1 W / 1 N untracked-file artifacts.
+8. **Screenshot `476372e6`:** the colony-manager guide's MHC figure showed
+   the pre-fix display — re-obligated by this session's own change;
+   re-captured live at the original framing (`scratchpad/s716_recapture.R`;
+   toast dismissed, element crop, top 990 px), caption/fig-alt accurate as
+   written.
+9. **Close-out:** Learning 765 appended; this evaluation + handoff;
+   receipt; ledger entries; BACKLOG block removed.
+
+**Self-assessment (Session 716): 9/10.** **Strengths:** (1) probe-first —
+RED asserted DT 0.34.0's real seam instead of a guessed one; (2) every scope
+expansion (8-phrase sweep, heading repair, screenshot re-capture) was
+owner-gated or convention-mandated, none silent; (3) verification faithful
+per surface: testServer JSON for the formatter declaration, live chromote
+for actual displayed cells, e2e for the untouched export path — the last
+being something the default suite structurally cannot check (e2e is
+opt-in); (4) docs discipline: `document()` scope-checked, NEWS.md
+diff-checked both renders, which is exactly how the pre-existing swallowed
+headings were caught. **Weaknesses:** (1) the RED formatter assertions are
+serialization-coupled (raw-JSON greps) — a DT/htmlwidgets serializer change
+could break them without a behavior change (disclosed as gotcha 3);
+(2) one wasted smoke invocation before rediscovering the `NPRC_RUN_E2E`
+opt-in gate; (3) one wasted screenshot capture before checking
+`get_screenshot()`'s no-overwrite behavior.
+
+**Next steps (specific):** (A) Push decision (owner): now ~31 commits ahead
+(recount with `git rev-list --count origin/master..HEAD`); the delta since
+the last green CI head includes real package code (S715's fix + this
+session's render change), so the next push's CI round is their first remote
+validation. (B) Pointer-block sweep ratification (DECISION NEEDED, M).
+(C) Owner decisions pending: package-split disposition, REUSE registration.
+(D) Lower-priority READY items: `Suggests:` audit (S), `context_budget.py`
+evaluation (S), chromote pinned-Chrome root-cause (M, optional).
+(E) Informational: dashboard copy stale (v2.14.0 vs v2.18.0); untracked
+leftovers unchanged (+ this session's s716_* scratchpad files, same class);
+LabKey remainder BLOCKED.
+
+**Key files:** `R/modMarkerGenetics.R:1170` (the rounded render) and `:165`
+(the rewritten `@return`), `tests/testthat/test_modMarkerGenetics.R:1252`
+(the new display-rounding test), `NEWS.Rmd:265-304` (sweep) / `:296`+`:338`
+(restored headings) / `:327` (the new bullet),
+`vignettes/articles/shiny_app_use/marker_genetics_mhc_haplotype.png`
+(re-captured), `PROJECT_LEARNINGS.md:2225` (Learning 765),
+`scratchpad/s716_probe.R` / `s716_smoke.R` / `s716_recapture.R` /
+`s716_smoke_mhc_summary.png` (evidence + reusable recipes).
+
+**Gotchas for the next session:** (1) **The fresh full-suite baseline is now
+2,437 blocks** (failed=0, error=0, skipped=184, warning=40) — +1 is the new
+MHC display test. (2) **e2e blocks are opt-in** (`NPRC_RUN_E2E=true`,
+helper-shinytest2.R:201): the 0F/0E regression claim structurally excludes
+them; a rendered-surface change owes an explicit e2e run (Learning 765).
+(3) The new test's formatter assertions grep serialized JSON
+(`"targets":5,"render"` etc.) — if a DT/htmlwidgets upgrade breaks them
+with behavior unchanged, re-derive the grep strings from a fresh probe
+(the s716_probe.R pattern), don't loosen the display-only property pins.
+(4) After ANY NEWS.Rmd render: read the NEWS.md diff AND
+`grep -c '\\##' NEWS.md` must be 0 (two headings sat swallowed for many
+sessions; Learning 765). (5) `AppDriver$get_screenshot()` refuses to
+overwrite an existing file — capture aside and `file.copy(overwrite=TRUE)`
+(s716_recapture.R is the recipe, incl. dismissing the QC toast that
+otherwise overlaps the DT header). (6) Expect ~1 self-reference commit past
+the CHANGELOG frontier at next Phase 0 (the recurring shape); measure it.
 
 ### Session 714 Handoff Evaluation (by Session 715)
 **Score: 8/10.** **What helped:** next-step A was this session's exact deliverable,

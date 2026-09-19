@@ -26,6 +26,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL] S716 close-out: MHC Haplotype Reporting polish DONE — display-only 4-decimal frequency rounding, `@return` rewritten, NEWS stale-phrase sweep + heading repair, article screenshot re-captured
+- **Deliverable (strict TDD for the code part, every gate owner-approved via
+  `AskUserQuestion`; BACKLOG item removed in this commit):**
+  `output$mhcSummaryTable` (`R/modMarkerGenetics.R:1170`) now renders
+  `DT::formatRound(DT::datatable(tbl), "frequency", digits = 4L)` — a
+  client-side display renderer gated on `type !== 'display'`, so the
+  `mhcHaplotypeSummaryTable` reactive, the CSV export, and DT's own
+  sorting/filtering keep full precision. RED `27d06c97` (3 formatter
+  grepls failing at HEAD for the right reason + reactive-identity and
+  pre-upload pins), GREEN `dbd68126` (3-line edit). REFACTOR judged
+  unnecessary at the owner-approved GREEN exit gate.
+- **Docs (owner-scoped pre-RED):** `modMarkerGeneticsUI()` `@return`
+  rewritten to the real 8-sub-tab UI (`c4fb69f3`, `document()`
+  scope-checked); NEWS.Rmd sweep removed all 8 verified-stale "no Shiny
+  screen yet" phrases (owner-ratified beyond the 2 the item named; the 2
+  accurate ones stay) and repaired 2 pre-existing swallowed section
+  headings (`## MHC Haplotype Reporting`, `## Genetic Value Analysis`
+  rendered as literal `\##` for want of a preceding blank line); NEWS
+  plain-language entry for the rounding (`37d17a55`); colony-manager-guide
+  MHC screenshot re-captured live at the original framing (`476372e6`) —
+  re-obligated by this session's own display change.
+- **Verification:** full clean regression 2,437 blocks 0 failed / 0 error
+  (+1 = the new test block; warnings 40 unchanged);
+  `lintr::lint_package()` 0; wordlist/moduleContract/pkgdown guards green;
+  Phase 3E live smoke: all rendered page-1 frequency cells exactly 4
+  decimals, no module console errors; full MHC e2e green under
+  `NPRC_RUN_E2E=true` incl. the full-precision CSV download pins;
+  `devtools::check()` 0 errors + the known pre-existing 1 W / 1 N
+  untracked-file artifacts. Learning 765 appended (DT 0.34.0 formatX
+  seam + the NEWS render-diff/`\##` reflex + the e2e opt-in corollary).
+
 ### 2026-09-18 · [BL] S716 claim: MHC Haplotype Reporting follow-up polish (BACKLOG Housekeeping item, issue #148 Slice 4 close-out; owner-picked via `AskUserQuestion` at Phase 0)
 - Three-part polish, strict TDD for the code part: (1) display-only rounding of
   the `frequency` column in `output$mhcSummaryTable` (`R/modMarkerGenetics.R`;
