@@ -26,6 +26,50 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-18 · [BL] S715 close-out: curved duplicate-connectors FIXED — arc-verified roundness selection ships; cArc 587 → 149 events, 117 → 72 arcs; exemplar + Track C warnings cleared, owner-ratified renders
+- **Deliverable (strict TDD, every gate owner-approved via `AskUserQuestion`;
+  BACKLOG item removed in this commit):** `.resolveEdgeNodeCollisions()`'s
+  curved branch (`R/makePedigreeDiagramData.R`) now scores each connector's
+  PAINTED arc for TRUE disc hits — `.curvedCwVia()` (the S714-verified
+  vis-network `curvedCW` transcription), `.bezierPointAt()`,
+  `.bezierMinDistTo()` (exact cubic solve), `.arcDiscHitCount()` (a
+  conservative Lipschitz-bound sampled prefilter keeps the exact solve to
+  near-boundary candidates; counts provably unchanged, resolve
+  0.21 → 0.95 s instead of +4.4 s unoptimized) — and walks the roundness
+  ladder `seq(0.05, 0.60, 0.05)` in preference order (fewest true hits,
+  tie → closest to base 0.2, tie → smaller). `curved-heuristic` residuals
+  now disclose exactly the arcs no step fully clears. RED `d39c66eb`
+  (7 assertions failing for the right reasons, incl. the never-worse
+  property the old bump measurably violated), GREEN `704d7c4c`.
+- **Verification:** target file + exemplar file green; full clean
+  regression 2,436 blocks, 0 failed / 0 error (warnings 48 → 40 = the
+  cleared collision warnings); `lintr::lint_package()` 0;
+  `devtools::check()` 0 errors + the known pre-existing 1 W / 1 N
+  untracked-local-file artifacts; census re-run `69152999` (postfix CSV;
+  frozen 2026-09-02 and 2026-09-18 baselines untouched): **cArc
+  587 → 149 events, cArcEdges 117 → 72; Track C fully arc-clean; class
+  (b) = 6 unchanged**, so the fidelity article's "6 of 237" is NOT
+  re-obligated. Test pins re-derived: residuals 56 → 72 (the true
+  population, no longer chord false positives), the S690 named pair
+  `__dup_1X40V5_1 → 1X40V5` now pins UNCHANGED 0.2 (it was a false
+  positive), `__dup_0L5AWR_1 → 0L5AWR` pins cleared-at-0.5 (6 → 0 hits).
+- **Exemplar warning pins (owner-ratified at the GREEN gate, per the
+  S693 pin's own re-render rule):** linebreeding + half_sib now render
+  warning-free (their 4 pinned residuals = 1 chord false positive + 3
+  true collisions, all cleared by the ladder);
+  `test_examplePedigreeFixtures.R` specs flipped, renders
+  `scratchpad/s715_render_{linebreeding,half_sib}_after.png` approved.
+- **Incidental (`fa4ec9ad`):** S714's article edit left
+  `test_wordlist_coverage.R` failing on `px` (that session touched no
+  package files and carried the baseline forward — the carried-baseline
+  heuristic has a hole for `.qmd`-fed tests, Learning 764); fixed via
+  `inst/WORDLIST` per the S564/S565 precedent. NEWS.Rmd plain-language
+  entry + NEWS.md render in `69152999`.
+- **Runtime evidence (Phase 3E):** live chromote renders through the
+  app's own widget construction (the S712/S714 verified path) — 2
+  exemplar full views + Real-375 before/after site crops
+  (`scratchpad/s715_render_site_0L5AWR_{before,after}_zoom.png`).
+
 ### 2026-09-18 · [BL] S715 claim: curved duplicate-connectors fix — arc-verified roundness selection replacing the blind +0.3 bump
 - Session claimed (stub + pending receipt + this entry). Owner picked the
   S714-filed BACKLOG Housekeeping item via the Phase 0 `AskUserQuestion` picker.

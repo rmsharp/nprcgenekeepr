@@ -26,16 +26,137 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 714 Handoff Evaluation (by Session 715)
+**Score: 8/10.** **What helped:** next-step A was this session's exact deliverable,
+and the BACKLOG block was a complete brief — mechanism, code pointers
+(`R/makePedigreeDiagramData.R` curved branch / `roundnessBump`), the census
+predicate function names to port, exactly which `test_resolveEdgeNodeCollisions.R`
+pins re-derive, and the S577/S675 constraints — PRE-RED went straight to the right
+code with zero discovery; gotcha 4 predicted the 1-commit backfill shape (measured
+exactly 1, `0b4d84bb`); gotcha 2 ("cArc is a NEW metric, never compare against the
+frozen 1,668") framed the census-re-run reporting correctly; the S712→S713→S714
+key-file chain made `s712_layouts.rds` the ready-made pre-fix "before" render with
+zero recomputation. **What was missing:** (1) the exemplar warning pins
+(`test_examplePedigreeFixtures.R`, S693) — the fix changes those two pinned
+expectations and triggers that pin's own owner-re-render rule; found only by a
+warning-text grep sweep; (2) no note that a same-calendar-day census re-run
+collides with the frozen CSV filename (resolved via a `_postfix` suffix).
+**What was wrong:** (1) S714's records commit `8c717ee6` corrupted `HANDOFFS.md` —
+a 5-line truncated duplicate S713 receipt header (unclosed fence, no unique
+content) left between the S714 prose and the real S713 receipt; repaired at the
+S715 claim, disclosed in the claim ledger entry; (2) the article edit introduced
+`px` into `test_wordlist_coverage.R`'s scan while carrying the baseline forward
+unrun — the suite was silently failing for a session (Learning 764). Both are
+close-out mechanics, not handoff-content errors; every content claim checked held
+(56 residuals, 587/117, the 21/24 bump figures all reproduced). **ROI:** high.
+
 ### What Session 715 Did
-**Deliverable:** Curved duplicate-connectors fix — replace the blind +0.3 roundness
-bump in `.resolveEdgeNodeCollisions()` with arc-verified roundness selection
-(BACKLOG Housekeeping item filed S714, owner-picked via `AskUserQuestion` at
-Phase 0; package-code fix, strict TDD) (IN PROGRESS)
-**Started:** 2026-09-18
-**Status:** Session claimed. Work beginning (PRE-RED investigation).
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** Curved duplicate-connectors fix — **DONE, owner-ratified at every
+gate** (S714-filed BACKLOG Housekeeping item, owner-picked via `AskUserQuestion`
+at Phase 0; package-code fix, strict TDD: PRE-RED probe → RED → GREEN, REFACTOR
+judged unnecessary at the owner-approved GREEN exit gate).
+**Started/completed:** 2026-09-18 (single session). Phase 0 backfill `62b57d76`;
+claim `d5008091` (+ HANDOFFS fragment repair); RED `d39c66eb`; GREEN `704d7c4c`;
+WORDLIST fix `fa4ec9ad`; census/NEWS `69152999`; records commit follows this
+handoff.
+**Ledger:** claim + close-out entries in `CHANGELOG.md`; curved-connector BACKLOG
+block removed in the records commit (the FM #28 reduction; all ledgers otherwise
+under budget).
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile backfilled 1 commit (`0b4d84bb`, the predicted
+   recurring self-reconcile shape, measured 1); repaired S714's duplicate-S713
+   receipt fragment in `HANDOFFS.md` at claim. CI 4/4 green + scheduled
+   shinytest2 green (S712–S714 work unpushed, so CI head is S711's). Dashboard
+   96/100. Owner picked the curved-connector fix from the 4-option picker.
+2. **PRE-RED probe (`scratchpad/s715_probe.R`):** continuity first (56 residuals,
+   587/117 reproduced exactly), then the ladder counterfactual: 114 of 170 arcs
+   truly collide at base 0.2; ladder (0.05–0.60 by 0.05; fewest hits, tie →
+   closest to 0.2, tie → smaller) clears 42 fully, events 587 → 149, residual 72;
+   no arc made worse. Unoptimized cost measured (+4.4 s → needs a prefilter).
+   Named representatives cross-checked against the current bumped set so every
+   RED pin fails honestly.
+3. **RED `d39c66eb`:** census-replica local helpers + 7 failing assertions —
+   `.curvedCwVia`/`.bezierMinDistTo` units (hand-derived literals), the
+   never-worse property (the old bump measurably violates it), the S690 pin pair
+   `__dup_1X40V5_1 → 1X40V5` keeps 0.2 (chord false positive),
+   `__dup_0L5AWR_1 → 0L5AWR` clears at 0.5 (6 → 0 hits), residual↔true-hit set
+   correspondence, count 56L → 72L; exemplar warning pins flipped (linebreeding,
+   half_sib → no warning). All confirmed failing for the right reason.
+4. **GREEN `704d7c4c`** (`R/makePedigreeDiagramData.R` only): internal
+   `.curvedCwVia()`/`.bezierPointAt()`/`.bezierMinDistTo()`/`.arcDiscHitCount()`
+   + preference-ordered ladder walk in the curved branch; conservative
+   Lipschitz-bound sampled prefilter (counts provably unchanged; resolve
+   0.21 → 0.95 s); warning parenthetical + doc-comment rewritten. Both test
+   files green; residuals 72 = probe exactly.
+5. **Verification:** full clean regression 2,436 blocks 0 failed/0 error
+   (warnings 48 → 40 = the cleared collision warnings); the 1 initial failure
+   was S714's stale `px` wordlist flag — root-caused as NOT this diff, fixed
+   `fa4ec9ad` (Learning 764); lint 0 package-wide; `devtools::check()` 0 errors
+   + the known 1 W/1 N untracked-file artifacts; census re-run `69152999`
+   (postfix CSV): cArc 587 → 149 / 117 → 72, Track C fully clean, class (b) = 6
+   unchanged (article NOT re-obligated).
+6. **Owner gates:** PRE-RED→RED, RED→GREEN, GREEN→close each via
+   `AskUserQuestion`; exemplar re-renders ratified at the GREEN exit gate
+   (`scratchpad/s715_render_{linebreeding,half_sib}_after.png` + the
+   Real-375 site crops).
+7. **Close-out:** Learning 764 appended; NEWS.Rmd plain-language entry +
+   NEWS.md render; this evaluation + handoff; receipt; ledger entries; BACKLOG
+   block removed.
+
+**Self-assessment (Session 715): 9/10.** **Strengths:** (1) probe-first
+counterfactual made RED encode measured expectations that GREEN then reproduced
+to the digit — implementation/probe divergence would have failed a test, not
+passed unnoticed; (2) the never-worse property test is a mechanism guarantee,
+not a pin; (3) performance handled with a provably-conservative prefilter
+(counts identical by construction, verified), not a weakened predicate; (4) the
+latent S714 suite failure was root-caused via the spell-check itself before
+fixing, not assumed to be this session's; (5) tight scope — no QP/weight
+changes, no rerouting, census script touched only for the CSV filename.
+**Weaknesses:** (1) the Real-375 before/after crops do not visually isolate the
+single fixed arc (fixture density; ground truth is the census overlap join,
+disclosed — the standing S712–S714 pattern); (2) the first site-crop framing
+wasted a render iteration (full-arc bbox dominated by empty apex space) before
+re-cropping on the obstacle region.
+
+**Next steps (specific):** (A) MHC polish (Housekeeping, S — the top remaining
+READY item; full brief in `BACKLOG.md`). (B) Push decision (owner): now ~21
+commits ahead of origin (recount with `git rev-list --count origin/master..HEAD`);
+the delta since the last green CI head includes real package code (this fix), so
+the next push's CI round is the first remote validation of it. (C) Pointer-block
+sweep ratification (DECISION NEEDED, M). (D) Owner decisions pending:
+package-split disposition, REUSE registration. (E) Informational: dashboard copy
+stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged (+ this session's
+s715_* scratchpad files, same class); LabKey remainder BLOCKED.
+
+**Key files:** `R/makePedigreeDiagramData.R:2404` (new arc helpers,
+`.curvedCwVia()` onward) and `:2982` (rewritten curved branch),
+`tests/testthat/test_resolveEdgeNodeCollisions.R:314` (rewritten curved section +
+local census replicas), `tests/testthat/test_examplePedigreeFixtures.R:183`
+(flipped exemplar specs), `docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_postfix_findings.csv`
+(new standing census baseline, 157 rows), `data-raw/pedigreeDrawingErrorCensus.R:79`
+(postfix CSV name), `NEWS.Rmd:209` (the new entry), `PROJECT_LEARNINGS.md:2223`
+(Learning 764), `scratchpad/s715_probe.R` / `s715_render.R` /
+`s715_probe_results.rds` / `s715_render_*.png` / `s715_census_rerun_output.md` /
+`s715_layouts.rds` (evidence; `s715_layouts.rds$R` is the current-engine
+Real-375 rectilinear layout, reusable until the next engine change).
+
+**Gotchas for the next session:** (1) **The fresh full-suite baseline is now
+2,436 blocks** (failed=0, error=0, skipped=184, warning=40) — +2 blocks are the
+new helper unit tests; warnings 48 → 40 is the cleared collision warnings, not a
+regression. (2) The carried-baseline heuristic has a hole: a docs-only session
+that edits `.qmd`/`.Rmd` prose owes at least `test_wordlist_coverage.R` before
+carrying a baseline forward (Learning 764 — S714's `px` sat failing for a
+session). (3) `s712_layouts.rds` is now STALE for edge styling (pre-fix
+roundness values); use `s715_layouts.rds` for current-engine renders; recompute
+after any future engine change. (4) The census's standing baseline is the
+`_postfix` CSV (149/72); the plain `2026-09-18` CSV is the frozen pre-fix S714
+record — never compare cArc against 587 as same-state. (5) Expect ~1
+self-reference commit past the CHANGELOG frontier at next Phase 0 (the recurring
+shape); measure it. (6) `.resolveEdgeNodeCollisions()` now costs ~0.95 s on the
+Real-375 fixture (was 0.21 s) — the arc scoring is the difference; if a future
+session sees layout-time complaints, the prefilter margin and the 64-sample
+count are the tuning knobs, with the census as the counts-unchanged referee.
 
 ### Session 713 Handoff Evaluation (by Session 714)
 **Score: 9/10.** **What helped:** next-step A was this session's exact deliverable
