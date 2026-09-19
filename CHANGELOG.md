@@ -30,6 +30,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S719 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `a095f4be`; carries its own entry, so no self-reference gap is left for Phase 0
+- Under the current rules every commit carries its own entry, so this self-reconcile commit is
+  recorded here instead of being left for the next Phase 0 to backfill (S717/S718's recurring
+  1-commit shape). **Count note (correction of the close-out entry above, which is not edited):**
+  that entry's "37 → 45 / 24 → 32" was measured before this entry existed; the final counts are
+  `### ` 46 and the anchored audit 33 (+9 from the claim commit, all `[ad hoc]`). The handoff's
+  gotcha predicting a 1-commit gap at next Phase 0 is updated to expect 0.
+
 ### 2026-09-19 · [ad hoc] S719 close-out: BL-57 P10 DONE for this project — session records (SESSION_NOTES handoff + S718 evaluation 8/10, HANDOFFS receipt complete) and the verification results
 - **Verification:** `bin/status` reads `present` for `CHANGELOG.md` and `HANDOFFS.md` (only
   `methodology_trim.py` stays `locally modified`, by design). §9.8 with bounds `62 117

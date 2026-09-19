@@ -126,8 +126,8 @@ is the first CI validation of P10.** `R-CMD-check.yaml` runs `error-on: "warning
 not run a full `R CMD check` — only the tarball listing (none of the new files ship) and
 the full test suite; no `.R` file was touched, so the lint checklist did not apply. My
 *estimate*, not a measurement: green, since zero package files changed. If red, that is new information — report, don't
-fix inline. (3) Expect ~1 self-reference commit past the `CHANGELOG.md` frontier at next
-Phase 0 (the records-sha commit); measure it. (4) `context_budget.py` is installed but
+fix inline. (3) The final sha commit carries its own `CHANGELOG.md` entry, so expect 0
+undocumented commits past the frontier at next Phase 0 (unlike S717/S718's 1); measure it. (4) `context_budget.py` is installed but
 uncalibrated — do **not** run `--status` and read red findings as P10 defects; the seed
 ceilings are the fork's own. `quality_ratchet.py --run` reports `0/0` (no gates declared).
 (5) Under the new rules a claim commit's entry is marked *(in progress)* and close-out
