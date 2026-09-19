@@ -162,9 +162,16 @@
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #'
-#' @return A \code{div} containing the marker-genetics UI: a marker
-#'   genotype file upload control, a guidance area, and the pedigree-vs-
-#'   marker mean-kinship comparison table.
+#' @return A \code{div} containing the marker-genetics UI: four file
+#'   upload controls (marker genotype, Center B genotype for the
+#'   Cross-Center comparison, multiallelic-tolerant linkage genotype, and
+#'   locus metadata), a guidance area, and a tab set with the Kinship
+#'   Comparison, Heterozygosity, Parentage Exclusion, Cross-Center,
+#'   Candidate Parent Assignment, Linkage and LD Block Metrics, Genomic
+#'   ROH (F_ROH), and MHC Haplotype Reporting sub-tabs. The last three
+#'   sub-tabs carry their own controls and confirm-gated de-identified
+#'   exports; the MHC sub-tab also has its own haplotype-file upload and
+#'   rarity-threshold inputs.
 #'
 #' @seealso \code{\link{modMarkerGeneticsServer}}
 #' @importFrom shiny NS div h3 h4 fluidRow column wellPanel fileInput

@@ -265,44 +265,44 @@ R. Mark Sharp, Ph.D.
   the data but simply wrong (issue \#155).
 - New locus-metadata check (`checkLocusMetadata()`): reports, for each
   marker locus, whether its chromosome/position data is complete,
-  partial, or missing -- PLINK-style. New example files included. No
-  Shiny screen yet (issue \#153).
+  partial, or missing -- PLINK-style. New example files included (issue
+  \#153).
 - New `checkLinkageMarkerGenotypeFile()` validates marker panels with
   more than 2 alleles per locus (e.g. STR/microsatellite markers),
-  alongside the existing 2-allele check. No Shiny screen yet (issue
-  \#153).
+  alongside the existing 2-allele check (issue \#153).
 - New `markerRealizedRelatednessVariance()` estimates how much a pair's
   actual DNA-based relatedness can vary around what the pedigree alone
-  would predict. No Shiny screen yet (issue \#153).
+  would predict (issue \#153).
 - New `markerLdBlock()` reports which nearby markers on the same
   chromosome tend to be inherited together, with a matching
-  `obfuscateLdBlocks()` for de-identified export. No Shiny screen yet
-  (issue \#153).
+  `obfuscateLdBlocks()` for de-identified export (issue \#153).
 - The Marker Genetics tab includes a **Linkage and LD Block Metrics**
   sub-tab, combining the locus-coverage, relatedness-variance, and
   linkage-block reports above in one place, with de-identified export
   (issue \#153).
 - New sequence-scale marker genotype check
   (`checkSequenceGenotypeFile()`), for genotype files with far more
-  markers than a standard panel. No Shiny screen yet (issue \#152).
+  markers than a standard panel (issue \#152).
 - The DNA-relatedness and candidate-parent calculations
   (`markerKinship()`/`markerParentageLikelihood()`) are optimized to
   handle large marker panels efficiently (issue \#152).
 - New: computes each animal's inbreeding level directly from large-scale
-  sequence data (runs of homozygosity), not just from the pedigree. No
-  Shiny screen yet. New `computeGenomicROH()` (issue \#152).
+  sequence data (runs of homozygosity), not just from the pedigree. New
+  `computeGenomicROH()` (issue \#152).
 - New `obfuscateGenotypeMatrix()` de-identifies a sequence-scale
-  genotype file's animal ids. No Shiny screen yet (issue \#152).
+  genotype file's animal ids (issue \#152).
 - The Marker Genetics tab includes a **Genomic ROH (F_ROH)** tab: the
   sequence-based inbreeding calculation above, with de-identified export
-  (new `obfuscateGenomicROH()`) (issue \#152). \## MHC Haplotype
-  Reporting
+  (new `obfuscateGenomicROH()`) (issue \#152).
+
+## MHC Haplotype Reporting
+
 - New `checkMhcHaplotypeFile()` validates a file of MHC haplotype
   designations -- two named haplotypes per animal, one row per animal,
   like the bundled `rhesusGenotypes` example data. Designations are
   taken exactly as written (a trailing `?` marks a provisional call).
   This is the first step toward MHC haplotype frequency and
-  rare-haplotype reporting; no Shiny screen yet (issue \#148).
+  rare-haplotype reporting (issue \#148).
 - New `mhcHaplotypeFrequency()` summarizes how common each MHC haplotype
   is in a colony: copies, carriers, and frequency per haplotype, with
   missing and provisional calls disclosed rather than silently dropped.
@@ -337,8 +337,10 @@ R. Mark Sharp, Ph.D.
   columns (issue \#149).
 - New **Cross-Center Identity** tab: walks a curator through matching
   and merging records from two centers, with a preview and downloadable
-  results behind a confirmation step (issue \#149). \## Genetic Value
-  Analysis
+  results behind a confirmation step (issue \#149).
+
+## Genetic Value Analysis
+
 - The Genetic Value Analysis tab gained a configurable **Ranking
   Scheme** control: choose a priority-tier ranking alongside the
   existing combined kinship/uniqueness score (issue \#125). Script
