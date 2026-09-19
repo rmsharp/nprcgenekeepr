@@ -30,6 +30,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-19.md` (21 record(s), 79,738 B → 3,500 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **21** record(s) (2026-09-17 → 2026-09-19) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-19.md`](docs/archive/SESSION_NOTES-through-2026-09-19.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-19.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-19.md.verify.sh)
+rather than trusting a digest printed here. Live file 79,738 B → 3,500 B (−95.6%).
+
 ### 2026-09-19 · [ad hoc] S720: `context_budget.py` ADOPTED with honest ceilings (owner-ratified via `AskUserQuestion`, over freeze-at-current and delete); trim budget SETTLED at the old 65,536 B cadence (over the 196,608 B default and a one-off trim)
 - **Evaluation findings that drove the decision:** `CLAUDE.md` (41,622 B pre-edit) is the one
   Phase-0 mandated read nothing gated — over the seed's 28,000 B ceiling and its own stated
