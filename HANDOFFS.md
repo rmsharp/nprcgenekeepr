@@ -61,14 +61,13 @@ would name); the next session reconciles them to real shas.
 
 ## Size, and when to archive
 
-This file gains a receipt every session and Phase 0 reads it every session, so it carries the same
-size discipline as `CHANGELOG.md`: **two caps, two distinct failure modes, fire if either fires,
-stop only when both stop conditions hold.**
+handoffs-format: 2 — keep this marker, and bring it across with this section; `bin/status` reads it.
 
-| Cap | Protects against | Form | Fire when | Cut until |
-|---|---|---|---|---|
-| **Lines** — ~2,000, the agent `Read` truncation cap | **silent truncation**: a read past the cap returns no error and no marker | a **rate** | headroom < **15** receipts | headroom > **30** |
-| **Bytes** — a per-file budget, default **65,536 B** (64 KB) | **context tax**: every session pays for the whole file, every time | a **level with hysteresis** | `size > budget` | `size ≤ ½ × budget` |
+This file gains a receipt every session and nothing removes one, so it grows without bound. The
+protocol never asks a session to read it whole: Phase 0 reconciles it against `git log` and checks
+the newest receipt, and a session reads that receipt at the top — past the harness's default-read
+refusal, with an offset and a limit. Archive it when the trimmer's trigger fires. The tool states the
+trigger, and this file names no size of its own.
 
 **Run this rather than estimating it:**
 
@@ -76,7 +75,7 @@ stop only when both stop conditions hold.**
 python3 methodology_trim.py --file HANDOFFS.md --check
 ```
 
-`--check` evaluates both conditions and never writes. `--write` performs the trim, refuses unless it
+`--check` evaluates the trigger and never writes. `--write` performs the trim, refuses unless it
 can prove the split lossless, and **neither commits nor stages** — it leaves this file modified and
 the new shard *untracked*, and leaves the commit to you (`git add HANDOFFS.md docs/archive/`).
 
@@ -91,11 +90,16 @@ An archive is a **shard**: a new frozen file, same format, same newest-on-top or
   forward-looking rule: a shard is frozen, so a rule copied into one cannot be corrected when the
   live rule moves.
 - **After a split, anything that enumerates receipts must span both** — `HANDOFFS.md
-  docs/archive/HANDOFFS-*.md` — or it silently counts a shrunken population.
+  $(git ls-files 'docs/archive/HANDOFFS-*.md')` — or it silently counts a shrunken
+  population. Enumerate the shards with `git ls-files`, never as a bare glob: zsh aborts a
+  command whose glob matches nothing, so before the first split the bare form counts nothing
+  at all — the same reason the ledger's audit is written that way.
 
-If a `CHANGELOG.md` sits beside this file, its own **Size, and when to archive** section carries the
-reasoning both files share: why the line cap must be a rate, why the byte cap cannot be one, and how
-to choose the budget. Everything needed to *act* is here.
+The reasoning this file shares with `CHANGELOG.md` — how a ledger is read, why the tool is the only
+statement of its trigger, and what a split must conserve — is in the *Reading and archiving*
+subsection of [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger).
+That subsection makes archiving optional for `CHANGELOG.md`; this file keeps its own rule, above —
+archive it when the trimmer's trigger fires. Everything needed to *act* is here.
 
 What is specific to *this* file, and gets receipts wrong if assumed:
 

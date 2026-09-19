@@ -30,6 +30,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 6: `HANDOFFS.md` brought to handoffs-format 2 — its `## Size, and when to archive` section replaced with the current seed's
+- Old `:62`–`:117` (56 lines) replaced by the seed's `:89`–`:148` (56 lines; its `:91` is the
+  `handoffs-format: 2` marker, now at `:64`); 17 insertions, 13 deletions. Everything else is
+  unchanged: front matter, the four-backtick worked example, the shard pointer blocks, the
+  regenerated "currently holds 2 receipt(s)" sentence and every receipt. The new section
+  states no size of its own and defers to the trimmer's trigger, which is the reason the
+  budget is left at the tool's default. The seed also carries two later sections (`Three
+  files, three questions, one shared key`; `Citing the gate run`) and a longer front matter;
+  the P10 steps do not ask for them, so they are not brought across.
+
 ### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 5: `CHANGELOG.md` brought to ledger-format 2 — the current seed's pointer-and-marker paragraph inserted
 - Three lines (the seed's "**The rules** … ledger-format: 2 — keep this marker; `bin/status`
   reads it.", copied from `starter-kit/CHANGELOG.md:10-12`) plus one blank, placed after the
