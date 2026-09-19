@@ -144,6 +144,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ```handoff
+session: S718
+date: 2026-09-19
+status: pending
+active_task: Pointer-block sweep (BACKLOG Housekeeping, DECISION NEEDED, M): inventory the S529–S531-era `[ ]`-marked-but-fully-RESOLVED pointer blocks, verify CHANGELOG coverage, present the ratification gate, then (if ratified) apply the S686 4-step relocation convention. Docs-only maintenance, no TDD phases.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S717
 date: 2026-09-19
 status: complete

@@ -26,6 +26,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [BL] S718 claim: pointer-block sweep ratification + (if ratified) execution (BACKLOG Housekeeping item, owner-picked via `AskUserQuestion` at Phase 0)
+- Docs-only maintenance session, no TDD phases (S686/S687 precedent). Plan:
+  inventory the S529–S531-era `[ ]`-marked-but-fully-RESOLVED pointer blocks
+  in `BACKLOG.md`, verify each has a complete `CHANGELOG.md` (or archive-shard)
+  record, present the concrete population at the ratification gate, then — if
+  ratified — apply the S686 4-step relocation (verify/enrich ledger,
+  forward-carry live context, extract open sub-threads, delete). Stub +
+  pending receipt committed with this entry.
+
 ### 2026-09-19 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `4cfe2dad` — S717's close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt), the documented recurring 1-commit shape; backfilled by the next session's Phase 0 reconcile
 
 ### 2026-09-19 · [ad hoc] S717 close-out: push to `origin/master` DONE — 33 commits (`1788e2b8..047d7f74`), all 4 CI workflows green on the pushed head

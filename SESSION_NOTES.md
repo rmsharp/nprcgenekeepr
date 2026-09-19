@@ -26,6 +26,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 718 Did
+**Deliverable:** Pointer-block sweep ratification + (if ratified) execution — the
+S687-found second population of `[ ]`-marked-but-fully-RESOLVED pointer blocks in
+`BACKLOG.md` (DECISION NEEDED, Effort M; owner-picked via `AskUserQuestion` at
+Phase 0). (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning: inventory the population, verify
+`CHANGELOG.md` coverage per block, present the ratification gate, then (if
+ratified) apply the S686 4-step relocation convention. Docs-only maintenance,
+no TDD phases.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 716 Handoff Evaluation (by Session 717)
 **Score: 9/10.** **What helped:** next-step A was this session's exact
 deliverable, with the recount command (measured 31 at orientation, 33
