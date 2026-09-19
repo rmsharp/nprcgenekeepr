@@ -116,27 +116,21 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `browser-actions/setup-chrome`'s actual download/unzip pipeline; or filing a new
       `rstudio/chromote` upstream issue, since no existing issue there matches this exact
       macOS+GHA+live-CDP-timeout signature).
-- [ ] **Evaluate adopting `context_budget.py` (the methodology tool that puts ceilings on the
-      files Phase 0 mandates reading) and settle the ledger-trigger budget**
-      (found S617, 2026-08-20; re-scoped S719, 2026-09-19; READY, Effort S -- a research/scoping
-      session, not an implementation session) -- the tool is a token/context-budget tracker, the
-      tooling counterpart to the FM #28 "unbounded mandatory read" failure mode. **State as of
-      S719:** the S719 sync (BL-57 P10) INSTALLED `context_budget.py` and the untouched seed
-      `.context-budget.json` (and `quality_ratchet.py` + an empty `.quality-gates.json`); all are
-      build-ignored, and `.context-budget-history.jsonl` / `.quality-gates-results.json` are
-      gitignored. Nothing has been calibrated or run: the seed's ceilings (e.g. `CLAUDE.md`
-      `max_bytes` 28,000, `SESSION_NOTES.md` `max_lines` 400) are the methodology fork's own, not
-      measurements of this project, and this project's `CLAUDE.md` is far over the seed's ceiling.
-      So the decision is now "calibrate and adopt, or delete", given this project already tracks
-      file-size risk via `methodology_dashboard.py` and `methodology_trim.py`. If adopting: run
-      `python3 context_budget.py --calibrate`, replace the seed ceilings with measured ones, and
-      decide whether to track `.context-budget-history.jsonl` (the methodology repo tracks it so its
-      growth-run trigger survives a fresh clone; this project's `.gitignore` currently ignores it,
-      matching `dashboard_history.jsonl`). **Also settle here (owner decision):** `methodology_trim.py`
-      1.5.0's byte budget defaults to 196,608 B where 1.1.2's was 65,536 B; S719 took the default
-      (recorded in `CLAUDE.md`), so `SESSION_NOTES.md` (71,192 B) fires only under
-      `--budget-bytes 65536`. A trim of it is one dry-run-verified command away
-      (`--file SESSION_NOTES.md --cut 1 --force`; S719's dry run: L1-L3 OK, 71,192 B -> 4,018 B).
+- [ ] **`CLAUDE.md` reduction campaign — bring it under the adopted 28,000 B
+      `.context-budget.json` ceiling** (43,348 B at filing; recount with `wc -c CLAUDE.md`;
+      filed S720, 2026-09-19, READY, Effort M) -- `CLAUDE.md`
+      reads **over — red by design** in the S720-adopted `python3 context_budget.py` Phase 0 check
+      until this lands; the per-clone pre-commit hook already refuses growth, so the file can only
+      shrink from here. The excess is concentrated in "Project-Specific Methodology Adaptations"
+      narrative blocks (multi-paragraph incident histories: the S325/S546/S547 CHANGELOG-relocation
+      trilogy, the S518 fence-scanner post-mortem marked "historical, not current state", the long
+      close-out-checklist rationales). Remedies in the tool's own order: **Move** each incident
+      narrative into `PROJECT_LEARNINGS.md` (its stated home) leaving a one-line rule + pointer;
+      **Compute** any hand-maintained count; **Archive** via `git show <sha>:CLAUDE.md` pointers;
+      **Delete** duplicates. Keep intact: the SESSION PROTOCOL header, the fenced Project Overview
+      (`budget:protected` -- the tool refuses its removal), the TDD contract, Build/Test/Verify,
+      and each adaptation's operative RULE (only the narrative moves). Not a mechanical trim --
+      each block needs a judgement call about what the rule actually is; wants its own session.
 - [ ] **`DESCRIPTION`'s `Suggests:` mixes real test/example/vignette dependencies with
       dev-tooling-only packages that belong in a `Config/Needs/...` field instead** (found
       2026-08-20, incidental to S615's own DESCRIPTION edit, owner-directed via chat, READY,

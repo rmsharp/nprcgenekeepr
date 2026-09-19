@@ -30,6 +30,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S720: `context_budget.py` ADOPTED with honest ceilings (owner-ratified via `AskUserQuestion`, over freeze-at-current and delete); trim budget SETTLED at the old 65,536 B cadence (over the 196,608 B default and a one-off trim)
+- **Evaluation findings that drove the decision:** `CLAUDE.md` (41,622 B pre-edit) is the one
+  Phase-0 mandated read nothing gated — over the seed's 28,000 B ceiling and its own stated
+  ~25 KB target, invisible to the dashboard (under the 56,750 B one-read cap) and structurally
+  out of the trimmer's reach. `--calibrate` on this project's transcripts was REJECTED: 0.60
+  B/token with a −6,015-token intercept (n=119, R²=0.73), physically implausible/confounded;
+  the dashboard's measured densest density (2.27 B/token) adopted instead. Seed misfits fixed:
+  `SESSION_NOTES.md` structure patterns rewritten for this file's real layout (the seed's
+  `^## ` expect_min 2 was instrument-failed here; note — `max: 0` is a literal bound, not a
+  disable), `max_lines` 400→1,000 (aligned to the 65,536 B cadence at the measured ~69 B/line,
+  eliminating a standing two-trigger disagreement), `max_bytes` set to the SAME 65,536 as the
+  trimmer cadence so a red means a trim is owed; the unmappable `LEARNINGS.md` entry dropped
+  (`PROJECT_LEARNINGS.md`, 2,888,991 B, is on-demand — a whole-file ceiling is the wrong unit).
+- **Executed:** `.context-budget.json` rewritten with derivations in `_` keys; `budget:protected`
+  fence added around `CLAUDE.md`'s Project Overview (tool-verified present); per-clone no-growth
+  pre-commit hook installed (`install-hook`; refuses only growth of an over-ceiling file);
+  Phase 0 check + red-by-design expectations recorded in `CLAUDE.md` (Additional Phase 0 steps);
+  the S719 "open owner decision" trigger-budget paragraph resolved (`--budget-bytes 65536` on
+  every run); `BACKLOG.md` item removed (this entry is its completed record) and the successor
+  "CLAUDE.md reduction campaign" item filed (READY, M). `--selftest` passes; post-config run
+  shows exactly the intended reds: `CLAUDE.md`/resident (by design, until the reduction lands)
+  and `SESSION_NOTES.md` (the owed trim, executed next this session). Sync-drift checks: both
+  `ok`. History file stays gitignored (S719 decision, kept). **This commit itself grows
+  `CLAUDE.md`, so it lands via `--no-verify` — the hook's first recorded bypass, legitimate
+  growth ratified by the adoption itself.** Dashboard note: its HIGH flag for `SESSION_NOTES.md`
+  says "the trimmer answers NO_CONFIG" — untrue under this project's local trimmer extension
+  (Class A, config present); the dashboard hardcodes stock-trimmer classes by design, so the
+  flag text overstates, though the >one-read-cap fact it flags is real until the trim.
+
 ### 2026-09-19 · [ad hoc] S720 claim: `context_budget.py` adoption evaluation + trim-budget decision (`BACKLOG.md:119`) *(in progress)*
 - Owner-picked via `AskUserQuestion` at Phase 0 (over the `Suggests:` audit, the
   package-split disposition, and the chromote research item). Phase 0 reconcile found 0

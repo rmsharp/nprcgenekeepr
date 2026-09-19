@@ -1,17 +1,17 @@
 {
-  "_": "SEED CONFIG — copied to your project root as .context-budget.json on first sync, then yours to own. Every ceiling below is a starting point, not a law. Replace each one with a number you can defend from a measurement of YOUR project, and record the derivation in the neighbouring _ key. Re-derive the calibration with: python3 context_budget.py --calibrate",
+  "_": "CALIBRATED for nprcgenekeepr, S720 (2026-09-19), replacing the untouched seed the S719 sync installed. Every ceiling below is either a measurement of THIS project or a deliberately-kept target with its status recorded. PROJECT_LEARNINGS.md (2,888,991 B at calibration) deliberately gets NO entry: it is on-demand and grep/section-accessed, so per the seed's own rule its budget would sit on the wrong unit (the whole file) — any honest whole-file ceiling is either red forever or records 2.9 MB as the standard. Re-derive with: python3 context_budget.py --calibrate — but see _bytes_per_token before trusting the fit.",
 
   "read_cap_tokens": 25000,
-  "_read_cap_tokens": "The agent read cap, in TOKENS — the unit the limit is actually denominated in. A whole-file read past this is refused or truncated. This is a fact about your harness, not a policy you choose: verify it rather than inheriting it. A `max_tokens` above this is rejected as a config defect, because no file could satisfy it. WHY THIS KEY EXISTS: a ceiling written in BYTES is `tokens x density`, and density is a property of your CONTENT — so every edit that changes how densely a file is written silently moves a byte ceiling, and nothing goes red. On the fork where this tool's 1.2.0 was developed (rmsharp/methodology) a declared byte ceiling certified `ok` a file the read tool REFUSES, and four of five ceilings converted to more than the cap. Declaring the ceiling in tokens makes that unrepresentable.",
+  "_read_cap_tokens": "Harness fact, not a policy: the Claude Code whole-file read cap. Matches the 25,000-token constant methodology_dashboard.py v2.18.0 uses for the same purpose (it converts this to a 56,750 B one-read budget for this repo's content).",
 
-  "bytes_per_token": 2.93,
-  "_bytes_per_token": "How many bytes of dense markdown cost one token. 2.93 was calibrated on one project by a natural experiment: a commit moved 156,574 B out of CLAUDE.md and the next session's opening context fell 53,520 tokens. Run --calibrate to derive your own; do not inherit this number if you can measure it.",
+  "bytes_per_token": 2.27,
+  "_bytes_per_token": "The densest content measured in THIS repo, as measured by methodology_dashboard.py v2.18.0 (25,000 tok = 56,750 B). Adopted in place of the seed's 2.93 because a local measurement beats an inherited one. S720 ran --calibrate (n=119 sessions, R^2=0.73): it fit 0.60 B/token with a NEGATIVE fixed floor (-6,015 tok) — physically implausible, a confounded regression (opening context here varies with tools/MCP servers loaded, not only CLAUDE.md size) — so the fit was REJECTED, not adopted. Using the densest measured value is the conservative choice: it makes token estimates err high.",
 
   "fixed_harness_tokens": 35700,
-  "_fixed_harness_tokens": "The part of opening context you do NOT control — system prompt, tool schemas, skill listings. Budget your documents as a fraction of this. --calibrate prints it as the regression intercept.",
+  "_fixed_harness_tokens": "Seed value, NOT locally derived — S720's calibration intercept was negative (see _bytes_per_token), so this project has no defensible local measurement. Kept only as framing for the resident-class ceiling; nothing gates on it.",
 
   "growth_run": 10,
-  "_growth_run": "Consecutive non-shrinking measurements before this warns, INDEPENDENT of absolute size. This is the trigger that matters: the 38-session run that motivated this tool never tripped a ceiling, because every individual step was small. It is also the only check that survives someone raising a ceiling to silence a warning.",
+  "_growth_run": "Seed value kept as-is: the trigger that survives ceiling-raising. History lives in .context-budget-history.jsonl, which this project GITIGNORES (S719 decision, matching dashboard_history.jsonl) — so the run resets on a fresh clone. Accepted: this clone is the working one, and the ceilings below are the durable record.",
 
   "calibrate_against": "CLAUDE.md",
 
@@ -19,7 +19,7 @@
     "resident": {
       "total_bytes": 34000,
       "warn_bytes": 30000,
-      "_": "Everything your harness injects in full before the session starts. 34,000 B / 2.93 = 11,604 tok = about a third of the 35,700-tok fixed floor. If your CLAUDE.md is bigger than this today, do not raise the ceiling to make it green — that records the problem as the standard."
+      "_": "Seed target kept. Resident = CLAUDE.md only in this project (41,622 B at calibration — OVER, deliberately: see the CLAUDE.md entry). Raising this to green it would record the problem as the standard."
     }
   },
 
@@ -28,33 +28,26 @@
       "path": "CLAUDE.md",
       "class": "resident",
       "max_bytes": 28000,
-      "max_tokens": 12334,
+      "max_tokens": 12335,
       "warn_bytes": 24000,
       "protected_fence": "budget:protected",
       "protected_min_bytes": 800,
-      "_": "Auto-loaded in full by Claude Code. Wrap your project's statement of purpose in <!-- budget:protected --> ... <!-- /budget:protected --> and the tool will refuse to let a later compaction remove it. On the project this came from, 32.5% of this file was an index of past failures and 0.5% was what the software is for."
+      "_": "41,622 B at S720 calibration — RED BY DESIGN, kept at the seed's 28,000 B target (which also matches the file's own stated ~25 KB budget) rather than frozen at current size. The remedy is the BACKLOG.md 'CLAUDE.md reduction campaign' item (filed S720); until it lands, the pre-commit hook's relative rule refuses commits that GROW this file and passes any that shrink it. max_tokens = 28,000 / 2.27. The protected fence wraps the Project Overview (what the package is for) so no future compaction can take it — FM #28's harder-to-see form."
     },
     {
       "path": "SESSION_NOTES.md",
       "class": "read-mandated",
-      "max_lines": 400,
-      "max_bytes": 120000,
+      "max_lines": 1000,
+      "max_bytes": 65536,
       "max_tokens": 25000,
       "max_line_bytes": 280,
       "structure": [
         { "pattern": "^## ACTIVE TASK", "max": 1,
-          "why": "Phase 3D says UPDATE the active task. Sessions read that as ADD one; three had accumulated on the project this came from, at lines 7, 10005 and 10218." },
-        { "pattern": "^## ", "expect_min": 2,
-          "why": "if this matches nothing the file has been restructured and every other check here is silently measuring the wrong thing" }
+          "why": "Phase 3D says UPDATE the active task, not add one; the seed's source project had accumulated three." },
+        { "pattern": "^### ", "expect_min": 1,
+          "why": "This project's records open at '### What Session N Did' / '### Session N Handoff Evaluation ...' under the single ACTIVE TASK heading (the seed's '^## ' expect_min 2 pattern matched only 1 here — instrument-failed). If this matches nothing the file was restructured and every other check is measuring the wrong thing. No max: only the floor is asserted (S720 measured that max 0 is a literal bound, not a disable)." }
       ],
-      "_": "Phase 0 step 2 orders a read of this file. That instruction is only honest while the file is readable. Set max_lines from what your sessions ACTUALLY read, not from what feels tidy — on the source project the median session read 180 of 26,097 lines and the maximum ever was 334, so 400 sits just above the observed ceiling. The per-line cap exists because a line-count ceiling alone just produces longer lines."
-    },
-    {
-      "path": "LEARNINGS.md",
-      "_max_tokens": "DELIBERATELY ABSENT. The read cap binds a file read WHOLE; a file read in PART is not bound by it — measured over 80 transcripts, one such file was read whole once and in part 243 times, and a partial read returns whole ROWS. So on-demand files get no token verdict, and their budget belongs on the unit actually read (a row, a record, a section). Giving this file a max_tokens would be a budget on the wrong unit, which is not conservative — it is unmeasured.",
-      "class": "on-demand",
-      "max_bytes": 60000,
-      "_": "Optional — delete this entry if your project keeps learnings in CLAUDE.md per Phase 3C. A file a pointer sends you to open whole still has a budget: on the source project this reached 215,750 B and was measured, across 51 transcripts, to have been opened exactly once."
+      "_": "Ceilings aligned to ONE remedy: max_bytes 65,536 is exactly the methodology_trim.py cadence this project chose (S720, owner-ratified — every trimmer run passes --budget-bytes 65536, recorded in CLAUDE.md), so a red here means a trim is owed, never a judgement call. max_tokens 25,000 is the read-cap fact and binds first for dense content (at 56,750 B). max_lines 1000 ~ 65,536 B / 69 B-per-line (this file's measured density, 79,738 B / 1,150 ln at S720) — the backstop for sparse growth, same trigger in the file's other unit; the seed's 400 was the source project's observed-read ceiling and would have gone red ~550 lines before the trim cadence owed anything, a standing two-trigger disagreement."
     }
   ],
 
@@ -62,7 +55,7 @@
     {
       "path": "SESSION_RUNNER.md",
       "canonical": "../methodology/starter-kit/SESSION_RUNNER.md",
-      "_": "Drift-checked, never size-checked — an adopter may not edit this file, so a size finding would be unactionable. Adjust the canonical path to wherever your methodology checkout lives. Zero local edits means `git diff` in your project shows nothing, so drift is otherwise invisible: on the source project both synced files were 13 and 2 commits behind for 48 days without anyone noticing."
+      "_": "Drift-checked, never size-checked. Canonical path verified S720: the rmsharp/methodology checkout at ../methodology, the same source bin/sync uses; both synced files reported ok at calibration."
     },
     {
       "path": "SAFEGUARDS.md",
