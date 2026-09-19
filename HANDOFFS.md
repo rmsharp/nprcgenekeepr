@@ -156,7 +156,7 @@ key_files: HANDOFFS.md:146 (this receipt), CHANGELOG.md:29 (S717 entries), BACKL
 gotchas: Fresh baseline still 2,437 blocks (failed=0 error=0 skipped=184 warning=40) — no package files touched; S716's gotchas 2–5 (e2e opt-in via NPRC_RUN_E2E, serialization-coupled formatter greps, NEWS \## render check, screenshot recipe) apply verbatim. The close-out push triggers one more docs-only CI round — expect completed success at next Phase 0; if red, that is NEW information, report-don't-fix. Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0. origin/master in sync — recount before re-reporting any ahead-count.
 runtime_smoke: n/a — process/ops session, no code changes; the pushed head's full CI matrix (incl. R-CMD-check's own test run) is the runtime evidence
 changelog_ref: S717 entries at the top of CHANGELOG.md (claim + push outcome, 2026-09-19)
-commit: pending
+commit: 8e3a32a5
 ```
 S717 self-score 9/10: + claim-before-push kept the pushed head self-describing; + waited for the full 4-workflow matrix and re-verified the watcher's claim directly before recording; + tight scope, no package files touched. - The close-out push's own docs-only CI round is deliberately unwatched (S706/S711 precedent), a real open loop handed to the next Phase 0; - no new learning from a routine push session (correct — no signal — stated, not silent). Predecessor (S716) scored 9/10: exact deliverable with the recount command and the first-remote-validation framing; backfill-shape prediction measured exactly; nothing material missing for a push session's scope.
 
