@@ -1249,6 +1249,37 @@ test_that("modMarkerGenetics's MHC tables match mhcHaplotypeFrequency/Carriers o
   })
 })
 
+test_that("modMarkerGenetics's MHC summary table rounds the frequency column for display only (S708 polish)", {
+  skip_if_not_installed("shiny")
+  shiny::testServer(modMarkerGeneticsServer,
+    args = list(kinshipMatrix = shiny::reactive(NULL),
+                pedigree = shiny::reactive(NULL)), {
+    result <- session$getReturned()
+
+    ## Unchanged edge: before an upload the render is not ready.
+    expect_error(output$mhcSummaryTable)
+
+    i148Upload(session)
+
+    ## The rendered widget's JSON payload declares a DT::formatRound()
+    ## column renderer on the frequency column -- 0-based index 5 (the
+    ## rownames column is 0) -- showing 4 decimal places. DataTables
+    ## applies it only when asked for the display value, so sorting,
+    ## filtering, and the delivered data keep full precision.
+    payloadJson <- output$mhcSummaryTable
+    formatterDef <- "\"targets\":5,\"render\""
+    expect_true(grepl(formatterDef, payloadJson, fixed = TRUE))
+    expect_true(grepl("DTWidget.formatRound(data, 4", payloadJson,
+                      fixed = TRUE))
+    expect_true(grepl("type !== 'display' ? data :", payloadJson,
+                      fixed = TRUE))
+
+    ## Display-only: the returned reactive (and so the CSV export the
+    ## other tests pin against it) keeps full precision.
+    expect_identical(result$mhcHaplotypeSummaryTable(), i148ExpectedSummary)
+  })
+})
+
 test_that("modMarkerGenetics's MHC rarity flags follow the two threshold inputs", {
   skip_if_not_installed("shiny")
   shiny::testServer(modMarkerGeneticsServer,
