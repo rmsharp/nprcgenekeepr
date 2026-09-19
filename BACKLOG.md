@@ -24,6 +24,35 @@ regen left behind (S367 origin, flagged S368/S369) is now also RESOLVED --
 S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
 
 ## Up Next
+- [ ] **RStudio's Install button fails on a vignette-encoding defect -- add
+      `%\VignetteEncoding{UTF-8}` to the built vignettes** (found post-close-out S721,
+      2026-09-19, owner-reported live break, root-caused same conversation, READY, Effort S) --
+      the `.Rproj` sets `PackageRoxygenize: rd,collate,namespace,vignette`, so RStudio's
+      Install runs `devtools::document(roclets = c('rd','collate','namespace','vignette'))`;
+      the `vignette` roclet rebuilds each vignette via `tools::buildVignette()`, which reads
+      ONLY the vignette's own `%\VignetteEncoding{...}` declaration -- and no vignette in this
+      package declares one (`%\usepackage[UTF-8]{inputenc}` is LaTeX boilerplate it ignores).
+      `vignettes/a2interactive.Rmd` has contained non-ASCII (`r²`, lines 1641/1670, the
+      linkage-disequilibrium section) since `95609eeb` (S541, 2026-08-12), so EVERY
+      RStudio-button Install has failed since then with "Vignette 'a2interactive' is non-ASCII
+      but has no declared encoding". Terminal installs, `R CMD build`/`check`, and CI all stay
+      green because `tools::buildVignettes()` (plural) falls back to `DESCRIPTION`'s
+      `Encoding: UTF-8` -- only the per-file roclet path has no fallback; verified 2026-09-19:
+      `R CMD INSTALL`, `devtools::install()`, and full `devtools::check()` all clean on the
+      same tree that fails in RStudio. **Fix:** add `%\VignetteEncoding{UTF-8}` to the
+      `vignette:` block of the built vignettes (recommended all 5 -- `a2interactive.Rmd`,
+      `a3manual.Rmd`, `a3manual.md`, `gvaConvergence.Rmd`, `simulatedKValues.Rmd` -- so a
+      future non-ASCII edit elsewhere can't re-break the roclet path; minimal variant:
+      `a2interactive.Rmd` only, currently the sole non-ASCII carrier). **Verify** with
+      RStudio's exact call, `devtools::document(roclets = c('rd','collate','namespace',
+      'vignette'))` (clean up any vignette build products it leaves in `vignettes/`), plus the
+      standard regression read. **Follow-up in the same session:** the owner's original report
+      was "appserver tests failing in RStudio" (exact failures never captured) -- most likely
+      collateral of the stale installed copy (Install broken since 2026-08-12 means the
+      installed package predated everything since; S721's diagnosis refreshed it via a
+      terminal `devtools::install()` on 2026-09-19), so after the fix have the owner restart R,
+      Install from RStudio, and re-run the appServer tests; if anything still fails, capture
+      that output as its own finding.
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional

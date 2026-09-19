@@ -30,6 +30,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S721 post-close-out: owner-reported RStudio Install break root-caused (vignette-encoding defect, dormant since S541 `95609eeb`) and DEFERRED to a `BACKLOG.md` Up Next item per owner direction — no fix applied
+- Owner reported "appserver tests failing in RStudio," then "a simple Install fails in
+  RStudio," after S721's close-out. Diagnosis (read-only, plus two terminal installs as
+  reproduction attempts): RStudio's Install runs `devtools::document()` with the `vignette`
+  roclet (`.Rproj` `PackageRoxygenize`), whose per-file `tools::buildVignette()` call has no
+  `DESCRIPTION` `Encoding:` fallback — `a2interactive.Rmd`'s non-ASCII `r²` (since S541,
+  2026-08-12) + no `%\VignetteEncoding{UTF-8}` declaration in any vignette = every
+  RStudio-button Install failing since then, while terminal/CI/`R CMD check` paths stay green
+  via `tools::buildVignettes()`'s package-encoding fallback. Unrelated to S721's `Suggests:`
+  change. Owner directed the fix to its own future session; filed with full root cause,
+  fix options, verification recipe, and the appServer-tests follow-up (likely stale-installed-
+  copy collateral; the installed copy was refreshed by this diagnosis's terminal
+  `devtools::install()`). Side effect kept: that refreshed installed copy.
+
 ### 2026-09-19 · [ad hoc] S721 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `32c647c1`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S721 commit. S721 total: 5 commits (claim `05943cd5`, owner-requested backlog item
   `ede5289e`, deliverable `cd748874`, records `32c647c1`, this one); ahead of `origin/master`
