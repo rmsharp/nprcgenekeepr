@@ -26,6 +26,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `4cfe2dad` — S717's close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt), the documented recurring 1-commit shape; backfilled by the next session's Phase 0 reconcile
+
 ### 2026-09-19 · [ad hoc] S717 close-out: push to `origin/master` DONE — 33 commits (`1788e2b8..047d7f74`), all 4 CI workflows green on the pushed head
 - First remote validation of the S715 curved-connector arc-verified
   roundness fix and the S716 MHC display rounding (plus the S712–S714
