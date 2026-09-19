@@ -30,6 +30,11 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S721 claim: `Suggests:` audit (BACKLOG Housekeeping item, owner-picked via `AskUserQuestion`) — SESSION_NOTES stub + pending HANDOFFS receipt committed *(in progress)*
+- Phase 0 reconcile was clean: 0 undocumented commits past both frontiers (`ba09899c`), exactly
+  as S720's close-out entry predicted. CI 10/10 green; dashboard 96/100; `context_budget.py`
+  showed only the documented by-design reds (no new findings).
+
 ### 2026-09-19 · [ad hoc] S720 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `7e8ebc5f`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S720 commit. Post-trim state at write time, all under `--budget-bytes 65536`:
   `SESSION_NOTES.md` 10,295 B, `HANDOFFS.md` ~15 KB, `CHANGELOG.md` ~55 KB — none firing.

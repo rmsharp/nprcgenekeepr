@@ -30,6 +30,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 721 Did
+**Deliverable:** `Suggests:` audit (`BACKLOG.md` Housekeeping item, owner-picked via
+`AskUserQuestion`): audit every `DESCRIPTION` `Suggests:` entry against "does any file under
+`tests/`, `vignettes/`, or a roxygen `@examples` block actually load this via
+`library()`/`::`"; relocate dev-tooling-only entries to the matching `Config/Needs/<name>:`
+group; verify `devtools::check()` reports 0 new warnings/notes. (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 719 Handoff Evaluation (by Session 720)
 **Score: 9/10.** **What helped:** gotcha (3) "expect 0 undocumented commits past the
 frontier; measure it" measured exactly 0 — the first clean reconcile after two

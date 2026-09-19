@@ -152,6 +152,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S721
+date: 2026-09-19
+status: pending
+active_task: Suggests: audit (BACKLOG.md Housekeeping item, owner-picked via AskUserQuestion) — audit every DESCRIPTION Suggests: entry against actual loads in tests/, vignettes/, and roxygen @examples blocks; relocate dev-tooling-only entries to Config/Needs/<name>: groups; verify devtools::check() reports 0 new warnings/notes.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S720
 date: 2026-09-19
 status: complete
