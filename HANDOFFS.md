@@ -164,7 +164,7 @@ key_files: R/makePedigreeDiagramData.R:2414 (the escaped line), R/markerKinship.
 gotchas: Never verify absence-of-warning under suppressMessages() — roxygen2/cli emit warnings as messages, so a clean suppressed run is unsound (Learning 768). The suite's 40 warnings are ALL the tracked baseline item's class (suite green 0F/0E); re-derive the block inventory rather than trusting the item's enumeration, which went stale twice (10->15->40). Standing: context-budget reds by design until the CLAUDE.md reduction campaign; every methodology_trim.py run needs --budget-bytes 65536; the stray ~$e Compounding Loop.html still makes devtools::check() warn and exit 1 non-interactively; renv.lock carries no dev tooling (Rscript out-of-sync banner expected).
 runtime_smoke: The deliverable's runtime surface IS the document() roclet path: pre/post stash-verified warning-free end-to-end run, man/ untouched. No Shiny surface changed, so no NPRC_RUN_E2E run owed (Learning 765). quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
 changelog_ref: d2a43162
-commit: pending
+commit: 77a832e0
 ```
 <free-text: S723 +/- — plus: caught its own unsound first verification (suppressMessages() would have hidden the very warning under test) and re-proved with a pre/post stash test on the exact surface; zero collateral with exact-baseline suite; the owner's mid-session warning report triaged to the tracked item with a verified annotation instead of a scope-creep fix. Minus: the invalid suppressed check happened at all; a noisy sibling-instance grep preceded the realization that roxygen's own output is the exhaustive unresolved-link inventory.>
 
