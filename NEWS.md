@@ -325,6 +325,9 @@ R. Mark Sharp, Ph.D.
   adjust them. After you confirm, you can download a de-identified
   summary, carrier list, and a record of the settings used; every animal
   in the file must be in the loaded pedigree first (issue \#148).
+- The MHC haplotype summary's frequency column now shows four decimal
+  places on screen instead of long full-precision numbers; downloaded
+  files keep the exact values (issue \#148).
 
 ## Cross-Center Identity Matching
 
