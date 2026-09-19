@@ -30,6 +30,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 723 Did
+**Deliverable:** Fix the roxygen unresolved-link warning at `R/makePedigreeDiagramData.R:2414`
+(`@param t ... in [0, 1].` parses as a markdown link to topic "0, 1") so RStudio
+Install/`document()` runs are warning-free. (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning. Owner-picked via `AskUserQuestion` after reporting
+their RStudio-button Install (S722 follow-up A) succeeded end-to-end with this pre-existing
+`@noRd` cosmetic warning the only remaining output noise.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 721 Handoff Evaluation (by Session 722)
 **Score: 9/10.** **What helped:** the BACKLOG Up Next item S721 filed was a ready-to-execute
 plan — root cause, exact file list, the fix line, the verification recipe (RStudio's exact

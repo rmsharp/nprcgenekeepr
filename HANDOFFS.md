@@ -152,6 +152,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S723
+date: 2026-09-19
+status: pending
+active_task: Fix the roxygen unresolved-link warning at R/makePedigreeDiagramData.R:2414 — "@param t numeric vector of curve parameters in [0, 1]." parses as a markdown link to topic "0, 1"; escape the brackets so RStudio Install/document() runs are warning-free. Owner-picked via AskUserQuestion after their RStudio-button Install (S722 follow-up A) succeeded end-to-end with this pre-existing @noRd cosmetic warning the only remaining noise. Docs-only roxygen comment edit, no TDD phases (S720-S722 precedent); lint close-out checklist applies (tracked .R file touched).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S722
 date: 2026-09-19
 status: complete

@@ -34,6 +34,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S723 claim: fix the roxygen unresolved-link warning at `R/makePedigreeDiagramData.R:2414` (`[0, 1]` parsed as a markdown link to topic "0, 1") *(in progress)*
+- Owner-picked via `AskUserQuestion` after reporting their RStudio-button Install (S722
+  follow-up A): the Install now succeeds end-to-end (all 4 vignettes rebuilt including
+  `a2interactive.Rmd`, `R CMD INSTALL` DONE) — S722's fix is verified on the live RStudio
+  surface — with this pre-existing `@noRd` cosmetic warning the only remaining output noise.
+  Planned fix: escape the brackets (`\[0, 1\]`). Docs-only roxygen comment edit, no TDD
+  phases (S720–S722 precedent); lint close-out checklist applies (tracked `.R` file touched).
+
 ### 2026-09-19 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-19.md` (35 record(s), 67,636 B → 33,652 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
