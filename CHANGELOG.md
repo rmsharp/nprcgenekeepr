@@ -26,6 +26,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 4: re-apply the local `SESSION_NOTES.md` extension to the synced `methodology_trim.py` (v1.5.0), 49 lines
+- `git apply` of the patch saved before the sync (`git diff 18d8e3c7 HEAD --
+  methodology_trim.py`; `--check` passed first): `_session_notes_date` plus the
+  `"SESSION_NOTES.md": LedgerSpec(...)` entry, 49 lines added, 0 removed. Before: `--check` on
+  `SESSION_NOTES.md` answered `NO_CONFIG`. After: it reads the ledger, and
+  `--file SESSION_NOTES.md --cut 1 --force` (dry run) prints `L1_OK`, `L2_OK`, `L3_OK`, 20
+  records, would archive 19, 71,192 B → 4,018 B. The file stays locally modified against
+  canonical, so every later plain sync refuses it until the framework settles that (BL-32
+  in the fork); `CLAUDE.md` already prescribes the re-add. Byte budget is now the tool's
+  default 196,608 B (was 65,536 B under 1.1.2) — recorded in `CLAUDE.md` in the `CLAUDE.md`
+  commit of this phase.
+
 ### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 3: forced framework sync from the methodology fork (`v3.7-964-gce14b3f`, local source) — 13 files written, 2 created
 - `python3 ../methodology/bin/sync --force .` (forced because `methodology_trim.py` carried
   this project's 49-line `SESSION_NOTES.md` extension, which the plain sync refuses to
