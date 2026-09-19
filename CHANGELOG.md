@@ -42,6 +42,12 @@ Moved the oldest **35** record(s) (2026-09-18 → 2026-09-19) out of [`CHANGELOG
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh)
 rather than trusting a digest printed here. Live file 67,636 B → 33,652 B (−50.2%).
 
+### 2026-09-19 · [ad hoc] S722 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `36990de9`; carries its own entry, so no self-reference gap is left for Phase 0
+- Final S722 commit. S722 total: 5 commits (claim `f93a6ce2`, deliverable `10934a2f`, records
+  `36990de9`, trim `34b0a10e`, this one); ahead of `origin/master` by 18 including the 13
+  pre-existing — push is the owner's call, and the fix reaches other machines only once
+  pushed. Expect 0 undocumented commits past the frontier at next Phase 0; measure it.
+
 ### 2026-09-19 · [ad hoc] S722 close-out: session records (SESSION_NOTES handoff + S721 evaluation 9/10, HANDOFFS receipt complete, `PROJECT_LEARNINGS.md` Learning 767) and post-append verification measurements
 - **Trigger states, measured AFTER the handoff/receipt/learning text was appended**, all under
   `--budget-bytes 65536`: `SESSION_NOTES.md` 24,174 B (does not fire), `HANDOFFS.md` does not
