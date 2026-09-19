@@ -206,6 +206,16 @@ knitr::opts_chunk$set(echo = TRUE)
   line around unrelated animals no longer leave small dangling line ends
   hanging above the detour. Each detour now joins the child's own line
   directly, so what is drawn is only ink that connects somewhere.
+- The long curved connectors that link an animal's repeated appearances
+  now choose their curve height by checking the drawn curve itself
+  against every symbol in its path, keeping the curve closest to the
+  standard look that avoids passing through other animals' symbols. The
+  previous adjustment nudged a crowded connector by a fixed amount
+  without checking the result, which sometimes made the crossing worse.
+  On the bundled 375-animal example this cuts symbol crossings by
+  roughly three quarters; connectors that cannot fully avoid every
+  symbol on a crowded chart remain and are disclosed in the layout
+  warning.
 
 ## Kinship & Pedigree Calculations
 - Declaring a pair of animals as identical (MZ) twins now corrects their

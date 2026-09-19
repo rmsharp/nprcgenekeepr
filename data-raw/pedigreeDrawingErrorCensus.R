@@ -71,8 +71,13 @@
 
 suppressMessages(pkgload::load_all(".", quiet = TRUE))
 
+## The "postfix" suffix marks the S715 re-run (same calendar day as the
+## frozen S714 pre-fix baseline CSV, which stays untouched): S715's
+## arc-verified roundness selection replaced the blind +0.3 bump in
+## .resolveEdgeNodeCollisions(), so this re-run is the first post-fix
+## measurement.
 findingsCsv <- file.path("docs", "audits",
-  "PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_findings.csv")
+  "PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_postfix_findings.csv")
 
 ## Render-layer constants, mirrored from makePedigreeMatingLayout() (the
 ## script reads the radii off nodes$size directly; these two are only
