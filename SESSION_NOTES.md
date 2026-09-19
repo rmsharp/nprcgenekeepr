@@ -26,21 +26,114 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### Session 718 Handoff Evaluation (by Session 719)
+**Score: 8/10.** **What helped:** gotcha "expect ~1 self-reference commit past the
+`CHANGELOG.md` frontier; measure it" held exactly (`312996b0`, 1 commit); the
+`BACKLOG.md:133`/`:119` pointers and "~5 commits ahead, recount with `git rev-list`"
+both measured true at orientation (5); the untracked-leftovers list matched
+`git status` line for line; the 2,437-block baseline (failed=0 error=0
+skipped=184 warning=40) re-measured identically this session (4.3 min); S718's claim
+commit (stub + pending receipt + claim entry) was a ready template. **What was
+missing:** nothing this deliverable needed — it was operator-directed from the
+methodology fork, so next-steps (A)–(E) did not apply by design. **What was wrong:**
+one claim. The handoff's Ledger line and the close-out `CHANGELOG.md` entry say all
+three trim-managed ledgers were "verified trigger-not-firing at close-out", but on
+the committed close-out head (`312996b0`) trimmer 1.1.2 reports `SESSION_NOTES.md`
+FIRES (70,138 B against 65,536 B; re-run this session in an isolated worktree —
+`HANDOFFS.md` 56,781 B and `CHANGELOG.md` 37,090 B did not fire). Likely the check
+ran before the handoff text was appended (an estimate; the order is not recorded).
+Low impact — the P10 sync replaced the trimmer and its budget, so no trim was ever
+due — but a session trusting it would have skipped an owed trim; corrected by this
+session's own ledger entry, since a committed entry is never edited. **ROI:** high.
+
 ### What Session 719 Did
-**Deliverable:** BL-57 phase P10 (methodology fork's `changelog-rules-contradictions-plan.md`,
-P10 row) for this project — sync the framework files to the current methodology
-(forced sync, then re-apply the local 49-line `SESSION_NOTES.md` extension to
-`methodology_trim.py` in its own commit) and bring `CHANGELOG.md` and
-`HANDOFFS.md` to the current ledger rules. Route decided by the operator at the
-methodology fork's S194; task picked via `AskUserQuestion` at Phase 0. (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Work beginning: re-measure (save the trimmer patch
-before the sync), `.Rbuildignore`/`.gitignore` commit, forced sync commit,
-extension re-apply commit, `CHANGELOG.md` and `HANDOFFS.md` migration commits,
-`CLAUDE.md` update, verification. Docs/process only, no TDD phases, no push.
-**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
-recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** BL-57 phase P10 for this project — **DONE** (operator-directed via
+the methodology fork's `bl57-p10-nprcgenekeepr-launch-prompt.md`; confirmed via
+`AskUserQuestion` at Phase 0; docs/process only, no TDD phases, no push). The
+framework files are synced to the current methodology (`v3.7-964-gce14b3f`, local
+source), this project's `SESSION_NOTES.md` extension to `methodology_trim.py` is
+re-applied, and `CHANGELOG.md` / `HANDOFFS.md` are at the current ledger rules
+(`bin/status` reads `present` for both).
+**Started/completed:** 2026-09-19 (single session).
+**Ledger:** one `CHANGELOG.md` entry per commit (steps 2–7, the BACKLOG re-scope, this
+close-out). FM #28 reduction: none this session — `SESSION_NOTES.md` (71,192 B) is over
+the *old* 65,536 B budget but under the new default; a trim is one dry-run-verified
+command away (`--cut 1 --force`: L1–L3 OK, → 4,018 B) and is left as an owner decision
+(`BACKLOG.md:119`), not done here (scope).
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile backfilled 1 commit (`74243f04` for `312996b0`, the predicted
+   shape). CI 10/10 green. Dashboard 96/100. Picker → P10. Claim `d064993a`.
+2. **Measure:** saved the trimmer patch before the sync (49 added, 0 removed);
+   `bin/status` and the `--force` dry run matched the prompt's facts (13 written,
+   2 created). Only differences: source version printed `v3.7-964-gce14b3f` (one
+   docs-only fork commit past the prompt's `c20d6ab`, touching no distributed
+   file), and `bin/_manifest.py` lists `methodology_trim.py` at `:50`, not `:45`.
+3. **`00b8a4ca`** six `.Rbuildignore` patterns + two `.gitignore` entries (both tool
+   outputs ignored, matching `dashboard_history.jsonl`). **`b773ddb6`** forced sync,
+   exactly the 15 listed files; `NO_CONFIG` confirmed. **`63b3286f`** patch re-applied
+   (`git apply --check` first): `--check` no longer `NO_CONFIG`; dry run `L1_OK`–`L3_OK`.
+4. **`ba1f0135`** `CHANGELOG.md`: 3-line seed paragraph + blank, 0 deletions, all 540
+   old lines survive in order. **`47364f51`** `HANDOFFS.md`: `:62`–`:117` replaced by
+   seed `:89`–`:148` (17 ins / 13 del); §9.8 with `62 117 HANDOFFS.md` printed *only the
+   block changed*; lines 1–61 and the 208-line tail byte-identical. (My first attempt's
+   anchor assert fired before any write — the real last line has a 2-space indent.)
+5. **`2f451d1d`** `CLAUDE.md`: the `methodology_trim.py` checklist corrected (the fork's
+   `main` now distributes it), the per-sync procedure written out, the bare-`[BL]` and
+   empty-`## 2026-08` legacy forms recorded, budget choice recorded. Every new claim was
+   run first. **`f88afcb2`** `BACKLOG.md:119` re-scoped (its "never adopted" premise was
+   made false by the sync).
+6. **Verification:** trimmer dry runs `L1_OK`–`L3_OK` on all three ledgers (43 / 11 / 20
+   records); `R CMD build` tarball contains none of the tooling or ledger files;
+   full suite = baseline exactly (blocks=2437 failed=0 error=0 skipped=184 warning=40,
+   4.3 min); no CI file references any touched path.
+
+**Self-assessment (Session 719): 9/10.** **Strengths:** (1) measured before acting and
+saved the irreplaceable input (the patch) before the sync overwrote it; (2) every
+rewrite was guarded — anchored asserts, ordered-survival and byte-identity checks, the
+prompt's own §9.8 — and the one guard that fired did so before a write; (3) each claim
+written into `CLAUDE.md`/`BACKLOG.md` was run first (plain-sync exit 2, bare-`[BL]` count
+13, each ledger's size against both budgets); (4) tight scope — no push, no trim,
+no `context_budget.py` adoption, S718's own inaccuracy reported not silently fixed.
+**Weaknesses:** (1) the claim entry lacks the *(in progress)* marker the newly synced
+rules ask for — the rules arrived after the claim, and a committed entry is never
+edited; (2) `HANDOFFS.md` still differs from the current seed — the seed has a longer front
+matter and two later sections (`Three files…`, `Citing the gate run`) that the P10 steps
+do not ask for, so they were left out; by instruction, but a residual divergence; (3) took the tool's byte-budget default without an owner ask
+(sanctioned as "this project's call", flagged as open).
+
+**Next steps (specific):** (A) **Owner: push decision** — ~16 commits ahead after
+close-out (recount: `git rev-list --count origin/master..HEAD`; 5 at orientation, 14 at
+this handoff's write, plus the records and sha commits — the last two are an estimate).
+The push is the first CI validation of the new root files and build patterns (gotcha 2).
+(B) **Owner decision + evaluation:** `BACKLOG.md:119` — calibrate/adopt or delete
+`context_budget.py`, and settle the trim budget (196,608 B default vs 65,536 B).
+(C) `Suggests:` audit (READY, S, `BACKLOG.md:140`). (D) Owner decisions pending:
+package-split disposition (`BACKLOG.md:71`), REUSE registration (`BACKLOG.md:162`).
+(E) Informational: the dashboard copy is now current (v2.18.0; the sync fixed the
+v2.14.0 staleness S718 flagged); untracked leftovers unchanged; LabKey remainder BLOCKED.
+
+**Key files:** `CLAUDE.md:277` (per-sync procedure) and `:279` (ledger legacy forms),
+`methodology_trim.py:301` and `:377` (the local extension), `CHANGELOG.md:17` (rules
+pointer + `ledger-format: 2`), `HANDOFFS.md:62`/`:64` (Size section + `handoffs-format: 2`),
+`BACKLOG.md:119` (re-scoped item), `HANDOFFS.md:150` (S719 receipt).
+
+**Gotchas for the next session:** (1) **The next plain `bin/sync` refuses
+`methodology_trim.py`** (locally modified, exit 2) — the four-step procedure is at
+`CLAUDE.md:277`; `git show 63b3286f -- methodology_trim.py` is the patch. (2) **The push
+is the first CI validation of P10.** `R-CMD-check.yaml` runs `error-on: "warning"`
+(Learning 669: a `devtools::check()` warning once passed locally and tripped CI). I did
+not run a full `R CMD check` — only the tarball listing (none of the new files ship) and
+the full test suite; no `.R` file was touched, so the lint checklist did not apply. My
+*estimate*, not a measurement: green, since zero package files changed. If red, that is new information — report, don't
+fix inline. (3) Expect ~1 self-reference commit past the `CHANGELOG.md` frontier at next
+Phase 0 (the records-sha commit); measure it. (4) `context_budget.py` is installed but
+uncalibrated — do **not** run `--status` and read red findings as P10 defects; the seed
+ceilings are the fork's own. `quality_ratchet.py --run` reports `0/0` (no gates declared).
+(5) Under the new rules a claim commit's entry is marked *(in progress)* and close-out
+adds its own entry; entries are never edited. (6) The fresh baseline is still 2,437
+blocks (4.3 min). (7) `git worktree list` shows 5 `.claude/worktrees/wf_*` entries this session did
+not create — untouched (my own temporary worktree was removed).
 
 ### Session 717 Handoff Evaluation (by Session 718)
 **Score: 9/10.** **What helped:** next-step A named this session's exact

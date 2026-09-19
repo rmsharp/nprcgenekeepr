@@ -30,6 +30,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S719 close-out: BL-57 P10 DONE for this project — session records (SESSION_NOTES handoff + S718 evaluation 8/10, HANDOFFS receipt complete) and the verification results
+- **Verification:** `bin/status` reads `present` for `CHANGELOG.md` and `HANDOFFS.md` (only
+  `methodology_trim.py` stays `locally modified`, by design). §9.8 with bounds `62 117
+  HANDOFFS.md` printed *only the block changed*; the `CHANGELOG.md` step is insertion-only
+  (13 ins / 0 del, all 540 old lines in order). `methodology_trim.py --cut 1 --force` (dry run)
+  prints `L1_OK`–`L3_OK` on all three ledgers (43 / 11 / 20 records). `R CMD build` ships none of
+  the tooling or ledger files; the full suite equals the S718 baseline (2,437 blocks, 0 failed,
+  0 error, 184 skipped, 40 warning, 4.3 min). `quality_ratchet.py --run`: 0/0 gates declared.
+  Entry counts: `### ` 37 → 45 and the anchored audit 24 → 32 from the claim commit, i.e. +8 =
+  the entries this phase adds (steps 2–7, the BACKLOG follow-through, this one), all `[ad hoc]`,
+  none using bare `[BL]`.
+- **Correction to S718's entry (a committed entry is never edited, so it is named here):** S718's
+  close-out entry and handoff say all three trim-managed ledgers were "verified trigger-not-firing
+  at close-out". On the committed close-out head (`312996b0`) trimmer 1.1.2 reports
+  `SESSION_NOTES.md` FIRES (70,138 B against 65,536 B; re-run in an isolated worktree this
+  session); `HANDOFFS.md` and `CHANGELOG.md` did not fire. Likely the check ran before the
+  handoff text was appended — an estimate, not recorded. No consequence here: the sync replaced
+  the trimmer and its budget.
+- **Deviations from the launch prompt's facts:** the source version printed `v3.7-964-gce14b3f`
+  (one docs-only fork commit past the prompt's `c20d6ab`, touching no distributed file);
+  `bin/_manifest.py` lists `methodology_trim.py` at `:50`, not `:45`; the claim entry lacks the
+  *(in progress)* marker the newly synced rules ask for (they arrived after the claim). FM #28
+  reduction: none this session — stated, not silent; a `SESSION_NOTES.md` trim is left as an
+  owner decision (`BACKLOG.md:119`). No new learning appended (routine application of a decided
+  route; the durable knowledge is in `CLAUDE.md:277`, not a row). No push (owner's call).
+
 ### 2026-09-19 · [ad hoc] S719 BL-57 P10 follow-through: `BACKLOG.md`'s `context_budget.py` evaluation item re-scoped — its "never adopted, `bin/status` reports missing/absent" premise was made false by the sync
 - The item (found S617) said the tool and its seed config were absent from this project. The S719
   forced sync installed both (plus `quality_ratchet.py` and an empty `.quality-gates.json`), so the
