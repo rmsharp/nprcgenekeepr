@@ -30,6 +30,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S721 close-out: session records (SESSION_NOTES handoff + S720 evaluation 9/10, HANDOFFS receipt complete, `PROJECT_LEARNINGS.md` Learning 766) and post-append verification measurements
+- **Trigger states, measured AFTER the handoff/receipt/learning text was appended**, all under
+  `--budget-bytes 65536`: `SESSION_NOTES.md` 17,138 B, `HANDOFFS.md` 19,135 B,
+  `CHANGELOG.md` 60,188 B (before this entry) — none fire. **Heads-up:** `CHANGELOG.md` is
+  within ~5 KB of the trigger and will likely fire within a session or two; the trim then owed
+  is routine (`--budget-bytes 65536`). No FM #28 reduction owed this session — stated
+  explicitly rather than left unsaid.
+- **`context_budget.py` post-append run:** exactly the documented expected state — `CLAUDE.md`
+  43,348 B / resident total over (red by design, remedy filed), `SESSION_NOTES.md` ok.
+- **Close-out checklists:** no `.R` files touched → lint N/A; no new exports/features →
+  NEWS/pkgdown/citation/tutorial/`a2interactive` N/A; the completed BACKLOG item named no
+  GitHub issue → issue close-out N/A; CI green all session, no CI break found. Verification
+  evidence (full regression at exact baseline, `devtools::check()` 0 new findings) recorded in
+  the deliverable entry below.
+- Sha self-reconcile commit follows with its own entry; expect 0 undocumented commits past the
+  frontier at next Phase 0.
+
 ### 2026-09-19 · [ad hoc] S721: `Suggests:` audit DONE — 6 entries relocated/removed from `DESCRIPTION`, new `Config/Needs/dev` group, `renv.lock` re-snapshotted; 0 new `devtools::check()` warnings/notes (BACKLOG Housekeeping item removed this commit)
 - **Audit method:** grep-based inventory of all 22 `Suggests:` entries across `R/`, `tests/`,
   `vignettes/` (real vignettes vs `articles/` distinguished), `man/`, `inst/`, `data-raw/`,

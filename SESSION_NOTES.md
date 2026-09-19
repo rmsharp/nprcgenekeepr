@@ -30,17 +30,94 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 720 Handoff Evaluation (by Session 721)
+**Score: 9/10.** **What helped:** next-step (B) named this session's exact deliverable with a
+`BACKLOG.md` pointer whose "recount after any BACKLOG edit" caveat proved necessary (the item
+sat at line 146 by pickup time); gotcha (1) pre-cleared the `context_budget.py` exit-2 reds as
+by-design — zero time lost chasing them; the close-out ledger entry's full-suite baseline
+(2437/0/0/184/40) was directly load-bearing — this session's regression read was compared
+against it and matched exactly; "expect 0 undocumented commits; measure it" measured exactly 0.
+**What was missing:** no current `devtools::check()` baseline exists anywhere current — the old
+"iCloud duplicate-file warning" baseline is stale (those files are gone), so this session had
+to derive from the session-start `git status` that today's 1 WARNING + 1 NOTE (untracked
+`~$e Compounding Loop.html` clutter + `scratchpad/`) are pre-existing rather than compare
+against a stated expectation. Minor; now recorded below. **What was wrong:** nothing found.
+**ROI:** high.
+
 ### What Session 721 Did
-**Deliverable:** `Suggests:` audit (`BACKLOG.md` Housekeeping item, owner-picked via
-`AskUserQuestion`): audit every `DESCRIPTION` `Suggests:` entry against "does any file under
-`tests/`, `vignettes/`, or a roxygen `@examples` block actually load this via
-`library()`/`::`"; relocate dev-tooling-only entries to the matching `Config/Needs/<name>:`
-group; verify `devtools::check()` reports 0 new warnings/notes. (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** `Suggests:` audit — **DONE.** All 22 `Suggests:` entries audited against the
+owner's rule (real loads in `tests/`/`vignettes/`/roxygen `@examples`); 16 retained with
+grep-verified load sites, 6 relocated/removed (owner-ratified via 2 `AskUserQuestion` gates,
+both recommended options picked): `devtools` + `roxygen2` → new `Config/Needs/dev`; `quarto`
+dropped (already `Config/Needs/website`, `pkgdown.yaml` already passes `needs: website`);
+`grid`/`png`/`shinyWidgets` deleted outright (zero uses anywhere). `renv.lock` re-snapshotted
+(`dev = TRUE`, S637 precedent) — 21 packages dropped (the 5 + transitive closures);
+`renv::status(dev = TRUE)` clean. No TDD phases (DESCRIPTION/config metadata, no `.R` files).
+**Started/completed:** 2026-09-19 (single session). Claim `05943cd5`; owner-requested backlog
+item `ede5289e`; deliverable `cd748874`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per commit; completed BACKLOG item removed in `cd748874`.
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile clean (0 undocumented commits, predicted 0); CI 10/10 green;
+   dashboard 96/100; context-budget reds by-design only. Owner picked this item from the
+   4-option picker. Claim `05943cd5`.
+2. **Mid-session owner request** (arrived during research): filed the pedigree-drawing
+   package-growth measurement item (rough ±20% acceptable) as `BACKLOG.md` Housekeeping
+   (READY, S) — `ede5289e`, not acted on (1-and-done).
+3. **Audit:** grep inventory of all 22 entries across `R/`/`tests/`/`vignettes/`/`man/`/
+   `inst/`/`data-raw/`, then **read every thin hit for code-vs-comment** — this flipped two
+   classifications: `devtools`' 20+ test/vignette hits are ALL comments or `eval = FALSE`
+   install snippets tangling to comments (`vignettes/a3manual.R:5-10`) → out; `pkgdown`'s
+   single hit is real code (`pkgdown::as_pkgdown()`, `test_pkgdown_reference_config.R:25`)
+   → stays, refuting the filing item's own suspicion. A secondary engine-level sweep caught
+   `markdown` (zero direct hits but `a3manual.{Rmd,md}` use the `knitr::knitr` engine, which
+   renders through it) → stays.
+4. **Gate:** two `AskUserQuestion`s (devtools/roxygen2 disposition; unused-package deletion);
+   owner ratified both recommendations.
+5. **Execute `cd748874`:** DESCRIPTION edit (6 lines out, `Config/Needs/dev` in; roxygen2's
+   `(>= 8.0.0)` superseded by `Config/roxygen2/version`); `renv::snapshot(dev = TRUE)`.
+6. **Verify:** full regression read `blocks=2437 failed=0 error=0 skipped=184 warning=40` —
+   equals S718–S720 baseline exactly. Full `devtools::check()` (21m52s): 0 errors, all
+   dependency gates OK, vignettes rebuilt OK; 1 WARNING + 1 NOTE both name pre-existing
+   UNTRACKED clutter (`inst/extdata/reference/~$e Compounding Loop.html`, `scratchpad/`) —
+   0 new findings.
+
+**Self-assessment (Session 721): 9/10.** **Strengths:** (1) read-the-hit discipline caught
+both would-be errors (devtools wrongly kept / markdown wrongly removed) before they happened;
+(2) precedent-checked the renv question (S637 `526c7fec`, covr absent from lock) instead of
+guessing; (3) CI-safety verified before removal (`pkgdown.yaml` `needs: website`), not after.
+**Weaknesses:** (1) the first grep pattern set was pure `library()`/`::`-shaped and would have
+missed the `markdown` engine dependency without the deliberate secondary sweep — engine/YAML
+deps need their own pass by default; (2) `devtools::check()`'s non-interactive exit-1 on the
+pre-existing WARNING briefly read as a failure before the log was inspected.
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~12 expected after close-out: 7 pre-existing +
+claim + backlog-file + deliverable + records + sha; the last two are an estimate at write
+time). (B) Priorities: `CLAUDE.md` reduction campaign (READY, M); pedigree-growth measurement
+(READY, S, owner-requested S721); owner decisions pending: package-split disposition, REUSE
+registration. (C) Owner call, trivial: delete/relocate the stray untracked
+`inst/extdata/reference/~$e Compounding Loop.html` (an Office lock-file artifact) — it alone
+makes `devtools::check()` warn (and exit 1 non-interactively); `scratchpad/` likewise drives
+the top-level NOTE. Untracked files, deliberately not touched this session.
+
+**Key files:** `DESCRIPTION:60` (trimmed Suggests), `DESCRIPTION:85-87` (Config/Needs
+website/coverage/dev groups), `renv.lock` (21 packages dropped), `BACKLOG.md` Housekeeping
+(new pedigree-growth item; Suggests item removed), `PROJECT_LEARNINGS.md` Learning 766,
+`CHANGELOG.md` S721 deliverable entry (full audit table).
+
+**Gotchas for the next session:** (1) **`devtools::check()` exits 1 non-interactively until
+the stray `~$` file is removed** — the WARNING is pre-existing clutter, not a regression;
+current true baseline: 0 errors + that clutter WARNING + the `scratchpad/` NOTE. (2)
+**`renv.lock` no longer carries dev tooling** (devtools/roxygen2/quarto/pak/usethis/rcmdcheck
+etc.) — a fresh clone's `renv::restore()` yields a runtime+test library only; install dev
+tooling via `Config/Needs/dev` / `Config/Needs/website` (pak understands these) or the renv
+dev profile field. (3) S720's standing gotchas carry forward: context-budget reds by-design
+until the CLAUDE.md reduction campaign; every `methodology_trim.py` run needs
+`--budget-bytes 65536`; the per-clone no-growth hook refuses CLAUDE.md growth. (4) If a future
+feature reintroduces `grid`/`png`/`shinyWidgets`, re-declare them in `Suggests:` then — their
+deletion is "unused now", not "banned". (5) Full-suite baseline re-confirmed this session:
+2437/0/0/184/40.
 
 ### Session 719 Handoff Evaluation (by Session 720)
 **Score: 9/10.** **What helped:** gotcha (3) "expect 0 undocumented commits past the

@@ -154,11 +154,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S721
 date: 2026-09-19
-status: pending
-active_task: Suggests: audit (BACKLOG.md Housekeeping item, owner-picked via AskUserQuestion) — audit every DESCRIPTION Suggests: entry against actual loads in tests/, vignettes/, and roxygen @examples blocks; relocate dev-tooling-only entries to Config/Needs/<name>: groups; verify devtools::check() reports 0 new warnings/notes.
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Suggests: audit DONE — all 22 DESCRIPTION Suggests: entries audited against the owner's rule; 16 retained with grep-verified load sites, 6 relocated/removed (owner-ratified via 2 AskUserQuestion gates): devtools + roxygen2 to the new Config/Needs/dev group, quarto dropped (already Config/Needs/website), grid/png/shinyWidgets deleted as unused everywhere. renv.lock re-snapshotted (dev = TRUE, S637 precedent, 21 packages dropped). BACKLOG item removed in the deliverable commit. Also filed (owner mid-session request, ede5289e): BACKLOG Housekeeping item to measure package growth from the pedigree-drawing feature (rough +/-20% acceptable). No TDD phases (metadata only, no .R files).
+what_was_done: Claim 05943cd5. Owner-requested backlog item ede5289e. Deliverable cd748874: DESCRIPTION (6 Suggests lines out, Config/Needs/dev in; roxygen2's version constraint superseded by Config/roxygen2/version) + renv::snapshot(dev = TRUE) + BACKLOG item removal + full-audit CHANGELOG entry. Audit method: grep inventory across R/, tests/, vignettes/, man/, inst/, data-raw/, then every thin hit READ for code-vs-comment — devtools' 20+ hits are all comments (out); pkgdown's one hit is real test code, test_pkgdown_reference_config.R:25 (stays, filing item's suspicion refuted); a secondary engine sweep kept markdown (a3manual.{Rmd,md} knitr::knitr engine renders through it). Verified: full regression read blocks=2437 failed=0 error=0 skipped=184 warning=40 (equals S718-S720 baseline exactly); full devtools::check() 21m52s, 0 errors, all dependency gates OK, 0 new warnings/notes (the 1 WARNING + 1 NOTE name pre-existing untracked clutter: inst/extdata/reference/~$e Compounding Loop.html and scratchpad/).
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~12 expected after close-out; estimate). (B) Priorities: CLAUDE.md reduction campaign (READY, M); pedigree-growth measurement (READY, S, owner-requested S721); owner decisions pending: package-split disposition, REUSE registration. (C) Owner call, trivial: delete the stray untracked ~$e Compounding Loop.html (it alone makes devtools::check() warn and exit 1 non-interactively).
+key_files: DESCRIPTION:60 (trimmed Suggests), DESCRIPTION:85 (Config/Needs website/coverage/dev), renv.lock:1 (21 packages dropped), BACKLOG.md:96 (new pedigree-growth Housekeeping item), PROJECT_LEARNINGS.md (Learning 766), SESSION_NOTES.md:33 (full S721 handoff)
+gotchas: devtools::check() exits 1 non-interactively until the stray ~$ file is removed — pre-existing clutter WARNING, not a regression; current true baseline is 0 errors + that WARNING + the scratchpad/ NOTE. renv.lock no longer carries dev tooling (devtools/roxygen2/quarto/pak/usethis/rcmdcheck etc.) — fresh-clone restore yields a runtime+test library only; install dev tooling via Config/Needs/dev / Config/Needs/website or the renv dev profile field. S720's standing gotchas carry forward (context-budget reds by design; every methodology_trim.py run needs --budget-bytes 65536; per-clone no-growth hook). grid/png/shinyWidgets deletion means "unused now", not "banned" — re-declare in Suggests if reintroduced.
+runtime_smoke: n/a — dependency metadata only; no runtime code path changed (removed packages have zero R/ references, grep-proven; every R/-loaded package retained). Full suite at exact baseline + full devtools::check() incl. vignette rebuild ran as the verification instead.
+changelog_ref: cd748874
 commit: pending
 ```
+<free-text: S721 +/- — plus: read-every-hit discipline flipped two classifications before they became errors (devtools out despite many hits, markdown kept despite zero direct hits); renv question settled by precedent (S637 526c7fec, covr absent from lock), not guesswork; CI-safety of the quarto drop verified (pkgdown.yaml needs: website) before removal. Minus: the first grep pattern set was library()/::-shaped and would have missed the markdown engine dependency without a deliberate secondary sweep; check's non-interactive exit-1 briefly read as a failure before the log was inspected.>
+
+```handoff
+session: S720
+date: 2026-09-19
+status: complete
 
 ```handoff
 session: S720
