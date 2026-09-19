@@ -26,6 +26,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `b229a305` — S716's close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt), the documented recurring 1-commit shape; backfilled by the next session's Phase 0 reconcile
+
 ### 2026-09-18 · [BL] S716 close-out: MHC Haplotype Reporting polish DONE — display-only 4-decimal frequency rounding, `@return` rewritten, NEWS stale-phrase sweep + heading repair, article screenshot re-captured
 - **Deliverable (strict TDD for the code part, every gate owner-approved via
   `AskUserQuestion`; BACKLOG item removed in this commit):**
