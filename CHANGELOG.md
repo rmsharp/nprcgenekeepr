@@ -14,6 +14,10 @@ it is failure mode #27.
 > `NEWS.md` / `NEWS.Rmd`. This file tracks the development *process* and methodology
 > history, not package releases.
 
+**The rules** — how to add an entry, source tags, reading and archiving — are in
+[§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger), which `bin/sync`
+keeps current. ledger-format: 2 — keep this marker; `bin/status` reads it.
+
 ## 2026-08
 
 ## 2026-09
@@ -25,6 +29,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 **Archived 40 record(s), 2026-09-17 → 2026-09-18** into [`docs/archive/CHANGELOG-through-2026-09-18.md`](docs/archive/CHANGELOG-through-2026-09-18.md) — same format, same order, frozen.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
+
+### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 5: `CHANGELOG.md` brought to ledger-format 2 — the current seed's pointer-and-marker paragraph inserted
+- Three lines (the seed's "**The rules** … ledger-format: 2 — keep this marker; `bin/status`
+  reads it.", copied from `starter-kit/CHANGELOG.md:10-12`) plus one blank, placed after the
+  intro and its Note and before `## 2026-08`. A pure insertion; no existing line changed.
+  The rules block that once lived in this file was already in the frozen shard
+  `docs/archive/CHANGELOG-through-2026-09-17.md` (`## How to add an entry`) after S700/S710's
+  trims, so it stays there. The rules now live in the synced
+  `docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger`.
 
 ### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 4: re-apply the local `SESSION_NOTES.md` extension to the synced `methodology_trim.py` (v1.5.0), 49 lines
 - `git apply` of the patch saved before the sync (`git diff 18d8e3c7 HEAD --
