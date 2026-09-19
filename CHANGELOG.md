@@ -26,6 +26,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 2: build and ignore files for the tools the sync installs — 6 `.Rbuildignore` patterns, 2 `.gitignore` entries
+- `.Rbuildignore`: `context_budget.py`, `quality_ratchet.py`, `.context-budget.json`,
+  `.quality-gates.json` (the sync installs them) and `.context-budget-history.jsonl`,
+  `.quality-gates-results.json` (written when the tools run) — none matched an existing
+  pattern, so `R CMD check` would have noted them. Committed before the sync so no commit
+  ships the new files into the package build. `FRAMEWORK_APPARATUS.md` is covered by
+  `^docs$`. `.gitignore`: both run-time outputs ignored, matching this project's own
+  `dashboard_history.jsonl`; the methodology repo tracks `.context-budget-history.jsonl`
+  for its growth-run trigger, which this project has not adopted (BACKLOG carries the
+  `context_budget.py` evaluation), so that choice is left to the evaluation.
+
 ### 2026-09-19 · [ad hoc] S719 claim: BL-57 P10 — bring this project's ledgers to the current methodology's rules (operator-picked via `AskUserQuestion` at Phase 0)
 - Docs/process session, no TDD phases, no push. Source is the methodology
   fork's `changelog-rules-contradictions-plan.md` (P10 row) and its launch

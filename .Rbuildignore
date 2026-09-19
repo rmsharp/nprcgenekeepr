@@ -135,3 +135,13 @@ README\.*\.png$
 # tooling files. Session 607, 2026-08-18.
 ^REUSE\.toml$
 ^LICENSES$
+
+# Methodology tooling installed by the 2026-09-19 sync (BL-57 P10, S719) and the
+# two files it writes at run time -- repo-root tooling, not R package content;
+# without these R CMD check notes them as non-standard/hidden top-level files.
+^context_budget\.py$
+^quality_ratchet\.py$
+^\.context-budget\.json$
+^\.quality-gates\.json$
+^\.context-budget-history\.jsonl$
+^\.quality-gates-results\.json$

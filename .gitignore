@@ -86,3 +86,12 @@ inst/extdata/reference/The Compounding Loop.webarchive
 
 # Python bytecode cache from methodology_dashboard.py/methodology_trim.py (Session 514)
 __pycache__/
+
+# Run-time output of the methodology tools installed by the 2026-09-19 sync (BL-57 P10,
+# S719). Both ignored here, matching this project's own handling of dashboard_history.jsonl
+# above. The methodology repo tracks .context-budget-history.jsonl because context_budget.py's
+# growth-run trigger reads the series and must survive a fresh clone; this project has not yet
+# adopted that trigger (BACKLOG.md carries a context_budget.py evaluation item), so tracking is
+# deferred to that evaluation rather than decided here.
+.context-budget-history.jsonl
+.quality-gates-results.json
