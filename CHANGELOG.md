@@ -30,6 +30,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 7: `CLAUDE.md` updated — `methodology_trim.py` checklist corrected, ledger legacy forms and the trigger-budget choice recorded
+- The `methodology_trim.py` local-customization paragraph said the tool was project-owned and
+  that a sync "never reaches" it; the fork's `main` now distributes it (`bin/_manifest.py`
+  lists `starter-kit/methodology_trim.py`) and the S719 sync rewrote it (1.1.2 → 1.5.0). It
+  now states the actual per-sync procedure: save the extension patch, `--force`, re-apply,
+  confirm `L1_OK`–`L3_OK` (the re-apply commit `63b3286f` is itself the patch). A new
+  paragraph records the two legacy ledger shapes left as written — 13 bare `[BL]` headings
+  the anchored audit does not count, and the empty `## 2026-08` above `## 2026-09` — plus
+  the rule for new entries. Budget: the tool default (196,608 B) is taken instead of the old
+  65,536 B; measured at this commit `SESSION_NOTES.md` is 71,192 B (fires only under the old
+  budget), `HANDOFFS.md` 57,509 B and `CHANGELOG.md` 43,018 B (under both). Left as an open
+  owner decision in the handoff. Each claim in the new text was checked against a run
+  first (plain dry-run sync exits 2 on `methodology_trim.py`; bare-`[BL]` count is 13).
+
 ### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 6: `HANDOFFS.md` brought to handoffs-format 2 — its `## Size, and when to archive` section replaced with the current seed's
 - Old `:62`–`:117` (56 lines) replaced by the seed's `:89`–`:148` (56 lines; its `:91` is the
   `handoffs-format: 2` marker, now at `:64`); 17 insertions, 13 deletions. Everything else is
