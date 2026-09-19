@@ -34,6 +34,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S723: BACKLOG baseline-warnings item annotated — owner-reported RStudio test warnings triaged to it; block list marked stale (10 → 15 → 40), re-derive-the-inventory instruction added
+- Mid-session owner report: `markerKinship()` "share no heterozygous locus" warnings at
+  `test_modMarkerGenetics.R:1649`/`:1712` (issue #152 sequence-export-preview tests, S535's
+  `i152_roh_genotype.csv` fixture, pair `'I2'`/`'I3'`) — 2 blocks not in the item's 3-block
+  list. Source confirmed `R/markerKinship.R:135`, the documented NA path; suite green.
+  Annotation only — no fix, per 1-and-done and the item's own "report, don't fix
+  mid-session" lineage; the item stays READY (Effort S) for a dedicated cleanup session.
+
 ### 2026-09-19 · [ad hoc] S723: roxygen unresolved-link warning fixed — `R/makePedigreeDiagramData.R:2414` `[0, 1]` escaped to `\[0, 1\]`; `document()`/RStudio-Install runs now warning-free
 - **Trigger:** the owner's RStudio-button Install (S722 follow-up A) succeeded end-to-end —
   verifying S722's fix on the live GUI surface — with this pre-existing `@noRd` cosmetic

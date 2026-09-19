@@ -281,6 +281,23 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `markerKinship()` NA-warning path as the 2 original cross-center tests.
       A future session fixing this item should address all 3 test blocks, not
       just the original 2.
+      **Count now 40 and the block list above is stale, found S723 (2026-09-19,
+      owner-reported)** -- the owner, running tests in RStudio, saw the same
+      `markerKinship()` NA warning (`'I2'`/`'I3'`, the `i152_roh_genotype.csv`
+      fixture pair) from 2 blocks NOT in this item's list:
+      `test_modMarkerGenetics.R:1649` and `:1712` (issue #152's
+      sequence-export-preview tests, added S535) -- warning source confirmed
+      `R/markerKinship.R:135`, the documented kinship-undefined NA path
+      (production code working as designed; suite green, 0 failed/0 error).
+      The full-suite baseline warning count has been 40 across every S718-S723
+      regression read. A future session fixing this item should RE-DERIVE the
+      complete warning-emitting block inventory from a fresh suite run
+      (warnings grouped by test block), not trust this item's enumeration --
+      it has gone stale twice already (10 -> 15 -> 40) as new
+      fixture-uploading tests accumulate; the two remedy options above
+      (Learning 273(d) `suppressWarnings()` on the upload calls, or fixture
+      completion with expected-value re-verification) apply unchanged to
+      whatever the full inventory turns out to be.
 
 - [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
       `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L) -- `BACKLOG.md`
