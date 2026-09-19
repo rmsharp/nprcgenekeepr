@@ -30,6 +30,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S719 push to `origin/master` DONE (owner: "push") — 16 commits (`4cfe2dad..4565c39d`), all 4 on-push CI workflows green on the pushed head
+- Pushed after `git fetch` confirmed 16 ahead / 0 behind (only `gh-pages`, CI's own branch,
+  had moved). The 16 are S718's 5 commits plus S719's 11. CI on `4565c39d`, watched to
+  completion: `lint` 4m39s, `test-coverage` 10m36s, `pkgdown` 18m08s, `R-CMD-check` 33m02s
+  (run ids 35466135572 / 35466135534 / 35466135549 / 35466135548), all `completed success`;
+  `R-CMD-check` green on all 5 platforms (ubuntu release/devel/oldrel-1, macOS release,
+  Windows release). This is the first CI validation of P10's build patterns and new root
+  files; the handoff's "estimate green" is now a measurement (`R-CMD-check` runs
+  `error-on: "warning"`, so no warning was raised). Only this entry's own commit is left
+  unpushed — the owner's call.
+
 ### 2026-09-19 · [ad hoc] S719 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `a095f4be`; carries its own entry, so no self-reference gap is left for Phase 0
 - Under the current rules every commit carries its own entry, so this self-reconcile commit is
   recorded here instead of being left for the next Phase 0 to backfill (S717/S718's recurring

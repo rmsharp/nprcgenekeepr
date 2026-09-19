@@ -135,6 +135,15 @@ adds its own entry; entries are never edited. (6) The fresh baseline is still 2,
 blocks (4.3 min). (7) `git worktree list` shows 5 `.claude/worktrees/wf_*` entries this session did
 not create — untouched (my own temporary worktree was removed).
 
+**Post-close-out update (same session, owner said "push"):** pushed
+`4cfe2dad..4565c39d` (16 commits: S718's 5 + S719's 11); all 4 on-push CI workflows
+completed green on `4565c39d` — `R-CMD-check` (33m02s) on all 5 platforms. This resolves
+next-step (A) (push) and turns gotcha (2)'s "estimate green" into a measurement. The only
+unpushed commit is the one recording this (`git rev-list --count origin/master..HEAD` = 1
+at write time); pushing it is the owner's call and triggers one more docs-only CI round.
+The "no push" wording in the description above and in the self-assessment was true at
+close-out and is superseded here.
+
 ### Session 717 Handoff Evaluation (by Session 718)
 **Score: 9/10.** **What helped:** next-step A named this session's exact
 deliverable with the `BACKLOG.md:96` pointer; gotcha 3 predicted the 1-commit
