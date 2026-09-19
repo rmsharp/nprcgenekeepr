@@ -164,7 +164,7 @@ key_files: DESCRIPTION:60 (trimmed Suggests), DESCRIPTION:85 (Config/Needs websi
 gotchas: devtools::check() exits 1 non-interactively until the stray ~$ file is removed — pre-existing clutter WARNING, not a regression; current true baseline is 0 errors + that WARNING + the scratchpad/ NOTE. renv.lock no longer carries dev tooling (devtools/roxygen2/quarto/pak/usethis/rcmdcheck etc.) — fresh-clone restore yields a runtime+test library only; install dev tooling via Config/Needs/dev / Config/Needs/website or the renv dev profile field. S720's standing gotchas carry forward (context-budget reds by design; every methodology_trim.py run needs --budget-bytes 65536; per-clone no-growth hook). grid/png/shinyWidgets deletion means "unused now", not "banned" — re-declare in Suggests if reintroduced.
 runtime_smoke: n/a — dependency metadata only; no runtime code path changed (removed packages have zero R/ references, grep-proven; every R/-loaded package retained). Full suite at exact baseline + full devtools::check() incl. vignette rebuild ran as the verification instead.
 changelog_ref: cd748874
-commit: pending
+commit: 32c647c1
 ```
 <free-text: S721 +/- — plus: read-every-hit discipline flipped two classifications before they became errors (devtools out despite many hits, markdown kept despite zero direct hits); renv question settled by precedent (S637 526c7fec, covr absent from lock), not guesswork; CI-safety of the quarto drop verified (pkgdown.yaml needs: website) before removal. Minus: the first grep pattern set was library()/::-shaped and would have missed the markdown engine dependency without a deliberate secondary sweep; check's non-interactive exit-1 briefly read as a failure before the log was inspected.>
 
