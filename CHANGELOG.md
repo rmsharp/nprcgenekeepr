@@ -26,6 +26,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S719 claim: BL-57 P10 — bring this project's ledgers to the current methodology's rules (operator-picked via `AskUserQuestion` at Phase 0)
+- Docs/process session, no TDD phases, no push. Source is the methodology
+  fork's `changelog-rules-contradictions-plan.md` (P10 row) and its launch
+  prompt; route decided by the operator at the fork's S194: forced sync, then
+  re-apply the local `SESSION_NOTES.md` extension to `methodology_trim.py` in
+  its own commit. Planned commits: build/ignore files, forced sync, extension
+  re-apply, `CHANGELOG.md` migration, `HANDOFFS.md` migration, `CLAUDE.md`,
+  close-out. Stub + pending receipt committed with this entry. (Tag is
+  `[ad hoc]` because `BL-57` is the methodology fork's backlog id, not this
+  project's.)
+
 ### 2026-09-19 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `312996b0` — S718's close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt, 1 line changed), the documented recurring 1-commit shape; backfilled by the next session's Phase 0 reconcile
 
 ### 2026-09-19 · [BL] S718 close-out: pointer-block sweep session records — SESSION_NOTES handoff + S717 evaluation (9/10), HANDOFFS receipt complete, ledger triggers verified not firing

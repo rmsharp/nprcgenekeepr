@@ -26,6 +26,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
 ## ACTIVE TASK
 
+### What Session 719 Did
+**Deliverable:** BL-57 phase P10 (methodology fork's `changelog-rules-contradictions-plan.md`,
+P10 row) for this project — sync the framework files to the current methodology
+(forced sync, then re-apply the local 49-line `SESSION_NOTES.md` extension to
+`methodology_trim.py` in its own commit) and bring `CHANGELOG.md` and
+`HANDOFFS.md` to the current ledger rules. Route decided by the operator at the
+methodology fork's S194; task picked via `AskUserQuestion` at Phase 0. (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning: re-measure (save the trimmer patch
+before the sync), `.Rbuildignore`/`.gitignore` commit, forced sync commit,
+extension re-apply commit, `CHANGELOG.md` and `HANDOFFS.md` migration commits,
+`CLAUDE.md` update, verification. Docs/process only, no TDD phases, no push.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are
+recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 717 Handoff Evaluation (by Session 718)
 **Score: 9/10.** **What helped:** next-step A named this session's exact
 deliverable with the `BACKLOG.md:96` pointer; gotcha 3 predicted the 1-commit
