@@ -30,6 +30,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S722: RStudio-Install vignette-encoding fix DONE — `%\VignetteEncoding{UTF-8}` added to all 5 built vignettes; RStudio's exact roclet call now succeeds end-to-end (BACKLOG Up Next item removed this commit)
+- **Fix:** one line added inside each `vignette:` block — `vignettes/a2interactive.Rmd`,
+  `a3manual.Rmd`, `gvaConvergence.Rmd`, `simulatedKValues.Rmd` (the 4 tracked files).
+  `vignettes/a3manual.md` (the item's 5th file) is gitignored (`.gitignore:18` — it is the
+  `knitr::knitr` intermediate) and regenerates WITH the line from the `.Rmd`'s YAML —
+  verified post-run at its line 14, so the durable fix is the 4 tracked files.
+- **Mechanism verification (seconds, no rebuild):** `tools:::.getVignetteEncoding()` on
+  `a2interactive.Rmd` returns `'non-ASCII'` on the pre-fix HEAD copy (exactly the state that
+  trips `tools::buildVignette()`'s stop) and `'UTF-8'` on the fixed working copy.
+- **End-to-end verification (RStudio's exact call):** `devtools::document(roclets = c('rd',
+  'collate','namespace','vignette'))` exited 0 — all 4 `.Rmd` vignettes rebuilt including the
+  previously-failing `a2interactive.Rmd` (its `.html` produced for the first time; its absence
+  among the leftover build products was the failure fingerprint). `man/` untouched — zero
+  collateral `.Rd` churn. One pre-existing, warning-only roxygen finding surfaced, unrelated
+  to this diff: `R/makePedigreeDiagramData.R:2414`'s `@param t ... in [0, 1].` parses as a
+  markdown link to topic "0, 1" (the function is `@noRd`, so no rendered output is affected)
+  — reported, not fixed (Learning 382 precedent).
+- **Regression read:** `blocks=2437 failed=0 error=0 skipped=184 warning=40` — equals the
+  S718–S721 baseline exactly.
+- **Cleanup:** the 8 gitignored in-place build products (`*.html`/`*.R` × 4 vignettes) removed
+  from `vignettes/` per the item's own verification recipe.
+- **Owner follow-up owed (from the item):** restart R, Install from the RStudio button, re-run
+  the appServer tests; if anything still fails, capture that output as its own finding (most
+  likely collateral of the stale installed copy, already refreshed by S721's terminal install).
+
 ### 2026-09-19 · [ad hoc] S722 claim: RStudio-Install vignette-encoding fix (BACKLOG Up Next item, filed post-close-out S721) — stub + pending receipt + this entry *(in progress)*
 - Deliverable: add `%\VignetteEncoding{UTF-8}` to the 5 built vignettes; verify with RStudio's
   exact `devtools::document(roclets = c('rd','collate','namespace','vignette'))` call plus the

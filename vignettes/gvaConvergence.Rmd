@@ -10,6 +10,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle}
   %\VignetteIndexEntry{Gene-Drop Iteration Convergence}
   %\usepackage[UTF-8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}

@@ -10,6 +10,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle} 
   %\VignetteIndexEntry{Simulated Kinships with Partial Parentage} 
   %\usepackage[UTF-8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction

@@ -11,6 +11,7 @@ vignette: >
   %\VignetteEngine{knitr::knitr}
   %\VignetteIndexEntry{Genetic Management Tools Manual}
   %\usepackage[UTF-8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 [Introduction]  
