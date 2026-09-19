@@ -116,20 +116,27 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `browser-actions/setup-chrome`'s actual download/unzip pipeline; or filing a new
       `rstudio/chromote` upstream issue, since no existing issue there matches this exact
       macOS+GHA+live-CDP-timeout signature).
-- [ ] **Evaluate adopting `context_budget.py`, a new methodology tool shipped in canonical v3.7**
-      (found S617, 2026-08-20, incidental to the v3.7 methodology sync, READY, Effort S -- a
-      research/scoping session, not an implementation session) -- true upstream `KJ5HST/methodology`
-      v3.7 ships a new tracked file, `context_budget.py` (+ `.context-budget.json` seed), that this
-      project has never adopted (`bin/status` reports both `missing`/`absent`). Per the methodology
-      repo's own `CHANGELOG.md`, it addresses "Failure mode #28 and context_budget.py -- the
-      artifacts Phase 0 mandates reading now have ceilings" -- i.e. a token/context-budget tracker,
-      the tooling counterpart to the FM #28 "unbounded mandatory read" failure mode this session
-      DID adopt into `SESSION_RUNNER.md`. Deliberately not adopted this session (a new capability is
-      a bigger decision than syncing an existing file, out of "sync to v3.7"'s own scope) -- a
-      future session should read `starter-kit/context_budget.py` and its `HOW_TO_USE.md`/
-      `BOOTSTRAP.md` documentation in the sibling `methodology/` checkout, decide whether it's worth
-      adopting given this project already tracks file-size risk via `methodology_dashboard.py` and
-      `methodology_trim.py`, and if so run `bin/sync` (or manual copy) to add it.
+- [ ] **Evaluate adopting `context_budget.py` (the methodology tool that puts ceilings on the
+      files Phase 0 mandates reading) and settle the ledger-trigger budget**
+      (found S617, 2026-08-20; re-scoped S719, 2026-09-19; READY, Effort S -- a research/scoping
+      session, not an implementation session) -- the tool is a token/context-budget tracker, the
+      tooling counterpart to the FM #28 "unbounded mandatory read" failure mode. **State as of
+      S719:** the S719 sync (BL-57 P10) INSTALLED `context_budget.py` and the untouched seed
+      `.context-budget.json` (and `quality_ratchet.py` + an empty `.quality-gates.json`); all are
+      build-ignored, and `.context-budget-history.jsonl` / `.quality-gates-results.json` are
+      gitignored. Nothing has been calibrated or run: the seed's ceilings (e.g. `CLAUDE.md`
+      `max_bytes` 28,000, `SESSION_NOTES.md` `max_lines` 400) are the methodology fork's own, not
+      measurements of this project, and this project's `CLAUDE.md` is far over the seed's ceiling.
+      So the decision is now "calibrate and adopt, or delete", given this project already tracks
+      file-size risk via `methodology_dashboard.py` and `methodology_trim.py`. If adopting: run
+      `python3 context_budget.py --calibrate`, replace the seed ceilings with measured ones, and
+      decide whether to track `.context-budget-history.jsonl` (the methodology repo tracks it so its
+      growth-run trigger survives a fresh clone; this project's `.gitignore` currently ignores it,
+      matching `dashboard_history.jsonl`). **Also settle here (owner decision):** `methodology_trim.py`
+      1.5.0's byte budget defaults to 196,608 B where 1.1.2's was 65,536 B; S719 took the default
+      (recorded in `CLAUDE.md`), so `SESSION_NOTES.md` (71,192 B) fires only under
+      `--budget-bytes 65536`. A trim of it is one dry-run-verified command away
+      (`--file SESSION_NOTES.md --cut 1 --force`; S719's dry run: L1-L3 OK, 71,192 B -> 4,018 B).
 - [ ] **`DESCRIPTION`'s `Suggests:` mixes real test/example/vignette dependencies with
       dev-tooling-only packages that belong in a `Config/Needs/...` field instead** (found
       2026-08-20, incidental to S615's own DESCRIPTION edit, owner-directed via chat, READY,

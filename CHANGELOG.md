@@ -30,6 +30,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S719 BL-57 P10 follow-through: `BACKLOG.md`'s `context_budget.py` evaluation item re-scoped — its "never adopted, `bin/status` reports missing/absent" premise was made false by the sync
+- The item (found S617) said the tool and its seed config were absent from this project. The S719
+  forced sync installed both (plus `quality_ratchet.py` and an empty `.quality-gates.json`), so the
+  item now records the real state — installed, build-ignored, uncalibrated, never run; seed ceilings
+  are the fork's own and `CLAUDE.md` is far over the seed's — and the remaining decision
+  (calibrate and adopt, or delete; whether to track `.context-budget-history.jsonl`). It also
+  carries the `methodology_trim.py` byte-budget decision (1.5.0 default 196,608 B vs 1.1.2's
+  65,536 B; S719 took the default) so the owner sees it in one place. Text edit in place; no item
+  added or removed (the S686 removal convention is for *completed* items).
+
 ### 2026-09-19 · [ad hoc] S719 BL-57 P10 step 7: `CLAUDE.md` updated — `methodology_trim.py` checklist corrected, ledger legacy forms and the trigger-budget choice recorded
 - The `methodology_trim.py` local-customization paragraph said the tool was project-owned and
   that a sync "never reaches" it; the fork's `main` now distributes it (`bin/_manifest.py`
