@@ -30,6 +30,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 
+### 2026-09-19 · [ad hoc] S720 close-out: session records (SESSION_NOTES handoff + S719 evaluation 9/10, HANDOFFS receipt complete) and the post-append verification results
+- **Trigger states, measured AFTER the handoff/receipt text was appended** (the S718 lesson —
+  a pre-append check certifies the wrong content): under `--budget-bytes 65536`,
+  `SESSION_NOTES.md` 10,295 B does not fire, `CHANGELOG.md` 53,422 B (before this entry) does
+  not fire, **`HANDOFFS.md` 66,229 B FIRES** — the receipt pushed it over, exactly as the
+  handoff's gotcha (4) anticipated. Its trim follows this commit (dry run already clean:
+  L1–L3 OK, 11 of 12 records to `docs/archive/HANDOFFS-through-2026-09-19.md`, 66,229 →
+  14,869 B, S720 receipt retained) — FM #28 close-out reduction, not a second deliverable.
+- **`context_budget.py` post-append run:** exactly the documented expected state —
+  `CLAUDE.md` 43,348 B / resident total over (red by design, remedy filed), `SESSION_NOTES.md`
+  10,295 B ok, both sync-drift checks ok.
+- **Full suite (close-out insurance; zero package files touched):** blocks=2437 failed=0
+  error=0 skipped=184 warning=40 — equals the S718/S719 baseline exactly. Close-out checklists:
+  no `.R` files → lint N/A; no exports/features → NEWS/pkgdown/citation/tutorial N/A; completed
+  BACKLOG item removed in the adoption commit (its record is the adoption entry below).
+- Sha self-reconcile commit follows with its own entry, so expect 0 undocumented commits past
+  the frontier at next Phase 0.
+
 ### 2026-09-19 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-19.md` (21 record(s), 79,738 B → 3,500 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
