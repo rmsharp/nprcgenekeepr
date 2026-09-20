@@ -63,18 +63,121 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 735 Did
+
+**Deliverable:** Owner-directed push of the 2 unpushed S734 close-out
+commits (`be4f41ce`, `12218ad2`) to `origin/master` + CI verification on
+the pushed sha (IN PROGRESS) **Started:** 2026-09-20 **Status:** Session
+claimed. Work beginning. Claim commit rides the push
+(S726/S729/S731/S733/S734 precedent); then verify all 4 push-triggered
+workflows green on the pushed sha via `gh run list --commit <sha>`
+(R-CMD-check ~22 min, one 30-min Monitor arm). **Ledger:**
+`CHANGELOG: pending` — the claim commit’s `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session’s reconcile.
+
+### Session 733 Handoff Evaluation (by Session 734)
+
+**Score: 9/10.** **What helped:** the “~3 unpushed” estimate measured
+exactly 3; the CHANGED CI-wait gotcha (R-CMD-check ~21–22 min post-fix,
+fits one 30-min Monitor arm) was exact — measured 22m17s, no re-arm;
+“expect 0 undocumented; measure it” measured 0 on both frontiers; the
+ratchet citation matched `.quality-gates-results.json` byte-for-byte;
+the priorities list fed straight into the Phase 0 picker and the
+`--commit` filter mechanics carried unchanged. **What was missing:** the
+context-budget run surfaced two signals not itemized by S733’s “WARN =
+CLAUDE.md warn band only” — a growth-run 12/10 warning and “differs from
+canonical” flags on `SESSION_RUNNER.md`/`SAFEGUARDS.md`; whether they
+were present at S733’s run is not verifiable from the handoff, and
+pinning them down cost a small verification detour. **What was wrong:**
+nothing found — every checked claim held. **ROI:** high.
+
 ### What Session 734 Did
 
-**Deliverable:** Owner-directed push of the 3 unpushed S733 close-out
-commits to `origin/master` + CI verification on the pushed sha (IN
-PROGRESS) **Started:** 2026-09-20 **Status:** Session claimed. Work
-beginning. Claim commit rides the push (S726/S729/S731/S733 precedent);
-then verify all 4 push-triggered workflows green on the pushed sha via
-`gh run list --commit <sha>` (R-CMD-check ~21–22 min post-S732-fix, fits
-one 30-min Monitor arm). **Ledger:** `CHANGELOG: pending` — the claim
-commit’s `CHANGELOG.md` entry says (in progress); Phase 3F records the
-rest. Until close-out, this line is the crash breadcrumb for the next
-session’s reconcile.
+**Deliverable:** Owner-directed push to `origin/master` + CI
+verification — **DONE.** Pushed `5ed0da83..75d2b049` (4 commits: the 3
+unpushed S733 close-out commits — trim `484c46de`, records `6fb68007`,
+sha `c09d7b5a` — + the S734 claim `75d2b049` riding the push,
+S726/S729/S731/S733 precedent). All 4 push-triggered workflows
+`completed success` ON THE PUSHED SHA `75d2b049` (verified via
+`gh run list --commit <sha>`, sha match structural): lint 5m11s (id
+35536061548), pkgdown 6m03s (35536061442), test-coverage 10m35s
+(35536061510), R-CMD-check 22m17s (35536061496) — the ~21–22 min
+post-S732-fix figure confirmed a second time; the monitor’s single
+30-min arm was enough, no re-arm. No TDD phases (push + docs; no `.R`
+files). Lint N/A. **Started/completed:** 2026-09-20 (single session).
+Claim `75d2b049` (rode the push); records + sha commits follow this
+handoff. **Ledger:** one `CHANGELOG.md` entry per action (claim, push+CI
+deliverable, records, sha). No BACKLOG item consumed (the push was a
+Phase 0 owner pick).
+
+**What actually happened, in order:** 1. **Phase 0:** full 8-step
+orient; reconcile clean (0 undocumented on both frontiers at `c09d7b5a`;
+S733 receipt complete, ratchet citation matches results file); CI 4/4
+green on `5ed0da83` + scheduled shinytest2 green; dashboard 96/100; 3
+unpushed measured (= S733’s estimate); 5 known untracked files
+unchanged. Context budget: CLAUDE.md warn band PLUS two signals
+new-to-the-record — growth run 12/10, and
+`SESSION_RUNNER.md`/`SAFEGUARDS.md` “differs from canonical (matches no
+revision in canonical history).” Verified NOT local edits: both files
+last touched by the S719 forced sync `b773ddb6`, clean in the working
+tree — the checker’s comparison target moved (fork-vs-canonical
+provenance). Report-only. 2. **Owner picked the push** via the Phase 0
+AskUserQuestion picker. 3. **Claim committed and rode the push:**
+`75d2b049`; push `5ed0da83..75d2b049`; 0 unpushed after the push. 4.
+**CI verification:** Monitor polling `gh run list --commit 75d2b049` at
+60 s, emitting every terminal conclusion (not success-only); all 4 green
+in 22m17s wall. 5. **quality_ratchet at the pushed HEAD `75d2b049`:**
+1/1 pass · 0 fail · 0 unmeasured · results 84231b1581ab · manifest
+aa983075d6a2 (3,483,934 B ≤ 5,000,000 B).
+
+**Self-assessment (Session 734): 9/10.** **Strengths:** (1) deliverable
+verified on the exact pushed sha by construction (`--commit` filter),
+run ids + durations recorded; (2) the two new context-budget signals
+were pinned down at Orient (git log on both synced files ruled out local
+edits) instead of being either ignored or “fixed” — the report-don’t-fix
+rule held; (3) scope held through the CI wait; (4) monitor filter
+covered all terminal states, not just success. **Weaknesses:** (1)
+durations are createdAt→updatedAt and include queue time (seconds ±);
+(2) whether the differs-from-canonical flags predate this session could
+not be established — recorded as unverifiable rather than guessed.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push
+(6th of its kind: S717/S726/S729/S731/S733). **Reduction check:**
+nothing removed from a mandated-read file this session — none was over
+ceiling (SESSION_NOTES.md ~17 KB live, ample token-cap headroom); stated
+explicitly per FM \#28’s decay term.
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~2 expected after close-out:
+records + sha; both docs-only, estimated at write time; no urgency — CI
+is current through `75d2b049`). (B) Priorities: pedigree-growth
+measurement (READY, S, `BACKLOG.md:117`); package-split disposition +
+REUSE registration (owner decisions); BACKLOG.md editorial compression
+(READY, L); inst/doc slimming (DECISION NEEDED, M, `BACKLOG.md:100`).
+(C) Standing report-only set now INCLUDES the two new context-budget
+signals (growth run; synced-files differ-from-canonical) — surface them
+at Phase 0 until resolved or owner-dispositioned.
+
+**Key files:** `CHANGELOG.md:41` (S734 entries at top),
+`HANDOFFS.md:158` (S734 receipt), `BACKLOG.md:117` (next natural
+pickup).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; ~2 unpushed (estimate at write time). (2)
+CI-wait mechanics: R-CMD-check 22m17s on `75d2b049` — the ~21–22 min
+figure is now confirmed twice; one 30-min Monitor arm suffices. (3) The
+`SESSION_RUNNER.md`/`SAFEGUARDS.md` differs-from-canonical flags are NOT
+local edits (verified this session: last touch `b773ddb6`, tree clean) —
+do NOT re-sync reflexively; a fork-main sync carries the
+`methodology_trim.py` patch procedure (`CLAUDE.md` §methodology_trim
+local-customization checklist) and is its own session with an owner
+decision. (4) Standing set unchanged otherwise: `scratchpad/` invisible
+to git BY OWNER DECISION; ratchet ~2 min, AFTER committing (Learning
+772); trim needs `--budget-bytes 65536`; renv banner expected;
+`CLAUDE.md` warn band; the two `SESSION_NOTES.md` ceilings differ (owner
+decision pending); suite baseline 2437/0/0/184/0 — remote-confirmed
+again by R-CMD-check on `75d2b049`.
 
 ### Session 732 Handoff Evaluation (by Session 733)
 
