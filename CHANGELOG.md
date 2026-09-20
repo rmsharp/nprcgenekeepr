@@ -46,6 +46,239 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · \[ad hoc\] S729 claim: owner-directed push to origin/master + CI verification (stub + pending receipt + this in-progress entry)
+
+- Deliverable (in progress): push the 12 unpushed S726–S728 docs/config
+  commits + this claim (13 total; the claim rides the push so CI runs on
+  it — S717/S726 precedent), then verify all 4 push-triggered workflows
+  green on the pushed sha exactly. First remote validation of the S728
+  build-hygiene work (ignore entries + the first `.quality-gates.json`
+  manifest).
+
+### 2026-09-19 · \[ad hoc\] S728 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `facc4df1`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S728 commit. S728 total: 4 commits (claim `f82f978a`;
+  deliverable `2570645b`; records `facc4df1`; this one). Ahead of
+  `origin/master` by 12 after close-out (8 pre-existing + these
+  4.  — all docs/config-only, push is the owner’s call; the push also
+      puts the first quality-gate manifest on the remote. Expect 0
+      undocumented commits past the frontier at next Phase 0; measure
+      it.
+
+### 2026-09-19 · \[ad hoc\] S728 close-out: tarball build-hygiene DONE + session records (handoff, S727 evaluation 9/10, receipt, Learning 772)
+
+- **Records:** `SESSION_NOTES.md` S728 handoff + S727 evaluation (9/10 —
+  its next-step (A) WAS this session’s deliverable, the `BACKLOG.md:100`
+  block was the execution plan verbatim, and every checked claim held);
+  `HANDOFFS.md` receipt complete (self 9/10); `PROJECT_LEARNINGS.md`
+  Learning 772 (gate-author mechanics: a gate measuring
+  `git archive HEAD` measures the last commit, so run `--run` AFTER
+  committing; the 600 s per-gate timeout fits a build gate; a
+  self-tagged extract marker survives chatty tooling).
+- **Receipt citation** (run at the deliverable HEAD `2570645b`):
+  quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results
+  `ef8070eeb6c7` · manifest `aa983075d6a2` — the new gate’s first
+  citation-of-record, measured 3,485,027 B against the 5,000,000 B
+  threshold.
+- **Post-append measurements** (`--budget-bytes 65536`): no trigger
+  fires — SESSION_NOTES 31,480 B, HANDOFFS 52,085 B, CHANGELOG 61,770 B
+  pre-entry (CHANGELOG is ~3.7 KB from its trigger — expect it to fire
+  within a session or two). context_budget: no file over ceiling
+  (`CLAUDE.md` warn band, documented headroom).
+
+### 2026-09-19 · \[ad hoc\] S728 deliverable: tarball build-hygiene follow-ups DONE — leak closed in both ignore files, testthat debris ignored, 5 MB clean-export size gate live (first declared quality gate)
+
+- **`.Rbuildignore`:** the owner’s pending `^scratchpad$` line committed
+  (owner-directed via picker; the measured fix for the 19.7 MB
+  working-tree leak, S727 audit Finding 1), plus
+  `^tests/testthat/_problems$` and
+  `^tests/testthat/testthat-problems\.rds$` (Finding 2).
+- **`.gitignore`:** `scratchpad/` (owner accepted the documented
+  ghost-check tradeoff) plus the two testthat-debris paths.
+- **`.quality-gates.json`:** first gate declared —
+  `tarball_size_clean_export`, max 5,000,000 B measured on a
+  `git archive HEAD` clean-export
+  [`pkgbuild::build()`](https://pkgbuild.r-lib.org/reference/build.html)
+  (audit §7 recipe, Finding 5 remedy). Exercised in-session at
+  `f82f978a`: **1/1 pass, measured 3,485,137 B** (results `16f2d705768f`
+  · manifest `aa983075d6a2`).
+- **Verification:** `git check-ignore -v` resolves all three paths to
+  the new `.gitignore` lines; `tools:::inRbuildignore` TRUE on each real
+  path (`scratchpad`, `tests/testthat/_problems`,
+  `tests/testthat/testthat-problems.rds` — directory matches prune
+  contents, the semantics S727’s 3.56 MB working-tree build measured);
+  `git status` untracked noise now only the 5 known planning/article
+  files. No `.R` files touched — TDD N/A, lint N/A, suite baseline
+  2437/0/0/184/0 carries forward (Learning 764 scope rule).
+- **BACKLOG:** completed item’s block removed in this commit (S686
+  convention); its still-open step 4 (optional `inst/doc` slimming via
+  `html_vignette`, Effort M) extracted as its own DECISION-NEEDED item
+  in place.
+
+### 2026-09-19 · \[ad hoc\] S728 claim: tarball build-hygiene follow-ups (stub + pending receipt + this in-progress entry)
+
+- Deliverable (in progress): `BACKLOG.md:100` steps 1–3 — commit the
+  owner’s `.Rbuildignore` `+^scratchpad$` line (owner-directed via Phase
+  0/1 picker), git-ignore `scratchpad/` (owner: yes, accepting the
+  documented ghost-check tradeoff), add the testthat-debris paths
+  (`tests/testthat/_problems/`, `testthat-problems.rds`) to
+  `.Rbuildignore`/`.gitignore`, and declare a clean-export tarball-size
+  gate (≤5 MB) in `.quality-gates.json` (owner: yes). Step 4 (inst/doc
+  slimming) stays deferred — its own session per the item.
+
+### 2026-09-19 · \[ad hoc\] S727 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `66d4116b`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S727 commit. S727 total: 5 commits (claim `f8ffa40b`;
+  deliverable `6d221ddc`; trim `1a5f345e`; records `66d4116b`; this
+  one). Ahead of `origin/master` by 8 after close-out (3 pre-existing
+  S726 + these 5) — all docs-only, push is the owner’s call. The owner’s
+  `.Rbuildignore` `+^scratchpad$` edit remains uncommitted by design.
+  Expect 0 undocumented commits past the frontier at next Phase 0;
+  measure it.
+
+### 2026-09-19 · \[ad hoc\] S727 close-out: tarball-size audit DONE + session records (handoff, S726 evaluation 9/10, receipt, Learning 771)
+
+- **Records:** `SESSION_NOTES.md` S727 handoff + S726 evaluation (9/10 —
+  its measure-first mandate was this session’s method and its
+  self-assessment honestly flagged the ~19 MB as unmeasured; nobody
+  S721–S726 connected the long-carried `scratchpad` check NOTE to the
+  artifact); `HANDOFFS.md` receipt complete (self 8/10);
+  `PROJECT_LEARNINGS.md` Learning 771 (a top-level-directory check NOTE
+  means the directory ships; three artifacts share one name; compressed
+  bytes are the currency).
+- **Why the trim entry below exists:** the handoff took
+  `SESSION_NOTES.md` to 57,111 B — past `context_budget.py`’s
+  25,000-token read cap (56,750 B at 2.27 B/token; hook-enforced) while
+  the trimmer at `--budget-bytes 65536` reported NOTHING_TO_DO. Trimmed
+  with an explicit `--cut 5` (budget flag still passed, no `--force`),
+  on the committed pre-handoff state. **Finding, report-only:** the two
+  `SESSION_NOTES.md` ceilings differ in practice (56,750 B vs 65,536 B);
+  `CLAUDE.md`’s “deliberately the same number” holds for `max_bytes`
+  only. Owner decision: align the trim budget to 56,750 B, or keep the
+  explicit-cut workaround.
+- **Post-append measurements** (`--budget-bytes 65536`): no trigger
+  fires — SESSION_NOTES 24,540 B, HANDOFFS 46,707 B, CHANGELOG 56,646 B
+  pre-entry (CHANGELOG is ~9 KB from its trigger). context_budget: no
+  file over ceiling (`CLAUDE.md` warn band, unchanged 26,360 B).
+  quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured · results
+  4f53cda18c2b · manifest 4f53cda18c2b.
+- **Non-commit actions this session:** none (no push, no issue/PR/tag
+  activity). Read-only outside the repo:
+  `../nprcgenekeepr_2.0.0.9000.tar.gz` and
+  `../nprcgenekeepr.Rcheck/00check.log` were listed/grepped, never
+  modified; CRAN policy page and the CRAN 2.0.0 tarball header fetched;
+  CI run 35481710058’s log read via `gh`.
+- **Still uncommitted, deliberately:** the owner’s `.Rbuildignore`
+  `+^scratchpad$` line. Unpushed after close-out: ~8 docs-only commits —
+  owner push decision.
+
+### 2026-09-19 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-19-2.md` (10 record(s), 49,225 B → 15,427 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **10** record(s) (2026-09-19 →
+2026-09-19) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-19-2.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-19-2.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 49,225 B → 15,427
+B (−68.7%).
+
+### 2026-09-19 · \[ad hoc\] S727 deliverable: tarball-size audit — the “~19 MB tarball” is a `scratchpad/` leak; the real package builds to 3.49 MB (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md`)
+
+- **Headline (all measured, none estimated):** clean `git archive HEAD`
+  build = **3,485,185 B** (35% of CRAN’s 10 MB line; CRAN 2.0.0 =
+  2,419,329 B, so +1.07 MB / +44% since release). The owner’s
+  `../nprcgenekeepr_2.0.0.9000.tar.gz` = 19,732,245 B and lists 252
+  `scratchpad/` entries (19.99 MB uncompressed; untracked dir, 250
+  files, 16.3 MB compressed — two 5.6 MB `.rds` captures + 65 PNGs).
+  Controlled reproduction (clean export
+  - `scratchpad/` + untracked testthat debris, committed
+    `.Rbuildignore`) = 19,714,510 B — matches to 0.1%.
+    `git log -S'scratchpad' -- .Rbuildignore` is empty: it was never
+    excluded. Current working tree (with the owner’s UNCOMMITTED
+    `+^scratchpad$`) = 3,564,041 B; the +78,856 B over clean is
+    `tests/testthat/_problems/` + `testthat-problems.rds` (untracked,
+    neither git- nor build-ignored).
+- **Inventory:** 997 entries, 12.01 MB uncompressed. Compressed shares:
+  `inst/doc` 1.37 MB (38% — three `html_document` vignettes;
+  `a2interactive.html` alone 855 KB), `tests` 0.66,
+  `inst/extdata/examples` 0.46, `R` 0.39, `man` 0.31, `data` 0.14. CRAN
+  sub-limits: data 2.66 MB pass; documentation 4.38 MB `inst/doc` = 86%
+  of the 5 MB guideline (borderline); installed size 8.9 MB local /
+  9.5–10.2 MB on CI run 35481710058 (`INFO`).
+- **Findings:** 0 critical · 2 moderate (scratchpad leak; doc-guideline
+  headroom) · 3 minor (testthat debris ships; installed size; no
+  mechanical size gate). Policy text verified at source (CRAN Repository
+  Policy rev. 6875). No remedy applied — research-only deliverable.
+- **BACKLOG:** the S726 Effort-L “reduce tarball size” item REMOVED
+  (premise refuted by measurement) and replaced by a DECISION-NEEDED
+  Effort-S build-hygiene follow-up item carrying the ranked actions;
+  package-split item’s cross-ref rewritten (“size is not an argument for
+  splitting” — all of `R/` is 0.39 MB compressed); pedigree-growth item
+  given the +1.07 MB upper bound. Stale-reference sweep of
+  `BACKLOG.md`/`ROADMAP.md`: none left.
+- No `.R` files touched (no TDD phases, lint N/A). The owner’s
+  uncommitted `.Rbuildignore` edit was left untouched and is not in this
+  commit. All builds ran in the session scratch directory; nothing
+  written to the repo or `..` besides the three files in this commit.
+
+### 2026-09-19 · \[ad hoc\] S727 claim: tarball-size audit (in progress)
+
+- Owner picked “Tarball-size research” from the Phase 0 4-option picker.
+  Deliverable: one audit report — a measured `R CMD build` contents
+  inventory (bytes attributed to files that actually ship) + ranked
+  remedy candidates; no remedies applied this session. Pre-existing
+  uncommitted `.Rbuildignore` change (`^scratchpad$`, not session-made)
+  left untouched and excluded from this commit. Close-out adds its own
+  entry.
+
+### 2026-09-19 · \[ad hoc\] S726 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `211f8786`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S726 commit. S726 total: 4 commits (claim `9006b567` — pushed,
+  CI-validated; BACKLOG filing `f8970edc`; records `211f8786`; this
+  one). Ahead of `origin/master` by 3 after close-out — push is the
+  owner’s call, all docs-only. Expect 0 undocumented commits past the
+  frontier at next Phase 0; measure it.
+
+### 2026-09-19 · \[ad hoc\] S726 close-out: push DONE (33 commits `4565c39d..9006b567`, 4/4 CI green on the pushed sha) + session records
+
+- **Deliverable verified:** all 4 push-triggered workflows
+  `completed success` filtered on `headSha == 9006b567` (R-CMD-check
+  31m53s, pkgdown 13m47s, test-coverage 10m4s, lint 4m37s; run ids
+  35481709978–35481710058). First remote validation of S720–S725: the
+  warning-free suite, the Suggests trim + renv re-snapshot, the
+  context-budget adoption, the CLAUDE.md reduction, the `~$` guards.
+- **Records:** SESSION_NOTES S726 handoff + S725 evaluation (9/10, one
+  superseded-at-write gotcha noted, self-corrected by S725’s own
+  addendum entry); HANDOFFS receipt complete; no new PROJECT_LEARNINGS
+  entry (routine clean push; the tarball-inventory insight lives in the
+  filed BACKLOG item, its forward-carrying home).
+- **Post-append trigger measurements** (`--budget-bytes 65536`): no trim
+  fires on SESSION_NOTES/HANDOFFS/CHANGELOG. quality_ratchet: 0/0 pass ·
+  0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b.
+- Unpushed after close-out: ~3 docs-only commits (BACKLOG filing +
+  records + sha) — owner push decision; expect 0 undocumented commits
+  past the frontier at next Phase 0.
+
+### 2026-09-19 · \[ad hoc\] S726 mid-session owner request: tarball-size-reduction item filed in `BACKLOG.md` Up Next (READY, Effort L)
+
+- Owner reports the source tarball at ~19 MB vs CRAN policy’s ≤10 MB
+  (“should, if possible”; data ≤5 MB, documentation ≤5 MB generally) and
+  steers that slimming examples/test data may beat the package split;
+  extensive code research required first.
+- Item filed with a measure-first mandate (`R CMD build` + `tar tzvf`
+  inventory — on-disk sizes mislead because `.Rbuildignore` already
+  excludes `docs/`, `vignettes/articles/`, and several reference files),
+  S726 quick size anchors, the remedy candidate list, and
+  cross-references both ways with the package-split investigation item
+  (S667 scoping rec “do not split now”, owner disposition pending) and
+  the pedigree-growth measurement item.
+- Filed only, not acted on (1-and-done; S721 `ede5289e` precedent for
+  mid-session filings).
+
 ### 2026-09-19 · \[ad hoc\] S726 claim: owner-directed push to `origin/master` (in progress)
 
 - Owner picked “Push to origin” from the Phase 0 4-option picker. 32

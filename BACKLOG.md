@@ -133,7 +133,37 @@ consumes it; the Shiny module cannot move; recommendation **do not split
 now**, with 3 revisit conditions and 3 optional in-place prep steps).
 **Owner disposition pending** – the item stays open until the owner
 accepts or rejects the recommendation; nothing else to do here until
-then. \## Housekeeping
+then. **Size is not an argument for splitting (measured S727):** the
+clean-build tarball is 3.49 MB, all of `R/` is 0.39 MB compressed, and
+the drawing feature’s named R sources are 205 KB uncompressed — a split
+would move well under 0.3 MB
+(`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` §5). Decide the split on
+coupling/reuse grounds only.
+
+**(Optional, owner decision) Slim `inst/doc/` by moving the three
+`html_document` vignettes to
+[`rmarkdown::html_vignette`](https://pkgs.rstudio.com/rmarkdown/reference/html_vignette.html)**
+(extracted S728, 2026-09-19, from the completed tarball build-hygiene
+item — its still-open step 4; DECISION NEEDED, Effort M, its own
+session) – `inst/doc/` is 4.38 MB uncompressed = 86% of CRAN’s 5 MB
+documentation guideline and 38% of the tarball;
+`a2interactive`/`gvaConvergence`/`simulatedKValues` declare
+`output: html_document` (`vignettes/a2interactive.Rmd:4-7`,
+`gvaConvergence.Rmd:6-8`, `simulatedKValues.Rmd:6-8`). Est. 0.4-0.9 MB
+compressed saved — an ESTIMATE needing its own before/after clean-export
+build measurement (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md`
+Finding 3 + §7 recipe); `df_print: paged` does not exist under
+`html_vignette` and must become
+[`knitr::kable()`](https://rdrr.io/pkg/knitr/man/kable.html); optionally
+replace `a2interactive`’s two live `visNetwork` widgets with static
+images. Buys documentation-guideline headroom, not tarball-limit
+compliance (already met: clean build 3.49 MB vs 10 MB); the S728
+`tarball_size_clean_export` gate (`.quality-gates.json`, \<=5 MB) will
+show any saving mechanically. **Not worth doing on size grounds
+(measured S727):** shrinking example/test data (`inst/extdata/examples/`
+0.46 MB compressed, `tests/` 0.66 MB), recompressing `data/` (0.14 MB),
+or the package split. Always build release tarballs from a clean export,
+never the working tree. \## Housekeeping
 
 **Measure how much this R package has grown due to the pedigree-drawing
 feature — a rough estimate (±20%) is sufficient** (owner-requested
@@ -149,7 +179,13 @@ before S433). The file-level coupling inventory in
 `docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`
 already names the feature’s file set and is a good starting point. Owner
 explicitly accepts a rough ±20% estimate – shared-infrastructure
-attribution does not need to be precise.
+attribution does not need to be precise. **Upper bound from the S727
+tarball audit:** the clean-build tarball grew 2,419,329 B (CRAN 2.0.0,
+2026-07-26) -\> 3,485,185 B (`f8ffa40b`), i.e. +1.07 MB compressed
+(+44%) across ALL features, so the drawing feature’s tarball share is
+some fraction of that; measure compressed, from a clean `git archive`
+build, not on-disk (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` §5,
+§7).
 
 **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing
 binary hangs on `macos-latest`’s `ChromoteSession$new()` bootstrap**

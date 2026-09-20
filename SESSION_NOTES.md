@@ -45,19 +45,400 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+**Archived 10 record(s), 2026-09-19 → 2026-09-19** into
+[`docs/archive/SESSION_NOTES-through-2026-09-19-2.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-19-2.md)
+— same format, same order, frozen. Losslessness is proved by
+[`docs/archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh),
+which re-derives L1/L2/L3 from git; run it rather than trusting this
+sentence. Written by `methodology_trim.py` v1.5.0.
+
 ------------------------------------------------------------------------
 
 ## ACTIVE TASK
 
+### What Session 729 Did
+
+**Deliverable:** Owner-directed push to `origin/master` + CI
+verification (IN PROGRESS) — 13 commits expected (the 12 unpushed
+S726–S728 docs/config commits + this claim, which rides the push so CI
+runs on it, S717/S726 precedent). Verification = all 4 push-triggered
+workflows `completed success` ON THE PUSHED SHA (jq-filtered on
+`headSha`, not eyeballed). **Started:** 2026-09-19 **Status:** Session
+claimed. Push follows this commit immediately. **Ledger:**
+`CHANGELOG: pending` — the claim commit’s `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session’s reconcile.
+
+### Session 727 Handoff Evaluation (by Session 728)
+
+**Score: 9/10.** **What helped:** next step (A) WAS this session’s
+deliverable, framed exactly as the decision the Phase 0/1 pickers then
+posed (commit or discard the `.Rbuildignore` line); the `BACKLOG.md:100`
+block was the execution plan verbatim — steps in order, verification
+commands named (`tools:::inRbuildignore` + `git check-ignore`, S725
+precedent), threshold suggestion (\<=5 MB) adopted as declared; the
+audit §7 recipe became the gate command nearly verbatim; “~8 expected”
+unpushed measured exactly 8; “expect 0 undocumented; measure it”
+measured 0 on both frontiers; gotcha (1) (dirty `.Rbuildignore`, not
+session-made, don’t touch) correctly shaped Phase 0. **What was
+missing:** nothing material — only that nobody had checked whether the
+ratchet’s timeout accommodates a build-based gate (one grep: 600 s,
+fits). **What was wrong:** nothing found — every checked claim held, and
+the gate’s clean-export measurements (3,485,137 B at `f82f978a`;
+3,485,027 B at `2570645b`) are consistent with the audit’s 3,485,185 B
+at `f8ffa40b` (drift = the docs-only commits in between). **ROI:** high.
+
+### What Session 728 Did
+
+**Deliverable:** Tarball build-hygiene follow-ups (`BACKLOG.md:100`
+steps 1–3) — **DONE.** The owner’s `^scratchpad$` `.Rbuildignore` line
+is committed (the 19.7 MB working-tree leak closed); `scratchpad/` and
+the testthat debris (`tests/testthat/_problems/`,
+`testthat-problems.rds`) are ignored in BOTH `.Rbuildignore` and
+`.gitignore`; and the project’s FIRST declared quality gate is live:
+`tarball_size_clean_export` (clean-export
+[`pkgbuild::build()`](https://pkgbuild.r-lib.org/reference/build.html)
+of `git archive HEAD`, max 5,000,000 B), measured in-session **1/1 pass
+at 3,485,027 B** on the deliverable commit. Config/docs only — no `.R`
+files; TDD N/A; lint N/A. **Started/completed:** 2026-09-19 (single
+session). Claim `f82f978a`; deliverable `2570645b`; records + sha
+commits follow this handoff. **Ledger:** one `CHANGELOG.md` entry per
+commit; the deliverable entry carries the numbers.
+
+**What actually happened, in order:** 1. **Phase 0:** reconcile clean (0
+undocumented on both frontiers; the sole `status: pending` grep hit is
+the HANDOFFS how-to text, not a receipt); CI 4/4 green on `9006b567`;
+dashboard 96/100; context budget warn-band only; 8 unpushed as
+predicted; dirty `.Rbuildignore` reported, untouched. 2. **Owner
+decisions via pickers** (Phase 0 pick + one 3-question Phase 1 gate):
+pick the build-hygiene item; commit the edit; ALSO git-ignore
+`scratchpad/` (ghost-check tradeoff accepted); include the size gate. 3.
+**Edits:** `.Rbuildignore` +2 debris lines (:159–160) beside the owner’s
+:155; `.gitignore` new block (:93–103); `.quality-gates.json` first gate
+(:17–27), command = audit §7 recipe printing a self-tagged
+`TARBALL_BYTES=` marker. 4. **Verification:** `git check-ignore -v`
+resolves all three paths to the new lines; `tools:::inRbuildignore` TRUE
+on each real path (directory matches prune contents — the semantics
+S727’s 3.56 MB working-tree build measured); gate exercised twice (claim
+commit 3,485,137 B; deliverable commit 3,485,027 B; both pass with ~1.5
+MB headroom); `git status` untracked noise down to the 5 known
+planning/article files. 5. **BACKLOG:** completed block removed in the
+deliverable commit (S686 convention); step 4 (optional `inst/doc`
+slimming) extracted as its own DECISION-NEEDED item at `BACKLOG.md:100`.
+
+**Self-assessment (Session 728): 9/10.** **Strengths:** (1) all three
+embedded owner decisions collected in ONE structured gate before the
+claim, so execution never stalled; (2) the gate was exercised in-session
+twice, and the receipt cites the run at the shipped HEAD, not the claim
+state; (3) scope held — no CI-workflow variant, no inst/doc slimming,
+nothing beyond the approved three steps. **Weaknesses:** (1) “5 MB” was
+interpreted as decimal 5,000,000 B (the audit’s currency) without asking
+— documented in the gate’s `unit`, but 5 MiB was equally plausible; (2)
+the first ratchet run measured the claim state — harmless here
+(docs-only claim) but the sequencing is now a Learning 772 caution; (3)
+every future close-out pays ~2 min of gate build time — approved, but
+the recurring cost lands on successors.
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~12 expected after
+close-out: 8 pre-existing + claim + deliverable + records + sha; the
+last two are an estimate at write time). All docs/config-only; the push
+also puts the first gate manifest on the remote. (B) Priorities:
+pedigree-growth measurement (READY, S, owner-requested S721 — bounded at
++1.07 MB total, measure compressed from a clean build); package-split
+disposition (owner; size no longer argues for it) + REUSE registration
+(owner action, S); BACKLOG.md editorial compression (READY, L); the
+extracted inst/doc slimming item (DECISION NEEDED, M, `BACKLOG.md:100`).
+(C) Standing report-only: HANDOFFS.md truncated duplicate S720 stub (two
+adjacent `session: S720` blocks); iCloud Housekeeping item closable
+pending a duplicates-stay-gone confirmation; the owner’s stale 19.7 MB
+`../nprcgenekeepr_2.0.0.9000.tar.gz` + `../nprcgenekeepr.Rcheck/` still
+sit outside the repo (delete/rebuild is the owner’s call).
+
+**Key files:** `.quality-gates.json:17` (the gate —
+name/threshold/command/why), `.Rbuildignore:155-160` (scratchpad +
+debris lines), `.gitignore:93-103` (mirror block with the tradeoff
+note), `BACKLOG.md:100` (extracted inst/doc item),
+`PROJECT_LEARNINGS.md` Learning 772 (gate-author mechanics),
+`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` §7 (the recipe the gate
+command reuses).
+
+**Gotchas for the next session:** (1) **`scratchpad/` no longer shows as
+untracked — by owner decision, not by accident.** The Phase 0
+untracked-file ghost-session check must remember the directory still
+exists on disk (`ls -d scratchpad` if in doubt); it is now invisible to
+both git and builds. (2) **`quality_ratchet.py --run` now takes ~2 min**
+(full package build with vignettes) — not a hang; per-gate timeout is
+600 s. Run it AFTER committing: the gate measures `git archive HEAD`
+(Learning 772); never swap in `--no-build-vignettes`, which measures a
+~38%-lighter artifact than the one CRAN gets. (3) The gate threshold is
+decimal 5,000,000 B; thresholds only tighten — loosening is a plan-mode
+decision committed with `--no-verify` (SAFEGUARDS Blast Radius). (4)
+Standing: every `methodology_trim.py` run needs `--budget-bytes 65536`;
+`renv.lock` carries no dev tooling (`Rscript` banner expected);
+CLAUDE.md in warn band (~1,640 B headroom) — narrative goes to
+`PROJECT_LEARNINGS.md`; the two `SESSION_NOTES.md` ceilings still differ
+(56,750 B token cap binds before the 65,536 B byte trigger — owner
+decision pending); suite baseline 2437/0/0/184/0 carries forward (no
+code touched).
+
+### Session 726 Handoff Evaluation (by Session 727)
+
+**Score: 9/10.** **What helped:** the filed tarball item’s measure-first
+mandate (“build the real artifact and `tar tzvf` it; on-disk sizes
+mislead”) WAS this session’s method and led straight to the answer;
+S726’s own self-assessment flagged the ~19 MB headline as
+“owner-reported, not measured” — exactly the claim that turned out to
+need refuting, so it was approached as a hypothesis, not a fact; “~3
+unpushed” measured 3; “expect 0 undocumented commits; measure it”
+measured 0 on both frontiers; gotcha (1)’s “the `scratchpad/` NOTE
+remains” was, in hindsight, the clue. **What was missing:** nobody
+(S721–S726) connected that NOTE to the artifact — a top-level directory
+that check complains about is a directory that ships; the item’s remedy
+list was therefore built entirely around slimming package content.
+**What was wrong:** the on-disk anchors (tests 3.4 MB, `inst/extdata`
+5.3 MB) pointed at data slimming, which measured compressed is worth
+almost nothing — low harm, because the same item told the reader not to
+trust on-disk numbers. **ROI:** high.
+
+### What Session 727 Did
+
+**Deliverable:** Tarball-size audit — **DONE.**
+[`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md`](https://github.com/rmsharp/nprcgenekeepr/docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md).
+**The “~19 MB tarball” is not package content: it is the untracked 20 MB
+`scratchpad/` directory leaking into working-tree builds. A clean
+`git archive HEAD` build is 3,485,185 B (3.49 MB) — 35% of CRAN’s 10 MB
+line** (CRAN 2.0.0 was 2,419,329 B). Research only: no remedy applied,
+no `.R`/`.Rbuildignore`/`.gitignore` change, no TDD phases, lint N/A.
+**Started/completed:** 2026-09-19 (single session). Claim `f8ffa40b`;
+deliverable `6d221ddc`; close-out trim `1a5f345e`; records + sha commits
+follow this handoff. **Ledger:** one `CHANGELOG.md` entry per commit;
+the deliverable entry carries the numbers.
+
+**What actually happened, in order:** 1. **Phase 0:** reconcile clean (0
+undocumented on both frontiers); CI 4/4 green on the pushed sha
+`9006b567`; dashboard 96/100; context budget WARN-band only. **Dirty
+tree:** an uncommitted, not-session-made `.Rbuildignore` edit
+(`+^scratchpad$`). The Phase 0 picker (with a second question about that
+edit) was dismissed “to clarify”; the owner then replied with the pasted
+label “Tarball-size research” — taken as the pick. The dirty-file
+question was never answered, so the edit was left untouched all session.
+2. **Three real builds** (all in the session scratch dir, via
+[`pkgbuild::build()`](https://pkgbuild.r-lib.org/reference/build.html)
+run from the repo root so renv’s library applies): working tree
+3,564,041 B; clean HEAD export 3,485,185 B; clean export +
+`scratchpad/` + testthat debris under the COMMITTED `.Rbuildignore`
+19,714,510 B. Then found and inspected the owner’s own artifact,
+`../nprcgenekeepr_2.0.0.9000.tar.gz` (19,732,245 B, built 20:14): 252
+`scratchpad/` entries. Reproduction matches to 0.1%. 3. **Inventory:**
+997 entries / 12.01 MB uncompressed; compressed shares by directory and
+a per-file `gzip -9` ranking. `inst/doc` is 38% of the tarball (three
+`html_document` vignettes); example/test data is cheap compressed. CRAN
+policy text verified at source (rev. 6875); installed size cross-checked
+against CI run 35481710058 (9.5–10.2 MB, `INFO`). 4. **Mid-session owner
+messages:** “note size of `../nprcgenekeepr_2.0.0.9000.tar.gz`” (already
+measured; it is the report’s primary evidence) and “does this mean we
+need to add files and folders to rbuildignore?” — answered yes (the
+owner’s pending line is the fix; two testthat-debris paths also
+warranted) and NOT acted on (a question is not an instruction; filed in
+the follow-up item). 5. **BACKLOG:** the Effort-L reduce-size item
+removed (premise refuted) and replaced by “Tarball build-hygiene
+follow-ups” (DECISION NEEDED, S) at `BACKLOG.md:100`; split item
+cross-ref rewritten (`:95`); pedigree-growth item given the +1.07 MB
+upper bound (`:140`). 6. **Close-out trim (`1a5f345e`):** this handoff
+pushed `SESSION_NOTES.md` to 57,111 B — over `context_budget.py`’s
+25,000-token read cap (= 56,750 B at 2.27 B/token), which the pre-commit
+hook enforces, while `methodology_trim.py --budget-bytes 65536` still
+said NOTHING_TO_DO. Resolved with an explicit `--cut 5` (budget flag
+still passed; no `--force` needed): 10 records (S720–S724) to
+`docs/archive/SESSION_NOTES-through-2026-09-19-2.md`, L1/L2/L3 verified
+before and after commit. The trim ran on the committed pre-handoff state
+(the verify script anchors to the trim commit’s parent), then this
+handoff was re-applied.
+
+**Verification:** every headline number is a measured byte count from a
+built artifact, and the explanation was tested by controlled
+reproduction, not inferred. Three draft claims in the report were caught
+by a pre-commit fact-check and corrected (scratchpad file count 244→250;
+“~63 MB excluded”→43.5 MB measured; “leaking for weeks” re-anchored to
+the 2026-08-17 oldest-file date + empty `git log -S`). No code touched,
+so the suite baseline 2437/0/0/184/0 carries forward (Learning 764 scope
+rule). quality_ratchet and post-append trim-trigger results: see the
+close-out `CHANGELOG.md` entry.
+
+**Self-assessment (Session 727): 8/10.** **Strengths:** (1) refuted the
+item’s premise by measurement in the first 20 minutes instead of
+executing an Effort-L slimming campaign against a non-problem; (2)
+closed the loop three ways — controlled reproduction, the owner’s actual
+artifact, and the local check log — rather than stopping at plausible
+arithmetic (3.56 + 16.27 ≈ 19.8); (3) compressed-byte attribution
+overturned the item’s own remedy steer with numbers; (4) left the
+owner’s uncommitted edit alone and answered the owner’s question without
+acting on it. **Weaknesses:** (1) the task pick rested on a terse pasted
+label after a dismissed picker — reasonable and reversible (docs-only),
+but not an explicit confirmation; (2) removing the owner-requested L
+item and substituting an S follow-up was this session’s judgment under
+the S686 convention — the owner may prefer otherwise; (3) the
+`a2interactive.html` component breakdown was attempted with a sloppy
+regex that produced nonsense (negative remainders) and was reported as
+“identified, not weighed” rather than redone; (4) two Phase 0 shell
+fumbles (GNU vs BSD `stat`).
+
+**Next steps (specific):** (A) **Owner decision first:** commit or
+discard the uncommitted `.Rbuildignore` `+^scratchpad$` line — it is the
+fix (measured), and the follow-up item at `BACKLOG.md:100` is blocked on
+it. Then that item’s steps (2)–(4) in order; (2) is trivial and can ride
+the same commit, verified with `tools:::inRbuildignore` +
+`git check-ignore` on the real paths. (B) **Owner: push decision** —
+recount with `git rev-list --count origin/master..HEAD` (~8 expected
+after close-out: 3 pre-existing + claim + deliverable + trim + records +
+sha; the last two are an estimate at write time). All docs-only. (C)
+Priorities after that: pedigree-growth measurement (READY, S — now
+bounded at +1.07 MB total; measure compressed from a clean build);
+package-split disposition (owner — size no longer argues for it) + REUSE
+registration; BACKLOG.md editorial compression (READY, L). (D) Standing
+report-only: HANDOFFS.md truncated duplicate S720 stub (grep for two
+adjacent `session: S720` blocks); iCloud Housekeeping item closable
+pending a duplicates-stay-gone confirmation; the owner’s stale 19.7 MB
+`../nprcgenekeepr_2.0.0.9000.tar.gz` and `../nprcgenekeepr.Rcheck/` are
+outside the repo and were only read, never touched.
+
+**Key files:** `docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` (§1 build
+table, §2 inventory, §3 findings, §7 reproduction commands),
+`BACKLOG.md:100` (follow-up item), `BACKLOG.md:95` and `:140` (rewritten
+cross-refs), `.Rbuildignore:155` (the owner’s UNCOMMITTED line),
+`vignettes/a2interactive.Rmd:4-7` / `gvaConvergence.Rmd:6-8` /
+`simulatedKValues.Rmd:6-8` (the `html_document` declarations behind
+Finding 3), `PROJECT_LEARNINGS.md` Learning 771.
+
+**Gotchas for the next session:** (1) **The working tree is still
+dirty** (`.Rbuildignore`) — not session-made; do not commit or discard
+it without the owner’s word. Until it is committed, a working-tree build
+from a checkout WITHOUT that line is 19.7 MB again. (2) **Never measure
+the tarball from the working tree** — use the §7 clean-export recipe;
+[`pkgbuild::build()`](https://pkgbuild.r-lib.org/reference/build.html)
+must be launched from the repo root (renv library) even when building an
+export elsewhere. (3) The `html_vignette` saving in Finding 3 is an
+estimate, and `df_print: paged` does not exist under `html_vignette` —
+that slice needs its own before/after build measurement. (4) Standing:
+every `methodology_trim.py` run needs `--budget-bytes 65536`;
+`renv.lock` carries no dev tooling (`Rscript` out-of-sync banner
+expected); CLAUDE.md sits in the warn band (~1,640 B headroom) — new
+narrative goes to `PROJECT_LEARNINGS.md`. (5) Full-suite baseline
+unchanged: 2437/0/0/184/0. (6) **The two `SESSION_NOTES.md` ceilings are
+NOT the same number in practice:** the token cap binds at 56,750 B, the
+byte trigger at 65,536 B, and in the gap the hook refuses growth while
+the trimmer reports NOTHING_TO_DO. `CLAUDE.md`’s “deliberately the same
+number” sentence holds for `max_bytes` only (`.context-budget.json`’s
+own note says `max_tokens` binds first) — report-only here (owner
+decision: lower the trim budget to 56,750, or keep using an explicit
+`--cut N`). With ~8 KB handoffs this recurs roughly every 4–5 sessions.
+
+### Session 725 Handoff Evaluation (by Session 726)
+
+**Score: 9/10.** **What helped:** the priorities list mapped one-for-one
+onto this session’s Phase 0 picker (push decision surfaced as the
+owner’s actual pick); the ~31-unpushed prediction + the post-close-out
+addendum’s own ledger note reconciled exactly to the measured 32;
+“expect 0 undocumented commits; measure it” measured 0 on the CHANGELOG
+frontier, and the one commit past the HANDOFFS frontier was the addendum
+itself, carrying its own ledger entry — reconcile closed as a no-op in
+minutes; the warn-band CLAUDE.md gotcha correctly framed this session’s
+context-budget WARN as headroom, not a finding. **What was missing:**
+nothing material. **What was wrong:** gotcha (3)’s “the stray
+`~$e Compounding Loop.html` still makes `devtools::check()` warn” was
+already superseded at write time + one commit — S725’s own
+post-close-out addendum (`89b14d1b`) deleted the file and added standing
+guards; the addendum’s ledger entry self-corrects this, so zero harm.
+**ROI:** high.
+
 ### What Session 726 Did
 
-**Deliverable:** Owner-directed push to `origin/master` (32 pre-existing
-unpushed commits, S720–S725, + this claim) and CI verification (IN
-PROGRESS) **Started:** 2026-09-19 **Status:** Session claimed. Work
-beginning. **Ledger:** `CHANGELOG: pending` — the claim commit’s
-`CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
-Until close-out, this line is the crash breadcrumb for the next
-session’s reconcile.
+**Deliverable:** Owner-directed push to `origin/master` + CI
+verification — **DONE.** Pushed `4565c39d..9006b567` (33 commits: the 32
+pre-existing S720–S725 commits + the S726 claim), and all 4
+push-triggered workflows completed green ON THE PUSHED SHA `9006b567`:
+R-CMD-check 31m53s, pkgdown 13m47s, test-coverage 10m4s, lint 4m37s.
+This is the FIRST remote validation of the S720–S725 work: the S724
+warning-free suite (CI’s R-CMD-check runs it), the S721 Suggests trim +
+renv re-snapshot, the S720 context-budget adoption, the S725 CLAUDE.md
+reduction, and the S725 `~$`-guard additions. No TDD phases (no `.R`
+files touched; push + docs). Lint N/A. **Started/completed:** 2026-09-19
+(single session). Claim `9006b567` (rode the push, so CI ran on it —
+S717 precedent); mid-session BACKLOG filing `f8970edc`; records + sha
+commits follow this handoff. **Ledger:** one `CHANGELOG.md` entry per
+action (claim, BACKLOG filing, close-out, sha).
+
+**Mid-session owner request (filed, not acted on — 1-and-done, S721
+precedent):** tarball-size-reduction item added to `BACKLOG.md` Up Next
+(`f8970edc`, READY, Effort L): owner reports ~19 MB source tarball vs
+CRAN’s ≤10 MB policy; owner steer that slimming examples/test data may
+beat the package split. Item mandates measure-first (`R CMD build` +
+`tar tzvf` inventory — on-disk sizes mislead because `.Rbuildignore`
+already excludes `docs/`, `vignettes/articles/`, and several reference
+files), carries S726 on-disk anchors (`inst/extdata/` 5.3 MB, vignette
+HTMLs ~4.3 MB, `tests/` 3.4 MB), and cross-references the package-split
+item (S667 rec “do not split now”, owner disposition pending) and the
+pedigree-growth measurement item both ways.
+
+**Verification:** push confirmed (`master` even with `origin/master`
+post-push; `git rev-list --count` 33 at push time); CI 4/4
+`completed success` filtered on `headSha == 9006b567` exactly (not just
+“latest runs green”); quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured
+· results 4f53cda18c2b · manifest 4f53cda18c2b. Post-append trim
+triggers (`--budget-bytes 65536`): none fire on
+SESSION_NOTES/HANDOFFS/CHANGELOG.
+
+**Self-assessment (Session 726): 9/10.** **Strengths:** (1) CI
+verification pinned to the exact pushed sha via `--jq` filter on
+`headSha`, not eyeballed from the run list; (2) the mid-session owner
+request was filed with a measure-first mandate that caught the
+on-disk-vs-tarball misdirection (`.Rbuildignore` excludes the two
+biggest trees) before it could send the future session chasing the wrong
+60 MB; (3) no scope creep — the filed item was not started.
+**Weaknesses:** (1) the ~19 MB tarball figure is recorded as
+owner-reported, not measured in-session (deliberate — a full
+`R CMD build` mid-push-session wasn’t worth the wall time, but the
+item’s headline number is unverified until the research session builds
+the artifact); (2) one harness fumble — the first CI wait used a blocked
+sleep-chain form and had to be redone as a background poller.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push;
+the tarball-inventory insight lives in the filed BACKLOG item (its
+forward-carrying home per the S686 convention).
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~3 expected after close-out:
+BACKLOG filing `f8970edc` + records + sha; the last two are an estimate
+at write time). All 3 are docs-only; no urgency, they ride the next
+push. (B) Priorities: tarball-size-reduction research (READY, L,
+owner-requested S726 — measure first); pedigree-growth measurement
+(READY, S, owner-requested S721 — feeds the tarball item); package-split
+disposition + REUSE registration (owner decisions pending); BACKLOG.md
+editorial compression (READY, L). (C) Standing report-only: HANDOFFS.md
+truncated duplicate S720 stub (grep for two adjacent `session: S720`
+blocks); iCloud Housekeeping item closable pending a
+duplicates-stay-gone confirmation.
+
+**Key files:** `BACKLOG.md` Up Next tail (the new tarball item + the
+split item’s new cross-ref line), `CHANGELOG.md` S726 entries,
+`HANDOFFS.md` S726 receipt, `.github/workflows/` (unchanged — the 4
+green runs are ids 35481709978–35481710058).
+
+**Gotchas for the next session:** (1) **The `devtools::check()`
+warn/exit-1 gotcha should now be CLEARED** — S725’s addendum deleted the
+`~$` lock file and added standing guards; the next local check run
+should confirm (0 errors expected; the `scratchpad/` NOTE remains). If a
+`~$*` file reappears, the guards make it invisible to both git and
+`R CMD build`. (2) CI is now current through `9006b567` — only the ~3
+close-out docs commits are unpushed; “expect 0 undocumented commits;
+measure it” at next Phase 0. (3) Standing: every `methodology_trim.py`
+run needs `--budget-bytes 65536`; `renv.lock` carries no dev tooling
+(`Rscript` out-of-sync banner expected); CLAUDE.md sits in the warn band
+with ~1,640 B headroom — new adaptation narrative goes to
+`PROJECT_LEARNINGS.md`. (4) Full-suite baseline unchanged (no test-read
+files touched): 2437/0/0/184/0 — and now remote-confirmed by R-CMD-check
+on `9006b567`.
 
 ### Session 724 Handoff Evaluation (by Session 725)
 
@@ -149,573 +530,3 @@ makes `devtools::check()` warn and exit 1 non-interactively; `renv.lock`
 carries no dev tooling (`Rscript` out-of-sync banner expected). (4)
 Full-suite baseline unchanged this session (no test-read files touched):
 2437/0/0/184/0.
-
-### Session 723 Handoff Evaluation (by Session 724)
-
-**Score: 9/10.** **What helped:** the annotated BACKLOG item plus gotcha
-(2)’s re-derive mandate WAS this session’s plan — and the mandate was
-load-bearing (staleness confirmed: the list knew 5 of the actual 14
-markerKinship blocks); the full-suite baseline (2437/0/0/184/40) matched
-this session’s fresh inventory read exactly; next-steps (B) described
-this session’s exact opening play (fresh-suite inventory first, then
-273(d) vs fixture completion); key-file anchors accurate
-(`R/markerKinship.R:135` confirmed as the emission site). **What was
-missing:** nothing material. **What was wrong:** gotcha (2)’s first half
-— “the 40 suite warnings are ALL the tracked baseline item’s class” —
-was refuted by measurement: 37/40 are; 3 warnings in 2 OTHER files are
-two different classes (`test_appServer_server.R:206`
-findGeneration/`-Inf`; `test_modPedigree_processing.R:672`
-layout-collision residual). Zero harm done — the same gotcha’s own
-re-derive instruction pre-neutralized it. **ROI:** high.
-
-### What Session 724 Did
-
-**Deliverable:** Baseline-warnings cleanup — **DONE.** Suite warning
-count **40 → 0** (`blocks=2437 failed=0 error=0 skipped=184 warning=0`;
-block/skip counts equal the S718–S723 baseline exactly) via 16
-[`suppressWarnings()`](https://rdrr.io/r/base/warning.html) wraps on the
-exact test calls that leak working-as-designed production warnings. The
-suite is back to the 0-warning state of CRAN v2.0.0 — the owner’s “we
-had zero at last release” report (S487) that opened the item. BACKLOG
-item removed in the deliverable commit. No TDD phases (test-hygiene: no
-new tests, no assertion or production change; the remedy choice was the
-session’s `AskUserQuestion` gate, posed with the inventory in hand).
-Lint checklist applied (3 tracked test `.R` files touched):
-`lintr::lint_package()` = 0 lints, package loaded first (Learning 224).
-**Started/completed:** 2026-09-19 (single session). Claim `1bd5ef9c`;
-deliverable `eb3573bc`; records + sha commits follow this handoff.
-**Ledger:** one `CHANGELOG.md` entry per commit; the deliverable entry
-carries the full inventory + verification record.
-
-**What actually happened, in order:** 1. **Phase 0:** reconcile clean (0
-undocumented commits on both frontiers, predicted 0); CI 10/10 green
-(still on the S719 push — the 23 then-unpushed commits had never seen
-CI); dashboard 96/100; context-budget reds by-design only; untracked
-files all long-standing/known. Owner picked this item from the 4-option
-picker. Claim `1bd5ef9c`. 2. **Inventory (fresh full suite, silent
-reporter + `expectation_warning` walk):** 40 warnings = 37 markerKinship
-NA-path across 14 blocks, all `test_modMarkerGenetics.R` (3 known
-5-warning blocks at :265/:278/:416 + ELEVEN 2-warning `i152_roh` blocks
-at :927–:1712, of which the stale list knew 2) **plus 3 out-of-class**
-(see the S723 evaluation above). srcref lines landed on the exact
-triggering calls = the wrap-site list for free. 3. **Remedy gate:**
-owner picked “suppress all 16 sites” (over markerKinship-only, and over
-fixture completion with its Fst re-derivation risk) via
-`AskUserQuestion`. 4. **Fix (`eb3573bc`):** 16 wraps — 14
-`setInputs(genotypeFile=...)` (2 centerA, 1 flaggedSlot, 11 i152_roh;
-fixture filenames partition warning from non-warning sites exactly, so
-replace-all keyed on the fixture-name line was provably precise), 1
-`flushReact()` (appServer), 1 `setInputs(trimPedigree=TRUE)`
-(modPedigree). Diff = exactly the 16 wraps; assertions and production
-code untouched. 5. **Verification:** the 3 touched files individually
-0F/0E/0W; full clean regression read 2437/0/0/184/**0**; lint 0.
-
-**Self-assessment (Session 724): 9/10.** **Strengths:** (1)
-inventory-before-remedy sequencing caught the class heterogeneity BEFORE
-any fix was designed — the remedy gate’s options were built from
-measurement, not the item’s stale enumeration; (2) provably precise
-edits (fixture-name partition + wrap-count + per-file 0W re-runs +
-full-suite exact-baseline block/skip counts); (3) the suite’s warning
-channel is now clean, turning every future warning into signal.
-**Weaknesses:** (1) the BACKLOG block removal used line-number `sed`
-rather than a context-anchored edit — boundaries were re-verified
-immediately before and the diff checked after, but it’s the FM
-\#20-adjacent pattern; (2) the deliverable commit sat exactly at the
-5-file blast-radius cap — compliant but with no headroom; splitting the
-docs pair from the test trio would have been more conservative.
-
-**Next steps (specific):** (A) **Owner: push decision** — recount with
-`git rev-list --count origin/master..HEAD` (~27 expected after
-close-out: 23 pre-existing + claim + deliverable + records + sha; the
-last two are an estimate at write time). CI’s R-CMD-check runs this same
-suite and should confirm warning-free on push. (B) Priorities:
-`CLAUDE.md` reduction campaign (READY, M); pedigree-growth measurement
-(READY, S, owner-requested S721); owner decisions pending: package-split
-disposition, REUSE registration. (C) Standing report-only: HANDOFFS.md
-truncated duplicate S720 stub (locate by grepping for two adjacent
-`session: S720` blocks); iCloud Housekeeping item closable pending a
-duplicates-stay-gone confirmation.
-
-**Key files:** `tests/testthat/test_modMarkerGenetics.R` (14 wraps at
-:265/:278/:416/
-:927/:940/:989/:1015/:1046/:1067/:1103/:1123/:1598/:1649/:1712 — wrap
-adds no lines, so pre-fix line numbers still hold),
-`tests/testthat/test_appServer_server.R:206`,
-`tests/testthat/test_modPedigree_processing.R:672`,
-`R/markerKinship.R:131-139` (the NA-path emission — untouched),
-`CHANGELOG.md` S724 entries, `PROJECT_LEARNINGS.md` Learning 769.
-
-**Gotchas for the next session:** (1) **The full-suite baseline is now
-2437/0/0/184/0 — any `warning > 0` in a regression read is a NEW
-finding, never “baseline.”** (2) When authoring tests that upload
-degenerate/toy genotype fixtures, wrap the triggering call per Learning
-273(d) AT AUTHORING TIME — the 10→15→40 growth was new tests reusing
-warning-prone fixtures without wraps (S447/S502/S535). (3) The 16
-wrapped call sites also mute future unexpected warnings from those exact
-calls (owner-accepted trade; assertions unchanged, failures still
-surface). (4) Standing: context-budget reds by design until the
-CLAUDE.md reduction campaign; every `methodology_trim.py` run needs
-`--budget-bytes 65536`; the stray `~$e Compounding Loop.html` still
-makes `devtools::check()` warn and exit 1 non-interactively; `renv.lock`
-carries no dev tooling (the `Rscript` out-of-sync banner is expected).
-
-### Session 722 Handoff Evaluation (by Session 723)
-
-**Score: 9/10.** **What helped:** gotcha (3) WAS this session’s
-deliverable, pre-diagnosed in full — <file:line>, root cause (roxygen
-markdown parses `[0, 1]` as a link to topic “0, 1”), scope (`@noRd`,
-warning-only, no output effect), and the remedy (“escape the brackets”)
-— zero diagnosis time; follow-up (A)’s framing predicted exactly how the
-session would open (the owner pasting RStudio Install output); the
-full-suite baseline (2437/0/0/184/40) matched this session’s regression
-read exactly; “expect 0 undocumented commits; measure it” measured 0;
-the truncated-S720-stub report-only finding was accurate in substance.
-**What was missing:** nothing material. **What was wrong:** one minor
-stale anchor — the truncated-stub pointer said `HANDOFFS.md:171-175`,
-but S722’s own receipt (prepended after the note was written) shifted it
-to ~188-192 by read time; locate it by grep/structure, not line number.
-**ROI:** high.
-
-### What Session 723 Did
-
-**Deliverable:** roxygen unresolved-link warning fix — **DONE.**
-`R/makePedigreeDiagramData.R:2414` `@param t ... in [0, 1].` escaped to
-`\[0, 1\]`, so `devtools::document()`/RStudio-Install runs are
-warning-free. Session trigger: the owner’s RStudio-button Install (S722
-follow-up A) succeeded end-to-end — S722’s encoding fix verified on the
-live GUI surface — with this warning the only remaining noise; owner
-picked the fix via `AskUserQuestion`. No TDD phases (docs-only roxygen
-comment, S720–S722 precedent); lint checklist applied (tracked `.R` file
-touched). **Started/completed:** 2026-09-19 (single session). Claim
-`3980cc31`; deliverable `d2a43162`; BACKLOG annotation `e2a91424`;
-records + sha commits follow this handoff. **Ledger:** one
-`CHANGELOG.md` entry per commit; deliverable entry carries the
-verification record.
-
-**What actually happened, in order:** 1. **Phase 0:** reconcile clean (0
-undocumented commits, predicted 0); CI 10/10 green (still on the S719
-commit — now 18+ unpushed commits have never seen CI); dashboard 96/100;
-context-budget reds by-design only. Incidental finding: the iCloud
-duplicate `.R` files are gone and the repo now lives outside iCloud —
-that Housekeeping item’s close condition looks satisfiable
-(confirm-and-close, future session). 2. **Task pick:** owner clarified
-via their pasted Install output; picked the warning fix from a 4-option
-`AskUserQuestion`. Claim `3980cc31`. 3. **Fix + verification
-(`d2a43162`):** one-line escape. (1) Pre/post stash test — the warning
-reproduces on unfixed HEAD via
-`document(roclets = c("rd","collate","namespace"))`, absent with the
-fix; the first post-fix check was INVALID (run under
-[`suppressMessages()`](https://rdrr.io/r/base/message.html), which hides
-roxygen’s cli-emitted warning) and was caught and re-run unsuppressed.
-(2) Zero collateral: `man/`/`NAMESPACE` untouched. (3) Lint: no lints
-(package loaded first, Learning 224). (4) Full clean regression read
-`blocks=2437 failed=0 error=0 skipped=184 warning=40` — equals the
-S718–S722 baseline exactly. 4. **Mid-session owner report**
-(markerKinship NA warnings in RStudio test runs,
-`test_modMarkerGenetics.R:1649`/`:1712`) triaged to the existing BACKLOG
-baseline-warnings Housekeeping item — those 2 blocks are NOT in its
-stale 3-block list; source confirmed `R/markerKinship.R:135` (documented
-NA path, working as designed). Annotated the item (`e2a91424`): count
-10→15→40, re-derive-the-inventory instruction added. No fix
-(1-and-done).
-
-**Self-assessment (Session 723): 9/10.** **Strengths:** (1) caught its
-own unsound verification — the
-[`suppressMessages()`](https://rdrr.io/r/base/message.html) first check
-would have claimed “warning gone” on a channel that could not see the
-warning — and re-proved unsuppressed with a pre/post stash test on the
-exact surface; (2) zero collateral, exact-baseline suite; (3) the
-owner’s mid-session warning report was triaged to the tracked item with
-a verified annotation instead of scope-creeping into a fix.
-**Weaknesses:** (1) that first invalid check happened at all —
-absence-of-output must never be verified under suppression; (2) a noisy
-sibling-instance grep was run before realizing roxygen’s own output IS
-the exhaustive unresolved-link inventory (one wasted step).
-
-**Next steps (specific):** (A) **Owner: push decision** — recount with
-`git rev-list --count origin/master..HEAD` (~23 expected after
-close-out: 18 pre-existing + claim + fix + annotation + records + sha;
-the last two are an estimate at write time). The warning fix reaches
-other clones only once pushed. (B) **Warning-cleanup session** (READY,
-Effort S) — the annotated baseline-warnings item; owner showed active
-interest this session; start by re-deriving the full warning-emitting
-block inventory from a fresh suite run, then apply Learning 273(d)
-[`suppressWarnings()`](https://rdrr.io/r/base/warning.html) or fixture
-completion per the item. (C) Priorities: `CLAUDE.md` reduction campaign
-(READY, M); pedigree-growth measurement (READY, S, owner-requested
-S721); owner decisions pending: package-split disposition, REUSE
-registration. (D) Report-only standing findings: HANDOFFS.md truncated
-duplicate S720 stub (locate by grep for two adjacent `session: S720`
-blocks — line numbers drift); iCloud Housekeeping item now closable
-pending a duplicates-stay-gone confirmation.
-
-**Key files:** `R/makePedigreeDiagramData.R:2414` (the escaped line),
-`R/markerKinship.R:135` (the NA-warning emission the owner asked about),
-`BACKLOG.md` baseline-warnings item (S723 annotation at its tail),
-`CHANGELOG.md` S723 entries, `PROJECT_LEARNINGS.md` Learning 768.
-
-**Gotchas for the next session:** (1) **Never verify absence-of-warning
-under [`suppressMessages()`](https://rdrr.io/r/base/message.html)** —
-roxygen2 (and cli-based tooling generally) emits warnings as messages; a
-clean result under suppression is unsound (Learning 768). (2) The 40
-suite warnings are ALL the tracked baseline item’s class — suite green
-0F/0E; re-derive the block inventory, don’t trust the item’s
-enumeration. (3) Standing gotchas carry forward: context-budget reds by
-design until the CLAUDE.md reduction campaign; every
-`methodology_trim.py` run needs `--budget-bytes 65536`; the stray
-`~$e Compounding Loop.html` still makes `devtools::check()` warn and
-exit 1 non-interactively; `renv.lock` carries no dev tooling (the
-`Rscript` out-of-sync banner is expected). (4) Full-suite baseline
-re-confirmed this session: 2437/0/0/184/40.
-
-### Session 721 Handoff Evaluation (by Session 722)
-
-**Score: 9/10.** **What helped:** the BACKLOG Up Next item S721 filed
-was a ready-to-execute plan — root cause, exact file list, the fix line,
-the verification recipe (RStudio’s exact roclet call + regression read +
-cleanup), and the owner follow-up — so this session spent zero time on
-diagnosis; gotcha (5)’s full-suite baseline (2437/0/0/184/40) was
-directly load-bearing (this session’s read matched it exactly); gotcha
-(2) pre-explained the renv “project is out-of-sync” banner that now
-prints on every `Rscript` start (dev tooling deliberately absent from
-the lock — no time lost chasing it); the next-steps priority list
-matched the Phase 0 picker one-for-one. **What was missing:** the item
-counted `vignettes/a3manual.md` among “the 5 built vignettes” without
-noting it is gitignored (`.gitignore:18` — the
-[`knitr::knitr`](https://rdrr.io/pkg/knitr/man/knitr-package.html)
-intermediate), discovered here when `git diff --stat` showed only 4
-files; cost ~1 minute. **What was wrong:** nothing found — every checked
-claim held, including the failure fingerprint (leftover build products
-had every `.html` except `a2interactive.html`). **ROI:** high.
-
-### What Session 722 Did
-
-**Deliverable:** RStudio-Install vignette-encoding fix — **DONE.**
-`%\VignetteEncoding{UTF-8}` added inside the `vignette:` block of all 4
-tracked built vignettes (`a2interactive.Rmd`, `a3manual.Rmd`,
-`gvaConvergence.Rmd`, `simulatedKValues.Rmd`); the item’s 5th file
-(`a3manual.md`) is the gitignored
-[`knitr::knitr`](https://rdrr.io/pkg/knitr/man/knitr-package.html)
-intermediate and regenerates WITH the line from the `.Rmd`’s YAML
-(verified at its line 14 post-run). No TDD phases (vignette metadata, no
-`.R` files — S720/S721 precedent). BACKLOG Up Next item removed in the
-deliverable commit. **Started/completed:** 2026-09-19 (single session).
-Claim `f93a6ce2`; deliverable `10934a2f`; records + sha commits follow
-this handoff. **Ledger:** one `CHANGELOG.md` entry per commit;
-deliverable entry carries the full verification record.
-
-**What actually happened, in order:** 1. **Phase 0:** reconcile clean (0
-undocumented commits, predicted 0); CI 10/10 green (on the S719 commit —
-the 13 then-unpushed commits have never seen CI); dashboard 96/100;
-context-budget reds by-design only. Owner picked this item from the
-4-option picker. Claim `f93a6ce2`. 2. **Fix:** one line per file after
-the `%\usepackage[UTF-8]{inputenc}` boilerplate (which the roclet path
-ignores — the item’s diagnosis, confirmed). 3. **Mechanism verification
-(seconds, no rebuild):** `tools:::.getVignetteEncoding()` returns
-`'non-ASCII'` on the pre-fix HEAD copy of `a2interactive.Rmd` (exactly
-the value that trips
-[`tools::buildVignette()`](https://rdrr.io/r/tools/buildVignette.html)’s
-stop) and `'UTF-8'` post-fix. 4. **End-to-end verification (RStudio’s
-exact call):**
-`devtools::document(roclets = c('rd', 'collate','namespace','vignette'))`
-exited 0; all 4 `.Rmd` vignettes rebuilt including the
-previously-failing `a2interactive.Rmd` (its `.html` produced — its
-absence among the leftover build products was the failure fingerprint).
-`man/` untouched (zero collateral `.Rd` churn). Build products then
-cleaned per the item’s recipe. 5. **Regression read:**
-`blocks=2437 failed=0 error=0 skipped=184 warning=40` — equals the
-S718–S721 baseline exactly. (`devtools::check()` not re-run — the item’s
-verify recipe doesn’t call for it, S721 ran a full check on effectively
-this tree yesterday, and CI’s R-CMD-check will exercise the batch
-vignette path on push.) 6. **Mid-session owner question** answered (why
-`vignettes/` retains `.md`/`.R`/`.html` files): in-place roclet builds +
-`.gitignore:18-22` hiding them; no file changes.
-
-**Self-assessment (Session 722): 9/10.** **Strengths:** (1)
-mechanism-level pre/post verification added beyond the recipe — proved
-the fix on the exact reader the failing path uses before spending
-minutes on the full rebuild; (2) zero collateral — diff is exactly 4
-one-line insertions, `man/` untouched; (3) the gitignored-5th-file
-wrinkle was detected and resolved (regeneration verified) rather than
-claiming “5 files committed” when only 4 could be. **Weaknesses:** (1)
-edited `a3manual.md` as if durable before noticing it was gitignored —
-caught by `git diff --stat`, cost one check; (2) the actual RStudio
-Install *button* was not exercised (no GUI in this environment) —
-terminal-side proof is complete, but the live surface remains the
-owner’s follow-up, stated explicitly rather than claimed.
-
-**Next steps (specific):** (A) **Owner: the item’s own follow-up** —
-restart R, Install via the RStudio button, re-run the appServer tests;
-if anything still fails, capture the output as its own finding (most
-likely stale-installed-copy collateral, already refreshed by S721’s
-terminal install). (B) **Owner: push decision** — recount with
-`git rev-list --count origin/master..HEAD` (~17 expected after
-close-out: 13 pre-existing + claim + deliverable + records + sha; the
-last two are an estimate at write time). Note the fix only reaches other
-clones/machines once pushed. (C) Priorities: `CLAUDE.md` reduction
-campaign (READY, M); pedigree-growth measurement (READY, S,
-owner-requested S721); owner decisions pending: package-split
-disposition, REUSE registration. (D) Report-only finding:
-`HANDOFFS.md:171-175` holds a truncated duplicate S720 stub block (an
-unclosed `handoff` fence with only session/date/status lines immediately
-above the real S720 receipt) — pre-existing, not touched this session
-(Learning 382 precedent); a future session should repair it
-deliberately.
-
-**Key files:** `vignettes/a2interactive.Rmd:12` (the load-bearing new
-line; siblings at `a3manual.Rmd:14`, `gvaConvergence.Rmd:13`,
-`simulatedKValues.Rmd:13`), `.gitignore:18` (why `vignettes/` build
-products are invisible to git), `CHANGELOG.md` S722 deliverable entry
-(full verification record), `PROJECT_LEARNINGS.md` Learning 767.
-
-**Gotchas for the next session:** (1) **The RStudio-button click itself
-is still unverified** — everything terminal-side is green, but the
-button runs in the owner’s GUI session; treat the owner follow-up in
-next-step (A) as the remaining verification surface. (2) Every
-RStudio-button Install (vignette roclet) will keep depositing gitignored
-build products in `vignettes/` — harmless, regenerable; `a3manual.md`
-persists by design. (3) Pre-existing roxygen warning on every
-`document()` run: `R/makePedigreeDiagramData.R:2414`
-`@param t ... in [0, 1].` parses as a link to topic “0, 1” (`@noRd`,
-warning-only, no output effect) — not a regression; escape the brackets
-if it ever needs silencing. (4) Standing gotchas carry forward:
-context-budget reds by design until the CLAUDE.md reduction campaign;
-every `methodology_trim.py` run needs `--budget-bytes 65536`; the stray
-`~$e Compounding Loop.html` still makes `devtools::check()` warn and
-exit 1 non-interactively; `renv.lock` carries no dev tooling (the
-`Rscript` out-of-sync banner is expected). (5) Full-suite baseline
-re-confirmed this session: 2437/0/0/184/40.
-
-### Session 720 Handoff Evaluation (by Session 721)
-
-**Score: 9/10.** **What helped:** next-step (B) named this session’s
-exact deliverable with a `BACKLOG.md` pointer whose “recount after any
-BACKLOG edit” caveat proved necessary (the item sat at line 146 by
-pickup time); gotcha (1) pre-cleared the `context_budget.py` exit-2 reds
-as by-design — zero time lost chasing them; the close-out ledger entry’s
-full-suite baseline (2437/0/0/184/40) was directly load-bearing — this
-session’s regression read was compared against it and matched exactly;
-“expect 0 undocumented commits; measure it” measured exactly 0. **What
-was missing:** no current `devtools::check()` baseline exists anywhere
-current — the old “iCloud duplicate-file warning” baseline is stale
-(those files are gone), so this session had to derive from the
-session-start `git status` that today’s 1 WARNING + 1 NOTE (untracked
-`~$e Compounding Loop.html` clutter + `scratchpad/`) are pre-existing
-rather than compare against a stated expectation. Minor; now recorded
-below. **What was wrong:** nothing found. **ROI:** high.
-
-### What Session 721 Did
-
-**Deliverable:** `Suggests:` audit — **DONE.** All 22 `Suggests:`
-entries audited against the owner’s rule (real loads in
-`tests/`/`vignettes/`/roxygen `@examples`); 16 retained with
-grep-verified load sites, 6 relocated/removed (owner-ratified via 2
-`AskUserQuestion` gates, both recommended options picked): `devtools` +
-`roxygen2` → new `Config/Needs/dev`; `quarto` dropped (already
-`Config/Needs/website`, `pkgdown.yaml` already passes `needs: website`);
-`grid`/`png`/`shinyWidgets` deleted outright (zero uses anywhere).
-`renv.lock` re-snapshotted (`dev = TRUE`, S637 precedent) — 21 packages
-dropped (the 5 + transitive closures); `renv::status(dev = TRUE)` clean.
-No TDD phases (DESCRIPTION/config metadata, no `.R` files).
-**Started/completed:** 2026-09-19 (single session). Claim `05943cd5`;
-owner-requested backlog item `ede5289e`; deliverable `cd748874`;
-records + sha commits follow this handoff. **Ledger:** one
-`CHANGELOG.md` entry per commit; completed BACKLOG item removed in
-`cd748874`.
-
-**What actually happened, in order:** 1. **Phase 0:** reconcile clean (0
-undocumented commits, predicted 0); CI 10/10 green; dashboard 96/100;
-context-budget reds by-design only. Owner picked this item from the
-4-option picker. Claim `05943cd5`. 2. **Mid-session owner request**
-(arrived during research): filed the pedigree-drawing package-growth
-measurement item (rough ±20% acceptable) as `BACKLOG.md` Housekeeping
-(READY, S) — `ede5289e`, not acted on (1-and-done). 3. **Audit:** grep
-inventory of all 22 entries across `R/`/`tests/`/`vignettes/`/`man/`/
-`inst/`/`data-raw/`, then **read every thin hit for code-vs-comment** —
-this flipped two classifications: `devtools`’ 20+ test/vignette hits are
-ALL comments or `eval = FALSE` install snippets tangling to comments
-(`vignettes/a3manual.R:5-10`) → out; `pkgdown`’s single hit is real code
-([`pkgdown::as_pkgdown()`](https://pkgdown.r-lib.org/reference/as_pkgdown.html),
-`test_pkgdown_reference_config.R:25`) → stays, refuting the filing
-item’s own suspicion. A secondary engine-level sweep caught `markdown`
-(zero direct hits but `a3manual.{Rmd,md}` use the
-[`knitr::knitr`](https://rdrr.io/pkg/knitr/man/knitr-package.html)
-engine, which renders through it) → stays. 4. **Gate:** two
-`AskUserQuestion`s (devtools/roxygen2 disposition; unused-package
-deletion); owner ratified both recommendations. 5. **Execute
-`cd748874`:** DESCRIPTION edit (6 lines out, `Config/Needs/dev` in;
-roxygen2’s `(>= 8.0.0)` superseded by `Config/roxygen2/version`);
-`renv::snapshot(dev = TRUE)`. 6. **Verify:** full regression read
-`blocks=2437 failed=0 error=0 skipped=184 warning=40` — equals S718–S720
-baseline exactly. Full `devtools::check()` (21m52s): 0 errors, all
-dependency gates OK, vignettes rebuilt OK; 1 WARNING + 1 NOTE both name
-pre-existing UNTRACKED clutter
-(`inst/extdata/reference/~$e Compounding Loop.html`, `scratchpad/`) — 0
-new findings.
-
-**Self-assessment (Session 721): 9/10.** **Strengths:** (1) read-the-hit
-discipline caught both would-be errors (devtools wrongly kept / markdown
-wrongly removed) before they happened; (2) precedent-checked the renv
-question (S637 `526c7fec`, covr absent from lock) instead of guessing;
-(3) CI-safety verified before removal (`pkgdown.yaml` `needs: website`),
-not after. **Weaknesses:** (1) the first grep pattern set was pure
-[`library()`](https://rdrr.io/r/base/library.html)/`::`-shaped and would
-have missed the `markdown` engine dependency without the deliberate
-secondary sweep — engine/YAML deps need their own pass by default; (2)
-`devtools::check()`’s non-interactive exit-1 on the pre-existing WARNING
-briefly read as a failure before the log was inspected.
-
-**Next steps (specific):** (A) **Owner: push decision** — recount with
-`git rev-list --count origin/master..HEAD` (~12 expected after
-close-out: 7 pre-existing + claim + backlog-file + deliverable +
-records + sha; the last two are an estimate at write time). (B)
-Priorities: `CLAUDE.md` reduction campaign (READY, M); pedigree-growth
-measurement (READY, S, owner-requested S721); owner decisions pending:
-package-split disposition, REUSE registration. (C) Owner call, trivial:
-delete/relocate the stray untracked
-`inst/extdata/reference/~$e Compounding Loop.html` (an Office lock-file
-artifact) — it alone makes `devtools::check()` warn (and exit 1
-non-interactively); `scratchpad/` likewise drives the top-level NOTE.
-Untracked files, deliberately not touched this session.
-
-**Key files:** `DESCRIPTION:60` (trimmed Suggests), `DESCRIPTION:85-87`
-(Config/Needs website/coverage/dev groups), `renv.lock` (21 packages
-dropped), `BACKLOG.md` Housekeeping (new pedigree-growth item; Suggests
-item removed), `PROJECT_LEARNINGS.md` Learning 766, `CHANGELOG.md` S721
-deliverable entry (full audit table).
-
-**Gotchas for the next session:** (1) **`devtools::check()` exits 1
-non-interactively until the stray `~$` file is removed** — the WARNING
-is pre-existing clutter, not a regression; current true baseline: 0
-errors + that clutter WARNING + the `scratchpad/` NOTE. (2)
-**`renv.lock` no longer carries dev tooling**
-(devtools/roxygen2/quarto/pak/usethis/rcmdcheck etc.) — a fresh clone’s
-[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
-yields a runtime+test library only; install dev tooling via
-`Config/Needs/dev` / `Config/Needs/website` (pak understands these) or
-the renv dev profile field. (3) S720’s standing gotchas carry forward:
-context-budget reds by-design until the CLAUDE.md reduction campaign;
-every `methodology_trim.py` run needs `--budget-bytes 65536`; the
-per-clone no-growth hook refuses CLAUDE.md growth. (4) If a future
-feature reintroduces `grid`/`png`/`shinyWidgets`, re-declare them in
-`Suggests:` then — their deletion is “unused now”, not “banned”. (5)
-Full-suite baseline re-confirmed this session: 2437/0/0/184/40.
-
-### Session 719 Handoff Evaluation (by Session 720)
-
-**Score: 9/10.** **What helped:** gotcha (3) “expect 0 undocumented
-commits past the frontier; measure it” measured exactly 0 — the first
-clean reconcile after two 1-commit sessions; next-step (B) named this
-session’s deliverable with the `BACKLOG.md:119` pointer, and that item’s
-“State as of S719” paragraph was accurate in every checked particular
-(seed untouched, history gitignored, tools build-ignored,
-`--budget-bytes 65536` the only way `SESSION_NOTES.md` fires); gotcha
-(4) pre-warned not to read `context_budget.py`’s seed-config reds as P10
-defects — directly load-bearing for this exact deliverable; the “trim is
-one dry-run-verified command away” claim re-verified live (this
-session’s own dry run: L1–L3 OK, 79,738 B → 3,500 B — larger than their
-71,192 → 4,018 because the file had since grown, consistent). **What was
-missing:** nothing material; one discoverable-only wrinkle — the
-dashboard’s `SESSION_NOTES.md` HIGH-flag text (“the trimmer answers
-NO_CONFIG”) contradicts the local trimmer extension, found only by
-running both this session. **What was wrong:** nothing found; every
-checked claim held. **ROI:** high.
-
-### What Session 720 Did
-
-**Deliverable:** `context_budget.py` ADOPTED with honest ceilings +
-ledger-trigger budget SETTLED at the old 65,536 B cadence + the owed
-`SESSION_NOTES.md` trim executed — **DONE, owner-ratified**
-(`BACKLOG.md:119` item, removed in the adoption commit; both decisions
-picked via `AskUserQuestion` — adopt-honest over freeze-at-current and
-delete; old-cadence-and-trim over the 196,608 B default and a one-off
-trim). Docs/process tooling, no TDD phases, no `.R` files touched.
-**Started/completed:** 2026-09-19 (single session). Claim `572562f1`;
-adoption `bc6be1d0`; trim `c079c27a`; records + sha commits follow this
-handoff. **Ledger:** one `CHANGELOG.md` entry per commit (the trimmer
-wrote its own for the trim). FM \#28 reduction: `SESSION_NOTES.md`
-79,738 B → 3,500 B (21 records to
-`docs/archive/SESSION_NOTES-through-2026-09-19.md`, L1–L3 verified
-pre-commit).
-
-**What actually happened, in order:** 1. **Phase 0:** reconcile clean (0
-undocumented commits, predicted 0); CI 10/10 green on `4565c39d`;
-dashboard 96/100; owner picked this item from the 4-option picker. Claim
-`572562f1`. 2. **Evaluation:** seed-config run exit 2 (`CLAUDE.md`
-41,622 B over 28,000; structure pattern instrument-failed; fence
-missing). `--calibrate` REJECTED: 0.60 B/token with a −6,015-token
-intercept (n=119, R²=0.73) — implausible, confounded; adopted the
-dashboard’s measured densest 2.27 B/token instead. Overlap analysis:
-dashboard observes, trimmer archives chronological ledgers,
-`context_budget.py` uniquely gates `CLAUDE.md` (under the one-read cap,
-so dashboard-invisible; not a ledger, so trimmer-unreachable). Trim
-measurements: SN 79,738 B fires only under 65,536; HANDOFFS 62,667 and
-CHANGELOG 49,819 fire under neither. 3. **Gate:** two
-`AskUserQuestion`s; owner ratified both recommended options. 4.
-**Adoption `bc6be1d0`:** config rewritten with derivations in `_` keys
-(ceilings aligned so a `SESSION_NOTES.md` red means exactly “a trim is
-owed”); `budget:protected` fence around the Project Overview; per-clone
-no-growth hook installed; Phase 0 check + red-by-design expectations
-added to `CLAUDE.md`; S719’s open trigger-budget paragraph resolved;
-BACKLOG item swapped for the successor “CLAUDE.md reduction campaign”
-(READY, M). Committed `--no-verify` — the hook correctly refuses the
-`CLAUDE.md` growth this very commit makes; bypass recorded in the ledger
-entry. 5. **Trim `c079c27a`:** dry run then `--write` under
-`--budget-bytes 65536`; verify.sh OK before commit; the hook ran live on
-this commit and passed it (the shrink path, observed end-to-end).
-
-**Self-assessment (Session 720): 9/10.** **Strengths:** (1) measured
-before deciding, and rejected the tool’s own calibration when it was
-confidently wrong rather than adopting a bad number; (2) both decisions
-went to the owner with recommendations and measured trade-offs, none
-pre-empted; (3) single-remedy design — the two tools’ `SESSION_NOTES.md`
-triggers are the same number, so no standing two-trigger disagreement;
-(4) honest-red posture with the remedy filed as a BACKLOG item and
-growth mechanically refused meanwhile. **Weaknesses:** (1) one
-`BACKLOG.md` edit clipped the first line of the adjacent `Suggests:`
-item — caught and restored before commit, but a real anchor-selection
-error; (2) first config write guessed `max: 0` disables a bound (it is
-literal) — caught by running the tool, cost one iteration; (3)
-`CLAUDE.md` grew 1,726 B in the very session that adopted its ceiling
-(fence + Phase-0 step + decision record) — documented as red-by-design,
-but the irony stands.
-
-**Next steps (specific):** (A) **Owner: push decision** — recount with
-`git rev-list --count origin/master..HEAD` (~6 expected after close-out:
-1 pre-existing + claim + adoption + trim + records + sha — the last two
-are an estimate at write time). All changes are docs/config; CI clones
-never see the per-clone hook. (B) `Suggests:` audit (READY, S — the item
-now sits near `BACKLOG.md:133`; recount after any BACKLOG edit). (C)
-Owner decisions pending: package-split disposition (`BACKLOG.md:71`),
-REUSE registration (`BACKLOG.md` Housekeeping). (D) `CLAUDE.md`
-reduction campaign (new item, READY, M) — clears the by-design red and
-re-greens the Phase 0 budget check. (E) Informational: the dashboard’s
-`SESSION_NOTES.md` HIGH flag should clear on its next Phase 0 run
-(post-trim 3,500 B); LabKey remainder still BLOCKED.
-
-**Key files:** `.context-budget.json` (calibrated config — every value
-carries its derivation in the neighbouring `_` key), `CLAUDE.md`
-“Context-budget check” under Additional Phase 0 steps, `CLAUDE.md`
-trigger-budget decision inside the `methodology_trim.py` checklist
-block, `BACKLOG.md:119` (reduction-campaign item),
-`docs/archive/SESSION_NOTES-through-2026-09-19.md` + `.verify.sh`,
-`.git/hooks/pre-commit` (per-clone, untracked).
-
-**Gotchas for the next session:** (1) **Phase 0’s
-`python3 context_budget.py` run exits 2 with `CLAUDE.md` + resident red
-BY DESIGN** until the reduction campaign lands — only *new* reds are
-findings; a `SESSION_NOTES.md` red means a `--budget-bytes 65536` trim
-is owed, nothing else. (2) **The pre-commit hook refuses any commit that
-grows `CLAUDE.md`** — shrink it, or `--no-verify` with the rationale
-recorded in the ledger entry; a fresh clone must re-run
-`python3 context_budget.py install-hook`. (3) **Every
-`methodology_trim.py` run needs `--budget-bytes 65536`** (the tool keeps
-no per-project setting; decision recorded in `CLAUDE.md`). (4)
-`HANDOFFS.md` was 62,667 B before this session’s receipt — under the
-65,536 budget it is within ~3 KB of firing; this close-out measures it
-after appending (result in the close-out ledger entry) and trims it if
-it fires. (5) The dashboard HIGH-flag text “the trimmer answers
-NO_CONFIG” for `SESSION_NOTES.md` overstates (stock-class hardcoding vs
-the local extension); do not act on the text, act on the size. (6)
-Full-suite baseline re-measured this session — see the close-out ledger
-entry for the number (2,437 blocks expected).
