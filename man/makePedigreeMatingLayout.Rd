@@ -109,6 +109,7 @@ FALSE} (grep-confirmed).
 }
 \examples{
 library(nprcgenekeepr)
-layout <- makePedigreeMatingLayout(nprcgenekeepr::examplePedigree)
+ped <- nprcgenekeepr::smallPed
+layout <- makePedigreeMatingLayout(ped)
 
 }

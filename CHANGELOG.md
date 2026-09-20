@@ -38,6 +38,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S732 deliverable: CRAN check-time fix — `makePedigreeMatingLayout` example input `examplePedigree` → `smallPed`
+- `R/makePedigreeDiagramData.R:1659-1662` roxygen `@examples` + regenerated
+  `man/makePedigreeMatingLayout.Rd` (`devtools::document()`, never hand-edited). Input
+  choice measured in-session across all shipped pedigrees with the required columns:
+  `smallPed` (17 rows) 0.03 s, ZERO warnings/messages — beats the item's named candidate
+  `pedWithGenotype` (0.93 s, 5-collision warning), `qcPed` (0.91 s, same warning), and
+  `rhesusPedigree` (2.91 s, 72-collision warning); `smallPed` is also the established
+  fixture idiom in 13 other roxygen examples. Lint: 0 on the touched file (package
+  loaded). Verification = the audit §7 clean-export re-measure, run AFTER this commit
+  (the recipe builds from `git archive HEAD`); results in the close-out entry. BACKLOG
+  item removal follows the re-measure passing, not this commit.
+
 ### 2026-09-20 · [ad hoc] S732 claim: apply the CRAN check-time fix (in progress)
 - Session claimed after full Phase 0 (reconcile clean: 0 undocumented on both frontiers at
   `400e226e`; CI 4/4 green on `3b688ae2`; dashboard 96/100; context budget warn-band only;

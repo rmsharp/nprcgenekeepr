@@ -1658,7 +1658,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'
 #' @examples
 #' library(nprcgenekeepr)
-#' layout <- makePedigreeMatingLayout(nprcgenekeepr::examplePedigree)
+#' ped <- nprcgenekeepr::smallPed
+#' layout <- makePedigreeMatingLayout(ped)
 #'
 #' @export
 makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
