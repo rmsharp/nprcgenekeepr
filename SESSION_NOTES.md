@@ -34,15 +34,98 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 729 Handoff Evaluation (by Session 730)
+**Score: 9/10.** **What helped:** the priorities list mapped one-for-one onto this session's
+Phase 0 picker, and the owner picked its #1; the `BACKLOG.md:117` item WAS the execution plan
+verbatim — both measurement axes with their exact commands, the NOT_CRAN-inversion warning
+(gotcha 2) that became this session's method, and the GHA-is-not-the-CRAN-number caution that
+was confirmed in passing (CI step timestamps unretrievable); "expect 0 undocumented commits;
+measure it" measured 0 on both frontiers; the "~3 unpushed" estimate was already self-corrected
+to 4 by S729's own sha-commit ledger entry before this session read it. **What was missing:**
+nothing material — only that the item's remedy steer ("fewer gene-drop iterations; simulation
+functions take `n` directly") pointed at simulation examples while the actual culprit is the
+pedigree-layout example; zero harm, because the item's own measure-first mandate exists
+precisely to catch that. **What was wrong:** nothing found — every checked claim held. **ROI:**
+high.
+
 ### What Session 730 Did
-**Deliverable:** CRAN check-time measurement audit (`BACKLOG.md:117`, owner-requested S729) —
-measure per-Rd example timings (`R CMD check --timings`) and the CRAN-visible test runtime
-(suite WITHOUT `NOT_CRAN=true`), weigh remedies without applying any (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** CRAN check-time measurement audit — **DONE.**
+[`docs/audits/CRAN_CHECK_TIME_AUDIT_2026-09-19.md`](docs/audits/CRAN_CHECK_TIME_AUDIT_2026-09-19.md).
+**One example is the entire problem: the full CRAN-surface check is 1,037 s wall / 1,032 s CPU
+(17.3 min, Status OK), and 734 s (71%) of it is the single `makePedigreeMatingLayout` Rd
+example** running the full 3,694-row `examplePedigree` — ~147× CRAN's 5 s per-Rd threshold,
+on an input ~5× the app's own 750-individual diagram cap (`R/modPedigree.R:406`). The other
+201 timed examples total 8.9 s. Tests are fine (215 s under check, 0 fail; ~14% of local
+blocks already stay home on CRAN). Measured remedy: the same call on `pedWithGenotype`
+(280 rows) is 1.0 s → check drops to ~5 min, clearing the verified 10-min incoming
+"Overall checktime" NOTE. Research only: no remedy applied, no `.R`/`man/` change, no TDD
+phases, lint N/A.
+**Started/completed:** 2026-09-19 (single session). Claim `c8397845`; deliverable `e8a0eca7`;
+records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per commit; the deliverable entry carries the numbers.
+
+**What actually happened, in order:**
+1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both frontiers; S729
+   receipt's ratchet citation matches `.quality-gates-results.json` exactly); CI 4/4 green on
+   `0572767b`; dashboard 96/100; context budget warn-band only; 4 unpushed (S729's own ledger
+   had already corrected its ~3 estimate); sequencing audits checked — no ratified order
+   outranks the BACKLOG order (their clusters are closed issues or the retired campaign).
+2. **Criteria verified at source:** CRAN policy rev 6875 fetched (CPU-time/examples/2-core/
+   optional-long-tests passages quoted); the 5 s per-Rd threshold, its CPU-or-elapsed rule,
+   and `_R_CHECK_DONTTEST_EXAMPLES_` = `as_cran` (donttest STILL RUNS at incoming) read from
+   `tools/R/check.R` itself; the 10-min incoming "Overall checktime" NOTE evidenced from
+   R-pkg-devel.
+3. **Measurements:** clean-export tarball (3,485,111 B at `c8397845`, §7 recipe) →
+   `R CMD check --timings` with `NOT_CRAN` unset under `/usr/bin/time -l` (1,037 s; the check's
+   own >5 s table lists exactly one row); per-file testthat runs on BOTH sides of the NOT_CRAN
+   switch (CRAN surface 187.6 s / 2,141 blocks / 200 skips; baseline 260.3 s / 2,437 / 184 —
+   reproducing the standing baseline exactly and settling its currency as rows/failed/error/
+   skipped); control measurement `pedWithGenotype` → 1.0 s; CPU/wall 0.995 = single-threaded
+   (2-core policy pass measured, not assumed).
+4. **BACKLOG:** measure-first item removed (complete, S686 convention), replaced in place by
+   the READY/Effort-S "apply the CRAN check-time fix" item carrying every number, location,
+   and the NOT-`\donttest` warning.
+
+**Self-assessment (Session 730): 9/10.** **Strengths:** (1) every enforcement criterion was
+verified in the enforcing tool's own source or at the policy page, not folklore — which
+overturned the item's implicit `\donttest` remedy before it could be recommended; (2) the
+headline finding is closed three ways (Ex.timings, the check's own >5 s table, and a measured
+small-input control that also sized the remedy); (3) the identical-currency double test run
+settled the long-standing baseline-currency question instead of comparing reporter apples to
+block oranges; (4) scope held — the fix is a one-line temptation and it was filed, not applied.
+**Weaknesses:** (1) all timings are single runs, no variance estimate (direction of every
+conclusion is robust to that, magnitude ±); (2) the ~79 s install/vignette/manual residual was
+not decomposed per stage; (3) one sloppy artifact — the full-results CSV write errored on a
+list column after the needed numbers printed (per-file CSV landed fine).
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine measurement session (S727/S729
+precedent); the insights' forward-carrying homes are the audit and the rewritten BACKLOG item.
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~8 expected after close-out: 4 pre-existing +
+claim + deliverable + records + sha; the last two are an estimate at write time). All
+docs-only. (B) Priorities: **apply the CRAN check-time fix** (READY, S, `BACKLOG.md:117` —
+doc-only `.Rd` example change + §7 re-measure; the natural next pickup); pedigree-growth
+measurement (READY, S, owner-requested S721); package-split disposition + REUSE registration
+(owner decisions); BACKLOG.md editorial compression (READY, L); inst/doc slimming (DECISION
+NEEDED, M, `BACKLOG.md:100`). (C) Standing report-only set unchanged from S729.
+
+**Key files:** `docs/audits/CRAN_CHECK_TIME_AUDIT_2026-09-19.md` (§2 stage table, §3 findings,
+§7 recipe), `BACKLOG.md:117` (the apply-the-fix item), `R/makePedigreeDiagramData.R:1659-1662`
+(the roxygen example to change — never edit `man/*.Rd` by hand; `devtools::document()`
+regenerates), `R/modPedigree.R:406` (the 750-individual cap), `CHANGELOG.md` S730 entries.
+
+**Gotchas for the next session:** (1) The apply-the-fix re-measure must use the §7
+clean-export recipe with `NOT_CRAN` unset — expect ~5 min total and an EMPTY >5 s table;
+never measure from the working tree. (2) `pedWithGenotype` through the layout emits a benign
+5-collision warning — fine for timing, but the remedy session may prefer a clean-laying-out
+`examplePedigree` subset for the shipped example. (3) `\donttest{}` is NOT an escape at
+incoming (verified in `check.R`) — do not let a future session re-derive the wrong remedy.
+(4) Standing set unchanged: `scratchpad/` invisible to git by owner decision; ratchet ~2 min,
+run AFTER committing (Learning 772); trim needs `--budget-bytes 65536`; renv banner expected;
+CLAUDE.md warn band; the two `SESSION_NOTES.md` ceilings differ (owner decision pending);
+suite baseline 2437/0/0/184/0 — reproduced exactly this session, currency now settled
+(rows/failed/error/skipped in `as.data.frame(test_dir(...))` terms).
 
 ### Session 728 Handoff Evaluation (by Session 729)
 **Score: 9/10.** **What helped:** next-step (A) named the push decision with the exact recount

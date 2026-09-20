@@ -38,6 +38,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S730 close-out: session records (handoff, S729 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (evaluation of S729: 9/10; self-assessment: 9/10);
+  `HANDOFFS.md` receipt overwritten to `status: complete` with the six requirements filled.
+  quality_ratchet at the deliverable HEAD `e8a0eca7`: 1/1 pass · 0 fail · 0 unmeasured ·
+  results 10bcea6e4007 · manifest aa983075d6a2 (tarball 3,485,180 B ≤ 5,000,000 B). No new
+  `PROJECT_LEARNINGS.md` entry (routine measurement session; forward-carrying homes are the
+  audit + the rewritten `BACKLOG.md:117` item). Next natural pickup: the READY/S
+  apply-the-fix item. ~8 unpushed after close-out (estimate at write time); push is the
+  owner's call.
+
 ### 2026-09-19 · [ad hoc] S730 deliverable: CRAN check-time audit — one example is 71% of the whole check
 - **`docs/audits/CRAN_CHECK_TIME_AUDIT_2026-09-19.md`.** Full `R CMD check --timings` of the
   clean-export tarball (3,485,111 B at `c8397845`), CRAN surface (no `NOT_CRAN`): **Status OK,
