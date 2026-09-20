@@ -84,6 +84,12 @@ inst/extdata/reference/The Compounding Loop.html
 inst/extdata/reference/The Compounding Loop.pdf
 inst/extdata/reference/The Compounding Loop.webarchive
 
+# Microsoft Office owner/lock files (Word temp files, recreated whenever a document in the
+# tree is opened in Word -- the S568-deleted lock file above reappeared 2026-08-18 this way).
+# Mirrors .Rbuildignore's S725 guard so recurrences neither show as untracked noise nor
+# reach a build tarball. S725, 2026-09-19.
+~$*
+
 # Python bytecode cache from methodology_dashboard.py/methodology_trim.py (Session 514)
 __pycache__/
 

@@ -34,6 +34,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S725 post-close-out, owner-directed: recurring Word lock file `inst/extdata/reference/~$e Compounding Loop.html` deleted; standing `~$` guards added to `.Rbuildignore` and `.gitignore`
+- Owner picked "delete + Rbuildignore guard" from the close-out `AskUserQuestion`. The file
+  was a 162-byte Microsoft Word owner/lock file (contents: just the Office username) for the
+  local-only `The Compounding Loop.html`; first deleted S568, recreated 2026-08-18 by a later
+  Word open, and flagged by local `devtools::check()` as a non-portable filename because
+  `R CMD build` copies the working tree (never committed — `git log --all` on the path is
+  empty, so the `rm` is a non-commit action recorded here).
+- **Guards (the new part beyond S568's plain delete):** `.Rbuildignore` gains unanchored
+  `~\$` (paren-free per the file's own regex-safety rule); `.gitignore` gains `~$*` in the
+  same reference-file section, mirroring the S497/S567/S568 pairing precedent.
+- **Verified on a probe lock file** (`~$probe.txt`, created then removed):
+  `git check-ignore -v` matched `.gitignore:91:~$*`, and R's own `tools:::inRbuildignore()`
+  — the code path `R CMD build` uses — returned TRUE. The next local `devtools::check()`
+  should drop the non-portable-filename warning; the known warn/exit-1 gotcha recorded in
+  S724/S725 handoffs is thereby expected to clear (next check run confirms).
+
 ### 2026-09-19 · [ad hoc] S725 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `6d890617`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S725 commit. S725 total: 4 commits (claim `1ef168b8`, deliverable `c8512d0d`,
   records `6d890617`, this one); ahead of `origin/master` by 31 including the 27

@@ -125,6 +125,13 @@ README\.*\.png$
 ^inst/extdata/reference/The Compounding Loop\.html$
 ^inst/extdata/reference/The Compounding Loop\.pdf$
 ^inst/extdata/reference/The Compounding Loop\.webarchive$
+
+# Microsoft Office owner/lock files -- tilde-dollar-prefixed temp files Word leaves behind
+# when a document in the tree is opened, e.g. the recurring lock file for the reference
+# HTML above: first deleted S568, recreated 2026-08-18 by a later Word open, and flagged
+# by R CMD check as a non-portable filename because R CMD build copies the working tree.
+# Unanchored on purpose so a lock file anywhere in the tree is excluded. S725, 2026-09-19.
+~\$
 ^FRAMEWORK_LEARNINGS\.md$
 ^methodology_trim\.py$
 ^__pycache__$
