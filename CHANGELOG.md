@@ -34,6 +34,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S727 deliverable: tarball-size audit — the "~19 MB tarball" is a `scratchpad/` leak; the real package builds to 3.49 MB (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md`)
+- **Headline (all measured, none estimated):** clean `git archive HEAD` build =
+  **3,485,185 B** (35% of CRAN's 10 MB line; CRAN 2.0.0 = 2,419,329 B, so +1.07 MB / +44%
+  since release). The owner's `../nprcgenekeepr_2.0.0.9000.tar.gz` = 19,732,245 B and lists
+  252 `scratchpad/` entries (19.99 MB uncompressed; untracked dir, 250 files, 16.3 MB
+  compressed — two 5.6 MB `.rds` captures + 65 PNGs). Controlled reproduction (clean export
+  + `scratchpad/` + untracked testthat debris, committed `.Rbuildignore`) = 19,714,510 B —
+  matches to 0.1%. `git log -S'scratchpad' -- .Rbuildignore` is empty: it was never excluded.
+  Current working tree (with the owner's UNCOMMITTED `+^scratchpad$`) = 3,564,041 B; the
+  +78,856 B over clean is `tests/testthat/_problems/` + `testthat-problems.rds` (untracked,
+  neither git- nor build-ignored).
+- **Inventory:** 997 entries, 12.01 MB uncompressed. Compressed shares: `inst/doc` 1.37 MB
+  (38% — three `html_document` vignettes; `a2interactive.html` alone 855 KB), `tests` 0.66,
+  `inst/extdata/examples` 0.46, `R` 0.39, `man` 0.31, `data` 0.14. CRAN sub-limits: data
+  2.66 MB pass; documentation 4.38 MB `inst/doc` = 86% of the 5 MB guideline (borderline);
+  installed size 8.9 MB local / 9.5–10.2 MB on CI run 35481710058 (`INFO`).
+- **Findings:** 0 critical · 2 moderate (scratchpad leak; doc-guideline headroom) · 3 minor
+  (testthat debris ships; installed size; no mechanical size gate). Policy text verified at
+  source (CRAN Repository Policy rev. 6875). No remedy applied — research-only deliverable.
+- **BACKLOG:** the S726 Effort-L "reduce tarball size" item REMOVED (premise refuted by
+  measurement) and replaced by a DECISION-NEEDED Effort-S build-hygiene follow-up item
+  carrying the ranked actions; package-split item's cross-ref rewritten ("size is not an
+  argument for splitting" — all of `R/` is 0.39 MB compressed); pedigree-growth item given
+  the +1.07 MB upper bound. Stale-reference sweep of `BACKLOG.md`/`ROADMAP.md`: none left.
+- No `.R` files touched (no TDD phases, lint N/A). The owner's uncommitted `.Rbuildignore`
+  edit was left untouched and is not in this commit. All builds ran in the session scratch
+  directory; nothing written to the repo or `..` besides the three files in this commit.
+
 ### 2026-09-19 · [ad hoc] S727 claim: tarball-size audit (in progress)
 - Owner picked "Tarball-size research" from the Phase 0 4-option picker. Deliverable: one
   audit report — a measured `R CMD build` contents inventory (bytes attributed to files

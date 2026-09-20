@@ -92,34 +92,38 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       recommendation **do not split now**, with 3 revisit conditions and 3 optional in-place prep
       steps). **Owner disposition pending** -- the item stays open until the owner accepts or
       rejects the recommendation; nothing else to do here until then.
-      **See also the tarball-size-reduction item below (owner-requested S726):** the split is
-      one candidate remedy for package size, but in-place slimming of examples/test data may
-      be better — weigh the two together.
-- [ ] **Reduce the built package (source tarball) size toward CRAN's ≤10 MB policy — owner
-      reports the current tarball at ~19 MB** (owner-requested mid-S726, 2026-09-19, READY,
-      Effort L — extensive code research first: a tarball-contents inventory session, then
-      remedy slices) — CRAN Repository Policy: source tarball "should, if possible" be ≤10 MB
-      (a modest increase can be requested with good reason, e.g. bundled third-party source);
-      data generally ≤5 MB; documentation generally ≤5 MB. **First step is measurement, not
-      guessing:** on-disk directory sizes are misleading here because `.Rbuildignore` already
-      excludes the biggest trees (`docs/` ~34 MB, `vignettes/articles/` ~29 MB incl. the
-      18.9 MB `shiny_app_use` images, several `inst/extdata/reference/` PDFs/HTMLs) — so build
-      the real artifact (`R CMD build .`) and inventory its contents
-      (`tar tzvf nprcgenekeepr_*.tar.gz | sort -k3 -rn | head -50`) to attribute bytes to
-      files that actually ship. Quick on-disk anchors (S726) for what does ship:
-      `inst/extdata/` 5.3 MB on disk (reference 3.0 MB + examples 2.3 MB; tarball share is
-      smaller after the build-ignores), built vignette HTMLs ~4.3 MB (`a2interactive.html`
-      alone 2.7 MB), `tests/` 3.4 MB, `man/` 1.3 MB, `data/` 0.2 MB. **Remedies to weigh
-      (owner steer, S726): simply reducing the size of examples and test data may be a better
-      approach than the package split** — candidates: shrink/subset `inst/extdata` examples
-      and reference material, slim test fixtures, move heavyweight vignettes to web-only
-      pkgdown articles (already the pattern for `vignettes/articles/`), recompress `data/`
-      (`tools::resaveRdaFiles()`, xz), further `.Rbuildignore` entries for anything that need
-      not ship. The **package-split investigation item above is one candidate remedy for the
-      same problem** (its S667 scoping recommendation is "do not split now", owner disposition
-      pending) — weigh split vs. in-place slimming together, and feed in the pedigree-growth
-      measurement item (Housekeeping, below), which quantifies how much of the growth is the
-      drawing feature.
+      **Size is not an argument for splitting (measured S727):** the clean-build tarball is
+      3.49 MB, all of `R/` is 0.39 MB compressed, and the drawing feature's named R sources are
+      205 KB uncompressed — a split would move well under 0.3 MB
+      (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` §5). Decide the split on coupling/reuse
+      grounds only.
+- [ ] **Tarball build-hygiene follow-ups from the S727 size audit** (found S727, 2026-09-19,
+      DECISION NEEDED -- owner's uncommitted `.Rbuildignore` edit must be committed or
+      discarded first, Effort S) -- the S726 "~19 MB tarball" was NOT package content: a clean
+      `git archive HEAD` build is **3,485,185 B (3.49 MB, 35% of CRAN's 10 MB line; CRAN 2.0.0
+      was 2,419,329 B)**; the owner's 19,732,245 B artifact carried 252 entries of the untracked
+      20 MB `scratchpad/` directory, which the committed `.Rbuildignore` has never excluded
+      (reproduced to 0.1%). Full evidence, inventory tables, and reproduction commands:
+      [`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md`](docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md).
+      Remaining actions, in order: **(1)** commit the owner's pending `+^scratchpad$` line in
+      `.Rbuildignore` (measured: working tree then builds to 3.56 MB and the long-standing
+      top-level-files check NOTE clears) — and decide whether `scratchpad/` should also be
+      git-ignored (quieter `git status`, but hides it from the Phase 0 untracked-file
+      ghost-session check); **(2)** add `^tests/testthat/_problems$` and
+      `^tests/testthat/testthat-problems\.rds$` to `.Rbuildignore` and the matching paths to
+      `.gitignore` (untracked testthat debris, ~79 KB, currently ships from the working tree);
+      verify each with `tools:::inRbuildignore`/`git check-ignore` on the real paths (S725
+      precedent); **(3)** owner decision, optional: declare a clean-export tarball-size gate
+      (suggest <=5 MB) in `.quality-gates.json` or as a CI step — nothing mechanical guards
+      artifact size today; **(4)** owner decision, optional, Effort M, its own session: slim
+      `inst/doc/` (4.38 MB uncompressed = 86% of CRAN's 5 MB documentation guideline; 38% of
+      the tarball) by moving `a2interactive`/`gvaConvergence`/`simulatedKValues` from
+      `html_document` to `rmarkdown::html_vignette` (est. 0.4-0.9 MB compressed saved — an
+      estimate; `df_print: paged` must become `knitr::kable()`), and/or replacing
+      `a2interactive`'s two live `visNetwork` widgets with static images. **Not worth doing on
+      size grounds (measured):** shrinking example/test data (all of `inst/extdata/examples/`
+      is 0.46 MB compressed, all of `tests/` 0.66 MB), recompressing `data/` (0.14 MB), or the
+      package split. Always build release tarballs from a clean export, never the working tree.
 ## Housekeeping
 - [ ] **Measure how much this R package has grown due to the pedigree-drawing feature —
       a rough estimate (±20%) is sufficient** (owner-requested mid-S721, 2026-09-19, READY,
@@ -133,6 +137,11 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` already names the
       feature's file set and is a good starting point. Owner explicitly accepts a rough ±20%
       estimate -- shared-infrastructure attribution does not need to be precise.
+      **Upper bound from the S727 tarball audit:** the clean-build tarball grew 2,419,329 B
+      (CRAN 2.0.0, 2026-07-26) -> 3,485,185 B (`f8ffa40b`), i.e. +1.07 MB compressed (+44%)
+      across ALL features, so the drawing feature's tarball share is some fraction of that;
+      measure compressed, from a clean `git archive` build, not on-disk
+      (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` §5, §7).
 - [ ] **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing binary hangs on
       `macos-latest`'s `ChromoteSession$new()` bootstrap** (found S619, 2026-08-20, incidental to
       the chromote CDP-timeout fallback fix below, READY, Effort M -- research only, not
