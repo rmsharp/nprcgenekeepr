@@ -34,6 +34,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S726 mid-session owner request: tarball-size-reduction item filed in `BACKLOG.md` Up Next (READY, Effort L)
+- Owner reports the source tarball at ~19 MB vs CRAN policy's ≤10 MB ("should, if
+  possible"; data ≤5 MB, documentation ≤5 MB generally) and steers that slimming
+  examples/test data may beat the package split; extensive code research required first.
+- Item filed with a measure-first mandate (`R CMD build` + `tar tzvf` inventory — on-disk
+  sizes mislead because `.Rbuildignore` already excludes `docs/`, `vignettes/articles/`,
+  and several reference files), S726 quick size anchors, the remedy candidate list, and
+  cross-references both ways with the package-split investigation item (S667 scoping rec
+  "do not split now", owner disposition pending) and the pedigree-growth measurement item.
+- Filed only, not acted on (1-and-done; S721 `ede5289e` precedent for mid-session filings).
+
 ### 2026-09-19 · [ad hoc] S726 claim: owner-directed push to `origin/master` (in progress)
 - Owner picked "Push to origin" from the Phase 0 4-option picker. 32 unpushed commits
   (S720–S725) at claim time; this claim commit rides the push, so CI runs on it (S717

@@ -92,6 +92,34 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       recommendation **do not split now**, with 3 revisit conditions and 3 optional in-place prep
       steps). **Owner disposition pending** -- the item stays open until the owner accepts or
       rejects the recommendation; nothing else to do here until then.
+      **See also the tarball-size-reduction item below (owner-requested S726):** the split is
+      one candidate remedy for package size, but in-place slimming of examples/test data may
+      be better — weigh the two together.
+- [ ] **Reduce the built package (source tarball) size toward CRAN's ≤10 MB policy — owner
+      reports the current tarball at ~19 MB** (owner-requested mid-S726, 2026-09-19, READY,
+      Effort L — extensive code research first: a tarball-contents inventory session, then
+      remedy slices) — CRAN Repository Policy: source tarball "should, if possible" be ≤10 MB
+      (a modest increase can be requested with good reason, e.g. bundled third-party source);
+      data generally ≤5 MB; documentation generally ≤5 MB. **First step is measurement, not
+      guessing:** on-disk directory sizes are misleading here because `.Rbuildignore` already
+      excludes the biggest trees (`docs/` ~34 MB, `vignettes/articles/` ~29 MB incl. the
+      18.9 MB `shiny_app_use` images, several `inst/extdata/reference/` PDFs/HTMLs) — so build
+      the real artifact (`R CMD build .`) and inventory its contents
+      (`tar tzvf nprcgenekeepr_*.tar.gz | sort -k3 -rn | head -50`) to attribute bytes to
+      files that actually ship. Quick on-disk anchors (S726) for what does ship:
+      `inst/extdata/` 5.3 MB on disk (reference 3.0 MB + examples 2.3 MB; tarball share is
+      smaller after the build-ignores), built vignette HTMLs ~4.3 MB (`a2interactive.html`
+      alone 2.7 MB), `tests/` 3.4 MB, `man/` 1.3 MB, `data/` 0.2 MB. **Remedies to weigh
+      (owner steer, S726): simply reducing the size of examples and test data may be a better
+      approach than the package split** — candidates: shrink/subset `inst/extdata` examples
+      and reference material, slim test fixtures, move heavyweight vignettes to web-only
+      pkgdown articles (already the pattern for `vignettes/articles/`), recompress `data/`
+      (`tools::resaveRdaFiles()`, xz), further `.Rbuildignore` entries for anything that need
+      not ship. The **package-split investigation item above is one candidate remedy for the
+      same problem** (its S667 scoping recommendation is "do not split now", owner disposition
+      pending) — weigh split vs. in-place slimming together, and feed in the pedigree-growth
+      measurement item (Housekeeping, below), which quantifies how much of the growth is the
+      drawing feature.
 ## Housekeeping
 - [ ] **Measure how much this R package has grown due to the pedigree-drawing feature —
       a rough estimate (±20%) is sufficient** (owner-requested mid-S721, 2026-09-19, READY,
