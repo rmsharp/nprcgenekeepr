@@ -34,6 +34,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S724 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `da52bd49`; carries its own entry, so no self-reference gap is left for Phase 0
+- Final S724 commit. S724 total: 4 commits (claim `1bd5ef9c`, deliverable `eb3573bc`,
+  records `da52bd49`, this one); ahead of `origin/master` by 27 including the 23
+  pre-existing — push is the owner's call, and the 0-warning suite reaches CI only once
+  pushed (CI's R-CMD-check runs this same suite). Expect 0 undocumented commits past the
+  frontier at next Phase 0; measure it.
+
 ### 2026-09-19 · [ad hoc] S724 close-out: session records (SESSION_NOTES handoff + S723 evaluation 9/10, HANDOFFS receipt complete, `PROJECT_LEARNINGS.md` Learning 769) and post-append verification measurements
 - **Trigger states, measured AFTER the handoff/receipt/learning text was appended**, all under
   `--budget-bytes 65536`: `SESSION_NOTES.md` 37,239 B, `HANDOFFS.md` 32,489 B, `CHANGELOG.md`
