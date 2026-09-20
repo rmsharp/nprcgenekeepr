@@ -111,7 +111,7 @@ check (FM #28):** `BACKLOG.md` shrank net (−18 lines item removal, +6 lines en
 
 **Next steps (specific):** (A) ~3 unpushed commits after close-out (deliverable + records
 + sha; claim `0528da0e` also unpushed — recount with
-`git rev-list --count origin/master..HEAD`, estimate ~4); CI current through `2628cd02`;
+`git rev-list --count origin/master..HEAD`, measured 5 before the sha commit → 6 after); CI current through `2628cd02`;
 docs-only since, so a push session is routine when the owner wants one (S726–S736
 precedent). (B) Priorities after this session: package-split disposition + REUSE
 registration (owner decisions — the audit adds ammunition: the feature is 14.1% of R/
@@ -127,7 +127,7 @@ deliverable), `CHANGELOG.md:41` (S737 entries at top), `BACKLOG.md:100` (inst/do
 now enriched), `HANDOFFS.md:158` (S737 receipt).
 
 **Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0 —
-measure it; ~4 unpushed (estimate at write time). (2) The audit's shipping filter
+measure it; 6 unpushed after close-out (measured: 2 carried S736 commits + 4 S737). (2) The audit's shipping filter
 approximates `.Rbuildignore` in a scratchpad script — if anyone re-derives the numbers,
 §5 of the audit has the reproduction commands; scratchpad copies do not survive the
 session. (3) `pkgbuild::build()` on a clean export takes ~4 min locally and its output
