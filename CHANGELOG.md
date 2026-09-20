@@ -34,6 +34,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S726 close-out: push DONE (33 commits `4565c39d..9006b567`, 4/4 CI green on the pushed sha) + session records
+- **Deliverable verified:** all 4 push-triggered workflows `completed success` filtered on
+  `headSha == 9006b567` (R-CMD-check 31m53s, pkgdown 13m47s, test-coverage 10m4s, lint
+  4m37s; run ids 35481709978–35481710058). First remote validation of S720–S725: the
+  warning-free suite, the Suggests trim + renv re-snapshot, the context-budget adoption,
+  the CLAUDE.md reduction, the `~$` guards.
+- **Records:** SESSION_NOTES S726 handoff + S725 evaluation (9/10, one superseded-at-write
+  gotcha noted, self-corrected by S725's own addendum entry); HANDOFFS receipt complete;
+  no new PROJECT_LEARNINGS entry (routine clean push; the tarball-inventory insight lives
+  in the filed BACKLOG item, its forward-carrying home).
+- **Post-append trigger measurements** (`--budget-bytes 65536`): no trim fires on
+  SESSION_NOTES/HANDOFFS/CHANGELOG. quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured ·
+  results 4f53cda18c2b · manifest 4f53cda18c2b.
+- Unpushed after close-out: ~3 docs-only commits (BACKLOG filing + records + sha) — owner
+  push decision; expect 0 undocumented commits past the frontier at next Phase 0.
+
 ### 2026-09-19 · [ad hoc] S726 mid-session owner request: tarball-size-reduction item filed in `BACKLOG.md` Up Next (READY, Effort L)
 - Owner reports the source tarball at ~19 MB vs CRAN policy's ≤10 MB ("should, if
   possible"; data ≤5 MB, documentation ≤5 MB generally) and steers that slimming

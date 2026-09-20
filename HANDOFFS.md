@@ -154,11 +154,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S726
 date: 2026-09-19
-status: pending
-active_task: Owner-directed push to origin/master (32 pre-existing unpushed commits, S720–S725, + this claim) and CI verification — S717 precedent
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Owner-directed push to origin/master + CI verification DONE — pushed 4565c39d..9006b567 (33 commits: 32 pre-existing S720–S725 + the S726 claim); all 4 push-triggered workflows completed success ON the pushed sha 9006b567 (R-CMD-check 31m53s, pkgdown 13m47s, test-coverage 10m4s, lint 4m37s; run ids 35481709978–35481710058). First remote validation of the S720–S725 work (warning-free suite, Suggests trim + renv re-snapshot, context-budget adoption, CLAUDE.md reduction, ~$ guards). No TDD phases (no .R files); lint N/A.
+what_was_done: Claim 9006b567 (rode the push so CI ran on it — S717 precedent). Push executed and confirmed (master even with origin/master). Mid-session owner request filed as BACKLOG.md Up Next item f8970edc, NOT acted on (1-and-done, S721 precedent): tarball-size-reduction toward CRAN ≤10 MB (owner reports ~19 MB; owner steer: slimming examples/test data may beat the package split; measure-first mandate — R CMD build + tar tzvf inventory, because .Rbuildignore already excludes docs/ and vignettes/articles/ so on-disk sizes mislead; cross-refs both ways with the package-split and pedigree-growth items). CI verified via --jq filter on headSha==9006b567, not eyeballed.
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~3 expected after close-out: f8970edc + records + sha, last two estimated at write time; all docs-only, no urgency). (B) Priorities: tarball-size-reduction research (READY, L, owner-requested S726, measure first); pedigree-growth measurement (READY, S, feeds it); package-split disposition + REUSE registration (owner decisions pending); BACKLOG.md editorial compression (READY, L). (C) Standing report-only: HANDOFFS.md truncated duplicate S720 stub (grep two adjacent "session: S720" blocks); iCloud Housekeeping item closable pending duplicates-stay-gone confirmation.
+key_files: BACKLOG.md:88 (new tarball item — recount after edits; split item's cross-ref line just above), CHANGELOG.md:37 (S726 entries), SESSION_NOTES.md:33 (full S726 handoff), R-CMD-check run 35481710058 (the 31m53s green run on 9006b567)
+gotchas: The devtools::check() warn/exit-1 gotcha should now be CLEARED (S725 addendum 89b14d1b deleted the ~$ lock file + added standing .Rbuildignore/.gitignore guards) — next local check run confirms; scratchpad/ NOTE remains. CI current through 9006b567; expect 0 undocumented commits at next Phase 0, measure it. Standing: methodology_trim.py always --budget-bytes 65536; renv.lock has no dev tooling (Rscript banner expected); CLAUDE.md in warn band ~1,640 B headroom — new narrative goes to PROJECT_LEARNINGS.md. Full-suite baseline 2437/0/0/184/0, now remote-confirmed by R-CMD-check on 9006b567.
+runtime_smoke: n/a — no code changes; the deliverable's verification surface IS the remote CI matrix, 4/4 green pinned to the pushed sha. quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
+changelog_ref: f8970edc
 commit: pending
 ```
+<free-text: S726 +/- — plus: CI verification pinned to the exact pushed sha via headSha filter; the mid-session filing's measure-first mandate caught the on-disk-vs-tarball misdirection before it could misdirect the research session; filed item not started (no scope creep). Minus: the ~19 MB headline is owner-reported, not measured in-session (deliberate wall-time call, but unverified until the research session builds the artifact); one harness fumble on the first CI-wait attempt (blocked sleep-chain, redone as background poller).>
 
 ```handoff
 session: S725

@@ -30,14 +30,91 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 725 Handoff Evaluation (by Session 726)
+**Score: 9/10.** **What helped:** the priorities list mapped one-for-one onto this session's
+Phase 0 picker (push decision surfaced as the owner's actual pick); the ~31-unpushed
+prediction + the post-close-out addendum's own ledger note reconciled exactly to the
+measured 32; "expect 0 undocumented commits; measure it" measured 0 on the CHANGELOG
+frontier, and the one commit past the HANDOFFS frontier was the addendum itself, carrying
+its own ledger entry — reconcile closed as a no-op in minutes; the warn-band CLAUDE.md
+gotcha correctly framed this session's context-budget WARN as headroom, not a finding.
+**What was missing:** nothing material. **What was wrong:** gotcha (3)'s "the stray `~$e
+Compounding Loop.html` still makes `devtools::check()` warn" was already superseded at
+write time + one commit — S725's own post-close-out addendum (`89b14d1b`) deleted the file
+and added standing guards; the addendum's ledger entry self-corrects this, so zero harm.
+**ROI:** high.
+
 ### What Session 726 Did
-**Deliverable:** Owner-directed push to `origin/master` (32 pre-existing unpushed commits,
-S720–S725, + this claim) and CI verification (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Owner-directed push to `origin/master` + CI verification — **DONE.**
+Pushed `4565c39d..9006b567` (33 commits: the 32 pre-existing S720–S725 commits + the S726
+claim), and all 4 push-triggered workflows completed green ON THE PUSHED SHA `9006b567`:
+R-CMD-check 31m53s, pkgdown 13m47s, test-coverage 10m4s, lint 4m37s. This is the FIRST
+remote validation of the S720–S725 work: the S724 warning-free suite (CI's R-CMD-check runs
+it), the S721 Suggests trim + renv re-snapshot, the S720 context-budget adoption, the S725
+CLAUDE.md reduction, and the S725 `~$`-guard additions. No TDD phases (no `.R` files
+touched; push + docs). Lint N/A.
+**Started/completed:** 2026-09-19 (single session). Claim `9006b567` (rode the push, so CI
+ran on it — S717 precedent); mid-session BACKLOG filing `f8970edc`; records + sha commits
+follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, BACKLOG filing, close-out, sha).
+
+**Mid-session owner request (filed, not acted on — 1-and-done, S721 precedent):**
+tarball-size-reduction item added to `BACKLOG.md` Up Next (`f8970edc`, READY, Effort L):
+owner reports ~19 MB source tarball vs CRAN's ≤10 MB policy; owner steer that slimming
+examples/test data may beat the package split. Item mandates measure-first (`R CMD build`
++ `tar tzvf` inventory — on-disk sizes mislead because `.Rbuildignore` already excludes
+`docs/`, `vignettes/articles/`, and several reference files), carries S726 on-disk anchors
+(`inst/extdata/` 5.3 MB, vignette HTMLs ~4.3 MB, `tests/` 3.4 MB), and cross-references
+the package-split item (S667 rec "do not split now", owner disposition pending) and the
+pedigree-growth measurement item both ways.
+
+**Verification:** push confirmed (`master` even with `origin/master` post-push;
+`git rev-list --count` 33 at push time); CI 4/4 `completed success` filtered on
+`headSha == 9006b567` exactly (not just "latest runs green"); quality_ratchet: 0/0 pass ·
+0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b. Post-append trim
+triggers (`--budget-bytes 65536`): none fire on SESSION_NOTES/HANDOFFS/CHANGELOG.
+
+**Self-assessment (Session 726): 9/10.** **Strengths:** (1) CI verification pinned to the
+exact pushed sha via `--jq` filter on `headSha`, not eyeballed from the run list; (2) the
+mid-session owner request was filed with a measure-first mandate that caught the
+on-disk-vs-tarball misdirection (`.Rbuildignore` excludes the two biggest trees) before it
+could send the future session chasing the wrong 60 MB; (3) no scope creep — the filed item
+was not started. **Weaknesses:** (1) the ~19 MB tarball figure is recorded as
+owner-reported, not measured in-session (deliberate — a full `R CMD build` mid-push-session
+wasn't worth the wall time, but the item's headline number is unverified until the research
+session builds the artifact); (2) one harness fumble — the first CI wait used a blocked
+sleep-chain form and had to be redone as a background poller.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push; the
+tarball-inventory insight lives in the filed BACKLOG item (its forward-carrying home per
+the S686 convention).
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~3 expected after close-out: BACKLOG filing
+`f8970edc` + records + sha; the last two are an estimate at write time). All 3 are
+docs-only; no urgency, they ride the next push. (B) Priorities: tarball-size-reduction
+research (READY, L, owner-requested S726 — measure first); pedigree-growth measurement
+(READY, S, owner-requested S721 — feeds the tarball item); package-split disposition +
+REUSE registration (owner decisions pending); BACKLOG.md editorial compression (READY, L).
+(C) Standing report-only: HANDOFFS.md truncated duplicate S720 stub (grep for two adjacent
+`session: S720` blocks); iCloud Housekeeping item closable pending a duplicates-stay-gone
+confirmation.
+
+**Key files:** `BACKLOG.md` Up Next tail (the new tarball item + the split item's new
+cross-ref line), `CHANGELOG.md` S726 entries, `HANDOFFS.md` S726 receipt,
+`.github/workflows/` (unchanged — the 4 green runs are ids 35481709978–35481710058).
+
+**Gotchas for the next session:** (1) **The `devtools::check()` warn/exit-1 gotcha should
+now be CLEARED** — S725's addendum deleted the `~$` lock file and added standing guards;
+the next local check run should confirm (0 errors expected; the `scratchpad/` NOTE
+remains). If a `~$*` file reappears, the guards make it invisible to both git and
+`R CMD build`. (2) CI is now current through `9006b567` — only the ~3 close-out docs
+commits are unpushed; "expect 0 undocumented commits; measure it" at next Phase 0.
+(3) Standing: every `methodology_trim.py` run needs `--budget-bytes 65536`; `renv.lock`
+carries no dev tooling (`Rscript` out-of-sync banner expected); CLAUDE.md sits in the warn
+band with ~1,640 B headroom — new adaptation narrative goes to `PROJECT_LEARNINGS.md`.
+(4) Full-suite baseline unchanged (no test-read files touched): 2437/0/0/184/0 — and now
+remote-confirmed by R-CMD-check on `9006b567`.
 
 ### Session 724 Handoff Evaluation (by Session 725)
 **Score: 9/10.** **What helped:** the priorities list matched this session's Phase 0
