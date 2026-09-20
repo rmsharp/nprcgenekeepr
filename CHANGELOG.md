@@ -38,6 +38,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S738 deliverable: package-split disposition — owner ACCEPTED "do not split now" and queued the three S667 prep steps
+- The owner accepted the S667 scoping recommendation
+  (`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` §6): the
+  pedigree-diagram layout core stays in `nprcgenekeepr`; no standalone package now. The
+  three revisit conditions stand as written in the doc — (1) fidelity priority lifted AND
+  engine stable (single-digit commits/60 days), (2) next CRAN release accepted, (3) a
+  named second consumer. Re-measured at decision time (S738): condition 1 half-met
+  (priority retired S699, but 67 commits/60 days · 27/30 on the core), conditions 2
+  (`DESCRIPTION` 2.0.0.9000) and 3 (no consumer on record) not met — the recommendation
+  holds on its own test. Context carried from the closed item: coupling is one consumer
+  (`modPedigreeServer()`) through one function and one back-reference (`kinship()`, now
+  `R/makePedigreeDiagramData.R:1755`); the Shiny module cannot move (calls 8 package
+  functions); size is NOT an argument for splitting (S727: the feature's named R sources
+  are 205 KB uncompressed; S737: 14.1% of `R/` lines, tarball weight mostly widget
+  payload). The 2026-08-19 BACKLOG item's block REMOVED (completed-item removal
+  checklist); its still-open sub-threads extracted as three new Up Next items — prep
+  D-1 (invert the `kinship()` call), D-2 (remove the two `test_modPedigree.R:1669/:1706`
+  internal reaches), D-3 (`@noRd` blocks for `R/positionTreeApportion.R`) — each its own
+  small TDD session, worthwhile split or not.
+
 ### 2026-09-20 · [ad hoc] S738 claim: package-split disposition — owner accept/reject of the S667 "do not split now" recommendation *(in progress)*
 - Session claimed (stub + pending receipt + this entry). Owner picked the item via the
   Phase 0 picker; Phase 0 reconcile was clean (0 undocumented on both frontiers at

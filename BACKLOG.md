@@ -68,35 +68,30 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
       test/observe, and a naive focal-id server filter is incompatible with the client-side
       connected-component walk).
-- [ ] **Investigate factoring out the pedigree-diagram drawing functionality into a separate R
-      package that `nprcgenekeepr` depends on** (found 2026-08-19, owner-directed, READY, Effort M
-      -- a research/scoping session, not an implementation session) -- look into the possibility,
-      advantages, and disadvantages of splitting the pedigree-diagram layout/rendering code
-      (`.buildMatingUnitForest()`/`.positionMatingUnitForest()`/`.addRectilinearWaypoints()`/
-      `.resolveEdgeNodeCollisions()`/`makePedigreeMatingLayout()` in `R/makePedigreeDiagramData.R`,
-      plus the Shiny Diagram-tab module) out of `nprcgenekeepr` into its own standalone package,
-      with `nprcgenekeepr` then depending on it. A future session should weigh this independent of,
-      and probably after, the Walker/BJL apportioning redesign (`docs/planning/
-      pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`, issue #141) currently in
-      progress -- splitting mid-redesign would add package-boundary churn on top of an
-      already-large in-flight algorithm change. Not scoped further this session (out of Phase 1a's
-      own boundary); a future session should produce the actual advantages/disadvantages analysis
-      (reuse potential outside this project, cleaner dependency graph, and versioning/release
-      overhead, cross-package test/CI complexity, `@noRd`/internal-function visibility loss across
-      a package boundary, etc.) before any decision to split.
-      **Scoping analysis DONE S667 (2026-09-02) as a side artifact** -- the session was first
-      (mis-)pointed at this item before the owner redirected it to pedigree drawing:
-      [`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`](docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md)
-      (`findGlobals()`-measured coupling: the layout core reaches back into the package at exactly
-      one point, `kinship()`; only `modPedigreeServer()` consumes it; the Shiny module cannot move;
-      recommendation **do not split now**, with 3 revisit conditions and 3 optional in-place prep
-      steps). **Owner disposition pending** -- the item stays open until the owner accepts or
-      rejects the recommendation; nothing else to do here until then.
-      **Size is not an argument for splitting (measured S727):** the clean-build tarball is
-      3.49 MB, all of `R/` is 0.39 MB compressed, and the drawing feature's named R sources are
-      205 KB uncompressed — a split would move well under 0.3 MB
-      (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` §5). Decide the split on coupling/reuse
-      grounds only.
+- [ ] **Prep D-1: invert the `kinship()` dependency in `makePedigreeMatingLayout()`** (queued
+      S738, 2026-09-20, from the accepted package-split disposition, READY, Effort S -- its own
+      TDD session) -- add an optional argument accepting a precomputed kinship matrix or
+      consanguinity flags, defaulting to computing via `kinship()` exactly as today so no caller
+      changes. This is the layout core's ONE genuine back-reference into the genetics code
+      (`R/makePedigreeDiagramData.R:1755` as of S738; S667 coupling inventory
+      `docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` §2.2/D3) -- inverting
+      it makes the core genetics-free as well as visNetwork-free (a cleaner, injectable
+      interface), and is the prerequisite step if a split is ever revisited. `twinRelations`
+      threading semantics must be preserved (see the comment block at `:1741-1754`).
+- [ ] **Prep D-2: remove the two test-only reaches into the internal
+      `.buildMatingUnitForest()`** (queued S738, 2026-09-20, from the accepted package-split
+      disposition, READY, Effort S) -- `tests/testthat/test_modPedigree.R:1669` and `:1706`
+      (verified current S738) each call the internal directly; rewrite through
+      `makePedigreeMatingLayout()`'s public surface or a small exported accessor. These are the
+      only cross-boundary internal reaches outside the core's own test files (S667 §2.4/D6).
+- [ ] **Prep D-3: add `@noRd` roxygen blocks to `R/positionTreeApportion.R`'s 13 functions**
+      (queued S738, 2026-09-20, from the accepted package-split disposition, READY, Effort S) --
+      the file has zero roxygen markers (verified S738: `grep -c "^#'"` = 0), inconsistent with
+      the rest of `R/`; documentation hygiene, no behavior change (REFACTOR-only, no RED/GREEN).
+      (Context for all three prep items: the owner accepted the S667 recommendation NOT to split
+      the layout core into its own package -- disposition recorded S738 in `CHANGELOG.md`, with
+      the 3 revisit conditions in the scoping doc §6; these steps harden the boundary in place
+      and are worthwhile whether or not a split ever happens.)
 - [ ] **(Optional, owner decision) Slim `inst/doc/` by moving the three `html_document`
       vignettes to `rmarkdown::html_vignette`** (extracted S728, 2026-09-19, from the completed
       tarball build-hygiene item — its still-open step 4; DECISION NEEDED, Effort M, its own
