@@ -30,16 +30,79 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 724 Handoff Evaluation (by Session 725)
+**Score: 9/10.** **What helped:** the priorities list matched this session's Phase 0
+picker one-for-one, and the picked item's own BACKLOG block WAS the plan (excess
+location, remedies in order, keep-intact list — all accurate); the ~27-unpushed-commits
+prediction measured exactly 27; "expect 0 undocumented commits; measure it" measured 0;
+standing gotcha (4)'s "context-budget reds by design until the CLAUDE.md reduction
+campaign" framed the target precisely, and the trim-budget/`~$e`-file/renv-banner
+gotchas all held. **What was missing:** nothing material. **What was wrong:** nothing
+found — every checked claim held. **ROI:** high.
+
 ### What Session 725 Did
-**Deliverable:** `CLAUDE.md` reduction campaign — bring it under the adopted 28,000 B
-`.context-budget.json` ceiling (43,348 B at claim) by moving Adaptations incident
-narratives into `PROJECT_LEARNINGS.md`, leaving each adaptation's operative rule +
-pointer (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** `CLAUDE.md` reduction campaign — **DONE.** 43,348 B → 26,360 B, under
+the 28,000 B `.context-budget.json` ceiling (17 KB cut; warn band ≥24,000 B is
+documented headroom, not a defect). Method per the BACKLOG item: each Adaptations block
+classified sentence-by-sentence into operative rule vs incident narrative; rules kept
+(verbatim or tightened) with origins compressed to Learning pointers; narrative existing
+nowhere else moved to `PROJECT_LEARNINGS.md` **Learning 770** (the relocation record:
+S545 rejected alternatives, S436 origin, NEWS.Rmd drift history, `methodology_trim.py`
+provenance, the S325/S546/S547 legacy-history decision chain, and the reduction method
+itself); full pre-reduction text archived as `git show 1ef168b8:CLAUDE.md`. Kept intact:
+SESSION PROTOCOL header, `budget:protected` Project Overview fence, TDD contract,
+Build/Test/Verify. BACKLOG item removed in the deliverable commit. No TDD phases
+(docs-only, S720–S724 precedent); lint N/A (no `.R` files).
+**Started/completed:** 2026-09-19 (single session). Claim `1ef168b8`; deliverable
+`c8512d0d`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per commit; the deliverable entry carries the full
+method + verification record.
+
+**Verification:** `wc -c CLAUDE.md` = 26,360 B; `python3 context_budget.py` = no file
+over its ceiling (resident 26,360/34,000, `budget:protected` fence intact); every
+Learning number cited by a new pointer grep-verified present (382/433/435/475/477/478/
+479/495/506/533/544/547/549/554/586/587/669/740); `grep -c '^#### Learning '` = 770,
+matching the new record's number; all in-file "above" cross-references re-read and
+resolving; no test reads the 4 touched `.md` files (grep-verified: all matches are
+comments/strings), so the S724 suite baseline 2437/0/0/184/0 carries forward
+legitimately under Learning 764's scope rule. quality_ratchet: 0/0 pass · 0 fail · 0
+unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b. Trim triggers post-append
+(`--budget-bytes 65536`): none fire on SESSION_NOTES/HANDOFFS/CHANGELOG.
+
+**Self-assessment (Session 725): 9/10.** **Strengths:** (1) every relocated narrative's
+destination verified before the pointer was written — nothing points at a Learning that
+doesn't hold the content; (2) caught two sentences the reduction itself falsified and
+updated them in the same pass (the context-budget check's expected state; the trilogy's
+"no file has moved yet"); (3) the first draft of the new expected-state sentence claimed
+"all green" — measurement (warn at 26,360 B) corrected it to "no file over its ceiling"
+before commit. **Weaknesses:** (1) landed in the warn band rather than under 24,000 B —
+the remaining large block (the Build/Test/Verify regression-read narrative) was
+explicitly on the item's keep-intact list, so deeper cutting needs an owner decision;
+(2) growth headroom is only ~1,640 B before red.
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~31 expected after close-out: 27 pre-existing
++ claim + deliverable + records + sha; the last two are an estimate at write time).
+(B) Priorities: pedigree-growth measurement (READY, S, owner-requested S721); owner
+decisions pending: package-split disposition, REUSE registration; BACKLOG.md editorial
+compression (READY, L). (C) Standing report-only: HANDOFFS.md truncated duplicate S720
+stub (grep for two adjacent `session: S720` blocks); iCloud Housekeeping item closable
+pending a duplicates-stay-gone confirmation.
+
+**Key files:** `CLAUDE.md` (whole Adaptations section reshaped; overview/TDD/BTV
+untouched), `PROJECT_LEARNINGS.md` tail (Learning 770), `BACKLOG.md` (campaign item
+removed), `CHANGELOG.md` S725 entries.
+
+**Gotchas for the next session:** (1) **CLAUDE.md is now under ceiling but in the warn
+band — any growth commit trips the pre-commit hook's relative rule; put new adaptation
+narrative in `PROJECT_LEARNINGS.md` and keep only the rule + pointer in `CLAUDE.md`**
+(the Learning 770 method, recorded there as point 6). (2) The context-budget expected
+state changed: reds are no longer "by design" — a `CLAUDE.md` red is now a finding.
+(3) Standing: every `methodology_trim.py` run needs `--budget-bytes 65536`; the stray
+`~$e Compounding Loop.html` still makes `devtools::check()` warn and exit 1
+non-interactively; `renv.lock` carries no dev tooling (`Rscript` out-of-sync banner
+expected). (4) Full-suite baseline unchanged this session (no test-read files touched):
+2437/0/0/184/0.
 
 ### Session 723 Handoff Evaluation (by Session 724)
 **Score: 9/10.** **What helped:** the annotated BACKLOG item plus gotcha (2)'s re-derive

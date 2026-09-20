@@ -34,6 +34,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S725 close-out: session records (SESSION_NOTES handoff + S724 evaluation 9/10, HANDOFFS receipt complete) and post-append verification measurements
+- **Trigger states, measured AFTER the handoff/receipt text was appended**, all under
+  `--budget-bytes 65536`: `SESSION_NOTES.md` 42,524 B, `HANDOFFS.md` 36,925 B,
+  `CHANGELOG.md` 46,092 B — none fires; no trim owed this session. `context_budget.py`:
+  no file over its ceiling (`CLAUDE.md` 26,360 B, warn band = documented headroom).
+- **Close-out checklists:** no `.R` files touched → lint N/A; no new exports/statistics/
+  Shiny features → NEWS/pkgdown/citation/tutorial/`a2interactive` N/A; completed BACKLOG
+  item names no GitHub issue → issue close-out N/A; CI green all session (on the S719
+  push); quality_ratchet 0/0 (manifest empty by design); runtime smoke N/A — docs-only.
+  Learning 770 doubles as the session learning (its point 6 records the reduction method).
+- **Owner mid-session report, triaged not fixed (S723 precedent):** the untracked
+  `inst/extdata/reference/~$e Compounding Loop.html` is a 162-byte Microsoft Word
+  owner/lock file (contents: just the Office username) left behind on 2026-08-18 when the
+  local-only `The Compounding Loop.html` reference file was opened in Word; never
+  committed; its 3 parent files are individually `.Rbuildignore`d (lines 125-127) but the
+  lock file is not, so `R CMD build` copies it into the check tarball → the non-portable-
+  filename warning. Remedy (delete + optional `.Rbuildignore` `~$` guard) posed to the
+  owner at close-out; not acted on inside this session's deliverable.
+- Sha self-reconcile commit follows with its own entry; expect 0 undocumented commits past
+  the frontier at next Phase 0.
+
 ### 2026-09-19 · [ad hoc] S725 deliverable: `CLAUDE.md` reduction campaign — 43,348 B → 26,360 B, under the 28,000 B ceiling; BACKLOG item removed (completed record here)
 - **Method (per the item):** each Adaptations block classified sentence-by-sentence into
   operative rule vs incident narrative; rules kept (verbatim or tightened) with origins
