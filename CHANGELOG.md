@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S738 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `0dec1c09`; carries its own entry, so no self-reference gap is left for Phase 0
+- Final S738 commit. S738 total: 4 commits (claim `f9b1f2a3`, deliverable `9d80dde6`,
+  records `0dec1c09`, this one). Ahead of `origin/master` by 10 after close-out (6
+  carried + these 4), all docs-only; CI is current through `2628cd02`, so no urgency —
+  push is the owner's call, though the unpushed backlog is growing. Expect 0
+  undocumented commits past the frontier at next Phase 0; measure it.
+
 ### 2026-09-20 · [ad hoc] S738 close-out: session records (handoff, S737 evaluation 9/10, receipt complete, self 9/10)
 - `SESSION_NOTES.md` handoff written (S737 evaluation: 9/10 — every checked claim held:
   6 unpushed, 0 undocumented, ratchet citation, growth-run prediction all exact).
