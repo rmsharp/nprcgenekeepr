@@ -34,6 +34,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S729 close-out: push DONE (13 commits, 4/4 CI green on `0572767b` — first remote validation of S728 incl. the first quality-gate manifest) + session records
+- **Deliverable:** pushed `9006b567..0572767b`; all 4 push-triggered workflows `completed
+  success` on the pushed sha exactly (jq `headSha` filter): lint 4m49s (35485603669),
+  test-coverage 9m39s (35485603670), pkgdown 18m32s (35485603680), R-CMD-check 33m54s
+  (35485603672). Background poller from the first attempt (35 polls, ~35 min).
+- **Records:** `SESSION_NOTES.md` S729 handoff + S728 evaluation (9/10 — the push decision
+  named with the exact recount command, measured 12 vs predicted ~12; the ratchet-after-commit
+  gotcha applied cleanly); `HANDOFFS.md` receipt complete (self 9/10 — abbreviated Phase 0
+  re-verification recorded honestly as the main minus); no new learning (routine clean push,
+  S726 precedent).
+- **Receipt citation** (run at `c9c946f7`): quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured
+  · results `a39b6c231e42` · manifest `aa983075d6a2` (gate measured 3,485,202 B).
+- **Post-append measurements** (`--budget-bytes 65536`): SESSION_NOTES 36,997 B and HANDOFFS
+  56,465 B — no trigger; CHANGELOG was 64,861 B BEFORE this entry (~675 B from its trigger),
+  so the trigger state is re-checked after this append and any owed trim lands as its own
+  commit (S727 precedent). context_budget: no file over ceiling (`CLAUDE.md` warn band,
+  documented headroom).
+
 ### 2026-09-19 · [ad hoc] S729 mid-session owner request filed (not acted on — 1-and-done, S726 precedent): BACKLOG item to see if example/test code can run shorter for CRAN submission needs
 - New Up Next item (READY, Effort M): measure-first mandate on the CRAN-visible surface —
   `R CMD check --timings` for per-Rd example times (incoming checks NOTE > 5 s), and a suite

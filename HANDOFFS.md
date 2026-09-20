@@ -154,16 +154,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S729
 date: 2026-09-19
-status: pending
-active_task: Owner-directed push to origin/master + CI verification. 13 commits expected (12 unpushed S726-S728 + this claim riding the push, S717/S726 precedent). Verification = 4 push-triggered workflows completed success on the pushed sha exactly (jq headSha filter). First remote validation of the S728 build-hygiene work incl. the first quality-gate manifest.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Owner-directed push to origin/master + CI verification DONE — pushed 9006b567..0572767b (13 commits: 12 unpushed S726-S728 docs/config + the S729 claim riding the push), all 4 push-triggered workflows completed success ON THE PUSHED SHA 0572767b: lint 4m49s (35485603669), test-coverage 9m39s (35485603670), pkgdown 18m32s (35485603680), R-CMD-check 33m54s (35485603672). First remote validation of the S728 build-hygiene work incl. the first .quality-gates.json manifest. No TDD phases; lint N/A.
+what_was_done: Claim 0572767b (rode the push so CI ran on it — S717/S726 precedent). Mid-session owner request filed, not acted on (1-and-done, S726 precedent): CRAN check-time item at BACKLOG.md:117 (c9c946f7, READY, Effort M) — measure-first on the CRAN-visible surface (R CMD check --timings per-Rd example times, incoming NOTE > 5 s; suite run WITHOUT NOT_CRAN=true so skip_on_cran exclusions match CRAN's), remedies (donttest, smaller example inputs, skip_on_cran on CI-duplicated tests, shared fixtures) deferred until measured. CI verification via background poller from the first attempt (35 polls, ~35 min), jq-filtered on headSha == 0572767b exactly.
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~3 expected after close-out: filing c9c946f7 + records + sha; last two estimated at write time; all docs-only, no urgency). (B) Priorities: CRAN check-time measurement (READY, M, owner-requested S729, BACKLOG.md:117, measure first); pedigree-growth measurement (READY, S, owner-requested S721); package-split disposition + REUSE registration (owner decisions pending); BACKLOG.md editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M, BACKLOG.md:100). (C) Standing report-only: HANDOFFS.md truncated duplicate S720 stub; iCloud Housekeeping item closable pending confirmation; owner's stale 19.7 MB ../nprcgenekeepr_2.0.0.9000.tar.gz + ../nprcgenekeepr.Rcheck/ outside the repo.
+key_files: BACKLOG.md:117 (new CRAN check-time item), CHANGELOG.md:1 (S729 entries at top), HANDOFFS.md:154 (this receipt), .quality-gates.json:17 (gate manifest now on the remote via the push)
+gotchas: CI is current through 0572767b — only ~3 close-out docs commits unpushed; expect 0 undocumented commits at next Phase 0, measure it. The CRAN check-time item's test measurement must run WITHOUT NOT_CRAN=true — the exact opposite of the Build/Test/Verify regression-read setting; never blend the two numbers. Standing set unchanged from S728: scratchpad/ invisible to git BY OWNER DECISION (ls -d scratchpad if in doubt); quality_ratchet.py --run takes ~2 min and measures git archive HEAD so run it AFTER committing (Learning 772); methodology_trim.py needs --budget-bytes 65536; renv Rscript banner expected; CLAUDE.md warn band; SESSION_NOTES.md's two ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 — remote-confirmed again by R-CMD-check on 0572767b.
+runtime_smoke: n/a — push + docs only (no runtime behavior changed); the deliverable's verification surface is CI itself, 4/4 green on the pushed sha. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results a39b6c231e42 · manifest aa983075d6a2 (measured 3,485,202 B at c9c946f7)
+changelog_ref: 0572767b
 commit: pending
 ```
+<free-text: S729 +/- — plus: the claim rode the push so CI ran on the exact claim sha; verification pinned to headSha with run ids and durations recorded, not eyeballed; the mid-session owner request was filed with a measure-first mandate and its own ledger entry and NOT started; the CI wait used a background poller from the first attempt (S726's sleep-chain fumble not repeated). Minus: Phase 0 was an abbreviated re-verification (status, unpushed count, frontier check) rather than the full 8-step read — the session began minutes after S728's close-out with the full orientation in-context and the owner's task already given; recorded honestly rather than claimed as a full Orient. The poller's 55-poll cap was a guess that fit (35 needed) — a longer queue would have timed it out. Predecessor 9/10: the push decision was named with the exact recount command (measured 12, predicted ~12), the ratchet-after-commit gotcha was applied without a fumble, and no checked claim failed.>
+
 
 ```handoff
 session: S728

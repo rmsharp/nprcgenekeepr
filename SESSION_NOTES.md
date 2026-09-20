@@ -34,16 +34,78 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 728 Handoff Evaluation (by Session 729)
+**Score: 9/10.** **What helped:** next-step (A) named the push decision with the exact recount
+command — measured 12, predicted ~12; "the push also puts the first gate manifest on the
+remote" framed this session's stakes correctly; gotcha (2) (ratchet now ~2 min, run it AFTER
+committing because the gate measures `git archive HEAD`) was applied directly — both close-out
+ratchet runs landed at the right HEADs with no fumble; the carried S726 poller learning
+avoided the blocked sleep-chain mistake on the CI wait. **What was missing:** nothing
+material. **What was wrong:** nothing found — every checked claim held (12 unpushed measured
+12; frontiers at HEAD; the 5 known untracked files unchanged). **ROI:** high.
+
 ### What Session 729 Did
-**Deliverable:** Owner-directed push to `origin/master` + CI verification (IN PROGRESS) —
-13 commits expected (the 12 unpushed S726–S728 docs/config commits + this claim, which rides
-the push so CI runs on it, S717/S726 precedent). Verification = all 4 push-triggered
-workflows `completed success` ON THE PUSHED SHA (jq-filtered on `headSha`, not eyeballed).
-**Started:** 2026-09-19
-**Status:** Session claimed. Push follows this commit immediately.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Owner-directed push to `origin/master` + CI verification — **DONE.**
+Pushed `9006b567..0572767b` (13 commits: the 12 unpushed S726–S728 docs/config commits + the
+S729 claim, which rode the push so CI ran on it — S717/S726 precedent). All 4 push-triggered
+workflows `completed success` ON THE PUSHED SHA `0572767b` (jq-filtered on `headSha`):
+lint 4m49s (id 35485603669), test-coverage 9m39s (35485603670), pkgdown 18m32s (35485603680),
+R-CMD-check 33m54s (35485603672). This is the first remote validation of the S728
+build-hygiene work, including the first `.quality-gates.json` manifest now on the remote.
+No TDD phases (push + docs; no `.R` files). Lint N/A.
+**Started/completed:** 2026-09-19 (single session). Claim `0572767b` (rode the push);
+mid-session BACKLOG filing `c9c946f7`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, filing, close-out, sha).
+
+**Mid-session owner request (filed, not acted on — 1-and-done, S726 precedent):**
+CRAN check-time item added to `BACKLOG.md:117` (`c9c946f7`, READY, Effort M): see if example
+and test code can run shorter for CRAN submission needs. Measure-first mandate on the
+CRAN-visible surface: `R CMD check --timings` per-Rd example times (incoming checks NOTE
+> 5 s) and a suite run WITHOUT `NOT_CRAN=true` so `skip_on_cran()` exclusions match CRAN's;
+remedy candidates (`\donttest{}`, smaller example inputs, `skip_on_cran()` on tests CI already
+covers, shared fixtures) deferred until the measurements exist.
+
+**Verification:** push confirmed (`master` even with `origin/master` post-push); CI 4/4
+`completed success` filtered on `headSha == 0572767b` exactly (not eyeballed from the run
+list); background poller from the start (35 polls, ~35 min). quality_ratchet re-run at the
+close-out HEAD: see the close-out `CHANGELOG.md` entry for the citation.
+
+**Self-assessment (Session 729): 9/10.** **Strengths:** (1) claim rode the push so CI ran on
+the exact claim sha; (2) verification pinned to `headSha`, with run ids and durations
+recorded; (3) the mid-session owner request was filed with a measure-first mandate and its
+own ledger entry, and NOT started; (4) the CI wait used a background poller from the first
+attempt. **Weaknesses:** (1) Phase 0 was an abbreviated re-verification (status, unpushed
+count, frontier check) rather than the full 8-step read — the session began minutes after
+S728's close-out with the full orientation in-context and the owner's task already given;
+recorded here honestly rather than claimed as a full Orient; (2) the poller's 55-poll cap was
+a guess that happened to fit (35 needed) — a longer R-CMD-check queue would have timed it out.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push (S726 precedent);
+the CRAN check-time insight lives in the filed BACKLOG item (forward-carrying home, S686).
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~3 expected after close-out: filing `c9c946f7` +
+records + sha; the last two are an estimate at write time). All docs-only; no urgency, they
+ride the next push. (B) Priorities: CRAN check-time measurement (READY, M, owner-requested
+S729, `BACKLOG.md:117` — measure first); pedigree-growth measurement (READY, S,
+owner-requested S721); package-split disposition + REUSE registration (owner decisions);
+BACKLOG.md editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M,
+`BACKLOG.md:100`). (C) Standing report-only: HANDOFFS.md truncated duplicate S720 stub;
+iCloud Housekeeping item closable pending confirmation; the owner's stale 19.7 MB
+`../nprcgenekeepr_2.0.0.9000.tar.gz` + `../nprcgenekeepr.Rcheck/` outside the repo.
+
+**Key files:** `BACKLOG.md:117` (new CRAN check-time item), `CHANGELOG.md` S729 entries,
+`HANDOFFS.md` S729 receipt, run ids 35485603669/70/80/72 (the 4 green runs on `0572767b`).
+
+**Gotchas for the next session:** (1) CI is now current through `0572767b` — only the ~3
+close-out docs commits are unpushed; "expect 0 undocumented commits; measure it" at next
+Phase 0. (2) The CRAN check-time item's test measurement must run WITHOUT `NOT_CRAN=true` —
+the exact opposite of the Build/Test/Verify regression-read setting; don't blend the two
+numbers. (3) Standing set unchanged from S728: `scratchpad/` invisible to git by owner
+decision (`ls -d scratchpad` if in doubt); ratchet ~2 min, run AFTER committing (Learning
+772); trim needs `--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; the two
+`SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 —
+now remote-confirmed again by R-CMD-check on `0572767b`.
 
 ### Session 727 Handoff Evaluation (by Session 728)
 **Score: 9/10.** **What helped:** next step (A) WAS this session's deliverable, framed exactly
