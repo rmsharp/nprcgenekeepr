@@ -176,7 +176,7 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
-This file currently holds **2** receipt(s). Computed by
+This file currently holds **1** receipt(s). Computed by
 `methodology_trim.py` on every `--check`/`--write` run, never
 hand-maintained.
 
@@ -194,342 +194,169 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
+**Archived 11 record(s), 2026-09-18 → 2026-09-19** into
+[`docs/archive/HANDOFFS-through-2026-09-19.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-19.md)
+— same format, same order, frozen. Losslessness is proved by
+[`docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh),
+which re-derives L1/L2/L3 from git; run it rather than trusting this
+sentence. Written by `methodology_trim.py` v1.5.0.
+
 ``` handoff
-session: S719
+session: S726
 date: 2026-09-19
-status: complete
-self_score: 9
-predecessor_score: 8
-active_task: BL-57 P10 for this project (methodology fork plan `changelog-rules-contradictions-plan.md`, P10 row) — DONE. Framework files synced to v3.7-964-gce14b3f, the local SESSION_NOTES.md trimmer extension re-applied, CHANGELOG.md and HANDOFFS.md at the current ledger rules (bin/status reads present for both), CLAUDE.md corrected. Docs/process only, no TDD phases, no push. Open: owner decisions on push, the trim-budget cadence, and context_budget.py adoption.
-what_was_done: Phase 0 backfill 74243f04 (1 commit, 312996b0). Claim d064993a. 00b8a4ca build/ignore (6 .Rbuildignore patterns, 2 .gitignore entries). b773ddb6 forced sync (13 written, 2 created; trimmer 1.1.2 to 1.5.0). 63b3286f trimmer extension re-applied (49 lines; --check no longer NO_CONFIG; dry run L1_OK-L3_OK). ba1f0135 CHANGELOG.md seed paragraph (13 ins, 0 del, all 540 old lines survive in order). 47364f51 HANDOFFS.md Size section replaced (17 ins, 13 del; section 9.8 with bounds 62 117 printed only the block changed; lines 1-61 and the 208-line tail identical). 2f451d1d CLAUDE.md corrected. f88afcb2 BACKLOG.md context_budget item re-scoped. Verification: trimmer dry runs L1_OK-L3_OK on all three ledgers (43/11/20 records); R CMD build tarball ships none of the tooling or ledger files; full suite blocks=2437 failed=0 error=0 skipped=184 warning=40 (4.3 min, equals baseline). Records commit follows this receipt, then a self-reconcile sha commit.
-next_steps: (A) Owner push decision, about 16 commits ahead after close-out (recount with git rev-list --count origin/master..HEAD; the last two are an estimate). (B) BACKLOG.md:119 — calibrate/adopt or delete context_budget.py and settle the trim budget (196,608 B default vs the old 65,536 B). (C) Suggests: audit (READY, S, BACKLOG.md:140). (D) Owner decisions pending: package-split disposition (BACKLOG.md:71), REUSE registration (BACKLOG.md:162).
-key_files: CLAUDE.md:277 (per-sync procedure for the locally modified trimmer), CLAUDE.md:279 (ledger legacy forms), methodology_trim.py:377 (the local SESSION_NOTES.md LedgerSpec), CHANGELOG.md:17 (rules pointer and ledger-format 2 marker), HANDOFFS.md:64 (handoffs-format 2 marker), BACKLOG.md:119 (re-scoped item), SESSION_NOTES.md:29 (full S719 handoff)
-gotchas: Next plain bin/sync refuses methodology_trim.py (exit 2) — procedure at CLAUDE.md:277, patch is git show 63b3286f -- methodology_trim.py. The push is the first CI validation of P10; R-CMD-check runs error-on warning and I ran only the tarball listing plus the test suite, not a full R CMD check — estimate green (no package file changed), if red report don't fix inline. The final sha commit carries its own CHANGELOG entry, so expect 0 undocumented commits past the CHANGELOG frontier at next Phase 0; measure it. context_budget.py is installed but uncalibrated (seed ceilings are the fork's), quality_ratchet.py reports 0/0 gates — do not read either as a P10 defect. Under the new rules a claim entry is marked in progress and entries are never edited. S718's claim that all three ledgers were verified not firing is wrong on its committed head: SESSION_NOTES.md fired under 1.1.2 (70,138 B vs 65,536 B). Baseline is still 2,437 blocks.
-runtime_smoke: n/a — docs/process only (zero R/, tests/, man/, vignettes/ changes); evidence is the untouched full suite at baseline, the tarball listing, and the trimmer dry runs. quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured (no gates declared)
-changelog_ref: S719 entries at the top of CHANGELOG.md (claim, steps 2-7, BACKLOG follow-through, close-out, 2026-09-19)
-commit: a095f4be
+status: pending
+active_task: Owner-directed push to origin/master (32 pre-existing unpushed commits, S720–S725, + this claim) and CI verification — S717 precedent
+what_was_done: pending
+commit: pending
 ```
 
-S719 self-score 9/10: + measured before acting and saved the patch the
-sync would have destroyed; + every rewrite guarded by anchored asserts
-and ordered-survival / byte-identity / section 9.8 checks, the one guard
-that fired did so before a write; + each claim written into CLAUDE.md
-and BACKLOG.md was run first; + tight scope (no push, no trim, no
-context_budget adoption). - The claim entry lacks the in-progress marker
-the newly synced rules ask for (the rules arrived after the claim; a
-committed entry is never edited); - HANDOFFS.md still differs from the
-current seed (longer front matter, two later sections the P10 steps do
-not ask for); - took the tool’s byte-budget default without an owner ask
-(sanctioned by the prompt, flagged open). Predecessor (S718) scored
-8/10: its gotchas held (1-commit backfill, ahead-count, untracked list,
-2,437-block baseline) but its ledger claim that all three trim-managed
-ledgers were verified trigger-not-firing at close-out is wrong on the
-committed head — SESSION_NOTES.md fired under the 1.1.2 trimmer (70,138
-B vs 65,536 B), verified in an isolated worktree.
-
 ``` handoff
-session: S718
+session: S725
 date: 2026-09-19
 status: complete
 self_score: 9
 predecessor_score: 9
-active_task: Pointer-block sweep — DONE, owner-ratified. All 15 `[ ]`-marked-but-fully-RESOLVED pointer blocks removed from BACKLOG.md (429 lines) plus the completed sweep item itself (15 lines): 1,119 → 675 lines. Docs-only maintenance, no TDD phases. No open work from this session.
-what_was_done: Phase 0 backfill 94b39dc7 (1 commit, 4cfe2dad — the predicted recurring self-reconcile shape, measured 1). Claim f058a8de. Census: full BACKLOG.md read → 15-block population (the item's "e.g." list named 13; the S545/S549 audit and S568 Compounding-Loop blocks completed it). Pre-gate verification: every resolving session (S457–S568) has dated ledger entries across CHANGELOG.md + shards (0 FM #27 gaps, vs. the 2 S529 found); depth spot-check on S565 Track B; no open sub-threads; zero live cross-references. Owner ratified "remove all 15" via AskUserQuestion (over keep-S457/S458 and hold). Execution b7cc2508: guarded line-range script (scratchpad/s718_sweep.py, anchors verified per range; the guard fired once, correctly, on a wrap-boundary anchor); diff deletion-only 429/0; sweep item removed same commit; CHANGELOG deliverable entry maps every block to its resolving session(s) and cites git show f058a8de:BACKLOG.md for full-text provenance. CI: the 3 runs in-flight at orientation completed green in-session (+ scheduled shinytest2) — S717's open loop closed. Records commit follows this receipt.
-next_steps: (A) Suggests: audit (READY, S, BACKLOG.md:133 — now the top READY Housekeeping item). (B) context_budget.py evaluation (READY, S, BACKLOG.md:119). (C) Push decision (owner): ~5 commits ahead after close-out (recount with git rev-list --count origin/master..HEAD); docs-only delta. (D) Owner decisions pending: package-split disposition (BACKLOG.md:71), REUSE registration (BACKLOG.md:155).
-key_files: BACKLOG.md:1 (post-sweep 675-line file), CHANGELOG.md:29 (S718 entries incl. the per-block removal map), scratchpad/s718_sweep.py:1 (guarded deletion script), SESSION_NOTES.md:29 (full S718 handoff)
-gotchas: Fresh baseline still 2,437 blocks (failed=0 error=0 skipped=184 warning=40) — no package files touched; S716's gotchas 2–5 (e2e opt-in via NPRC_RUN_E2E, serialization-coupled formatter greps, NEWS \## render check, screenshot recipe) apply verbatim. BACKLOG.md's new sparseness is not a ghost session — removed-block full text is at git show f058a8de:BACKLOG.md. Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0; measure it. The chromote item's "CDP-timeout fallback fix below" phrase was stale before this sweep — fix opportunistically if that item is picked up. This session did not push.
-runtime_smoke: n/a — docs-only (BACKLOG.md/CHANGELOG.md/SESSION_NOTES.md/HANDOFFS.md + an untracked scratchpad script; zero R/, tests/, man/, vignettes/ changes)
-changelog_ref: S718 entries at the top of CHANGELOG.md (claim + deliverable + close-out, 2026-09-19)
-commit: f2922cfc
+active_task: CLAUDE.md reduction campaign DONE — 43,348 B → 26,360 B, under the 28,000 B .context-budget.json ceiling (warn band ≥24,000 B is documented headroom, not a defect). Adaptations incident narratives moved to PROJECT_LEARNINGS.md Learning 770 (the relocation record) or replaced with pointers to their existing Learnings; every adaptation's operative rule kept; SESSION PROTOCOL header, budget:protected Project Overview fence, TDD contract, and Build/Test/Verify untouched. BACKLOG item removed in the deliverable commit. Docs-only — no TDD phases (S720–S724 precedent); lint N/A (no .R files).
+what_was_done: Claim 1ef168b8. Deliverable c8512d0d: CLAUDE.md reshaped (130 lines changed; the S325/S546/S547 trilogy → 1 short block, the S518 fence-scanner post-mortem → 3 lines, all 9 close-out checklists → rule + Learning pointer, hand-maintained learnings count → its computing command, two self-falsified sentences updated) + PROJECT_LEARNINGS.md Learning 770 (holds the ONLY-in-CLAUDE.md narratives: S545 rejected alternatives, S436 origin, NEWS.Rmd drift history, methodology_trim.py provenance, the legacy-history decision chain, the reduction method) + BACKLOG item removal + CHANGELOG entry. Full pre-reduction text: git show 1ef168b8:CLAUDE.md. Verified: wc -c = 26,360; context_budget.py no-file-over-ceiling with fence intact; all 18 cited Learning numbers grep-verified present; learnings count computes to exactly 770; in-file "above" references re-read and resolving; no test reads the 4 touched .md files (grep-verified), so the 2437/0/0/184/0 baseline carries forward per Learning 764's scope rule.
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~31 expected after close-out: 27 pre-existing + claim + deliverable + records + sha; the last two estimated at write time). (B) Priorities: pedigree-growth measurement (READY, S, owner-requested S721); owner decisions pending: package-split disposition, REUSE registration; BACKLOG.md editorial compression (READY, L). (C) Standing report-only: HANDOFFS.md truncated duplicate S720 stub (grep for two adjacent "session: S720" blocks); iCloud Housekeeping item closable pending a duplicates-stay-gone confirmation.
+key_files: CLAUDE.md:127 (Adaptations section start — the reshaped region runs to EOF), CLAUDE.md:217 (context-budget check with the new expected state), PROJECT_LEARNINGS.md:2230 (Learning 770 — recount after any append), BACKLOG.md:131 (where the removed campaign item sat — REUSE item now there), CHANGELOG.md:37 (S725 entries), SESSION_NOTES.md:33 (full S725 handoff)
+gotchas: CLAUDE.md is under ceiling but in the warn band with ~1,640 B headroom — the pre-commit hook's relative rule refuses any commit that grows it while over a threshold state; put new adaptation narrative in PROJECT_LEARNINGS.md and keep only the rule + pointer in CLAUDE.md (Learning 770 point 6 records the method). Context-budget reds are NO LONGER "by design" — a CLAUDE.md red is now a finding. Standing: every methodology_trim.py run needs --budget-bytes 65536; the stray ~$e Compounding Loop.html still makes devtools::check() warn and exit 1 non-interactively; renv.lock carries no dev tooling (Rscript out-of-sync banner expected). Full-suite baseline unchanged: 2437/0/0/184/0.
+runtime_smoke: n/a — docs-only (4 markdown files; no runtime surface, no test-read files touched). The deliverable's own verification surface IS context_budget.py, run post-edit: no file over its ceiling, budget:protected fence intact. quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
+changelog_ref: c8512d0d
+commit: 6d890617
 ```
 
-S718 self-score 9/10: + census-first — the ratification gate presented a
-measured 15-block population with per-block ledger verification, not the
-item’s own unverified enumeration; + the anchor-guarded deletion script
-refused once for the right reason and never wrote a bad state; + tight
-scope — zero package files, the borderline S518 recurring-maintenance
-item deliberately excluded. - Depth spot-check covered 1 of 15 blocks
-(existence verified for all 15; full content diffs judged
-disproportionate, disclosed at the gate); - one wasted script iteration
-on a wrap-boundary anchor. Predecessor (S717) scored 9/10: next-step A
-named this exact deliverable with the BACKLOG pointer; the
-backfill-shape and CI-round predictions both measured exactly; nothing
-wrong found; only the item’s non-exhaustive “e.g.” enumeration was left
-to the census to discover.
+\<free-text: S725 +/- — plus: every relocated narrative’s destination
+was verified before its pointer was written, so the pointer chain is
+lossless by construction; two sentences the reduction itself falsified
+were caught and updated in the same pass; the first draft’s “all green”
+expected-state claim was corrected by measurement (warn at 26,360 B)
+before commit. Minus: landed in the warn band rather than under 24,000 B
+— the remaining large narrative (Build/Test/Verify’s regression-read
+block) was on the item’s explicit keep-intact list, so deeper cutting
+needs an owner decision; headroom before red is only ~1,640 B.\>
 
 ``` handoff
-session: S717
+session: S724
 date: 2026-09-19
 status: complete
 self_score: 9
 predecessor_score: 9
-active_task: Owner-directed push to origin/master — DONE. 33 commits (1788e2b8..047d7f74) spanning S712–S716 pushed; all 4 on-push CI workflows green on the pushed head — the first remote validation of the S715 curved-connector fix and the S716 MHC display rounding. No open work from this session.
-what_was_done: Phase 0 backfill aa003382 (1 commit, b229a305 — the predicted recurring self-reconcile shape, measured 1). Claim 047d7f74 made BEFORE the push so the pushed head carries the session breadcrumb. Push 1788e2b8..047d7f74 (33 commits). CI watched via a 2-min background poller to completion, then confirmed directly via gh run list: lint 4m41s, test-coverage 10m26s, pkgdown 18m40s, R-CMD-check 34m16s (run ids 35425960304/340/312/299), all completed success. Records commit follows this receipt, then a self-reconcile sha commit, both pushed immediately.
-next_steps: (A) Pointer-block sweep ratification (DECISION NEEDED, M; BACKLOG Housekeeping block). (B) Suggests: audit (READY, S). (C) Owner decisions pending: package-split disposition, REUSE registration. (D) Lower priority: context_budget.py evaluation (READY, S), chromote root-cause (optional, M).
-key_files: HANDOFFS.md:146 (this receipt), CHANGELOG.md:29 (S717 entries), BACKLOG.md:96 (pointer-block sweep), BACKLOG.md:148 (Suggests: audit)
-gotchas: Fresh baseline still 2,437 blocks (failed=0 error=0 skipped=184 warning=40) — no package files touched; S716's gotchas 2–5 (e2e opt-in via NPRC_RUN_E2E, serialization-coupled formatter greps, NEWS \## render check, screenshot recipe) apply verbatim. The close-out push triggers one more docs-only CI round — expect completed success at next Phase 0; if red, that is NEW information, report-don't-fix. Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0. origin/master in sync — recount before re-reporting any ahead-count.
-runtime_smoke: n/a — process/ops session, no code changes; the pushed head's full CI matrix (incl. R-CMD-check's own test run) is the runtime evidence
-changelog_ref: S717 entries at the top of CHANGELOG.md (claim + push outcome, 2026-09-19)
-commit: 8e3a32a5
+active_task: Baseline-warnings cleanup DONE — suite warning count 40 → 0 (blocks=2437 failed=0 error=0 skipped=184 warning=0; block/skip counts equal the S718–S723 baseline exactly), restoring the CRAN v2.0.0 clean-warning state. Inventory re-derived per the item's mandate: 37/40 were markerKinship NA-path across 14 blocks (stale list knew 5), 3/40 were two OTHER classes in 2 other files — refuting S723's "ALL one class" gotcha. Remedy owner-picked via AskUserQuestion: suppressWarnings() on all 16 triggering call sites (Learning 273(d)). BACKLOG item removed in the deliverable commit. No TDD phases (test-hygiene, no assertion/production change); lint checklist applied (0 lints).
+what_was_done: Claim 1bd5ef9c. Deliverable eb3573bc: 16 wraps — 14 setInputs(genotypeFile) in test_modMarkerGenetics.R (2 centerA at :265/:278, 1 flaggedSlot at :416, 11 i152_roh at :927-:1712), 1 flushReact() at test_appServer_server.R:206, 1 setInputs(trimPedigree=TRUE) at test_modPedigree_processing.R:672 — plus BACKLOG item removal + CHANGELOG entry carrying the full inventory/verification record. Verified: fixture-name partition proves wrap precision (warning fixtures centerA/i152_roh/flaggedSlot vs non-warning markerGenotype/hetGenotype/marker_genotypes/malformed); 3 touched files individually 0F/0E/0W; full clean regression read 2437/0/0/184/0; lint_package 0 (package loaded first, Learning 224); diff exactly the 16 wraps, assertions and production code untouched.
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~27 expected after close-out: 23 pre-existing + claim + deliverable + records + sha; the last two estimated at write time); CI R-CMD-check runs this suite and should confirm warning-free on push. (B) Priorities: CLAUDE.md reduction campaign (READY, M); pedigree-growth measurement (READY, S, owner-requested S721); owner decisions pending: package-split disposition, REUSE registration. (C) Standing report-only: HANDOFFS.md truncated duplicate S720 stub (grep for two adjacent "session: S720" blocks); iCloud Housekeeping item closable pending a duplicates-stay-gone confirmation.
+key_files: tests/testthat/test_modMarkerGenetics.R:265 (first of the 14 wraps — wraps add no lines so pre-fix line numbers hold), tests/testthat/test_appServer_server.R:206, tests/testthat/test_modPedigree_processing.R:672, R/markerKinship.R:135 (the NA-path emission, untouched), CHANGELOG.md:37 (S724 entries — recount after edits), PROJECT_LEARNINGS.md:2228 (Learning 769), SESSION_NOTES.md:33 (full S724 handoff)
+gotchas: The full-suite baseline is now 2437/0/0/184/0 — ANY warning>0 in a future regression read is a new finding, never baseline. Wrap incidental working-as-designed warnings at test-AUTHORING time per Learning 273(d) — the 10→15→40 growth was new tests reusing warning-prone fixtures without wraps. The 16 wrapped sites also mute future unexpected warnings from those exact calls (owner-accepted trade; assertions unchanged). Standing: context-budget reds by design until the CLAUDE.md reduction campaign; every methodology_trim.py run needs --budget-bytes 65536; the stray ~$e Compounding Loop.html still makes devtools::check() warn and exit 1 non-interactively; renv.lock carries no dev tooling (Rscript out-of-sync banner expected).
+runtime_smoke: n/a — test-only change (16 suppressWarnings() wraps in 3 test files; no runtime surface, no production code, no assertion change; FM #24 has no target). quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
+changelog_ref: eb3573bc
+commit: da52bd49
 ```
 
-S717 self-score 9/10: + claim-before-push kept the pushed head
-self-describing; + waited for the full 4-workflow matrix and re-verified
-the watcher’s claim directly before recording; + tight scope, no package
-files touched. - The close-out push’s own docs-only CI round is
-deliberately unwatched (S706/S711 precedent), a real open loop handed to
-the next Phase 0; - no new learning from a routine push session (correct
-— no signal — stated, not silent). Predecessor (S716) scored 9/10: exact
-deliverable with the recount command and the first-remote-validation
-framing; backfill-shape prediction measured exactly; nothing material
-missing for a push session’s scope.
+\<free-text: S724 +/- — plus: inventory-before-remedy sequencing caught
+the class heterogeneity (37+3, not 40-of-one-class) before any fix was
+designed, so the owner’s remedy gate was built from measurement rather
+than the item’s stale enumeration; provably precise edits (fixture-name
+partition + per-file 0W re-runs + exact-baseline block/skip counts); the
+warning channel is now clean, so every future warning is signal. Minus:
+the BACKLOG block removal used line-number sed rather than a
+context-anchored edit (boundaries re-verified immediately before,
+diff-checked after — but FM \#20-adjacent); the deliverable commit sat
+exactly at the 5-file blast-radius cap, compliant but without
+headroom.\>
 
 ``` handoff
-session: S716
-date: 2026-09-18
+session: S723
+date: 2026-09-19
 status: complete
 self_score: 9
 predecessor_score: 9
-active_task: MHC Haplotype Reporting follow-up polish — DONE, owner-ratified at every gate. Display-only 4-decimal rounding of the MHC summary table's frequency column (strict TDD; reactive/export/downloads keep full precision), modMarkerGeneticsUI() @return rewritten to the real 8-sub-tab UI, owner-ratified NEWS sweep (all 8 stale "no Shiny screen yet" phrases removed, 2 accurate ones kept) + repair of 2 pre-existing swallowed section headings + plain-language entry for the rounding, article screenshot re-captured. No open work from this session.
-what_was_done: PRE-RED probe (scratchpad/s716_probe.R): DT 0.34.0 formatRound = columnDefs render fn gated on type !== 'display', testServer renderDT output is class-"json" character, server-side payload carries no row data. Owner scope decisions pre-RED: 8-phrase NEWS sweep, 4 display digits. RED 27d06c97 (3 formatter grepls + reactive-identity + pre-upload pins; failed at HEAD exactly on the 3 formatter assertions). GREEN dbd68126 (3-line edit, R/modMarkerGenetics.R:1170: DT::formatRound(DT::datatable(tbl), "frequency", digits = 4L)). Docs c4fb69f3 (@return + man/ regenerated scope-checked; NEWS sweep + heading repair, render diff-checked). NEWS entry 37d17a55. Screenshot 476372e6 (re-captured live, original framing). Verification: full clean regression 2,437 blocks 0 failed/0 error (+1 = the new block, warnings 40 unchanged); lint_package() 0; wordlist/moduleContract/pkgdown guards green; live smoke: all page-1 frequency cells exactly 4 decimals, no module console errors; full MHC e2e green under NPRC_RUN_E2E=true (incl. full-precision CSV download pins); devtools::check() 0 errors + known pre-existing 1 W/1 N untracked-file artifacts. Learning 765 appended. Phase 0 backfill edab0fdd; claim d0cf1f09; records commit follows this receipt.
-next_steps: (A) Push decision (owner): ~31 commits ahead (recount with git rev-list --count origin/master..HEAD); delta since the last green CI head includes real package code (S715 fix + this render change) — the next push's CI round is their first remote validation. (B) Pointer-block sweep ratification (DECISION NEEDED, M). (C) Owner decisions pending: package-split disposition, REUSE registration. (D) Lower-priority READY: Suggests: audit (S), context_budget.py evaluation (S), chromote root-cause (M, optional).
-key_files: R/modMarkerGenetics.R:1170 (rounded render), R/modMarkerGenetics.R:165 (rewritten @return), tests/testthat/test_modMarkerGenetics.R:1252 (new display-rounding test), NEWS.Rmd:327 (new bullet; sweep at 265-304, restored headings 296/338), vignettes/articles/shiny_app_use/marker_genetics_mhc_haplotype.png:1 (re-captured figure), PROJECT_LEARNINGS.md:2225 (Learning 765), scratchpad/s716_probe.R:1 + s716_smoke.R:1 + s716_recapture.R:1 (evidence + reusable recipes)
-gotchas: Fresh baseline now 2,437 blocks (failed=0 error=0 skipped=184 warning=40); +1 = the new MHC display test. e2e blocks are OPT-IN (NPRC_RUN_E2E=true, helper-shinytest2.R:201) — the 0F/0E regression claim structurally excludes them; a rendered-surface change owes an explicit e2e run (Learning 765). The new test's formatter assertions grep serialized JSON ("targets":5,"render" etc.) — on a DT/htmlwidgets serializer change, re-derive the greps from a fresh probe, don't loosen the display-only pins. After ANY NEWS.Rmd render: read the NEWS.md diff AND grep for \## (must be 0). AppDriver$get_screenshot() refuses to overwrite — capture aside + file.copy(overwrite=TRUE), dismissing the QC toast first (s716_recapture.R). Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0.
-runtime_smoke: live chromote through the real app (NPRC_RUN_E2E=true): every rendered page-1 frequency cell exactly 4 decimals (0.0500/0.0333/0.0167/0.1000/0.0667), zero full-precision runs, no module console errors (scratchpad/s716_smoke.R + s716_smoke_mhc_summary.png); full MHC e2e file green including the untouched full-precision CSV downloads
-changelog_ref: S716 entries at the top of CHANGELOG.md (claim + close-out, 2026-09-18)
-commit: d55ff142
+active_task: Roxygen unresolved-link warning fix DONE — R/makePedigreeDiagramData.R:2414 "@param t ... in [0, 1]." escaped to \[0, 1\]; document()/RStudio-Install runs now warning-free. Trigger: the owner's RStudio-button Install (S722 follow-up A) succeeded end-to-end (S722's encoding fix verified on the live GUI surface) with this warning the only remaining noise. Also: owner's mid-session markerKinship NA-warning report triaged to the BACKLOG baseline-warnings item and the item annotated (stale block list, count 10->15->40). No TDD phases (docs-only roxygen comment); lint checklist applied.
+what_was_done: Claim 3980cc31. Deliverable d2a43162: the one-line escape + CHANGELOG entry. BACKLOG annotation e2a91424: owner-reported blocks test_modMarkerGenetics.R:1649/:1712 (issue #152 sequence-export tests, i152_roh fixture pair I2/I3, source R/markerKinship.R:135) added to the baseline-warnings item with a re-derive-the-inventory instruction. Verified 4 ways: pre/post stash test (warning reproduces on unfixed HEAD, absent with fix — first post-fix check re-run WITHOUT suppressMessages(), which hides roxygen's cli-emitted warnings); zero collateral (man//NAMESPACE untouched); lint clean on the touched file (package loaded, Learning 224); full clean regression read blocks=2437 failed=0 error=0 skipped=184 warning=40, equal to the S718-S722 baseline exactly.
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~23 expected after close-out: 18 pre-existing + claim + fix + annotation + records + sha; estimate). (B) Warning-cleanup session (READY, S) — the annotated baseline-warnings item; owner showed active interest; re-derive the full block inventory from a fresh suite run first, then Learning 273(d) suppressWarnings() or fixture completion. (C) Priorities: CLAUDE.md reduction campaign (READY, M); pedigree-growth measurement (READY, S, owner-requested S721); owner decisions pending: package-split disposition, REUSE registration. (D) Standing report-only: HANDOFFS.md truncated duplicate S720 stub (locate by grepping for two adjacent "session: S720" blocks — line numbers drift); iCloud Housekeeping item now closable pending a duplicates-stay-gone confirmation (dups gone, repo out of iCloud at ~/Development).
+key_files: R/makePedigreeDiagramData.R:2414 (the escaped line), R/markerKinship.R:135 (NA-warning source the owner asked about), BACKLOG.md:284 (baseline-warnings item S723 annotation — recount after any BACKLOG edit), CHANGELOG.md:37 (S723 entries), PROJECT_LEARNINGS.md (Learning 768), SESSION_NOTES.md:33 (full S723 handoff)
+gotchas: Never verify absence-of-warning under suppressMessages() — roxygen2/cli emit warnings as messages, so a clean suppressed run is unsound (Learning 768). The suite's 40 warnings are ALL the tracked baseline item's class (suite green 0F/0E); re-derive the block inventory rather than trusting the item's enumeration, which went stale twice (10->15->40). Standing: context-budget reds by design until the CLAUDE.md reduction campaign; every methodology_trim.py run needs --budget-bytes 65536; the stray ~$e Compounding Loop.html still makes devtools::check() warn and exit 1 non-interactively; renv.lock carries no dev tooling (Rscript out-of-sync banner expected).
+runtime_smoke: The deliverable's runtime surface IS the document() roclet path: pre/post stash-verified warning-free end-to-end run, man/ untouched. No Shiny surface changed, so no NPRC_RUN_E2E run owed (Learning 765). quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
+changelog_ref: d2a43162
+commit: 77a832e0
 ```
 
-S716 self-score 9/10: + probe-first meant RED asserted DT 0.34.0’s real
-seam (columnDefs render fn), not the guessed rowCallback; + every scope
-expansion (8-phrase sweep, heading repair, screenshot re-capture)
-owner-gated or convention-mandated, none silent; + verification faithful
-per surface — testServer JSON for the declaration, live render for the
-displayed cells, e2e for the export path the default suite structurally
-cannot check; + NEWS render diff-checking caught two long-swallowed
-section headings. - The formatter assertions are serialization-coupled
-raw-JSON greps (disclosed); - one wasted smoke invocation before
-rediscovering the NPRC_RUN_E2E gate; - one wasted capture before hitting
-get_screenshot()’s no-overwrite refusal. Predecessor (S715) scored 9/10:
-complete BACKLOG brief (pointers + the never-touch-the-reactive
-constraint that shaped the RED design), accurate baseline and backfill
-predictions; deductions only for the absent NPRC_RUN_E2E opt-in note and
-the pre-DT-0.34.0 formatRound seam suggestion.
+\<free-text: S723 +/- — plus: caught its own unsound first verification
+(suppressMessages() would have hidden the very warning under test) and
+re-proved with a pre/post stash test on the exact surface; zero
+collateral with exact-baseline suite; the owner’s mid-session warning
+report triaged to the tracked item with a verified annotation instead of
+a scope-creep fix. Minus: the invalid suppressed check happened at all;
+a noisy sibling-instance grep preceded the realization that roxygen’s
+own output is the exhaustive unresolved-link inventory.\>
 
 ``` handoff
-session: S715
-date: 2026-09-18
-status: complete
-self_score: 9
-predecessor_score: 8
-active_task: Curved duplicate-connectors fix — DONE, owner-ratified at every TDD gate. .resolveEdgeNodeCollisions()'s curved branch now selects roundness by scoring the PAINTED arc for true disc hits (exact cubic-solve predicate, conservative Lipschitz prefilter) over the ladder seq(0.05, 0.60, 0.05), replacing the blind +0.3 bump; curved-heuristic residuals now disclose exactly the arcs no step fully clears. No open work from this session.
-what_was_done: PRE-RED probe (continuity 56/587/117 exact, ladder counterfactual: 114 of 170 truly collide, 42 cleared, events 587 -> 149, residual 72, no arc worse, +4.4 s unoptimized). RED d39c66eb (7 honest failures: helper units, never-worse property, false-positive pair keeps 0.2, __dup_0L5AWR_1 clears at 0.5, residual/true-hit correspondence, 56L -> 72L, exemplar pins flipped). GREEN 704d7c4c (R/makePedigreeDiagramData.R only: .curvedCwVia/.bezierPointAt/.bezierMinDistTo/.arcDiscHitCount + preference-ordered ladder walk; prefilter keeps counts provably identical, resolve 0.21 -> 0.95 s). Full suite 2,436 blocks 0 failed/0 error (warnings 48 -> 40 = cleared collision warnings); the 1 initial failure was S714's stale px wordlist flag, root-caused NOT this diff, fixed fa4ec9ad (Learning 764). Lint 0. devtools::check 0 errors + known 1 W/1 N untracked-file artifacts. Census re-run 69152999 (postfix CSV, frozen baselines untouched): cArc 587 -> 149, cArcEdges 117 -> 72, Track C fully clean, class (b) = 6 unchanged (article NOT re-obligated). Exemplar re-renders owner-ratified at the GREEN gate. Also: Phase 0 backfill 62b57d76; claim d5008091 repaired S714's duplicate-S713 receipt fragment in this file. Records commit follows this receipt.
-next_steps: (A) MHC polish (Housekeeping, S) — the top remaining READY BACKLOG item, full brief in the block. (B) Push decision (owner): ~21 commits ahead (recount with git rev-list --count origin/master..HEAD); the delta now includes real package code (this fix), so the next push's CI round is its first remote validation. (C) Pointer-block sweep ratification (DECISION NEEDED, M). (D) Owner decisions pending: package-split disposition, REUSE registration.
-key_files: R/makePedigreeDiagramData.R:2404 (arc helpers) and R/makePedigreeDiagramData.R:2982 (curved branch), tests/testthat/test_resolveEdgeNodeCollisions.R:314 (rewritten curved section), tests/testthat/test_examplePedigreeFixtures.R:183 (flipped exemplar specs), docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_postfix_findings.csv:1 (new standing baseline), data-raw/pedigreeDrawingErrorCensus.R:79 (postfix CSV name), NEWS.Rmd:209 (entry), PROJECT_LEARNINGS.md:2223 (Learning 764), scratchpad/s715_probe.R:1 + s715_render.R:1 + s715_layouts.rds (evidence; s715_layouts.rds$R is the current-engine Real-375 layout)
-gotchas: Fresh baseline now 2,436 blocks (failed=0 error=0 skipped=184 warning=40); +2 = new helper units, warnings -8 = cleared collision warnings. Carried-baseline heuristic hole: a docs-only session editing .qmd/.Rmd prose owes test_wordlist_coverage.R before carrying a baseline forward (Learning 764). s712_layouts.rds is STALE for edge styling (pre-fix roundness) — use s715_layouts.rds. The census standing baseline is the _postfix CSV (149/72); never compare cArc against 587 as same-state. Resolve now ~0.95 s on Real 375 (arc scoring); prefilter margin + 64-sample count are the tuning knobs if layout time ever matters, census as referee. Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0.
-runtime_smoke: live chromote renders through the app's own widget construction (the S712/S714-verified path): linebreeding + half_sib full views and Real-375 before/after site crops (scratchpad/s715_render_*.png), owner-reviewed and ratified at the GREEN gate; the census re-run measures the shipped engine output itself
-changelog_ref: S715 entries at the top of CHANGELOG.md (claim + close-out, 2026-09-18)
-commit: ef575abb
-```
-
-S715 self-score 9/10: + probe-first counterfactual meant RED encoded
-measured expectations GREEN reproduced to the digit; + the never-worse
-property is a mechanism guarantee, not a pin; + performance solved with
-a provably-conservative prefilter (counts identical by construction,
-verified), never a weakened predicate; + the latent S714 suite failure
-was root-caused before fixing; - the Real-375 crops do not visually
-isolate the single fixed arc (density; census overlap join is the ground
-truth, disclosed per the S712-S714 pattern); - one wasted render
-iteration on the first site-crop framing. Predecessor (S714) scored
-8/10: complete brief (mechanism, pointers, pins, constraints) and
-accurate content claims throughout; deductions for the corrupted
-duplicate-S713 receipt fragment its records commit left in this file
-(repaired at S715 claim) and the unflagged exemplar warning pins +
-same-day CSV-name collision, plus the px wordlist flag it left failing
-unrun (Learning 764).
-
-``` handoff
-session: S714
-date: 2026-09-18
+session: S722
+date: 2026-09-19
 status: complete
 self_score: 9
 predecessor_score: 9
-active_task: Census curved-chord arc-modelling measurement pass — DONE, owner-ratified; follow-up fix item filed (arc-verified roundness selection, READY, M). No open work from this session beyond that item.
-what_was_done: Modelled the arc vis-network actually paints (curvedCW quadratic Bezier; via formula transcribed from the bundled vis-network.min.js and verified against the LIVE widget to 1.1e-13 px over all 173 curved edges). Result — the 1,668-row chord heuristic was 100 percent false positives AND blind to every true hit; the true population is 587 arc-inside-symbol events on 117 of 170 Real-375 connectors (Track C arc-clean): 485 events on cross-row connectors nothing ever checked, 102 from bumped arcs crossing upper rows; the +0.3 roundness bump is net-negative on Real 375 (21 arcs hit at 0.2, 24 at 0.5). Census script extended with the exact c-arc-inside predicate (chord subclass retired, lint 0), re-run committed as the 2026-09-18 CSV (595 rows; class b = 6 at its first post-S713 re-run); article "8 of 237" updated to 6 of 237 per the S713 forward-carry; audit doc written. Incidental discovery: vis-network parseInt-truncates predefined node coordinates (Learning 763). Commits: backfill 9a096ed6, claim 88f563de, deliverable 318c32da, records commit after this receipt.
-next_steps: (A) Curved-connector fix item (READY, M, strict TDD) — the new BACKLOG block carries the full brief (R/makePedigreeDiagramData.R curved branch, roundnessBump; port curvedCwVia()/bezierMinDistTo()/arcDiscHits() from the census script; re-derive test_resolveEdgeNodeCollisions.R pins 170/56/0.5; constraints S577 arc convention + S675 no-weight-tuning). (B) MHC polish (Housekeeping, S). (C) Push decision (owner) — 12 commits ahead at close-out, recount first. (D) Owner decisions pending: package-split, pointer-block sweep, REUSE registration.
-key_files: docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_2026-09-18.md:1 (audit report), data-raw/pedigreeDrawingErrorCensus.R:441 (arc predicate), docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_findings.csv:1 (new baseline), vignettes/articles/kinship2-fidelity-validation.qmd:164 (6-of-237 site), BACKLOG.md:109 (the fix item), tests/testthat/test_resolveEdgeNodeCollisions.R:394 (56L pin), scratchpad/s714_probe.R:1 (evidence)
-gotchas: Baseline still 2,434 blocks failed=0 error=0 (no package files touched). cArc/cArcEdges (587/117) is a NEW metric — never compare against the frozen 1,668 as same-metric. 2026-09-02 census artifacts stay frozen; 2026-09-18 CSV is the standing baseline. Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0. The article's "6 of 237" re-obligates only on a class-(b) change, not on cArc changes. vis-network renders node coords parseInt-truncated (whole px) — pixel-exact reasoning must expect that.
-runtime_smoke: n/a — measurement/docs session; no package runtime behavior changed (data-raw script + audit doc + article prose). The live-widget chromote verification doubled as a rendered-app check of the arc geometry itself.
-changelog_ref: S714 entries at the top of CHANGELOG.md (claim + close-out, 2026-09-18)
-commit: 8c717ee6
+active_task: RStudio-Install vignette-encoding fix DONE — %\VignetteEncoding{UTF-8} added inside the vignette: block of all 4 tracked built vignettes; the item's 5th file (a3manual.md) is the gitignored knitr::knitr intermediate and regenerates WITH the line from the .Rmd's YAML (verified at its line 14 post-run). BACKLOG Up Next item removed in the deliverable commit. No TDD phases (vignette metadata, no .R files). Remaining verification surface: the owner's own RStudio-button Install + appServer-test re-run (GUI-only, this environment cannot click it).
+what_was_done: Claim f93a6ce2. Deliverable 10934a2f: one line per file after the inert %\usepackage[UTF-8]{inputenc} boilerplate in a2interactive.Rmd/a3manual.Rmd/gvaConvergence.Rmd/simulatedKValues.Rmd + CHANGELOG entry + BACKLOG item removal. Verified three ways: (1) mechanism — tools:::.getVignetteEncoding() returns 'non-ASCII' on the pre-fix HEAD copy (the exact value that trips tools::buildVignette()'s stop) and 'UTF-8' post-fix; (2) end-to-end — RStudio's exact devtools::document(roclets = c('rd','collate','namespace','vignette')) call exited 0, all 4 .Rmd vignettes rebuilt including previously-failing a2interactive.Rmd (its .html produced; its absence among leftover build products was the failure fingerprint), man/ untouched (zero collateral .Rd churn), build products cleaned per the item's recipe; (3) regression — blocks=2437 failed=0 error=0 skipped=184 warning=40, equals the S718-S721 baseline exactly. devtools::check() not re-run (not in the item's recipe; S721 ran a full check on effectively this tree; CI exercises the batch path on push).
+next_steps: (A) Owner follow-up from the item: restart R, Install via the RStudio button, re-run the appServer tests; capture any remaining failure as its own finding (likely stale-installed-copy collateral, already refreshed by S721's terminal install). (B) Owner push decision — recount with git rev-list --count origin/master..HEAD (~17 expected after close-out; estimate); the fix reaches other machines only once pushed. (C) Priorities: CLAUDE.md reduction campaign (READY, M); pedigree-growth measurement (READY, S, owner-requested S721); owner decisions pending: package-split disposition, REUSE registration. (D) Report-only: HANDOFFS.md holds a pre-existing truncated duplicate S720 stub block (unclosed fence, session/date/status only) directly above the real S720 receipt — repair deliberately in a future session.
+key_files: vignettes/a2interactive.Rmd:12 (the load-bearing line; siblings a3manual.Rmd:14, gvaConvergence.Rmd:13, simulatedKValues.Rmd:13), .gitignore:18 (why vignettes/ build products are git-invisible), CHANGELOG.md:33 (S722 deliverable entry, full verification record), PROJECT_LEARNINGS.md (Learning 767), SESSION_NOTES.md:33 (full S722 handoff)
+gotchas: The RStudio-button click itself is still unverified — terminal-side proof is complete but the button runs in the owner's GUI; next-step (A) is the remaining surface. Every RStudio-button Install deposits gitignored build products in vignettes/ (harmless, regenerable; a3manual.md persists by design). Pre-existing roxygen warning on every document() run: R/makePedigreeDiagramData.R:2414 @param t ... in [0, 1]. parses as a link to topic "0, 1" (@noRd, warning-only) — not a regression. Standing: context-budget reds by design; every methodology_trim.py run needs --budget-bytes 65536; the stray ~$e Compounding Loop.html still makes devtools::check() warn and exit 1 non-interactively; renv.lock carries no dev tooling (the Rscript out-of-sync banner is expected).
+runtime_smoke: The deliverable's runtime surface IS the vignette-roclet path: RStudio's exact document() call ran end-to-end, exit 0, a2interactive.html produced. The one surface this environment cannot exercise — the actual RStudio Install button — is stated as the owner follow-up, not claimed. No Shiny surface changed, so no NPRC_RUN_E2E run owed (Learning 765).
+changelog_ref: 10934a2f
+commit: 36990de9
 ```
 
-S714 self-score 9/10: continuity-first (frozen 1,668 reproduced to the
-row before any new claim), live-renderer verification of the model plus
-border-trim/quantization/jitter sensitivities before quoting counts,
-exact overlap join for the inversion finding, recommendation anchored to
-the measured net-negative bump; weaknesses — crops do not pixel-isolate
-a single offending arc (programmatic geometry, disclosed), and the audit
-doc briefly claimed the article edit before it landed (in-session
-ordering slip, corrected). Predecessor (S713) scored 9/10: exact
-deliverable pointer, forward-carry spelled out, frozen-CSV framing
-precise; stale “47 residuals” figure in the BACKLOG item and no
-vis-network.min.js breadcrumb were the only gaps.
+\<free-text: S722 +/- — plus: mechanism-level pre/post check on the
+exact reader the failing path uses (seconds, no rebuild) before the
+multi-minute end-to-end run; diff is exactly 4 one-line insertions with
+man/ untouched; the gitignored-5th-file wrinkle detected and resolved
+(regeneration verified) instead of over-claiming. Minus: edited
+a3manual.md as if durable before noticing .gitignore:18 (caught via git
+diff –stat, one check lost); the live RStudio button remains
+owner-verified only.\>
 
 ``` handoff
-session: S713
-date: 2026-09-18
+session: S721
+date: 2026-09-19
 status: complete
 self_score: 9
 predecessor_score: 9
-active_task: DONE, class CLOSED both ways, owner-ratified. Census class (b) assessment (S712 next-step A, owner-picked via AskUserQuestion at Phase 0): the 6 real 60-180 px off-centre union dots (__union_97/114/130/137/191/228) accepted as minSep-forced structural residuals, no fix item; the 2 numerical-noise rows (__union_75 ~2.8e-5 px, __union_132 ~1.0e-6 px) ratified out of the census predicate, which now uses the test suite's own 1e-3 raw-unit (0.12 px) solver-dust floor (data-raw/pedigreeDrawingErrorCensus.R, commit de4e6ce8). BACKLOG block removed per the S686 completed-item convention, with the census-re-run consequence forward-carried into the curved-chord item. Assessment session + one ratified data-raw edit; no package files touched, no TDD phases.
-what_was_done: Phase 0 backfill 47905f6a (1 commit, ed79261f -- the predicted self-reconcile shape, measured exactly 1); claim 8e769e30. Probe (scratchpad/s713_probe.R + s713_probe2.R): continuity first -- frozen census reproduced TO THE DIGIT from s712_layouts.rds (max |diff| ~2e-15 u on all 8 rows) and from a fresh run (6 real rows to 1e-12); then trace()-captured .solveJointQP() inputs (5 components, target 733 variables), baseline re-solve reproduction check, and the two instruments: binding-chain analysis (every between-mates gap BINDING at its floor; chain-implied minimum offset == observed offset exactly, 0.5/0.5/1.0/1.5/1.0/0.5 u) and a wUnion sweep 2 -> 2e5 (offsets reducible ONLY via mate-span stretch, __union_137 480 -> 1,787 px) => minSep-forced at the ratified S675 weights. 4 neighbourhood crops (Learning 732 recipe) show each dot adjacent to its distal marry-in mate -- the conventional multiple-marriage chain. Owner gate (2 questions): accept-and-close ratified; adopt-floor-now ratified. Predicate edited and verified (old skip reproduces the frozen 8; new floor yields exactly the disclosed 6); lintr::lint_package() 0 lints. Coupled prose re-verified: Track B centering re-measured live (max 1.9e-11 px); "8 of 237" stays accurate as a frozen-baseline citation, count changes only at the next census re-run (forward-carried). Learning 762 appended (threshold alignment across measurement artifacts; the trace()-capture probe instrument; the silent NULL-propagation skip corollary, mechanism verified).
-next_steps: (A) Census curved-chord (READY, M): arc-modelling measurement pass replacing the 1,668-chord upper bound; that pass now also owes the article's "8 of 237" update at its census re-run (BACKLOG forward-carry). (B) MHC polish (Housekeeping, S). (C) Owner decisions pending: package-split disposition, pointer-block sweep ratification, REUSE registration. (D) Informational: dashboard copy stale (v2.14.0 vs v2.18.0); untracked leftovers unchanged (+ s713_* scratchpad files, same class); LabKey remainder BLOCKED; local ahead of origin by this session's commits -- push decision is the owner's.
-key_files: scratchpad/s713_probe.R:1 + scratchpad/s713_probe2.R:1 (two-instrument probe; results scratchpad/s713_probe_results.rds), scratchpad/s713_crop_A_wcpxhd.png (+ B_u97/C_u191/D_u228) (4 site crops), data-raw/pedigreeDrawingErrorCensus.R:346 (the ratified floor, de4e6ce8), tests/testthat/test_positionMatingUnitForest.R:2917 (the structural-residual test naming the same 6 -- the decisive context S712's handoff missed), CHANGELOG.md:29 (S713 entries), BACKLOG.md:109 (curved-chord with the forward-carry)
-gotchas: (1) Fresh baseline still 2,434 blocks (failed=0, error=0, skipped=184, warning=48) -- no package files touched (data-raw only); S709's gotchas apply verbatim, read them in docs/archive/SESSION_NOTES-through-2026-09-18.md. (2) The census CSV remains frozen at 8 class-(b) rows -- do NOT edit it; the 6-row count exists only in a future re-run, which owes the article-figure update. (3) s712_layouts.rds remains valid (no R/ commits since S697); recompute if a layout-engine change lands. (4) Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0; measure it. (5) The trace()-capture probe (Learning 762) needs capEnv in globalenv and translation-invariant comparisons (per-component packing shifts absolute x); a probe section can skip SILENTLY via NULL propagation -- check every section header has rows under it.
-runtime_smoke: n/a -- no package runtime behavior changed (data-raw measurement script + docs/ledger edits only); the predicate edit's own verification is the old-vs-new threshold replication against the real layout (old=the frozen 8, new=exactly the disclosed 6), run live this session
-changelog_ref: f67830a1
-commit: f67830a1
+active_task: Suggests: audit DONE — all 22 DESCRIPTION Suggests: entries audited against the owner's rule; 16 retained with grep-verified load sites, 6 relocated/removed (owner-ratified via 2 AskUserQuestion gates): devtools + roxygen2 to the new Config/Needs/dev group, quarto dropped (already Config/Needs/website), grid/png/shinyWidgets deleted as unused everywhere. renv.lock re-snapshotted (dev = TRUE, S637 precedent, 21 packages dropped). BACKLOG item removed in the deliverable commit. Also filed (owner mid-session request, ede5289e): BACKLOG Housekeeping item to measure package growth from the pedigree-drawing feature (rough +/-20% acceptable). No TDD phases (metadata only, no .R files).
+what_was_done: Claim 05943cd5. Owner-requested backlog item ede5289e. Deliverable cd748874: DESCRIPTION (6 Suggests lines out, Config/Needs/dev in; roxygen2's version constraint superseded by Config/roxygen2/version) + renv::snapshot(dev = TRUE) + BACKLOG item removal + full-audit CHANGELOG entry. Audit method: grep inventory across R/, tests/, vignettes/, man/, inst/, data-raw/, then every thin hit READ for code-vs-comment — devtools' 20+ hits are all comments (out); pkgdown's one hit is real test code, test_pkgdown_reference_config.R:25 (stays, filing item's suspicion refuted); a secondary engine sweep kept markdown (a3manual.{Rmd,md} knitr::knitr engine renders through it). Verified: full regression read blocks=2437 failed=0 error=0 skipped=184 warning=40 (equals S718-S720 baseline exactly); full devtools::check() 21m52s, 0 errors, all dependency gates OK, 0 new warnings/notes (the 1 WARNING + 1 NOTE name pre-existing untracked clutter: inst/extdata/reference/~$e Compounding Loop.html and scratchpad/).
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~12 expected after close-out; estimate). (B) Priorities: CLAUDE.md reduction campaign (READY, M); pedigree-growth measurement (READY, S, owner-requested S721); owner decisions pending: package-split disposition, REUSE registration. (C) Owner call, trivial: delete the stray untracked ~$e Compounding Loop.html (it alone makes devtools::check() warn and exit 1 non-interactively).
+key_files: DESCRIPTION:60 (trimmed Suggests), DESCRIPTION:85 (Config/Needs website/coverage/dev), renv.lock:1 (21 packages dropped), BACKLOG.md:96 (new pedigree-growth Housekeeping item), PROJECT_LEARNINGS.md (Learning 766), SESSION_NOTES.md:33 (full S721 handoff)
+gotchas: devtools::check() exits 1 non-interactively until the stray ~$ file is removed — pre-existing clutter WARNING, not a regression; current true baseline is 0 errors + that WARNING + the scratchpad/ NOTE. renv.lock no longer carries dev tooling (devtools/roxygen2/quarto/pak/usethis/rcmdcheck etc.) — fresh-clone restore yields a runtime+test library only; install dev tooling via Config/Needs/dev / Config/Needs/website or the renv dev profile field. S720's standing gotchas carry forward (context-budget reds by design; every methodology_trim.py run needs --budget-bytes 65536; per-clone no-growth hook). grid/png/shinyWidgets deletion means "unused now", not "banned" — re-declare in Suggests if reintroduced.
+runtime_smoke: n/a — dependency metadata only; no runtime code path changed (removed packages have zero R/ references, grep-proven; every R/-loaded package retained). Full suite at exact baseline + full devtools::check() incl. vignette rebuild ran as the verification instead.
+changelog_ref: cd748874
+commit: 32c647c1
 ```
 
-Self-score 9/10: + continuity before counterfactuals (baseline re-solve
-had to reproduce production devs before any sweep was trusted); + two
-independent instruments agreeing exactly makes the verdict measurement,
-not judgment; + the escape route’s cost quantified (span stretch 3.7x)
-rather than asserted; + tolerance anchored to an existing committed
-constant (the test’s own floor) instead of a new invented one; +
-predicate edit verified against both thresholds. - Probe v1’s 1a
-continuity section skipped silently (NULL propagation; caught by absent
-output, fixed in probe2, mechanism verified into Learning 762); - crops
-at neighbourhood zoom only, no pixel-ruler measurement in the render
-(geometry established programmatically, matching the S712 disclosure
-pattern). Predecessor 9/10: next-step A was the exact deliverable with
-both populations enumerated and exact code pointers; the layout cache
-reproduced the census to the digit; the crop recipe ran zero-failure;
-the only material gap was the committed structural-residual test that
-already named the 6 – this session’s most decisive context, found via a
-doc-comment cross-reference instead of the handoff.
+\<free-text: S721 +/- — plus: read-every-hit discipline flipped two
+classifications before they became errors (devtools out despite many
+hits, markdown kept despite zero direct hits); renv question settled by
+precedent (S637 526c7fec, covr absent from lock), not guesswork;
+CI-safety of the quarto drop verified (pkgdown.yaml needs: website)
+before removal. Minus: the first grep pattern set was
+library()/::-shaped and would have missed the markdown engine dependency
+without a deliberate secondary sweep; check’s non-interactive exit-1
+briefly read as a failure before the log was inspected.\>
 
 ``` handoff
-session: S712
-date: 2026-09-18
+session: S720
+date: 2026-09-19
+status: complete
+
+```handoff
+session: S720
+date: 2026-09-19
 status: complete
 self_score: 9
 predecessor_score: 9
-active_task: DONE, item CLOSED as acceptable. Census class (d) duplicate-adjacent assessment (S711 next-step A, owner-picked via AskUserQuestion at Phase 0): both sites rendered as 100%/2.2x/context crops (6 PNGs), local geometry verified programmatically against fresh current-engine layouts, verdict owner-ratified via a second AskUserQuestion with the crops in front of them. BACKLOG block removed per the S686 completed-item convention. Assessment session, no package files touched, no TDD phases.
-what_was_done: Phase 0 backfill e099a6f9 (1 commit, 1788e2b8 -- the predicted self-reconcile shape, measured exactly 1); claim 7a3a49f4. Probe (scratchpad/s712_probe.R) recomputed BOTH fixture layouts fresh (default rectilinear) rather than trusting the S696 cache: census rows reproduced to the digit (Track C dx=120.0 exactly, Real 375 dx=119.9999999992; both same-row, zero nodes between; dashed dup-connector present in the edge frame at both sites). Crops via the Learning 732 recipe (scratchpad/s712_crop.R, moveTo + raw-viewport capture): Track C reads cleanly (70-px rim gap, connector plainly visible); Real 375 structurally identical but the short connector is obscured by unrelated long-range chords -- a class (c) density issue, not an adjacency defect (extra separation would lengthen the connector and worsen exactly that clutter). Owner ratified: acceptable, close, no separation follow-up. Coupled-prose check: fidelity article has zero class-(d) references (grep-verified), nothing owed. Also closed S711's open loop: R-CMD-check on the close-out head completed green in-session (4/4, run 35390065689). No new learning appended (routine assessment on existing recipes; stated, not silent).
-next_steps: (A) Census class (b) (READY, M): decide the census-predicate tolerance for the 2 noise rows, then assess whether the 6 real 60-180 px union-dot offsets are minSep-forced or QP-reducible (R/makePedigreeDiagramData.R, .solveJointQP()); re-verify the coupled fidelity-article prose; scratchpad/s712_layouts.rds + s712_crop.R are a ready-made render path for the same fixtures. (B) Census curved-chord (READY, M): arc-modelling measurement pass replacing the 1,668-chord upper bound -- this session's Real-375 site is a concrete motivating example. (C) MHC polish (Housekeeping, S). (D) Owner decisions pending: package-split disposition, pointer-block sweep ratification, REUSE registration. (E) Informational: dashboard copy stale (v2.14.0 vs v2.18.0); R/appServer.R:168 re-throw observer reported-not-changed; untracked leftovers unchanged; LabKey remainder BLOCKED; local ahead of origin by this session's commits -- push decision is the owner's.
-key_files: scratchpad/s712_probe.R:1 (geometry probe), scratchpad/s712_crop.R:1 (reusable crop renderer, fixture-keyed), docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-02_findings.csv:3 (Track C row) and :1679 (Real 375 row -- CSV unchanged, frozen audit record), CHANGELOG.md:29 (S712 entries), BACKLOG.md:109 (class b, now the top census item), BACKLOG.md:128 (curved-chord)
-gotchas: (1) Fresh baseline still 2,434 blocks (failed=0, error=0, skipped=184, warning=48) -- no package files touched; S709's gotchas apply verbatim, read them in docs/archive/SESSION_NOTES-through-2026-09-18.md. (2) s712_layouts.rds was computed at S712 -- recompute before reuse if any layout-engine change lands (the probe rebuilds both layouts in ~3 s; the ~2-min figure in s696_crop.R's header predates the QP engine's current speed). (3) The census CSV is frozen -- a closed class is NOT edited out of it; closure lives in CHANGELOG.md. (4) Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0; measure it. (5) The makePedigreeMatingLayout() unresolved-collision warning (1 Track C, 56 Real 375) is the documented residual disclosure, not a regression signal.
-runtime_smoke: live chromote renders of the real engine's own layout output ARE the deliverable's runtime evidence (6 captures, both fixtures); no package runtime behavior changed -- docs/BACKLOG/ledger edits only
-changelog_ref: 263d48ec
-commit: 263d48ec
+active_task: context_budget.py ADOPTED with honest ceilings; methodology_trim.py budget SETTLED at the old 65,536 B cadence (pass --budget-bytes 65536 on every run, recorded in CLAUDE.md); the owed SESSION_NOTES.md trim executed (79,738 B to 3,500 B). BACKLOG.md:119 item DONE and removed. Both decisions owner-ratified via AskUserQuestion. Docs/process tooling, no TDD phases, no .R files touched. Open: owner push decision; the new CLAUDE.md reduction campaign item (READY, M) is the remedy for the deliberate CLAUDE.md red.
+what_was_done: Claim 572562f1. Evaluation: seed-config run exit 2; --calibrate REJECTED (0.60 B/token, negative -6,015-token intercept, n=119, R^2=0.73 — implausible/confounded), dashboard-measured 2.27 B/token adopted instead; overlap analysis showed CLAUDE.md is the one Phase-0 mandated read nothing gates. Adoption bc6be1d0: .context-budget.json rewritten with derivations in _ keys (SESSION_NOTES.md max_bytes = 65,536 = the trimmer cadence, one remedy per red; max_lines 1000 at measured ~69 B/line; structure patterns fixed for this file's real layout — note max 0 is a literal bound, not a disable); budget:protected fence around CLAUDE.md's Project Overview; per-clone no-growth pre-commit hook installed; Phase 0 check + red-by-design expectations recorded in CLAUDE.md; completed BACKLOG item removed, successor CLAUDE.md-reduction item filed; committed --no-verify (the hook correctly refuses the CLAUDE.md growth this commit itself makes — recorded bypass). Trim c079c27a: 21 records to docs/archive/SESSION_NOTES-through-2026-09-19.md under --budget-bytes 65536, verify.sh L1/L2/L3 OK before commit; the hook ran live on this commit and passed the shrink path. Full suite re-run at close-out — result in the close-out CHANGELOG entry.
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~6 expected after close-out; estimate). (B) Suggests: audit (READY, S, near BACKLOG.md:133). (C) Owner decisions pending: package-split disposition (BACKLOG.md:71), REUSE registration (BACKLOG.md Housekeeping). (D) CLAUDE.md reduction campaign (new item, READY, M) — clears the by-design red.
+key_files: .context-budget.json:1 (calibrated config, derivations inline), CLAUDE.md:131 (Context-budget check, Additional Phase 0 steps), CLAUDE.md:293 (trigger-budget decision inside the methodology_trim.py checklist), BACKLOG.md:119 (CLAUDE.md reduction campaign item), docs/archive/SESSION_NOTES-through-2026-09-19.md:1 (shard + .verify.sh), SESSION_NOTES.md:33 (full S720 handoff)
+gotchas: Phase 0's python3 context_budget.py exits 2 with CLAUDE.md + resident red BY DESIGN until the reduction campaign lands — only NEW reds are findings; a SESSION_NOTES.md red means exactly one thing, a --budget-bytes 65536 trim is owed. The per-clone hook refuses any commit growing CLAUDE.md — shrink or --no-verify with the rationale recorded; fresh clones re-run install-hook. Every methodology_trim.py run needs --budget-bytes 65536. HANDOFFS.md was 62,667 B before this receipt and is within ~3 KB of the budget — this close-out measures it after appending and trims if it fires (result in the close-out ledger entry). The dashboard's SESSION_NOTES.md HIGH-flag text (trimmer answers NO_CONFIG) overstates — stock-class hardcoding vs the local extension; act on the size, not the text.
+runtime_smoke: The deliverable IS tooling: post-config context_budget.py run shows exactly the intended reds and both sync-drift checks ok; --selftest passes (refuse paths observed there); hook observed live passing the shrink path on c079c27a and bypassed with recorded rationale on bc6be1d0; trimmer verify.sh L1/L2/L3 OK pre-commit. R package untouched; full suite re-run at close-out as insurance.
+changelog_ref: bc6be1d0
+commit: 7e8ebc5f
 ```
-
-Self-score 9/10: + fresh layouts instead of the stale cache closed the
-engine-drift question before it could taint the evidence; + programmatic
-verification BEFORE rendering means the crops illustrate a measured fact
-(census values reproduced to the digit) rather than stand in for one; +
-proven recipe reuse, zero failed render iterations; + tight scope,
-class-(c) concern routed to its existing item. - The Real-375 short
-connector’s presence is established programmatically but not
-pixel-confirmed at that site (obscured by chord clutter; disclosed at
-the gate); - no learning row (correct, no signal, but stated).
-Predecessor 9/10: next-step A was the exact deliverable with site ids,
-values, precedent pointer, and the exact BACKLOG line; gotcha 3’s
-1-commit shape measured exactly 1; gotcha 2’s CI framing proved out
-(completed green in-session); nothing wrong found; only the crop
-recipe’s location (Learning 732/scratchpad) was left to one grep.
-
-``` handoff
-session: S711
-date: 2026-09-18
-status: complete
-self_score: 9
-predecessor_score: 9
-active_task: DONE. Owner-directed push to origin/master (S710 next-step A, owner-picked via AskUserQuestion at Phase 0): 34 commits pushed (955f6f19..afd33514), spanning S708 MHC Slice 4, the S709 export-preview crash fix, and the S710 ledger archive pass. All 4 on-push CI workflows green on afd33514 -- lint 5m43s, test-coverage 9m58s, pkgdown 16m52s, R-CMD-check 33m22s (runs 35386636842/857/853/874), watched to completion in-session and confirmed directly. Process/ops action, no code changes, no TDD phases.
-what_was_done: Phase 0 backfill 83618479 (1 commit, 0f7f94fe -- the predicted self-reconcile shape, measured exactly 1); claim afd33514 written BEFORE the push so the pushed head carries the session's own breadcrumb. Push executed, background watcher polled to matrix completion, conclusions re-verified via gh run list before recording. Close-out records committed and pushed immediately after (second push; its CI round is next Phase 0's to verify, per the S706 precedent). Nothing removed from BACKLOG.md (the push was a handoff next-step, not a BACKLOG block); no new learning appended (routine session, no signal -- stated explicitly, not silently). FM 28 reduction check: nothing to trim, all three ledgers remain sparse from S710's cuts.
-next_steps: (A) Census class (d) (READY, S): render the 2 duplicate-adjacent sites and judge acceptability. (B) Census class (b) (READY, M): decide the census-predicate tolerance for the 2 noise rows, then assess whether the 6 real 60-180 px union-dot offsets are minSep-forced or QP-reducible (R/makePedigreeDiagramData.R, .solveJointQP()); re-verify the coupled fidelity-article prose. (C) Census curved-chord (READY, M): arc-modelling measurement pass replacing the 1,668-chord upper bound. (D) MHC polish (Housekeeping, S). (E) Owner decisions pending: package-split disposition, pointer-block sweep ratification, REUSE registration. (F) Informational: dashboard copy stale (v2.14.0 vs v2.18.0); R/appServer.R:168 re-throw observer reported-not-changed; untracked leftovers unchanged; LabKey remainder BLOCKED.
-key_files: HANDOFFS.md:146 (this receipt), CHANGELOG.md:29 (S711 entries), docs/archive/SESSION_NOTES-through-2026-09-18.md:1 (S709 gotchas, still applicable), BACKLOG.md:109 (census class b), BACKLOG.md:128 (curved-chord), BACKLOG.md:142 (census class d)
-gotchas: (1) Fresh baseline still 2,434 blocks (failed=0, error=0, skipped=184, warning=48) -- neither S710 nor S711 touched package files; S709's gotchas apply verbatim, read them in docs/archive/SESSION_NOTES-through-2026-09-18.md. (2) The close-out push triggers one more CI round on the records/self-reconcile head -- expect completed success at Phase 0's gh run list; if red, that is NEW information (docs-only delta), report-don't-fix per the standing convention. (3) Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0 (the recurring shape); measure it. (4) origin/master is now in sync -- the long-running "N commits ahead" informational item is gone; don't re-report it from stale handoffs.
-runtime_smoke: n/a -- docs-only local changes; the deliverable's own verification IS the CI matrix on real runners (R CMD check, lint, coverage, pkgdown all green on the pushed head afd33514)
-changelog_ref: 827a7e67
-commit: 827a7e67
-```
-
-Self-score 9/10: + claim-before-push left the pushed head
-self-describing (a crash mid-watch would still have left origin carrying
-the session claim); + waited for the full matrix and re-verified the
-watcher’s claim directly before recording it; + clean
-precedent-following scope, no package files touched, no scope creep. -
-The close-out push’s own CI round is deliberately unwatched (S706
-precedent, docs-only delta on a just-verified tree) – a defensible but
-real open loop handed to the next Phase 0; - a routine session yields no
-learning row, correct but worth stating. Predecessor 9/10: next-step A
-was the exact deliverable – the ~32 recount measured 32 exactly, the
-span description and clean-state assurance made the decision presentable
-with zero re-derivation, and gotcha 5’s 1-commit backfill shape measured
-exactly 1; nothing material missing for this scope; nothing wrong found.
-
-``` handoff
-session: S710
-date: 2026-09-18
-status: complete
-self_score: 9
-predecessor_score: 9
-active_task: DONE. Ledger archive pass (S709 next-step A, owner-picked): all three ledger byte triggers were firing and all three now clear with wide headroom -- SESSION_NOTES.md 87,984 -> 4,771 B (19 records), HANDOFFS.md 78,503 -> 16,481 B (13 receipts), CHANGELOG.md 68,117 -> 9,471 B (40 records), each into its own docs/archive/*-through-2026-09-18.md shard, L1/L2/L3 verified by each shard's verify.sh. Docs-only maintenance; no package files touched.
-what_was_done: Phase 0 backfill 7ab986e2 (1 commit, 710fea78 -- the predicted self-reconcile shape, measured exactly 1); claim 852b5292. Cut-boundary discovery: the default cut on every file collided with the existing -through-2026-09-17 shards (S704-S708 all share that date), so legal retained counts were probed with dry-run --cut N -- SESSION_NOTES only >=15 or <=2, HANDOFFS only <=2, CHANGELOG only <=8 (Learning 761). Trims committed one file per commit, largest non-colliding retention satisfying both stop conditions: SESSION_NOTES retain 2 (7fbe17b7), HANDOFFS retain 2 -- the pending S710 stub + S709's complete receipt, never zero (3dbe15f3), CHANGELOG retain 8, trimmed LAST so the two earlier trim-injected P1A entries landed before its cut (447f2beb). No --force needed anywhere: the Learning 549/586/594 SRF refusals never fired (large post-2026-09-17-archive denominators). Receipt-count sentence regenerated to 2 by the tool. Learning 761 appended; records commit follows this receipt.
-next_steps: (A) Push decision (owner call): ~32 commits ahead after close-out (recount with git rev-list --count origin/master..HEAD); span includes S708 MHC Slice 4, the S709 crash fix, and this archive pass; no package files touched since the S709-verified clean state. (B) Census class (d) S, class (b) M, curved-chord M -- unchanged. (C) MHC polish (Housekeeping, S). (D) Informational: package-split disposition pending; dashboard copy stale; untracked leftovers unchanged; R/appServer.R:168's deliberate re-throw observer reported-not-changed (S709 next-step E).
-key_files: docs/archive/SESSION_NOTES-through-2026-09-18.md:1 (S709's full handoff lives here now), docs/archive/HANDOFFS-through-2026-09-18.md:1 (S696-S708 receipts), docs/archive/CHANGELOG-through-2026-09-18.md:1 (S697-S708 ledger records), PROJECT_LEARNINGS.md:2217 (Learning 761), HANDOFFS.md:135 (regenerated receipt-count sentence)
-gotchas: (1) Baseline still 2,434 blocks (failed=0, error=0, skipped=184, warning=48) -- no package files touched; S709's gotchas still apply verbatim, read them in docs/archive/SESSION_NOTES-through-2026-09-18.md. (2) The live ledgers are deliberately sparse now -- older context is one hop away via the front-matter shard pointers; sparseness is not a ghost session. (3) The NEXT archive pass hits the same SHARD_EXISTS collision on the 2026-09-18 boundary -- probe legal cuts with dry-run --cut N first (Learning 761). (4) Every methodology_trim.py --write injects its own entry into CHANGELOG.md -- trim CHANGELOG last in any multi-file pass. (5) Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0; measure it.
-runtime_smoke: n/a -- docs-only (ledger files and docs/archive shards; zero R/, tests/, man/, vignettes/ changes)
-changelog_ref: a6b26716
-commit: a6b26716
-```
-
-Self-score 9/10: + dry-run probes before every write meant no rollback
-was ever needed; + CHANGELOG trimmed last so the tool’s own injected
-entries stayed inside the trimmed budget; + every shard verified via its
-own verify.sh before its commit, and a final –check on all three files
-confirms no trigger fires. - The deep SESSION_NOTES cut archived S709’s
-handoff record mid-session (before this handoff existed), briefly
-leaving the live ACTIVE TASK stub-only – lossless but a crash in that
-window would have cost the next session an archive hop; - pre-announced
-an owner –force gate the evidence never required. Predecessor 9/10:
-next-step A was the exact deliverable with measured sizes and the
-“measure CHANGELOG first” instruction that proved out; the shard-name
-collision constraint – the pass’s dominant obstacle – was unflagged
-(discoverable only by doing); the predicted SRF refusals never fired
-(labeled expectation, zero cost).
-
-``` handoff
-session: S709
-date: 2026-09-18
-status: complete
-self_score: 9
-predecessor_score: 9
-active_task: DONE. Export-preview session-crash fix (top BACKLOG Up Next item, found S708): the LD-block, sequence, and MHC export-preview observers in R/modMarkerGenetics.R read every upstream reactive through safeRead() + req(); the sequence observer ports the MHC Dragon 5 missing-id pre-check (sequenceExportMissingIds -- build nothing, say why); the three guidance renderUIs name the could-not-be-processed state; the eager E2E data-ready observe() (a second, unknown, NO-CLICK crash the RED tests exposed) is defused too. Strict TDD, every gate owner-approved via AskUserQuestion.
-what_was_done: Phase 0 backfill 148cccaa (1 commit, cc540bf3); claim cf97540e. PRE-RED probes: sequence missing-id crash reachable; LD missing-id crash structurally unreachable (markerLdBlock subsets to founderIds, R/markerLdBlock.R:236 -- owner re-ratified defusal-only); testServer DESTROYS the module session on an observer error so survival is directly assertable (Learning 759, refining 758). Fresh baseline before any test: 2,427/0/0/183/42 (S708 exactly). RED cd63250c: 6 testServer blocks + 1 live E2E in the already-registered ROH E2E file; 5 blocks fail via shiny.destroyed.error, guard passes by design, E2E reproduces the live disconnect on the real tab (isConnected FALSE). GREEN 310c731d (R/modMarkerGenetics.R only): the RED malformed-upload block dying at UPLOAD time exposed the eager data-ready observe({req(comparison())}) as a real no-click crash, fixed with req(safeRead(comparison)); target file 66/66; both live E2E tests green (Phase 3E); lint 0. NEWS 76807b2a + spell-check reword 61c544a3. Full suite once on final source: 2,434 = 2,427 + the 7 new; failed=3 all triaged (2 wall-clock benchmarks = CPU contention from running lint/render beside the suite, both files green on quiet re-run, Learning 760; 1 spelling fixed, re-run green); warnings 42->48 = the i152 fixture's documented markerKinship NA warnings x 3 new instances. devtools::check 0 errors, 1 W + 1 N = the known untracked-local-file artifacts. BACKLOG item removed; Learnings 759/760 appended; records commit follows this receipt.
-next_steps: (A) Archive pass (READY, S): HANDOFFS.md (72,242 B) and SESSION_NOTES.md (77,442 B) byte triggers BOTH firing; CHANGELOG.md was 62,816 B before this close-out -- measure; expect SRF small-denominator refusals needing an owner --force (Learnings 549/586/594). (B) Census class (d) S, class (b) M, curved-chord M -- unchanged. (C) Push decision (owner call): ~25 commits ahead after close-out (recount with git rev-list --count origin/master..HEAD); local suite + check clean apart from the untracked-file artifacts. (D) MHC polish (Housekeeping, S). (E) Informational: R/appServer.R:168's observe re-throws cleanedStudbook errors by DELIBERATE design comment -- same crash class as Learning 758, reported not changed, owner's call; package-split disposition pending; dashboard copy stale; untracked leftovers unchanged.
-key_files: R/modMarkerGenetics.R:740 (LD observer), R/modMarkerGenetics.R:816 (sequence observer + pre-check), R/modMarkerGenetics.R:807 (sequenceExportMissingIds), R/modMarkerGenetics.R:929 (MHC observer), R/modMarkerGenetics.R:1261 (fixed data-ready observe), R/modMarkerGenetics.R:1036 + :1075 + :1182 (guidance renderUIs), tests/testthat/test_modMarkerGenetics.R:1554 (S709 section), tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R:192 (disconnect E2E), PROJECT_LEARNINGS.md tail (Learnings 759/760), NEWS.Rmd:374 (General Fixes entry)
-gotchas: (1) Fresh baseline now 2,434 blocks (failed=0, error=0, skipped=184, warning=48); skipped +1 = new opt-in E2E; warnings +6 = documented fixture warnings, not a regression. (2) Never run heavy jobs beside the full suite -- the 2 wall-clock benchmark files fail under CPU contention; re-run alone before treating as a regression (Learning 760). (3) Observer-crash tests assert session survival directly: click, then read any module state -- shiny.destroyed.error is the honest RED signal; req(x()) does NOT guard against x() erroring (Learning 759). (4) devtools::check keeps 1 W + 1 N from the untracked local files; CI never sees them. (5) Expect ~1 self-reference commit past the CHANGELOG frontier at next Phase 0; measure it. (6) Both ROH E2E tests share makeGenomicRohE2ePedigreeFile(dropIds=); the partial variant writes a different filename so the fixtures cannot clobber each other.
-runtime_smoke: live shinytest2 E2E in headless Chrome, both tests: the pre-existing full export flow (8 assertions, upload -> preview -> confirm -> unlock) unchanged, and the new disconnect check -- pedigree missing S050, Generate Preview clicked, Shiny.shinyapp.isConnected() TRUE, guidance names "1 animal ... not in the loaded pedigree"
-changelog_ref: 33b0a556
-commit: 33b0a556
-```
-
-Self-score 9/10: + PRE-RED probes overturned two load-bearing brief
-assumptions (LD unreachability; destroyed-session observability) before
-any test existed; + the RED honest-failure discipline surfaced a second
-real no-click crash the brief didn’t know about; + user-boundary runtime
-verification (live disconnect reproduced pre-fix, survival proved
-post-fix); - ran lint/render beside the single full-suite launch,
-causing 2 spurious benchmark failures and a re-triage cycle (Learning
-760); - the NEWS spell-check flag surfaced only in the full suite; - the
-mid-GREEN data-ready-observer fix was decided solo (disclosed in
-commit + gate, but a mid-session owner flag would have been cleaner).
-Predecessor 9/10: complete brief with the fix-pattern pointer and the
-E2E suggestion that became the key test; the “guidance text is the ONLY
-observable” claim understated the destroyed-session surface, and the
-eager data-ready observer wasn’t flagged; “port to BOTH observers” was
-evidence-retired for LD.

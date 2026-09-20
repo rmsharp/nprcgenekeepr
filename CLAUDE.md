@@ -157,8 +157,8 @@ The build-equivalent for this R package (relocated here from
 
 | Purpose | Command | Pass criteria |
 |----|----|----|
-| Full package check | [`devtools::check()`](https://devtools.r-lib.org/reference/check.html) or `R CMD check` | No errors, no warnings, no notes (ideally) |
-| Test suite | [`devtools::test()`](https://devtools.r-lib.org/reference/test.html) or [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html) | All tests pass |
+| Full package check | `devtools::check()` or `R CMD check` | No errors, no warnings, no notes (ideally) |
+| Test suite | `devtools::test()` or [`testthat::test_local()`](https://testthat.r-lib.org/reference/test_package.html) | All tests pass |
 
 **Fast single-file test:**
 `Rscript -e 'Sys.setenv(NOT_CRAN = "true"); suppressMessages(pkgload::load_all(".", quiet=TRUE)); testthat::test_file("tests/testthat/test_X.R", reporter="summary")'`
@@ -246,17 +246,12 @@ open GitHub issues/PRs not yet mirrored into `BACKLOG.md`). Format
 - Effort is a rough S/M/L, not a time estimate – lets the user pick by
   capacity as well as priority.
 - **A flat `BACKLOG.md` tag grep is not sufficient on its own (found
-  S507, 2026-08-10):** also check `docs/audits/*SEQUENCING_AUDIT*.md`
-  (or any doc whose own text establishes a ratified next-pickup order
-  for a cluster of still-open GitHub issues) and surface that cluster’s
-  own next item as a first-class numbered option – never folded into the
-  flat “Informational: open GitHub issues” bucket just because no inline
-  `BACKLOG.md` tag exists for it. A ratified sequencing audit’s order
-  lives in prose, not a per-item tag, so the tag-only grep misses it
-  entirely; this exact gap independently hit both S506’s own handoff
-  `next_steps` field and S507’s own initial Phase 0 rendering before the
-  owner caught it. See `PROJECT_LEARNINGS.md` Learning
-  506. 
+  S507):** also check `docs/audits/*SEQUENCING_AUDIT*.md` (or any doc
+  whose text establishes a ratified next-pickup order for still-open
+  issues) and surface that cluster’s next item as a first-class numbered
+  option — never folded into “Informational” just because no inline tag
+  exists. A ratified order lives in prose, so the tag-only grep misses
+  it entirely (`PROJECT_LEARNINGS.md` Learning 506).
 - This formats the *existing* Phase 0 step 7 report; it adds no new
   `SESSION_RUNNER.md` step and does not change the mandatory
   STOP-and-wait-for-the-user after the report.
@@ -297,67 +292,46 @@ STOP-and-wait-for-the-user: the question itself **is** the wait.
   which item to pick up this session, not restate the tags (those live
   in each option’s description).
 
-**Untracked-file ghost-session check (found S479, 2026-08-08):** Phase 0
-step 6’s ledger reconcile is keyed entirely on `git log` gaps, which is
-blind to a session that produces real work but makes zero commits — that
-work is visible only as untracked files in `git status`, with nothing
-distinguishing harmless local scratch from a completed deliverable
-nobody recorded. Found when 2 well-formed
-`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_*.md` docs (dated
-2026-08-05, 2026-08-06) and 8 correspondent GitHub issues (#146-153) sat
-untracked/unmirrored for 1-4 days, invisible to the standard commit-gap
-check (only S478’s own self-referential sha-backfill commit existed
-since the prior documented session). At Phase 0 step 7, alongside the
-standard `git status`, treat any untracked file whose modification time
-predates today by more than one session cycle, and whose content reads
-as a completed deliverable rather than scratch/config, as a secondary
-ghost-session signal — cross-check newly-filed GitHub issues against
-whether their content traces to such a file. Before bulk-acting on a
-batch of untracked files found this way, open and date-check each one
-individually: grouping by directory/extension alone can wrongly
-implicate unrelated old clutter (this session nearly did) or wrongly
-clear a copyright risk that only surfaces by actually reading the file
-(also this session — see PROJECT_LEARNINGS.md Learning 479 for both
-near-misses). See `CHANGELOG.md` 2026-08-08.
+**Untracked-file ghost-session check (found S479, 2026-08-08):** step
+6’s ledger reconcile is keyed on `git log` gaps and is blind to a
+session that produced real work but zero commits. At Phase 0 step 7,
+treat any untracked file whose modification time predates today by more
+than one session cycle, and whose content reads as a completed
+deliverable rather than scratch/config, as a secondary ghost-session
+signal — cross-check newly-filed GitHub issues against such files.
+Before bulk-acting on such a batch, open and date-check each file
+individually: grouping by directory/extension alone misclassifies in
+both directions (two near-misses: `PROJECT_LEARNINGS.md` Learning 479).
 
 **GitHub Actions CI status check (decided S545, 2026-08-13,
-owner-directed via `AskUserQuestion`):** neither `SAFEGUARDS.md`’s
-Session Recovery Protocol nor `SESSION_RUNNER.md`’s Phase 0 checklist
-inspects GitHub Actions at all, so a red CI run is invisible to
-orientation unless someone thinks to check it directly. This let a
-genuinely failing `R-CMD-check.yaml` run sit unnoticed across 13
-sessions (S526-S539) — `PROJECT_LEARNINGS.md` Learning 547 — until the
-owner asked directly.
+owner-directed):** run `gh run list --branch master --limit 10` as part
+of Phase 0 step 4, **every session, unconditionally** — never
+push-conditioned (a scheduled workflow can go red with no push) and
+always the plain, unfiltered form, never `--workflow=<one>` (Learning
+549: `test-coverage.yaml` failed while `R-CMD-check.yaml` was green on
+the same commit). **Report, don’t fix:** fold any
+non-`completed success` run into the step 7 report; diagnosing/fixing it
+is its own session deliverable (“1 and done”), never a Phase 0 inline
+repair. Origin (a red `R-CMD-check.yaml` run unnoticed for 13 sessions)
+is Learning 547; rejected alternatives are recorded in Learning 770.
 
-Run `gh run list --branch master --limit 10` as part of Phase 0 step 4
-(alongside `git status`/ `git log`/`git diff --stat`), **every session,
-unconditionally** — not conditioned on whether this session (or the
-prior one) pushed. This project has 7 active workflows
-(`R-CMD-check.yaml`/`lint.yaml`/`pkgdown.yaml`/`test-coverage.yaml`/`shinytest2.yaml`/`rhub.yaml`/
-`R-CMD-check-scheduled.yaml`), 4 of which trigger on every push to
-`master`; an unconditional check also catches a scheduled or
-manually-triggered workflow going red with no intervening local push at
-all — a gap a push-conditioned check would miss entirely. Deliberately
-the plain, unfiltered form (never `gh run list --workflow=<one>`, which
-only confirms that one workflow) — `PROJECT_LEARNINGS.md` Learning 549’s
-own practical rule, from the session that found `test-coverage.yaml`
-failing while `R-CMD-check.yaml` was green on the same commit.
-
-- **Report, don’t fix.** Fold any non-`completed success` run into the
-  Phase 0 step 7 report exactly like a ghost-session or ledger-reconcile
-  finding — surfaced to the user, not silently repaired or silently
-  ignored. Diagnosing/fixing a red run found this way is its own session
-  deliverable (per `SESSION_RUNNER.md`’s “1 and done”), not something
-  Phase 0 does inline.
-- **Rejected alternatives** (recorded so a future session doesn’t
-  re-litigate from scratch): a push-conditioned cadence (misses
-  scheduled-workflow-only drift, needs extra “since when” tracking
-  logic); GitHub branch protection instead of an observation step (a
-  repo-config change, not a `SESSION_RUNNER.md`/`CLAUDE.md` process
-  change, and doesn’t stop local commits stacking up unpushed in the
-  first place — a different problem than “nobody looked”); holding with
-  no change (rejected — 13 sessions of precedent was judged sufficient
-  to act on).
+**Context-budget check (adopted S720, 2026-09-19, owner-ratified):** run
+`python3 context_budget.py` at Phase 0 step 5, alongside the dashboard.
+**Report, don’t fix** — fold findings into the step 7 report like any
+other health signal. Expected state since the S725 reduction campaign:
+**no file over its ceiling** (`CLAUDE.md` may sit in the 24,000 B warn
+band — headroom, not a defect); a `CLAUDE.md` red means new growth is
+owed a reduction, and a `SESSION_NOTES.md` red means a
+`methodology_trim.py --budget-bytes 65536` trim is owed (the two
+ceilings are deliberately the same number). A **missing
+`budget:protected` fence** finding on `CLAUDE.md` means someone removed
+the Project Overview fence — restore it before anything else. The
+per-clone pre-commit hook (`python3 context_budget.py install-hook`)
+refuses only commits that *grow* an over-ceiling file; re-install it on
+a fresh clone, bypass with `--no-verify` only when a legitimate growth
+commit is owed (the decision then lands as a `.context-budget.json`
+diff, not a silent override). `.context-budget-history.jsonl` stays
+gitignored (S719 decision).
 
 ### Additional task-to-workstream mappings
 
@@ -366,367 +340,155 @@ failing while `R-CMD-check.yaml` was green on the same commit.
 ### Additional close-out checks
 
 **Citation checklist (issue \#120, 2026-07-08):** any session that adds
-a new displayed statistic/estimator to the package must update
+a new displayed statistic/estimator must update
 `inst/extdata/ui_guidance/population_genetics_terms.html` (or the
 relevant UI guidance page) and the statistic’s own roxygen `@references`
-in the same session that ships it, rather than deferring to a later
-audit. (Source:
-`docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md` Structural
-Observation 1 — citation gaps correlated with recency, not centrality:
-the metrics missing coverage were consistently the ones added without
-their own citation pass.)
+in the same session it ships. (Source:
+`docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md`,
+Structural Observation 1.)
 
-**Tutorial/article documentation checklist (owner-directed, 2026-07-30,
-Session 436):** a plan that ships a new user-facing Shiny feature (a new
+**Tutorial/article documentation checklist (owner-directed, S436,
+2026-07-30):** a plan that ships a new user-facing Shiny feature (a new
 tab, control, or interaction pattern) must include a documentation phase
 updating the relevant tutorial/article
 (`vignettes/articles/colony-manager-guide.qmd` and/or the matching
-`vignettes/manual_components/*.Rmd` component) describing the feature’s
-purpose and use — not just code + tests + `NEWS.md`. Surfaced when a
-mid-session owner directive (“this plan needs to include augmenting
-articles and tutorials”) prompted a check that found issue \#129’s
-already-shipped pedigree-diagram Diagram tab (S433/S434) has **zero**
-mentions in any vignette or article (`grep` across
-`vignettes/**/*.Rmd`/`vignettes/articles/*.qmd` returns nothing) —
-tracked as GitHub issue \#139 rather than fixed retroactively in the
-triage session that found it, per the established “report an
-incidentally-discovered, unrelated pre-existing gap, don’t fix it
-mid-session” precedent (`PROJECT_LEARNINGS.md` Learning 382).
+`vignettes/manual_components/*.Rmd`) describing the feature’s purpose
+and use — not just code + tests + `NEWS.md`. Origin (issue \#129’s
+Diagram tab shipped with zero vignette/article mentions → issue \#139):
+Learning 770; the report-don’t-fix precedent it followed: Learning 382.
 
-**NEWS.Rmd entry checklist (owner-directed, 2026-08-01, Session 448;
-extended S628, 2026-08-23 with a plain-language criterion):** any
-session that ships a new exported function or a new user-facing Shiny
-feature/control must add a `NEWS.Rmd` entry (in the current
-development-version section, matching the style of existing entries) in
-the same session it ships, rather than deferring to a later audit —
-mirroring the citation (issue \#120) and tutorial/article (Session 436)
-checklists above. Ratified after issue \#130’s entire 5-slice sequencing
-chain (Slices 1-5, Sessions 442-447:
-[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md),
-[`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)/[`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md),
-[`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md),
-[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md),
-[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md),
-plus the new Marker Genetics Shiny module) shipped with zero `NEWS.Rmd`
-entries between them, unlike sibling issues \#125-#129 from the same
-audit-triage batch, each of which got one in its own shipping session
-(`BACKLOG.md` Housekeeping, `PROJECT_LEARNINGS.md` Learning 433). Slices
-1-5 were backfilled retroactively this session (Session 448) as a
-one-time exception to the general no-retroactive-fix precedent above,
-since the gap spans the package’s entire user-visible changelog for a
-shipped capability; the checklist applies prospectively, same-session,
-from here on. **Plain-language criterion (extended S628, 2026-08-23):**
-“matching the style of existing entries” above also means passing a
-plain-language/no-jargon check before commit — plain language for a
-colony-manager/veterinarian reader, not an R programmer; state what
-changed and why it matters to that reader in one or two short sentences;
-avoid naming algorithms, internal function mechanics, or statistical
-jargon unless the reader would already know the term (domain vocabulary
-like “kinship”/“genotype”/“heterozygosity” is fine;
-implementation-flavored phrasing like “vectorized matrix algebra,”
-“KING-robust,” or “a CERVUS-style multilocus LOD score” is not —
-describe what it does for the reader instead, not how it’s computed).
-Added after finding the dev-version section had regrown back into
-verbose/technical style within 8 days of S538’s prior one-time trim
-(386→134 lines/26 entries, `PROJECT_LEARNINGS.md` Learning 544) — that
-trim carried no standing criterion of its own, so nothing caught the
-drift back to 315 lines/57 entries by S619. Deliberately docs-only, not
-an automated lint: a banned-term word list would false-positive on
-legitimate domain vocabulary this audience already knows, so the check
-stays a session’s own judgment call against this criterion, applied at
-each of the (typically many) sessions that touch the file, not a
-one-time mechanical gate.
+**NEWS.Rmd entry checklist (owner-directed, S448; plain-language
+criterion added S628):** any session that ships a new exported function
+or user-facing Shiny feature/control must add a `NEWS.Rmd` entry
+(current development-version section, matching existing style) in the
+same session it ships (origin — issue \#130’s five slices shipped with
+none: Learning 433). **Plain-language criterion:** the entry must read
+plainly for a colony-manager/veterinarian reader, not an R programmer —
+what changed and why it matters, in one or two short sentences; domain
+vocabulary (“kinship”/“genotype”/“heterozygosity”) is fine,
+implementation-flavored phrasing (“vectorized matrix algebra,”
+“KING-robust,” “a CERVUS-style multilocus LOD score”) is not.
+Deliberately a per-session judgment check, not an automated word list (a
+banned-term lint would false-positive on legitimate domain vocabulary).
+Drift history behind the criterion: Learnings 544/770.
 
-**`a2interactive.Rmd` script-callable-function checklist
-(owner-directed, 2026-08-02, Session 450; scope broadened S478,
-2026-08-04):** any new exported, script-callable function **or new
-parameter/argument added to an already-documented exported function**
-should eventually get a demonstration section (or a demonstration
-update) in `vignettes/a2interactive.Rmd` (the scriptable/interactive-R
-tutorial) — but unlike the citation, tutorial/article, and `NEWS.Rmd`
-checklists above, this coverage is **deferred, not same-session**: it
-happens in a dedicated documentation pass after the feature has been
-fully reviewed and has stabilized, not in the shipping session itself,
-to avoid documenting something that may still change. A future session
-picking up this work should identify any exported, script-callable
-functions (not Shiny-UI-only features, which the tutorial/article
-checklist already covers) — or existing documented functions that gained
-new parameters — added/changed since the last `a2interactive.Rmd`
-documentation pass and add matching demonstration sections. Ratified
-after issue \#130’s entire marker-genetics function family
-([`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md),
-[`markerObservedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md)/[`markerExpectedHeterozygosity()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerExpectedHeterozygosity.md),
-[`markerParentageExclusion()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md),
-[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md),
-[`markerFst()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md))
-shipped across Sessions 442-447 with zero `a2interactive.Rmd` mentions —
-discovered S447 (`BACKLOG.md` Housekeeping, `PROJECT_LEARNINGS.md`
-Learning 435) and backfilled this session as a one-time exception,
-matching the `NEWS.Rmd` checklist’s own backfill precedent; the
-checklist itself applies prospectively, as a deferred obligation, from
-here on. Scope broadened S478 after finding the checklist’s original
-“new function” wording missed exactly this shape of gap: issue \#142
-added an `edgeStyle` parameter to the *already-documented*
-[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-(S465/S468), and the existing `a2interactive.Rmd` “Pedigree Diagram”
-section silently went stale (including its own render code drifting out
-of sync with the app’s actual reserved-node-id-prefix set) until the
-user directly asked for it — see `PROJECT_LEARNINGS.md` Learning 478.
+**`a2interactive.Rmd` script-callable-function checklist (owner-directed
+S450; scope broadened S478):** any new exported, script-callable
+function **or new parameter added to an already-documented exported
+function** should get a demonstration section (or update) in
+`vignettes/a2interactive.Rmd` — **deferred, not same-session**: a
+dedicated documentation pass after the feature has been reviewed and
+stabilized, to avoid documenting what may still change. A session
+picking this up inventories exported functions (not Shiny-UI-only
+features — the tutorial/article checklist covers those) and new
+parameters on documented ones since the last such pass. Origins:
+Learning 435 (issue \#130’s marker-genetics family shipped
+undemonstrated), Learning 478 (the `edgeStyle` parameter gap that
+broadened the scope to parameters).
 
-**GitHub issue close-out checklist (found S475, 2026-08-04):** any
-session whose close-out marks a `BACKLOG.md` item fully DONE, where that
-item names a GitHub issue number, must close the issue in the *same*
-session — a `gh issue close --reason completed --comment "..."` citing
-the `CHANGELOG.md` entry and verification evidence, matching the
-established \#131/#134/#135/#139 precedent — rather than deferring to “a
-future session should consider closing this.” Ratified after finding 3
-consecutive instances of this exact gap: issue \#142 (implemented S468)
-stayed open 7 sessions before S475 closed it; issue \#143 (implemented
-S472) stayed open 3 sessions, flagged-but-not-acted-on by 2 intervening
-orientation reports; issue \#144 (implemented S474) stayed open 1
-session. Each was caught only by a *later* session’s Phase 0 orientation
-cross-checking `gh issue list` against `BACKLOG.md`’s own DONE markers,
-never by the shipping session’s own close-out. See
-`PROJECT_LEARNINGS.md` Learning 475.
+**GitHub issue close-out checklist (found S475, 2026-08-04):** a session
+whose close-out marks a `BACKLOG.md` item fully DONE, where the item
+names a GitHub issue number, must close the issue in the *same* session
+— `gh issue close --reason completed --comment "..."` citing the
+`CHANGELOG.md` entry and verification evidence — never “a future session
+should consider closing this.” Ratified after 3 consecutive deferred
+closes (issues \#142/#143/#144): Learning 475.
 
-**CI-break tracking convention (owner-directed, 2026-08-26, S636):** a
-CI break found live in-session (e.g. a red GitHub Actions run) does
-**not** get its own GitHub issue. Fix it as found if the fix is in scope
-and clear; otherwise defer it to a future session via a `BACKLOG.md` “Up
-Next” item with full root-cause detail — the same place any other undone
-work lives. This is a deliberate contrast with the “GitHub issue
-close-out checklist” directly above: that checklist governs *closing*
-issues tied to shipped `BACKLOG.md` DONE items, not *opening* new ones
-for a CI-health finding. Ratified after S636 filed issue \#165 for a
-newly-discovered `R-CMD-check.yaml` break, then closed it same-session
-per a live owner correction — see `PROJECT_LEARNINGS.md` Learning 669
-for the full incident (a
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-WARNING accepted as a documented trade-off against local tooling turned
-out to also trip CI’s own stricter `error-on: "warning"` gate, the first
-time the introducing commits had ever been pushed).
+**CI-break tracking convention (owner-directed, S636, 2026-08-26):** a
+CI break found live in-session does **not** get its own GitHub issue.
+Fix it as found if the fix is in scope and clear; otherwise defer it via
+a `BACKLOG.md` “Up Next” item with full root-cause detail. (Deliberate
+contrast with the issue *close-out* checklist above, which governs
+closing issues on shipped DONE items, not opening ones for CI-health
+findings.) Full incident: Learning 669.
 
 **Lint close-out checklist (found S477, 2026-08-04):** any session that
 adds or modifies a tracked `.R` file must run `lintr::lint_package()` —
 package loaded first via
-[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html),
-per `PROJECT_LEARNINGS.md` Learning 224’s ground-truth methodology (an
-unloaded lint run produces spurious `object_usage_linter` noise CI never
-sees) — on touched files before closing out, and fix or
-`# nolint`-suppress (with a documented rationale, matching the
-established false-positive precedent, `PROJECT_LEARNINGS.md` Learnings
-224/461) anything it flags there, rather than relying on
-`.github/workflows/lint.yaml`’s post-push CI run to catch it. Ratified
-after finding that CI job — which already exists and runs
-`lintr::lint_package()` on every push with `LINTR_ERROR_ON_LINT: true` —
-went red for 2 real violations S472 introduced in
-`R/makePedigreeDiagramData.R`, with S473-S476 all committing on top of
-the red run without noticing or fixing it: `master` carries no branch
-protection requiring the check to pass, so a failing run blocks nothing
-and is easy to never look at. Fixed S477; see `PROJECT_LEARNINGS.md`
-Learning 477.
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+(an unloaded run produces spurious `object_usage_linter` noise CI never
+sees: Learning 224) — on touched files before close-out, and fix or
+`# nolint`-suppress (with documented rationale: Learnings 224/461)
+anything flagged, never relying on the post-push `lint.yaml` CI run
+(`master` has no branch protection, so a red run blocks nothing). Origin
+(a red lint run unnoticed for 4 sessions): Learning 477.
 
 **`_pkgdown.yml` reference-coverage checklist (found S496,
 2026-08-09):** any session that adds a new exported function must add it
-to a `_pkgdown.yml` reference: group (any existing group satisfies
-`test_pkgdown_reference_config.R`’s coverage guard — the “All exposed
-functions” catch-all in alphabetical position is the simplest choice
-absent a more specific curated group) in the same session it ships,
-rather than relying on that guard’s own full clean regression read to
-catch the gap later. Ratified after finding this exact gap hit twice:
-issue \#130 Slice 1’s own
-[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
-(“the gap class Slice 1 hit and had to fix retroactively,”
-`BACKLOG.md`), and issue \#147 Slice 1’s
-[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
-(S496) — the latter caught only because a
-[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
-run for an unrelated reason also surfaced a second, pre-existing
-instance
-([`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md),
-shipped S494 with no NAMESPACE export or `_pkgdown.yml` entry either)
-failing the SAME guard, which cannot be fixed for only one entry since
-the test evaluates coverage collectively. See `PROJECT_LEARNINGS.md`
-Learning 495 for the adjacent
-[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
-verification discipline this same session established.
+to a `_pkgdown.yml` reference: group in the same session (any existing
+group satisfies `test_pkgdown_reference_config.R`’s coverage guard — the
+“All exposed functions” catch-all in alphabetical position is the
+default choice). The guard evaluates coverage collectively, so one
+missing entry blocks unrelated fixes. Origin (the gap hit twice,
+incl. [`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md))
+and the adjacent `devtools::document()` verification discipline:
+Learning 495.
 
-**BACKLOG completed-item removal checklist (owner-directed, 2026-09-11,
-S686 post-close-out chat):** a session that completes a `BACKLOG.md`
-item REMOVES the item’s block entirely in the same commit (the base
-Phase 3F rule — never an inline `[x]` marking): the completed record
-goes to `CHANGELOG.md` (enriched with any load-bearing verification
-detail the block held); any detail a live open item needs is written
-INTO that open item’s own description (forward-carrying context, never a
+**BACKLOG completed-item removal checklist (owner-directed, S686,
+2026-09-11):** a session that completes a `BACKLOG.md` item REMOVES the
+item’s block entirely in the same commit — never an inline `[x]`: the
+completed record goes to `CHANGELOG.md` (enriched with any load-bearing
+verification detail the block held); detail a live open item needs is
+written INTO that item’s own description (forward-carrying, never a
 pointer back at a DONE block); any still-open sub-thread is extracted as
-its own standalone item first. Rationale (owner-ratified): a `[x]` DONE
-block kept as de-facto reference documentation is a *weaker* record —
-findable only by someone who already knows it’s there, frozen rather
-than maintained, and it compounds a Phase-0 mandated read
-(`SESSION_RUNNER.md` FM \#28’s “compounding term with no decay term”).
-The 28 pre-existing `[x]` blocks are a one-time Housekeeping backfill
-item (2026-09-11), not license to keep the pattern.
+its own item first. Rationale (a kept DONE block is a weaker record and
+compounds FM \#28’s mandated read) and the S687 backfill sweep: Learning
+740.
 
-**CHANGELOG.md ledger-format resolution (2026-07-08, Session 325 —
-“freeze legacy, go forward”):** canonical v3.1+ defines `CHANGELOG.md`
-as an “Authoritative Action Ledger” — dated
-`### YYYY-MM-DD · [issue #N] | [BL-N] | [ad hoc]` entries, one per
-action. This project’s pre-existing ~30+-session history (dated
-subsections, no source tag) was **not** retroactively migrated — owner
-chose (via `AskUserQuestion`) to freeze it as-is rather than run a
-multi-session migration campaign to re-tag 303 already-closed entries.
-`CHANGELOG.md` now has a
-`## Legacy history (pre-ledger format, Sessions 1-324)` marker:
-everything below it is untouched original-format history; everything
-above it (from Session 325 forward) uses the canonical `[SOURCE]`-tagged
-format. New entries always go above the marker, never inside it. **A
-direct consequence for `methodology_trim.py` (found S518, 2026-08-11):
-the frozen legacy block is a permanently-pinned FOOTER (935,292 B /
-3,570 lines as of S518), which the trim tool structurally cannot archive
-— `CHANGELOG.md`’s byte trigger will fire indefinitely regardless of how
-aggressively the ~S325-onward tagged records are trimmed, since the
-footer alone already exceeds the 65,536 B budget 14×. Routine trims of
-the tagged-record portion are still worth doing (real, if small,
-reduction) but do not by themselves resolve the file’s read-truncation
-risk; only re-opening the S325 decision (a migration campaign) would.**
+**`CHANGELOG.md` legacy history (S325 froze it; S547 relocated it):**
+the pre-ledger-format history (Sessions 1-324, ~935 KB) lives in
+[`docs/archive/CHANGELOG-legacy-pre-S325.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-legacy-pre-S325.md)
+— frozen as-is (S325 owner decision: no retroactive re-tagging),
+relocated out of the live ledger S547 after the S546 owner-directed
+decision and full verification (Learning 554 carries the record:
+`classify_zones()` proof, fence scan, shard discovery, the
+SRF-denominator side effect). New entries never go in it; decision chain
+detail: Learning 770.
 
-**S325 reopened, decision only (S546, 2026-08-13, owner-directed via
-`AskUserQuestion`):** presented with 3 options — (a) scope a lighter
-bulk relocation of the frozen legacy block into its own archive file
-as-is, no per-entry re-tagging; (b) commit to the full multi-session
-re-tag campaign this note originally declined; (c) hold as a permanent
-known limitation — the owner picked (a). `BACKLOG.md` Housekeeping now
-carries the scoping/verification item (READY, Effort M): a future
-session must confirm the relocation doesn’t break
-`methodology_trim.py`’s L1/L2/L3 losslessness invariants and that no
-script/audit expects the legacy block inline, before moving it. (b) and
-(c) remain valid fallbacks if that verification finds a blocker — not
-discarded, just not attempted first. This is a decision-only entry; no
-file has moved yet.
+**`methodology_trim.py` local-customization checklist (S518; corrected
+S617/S719):** the tool ships from the `rmsharp/methodology` fork’s
+`main` (a sync against an official *tag* never touches it) and carries
+**one local modification** — this project’s `SESSION_NOTES.md`
+`LedgerSpec` + `_session_notes_date` helper; a **`NO_CONFIG` result**
+from `python3 methodology_trim.py --file SESSION_NOTES.md --check` is
+the signal a sync dropped it. Every sync from the fork’s `main`: (1)
+save the extension first — after S719,
+`git show 63b3286f -- methodology_trim.py` is the patch (re-derive from
+the latest re-apply commit after future syncs); (2) `bin/sync --force`
+and commit exactly the files the dry run listed; (3) `git apply --check`
+then `git apply` the patch, in its own commit; (4) confirm `--check` no
+longer says `NO_CONFIG` and a `--file SESSION_NOTES.md --cut 1 --force`
+dry run prints `L1_OK`/`L2_OK`/`L3_OK`. Stays until the framework
+supports project-supplied ledger configs (fork BL-32). **Budget (decided
+S720, owner-ratified): pass `--budget-bytes 65536` on every
+`methodology_trim.py` run, `--check` included** — the 1.5.0 default is
+196,608 B and this project keeps the old 65,536 B cadence;
+`.context-budget.json`’s `SESSION_NOTES.md` ceiling is the same number
+so the two tools tell one story. Provenance history and rejected
+alternatives: Learning 770.
 
-**S325 verified and executed (S547, 2026-08-13):** both verification
-checks passed, and the relocation was executed the same session (the
-item’s own “if verification allows, execute” framing). **Check 1
-(`methodology_trim.py` L1/L2/L3):** the legacy footer contains zero
-triple-or-more backtick/tilde fence markers anywhere (confirmed by grep
-and by walking the tool’s own `fence_scan()` over the extracted content)
-— the fence-scanner defect class found against `SESSION_NOTES.md`
-(`CLAUDE.md`’s own note above) cannot occur here, there is nothing
-fence-shaped to misparse. `classify_zones()` run directly against the
-post-relocation content reports zero findings (footer cleanly empty, all
-13 records intact), and a real `--check` run against the modified
-working tree (before commit) reports `[CHECK] trigger does not fire` at
-20,929 B — down from 954,673 B. **Check 2 (nothing expects it inline):**
-grepped `docs/`, `bin/`, `*.py` for “Legacy
-history”/“pre-S325”/“pre-ledger format” — no script or tool has a live,
-mechanical dependency on the block’s location; `methodology_trim.py`’s
-own `archive_events()` discovers shards by glob + a live-file-size-drop
-check, not by filename parsing, so the new shard’s non-`-through-<date>`
-name (`CHANGELOG-legacy-pre-S325.md`, chosen because this is a one-time
-bulk move, not a dated cut) is still correctly picked up. The only
-references found were prose in already-closed planning docs
-(`docs/planning/issue{137,146,147,149,151}-*.md`, each with a stale
-“close-out prepends an entry above `## Legacy history`” checklist line)
-and historical narrative in frozen archive shards/`PROJECT_LEARNINGS.md`
-— left untouched, matching the project’s standing precedent against
-retroactively editing completed/frozen documents. **Executed:** the
-block (935,287 B / 3,567 lines, byte-for-byte verified against what
-`classify_zones()` reported as the footer before any edit) moved to
-[`docs/archive/CHANGELOG-legacy-pre-S325.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-legacy-pre-S325.md);
-`CHANGELOG.md`’s “shard convention” section and its live-pointer
-paragraph updated to describe the new location; `CHANGELOG.md` is now
-20,929 B / 283 lines, both triggers clear. **Side effect, not previously
-anticipated:** because `archive_events()`’s SRF baseline is now this new
-shard (pre=954,673 B, post=20,929 B), the SRF denominator for future
-`CHANGELOG.md` archive-refusal checks becomes ~934,000 B — resolving,
-for a long while, the small-denominator `SRF_RED` false-refusal pattern
-Learnings 549/550 diagnosed. See `PROJECT_LEARNINGS.md` for the full
-verification record.
+**`CHANGELOG.md` legacy forms under the current ledger rules (S719):**
+ledger-format: 2; the rules live in the synced
+`docs/methodology/FRAMEWORK_APPARATUS.md` §The Action Ledger. Two
+pre-existing shapes stay as written (nothing already written is
+retrofitted): (a) **13 headings use a bare `[BL]` tag** the anchored
+audit doesn’t count — expected, not a defect; new entries use the closed
+vocabulary `[issue #<N>]`, `[BL-<id>]` (this project’s own backlog ids
+only — methodology-fork work is `[ad hoc]`), or `[ad hoc]`. (b) **The
+empty `## 2026-08` sits ABOVE `## 2026-09`**, so read “prepend under the
+topmost month” as: prepend under the pointer blocks beneath the month
+the entry belongs to; open a new month’s heading at the top. A claim
+commit’s entry is marked *(in progress)* and close-out adds its own
+entry — an entry once committed is never edited.
 
-**`methodology_trim.py` local-customization checklist (found S518,
-2026-08-11; corrected S617, 2026-08-20; corrected again S719,
-2026-09-19):** `methodology_trim.py` was **not** part of real upstream
-`KJ5HST/methodology` in any tagged release through v3.7 (S617 confirmed
-this by inspecting each tag’s tree), and reached this project via the
-2026-08-10 sync (`18d8e3c7`) from the `rmsharp/methodology` fork’s
-unreleased `main` (`v3.6-255-gc43e7ee`). **That is no longer true of the
-fork’s `main`, which now distributes it** (`bin/_manifest.py`, the
-`starter-kit/methodology_trim.py` entry): the S719 sync (BL-57 P10, from
-`v3.7-964-gce14b3f`) rewrote it, taking it from 1.1.2 to 1.5.0. A sync
-against an official *tag* still never touches it. The file carries **one
-local modification** — this project’s `SESSION_NOTES.md` `LedgerSpec`
-entry and its `_session_notes_date` helper (49 lines, from S518
-`c75bb9da` and S528 `9bfc8bb4`); the canonical tool has no config for
-that ledger, and a **`NO_CONFIG` result** from
-`python3 methodology_trim.py --file SESSION_NOTES.md --check` is the
-signal a sync dropped it. **Every future sync from the fork’s `main`
-therefore has this shape:** `bin/sync` refuses the locally modified file
-(exit 2), so (1) save the extension first —
-`git diff <previous-sync-commit> HEAD -- methodology_trim.py > extension.patch`
-(after S719 the sync commit is `b773ddb6` and the extension’s own
-re-apply commit is `63b3286f`, so
-`git show 63b3286f -- methodology_trim.py` is the patch); (2)
-`bin/sync --force` and commit exactly the files the dry run listed; (3)
-`git apply --check` then `git apply` the patch, in its own commit; (4)
-confirm `--check` no longer says `NO_CONFIG` and that
-`--file SESSION_NOTES.md --cut 1 --force` (a dry run) prints `L1_OK`,
-`L2_OK` and `L3_OK`. This stays until the framework settles how a
-project supplies a ledger config of its own (BL-32 in the fork).
-**Trigger budget (S719):** the 1.5.0 default byte budget is 196,608 B
-(1.1.2’s was 65,536 B), and this project takes the tool’s default — the
-synced `HANDOFFS.md` “Size” section states no size of its own and defers
-to the tool’s trigger. At S719 `SESSION_NOTES.md` (71,192 B) was over
-the old budget and under the new one, and `HANDOFFS.md` and
-`CHANGELOG.md` were under both. To restore the old cadence, pass
-`--budget-bytes 65536` on every `methodology_trim.py` run (the tool
-keeps no per-project setting). Whether to keep the old cadence is an
-open owner decision.
-
-**`CHANGELOG.md` legacy forms under the current ledger rules (S719,
-2026-09-19):** the ledger was brought to `ledger-format: 2` (the
-pointer-and-marker paragraph above `## 2026-08`); the rules themselves
-now live in the synced `docs/methodology/FRAMEWORK_APPARATUS.md` §The
-Action Ledger, not in this file. Two pre-existing shapes are left as
-written, per that section’s own “entries written before a project
-adopted this vocabulary stay as written; nothing already written is
-retrofitted”: (a) **13 headings use a bare `[BL]` source tag**, which
-the anchored audit
-(`grep -E '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[(issue #[0-9]+|BL-[^]]+|ad hoc)\]'`)
-does not count — that gap is expected, not a defect. New entries use the
-closed vocabulary: `[issue #<N>]`, `[BL-<id>]` (this project’s own
-backlog ids only; the methodology fork’s `BL-57` is not one — such work
-is `[ad hoc]`), or `[ad hoc]`. (b) **`## 2026-08` (empty) sits above
-`## 2026-09`**, the reverse of the rules’ newest-month-on-top order, so
-“prepend under the topmost `## YYYY-MM`” read literally would file
-September entries under August. Prepend under the pointer blocks beneath
-`## 2026-09` (the month the entry belongs to); when a new month starts,
-open its heading above `## 2026-08`, as the rules say. The rules also
-want a claim commit’s entry marked *(in progress)* and close-out to add
-its own entry rather than edit the claim’s — an entry once committed is
-never edited.
-
-**`SESSION_NOTES.md` archive fence-scanner defect (found S518,
-2026-08-11; RESOLVED S527/S528, 2026-08-12) — historical, not current
-state:** `methodology_trim.py`’s simplified fence-scanner
-(`_FENCE = re.compile(r"^(\`{3,}\|~{3,})(.\*)\$“)`) originally misread`SESSION_NOTES.md`'s one 4-backtick-delimited *inline code span* (a legitimate way to show literal triple-backtick text inline) as an unclosed block-fence opener because it happened to start a physical line, putting 42% of the file into a false "inside a fence" state and hiding most real session-record headings from the partition. S527 fixed the fence misread (raising the tool's partition count from 173 toward the true total) and, in the same pass, found and fixed a second, independent`-word-boundary
-regex defect (`PROJECT_LEARNINGS.md` Learning 533) that separately hid
-every”Handoff Evaluation (by Session N)” heading (they end in `)`, a
-non-word character, so a trailing `\b` placed after the whole
-alternation could never fire on that branch). Both fixes now live in
-`methodology_trim.py`’s `SESSION_NOTES.md` `LedgerSpec` (`record_start`,
-with the `\b` moved inside the “Did” branch only). **Archiving now works
-cleanly:** S539 (2026-08-12) archived 612 records to
-`docs/archive/SESSION_NOTES-through-2026-08-12.md`; a follow-up pass
-swept 40 stragglers (2026-08-11 → 2026-08-13) to
-`docs/archive/SESSION_NOTES-through-2026-08-13.md`; S594 (2026-08-15)
-archived a further 76 records to
-`docs/archive/SESSION_NOTES-through-2026-08-15.md`, after a routine
-`SRF_RED` refusal (small-denominator artifact of the prior archive being
-tiny — see the `SRF_RED` pattern documented for
-`CHANGELOG.md`/`HANDOFFS.md` in `PROJECT_LEARNINGS.md` Learnings
-549/586/587, now confirmed on this file too) resolved via owner-directed
-`--force`, all three L1/L2/L3 losslessness checks passing each time. No
-known defect currently blocks `SESSION_NOTES.md` archiving.
+**`SESSION_NOTES.md` archive fence-scanner defect (found S518; RESOLVED
+S527/S528) — historical:** two `methodology_trim.py` regex defects once
+hid most session-record headings from the archive partition; both fixes
+live in the tool’s `SESSION_NOTES.md` `LedgerSpec` (Learning 533). No
+known defect blocks `SESSION_NOTES.md` archiving — every pass since S539
+has verified L1/L2/L3. Expect the recurring `SRF_RED` small-denominator
+refusal pattern on any ledger whose last archive was small (Learnings
+549/586/587; owner-directed `--force` is the established resolution).
 
 ### Development Process Contract override
 
@@ -742,11 +504,11 @@ workstream **and** the RED→GREEN→REFACTOR gates.
 
 ### Project-specific Learnings
 
-Project institutional memory (Sessions 1–664+; 704 learnings, ~2.7 MB)
-lives in
+Project institutional memory lives in
 [`PROJECT_LEARNINGS.md`](https://github.com/rmsharp/nprcgenekeepr/PROJECT_LEARNINGS.md)
 — extracted from this file to keep `CLAUDE.md` within its size budget
-(Claude Code targets ~200 lines / ~25 KB). **Read it when you need
+(count entries with `grep -c '^#### Learning ' PROJECT_LEARNINGS.md`;
+never hand-maintain the number here). **Read it when you need
 prior-session context; append new learnings there, not here.** Base
 methodology-level learnings remain in `SESSION_RUNNER.md`.
 

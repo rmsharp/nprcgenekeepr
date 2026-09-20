@@ -135,6 +135,22 @@ now**, with 3 revisit conditions and 3 optional in-place prep steps).
 accepts or rejects the recommendation; nothing else to do here until
 then. \## Housekeeping
 
+**Measure how much this R package has grown due to the pedigree-drawing
+feature — a rough estimate (±20%) is sufficient** (owner-requested
+mid-S721, 2026-09-19, READY, Effort S) – quantify the package-size
+growth attributable to the pedigree-diagram/ drawing capability (issue
+\#129’s Diagram tab, S433/S434, through the S643-S699 pedigree-drawing
+campaign): e.g. lines/bytes of the feature’s own source and test files
+(the layout core in `R/makePedigreeDiagramData.R`, the Diagram-tab Shiny
+module, `R/comparePedigreeStructure.R`, their `tests/testthat/` files,
+and the pedigree-diagram vignettes/articles) vs. package totals, and/or
+a before/after comparison against a pre-feature commit (~2026-07-29,
+before S433). The file-level coupling inventory in
+`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`
+already names the feature’s file set and is a good starting point. Owner
+explicitly accepts a rough ±20% estimate – shared-infrastructure
+attribution does not need to be precise.
+
 **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing
 binary hangs on `macos-latest`’s `ChromoteSession$new()` bootstrap**
 (found S619, 2026-08-20, incidental to the chromote CDP-timeout fallback
@@ -164,66 +180,6 @@ which the same research found NOT evidenced for
 `browser-actions/setup-chrome`’s actual download/unzip pipeline; or
 filing a new `rstudio/chromote` upstream issue, since no existing issue
 there matches this exact macOS+GHA+live-CDP-timeout signature).
-
-**Evaluate adopting `context_budget.py` (the methodology tool that puts
-ceilings on the files Phase 0 mandates reading) and settle the
-ledger-trigger budget** (found S617, 2026-08-20; re-scoped S719,
-2026-09-19; READY, Effort S – a research/scoping session, not an
-implementation session) – the tool is a token/context-budget tracker,
-the tooling counterpart to the FM \#28 “unbounded mandatory read”
-failure mode. **State as of S719:** the S719 sync (BL-57 P10) INSTALLED
-`context_budget.py` and the untouched seed `.context-budget.json` (and
-`quality_ratchet.py` + an empty `.quality-gates.json`); all are
-build-ignored, and `.context-budget-history.jsonl` /
-`.quality-gates-results.json` are gitignored. Nothing has been
-calibrated or run: the seed’s ceilings (e.g. `CLAUDE.md` `max_bytes`
-28,000, `SESSION_NOTES.md` `max_lines` 400) are the methodology fork’s
-own, not measurements of this project, and this project’s `CLAUDE.md` is
-far over the seed’s ceiling. So the decision is now “calibrate and
-adopt, or delete”, given this project already tracks file-size risk via
-`methodology_dashboard.py` and `methodology_trim.py`. If adopting: run
-`python3 context_budget.py --calibrate`, replace the seed ceilings with
-measured ones, and decide whether to track
-`.context-budget-history.jsonl` (the methodology repo tracks it so its
-growth-run trigger survives a fresh clone; this project’s `.gitignore`
-currently ignores it, matching `dashboard_history.jsonl`). **Also settle
-here (owner decision):** `methodology_trim.py` 1.5.0’s byte budget
-defaults to 196,608 B where 1.1.2’s was 65,536 B; S719 took the default
-(recorded in `CLAUDE.md`), so `SESSION_NOTES.md` (71,192 B) fires only
-under `--budget-bytes 65536`. A trim of it is one dry-run-verified
-command away (`--file SESSION_NOTES.md --cut 1 --force`; S719’s dry run:
-L1-L3 OK, 71,192 B -\> 4,018 B).
-
-**`DESCRIPTION`’s `Suggests:` mixes real test/example/vignette
-dependencies with dev-tooling-only packages that belong in a
-`Config/Needs/...` field instead** (found 2026-08-20, incidental to
-S615’s own DESCRIPTION edit, owner-directed via chat, READY, Effort S) –
-owner-stated rule: `Suggests:` is for packages optional code in
-`tests/`, `man/examples`, or `vignettes/` actually loads; anything
-needed only by dev tooling (website building, linting, coverage, release
-scripts) belongs in its own `Config/Needs/<name>:` field instead (`pak`
-and similar tools understand these named dev-dependency groups), kept
-out of `Suggests:` entirely. This session already fixed one instance
-directly (`covr` moved to the new `Config/Needs/coverage: covr`,
-matching the file’s own pre-existing `Config/Needs/ website: quarto`
-precedent and confirmed via `.github/workflows/test-coverage.yaml:27`
-already installing `covr` itself via `extra-packages: any::covr`,
-independent of `DESCRIPTION`). Not fixed this session (out of Phase 2b’s
-own scope, flagged not touched per owner direction): `devtools` and
-`roxygen2` are also listed in `Config/renv/profiles/ dev/dependencies`
-(line 88) as well as `Suggests` – redundant, or intentionally
-dual-listed for a reason not investigated this session; `pkgdown` sits
-in `Suggests` with no matching `Config/Needs/website` entry even though
-`quarto` (already `Config/Needs/website`) is ALSO still separately
-listed in `Suggests` – looks like the same
-pkgdown-belongs-in-Config/Needs/ website gap, not confirmed. A future
-session should audit every `Suggests:` entry against “does any file
-under `tests/`, `vignettes/`, or a roxygen `@examples` block actually
-load this via [`library()`](https://rdrr.io/r/base/library.html)/`::`”
-and relocate anything that fails that test to the matching
-`Config/Needs/<name>` group, verifying
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-still reports 0 new warnings/notes after.
 
 **Register `rmsharp/nprcgenekeepr` with api.reuse.software so the REUSE
 badge renders its real compliance status** (found S607, 2026-08-18,
@@ -263,11 +219,10 @@ size, and the mechanism would be a norm plus a check, not an archiver”)
 is worth adopting for `CHANGELOG.md` specifically.
 
 **iCloud “conflicted copy” duplicate `.R` files corrupt
-[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)/`R CMD check`
-output** (found S461, Effort S, not a code defect) – `R/appServer 2.R`
-and `R/modMarkerGenetics 2.R` (carried forward many sessions as passive
-noise) are SOURCED by
-[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)/[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+`devtools::document()`/`R CMD check` output** (found S461, Effort S, not
+a code defect) – `R/appServer 2.R` and `R/modMarkerGenetics 2.R`
+(carried forward many sessions as passive noise) are SOURCED by
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)/`devtools::document()`
 like any other `.R` file, silently merging their own stale roxygen
 comments into the SAME generated `.Rd` page as the current source –
 confirmed twice this session (`man/appServer.Rd`,
@@ -286,31 +241,24 @@ relocation had NOT yet happened (`pwd` still resolves to the original
 iCloud-synced path) – this item cannot be closed until the move actually
 completes.
 
-**[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
-spelling NOTE has drifted again – 6 new words, not caught by any session
-since S461** (found S465, Effort S, incidental – confirmed pre-existing,
-not caused by this session’s own diff via a stash test) –
-`man/makePedigreeMatingLayout.Rd:40` (“sibship”, “waypoint”) and
-`vignettes/a2interactive.Rmd:355,371,429, 437,440,441`
+**`devtools::check()`’s spelling NOTE has drifted again – 6 new words,
+not caught by any session since S461** (found S465, Effort S, incidental
+– confirmed pre-existing, not caused by this session’s own diff via a
+stash test) – `man/makePedigreeMatingLayout.Rd:40` (“sibship”,
+“waypoint”) and `vignettes/a2interactive.Rmd:355,371,429, 437,440,441`
 (“duplicateToReal”, “js’s”, “makePedigreeMatingLayout”, “vis”) are
-flagged in
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)’s
-`spelling.R` test diff (comparing fresh `spelling.Rout` against the
-committed `spelling.Rout.save`) but are not yet in `inst/WORDLIST`.
-Mirrors the S443/S448/S452 spelling-gap pattern (Learning 426,
-`CLAUDE.md`’s own “Additional close-out checks” precedent) – a future
-session should hand-add these 6 words to `inst/WORDLIST` in `LC_ALL=C`
-byte-order position (not via
+flagged in `devtools::check()`’s `spelling.R` test diff (comparing fresh
+`spelling.Rout` against the committed `spelling.Rout.save`) but are not
+yet in `inst/WORDLIST`. Mirrors the S443/S448/S452 spelling-gap pattern
+(Learning 426, `CLAUDE.md`’s own “Additional close-out checks”
+precedent) – a future session should hand-add these 6 words to
+`inst/WORDLIST` in `LC_ALL=C` byte-order position (not via
 [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html),
-per S230 convention) and re-verify
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-drops to the pre-existing iCloud duplicate-file warning +
-vignette-engine note only. **Count grown to 9 words as of S490
-(2026-08-09), still not fixed** – incidental to issue \#136 Slice 2’s
-own
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-verification pass. The original 6
-(`sibship`/`waypoint`/`duplicateToReal`/`js's`/
+per S230 convention) and re-verify `devtools::check()` drops to the
+pre-existing iCloud duplicate-file warning + vignette-engine note only.
+**Count grown to 9 words as of S490 (2026-08-09), still not fixed** –
+incidental to issue \#136 Slice 2’s own `devtools::check()` verification
+pass. The original 6 (`sibship`/`waypoint`/`duplicateToReal`/`js's`/
 `makePedigreeMatingLayout`/`vis`) are joined by 3 more: `discoverable`
 (`NEWS.md:140`), a bare `js` (`a2interactive.Rmd:533`, distinct token
 from `js's`), and `unshaded` (`_pedigree_browser.Rmd:55`) – all 3
@@ -329,62 +277,6 @@ real CI (all recent `R-CMD-check.yaml` runs green), likely a local
 hunspell/ dictionary-state difference from CI’s runner, matching this
 item’s own established “local devtools::check() catches words CI’s own
 spelling gate doesn’t” pattern.
-
-**The “10 pre-existing baseline warnings” carried in every
-full-regression report since S448 have never been root-caused, and were
-introduced by a test-fixture gap, not a real production-code issue**
-(found S487, incidental to issue \#133 Slice 2’s own regression read;
-Effort S, low priority) – the owner asked directly (“we had zero at last
-release”) after seeing `warning: 10` in this session’s clean regression
-read, which no prior session had actually traced. Root cause: both
-`tests/testthat/test_modMarkerGenetics.R` “cross-center” tests (added by
-commit `a319e0c5`, S447, 2026-08-01, implementing issue \#130 Slice 5)
-upload a hand-derived 2-locus toy fixture (Center A n=4, Center B n=6)
-chosen for exact-fraction Fst arithmetic, not for kinship completeness.
-`modMarkerGeneticsServer`’s reactive graph incidentally also computes
-marker-based kinship (the Slice 1 feature) on any uploaded Center-A
-file, and in this fixture `'CA1'`/`'CA2'` share no heterozygous locus –
-[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
-correctly warns and returns `NA` for that pair (working as designed, not
-a bug), 5x per test x 2 tests = 10. **Confirmed CRAN v2.0.0 (released
-2026-07-26) predates S447 (2026-08-01) and genuinely shipped with a
-clean, 0-warning suite** – the owner’s recollection was correct. S447’s
-own close-out reported “0 failed/0 error” but never actually stated a
-warning count; S448 (the very next session) independently found S447’s
-self-reported
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-“0/0/0” also didn’t hold up under re-verification (a missed spelling
-gap) – the same kind of unverified self-report, in the same session, is
-the most likely origin of this gap too, though this was never directly
-confirmed against S447’s own raw test output (not preserved). Every
-session from S448 through S486 (~40 sessions) carried “10 pre-existing …
-warnings” forward as an accepted baseline without investigating what it
-was. Not fixed this session (`PROJECT_LEARNINGS.md` Learning 382’s
-“report, don’t fix mid-session” precedent – out of scope for a Slice 2
-legend/documentation TDD session; owner directed file-and-continue via
-`AskUserQuestion`). A future session should either (a) wrap the
-`session$setInputs(genotypeFile = ...)` calls in these 2 tests with
-[`suppressWarnings()`](https://rdrr.io/r/base/warning.html) (matching
-the established `PROJECT_LEARNINGS.md` Learning 273(d) precedent: “a
-degenerate out-of-contract input … often misbehaves further downstream –
-suppress the incidental warning, not the branch”), or (b) adjust the
-2-locus fixture so `CA1`/`CA2` share a heterozygous locus – but only
-after re-verifying the exact-fraction Fst values (`58/1001`, `139/308`,
-`614/2233`) still hold, since the fixture was hand-derived specifically
-to produce those numbers. **Count grown from 10 to 15, found
-incidentally S504 (2026-08-10), still not fixed** – a full clean
-regression read during issue \#149 Slice 1 showed `warning: 15`,
-confirmed via a `git stash` comparison to be pre-existing (identical on
-unmodified `HEAD`), unrelated to that session’s own diff. The 3rd
-5-warning source is `test_modMarkerGenetics.R`’s
-“candidate-parent-assignment table is non-empty for a real (non-mocked)
-recorded-but-wrong-parent fixture (issue \#155)” block, added S502
-(2026-08-10) – a live, non-mocked genotype-file upload that incidentally
-triggers the same
-[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
-NA-warning path as the 2 original cross-center tests. A future session
-fixing this item should address all 3 test blocks, not just the original
-2.
 
 **`BACKLOG.md`’s own ledger-size housekeeping – editorial compression,
 not a `methodology_trim.py` config** (found S518, 2026-08-11, READY,
@@ -596,9 +488,8 @@ Example 4 reproducing S482’s own kinship2 counter-example directly
 design-document ratification (`AskUserQuestion`-gated judgment calls)
 then 1-3 implementation slices, each slice a full strict-TDD
 PRE-RED-\>RED-\>GREEN (-\>REFACTOR) cycle with clean regression +
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html) +
-live `shinytest2`/`chromote` verification, plus the
-citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd` documentation
+`devtools::check()` + live `shinytest2`/`chromote` verification, plus
+the citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd` documentation
 checklists applied per-slice: - **Issue \#133** (affected/phenotype
 status): design S485
 (`docs/planning/issue133-affected-status- pedigree-diagram-plan.md` –
@@ -867,10 +758,8 @@ regression tests; the median-of-3 -reps timing-stability fix is
 F_ROH metric (Ceballos et al. 2018 convention), reuses
 [`checkLocusMetadata()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md)’s
 coverage classification. `PROJECT_LEARNINGS.md` Learning 538 (a
-lower-than-baseline
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-NOTE count needs the same direct verification as a higher one)
-originates here. - **Slice 4** (S533): new
+lower-than-baseline `devtools::check()` NOTE count needs the same direct
+verification as a higher one) originates here. - **Slice 4** (S533): new
 [`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md)
 de-identification primitive, mirrors the established `obfuscate*` family
 pattern. `PROJECT_LEARNINGS.md` Learning 539 (verification tools must be
@@ -895,8 +784,7 @@ cause was a test pedigree fixture missing the required `birth` column,
 which silently blocked `req()` upstream of `showModal()`; fixed by
 completing the fixture.**
 
-Each slice: full clean regression 0 failed/0 error,
-[`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
+Each slice: full clean regression 0 failed/0 error, `devtools::check()`
 clean modulo pre-existing NOTEs, citation/`NEWS.Rmd`/`_pkgdown.yml`
 checklists applied per-slice (tutorial/article checklist satisfied at
 Slice 5; `a2interactive.Rmd` deferred per its own standing rule). See

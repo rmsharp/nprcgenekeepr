@@ -39,6 +39,601 @@ sentence. Written by `methodology_trim.py` v1.1.2.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.1.2.
 
+**Archived 35 record(s), 2026-09-18 → 2026-09-19** into
+[`docs/archive/CHANGELOG-through-2026-09-19.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-19.md)
+— same format, same order, frozen. Losslessness is proved by
+[`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh),
+which re-derives L1/L2/L3 from git; run it rather than trusting this
+sentence. Written by `methodology_trim.py` v1.5.0.
+
+### 2026-09-19 · \[ad hoc\] S726 claim: owner-directed push to `origin/master` (in progress)
+
+- Owner picked “Push to origin” from the Phase 0 4-option picker. 32
+  unpushed commits (S720–S725) at claim time; this claim commit rides
+  the push, so CI runs on it (S717 precedent). Deliverable: push + all 4
+  push-triggered workflows green. Close-out adds its own entry.
+
+### 2026-09-19 · \[ad hoc\] S725 post-close-out, owner-directed: recurring Word lock file `inst/extdata/reference/~$e Compounding Loop.html` deleted; standing `~$` guards added to `.Rbuildignore` and `.gitignore`
+
+- Owner picked “delete + Rbuildignore guard” from the close-out
+  `AskUserQuestion`. The file was a 162-byte Microsoft Word owner/lock
+  file (contents: just the Office username) for the local-only
+  `The Compounding Loop.html`; first deleted S568, recreated 2026-08-18
+  by a later Word open, and flagged by local `devtools::check()` as a
+  non-portable filename because `R CMD build` copies the working tree
+  (never committed — `git log --all` on the path is empty, so the `rm`
+  is a non-commit action recorded here).
+- **Guards (the new part beyond S568’s plain delete):** `.Rbuildignore`
+  gains unanchored `~\$` (paren-free per the file’s own regex-safety
+  rule); `.gitignore` gains `~$*` in the same reference-file section,
+  mirroring the S497/S567/S568 pairing precedent.
+- **Verified on a probe lock file** (`~$probe.txt`, created then
+  removed): `git check-ignore -v` matched `.gitignore:91:~$*`, and R’s
+  own `tools:::inRbuildignore()` — the code path `R CMD build` uses —
+  returned TRUE. The next local `devtools::check()` should drop the
+  non-portable-filename warning; the known warn/exit-1 gotcha recorded
+  in S724/S725 handoffs is thereby expected to clear (next check run
+  confirms).
+
+### 2026-09-19 · \[ad hoc\] S725 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `6d890617`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S725 commit. S725 total: 4 commits (claim `1ef168b8`,
+  deliverable `c8512d0d`, records `6d890617`, this one); ahead of
+  `origin/master` by 31 including the 27 pre-existing — push is the
+  owner’s call. Expect 0 undocumented commits past the frontier at next
+  Phase 0; measure it.
+
+### 2026-09-19 · \[ad hoc\] S725 close-out: session records (SESSION_NOTES handoff + S724 evaluation 9/10, HANDOFFS receipt complete) and post-append verification measurements
+
+- **Trigger states, measured AFTER the handoff/receipt text was
+  appended**, all under `--budget-bytes 65536`: `SESSION_NOTES.md`
+  42,524 B, `HANDOFFS.md` 36,925 B, `CHANGELOG.md` 46,092 B — none
+  fires; no trim owed this session. `context_budget.py`: no file over
+  its ceiling (`CLAUDE.md` 26,360 B, warn band = documented headroom).
+- **Close-out checklists:** no `.R` files touched → lint N/A; no new
+  exports/statistics/ Shiny features →
+  NEWS/pkgdown/citation/tutorial/`a2interactive` N/A; completed BACKLOG
+  item names no GitHub issue → issue close-out N/A; CI green all session
+  (on the S719 push); quality_ratchet 0/0 (manifest empty by design);
+  runtime smoke N/A — docs-only. Learning 770 doubles as the session
+  learning (its point 6 records the reduction method).
+- **Owner mid-session report, triaged not fixed (S723 precedent):** the
+  untracked `inst/extdata/reference/~$e Compounding Loop.html` is a
+  162-byte Microsoft Word owner/lock file (contents: just the Office
+  username) left behind on 2026-08-18 when the local-only
+  `The Compounding Loop.html` reference file was opened in Word; never
+  committed; its 3 parent files are individually `.Rbuildignore`d (lines
+  125-127) but the lock file is not, so `R CMD build` copies it into the
+  check tarball → the non-portable- filename warning. Remedy (delete +
+  optional `.Rbuildignore` `~$` guard) posed to the owner at close-out;
+  not acted on inside this session’s deliverable.
+- Sha self-reconcile commit follows with its own entry; expect 0
+  undocumented commits past the frontier at next Phase 0.
+
+### 2026-09-19 · \[ad hoc\] S725 deliverable: `CLAUDE.md` reduction campaign — 43,348 B → 26,360 B, under the 28,000 B ceiling; BACKLOG item removed (completed record here)
+
+- **Method (per the item):** each Adaptations block classified
+  sentence-by-sentence into operative rule vs incident narrative; rules
+  kept (verbatim or tightened) with origins compressed to Learning
+  pointers; narrative that existed nowhere else moved into the new
+  `PROJECT_LEARNINGS.md` Learning 770 (the relocation record — S545
+  rejected alternatives, S436 origin, NEWS.Rmd drift history,
+  `methodology_trim.py` provenance, the S325/S546/S547 legacy-history
+  decision chain); the full pre-reduction text is archived as
+  `git show 1ef168b8:CLAUDE.md`. Kept intact per the item: SESSION
+  PROTOCOL header, the `budget:protected` Project Overview fence, the
+  TDD contract (incl. Phase-gate format), Build/Test/Verify.
+  Hand-maintained learnings count replaced with its computing command
+  (Compute remedy); two sentences the reduction itself falsified were
+  updated (the context-budget check’s expected state; the trilogy’s “no
+  file has moved yet”).
+- **Verification:** `wc -c CLAUDE.md` = 26,360 B (≤ 28,000; warn band ≥
+  24,000 is headroom, documented as such); `python3 context_budget.py`
+  reports no file over its ceiling, resident total 26,360/34,000 green,
+  `budget:protected` fence intact; `grep -c '^#### Learning '` = 770,
+  matching the new relocation record’s number; every Learning number
+  cited by a new pointer verified present (382/433/435/475/477/478/479/
+  495/506/533/544/547/549/554/586/587/669/740). No `.R` files touched →
+  lint checklist N/A; no TDD phases (docs-only, S720–S724 precedent).
+
+### 2026-09-19 · \[ad hoc\] S725 claim: `CLAUDE.md` reduction campaign — move Adaptations incident narratives to `PROJECT_LEARNINGS.md`, keep rules + pointers, bring the file under its 28,000 B ceiling *(in progress)*
+
+- Owner-picked from the Phase 0 4-option picker. Phase 0: reconcile
+  clean (0 undocumented commits on both frontiers, predicted 0 by S724 —
+  measured 0); CI 10/10 green (still on the S719 push; the 27 unpushed
+  commits have never seen CI); dashboard 96/100; context-budget reds
+  by-design only (`CLAUDE.md` 43,348 B — this session’s target);
+  untracked files all long-standing/known. Stub + pending receipt ride
+  this commit.
+
+### 2026-09-19 · \[ad hoc\] S724 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `da52bd49`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S724 commit. S724 total: 4 commits (claim `1bd5ef9c`,
+  deliverable `eb3573bc`, records `da52bd49`, this one); ahead of
+  `origin/master` by 27 including the 23 pre-existing — push is the
+  owner’s call, and the 0-warning suite reaches CI only once pushed
+  (CI’s R-CMD-check runs this same suite). Expect 0 undocumented commits
+  past the frontier at next Phase 0; measure it.
+
+### 2026-09-19 · \[ad hoc\] S724 close-out: session records (SESSION_NOTES handoff + S723 evaluation 9/10, HANDOFFS receipt complete, `PROJECT_LEARNINGS.md` Learning 769) and post-append verification measurements
+
+- **Trigger states, measured AFTER the handoff/receipt/learning text was
+  appended**, all under `--budget-bytes 65536`: `SESSION_NOTES.md`
+  37,239 B, `HANDOFFS.md` 32,489 B, `CHANGELOG.md` 41,926 B — none
+  fires; no trim owed this session.
+- **`context_budget.py` post-append run:** exactly the documented
+  expected state — `CLAUDE.md` 43,348 B / resident total over (red by
+  design, remedy filed), `SESSION_NOTES.md` ok.
+- **Close-out checklists:** lint DONE (3 touched test `.R` files, 0
+  lints, package loaded first); no new exports/statistics/Shiny features
+  → NEWS/pkgdown/citation/tutorial/ `a2interactive` N/A; BACKLOG item
+  completed but names no GitHub issue → issue close-out N/A; CI green
+  all session (on the S719 push), no CI break found; quality_ratchet
+  cited in the receipt (0/0, manifest empty by design); runtime smoke
+  N/A — test-only, no runtime surface.
+- Sha self-reconcile commit follows with its own entry; expect 0
+  undocumented commits past the frontier at next Phase 0.
+
+### 2026-09-19 · \[ad hoc\] S724 deliverable: baseline-warnings cleanup — suite warning count 40 → 0 via 16 `suppressWarnings()` wraps on triggering test calls; BACKLOG item removed (completed record here)
+
+- **Inventory re-derived from a fresh full-suite run** (the item’s own
+  mandate — and it was right to demand it): the 40 warnings were NOT all
+  one class. 37 are the
+  [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+  NA-path (`R/markerKinship.R:131-139`, working as designed) across 14
+  blocks, all in `test_modMarkerGenetics.R` — the 3 known 5-warning
+  blocks (2 cross-center + the issue \#155 candidate-parent block) plus
+  **11** two-warning blocks from the `i152_roh_genotype.csv` fixture
+  (pairs I1/I3, I2/I3; the item’s stale list knew only 2 of these). The
+  other 3 are out-of-class: `test_appServer_server.R` “wires
+  child-module outputs into shared state” (2: `findGeneration`
+  unplaced-id + empty-[`max()`](https://rdrr.io/r/base/Extremes.html)
+  `-Inf`, from the 1-row toy pedigree) and
+  `test_modPedigree_processing.R` “trimPedigree works with
+  examplePedigree” (1:
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  2-collision residual, the accepted render-quality warning).
+- **Remedy:** owner picked “suppress all 16 sites” via `AskUserQuestion`
+  (Learning 273(d) — suppress the incidental warning, not the branch;
+  fixture-completion option declined). The 16 wraps: 14
+  `setInputs(genotypeFile=...)` (2 centerA, 1 flaggedSlot, 11 i152_roh),
+  1 `session$flushReact()` (appServer), 1
+  `setInputs(trimPedigree=TRUE)`. Test assertions and production code
+  untouched; diff is exactly the 16 wraps.
+- **Verification:** all 3 touched files individually 0 failed/0 error/0
+  warning; full clean regression read
+  `blocks=2437 failed=0 error=0 skipped=184 warning=0` — block and skip
+  counts equal the S718–S723 baseline exactly, warnings 40 → 0;
+  `lintr::lint_package()` 0 lints (package loaded first, Learning 224).
+  The suite is back to the 0-warning state of CRAN v2.0.0 — the owner’s
+  “we had zero at last release” report (S487) that opened the item.
+- No TDD phases (test-hygiene: no new tests, no assertion or production
+  change; the remedy choice was the session’s gate, posed with the
+  inventory in hand).
+
+### 2026-09-19 · \[ad hoc\] S724 claim: baseline-warnings cleanup — re-derive the warning-block inventory, then clean the ~40 markerKinship() NA-path suite warnings *(in progress)*
+
+- The `BACKLOG.md:233` Housekeeping item (found S487, annotated S723;
+  count 10 → 15 → 40, block list stale twice). Plan: fresh-suite
+  inventory grouped by test block first; remedy (Learning 273(d)
+  [`suppressWarnings()`](https://rdrr.io/r/base/warning.html) on
+  triggering calls vs. fixture completion with expected-value
+  re-verification) gated by `AskUserQuestion` with the inventory in
+  hand. Owner picked this from the Phase 0 four-option picker. Stub +
+  pending receipt in this commit.
+
+### 2026-09-19 · \[ad hoc\] S723 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `77a832e0`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S723 commit. S723 total: 5 commits (claim `3980cc31`,
+  deliverable `d2a43162`, BACKLOG annotation `e2a91424`, records
+  `77a832e0`, this one); ahead of `origin/master` by 23 including the 18
+  pre-existing — push is the owner’s call, and the warning fix reaches
+  other clones only once pushed. Expect 0 undocumented commits past the
+  frontier at next Phase 0; measure it.
+
+### 2026-09-19 · \[ad hoc\] S723 close-out: session records (SESSION_NOTES handoff + S722 evaluation 9/10, HANDOFFS receipt complete, `PROJECT_LEARNINGS.md` Learning 768) and post-append verification measurements
+
+- **Trigger states, measured AFTER the handoff/receipt/learning text was
+  appended**, all under `--budget-bytes 65536`: `SESSION_NOTES.md`
+  30,599 B (does not fire), `HANDOFFS.md` does not fire, `CHANGELOG.md`
+  does not fire — no trim owed this session.
+- **`context_budget.py` post-append run:** exactly the documented
+  expected state — `CLAUDE.md` 43,348 B / resident total over (red by
+  design, remedy filed), `SESSION_NOTES.md` ok.
+- **Close-out checklists:** lint DONE (touched `.R` file clean, package
+  loaded first); no new exports/statistics/Shiny features →
+  NEWS/pkgdown/citation/tutorial/`a2interactive` N/A (a roxygen comment
+  on a `@noRd` internal changes no user-facing surface); no BACKLOG item
+  completed and none names a GitHub issue → issue close-out N/A; CI
+  green all session, no CI break found; quality_ratchet cited in the
+  receipt (0/0, manifest empty by design).
+- Sha self-reconcile commit follows with its own entry; expect 0
+  undocumented commits past the frontier at next Phase 0.
+
+### 2026-09-19 · \[ad hoc\] S723: BACKLOG baseline-warnings item annotated — owner-reported RStudio test warnings triaged to it; block list marked stale (10 → 15 → 40), re-derive-the-inventory instruction added
+
+- Mid-session owner report:
+  [`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)
+  “share no heterozygous locus” warnings at
+  `test_modMarkerGenetics.R:1649`/`:1712` (issue \#152
+  sequence-export-preview tests, S535’s `i152_roh_genotype.csv` fixture,
+  pair `'I2'`/`'I3'`) — 2 blocks not in the item’s 3-block list. Source
+  confirmed `R/markerKinship.R:135`, the documented NA path; suite
+  green. Annotation only — no fix, per 1-and-done and the item’s own
+  “report, don’t fix mid-session” lineage; the item stays READY
+  (Effort S) for a dedicated cleanup session.
+
+### 2026-09-19 · \[ad hoc\] S723: roxygen unresolved-link warning fixed — `R/makePedigreeDiagramData.R:2414` `[0, 1]` escaped to `\[0, 1\]`; `document()`/RStudio-Install runs now warning-free
+
+- **Trigger:** the owner’s RStudio-button Install (S722 follow-up A)
+  succeeded end-to-end — verifying S722’s fix on the live GUI surface —
+  with this pre-existing `@noRd` cosmetic warning the only remaining
+  output noise; owner picked this fix via `AskUserQuestion`.
+- **Fix:** one comment-line edit — roxygen2’s markdown mode parsed
+  `[0, 1]` in `.bezierPointAt()`’s `@param t` prose as a link to a topic
+  named “0, 1”; the escaped `\[0, 1\]` reads identically and resolves
+  nothing. `@noRd`, so no `.Rd` output was ever affected — the warning
+  was pure noise on every `document()`/Install run.
+- **Verified:** (1) pre/post stash test — the warning reproduces on
+  unfixed HEAD via
+  `devtools::document(roclets = c("rd","collate","namespace"))` and is
+  absent with the fix (the first post-fix check was re-run without
+  [`suppressMessages()`](https://rdrr.io/r/base/message.html), which
+  would have hidden the very warning line under test); (2) zero
+  collateral — `man/`/`NAMESPACE` untouched, diff is exactly the one
+  comment line; (3) lint clean on the touched file (package loaded
+  first, Learning 224); (4) full clean regression read
+  `blocks=2437 failed=0 error=0 skipped=184 warning=40` — equals the
+  S718–S722 baseline exactly.
+- Mid-session owner report (markerKinship NA warnings in RStudio test
+  runs) triaged to the existing BACKLOG Housekeeping baseline-warnings
+  item — annotation follows as its own commit, not folded into this fix.
+
+### 2026-09-19 · \[ad hoc\] S723 claim: fix the roxygen unresolved-link warning at `R/makePedigreeDiagramData.R:2414` (`[0, 1]` parsed as a markdown link to topic “0, 1”) *(in progress)*
+
+- Owner-picked via `AskUserQuestion` after reporting their
+  RStudio-button Install (S722 follow-up A): the Install now succeeds
+  end-to-end (all 4 vignettes rebuilt including `a2interactive.Rmd`,
+  `R CMD INSTALL` DONE) — S722’s fix is verified on the live RStudio
+  surface — with this pre-existing `@noRd` cosmetic warning the only
+  remaining output noise. Planned fix: escape the brackets (`\[0, 1\]`).
+  Docs-only roxygen comment edit, no TDD phases (S720–S722 precedent);
+  lint close-out checklist applies (tracked `.R` file touched).
+
+### 2026-09-19 · \[ad hoc\] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-19.md` (35 record(s), 67,636 B → 33,652 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **35** record(s) (2026-09-18 →
+2026-09-19) out of
+[`CHANGELOG.md`](https://github.com/rmsharp/nprcgenekeepr/CHANGELOG.md)
+into
+[`docs/archive/CHANGELOG-through-2026-09-19.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-19.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh)
+rather than trusting a digest printed here. Live file 67,636 B → 33,652
+B (−50.2%).
+
+### 2026-09-19 · \[ad hoc\] S722 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `36990de9`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S722 commit. S722 total: 5 commits (claim `f93a6ce2`,
+  deliverable `10934a2f`, records `36990de9`, trim `34b0a10e`, this
+  one); ahead of `origin/master` by 18 including the 13 pre-existing —
+  push is the owner’s call, and the fix reaches other machines only once
+  pushed. Expect 0 undocumented commits past the frontier at next Phase
+  0; measure it.
+
+### 2026-09-19 · \[ad hoc\] S722 close-out: session records (SESSION_NOTES handoff + S721 evaluation 9/10, HANDOFFS receipt complete, `PROJECT_LEARNINGS.md` Learning 767) and post-append verification measurements
+
+- **Trigger states, measured AFTER the handoff/receipt/learning text was
+  appended**, all under `--budget-bytes 65536`: `SESSION_NOTES.md`
+  24,174 B (does not fire), `HANDOFFS.md` does not fire,
+  **`CHANGELOG.md` FIRES** — the routine trim S721’s heads-up predicted
+  is owed and is executed as this close-out’s own next commit (FM \#28
+  reduction performed, not deferred).
+- **`context_budget.py` post-append run:** exactly the documented
+  expected state — `CLAUDE.md` 43,348 B / resident total over (red by
+  design, remedy filed), `SESSION_NOTES.md` ok.
+- **Close-out checklists:** no `.R` files touched → lint N/A; no new
+  exports/statistics/Shiny features →
+  NEWS/pkgdown/citation/tutorial/`a2interactive` N/A (the fix is
+  developer-workflow metadata, not a user-facing package change); the
+  completed BACKLOG item named no GitHub issue → issue close-out N/A; CI
+  green all session, no CI break found.
+- **Report-only finding (not fixed, Learning 382 precedent):**
+  `HANDOFFS.md` carries a pre-existing truncated duplicate S720 stub
+  block (an unclosed `handoff` fence holding only session/date/status
+  lines) directly above the real S720 receipt — a future session should
+  repair it deliberately.
+- Trim commit and sha self-reconcile commit follow, each with its own
+  entry; expect 0 undocumented commits past the frontier at next Phase
+  0.
+
+### 2026-09-19 · \[ad hoc\] S722: RStudio-Install vignette-encoding fix DONE — `%\VignetteEncoding{UTF-8}` added to all 5 built vignettes; RStudio’s exact roclet call now succeeds end-to-end (BACKLOG Up Next item removed this commit)
+
+- **Fix:** one line added inside each `vignette:` block —
+  `vignettes/a2interactive.Rmd`, `a3manual.Rmd`, `gvaConvergence.Rmd`,
+  `simulatedKValues.Rmd` (the 4 tracked files). `vignettes/a3manual.md`
+  (the item’s 5th file) is gitignored (`.gitignore:18` — it is the
+  [`knitr::knitr`](https://rdrr.io/pkg/knitr/man/knitr-package.html)
+  intermediate) and regenerates WITH the line from the `.Rmd`’s YAML —
+  verified post-run at its line 14, so the durable fix is the 4 tracked
+  files.
+- **Mechanism verification (seconds, no rebuild):**
+  `tools:::.getVignetteEncoding()` on `a2interactive.Rmd` returns
+  `'non-ASCII'` on the pre-fix HEAD copy (exactly the state that trips
+  [`tools::buildVignette()`](https://rdrr.io/r/tools/buildVignette.html)’s
+  stop) and `'UTF-8'` on the fixed working copy.
+- **End-to-end verification (RStudio’s exact call):**
+  `devtools::document(roclets = c('rd', 'collate','namespace','vignette'))`
+  exited 0 — all 4 `.Rmd` vignettes rebuilt including the
+  previously-failing `a2interactive.Rmd` (its `.html` produced for the
+  first time; its absence among the leftover build products was the
+  failure fingerprint). `man/` untouched — zero collateral `.Rd` churn.
+  One pre-existing, warning-only roxygen finding surfaced, unrelated to
+  this diff: `R/makePedigreeDiagramData.R:2414`’s
+  `@param t ... in [0, 1].` parses as a markdown link to topic “0, 1”
+  (the function is `@noRd`, so no rendered output is affected) —
+  reported, not fixed (Learning 382 precedent).
+- **Regression read:**
+  `blocks=2437 failed=0 error=0 skipped=184 warning=40` — equals the
+  S718–S721 baseline exactly.
+- **Cleanup:** the 8 gitignored in-place build products (`*.html`/`*.R`
+  × 4 vignettes) removed from `vignettes/` per the item’s own
+  verification recipe.
+- **Owner follow-up owed (from the item):** restart R, Install from the
+  RStudio button, re-run the appServer tests; if anything still fails,
+  capture that output as its own finding (most likely collateral of the
+  stale installed copy, already refreshed by S721’s terminal install).
+
+### 2026-09-19 · \[ad hoc\] S722 claim: RStudio-Install vignette-encoding fix (BACKLOG Up Next item, filed post-close-out S721) — stub + pending receipt + this entry *(in progress)*
+
+- Deliverable: add `%\VignetteEncoding{UTF-8}` to the 5 built vignettes;
+  verify with RStudio’s exact
+  `devtools::document(roclets = c('rd','collate','namespace','vignette'))`
+  call plus the standard clean regression read. Close-out records the
+  rest.
+
+### 2026-09-19 · \[ad hoc\] S721 post-close-out: owner-reported RStudio Install break root-caused (vignette-encoding defect, dormant since S541 `95609eeb`) and DEFERRED to a `BACKLOG.md` Up Next item per owner direction — no fix applied
+
+- Owner reported “appserver tests failing in RStudio,” then “a simple
+  Install fails in RStudio,” after S721’s close-out. Diagnosis
+  (read-only, plus two terminal installs as reproduction attempts):
+  RStudio’s Install runs `devtools::document()` with the `vignette`
+  roclet (`.Rproj` `PackageRoxygenize`), whose per-file
+  [`tools::buildVignette()`](https://rdrr.io/r/tools/buildVignette.html)
+  call has no `DESCRIPTION` `Encoding:` fallback — `a2interactive.Rmd`’s
+  non-ASCII `r²` (since S541, 2026-08-12) + no
+  `%\VignetteEncoding{UTF-8}` declaration in any vignette = every
+  RStudio-button Install failing since then, while
+  terminal/CI/`R CMD check` paths stay green via
+  [`tools::buildVignettes()`](https://rdrr.io/r/tools/buildVignettes.html)’s
+  package-encoding fallback. Unrelated to S721’s `Suggests:` change.
+  Owner directed the fix to its own future session; filed with full root
+  cause, fix options, verification recipe, and the appServer-tests
+  follow-up (likely stale-installed- copy collateral; the installed copy
+  was refreshed by this diagnosis’s terminal `devtools::install()`).
+  Side effect kept: that refreshed installed copy.
+
+### 2026-09-19 · \[ad hoc\] S721 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `32c647c1`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S721 commit. S721 total: 5 commits (claim `05943cd5`,
+  owner-requested backlog item `ede5289e`, deliverable `cd748874`,
+  records `32c647c1`, this one); ahead of `origin/master` by 12
+  including the 7 pre-existing — push is the owner’s call. Expect 0
+  undocumented commits past the frontier at next Phase 0; measure it.
+
+### 2026-09-19 · \[ad hoc\] S721 close-out: session records (SESSION_NOTES handoff + S720 evaluation 9/10, HANDOFFS receipt complete, `PROJECT_LEARNINGS.md` Learning 766) and post-append verification measurements
+
+- **Trigger states, measured AFTER the handoff/receipt/learning text was
+  appended**, all under `--budget-bytes 65536`: `SESSION_NOTES.md`
+  17,138 B, `HANDOFFS.md` 19,135 B, `CHANGELOG.md` 60,188 B (before this
+  entry) — none fire. **Heads-up:** `CHANGELOG.md` is within ~5 KB of
+  the trigger and will likely fire within a session or two; the trim
+  then owed is routine (`--budget-bytes 65536`). No FM \#28 reduction
+  owed this session — stated explicitly rather than left unsaid.
+- **`context_budget.py` post-append run:** exactly the documented
+  expected state — `CLAUDE.md` 43,348 B / resident total over (red by
+  design, remedy filed), `SESSION_NOTES.md` ok.
+- **Close-out checklists:** no `.R` files touched → lint N/A; no new
+  exports/features → NEWS/pkgdown/citation/tutorial/`a2interactive` N/A;
+  the completed BACKLOG item named no GitHub issue → issue close-out
+  N/A; CI green all session, no CI break found. Verification evidence
+  (full regression at exact baseline, `devtools::check()` 0 new
+  findings) recorded in the deliverable entry below.
+- Sha self-reconcile commit follows with its own entry; expect 0
+  undocumented commits past the frontier at next Phase 0.
+
+### 2026-09-19 · \[ad hoc\] S721: `Suggests:` audit DONE — 6 entries relocated/removed from `DESCRIPTION`, new `Config/Needs/dev` group, `renv.lock` re-snapshotted; 0 new `devtools::check()` warnings/notes (BACKLOG Housekeeping item removed this commit)
+
+- **Audit method:** grep-based inventory of all 22 `Suggests:` entries
+  across `R/`, `tests/`, `vignettes/` (real vignettes vs `articles/`
+  distinguished), `man/`, `inst/`, `data-raw/`, with every thin hit READ
+  for code-vs-comment before classification.
+- **Stayed (16, each with a real load site):**
+  chromote/shinytest2/mockery/testthat/withr/
+  htmltools/htmlwidgets/spelling (test code), pkgdown (**real test
+  code** —
+  [`pkgdown::as_pkgdown()`](https://pkgdown.r-lib.org/reference/as_pkgdown.html)
+  in `test_pkgdown_reference_config.R:25`; the item’s own
+  “pkgdown-belongs-in-Config/Needs/website” suspicion REFUTED), dplyr
+  (roxygen `@examples` + tests), kinship2 + shinyBS (package `R/` code),
+  knitr (`VignetteBuilder` + engines), rmarkdown (vignette
+  engines/outputs), **markdown (`a3manual.{Rmd,md}` use the
+  [`knitr::knitr`](https://rdrr.io/pkg/knitr/man/knitr-package.html)
+  engine, which renders through the markdown package — NOT unused)**,
+  kableExtra (`gvaConvergence.Rmd`/`simulatedKValues.Rmd`).
+- **Removed (6, owner-ratified via two `AskUserQuestion` gates, both
+  recommended options picked):** devtools + roxygen2 → new
+  `Config/Needs/dev: devtools, roxygen2` (their only tests/vignettes
+  hits are comments and `eval = FALSE` install instructions that tangle
+  to commented lines, `vignettes/a3manual.R:5-10`; both also remain in
+  `Config/renv/profiles/dev/dependencies`; roxygen2’s `(>= 8.0.0)`
+  constraint superseded by `Config/roxygen2/version: 8.0.0`); quarto →
+  dropped (already `Config/Needs/website`; `pkgdown.yaml` already passes
+  `needs: website`, CI-safe); grid + png + shinyWidgets → deleted
+  outright (zero uses anywhere; vestiges of `c1138a6e`/`22f5914d`-era
+  features).
+- **`renv.lock`:** `renv::snapshot(dev = TRUE)` per the standing
+  CLAUDE.md rule and the S637 precedent (`526c7fec`) — 21 packages
+  dropped (the 5 removed + transitive closures incl.
+  usethis/pak/rcmdcheck/profvis); `renv::status(dev = TRUE)` now “No
+  issues found”. Matches the S615 covr precedent (covr likewise absent
+  from the lock, CI installs it itself).
+- **Verification:** full clean regression read
+  `blocks=2437 failed=0 error=0 skipped=184 warning=40` — equals the
+  S718–S720 baseline exactly. Full `devtools::check()` (21m52s): 0
+  errors; all dependency gates OK (unstated deps in
+  examples/tests/vignettes, deps in R code, vignette rebuild incl. the
+  [`knitr::knitr`](https://rdrr.io/pkg/knitr/man/knitr-package.html)→markdown
+  path); the 1 WARNING (non-portable
+  `inst/extdata/reference/~$e Compounding Loop.html`) and 1 NOTE
+  (top-level `scratchpad/`) both name UNTRACKED working-tree clutter
+  present since before this session (in the session-start `git status`),
+  unreachable by this diff — **0 new warnings/notes**.
+
+### 2026-09-19 · \[ad hoc\] S721: filed owner-requested BACKLOG item — measure package growth attributable to the pedigree-drawing feature (rough ±20% estimate sufficient)
+
+- Owner request arrived mid-session (during the `Suggests:` audit’s
+  research phase); recorded as a `BACKLOG.md` Housekeeping item (READY,
+  Effort S) for a future session, not acted on now (1-and-done: this
+  session’s deliverable remains the `Suggests:` audit).
+
+### 2026-09-19 · \[ad hoc\] S721 claim: `Suggests:` audit (BACKLOG Housekeeping item, owner-picked via `AskUserQuestion`) — SESSION_NOTES stub + pending HANDOFFS receipt committed *(in progress)*
+
+- Phase 0 reconcile was clean: 0 undocumented commits past both
+  frontiers (`ba09899c`), exactly as S720’s close-out entry predicted.
+  CI 10/10 green; dashboard 96/100; `context_budget.py` showed only the
+  documented by-design reds (no new findings).
+
+### 2026-09-19 · \[ad hoc\] S720 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `7e8ebc5f`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S720 commit. Post-trim state at write time, all under
+  `--budget-bytes 65536`: `SESSION_NOTES.md` 10,295 B, `HANDOFFS.md` ~15
+  KB, `CHANGELOG.md` ~55 KB — none firing. Expect 0 undocumented commits
+  past the frontier at next Phase 0; measure it. S720 total: 6 commits
+  (claim `572562f1`, adoption `bc6be1d0`, SESSION_NOTES trim `c079c27a`,
+  records `7e8ebc5f`, HANDOFFS trim `d05e8573`, this one); ahead of
+  `origin/master` by 7 including S719’s pre-existing `c0002e04` — push
+  is the owner’s call.
+
+### 2026-09-19 · \[ad hoc\] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-19.md` (11 record(s), 66,229 B → 14,869 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **11** record(s) (2026-09-18 →
+2026-09-19) out of
+[`HANDOFFS.md`](https://github.com/rmsharp/nprcgenekeepr/HANDOFFS.md)
+into
+[`docs/archive/HANDOFFS-through-2026-09-19.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-19.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh)
+rather than trusting a digest printed here. Live file 66,229 B → 14,869
+B (−77.5%).
+
+### 2026-09-19 · \[ad hoc\] S720 close-out: session records (SESSION_NOTES handoff + S719 evaluation 9/10, HANDOFFS receipt complete) and the post-append verification results
+
+- **Trigger states, measured AFTER the handoff/receipt text was
+  appended** (the S718 lesson — a pre-append check certifies the wrong
+  content): under `--budget-bytes 65536`, `SESSION_NOTES.md` 10,295 B
+  does not fire, `CHANGELOG.md` 53,422 B (before this entry) does not
+  fire, **`HANDOFFS.md` 66,229 B FIRES** — the receipt pushed it over,
+  exactly as the handoff’s gotcha (4) anticipated. Its trim follows this
+  commit (dry run already clean: L1–L3 OK, 11 of 12 records to
+  `docs/archive/HANDOFFS-through-2026-09-19.md`, 66,229 → 14,869 B, S720
+  receipt retained) — FM \#28 close-out reduction, not a second
+  deliverable.
+- **`context_budget.py` post-append run:** exactly the documented
+  expected state — `CLAUDE.md` 43,348 B / resident total over (red by
+  design, remedy filed), `SESSION_NOTES.md` 10,295 B ok, both sync-drift
+  checks ok.
+- **Full suite (close-out insurance; zero package files touched):**
+  blocks=2437 failed=0 error=0 skipped=184 warning=40 — equals the
+  S718/S719 baseline exactly. Close-out checklists: no `.R` files → lint
+  N/A; no exports/features → NEWS/pkgdown/citation/tutorial N/A;
+  completed BACKLOG item removed in the adoption commit (its record is
+  the adoption entry below).
+- Sha self-reconcile commit follows with its own entry, so expect 0
+  undocumented commits past the frontier at next Phase 0.
+
+### 2026-09-19 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-19.md` (21 record(s), 79,738 B → 3,500 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **21** record(s) (2026-09-17 →
+2026-09-19) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-19.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-19.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-19.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-19.md.verify.sh)
+rather than trusting a digest printed here. Live file 79,738 B → 3,500 B
+(−95.6%).
+
+### 2026-09-19 · \[ad hoc\] S720: `context_budget.py` ADOPTED with honest ceilings (owner-ratified via `AskUserQuestion`, over freeze-at-current and delete); trim budget SETTLED at the old 65,536 B cadence (over the 196,608 B default and a one-off trim)
+
+- **Evaluation findings that drove the decision:** `CLAUDE.md` (41,622 B
+  pre-edit) is the one Phase-0 mandated read nothing gated — over the
+  seed’s 28,000 B ceiling and its own stated ~25 KB target, invisible to
+  the dashboard (under the 56,750 B one-read cap) and structurally out
+  of the trimmer’s reach. `--calibrate` on this project’s transcripts
+  was REJECTED: 0.60 B/token with a −6,015-token intercept (n=119,
+  R²=0.73), physically implausible/confounded; the dashboard’s measured
+  densest density (2.27 B/token) adopted instead. Seed misfits fixed:
+  `SESSION_NOTES.md` structure patterns rewritten for this file’s real
+  layout (the seed’s `^##` expect_min 2 was instrument-failed here; note
+  — `max: 0` is a literal bound, not a disable), `max_lines` 400→1,000
+  (aligned to the 65,536 B cadence at the measured ~69 B/line,
+  eliminating a standing two-trigger disagreement), `max_bytes` set to
+  the SAME 65,536 as the trimmer cadence so a red means a trim is owed;
+  the unmappable `LEARNINGS.md` entry dropped (`PROJECT_LEARNINGS.md`,
+  2,888,991 B, is on-demand — a whole-file ceiling is the wrong unit).
+- **Executed:** `.context-budget.json` rewritten with derivations in `_`
+  keys; `budget:protected` fence added around `CLAUDE.md`’s Project
+  Overview (tool-verified present); per-clone no-growth pre-commit hook
+  installed (`install-hook`; refuses only growth of an over-ceiling
+  file); Phase 0 check + red-by-design expectations recorded in
+  `CLAUDE.md` (Additional Phase 0 steps); the S719 “open owner decision”
+  trigger-budget paragraph resolved (`--budget-bytes 65536` on every
+  run); `BACKLOG.md` item removed (this entry is its completed record)
+  and the successor “CLAUDE.md reduction campaign” item filed (READY,
+  M). `--selftest` passes; post-config run shows exactly the intended
+  reds: `CLAUDE.md`/resident (by design, until the reduction lands) and
+  `SESSION_NOTES.md` (the owed trim, executed next this session).
+  Sync-drift checks: both `ok`. History file stays gitignored (S719
+  decision, kept). **This commit itself grows `CLAUDE.md`, so it lands
+  via `--no-verify` — the hook’s first recorded bypass, legitimate
+  growth ratified by the adoption itself.** Dashboard note: its HIGH
+  flag for `SESSION_NOTES.md` says “the trimmer answers NO_CONFIG” —
+  untrue under this project’s local trimmer extension (Class A, config
+  present); the dashboard hardcodes stock-trimmer classes by design, so
+  the flag text overstates, though the \>one-read-cap fact it flags is
+  real until the trim.
+
+### 2026-09-19 · \[ad hoc\] S720 claim: `context_budget.py` adoption evaluation + trim-budget decision (`BACKLOG.md:119`) *(in progress)*
+
+- Owner-picked via `AskUserQuestion` at Phase 0 (over the `Suggests:`
+  audit, the package-split disposition, and the chromote research item).
+  Phase 0 reconcile found 0 undocumented commits past both frontiers
+  (S719’s gotcha predicted 0; measured 0); CI 10/10 green on `4565c39d`;
+  dashboard 96/100. Stub + pending `HANDOFFS.md` receipt ride this
+  commit. Docs/process tooling — no TDD phases; close-out adds its own
+  entries.
+
+### 2026-09-19 · \[ad hoc\] S719 push to `origin/master` DONE (owner: “push”) — 16 commits (`4cfe2dad..4565c39d`), all 4 on-push CI workflows green on the pushed head
+
+- Pushed after `git fetch` confirmed 16 ahead / 0 behind (only
+  `gh-pages`, CI’s own branch, had moved). The 16 are S718’s 5 commits
+  plus S719’s 11. CI on `4565c39d`, watched to completion: `lint` 4m39s,
+  `test-coverage` 10m36s, `pkgdown` 18m08s, `R-CMD-check` 33m02s (run
+  ids 35466135572 / 35466135534 / 35466135549 / 35466135548), all
+  `completed success`; `R-CMD-check` green on all 5 platforms (ubuntu
+  release/devel/oldrel-1, macOS release, Windows release). This is the
+  first CI validation of P10’s build patterns and new root files; the
+  handoff’s “estimate green” is now a measurement (`R-CMD-check` runs
+  `error-on: "warning"`, so no warning was raised). Only this entry’s
+  own commit is left unpushed — the owner’s call.
+
 ### 2026-09-19 · \[ad hoc\] S719 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `a095f4be`; carries its own entry, so no self-reference gap is left for Phase 0
 
 - Under the current rules every commit carries its own entry, so this
@@ -206,579 +801,3 @@ sentence. Written by `methodology_trim.py` v1.1.2.
   `BL-57` is the methodology fork’s backlog id, not this project’s.)
 
 ### 2026-09-19 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `312996b0` — S718’s close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt, 1 line changed), the documented recurring 1-commit shape; backfilled by the next session’s Phase 0 reconcile
-
-### 2026-09-19 · \[BL\] S718 close-out: pointer-block sweep session records — SESSION_NOTES handoff + S717 evaluation (9/10), HANDOFFS receipt complete, ledger triggers verified not firing
-
-- CI note: the 3 workflows in-flight at orientation on the S717
-  close-out head completed green in-session (test-coverage 12m48s,
-  pkgdown 18m36s, R-CMD-check 31m32s; lint was already green), plus the
-  scheduled shinytest2 run green — 5/5; S717’s deliberately-unwatched
-  docs-only CI round is closed. FM \#28 reduction this session = the
-  deliverable itself (444 lines out of `BACKLOG.md`, 1,119 → 675);
-  `methodology_trim.py --check` verified the
-  SESSION_NOTES/HANDOFFS/CHANGELOG byte triggers all clear at close-out.
-  No new learning appended (routine application of the S686 convention,
-  no new signal — stated, not silent, per the S711/S712 precedent). No
-  push (owner’s call, per the standing convention).
-
-### 2026-09-19 · \[BL\] S718 deliverable: pointer-block sweep RATIFIED and executed — all 15 `[ ]`-marked-but-fully-RESOLVED blocks removed from `BACKLOG.md` (429 lines, 1,119 → 690)
-
-- Owner ratified “remove all 15” via `AskUserQuestion` (over a
-  keep-S457/S458 variant and a hold), extending the S686 completed-item
-  convention to the S529–S531-era population the S687 item flagged.
-  Verification before the gate: every resolving session has dated ledger
-  entries in the CHANGELOG corpus (live + `docs/archive/CHANGELOG-*`
-  shards; 3–7 headings each; **0 FM \#27 gaps** — unlike S529’s sweep,
-  which found 2); depth spot-checked on the densest block (S565 Track B
-  — the shard entry carries all of the block’s verification detail); no
-  open sub-threads (the S568 block’s untitled-folder finding already
-  stands as its own item, which stays); zero live cross-references from
-  `CLAUDE.md`/`SESSION_NOTES.md`/`HANDOFFS.md` into the population.
-- Removed (block → resolving sessions): S508-found HANDOFFS front-matter
-  field → S561; `genOf` integer-widening fix → S556; repository branch
-  cleanup → S557/S558; kinship2-supplement reproducibility audit + PDF
-  classification → S549/S567;
-  twinRelations-into-[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
-  (3 slices) → S551–S553; consanguineous-mating marker + rectilinear
-  propagation → S555/S563; kinship2-supplement full-reproduction plan +
-  fidelity article + issues \#156–#158 → S562/S566; Track A X-chromosome
-  kinship → S564; Track B
-  [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md)
-  → S565; affected-status shading fix → S554; stale
-  `pb_diagram_legend.png` regeneration → S560; `pedigree-diagram.qmd`
-  article → S560; Compounding-Loop tarball exclusion → S568; Option-2
-  feasibility pointer → S457; Option-2 design pointer → S458.
-- Deletion executed by a guarded line-range script (first/last-line
-  anchors verified on every range before writing; diff confirmed
-  deletion-only, 429 deletions / 0 insertions). Full block text remains
-  recoverable at the pre-sweep tree, commit `f058a8de`
-  (`git show f058a8de:BACKLOG.md`). The completed sweep item itself
-  (S687) is removed in this same commit per the convention. The 18
-  genuinely-open `[ ]` items are untouched; the borderline S518
-  BACKLOG-compression item was excluded as a recurring-maintenance item
-  per its own S606 correction.
-
-### 2026-09-19 · \[BL\] S718 claim: pointer-block sweep ratification + (if ratified) execution (BACKLOG Housekeeping item, owner-picked via `AskUserQuestion` at Phase 0)
-
-- Docs-only maintenance session, no TDD phases (S686/S687 precedent).
-  Plan: inventory the S529–S531-era `[ ]`-marked-but-fully-RESOLVED
-  pointer blocks in `BACKLOG.md`, verify each has a complete
-  `CHANGELOG.md` (or archive-shard) record, present the concrete
-  population at the ratification gate, then — if ratified — apply the
-  S686 4-step relocation (verify/enrich ledger, forward-carry live
-  context, extract open sub-threads, delete). Stub + pending receipt
-  committed with this entry.
-
-### 2026-09-19 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `4cfe2dad` — S717’s close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt), the documented recurring 1-commit shape; backfilled by the next session’s Phase 0 reconcile
-
-### 2026-09-19 · \[ad hoc\] S717 close-out: push to `origin/master` DONE — 33 commits (`1788e2b8..047d7f74`), all 4 CI workflows green on the pushed head
-
-- First remote validation of the S715 curved-connector arc-verified
-  roundness fix and the S716 MHC display rounding (plus the S712–S714
-  census assessments and five sessions of records). CI on `047d7f74`:
-  lint 4m41s, test-coverage 10m26s, pkgdown 18m40s, R-CMD-check 34m16s
-  (run ids 35425960304/340/312/299), all `completed success` — watched
-  to completion in-session via a 2-min poller, then confirmed directly
-  via `gh run list`. The records + self-reconcile commits that follow
-  are pushed immediately; their own docs-only CI round is verified at
-  the next session’s unconditional Phase 0 CI check (S706/S711
-  precedent).
-
-### 2026-09-19 · \[ad hoc\] S717 claim: owner-directed push to `origin/master` (S716 next-step A, owner-picked via `AskUserQuestion` at Phase 0)
-
-- Process/ops session, no TDD phases (S711 precedent): push the ~33
-  pending commits (S712–S716, incl. real package code — the S715
-  curved-connector fix and the S716 MHC display rounding, both never yet
-  seen by CI), then watch all 4 on-push workflows to completion. Claim
-  made BEFORE the push so the pushed head carries the session’s own
-  breadcrumb. Stub + pending receipt committed with this entry.
-
-### 2026-09-19 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `b229a305` — S716’s close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt), the documented recurring 1-commit shape; backfilled by the next session’s Phase 0 reconcile
-
-### 2026-09-18 · \[BL\] S716 close-out: MHC Haplotype Reporting polish DONE — display-only 4-decimal frequency rounding, `@return` rewritten, NEWS stale-phrase sweep + heading repair, article screenshot re-captured
-
-- **Deliverable (strict TDD for the code part, every gate owner-approved
-  via `AskUserQuestion`; BACKLOG item removed in this commit):**
-  `output$mhcSummaryTable` (`R/modMarkerGenetics.R:1170`) now renders
-  `DT::formatRound(DT::datatable(tbl), "frequency", digits = 4L)` — a
-  client-side display renderer gated on `type !== 'display'`, so the
-  `mhcHaplotypeSummaryTable` reactive, the CSV export, and DT’s own
-  sorting/filtering keep full precision. RED `27d06c97` (3 formatter
-  grepls failing at HEAD for the right reason + reactive-identity and
-  pre-upload pins), GREEN `dbd68126` (3-line edit). REFACTOR judged
-  unnecessary at the owner-approved GREEN exit gate.
-- **Docs (owner-scoped pre-RED):**
-  [`modMarkerGeneticsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsUI.md)
-  `@return` rewritten to the real 8-sub-tab UI (`c4fb69f3`, `document()`
-  scope-checked); NEWS.Rmd sweep removed all 8 verified-stale “no Shiny
-  screen yet” phrases (owner-ratified beyond the 2 the item named; the 2
-  accurate ones stay) and repaired 2 pre-existing swallowed section
-  headings (`## MHC Haplotype Reporting`, `## Genetic Value Analysis`
-  rendered as literal `\##` for want of a preceding blank line); NEWS
-  plain-language entry for the rounding (`37d17a55`);
-  colony-manager-guide MHC screenshot re-captured live at the original
-  framing (`476372e6`) — re-obligated by this session’s own display
-  change.
-- **Verification:** full clean regression 2,437 blocks 0 failed / 0
-  error (+1 = the new test block; warnings 40 unchanged);
-  `lintr::lint_package()` 0; wordlist/moduleContract/pkgdown guards
-  green; Phase 3E live smoke: all rendered page-1 frequency cells
-  exactly 4 decimals, no module console errors; full MHC e2e green under
-  `NPRC_RUN_E2E=true` incl. the full-precision CSV download pins;
-  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-  0 errors + the known pre-existing 1 W / 1 N untracked-file artifacts.
-  Learning 765 appended (DT 0.34.0 formatX seam + the NEWS
-  render-diff/`\##` reflex + the e2e opt-in corollary).
-
-### 2026-09-18 · \[BL\] S716 claim: MHC Haplotype Reporting follow-up polish (BACKLOG Housekeeping item, issue \#148 Slice 4 close-out; owner-picked via `AskUserQuestion` at Phase 0)
-
-- Three-part polish, strict TDD for the code part: (1) display-only
-  rounding of the `frequency` column in `output$mhcSummaryTable`
-  (`R/modMarkerGenetics.R`; the `mhcHaplotypeSummaryTable` reactive and
-  the export stay untouched — tests pin those exactly), (2)
-  [`modMarkerGeneticsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMarkerGeneticsUI.md)’s
-  `@return` updated to cover the tabs shipped by \#148 Slice 4 / \#152 /
-  \#153, (3) the two stale “no Shiny screen yet” `NEWS.Rmd` phrases
-  fixed + `NEWS.md` re-rendered (plain-language criterion). Stub +
-  pending receipt committed with this entry.
-
-### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `56c705b8` — S715’s close-out self-reference commit (recorded the records-commit sha in its own `HANDOFFS.md` receipt), the documented recurring 1-commit shape; backfilled by the next session’s Phase 0 reconcile
-
-### 2026-09-18 · \[BL\] S715 close-out: curved duplicate-connectors FIXED — arc-verified roundness selection ships; cArc 587 → 149 events, 117 → 72 arcs; exemplar + Track C warnings cleared, owner-ratified renders
-
-- **Deliverable (strict TDD, every gate owner-approved via
-  `AskUserQuestion`; BACKLOG item removed in this commit):**
-  `.resolveEdgeNodeCollisions()`’s curved branch
-  (`R/makePedigreeDiagramData.R`) now scores each connector’s PAINTED
-  arc for TRUE disc hits — `.curvedCwVia()` (the S714-verified
-  vis-network `curvedCW` transcription), `.bezierPointAt()`,
-  `.bezierMinDistTo()` (exact cubic solve), `.arcDiscHitCount()` (a
-  conservative Lipschitz-bound sampled prefilter keeps the exact solve
-  to near-boundary candidates; counts provably unchanged, resolve 0.21 →
-  0.95 s instead of +4.4 s unoptimized) — and walks the roundness ladder
-  `seq(0.05, 0.60, 0.05)` in preference order (fewest true hits, tie →
-  closest to base 0.2, tie → smaller). `curved-heuristic` residuals now
-  disclose exactly the arcs no step fully clears. RED `d39c66eb` (7
-  assertions failing for the right reasons, incl. the never-worse
-  property the old bump measurably violated), GREEN `704d7c4c`.
-- **Verification:** target file + exemplar file green; full clean
-  regression 2,436 blocks, 0 failed / 0 error (warnings 48 → 40 = the
-  cleared collision warnings); `lintr::lint_package()` 0;
-  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-  0 errors + the known pre-existing 1 W / 1 N untracked-local-file
-  artifacts; census re-run `69152999` (postfix CSV; frozen 2026-09-02
-  and 2026-09-18 baselines untouched): \*\*cArc 587 → 149 events,
-  cArcEdges 117 → 72; Track C fully arc-clean; class
-  2.  = 6 unchanged\*\*, so the fidelity article’s “6 of 237” is NOT
-      re-obligated. Test pins re-derived: residuals 56 → 72 (the true
-      population, no longer chord false positives), the S690 named pair
-      `__dup_1X40V5_1 → 1X40V5` now pins UNCHANGED 0.2 (it was a false
-      positive), `__dup_0L5AWR_1 → 0L5AWR` pins cleared-at-0.5 (6 → 0
-      hits).
-- **Exemplar warning pins (owner-ratified at the GREEN gate, per the
-  S693 pin’s own re-render rule):** linebreeding + half_sib now render
-  warning-free (their 4 pinned residuals = 1 chord false positive + 3
-  true collisions, all cleared by the ladder);
-  `test_examplePedigreeFixtures.R` specs flipped, renders
-  `scratchpad/s715_render_{linebreeding,half_sib}_after.png` approved.
-- **Incidental (`fa4ec9ad`):** S714’s article edit left
-  `test_wordlist_coverage.R` failing on `px` (that session touched no
-  package files and carried the baseline forward — the carried-baseline
-  heuristic has a hole for `.qmd`-fed tests, Learning 764); fixed via
-  `inst/WORDLIST` per the S564/S565 precedent. NEWS.Rmd plain-language
-  entry + NEWS.md render in `69152999`.
-- **Runtime evidence (Phase 3E):** live chromote renders through the
-  app’s own widget construction (the S712/S714 verified path) — 2
-  exemplar full views + Real-375 before/after site crops
-  (`scratchpad/s715_render_site_0L5AWR_{before,after}_zoom.png`).
-
-### 2026-09-18 · \[BL\] S715 claim: curved duplicate-connectors fix — arc-verified roundness selection replacing the blind +0.3 bump
-
-- Session claimed (stub + pending receipt + this entry). Owner picked
-  the S714-filed BACKLOG Housekeeping item via the Phase 0
-  `AskUserQuestion` picker. Scope: `.resolveEdgeNodeCollisions()`’s
-  curved branch (`R/makePedigreeDiagramData.R`) gains arc-verified
-  roundness selection using the census’s exact predicates (ported as
-  internal helpers); strict TDD; `test_resolveEdgeNodeCollisions.R` pins
-  re-derived; census re-run + full suite + lint at verification.
-- **Ledger repair (ad hoc, disclosed):** removed a 5-line truncated
-  duplicate S713 receipt header (an unclosed ```` ```handoff ```` fence,
-  no unique content) that S714’s records commit `8c717ee6` accidentally
-  inserted into `HANDOFFS.md` between the S714 prose and the real S713
-  receipt.
-
-### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `0b4d84bb` — S714 close-out self-reference
-
-- S714’s final commit recorded its own records-commit sha (`8c717ee6`)
-  into the `HANDOFFS.md` receipt after the ledger entry was written —
-  the recurring self-reconcile shape (predicted “~1” by the S714
-  handoff; measured 1). Backfilled at Session 715 Phase 0.
-
-### 2026-09-18 · \[BL\] S714 close-out: curved-chord upper bound REPLACED by the true arc census — 1,668 chord rows were 100% false positives; real population 587 events / 117 arcs; fix item ratified and filed
-
-- **Deliverable (`318c32da`; curved-chord BACKLOG block replaced by the
-  ratified fix item in this commit):** the census now measures the arc
-  vis-network actually paints. The `curvedCW` via formula was
-  transcribed from the bundled `vis-network.min.js` and verified against
-  the LIVE widget via chromote (`edgeType.getViaNode()`): max
-  \|via(model) − via(live)\| = 1.1e-13 px over all 173 curved edges,
-  per-edge roundness overrides (0.2 / bumped 0.5) confirmed applied.
-  Exact point-to-quadratic distances (cubic root solve), no sampling.
-- **Findings (audit doc
-  `docs/audits/PEDIGREE_DRAWING_CURVED_ARC_CENSUS_ 2026-09-18.md`):** (1)
-  overlap join: 0 of the frozen 1,667+1 chord pairs are true hits — the
-  arc bows over every same-row chord obstacle; (2) the true population,
-  587 events on 117 of 170 Real-375 connectors (Track C arc-clean), sits
-  entirely where no predicate ever looked: 485 events on cross-row
-  connectors (`c1` was same-row-only, `c2` skipped curved), 102 from
-  bumped arcs crossing upper rows; median penetration 10.9 px of a 25-px
-  radius; (3) the repair pass’s blind +0.3 roundness bump is
-  net-negative on Real 375 (21 arcs hit at 0.2 → 24 at the shipped
-  0.5); (4) incidental: vis-network parseInt-truncates predefined node
-  coordinates — counts stable under that quantization (587→586 events,
-  117 arcs in every ±1-px jitter draw) (Learning 763). Census script
-  extended (`c-arc-inside`, scoreboard `cArc`/`cArcEdges`, chord
-  subclass retired, lint 0, post-lint re-run byte-identical); new
-  baseline CSV
-  `docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_2026-09-18_findings.csv`
-  (595 rows); frozen 2026-09-02 artifacts untouched.
-- **S713 forward-carry discharged:** the re-run reports class (b) = 6
-  (first post-S713 confirmation of the ratified dust floor); the
-  fidelity article’s mate-line paragraph now cites 6 of 237
-  (`vignettes/articles/ kinship2-fidelity-validation.qmd`), the caveats
-  bullet verified count-free, Track B centering re-verified (b = 0 on
-  both Track B fixtures).
-- **Owner gate (recommended option taken):** fix item filed —
-  arc-verified roundness selection replacing the blind bump (BACKLOG,
-  READY, Effort M, strict TDD; full brief in the block, incl. which
-  `test_resolveEdgeNodeCollisions.R` pins re-derive). Corpus sweep: the
-  test comments’ “47” figures are frozen CHANGED-history (live pin 56L,
-  correct); the only stale live “47” was in the removed BACKLOG block.
-
-### 2026-09-18 · \[BL\] S714 claim: census curved-chord arc-modelling measurement pass
-
-- BACKLOG Housekeeping “Census curved-chord heuristic” item (S713
-  next-step A), owner-picked via `AskUserQuestion` at Phase 0.
-  Deliverable: model the actually-drawn arc geometry (render layer’s
-  curved connectors + the roundness bump applied to duplicate
-  connectors) and count how many drawn arcs truly pass inside a visible
-  unrelated symbol — replacing the 1,667 Real-375 + 1 Track C
-  `c-curved-chord` chord-heuristic upper bound — reproducibly, by
-  extending `data-raw/pedigreeDrawingErrorCensus.R` or a committed
-  sibling script; then recommend whether a fix item is warranted.
-  Carries the S713 forward-carry (article “8 of 237” sites + Track B
-  centering) if a census re-run lands. Measurement/scoping session, no
-  TDD phases unless package code turns out to be touched. Stub + pending
-  receipt written with this entry.
-
-### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 35a33905 — S713 close-out self-reconcile
-
-- S713’s final commit recorded its own close-out commit sha (`f67830a1`)
-  into the completed `HANDOFFS.md` receipt — the recurring
-  self-reference shape S713’s own handoff predicted (gotcha 4, “expect
-  ~1”). Measured: exactly 1 commit past the frontier. No other action in
-  the gap.
-
-### 2026-09-18 · \[BL\] S713 close-out: census class (b) CLOSED — 6 real rows accepted as minSep-forced structural residuals, 2 dust rows ratified out of the predicate (both owner-ratified)
-
-- **Deliverable (BACKLOG “Census class (b)” block removed in this
-  commit):** the census’s 8 class-(b) rows are fully dispositioned. The
-  **6 real 60–180 px rows** (`__union_97/114/130/137/191/228`) are
-  **accepted as structural residuals, no fix item**; the **2
-  numerical-noise rows** (`__union_75` ≈ 2.8e-5 px, `__union_132` ≈
-  1.0e-6 px) are solver dust, and the census predicate now skips below
-  the test suite’s own 1e-3 raw-unit (0.12 px) meaningful floor
-  (`data-raw/pedigreeDrawingErrorCensus.R`, commit `de4e6ce8`) so future
-  runs report 6. The frozen 2026-09-02 census CSV is untouched (audit
-  record; closure lives here).
-- **Evidence — forced vs reducible (the item’s own question), both
-  instruments agreeing (`scratchpad/s713_probe.R`/`s713_probe2.R`,
-  results in `scratchpad/s713_probe_results.rds`):** (1) binding-chain
-  analysis: every adjacent pair between each of the 6 unions’ rendered
-  mates is BINDING at its floor, and the chain-implied minimum offset
-  given the solved mate span equals the observed offset exactly
-  (0.5/0.5/1.0/1.5/1.0/0.5 raw units) — marry-in-chain /
-  polygamous-anchor crowding (WCPXHD’s 5-unit chain, HV7LZ3’s 3-unit
-  anchor);
-  2.  wUnion sweep 2 → 2e5 on trace()-captured QP inputs (target
-      component: 733 variables): offsets shrink only by stretching mate
-      spans (`__union_137` 480 → 1,787 px; `__union_130` 360 → 834 px) —
-      i.e. **minSep-forced at the owner-ratified S675 weights**;
-      centering by weight escalation degrades the layout and would
-      contradict the no-weight-tuning mandate. The 6 are already
-      disclosed, named, and bounded (≤ 1.55 u) by the committed
-      structural-residual test
-      (`tests/testthat/test_positionMatingUnitForest.R`, Learning 726
-      pattern), whose own comment reads “8 rows of which 2 dust = 6
-      meaningful” — the predicate change aligns the census with that
-      same dust line (Learning 762).
-- **Continuity:** frozen census reproduced to the digit from
-  `s712_layouts.rds` (max \|diff\| ≈ 2e-15 u on all 8 rows) and from a
-  fresh current-engine run (6 real rows to 1e-12) before any
-  counterfactual was trusted. Predicate edit verified: old skip
-  reproduces the frozen 8 on the current layout; new floor yields
-  exactly the disclosed 6, dropping exactly the 2 dust rows.
-  `lintr::lint_package()` (loaded per Learning 224): 0 lints. Crops of
-  all 4 neighbourhoods (`scratchpad/s713_crop_*.png`): each “off-centre”
-  dot sits adjacent to its distal marry-in mate — the conventional
-  multiple-marriage-chain rendering.
-- **Coupled prose re-verified (no edit owed now):** Track B “all four
-  union dots exactly centered” re-measured live (max residual 1.9e-11
-  px); the article’s “8 of 237 … where the separation floors bind” stays
-  accurate as a citation of the standing frozen baseline — the count
-  becomes 6 only at the next census re-run, an obligation
-  forward-carried into the curved-chord BACKLOG item.
-
-### 2026-09-18 · \[BL\] S713 claim: census class (b) off-centre union-dot assessment
-
-- S712 next-step A / BACKLOG “Census class (b)” item, owner-picked via
-  `AskUserQuestion` at Phase 0. Deliverable: (i) decide whether the 2
-  numerical-noise rows (`__union_75` −2.3e-07 units, `__union_132`
-  8.7e-09 units) belong in the census (the visible-offset tolerance
-  question for the census predicate); (ii) determine whether the 6 real
-  60–180 px offsets (`__union_97/114/130/137/191/228`) are minSep-forced
-  or QP-reducible (`R/makePedigreeDiagramData.R`,
-  `.solveJointQP()`); (iii) re-verify the coupled fidelity-article prose
-  (“8 of 237”, 0.00-px Track B centering). Assessment session. Stub +
-  pending receipt written with this entry.
-
-### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit ed79261f — S712 close-out self-reconcile
-
-- S712’s final commit recorded its own close-out commit sha into the
-  completed `HANDOFFS.md` receipt (the recurring 1-commit self-reference
-  shape its handoff gotcha 4 predicted; measured exactly 1). Backfilled
-  at S713 Phase 0 reconcile.
-
-### 2026-09-18 · \[BL\] S712 close-out: census class (d) CLOSED — both duplicate-adjacent sites assessed acceptable (owner-ratified)
-
-- **Deliverable (this commit; BACKLOG “Census class (d)” block removed
-  in it):** the census’s 2 class-(d) “adjacent” rows
-  (`docs/audits/PEDIGREE_DRAWING_ERROR_CENSUS_ 2026-09-02_findings.csv`
-  rows 3 and 1679 — the CSV itself is a frozen audit record, unchanged)
-  are **closed as visually acceptable**, owner-ratified via
-  `AskUserQuestion` with all 6 crops presented.
-- **Evidence:** fresh current-engine layouts of both fixtures (default
-  rectilinear; `scratchpad/s712_probe.R`, cached at
-  `scratchpad/s712_layouts.rds`) reproduce the census to the digit —
-  Track C `__dup_Y_2`/`Y` dx = 120.0 px exactly, Real 375
-  `__dup_SLN0TF_2`/`SLN0TF` dx = 119.9999999992 px; both pairs same-row
-  with ZERO nodes strictly between; the dashed duplicate-connector is
-  present in the edge frame at both sites. Crops (100% / 2.2x / context
-  per site, Learning 732 recipe, `scratchpad/s712_crop_*.png`): Track C
-  plainly legible (70-px rim gap, connector visible); Real 375
-  structurally identical, its short connector visually obscured only by
-  unrelated long-range dashed chords — the class-(c) curved-chord
-  density issue tracked in its own BACKLOG item, not an adjacency
-  defect.
-- **Rationale for acceptance:** adjacent-at-minSep (1 raw unit = 120 px,
-  the engine’s own same-row minimum) is the same spacing as any other
-  adjacent pair on the row; the overlap subclass (\< 50 px) has count 0;
-  adjacency minimizes duplicate-connector length, and added separation
-  would lengthen the connector and feed the very class-c clutter that is
-  the only legibility concern observed. No separation follow-up scoped.
-  Coupled-prose check:
-  `vignettes/articles/kinship2-fidelity-validation.qmd` contains zero
-  class-(d)/“adjacent” references (grep-verified), so no prose update
-  was owed.
-- **Also closed in-session:** S711’s open CI loop — R-CMD-check on the
-  S711 close-out head completed green (run 35390065689, 33m33s; that
-  head is now 4/4).
-
-### 2026-09-18 · \[BL\] S712 claim: census class (d) duplicate-adjacent assessment
-
-- S711 next-step A / BACKLOG “Census class (d)” item, owner-picked via
-  `AskUserQuestion` at Phase 0. Deliverable: render the 2
-  duplicate-adjacent sites (`__dup_Y_2` vs `Y`, Track C;
-  `__dup_SLN0TF_2` vs `SLN0TF`, Real 375) as crops, verify local
-  geometry programmatically, judge acceptability, and close the item
-  with a dated note or scope a follow-up. Stub + pending receipt written
-  with this entry.
-
-### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 1788e2b8 — S711 close-out self-reconcile
-
-- S711’s final commit recorded its own close-out commit sha into the
-  completed `HANDOFFS.md` receipt (the recurring 1-commit self-reference
-  shape its handoff gotcha 3 predicted; measured exactly 1). Backfilled
-  at S712 Phase 0 reconcile.
-
-### 2026-09-18 · \[ad hoc\] S711 close-out: owner-directed push DONE — 34 commits to origin/master, all 4 CI workflows green
-
-- **Push (non-commit action):** `955f6f19..afd33514`, 34 commits (32 at
-  session start
-  - Phase 0 backfill `83618479` + claim `afd33514`), spanning S708 MHC
-    Slice 4, the S709 export-preview crash fix, and the S710 ledger
-    archive pass. Claim was committed BEFORE the push so the pushed head
-    carries the session’s own breadcrumb.
-- **Outcome:** all 4 on-push workflows green on `afd33514` — lint 5m43s,
-  test-coverage 9m58s, pkgdown 16m52s, R-CMD-check 33m22s (runs
-  35386636842/35386636857/35386636853/35386636874); watched to
-  completion in-session, then re-verified via `gh run list` before
-  recording. Close-out records + the self-reconcile sha commit are
-  pushed immediately after this entry (second push); that round’s
-  verification belongs to the next session’s unconditional Phase 0 CI
-  check (S706 precedent). Docs-only local changes; runtime smoke n/a —
-  the deliverable’s verification IS the CI matrix on real runners.
-
-### 2026-09-18 · \[ad hoc\] S711 claim: owner-directed push of local master to origin/master
-
-- S710 next-step A, owner-picked via `AskUserQuestion` at Phase 0. 33
-  commits ahead at claim (32 at session start + the Phase 0 backfill
-  `83618479`); the claim commit itself makes 34. Deliverable: push, then
-  verify the 4 on-push CI workflows (R-CMD-check / lint / pkgdown /
-  test-coverage) green and record the outcome. Stub + pending receipt
-  written with this entry.
-
-### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit 0f7f94fe — S710 close-out self-reconcile
-
-- S710’s final commit recorded its own close-out commit sha into the
-  completed `HANDOFFS.md` receipt (the recurring 1-commit self-reference
-  shape its handoff gotcha 5 predicted; measured exactly 1). Backfilled
-  at S711 Phase 0 reconcile.
-
-### 2026-09-18 · \[ad hoc\] S710 close-out: ledger archive pass DONE — all three byte triggers cleared
-
-- **Deliverable (trims `7fbe17b7`/`3dbe15f3`/`447f2beb`):** S709
-  next-step A. All three ledger files trimmed into
-  `docs/archive/*-through-2026-09-18.md` shards, L1/L2/L3 verified by
-  each shard’s own `verify.sh`: `SESSION_NOTES.md` 87,984 → 4,771 B (19
-  records), `HANDOFFS.md` 78,503 → 16,481 B (13 receipts, never zero),
-  `CHANGELOG.md` 68,117 → 9,471 B (40 records, trimmed last so the two
-  earlier trim-injected entries landed inside its cut). Final `--check`
-  on all three: no trigger fires.
-- **Findings:** the default cut on every file collided with the existing
-  `-through-2026-09-17` shards (S704–S708 all share that date) — legal
-  retained counts were quantized (SESSION_NOTES ≥15 or ≤2; HANDOFFS ≤2;
-  CHANGELOG ≤8) and probed with dry-run `--cut N` before any write
-  (Learning 761). The predicted small-denominator SRF refusals
-  (Learnings 549/586/594) never fired — no `--force`, no owner gate
-  needed. Docs-only; no package files touched; runtime smoke n/a.
-
-### 2026-09-18 · \[ad hoc\] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-18.md` (40 record(s), 68,117 B → 9,471 B)
-
-**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a
-session’s judgment. Moved the oldest **40** record(s) (2026-09-17 →
-2026-09-18) out of
-[`CHANGELOG.md`](https://github.com/rmsharp/nprcgenekeepr/CHANGELOG.md)
-into
-[`docs/archive/CHANGELOG-through-2026-09-18.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-18.md).
-Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
-pinning) and L3 (record partition), and is **re-derivable** — run
-[`docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh)
-rather than trusting a digest printed here. Live file 68,117 B → 9,471 B
-(−86.1%).
-
-### 2026-09-18 · \[ad hoc\] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-18.md` (13 record(s), 78,503 B → 16,481 B)
-
-**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a
-session’s judgment. Moved the oldest **13** record(s) (2026-09-17 →
-2026-09-18) out of
-[`HANDOFFS.md`](https://github.com/rmsharp/nprcgenekeepr/HANDOFFS.md)
-into
-[`docs/archive/HANDOFFS-through-2026-09-18.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-18.md).
-Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
-pinning) and L3 (record partition), and is **re-derivable** — run
-[`docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh)
-rather than trusting a digest printed here. Live file 78,503 B → 16,481
-B (−79.0%).
-
-### 2026-09-18 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-18.md` (19 record(s), 87,984 B → 4,771 B)
-
-**Written by:** `methodology_trim.py` v1.1.2 — a tool action, not a
-session’s judgment. Moved the oldest **19** record(s) (2026-08-14 →
-2026-09-18) out of
-[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
-into
-[`docs/archive/SESSION_NOTES-through-2026-09-18.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-18.md).
-Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
-pinning) and L3 (record partition), and is **re-derivable** — run
-[`docs/archive/SESSION_NOTES-through-2026-09-18.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-18.md.verify.sh)
-rather than trusting a digest printed here. Live file 87,984 B → 4,771 B
-(−94.6%).
-
-### 2026-09-18 · \[ad hoc\] S710 claim: ledger archive pass — trim SESSION_NOTES.md, HANDOFFS.md, and CHANGELOG.md
-
-- Session claimed (stub + pending HANDOFFS receipt + this entry, one
-  commit). S709 next-step A, owner-picked via `AskUserQuestion` at Phase
-  0: all three ledger byte triggers fire (`SESSION_NOTES.md` 87,140 B,
-  `HANDOFFS.md` 78,117 B, `CHANGELOG.md` 65,829 B — it crossed its
-  65,536 B budget with this session’s own Phase 0 backfill). Run
-  `methodology_trim.py --write` per file with L1/L2/L3 losslessness
-  verification; any small-denominator SRF refusal goes to the owner via
-  `AskUserQuestion` before a `--force` (Learnings 549/586/594).
-  Docs-only maintenance; no TDD phases apply.
-
-### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `710fea78` — S709’s own close-out self-reference commit
-
-- S710 Phase 0 ledger reconcile. The one commit past the frontier
-  (`33b0a556`) is S709’s final close-out write, which by construction
-  lands after its CHANGELOG entry: `710fea78` (close-out commit sha
-  recorded in the HANDOFFS receipt, self-reconcile). S709’s gotcha 5
-  predicted about 1 self-reference commit; it measured as exactly 1.
-
-### 2026-09-18 · \[BL-Up-Next\] S709 close-out: export-preview session-crash fix DONE — the Marker Genetics observers survive missing pedigree ids and failed-validation uploads
-
-- **Deliverable (RED `cd63250c`, GREEN `310c731d`, NEWS
-  `76807b2a`+`61c544a3`):** the top BACKLOG Up Next item (found S708).
-  Every upstream read inside the LD-block, sequence, and MHC
-  export-preview observers in `R/modMarkerGenetics.R` now goes through
-  `safeRead()` + `req()`, so a malformed upload’s validation error or an
-  erroring `pedigree()` aborts the preview quietly instead of ending the
-  user’s session (Learning 758); the sequence observer ports the MHC
-  tab’s Dragon 5 pre-check (`sequenceExportMissingIds`: build nothing,
-  show the count + alias-map precondition in the guidance); the three
-  guidance renderUIs name the could-not-be-processed state. Strict TDD,
-  all gates owner-approved via `AskUserQuestion` (3 PRE-RED approach
-  decisions, PRE-RED→RED, RED→GREEN, GREEN→skip-REFACTOR-and-close-out).
-- **Two evidence-driven scope rulings (owner-ratified):** the LD-block
-  missing-id pre-check was deliberately NOT ported —
-  [`markerLdBlock()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerLdBlock.md)
-  subsets its matrix to `founderIds` drawn from the same pedigree
-  (`R/markerLdBlock.R:236`), so `idsUsed` can never carry a non-pedigree
-  id and the branch would be untestable dead code; and the RED tests
-  exposed a SECOND, unknown crash path fixed in the same GREEN — the
-  module’s eager E2E data-ready `observe()` re-threw a malformed shared
-  upload’s validation error with no export click at all (Learning 759).
-- **Verification:** fresh pre-change baseline 2,405→S708-shape
-  reproduced (2,427 blocks, failed=0). RED honest: 5 new `testServer`
-  blocks fail via `shiny.destroyed.error` (Learning 759’s refinement:
-  the destroyed module session IS directly assertable), 1 guard passes
-  by design; the new live E2E reproduced the disconnect on the real tab
-  pre-fix (`Shiny.shinyapp.isConnected()` FALSE). GREEN: target file
-  66/66; both live E2E tests pass (Phase 3E smoke — session survives,
-  guidance shows the reason, pre-existing full export flow unchanged);
-  package-loaded lint 0; full suite once on final source 2,434 blocks =
-  baseline + the 7 new, failed=3 all triaged (2 wall-clock benchmarks
-  green on quiet re-run — CPU contention, Learning 760; 1 spelling fixed
-  by rewording the NEWS entry, re-run green);
-  [`devtools::check()`](https://devtools.r-lib.org/reference/check.html)
-  0 errors, 1 W + 1 N both the known untracked-local-file artifacts.
-  Learnings 759/760 appended; BACKLOG item removed.
-
-### 2026-09-18 · \[BL-Up-Next\] S709 claim: fix the LD-block/Genomic ROH export-preview session-disconnect crash
-
-- Session claimed (stub + pending HANDOFFS receipt + this entry, one
-  commit). Top BACKLOG Up Next item (found S708): both existing export
-  observers in `R/modMarkerGenetics.R` call de-identification primitives
-  that [`stop()`](https://rdrr.io/r/base/stop.html) inside
-  `observeEvent()`, which disconnects a live Shiny session (Learning
-  758); port the MHC tab’s `mhcExportMissingIds` pre-check to
-  `ldBlockExportPreview` and `sequenceExportPreview`, and fold in the
-  MHC malformed-upload residual. Strict TDD. Close-out entry follows at
-  Phase 3F.
-
-### 2026-09-18 · \[ad hoc\] Backfilled (reconcile-on-read): undocumented commit `cc540bf3` — S708’s own close-out self-reference commit
-
-- S709 Phase 0 ledger reconcile. The one commit past the frontier
-  (`6b008487`) is S708’s final close-out write, which by construction
-  lands after its CHANGELOG entry: `cc540bf3` (close-out commit sha
-  recorded in the HANDOFFS receipt, self-reconcile). S708’s gotcha 5
-  predicted about 1 self-reference commit; it measured as exactly 1.
-
-### 2026-09-18 · \[issue \#148\] S708 closed issue \#148 on GitHub (all 4 slices shipped)
-
-- `gh issue close 148 --reason completed` with a comment listing the
-  four slices’ commits and S708’s verification evidence (closed
-  2026-09-18T05:23:31Z,
-  <https://github.com/rmsharp/nprcgenekeepr/issues/148>). Non-commit
-  action, per the issue close-out checklist (close in the same session
-  the last BACKLOG item ships).
