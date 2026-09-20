@@ -34,6 +34,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-19-2.md` (10 record(s), 49,225 B → 15,427 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **10** record(s) (2026-09-19 → 2026-09-19) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-19-2.md`](docs/archive/SESSION_NOTES-through-2026-09-19-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 49,225 B → 15,427 B (−68.7%).
+
 ### 2026-09-19 · [ad hoc] S727 deliverable: tarball-size audit — the "~19 MB tarball" is a `scratchpad/` leak; the real package builds to 3.49 MB (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md`)
 - **Headline (all measured, none estimated):** clean `git archive HEAD` build =
   **3,485,185 B** (35% of CRAN's 10 MB line; CRAN 2.0.0 = 2,419,329 B, so +1.07 MB / +44%
