@@ -38,6 +38,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 738 Did
+**Deliverable:** Package-split disposition — owner accept/reject of the S667 scoping
+recommendation ("do not split now",
+`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`) recorded in the
+BACKLOG/CHANGELOG (IN PROGRESS)
+**Started:** 2026-09-20
+**Status:** Session claimed. Owner picked the item via the Phase 0 picker; the
+disposition question goes to the owner next.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 736 Handoff Evaluation (by Session 737)
 **Score: 9/10.** **What helped:** the priorities list fed the Phase 0 picker directly, and
 the picked item's own pointers (S667 coupling inventory names the feature file set; S727

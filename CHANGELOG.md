@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S738 claim: package-split disposition — owner accept/reject of the S667 "do not split now" recommendation *(in progress)*
+- Session claimed (stub + pending receipt + this entry). Owner picked the item via the
+  Phase 0 picker; Phase 0 reconcile was clean (0 undocumented on both frontiers at
+  `a4b62e16`; S737 receipt complete, ratchet citation matches results file); CI 10/10
+  green on master; dashboard 96/100; 6 unpushed measured (= S737's estimate); context
+  budget WARN = CLAUDE.md warn band + growth run 15/10 (as S737 predicted), both synced
+  files `canonical ok`. Close-out records the disposition.
+
 ### 2026-09-20 · [ad hoc] S737 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `0dc52bc7`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S737 commit. S737 total: 4 commits (claim `0528da0e`, deliverable `6346cbde`,
   records `0dc52bc7`, this one). Ahead of `origin/master` by 6 after close-out (2
