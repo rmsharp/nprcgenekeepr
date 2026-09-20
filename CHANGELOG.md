@@ -38,6 +38,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S737 deliverable: pedigree-drawing feature growth audit — the feature is 25.4–30.5% of shipped-source growth, 43% of R+test line growth, and ~51–61% of compressed-tarball growth since CRAN 2.0.0
+- `docs/audits/PEDIGREE_DRAWING_FEATURE_GROWTH_AUDIT_2026-09-20.md` written; the
+  owner-requested `BACKLOG.md` item (mid-S721, ±20% accepted) is DONE and its block
+  removed in this commit. Headline: shipped source grew 4,323,677 → 7,551,980 B
+  (+74.7%) since pre-feature `fc358df4` (2026-07-29); the feature owns
+  821,174–983,984 B of that (strict wholly-owned → +partial/twin brackets), i.e. the
+  package is ~19–23% larger in source bytes because of the feature. Lines: 15,582
+  feature lines = 43.0% of R+test line growth (test:source 2.6:1). Compressed: clean
+  tarball rebuilt this session 3,483,939 B (matches the S728 gate figure); feature
+  share ≈ 0.55–0.65 MB ≈ 16–19% of the tarball, dominated not by the feature's own
+  code but by the vis-network + html2canvas payload its two live widgets embed in
+  `inst/doc/a2interactive.html` (~0.29 MB compressed) — carried forward into the open
+  inst/doc-slimming item's description as hard numbers. Marker-genetics context: its
+  single 1,247,940 B example CSV outweighs the feature's entire tracked source.
+
 ### 2026-09-20 · [ad hoc] S737 claim: pedigree-drawing feature growth measurement *(in progress)*
 - Owner pick via the Phase 0 picker: the `BACKLOG.md:117` item (owner-requested
   mid-S721, ±20% accepted). Deliverable: one measurement report in `docs/audits/`

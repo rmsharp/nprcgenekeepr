@@ -107,30 +107,17 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       — an ESTIMATE needing its own before/after clean-export build measurement
       (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` Finding 3 + §7 recipe); `df_print: paged`
       does not exist under `html_vignette` and must become `knitr::kable()`; optionally replace
-      `a2interactive`'s two live `visNetwork` widgets with static images. Buys
+      `a2interactive`'s two live `visNetwork` widgets with static images — now quantified
+      (S737, `docs/audits/PEDIGREE_DRAWING_FEATURE_GROWTH_AUDIT_2026-09-20.md` Obs. 2): the
+      widgets' vis-network + html2canvas payload is ~1.23 MB uncompressed ≈ 0.29 MB compressed
+      inside `inst/doc/a2interactive.html`, so that one step alone removes most of the drawing
+      feature's tarball footprint. Buys
       documentation-guideline headroom, not tarball-limit compliance (already met: clean build
       3.49 MB vs 10 MB); the S728 `tarball_size_clean_export` gate (`.quality-gates.json`,
       <=5 MB) will show any saving mechanically. **Not worth doing on size grounds (measured
       S727):** shrinking example/test data (`inst/extdata/examples/` 0.46 MB compressed,
       `tests/` 0.66 MB), recompressing `data/` (0.14 MB), or the package split. Always build
       release tarballs from a clean export, never the working tree.
-- [ ] **Measure how much this R package has grown due to the pedigree-drawing feature —
-      a rough estimate (±20%) is sufficient** (owner-requested mid-S721, 2026-09-19, READY,
-      Effort S) -- quantify the package-size growth attributable to the pedigree-diagram/
-      drawing capability (issue #129's Diagram tab, S433/S434, through the S643-S699
-      pedigree-drawing campaign): e.g. lines/bytes of the feature's own source and test
-      files (the layout core in `R/makePedigreeDiagramData.R`, the Diagram-tab Shiny module,
-      `R/comparePedigreeStructure.R`, their `tests/testthat/` files, and the pedigree-diagram
-      vignettes/articles) vs. package totals, and/or a before/after comparison against a
-      pre-feature commit (~2026-07-29, before S433). The file-level coupling inventory in
-      `docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` already names the
-      feature's file set and is a good starting point. Owner explicitly accepts a rough ±20%
-      estimate -- shared-infrastructure attribution does not need to be precise.
-      **Upper bound from the S727 tarball audit:** the clean-build tarball grew 2,419,329 B
-      (CRAN 2.0.0, 2026-07-26) -> 3,485,185 B (`f8ffa40b`), i.e. +1.07 MB compressed (+44%)
-      across ALL features, so the drawing feature's tarball share is some fraction of that;
-      measure compressed, from a clean `git archive` build, not on-disk
-      (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` §5, §7).
 - [ ] **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing binary hangs on
       `macos-latest`'s `ChromoteSession$new()` bootstrap** (found S619, 2026-08-20, incidental to
       the chromote CDP-timeout fallback fix below, READY, Effort M -- research only, not
