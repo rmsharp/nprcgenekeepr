@@ -34,6 +34,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S728 close-out: tarball build-hygiene DONE + session records (handoff, S727 evaluation 9/10, receipt, Learning 772)
+- **Records:** `SESSION_NOTES.md` S728 handoff + S727 evaluation (9/10 — its next-step (A) WAS
+  this session's deliverable, the `BACKLOG.md:100` block was the execution plan verbatim, and
+  every checked claim held); `HANDOFFS.md` receipt complete (self 9/10);
+  `PROJECT_LEARNINGS.md` Learning 772 (gate-author mechanics: a gate measuring
+  `git archive HEAD` measures the last commit, so run `--run` AFTER committing; the 600 s
+  per-gate timeout fits a build gate; a self-tagged extract marker survives chatty tooling).
+- **Receipt citation** (run at the deliverable HEAD `2570645b`): quality_ratchet: 1/1 pass ·
+  0 fail · 0 unmeasured · results `ef8070eeb6c7` · manifest `aa983075d6a2` — the new gate's
+  first citation-of-record, measured 3,485,027 B against the 5,000,000 B threshold.
+- **Post-append measurements** (`--budget-bytes 65536`): no trigger fires — SESSION_NOTES
+  31,480 B, HANDOFFS 52,085 B, CHANGELOG 61,770 B pre-entry (CHANGELOG is ~3.7 KB from its
+  trigger — expect it to fire within a session or two). context_budget: no file over ceiling
+  (`CLAUDE.md` warn band, documented headroom).
+
 ### 2026-09-19 · [ad hoc] S728 deliverable: tarball build-hygiene follow-ups DONE — leak closed in both ignore files, testthat debris ignored, 5 MB clean-export size gate live (first declared quality gate)
 - **`.Rbuildignore`:** the owner's pending `^scratchpad$` line committed (owner-directed via
   picker; the measured fix for the 19.7 MB working-tree leak, S727 audit Finding 1), plus

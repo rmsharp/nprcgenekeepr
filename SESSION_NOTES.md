@@ -34,19 +34,95 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 727 Handoff Evaluation (by Session 728)
+**Score: 9/10.** **What helped:** next step (A) WAS this session's deliverable, framed exactly
+as the decision the Phase 0/1 pickers then posed (commit or discard the `.Rbuildignore` line);
+the `BACKLOG.md:100` block was the execution plan verbatim — steps in order, verification
+commands named (`tools:::inRbuildignore` + `git check-ignore`, S725 precedent), threshold
+suggestion (<=5 MB) adopted as declared; the audit §7 recipe became the gate command nearly
+verbatim; "~8 expected" unpushed measured exactly 8; "expect 0 undocumented; measure it"
+measured 0 on both frontiers; gotcha (1) (dirty `.Rbuildignore`, not session-made, don't
+touch) correctly shaped Phase 0. **What was missing:** nothing material — only that nobody had
+checked whether the ratchet's timeout accommodates a build-based gate (one grep: 600 s, fits).
+**What was wrong:** nothing found — every checked claim held, and the gate's clean-export
+measurements (3,485,137 B at `f82f978a`; 3,485,027 B at `2570645b`) are consistent with the
+audit's 3,485,185 B at `f8ffa40b` (drift = the docs-only commits in between). **ROI:** high.
+
 ### What Session 728 Did
-**Deliverable:** Tarball build-hygiene follow-ups (`BACKLOG.md:100` steps 1–3) — commit the
-owner's `.Rbuildignore` `+^scratchpad$` line, git-ignore `scratchpad/`, ignore the testthat
-debris (`tests/testthat/_problems/`, `testthat-problems.rds`) in both files, and declare a
-clean-export tarball-size gate (≤5 MB) in `.quality-gates.json` (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Owner decisions taken via Phase 0/1 pickers: (1) commit the
-`.Rbuildignore` edit; (2) yes, also git-ignore `scratchpad/` (documented ghost-check tradeoff
-accepted); (3) yes, include the size gate. Step 4 (inst/doc slimming) stays deferred — its
-own session per the item. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Tarball build-hygiene follow-ups (`BACKLOG.md:100` steps 1–3) — **DONE.**
+The owner's `^scratchpad$` `.Rbuildignore` line is committed (the 19.7 MB working-tree leak
+closed); `scratchpad/` and the testthat debris (`tests/testthat/_problems/`,
+`testthat-problems.rds`) are ignored in BOTH `.Rbuildignore` and `.gitignore`; and the
+project's FIRST declared quality gate is live: `tarball_size_clean_export` (clean-export
+`pkgbuild::build()` of `git archive HEAD`, max 5,000,000 B), measured in-session **1/1 pass
+at 3,485,027 B** on the deliverable commit. Config/docs only — no `.R` files; TDD N/A;
+lint N/A.
+**Started/completed:** 2026-09-19 (single session). Claim `f82f978a`; deliverable `2570645b`;
+records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per commit; the deliverable entry carries the numbers.
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile clean (0 undocumented on both frontiers; the sole `status: pending`
+   grep hit is the HANDOFFS how-to text, not a receipt); CI 4/4 green on `9006b567`; dashboard
+   96/100; context budget warn-band only; 8 unpushed as predicted; dirty `.Rbuildignore`
+   reported, untouched.
+2. **Owner decisions via pickers** (Phase 0 pick + one 3-question Phase 1 gate): pick the
+   build-hygiene item; commit the edit; ALSO git-ignore `scratchpad/` (ghost-check tradeoff
+   accepted); include the size gate.
+3. **Edits:** `.Rbuildignore` +2 debris lines (:159–160) beside the owner's :155;
+   `.gitignore` new block (:93–103); `.quality-gates.json` first gate (:17–27), command =
+   audit §7 recipe printing a self-tagged `TARBALL_BYTES=` marker.
+4. **Verification:** `git check-ignore -v` resolves all three paths to the new lines;
+   `tools:::inRbuildignore` TRUE on each real path (directory matches prune contents — the
+   semantics S727's 3.56 MB working-tree build measured); gate exercised twice (claim commit
+   3,485,137 B; deliverable commit 3,485,027 B; both pass with ~1.5 MB headroom); `git status`
+   untracked noise down to the 5 known planning/article files.
+5. **BACKLOG:** completed block removed in the deliverable commit (S686 convention); step 4
+   (optional `inst/doc` slimming) extracted as its own DECISION-NEEDED item at `BACKLOG.md:100`.
+
+**Self-assessment (Session 728): 9/10.** **Strengths:** (1) all three embedded owner decisions
+collected in ONE structured gate before the claim, so execution never stalled; (2) the gate was
+exercised in-session twice, and the receipt cites the run at the shipped HEAD, not the claim
+state; (3) scope held — no CI-workflow variant, no inst/doc slimming, nothing beyond the
+approved three steps. **Weaknesses:** (1) "5 MB" was interpreted as decimal 5,000,000 B (the
+audit's currency) without asking — documented in the gate's `unit`, but 5 MiB was equally
+plausible; (2) the first ratchet run measured the claim state — harmless here (docs-only
+claim) but the sequencing is now a Learning 772 caution; (3) every future close-out pays
+~2 min of gate build time — approved, but the recurring cost lands on successors.
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~12 expected after close-out: 8 pre-existing +
+claim + deliverable + records + sha; the last two are an estimate at write time). All
+docs/config-only; the push also puts the first gate manifest on the remote. (B) Priorities:
+pedigree-growth measurement (READY, S, owner-requested S721 — bounded at +1.07 MB total,
+measure compressed from a clean build); package-split disposition (owner; size no longer
+argues for it) + REUSE registration (owner action, S); BACKLOG.md editorial compression
+(READY, L); the extracted inst/doc slimming item (DECISION NEEDED, M, `BACKLOG.md:100`).
+(C) Standing report-only: HANDOFFS.md truncated duplicate S720 stub (two adjacent
+`session: S720` blocks); iCloud Housekeeping item closable pending a duplicates-stay-gone
+confirmation; the owner's stale 19.7 MB `../nprcgenekeepr_2.0.0.9000.tar.gz` +
+`../nprcgenekeepr.Rcheck/` still sit outside the repo (delete/rebuild is the owner's call).
+
+**Key files:** `.quality-gates.json:17` (the gate — name/threshold/command/why),
+`.Rbuildignore:155-160` (scratchpad + debris lines), `.gitignore:93-103` (mirror block with
+the tradeoff note), `BACKLOG.md:100` (extracted inst/doc item), `PROJECT_LEARNINGS.md`
+Learning 772 (gate-author mechanics), `docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` §7
+(the recipe the gate command reuses).
+
+**Gotchas for the next session:** (1) **`scratchpad/` no longer shows as untracked — by owner
+decision, not by accident.** The Phase 0 untracked-file ghost-session check must remember the
+directory still exists on disk (`ls -d scratchpad` if in doubt); it is now invisible to both
+git and builds. (2) **`quality_ratchet.py --run` now takes ~2 min** (full package build with
+vignettes) — not a hang; per-gate timeout is 600 s. Run it AFTER committing: the gate measures
+`git archive HEAD` (Learning 772); never swap in `--no-build-vignettes`, which measures a
+~38%-lighter artifact than the one CRAN gets. (3) The gate threshold is decimal 5,000,000 B;
+thresholds only tighten — loosening is a plan-mode decision committed with `--no-verify`
+(SAFEGUARDS Blast Radius). (4) Standing: every `methodology_trim.py` run needs
+`--budget-bytes 65536`; `renv.lock` carries no dev tooling (`Rscript` banner expected);
+CLAUDE.md in warn band (~1,640 B headroom) — narrative goes to `PROJECT_LEARNINGS.md`; the
+two `SESSION_NOTES.md` ceilings still differ (56,750 B token cap binds before the 65,536 B
+byte trigger — owner decision pending); suite baseline 2437/0/0/184/0 carries forward (no
+code touched).
 
 ### Session 726 Handoff Evaluation (by Session 727)
 **Score: 9/10.** **What helped:** the filed tarball item's measure-first mandate ("build the
