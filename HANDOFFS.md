@@ -156,6 +156,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S737
+date: 2026-09-20
+status: pending
+active_task: Pedigree-drawing feature growth measurement (BACKLOG.md:117, owner-requested mid-S721, ±20% accepted; owner pick via the Phase 0 picker) — one measurement report in docs/audits/. Claimed, work beginning.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S736
 date: 2026-09-20
 status: complete

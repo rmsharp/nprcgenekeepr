@@ -38,6 +38,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S737 claim: pedigree-drawing feature growth measurement *(in progress)*
+- Owner pick via the Phase 0 picker: the `BACKLOG.md:117` item (owner-requested
+  mid-S721, ±20% accepted). Deliverable: one measurement report in `docs/audits/`
+  quantifying package growth attributable to the pedigree-drawing feature. Stub +
+  pending receipt committed with this entry; close-out records the rest.
+
 ### 2026-09-20 · [ad hoc] S736 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `953ca78a`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S736 commit. S736 total: 3 commits (claim `2628cd02` — rode the push, records
   `953ca78a`, this one). Ahead of `origin/master` by 2 after close-out, both docs-only;

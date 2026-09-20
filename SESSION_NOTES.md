@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 737 Did
+**Deliverable:** Pedigree-drawing feature growth measurement (`BACKLOG.md:117`,
+owner-requested mid-S721; ±20% accepted; owner pick via the Phase 0 picker) — one
+measurement report in `docs/audits/` (IN PROGRESS)
+**Started:** 2026-09-20
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 735 Handoff Evaluation (by Session 736)
 **Score: 9/10.** **What helped:** "~2 unpushed" measured exactly 2; "expect 0
 undocumented; measure it" measured 0 on both frontiers; the ratchet citation matched
