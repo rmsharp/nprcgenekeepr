@@ -38,6 +38,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S737 close-out: session records (handoff, S736 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S736 evaluation: 9/10 — every checked claim held;
+  the picked item's own pointers made discovery near-zero). `HANDOFFS.md` receipt
+  complete. No new `PROJECT_LEARNINGS.md` entry (routine audit-workstream session; the
+  durable findings live in the audit + the enriched BACKLOG item). Reduction check:
+  `BACKLOG.md` shrank net this session (item block removed). quality_ratchet at the
+  deliverable HEAD `6346cbde`: 1/1 pass · 0 fail · 0 unmeasured · results 2efb342d66ad ·
+  manifest aa983075d6a2 (3,483,914 B ≤ 5,000,000 B). ~4 unpushed after close-out
+  (estimate); push is the owner's call.
+
 ### 2026-09-20 · [ad hoc] S737 deliverable: pedigree-drawing feature growth audit — the feature is 25.4–30.5% of shipped-source growth, 43% of R+test line growth, and ~51–61% of compressed-tarball growth since CRAN 2.0.0
 - `docs/audits/PEDIGREE_DRAWING_FEATURE_GROWTH_AUDIT_2026-09-20.md` written; the
   owner-requested `BACKLOG.md` item (mid-S721, ±20% accepted) is DONE and its block

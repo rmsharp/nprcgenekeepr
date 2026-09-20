@@ -38,13 +38,105 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 736 Handoff Evaluation (by Session 737)
+**Score: 9/10.** **What helped:** the priorities list fed the Phase 0 picker directly, and
+the picked item's own pointers (S667 coupling inventory names the feature file set; S727
+upper bound +1.07 MB) eliminated nearly all discovery; "expect 0 undocumented; measure it"
+measured 0 on both frontiers; "~2 unpushed (estimate)" measured exactly 2; the ratchet
+citation matched `.quality-gates-results.json` byte-for-byte; the standing set held
+(CLAUDE.md warn band present; growth run 14/10, consistent with S736's 13/10 + one more
+non-shrinking measurement). **What was missing:** nothing material — this session's task
+carried its own pointers in the BACKLOG item. **What was wrong:** nothing found. **ROI:**
+high.
+
 ### What Session 737 Did
-**Deliverable:** Pedigree-drawing feature growth measurement (`BACKLOG.md:117`,
-owner-requested mid-S721; ±20% accepted; owner pick via the Phase 0 picker) — one
-measurement report in `docs/audits/` (IN PROGRESS)
-**Started:** 2026-09-20
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Pedigree-drawing feature growth measurement — **DONE.**
+`docs/audits/PEDIGREE_DRAWING_FEATURE_GROWTH_AUDIT_2026-09-20.md` (commit `6346cbde`;
+BACKLOG item removed and the open inst/doc-slimming item enriched in the same commit).
+Headline: the feature owns **25.4–30.5% of shipped-source byte growth** (821,174–983,984 B
+of +3,228,303 B since pre-feature `fc358df4`, 2026-07-29 — the package is ~19–23% larger
+in source bytes because of it), **43.0% of R+test line growth** (15,582 lines; test:source
+2.6:1), and **≈0.55–0.65 MB ≈ 51–61% of compressed-tarball growth** since CRAN 2.0.0
+(tarball rebuilt clean this session: 3,483,939 B, matching the S728 gate figure). The
+feature's largest shipped weight is NOT its own code: ~0.29 MB compressed is the
+vis-network + html2canvas payload its two live widgets embed in
+`inst/doc/a2interactive.html` — hard numbers now carried into the inst/doc BACKLOG item.
+Marker-genetics context: one 1,247,940 B example CSV outweighs the feature's entire
+tracked source. No TDD phases (measurement + docs; no `.R` files). Lint N/A.
+**Started/completed:** 2026-09-20 (single session). Claim `0528da0e`; deliverable
+`6346cbde`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable, records, sha).
+BACKLOG item consumed and removed (completed-item removal checklist).
+
+**What actually happened, in order:**
+1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both frontiers at
+   `aa60cd58`; S736 receipt complete, ratchet citation matches results file); CI 10/10
+   green on master (latest 4 on `2628cd02`); dashboard 96/100; 2 unpushed measured
+   (= S736's estimate); context budget WARN = CLAUDE.md warn band + growth run 14/10,
+   both synced files `canonical ok`. Sequencing audits checked: #146–153 all closed, no
+   live cluster.
+2. **Owner picked the growth measurement** via the Phase 0 picker; claim `0528da0e`.
+3. **Classification:** feature file set from the S667 scoping doc, verified per-file by
+   `git log --diff-filter=A` creation dates and grep usage (e.g. the affected/name/twins
+   example CSVs are consumed by drawing tests + diagram screenshots generator;
+   `shrinkPedigree.R` created 2026-08-14 as Track B fidelity apparatus; twin-relations
+   infra bucketed separately as ambiguous; `enumerateMaximalIndependentSets.R`/`zzz.R`
+   confirmed NON-feature via their creating commits).
+4. **Measurement:** per-file byte deltas `fc358df4`→HEAD via `git ls-tree -r -l` joined in
+   a scratchpad script (shipping filter approximating `.Rbuildignore`); line counts at
+   both commits; clean tarball rebuilt per the S727 §7 recipe (3,483,939 B, 5 B from the
+   gate figure = gzip header noise); `inst/doc/a2interactive.html` dissected by script
+   block (vis-network ×3 = 1,069,799 B + html2canvas 124,573 B + 2 widget payloads
+   33,421 B attributed; the 594 KB d3-based block and 17 embedded images excluded —
+   conservative). Two compressed-attribution methods (independent gzip -9 vs proportional
+   tarball share) agreed within 10%; report brackets both.
+5. **Reconciliation:** bucket arithmetic reconciles to the byte (821,174 + 119,748 +
+   43,062 + 2,258,954 − 14,635 double-count = 3,228,303 ✓).
+
+**Self-assessment (Session 737): 9/10.** **Strengths:** (1) attribution built from
+verified creation dates + usage greps, not filename pattern-matching; (2) two independent
+compressed methods cross-checked; arithmetic reconciled exactly; (3) the audit's most
+actionable number (widget payload ≈ 0.29 MB compressed) was forward-carried into the live
+inst/doc BACKLOG item, not left buried in the report; (4) scope held (measurement only, no
+remedy); full claim/receipt/ledger discipline kept. **Weaknesses:** (1) the partial-file
+bucket is an upper bound by construction, not a measurement (bracketed, disclosed); (2)
+the 17 embedded images in a2interactive.html (≤538 KB uncompressed) were left
+unattributed — bounded and noted, but a per-image section mapping would have tightened
+the compressed range.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine audit-workstream session;
+the durable findings live in the audit doc + the enriched BACKLOG item. **Reduction
+check (FM #28):** `BACKLOG.md` shrank net (−18 lines item removal, +6 lines enrichment)
+— a mandated-read file got smaller this session.
+
+**Next steps (specific):** (A) ~3 unpushed commits after close-out (deliverable + records
++ sha; claim `0528da0e` also unpushed — recount with
+`git rev-list --count origin/master..HEAD`, estimate ~4); CI current through `2628cd02`;
+docs-only since, so a push session is routine when the owner wants one (S726–S736
+precedent). (B) Priorities after this session: package-split disposition + REUSE
+registration (owner decisions — the audit adds ammunition: the feature is 14.1% of R/
+lines, and its tarball weight is mostly the widget payload, not code); BACKLOG.md
+editorial compression (READY, L, `BACKLOG.md:227` area); inst/doc slimming (DECISION
+NEEDED, M, `BACKLOG.md:100` — now with quantified savings: ~0.29 MB from the widget
+replacement alone + the 0.4–0.9 MB html_vignette estimate). (C) Standing report-only set
+unchanged: CLAUDE.md warn band; growth run (15/10 next if nothing shrinks — note
+BACKLOG.md is not in the budget file, so this session's reduction won't reset it).
+
+**Key files:** `docs/audits/PEDIGREE_DRAWING_FEATURE_GROWTH_AUDIT_2026-09-20.md` (the
+deliverable), `CHANGELOG.md:41` (S737 entries at top), `BACKLOG.md:100` (inst/doc item,
+now enriched), `HANDOFFS.md:158` (S737 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0 —
+measure it; ~4 unpushed (estimate at write time). (2) The audit's shipping filter
+approximates `.Rbuildignore` in a scratchpad script — if anyone re-derives the numbers,
+§5 of the audit has the reproduction commands; scratchpad copies do not survive the
+session. (3) `pkgbuild::build()` on a clean export takes ~4 min locally and its output
+tarball differs from the gate figure by ~5 B (gzip mtime header) — not a discrepancy.
+(4) Standing set unchanged: `gh run list --commit` needs the FULL 40-char sha;
+`scratchpad/` invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing
+(Learning 772); trim needs `--budget-bytes 65536`; renv banner expected; CLAUDE.md warn
+band; the two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline
+2437/0/0/184/0 remote-confirmed on `2628cd02`.
 
 ### Session 735 Handoff Evaluation (by Session 736)
 **Score: 9/10.** **What helped:** "~2 unpushed" measured exactly 2; "expect 0
