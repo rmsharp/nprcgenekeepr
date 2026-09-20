@@ -114,25 +114,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       S727):** shrinking example/test data (`inst/extdata/examples/` 0.46 MB compressed,
       `tests/` 0.66 MB), recompressing `data/` (0.14 MB), or the package split. Always build
       release tarballs from a clean export, never the working tree.
-- [ ] **Apply the CRAN check-time fix: shrink the `makePedigreeMatingLayout` example input**
-      (extracted S730, 2026-09-19, from the completed measure-first CRAN check-time item;
-      READY, Effort S) -- the S730 audit
-      (`docs/audits/CRAN_CHECK_TIME_AUDIT_2026-09-19.md`) measured the full CRAN-surface
-      check at 17.3 min, of which **734 s (71%) is the ONE example
-      `makePedigreeMatingLayout(nprcgenekeepr::examplePedigree)`** (3,694 rows, ~147× CRAN's
-      5 s per-Rd threshold; the app's own diagram cap is 750 individuals,
-      `R/modPedigree.R:406`). Fix: replace the example input with a small shipped pedigree
-      at `R/makePedigreeDiagramData.R:1659-1662` + `devtools::document()` — measured
-      candidate `pedWithGenotype` (280 rows, 1.0 s; emits a benign edge-collision warning,
-      so a clean-laying-out `examplePedigree` subset is the alternative) — then re-measure
-      with the audit §7 recipe (expect ~5 min total, empty >5 s table), clearing the
-      incoming "Overall checktime > 10 min" NOTE. **NOT `\donttest{}`** — incoming still
-      runs those (audit Finding 3, verified in `check.R`). Optional second lever only if
-      CRAN's farm still crowds 10 min: `skip_on_cran()` on the top Finding-4 test files
-      (~1–2 min back; CI keeps full coverage). Tests are otherwise fine (215 s under check;
-      ~14% of local blocks already stay home on CRAN — audit Finding 2). The suite's
-      local/CI baseline stays authoritative; the re-measure IS the verification gate for
-      this doc-only `.Rd` change.
 - [ ] **Measure how much this R package has grown due to the pedigree-drawing feature —
       a rough estimate (±20%) is sufficient** (owner-requested mid-S721, 2026-09-19, READY,
       Effort S) -- quantify the package-size growth attributable to the pedigree-diagram/

@@ -154,16 +154,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S732
 date: 2026-09-20
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Apply the CRAN check-time fix — shrink the makePedigreeMatingLayout roxygen example input (R/makePedigreeDiagramData.R:1659-1662) + devtools::document() + audit §7 clean-export re-measure (BACKLOG.md:117, READY, Effort S). Claimed; work beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: CRAN check-time fix applied and verified DONE — makePedigreeMatingLayout roxygen example input examplePedigree (3,694 rows, 734 s = 71% of the whole check) → smallPed (17 rows, 0.03 s, zero warnings) at R/makePedigreeDiagramData.R:1659-1663 + regenerated man/makePedigreeMatingLayout.Rd via devtools::document(). §7 clean-export re-measure at the fix commit ba088d0d: Status OK, zero NOTEs, >5 s examples table EMPTY (worst remaining Rd: groupAddAssign 1.98 s); examples 743.0 → 9.8 s; whole check 1,032 → 291.6 s CPU (4.9 min, −72%, matching the audit prediction); wall 518.8 s contention-inflated (load avg 50+; CPU/wall 0.56 vs S730's 0.995) — upper bound only. TDD N/A (doc-only .Rd example change; the re-measure is the ratified verification gate). Lint 0 on the touched file.
+what_was_done: Claim e7fe4713; fix ba088d0d; completed BACKLOG item removed in the records commit (S686). Input choice measured across ALL shipped pedigrees with the required id/sire/dam/sex/gen columns: smallPed 0.03 s/clean beat the item's named candidate pedWithGenotype (0.93 s + 5-collision warning), qcPed (0.91 s + same), rhesusPedigree (2.91 s + 72 collisions); smallPed is the fixture idiom in 13 other roxygen examples. Fix committed BEFORE the re-measure (the §7 recipe builds git archive HEAD). First §7 run failed in 4 s (renv banner polluted the R_LIBS capture → "quadprog not available"); re-captured with tail -1, re-check passed.
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~6 expected after close-out: 2 pre-existing + claim + fix + records + sha; last two estimated at write time). The fix commit touches .R/.Rd, so a push gets it remote R-CMD-check validation; still no urgency. (B) Priorities: pedigree-growth measurement (READY, S — now the first Up Next item); package-split disposition + REUSE registration (owner decisions); BACKLOG.md editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M, BACKLOG.md:100). (C) Standing report-only set unchanged from S731.
+key_files: R/makePedigreeDiagramData.R:1659 (new example), man/makePedigreeMatingLayout.Rd:110 (regenerated), CHANGELOG.md:41 (S732 entries with verification numbers), docs/audits/CRAN_CHECK_TIME_AUDIT_2026-09-19.md:225 (§7 recipe; Finding 4 holds the untaken skip_on_cran lever)
+gotchas: §7 recipe trap — capture R_LIBS with Rscript -e 'cat(.libPaths()[1])' 2>/dev/null | tail -1; renv's out-of-sync banner can land on stdout and a polluted R_LIBS kills the check in 4 s ("quadprog not available"). Expect 0 undocumented commits at next Phase 0 — measure it; ~6 unpushed (estimate). Quiet-machine wall figure not measured (machine loaded all session); direction settled (empty >5 s table, worst Rd 1.98 s, CPU 4.9 min). Finding-4 skip_on_cran lever stays untaken unless CRAN's actual farm crowds 10 min. Standing set unchanged: scratchpad/ invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band; the two SESSION_NOTES.md ceilings differ (owner decision pending; file at ~56.4 KB is ~350 B under the token cap — next handoff will need a trim); suite baseline 2437/0/0/184/0 not re-run locally (no code-behavior change; CRAN-surface suite ran 0-fail inside the §7 check).
+runtime_smoke: n/a — doc-only roxygen example change; the §7 R CMD check executed the new example end-to-end (Status OK, examples stage 9.8 s). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results f25e0f1593cb · manifest aa983075d6a2 (measured 3,483,950 B at ba088d0d)
+changelog_ref: ba088d0d
 commit: pending
 ```
 

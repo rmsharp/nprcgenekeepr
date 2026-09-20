@@ -38,6 +38,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S732 close-out: fix verified (§7 re-measure — Status OK, >5 s table EMPTY, check CPU 1,032 → 291.6 s); session records
+- **Verification at the fix commit `ba088d0d`** (audit §7 clean-export recipe, `NOT_CRAN`
+  unset): **Status OK, zero NOTEs, the >5 s examples table is EMPTY** (worst remaining Rd:
+  `groupAddAssign` 1.98 s elapsed); examples 743.0 → 9.8 s elapsed over 202 Rd files;
+  whole check 1,032 → 291.6 s CPU (4.9 min, −72%), matching the audit's ~5 min
+  prediction. Wall 518.8 s (8.6 min) is contention-inflated (load avg 50+, external VM +
+  5 Chromium processes; CPU/wall 0.56 vs S730's 0.995) — an upper bound; the CRAN-surface
+  test suite ran 0-fail inside the check. T1–T4 cleared. The Finding-4 `skip_on_cran()`
+  lever deliberately NOT taken (audit holds it if CRAN's farm ever crowds 10 min).
+  Gotcha for §7 reuse: capture `R_LIBS` with `... | tail -1` — renv's out-of-sync banner
+  can land on stdout and a polluted `R_LIBS` kills the check in 4 s ("quadprog not
+  available"; cost one failed run this session). **Completed BACKLOG item removed**
+  (`BACKLOG.md:117`, S686 convention) in this commit. `SESSION_NOTES.md` handoff written
+  (S731 evaluation: 9/10; self: 9/10); `HANDOFFS.md` receipt complete. No new
+  `PROJECT_LEARNINGS.md` entry (routine Effort-S fix). quality_ratchet at close-out:
+  cited in the receipt. ~6 unpushed after close-out (estimate); push is the owner's call.
+
 ### 2026-09-20 · [ad hoc] S732 deliverable: CRAN check-time fix — `makePedigreeMatingLayout` example input `examplePedigree` → `smallPed`
 - `R/makePedigreeDiagramData.R:1659-1662` roxygen `@examples` + regenerated
   `man/makePedigreeMatingLayout.Rd` (`devtools::document()`, never hand-edited). Input
