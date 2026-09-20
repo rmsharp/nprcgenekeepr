@@ -152,6 +152,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S724
+date: 2026-09-19
+status: pending
+active_task: Baseline-warnings cleanup (BACKLOG.md:233 Housekeeping item) — re-derive the full warning-emitting block inventory from a fresh suite run, then clean the ~40 markerKinship() NA-path baseline warnings via Learning 273(d) suppressWarnings() or fixture completion (remedy gated by AskUserQuestion after the inventory).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S723
 date: 2026-09-19
 status: complete

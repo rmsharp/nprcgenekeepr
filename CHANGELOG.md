@@ -34,6 +34,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S724 claim: baseline-warnings cleanup — re-derive the warning-block inventory, then clean the ~40 markerKinship() NA-path suite warnings *(in progress)*
+- The `BACKLOG.md:233` Housekeeping item (found S487, annotated S723; count 10 → 15 → 40,
+  block list stale twice). Plan: fresh-suite inventory grouped by test block first; remedy
+  (Learning 273(d) `suppressWarnings()` on triggering calls vs. fixture completion with
+  expected-value re-verification) gated by `AskUserQuestion` with the inventory in hand.
+  Owner picked this from the Phase 0 four-option picker. Stub + pending receipt in this commit.
+
 ### 2026-09-19 · [ad hoc] S723 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `77a832e0`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S723 commit. S723 total: 5 commits (claim `3980cc31`, deliverable `d2a43162`,
   BACKLOG annotation `e2a91424`, records `77a832e0`, this one); ahead of `origin/master`

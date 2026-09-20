@@ -30,6 +30,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 724 Did
+**Deliverable:** Baseline-warnings cleanup (BACKLOG Housekeeping item, `BACKLOG.md:233`) —
+re-derive the complete warning-emitting block inventory from a fresh suite run, then clean the
+~40 `markerKinship()` NA-path baseline warnings (Learning 273(d) `suppressWarnings()` on the
+triggering calls, or fixture completion — remedy choice gated by `AskUserQuestion` once the
+inventory is in hand). (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 722 Handoff Evaluation (by Session 723)
 **Score: 9/10.** **What helped:** gotcha (3) WAS this session's deliverable, pre-diagnosed in
 full — file:line, root cause (roxygen markdown parses `[0, 1]` as a link to topic "0, 1"),
