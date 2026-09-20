@@ -34,15 +34,83 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 730 Handoff Evaluation (by Session 731)
+**Score: 9/10.** **What helped:** next-step (A) named the push decision with the exact recount
+command — measured 8, predicted ~8 exactly; the priorities list mapped one-for-one onto the
+Phase 0 picker and the owner picked the push; "expect 0 undocumented commits; measure it"
+measured 0 on both frontiers; the receipt's ratchet citation matched
+`.quality-gates-results.json` byte-for-byte (results 10bcea6e4007, manifest aa983075d6a2);
+the S729-precedent chain it carried (claim rides the push; sha-filtered CI verification;
+background-poller learning) was this session's entire method. **What was missing:** nothing
+material — only the CI-wait mechanics (R-CMD-check ~34 min exceeds a 30-min monitor arm, so
+one re-arm is expected) had to be re-derived from S729's recorded durations rather than
+stated. **What was wrong:** nothing found — every checked claim held. **ROI:** high.
+
 ### What Session 731 Did
-**Deliverable:** Owner-directed push of the 8 unpushed docs-only S730 commits to
-`origin/master` + CI verification (all 4 push-triggered workflows green on the pushed sha;
-this claim commit rides the push, making 9 — S729/S726/S717 precedent) (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Owner-directed push to `origin/master` + CI verification — **DONE.**
+Pushed `0572767b..3b688ae2` (9 commits: the 8 unpushed S730 docs-only commits + the S731
+claim, which rode the push so CI ran on it — S729/S726/S717 precedent). All 4 push-triggered
+workflows `completed success` ON THE PUSHED SHA `3b688ae2` (verified via
+`gh run list --commit <sha>`, so the sha match is structural, not read off run titles):
+lint 4m26s (id 35490394639), test-coverage 8m41s (35490394613), pkgdown 18m05s (35490394612),
+R-CMD-check 33m37s (35490394609). This puts the S730 CRAN check-time audit and the full S730
+close-out record set on the remote. No TDD phases (push + docs; no `.R` files). Lint N/A.
+**Started/completed:** 2026-09-19 → 2026-09-20 (single session; the CI wait crossed local
+midnight). Claim `3b688ae2` (rode the push); records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, push+CI deliverable, records, sha).
+
+**What actually happened, in order:**
+1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both frontiers, both
+   at HEAD `bd094712`; S730 receipt `complete`, its ratchet citation matches
+   `.quality-gates-results.json` exactly); CI 4/4 green on `0572767b`; dashboard 96/100;
+   context budget WARN = `CLAUDE.md` warn band only (headroom) + growth run 10/10
+   (report-only); 8 unpushed measured (S730's prediction exact); 5 known untracked files
+   unchanged; sequencing audits unchanged since S730's check (0 commits since).
+2. **Claim committed and rode the push:** `3b688ae2`; `git push` → `0572767b..3b688ae2`.
+3. **CI verification:** Monitor polling `gh run list --commit 3b688ae2` at 60 s; one
+   expected re-arm at the 30-min monitor cap (R-CMD-check ~34 min); all 4 workflows
+   `completed success` on the pushed sha.
+4. **quality_ratchet at the pushed HEAD `3b688ae2`:** 1/1 pass · 0 fail · 0 unmeasured ·
+   results 24c0d9475ec1 · manifest aa983075d6a2 (tarball 3,483,933 B ≤ 5,000,000 B).
+
+**Self-assessment (Session 731): 9/10.** **Strengths:** (1) the deliverable was verified on
+the exact pushed sha by construction (`--commit` filter), not by matching run titles;
+(2) prediction discipline held both ways — 8 unpushed predicted/measured, 0 undocumented
+predicted/measured; (3) scope held absolutely through the ~50-min CI wait (no side work);
+(4) every close-out number is from a fresh read this hour, not memory. **Weaknesses:**
+(1) the re-armed monitor re-emitted the 3 already-green workflows (predicted, but still
+noise); (2) durations are createdAt→updatedAt, which include queue time (matches gh's
+displayed durations in direction; seconds ±).
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine push session (S729 precedent;
+fourth of its kind). **Reduction check:** nothing removed from mandated-read files this
+session — nothing beyond the session records was added either; `SESSION_NOTES.md` sits at
+~44 KB against its 65,536 B ceiling.
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~2 expected after close-out: records + sha; both
+docs-only; no urgency — CI is current through `3b688ae2`). (B) Priorities: **apply the CRAN
+check-time fix** (READY, S, `BACKLOG.md:117` — natural next pickup, unchanged from S730);
+pedigree-growth measurement (READY, S, `BACKLOG.md:136`); package-split disposition + REUSE
+registration (owner decisions); BACKLOG.md editorial compression (READY, L); inst/doc
+slimming (DECISION NEEDED, M, `BACKLOG.md:100`). (C) Standing report-only set unchanged
+from S730.
+
+**Key files:** `CHANGELOG.md:41` (S731 entries at top), `HANDOFFS.md:155` (S731 receipt),
+`BACKLOG.md:117` (next natural pickup), `docs/audits/CRAN_CHECK_TIME_AUDIT_2026-09-19.md`
+(now on the remote).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0 —
+measure it; ~2 unpushed (estimate at write time). (2) The apply-the-fix session's own
+gotchas live in the S730 receipt and `BACKLOG.md:117` (clean-export §7 recipe with
+`NOT_CRAN` unset; `\donttest{}` is NOT an escape at incoming; never edit `man/*.Rd` by
+hand — `devtools::document()` regenerates). (3) CI-wait mechanics: R-CMD-check ~34 min
+exceeds the 30-min Monitor cap — arm expecting one re-arm; filter with
+`gh run list --commit <sha>` so the sha match is structural. (4) Standing set unchanged:
+`scratchpad/` invisible to git BY OWNER DECISION; ratchet ~2 min, run AFTER committing
+(Learning 772); trim needs `--budget-bytes 65536`; renv banner expected; `CLAUDE.md` warn
+band; the two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline
+2437/0/0/184/0 — remote-confirmed again by R-CMD-check on `3b688ae2`.
 
 ### Session 729 Handoff Evaluation (by Session 730)
 **Score: 9/10.** **What helped:** the priorities list mapped one-for-one onto this session's

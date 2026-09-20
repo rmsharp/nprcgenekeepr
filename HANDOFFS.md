@@ -154,11 +154,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S731
 date: 2026-09-19
-status: pending
-active_task: Owner-directed push of the 8 unpushed docs-only S730 commits to origin/master + CI verification (4 workflows green on the pushed sha; claim rides the push, making 9 — S729/S726/S717 precedent)
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Owner-directed push to origin/master + CI verification DONE — pushed 0572767b..3b688ae2 (9 commits: the 8 unpushed S730 docs-only commits + the S731 claim riding the push), all 4 push-triggered workflows completed success ON THE PUSHED SHA 3b688ae2 (verified via gh run list --commit, sha match structural): lint 4m26s (35490394639), test-coverage 8m41s (35490394613), pkgdown 18m05s (35490394612), R-CMD-check 33m37s (35490394609). Puts the S730 CRAN check-time audit + full S730 record set on the remote. No TDD phases; lint N/A.
+what_was_done: Claim 3b688ae2 (rode the push so CI ran on it — S729/S726/S717 precedent). Phase 0 reconcile clean (0 undocumented on both frontiers at bd094712; S730 receipt ratchet citation matched .quality-gates-results.json exactly); 8 unpushed measured = S730 prediction. CI verification via Monitor polling gh run list --commit 3b688ae2 at 60 s, one expected re-arm at the 30-min cap (R-CMD-check ~34 min). No BACKLOG item consumed (the push was a next-steps owner decision), so nothing removed.
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~2 expected after close-out: records + sha; both docs-only, estimated at write time; no urgency, CI current through 3b688ae2). (B) Priorities: apply the CRAN check-time fix (READY, S, BACKLOG.md:117 — doc-only roxygen example change at R/makePedigreeDiagramData.R:1659 + devtools::document() + audit §7 re-measure; natural next pickup); pedigree-growth measurement (READY, S, BACKLOG.md:136); package-split disposition + REUSE registration (owner decisions); BACKLOG.md editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M, BACKLOG.md:100). (C) Standing report-only set unchanged from S730.
+key_files: CHANGELOG.md:41 (S731 entries at top), SESSION_NOTES.md:37 (S731 handoff), BACKLOG.md:117 (next natural pickup), docs/audits/CRAN_CHECK_TIME_AUDIT_2026-09-19.md:1 (now on the remote)
+gotchas: Expect 0 undocumented commits at next Phase 0 — measure it; ~2 unpushed after close-out. The apply-the-fix session's own gotchas live in the S730 receipt and BACKLOG.md:117 (clean-export §7 recipe with NOT_CRAN unset; donttest is NOT an escape at incoming; never edit man/*.Rd by hand). CI-wait mechanics: R-CMD-check ~34 min exceeds the 30-min Monitor cap — arm expecting one re-arm; filter with gh run list --commit <sha>. Standing set unchanged: scratchpad/ invisible to git BY OWNER DECISION; quality_ratchet.py --run ~2 min, AFTER committing (Learning 772); methodology_trim.py needs --budget-bytes 65536; renv Rscript banner expected; CLAUDE.md warn band; SESSION_NOTES.md's two ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 remote-confirmed again by R-CMD-check on 3b688ae2.
+runtime_smoke: n/a — push + docs only (no runtime behavior changed); the deliverable's verification surface is CI itself, 4/4 green on the pushed sha. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 24c0d9475ec1 · manifest aa983075d6a2 (measured 3,483,933 B at 3b688ae2)
+changelog_ref: 3b688ae2
 commit: pending
 ```
+<free-text: S731 +/- — plus: deliverable verified on the exact pushed sha by construction (--commit filter), not run-title matching; prediction discipline held both ways (8 unpushed predicted/measured, 0 undocumented predicted/measured); scope held absolutely through the ~50-min CI wait; every close-out number from a fresh read. Minus: the re-armed monitor re-emitted the 3 already-green workflows (predicted noise); durations are createdAt→updatedAt and include queue time (seconds ±). Predecessor 9/10: the recount command and precedent chain were this session's entire method and every checked claim held; only miss was that the one-re-arm CI-wait mechanic had to be re-derived from S729's durations rather than stated.>
 
 ```handoff
 session: S730

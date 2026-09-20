@@ -38,6 +38,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S731 close-out: session records (handoff, S730 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (evaluation of S730: 9/10; self-assessment: 9/10);
+  `HANDOFFS.md` receipt overwritten to `status: complete` with the six requirements filled.
+  quality_ratchet at the pushed HEAD `3b688ae2`: 1/1 pass · 0 fail · 0 unmeasured ·
+  results 24c0d9475ec1 · manifest aa983075d6a2 (tarball 3,483,933 B ≤ 5,000,000 B). No new
+  `PROJECT_LEARNINGS.md` entry (routine push session, S729 precedent). No BACKLOG item
+  consumed. Next natural pickup: the READY/S apply-the-CRAN-check-time-fix item
+  (`BACKLOG.md:117`). ~2 unpushed after close-out (estimate at write time); push is the
+  owner's call.
+
+### 2026-09-20 · [ad hoc] S731 deliverable: push to origin/master + CI verification — 4/4 workflows green on the pushed sha
+- **Pushed `0572767b..3b688ae2`** (9 commits: the 8 unpushed S730 docs-only commits + the
+  S731 claim riding the push — S729/S726/S717 precedent). All 4 push-triggered workflows
+  `completed success` ON THE PUSHED SHA `3b688ae2` (verified via
+  `gh run list --commit <sha>`): lint 4m26s (id 35490394639), test-coverage 8m41s
+  (35490394613), pkgdown 18m05s (35490394612), R-CMD-check 33m37s (35490394609). Puts the
+  S730 CRAN check-time audit and full S730 close-out record set on the remote. The push is
+  a non-commit action; this entry is its ledger record.
+
 ### 2026-09-19 · [ad hoc] S731 claim: owner-directed push to origin/master (stub + pending receipt + in-progress ledger entry)
 - Session claimed. Deliverable (in progress): push the 8 unpushed docs-only S730 commits to
   `origin/master` (this claim commit rides the push, making 9 — S729/S726/S717 precedent, so
