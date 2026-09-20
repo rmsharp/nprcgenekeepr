@@ -53,6 +53,51 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · \[ad hoc\] S736 claim: owner-directed push to `origin/master` (stub + pending receipt + in-progress ledger entry) *(in progress)*
+
+- Owner picked the push of the 2 unpushed S735 close-out commits
+  (records `1296c6e6`, sha `dd8ea5a7`) via the Phase 0 picker. Full
+  8-step orient ran clean: 0 undocumented on both frontiers at
+  `dd8ea5a7`; S735 receipt complete, ratchet citation matches results
+  file; CI 4/4 green on `3b29f498`; dashboard 96/100; context budget
+  WARN = CLAUDE.md warn band + growth run 13/10 — and the
+  `SESSION_RUNNER.md`/`SAFEGUARDS.md` differs-from-canonical flags are
+  GONE this run (both now `synced / canonical ok`; working tree clean,
+  no local change — the checker’s canonical reference caught up). The
+  claim rides the push (S726–S735 precedent) so CI runs on it.
+
+### 2026-09-20 · \[ad hoc\] S735 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `1296c6e6`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S735 commit. S735 total: 3 commits (claim `3b29f498` — rode the
+  push, records `1296c6e6`, this one). Ahead of `origin/master` by 2
+  after close-out, both docs-only; CI is current through `3b29f498`, so
+  no urgency — push is the owner’s call. Expect 0 undocumented commits
+  past the frontier at next Phase 0; measure it.
+
+### 2026-09-20 · \[ad hoc\] S735 close-out: session records (handoff, S734 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S734 evaluation: 9/10 — every
+  checked claim held exactly; lightly exercised, same-conversation
+  pickup). `HANDOFFS.md` receipt complete. No new `PROJECT_LEARNINGS.md`
+  entry (routine clean push, 7th: S717/S726/S729/S731/S733/S734).
+  quality_ratchet at the pushed HEAD `3b29f498`: 1/1 pass · 0 fail · 0
+  unmeasured · results 0c58d203ae28 · manifest aa983075d6a2 (3,483,951 B
+  ≤ 5,000,000 B). ~2 unpushed after close-out (estimate); push is the
+  owner’s call.
+
+### 2026-09-20 · \[ad hoc\] S735 deliverable: push `75d2b049..3b29f498` + CI 4/4 green on the pushed sha — `origin/master` fully current; post-fix R-CMD-check figure confirmed a third time
+
+- Pushed 3 commits (the 2 unpushed S734 close-out commits — records
+  `be4f41ce`, sha `12218ad2` — + the S735 claim `3b29f498` riding the
+  push, S726/S729/S731/S733/S734 precedent). All 4 push-triggered
+  workflows `completed success` ON THE PUSHED SHA `3b29f498`
+  (`gh run list --commit`, sha match structural): lint 5m14s (id
+  35539906766), pkgdown 6m04s (35539906763), test-coverage 9m51s
+  (35539906801), R-CMD-check 21m28s (35539906788) — the ~21–22 min
+  post-S732-fix figure confirmed three times running; single 30-min
+  Monitor arm, no re-arm. Durations are createdAt→updatedAt (include
+  queue; seconds ±).
+
 ### 2026-09-20 · \[ad hoc\] S735 claim: owner-directed push to `origin/master` (stub + pending receipt + in-progress ledger entry) *(in progress)*
 
 - Owner directed the push of the 2 unpushed S734 close-out commits
