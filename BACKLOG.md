@@ -92,6 +92,37 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       the layout core into its own package -- disposition recorded S738 in `CHANGELOG.md`, with
       the 3 revisit conditions in the scoping doc §6; these steps harden the boundary in place
       and are worthwhile whether or not a split ever happens.)
+- [ ] **Discuss making a kinship2-similar standalone package from code within this repository**
+      (owner-directed S739, 2026-09-20; step 1 READY, Effort M -- a research session; step 2
+      DECISION NEEDED, gated on step 1) -- broader than, and distinct from, the S738-dispositioned
+      "split the layout core" question: the idea is a general-purpose pedigree package in the
+      spirit of kinship2 built from what this repo already has (layout engine, twin-aware
+      `kinship()`, pedigree utilities, structural-comparison apparatus), not merely relocating the
+      drawing core.
+      **Step 1 (the first session): kinship2 feature-gap analysis** -- enumerate kinship2's
+      exported surface at analysis time (from the installed package/CRAN reference manual, e.g.
+      `pedigree()`/ped objects, `align.pedigree`, `plot.pedigree`, `autohint`, `kinship` incl.
+      X-linked/chrtype, `makefamid`, `familycheck`, `pedigree.shrink`, `bitSize`, legend plotting
+      -- verify the list then, don't trust this parenthetical) and classify each feature: (a)
+      equivalent exists here (name the function), (b) partial (name the gap), (c) absent.
+      Deliverable: a per-feature gap table in `docs/research/`. Prior art to reuse, not redo:
+      `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` (17-point checklist --
+      DRAWING-only and stale: issues #131-#137/#145 have since closed most of its gaps),
+      the S482 kinship2 source-read spike
+      (`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`),
+      `R/comparePedigreeStructure.R` (Track B structural-parity apparatus), `R/shrinkPedigree.R`
+      (`pedigree.shrink` analog), `R/kinship.R` (twin-aware kinship).
+      **Step 2 (owner discussion, after step 1):** whether the gap list justifies building the
+      package and at what scope (interactive-drawing-focused vs full kinship2 parity). Relation
+      to the S738 disposition: this is revisit-condition 3's "ecosystem argument" path made
+      concrete (`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` §6 cond 3;
+      §2.7: nothing on CRAN offers a vis.js-targeted kinship2-parity layout; kinship2 1.9.6.2 is
+      maintained with NO CRAN deprecation notice -- the "impending deprecation" language is
+      ggpedigree's own description, and ggpedigree has absorbed kinship2's layout helpers). The
+      other two revisit conditions (engine stability single-digit commits/60 days; next CRAN
+      release accepted) still gate any actual extraction, and prep D-1/D-2/D-3 above are step 0
+      of any extraction path -- this item supplies the "why" that could eventually satisfy
+      condition 3.
 - [ ] **(Optional, owner decision) Slim `inst/doc/` by moving the three `html_document`
       vignettes to `rmarkdown::html_vignette`** (extracted S728, 2026-09-19, from the completed
       tarball build-hygiene item — its still-open step 4; DECISION NEEDED, Effort M, its own

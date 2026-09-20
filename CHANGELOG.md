@@ -38,6 +38,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S739 deliverable: BACKLOG item added — discuss a kinship2-similar standalone package built from this repo's code; step 1 = kinship2 feature-gap analysis
+- New Up Next item placed directly after the S738 prep items (D-1/D-2/D-3), which are
+  step 0 of any extraction path. Two explicit steps: step 1 (READY, Effort M) a
+  research session producing a per-feature gap table in `docs/research/` — enumerate
+  kinship2's exported surface at analysis time and classify each feature as
+  equivalent/partial/absent here; step 2 (DECISION NEEDED) the owner discussion on
+  whether and at what scope to build it. Cross-referenced rather than merged: the
+  mostly-DONE "Pedigree diagram vs kinship2 audit follow-ups" section (drawing-only,
+  stale — #131–#137/#145 closed most of its gaps) is prior art for step 1, and the
+  item is framed as the concrete path to the S738 disposition's revisit condition 3
+  (the "ecosystem argument", S667 doc §6/§2.7). Combination judgment (the owner said
+  "perhaps combining with other backlog item"): adjacency + cross-references chosen
+  over merging into the historical follow-ups section, which is a triage record, not
+  a live item.
+
 ### 2026-09-20 · [ad hoc] S739 claim: BACKLOG item — kinship2-similar package discussion, step 1 = feature-gap analysis *(in progress)*
 - Session claimed (stub + pending receipt + this entry), same conversation as S738.
   Abbreviated re-orient per S735 precedent (state minutes old): tree clean, both
