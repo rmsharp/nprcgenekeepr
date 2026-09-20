@@ -38,6 +38,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 736 Did
+**Deliverable:** Owner-directed push to `origin/master` + CI verification on the pushed
+sha (IN PROGRESS)
+**Started:** 2026-09-20
+**Status:** Session claimed. Full 8-step Phase 0 orient complete (reconcile clean, 0
+undocumented on both frontiers at `dd8ea5a7`; dashboard 96/100; CI 4/4 green on
+`3b29f498`; 2 unpushed measured = S735's estimate). Owner picked the push via the
+Phase 0 picker. Claim rides the push (S726–S735 precedent).
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 734 Handoff Evaluation (by Session 735)
 **Score: 9/10.** **What helped:** every forward-looking claim held exactly — "~2
 unpushed" measured 2, "expect 0 undocumented; measure it" measured 0 on both

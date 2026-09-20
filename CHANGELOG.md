@@ -38,6 +38,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S736 claim: owner-directed push to `origin/master` (stub + pending receipt + in-progress ledger entry) *(in progress)*
+- Owner picked the push of the 2 unpushed S735 close-out commits (records `1296c6e6`,
+  sha `dd8ea5a7`) via the Phase 0 picker. Full 8-step orient ran clean: 0 undocumented
+  on both frontiers at `dd8ea5a7`; S735 receipt complete, ratchet citation matches
+  results file; CI 4/4 green on `3b29f498`; dashboard 96/100; context budget WARN =
+  CLAUDE.md warn band + growth run 13/10 — and the `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+  differs-from-canonical flags are GONE this run (both now `synced / canonical ok`;
+  working tree clean, no local change — the checker's canonical reference caught up).
+  The claim rides the push (S726–S735 precedent) so CI runs on it.
+
 ### 2026-09-20 · [ad hoc] S735 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `1296c6e6`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S735 commit. S735 total: 3 commits (claim `3b29f498` — rode the push, records
   `1296c6e6`, this one). Ahead of `origin/master` by 2 after close-out, both docs-only;
