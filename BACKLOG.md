@@ -97,33 +97,23 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       205 KB uncompressed — a split would move well under 0.3 MB
       (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` §5). Decide the split on coupling/reuse
       grounds only.
-- [ ] **Tarball build-hygiene follow-ups from the S727 size audit** (found S727, 2026-09-19,
-      DECISION NEEDED -- owner's uncommitted `.Rbuildignore` edit must be committed or
-      discarded first, Effort S) -- the S726 "~19 MB tarball" was NOT package content: a clean
-      `git archive HEAD` build is **3,485,185 B (3.49 MB, 35% of CRAN's 10 MB line; CRAN 2.0.0
-      was 2,419,329 B)**; the owner's 19,732,245 B artifact carried 252 entries of the untracked
-      20 MB `scratchpad/` directory, which the committed `.Rbuildignore` has never excluded
-      (reproduced to 0.1%). Full evidence, inventory tables, and reproduction commands:
-      [`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md`](docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md).
-      Remaining actions, in order: **(1)** commit the owner's pending `+^scratchpad$` line in
-      `.Rbuildignore` (measured: working tree then builds to 3.56 MB and the long-standing
-      top-level-files check NOTE clears) — and decide whether `scratchpad/` should also be
-      git-ignored (quieter `git status`, but hides it from the Phase 0 untracked-file
-      ghost-session check); **(2)** add `^tests/testthat/_problems$` and
-      `^tests/testthat/testthat-problems\.rds$` to `.Rbuildignore` and the matching paths to
-      `.gitignore` (untracked testthat debris, ~79 KB, currently ships from the working tree);
-      verify each with `tools:::inRbuildignore`/`git check-ignore` on the real paths (S725
-      precedent); **(3)** owner decision, optional: declare a clean-export tarball-size gate
-      (suggest <=5 MB) in `.quality-gates.json` or as a CI step — nothing mechanical guards
-      artifact size today; **(4)** owner decision, optional, Effort M, its own session: slim
-      `inst/doc/` (4.38 MB uncompressed = 86% of CRAN's 5 MB documentation guideline; 38% of
-      the tarball) by moving `a2interactive`/`gvaConvergence`/`simulatedKValues` from
-      `html_document` to `rmarkdown::html_vignette` (est. 0.4-0.9 MB compressed saved — an
-      estimate; `df_print: paged` must become `knitr::kable()`), and/or replacing
-      `a2interactive`'s two live `visNetwork` widgets with static images. **Not worth doing on
-      size grounds (measured):** shrinking example/test data (all of `inst/extdata/examples/`
-      is 0.46 MB compressed, all of `tests/` 0.66 MB), recompressing `data/` (0.14 MB), or the
-      package split. Always build release tarballs from a clean export, never the working tree.
+- [ ] **(Optional, owner decision) Slim `inst/doc/` by moving the three `html_document`
+      vignettes to `rmarkdown::html_vignette`** (extracted S728, 2026-09-19, from the completed
+      tarball build-hygiene item — its still-open step 4; DECISION NEEDED, Effort M, its own
+      session) -- `inst/doc/` is 4.38 MB uncompressed = 86% of CRAN's 5 MB documentation
+      guideline and 38% of the tarball; `a2interactive`/`gvaConvergence`/`simulatedKValues`
+      declare `output: html_document` (`vignettes/a2interactive.Rmd:4-7`,
+      `gvaConvergence.Rmd:6-8`, `simulatedKValues.Rmd:6-8`). Est. 0.4-0.9 MB compressed saved
+      — an ESTIMATE needing its own before/after clean-export build measurement
+      (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` Finding 3 + §7 recipe); `df_print: paged`
+      does not exist under `html_vignette` and must become `knitr::kable()`; optionally replace
+      `a2interactive`'s two live `visNetwork` widgets with static images. Buys
+      documentation-guideline headroom, not tarball-limit compliance (already met: clean build
+      3.49 MB vs 10 MB); the S728 `tarball_size_clean_export` gate (`.quality-gates.json`,
+      <=5 MB) will show any saving mechanically. **Not worth doing on size grounds (measured
+      S727):** shrinking example/test data (`inst/extdata/examples/` 0.46 MB compressed,
+      `tests/` 0.66 MB), recompressing `data/` (0.14 MB), or the package split. Always build
+      release tarballs from a clean export, never the working tree.
 ## Housekeeping
 - [ ] **Measure how much this R package has grown due to the pedigree-drawing feature —
       a rough estimate (±20%) is sufficient** (owner-requested mid-S721, 2026-09-19, READY,

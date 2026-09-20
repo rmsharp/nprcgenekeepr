@@ -34,6 +34,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S728 deliverable: tarball build-hygiene follow-ups DONE — leak closed in both ignore files, testthat debris ignored, 5 MB clean-export size gate live (first declared quality gate)
+- **`.Rbuildignore`:** the owner's pending `^scratchpad$` line committed (owner-directed via
+  picker; the measured fix for the 19.7 MB working-tree leak, S727 audit Finding 1), plus
+  `^tests/testthat/_problems$` and `^tests/testthat/testthat-problems\.rds$` (Finding 2).
+- **`.gitignore`:** `scratchpad/` (owner accepted the documented ghost-check tradeoff) plus the
+  two testthat-debris paths.
+- **`.quality-gates.json`:** first gate declared — `tarball_size_clean_export`, max 5,000,000 B
+  measured on a `git archive HEAD` clean-export `pkgbuild::build()` (audit §7 recipe, Finding 5
+  remedy). Exercised in-session at `f82f978a`: **1/1 pass, measured 3,485,137 B** (results
+  `16f2d705768f` · manifest `aa983075d6a2`).
+- **Verification:** `git check-ignore -v` resolves all three paths to the new `.gitignore`
+  lines; `tools:::inRbuildignore` TRUE on each real path (`scratchpad`,
+  `tests/testthat/_problems`, `tests/testthat/testthat-problems.rds` — directory matches prune
+  contents, the semantics S727's 3.56 MB working-tree build measured); `git status` untracked
+  noise now only the 5 known planning/article files. No `.R` files touched — TDD N/A, lint N/A,
+  suite baseline 2437/0/0/184/0 carries forward (Learning 764 scope rule).
+- **BACKLOG:** completed item's block removed in this commit (S686 convention); its still-open
+  step 4 (optional `inst/doc` slimming via `html_vignette`, Effort M) extracted as its own
+  DECISION-NEEDED item in place.
+
 ### 2026-09-19 · [ad hoc] S728 claim: tarball build-hygiene follow-ups (stub + pending receipt + this in-progress entry)
 - Deliverable (in progress): `BACKLOG.md:100` steps 1–3 — commit the owner's `.Rbuildignore`
   `+^scratchpad$` line (owner-directed via Phase 0/1 picker), git-ignore `scratchpad/`

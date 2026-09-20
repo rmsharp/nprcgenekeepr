@@ -13,5 +13,15 @@
     "extract": "TOTAL\\s+\\d+\\s+\\d+\\s+(\\d+(?:\\.\\d+)?)%",
     "why": "measured 82.5% on 2026-01-01; a floor without a faithfulness check beside it measures effort, not quality — pair it with a mutation spot-check in review"
   },
-  "gates": []
+  "gates": [
+    {
+      "name": "tarball_size_clean_export",
+      "direction": "max",
+      "threshold": 5000000,
+      "unit": "bytes (decimal MB, the S727 audit's currency; CRAN guideline is 10 MB)",
+      "command": "X=$(mktemp -d) && mkdir \"$X/src\" \"$X/out\" && git archive HEAD | tar -x -C \"$X/src\" && Rscript -e \"cat(sprintf('TARBALL_BYTES=%.0f', file.size(pkgbuild::build('$X/src', dest_path = '$X/out', quiet = TRUE))))\" ; rc=$?; rm -rf \"$X\"; exit $rc",
+      "extract": "TARBALL_BYTES=(\\d+)",
+      "why": "Declared S728 (2026-09-19, owner-approved follow-up from docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md Finding 5): clean-export build measured 3,485,185 B at f8ffa40b; the gate at 5 MB catches a scratchpad-class leak or runaway growth long before CRAN's 10 MB line. Measures a `git archive HEAD` export (the artifact a fresh clone / CRAN submission gets), never the working tree -- working-tree leaks are the .Rbuildignore/.gitignore hygiene entries' job. Full build with vignettes; ~1-3 min per run, inside the ratchet's 600 s timeout."
+    }
+  ]
 }

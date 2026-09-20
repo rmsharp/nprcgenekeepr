@@ -90,6 +90,17 @@ inst/extdata/reference/The Compounding Loop.webarchive
 # reach a build tarball. S725, 2026-09-19.
 ~$*
 
+# Session-scratch working directory (untracked, ~20 MB) -- leaked into working-tree tarball
+# builds until the matching ^scratchpad$ .Rbuildignore line landed (S727 tarball audit
+# Finding 1). Git-ignored S728 by owner decision, accepting the documented tradeoff that it
+# no longer appears in the Phase 0 untracked-file ghost-session check. 2026-09-19.
+scratchpad/
+
+# testthat debris written by interactive test runs -- ships from the working tree otherwise
+# (S727 tarball audit Finding 2). Mirrored in .Rbuildignore. S728, 2026-09-19.
+tests/testthat/_problems/
+tests/testthat/testthat-problems.rds
+
 # Python bytecode cache from methodology_dashboard.py/methodology_trim.py (Session 514)
 __pycache__/
 
