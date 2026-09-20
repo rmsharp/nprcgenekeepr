@@ -38,6 +38,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S734 close-out: session records (handoff, S733 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S733 evaluation: 9/10 — every checked claim held;
+  only gap was two context-budget signals not itemized: growth run 12/10 and
+  `SESSION_RUNNER.md`/`SAFEGUARDS.md` "differs from canonical," this session verified
+  NOT local edits — both last touched by the S719 forced sync `b773ddb6`, tree clean;
+  report-only). `HANDOFFS.md` receipt complete. No new `PROJECT_LEARNINGS.md` entry
+  (routine clean push, 6th of its kind: S717/S726/S729/S731/S733). quality_ratchet at
+  the pushed HEAD `75d2b049`: 1/1 pass · 0 fail · 0 unmeasured · results 84231b1581ab ·
+  manifest aa983075d6a2 (3,483,934 B ≤ 5,000,000 B). ~2 unpushed after close-out
+  (estimate); push is the owner's call.
+
+### 2026-09-20 · [ad hoc] S734 deliverable: push `5ed0da83..75d2b049` + CI 4/4 green on the pushed sha — post-fix R-CMD-check duration confirmed a second time
+- Pushed 4 commits (the 3 unpushed S733 close-out commits — trim `484c46de`, records
+  `6fb68007`, sha `c09d7b5a` — + the S734 claim `75d2b049` riding the push,
+  S726/S729/S731/S733 precedent). All 4 push-triggered workflows `completed success`
+  ON THE PUSHED SHA `75d2b049` (`gh run list --commit`, sha match structural): lint
+  5m11s (id 35536061548), pkgdown 6m03s (35536061442), test-coverage 10m35s
+  (35536061510), R-CMD-check 22m17s (35536061496) — the ~21–22 min post-S732-fix
+  figure confirmed twice now; single 30-min Monitor arm, no re-arm. Durations are
+  createdAt→updatedAt (include queue; seconds ±).
+
 ### 2026-09-20 · [ad hoc] S734 claim: owner-directed push to `origin/master` (stub + pending receipt + in-progress ledger entry) *(in progress)*
 - Owner picked the push at Phase 0 (AskUserQuestion). 3 unpushed docs-only S733
   close-out commits at claim time; the claim rides the push (S726/S729/S731/S733
