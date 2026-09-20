@@ -34,6 +34,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S727 close-out: tarball-size audit DONE + session records (handoff, S726 evaluation 9/10, receipt, Learning 771)
+- **Records:** `SESSION_NOTES.md` S727 handoff + S726 evaluation (9/10 — its measure-first
+  mandate was this session's method and its self-assessment honestly flagged the ~19 MB as
+  unmeasured; nobody S721–S726 connected the long-carried `scratchpad` check NOTE to the
+  artifact); `HANDOFFS.md` receipt complete (self 8/10); `PROJECT_LEARNINGS.md` Learning 771
+  (a top-level-directory check NOTE means the directory ships; three artifacts share one
+  name; compressed bytes are the currency).
+- **Why the trim entry below exists:** the handoff took `SESSION_NOTES.md` to 57,111 B — past
+  `context_budget.py`'s 25,000-token read cap (56,750 B at 2.27 B/token; hook-enforced) while
+  the trimmer at `--budget-bytes 65536` reported NOTHING_TO_DO. Trimmed with an explicit
+  `--cut 5` (budget flag still passed, no `--force`), on the committed pre-handoff state.
+  **Finding, report-only:** the two `SESSION_NOTES.md` ceilings differ in practice (56,750 B
+  vs 65,536 B); `CLAUDE.md`'s "deliberately the same number" holds for `max_bytes` only.
+  Owner decision: align the trim budget to 56,750 B, or keep the explicit-cut workaround.
+- **Post-append measurements** (`--budget-bytes 65536`): no trigger fires —
+  SESSION_NOTES 24,540 B, HANDOFFS 46,707 B, CHANGELOG 56,646 B pre-entry (CHANGELOG is
+  ~9 KB from its trigger). context_budget: no file over ceiling (`CLAUDE.md` warn band,
+  unchanged 26,360 B). quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured · results
+  4f53cda18c2b · manifest 4f53cda18c2b.
+- **Non-commit actions this session:** none (no push, no issue/PR/tag activity). Read-only
+  outside the repo: `../nprcgenekeepr_2.0.0.9000.tar.gz` and `../nprcgenekeepr.Rcheck/00check.log`
+  were listed/grepped, never modified; CRAN policy page and the CRAN 2.0.0 tarball header
+  fetched; CI run 35481710058's log read via `gh`.
+- **Still uncommitted, deliberately:** the owner's `.Rbuildignore` `+^scratchpad$` line.
+  Unpushed after close-out: ~8 docs-only commits — owner push decision.
+
 ### 2026-09-19 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-19-2.md` (10 record(s), 49,225 B → 15,427 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

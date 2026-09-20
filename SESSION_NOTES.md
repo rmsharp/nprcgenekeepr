@@ -34,14 +34,124 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 726 Handoff Evaluation (by Session 727)
+**Score: 9/10.** **What helped:** the filed tarball item's measure-first mandate ("build the
+real artifact and `tar tzvf` it; on-disk sizes mislead") WAS this session's method and led
+straight to the answer; S726's own self-assessment flagged the ~19 MB headline as
+"owner-reported, not measured" — exactly the claim that turned out to need refuting, so it
+was approached as a hypothesis, not a fact; "~3 unpushed" measured 3; "expect 0 undocumented
+commits; measure it" measured 0 on both frontiers; gotcha (1)'s "the `scratchpad/` NOTE
+remains" was, in hindsight, the clue. **What was missing:** nobody (S721–S726) connected that
+NOTE to the artifact — a top-level directory that check complains about is a directory that
+ships; the item's remedy list was therefore built entirely around slimming package content.
+**What was wrong:** the on-disk anchors (tests 3.4 MB, `inst/extdata` 5.3 MB) pointed at
+data slimming, which measured compressed is worth almost nothing — low harm, because the
+same item told the reader not to trust on-disk numbers. **ROI:** high.
+
 ### What Session 727 Did
-**Deliverable:** Tarball-size audit — measured inventory of what ships in the built source
-tarball + ranked remedy candidates (research only; no remedies applied) (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Tarball-size audit — **DONE.**
+[`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md`](docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md).
+**The "~19 MB tarball" is not package content: it is the untracked 20 MB `scratchpad/`
+directory leaking into working-tree builds. A clean `git archive HEAD` build is
+3,485,185 B (3.49 MB) — 35% of CRAN's 10 MB line** (CRAN 2.0.0 was 2,419,329 B). Research
+only: no remedy applied, no `.R`/`.Rbuildignore`/`.gitignore` change, no TDD phases, lint N/A.
+**Started/completed:** 2026-09-19 (single session). Claim `f8ffa40b`; deliverable `6d221ddc`;
+close-out trim `1a5f345e`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per commit; the deliverable entry carries the numbers.
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile clean (0 undocumented on both frontiers); CI 4/4 green on the
+   pushed sha `9006b567`; dashboard 96/100; context budget WARN-band only. **Dirty tree:** an
+   uncommitted, not-session-made `.Rbuildignore` edit (`+^scratchpad$`). The Phase 0 picker
+   (with a second question about that edit) was dismissed "to clarify"; the owner then
+   replied with the pasted label "Tarball-size research" — taken as the pick. The dirty-file
+   question was never answered, so the edit was left untouched all session.
+2. **Three real builds** (all in the session scratch dir, via `pkgbuild::build()` run from
+   the repo root so renv's library applies): working tree 3,564,041 B; clean HEAD export
+   3,485,185 B; clean export + `scratchpad/` + testthat debris under the COMMITTED
+   `.Rbuildignore` 19,714,510 B. Then found and inspected the owner's own artifact,
+   `../nprcgenekeepr_2.0.0.9000.tar.gz` (19,732,245 B, built 20:14): 252 `scratchpad/`
+   entries. Reproduction matches to 0.1%.
+3. **Inventory:** 997 entries / 12.01 MB uncompressed; compressed shares by directory and a
+   per-file `gzip -9` ranking. `inst/doc` is 38% of the tarball (three `html_document`
+   vignettes); example/test data is cheap compressed. CRAN policy text verified at source
+   (rev. 6875); installed size cross-checked against CI run 35481710058 (9.5–10.2 MB, `INFO`).
+4. **Mid-session owner messages:** "note size of `../nprcgenekeepr_2.0.0.9000.tar.gz`"
+   (already measured; it is the report's primary evidence) and "does this mean we need to add
+   files and folders to rbuildignore?" — answered yes (the owner's pending line is the fix;
+   two testthat-debris paths also warranted) and NOT acted on (a question is not an
+   instruction; filed in the follow-up item).
+5. **BACKLOG:** the Effort-L reduce-size item removed (premise refuted) and replaced by
+   "Tarball build-hygiene follow-ups" (DECISION NEEDED, S) at `BACKLOG.md:100`; split item
+   cross-ref rewritten (`:95`); pedigree-growth item given the +1.07 MB upper bound (`:140`).
+6. **Close-out trim (`1a5f345e`):** this handoff pushed `SESSION_NOTES.md` to 57,111 B —
+   over `context_budget.py`'s 25,000-token read cap (= 56,750 B at 2.27 B/token), which the
+   pre-commit hook enforces, while `methodology_trim.py --budget-bytes 65536` still said
+   NOTHING_TO_DO. Resolved with an explicit `--cut 5` (budget flag still passed; no
+   `--force` needed): 10 records (S720–S724) to
+   `docs/archive/SESSION_NOTES-through-2026-09-19-2.md`, L1/L2/L3 verified before and after
+   commit. The trim ran on the committed pre-handoff state (the verify script anchors to
+   the trim commit's parent), then this handoff was re-applied.
+
+**Verification:** every headline number is a measured byte count from a built artifact, and
+the explanation was tested by controlled reproduction, not inferred. Three draft claims in
+the report were caught by a pre-commit fact-check and corrected (scratchpad file count
+244→250; "~63 MB excluded"→43.5 MB measured; "leaking for weeks" re-anchored to the
+2026-08-17 oldest-file date + empty `git log -S`). No code touched, so the suite baseline
+2437/0/0/184/0 carries forward (Learning 764 scope rule). quality_ratchet and post-append
+trim-trigger results: see the close-out `CHANGELOG.md` entry.
+
+**Self-assessment (Session 727): 8/10.** **Strengths:** (1) refuted the item's premise by
+measurement in the first 20 minutes instead of executing an Effort-L slimming campaign
+against a non-problem; (2) closed the loop three ways — controlled reproduction, the owner's
+actual artifact, and the local check log — rather than stopping at plausible arithmetic
+(3.56 + 16.27 ≈ 19.8); (3) compressed-byte attribution overturned the item's own remedy
+steer with numbers; (4) left the owner's uncommitted edit alone and answered the owner's
+question without acting on it. **Weaknesses:** (1) the task pick rested on a terse pasted
+label after a dismissed picker — reasonable and reversible (docs-only), but not an explicit
+confirmation; (2) removing the owner-requested L item and substituting an S follow-up was
+this session's judgment under the S686 convention — the owner may prefer otherwise; (3) the
+`a2interactive.html` component breakdown was attempted with a sloppy regex that produced
+nonsense (negative remainders) and was reported as "identified, not weighed" rather than
+redone; (4) two Phase 0 shell fumbles (GNU vs BSD `stat`).
+
+**Next steps (specific):** (A) **Owner decision first:** commit or discard the uncommitted
+`.Rbuildignore` `+^scratchpad$` line — it is the fix (measured), and the follow-up item at
+`BACKLOG.md:100` is blocked on it. Then that item's steps (2)–(4) in order; (2) is trivial
+and can ride the same commit, verified with `tools:::inRbuildignore` + `git check-ignore`
+on the real paths. (B) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~8 expected after close-out: 3 pre-existing +
+claim + deliverable + trim + records + sha; the last two are an estimate at write time). All
+docs-only. (C) Priorities after that: pedigree-growth measurement (READY, S — now bounded at
++1.07 MB total; measure compressed from a clean build); package-split disposition (owner —
+size no longer argues for it) + REUSE registration; BACKLOG.md editorial compression
+(READY, L). (D) Standing report-only: HANDOFFS.md truncated duplicate S720 stub (grep for
+two adjacent `session: S720` blocks); iCloud Housekeeping item closable pending a
+duplicates-stay-gone confirmation; the owner's stale 19.7 MB `../nprcgenekeepr_2.0.0.9000.tar.gz`
+and `../nprcgenekeepr.Rcheck/` are outside the repo and were only read, never touched.
+
+**Key files:** `docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` (§1 build table, §2 inventory,
+§3 findings, §7 reproduction commands), `BACKLOG.md:100` (follow-up item), `BACKLOG.md:95`
+and `:140` (rewritten cross-refs), `.Rbuildignore:155` (the owner's UNCOMMITTED line),
+`vignettes/a2interactive.Rmd:4-7` / `gvaConvergence.Rmd:6-8` / `simulatedKValues.Rmd:6-8`
+(the `html_document` declarations behind Finding 3), `PROJECT_LEARNINGS.md` Learning 771.
+
+**Gotchas for the next session:** (1) **The working tree is still dirty** (`.Rbuildignore`)
+— not session-made; do not commit or discard it without the owner's word. Until it is
+committed, a working-tree build from a checkout WITHOUT that line is 19.7 MB again.
+(2) **Never measure the tarball from the working tree** — use the §7 clean-export recipe;
+`pkgbuild::build()` must be launched from the repo root (renv library) even when building
+an export elsewhere. (3) The `html_vignette` saving in Finding 3 is an estimate, and
+`df_print: paged` does not exist under `html_vignette` — that slice needs its own
+before/after build measurement. (4) Standing: every `methodology_trim.py` run needs
+`--budget-bytes 65536`; `renv.lock` carries no dev tooling (`Rscript` out-of-sync banner
+expected); CLAUDE.md sits in the warn band (~1,640 B headroom) — new narrative goes to
+`PROJECT_LEARNINGS.md`. (5) Full-suite baseline unchanged: 2437/0/0/184/0. (6) **The two `SESSION_NOTES.md`
+ceilings are NOT the same number in practice:** the token cap binds at 56,750 B, the byte
+trigger at 65,536 B, and in the gap the hook refuses growth while the trimmer reports
+NOTHING_TO_DO. `CLAUDE.md`'s "deliberately the same number" sentence holds for `max_bytes`
+only (`.context-budget.json`'s own note says `max_tokens` binds first) — report-only here (owner decision: lower the trim budget to 56,750, or keep using
+an explicit `--cut N`). With ~8 KB handoffs this recurs roughly every 4–5 sessions.
 
 ### Session 725 Handoff Evaluation (by Session 726)
 **Score: 9/10.** **What helped:** the priorities list mapped one-for-one onto this session's
