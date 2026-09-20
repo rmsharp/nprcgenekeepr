@@ -209,13 +209,41 @@ which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
 ``` handoff
-session: S733
+session: S734
 date: 2026-09-20
 status: pending
-active_task: Owner-directed push to origin/master + CI verification (7 unpushed commits incl. the S732 CRAN check-time fix ba088d0d touching .R/.Rd; claim rides the push so CI runs on it — S726/S729/S731 precedent)
-what_was_done: pending
-commit: pending
+active_task: Owner-directed push of the 3 unpushed S733 close-out commits (+ this claim riding the push) to origin/master + CI verification on the pushed sha
 ```
+
+``` handoff
+session: S733
+date: 2026-09-20
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Owner-directed push to origin/master + CI verification DONE — pushed 3b688ae2..5ed0da83 (8 commits: the 7 unpushed S732 commits incl. the CRAN check-time fix ba088d0d touching .R/.Rd, + the S733 claim riding the push — S726/S729/S731 precedent), all 4 push-triggered workflows completed success ON THE PUSHED SHA 5ed0da83 (verified via gh run list --commit, sha match structural): lint 3m56s (35534412900), pkgdown 6m13s (35534413059), test-coverage 10m33s (35534412911), R-CMD-check 21m28s (35534412936) — down from 33m37s on the previous push: the first remote-side confirmation of the S732 fix, −12 min of CI. No TDD phases; lint N/A.
+what_was_done: Claim 5ed0da83 (rode the push so CI ran on it). Phase 0 reconcile clean (0 undocumented on both frontiers at ee7cb230; S732 receipt ratchet citation matched .quality-gates-results.json exactly); 7 unpushed measured vs S732's ~6 estimate (delta = S732's own HANDOFFS trim commit). CI verification via Monitor polling gh run list --commit 5ed0da83 at 60 s; no re-arm needed (check now fits one 30-min arm). Pre-handoff SESSION_NOTES trim 484c46de: 14 records archived to docs/archive/SESSION_NOTES-through-2026-09-19-3.md (56,599 → 10,583 B; L1/L2/L3 verified; SRF_RED overridden per the established Learning 549/586/587 resolution; file was 151 B under the 56,750 B token cap and the handoff would not fit). No BACKLOG item consumed (the push was a next-steps owner decision).
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~3 expected after close-out: trim + records + sha; all docs-only, last two estimated at write time; no urgency, CI current through 5ed0da83). (B) Priorities: pedigree-growth measurement (READY, S, BACKLOG.md:117); package-split disposition + REUSE registration (owner decisions); BACKLOG.md editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M, BACKLOG.md:100). (C) Standing report-only set unchanged from S732.
+key_files: CHANGELOG.md:41 (S733 entries at top), SESSION_NOTES.md:39 (S733 handoff), docs/archive/SESSION_NOTES-through-2026-09-19-3.md:1 (new shard), BACKLOG.md:117 (next natural pickup)
+gotchas: Expect 0 undocumented commits at next Phase 0 — measure it; ~3 unpushed after close-out (estimate). CI-wait mechanics CHANGED — R-CMD-check now ~21–22 min on the remote after the S732 fix, fits one 30-min Monitor arm; the ~34 min / expect-one-re-arm figure is obsolete (measured on 5ed0da83). methodology_trim.py --cut N keeps the newest N records and archives the rest — dry-run first; SESSION_NOTES.md now 10.6 KB live, several sessions of token-cap headroom. Standing set unchanged: scratchpad/ invisible to git BY OWNER DECISION; quality_ratchet.py --run ~2 min, AFTER committing (Learning 772); methodology_trim.py needs --budget-bytes 65536; renv Rscript banner expected; CLAUDE.md warn band; SESSION_NOTES.md's two ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 remote-confirmed again by R-CMD-check on 5ed0da83.
+runtime_smoke: n/a — push + docs only (no runtime behavior changed); the deliverable's verification surface is CI itself, 4/4 green on the pushed sha. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 7ced9faa4709 · manifest aa983075d6a2 (measured 3,483,941 B at 5ed0da83)
+changelog_ref: 5ed0da83
+commit: 6fb68007
+```
+
+\<free-text: S733 +/- — plus: deliverable verified on the exact pushed
+sha by construction (–commit filter) with run ids and durations
+recorded; the predicted SESSION_NOTES trim handled proactively on
+committed state before the hook could refuse, shard verify script run
+pre-commit; scope held through the CI wait; the R-CMD-check −12 min drop
+recognized and recorded as the S732 fix’s remote confirmation rather
+than just “still green.” Minus: methodology_trim.py –cut semantics (N =
+kept, not cut) discovered by dry run, not known going in — the accepted
+trim is more aggressive than first intended (3 records live), though
+lossless; durations are createdAt→updatedAt and include queue time.
+Predecessor 9/10: recount command, ratchet citation, trim prediction and
+CI-filter mechanics all held; only miss was the ~6 unpushed estimate
+undercounting its own trim commit (measured 7).\>
 
 ``` handoff
 session: S732

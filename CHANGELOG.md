@@ -53,6 +53,63 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · \[ad hoc\] S734 claim: owner-directed push to `origin/master` (stub + pending receipt + in-progress ledger entry) *(in progress)*
+
+- Owner picked the push at Phase 0 (AskUserQuestion). 3 unpushed
+  docs-only S733 close-out commits at claim time; the claim rides the
+  push (S726/S729/S731/S733 precedent) so CI runs on it. Phase 3F
+  records the outcome.
+
+### 2026-09-20 · \[ad hoc\] S733 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `6fb68007`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S733 commit. S733 total: 4 commits (claim `5ed0da83` — rode the
+  push, trim `484c46de`, records `6fb68007`, this one). Ahead of
+  `origin/master` by 3 after close-out, all docs-only; CI is current
+  through `5ed0da83`, so no urgency — push is the owner’s call. Expect 0
+  undocumented commits past the frontier at next Phase 0; measure it.
+
+### 2026-09-20 · \[ad hoc\] S733 close-out: session records (handoff, S732 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S732 evaluation: 9/10 — only miss
+  was the ~6 unpushed estimate undercounting its own trim commit;
+  measured 7); `HANDOFFS.md` receipt complete. No new
+  `PROJECT_LEARNINGS.md` entry (routine clean push, 5th of its kind:
+  S717/S726/S729/S731); the `methodology_trim.py --cut N` =
+  keep-newest-N semantics note and the CHANGED CI-wait mechanics
+  (R-CMD-check now ~21–22 min post-fix, fits one 30-min Monitor arm)
+  live in the handoff gotchas. quality_ratchet at the pushed HEAD
+  `5ed0da83`: 1/1 pass · 0 fail · 0 unmeasured · results 7ced9faa4709 ·
+  manifest aa983075d6a2 (3,483,941 B ≤ 5,000,000 B). ~3 unpushed after
+  close-out (estimate); push is the owner’s call.
+
+### 2026-09-20 · \[ad hoc\] S733 deliverable: push `3b688ae2..5ed0da83` + CI 4/4 green on the pushed sha — first remote validation of the S732 CRAN check-time fix
+
+- Pushed 8 commits (the 7 unpushed S732 commits incl. fix `ba088d0d`
+  touching `.R`/`.Rd`, + the S733 claim riding the push — S726/S729/S731
+  precedent). All 4 push-triggered workflows `completed success` ON THE
+  PUSHED SHA `5ed0da83` (`gh run list --commit`, sha match structural):
+  lint 3m56s (id 35534412900), pkgdown 6m13s (35534413059),
+  test-coverage 10m33s (35534412911), \*\*R-CMD-check 21m28s
+  35534412936. — down from 33m37s on the previous push `3b688ae2`: the
+               S732 example shrink confirmed remote-side, −12 min of CI
+               per push.\*\* The expected 30-min-cap monitor re-arm
+               never fired because the check now fits one arm. Durations
+               are createdAt→updatedAt (include queue; seconds ±).
+
+### 2026-09-20 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-19-3.md` (14 record(s), 56,599 B → 10,583 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **14** record(s) (2026-09-19 →
+2026-09-19) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-19-3.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-19-3.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-19-3.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-19-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 56,599 B → 10,583
+B (−81.3%).
+
 ### 2026-09-20 · \[ad hoc\] S733 claim: owner-directed push to `origin/master` + CI verification *(in progress)*
 
 - Session claimed after full Phase 0 (reconcile clean: 0 undocumented on
