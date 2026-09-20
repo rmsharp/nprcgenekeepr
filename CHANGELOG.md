@@ -34,6 +34,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S725 claim: `CLAUDE.md` reduction campaign — move Adaptations incident narratives to `PROJECT_LEARNINGS.md`, keep rules + pointers, bring the file under its 28,000 B ceiling *(in progress)*
+- Owner-picked from the Phase 0 4-option picker. Phase 0: reconcile clean (0 undocumented
+  commits on both frontiers, predicted 0 by S724 — measured 0); CI 10/10 green (still on
+  the S719 push; the 27 unpushed commits have never seen CI); dashboard 96/100;
+  context-budget reds by-design only (`CLAUDE.md` 43,348 B — this session's target);
+  untracked files all long-standing/known. Stub + pending receipt ride this commit.
+
 ### 2026-09-19 · [ad hoc] S724 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `da52bd49`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S724 commit. S724 total: 4 commits (claim `1bd5ef9c`, deliverable `eb3573bc`,
   records `da52bd49`, this one); ahead of `origin/master` by 27 including the 23

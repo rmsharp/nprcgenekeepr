@@ -30,6 +30,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 725 Did
+**Deliverable:** `CLAUDE.md` reduction campaign — bring it under the adopted 28,000 B
+`.context-budget.json` ceiling (43,348 B at claim) by moving Adaptations incident
+narratives into `PROJECT_LEARNINGS.md`, leaving each adaptation's operative rule +
+pointer (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 723 Handoff Evaluation (by Session 724)
 **Score: 9/10.** **What helped:** the annotated BACKLOG item plus gotcha (2)'s re-derive
 mandate WAS this session's plan — and the mandate was load-bearing (staleness confirmed:

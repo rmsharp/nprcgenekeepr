@@ -152,6 +152,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S725
+date: 2026-09-19
+status: pending
+active_task: CLAUDE.md reduction campaign — bring CLAUDE.md under its 28,000 B .context-budget.json ceiling (43,348 B at claim) by moving the Project-Specific Methodology Adaptations incident narratives into PROJECT_LEARNINGS.md, keeping each adaptation's operative rule + a pointer; keep intact the SESSION PROTOCOL header, the budget:protected Project Overview fence, the TDD contract, and Build/Test/Verify. Docs-only session — no TDD phases (S720–S724 precedent).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S724
 date: 2026-09-19
 status: complete
