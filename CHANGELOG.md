@@ -34,6 +34,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S725 deliverable: `CLAUDE.md` reduction campaign — 43,348 B → 26,360 B, under the 28,000 B ceiling; BACKLOG item removed (completed record here)
+- **Method (per the item):** each Adaptations block classified sentence-by-sentence into
+  operative rule vs incident narrative; rules kept (verbatim or tightened) with origins
+  compressed to Learning pointers; narrative that existed nowhere else moved into the new
+  `PROJECT_LEARNINGS.md` Learning 770 (the relocation record — S545 rejected alternatives,
+  S436 origin, NEWS.Rmd drift history, `methodology_trim.py` provenance, the S325/S546/S547
+  legacy-history decision chain); the full pre-reduction text is archived as
+  `git show 1ef168b8:CLAUDE.md`. Kept intact per the item: SESSION PROTOCOL header, the
+  `budget:protected` Project Overview fence, the TDD contract (incl. Phase-gate format),
+  Build/Test/Verify. Hand-maintained learnings count replaced with its computing command
+  (Compute remedy); two sentences the reduction itself falsified were updated (the
+  context-budget check's expected state; the trilogy's "no file has moved yet").
+- **Verification:** `wc -c CLAUDE.md` = 26,360 B (≤ 28,000; warn band ≥ 24,000 is headroom,
+  documented as such); `python3 context_budget.py` reports no file over its ceiling,
+  resident total 26,360/34,000 green, `budget:protected` fence intact;
+  `grep -c '^#### Learning '` = 770, matching the new relocation record's number; every
+  Learning number cited by a new pointer verified present (382/433/435/475/477/478/479/
+  495/506/533/544/547/549/554/586/587/669/740). No `.R` files touched → lint checklist N/A;
+  no TDD phases (docs-only, S720–S724 precedent).
+
 ### 2026-09-19 · [ad hoc] S725 claim: `CLAUDE.md` reduction campaign — move Adaptations incident narratives to `PROJECT_LEARNINGS.md`, keep rules + pointers, bring the file under its 28,000 B ceiling *(in progress)*
 - Owner-picked from the Phase 0 4-option picker. Phase 0: reconcile clean (0 undocumented
   commits on both frontiers, predicted 0 by S724 — measured 0); CI 10/10 green (still on

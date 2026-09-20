@@ -128,21 +128,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `browser-actions/setup-chrome`'s actual download/unzip pipeline; or filing a new
       `rstudio/chromote` upstream issue, since no existing issue there matches this exact
       macOS+GHA+live-CDP-timeout signature).
-- [ ] **`CLAUDE.md` reduction campaign — bring it under the adopted 28,000 B
-      `.context-budget.json` ceiling** (43,348 B at filing; recount with `wc -c CLAUDE.md`;
-      filed S720, 2026-09-19, READY, Effort M) -- `CLAUDE.md`
-      reads **over — red by design** in the S720-adopted `python3 context_budget.py` Phase 0 check
-      until this lands; the per-clone pre-commit hook already refuses growth, so the file can only
-      shrink from here. The excess is concentrated in "Project-Specific Methodology Adaptations"
-      narrative blocks (multi-paragraph incident histories: the S325/S546/S547 CHANGELOG-relocation
-      trilogy, the S518 fence-scanner post-mortem marked "historical, not current state", the long
-      close-out-checklist rationales). Remedies in the tool's own order: **Move** each incident
-      narrative into `PROJECT_LEARNINGS.md` (its stated home) leaving a one-line rule + pointer;
-      **Compute** any hand-maintained count; **Archive** via `git show <sha>:CLAUDE.md` pointers;
-      **Delete** duplicates. Keep intact: the SESSION PROTOCOL header, the fenced Project Overview
-      (`budget:protected` -- the tool refuses its removal), the TDD contract, Build/Test/Verify,
-      and each adaptation's operative RULE (only the narrative moves). Not a mechanical trim --
-      each block needs a judgement call about what the rule actually is; wants its own session.
 - [ ] **Register `rmsharp/nprcgenekeepr` with api.reuse.software so the REUSE badge renders its
       real compliance status** (found S607, 2026-08-18, DECISION NEEDED / owner action, Effort S)
       -- the badge added above currently renders gray **"unregistered,"** not green: hitting
