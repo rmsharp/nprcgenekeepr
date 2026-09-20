@@ -38,6 +38,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S738 close-out: session records (handoff, S737 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S737 evaluation: 9/10 — every checked claim held:
+  6 unpushed, 0 undocumented, ratchet citation, growth-run prediction all exact).
+  `HANDOFFS.md` receipt complete. No new `PROJECT_LEARNINGS.md` entry (routine
+  decision/records session; the durable record is the deliverable ledger entry + the
+  three prep items). Reduction check: `BACKLOG.md` net −2 lines. quality_ratchet at the
+  deliverable HEAD `9d80dde6`: 1/1 pass · 0 fail · 0 unmeasured · results 847588b5cc75 ·
+  manifest aa983075d6a2 (3,483,940 B ≤ 5,000,000 B). ~10 unpushed after close-out
+  (estimate); push is the owner's call.
+
 ### 2026-09-20 · [ad hoc] S738 deliverable: package-split disposition — owner ACCEPTED "do not split now" and queued the three S667 prep steps
 - The owner accepted the S667 scoping recommendation
   (`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` §6): the

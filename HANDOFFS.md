@@ -158,11 +158,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S738
 date: 2026-09-20
-status: pending
-active_task: Package-split disposition — owner accept/reject of the S667 scoping recommendation ("do not split now", docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md), recorded in BACKLOG/CHANGELOG. Owner picked the item via the Phase 0 picker.
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Package-split disposition DONE — owner ACCEPTED the S667 recommendation ("do not split now", docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md §6) AND queued the three prep steps (D-1 invert kinship(), D-2 remove the two test-only internal reaches, D-3 @noRd blocks for positionTreeApportion.R) as Up Next BACKLOG items. No TDD phases (decision/records; no .R files); lint N/A.
+what_was_done: Claim f9b1f2a3; deliverable 9d80dde6 (BACKLOG item block removed per the completed-item removal checklist, three prep items written with S738-verified references, disposition + revisit conditions in CHANGELOG). Revisit conditions re-measured at decision time: cond 1 half-met (priority retired S699; core churn 67 commits/60 days · 27/30 — not single digits), cond 2 not met (DESCRIPTION 2.0.0.9000), cond 3 not met (no named consumer) — the recommendation held on its own test. Prep targets verified current: kinship() call drifted to R/makePedigreeDiagramData.R:1755; test_modPedigree.R reaches exactly at :1669/:1706; positionTreeApportion.R roxygen count 0. Owner asked for an S667 briefing before deciding (given from the scoping doc), then chose "Accept + queue prep steps" via AskUserQuestion.
+next_steps: (A) ~10 unpushed after close-out (6 carried + 4 S738; last two estimated at write time) — recount with git rev-list --count origin/master..HEAD; all docs-only since 2628cd02, push is the owner's call (S726–S736 precedent) but the unpushed backlog is growing. (B) New code pickups: prep D-1 (READY, S, TDD-gated), D-2 (READY, S, TDD-gated), D-3 (READY, S, REFACTOR-only). (C) Remaining: BACKLOG.md editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M); REUSE registration (owner web-action, S); NPRC outreach (owner review).
+key_files: BACKLOG.md:71 (three new prep items), CHANGELOG.md:41 (S738 entries), docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md:401 (§6 recommendation + revisit conditions), SESSION_NOTES.md:39 (S738 handoff)
+gotchas: Expect 0 undocumented commits at next Phase 0 — measure it; ~10 unpushed after close-out (8 measured + 2 estimated). D-1/D-2 pickups are CODE sessions — full TDD gates (phase declarations + AskUserQuestion transitions) apply after a long docs-only run. The layout core still changes: re-verify :1755 (D-1) and :1669/:1706 (D-2) before editing. Standing set unchanged: gh run list --commit needs the FULL 40-char sha; scratchpad/ invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band (growth run 15/10, 16/10 next if nothing shrinks — BACKLOG.md is not in the budget file); SESSION_NOTES.md's two ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 remote-confirmed on 2628cd02.
+runtime_smoke: n/a — decision + records only (no runtime behavior changed; no .R files touched). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 847588b5cc75 · manifest aa983075d6a2 (measured 3,483,940 B ≤ 5,000,000 B at 9d80dde6)
+changelog_ref: 9d80dde6
 commit: pending
 ```
+<free-text: S738 +/- — plus: decision posed on re-measured current facts (churn, version, line drift), not 18-day-old S667 numbers; all three prep-item targets verified against the live tree before landing in BACKLOG; completed-item removal checklist followed exactly (block removed, record enriched into CHANGELOG, open sub-threads extracted as items); scope held — no prep step started, and the owner's clarify request got a briefing, not file edits (FM #23). Minus: the first AskUserQuestion went out before the S667 briefing was offered — the owner had to ask for context that should have been volunteered; BACKLOG net reduction only −2 lines. Predecessor 9/10: every checked claim held (6 unpushed, 0 undocumented, ratchet citation, growth-run prediction all exact).>
 
 ```handoff
 session: S737
