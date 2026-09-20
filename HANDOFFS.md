@@ -158,11 +158,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S739
 date: 2026-09-20
-status: pending
-active_task: Add BACKLOG item (owner-directed, same conversation as S738): discuss making a kinship2-similar standalone package from this repo's code; step 1 = kinship2 feature-gap analysis. Combine with/cross-reference the S738 prep items and prior kinship2 comparison artifacts.
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: BACKLOG item added DONE (owner-directed, same conversation as S738) — new Up Next item: discuss making a kinship2-similar standalone package from this repo's code. Step 1 (READY, M): kinship2 feature-gap analysis producing a per-feature gap table in docs/research/. Step 2 (DECISION NEEDED, gated on step 1): owner scope decision. No TDD phases (records only; no .R files); lint N/A.
+what_was_done: Claim e2671de1; deliverable 7b10ac3d. Combination judgment ("perhaps combining with other backlog item"): placed directly after prep D-1/D-2/D-3 (step 0 of any extraction) with cross-references, NOT merged into the mostly-DONE "Pedigree diagram vs kinship2 audit follow-ups" section (a historical drawing-only triage record, stale — #131–#137/#145 closed most of its gaps — cited as step-1 prior art instead); reason recorded in the deliverable ledger entry. Item framed as the concrete path to S738's revisit condition 3 (ecosystem argument, S667 doc §6/§2.7); prior art enumerated (ISSUE_129 audit, S482 spike, comparePedigreeStructure.R, shrinkPedigree.R, kinship.R); the embedded kinship2 export list is flagged inside the item as an unverified hint to re-enumerate at analysis time.
+next_steps: (A) ~12 unpushed after close-out (10 carried + claim + deliverable measured; records + sha estimated) — recount with git rev-list --count origin/master..HEAD; all docs-only since 2628cd02; the unpushed backlog keeps growing, so a push+CI session is the natural next pick. (B) The new item's step 1 (kinship2 feature-gap analysis, READY, M) is a first-class research pickup. (C) Unchanged: prep D-1/D-2/D-3 (READY, S, TDD-gated code sessions); BACKLOG editorial compression (READY, L — more overdue after this +36-line add); inst/doc slimming (DECISION NEEDED, M); REUSE registration (owner action, S).
+key_files: BACKLOG.md:98 (the new item), CHANGELOG.md:41 (S739 entries), docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md:1 (step-1 prior art), SESSION_NOTES.md:39 (S739 handoff)
+gotchas: Expect 0 undocumented commits at next Phase 0 — measure it; ~12 unpushed after close-out (estimate for last 2). A step-1 pickup must enumerate kinship2's exports from the installed package/CRAN manual at analysis time — the BACKLOG item's list is an unverified hint by its own caveat. D-1/D-2 are CODE sessions: full TDD gates. Standing set unchanged: gh run list --commit needs the FULL 40-char sha; scratchpad/ invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band (growth run 16/10 next if nothing shrinks); SESSION_NOTES.md's two ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 remote-confirmed on 2628cd02.
+runtime_smoke: n/a — records only (no runtime behavior changed; no .R files touched). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 060a3da9b4b6 · manifest aa983075d6a2 (measured 3,483,920 B ≤ 5,000,000 B at 7b10ac3d)
+changelog_ref: 7b10ac3d
 commit: pending
 ```
+<free-text: S739 +/- — plus: the "perhaps combining" directive was resolved by reading the candidate section before writing, with the judgment and reason in the ledger; the item is forward-carrying (prior art, deliverable format, staleness flags all named); full claim/receipt/ledger discipline for a small grooming session. Minus: BACKLOG.md grew +36 lines (inherent to the directive; stated per FM #28's decay term, editorial-compression item is the counterweight); the embedded kinship2 export list is model knowledge — flagged untrusted, but still a potential stale anchor. Predecessor 9/10: 10-unpushed and clean-frontier claims held exactly; lightly exercised same-conversation.>
 
 ```handoff
 session: S738

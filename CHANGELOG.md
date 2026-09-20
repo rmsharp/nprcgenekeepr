@@ -38,6 +38,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S739 close-out: session records (handoff, S738 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S738 evaluation: 9/10 — 10-unpushed and
+  clean-frontier claims held exactly; lightly exercised same-conversation).
+  `HANDOFFS.md` receipt complete. No new `PROJECT_LEARNINGS.md` entry (routine
+  grooming session). Reduction check: nothing removed from a mandated-read file;
+  `BACKLOG.md` grew +36 lines by owner directive — stated explicitly; the
+  editorial-compression item is the standing counterweight. quality_ratchet at the
+  deliverable HEAD `7b10ac3d`: 1/1 pass · 0 fail · 0 unmeasured · results 060a3da9b4b6 ·
+  manifest aa983075d6a2 (3,483,920 B ≤ 5,000,000 B). ~12 unpushed after close-out
+  (estimate); push is the owner's call and increasingly the natural next pick.
+
 ### 2026-09-20 · [ad hoc] S739 deliverable: BACKLOG item added — discuss a kinship2-similar standalone package built from this repo's code; step 1 = kinship2 feature-gap analysis
 - New Up Next item placed directly after the S738 prep items (D-1/D-2/D-3), which are
   step 0 of any extraction path. Two explicit steps: step 1 (READY, Effort M) a

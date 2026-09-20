@@ -38,17 +38,90 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 738 Handoff Evaluation (by Session 739)
+**Score: 9/10.** **What helped:** "~10 unpushed after close-out" measured exactly 10;
+both frontiers clean at `e3370b82` as predicted; the prep-item context (D-1/D-2/D-3 as
+step 0 of any extraction, the S667 §6/§2.7 pointers) fed directly into how the new
+kinship2-package item was framed and cross-referenced. **What was missing:** nothing
+material — the new directive was not predictable from S738's state. **What was
+wrong:** nothing found. **ROI:** high, though lightly exercised (same-conversation
+pickup minutes after the handoff was written).
+
 ### What Session 739 Did
-**Deliverable:** BACKLOG item added (owner-directed, same conversation as S738):
-discuss making a kinship2-similar standalone package from this repository's code;
-step 1 = gap analysis of kinship2 features not present in this codebase. Combined
-with/cross-referenced against the S738 prep items and prior kinship2 comparisons
-(IN PROGRESS)
-**Started:** 2026-09-20
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** BACKLOG item added — **DONE** (commit `7b10ac3d`). New Up Next item:
+**discuss making a kinship2-similar standalone package from this repository's code**,
+owner-directed this session. Two explicit steps: **step 1** (READY, Effort M, its own
+research session) a kinship2 feature-gap analysis — enumerate kinship2's exported
+surface at analysis time, classify each feature equivalent/partial/absent here,
+deliverable a per-feature gap table in `docs/research/`; **step 2** (DECISION NEEDED,
+gated on step 1) the owner discussion on whether/at what scope to build it.
+**Combination judgment** (owner said "perhaps combining with other backlog item"):
+placed directly after the S738 prep items D-1/D-2/D-3 (step 0 of any extraction) with
+cross-references, rather than merged into the mostly-DONE "Pedigree diagram vs
+kinship2 audit follow-ups" section — that section is a historical triage record
+(drawing-only, stale: #131–#137/#145 closed most of its gaps) and is cited as step-1
+prior art instead. The item is framed as the concrete path to the S738 disposition's
+revisit condition 3 (the "ecosystem argument", S667 doc §6/§2.7). No TDD phases
+(records only; no `.R` files). Lint N/A.
+**Started/completed:** 2026-09-20 (single session, same conversation as S738). Claim
+`e2671de1`; deliverable `7b10ac3d`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable, records, sha).
+No BACKLOG item consumed (this session ADDED one).
+
+**What actually happened, in order:**
+1. **Abbreviated re-orient** (S735 precedent, state minutes old, named honestly): tree
+   clean, both ledger frontiers at `e3370b82`, 0 undocumented, 10 unpushed (= S738's
+   estimate exactly); full 8-step orient/dashboard/CI check not re-run.
+2. **Claim committed** `e2671de1`.
+3. **Combination decision researched before writing:** read the existing "Pedigree
+   diagram vs kinship2 audit follow-ups" section — determined it is a mostly-DONE
+   triage record, so adjacency + cross-references beat merging into it.
+4. **Item written** with S739-verified prior-art pointers (ISSUE_129 audit, S482
+   spike, `comparePedigreeStructure.R`, `shrinkPedigree.R`, `kinship.R`) and the
+   explicit caveat that the kinship2 export list in the item is a hint to verify at
+   analysis time, not a trusted inventory. Deliverable committed `7b10ac3d`;
+   quality_ratchet run at that HEAD (summary in the receipt).
+
+**Self-assessment (Session 739): 9/10.** **Strengths:** (1) the "perhaps combining"
+directive was resolved by reading the candidate section first, and the judgment (and
+its reason) recorded in the ledger rather than silently applied; (2) the item is
+forward-carrying — a future session can run step 1 with no re-derivation (prior art
+enumerated, deliverable format named, staleness of the old comparison flagged); (3)
+full claim/receipt/ledger discipline kept for a small records session. **Weaknesses:**
+(1) BACKLOG.md GREW by ~36 lines (FM #28 tension — inherent to an add-an-item
+directive, but the editorial-compression item grows more overdue); (2) the kinship2
+export list embedded in the item is from model knowledge, flagged as untrusted but
+still a potential stale anchor.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine grooming session.
+**Reduction check (FM #28):** nothing removed from a mandated-read file; `BACKLOG.md`
+grew +36 lines by owner directive — stated explicitly; the editorial-compression item
+(READY, L) is the standing counterweight.
+
+**Next steps (specific):** (A) ~12 unpushed after close-out (10 carried + claim +
+deliverable measured; records + sha estimated — recount with
+`git rev-list --count origin/master..HEAD`); all docs-only since `2628cd02`; the
+unpushed backlog keeps growing, so a push+CI session is the natural next pick.
+(B) The new item's step 1 (kinship2 feature-gap analysis, READY, M) is now a
+first-class research pickup. (C) Other priorities unchanged: prep D-1/D-2/D-3
+(READY, S each); BACKLOG editorial compression (READY, L); inst/doc slimming
+(DECISION NEEDED, M); REUSE registration (owner action, S). (D) Standing report-only
+set unchanged: CLAUDE.md warn band; growth run 16/10 next if nothing shrinks.
+
+**Key files:** `BACKLOG.md:98` (the new item, right after prep D-1/D-2/D-3),
+`CHANGELOG.md:41` (S739 entries at top), `HANDOFFS.md` (S739 receipt),
+`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` (step-1 prior art).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0 —
+measure it; ~12 unpushed after close-out (estimate for the last 2). (2) A step-1
+pickup must enumerate kinship2's exports from the installed package/CRAN manual at
+analysis time — the list inside the BACKLOG item is an unverified hint, per the item's
+own caveat. (3) D-1/D-2 pickups are CODE sessions — full TDD gates apply. (4) Standing
+set unchanged: `gh run list --commit` needs the FULL 40-char sha; `scratchpad/`
+invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772);
+trim needs `--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; the two
+`SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline
+2437/0/0/184/0 remote-confirmed on `2628cd02`.
 
 ### Session 737 Handoff Evaluation (by Session 738)
 **Score: 9/10.** **What helped:** "6 unpushed after close-out (measured)" measured
