@@ -34,6 +34,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S726 claim: owner-directed push to `origin/master` (in progress)
+- Owner picked "Push to origin" from the Phase 0 4-option picker. 32 unpushed commits
+  (S720–S725) at claim time; this claim commit rides the push, so CI runs on it (S717
+  precedent). Deliverable: push + all 4 push-triggered workflows green. Close-out adds
+  its own entry.
+
 ### 2026-09-19 · [ad hoc] S725 post-close-out, owner-directed: recurring Word lock file `inst/extdata/reference/~$e Compounding Loop.html` deleted; standing `~$` guards added to `.Rbuildignore` and `.gitignore`
 - Owner picked "delete + Rbuildignore guard" from the close-out `AskUserQuestion`. The file
   was a 162-byte Microsoft Word owner/lock file (contents: just the Office username) for the

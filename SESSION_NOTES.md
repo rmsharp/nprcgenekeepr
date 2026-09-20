@@ -30,6 +30,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 726 Did
+**Deliverable:** Owner-directed push to `origin/master` (32 pre-existing unpushed commits,
+S720–S725, + this claim) and CI verification (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 724 Handoff Evaluation (by Session 725)
 **Score: 9/10.** **What helped:** the priorities list matched this session's Phase 0
 picker one-for-one, and the picked item's own BACKLOG block WAS the plan (excess
