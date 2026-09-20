@@ -34,6 +34,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S727 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `66d4116b`; carries its own entry, so no self-reference gap is left for Phase 0
+- Final S727 commit. S727 total: 5 commits (claim `f8ffa40b`; deliverable `6d221ddc`; trim
+  `1a5f345e`; records `66d4116b`; this one). Ahead of `origin/master` by 8 after close-out
+  (3 pre-existing S726 + these 5) — all docs-only, push is the owner's call. The owner's
+  `.Rbuildignore` `+^scratchpad$` edit remains uncommitted by design. Expect 0 undocumented
+  commits past the frontier at next Phase 0; measure it.
+
 ### 2026-09-19 · [ad hoc] S727 close-out: tarball-size audit DONE + session records (handoff, S726 evaluation 9/10, receipt, Learning 771)
 - **Records:** `SESSION_NOTES.md` S727 handoff + S726 evaluation (9/10 — its measure-first
   mandate was this session's method and its self-assessment honestly flagged the ~19 MB as
