@@ -164,7 +164,7 @@ key_files: BACKLOG.md:88 (new tarball item — recount after edits; split item's
 gotchas: The devtools::check() warn/exit-1 gotcha should now be CLEARED (S725 addendum 89b14d1b deleted the ~$ lock file + added standing .Rbuildignore/.gitignore guards) — next local check run confirms; scratchpad/ NOTE remains. CI current through 9006b567; expect 0 undocumented commits at next Phase 0, measure it. Standing: methodology_trim.py always --budget-bytes 65536; renv.lock has no dev tooling (Rscript banner expected); CLAUDE.md in warn band ~1,640 B headroom — new narrative goes to PROJECT_LEARNINGS.md. Full-suite baseline 2437/0/0/184/0, now remote-confirmed by R-CMD-check on 9006b567.
 runtime_smoke: n/a — no code changes; the deliverable's verification surface IS the remote CI matrix, 4/4 green pinned to the pushed sha. quality_ratchet: 0/0 pass · 0 fail · 0 unmeasured · results 4f53cda18c2b · manifest 4f53cda18c2b
 changelog_ref: f8970edc
-commit: pending
+commit: 211f8786
 ```
 <free-text: S726 +/- — plus: CI verification pinned to the exact pushed sha via headSha filter; the mid-session filing's measure-first mandate caught the on-disk-vs-tarball misdirection before it could misdirect the research session; filed item not started (no scope creep). Minus: the ~19 MB headline is owner-reported, not measured in-session (deliberate wall-time call, but unverified until the research session builds the artifact); one harness fumble on the first CI-wait attempt (blocked sleep-chain, redone as background poller).>
 
