@@ -38,6 +38,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S735 close-out: session records (handoff, S734 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S734 evaluation: 9/10 — every checked claim held
+  exactly; lightly exercised, same-conversation pickup). `HANDOFFS.md` receipt
+  complete. No new `PROJECT_LEARNINGS.md` entry (routine clean push, 7th:
+  S717/S726/S729/S731/S733/S734). quality_ratchet at the pushed HEAD `3b29f498`:
+  1/1 pass · 0 fail · 0 unmeasured · results 0c58d203ae28 · manifest aa983075d6a2
+  (3,483,951 B ≤ 5,000,000 B). ~2 unpushed after close-out (estimate); push is the
+  owner's call.
+
+### 2026-09-20 · [ad hoc] S735 deliverable: push `75d2b049..3b29f498` + CI 4/4 green on the pushed sha — `origin/master` fully current; post-fix R-CMD-check figure confirmed a third time
+- Pushed 3 commits (the 2 unpushed S734 close-out commits — records `be4f41ce`, sha
+  `12218ad2` — + the S735 claim `3b29f498` riding the push, S726/S729/S731/S733/S734
+  precedent). All 4 push-triggered workflows `completed success` ON THE PUSHED SHA
+  `3b29f498` (`gh run list --commit`, sha match structural): lint 5m14s
+  (id 35539906766), pkgdown 6m04s (35539906763), test-coverage 9m51s (35539906801),
+  R-CMD-check 21m28s (35539906788) — the ~21–22 min post-S732-fix figure confirmed
+  three times running; single 30-min Monitor arm, no re-arm. Durations are
+  createdAt→updatedAt (include queue; seconds ±).
+
 ### 2026-09-20 · [ad hoc] S735 claim: owner-directed push to `origin/master` (stub + pending receipt + in-progress ledger entry) *(in progress)*
 - Owner directed the push of the 2 unpushed S734 close-out commits (`be4f41ce`,
   `12218ad2`) in the same conversation, immediately after the S734 report. Quick

@@ -38,18 +38,81 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 734 Handoff Evaluation (by Session 735)
+**Score: 9/10.** **What helped:** every forward-looking claim held exactly — "~2
+unpushed" measured 2, "expect 0 undocumented; measure it" measured 0 on both
+frontiers, and the CI-wait figure (~21–22 min R-CMD-check, one 30-min Monitor arm)
+measured 21m28s with no re-arm; the `--commit` filter mechanics and the
+differs-from-canonical don't-re-sync-reflexively gotcha carried unchanged. **What was
+missing:** nothing material. **What was wrong:** nothing found. **ROI:** high, though
+lightly exercised — the pickup happened in the same conversation minutes after the
+handoff was written, so discovery cost was near zero regardless.
+
 ### What Session 735 Did
-**Deliverable:** Owner-directed push of the 2 unpushed S734 close-out commits
-(`be4f41ce`, `12218ad2`) to `origin/master` + CI verification on the pushed sha
-(IN PROGRESS)
-**Started:** 2026-09-20
-**Status:** Session claimed. Work beginning. Claim commit rides the push
-(S726/S729/S731/S733/S734 precedent); then verify all 4 push-triggered workflows
-green on the pushed sha via `gh run list --commit <sha>` (R-CMD-check ~22 min,
-one 30-min Monitor arm).
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** Owner-directed push to `origin/master` + CI verification — **DONE.**
+Pushed `75d2b049..3b29f498` (3 commits: the 2 unpushed S734 close-out commits —
+records `be4f41ce`, sha `12218ad2` — + the S735 claim `3b29f498` riding the push,
+S726/S729/S731/S733/S734 precedent). All 4 push-triggered workflows `completed
+success` ON THE PUSHED SHA `3b29f498` (verified via `gh run list --commit <sha>`, sha
+match structural): lint 5m14s (id 35539906766), pkgdown 6m04s (35539906763),
+test-coverage 9m51s (35539906801), R-CMD-check 21m28s (35539906788) — the post-S732-fix
+~21–22 min figure confirmed a THIRD consecutive time; single 30-min Monitor arm, no
+re-arm. No TDD phases (push + docs; no `.R` files). Lint N/A.
+**Started/completed:** 2026-09-20 (single session, same conversation as S734). Claim
+`3b29f498` (rode the push); records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, push+CI deliverable, records,
+sha). No BACKLOG item consumed (owner-directed push).
+
+**What actually happened, in order:**
+1. **Abbreviated re-orient (same conversation, state minutes old):** git state,
+   unpushed count (2, matching S734's estimate), and both ledger frontiers re-measured
+   (0 undocumented); the full 8-step orient, dashboard, CI check, and priorities
+   report had run minutes earlier in S734's Phase 0 and were not re-run — noted
+   honestly rather than claimed.
+2. **Claim committed and rode the push:** `3b29f498`; push `75d2b049..3b29f498`;
+   0 unpushed after the push — `origin/master` fully current.
+3. **CI verification:** Monitor polling `gh run list --commit 3b29f498` at 60 s,
+   emitting every terminal conclusion; all 4 green in 21m28s wall.
+4. **quality_ratchet at the pushed HEAD `3b29f498`:** 1/1 pass · 0 fail · 0 unmeasured
+   · results 0c58d203ae28 · manifest aa983075d6a2 (3,483,951 B ≤ 5,000,000 B).
+
+**Self-assessment (Session 735): 9/10.** **Strengths:** (1) deliverable verified on
+the exact pushed sha by construction, run ids + durations recorded; (2) the
+same-conversation pickup was re-measured mechanically (state, frontiers) rather than
+assumed from memory; (3) scope held; full claim/receipt/ledger discipline kept even
+for a 2-commit push. **Weaknesses:** (1) Phase 0 was abbreviated (dashboard, issues,
+SAFEGUARDS re-read not repeated) — defensible minutes after a full orient in the same
+conversation, but it is a deviation to name, not hide; (2) durations are
+createdAt→updatedAt and include queue time (seconds ±).
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push (7th:
+S717/S726/S729/S731/S733/S734). **Reduction check:** nothing removed from a
+mandated-read file this session — none over ceiling (SESSION_NOTES.md ~20 KB live,
+ample headroom); stated explicitly per FM #28's decay term.
+
+**Next steps (specific):** (A) No push pending at handoff-write time except this
+close-out's own ~2 commits (records + sha, docs-only, estimate) — recount with
+`git rev-list --count origin/master..HEAD`; CI current through `3b29f498`; no urgency.
+(B) Priorities unchanged: pedigree-growth measurement (READY, S, `BACKLOG.md:117`);
+package-split disposition + REUSE registration (owner decisions); BACKLOG.md
+editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M,
+`BACKLOG.md:100`). (C) Standing report-only set unchanged from S734, including the two
+context-budget signals (growth run; synced-files differ-from-canonical).
+
+**Key files:** `CHANGELOG.md:41` (S735 entries at top), `HANDOFFS.md:158` (S735
+receipt), `BACKLOG.md:117` (next natural pickup).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0 —
+measure it; ~2 unpushed (estimate at write time). (2) R-CMD-check 21m28s on
+`3b29f498` — the ~21–22 min figure is confirmed three times running; one 30-min
+Monitor arm suffices. (3) The `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+differs-from-canonical flags remain NOT local edits — don't re-sync reflexively (see
+S734 gotcha 3; a fork-main sync is its own session with the `methodology_trim.py`
+patch procedure). (4) Standing set unchanged: `scratchpad/` invisible to git BY OWNER
+DECISION; ratchet ~2 min, AFTER committing (Learning 772); trim needs
+`--budget-bytes 65536`; renv banner expected; `CLAUDE.md` warn band; the two
+`SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline
+2437/0/0/184/0 — remote-confirmed again by R-CMD-check on `3b29f498`.
 
 ### Session 733 Handoff Evaluation (by Session 734)
 **Score: 9/10.** **What helped:** the "~3 unpushed" estimate measured exactly 3; the

@@ -158,9 +158,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S735
 date: 2026-09-20
-status: pending
-active_task: Owner-directed push of the 2 unpushed S734 close-out commits (be4f41ce, 12218ad2) (+ this claim riding the push) to origin/master + CI verification on the pushed sha
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Owner-directed push to origin/master + CI verification DONE — pushed 75d2b049..3b29f498 (3 commits: the 2 unpushed S734 close-out commits — records be4f41ce, sha 12218ad2 — + the S735 claim 3b29f498 riding the push, S726/S729/S731/S733/S734 precedent), all 4 push-triggered workflows completed success ON THE PUSHED SHA 3b29f498 (verified via gh run list --commit, sha match structural): lint 5m14s (35539906766), pkgdown 6m04s (35539906763), test-coverage 9m51s (35539906801), R-CMD-check 21m28s (35539906788) — post-S732-fix ~21–22 min figure confirmed a third consecutive time, single 30-min Monitor arm, no re-arm. No TDD phases; lint N/A.
+what_was_done: Claim 3b29f498 (rode the push so CI ran on it; owner directed the push in the same conversation immediately after the S734 report). Abbreviated re-orient (state minutes old): git state, unpushed count (2 = S734's estimate exactly), both ledger frontiers re-measured (0 undocumented); full 8-step orient not repeated — a named deviation, defensible same-conversation, not hidden. Push left origin/master fully current (0 unpushed). CI verification via Monitor polling gh run list --commit 3b29f498 at 60 s emitting every terminal conclusion; all 4 green in 21m28s wall. No BACKLOG item consumed.
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~2 expected after close-out: records + sha; both docs-only, estimated at write time; no urgency, CI current through 3b29f498). (B) Priorities unchanged: pedigree-growth measurement (READY, S, BACKLOG.md:117); package-split disposition + REUSE registration (owner decisions); BACKLOG.md editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M, BACKLOG.md:100). (C) Standing report-only set unchanged from S734, incl. the two context-budget signals (growth run; synced-files differ-from-canonical).
+key_files: CHANGELOG.md:41 (S735 entries at top), SESSION_NOTES.md:39 (S735 handoff), BACKLOG.md:117 (next natural pickup)
+gotchas: Expect 0 undocumented commits at next Phase 0 — measure it; ~2 unpushed after close-out (estimate). R-CMD-check 21m28s on 3b29f498 — the ~21–22 min figure confirmed three times running; one 30-min Monitor arm suffices. SESSION_RUNNER.md/SAFEGUARDS.md differs-from-canonical flags remain NOT local edits — don't re-sync reflexively; a fork-main sync is its own session with the methodology_trim.py patch procedure (CLAUDE.md checklist). Standing set unchanged: scratchpad/ invisible to git BY OWNER DECISION; quality_ratchet.py --run ~2 min, AFTER committing (Learning 772); methodology_trim.py needs --budget-bytes 65536; renv Rscript banner expected; CLAUDE.md warn band; SESSION_NOTES.md's two ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 remote-confirmed again by R-CMD-check on 3b29f498.
+runtime_smoke: n/a — push + docs only (no runtime behavior changed); the deliverable's verification surface is CI itself, 4/4 green on the pushed sha. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 0c58d203ae28 · manifest aa983075d6a2 (measured 3,483,951 B at 3b29f498)
+changelog_ref: 3b29f498
+commit: pending-records-commit
 ```
+<free-text: S735 +/- — plus: exact-sha verification with run ids and durations recorded; same-conversation pickup re-measured mechanically (state, frontiers) rather than assumed; full claim/receipt/ledger discipline kept for a 2-commit push; scope held. Minus: Phase 0 abbreviated (dashboard/issues/SAFEGUARDS re-read not repeated minutes after a full orient) — named as a deviation rather than hidden; durations include queue time. Predecessor 9/10: every checked claim held exactly (~2 unpushed, 0 undocumented, CI-wait figure); lightly exercised because the pickup was same-conversation.>
 
 ```handoff
 session: S734
