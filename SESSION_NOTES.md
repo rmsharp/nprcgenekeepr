@@ -34,6 +34,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 732 Did
+**Deliverable:** Apply the CRAN check-time fix — shrink the `makePedigreeMatingLayout`
+roxygen example input (`R/makePedigreeDiagramData.R:1659-1662`) + `devtools::document()` +
+audit §7 clean-export re-measure (`BACKLOG.md:117`, READY, Effort S) (IN PROGRESS)
+**Started:** 2026-09-20
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb
+for the next session's reconcile.
+
 ### Session 730 Handoff Evaluation (by Session 731)
 **Score: 9/10.** **What helped:** next-step (A) named the push decision with the exact recount
 command — measured 8, predicted ~8 exactly; the priorities list mapped one-for-one onto the

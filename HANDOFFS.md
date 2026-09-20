@@ -152,6 +152,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S732
+date: 2026-09-20
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Apply the CRAN check-time fix — shrink the makePedigreeMatingLayout roxygen example input (R/makePedigreeDiagramData.R:1659-1662) + devtools::document() + audit §7 clean-export re-measure (BACKLOG.md:117, READY, Effort S). Claimed; work beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S731
 date: 2026-09-19
 status: complete
