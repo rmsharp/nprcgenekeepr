@@ -34,6 +34,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S729 mid-session owner request filed (not acted on — 1-and-done, S726 precedent): BACKLOG item to see if example/test code can run shorter for CRAN submission needs
+- New Up Next item (READY, Effort M): measure-first mandate on the CRAN-visible surface —
+  `R CMD check --timings` for per-Rd example times (incoming checks NOTE > 5 s), and a suite
+  run WITHOUT `NOT_CRAN=true` so `skip_on_cran()` exclusions match CRAN's, with per-file wall
+  times; remedy candidates (`\donttest{}`, smaller example inputs, `skip_on_cran()` on tests
+  that duplicate CI coverage, shared fixtures) explicitly deferred to after measurement.
+  Filed while the S729 push's CI verification poller runs.
+
 ### 2026-09-19 · [ad hoc] S729 claim: owner-directed push to origin/master + CI verification (stub + pending receipt + this in-progress entry)
 - Deliverable (in progress): push the 12 unpushed S726–S728 docs/config commits + this claim
   (13 total; the claim rides the push so CI runs on it — S717/S726 precedent), then verify all
