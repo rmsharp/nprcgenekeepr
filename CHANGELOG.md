@@ -38,6 +38,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S731 claim: owner-directed push to origin/master (stub + pending receipt + in-progress ledger entry)
+- Session claimed. Deliverable (in progress): push the 8 unpushed docs-only S730 commits to
+  `origin/master` (this claim commit rides the push, making 9 — S729/S726/S717 precedent, so
+  CI runs on the pushed sha) and verify all 4 push-triggered workflows `completed success` on
+  that sha. Phase 3F records the rest. Until close-out, this entry is the crash breadcrumb.
+
 ### 2026-09-19 · [ad hoc] S730 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `fcf6790b`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S730 commit. S730 total: 4 commits (claim `c8397845`, deliverable `e8a0eca7`, records
   `fcf6790b`, this one). Ahead of `origin/master` by 8 after close-out — all docs-only, push

@@ -34,6 +34,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 731 Did
+**Deliverable:** Owner-directed push of the 8 unpushed docs-only S730 commits to
+`origin/master` + CI verification (all 4 push-triggered workflows green on the pushed sha;
+this claim commit rides the push, making 9 — S729/S726/S717 precedent) (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 729 Handoff Evaluation (by Session 730)
 **Score: 9/10.** **What helped:** the priorities list mapped one-for-one onto this session's
 Phase 0 picker, and the owner picked its #1; the `BACKLOG.md:117` item WAS the execution plan
