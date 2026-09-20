@@ -168,7 +168,7 @@ key_files: R/makePedigreeDiagramData.R:1659 (new example), man/makePedigreeMatin
 gotchas: §7 recipe trap — capture R_LIBS with Rscript -e 'cat(.libPaths()[1])' 2>/dev/null | tail -1; renv's out-of-sync banner can land on stdout and a polluted R_LIBS kills the check in 4 s ("quadprog not available"). Expect 0 undocumented commits at next Phase 0 — measure it; ~6 unpushed (estimate). Quiet-machine wall figure not measured (machine loaded all session); direction settled (empty >5 s table, worst Rd 1.98 s, CPU 4.9 min). Finding-4 skip_on_cran lever stays untaken unless CRAN's actual farm crowds 10 min. Standing set unchanged: scratchpad/ invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band; the two SESSION_NOTES.md ceilings differ (owner decision pending; file at ~56.4 KB is ~350 B under the token cap — next handoff will need a trim); suite baseline 2437/0/0/184/0 not re-run locally (no code-behavior change; CRAN-surface suite ran 0-fail inside the §7 check).
 runtime_smoke: n/a — doc-only roxygen example change; the §7 R CMD check executed the new example end-to-end (Status OK, examples stage 9.8 s). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results f25e0f1593cb · manifest aa983075d6a2 (measured 3,483,950 B at ba088d0d)
 changelog_ref: ba088d0d
-commit: pending
+commit: e6439a20
 ```
 
 ```handoff

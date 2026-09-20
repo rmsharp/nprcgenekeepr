@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S732 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `e6439a20`; carries its own entry, so no self-reference gap is left for Phase 0
+- Final S732 commit. S732 total: 5 commits (claim `e7fe4713`, fix `ba088d0d`, records
+  `e6439a20`, trim `e33a7b41`, this one). Ahead of `origin/master` by 6 after close-out —
+  the fix commit touches `.R`/`.Rd`, so the next push gets it remote R-CMD-check
+  validation; push is the owner's call. Expect 0 undocumented commits past the frontier
+  at next Phase 0; measure it.
+
 ### 2026-09-20 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-19-2.md` (9 record(s), 69,215 B → 28,548 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
