@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-19-2.md` (9 record(s), 69,215 B → 28,548 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **9** record(s) (2026-09-19 → 2026-09-19) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-19-2.md`](docs/archive/HANDOFFS-through-2026-09-19-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 69,215 B → 28,548 B (−58.8%).
+
 ### 2026-09-20 · [ad hoc] S732 close-out: fix verified (§7 re-measure — Status OK, >5 s table EMPTY, check CPU 1,032 → 291.6 s); session records
 - **Verification at the fix commit `ba088d0d`** (audit §7 clean-export recipe, `NOT_CRAN`
   unset): **Status OK, zero NOTEs, the >5 s examples table is EMPTY** (worst remaining Rd:
