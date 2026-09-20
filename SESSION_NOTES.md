@@ -38,6 +38,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 739 Did
+**Deliverable:** BACKLOG item added (owner-directed, same conversation as S738):
+discuss making a kinship2-similar standalone package from this repository's code;
+step 1 = gap analysis of kinship2 features not present in this codebase. Combined
+with/cross-referenced against the S738 prep items and prior kinship2 comparisons
+(IN PROGRESS)
+**Started:** 2026-09-20
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 737 Handoff Evaluation (by Session 738)
 **Score: 9/10.** **What helped:** "6 unpushed after close-out (measured)" measured
 exactly 6; "expect 0 undocumented; measure it" measured 0 on both frontiers; the

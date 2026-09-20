@@ -156,6 +156,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S739
+date: 2026-09-20
+status: pending
+active_task: Add BACKLOG item (owner-directed, same conversation as S738): discuss making a kinship2-similar standalone package from this repo's code; step 1 = kinship2 feature-gap analysis. Combine with/cross-reference the S738 prep items and prior kinship2 comparison artifacts.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S738
 date: 2026-09-20
 status: complete

@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S739 claim: BACKLOG item — kinship2-similar package discussion, step 1 = feature-gap analysis *(in progress)*
+- Session claimed (stub + pending receipt + this entry), same conversation as S738.
+  Abbreviated re-orient per S735 precedent (state minutes old): tree clean, both
+  ledger frontiers at `e3370b82`, 0 undocumented, 10 unpushed (= S738's estimate).
+  Owner directive: add a BACKLOG item (perhaps combining with an existing one) to
+  discuss making a package similar to kinship2 from code within this repository;
+  first step is identifying kinship2 features not available in this codebase.
+
 ### 2026-09-20 · [ad hoc] S738 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `0dec1c09`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S738 commit. S738 total: 4 commits (claim `f9b1f2a3`, deliverable `9d80dde6`,
   records `0dec1c09`, this one). Ahead of `origin/master` by 10 after close-out (6
