@@ -152,6 +152,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S727
+date: 2026-09-19
+status: pending
+active_task: Tarball-size audit (BACKLOG Up Next, owner-requested S726) — measured R CMD build inventory + ranked remedy candidates; research only, no remedies applied
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S726
 date: 2026-09-19
 status: complete

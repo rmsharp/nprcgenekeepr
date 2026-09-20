@@ -30,6 +30,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 727 Did
+**Deliverable:** Tarball-size audit — measured inventory of what ships in the built source
+tarball + ranked remedy candidates (research only; no remedies applied) (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 725 Handoff Evaluation (by Session 726)
 **Score: 9/10.** **What helped:** the priorities list mapped one-for-one onto this session's
 Phase 0 picker (push decision surfaced as the owner's actual pick); the ~31-unpushed
