@@ -152,6 +152,21 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S730
+date: 2026-09-19
+status: pending
+active_task: CRAN check-time measurement audit (BACKLOG.md:117, owner-requested S729) — measure per-Rd example timings (R CMD check --timings) and the CRAN-visible test runtime (suite WITHOUT NOT_CRAN=true), weigh remedies without applying any. Research/measurement session; remedies land in their own follow-up session.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text: pending — completed at Phase 3D.>
+
+```handoff
 session: S729
 date: 2026-09-19
 status: complete

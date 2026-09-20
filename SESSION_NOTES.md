@@ -34,6 +34,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 730 Did
+**Deliverable:** CRAN check-time measurement audit (`BACKLOG.md:117`, owner-requested S729) —
+measure per-Rd example timings (`R CMD check --timings`) and the CRAN-visible test runtime
+(suite WITHOUT `NOT_CRAN=true`), weigh remedies without applying any (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 728 Handoff Evaluation (by Session 729)
 **Score: 9/10.** **What helped:** next-step (A) named the push decision with the exact recount
 command — measured 12, predicted ~12; "the push also puts the first gate manifest on the

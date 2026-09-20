@@ -38,6 +38,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S730 claim: CRAN check-time measurement audit (in progress)
+- Session claimed for the `BACKLOG.md:117` item (owner-requested mid-S729). Measurement/research
+  only: `R CMD check --timings` per-Rd example times + a suite run WITHOUT `NOT_CRAN=true` so
+  `skip_on_cran()` exclusions match CRAN's; remedies weighed in the audit report, none applied.
+  Stub + pending `HANDOFFS.md` receipt ride this commit; close-out records the rest.
+
 ### 2026-09-19 · [ad hoc] S729 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `2b6ccc45`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S729 commit. S729 total: 5 commits (claim `0572767b`, pushed and CI-validated; filing
   `c9c946f7`; records `2b6ccc45`; trim `10016a8e`; this one). Ahead of `origin/master` by 4
