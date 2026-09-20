@@ -34,6 +34,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S728 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `facc4df1`; carries its own entry, so no self-reference gap is left for Phase 0
+- Final S728 commit. S728 total: 4 commits (claim `f82f978a`; deliverable `2570645b`; records
+  `facc4df1`; this one). Ahead of `origin/master` by 12 after close-out (8 pre-existing + these
+  4) — all docs/config-only, push is the owner's call; the push also puts the first quality-gate
+  manifest on the remote. Expect 0 undocumented commits past the frontier at next Phase 0;
+  measure it.
+
 ### 2026-09-19 · [ad hoc] S728 close-out: tarball build-hygiene DONE + session records (handoff, S727 evaluation 9/10, receipt, Learning 772)
 - **Records:** `SESSION_NOTES.md` S728 handoff + S727 evaluation (9/10 — its next-step (A) WAS
   this session's deliverable, the `BACKLOG.md:100` block was the execution plan verbatim, and
