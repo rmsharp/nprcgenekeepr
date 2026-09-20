@@ -53,6 +53,120 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · \[ad hoc\] S733 claim: owner-directed push to `origin/master` + CI verification *(in progress)*
+
+- Session claimed after full Phase 0 (reconcile clean: 0 undocumented on
+  both frontiers at `ee7cb230`; S732 receipt complete, ratchet citation
+  matches `.quality-gates-results.json`; CI 4/4 green on `3b688ae2` +
+  scheduled shinytest2 green; dashboard 96/100; context budget WARN =
+  `CLAUDE.md` warn band only; 7 unpushed measured vs S732’s ~6 estimate
+  — the delta is the S732 HANDOFFS trim commit). Owner picked the push
+  via the Phase 0 picker. Claim rides the push so CI runs on it
+  (S726/S729/S731 precedent). Phase 3F records the rest.
+
+### 2026-09-20 · \[ad hoc\] S732 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `e6439a20`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S732 commit. S732 total: 5 commits (claim `e7fe4713`, fix
+  `ba088d0d`, records `e6439a20`, trim `e33a7b41`, this one). Ahead of
+  `origin/master` by 6 after close-out — the fix commit touches
+  `.R`/`.Rd`, so the next push gets it remote R-CMD-check validation;
+  push is the owner’s call. Expect 0 undocumented commits past the
+  frontier at next Phase 0; measure it.
+
+### 2026-09-20 · \[ad hoc\] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-19-2.md` (9 record(s), 69,215 B → 28,548 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **9** record(s) (2026-09-19 →
+2026-09-19) out of
+[`HANDOFFS.md`](https://github.com/rmsharp/nprcgenekeepr/HANDOFFS.md)
+into
+[`docs/archive/HANDOFFS-through-2026-09-19-2.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-19-2.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 69,215 B → 28,548
+B (−58.8%).
+
+### 2026-09-20 · \[ad hoc\] S732 close-out: fix verified (§7 re-measure — Status OK, \>5 s table EMPTY, check CPU 1,032 → 291.6 s); session records
+
+- **Verification at the fix commit `ba088d0d`** (audit §7 clean-export
+  recipe, `NOT_CRAN` unset): **Status OK, zero NOTEs, the \>5 s examples
+  table is EMPTY** (worst remaining Rd: `groupAddAssign` 1.98 s
+  elapsed); examples 743.0 → 9.8 s elapsed over 202 Rd files; whole
+  check 1,032 → 291.6 s CPU (4.9 min, −72%), matching the audit’s ~5 min
+  prediction. Wall 518.8 s (8.6 min) is contention-inflated (load avg
+  50+, external VM + 5 Chromium processes; CPU/wall 0.56 vs S730’s
+  0.995) — an upper bound; the CRAN-surface test suite ran 0-fail inside
+  the check. T1–T4 cleared. The Finding-4 `skip_on_cran()` lever
+  deliberately NOT taken (audit holds it if CRAN’s farm ever crowds 10
+  min). Gotcha for §7 reuse: capture `R_LIBS` with `... | tail -1` —
+  renv’s out-of-sync banner can land on stdout and a polluted `R_LIBS`
+  kills the check in 4 s (“quadprog not available”; cost one failed run
+  this session). **Completed BACKLOG item removed** (`BACKLOG.md:117`,
+  S686 convention) in this commit. `SESSION_NOTES.md` handoff written
+  (S731 evaluation: 9/10; self: 9/10); `HANDOFFS.md` receipt complete.
+  No new `PROJECT_LEARNINGS.md` entry (routine Effort-S fix).
+  quality_ratchet at close-out: cited in the receipt. ~6 unpushed after
+  close-out (estimate); push is the owner’s call.
+
+### 2026-09-20 · \[ad hoc\] S732 deliverable: CRAN check-time fix — `makePedigreeMatingLayout` example input `examplePedigree` → `smallPed`
+
+- `R/makePedigreeDiagramData.R:1659-1662` roxygen `@examples` +
+  regenerated `man/makePedigreeMatingLayout.Rd` (`devtools::document()`,
+  never hand-edited). Input choice measured in-session across all
+  shipped pedigrees with the required columns: `smallPed` (17 rows) 0.03
+  s, ZERO warnings/messages — beats the item’s named candidate
+  `pedWithGenotype` (0.93 s, 5-collision warning), `qcPed` (0.91 s, same
+  warning), and `rhesusPedigree` (2.91 s, 72-collision warning);
+  `smallPed` is also the established fixture idiom in 13 other roxygen
+  examples. Lint: 0 on the touched file (package loaded). Verification =
+  the audit §7 clean-export re-measure, run AFTER this commit (the
+  recipe builds from `git archive HEAD`); results in the close-out
+  entry. BACKLOG item removal follows the re-measure passing, not this
+  commit.
+
+### 2026-09-20 · \[ad hoc\] S732 claim: apply the CRAN check-time fix (in progress)
+
+- Session claimed after full Phase 0 (reconcile clean: 0 undocumented on
+  both frontiers at `400e226e`; CI 4/4 green on `3b688ae2`; dashboard
+  96/100; context budget warn-band only; 2 unpushed docs-only as S731
+  predicted). Owner picked the `BACKLOG.md:117` READY/S item via the
+  Phase 0 picker: shrink the `makePedigreeMatingLayout` roxygen example
+  input (`R/makePedigreeDiagramData.R:1659-1662`) +
+  `devtools::document()` + audit §7 clean-export re-measure. TDD N/A
+  (doc-only `.Rd` example change; the re-measure is the verification
+  gate per the item). Close-out records the rest.
+- Final S731 commit. S731 total: 3 commits (claim `3b688ae2` — rode the
+  push, records `f5656164`, this one) + the push itself (a non-commit
+  action, its own entry below). Ahead of `origin/master` by 2 after
+  close-out — both docs-only, push is the owner’s call. Expect 0
+  undocumented commits past the frontier at next Phase 0; measure it.
+
+### 2026-09-20 · \[ad hoc\] S731 close-out: session records (handoff, S730 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (evaluation of S730: 9/10;
+  self-assessment: 9/10); `HANDOFFS.md` receipt overwritten to
+  `status: complete` with the six requirements filled. quality_ratchet
+  at the pushed HEAD `3b688ae2`: 1/1 pass · 0 fail · 0 unmeasured ·
+  results 24c0d9475ec1 · manifest aa983075d6a2 (tarball 3,483,933 B ≤
+  5,000,000 B). No new `PROJECT_LEARNINGS.md` entry (routine push
+  session, S729 precedent). No BACKLOG item consumed. Next natural
+  pickup: the READY/S apply-the-CRAN-check-time-fix item
+  (`BACKLOG.md:117`). ~2 unpushed after close-out (estimate at write
+  time); push is the owner’s call.
+
+### 2026-09-20 · \[ad hoc\] S731 deliverable: push to origin/master + CI verification — 4/4 workflows green on the pushed sha
+
+- **Pushed `0572767b..3b688ae2`** (9 commits: the 8 unpushed S730
+  docs-only commits + the S731 claim riding the push — S729/S726/S717
+  precedent). All 4 push-triggered workflows `completed success` ON THE
+  PUSHED SHA `3b688ae2` (verified via `gh run list --commit <sha>`):
+  lint 4m26s (id 35490394639), test-coverage 8m41s (35490394613),
+  pkgdown 18m05s (35490394612), R-CMD-check 33m37s (35490394609). Puts
+  the S730 CRAN check-time audit and full S730 close-out record set on
+  the remote. The push is a non-commit action; this entry is its ledger
+  record.
+
 ### 2026-09-19 · \[ad hoc\] S731 claim: owner-directed push to origin/master (stub + pending receipt + in-progress ledger entry)
 
 - Session claimed. Deliverable (in progress): push the 8 unpushed
