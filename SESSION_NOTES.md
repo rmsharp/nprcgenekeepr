@@ -38,6 +38,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 735 Did
+**Deliverable:** Owner-directed push of the 2 unpushed S734 close-out commits
+(`be4f41ce`, `12218ad2`) to `origin/master` + CI verification on the pushed sha
+(IN PROGRESS)
+**Started:** 2026-09-20
+**Status:** Session claimed. Work beginning. Claim commit rides the push
+(S726/S729/S731/S733/S734 precedent); then verify all 4 push-triggered workflows
+green on the pushed sha via `gh run list --commit <sha>` (R-CMD-check ~22 min,
+one 30-min Monitor arm).
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 733 Handoff Evaluation (by Session 734)
 **Score: 9/10.** **What helped:** the "~3 unpushed" estimate measured exactly 3; the
 CHANGED CI-wait gotcha (R-CMD-check ~21–22 min post-fix, fits one 30-min Monitor arm)

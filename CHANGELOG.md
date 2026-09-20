@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S735 claim: owner-directed push to `origin/master` (stub + pending receipt + in-progress ledger entry) *(in progress)*
+- Owner directed the push of the 2 unpushed S734 close-out commits (`be4f41ce`,
+  `12218ad2`) in the same conversation, immediately after the S734 report. Quick
+  mechanical re-orient (state seconds old): ahead 2 confirmed, both ledger frontiers
+  reconcile clean. The claim rides the push (S726/S729/S731/S733/S734 precedent) so CI
+  runs on it. Phase 3F records the outcome.
+
 ### 2026-09-20 · [ad hoc] S734 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `be4f41ce`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S734 commit. S734 total: 3 commits (claim `75d2b049` — rode the push, records
   `be4f41ce`, this one). Ahead of `origin/master` by 2 after close-out, both docs-only;
