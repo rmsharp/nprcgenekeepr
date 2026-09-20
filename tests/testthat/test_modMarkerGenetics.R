@@ -262,9 +262,9 @@ test_that("modMarkerGenetics's cross-center table is not ready before both cente
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(NULL)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "centerA.csv", datapath = centerAGenotypeFilePath
-    ))
+    )))
     expect_null(result$crossCenterTable())
   })
 })
@@ -275,9 +275,9 @@ test_that("modMarkerGenetics computes the cross-center Fst table from two upload
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(NULL)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "centerA.csv", datapath = centerAGenotypeFilePath
-    ))
+    )))
     session$setInputs(genotypeFileB = list(
       name = "centerB.csv", datapath = centerBGenotypeFilePath
     ))
@@ -413,9 +413,9 @@ test_that("modMarkerGenetics's candidate-parent-assignment table is non-empty fo
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(pedigreeFlaggedSlot)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "markerGenotypeFlaggedSlot.csv", datapath = genotypeFilePathFlaggedSlot
-    ))
+    )))
 
     tbl <- result$candidateAssignmentTable()
     expect_s3_class(tbl, "data.frame")
@@ -924,9 +924,9 @@ test_that("modMarkerGenetics's sequenceRohTable is not ready before a locus-meta
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(NULL)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
-    ))
+    )))
     expect_null(result$sequenceRohTable())
   })
 })
@@ -937,9 +937,9 @@ test_that("modMarkerGenetics computes sequenceRohTable matching test_computeGeno
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(NULL)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
-    ))
+    )))
     session$setInputs(locusMetadataFile = list(
       name = "i152_roh_locus_metadata.csv",
       datapath = i152RohLocusMetadataFilePath
@@ -986,9 +986,9 @@ test_that("modMarkerGenetics's sequenceRohTable does not error on a 4-column (wi
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(NULL)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
-    ))
+    )))
     session$setInputs(locusMetadataFile = list(
       name = "i152_roh_locus_metadata_with_cm.csv",
       datapath = i152RohLocusMetadataWithCmFilePath
@@ -1012,9 +1012,9 @@ test_that("modMarkerGenetics's sequenceRohTable uses minSnp=50L/minBp=1e6 defaul
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(NULL)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
-    ))
+    )))
     session$setInputs(locusMetadataFile = list(
       name = "i152_roh_locus_metadata.csv",
       datapath = i152RohLocusMetadataFilePath
@@ -1043,9 +1043,9 @@ test_that("modMarkerGenetics's sequence export reactives are NULL before Generat
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(i152RohPed)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
-    ))
+    )))
     session$setInputs(locusMetadataFile = list(
       name = "i152_roh_locus_metadata.csv",
       datapath = i152RohLocusMetadataFilePath
@@ -1064,9 +1064,9 @@ test_that("modMarkerGenetics's sequence export de-identifies the genotype matrix
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(i152RohPed)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
-    ))
+    )))
     session$setInputs(locusMetadataFile = list(
       name = "i152_roh_locus_metadata.csv",
       datapath = i152RohLocusMetadataFilePath
@@ -1100,9 +1100,9 @@ test_that("modMarkerGenetics's sequence export stays NULL after Generate Export 
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(NULL)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
-    ))
+    )))
     session$setInputs(locusMetadataFile = list(
       name = "i152_roh_locus_metadata.csv",
       datapath = i152RohLocusMetadataFilePath
@@ -1120,9 +1120,9 @@ test_that("modMarkerGenetics's sequenceExportConfirmed becomes TRUE after the fu
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(i152RohPed)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
-    ))
+    )))
     session$setInputs(locusMetadataFile = list(
       name = "i152_roh_locus_metadata.csv",
       datapath = i152RohLocusMetadataFilePath
@@ -1595,9 +1595,9 @@ test_that("modMarkerGenetics's sequence export preview blocks, says why, and sur
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(s709PartialRohPed)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
-    ))
+    )))
     session$setInputs(locusMetadataFile = list(
       name = "i152_roh_locus_metadata.csv",
       datapath = i152RohLocusMetadataFilePath
@@ -1646,9 +1646,9 @@ test_that("modMarkerGenetics's sequence export preview survives an erroring pedi
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(stop("pedigree not ready"))), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
-    ))
+    )))
     session$setInputs(locusMetadataFile = list(
       name = "i152_roh_locus_metadata.csv",
       datapath = i152RohLocusMetadataFilePath
@@ -1709,9 +1709,9 @@ test_that("modMarkerGenetics's sequence export preview still builds, with no blo
     args = list(kinshipMatrix = shiny::reactive(pedKinshipMatrix),
                 pedigree = shiny::reactive(i152RohPed)), {
     result <- session$getReturned()
-    session$setInputs(genotypeFile = list(
+    suppressWarnings(session$setInputs(genotypeFile = list(
       name = "i152_roh_genotype.csv", datapath = i152RohGenotypeFilePath
-    ))
+    )))
     session$setInputs(locusMetadataFile = list(
       name = "i152_roh_locus_metadata.csv",
       datapath = i152RohLocusMetadataFilePath

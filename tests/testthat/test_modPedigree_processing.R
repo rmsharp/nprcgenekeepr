@@ -669,7 +669,7 @@ test_that("modPedigreeServer trimPedigree works with examplePedigree", {
       count_before <- result$nAnimals()
 
       # Enable trimming
-      session$setInputs(trimPedigree = TRUE)
+      suppressWarnings(session$setInputs(trimPedigree = TRUE))
       count_after <- result$nAnimals()
 
       # Trimmed pedigree should be smaller or equal

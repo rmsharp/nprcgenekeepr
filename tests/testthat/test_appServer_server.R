@@ -203,7 +203,7 @@ test_that("appServer wires child-module outputs into shared state", {
         studbookSet <<- !is.null(shared$currentStudbook)
         # pedigree() -> shared$currentPedigree (req passes)
         ctl$ped(data.frame(id = "a", stringsAsFactors = FALSE))
-        session$flushReact()
+        suppressWarnings(session$flushReact())
         pedSet <<- !is.null(shared$currentPedigree)
         # geneticValues() -> shared$geneticValues (req passes)
         ctl$gv(data.frame(id = "a", value = 1, stringsAsFactors = FALSE))

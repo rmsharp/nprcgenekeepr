@@ -34,6 +34,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S724 deliverable: baseline-warnings cleanup — suite warning count 40 → 0 via 16 `suppressWarnings()` wraps on triggering test calls; BACKLOG item removed (completed record here)
+- **Inventory re-derived from a fresh full-suite run** (the item's own mandate — and it was
+  right to demand it): the 40 warnings were NOT all one class. 37 are the `markerKinship()`
+  NA-path (`R/markerKinship.R:131-139`, working as designed) across 14 blocks, all in
+  `test_modMarkerGenetics.R` — the 3 known 5-warning blocks (2 cross-center + the issue #155
+  candidate-parent block) plus **11** two-warning blocks from the `i152_roh_genotype.csv`
+  fixture (pairs I1/I3, I2/I3; the item's stale list knew only 2 of these). The other 3 are
+  out-of-class: `test_appServer_server.R` "wires child-module outputs into shared state"
+  (2: `findGeneration` unplaced-id + empty-`max()` `-Inf`, from the 1-row toy pedigree) and
+  `test_modPedigree_processing.R` "trimPedigree works with examplePedigree" (1:
+  `makePedigreeMatingLayout()` 2-collision residual, the accepted render-quality warning).
+- **Remedy:** owner picked "suppress all 16 sites" via `AskUserQuestion` (Learning 273(d) —
+  suppress the incidental warning, not the branch; fixture-completion option declined). The
+  16 wraps: 14 `setInputs(genotypeFile=...)` (2 centerA, 1 flaggedSlot, 11 i152_roh), 1
+  `session$flushReact()` (appServer), 1 `setInputs(trimPedigree=TRUE)`. Test assertions and
+  production code untouched; diff is exactly the 16 wraps.
+- **Verification:** all 3 touched files individually 0 failed/0 error/0 warning; full clean
+  regression read `blocks=2437 failed=0 error=0 skipped=184 warning=0` — block and skip
+  counts equal the S718–S723 baseline exactly, warnings 40 → 0; `lintr::lint_package()` 0
+  lints (package loaded first, Learning 224). The suite is back to the 0-warning state of
+  CRAN v2.0.0 — the owner's "we had zero at last release" report (S487) that opened the item.
+- No TDD phases (test-hygiene: no new tests, no assertion or production change; the remedy
+  choice was the session's gate, posed with the inventory in hand).
+
 ### 2026-09-19 · [ad hoc] S724 claim: baseline-warnings cleanup — re-derive the warning-block inventory, then clean the ~40 markerKinship() NA-path suite warnings *(in progress)*
 - The `BACKLOG.md:233` Housekeeping item (found S487, annotated S723; count 10 → 15 → 40,
   block list stale twice). Plan: fresh-suite inventory grouped by test block first; remedy
