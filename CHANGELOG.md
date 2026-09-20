@@ -34,6 +34,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S724 close-out: session records (SESSION_NOTES handoff + S723 evaluation 9/10, HANDOFFS receipt complete, `PROJECT_LEARNINGS.md` Learning 769) and post-append verification measurements
+- **Trigger states, measured AFTER the handoff/receipt/learning text was appended**, all under
+  `--budget-bytes 65536`: `SESSION_NOTES.md` 37,239 B, `HANDOFFS.md` 32,489 B, `CHANGELOG.md`
+  41,926 B — none fires; no trim owed this session.
+- **`context_budget.py` post-append run:** exactly the documented expected state — `CLAUDE.md`
+  43,348 B / resident total over (red by design, remedy filed), `SESSION_NOTES.md` ok.
+- **Close-out checklists:** lint DONE (3 touched test `.R` files, 0 lints, package loaded
+  first); no new exports/statistics/Shiny features → NEWS/pkgdown/citation/tutorial/
+  `a2interactive` N/A; BACKLOG item completed but names no GitHub issue → issue close-out N/A;
+  CI green all session (on the S719 push), no CI break found; quality_ratchet cited in the
+  receipt (0/0, manifest empty by design); runtime smoke N/A — test-only, no runtime surface.
+- Sha self-reconcile commit follows with its own entry; expect 0 undocumented commits past the
+  frontier at next Phase 0.
+
 ### 2026-09-19 · [ad hoc] S724 deliverable: baseline-warnings cleanup — suite warning count 40 → 0 via 16 `suppressWarnings()` wraps on triggering test calls; BACKLOG item removed (completed record here)
 - **Inventory re-derived from a fresh full-suite run** (the item's own mandate — and it was
   right to demand it): the 40 warnings were NOT all one class. 37 are the `markerKinship()`

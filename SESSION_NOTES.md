@@ -30,17 +30,96 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 723 Handoff Evaluation (by Session 724)
+**Score: 9/10.** **What helped:** the annotated BACKLOG item plus gotcha (2)'s re-derive
+mandate WAS this session's plan — and the mandate was load-bearing (staleness confirmed:
+the list knew 5 of the actual 14 markerKinship blocks); the full-suite baseline
+(2437/0/0/184/40) matched this session's fresh inventory read exactly; next-steps (B)
+described this session's exact opening play (fresh-suite inventory first, then 273(d) vs
+fixture completion); key-file anchors accurate (`R/markerKinship.R:135` confirmed as the
+emission site). **What was missing:** nothing material. **What was wrong:** gotcha (2)'s
+first half — "the 40 suite warnings are ALL the tracked baseline item's class" — was
+refuted by measurement: 37/40 are; 3 warnings in 2 OTHER files are two different classes
+(`test_appServer_server.R:206` findGeneration/`-Inf`; `test_modPedigree_processing.R:672`
+layout-collision residual). Zero harm done — the same gotcha's own re-derive instruction
+pre-neutralized it. **ROI:** high.
+
 ### What Session 724 Did
-**Deliverable:** Baseline-warnings cleanup (BACKLOG Housekeeping item, `BACKLOG.md:233`) —
-re-derive the complete warning-emitting block inventory from a fresh suite run, then clean the
-~40 `markerKinship()` NA-path baseline warnings (Learning 273(d) `suppressWarnings()` on the
-triggering calls, or fixture completion — remedy choice gated by `AskUserQuestion` once the
-inventory is in hand). (IN PROGRESS)
-**Started:** 2026-09-19
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** Baseline-warnings cleanup — **DONE.** Suite warning count **40 → 0**
+(`blocks=2437 failed=0 error=0 skipped=184 warning=0`; block/skip counts equal the
+S718–S723 baseline exactly) via 16 `suppressWarnings()` wraps on the exact test calls that
+leak working-as-designed production warnings. The suite is back to the 0-warning state of
+CRAN v2.0.0 — the owner's "we had zero at last release" report (S487) that opened the item.
+BACKLOG item removed in the deliverable commit. No TDD phases (test-hygiene: no new tests,
+no assertion or production change; the remedy choice was the session's `AskUserQuestion`
+gate, posed with the inventory in hand). Lint checklist applied (3 tracked test `.R` files
+touched): `lintr::lint_package()` = 0 lints, package loaded first (Learning 224).
+**Started/completed:** 2026-09-19 (single session). Claim `1bd5ef9c`; deliverable
+`eb3573bc`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per commit; the deliverable entry carries the full
+inventory + verification record.
+
+**What actually happened, in order:**
+1. **Phase 0:** reconcile clean (0 undocumented commits on both frontiers, predicted 0);
+   CI 10/10 green (still on the S719 push — the 23 then-unpushed commits had never seen
+   CI); dashboard 96/100; context-budget reds by-design only; untracked files all
+   long-standing/known. Owner picked this item from the 4-option picker. Claim `1bd5ef9c`.
+2. **Inventory (fresh full suite, silent reporter + `expectation_warning` walk):** 40
+   warnings = 37 markerKinship NA-path across 14 blocks, all `test_modMarkerGenetics.R`
+   (3 known 5-warning blocks at :265/:278/:416 + ELEVEN 2-warning `i152_roh` blocks at
+   :927–:1712, of which the stale list knew 2) **plus 3 out-of-class** (see the S723
+   evaluation above). srcref lines landed on the exact triggering calls = the wrap-site
+   list for free.
+3. **Remedy gate:** owner picked "suppress all 16 sites" (over markerKinship-only, and
+   over fixture completion with its Fst re-derivation risk) via `AskUserQuestion`.
+4. **Fix (`eb3573bc`):** 16 wraps — 14 `setInputs(genotypeFile=...)` (2 centerA, 1
+   flaggedSlot, 11 i152_roh; fixture filenames partition warning from non-warning sites
+   exactly, so replace-all keyed on the fixture-name line was provably precise), 1
+   `flushReact()` (appServer), 1 `setInputs(trimPedigree=TRUE)` (modPedigree). Diff =
+   exactly the 16 wraps; assertions and production code untouched.
+5. **Verification:** the 3 touched files individually 0F/0E/0W; full clean regression
+   read 2437/0/0/184/**0**; lint 0.
+
+**Self-assessment (Session 724): 9/10.** **Strengths:** (1) inventory-before-remedy
+sequencing caught the class heterogeneity BEFORE any fix was designed — the remedy gate's
+options were built from measurement, not the item's stale enumeration; (2) provably
+precise edits (fixture-name partition + wrap-count + per-file 0W re-runs + full-suite
+exact-baseline block/skip counts); (3) the suite's warning channel is now clean, turning
+every future warning into signal. **Weaknesses:** (1) the BACKLOG block removal used
+line-number `sed` rather than a context-anchored edit — boundaries were re-verified
+immediately before and the diff checked after, but it's the FM #20-adjacent pattern;
+(2) the deliverable commit sat exactly at the 5-file blast-radius cap — compliant but
+with no headroom; splitting the docs pair from the test trio would have been more
+conservative.
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~27 expected after close-out: 23 pre-existing
++ claim + deliverable + records + sha; the last two are an estimate at write time). CI's
+R-CMD-check runs this same suite and should confirm warning-free on push. (B) Priorities:
+`CLAUDE.md` reduction campaign (READY, M); pedigree-growth measurement (READY, S,
+owner-requested S721); owner decisions pending: package-split disposition, REUSE
+registration. (C) Standing report-only: HANDOFFS.md truncated duplicate S720 stub (locate
+by grepping for two adjacent `session: S720` blocks); iCloud Housekeeping item closable
+pending a duplicates-stay-gone confirmation.
+
+**Key files:** `tests/testthat/test_modMarkerGenetics.R` (14 wraps at :265/:278/:416/
+:927/:940/:989/:1015/:1046/:1067/:1103/:1123/:1598/:1649/:1712 — wrap adds no lines, so
+pre-fix line numbers still hold), `tests/testthat/test_appServer_server.R:206`,
+`tests/testthat/test_modPedigree_processing.R:672`, `R/markerKinship.R:131-139` (the
+NA-path emission — untouched), `CHANGELOG.md` S724 entries, `PROJECT_LEARNINGS.md`
+Learning 769.
+
+**Gotchas for the next session:** (1) **The full-suite baseline is now 2437/0/0/184/0 —
+any `warning > 0` in a regression read is a NEW finding, never "baseline."** (2) When
+authoring tests that upload degenerate/toy genotype fixtures, wrap the triggering call
+per Learning 273(d) AT AUTHORING TIME — the 10→15→40 growth was new tests reusing
+warning-prone fixtures without wraps (S447/S502/S535). (3) The 16 wrapped call sites also
+mute future unexpected warnings from those exact calls (owner-accepted trade; assertions
+unchanged, failures still surface). (4) Standing: context-budget reds by design until the
+CLAUDE.md reduction campaign; every `methodology_trim.py` run needs `--budget-bytes
+65536`; the stray `~$e Compounding Loop.html` still makes `devtools::check()` warn and
+exit 1 non-interactively; `renv.lock` carries no dev tooling (the `Rscript` out-of-sync
+banner is expected).
 
 ### Session 722 Handoff Evaluation (by Session 723)
 **Score: 9/10.** **What helped:** gotcha (3) WAS this session's deliverable, pre-diagnosed in
