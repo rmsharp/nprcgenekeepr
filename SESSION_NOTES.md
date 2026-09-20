@@ -38,17 +38,97 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 735 Handoff Evaluation (by Session 736)
+**Score: 9/10.** **What helped:** "~2 unpushed" measured exactly 2; "expect 0
+undocumented; measure it" measured 0 on both frontiers; the ratchet citation matched
+`.quality-gates-results.json` byte-for-byte; the priorities list fed the Phase 0
+picker directly. **What was missing:** the carried CI-monitor mechanics
+("poll `gh run list --commit <sha>`") never say the sha must be the FULL 40-char
+form — a short sha silently returns an empty list, and this session's monitor sat
+silent through an entirely green run for its whole 30-min arm because of it (whether
+prior sessions polled with full shas is not verifiable from the notes, which print
+short shas throughout). **What was wrong:** nothing found — every checked claim held;
+the ~21–22 min R-CMD-check figure was an overestimate this time (17m39s) in the safe
+direction. **ROI:** high.
+
 ### What Session 736 Did
-**Deliverable:** Owner-directed push to `origin/master` + CI verification on the pushed
-sha (IN PROGRESS)
-**Started:** 2026-09-20
-**Status:** Session claimed. Full 8-step Phase 0 orient complete (reconcile clean, 0
-undocumented on both frontiers at `dd8ea5a7`; dashboard 96/100; CI 4/4 green on
-`3b29f498`; 2 unpushed measured = S735's estimate). Owner picked the push via the
-Phase 0 picker. Claim rides the push (S726–S735 precedent).
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** Owner-directed push to `origin/master` + CI verification — **DONE.**
+Pushed `3b29f498..2628cd02` (3 commits: the 2 unpushed S735 close-out commits —
+records `1296c6e6`, sha `dd8ea5a7` — + the S736 claim `2628cd02` riding the push,
+S726–S735 precedent). All 4 push-triggered workflows `completed success` ON THE
+PUSHED SHA `2628cd02` (verified via `gh run list --commit <full-sha>` with `headSha`
+echoed back structurally): lint 4m56s (id 35541807254), pkgdown 7m01s (35541807276),
+test-coverage 10m02s (35541807240), R-CMD-check 17m39s (35541807302) — fastest
+post-S732-fix figure yet (prior band 21m28s–22m17s). No TDD phases (push + docs; no
+`.R` files). Lint N/A.
+**Started/completed:** 2026-09-20 (single session). Claim `2628cd02` (rode the push);
+records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, push+CI deliverable, records,
+sha). No BACKLOG item consumed (the push was a Phase 0 owner pick).
+
+**What actually happened, in order:**
+1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both frontiers
+   at `dd8ea5a7`; S735 receipt complete, ratchet citation matches results file); CI
+   4/4 green on `3b29f498`; dashboard 96/100; 2 unpushed measured (= S735's
+   estimate); 5 known untracked files unchanged. Context budget: CLAUDE.md warn band,
+   growth run 13/10 — and the `SESSION_RUNNER.md`/`SAFEGUARDS.md`
+   differs-from-canonical flags are GONE (both `synced / canonical ok`; tree clean,
+   no local change — the checker's reference caught up). Report-only.
+2. **Owner picked the push** via the Phase 0 AskUserQuestion picker.
+3. **Claim committed and rode the push:** `2628cd02`; push `3b29f498..2628cd02`;
+   0 unpushed after the push — `origin/master` fully current.
+4. **CI verification:** the first Monitor arm polled `gh run list --commit 2628cd02`
+   (SHORT sha) — which silently returns an empty list — and expired after 30 min with
+   zero events while all 4 workflows completed green underneath it. Direct check with
+   the full sha (`git rev-parse`) returned all 4 `completed success` with `headSha`
+   matching exactly; conclusions verified from the JSON, not inferred from silence.
+5. **quality_ratchet at the pushed HEAD `2628cd02`:** 1/1 pass · 0 fail · 0 unmeasured
+   · results 847588b5cc75 · manifest aa983075d6a2 (3,483,944 B ≤ 5,000,000 B).
+
+**Self-assessment (Session 736): 8/10.** **Strengths:** (1) deliverable verified on
+the exact pushed sha structurally (`headSha` echoed from the JSON), run ids +
+durations recorded; (2) the monitor's silence was treated as a signal to investigate,
+not as "still running" — the root cause (short-sha filter) was pinned down and
+recorded rather than the run being re-armed blind; (3) scope held; full
+claim/receipt/ledger discipline kept. **Weaknesses:** (1) the 30-min silent arm was
+avoidable — the filter was never smoke-tested against an in-flight run before arming
+(a single foreground `gh run list --commit <sha>` while runs were queued would have
+shown the empty list immediately); (2) durations are createdAt→updatedAt and include
+queue time (seconds ±).
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push (8th:
+S717/S726/S729/S731/S733/S734/S735); the full-sha gotcha lives in the gotchas below
+and the deliverable ledger entry. **Reduction check:** nothing removed from a
+mandated-read file this session — none over ceiling (SESSION_NOTES.md ~32 KB live vs
+65,536 B); stated explicitly per FM #28's decay term.
+
+**Next steps (specific):** (A) No push pending at handoff-write time except this
+close-out's own ~2 commits (records + sha, docs-only, estimate) — recount with
+`git rev-list --count origin/master..HEAD`; CI current through `2628cd02`; no
+urgency. (B) Priorities unchanged: pedigree-growth measurement (READY, S,
+`BACKLOG.md:117`); package-split disposition + REUSE registration (owner decisions);
+BACKLOG.md editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M,
+`BACKLOG.md:100`). (C) Standing report-only set SHRINKS by one: the synced-files
+differ-from-canonical signal cleared this session (verified `synced / canonical ok`);
+the growth run (13/10) and CLAUDE.md warn band remain.
+
+**Key files:** `CHANGELOG.md:41` (S736 entries at top), `HANDOFFS.md:158` (S736
+receipt), `BACKLOG.md:117` (next natural pickup).
+
+**Gotchas for the next session:** (1) **`gh run list --commit` requires the FULL
+40-char sha** — a short sha returns an empty list with no error, so a monitor built
+on it is blind while looking armed; capture it with `git rev-parse <short>` before
+polling (found this session at the cost of one silent 30-min arm). (2) Expect 0
+undocumented commits at next Phase 0 — measure it; ~2 unpushed (estimate at write
+time). (3) R-CMD-check 17m39s on `2628cd02` — post-fix range now 17m39s–22m17s; one
+30-min Monitor arm suffices. (4) The differs-from-canonical flags on
+`SESSION_RUNNER.md`/`SAFEGUARDS.md` cleared this run; if they reappear, it is the
+checker's canonical reference moving, not local edits (S734 verification: last touch
+`b773ddb6`, tree clean). (5) Standing set unchanged otherwise: `scratchpad/`
+invisible to git BY OWNER DECISION; ratchet ~2 min, AFTER committing (Learning 772);
+trim needs `--budget-bytes 65536`; renv banner expected; `CLAUDE.md` warn band; the
+two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline
+2437/0/0/184/0 — remote-confirmed again by R-CMD-check on `2628cd02`.
 
 ### Session 734 Handoff Evaluation (by Session 735)
 **Score: 9/10.** **What helped:** every forward-looking claim held exactly — "~2

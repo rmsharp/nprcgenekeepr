@@ -158,16 +158,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S736
 date: 2026-09-20
-status: pending
-active_task: Owner-directed push to origin/master + CI verification on the pushed sha (IN PROGRESS) — pushing the 2 unpushed S735 close-out commits (records 1296c6e6, sha dd8ea5a7) + this claim riding the push (S726–S735 precedent); verify all 4 push-triggered workflows green ON THE PUSHED SHA via gh run list --commit.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Owner-directed push to origin/master + CI verification DONE — pushed 3b29f498..2628cd02 (3 commits: the 2 unpushed S735 close-out commits — records 1296c6e6, sha dd8ea5a7 — + the S736 claim 2628cd02 riding the push, S726–S735 precedent), all 4 push-triggered workflows completed success ON THE PUSHED SHA 2628cd02 (verified via gh run list --commit with the FULL sha, headSha echoed back structurally): lint 4m56s (35541807254), pkgdown 7m01s (35541807276), test-coverage 10m02s (35541807240), R-CMD-check 17m39s (35541807302) — fastest post-S732-fix figure yet (prior band 21m28s–22m17s). No TDD phases; lint N/A.
+what_was_done: Claim 2628cd02 (rode the push; owner picked the push via the Phase 0 picker). Phase 0 reconcile clean (0 undocumented on both frontiers at dd8ea5a7; S735 receipt ratchet citation matched .quality-gates-results.json exactly); 2 unpushed measured = S735's estimate exactly. Context budget: CLAUDE.md warn band, growth run 13/10, and the SESSION_RUNNER.md/SAFEGUARDS.md differs-from-canonical flags CLEARED (both synced / canonical ok; tree clean — the checker's reference caught up); report-only. CI verification: the first Monitor arm polled gh run list --commit with the SHORT sha, which silently returns an empty list — it expired after 30 min with zero events while all 4 workflows completed green underneath it; the silence was investigated, root-caused, and conclusions verified directly from the full-sha JSON rather than inferred. No BACKLOG item consumed.
+next_steps: (A) Owner push decision — recount with git rev-list --count origin/master..HEAD (~2 expected after close-out: records + sha; both docs-only, estimated at write time; no urgency, CI current through 2628cd02). (B) Priorities unchanged: pedigree-growth measurement (READY, S, BACKLOG.md:117); package-split disposition + REUSE registration (owner decisions); BACKLOG.md editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M, BACKLOG.md:100). (C) Standing report-only set shrinks by one: differs-from-canonical cleared; growth run + CLAUDE.md warn band remain.
+key_files: CHANGELOG.md:41 (S736 entries at top), SESSION_NOTES.md:39 (S736 handoff), BACKLOG.md:117 (next natural pickup)
+gotchas: gh run list --commit requires the FULL 40-char sha — a short sha returns an empty list with no error, so a monitor built on it is blind while looking armed; capture with git rev-parse before polling (cost one silent 30-min arm this session). Expect 0 undocumented commits at next Phase 0 — measure it; ~2 unpushed after close-out (estimate). R-CMD-check 17m39s on 2628cd02 — post-fix range now 17m39s–22m17s; one 30-min Monitor arm suffices. Differs-from-canonical flags cleared this run; if they reappear it is the checker's reference moving, not local edits (S734: last touch b773ddb6, tree clean). Standing set unchanged otherwise: scratchpad/ invisible to git BY OWNER DECISION; quality_ratchet.py --run ~2 min, AFTER committing (Learning 772); methodology_trim.py needs --budget-bytes 65536; renv Rscript banner expected; CLAUDE.md warn band; SESSION_NOTES.md's two ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 remote-confirmed again by R-CMD-check on 2628cd02.
+runtime_smoke: n/a — push + docs only (no runtime behavior changed); the deliverable's verification surface is CI itself, 4/4 green on the pushed sha. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 847588b5cc75 · manifest aa983075d6a2 (measured 3,483,944 B at 2628cd02)
+changelog_ref: 2628cd02
 commit: pending
 ```
+<free-text: S736 +/- — plus: exact-sha verification done structurally (headSha echoed from the JSON, not filter trust); the monitor's 30-min silence was treated as a signal and root-caused (short-sha filter returns empty silently) instead of re-armed blind; scope held; full claim/receipt/ledger discipline kept. Minus: the silent arm was avoidable — the filter was never smoke-tested against the in-flight run before arming; durations include queue time. Predecessor 9/10: every checked claim held (~2 unpushed, 0 undocumented, ratchet citation); gap was the carried monitor mechanics never saying the sha must be full-length.>
 
 ```handoff
 session: S735

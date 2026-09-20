@@ -38,6 +38,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S736 close-out: session records (handoff, S735 evaluation 9/10, receipt complete, self 8/10)
+- `SESSION_NOTES.md` handoff written (S735 evaluation: 9/10 — every checked claim
+  held; gap was the carried monitor mechanics never saying `gh run list --commit`
+  needs the full sha). `HANDOFFS.md` receipt complete. No new `PROJECT_LEARNINGS.md`
+  entry (routine clean push, 8th: S717/S726/S729/S731/S733/S734/S735). quality_ratchet
+  at the pushed HEAD `2628cd02`: 1/1 pass · 0 fail · 0 unmeasured · results
+  847588b5cc75 · manifest aa983075d6a2 (3,483,944 B ≤ 5,000,000 B). ~2 unpushed after
+  close-out (estimate); push is the owner's call.
+
+### 2026-09-20 · [ad hoc] S736 deliverable: push `3b29f498..2628cd02` + CI 4/4 green on the pushed sha — `origin/master` fully current; monitor short-sha blindness found and recorded
+- Pushed 3 commits (the 2 unpushed S735 close-out commits — records `1296c6e6`, sha
+  `dd8ea5a7` — + the S736 claim `2628cd02` riding the push, S726–S735 precedent). All
+  4 push-triggered workflows `completed success` ON THE PUSHED SHA `2628cd02`
+  (verified with the FULL sha, `headSha` echoed back structurally): lint 4m56s
+  (id 35541807254), pkgdown 7m01s (35541807276), test-coverage 10m02s (35541807240),
+  R-CMD-check 17m39s (35541807302) — fastest post-S732-fix figure yet (prior band
+  21m28s–22m17s). **Gotcha found:** `gh run list --commit <short-sha>` silently
+  returns an empty list — the first Monitor arm was blind for 30 min while CI ran
+  green underneath it; poll with the full 40-char sha (`git rev-parse`). Durations
+  are createdAt→updatedAt (include queue; seconds ±).
+
 ### 2026-09-20 · [ad hoc] S736 claim: owner-directed push to `origin/master` (stub + pending receipt + in-progress ledger entry) *(in progress)*
 - Owner picked the push of the 2 unpushed S735 close-out commits (records `1296c6e6`,
   sha `dd8ea5a7`) via the Phase 0 picker. Full 8-step orient ran clean: 0 undocumented
