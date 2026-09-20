@@ -38,6 +38,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S739 correction: unpushed-count claim in notes + receipt fixed ~12 → 14 measured (arithmetic slip forgot the records + sha commits themselves)
+- The sha-commit ledger entry below already carried the correct 14; the receipt's
+  `next_steps`/`gotchas` and the notes' matching lines were the wrong forward-looking
+  claims and are now corrected (a wrong prediction is worse than none — Phase 3D).
+  Fifth and final S739 commit.
+
 ### 2026-09-20 · [ad hoc] S739 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `3471ac36`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S739 commit. S739 total: 4 commits (claim `e2671de1`, deliverable `7b10ac3d`,
   records `3471ac36`, this one). Ahead of `origin/master` by 14 after close-out (6

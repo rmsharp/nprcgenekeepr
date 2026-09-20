@@ -98,9 +98,9 @@ still a potential stale anchor.
 grew +36 lines by owner directive — stated explicitly; the editorial-compression item
 (READY, L) is the standing counterweight.
 
-**Next steps (specific):** (A) ~12 unpushed after close-out (10 carried + claim +
-deliverable measured; records + sha estimated — recount with
-`git rev-list --count origin/master..HEAD`); all docs-only since `2628cd02`; the
+**Next steps (specific):** (A) 14 unpushed after close-out (measured post-sha-commit;
+the ~12 first written here was an arithmetic slip that forgot the records + sha
+commits themselves — recount with `git rev-list --count origin/master..HEAD`); all docs-only since `2628cd02`; the
 unpushed backlog keeps growing, so a push+CI session is the natural next pick.
 (B) The new item's step 1 (kinship2 feature-gap analysis, READY, M) is now a
 first-class research pickup. (C) Other priorities unchanged: prep D-1/D-2/D-3
@@ -113,7 +113,7 @@ set unchanged: CLAUDE.md warn band; growth run 16/10 next if nothing shrinks.
 `docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md` (step-1 prior art).
 
 **Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0 —
-measure it; ~12 unpushed after close-out (estimate for the last 2). (2) A step-1
+measure it; 14 unpushed after close-out (measured). (2) A step-1
 pickup must enumerate kinship2's exports from the installed package/CRAN manual at
 analysis time — the list inside the BACKLOG item is an unverified hint, per the item's
 own caveat. (3) D-1/D-2 pickups are CODE sessions — full TDD gates apply. (4) Standing
