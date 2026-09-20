@@ -152,6 +152,20 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S728
+date: 2026-09-19
+status: pending
+active_task: Tarball build-hygiene follow-ups (BACKLOG.md:100 steps 1-3): commit the owner's .Rbuildignore +^scratchpad$ line; git-ignore scratchpad/; ignore tests/testthat/_problems + testthat-problems.rds in .Rbuildignore and .gitignore (verify with tools:::inRbuildignore + git check-ignore); declare a clean-export tarball-size gate (<=5 MB) in .quality-gates.json. Owner decisions recorded at claim: commit the edit / yes git-ignore scratchpad / yes gate. Step 4 (inst/doc slimming) stays deferred.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S727
 date: 2026-09-19
 status: complete

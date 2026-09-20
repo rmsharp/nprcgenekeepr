@@ -34,6 +34,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 728 Did
+**Deliverable:** Tarball build-hygiene follow-ups (`BACKLOG.md:100` steps 1–3) — commit the
+owner's `.Rbuildignore` `+^scratchpad$` line, git-ignore `scratchpad/`, ignore the testthat
+debris (`tests/testthat/_problems/`, `testthat-problems.rds`) in both files, and declare a
+clean-export tarball-size gate (≤5 MB) in `.quality-gates.json` (IN PROGRESS)
+**Started:** 2026-09-19
+**Status:** Session claimed. Owner decisions taken via Phase 0/1 pickers: (1) commit the
+`.Rbuildignore` edit; (2) yes, also git-ignore `scratchpad/` (documented ghost-check tradeoff
+accepted); (3) yes, include the size gate. Step 4 (inst/doc slimming) stays deferred — its
+own session per the item. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 726 Handoff Evaluation (by Session 727)
 **Score: 9/10.** **What helped:** the filed tarball item's measure-first mandate ("build the
 real artifact and `tar tzvf` it; on-disk sizes mislead") WAS this session's method and led

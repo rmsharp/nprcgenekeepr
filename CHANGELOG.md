@@ -34,6 +34,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S728 claim: tarball build-hygiene follow-ups (stub + pending receipt + this in-progress entry)
+- Deliverable (in progress): `BACKLOG.md:100` steps 1–3 — commit the owner's `.Rbuildignore`
+  `+^scratchpad$` line (owner-directed via Phase 0/1 picker), git-ignore `scratchpad/`
+  (owner: yes, accepting the documented ghost-check tradeoff), add the testthat-debris paths
+  (`tests/testthat/_problems/`, `testthat-problems.rds`) to `.Rbuildignore`/`.gitignore`,
+  and declare a clean-export tarball-size gate (≤5 MB) in `.quality-gates.json` (owner: yes).
+  Step 4 (inst/doc slimming) stays deferred — its own session per the item.
+
 ### 2026-09-19 · [ad hoc] S727 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `66d4116b`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S727 commit. S727 total: 5 commits (claim `f8ffa40b`; deliverable `6d221ddc`; trim
   `1a5f345e`; records `66d4116b`; this one). Ahead of `origin/master` by 8 after close-out
