@@ -34,6 +34,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.2.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S729 claim: owner-directed push to origin/master + CI verification (stub + pending receipt + this in-progress entry)
+- Deliverable (in progress): push the 12 unpushed S726–S728 docs/config commits + this claim
+  (13 total; the claim rides the push so CI runs on it — S717/S726 precedent), then verify all
+  4 push-triggered workflows green on the pushed sha exactly. First remote validation of the
+  S728 build-hygiene work (ignore entries + the first `.quality-gates.json` manifest).
+
 ### 2026-09-19 · [ad hoc] S728 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `facc4df1`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S728 commit. S728 total: 4 commits (claim `f82f978a`; deliverable `2570645b`; records
   `facc4df1`; this one). Ahead of `origin/master` by 12 after close-out (8 pre-existing + these

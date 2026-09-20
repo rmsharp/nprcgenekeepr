@@ -152,6 +152,20 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S729
+date: 2026-09-19
+status: pending
+active_task: Owner-directed push to origin/master + CI verification. 13 commits expected (12 unpushed S726-S728 + this claim riding the push, S717/S726 precedent). Verification = 4 push-triggered workflows completed success on the pushed sha exactly (jq headSha filter). First remote validation of the S728 build-hygiene work incl. the first quality-gate manifest.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S728
 date: 2026-09-19
 status: complete

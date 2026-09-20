@@ -34,6 +34,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 729 Did
+**Deliverable:** Owner-directed push to `origin/master` + CI verification (IN PROGRESS) —
+13 commits expected (the 12 unpushed S726–S728 docs/config commits + this claim, which rides
+the push so CI runs on it, S717/S726 precedent). Verification = all 4 push-triggered
+workflows `completed success` ON THE PUSHED SHA (jq-filtered on `headSha`, not eyeballed).
+**Started:** 2026-09-19
+**Status:** Session claimed. Push follows this commit immediately.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 727 Handoff Evaluation (by Session 728)
 **Score: 9/10.** **What helped:** next step (A) WAS this session's deliverable, framed exactly
 as the decision the Phase 0/1 pickers then posed (commit or discard the `.Rbuildignore` line);
