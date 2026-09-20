@@ -38,11 +38,91 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 732 Handoff Evaluation (by Session 733)
+**Score: 9/10.** **What helped:** next-step (A) named the push decision with the exact
+recount command, and the fix commit's `.R`/`.Rd` framing ("a push gets it remote
+R-CMD-check validation") was this session's stakes exactly; "expect 0 undocumented;
+measure it" measured 0 on both frontiers; the ratchet citation matched
+`.quality-gates-results.json` byte-for-byte; the gotcha "next handoff will need a trim"
+(file ~350 B under the token cap) was exact — the claim stub fit with 151 B to spare and
+the handoff forced the trim, precisely as predicted; the carried CI-wait mechanics
+(filter with `gh run list --commit <sha>`) set up the monitor correctly. **What was
+missing:** nothing material. **What was wrong:** the "~6 unpushed" estimate (and the sha
+entry's "ahead by 6") undercounted by one — S732's own HANDOFFS trim commit was missing
+from its own arithmetic; measured 7. Low harm: the recount command was given and caught
+it immediately. **ROI:** high.
+
 ### What Session 733 Did
-**Deliverable:** Owner-directed push to `origin/master` + CI verification (IN PROGRESS)
-**Started:** 2026-09-20
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending`
+**Deliverable:** Owner-directed push to `origin/master` + CI verification — **DONE.**
+Pushed `3b688ae2..5ed0da83` (8 commits: the 7 unpushed S732 commits incl. the CRAN
+check-time fix `ba088d0d` touching `.R`/`.Rd`, + the S733 claim riding the push —
+S726/S729/S731 precedent). All 4 push-triggered workflows `completed success` ON THE
+PUSHED SHA `5ed0da83` (verified via `gh run list --commit <sha>`, sha match structural):
+lint 3m56s (id 35534412900), pkgdown 6m13s (35534413059), test-coverage 10m33s
+(35534412911), **R-CMD-check 21m28s (35534412936) — down from 33m37s on the previous
+push (`3b688ae2`): the first remote-side confirmation of the S732 fix, −12 min of CI.**
+The expected monitor re-arm never happened because the check now fits one 30-min arm.
+No TDD phases (push + docs; no `.R` files). Lint N/A.
+**Started/completed:** 2026-09-20 (single session). Claim `5ed0da83` (rode the push);
+trim `484c46de`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, trim, push+CI deliverable,
+records, sha). No BACKLOG item consumed (the push was a next-steps owner decision).
+
+**What actually happened, in order:**
+1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both frontiers at
+   `ee7cb230`; S732 receipt complete, ratchet citation matches results file); CI 4/4
+   green on `3b688ae2` + scheduled shinytest2 green; dashboard 96/100; context budget
+   WARN = CLAUDE.md warn band only; 7 unpushed measured; 5 known untracked files
+   unchanged; audits dir unchanged since S730's check.
+2. **Claim committed and rode the push:** `5ed0da83`; push `3b688ae2..5ed0da83`.
+3. **CI verification:** Monitor polling `gh run list --commit 5ed0da83` at 60 s; all 4
+   green in 21m28s wall (R-CMD-check the last) — no re-arm needed.
+4. **quality_ratchet at the pushed HEAD `5ed0da83`:** 1/1 pass · 0 fail · 0 unmeasured ·
+   results 7ced9faa4709 · manifest aa983075d6a2 (3,483,941 B ≤ 5,000,000 B).
+5. **SESSION_NOTES trim (`484c46de`), pre-handoff:** file was 151 B under the 56,750 B
+   token cap; archived 14 records (56,599 → 10,583 B) to
+   `docs/archive/SESSION_NOTES-through-2026-09-19-3.md`, L1/L2/L3 verified before commit;
+   SRF_RED overridden per the established Learning 549/586/587 resolution.
+
+**Self-assessment (Session 733): 9/10.** **Strengths:** (1) deliverable verified on the
+exact pushed sha by construction (`--commit` filter), run ids + durations recorded;
+(2) the predicted trim was handled proactively on committed state BEFORE the handoff
+could trip the hook, with the shard verify script run pre-commit; (3) scope held through
+the CI wait; (4) the R-CMD-check duration drop was recognized and recorded as the fix's
+remote confirmation, not just "still green." **Weaknesses:** (1) `methodology_trim.py
+--cut N` semantics (N = records KEPT, not cut) were discovered by dry run, not known
+going in — the accepted trim is more aggressive than first intended (3 records live),
+though lossless and within precedent; (2) durations are createdAt→updatedAt and include
+queue time (seconds ±).
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push (5th of its
+kind: S717/S726/S729/S731). The `--cut` semantics note lives in the gotchas below.
+**Reduction check:** 14 records removed from a mandated-read file this session (the trim).
+
+**Next steps (specific):** (A) **Owner: push decision** — recount with
+`git rev-list --count origin/master..HEAD` (~3 expected after close-out: trim + records
++ sha; all docs-only, last two estimated at write time; no urgency — CI is current
+through `5ed0da83`). (B) Priorities: pedigree-growth measurement (READY, S,
+`BACKLOG.md:117`); package-split disposition + REUSE registration (owner decisions);
+BACKLOG.md editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M,
+`BACKLOG.md:100`). (C) Standing report-only set unchanged from S732.
+
+**Key files:** `CHANGELOG.md:41` (S733 entries at top), `HANDOFFS.md:158` (S733
+receipt), `docs/archive/SESSION_NOTES-through-2026-09-19-3.md` (new shard),
+`BACKLOG.md:117` (next natural pickup).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0 —
+measure it; ~3 unpushed (estimate at write time). (2) **CI-wait mechanics CHANGED:
+R-CMD-check is now ~21–22 min on the remote after the S732 fix — it fits inside a
+single 30-min Monitor arm; the ~34 min / expect-one-re-arm figure is obsolete**
+(measured this session on `5ed0da83`). (3) `methodology_trim.py --cut N` keeps the
+newest N records and archives the rest — dry-run (no `--write`) first; SESSION_NOTES.md
+is now 10.6 KB live with several sessions of headroom before the 56,750 B token cap
+binds again. (4) Standing set unchanged: `scratchpad/` invisible to git BY OWNER
+DECISION; ratchet ~2 min, AFTER committing (Learning 772); trim needs
+`--budget-bytes 65536`; renv banner expected; `CLAUDE.md` warn band; the two
+`SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline
+2437/0/0/184/0 — remote-confirmed again by R-CMD-check on `5ed0da83`.
 
 ### Session 731 Handoff Evaluation (by Session 732)
 **Score: 9/10.** **What helped:** next-step (B) named this exact pickup with location and
