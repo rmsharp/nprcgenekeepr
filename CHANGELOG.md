@@ -38,6 +38,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-19 · [ad hoc] S730 deliverable: CRAN check-time audit — one example is 71% of the whole check
+- **`docs/audits/CRAN_CHECK_TIME_AUDIT_2026-09-19.md`.** Full `R CMD check --timings` of the
+  clean-export tarball (3,485,111 B at `c8397845`), CRAN surface (no `NOT_CRAN`): **Status OK,
+  1,037 s wall / 1,032 s CPU (17.3 min)** on M2 Max / R 4.6.1 — of which **734.1 s is the single
+  `makePedigreeMatingLayout` Rd example** (full 3,694-row `examplePedigree`; ~147× the 5 s
+  per-Rd threshold; the app's own diagram cap is 750, `R/modPedigree.R:406`). Other 201 timed
+  examples: 8.9 s combined. Tests: 215 s under check, 0 fail; identical-currency comparison
+  measured ~14% of local test blocks staying home on CRAN (2,437/184 baseline reproduced
+  exactly vs 2,141/200 CRAN-surface). Verified at source: CRAN policy rev 6875; the 5 s
+  threshold and `\donttest`-still-runs-at-incoming in `tools/R/check.R`; the 10-min incoming
+  "Overall checktime" NOTE (R-pkg-devel). Measured remedy: `pedWithGenotype` input → 1.0 s
+  (~17.3 min → ~5 min total). Research only — no remedy applied, no `.R`/`man/` change; TDD
+  N/A; lint N/A. BACKLOG: measure-first item removed (complete), replaced by the READY/S
+  apply-the-fix item carrying the numbers (S686 convention).
+
 ### 2026-09-19 · [ad hoc] S730 claim: CRAN check-time measurement audit (in progress)
 - Session claimed for the `BACKLOG.md:117` item (owner-requested mid-S729). Measurement/research
   only: `R CMD check --timings` per-Rd example times + a suite run WITHOUT `NOT_CRAN=true` so

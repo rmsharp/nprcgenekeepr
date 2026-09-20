@@ -114,29 +114,25 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       S727):** shrinking example/test data (`inst/extdata/examples/` 0.46 MB compressed,
       `tests/` 0.66 MB), recompressing `data/` (0.14 MB), or the package split. Always build
       release tarballs from a clean export, never the working tree.
-- [ ] **See if example and test code can be made to run shorter for CRAN submission needs**
-      (owner-requested mid-S729, 2026-09-19, READY, Effort M — a measurement/research session
-      first; any remedies land in their own follow-up session) -- CRAN's axes here are check
-      TIME, distinct from the S727 size audit's byte axes: the incoming checks NOTE any
-      example with CPU-or-elapsed time > 5 s per Rd file, and overall check time "should take
-      as little CPU time as possible" (CRAN policy; re-verify the current policy text at
-      measurement time, S727 precedent). **Measure first, on the CRAN-visible surface:**
-      (1) examples — `R CMD check --timings` and read
-      `nprcgenekeepr.Rcheck/nprcgenekeepr-Ex.timings` (per-Rd user/system/elapsed), ranked;
-      (2) tests — a suite run WITHOUT `NOT_CRAN=true` (the opposite of the project's usual
-      regression-read setting), so `skip_on_cran()`-guarded tests are excluded exactly as CRAN
-      excludes them, with per-file wall times from the testthat results; note what share of
-      the local baseline (2437 pass / 184 skip with `NOT_CRAN=true`) already stays home.
-      GHA R-CMD-check wall time (~32 min) is NOT the CRAN number (it includes dependency
-      install; use it only as a trend line). **Remedy candidates to weigh AFTER measuring,
-      cheapest first:** wrap slow examples in `\donttest{}` (CRAN incoming may still run
-      donttest examples — check current behavior before relying on it) or shrink their inputs
-      (e.g. fewer gene-drop iterations in examples: `nprcgenekeepr` simulation functions take
-      `n` directly); add `skip_on_cran()` to long-running tests that duplicate CI coverage
-      (CI runs the full suite on every push regardless, so CRAN-side skips lose no real
-      coverage); shared fixtures over per-test regeneration for expensive setups. Do NOT
-      degrade test quality to save time — the suite's local/CI baseline stays authoritative;
-      this item only tunes what runs ON CRAN's machines.
+- [ ] **Apply the CRAN check-time fix: shrink the `makePedigreeMatingLayout` example input**
+      (extracted S730, 2026-09-19, from the completed measure-first CRAN check-time item;
+      READY, Effort S) -- the S730 audit
+      (`docs/audits/CRAN_CHECK_TIME_AUDIT_2026-09-19.md`) measured the full CRAN-surface
+      check at 17.3 min, of which **734 s (71%) is the ONE example
+      `makePedigreeMatingLayout(nprcgenekeepr::examplePedigree)`** (3,694 rows, ~147× CRAN's
+      5 s per-Rd threshold; the app's own diagram cap is 750 individuals,
+      `R/modPedigree.R:406`). Fix: replace the example input with a small shipped pedigree
+      at `R/makePedigreeDiagramData.R:1659-1662` + `devtools::document()` — measured
+      candidate `pedWithGenotype` (280 rows, 1.0 s; emits a benign edge-collision warning,
+      so a clean-laying-out `examplePedigree` subset is the alternative) — then re-measure
+      with the audit §7 recipe (expect ~5 min total, empty >5 s table), clearing the
+      incoming "Overall checktime > 10 min" NOTE. **NOT `\donttest{}`** — incoming still
+      runs those (audit Finding 3, verified in `check.R`). Optional second lever only if
+      CRAN's farm still crowds 10 min: `skip_on_cran()` on the top Finding-4 test files
+      (~1–2 min back; CI keeps full coverage). Tests are otherwise fine (215 s under check;
+      ~14% of local blocks already stay home on CRAN — audit Finding 2). The suite's
+      local/CI baseline stays authoritative; the re-measure IS the verification gate for
+      this doc-only `.Rd` change.
 - [ ] **Measure how much this R package has grown due to the pedigree-drawing feature —
       a rough estimate (±20%) is sufficient** (owner-requested mid-S721, 2026-09-19, READY,
       Effort S) -- quantify the package-size growth attributable to the pedigree-diagram/
