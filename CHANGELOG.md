@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-19-3.md` (14 record(s), 56,599 B → 10,583 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **14** record(s) (2026-09-19 → 2026-09-19) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-19-3.md`](docs/archive/SESSION_NOTES-through-2026-09-19-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-19-3.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-19-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 56,599 B → 10,583 B (−81.3%).
+
 ### 2026-09-20 · [ad hoc] S733 claim: owner-directed push to `origin/master` + CI verification *(in progress)*
 - Session claimed after full Phase 0 (reconcile clean: 0 undocumented on both frontiers at
   `ee7cb230`; S732 receipt complete, ratchet citation matches `.quality-gates-results.json`;
