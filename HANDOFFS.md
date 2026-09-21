@@ -209,10 +209,10 @@ which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
 ``` handoff
-session: S751
+session: S754
 date: 2026-09-21
 status: pending
-active_task: Push to origin/master + CI verification (routine operational pick, S726–S749 precedent; owner-picked via the Phase 0 picker). 6 unpushed docs-only commits at Orient; CI current through 589cf73c with no code changed since — records-currency push. Claim commit rides the push.
+active_task: Push to origin/master + CI verification — 13 docs-only commits unpushed at Orient (claim rides the push); verify all 4 push-triggered workflows green on the pushed sha (full-40-char --commit filter, smoke-tested before arming).
 what_was_done: pending
 next_steps: pending
 key_files: pending
@@ -222,9 +222,98 @@ changelog_ref: pending
 commit: pending
 ```
 
-\<free-text: S751 claim stub — crash breadcrumb. If this block is still
-`pending` at a later session’s Phase 0 reconcile, this session ended
-before close-out; reconstruct from git log.\>
+``` handoff
+session: S753
+date: 2026-09-21
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: File the 2 unticketed High-priority audit gaps as GitHub issues — DONE (issues #167 longitudinal genetic-health monitoring, #168 ancestry guardrails in group formation). Implementation is separate, design-first sessions.
+what_was_done: Claim 33e66364; deliverable c823a9f7 (BACKLOG block at :463 removed, 480→462 lines, S686 rule); Learning 776 2c86a035. Premise recomputed BEFORE filing: 0 title hits for longitudinal/ancestry/guardrail/monitoring, body hits only closed unrelated #118/#76, positive control (kinship in:title = 5) proved the harness (Learning 775). Both drafts owner-approved verbatim via AskUserQuestion after full blockquoted-markdown render in-conversation (the preview-only first gate round-tripped undecided — Learning 776). Shape matches #147 per sequencing-audit Recommendation 2: Source section citing both audits, capability gap, feature description, Pre-RED-design-gate line, no labels. Per-action ledger entries: claim, #167 filed, #168 filed, deliverable, Learning, records, sha. No issue close owed (item named no existing issue); no NEWS.Rmd/lint/pkgdown checklist owed (no code, no exports). FM 28 reduction: REAL — BACKLOG.md −18 lines.
+next_steps: (A) Push+CI is now the largest pending item — 13 docs-only commits unpushed after close-out (recount with git rev-list --count origin/master..HEAD); CI current through a7613044. (B) Issues #167/#168 are now pickable from gh issue list — each REQUIRES a Pre-RED design/scoping session first (their closing gate line; #147/#148 precedent). (C) Unchanged: chromote hang research (READY M, BACKLOG.md:129), inst/doc slimming (DECISION NEEDED M, :108), REUSE registration (owner action S, :153), kinship2-standalone BLOCKED (:71), LabKey BLOCKED (:27), BACKLOG compression recurring (:181).
+key_files: no code touched. BACKLOG.md (462 lines; :463 item GONE, Genetic-metrics section now ends with the 148 pass-history block; anchors at/above :180 and the :419 heading unchanged), CHANGELOG.md:41 (S753 entries at top), PROJECT_LEARNINGS.md:2242 (Learning 776), SESSION_NOTES.md:53 (S753 handoff), .quality-gates-results.json (head c823a9f7)
+gotchas: Expect 0 undocumented at next Phase 0 — measure it; 13 unpushed expected (recount). Retired premise — issue searches for longitudinal/ancestry/guardrail now legitimately HIT #167/#168; do not re-run the old verify-unfiled check expecting zeros. Ratchet baseline 3,489,135 B at c823a9f7 (−16 B vs 37992d20, build-metadata noise; measured value drifts a few bytes between runs with no package change); cite from .quality-gates-results.json (results b593a0c84084), never the rounded run table. No code, no suite run (docs-only; baseline 0/0/184 stands, remotely confirmed through a7613044). Standing set unchanged: full-40-char sha + smoke-test before arming a monitor; scratchpad/ invisible to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band 26,360 B; growth run 32/10 at Orient — measure at next Orient; the two SESSION_NOTES.md ceilings differ (owner decision pending); zsh harness traps (Learning 775).
+runtime_smoke: n/a — docs-only (no package file touched; the two created issues verified OPEN with correct titles via gh issue view). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results b593a0c84084 · manifest aa983075d6a2 (measured 3,489,135 B ≤ 5,000,000 B at c823a9f7, read from the results file)
+changelog_ref: c823a9f7
+commit: 9569eb99
+```
+
+Self-score 9/10 breakdown — plus: premise re-measured with a positive
+control before any outward action; \#147 read before drafting; the
+confirm gate held (nothing filed until verbatim approval); S686 removal
+in the deliverable commit; per-action ledger entries including both
+non-commit issue creates; a mandated-read file shrank. Minus: the first
+confirm gate packed multi-paragraph drafts into AskUserQuestion previews
+and round-tripped undecided (owner: “I have not seen what is drafted”) —
+one full round trip lost; fixed by rendering blockquoted markdown
+in-conversation, recorded as Learning 776. Also the 166-vs-107
+issue-count reconciliation (issues+PRs vs issues) was recorded in the
+ledger but not surfaced to the owner at the gate. Predecessor 9/10:
+every checked S752 claim held (8 unpushed exact, 0 undocumented on both
+frontiers, byte-exact ratchet citation, exact BACKLOG anchor, next-step
+A was this exact deliverable); one phrasing imprecision (“166 issues”
+counted issues+PRs).
+
+``` handoff
+session: S752
+date: 2026-09-21
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: BACKLOG.md editorial compression pass (S518 recurring-maintenance item) — DONE (owner-picked via the Phase 0 picker; scope ratified at a structured gate AFTER measuring). The named regrowth check found "Pedigree diagram vs kinship2" NOT regrown (286→156 lines), so the real targets were "Genetic-metrics PDF audit follow-ups" (91→62 lines incl. one extracted open item) + the S518 item's own pass history (91→38). File 561→480 lines, 47,218→39,507 B. The S518 item stays OPEN (recurring).
+what_was_done: Claim 22be597a; deliverable 37992d20. Verified BEFORE cutting: 28/28 cited session numbers have ledger entry headings; 21/21 load-bearing facts inside those entries (first run 0/21 was a zsh harness artifact — Learning 775); 7/7 Learnings resolve; 9/9 paths + both example_sequence_*.csv exist; 14/14 issues (#125-#130, #146-#153) CLOSED; no test/CI/tooling reads BACKLOG.md content. Whole-range boundary-asserted replacement (Learning 537): 179 prefix + 200 middle lines byte-identical to the pre-edit file (every other open item untouched), 0 survivors of removed text, positive control passed. Buried open thread EXTRACTED as its own item (BACKLOG.md:463, READY/S): 2 audit-table High-priority rows (Longitudinal genetic-health monitoring, Ancestry guardrails) have NO GitHub issue — re-verified across all 166 issues in every state plus body searches. End-to-end re-read caught 2 defects in my own new text (ragged line; found-S479 → S483) and measuring corrected 3 size estimates. Learning 775 appended. No GitHub issue named → no issue close owed; no NEWS.Rmd/lint/pkgdown-reference checklist owed (no code, no exports). FM #28 reduction: REAL — BACKLOG.md −81 lines / −7,711 B.
+next_steps: (A) File the 2 unticketed High-priority audit gaps (READY, S) — BACKLOG.md:463; a triage session, creating GitHub issues is outward-facing so recommend confirming titles/bodies with the owner via AskUserQuestion before gh issue create (a recommendation, not a computed fact); first recompute the premise with gh issue list --state all; source text docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-06.md:86-87, the sequencing audit :116-124 (Finding #1) and :309 (recommendation 2). (B) Push+CI NOT urgent — 8 docs-only commits unpushed after close-out (S751's 2 + this session's 6: claim, deliverable, Learning, records, sha, and the count-correction commit that wrote this figure; an earlier draft said 6 and missed the separately committed Learning; recount with git rev-list --count origin/master..HEAD); CI current through a7613044. (C) BACKLOG compression is RECURRING, not urgent — measured next-pass candidates are in the item itself (BACKLOG.md:210-218); the kinship2 section's deeper cut needs fresh owner ratification. (D) Unchanged: inst/doc slimming (DECISION NEEDED, M, BACKLOG.md:108); REUSE registration (owner action, S, :152); kinship2-standalone BLOCKED on the S738 revisit conditions only (:71); chromote hang research (READY, M, :129).
+key_files: no code touched. BACKLOG.md:180-218 (S518 item: pass history + method + candidates), BACKLOG.md:419-480 (Genetic-metrics section; extracted open item at :463), SESSION_NOTES.md:49 (S752 handoff), CHANGELOG.md:41 (S752 entries at top), PROJECT_LEARNINGS.md:2240 (Learning 775), .quality-gates-results.json (head now 37992d20)
+gotchas: Expect 0 undocumented at next Phase 0 — measure it; 8 unpushed expected after close-out (recount). BACKLOG anchors at/above :180 UNCHANGED, below shifted UP (kinship2 diagram heading 280→:228, NPRC outreach 438→:386, Genetic-metrics 471→:419) — re-grep before trusting any stale BACKLOG.md:2xx+ reference. zsh harness trap (Learning 775): file lists as arrays, a positive control beside every expect-none sweep, never blanket 2>/dev/null a verification grep, an unmatched glob aborts the whole command silently. Ratchet baseline 3,489,151 B at 37992d20 (+60 B vs S751 — build-metadata noise, all 5 touched files .Rbuildignore'd :69/72/74/76/79); cite from .quality-gates-results.json, never the rounded run table (table 3.48915e+06 vs file 3,489,151 — the trap again). Commit trailers change mid-session: claim 22be597a says Claude Fable 5, later commits Claude Sonnet 5 (harness switched the acting model) — each accurate for its writer. No code touched, no test suite run (docs-only; baseline 0/0/184 stands, remotely confirmed through a7613044). Standing set unchanged: full-40-char sha + smoke-test before arming a monitor; scratchpad/ invisible to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band; growth run 28/10 at Orient, 31/10 at my final check (it rose with each of my later context_budget.py runs — read the value at the next Orient, measure don't predict); the two SESSION_NOTES.md ceilings differ (owner decision pending).
+runtime_smoke: n/a — docs-only (no package file touched; all 5 touched files .Rbuildignore'd; no test/CI/tooling reads BACKLOG.md content — grep with positive control; dashboard re-run 96/100). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 15a11fe864f4 · manifest aa983075d6a2 (measured 3,489,151 B ≤ 5,000,000 B at 37992d20, read from the results file)
+changelog_ref: 37992d20
+commit: 8b2e3f9e
+```
+
+\<free-text: S752 +/- — plus: evidence-based scope gate (the regrowth
+check flipped the item’s premise, so the owner chose with real numbers);
+verification preceded cutting and a false “0/21 facts found” was
+diagnosed as a harness bug rather than acted on; mechanical scope
+proof + zero survivors + positive control; the end-to-end re-read caught
+2 defects in my own text; a real buried open item found and re-verified;
+FM \#28 reduction real (−81 lines). Minus: over-promised at the gate
+(“~150 lines removed / _(88→)12”, delivered −81 — first pass retained
+too much and needed a tightening pass); three size figures written
+before measuring (corrected after); block boundaries initially
+mis-stated (caught by the boundary assertion); no TDD phase gate posed
+(docs-only, S750/S529-S531/S606 precedent; the scope gate served but
+“TDD phases N/A” was never explicitly confirmed). Predecessor 9/10:
+every checked claim held exactly; the one gap was that S751 named only
+the kinship2 regrowth check and never noticed Genetic-metrics was the
+section that actually regrew (80→91 via the \#148 chain).\>
+
+``` handoff
+session: S751
+date: 2026-09-21
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Push to origin/master + CI verification — DONE (routine operational pick, S726–S749 precedent; owner-picked via the Phase 0 picker). Pushed 589cf73c..a7613044 (7 commits, ALL docs-only; claim rode the push); all 4 push-triggered workflows completed success ON THE PUSHED SHA after one transient-infra rerun.
+what_was_done: Claim a7613044 (rode the push); 0 unpushed confirmed by recount. Filter smoke-tested BEFORE arming (gh run list --commit full-40-char-sha returned all 4 workflows, headSha echoed). First attempt: R-CMD-check failure — diagnosed at failed-STEP granularity before reacting: windows setup-pandoc@v2 (pandoc 3.8.3 download, HTTP 504 x2 then fatal) + macos setup-r@v2 (gfortran download, 504 x2 then fatal), 14:49–14:50 UTC; all 3 ubuntu check jobs passed; --log-failed showed zero package output on the failed platforms. Fixed as found per the S636 CI-break convention (no GitHub issue): gh run rerun 35614709050 --failed (same run id + headSha, ubuntu successes retained); rerun success. Final structural verification: all 4 completed success with headSha = a761304410c079847d09de422cba73814574408b echoed per run — lint 4m56s (35614708951), pkgdown 6m52s (35614708967), test-coverage 10m3s (35614708970), R-CMD-check 41m49s wall across BOTH attempts (35614709050). Learning 774 appended. No BACKLOG item consumed; no NEWS.Rmd/lint/pkgdown-reference/issue-close checklist owed (no code, no exports, no item closed). FM #28 reduction: none — said plainly.
+next_steps: (A) BACKLOG editorial compression (READY, L) — now the top READY pick: S518 item at BACKLOG.md:181; start with the "Pedigree diagram vs kinship2" regrowth check (:280). (B) inst/doc slimming (DECISION NEEDED, M): owner ratifies the html_vignette move first (BACKLOG.md:110). (C) kinship2-standalone stays BLOCKED on the S738 revisit conditions only (BACKLOG.md:72; planning session when the owner judges them met). (D) Push+CI NOT urgent — 2 docs-only records/sha commits unpushed after close-out (recount with git rev-list --count origin/master..HEAD). (E) Alternative code-adjacent pick: chromote CDP-timeout fallback research (READY, M, BACKLOG.md:131).
+key_files: no code touched. SESSION_NOTES.md:49 (S751 handoff), HANDOFFS.md (this receipt), CHANGELOG.md:41 (S751 entries at top), PROJECT_LEARNINGS.md (Learning 774, at end), .quality-gates-results.json (head now a7613044)
+gotchas: Expect 0 undocumented at next Phase 0 — measure it; 2 unpushed expected after close-out (recount). CI now CURRENT through a7613044 — the R-CMD-check green there is a RERUN (attempt 2, same run id 35614709050); its 41m49s wall duration spans both attempts — never compare against the 17m39s–22m17s single-attempt band. Ratchet baseline now 3,489,091 B at a7613044 (−20 B vs S750 — build-metadata noise, touched files .Rbuildignore'd); cite from .quality-gates-results.json, never the rounded run table (table 3.48909e+06 vs file 3,489,091 — the trap again). A future red R-CMD-check: read failed STEP names first (setup-* vs check) — Learning 774. Standing set unchanged: full-40-char sha + smoke-test before arming; scratchpad/ invisible to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band, growth run 27/10 (28/10 next if nothing shrinks — measure, don't predict); the two SESSION_NOTES.md ceilings differ (owner decision pending); suite baseline 0/0/184 remotely confirmed through a7613044.
+runtime_smoke: n/a — docs-only push (no package file touched); the package-level evidence is CI on the pushed sha: R-CMD-check success across all 5 platform jobs (attempt 2 after transient-504 setup failures), plus lint/pkgdown/test-coverage green. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results e7499ae4e4a9 · manifest aa983075d6a2 (measured 3,489,091 B ≤ 5,000,000 B at a7613044, read from the results file)
+changelog_ref: a7613044
+commit: 761800c9
+```
+
+\<free-text: S751 +/- — plus: predecessor claims re-measured (6 unpushed
+exact, 0 undocumented, growth run 27/10 exact); filter smoke-tested
+before arming; the red R-CMD-check diagnosed to failed-step granularity
+BEFORE the rerun (evidence, not the “docs-only so infra” presumption —
+Learning 773’s carried-claim shape avoided); structural verification
+unchanged through the rerun (same run id/headSha). Minus: no FM \#28
+reduction (no mandated-read file got smaller); ~40 min extra wall time
+from external infra (unavoidable; it is why this session captured a
+learning where the 12 clean predecessors did not). Predecessor 9/10:
+every checked claim held exactly; the 504 flake was not a knowable
+claim.\>
 
 ``` handoff
 session: S750

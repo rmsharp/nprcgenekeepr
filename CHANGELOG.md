@@ -53,6 +53,283 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · \[ad hoc\] S754 claim: push to origin/master + CI verification (stub + pending receipt + ledger entry) *(in progress)*
+
+- Session claimed. 13 docs-only commits unpushed at Orient (recounted,
+  matches S753’s prediction); CI current through `a7613044`; this claim
+  commit rides the push. Phase 3F records the rest.
+
+### 2026-09-21 · \[ad hoc\] S753 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `9569eb99`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S753 commit. Session total: 5 commits (claim `33e66364`,
+  deliverable `c823a9f7`, Learning 776 `2c86a035`, records `9569eb99`,
+  this sha commit) + 2 non-commit actions (issues \#167/#168 created).
+  All docs-only; 13 unpushed after this commit — verify with
+  `git rev-list --count origin/master..HEAD`, not this sentence.
+
+### 2026-09-21 · \[ad hoc\] S753 records: close-out records committed (handoff, receipt, evaluations)
+
+- `SESSION_NOTES.md` S753 handoff + S752 evaluation (9/10, one phrasing
+  imprecision: “166 issues” counted issues+PRs, fresh count 107 issues —
+  same population searched, substance stands); `HANDOFFS.md` receipt
+  complete (self 9/10); this ledger entry. Ratchet cited at the
+  deliverable sha: 1/1 pass, 3,489,135 B at `c823a9f7`, results
+  `b593a0c84084`, manifest `aa983075d6a2` (read from the results file).
+  `methodology_trim.py --check --budget-bytes 65536`: no trigger
+  (SESSION_NOTES.md well under ceiling after the S752 trim). S753
+  totals: 5 commits (claim `33e66364`, deliverable `c823a9f7`, Learning
+  `2c86a035`, records, sha) + 2 non-commit actions (issues \#167/#168
+  created), all docs-only; 13 unpushed expected after close-out — verify
+  with the recount, not this sentence.
+
+### 2026-09-21 · \[ad hoc\] S753 Learning 776: an outward-facing confirm gate is only as good as what the owner can actually read
+
+- `PROJECT_LEARNINGS.md` Learning 776 appended: render a document-shaped
+  draft (issue body, NEWS entry, announcement) as blockquoted markdown
+  in the conversation BEFORE posing the `AskUserQuestion`; the
+  per-option `preview` field is for comparing short artifacts, not
+  proofreading prose. Origin: the \#167/#168 confirm gate round-tripped
+  undecided (“I have not seen what is drafted”) until the drafts were
+  rendered inline.
+
+### 2026-09-21 · \[ad hoc\] S753 deliverable: the 2 unticketed High-priority audit gaps are FILED (#167, \#168); completed `BACKLOG.md` block removed in this commit
+
+- Deliverable complete. The two audit-table High rows with no GitHub
+  issue (“Longitudinal genetic-health monitoring”, “Ancestry guardrails
+  in breeding decisions” — found S483 by
+  `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`
+  Finding \#1; extracted as its own `BACKLOG.md` item S752) are now
+  issues **\#167** and **\#168**. Premise recomputed BEFORE filing: 107
+  issues in every state (S752’s “166” figure counted issues+PRs — the
+  shared number sequence; same population, no discrepancy), 0 title hits
+  for `longitudinal`/`ancestry`/`guardrail`/`monitoring`, body hits only
+  the known-unrelated CLOSED \#118/#76, and a positive control
+  (`kinship in:title` = 5 hits) proved the search harness per
+  Learning 775. Both drafts owner-approved **verbatim** via
+  `AskUserQuestion` (after a full-text render in-conversation — the
+  structured preview alone was not readable enough, a gate-usability
+  note for future outward-facing confirms). Shape matches \#147 per the
+  sequencing audit’s Recommendation 2: `## Source` section citing both
+  audits, capability-gap paragraph, feature description, closing
+  Pre-RED-design-gate line, no labels — NOT the Deferred-tier
+  design-only shape. Implementation is separate, design-first sessions.
+  `BACKLOG.md` block (18 lines at :463) removed per the S686
+  completed-item rule; file 480→462 lines.
+
+### 2026-09-21 · \[issue \#168\] S753: filed issue \#168 “Add ancestry guardrails to breeding-group formation (configurable compatibility rules with override/audit trail)” (non-commit action)
+
+- Center-configurable ancestry compatibility rules evaluated during
+  candidate-group construction, override mechanism + audit trail;
+  Pre-RED design session gate (same as \#147). Source: capability audit
+  2026-08-06 priority table, High.
+
+### 2026-09-21 · \[issue \#167\] S753: filed issue \#167 “Add longitudinal genetic-health monitoring (colony snapshots and trend reporting)” (non-commit action)
+
+- Dated colony genetic-health snapshots under a defined schema,
+  consistent-cohort rules, trend outputs; Pre-RED design session gate
+  (same as \#147). Source: capability audit 2026-08-06 priority table,
+  High.
+
+### 2026-09-21 · \[ad hoc\] S753 claim: file the 2 unticketed High-priority audit gaps as GitHub issues (in progress)
+
+- Session claimed. Deliverable: create GitHub issues for the 2
+  audit-table High-priority rows with no issue — “Longitudinal
+  genetic-health monitoring” and “Ancestry guardrails in breeding
+  decisions” (`BACKLOG.md:463` item, extracted S752 from the
+  Genetic-metrics section; found S483 by
+  `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`
+  Finding \#1). Plan: recompute the still-unfiled premise
+  (`gh issue list --state all` + title/body searches), draft
+  titles/bodies from the audit sources, confirm both with the owner via
+  `AskUserQuestion` (outward-facing action), `gh issue create`, then
+  remove the completed `BACKLOG.md` block in the same commit (S686
+  rule). Stub + pending receipt committed with this entry.
+
+### 2026-09-21 · \[ad hoc\] S752 correction: unpushed-commit count in the handoff/receipt fixed 6 → 8 (the sha entry below, already committed and never edited, says 6)
+
+- Final S752 commit — it is included in its own count.
+  `git rev-list --count origin/master..HEAD` measured **7** at
+  `4a9c9037`, not the 6 written into `SESSION_NOTES.md`, the
+  `HANDOFFS.md` receipt, and the sha entry below: the estimate missed
+  the Learning 775 commit `8ab100b1`, which S752 split out (to keep the
+  records commit at the 5-file cap) after the estimate was written. With
+  this commit the count is **8** = S751’s 2 records/sha commits + S752’s
+  6 (claim `22be597a`, deliverable `37992d20`, Learning `8ab100b1`,
+  records `8b2e3f9e`, sha `4a9c9037`, this correction), ALL docs-only;
+  CI is current through `a7613044`. Also refreshed the stale “growth run
+  29/10 at close” note (28/10 at Orient, 31/10 at the final check — the
+  counter rose with each of this session’s later `context_budget.py`
+  runs). Only the mutable handoff and receipt were edited; the ledger
+  entry below is left as written and superseded here. Verify the 8 with
+  the recount, not this sentence.
+
+### 2026-09-21 · \[ad hoc\] S752 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `8b2e3f9e`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S752 commit. S752 total: 5 commits — claim `22be597a`,
+  deliverable `37992d20`, Learning 775 `8ab100b1` (committed alone to
+  keep the records commit at the 5-file cap), records +
+  `SESSION_NOTES.md` trim `8b2e3f9e`, and this one. Ahead of
+  `origin/master` by 6 after close-out, ALL docs-only; CI is current
+  through `a7613044` and no code has changed since. Expect 0
+  undocumented commits past the frontier at next Phase 0; measure it.
+  Trigger for the trim, said plainly: the records commit was REFUSED by
+  the context-budget hook (`SESSION_NOTES.md` ≈27,875 tok vs the
+  25,000-tok read cap; the byte budget was fine); resolved per
+  `CLAUDE.md`’s standing guidance, not bypassed with `--no-verify`.
+  `SRF_RED` fired as predicted and `--force` was used under the
+  established practice (Learnings 549/586/587); the shard’s verify
+  script reports one expected L1/L3 exception — the frontier record (the
+  claim stub committed at `22be597a`, finalized in place by this
+  handoff) — manually diffed and confirmed a stub finalize, not data
+  loss.
+
+### 2026-09-21 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-21.md` (14 record(s), 63,278 B → 14,356 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **14** record(s) (2026-08-12 →
+2026-09-21) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-21.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-21.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-21.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-21.md.verify.sh)
+rather than trusting a digest printed here. Live file 63,278 B → 14,356
+B (−77.3%).
+
+### 2026-09-21 · \[ad hoc\] S752 close-out: session records (handoff, S751 evaluation 9/10, receipt complete, self 8/10, Learning 775)
+
+- `SESSION_NOTES.md` handoff written (S751 evaluation: 9/10 — every
+  checked claim held exactly: 2 unpushed, 0 undocumented on both
+  frontiers, growth run 28/10, byte-identical ratchet citation, exact
+  BACKLOG tag-line anchors, CI current through `a7613044`; the one gap
+  was that S751 named only the kinship2 regrowth check and never noticed
+  “Genetic-metrics” was the section that actually regrew). `HANDOFFS.md`
+  receipt complete (self 8/10: over-promised the line count at the scope
+  gate, wrote three size figures before measuring, never explicitly
+  confirmed “TDD phases N/A”). `PROJECT_LEARNINGS.md` Learning 775
+  appended: a zero-hit verification sweep is a claim about the sweep
+  until a positive control proves the harness — under zsh an unquoted
+  `$files` is not word-split, an unmatched glob aborts the whole
+  command, and blanket `2>/dev/null` hides the one error that diagnoses
+  it (this session hit it three times). Reduction check (FM \#28): REAL
+  — `BACKLOG.md` −81 lines / −7,711 B (the deliverable). Runtime smoke:
+  n/a — docs-only; all 5 touched files are `.Rbuildignore`d
+  (`:69/72/74/76/79`) and no test/CI/tooling reads `BACKLOG.md` content
+  (grep with positive control); dashboard re-run 96/100. Ratchet at
+  `37992d20`: 1/1 pass · 0 fail · 0 unmeasured · results 15a11fe864f4 ·
+  manifest aa983075d6a2 (3,489,151 B ≤ 5,000,000 B, read from the
+  results file; +60 B vs S751 is build-metadata noise).
+
+### 2026-09-21 · \[ad hoc\] S752 deliverable: `BACKLOG.md` editorial compression — “Genetic-metrics PDF audit follow-ups” re-compressed (91→62 lines incl. one extracted open item) + the S518 item’s own pass history condensed (91→38); file 561→480 lines, 47,218→39,507 B
+
+- **Scope** ratified at a structured gate (owner picked
+  “Genetic-metrics + S518 history” over Genetic-metrics-only /
+  deeper-kinship2 / full-sweep). Docs-only: no code, no TDD phase
+  entered, one file besides this ledger.
+- **Regrowth check (the S606-requested one) — “Pedigree diagram vs
+  kinship2”: NOT regrown** (286 → 156 lines; S686’s completed-item
+  removals shrank it; what remains is S530’s own ratified summary — a
+  deeper cut needs fresh owner ratification, recorded in the item).
+  “Genetic-metrics” is what actually regrew (80 → 91 via the issue \#148
+  chain S703–S708) and is now fully closed.
+- **Verified BEFORE cutting** (all measured this session): 28/28 cited
+  session numbers have a ledger entry heading (CHANGELOG.md + archive
+  shards); 21/21 load-bearing facts sit inside those entries (a first
+  run reported 0/21 — a zsh harness artifact, see Learning 775 — rerun
+  with an explicit file array: 21/21); 7/7 cited Learnings resolve; 9/9
+  cited paths + both `example_sequence_*.csv` fixtures exist; all 14
+  issues (#125–#130, \#146–#153) CLOSED via `gh issue view`; the one
+  fact dropped in a tightening pass (“8-agent” S483 workflow)
+  recoverable from two archive shards.
+- **Buried open thread EXTRACTED as its own item** (S686 rule): 2
+  audit-table High-priority rows — “Longitudinal genetic-health
+  monitoring” and “Ancestry guardrails in breeding decisions” — have no
+  GitHub issue; re-verified by title search across all 166 issues in
+  every state plus body searches (3 incidental hits \#118/#76/#47 ruled
+  out by title). Now a READY / Effort S triage item with the audit’s own
+  recommended shapes carried forward. Also removed a dangling “see the
+  compressed entry below” pointer that no longer had a target.
+- **Mechanical proof of scope:** boundary-asserted whole-range
+  replacement (Learning 537); 179 prefix + 200 middle lines
+  byte-identical to the pre-edit file (every other open item untouched);
+  0 survivors of any removed paragraph; positive control passed. The
+  end-to-end re-read caught 2 defects in the NEW text before commit (a
+  ragged line; “found S479” → “found S483” — S479 produced the audit
+  table, S483’s sequencing audit found the gap), and 3 size estimates in
+  the “next-pass candidates” text were corrected to measured values
+  (45-line Tier block, 6-line LabKey remainder, empty `## Active`
+  heading).
+- **Estimate vs delivered (said plainly):** the scope gate quoted “~150
+  lines removed”; actual is −81 lines / −7,711 B (−16.3%). The gap is
+  the 18-line extracted open item plus the retained
+  session/path/Learning pointers; a second tightening pass took
+  Genetic-metrics narrative from 55 → 44 lines. The S518 item stays OPEN
+  as RECURRING maintenance (its own text now carries the pass history,
+  method, and measured next-pass candidates). No GitHub issue named → no
+  issue close owed.
+
+### 2026-09-21 · \[ad hoc\] S752 claim: BACKLOG editorial compression pass (S518 item) *(in progress)*
+
+- Session claimed: stub + pending receipt + this entry. Owner picked the
+  S518 recurring-maintenance item (`BACKLOG.md:181`) via the Phase 0
+  picker (over chromote hang research, inst/doc slimming, REUSE
+  registration). Plan: measure “Pedigree diagram vs kinship2” regrowth
+  since S530 (`:280`) and survey the file, then pose the scope gate with
+  evidence in hand (S606 precedent). Phase 0 reconcile: clean — 0
+  undocumented on both frontiers at `23107e60`; S751 receipt complete,
+  ratchet citation matches the results file (e7499ae4e4a9, 3,489,091 B
+  at `a7613044`). CI 10/10 green, current through `a7613044`; dashboard
+  96/100; growth run 28/10 (predicted); 2 unpushed docs-only
+  (predicted).
+
+### 2026-09-21 · \[ad hoc\] S751 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `761800c9`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S751 commit. S751 total: 3 commits (claim `a7613044` — rode the
+  push, records `761800c9`, this one). Ahead of `origin/master` by 2
+  after close-out, BOTH docs-only; CI is current through `a7613044` and
+  no code has changed since. Expect 0 undocumented commits past the
+  frontier at next Phase 0; measure it.
+
+### 2026-09-21 · \[ad hoc\] S751 close-out: session records (handoff, S750 evaluation 9/10, receipt complete, self 9/10, Learning 774)
+
+- `SESSION_NOTES.md` handoff written (S750 evaluation: 9/10 — every
+  checked claim held exactly: 6 unpushed, 0 undocumented on both
+  frontiers, growth run 27/10, byte-identical ratchet citation, current
+  anchors after re-grep; the transient-504 CI flake was not a knowable
+  claim). `HANDOFFS.md` receipt complete. `PROJECT_LEARNINGS.md`
+  Learning 774 appended: diagnose a red R-CMD-check at failed-STEP
+  granularity before reacting — setup-step 504s are infrastructure;
+  `gh run rerun --failed` keeps run id + headSha so `--commit`
+  structural verification is unchanged; the both-attempts wall duration
+  is not comparable to the single-attempt band. Reduction check (FM
+  \#28): none this session — no mandated-read file got smaller (said
+  plainly). Runtime smoke: n/a — docs-only push; package evidence is CI
+  green on the pushed sha across all 5 R-CMD-check platform jobs.
+  Ratchet at pushed HEAD `a7613044`: 1/1 pass · 0 fail · 0 unmeasured ·
+  results e7499ae4e4a9 · manifest aa983075d6a2 (3,489,091 B ≤ 5,000,000
+  B, read from the results file; −20 B vs S750 is build-metadata noise —
+  touched files `.Rbuildignore`d).
+
+### 2026-09-21 · \[ad hoc\] S751 deliverable: pushed `589cf73c..a7613044` (7 commits, ALL docs-only); all 4 workflows green ON THE PUSHED SHA after one transient-infra rerun
+
+- Push: 7 commits (6 carried S750/S749 records + the claim riding the
+  push); 0 unpushed confirmed by recount. Filter smoke-tested before
+  arming (`gh run list --commit <full-40-char-sha>`, `headSha` echoed).
+  **First attempt: R-CMD-check `failure` — transient infrastructure, not
+  the package:** failures confined to setup steps (windows
+  `setup-pandoc@v2`: pandoc 3.8.3 download HTTP 504 ×2 then fatal; macos
+  `setup-r@v2`: gfortran download 504 ×2 then fatal; 14:49–14:50 UTC);
+  all 3 ubuntu check jobs passed; `--log-failed` showed zero package
+  output on the failed platforms. Fixed as found per the S636 CI-break
+  convention (no GitHub issue): `gh run rerun 35614709050 --failed` —
+  same run id + headSha, ubuntu successes retained; rerun `success`.
+  Final structural verification: all 4 `completed success` with
+  `headSha` = `a761304410c079847d09de422cba73814574408b` echoed per run
+  — lint 4m56s (35614708951), pkgdown 6m52s (35614708967), test-coverage
+  10m3s (35614708970), R-CMD-check 41m49s wall across both attempts
+  (35614709050). CI is now current through `a7613044`.
+
 ### 2026-09-21 · \[ad hoc\] S751 claim: push to `origin/master` + CI verification (in progress)
 
 - Routine operational pick (S726–S749 precedent), owner-picked via the
