@@ -38,6 +38,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S742 deliverable: kinship2 standalone-package disposition — COMMITTED but DEFERRED, scope ratified (owner discussion, step 2 of the S739 item)
+- Owner briefed from `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`
+  (Findings #1/#2/#4, Structural Observations 2/3, Recommendations) with the
+  question, S738-lesson style; decisions via one 4-question `AskUserQuestion`:
+  1. **Disposition: "Not now — defer, gates stand"** (prep D-1/D-2/D-3 + the S738
+     revisit conditions, scoping doc §6), **with the owner's free-text intent
+     recorded: the package WILL be built.** Owner (near-verbatim): creation of a
+     separate package will be done and may eventually be used by nprcgenekeepr,
+     "but that is not the primary goal. The primary goal is to have a standalone
+     near equivalent package that has the enhanced features offered with
+     nprcgenekeepr and particularly the pedigree drawing, annotation ability, and
+     interactivity." So: plan a sibling product first; nprcgenekeepr adoption is
+     secondary/optional.
+  2. **API shape: DELIBERATELY OPEN** — data-frame-as-is vs kinship2-compat layer
+     decided at plan time with a prototype in hand.
+  3. **Drawing surface: IN** — lift the module-bound decorations
+     (`R/modPedigree.R:675-790`) into a script-callable visNetwork renderer.
+  4. **Parity closers: IN** — export shrink helpers + `bitSize`
+     (`R/shrinkPedigree.R:227-380`), port `familycheck` + `ibdMatrix`, add
+     user-suppliable layout hints; **OUT** — block-sparse `makekinship`.
+- Records: the S739 two-step discussion item (`BACKLOG.md:95`) REMOVED per the
+  completed-item removal checklist; its still-open thread extracted as a new
+  BLOCKED item "Build a kinship2-similar standalone pedigree package" carrying the
+  full ratified scope + purpose statement forward. Step-1 gap-doc counts
+  (15 EQ / 8 PARTIAL / 2 ABSENT, kinship2 1.9.6.2) unchanged.
+
 ### 2026-09-21 · [ad hoc] S742 claim: kinship2 standalone-package step 2 — owner discussion / packaging disposition (in progress)
 - Session claimed via the Phase 0 `AskUserQuestion` picker (owner pick over push+CI
   and prep D-1/D-2). Plan: brief the owner from

@@ -92,26 +92,31 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       the layout core into its own package -- disposition recorded S738 in `CHANGELOG.md`, with
       the 3 revisit conditions in the scoping doc §6; these steps harden the boundary in place
       and are worthwhile whether or not a split ever happens.)
-- [ ] **Discuss making a kinship2-similar standalone package from code within this repository**
-      (owner-directed S739, 2026-09-20; step 1 DONE S741 -- step 2 now live: DECISION NEEDED,
-      owner discussion, Effort S) -- broader than, and distinct from, the S738-dispositioned
-      "split the layout core" question: a general-purpose pedigree package in the spirit of
-      kinship2 built from what this repo already has.
-      **Step 1 DONE (S741): kinship2 feature-gap analysis** --
-      `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`. Verdict: **15 equivalent /
-      8 partial / 2 absent** across kinship2 1.9.6.2's 25 live-enumerated exports (+ S3
-      registrations and datasets as supplementary rows); capability parity is effectively done
-      (the compute core was already deliberately ported: `kinship()` incl. `chrtype="x"` + MZ
-      twins, `shrinkPedigree()`), so step 2 is a PACKAGING question, not a feature question.
-      **Step 2 (owner discussion):** the doc's Recommendations frame the decisions: (a)
-      data-frame API as-is vs a kinship2-compatibility layer; (b) whether the drawing
-      decorations (legend/image-export/tooltips, `R/modPedigree.R:675-790`) get lifted into a
-      script-callable renderer; (c) whether the shrink internals + `bitSize` get exported to
-      mirror kinship2's surface; cheap parity closers (`familycheck`/`ibdMatrix` ports) and the
-      two substantive partials (layout hints, block-sparse `makekinship`) are itemized there.
-      Relation to the S738 disposition unchanged: prep D-1/D-2/D-3 above are step 0 of any
-      extraction; the revisit conditions (scoping doc §6) still gate it -- this analysis
-      supplies the condition-3 "ecosystem argument" evidence.
+- [ ] **Build a kinship2-similar standalone pedigree package from this repository's code —
+      committed, deferred** (disposition S742, 2026-09-20; BLOCKED -- on prep D-1/D-2/D-3
+      above plus the S738 revisit conditions, scoping doc §6: engine churn calms + an
+      accepted CRAN release; Effort L, its own planning session first when unblocked) --
+      owner disposition closing the S739 two-step discussion item (step 1: gap analysis
+      DONE S741, `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`, 15 EQ /
+      8 PARTIAL / 2 ABSENT; step 2: this decision — full record in `CHANGELOG.md` S742).
+      **The package WILL be built; only the timing is deferred ("gates stand").
+      Purpose (owner-stated): a standalone near-equivalent of kinship2 carrying
+      nprcgenekeepr's enhanced features — particularly the pedigree drawing, annotation
+      ability, and interactivity; nprcgenekeepr may eventually consume it, but that is NOT
+      the primary goal** (i.e. plan a sibling product first, not an extraction nprcgenekeepr
+      must immediately depend on). **Ratified scope (S742, so the plan session doesn't
+      re-derive):** drawing surface IN — lift the module-bound decorations
+      (`R/modPedigree.R:675-790`: legend/image-export/tooltips) into a script-callable
+      visNetwork renderer (the unique value per the gap doc's ecosystem observation; the one
+      substantive new-work item); parity closers IN — export the shrink helpers + `bitSize`
+      (tested internals, `R/shrinkPedigree.R:227-380`), port `familycheck` + `ibdMatrix`
+      (the two full absences), and user-suppliable layout hints (autohint's override half —
+      real engine-surface design); OUT — block-sparse `makekinship` (dense whole-colony
+      matrices are current practice); API shape (data-frame-as-is vs kinship2-compat layer)
+      DELIBERATELY OPEN — decide at plan time with a prototype in hand. When unblocked, the
+      pickup is a planning session (package boundary/plan doc in `docs/planning/`,
+      evidence-based inventory); prep D-1/D-2/D-3 are step 0, and D-1 is exactly the
+      boundary the package needs.
 - [ ] **(Optional, owner decision) Slim `inst/doc/` by moving the three `html_document`
       vignettes to `rmarkdown::html_vignette`** (extracted S728, 2026-09-19, from the completed
       tarball build-hygiene item — its still-open step 4; DECISION NEEDED, Effort M, its own
