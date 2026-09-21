@@ -38,6 +38,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S754 records: close-out records committed (handoff, receipt, evaluations)
+- `SESSION_NOTES.md` S754 handoff + S753 evaluation (9/10 — every checked
+  claim held exactly; nothing material missing or wrong); `HANDOFFS.md`
+  receipt complete (self 9/10); this ledger entry. Ratchet cited at the
+  pushed sha: 1/1 pass, 3,489,164 B at `8007de81`, results `402149dcd019`,
+  manifest `aa983075d6a2` (read from the results file; +29 B vs S753 —
+  build-metadata noise, no package file touched). `methodology_trim.py
+  --check`: no trigger on `SESSION_NOTES.md` (21,647 B vs 65,536 B,
+  `--budget-bytes 65536`) or `HANDOFFS.md` (122,465 B vs 196,608 B).
+  S754 totals: 2 commits after the claim (records, sha) + 1 non-commit
+  action (the push); 2 unpushed expected after close-out — verify with
+  `git rev-list --count origin/master..HEAD`, not this sentence.
+
+### 2026-09-21 · [ad hoc] S754 deliverable: pushed `a7613044..8007de81` to origin/master (14 docs-only commits); all 4 CI workflows green ON THE PUSHED SHA, first attempt
+- Non-commit action (the push) + its verification. 13 inherited docs-only
+  commits (S751 close-out tail through S753 + S754 claim `8007de81`, which
+  rode the push); 0 unpushed confirmed by recount. Filter smoke-tested
+  before arming (`gh run list --commit` with the full 40-char sha returned
+  all 4 workflows, headSha echoed). All 4 completed success, first
+  attempt, no reruns: lint 4m44s (35632491706), pkgdown 5m23s
+  (35632491742), test-coverage 9m2s (35632491647), R-CMD-check 22m50s
+  (35632491615). CI now current through `8007de81`; suite baseline
+  0 failed / 0 error / 184 skipped remotely confirmed through it.
+
 ### 2026-09-21 · [ad hoc] S754 claim: push to origin/master + CI verification (stub + pending receipt + ledger entry) *(in progress)*
 - Session claimed. 13 docs-only commits unpushed at Orient (recounted,
   matches S753's prediction); CI current through `a7613044`; this claim

@@ -50,13 +50,100 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 753 Handoff Evaluation (by Session 754)
+**Score: 9/10.** **What helped:** "13 unpushed expected (recount)" measured
+exactly 13; "expect 0 undocumented; measure it" measured 0 on both frontiers
+at `d84c97d4`; the S753 receipt's ratchet citation matched
+`.quality-gates-results.json` byte-for-byte at close-out (b593a0c84084,
+3,489,135 B at `c823a9f7`), and the "drifts a few bytes between runs"
+gotcha predicted exactly what this session saw (+29 B on re-run); growth
+run read 33/10 at Orient (rose from 32 — the read-don't-predict framing
+was right); next step (A) named push+CI as the largest pending item, which
+WAS this session's owner-picked deliverable, with the correct count and
+the correct first moves (full-40-char `--commit` filter, smoke-test before
+arming — both applied verbatim and both held). **What was missing:**
+nothing material — the clean first-attempt CI was not a knowable claim.
+**What was wrong:** nothing found — every checked claim held. **ROI:** high.
+
 ### What Session 754 Did
-**Deliverable:** Push to origin/master + CI verification — 13 docs-only
-commits unpushed at Orient (recounted, matches S753's prediction); claim
-commit rides the push (IN PROGRESS)
-**Started:** 2026-09-21
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Push to origin/master + CI verification — **DONE**
+(routine operational pick, S726–S751 precedent; owner-picked via the
+Phase 0 picker). Pushed `a7613044..8007de81` (14 commits: 13 inherited
+docs-only + the S754 claim `8007de81`, which rode the push); 0 unpushed
+confirmed by recount. All 4 push-triggered workflows **completed success
+ON THE PUSHED SHA, first attempt, no reruns**: lint 4m44s (35632491706),
+pkgdown 5m23s (35632491742), test-coverage 9m2s (35632491647),
+R-CMD-check 22m50s (35632491615) — headSha
+`8007de81ad1291cf49f388f972350e90a152d46a` echoed per run. Filter
+smoke-tested BEFORE arming (returned all 4 workflows with headSha echoed);
+completion watched by a background until-loop keyed on `status !=
+completed` (covers every terminal state), conclusions then read from the
+results, not assumed.
+**Started/completed:** 2026-09-21 (single session). Claim `8007de81`
+(rode the push); records + sha commits follow this handoff. **Ledger:**
+one `CHANGELOG.md` entry per action — claim, push+CI-verified
+(non-commit action), records, sha. TDD phases N/A (docs-only push, no
+code; declared at every response top). No BACKLOG item consumed (the
+pick came from S753's next-steps, not a BACKLOG block); no NEWS.Rmd/
+lint/pkgdown-reference/issue-close checklist owed (no code, no exports,
+no item closed).
+
+**Self-assessment (Session 754): 9/10.** **Strengths:** (1) predecessor
+claims re-measured before acting (13 unpushed exact, 0 undocumented on
+both frontiers, growth run read at 33/10); (2) filter smoke-tested before
+arming; (3) the CI monitor's exit condition covered all terminal states
+(`status != completed`), so a failed run would have fired it exactly like
+success — silence was never the signal; (4) clean single-attempt green on
+all 4 workflows; (5) per-action ledger discipline held. **Weaknesses:**
+(1) no FM #28 reduction — no mandated-read file got smaller this session
+(said plainly); (2) one tool-use fumble (a `sleep`-chained command the
+harness blocked; corrected immediately, no state touched).
+
+**Learnings:** none owed — routine clean push, no novel failure or
+pattern (S751's precedent: the 12 clean predecessors captured none
+either). `PROJECT_LEARNINGS.md` untouched.
+
+**Next steps (specific):** (A) **Pre-RED scoping session for issue #167
+or #168 (READY, M)** — now the top substantive pick; each issue's closing
+gate line requires a design/scoping session FIRST (per #147/#148
+precedent: scoping doc → owner-ratified plan → TDD slices); decision at
+pickup: which of the two (#167 is the sequencing-audit Finding-#1
+cluster's natural next). (B) **Push+CI NOT urgent** — 2 docs-only
+records/sha commits unpushed after close-out (recount with
+`git rev-list --count origin/master..HEAD`); CI current through
+`8007de81`. (C) Unchanged: chromote hang research (READY, M, research
+only, `BACKLOG.md:129`); inst/doc slimming (DECISION NEEDED, M, `:108`);
+REUSE registration (owner action, S, `:152`); BACKLOG compression
+recurring (`:180`, measured candidates in the item); NPRC outreach
+(DECISION NEEDED — owner review/edit, `:386`); kinship2-standalone
+BLOCKED on the S738 revisit conditions (`:71`); LabKey BLOCKED (`:27`).
+
+**Key files:** no code touched. `SESSION_NOTES.md:51` (this handoff),
+`HANDOFFS.md` (S754 receipt), `CHANGELOG.md:41` (S754 entries at top),
+`.quality-gates-results.json` (head `8007de81`; gitignored).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; 2 unpushed expected after close-out (recount).
+(2) **CI now current through `8007de81`** — all 4 workflows first-attempt
+green; the R-CMD-check single-attempt band now extends to 22m50s (S751's
+stated band was 17m39s–22m17s; this run sits just above it, first
+attempt, green — update the expectation, don't treat ~23 min as a hang).
+(3) Ratchet baseline now 3,489,164 B at `8007de81` (+29 B vs S753 —
+build-metadata noise again; no package file touched); cite from
+`.quality-gates-results.json` (results `402149dcd019`), never the rounded
+run table. (4) No code touched, no test suite run (docs-only; suite
+baseline 0 failed / 0 error / 184 skipped stands, now remotely confirmed
+through `8007de81`). (5) The 5 standing untracked files (3 pedigree
+spike-evidence HTMLs, Aug 15; 2 article PDFs, Aug 25) remain untracked
+and unchanged — artifacts of the retired pedigree campaign, present
+across many sessions; no owner decision recorded either way. (6) Standing
+set unchanged: `gh run list --commit` needs the FULL 40-char sha +
+smoke-test the filter; `scratchpad/` invisible to git BY OWNER DECISION;
+ratchet AFTER committing (Learning 772); trim needs `--budget-bytes
+65536`; renv banner expected; CLAUDE.md warn band (26,360 B); growth run
+33/10 at this Orient — read the value at the next Orient; the two
+`SESSION_NOTES.md` ceilings differ (owner decision pending); zsh harness
+traps (Learning 775).
 
 ### Session 752 Handoff Evaluation (by Session 753)
 **Score: 9/10.** **What helped:** "8 unpushed expected (recount)" measured

@@ -158,16 +158,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S754
 date: 2026-09-21
-status: pending
-active_task: Push to origin/master + CI verification — 13 docs-only commits unpushed at Orient (claim rides the push); verify all 4 push-triggered workflows green on the pushed sha (full-40-char --commit filter, smoke-tested before arming).
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Push to origin/master + CI verification — DONE (routine operational pick, S726–S751 precedent; owner-picked via the Phase 0 picker). Pushed a7613044..8007de81 (14 commits, ALL docs-only; claim rode the push); all 4 push-triggered workflows completed success ON THE PUSHED SHA, first attempt, no reruns.
+what_was_done: Claim 8007de81 (rode the push); 0 unpushed confirmed by recount. Filter smoke-tested BEFORE arming (gh run list --commit full-40-char-sha returned all 4 workflows, headSha 8007de81ad1291cf49f388f972350e90a152d46a echoed). Completion watched by a background until-loop keyed on status != completed (covers every terminal state); conclusions read from the results, not assumed. All 4 completed success, first attempt: lint 4m44s (35632491706), pkgdown 5m23s (35632491742), test-coverage 9m2s (35632491647), R-CMD-check 22m50s (35632491615). No BACKLOG item consumed; no NEWS.Rmd/lint/pkgdown-reference/issue-close checklist owed (no code, no exports, no item closed). No learning owed (routine clean push — S751 precedent). FM #28 reduction: none — said plainly.
+next_steps: (A) Pre-RED scoping session for issue #167 or #168 (READY, M) — now the top substantive pick; each issue's closing gate line requires a design/scoping session FIRST (#147/#148 precedent); decision at pickup which of the two (#167 is the sequencing-audit Finding-#1 cluster's natural next). (B) Push+CI NOT urgent — 2 docs-only records/sha commits unpushed after close-out (recount with git rev-list --count origin/master..HEAD); CI current through 8007de81. (C) Unchanged: chromote hang research (READY, M, research only, BACKLOG.md:129); inst/doc slimming (DECISION NEEDED, M, :108); REUSE registration (owner action, S, :152); BACKLOG compression recurring (:180); NPRC outreach (DECISION NEEDED, :386); kinship2-standalone BLOCKED on the S738 revisit conditions (:71); LabKey BLOCKED (:27).
+key_files: no code touched. SESSION_NOTES.md:51 (S754 handoff), HANDOFFS.md (this receipt), CHANGELOG.md:41 (S754 entries at top), .quality-gates-results.json (head 8007de81; gitignored)
+gotchas: Expect 0 undocumented at next Phase 0 — measure it; 2 unpushed expected after close-out (recount). CI now CURRENT through 8007de81 — all 4 first-attempt green; the R-CMD-check single-attempt band now extends to 22m50s (S751's stated band was 17m39s–22m17s — update the expectation, don't treat ~23 min as a hang). Ratchet baseline now 3,489,164 B at 8007de81 (+29 B vs S753 — build-metadata noise; no package file touched); cite from .quality-gates-results.json (results 402149dcd019), never the rounded run table. The 5 standing untracked files (3 pedigree spike-evidence HTMLs Aug 15, 2 article PDFs Aug 25) remain untracked and unchanged — retired-campaign artifacts, no owner decision recorded. Standing set unchanged: full-40-char sha + smoke-test before arming; scratchpad/ invisible to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band (26,360 B); growth run 33/10 at this Orient — read the value, don't predict; the two SESSION_NOTES.md ceilings differ (owner decision pending); zsh harness traps (Learning 775); suite baseline 0/0/184 remotely confirmed through 8007de81.
+runtime_smoke: n/a — docs-only push (no package file touched); the package-level evidence is CI on the pushed sha: R-CMD-check success across all platform jobs, first attempt, plus lint/pkgdown/test-coverage green. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 402149dcd019 · manifest aa983075d6a2 (measured 3,489,164 B ≤ 5,000,000 B at 8007de81, read from the results file)
+changelog_ref: 8007de81
 commit: pending
 ```
+<free-text: S754 +/- — plus: predecessor claims re-measured (13 unpushed exact, 0 undocumented on both frontiers, growth run read at 33/10); filter smoke-tested before arming; the CI monitor's exit condition covered all terminal states, so a red run would have fired it exactly like green — silence was never the signal; clean single-attempt success on all 4 workflows; per-action ledger discipline held. Minus: no FM #28 reduction (no mandated-read file got smaller); one tool-use fumble (a sleep-chained command the harness blocked; corrected immediately, no state touched). Predecessor 9/10: every checked claim held exactly — 13-unpushed exact, frontiers clean at d84c97d4, ratchet citation matched with the drift gotcha predicting this session's +29 B, next step (A) was this session's deliverable with the correct first moves; nothing material missing or wrong.>
 
 ```handoff
 session: S753
