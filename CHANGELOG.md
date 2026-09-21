@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S751 claim: push to `origin/master` + CI verification (in progress)
+- Routine operational pick (S726–S749 precedent), owner-picked via the
+  Phase 0 picker over BACKLOG compression, inst/doc slimming, and
+  kinship2-standalone. 6 unpushed docs-only commits measured at Orient
+  (`9410a558..1f8a32f0` + S750's four); this claim rides the push
+  (7 expected). CI current through `589cf73c`, no code changed since —
+  records-currency, not code verification. Close-out records the rest.
+
 ### 2026-09-21 · [ad hoc] S750 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `5e280761`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S750 commit. S750 total: 4 commits (claim `aa029ae6`, deliverable
   `cc6d5d6b`, records `5e280761`, this one). Ahead of `origin/master` by 6

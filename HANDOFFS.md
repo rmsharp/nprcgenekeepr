@@ -156,6 +156,21 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S751
+date: 2026-09-21
+status: pending
+active_task: Push to origin/master + CI verification (routine operational pick, S726–S749 precedent; owner-picked via the Phase 0 picker). 6 unpushed docs-only commits at Orient; CI current through 589cf73c with no code changed since — records-currency push. Claim commit rides the push.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text: S751 claim stub — crash breadcrumb. If this block is still `pending` at a later session's Phase 0 reconcile, this session ended before close-out; reconstruct from git log.>
+
+```handoff
 session: S750
 date: 2026-09-21
 status: complete

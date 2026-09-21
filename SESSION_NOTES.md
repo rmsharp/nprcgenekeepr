@@ -46,6 +46,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 751 Did
+**Deliverable:** Push to `origin/master` + CI verification (routine
+operational pick, S726–S749 precedent; owner-picked via the Phase 0
+picker) (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. 6 unpushed docs-only commits measured at
+Orient (+ this claim riding the push = 7 expected). CI current through
+`589cf73c`, no code changed since — records-currency push. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry
+says (in progress); Phase 3F records the rest. Until close-out, this line
+is the crash breadcrumb for the next session's reconcile.
+
 ### Session 749 Handoff Evaluation (by Session 750)
 **Score: 8/10.** **What helped:** "2 unpushed expected (recount)" measured
 exactly 2; "expect 0 undocumented; measure it" measured 0 on both frontiers
