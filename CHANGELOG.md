@@ -38,6 +38,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S747 close-out: session records (handoff, S746 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S746 evaluation: 9/10 — 14-unpushed and
+  clean-frontier claims held exactly; growth-run prediction 23/10 exact;
+  ratchet citation byte-identical; its push+CI guidance was the execution
+  plan, R-CMD-check 17m42s inside the predicted band; nothing found wrong).
+  `HANDOFFS.md` receipt complete. No new `PROJECT_LEARNINGS.md` entry
+  (routine clean push+CI, 11th consecutive, extending S743's 10th). Reduction
+  check (FM #28): NONE this session — no mandated-read file got smaller;
+  stated plainly rather than left unsaid. Runtime smoke: n/a — push-only; the
+  runtime evidence IS the deliverable (4/4 workflows green on the pushed
+  sha). quality_ratchet at pushed HEAD `5d281ad5`: 1/1 pass · 0 fail ·
+  0 unmeasured · results 44c6e83894b6 · manifest aa983075d6a2 (3,488,951 B ≤
+  5,000,000 B, read from the results file — the run table rounded to
+  3.48895e+06; the +7 B vs S746 is build-metadata noise, the claim commit's
+  three touched files are all `.Rbuildignore`d, verified). 2 unpushed
+  expected after close-out (records + sha); CI current through `5d281ad5`.
+
+### 2026-09-21 · [ad hoc] S747 deliverable: owner-directed push to `origin/master` + CI verification — DONE
+- Pushed `59f1888e..5d281ad5` (15 commits: 14 carried S744–S746 close-out/
+  claim/deliverable commits + the S747 claim riding the push, S726–S743
+  precedent). All 4 push-triggered workflows `completed success` ON THE
+  PUSHED SHA `5d281ad5`, verified structurally via
+  `gh run list --commit <full-40-char-sha>` with `headSha` echoed back:
+  lint 4m51s (id 35559402091), pkgdown 6m14s (35559402167), test-coverage
+  8m42s (35559402158), R-CMD-check 17m42s (35559402194) — inside the
+  established 17m39s–22m17s band; filter smoke-tested against in-flight runs
+  BEFORE arming the single 30-min Monitor; no re-arm. First remote CI
+  confirmation for all THREE prep deliverables (`44bb4481` D-1, `eb896c2e`
+  D-2, `a5a9bf42` D-3). 0 unpushed after the push.
+
 ### 2026-09-21 · [ad hoc] S747 claim: owner-directed push to `origin/master` + CI verification *(in progress)*
 - Phase 0 clean: 0 undocumented on both frontiers at `8b9a0148`; S746 receipt
   complete, ratchet citation matched `.quality-gates-results.json`

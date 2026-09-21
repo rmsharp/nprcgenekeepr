@@ -158,18 +158,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S747
 date: 2026-09-21
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Owner-directed push to origin/master + CI verification — claimed, in progress. 14 unpushed at claim time (this claim rides the push, S726–S743 precedent); three deliverables (44bb4481, eb896c2e, a5a9bf42) never seen by CI — expect R-CMD-check in the 17m39s–22m17s band.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Owner-directed push to origin/master + CI verification — DONE. Pushed 59f1888e..5d281ad5 (15 commits: 14 carried S744–S746 commits + the claim riding the push, S726–S743 precedent). All 4 push-triggered workflows completed success ON THE PUSHED SHA 5d281ad5; the three never-CI'd deliverables (44bb4481 D-1, eb896c2e D-2, a5a9bf42 D-3) now have remote CI confirmation. 0 unpushed after the push.
+what_was_done: Claim 5d281ad5 (rode the push). Push 59f1888e..5d281ad5; 0 unpushed confirmed by recount. Filter smoke-tested against in-flight runs BEFORE arming the single 30-min Monitor (no re-arm). Verified structurally via gh run list --commit <full-40-char-sha> with headSha echoed back: lint 4m51s (id 35559402091), pkgdown 6m14s (35559402167), test-coverage 8m42s (35559402158), R-CMD-check 17m42s (35559402194) — inside the established 17m39s–22m17s band. No BACKLOG item consumed (routine operational pick); no NEWS.Rmd entry owed (no code change); no lint checklist owed (no .R file touched).
+next_steps: (A) iCloud-duplicate Housekeeping item closable-on-confirmation (READY, XS): re-check ls R/ | grep " 2\." and close if still clean after local rebuilds (BACKLOG.md:180). (B) BACKLOG editorial compression (READY, L): re-check "Pedigree diagram vs kinship2" for regrowth since S530 (BACKLOG.md:239). (C) inst/doc slimming (DECISION NEEDED, M): owner ratifies html_vignette move first (BACKLOG.md:108). (D) kinship2-standalone stays BLOCKED on the S738 revisit conditions only — planning session when the owner judges them met. (E) WORDLIST 10-word drift (S) and other lower-priority items unchanged.
+key_files: no code touched. SESSION_NOTES.md:59 (S747 handoff), HANDOFFS.md (this receipt), CHANGELOG.md:41 (S747 entries at top), .quality-gates-results.json (head now 5d281ad5)
+gotchas: Expect 0 undocumented at next Phase 0 — measure it; 2 unpushed expected after close-out (records + sha — recount). CI is now CURRENT through 5d281ad5 — only docs-only records/sha commits remain unpushed. Ratchet baseline now 3,488,951 B at 5d281ad5 (+7 B vs S746 is build-metadata noise — the touched files are .Rbuildignore'd, verified; not content growth); cite from .quality-gates-results.json, never the rounded run table. Standing set unchanged: gh run list --commit needs FULL 40-char sha + smoke-test before arming a monitor; scratchpad/ invisible to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band, growth run 23/10 (measure, don't predict); the two SESSION_NOTES.md ceilings differ (owner decision pending); suite baseline 0/0/184 now ALSO remotely confirmed (R-CMD-check green on 5d281ad5).
+runtime_smoke: n/a — push-only session, no code or docs-content change to the package; the runtime evidence IS the deliverable: R-CMD-check + lint + pkgdown + test-coverage all completed success on the pushed sha 5d281ad5. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 44c6e83894b6 · manifest aa983075d6a2 (measured 3,488,951 B ≤ 5,000,000 B at 5d281ad5, read from the results file)
+changelog_ref: 5d281ad5
 commit: pending
 ```
+<free-text: S747 +/- — plus: every predecessor claim re-measured (14 unpushed, 0 undocumented, growth run 23/10 all exact); filter smoke-tested before arming, one monitor, no re-arm; verification structural (headSha echoed per run), not badge-inferred; the +7 B tarball delta root-caused via .Rbuildignore rather than hand-waved. Minus: FM #28 reduction none this session — no mandated-read file got smaller, said plainly; routine session, no new learning (deliberate — 11th consecutive clean push+CI, extending S743's 10th). Predecessor 9/10: 14-unpushed exact, frontiers clean at 8b9a0148, growth-run prediction exact, ratchet citation byte-identical, push guidance was the execution plan; nothing found wrong.>
 
 ```handoff
 session: S746
