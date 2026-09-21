@@ -460,21 +460,3 @@ plan ratified S704 (`docs/planning/issue148-mhc-haplotype-reporting-plan.md`, D1
 strict-TDD slices S705-S708: the `checkMhcHaplotypeFile()` validator,
 `mhcHaplotypeFrequency()`/`mhcHaplotypeCarriers()`, `obfuscateMhcHaplotypes()`, and the 8th Marker
 Genetics tab "MHC Haplotype Reporting" with confirm-gate export.
-- [ ] **File the 2 unticketed High-priority audit gaps: "Longitudinal genetic-health monitoring"
-      and "Ancestry guardrails in breeding decisions"** (found S483 by the sequencing audit's
-      Finding #1, re-verified still true S752 -- READY, Effort S, a dedicated triage session) -- the
-      `..._2026-08-06.md` audit's priority table rates both **High** (tied with #147, above every
-      Medium/Deferred item in the batch), yet no GitHub issue exists for either: verified S752
-      (2026-09-21) by title search across all 166 issues in every state plus body searches
-      (`longitudinal`/`ancestry`/`guardrail`/`trend`/`snapshot`/`drift`; the 3 incidental hits --
-      #118, #76, #47 -- are unrelated). The audit's own recommended shapes: *longitudinal* =
-      "define snapshot schema, consistent-cohort rules, and trend outputs before implementation";
-      *ancestry guardrails* = "define center-configurable ancestry compatibility rules and an
-      override/audit trail" (reporting an Origin color AFTER group construction is weaker than
-      preventing a problematic grouping). The sequencing audit (Finding #1 + recommendation 2,
-      `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`) says to file both as
-      full-feature requests gated on a Pre-RED design session, shaped like #147 -- NOT like the
-      Deferred-tier design-only issues. **Why it matters:** audit priority and "has a GitHub
-      issue" are independent facts, so a session choosing "next issue by priority" from
-      `gh issue list` alone would silently work Medium-tier issues before these two High-tier
-      gaps. Filing the two issues is the whole deliverable; implementation is separate sessions.

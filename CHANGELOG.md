@@ -38,6 +38,39 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S753 deliverable: the 2 unticketed High-priority audit gaps are FILED (#167, #168); completed `BACKLOG.md` block removed in this commit
+- Deliverable complete. The two audit-table High rows with no GitHub issue
+  ("Longitudinal genetic-health monitoring", "Ancestry guardrails in
+  breeding decisions" — found S483 by
+  `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`
+  Finding #1; extracted as its own `BACKLOG.md` item S752) are now issues
+  **#167** and **#168**. Premise recomputed BEFORE filing: 107 issues in
+  every state (S752's "166" figure counted issues+PRs — the shared number
+  sequence; same population, no discrepancy), 0 title hits for
+  `longitudinal`/`ancestry`/`guardrail`/`monitoring`, body hits only the
+  known-unrelated CLOSED #118/#76, and a positive control (`kinship
+  in:title` = 5 hits) proved the search harness per Learning 775. Both
+  drafts owner-approved **verbatim** via `AskUserQuestion` (after a
+  full-text render in-conversation — the structured preview alone was not
+  readable enough, a gate-usability note for future outward-facing
+  confirms). Shape matches #147 per the sequencing audit's Recommendation
+  2: `## Source` section citing both audits, capability-gap paragraph,
+  feature description, closing Pre-RED-design-gate line, no labels — NOT
+  the Deferred-tier design-only shape. Implementation is separate,
+  design-first sessions. `BACKLOG.md` block (18 lines at :463) removed per
+  the S686 completed-item rule; file 480→462 lines.
+
+### 2026-09-21 · [issue #168] S753: filed issue #168 "Add ancestry guardrails to breeding-group formation (configurable compatibility rules with override/audit trail)" (non-commit action)
+- Center-configurable ancestry compatibility rules evaluated during
+  candidate-group construction, override mechanism + audit trail;
+  Pre-RED design session gate (same as #147). Source: capability audit
+  2026-08-06 priority table, High.
+
+### 2026-09-21 · [issue #167] S753: filed issue #167 "Add longitudinal genetic-health monitoring (colony snapshots and trend reporting)" (non-commit action)
+- Dated colony genetic-health snapshots under a defined schema,
+  consistent-cohort rules, trend outputs; Pre-RED design session gate
+  (same as #147). Source: capability audit 2026-08-06 priority table, High.
+
 ### 2026-09-21 · [ad hoc] S753 claim: file the 2 unticketed High-priority audit gaps as GitHub issues (in progress)
 - Session claimed. Deliverable: create GitHub issues for the 2 audit-table
   High-priority rows with no issue — "Longitudinal genetic-health
