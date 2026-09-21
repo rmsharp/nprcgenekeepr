@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S743 claim: owner-directed push to `origin/master` + CI verification *(in progress)*
+- Phase 0 clean: 0 undocumented on both frontiers at `ef0f34bb`; S742 receipt
+  complete, ratchet citation matched `.quality-gates-results.json`; CI 10/10 green
+  (latest 4 on `889f9896`); dashboard 96/100; context budget WARN = CLAUDE.md warn
+  band, growth run 19/10 (as S742 predicted); 11 unpushed measured (= S742's ~11).
+  Owner picked the push via the Phase 0 picker. This claim rides the push
+  (S726–S740 precedent).
+
 ### 2026-09-21 · [ad hoc] S742 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `9a8325c2`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S742 commit. S742 total: 4 commits (claim `222f0c5e`, deliverable
   `4697f66c`, records `9a8325c2`, this one). Ahead of `origin/master` by 11 after

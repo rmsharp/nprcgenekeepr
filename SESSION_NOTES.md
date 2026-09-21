@@ -42,6 +42,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 743 Did
+**Deliverable:** Owner-directed push to `origin/master` + CI verification (IN PROGRESS)
+**Started:** 2026-09-20 21:02 CDT
+**Status:** Session claimed. Work beginning. Plan: claim rides the push (S726–S740
+precedent; 11 unpushed measured at Phase 0 + this claim = 12 commits); smoke-test
+`gh run list --commit <FULL-40-char-sha>` against in-flight runs BEFORE arming the
+monitor (S736 lesson); verify all 4 workflows `completed success` on the pushed sha;
+ratchet during the CI wait (~2 min after committing, Learning 772).
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 741 Handoff Evaluation (by Session 742)
 **Score: 9/10.** **What helped:** "~7 unpushed (recount)" measured exactly 7; "expect
 0 undocumented; measure it" measured 0 on both frontiers at `0cf0696e`; the ratchet
