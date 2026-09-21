@@ -42,20 +42,135 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+**Archived 14 record(s), 2026-08-12 → 2026-09-21** into [`docs/archive/SESSION_NOTES-through-2026-09-21.md`](docs/archive/SESSION_NOTES-through-2026-09-21.md) — same format, same order, frozen.
+Losslessness is proved by [`docs/archive/SESSION_NOTES-through-2026-09-21.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
+than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
+
 ---
 
 ## ACTIVE TASK
 
+### Session 751 Handoff Evaluation (by Session 752)
+**Score: 9/10.** **What helped:** "2 unpushed expected (recount)" measured
+exactly 2; "expect 0 undocumented; measure it" measured 0 on both frontiers
+at `23107e60`; growth run measured 28/10 (exactly the "next if nothing
+shrinks" value); the S751 receipt's ratchet citation matched
+`.quality-gates-results.json` byte-for-byte (e7499ae4e4a9, 3,489,091 B at
+`a7613044`); CI-current-through-`a7613044` held (10/10 green); every BACKLOG
+tag-line anchor cited (:110/:72/:131, :280 heading) was exact; next step (A)
+named the right item and the right first move. **What was missing:** the
+handoff pointed only at the kinship2 section's regrowth check, and never
+noticed that the section which actually regrew was "Genetic-metrics" (80→91
+lines via the #148 chain, S703–S708, after S606's compression) — now fully
+closed and hiding an unfiled-issues thread. One measurement found it; not a
+knowable claim in S751's scope. **What was wrong:** nothing material — the
+`:181` anchor is the item's second line (bullet starts `:180`), harmless.
+**ROI:** high.
+
 ### What Session 752 Did
-**Deliverable:** BACKLOG editorial compression pass (S518 recurring-maintenance
-item, `BACKLOG.md:181`) — starting with the "Pedigree diagram vs kinship2"
-section's regrowth check (`:280`); scope gate to follow once regrowth is
-measured (IN PROGRESS)
-**Started:** 2026-09-21
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
-(in progress); Phase 3F records the rest. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+**Deliverable:** `BACKLOG.md` editorial compression pass (S518 recurring item)
+— **DONE** (deliverable commit `37992d20`). Scope ratified at a structured
+gate AFTER measuring: the named regrowth check found "Pedigree diagram vs
+kinship2" **NOT regrown** (286→156 lines), so the real targets were
+"Genetic-metrics PDF audit follow-ups" (91→62 lines, incl. one extracted open
+item) + the S518 item's own pass history (91→38); owner picked that pair.
+File 561→480 lines, 47,218→39,507 B (−81 lines, −16.3%); every other open
+item byte-identical (179 prefix + 200 middle lines, proven by script).
+**Buried open thread EXTRACTED as its own item** (S686 rule): 2 audit-table
+High-priority rows ("Longitudinal genetic-health monitoring", "Ancestry
+guardrails") have NO GitHub issue — re-verified across all 166 issues in
+every state plus body searches. Now `BACKLOG.md:463`, READY / Effort S.
+**Started/completed:** 2026-09-21 (single session). Claim `22be597a`;
+deliverable `37992d20`; records + sha commits follow this handoff. **Ledger:**
+one `CHANGELOG.md` entry per action (claim, deliverable, records, sha). No
+GitHub issue named by the item → no issue close owed; the S518 item stays
+OPEN (recurring) with pass history + measured next-pass candidates written
+into its own text.
+
+**Verification (all measured; done BEFORE any cut):** 28/28 cited session
+numbers have ledger entry headings; 21/21 load-bearing facts sit inside
+those entries (first run said 0/21 — a zsh harness artifact, Learning 775);
+7/7 Learnings resolve; 9/9 cited paths + both `example_sequence_*.csv`
+exist; 14/14 issues CLOSED; no test/CI/tooling reads `BACKLOG.md` content
+(only comments + one message string).
+
+**Self-assessment (Session 752): 8/10.** **Strengths:** (1) the scope gate
+was evidence-based — the regrowth check flipped the item's premise and the
+owner chose with real numbers; (2) verification preceded cutting, and a
+false "0/21 facts found" was diagnosed as a harness bug instead of acted on
+(twice — a second checker and a `*.yaml` no-match abort hit the same zsh
+trap); (3) mechanical scope proof + zero survivors + a positive control;
+(4) the end-to-end re-read caught 2 defects in my OWN new text (a ragged
+line; "found S479" should be S483) and measuring caught 3 wrong size
+estimates; (5) **FM #28 reduction: REAL — `BACKLOG.md` −81 lines / −7,711
+B**, a mandated-read file got smaller; (6) a real buried open item was found
+and re-verified. **Weaknesses:** (1) **over-promised at the gate** — quoted
+"~150 lines removed / ~88→~12"; delivered −81. The first pass retained too
+much (73 lines) and needed a tightening pass; the estimate should have come
+from the retained-pointer policy, not from the ideal; (2) three size
+figures in my own "next-pass candidates" text were written before measuring
+(~44/~8 lines, missed empty `## Active`) — corrected only because I measured
+after writing; measure first; (3) block boundaries were initially mis-stated
+(180 vs 181; 90 vs 91 lines) — caught by the boundary assertion; (4) no TDD
+phase gate posed — docs-only, S750/S529–S531/S606 precedent, and the scope
+gate served, but I never asked the owner to confirm "TDD phases N/A".
+
+**Learnings:** `PROJECT_LEARNINGS.md` Learning 775 appended — a zero-hit
+verification sweep is a claim about the sweep until a positive control
+proves the harness; under zsh an unquoted `$files` is not word-split and an
+unmatched glob aborts the whole command; never blanket `2>/dev/null` a
+verification grep.
+
+**Next steps (specific):** (A) **File the 2 unticketed High-priority audit
+gaps (READY, S)** — `BACKLOG.md:463`. A triage session, and creating GitHub
+issues is an outward-facing action, so recommend confirming the two titles/
+bodies with the owner via `AskUserQuestion` before `gh issue create` (that
+is a recommendation, not a computed fact). First recompute the premise:
+`gh issue list --state all` — it was true on 2026-09-21 (166 issues) and may
+not be later. Source text: `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-06.md:86-87`
+(rows), `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md:116-124`
+(Finding #1) and `:309` (recommendation 2: full-feature requests gated on a
+Pre-RED design session, shaped like #147). (B) **Push+CI: NOT urgent** — 6
+docs-only commits unpushed after close-out (recount with
+`git rev-list --count origin/master..HEAD`); CI current through `a7613044`.
+(C) **BACKLOG compression is RECURRING, not urgent** — measured next-pass
+candidates are in the item itself (`BACKLOG.md:210-218`); the kinship2
+section's deeper cut needs fresh owner ratification. (D) Unchanged:
+inst/doc slimming (DECISION NEEDED, M, `BACKLOG.md:108`); REUSE registration
+(owner action, S, `:152`); kinship2-standalone BLOCKED on the S738 revisit
+conditions only (`:71`); chromote hang research (READY, M, research only,
+`:129`).
+
+**Key files:** `BACKLOG.md:180-218` (S518 item: pass history + method +
+candidates), `:419-480` (Genetic-metrics section + extracted open item at
+`:463`), `CHANGELOG.md:41` (S752 entries at top), `PROJECT_LEARNINGS.md:2240`
+(Learning 775), `HANDOFFS.md` (S752 receipt), `.quality-gates-results.json`
+(head now `37992d20`).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next
+Phase 0 — measure it; 6 unpushed expected after close-out (recount).
+(2) **BACKLOG anchors:** everything at/above `:180` is UNCHANGED; below it
+shifted UP — "Pedigree diagram vs kinship2" heading 280→`:228`, NPRC outreach
+438→`:386`, Genetic-metrics 471→`:419`; re-grep before trusting any stale
+`BACKLOG.md:2xx+` reference. (3) **zsh harness trap (Learning 775):** build
+file lists as arrays (`"${files[@]}"`), run a positive control beside any
+"expect none" sweep, never blanket `2>/dev/null` a verification grep, and an
+unmatched glob (`*.yaml`) aborts the whole command silently. (4) Ratchet
+baseline now 3,489,151 B at `37992d20` (+60 B vs S751 — build-metadata noise:
+all 5 touched files are `.Rbuildignore`d, verified `:69/72/74/76/79`); cite
+from `.quality-gates-results.json`, never the rounded run table (table
+3.48915e+06 vs file 3,489,151 — the trap again). (5) The commit trailers
+change mid-session: the claim `22be597a` carries `Claude Fable 5`, later
+commits `Claude Sonnet 5` (the harness switched the acting model) — each is
+accurate for the model that wrote it. (6) No code touched, no test suite
+run this session (docs-only; suite baseline 0 failed / 0 error / 184
+skipped stands, remotely confirmed through `a7613044`). (7) Standing set
+unchanged: `gh run list --commit` needs the FULL 40-char sha + smoke-test
+the filter before arming a monitor; `scratchpad/` invisible to git BY OWNER
+DECISION; ratchet AFTER committing (Learning 772); trim needs
+`--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; growth
+run 29/10 at close (measure, don't predict); the two `SESSION_NOTES.md`
+ceilings differ (owner decision pending).
 
 ### Session 750 Handoff Evaluation (by Session 751)
 **Score: 9/10.** **What helped:** "6 unpushed expected (recount)" measured
@@ -70,772 +185,4 @@ the execution plan as written — ALL-docs-only held, CI-current-through-
 ran verbatim. **What was missing:** nothing material (the transient-504 CI
 flake this session hit was not a knowable claim). **What was wrong:**
 nothing found — every checked claim held. **ROI:** high.
-
-### What Session 751 Did
-**Deliverable:** Push to `origin/master` + CI verification — **DONE.**
-Pushed `589cf73c..a7613044` (7 commits: 6 carried S750/S749 records + this
-session's claim riding the push, S726–S749 precedent), ALL docs-only.
-**First attempt: R-CMD-check `failure`** — diagnosed at failed-step
-granularity BEFORE reacting: failures confined to setup steps (windows
-`setup-pandoc@v2`: pandoc 3.8.3 download HTTP 504 twice then fatal; macos
-`setup-r@v2`: gfortran download 504 twice then fatal, both 14:49–14:50
-UTC); all 3 ubuntu check jobs passed; `--log-failed` showed zero package
-output on the failed platforms. Fixed as found per the S636 CI-break
-convention (no GitHub issue): `gh run rerun 35614709050 --failed` — same
-run id + headSha, ubuntu successes retained; rerun `success`. **Final
-structural verification: all 4 workflows `completed success` ON THE PUSHED
-SHA** `a761304410c079847d09de422cba73814574408b`, `headSha` echoed back per
-run: lint 4m56s (id 35614708951), pkgdown 6m52s (35614708967),
-test-coverage 10m3s (35614708970), R-CMD-check 41m49s wall ACROSS BOTH
-ATTEMPTS (35614709050 — not comparable to the 17m39s–22m17s single-attempt
-band). 0 unpushed after the push; two monitors (initial 4-workflow watch +
-a fresh rerun watch — a new watch, not an expiry re-arm).
-**Started/completed:** 2026-09-21 (single session). Claim `a7613044` (rode
-the push); records + sha commits follow this handoff. **Ledger:** one
-`CHANGELOG.md` entry per action (claim, deliverable, records, sha). No
-BACKLOG item consumed (routine operational pick).
-
-**Self-assessment (Session 751): 9/10.** **Strengths:** (1) every
-predecessor claim re-measured, not assumed (6 unpushed, 0 undocumented on
-both frontiers, growth run 27/10); (2) filter smoke-tested before arming;
-(3) the red R-CMD-check was diagnosed to failed-step granularity
-(`gh run view --json jobs` + `--log-failed`) before any action — the rerun
-was chosen on evidence (setup-step 504s, no package output), not on the
-"docs-only, must be infra" presumption; (4) verification stayed structural
-through the rerun (same run id/headSha, `headSha` echoed per run).
-**Weaknesses:** (1) **FM #28 reduction: none this session** — no
-mandated-read file got smaller (this handoff adds bytes to
-`SESSION_NOTES.md`; still under its 65,536 B ceiling) — said plainly per
-the degradation-detection row; (2) ~40 min extra wall time vs a clean
-push session (external infra; unavoidable, but it is why this session
-captured a learning where the 12 clean predecessors did not).
-
-**Learnings:** `PROJECT_LEARNINGS.md` Learning 774 appended — diagnose a
-red R-CMD-check at failed-STEP granularity before reacting; setup-step
-504s are infra; `gh run rerun --failed` keeps run id + headSha so
-`--commit` structural verification is unchanged; the both-attempts wall
-duration is not comparable to the single-attempt band.
-
-**Next steps (specific):** (A) **BACKLOG editorial compression (READY,
-L):** now the top READY pick — the S518 item at `BACKLOG.md:181`; start
-with the "Pedigree diagram vs kinship2" section's regrowth check (`:280`).
-(B) **inst/doc slimming (DECISION NEEDED, M):** owner must first ratify
-moving the 3 `html_document` vignettes to `html_vignette`
-(`BACKLOG.md:110`). (C) **kinship2-standalone stays BLOCKED** on the S738
-revisit conditions only (`BACKLOG.md:72`; owner judges; planning session
-when unblocked). (D) **Push+CI: NOT urgent** — only 2 docs-only
-records/sha commits unpushed after close-out (recount with
-`git rev-list --count origin/master..HEAD`). (E) Alternative
-code-adjacent pick: chromote CDP-timeout fallback research (READY, M,
-`BACKLOG.md:131` — research only).
-
-**Key files:** no code touched. `SESSION_NOTES.md` (this handoff),
-`HANDOFFS.md` (S751 receipt), `CHANGELOG.md:41` (S751 entries at top),
-`PROJECT_LEARNINGS.md` (Learning 774, at end),
-`.quality-gates-results.json` (head now `a7613044`).
-
-**Gotchas for the next session:** (1) Expect 0 undocumented commits at
-next Phase 0 — measure it; 2 unpushed expected after close-out (recount).
-(2) **CI is now CURRENT through `a7613044`** — every commit on
-`origin/master` has remote confirmation; the R-CMD-check green on
-`a7613044` is a RERUN (attempt 2) on the same run id 35614709050, and its
-41m49s wall duration spans both attempts — don't read it against the
-17m39s–22m17s band. (3) Ratchet baseline is now 3,489,091 B at `a7613044`
-(−20 B vs S750 — build-metadata noise; touched files `.Rbuildignore`d);
-cite from `.quality-gates-results.json`, never the rounded run table
-(table 3.48909e+06 vs file 3,489,091 this session — the trap again).
-(4) A future red R-CMD-check: read failed STEP names first (setup-* vs
-the check step) — Learning 774. (5) Standing set unchanged:
-`gh run list --commit` needs the FULL 40-char sha + smoke-test the filter
-before arming a monitor; `scratchpad/` invisible to git BY OWNER DECISION;
-ratchet AFTER committing (Learning 772); trim needs `--budget-bytes
-65536`; renv banner expected; CLAUDE.md warn band; growth run 27/10 at
-this Orient (28/10 next if nothing shrinks — measure, don't predict); the
-two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite
-baseline 0 failed / 0 error / 184 skipped, remotely confirmed through
-`a7613044` (R-CMD-check green across 5 platforms; no code changed since
-`5d281ad5`).
-
-### Session 749 Handoff Evaluation (by Session 750)
-**Score: 8/10.** **What helped:** "2 unpushed expected (recount)" measured
-exactly 2; "expect 0 undocumented; measure it" measured 0 on both frontiers
-at `9410a558`; the growth-run trajectory held (26/10 measured, exactly the
-"next if nothing shrinks" value); the S749 receipt's ratchet citation
-matched `.quality-gates-results.json` byte-for-byte (b740dd347d67,
-3,489,040 B at `589cf73c`); all four BACKLOG anchors were current
-(:181/:220/:110/:72); CI-current-through-`589cf73c` held. **What was
-wrong:** next step (A)'s premise was stale — "hand-add the 10 words to
-`inst/WORDLIST`" — but all 10 were already there (8 since 2026-08-12
-`250b33d0`, `comparator` since S680's `741b2764`, 2026-09-08). Inherited
-from the BACKLOG item rather than invented, but a one-grep computable
-claim was relayed unverified (Learning #13's compute-what's-computable
-rule); it made the top recommendation's execution plan wrong, caught in
-this session's first research step. **What was missing:** nothing else
-material. **ROI:** high.
-
-### What Session 750 Did
-**Deliverable:** WORDLIST 10-word drift Housekeeping item CLOSED as
-already-satisfied — **DONE** (deliverable commit `cc6d5d6b`). The item's
-premise was stale: all 10 words already in `inst/WORDLIST` — 8 (`sibship`,
-`waypoint`, `duplicateToReal`, `js's`, `makePedigreeMatingLayout`,
-`discoverable`, `js`, `unshaded`) hand-added 2026-08-12 by `250b33d0`
-("hand-add 76 verified words + permanent guard test"), `vis` earlier
-(`562536cf`), `comparator` 2026-09-08 by S680's `741b2764`. Closure
-evidence, all measured this session: (1) `grep -cx` = 1 per word; (2)
-fresh `spelling::spell_check_package(vignettes = TRUE)` clean; (3)
-`test_wordlist_coverage.R` guard passes (`NOT_CRAN=true`); (4) full
-`devtools::check()`: **0 errors / 0 warnings / 0 notes** (5m34s) — exceeds
-the item's "vignette-engine note only" criterion (even that note is gone),
-spelling `.Rout` comparison OK inside the check. Scope pivot
-(add-words → verify-and-close) owner-ratified at a structured gate before
-any edit. BACKLOG block (was `:180-218`) REMOVED per the completed-item
-checklist; no GitHub issue named — no issue close owed; nothing hand-added;
-no package file touched. **Started/completed:** 2026-09-21 (single
-session). Claim `aa029ae6`; deliverable `cc6d5d6b`; records + sha commits
-follow this handoff. **Ledger:** one `CHANGELOG.md` entry per action
-(claim, deliverable, records, sha).
-
-**Self-assessment (Session 750): 9/10.** **Strengths:** (1) the item's
-premise was re-measured before any edit — refuted in the first research
-step, and the deliverable pivoted with owner ratification rather than
-plowing ahead; (2) closure is four independent measurements incl. the full
-`check()` 0/0/0, with per-word provenance traced via `git log -S`; (3)
-scope held — the `LC_ALL=C` ordering discrepancy and a suspected-mojibake
-entry were investigated (dismissed: U+2019 curly apostrophes are
-legitimate) and reported, not fixed; (4) **FM #28 reduction: REAL —
-`BACKLOG.md` net −39 lines**, a mandated-read file got smaller.
-**Weaknesses:** (1) the claim stub/entry encoded the stale plan
-("hand-add the 10 words") before verifying it — harmless (the append-only
-ledger's deliverable entry corrects the record) but the claim should have
-been phrased against the item's closure criterion, not its premise;
-(2) no code touched, so the TDD RED/GREEN/REFACTOR phases were never
-entered (owner-ratified at the scope gate — deliberate, not skipped).
-
-**Learnings:** `PROJECT_LEARNINGS.md` Learning 773 appended — sweep-style
-fixes silently satisfy BACKLOG items they never looked at; re-measure an
-item's premise as the first research step, and grep `BACKLOG.md` after any
-bulk fix. Also records the WORDLIST-ordering fact (case-insensitive, not
-`LC_ALL=C`) so it isn't relitigated.
-
-**Next steps (specific):** (A) **Push + CI verification when convenient
-(routine, S):** 6 unpushed expected after close-out (4 measured
-post-deliverable + records + sha estimated at write time — recount with
-`git rev-list --count origin/master..HEAD`), ALL docs-only; CI is current
-through `589cf73c` and no code has changed since — records-currency; the
-17m39s–22m17s R-CMD-check band and full-40-char-sha `--commit` filter +
-smoke-test discipline still apply. (B) **BACKLOG editorial compression
-(READY, L):** the item shifted up ~39 lines (was `:219`, now ≈`:180` —
-re-grep before trusting); start with the "Pedigree diagram vs kinship2"
-section's regrowth check. (C) **inst/doc slimming (DECISION NEEDED, M):**
-owner must first ratify moving the 3 `html_document` vignettes to
-`html_vignette` (`BACKLOG.md:110`). (D) **kinship2-standalone stays
-BLOCKED** on the S738 revisit conditions only (`BACKLOG.md:72`; owner
-judges; planning session when unblocked).
-
-**Key files:** no code touched. `BACKLOG.md` (39-line block removed, was
-`:180-218`), `CHANGELOG.md:41` (S750 entries at top),
-`PROJECT_LEARNINGS.md` (Learning 773, at end), `SESSION_NOTES.md` (this
-handoff), `HANDOFFS.md` (S750 receipt), `.quality-gates-results.json`
-(head now `cc6d5d6b`).
-
-**Gotchas for the next session:** (1) Expect 0 undocumented commits at
-next Phase 0 — measure it; 6 unpushed expected after close-out (recount).
-(2) Ratchet baseline is now 3,489,111 B at `cc6d5d6b` (+71 B vs S749 —
-build-metadata noise, all touched files `.Rbuildignore`d); cite from
-`.quality-gates-results.json`, never the rounded run table (table
-3.48911e+06 vs file 3,489,111 this session — the trap again).
-(3) BACKLOG anchors below old `:180` shifted UP 39 lines — re-grep before
-trusting any stale `BACKLOG.md:2xx` reference. (4) Local
-`devtools::check()` is now fully clean (0 errors / 0 warnings / 0 notes) —
-the old "vignette-engine note only" expectation is obsolete; no BACKLOG
-text still references it (grepped). (5) `inst/WORDLIST` is ordered
-case-insensitively, NOT `LC_ALL=C` (Learning 773) — add future words by
-the file's actual convention and don't "fix" the ordering as a drive-by;
-its two curly-apostrophe entries are legitimate. (6) Standing set
-unchanged: `gh run list --commit` needs the FULL 40-char sha + smoke-test
-the filter before arming a monitor; `scratchpad/` invisible to git BY
-OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs
-`--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; growth
-run 26/10 at this Orient (BACKLOG.md shrank but is not budget-tracked —
-measure, don't predict); the two `SESSION_NOTES.md` ceilings differ (owner
-decision pending); suite baseline 0 failed / 0 error / 184 skipped —
-re-confirmed inside this session's `check()` (tests OK, 236s), remotely
-confirmed through `589cf73c` (no code changed since).
-
-### Session 748 Handoff Evaluation (by Session 749)
-**Score: 9/10.** **What helped:** "6 unpushed expected (recount)" measured
-exactly 6; "expect 0 undocumented; measure it" measured 0 on both frontiers
-at `cb44c898`; the growth-run trajectory held (25/10 measured at this
-Orient, exactly the "next if nothing shrinks" value); the S748 receipt's
-ratchet citation matched `.quality-gates-results.json` byte-for-byte
-(443e4de1cd50, 3,488,873 B at `73107bc8`); next step (A)'s push+CI guidance
-was the execution plan as written — ALL-docs-only held, CI-current-through-
-`5d281ad5` held, and the full-40-char-sha `--commit` filter + smoke-test
-discipline ran verbatim; the BACKLOG anchors (:180/:220/:108) were current.
-**What was missing:** nothing material. **What was wrong:** nothing found —
-every checked claim held. **ROI:** high.
-
-### What Session 749 Did
-**Deliverable:** Push to `origin/master` + CI verification — **DONE.**
-Pushed `5d281ad5..589cf73c` (7 commits: 6 carried S747–S748 records commits
-+ this session's claim riding the push, S726–S747 precedent), ALL
-docs-only. All 4 push-triggered workflows `completed success` ON THE PUSHED
-SHA `589cf73c`, verified structurally via `gh run list --commit
-<full-40-char-sha>` with `headSha` echoed back per run: lint 3m46s
-(id 35562052225), pkgdown 6m13s (35562052219), test-coverage 10m9s
-(35562052322), R-CMD-check 21m37s (35562052190) — inside the established
-17m39s–22m17s band. Records-currency push (no code changed since
-`5d281ad5`, which was already CI-confirmed). 0 unpushed after the push;
-single 30-min monitor, no re-arm. **Started/completed:** 2026-09-21
-(single session). Claim `589cf73c` (rode the push); records + sha commits
-follow this handoff. **Ledger:** one `CHANGELOG.md` entry per action
-(claim, deliverable, records, sha). No BACKLOG item consumed (routine
-operational pick).
-
-**What actually happened, in order:**
-1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both
-   frontiers at `cb44c898`; S748 receipt complete, ratchet citation matched
-   the results file byte-for-byte); CI 10/10 green, current through
-   `5d281ad5`; 6 unpushed measured; dashboard 96/100; context budget WARN =
-   CLAUDE.md warn band (26,360 B), growth run 25/10; 5 known untracked
-   files unchanged; no live sequencing-audit cluster.
-2. **Owner picked push+CI** via the Phase 0 picker (over WORDLIST drift,
-   BACKLOG compression, inst/doc slimming); claim `589cf73c`.
-3. **Push:** `5d281ad5..589cf73c`; 0 unpushed confirmed by recount.
-4. **Filter smoke test BEFORE arming:** `gh run list --commit <full sha>`
-   returned all 4 workflows on the pushed sha (lint + pkgdown in_progress,
-   R-CMD-check + test-coverage queued), `headSha` echoed back.
-5. **Single 30-min Monitor** (emit per completion incl. failures, exit when
-   all 4 done); completions arrived lint → pkgdown → test-coverage →
-   R-CMD-check, all success; no re-arm needed.
-6. **Structural verification:** all 4 `completed success`, `headSha` = the
-   pushed sha, run ids + durations recorded above.
-7. **Close-out:** ratchet AFTER the push at pushed HEAD `589cf73c`: 1/1
-   pass · 0 fail · 0 unmeasured · results b740dd347d67 · manifest
-   aa983075d6a2 (3,489,040 B ≤ 5,000,000 B, read from the results FILE —
-   the run table rounded to 3.48904e+06). +167 B vs S748's 3,488,873 B on
-   docs-only commits: all touched files are `.Rbuildignore`d (verified
-   `.Rbuildignore:72/76/79/154`), so the delta is build-metadata/gzip
-   noise, not content — not a regression.
-
-**Self-assessment (Session 749): 9/10.** **Strengths:** (1) every
-predecessor claim was re-measured, not assumed (6 unpushed, 0 undocumented,
-growth run 25/10); (2) filter smoke-tested before arming; one monitor, no
-re-arm; (3) verification is structural (`headSha` echoed back per run), not
-inferred from a green badge list; (4) the +167 B tarball delta was
-root-caused (`.Rbuildignore` line-number check) rather than hand-waved.
-**Weaknesses:** (1) **FM #28 reduction: none this session** — no
-mandated-read file got smaller (this handoff adds bytes to
-`SESSION_NOTES.md`; still well under its 65,536 B ceiling) — said plainly
-per the degradation-detection row; (2) routine operational session — no new
-learning captured (deliberate: 12th consecutive clean push+CI session,
-extending S747's "11th consecutive" precedent).
-
-**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push+CI
-session; the durable record is the CHANGELOG entries + the receipt.
-
-**Next steps (specific):** (A) **WORDLIST 10-word drift (READY, S):**
-hand-add the 10 words to `inst/WORDLIST` in `LC_ALL=C` byte order (never
-`spelling::update_wordlist()`, S230 convention); re-verify
-`devtools::check()` drops to the vignette-engine note only
-(`BACKLOG.md:180`; no BACKLOG edits this session, so anchors are
-unchanged). (B) **BACKLOG editorial compression (READY, L):** start with
-the "Pedigree diagram vs kinship2" section's regrowth check
-(`BACKLOG.md:220`; its S530 DONE-note near `:240`). (C) **inst/doc
-slimming (DECISION NEEDED, M):** owner must first ratify moving the 3
-`html_document` vignettes to `html_vignette` (`BACKLOG.md:108`).
-(D) **kinship2-standalone stays BLOCKED** on the S738 revisit conditions
-only (`BACKLOG.md:72`; owner judges; planning session when unblocked).
-(E) Push+CI: NOT urgent next session — only 2 docs-only records/sha
-commits will be unpushed after close-out (recount with
-`git rev-list --count origin/master..HEAD`).
-
-**Key files:** no code touched. `SESSION_NOTES.md` (this handoff),
-`HANDOFFS.md` (S749 receipt), `CHANGELOG.md:41` (S749 entries at top),
-`.quality-gates-results.json` (head now `589cf73c`).
-
-**Gotchas for the next session:** (1) Expect 0 undocumented commits at next
-Phase 0 — measure it; 2 unpushed expected after close-out (records + sha —
-recount). (2) **CI is now CURRENT through `589cf73c`** — every commit on
-`origin/master` has remote confirmation; only docs-only records/sha commits
-remain unpushed. (3) Ratchet baseline is now 3,489,040 B at `589cf73c`
-(+167 B build-metadata noise vs S748 — the touched files are
-`.Rbuildignore`d; don't read the delta as content growth); cite from
-`.quality-gates-results.json`, never the rounded run table (table
-3.48904e+06 vs file 3,489,040 this session — the trap again). (4) Standing
-set unchanged: `gh run list --commit` needs the FULL 40-char sha +
-smoke-test the filter before arming a monitor; `scratchpad/` invisible to
-git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs
-`--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; growth
-run 25/10 (26/10 next if nothing shrinks — measure, don't predict); the two
-`SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline
-0 failed / 0 error / 184 skipped, remotely confirmed through `589cf73c`
-(R-CMD-check green; no code changed since `5d281ad5`).
-
-### Session 747 Handoff Evaluation (by Session 748)
-**Score: 9/10.** **What helped:** "2 unpushed expected (recount)" measured
-exactly 2; "expect 0 undocumented; measure it" measured 0 on both frontiers
-at `01f1b030`; the growth-run prediction (24/10) was exact; the S747
-receipt's ratchet citation matched `.quality-gates-results.json`
-byte-for-byte; next step (A)'s iCloud-close guidance was the execution plan
-as written — `BACKLOG.md:180` was still current, and "re-check `ls R/ |
-grep ' 2\.'` and close per its own closure condition" is precisely what
-ran. **What was missing:** nothing material. **What was wrong:** nothing
-found — every checked claim held. **ROI:** high.
-
-### What Session 748 Did
-**Deliverable:** Close the iCloud "conflicted copy" duplicate-`.R`-files
-Housekeeping item per its own closure condition — **DONE** (deliverable
-commit `73107bc8`). The item (found S461, recurred S462, Learning 454)
-required the repo relocated outside iCloud AND the duplicates not
-reappearing after local rebuilds. Both conditions measured met; the BACKLOG
-block (was `BACKLOG.md:180-201`) REMOVED per the completed-item checklist,
-with the completed record (full recurrence history + closure evidence) in
-`CHANGELOG.md`. One forward-carry: the WORDLIST-drift item's
-`devtools::check()` expectation updated in place (drops to the
-vignette-engine note only — the co-present duplicate-file warning died with
-this item). No GitHub issue named by the item → no issue close owed.
-**Started/completed:** 2026-09-21 (single session). Claim `f4f4442e`;
-deliverable `73107bc8`; records + sha commits follow this handoff.
-**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable,
-records, sha).
-
-**Closure evidence (all measured this session):** (1) `pwd` =
-`~/Development/nprcgenekeepr` — no iCloud path component (the S462 blocker
-"relocation had NOT yet happened" is resolved); (2) `ls R/ | grep ' 2\.'`
-empty — second consecutive session-check (S746, S748) with owner-side
-local rebuilds in between; (3) no `*conflicted copy*` file anywhere in the
-repo; (4) the 3 previously-corrupted `.Rd` files clean in git; (5) the only
-` 2.*` residue repo-wide is 7 stale `.pper` files under `.Rproj.user/` —
-gitignored (`.gitignore:1`), 0 tracked, never sourced by package tooling:
-inert iCloud-era residue, not a recurrence.
-
-**Self-assessment (Session 748): 9/10.** **Strengths:** (1) the closure is
-five independent measurements, not an assertion; (2) scope held exactly —
-only the mandated forward-carry rode along, no drive-by fixes; (3) **FM #28
-reduction: REAL — `BACKLOG.md` net −20 lines** (24 deleted, 4 added), a
-mandated-read file got smaller; (4) the Phase 0 picker and the report ran
-in full. **Weaknesses:** (1) a working-tree slip: the deliverable's
-CHANGELOG entry was first written by REPLACING the already-committed claim
-entry's heading instead of prepending a new entry — caught by re-reading
-the diff before committing and corrected to a pure prepend (verified: the
-committed diff has 0 deletions in `CHANGELOG.md`), but the never-edit rule
-was briefly violated in the working tree; (2) closure rests on two
-session-checks plus the relocation — if iCloud residue somehow reappears,
-reopen via a fresh item (Learning 454 remains the frozen record).
-
-**Learnings:** no new `PROJECT_LEARNINGS.md` entry — the near-miss above is
-covered by the existing "an entry once committed is never edited" rule in
-`CLAUDE.md` (the countermeasure that caught it — diff re-read before
-commit — is already standing discipline); the durable record is the
-CHANGELOG entries + this handoff.
-
-**Next steps (specific):** (A) **Push + CI verification when convenient
-(routine, S):** 6 unpushed expected after close-out (4 measured
-post-deliverable + records + sha, last two estimated at write time —
-recount with `git rev-list --count origin/master..HEAD`), ALL docs-only;
-CI is current through `5d281ad5` and no code has changed since, so this is
-records-currency, not code verification — the 17m39s–22m17s R-CMD-check
-band and the full-40-char-sha `--commit` filter discipline still apply.
-(B) **BACKLOG editorial compression (READY, L):** the item is now at
-`BACKLOG.md:220`; start with the "Pedigree diagram vs kinship2" section's
-regrowth check (its S530 DONE-note now at `BACKLOG.md:240`).
-(C) **inst/doc slimming (DECISION NEEDED, M):** owner must first ratify
-moving the 3 `html_document` vignettes to `html_vignette`
-(`BACKLOG.md:108`). (D) **kinship2-standalone stays BLOCKED** on the S738
-revisit conditions only (`BACKLOG.md:72`; owner judges; planning session
-when unblocked). (E) **WORDLIST 10-word drift (READY, S):** item now at
-`BACKLOG.md:180`; note its `check()` expectation was updated this session
-(vignette-engine note only).
-
-**Key files:** no code touched. `BACKLOG.md:180` (WORDLIST item now first
-in Housekeeping, its check() expectation updated), `CHANGELOG.md:41` (S748
-entries at top), `SESSION_NOTES.md` (this handoff), `HANDOFFS.md` (S748
-receipt).
-
-**Gotchas for the next session:** (1) Expect 0 undocumented commits at next
-Phase 0 — measure it; 6 unpushed expected after close-out (recount).
-(2) Ratchet baseline is now 3,488,873 B at `73107bc8` (−78 B vs S747:
-`BACKLOG.md` is `.Rbuildignore`d — verified `.Rbuildignore:74` — so the
-delta is build-metadata noise, same class as S747's +7 B); cite from
-`.quality-gates-results.json`, never the rounded run table (this session's
-table showed 3.48887e+06 vs file 3,488,873 — the trap again).
-(3) BACKLOG line anchors below the removed block shifted up ~20 lines —
-re-grep before trusting any stale `BACKLOG.md:2xx` reference.
-(4) Standing set unchanged: `gh run list --commit` needs the FULL 40-char
-sha + smoke-test the filter before arming a monitor; `scratchpad/`
-invisible to git BY OWNER DECISION; ratchet AFTER committing (Learning
-772); trim needs `--budget-bytes 65536`; renv banner expected; CLAUDE.md
-warn band; growth run 24/10 at this session's Orient (BACKLOG.md shrank
-this session but it is not budget-tracked — measure, don't predict); the
-two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite
-baseline 0 failed / 0 error / 184 skipped, remotely confirmed through
-`5d281ad5` (no code changed since).
-
-### Session 746 Handoff Evaluation (by Session 747)
-**Score: 9/10.** **What helped:** "14 unpushed expected (recount)" measured
-exactly 14; "expect 0 undocumented; measure it" measured 0 on both frontiers
-at `8b9a0148`; the growth-run prediction (23/10) was exact; the S746 receipt's
-ratchet citation matched `.quality-gates-results.json` byte-for-byte; next
-step (A)'s push+CI guidance was the execution plan as written — the
-full-40-char-sha `--commit` filter was smoke-tested against in-flight runs
-BEFORE arming the single monitor, and R-CMD-check landed at 17m42s, inside the
-predicted 17m39s–22m17s band. **What was missing:** nothing material.
-**What was wrong:** nothing found — every checked claim held. **ROI:** high.
-
-### What Session 747 Did
-**Deliverable:** Owner-directed push to `origin/master` + CI verification —
-**DONE.** Pushed `59f1888e..5d281ad5` (15 commits: 14 carried S744–S746
-commits + this session's claim riding the push, S726–S743 precedent). All 4
-push-triggered workflows `completed success` ON THE PUSHED SHA `5d281ad5`,
-verified structurally via `gh run list --commit <full-40-char-sha>` with
-`headSha` echoed back: lint 4m51s (id 35559402091), pkgdown 6m14s
-(35559402167), test-coverage 8m42s (35559402158), R-CMD-check 17m42s
-(35559402194) — inside the established 17m39s–22m17s band. The THREE
-never-CI'd deliverables (`44bb4481` D-1, `eb896c2e` D-2, `a5a9bf42` D-3) now
-have remote CI confirmation. 0 unpushed after the push; single 30-min
-monitor, no re-arm. **Started/completed:** 2026-09-21 (single session).
-Claim `5d281ad5` (rode the push); records + sha commits follow this handoff.
-**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable, records,
-sha). No BACKLOG item consumed (routine operational pick, not a BACKLOG
-block).
-
-**What actually happened, in order:**
-1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both
-   frontiers at `8b9a0148`; S746 receipt complete, ratchet citation matched
-   the results file byte-for-byte); CI 10/10 green but current only through
-   S743's push; 14 unpushed measured; dashboard 96/100; context budget WARN =
-   CLAUDE.md warn band, growth run 23/10; 5 known untracked files unchanged;
-   no live sequencing-audit cluster.
-2. **Owner picked push+CI** via the Phase 0 picker (over iCloud-dup close,
-   BACKLOG compression, inst/doc slimming); claim `5d281ad5`.
-3. **Push:** `59f1888e..5d281ad5`; 0 unpushed confirmed by recount.
-4. **Filter smoke test BEFORE arming:** `gh run list --commit <full sha>`
-   returned all 4 workflows on the pushed sha (3 in_progress, R-CMD-check
-   queued).
-5. **Single 30-min Monitor** (emit per completion, exit when all 4 done);
-   completions arrived lint → pkgdown → test-coverage → R-CMD-check, all
-   success; no re-arm needed.
-6. **Structural verification:** all 4 `completed success`, `headSha` = the
-   pushed sha, run ids + durations recorded above.
-7. **Close-out:** ratchet AFTER the push at pushed HEAD `5d281ad5`: 1/1 pass ·
-   0 fail · 0 unmeasured · results 44c6e83894b6 · manifest aa983075d6a2
-   (3,488,951 B ≤ 5,000,000 B, read from the results FILE — the run table
-   rounded to 3.48895e+06). +7 B vs S746's 3,488,944 B on a docs-only commit:
-   all three touched files are `.Rbuildignore`d (verified), so the delta is
-   build-metadata/gzip noise, not content — not a regression.
-
-**Self-assessment (Session 747): 9/10.** **Strengths:** (1) every predecessor
-claim was re-measured, not assumed (14 unpushed, 0 undocumented, growth run
-23/10); (2) filter smoke-tested before arming; one monitor, no re-arm; (3)
-verification is structural (`headSha` echoed back per run), not inferred from
-a green badge list; (4) the +7 B tarball delta was root-caused
-(`.Rbuildignore` check) rather than hand-waved. **Weaknesses:** (1) **FM #28
-reduction: none this session** — no mandated-read file got smaller (this
-handoff adds bytes to `SESSION_NOTES.md`; still well under its 65,536 B
-ceiling) — said plainly per the degradation-detection row; (2) routine
-operational session — no new learning captured (deliberate: 11th consecutive
-clean push+CI session, extending S743's "10th consecutive" precedent).
-
-**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push+CI
-session; the durable record is the CHANGELOG entries + the receipt.
-
-**Next steps (specific):** (A) **iCloud-duplicate Housekeeping item is
-closable-on-confirmation (READY, XS):** the 2 duplicate `.R` files verified
-gone from `R/` in S746; re-check `ls R/ | grep ' 2\.'` and, if still clean
-after local rebuilds, close the item per its own closure condition
-(`BACKLOG.md:180`). (B) **BACKLOG editorial compression (READY, L):** the
-S518 item's own note says "Pedigree diagram vs kinship2" (compressed S530)
-was never re-checked for regrowth — start there (`BACKLOG.md:239`).
-(C) **inst/doc slimming (DECISION NEEDED, M):** owner must first ratify
-moving the 3 `html_document` vignettes to `html_vignette`
-(`BACKLOG.md:108`). (D) **kinship2-standalone stays BLOCKED** on the S738
-revisit conditions only (owner judges; planning session when unblocked).
-(E) WORDLIST 10-word drift (S) and the other lower-priority items unchanged.
-
-**Key files:** no code touched. `SESSION_NOTES.md` (this handoff),
-`HANDOFFS.md` (S747 receipt), `CHANGELOG.md:41` (S747 entries at top),
-`.quality-gates-results.json` (head now `5d281ad5`).
-
-**Gotchas for the next session:** (1) Expect 0 undocumented commits at next
-Phase 0 — measure it; 2 unpushed expected after close-out (records + sha —
-recount with `git rev-list --count origin/master..HEAD`). (2) **CI is now
-CURRENT through `5d281ad5`** — every code deliverable to date has remote
-confirmation; the only unpushed commits are docs-only records/sha.
-(3) Ratchet baseline is now 3,488,951 B at `5d281ad5` (+7 B build-metadata
-noise vs S746 — the touched files are `.Rbuildignore`d; don't read the delta
-as content growth); cite from `.quality-gates-results.json`, never the
-rounded run table. (4) Standing set unchanged: `gh run list --commit` needs
-the FULL 40-char sha + smoke-test the filter before arming a monitor;
-`scratchpad/` invisible to git BY OWNER DECISION; ratchet AFTER committing
-(Learning 772); trim needs `--budget-bytes 65536`; renv banner expected;
-CLAUDE.md warn band; growth run 23/10 (24/10 next if nothing shrinks —
-measure, don't predict); the two `SESSION_NOTES.md` ceilings differ (owner
-decision pending); suite baseline 0 failed / 0 error / 184 skipped — now
-ALSO remotely confirmed (R-CMD-check green on `5d281ad5`).
-
-### Session 745 Handoff Evaluation (by Session 746)
-**Score: 9/10.** **What helped:** "10 unpushed (recount)" measured exactly 10;
-"expect 0 undocumented; measure it" measured 0 on both frontiers at `41c43c35`;
-the growth-run prediction (22/10) was exact; the ratchet-table-rounds gotcha
-paid off twice — this session's own table showed 3.48894e+06 where the results
-file says 3,488,944, exactly the trap; the D-3 guidance was the execution plan
-as written (`grep -c "^#'"` = 0 re-verified still true; PRE-RED→REFACTOR gate
-posed before editing, as instructed). **What was missing:** nothing material.
-**What was wrong:** nothing found — every checked claim held. **ROI:** high.
-
-### What Session 746 Did
-**Deliverable:** Prep D-3 — **DONE** (deliverable commit `a5a9bf42`). All 13
-functions in `R/positionTreeApportion.R` now carry `@noRd` roxygen blocks
-(title + `@param` + `@return` + `@noRd`, matching `R/shrinkPedigree.R`'s
-internal-doc house style). Diff mechanically proven comment-only: exactly 160
-added `#'` lines, 0 deletions, no code touched, no line over 80 chars.
-REFACTOR-only (owner-gated PRE-RED→REFACTOR via AskUserQuestion with the exact
-edits; the RED/GREEN-skipping mapping was already owner-ratified in the BACKLOG
-tag). **Started/completed:** 2026-09-21 (single session). Claim `19de9c64`;
-deliverable `a5a9bf42`; records + sha commits follow this handoff.
-**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable, records,
-sha). BACKLOG D-3 item REMOVED in the deliverable commit (completed-item
-checklist); the kinship2-standalone item's blocker updated to the S738 revisit
-conditions ONLY (prep steps ALL DONE: D-1 S744, D-2 S745, D-3 S746), with the
-D-3 fact and prep-origin context carried forward into the item.
-
-**What actually happened, in order:**
-1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both
-   frontiers at `41c43c35`; S745 receipt complete, its ratchet citation matches
-   `.quality-gates-results.json` byte-for-byte); CI 10/10 green but current
-   only through S743's push; 10 unpushed measured; dashboard 96/100; context
-   budget WARN = CLAUDE.md warn band, growth run 22/10; 5 known untracked
-   files unchanged; no live sequencing-audit cluster.
-2. **Owner picked D-3** via the Phase 0 picker (over push+CI, BACKLOG
-   compression, inst/doc slimming); claim `19de9c64`.
-3. **Research before the gate:** workstream doc read; the full 277-line file
-   read end-to-end; 13 function definitions confirmed; `grep -c "^#'"` = 0
-   re-verified; house style sampled from `R/shrinkPedigree.R`; **the iCloud
-   duplicate files (`R/appServer 2.R`, `R/modMarkerGenetics 2.R`) confirmed
-   GONE from `R/`** — so the S461 `devtools::document()` corruption trap did
-   not apply to this session's verification plan.
-4. **PRE-RED→REFACTOR gate:** approved with the exact edits + verification
-   plan spelled out (the alternative offered: review all 13 block texts in
-   chat first).
-5. **REFACTOR:** 13 blocks written; diff verified comment-only mechanically
-   (grep on the diff's `+` lines: 1 non-`#'` line = the `+++` header).
-6. **Verification:** `devtools::document()` byte-identical no-op on `man/` +
-   `NAMESPACE` (correct outcome — `@noRd` generates nothing);
-   `test_positionTreeApportion.R` passes; full silent suite **0 failed /
-   0 error / 184 skipped** (7054 passed); lint 0 on the touched file
-   (package loaded first).
-7. **Close-out:** no NEWS.Rmd entry owed (no exported function, no
-   user-facing change — checklist consulted, not skipped); no WORDLIST risk
-   (`@noRd` text never reaches `.Rd`/vignettes, so the spelling gate cannot
-   see it); ratchet AFTER the deliverable commit (Learning 772): 1/1 pass ·
-   results b7c4dc700aa7 · manifest aa983075d6a2 (3,488,944 B ≤ 5,000,000 B at
-   `a5a9bf42`, read from the results FILE — the run table rounded to
-   3.48894e+06, re-confirming the S745 gotcha). Tarball grew +2,386 B vs
-   S745's 3,486,558 B: the roxygen comments ride in the `R/` sources —
-   expected, not a defect.
-
-**Self-assessment (Session 746): 9/10.** **Strengths:** (1) the
-comment-only claim is a measurement, not an assertion (diff `+`-line grep);
-(2) the `document()` no-op check turned "docs hygiene" into a mechanically
-verifiable outcome, and the iCloud-dup pre-check protected it; (3) scope held
-exactly (no code edits, no export changes, no drive-by fixes); (4) both the
-Phase 0 picker and the phase gate ran as structured questions.
-**Weaknesses:** (1) **FM #28 reduction: none this session** — BACKLOG.md net
-0 lines (8-line D-3 block removed but equal bytes carried forward into the
-kinship2 item); no mandated-read file got smaller — said plainly per the
-degradation-detection row, not left unsaid; (2) roxygen prose accuracy rests
-on my reading of the code, not on any gate — a wrong `@param` description
-would fail no test (mitigated by the full-file read and the engine's
-exact-value oracle tests, but it is documentation, not proof).
-
-**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean REFACTOR
-session (S745 precedent); the durable record is the CHANGELOG entries + the
-code.
-
-**Next steps (specific):** (A) **Push + CI verification is now overdue as the
-top routine pick** (S726–S743 precedent): 14 unpushed expected after close-out
-(recount with `git rev-list --count origin/master..HEAD`), and THREE
-deliverable commits (`44bb4481` R/+tests, `eb896c2e` tests, `a5a9bf42` R/
-comment-only) have never been seen by CI — expect R-CMD-check inside the
-17m39s–22m17s band; smoke-test the FULL-40-char-sha `--commit` filter against
-in-flight runs BEFORE arming any monitor. (B) **kinship2-standalone item is
-now blocked on the S738 revisit conditions ONLY** (engine churn calms + an
-accepted CRAN release) — NOT a routine pickup; when the owner judges the
-conditions met, the pickup is a planning session (`docs/planning/` boundary
-doc, evidence-based inventory; ratified scope already in the BACKLOG item).
-(C) **iCloud-duplicate Housekeeping item is now closable-on-confirmation:**
-the 2 duplicate `.R` files are gone from `R/` (verified this session); the
-item's own text says confirm non-reappearance and close — a future session
-should re-check `ls R/ | grep ' 2\.'` and, if still clean after local
-rebuilds, close the item (Effort XS). (D) Others unchanged: BACKLOG editorial
-compression (READY, L); inst/doc slimming (DECISION NEEDED, M); REUSE
-registration (owner action, S); NPRC outreach (owner review).
-
-**Key files:** `R/positionTreeApportion.R` (13 `@noRd` blocks, file now 437
-lines), `BACKLOG.md:71` (kinship2 item, blocker + prep-context updated),
-`CHANGELOG.md:41` (S746 entries at top), `HANDOFFS.md` (S746 receipt).
-
-**Gotchas for the next session:** (1) Expect 0 undocumented commits at next
-Phase 0 — measure it; 14 unpushed expected after close-out (recount).
-(2) **Cite the ratchet's measured value from `.quality-gates-results.json`,
-never the run table** — confirmed AGAIN this session (table 3.48894e+06 vs
-file 3,488,944). (3) The tarball baseline is now 3,488,944 B (grew +2,386 B
-with the roxygen — expected); don't read the delta as a regression.
-(4) Standing set unchanged: `gh run list --commit` needs the FULL 40-char
-sha + smoke-test the filter before arming a monitor; `scratchpad/` invisible
-to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs
-`--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; growth run
-22/10 (23/10 next if nothing shrinks — measure, don't predict); the two
-`SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline
-0 failed / 0 error / 184 skipped re-confirmed locally on `a5a9bf42` — remote
-confirmation for all THREE unpushed deliverables lands with the next push.
-
-### Session 744 Handoff Evaluation (by Session 745)
-**Score: 9/10.** **What helped:** "~6 unpushed (recount)" measured exactly 6;
-"expect 0 undocumented; measure it" measured 0 on both frontiers at `d1a34d0d`;
-the growth-run prediction (21/10) was exact; the D-2 guidance was the execution
-plan as written — `:1669`/`:1706` were both still current, and "agree the
-RED/GREEN phase mapping with the owner at the gate before writing anything"
-was exactly the right call (owner ratified REFACTOR-only); the
-CI-not-current-for-new-code flag fed the Phase 0 report directly. **What was
-missing:** nothing material. **What was wrong:** one immaterial slip — the
-receipt's ratchet citation transcribed the measured size as 3,486,350 B where
-`.quality-gates-results.json` says 3,486,353 B (all hashes matched, so the
-gate outcome is unaffected; mechanism identified this session: the ratchet
-table DISPLAYS a rounded value — cite from the results file, not the table).
-**ROI:** high.
-
-### What Session 745 Did
-**Deliverable:** Prep D-2 — **DONE** (deliverable commit `eb896c2e`). The two
-test-only reaches into the internal `.buildMatingUnitForest()` in
-`tests/testthat/test_modPedigree.R` (were `:1669`/`:1706`, both re-verified
-current before editing) are rewritten through `makePedigreeMatingLayout()`'s
-exported surface: the union-click no-op test now takes
-`grep("^__union_", layout$nodes$id, value = TRUE)[1L]` (the `^` anchor
-matters — waypoint ids like `__drop___union_1` contain but don't start with
-the prefix), and the duplicate-click test uses `duplicateToReal` for
-length/id/realId. Zero functional `.buildMatingUnitForest` calls remain
-outside the layout core's own test files (S667 §2.4/D6 closed). No production
-code touched; no new exports. **Phase mapping (owner-ratified via
-AskUserQuestion): REFACTOR-only** — same mapping as D-3; chosen over a
-RED→GREEN boundary-guard meta-test and over a new exported accessor. Two
-gates ran (approach; PRE-RED→REFACTOR with exact planned edits).
-**Started/completed:** 2026-09-21 (single session). Claim `d6dc0852`;
-deliverable `eb896c2e`; records + sha commits follow this handoff.
-**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable, records,
-sha). BACKLOG D-2 item consumed and REMOVED in the deliverable commit
-(completed-item checklist); the BLOCKED kinship2-build item's blocker updated
-to D-3 only (D-1 DONE S744, D-2 DONE S745), with the D-2 boundary fact
-carried forward into the item.
-
-**What actually happened, in order:**
-1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both
-   frontiers at `d1a34d0d`; S744 receipt complete except the 3-byte measured-
-   size transcription slip noted above — hashes matched, report-only); CI
-   10/10 green but current only through `59f1888e` (S744's `44bb4481`
-   unpushed); dashboard 96/100; context budget WARN = CLAUDE.md warn band,
-   growth run 21/10; 6 unpushed measured; 5 known untracked files unchanged;
-   no live sequencing-audit cluster.
-2. **Owner picked D-2** via the Phase 0 picker (over push+CI, D-3, BACKLOG
-   compression); claim `d6dc0852`.
-3. **Research before any gate:** workstream doc read; both reaches re-read in
-   place (`:1669` needs a union node id to click; `:1706` needs the dup
-   id→realId pair); `makePedigreeMatingLayout()`'s return contract read; then
-   **equivalence proven empirically before editing** — on the fixture, the
-   public return's union-id set and `duplicateToReal` mapping are identical
-   to the internal forest's (`setequal` TRUE, mapping `identical` TRUE).
-4. **Approach gate:** owner chose REFACTOR-only (recommended) over the
-   boundary-guard RED→GREEN framing and the exported-accessor option.
-5. **PRE-RED→REFACTOR gate:** approved with the exact edits spelled out.
-6. **REFACTOR:** the two blocks rewritten (+ short boundary comments);
-   grep confirms 0 functional reaches remain in `test_modPedigree.R`; full
-   file passes; full silent suite **0 failed / 0 error / 184 skipped**
-   (7054 passed); lint 0 on the touched file (package loaded first).
-7. **Close-out:** no NEWS.Rmd entry owed (no exported function, no
-   user-facing change — checklist consulted, not skipped); ratchet AFTER the
-   deliverable commit (Learning 772): 1/1 pass · results cb8622ee3020 ·
-   manifest aa983075d6a2 (3,486,558 B ≤ 5,000,000 B at `eb896c2e`, figure
-   read from the results FILE, not the rounded table display).
-
-**Self-assessment (Session 745): 9/10.** **Strengths:** (1) equivalence was a
-measurement, not an assumption — the fixture-level identity check ran before
-any edit; (2) both gates ran as structured questions with exact planned
-actions; (3) scope held exactly (no guard test, no accessor, no production
-code); (4) FM #28 reduction: BACKLOG.md net −3 lines; (5) the S744 ratchet
-transcription slip was root-caused (rounded table display) and the
-countermeasure applied in-session. **Weaknesses:** (1) REFACTOR-only means no
-new failing-test proof — correctness rests on the pre-edit equivalence
-measurement plus the suite staying green (deliberate, owner-ratified, but a
-weaker proof shape than D-1's bypass tests); (2) the union-test boundary
-comment is 4 lines — borderline density for a test file.
-
-**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean REFACTOR
-session; the durable record is the CHANGELOG entry + the code. **Reduction
-check (FM #28):** BACKLOG.md net −3 lines (7-line D-2 block removed; +4 lines
-of blocker/boundary updates) AND `SESSION_NOTES.md` trimmed 61,388 → 13,607 B
-— two mandated-read files got smaller.
-
-**Trim (rode the records commit):** the records commit was REFUSED by the
-context-budget pre-commit hook (`SESSION_NOTES.md` would have hit 27,043 tok
-vs the hook's 25,000-tok ceiling — the known "two ceilings differ" situation;
-the byte budget was fine). Resolution: `methodology_trim.py --cut 3
---budget-bytes 65536 --force --write` (SRF_RED fired as the standing gotcha
-predicts; `--force` is the established owner-ratified resolution, Learnings
-549/586/587). 13 records → `docs/archive/SESSION_NOTES-through-2026-09-20-2.md`;
-L1/L2/L3 verified via the shard's verify script with ONE expected exception —
-the frontier record (the S745 claim stub, committed at `d6dc0852`) was
-overwritten in place by this very handoff, the accepted BL-27 close-out-bundle
-pattern; manually diffed per the script's NOTE and confirmed a stub finalize,
-not data loss. The trimmer's own `[ad hoc]` CHANGELOG entry rides the same
-commit.
-
-**Next steps (specific):** (A) **Push + CI verification is now the top
-routine pick** (S726–S743 precedent): 10 unpushed after close-out (8 measured
-post-deliverable + records + sha, last two estimated at write time — recount
-with `git rev-list --count origin/master..HEAD`), and TWO code deliverables
-(`44bb4481` R/+tests/, `eb896c2e` tests/) have never been seen by CI — expect
-R-CMD-check inside the 17m39s–22m17s band; smoke-test the FULL-40-char-sha
-`--commit` filter against in-flight runs BEFORE arming any monitor.
-(B) **Prep D-3 is the last prep step** (READY, S, REFACTOR-only): `@noRd`
-roxygen blocks for `R/positionTreeApportion.R`'s 13 functions (`grep -c "^#'"`
-= 0 verified S738, not re-verified S745). When D-3 lands, the kinship2-build
-item's prep-step blocker is fully cleared (the S738 revisit-condition gates
-remain). (C) Other priorities unchanged: BACKLOG editorial compression
-(READY, L); inst/doc slimming (DECISION NEEDED, M); REUSE registration (owner
-action, S); NPRC outreach (owner review).
-
-**Key files:** `tests/testthat/test_modPedigree.R:1668-1691` (union-click
-rewrite), `:1710-1730` (duplicate-click rewrite), `BACKLOG.md:71` (D-3 now the
-first prep item), `CHANGELOG.md:41` (S745 entries at top), `HANDOFFS.md` (S745
-receipt).
-
-**Gotchas for the next session:** (1) Expect 0 undocumented commits at next
-Phase 0 — measure it; 10 unpushed after close-out (recount). (2) **Cite the
-ratchet's measured value from `.quality-gates-results.json`, never from the
-run table** — the table rounds (3.48656e+06 vs 3,486,558), which is exactly
-how S744's receipt picked up its 3-byte slip. (3) A D-3 pickup is
-REFACTOR-only by its own BACKLOG tag (no RED/GREEN), but it is still a
-phase-gated session — pose the PRE-RED→REFACTOR gate before editing.
-(4) Standing set unchanged: `gh run list --commit` needs the FULL 40-char
-sha + smoke-test the filter before arming a monitor; `scratchpad/` invisible
-to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772);
-trim needs `--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band;
-growth run 21/10 (22/10 next if nothing shrinks — measure, don't predict);
-the two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite
-baseline 0 failed / 0 error / 184 skipped locally re-confirmed this session
-on `eb896c2e` — remote confirmation for BOTH code deliverables lands with the
-next push's R-CMD-check.
-
-### Session 743 Handoff Evaluation (by Session 744)
-**Score: 9/10.** **What helped:** "2 unpushed (recount)" measured exactly 2;
-"expect 0 undocumented; measure it" measured 0 on both frontiers at `c0eaef65`;
-the ratchet citation matched `.quality-gates-results.json` byte-for-byte; the
-growth-run prediction ("20/10 next if nothing shrinks") was exact; D-1 was the
-handoff's named natural code pickup and was the owner's pick; its D-1-specific
-guidance (re-verify `R/makePedigreeDiagramData.R:1755` first; full TDD gates
-with AskUserQuestion at every transition) was the execution plan as written —
-`:1755` was still current, and all four gates ran. **What was missing:**
-nothing material. **What was wrong:** nothing found — every checked claim held.
-**ROI:** high.
 

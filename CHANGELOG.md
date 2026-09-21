@@ -38,6 +38,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-21.md` (14 record(s), 63,278 B → 14,356 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **14** record(s) (2026-08-12 → 2026-09-21) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-21.md`](docs/archive/SESSION_NOTES-through-2026-09-21.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-21.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-21.md.verify.sh)
+rather than trusting a digest printed here. Live file 63,278 B → 14,356 B (−77.3%).
+
+### 2026-09-21 · [ad hoc] S752 close-out: session records (handoff, S751 evaluation 9/10, receipt complete, self 8/10, Learning 775)
+- `SESSION_NOTES.md` handoff written (S751 evaluation: 9/10 — every
+  checked claim held exactly: 2 unpushed, 0 undocumented on both
+  frontiers, growth run 28/10, byte-identical ratchet citation, exact
+  BACKLOG tag-line anchors, CI current through `a7613044`; the one gap
+  was that S751 named only the kinship2 regrowth check and never noticed
+  "Genetic-metrics" was the section that actually regrew).
+  `HANDOFFS.md` receipt complete (self 8/10: over-promised the line count
+  at the scope gate, wrote three size figures before measuring, never
+  explicitly confirmed "TDD phases N/A"). `PROJECT_LEARNINGS.md` Learning
+  775 appended: a zero-hit verification sweep is a claim about the sweep
+  until a positive control proves the harness — under zsh an unquoted
+  `$files` is not word-split, an unmatched glob aborts the whole command,
+  and blanket `2>/dev/null` hides the one error that diagnoses it (this
+  session hit it three times). Reduction check (FM #28): REAL —
+  `BACKLOG.md` −81 lines / −7,711 B (the deliverable). Runtime smoke: n/a
+  — docs-only; all 5 touched files are `.Rbuildignore`d (`:69/72/74/76/79`)
+  and no test/CI/tooling reads `BACKLOG.md` content (grep with positive
+  control); dashboard re-run 96/100. Ratchet at `37992d20`: 1/1 pass · 0
+  fail · 0 unmeasured · results 15a11fe864f4 · manifest aa983075d6a2
+  (3,489,151 B ≤ 5,000,000 B, read from the results file; +60 B vs S751
+  is build-metadata noise).
+
 ### 2026-09-21 · [ad hoc] S752 deliverable: `BACKLOG.md` editorial compression — "Genetic-metrics PDF audit follow-ups" re-compressed (91→62 lines incl. one extracted open item) + the S518 item's own pass history condensed (91→38); file 561→480 lines, 47,218→39,507 B
 - **Scope** ratified at a structured gate (owner picked "Genetic-metrics +
   S518 history" over Genetic-metrics-only / deeper-kinship2 / full-sweep).
