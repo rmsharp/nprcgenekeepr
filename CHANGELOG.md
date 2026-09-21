@@ -38,6 +38,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S743 close-out: session records (handoff, S742 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S742 evaluation: 9/10 — 11-unpushed and
+  clean-frontier claims held exactly; ratchet citation byte-identical; growth-run
+  prediction exact; its natural-next-pick call was the owner's pick).
+  `HANDOFFS.md` receipt complete. No new `PROJECT_LEARNINGS.md` entry (routine
+  clean push, 10th consecutive). Reduction check (FM #28): nothing removed from a
+  mandated-read file — stated explicitly; `SESSION_NOTES.md` ~45 KB, next trim
+  likely 1–2 sessions out. quality_ratchet at the pushed HEAD `59f1888e`: 1/1 pass
+  · 0 fail · 0 unmeasured · results 0ddf7e4d90f7 · manifest aa983075d6a2
+  (3,483,919 B ≤ 5,000,000 B). 2 unpushed after close-out (estimate: records +
+  sha); CI current through `59f1888e`.
+
+### 2026-09-21 · [ad hoc] S743 deliverable: owner-directed push to `origin/master` + CI verification — DONE
+- Pushed `889f9896..59f1888e` (12 commits: 11 carried docs-only S737–S742
+  close-out/claim commits + the S743 claim riding the push, S726–S740 precedent).
+  All 4 push-triggered workflows `completed success` ON THE PUSHED SHA `59f1888e`,
+  verified structurally via `gh run list --commit <full-40-char-sha>` with
+  `headSha` echoed back: lint 4m22s (id 35552846756), pkgdown 5m02s (35552846743),
+  test-coverage 9m47s (35552846748), R-CMD-check 21m41s (35552846742) — inside the
+  established 17m39s–22m17s band; filter smoke-tested against in-flight runs
+  BEFORE arming the single 30-min Monitor (S736 lesson); no re-arm. 0 unpushed
+  after the push.
+
 ### 2026-09-21 · [ad hoc] S743 claim: owner-directed push to `origin/master` + CI verification *(in progress)*
 - Phase 0 clean: 0 undocumented on both frontiers at `ef0f34bb`; S742 receipt
   complete, ratchet citation matched `.quality-gates-results.json`; CI 10/10 green

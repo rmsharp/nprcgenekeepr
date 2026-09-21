@@ -158,11 +158,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S743
 date: 2026-09-20
-status: pending
-active_task: Owner-directed push to origin/master + CI verification (11 unpushed docs-only S737–S742 commits + this claim riding the push; verify all 4 workflows green on the pushed sha)
-what_was_done: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Owner-directed push to origin/master + CI verification — DONE. Pushed 889f9896..59f1888e (12 commits: 11 carried docs-only S737–S742 + the S743 claim riding the push); all 4 workflows completed success on the pushed sha. No TDD phases (push + records; no .R files); lint N/A.
+what_was_done: Claim 59f1888e (rode the push). Filter smoke-tested live BEFORE arming the monitor (S736 lesson): gh run list --commit <full-40-char-sha> returned all 4 runs with matching headSha; then one 30-min Monitor arm covering every terminal conclusion. All 4 completed success ON 59f1888e, re-verified structurally from JSON (not the monitor stream): lint 4m22s (id 35552846756), pkgdown 5m02s (35552846743), test-coverage 9m47s (35552846748), R-CMD-check 21m41s (35552846742) — inside the 17m39s–22m17s band, no re-arm. Ratchet run during the CI wait. 10th consecutive clean push (S717/S726/S729/S731/S733/S734/S735/S736/S740).
+next_steps: (A) 2 unpushed after close-out (records + sha — estimated at write time; recount with git rev-list --count origin/master..HEAD); CI current through 59f1888e; no push urgency. (B) Priorities unchanged: prep D-1/D-2/D-3 (READY, S; D-1/D-2 CODE + full TDD; D-1 doubly motivated as step 0 of the committed kinship2 package); BACKLOG compression (READY, L); inst/doc slimming (DECISION NEEDED, M); REUSE (owner action, S); NPRC outreach (owner review). (C) kinship2 build item stays BLOCKED — do NOT surface it in the Phase 0 picker until D-1/D-2/D-3 land and the S738 gates move.
+key_files: CHANGELOG.md:41 (S743 entries at top), BACKLOG.md:71 (prep D-1/D-2/D-3 — natural code pickups), BACKLOG.md:95 (BLOCKED kinship2 build item — read its purpose statement before any future planning), R/makePedigreeDiagramData.R:1755 (D-1 target, re-verify before editing)
+gotchas: Expect 0 undocumented commits at next Phase 0 — measure it; 2 unpushed (recount). CI band confirmed across 5 pushes: R-CMD-check 17m39s–22m17s, one 30-min Monitor arm suffices — ALWAYS smoke-test gh run list --commit <FULL-40-char-sha> against in-flight runs before arming. D-1/D-2 pickups are CODE sessions — full TDD gates; re-verify :1755 and test_modPedigree.R:1669/:1706 first. Standing set unchanged: scratchpad/ invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band, growth run 19/10 (20/10 next if nothing shrinks — measure, don't predict); the two SESSION_NOTES.md ceilings differ (owner decision pending); SESSION_NOTES.md ~45 KB — next trim likely 1–2 sessions out; suite baseline 2437/0/0/184/0 remote-confirmed on 59f1888e.
+runtime_smoke: n/a — push + records only (no runtime behavior changed; no .R files touched). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 0ddf7e4d90f7 · manifest aa983075d6a2 (measured 3,483,919 B ≤ 5,000,000 B at 59f1888e)
+changelog_ref: 59f1888e
 commit: pending
 ```
+<free-text: S743 +/- — plus: the S736 failure mode prevented by design (filter proven against in-flight runs before arming); deliverable verified structurally on the exact pushed sha with run ids + durations; no dead time (ratchet during the CI wait); scope held — a pure push+CI session. Minus: durations are createdAt→updatedAt and include queue time (seconds ±); nothing novel — a 10th clean push exercises the protocol but adds no new knowledge. Predecessor 9/10: 11-unpushed exact, both frontiers clean at ef0f34bb, ratchet citation byte-identical, growth-run prediction exact, and its natural-next-pick call was the owner's pick.>
 
 ```handoff
 session: S742

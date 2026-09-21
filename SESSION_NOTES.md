@@ -42,17 +42,97 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 742 Handoff Evaluation (by Session 743)
+**Score: 9/10.** **What helped:** "~11 unpushed (recount)" measured exactly 11;
+"expect 0 undocumented; measure it" measured 0 on both frontiers at `ef0f34bb`; the
+ratchet citation matched `.quality-gates-results.json` byte-for-byte; the growth-run
+prediction ("19/10 next if nothing shrinks") was exact; the push+CI natural-next-pick
+call was the owner's pick, and the carried standing set (FULL-40-char-sha smoke test,
+CI band 17m39s–22m17s, single 30-min monitor arm, ratchet-during-wait) was applied as
+written and all held — R-CMD-check measured 21m41s, inside the band, no re-arm.
+**What was missing:** nothing material. **What was wrong:** nothing found — every
+checked claim held. **ROI:** high.
+
 ### What Session 743 Did
-**Deliverable:** Owner-directed push to `origin/master` + CI verification (IN PROGRESS)
-**Started:** 2026-09-20 21:02 CDT
-**Status:** Session claimed. Work beginning. Plan: claim rides the push (S726–S740
-precedent; 11 unpushed measured at Phase 0 + this claim = 12 commits); smoke-test
-`gh run list --commit <FULL-40-char-sha>` against in-flight runs BEFORE arming the
-monitor (S736 lesson); verify all 4 workflows `completed success` on the pushed sha;
-ratchet during the CI wait (~2 min after committing, Learning 772).
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** Owner-directed push to `origin/master` + CI verification — **DONE.**
+Pushed `889f9896..59f1888e` (12 commits: the 11 unpushed docs-only S737–S742
+close-out/claim commits + the S743 claim `59f1888e` riding the push, S726–S740
+precedent). All 4 push-triggered workflows `completed success` ON THE PUSHED SHA
+`59f1888e` (verified via `gh run list --commit <full-40-char-sha>` with `headSha`
+echoed back structurally, not inferred from the monitor stream): lint 4m22s
+(id 35552846756), pkgdown 5m02s (35552846743), test-coverage 9m47s (35552846748),
+R-CMD-check 21m41s (35552846742) — inside the established 17m39s–22m17s band; single
+30-min Monitor arm covering every terminal conclusion, no re-arm. No trim needed
+this session (`SESSION_NOTES.md` ~45 KB post-handoff, under the 56,750 B one-read
+cap). No TDD phases (push + records; no `.R` files). Lint N/A.
+**Started/completed:** 2026-09-20/21 (single session). Claim `59f1888e` (rode the
+push); records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, push+CI deliverable,
+records, sha). No BACKLOG item consumed (the push was a Phase 0 owner pick).
+
+**What actually happened, in order:**
+1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both frontiers
+   at `ef0f34bb`; S742 receipt complete; ratchet citation matched the results file);
+   CI 10/10 green on master (latest 4 on `889f9896`); dashboard 96/100; context
+   budget WARN = CLAUDE.md warn band, growth run 19/10 (exactly as S742 predicted);
+   11 unpushed measured (= S742's ~11); 5 known untracked files unchanged; no live
+   sequencing-audit cluster.
+2. **Owner picked the push** via the Phase 0 AskUserQuestion picker; claim `59f1888e`
+   committed and rode the push `889f9896..59f1888e`; 0 unpushed after the push.
+3. **Filter smoke-tested live BEFORE arming the monitor** (the S736 lesson): a direct
+   `gh run list --commit <full-sha>` returned all 4 runs queued/in-progress with
+   matching `headSha` — only then was the 30-min Monitor armed, covering every
+   terminal conclusion, not success-only.
+4. **quality_ratchet run DURING the CI wait** at the pushed HEAD `59f1888e`: 1/1 pass
+   · 0 fail · 0 unmeasured · results 0ddf7e4d90f7 · manifest aa983075d6a2
+   (3,483,919 B ≤ 5,000,000 B).
+5. **CI verification:** monitor emitted each terminal conclusion (lint → pkgdown →
+   test-coverage → R-CMD-check, all success); conclusions then re-verified directly
+   from the JSON with run ids, durations, and `headSha`.
+
+**Self-assessment (Session 743): 9/10.** **Strengths:** (1) the S736 failure mode
+(silent monitor arm on a bad filter) prevented by design — filter proven against
+in-flight runs before arming; (2) deliverable verified structurally on the exact
+pushed sha with run ids + durations recorded; (3) no dead time — the ratchet ran
+during the CI wait; (4) scope held — a pure push+CI session, nothing else touched.
+**Weaknesses:** (1) durations are createdAt→updatedAt and include queue time
+(seconds ±); (2) nothing novel to report — a 10th consecutive clean push exercises
+the protocol but adds no new knowledge.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push (10th:
+S717/S726/S729/S731/S733/S734/S735/S736/S740). **Reduction check (FM #28):** nothing
+removed from a mandated-read file this session — stated explicitly; `SESSION_NOTES.md`
+has ~11 KB headroom before the one-read cap binds, so the next trim is likely 1–2
+sessions out.
+
+**Next steps (specific):** (A) 2 unpushed after close-out (records + sha — estimated
+at write time; recount with `git rev-list --count origin/master..HEAD`); CI current
+through `59f1888e`; no push urgency. (B) Priorities unchanged: prep D-1/D-2/D-3
+(READY, S each — D-1/D-2 are CODE sessions, full TDD gates; D-1 doubly motivated as
+step 0 of the committed kinship2 package); BACKLOG editorial compression (READY, L);
+inst/doc slimming (DECISION NEEDED, M); REUSE registration (owner action, S); NPRC
+outreach (owner review). (C) The kinship2 build item stays BLOCKED — not pickable
+until D-1/D-2/D-3 land and the S738 gates move; do NOT surface it in the Phase 0
+picker.
+
+**Key files:** `CHANGELOG.md:41` (S743 entries at top), `HANDOFFS.md:158` (S743
+receipt), `BACKLOG.md:71` (prep D-1/D-2/D-3 — the natural code pickups),
+`BACKLOG.md:95` (BLOCKED kinship2 build item — read its purpose statement before any
+future planning).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0 —
+measure it; 2 unpushed after close-out (recount). (2) CI band now confirmed across 5
+pushes: R-CMD-check 17m39s–22m17s; one 30-min Monitor arm suffices — and ALWAYS
+smoke-test `gh run list --commit <FULL-40-char-sha>` against the in-flight runs
+before arming. (3) A D-1/D-2 pickup is a CODE session — full TDD gates (phase
+declarations, AskUserQuestion at every transition); re-verify
+`R/makePedigreeDiagramData.R:1755` and `test_modPedigree.R:1669/:1706` before
+editing. (4) Standing set unchanged: `scratchpad/` invisible to git BY OWNER
+DECISION; ratchet ~2 min AFTER committing (Learning 772); trim needs
+`--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; growth run 19/10
+(20/10 next if nothing shrinks — measure, don't predict); the two `SESSION_NOTES.md`
+ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 —
+remote-confirmed again by R-CMD-check on `59f1888e`.
 
 ### Session 741 Handoff Evaluation (by Session 742)
 **Score: 9/10.** **What helped:** "~7 unpushed (recount)" measured exactly 7; "expect
