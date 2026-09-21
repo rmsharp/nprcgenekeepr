@@ -38,6 +38,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 740 Did
+**Deliverable:** Owner-directed push to `origin/master` + CI verification (IN PROGRESS)
+**Started:** 2026-09-20
+**Status:** Session claimed. Push of the 15 unpushed docs-only commits (+ this claim
+commit riding the push, S726–S736 precedent) beginning; CI verification on the pushed
+sha to follow.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 738 Handoff Evaluation (by Session 739)
 **Score: 9/10.** **What helped:** "~10 unpushed after close-out" measured exactly 10;
 both frontiers clean at `e3370b82` as predicted; the prep-item context (D-1/D-2/D-3 as

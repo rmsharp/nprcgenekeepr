@@ -38,6 +38,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] S740 claim: owner-directed push to `origin/master` + CI verification (in progress)
+- Session claimed via the Phase 0 picker. Scope: push the 15 unpushed docs-only
+  commits (measured at Orient, = S739's corrected count) + this claim commit riding
+  the push (S726–S736 precedent); verify all 4 push-triggered workflows on the pushed
+  sha with `gh run list --commit <full-40-char-sha>`. Close-out records the rest.
+
 ### 2026-09-20 · [ad hoc] S739 correction: unpushed-count claim in notes + receipt fixed ~12 → 14 measured (arithmetic slip forgot the records + sha commits themselves)
 - The sha-commit ledger entry below already carried the correct 14; the receipt's
   `next_steps`/`gotchas` and the notes' matching lines were the wrong forward-looking
