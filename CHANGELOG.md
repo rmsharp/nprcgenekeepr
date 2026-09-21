@@ -53,6 +53,133 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · \[ad hoc\] S749 claim: push to `origin/master` + CI verification (in progress)
+
+- Session claimed (stub + pending receipt + this entry). Phase 0 was
+  clean: 0 undocumented commits on both frontiers at `cb44c898`; S748
+  receipt complete, its ratchet citation byte-identical to
+  `.quality-gates-results.json`; CI 10/10 green, current through
+  `5d281ad5`; 6 unpushed measured (matching the S748 prediction), ALL
+  docs-only; dashboard 96/100; context budget WARN = the known
+  `CLAUDE.md` warn band, growth run 25/10; the 5 known untracked files
+  unchanged. Owner picked push+CI via the Phase 0 picker (over WORDLIST
+  drift, BACKLOG compression, inst/doc slimming). Plan: push (this claim
+  rides), smoke-test the full-40-char-sha `--commit` filter against
+  in-flight runs BEFORE arming a single monitor, then verify all 4
+  workflows `completed success` with `headSha` echoed back on the pushed
+  sha.
+
+### 2026-09-21 · \[ad hoc\] S748 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `7ad303fc`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S748 commit. S748 total: 4 commits (claim `f4f4442e`,
+  deliverable `73107bc8`, records `7ad303fc`, this one). Ahead of
+  `origin/master` by 6 after close-out (S747’s 2 records/sha + this
+  session’s 4), ALL docs-only; CI is current through `5d281ad5` and no
+  code has changed since. Expect 0 undocumented commits past the
+  frontier at next Phase 0; measure it.
+
+### 2026-09-21 · \[ad hoc\] S748 close-out: session records (handoff, S747 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S747 evaluation: 9/10 — 2-unpushed
+  and clean-frontier claims held exactly; growth-run prediction 24/10
+  exact; ratchet citation byte-identical; its iCloud-close guidance was
+  the execution plan as written; nothing found wrong). `HANDOFFS.md`
+  receipt complete. No new `PROJECT_LEARNINGS.md` entry (the session’s
+  one working-tree slip — replacing the committed claim entry’s heading
+  instead of prepending, caught by diff re-read before committing — is
+  covered by the existing never-edit rule; named plainly in the
+  self-assessment). Reduction check (FM \#28): REAL — `BACKLOG.md` net
+  −20 lines. Runtime smoke: n/a — docs-only. quality_ratchet at
+  `73107bc8`: 1/1 pass · 0 fail · 0 unmeasured · results 443e4de1cd50 ·
+  manifest aa983075d6a2 (3,488,873 B ≤ 5,000,000 B, read from the
+  results file — the run table rounded to 3.48887e+06; the −78 B vs S747
+  is build-metadata noise, `BACKLOG.md` being `.Rbuildignore`d).
+
+### 2026-09-21 · \[ad hoc\] S748 deliverable: iCloud duplicate-`.R`-files Housekeeping item CLOSED per its own closure condition; BACKLOG block removed
+
+- The item (found S461, recurred S462; `PROJECT_LEARNINGS.md` Learning
+  454): iCloud sync left `R/appServer 2.R` and `R/modMarkerGenetics 2.R`
+  in `R/`, where
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)/`devtools::document()`
+  sourced them like any other `.R` file, silently merging their stale
+  roxygen into `man/appServer.Rd`, `man/modMarkerGeneticsServer.Rd`, and
+  `man/modMarkerGeneticsUI.Rd` (corruption confirmed twice S461,
+  recurred S462 after an owner-side local rebuild; each time reverted
+  via `git checkout --`). Closure condition (the item’s own text): the
+  owner relocates the repo outside iCloud’s purview and the duplicates
+  no longer reappear after local rebuilds.
+- Closure evidence (measured this session): (1) `pwd` =
+  `~/Development/nprcgenekeepr` — no iCloud path component (the S462-era
+  blocker “relocation had NOT yet happened” is resolved); (2)
+  `ls R/ | grep ' 2\.'` empty — second consecutive session-check (S746,
+  S748) with owner-side local rebuilds in between; (3) no
+  `*conflicted copy*` file anywhere in the repo; (4) the 3
+  previously-corrupted `.Rd` files are clean in git; (5) only `2.*`
+  residue repo-wide is 7 stale `.pper` files under `.Rproj.user/` —
+  gitignored (`.gitignore:1`), 0 tracked, never sourced by package
+  tooling: inert iCloud-era residue, not a recurrence.
+- BACKLOG block (was `BACKLOG.md:180-201`) REMOVED per the
+  completed-item checklist. Forward-carry: the WORDLIST-drift item’s
+  verification target updated in place — `devtools::check()` should now
+  drop to the vignette-engine note only, since the co-present
+  duplicate-file warning died with this item. No GitHub issue named by
+  the item, so no issue close owed. Learning 454 stays as the frozen
+  historical record.
+
+### 2026-09-21 · \[ad hoc\] S748 claim: close the iCloud duplicate-`.R`-files Housekeeping item per its own closure condition (in progress)
+
+- Owner-picked via the Phase 0 picker (over BACKLOG compression,
+  inst/doc slimming, kinship2-standalone). Session claimed:
+  `SESSION_NOTES.md` stub + `HANDOFFS.md` pending receipt + this entry.
+  Phase 0 reconcile was clean (0 undocumented on both frontiers at
+  `01f1b030`; S747 receipt complete, ratchet citation matched the
+  results file byte-for-byte). Pre-check already run at Orient:
+  `ls R/ | grep ' 2\.'` returns nothing — the closure condition is met,
+  pending the item-removal + records work.
+
+### 2026-09-21 · \[ad hoc\] S747 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `f976d94f`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S747 commit. S747 total: 3 commits (claim `5d281ad5` — rode the
+  push, records `f976d94f`, this one). Ahead of `origin/master` by 2
+  after close-out (records + this one), both docs-only; CI is current
+  through `5d281ad5`. Expect 0 undocumented commits past the frontier at
+  next Phase 0; measure it.
+
+### 2026-09-21 · \[ad hoc\] S747 close-out: session records (handoff, S746 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S746 evaluation: 9/10 —
+  14-unpushed and clean-frontier claims held exactly; growth-run
+  prediction 23/10 exact; ratchet citation byte-identical; its push+CI
+  guidance was the execution plan, R-CMD-check 17m42s inside the
+  predicted band; nothing found wrong). `HANDOFFS.md` receipt complete.
+  No new `PROJECT_LEARNINGS.md` entry (routine clean push+CI, 11th
+  consecutive, extending S743’s 10th). Reduction check (FM \#28): NONE
+  this session — no mandated-read file got smaller; stated plainly
+  rather than left unsaid. Runtime smoke: n/a — push-only; the runtime
+  evidence IS the deliverable (4/4 workflows green on the pushed sha).
+  quality_ratchet at pushed HEAD `5d281ad5`: 1/1 pass · 0 fail · 0
+  unmeasured · results 44c6e83894b6 · manifest aa983075d6a2 (3,488,951 B
+  ≤ 5,000,000 B, read from the results file — the run table rounded to
+  3.48895e+06; the +7 B vs S746 is build-metadata noise, the claim
+  commit’s three touched files are all `.Rbuildignore`d, verified). 2
+  unpushed expected after close-out (records + sha); CI current through
+  `5d281ad5`.
+
+### 2026-09-21 · \[ad hoc\] S747 deliverable: owner-directed push to `origin/master` + CI verification — DONE
+
+- Pushed `59f1888e..5d281ad5` (15 commits: 14 carried S744–S746
+  close-out/ claim/deliverable commits + the S747 claim riding the push,
+  S726–S743 precedent). All 4 push-triggered workflows
+  `completed success` ON THE PUSHED SHA `5d281ad5`, verified
+  structurally via `gh run list --commit <full-40-char-sha>` with
+  `headSha` echoed back: lint 4m51s (id 35559402091), pkgdown 6m14s
+  (35559402167), test-coverage 8m42s (35559402158), R-CMD-check
+  17m42s (35559402194) — inside the established 17m39s–22m17s band;
+  filter smoke-tested against in-flight runs BEFORE arming the single
+  30-min Monitor; no re-arm. First remote CI confirmation for all THREE
+  prep deliverables (`44bb4481` D-1, `eb896c2e` D-2, `a5a9bf42` D-3). 0
+  unpushed after the push.
+
 ### 2026-09-21 · \[ad hoc\] S747 claim: owner-directed push to `origin/master` + CI verification *(in progress)*
 
 - Phase 0 clean: 0 undocumented on both frontiers at `8b9a0148`; S746
