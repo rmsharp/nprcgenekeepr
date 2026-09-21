@@ -112,8 +112,9 @@ S717/S726/S729/S731/S733/S734/S735/S736). **Reduction check (FM #28):** 12 recor
 removed from a mandated-read file this session (the trim) — `SESSION_NOTES.md`
 55,049 → 17,713 B.
 
-**Next steps (specific):** (A) ~2 unpushed after close-out (records + sha, docs-only,
-estimate at write time — recount with `git rev-list --count origin/master..HEAD`);
+**Next steps (specific):** (A) 3 unpushed after close-out (trim + records + sha —
+the ~2 first written here forgot the post-push trim commit, the same slip S739 made;
+recount with `git rev-list --count origin/master..HEAD`);
 CI current through `889f9896`; no push urgency. (B) Priorities unchanged: kinship2
 feature-gap analysis (READY, M — step 1 of the S739 item, first-class research
 pickup); prep D-1/D-2/D-3 (READY, S each — D-1/D-2 are CODE sessions, full TDD
@@ -129,7 +130,7 @@ receipt), `docs/archive/SESSION_NOTES-through-2026-09-20.md` (new shard),
 `BACKLOG.md:95` (kinship2 step-1 item — the next natural research pickup).
 
 **Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0 —
-measure it; ~2 unpushed after close-out (estimate; recount). (2) CI band now
+measure it; 3 unpushed after close-out (trim + records + sha; recount). (2) CI band now
 confirmed across 4 pushes: R-CMD-check 17m39s–22m17s; one 30-min Monitor arm
 suffices — and ALWAYS smoke-test `gh run list --commit <FULL-40-char-sha>` against
 the in-flight runs before arming. (3) `SESSION_NOTES.md` is 17.7 KB live post-trim —
