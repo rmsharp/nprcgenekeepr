@@ -38,6 +38,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [BL-prep-D-3] S746 deliverable: prep D-3 — all 13 `R/positionTreeApportion.R` functions now carry `@noRd` roxygen blocks
+- REFACTOR-only (owner-gated PRE-RED→REFACTOR with the exact edits): one
+  house-style block per function (title + `@param` + `@return` + `@noRd`,
+  matching `R/shrinkPedigree.R`'s internal-doc convention); diff is exactly
+  160 added `#'` lines, 0 deletions, no code touched; no line over 80 chars.
+  Verification: `devtools::document()` byte-identical no-op on `man/` +
+  `NAMESPACE` (`@noRd` generates nothing — and the iCloud duplicate `.R`
+  files are confirmed GONE from `R/`, so the S461 corruption trap did not
+  apply); `test_positionTreeApportion.R` passes; full silent suite 0 failed /
+  0 error / 184 skipped (7054 passed); lint 0 on the touched file (package
+  loaded first). BACKLOG D-3 block REMOVED in this commit (completed-item
+  checklist); the kinship2-standalone item's blocker updated: prep steps ALL
+  DONE (D-1 S744, D-2 S745, D-3 S746) — only the S738 revisit conditions
+  remain, with the D-3 fact and prep-origin context carried into the item.
+
 ### 2026-09-21 · [BL-prep-D-3] S746 claim: prep D-3 — `@noRd` roxygen blocks for `R/positionTreeApportion.R`'s 13 functions (in progress)
 - Phase 0 clean: 0 undocumented on both frontiers at `41c43c35`; S745 receipt
   complete, ratchet citation matches `.quality-gates-results.json` exactly;

@@ -68,17 +68,10 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
       test/observe, and a naive focal-id server filter is incompatible with the client-side
       connected-component walk).
-- [ ] **Prep D-3: add `@noRd` roxygen blocks to `R/positionTreeApportion.R`'s 13 functions**
-      (queued S738, 2026-09-20, from the accepted package-split disposition, READY, Effort S) --
-      the file has zero roxygen markers (verified S738: `grep -c "^#'"` = 0), inconsistent with
-      the rest of `R/`; documentation hygiene, no behavior change (REFACTOR-only, no RED/GREEN).
-      (Context for all three prep items: the owner accepted the S667 recommendation NOT to split
-      the layout core into its own package -- disposition recorded S738 in `CHANGELOG.md`, with
-      the 3 revisit conditions in the scoping doc §6; these steps harden the boundary in place
-      and are worthwhile whether or not a split ever happens.)
 - [ ] **Build a kinship2-similar standalone pedigree package from this repository's code —
-      committed, deferred** (disposition S742, 2026-09-20; BLOCKED -- on prep D-3
-      above (D-1 DONE S744, D-2 DONE S745) plus the S738 revisit conditions, scoping doc §6: engine churn calms + an
+      committed, deferred** (disposition S742, 2026-09-20; BLOCKED -- prep steps ALL DONE
+      (D-1 S744, D-2 S745, D-3 S746); the remaining blocker is the S738 revisit conditions
+      only, scoping doc §6: engine churn calms + an
       accepted CRAN release; Effort L, its own planning session first when unblocked) --
       owner disposition closing the S739 two-step discussion item (step 1: gap analysis
       DONE S741, `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`, 15 EQ /
@@ -99,12 +92,19 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       matrices are current practice); API shape (data-frame-as-is vs kinship2-compat layer)
       DELIBERATELY OPEN — decide at plan time with a prototype in hand. When unblocked, the
       pickup is a planning session (package boundary/plan doc in `docs/planning/`,
-      evidence-based inventory); prep D-3 is step 0's remainder — D-1 landed S744:
+      evidence-based inventory); step 0's prep is complete — D-1 landed S744:
       `makePedigreeMatingLayout(kinshipMatrix = )` (`R/makePedigreeDiagramData.R:1685`)
       is exactly the injectable boundary the package needs; D-2 landed S745: no test
       file outside the layout core's own reaches `.buildMatingUnitForest()` any more
       (the two `test_modPedigree.R` reaches now derive union/duplicate ids from the
-      exported return's `nodes$id` / `duplicateToReal`).
+      exported return's `nodes$id` / `duplicateToReal`); D-3 landed S746: all 13
+      `R/positionTreeApportion.R` functions carry `@noRd` roxygen (title + `@param` +
+      `@return`, house style), so the engine's contract is readable in place
+      (`@noRd` generates no `.Rd`, `man/`/`NAMESPACE` verified byte-identical).
+      (Prep-step origin context: the owner accepted the S667 recommendation NOT to
+      split the layout core into its own package — disposition recorded S738 in
+      `CHANGELOG.md`; the prep steps hardened the boundary in place and stand
+      whether or not a split ever happens.)
 - [ ] **(Optional, owner decision) Slim `inst/doc/` by moving the three `html_document`
       vignettes to `rmarkdown::html_vignette`** (extracted S728, 2026-09-19, from the completed
       tarball build-hygiene item — its still-open step 4; DECISION NEEDED, Effort M, its own

@@ -33,6 +33,18 @@
 
 ## ---- generic tree discovery: build a mutable node-per-id environment once --
 
+#' Create one mutable BJL bookkeeping node (internal).
+#'
+#' Environment-backed so the walks can update \code{prelim}, \code{mod},
+#' \code{shift}, \code{change}, \code{ancestor}, and \code{thread} in place.
+#'
+#' @param id character(1) node id.
+#' @param parentId character(1) parent id, or \code{NULL} for the root.
+#' @param number 0-based index of this node among its own siblings.
+#' @param children character vector of child ids, left-to-right;
+#'   \code{character(0)} for a leaf.
+#' @return An environment holding the node's BJL walk state.
+#' @noRd
 .newApportionNode <- function(id, parentId, number, children) {
   node <- new.env(parent = emptyenv())
   node$id <- id
@@ -50,6 +62,16 @@
   node
 }
 
+#' Discover the caller's tree into a node-per-id environment (internal).
+#'
+#' Depth-first walk from \code{rootId} through the generic \code{childrenOf}
+#' accessor; every visited id gets a fresh \code{.newApportionNode()} entry.
+#'
+#' @param rootId character(1) id of the tree's root.
+#' @param childrenOf function(id) returning the ordered character vector of
+#'   the node's children (\code{character(0)} for a leaf).
+#' @return An environment mapping each node id to its mutable BJL node.
+#' @noRd
 .discoverApportionTree <- function(rootId, childrenOf) {
   nodes <- new.env(parent = emptyenv())
   build <- function(id, parentId, number) {
@@ -65,18 +87,43 @@
 
 ## ---- BJL-standard helper accessors (corrected pseudocode, C2-6) ------------
 
+#' Next node down the right contour of a subtree (internal).
+#'
+#' BJL \code{nextRight()}: the last child when one exists, else the node's
+#' \code{thread} pointer (\code{NULL} when the contour ends).
+#'
+#' @param nodes the node environment from \code{.discoverApportionTree()}.
+#' @param id character(1) node id.
+#' @return character(1) id of the next right-contour node, or \code{NULL}.
+#' @noRd
 .nextRightApportion <- function(nodes, id) {
   n <- nodes[[id]]
   if (length(n$children) > 0L) return(n$children[[length(n$children)]])
   n$thread
 }
 
+#' Next node down the left contour of a subtree (internal).
+#'
+#' BJL \code{nextLeft()}: the first child when one exists, else the node's
+#' \code{thread} pointer (\code{NULL} when the contour ends).
+#'
+#' @param nodes the node environment from \code{.discoverApportionTree()}.
+#' @param id character(1) node id.
+#' @return character(1) id of the next left-contour node, or \code{NULL}.
+#' @noRd
 .nextLeftApportion <- function(nodes, id) {
   n <- nodes[[id]]
   if (length(n$children) > 0L) return(n$children[[1L]])
   n$thread
 }
 
+#' The sibling immediately to the left of a node (internal).
+#'
+#' @param nodes the node environment from \code{.discoverApportionTree()}.
+#' @param id character(1) node id.
+#' @return character(1) id of the left sibling, or \code{NULL} when the
+#'   node is the root or its parent's leftmost child.
+#' @noRd
 .leftSiblingApportion <- function(nodes, id) {
   n <- nodes[[id]]
   if (is.null(n$parent) || n$number == 0L) return(NULL)
@@ -85,6 +132,18 @@
   nodes[[n$parent]]$children[[n$number]]
 }
 
+#' Pick the shift partner for a contour overlap (internal).
+#'
+#' BJL \code{ancestor()}: \code{vim}'s recorded \code{ancestor} when that
+#' ancestor is still a sibling of \code{v} (their parents match), else the
+#' running \code{defaultAncestorId}.
+#'
+#' @param nodes the node environment from \code{.discoverApportionTree()}.
+#' @param vimId character(1) id of the left-contour comparison node.
+#' @param vId character(1) id of the node being apportioned.
+#' @param defaultAncestorId character(1) current default ancestor id.
+#' @return character(1) id of the ancestor sibling to shift against.
+#' @noRd
 .commonAncestorApportion <- function(nodes, vimId, vId, defaultAncestorId) {
   vim <- nodes[[vimId]]
   ancestorParent <- nodes[[vim$ancestor]]$parent
@@ -97,6 +156,19 @@
 
 ## ---- moveSubtree / executeShifts --------------------------------------------
 
+#' Shift a subtree right to resolve a contour overlap (internal).
+#'
+#' BJL \code{moveSubtree()}: moves the subtree rooted at \code{wRightId}
+#' right by \code{shiftVal}, recording per-node \code{shift} and
+#' \code{change} amounts so \code{.executeShiftsApportion()} can spread the
+#' spacing adjustment evenly across the intermediate siblings.
+#'
+#' @param nodes the node environment from \code{.discoverApportionTree()}.
+#' @param wLeftId character(1) id of the left (ancestor) sibling.
+#' @param wRightId character(1) id of the sibling subtree being moved.
+#' @param shiftVal numeric(1) distance to move right.
+#' @return Called for its side effects on \code{nodes}.
+#' @noRd
 .moveSubtreeApportion <- function(nodes, wLeftId, wRightId, shiftVal) {
   wLeft <- nodes[[wLeftId]]
   wRight <- nodes[[wRightId]]
@@ -108,6 +180,16 @@
   wRight$mod <- wRight$mod + shiftVal
 }
 
+#' Apply accumulated shift/change amounts to a node's children (internal).
+#'
+#' BJL \code{executeShifts()}: one right-to-left pass over \code{vId}'s
+#' children folding the aggregated \code{shift} and \code{change}
+#' bookkeeping into each child's \code{prelim} and \code{mod}.
+#'
+#' @param nodes the node environment from \code{.discoverApportionTree()}.
+#' @param vId character(1) id of the parent whose children are adjusted.
+#' @return Called for its side effects on \code{nodes}.
+#' @noRd
 .executeShiftsApportion <- function(nodes, vId) {
   kids <- nodes[[vId]]$children
   s <- 0L
@@ -123,6 +205,24 @@
 
 ## ---- apportion: local-sibling comparison-partner sourcing (corrected) ----
 
+#' Apportion one node against its left-sibling subtrees (internal).
+#'
+#' The BJL core: walks the contours of \code{vId}'s subtree and its left
+#' siblings' subtrees in lock-step and, wherever the left contour of
+#' \code{vId}'s subtree overlaps a left sibling's right contour, fires
+#' \code{.moveSubtreeApportion()} with the separating shift. Includes the
+#' post-\code{moveSubtree} modifier correction (the \code{vipMod} and
+#' \code{vopMod} increments) documented in this file's header -- required to
+#' match the real d3-hierarchy reference when two shifts compound within one
+#' call.
+#'
+#' @param nodes the node environment from \code{.discoverApportionTree()}.
+#' @param vId character(1) id of the node being apportioned.
+#' @param defaultAncestorId character(1) current default ancestor id.
+#' @param nodeGap function(leftId, rightId) returning the minimum horizontal
+#'   gap between the two nodes.
+#' @return character(1) the (possibly updated) default ancestor id.
+#' @noRd
 .apportionNode <- function(nodes, vId, defaultAncestorId, nodeGap) {
   wId <- .leftSiblingApportion(nodes, vId)
   if (is.null(wId)) return(defaultAncestorId)
@@ -189,6 +289,20 @@
 
 ## ---- firstWalk / secondWalk -----------------------------------------------
 
+#' Bottom-up first walk: compute preliminary x and modifiers (internal).
+#'
+#' BJL \code{firstWalk()}: post-order recursion assigning each node a
+#' \code{prelim} x (leaves packed left-to-right; parents centered over
+#' their children -- Aesthetic 4) and a \code{mod} carried down to its
+#' descendants, apportioning each child against its left siblings as the
+#' recursion returns.
+#'
+#' @param nodes the node environment from \code{.discoverApportionTree()}.
+#' @param vId character(1) id of the subtree root to walk.
+#' @param nodeGap function(leftId, rightId) returning the minimum horizontal
+#'   gap between the two nodes.
+#' @return \code{invisible(NULL)}; works by side effect on \code{nodes}.
+#' @noRd
 .firstWalkApportion <- function(nodes, vId, nodeGap) {
   v <- nodes[[vId]]
   kids <- v$children
@@ -224,6 +338,19 @@
   invisible(NULL)
 }
 
+#' Top-down second walk: write final x positions (internal).
+#'
+#' BJL \code{secondWalk()}: pre-order recursion writing each node's final
+#' x -- its \code{prelim} plus the accumulated ancestor modifiers -- into
+#' \code{out}.
+#'
+#' @param nodes the node environment from \code{.discoverApportionTree()}.
+#' @param vId character(1) id of the subtree root to walk.
+#' @param accumMod numeric(1) sum of the ancestor \code{mod} values above
+#'   \code{vId}.
+#' @param out environment collecting id to final-x assignments.
+#' @return \code{invisible(NULL)}; works by side effect on \code{out}.
+#' @noRd
 .secondWalkApportion <- function(nodes, vId, accumMod, out) {
   v <- nodes[[vId]]
   assign(vId, v$prelim + accumMod, envir = out)
@@ -235,6 +362,22 @@
 
 ## ---- public (internal, non-exported) entry points -------------------------
 
+#' Position a genuine tree with the BJL apportioning algorithm (internal
+#' entry point).
+#'
+#' Validates its arguments, discovers the tree through the generic
+#' \code{childrenOf} accessor, then runs the bottom-up first walk and the
+#' top-down second walk. Pedigree-agnostic by design; scoped to genuine
+#' trees whose every edge advances exactly one level (see the file header).
+#'
+#' @param rootId character(1) id of the tree's root.
+#' @param childrenOf function(id) returning the ordered character vector of
+#'   the node's children (\code{character(0)} for a leaf).
+#' @param nodeGap function(leftId, rightId) returning the minimum horizontal
+#'   gap between the two nodes; defaults to a constant gap of 1.
+#' @return A named numeric vector of final x positions, one element per
+#'   discovered node id.
+#' @noRd
 .positionTreeApportion <- function(rootId, childrenOf,
                                     nodeGap = function(a, b) 1L) {
   if (!(is.character(rootId) && length(rootId) == 1L && !is.na(rootId))) {
@@ -257,6 +400,23 @@
   unlist(mget(ids, envir = out, inherits = FALSE), use.names = TRUE)
 }
 
+#' Wrap a childrenOf accessor so a forest hangs under one synthetic
+#' super-root (internal).
+#'
+#' Lets \code{.positionTreeApportion()} lay out a multi-root forest as a
+#' single tree: the returned accessor reports \code{rootIds} as the
+#' children of \code{superRootId} and otherwise delegates to
+#' \code{childrenOf}.
+#'
+#' @param rootIds non-empty character vector of the forest's root ids
+#'   (no NA).
+#' @param childrenOf function(id) returning the ordered character vector of
+#'   the node's children (\code{character(0)} for a leaf).
+#' @param superRootId character(1) id for the synthetic super-root; must
+#'   not collide with any \code{rootIds} entry.
+#' @return A \code{function(id)} suitable as the \code{childrenOf} argument
+#'   of \code{.positionTreeApportion()}.
+#' @noRd
 .buildForestChildrenOf <- function(rootIds, childrenOf,
                                     superRootId = "__super_root__") {
   if (!(is.character(rootIds) && length(rootIds) > 0L && !anyNA(rootIds))) {
