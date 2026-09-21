@@ -168,7 +168,7 @@ key_files: no code touched. BACKLOG.md (462 lines; :463 item GONE, Genetic-metri
 gotchas: Expect 0 undocumented at next Phase 0 — measure it; 13 unpushed expected (recount). Retired premise — issue searches for longitudinal/ancestry/guardrail now legitimately HIT #167/#168; do not re-run the old verify-unfiled check expecting zeros. Ratchet baseline 3,489,135 B at c823a9f7 (−16 B vs 37992d20, build-metadata noise; measured value drifts a few bytes between runs with no package change); cite from .quality-gates-results.json (results b593a0c84084), never the rounded run table. No code, no suite run (docs-only; baseline 0/0/184 stands, remotely confirmed through a7613044). Standing set unchanged: full-40-char sha + smoke-test before arming a monitor; scratchpad/ invisible to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band 26,360 B; growth run 32/10 at Orient — measure at next Orient; the two SESSION_NOTES.md ceilings differ (owner decision pending); zsh harness traps (Learning 775).
 runtime_smoke: n/a — docs-only (no package file touched; the two created issues verified OPEN with correct titles via gh issue view). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results b593a0c84084 · manifest aa983075d6a2 (measured 3,489,135 B ≤ 5,000,000 B at c823a9f7, read from the results file)
 changelog_ref: c823a9f7
-commit: pending
+commit: 9569eb99
 ```
 Self-score 9/10 breakdown — plus: premise re-measured with a positive control before any outward
 action; #147 read before drafting; the confirm gate held (nothing filed until verbatim approval);

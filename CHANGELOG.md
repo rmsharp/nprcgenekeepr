@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S753 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `9569eb99`; carries its own entry, so no self-reference gap is left for Phase 0
+- Final S753 commit. Session total: 5 commits (claim `33e66364`,
+  deliverable `c823a9f7`, Learning 776 `2c86a035`, records `9569eb99`,
+  this sha commit) + 2 non-commit actions (issues #167/#168 created).
+  All docs-only; 13 unpushed after this commit — verify with
+  `git rev-list --count origin/master..HEAD`, not this sentence.
+
 ### 2026-09-21 · [ad hoc] S753 records: close-out records committed (handoff, receipt, evaluations)
 - `SESSION_NOTES.md` S753 handoff + S752 evaluation (9/10, one phrasing
   imprecision: "166 issues" counted issues+PRs, fresh count 107 issues —
