@@ -32,6 +32,12 @@ knitr::opts_chunk$set(echo = TRUE)
   an individual with more than one mate is drawn once per mating rather
   than once total. `makePedigreeMatingLayout()` builds this layout;
   `makePedigreeDiagramData()` is unrelated to it.
+- `makePedigreeMatingLayout()` can now be handed an already-computed
+  kinship table (a new optional `kinshipMatrix` argument) instead of
+  always recalculating relatedness itself when flagging consanguineous
+  matings. Scripts that already have a kinship table can reuse it and
+  skip the recalculation; when the argument is not used, the function
+  behaves exactly as before.
 - The Diagram tab includes a **Diagram Edge Style** toggle: choose between
   a default "Direct" straight-line connector style and an alternative
   "Rectilinear (kinship2-style)" right-angle style (issue #142).

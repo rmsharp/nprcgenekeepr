@@ -42,16 +42,128 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 743 Handoff Evaluation (by Session 744)
+**Score: 9/10.** **What helped:** "2 unpushed (recount)" measured exactly 2;
+"expect 0 undocumented; measure it" measured 0 on both frontiers at `c0eaef65`;
+the ratchet citation matched `.quality-gates-results.json` byte-for-byte; the
+growth-run prediction ("20/10 next if nothing shrinks") was exact; D-1 was the
+handoff's named natural code pickup and was the owner's pick; its D-1-specific
+guidance (re-verify `R/makePedigreeDiagramData.R:1755` first; full TDD gates
+with AskUserQuestion at every transition) was the execution plan as written —
+`:1755` was still current, and all four gates ran. **What was missing:**
+nothing material. **What was wrong:** nothing found — every checked claim held.
+**ROI:** high.
+
 ### What Session 744 Did
-**Deliverable:** Prep D-1 — invert the `kinship()` dependency in
-`makePedigreeMatingLayout()`: optional precomputed-kinship argument, default
-computes via `kinship()` exactly as today so no caller changes
-(`BACKLOG.md:71` item; CODE session, full TDD gates). (IN PROGRESS)
-**Started:** 2026-09-20 21:35 CDT
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
-(in progress); Phase 3F records the rest. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+**Deliverable:** Prep D-1 — **DONE** (deliverable commit `44bb4481`).
+`makePedigreeMatingLayout()` gained an optional `kinshipMatrix` argument
+(`R/makePedigreeDiagramData.R:1685` signature, `:1785` injection branch): a
+precomputed kinship matrix (base matrix or Matrix, dimnames = ids) replaces the
+internal `kinship()` call as the SOLE consanguinity source; default `NULL`
+computes `kinship(ped$id, ped$sire, ped$dam, ped$gen, twinRelations =
+twinRelations)` byte-identically, so no caller changes — the layout core's one
+genetics back-reference is now injectable (scoping doc §4 D3 option ii; step 0
+of the committed kinship2 standalone package). Full TDD cycle, every gate
+owner-approved via AskUserQuestion: approach (`kinshipMatrix = NULL` over
+pair-flags/`kinshipFn`), PRE-RED→RED, RED→GREEN, GREEN→REFACTOR.
+**Started/completed:** 2026-09-20 (single session). Claim `1dc5d9bd`;
+deliverable `44bb4481`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable, records,
+sha). BACKLOG D-1 item consumed and REMOVED in the deliverable commit
+(completed-item removal checklist); the BLOCKED kinship2-build item's blocker
+line updated to D-2/D-3 (D-1 DONE S744) with the boundary pointer carried
+forward into the item.
+
+**What actually happened, in order:**
+1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both
+   frontiers at `c0eaef65`; S743 receipt complete; ratchet citation matched the
+   results file); CI 10/10 green (latest 4 on `59f1888e`); dashboard 96/100;
+   context budget WARN = CLAUDE.md warn band, growth run 20/10 (as S743
+   predicted); 2 unpushed measured (= S743's estimate); 5 known untracked files
+   unchanged; no live sequencing-audit cluster.
+2. **Owner picked D-1** via the Phase 0 picker; claim `1dc5d9bd`.
+3. **Research before RED:** workstream doc read; call site + twinRelations
+   comment block re-verified current at `:1755/:1741-1754`; one production
+   caller confirmed (`R/modPedigree.R:642`); scoping doc D3 re-read; kinship()
+   return classes checked live (dense = base matrix, sparse = dgCMatrix,
+   `inherits(x, "Matrix")` TRUE only for the latter — validation covers both).
+4. **Approach gate:** owner chose `kinshipMatrix = NULL` (recommended) over
+   pair-flags and `kinshipFn`.
+5. **RED:** 7 tests appended (`test_makePedigreeMatingLayout.R:1689+`):
+   identity-vs-default on the loop fixture; bypass proof (all-zero matrix
+   suppresses the genuine 8LKBV9×FJIB3R marker); injected-marker proof (marks a
+   pair the default never would); partial-matrix safe FALSE (dam dropped from
+   dimnames); invalid-input errors (no dimnames, non-matrix); twinRelations
+   interplay (connectors still render, zero matrix wins over twin-threaded
+   kinship); issue-#164 all-isolated empty contract with matrix supplied.
+   Confirmed failing on `unused argument` with all 222 pre-existing passing.
+6. **GREEN:** signature + up-front validation + injection branch + roxygen
+   `@param`; `devtools::document()` touched only `man/makePedigreeMatingLayout.Rd`.
+   File 243/0/0; full silent regression read 0 failed / 0 error / 184 skipped.
+7. **REFACTOR:** 0 lints on both touched files (package loaded first); no
+   edits needed — recorded as a pass that found nothing.
+8. **Close-out:** NEWS.Rmd plain-language entry (Pedigree Diagram section);
+   runtime smoke = script-level both-paths-agree on shipped `smallPed`
+   (`identical(injected, default)` TRUE, 27 nodes / 26 edges); ratchet AFTER
+   the deliverable commit (Learning 772): 1/1 pass · results bd0b6b4bcfcf ·
+   manifest aa983075d6a2 (3,486,350 B ≤ 5,000,000 B at `44bb4481`).
+
+**Self-assessment (Session 744): 9/10.** **Strengths:** (1) the bypass is
+proven behaviorally (zero-matrix test), not asserted; (2) the identity test
+plus the full-suite read make "no caller changes" a measurement, not a claim;
+(3) all four TDD gates ran as structured questions with exact planned actions;
+(4) the 5-file per-commit cap held by moving NEWS.Rmd to the records commit;
+(5) FM #28 reduction: BACKLOG.md net −7 lines. **Weaknesses:** (1) runtime
+smoke is script-level, not a full Shiny launch — justified (the app's call
+site passes no `kinshipMatrix`, and the default path is proven identical) and
+stated rather than hidden; (2) REFACTOR produced no edits — the phase ran but
+was thin; (3) the roxygen `@param` is long — parameter docs are drifting
+toward CLAUDE.md-style density.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean TDD session;
+the durable record is the CHANGELOG entry + the code. **Reduction check
+(FM #28):** BACKLOG.md net −7 lines (10-line D-1 block removed, ~3 lines of
+blocker/pointer updates added) — a mandated-read file got smaller.
+
+**Next steps (specific):** (A) **Prep D-2 is the natural next code pickup**
+(READY, S, full TDD gates): rewrite the two test-only reaches into
+`.buildMatingUnitForest()` — re-verify `tests/testthat/test_modPedigree.R:1669`
+and `:1706` before editing (verified current S738, not re-verified S744).
+D-3 (REFACTOR-only roxygen hygiene) remains READY/S. (B) ~6 unpushed after
+close-out (2 carried + claim + deliverable + records + sha; last two estimated
+at write time — recount with `git rev-list --count origin/master..HEAD`).
+**The deliverable commit touches `R/` and `tests/` — CI is NOT current for the
+new code**, so a push+CI session is now the higher-value routine pick
+(S726–S743 precedent; expect R-CMD-check inside the 17m39s–22m17s band).
+(C) The a2interactive deferred-documentation pass now owes a `kinshipMatrix`
+demonstration when it next runs (S450/S478 checklist — deferred by design, not
+skipped). (D) Other priorities unchanged: BACKLOG editorial compression
+(READY, L); inst/doc slimming (DECISION NEEDED, M); REUSE registration (owner
+action, S); NPRC outreach (owner review); kinship2 build item BLOCKED on
+D-2/D-3 + S738 gates.
+
+**Key files:** `R/makePedigreeDiagramData.R:1685` (new signature), `:1785`
+(injection branch), `tests/testthat/test_makePedigreeMatingLayout.R:1689`
+(D-1 test block), `BACKLOG.md:71` (D-2/D-3 now first), `CHANGELOG.md:41`
+(S744 entries at top), `HANDOFFS.md` (S744 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next
+Phase 0 — measure it; ~6 unpushed (recount). (2) A D-2 pickup is a CODE
+session — full TDD gates (phase declarations, AskUserQuestion at every
+transition); the reaches are in `test_modPedigree.R`, so the "tests only in
+RED" phase discipline needs care: the deliverable IS a test rewrite, so agree
+the phase mapping with the owner at the gate before writing anything.
+(3) `inherits(x, "Matrix")` is FALSE for base matrices and TRUE for Matrix S4
+classes — the D-1 validation deliberately checks `is.matrix(x) || inherits(x,
+"Matrix")`; don't "simplify" it to one test. (4) Standing set unchanged:
+`gh run list --commit` needs the FULL 40-char sha; smoke-test the filter
+against in-flight runs BEFORE arming any monitor; `scratchpad/` invisible to
+git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772); trim
+needs `--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band;
+growth run 20/10 (21/10 next if nothing shrinks — measure, don't predict);
+the two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite
+baseline 0 failed / 0 error / 184 skipped locally re-confirmed this session on
+`44bb4481` — remote confirmation lands with the next push's R-CMD-check.
 
 ### Session 742 Handoff Evaluation (by Session 743)
 **Score: 9/10.** **What helped:** "~11 unpushed (recount)" measured exactly 11;

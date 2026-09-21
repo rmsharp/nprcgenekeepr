@@ -38,6 +38,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [BL-prep-D-1] S744 close-out: session records (handoff, S743 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S743 evaluation: 9/10 — 2-unpushed and
+  clean-frontier claims held exactly; ratchet citation byte-identical;
+  growth-run prediction exact; D-1 was its named pick and its guidance was the
+  execution plan). `HANDOFFS.md` receipt complete. NEWS.Rmd plain-language
+  entry rides this records commit (5-file cap kept the deliverable commit at
+  5). No new `PROJECT_LEARNINGS.md` entry (routine clean TDD session).
+  Reduction check (FM #28): BACKLOG.md net −7 lines — a mandated-read file got
+  smaller. Runtime smoke: script-level both-paths-agree on `smallPed`
+  (`identical` TRUE); quality_ratchet at deliverable HEAD `44bb4481`: 1/1 pass
+  · 0 fail · 0 unmeasured · results bd0b6b4bcfcf · manifest aa983075d6a2
+  (3,486,350 B ≤ 5,000,000 B). ~6 unpushed after close-out (recount); the
+  deliverable touches R/ + tests/, so a push+CI session is the natural next
+  routine pick.
+
 ### 2026-09-21 · [BL-prep-D-1] S744 deliverable: Prep D-1 DONE — `makePedigreeMatingLayout()` gains an optional `kinshipMatrix` argument; the layout core's one genetics back-reference is now injectable
 - Full TDD cycle, every gate owner-approved via AskUserQuestion (approach:
   `kinshipMatrix = NULL` over pair-flags/`kinshipFn`; PRE-RED→RED; RED→GREEN;
