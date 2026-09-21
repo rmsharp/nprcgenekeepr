@@ -53,6 +53,193 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · \[ad hoc\] S743 claim: owner-directed push to `origin/master` + CI verification *(in progress)*
+
+- Phase 0 clean: 0 undocumented on both frontiers at `ef0f34bb`; S742
+  receipt complete, ratchet citation matched
+  `.quality-gates-results.json`; CI 10/10 green (latest 4 on
+  `889f9896`); dashboard 96/100; context budget WARN = CLAUDE.md warn
+  band, growth run 19/10 (as S742 predicted); 11 unpushed measured (=
+  S742’s ~11). Owner picked the push via the Phase 0 picker. This claim
+  rides the push (S726–S740 precedent).
+
+### 2026-09-21 · \[ad hoc\] S742 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `9a8325c2`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S742 commit. S742 total: 4 commits (claim `222f0c5e`,
+  deliverable `4697f66c`, records `9a8325c2`, this one). Ahead of
+  `origin/master` by 11 after close-out (7 carried + these 4), all
+  docs-only; CI is current through `889f9896`. Expect 0 undocumented
+  commits past the frontier at next Phase 0; measure it.
+
+### 2026-09-21 · \[ad hoc\] S742 close-out: session records (handoff, S741 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S741 evaluation: 9/10 — 7-unpushed
+  and clean-frontier claims held exactly; its step-2 pickup guidance was
+  effectively this session’s execution plan). `HANDOFFS.md` receipt
+  complete. No new `PROJECT_LEARNINGS.md` entry (routine
+  decision/records session; the durable record is the deliverable
+  entry + the BACKLOG item). Reduction check (FM \#28): `BACKLOG.md` net
+  +6 lines by disposition-recording — stated explicitly; the
+  editorial-compression item remains the counterweight. quality_ratchet
+  at the deliverable HEAD `4697f66c`: 1/1 pass · 0 fail · 0 unmeasured ·
+  results 966c2a067d51 · manifest aa983075d6a2 (3,483,942 B ≤ 5,000,000
+  B). ~11 unpushed after close-out (estimate: 7 carried + claim +
+  deliverable + records + sha); CI current through `889f9896`; a push+CI
+  session is the natural next pick.
+
+### 2026-09-21 · \[ad hoc\] S742 deliverable: kinship2 standalone-package disposition — COMMITTED but DEFERRED, scope ratified (owner discussion, step 2 of the S739 item)
+
+- Owner briefed from
+  `docs/research/kinship2-feature-gap-analysis-2026-09-20.md` (Findings
+  \#1/#2/#4, Structural Observations 2/3, Recommendations) with the
+  question, S738-lesson style; decisions via one 4-question
+  `AskUserQuestion`:
+  1.  **Disposition: “Not now — defer, gates stand”** (prep
+      D-1/D-2/D-3 + the S738 revisit conditions, scoping doc §6), **with
+      the owner’s free-text intent recorded: the package WILL be
+      built.** Owner (near-verbatim): creation of a separate package
+      will be done and may eventually be used by nprcgenekeepr, “but
+      that is not the primary goal. The primary goal is to have a
+      standalone near equivalent package that has the enhanced features
+      offered with nprcgenekeepr and particularly the pedigree drawing,
+      annotation ability, and interactivity.” So: plan a sibling product
+      first; nprcgenekeepr adoption is secondary/optional.
+  2.  **API shape: DELIBERATELY OPEN** — data-frame-as-is vs
+      kinship2-compat layer decided at plan time with a prototype in
+      hand.
+  3.  **Drawing surface: IN** — lift the module-bound decorations
+      (`R/modPedigree.R:675-790`) into a script-callable visNetwork
+      renderer.
+  4.  **Parity closers: IN** — export shrink helpers + `bitSize`
+      (`R/shrinkPedigree.R:227-380`), port `familycheck` + `ibdMatrix`,
+      add user-suppliable layout hints; **OUT** — block-sparse
+      `makekinship`.
+- Records: the S739 two-step discussion item (`BACKLOG.md:95`) REMOVED
+  per the completed-item removal checklist; its still-open thread
+  extracted as a new BLOCKED item “Build a kinship2-similar standalone
+  pedigree package” carrying the full ratified scope + purpose statement
+  forward. Step-1 gap-doc counts (15 EQ / 8 PARTIAL / 2 ABSENT, kinship2
+  1.9.6.2) unchanged.
+
+### 2026-09-21 · \[ad hoc\] S742 claim: kinship2 standalone-package step 2 — owner discussion / packaging disposition (in progress)
+
+- Session claimed via the Phase 0 `AskUserQuestion` picker (owner pick
+  over push+CI and prep D-1/D-2). Plan: brief the owner from
+  `docs/research/kinship2-feature-gap-analysis-2026-09-20.md` (Finding
+  \#4, Structural Observation 2, Recommendations), pose the
+  Recommendation-1 packaging choices (a: df API vs compatibility layer;
+  b: lift drawing decorations to a script-callable renderer; c: export
+  shrink internals + `bitSize`) via `AskUserQuestion`, record the
+  disposition in `BACKLOG.md` + this ledger. Decision/records session —
+  no TDD phases expected. Phase 0 was clean: 0 undocumented on both
+  frontiers at `0cf0696e`; CI 10/10 green (latest 4 on `889f9896`);
+  dashboard 96/100; context budget WARN = CLAUDE.md warn band, growth
+  run 18/10; 7 unpushed measured (= S741’s estimate); 5 known untracked
+  files unchanged.
+
+### 2026-09-21 · \[ad hoc\] S741 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `27238ad3`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S741 commit. S741 total: 4 commits (claim `c9457ec7`,
+  deliverable `11f436cd`, records `27238ad3`, this one). Ahead of
+  `origin/master` by 7 after close-out (3 carried + these 4), all
+  docs-only; CI is current through `889f9896`. Expect 0 undocumented
+  commits past the frontier at next Phase 0; measure it.
+
+### 2026-09-21 · \[ad hoc\] S741 close-out: session records (handoff, S740 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S740 evaluation: 9/10 — 3-unpushed
+  and clean-frontier claims held exactly; its “measure the growth run
+  rather than predict” guidance was exactly right: 17/10, the trim did
+  not reset it). `HANDOFFS.md` receipt complete. No new
+  `PROJECT_LEARNINGS.md` entry (routine research session; the durable
+  record is the doc + the deliverable entry). Reduction check (FM \#28):
+  `BACKLOG.md` net −10 lines. quality_ratchet at the deliverable HEAD
+  `11f436cd`: 1/1 pass · 0 fail · 0 unmeasured · results c0835d09d7dc ·
+  manifest aa983075d6a2 (3,483,909 B ≤ 5,000,000 B). ~7 unpushed after
+  close-out (estimate: 3 carried + claim + deliverable + records + sha);
+  CI current through `889f9896`; push at owner’s call.
+
+### 2026-09-21 · \[ad hoc\] S741 deliverable: kinship2 feature-gap analysis — 15 equivalent / 8 partial / 2 absent across kinship2’s 25 live-enumerated exports
+
+- `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`: kinship2
+  1.9.6.2’s surface enumerated live from the installed package
+  (`getNamespaceExports` — 25 exports, 11 S3 registrations, 3 datasets;
+  the BACKLOG item’s embedded list was indeed an incomplete hint, 11 of
+  25). Every nprcgenekeepr-side claim verified against live source with
+  <file:line> evidence this session. Headline: capability parity is
+  effectively done — the compute core was already deliberately ported
+  ([`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  incl. `chrtype="x"`/MZ twins,
+  [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md) +
+  5 internal helpers), the S435 drawing gaps all closed via issues
+  \#131–#137/#145 (states re-verified via `gh issue view`), and the only
+  fully absent items are two minor utilities (`familycheck`,
+  `ibdMatrix`). Six of eight partials are shrink internals one export
+  away from equivalent; the two substantive partials are user-suppliable
+  layout hints (`autohint`) and block-sparse multi-family kinship
+  (`makekinship`). Finding \#4 names the real step-2 question: drawing
+  decorations live in the Shiny module (`R/modPedigree.R:675-790`), not
+  the exported surface. `BACKLOG.md` item updated in place (step 1 DONE
+  → step 2 DECISION NEEDED, −10 lines net). Step 2 (owner discussion)
+  deliberately not started.
+
+### 2026-09-21 · \[ad hoc\] S741 claim: kinship2 feature-gap analysis — per-feature gap table in `docs/research/` *(in progress)*
+
+- Session claimed via the Phase 0 picker. Scope: step 1 of the S739
+  kinship2-similar-package BACKLOG item (`BACKLOG.md:95`) — enumerate
+  kinship2’s exported surface at analysis time (installed package / CRAN
+  reference manual, per the item’s own caveat that its embedded list is
+  an unverified hint), classify each feature equivalent/partial/absent
+  in nprcgenekeepr, and ship the gap table to `docs/research/`. Step 2
+  (the owner discussion) stays out of scope. Close-out records the rest.
+
+### 2026-09-21 · \[ad hoc\] S740 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `f8605f07`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S740 commit. S740 total: 4 commits (claim `889f9896` — rode the
+  push, trim `4876094d`, records `f8605f07`, this one). Ahead of
+  `origin/master` by 3 after close-out (trim + records + this), all
+  docs-only; CI is current through `889f9896`. Expect 0 undocumented
+  commits past the frontier at next Phase 0; measure it.
+
+### 2026-09-21 · \[ad hoc\] S740 close-out: session records (handoff, S739 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S739 evaluation: 9/10 —
+  15-unpushed and clean-frontier claims held exactly; the full-sha
+  gotcha prevented a repeat of the S736 silent arm). `HANDOFFS.md`
+  receipt complete. No new `PROJECT_LEARNINGS.md` entry (routine clean
+  push, 9th of its kind). Reduction check: 12 records removed from a
+  mandated-read file (the trim). quality_ratchet at the pushed HEAD
+  `889f9896`: 1/1 pass · 0 fail · 0 unmeasured · results 2cb2faa00809 ·
+  manifest aa983075d6a2 (3,483,874 B ≤ 5,000,000 B). ~2 unpushed after
+  close-out (estimate: records + sha); CI current through `889f9896`.
+
+### 2026-09-21 · \[ad hoc\] S740 deliverable: push `2628cd02..889f9896` (16 commits) + CI verification — all 4 workflows green on the pushed sha
+
+- Pushed the 15 unpushed docs-only S737–S739 commits + the S740 claim
+  riding the push (S726–S736 precedent); 0 unpushed after the push. All
+  4 push-triggered workflows `completed success` on `889f9896` (headSha
+  echoed structurally): lint 4m37s (id 35548502389), pkgdown 6m13s
+  (35548502366), test-coverage 9m54s (35548502412), R-CMD-check
+  22m07s (35548502318) — inside the 17m39s–22m17s post-S732-fix band;
+  single 30-min Monitor arm, no re-arm. The `--commit` filter was
+  smoke-tested against the in-flight runs with the FULL 40-char sha
+  BEFORE the monitor was armed (the S736 lesson applied); conclusions
+  verified from the JSON, not inferred from the stream.
+
+### 2026-09-20 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-20.md` (12 record(s), 55,049 B → 17,713 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **12** record(s) (2026-09-20 →
+2026-09-20) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-20.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-20.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-20.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-20.md.verify.sh)
+rather than trusting a digest printed here. Live file 55,049 B → 17,713
+B (−67.8%).
+
 ### 2026-09-20 · \[ad hoc\] S740 claim: owner-directed push to `origin/master` + CI verification (in progress)
 
 - Session claimed via the Phase 0 picker. Scope: push the 15 unpushed

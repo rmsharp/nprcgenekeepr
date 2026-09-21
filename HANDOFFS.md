@@ -209,13 +209,102 @@ which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
 ``` handoff
-session: S740
+session: S743
 date: 2026-09-20
 status: pending
-active_task: Owner-directed push to origin/master + CI verification — push the 15 unpushed docs-only commits (+ this claim commit riding the push, S726–S736 precedent) and verify all 4 push-triggered workflows green on the pushed sha via gh run list --commit with the FULL 40-char sha.
+active_task: Owner-directed push to origin/master + CI verification (11 unpushed docs-only S737–S742 commits + this claim riding the push; verify all 4 workflows green on the pushed sha)
 what_was_done: pending
 commit: pending
 ```
+
+``` handoff
+session: S742
+date: 2026-09-20
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: kinship2 standalone-package step 2 (owner discussion / packaging disposition) — DONE. Disposition: COMMITTED but DEFERRED ("gates stand": prep D-1/D-2/D-3 + S738 revisit conditions, scoping doc §6). The S739 discussion item is closed and removed; the committed build lives as a new BLOCKED item at BACKLOG.md:95. No TDD phases (decision/records; no .R files); lint N/A.
+what_was_done: Claim 222f0c5e; deliverable 4697f66c. Owner briefed from docs/research/kinship2-feature-gap-analysis-2026-09-20.md (Findings #1/#2/#4, Structural Obs 2/3) WITH the question (S738 lesson); all four decisions in one AskUserQuestion: (1) disposition "Not now — defer, gates stand" PLUS owner free-text intent recorded near-verbatim — the package WILL be built; primary goal is a standalone near-equivalent of kinship2 carrying nprcgenekeepr's enhanced features, particularly pedigree drawing, annotation ability, and interactivity; nprcgenekeepr consuming it is secondary. (2) API shape deliberately OPEN (df-as-is vs compat layer — decide at plan time). (3) Drawing surface IN — lift R/modPedigree.R:675-790 decorations into a script-callable visNetwork renderer. (4) Parity closers IN — shrink helpers + bitSize exports, familycheck + ibdMatrix ports, user-suppliable layout hints; OUT — block-sparse makekinship. Records per the completed-item removal checklist: old 20-line item block removed, new 26-line BLOCKED build item carries scope + purpose forward; CHANGELOG deliverable entry holds the owner quote.
+next_steps: (A) ~11 unpushed after close-out (7 carried + 4 S742: claim, deliverable, records, sha — last two estimated at write time; recount with git rev-list --count origin/master..HEAD); all docs-only since 889f9896, CI current — a push+CI session is the natural next pick (S726–S740 precedent). (B) The kinship2 build item is BLOCKED, not pickable — do NOT surface it in the Phase 0 picker until D-1/D-2/D-3 land and the gates move. (C) Pickable: prep D-1/D-2/D-3 (READY, S; D-1/D-2 CODE + full TDD; D-1 now doubly motivated as step 0 of the committed package); BACKLOG compression (READY, L); inst/doc slimming (DECISION NEEDED, M); REUSE (owner action, S); NPRC outreach (owner review).
+key_files: BACKLOG.md:95 (new BLOCKED build item — a future planning session MUST read its purpose statement), CHANGELOG.md:41 (S742 entries incl. the owner quote), docs/research/kinship2-feature-gap-analysis-2026-09-20.md:186 (Recommendations — the scope evidence base), R/makePedigreeDiagramData.R:1755 (D-1 target, re-verify before editing)
+gotchas: Expect 0 undocumented commits at next Phase 0 — measure it; ~11 unpushed (recount). The disposition is COMMITTED-deferred — don't re-pose it; the one cheap open question is whether the CRAN-release gate still fits the standalone-first purpose (recorded as this session's weakness #2). D-1/D-2 pickups are CODE sessions — full TDD gates; re-verify :1755 and test_modPedigree.R:1669/:1706 first. Standing set unchanged: gh run list --commit needs the FULL 40-char sha; scratchpad/ invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band, growth run 18/10 (19/10 next if nothing shrinks; BACKLOG.md is not in the budget file — measure, don't predict); the two SESSION_NOTES.md ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 remote-confirmed on 889f9896.
+runtime_smoke: n/a — decision/records only (no runtime behavior changed; no .R files touched). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 966c2a067d51 · manifest aa983075d6a2 (measured 3,483,942 B ≤ 5,000,000 B at 4697f66c)
+changelog_ref: 4697f66c
+commit: 9a8325c2
+```
+
+\<free-text: S742 +/- — plus: briefing volunteered WITH the question
+(the S738 lesson applied by design), so the owner decided on full
+context in one round; all four decisions captured in one structured
+call; the owner’s free-text purpose statement preserved near-verbatim in
+both ledger and item (it materially redirects any future plan: sibling
+product first, not extraction-for-dependency); completed-item removal
+checklist followed exactly; scope held — nothing designed or coded on a
+committed-but-deferred item. Minus: BACKLOG.md net +6 lines (FM \#28
+tension, inherent to a scope-rich disposition); the recommended option
+carried the S738 CRAN-release gate forward unexamined even though the
+standalone-first reframing weakens its rationale — recorded as an open
+tension rather than re-posed (deliberate: one decision round).
+Predecessor 9/10: 7-unpushed exact, both frontiers clean, ratchet
+citation byte-identical, and its step-2 pickup guidance was effectively
+this session’s execution plan.\>
+
+``` handoff
+session: S741
+date: 2026-09-20
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: kinship2 feature-gap analysis (step 1 of the S739 kinship2-similar-package item) — DONE. Step 2 (owner discussion) now live as DECISION NEEDED in BACKLOG.md:95. No TDD phases (research/records; no .R files); lint N/A.
+what_was_done: Claim c9457ec7; deliverable 11f436cd — docs/research/kinship2-feature-gap-analysis-2026-09-20.md. kinship2 1.9.6.2's surface enumerated LIVE from the installed package (25 exports + 11 S3 registrations + 3 datasets; the BACKLOG item's embedded hint list was incomplete, 11 of 25). Verdict 15 equivalent / 8 partial / 2 absent, every analog claim carrying this-session file:line evidence. Key findings: compute core already deliberately ported (kinship() chrtype="x" + transitive MZ twins R/kinship.R:104; shrinkPedigree() + kinship2's 5 shrink helpers as internals R/shrinkPedigree.R:122,227-380); S435 drawing gaps ALL closed (issues #131–#137/#145 re-verified CLOSED); only familycheck + ibdMatrix fully absent (both minor); the real step-2 question is packaging — drawing decorations live in the Shiny module R/modPedigree.R:675-790, not the exported surface. BACKLOG item rewritten forward-carrying (step 1 DONE → step 2 framing, net −10 lines).
+next_steps: (A) Step 2 is the natural pickup (DECISION NEEDED, S): owner-discussion session, S738-disposition style — brief from the doc's Finding #4 + Structural Observation 2, then pose Recommendation 1's packaging choices (a: df API vs compatibility layer; b: lift drawing decorations to a script-callable renderer; c: export shrink internals) via AskUserQuestion. Read the doc's Recommendations first. (B) ~7 unpushed after close-out (3 carried + 4 S741: claim, deliverable, records, sha — last two estimated at write time; recount with git rev-list --count origin/master..HEAD); all docs-only since 889f9896, CI current, push at owner's call. (C) Other priorities unchanged: prep D-1/D-2/D-3 (READY, S; D-1/D-2 CODE + full TDD); BACKLOG compression (READY, L); inst/doc slimming (DECISION NEEDED, M); REUSE (owner action, S).
+key_files: docs/research/kinship2-feature-gap-analysis-2026-09-20.md:1 (deliverable), BACKLOG.md:95 (updated item — step-2 framing), CHANGELOG.md:41 (S741 entries), R/modPedigree.R:675 (the module-bound drawing decorations Finding #4 cites)
+gotchas: Expect 0 undocumented commits at next Phase 0 — measure it; ~7 unpushed (recount). A step-2 pickup is a decision/records session — the decision is the owner's: volunteer the briefing WITH the question (S738 lesson). The doc's 15/8/2 counts are as-of kinship2 1.9.6.2 — re-check packageVersion("kinship2") before citing as current. Standing set unchanged: gh run list --commit needs the FULL 40-char sha; scratchpad/ invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band, growth run 17/10 (the S740 trim did NOT reset it — resident total tracks CLAUDE.md alone); the two SESSION_NOTES.md ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 remote-confirmed on 889f9896.
+runtime_smoke: n/a — research/records only (no runtime behavior changed; no .R files touched). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results c0835d09d7dc · manifest aa983075d6a2 (measured 3,483,909 B ≤ 5,000,000 B at 11f436cd)
+changelog_ref: 11f436cd
+commit: 27238ad3
+```
+
+\<free-text: S741 +/- — plus: live enumeration made the scope
+authoritative and falsified the BACKLOG item’s embedded hint list
+(11/25) instead of trusting it; the decisive prior-art find
+(supplement-reproduction plan Tracks A/B already shipped) reframed the
+analysis from gap hunt to packaging question; all 25 exports + 5
+supplementary rows carry this-session <file:line> evidence; scope held
+(step 2 untouched); BACKLOG.md −10 lines net (FM \#28 reduction). Minus:
+kinship2-side per-export behavior descriptions rest on the installed
+package’s docs plus prior deparse-based ports, not a fresh per-export
+CRAN-manual re-read; EQ-D judgments (e.g., groupAddAssign ⊇
+pedigree.unrelated) are reasoned from roxygen/source, not head-to-head
+runs. Predecessor 9/10: 3-unpushed exact, both frontiers clean, ratchet
+citation byte-identical; its “measure the growth run, don’t predict”
+guidance was exactly right (17/10, trim did not reset it).\>
+
+``` handoff
+session: S740
+date: 2026-09-20
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Owner-directed push to origin/master + CI verification — DONE. Pushed 2628cd02..889f9896 (16 commits: 15 unpushed docs-only S737–S739 commits + the S740 claim riding the push, S726–S736 precedent). No TDD phases (push + docs; no .R files); lint N/A.
+what_was_done: Claim 889f9896 (rode the push); trim 4876094d. All 4 push-triggered workflows completed success ON THE PUSHED SHA 889f9896 (headSha echoed structurally from gh run list --commit with the FULL 40-char sha): lint 4m37s (id 35548502389), pkgdown 6m13s (35548502366), test-coverage 9m54s (35548502412), R-CMD-check 22m07s (35548502318) — inside the 17m39s–22m17s post-S732-fix band; single 30-min Monitor arm, no re-arm; filter smoke-tested against the in-flight runs BEFORE arming (the S736 lesson applied). Proactive SESSION_NOTES.md trim pre-handoff (file 1,701 B under the 56,750 B one-read cap): 12 records archived to docs/archive/SESSION_NOTES-through-2026-09-20.md, 55,049 → 17,713 B, L1/L2/L3 verified pre-commit, no SRF refusal.
+next_steps: (A) 3 unpushed after close-out (trim + records + sha, docs-only; the ~2 first written forgot the post-push trim commit) — recount with git rev-list --count origin/master..HEAD; CI current through 889f9896, no urgency. (B) Priorities unchanged: kinship2 feature-gap analysis (READY, M — step 1 of the S739 item); prep D-1/D-2/D-3 (READY, S each; D-1/D-2 are CODE sessions with full TDD gates); BACKLOG editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M); REUSE registration (owner action, S). (C) Growth run was 16/10 this session; whether the trim resets it depends on what the run measures (resident total prints as CLAUDE.md alone) — measure at next Phase 0 rather than predict.
+key_files: CHANGELOG.md:41 (S740 entries), HANDOFFS.md:159 (this receipt), docs/archive/SESSION_NOTES-through-2026-09-20.md:1 (new shard), BACKLOG.md:95 (kinship2 step-1 item — next natural research pickup)
+gotchas: Expect 0 undocumented commits at next Phase 0 — measure it; 3 unpushed after close-out (trim + records + sha). CI band confirmed across 4 pushes: R-CMD-check 17m39s–22m17s, one 30-min arm suffices — ALWAYS smoke-test gh run list --commit <FULL-40-char-sha> against in-flight runs before arming. SESSION_NOTES.md 17.7 KB live post-trim. Standing set unchanged: scratchpad/ invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band; the two SESSION_NOTES.md ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 remote-confirmed on 889f9896.
+runtime_smoke: n/a — push + records only (no runtime behavior changed; no .R files touched). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 2cb2faa00809 · manifest aa983075d6a2 (measured 3,483,874 B ≤ 5,000,000 B at 889f9896)
+changelog_ref: 889f9896
+commit: f8605f07
+```
+
+\<free-text: S740 +/- — plus: the S736 silent-arm failure was prevented
+by design (filter proven against in-flight runs before arming);
+deliverable verified structurally on the exact pushed sha with run ids +
+durations; ratchet ran during the CI wait (no dead time); the
+one-read-cap crossing was caught before the handoff landed. Minus:
+durations are createdAt→updatedAt and include queue time (seconds ±);
+the trim keep-count (5 records) was dry-run judgment, not a principled
+rule. Predecessor 9/10: every checked claim held — 15 unpushed exact,
+both frontiers clean, CI band exact; nothing missing or wrong.\>
 
 ``` handoff
 session: S739
