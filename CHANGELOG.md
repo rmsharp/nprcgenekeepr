@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [BL-prep-D-1] S744 claim: Prep D-1 — invert the `kinship()` dependency in `makePedigreeMatingLayout()` *(in progress)*
+- Owner picked Prep D-1 via the Phase 0 picker (`BACKLOG.md:71`). Scope: add an
+  optional argument accepting a precomputed kinship matrix (or consanguinity
+  flags) to `makePedigreeMatingLayout()`, defaulting to computing via
+  `kinship()` exactly as today so no caller changes; preserve `twinRelations`
+  threading semantics. CODE session — full TDD gates. Claim stub + pending
+  receipt ride this commit.
+
 ### 2026-09-21 · [ad hoc] S743 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `b7689145`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S743 commit. S743 total: 3 commits (claim `59f1888e` — rode the push,
   records `b7689145`, this one). Ahead of `origin/master` by 2 after close-out

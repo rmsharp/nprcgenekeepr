@@ -156,6 +156,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S744
+date: 2026-09-20
+status: pending
+active_task: Prep D-1 — invert the kinship() dependency in makePedigreeMatingLayout(): optional precomputed-kinship argument, default computes via kinship() as today (BACKLOG.md:71; CODE session, full TDD gates). IN PROGRESS.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S743
 date: 2026-09-20
 status: complete

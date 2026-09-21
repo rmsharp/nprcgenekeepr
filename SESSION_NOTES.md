@@ -42,6 +42,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 744 Did
+**Deliverable:** Prep D-1 — invert the `kinship()` dependency in
+`makePedigreeMatingLayout()`: optional precomputed-kinship argument, default
+computes via `kinship()` exactly as today so no caller changes
+(`BACKLOG.md:71` item; CODE session, full TDD gates). (IN PROGRESS)
+**Started:** 2026-09-20 21:35 CDT
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 742 Handoff Evaluation (by Session 743)
 **Score: 9/10.** **What helped:** "~11 unpushed (recount)" measured exactly 11;
 "expect 0 undocumented; measure it" measured 0 on both frontiers at `ef0f34bb`; the
