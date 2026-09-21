@@ -38,6 +38,50 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S752 deliverable: `BACKLOG.md` editorial compression — "Genetic-metrics PDF audit follow-ups" re-compressed (91→62 lines incl. one extracted open item) + the S518 item's own pass history condensed (91→38); file 561→480 lines, 47,218→39,507 B
+- **Scope** ratified at a structured gate (owner picked "Genetic-metrics +
+  S518 history" over Genetic-metrics-only / deeper-kinship2 / full-sweep).
+  Docs-only: no code, no TDD phase entered, one file besides this ledger.
+- **Regrowth check (the S606-requested one) — "Pedigree diagram vs
+  kinship2": NOT regrown** (286 → 156 lines; S686's completed-item
+  removals shrank it; what remains is S530's own ratified summary — a
+  deeper cut needs fresh owner ratification, recorded in the item).
+  "Genetic-metrics" is what actually regrew (80 → 91 via the issue #148
+  chain S703–S708) and is now fully closed.
+- **Verified BEFORE cutting** (all measured this session): 28/28 cited
+  session numbers have a ledger entry heading (CHANGELOG.md + archive
+  shards); 21/21 load-bearing facts sit inside those entries (a first run
+  reported 0/21 — a zsh harness artifact, see Learning 775 — rerun with an
+  explicit file array: 21/21); 7/7 cited Learnings resolve; 9/9 cited
+  paths + both `example_sequence_*.csv` fixtures exist; all 14 issues
+  (#125–#130, #146–#153) CLOSED via `gh issue view`; the one fact dropped
+  in a tightening pass ("8-agent" S483 workflow) recoverable from two
+  archive shards.
+- **Buried open thread EXTRACTED as its own item** (S686 rule): 2
+  audit-table High-priority rows — "Longitudinal genetic-health
+  monitoring" and "Ancestry guardrails in breeding decisions" — have no
+  GitHub issue; re-verified by title search across all 166 issues in
+  every state plus body searches (3 incidental hits #118/#76/#47 ruled
+  out by title). Now a READY / Effort S triage item with the audit's own
+  recommended shapes carried forward. Also removed a dangling "see the
+  compressed entry below" pointer that no longer had a target.
+- **Mechanical proof of scope:** boundary-asserted whole-range
+  replacement (Learning 537); 179 prefix + 200 middle lines byte-identical
+  to the pre-edit file (every other open item untouched); 0 survivors of
+  any removed paragraph; positive control passed. The end-to-end re-read
+  caught 2 defects in the NEW text before commit (a ragged line; "found
+  S479" → "found S483" — S479 produced the audit table, S483's sequencing
+  audit found the gap), and 3 size estimates in the "next-pass
+  candidates" text were corrected to measured values (45-line Tier block,
+  6-line LabKey remainder, empty `## Active` heading).
+- **Estimate vs delivered (said plainly):** the scope gate quoted "~150
+  lines removed"; actual is −81 lines / −7,711 B (−16.3%). The gap is the
+  18-line extracted open item plus the retained session/path/Learning
+  pointers; a second tightening pass took Genetic-metrics narrative from
+  55 → 44 lines. The S518 item stays OPEN as RECURRING maintenance (its
+  own text now carries the pass history, method, and measured
+  next-pass candidates). No GitHub issue named → no issue close owed.
+
 ### 2026-09-21 · [ad hoc] S752 claim: BACKLOG editorial compression pass (S518 item) *(in progress)*
 - Session claimed: stub + pending receipt + this entry. Owner picked the
   S518 recurring-maintenance item (`BACKLOG.md:181`) via the Phase 0

@@ -178,96 +178,44 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       §10.2, "the lever is receipt size, and the mechanism would be a norm plus a check, not
       an archiver") is worth adopting for `CHANGELOG.md` specifically.
 - [ ] **`BACKLOG.md`'s own ledger-size housekeeping -- editorial compression, not a
-      `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L) -- `BACKLOG.md`
-      itself is one of the dashboard's 3-file HIGH-risk ledger-size items but does not fit
-      `methodology_trim.py`'s chronological-record model: it has 10 `##` sections, each a large
-      *standing topical category* that accumulates resolved-item narrative indefinitely, not dated
-      newest-on-top records. The file's own header already states the right remedy: "Open,
-      actionable work only... for history see `CHANGELOG.md`."
-      **Housekeeping section DONE -- S529 (2026-08-12):** an inventory pass (background agent, full
-      read of all 2,501 then-current lines) found 62 top-level items file-wide, 48 fully resolved,
-      ~1,500 compressible lines total, concentrated in 3 oversized sections (Housekeeping,
-      "Pedigree diagram vs kinship2," "Genetic-metrics PDF audit"). Scoped to Housekeeping only for
-      this session (owner-picked via `AskUserQuestion`, over top-15-file-wide / single-biggest-item
-      / prep-only alternatives) -- self-contained, bounded by clean section headers. All 17 of its
-      19 fully-resolved items compressed to the file's own established short-pointer convention; the
-      8 genuinely-open items (incl. this one) left untouched. **2 items had NO existing
-      `CHANGELOG.md` entry at all** (a real ledger gap, FM #27 -- not just verbose narrative): the
-      `inst/extdata/` reorg (Sessions 415-418) and the non-portable-filename fix (Session 497).
-      Backfilled proper `CHANGELOG.md` entries for both before compressing, rather than compress to
-      a dangling pointer that would have destroyed the only detailed record. Net: Housekeeping
-      147→389 lines (263 removed); file total 2,501→2,238 (263 removed). Zero information loss
-      verified by re-reading the full compressed section end-to-end before close-out.
-      **"Pedigree diagram vs kinship2 audit follow-ups" section DONE -- S530 (2026-08-12):** the
-      2nd of the item's 2 remaining sections. Compressed all 12 fully-resolved bulleted items (issues
-      #131/#134/#135/#139, Option 2 layout feasibility/design/3 implementation slices, the
-      duplicate-node-arc fix, issues #143/#144) to the file's own short-pointer convention, and
-      condensed the ~375-line unbulleted S480-S500 Progress-narrative chain (Tier 1 crash-bug fixes +
-      #145 spike + doc refresh; Tier 2 issues #133/#136/#137/#145, all closed) into one ~50-line
-      consolidated summary retaining every session number, design-doc path, and Learning
-      cross-reference. Verified `CHANGELOG.md` (+ its `docs/archive/CHANGELOG-through-*.md` shards)
-      actually carries an entry for all 31 session numbers cited before compressing to a pointer --
-      0 gaps found this time (unlike the Housekeeping section's 2). All Learning cross-references and
-      all 11 cited `docs/planning|audits|research/*` file paths confirmed to resolve. The 4 genuinely
-      -open items (Candidate C's connector idea; the 3 dangling-parent-crash-bugs and free-pass-filter
-      pointers, both already short; the node-count-off-by-one gap; the docstring-mismatch gap; the
-      `highlightNearest` degree=6 bound) left untouched. Net: section 896->286 lines (610 removed);
-      file total 2,254->1,658 (596 removed, after this session's own S518-item progress notes added
-      lines back elsewhere in the file). Zero information loss verified by re-reading the full
-      compressed section end-to-end before close-out.
-      **"Genetic-metrics PDF audit follow-ups" section DONE -- S531 (2026-08-12):** the 3rd and
-      last of the item's 3 oversized sections. Compressed 8 fully-resolved issue chains
-      (#126/#127/#129/#130's shared sequencing-decision bullet, plus the individually-tracked
-      #147/#149/#146/#151/#150/#153 design->slice narrative chains) to the file's own short-pointer
-      convention; also condensed the S479-S483 re-audit/sequencing context note (still relevant --
-      it names the still-open items) without losing any issue number, tier assignment, or audit-doc
-      pointer. Left the still-open issue #152 chain (design S517, Slice 1 S525, Slice 2 S526, Slice
-      3 next) fully untouched, matching the S529/S530 "leave open items untouched" precedent. An
-      early compression pass left a real duplication defect -- the #153 chain's design paragraph was
-      replaced but its 3 slice-by-slice progress paragraphs (S520/S521-523/S524) were missed and
-      briefly duplicated the new compressed bullet -- caught by this session's own end-to-end re-read
-      before close-out and fixed by removing the now-redundant paragraphs. Verified `CHANGELOG.md`
-      (+ both `docs/archive/CHANGELOG-through-*.md` shards) carries an entry for all 39 session
-      numbers cited before compressing to a pointer -- 0 gaps found. All Learning cross-references
-      and all 13 cited `docs/planning|audits/*` file paths confirmed to resolve. Net: section
-      753->267 lines (486 removed); file total 1,658->1,173 (485 removed, some absorbed by this
-      item's own progress-note growth). Zero information loss verified by re-reading the full
-      compressed section end-to-end before close-out.
-      **The S518 item is now fully RESOLVED -- all 3 oversized sections compressed across 3
-      sessions:** Housekeeping (S529, 147->389 lines), "Pedigree diagram vs kinship2" (S530,
-      896->286 lines), "Genetic-metrics PDF audit follow-ups" (S531, 753->267 lines). File total:
-      2,501 lines (S529 start) -> 1,173 lines (S531 end), a 1,328-line/53% reduction across 3
-      sessions, with zero information loss at any step (each session's own end-to-end re-read plus
-      CHANGELOG.md/Learning/file-path cross-reference verification). See `CHANGELOG.md`.
-      **Correction (S606, 2026-08-18): "fully RESOLVED" held only as a snapshot -- a standing
-      topical section regrows as later sessions append their own progress narrative to it, exactly
-      the accumulation pattern this item's own opening paragraph names as the root problem.**
-      Between S531 and this session, 3 further issue #152 slice-completion sessions (S532/S533/
-      S535) each appended their own multi-paragraph progress update to "Genetic-metrics PDF audit
-      follow-ups," regrowing it from S531's 267 lines back to 304 -- with issue #152 now fully
-      closed (S535), unlike at S531's compression time (then still open, Slice 3 pending). Owner
-      picked this section for re-compression this session via `AskUserQuestion` (over "Pedigree
-      diagram vs kinship2" and "both sections"). Re-compressed: the 6 progress paragraphs (S517
-      design + Slices 1-5) condensed into 1 consolidated summary retaining every session number,
-      design-doc path, and Learning cross-reference. Also corrected 2 stale claims found in the
-      same pass, not just compressed around them: the section's own intro paragraph still said
-      "#152 (Deferred) is in progress (Slice 3 next)" (superseded by S535's close); and the S535
-      paragraph's own "shinytest2/chromote headless-modal-rendering harness limitation" finding was
-      never corrected in place after `PROJECT_LEARNINGS.md` Learning 542 (S536) retracted it as a
-      test-pedigree-fixture defect (missing `birth` column), not a harness limitation. Verified
-      `CHANGELOG.md` (+ its `docs/archive/CHANGELOG-through-*.md` shards) carries an entry for all
-      6 session numbers cited (S517/S525/S526/S532/S533/S535) before compressing to a pointer -- 0
-      gaps found (1 apparent gap, S492, was a search-pattern false negative: the archive heading
-      reads "Session 492," not "S492"). All 6 cited `PROJECT_LEARNINGS.md` Learning
-      cross-references (532/538/539/540/541/542) and the 1 cited `docs/planning/*.md` path
-      confirmed to resolve; issues #152/#153's CLOSED state independently confirmed via
-      `gh issue view`, not assumed from prose. Net: section 304->80 lines (224 removed); file
-      total 1,881->1,657 (224 removed). Zero information loss verified by re-reading the full
-      compressed section end-to-end before close-out. **"Pedigree diagram vs kinship2" (S530's own
-      prior compression target) was NOT re-checked this session for the same regrowth pattern** --
-      out of this session's own scope; a future session should check whether it, too, has regrown
-      since S530, and should treat this item's own "fully RESOLVED" framing as describing a
-      recurring maintenance need, not a one-time fix. See `CHANGELOG.md`.
+      `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L; RECURRING --
+      last pass S752, 2026-09-21) -- `BACKLOG.md` is one of the dashboard's HIGH-risk ledger-size
+      items but does not fit `methodology_trim.py`'s chronological-record model: its `##` sections
+      are standing *topical* categories that accumulate resolved-item narrative indefinitely, not
+      dated newest-on-top records. The file's own header states the remedy ("Open, actionable work
+      only... for history see `CHANGELOG.md`"). Sections **regrow** as later sessions append their
+      own progress narrative (S606 found the S531 "fully RESOLVED" claim was only a snapshot), so
+      this is a recurring maintenance pass, never a one-time fix.
+      **Pass history** (per-pass detail in `CHANGELOG.md`): S529 Housekeeping section (263 lines
+      removed; its inventory found 2 items with NO ledger entry -- the `inst/extdata/` reorg
+      S415-418 and the non-portable-filename fix S497, a real FM #27 gap -- and both were
+      backfilled before compressing); S530 "Pedigree diagram vs kinship2" (896->286 lines); S531
+      "Genetic-metrics PDF audit follow-ups" (753->267; file total 2,501->1,173 across the three
+      passes); S606 re-compressed Genetic-metrics after regrowth (304->80) and fixed 2 stale claims
+      found in the same pass; **S752** (2026-09-21) re-compressed Genetic-metrics again (regrown to
+      91 lines by the issue #148 chain, all 14 issues now closed -> 62 lines incl. the extracted
+      open item), condensed this item's own pass history (91 -> 38 lines), extracted the
+      Genetic-metrics section's one buried open thread as its own item, and ran the
+      S606-requested regrowth check on "Pedigree diagram vs kinship2": **NOT regrown**
+      (286->156 lines; S686's completed-item removals shrank it, and what remains is S530's own
+      ratified summary).
+      **Method (every pass, all steps):** before compressing anything to a pointer, (1) verify
+      `CHANGELOG.md` + `docs/archive/CHANGELOG-*.md` carry an entry heading for every session
+      number cited AND that the load-bearing facts are inside those entries (a heading alone proves
+      little); (2) confirm every cited Learning / doc path resolves and every issue state via
+      `gh issue view`, not prose; (3) extract any buried open thread as its own item first; (4)
+      replace whole line ranges mechanically (Learning 537: a partial `old_string` leaves later
+      paragraphs duplicated beside the new bullet); (5) leave open items byte-untouched; (6)
+      re-read the compressed result end to end.
+      **Candidates for the next pass (measured S752; re-grep, sizes not anchors):** "Pedigree
+      diagram vs kinship2" -- its ~30-line S436 triage intro + ~45-line "Tier 1/Tier 2 DONE" block
+      are resolved narrative (~60-75 lines recoverable), but that is a DEEPER cut than S530
+      ratified, so it needs fresh owner ratification, and its 4 open items stay untouched; the
+      LabKey item -- ~44 lines, mostly DONE narrative for Recs #1-#5 (S143-S152) around an
+      ~6-line open remainder; structural residue -- a duplicate empty `## Up Next` heading and
+      an empty `## Active` heading near the top, an empty `## Documents` heading, and two
+      fully-resolved section stubs (`## Architecture follow-ups`, ~15 lines;
+      `## Architecture (issue #122 / XARCH-2 ...)`, ~6 lines).
 - [ ] (found S568, 2026-08-14, incidental to this session's own `pkgbuild::build()` verification,
       Effort S, not fixed this session) **An empty, untracked `inst/extdata/reference/untitled
       folder` directory** (dated 2026-08-13, the same day as the now-resolved "Compounding Loop"
@@ -469,93 +417,64 @@ test). The living contract is `docs/architecture/module-contract.md`; it is enfo
 Learnings".)*
 
 ## Genetic-metrics PDF audit follow-ups (from GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md)
-*S419's capability-comparison audit (`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`)
-compared the package against the 2015 NHP Genetics and Genomics Working Group PDF and found 12
-missing / 9 partial findings (of 37 total). Triaged S422 (2026-07-29) via owner `AskUserQuestion`
-picks -- all 6 findings/clusters owner-directed to file as GitHub issues, tracked there, not here:
-**#125** (configurable ranking-priority scheme + surface multiple breeding-group candidates,
-Dimensions 1 & 2), **#126** (kinship/genome-uniqueness distribution shape statistics -- skewness,
-kurtosis, Dimension 3), **#127** (surface `correctUnknownParentMeanKinship()`'s silently-dropped
-`flagged` list, Dimension 4), **#128** (breeding-group exclusion is top-N rank-based, not a
-genetic-value floor, Dimension 2), **#129** (pedigree-diagram/tree visualization, currently
-table-only, Dimension 7), **#130** (marker-based kinship/heterozygosity/parentage-verification +
-cross-center identity resolution, Dimensions 5 & 6). 1 finding (NGS/whole-genome/MHC-specific/
-linkage-disequilibrium methods, Dimension 5) declined, no action -- the source PDF itself frames
-these as speculative future work even in 2015, matching the audit's own Recommendation #5. The
-remaining findings (PMX/MateRx/Pedscope/PedSys tool-comparison notes, the "make pedigree available
-to researchers" governance recommendation) are descriptive or already-adequately-served, not gaps
-requiring tracking. See `CHANGELOG.md`.*
+*Every GitHub issue this cluster produced (#125-#130, #146-#153) is shipped and closed -- all 14
+confirmed CLOSED via `gh issue view` (S752, 2026-09-21); the one live thread is the open item at
+the end of this section. Full session-by-session record: `CHANGELOG.md`; per-issue technical
+findings: `PROJECT_LEARNINGS.md` (Learnings 479, 532, 538-542, cited below).*
 
-**Second-generation re-audit and issue-sequencing (S479-S483, 2026-08-05 to 2026-08-08):** a ghost
-session (reconciled S479, `PROJECT_LEARNINGS.md` Learning 479) produced 2 further capability audits
-(`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md`, `..._2026-08-06.md`) and filed 8
-new GitHub issues: **#146** (configurable/exhaustive breeding-group candidate retention), **#147**
-(likelihood-based candidate-parent assignment), **#148** (MHC haplotype-specific frequency
-reporting), **#149** (cross-center identity-mapping workflow with provenance export), **#150**
-(de-identified pedigree export workflow), **#151** (individual mate-pair analysis), **#152**
-(whole-genome/whole-exome sequence input + sequence-based metrics), **#153** (linkage-aware/
-haplotype-block metrics). Sequencing ratified S483
-(`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`, owner-directed, 8-agent
-codebase-grounded workflow): Tier 1 #147; Tier 2 #149 > #146 > #151; Tier 3 (policy-gated) #150;
-Deferred (design-only) #152 > #153 > #148, with #148 flagged as needing its own scope-narrowing
-conversation first (filed broader than the audit recommends). **Also found, still not filed as of
-this compression:** 2 audit-table High-priority rows -- "Longitudinal genetic-health monitoring" and
-"Ancestry guardrails in breeding decisions" -- have no corresponding GitHub issue, despite ranking
-above every Medium/Deferred item in this batch (Finding #1/Recommendation 2); a future triage session
-should file both. **Every Tier 1/2/3 item (#147, #149, #146, #151, #150) plus Deferred-tier #152 and #153 are now
-fully shipped and closed** -- see the compressed entry below. #148's scope-narrowing
-conversation is DONE (S703, 2026-09-17, owner via `AskUserQuestion`: design-first, same issue —
-decision record `docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md`, issue comment
-posted) and its design plan is RATIFIED (S704, 2026-09-17 —
-`docs/planning/issue148-mhc-haplotype-reporting-plan.md`, D1-D10, owner picked all 4
-recommended judgment calls); Slice 1 (validator + parse rule) shipped S705 (2026-09-17,
-strict TDD, `checkMhcHaplotypeFile()` + `.parseMhcHaplotypeCalls()`); Slice 2 (statistics)
-shipped S706 (2026-09-17, strict TDD, `mhcHaplotypeFrequency()` + `mhcHaplotypeCarriers()`);
-Slice 3 (de-identification primitive) shipped S707 (2026-09-17, strict TDD,
-`obfuscateMhcHaplotypes()`); Slice 4 (the 8th Marker Genetics tab "MHC Haplotype
-Reporting" + confirm-gate export + `.buildMhcExportManifest()` + tutorial/terms/NEWS docs)
-shipped S708 (2026-09-18, strict TDD, live E2E) -- **issue #148 is DONE and closed**, so every
-issue in this batch (#146-#153) is now shipped and closed. See `CHANGELOG.md`.
+**Origin and sequencing.** S419's capability audit
+(`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`) compared the package against the
+2015 NHP Genetics and Genomics Working Group PDF (37 findings: 12 missing / 9 partial); S422
+(2026-07-29, owner `AskUserQuestion` picks) filed **#125** (ranking-priority scheme + multiple
+breeding-group candidates), **#126** (distribution-shape statistics), **#127** (surface
+`correctUnknownParentMeanKinship()`'s dropped `flagged` list), **#128** (genetic-value floor for
+breeding-group exclusion), **#129** (pedigree diagram) and **#130** (marker-based kinship/
+heterozygosity/parentage + cross-center identity). One finding (NGS/whole-genome/MHC/
+linkage-disequilibrium methods) was declined -- the PDF itself frames it as speculative. A ghost
+session (reconciled S479, Learning 479) then produced two re-audits
+(`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md`, `..._2026-08-06.md`) and filed
+**#146** (candidate retention), **#147** (likelihood-based candidate-parent assignment), **#148**
+(MHC haplotype reporting), **#149** (cross-center identity mapping), **#150** (de-identified
+pedigree export), **#151** (mate-pair analysis), **#152** (sequence input + metrics) and **#153**
+(linkage-aware metrics). Sequencing ratified S483 (owner-directed,
+`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`): Tier 1 #147; Tier 2 #149 >
+#146 > #151; Tier 3 (policy-gated) #150; Deferred (design-only) #152 > #153 > #148, with #148
+needing its own scope-narrowing conversation first. All shipped, each slice strict TDD with the
+citation / `NEWS.Rmd` / `_pkgdown.yml` / tutorial-article checklists applied per slice
+(`a2interactive.Rmd` deferred per `CLAUDE.md`'s standing rule).
 
-**Progress, issue #152 (whole-genome/whole-exome sequence input + sequence-based genetic
-metrics) -- DONE, closed (design S517 through close-out S535, Sessions 517-535).** Design
-ratified S517 (`docs/planning/issue152-sequence-input-genetic-metrics-plan.md` -- two parallel
-background research agents plus direct verification of the load-bearing prior Bioconductor
--Imports decline): sparse/GBS-scale scope tier (~50,000-locus ceiling); a shared `locusMetadata`
-(`locus, chrom, pos[, cM]`) sidecar reused by sibling issue #153; genome-wide F_ROH (new, Ceballos
-et al. 2018) plus genome-scale reruns of the existing kinship/heterozygosity/Fst functions; a new
-tab inside the existing `modMarkerGenetics.R` rather than a dedicated module. Scoped as 5 vertical
-slices, each its own session, each a full strict-TDD PRE-RED->RED->GREEN(->REFACTOR) cycle gated
-by `AskUserQuestion`:
-- **Slice 1** (S525): new `checkSequenceGenotypeFile()` structural validator (reuses issue #153's
-  `checkLocusMetadata()`); `data-raw/generate_sequence_fixtures.R` (seeded 50-individual x
-  1,000-locus synthetic biallelic SNP panel + `locusMetadata` sidecar, committed as
-  `inst/extdata/examples/example_sequence_*.csv`).
-- **Slice 2** (S526): `markerKinship()`/`markerParentageLikelihood()` performance rewrite --
-  vectorized matrix algebra / precomputed per-locus allele-frequency tables -- ~2x/~2.4x speedups,
-  output unchanged (golden-master + `system.time()` benchmark regression tests; the median-of-3
-  -reps timing-stability fix is `PROJECT_LEARNINGS.md` Learning 532).
-- **Slice 3** (S532): new `computeGenomicROH()` F_ROH metric (Ceballos et al. 2018 convention),
-  reuses `checkLocusMetadata()`'s coverage classification. `PROJECT_LEARNINGS.md` Learning 538 (a
-  lower-than-baseline `devtools::check()` NOTE count needs the same direct verification as a
-  higher one) originates here.
-- **Slice 4** (S533): new `obfuscateGenotypeMatrix()` de-identification primitive, mirrors the
-  established `obfuscate*` family pattern. `PROJECT_LEARNINGS.md` Learning 539 (verification
-  tools must be invoked with the project's own default config/args, not an override) originates
-  here; found (not fixed) the `.Rbuildignore` `methodolog_trim.py` typo, fixed next session
-  (Learning 540).
-- **Slice 5** (S535, closes #152): new "Genomic ROH (F_ROH)" tab in `R/modMarkerGenetics.R`
-  (curator confirm-gate export: de-identified genotype matrix + F_ROH table + manifest), new
-  `obfuscateGenomicROH()`. Live Phase 3E verification found and fixed a real bug --
-  `sequenceRohTable` fed `locusMetadata()`'s already-`checkLocusMetadata()`-processed output back
-  into `computeGenomicROH()`, which re-runs that same check internally, silently mislabeling a
-  column (`PROJECT_LEARNINGS.md` Learning 541). S535 also suspected a `shinytest2`/`chromote`
-  headless-modal-rendering harness limitation blocking the export-confirm modal --
-  **`PROJECT_LEARNINGS.md` Learning 542 (S536) corrects this: there was no harness limitation, the
-  real cause was a test pedigree fixture missing the required `birth` column, which silently
-  blocked `req()` upstream of `showModal()`; fixed by completing the fixture.**
+**Issue #152** (sequence input + metrics; closed S535) -- design S517
+(`docs/planning/issue152-sequence-input-genetic-metrics-plan.md`: sparse/GBS-scale tier, ~50,000-
+locus ceiling, a `locusMetadata` sidecar shared with #153, a new tab in `R/modMarkerGenetics.R`),
+then 5 vertical slices S525/S526/S532/S533/S535: the `checkSequenceGenotypeFile()` validator +
+synthetic fixtures (`data-raw/generate_sequence_fixtures.R`,
+`inst/extdata/examples/example_sequence_*.csv`), `markerKinship()`/`markerParentageLikelihood()`
+speedups (Learning 532), `computeGenomicROH()` F_ROH (Learning 538), `obfuscateGenotypeMatrix()`
+(Learnings 539/540), and the "Genomic ROH (F_ROH)" tab + `obfuscateGenomicROH()` (Learning 541;
+Learning 542 retracts S535's suspected chromote harness limitation -- the cause was a test
+fixture missing `birth`).
 
-Each slice: full clean regression 0 failed/0 error, `devtools::check()` clean modulo pre-existing
-NOTEs, citation/`NEWS.Rmd`/`_pkgdown.yml` checklists applied per-slice (tutorial/article checklist
-satisfied at Slice 5; `a2interactive.Rmd` deferred per its own standing rule). See `CHANGELOG.md`
-for the full session-by-session record.
+**Issue #148** (MHC haplotype reporting; closed S708) -- scoping S703
+(`docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md`, owner: design-first, same issue),
+plan ratified S704 (`docs/planning/issue148-mhc-haplotype-reporting-plan.md`, D1-D10), then 4
+strict-TDD slices S705-S708: the `checkMhcHaplotypeFile()` validator,
+`mhcHaplotypeFrequency()`/`mhcHaplotypeCarriers()`, `obfuscateMhcHaplotypes()`, and the 8th Marker
+Genetics tab "MHC Haplotype Reporting" with confirm-gate export.
+- [ ] **File the 2 unticketed High-priority audit gaps: "Longitudinal genetic-health monitoring"
+      and "Ancestry guardrails in breeding decisions"** (found S483 by the sequencing audit's
+      Finding #1, re-verified still true S752 -- READY, Effort S, a dedicated triage session) -- the
+      `..._2026-08-06.md` audit's priority table rates both **High** (tied with #147, above every
+      Medium/Deferred item in the batch), yet no GitHub issue exists for either: verified S752
+      (2026-09-21) by title search across all 166 issues in every state plus body searches
+      (`longitudinal`/`ancestry`/`guardrail`/`trend`/`snapshot`/`drift`; the 3 incidental hits --
+      #118, #76, #47 -- are unrelated). The audit's own recommended shapes: *longitudinal* =
+      "define snapshot schema, consistent-cohort rules, and trend outputs before implementation";
+      *ancestry guardrails* = "define center-configurable ancestry compatibility rules and an
+      override/audit trail" (reporting an Origin color AFTER group construction is weaker than
+      preventing a problematic grouping). The sequencing audit (Finding #1 + recommendation 2,
+      `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`) says to file both as
+      full-feature requests gated on a Pre-RED design session, shaped like #147 -- NOT like the
+      Deferred-tier design-only issues. **Why it matters:** audit priority and "has a GitHub
+      issue" are independent facts, so a session choosing "next issue by priority" from
+      `gh issue list` alone would silently work Medium-tier issues before these two High-tier
+      gaps. Filing the two issues is the whole deliverable; implementation is separate sessions.
