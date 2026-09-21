@@ -38,6 +38,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S741 claim: kinship2 feature-gap analysis — per-feature gap table in `docs/research/` *(in progress)*
+- Session claimed via the Phase 0 picker. Scope: step 1 of the S739
+  kinship2-similar-package BACKLOG item (`BACKLOG.md:95`) — enumerate kinship2's
+  exported surface at analysis time (installed package / CRAN reference manual, per
+  the item's own caveat that its embedded list is an unverified hint), classify each
+  feature equivalent/partial/absent in nprcgenekeepr, and ship the gap table to
+  `docs/research/`. Step 2 (the owner discussion) stays out of scope. Close-out
+  records the rest.
+
 ### 2026-09-21 · [ad hoc] S740 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `f8605f07`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S740 commit. S740 total: 4 commits (claim `889f9896` — rode the push, trim
   `4876094d`, records `f8605f07`, this one). Ahead of `origin/master` by 3 after

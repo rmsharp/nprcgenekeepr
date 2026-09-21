@@ -156,6 +156,21 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S741
+date: 2026-09-20
+status: pending
+active_task: kinship2 feature-gap analysis (step 1 of the S739 kinship2-similar-package item, BACKLOG.md:95) — research session; deliverable a per-feature gap table in docs/research/. Claimed via the Phase 0 picker.
+what_was_done: pending
+next_steps: pending
+key_files: BACKLOG.md:95 (the item, with prior-art pointers), docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md:1 (drawing-only + stale prior art)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<free-text: pending — completed at Phase 3D>
+
+```handoff
 session: S740
 date: 2026-09-20
 status: complete
