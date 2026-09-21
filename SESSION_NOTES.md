@@ -42,15 +42,103 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 739 Handoff Evaluation (by Session 740)
+**Score: 9/10.** **What helped:** "15 unpushed after close-out" (the corrected count)
+measured exactly 15; "expect 0 undocumented; measure it" measured 0 on both frontiers
+at `8006087b`; the FULL-40-char-sha gotcha was applied by design — the `--commit`
+filter was smoke-tested against in-flight runs seconds after the push, so S736's
+silent 30-min arm could not recur; the carried CI band (17m39s–22m17s, one 30-min
+Monitor arm) held — R-CMD-check measured 22m07s, no re-arm; the priorities list fed
+the Phase 0 picker directly and the push was its named natural next pick. **What was
+missing:** nothing material. **What was wrong:** nothing found — every checked claim
+held (S739's own correction commit had already fixed its arithmetic slip in-session).
+**ROI:** high.
+
 ### What Session 740 Did
-**Deliverable:** Owner-directed push to `origin/master` + CI verification (IN PROGRESS)
-**Started:** 2026-09-20
-**Status:** Session claimed. Push of the 15 unpushed docs-only commits (+ this claim
-commit riding the push, S726–S736 precedent) beginning; CI verification on the pushed
-sha to follow.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** Owner-directed push to `origin/master` + CI verification — **DONE.**
+Pushed `2628cd02..889f9896` (16 commits: the 15 unpushed docs-only S737–S739
+close-out/claim commits + the S740 claim `889f9896` riding the push, S726–S736
+precedent). All 4 push-triggered workflows `completed success` ON THE PUSHED SHA
+`889f9896` (verified via `gh run list --commit <full-40-char-sha>` with `headSha`
+echoed back structurally): lint 4m37s (id 35548502389), pkgdown 6m13s (35548502366),
+test-coverage 9m54s (35548502412), R-CMD-check 22m07s (35548502318) — inside the
+established 17m39s–22m17s post-S732-fix band; single 30-min Monitor arm, no re-arm.
+Also: proactive `SESSION_NOTES.md` trim `4876094d` (S733 precedent — the file was
+1,701 B under the 56,750 B one-read cap and the handoff would have crossed it;
+12 records archived, 55,049 → 17,713 B, L1/L2/L3 verified pre-commit, no SRF refusal
+this time). No TDD phases (push + docs; no `.R` files). Lint N/A.
+**Started/completed:** 2026-09-20/21 (single session). Claim `889f9896` (rode the
+push); trim `4876094d`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, trim, push+CI deliverable,
+records, sha). No BACKLOG item consumed (the push was a Phase 0 owner pick).
+
+**What actually happened, in order:**
+1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both frontiers
+   at `8006087b`; S739 receipt complete; the only `status: pending` in HANDOFFS.md is
+   its instructions text); CI 10/10 green on master; dashboard 96/100; context budget
+   WARN = CLAUDE.md warn band + growth run 16/10 (exactly as S739 predicted), both
+   synced files `canonical ok`; 15 unpushed measured (= S739's corrected count);
+   5 known untracked files unchanged; no live sequencing-audit cluster.
+2. **Owner picked the push** via the Phase 0 AskUserQuestion picker; claim `889f9896`
+   committed and rode the push `2628cd02..889f9896`; 0 unpushed after the push.
+3. **Filter smoke-tested live BEFORE arming the monitor** (the S736 lesson): a direct
+   `gh run list --commit <full-sha>` returned all 4 runs queued/in-progress with
+   matching `headSha` — only then was the 30-min Monitor armed, covering every
+   terminal conclusion, not success-only.
+4. **CI verification:** monitor emitted each terminal conclusion (lint → pkgdown →
+   test-coverage → R-CMD-check, all success); conclusions then re-verified directly
+   from the JSON with run ids, durations, and `headSha` — not inferred from the
+   monitor stream alone.
+5. **quality_ratchet run DURING the CI wait** at the pushed HEAD `889f9896`: 1/1 pass
+   · 0 fail · 0 unmeasured · results 2cb2faa00809 · manifest aa983075d6a2
+   (3,483,874 B ≤ 5,000,000 B).
+6. **Trim, pre-handoff, on committed state:** dry run first (`--cut 5`, semantics =
+   records KEPT, per the S733 gotcha), L1/L2/L3 verified via the shard's verify
+   script before commit `4876094d`.
+
+**Self-assessment (Session 740): 9/10.** **Strengths:** (1) the S736 failure mode
+(silent monitor arm on a short-sha filter) was prevented by design, not luck — the
+filter was proven against in-flight runs before arming; (2) deliverable verified
+structurally on the exact pushed sha with run ids + durations recorded; (3) no dead
+time — the ratchet ran during the CI wait; (4) the one-read-cap crossing was caught
+BEFORE the handoff landed, and the trim rode committed state with the verify script
+run pre-commit. **Weaknesses:** (1) durations are createdAt→updatedAt and include
+queue time (seconds ±); (2) the trim's keep-count (5 records) was chosen by dry-run
+inspection, not a principled rule — S733 kept 3; the convention is consistency by
+feel, not policy.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push (9th:
+S717/S726/S729/S731/S733/S734/S735/S736). **Reduction check (FM #28):** 12 records
+removed from a mandated-read file this session (the trim) — `SESSION_NOTES.md`
+55,049 → 17,713 B.
+
+**Next steps (specific):** (A) ~2 unpushed after close-out (records + sha, docs-only,
+estimate at write time — recount with `git rev-list --count origin/master..HEAD`);
+CI current through `889f9896`; no push urgency. (B) Priorities unchanged: kinship2
+feature-gap analysis (READY, M — step 1 of the S739 item, first-class research
+pickup); prep D-1/D-2/D-3 (READY, S each — D-1/D-2 are CODE sessions, full TDD
+gates); BACKLOG editorial compression (READY, L); inst/doc slimming (DECISION
+NEEDED, M); REUSE registration (owner action, S); NPRC outreach (owner review).
+(C) Standing report-only set: CLAUDE.md warn band unchanged; growth run was 16/10
+this session — whether the SESSION_NOTES trim resets it depends on what the run
+measures (the "resident total" printed equals CLAUDE.md alone), so measure at next
+Phase 0 rather than predict.
+
+**Key files:** `CHANGELOG.md:41` (S740 entries at top), `HANDOFFS.md:159` (S740
+receipt), `docs/archive/SESSION_NOTES-through-2026-09-20.md` (new shard),
+`BACKLOG.md:95` (kinship2 step-1 item — the next natural research pickup).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0 —
+measure it; ~2 unpushed after close-out (estimate; recount). (2) CI band now
+confirmed across 4 pushes: R-CMD-check 17m39s–22m17s; one 30-min Monitor arm
+suffices — and ALWAYS smoke-test `gh run list --commit <FULL-40-char-sha>` against
+the in-flight runs before arming. (3) `SESSION_NOTES.md` is 17.7 KB live post-trim —
+several sessions of headroom before the 56,750 B one-read cap binds again.
+(4) Standing set unchanged: `scratchpad/` invisible to git BY OWNER DECISION;
+ratchet ~2 min AFTER committing (Learning 772); trim needs `--budget-bytes 65536`;
+renv banner expected; CLAUDE.md warn band; the two `SESSION_NOTES.md` ceilings
+differ (owner decision pending); suite baseline 2437/0/0/184/0 — remote-confirmed
+again by R-CMD-check on `889f9896`.
 
 ### Session 738 Handoff Evaluation (by Session 739)
 **Score: 9/10.** **What helped:** "~10 unpushed after close-out" measured exactly 10;

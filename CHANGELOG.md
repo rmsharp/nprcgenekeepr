@@ -38,6 +38,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S740 close-out: session records (handoff, S739 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S739 evaluation: 9/10 — 15-unpushed and
+  clean-frontier claims held exactly; the full-sha gotcha prevented a repeat of the
+  S736 silent arm). `HANDOFFS.md` receipt complete. No new `PROJECT_LEARNINGS.md`
+  entry (routine clean push, 9th of its kind). Reduction check: 12 records removed
+  from a mandated-read file (the trim). quality_ratchet at the pushed HEAD
+  `889f9896`: 1/1 pass · 0 fail · 0 unmeasured · results 2cb2faa00809 · manifest
+  aa983075d6a2 (3,483,874 B ≤ 5,000,000 B). ~2 unpushed after close-out (estimate:
+  records + sha); CI current through `889f9896`.
+
+### 2026-09-21 · [ad hoc] S740 deliverable: push `2628cd02..889f9896` (16 commits) + CI verification — all 4 workflows green on the pushed sha
+- Pushed the 15 unpushed docs-only S737–S739 commits + the S740 claim riding the push
+  (S726–S736 precedent); 0 unpushed after the push. All 4 push-triggered workflows
+  `completed success` on `889f9896` (headSha echoed structurally): lint 4m37s
+  (id 35548502389), pkgdown 6m13s (35548502366), test-coverage 9m54s (35548502412),
+  R-CMD-check 22m07s (35548502318) — inside the 17m39s–22m17s post-S732-fix band;
+  single 30-min Monitor arm, no re-arm. The `--commit` filter was smoke-tested against
+  the in-flight runs with the FULL 40-char sha BEFORE the monitor was armed (the S736
+  lesson applied); conclusions verified from the JSON, not inferred from the stream.
+
 ### 2026-09-20 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-20.md` (12 record(s), 55,049 B → 17,713 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
