@@ -156,6 +156,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S747
+date: 2026-09-21
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Owner-directed push to origin/master + CI verification — claimed, in progress. 14 unpushed at claim time (this claim rides the push, S726–S743 precedent); three deliverables (44bb4481, eb896c2e, a5a9bf42) never seen by CI — expect R-CMD-check in the 17m39s–22m17s band.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S746
 date: 2026-09-21
 status: complete

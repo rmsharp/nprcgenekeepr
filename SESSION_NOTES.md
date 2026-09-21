@@ -46,6 +46,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 747 Did
+**Deliverable:** Owner-directed push to `origin/master` + CI verification (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Work beginning. 14 unpushed at claim time (this
+claim rides the push, S726–S743 precedent); three deliverables (`44bb4481`,
+`eb896c2e`, `a5a9bf42`) never seen by CI.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 745 Handoff Evaluation (by Session 746)
 **Score: 9/10.** **What helped:** "10 unpushed (recount)" measured exactly 10;
 "expect 0 undocumented; measure it" measured 0 on both frontiers at `41c43c35`;

@@ -38,6 +38,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S747 claim: owner-directed push to `origin/master` + CI verification *(in progress)*
+- Phase 0 clean: 0 undocumented on both frontiers at `8b9a0148`; S746 receipt
+  complete, ratchet citation matched `.quality-gates-results.json`
+  byte-for-byte; CI 10/10 green (current only through S743's push `59f1888e`);
+  dashboard 96/100; context budget WARN = CLAUDE.md warn band, growth run
+  23/10 (as S746 predicted); 14 unpushed measured (= S746's prediction).
+  Owner picked the push via the Phase 0 picker. This claim rides the push
+  (S726–S743 precedent). THREE deliverables never seen by CI: `44bb4481`
+  (D-1, R/+tests), `eb896c2e` (D-2, tests), `a5a9bf42` (D-3, comment-only).
+
 ### 2026-09-21 · [BL-prep-D-3] S746 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `70ed987b`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S746 commit. S746 total: 4 commits (claim `19de9c64`, deliverable
   `a5a9bf42`, records `70ed987b`, this one). Ahead of `origin/master` by
