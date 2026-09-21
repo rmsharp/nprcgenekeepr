@@ -96,5 +96,5 @@ obfuscatedPed
 #> 5 9G3CPE LSYDEB T5NBEL   F   1 2015-02-22 <NA> 11.6     original
 #> 6 G40JSC LSYDEB FEHHE9   F   1 2009-02-19 <NA> 17.6     original
 #> 7 M8WYKP 7YDSRN FEHHE9   F   1 2012-04-02 <NA> 14.5     original
-#> 8 94832J 7YDSRN FEHHE9   M   1 2008-04-09 <NA> 18.4     original
+#> 8 94832J 7YDSRN FEHHE9   M   1 2008-04-09 <NA> 18.5     original
 ```

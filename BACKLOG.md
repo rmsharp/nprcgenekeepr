@@ -99,46 +99,85 @@ availability/permissions are confirmed; needs a live LabKey server to
 test/observe, and a naive focal-id server filter is incompatible with
 the client-side connected-component walk).
 
-**Investigate factoring out the pedigree-diagram drawing functionality
-into a separate R package that `nprcgenekeepr` depends on** (found
-2026-08-19, owner-directed, READY, Effort M – a research/scoping
-session, not an implementation session) – look into the possibility,
-advantages, and disadvantages of splitting the pedigree-diagram
-layout/rendering code
-(`.buildMatingUnitForest()`/`.positionMatingUnitForest()`/`.addRectilinearWaypoints()`/
-`.resolveEdgeNodeCollisions()`/[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-in `R/makePedigreeDiagramData.R`, plus the Shiny Diagram-tab module) out
-of `nprcgenekeepr` into its own standalone package, with `nprcgenekeepr`
-then depending on it. A future session should weigh this independent of,
-and probably after, the Walker/BJL apportioning redesign
-(`docs/planning/ pedigree-diagram-walker-bjl-apportioning-redesign-plan.md`,
-issue \#141) currently in progress – splitting mid-redesign would add
-package-boundary churn on top of an already-large in-flight algorithm
-change. Not scoped further this session (out of Phase 1a’s own
-boundary); a future session should produce the actual
-advantages/disadvantages analysis (reuse potential outside this project,
-cleaner dependency graph, and versioning/release overhead, cross-package
-test/CI complexity, `@noRd`/internal-function visibility loss across a
-package boundary, etc.) before any decision to split. **Scoping analysis
-DONE S667 (2026-09-02) as a side artifact** – the session was first
-(mis-)pointed at this item before the owner redirected it to pedigree
-drawing:
-[`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`](https://github.com/rmsharp/nprcgenekeepr/docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md)
-(`findGlobals()`-measured coupling: the layout core reaches back into
-the package at exactly one point,
-[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md);
-only
-[`modPedigreeServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeServer.md)
-consumes it; the Shiny module cannot move; recommendation **do not split
-now**, with 3 revisit conditions and 3 optional in-place prep steps).
-**Owner disposition pending** – the item stays open until the owner
-accepts or rejects the recommendation; nothing else to do here until
-then. **Size is not an argument for splitting (measured S727):** the
-clean-build tarball is 3.49 MB, all of `R/` is 0.39 MB compressed, and
-the drawing feature’s named R sources are 205 KB uncompressed — a split
-would move well under 0.3 MB
-(`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` §5). Decide the split on
-coupling/reuse grounds only.
+**Prep D-1: invert the
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+dependency in
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)**
+(queued S738, 2026-09-20, from the accepted package-split disposition,
+READY, Effort S – its own TDD session) – add an optional argument
+accepting a precomputed kinship matrix or consanguinity flags,
+defaulting to computing via
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+exactly as today so no caller changes. This is the layout core’s ONE
+genuine back-reference into the genetics code
+(`R/makePedigreeDiagramData.R:1755` as of S738; S667 coupling inventory
+`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`
+§2.2/D3) – inverting it makes the core genetics-free as well as
+visNetwork-free (a cleaner, injectable interface), and is the
+prerequisite step if a split is ever revisited. `twinRelations`
+threading semantics must be preserved (see the comment block at
+`:1741-1754`).
+
+**Prep D-2: remove the two test-only reaches into the internal
+`.buildMatingUnitForest()`** (queued S738, 2026-09-20, from the accepted
+package-split disposition, READY, Effort S) –
+`tests/testthat/test_modPedigree.R:1669` and `:1706` (verified current
+S738) each call the internal directly; rewrite through
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+public surface or a small exported accessor. These are the only
+cross-boundary internal reaches outside the core’s own test files (S667
+§2.4/D6).
+
+**Prep D-3: add `@noRd` roxygen blocks to `R/positionTreeApportion.R`’s
+13 functions** (queued S738, 2026-09-20, from the accepted package-split
+disposition, READY, Effort S) – the file has zero roxygen markers
+(verified S738: `grep -c "^#'"` = 0), inconsistent with the rest of
+`R/`; documentation hygiene, no behavior change (REFACTOR-only, no
+RED/GREEN). (Context for all three prep items: the owner accepted the
+S667 recommendation NOT to split the layout core into its own package –
+disposition recorded S738 in `CHANGELOG.md`, with the 3 revisit
+conditions in the scoping doc §6; these steps harden the boundary in
+place and are worthwhile whether or not a split ever happens.)
+
+**Discuss making a kinship2-similar standalone package from code within
+this repository** (owner-directed S739, 2026-09-20; step 1 READY, Effort
+M – a research session; step 2 DECISION NEEDED, gated on step 1) –
+broader than, and distinct from, the S738-dispositioned “split the
+layout core” question: the idea is a general-purpose pedigree package in
+the spirit of kinship2 built from what this repo already has (layout
+engine, twin-aware
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md),
+pedigree utilities, structural-comparison apparatus), not merely
+relocating the drawing core. **Step 1 (the first session): kinship2
+feature-gap analysis** – enumerate kinship2’s exported surface at
+analysis time (from the installed package/CRAN reference manual, e.g.
+`pedigree()`/ped objects, `align.pedigree`, `plot.pedigree`, `autohint`,
+`kinship` incl. X-linked/chrtype, `makefamid`, `familycheck`,
+`pedigree.shrink`, `bitSize`, legend plotting – verify the list then,
+don’t trust this parenthetical) and classify each feature: (a)
+equivalent exists here (name the function), (b) partial (name the gap),
+(c) absent. Deliverable: a per-feature gap table in `docs/research/`.
+Prior art to reuse, not redo:
+`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`
+(17-point checklist – DRAWING-only and stale: issues \#131-#137/#145
+have since closed most of its gaps), the S482 kinship2 source-read spike
+(`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`),
+`R/comparePedigreeStructure.R` (Track B structural-parity apparatus),
+`R/shrinkPedigree.R` (`pedigree.shrink` analog), `R/kinship.R`
+(twin-aware kinship). **Step 2 (owner discussion, after step 1):**
+whether the gap list justifies building the package and at what scope
+(interactive-drawing-focused vs full kinship2 parity). Relation to the
+S738 disposition: this is revisit-condition 3’s “ecosystem argument”
+path made concrete
+(`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` §6
+cond 3; §2.7: nothing on CRAN offers a vis.js-targeted kinship2-parity
+layout; kinship2 1.9.6.2 is maintained with NO CRAN deprecation notice –
+the “impending deprecation” language is ggpedigree’s own description,
+and ggpedigree has absorbed kinship2’s layout helpers). The other two
+revisit conditions (engine stability single-digit commits/60 days; next
+CRAN release accepted) still gate any actual extraction, and prep
+D-1/D-2/D-3 above are step 0 of any extraction path – this item supplies
+the “why” that could eventually satisfy condition 3.
 
 **(Optional, owner decision) Slim `inst/doc/` by moving the three
 `html_document` vignettes to
@@ -155,8 +194,13 @@ build measurement (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md`
 Finding 3 + §7 recipe); `df_print: paged` does not exist under
 `html_vignette` and must become
 [`knitr::kable()`](https://rdrr.io/pkg/knitr/man/kable.html); optionally
-replace `a2interactive`’s two live `visNetwork` widgets with static
-images. Buys documentation-guideline headroom, not tarball-limit
+replace `a2interactive`‘s two live `visNetwork` widgets with static
+images — now quantified (S737,
+`docs/audits/PEDIGREE_DRAWING_FEATURE_GROWTH_AUDIT_2026-09-20.md` Obs.
+2): the widgets’ vis-network + html2canvas payload is ~1.23 MB
+uncompressed ≈ 0.29 MB compressed inside `inst/doc/a2interactive.html`,
+so that one step alone removes most of the drawing feature’s tarball
+footprint. Buys documentation-guideline headroom, not tarball-limit
 compliance (already met: clean build 3.49 MB vs 10 MB); the S728
 `tarball_size_clean_export` gate (`.quality-gates.json`, \<=5 MB) will
 show any saving mechanically. **Not worth doing on size grounds
@@ -164,28 +208,6 @@ show any saving mechanically. **Not worth doing on size grounds
 0.46 MB compressed, `tests/` 0.66 MB), recompressing `data/` (0.14 MB),
 or the package split. Always build release tarballs from a clean export,
 never the working tree.
-
-**Measure how much this R package has grown due to the pedigree-drawing
-feature — a rough estimate (±20%) is sufficient** (owner-requested
-mid-S721, 2026-09-19, READY, Effort S) – quantify the package-size
-growth attributable to the pedigree-diagram/ drawing capability (issue
-\#129’s Diagram tab, S433/S434, through the S643-S699 pedigree-drawing
-campaign): e.g. lines/bytes of the feature’s own source and test files
-(the layout core in `R/makePedigreeDiagramData.R`, the Diagram-tab Shiny
-module, `R/comparePedigreeStructure.R`, their `tests/testthat/` files,
-and the pedigree-diagram vignettes/articles) vs. package totals, and/or
-a before/after comparison against a pre-feature commit (~2026-07-29,
-before S433). The file-level coupling inventory in
-`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`
-already names the feature’s file set and is a good starting point. Owner
-explicitly accepts a rough ±20% estimate – shared-infrastructure
-attribution does not need to be precise. **Upper bound from the S727
-tarball audit:** the clean-build tarball grew 2,419,329 B (CRAN 2.0.0,
-2026-07-26) -\> 3,485,185 B (`f8ffa40b`), i.e. +1.07 MB compressed
-(+44%) across ALL features, so the drawing feature’s tarball share is
-some fraction of that; measure compressed, from a clean `git archive`
-build, not on-disk (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md` §5,
-§7).
 
 **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing
 binary hangs on `macos-latest`’s `ChromoteSession$new()` bootstrap**

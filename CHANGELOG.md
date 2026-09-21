@@ -53,6 +53,217 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · \[ad hoc\] S740 claim: owner-directed push to `origin/master` + CI verification (in progress)
+
+- Session claimed via the Phase 0 picker. Scope: push the 15 unpushed
+  docs-only commits (measured at Orient, = S739’s corrected count) +
+  this claim commit riding the push (S726–S736 precedent); verify all 4
+  push-triggered workflows on the pushed sha with
+  `gh run list --commit <full-40-char-sha>`. Close-out records the rest.
+
+### 2026-09-20 · \[ad hoc\] S739 correction: unpushed-count claim in notes + receipt fixed ~12 → 14 measured (arithmetic slip forgot the records + sha commits themselves)
+
+- The sha-commit ledger entry below already carried the correct 14; the
+  receipt’s `next_steps`/`gotchas` and the notes’ matching lines were
+  the wrong forward-looking claims and are now corrected (a wrong
+  prediction is worse than none — Phase 3D). Fifth and final S739
+  commit.
+
+### 2026-09-20 · \[ad hoc\] S739 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `3471ac36`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S739 commit. S739 total: 4 commits (claim `e2671de1`,
+  deliverable `7b10ac3d`, records `3471ac36`, this one). Ahead of
+  `origin/master` by 14 after close-out (6 carried pre-S738 + 4 S738 +
+  these 4), all docs-only; CI is current through `2628cd02` — push is
+  the owner’s call and increasingly the natural next pick. Expect 0
+  undocumented commits past the frontier at next Phase 0; measure it.
+
+### 2026-09-20 · \[ad hoc\] S739 close-out: session records (handoff, S738 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S738 evaluation: 9/10 —
+  10-unpushed and clean-frontier claims held exactly; lightly exercised
+  same-conversation). `HANDOFFS.md` receipt complete. No new
+  `PROJECT_LEARNINGS.md` entry (routine grooming session). Reduction
+  check: nothing removed from a mandated-read file; `BACKLOG.md` grew
+  +36 lines by owner directive — stated explicitly; the
+  editorial-compression item is the standing counterweight.
+  quality_ratchet at the deliverable HEAD `7b10ac3d`: 1/1 pass · 0 fail
+  · 0 unmeasured · results 060a3da9b4b6 · manifest aa983075d6a2
+  (3,483,920 B ≤ 5,000,000 B). ~12 unpushed after close-out (estimate);
+  push is the owner’s call and increasingly the natural next pick.
+
+### 2026-09-20 · \[ad hoc\] S739 deliverable: BACKLOG item added — discuss a kinship2-similar standalone package built from this repo’s code; step 1 = kinship2 feature-gap analysis
+
+- New Up Next item placed directly after the S738 prep items
+  (D-1/D-2/D-3), which are step 0 of any extraction path. Two explicit
+  steps: step 1 (READY, Effort M) a research session producing a
+  per-feature gap table in `docs/research/` — enumerate kinship2’s
+  exported surface at analysis time and classify each feature as
+  equivalent/partial/absent here; step 2 (DECISION NEEDED) the owner
+  discussion on whether and at what scope to build it. Cross-referenced
+  rather than merged: the mostly-DONE “Pedigree diagram vs kinship2
+  audit follow-ups” section (drawing-only, stale — \#131–#137/#145
+  closed most of its gaps) is prior art for step 1, and the item is
+  framed as the concrete path to the S738 disposition’s revisit
+  condition 3 (the “ecosystem argument”, S667 doc §6/§2.7). Combination
+  judgment (the owner said “perhaps combining with other backlog item”):
+  adjacency + cross-references chosen over merging into the historical
+  follow-ups section, which is a triage record, not a live item.
+
+### 2026-09-20 · \[ad hoc\] S739 claim: BACKLOG item — kinship2-similar package discussion, step 1 = feature-gap analysis *(in progress)*
+
+- Session claimed (stub + pending receipt + this entry), same
+  conversation as S738. Abbreviated re-orient per S735 precedent (state
+  minutes old): tree clean, both ledger frontiers at `e3370b82`, 0
+  undocumented, 10 unpushed (= S738’s estimate). Owner directive: add a
+  BACKLOG item (perhaps combining with an existing one) to discuss
+  making a package similar to kinship2 from code within this repository;
+  first step is identifying kinship2 features not available in this
+  codebase.
+
+### 2026-09-20 · \[ad hoc\] S738 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `0dec1c09`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S738 commit. S738 total: 4 commits (claim `f9b1f2a3`,
+  deliverable `9d80dde6`, records `0dec1c09`, this one). Ahead of
+  `origin/master` by 10 after close-out (6 carried + these 4), all
+  docs-only; CI is current through `2628cd02`, so no urgency — push is
+  the owner’s call, though the unpushed backlog is growing. Expect 0
+  undocumented commits past the frontier at next Phase 0; measure it.
+
+### 2026-09-20 · \[ad hoc\] S738 close-out: session records (handoff, S737 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S737 evaluation: 9/10 — every
+  checked claim held: 6 unpushed, 0 undocumented, ratchet citation,
+  growth-run prediction all exact). `HANDOFFS.md` receipt complete. No
+  new `PROJECT_LEARNINGS.md` entry (routine decision/records session;
+  the durable record is the deliverable ledger entry + the three prep
+  items). Reduction check: `BACKLOG.md` net −2 lines. quality_ratchet at
+  the deliverable HEAD `9d80dde6`: 1/1 pass · 0 fail · 0 unmeasured ·
+  results 847588b5cc75 · manifest aa983075d6a2 (3,483,940 B ≤ 5,000,000
+  B). ~10 unpushed after close-out (estimate); push is the owner’s call.
+
+### 2026-09-20 · \[ad hoc\] S738 deliverable: package-split disposition — owner ACCEPTED “do not split now” and queued the three S667 prep steps
+
+- The owner accepted the S667 scoping recommendation
+  (`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`
+  §6): the pedigree-diagram layout core stays in `nprcgenekeepr`; no
+  standalone package now. The three revisit conditions stand as written
+  in the doc — (1) fidelity priority lifted AND engine stable
+  (single-digit commits/60 days), (2) next CRAN release accepted, (3) a
+  named second consumer. Re-measured at decision time (S738): condition
+  1 half-met (priority retired S699, but 67 commits/60 days · 27/30 on
+  the core), conditions 2 (`DESCRIPTION` 2.0.0.9000) and 3 (no consumer
+  on record) not met — the recommendation holds on its own test. Context
+  carried from the closed item: coupling is one consumer
+  ([`modPedigreeServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeServer.md))
+  through one function and one back-reference
+  ([`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md),
+  now `R/makePedigreeDiagramData.R:1755`); the Shiny module cannot move
+  (calls 8 package functions); size is NOT an argument for splitting
+  (S727: the feature’s named R sources are 205 KB uncompressed; S737:
+  14.1% of `R/` lines, tarball weight mostly widget payload). The
+  2026-08-19 BACKLOG item’s block REMOVED (completed-item removal
+  checklist); its still-open sub-threads extracted as three new Up Next
+  items — prep D-1 (invert the
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  call), D-2 (remove the two `test_modPedigree.R:1669/:1706` internal
+  reaches), D-3 (`@noRd` blocks for `R/positionTreeApportion.R`) — each
+  its own small TDD session, worthwhile split or not.
+
+### 2026-09-20 · \[ad hoc\] S738 claim: package-split disposition — owner accept/reject of the S667 “do not split now” recommendation *(in progress)*
+
+- Session claimed (stub + pending receipt + this entry). Owner picked
+  the item via the Phase 0 picker; Phase 0 reconcile was clean (0
+  undocumented on both frontiers at `a4b62e16`; S737 receipt complete,
+  ratchet citation matches results file); CI 10/10 green on master;
+  dashboard 96/100; 6 unpushed measured (= S737’s estimate); context
+  budget WARN = CLAUDE.md warn band + growth run 15/10 (as S737
+  predicted), both synced files `canonical ok`. Close-out records the
+  disposition.
+
+### 2026-09-20 · \[ad hoc\] S737 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `0dc52bc7`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S737 commit. S737 total: 4 commits (claim `0528da0e`,
+  deliverable `6346cbde`, records `0dc52bc7`, this one). Ahead of
+  `origin/master` by 6 after close-out (2 carried S736 close-out
+  commits + these 4), all docs-only; CI is current through `2628cd02`,
+  so no urgency — push is the owner’s call. Expect 0 undocumented
+  commits past the frontier at next Phase 0; measure it.
+
+### 2026-09-20 · \[ad hoc\] S737 close-out: session records (handoff, S736 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S736 evaluation: 9/10 — every
+  checked claim held; the picked item’s own pointers made discovery
+  near-zero). `HANDOFFS.md` receipt complete. No new
+  `PROJECT_LEARNINGS.md` entry (routine audit-workstream session; the
+  durable findings live in the audit + the enriched BACKLOG item).
+  Reduction check: `BACKLOG.md` shrank net this session (item block
+  removed). quality_ratchet at the deliverable HEAD `6346cbde`: 1/1 pass
+  · 0 fail · 0 unmeasured · results 2efb342d66ad · manifest aa983075d6a2
+  (3,483,914 B ≤ 5,000,000 B). ~4 unpushed after close-out (estimate);
+  push is the owner’s call.
+
+### 2026-09-20 · \[ad hoc\] S737 deliverable: pedigree-drawing feature growth audit — the feature is 25.4–30.5% of shipped-source growth, 43% of R+test line growth, and ~51–61% of compressed-tarball growth since CRAN 2.0.0
+
+- `docs/audits/PEDIGREE_DRAWING_FEATURE_GROWTH_AUDIT_2026-09-20.md`
+  written; the owner-requested `BACKLOG.md` item (mid-S721, ±20%
+  accepted) is DONE and its block removed in this commit. Headline:
+  shipped source grew 4,323,677 → 7,551,980 B (+74.7%) since pre-feature
+  `fc358df4` (2026-07-29); the feature owns 821,174–983,984 B of that
+  (strict wholly-owned → +partial/twin brackets), i.e. the package is
+  ~19–23% larger in source bytes because of the feature. Lines: 15,582
+  feature lines = 43.0% of R+test line growth (test:source 2.6:1).
+  Compressed: clean tarball rebuilt this session 3,483,939 B (matches
+  the S728 gate figure); feature share ≈ 0.55–0.65 MB ≈ 16–19% of the
+  tarball, dominated not by the feature’s own code but by the
+  vis-network + html2canvas payload its two live widgets embed in
+  `inst/doc/a2interactive.html` (~0.29 MB compressed) — carried forward
+  into the open inst/doc-slimming item’s description as hard numbers.
+  Marker-genetics context: its single 1,247,940 B example CSV outweighs
+  the feature’s entire tracked source.
+
+### 2026-09-20 · \[ad hoc\] S737 claim: pedigree-drawing feature growth measurement *(in progress)*
+
+- Owner pick via the Phase 0 picker: the `BACKLOG.md:117` item
+  (owner-requested mid-S721, ±20% accepted). Deliverable: one
+  measurement report in `docs/audits/` quantifying package growth
+  attributable to the pedigree-drawing feature. Stub + pending receipt
+  committed with this entry; close-out records the rest.
+
+### 2026-09-20 · \[ad hoc\] S736 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `953ca78a`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S736 commit. S736 total: 3 commits (claim `2628cd02` — rode the
+  push, records `953ca78a`, this one). Ahead of `origin/master` by 2
+  after close-out, both docs-only; CI is current through `2628cd02`, so
+  no urgency — push is the owner’s call. Expect 0 undocumented commits
+  past the frontier at next Phase 0; measure it.
+
+### 2026-09-20 · \[ad hoc\] S736 close-out: session records (handoff, S735 evaluation 9/10, receipt complete, self 8/10)
+
+- `SESSION_NOTES.md` handoff written (S735 evaluation: 9/10 — every
+  checked claim held; gap was the carried monitor mechanics never saying
+  `gh run list --commit` needs the full sha). `HANDOFFS.md` receipt
+  complete. No new `PROJECT_LEARNINGS.md` entry (routine clean push,
+  8th: S717/S726/S729/S731/S733/S734/S735). quality_ratchet at the
+  pushed HEAD `2628cd02`: 1/1 pass · 0 fail · 0 unmeasured · results
+  847588b5cc75 · manifest aa983075d6a2 (3,483,944 B ≤ 5,000,000 B). ~2
+  unpushed after close-out (estimate); push is the owner’s call.
+
+### 2026-09-20 · \[ad hoc\] S736 deliverable: push `3b29f498..2628cd02` + CI 4/4 green on the pushed sha — `origin/master` fully current; monitor short-sha blindness found and recorded
+
+- Pushed 3 commits (the 2 unpushed S735 close-out commits — records
+  `1296c6e6`, sha `dd8ea5a7` — + the S736 claim `2628cd02` riding the
+  push, S726–S735 precedent). All 4 push-triggered workflows
+  `completed success` ON THE PUSHED SHA `2628cd02` (verified with the
+  FULL sha, `headSha` echoed back structurally): lint 4m56s (id
+  35541807254), pkgdown 7m01s (35541807276), test-coverage 10m02s
+  (35541807240), R-CMD-check 17m39s (35541807302) — fastest
+  post-S732-fix figure yet (prior band 21m28s–22m17s). **Gotcha found:**
+  `gh run list --commit <short-sha>` silently returns an empty list —
+  the first Monitor arm was blind for 30 min while CI ran green
+  underneath it; poll with the full 40-char sha (`git rev-parse`).
+  Durations are createdAt→updatedAt (include queue; seconds ±).
+
 ### 2026-09-20 · \[ad hoc\] S736 claim: owner-directed push to `origin/master` (stub + pending receipt + in-progress ledger entry) *(in progress)*
 
 - Owner picked the push of the 2 unpushed S735 close-out commits

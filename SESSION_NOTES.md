@@ -63,18 +63,465 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 740 Did
+
+**Deliverable:** Owner-directed push to `origin/master` + CI
+verification (IN PROGRESS) **Started:** 2026-09-20 **Status:** Session
+claimed. Push of the 15 unpushed docs-only commits (+ this claim commit
+riding the push, S726–S736 precedent) beginning; CI verification on the
+pushed sha to follow. **Ledger:** `CHANGELOG: pending` — the claim
+commit’s `CHANGELOG.md` entry says (in progress); Phase 3F records the
+rest. Until close-out, this line is the crash breadcrumb for the next
+session’s reconcile.
+
+### Session 738 Handoff Evaluation (by Session 739)
+
+**Score: 9/10.** **What helped:** “~10 unpushed after close-out”
+measured exactly 10; both frontiers clean at `e3370b82` as predicted;
+the prep-item context (D-1/D-2/D-3 as step 0 of any extraction, the S667
+§6/§2.7 pointers) fed directly into how the new kinship2-package item
+was framed and cross-referenced. **What was missing:** nothing material
+— the new directive was not predictable from S738’s state. **What was
+wrong:** nothing found. **ROI:** high, though lightly exercised
+(same-conversation pickup minutes after the handoff was written).
+
+### What Session 739 Did
+
+**Deliverable:** BACKLOG item added — **DONE** (commit `7b10ac3d`). New
+Up Next item: **discuss making a kinship2-similar standalone package
+from this repository’s code**, owner-directed this session. Two explicit
+steps: **step 1** (READY, Effort M, its own research session) a kinship2
+feature-gap analysis — enumerate kinship2’s exported surface at analysis
+time, classify each feature equivalent/partial/absent here, deliverable
+a per-feature gap table in `docs/research/`; **step 2** (DECISION
+NEEDED, gated on step 1) the owner discussion on whether/at what scope
+to build it. **Combination judgment** (owner said “perhaps combining
+with other backlog item”): placed directly after the S738 prep items
+D-1/D-2/D-3 (step 0 of any extraction) with cross-references, rather
+than merged into the mostly-DONE “Pedigree diagram vs kinship2 audit
+follow-ups” section — that section is a historical triage record
+(drawing-only, stale: \#131–#137/#145 closed most of its gaps) and is
+cited as step-1 prior art instead. The item is framed as the concrete
+path to the S738 disposition’s revisit condition 3 (the “ecosystem
+argument”, S667 doc §6/§2.7). No TDD phases (records only; no `.R`
+files). Lint N/A. **Started/completed:** 2026-09-20 (single session,
+same conversation as S738). Claim `e2671de1`; deliverable `7b10ac3d`;
+records + sha commits follow this handoff. **Ledger:** one
+`CHANGELOG.md` entry per action (claim, deliverable, records, sha). No
+BACKLOG item consumed (this session ADDED one).
+
+**What actually happened, in order:** 1. **Abbreviated re-orient** (S735
+precedent, state minutes old, named honestly): tree clean, both ledger
+frontiers at `e3370b82`, 0 undocumented, 10 unpushed (= S738’s estimate
+exactly); full 8-step orient/dashboard/CI check not re-run. 2. **Claim
+committed** `e2671de1`. 3. **Combination decision researched before
+writing:** read the existing “Pedigree diagram vs kinship2 audit
+follow-ups” section — determined it is a mostly-DONE triage record, so
+adjacency + cross-references beat merging into it. 4. **Item written**
+with S739-verified prior-art pointers (ISSUE_129 audit, S482 spike,
+`comparePedigreeStructure.R`, `shrinkPedigree.R`, `kinship.R`) and the
+explicit caveat that the kinship2 export list in the item is a hint to
+verify at analysis time, not a trusted inventory. Deliverable committed
+`7b10ac3d`; quality_ratchet run at that HEAD (summary in the receipt).
+
+**Self-assessment (Session 739): 9/10.** **Strengths:** (1) the “perhaps
+combining” directive was resolved by reading the candidate section
+first, and the judgment (and its reason) recorded in the ledger rather
+than silently applied; (2) the item is forward-carrying — a future
+session can run step 1 with no re-derivation (prior art enumerated,
+deliverable format named, staleness of the old comparison flagged); (3)
+full claim/receipt/ledger discipline kept for a small records session.
+**Weaknesses:** (1) BACKLOG.md GREW by ~36 lines (FM \#28 tension —
+inherent to an add-an-item directive, but the editorial-compression item
+grows more overdue); (2) the kinship2 export list embedded in the item
+is from model knowledge, flagged as untrusted but still a potential
+stale anchor.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine grooming
+session. **Reduction check (FM \#28):** nothing removed from a
+mandated-read file; `BACKLOG.md` grew +36 lines by owner directive —
+stated explicitly; the editorial-compression item (READY, L) is the
+standing counterweight.
+
+**Next steps (specific):** (A) 14 unpushed after close-out (measured
+post-sha-commit; the ~12 first written here was an arithmetic slip that
+forgot the records + sha commits themselves — recount with
+`git rev-list --count origin/master..HEAD`); all docs-only since
+`2628cd02`; the unpushed backlog keeps growing, so a push+CI session is
+the natural next pick. (B) The new item’s step 1 (kinship2 feature-gap
+analysis, READY, M) is now a first-class research pickup. (C) Other
+priorities unchanged: prep D-1/D-2/D-3 (READY, S each); BACKLOG
+editorial compression (READY, L); inst/doc slimming (DECISION NEEDED,
+M); REUSE registration (owner action, S). (D) Standing report-only set
+unchanged: CLAUDE.md warn band; growth run 16/10 next if nothing
+shrinks.
+
+**Key files:** `BACKLOG.md:98` (the new item, right after prep
+D-1/D-2/D-3), `CHANGELOG.md:41` (S739 entries at top), `HANDOFFS.md`
+(S739 receipt),
+`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`
+(step-1 prior art).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; 14 unpushed after close-out (measured). (2) A
+step-1 pickup must enumerate kinship2’s exports from the installed
+package/CRAN manual at analysis time — the list inside the BACKLOG item
+is an unverified hint, per the item’s own caveat. (3) D-1/D-2 pickups
+are CODE sessions — full TDD gates apply. (4) Standing set unchanged:
+`gh run list --commit` needs the FULL 40-char sha; `scratchpad/`
+invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing
+(Learning 772); trim needs `--budget-bytes 65536`; renv banner expected;
+CLAUDE.md warn band; the two `SESSION_NOTES.md` ceilings differ (owner
+decision pending); suite baseline 2437/0/0/184/0 remote-confirmed on
+`2628cd02`.
+
+### Session 737 Handoff Evaluation (by Session 738)
+
+**Score: 9/10.** **What helped:** “6 unpushed after close-out
+(measured)” measured exactly 6; “expect 0 undocumented; measure it”
+measured 0 on both frontiers; the ratchet citation matched
+`.quality-gates-results.json` byte-for-byte; the growth-run prediction
+(“15/10 next if nothing shrinks”) was exact; the priorities list fed the
+Phase 0 picker directly, and the picked item’s own pointers (the S667
+doc path + the S737 audit context lines) were most of the execution
+plan. **What was missing:** nothing material — the owner asked for an
+S667 briefing before deciding, which the scoping doc itself supplied.
+**What was wrong:** nothing found — every checked claim held. **ROI:**
+high.
+
+### What Session 738 Did
+
+**Deliverable:** Package-split disposition — **DONE.** The owner
+**ACCEPTED** the S667 recommendation (“do not split now”,
+`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` §6)
+**and queued the three prep steps** (D-1 invert
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md),
+D-2 remove the two test-only internal reaches, D-3 `@noRd` blocks for
+`positionTreeApportion.R`) as Up Next items. Deliverable commit
+`9d80dde6`: the 2026-08-19 BACKLOG item block removed (completed-item
+removal checklist), the three prep items written with forward-carrying
+detail and S738-verified line references, disposition + revisit
+conditions recorded in `CHANGELOG.md`. No TDD phases (decision/records;
+no `.R` files). Lint N/A. **Started/completed:** 2026-09-20 (single
+session). Claim `f9b1f2a3`; deliverable `9d80dde6`; records + sha
+commits follow this handoff. **Ledger:** one `CHANGELOG.md` entry per
+action (claim, deliverable, records, sha). BACKLOG item consumed and
+removed; three new items added in its place.
+
+**What actually happened, in order:** 1. **Phase 0:** full 8-step
+orient; reconcile clean (0 undocumented on both frontiers at `a4b62e16`;
+S737 receipt complete, ratchet citation matches results file); CI 10/10
+green on master (latest 4 on `2628cd02`); dashboard 96/100; 6 unpushed
+measured (= S737’s estimate); context budget WARN = CLAUDE.md warn
+band + growth run 15/10 (as predicted), both synced files
+`canonical ok`; the 5 known untracked files unchanged; no live
+sequencing-audit cluster. 2. **Owner picked the package-split
+disposition** via the Phase 0 picker; claim `f9b1f2a3`. 3. **Revisit
+conditions re-measured at decision time** (the S667 numbers were 18 days
+old): condition 1 half-met (priority retired S699, but core churn 67
+commits/60 days · 27/30 — not single digits), condition 2 not met
+(`DESCRIPTION` 2.0.0.9000), condition 3 not met (no named consumer).
+Prep-step targets re-verified current:
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+call drifted `:1551` → `R/makePedigreeDiagramData.R:1755`; the two
+`test_modPedigree.R` reaches exactly at `:1669`/`:1706`;
+`positionTreeApportion.R` roxygen count 0. 4. **Owner asked for the S667
+findings before deciding** — briefing given from the scoping doc
+(boundary shape, costs D4/D5/D7, hypothetical-benefit finding, prep
+steps); owner then chose **“Accept + queue prep steps”** via
+AskUserQuestion. 5. **Records:** BACKLOG block (29 lines) replaced by
+the three prep items (27 lines); CHANGELOG deliverable entry carries the
+disposition, the re-measured conditions, and the load-bearing context
+from the removed block; deliverable committed `9d80dde6`;
+quality_ratchet run at that HEAD (summary in the receipt).
+
+**Self-assessment (Session 738): 9/10.** **Strengths:** (1) the decision
+was posed on re-measured, current facts (churn, version, line drift),
+not the 18-day-old S667 numbers; (2) all three prep-item targets
+verified against the live tree before being written into BACKLOG (no
+stale line references shipped); (3) the completed-item removal checklist
+followed exactly — block removed, record enriched into CHANGELOG,
+still-open sub-threads extracted as their own items; (4) scope held (no
+prep step was started; FM \#23 respected — the owner’s clarify request
+got a briefing, not file edits). **Weaknesses:** (1) the first
+AskUserQuestion was posed before offering the S667 briefing — the owner
+had to ask for context that could have been volunteered with the
+question; (2) BACKLOG net reduction was only −2 lines (the three new
+items nearly replace the removed block’s bulk).
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine
+decision/records session; the durable record is the CHANGELOG entry +
+the prep items. **Reduction check (FM \#28):** `BACKLOG.md` net −2 lines
+(29-line block → 27 lines of prep items) — a mandated-read file got
+(barely) smaller.
+
+**Next steps (specific):** (A) ~10 unpushed after close-out (6 carried +
+4 S738: claim, deliverable, records, sha — last two estimated at write
+time; recount with `git rev-list --count origin/master..HEAD`); all
+docs-only since `2628cd02`, so CI is current and a push session is
+routine when the owner wants one (S726–S736 precedent) — the backlog of
+unpushed commits is growing, so sooner is better than later. (B) New
+natural code pickups: prep D-1 (READY, S, TDD-gated — invert
+[`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+at `R/makePedigreeDiagramData.R:1755`, re-verify the line first), D-2
+(READY, S, TDD-gated — `test_modPedigree.R:1669/:1706`), D-3 (READY, S,
+REFACTOR-only roxygen hygiene). (C) Remaining priorities: BACKLOG.md
+editorial compression (READY, L); inst/doc slimming (DECISION NEEDED, M,
+`BACKLOG.md:100` area); REUSE registration (owner web-action, S); NPRC
+outreach (owner review). (D) Standing report-only set unchanged:
+CLAUDE.md warn band; growth run 16/10 next if nothing shrinks
+(BACKLOG.md is not in the budget file, so its −2 lines won’t reset the
+run).
+
+**Key files:** `BACKLOG.md:71` (the three new prep items),
+`CHANGELOG.md:41` (S738 entries at top),
+`docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` §6
+(revisit conditions — the doc is the durable analysis), `HANDOFFS.md`
+(S738 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; ~10 unpushed after close-out (8 measured + 2
+estimated). (2) A session picking up D-1 or D-2 is a CODE session: full
+TDD gates apply (phase declarations, AskUserQuestion at every
+transition), unlike the recent docs-only run — don’t carry the “no TDD
+phases” reflex forward. (3) The layout core still changes; re-verify
+`:1755` (D-1) and `:1669/:1706` (D-2) before editing. (4) Standing set
+unchanged: `gh run list --commit` needs the FULL 40-char sha;
+`scratchpad/` invisible to git BY OWNER DECISION; ratchet ~2 min AFTER
+committing (Learning 772); trim needs `--budget-bytes 65536`; renv
+banner expected; CLAUDE.md warn band; the two `SESSION_NOTES.md`
+ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0
+remote-confirmed on `2628cd02`.
+
+### Session 736 Handoff Evaluation (by Session 737)
+
+**Score: 9/10.** **What helped:** the priorities list fed the Phase 0
+picker directly, and the picked item’s own pointers (S667 coupling
+inventory names the feature file set; S727 upper bound +1.07 MB)
+eliminated nearly all discovery; “expect 0 undocumented; measure it”
+measured 0 on both frontiers; “~2 unpushed (estimate)” measured exactly
+2; the ratchet citation matched `.quality-gates-results.json`
+byte-for-byte; the standing set held (CLAUDE.md warn band present;
+growth run 14/10, consistent with S736’s 13/10 + one more non-shrinking
+measurement). **What was missing:** nothing material — this session’s
+task carried its own pointers in the BACKLOG item. **What was wrong:**
+nothing found. **ROI:** high.
+
+### What Session 737 Did
+
+**Deliverable:** Pedigree-drawing feature growth measurement — **DONE.**
+`docs/audits/PEDIGREE_DRAWING_FEATURE_GROWTH_AUDIT_2026-09-20.md`
+(commit `6346cbde`; BACKLOG item removed and the open inst/doc-slimming
+item enriched in the same commit). Headline: the feature owns
+**25.4–30.5% of shipped-source byte growth** (821,174–983,984 B of
++3,228,303 B since pre-feature `fc358df4`, 2026-07-29 — the package is
+~19–23% larger in source bytes because of it), **43.0% of R+test line
+growth** (15,582 lines; test:source 2.6:1), and **≈0.55–0.65 MB ≈ 51–61%
+of compressed-tarball growth** since CRAN 2.0.0 (tarball rebuilt clean
+this session: 3,483,939 B, matching the S728 gate figure). The feature’s
+largest shipped weight is NOT its own code: ~0.29 MB compressed is the
+vis-network + html2canvas payload its two live widgets embed in
+`inst/doc/a2interactive.html` — hard numbers now carried into the
+inst/doc BACKLOG item. Marker-genetics context: one 1,247,940 B example
+CSV outweighs the feature’s entire tracked source. No TDD phases
+(measurement + docs; no `.R` files). Lint N/A. **Started/completed:**
+2026-09-20 (single session). Claim `0528da0e`; deliverable `6346cbde`;
+records + sha commits follow this handoff. **Ledger:** one
+`CHANGELOG.md` entry per action (claim, deliverable, records, sha).
+BACKLOG item consumed and removed (completed-item removal checklist).
+
+**What actually happened, in order:** 1. **Phase 0:** full 8-step
+orient; reconcile clean (0 undocumented on both frontiers at `aa60cd58`;
+S736 receipt complete, ratchet citation matches results file); CI 10/10
+green on master (latest 4 on `2628cd02`); dashboard 96/100; 2 unpushed
+measured (= S736’s estimate); context budget WARN = CLAUDE.md warn
+band + growth run 14/10, both synced files `canonical ok`. Sequencing
+audits checked: \#146–153 all closed, no live cluster. 2. **Owner picked
+the growth measurement** via the Phase 0 picker; claim `0528da0e`. 3.
+**Classification:** feature file set from the S667 scoping doc, verified
+per-file by `git log --diff-filter=A` creation dates and grep usage
+(e.g. the affected/name/twins example CSVs are consumed by drawing
+tests + diagram screenshots generator; `shrinkPedigree.R` created
+2026-08-14 as Track B fidelity apparatus; twin-relations infra bucketed
+separately as ambiguous; `enumerateMaximalIndependentSets.R`/`zzz.R`
+confirmed NON-feature via their creating commits). 4. **Measurement:**
+per-file byte deltas `fc358df4`→HEAD via `git ls-tree -r -l` joined in a
+scratchpad script (shipping filter approximating `.Rbuildignore`); line
+counts at both commits; clean tarball rebuilt per the S727 §7 recipe
+(3,483,939 B, 5 B from the gate figure = gzip header noise);
+`inst/doc/a2interactive.html` dissected by script block (vis-network ×3
+= 1,069,799 B + html2canvas 124,573 B + 2 widget payloads 33,421 B
+attributed; the 594 KB d3-based block and 17 embedded images excluded —
+conservative). Two compressed-attribution methods (independent gzip -9
+vs proportional tarball share) agreed within 10%; report brackets both.
+5. **Reconciliation:** bucket arithmetic reconciles to the byte
+(821,174 + 119,748 + 43,062 + 2,258,954 − 14,635 double-count =
+3,228,303 ✓).
+
+**Self-assessment (Session 737): 9/10.** **Strengths:** (1) attribution
+built from verified creation dates + usage greps, not filename
+pattern-matching; (2) two independent compressed methods cross-checked;
+arithmetic reconciled exactly; (3) the audit’s most actionable number
+(widget payload ≈ 0.29 MB compressed) was forward-carried into the live
+inst/doc BACKLOG item, not left buried in the report; (4) scope held
+(measurement only, no remedy); full claim/receipt/ledger discipline
+kept. **Weaknesses:** (1) the partial-file bucket is an upper bound by
+construction, not a measurement (bracketed, disclosed); (2) the 17
+embedded images in a2interactive.html (≤538 KB uncompressed) were left
+unattributed — bounded and noted, but a per-image section mapping would
+have tightened the compressed range.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine
+audit-workstream session; the durable findings live in the audit doc +
+the enriched BACKLOG item. **Reduction check (FM \#28):** `BACKLOG.md`
+shrank net (−18 lines item removal, +6 lines enrichment) — a
+mandated-read file got smaller this session.
+
+**Next steps (specific):** (A) ~3 unpushed commits after close-out
+(deliverable + records + sha; claim `0528da0e` also unpushed — recount
+with `git rev-list --count origin/master..HEAD`, measured 5 before the
+sha commit → 6 after); CI current through `2628cd02`; docs-only since,
+so a push session is routine when the owner wants one (S726–S736
+precedent). (B) Priorities after this session: package-split
+disposition + REUSE registration (owner decisions — the audit adds
+ammunition: the feature is 14.1% of R/ lines, and its tarball weight is
+mostly the widget payload, not code); BACKLOG.md editorial compression
+(READY, L, `BACKLOG.md:227` area); inst/doc slimming (DECISION NEEDED,
+M, `BACKLOG.md:100` — now with quantified savings: ~0.29 MB from the
+widget replacement alone + the 0.4–0.9 MB html_vignette estimate). (C)
+Standing report-only set unchanged: CLAUDE.md warn band; growth run
+(15/10 next if nothing shrinks — note BACKLOG.md is not in the budget
+file, so this session’s reduction won’t reset it).
+
+**Key files:**
+`docs/audits/PEDIGREE_DRAWING_FEATURE_GROWTH_AUDIT_2026-09-20.md` (the
+deliverable), `CHANGELOG.md:41` (S737 entries at top), `BACKLOG.md:100`
+(inst/doc item, now enriched), `HANDOFFS.md:158` (S737 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; 6 unpushed after close-out (measured: 2
+carried S736 commits + 4 S737). (2) The audit’s shipping filter
+approximates `.Rbuildignore` in a scratchpad script — if anyone
+re-derives the numbers, §5 of the audit has the reproduction commands;
+scratchpad copies do not survive the session. (3)
+[`pkgbuild::build()`](https://pkgbuild.r-lib.org/reference/build.html)
+on a clean export takes ~4 min locally and its output tarball differs
+from the gate figure by ~5 B (gzip mtime header) — not a discrepancy.
+(4) Standing set unchanged: `gh run list --commit` needs the FULL
+40-char sha; `scratchpad/` invisible to git BY OWNER DECISION; ratchet
+~2 min AFTER committing (Learning 772); trim needs
+`--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; the
+two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite
+baseline 2437/0/0/184/0 remote-confirmed on `2628cd02`.
+
+### Session 735 Handoff Evaluation (by Session 736)
+
+**Score: 9/10.** **What helped:** “~2 unpushed” measured exactly 2;
+“expect 0 undocumented; measure it” measured 0 on both frontiers; the
+ratchet citation matched `.quality-gates-results.json` byte-for-byte;
+the priorities list fed the Phase 0 picker directly. **What was
+missing:** the carried CI-monitor mechanics (“poll
+`gh run list --commit <sha>`”) never say the sha must be the FULL
+40-char form — a short sha silently returns an empty list, and this
+session’s monitor sat silent through an entirely green run for its whole
+30-min arm because of it (whether prior sessions polled with full shas
+is not verifiable from the notes, which print short shas throughout).
+**What was wrong:** nothing found — every checked claim held; the ~21–22
+min R-CMD-check figure was an overestimate this time (17m39s) in the
+safe direction. **ROI:** high.
+
 ### What Session 736 Did
 
 **Deliverable:** Owner-directed push to `origin/master` + CI
-verification on the pushed sha (IN PROGRESS) **Started:** 2026-09-20
-**Status:** Session claimed. Full 8-step Phase 0 orient complete
-(reconcile clean, 0 undocumented on both frontiers at `dd8ea5a7`;
-dashboard 96/100; CI 4/4 green on `3b29f498`; 2 unpushed measured =
-S735’s estimate). Owner picked the push via the Phase 0 picker. Claim
-rides the push (S726–S735 precedent). **Ledger:** `CHANGELOG: pending` —
-the claim commit’s `CHANGELOG.md` entry says (in progress); Phase 3F
-records the rest. Until close-out, this line is the crash breadcrumb for
-the next session’s reconcile.
+verification — **DONE.** Pushed `3b29f498..2628cd02` (3 commits: the 2
+unpushed S735 close-out commits — records `1296c6e6`, sha `dd8ea5a7` — +
+the S736 claim `2628cd02` riding the push, S726–S735 precedent). All 4
+push-triggered workflows `completed success` ON THE PUSHED SHA
+`2628cd02` (verified via `gh run list --commit <full-sha>` with
+`headSha` echoed back structurally): lint 4m56s (id 35541807254),
+pkgdown 7m01s (35541807276), test-coverage 10m02s (35541807240),
+R-CMD-check 17m39s (35541807302) — fastest post-S732-fix figure yet
+(prior band 21m28s–22m17s). No TDD phases (push + docs; no `.R` files).
+Lint N/A. **Started/completed:** 2026-09-20 (single session). Claim
+`2628cd02` (rode the push); records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, push+CI
+deliverable, records, sha). No BACKLOG item consumed (the push was a
+Phase 0 owner pick).
+
+**What actually happened, in order:** 1. **Phase 0:** full 8-step
+orient; reconcile clean (0 undocumented on both frontiers at `dd8ea5a7`;
+S735 receipt complete, ratchet citation matches results file); CI 4/4
+green on `3b29f498`; dashboard 96/100; 2 unpushed measured (= S735’s
+estimate); 5 known untracked files unchanged. Context budget: CLAUDE.md
+warn band, growth run 13/10 — and the
+`SESSION_RUNNER.md`/`SAFEGUARDS.md` differs-from-canonical flags are
+GONE (both `synced / canonical ok`; tree clean, no local change — the
+checker’s reference caught up). Report-only. 2. **Owner picked the
+push** via the Phase 0 AskUserQuestion picker. 3. **Claim committed and
+rode the push:** `2628cd02`; push `3b29f498..2628cd02`; 0 unpushed after
+the push — `origin/master` fully current. 4. **CI verification:** the
+first Monitor arm polled `gh run list --commit 2628cd02` (SHORT sha) —
+which silently returns an empty list — and expired after 30 min with
+zero events while all 4 workflows completed green underneath it. Direct
+check with the full sha (`git rev-parse`) returned all 4
+`completed success` with `headSha` matching exactly; conclusions
+verified from the JSON, not inferred from silence. 5. **quality_ratchet
+at the pushed HEAD `2628cd02`:** 1/1 pass · 0 fail · 0 unmeasured ·
+results 847588b5cc75 · manifest aa983075d6a2 (3,483,944 B ≤ 5,000,000
+B).
+
+**Self-assessment (Session 736): 8/10.** **Strengths:** (1) deliverable
+verified on the exact pushed sha structurally (`headSha` echoed from the
+JSON), run ids + durations recorded; (2) the monitor’s silence was
+treated as a signal to investigate, not as “still running” — the root
+cause (short-sha filter) was pinned down and recorded rather than the
+run being re-armed blind; (3) scope held; full claim/receipt/ledger
+discipline kept. **Weaknesses:** (1) the 30-min silent arm was avoidable
+— the filter was never smoke-tested against an in-flight run before
+arming (a single foreground `gh run list --commit <sha>` while runs were
+queued would have shown the empty list immediately); (2) durations are
+createdAt→updatedAt and include queue time (seconds ±).
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean push
+(8th: S717/S726/S729/S731/S733/S734/S735); the full-sha gotcha lives in
+the gotchas below and the deliverable ledger entry. **Reduction check:**
+nothing removed from a mandated-read file this session — none over
+ceiling (SESSION_NOTES.md ~32 KB live vs 65,536 B); stated explicitly
+per FM \#28’s decay term.
+
+**Next steps (specific):** (A) No push pending at handoff-write time
+except this close-out’s own ~2 commits (records + sha, docs-only,
+estimate) — recount with `git rev-list --count origin/master..HEAD`; CI
+current through `2628cd02`; no urgency. (B) Priorities unchanged:
+pedigree-growth measurement (READY, S, `BACKLOG.md:117`); package-split
+disposition + REUSE registration (owner decisions); BACKLOG.md editorial
+compression (READY, L); inst/doc slimming (DECISION NEEDED, M,
+`BACKLOG.md:100`). (C) Standing report-only set SHRINKS by one: the
+synced-files differ-from-canonical signal cleared this session (verified
+`synced / canonical ok`); the growth run (13/10) and CLAUDE.md warn band
+remain.
+
+**Key files:** `CHANGELOG.md:41` (S736 entries at top),
+`HANDOFFS.md:158` (S736 receipt), `BACKLOG.md:117` (next natural
+pickup).
+
+**Gotchas for the next session:** (1) **`gh run list --commit` requires
+the FULL 40-char sha** — a short sha returns an empty list with no
+error, so a monitor built on it is blind while looking armed; capture it
+with `git rev-parse <short>` before polling (found this session at the
+cost of one silent 30-min arm). (2) Expect 0 undocumented commits at
+next Phase 0 — measure it; ~2 unpushed (estimate at write time). (3)
+R-CMD-check 17m39s on `2628cd02` — post-fix range now 17m39s–22m17s; one
+30-min Monitor arm suffices. (4) The differs-from-canonical flags on
+`SESSION_RUNNER.md`/`SAFEGUARDS.md` cleared this run; if they reappear,
+it is the checker’s canonical reference moving, not local edits (S734
+verification: last touch `b773ddb6`, tree clean). (5) Standing set
+unchanged otherwise: `scratchpad/` invisible to git BY OWNER DECISION;
+ratchet ~2 min, AFTER committing (Learning 772); trim needs
+`--budget-bytes 65536`; renv banner expected; `CLAUDE.md` warn band; the
+two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite
+baseline 2437/0/0/184/0 — remote-confirmed again by R-CMD-check on
+`2628cd02`.
 
 ### Session 734 Handoff Evaluation (by Session 735)
 
