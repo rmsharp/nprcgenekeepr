@@ -158,17 +158,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S751
 date: 2026-09-21
-status: pending
-active_task: Push to origin/master + CI verification (routine operational pick, S726–S749 precedent; owner-picked via the Phase 0 picker). 6 unpushed docs-only commits at Orient; CI current through 589cf73c with no code changed since — records-currency push. Claim commit rides the push.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Push to origin/master + CI verification — DONE (routine operational pick, S726–S749 precedent; owner-picked via the Phase 0 picker). Pushed 589cf73c..a7613044 (7 commits, ALL docs-only; claim rode the push); all 4 push-triggered workflows completed success ON THE PUSHED SHA after one transient-infra rerun.
+what_was_done: Claim a7613044 (rode the push); 0 unpushed confirmed by recount. Filter smoke-tested BEFORE arming (gh run list --commit full-40-char-sha returned all 4 workflows, headSha echoed). First attempt: R-CMD-check failure — diagnosed at failed-STEP granularity before reacting: windows setup-pandoc@v2 (pandoc 3.8.3 download, HTTP 504 x2 then fatal) + macos setup-r@v2 (gfortran download, 504 x2 then fatal), 14:49–14:50 UTC; all 3 ubuntu check jobs passed; --log-failed showed zero package output on the failed platforms. Fixed as found per the S636 CI-break convention (no GitHub issue): gh run rerun 35614709050 --failed (same run id + headSha, ubuntu successes retained); rerun success. Final structural verification: all 4 completed success with headSha = a761304410c079847d09de422cba73814574408b echoed per run — lint 4m56s (35614708951), pkgdown 6m52s (35614708967), test-coverage 10m3s (35614708970), R-CMD-check 41m49s wall across BOTH attempts (35614709050). Learning 774 appended. No BACKLOG item consumed; no NEWS.Rmd/lint/pkgdown-reference/issue-close checklist owed (no code, no exports, no item closed). FM #28 reduction: none — said plainly.
+next_steps: (A) BACKLOG editorial compression (READY, L) — now the top READY pick: S518 item at BACKLOG.md:181; start with the "Pedigree diagram vs kinship2" regrowth check (:280). (B) inst/doc slimming (DECISION NEEDED, M): owner ratifies the html_vignette move first (BACKLOG.md:110). (C) kinship2-standalone stays BLOCKED on the S738 revisit conditions only (BACKLOG.md:72; planning session when the owner judges them met). (D) Push+CI NOT urgent — 2 docs-only records/sha commits unpushed after close-out (recount with git rev-list --count origin/master..HEAD). (E) Alternative code-adjacent pick: chromote CDP-timeout fallback research (READY, M, BACKLOG.md:131).
+key_files: no code touched. SESSION_NOTES.md:49 (S751 handoff), HANDOFFS.md (this receipt), CHANGELOG.md:41 (S751 entries at top), PROJECT_LEARNINGS.md (Learning 774, at end), .quality-gates-results.json (head now a7613044)
+gotchas: Expect 0 undocumented at next Phase 0 — measure it; 2 unpushed expected after close-out (recount). CI now CURRENT through a7613044 — the R-CMD-check green there is a RERUN (attempt 2, same run id 35614709050); its 41m49s wall duration spans both attempts — never compare against the 17m39s–22m17s single-attempt band. Ratchet baseline now 3,489,091 B at a7613044 (−20 B vs S750 — build-metadata noise, touched files .Rbuildignore'd); cite from .quality-gates-results.json, never the rounded run table (table 3.48909e+06 vs file 3,489,091 — the trap again). A future red R-CMD-check: read failed STEP names first (setup-* vs check) — Learning 774. Standing set unchanged: full-40-char sha + smoke-test before arming; scratchpad/ invisible to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band, growth run 27/10 (28/10 next if nothing shrinks — measure, don't predict); the two SESSION_NOTES.md ceilings differ (owner decision pending); suite baseline 0/0/184 remotely confirmed through a7613044.
+runtime_smoke: n/a — docs-only push (no package file touched); the package-level evidence is CI on the pushed sha: R-CMD-check success across all 5 platform jobs (attempt 2 after transient-504 setup failures), plus lint/pkgdown/test-coverage green. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results e7499ae4e4a9 · manifest aa983075d6a2 (measured 3,489,091 B ≤ 5,000,000 B at a7613044, read from the results file)
+changelog_ref: a7613044
 commit: pending
 ```
-<free-text: S751 claim stub — crash breadcrumb. If this block is still `pending` at a later session's Phase 0 reconcile, this session ended before close-out; reconstruct from git log.>
+<free-text: S751 +/- — plus: predecessor claims re-measured (6 unpushed exact, 0 undocumented, growth run 27/10 exact); filter smoke-tested before arming; the red R-CMD-check diagnosed to failed-step granularity BEFORE the rerun (evidence, not the "docs-only so infra" presumption — Learning 773's carried-claim shape avoided); structural verification unchanged through the rerun (same run id/headSha). Minus: no FM #28 reduction (no mandated-read file got smaller); ~40 min extra wall time from external infra (unavoidable; it is why this session captured a learning where the 12 clean predecessors did not). Predecessor 9/10: every checked claim held exactly; the 504 flake was not a knowable claim.>
 
 ```handoff
 session: S750

@@ -46,17 +46,104 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 750 Handoff Evaluation (by Session 751)
+**Score: 9/10.** **What helped:** "6 unpushed expected (recount)" measured
+exactly 6; "expect 0 undocumented; measure it" measured 0 on both frontiers
+at `1f8a32f0`; growth run measured 27/10 (exactly the "next if nothing
+shrinks" value); the S750 receipt's ratchet citation matched
+`.quality-gates-results.json` byte-for-byte (ab63a9bfe821, 3,489,111 B at
+`cc6d5d6b`); all BACKLOG anchors held after re-grep (:181 following the
+predicted ~39-line shift, :110, :72); next step (A)'s push+CI guidance was
+the execution plan as written — ALL-docs-only held, CI-current-through-
+`589cf73c` held, full-40-char-sha `--commit` filter + smoke-test discipline
+ran verbatim. **What was missing:** nothing material (the transient-504 CI
+flake this session hit was not a knowable claim). **What was wrong:**
+nothing found — every checked claim held. **ROI:** high.
+
 ### What Session 751 Did
-**Deliverable:** Push to `origin/master` + CI verification (routine
-operational pick, S726–S749 precedent; owner-picked via the Phase 0
-picker) (IN PROGRESS)
-**Started:** 2026-09-21
-**Status:** Session claimed. 6 unpushed docs-only commits measured at
-Orient (+ this claim riding the push = 7 expected). CI current through
-`589cf73c`, no code changed since — records-currency push. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry
-says (in progress); Phase 3F records the rest. Until close-out, this line
-is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Push to `origin/master` + CI verification — **DONE.**
+Pushed `589cf73c..a7613044` (7 commits: 6 carried S750/S749 records + this
+session's claim riding the push, S726–S749 precedent), ALL docs-only.
+**First attempt: R-CMD-check `failure`** — diagnosed at failed-step
+granularity BEFORE reacting: failures confined to setup steps (windows
+`setup-pandoc@v2`: pandoc 3.8.3 download HTTP 504 twice then fatal; macos
+`setup-r@v2`: gfortran download 504 twice then fatal, both 14:49–14:50
+UTC); all 3 ubuntu check jobs passed; `--log-failed` showed zero package
+output on the failed platforms. Fixed as found per the S636 CI-break
+convention (no GitHub issue): `gh run rerun 35614709050 --failed` — same
+run id + headSha, ubuntu successes retained; rerun `success`. **Final
+structural verification: all 4 workflows `completed success` ON THE PUSHED
+SHA** `a761304410c079847d09de422cba73814574408b`, `headSha` echoed back per
+run: lint 4m56s (id 35614708951), pkgdown 6m52s (35614708967),
+test-coverage 10m3s (35614708970), R-CMD-check 41m49s wall ACROSS BOTH
+ATTEMPTS (35614709050 — not comparable to the 17m39s–22m17s single-attempt
+band). 0 unpushed after the push; two monitors (initial 4-workflow watch +
+a fresh rerun watch — a new watch, not an expiry re-arm).
+**Started/completed:** 2026-09-21 (single session). Claim `a7613044` (rode
+the push); records + sha commits follow this handoff. **Ledger:** one
+`CHANGELOG.md` entry per action (claim, deliverable, records, sha). No
+BACKLOG item consumed (routine operational pick).
+
+**Self-assessment (Session 751): 9/10.** **Strengths:** (1) every
+predecessor claim re-measured, not assumed (6 unpushed, 0 undocumented on
+both frontiers, growth run 27/10); (2) filter smoke-tested before arming;
+(3) the red R-CMD-check was diagnosed to failed-step granularity
+(`gh run view --json jobs` + `--log-failed`) before any action — the rerun
+was chosen on evidence (setup-step 504s, no package output), not on the
+"docs-only, must be infra" presumption; (4) verification stayed structural
+through the rerun (same run id/headSha, `headSha` echoed per run).
+**Weaknesses:** (1) **FM #28 reduction: none this session** — no
+mandated-read file got smaller (this handoff adds bytes to
+`SESSION_NOTES.md`; still under its 65,536 B ceiling) — said plainly per
+the degradation-detection row; (2) ~40 min extra wall time vs a clean
+push session (external infra; unavoidable, but it is why this session
+captured a learning where the 12 clean predecessors did not).
+
+**Learnings:** `PROJECT_LEARNINGS.md` Learning 774 appended — diagnose a
+red R-CMD-check at failed-STEP granularity before reacting; setup-step
+504s are infra; `gh run rerun --failed` keeps run id + headSha so
+`--commit` structural verification is unchanged; the both-attempts wall
+duration is not comparable to the single-attempt band.
+
+**Next steps (specific):** (A) **BACKLOG editorial compression (READY,
+L):** now the top READY pick — the S518 item at `BACKLOG.md:181`; start
+with the "Pedigree diagram vs kinship2" section's regrowth check (`:280`).
+(B) **inst/doc slimming (DECISION NEEDED, M):** owner must first ratify
+moving the 3 `html_document` vignettes to `html_vignette`
+(`BACKLOG.md:110`). (C) **kinship2-standalone stays BLOCKED** on the S738
+revisit conditions only (`BACKLOG.md:72`; owner judges; planning session
+when unblocked). (D) **Push+CI: NOT urgent** — only 2 docs-only
+records/sha commits unpushed after close-out (recount with
+`git rev-list --count origin/master..HEAD`). (E) Alternative
+code-adjacent pick: chromote CDP-timeout fallback research (READY, M,
+`BACKLOG.md:131` — research only).
+
+**Key files:** no code touched. `SESSION_NOTES.md` (this handoff),
+`HANDOFFS.md` (S751 receipt), `CHANGELOG.md:41` (S751 entries at top),
+`PROJECT_LEARNINGS.md` (Learning 774, at end),
+`.quality-gates-results.json` (head now `a7613044`).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; 2 unpushed expected after close-out (recount).
+(2) **CI is now CURRENT through `a7613044`** — every commit on
+`origin/master` has remote confirmation; the R-CMD-check green on
+`a7613044` is a RERUN (attempt 2) on the same run id 35614709050, and its
+41m49s wall duration spans both attempts — don't read it against the
+17m39s–22m17s band. (3) Ratchet baseline is now 3,489,091 B at `a7613044`
+(−20 B vs S750 — build-metadata noise; touched files `.Rbuildignore`d);
+cite from `.quality-gates-results.json`, never the rounded run table
+(table 3.48909e+06 vs file 3,489,091 this session — the trap again).
+(4) A future red R-CMD-check: read failed STEP names first (setup-* vs
+the check step) — Learning 774. (5) Standing set unchanged:
+`gh run list --commit` needs the FULL 40-char sha + smoke-test the filter
+before arming a monitor; `scratchpad/` invisible to git BY OWNER DECISION;
+ratchet AFTER committing (Learning 772); trim needs `--budget-bytes
+65536`; renv banner expected; CLAUDE.md warn band; growth run 27/10 at
+this Orient (28/10 next if nothing shrinks — measure, don't predict); the
+two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite
+baseline 0 failed / 0 error / 184 skipped, remotely confirmed through
+`a7613044` (R-CMD-check green across 5 platforms; no code changed since
+`5d281ad5`).
 
 ### Session 749 Handoff Evaluation (by Session 750)
 **Score: 8/10.** **What helped:** "2 unpushed expected (recount)" measured

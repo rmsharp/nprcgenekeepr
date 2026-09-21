@@ -38,6 +38,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S751 close-out: session records (handoff, S750 evaluation 9/10, receipt complete, self 9/10, Learning 774)
+- `SESSION_NOTES.md` handoff written (S750 evaluation: 9/10 — every
+  checked claim held exactly: 6 unpushed, 0 undocumented on both
+  frontiers, growth run 27/10, byte-identical ratchet citation, current
+  anchors after re-grep; the transient-504 CI flake was not a knowable
+  claim). `HANDOFFS.md` receipt complete. `PROJECT_LEARNINGS.md` Learning
+  774 appended: diagnose a red R-CMD-check at failed-STEP granularity
+  before reacting — setup-step 504s are infrastructure; `gh run rerun
+  --failed` keeps run id + headSha so `--commit` structural verification
+  is unchanged; the both-attempts wall duration is not comparable to the
+  single-attempt band. Reduction check (FM #28): none this session — no
+  mandated-read file got smaller (said plainly). Runtime smoke: n/a —
+  docs-only push; package evidence is CI green on the pushed sha across
+  all 5 R-CMD-check platform jobs. Ratchet at pushed HEAD `a7613044`:
+  1/1 pass · 0 fail · 0 unmeasured · results e7499ae4e4a9 · manifest
+  aa983075d6a2 (3,489,091 B ≤ 5,000,000 B, read from the results file;
+  −20 B vs S750 is build-metadata noise — touched files `.Rbuildignore`d).
+
+### 2026-09-21 · [ad hoc] S751 deliverable: pushed `589cf73c..a7613044` (7 commits, ALL docs-only); all 4 workflows green ON THE PUSHED SHA after one transient-infra rerun
+- Push: 7 commits (6 carried S750/S749 records + the claim riding the
+  push); 0 unpushed confirmed by recount. Filter smoke-tested before
+  arming (`gh run list --commit <full-40-char-sha>`, `headSha` echoed).
+  **First attempt: R-CMD-check `failure` — transient infrastructure, not
+  the package:** failures confined to setup steps (windows
+  `setup-pandoc@v2`: pandoc 3.8.3 download HTTP 504 ×2 then fatal; macos
+  `setup-r@v2`: gfortran download 504 ×2 then fatal; 14:49–14:50 UTC);
+  all 3 ubuntu check jobs passed; `--log-failed` showed zero package
+  output on the failed platforms. Fixed as found per the S636 CI-break
+  convention (no GitHub issue): `gh run rerun 35614709050 --failed` —
+  same run id + headSha, ubuntu successes retained; rerun `success`.
+  Final structural verification: all 4 `completed success` with `headSha`
+  = `a761304410c079847d09de422cba73814574408b` echoed per run — lint
+  4m56s (35614708951), pkgdown 6m52s (35614708967), test-coverage 10m3s
+  (35614708970), R-CMD-check 41m49s wall across both attempts
+  (35614709050). CI is now current through `a7613044`.
+
 ### 2026-09-21 · [ad hoc] S751 claim: push to `origin/master` + CI verification (in progress)
 - Routine operational pick (S726–S749 precedent), owner-picked via the
   Phase 0 picker over BACKLOG compression, inst/doc slimming, and
