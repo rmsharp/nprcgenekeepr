@@ -38,6 +38,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S749 close-out: session records (handoff, S748 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S748 evaluation: 9/10 — 6-unpushed and
+  clean-frontier claims held exactly; growth-run trajectory exact (25/10
+  measured); ratchet citation byte-identical; its push+CI guidance was the
+  execution plan as written; nothing found wrong). `HANDOFFS.md` receipt
+  complete. No new `PROJECT_LEARNINGS.md` entry (routine clean push+CI —
+  12th consecutive, extending S747's 11th). Reduction check (FM #28): none
+  this session — no mandated-read file got smaller; said plainly. Runtime
+  smoke: n/a — push-only; the CI runs are the runtime evidence.
+  quality_ratchet at `589cf73c`: 1/1 pass · 0 fail · 0 unmeasured · results
+  b740dd347d67 · manifest aa983075d6a2 (3,489,040 B ≤ 5,000,000 B, read
+  from the results file — the run table rounded to 3.48904e+06; the +167 B
+  vs S748 is build-metadata noise, all touched files being
+  `.Rbuildignore`d, verified `:72/:76/:79/:154`).
+
+### 2026-09-21 · [ad hoc] S749 deliverable: pushed `5d281ad5..589cf73c` to `origin/master`; all 4 workflows `completed success` on the pushed sha
+- Records-currency push (S726–S747 precedent): 7 commits (S747–S748
+  records/sha + the S749 claim riding the push), ALL docs-only; no code
+  changed since `5d281ad5`, which was already CI-confirmed. 0 unpushed
+  after the push (recount). Filter smoke-tested against in-flight runs
+  BEFORE arming the single 30-min monitor (no re-arm; completions lint →
+  pkgdown → test-coverage → R-CMD-check, all success). Structural
+  verification via `gh run list --commit <full-40-char-sha>` with `headSha`
+  echoed back per run: lint 3m46s (id 35562052225), pkgdown 6m13s
+  (35562052219), test-coverage 10m9s (35562052322), R-CMD-check 21m37s
+  (35562052190) — inside the established 17m39s–22m17s band. CI is now
+  current through `589cf73c`.
+
 ### 2026-09-21 · [ad hoc] S749 claim: push to `origin/master` + CI verification (in progress)
 - Session claimed (stub + pending receipt + this entry). Phase 0 was clean:
   0 undocumented commits on both frontiers at `cb44c898`; S748 receipt
