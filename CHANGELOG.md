@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S754 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `e4990a40`; carries its own entry, so no self-reference gap is left for Phase 0
+- Final S754 commit. Session total: 3 commits (claim `8007de81` — rode
+  the push, records `e4990a40`, this sha commit) + 1 non-commit action
+  (the push, CI-verified). All docs-only; 2 unpushed after this commit —
+  verify with `git rev-list --count origin/master..HEAD`, not this
+  sentence.
+
 ### 2026-09-21 · [ad hoc] S754 records: close-out records committed (handoff, receipt, evaluations)
 - `SESSION_NOTES.md` S754 handoff + S753 evaluation (9/10 — every checked
   claim held exactly; nothing material missing or wrong); `HANDOFFS.md`
