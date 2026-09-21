@@ -1685,3 +1685,215 @@ test_that(
 ## No future re-derivation restores bit-exactness -- permanently superseded
 ## by design. (The census script, data-raw/pedigreeDrawingErrorCensus.R,
 ## remains the project's own kinship2-baseline comparison mechanism.)
+
+## ---- Prep D-1 (S744): optional precomputed kinshipMatrix argument --------
+## The layout core's ONE genetics back-reference is the internal
+## kinship() call that flags consanguineous mating units (S549 Finding #2,
+## fixed S555). Prep D-1 (queued S738 from the accepted package-split
+## disposition; scoping doc pedigree-diagram-package-split-scoping-2026-09-02
+## §4 D3 option ii) inverts it: makePedigreeMatingLayout() gains an optional
+## `kinshipMatrix` argument -- a precomputed kinship matrix with row/col
+## names = individual ids. Default NULL computes kinship(ped$id, ped$sire,
+## ped$dam, ped$gen, twinRelations = twinRelations) exactly as before, so
+## no existing caller changes. When supplied, the internal kinship() call
+## is bypassed entirely -- the injected matrix is the sole consanguinity
+## source (twinRelations continues to drive connector edges only; a caller
+## wanting twin-corrected consanguinity bakes it into the matrix).
+## edgeStyle = "direct" throughout -- these tests assert raw mate-edge
+## color/width, not routing (file-local precedent, e.g. the dangling-parent
+## consanguinity test above).
+
+test_that(
+  "makePedigreeMatingLayout(kinshipMatrix = <kinship()'s own result>)
+   returns output identical to the default NULL path (the injected matrix
+   is a drop-in, not a behavior change) on the real loop fixture", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  kmat <- kinship(loopPed$id, loopPed$sire, loopPed$dam, loopPed$gen)
+  default <- makePedigreeMatingLayout(loopPed, edgeStyle = "direct")
+  injected <- makePedigreeMatingLayout(loopPed, edgeStyle = "direct",
+                                        kinshipMatrix = kmat)
+  expect_identical(injected, default)
+})
+
+test_that(
+  "makePedigreeMatingLayout with an all-zero kinshipMatrix marks NO mating
+   unit on a fixture whose default path genuinely marks one -- proving the
+   internal kinship() call is bypassed, not merely supplemented", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  ids <- loopPed$id
+  zeroKmat <- matrix(0.0, nrow = length(ids), ncol = length(ids),
+                      dimnames = list(ids, ids))
+  forest <- .buildMatingUnitForest(loopPed)
+  consanguineousUnit <- forest$matingUnits$id[
+    forest$matingUnits$sire == "8LKBV9" & forest$matingUnits$dam == "FJIB3R"
+  ]
+  expect_equal(length(consanguineousUnit), 1L)
+
+  result <- makePedigreeMatingLayout(loopPed, edgeStyle = "direct",
+                                      kinshipMatrix = zeroKmat)
+  expect_true("color" %in% names(result$edges))
+  expect_true("width" %in% names(result$edges))
+  mateEdges <- result$edges[result$edges$to == consanguineousUnit, ]
+  expect_equal(nrow(mateEdges), 2L)
+  expect_equal(mateEdges$color, rep(NA_character_, 2L))
+  expect_equal(mateEdges$width, rep(NA_real_, 2L))
+})
+
+test_that(
+  "makePedigreeMatingLayout marks a mating unit the default path would
+   NEVER mark when the injected kinshipMatrix says the pair is kin --
+   consanguinity flags derive from the injected matrix alone", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  ids <- trio$id
+  kmat <- matrix(0.0, nrow = 3L, ncol = 3L, dimnames = list(ids, ids))
+  diag(kmat) <- 0.5
+  kmat["P1", "P2"] <- 0.25
+  kmat["P2", "P1"] <- 0.25
+  forest <- .buildMatingUnitForest(trio)
+  unitId <- forest$matingUnits$id[
+    forest$matingUnits$sire == "P1" & forest$matingUnits$dam == "P2"
+  ]
+  expect_equal(length(unitId), 1L)
+
+  result <- makePedigreeMatingLayout(trio, edgeStyle = "direct",
+                                      kinshipMatrix = kmat)
+  mateEdges <- result$edges[result$edges$to == unitId, ]
+  expect_equal(nrow(mateEdges), 2L)
+  expect_equal(mateEdges$color, rep("#D55E00", 2L))
+  expect_equal(mateEdges$width, rep(4, 2L))
+})
+
+test_that(
+  "makePedigreeMatingLayout leaves a mating unit safely unmarked (no
+   error) when the injected kinshipMatrix omits one of its parents --
+   the same match() dangling-id guard the default path already has", {
+  loopPed <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  kmat <- kinship(loopPed$id, loopPed$sire, loopPed$dam, loopPed$gen)
+  ## Drop the consanguineous unit's dam entirely: its flag cannot be
+  ## evaluated, so the safe default is FALSE -- mirroring the dangling-
+  ## parent precedent above.
+  kmatPartial <- as.matrix(kmat)
+  keep <- rownames(kmatPartial) != "FJIB3R"
+  kmatPartial <- kmatPartial[keep, keep]
+  forest <- .buildMatingUnitForest(loopPed)
+  consanguineousUnit <- forest$matingUnits$id[
+    forest$matingUnits$sire == "8LKBV9" & forest$matingUnits$dam == "FJIB3R"
+  ]
+
+  result <- expect_error(
+    makePedigreeMatingLayout(loopPed, edgeStyle = "direct",
+                              kinshipMatrix = kmatPartial), NA
+  )
+  mateEdges <- result$edges[result$edges$to == consanguineousUnit, ]
+  expect_equal(nrow(mateEdges), 2L)
+  expect_equal(mateEdges$color, rep(NA_character_, 2L))
+  expect_equal(mateEdges$width, rep(NA_real_, 2L))
+})
+
+test_that(
+  "makePedigreeMatingLayout rejects an invalid kinshipMatrix (not
+   matrix-like, or missing row/col names) with a clear error naming the
+   argument -- never a silent fall-through to the default path", {
+  trio <- data.frame(
+    id = c("P1", "P2", "C1"),
+    sire = c(NA, NA, "P1"), dam = c(NA, NA, "P2"),
+    sex = c("M", "F", "M"), gen = c(0L, 0L, 1L),
+    stringsAsFactors = FALSE
+  )
+  ## A matrix with no dimnames: ids cannot be matched.
+  expect_error(
+    makePedigreeMatingLayout(trio, edgeStyle = "direct",
+                              kinshipMatrix = matrix(0.0, 3L, 3L)),
+    "kinshipMatrix"
+  )
+  ## Not a matrix at all.
+  expect_error(
+    makePedigreeMatingLayout(trio, edgeStyle = "direct",
+                              kinshipMatrix = c(P1 = 0.5, P2 = 0.5)),
+    "kinshipMatrix"
+  )
+})
+
+test_that(
+  "makePedigreeMatingLayout with an injected kinshipMatrix still renders
+   twinRelations connector edges, while the matrix alone decides the
+   consanguinity marker (an all-zero matrix suppresses the marker the
+   default twin-threaded kinship() path would compute)", {
+  ## The D7 fixture above: TW1 (MZ twin of TW2) mates with her own
+  ## daughter C1 -- consanguineous under the default path.
+  d7Ped <- data.frame(
+    id = c("TW1", "TW2", "M1", "M2", "C1", "C2", "C3"),
+    sire = c(NA, NA, NA, NA, "M1", "M2", "TW1"),
+    dam  = c(NA, NA, NA, NA, "TW1", "TW1", "C1"),
+    sex = c("F", "F", "M", "M", "F", "M", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 1L, 2L),
+    stringsAsFactors = FALSE
+  )
+  twinRelations <- data.frame(
+    id1 = "TW1", id2 = "TW2", code = "MZ twin", stringsAsFactors = FALSE
+  )
+  ids <- d7Ped$id
+  zeroKmat <- matrix(0.0, nrow = length(ids), ncol = length(ids),
+                      dimnames = list(ids, ids))
+
+  result <- makePedigreeMatingLayout(d7Ped, edgeStyle = "direct",
+                                      twinRelations = twinRelations,
+                                      kinshipMatrix = zeroKmat)
+  ## Twin connector still renders -- twinRelations' connector role is
+  ## untouched by the injection.
+  connector <- result$edges[result$edges$label %in% "MZ", ]
+  expect_true(nrow(connector) >= 1L)
+  expect_true(all(connector$color == "#009E73"))
+  ## But no consanguinity marker anywhere: the all-zero injected matrix
+  ## wins over what kinship(..., twinRelations) would have computed.
+  expect_false(any(result$edges$color %in% "#D55E00"))
+})
+
+test_that(
+  "makePedigreeMatingLayout's all-isolated typed-empty-result contract
+   (issue #164) is unchanged when a kinshipMatrix is supplied", {
+  ped <- data.frame(
+    id = c("A", "B"), sire = c(NA, NA), dam = c(NA, NA),
+    sex = c("M", "F"), gen = c(0L, 0L),
+    stringsAsFactors = FALSE
+  )
+  kmat <- matrix(c(0.5, 0.0, 0.0, 0.5), nrow = 2L,
+                  dimnames = list(c("A", "B"), c("A", "B")))
+  result <- expect_message(
+    makePedigreeMatingLayout(ped, edgeStyle = "direct",
+                              kinshipMatrix = kmat)
+  )
+  expect_equal(nrow(result$nodes), 0L)
+  expect_equal(nrow(result$edges), 0L)
+  expect_length(result$duplicateToReal, 0L)
+  expect_setequal(result$isolatedIds, c("A", "B"))
+})

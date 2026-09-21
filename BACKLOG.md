@@ -68,16 +68,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
       test/observe, and a naive focal-id server filter is incompatible with the client-side
       connected-component walk).
-- [ ] **Prep D-1: invert the `kinship()` dependency in `makePedigreeMatingLayout()`** (queued
-      S738, 2026-09-20, from the accepted package-split disposition, READY, Effort S -- its own
-      TDD session) -- add an optional argument accepting a precomputed kinship matrix or
-      consanguinity flags, defaulting to computing via `kinship()` exactly as today so no caller
-      changes. This is the layout core's ONE genuine back-reference into the genetics code
-      (`R/makePedigreeDiagramData.R:1755` as of S738; S667 coupling inventory
-      `docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md` §2.2/D3) -- inverting
-      it makes the core genetics-free as well as visNetwork-free (a cleaner, injectable
-      interface), and is the prerequisite step if a split is ever revisited. `twinRelations`
-      threading semantics must be preserved (see the comment block at `:1741-1754`).
 - [ ] **Prep D-2: remove the two test-only reaches into the internal
       `.buildMatingUnitForest()`** (queued S738, 2026-09-20, from the accepted package-split
       disposition, READY, Effort S) -- `tests/testthat/test_modPedigree.R:1669` and `:1706`
@@ -93,8 +83,8 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       the 3 revisit conditions in the scoping doc §6; these steps harden the boundary in place
       and are worthwhile whether or not a split ever happens.)
 - [ ] **Build a kinship2-similar standalone pedigree package from this repository's code —
-      committed, deferred** (disposition S742, 2026-09-20; BLOCKED -- on prep D-1/D-2/D-3
-      above plus the S738 revisit conditions, scoping doc §6: engine churn calms + an
+      committed, deferred** (disposition S742, 2026-09-20; BLOCKED -- on prep D-2/D-3
+      above (D-1 DONE S744) plus the S738 revisit conditions, scoping doc §6: engine churn calms + an
       accepted CRAN release; Effort L, its own planning session first when unblocked) --
       owner disposition closing the S739 two-step discussion item (step 1: gap analysis
       DONE S741, `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`, 15 EQ /
@@ -115,8 +105,9 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       matrices are current practice); API shape (data-frame-as-is vs kinship2-compat layer)
       DELIBERATELY OPEN — decide at plan time with a prototype in hand. When unblocked, the
       pickup is a planning session (package boundary/plan doc in `docs/planning/`,
-      evidence-based inventory); prep D-1/D-2/D-3 are step 0, and D-1 is exactly the
-      boundary the package needs.
+      evidence-based inventory); prep D-2/D-3 are step 0's remainder — D-1 landed S744:
+      `makePedigreeMatingLayout(kinshipMatrix = )` (`R/makePedigreeDiagramData.R:1685`)
+      is exactly the injectable boundary the package needs.
 - [ ] **(Optional, owner decision) Slim `inst/doc/` by moving the three `html_document`
       vignettes to `rmarkdown::html_vignette`** (extracted S728, 2026-09-19, from the completed
       tarball build-hygiene item — its still-open step 4; DECISION NEEDED, Effort M, its own

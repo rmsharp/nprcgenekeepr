@@ -38,6 +38,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [BL-prep-D-1] S744 deliverable: Prep D-1 DONE — `makePedigreeMatingLayout()` gains an optional `kinshipMatrix` argument; the layout core's one genetics back-reference is now injectable
+- Full TDD cycle, every gate owner-approved via AskUserQuestion (approach:
+  `kinshipMatrix = NULL` over pair-flags/`kinshipFn`; PRE-RED→RED; RED→GREEN;
+  GREEN→REFACTOR). RED: 7 tests appended
+  (`tests/testthat/test_makePedigreeMatingLayout.R:1689+` — identity vs default,
+  bypass proof via all-zero matrix, injected-marker proof, partial-matrix safe
+  FALSE, invalid-input errors, twinRelations interplay, issue-#164 empty
+  contract), failing on `unused argument` with all 222 pre-existing passing.
+  GREEN: signature + up-front validation (matrix/Matrix with dimnames) at
+  `R/makePedigreeDiagramData.R:1685-1699`, injection branch at `:1785` (default
+  path computes `kinship(..., twinRelations = twinRelations)` byte-identically —
+  threading preserved; injected matrix is the SOLE consanguinity source,
+  documented in roxygen `@param`); `devtools::document()` touched only
+  `man/makePedigreeMatingLayout.Rd`. File 243/0/0; full suite 0 failed / 0 error /
+  184 skipped (baseline held). REFACTOR: 0 lints on both touched files, no edits
+  needed. NEWS.Rmd plain-language entry added (Pedigree Diagram section).
+  BACKLOG D-1 item block REMOVED in this commit (completed-item removal
+  checklist); the BLOCKED kinship2-build item's blocker line updated to
+  D-2/D-3 (D-1 DONE S744) with the boundary pointer carried forward.
+  a2interactive demonstration: deferred by standing checklist (S450/S478 —
+  new-parameter passes are a dedicated later session). No pkgdown change owed
+  (no new export).
+
 ### 2026-09-21 · [BL-prep-D-1] S744 claim: Prep D-1 — invert the `kinship()` dependency in `makePedigreeMatingLayout()` *(in progress)*
 - Owner picked Prep D-1 via the Phase 0 picker (`BACKLOG.md:71`). Scope: add an
   optional argument accepting a precomputed kinship matrix (or consanguinity

@@ -1626,6 +1626,23 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #'   contract. A connector always targets the two individuals' REAL node
 #'   ids (D7) and always renders as a direct edge regardless of
 #'   \code{edgeStyle} (D9).
+#' @param kinshipMatrix optional precomputed kinship matrix (a base
+#'   \code{matrix} or a \code{Matrix}) with row AND column names set to
+#'   individual ids -- Prep D-1 (S744; package-split scoping doc
+#'   \code{docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md}
+#'   §4 D3 option ii, the dependency inversion). When supplied, it
+#'   replaces this function's internal \code{\link{kinship}()} call as the
+#'   SOLE source of the consanguineous-mating-unit flags
+#'   (\code{kinshipMatrix[sire, dam] > 0}): \code{twinRelations} then
+#'   drives twin CONNECTOR edges only, so a caller wanting twin-corrected
+#'   consanguinity must bake it into the matrix (e.g.
+#'   \code{kinship(..., twinRelations = ...)}). A sire/dam id absent from
+#'   the matrix's dimnames leaves that unit at the safe \code{FALSE}
+#'   default, exactly like the dangling-parent guard on the default path.
+#'   \code{NULL} (default) computes
+#'   \code{kinship(ped$id, ped$sire, ped$dam, ped$gen,
+#'   twinRelations = twinRelations)} exactly as before, so no existing
+#'   caller changes.
 #' @return A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
 #'   \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
 #'   (\code{from}, \code{to}, \code{dashes}, \code{color}, \code{width} --
@@ -1664,7 +1681,8 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
 #' @export
 makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
                                                           "direct"),
-                                      twinRelations = NULL) {
+                                      twinRelations = NULL,
+                                      kinshipMatrix = NULL) {
   if (!is.data.frame(ped)) {
     stop("makePedigreeMatingLayout() requires 'ped' to be a data frame.")
   }
@@ -1675,6 +1693,14 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
          toString(required), ". Missing: ", toString(missingCols))
   }
   edgeStyle <- match.arg(edgeStyle)
+  if (!is.null(kinshipMatrix) &&
+        (!(is.matrix(kinshipMatrix) || inherits(kinshipMatrix, "Matrix")) ||
+           is.null(rownames(kinshipMatrix)) ||
+           is.null(colnames(kinshipMatrix)))) {
+    stop("makePedigreeMatingLayout() requires 'kinshipMatrix' to be a ",
+         "matrix (or Matrix) with row and column names set to individual ",
+         "ids, or NULL.")
+  }
 
   # A fully-isolated individual (no known parent, never a parent, not
   # twinRelations-connected) is suppressed from the diagram, matching
@@ -1750,10 +1776,18 @@ makePedigreeMatingLayout <- function(ped, edgeStyle = c("rectilinear",
   # deemed consanguineous with their mate: kinship() has no matrix entry
   # for an id outside 'ped$id', so the match() guard below leaves it at
   # the safe FALSE default rather than erroring.
+  # Prep D-1 (S744): a caller-supplied kinshipMatrix bypasses the internal
+  # kinship() call entirely -- the injected matrix is the sole
+  # consanguinity source (see @param kinshipMatrix). The match() guard
+  # below covers both paths unchanged.
   matingUnits$consanguineous <- rep(FALSE, nrow(matingUnits))
   if (nrow(matingUnits) > 0L) {
-    kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen,
-                     twinRelations = twinRelations)
+    kmat <- if (is.null(kinshipMatrix)) {
+      kinship(ped$id, ped$sire, ped$dam, ped$gen,
+              twinRelations = twinRelations)
+    } else {
+      kinshipMatrix
+    }
     sireIdx <- match(matingUnits$sire, rownames(kmat))
     damIdx <- match(matingUnits$dam, colnames(kmat))
     known <- !is.na(sireIdx) & !is.na(damIdx)
