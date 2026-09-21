@@ -38,6 +38,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S755 deliverable: scope-narrowing decision record written — `docs/planning/issue167-longitudinal-monitoring-scoping-2026-09-21.md`
+- Owner decision (via `AskUserQuestion`): **design-first, same issue** — the
+  #148/S703 mold; sub-issue split, implement-as-filed, and defer all
+  rejected with reasons recorded. Doc contains the verbatim issue body +
+  audit gate context, a 14-row grep-verified evidence inventory (all
+  metric machinery exists — `reportGV()` scalars, `meanKinship()`, #126
+  shape stats, founder contributions; NOTHING longitudinal exists), 9
+  open design questions (Q1 schema, Q2 persistence under CRAN
+  write-policy, Q3 membership-rule vocabulary — "cohort" collides with
+  `getBreedingPeerCohort`, Q4 Monte-Carlo comparability guards — no seed
+  in `reportGV()`, Q5 retrospective vs prospective, Q6 trend outputs,
+  Q7 surface — ORIP tab already promises "Inbreeding trends over time",
+  Q8 #150 export gating, Q9 slice shape), hard constraints, next actions.
+  Deliberate divergence from S703: no new `BACKLOG.md` item (FM #28; the
+  issue is the tracker). Next #167 session writes the design plan
+  answering Q1–Q9; implementation only after ratification.
+
 ### 2026-09-21 · [issue #167] S755 claim: Pre-RED design/scoping session for issue #167 (longitudinal genetic-health monitoring) — (in progress)
 - Session claimed after Phase 0 orientation (clean reconcile: 0 undocumented
   on both frontiers at `05d0cf60`; all CI green through `8007de81`; dashboard
