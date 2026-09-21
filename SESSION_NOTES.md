@@ -46,15 +46,105 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 747 Handoff Evaluation (by Session 748)
+**Score: 9/10.** **What helped:** "2 unpushed expected (recount)" measured
+exactly 2; "expect 0 undocumented; measure it" measured 0 on both frontiers
+at `01f1b030`; the growth-run prediction (24/10) was exact; the S747
+receipt's ratchet citation matched `.quality-gates-results.json`
+byte-for-byte; next step (A)'s iCloud-close guidance was the execution plan
+as written — `BACKLOG.md:180` was still current, and "re-check `ls R/ |
+grep ' 2\.'` and close per its own closure condition" is precisely what
+ran. **What was missing:** nothing material. **What was wrong:** nothing
+found — every checked claim held. **ROI:** high.
+
 ### What Session 748 Did
 **Deliverable:** Close the iCloud "conflicted copy" duplicate-`.R`-files
-Housekeeping item (`BACKLOG.md:180`) per its own closure condition — the 2
-duplicate files verified gone from `R/` after local rebuilds (IN PROGRESS)
-**Started:** 2026-09-21
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry
-says (in progress); Phase 3F records the rest. Until close-out, this line is
-the crash breadcrumb for the next session's reconcile.
+Housekeeping item per its own closure condition — **DONE** (deliverable
+commit `73107bc8`). The item (found S461, recurred S462, Learning 454)
+required the repo relocated outside iCloud AND the duplicates not
+reappearing after local rebuilds. Both conditions measured met; the BACKLOG
+block (was `BACKLOG.md:180-201`) REMOVED per the completed-item checklist,
+with the completed record (full recurrence history + closure evidence) in
+`CHANGELOG.md`. One forward-carry: the WORDLIST-drift item's
+`devtools::check()` expectation updated in place (drops to the
+vignette-engine note only — the co-present duplicate-file warning died with
+this item). No GitHub issue named by the item → no issue close owed.
+**Started/completed:** 2026-09-21 (single session). Claim `f4f4442e`;
+deliverable `73107bc8`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable,
+records, sha).
+
+**Closure evidence (all measured this session):** (1) `pwd` =
+`~/Development/nprcgenekeepr` — no iCloud path component (the S462 blocker
+"relocation had NOT yet happened" is resolved); (2) `ls R/ | grep ' 2\.'`
+empty — second consecutive session-check (S746, S748) with owner-side
+local rebuilds in between; (3) no `*conflicted copy*` file anywhere in the
+repo; (4) the 3 previously-corrupted `.Rd` files clean in git; (5) the only
+` 2.*` residue repo-wide is 7 stale `.pper` files under `.Rproj.user/` —
+gitignored (`.gitignore:1`), 0 tracked, never sourced by package tooling:
+inert iCloud-era residue, not a recurrence.
+
+**Self-assessment (Session 748): 9/10.** **Strengths:** (1) the closure is
+five independent measurements, not an assertion; (2) scope held exactly —
+only the mandated forward-carry rode along, no drive-by fixes; (3) **FM #28
+reduction: REAL — `BACKLOG.md` net −20 lines** (24 deleted, 4 added), a
+mandated-read file got smaller; (4) the Phase 0 picker and the report ran
+in full. **Weaknesses:** (1) a working-tree slip: the deliverable's
+CHANGELOG entry was first written by REPLACING the already-committed claim
+entry's heading instead of prepending a new entry — caught by re-reading
+the diff before committing and corrected to a pure prepend (verified: the
+committed diff has 0 deletions in `CHANGELOG.md`), but the never-edit rule
+was briefly violated in the working tree; (2) closure rests on two
+session-checks plus the relocation — if iCloud residue somehow reappears,
+reopen via a fresh item (Learning 454 remains the frozen record).
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — the near-miss above is
+covered by the existing "an entry once committed is never edited" rule in
+`CLAUDE.md` (the countermeasure that caught it — diff re-read before
+commit — is already standing discipline); the durable record is the
+CHANGELOG entries + this handoff.
+
+**Next steps (specific):** (A) **Push + CI verification when convenient
+(routine, S):** 6 unpushed expected after close-out (4 measured
+post-deliverable + records + sha, last two estimated at write time —
+recount with `git rev-list --count origin/master..HEAD`), ALL docs-only;
+CI is current through `5d281ad5` and no code has changed since, so this is
+records-currency, not code verification — the 17m39s–22m17s R-CMD-check
+band and the full-40-char-sha `--commit` filter discipline still apply.
+(B) **BACKLOG editorial compression (READY, L):** the item is now at
+`BACKLOG.md:220`; start with the "Pedigree diagram vs kinship2" section's
+regrowth check (its S530 DONE-note now at `BACKLOG.md:240`).
+(C) **inst/doc slimming (DECISION NEEDED, M):** owner must first ratify
+moving the 3 `html_document` vignettes to `html_vignette`
+(`BACKLOG.md:108`). (D) **kinship2-standalone stays BLOCKED** on the S738
+revisit conditions only (`BACKLOG.md:72`; owner judges; planning session
+when unblocked). (E) **WORDLIST 10-word drift (READY, S):** item now at
+`BACKLOG.md:180`; note its `check()` expectation was updated this session
+(vignette-engine note only).
+
+**Key files:** no code touched. `BACKLOG.md:180` (WORDLIST item now first
+in Housekeeping, its check() expectation updated), `CHANGELOG.md:41` (S748
+entries at top), `SESSION_NOTES.md` (this handoff), `HANDOFFS.md` (S748
+receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next
+Phase 0 — measure it; 6 unpushed expected after close-out (recount).
+(2) Ratchet baseline is now 3,488,873 B at `73107bc8` (−78 B vs S747:
+`BACKLOG.md` is `.Rbuildignore`d — verified `.Rbuildignore:74` — so the
+delta is build-metadata noise, same class as S747's +7 B); cite from
+`.quality-gates-results.json`, never the rounded run table (this session's
+table showed 3.48887e+06 vs file 3,488,873 — the trap again).
+(3) BACKLOG line anchors below the removed block shifted up ~20 lines —
+re-grep before trusting any stale `BACKLOG.md:2xx` reference.
+(4) Standing set unchanged: `gh run list --commit` needs the FULL 40-char
+sha + smoke-test the filter before arming a monitor; `scratchpad/`
+invisible to git BY OWNER DECISION; ratchet AFTER committing (Learning
+772); trim needs `--budget-bytes 65536`; renv banner expected; CLAUDE.md
+warn band; growth run 24/10 at this session's Orient (BACKLOG.md shrank
+this session but it is not budget-tracked — measure, don't predict); the
+two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite
+baseline 0 failed / 0 error / 184 skipped, remotely confirmed through
+`5d281ad5` (no code changed since).
 
 ### Session 746 Handoff Evaluation (by Session 747)
 **Score: 9/10.** **What helped:** "14 unpushed expected (recount)" measured

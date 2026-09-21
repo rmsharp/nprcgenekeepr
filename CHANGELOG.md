@@ -38,6 +38,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S748 close-out: session records (handoff, S747 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S747 evaluation: 9/10 — 2-unpushed and
+  clean-frontier claims held exactly; growth-run prediction 24/10 exact;
+  ratchet citation byte-identical; its iCloud-close guidance was the
+  execution plan as written; nothing found wrong). `HANDOFFS.md` receipt
+  complete. No new `PROJECT_LEARNINGS.md` entry (the session's one
+  working-tree slip — replacing the committed claim entry's heading instead
+  of prepending, caught by diff re-read before committing — is covered by
+  the existing never-edit rule; named plainly in the self-assessment).
+  Reduction check (FM #28): REAL — `BACKLOG.md` net −20 lines. Runtime
+  smoke: n/a — docs-only. quality_ratchet at `73107bc8`: 1/1 pass · 0 fail ·
+  0 unmeasured · results 443e4de1cd50 · manifest aa983075d6a2 (3,488,873 B ≤
+  5,000,000 B, read from the results file — the run table rounded to
+  3.48887e+06; the −78 B vs S747 is build-metadata noise, `BACKLOG.md`
+  being `.Rbuildignore`d).
+
 ### 2026-09-21 · [ad hoc] S748 deliverable: iCloud duplicate-`.R`-files Housekeeping item CLOSED per its own closure condition; BACKLOG block removed
 - The item (found S461, recurred S462; `PROJECT_LEARNINGS.md` Learning 454):
   iCloud sync left `R/appServer 2.R` and `R/modMarkerGenetics 2.R` in `R/`,
