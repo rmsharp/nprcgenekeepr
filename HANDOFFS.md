@@ -156,6 +156,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S750
+date: 2026-09-21
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Close the WORDLIST 10-word drift Housekeeping item (BACKLOG.md:181) — hand-add the 10 drifted words to inst/WORDLIST in LC_ALL=C byte order (never spelling::update_wordlist(), S230 convention); re-verify devtools::check() drops to the vignette-engine note only. IN PROGRESS.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S749
 date: 2026-09-21
 status: complete

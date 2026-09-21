@@ -38,6 +38,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S750 claim: close the WORDLIST 10-word drift Housekeeping item *(in progress)*
+- Owner-picked via the Phase 0 picker (over BACKLOG editorial compression,
+  inst/doc slimming, kinship2-standalone). Plan: hand-add the 10 drifted
+  words (`BACKLOG.md:181` names them) to `inst/WORDLIST` in `LC_ALL=C`
+  byte order — never `spelling::update_wordlist()` (S230 convention) —
+  then re-verify `devtools::check()` drops to the vignette-engine note
+  only (the item's own closure criterion, expectation updated S748).
+  Phase mapping to be owner-ratified at the TDD gate before any edit.
+
 ### 2026-09-21 · [ad hoc] S749 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `dcf51299`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S749 commit. S749 total: 3 commits (claim `589cf73c` — rode the
   push, deliverable was the push itself, records `dcf51299`, this one).

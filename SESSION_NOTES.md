@@ -46,6 +46,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 750 Did
+**Deliverable:** Close the WORDLIST 10-word drift Housekeeping item
+(`BACKLOG.md:181`): hand-add the 10 drifted words to `inst/WORDLIST` in
+`LC_ALL=C` byte order (never `spelling::update_wordlist()`, S230
+convention); re-verify `devtools::check()` drops to the vignette-engine
+note only. (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry
+says (in progress); Phase 3F records the rest. Until close-out, this line
+is the crash breadcrumb for the next session's reconcile.
+
 ### Session 748 Handoff Evaluation (by Session 749)
 **Score: 9/10.** **What helped:** "6 unpushed expected (recount)" measured
 exactly 6; "expect 0 undocumented; measure it" measured 0 on both frontiers
