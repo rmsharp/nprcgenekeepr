@@ -38,6 +38,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S741 deliverable: kinship2 feature-gap analysis — 15 equivalent / 8 partial / 2 absent across kinship2's 25 live-enumerated exports
+- `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`: kinship2 1.9.6.2's
+  surface enumerated live from the installed package (`getNamespaceExports` — 25
+  exports, 11 S3 registrations, 3 datasets; the BACKLOG item's embedded list was
+  indeed an incomplete hint, 11 of 25). Every nprcgenekeepr-side claim verified
+  against live source with file:line evidence this session. Headline: capability
+  parity is effectively done — the compute core was already deliberately ported
+  (`kinship()` incl. `chrtype="x"`/MZ twins, `shrinkPedigree()` + 5 internal
+  helpers), the S435 drawing gaps all closed via issues #131–#137/#145 (states
+  re-verified via `gh issue view`), and the only fully absent items are two minor
+  utilities (`familycheck`, `ibdMatrix`). Six of eight partials are shrink
+  internals one export away from equivalent; the two substantive partials are
+  user-suppliable layout hints (`autohint`) and block-sparse multi-family kinship
+  (`makekinship`). Finding #4 names the real step-2 question: drawing decorations
+  live in the Shiny module (`R/modPedigree.R:675-790`), not the exported surface.
+  `BACKLOG.md` item updated in place (step 1 DONE → step 2 DECISION NEEDED,
+  −10 lines net). Step 2 (owner discussion) deliberately not started.
+
 ### 2026-09-21 · [ad hoc] S741 claim: kinship2 feature-gap analysis — per-feature gap table in `docs/research/` *(in progress)*
 - Session claimed via the Phase 0 picker. Scope: step 1 of the S739
   kinship2-similar-package BACKLOG item (`BACKLOG.md:95`) — enumerate kinship2's
