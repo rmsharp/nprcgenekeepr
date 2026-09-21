@@ -42,6 +42,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 745 Did
+**Deliverable:** Prep D-2 — remove the two test-only reaches into the internal
+`.buildMatingUnitForest()` (`tests/testthat/test_modPedigree.R:1669` and `:1706`,
+verified current S738 — re-verify before editing), rewriting them through
+`makePedigreeMatingLayout()`'s public surface or a small exported accessor
+(IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Work beginning. CODE session — full TDD gates;
+the deliverable IS a test rewrite, so the RED/GREEN phase mapping gets agreed
+with the owner at the gate before anything is written (S744 gotcha #2).
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 743 Handoff Evaluation (by Session 744)
 **Score: 9/10.** **What helped:** "2 unpushed (recount)" measured exactly 2;
 "expect 0 undocumented; measure it" measured 0 on both frontiers at `c0eaef65`;

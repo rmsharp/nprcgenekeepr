@@ -156,6 +156,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S745
+date: 2026-09-21
+status: pending
+active_task: Prep D-2 — remove the two test-only reaches into the internal .buildMatingUnitForest() (tests/testthat/test_modPedigree.R:1669 and :1706), rewriting them through makePedigreeMatingLayout()'s public surface or a small exported accessor. CODE session, full TDD gates; phase mapping to be agreed with the owner at the gate.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S744
 date: 2026-09-20
 status: complete

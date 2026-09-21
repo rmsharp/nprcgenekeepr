@@ -38,6 +38,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [BL-prep-D-2] S745 claim: Prep D-2 — remove the two test-only reaches into `.buildMatingUnitForest()` *(in progress)*
+- Owner pick via the Phase 0 picker (over push+CI, prep D-3, BACKLOG
+  compression). Phase 0 findings: 0 undocumented on both frontiers at
+  `d1a34d0d`; S744 receipt complete (one 3-byte transcription slip in its
+  measured-size figure — 3,486,350 vs the results file's 3,486,353 B; hashes
+  match, gate outcome unaffected); CI 10/10 green but current only through
+  `59f1888e` (the S744 code deliverable `44bb4481` is unpushed); dashboard
+  96/100; context budget WARN = CLAUDE.md warn band, growth run 21/10 (as S744
+  predicted); 6 unpushed measured (= S744's ~6). CODE session — full TDD
+  gates; the RED/GREEN phase mapping (the deliverable IS a test rewrite) gets
+  agreed with the owner before anything is written.
+
 ### 2026-09-21 · [BL-prep-D-1] S744 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `63a645bf`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S744 commit. S744 total: 4 commits (claim `1dc5d9bd`, deliverable
   `44bb4481`, records `63a645bf`, this one). Ahead of `origin/master` by 6
