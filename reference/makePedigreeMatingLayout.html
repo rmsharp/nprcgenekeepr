@@ -82,7 +82,8 @@ this is an additive sibling function (Migration Path step 2).</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">makePedigreeMatingLayout</span><span class="op">(</span></span>
 <span>  <span class="va">ped</span>,</span>
 <span>  edgeStyle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rectilinear"</span>, <span class="st">"direct"</span><span class="op">)</span>,</span>
-<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  twinRelations <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  kinshipMatrix <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -116,6 +117,26 @@ connector edges and leaves <code>edges</code> unchanged from the pre-#137
 contract. A connector always targets the two individuals' REAL node
 ids (D7) and always renders as a direct edge regardless of
 <code>edgeStyle</code> (D9).</p></dd>
+
+
+<dt id="arg-kinshipmatrix">kinshipMatrix<a class="anchor" aria-label="anchor" href="#arg-kinshipmatrix"></a></dt>
+<dd><p>optional precomputed kinship matrix (a base
+<code>matrix</code> or a <code>Matrix</code>) with row AND column names set to
+individual ids – Prep D-1 (S744; package-split scoping doc
+<code>docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md</code>
+§4 D3 option ii, the dependency inversion). When supplied, it
+replaces this function's internal <code><a href="kinship.html">kinship()</a></code> call as the
+SOLE source of the consanguineous-mating-unit flags
+(<code>kinshipMatrix[sire, dam] &gt; 0</code>): <code>twinRelations</code> then
+drives twin CONNECTOR edges only, so a caller wanting twin-corrected
+consanguinity must bake it into the matrix (e.g.
+<code>kinship(..., twinRelations = ...)</code>). A sire/dam id absent from
+the matrix's dimnames leaves that unit at the safe <code>FALSE</code>
+default, exactly like the dangling-parent guard on the default path.
+<code>NULL</code> (default) computes
+<code>kinship(ped$id, ped$sire, ped$dam, ped$gen,
+twinRelations = twinRelations)</code> exactly as before, so no existing
+caller changes.</p></dd>
 
 </dl></div>
     <div class="section level2">

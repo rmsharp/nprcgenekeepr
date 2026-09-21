@@ -19,7 +19,8 @@ Path step 2).
 makePedigreeMatingLayout(
   ped,
   edgeStyle = c("rectilinear", "direct"),
-  twinRelations = NULL
+  twinRelations = NULL,
+  kinshipMatrix = NULL
 )
 ```
 
@@ -52,6 +53,26 @@ makePedigreeMatingLayout(
   unchanged from the pre-#137 contract. A connector always targets the
   two individuals' REAL node ids (D7) and always renders as a direct
   edge regardless of `edgeStyle` (D9).
+
+- kinshipMatrix:
+
+  optional precomputed kinship matrix (a base `matrix` or a `Matrix`)
+  with row AND column names set to individual ids – Prep D-1 (S744;
+  package-split scoping doc
+  `docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md`
+  §4 D3 option ii, the dependency inversion). When supplied, it replaces
+  this function's internal
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  call as the SOLE source of the consanguineous-mating-unit flags
+  (`kinshipMatrix[sire, dam] > 0`): `twinRelations` then drives twin
+  CONNECTOR edges only, so a caller wanting twin-corrected consanguinity
+  must bake it into the matrix (e.g.
+  `kinship(..., twinRelations = ...)`). A sire/dam id absent from the
+  matrix's dimnames leaves that unit at the safe `FALSE` default,
+  exactly like the dangling-parent guard on the default path. `NULL`
+  (default) computes
+  `kinship(ped$id, ped$sire, ped$dam, ped$gen, twinRelations = twinRelations)`
+  exactly as before, so no existing caller changes.
 
 ## Value
 

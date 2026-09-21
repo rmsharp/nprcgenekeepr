@@ -53,6 +53,258 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · \[ad hoc\] S747 claim: owner-directed push to `origin/master` + CI verification *(in progress)*
+
+- Phase 0 clean: 0 undocumented on both frontiers at `8b9a0148`; S746
+  receipt complete, ratchet citation matched
+  `.quality-gates-results.json` byte-for-byte; CI 10/10 green (current
+  only through S743’s push `59f1888e`); dashboard 96/100; context budget
+  WARN = CLAUDE.md warn band, growth run 23/10 (as S746 predicted); 14
+  unpushed measured (= S746’s prediction). Owner picked the push via the
+  Phase 0 picker. This claim rides the push (S726–S743 precedent). THREE
+  deliverables never seen by CI: `44bb4481` (D-1, R/+tests), `eb896c2e`
+  (D-2, tests), `a5a9bf42` (D-3, comment-only).
+
+### 2026-09-21 · \[BL-prep-D-3\] S746 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `70ed987b`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S746 commit. S746 total: 4 commits (claim `19de9c64`,
+  deliverable `a5a9bf42`, records `70ed987b`, this one). Ahead of
+  `origin/master` by 14 after close-out; THREE deliverables (`44bb4481`,
+  `eb896c2e`, `a5a9bf42`) have never been seen by CI, so a push+CI
+  session is the top routine next pick. Expect 0 undocumented commits
+  past the frontier at next Phase 0; measure it.
+
+### 2026-09-21 · \[BL-prep-D-3\] S746 close-out: session records (handoff, S745 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S745 evaluation: 9/10 —
+  10-unpushed and clean-frontier claims held exactly; growth-run
+  prediction exact; the D-3 guidance was the execution plan; nothing
+  found wrong). `HANDOFFS.md` receipt complete. No NEWS.Rmd entry owed
+  (no exported function or user-facing change); no WORDLIST risk
+  (`@noRd` text never reaches `.Rd`/vignettes). No new
+  `PROJECT_LEARNINGS.md` entry (routine clean REFACTOR session).
+  Reduction check (FM \#28): NONE this session — BACKLOG.md net 0 lines
+  (D-3 block removed, equal bytes carried forward into the kinship2
+  item); stated plainly rather than left unsaid. Runtime smoke: n/a —
+  comment-only; quality_ratchet at deliverable HEAD `a5a9bf42`: 1/1 pass
+  · 0 fail · 0 unmeasured · results b7c4dc700aa7 · manifest aa983075d6a2
+  (3,488,944 B ≤ 5,000,000 B, read from the results file — the run table
+  rounded to 3.48894e+06, re-confirming the S745 gotcha; +2,386 B vs
+  S745 is the roxygen riding in `R/` sources, expected). 14 unpushed
+  expected after close-out (recount); THREE deliverables (`44bb4481`,
+  `eb896c2e`, `a5a9bf42`) never seen by CI — push+CI is the top routine
+  next pick. Incidental finding: the iCloud duplicate `.R` files are
+  GONE from `R/` — the Housekeeping item is closable-on-confirmation by
+  a future session.
+
+### 2026-09-21 · \[BL-prep-D-3\] S746 deliverable: prep D-3 — all 13 `R/positionTreeApportion.R` functions now carry `@noRd` roxygen blocks
+
+- REFACTOR-only (owner-gated PRE-RED→REFACTOR with the exact edits): one
+  house-style block per function (title + `@param` + `@return` +
+  `@noRd`, matching `R/shrinkPedigree.R`’s internal-doc convention);
+  diff is exactly 160 added `#'` lines, 0 deletions, no code touched; no
+  line over 80 chars. Verification: `devtools::document()`
+  byte-identical no-op on `man/` + `NAMESPACE` (`@noRd` generates
+  nothing — and the iCloud duplicate `.R` files are confirmed GONE from
+  `R/`, so the S461 corruption trap did not apply);
+  `test_positionTreeApportion.R` passes; full silent suite 0 failed / 0
+  error / 184 skipped (7054 passed); lint 0 on the touched file (package
+  loaded first). BACKLOG D-3 block REMOVED in this commit
+  (completed-item checklist); the kinship2-standalone item’s blocker
+  updated: prep steps ALL DONE (D-1 S744, D-2 S745, D-3 S746) — only the
+  S738 revisit conditions remain, with the D-3 fact and prep-origin
+  context carried into the item.
+
+### 2026-09-21 · \[BL-prep-D-3\] S746 claim: prep D-3 — `@noRd` roxygen blocks for `R/positionTreeApportion.R`’s 13 functions (in progress)
+
+- Phase 0 clean: 0 undocumented on both frontiers at `41c43c35`; S745
+  receipt complete, ratchet citation matches
+  `.quality-gates-results.json` exactly; CI 10/10 green but current only
+  through S743’s push (`44bb4481`/`eb896c2e` still unpushed, 10 ahead);
+  dashboard 96/100; context budget WARN = CLAUDE.md warn band, growth
+  run 22/10 (predicted exactly); 5 known untracked files unchanged.
+  Owner picked D-3 via the Phase 0 picker. Stub + pending receipt ride
+  this commit.
+
+### 2026-09-21 · \[BL-prep-D-2\] S745 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `b528b8bd`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S745 commit. S745 total: 4 commits (claim `d6dc0852`,
+  deliverable `eb896c2e`, records+trim `b528b8bd`, this one). Ahead of
+  `origin/master` by 10 after close-out; TWO code deliverables
+  (`44bb4481`, `eb896c2e`) have never been seen by CI, so a push+CI
+  session is the top routine next pick. Expect 0 undocumented commits
+  past the frontier at next Phase 0; measure it.
+
+### 2026-09-20 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-20-2.md` (13 record(s), 61,388 B → 13,607 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **13** record(s) (2026-09-02 →
+2026-09-20) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-20-2.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-20-2.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 61,388 B → 13,607
+B (−77.8%).
+
+### 2026-09-21 · \[BL-prep-D-2\] S745 close-out: session records (handoff, S744 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S744 evaluation: 9/10 — 6-unpushed
+  and clean-frontier claims held exactly; growth-run prediction exact;
+  the D-2 guidance was the execution plan; ONE immaterial finding — its
+  ratchet citation’s measured size was 3 B off the results file,
+  root-caused this session to the run table’s rounded display: cite from
+  `.quality-gates-results.json`, never the table). `HANDOFFS.md` receipt
+  complete. No NEWS.Rmd entry owed (no exported function or user-facing
+  change). No new `PROJECT_LEARNINGS.md` entry (routine clean REFACTOR
+  session). Reduction check (FM \#28): BACKLOG.md net −3 lines — a
+  mandated-read file got smaller. Runtime smoke: n/a — test-only
+  refactor; quality_ratchet at deliverable HEAD `eb896c2e`: 1/1 pass · 0
+  fail · 0 unmeasured · results cb8622ee3020 · manifest aa983075d6a2
+  (3,486,558 B ≤ 5,000,000 B, read from the results file). 10 unpushed
+  after close-out (recount); TWO code deliverables (`44bb4481`,
+  `eb896c2e`) never seen by CI — push+CI is the top routine next pick.
+
+### 2026-09-21 · \[BL-prep-D-2\] S745 deliverable: Prep D-2 DONE — the two test-only reaches into `.buildMatingUnitForest()` now derive ids through the exported surface
+
+- REFACTOR-only, the owner-ratified phase mapping (same as D-3’s; two
+  gates ran via AskUserQuestion: approach — REFACTOR-only over a
+  RED→GREEN boundary guard test and over a new exported accessor — then
+  PRE-RED→REFACTOR with exact planned edits).
+  `tests/testthat/test_modPedigree.R`: the union-click no-op test (was
+  `:1669`) now takes
+  `grep("^__union_", layout$nodes$id, value = TRUE)[1L]` from
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+  return (the `^` anchor matters — waypoint ids like `__drop___union_1`
+  contain but do not start with the prefix); the duplicate-click test
+  (was `:1706`) now uses `duplicateToReal` for length/id/realId.
+  Equivalence proven empirically BEFORE editing: on the fixture, the
+  public return’s union-id set and dup mapping are identical to the
+  internal forest’s. Zero functional `.buildMatingUnitForest` calls
+  remain outside the layout core’s own test files (S667 §2.4/D6 closed).
+  Verification: full `test_modPedigree.R` pass; full silent suite 0
+  failed / 0 error / 184 skipped (7054 passed); lint 0 on the touched
+  file (package loaded first). No production code touched; no NEWS.Rmd
+  entry owed (no exported function or user-facing change). BACKLOG D-2
+  item REMOVED (completed-item checklist); the BLOCKED kinship2-build
+  item’s blocker updated to D-3 only, with the D-2 boundary fact carried
+  into the item.
+
+### 2026-09-21 · \[BL-prep-D-2\] S745 claim: Prep D-2 — remove the two test-only reaches into `.buildMatingUnitForest()` *(in progress)*
+
+- Owner pick via the Phase 0 picker (over push+CI, prep D-3, BACKLOG
+  compression). Phase 0 findings: 0 undocumented on both frontiers at
+  `d1a34d0d`; S744 receipt complete (one 3-byte transcription slip in
+  its measured-size figure — 3,486,350 vs the results file’s 3,486,353
+  B; hashes match, gate outcome unaffected); CI 10/10 green but current
+  only through `59f1888e` (the S744 code deliverable `44bb4481` is
+  unpushed); dashboard 96/100; context budget WARN = CLAUDE.md warn
+  band, growth run 21/10 (as S744 predicted); 6 unpushed measured (=
+  S744’s ~6). CODE session — full TDD gates; the RED/GREEN phase mapping
+  (the deliverable IS a test rewrite) gets agreed with the owner before
+  anything is written.
+
+### 2026-09-21 · \[BL-prep-D-1\] S744 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `63a645bf`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S744 commit. S744 total: 4 commits (claim `1dc5d9bd`,
+  deliverable `44bb4481`, records `63a645bf`, this one). Ahead of
+  `origin/master` by 6 after close-out; the deliverable touches `R/` +
+  `tests/`, so the next push’s CI run is the first remote confirmation
+  of the new code. Expect 0 undocumented commits past the frontier at
+  next Phase 0; measure it.
+
+### 2026-09-21 · \[BL-prep-D-1\] S744 close-out: session records (handoff, S743 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S743 evaluation: 9/10 — 2-unpushed
+  and clean-frontier claims held exactly; ratchet citation
+  byte-identical; growth-run prediction exact; D-1 was its named pick
+  and its guidance was the execution plan). `HANDOFFS.md` receipt
+  complete. NEWS.Rmd plain-language entry rides this records commit
+  (5-file cap kept the deliverable commit at 5). No new
+  `PROJECT_LEARNINGS.md` entry (routine clean TDD session). Reduction
+  check (FM \#28): BACKLOG.md net −7 lines — a mandated-read file got
+  smaller. Runtime smoke: script-level both-paths-agree on `smallPed`
+  (`identical` TRUE); quality_ratchet at deliverable HEAD `44bb4481`:
+  1/1 pass · 0 fail · 0 unmeasured · results bd0b6b4bcfcf · manifest
+  aa983075d6a2 (3,486,350 B ≤ 5,000,000 B). ~6 unpushed after close-out
+  (recount); the deliverable touches R/ + tests/, so a push+CI session
+  is the natural next routine pick.
+
+### 2026-09-21 · \[BL-prep-D-1\] S744 deliverable: Prep D-1 DONE — `makePedigreeMatingLayout()` gains an optional `kinshipMatrix` argument; the layout core’s one genetics back-reference is now injectable
+
+- Full TDD cycle, every gate owner-approved via AskUserQuestion
+  (approach: `kinshipMatrix = NULL` over pair-flags/`kinshipFn`;
+  PRE-RED→RED; RED→GREEN; GREEN→REFACTOR). RED: 7 tests appended
+  (`tests/testthat/test_makePedigreeMatingLayout.R:1689+` — identity vs
+  default, bypass proof via all-zero matrix, injected-marker proof,
+  partial-matrix safe FALSE, invalid-input errors, twinRelations
+  interplay, issue-#164 empty contract), failing on `unused argument`
+  with all 222 pre-existing passing. GREEN: signature + up-front
+  validation (matrix/Matrix with dimnames) at
+  `R/makePedigreeDiagramData.R:1685-1699`, injection branch at `:1785`
+  (default path computes `kinship(..., twinRelations = twinRelations)`
+  byte-identically — threading preserved; injected matrix is the SOLE
+  consanguinity source, documented in roxygen `@param`);
+  `devtools::document()` touched only `man/makePedigreeMatingLayout.Rd`.
+  File 243/0/0; full suite 0 failed / 0 error / 184 skipped (baseline
+  held). REFACTOR: 0 lints on both touched files, no edits needed.
+  NEWS.Rmd plain-language entry added (Pedigree Diagram section).
+  BACKLOG D-1 item block REMOVED in this commit (completed-item removal
+  checklist); the BLOCKED kinship2-build item’s blocker line updated to
+  D-2/D-3 (D-1 DONE S744) with the boundary pointer carried forward.
+  a2interactive demonstration: deferred by standing checklist (S450/S478
+  — new-parameter passes are a dedicated later session). No pkgdown
+  change owed (no new export).
+
+### 2026-09-21 · \[BL-prep-D-1\] S744 claim: Prep D-1 — invert the `kinship()` dependency in `makePedigreeMatingLayout()` *(in progress)*
+
+- Owner picked Prep D-1 via the Phase 0 picker (`BACKLOG.md:71`). Scope:
+  add an optional argument accepting a precomputed kinship matrix (or
+  consanguinity flags) to
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md),
+  defaulting to computing via
+  [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
+  exactly as today so no caller changes; preserve `twinRelations`
+  threading semantics. CODE session — full TDD gates. Claim stub +
+  pending receipt ride this commit.
+
+### 2026-09-21 · \[ad hoc\] S743 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `b7689145`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S743 commit. S743 total: 3 commits (claim `59f1888e` — rode the
+  push, records `b7689145`, this one). Ahead of `origin/master` by 2
+  after close-out (records + this one), both docs-only; CI is current
+  through `59f1888e`. Expect 0 undocumented commits past the frontier at
+  next Phase 0; measure it.
+
+### 2026-09-21 · \[ad hoc\] S743 close-out: session records (handoff, S742 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S742 evaluation: 9/10 —
+  11-unpushed and clean-frontier claims held exactly; ratchet citation
+  byte-identical; growth-run prediction exact; its natural-next-pick
+  call was the owner’s pick). `HANDOFFS.md` receipt complete. No new
+  `PROJECT_LEARNINGS.md` entry (routine clean push, 10th consecutive).
+  Reduction check (FM \#28): nothing removed from a mandated-read file —
+  stated explicitly; `SESSION_NOTES.md` ~45 KB, next trim likely 1–2
+  sessions out. quality_ratchet at the pushed HEAD `59f1888e`: 1/1 pass
+  · 0 fail · 0 unmeasured · results 0ddf7e4d90f7 · manifest aa983075d6a2
+  (3,483,919 B ≤ 5,000,000 B). 2 unpushed after close-out (estimate:
+  records + sha); CI current through `59f1888e`.
+
+### 2026-09-21 · \[ad hoc\] S743 deliverable: owner-directed push to `origin/master` + CI verification — DONE
+
+- Pushed `889f9896..59f1888e` (12 commits: 11 carried docs-only
+  S737–S742 close-out/claim commits + the S743 claim riding the push,
+  S726–S740 precedent). All 4 push-triggered workflows
+  `completed success` ON THE PUSHED SHA `59f1888e`, verified
+  structurally via `gh run list --commit <full-40-char-sha>` with
+  `headSha` echoed back: lint 4m22s (id 35552846756), pkgdown 5m02s
+  (35552846743), test-coverage 9m47s (35552846748), R-CMD-check
+  21m41s (35552846742) — inside the established 17m39s–22m17s band;
+  filter smoke-tested against in-flight runs BEFORE arming the single
+  30-min Monitor (S736 lesson); no re-arm. 0 unpushed after the push.
+
 ### 2026-09-21 · \[ad hoc\] S743 claim: owner-directed push to `origin/master` + CI verification *(in progress)*
 
 - Phase 0 clean: 0 undocumented on both frontiers at `ef0f34bb`; S742
