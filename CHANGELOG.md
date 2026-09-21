@@ -38,6 +38,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S742 close-out: session records (handoff, S741 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S741 evaluation: 9/10 — 7-unpushed and
+  clean-frontier claims held exactly; its step-2 pickup guidance was effectively
+  this session's execution plan). `HANDOFFS.md` receipt complete. No new
+  `PROJECT_LEARNINGS.md` entry (routine decision/records session; the durable
+  record is the deliverable entry + the BACKLOG item). Reduction check (FM #28):
+  `BACKLOG.md` net +6 lines by disposition-recording — stated explicitly; the
+  editorial-compression item remains the counterweight. quality_ratchet at the
+  deliverable HEAD `4697f66c`: 1/1 pass · 0 fail · 0 unmeasured · results
+  966c2a067d51 · manifest aa983075d6a2 (3,483,942 B ≤ 5,000,000 B). ~11 unpushed
+  after close-out (estimate: 7 carried + claim + deliverable + records + sha);
+  CI current through `889f9896`; a push+CI session is the natural next pick.
+
 ### 2026-09-21 · [ad hoc] S742 deliverable: kinship2 standalone-package disposition — COMMITTED but DEFERRED, scope ratified (owner discussion, step 2 of the S739 item)
 - Owner briefed from `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`
   (Findings #1/#2/#4, Structural Observations 2/3, Recommendations) with the

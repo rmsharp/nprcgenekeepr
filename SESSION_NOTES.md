@@ -42,17 +42,117 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 741 Handoff Evaluation (by Session 742)
+**Score: 9/10.** **What helped:** "~7 unpushed (recount)" measured exactly 7; "expect
+0 undocumented; measure it" measured 0 on both frontiers at `0cf0696e`; the ratchet
+citation matched `.quality-gates-results.json` byte-for-byte; the step-2 pickup
+guidance was effectively the session's execution plan — brief from Finding #4 +
+Structural Observation 2, read the Recommendations first, volunteer the briefing
+WITH the question (S738 lesson) — all applied as written and the owner engaged with
+the full decision set in one pass. **What was missing:** nothing material — the
+owner's purpose reframing (standalone-first, not extraction-for-dependency) was not
+predictable from S741's state. **What was wrong:** nothing found — every checked
+claim held. **ROI:** high.
+
 ### What Session 742 Did
-**Deliverable:** kinship2 standalone-package step 2 — owner discussion / packaging
-disposition (`BACKLOG.md:95` item, DECISION NEEDED) (IN PROGRESS)
-**Started:** 2026-09-20 20:33 CDT
-**Status:** Session claimed. Work beginning — brief the owner from
-`docs/research/kinship2-feature-gap-analysis-2026-09-20.md`, then pose the
-Recommendation-1 packaging choices via `AskUserQuestion`, then record the
-disposition (BACKLOG + CHANGELOG).
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** kinship2 standalone-package step 2 owner discussion / packaging
+disposition — **DONE** (commit `4697f66c`). Owner decisions via one 4-question
+`AskUserQuestion` (briefing volunteered with it, from
+`docs/research/kinship2-feature-gap-analysis-2026-09-20.md`):
+(1) **Disposition: COMMITTED but DEFERRED** — "Not now — defer, gates stand" (prep
+D-1/D-2/D-3 + the S738 revisit conditions, scoping doc §6), with owner free-text
+intent recorded near-verbatim: the package WILL be built; "the primary goal is to
+have a standalone near equivalent package that has the enhanced features offered
+with nprcgenekeepr and particularly the pedigree drawing, annotation ability, and
+interactivity" — nprcgenekeepr consuming it is secondary, NOT the primary goal.
+(2) **API shape: deliberately OPEN** (df-as-is vs kinship2-compat layer — decide at
+plan time with a prototype). (3) **Drawing surface: IN** — lift the module-bound
+decorations (`R/modPedigree.R:675-790`) into a script-callable visNetwork renderer.
+(4) **Parity closers: IN** — shrink helpers + `bitSize` exports, `familycheck` +
+`ibdMatrix` ports, user-suppliable layout hints; **OUT** — block-sparse
+`makekinship`. Records: S739 discussion item REMOVED (completed-item removal
+checklist); still-open thread extracted as the new BLOCKED item "Build a
+kinship2-similar standalone pedigree package" (`BACKLOG.md:95`) carrying the full
+scope + purpose statement forward. No TDD phases (decision/records; no `.R` files).
+Lint N/A.
+**Started/completed:** 2026-09-20 (single session). Claim `222f0c5e`; deliverable
+`4697f66c`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable, records, sha).
+BACKLOG item consumed and removed; one new BLOCKED item added in its place.
+
+**What actually happened, in order:**
+1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both frontiers
+   at `0cf0696e`; S741 receipt complete, ratchet citation matched the results file);
+   CI 10/10 green (latest 4 on `889f9896`); dashboard 96/100; context budget WARN =
+   CLAUDE.md warn band, growth run 18/10; 7 unpushed measured (= S741's estimate);
+   5 known untracked files unchanged; no live sequencing-audit cluster.
+2. **Owner picked step 2** via the Phase 0 picker (over push+CI and prep D-1/D-2);
+   claim `222f0c5e`.
+3. **Gap doc read in full** before briefing; briefing rendered in-chat (Findings
+   #1/#2/#4, Structural Observations 2/3, sequencing/gates status), then all four
+   decisions posed in ONE `AskUserQuestion` — disposition + the three scope
+   questions framed as "recorded scope if/when built" so the answers land as the
+   durable disposition either way.
+4. **Records:** old item block (20 lines) replaced by the new BLOCKED build item
+   (26 lines) with the owner's purpose statement and full IN/OUT scope; CHANGELOG
+   deliverable entry carries the near-verbatim owner quote; deliverable committed
+   `4697f66c`; quality_ratchet at that HEAD: 1/1 pass · results 966c2a067d51 ·
+   manifest aa983075d6a2 (3,483,942 B ≤ 5,000,000 B).
+
+**Self-assessment (Session 742): 9/10.** **Strengths:** (1) the S738 lesson applied
+by design — briefing volunteered WITH the question, so the owner decided on full
+context in one round; (2) all four decisions captured in one structured call, and
+the owner's free-text purpose statement was preserved near-verbatim in BOTH the
+ledger and the forward-carrying item (it materially changes what a future planning
+session should design: sibling product, not extraction); (3) completed-item removal
+checklist followed exactly (block removed, record enriched into CHANGELOG, open
+thread extracted); (4) scope held — no planning or code started on a committed-but-
+deferred item. **Weaknesses:** (1) `BACKLOG.md` net +6 lines (FM #28 tension —
+inherent to recording a scope-rich disposition, but real); (2) the recommended
+disposition option carried the S738 CRAN-release gate forward unexamined — the
+owner's standalone-first reframing arguably weakens that gate's rationale, and the
+session recorded the tension rather than re-posing it (deliberate: one decision
+round, no re-litigating — but a future session could surface it cheaply).
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine decision/records
+session; the durable record is the CHANGELOG entry + the BACKLOG item. **Reduction
+check (FM #28):** nothing removed from a mandated-read file; `BACKLOG.md` grew net
++6 lines by disposition-recording — stated explicitly; the editorial-compression
+item (READY, L) remains the standing counterweight.
+
+**Next steps (specific):** (A) ~11 unpushed after close-out (7 carried + 4 S742:
+claim, deliverable, records, sha — last two estimated at write time; recount with
+`git rev-list --count origin/master..HEAD`); all docs-only since `889f9896`, so CI
+is current; the unpushed backlog keeps growing — **a push+CI session is the natural
+next pick** (S726–S740 precedent). (B) The kinship2 build item is now **BLOCKED —
+not pickable** until prep D-1/D-2/D-3 land and the S738 gates move; do NOT surface
+it in the Phase 0 picker. (C) Pickable priorities: prep D-1/D-2/D-3 (READY, S each;
+D-1/D-2 CODE sessions, full TDD gates; D-1 is now doubly motivated as step 0 of the
+committed package); BACKLOG editorial compression (READY, L); inst/doc slimming
+(DECISION NEEDED, M); REUSE registration (owner action, S); NPRC outreach (owner
+review).
+
+**Key files:** `BACKLOG.md:95` (the new BLOCKED build item — a future planning
+session MUST read its purpose statement before designing), `CHANGELOG.md:41` (S742
+entries at top, incl. the near-verbatim owner quote), `HANDOFFS.md` (S742 receipt),
+`docs/research/kinship2-feature-gap-analysis-2026-09-20.md:186` (Recommendations —
+the scope decisions' evidence base).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0
+— measure it; ~11 unpushed after close-out (recount). (2) The kinship2 package
+disposition is COMMITTED-deferred: treat "gates stand" as the owner's word — don't
+re-pose the disposition; the one legitimately open cheap question is whether the
+CRAN-release gate still fits the standalone-first purpose (see this session's
+weakness #2). (3) A D-1/D-2 pickup is a CODE session — full TDD gates
+(phase declarations, AskUserQuestion at every transition); re-verify
+`R/makePedigreeDiagramData.R:1755` and `test_modPedigree.R:1669/:1706` before
+editing. (4) Standing set unchanged: `gh run list --commit` needs the FULL 40-char
+sha; `scratchpad/` invisible to git BY OWNER DECISION; ratchet ~2 min AFTER
+committing (Learning 772); trim needs `--budget-bytes 65536`; renv banner expected;
+CLAUDE.md warn band; growth run 18/10 (19/10 next if nothing shrinks — BACKLOG.md
+is not in the budget file, so its +6 lines don't move it; measure, don't predict);
+the two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline
+2437/0/0/184/0 remote-confirmed on `889f9896`.
 
 ### Session 740 Handoff Evaluation (by Session 741)
 **Score: 9/10.** **What helped:** "3 unpushed after close-out" measured exactly 3;
