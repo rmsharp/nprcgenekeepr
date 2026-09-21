@@ -46,6 +46,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 749 Did
+**Deliverable:** Push the 6 docs-only records commits (+ this claim riding the
+push) to `origin/master` and structurally verify all 4 push-triggered
+workflows green on the pushed sha (routine operational pick, S726–S747
+precedent; owner-picked via the Phase 0 picker) (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 747 Handoff Evaluation (by Session 748)
 **Score: 9/10.** **What helped:** "2 unpushed expected (recount)" measured
 exactly 2; "expect 0 undocumented; measure it" measured 0 on both frontiers

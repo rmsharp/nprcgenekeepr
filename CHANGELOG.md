@@ -38,6 +38,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S749 claim: push to `origin/master` + CI verification (in progress)
+- Session claimed (stub + pending receipt + this entry). Phase 0 was clean:
+  0 undocumented commits on both frontiers at `cb44c898`; S748 receipt
+  complete, its ratchet citation byte-identical to
+  `.quality-gates-results.json`; CI 10/10 green, current through `5d281ad5`;
+  6 unpushed measured (matching the S748 prediction), ALL docs-only;
+  dashboard 96/100; context budget WARN = the known `CLAUDE.md` warn band,
+  growth run 25/10; the 5 known untracked files unchanged. Owner picked
+  push+CI via the Phase 0 picker (over WORDLIST drift, BACKLOG compression,
+  inst/doc slimming). Plan: push (this claim rides), smoke-test the
+  full-40-char-sha `--commit` filter against in-flight runs BEFORE arming a
+  single monitor, then verify all 4 workflows `completed success` with
+  `headSha` echoed back on the pushed sha.
+
 ### 2026-09-21 · [ad hoc] S748 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `7ad303fc`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S748 commit. S748 total: 4 commits (claim `f4f4442e`, deliverable
   `73107bc8`, records `7ad303fc`, this one). Ahead of `origin/master` by 6
