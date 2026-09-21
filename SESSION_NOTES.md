@@ -50,18 +50,116 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 754 Handoff Evaluation (by Session 755)
+**Score: 9/10.** **What helped:** "2 unpushed expected (recount)" measured
+exactly 2; "expect 0 undocumented; measure it" measured 0 on both frontiers
+at `05d0cf60`; the S754 receipt's ratchet citation matched
+`.quality-gates-results.json` byte-for-byte (402149dcd019, 3,489,164 B at
+`8007de81`); CI-current-through-`8007de81` held (all
+4 push runs green plus 2 scheduled runs green since); growth run read
+34/10 at Orient (rose from 33 — the read-don't-predict framing was right
+again); the 5 standing untracked files were exactly as described; next
+step (A) named the Pre-RED scoping session for #167/#168 as the top
+substantive pick with the right gate (#147/#148 precedent) and the right
+pickup decision (#167 the natural next) — it WAS this session's
+owner-picked deliverable. **What was missing:** nothing material.
+**What was wrong:** nothing found — every checked claim held. **ROI:** high.
+
 ### What Session 755 Did
-**Deliverable:** Pre-RED design/scoping document for issue #167 (longitudinal
-genetic-health monitoring — colony snapshots and trend reporting) (IN PROGRESS)
-**Started:** 2026-09-21
-**Status:** Session claimed. Owner picked the item via the Phase 0 picker and
-picked #167 over #168 at a separate scope gate. Work beginning: read the
-design workstream + the #147/#148 scoping-doc precedent, then draft the
-scoping doc to `docs/planning/`. The scoping doc is the deliverable — no
-implementation this session.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
-(in progress); Phase 3F records the rest. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+**Deliverable:** Pre-RED scope-narrowing decision record for issue #167
+(longitudinal genetic-health monitoring) — **DONE**:
+`docs/planning/issue167-longitudinal-monitoring-scoping-2026-09-21.md`
+(#148/S703 mold). Owner decisions via `AskUserQuestion`: item picked at the
+Phase 0 picker; **#167 over #168** at a separate scope gate; **design-first,
+same issue** (sub-issue split / implement-as-filed / defer rejected with
+reasons recorded); narrowing comment **approved verbatim after full inline
+render** (Learning 776 applied — no round-trip lost) and posted:
+issue #167 comment 5767523393, verified by re-read. Doc contents: verbatim
+issue body + audit gate context; 14-row grep-verified evidence inventory
+(all metric machinery exists — `reportGV()` colony scalars fe/fg/fgSE/
+neGD/neSexRatio/neVariance, `meanKinship()`, #126 shape stats,
+`calcFounderContributions()`; NOTHING longitudinal exists — no
+persistence, no trends, no as-of-date reconstruction); 9 open design
+questions Q1–Q9 for the plan session (schema; persistence under CRAN
+write policy; membership-rule vocabulary — "cohort" collides with
+`getBreedingPeerCohort` `R/correctUnknownParentMeanKinship.R:37`;
+Monte-Carlo comparability — `reportGV()` has NO seed param, only
+`gvaConvergence()` does; retrospective vs prospective; trend outputs;
+surface — `R/modORIPReporting.R:108` already promises "Inbreeding trends
+over time"; #150 export gating; slices); hard constraints; next actions.
+Deliberate S703 divergence recorded: NO new BACKLOG item (FM #28; the
+issue is the tracker).
+**Started/completed:** 2026-09-21 (single session). Claim `1c0480e1`;
+deliverable `fb8af874`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action — claim, deliverable,
+comment posted (non-commit action), records, sha. TDD phase PRE-RED
+declared at every response top (docs-only, no code). No BACKLOG item
+consumed; no NEWS.Rmd/lint/pkgdown-reference/citation/issue-close
+checklist owed (no code, no exports, no statistic shipped, no item
+closed — the citation checklist fires at the implementation slices).
+
+**Self-assessment (Session 755): 9/10.** **Strengths:** (1) every
+inventory claim grep-verified in-session before it was written (seed
+absence, cohort collision, ORIP placeholder, dated-file precedents);
+(2) both owner gates held — nothing outward-facing moved without
+verbatim approval, and the comment was rendered inline BEFORE the
+structured confirm (Learning 776 applied, zero lost round-trips);
+(3) precedent read, not assumed (#148 scoping doc + S703's actual
+posted comment fetched and matched); (4) per-action ledger discipline
+including the non-commit comment action; (5) the FM #28-conscious
+divergence (no BACKLOG regrowth) made explicitly, with reasons, in the
+doc itself. **Weaknesses:** (1) no FM #28 reduction — no mandated-read
+file got smaller this session (said plainly); (2) `DESIGN_WORKSTREAM.md`
+was read but is UI-centric and mostly inapplicable — the governing shape
+was the #148 precedent; small time cost, no harm.
+
+**Learnings:** none owed — clean scoping session following an
+established mold; no novel failure or pattern (S751/S754 precedent for
+capturing none). `PROJECT_LEARNINGS.md` untouched.
+
+**Next steps (specific):** (A) **Design-plan session for #167 (READY,
+M/L)** — write `docs/planning/issue167-longitudinal-monitoring-plan.md`
+answering Q1–Q9 as ratified numbered decisions with a vertical-slice
+list and per-slice completion criteria (#152/#153 mold). Start from the
+scoping doc §4; the plan is that session's whole deliverable (FM #18/#19).
+(B) **#168 scoping session (READY, M)** — the sibling gap (ancestry
+guardrails) still needs its own scope-narrowing record; this session's
+doc is the mold. (C) **Push+CI not urgent** — 6 docs-only commits
+unpushed expected after close-out (2 inherited + claim `1c0480e1`,
+deliverable `fb8af874`, records, sha; recount with
+`git rev-list --count origin/master..HEAD`); CI current through
+`8007de81`. (D) Unchanged: chromote hang research (READY, M, research
+only, `BACKLOG.md:131`); inst/doc slimming (DECISION NEEDED, M, `:110`);
+REUSE registration (owner action, S, `:153`); BACKLOG compression
+recurring (`:181`); NPRC outreach (DECISION NEEDED, `:386`);
+kinship2-standalone BLOCKED (`:72`); LabKey BLOCKED (`:27`).
+
+**Key files:** no code touched.
+`docs/planning/issue167-longitudinal-monitoring-scoping-2026-09-21.md`
+(the deliverable — §4 Q1–Q9 is the next session's worklist),
+`SESSION_NOTES.md:51` (this handoff), `HANDOFFS.md` (S755 receipt),
+`CHANGELOG.md:41` (S755 entries at top), `.quality-gates-results.json`
+(head `fb8af874`; gitignored).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; 6 unpushed expected after close-out (recount).
+(2) Issue #167 now carries the narrowing comment (5767523393) — body
+searches hit it; read the issue THROUGH the gate (envelope, not a single
+ask). (3) Ratchet baseline now 3,489,117 B at `fb8af874` (−47 B vs S754 —
+build-metadata noise again; no package file touched); cite from
+`.quality-gates-results.json` (results `d3019e040f5f`), never the rounded
+run table. (4) No code touched, no suite run (docs-only; baseline
+0 failed / 0 error / 184 skipped stands, remotely confirmed through
+`8007de81`). (5) BACKLOG anchors shifted slightly vs older handoffs:
+chromote `:131` (not :129), inst/doc `:110` (not :108), REUSE `:153`
+(not :152) — re-grep before trusting any stale anchor. (6) Standing set
+unchanged: `gh run list --commit` needs the FULL 40-char sha +
+smoke-test the filter; `scratchpad/` invisible to git BY OWNER DECISION;
+ratchet AFTER committing (Learning 772); trim needs `--budget-bytes
+65536`; renv banner expected; CLAUDE.md warn band (26,360 B); growth run
+34/10 at this Orient — read the value at the next Orient; the two
+`SESSION_NOTES.md` ceilings differ (owner decision pending); zsh harness
+traps (Learning 775).
 
 ### Session 753 Handoff Evaluation (by Session 754)
 **Score: 9/10.** **What helped:** "13 unpushed expected (recount)" measured

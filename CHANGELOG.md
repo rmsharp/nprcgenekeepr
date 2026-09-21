@@ -38,6 +38,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S755 records: close-out records committed (handoff, receipt, evaluations)
+- `SESSION_NOTES.md` S755 handoff + S754 evaluation (9/10 — every checked
+  claim held exactly; next step (A) was this session's owner-picked
+  deliverable); `HANDOFFS.md` receipt complete (self 9/10); this ledger
+  entry. Ratchet cited at the deliverable sha: 1/1 pass, 3,489,117 B at
+  `fb8af874`, results `d3019e040f5f`, manifest `aa983075d6a2` (read from
+  the results file; −47 B vs S754 — build-metadata noise, no package
+  file touched). `methodology_trim.py --check`: no trigger on
+  `SESSION_NOTES.md` (27,854 B vs 65,536 B, `--budget-bytes 65536`),
+  `HANDOFFS.md` (127,292 B vs 196,608 B), or `CHANGELOG.md` (129,948 B
+  vs 196,608 B). S755 totals: 3 commits (claim `1c0480e1`, deliverable
+  `fb8af874`, records) + 1 sha commit to follow + 1 non-commit action
+  (the #167 comment); 6 unpushed expected after close-out — verify with
+  `git rev-list --count origin/master..HEAD`, not this sentence.
+
+### 2026-09-21 · [issue #167] S755 non-commit action: design-first narrowing comment posted on issue #167 (owner-approved verbatim)
+- Comment 5767523393 posted via `gh issue comment` after full inline
+  render + `AskUserQuestion` approval (Learning 776 discipline); verified
+  by re-reading the issue — first line matches the approved text. The
+  issue body is now read through the gate: feature envelope, not a
+  single implementable ask; next #167 session writes the design plan.
+
 ### 2026-09-21 · [issue #167] S755 deliverable: scope-narrowing decision record written — `docs/planning/issue167-longitudinal-monitoring-scoping-2026-09-21.md`
 - Owner decision (via `AskUserQuestion`): **design-first, same issue** — the
   #148/S703 mold; sub-issue split, implement-as-filed, and defer all
