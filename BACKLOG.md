@@ -68,12 +68,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       measured + per-center query availability/permissions are confirmed; needs a live LabKey server to
       test/observe, and a naive focal-id server filter is incompatible with the client-side
       connected-component walk).
-- [ ] **Prep D-2: remove the two test-only reaches into the internal
-      `.buildMatingUnitForest()`** (queued S738, 2026-09-20, from the accepted package-split
-      disposition, READY, Effort S) -- `tests/testthat/test_modPedigree.R:1669` and `:1706`
-      (verified current S738) each call the internal directly; rewrite through
-      `makePedigreeMatingLayout()`'s public surface or a small exported accessor. These are the
-      only cross-boundary internal reaches outside the core's own test files (S667 §2.4/D6).
 - [ ] **Prep D-3: add `@noRd` roxygen blocks to `R/positionTreeApportion.R`'s 13 functions**
       (queued S738, 2026-09-20, from the accepted package-split disposition, READY, Effort S) --
       the file has zero roxygen markers (verified S738: `grep -c "^#'"` = 0), inconsistent with
@@ -83,8 +77,8 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       the 3 revisit conditions in the scoping doc §6; these steps harden the boundary in place
       and are worthwhile whether or not a split ever happens.)
 - [ ] **Build a kinship2-similar standalone pedigree package from this repository's code —
-      committed, deferred** (disposition S742, 2026-09-20; BLOCKED -- on prep D-2/D-3
-      above (D-1 DONE S744) plus the S738 revisit conditions, scoping doc §6: engine churn calms + an
+      committed, deferred** (disposition S742, 2026-09-20; BLOCKED -- on prep D-3
+      above (D-1 DONE S744, D-2 DONE S745) plus the S738 revisit conditions, scoping doc §6: engine churn calms + an
       accepted CRAN release; Effort L, its own planning session first when unblocked) --
       owner disposition closing the S739 two-step discussion item (step 1: gap analysis
       DONE S741, `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`, 15 EQ /
@@ -105,9 +99,12 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       matrices are current practice); API shape (data-frame-as-is vs kinship2-compat layer)
       DELIBERATELY OPEN — decide at plan time with a prototype in hand. When unblocked, the
       pickup is a planning session (package boundary/plan doc in `docs/planning/`,
-      evidence-based inventory); prep D-2/D-3 are step 0's remainder — D-1 landed S744:
+      evidence-based inventory); prep D-3 is step 0's remainder — D-1 landed S744:
       `makePedigreeMatingLayout(kinshipMatrix = )` (`R/makePedigreeDiagramData.R:1685`)
-      is exactly the injectable boundary the package needs.
+      is exactly the injectable boundary the package needs; D-2 landed S745: no test
+      file outside the layout core's own reaches `.buildMatingUnitForest()` any more
+      (the two `test_modPedigree.R` reaches now derive union/duplicate ids from the
+      exported return's `nodes$id` / `duplicateToReal`).
 - [ ] **(Optional, owner decision) Slim `inst/doc/` by moving the three `html_document`
       vignettes to `rmarkdown::html_vignette`** (extracted S728, 2026-09-19, from the completed
       tarball build-hygiene item — its still-open step 4; DECISION NEEDED, Effort M, its own

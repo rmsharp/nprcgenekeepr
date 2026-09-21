@@ -1666,7 +1666,12 @@ test_that(
     sex = c("M", "F", "F", "F", "F"),
     stringsAsFactors = FALSE
   )
-  forest <- .buildMatingUnitForest(cbind(test_studbook, gen = 0L))
+  ## Union node ids derived through the exported surface (prep D-2) --
+  ## tests outside the layout core's own must not reach the internal
+  ## .buildMatingUnitForest(). The "^__union_" anchor matters: waypoint
+  ## ids like "__drop___union_1" contain but do not start with it.
+  layout <- makePedigreeMatingLayout(cbind(test_studbook, gen = 0L))
+  unionIds <- grep("^__union_", layout$nodes$id, value = TRUE)
 
   shiny::testServer(
     modPedigreeServer,
@@ -1683,7 +1688,7 @@ test_that(
       result <- session$getReturned()
       expect_equal(result$focalAnimals(), "C")
 
-      session$setInputs(pedigreeDiagram_click = forest$matingUnits$id[1L])
+      session$setInputs(pedigreeDiagram_click = unionIds[1L])
       session$flushReact()
       expect_equal(result$focalAnimals(), "C")
     }
@@ -1703,8 +1708,11 @@ test_that(
     sex = c("M", "F", "F", "F", "F"),
     stringsAsFactors = FALSE
   )
-  forest <- .buildMatingUnitForest(cbind(test_studbook, gen = 0L))
-  expect_equal(nrow(forest$duplicates), 1L)
+  ## Duplicate node id -> real id derived through the exported surface
+  ## (prep D-2): makePedigreeMatingLayout()'s duplicateToReal is exactly
+  ## the D6 lookup the internal forest's duplicates table feeds.
+  layout <- makePedigreeMatingLayout(cbind(test_studbook, gen = 0L))
+  expect_equal(length(layout$duplicateToReal), 1L)
 
   shiny::testServer(
     modPedigreeServer,
@@ -1715,11 +1723,11 @@ test_that(
       session$setInputs(
         displayUnknownIds = TRUE,
         trimPedigree = FALSE,
-        pedigreeDiagram_click = forest$duplicates$id[1L]
+        pedigreeDiagram_click = names(layout$duplicateToReal)[1L]
       )
       session$flushReact()
       result <- session$getReturned()
-      expect_equal(result$focalAnimals(), forest$duplicates$realId[1L])
+      expect_equal(result$focalAnimals(), unname(layout$duplicateToReal[1L]))
     }
   )
 })

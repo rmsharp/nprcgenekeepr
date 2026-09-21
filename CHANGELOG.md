@@ -38,6 +38,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [BL-prep-D-2] S745 deliverable: Prep D-2 DONE — the two test-only reaches into `.buildMatingUnitForest()` now derive ids through the exported surface
+- REFACTOR-only, the owner-ratified phase mapping (same as D-3's; two gates
+  ran via AskUserQuestion: approach — REFACTOR-only over a RED→GREEN boundary
+  guard test and over a new exported accessor — then PRE-RED→REFACTOR with
+  exact planned edits). `tests/testthat/test_modPedigree.R`: the union-click
+  no-op test (was `:1669`) now takes `grep("^__union_", layout$nodes$id,
+  value = TRUE)[1L]` from `makePedigreeMatingLayout()`'s return (the `^`
+  anchor matters — waypoint ids like `__drop___union_1` contain but do not
+  start with the prefix); the duplicate-click test (was `:1706`) now uses
+  `duplicateToReal` for length/id/realId. Equivalence proven empirically
+  BEFORE editing: on the fixture, the public return's union-id set and dup
+  mapping are identical to the internal forest's. Zero functional
+  `.buildMatingUnitForest` calls remain outside the layout core's own test
+  files (S667 §2.4/D6 closed). Verification: full `test_modPedigree.R` pass;
+  full silent suite 0 failed / 0 error / 184 skipped (7054 passed); lint 0 on
+  the touched file (package loaded first). No production code touched; no
+  NEWS.Rmd entry owed (no exported function or user-facing change). BACKLOG
+  D-2 item REMOVED (completed-item checklist); the BLOCKED kinship2-build
+  item's blocker updated to D-3 only, with the D-2 boundary fact carried into
+  the item.
+
 ### 2026-09-21 · [BL-prep-D-2] S745 claim: Prep D-2 — remove the two test-only reaches into `.buildMatingUnitForest()` *(in progress)*
 - Owner pick via the Phase 0 picker (over push+CI, prep D-3, BACKLOG
   compression). Phase 0 findings: 0 undocumented on both frontiers at
