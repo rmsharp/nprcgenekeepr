@@ -38,6 +38,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-20-2.md` (13 record(s), 61,388 B → 13,607 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **13** record(s) (2026-09-02 → 2026-09-20) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-20-2.md`](docs/archive/SESSION_NOTES-through-2026-09-20-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 61,388 B → 13,607 B (−77.8%).
+
+### 2026-09-21 · [BL-prep-D-2] S745 close-out: session records (handoff, S744 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S744 evaluation: 9/10 — 6-unpushed and
+  clean-frontier claims held exactly; growth-run prediction exact; the D-2
+  guidance was the execution plan; ONE immaterial finding — its ratchet
+  citation's measured size was 3 B off the results file, root-caused this
+  session to the run table's rounded display: cite from
+  `.quality-gates-results.json`, never the table). `HANDOFFS.md` receipt
+  complete. No NEWS.Rmd entry owed (no exported function or user-facing
+  change). No new `PROJECT_LEARNINGS.md` entry (routine clean REFACTOR
+  session). Reduction check (FM #28): BACKLOG.md net −3 lines — a
+  mandated-read file got smaller. Runtime smoke: n/a — test-only refactor;
+  quality_ratchet at deliverable HEAD `eb896c2e`: 1/1 pass · 0 fail ·
+  0 unmeasured · results cb8622ee3020 · manifest aa983075d6a2 (3,486,558 B ≤
+  5,000,000 B, read from the results file). 10 unpushed after close-out
+  (recount); TWO code deliverables (`44bb4481`, `eb896c2e`) never seen by
+  CI — push+CI is the top routine next pick.
+
 ### 2026-09-21 · [BL-prep-D-2] S745 deliverable: Prep D-2 DONE — the two test-only reaches into `.buildMatingUnitForest()` now derive ids through the exported surface
 - REFACTOR-only, the owner-ratified phase mapping (same as D-3's; two gates
   ran via AskUserQuestion: approach — REFACTOR-only over a RED→GREEN boundary
