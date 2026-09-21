@@ -38,6 +38,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S748 deliverable: iCloud duplicate-`.R`-files Housekeeping item CLOSED per its own closure condition; BACKLOG block removed
+- The item (found S461, recurred S462; `PROJECT_LEARNINGS.md` Learning 454):
+  iCloud sync left `R/appServer 2.R` and `R/modMarkerGenetics 2.R` in `R/`,
+  where `pkgload::load_all()`/`devtools::document()` sourced them like any
+  other `.R` file, silently merging their stale roxygen into
+  `man/appServer.Rd`, `man/modMarkerGeneticsServer.Rd`, and
+  `man/modMarkerGeneticsUI.Rd` (corruption confirmed twice S461, recurred
+  S462 after an owner-side local rebuild; each time reverted via
+  `git checkout --`). Closure condition (the item's own text): the owner
+  relocates the repo outside iCloud's purview and the duplicates no longer
+  reappear after local rebuilds.
+- Closure evidence (measured this session): (1) `pwd` =
+  `~/Development/nprcgenekeepr` — no iCloud path component (the S462-era
+  blocker "relocation had NOT yet happened" is resolved); (2) `ls R/ |
+  grep ' 2\.'` empty — second consecutive session-check (S746, S748) with
+  owner-side local rebuilds in between; (3) no `*conflicted copy*` file
+  anywhere in the repo; (4) the 3 previously-corrupted `.Rd` files are
+  clean in git; (5) only ` 2.*` residue repo-wide is 7 stale `.pper` files
+  under `.Rproj.user/` — gitignored (`.gitignore:1`), 0 tracked, never
+  sourced by package tooling: inert iCloud-era residue, not a recurrence.
+- BACKLOG block (was `BACKLOG.md:180-201`) REMOVED per the completed-item
+  checklist. Forward-carry: the WORDLIST-drift item's verification target
+  updated in place — `devtools::check()` should now drop to the
+  vignette-engine note only, since the co-present duplicate-file warning
+  died with this item. No GitHub issue named by the item, so no issue
+  close owed. Learning 454 stays as the frozen historical record.
+
 ### 2026-09-21 · [ad hoc] S748 claim: close the iCloud duplicate-`.R`-files Housekeeping item per its own closure condition (in progress)
 - Owner-picked via the Phase 0 picker (over BACKLOG compression, inst/doc
   slimming, kinship2-standalone). Session claimed: `SESSION_NOTES.md` stub +

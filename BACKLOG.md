@@ -177,28 +177,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       the canonical design's own deferred H4 remedy (`docs/planning/ledger-trimmer-design.md`
       §10.2, "the lever is receipt size, and the mechanism would be a norm plus a check, not
       an archiver") is worth adopting for `CHANGELOG.md` specifically.
-- [ ] **iCloud "conflicted copy" duplicate `.R` files corrupt
-      `devtools::document()`/`R CMD check` output** (found S461, Effort S,
-      not a code defect) -- `R/appServer 2.R` and `R/modMarkerGenetics 2.R`
-      (carried forward many sessions as passive noise) are SOURCED by
-      `pkgload::load_all()`/`devtools::document()` like any other `.R` file,
-      silently merging their own stale roxygen comments into the SAME
-      generated `.Rd` page as the current source -- confirmed twice this
-      session (`man/appServer.Rd`, `man/modMarkerGeneticsServer.Rd`,
-      `man/modMarkerGeneticsUI.Rd`, each reverted via `git checkout --`
-      immediately). See `PROJECT_LEARNINGS.md` Learning 454. The owner is
-      relocating this repository outside iCloud's purview specifically
-      because of this and other iCloud-latency issues (same session,
-      out-of-band) -- once moved, this item should self-resolve; a future
-      session should confirm the 2 duplicate files no longer reappear and,
-      if so, close this item without further action.
-      **Recurred again S462 (2026-08-03):** the owner rebuilt the package
-      locally (outside this session's own tool calls) while reviewing a
-      screenshot, which re-corrupted the same 3 `.Rd` files the same way;
-      reverted again via `git checkout --`. As of this session's Orient, the
-      planned repository relocation had NOT yet happened (`pwd` still
-      resolves to the original iCloud-synced path) -- this item cannot be
-      closed until the move actually completes.
 - [ ] **`devtools::check()`'s spelling NOTE has drifted again -- 6 new words,
       not caught by any session since S461** (found S465, Effort S,
       incidental -- confirmed pre-existing, not caused by this session's own
@@ -212,8 +190,10 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       "Additional close-out checks" precedent) -- a future session should
       hand-add these 6 words to `inst/WORDLIST` in `LC_ALL=C` byte-order
       position (not via `spelling::update_wordlist()`, per S230 convention)
-      and re-verify `devtools::check()` drops to the pre-existing iCloud
-      duplicate-file warning + vignette-engine note only.
+      and re-verify `devtools::check()` drops to the vignette-engine note
+      only (the formerly co-present iCloud duplicate-file warning cleared
+      when that item closed, S748 — the repo now lives outside iCloud and
+      the duplicate `.R` files are gone).
       **Count grown to 9 words as of S490 (2026-08-09), still not fixed** --
       incidental to issue #136 Slice 2's own `devtools::check()` verification
       pass. The original 6 (`sibship`/`waypoint`/`duplicateToReal`/`js's`/
