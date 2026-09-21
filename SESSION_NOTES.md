@@ -46,16 +46,122 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 745 Handoff Evaluation (by Session 746)
+**Score: 9/10.** **What helped:** "10 unpushed (recount)" measured exactly 10;
+"expect 0 undocumented; measure it" measured 0 on both frontiers at `41c43c35`;
+the growth-run prediction (22/10) was exact; the ratchet-table-rounds gotcha
+paid off twice — this session's own table showed 3.48894e+06 where the results
+file says 3,488,944, exactly the trap; the D-3 guidance was the execution plan
+as written (`grep -c "^#'"` = 0 re-verified still true; PRE-RED→REFACTOR gate
+posed before editing, as instructed). **What was missing:** nothing material.
+**What was wrong:** nothing found — every checked claim held. **ROI:** high.
+
 ### What Session 746 Did
-**Deliverable:** Prep D-3 — `@noRd` roxygen blocks for `R/positionTreeApportion.R`'s
-13 functions (IN PROGRESS)
-**Started:** 2026-09-21 (2026-09-20 22:43 CDT)
-**Status:** Session claimed. Work beginning. Owner picked D-3 via the Phase 0
-picker (over push+CI, BACKLOG compression, inst/doc slimming). REFACTOR-only by
-its BACKLOG tag but phase-gated: research + PRE-RED→REFACTOR gate before editing.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
-(in progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** Prep D-3 — **DONE** (deliverable commit `a5a9bf42`). All 13
+functions in `R/positionTreeApportion.R` now carry `@noRd` roxygen blocks
+(title + `@param` + `@return` + `@noRd`, matching `R/shrinkPedigree.R`'s
+internal-doc house style). Diff mechanically proven comment-only: exactly 160
+added `#'` lines, 0 deletions, no code touched, no line over 80 chars.
+REFACTOR-only (owner-gated PRE-RED→REFACTOR via AskUserQuestion with the exact
+edits; the RED/GREEN-skipping mapping was already owner-ratified in the BACKLOG
+tag). **Started/completed:** 2026-09-21 (single session). Claim `19de9c64`;
+deliverable `a5a9bf42`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable, records,
+sha). BACKLOG D-3 item REMOVED in the deliverable commit (completed-item
+checklist); the kinship2-standalone item's blocker updated to the S738 revisit
+conditions ONLY (prep steps ALL DONE: D-1 S744, D-2 S745, D-3 S746), with the
+D-3 fact and prep-origin context carried forward into the item.
+
+**What actually happened, in order:**
+1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both
+   frontiers at `41c43c35`; S745 receipt complete, its ratchet citation matches
+   `.quality-gates-results.json` byte-for-byte); CI 10/10 green but current
+   only through S743's push; 10 unpushed measured; dashboard 96/100; context
+   budget WARN = CLAUDE.md warn band, growth run 22/10; 5 known untracked
+   files unchanged; no live sequencing-audit cluster.
+2. **Owner picked D-3** via the Phase 0 picker (over push+CI, BACKLOG
+   compression, inst/doc slimming); claim `19de9c64`.
+3. **Research before the gate:** workstream doc read; the full 277-line file
+   read end-to-end; 13 function definitions confirmed; `grep -c "^#'"` = 0
+   re-verified; house style sampled from `R/shrinkPedigree.R`; **the iCloud
+   duplicate files (`R/appServer 2.R`, `R/modMarkerGenetics 2.R`) confirmed
+   GONE from `R/`** — so the S461 `devtools::document()` corruption trap did
+   not apply to this session's verification plan.
+4. **PRE-RED→REFACTOR gate:** approved with the exact edits + verification
+   plan spelled out (the alternative offered: review all 13 block texts in
+   chat first).
+5. **REFACTOR:** 13 blocks written; diff verified comment-only mechanically
+   (grep on the diff's `+` lines: 1 non-`#'` line = the `+++` header).
+6. **Verification:** `devtools::document()` byte-identical no-op on `man/` +
+   `NAMESPACE` (correct outcome — `@noRd` generates nothing);
+   `test_positionTreeApportion.R` passes; full silent suite **0 failed /
+   0 error / 184 skipped** (7054 passed); lint 0 on the touched file
+   (package loaded first).
+7. **Close-out:** no NEWS.Rmd entry owed (no exported function, no
+   user-facing change — checklist consulted, not skipped); no WORDLIST risk
+   (`@noRd` text never reaches `.Rd`/vignettes, so the spelling gate cannot
+   see it); ratchet AFTER the deliverable commit (Learning 772): 1/1 pass ·
+   results b7c4dc700aa7 · manifest aa983075d6a2 (3,488,944 B ≤ 5,000,000 B at
+   `a5a9bf42`, read from the results FILE — the run table rounded to
+   3.48894e+06, re-confirming the S745 gotcha). Tarball grew +2,386 B vs
+   S745's 3,486,558 B: the roxygen comments ride in the `R/` sources —
+   expected, not a defect.
+
+**Self-assessment (Session 746): 9/10.** **Strengths:** (1) the
+comment-only claim is a measurement, not an assertion (diff `+`-line grep);
+(2) the `document()` no-op check turned "docs hygiene" into a mechanically
+verifiable outcome, and the iCloud-dup pre-check protected it; (3) scope held
+exactly (no code edits, no export changes, no drive-by fixes); (4) both the
+Phase 0 picker and the phase gate ran as structured questions.
+**Weaknesses:** (1) **FM #28 reduction: none this session** — BACKLOG.md net
+0 lines (8-line D-3 block removed but equal bytes carried forward into the
+kinship2 item); no mandated-read file got smaller — said plainly per the
+degradation-detection row, not left unsaid; (2) roxygen prose accuracy rests
+on my reading of the code, not on any gate — a wrong `@param` description
+would fail no test (mitigated by the full-file read and the engine's
+exact-value oracle tests, but it is documentation, not proof).
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean REFACTOR
+session (S745 precedent); the durable record is the CHANGELOG entries + the
+code.
+
+**Next steps (specific):** (A) **Push + CI verification is now overdue as the
+top routine pick** (S726–S743 precedent): 14 unpushed expected after close-out
+(recount with `git rev-list --count origin/master..HEAD`), and THREE
+deliverable commits (`44bb4481` R/+tests, `eb896c2e` tests, `a5a9bf42` R/
+comment-only) have never been seen by CI — expect R-CMD-check inside the
+17m39s–22m17s band; smoke-test the FULL-40-char-sha `--commit` filter against
+in-flight runs BEFORE arming any monitor. (B) **kinship2-standalone item is
+now blocked on the S738 revisit conditions ONLY** (engine churn calms + an
+accepted CRAN release) — NOT a routine pickup; when the owner judges the
+conditions met, the pickup is a planning session (`docs/planning/` boundary
+doc, evidence-based inventory; ratified scope already in the BACKLOG item).
+(C) **iCloud-duplicate Housekeeping item is now closable-on-confirmation:**
+the 2 duplicate `.R` files are gone from `R/` (verified this session); the
+item's own text says confirm non-reappearance and close — a future session
+should re-check `ls R/ | grep ' 2\.'` and, if still clean after local
+rebuilds, close the item (Effort XS). (D) Others unchanged: BACKLOG editorial
+compression (READY, L); inst/doc slimming (DECISION NEEDED, M); REUSE
+registration (owner action, S); NPRC outreach (owner review).
+
+**Key files:** `R/positionTreeApportion.R` (13 `@noRd` blocks, file now 437
+lines), `BACKLOG.md:71` (kinship2 item, blocker + prep-context updated),
+`CHANGELOG.md:41` (S746 entries at top), `HANDOFFS.md` (S746 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next
+Phase 0 — measure it; 14 unpushed expected after close-out (recount).
+(2) **Cite the ratchet's measured value from `.quality-gates-results.json`,
+never the run table** — confirmed AGAIN this session (table 3.48894e+06 vs
+file 3,488,944). (3) The tarball baseline is now 3,488,944 B (grew +2,386 B
+with the roxygen — expected); don't read the delta as a regression.
+(4) Standing set unchanged: `gh run list --commit` needs the FULL 40-char
+sha + smoke-test the filter before arming a monitor; `scratchpad/` invisible
+to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs
+`--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; growth run
+22/10 (23/10 next if nothing shrinks — measure, don't predict); the two
+`SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline
+0 failed / 0 error / 184 skipped re-confirmed locally on `a5a9bf42` — remote
+confirmation for all THREE unpushed deliverables lands with the next push.
 
 ### Session 744 Handoff Evaluation (by Session 745)
 **Score: 9/10.** **What helped:** "~6 unpushed (recount)" measured exactly 6;

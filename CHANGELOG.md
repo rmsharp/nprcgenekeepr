@@ -38,6 +38,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [BL-prep-D-3] S746 close-out: session records (handoff, S745 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S745 evaluation: 9/10 — 10-unpushed and
+  clean-frontier claims held exactly; growth-run prediction exact; the D-3
+  guidance was the execution plan; nothing found wrong). `HANDOFFS.md`
+  receipt complete. No NEWS.Rmd entry owed (no exported function or
+  user-facing change); no WORDLIST risk (`@noRd` text never reaches
+  `.Rd`/vignettes). No new `PROJECT_LEARNINGS.md` entry (routine clean
+  REFACTOR session). Reduction check (FM #28): NONE this session —
+  BACKLOG.md net 0 lines (D-3 block removed, equal bytes carried forward
+  into the kinship2 item); stated plainly rather than left unsaid. Runtime
+  smoke: n/a — comment-only; quality_ratchet at deliverable HEAD `a5a9bf42`:
+  1/1 pass · 0 fail · 0 unmeasured · results b7c4dc700aa7 · manifest
+  aa983075d6a2 (3,488,944 B ≤ 5,000,000 B, read from the results file — the
+  run table rounded to 3.48894e+06, re-confirming the S745 gotcha; +2,386 B
+  vs S745 is the roxygen riding in `R/` sources, expected). 14 unpushed
+  expected after close-out (recount); THREE deliverables (`44bb4481`,
+  `eb896c2e`, `a5a9bf42`) never seen by CI — push+CI is the top routine
+  next pick. Incidental finding: the iCloud duplicate `.R` files are GONE
+  from `R/` — the Housekeeping item is closable-on-confirmation by a future
+  session.
+
 ### 2026-09-21 · [BL-prep-D-3] S746 deliverable: prep D-3 — all 13 `R/positionTreeApportion.R` functions now carry `@noRd` roxygen blocks
 - REFACTOR-only (owner-gated PRE-RED→REFACTOR with the exact edits): one
   house-style block per function (title + `@param` + `@return` + `@noRd`,
