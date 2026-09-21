@@ -38,6 +38,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S750 close-out: session records (handoff, S749 evaluation 8/10, receipt complete, self 9/10, Learning 773)
+- `SESSION_NOTES.md` handoff written (S749 evaluation: 8/10 — every
+  measured claim held exactly (2 unpushed, clean frontiers, growth run
+  26/10, byte-identical ratchet citation, current anchors), but next step
+  (A) relayed the WORDLIST item's stale premise unverified — a one-grep
+  computable claim, Learning #13's rule). `HANDOFFS.md` receipt complete.
+  `PROJECT_LEARNINGS.md` Learning 773 appended: sweep-style fixes silently
+  satisfy BACKLOG items they never looked at — re-measure an item's
+  premise as the first research step; grep `BACKLOG.md` after any bulk
+  fix; also records the WORDLIST case-insensitive-ordering fact.
+  Reduction check (FM #28): REAL — `BACKLOG.md` net −39 lines. Runtime
+  smoke: n/a — docs-only; the package-level evidence is this session's
+  full `devtools::check()` (0 errors / 0 warnings / 0 notes, tests OK).
+  quality_ratchet at `cc6d5d6b`: 1/1 pass · 0 fail · 0 unmeasured ·
+  results ab63a9bfe821 · manifest aa983075d6a2 (3,489,111 B ≤ 5,000,000 B,
+  read from the results file — the run table rounded to 3.48911e+06; the
+  +71 B vs S749 is build-metadata noise, all touched files being
+  `.Rbuildignore`d).
+
 ### 2026-09-21 · [ad hoc] S750 deliverable: WORDLIST 10-word drift Housekeeping item CLOSED as already-satisfied — `devtools::check()` verified 0 errors / 0 warnings / 0 notes
 - The item (found S465, count grown S490/S642) was stale: all 10 words were
   already in `inst/WORDLIST` — 8 of them (`sibship`, `waypoint`,

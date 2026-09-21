@@ -46,17 +46,111 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 749 Handoff Evaluation (by Session 750)
+**Score: 8/10.** **What helped:** "2 unpushed expected (recount)" measured
+exactly 2; "expect 0 undocumented; measure it" measured 0 on both frontiers
+at `9410a558`; the growth-run trajectory held (26/10 measured, exactly the
+"next if nothing shrinks" value); the S749 receipt's ratchet citation
+matched `.quality-gates-results.json` byte-for-byte (b740dd347d67,
+3,489,040 B at `589cf73c`); all four BACKLOG anchors were current
+(:181/:220/:110/:72); CI-current-through-`589cf73c` held. **What was
+wrong:** next step (A)'s premise was stale — "hand-add the 10 words to
+`inst/WORDLIST`" — but all 10 were already there (8 since 2026-08-12
+`250b33d0`, `comparator` since S680's `741b2764`, 2026-09-08). Inherited
+from the BACKLOG item rather than invented, but a one-grep computable
+claim was relayed unverified (Learning #13's compute-what's-computable
+rule); it made the top recommendation's execution plan wrong, caught in
+this session's first research step. **What was missing:** nothing else
+material. **ROI:** high.
+
 ### What Session 750 Did
-**Deliverable:** Close the WORDLIST 10-word drift Housekeeping item
-(`BACKLOG.md:181`): hand-add the 10 drifted words to `inst/WORDLIST` in
-`LC_ALL=C` byte order (never `spelling::update_wordlist()`, S230
-convention); re-verify `devtools::check()` drops to the vignette-engine
-note only. (IN PROGRESS)
-**Started:** 2026-09-21
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry
-says (in progress); Phase 3F records the rest. Until close-out, this line
-is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** WORDLIST 10-word drift Housekeeping item CLOSED as
+already-satisfied — **DONE** (deliverable commit `cc6d5d6b`). The item's
+premise was stale: all 10 words already in `inst/WORDLIST` — 8 (`sibship`,
+`waypoint`, `duplicateToReal`, `js's`, `makePedigreeMatingLayout`,
+`discoverable`, `js`, `unshaded`) hand-added 2026-08-12 by `250b33d0`
+("hand-add 76 verified words + permanent guard test"), `vis` earlier
+(`562536cf`), `comparator` 2026-09-08 by S680's `741b2764`. Closure
+evidence, all measured this session: (1) `grep -cx` = 1 per word; (2)
+fresh `spelling::spell_check_package(vignettes = TRUE)` clean; (3)
+`test_wordlist_coverage.R` guard passes (`NOT_CRAN=true`); (4) full
+`devtools::check()`: **0 errors / 0 warnings / 0 notes** (5m34s) — exceeds
+the item's "vignette-engine note only" criterion (even that note is gone),
+spelling `.Rout` comparison OK inside the check. Scope pivot
+(add-words → verify-and-close) owner-ratified at a structured gate before
+any edit. BACKLOG block (was `:180-218`) REMOVED per the completed-item
+checklist; no GitHub issue named — no issue close owed; nothing hand-added;
+no package file touched. **Started/completed:** 2026-09-21 (single
+session). Claim `aa029ae6`; deliverable `cc6d5d6b`; records + sha commits
+follow this handoff. **Ledger:** one `CHANGELOG.md` entry per action
+(claim, deliverable, records, sha).
+
+**Self-assessment (Session 750): 9/10.** **Strengths:** (1) the item's
+premise was re-measured before any edit — refuted in the first research
+step, and the deliverable pivoted with owner ratification rather than
+plowing ahead; (2) closure is four independent measurements incl. the full
+`check()` 0/0/0, with per-word provenance traced via `git log -S`; (3)
+scope held — the `LC_ALL=C` ordering discrepancy and a suspected-mojibake
+entry were investigated (dismissed: U+2019 curly apostrophes are
+legitimate) and reported, not fixed; (4) **FM #28 reduction: REAL —
+`BACKLOG.md` net −39 lines**, a mandated-read file got smaller.
+**Weaknesses:** (1) the claim stub/entry encoded the stale plan
+("hand-add the 10 words") before verifying it — harmless (the append-only
+ledger's deliverable entry corrects the record) but the claim should have
+been phrased against the item's closure criterion, not its premise;
+(2) no code touched, so the TDD RED/GREEN/REFACTOR phases were never
+entered (owner-ratified at the scope gate — deliberate, not skipped).
+
+**Learnings:** `PROJECT_LEARNINGS.md` Learning 773 appended — sweep-style
+fixes silently satisfy BACKLOG items they never looked at; re-measure an
+item's premise as the first research step, and grep `BACKLOG.md` after any
+bulk fix. Also records the WORDLIST-ordering fact (case-insensitive, not
+`LC_ALL=C`) so it isn't relitigated.
+
+**Next steps (specific):** (A) **Push + CI verification when convenient
+(routine, S):** 6 unpushed expected after close-out (4 measured
+post-deliverable + records + sha estimated at write time — recount with
+`git rev-list --count origin/master..HEAD`), ALL docs-only; CI is current
+through `589cf73c` and no code has changed since — records-currency; the
+17m39s–22m17s R-CMD-check band and full-40-char-sha `--commit` filter +
+smoke-test discipline still apply. (B) **BACKLOG editorial compression
+(READY, L):** the item shifted up ~39 lines (was `:219`, now ≈`:180` —
+re-grep before trusting); start with the "Pedigree diagram vs kinship2"
+section's regrowth check. (C) **inst/doc slimming (DECISION NEEDED, M):**
+owner must first ratify moving the 3 `html_document` vignettes to
+`html_vignette` (`BACKLOG.md:110`). (D) **kinship2-standalone stays
+BLOCKED** on the S738 revisit conditions only (`BACKLOG.md:72`; owner
+judges; planning session when unblocked).
+
+**Key files:** no code touched. `BACKLOG.md` (39-line block removed, was
+`:180-218`), `CHANGELOG.md:41` (S750 entries at top),
+`PROJECT_LEARNINGS.md` (Learning 773, at end), `SESSION_NOTES.md` (this
+handoff), `HANDOFFS.md` (S750 receipt), `.quality-gates-results.json`
+(head now `cc6d5d6b`).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; 6 unpushed expected after close-out (recount).
+(2) Ratchet baseline is now 3,489,111 B at `cc6d5d6b` (+71 B vs S749 —
+build-metadata noise, all touched files `.Rbuildignore`d); cite from
+`.quality-gates-results.json`, never the rounded run table (table
+3.48911e+06 vs file 3,489,111 this session — the trap again).
+(3) BACKLOG anchors below old `:180` shifted UP 39 lines — re-grep before
+trusting any stale `BACKLOG.md:2xx` reference. (4) Local
+`devtools::check()` is now fully clean (0 errors / 0 warnings / 0 notes) —
+the old "vignette-engine note only" expectation is obsolete; no BACKLOG
+text still references it (grepped). (5) `inst/WORDLIST` is ordered
+case-insensitively, NOT `LC_ALL=C` (Learning 773) — add future words by
+the file's actual convention and don't "fix" the ordering as a drive-by;
+its two curly-apostrophe entries are legitimate. (6) Standing set
+unchanged: `gh run list --commit` needs the FULL 40-char sha + smoke-test
+the filter before arming a monitor; `scratchpad/` invisible to git BY
+OWNER DECISION; ratchet AFTER committing (Learning 772); trim needs
+`--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; growth
+run 26/10 at this Orient (BACKLOG.md shrank but is not budget-tracked —
+measure, don't predict); the two `SESSION_NOTES.md` ceilings differ (owner
+decision pending); suite baseline 0 failed / 0 error / 184 skipped —
+re-confirmed inside this session's `check()` (tests OK, 236s), remotely
+confirmed through `589cf73c` (no code changed since).
 
 ### Session 748 Handoff Evaluation (by Session 749)
 **Score: 9/10.** **What helped:** "6 unpushed expected (recount)" measured
