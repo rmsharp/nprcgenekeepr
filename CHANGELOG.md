@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [BL-prep-D-2] S745 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `b528b8bd`; carries its own entry, so no self-reference gap is left for Phase 0
+- Final S745 commit. S745 total: 4 commits (claim `d6dc0852`, deliverable
+  `eb896c2e`, records+trim `b528b8bd`, this one). Ahead of `origin/master` by
+  10 after close-out; TWO code deliverables (`44bb4481`, `eb896c2e`) have
+  never been seen by CI, so a push+CI session is the top routine next pick.
+  Expect 0 undocumented commits past the frontier at next Phase 0; measure it.
+
 ### 2026-09-20 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-20-2.md` (13 record(s), 61,388 B → 13,607 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
