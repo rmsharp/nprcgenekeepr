@@ -38,6 +38,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S753 Learning 776: an outward-facing confirm gate is only as good as what the owner can actually read
+- `PROJECT_LEARNINGS.md` Learning 776 appended: render a document-shaped
+  draft (issue body, NEWS entry, announcement) as blockquoted markdown in
+  the conversation BEFORE posing the `AskUserQuestion`; the per-option
+  `preview` field is for comparing short artifacts, not proofreading
+  prose. Origin: the #167/#168 confirm gate round-tripped undecided
+  ("I have not seen what is drafted") until the drafts were rendered
+  inline.
+
 ### 2026-09-21 · [ad hoc] S753 deliverable: the 2 unticketed High-priority audit gaps are FILED (#167, #168); completed `BACKLOG.md` block removed in this commit
 - Deliverable complete. The two audit-table High rows with no GitHub issue
   ("Longitudinal genetic-health monitoring", "Ancestry guardrails in
