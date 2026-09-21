@@ -46,6 +46,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 746 Did
+**Deliverable:** Prep D-3 — `@noRd` roxygen blocks for `R/positionTreeApportion.R`'s
+13 functions (IN PROGRESS)
+**Started:** 2026-09-21 (2026-09-20 22:43 CDT)
+**Status:** Session claimed. Work beginning. Owner picked D-3 via the Phase 0
+picker (over push+CI, BACKLOG compression, inst/doc slimming). REFACTOR-only by
+its BACKLOG tag but phase-gated: research + PRE-RED→REFACTOR gate before editing.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 744 Handoff Evaluation (by Session 745)
 **Score: 9/10.** **What helped:** "~6 unpushed (recount)" measured exactly 6;
 "expect 0 undocumented; measure it" measured 0 on both frontiers at `d1a34d0d`;

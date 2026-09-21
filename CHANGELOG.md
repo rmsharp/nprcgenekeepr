@@ -38,6 +38,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [BL-prep-D-3] S746 claim: prep D-3 — `@noRd` roxygen blocks for `R/positionTreeApportion.R`'s 13 functions (in progress)
+- Phase 0 clean: 0 undocumented on both frontiers at `41c43c35`; S745 receipt
+  complete, ratchet citation matches `.quality-gates-results.json` exactly;
+  CI 10/10 green but current only through S743's push (`44bb4481`/`eb896c2e`
+  still unpushed, 10 ahead); dashboard 96/100; context budget WARN =
+  CLAUDE.md warn band, growth run 22/10 (predicted exactly); 5 known
+  untracked files unchanged. Owner picked D-3 via the Phase 0 picker.
+  Stub + pending receipt ride this commit.
+
 ### 2026-09-21 · [BL-prep-D-2] S745 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `b528b8bd`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S745 commit. S745 total: 4 commits (claim `d6dc0852`, deliverable
   `eb896c2e`, records+trim `b528b8bd`, this one). Ahead of `origin/master` by

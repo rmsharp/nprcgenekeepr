@@ -156,6 +156,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S746
+date: 2026-09-21
+status: pending
+active_task: Prep D-3 — @noRd roxygen blocks for R/positionTreeApportion.R's 13 functions (REFACTOR-only by BACKLOG tag; phase-gated: PRE-RED→REFACTOR gate before editing). Owner-picked via the Phase 0 picker over push+CI / BACKLOG compression / inst/doc slimming.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S745
 date: 2026-09-21
 status: complete
