@@ -38,6 +38,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S750 deliverable: WORDLIST 10-word drift Housekeeping item CLOSED as already-satisfied — `devtools::check()` verified 0 errors / 0 warnings / 0 notes
+- The item (found S465, count grown S490/S642) was stale: all 10 words were
+  already in `inst/WORDLIST` — 8 of them (`sibship`, `waypoint`,
+  `duplicateToReal`, `js's`, `makePedigreeMatingLayout`, `discoverable`,
+  `js`, `unshaded`) hand-added 2026-08-12 by `250b33d0` ("hand-add 76
+  verified words + permanent guard test"), `vis` earlier (`562536cf`), and
+  `comparator` 2026-09-08 by S680's `741b2764`. No session closed the item;
+  S748's forward-carry updated its expectation without noticing. Closure
+  evidence, all measured this session: (1) all 10 words present
+  (`grep -cx` = 1 each); (2) fresh
+  `spelling::spell_check_package(vignettes = TRUE)` clean ("No spelling
+  errors found"); (3) `test_wordlist_coverage.R` guard passes
+  (`NOT_CRAN=true`); (4) full `devtools::check()`: 0 errors / 0 warnings /
+  0 notes (5m34s) — exceeds the item's "vignette-engine note only"
+  criterion (even that note is gone), with the spelling test's
+  `spelling.Rout` comparison OK inside the check. Incidental, report-only:
+  `inst/WORDLIST` is ordered case-insensitively, not in the strict
+  `LC_ALL=C` byte order the item's instructions named (`LC_ALL=C sort -c`
+  flags `:6`); both spelling tools are order-indifferent, so not a
+  defect — noted here for any future session reading the S230 convention
+  literally. Nothing hand-added; no package file touched. BACKLOG block
+  (was `:180-218`) REMOVED per the completed-item checklist. No GitHub
+  issue named by the item — no issue close owed.
+
 ### 2026-09-21 · [ad hoc] S750 claim: close the WORDLIST 10-word drift Housekeeping item *(in progress)*
 - Owner-picked via the Phase 0 picker (over BACKLOG editorial compression,
   inst/doc slimming, kinship2-standalone). Plan: hand-add the 10 drifted
