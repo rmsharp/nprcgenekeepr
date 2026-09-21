@@ -38,6 +38,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S742 claim: kinship2 standalone-package step 2 — owner discussion / packaging disposition (in progress)
+- Session claimed via the Phase 0 `AskUserQuestion` picker (owner pick over push+CI
+  and prep D-1/D-2). Plan: brief the owner from
+  `docs/research/kinship2-feature-gap-analysis-2026-09-20.md` (Finding #4,
+  Structural Observation 2, Recommendations), pose the Recommendation-1 packaging
+  choices (a: df API vs compatibility layer; b: lift drawing decorations to a
+  script-callable renderer; c: export shrink internals + `bitSize`) via
+  `AskUserQuestion`, record the disposition in `BACKLOG.md` + this ledger.
+  Decision/records session — no TDD phases expected. Phase 0 was clean: 0
+  undocumented on both frontiers at `0cf0696e`; CI 10/10 green (latest 4 on
+  `889f9896`); dashboard 96/100; context budget WARN = CLAUDE.md warn band, growth
+  run 18/10; 7 unpushed measured (= S741's estimate); 5 known untracked files
+  unchanged.
+
 ### 2026-09-21 · [ad hoc] S741 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `27238ad3`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S741 commit. S741 total: 4 commits (claim `c9457ec7`, deliverable
   `11f436cd`, records `27238ad3`, this one). Ahead of `origin/master` by 7 after

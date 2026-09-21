@@ -42,6 +42,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 742 Did
+**Deliverable:** kinship2 standalone-package step 2 — owner discussion / packaging
+disposition (`BACKLOG.md:95` item, DECISION NEEDED) (IN PROGRESS)
+**Started:** 2026-09-20 20:33 CDT
+**Status:** Session claimed. Work beginning — brief the owner from
+`docs/research/kinship2-feature-gap-analysis-2026-09-20.md`, then pose the
+Recommendation-1 packaging choices via `AskUserQuestion`, then record the
+disposition (BACKLOG + CHANGELOG).
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 740 Handoff Evaluation (by Session 741)
 **Score: 9/10.** **What helped:** "3 unpushed after close-out" measured exactly 3;
 "expect 0 undocumented; measure it" measured 0 on both frontiers at `ab71a037`; the
