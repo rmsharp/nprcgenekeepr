@@ -158,17 +158,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S741
 date: 2026-09-20
-status: pending
-active_task: kinship2 feature-gap analysis (step 1 of the S739 kinship2-similar-package item, BACKLOG.md:95) — research session; deliverable a per-feature gap table in docs/research/. Claimed via the Phase 0 picker.
-what_was_done: pending
-next_steps: pending
-key_files: BACKLOG.md:95 (the item, with prior-art pointers), docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md:1 (drawing-only + stale prior art)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: kinship2 feature-gap analysis (step 1 of the S739 kinship2-similar-package item) — DONE. Step 2 (owner discussion) now live as DECISION NEEDED in BACKLOG.md:95. No TDD phases (research/records; no .R files); lint N/A.
+what_was_done: Claim c9457ec7; deliverable 11f436cd — docs/research/kinship2-feature-gap-analysis-2026-09-20.md. kinship2 1.9.6.2's surface enumerated LIVE from the installed package (25 exports + 11 S3 registrations + 3 datasets; the BACKLOG item's embedded hint list was incomplete, 11 of 25). Verdict 15 equivalent / 8 partial / 2 absent, every analog claim carrying this-session file:line evidence. Key findings: compute core already deliberately ported (kinship() chrtype="x" + transitive MZ twins R/kinship.R:104; shrinkPedigree() + kinship2's 5 shrink helpers as internals R/shrinkPedigree.R:122,227-380); S435 drawing gaps ALL closed (issues #131–#137/#145 re-verified CLOSED); only familycheck + ibdMatrix fully absent (both minor); the real step-2 question is packaging — drawing decorations live in the Shiny module R/modPedigree.R:675-790, not the exported surface. BACKLOG item rewritten forward-carrying (step 1 DONE → step 2 framing, net −10 lines).
+next_steps: (A) Step 2 is the natural pickup (DECISION NEEDED, S): owner-discussion session, S738-disposition style — brief from the doc's Finding #4 + Structural Observation 2, then pose Recommendation 1's packaging choices (a: df API vs compatibility layer; b: lift drawing decorations to a script-callable renderer; c: export shrink internals) via AskUserQuestion. Read the doc's Recommendations first. (B) ~7 unpushed after close-out (3 carried + 4 S741: claim, deliverable, records, sha — last two estimated at write time; recount with git rev-list --count origin/master..HEAD); all docs-only since 889f9896, CI current, push at owner's call. (C) Other priorities unchanged: prep D-1/D-2/D-3 (READY, S; D-1/D-2 CODE + full TDD); BACKLOG compression (READY, L); inst/doc slimming (DECISION NEEDED, M); REUSE (owner action, S).
+key_files: docs/research/kinship2-feature-gap-analysis-2026-09-20.md:1 (deliverable), BACKLOG.md:95 (updated item — step-2 framing), CHANGELOG.md:41 (S741 entries), R/modPedigree.R:675 (the module-bound drawing decorations Finding #4 cites)
+gotchas: Expect 0 undocumented commits at next Phase 0 — measure it; ~7 unpushed (recount). A step-2 pickup is a decision/records session — the decision is the owner's: volunteer the briefing WITH the question (S738 lesson). The doc's 15/8/2 counts are as-of kinship2 1.9.6.2 — re-check packageVersion("kinship2") before citing as current. Standing set unchanged: gh run list --commit needs the FULL 40-char sha; scratchpad/ invisible to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772); trim needs --budget-bytes 65536; renv banner expected; CLAUDE.md warn band, growth run 17/10 (the S740 trim did NOT reset it — resident total tracks CLAUDE.md alone); the two SESSION_NOTES.md ceilings differ (owner decision pending); suite baseline 2437/0/0/184/0 remote-confirmed on 889f9896.
+runtime_smoke: n/a — research/records only (no runtime behavior changed; no .R files touched). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results c0835d09d7dc · manifest aa983075d6a2 (measured 3,483,909 B ≤ 5,000,000 B at 11f436cd)
+changelog_ref: 11f436cd
 commit: pending
 ```
-<free-text: pending — completed at Phase 3D>
+<free-text: S741 +/- — plus: live enumeration made the scope authoritative and falsified the BACKLOG item's embedded hint list (11/25) instead of trusting it; the decisive prior-art find (supplement-reproduction plan Tracks A/B already shipped) reframed the analysis from gap hunt to packaging question; all 25 exports + 5 supplementary rows carry this-session file:line evidence; scope held (step 2 untouched); BACKLOG.md −10 lines net (FM #28 reduction). Minus: kinship2-side per-export behavior descriptions rest on the installed package's docs plus prior deparse-based ports, not a fresh per-export CRAN-manual re-read; EQ-D judgments (e.g., groupAddAssign ⊇ pedigree.unrelated) are reasoned from roxygen/source, not head-to-head runs. Predecessor 9/10: 3-unpushed exact, both frontiers clean, ratchet citation byte-identical; its "measure the growth run, don't predict" guidance was exactly right (17/10, trim did not reset it).>
 
 ```handoff
 session: S740

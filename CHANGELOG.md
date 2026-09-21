@@ -38,6 +38,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S741 close-out: session records (handoff, S740 evaluation 9/10, receipt complete, self 9/10)
+- `SESSION_NOTES.md` handoff written (S740 evaluation: 9/10 — 3-unpushed and
+  clean-frontier claims held exactly; its "measure the growth run rather than
+  predict" guidance was exactly right: 17/10, the trim did not reset it).
+  `HANDOFFS.md` receipt complete. No new `PROJECT_LEARNINGS.md` entry (routine
+  research session; the durable record is the doc + the deliverable entry).
+  Reduction check (FM #28): `BACKLOG.md` net −10 lines. quality_ratchet at the
+  deliverable HEAD `11f436cd`: 1/1 pass · 0 fail · 0 unmeasured · results
+  c0835d09d7dc · manifest aa983075d6a2 (3,483,909 B ≤ 5,000,000 B). ~7 unpushed
+  after close-out (estimate: 3 carried + claim + deliverable + records + sha);
+  CI current through `889f9896`; push at owner's call.
+
 ### 2026-09-21 · [ad hoc] S741 deliverable: kinship2 feature-gap analysis — 15 equivalent / 8 partial / 2 absent across kinship2's 25 live-enumerated exports
 - `docs/research/kinship2-feature-gap-analysis-2026-09-20.md`: kinship2 1.9.6.2's
   surface enumerated live from the installed package (`getNamespaceExports` — 25

@@ -42,15 +42,103 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 740 Handoff Evaluation (by Session 741)
+**Score: 9/10.** **What helped:** "3 unpushed after close-out" measured exactly 3;
+"expect 0 undocumented; measure it" measured 0 on both frontiers at `ab71a037`; the
+ratchet citation matched `.quality-gates-results.json` byte-for-byte; the priorities
+list fed the Phase 0 picker directly and its named research pickup (kinship2 gap
+analysis, `BACKLOG.md:95`) was the owner's pick; the "measure the growth run rather
+than predict" guidance was exactly right — measured 17/10, and the trim did NOT reset
+it (the resident total tracks `CLAUDE.md` alone), answering S740's own open question.
+**What was missing:** nothing material. **What was wrong:** nothing found — every
+checked claim held. **ROI:** high.
+
 ### What Session 741 Did
-**Deliverable:** kinship2 feature-gap analysis — per-feature gap table in
-`docs/research/` (step 1 of the S739 kinship2-similar-package item, `BACKLOG.md:95`)
-(IN PROGRESS)
-**Started:** 2026-09-20 ~20:15 CDT
-**Status:** Session claimed via the Phase 0 picker. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** kinship2 feature-gap analysis — **DONE** (commit `11f436cd`).
+`docs/research/kinship2-feature-gap-analysis-2026-09-20.md`: kinship2 1.9.6.2's
+surface enumerated LIVE from the installed package — 25 exports + 11 S3 registrations
+(4 not in the export list) + 3 datasets; the BACKLOG item's embedded list was indeed
+an incomplete hint (11 of 25). Verdict: **15 equivalent / 8 partial / 2 absent**.
+Headline findings: (1) the compute core was already deliberately ported —
+`kinship()` incl. `chrtype="x"` + transitive MZ-twin correction (`R/kinship.R:104`),
+`shrinkPedigree()` + kinship2's 5 shrink helpers as internals
+(`R/shrinkPedigree.R:122,227-380`) — per the shipped Tracks A/B of
+`docs/planning/kinship2-supplement-full-reproduction-plan.md`; (2) the S435 drawing
+gaps are ALL closed (issues #131–#137/#145, states re-verified via `gh issue view`);
+(3) only `familycheck` and `ibdMatrix` are fully absent, both minor; (4) the real
+step-2 question is PACKAGING, not features — drawing decorations live in the Shiny
+module (`R/modPedigree.R:675-790`), not the exported surface (doc Finding #4).
+`BACKLOG.md:95` item updated in place: step 1 DONE → step 2 DECISION NEEDED
+(net −10 lines). Step 2 (owner discussion) deliberately NOT started ("1 and done").
+No TDD phases (research/records; no `.R` files). Lint N/A.
+**Started/completed:** 2026-09-20 (single session). Claim `c9457ec7`; deliverable
+`11f436cd`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable, records, sha).
+BACKLOG item advanced (step 1 consumed), not removed — step 2 remains open.
+
+**What actually happened, in order:**
+1. **Phase 0:** full 8-step orient; reconcile clean (0 undocumented on both frontiers
+   at `ab71a037`; ratchet citation matched results file); CI 10/10 green (latest 4 on
+   `889f9896`); dashboard 96/100; context budget WARN = CLAUDE.md warn band, growth
+   run 17/10 (trim did not reset it); 3 unpushed measured (= S740's count); 5 known
+   untracked files unchanged; no live sequencing-audit cluster.
+2. **Owner picked the gap analysis** via the Phase 0 picker; claim `c9457ec7`.
+3. **Enumeration before classification:** exports/S3/datasets pulled from the
+   installed kinship2 via `getNamespaceExports`/`getNamespaceInfo`/`data()` — found
+   the item's hint list incomplete (11/25), exactly as its own caveat warned.
+4. **Prior art read before writing:** ISSUE_129 comparison (drawing-only, stale —
+   all 8 follow-up issues verified CLOSED), the supplement-reproduction plan
+   (Tracks A/B shipped — reframed the analysis), the S482 spike.
+5. **Every analog claim verified live** (signatures/roxygen/grep with file:line);
+   `familycheck`/`ibdMatrix` absence established by corpus grep, not assumption.
+6. **Doc written** (audit-workstream structure: method/coverage/gap table/findings/
+   structural observations/recommendations), BACKLOG item rewritten forward-carrying,
+   deliverable committed `11f436cd`; quality_ratchet run at that HEAD (summary in the
+   receipt).
+
+**Self-assessment (Session 741): 9/10.** **Strengths:** (1) live enumeration made the
+scope authoritative and falsified the embedded hint list rather than trusting it;
+(2) the decisive prior-art discovery (Tracks A/B already shipped) turned the analysis
+from a gap hunt into the packaging question step 2 actually needs; (3) all 25 + 5
+supplementary rows carry this-session file:line evidence; (4) scope held — step 2
+untouched; (5) FM #28 reduction: BACKLOG.md net −10 lines. **Weaknesses:** (1)
+kinship2-side per-export behavior descriptions rest on the installed package's docs
+plus the prior deparse-based ports, not a fresh per-export CRAN-manual re-read;
+(2) the EQ-D judgments (e.g., `groupAddAssign` ⊇ `pedigree.unrelated`) are
+reasoned from roxygen/source, not head-to-head empirical runs.
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine research session; the
+durable record is the doc + the CHANGELOG entry. **Reduction check (FM #28):**
+`BACKLOG.md` net −10 lines (31-line item → 21) — a mandated-read file got smaller.
+
+**Next steps (specific):** (A) **Step 2 is now the natural pickup** (DECISION NEEDED,
+Effort S): an owner-discussion session like S738's disposition — pose the doc's
+Recommendation-1 packaging choices (a/b/c) via `AskUserQuestion`, brief from Finding
+#4 + Structural Observation 2 first. Read
+`docs/research/kinship2-feature-gap-analysis-2026-09-20.md` Recommendations before
+posing anything. (B) ~7 unpushed after close-out (3 carried + claim + deliverable +
+records + sha; the last two estimated at write time — recount with
+`git rev-list --count origin/master..HEAD`); all docs-only since `889f9896`, so CI
+current; push session at owner's call. (C) Other priorities unchanged: prep
+D-1/D-2/D-3 (READY, S each; D-1/D-2 CODE sessions, full TDD gates); BACKLOG editorial
+compression (READY, L); inst/doc slimming (DECISION NEEDED, M); REUSE registration
+(owner action, S); NPRC outreach (owner review).
+
+**Key files:** `docs/research/kinship2-feature-gap-analysis-2026-09-20.md:1` (the
+deliverable — step 2 reads its Recommendations), `BACKLOG.md:95` (updated item, step
+2 framing), `CHANGELOG.md:41` (S741 entries at top), `HANDOFFS.md:158` (S741 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at next Phase 0 —
+measure it; ~7 unpushed after close-out (recount). (2) A step-2 pickup is a
+DECISION/records session (no TDD phases) but the decision belongs to the owner — brief
+first, ask second (S738 precedent: volunteering the briefing with the question beats
+being asked for it). (3) The gap doc's counts (15/8/2) are as-of kinship2 1.9.6.2 —
+re-check `packageVersion("kinship2")` before citing them as current. (4) Standing set
+unchanged: `gh run list --commit` needs the FULL 40-char sha; `scratchpad/` invisible
+to git BY OWNER DECISION; ratchet ~2 min AFTER committing (Learning 772); trim needs
+`--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; growth run 17/10;
+the two `SESSION_NOTES.md` ceilings differ (owner decision pending); suite baseline
+2437/0/0/184/0 remote-confirmed on `889f9896`.
 
 ### Session 739 Handoff Evaluation (by Session 740)
 **Score: 9/10.** **What helped:** "15 unpushed after close-out" (the corrected count)
