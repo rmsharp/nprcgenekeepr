@@ -50,15 +50,107 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 752 Handoff Evaluation (by Session 753)
+**Score: 9/10.** **What helped:** "8 unpushed expected (recount)" measured
+exactly 8; "expect 0 undocumented; measure it" measured 0 on both frontiers
+at `0bcad910`; the S752 receipt's ratchet citation matched
+`.quality-gates-results.json` byte-for-byte (15a11fe864f4, 3,489,151 B at
+`37992d20`); growth run 32/10 at Orient ("read the value, measure don't
+predict" — it had risen from 31 exactly as warned); the `BACKLOG.md:463`
+anchor was exact; next step (A) WAS this session's deliverable, with the
+right first move (recompute the premise), the right sources (capability
+audit's two High rows, sequencing audit Finding #1 `:116-124` +
+Recommendation 2 `:309` — all found where cited), and the right gate
+(owner confirms titles/bodies before `gh issue create`, correctly labeled
+a recommendation). **What was missing:** HOW to present the drafts at the
+confirm gate — the first `AskUserQuestion` packed the bodies into option
+previews and round-tripped undecided (Learning 776); arguably not a
+knowable claim in S752's scope. **What was wrong:** one phrasing
+imprecision — "across all 166 issues in every state" counts issues+PRs
+(shared number sequence); a fresh `gh issue list --state all` returns 107
+issues. Same population searched, so the verification's substance stands.
+**ROI:** high.
+
 ### What Session 753 Did
-**Deliverable:** File the 2 unticketed High-priority audit gaps
-("Longitudinal genetic-health monitoring", "Ancestry guardrails in breeding
-decisions") as GitHub issues — the extracted BACKLOG.md:463 item (READY, S;
-S752 handoff next step A). Owner confirmation of titles/bodies via
-`AskUserQuestion` before `gh issue create`. (IN PROGRESS)
-**Started:** 2026-09-21
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** File the 2 unticketed High-priority audit gaps as GitHub
+issues — **DONE**: **#167** "Add longitudinal genetic-health monitoring
+(colony snapshots and trend reporting)" and **#168** "Add ancestry
+guardrails to breeding-group formation (configurable compatibility rules
+with override/audit trail)", both shaped like #147 per the sequencing
+audit's Recommendation 2 (`## Source` citing both audits, capability gap,
+feature description, closing Pre-RED-design-gate line, no labels), both
+owner-approved **verbatim** via `AskUserQuestion` — after rendering the
+full drafts as blockquoted markdown in-conversation (the preview-only
+first gate round-tripped undecided; Learning 776). Premise recomputed
+BEFORE filing: 0 title hits (`longitudinal`/`ancestry`/`guardrail`/
+`monitoring`), body hits only closed unrelated #118/#76, positive control
+(`kinship in:title` = 5) proved the harness (Learning 775 discipline).
+Completed `BACKLOG.md` block (18 lines at :463) REMOVED in the deliverable
+commit (S686 rule); file 480→462 lines.
+**Started/completed:** 2026-09-21 (single session). Claim `33e66364`;
+deliverable `c823a9f7`; Learning `2c86a035`; records + sha commits follow
+this handoff. **Ledger:** one `CHANGELOG.md` entry per action — claim,
+issue #167 filed, issue #168 filed, deliverable commit, Learning 776,
+records, sha. TDD phases N/A (triage, no code; declared at every response
+top).
+
+**Self-assessment (Session 753): 9/10.** **Strengths:** (1) premise
+re-measured before acting (Learning 773 reflex) WITH a positive control
+beside the expect-zero sweep (Learning 775); (2) read #147 before drafting
+instead of assuming its shape; (3) the outward-facing gate held — nothing
+was filed until verbatim approval, and the "don't file" option was real;
+(4) S686 removal in the same commit as the deliverable entry; per-action
+ledger entries including the two non-commit actions (issue creates);
+(5) FM #28 reduction: REAL — `BACKLOG.md` −18 lines, a mandated-read file
+got smaller. **Weaknesses:** (1) the first confirm gate was unreviewable
+(bodies in option previews only) and cost a full round trip — the owner
+had to ask to see the drafts; Learning 776 written so the next
+outward-facing confirm renders first; (2) the 166-vs-107 issue-count
+reconciliation was done mid-flight and recorded in the ledger entry, but
+I did not surface it to the owner at the gate.
+
+**Learnings:** `PROJECT_LEARNINGS.md` Learning 776 appended (render
+document-shaped drafts inline before the structured confirm; `preview` is
+for comparing short artifacts, not proofreading prose).
+
+**Next steps (specific):** (A) **Push+CI: now the largest pending item** —
+13 docs-only commits unpushed after close-out (8 inherited + S753's 5:
+claim `33e66364`, deliverable `c823a9f7`, Learning `2c86a035`, records,
+sha; recount with `git rev-list --count origin/master..HEAD`); CI current
+through `a7613044`. Not urgent, but the gap grows each session. (B) **New
+issues #167/#168 are now pickable** from `gh issue list` — each requires a
+Pre-RED design/scoping session FIRST when picked up (their closing gate
+line; #147/#148's precedent: scoping doc → owner-ratified plan → TDD
+slices). (C) Unchanged: chromote hang research (READY, M, research only,
+`BACKLOG.md:129`); inst/doc slimming (DECISION NEEDED, M, `:108`); REUSE
+registration (owner action, S, `:153`); kinship2-standalone BLOCKED on the
+S738 revisit conditions (`:71`); LabKey BLOCKED (`:27`); BACKLOG
+compression recurring (`:181`, measured candidates in the item).
+
+**Key files:** `BACKLOG.md` (now 462 lines; the :463 item is GONE — the
+Genetic-metrics section now ends with the #148 pass-history block; anchors
+at/above :180 and the :419 section heading unchanged), `CHANGELOG.md:41`
+(S753 entries at top), `PROJECT_LEARNINGS.md:2242` (Learning 776),
+`HANDOFFS.md` (S753 receipt), `.quality-gates-results.json` (head
+`c823a9f7`).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; 13 unpushed expected (recount). (2) The
+retired premise: issue searches for `longitudinal`/`ancestry`/`guardrail`
+now legitimately HIT #167/#168 — do not re-run the old "verify unfiled"
+check expecting zeros. (3) Ratchet baseline now 3,489,135 B at `c823a9f7`
+(−16 B vs `37992d20` — build-metadata noise again; the measured value
+drifts a few bytes between runs with no package change); cite from
+`.quality-gates-results.json` (results `b593a0c84084`), never the rounded
+run table. (4) No code touched, no test suite run (docs-only; suite
+baseline 0 failed / 0 error / 184 skipped stands, remotely confirmed
+through `a7613044`). (5) Standing set unchanged: `gh run list --commit`
+needs the FULL 40-char sha + smoke-test the filter; `scratchpad/`
+invisible to git BY OWNER DECISION; ratchet AFTER committing (Learning
+772); trim needs `--budget-bytes 65536`; renv banner expected; CLAUDE.md
+warn band (26,360 B); growth run 32/10 at Orient — read the value at the
+next Orient; the two `SESSION_NOTES.md` ceilings differ (owner decision
+pending); zsh harness traps (Learning 775).
 
 ### Session 751 Handoff Evaluation (by Session 752)
 **Score: 9/10.** **What helped:** "2 unpushed expected (recount)" measured

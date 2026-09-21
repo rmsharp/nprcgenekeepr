@@ -38,6 +38,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S753 records: close-out records committed (handoff, receipt, evaluations)
+- `SESSION_NOTES.md` S753 handoff + S752 evaluation (9/10, one phrasing
+  imprecision: "166 issues" counted issues+PRs, fresh count 107 issues —
+  same population searched, substance stands); `HANDOFFS.md` receipt
+  complete (self 9/10); this ledger entry. Ratchet cited at the
+  deliverable sha: 1/1 pass, 3,489,135 B at `c823a9f7`, results
+  `b593a0c84084`, manifest `aa983075d6a2` (read from the results file).
+  `methodology_trim.py --check --budget-bytes 65536`: no trigger
+  (SESSION_NOTES.md well under ceiling after the S752 trim). S753 totals:
+  5 commits (claim `33e66364`, deliverable `c823a9f7`, Learning
+  `2c86a035`, records, sha) + 2 non-commit actions (issues #167/#168
+  created), all docs-only; 13 unpushed expected after close-out —
+  verify with the recount, not this sentence.
+
 ### 2026-09-21 · [ad hoc] S753 Learning 776: an outward-facing confirm gate is only as good as what the owner can actually read
 - `PROJECT_LEARNINGS.md` Learning 776 appended: render a document-shaped
   draft (issue body, NEWS entry, announcement) as blockquoted markdown in
