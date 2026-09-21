@@ -53,6 +53,124 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · \[ad hoc\] S751 claim: push to `origin/master` + CI verification (in progress)
+
+- Routine operational pick (S726–S749 precedent), owner-picked via the
+  Phase 0 picker over BACKLOG compression, inst/doc slimming, and
+  kinship2-standalone. 6 unpushed docs-only commits measured at Orient
+  (`9410a558..1f8a32f0` + S750’s four); this claim rides the push (7
+  expected). CI current through `589cf73c`, no code changed since —
+  records-currency, not code verification. Close-out records the rest.
+
+### 2026-09-21 · \[ad hoc\] S750 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `5e280761`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S750 commit. S750 total: 4 commits (claim `aa029ae6`,
+  deliverable `cc6d5d6b`, records `5e280761`, this one). Ahead of
+  `origin/master` by 6 after close-out, ALL docs-only; CI is current
+  through `589cf73c` and no code has changed since. Expect 0
+  undocumented commits past the frontier at next Phase 0; measure it.
+
+### 2026-09-21 · \[ad hoc\] S750 close-out: session records (handoff, S749 evaluation 8/10, receipt complete, self 9/10, Learning 773)
+
+- `SESSION_NOTES.md` handoff written (S749 evaluation: 8/10 — every
+  measured claim held exactly (2 unpushed, clean frontiers, growth run
+  26/10, byte-identical ratchet citation, current anchors), but next
+  step
+  1.  relayed the WORDLIST item’s stale premise unverified — a one-grep
+      computable claim, Learning \#13’s rule). `HANDOFFS.md` receipt
+      complete. `PROJECT_LEARNINGS.md` Learning 773 appended:
+      sweep-style fixes silently satisfy BACKLOG items they never looked
+      at — re-measure an item’s premise as the first research step; grep
+      `BACKLOG.md` after any bulk fix; also records the WORDLIST
+      case-insensitive-ordering fact. Reduction check (FM \#28): REAL —
+      `BACKLOG.md` net −39 lines. Runtime smoke: n/a — docs-only; the
+      package-level evidence is this session’s full `devtools::check()`
+      (0 errors / 0 warnings / 0 notes, tests OK). quality_ratchet at
+      `cc6d5d6b`: 1/1 pass · 0 fail · 0 unmeasured · results
+      ab63a9bfe821 · manifest aa983075d6a2 (3,489,111 B ≤ 5,000,000 B,
+      read from the results file — the run table rounded to 3.48911e+06;
+      the +71 B vs S749 is build-metadata noise, all touched files being
+      `.Rbuildignore`d).
+
+### 2026-09-21 · \[ad hoc\] S750 deliverable: WORDLIST 10-word drift Housekeeping item CLOSED as already-satisfied — `devtools::check()` verified 0 errors / 0 warnings / 0 notes
+
+- The item (found S465, count grown S490/S642) was stale: all 10 words
+  were already in `inst/WORDLIST` — 8 of them (`sibship`, `waypoint`,
+  `duplicateToReal`, `js's`, `makePedigreeMatingLayout`, `discoverable`,
+  `js`, `unshaded`) hand-added 2026-08-12 by `250b33d0` (“hand-add 76
+  verified words + permanent guard test”), `vis` earlier (`562536cf`),
+  and `comparator` 2026-09-08 by S680’s `741b2764`. No session closed
+  the item; S748’s forward-carry updated its expectation without
+  noticing. Closure evidence, all measured this session: (1) all 10
+  words present (`grep -cx` = 1 each); (2) fresh
+  `spelling::spell_check_package(vignettes = TRUE)` clean (“No spelling
+  errors found”); (3) `test_wordlist_coverage.R` guard passes
+  (`NOT_CRAN=true`); (4) full `devtools::check()`: 0 errors / 0 warnings
+  / 0 notes (5m34s) — exceeds the item’s “vignette-engine note only”
+  criterion (even that note is gone), with the spelling test’s
+  `spelling.Rout` comparison OK inside the check. Incidental,
+  report-only: `inst/WORDLIST` is ordered case-insensitively, not in the
+  strict `LC_ALL=C` byte order the item’s instructions named
+  (`LC_ALL=C sort -c` flags `:6`); both spelling tools are
+  order-indifferent, so not a defect — noted here for any future session
+  reading the S230 convention literally. Nothing hand-added; no package
+  file touched. BACKLOG block (was `:180-218`) REMOVED per the
+  completed-item checklist. No GitHub issue named by the item — no issue
+  close owed.
+
+### 2026-09-21 · \[ad hoc\] S750 claim: close the WORDLIST 10-word drift Housekeeping item *(in progress)*
+
+- Owner-picked via the Phase 0 picker (over BACKLOG editorial
+  compression, inst/doc slimming, kinship2-standalone). Plan: hand-add
+  the 10 drifted words (`BACKLOG.md:181` names them) to `inst/WORDLIST`
+  in `LC_ALL=C` byte order — never
+  [`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html)
+  (S230 convention) — then re-verify `devtools::check()` drops to the
+  vignette-engine note only (the item’s own closure criterion,
+  expectation updated S748). Phase mapping to be owner-ratified at the
+  TDD gate before any edit.
+
+### 2026-09-21 · \[ad hoc\] S749 close-out sha: `HANDOFFS.md` receipt’s `commit:` field set to the records commit `dcf51299`; carries its own entry, so no self-reference gap is left for Phase 0
+
+- Final S749 commit. S749 total: 3 commits (claim `589cf73c` — rode the
+  push, deliverable was the push itself, records `dcf51299`, this one).
+  Ahead of `origin/master` by 2 after close-out (records + this sha
+  commit), ALL docs-only; CI is current through `589cf73c` and no code
+  has changed since `5d281ad5`. Expect 0 undocumented commits past the
+  frontier at next Phase 0; measure it.
+
+### 2026-09-21 · \[ad hoc\] S749 close-out: session records (handoff, S748 evaluation 9/10, receipt complete, self 9/10)
+
+- `SESSION_NOTES.md` handoff written (S748 evaluation: 9/10 — 6-unpushed
+  and clean-frontier claims held exactly; growth-run trajectory exact
+  (25/10 measured); ratchet citation byte-identical; its push+CI
+  guidance was the execution plan as written; nothing found wrong).
+  `HANDOFFS.md` receipt complete. No new `PROJECT_LEARNINGS.md` entry
+  (routine clean push+CI — 12th consecutive, extending S747’s 11th).
+  Reduction check (FM \#28): none this session — no mandated-read file
+  got smaller; said plainly. Runtime smoke: n/a — push-only; the CI runs
+  are the runtime evidence. quality_ratchet at `589cf73c`: 1/1 pass · 0
+  fail · 0 unmeasured · results b740dd347d67 · manifest aa983075d6a2
+  (3,489,040 B ≤ 5,000,000 B, read from the results file — the run table
+  rounded to 3.48904e+06; the +167 B vs S748 is build-metadata noise,
+  all touched files being `.Rbuildignore`d, verified
+  `:72/:76/:79/:154`).
+
+### 2026-09-21 · \[ad hoc\] S749 deliverable: pushed `5d281ad5..589cf73c` to `origin/master`; all 4 workflows `completed success` on the pushed sha
+
+- Records-currency push (S726–S747 precedent): 7 commits (S747–S748
+  records/sha + the S749 claim riding the push), ALL docs-only; no code
+  changed since `5d281ad5`, which was already CI-confirmed. 0 unpushed
+  after the push (recount). Filter smoke-tested against in-flight runs
+  BEFORE arming the single 30-min monitor (no re-arm; completions lint →
+  pkgdown → test-coverage → R-CMD-check, all success). Structural
+  verification via `gh run list --commit <full-40-char-sha>` with
+  `headSha` echoed back per run: lint 3m46s (id 35562052225), pkgdown
+  6m13s (35562052219), test-coverage 10m9s (35562052322), R-CMD-check
+  21m37s
+  35562052190. — inside the established 17m39s–22m17s band. CI is now
+               current through `589cf73c`.
+
 ### 2026-09-21 · \[ad hoc\] S749 claim: push to `origin/master` + CI verification (in progress)
 
 - Session claimed (stub + pending receipt + this entry). Phase 0 was

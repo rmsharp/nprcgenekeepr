@@ -77,17 +77,244 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 751 Did
+
+**Deliverable:** Push to `origin/master` + CI verification (routine
+operational pick, S726–S749 precedent; owner-picked via the Phase 0
+picker) (IN PROGRESS) **Started:** 2026-09-21 **Status:** Session
+claimed. 6 unpushed docs-only commits measured at Orient (+ this claim
+riding the push = 7 expected). CI current through `589cf73c`, no code
+changed since — records-currency push. Work beginning. **Ledger:**
+`CHANGELOG: pending` — the claim commit’s `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session’s reconcile.
+
+### Session 749 Handoff Evaluation (by Session 750)
+
+**Score: 8/10.** **What helped:** “2 unpushed expected (recount)”
+measured exactly 2; “expect 0 undocumented; measure it” measured 0 on
+both frontiers at `9410a558`; the growth-run trajectory held (26/10
+measured, exactly the “next if nothing shrinks” value); the S749
+receipt’s ratchet citation matched `.quality-gates-results.json`
+byte-for-byte (b740dd347d67, 3,489,040 B at `589cf73c`); all four
+BACKLOG anchors were current (:181/:220/:110/:72);
+CI-current-through-`589cf73c` held. **What was wrong:** next step (A)’s
+premise was stale — “hand-add the 10 words to `inst/WORDLIST`” — but all
+10 were already there (8 since 2026-08-12 `250b33d0`, `comparator` since
+S680’s `741b2764`, 2026-09-08). Inherited from the BACKLOG item rather
+than invented, but a one-grep computable claim was relayed unverified
+(Learning \#13’s compute-what’s-computable rule); it made the top
+recommendation’s execution plan wrong, caught in this session’s first
+research step. **What was missing:** nothing else material. **ROI:**
+high.
+
+### What Session 750 Did
+
+**Deliverable:** WORDLIST 10-word drift Housekeeping item CLOSED as
+already-satisfied — **DONE** (deliverable commit `cc6d5d6b`). The item’s
+premise was stale: all 10 words already in `inst/WORDLIST` — 8
+(`sibship`, `waypoint`, `duplicateToReal`, `js's`,
+`makePedigreeMatingLayout`, `discoverable`, `js`, `unshaded`) hand-added
+2026-08-12 by `250b33d0` (“hand-add 76 verified words + permanent guard
+test”), `vis` earlier (`562536cf`), `comparator` 2026-09-08 by S680’s
+`741b2764`. Closure evidence, all measured this session: (1) `grep -cx`
+= 1 per word; (2) fresh
+`spelling::spell_check_package(vignettes = TRUE)` clean; (3)
+`test_wordlist_coverage.R` guard passes (`NOT_CRAN=true`); (4) full
+`devtools::check()`: **0 errors / 0 warnings / 0 notes** (5m34s) —
+exceeds the item’s “vignette-engine note only” criterion (even that note
+is gone), spelling `.Rout` comparison OK inside the check. Scope pivot
+(add-words → verify-and-close) owner-ratified at a structured gate
+before any edit. BACKLOG block (was `:180-218`) REMOVED per the
+completed-item checklist; no GitHub issue named — no issue close owed;
+nothing hand-added; no package file touched. **Started/completed:**
+2026-09-21 (single session). Claim `aa029ae6`; deliverable `cc6d5d6b`;
+records + sha commits follow this handoff. **Ledger:** one
+`CHANGELOG.md` entry per action (claim, deliverable, records, sha).
+
+**Self-assessment (Session 750): 9/10.** **Strengths:** (1) the item’s
+premise was re-measured before any edit — refuted in the first research
+step, and the deliverable pivoted with owner ratification rather than
+plowing ahead; (2) closure is four independent measurements incl. the
+full `check()` 0/0/0, with per-word provenance traced via `git log -S`;
+(3) scope held — the `LC_ALL=C` ordering discrepancy and a
+suspected-mojibake entry were investigated (dismissed: U+2019 curly
+apostrophes are legitimate) and reported, not fixed; (4) **FM \#28
+reduction: REAL — `BACKLOG.md` net −39 lines**, a mandated-read file got
+smaller. **Weaknesses:** (1) the claim stub/entry encoded the stale plan
+(“hand-add the 10 words”) before verifying it — harmless (the
+append-only ledger’s deliverable entry corrects the record) but the
+claim should have been phrased against the item’s closure criterion, not
+its premise; (2) no code touched, so the TDD RED/GREEN/REFACTOR phases
+were never entered (owner-ratified at the scope gate — deliberate, not
+skipped).
+
+**Learnings:** `PROJECT_LEARNINGS.md` Learning 773 appended —
+sweep-style fixes silently satisfy BACKLOG items they never looked at;
+re-measure an item’s premise as the first research step, and grep
+`BACKLOG.md` after any bulk fix. Also records the WORDLIST-ordering fact
+(case-insensitive, not `LC_ALL=C`) so it isn’t relitigated.
+
+**Next steps (specific):** (A) **Push + CI verification when convenient
+(routine, S):** 6 unpushed expected after close-out (4 measured
+post-deliverable + records + sha estimated at write time — recount with
+`git rev-list --count origin/master..HEAD`), ALL docs-only; CI is
+current through `589cf73c` and no code has changed since —
+records-currency; the 17m39s–22m17s R-CMD-check band and
+full-40-char-sha `--commit` filter + smoke-test discipline still apply.
+(B) **BACKLOG editorial compression (READY, L):** the item shifted up
+~39 lines (was `:219`, now ≈`:180` — re-grep before trusting); start
+with the “Pedigree diagram vs kinship2” section’s regrowth check. (C)
+**inst/doc slimming (DECISION NEEDED, M):** owner must first ratify
+moving the 3 `html_document` vignettes to `html_vignette`
+(`BACKLOG.md:110`). (D) **kinship2-standalone stays BLOCKED** on the
+S738 revisit conditions only (`BACKLOG.md:72`; owner judges; planning
+session when unblocked).
+
+**Key files:** no code touched. `BACKLOG.md` (39-line block removed, was
+`:180-218`), `CHANGELOG.md:41` (S750 entries at top),
+`PROJECT_LEARNINGS.md` (Learning 773, at end), `SESSION_NOTES.md` (this
+handoff), `HANDOFFS.md` (S750 receipt), `.quality-gates-results.json`
+(head now `cc6d5d6b`).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; 6 unpushed expected after close-out
+(recount). (2) Ratchet baseline is now 3,489,111 B at `cc6d5d6b` (+71 B
+vs S749 — build-metadata noise, all touched files `.Rbuildignore`d);
+cite from `.quality-gates-results.json`, never the rounded run table
+(table 3.48911e+06 vs file 3,489,111 this session — the trap again). (3)
+BACKLOG anchors below old `:180` shifted UP 39 lines — re-grep before
+trusting any stale `BACKLOG.md:2xx` reference. (4) Local
+`devtools::check()` is now fully clean (0 errors / 0 warnings / 0 notes)
+— the old “vignette-engine note only” expectation is obsolete; no
+BACKLOG text still references it (grepped). (5) `inst/WORDLIST` is
+ordered case-insensitively, NOT `LC_ALL=C` (Learning 773) — add future
+words by the file’s actual convention and don’t “fix” the ordering as a
+drive-by; its two curly-apostrophe entries are legitimate. (6) Standing
+set unchanged: `gh run list --commit` needs the FULL 40-char sha +
+smoke-test the filter before arming a monitor; `scratchpad/` invisible
+to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim
+needs `--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band;
+growth run 26/10 at this Orient (BACKLOG.md shrank but is not
+budget-tracked — measure, don’t predict); the two `SESSION_NOTES.md`
+ceilings differ (owner decision pending); suite baseline 0 failed / 0
+error / 184 skipped — re-confirmed inside this session’s `check()`
+(tests OK, 236s), remotely confirmed through `589cf73c` (no code changed
+since).
+
+### Session 748 Handoff Evaluation (by Session 749)
+
+**Score: 9/10.** **What helped:** “6 unpushed expected (recount)”
+measured exactly 6; “expect 0 undocumented; measure it” measured 0 on
+both frontiers at `cb44c898`; the growth-run trajectory held (25/10
+measured at this Orient, exactly the “next if nothing shrinks” value);
+the S748 receipt’s ratchet citation matched
+`.quality-gates-results.json` byte-for-byte (443e4de1cd50, 3,488,873 B
+at `73107bc8`); next step (A)’s push+CI guidance was the execution plan
+as written — ALL-docs-only held, CI-current-through- `5d281ad5` held,
+and the full-40-char-sha `--commit` filter + smoke-test discipline ran
+verbatim; the BACKLOG anchors (:180/:220/:108) were current. **What was
+missing:** nothing material. **What was wrong:** nothing found — every
+checked claim held. **ROI:** high.
+
 ### What Session 749 Did
 
-**Deliverable:** Push the 6 docs-only records commits (+ this claim
-riding the push) to `origin/master` and structurally verify all 4
-push-triggered workflows green on the pushed sha (routine operational
-pick, S726–S747 precedent; owner-picked via the Phase 0 picker) (IN
-PROGRESS) **Started:** 2026-09-21 **Status:** Session claimed. Work
-beginning. **Ledger:** `CHANGELOG: pending` — the claim commit’s
-`CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
-Until close-out, this line is the crash breadcrumb for the next
-session’s reconcile.
+**Deliverable:** Push to `origin/master` + CI verification — **DONE.**
+Pushed `5d281ad5..589cf73c` (7 commits: 6 carried S747–S748 records
+commits + this session’s claim riding the push, S726–S747 precedent),
+ALL docs-only. All 4 push-triggered workflows `completed success` ON THE
+PUSHED SHA `589cf73c`, verified structurally via
+`gh run list --commit <full-40-char-sha>` with `headSha` echoed back per
+run: lint 3m46s (id 35562052225), pkgdown 6m13s (35562052219),
+test-coverage 10m9s (35562052322), R-CMD-check 21m37s (35562052190) —
+inside the established 17m39s–22m17s band. Records-currency push (no
+code changed since `5d281ad5`, which was already CI-confirmed). 0
+unpushed after the push; single 30-min monitor, no re-arm.
+**Started/completed:** 2026-09-21 (single session). Claim `589cf73c`
+(rode the push); records + sha commits follow this handoff. **Ledger:**
+one `CHANGELOG.md` entry per action (claim, deliverable, records, sha).
+No BACKLOG item consumed (routine operational pick).
+
+**What actually happened, in order:** 1. **Phase 0:** full 8-step
+orient; reconcile clean (0 undocumented on both frontiers at `cb44c898`;
+S748 receipt complete, ratchet citation matched the results file
+byte-for-byte); CI 10/10 green, current through `5d281ad5`; 6 unpushed
+measured; dashboard 96/100; context budget WARN = CLAUDE.md warn band
+(26,360 B), growth run 25/10; 5 known untracked files unchanged; no live
+sequencing-audit cluster. 2. **Owner picked push+CI** via the Phase 0
+picker (over WORDLIST drift, BACKLOG compression, inst/doc slimming);
+claim `589cf73c`. 3. **Push:** `5d281ad5..589cf73c`; 0 unpushed
+confirmed by recount. 4. **Filter smoke test BEFORE arming:**
+`gh run list --commit <full sha>` returned all 4 workflows on the pushed
+sha (lint + pkgdown in_progress, R-CMD-check + test-coverage queued),
+`headSha` echoed back. 5. **Single 30-min Monitor** (emit per completion
+incl. failures, exit when all 4 done); completions arrived lint →
+pkgdown → test-coverage → R-CMD-check, all success; no re-arm needed. 6.
+**Structural verification:** all 4 `completed success`, `headSha` = the
+pushed sha, run ids + durations recorded above. 7. **Close-out:**
+ratchet AFTER the push at pushed HEAD `589cf73c`: 1/1 pass · 0 fail · 0
+unmeasured · results b740dd347d67 · manifest aa983075d6a2 (3,489,040 B ≤
+5,000,000 B, read from the results FILE — the run table rounded to
+3.48904e+06). +167 B vs S748’s 3,488,873 B on docs-only commits: all
+touched files are `.Rbuildignore`d (verified
+`.Rbuildignore:72/76/79/154`), so the delta is build-metadata/gzip
+noise, not content — not a regression.
+
+**Self-assessment (Session 749): 9/10.** **Strengths:** (1) every
+predecessor claim was re-measured, not assumed (6 unpushed, 0
+undocumented, growth run 25/10); (2) filter smoke-tested before arming;
+one monitor, no re-arm; (3) verification is structural (`headSha` echoed
+back per run), not inferred from a green badge list; (4) the +167 B
+tarball delta was root-caused (`.Rbuildignore` line-number check) rather
+than hand-waved. **Weaknesses:** (1) **FM \#28 reduction: none this
+session** — no mandated-read file got smaller (this handoff adds bytes
+to `SESSION_NOTES.md`; still well under its 65,536 B ceiling) — said
+plainly per the degradation-detection row; (2) routine operational
+session — no new learning captured (deliberate: 12th consecutive clean
+push+CI session, extending S747’s “11th consecutive” precedent).
+
+**Learnings:** no new `PROJECT_LEARNINGS.md` entry — routine clean
+push+CI session; the durable record is the CHANGELOG entries + the
+receipt.
+
+**Next steps (specific):** (A) **WORDLIST 10-word drift (READY, S):**
+hand-add the 10 words to `inst/WORDLIST` in `LC_ALL=C` byte order (never
+[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html),
+S230 convention); re-verify `devtools::check()` drops to the
+vignette-engine note only (`BACKLOG.md:180`; no BACKLOG edits this
+session, so anchors are unchanged). (B) **BACKLOG editorial compression
+(READY, L):** start with the “Pedigree diagram vs kinship2” section’s
+regrowth check (`BACKLOG.md:220`; its S530 DONE-note near `:240`). (C)
+**inst/doc slimming (DECISION NEEDED, M):** owner must first ratify
+moving the 3 `html_document` vignettes to `html_vignette`
+(`BACKLOG.md:108`). (D) **kinship2-standalone stays BLOCKED** on the
+S738 revisit conditions only (`BACKLOG.md:72`; owner judges; planning
+session when unblocked). (E) Push+CI: NOT urgent next session — only 2
+docs-only records/sha commits will be unpushed after close-out (recount
+with `git rev-list --count origin/master..HEAD`).
+
+**Key files:** no code touched. `SESSION_NOTES.md` (this handoff),
+`HANDOFFS.md` (S749 receipt), `CHANGELOG.md:41` (S749 entries at top),
+`.quality-gates-results.json` (head now `589cf73c`).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; 2 unpushed expected after close-out
+(records + sha — recount). (2) **CI is now CURRENT through `589cf73c`**
+— every commit on `origin/master` has remote confirmation; only
+docs-only records/sha commits remain unpushed. (3) Ratchet baseline is
+now 3,489,040 B at `589cf73c` (+167 B build-metadata noise vs S748 — the
+touched files are `.Rbuildignore`d; don’t read the delta as content
+growth); cite from `.quality-gates-results.json`, never the rounded run
+table (table 3.48904e+06 vs file 3,489,040 this session — the trap
+again). (4) Standing set unchanged: `gh run list --commit` needs the
+FULL 40-char sha + smoke-test the filter before arming a monitor;
+`scratchpad/` invisible to git BY OWNER DECISION; ratchet AFTER
+committing (Learning 772); trim needs `--budget-bytes 65536`; renv
+banner expected; CLAUDE.md warn band; growth run 25/10 (26/10 next if
+nothing shrinks — measure, don’t predict); the two `SESSION_NOTES.md`
+ceilings differ (owner decision pending); suite baseline 0 failed / 0
+error / 184 skipped, remotely confirmed through `589cf73c` (R-CMD-check
+green; no code changed since `5d281ad5`).
 
 ### Session 747 Handoff Evaluation (by Session 748)
 

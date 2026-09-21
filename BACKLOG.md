@@ -240,45 +240,6 @@ norm analogous to the canonical design’s own deferred H4 remedy
 size, and the mechanism would be a norm plus a check, not an archiver”)
 is worth adopting for `CHANGELOG.md` specifically.
 
-**`devtools::check()`’s spelling NOTE has drifted again – 6 new words,
-not caught by any session since S461** (found S465, Effort S, incidental
-– confirmed pre-existing, not caused by this session’s own diff via a
-stash test) – `man/makePedigreeMatingLayout.Rd:40` (“sibship”,
-“waypoint”) and `vignettes/a2interactive.Rmd:355,371,429, 437,440,441`
-(“duplicateToReal”, “js’s”, “makePedigreeMatingLayout”, “vis”) are
-flagged in `devtools::check()`’s `spelling.R` test diff (comparing fresh
-`spelling.Rout` against the committed `spelling.Rout.save`) but are not
-yet in `inst/WORDLIST`. Mirrors the S443/S448/S452 spelling-gap pattern
-(Learning 426, `CLAUDE.md`’s own “Additional close-out checks”
-precedent) – a future session should hand-add these 6 words to
-`inst/WORDLIST` in `LC_ALL=C` byte-order position (not via
-[`spelling::update_wordlist()`](https://docs.ropensci.org/spelling//reference/wordlist.html),
-per S230 convention) and re-verify `devtools::check()` drops to the
-vignette-engine note only (the formerly co-present iCloud duplicate-file
-warning cleared when that item closed, S748 — the repo now lives outside
-iCloud and the duplicate `.R` files are gone). **Count grown to 9 words
-as of S490 (2026-08-09), still not fixed** – incidental to issue \#136
-Slice 2’s own `devtools::check()` verification pass. The original 6
-(`sibship`/`waypoint`/`duplicateToReal`/`js's`/
-`makePedigreeMatingLayout`/`vis`) are joined by 3 more: `discoverable`
-(`NEWS.md:140`), a bare `js` (`a2interactive.Rmd:533`, distinct token
-from `js's`), and `unshaded` (`_pedigree_browser.Rmd:55`) – all 3
-confirmed via `git blame`/`git log -S` to trace to commit `100741ae`
-(S487, 2026-08-08, issue \#133 Slice 2’s own NEWS/tutorial/article
-commit), not this session’s diff. A future session fixing this item
-should hand-add all 9 words, not just the original 6. **Count grown to
-10 words as of S642 (2026-08-26)** – incidental to this session’s
-`test_wordlist_coverage.R` full-regression run: `comparator`
-(`R/comparePedigreeStructure.R:230`, a roxygen `@details`-block word,
-likely introduced by S633-S636’s original `.comparePedigreeStructures()`
-implementation). Confirmed pre-existing via a `git stash` test (fails
-identically with this session’s own diff stashed out) – not caused by
-this session’s `. formatStructuralDiscrepancy()` work. Not visible on
-real CI (all recent `R-CMD-check.yaml` runs green), likely a local
-hunspell/ dictionary-state difference from CI’s runner, matching this
-item’s own established “local devtools::check() catches words CI’s own
-spelling gate doesn’t” pattern.
-
 **`BACKLOG.md`’s own ledger-size housekeeping – editorial compression,
 not a `methodology_trim.py` config** (found S518, 2026-08-11, READY,
 Effort L) – `BACKLOG.md` itself is one of the dashboard’s 3-file
