@@ -50,6 +50,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 755 Did
+**Deliverable:** Pre-RED design/scoping document for issue #167 (longitudinal
+genetic-health monitoring — colony snapshots and trend reporting) (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Owner picked the item via the Phase 0 picker and
+picked #167 over #168 at a separate scope gate. Work beginning: read the
+design workstream + the #147/#148 scoping-doc precedent, then draft the
+scoping doc to `docs/planning/`. The scoping doc is the deliverable — no
+implementation this session.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 753 Handoff Evaluation (by Session 754)
 **Score: 9/10.** **What helped:** "13 unpushed expected (recount)" measured
 exactly 13; "expect 0 undocumented; measure it" measured 0 on both frontiers

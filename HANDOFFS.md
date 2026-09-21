@@ -156,6 +156,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S755
+date: 2026-09-21
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Pre-RED design/scoping document for issue #167 (longitudinal genetic-health monitoring — colony snapshots and trend reporting). Owner-picked via the Phase 0 picker; #167 chosen over #168 at a separate scope gate. The scoping doc is the deliverable — no implementation this session (#147/#148 precedent).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S754
 date: 2026-09-21
 status: complete

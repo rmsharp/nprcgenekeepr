@@ -38,6 +38,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S755 claim: Pre-RED design/scoping session for issue #167 (longitudinal genetic-health monitoring) — (in progress)
+- Session claimed after Phase 0 orientation (clean reconcile: 0 undocumented
+  on both frontiers at `05d0cf60`; all CI green through `8007de81`; dashboard
+  96/100). Owner picked the #167/#168 Pre-RED scoping item via the Phase 0
+  picker, then #167 over #168 at a separate scope gate. Deliverable: one
+  scoping document to `docs/planning/` (#147/#148 precedent) — no
+  implementation this session. TDD phase: PRE-RED, declared at every
+  response top.
+
 ### 2026-09-21 · [ad hoc] S754 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `e4990a40`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S754 commit. Session total: 3 commits (claim `8007de81` — rode
   the push, records `e4990a40`, this sha commit) + 1 non-commit action
