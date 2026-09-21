@@ -38,6 +38,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S752 correction: unpushed-commit count in the handoff/receipt fixed 6 → 8 (the sha entry below, already committed and never edited, says 6)
+- Final S752 commit — it is included in its own count. `git rev-list
+  --count origin/master..HEAD` measured **7** at `4a9c9037`, not the 6
+  written into `SESSION_NOTES.md`, the `HANDOFFS.md` receipt, and the sha
+  entry below: the estimate missed the Learning 775 commit `8ab100b1`,
+  which S752 split out (to keep the records commit at the 5-file cap)
+  after the estimate was written. With this commit the count is **8** =
+  S751's 2 records/sha commits + S752's 6 (claim `22be597a`, deliverable
+  `37992d20`, Learning `8ab100b1`, records `8b2e3f9e`, sha `4a9c9037`,
+  this correction), ALL docs-only; CI is current through `a7613044`.
+  Also refreshed the stale "growth run 29/10 at close" note (28/10 at
+  Orient, 31/10 at the final check — the counter rose with each of this
+  session's later `context_budget.py` runs). Only the mutable handoff and
+  receipt were edited; the ledger entry below is left as written and
+  superseded here. Verify the 8 with the recount, not this sentence.
+
 ### 2026-09-21 · [ad hoc] S752 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `8b2e3f9e`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S752 commit. S752 total: 5 commits — claim `22be597a`,
   deliverable `37992d20`, Learning 775 `8ab100b1` (committed alone to keep

@@ -130,9 +130,12 @@ is a recommendation, not a computed fact). First recompute the premise:
 not be later. Source text: `docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-06.md:86-87`
 (rows), `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md:116-124`
 (Finding #1) and `:309` (recommendation 2: full-feature requests gated on a
-Pre-RED design session, shaped like #147). (B) **Push+CI: NOT urgent** — 6
-docs-only commits unpushed after close-out (recount with
-`git rev-list --count origin/master..HEAD`); CI current through `a7613044`.
+Pre-RED design session, shaped like #147). (B) **Push+CI: NOT urgent** — 8
+docs-only commits unpushed after close-out (S751's 2 + this session's 6:
+claim, deliverable, Learning, records, sha, and the count-correction commit
+that wrote this figure; an earlier draft said 6 and missed the separately
+committed Learning — recount with `git rev-list --count origin/master..HEAD`);
+CI current through `a7613044`.
 (C) **BACKLOG compression is RECURRING, not urgent** — measured next-pass
 candidates are in the item itself (`BACKLOG.md:210-218`); the kinship2
 section's deeper cut needs fresh owner ratification. (D) Unchanged:
@@ -148,7 +151,7 @@ candidates), `:419-480` (Genetic-metrics section + extracted open item at
 (head now `37992d20`).
 
 **Gotchas for the next session:** (1) Expect 0 undocumented commits at next
-Phase 0 — measure it; 6 unpushed expected after close-out (recount).
+Phase 0 — measure it; 8 unpushed expected after close-out (recount).
 (2) **BACKLOG anchors:** everything at/above `:180` is UNCHANGED; below it
 shifted UP — "Pedigree diagram vs kinship2" heading 280→`:228`, NPRC outreach
 438→`:386`, Genetic-metrics 471→`:419`; re-grep before trusting any stale
@@ -169,7 +172,9 @@ unchanged: `gh run list --commit` needs the FULL 40-char sha + smoke-test
 the filter before arming a monitor; `scratchpad/` invisible to git BY OWNER
 DECISION; ratchet AFTER committing (Learning 772); trim needs
 `--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band; growth
-run 29/10 at close (measure, don't predict); the two `SESSION_NOTES.md`
+run 28/10 at Orient, 31/10 at my final check (it rose with each of my later
+`context_budget.py` runs, so read the value at the next Orient — measure,
+don't predict); the two `SESSION_NOTES.md`
 ceilings differ (owner decision pending).
 
 ### Session 750 Handoff Evaluation (by Session 751)
