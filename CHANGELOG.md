@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-20 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-20.md` (12 record(s), 55,049 B → 17,713 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **12** record(s) (2026-09-20 → 2026-09-20) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-20.md`](docs/archive/SESSION_NOTES-through-2026-09-20.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-20.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-20.md.verify.sh)
+rather than trusting a digest printed here. Live file 55,049 B → 17,713 B (−67.8%).
+
 ### 2026-09-20 · [ad hoc] S740 claim: owner-directed push to `origin/master` + CI verification (in progress)
 - Session claimed via the Phase 0 picker. Scope: push the 15 unpushed docs-only
   commits (measured at Orient, = S739's corrected count) + this claim commit riding
