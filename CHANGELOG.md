@@ -38,6 +38,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S752 claim: BACKLOG editorial compression pass (S518 item) *(in progress)*
+- Session claimed: stub + pending receipt + this entry. Owner picked the
+  S518 recurring-maintenance item (`BACKLOG.md:181`) via the Phase 0
+  picker (over chromote hang research, inst/doc slimming, REUSE
+  registration). Plan: measure "Pedigree diagram vs kinship2" regrowth
+  since S530 (`:280`) and survey the file, then pose the scope gate with
+  evidence in hand (S606 precedent). Phase 0 reconcile: clean — 0
+  undocumented on both frontiers at `23107e60`; S751 receipt complete,
+  ratchet citation matches the results file (e7499ae4e4a9, 3,489,091 B
+  at `a7613044`). CI 10/10 green, current through `a7613044`; dashboard
+  96/100; growth run 28/10 (predicted); 2 unpushed docs-only (predicted).
+
 ### 2026-09-21 · [ad hoc] S751 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `761800c9`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S751 commit. S751 total: 3 commits (claim `a7613044` — rode the
   push, records `761800c9`, this one). Ahead of `origin/master` by 2

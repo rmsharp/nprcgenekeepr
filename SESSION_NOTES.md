@@ -46,6 +46,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 752 Did
+**Deliverable:** BACKLOG editorial compression pass (S518 recurring-maintenance
+item, `BACKLOG.md:181`) — starting with the "Pedigree diagram vs kinship2"
+section's regrowth check (`:280`); scope gate to follow once regrowth is
+measured (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 750 Handoff Evaluation (by Session 751)
 **Score: 9/10.** **What helped:** "6 unpushed expected (recount)" measured
 exactly 6; "expect 0 undocumented; measure it" measured 0 on both frontiers
