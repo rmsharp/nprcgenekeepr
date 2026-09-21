@@ -38,6 +38,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S756 deliverable: design plan written and owner-ratified — `docs/planning/issue167-longitudinal-monitoring-plan.md`
+- Answers the S755 scoping record's Q1–Q9 as numbered decisions D1–D9
+  (#152/#153 mold): D1 aggregate-only snapshot rows, D2 one user-maintained
+  history CSV (reader/validator/pure-append, kinship-overrides mold,
+  `downloadHandler`-only app writes), D3 "membership rule" vocabulary
+  (never bare "cohort"), D4 comparability guards (flag-don't-refuse, SE
+  ribbons mandatory), D5 prospective-only v1 (retrospective = deferred
+  Slice 5, own Pre-RED), D6 trend plots + delta table (threshold verdicts
+  declined), D7 new dedicated module/16th tab (ORIP placeholder
+  untouched), D8 no #150 gate for aggregate-only (future-detail
+  precondition recorded), D9 four v1 slices, each one strict-TDD session.
+  Judgment calls D1/D2/D5/D7 owner-ratified via one `AskUserQuestion`
+  round — all four recommended options selected, no changes requested.
+  Two scoping-inventory corrections recorded (§1.3):
+  `calcFounderContributions()` and `getLivingBreeders()` are `@noRd`
+  internals; canonical report columns are `indivMeanKin`/`gu`. Zero
+  `R/`/`tests/`/`man/` changes — the plan is the whole deliverable
+  (FM #18/#19). Issue #167 stays open (design ratified, not implemented).
+
 ### 2026-09-21 · [issue #167] S756 claim: design-plan session for issue #167 (in progress)
 - Session claimed at Phase 1B (stub + pending `HANDOFFS.md` receipt + this
   entry). Deliverable: `docs/planning/issue167-longitudinal-monitoring-plan.md`
