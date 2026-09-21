@@ -38,6 +38,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S752 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `8b2e3f9e`; carries its own entry, so no self-reference gap is left for Phase 0
+- Final S752 commit. S752 total: 5 commits — claim `22be597a`,
+  deliverable `37992d20`, Learning 775 `8ab100b1` (committed alone to keep
+  the records commit at the 5-file cap), records + `SESSION_NOTES.md` trim
+  `8b2e3f9e`, and this one. Ahead of `origin/master` by 6 after
+  close-out, ALL docs-only; CI is current through `a7613044` and no code
+  has changed since. Expect 0 undocumented commits past the frontier at
+  next Phase 0; measure it. Trigger for the trim, said plainly: the
+  records commit was REFUSED by the context-budget hook (`SESSION_NOTES.md`
+  ≈27,875 tok vs the 25,000-tok read cap; the byte budget was fine);
+  resolved per `CLAUDE.md`'s standing guidance, not bypassed with
+  `--no-verify`. `SRF_RED` fired as predicted and `--force` was used under
+  the established practice (Learnings 549/586/587); the shard's verify
+  script reports one expected L1/L3 exception — the frontier record (the
+  claim stub committed at `22be597a`, finalized in place by this
+  handoff) — manually diffed and confirmed a stub finalize, not data loss.
+
 ### 2026-09-21 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-21.md` (14 record(s), 63,278 B → 14,356 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
