@@ -50,6 +50,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 753 Did
+**Deliverable:** File the 2 unticketed High-priority audit gaps
+("Longitudinal genetic-health monitoring", "Ancestry guardrails in breeding
+decisions") as GitHub issues — the extracted BACKLOG.md:463 item (READY, S;
+S752 handoff next step A). Owner confirmation of titles/bodies via
+`AskUserQuestion` before `gh issue create`. (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 751 Handoff Evaluation (by Session 752)
 **Score: 9/10.** **What helped:** "2 unpushed expected (recount)" measured
 exactly 2; "expect 0 undocumented; measure it" measured 0 on both frontiers

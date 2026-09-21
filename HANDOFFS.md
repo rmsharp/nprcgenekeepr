@@ -156,6 +156,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S753
+date: 2026-09-21
+status: pending
+active_task: File the 2 unticketed High-priority audit gaps (Longitudinal genetic-health monitoring; Ancestry guardrails in breeding decisions) as GitHub issues — BACKLOG.md:463 item (READY, S; S752 next step A). Owner confirms titles/bodies via AskUserQuestion before gh issue create.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S752
 date: 2026-09-21
 status: complete

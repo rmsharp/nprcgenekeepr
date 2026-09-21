@@ -38,6 +38,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S753 claim: file the 2 unticketed High-priority audit gaps as GitHub issues (in progress)
+- Session claimed. Deliverable: create GitHub issues for the 2 audit-table
+  High-priority rows with no issue — "Longitudinal genetic-health
+  monitoring" and "Ancestry guardrails in breeding decisions"
+  (`BACKLOG.md:463` item, extracted S752 from the Genetic-metrics section;
+  found S483 by `docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`
+  Finding #1). Plan: recompute the still-unfiled premise (`gh issue list
+  --state all` + title/body searches), draft titles/bodies from the audit
+  sources, confirm both with the owner via `AskUserQuestion` (outward-facing
+  action), `gh issue create`, then remove the completed `BACKLOG.md` block
+  in the same commit (S686 rule). Stub + pending receipt committed with
+  this entry.
+
 ### 2026-09-21 · [ad hoc] S752 correction: unpushed-commit count in the handoff/receipt fixed 6 → 8 (the sha entry below, already committed and never edited, says 6)
 - Final S752 commit — it is included in its own count. `git rev-list
   --count origin/master..HEAD` measured **7** at `4a9c9037`, not the 6
