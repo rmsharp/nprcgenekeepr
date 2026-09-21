@@ -38,6 +38,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] S748 claim: close the iCloud duplicate-`.R`-files Housekeeping item per its own closure condition (in progress)
+- Owner-picked via the Phase 0 picker (over BACKLOG compression, inst/doc
+  slimming, kinship2-standalone). Session claimed: `SESSION_NOTES.md` stub +
+  `HANDOFFS.md` pending receipt + this entry. Phase 0 reconcile was clean
+  (0 undocumented on both frontiers at `01f1b030`; S747 receipt complete,
+  ratchet citation matched the results file byte-for-byte). Pre-check
+  already run at Orient: `ls R/ | grep ' 2\.'` returns nothing — the
+  closure condition is met, pending the item-removal + records work.
+
 ### 2026-09-21 · [ad hoc] S747 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `f976d94f`; carries its own entry, so no self-reference gap is left for Phase 0
 - Final S747 commit. S747 total: 3 commits (claim `5d281ad5` — rode the push,
   records `f976d94f`, this one). Ahead of `origin/master` by 2 after close-out

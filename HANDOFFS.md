@@ -156,6 +156,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S748
+date: 2026-09-21
+status: pending
+active_task: Close the iCloud "conflicted copy" duplicate-.R-files Housekeeping item (BACKLOG.md:180) per its own closure condition — duplicates verified gone from R/ after local rebuilds
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S747
 date: 2026-09-21
 status: complete

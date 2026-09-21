@@ -46,6 +46,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 748 Did
+**Deliverable:** Close the iCloud "conflicted copy" duplicate-`.R`-files
+Housekeeping item (`BACKLOG.md:180`) per its own closure condition — the 2
+duplicate files verified gone from `R/` after local rebuilds (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry
+says (in progress); Phase 3F records the rest. Until close-out, this line is
+the crash breadcrumb for the next session's reconcile.
+
 ### Session 746 Handoff Evaluation (by Session 747)
 **Score: 9/10.** **What helped:** "14 unpushed expected (recount)" measured
 exactly 14; "expect 0 undocumented; measure it" measured 0 on both frontiers
