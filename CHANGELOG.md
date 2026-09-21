@@ -38,6 +38,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S756 claim: design-plan session for issue #167 (in progress)
+- Session claimed at Phase 1B (stub + pending `HANDOFFS.md` receipt + this
+  entry). Deliverable: `docs/planning/issue167-longitudinal-monitoring-plan.md`
+  answering the S755 scoping doc's Q1–Q9 as owner-ratified numbered decisions
+  with a vertical-slice list and per-slice completion criteria (#152/#153
+  mold). Owner-picked at the Phase 0 picker (4 options; #168 scoping,
+  chromote research, inst/doc slimming declined this session). Phase 3F
+  records the rest.
+
 ### 2026-09-21 · [issue #167] S755 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `b3a7e3ff` (self-reconcile, carries its own ledger entry)
 - Final S755 commit. Session total: 4 commits (claim `1c0480e1`,
   deliverable `fb8af874`, records `b3a7e3ff`, this sha commit) + 1

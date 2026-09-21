@@ -50,6 +50,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 756 Did
+**Deliverable:** Design-plan session for issue #167 — write
+`docs/planning/issue167-longitudinal-monitoring-plan.md` answering the
+scoping doc's Q1–Q9 as owner-ratified numbered decisions with a
+vertical-slice list and per-slice completion criteria (#152/#153 mold).
+The plan is the whole deliverable (FM #18/#19). (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 754 Handoff Evaluation (by Session 755)
 **Score: 9/10.** **What helped:** "2 unpushed expected (recount)" measured
 exactly 2; "expect 0 undocumented; measure it" measured 0 on both frontiers
