@@ -38,6 +38,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-22.md` (9 record(s), 57,401 B → 7,564 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **9** record(s) (2026-09-21 → 2026-09-22) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-22.md`](docs/archive/SESSION_NOTES-through-2026-09-22.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-22.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-22.md.verify.sh)
+rather than trusting a digest printed here. Live file 57,401 B → 7,564 B (−86.8%).
+- **S762 session rationale:** the context-budget hook refused the S762 claim
+  commit (`SESSION_NOTES.md` 24,995 → 25,286 tok against the binding 25,000-tok
+  ceiling — S761's gotcha 6 predicted this). Owner ratified the SRF_RED
+  `--force` via `AskUserQuestion` (the Learning 549/586/587 established
+  resolution). Note: `--cut 2` keeps the 2 newest records rather than
+  archiving 2 — 9 records archived, more than the ~2 proposed to the owner,
+  but lossless (L1/L2/L3 + verify script run in-session) and all 9 remain
+  receipted in `HANDOFFS.md`. Trim rides the claim commit because the tool
+  rewrote the same files the claim touches (S758 carried-handoff precedent).
+
+### 2026-09-22 · [issue #168] S762 claim: design-plan session for ancestry guardrails (in progress)
+- Session claimed: write `docs/planning/issue168-ancestry-guardrails-plan.md`
+  answering the S761 scoping doc's Q1–Q9 as owner-ratified numbered decisions
+  (`AskUserQuestion`-gated) + vertical slices + per-slice completion criteria
+  (#152/#153/#167 plan mold). PLANNING session — the plan is the deliverable;
+  no implementation (FM #18/#19). Stub + pending `HANDOFFS.md` receipt commit.
+
 ### 2026-09-22 · [issue #168] S761 deliverable: scope-narrowing decision record for issue #168 (design-first, same issue)
 - `docs/planning/issue168-ancestry-guardrails-scoping-2026-09-22.md` written in
   the S755 issue #167 scoping mold. Owner decision ratified via

@@ -156,6 +156,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S762
+date: 2026-09-22
+status: pending
+active_task: Issue #168 design-plan session — write docs/planning/issue168-ancestry-guardrails-plan.md answering the scoping doc's Q1-Q9 as owner-ratified numbered decisions + vertical slices + per-slice completion criteria (#152/#153/#167 mold). PLANNING session — the plan is the deliverable, no implementation (FM #18/#19).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S761
 date: 2026-09-22
 status: complete
