@@ -116,10 +116,11 @@ workaround); ratchet 1/1 pass at `eee75958` (3,482,596 B, results
 trim --check: no trigger (SESSION_NOTES 51,840 / 65,536; HANDOFFS 145,415
 and CHANGELOG 147,072 at the 196,608 default, S756/S757 practice).
 **Started/completed:** 2026-09-21 (single session). Claim `0b8a4e26`; RED
-`cbab400b`; GREEN `b9b90769` + `8892fa39`; docs `eee75958`; records + sha
-commits follow this handoff.
+`cbab400b`; GREEN `b9b90769` + `8892fa39`; docs `eee75958`; trim
+`55da1283` (carried this handoff); records + sha commits follow.
 **Ledger:** one `CHANGELOG.md` entry per action — claim, RED, GREEN 1/2,
-GREEN 2/2, docs, records, sha. TDD phase declared at every response top.
+GREEN 2/2, docs, trim (tool entry + session rationale), records, sha.
+TDD phase declared at every response top.
 **Checklists:** NEWS.Rmd ✓ (plain-language, S628); `_pkgdown.yml` ✓
 (coverage guard passed in both suite runs); lint ✓; citation (#120)
 **N/A recorded** — no new displayed statistic (script IO only; plan §9
@@ -168,8 +169,8 @@ assume); vdiffr-or-structural choice is the implementing session's,
 recorded. (B) **#168 scoping session (READY, M)** — unchanged; S755's doc
 is the mold. (C) **Pandoc owner action (DECISION NEEDED, S,
 `BACKLOG.md:7`)** — unchanged; workaround still required for suite/check/
-ratchet. (D) **Push+CI (medium priority, growing)** — 24 unpushed
-expected after close-out (17 inherited + S758's 7; recount with
+ratchet. (D) **Push+CI (medium priority, growing)** — 25 unpushed
+expected after close-out (17 inherited + S758's 8; recount with
 `git rev-list --count origin/master..HEAD`); CI current through
 `8007de81`; the batch now carries Slice 1 AND Slice 2 R-code changes, so
 the next push is their first remote verification. (E) Unchanged: chromote
@@ -189,7 +190,7 @@ implementation note — Slice 4 must pass the app's `reportGV()` call-site
 `eee75958`; gitignored).
 
 **Gotchas for the next session:** (1) Expect 0 undocumented commits at
-next Phase 0 — measure it; 24 unpushed expected after close-out (recount).
+next Phase 0 — measure it; 25 unpushed expected after close-out (recount).
 (2) **A full-suite run can flake ONE of the two #152 wall-clock
 benchmarks** (`test_markerKinship.R` / `test_markerParentageLikelihood.R`)
 even on an otherwise-idle machine — Learnings 532/760; re-run the file

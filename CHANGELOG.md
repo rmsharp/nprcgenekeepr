@@ -38,6 +38,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S758 records: close-out records committed (receipt, plan note; handoff rode the trim commit)
+- `HANDOFFS.md` receipt complete (self 9/10; predecessor S757 9/10 —
+  every checked claim held; one marginally-knowable gap: the GV object
+  not carrying `guIter`/`guThresh`, found and resolved this session via
+  two pre-RED owner gates); plan §4 implementation note recording the
+  ratified S758 signature and the Slice 4 wiring consequence; this
+  ledger entry. The `SESSION_NOTES.md` handoff + S757 evaluation rode
+  the trim commit `55da1283` (entry below). Slice 2 verification recap,
+  all measured: 78/78 new expectations; two full-suite runs with every
+  file green across them (run 2, idle machine: 1 failed / 0 error /
+  7177 passed / 184 skipped — the rotating Learnings-532/760 benchmark
+  flake, isolated-clean 21/21); `spell_check_package()` clean; lint
+  clean on both new files; `devtools::check()` 0 errors / 0 warnings /
+  0 notes (raw `Status: OK`); ratchet 1/1 pass at `eee75958`
+  (3,482,596 B, results `748b619b8b2c`, manifest `aa983075d6a2`, read
+  from the results file, arm64-pandoc PATH workaround). Citation
+  checklist (#120) N/A recorded — no new displayed statistic (script
+  IO; plan §9 maps the check to Slices 3–4). A first 6-file trim commit
+  (stale index from the hook-refused attempt swept `HANDOFFS.md` + the
+  plan along, over the 5-file cap) was caught immediately and re-split
+  via soft reset before any committed text referenced its sha —
+  recorded in the handoff's self-assessment. S758 totals: 7 commits
+  (claim `0b8a4e26`, RED `cbab400b`, GREEN `b9b90769` + `8892fa39`,
+  docs `eee75958`, trim `55da1283`, records) + 1 sha commit to follow;
+  25 unpushed expected after close-out — verify with
+  `git rev-list --count origin/master..HEAD`, not this sentence.
+
 ### 2026-09-21 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-21-2.md` (11 record(s), 61,483 B → 24,899 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

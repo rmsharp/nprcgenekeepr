@@ -251,6 +251,17 @@ slicing FM #25 test ("if I stop here, is something working?") passes at every bo
 Vocabulary note (D3): no interface, column, or doc uses bare "cohort" for the
 membership-consistency concept.
 
+Implementation note (S758, 2026-09-21 — Slice 2 shipped): the ratified signature is
+`createColonySnapshot(ped, geneticValue, membershipRule, guIter, guThresh,
+snapshotDate = Sys.Date())` — `guIter`/`guThresh` are **required, no-default**
+arguments (owner decision via `AskUserQuestion`) because the `nprcgenekeeprGV`
+object does not carry them and this plan's impact table keeps `reportGV()`
+unchanged; a default could silently record false D4 provenance. The claimed
+`membershipRule` (v1 enumeration: `wholePedigree`, `focalPopulation`) is verified
+against `ped`/report ids and a contradiction `stop()`s (second owner decision).
+Slice 4's module wiring must pass the app's own `reportGV()` call-site
+`guIter`/`guThresh` values through.
+
 ---
 
 ## 5. Implementation plan — vertical slices (each its own future session)
