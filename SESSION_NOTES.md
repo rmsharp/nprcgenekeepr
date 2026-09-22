@@ -58,18 +58,126 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 762 Handoff Evaluation (by Session 763)
+**Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
+measured 0 on both frontiers; "~51 unpushed (recount)" measured exactly
+51; CI-green held (10/10); "the plan is RATIFIED — don't re-litigate"
+framed the whole session correctly (only the plan-reserved RED items
+needed the gate); next step (A) WAS this session's owner-picked
+deliverable with the exact start point (plan §5 Slice 1 + §4 catalog —
+the RED schema came straight from §4's validator row); the
+non-idempotency design input directly shaped the fixture ("mauritius"→
+OTHER, blank→UNKNOWN) and the D6 warning tests; pandoc workaround
+verbatim; the ratchet noise-vs-content rule read this session's
++4,655 B correctly as content. **Missing:** nothing found — the slice
+went first-run green on the plan's information alone. **Wrong:**
+nothing found. **ROI:** high.
+
 ### What Session 763 Did
-**Deliverable:** Issue #168 **Slice 1** — rule-table schema +
-`readAncestryRules()`/`checkAncestryRules()` + fixtures (example rules
-file + ancestry-bearing test pedigree), strict TDD from the ratified
-plan (`docs/planning/issue168-ancestry-guardrails-plan.md` §5 Slice 1 +
-§4 catalog). RED fixes the exact column list + self-pair policy.
-(IN PROGRESS)
-**Started:** 2026-09-22
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md`
-entry says (in progress); Phase 3F records the rest. Until close-out,
-this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Issue #168 **Slice 1 — `readAncestryRules()` +
+`checkAncestryRules()` + fixtures — DONE**, strict TDD with all three
+phase gates owner-ratified via `AskUserQuestion` (PRE-RED→RED with the
+full schema pinned in the gate text; RED→GREEN; GREEN→REFACTOR,
+REFACTOR declared no-op after re-read — both functions match their
+molds, reader-family repetition is deliberate).
+**RED** (`60737dc3`): 24 blocks across `test_readAncestryRules.R` (4:
+CSV, validator round-trip, Excel branch, shipped-example validity incl.
+warning-free UNKNOWN+OTHER), `test_checkAncestryRules.R` (17: coercion,
+case normalization, factor input, per-violation stops with pinned
+messages, self-pair legal, empty valid, extra cols ignored, 3 D6
+warning blocks), `test_exampleAncestryPedigree.R` (3: fixture QCs
+cleanly 10 rows; post-QC coverage of ALL 6 levels; cross-fixture
+check). Fixtures: `example_ancestry_rules.csv` (rhesus case, both
+severities, UNKNOWN AND OTHER) + `example_ancestry_pedigree.csv` (10
+animals, free-text → all 6 post-QC levels). Verified failing ONLY on
+the 2 missing functions via per-block audit — which caught 2 spurious
+passes (bare `expect_error()` satisfied by could-not-find-function) and
+pinned message patterns at RED. The 2 fixture-integrity blocks pass at
+RED by design (test DATA, declared in-file).
+**GREEN** (`c77b3b6a` code+NAMESPACE+man ×2; `649c463e`
+_pkgdown.yml+NEWS.Rmd): 51/51 expectations first run, 0 warnings;
+molds followed verbatim; NO mass `@family` regen (siblings carry none —
+verified pre-RED); plain-language NEWS entry (S628, #167 groundwork
+mold); pkgdown guard 5/5; wordlist guard clean.
+**Verification (all measured):** full suite (idle, NOT_CRAN,
+load_all, pandoc PATH) **0 failed / 0 error / 7370 passed / 185
+skipped** — fully clean, no flake; `devtools::check()` **0/0/0**
+(6m29s); ratchet 1/1 at `649c463e` (3,504,643 B, results
+`e0777c334990`, manifest `aa983075d6a2` — +4,655 B vs S762, CONTENT:
+code/tests/fixtures ship in the tarball); lint 0 on all 5 touched
+files; trim --check no trigger ×3.
+**Started/completed:** 2026-09-22. Claim `fe0f2b0d`; RED `60737dc3`;
+GREEN `c77b3b6a`+`649c463e`; records + sha follow. **Ledger:** one
+entry per action — claim, RED, GREEN 1/2, GREEN 2/2,
+REFACTOR-no-op+verification, records, sha. TDD phase declared at every
+response top.
+**Checklists:** NEWS.Rmd ✓; `_pkgdown.yml` ✓ (5/5); lint ✓; citation
+(#120) **N/A recorded** — no new displayed statistic (IO only; plan §9
+maps it to Slice 4); tutorial/article owed at Slice 4; `a2interactive`
+deferred to the standing pass (both new exports join its inventory);
+issue #168 stays OPEN (Slices 2–4 remain).
+
+**Self-assessment (Session 763): 9/10.** **Strengths:** (1) strict TDD
+end to end — the RED per-block audit caught and fixed 2 spurious
+passes BEFORE commit, so RED failed for exactly the right reason; (2)
+3 owner gates, nothing decided silently; (3) GREEN 51/51 first run;
+full suite fully clean; check 0/0/0; (4) blast radius: 5 commits, ≤5
+content files each, per-action ledger entries; (5) fixture design
+worked first try (all 6 post-QC levels, exactly 10 rows). **Weak:**
+(1) loaded the Monitor tool unnecessarily (harness auto-notifies
+background tasks) — trivial context waste; (2) no FM #28 reduction —
+CHANGELOG grew 4 entries (said plainly); (3) the fixture-integrity
+blocks passing at RED is a declared deviation from tests-must-fail —
+right call, but a purist split into a separate guard file would have
+kept RED pure.
+
+**Learnings:** none owed to `PROJECT_LEARNINGS.md` — clean
+mold-following TDD session (S751–S760 precedent); the RED-honesty
+catch is recorded as gotcha (5) below, a confirming instance of
+careful RED verification, not a new mechanism.
+
+**Next steps (specific):** (A) **#168 Slice 2 (READY, L)** —
+enforcement kernel: `groupAddAssign(ancestryRules = NULL)` +
+`reportAncestryViolations()` + `.ancestryConflictPairs()`, strict TDD
+from plan §5 Slice 2; same-seed identity tests (D7), both-search-modes
+block property test, the F-F-blocked-while-F-F-kinship-ignored pin
+(D3); kin-merge mechanics in plan §1.3 + Dragon 2 (symmetry, NA
+padding, merge upstream of the mode fork, NEVER inside the iter loop);
+the Slice 1 fixtures are the test vehicle. (B) **Push+CI (READY, S,
+growing)** — ~57 unpushed expected after close-out (recount); CI
+current through `8007de81`; batch carries ALL of #167 + the #168 plan
++ Slice 1. (C) **Pandoc owner action (DECISION NEEDED, S,
+`BACKLOG.md`)** — unchanged. (D) **Slice 5 backfill scoping (DECISION
+NEEDED, L, `BACKLOG.md`)** — unchanged. (E) Standing list unchanged —
+see S760's next-steps (E) via its HANDOFFS receipt.
+
+**Key files:** `R/checkAncestryRules.R:42` (validator — its
+`levelsAll` vector IS the vocabulary pin), `R/readAncestryRules.R:39`
+(reader), `tests/testthat/test_checkAncestryRules.R:17`
+(`validAncestryRules()` fixture constructor),
+`tests/testthat/test_exampleAncestryPedigree.R:19` (fixture path
+helpers), `inst/extdata/examples/example_ancestry_rules.csv` +
+`example_ancestry_pedigree.csv` (Slice 2's test vehicle),
+`docs/planning/issue168-ancestry-guardrails-plan.md:§5-Slice-2` (next
+pickup), `CHANGELOG.md` (S763 entries), `HANDOFFS.md` (S763 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~57 unpushed expected (recount). (2) Slice 2's
+block-merge MUST land upstream of the sampling/exhaustive fork
+(`R/groupAddAssign.R:194`) and NEVER inside the iter loop — the D7
+same-seed identity tests are the guard (plan Dragon 1/2). (3) Ratchet
+moved for CONTENT: 3,504,643 B at `649c463e` (results `e0777c334990`);
+cite from the results file. (4) Pandoc PATH workaround unchanged. (5)
+**RED-honesty pattern (caught live):** a bare `expect_error()` is
+satisfied by the could-not-find-function error when the target doesn't
+exist yet — pin message patterns in RED tests, and audit RED per-block
+(passed>0 & !error) for spurious passes. (6) The 2 fixture-integrity
+blocks in `test_exampleAncestryPedigree.R` pass by design (they test
+fixture DATA) — declared in-file; don't "fix" them into failures. (7)
+Standing set unchanged — see S760's gotcha (9) via its HANDOFFS
+receipt (full-sha filters, scratchpad, L772, renv banner, CLAUDE.md
+warn band, growth run 43/10 read-next-Orient, zsh traps L775, trim
+budgets 65536/196608).
 
 ### Session 761 Handoff Evaluation (by Session 762)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"

@@ -38,6 +38,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S763 records: REFACTOR declared no-op, verification battery clean, close-out records committed
+- **REFACTOR (declared no-op):** both new functions re-read — the validator
+  is a linear per-violation chain, the reader is the deliberate
+  reader-family mold; extracting a shared generic reader would touch 3+
+  shipped functions (Architect-mode scope, not this slice). **Verification
+  (all measured):** full suite (idle machine, `NOT_CRAN=true`, `load_all()`
+  first, pandoc PATH workaround) **0 failed / 0 error / 7370 passed / 185
+  skipped** — fully clean; `devtools::check()` **0/0/0** (6m29s); ratchet
+  1/1 pass at `649c463e` (3,504,643 B, results `e0777c334990`, manifest
+  `aa983075d6a2` — +4,655 B vs S762, a CONTENT move: code/tests/fixtures
+  ship in the tarball); trim `--check` no trigger ×3. **Records:**
+  `SESSION_NOTES.md` S762 handoff evaluated 9/10 (every checked claim
+  held); S763 full handoff + self-assessment 9/10; `HANDOFFS.md` receipt
+  complete. Citation checklist (#120) N/A recorded (IO only — plan §9 maps
+  it to Slice 4); tutorial/article owed at Slice 4; `a2interactive`
+  deferred to the standing pass. Issue #168 stays OPEN (Slices 2–4).
+
 ### 2026-09-22 · [issue #168] S763 GREEN 2/2: pkgdown entries + plain-language NEWS.Rmd entry
 - `_pkgdown.yml`: `checkAncestryRules` + `readAncestryRules` added in
   alphabetical position (coverage guard 5/5). `NEWS.Rmd`: plain-language
