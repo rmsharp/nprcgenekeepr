@@ -373,6 +373,15 @@ knitr::opts_chunk$set(echo = TRUE)
   mode** checkbox: checks every possible single-group split instead of
   sampling, for the simplest case. Script users: `groupAddAssign()` gained
   a matching `exhaustive` argument (issue #146).
+- Groundwork for ancestry guardrails in breeding-group formation
+  (issue #168): centers can now describe their ancestry compatibility
+  policy in a simple rules file -- each line names two ancestry groups
+  (for example Indian-origin and Chinese-origin rhesus) and says whether
+  mixing them should be blocked or just pointed out. Script users: new
+  `readAncestryRules()` and `checkAncestryRules()` read and validate the
+  file; a worked example rules file and a matching example pedigree ship
+  with the package. Enforcement during group formation arrives in later
+  steps of this work.
 
 ## Mate Pair Analysis
 - New `reportMatePairs()` reports individual mate-pair candidates with

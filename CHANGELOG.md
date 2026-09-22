@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S763 GREEN 2/2: pkgdown entries + plain-language NEWS.Rmd entry
+- `_pkgdown.yml`: `checkAncestryRules` + `readAncestryRules` added in
+  alphabetical position (coverage guard 5/5). `NEWS.Rmd`: plain-language
+  colony-manager entry under "Breeding Group Formation" (S628 criterion —
+  policy file, block vs. pointed out, worked example ships, enforcement in
+  later steps; mirrors the #167 Slice 1 groundwork-entry mold). Wordlist
+  spell-check guard clean on the new roxygen prose (3/3).
+
 ### 2026-09-22 · [issue #168] S763 GREEN 1/2: readAncestryRules() + checkAncestryRules() implemented — 51/51 RED expectations pass first run
 - `R/readAncestryRules.R` (the `readKinshipOverrides` mold verbatim:
   `excel_format` branch + `read.table` with `muffleIncompleteFinalLine`) and
