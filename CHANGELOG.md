@@ -84,6 +84,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   reasons. Deliverable was DONE at `4310d820`; issue #168 stays OPEN behind
   its design gate.
 
+### 2026-09-22 · [issue #168] S761 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `29ea0795` (self-reconcile, carries its own ledger entry)
+- Also on the record here: the first records-commit attempt was REFUSED by the
+  context-budget pre-commit hook (`SESSION_NOTES.md` would have crossed its
+  binding 25,000-token ceiling — the `.context-budget.json` `max_tokens` that
+  binds before the 65,536 B trim budget for dense content); resolved by
+  compacting this session's own handoff record (~5 KB cut, long form kept in
+  the receipt), not by `--no-verify`. Committed size 56,739 B.
+
 ### 2026-09-22 · [issue #168] S761 claim: issue #168 scoping session (ancestry guardrails for breeding-group formation) *(in progress)*
 - Owner picked the #168 scoping session at Phase 0 via `AskUserQuestion` (over
   Push+CI, the pandoc owner action, and the Slice 5 backfill scoping).
