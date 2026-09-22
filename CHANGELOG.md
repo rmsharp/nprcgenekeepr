@@ -38,6 +38,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S758 RED: failing tests for `createColonySnapshot()` (Slice 2)
+- `tests/testthat/test_createColonySnapshot.R` (12 test blocks): one-row
+  27-column D1 schema (same pinned vector as Slice 1); field-equality vs
+  hand-derived values from the same `reportGV(qcPed, guIter = 20L)` object
+  (scalars/counts exact incl. the 280/108/171 qcPed pins; aggregates
+  identical to `mean()`/`median()`/`calcSkewness()`/`calcKurtosis()` at
+  full precision with a summary()-linkage tolerance check); focal flow via
+  `setPopulation(qcPed, living)`; verify-and-stop rule checks, unknown
+  rule, malformed/incomplete GV object, required/validated
+  `guIter`/`guThresh`, ISO date handling; validates + appends + survives
+  the write.csv round trip. Two owner decisions ratified pre-RED via
+  `AskUserQuestion`: required no-default `guIter`/`guThresh` args (the GV
+  object doesn't carry them; a default could record false D4 provenance)
+  and verify-and-stop `membershipRule` checking (D3's "what the generation
+  path can guarantee"). PRE-RED→RED gate ratified. Verified failing ONLY
+  on `could not find function "createColonySnapshot"` (12/12 blocks, one
+  failure class).
+
 ### 2026-09-21 · [issue #167] S758 claim: Slice 2 (`createColonySnapshot()`) implementation session *(in progress)*
 - Owner-picked at the Phase 0 picker. Strict TDD from the ratified plan's
   §5 Slice 2 + §4 interface catalog
