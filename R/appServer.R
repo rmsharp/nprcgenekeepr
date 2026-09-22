@@ -504,4 +504,13 @@ appServer <- function(input, output, session) {
 
   # GV & BG Description Module (informational - no reactive state)
   modGvAndBgDescServer("gvAndBgDesc")
+
+  # Genetic-Health Trends Module (issue #167 Slice 4) -- fed by the Genetic
+  # Value module's snapshotSource reactive (S760 catalog amendment): the
+  # exact analyzed pedigree/nprcgenekeeprGV object/guIter/guThresh from the
+  # most recent GVA run, captured atomically. Self-contained otherwise (no
+  # shared$... wiring), matching modCrossCenterIdentityServer's own
+  # single-upstream-reactive precedent.
+  modSnapshotTrendsServer("snapshotTrends",
+                          snapshotSource = gvResults$snapshotSource)
 }

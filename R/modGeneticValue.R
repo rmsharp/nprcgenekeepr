@@ -173,7 +173,10 @@ modGeneticValueUI <- function(id) {
 #'
 #' @return List with \code{geneticValues}, \code{topAnimals},
 #' \code{nAnalyzed}, \code{kinshipMatrix}, \code{founderStats},
-#' \code{maleFounders}, and \code{femaleFounders}.
+#' \code{maleFounders}, \code{femaleFounders}, and \code{snapshotSource}
+#' (issue #167 Slice 4: the most recent run's analyzed pedigree, its
+#' \code{nprcgenekeeprGV} object, and its \code{guIter}/\code{guThresh},
+#' captured atomically for \code{\link{modSnapshotTrendsServer}}).
 #'
 #' @seealso \code{\link{modGeneticValueUI}}
 #' @seealso \code{\link{modBreedingGroupsServer}} for using results.
@@ -192,6 +195,16 @@ modGeneticValueServer <- function(id, pedigree,
 
     # Store full reportGV results
     fullResults <- reactiveVal(NULL)
+
+    # Issue #167 Slice 4 (S760): snapshot the exact analyzed pedigree
+    # (post-trim, carrying its population column), the nprcgenekeeprGV
+    # object, and the guIter/guThresh reportGV() was actually called with --
+    # captured atomically inside the eventReactive body below, never
+    # recomputed from live input state later (mirrors
+    # modDeidentifiedExportServer's exportRaw params-snapshot pattern,
+    # issue #150 -- a slider changed after the run must never make the
+    # recorded provenance drift from what was actually analyzed).
+    analyzedSnapshot <- reactiveVal(NULL)
 
     # Genome-uniqueness threshold (monolith parity: default 4, user-selectable).
     # Threaded as guThresh into reportGV, replacing the former hardcoded 1L.
@@ -329,6 +342,17 @@ modGeneticValueServer <- function(id, pedigree,
 
         # Store full results
         fullResults(gvReport)
+
+        # Issue #167 Slice 4 (S760): capture this run's exact provenance
+        # atomically, alongside fullResults() above -- guThreshold() is
+        # already an integer (its own reactive coerces); input$nIterations
+        # is a numericInput double, coerced here once and frozen.
+        analyzedSnapshot(list(
+          ped = ped,
+          geneticValue = gvReport,
+          guIter = as.integer(input$nIterations),
+          guThresh = guThreshold()
+        ))
 
         # Return the report data frame with added rank column
         report <- gvReport$report
@@ -553,6 +577,13 @@ modGeneticValueServer <- function(id, pedigree,
       femaleFounders = reactive({
         req(fullResults())
         fullResults()$femaleFounders
+      }),
+      # Issue #167 Slice 4 (S760): the Genetic-Health Trends module's feed --
+      # req()s to shiny.silent.error before any run, matching the other
+      # fullResults()-gated reactives above.
+      snapshotSource = reactive({
+        req(analyzedSnapshot())
+        analyzedSnapshot()
       })
     )
   })

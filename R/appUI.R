@@ -293,6 +293,15 @@ appUI <- function(siteInfo = NULL) {
     ),
 
     # ====================
+    # Genetic-Health Trends Tab (issue #167 Slice 4)
+    # ====================
+    tabPanel(
+      "Genetic-Health Trends",
+      icon = icon("history"),
+      modSnapshotTrendsUI("snapshotTrends")
+    ),
+
+    # ====================
     # Settings/About Tab
     # ====================
     navbarMenu(

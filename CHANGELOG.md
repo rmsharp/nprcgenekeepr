@@ -80,6 +80,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   self-skips (opt-in `NPRC_RUN_E2E`, no `shinytest2`/`chromote` assertion
   reached).
 
+### 2026-09-21 · [issue #167] S760 GREEN (1/4) -- issue #167 Slice 4: modSnapshotTrends module, snapshotSource, appUI/appServer wiring
+- 4 files (checkpoint 1/4): `R/modSnapshotTrends.R` (new --
+  `modSnapshotTrendsUI`/`modSnapshotTrendsServer`: history upload via the
+  Slice 1 reader/validator mold, auto-derived `membershipRule`, snapshot
+  generation via `createColonySnapshot()`/`appendColonySnapshot()`
+  (Slice 2), trends/deltas via `plotSnapshotTrends()`/
+  `calcSnapshotDeltas()` (Slice 3), 2 downloads); `R/modGeneticValue.R`
+  (new `analyzedSnapshot` reactiveVal, captured atomically alongside
+  `fullResults()` inside the `gvResults()` eventReactive body; new
+  `snapshotSource` return element); `R/appUI.R` (16th tabPanel,
+  "Genetic-Health Trends", `icon("history")`); `R/appServer.R` (mounts
+  `modSnapshotTrendsServer("snapshotTrends", snapshotSource =
+  gvResults$snapshotSource)`). Lint clean on all 4 (one
+  `nonportable_path_linter` false positive on a "CSV/Excel" label string
+  fixed by rewording to "CSV or Excel", not suppressed). All 4 Slice 4
+  RED test files now pass: `test_modGeneticValue_snapshotSource.R` 11/11,
+  `test_modSnapshotTrends.R` 34/34, `test_appSnapshotTrendsWiring.R`
+  18/18, `test_moduleContract.R` 118/118 (whole-file, incl. the new
+  `modSnapshotTrends` entry). Regression: `test_modGeneticValue*.R`
+  (173+15+8+4), `test_appServer_*.R` (32+15+6), `test_appUI_*.R` (2+3) --
+  258/258, 0 failed/error.
+
 ### 2026-09-21 · [issue #167] S760 claim: issue #167 Slice 4 (`modSnapshotTrends` module + 16th tab) implementation session *(in progress)*
 - Phase 0 reconcile: 0 undocumented commits on both frontiers at
   `0e2e8629`; S759 receipt complete, ratchet citation verified against
