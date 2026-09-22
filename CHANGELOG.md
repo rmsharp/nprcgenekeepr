@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S763 claim: Slice 1 — rule table schema + reader/validator + fixtures (in progress)
+- Session claimed: implement plan §5 Slice 1 (`readAncestryRules()` +
+  `checkAncestryRules()` + example rules file + ancestry-bearing test
+  fixture + `_pkgdown.yml` + NEWS.Rmd), strict TDD, `AskUserQuestion`-gated
+  phases; RED fixes the exact rule column list + self-pair policy. Stub +
+  pending `HANDOFFS.md` receipt commit.
+
 ### 2026-09-22 · [issue #168] S762 sha: close-out commit sha recorded in HANDOFFS.md receipt
 - `HANDOFFS.md` S762 receipt `commit:` field reconciled to `dd3a4870`
   (self-reconcile, S760/S761 precedent; carries its own ledger entry).

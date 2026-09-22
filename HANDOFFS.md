@@ -156,6 +156,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S763
+date: 2026-09-22
+status: pending
+active_task: Issue #168 Slice 1 — rule-table schema + readAncestryRules()/checkAncestryRules() + fixtures (example rules file + ancestry-bearing test pedigree), strict TDD from the ratified plan §5 Slice 1 + §4 catalog. RED fixes the exact column list + self-pair policy.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S762
 date: 2026-09-22
 status: complete

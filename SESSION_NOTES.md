@@ -58,6 +58,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 763 Did
+**Deliverable:** Issue #168 **Slice 1** — rule-table schema +
+`readAncestryRules()`/`checkAncestryRules()` + fixtures (example rules
+file + ancestry-bearing test pedigree), strict TDD from the ratified
+plan (`docs/planning/issue168-ancestry-guardrails-plan.md` §5 Slice 1 +
+§4 catalog). RED fixes the exact column list + self-pair policy.
+(IN PROGRESS)
+**Started:** 2026-09-22
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md`
+entry says (in progress); Phase 3F records the rest. Until close-out,
+this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 761 Handoff Evaluation (by Session 762)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
 measured 0 on both frontiers at `9cfe6670`; "~47 unpushed (recount)"
