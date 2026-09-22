@@ -38,6 +38,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S763 RED: Slice 1 failing tests + fixtures (24 blocks, 2 hand-authored fixtures)
+- `test_readAncestryRules.R` (4 blocks: CSV read, validator round-trip, Excel
+  branch, shipped-example-file validity incl. warning-free UNKNOWN+OTHER
+  coverage), `test_checkAncestryRules.R` (17 blocks: valid/no-warning,
+  character coercion, case normalization toupper/tolower, factor input,
+  3 missing-column stops, unknown-level stop, unknown-severity stop, NA stops
+  with message patterns pinned RED-honest, self-pair legal, duplicated
+  unordered pair / post-coercion duplicate / duplicated self-pair stops,
+  empty-table valid, extra-column ignored, 3 D6 UNKNOWN/OTHER warning
+  blocks), `test_exampleAncestryPedigree.R` (3 blocks: fixture QCs cleanly
+  10 rows, post-QC coverage of ALL six levels incl. blank→UNKNOWN and
+  "mauritius"→OTHER, cross-fixture rules-vs-pedigree levels check).
+  Fixtures: `inst/extdata/examples/example_ancestry_rules.csv` (the
+  motivating rhesus case, both severities, UNKNOWN AND OTHER named per D6)
+  and `example_ancestry_pedigree.csv` (10 animals, free-text ancestry
+  mapping to all 6 post-QC levels). Verified failing ONLY on the two
+  missing functions (silent-reporter per-block audit: 0 spurious passes;
+  the 2 fixture-integrity blocks pass by design, declared in-file). One
+  RED-honesty fix during verification: bare `expect_error()` on the NA
+  blocks was satisfied by the could-not-find-function error — message
+  patterns pinned.
+
 ### 2026-09-22 · [issue #168] S763 claim: Slice 1 — rule table schema + reader/validator + fixtures (in progress)
 - Session claimed: implement plan §5 Slice 1 (`readAncestryRules()` +
   `checkAncestryRules()` + example rules file + ancestry-bearing test

@@ -1,0 +1,5 @@
+ancestry1,ancestry2,severity
+INDIAN,CHINESE,block
+INDIAN,HYBRID,block
+INDIAN,UNKNOWN,flag
+INDIAN,OTHER,flag

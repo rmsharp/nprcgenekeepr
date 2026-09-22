@@ -1,0 +1,11 @@
+id,sire,dam,sex,birth,ancestry
+I1,NA,NA,M,2000-01-01,india
+I2,NA,NA,F,2000-01-01,india
+C1,NA,NA,M,2000-01-01,china
+C2,NA,NA,F,2000-01-01,china
+J1,NA,NA,M,2000-01-01,japanese
+J2,NA,NA,F,2000-01-01,japanese
+O1,NA,NA,M,2000-01-01,mauritius
+U1,NA,NA,F,2000-01-01,
+H1,C1,I2,F,2005-06-15,hybrid
+A1,I1,I2,M,2005-06-15,india
