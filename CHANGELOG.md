@@ -38,6 +38,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S758 docs: NEWS.Rmd entry for `createColonySnapshot()`
+- Plain-language bullet (S628 criterion) added to the existing
+  "Longitudinal Monitoring" section: recording a dated snapshot from a
+  finished analysis, with settings captured and the membership rule
+  double-checked. The prior bullet's closing sentence trimmed of its
+  now-shipped half ("Generating snapshots from an analysis and" —
+  same unreleased development-version section, so the release reader
+  sees an accurate state). REFACTOR declared a no-op at the
+  GREEN→REFACTOR gate (owner: implementation already mold-consistent
+  with Slice 1).
+
 ### 2026-09-21 · [issue #167] S758 GREEN (2/2): man page + `_pkgdown.yml` reference entry
 - `man/createColonySnapshot.Rd` (from `devtools::document()`);
   `createColonySnapshot` added to `_pkgdown.yml`'s "All exposed

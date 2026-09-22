@@ -398,9 +398,17 @@ knitr::opts_chunk$set(echo = TRUE)
   genetic health is improving or eroding over time (issue #167). Script
   users: new `readSnapshotHistory()`, `checkSnapshotHistory()`, and
   `appendColonySnapshot()` read, validate, and extend the history; a
-  worked example history ships with the package. Generating snapshots
-  from an analysis and viewing trends in the app arrive in later steps
-  of this work.
+  worked example history ships with the package. Viewing trends in the
+  app arrives in later steps of this work.
+- Colony managers can now record a snapshot directly from a finished
+  genetic value analysis with the new `createColonySnapshot()` function:
+  it captures the analysis's colony-level results and the population's
+  make-up in a single dated row, together with the settings used, so
+  snapshots recorded months apart can be compared fairly. As a
+  safeguard, it double-checks that the stated animal-membership rule
+  (the whole pedigree, or the designated focal population) matches the
+  animals that were actually analyzed, and refuses to record a snapshot
+  that misstates it (issue #167).
 
 ## General Fixes
 - Fixed: on the Marker Genetics tab, generating a de-identified export
