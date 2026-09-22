@@ -409,6 +409,17 @@ knitr::opts_chunk$set(echo = TRUE)
   (the whole pedigree, or the designated focal population) matches the
   animals that were actually analyzed, and refuses to record a snapshot
   that misstates it (issue #167).
+- Colony managers can now see where their colony is heading: the new
+  `plotSnapshotTrends()` function draws each recorded genetic-health
+  value over time from a snapshot history, and the new
+  `calcSnapshotDeltas()` function lists what changed, value by value,
+  between any two recorded dates. Trend lines show the uncertainty
+  around the values that come from repeated random sampling, and both
+  the plots and the change table point out when two snapshots were
+  recorded under different settings or software versions, so a jump in
+  the numbers is not mistaken for a real change in the colony
+  (issue #167). Viewing trends in the app arrives in the next step of
+  this work.
 
 ## General Fixes
 - Fixed: on the Marker Genetics tab, generating a de-identified export

@@ -38,6 +38,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S759 docs: NEWS.Rmd Longitudinal Monitoring bullet + issue #120 citation check RECORDED (N/A)
+- Plain-language NEWS.Rmd bullet (S628 criterion) for
+  `plotSnapshotTrends()`/`calcSnapshotDeltas()` — trends, per-value
+  changes, sampling-uncertainty bands, and the mixed-settings warning,
+  in colony-manager language; no implementation phrasing. **Issue #120
+  citation check run against the slice's outputs and recorded (plan §9
+  requires the record this slice): N/A** — the delta table is
+  arithmetic differences of already-shipped statistics; the plots
+  display already-shipped statistics over time; the ribbons use the
+  already-shipped `fgSE`/`meanGuSE`. No new displayed statistic or
+  estimator, so no `population_genetics_terms.html` or `@references`
+  update is owed. REFACTOR declared no-op at the gate (owner-ratified;
+  the per-file metric vectors are the ratified schema-pinning pattern,
+  S757/S758 precedent).
+
 ### 2026-09-21 · [issue #167] S759 GREEN (2/2): man pages + `_pkgdown.yml` reference entries for the two Slice 3 exports
 - `man/calcSnapshotDeltas.Rd` + `man/plotSnapshotTrends.Rd` (generated
   by `devtools::document()`, GREEN 1/2 run); `_pkgdown.yml` catch-all
