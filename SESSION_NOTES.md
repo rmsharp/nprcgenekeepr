@@ -50,15 +50,135 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 755 Handoff Evaluation (by Session 756)
+**Score: 9/10.** **What helped:** "6 unpushed expected (recount)" measured
+exactly 6; "expect 0 undocumented; measure it" measured 0 on both frontiers
+at `4fde09f7`; the S755 receipt's ratchet citation matched
+`.quality-gates-results.json` byte-for-byte (d3019e040f5f, 3,489,117 B at
+`fb8af874`); CI-current-through-`8007de81` held (4 push runs + 2 scheduled
+green); growth run read 35/10 at Orient (rose from 34 — read-don't-predict
+right again); all re-grepped BACKLOG anchors held; next step (A) WAS this
+session's owner-picked deliverable, with the right mold (#152/#153), the
+right start point (scoping doc §4), and the right FM #18/#19 guard; the
+scoping doc's Q1–Q9 was a complete, directly answerable worklist.
+**What was missing:** nothing material. **What was wrong:** one nuance —
+the scoping record names `calcFounderContributions()` (and inventories
+`getLivingBreeders()`) without noting both are `@noRd` internals; caught
+by this session's direct reads, recorded as plan §1.3 corrections + Dragon
+2. Substance stood (their outputs reach snapshots via `reportGV()`).
+**ROI:** high.
+
 ### What Session 756 Did
-**Deliverable:** Design-plan session for issue #167 — write
-`docs/planning/issue167-longitudinal-monitoring-plan.md` answering the
-scoping doc's Q1–Q9 as owner-ratified numbered decisions with a
-vertical-slice list and per-slice completion criteria (#152/#153 mold).
-The plan is the whole deliverable (FM #18/#19). (IN PROGRESS)
-**Started:** 2026-09-21
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Issue #167 design plan — **DONE and owner-ratified**:
+`docs/planning/issue167-longitudinal-monitoring-plan.md` (#152/#153 mold),
+answering the S755 scoping record's Q1–Q9 as decisions D1–D9. Judgment
+calls D1/D2/D5/D7 ratified via one `AskUserQuestion` round — all four
+recommended options selected, no changes: **D1** aggregate-only snapshot
+rows (no per-animal identifiers; #150 gate out of v1 scope, precondition
+recorded in D8); **D2** one user-maintained history CSV (`readSnapshotHistory`/
+`checkSnapshotHistory`/`appendColonySnapshot`, kinship-overrides mold;
+`downloadHandler`-only app writes; `schemaVersion` from day one); **D5**
+prospective-only v1 (retrospective = deferred optional Slice 5, own
+Pre-RED, NOT ratified); **D7** new module `modSnapshotTrends` + 16th tab
+("Genetic-Health Trends"), ORIP placeholder untouched. Forced: D3
+"membership rule" vocabulary (never bare "cohort"), D4 comparability
+guards (flag-don't-refuse; SE ribbons mandatory on `gu`/`fg` trends), D6
+plots + delta table (threshold verdicts declined), D8 no-gate boundary,
+D9 four v1 slices (schema/IO → generation → trends → UI), each one
+strict-TDD session with named verification surfaces. Two scoping-inventory
+corrections recorded (§1.3): `calcFounderContributions()`/`getLivingBreeders()`
+are `@noRd`; canonical report columns `indivMeanKin`/`gu`. Zero
+`R/`/`tests/`/`man/` changes — the plan is the whole deliverable.
+**Also (found at close-out, deferred):** `/usr/local/bin/pandoc` (x86_64,
+root-owned) no longer executes on this arm64 machine → `rmarkdown::find_pandoc()`
+crashes → ratchet gate unmeasurable. Root-caused, worked around
+(arm64 pandoc first on PATH), measured 1/1 pass, deferred the machine fix
+as a BACKLOG "Up Next" owner-action item (top of file).
+**Started/completed:** 2026-09-21 (single session). Claim `c74ee02d`;
+deliverable `07359e16`; records + sha commits follow this handoff.
+**Ledger:** one `CHANGELOG.md` entry per action — claim, deliverable,
+pandoc finding + BACKLOG deferral, records, sha. TDD phase PRE-RED
+declared at every response top (docs-only, no code). No NEWS.Rmd/lint/
+pkgdown/citation/issue-close checklist owed (no code, no exports, no
+statistic shipped, no item closed — all owed at the plan's slices, mapped
+in plan §9).
+
+**Self-assessment (Session 756): 9/10.** **Strengths:** (1) every
+load-bearing scoping claim re-verified from source before the plan cited
+it — and that pass caught two real inventory errors (`@noRd` internals,
+canonical column names) that became plan corrections + a dragon;
+(2) the ratification gate held — four judgment calls posed with full
+inline context, nothing decided silently, forced decisions labeled as
+such with reasoning; (3) the ratchet anomaly was investigated, not
+pattern-matched: root cause isolated to the environment (broken x86_64
+pandoc + discovery crash), a faithful measurement obtained via a
+documented mechanism, machine fix correctly deferred to the owner;
+(4) per-action ledger discipline incl. the non-commit finding; (5) slice
+criteria name their verification surfaces and what each cannot enforce
+(SESSION_RUNNER planning-checklist item). **Weaknesses:** (1) no FM #28
+reduction — no mandated-read file got smaller; BACKLOG grew by one
+necessary item (said plainly); (2) the deepest-reasoning-mode step was
+flagged to the owner but proceeded unconfirmed (harness-controlled);
+(3) two ratchet re-runs (~6 min) before isolating that PATH, not
+RSTUDIO_PANDOC, was the lever — acceptable diagnosis cost, noted for
+the next toolchain break.
+
+**Learnings:** none owed to `PROJECT_LEARNINGS.md` — the pandoc
+root-cause + workaround is fully recorded in the BACKLOG item (its
+durable home; the fix retires it with the item), and the plan corrections
+live in the plan itself. Clean mold-following session otherwise
+(S751/S754/S755 precedent for capturing none).
+
+**Next steps (specific):** (A) **Slice 1 of the #167 plan (READY, M)** —
+schema + history IO: `checkSnapshotHistory()`/`readSnapshotHistory()`/
+`appendColonySnapshot()` + the committed example fixture; strict TDD;
+RED fixes the exact D1 column list. Start from plan §5 Slice 1 + §4
+interface catalog. Slices are order-forced (D9): 1 → 2 → 3 → 4.
+(B) **#168 scoping session (READY, M)** — unchanged; S755's scoping doc
+is the mold. (C) **Pandoc owner action (DECISION NEEDED, S,
+`BACKLOG.md` "Up Next", top)** — until done, any session running the
+ratchet or building vignettes locally needs the PATH workaround in the
+item. (D) **Push+CI not urgent** — 10 docs-only commits unpushed
+expected after close-out (6 inherited + claim `c74ee02d` + deliverable
+`07359e16` + records + sha; recount with
+`git rev-list --count origin/master..HEAD`); CI current through
+`8007de81`. (E) Unchanged: chromote hang research (READY, M, `:151`-ish —
+re-grep, anchors shifted +22 by the new item); inst/doc slimming
+(DECISION NEEDED, M); REUSE registration (owner action, S); BACKLOG
+compression recurring; NPRC outreach (DECISION NEEDED); kinship2-standalone
+BLOCKED; LabKey BLOCKED.
+
+**Key files:** no code touched.
+`docs/planning/issue167-longitudinal-monitoring-plan.md` (the ratified
+deliverable — §5 slice list is the implementation worklist, §4 the
+interface catalog), `BACKLOG.md:7-24` (new pandoc owner-action item —
+all anchors below it shifted +~18 lines), `SESSION_NOTES.md:51` (this
+handoff), `HANDOFFS.md` (S756 receipt), `CHANGELOG.md:41` (S756 entries
+at top), `.quality-gates-results.json` (head `07359e16`; gitignored).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; 10 unpushed expected after close-out (recount).
+(2) **Ratchet baseline moved for a toolchain reason, not content:**
+3,468,810 B at `07359e16` (−20,307 B vs S755) — the pandoc swap (old
+x86_64 2.x → RStudio arm64 3.10) changed vignette HTML size; cite from
+`.quality-gates-results.json` (results `33c741443cb2`), never the rounded
+table; expect small drift again if/when the owner installs a different
+pandoc. (3) **Ratchet/vignette runs FAIL on this machine without the PATH
+workaround** (BACKLOG "Up Next" item has the one-liner) until the owner
+replaces `/usr/local/bin/pandoc`; `RSTUDIO_PANDOC` alone does NOT work
+(discovery still probes PATH and crashes). (4) **BACKLOG anchors shifted
++~18 lines** below the new "Up Next" item — re-grep every stale anchor.
+(5) No code touched, no suite run (docs-only; baseline 0 failed / 0
+error / 184 skipped stands, remotely confirmed through `8007de81`).
+(6) Issue #167 stays OPEN (design ratified, not implemented) — its next
+session is Slice 1 implementation, strict TDD, no re-ratification needed.
+(7) Standing set unchanged: full-40-char sha + smoke-test `gh run list
+--commit` filters; `scratchpad/` invisible to git BY OWNER DECISION;
+ratchet AFTER committing (Learning 772); trim needs `--budget-bytes
+65536`; renv banner expected; CLAUDE.md warn band (26,360 B); growth run
+35/10 at this Orient — read the value at the next Orient; the two
+`SESSION_NOTES.md` ceilings differ (owner decision pending); zsh harness
+traps (Learning 775).
 
 ### Session 754 Handoff Evaluation (by Session 755)
 **Score: 9/10.** **What helped:** "2 unpushed expected (recount)" measured

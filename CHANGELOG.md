@@ -38,6 +38,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S756 records: close-out records committed (handoff, receipt, evaluations)
+- `SESSION_NOTES.md` S756 handoff + S755 evaluation (9/10 — every checked
+  claim held; one nuance: two functions inventoried without their `@noRd`
+  status, caught by direct reads, substance stood); `HANDOFFS.md` receipt
+  complete (self 9/10); this ledger entry. Ratchet cited at the
+  deliverable sha: 1/1 pass, 3,468,810 B at `07359e16`, results
+  `33c741443cb2`, manifest `aa983075d6a2` (read from the results file;
+  −20,307 B vs S755 — the pandoc toolchain swap, not content; run with
+  the arm64-pandoc PATH workaround, see the `[ad hoc]` entry below).
+  `methodology_trim.py --check`: no trigger on `SESSION_NOTES.md`
+  (34,701 B vs 65,536 B, `--budget-bytes 65536`), `HANDOFFS.md`
+  (132,556 B vs 196,608 B), or `CHANGELOG.md` (133,856 B vs 196,608 B)
+  — all measured pre-records; none near a ceiling. S756 totals: 3 commits
+  (claim `c74ee02d`, deliverable `07359e16`, records) + 1 sha commit to
+  follow + 1 non-commit action (the pandoc root-cause + BACKLOG
+  deferral); 10 unpushed expected after close-out — verify with
+  `git rev-list --count origin/master..HEAD`, not this sentence.
+
+### 2026-09-21 · [ad hoc] S756 finding: `/usr/local/bin/pandoc` (x86_64) broken on this arm64 machine — ratchet gate unmeasurable; root-caused, worked around, machine fix deferred to owner (`BACKLOG.md` "Up Next")
+- Found at close-out: the ratchet's first two runs returned UNMEASURED
+  ("extract matched nothing, exit 1"). Investigated, not ignored:
+  `pkgbuild::build()`'s vignette pass dies because root-owned
+  `/usr/local/bin/pandoc` (x86_64, Mar 2023) no longer executes ("Bad
+  CPU type in executable"; arm64 machine, Rosetta unavailable at Darwin
+  27), and `rmarkdown::find_pandoc()` crashes outright on the
+  un-executable candidate ("subscript out of bounds") — so
+  `RSTUDIO_PANDOC` alone cannot rescue discovery. S755 measured the same
+  gate cleanly earlier the same day: environment change between
+  sessions, not a repo regression. Workaround (used for this session's
+  measured run): RStudio's bundled arm64 pandoc 3.10 first on PATH.
+  Durable fix needs sudo (owner action) — deferred as a `BACKLOG.md`
+  "Up Next" item with full root-cause detail, per the S636 break-tracking
+  convention (no GitHub issue). Gate definition untouched.
+
 ### 2026-09-21 · [issue #167] S756 deliverable: design plan written and owner-ratified — `docs/planning/issue167-longitudinal-monitoring-plan.md`
 - Answers the S755 scoping record's Q1–Q9 as numbered decisions D1–D9
   (#152/#153 mold): D1 aggregate-only snapshot rows, D2 one user-maintained
