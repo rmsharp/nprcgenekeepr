@@ -38,6 +38,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S764 RED: Slice 2 failing tests committed (26 blocks, 2 new files)
+- `test_groupAddAssignAncestry.R` (12 blocks): same-seed identity (NULL vs
+  omitted; flag-only vs none), block-never-co-placed property tests in
+  sampling/exhaustive/sexRatio modes, harem loop-placed protection + the
+  **owner-ratified harem-sire limitation pin** (the sampled sire's conflicts
+  are never applied to `available` — true of the existing kinship machinery
+  too; "inherit + document" chosen over fill-path changes or dropping harem),
+  currentGroups seed-conflict exclusion, D3 F-F pin (I2+H1 co-place with no
+  rules, never with the INDIAN×HYBRID block), stop() paths, return shape
+  unchanged. `test_reportAncestryViolations.R` (14 blocks): hand-derived
+  violations/coverage on the Slice 1 fixtures, `list(violations, coverage)`
+  shape (reportMatePairs mold, pinned at gate), overridden-status rows,
+  self-pair rule, minimal ped, lowercase coercion, stop() paths, integration,
+  and `:::` pins for `.ancestryConflictPairs()`/`.mergeAncestryBlockPairs()`
+  (Dragon 2: both directions, absent + NA entries). Per-block audit: all 26
+  blocks fail ONLY on the missing argument/functions (messages inspected;
+  one declared control-arm pass inside the F-F block).
+- **Merge-point refinement recorded:** the block-merge must land BEFORE the
+  current-group conflict filter (`R/groupAddAssign.R:182-186`), not merely
+  before the mode fork — seeds never pass through the fill loop, so only
+  that filter excludes seed-blocked candidates.
+
 ### 2026-09-22 · [issue #168] S764 claim: issue #168 Slice 2 — enforcement kernel (in progress)
 - Session claimed at Phase 1B: `SESSION_NOTES.md` stub + `HANDOFFS.md`
   pending receipt. Deliverable: `groupAddAssign(ancestryRules = NULL)` +
