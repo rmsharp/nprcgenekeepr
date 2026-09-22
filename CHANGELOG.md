@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S758 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `5e485311` (self-reconcile, carries its own ledger entry)
+- Final S758 commit. Session total: 8 commits (claim `0b8a4e26`, RED
+  `cbab400b`, GREEN `b9b90769` + `8892fa39`, docs `eee75958`, trim
+  `55da1283`, records `5e485311`, this sha commit); no non-commit
+  actions. 25 unpushed after this commit — verify with
+  `git rev-list --count origin/master..HEAD`, not this sentence.
+
 ### 2026-09-21 · [issue #167] S758 records: close-out records committed (receipt, plan note; handoff rode the trim commit)
 - `HANDOFFS.md` receipt complete (self 9/10; predecessor S757 9/10 —
   every checked claim held; one marginally-knowable gap: the GV object
