@@ -38,6 +38,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-21-2.md` (11 record(s), 61,483 B → 24,899 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **11** record(s) (2026-09-21 → 2026-09-21) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-21-2.md`](docs/archive/SESSION_NOTES-through-2026-09-21-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-21-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-21-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 61,483 B → 24,899 B (−59.5%).
+
+### 2026-09-21 · [ad hoc] S758 trim rationale: context-budget hook refusal resolved by the owed trim (session judgment beside the tool entry above)
+- The S758 records commit was REFUSED by the context-budget pre-commit
+  hook (`SESSION_NOTES.md` 22,837 → 27,085 tok against the 25,000-token
+  ceiling; the 65,536 B byte budget had NOT fired — 61,483 B — so the
+  token ceiling is the binding one at this file's prose density). Per
+  `CLAUDE.md`'s standing rule (a `SESSION_NOTES.md` red means a
+  `methodology_trim.py` trim is owed), ran `--cut 4 --force
+  --budget-bytes 65536 --write` (mechanics in the tool entry above),
+  keeping the S757/S758 record pairs. The verify script's L3 note was
+  manually confirmed as the accepted BL-27 pattern: the one "missing"
+  frontier record is the S758 Phase 1B stub superseded in place by the
+  full Phase 3D handoff (its claim breadcrumb also survives in the claim
+  commit `0b8a4e26`) — a receipt finalize, not data loss. The S758
+  handoff text rides this commit (file-level entanglement with the
+  trim); the receipt/plan records follow in the next commit.
+
 ### 2026-09-21 · [issue #167] S758 docs: NEWS.Rmd entry for `createColonySnapshot()`
 - Plain-language bullet (S628 criterion) added to the existing
   "Longitudinal Monitoring" section: recording a dated snapshot from a
