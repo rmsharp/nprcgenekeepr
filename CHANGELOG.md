@@ -120,6 +120,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   confirmed `2 ++`, no other line changed (verified via `git diff --stat`
   before staging).
 
+### 2026-09-21 · [issue #167] S760 GREEN (4/4) -- issue #167 Slice 4: `_pkgdown.yml`, NEWS.Rmd, colony-manager-guide.qmd, citation check
+- `_pkgdown.yml`: reference-coverage entry for
+  `modSnapshotTrendsServer`/`UI` (alphabetical position, "All exposed
+  functions" catch-all). `NEWS.Rmd`: plain-language (S628) entry for the
+  new Genetic-Health Trends tab, appended after the Slice 3 bullet
+  (prior forward-references left as-is, matching the established
+  frozen-historical-record convention; `NEWS.md` intentionally not
+  re-rendered this session, matching S756-S759's own established
+  practice for this Longitudinal Monitoring cluster). New
+  `### Genetic-Health Trends` subsection in
+  `vignettes/articles/colony-manager-guide.qmd` (tutorial/article
+  checklist, S436) -- text-only, matching the established Cross-Center
+  Identity precedent (`fe033200`); `quarto render` clean with the pandoc
+  PATH workaround, new section confirmed present in the rendered HTML
+  (2 occurrences), no image/link warnings. **Issue #120 citation check
+  RUN and RECORDED: N/A** (plan §9/D6 -- Slice 4 displays only the
+  existing Slice 1-3 statistics in a new UI; no new estimator or
+  displayed statistic).
+
 ### 2026-09-21 · [issue #167] S760 claim: issue #167 Slice 4 (`modSnapshotTrends` module + 16th tab) implementation session *(in progress)*
 - Phase 0 reconcile: 0 undocumented commits on both frontiers at
   `0e2e8629`; S759 receipt complete, ratchet citation verified against

@@ -957,6 +957,43 @@ unknown parent," in a sortable, paginated, CSV-downloadable table.
 
 ![Potential Parents results for the full example pedigree (1,587 animals with at least one candidate parent found).](shiny_app_use/potential_parents_results.png){fig-alt="Potential Parents tab showing a results table of candidate sires and dams for 1,587 animals with at least one unknown parent."}
 
+### Genetic-Health Trends
+
+The **Genetic-Health Trends** tab (issue
+[#167](https://github.com/rmsharp/nprcgenekeepr/issues/167)) turns the
+one-time snapshots on the Genetic Value Analysis tab into a longitudinal
+record: a running history of dated colony snapshots that lets you see
+whether the colony's genetic health is improving or eroding over time.
+
+The workflow has three parts:
+
+1. **Snapshot history.** Upload a snapshot-history file (the tab ships a
+   worked example) or start recording a new one. Each row is one dated
+   snapshot -- mean kinship, founder representation, genome uniqueness,
+   and the population's make-up -- for a single membership rule (the
+   whole pedigree, or a designated focal population).
+2. **Generate Snapshot.** After running Genetic Value Analysis on the
+   Genetic Value Analysis tab, clicking **Generate Snapshot** here
+   records a new dated row from that analysis and appends it to the
+   history. The membership rule is filled in automatically from the
+   analysis you just ran -- it is not a setting you have to get right by
+   hand.
+3. **Trends and comparisons.** The **Trends** tab plots every recorded
+   value over time, with shaded bands showing the uncertainty that comes
+   from repeated random sampling. The **Deltas** tab lists what changed,
+   value by value, between any two recorded dates you choose. Both flag
+   snapshots recorded under different settings or package versions, so a
+   jump in the numbers is not mistaken for a real change in the colony.
+   The updated history and the delta table are both downloadable for
+   record-keeping.
+
+::: {.callout-note}
+This section is text-only, matching the established precedent for a
+straightforward new-tab addition (see the Cross-Center Identity section
+above); the tab's behavior is fully covered by the package's automated
+tests and a live end-to-end run, not only by this description.
+:::
+
 ## Conclusion {#sec-conclusion}
 
 This article covered why `nprcgenekeepr` exists, how its five function groups

@@ -420,6 +420,15 @@ knitr::opts_chunk$set(echo = TRUE)
   the numbers is not mistaken for a real change in the colony
   (issue #167). Viewing trends in the app arrives in the next step of
   this work.
+- Colony managers can now see genetic-health trends directly in the app:
+  a new **Genetic-Health Trends** tab lets you upload a snapshot history
+  (or start a new one), record a new dated snapshot from the genetic
+  value analysis you just ran, view the trend plot for every recorded
+  value, and compare any two dates side by side. Both the plot and the
+  comparison point out when snapshots were recorded under different
+  settings or software versions, so a jump in the numbers is not
+  mistaken for a real change in the colony. Updated histories and
+  comparison tables can be downloaded for record-keeping (issue #167).
 
 ## General Fixes
 - Fixed: on the Marker Genetics tab, generating a de-identified export

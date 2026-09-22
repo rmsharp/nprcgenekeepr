@@ -355,6 +355,8 @@ reference:
   - '`modPotentialParentsUI`'
   - '`modPyramidServer`'
   - '`modPyramidUI`'
+  - '`modSnapshotTrendsServer`'
+  - '`modSnapshotTrendsUI`'
   - '`modSummaryStatsServer`'
   - '`modSummaryStatsUI`'
   - '`obfuscateDate`'
