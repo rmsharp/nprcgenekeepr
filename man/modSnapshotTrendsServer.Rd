@@ -9,8 +9,9 @@ modSnapshotTrendsServer(id, snapshotSource)
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
 
-\item{snapshotSource}{reactive returning a list(ped, geneticValue,
-guIter, guThresh) from the most recent Genetic Value Analysis run (see
+\item{snapshotSource}{reactive returning
+\code{list(ped, geneticValue, guIter, guThresh)} from the most recent
+Genetic Value Analysis run (see
 \code{\link{modGeneticValueServer}}'s \code{snapshotSource} return
 element), or erroring (shiny \code{req()} semantics) before any run has
 happened.}
@@ -36,10 +37,10 @@ hit \code{\link{createColonySnapshot}}'s \code{stop()}. The delta
 comparison keeps a user-facing rule selector, populated from the
 uploaded/generated history's own \code{membershipRule} values.
 
-A malformed history upload's \code{\link{checkSnapshotHistory}}
-violation surfaces as a notification (module-contract rule 5: this is
-not the same seam as inter-module malleability -- the specific violation
-is shown, not disguised as "no data yet") and leaves the current history
+A \code{\link{checkSnapshotHistory}} violation on a malformed history
+upload surfaces as a notification (module-contract rule 5: this is not
+the same seam as inter-module malleability -- the specific violation is
+shown, not disguised as "no data yet") and leaves the current history
 unchanged.
 }
 \description{

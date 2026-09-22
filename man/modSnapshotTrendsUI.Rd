@@ -13,7 +13,8 @@ modSnapshotTrendsUI(id)
 A \code{div} object containing the module's UI.
 }
 \description{
-The 16th top-level tab (issue #167 Slice 4, D7): a Shiny workflow around
+The new top-level Genetic-Health Trends tab (issue #167 Slice 4, D7): a
+Shiny workflow around
 the longitudinal colony-snapshot functions already shipped in Slices 1-3
 (\code{\link{checkSnapshotHistory}}/\code{\link{readSnapshotHistory}}/
 \code{\link{appendColonySnapshot}}, \code{\link{createColonySnapshot}},

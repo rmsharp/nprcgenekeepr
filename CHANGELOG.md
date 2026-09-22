@@ -139,6 +139,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   existing Slice 1-3 statistics in a new UI; no new estimator or
   displayed statistic).
 
+### 2026-09-22 · [issue #167] S760 REFACTOR (declared no-op) + full-suite findings fix-up: shinytest2.yaml E2E registration + WORDLIST spelling
+- REFACTOR gate: re-read `R/modSnapshotTrends.R` and the `snapshotSource`
+  addition to `R/modGeneticValue.R` for structural cleanup opportunities
+  -- none found (the two `tryCatch`/`showNotification` blocks are each
+  small and distinct; the design already matches the established
+  `modDeidentifiedExportServer`/`modCrossCenterIdentityServer` molds).
+  **Declared no-op.**
+- Full-suite run (clean regression read, idle machine, pandoc PATH
+  workaround) surfaced 2 findings beyond the known baseline, both
+  investigated and fixed (neither was a regression in existing
+  behavior -- both were gaps in this session's own close-out checklist):
+  (1) `test_shinytest2_workflow_coverage.R` -- the new
+  `test-e2e-snapshot-trends-module.R` matched none of
+  `.github/workflows/shinytest2.yaml`'s per-module group regexes (the
+  #148/MHC precedent, `b7a55729`); added `^e2e-snapshot-trends-module`
+  in alphabetical position. (2) `test_wordlist_coverage.R` -- 3 words
+  flagged by `spelling::spell_check_package()`: `geneticValue` (unwrapped
+  in `@param snapshotSource` prose, now `\code{}`-wrapped),
+  `upload's`/`th` (from "history upload's" and "16th top-level tab" --
+  both reworded to avoid the flagged tokens, matching the established
+  reword-not-suppress convention rather than growing `inst/WORDLIST`).
+  Re-verified: `test_wordlist_coverage.R` 3/3, `test_shinytest2_workflow_coverage.R`
+  4/4, all 4 Slice 4 test files still 181/181, `lintr::lint()` on
+  `R/modSnapshotTrends.R` 0 lints.
+
 ### 2026-09-21 · [issue #167] S760 claim: issue #167 Slice 4 (`modSnapshotTrends` module + 16th tab) implementation session *(in progress)*
 - Phase 0 reconcile: 0 undocumented commits on both frontiers at
   `0e2e8629`; S759 receipt complete, ratchet citation verified against
