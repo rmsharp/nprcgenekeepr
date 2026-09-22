@@ -38,6 +38,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S759 GREEN (1/2): `calcSnapshotDeltas()` + `plotSnapshotTrends()` implementations + NAMESPACE
+- All 29 RED blocks pass first run: 41 + 31 = 72/72 expectations,
+  0 failed / 0 error / 0 warnings. `R/calcSnapshotDeltas.R`:
+  `checkSnapshotHistory()` reuse at entry; rule auto-resolve (NULL →
+  single rule, else stop naming rules); ISO date coercion (character or
+  Date); from==to and absent-date-under-rule stops; 21-row
+  metric/from/to/delta/comparabilityFlag table in schema order; `@noRd`
+  `snapshotComparabilityFlags()` helper with the evidence-based flag
+  sets (guIter→8 gene-drop rows, guThresh→5 gu rows, packageVersion→all;
+  each reason names the field and both values; NA when comparable).
+  `R/plotSnapshotTrends.R`: one faceted ggplot (free y), colour/group =
+  membershipRule, ribbons fg±fgSE and meanGu±meanGuSE as per-metric
+  subset layers, provenance-change point shapes (stable=16/changed=17,
+  guide off) + caption naming changed fields via `@noRd`
+  `snapshotProvenanceChanges()` (per-rule date-ordered walk; first
+  snapshot of a series never marked), 18-metric default / 21 allowed,
+  ≥2-snapshot stop, one-point series drawn as points without the
+  geom_line single-observation warning (line layer gets ≥2-point rules
+  only). Zero estimator internals: both functions read schema columns
+  only. `devtools::document()`: NAMESPACE +2 exports, +5 ggplot2
+  importFroms. `lintr` clean on both new files (package loaded first).
+
 ### 2026-09-21 · [issue #167] S759 RED: failing tests for `calcSnapshotDeltas()` + `plotSnapshotTrends()` (Slice 3)
 - Two new test files, 29 blocks total, verified failing ONLY on the two
   missing functions (silent-reporter counts: 14 blocks / 0 passed and
