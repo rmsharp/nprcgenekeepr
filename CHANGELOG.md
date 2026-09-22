@@ -38,6 +38,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S758 claim: Slice 2 (`createColonySnapshot()`) implementation session *(in progress)*
+- Owner-picked at the Phase 0 picker. Strict TDD from the ratified plan's
+  §5 Slice 2 + §4 interface catalog
+  (`docs/planning/issue167-longitudinal-monitoring-plan.md`); DONE requires
+  field-equality against hand-derived values from the same `reportGV()`
+  object plus a grep proof that no estimator internals are duplicated;
+  Dragons 1–2 apply. Stub + pending `HANDOFFS.md` receipt + this entry ride
+  the claim commit; Phase 3F records the rest.
+
 ### 2026-09-21 · [issue #167] S757 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `498a7a26` (self-reconcile, carries its own ledger entry)
 - Final S757 commit. Session total: 7 commits (claim `80169be9`, RED
   `1d10be70`, GREEN `0895a7d3` + `0848c9e8`, docs `2a2dbdcd`, records

@@ -50,6 +50,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 758 Did
+**Deliverable:** Issue #167 Slice 2 — `createColonySnapshot()` (strict TDD,
+plan §5 Slice 2 + §4 interface catalog) (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 756 Handoff Evaluation (by Session 757)
 **Score: 9/10.** **What helped:** "10 unpushed expected (recount)" measured
 exactly 10; "expect 0 undocumented; measure it" measured 0 on both frontiers
