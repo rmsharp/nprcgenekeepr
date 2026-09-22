@@ -38,6 +38,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S757 records: close-out records committed (handoff, receipt, evaluations)
+- `SESSION_NOTES.md` S757 handoff + S756 evaluation (9/10 — every checked
+  claim held; one unknowable gap: the pandoc break's local-suite impact,
+  found and recorded this session); `HANDOFFS.md` receipt complete
+  (self 9/10); this ledger entry. Slice 1 verification recap, all
+  measured: 46/46 new expectations; full suite 0 failed / 184 skipped
+  with 3 errors isolated to the pandoc environment break (212/212 clean
+  workaround re-run); lint clean on 6 files; `devtools::check()`
+  0 errors / 0 warnings / 0 notes; ratchet 1/1 pass at `2a2dbdcd`
+  (3,477,167 B, results `ac73517be855`, manifest `aa983075d6a2`, read
+  from the results file, arm64-pandoc PATH workaround); trim --check no
+  trigger (SESSION_NOTES at the 65,536 budget; HANDOFFS 138,684 B and
+  CHANGELOG 140,478 B at the 196,608 default, S756 precedent). S757
+  totals: 6 commits (claim `80169be9`, RED `1d10be70`, GREEN `0895a7d3`
+  + `0848c9e8`, docs `2a2dbdcd`, records) + 1 sha commit to follow;
+  17 unpushed expected after close-out — verify with
+  `git rev-list --count origin/master..HEAD`, not this sentence.
+
 ### 2026-09-21 · [issue #167] S757 docs: NEWS.Rmd entry + BACKLOG pandoc-item blast-radius update
 - `NEWS.Rmd` gains a plain-language "Longitudinal Monitoring" entry
   (S628 criterion) for the three new script-callable functions and the
