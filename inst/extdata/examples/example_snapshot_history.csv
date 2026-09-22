@@ -1,0 +1,5 @@
+schemaVersion,snapshotDate,packageVersion,membershipRule,guIter,guThresh,nAnimals,nMales,nFemales,fe,fg,fgSE,neGD,neSexRatio,neVariance,nMaleFounders,nFemaleFounders,nFounders,meanIndivMeanKin,medianIndivMeanKin,skewnessIndivMeanKin,kurtosisIndivMeanKin,meanGu,medianGu,meanGuSE,skewnessGu,kurtosisGu
+1,2025-01-15,1.0.5,wholePedigree,5000,3,360,120,240,14.2,8.6,0.21,42.5,213.3,187.4,12,24,36,0.0812,0.0794,0.42,2.9,0.213,0.205,0.0041,0.35,3.1
+1,2025-07-15,2.0.0,wholePedigree,5000,3,372,124,248,14.5,8.8,0.2,43.1,220.6,191.2,12,24,36,0.0805,0.0788,0.4,2.8,0.219,0.211,0.004,0.33,3.0
+1,2026-01-15,2.0.0.9000,wholePedigree,10000,3,381,127,254,14.7,9.0,0.14,43.8,226.9,195.0,12,24,36,0.0801,0.0785,0.39,2.8,0.224,0.216,0.0028,0.31,3.0
+1,2026-01-15,2.0.0.9000,focalPopulation,10000,3,145,48,97,9.8,6.2,0.18,30.4,128.5,110.7,10,20,30,0.091,0.0895,0.48,3.2,0.198,0.192,0.0033,0.38,3.1

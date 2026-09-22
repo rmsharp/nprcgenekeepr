@@ -38,6 +38,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S757 RED: Slice 1 failing tests + fixture committed (22 tests, 3 files; all fail only on the missing functions)
+- RED phase gate passed via `AskUserQuestion` (owner: proceed). Fixes the
+  exact D1 column list: 27 columns, three groups of nine (provenance/
+  comparability incl. `schemaVersion`/`membershipRule`/`guIter`; `reportGV()`
+  colony scalars verbatim; Summary-Statistics aggregates of
+  `indivMeanKin`/`gu`). New: `inst/extdata/examples/example_snapshot_history.csv`
+  (4 hand-authored rows, 2 membership rules, deliberate mixed-`guIter` pair,
+  shared-date/different-rule pair), `tests/testthat/test_checkSnapshotHistory.R`
+  (per-violation-class tests), `test_readSnapshotHistory.R` (pins the
+  27-column schema; CSV/tab/Excel), `test_appendColonySnapshot.R` (pure
+  merge, NULL/empty start, date order, mismatch/duplicate stops, write.csv
+  round-trip). Verified failing for the right reason: every failure is
+  "could not find function" — the fixture reads cleanly. No implementation
+  code (strict TDD).
+
 ### 2026-09-21 · [issue #167] S757 claim: Slice 1 implementation session — schema + history IO (in progress)
 - Owner-picked at the Phase 0 picker (S756 next-step A). Strict TDD from
   the ratified plan §5 Slice 1 + §4 interface catalog: RED fixes the exact
