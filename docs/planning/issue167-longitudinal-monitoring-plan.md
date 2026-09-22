@@ -262,6 +262,24 @@ against `ped`/report ids and a contradiction `stop()`s (second owner decision).
 Slice 4's module wiring must pass the app's own `reportGV()` call-site
 `guIter`/`guThresh` values through.
 
+Implementation note (S759, 2026-09-21 — Slice 3 shipped): the ratified
+signature is `calcSnapshotDeltas(history, from, to, membershipRule = NULL)`
+— the `membershipRule` argument was added to this catalog's signature
+(owner decision via `AskUserQuestion`) because a snapshot is identified by
+the (`snapshotDate`, `membershipRule`) pair and the Slice 1 fixture's own
+shared-date/different-rule pair proves date-only selection ambiguous;
+`NULL` auto-resolves a single-rule history, and deltas never cross rules
+(D3). The delta table carries 21 rows (18 metrics + the 3 composition
+counts, Dragon 3) with a per-metric `comparabilityFlag` whose sets are
+evidence-based: `guIter` → the 8 gene-drop metrics (`fg`/`fgSE`/`neGD` +
+the 5 `gu` aggregates), `guThresh` → the 5 `gu` aggregates only,
+`packageVersion` → all rows. `plotSnapshotTrends()` returns ONE faceted
+ggplot; plot verification is structural inspection (recorded choice —
+vdiffr NOT added to Suggests). Slice 4's wiring consequence: the module
+must supply `membershipRule` for delta computation (e.g. a rule selector
+fed from the uploaded history) in addition to the S758
+`guIter`/`guThresh` pass-through above.
+
 ---
 
 ## 5. Implementation plan — vertical slices (each its own future session)

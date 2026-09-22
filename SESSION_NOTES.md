@@ -54,11 +54,168 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 758 Handoff Evaluation (by Session 759)
+**Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
+measured 0 on both frontiers at `ba328a3d`; "25 unpushed expected
+(recount)" measured exactly 25; the S758 receipt's ratchet citation
+matched `.quality-gates-results.json` byte-for-byte (748b619b8b2c,
+3,482,596 B at `eee75958`); CI-green claim held (10/10 recent runs);
+growth run read 38/10 at Orient (rose from 37 — read-don't-predict right
+again); next step (A) WAS this session's owner-picked deliverable with
+exactly the right start point (plan §5 Slice 3); gotcha (5)'s fixture
+facts (deliberate mixed-`guIter` pair; `guThresh` 3 not 1L) directly
+shaped the RED flag tests; gotcha (6)'s schema-pinning rule was honored;
+the pandoc PATH workaround one-liner worked verbatim for suite, check,
+AND ratchet; the benchmark-flake warning primed the suite read (in the
+event: no flake — this run was fully clean). **What was missing:**
+nothing attributable to S758 — the one gap worked around this session
+(the plan catalog's `calcSnapshotDeltas(history, from, to)` signature
+can't resolve the (date, rule) ambiguity the Slice 1 fixture itself
+creates) is the plan session's, outside S758's slice, and S758's own
+handoff correctly delegated the vdiffr-vs-structural choice here.
+**What was wrong:** nothing found — every checked claim held.
+**ROI:** high.
+
 ### What Session 759 Did
-**Deliverable:** Issue #167 Slice 3 — `calcSnapshotDeltas()` + `plotSnapshotTrends()`, strict TDD from plan §5 Slice 3 (IN PROGRESS)
-**Started:** 2026-09-21
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Issue #167 **Slice 3 — `calcSnapshotDeltas()` +
+`plotSnapshotTrends()` — DONE**, strict TDD with four pre-RED scope
+decisions AND all three phase gates owner-ratified via `AskUserQuestion`
+(scope: `membershipRule = NULL` argument added to the catalog signature —
+the fixture's shared-date/different-rule pair proves date-only selection
+ambiguous; 21-row per-metric delta table with per-metric
+`comparabilityFlag`; ONE faceted ggplot return; structural plot
+verification — the plan-delegated recorded choice, vdiffr NOT added.
+Gates: PRE-RED→RED, RED→GREEN, GREEN→REFACTOR declared no-op). RED
+(`ac212b7d`): 29 blocks across `test_calcSnapshotDeltas.R` (hand-copied
+fixture from/to/delta pins; evidence-based D4 flag classes verified from
+`R/reportGV.R` source — `geneDrop(n = guIter)` feeds `calcFEFG()` AND
+`calcGU()`, `guThresh` reaches only `calcGU()`; rule
+auto-resolve/mixed-rule/unknown-rule/absent-date/from==to/malformed
+stops) and `test_plotSnapshotTrends.R` (18 default facets in schema
+order; ribbons exactly fg±fgSE and meanGu±meanGuSE with extents pinned;
+per-rule colored series; ≥2-snapshot guard; provenance-change shapes +
+caption; clean history ⇒ no annotation); verified failing ONLY on the
+two missing functions (silent-reporter counts, 0 passed). GREEN
+(`17fa3a89` code + NAMESPACE; `ea68fd84` man ×2 + `_pkgdown.yml`):
+72/72 expectations first run, 0 warnings; validator reuse at both
+entries; zero estimator internals (both functions read schema columns
+only). Docs (`16159872`): plain-language NEWS.Rmd bullet (S628) +
+**issue #120 citation check RECORDED: N/A** (deltas are arithmetic
+differences of shipped statistics; plots display shipped statistics;
+ribbons use shipped `fgSE`/`meanGuSE`). Records: plan §4 S759
+implementation note (signature + Slice 4 membershipRule wiring
+consequence).
+**Verification (all measured):** 72/72 new expectations; pkgdown
+coverage guard 5/5; `lintr` clean on both new R files (load_all first);
+full suite (NOT_CRAN=true, load_all first, pandoc PATH workaround, idle
+machine): **0 failed / 0 error / 7250 passed / 184 skipped — fully
+clean, no benchmark flake this run**; `devtools::check()` **0 errors /
+0 warnings / 0 notes** (5m28s, PATH workaround); ratchet 1/1 pass at
+`16159872` (3,492,147 B, results `c3054853fdfe`, manifest
+`aa983075d6a2`, read from the results file); trim --check: no trigger
+(SESSION_NOTES at 65,536 budget; HANDOFFS/CHANGELOG at the 196,608
+default per S756–S758 practice). ggplot2 4.0.3 `p$labels$caption`
+access verified before GREEN.
+**Started/completed:** 2026-09-21 (single session). Claim `f0f22988`;
+RED `ac212b7d`; GREEN `17fa3a89` + `ea68fd84`; docs `16159872`;
+records + sha commits follow.
+**Ledger:** one `CHANGELOG.md` entry per action — claim, RED, GREEN 1/2,
+GREEN 2/2, docs (with the #120 record), records, sha. TDD phase declared
+at every response top.
+**Checklists:** NEWS.Rmd ✓ (plain-language, S628); `_pkgdown.yml` ✓
+(guard 5/5); lint ✓; citation (#120) **run and RECORDED N/A** (plan §9
+required the record this slice); tutorial/article owed at Slice 4;
+`a2interactive.Rmd` deferred to the standing pass by its own rule (both
+new exports join that inventory); issue #167 stays OPEN (Slice 4
+remains; Slice 5 optional).
+
+**Self-assessment (Session 759): 9/10.** **Strengths:** (1) strict TDD
+held end to end — RED verified failing for exactly one reason before
+any implementation; seven owner ratifications (4 scope + 3 gates),
+nothing decided silently; (2) the D4 flag classification was verified
+from `R/reportGV.R`/`calcGU()` source BEFORE the tests pinned it —
+evidence, not assumption (guThresh flags 5 rows, not 8); (3) GREEN
+passed 72/72 on the first run with zero warnings, and the full suite
+came back fully clean (no flake); (4) blast-radius discipline: 7
+commits, none over 4 files, each with its own ledger entry; (5) S758's
+recorded weaknesses were consumed: check results PRINTED (not silently
+captured), suite run alone on an idle machine, ggplot2 caption access
+verified before implementation. **Weaknesses:** (1) one harness fumble —
+a malformed redirect path failed the first background suite launch
+(no state touched, ~1 min lost) and a reflexive ScheduleWakeup call was
+correctly hook-blocked while background tasks were outstanding; (2) no
+FM #28 reduction — no mandated-read file got smaller; the plan grew a
+20-line forward-carrying implementation note (said plainly); (3) the
+`p$labels$caption` compatibility check ran after the RED commit rather
+than before the test pinned it — right result, wrong order.
+
+**Learnings:** none owed to `PROJECT_LEARNINGS.md` — a clean
+mold-following TDD session (S751–S758 precedent for capturing none);
+the signature decision is durably recorded in the plan's §4 S759
+implementation note and the ledger.
+
+**Next steps (specific):** (A) **Slice 4 of the #167 plan (READY, L)** —
+`modSnapshotTrends` module + 16th tab, strict TDD from plan §5 Slice 4:
+module-contract test, `shinytest2` e2e (upload → generate → append →
+download → trend render with D4 flag visible), existing 15 tabs
+byte-unchanged, tutorial/article checklist (S436), #120 re-run, and the
+TWO recorded wiring consequences — pass the app's `reportGV()`
+call-site `guIter`/`guThresh` through (plan §4 S758 note) and supply
+`membershipRule` for delta computation (plan §4 S759 note); issue #167
+open/close call is made explicitly at that session's close-out.
+(B) **#168 scoping session (READY, M)** — unchanged; S755's doc is the
+mold. (C) **Pandoc owner action (DECISION NEEDED, S, `BACKLOG.md:7`)**
+— unchanged; workaround still required for suite/check/ratchet.
+(D) **Push+CI (medium priority, growing)** — 32 unpushed expected after
+close-out (25 inherited + S759's 7; recount with
+`git rev-list --count origin/master..HEAD`); CI current through
+`8007de81`; the batch now carries Slice 1+2+3 R-code changes, so the
+next push is their first remote verification. (E) Unchanged: chromote
+hang research (READY, M); inst/doc slimming (DECISION NEEDED, M); REUSE
+registration (owner action, S); BACKLOG compression recurring; NPRC
+outreach (DECISION NEEDED); kinship2-standalone BLOCKED; LabKey
+BLOCKED.
+
+**Key files:** `R/calcSnapshotDeltas.R:52` (function; `:118`
+`snapshotComparabilityFlags()` `@noRd` helper with the flag sets),
+`R/plotSnapshotTrends.R:44` (function; `:151`
+`snapshotProvenanceChanges()` `@noRd` per-rule walk),
+`tests/testthat/test_calcSnapshotDeltas.R:34` (21-column deltaMetrics
+pin; `:45` flag-set pins), `tests/testthat/test_plotSnapshotTrends.R:31`
+(18-column trendMetrics pin), `man/calcSnapshotDeltas.Rd` +
+`man/plotSnapshotTrends.Rd` (generated), `_pkgdown.yml:203` + `:373`
+(new entries), `NEWS.Rmd:412` (bullet),
+`docs/planning/issue167-longitudinal-monitoring-plan.md:265` (S759
+implementation note), `CHANGELOG.md:41` (S759 entries at top),
+`HANDOFFS.md` (S759 receipt), `.quality-gates-results.json` (head
+`16159872`; gitignored).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; 32 unpushed expected after close-out
+(recount). (2) The rotating #152 wall-clock benchmark flake (Learnings
+532/760) did NOT occur this session (suite fully clean) but the warning
+stands: re-run the file alone before treating one as a regression.
+(3) The pandoc PATH workaround (`BACKLOG.md:7`) remains required for
+suite/check/ratchet. (4) Ratchet baseline moved for a CONTENT reason:
+3,492,147 B at `16159872` (+9,551 B vs S758 — 2 R files, 2 man pages,
+tests, NEWS are real package content); cite from
+`.quality-gates-results.json` (results `c3054853fdfe`), never the
+rounded table. (5) The schema pin now spans FOUR test files:
+`test_readSnapshotHistory.R:13` and `test_createColonySnapshot.R:26`
+(27 columns) plus `test_calcSnapshotDeltas.R:34` (21 numeric) and
+`test_plotSnapshotTrends.R:31` (18 metrics) — a column change is a
+schema change (schemaVersion bump + design gate), never a refactor.
+(6) `plotSnapshotTrends()`'s caption exists ONLY when provenance
+changed (`p$labels$caption` NULL otherwise — pinned in tests; ggplot2
+4.0.3 verified); the line layer deliberately excludes one-point rules
+(no single-observation warning). (7) Standing set unchanged:
+full-40-char sha + smoke-test `gh run` filters; `scratchpad/` invisible
+to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); renv
+banner expected; CLAUDE.md warn band (26,360 B); growth run 38/10 at
+this Orient — read the value at the next Orient; zsh harness traps
+(Learning 775); trim budgets (`--budget-bytes 65536` for
+SESSION_NOTES.md; HANDOFFS/CHANGELOG at the 196,608 default per
+S756–S758 cited practice).
 
 ### Session 757 Handoff Evaluation (by Session 758)
 **Score: 9/10.** **What helped:** "17 unpushed expected (recount)" measured

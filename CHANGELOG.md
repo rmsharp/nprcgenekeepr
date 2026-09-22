@@ -38,6 +38,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S759 records: close-out records committed (handoff, receipt, plan note)
+- Deliverable DONE: issue #167 Slice 3 (`calcSnapshotDeltas()` +
+  `plotSnapshotTrends()`), strict TDD, 4 pre-RED scope decisions + 3
+  phase gates owner-ratified. `SESSION_NOTES.md` handoff + S758
+  evaluation (predecessor 9/10 — every checked claim held; the one
+  worked-around gap, the catalog signature's (date, rule) ambiguity,
+  belongs to the plan session); self-assessment 9/10; `HANDOFFS.md`
+  receipt complete; plan §4 S759 implementation note (ratified
+  signature + Slice 4 membershipRule wiring consequence); this ledger
+  entry. Verification recap, all measured: 72/72 new expectations;
+  pkgdown guard 5/5; lint clean on both new files; full suite 0 failed
+  / 0 error / 7250 passed / 184 skipped (fully clean — no benchmark
+  flake this run); `devtools::check()` 0 errors / 0 warnings / 0 notes
+  (5m28s); ratchet 1/1 pass at `16159872` (3,492,147 B, results
+  `c3054853fdfe`, manifest `aa983075d6a2`, read from the results file,
+  arm64-pandoc PATH workaround); trim --check no trigger. Citation
+  checklist (#120) recorded N/A at the docs commit. S759 totals: 6
+  commits so far (claim `f0f22988`, RED `ac212b7d`, GREEN `17fa3a89` +
+  `ea68fd84`, docs `16159872`, records) + 1 sha commit to follow; 32
+  unpushed expected after close-out — verify with
+  `git rev-list --count origin/master..HEAD`, not this sentence.
+
 ### 2026-09-21 · [issue #167] S759 docs: NEWS.Rmd Longitudinal Monitoring bullet + issue #120 citation check RECORDED (N/A)
 - Plain-language NEWS.Rmd bullet (S628 criterion) for
   `plotSnapshotTrends()`/`calcSnapshotDeltas()` — trends, per-value
