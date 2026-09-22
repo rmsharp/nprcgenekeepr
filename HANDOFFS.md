@@ -156,6 +156,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S761
+date: 2026-09-22
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Issue #168 scoping session — scope-narrowing decision record for ancestry guardrails in breeding-group formation (docs/planning/issue168-ancestry-guardrails-scoping-2026-09-22.md), following the S755 issue #167 scoping mold. Docs-only session.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S760
 date: 2026-09-22
 status: complete

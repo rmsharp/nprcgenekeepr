@@ -54,6 +54,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 761 Did
+**Deliverable:** Issue #168 scoping session — scope-narrowing decision record
+for ancestry guardrails in breeding-group formation
+(`docs/planning/issue168-ancestry-guardrails-scoping-2026-09-22.md`), following
+the S755 issue #167 scoping mold (design-first decision via `AskUserQuestion`,
+evidence-based inventory, open design questions for the future plan session).
+Docs-only session — zero `R/`/`tests/`/`man/` changes expected. (IN PROGRESS)
+**Started:** 2026-09-22
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 759 Handoff Evaluation (by Session 760)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
 measured 0 on both frontiers at `de30cf2a`; "32 unpushed expected

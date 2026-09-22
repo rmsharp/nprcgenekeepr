@@ -38,6 +38,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S761 claim: issue #168 scoping session (ancestry guardrails for breeding-group formation) *(in progress)*
+- Owner picked the #168 scoping session at Phase 0 via `AskUserQuestion` (over
+  Push+CI, the pandoc owner action, and the Slice 5 backfill scoping).
+  Deliverable: a scope-narrowing decision record
+  (`docs/planning/issue168-ancestry-guardrails-scoping-2026-09-22.md`) in the
+  S755 issue #167 scoping mold — design-first decision gated by
+  `AskUserQuestion`, grep-verified evidence inventory of what exists around
+  breeding-group formation and ancestry/origin today, and the numbered open
+  design questions the future design-plan session must ratify. Docs-only
+  session. Phase 0 reconcile at claim: 0 undocumented commits on both
+  frontiers at `6f9f386a`; CI 10/10 green; 43 unpushed (recounted).
+
 ### 2026-09-21 · [issue #167] S760 RED -- issue #167 Slice 4 failing tests for modSnapshotTrends + snapshotSource + appUI/appServer wiring
 - 3 pre-RED scope decisions owner-ratified via `AskUserQuestion`: (1)
   `modGeneticValueServer` gains a new returned reactive `snapshotSource`
