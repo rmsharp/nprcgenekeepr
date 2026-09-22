@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S757 GREEN (2/2): generated man pages + `_pkgdown.yml` reference entries for the three new exports
+- `man/checkSnapshotHistory.Rd`, `man/readSnapshotHistory.Rd`,
+  `man/appendColonySnapshot.Rd` (from `devtools::document()`); the three
+  functions added to `_pkgdown.yml`'s "All exposed functions" group in
+  alphabetical position (S496 coverage-guard checklist). Split from the
+  code commit `0895a7d3` to respect the 5-files-per-commit blast-radius
+  cap.
+
 ### 2026-09-21 · [issue #167] S757 GREEN (1/2): Slice 1 implementation — `checkSnapshotHistory()`, `readSnapshotHistory()`, `appendColonySnapshot()` (all 46 RED expectations pass)
 - RED→GREEN gate passed via `AskUserQuestion` (owner: proceed). Minimal
   implementations in the kinship-overrides reader/validator mold:
