@@ -38,6 +38,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S761 deliverable: scope-narrowing decision record for issue #168 (design-first, same issue)
+- `docs/planning/issue168-ancestry-guardrails-scoping-2026-09-22.md` written in
+  the S755 issue #167 scoping mold. Owner decision ratified via
+  `AskUserQuestion`: **design-first, same issue** — the next #168 session
+  writes `docs/planning/issue168-ancestry-guardrails-plan.md` (numbered
+  decisions, vertical slices, per-slice completion criteria); implementation
+  only after that plan is ratified; no new sub-issue, and deliberately no new
+  `BACKLOG.md` item (S755 divergence precedent, FM #28). Rejected
+  alternatives recorded: design-only sub-issue, implement-as-filed,
+  defer/park. Evidence inventory grep-verified: the entire group-formation
+  kernel (`groupAddAssign.R`, `fillGroupMembers.R`, `makeGroupMembers.R`,
+  `fillGroupMembersWithSexRatio.R`, `modBreedingGroups.R`) has ZERO
+  ancestry/origin references — Origin is computed post-hoc in
+  `modGeneticDiversity` only; the single pairwise-conflict seam for "block"
+  semantics is `fillGroupMembers.R:75` (`setdiff(available, kin[[id]])`);
+  the override/audit-trail mold is #150's confirm gate + downloadable
+  manifest (`modDeidentifiedExport.R:30`); the rules-table mold is the
+  `readKinshipOverrides` sibling-validator family. Two design inputs found
+  and recorded, not fixed: `getIndianOriginStatus()`'s `BORDERLINE_HYBRID`
+  branch is unreachable from `convertAncestry()`'s 6 levels (Q6), and no
+  shipped fixture carries INDIAN/CHINESE/HYBRID ancestry rows (`qcPed` has
+  no ancestry column; `examplePedigree` populates only JAPANESE/UNKNOWN).
+  Nine open design questions (Q1–Q9) + hard constraints recorded for the
+  plan session.
+
 ### 2026-09-22 · [issue #168] S761 claim: issue #168 scoping session (ancestry guardrails for breeding-group formation) *(in progress)*
 - Owner picked the #168 scoping session at Phase 0 via `AskUserQuestion` (over
   Push+CI, the pandoc owner action, and the Slice 5 backfill scoping).
