@@ -38,6 +38,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S762 sha: close-out commit sha recorded in HANDOFFS.md receipt
+- `HANDOFFS.md` S762 receipt `commit:` field reconciled to `dd3a4870`
+  (self-reconcile, S760/S761 precedent; carries its own ledger entry).
+
 ### 2026-09-22 · [issue #168] S762 records: close-out records committed (handoff, S761 evaluation, self-assessment, HANDOFFS receipt, Learning 777)
 - `SESSION_NOTES.md`: S761 handoff evaluated 9/10 (every checked claim held —
   0 undocumented measured on both frontiers, 47 unpushed measured exactly,
