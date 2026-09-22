@@ -110,6 +110,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   `man/modGeneticValueServer.Rd` (documents the new `snapshotSource`
   return element + the mechanical `@family` cross-reference addition).
 
+### 2026-09-21 · [issue #167] S760 GREEN (3/4) -- issue #167 Slice 4: mechanical `@family` cross-reference regen
+- 27 pre-existing `man/*.Rd` files each gain the identical `Other Shiny
+  modules:` two-line `\seealso` addition
+  (`modSnapshotTrendsServer()`/`modSnapshotTrendsUI()`), the mechanical
+  `devtools::document()` consequence of the new module joining the
+  `@family Shiny modules` group -- `PROJECT_LEARNINGS.md` Learning 262(f)
+  / the issue #112/#149 precedent for this exact scenario. Every diff
+  confirmed `2 ++`, no other line changed (verified via `git diff --stat`
+  before staging).
+
 ### 2026-09-21 · [issue #167] S760 claim: issue #167 Slice 4 (`modSnapshotTrends` module + 16th tab) implementation session *(in progress)*
 - Phase 0 reconcile: 0 undocumented commits on both frontiers at
   `0e2e8629`; S759 receipt complete, ratchet citation verified against

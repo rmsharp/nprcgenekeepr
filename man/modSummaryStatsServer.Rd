@@ -125,6 +125,8 @@ Other Shiny modules:
 \code{\link[=modPotentialParentsUI]{modPotentialParentsUI()}},
 \code{\link[=modPyramidServer]{modPyramidServer()}},
 \code{\link[=modPyramidUI]{modPyramidUI()}},
+\code{\link[=modSnapshotTrendsServer]{modSnapshotTrendsServer()}},
+\code{\link[=modSnapshotTrendsUI]{modSnapshotTrendsUI()}},
 \code{\link[=modSummaryStatsUI]{modSummaryStatsUI()}}
 }
 \concept{Shiny modules}

@@ -44,6 +44,8 @@ Other Shiny modules:
 \code{\link[=modPotentialParentsServer]{modPotentialParentsServer()}},
 \code{\link[=modPotentialParentsUI]{modPotentialParentsUI()}},
 \code{\link[=modPyramidServer]{modPyramidServer()}},
+\code{\link[=modSnapshotTrendsServer]{modSnapshotTrendsServer()}},
+\code{\link[=modSnapshotTrendsUI]{modSnapshotTrendsUI()}},
 \code{\link[=modSummaryStatsServer]{modSummaryStatsServer()}},
 \code{\link[=modSummaryStatsUI]{modSummaryStatsUI()}}
 }
