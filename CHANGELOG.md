@@ -38,6 +38,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S758 GREEN (2/2): man page + `_pkgdown.yml` reference entry
+- `man/createColonySnapshot.Rd` (from `devtools::document()`);
+  `createColonySnapshot` added to `_pkgdown.yml`'s "All exposed
+  functions" group in alphabetical position (coverage guard satisfied).
+  Full-suite record across the two S758 runs (NOT_CRAN=true, `load_all()`
+  first, pandoc PATH workaround): run 1 — 2 failed / 0 error / 7176
+  passed / 184 skipped (the WORDLIST flag was this session's own man
+  page, fixed; `test_markerParentageLikelihood.R` benchmark flaked under
+  parallel load, 117/117 clean isolated re-run); run 2, machine
+  otherwise idle — 1 failed / 0 error / 7177 passed / 184 skipped
+  (`test_markerKinship.R` benchmark only, 21/21 clean isolated re-run;
+  the rotating single-benchmark flake in full-suite runs is the exact
+  documented pattern of Learnings 532/760 — no marker code path is
+  touched by this slice's diff). Every test file has a green read across
+  the two runs; `spell_check_package()` clean; lint clean on both new
+  files.
+
 ### 2026-09-21 · [issue #167] S758 GREEN (1/2): `createColonySnapshot()` implementation
 - `R/createColonySnapshot.R` + `NAMESPACE`: validates the
   `nprcgenekeeprGV` object (class, 10 required elements, 5 required

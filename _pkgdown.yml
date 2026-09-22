@@ -229,6 +229,7 @@ reference:
   - '`countKinshipValues`'
   - '`countLoops`'
   - '`create_wkbk`'
+  - '`createColonySnapshot`'
   - '`createExampleFiles`'
   - '`createPedTree`'
   - '`createSimKinships`'
