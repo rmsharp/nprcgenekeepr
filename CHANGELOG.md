@@ -38,6 +38,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S763 GREEN 1/2: readAncestryRules() + checkAncestryRules() implemented — 51/51 RED expectations pass first run
+- `R/readAncestryRules.R` (the `readKinshipOverrides` mold verbatim:
+  `excel_format` branch + `read.table` with `muffleIncompleteFinalLine`) and
+  `R/checkAncestryRules.R` (the `checkKinshipOverrides` mold: missing-column /
+  NA / unknown-level / unknown-severity / duplicated-unordered-pair stops with
+  the RED-pinned messages; `toupper`/`tolower` coercion; self-pairs legal;
+  empty table valid; extra columns ignored; the D6 UNKNOWN/OTHER asymmetry
+  warning citing the non-idempotency rationale). `devtools::document()`:
+  NAMESPACE +2 exports, exactly 2 new `man/*.Rd`, NO mass `@family` regen
+  (siblings carry no family tag — verified pre-RED). All 3 new test files
+  green: 16+28+7 = 51 expectations, 0 failed / 0 error / 0 stray warnings.
+  `lintr` 0 lints on all 5 touched files (`load_all()` first).
+
 ### 2026-09-22 · [issue #168] S763 RED: Slice 1 failing tests + fixtures (24 blocks, 2 hand-authored fixtures)
 - `test_readAncestryRules.R` (4 blocks: CSV read, validator round-trip, Excel
   branch, shipped-example-file validity incl. warning-free UNKNOWN+OTHER
