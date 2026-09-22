@@ -38,6 +38,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S762 deliverable: ancestry-guardrails design plan ratified (D1–D9, 4 slices)
+- `docs/planning/issue168-ancestry-guardrails-plan.md` written in the #167 plan
+  mold, answering the S761 scoping record's Q1–Q9 as ratified numbered
+  decisions. Owner ratified all 5 genuine judgment calls via one
+  `AskUserQuestion` round (recommended option selected in all 5): **D1**
+  pairwise compatibility table (per-rule block|flag severity; example rules
+  file ships, active behavior does not — active default ruled out by the
+  zero-change hard constraint); **D2** user-supplied rules file
+  (`readAncestryRules()`/`checkAncestryRules()`, kinship-overrides mold);
+  **D3** sex-blind enforcement (bypasses the F-F kinship exemption, pinned by
+  test); **D5** v1 surfaces = `groupAddAssign(ancestryRules=)` +
+  `modBreedingGroups` + `reportAncestryViolations()` (mate-pair deferred as
+  recorded additive follow-up); **D8** collapsible in-module section +
+  "Ancestry" results tab + #150-mold confirm gate. Forced decisions D4
+  (per-rule per-run override + manifest, the issue's own granularity), D6
+  (6-level vocabulary, independence from `getIndianOriginStatus()`,
+  no-hardcoded-stance unknown handling with coverage surfacing, loud
+  degradation), D7 (zero-change default + RNG-stream neutrality with
+  same-seed identity tests), D9 (4 dependency-forced slices). **New
+  discovery recorded (Learning 382 discipline, not fixed):**
+  `convertAncestry()` is not idempotent — the literal string "UNKNOWN"
+  re-standardizes to OTHER, so the QC'd `examplePedigree` carries
+  JAPANESE/OTHER (not JAPANESE/UNKNOWN); D6's validator warning
+  (UNKNOWN/OTHER named asymmetrically) is the countermeasure. Every
+  load-bearing claim source-verified this session (§1.3); collision greps
+  clear for all proposed names. Implementation gated on this ratification;
+  each slice a separate strict-TDD session. Docs-only — zero
+  `R/`/`tests/`/`man/` changes.
+
 ### 2026-09-22 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-22.md` (9 record(s), 57,401 B → 7,564 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
