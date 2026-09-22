@@ -34,7 +34,7 @@ moduleContractServers <- list(
     args = list(pedigree = shiny::reactive(NULL)),
     names = c("geneticValues", "topAnimals", "nAnalyzed", "kinshipMatrix",
               "kinshipOverrides", "founderStats", "maleFounders",
-              "femaleFounders")
+              "femaleFounders", "snapshotSource")
   ),
   modSummaryStats = list(
     server = modSummaryStatsServer,
@@ -106,6 +106,11 @@ moduleContractServers <- list(
     server = modDeidentifiedExportServer,
     args = list(pedigree = shiny::reactive(NULL)),
     names = c("exportedPedigree", "map", "manifest", "confirmed")
+  ),
+  modSnapshotTrends = list(
+    server = modSnapshotTrendsServer,
+    args = list(snapshotSource = shiny::reactive(NULL)),
+    names = c("history", "deltas", "isReady")
   )
 )
 

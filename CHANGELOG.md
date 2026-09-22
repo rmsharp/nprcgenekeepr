@@ -38,6 +38,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S760 RED -- issue #167 Slice 4 failing tests for modSnapshotTrends + snapshotSource + appUI/appServer wiring
+- 3 pre-RED scope decisions owner-ratified via `AskUserQuestion`: (1)
+  `modGeneticValueServer` gains a new returned reactive `snapshotSource`
+  (list(ped, geneticValue, guIter, guThresh) captured atomically at run
+  time, mirroring `modDeidentifiedExportServer`'s exportRaw params-snapshot
+  pattern) rather than the Trends tab re-running `reportGV()`; (2) the plan
+  §4 catalog signature is amended:
+  `modSnapshotTrendsServer(id, snapshotSource)` -- ONE upstream reactive,
+  every declared parameter read (module-contract rule 6), superseding the
+  original `pedigree`/`geneticValues` signature; (3) the membership rule
+  for a GENERATED snapshot is auto-derived from
+  `snapshotSource()$ped$population` and shown read-only (truthful by
+  construction), while the DELTA comparison keeps a user-facing rule
+  selector fed from the uploaded/generated history (S759's own wiring
+  note). 5 files, one commit (within the 5-file cap): NEW
+  `test_modGeneticValue_snapshotSource.R` (4 blocks -- errors before any
+  run; carries ped/geneticValue/guIter/guThresh after a run; does not
+  drift when sliders change post-run, mirroring the #150 manifest dragon;
+  ped$population matches the analyzed report); NEW
+  `test_modSnapshotTrends.R` (14 blocks -- UI structure; empty state;
+  Slice 1 reader/validator reuse incl. a malformed-upload no-op; Slice 2
+  reuse via snapshotSource with auto-derived rule; Slice 3 reuse with the
+  D4 comparabilityFlag visible; both downloads); NEW
+  `test_appSnapshotTrendsWiring.R` (3 blocks -- new tab present; all 15
+  pre-existing tab labels still present, D7 zero-changes; appServer wires
+  `modSnapshotTrendsServer`/`gvResults$snapshotSource`); NEW
+  `test-e2e-snapshot-trends-module.R` (shinytest2, skip-gated -- full path:
+  load pedigree, run GVA, upload fixture history, generate+append,
+  trend plot, delta table with the D4 flag, both downloads, zero console
+  errors); EDIT `test_moduleContract.R` (modGeneticValue names +
+  `snapshotSource`; new `modSnapshotTrends` entry). Verified failing ONLY
+  on the missing implementation: `test_modGeneticValue_snapshotSource.R`
+  0 passed / 1 failed / 3 errored (all on the missing `snapshotSource`
+  field); `test_modSnapshotTrends.R` 0 passed / 14 errored (module
+  undefined); `test_appSnapshotTrendsWiring.R` 15 passed (unchanged
+  pre-existing tabs) / 3 failed (the new-tab/wiring assertions);
+  `test_moduleContract.R` errors at list-construction on the undefined
+  `modSnapshotTrendsServer` (file-level RED halt, matching precedent for
+  contract-file edits that reference a new server); e2e file parses clean,
+  self-skips (opt-in `NPRC_RUN_E2E`, no `shinytest2`/`chromote` assertion
+  reached).
+
 ### 2026-09-21 · [issue #167] S760 claim: issue #167 Slice 4 (`modSnapshotTrends` module + 16th tab) implementation session *(in progress)*
 - Phase 0 reconcile: 0 undocumented commits on both frontiers at
   `0e2e8629`; S759 receipt complete, ratchet citation verified against
