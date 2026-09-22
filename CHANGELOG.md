@@ -102,6 +102,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   (173+15+8+4), `test_appServer_*.R` (32+15+6), `test_appUI_*.R` (2+3) --
   258/258, 0 failed/error.
 
+### 2026-09-21 · [issue #167] S760 GREEN (2/4) -- issue #167 Slice 4: generated man pages + NAMESPACE
+- `devtools::document()` output for the 2 new exports
+  (`modSnapshotTrendsServer`/`UI`): NAMESPACE (+2 exports, +2
+  `importFrom(shiny, ...)` for `strong`/`updateSelectInput`),
+  `man/modSnapshotTrendsServer.Rd`, `man/modSnapshotTrendsUI.Rd` (new),
+  `man/modGeneticValueServer.Rd` (documents the new `snapshotSource`
+  return element + the mechanical `@family` cross-reference addition).
+
 ### 2026-09-21 · [issue #167] S760 claim: issue #167 Slice 4 (`modSnapshotTrends` module + 16th tab) implementation session *(in progress)*
 - Phase 0 reconcile: 0 undocumented commits on both frontiers at
   `0e2e8629`; S759 receipt complete, ratchet citation verified against

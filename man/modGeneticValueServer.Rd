@@ -35,7 +35,10 @@ regardless of which tab the user visits first. Defaults to
 \value{
 List with \code{geneticValues}, \code{topAnimals},
 \code{nAnalyzed}, \code{kinshipMatrix}, \code{founderStats},
-\code{maleFounders}, and \code{femaleFounders}.
+\code{maleFounders}, \code{femaleFounders}, and \code{snapshotSource}
+(issue #167 Slice 4: the most recent run's analyzed pedigree, its
+\code{nprcgenekeeprGV} object, and its \code{guIter}/\code{guThresh},
+captured atomically for \code{\link{modSnapshotTrendsServer}}).
 }
 \description{
 Genetic Value Analysis Module - Server Function
@@ -74,6 +77,8 @@ Other Shiny modules:
 \code{\link[=modPotentialParentsUI]{modPotentialParentsUI()}},
 \code{\link[=modPyramidServer]{modPyramidServer()}},
 \code{\link[=modPyramidUI]{modPyramidUI()}},
+\code{\link[=modSnapshotTrendsServer]{modSnapshotTrendsServer()}},
+\code{\link[=modSnapshotTrendsUI]{modSnapshotTrendsUI()}},
 \code{\link[=modSummaryStatsServer]{modSummaryStatsServer()}},
 \code{\link[=modSummaryStatsUI]{modSummaryStatsUI()}}
 }
