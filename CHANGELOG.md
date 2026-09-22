@@ -38,6 +38,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S759 RED: failing tests for `calcSnapshotDeltas()` + `plotSnapshotTrends()` (Slice 3)
+- Two new test files, 29 blocks total, verified failing ONLY on the two
+  missing functions (silent-reporter counts: 14 blocks / 0 passed and
+  15 blocks / 0 passed; every failure is the could-not-find-function
+  error). `test_calcSnapshotDeltas.R`: 21-row delta table in schema
+  order; hand-copied fixture values for wholePedigree
+  2025-01-15→2025-07-15 (from/to/delta pinned); D4 flag classes —
+  packageVersion→all rows, guIter→8 gene-drop rows (fg/fgSE/neGD + 5 gu
+  aggregates; classification verified from `R/reportGV.R`:
+  `geneDrop(n = guIter)` feeds `calcFEFG()` AND `calcGU()`;
+  `guThresh` reaches only `calcGU()`), guThresh→5 gu rows, NA when
+  comparable; rule auto-resolve/mixed-rule stop naming rules/unknown
+  rule/absent date under rule/from==to/malformed-history stops;
+  character+Date date args. `test_plotSnapshotTrends.R` (structural
+  inspection, the recorded S759 choice — vdiffr NOT added): one ggplot,
+  18 default facets in schema order, subset/count-on-request facets,
+  GeomRibbon exactly on fg±fgSE and meanGu±meanGuSE (extents pinned to
+  fixture values), per-rule colored series, ≥2-snapshot guard,
+  provenance-change point shapes + caption naming changed fields, clean
+  history ⇒ no annotation, malformed-history stop. Four pre-RED scope
+  decisions + the PRE-RED→RED gate owner-ratified via `AskUserQuestion`
+  (membershipRule = NULL arg added to the catalog signature — the
+  fixture's shared-date/different-rule pair proves date-only selection
+  ambiguous; 21-row per-metric flag table; one faceted ggplot;
+  structural plot tests).
+
 ### 2026-09-21 · [issue #167] S759 claim: Slice 3 (`calcSnapshotDeltas()`/`plotSnapshotTrends()`) implementation session *(in progress)*
 - Owner picked Slice 3 from the Phase 0 priorities picker. Stub +
   pending `HANDOFFS.md` receipt + this entry ride the claim commit.
