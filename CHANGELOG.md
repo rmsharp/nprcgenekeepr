@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S759 claim: Slice 3 (`calcSnapshotDeltas()`/`plotSnapshotTrends()`) implementation session *(in progress)*
+- Owner picked Slice 3 from the Phase 0 priorities picker. Stub +
+  pending `HANDOFFS.md` receipt + this entry ride the claim commit.
+  Phase 0 reconcile: 0 undocumented commits on both frontiers at
+  `ba328a3d`; S758 receipt's ratchet citation verified byte-for-byte
+  against `.quality-gates-results.json` (748b619b8b2c); CI green
+  (10/10 recent runs); 25 unpushed (measured, matches prediction).
+
 ### 2026-09-21 · [issue #167] S758 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `5e485311` (self-reconcile, carries its own ledger entry)
 - Final S758 commit. Session total: 8 commits (claim `0b8a4e26`, RED
   `cbab400b`, GREEN `b9b90769` + `8892fa39`, docs `eee75958`, trim

@@ -54,6 +54,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 759 Did
+**Deliverable:** Issue #167 Slice 3 — `calcSnapshotDeltas()` + `plotSnapshotTrends()`, strict TDD from plan §5 Slice 3 (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 757 Handoff Evaluation (by Session 758)
 **Score: 9/10.** **What helped:** "17 unpushed expected (recount)" measured
 exactly 17; "expect 0 undocumented; measure it" measured 0 on both frontiers
