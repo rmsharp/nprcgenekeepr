@@ -38,6 +38,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S764 GREEN 1/2: enforcement kernel code (26/26 RED blocks pass, lint clean)
+- `R/groupAddAssign.R`: `ancestryRules = NULL` argument (placed before
+  `updateProgress`); one guarded block after `getAnimalsWithHighKinship()`
+  and BEFORE the current-group conflict filter — re-validates via
+  `checkAncestryRules()`, `stop()`s without an `ancestry` column, merges
+  block pairs symmetrically, drops both-in-current-group pairs (mirrors the
+  kinship treatment). New `R/reportAncestryViolations.R`:
+  `reportAncestryViolations()` (`list(violations, coverage)`, statuses
+  violation|overridden, D6 coverage over the 6-level vocabulary) +
+  `.ancestryConflictPairs()` + `.mergeAncestryBlockPairs()` (`@noRd`).
+  NAMESPACE +1; 1 new man page + `groupAddAssign.Rd` regenerated (no mass
+  regen). **One GREEN-phase fix during the run:** `tapply()`'s 1-d
+  list-mode array errors on `[[`-read of an absent name (and is empty when
+  every kinship pair filters out) — the merge helper normalizes with
+  `as.list()` first, caught by the F-F pin and harem-limitation blocks.
+  All 26 new blocks pass (85 expectations, 0 warnings); adjacent corpora
+  (`test_groupAddAssign.R` 37, Slice 1 files 51) pass unchanged; lint 0 on
+  all 4 touched files.
+
 ### 2026-09-22 · [issue #168] S764 RED: Slice 2 failing tests committed (26 blocks, 2 new files)
 - `test_groupAddAssignAncestry.R` (12 blocks): same-seed identity (NULL vs
   omitted; flag-only vs none), block-never-co-placed property tests in

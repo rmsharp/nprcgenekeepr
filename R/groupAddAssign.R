@@ -67,6 +67,21 @@
 #' \code{exhaustive = TRUE}'s search before it truncates gracefully
 #' (\code{exhaustive = FALSE} in the return value, not an error). Default
 #' is 10.
+#' @param ancestryRules Optional data frame of ancestry compatibility rules
+#' (issue #168), in the shape \code{\link{checkAncestryRules}} validates --
+#' it is (re-)validated here, so structural or domain errors \code{stop()}
+#' with the validator's specific message. Default \code{NULL}: no rules,
+#' behavior identical to previous versions. When supplied, \code{ped} must
+#' carry an \code{ancestry} column (an error otherwise, so a script user
+#' who passed rules gets truth, not silence). \code{block}-severity rules
+#' exclude their conflicting pairs during formation -- in sampling,
+#' exhaustive, and \code{sexRatio} modes, and sex-blind (deliberately
+#' bypassing the female-female kinship exemption in \code{ignore}).
+#' \code{flag}-severity rules never affect the search; compute them
+#' afterward with \code{\link{reportAncestryViolations}}. Known limitation
+#' (shared with the kinship machinery): a harem's sampled sire is seeded
+#' into the group before the fill loop, so conflicts against the sire
+#' himself are not enforced -- only pairs among loop-placed members are.
 #' @param updateProgress Function or NULL. If this function is defined, it
 #' will be called during each iteration to update a
 #' \code{shiny::Progress} object.
@@ -165,6 +180,7 @@ groupAddAssign <- function(candidates,
                            exhaustive = FALSE,
                            maxExhaustiveCandidates = 20L,
                            exhaustiveTimeLimit = 10.0,
+                           ancestryRules = NULL,
                            updateProgress = NULL) {
   if (length(currentGroups) > numGp) {
     stop(
@@ -177,6 +193,35 @@ groupAddAssign <- function(candidates,
     kmat, ped, threshold, currentGroups, ignore,
     minAge
   )
+
+  # Ancestry guardrails (issue #168, D3/D7): block-severity rules merge
+  # their conflicting pairs into `kin` HERE -- upstream of the current-group
+  # conflict filter below (seeds never pass through the fill loop, so only
+  # that filter can exclude seed-blocked candidates) and upstream of the
+  # sampling/exhaustive mode fork, never inside the iter loop (RNG-stream
+  # neutrality). Flag rules never touch the search;
+  # reportAncestryViolations() computes them post-formation.
+  if (!is.null(ancestryRules)) {
+    ancestryRules <- checkAncestryRules(ancestryRules)
+    if (!("ancestry" %in% names(ped))) {
+      stop("nprcgenekeepr: ancestryRules were supplied, but the pedigree ",
+        "has no 'ancestry' column.",
+        call. = FALSE
+      )
+    }
+    blocked <- .ancestryConflictPairs(
+      union(candidates, unlist(currentGroups)), ped, ancestryRules,
+      severity = "block"
+    )
+    # pairs already within the current groups mirror the kinship treatment
+    # (getAnimalsWithHighKinship): formation cannot undo an existing
+    # co-housing, so they do not constrain the search
+    bothInGroups <- blocked$id1 %in% unlist(currentGroups) &
+      blocked$id2 %in% unlist(currentGroups)
+    kin <- .mergeAncestryBlockPairs(
+      kin, blocked[!bothInGroups, , drop = FALSE]
+    )
+  }
 
   # Filtering out candidates related to current group members
   conflicts <- unique(c(
