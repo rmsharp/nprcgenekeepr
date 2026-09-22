@@ -379,6 +379,7 @@ ggplot
 github
 groupAddAssign
 groupMembers
+groupmates
 grpNum
 gu
 guIter
@@ -560,6 +561,7 @@ sdKinship
 selectRows
 selectable
 setPopulation
+severities
 sexCodes
 sexRatio
 sexRatioWithAddions

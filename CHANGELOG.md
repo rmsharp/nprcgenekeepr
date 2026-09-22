@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S764 fix: WORDLIST coverage for the two new prose words
+- The full-suite run flagged exactly one failure: `test_wordlist_coverage.R`
+  on "groupmates" (`NEWS.Rmd`) and "severities"
+  (`reportAncestryViolations.Rd`) — both legitimate words introduced by
+  this slice's prose. Added to `inst/WORDLIST` at their neighbors; spell
+  check now reports 0 uncovered, guard 3/3.
+
 ### 2026-09-22 · [issue #168] S764 GREEN 2/2: pkgdown reference entry + plain-language NEWS entry
 - `_pkgdown.yml`: `reportAncestryViolations` added alphabetically to the
   "All exposed functions" group (coverage guard 5/5). `NEWS.Rmd`: enforcement
