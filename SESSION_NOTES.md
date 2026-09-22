@@ -54,18 +54,100 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 760 Handoff Evaluation (by Session 761)
+**Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
+measured 0 on both frontiers at `6f9f386a`; "~43 unpushed (recount)"
+measured exactly 43; CI-green held (10/10); growth run read 41/10 as
+left; "issue #167 is CLOSED" held; next step (A) WAS this session's
+owner-picked deliverable with the right mold named (S755's scoping
+doc); the pandoc PATH workaround worked verbatim for the ratchet.
+**Missing:** nothing attributable to S760 — this session's two
+discoveries are #168-specific, outside Slice 4's scope. **Wrong:**
+nothing found. **ROI:** high.
+
 ### What Session 761 Did
-**Deliverable:** Issue #168 scoping session — scope-narrowing decision record
-for ancestry guardrails in breeding-group formation
-(`docs/planning/issue168-ancestry-guardrails-scoping-2026-09-22.md`), following
-the S755 issue #167 scoping mold (design-first decision via `AskUserQuestion`,
-evidence-based inventory, open design questions for the future plan session).
-Docs-only session — zero `R/`/`tests/`/`man/` changes expected. (IN PROGRESS)
-**Started:** 2026-09-22
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
-(in progress); Phase 3F records the rest. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+**Deliverable:** Issue #168 **scoping — scope-narrowing decision record
+DONE** (`docs/planning/issue168-ancestry-guardrails-scoping-2026-09-22.md`,
+commit `4310d820`), the S755 mold section-for-section. Owner ratified
+via `AskUserQuestion`: **design-first, same issue** (rejected
+alternatives recorded in §1). Narrowing comment posted on #168
+(issuecomment-5781230607); issue stays OPEN behind the gate. NO new
+`BACKLOG.md` item (S755 divergence precedent, FM #28). Docs-only —
+zero `R/`/`tests/`/`man/` changes.
+**Inventory highlights (all line-pinned in the doc's §3):** the entire
+group-formation kernel is ancestry-blind (zero grep matches across all
+5 kernel files) — Origin is post-hoc only; the block-semantics seam is
+`fillGroupMembers.R:75`; the override/audit mold is #150's confirm gate
++ manifest; the rules-table mold is `readKinshipOverrides` + sibling
+validator. **Two design inputs RECORDED, not fixed** (Learning 382):
+`getIndianOriginStatus()`'s `BORDERLINE_HYBRID` branch is unreachable
+from `convertAncestry()`'s 6 levels (Q6); no fixture carries
+INDIAN/CHINESE/HYBRID ancestry — `qcPed` has no ancestry column,
+`examplePedigree` populates only JAPANESE/UNKNOWN (Q8). Nine open
+questions Q1–Q9 + hard constraints in §4 for the plan session.
+**Verification (docs-only):** trim `--check` no trigger ×3; ratchet
+**1/1 pass at `4310d820`** (3,499,994 B, results `88670d3a0bbf`,
+manifest `aa983075d6a2`, PATH workaround) — see gotcha (5) for the
+−20 B; lint/citation/NEWS/pkgdown/tutorial/a2interactive all N/A with
+reasons (no code, no export, no UI, no new statistic).
+**Started/completed:** 2026-09-22. Claim `771b61a1`; deliverable
+`4310d820`; records + sha commits follow. **Ledger:** one entry per
+action — claim, deliverable, issue-comment (non-commit), records, sha.
+TDD phase (PRE-RED, docs-only) declared at every response top.
+
+**Self-assessment (Session 761): 9/10.** **Strengths:** (1) full
+measured Phase 0; (2) mold followed AND two genuine grep-proven
+discoveries recorded as design inputs, not hot-fixed; (3) both owner
+gates via `AskUserQuestion`, the ratified option explicitly covering
+the issue comment; (4) ≤3 files per commit, one ledger entry per
+action incl. the non-commit comment; (5) the context-budget hook's
+refusal of the first records commit was resolved by SHRINKING this
+record (~5 KB cut), not by `--no-verify`. **Weaknesses:** (1) no FM
+#28 reduction beyond that self-cut; CHANGELOG grew 4 entries (said
+plainly); (2) read `DESIGN_WORKSTREAM.md` before recognizing the
+operative mold was S755's record (~2 min); (3) the first records
+commit crossed the SESSION_NOTES token ceiling — caught by the hook,
+not by me.
+
+**Learnings:** none owed to `PROJECT_LEARNINGS.md` — the two #168
+discoveries live in the scoping doc §3/§4 (design inputs, not process
+learnings); clean mold-following scoping session (S703/S755 precedent).
+The binding-ceiling finding is gotcha (6) below.
+
+**Next steps (specific):** (A) **#168 design-plan session (READY, L)** —
+write `docs/planning/issue168-ancestry-guardrails-plan.md` answering
+the scoping doc's Q1–Q9 as ratified numbered decisions + vertical
+slices + per-slice criteria (#152/#153/#167 mold); PLANNING session:
+deepest reasoning mode, plan is the deliverable, do NOT implement
+(FM #18/#19). (B) **Push+CI (READY, S, growing)** — ~47 unpushed
+expected after close-out (recount); CI current through `8007de81`;
+batch carries ALL of #167. (C) **Pandoc owner action (DECISION NEEDED,
+S, `BACKLOG.md`)** — unchanged. (D) **Slice 5 backfill scoping
+(DECISION NEEDED, L, `BACKLOG.md`)** — unchanged. (E) Standing list
+unchanged — see S760's next-steps (E) below.
+
+**Key files:** `docs/planning/issue168-ancestry-guardrails-scoping-2026-09-22.md`
+(§3 carries the FULL line-pinned inventory; §4 Q1–Q9; §5 next actions),
+`R/fillGroupMembers.R:75` (block seam), `CHANGELOG.md` (S761 entries),
+`HANDOFFS.md` (S761 receipt — the long-form record incl. the rest of
+the pinned paths).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~47 unpushed expected (recount). (2) The #168
+pickup is a PLANNING session — Q1–Q9 need `AskUserQuestion`-gated
+ratification, no implementation (FM #18/#19), ~4 slices expected after.
+(3) `BORDERLINE_HYBRID` discrepancy + ancestry-fixture gap are DESIGN
+INPUTS (doc §3) — resolve inside the plan (Q6/Q8), don't hot-fix.
+(4) Pandoc PATH workaround still required for suite/check/ratchet.
+(5) Ratchet measured **3,499,994 B at `4310d820`** — −20 B vs S760 on
+a fully `.Rbuildignore`d diff (coverage verified): tar/gzip timestamp
+noise, not content; treat ±tens-of-bytes on build-ignored-only diffs
+as noise, larger drift as content owing a reason. (6) **SESSION_NOTES
+ceiling that actually binds is 25,000 tok ≈ 56,750 B** (the hook), not
+the 65,536 B trim budget — keep handoff records compact; long form in
+the receipt. (7) Standing set unchanged — see S760's gotcha (9) below
+(shas/filters, scratchpad, L772, renv banner, CLAUDE.md warn band,
+growth run 41/10 read-next-Orient, L775, trim budgets).
 
 ### Session 759 Handoff Evaluation (by Session 760)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"

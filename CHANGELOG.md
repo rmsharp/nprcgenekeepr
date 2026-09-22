@@ -63,6 +63,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   Nine open design questions (Q1–Q9) + hard constraints recorded for the
   plan session.
 
+### 2026-09-22 · [issue #168] S761 non-commit action: scope-narrowing comment posted on issue #168
+- `gh issue comment 168` — owner-ratified narrowing recorded on the issue
+  itself (design-first, same issue; scoping record path + commit `4310d820`;
+  next step = the design-plan session answering Q1–Q9; "read the
+  full-feature body through this gate from now on"). Comment:
+  https://github.com/rmsharp/nprcgenekeepr/issues/168#issuecomment-5781230607
+  — matching S755's #167 narrowing-comment precedent. Issue stays OPEN.
+
+### 2026-09-22 · [issue #168] S761 records: close-out records committed (handoff, S760 evaluation, self-assessment, HANDOFFS receipt)
+- `SESSION_NOTES.md`: S760 handoff evaluated 9/10 (every checked claim held —
+  0 undocumented measured on both frontiers, 43 unpushed measured exactly,
+  CI 10/10, growth run 41/10); S761 full handoff + self-assessment 9/10.
+  `HANDOFFS.md`: S761 receipt complete (predecessor 9, self 9; ratchet cited
+  from the results file: 1/1 pass, results `88670d3a0bbf`, manifest
+  `aa983075d6a2`, 3,499,994 B at `4310d820` — the −20 B vs S760 verified as
+  tar/gzip noise on a fully `.Rbuildignore`d diff, ignore coverage checked).
+  Verification recorded: trim `--check` no trigger ×3; runtime smoke n/a
+  (docs-only); lint/citation/NEWS/pkgdown/tutorial checklists all N/A with
+  reasons. Deliverable was DONE at `4310d820`; issue #168 stays OPEN behind
+  its design gate.
+
 ### 2026-09-22 · [issue #168] S761 claim: issue #168 scoping session (ancestry guardrails for breeding-group formation) *(in progress)*
 - Owner picked the #168 scoping session at Phase 0 via `AskUserQuestion` (over
   Push+CI, the pandoc owner action, and the Slice 5 backfill scoping).

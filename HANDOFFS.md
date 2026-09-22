@@ -158,18 +158,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S761
 date: 2026-09-22
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Issue #168 scoping session — scope-narrowing decision record for ancestry guardrails in breeding-group formation (docs/planning/issue168-ancestry-guardrails-scoping-2026-09-22.md), following the S755 issue #167 scoping mold. Docs-only session.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Issue #168 scoping session — scope-narrowing decision record DONE (docs/planning/issue168-ancestry-guardrails-scoping-2026-09-22.md, commit 4310d820). Owner decision ratified via AskUserQuestion: design-first, same issue (rejected: design-only sub-issue, implement-as-filed, defer/park). Narrowing comment posted on #168 (issuecomment-5781230607); issue stays OPEN, read through the gate from now on. Deliberately NO new BACKLOG.md item (S755 divergence precedent, FM #28). Docs-only — zero R//tests//man/ changes.
+what_was_done: Claim 771b61a1; deliverable 4310d820 (scoping record, S755 mold section-for-section: §1 decision + rejected alternatives, §2 verbatim issue body + gate provenance, §3 grep-verified evidence inventory, §4 Q1-Q9 open design questions + hard constraints, §5 next actions); non-commit action gh issue comment on #168. Inventory highlights, all line-pinned: the ENTIRE group-formation kernel (groupAddAssign.R, fillGroupMembers.R, makeGroupMembers.R, fillGroupMembersWithSexRatio.R, modBreedingGroups.R) has zero ancestry/origin references — Origin is post-hoc only (modGeneticDiversity.R:96,105); the single block-semantics seam is fillGroupMembers.R:75; the override/audit mold is #150's confirm gate + manifest (modDeidentifiedExport.R:30,132); the rules-table mold is readKinshipOverrides + sibling validator; center-config precedent getSiteInfo/getConfigFileName + example_nprcgenekeepr_config. Two design inputs RECORDED not fixed: getIndianOriginStatus()'s BORDERLINE_HYBRID branch unreachable from convertAncestry()'s 6 levels (Q6); no fixture carries INDIAN/CHINESE/HYBRID ancestry (qcPed has no ancestry column, examplePedigree only JAPANESE/UNKNOWN) (Q8).
+next_steps: (A) #168 design-plan session (READY, L) — write docs/planning/issue168-ancestry-guardrails-plan.md answering the scoping doc's Q1-Q9 as ratified numbered decisions with a vertical-slice list + per-slice completion criteria (#152/#153/#167 mold); PLANNING session — deepest reasoning mode, the plan is the deliverable, do NOT implement (FM #18/#19). (B) Push+CI (READY, S, growing) — ~47 unpushed expected after close-out (recount with `git rev-list --count origin/master..HEAD`); CI current only through 8007de81; the batch carries ALL of #167 — high value soon. (C) Pandoc owner action (DECISION NEEDED, S, BACKLOG.md) unchanged. (D) Slice 5 retrospective-backfill scoping (DECISION NEEDED, L, BACKLOG.md) unchanged — own new issue + Pre-RED gate.
+key_files: docs/planning/issue168-ancestry-guardrails-scoping-2026-09-22.md (§3 inventory, §4 Q1-Q9); R/groupAddAssign.R:156; R/getAnimalsWithHighKinship.R:41; R/fillGroupMembers.R:75 (block seam); R/filterPairs.R:34; R/convertAncestry.R:19 (levels :42-45); R/getIndianOriginStatus.R:18; R/getGeneticDiversityStats.R:81 (Origin :109-118); R/modDeidentifiedExport.R:30 (confirm :132); R/modBreedingGroups.R:40-128; CHANGELOG.md (S761 entries at top).
+gotchas: (1) Expect 0 undocumented at next Phase 0 — measure it; ~47 unpushed expected (recount). (2) The #168 pickup is a PLANNING session — Q1-Q9 need AskUserQuestion-gated ratification; no implementation in that session; expect ~4 slices after. (3) BORDERLINE_HYBRID discrepancy + ancestry-fixture gap are DESIGN INPUTS (scoping doc §3) — resolve inside the plan (Q6/Q8), don't hot-fix ahead of it. (4) Pandoc PATH workaround still required for suite/check/ratchet. (5) Ratchet measured 3,499,994 B at 4310d820 — MINUS 20 B vs S760 on a docs-only, fully .Rbuildignore'd diff: tar/gzip timestamp noise, not content (verified ignore coverage); treat ±tens-of-bytes on build-ignored-only diffs as noise, larger as content owing a reason. (6) Standing set unchanged: full-40-char sha + smoke-test gh run filters; scratchpad/ invisible BY OWNER DECISION; ratchet AFTER committing (L772); renv banner expected; CLAUDE.md warn band 26,360 B; growth run 41/10 at this Orient — read next time; zsh traps (L775); trim budgets (65536 SESSION_NOTES; 196608 default HANDOFFS/CHANGELOG).
+runtime_smoke: n/a — docs-only (no runtime behavior change; no .R files touched, lint checklist N/A). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 88670d3a0bbf · manifest aa983075d6a2 (head 4310d820, 3,499,994 B, pandoc PATH workaround).
+changelog_ref: 4310d820 (deliverable entry; comment + records entries follow in the records commit)
 commit: pending
 ```
+
+S761 self-score 9/10. **+** Full measured Phase 0; mold followed with two genuine grep-proven discoveries recorded as design inputs (Learning 382 discipline); both owner gates via `AskUserQuestion`; ≤3-file commits, one ledger entry per action incl. the non-commit comment; every checklist recorded N/A-with-reason. **−** No FM #28 reduction (ledgers grew, said plainly); read `DESIGN_WORKSTREAM.md` before recognizing the operative mold was S755's record (~2 min); fixture check used the installed library, not `load_all()` (fine for data objects, named as a shortcut). S760 evaluated 9/10 — every checked claim held.
 
 ```handoff
 session: S760
