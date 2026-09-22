@@ -164,6 +164,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   4/4, all 4 Slice 4 test files still 181/181, `lintr::lint()` on
   `R/modSnapshotTrends.R` 0 lints.
 
+### 2026-09-22 · [issue #167] S760 verification + close: devtools::check() 0/0/0, quality ratchet 1/1, live shinytest2 e2e pass, issue #167 closed
+- Full regression suite (idle machine, `NOT_CRAN=true`, `load_all()`
+  first, pandoc PATH workaround): **0 failed / 0 error / 7319 passed /
+  185 skipped** -- fully clean, no benchmark flake this run.
+  `devtools::check()` **0 errors / 0 warnings / 0 notes**, raw
+  `Status: OK` (7m28.7s). Quality ratchet **1/1 pass** at `82cbecef`
+  (3,500,014 B, results `274862feb4c9`, manifest `aa983075d6a2`, read
+  from the results file; +7,867 B vs S759 -- new module, tests, docs,
+  real content growth). Phase 3E: the new
+  `test-e2e-snapshot-trends-module.R` run live against the real running
+  app (`NPRC_RUN_E2E=true`) -- 9/9 assertions pass, 0 failures, 0 skips:
+  pedigree load -> GVA run -> tab navigation -> history upload ->
+  snapshot generation -> trend plot render -> delta comparison with the
+  D4 comparability flag -> both downloads -> zero related console
+  errors.
+- Owner-ratified via `AskUserQuestion` (plan §5 Slice 4's own reserved
+  close-out decision): **issue #167 closed** -- v1 (Slices 1-4) is a
+  complete, shippable capability; Slice 5 (retrospective backfill) was
+  never ratified as v1 scope and is recorded as its own deferred
+  `BACKLOG.md` item (a future pursuit needs a fresh GitHub issue +
+  Pre-RED design session, since #167 itself is now closed). Closing
+  comment: https://github.com/rmsharp/nprcgenekeepr/issues/167#issuecomment-5771656769
+
 ### 2026-09-21 · [issue #167] S760 claim: issue #167 Slice 4 (`modSnapshotTrends` module + 16th tab) implementation session *(in progress)*
 - Phase 0 reconcile: 0 undocumented commits on both frontiers at
   `0e2e8629`; S759 receipt complete, ratchet citation verified against

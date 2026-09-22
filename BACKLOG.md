@@ -5,6 +5,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
+- [ ] **(Optional, owner decision) Retrospective colony-snapshot backfill for
+      longitudinal genetic-health monitoring** (deferred S760, 2026-09-22, from the
+      closed issue #167's plan §5 Slice 5, DECISION NEEDED, Effort L, its own scoping
+      session first) -- issue #167's v1 (schema + history IO, snapshot generation,
+      trend/delta computation, the Genetic-Health Trends tab; Slices 1-4, all shipped
+      and closed) is prospective-only: snapshots are recorded from the analysis state
+      a user is looking at when they generate one. A future, clearly-caveated feature
+      could reconstruct APPROXIMATE historical snapshots from birth/exit dates alone,
+      giving an immediate trend from a single studbook rather than waiting for
+      prospective series to accumulate. **Never ratified as v1 scope** (plan §3 D5,
+      §5 Slice 5) -- the caveat model is the design problem, not an implementation
+      detail: as-of-date reconstruction cannot recover historical breeder flags or
+      focal-population designations, so `neSexRatio`/`neVariance` and focal-rule
+      snapshots would be silently wrong, not merely approximate, unless the design
+      session solves that. Requires its own fresh Pre-RED design gate (a new GitHub
+      issue, since #167 itself is closed) before any implementation. See
+      `docs/planning/issue167-longitudinal-monitoring-plan.md` §5 Slice 5 / §7 Dragon 1
+      for the full caveat inventory.
 - [ ] **Replace the broken x86_64 `/usr/local/bin/pandoc` on this machine** (found S756,
       2026-09-21, DECISION NEEDED / owner action, Effort S) -- the root-owned
       `/usr/local/bin/pandoc` (x86_64, Mar 2023) now fails with "Bad CPU type in
