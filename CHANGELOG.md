@@ -38,6 +38,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S764 records: REFACTOR declared no-op, verification battery clean, close-out records committed
+- **REFACTOR (declared no-op):** both new surfaces re-read — the reporter
+  follows the `reportMatePairs()` linear mold, the helpers are clear
+  single-purpose loops; the only extraction candidate (a shared
+  canonical-pair-key helper) would touch the shipped Slice 1 validator
+  (Architect-mode scope, not this slice). **Verification (all measured):**
+  full suite (NOT_CRAN, `load_all()` first, pandoc PATH workaround)
+  **0 failed / 0 error / 7455 passed / 185 skipped** — 7370 baseline +
+  exactly the 85 new expectations; `devtools::check()` **0/0/0**; ratchet
+  **1/1 at `6203cb11`** (3,512,676 B, results `3ab41f1196de`, manifest
+  `aa983075d6a2` — +8,033 B vs S763, CONTENT: code/tests/man/NEWS ship in
+  the tarball); lint 0 on all 4 touched files; pkgdown guard 5/5; wordlist
+  guard 3/3; trim `--check` no trigger ×3; DESCRIPTION unchanged.
+  **Records:** S763 handoff evaluated 9/10; S764 full handoff +
+  self-assessment 9/10; `HANDOFFS.md` receipt complete. **Learnings
+  778/779** appended (harem-sire seam bypass, kinship AND ancestry;
+  tapply list-mode array `[[`-read trap). **New `BACKLOG.md` item**
+  (DECISION NEEDED): harem-sire conflict enforcement hole — closing it is
+  a behavior change needing its own Pre-RED gate. Citation checklist
+  (#120) N/A recorded (rule bookkeeping, no new displayed statistic — plan
+  §9 runs the check at Slice 4); tutorial/article owed at Slice 4;
+  `a2interactive` deferred to the standing pass. Issue #168 stays OPEN
+  (Slices 3–4).
+
 ### 2026-09-22 · [issue #168] S764 fix: WORDLIST coverage for the two new prose words
 - The full-suite run flagged exactly one failure: `test_wordlist_coverage.R`
   on "groupmates" (`NEWS.Rmd`) and "severities"

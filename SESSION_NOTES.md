@@ -58,15 +58,138 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 763 Handoff Evaluation (by Session 764)
+**Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
+measured 0 on both frontiers; "~57 unpushed (recount)" measured exactly
+57; CI-green held (10/10); ratchet citation matched the results file
+exactly; next step (A) WAS this session's owner-picked deliverable with
+the right design inputs used directly (D7 identity tests, both-modes
+property test, the D3 F-F pin, Slice 1 fixtures as test vehicle); gotcha
+(5)'s RED-honesty pattern was applied verbatim (message patterns pinned;
+per-block audit found 0 spurious passes); pandoc workaround verbatim;
+key-file pins (validAncestryRules mold, fixture paths, plan sections) all
+accurate. **Missing:** (1) the harem-sire seam hole — the plan and the
+handoff both said harem "inherits blocking through the same list";
+source reading found pre-seeded sires bypass the seam entirely (kinship
+included), forcing a mid-RED owner gate (more a plan gap than a handoff
+gap, but the handoff repeated it); (2) no warning that new prose words
+would need `inst/WORDLIST` entries (cost one suite re-run). **Wrong:**
+nothing found. **ROI:** high.
+
 ### What Session 764 Did
-**Deliverable:** Issue #168 Slice 2 — enforcement kernel:
-`groupAddAssign(ancestryRules = NULL)` + `reportAncestryViolations()` +
-`.ancestryConflictPairs()`, strict TDD from plan §5 Slice 2 (IN PROGRESS)
-**Started:** 2026-09-22
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry
-says (in progress); Phase 3F records the rest. Until close-out, this line
-is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Issue #168 **Slice 2 — enforcement kernel — DONE**,
+strict TDD with all phase gates owner-ratified via `AskUserQuestion`
+(PRE-RED→RED with 5 RED-reserved decisions pinned in the gate text; a
+mid-RED harem scope gate; RED→GREEN; GREEN→REFACTOR, REFACTOR declared
+no-op after re-read — the only extraction candidate, a shared
+canonical-pair-key helper, would touch the shipped Slice 1 validator:
+Architect-mode scope).
+**Merge-point refinement (load-bearing):** the block-merge lands BEFORE
+the current-group conflict filter (`R/groupAddAssign.R:182-186` region),
+not merely before the mode fork — seeds never pass through the fill
+loop, so only that filter excludes seed-blocked candidates.
+**Harem discovery + owner gate:** pre-seeded sires bypass the `kin` seam
+entirely (kinship AND ancestry — Learning 778); owner chose "inherit +
+document": limitation test-pinned, roxygen-documented, NEWS-caveated;
+the deliberate fix is a new `BACKLOG.md` DECISION-NEEDED item.
+**RED** (`101ae118`): 26 blocks / 2 new files.
+`test_groupAddAssignAncestry.R` (12): NULL-vs-omitted + flag-only
+same-seed identity, block-never-co-placed properties in sampling/
+exhaustive/sexRatio, harem loop-placed protection + the limitation pin,
+currentGroups seed exclusion, F-F pin (I2+H1 co-place with no rules,
+never with the INDIAN×HYBRID block), stop() paths, return shape
+unchanged. `test_reportAncestryViolations.R` (14): hand-derived
+violations/coverage on Slice 1 fixtures, `list(violations, coverage)`
+shape, overridden rows never absent, self-pair rule, minimal ped,
+lowercase coercion, stop() paths, integration, `:::` pins for both
+helpers (Dragon 2 before/after-merge). Per-block audit: all 26 fail
+ONLY on the missing argument/functions.
+**GREEN** (`9822bd7a` code+NAMESPACE+man ×2; `9c0dfdad`
+_pkgdown.yml+NEWS.Rmd): 26/26 blocks (85 expectations, 0 warnings)
+after one genuine defect the RED fixtures caught — `tapply()`'s
+list-mode array errors on `[[`-read of an absent name and is empty when
+all kinship pairs filter out (Learning 779); fixed by `as.list()` at
+the merge seam. Adjacent corpora unchanged. Then `6203cb11`: WORDLIST
++2 (groupmates, severities) after the full suite flagged them.
+**Verification (all measured):** full suite (NOT_CRAN, load_all, pandoc
+PATH) **0 failed / 0 error / 7455 passed / 185 skipped** (7370 + exactly
+the 85 new); `devtools::check()` **0/0/0**; ratchet **1/1 at `6203cb11`**
+(3,512,676 B, results `3ab41f1196de`, manifest `aa983075d6a2` — +8,033 B
+vs S763, CONTENT); lint 0 on all 4 touched files; pkgdown guard 5/5;
+wordlist guard 3/3; trim `--check` no trigger ×3; DESCRIPTION unchanged
+(utils already imported).
+**Started/completed:** 2026-09-22. Claim `2755a007`; RED `101ae118`;
+GREEN `9822bd7a`+`9c0dfdad`; fix `6203cb11`; records + sha follow.
+**Ledger:** one entry per action. TDD phase declared at every response
+top.
+**Checklists:** NEWS.Rmd ✓ (plain-language, harem caveat stated);
+`_pkgdown.yml` ✓ (5/5); lint ✓; citation (#120) **N/A recorded** — no
+new displayed statistic (violations/coverage are rule bookkeeping; plan
+§9 runs the check at Slice 4); tutorial/article owed at Slice 4;
+`a2interactive` deferred to the standing pass (reportAncestryViolations
++ the ancestryRules argument join its inventory); issue #168 stays OPEN
+(Slices 3–4 remain).
+
+**Self-assessment (Session 764): 9/10.** **Strengths:** (1) strict TDD
+with 5 owner gates; the harem discovery STOPPED the session for an owner
+decision instead of silently weakening a test; (2) two load-bearing
+source discoveries beyond the ratified plan (merge-point refinement;
+harem seam hole), both recorded durably (Learnings 778/779, BACKLOG,
+NEWS caveat); (3) RED per-block audit clean; the degenerate 2-animal
+fixtures caught a real GREEN defect; (4) full measured battery; (5)
+blast radius: 7 commits, ≤5 content files each, per-action ledger
+entries. **Weak:** (1) the WORDLIST failure cost a full-suite re-run —
+should have spell-checked new prose pre-commit; (2) the overriddenRules
+column guard shipped in GREEN without a RED test (declared: small, D4
+never-silent motivation — a purist would have RED'd it); (3) no FM #28
+reduction; CHANGELOG grew 6 entries (said plainly).
+
+**Learnings:** 778 (pre-seeded members bypass the kin seam — harem-sire
+hole, kinship and ancestry) and 779 (tapply list-mode array `[[`-read
+trap) appended to `PROJECT_LEARNINGS.md`; harem fix deferred as a new
+BACKLOG DECISION-NEEDED item.
+
+**Next steps (specific):** (A) **#168 Slice 3 (READY, M)** —
+override/audit-manifest primitives: `.buildAncestryOverrideManifest()`
++ the gate warning-text constant (`.deidentifiedExportWarningText`
+mold, `R/modDeidentifiedExport.R:30,49`), proving the full override →
+enforcement → report → manifest path headlessly, strict TDD from plan
+§5 Slice 3; `reportAncestryViolations(overriddenRules=)` is already
+argument-shaped for it; expected internals-only (record the NEWS N/A).
+(B) **Push+CI (READY, S, growing)** — ~64 unpushed expected after
+close-out (recount); CI current through `8007de81`; batch carries #167
++ the #168 plan + Slices 1–2. (C) **Pandoc owner action (DECISION
+NEEDED, S, `BACKLOG.md`)** — unchanged. (D) **Slice 5 backfill scoping
+(DECISION NEEDED, L, `BACKLOG.md`)** — unchanged. (E) **Harem-sire
+seam hole (DECISION NEEDED, M, NEW `BACKLOG.md` item)** — needs its own
+Pre-RED gate; never a mid-slice fix. (F) Standing list unchanged — see
+S760's next-steps (E) via its HANDOFFS receipt.
+
+**Key files:** `R/groupAddAssign.R:204` (the guarded ancestry block:
+validate → column check → conflict pairs → both-in-groups drop → merge),
+`R/reportAncestryViolations.R:65` (exported reporter; helpers at :178
+`.ancestryConflictPairs` and :239 `.mergeAncestryBlockPairs`),
+`tests/testthat/test_groupAddAssignAncestry.R`
+(harem-limitation pin + F-F pin), `tests/testthat/test_reportAncestryViolations.R`
+(shape pins), `docs/planning/issue168-ancestry-guardrails-plan.md:§5-Slice-3`
+(next pickup), `BACKLOG.md` (new harem item, top of Up Next),
+`PROJECT_LEARNINGS.md` (778/779), `CHANGELOG.md` (S764 entries),
+`HANDOFFS.md` (S764 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~64 unpushed expected (recount). (2) The harem
+limitation is DOCUMENTED, test-pinned behavior — do not "fix" it inside
+any #168 slice; the BACKLOG item owns it (Learning 778). (3) `kin` from
+`getAnimalsWithHighKinship()` is a tapply ARRAY — reading an absent name
+with `[[` errors; normalize with `as.list()` first (Learning 779). (4)
+Ratchet moved for CONTENT: 3,512,676 B at `6203cb11` (results
+`3ab41f1196de`); cite from the results file. (5) Pandoc PATH workaround
+unchanged. (6) New prose words need `inst/WORDLIST` entries — run
+`spelling::spell_check_package()` before committing prose to skip a
+suite round-trip. (7) The suite-wide `warnings: 6` count is
+pre-existing (measured identically before and after this slice's
+changes); the new files contribute 0. (8) Standing set unchanged — see
+S760's gotcha (9) via its HANDOFFS receipt.
 
 ### Session 762 Handoff Evaluation (by Session 763)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
