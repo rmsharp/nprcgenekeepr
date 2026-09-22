@@ -38,6 +38,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S759 GREEN (2/2): man pages + `_pkgdown.yml` reference entries for the two Slice 3 exports
+- `man/calcSnapshotDeltas.Rd` + `man/plotSnapshotTrends.Rd` (generated
+  by `devtools::document()`, GREEN 1/2 run); `_pkgdown.yml` catch-all
+  entries in alphabetical position; coverage-guard test re-run green
+  (5/5, `test_pkgdown_reference_config.R`).
+
 ### 2026-09-21 · [issue #167] S759 GREEN (1/2): `calcSnapshotDeltas()` + `plotSnapshotTrends()` implementations + NAMESPACE
 - All 29 RED blocks pass first run: 41 + 31 = 72/72 expectations,
   0 failed / 0 error / 0 warnings. `R/calcSnapshotDeltas.R`:
