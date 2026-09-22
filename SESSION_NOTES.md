@@ -54,6 +54,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 760 Did
+**Deliverable:** Issue #167 Slice 4 — `modSnapshotTrends` module + 16th
+tab, strict TDD from plan §5 Slice 4 (IN PROGRESS)
+**Started:** 2026-09-21
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md`
+entry says (in progress); Phase 3F records the rest. Until close-out,
+this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 758 Handoff Evaluation (by Session 759)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
 measured 0 on both frontiers at `ba328a3d`; "25 unpushed expected
