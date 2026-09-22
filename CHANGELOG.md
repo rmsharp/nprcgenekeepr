@@ -38,6 +38,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S762 records: close-out records committed (handoff, S761 evaluation, self-assessment, HANDOFFS receipt, Learning 777)
+- `SESSION_NOTES.md`: S761 handoff evaluated 9/10 (every checked claim held —
+  0 undocumented measured on both frontiers, 47 unpushed measured exactly,
+  CI 10/10, gotcha 6's binding ceiling predicted this session's hook refusal
+  verbatim; one marginal gap: post-QC ancestry state); S762 full handoff +
+  self-assessment 9/10. `HANDOFFS.md`: S762 receipt complete (predecessor 9,
+  self 9; ratchet cited from the results file: 1/1 pass, results
+  `93886b8a9313`, manifest `aa983075d6a2`, 3,499,988 B at `fd5f97d8` — the
+  −6 B vs S761 read as tar/gzip noise on a build-ignored diff per the
+  standing rule). `PROJECT_LEARNINGS.md`: Learning 777 appended
+  (`methodology_trim.py --cut N` keeps the N newest records — the S762 trim
+  gate misstated the archive scale; reflexes for stating tool semantics in
+  owner gates). All close-out checklists N/A with reasons (docs-only).
+
 ### 2026-09-22 · [issue #168] S762 deliverable: ancestry-guardrails design plan ratified (D1–D9, 4 slices)
 - `docs/planning/issue168-ancestry-guardrails-plan.md` written in the #167 plan
   mold, answering the S761 scoping record's Q1–Q9 as ratified numbered
