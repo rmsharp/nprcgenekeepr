@@ -209,6 +209,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   / 0 notes; ratchet 1/1 pass at `82cbecef` (3,500,014 B); live
   shinytest2 e2e 9/9 assertions, 0 failures, 0 skips.
 
+### 2026-09-22 · [issue #167] S760 close-out sha: `HANDOFFS.md` receipt's `commit:` field set to the records commit `a1046d47` (self-reconcile, carries its own ledger entry)
+- Final S760 commit. Session total: 12 commits (claim `de30cf2a`, RED
+  `4be883cc`, GREEN `e0c27f23`+`c87ea164`+`0519ef06`+`b11bc756`,
+  REFACTOR/fix-up `82cbecef`, verification+close `40b57312`, plan note
+  `a7f8e3c2`, records `a1046d47`, this sha commit); one non-commit
+  action (issue #167 closed via `gh issue close`, comment
+  https://github.com/rmsharp/nprcgenekeepr/issues/167#issuecomment-5771656769).
+  ~43 unpushed after this commit — verify with
+  `git rev-list --count origin/master..HEAD`, not this sentence.
+
 ### 2026-09-21 · [issue #167] S760 claim: issue #167 Slice 4 (`modSnapshotTrends` module + 16th tab) implementation session *(in progress)*
 - Phase 0 reconcile: 0 undocumented commits on both frontiers at
   `0e2e8629`; S759 receipt complete, ratchet citation verified against
