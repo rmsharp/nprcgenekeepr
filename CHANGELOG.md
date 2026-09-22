@@ -187,6 +187,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   Pre-RED design session, since #167 itself is now closed). Closing
   comment: https://github.com/rmsharp/nprcgenekeepr/issues/167#issuecomment-5771656769
 
+### 2026-09-22 · [issue #167] S760 records: plan §4 implementation note (signature amendment + wiring resolution)
+- `docs/planning/issue167-longitudinal-monitoring-plan.md` §4: recorded
+  the ratified `modSnapshotTrendsServer(id, snapshotSource)` signature
+  (superseding the catalog's `pedigree`/`geneticValues` proposal),
+  matching the S758/S759 precedent of recording every slice's catalog
+  deviation in the plan document itself, not only in the session's own
+  ledger entry.
+
 ### 2026-09-21 · [issue #167] S760 claim: issue #167 Slice 4 (`modSnapshotTrends` module + 16th tab) implementation session *(in progress)*
 - Phase 0 reconcile: 0 undocumented commits on both frontiers at
   `0e2e8629`; S759 receipt complete, ratchet citation verified against

@@ -280,6 +280,27 @@ must supply `membershipRule` for delta computation (e.g. a rule selector
 fed from the uploaded history) in addition to the S758
 `guIter`/`guThresh` pass-through above.
 
+Implementation note (S760, 2026-09-22 — Slice 4 shipped): the ratified
+signature is `modSnapshotTrendsServer(id, snapshotSource)` — the
+`pedigree`/`geneticValues` reactives this catalog row proposed are
+superseded by ONE new reactive, `snapshotSource`, added to
+`modGeneticValueServer`'s own return list (owner decision via
+`AskUserQuestion`): a list `(ped, geneticValue, guIter, guThresh)`
+captured atomically inside `modGeneticValueServer`'s `gvResults()`
+eventReactive body, mirroring `modDeidentifiedExportServer`'s
+exportRaw params-snapshot pattern (issue #150) so a slider changed
+after a run can never make the recorded provenance drift from what
+was actually analyzed — this resolves both S758's and S759's wiring
+consequences above (`guIter`/`guThresh` pass-through; `geneticValue`
+itself) from a single upstream reactive, and satisfies module-contract
+rule 6 (every declared parameter read) where the original two-reactive
+signature would have left `pedigree`/`geneticValues` unread. The
+generated snapshot's `membershipRule` is auto-derived from
+`snapshotSource()$ped$population` (second owner decision) rather than
+a user-set dropdown, satisfying the interface catalog's D7 intent
+without the delta comparison's own user-facing rule selector (S759's
+consequence) changing shape.
+
 ---
 
 ## 5. Implementation plan — vertical slices (each its own future session)
