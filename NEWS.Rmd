@@ -382,6 +382,20 @@ knitr::opts_chunk$set(echo = TRUE)
   file; a worked example rules file and a matching example pedigree ship
   with the package. Enforcement during group formation arrives in later
   steps of this work.
+- Ancestry rules are now enforced during group formation (issue #168,
+  continued): hand a rules file to group formation and animal pairs a
+  "block" rule names can no longer end up in the same group -- whatever
+  their sexes, and in every formation mode. Pairs a "flag" rule names
+  still form freely and are pointed out afterward. With no rules file,
+  formation behaves exactly as before. Script users: `groupAddAssign()`
+  gained a matching optional `ancestryRules` argument, and the new
+  `reportAncestryViolations()` lists every flagged or blocked pairing in
+  groups you already have, plus a summary showing how many animals each
+  rule does and does not reach. One caveat, stated in the documentation:
+  in harem formation the automatically chosen sire himself is not checked
+  against the rules yet (his groupmates are checked against each other).
+  The in-app upload and violations view arrive in the final step of this
+  work.
 
 ## Mate Pair Analysis
 - New `reportMatePairs()` reports individual mate-pair candidates with

@@ -38,6 +38,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-22 · [issue #168] S764 GREEN 2/2: pkgdown reference entry + plain-language NEWS entry
+- `_pkgdown.yml`: `reportAncestryViolations` added alphabetically to the
+  "All exposed functions" group (coverage guard 5/5). `NEWS.Rmd`: enforcement
+  entry appended to the Breeding Group Formation section directly under the
+  Slice 1 groundwork entry — plain colony-manager language (S628), states
+  the harem-sire caveat plainly, and points to the Slice 4 app surface as
+  the final step.
+
 ### 2026-09-22 · [issue #168] S764 GREEN 1/2: enforcement kernel code (26/26 RED blocks pass, lint clean)
 - `R/groupAddAssign.R`: `ancestryRules = NULL` argument (placed before
   `updateProgress`); one guarded block after `getAnimalsWithHighKinship()`

@@ -383,6 +383,7 @@ reference:
   - '`removePotentialSires`'
   - '`removeUninformativeFounders`'
   - '`removeUnknownAnimals`'
+  - '`reportAncestryViolations`'
   - '`reportGV`'
   - '`reportMatePairs`'
   - '`resolveCrossCenterIds`'
