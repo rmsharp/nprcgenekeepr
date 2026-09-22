@@ -54,14 +54,249 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 759 Handoff Evaluation (by Session 760)
+**Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
+measured 0 on both frontiers at `de30cf2a`; "32 unpushed expected
+(recount)" measured exactly 32; the S759 receipt's ratchet citation
+matched `.quality-gates-results.json` byte-for-byte (`c3054853fdfe`,
+3,492,147 B at `16159872`); CI-green claim held (10/10 recent runs);
+growth run read 39/10 at Orient (rose from 38 — read-don't-predict
+right again); next step (A) WAS this session's owner-picked deliverable
+with exactly the right start point (plan §5 Slice 4, the two named
+wiring consequences from S758/S759 — `guIter`/`guThresh` pass-through
+and `membershipRule` for deltas — both correctly resolved by the new
+`snapshotSource` reactive). **What was missing:** nothing attributable
+to S759 — the two real findings this session's own full-suite run
+surfaced (the `.github/workflows/shinytest2.yaml` per-module-group
+registration gap; 3 roxygen words unrecognized by
+`spelling::spell_check_package()`) belong to Slice 4's own new-module-
+and-new-e2e-file territory, which no prior script-only slice (1–3)
+could have anticipated or flagged. **What was wrong:** nothing found —
+every checked claim held. **ROI:** high.
+
 ### What Session 760 Did
-**Deliverable:** Issue #167 Slice 4 — `modSnapshotTrends` module + 16th
-tab, strict TDD from plan §5 Slice 4 (IN PROGRESS)
-**Started:** 2026-09-21
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md`
-entry says (in progress); Phase 3F records the rest. Until close-out,
-this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Issue #167 **Slice 4 — `modSnapshotTrends` module + the
+Genetic-Health Trends tab (16th top-level tab) — DONE, issue #167
+CLOSED**, strict TDD with 3 pre-RED scope decisions + all 3 phase gates
+owner-ratified via `AskUserQuestion`, plus a 4th close-out-time decision
+the plan itself reserved (scope: (1) `modGeneticValueServer` gains a
+new `snapshotSource` reactive — `list(ped, geneticValue, guIter,
+guThresh)` captured atomically inside the `gvResults()` eventReactive
+body, mirroring `modDeidentifiedExportServer`'s exportRaw params-
+snapshot pattern, issue #150 — rather than the Trends tab re-running
+`reportGV()`; (2) the plan's catalog signature is amended to
+`modSnapshotTrendsServer(id, snapshotSource)` — ONE upstream reactive,
+every declared parameter read (module-contract rule 6); (3) the
+generated snapshot's `membershipRule` is auto-derived from
+`snapshotSource()$ped$population` and shown read-only, never a
+user-set dropdown that could contradict the data; close-out: (4) issue
+#167 closed now — v1 (Slices 1-4) is complete and shippable, Slice 5
+(retrospective backfill) was never ratified as v1 scope and is
+deferred to its own `BACKLOG.md` item. Gates: PRE-RED→RED, RED→GREEN,
+GREEN→REFACTOR declared no-op).
+**RED** (`4be883cc`): 4 new test files + 1 edited contract file, 41
+new/modified blocks — `test_modGeneticValue_snapshotSource.R` (4
+blocks: errors before any run; carries ped/geneticValue/guIter/
+guThresh after a run; does not drift when sliders change post-run,
+mirroring the #150 manifest dragon; `ped$population` matches the
+analyzed report), `test_modSnapshotTrends.R` (14 blocks: UI structure;
+empty state; Slice 1 reader/validator reuse incl. malformed-upload
+no-op; Slice 2 reuse via `snapshotSource` with the auto-derived rule;
+Slice 3 reuse with the D4 `comparabilityFlag` visible; both downloads),
+`test_appSnapshotTrendsWiring.R` (3 blocks: new tab present; all 15
+pre-existing tab labels still present, D7 zero-changes; appServer wires
+`modSnapshotTrendsServer`/`gvResults$snapshotSource`),
+`test-e2e-snapshot-trends-module.R` (shinytest2, skip-gated — full
+path incl. the D4 flag and both downloads), `test_moduleContract.R`
+edited (new `snapshotSource` entry + `modSnapshotTrends` module entry).
+Verified failing ONLY on the missing implementation (silent-reporter
+counts: 0 passed across the 3 unit-test files; whole-file error on the
+contract file at list-construction).
+**GREEN** (4 checkpoint commits — `e0c27f23`, `c87ea164`, `0519ef06`,
+`b11bc756`): (1/4) the module + `snapshotSource` + `appUI`/`appServer`
+wiring, 4 files, lint clean (one `nonportable_path_linter` false
+positive on a "CSV/Excel" label string fixed by rewording, not
+suppressed); (2/4) `devtools::document()` output — NAMESPACE + the 2
+new `.Rd` files + the `snapshotSource` doc addition to
+`modGeneticValueServer.Rd`; (3/4) the mechanical `@family` cross-
+reference regen across **27 pre-existing `man/*.Rd` files** (every diff
+confirmed `2 ++`, nothing else — `PROJECT_LEARNINGS.md` Learning 262f /
+the issue #112/#149 precedent for exactly this scenario, committed as
+its own dedicated commit rather than hand-split under the 5-file cap,
+since it is ONE atomic mechanical action from a single `document()`
+run); (4/4) `_pkgdown.yml` + NEWS.Rmd (plain-language, S628) +
+`vignettes/articles/colony-manager-guide.qmd` (tutorial/article
+checklist, S436 — text-only, matching the established Cross-Center
+Identity precedent) + issue #120 citation check run and **RECORDED
+N/A** (Slice 4 displays only Slices 1-3's existing statistics; no new
+estimator). 72/72 (181 total across the 4 test files) RED expectations
+pass first try after checkpoint 1/4; 0 regressions in
+`test_modGeneticValue*.R`/`test_appServer_*.R`/`test_appUI_*.R`
+(258/258).
+**REFACTOR** (`82cbecef`, declared no-op): re-read the new module + the
+`snapshotSource` addition — no genuine duplication or naming issue
+found (the two `tryCatch`/`showNotification` blocks are each small and
+distinct; the design already matches the established
+`modDeidentifiedExportServer`/`modCrossCenterIdentityServer` molds). A
+full-suite regression run surfaced 2 real, unrelated-to-any-prior-
+session findings, both investigated and fixed in this same checkpoint:
+(a) `test_shinytest2_workflow_coverage.R` — the new e2e file matched no
+`.github/workflows/shinytest2.yaml` group regex (the #148/MHC
+precedent); added `^e2e-snapshot-trends-module`. (b)
+`test_wordlist_coverage.R` — 3 roxygen words unrecognized by
+`spelling::spell_check_package()` (`geneticValue` unwrapped in prose,
+`upload's`/`th` from an ordinal + possessive construction); fixed by
+`\code{}`-wrapping / rewording, not by growing `inst/WORDLIST`.
+**Verification (all measured):** full suite (idle machine, `NOT_CRAN=
+true`, `load_all()` first, pandoc PATH workaround) **0 failed / 0 error
+/ 7319 passed / 185 skipped** — fully clean, no benchmark flake this
+run; `devtools::check()` **0 errors / 0 warnings / 0 notes**, raw
+`Status: OK` (7m28.7s); ratchet 1/1 pass at `82cbecef` (3,500,014 B,
+results `274862feb4c9`, manifest `aa983075d6a2`, read from the results
+file); Phase 3E live `shinytest2` e2e run (`NPRC_RUN_E2E=true`) against
+the real running app — **9/9 assertions pass, 0 failures, 0 skips**:
+pedigree load → GVA run → tab navigation → history upload → snapshot
+generation → trend plot render → delta comparison with the D4 flag →
+both downloads → zero related console errors; `lintr::lint_package()`
+0 lints package-wide; `test_pkgdown_reference_config.R` 5/5.
+**Started/completed:** 2026-09-21 through 2026-09-22 (single continuous
+session, spanning midnight). Claim `de30cf2a`; RED `4be883cc`; GREEN
+`e0c27f23`+`c87ea164`+`0519ef06`+`b11bc756`; REFACTOR/fix-up `82cbecef`;
+verification+close `40b57312`; plan note `a7f8e3c2`; records + sha
+commits follow.
+**Ledger:** one `CHANGELOG.md` entry per action — claim, RED, GREEN
+1/4–4/4, REFACTOR+fix-up, verification+close, plan note, records, sha.
+TDD phase declared at every response top.
+**Checklists:** NEWS.Rmd ✓ (plain-language, S628); `_pkgdown.yml` ✓
+(guard 5/5); lint ✓ (package-wide 0); citation (#120) **run and
+RECORDED N/A**; tutorial/article ✓ (`colony-manager-guide.qmd`,
+text-only per the Cross-Center Identity precedent); `a2interactive.Rmd`
+deferred to the standing pass by its own rule (`modSnapshotTrendsUI`/
+`Server` and the `snapshotSource` addition join that inventory); issue
+#167 **CLOSED** (v1 complete; Slice 5 deferred to `BACKLOG.md`, own
+future issue + Pre-RED gate).
+
+**Self-assessment (Session 760): 9/10.** **Strengths:** (1) strict TDD
+held end to end across a genuinely NEW module (the first UI-adding
+slice in this chain since Slice 1) — RED verified failing for exactly
+one reason before any implementation; 4 owner ratifications (3 scope +
+1 close-out decision) + 3 phase gates, nothing decided silently; (2)
+researched and applied the correct precedent for a scenario this exact
+slice sequence had not yet hit — the mass mechanical `@family` man-page
+regen (found via `git log`/`PROJECT_LEARNINGS.md` archaeology, not
+guessed) — and committed it as its own dedicated checkpoint rather than
+fragmenting one atomic mechanical action to force-fit the 5-file cap;
+(3) a full-suite regression run was treated as a real signal, not
+noise: 2 genuine close-out-checklist gaps (CI group registration,
+WORDLIST spelling) were investigated, root-caused, and fixed in-session
+rather than deferred or dismissed as pre-existing; (4) Phase 3E was a
+GENUINE live browser run against the real app (not a headless
+`testServer` substitute), and it passed clean on the first try; (5)
+the plan document itself was updated with the S760 implementation
+note, matching the S758/S759 precedent, rather than leaving the
+signature deviation recorded only in the ledger; (6) issue #167's
+close-out/keep-open decision — explicitly reserved by the plan for this
+session — was posed via `AskUserQuestion` rather than decided
+unilaterally, and closed with a comprehensive summary comment citing
+every slice's commit range. **Weaknesses:** (1) one real harness
+fumble: nesting `&`/`disown` inside an already-`run_in_background`
+Bash call detached `devtools::check()` from harness tracking, producing
+a false-positive completion notification while the real process kept
+running orphaned — caught via `ps`, killed, and relaunched cleanly
+(~2 min lost, no state touched); (2) no FM #28 reduction — no
+mandated-read file got smaller; `BACKLOG.md` grew by one deferred item
+and `CHANGELOG.md` grew substantially (a genuinely large multi-
+checkpoint session), both said plainly rather than left implicit; (3)
+the colony-manager-guide.qmd section is text-only (matching the #149
+precedent) rather than including a live screenshot (matching the more
+recent #148/MHC precedent) — a legitimate, established-precedent
+choice, but the two precedents diverge and this session picked the
+lighter one without flagging the choice to the owner.
+
+**Learnings:** none owed to `PROJECT_LEARNINGS.md` as a NEW mechanism —
+the mass `@family` regen precedent (Learning 262f) and the
+CI-group-registration/spell-check gaps are confirming instances of
+already-documented patterns/precedents, not new discoveries; the
+nested-backgrounding harness fumble is genuinely new but low-stakes
+(caught immediately, no state damage) and is recorded here as a
+gotcha rather than promoted to a `PROJECT_LEARNINGS.md` entry.
+
+**Next steps (specific):** (A) **#168 scoping session (READY, M)** —
+ancestry guardrails for breeding-group formation; S755's scoping doc
+for issue #167 is the mold (design-first, same issue, evidence-based
+inventory, `AskUserQuestion`-gated decisions). (B) **Push+CI (READY,
+S, growing)** — 41 unpushed measured at this point (recount with
+`git rev-list --count origin/master..HEAD`; +2 more expected from this
+close-out's own records/sha commits, so ~43 after close-out); CI
+current only through S754's push (`8007de81`); this batch carries ALL
+of Slices 1-4's R-code changes (the whole #167 feature, now closed),
+so the next push is its first remote verification — high value to do
+soon. (C) **Pandoc owner action (DECISION NEEDED, S, `BACKLOG.md`)** —
+unchanged; workaround still required for suite/check/ratchet. (D)
+**(Optional, owner decision) Retrospective snapshot backfill (DECISION
+NEEDED, L, `BACKLOG.md`)** — the deferred issue #167 Slice 5; needs its
+own new GitHub issue + Pre-RED design gate before any implementation,
+per this session's close-out decision. (E) Unchanged: chromote hang
+research (READY, M); inst/doc slimming (DECISION NEEDED, M); REUSE
+registration (owner action, S); BACKLOG compression recurring; NPRC
+outreach (DECISION NEEDED); kinship2-standalone BLOCKED; LabKey
+BLOCKED.
+
+**Key files:** `R/modSnapshotTrends.R` (new — `modSnapshotTrendsUI`
+line 28, `modSnapshotTrendsServer` line ~145), `R/modGeneticValue.R`
+(`analyzedSnapshot` reactiveVal + its atomic capture inside
+`gvResults()`'s eventReactive body, `snapshotSource` in the return
+list), `R/appUI.R` (16th `tabPanel`, purely additive diff verified),
+`R/appServer.R` (mounts `modSnapshotTrendsServer` wired to
+`gvResults$snapshotSource`), `tests/testthat/test_modSnapshotTrends.R`
+(34 assertions), `tests/testthat/test_modGeneticValue_snapshotSource.R`
+(11), `tests/testthat/test_appSnapshotTrendsWiring.R` (18),
+`tests/testthat/test-e2e-snapshot-trends-module.R` (live-verified),
+`tests/testthat/test_moduleContract.R` (edited, 118 total),
+`.github/workflows/shinytest2.yaml` (new E2E group),
+`docs/planning/issue167-longitudinal-monitoring-plan.md:283` (S760
+implementation note), `BACKLOG.md` (Slice 5 deferred item),
+`vignettes/articles/colony-manager-guide.qmd` (new "Genetic-Health
+Trends" subsection), `NEWS.Rmd`/`_pkgdown.yml` (entries),
+`CHANGELOG.md` (S760 entries at top), `HANDOFFS.md` (S760 receipt),
+`.quality-gates-results.json` (head `82cbecef`; gitignored).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented commits at
+next Phase 0 — measure it; ~43 unpushed expected after close-out
+(recount). (2) **Issue #167 is CLOSED** — do not treat it as open work;
+the only remaining thread is the explicitly-deferred, unratified Slice
+5 (`BACKLOG.md`), which needs its own new issue. (3) The pandoc PATH
+workaround (`BACKLOG.md`) remains required for suite/check/ratchet.
+(4) Ratchet baseline moved for a CONTENT reason: 3,500,014 B at
+`82cbecef` (+7,867 B vs S759 — new module, tests, docs); cite from
+`.quality-gates-results.json` (results `274862feb4c9`), never the
+rounded table. (5) **New pitfall found this session:** adding a NEW
+Shiny module with `@family "Shiny modules"` triggers a mass mechanical
+`document()` regen across EVERY existing module's `.Rd` (here: 27
+files, uniform 2-line `\seealso` addition) — commit it as its OWN
+dedicated checkpoint (verify each diff is `2 ++` and nothing else
+before staging), don't hand-split it to force the 5-file cap; it is
+ONE atomic mechanical action, not N independent edits
+(`PROJECT_LEARNINGS.md` Learning 262f). (6) **New pitfall:** a fresh
+roxygen doc block is spell-checked by `test_wordlist_coverage.R` —
+wrap bare identifier-like words in `\code{}`, and avoid ordinal
+("16th") / possessive ("upload's") constructions that mis-tokenize;
+reword rather than growing `inst/WORDLIST` for trivial phrasing. (7)
+**New pitfall:** a NEW `test-e2e-*.R` file needs its group regex
+registered in `.github/workflows/shinytest2.yaml` in the SAME session
+(`test_shinytest2_workflow_coverage.R` catches the gap; the #148/MHC
+precedent, `b7a55729`). (8) **Harness gotcha:** never nest `&`/`disown`
+inside a Bash call that already uses `run_in_background: true` — it
+detaches the real work from tracking and produces a false-positive
+completion notification; verify with `ps` if a background result looks
+suspiciously instant. (9) Standing set unchanged: full-40-char sha +
+smoke-test `gh run` filters; `scratchpad/` invisible to git BY OWNER
+DECISION; ratchet AFTER committing (Learning 772); renv banner
+expected; CLAUDE.md warn band (26,360 B, unchanged this session);
+growth run 41/10 at this point — read the value at the next Orient; zsh
+harness traps (Learning 775); trim budgets (`--budget-bytes 65536` for
+SESSION_NOTES.md; HANDOFFS/CHANGELOG at the 196,608 default per
+S756–S759 cited practice).
 
 ### Session 758 Handoff Evaluation (by Session 759)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
