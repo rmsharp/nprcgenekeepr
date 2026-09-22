@@ -38,6 +38,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S758 GREEN (1/2): `createColonySnapshot()` implementation
+- `R/createColonySnapshot.R` + `NAMESPACE`: validates the
+  `nprcgenekeeprGV` object (class, 10 required elements, 5 required
+  report columns), the required no-default `guIter`/`guThresh` (single
+  positive whole numbers, coerced to integer), and the ISO
+  `snapshotDate`; verifies the claimed `membershipRule` against
+  `ped`/report ids (wholePedigree ⇔ report covers exactly `ped$id`;
+  focalPopulation ⇔ `ped$population` designates exactly the report's
+  animals) and stops on contradiction; assembles the one-row 27-column
+  D1 row — colony scalars verbatim (`as.numeric()` type-pinned),
+  `nFounders` from `$total`, counts from the report rows, aggregates via
+  `mean()`/`median()`/`calcSkewness()`/`calcKurtosis()` at full
+  precision. 78/78 RED expectations pass; grep proof recorded: zero
+  estimator-internal calls in the new file (only
+  mean/median/calcSkewness/calcKurtosis/sum/nrow/setequal). One roxygen
+  word reworded ("reimplemented" → "duplicated") after
+  `spell_check_package()` flagged it — WORDLIST unchanged. Full-suite
+  anomaly triage: first run 2 failed / 0 error (the WORDLIST failure was
+  this session's own man page, fixed; the `markerParentageLikelihood`
+  runtime benchmark flaked under parallel machine load and re-ran
+  117/117 clean in isolation); clean re-run record in the GREEN 2/2
+  entry.
+
 ### 2026-09-21 · [issue #167] S758 RED: failing tests for `createColonySnapshot()` (Slice 2)
 - `tests/testthat/test_createColonySnapshot.R` (12 test blocks): one-row
   27-column D1 schema (same pinned vector as Slice 1); field-equality vs
