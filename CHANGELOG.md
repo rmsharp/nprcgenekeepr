@@ -38,6 +38,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S757 docs: NEWS.Rmd entry + BACKLOG pandoc-item blast-radius update
+- `NEWS.Rmd` gains a plain-language "Longitudinal Monitoring" entry
+  (S628 criterion) for the three new script-callable functions and the
+  shipped example history. `BACKLOG.md` pandoc "Up Next" item extended
+  with the S757 finding that the broken x86_64 pandoc also errors 3
+  chromote live-render tests in the local full suite
+  (`test_positionMatingUnitForest.R`; same PATH workaround clears them)
+  — per the S636 CI-break convention this stays in the item, no new
+  issue. REFACTOR declared a no-op at the GREEN→REFACTOR gate (owner:
+  keep the mold-consistent inline pair-key).
+
 ### 2026-09-21 · [issue #167] S757 GREEN (2/2): generated man pages + `_pkgdown.yml` reference entries for the three new exports
 - `man/checkSnapshotHistory.Rd`, `man/readSnapshotHistory.Rd`,
   `man/appendColonySnapshot.Rd` (from `devtools::document()`); the three

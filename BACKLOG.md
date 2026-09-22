@@ -18,7 +18,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       pandoc 3.10 then serves) or install an arm64 pandoc (`brew install pandoc`).
       Session workaround until then (used S756, recorded in its receipt):
       `PATH=/Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/aarch64:$PATH`
-      before any ratchet/vignette run. NOTE: the pandoc swap (2.x x86_64 → 3.10 arm64)
+      before any ratchet/vignette run. Blast radius grew (found S757): the break also
+      errors 3 chromote live-render tests in the local full suite
+      (`test_positionMatingUnitForest.R` -- htmlwidgets' self-contained render shells out
+      to pandoc); the same PATH workaround clears them (212/212 clean re-run), so a local
+      "3 errors" suite read on that file is this environment break, not a regression.
+      NOTE: the pandoc swap (2.x x86_64 → 3.10 arm64)
       shifted the measured tarball to 3,468,810 B (−20,307 B vs S755) -- toolchain
       artifact, not content change.
 

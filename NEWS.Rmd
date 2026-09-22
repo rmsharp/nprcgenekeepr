@@ -390,6 +390,18 @@ knitr::opts_chunk$set(echo = TRUE)
   was changed, and a private key to re-identify records later) behind a
   confirmation step (issue #150).
 
+## Longitudinal Monitoring
+- Colony managers can now keep a running history file of dated colony
+  snapshots -- one row of colony-level genetic-health values per recorded
+  date (mean kinship, founder representation, genome uniqueness, and
+  related summaries) -- the groundwork for seeing whether a colony's
+  genetic health is improving or eroding over time (issue #167). Script
+  users: new `readSnapshotHistory()`, `checkSnapshotHistory()`, and
+  `appendColonySnapshot()` read, validate, and extend the history; a
+  worked example history ships with the package. Generating snapshots
+  from an analysis and viewing trends in the app arrive in later steps
+  of this work.
+
 ## General Fixes
 - Fixed: on the Marker Genetics tab, generating a de-identified export
   preview could abruptly end the session -- the app grayed out and stopped
