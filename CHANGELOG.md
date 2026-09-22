@@ -38,6 +38,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-21 · [issue #167] S757 GREEN (1/2): Slice 1 implementation — `checkSnapshotHistory()`, `readSnapshotHistory()`, `appendColonySnapshot()` (all 46 RED expectations pass)
+- RED→GREEN gate passed via `AskUserQuestion` (owner: proceed). Minimal
+  implementations in the kinship-overrides reader/validator mold:
+  validator stop()s per violation class (missing columns, non-numeric
+  metric/count fields, unknown `schemaVersion`, duplicate
+  (`snapshotDate`, `membershipRule`) pair, malformed ISO dates) and
+  returns the coerced history; reader is the `readKinshipOverrides()`
+  shape verbatim (CSV/text/Excel, no validation); append is a pure
+  date-ordered merge (NULL/zero-row start, mismatch/duplicate stops,
+  writes nothing — D2). `NAMESPACE` +3 exports. Verified: 46/46 new
+  expectations pass; full suite 0 failed / 184 skipped / 7093+ passed
+  with 3 errors in `test_positionMatingUnitForest.R` shown to be the
+  S756 pandoc environment break, not a regression (file passes 212/212
+  clean with the arm64-pandoc PATH workaround); `lintr` clean on all 6
+  touched files (loaded via `pkgload::load_all()` first).
+
 ### 2026-09-21 · [issue #167] S757 RED: Slice 1 failing tests + fixture committed (22 tests, 3 files; all fail only on the missing functions)
 - RED phase gate passed via `AskUserQuestion` (owner: proceed). Fixes the
   exact D1 column list: 27 columns, three groups of nine (provenance/
