@@ -38,6 +38,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S766 records: Slice 4a DONE (REFACTOR no-op), verification battery clean, close-out records committed
+- **REFACTOR declared no-op after re-read:** the shared validate-notify
+  helper would touch shipped `modGeneticValue.R` (cross-module
+  Architect-mode scope, S764 precedent); the duplicated rules+ancestry
+  guard clause is the module's idiom; a coverage helper for 4b is
+  speculative (4b consumes the reporter's coverage over FORMED groups).
+- **Verification (all measured at `dc8776be`):** full suite (NOT_CRAN,
+  `load_all()` first, pandoc PATH workaround) **0 failed / 0 error / 7593
+  passed / 185 skipped / 6 warnings** (7558 baseline + 35 new; warnings
+  pre-existing); `devtools::check()` **0/0/0**; ratchet **1/1**
+  (3,521,123 B, results `9cf9421e573e`, manifest `aa983075d6a2` —
+  +4,166 B vs S765, CONTENT); lint 0; spelling 0 new; DESCRIPTION
+  unchanged. Trim measured: `SESSION_NOTES.md` no trigger;
+  **`HANDOFFS.md` (197,665 B) and `CHANGELOG.md` (199,619 B) both FIRE
+  the default 196,608 B trigger** — reported; the archive pass is the
+  handoff's next-steps (A).
+- **Records:** S765 handoff evaluated 9/10; S766 full handoff +
+  self-assessment 9/10; `HANDOFFS.md` receipt complete. **Learning 781**
+  appended (the module `groups()` return's last element is the
+  unused-animals bucket when `hasUnused`; 4b's reporter call must receive
+  formed groups only). Issue #168 stays OPEN (4b remains); no
+  `BACKLOG.md` change (the #168 work is tracked on the issue).
+
 ### 2026-09-23 · [issue #168] S766 GREEN 2/2: NEWS.Rmd entry for the Ancestry Guardrails section
 - Plain-language entry under Breeding Group Formation (S628 criterion):
   the new upload + status line, the notify-don't-stop failure posture,

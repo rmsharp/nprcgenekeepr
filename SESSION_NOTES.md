@@ -58,15 +58,145 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 765 Handoff Evaluation (by Session 766)
+**Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
+measured 0 on both frontiers; "~70 unpushed (recount)" measured exactly
+70; CI-green held (10/10); ratchet citation matched the results file
+byte-for-byte; next step (A) WAS this session's owner-picked deliverable
+and its suggested split (config+enforcement vs. results tab+manifest+
+e2e+docs) was adopted verbatim as the ratified 4a/4b split; every key-file
+pin held exactly (the `modGeneticValue.R:249` validate-notify mold, the
+`:430` formation call, the `:123` tabset); gotcha (4)'s prediction that
+`CHANGELOG.md` would cross the default trim trigger within ~1 session
+measured TRUE at this close-out (199,619 B; `HANDOFFS.md` 197,665 B also
+fires); gotcha (5) (minSireAge/minDamAge) applied in the new fixtures;
+pandoc workaround verbatim. **Missing:** neither the handoff nor the plan
+flagged that the module's `groups()` return carries the unused-animals
+bucket as its last element — Slice 4a's RED co-placement property swept
+it in and failed against a correct kernel (Learning 781; cost one GREEN
+round-trip + a declared test correction). More a plan/RED-design gap than
+a handoff gap. **Wrong:** nothing found. **ROI:** high.
+
 ### What Session 766 Did
-**Deliverable:** Issue #168 Slice 4 — UI wiring, downloads, docs (IN PROGRESS;
-owner-gated scope-split decision pending — S765 flagged the slice as likely too
-big for one session: config+enforcement wiring vs. results tab+manifest+e2e+docs)
-**Started:** 2026-09-23
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
-(in progress); Phase 3F records the rest. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+**Deliverable:** Issue #168 **Slice 4a — ancestry-guardrails config +
+enforcement wiring in `modBreedingGroups` — DONE**, strict TDD with every
+gate owner-ratified via `AskUserQuestion` (priorities pick, the 4a/4b
+scope split, PRE-RED→RED, RED→GREEN, GREEN→REFACTOR). 4b (override modal,
+Ancestry results tab, manifest download, e2e, article, the #168 close
+call) deliberately remains.
+**RED** (`9fecc1ad`): 11 blocks, 1 new file
+`test_modBreedingGroups_ancestryRules.R` — 3 UI (ids, unprefixed
+conditionalPanel condition per Learning 324, toggle unchecked), 4
+validate-notify (NULL/no-upload, valid 2-block/2-flag example rules,
+malformed severity → NULL, D6 warning muffled), 2 status (D8 wordings
+pinned verbatim; "2 block, 2 flag rule(s); 2 animal(s) uncovered."
+hand-derived — J1/J2 JAPANESE uncovered), 2 formation (blocked pair
+never co-placed; no-ancestry ped forms as today, rules withheld).
+Per-block audit: 11/11 fail, 0 passing expectations, every message on
+the 3 missing symbols / 3 missing ids.
+**GREEN** (`926584e2` code+test-fix+man, `dc8776be` NEWS): collapsed
+"Ancestry Guardrails" UI beside the kinship threshold; `ancestryRulesData()`
+(kinshipOverrideData mold), `ancestryRulesForRun()` (NULL unless rules
+loaded AND ped has `ancestry` — D6 loud-not-fatal), `ancestryStatusText()`
++ renderUI; `ancestryRules = ancestryRulesForRun()` at the formation
+call. NAMESPACE unchanged (verified). **Declared RED-test correction:**
+block 10 had swept the unused-animals bucket into the co-placement
+property; kernel verified correct by direct repro BEFORE the edit; the
+corrected block checks formed groups across ALL retained candidates via
+`groupResults()`/`hasUnused` with an anti-vacuity guard (Learning 781).
+**REFACTOR:** declared no-op after re-read — the shared validate-notify
+helper would touch shipped `modGeneticValue.R` (Architect-mode, S764
+precedent); the duplicated guard clause is the module's idiom; a coverage
+helper for 4b is speculative (4b consumes the reporter's coverage over
+FORMED groups, a different universe).
+**Verification (all measured at `dc8776be`):** full suite (NOT_CRAN,
+load_all, pandoc PATH) **0 failed / 0 error / 7593 passed / 185 skipped /
+6 warnings** (7558 + 35 new; warnings pre-existing); `devtools::check()`
+**0/0/0**; ratchet **1/1** (3,521,123 B, results `9cf9421e573e`, manifest
+`aa983075d6a2` — +4,166 B vs S765, CONTENT); sibling module corpus +
+`test_moduleContract.R` 348 passed 0/0; lint 0 on both touched files;
+spelling 0 new; DESCRIPTION unchanged. Trim measured: `SESSION_NOTES.md`
+no trigger (38,916 B/65,536); **`HANDOFFS.md` (197,665 B) and
+`CHANGELOG.md` (199,619 B) both FIRE the default 196,608 B trigger** —
+reported, not fixed (the archive pass is next-steps (A)).
+**Started/completed:** 2026-09-23. Claim `8e3a417d`; RED `9fecc1ad`;
+GREEN `926584e2`+`dc8776be`; records + sha follow.
+**Checklists:** NEWS.Rmd ✓ same-session (plain-language, S628);
+`_pkgdown.yml` N/A (no export; NAMESPACE unchanged); lint ✓; citation
+(#120) **N/A recorded** — the status line's counts are rule bookkeeping,
+not statistics/estimators (the full-slice check re-runs at 4b per plan
+§9); tutorial/article owed at 4b; `a2interactive` N/A (no export); issue
+#168 stays OPEN (4b remains).
+
+**Self-assessment (Session 766): 9/10.** **Strengths:** (1) the flagged
+too-big slice became a clean owner-ratified 4a/4b split BEFORE any code;
+(2) RED per-block audit clean (0 spurious passes); (3) the block-10
+failure was diagnosed by direct kernel reproduction before touching
+anything — the test was corrected, never the implementation weakened,
+and the correction is declared in the ledger and pinned as Learning 781;
+(4) full measured battery run sequentially; (5) blast radius: 5 commits,
+≤4 content files each, per-action ledger entries; (6) scripts in the
+scratchpad from the start (S765's lesson applied). **Weak:** (1) the
+block-10 mis-specification itself — the unused-bucket semantics were
+readable in `candidateViews` pre-RED; a more careful return-path read
+would have avoided a post-commit test edit; (2) no FM #28 reduction —
+CHANGELOG grew 5 entries and now fires its default trim trigger (said
+plainly; promoted to next-steps (A)); (3) one blocked foreground-sleep
+attempt while waiting on the background suite (trivial).
+
+**Learnings:** Learning 781 appended (the module's `groups()` return
+carries the unused-animals bucket last when `hasUnused` — 4b's reporter
+call must receive FORMED groups only, or it fabricates violations).
+
+**Next steps (specific):** (A) **CHANGELOG + HANDOFFS archive pass
+(READY, S — now due):** both fire the default 196,608 B trigger
+(measured this session); `methodology_trim.py --file <F> --check` then
+owner-gated `--write` per file; expect the `SRF_RED` small-denominator
+refusal pattern (owner-directed `--force` is the established resolution,
+L549/586/587); the 65,536-vs-default budget-scope question for these two
+files remains the owner's call (S765 gotcha 4). (B) **#168 Slice 4b
+(READY, L):** strict TDD from plan §5 Slice 4 remainder — override
+controls behind the #150 `modalDialog` gate showing
+`.ancestryOverrideWarningText` with required reason;
+`.effectiveAncestryRules(rules, overrides)` into formation and ORIGINAL
+rules + overrides into `reportAncestryViolations()`/manifest (Learning
+780's two-call contract); "Ancestry" results tab (violations DT +
+coverage + manifest `downloadHandler` via `getDatedFilename()`) — **feed
+the reporter FORMED groups only, dropping the unused bucket via
+`hasUnused` (Learning 781)**; `shinytest2` e2e with its group regex
+registered in `.github/workflows/shinytest2.yaml` the SAME session;
+tutorial/article (D6 UNKNOWN+OTHER guidance); #120 re-check; the
+explicit #168 open/close call. (C) **Push+CI (READY, S, growing):** ~77
+unpushed expected after close-out (recount); CI current through
+`8007de81`. (D) **Pandoc owner action (DECISION NEEDED, S)**, (E)
+**Slice 5 backfill scoping (DECISION NEEDED, L)**, (F) **Harem-sire seam
+hole (DECISION NEEDED, M)** — all unchanged in `BACKLOG.md`. (G)
+Standing list unchanged — see S760's next-steps (E) via its HANDOFFS
+receipt.
+
+**Key files:** `R/modBreedingGroups.R:68` (guardrails UI), `:320`
+(`ancestryRulesData`), `:352` (`ancestryRulesForRun`), `:367`
+(`ancestryStatusText`), `:538` (the formation `ancestryRules` arg),
+`:664` (status render), `:655` region (`candidateViews`/`hasUnused` —
+Learning 781's seam); `tests/testthat/test_modBreedingGroups_ancestryRules.R:299`
+(the corrected formed-groups property block — 4b's mold);
+`docs/planning/issue168-ancestry-guardrails-plan.md:371` (§5 Slice 4
+remainder); `PROJECT_LEARNINGS.md:2251` (Learning 781); `CHANGELOG.md`
+(S766 entries); `HANDOFFS.md` (S766 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~77 unpushed expected (recount). (2) **Learning
+781:** the module `groups()` return's last element is the unused-animals
+bucket when `hasUnused` — never compute violations/properties over the
+raw return. (3) **Learning 780** still governs 4b's override wiring
+(effective rules to formation; ORIGINAL rules + overrides to
+reporter/manifest). (4) Ratchet moved for CONTENT: 3,521,123 B at
+`dc8776be` (results `9cf9421e573e`); cite from the results file. (5)
+Both big ledgers now fire their default trim trigger — archive pass (A)
+before they grow further; SESSION_NOTES has ample headroom. (6) Pandoc
+PATH workaround unchanged. (7) The suite-wide `warnings: 6` count is
+pre-existing; the new file contributes 0. (8) Standing set unchanged —
+see S760's gotcha (9) via its HANDOFFS receipt.
 
 ### Session 764 Handoff Evaluation (by Session 765)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
