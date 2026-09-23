@@ -42,6 +42,53 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S769 GREEN 2/2: NEWS + tutorial/article documentation for the completed guardrails (Slice 4b)
+- `NEWS.Rmd`: plain-language entry for the completed guardrails (Ancestry
+  results tab, per-rule session override with required written reason,
+  overridden pairings stay visible, downloadable audit record).
+- `vignettes/manual_components/_breeding_group_formation.Rmd`: Ancestry
+  Guardrails configuration bullet + the results-tab list corrected to the
+  actual four tabs (Groups, Statistics, Group Detail, Ancestry — the list
+  had been two-tab stale) with the new Ancestry tab described; includes the
+  D6 name-both-UNKNOWN-and-OTHER guidance. Verified: `a3manual.Rmd` (its
+  including parent) renders clean.
+- `vignettes/articles/colony-manager-guide.qmd`: "Ancestry guardrails"
+  walkthrough in the Breeding Group Formation section (upload → status →
+  Ancestry sub-tab → override with reason → audit manifest) plus the D6
+  UNKNOWN/OTHER practical note. Verified: `quarto render` clean.
+- Citation checklist (issue #120) re-checked on the shipped UI: **N/A
+  confirmed** — violations and coverage counts are rule bookkeeping, not
+  statistics/estimators (plan §5 expectation recorded, not assumed).
+
+### 2026-09-23 · [issue #168] S769 GREEN 1/2: Slice 4b implementation — override gate, Ancestry results tab, audit-manifest download
+- `R/modBreedingGroups.R`: static override controls inside the guardrails
+  panel (`overrideRule` select over the not-yet-overridden block rules,
+  `overrideOpen` → #150-mold `modalDialog` with verbatim
+  `.ancestryOverrideWarningText` + required `overrideReason` +
+  `overrideConfirm`, `overrideStatus`, `clearOverrides`); overrides are
+  session-scoped (`ancestryOverridesRV`), reset on rules re-upload; the
+  formation call now passes `.effectiveAncestryRules(rules, overrides)` and
+  SNAPSHOTS rules/overrides/ped(id, ancestry) into `groupResults` (Learning
+  780 + the #150 params-snapshot mold); `ancestryReport()` feeds
+  `reportAncestryViolations()` the selected candidate's FORMED groups only
+  (Learning 781) with the ORIGINAL rules + overrides; `ancestryManifest()`
+  via `.buildAncestryOverrideManifest`; new "Ancestry" results tab
+  (guidance, violations DT, coverage table, manifest `downloadHandler` via
+  `getDatedFilename()`). Return list unchanged (module contract rule 4).
+- **Verification (measured):** target file 20/20 blocks, 105 expectations,
+  0 failed / 0 error (first run after implementation); full suite (NOT_CRAN,
+  `load_all()`, unfiltered) **0 failed / 0 error / 7662 passed / 186
+  skipped / 6 warnings** (warnings pre-existing; +1 skip = the new e2e
+  file's opt-in gate); **live e2e** (`NPRC_RUN_E2E=true`, headless Chrome,
+  dev build installed): new `test-e2e-breeding-groups-ancestry.R` 17/17 —
+  full drive incl. both manifest downloads (block-rule `nPairs == 0`
+  pre-override; overridden row + reason + verbatim warning post-override),
+  zero console errors; sibling `e2e-breeding-groups-{module,detailed,
+  tutorial}` 26/26; lint 0 on all three touched files (one
+  `commented_code_linter` false positive resolved by rewording the comment
+  — the inner `#168` made the comment prefix parse as code).
+  `devtools::check()` result recorded at close-out (running at commit time).
+
 ### 2026-09-23 · [issue #168] S769 RED: Slice 4b failing tests committed (override gate + Ancestry tab + manifest + e2e)
 - 9 new blocks appended to `tests/testthat/test_modBreedingGroups_ancestryRules.R`
   (header updated to cover 4a+4b): Ancestry-tab + override-control UI ids;

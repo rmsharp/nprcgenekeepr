@@ -53,6 +53,23 @@ The left panel provides controls for group formation:
   group members (default: 0.25). Lower values create more genetically diverse
   groups but may result in fewer animals being placed.
 
+- **Ancestry Guardrails**: An optional, collapsed-by-default section for
+  centers that manage geographic ancestry (for example, Indian-origin vs.
+  Chinese-origin rhesus). Upload a rules file in which each line names two
+  ancestry classifications and a severity: *block* rules keep matching
+  pairs out of the same group during formation; *flag* rules let groups
+  form and report matching pairs afterward. A status line always shows how
+  many rules are loaded and how many candidate animals no rule reaches; a
+  pedigree without ancestry information leaves the guardrails inactive,
+  with the status line saying so. A loaded *block* rule can be overridden
+  for the session -- select it, choose "Override rule...", and confirm
+  with a required written reason; overridden rules still report their
+  pairings, marked "overridden", never silently dropped. When writing
+  rules for animals without usable ancestry information, name both
+  UNKNOWN and OTHER (blank entries standardize to UNKNOWN; unrecognized
+  text standardizes to OTHER) -- the validator warns when only one of the
+  two is named.
+
 - **Sex ratio**: Control the male-to-female composition:
   - *None*: No sex ratio constraint
   - *Harem (1M:NF)*: One male per group with multiple females
@@ -81,7 +98,7 @@ The left panel provides controls for group formation:
 
 ### Results Display
 
-After clicking "Form Groups", results appear in two tabs:
+After clicking "Form Groups", results appear in four tabs:
 
 1. **Groups**: Visual display of each formed group showing:
    - Group number and size
@@ -94,6 +111,19 @@ After clicking "Form Groups", results appear in two tabs:
    - Sex composition
    - Unassigned animals (those that couldn't be placed without exceeding
      kinship threshold)
+
+3. **Group Detail**: One group at a time -- annotated membership, the
+   within-group kinship matrix (when "Include kinship in display of
+   groups" was checked), and per-group export buttons.
+
+4. **Ancestry**: When ancestry rules were in effect for the run, every
+   within-group pairing a rule matched (with its rule, severity, and
+   whether it was overridden), a coverage summary showing how many
+   grouped animals carry each ancestry classification and which
+   classifications no rule reaches, and a **Download Audit Manifest**
+   button exporting the run's audit record: the rules in effect, any
+   overrides with their written reasons, pair counts, and the
+   confirmation warning text verbatim.
 
 ### Module Interface
 

@@ -520,6 +520,43 @@ A **Statistics** sub-tab summarizes all formed groups at once. Groups and
 their kinship matrices can each be exported individually to a file and
 location you choose.
 
+**Ancestry guardrails** (issue
+[#168](https://github.com/rmsharp/nprcgenekeepr/issues/168)). Centers that
+manage geographic ancestry -- for example keeping Indian-origin and
+Chinese-origin rhesus lines separate -- can upload an ancestry rules file
+in the **Ancestry Guardrails** section of the configuration panel (check
+the box to expand it; the status line beneath always shows what is
+loaded). Each line of the rules file names two ancestry classifications
+and a severity: `block` rules keep matching pairs out of the same group
+during formation, while `flag` rules let the groups form and report the
+matching pairs afterward. After forming groups, the **Ancestry** sub-tab
+lists every within-group pairing a rule matched, alongside a coverage
+summary showing how many grouped animals carry each ancestry
+classification and which classifications no rule reaches -- an animal
+whose ancestry no rule names participates in no conflict, so the coverage
+view is how a rule set that quietly covers too little stays visible.
+
+When professional judgment says a block rule should not apply to a
+particular run -- an approved founder import, for example -- select the
+rule and choose **Override rule...**: a confirmation step requiring a
+written reason relaxes that one rule for your session (until you clear
+the override or load a new rules file), and its matched pairings stay in
+the violations list marked "overridden" rather than disappearing. A
+**Download Audit Manifest** button exports the run's audit record: the
+rules in effect, any overrides with their reasons, pair counts, and the
+confirmation warning text verbatim, so the decision trail leaves the tool
+with the groups.
+
+One practical note on writing rules: pedigree files record "unknown"
+ancestry in two ways that the standardized vocabulary keeps separate -- a
+truly blank entry becomes UNKNOWN, while unrecognized text (including the
+literal word "unknown" after re-standardization) becomes OTHER. A center
+writing a conservative rule for animals without usable ancestry
+information should therefore name **both** UNKNOWN and OTHER; the
+validator warns when a rules file names one without the other, and the
+example rules file shipped with the package
+(`example_ancestry_rules.csv`) models naming both.
+
 ### Mate Pair Analysis
 
 The **Mate Pair Analysis** tab (issue

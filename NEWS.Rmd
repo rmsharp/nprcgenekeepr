@@ -407,6 +407,19 @@ knitr::opts_chunk$set(echo = TRUE)
   with the status line saying so. The in-app violations view, per-rule
   overrides, and the downloadable audit record arrive in the final step
   of this work.
+- The ancestry guardrails are now complete (issue #168, final step): a
+  new **Ancestry** results tab lists every within-group pairing your
+  rules matched for the groups just formed, alongside a coverage summary
+  showing how many animals each ancestry group holds and which ones no
+  rule reaches. When professional judgment says a block rule should not
+  apply -- say, an approved founder import -- you can override that one
+  rule for your session through a confirmation step that requires a
+  written reason; overridden pairings stay visible in the violations
+  list, marked "overridden", never silently dropped. A downloadable
+  audit record accompanies each formation run, listing the rules in
+  effect, any overrides with their reasons, and the warning text shown
+  at the confirmation step, so the decision trail leaves the tool with
+  the groups.
 
 ## Mate Pair Analysis
 - New `reportMatePairs()` reports individual mate-pair candidates with
