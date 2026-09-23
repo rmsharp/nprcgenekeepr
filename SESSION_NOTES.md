@@ -62,6 +62,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 769 Did
+**Deliverable:** Issue #168 Slice 4b — ancestry-guardrails override controls
+(#150-style modal gate with required reason), "Ancestry" results tab (violations
+DT + coverage + manifest download), shinytest2 e2e registered same-session,
+tutorial/article docs, and the explicit #168 open/close call — strict TDD from
+`docs/planning/issue168-ancestry-guardrails-plan.md:371` (IN PROGRESS)
+**Started:** 2026-09-23
+**Status:** Session claimed at the Phase 0 priorities gate (owner pick). Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the crash
+breadcrumb for the next session's reconcile.
+
 ### Session 767 Handoff Evaluation (by Session 768)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
 measured 0 on both frontiers (both at `5325ef89`); "~81 unpushed

@@ -42,6 +42,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S769 claim: Slice 4b — ancestry override controls + Ancestry results tab *(in progress)*
+- Session claimed at the Phase 0 priorities gate (owner pick via `AskUserQuestion`).
+  Deliverable: the §5 Slice 4 remainder from
+  `docs/planning/issue168-ancestry-guardrails-plan.md:371` — override controls behind
+  the #150-style `modalDialog` gate with required reason, effective rules to formation
+  and ORIGINAL rules + overrides to the reporter/manifest (Learning 780), "Ancestry"
+  results tab over FORMED groups only (Learning 781), `shinytest2` e2e registered in
+  `.github/workflows/shinytest2.yaml` same-session, tutorial/article docs, #120
+  re-check, and the explicit #168 close call. Strict TDD; stub + pending receipt
+  committed with this claim.
+
 ### 2026-09-23 · [ad hoc] S768 sha: close-out commit sha recorded in HANDOFFS.md receipt
 - `HANDOFFS.md` S768 receipt `commit:`/`changelog_ref:` fields reconciled to
   `a220e212` (self-reconcile, S760–S767 precedent; carries its own ledger entry).

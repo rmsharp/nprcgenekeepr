@@ -160,6 +160,20 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-21.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S769
+date: 2026-09-23
+status: pending
+active_task: Issue #168 Slice 4b — ancestry-guardrails override controls (modal gate with required reason), "Ancestry" results tab (violations DT + coverage + manifest download), shinytest2 e2e registered same-session, tutorial/article docs, explicit #168 close call. Strict TDD from docs/planning/issue168-ancestry-guardrails-plan.md:371 (§5 Slice 4 remainder). Owner-picked at the Phase 0 priorities gate.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S768
 date: 2026-09-23
 status: complete
