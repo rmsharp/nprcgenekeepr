@@ -38,6 +38,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S765 RED: Slice 3 failing tests (16 blocks, 1 new file)
+- `tests/testthat/test_ancestryOverrides.R`: pins `.ancestryOverrideWarningText`
+  (ratified wording, verbatim), `.checkAncestryOverrides()` (NULL/zero-row,
+  coercion, either pair order, 5 pinned `stop()` paths), `.effectiveAncestryRules()`
+  (downgrade-to-flag, no D6 warning), `.buildAncestryOverrideManifest()` (17
+  ratified columns + types, hand-derived pairs 2/1/1/1 and census, both summary
+  strings, zero-pair override kept, 4 `stop()` paths), plus a headless override
+  → formation → report → manifest block. Pre-RED design round owner-ratified
+  (recommended option in all 4: per-rule manifest, downgrade-to-flag, block-only
+  overrides, full warning draft), then the PRE-RED→RED gate. Per-block audit:
+  16/16 fail, 0 spurious passes, all 21 failing expectations trace to the 4
+  missing symbols; lint 0.
+
 ### 2026-09-23 · [issue #168] S765 claim: issue #168 Slice 3 — override + audit-manifest primitives (in progress)
 - Session claimed at Phase 1B: `SESSION_NOTES.md` stub + `HANDOFFS.md`
   pending receipt. Deliverable: `.buildAncestryOverrideManifest()` + the
