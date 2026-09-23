@@ -42,6 +42,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S768 deliverable: broken-pandoc environment item RESOLVED and verified with the PATH workaround OFF; `BACKLOG.md` item removed
+- **Finding:** the owner action the item asked for was already done before this
+  session — no sudo step was run or needed here. `/usr/local/bin/pandoc` (the
+  x86_64 binary) no longer exists; `which -a pandoc` shows only
+  `/opt/homebrew/bin/pandoc` → `Cellar/pandoc/3.11` (arm64 Mach-O; symlink mtime
+  Sep 22 17:15, so the Homebrew install predates the S765–S767 sessions; when the
+  x86_64 file was removed is undated). No `RSTUDIO_PANDOC`/pandoc env vars set.
+- **Verified WITHOUT the PATH workaround** (each surface the item's blast radius
+  named): `rmarkdown::find_pandoc(cache = FALSE)` → 3.11 at `/opt/homebrew/bin`,
+  `pandoc_available()` TRUE (no "subscript out of bounds" crash);
+  `tests/testthat/test_positionMatingUnitForest.R` → 57 tests, **212/212
+  expectations, 0 failed / 0 error / 0 skipped / 0 warnings**, and the 3 chromote
+  live-render blocks each ran and passed (3+2+2 expectations) — the same 212 the
+  item recorded as the "clean" figure under the workaround; `quality_ratchet.py
+  --run` → **1/1 pass at `e8d32ec0`, 3,521,109 B** (results `ec7f2bd24e18`,
+  manifest `aa983075d6a2`; −10 B vs S767's 3,521,119 B = noise — pandoc 3.11 vs
+  the 3.10 the workaround used moved nothing measurable). The ratchet's clean-export
+  build includes vignettes, so it exercises pandoc for real.
+- **Not run (stated, not skipped silently):** the full suite and
+  `devtools::check()` — no package code, tests, or docs-as-shipped changed, and
+  each named blast-radius surface was verified directly. The local "3 errors on
+  `test_positionMatingUnitForest.R`" reading is now retired as an environment
+  artifact; a recurrence would be a NEW defect (re-probe `which -a pandoc` first).
+- **Disclosure:** Phase 0 step 6's comparison of S767's receipt citation
+  (`results 42f1031a3c6b`) against `.quality-gates-results.json` was not made
+  before this session's re-run overwrote that gitignored file. The re-run is the
+  step's permitted alternative and agrees on everything checkable (pass, identical
+  manifest, size within 10 B); the specific results-hash comparison is lost.
+- **`BACKLOG.md`:** the item (former lines 46-66) removed entirely per the S686
+  completed-item removal checklist; this entry carries its load-bearing record.
+  It was the only live file still carrying the literal workaround string (verified
+  by `git grep` outside `docs/archive`); the 15 pandoc mentions in
+  `PROJECT_LEARNINGS.md` are historical smart-quote/render learnings, not standing
+  instructions.
+
 ### 2026-09-23 · [ad hoc] S768 claim: pandoc environment fix — resolve the broken x86_64 `/usr/local/bin/pandoc` (in progress)
 - Owner picked the BACKLOG "Replace the broken x86_64 pandoc" item (found S756,
   owner action needing sudo) at the Phase 0 priorities gate. Session claimed:

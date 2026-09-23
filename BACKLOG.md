@@ -43,27 +43,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       issue, since #167 itself is closed) before any implementation. See
       `docs/planning/issue167-longitudinal-monitoring-plan.md` §5 Slice 5 / §7 Dragon 1
       for the full caveat inventory.
-- [ ] **Replace the broken x86_64 `/usr/local/bin/pandoc` on this machine** (found S756,
-      2026-09-21, DECISION NEEDED / owner action, Effort S) -- the root-owned
-      `/usr/local/bin/pandoc` (x86_64, Mar 2023) now fails with "Bad CPU type in
-      executable" on this arm64 machine (Rosetta unavailable at Darwin 27), which crashes
-      `rmarkdown::find_pandoc()` outright ("subscript out of bounds" -- discovery probes
-      every candidate incl. PATH and dies on the un-executable binary, so `RSTUDIO_PANDOC`
-      alone cannot rescue it) and with it every local vignette build, including the
-      `tarball_size_clean_export` ratchet gate. S755 measured the gate cleanly earlier the
-      same day -- this is a between-sessions environment change, not a repo regression.
-      Fix (owner, needs sudo): `sudo rm /usr/local/bin/pandoc` (RStudio's bundled arm64
-      pandoc 3.10 then serves) or install an arm64 pandoc (`brew install pandoc`).
-      Session workaround until then (used S756, recorded in its receipt):
-      `PATH=/Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/aarch64:$PATH`
-      before any ratchet/vignette run. Blast radius grew (found S757): the break also
-      errors 3 chromote live-render tests in the local full suite
-      (`test_positionMatingUnitForest.R` -- htmlwidgets' self-contained render shells out
-      to pandoc); the same PATH workaround clears them (212/212 clean re-run), so a local
-      "3 errors" suite read on that file is this environment break, not a regression.
-      NOTE: the pandoc swap (2.x x86_64 → 3.10 arm64)
-      shifted the measured tarball to 3,468,810 B (−20,307 B vs S755) -- toolchain
-      artifact, not content change.
 
 ## Active
 
