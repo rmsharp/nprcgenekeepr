@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S766 GREEN 2/2: NEWS.Rmd entry for the Ancestry Guardrails section
+- Plain-language entry under Breeding Group Formation (S628 criterion):
+  the new upload + status line, the notify-don't-stop failure posture,
+  the inactive state on an ancestry-less pedigree, and what still arrives
+  at 4b (violations view, overrides, audit download). Spell-check: only
+  the pre-existing file-wide package-name flag; no new findings.
+
 ### 2026-09-23 · [issue #168] S766 GREEN 1/2: ancestry-guardrails config + enforcement wiring in modBreedingGroups
 - `R/modBreedingGroups.R`: collapsed-by-default "Ancestry Guardrails" UI
   beside the kinship threshold (toggle + always-visible status line +

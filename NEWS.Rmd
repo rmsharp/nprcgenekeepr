@@ -396,6 +396,17 @@ knitr::opts_chunk$set(echo = TRUE)
   against the rules yet (his groupmates are checked against each other).
   The in-app upload and violations view arrive in the final step of this
   work.
+- The Breeding Group Formation tab gained an **Ancestry Guardrails**
+  section (issue #168, continued): upload your center's ancestry rules
+  file next to the kinship threshold, and group formation applies it --
+  a status line always shows what is loaded ("2 block, 2 flag rule(s)")
+  and how many animals no rule reaches, so a rule set that quietly covers
+  too little is visible at a glance. A problem in the file is reported as
+  a notice and ignored rather than stopping your run, and a pedigree
+  without ancestry information simply leaves the guardrails inactive,
+  with the status line saying so. The in-app violations view, per-rule
+  overrides, and the downloadable audit record arrive in the final step
+  of this work.
 
 ## Mate Pair Analysis
 - New `reportMatePairs()` reports individual mate-pair candidates with
