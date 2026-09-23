@@ -38,6 +38,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S766 sha: close-out commit sha recorded in HANDOFFS.md receipt
+- `HANDOFFS.md` S766 receipt `commit:` field reconciled to `e11eb7b1`
+  (self-reconcile, S760–S765 precedent; carries its own ledger entry).
+
 ### 2026-09-23 · [issue #168] S766 records: Slice 4a DONE (REFACTOR no-op), verification battery clean, close-out records committed
 - **REFACTOR declared no-op after re-read:** the shared validate-notify
   helper would touch shipped `modGeneticValue.R` (cross-module
