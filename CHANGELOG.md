@@ -38,6 +38,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S765 records: Slice 3 DONE, verification battery clean, close-out records committed
+- **Verification (all measured at `6f334de5`, post-refactor):** full suite
+  (NOT_CRAN, `load_all()` first, pandoc PATH workaround) **0 failed / 0 error
+  / 7558 passed / 185 skipped / 6 warnings** — 7455 baseline + exactly the
+  103 new expectations, warnings pre-existing; `devtools::check()` **0/0/0**;
+  ratchet **1/1 at `6f334de5`** (3,516,957 B, results `ee0dfb5ea39e`, manifest
+  `aa983075d6a2` — +4,281 B vs S764, CONTENT: new R + test files ship in the
+  tarball); lint 0; spelling 0; DESCRIPTION unchanged. Trim `--check`:
+  `SESSION_NOTES.md` no trigger at 65,536; `HANDOFFS.md`/`CHANGELOG.md` no
+  trigger at the default 196,608 (both fire at 65,536 — budget-scope
+  ambiguity handed to the owner, S765 gotcha 4).
+- **Records:** S764 handoff evaluated 9/10; S765 full handoff +
+  self-assessment 9/10; `HANDOFFS.md` receipt complete. **Learning 780**
+  appended (two-call override contract — effective rules to enforcement,
+  original rules + overrides to report/manifest; miswiring is silent).
+  Issue #168 stays OPEN (Slice 4 remains); no `BACKLOG.md` change (the #168
+  slices are tracked by the issue + plan, not a backlog item).
+
 ### 2026-09-23 · [issue #168] S765 REFACTOR: extract `.ancestryPairKey()` within the Slice 3 file
 - `R/ancestryOverrides.R` only: the six inline `paste(pmin(), pmax())`
   unordered-pair keys → one `@noRd` helper `.ancestryPairKey()`. No behavior

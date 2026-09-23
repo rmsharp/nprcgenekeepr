@@ -58,15 +58,139 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 764 Handoff Evaluation (by Session 765)
+**Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
+measured 0 on both frontiers; "~64 unpushed (recount)" measured exactly
+64; CI-green held (10/10); ratchet citation matched the results file
+byte-for-byte; next step (A) WAS this session's owner-picked deliverable
+and every pin in it held (`R/modDeidentifiedExport.R:30,49` mold lines
+exact; `reportAncestryViolations(overriddenRules=)` really was
+argument-shaped — it accepted the override frame's extra `reason` column
+unchanged); gotcha (6) — spell-check before committing — applied, 0
+findings, no suite round-trip; gotcha (7) — `warnings: 6` pre-existing —
+let this session read its own suite correctly at a glance; pandoc
+workaround verbatim. **Missing:** the handoff (and the plan) did not flag
+that Slice 3 carried two unresolved design questions — how an override
+reaches `groupAddAssign()` (which takes only `ancestryRules`), and how a
+multi-rule manifest fits the one-row #150 mold — both surfaced by source
+reading and needed a pre-RED owner round. More a plan gap than a handoff
+gap. **Wrong:** nothing found. **ROI:** high.
+
 ### What Session 765 Did
-**Deliverable:** Issue #168 Slice 3 — override + audit-manifest
-primitives: `.buildAncestryOverrideManifest()` + the gate warning-text
-constant, strict TDD from plan §5 Slice 3 (IN PROGRESS)
-**Started:** 2026-09-23
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry
-says (in progress); Phase 3F records the rest. Until close-out, this line
-is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** Issue #168 **Slice 3 — override + audit-manifest
+primitives — DONE**, strict TDD with every phase gate owner-ratified via
+`AskUserQuestion` (a pre-RED design round of 4 questions, then
+PRE-RED→RED, RED→GREEN, GREEN→REFACTOR). Internals only — no export.
+**Pre-RED design round (owner picked the recommended option ×4):** (1)
+manifest = **one row per rule** (the rule is D4's unit), run-level fields
+repeated per row, 17 typed columns incl. a 6-level animal census; (2) an
+override reaches enforcement by **downgrading the rule to `flag`** in the
+effective rules (dropping it would fire `checkAncestryRules()`'s D6
+UNKNOWN/OTHER warning at formation time); (3) **block rules only** are
+overridable; (4) the **full four-sentence warning draft**.
+**RED** (`9e9d4566`): 16 blocks, 1 new file
+`tests/testthat/test_ancestryOverrides.R`. Per-block audit: 16/16 fail,
+0 spurious passes, all 21 failing expectations trace to the 4 missing
+symbols (message patterns pinned — S763 gotcha 5). Census and pair counts
+hand-derived AND measured against the Slice 2 reporter before RED.
+**GREEN** (`0b32469c`): 1 new file `R/ancestryOverrides.R` (all `@noRd`)
+— `.ancestryOverrideWarningText`, `.checkAncestryOverrides()`,
+`.effectiveAncestryRules()`, `.buildAncestryOverrideManifest()`. 16/16
+first run (103 expectations, 0 warnings); `document()` a verified no-op.
+**REFACTOR** (`6f334de5`): six inline unordered-pair keys → one
+file-local helper `.ancestryPairKey()`; sibling files deliberately
+untouched (S764 Architect-mode precedent).
+**Verification (all measured, post-refactor at `6f334de5`):** full suite
+(NOT_CRAN, load_all, pandoc PATH) **0 failed / 0 error / 7558 passed /
+185 skipped / 6 warnings** (7455 + exactly the 103 new; warnings
+pre-existing); `devtools::check()` **0/0/0**; ratchet **1/1 at
+`6f334de5`** (3,516,957 B, results `ee0dfb5ea39e`, manifest
+`aa983075d6a2` — +4,281 B vs S764, CONTENT: new R + test files ship);
+lint 0 on both files; spelling 0; DESCRIPTION unchanged.
+**Started/completed:** 2026-09-23. Claim `f7ed7283`; RED `9e9d4566`;
+GREEN `0b32469c`; REFACTOR `6f334de5`; records + sha follow.
+**Checklists:** NEWS.Rmd **N/A recorded** (no export, no user-visible
+behavior — plan §9's expectation, verified); `_pkgdown.yml` N/A (no
+export); lint ✓; citation (#120) N/A (no displayed statistic; runs at
+Slice 4); tutorial/article owed at Slice 4; `a2interactive` N/A (no
+export); issue #168 stays OPEN (Slice 4 remains).
+
+**Self-assessment (Session 765): 9/10.** **Strengths:** (1) source
+reading BEFORE the gate found both design gaps the plan left open and
+turned them into one 4-question owner round with previews — nothing
+decided silently; (2) RED expectations were measured against the shipped
+reporter before being written, so GREEN passed first run with no test
+edits; (3) the downgrade-vs-drop choice was grounded in a concrete
+failure (the D6 warning), not taste, and is pinned by its own test; (4)
+spell-check and lint ran before commit (S764's lesson applied); (5)
+full measured battery run sequentially (no CPU-contention flake risk).
+**Weak:** (1) the first RED-audit script died on shell/R escaping — cost
+one round-trip; scripts belong in the scratchpad from the start; (2) no
+FM #28 reduction — CHANGELOG grew 5 entries and is now ~2 KB under its
+default trim trigger (said plainly, see gotcha 4); (3) the manifest does
+not cross-check that `report` was built with the same overrides it is
+given — a Slice 4 miswiring would pass silently (recorded as Learning
+780 rather than guarded in code; a guard would have been unrequested
+scope).
+
+**Learnings:** Learning 780 appended (the two-call override contract:
+effective rules to `groupAddAssign()`, ORIGINAL rules + `overriddenRules`
+to the reporter and manifest; miswiring is silent).
+
+**Next steps (specific):** (A) **#168 Slice 4 (READY, L)** — UI wiring,
+downloads, docs, strict TDD from plan §5 Slice 4: collapsible "Ancestry
+Guardrails" section in `modBreedingGroups` config (rules upload via the
+`R/modGeneticValue.R:249` validate-notify mold; status line with
+coverage), per-rule override controls behind a `modalDialog` confirm gate
+showing `.ancestryOverrideWarningText` with a required reason; formation
+passes `.effectiveAncestryRules(rules, overrides)` to the
+`groupAddAssign()` call at `R/modBreedingGroups.R:430`; new "Ancestry"
+tab in the `tabsetPanel` at `:123` (violations DT + coverage + manifest
+`downloadHandler` via `getDatedFilename()`); `shinytest2` e2e (register
+its group regex in `.github/workflows/shinytest2.yaml` the SAME session);
+NEWS.Rmd; tutorial/article (D6 UNKNOWN+OTHER guidance); #120 check; the
+explicit #168 open/close call. Likely too big for one session — the
+picking session should consider an owner-gated split (e.g. config+
+enforcement wiring vs. results tab+manifest download+e2e+docs). (B)
+**Push+CI (READY, S, growing)** — ~70 unpushed expected after close-out
+(recount); CI current through `8007de81`. (C) **CHANGELOG archive pass
+(READY, S)** — see gotcha 4. (D) **Pandoc owner action (DECISION
+NEEDED, S)**, (E) **Slice 5 backfill scoping (DECISION NEEDED, L)**, (F)
+**Harem-sire seam hole (DECISION NEEDED, M)** — all unchanged in
+`BACKLOG.md`. (G) Standing list unchanged — see S760's next-steps (E)
+via its HANDOFFS receipt.
+
+**Key files:** `R/ancestryOverrides.R:14` (warning constant), `:33`
+(`.ancestryPairKey`), `:53` (`.checkAncestryOverrides`), `:125`
+(`.effectiveAncestryRules`), `:160` (`.buildAncestryOverrideManifest`);
+`tests/testthat/test_ancestryOverrides.R:299` (the end-to-end wiring
+block Slice 4 should copy); `R/modBreedingGroups.R:123` (results
+tabset), `:301` (`gatedSeed` E2E hook), `:345` (kinship-overrides
+reactive — the sidecar pattern), `:430` (the `groupAddAssign()` call);
+`docs/planning/issue168-ancestry-guardrails-plan.md:371` (§5 Slice 4);
+`PROJECT_LEARNINGS.md:2250` (Learning 780); `CHANGELOG.md` (S765
+entries); `HANDOFFS.md` (S765 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~70 unpushed expected (recount). (2) **Learning
+780 — the override wiring is a two-call contract:** enforcement gets
+`.effectiveAncestryRules(rules, overrides)`; `reportAncestryViolations()`
+and the manifest get the ORIGINAL rules + overrides. Swapping them
+silently relabels overridden pairs as flag violations. (3) Ratchet moved
+for CONTENT: 3,516,957 B at `6f334de5` (results `ee0dfb5ea39e`); cite
+from the results file. (4) **Trim budgets, measured this session:**
+`SESSION_NOTES.md` at `--budget-bytes 65536` → no trigger; `HANDOFFS.md`
+(190,548 B) and `CHANGELOG.md` (194,540 B before close-out) → no trigger
+at the tool's DEFAULT 196,608 B, but BOTH fire at 65,536 (and have for
+many sessions — prior "no trigger ×3" reads used the default for these
+two, matching `HANDOFFS.md`'s own documented command). `CHANGELOG.md`
+will cross the default trigger with ~1 more session of entries — measure
+it at Orient. `CLAUDE.md`'s "65536 on every run" sentence sits in the
+`SESSION_NOTES.md` checklist; its scope for the other two files is an
+owner call, not a session inference. (5) New tests use `qcStudbook(...,
+minSireAge = 2, minDamAge = 2)` — the S763/S764 helpers' `minParentAge`
+is deprecated. (6) Pandoc PATH workaround unchanged. (7) Standing set
+unchanged — see S760's gotcha (9) via its HANDOFFS receipt.
 
 ### Session 763 Handoff Evaluation (by Session 764)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
