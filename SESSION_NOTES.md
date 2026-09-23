@@ -192,9 +192,11 @@ banner + blocks); `tests/testthat/test-e2e-breeding-groups-ancestry.R`
 receipt).
 
 **Gotchas for the next session:** (1) Expect 0 undocumented at next
-Phase 0 — measure it; ~92 unpushed expected (recount). (2) **BOTH big
-ledgers fire the 65,536 B trigger after these records** — run the
-archive pass before anything grows them further. (3) Ratchet moved for
+Phase 0 — measure it; 91 unpushed measured at `cd36df89` (+ the sha
+commit; recount). (2) **`HANDOFFS.md` (75,810 B) FIRES the 65,536 B
+trigger; `CHANGELOG.md` measured 65,093 B — 443 B under, crossing with
+the very next entry** — run the archive pass (next-steps A, both files)
+before anything grows them further. (3) Ratchet moved for
 CONTENT: 3,528,749 B at `237fce3c` (results `94d35e35769a`); cite from
 `.quality-gates-results.json`. (4) **The e2e app runs the INSTALLED
 package** (`inst/shinytest/app.R` does `library(nprcgenekeepr)`) — `R
