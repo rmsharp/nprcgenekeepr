@@ -38,6 +38,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S765 claim: issue #168 Slice 3 — override + audit-manifest primitives (in progress)
+- Session claimed at Phase 1B: `SESSION_NOTES.md` stub + `HANDOFFS.md`
+  pending receipt. Deliverable: `.buildAncestryOverrideManifest()` + the
+  gate warning-text constant, strict TDD from the ratified plan §5 Slice 3
+  (`docs/planning/issue168-ancestry-guardrails-plan.md`). Owner-picked at
+  Phase 0 (orientation: 0 undocumented on both frontiers, ratchet citation
+  matches results, CI 10/10 green, dashboard 96/100, 64 unpushed measured,
+  growth run 45/10).
+
 ### 2026-09-22 · [issue #168] S764 sha: close-out commit sha recorded in HANDOFFS.md receipt
 - `HANDOFFS.md` S764 receipt `commit:` field reconciled to `eea7eb8c`
   (self-reconcile, S760–S763 precedent; carries its own ledger entry).

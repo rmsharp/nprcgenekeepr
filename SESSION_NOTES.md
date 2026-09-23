@@ -58,6 +58,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 765 Did
+**Deliverable:** Issue #168 Slice 3 — override + audit-manifest
+primitives: `.buildAncestryOverrideManifest()` + the gate warning-text
+constant, strict TDD from plan §5 Slice 3 (IN PROGRESS)
+**Started:** 2026-09-23
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry
+says (in progress); Phase 3F records the rest. Until close-out, this line
+is the crash breadcrumb for the next session's reconcile.
+
 ### Session 763 Handoff Evaluation (by Session 764)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
 measured 0 on both frontiers; "~57 unpushed (recount)" measured exactly
