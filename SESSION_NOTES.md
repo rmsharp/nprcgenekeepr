@@ -62,18 +62,143 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 767 Handoff Evaluation (by Session 768)
+**Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
+measured 0 on both frontiers (both at `5325ef89`); "~81 unpushed
+(recount)" measured exactly 81; CI-green held (10/10 completed
+success); the ratchet baseline held (re-run this session: 3,521,109 B,
+−10 B vs its 3,521,119 B, manifest `aa983075d6a2` identical); the
+`--budget-bytes 65536` ratification was applied to every trim run here
+and Learning 782 held live (the trimmer wrote its own ledger entry — no
+duplicate); the `CHANGELOG.md:41` key-file pin was exact. **Missing /
+wrong:** next-steps (C) and gotcha (6) carried "pandoc owner action
+(DECISION NEEDED) / PATH workaround still required" — stale: a probe
+showed the fix had landed (`/usr/local/bin/pandoc` gone; Homebrew arm64
+pandoc 3.11 installed Sep 22 17:15, before S765–S767's 2026-09-23
+dates). Not S767's error alone — the claim was carried unprobed since
+S756 and the workaround itself masks the change (Learning 783). Trivia:
+the "`PROJECT_LEARNINGS.md:2253` region (Learning 782)" pin is actually
+line 2252. **ROI:** high.
+
 ### What Session 768 Did
-**Deliverable:** Resolve the broken x86_64 `/usr/local/bin/pandoc`
-(BACKLOG "Replace the broken x86_64 pandoc" item, found S756) — owner
-executes the sudo step, session verifies `rmarkdown::find_pandoc()` and
-the previously-affected checks (chromote live-render tests, ratchet
-gate) work WITHOUT the PATH workaround, then removes the BACKLOG item.
-(IN PROGRESS)
-**Started:** 2026-09-23
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md`
-entry says (in progress); Phase 3F records the rest. Until close-out,
-this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** **Broken-pandoc environment item RESOLVED — verified
+with the PATH workaround OFF; `BACKLOG.md` item removed — DONE.** Owner
+picked it at the Phase 0 priorities gate; one further owner gate (the
+SESSION_NOTES trim). TDD phase PRE-RED (docs/environment-only) declared
+throughout.
+**Finding:** the owner action was already done before the session — no
+sudo step run or needed. `/usr/local/bin/pandoc` (x86_64) no longer
+exists; `which -a pandoc` shows only `/opt/homebrew/bin/pandoc` →
+`Cellar/pandoc/3.11` (arm64; symlink mtime Sep 22 17:15); no
+pandoc/RSTUDIO env vars set. When the x86_64 file was removed is undated.
+**Verified WITHOUT the workaround (each surface the item's blast radius
+named):** `rmarkdown::find_pandoc(cache = FALSE)` → 3.11,
+`pandoc_available()` TRUE; `test_positionMatingUnitForest.R` → 57 tests,
+**212/212 expectations, 0 failed / 0 error / 0 skipped**, and the 3
+chromote live-render blocks each ran and passed (re-counted directly,
+not inferred from a row of dots); `quality_ratchet.py --run` → **1/1
+pass at `e8d32ec0`, 3,521,109 B** (results `ec7f2bd24e18`, manifest
+`aa983075d6a2`; −10 B vs S767 = noise). **Not run:** full suite,
+`devtools::check()` — no package code changed; each named surface was
+verified directly.
+**Commits:** claim `e8d32ec0`; deliverable `0fa0c067` (BACKLOG item
+removed + ledger entry carrying its record); trim `d6d07e33`
+(`SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-23.md`,
+9 of 14 records, 55,266 → 23,645 B, verify script OK pre- AND
+post-commit; owner-gated `--cut 5 --force` — the 25,000-token read cap
+(56,750 B) binds before the trimmer's 65,536 B trigger, the S762
+situation); records + sha follow.
+**Checklists:** lint N/A (no `.R` touched); NEWS/pkgdown/citation/
+tutorial/a2interactive N/A (no export, UI, or statistic); BACKLOG item
+removed in the same commit as its ledger entry (S686); no GitHub issue
+involved.
+**Disclosures:** (1) Phase 0 step 6's receipt-citation-vs-results-file
+comparison was NOT made before my ratchet re-run overwrote the
+(gitignored) results file — the re-run agrees on everything checkable
+but the hash comparison is lost; (2) commit `e8d32ec0` carries a
+`Claude Fable 5` trailer, later commits `Claude Sonnet 5` — the
+harness's attribution reminder changed mid-session; each commit
+followed the reminder in force.
+
+**Self-assessment (Session 768): 8/10.** **Strengths:** (1) probed the
+environment before asking the owner for a sudo step, and found the fix
+already landed; (2) every blast-radius surface verified directly with
+the workaround off, the chromote result re-counted rather than trusted;
+(3) the trim gated with dry-run numbers for BOTH options, lossless
+pre- and post-commit; (4) item removed with boundary assertions, the
+ledger entry carries its record plus an explicit not-run statement; (5)
+Learning 783 pins the general masking mechanism. **Weak:** (1) skipped
+the Phase 0 step 6 citation comparison before overwriting the results
+file (disclosed above, not recoverable); (2) my priorities list ranked
+an already-done item as "needs sudo" without probing — the owner's pick
+was spent on it (the probe reflex is now Learning 783); (3) a first
+per-test summary printed unreadable multi-paragraph test names and
+cost one re-run.
+
+**Learnings:** Learning 783 appended (a standing workaround that is
+green with or without the fix hides the fix's arrival — probe "owner
+action pending" environment items with the workaround OFF).
+
+**Next steps (specific):** (A) **#168 Slice 4b (READY, L):** unchanged
+from S767's (A) — strict TDD from plan
+`docs/planning/issue168-ancestry-guardrails-plan.md:371`: override
+controls behind the #150 `modalDialog` gate showing
+`.ancestryOverrideWarningText` with required reason; effective rules to
+formation, ORIGINAL rules + overrides to `reportAncestryViolations()`/
+manifest (Learning 780); "Ancestry" results tab (violations DT +
+coverage + manifest `downloadHandler` via `getDatedFilename()`), FORMED
+groups only via `hasUnused` (Learning 781); `shinytest2` e2e with its
+group regex registered in `.github/workflows/shinytest2.yaml` the SAME
+session; tutorial/article (D6 guidance); #120 re-check; the explicit
+#168 open/close call. (B) **`HANDOFFS.md` archive pass (READY, S):**
+measured at close-out, `HANDOFFS.md` is 68,907 B and `--check
+--budget-bytes 65536` FIRES (S768's own receipt took it from ~62.4 KB);
+`CHANGELOG.md` is 56,674 B, ~9 KB from its trigger. `--check` then
+owner-gated `--cut N --force --write` (SRF_RED pattern, L549/586/587;
+`--cut N` = KEEP N, Learning 777). Receipts run ~6-8 KB each, so this
+recurs every ~1-2 sessions — the receipt-size norm in `BACKLOG.md`'s
+CHANGELOG-inflation item is the lever. Reported, not fixed (nothing
+gates on it; a second archive pass is a second deliverable). (C)
+**Push+CI (READY, S, growing):** ~86 unpushed expected after close-out
+(an estimate — 84 measured before the two records commits; recount with
+`git rev-list --count origin/master..HEAD`); CI current through
+`8007de81`; pushing is outward-facing, so confirm with the owner first.
+(D) **Slice 5 backfill scoping (DECISION NEEDED, L)** and (E)
+**Harem-sire seam hole (DECISION NEEDED, M)** — unchanged in
+`BACKLOG.md` (`:28`, `:8`). (F) Standing list unchanged — S760's
+next-steps (E) via its still-live HANDOFFS receipt. The pandoc item is
+gone from the list.
+
+**Key files:** `CHANGELOG.md:45` region (S768 records entry, the
+tool-written SESSION_NOTES trim entry, the deliverable and claim
+entries); `BACKLOG.md:6` (Up Next now holds two items — `:8` harem hole,
+`:28` Slice 5); `docs/planning/issue168-ancestry-guardrails-plan.md:371`
+(Slice 4 — 4b's spec); `R/modBreedingGroups.R:320/:352/:367/:538/:569`
+(4a's `ancestryRulesData`/`ancestryRulesForRun`/`ancestryStatusText`/the
+formation `ancestryRules =` arg/the `hasUnused` seam);
+`docs/archive/SESSION_NOTES-through-2026-09-23.md` + `.verify.sh` (9
+records); `PROJECT_LEARNINGS.md:2253` (Learning 783); `HANDOFFS.md:163`
+(S768 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~86 unpushed expected (recount). (2) **Pandoc
+workaround RETIRED (Learning 783):** do not prepend the aarch64 RStudio
+dir; `rmarkdown::find_pandoc()` resolves Homebrew's 3.11. If pandoc
+errors reappear, `which -a pandoc` first — PATH lists `/usr/local/bin`
+before `/opt/homebrew/bin` (measured), so a re-installed x86_64 binary
+there would shadow Homebrew's (derived from that order, not observed).
+(3) Do Phase 0 step 6's receipt-citation comparison BEFORE any
+`quality_ratchet.py --run` — the run overwrites the gitignored results
+file (S768 lost the comparison). (4) `SESSION_NOTES.md` is now ~23.6 KB
+plus this record; the 25,000-token read cap (56,750 B) binds before the
+trimmer's 65,536 B trigger (`--check` said "does not fire" at 55,266 B) —
+`wc -c SESSION_NOTES.md` at Orient and trim (owner-gated `--cut N
+--force`) when within ~8 KB of 56,750 B. (5) Ratchet baseline 3,521,109 B
+at `e8d32ec0` (results `ec7f2bd24e18`); cite from the results file. (6)
+Learnings 780/781 still govern Slice 4b. (7) Older SESSION_NOTES records
+now live in shards — span them via `git ls-files
+'docs/archive/SESSION_NOTES-*.md'`. (8) Standing set unchanged — S760's
+gotcha (9) via its live receipt.
 
 ### Session 766 Handoff Evaluation (by Session 767)
 **Score: 10/10.** **What helped:** next-steps (A) WAS this session's

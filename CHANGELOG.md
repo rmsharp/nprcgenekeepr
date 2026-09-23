@@ -42,6 +42,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S768 records: pandoc item DONE, close-out records committed
+- **Deliverable:** see the S768 deliverable entry below (`0fa0c067`). This entry
+  records the close-out and the one owner-gated decision that rode with it.
+- **Decision (owner-gated, `AskUserQuestion`):** `SESSION_NOTES.md` trimmed with
+  `--cut 5 --force --budget-bytes 65536` (commit `d6d07e33`; the tool wrote the
+  ledger entry above — Learning 782, no duplicate). `--force` was needed because
+  the trimmer's own trigger (65,536 B) did not fire at 55,266 B, while the
+  25,000-token one-read cap (56,750 B) would have made the pre-commit hook refuse
+  this session's close-out records (the S762 situation). Owner picked `--cut 5`
+  (live 23,645 B) over `--cut 8` (33,409 B); both dry runs measured L1/L2/L3 OK;
+  the verify script ran clean before AND after the commit.
+- **Records:** S767 handoff evaluated 9/10; S768 full handoff + self-assessment
+  8/10; `HANDOFFS.md` receipt complete. **Learning 783** appended (a standing
+  workaround that is green with or without the fix hides the fix's arrival — probe
+  "owner action pending" environment items with the workaround OFF before ranking
+  them). `BACKLOG.md` item already removed in the deliverable commit.
+- **Verification:** ratchet 1/1 pass at `e8d32ec0` (3,521,109 B, results
+  `ec7f2bd24e18`, manifest `aa983075d6a2`, no PATH workaround). Docs/environment-only
+  session — no `.R` touched, so lint/suite/check not owed.
+- **Reported, not fixed:** post-records `methodology_trim.py --check
+  --budget-bytes 65536` — `SESSION_NOTES.md` 30,881 B and `CHANGELOG.md` 56,674 B
+  do not fire; **`HANDOFFS.md` 68,907 B FIRES** (this session's own receipt took it
+  from ~62.4 KB). Nothing mechanical gates on it and a second archive pass would be
+  a second deliverable, so it is carried as next-steps (B) in the handoff.
+- **Disclosures:** (1) the Phase 0 step 6 receipt-citation comparison was skipped
+  before the ratchet re-run overwrote the results file (see the deliverable entry);
+  (2) commit `e8d32ec0` carries a `Co-Authored-By: Claude Fable 5` trailer, the
+  later S768 commits carry `Claude Sonnet 5` — the harness's attribution reminder
+  changed mid-session and each commit followed the reminder in force at the time.
+
 ### 2026-09-23 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-23.md` (9 record(s), 55,266 B → 23,645 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
