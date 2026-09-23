@@ -42,6 +42,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-23.md` (9 record(s), 55,266 B → 23,645 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **9** record(s) (2026-09-22 → 2026-09-23) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-23.md`](docs/archive/SESSION_NOTES-through-2026-09-23.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-23.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-23.md.verify.sh)
+rather than trusting a digest printed here. Live file 55,266 B → 23,645 B (−57.2%).
+
 ### 2026-09-23 · [ad hoc] S768 deliverable: broken-pandoc environment item RESOLVED and verified with the PATH workaround OFF; `BACKLOG.md` item removed
 - **Finding:** the owner action the item asked for was already done before this
   session — no sudo step was run or needed here. `/usr/local/bin/pandoc` (the
