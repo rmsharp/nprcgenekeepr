@@ -46,6 +46,11 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S770 sha: close-out commit sha recorded in HANDOFFS.md receipt
+- Receipt `commit:` reconciled to `f2671ca6` (self-reconcile, S760–S769
+  precedent; carries its own ledger entry). Ledger sizes after: all three
+  under the 65,536 B budget with the headroom the records entry states.
+
 ### 2026-09-23 · [ad hoc] S770 records: archive pass DONE, close-out records committed
 - **Deliverable:** the two owner-gated trims recorded in the tool-written
   entries below — `CHANGELOG.md` 66,092 → 20,120 B (`--cut 13`, keeps
