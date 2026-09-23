@@ -42,6 +42,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S767 records: archive pass DONE, close-out records committed
+- **Deliverable:** both over-trigger ledgers archived losslessly, owner-gated
+  end to end (dry runs first; the predicted `SRF_RED` cleared by owner-directed
+  `--force`, L549/586/587). The two trim actions carry the tool-written entries
+  below (Learning 782 — no hand-written duplicates). Verify scripts run pre- AND
+  post-commit: L1/L2/L3 hold for both shards.
+- **Verification:** post-trim `--check --budget-bytes 65536`: CHANGELOG 48,563 B,
+  HANDOFFS 56,293 B, SESSION_NOTES 47,826 B — none fire. Ratchet **1/1 pass at
+  `30c5b6d1`** (3,521,119 B, results `42f1031a3c6b`, manifest `aa983075d6a2` —
+  −4 B vs S766 = tar/gzip noise on a build-ignored diff, pandoc PATH workaround).
+- **Records:** S766 handoff evaluated 10/10; S767 full handoff + self-assessment
+  9/10; `HANDOFFS.md` receipt complete. **Learning 782** appended (trimmer
+  v1.5.0 auto-writes the trim's own ledger entry for ANY trimmed file; ratified
+  budget scope folded in as 782(c)). No `BACKLOG.md` change (no item existed for
+  this pass — tracked via S766 next-steps (A)).
+
+### 2026-09-23 · [ad hoc] S767 decision: trim budget ratified — `--budget-bytes 65536` governs all three ledgers on every run
+- Owner-gated (Phase 0 follow-up to S765 gotcha 4, which left the scope for
+  `CHANGELOG.md`/`HANDOFFS.md` an explicit owner call): `--budget-bytes 65536`
+  is passed on EVERY `methodology_trim.py` run for `SESSION_NOTES.md`,
+  `CHANGELOG.md`, AND `HANDOFFS.md`, `--check` included. `CLAUDE.md`'s existing
+  "on every run" sentence already reads this way — no edit made (anti-growth);
+  `HANDOFFS.md`'s own documented bare `--check` example predates this
+  ratification and omits the flag — pass it anyway (Learning 782(c) carries the
+  reflex). Non-commit action (a ratified decision), recorded per FM #27.
+
 ### 2026-09-23 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-21.md` (31 record(s), 205,190 B → 56,293 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

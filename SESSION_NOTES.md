@@ -58,15 +58,124 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 766 Handoff Evaluation (by Session 767)
+**Score: 10/10.** **What helped:** next-steps (A) WAS this session's
+owner-picked deliverable, with the exact mechanics that all held:
+`--check` then owner-gated `--write` per file; the SRF_RED refusal
+predicted and fired exactly, resolved by the named owner-directed
+`--force` (L549/586/587); the budget-scope owner question flagged as
+open was posed and ratified in-session; the measured sizes (199,619 /
+197,665 B) correctly predicted both files firing (grown to 201,875 /
+205,190 B at Orient); "expect 0 undocumented; measure it" measured 0 on
+both frontiers; the ratchet citation matched the results file
+byte-for-byte; ~77 unpushed measured 76 (labeled a recount estimate);
+Learning 777's `--cut N = KEEP N` shaped the gate wording correctly.
+**Missing:** only trivia — no note that the trimmer v1.5.0 auto-writes
+its own ledger entries (discovered in-run, now Learning 782), and
+`bin/check-handoff`'s absence in this project (cost one `ls`). Neither
+cost meaningful time. **Wrong:** nothing found. **ROI:** high.
+
 ### What Session 767 Did
-**Deliverable:** CHANGELOG.md + HANDOFFS.md archive pass (IN PROGRESS) —
-both ledgers over the default 196,608 B trim trigger at Orient
-(CHANGELOG 201,379 B, HANDOFFS 204,862 B); owner picked this at Phase 0.
-**Started:** 2026-09-23
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md`
-entry says (in progress); Phase 3F records the rest. Until close-out,
-this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable:** **CHANGELOG.md + HANDOFFS.md archive pass — DONE**,
+owner-gated end to end (Phase 0 priorities pick; a 2-question gate
+ratifying (a) the trim budget and (b) the exact dry-run-verified
+writes). **Budget decision (owner-ratified):** `--budget-bytes 65536`
+governs ALL THREE ledgers on every `methodology_trim.py` run, `--check`
+included — resolves S765 gotcha 4's open scope question; recorded in
+the ledger + Learning 782(c), no CLAUDE.md growth (its sentence already
+reads this way).
+**Trims (both dry-run first, SRF_RED cleared by owner `--force`):**
+`CHANGELOG.md` `--cut 47` (`497dda57`): 172 of 219 records
+(2026-09-19 → 2026-09-21) → `docs/archive/CHANGELOG-through-2026-09-21.md`;
+live 201,875 → 47,791 B (−76.3%), keeps all S760–S767 entries.
+`HANDOFFS.md` `--cut 8` (`30c5b6d1`): 31 of 39 receipts → 
+`docs/archive/HANDOFFS-through-2026-09-21.md`; live 205,190 → 56,293 B
+(−72.6%), keeps the S760–S767 receipts (S760's standing-list receipt
+stays LIVE, deliberately); stale front-matter count regenerated 4 → 8.
+Both verify scripts run twice (pre- and post-commit): L1/L2/L3 hold.
+The trimmer wrote both trims' ledger entries itself (Learning 782) —
+no hand-written duplicates.
+**Verification (measured):** trim `--check --budget-bytes 65536` after:
+CHANGELOG 48,563 B, HANDOFFS 56,293 B, SESSION_NOTES 47,826 B — none
+fire. Ratchet **1/1 pass at `30c5b6d1`** (3,521,119 B, results
+`42f1031a3c6b`, manifest `aa983075d6a2` — −4 B vs S766 = tar/gzip noise
+on a build-ignored diff). Context budget unchanged (CLAUDE.md 26,360 B
+warn band = headroom; docs-only session, no code, no suite run owed).
+**Started/completed:** 2026-09-23. Claim `171248f0`; trims `497dda57` +
+`30c5b6d1`; records + sha follow. TDD phase PRE-RED (docs-only)
+declared throughout.
+**Checklists:** lint N/A (no `.R` touched); NEWS/pkgdown/citation/
+tutorial/a2interactive N/A (no export, no UI, no statistic); no
+BACKLOG item existed for this pass (tracked via S766 next-steps (A));
+no GitHub issue involved.
+
+**Self-assessment (Session 767): 9/10.** **Strengths:** (1) every
+decision owner-gated with dry-run-derived numbers in the gate text —
+Learning 777 applied, the scale was verified before the gate, and the
+result matched the gate exactly (no divergence to record); (2) both
+trims proved lossless twice; (3) per-action commits, ≤4 files each;
+(4) an actual FM #28 reduction landed: ~305 KB moved out of
+mandated-read ledgers, all three now under the ratified budget; (5)
+Learning 782 pins the double-entry trap for successors. **Weak:** (1)
+one broken grep (`\=\=` under ugrep) cost a round-trip; (2) the
+CHANGELOG cut straddles 2026-09-21 (span-label shard name; positional
+cut accepted rather than hunting a calendar seam — deliberate, noted);
+(3) the budget ratification lives in ledger + learning + gotcha rather
+than a CLAUDE.md edit (deliberate anti-growth call; the residual risk —
+a future session running HANDOFFS.md's documented bare `--check` — is
+mitigated by Learning 782(c) and gotcha (2)).
+
+**Learnings:** Learning 782 appended (trimmer v1.5.0 auto-writes the
+trim's own `CHANGELOG.md` entry for ANY trimmed file — commit it, never
+hand-write a duplicate; plus the ratified budget scope).
+
+**Next steps (specific):** (A) **#168 Slice 4b (READY, L):** strict TDD
+from plan §5 Slice 4 remainder
+(`docs/planning/issue168-ancestry-guardrails-plan.md:371`) — override
+controls behind the #150 `modalDialog` gate showing
+`.ancestryOverrideWarningText` with required reason;
+`.effectiveAncestryRules(rules, overrides)` into formation and ORIGINAL
+rules + overrides into `reportAncestryViolations()`/manifest (Learning
+780's two-call contract); "Ancestry" results tab (violations DT +
+coverage + manifest `downloadHandler` via `getDatedFilename()`) — feed
+the reporter FORMED groups only, dropping the unused bucket via
+`hasUnused` (Learning 781); `shinytest2` e2e with its group regex
+registered in `.github/workflows/shinytest2.yaml` the SAME session;
+tutorial/article (D6 UNKNOWN+OTHER guidance); #120 re-check; the
+explicit #168 open/close call. (B) **Push+CI (READY, S, growing):**
+~81 unpushed expected after close-out (recount with
+`git rev-list --count origin/master..HEAD`); CI current through
+`8007de81`. (C) **Pandoc owner action (DECISION NEEDED, S)**, (D)
+**Slice 5 backfill scoping (DECISION NEEDED, L)**, (E) **Harem-sire
+seam hole (DECISION NEEDED, M)** — all unchanged in `BACKLOG.md`. (F)
+Standing list unchanged — see S760's next-steps (E) via its HANDOFFS
+receipt, which this session's cut deliberately kept LIVE.
+
+**Key files:** `CHANGELOG.md:41` region (new shard pointer + the two
+tool-written trim entries + S767 entries); `HANDOFFS.md` (S767 receipt;
+S760–S766 receipts still live below it);
+`docs/archive/CHANGELOG-through-2026-09-21.md` + `.verify.sh` (172
+records); `docs/archive/HANDOFFS-through-2026-09-21.md` + `.verify.sh`
+(31 receipts); `PROJECT_LEARNINGS.md:2253` region (Learning 782);
+`BACKLOG.md:47` (pandoc item with the PATH workaround string).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~81 unpushed expected (recount). (2) **Budget
+ratified this session:** pass `--budget-bytes 65536` on EVERY
+`methodology_trim.py` run for all three ledgers, `--check` included —
+`HANDOFFS.md`'s own documented bare `--check` command predates this;
+pass the flag anyway. (3) **Learning 782:** the trimmer auto-writes the
+trim's ledger entry (for ANY trimmed file, into `CHANGELOG.md`) — never
+hand-write a duplicate; check `git status` after any `--write`. (4)
+Ratchet 3,521,119 B at `30c5b6d1` (−4 B vs S766 = noise; results
+`42f1031a3c6b`); cite from the results file. (5) Older receipts now
+live in `docs/archive/HANDOFFS-through-2026-09-21.md` — any pass that
+enumerates receipts must span shards via
+`git ls-files 'docs/archive/HANDOFFS-*.md'`; S760's receipt (standing
+lists) is still LIVE in `HANDOFFS.md`. (6) Pandoc PATH workaround
+unchanged (`BACKLOG.md:47` region has the literal string). (7)
+Learnings 780/781 still govern Slice 4b's wiring. (8) Standing set
+unchanged — see S760's gotcha (9) via its live HANDOFFS receipt.
 
 ### Session 765 Handoff Evaluation (by Session 766)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
