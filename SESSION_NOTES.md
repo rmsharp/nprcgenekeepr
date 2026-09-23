@@ -58,6 +58,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 766 Did
+**Deliverable:** Issue #168 Slice 4 — UI wiring, downloads, docs (IN PROGRESS;
+owner-gated scope-split decision pending — S765 flagged the slice as likely too
+big for one session: config+enforcement wiring vs. results tab+manifest+e2e+docs)
+**Started:** 2026-09-23
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 764 Handoff Evaluation (by Session 765)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
 measured 0 on both frontiers; "~64 unpushed (recount)" measured exactly

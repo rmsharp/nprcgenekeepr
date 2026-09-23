@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S766 claim: Slice 4 — UI wiring, downloads, docs *(in progress)*
+- Session claimed after Phase 0 (0 undocumented on both frontiers; CI 10/10
+  green; dashboard 96/100; ratchet citation matches the results file). Owner
+  picked Slice 4 from the priorities picker. S765's flagged scope-split
+  question (config+enforcement wiring vs. results tab+manifest download+e2e+
+  docs) goes to the owner via `AskUserQuestion` before any RED work.
+
 ### 2026-09-23 · [issue #168] S765 sha: close-out commit sha recorded in HANDOFFS.md receipt
 - `HANDOFFS.md` S765 receipt `commit:` field reconciled to `a798fc8e`
   (self-reconcile, S760–S764 precedent; carries its own ledger entry).
