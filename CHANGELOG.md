@@ -42,6 +42,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S770 claim: CHANGELOG + HANDOFFS archive pass *(in progress)*
+- Session claimed at Phase 1B (stub + pending receipt). Owner picked S769's
+  next-steps (A) at the Phase 0 priorities gate. Measured at Orient:
+  `HANDOFFS.md` 76,182 B FIRES the ratified 65,536 B trigger; `CHANGELOG.md`
+  65,527 B — 9 B under, crossing with this very entry. Phase 0 reconcile:
+  0 undocumented on both frontiers; S769 receipt complete, ratchet citation
+  matches `.quality-gates-results.json` byte-for-byte; CI 10/10 green.
+  Close-out records the rest.
+
 ### 2026-09-23 · [ad hoc] S769 sha: close-out commit sha recorded in HANDOFFS.md receipt
 - Receipt `commit:` reconciled to `cd36df89` (self-reconcile, S760–S768
   precedent). Measurement correction recorded in receipt + notes:

@@ -62,6 +62,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 770 Did
+**Deliverable:** CHANGELOG.md + HANDOFFS.md archive pass (IN PROGRESS) —
+owner-picked at the Phase 0 priorities gate (next-steps (A), NOW DUE).
+Measured at Orient: `HANDOFFS.md` 76,182 B FIRES the ratified 65,536 B
+trigger; `CHANGELOG.md` 65,527 B — 9 B under, crossing with this claim's
+own ledger entry. S767 mechanics govern: `--check --budget-bytes 65536`,
+then owner-gated `--cut N --force --write` per file (SRF_RED expected),
+verify scripts pre- and post-commit; the trimmer writes its own ledger
+entries (Learning 782).
+**Started:** 2026-09-23
+**Status:** Session claimed. Work beginning. TDD phase PRE-RED
+(docs-only) declared throughout.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md`
+entry says (in progress); Phase 3F records the rest. Until close-out,
+this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 768 Handoff Evaluation (by Session 769)
 **Score: 10/10.** **What helped:** "expect 0 undocumented; measure it"
 measured 0 on both frontiers; "~86 unpushed (recount)" measured exactly
