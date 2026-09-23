@@ -62,21 +62,120 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 769 Handoff Evaluation (by Session 770)
+**Score: 10/10.** **What helped:** gotcha (2)'s sizes predicted Orient
+exactly — `HANDOFFS.md` fired (76,182 B) and `CHANGELOG.md` (65,527 B,
+9 B under) crossed with the claim's own ledger entry, precisely as
+written; "expect 0 undocumented; measure it" measured 0 on both
+frontiers; "~92 unpushed (recount)" measured exactly 92; gotcha (3)
+followed — S769's ratchet citation matched `.quality-gates-results.json`
+byte-for-byte, compared BEFORE any run; next-steps (A) WAS the
+owner-picked deliverable and every named mechanic held (SRF cleared by
+the ratified `--force`; Learning 777's `--cut N` = KEEP N shaped both
+gate texts; Learning 782 held — the trimmer wrote all three of its own
+ledger entries, zero hand-written duplicates). **Missing/wrong:** trivia
+— the carried "S760's next-steps (E)" standing-list pointer is off:
+S760's receipt has next_steps (A)–(D) only; the standing set actually
+lives in its gotcha (9) (cost: one read of that receipt). **ROI:** high.
+
 ### What Session 770 Did
-**Deliverable:** CHANGELOG.md + HANDOFFS.md archive pass (IN PROGRESS) —
-owner-picked at the Phase 0 priorities gate (next-steps (A), NOW DUE).
-Measured at Orient: `HANDOFFS.md` 76,182 B FIRES the ratified 65,536 B
-trigger; `CHANGELOG.md` 65,527 B — 9 B under, crossing with this claim's
-own ledger entry. S767 mechanics govern: `--check --budget-bytes 65536`,
-then owner-gated `--cut N --force --write` per file (SRF_RED expected),
-verify scripts pre- and post-commit; the trimmer writes its own ledger
-entries (Learning 782).
-**Started:** 2026-09-23
-**Status:** Session claimed. Work beginning. TDD phase PRE-RED
+**Deliverable:** **CHANGELOG.md + HANDOFFS.md archive pass — DONE**,
+owner-gated end to end (Phase 0 priorities pick; one 2-question gate
+ratifying both dry-run-verified cuts + `--force`). TDD phase PRE-RED
 (docs-only) declared throughout.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md`
-entry says (in progress); Phase 3F records the rest. Until close-out,
-this line is the crash breadcrumb for the next session's reconcile.
+**Trims (both dry-run first; SRF cleared by the ratified `--force`):**
+`CHANGELOG.md` `--cut 13` (`b57c35bc`): 52 of 65 records
+(2026-09-21 → 2026-09-23) → `docs/archive/CHANGELOG-through-2026-09-23.md`;
+live 66,092 → 20,120 B (−69.6%), keeps all S768–S770 entries.
+`HANDOFFS.md` `--cut 4` (`c195ea31`): 7 of 11 receipts (S760–S766) →
+`docs/archive/HANDOFFS-through-2026-09-23.md`; live 76,658 → 33,009 B
+(−56.9%), keeps S767–S770. **The S760 standing-set receipt is now
+ARCHIVED** — its standing set is carried forward in the S770 receipt's
+gotchas (S686 forward-carrying rule), updated where stale (trim budget
+is 65,536 B for all three ledgers per the S767 ratification). Both
+verify scripts run twice (pre- and post-commit): L1/L2/L3 hold. The
+trimmer wrote its own ledger entries (Learning 782) — no duplicates.
+**Verification (measured):** post-pass `--check --budget-bytes 65536`:
+CHANGELOG 20,888 B, HANDOFFS 33,009 B, SESSION_NOTES 41,867 B — none
+fire. Ratchet **1/1 pass at `c195ea31`** (3,528,758 B, results
+`9649b761f9d3`, manifest `aa983075d6a2` — +9 B vs S769 = noise on a
+docs-only diff). CI 10/10 green at Orient; receipt-citation comparison
+done before the ratchet run.
+**Started/completed:** 2026-09-23. Claim `eaff866e`; trims `b57c35bc` +
+`c195ea31`; records + sha follow.
+**Checklists:** lint N/A (no `.R` touched); NEWS/pkgdown/citation/
+tutorial/a2interactive N/A (no export, UI, or statistic); no BACKLOG
+item existed for this pass (tracked via S769 next-steps (A)); no GitHub
+issue involved.
+
+**Self-assessment (Session 770): 9/10.** **Strengths:** (1) both gates
+carried exact dry-run-derived numbers and the results matched the gates
+exactly; (2) both trims proved lossless twice; (3) per-action commits
+(claim, trim, trim, records, sha), ≤4 files each; (4) a real FM #28
+reduction landed — ~89 KB moved out of mandated-read ledgers, all three
+under budget with ~4–5 sessions of headroom; (5) the receipt-citation
+comparison ran BEFORE the ratchet run (S768's lost comparison not
+repeated); (6) the S760 standing-set pointer chain ended by
+forward-carrying instead of another "via its live receipt" hop.
+**Weak:** (1) the claim entry itself pushed `CHANGELOG.md` over budget
+mid-session — inherent to claim-first ordering, but the Phase 0 report
+could have said so explicitly; (2) the stale "S760 next-steps (E)"
+phrasing was inherited by three consecutive handoffs (incl. the one I
+evaluated 10/10) before being caught here — a reminder that carried
+pointers decay silently.
+
+**Learnings:** none appended — the mechanics are covered by Learnings
+777/782; the one candidate (the "S760 next-steps (E)" mispointer) is a
+handoff correction carried in the receipt, not a general pattern
+(FM #28).
+
+**Next steps (specific):** (A) **Push+CI (READY, S, growing):** ~97
+unpushed expected after close-out (recount with
+`git rev-list --count origin/master..HEAD`); CI current through
+`8007de81`; outward-facing — owner confirms first. (B) **Mate-pair
+guardrail surface (DECISION NEEDED, M)** — `BACKLOG.md:8`; a pickup
+session opens a new GitHub issue and runs the small design gate first.
+(C) **Harem-sire seam hole (DECISION NEEDED, M)** — `BACKLOG.md:20`;
+Pre-RED design gate (kinship-side scope, RNG posture, `currentGroups`
+seeds; Learning 778). (D) **Slice 5 backfill scoping (DECISION NEEDED,
+L)** — `BACKLOG.md:40`; own scoping session + new issue. (E) Lower
+priority: unchanged in `BACKLOG.md` (vignette slimming, REUSE
+registration, BACKLOG editorial pass, Chrome hang research, `untitled
+folder` cleanup, CHANGELOG entry-rate investigation).
+
+**Key files:** `CHANGELOG.md:49` region (S770 entries + the two
+tool-written trim entries); `HANDOFFS.md:163` (S770 receipt — carries
+the standing set); `docs/archive/CHANGELOG-through-2026-09-23.md` +
+`.verify.sh` (52 records); `docs/archive/HANDOFFS-through-2026-09-23.md`
++ `.verify.sh` (7 receipts incl. S760's standing-set receipt);
+`BACKLOG.md:8`/`:20`/`:40` (the three DECISION NEEDED items).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~97 unpushed expected (recount). (2) All three
+ledgers under budget (20,888 / 33,009 / 41,867 B + these records);
+CHANGELOG grows ~9 KB/session → ~4–5 sessions of headroom; pass
+`--budget-bytes 65536` on EVERY `methodology_trim.py` run, `--check`
+included. (3) Ratchet 1/1 at `c195ea31` (3,528,758 B, results
+`9649b761f9d3`; +9 B vs S769 = noise); cite from
+`.quality-gates-results.json`; do the receipt-citation comparison
+BEFORE any ratchet run. (4) **S760's receipt is ARCHIVED**
+(`docs/archive/HANDOFFS-through-2026-09-23.md`) — the standing set now
+lives in the S770 receipt's gotchas; stop writing "via S760's live
+receipt" (and note the old "next-steps (E)" phrasing was a mispointer —
+the set was its gotcha (9)). (5) **STANDING SET (carried forward,
+updated):** full-40-char sha + smoke-test `gh run` filters;
+`scratchpad/` invisible to git BY OWNER DECISION; ratchet AFTER
+committing; renv banner expected; `CLAUDE.md` warn band (26,360 B) =
+headroom, growth run 52/10; zsh harness traps (no foreground sleep; no
+`&`/`disown` inside a `run_in_background` call); trim budget 65,536 B
+for ALL THREE ledgers (S767 ratification — supersedes the archived S760
+receipt's stale "196608 default" wording). (6) The e2e app runs the
+INSTALLED package (`inst/shinytest/app.R` does `library(nprcgenekeepr)`)
+— `R CMD INSTALL` the dev tree before any local live-e2e run. (7)
+Slice-4b semantics: consumers read the run SNAPSHOT fields, never live
+inputs (L780/#150 mold); report universe is FORMED groups only (L781).
+(8) `commented_code_linter` fires on a prose comment with an inner `#`
+(e.g. "#168") — write "issue 168" in R comments.
 
 ### Session 768 Handoff Evaluation (by Session 769)
 **Score: 10/10.** **What helped:** "expect 0 undocumented; measure it"

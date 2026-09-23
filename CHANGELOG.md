@@ -46,6 +46,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S770 records: archive pass DONE, close-out records committed
+- **Deliverable:** the two owner-gated trims recorded in the tool-written
+  entries below — `CHANGELOG.md` 66,092 → 20,120 B (`--cut 13`, keeps
+  S768–S770) at `b57c35bc`; `HANDOFFS.md` 76,658 → 33,009 B (`--cut 4`,
+  keeps S767–S770) at `c195ea31`. Both verify scripts run pre- AND
+  post-commit: L1/L2/L3 hold. Post-pass `--check --budget-bytes 65536`:
+  none of the three ledgers fires (20,888 / 33,009 / 41,867 B).
+- **Records:** S769 handoff evaluated 10/10; S770 self-assessment 9/10;
+  `HANDOFFS.md` receipt complete. The archived S760 receipt's standing
+  set is carried forward INTO the S770 receipt (S686 forward-carrying
+  rule) — successors stop pointing at "S760's live receipt." Learnings:
+  none appended (mechanics covered by 777/782; the "S760 next-steps (E)"
+  mispointer is corrected in the receipt, FM #28).
+- **Verification:** ratchet 1/1 at `c195ea31` (3,528,758 B, +9 B vs S769
+  = noise on a docs-only diff; results `9649b761f9d3`, manifest
+  `aa983075d6a2`); receipt-citation comparison done before the run.
+
 ### 2026-09-23 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-23.md` (7 record(s), 76,658 B → 33,009 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
