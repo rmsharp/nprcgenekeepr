@@ -21,6 +21,19 @@
   "responsibility, not this tool's."
 )
 
+#' Canonical key for an unordered pair of ancestry levels
+#'
+#' Must stay identical to the \code{rule} strings
+#' \code{\link{reportAncestryViolations}} emits (sorted \code{"LO-HI"}), so
+#' manifest pair counts match the report's rows.
+#'
+#' @param a,b character vectors of uppercase ancestry levels.
+#' @return character vector of \code{"LEVEL-LEVEL"} keys.
+#' @noRd
+.ancestryPairKey <- function(a, b) {
+  paste(pmin(a, b), pmax(a, b), sep = "-")
+}
+
 #' Validate the ancestry-rule overrides for one formation run
 #'
 #' Each override names one \code{block} rule present in \code{rules}
@@ -65,11 +78,8 @@
       call. = FALSE
     )
   }
-  key <- paste(pmin(a1, a2), pmax(a1, a2), sep = "-")
-  ruleKey <- paste(pmin(rules$ancestry1, rules$ancestry2),
-    pmax(rules$ancestry1, rules$ancestry2),
-    sep = "-"
-  )
+  key <- .ancestryPairKey(a1, a2)
+  ruleKey <- .ancestryPairKey(rules$ancestry1, rules$ancestry2)
   missingRules <- setdiff(key, ruleKey)
   if (length(missingRules) > 0L) {
     stop("nprcgenekeepr: overrides name rule(s) not present in rules: ",
@@ -118,14 +128,8 @@
   if (nrow(overrides) == 0L) {
     return(rules)
   }
-  ruleKey <- paste(pmin(rules$ancestry1, rules$ancestry2),
-    pmax(rules$ancestry1, rules$ancestry2),
-    sep = "-"
-  )
-  overrideKey <- paste(pmin(overrides$ancestry1, overrides$ancestry2),
-    pmax(overrides$ancestry1, overrides$ancestry2),
-    sep = "-"
-  )
+  ruleKey <- .ancestryPairKey(rules$ancestry1, rules$ancestry2)
+  overrideKey <- .ancestryPairKey(overrides$ancestry1, overrides$ancestry2)
   rules$severity[ruleKey %in% overrideKey] <- "flag"
   rules
 }
@@ -179,14 +183,8 @@
     )
   }
 
-  ruleKey <- paste(pmin(rules$ancestry1, rules$ancestry2),
-    pmax(rules$ancestry1, rules$ancestry2),
-    sep = "-"
-  )
-  overrideKey <- paste(pmin(overrides$ancestry1, overrides$ancestry2),
-    pmax(overrides$ancestry1, overrides$ancestry2),
-    sep = "-"
-  )
+  ruleKey <- .ancestryPairKey(rules$ancestry1, rules$ancestry2)
+  overrideKey <- .ancestryPairKey(overrides$ancestry1, overrides$ancestry2)
   nPairs <- unname(vapply(
     ruleKey, function(k) sum(report$violations$rule == k), integer(1L)
   ))

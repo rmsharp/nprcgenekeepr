@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S765 REFACTOR: extract `.ancestryPairKey()` within the Slice 3 file
+- `R/ancestryOverrides.R` only: the six inline `paste(pmin(), pmax())`
+  unordered-pair keys → one `@noRd` helper `.ancestryPairKey()`. No behavior
+  change; 16/16 blocks, 103 expectations, lint 0. `reportAncestryViolations.R`
+  and `checkAncestryRules.R` keep their own copies — touching shipped Slice
+  1/2 files is Architect-mode scope (S764 precedent). Owner-gated GREEN→REFACTOR.
+
 ### 2026-09-23 · [issue #168] S765 GREEN: override + audit-manifest primitives (1 new file, internals only)
 - New `R/ancestryOverrides.R` (all `@noRd`): `.ancestryOverrideWarningText`
   (ratified gate wording), `.checkAncestryOverrides()`, `.effectiveAncestryRules()`
