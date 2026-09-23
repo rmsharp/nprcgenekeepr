@@ -81,7 +81,12 @@ The module supports multiple configuration options:
 \item \strong{Sex ratio}: Target female-to-male ratio in groups
 \item \strong{Ancestry guardrails}: Optional uploaded ancestry rules
 (see \code{\link{checkAncestryRules}}) enforced during group
-formation; inactive when the pedigree has no \code{ancestry} column
+formation; inactive when the pedigree has no \code{ancestry} column.
+A block rule can be overridden for the session through a confirm
+gate requiring a stated reason; the "Ancestry" results tab reports
+each run's rule violations (overridden rules stay visible, marked
+\code{overridden} -- see \code{\link{reportAncestryViolations}}) and
+offers the run's downloadable audit manifest
 }
 }
 \seealso{

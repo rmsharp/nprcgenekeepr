@@ -78,7 +78,18 @@ modBreedingGroupsUI <- function(id) {
                  ns = ns,
                  fileInput(ns("ancestryRulesFile"),
                            "Ancestry rules file:",
-                           accept = c(".csv", ".txt", ".xlsx", ".xls"))
+                           accept = c(".csv", ".txt", ".xlsx", ".xls")),
+                 # Issue 168 Slice 4b (D4/D8): per-rule override controls.
+                 # The select lists the not-yet-overridden BLOCK rules; the
+                 # button opens the #150-mold confirm gate (required
+                 # reason). Overrides persist until cleared or a new rules
+                 # file is uploaded (owner-ratified "until cleared").
+                 selectInput(ns("overrideRule"), "Block rule to override:",
+                             choices = NULL),
+                 actionButton(ns("overrideOpen"), "Override rule...",
+                              icon = icon("unlock")),
+                 uiOutput(ns("overrideStatus")),
+                 actionButton(ns("clearOverrides"), "Clear overrides")
                ),
                radioButtons(ns("sexRatio"), "Sex ratio:",
                             choices = c(None = "none",
@@ -154,6 +165,22 @@ modBreedingGroupsUI <- function(id) {
                                 "Export Current Group"),
                  downloadButton(ns("downloadGroupKin"),
                                 "Export Current Group Kinship Matrix")
+               ),
+               # Issue #168 Slice 4b (D8): the guardrail's results surface.
+               # Violations and coverage describe the currently-selected
+               # candidate's FORMED groups for the displayed run; the
+               # manifest is the run's downloadable audit record (D4).
+               tabPanel(
+                 "Ancestry", br(),
+                 uiOutput(ns("ancestryGuidance")),
+                 h4("Rule violations"),
+                 DT::DTOutput(ns("ancestryViolationsTable")),
+                 br(),
+                 h4("Rule coverage"),
+                 tableOutput(ns("ancestryCoverageTable")),
+                 br(),
+                 downloadButton(ns("downloadAncestryManifest"),
+                                "Download Audit Manifest")
                )
              )
       )
@@ -191,7 +218,12 @@ modBreedingGroupsUI <- function(id) {
 #'   \item \strong{Sex ratio}: Target female-to-male ratio in groups
 #'   \item \strong{Ancestry guardrails}: Optional uploaded ancestry rules
 #'     (see \code{\link{checkAncestryRules}}) enforced during group
-#'     formation; inactive when the pedigree has no \code{ancestry} column
+#'     formation; inactive when the pedigree has no \code{ancestry} column.
+#'     A block rule can be overridden for the session through a confirm
+#'     gate requiring a stated reason; the "Ancestry" results tab reports
+#'     each run's rule violations (overridden rules stay visible, marked
+#'     \code{overridden} -- see \code{\link{reportAncestryViolations}}) and
+#'     offers the run's downloadable audit manifest
 #' }
 #'
 #' @param id character vector of length 1. Module namespace identifier.
@@ -382,6 +414,123 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
               sum(!(ancestryLevels %in% covered)))
     })
 
+    # Issue #168 Slice 4b (D4): the session's confirmed per-rule overrides.
+    # Session-scoped, never persisted; each formation run snapshots what is
+    # in effect (the #150 params-snapshot mold), so a late override can
+    # never rewrite an earlier run's report or audit manifest.
+    emptyAncestryOverrides <- data.frame(
+      ancestry1 = character(0L), ancestry2 = character(0L),
+      reason = character(0L), stringsAsFactors = FALSE
+    )
+    ancestryOverridesRV <- reactiveVal(emptyAncestryOverrides)
+
+    # A new rules file may not contain the overridden rules at all -- stale
+    # overrides never survive a rules change (mirrors #150's
+    # stale-confirmation reset).
+    observeEvent(input$ancestryRulesFile, {
+      ancestryOverridesRV(emptyAncestryOverrides)
+    })
+
+    # The block rules a curator can still override: active rules only
+    # (NULL when the guardrails are inactive), block severity, minus the
+    # rules already overridden this session.
+    overridableRules <- reactive({
+      rules <- ancestryRulesForRun()
+      if (is.null(rules)) {
+        return(NULL)
+      }
+      blocks <- rules[rules$severity == "block", , drop = FALSE]
+      ov <- ancestryOverridesRV()
+      if (nrow(ov) > 0L) {
+        blockKeys <- .ancestryPairKey(blocks$ancestry1, blocks$ancestry2)
+        ovKeys <- .ancestryPairKey(ov$ancestry1, ov$ancestry2)
+        blocks <- blocks[!(blockKeys %in% ovKeys), , drop = FALSE]
+      }
+      blocks
+    })
+
+    # Keep the override select in step with the overridable set.
+    observe({
+      ovr <- overridableRules()
+      choices <- if (is.null(ovr) || nrow(ovr) == 0L) {
+        character(0L)
+      } else {
+        stats::setNames(
+          .ancestryPairKey(ovr$ancestry1, ovr$ancestry2),
+          sprintf("%s x %s", ovr$ancestry1, ovr$ancestry2)
+        )
+      }
+      updateSelectInput(session, "overrideRule", choices = choices)
+    })
+
+    # The #150-mold confirm gate: verbatim warning text, a required
+    # free-text reason, explicit Confirm/Cancel (D4). The gate appears only
+    # when the curator initiates an override -- never on a routine run
+    # (Dragon 7).
+    observeEvent(input$overrideOpen, {
+      ovr <- overridableRules()
+      req(!is.null(ovr), nrow(ovr) > 0L)
+      req(input$overrideRule %in%
+            .ancestryPairKey(ovr$ancestry1, ovr$ancestry2))
+      showModal(modalDialog(
+        title = "Override Ancestry Rule",
+        p(.ancestryOverrideWarningText),
+        textAreaInput(session$ns("overrideReason"),
+                      "Reason for override (required):",
+                      value = "", rows = 3L),
+        footer = tagList(
+          modalButton("Cancel"),
+          actionButton(session$ns("overrideConfirm"), "Confirm Override",
+                       class = "btn-warning")
+        )
+      ))
+    })
+
+    observeEvent(input$overrideConfirm, {
+      ovr <- overridableRules()
+      req(!is.null(ovr), nrow(ovr) > 0L)
+      keys <- .ancestryPairKey(ovr$ancestry1, ovr$ancestry2)
+      req(input$overrideRule %in% keys)
+      reason <- if (is.null(input$overrideReason)) {
+        ""
+      } else {
+        trimws(input$overrideReason)
+      }
+      if (!nzchar(reason)) {
+        showNotification(
+          "An override needs a non-empty reason.",
+          type = "error", duration = 10L
+        )
+        return()
+      }
+      row <- ovr[keys == input$overrideRule, , drop = FALSE]
+      ancestryOverridesRV(rbind(
+        ancestryOverridesRV(),
+        data.frame(
+          ancestry1 = row$ancestry1, ancestry2 = row$ancestry2,
+          reason = reason, stringsAsFactors = FALSE
+        )
+      ))
+      removeModal()
+    })
+
+    observeEvent(input$clearOverrides, {
+      ancestryOverridesRV(emptyAncestryOverrides)
+    })
+
+    # NULL when no overrides are active; otherwise the pinned one-liner.
+    overrideStatusText <- reactive({
+      ov <- ancestryOverridesRV()
+      if (nrow(ov) == 0L) {
+        return(NULL)
+      }
+      sprintf(
+        "%d block rule(s) overridden this session: %s.",
+        nrow(ov),
+        toString(sort(.ancestryPairKey(ov$ancestry1, ov$ancestry2)))
+      )
+    })
+
     # Runs groupAddAssign() once per "Form Groups" click and stores the full
     # multi-candidate result (issue #125 Slice 2). Kept separate from
     # `breedingGroups` (below) so that changing the candidate selection never
@@ -508,6 +657,24 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
           incProgress(amount = 0.001, detail = detail)
         }
 
+        # Issue #168 Slice 4b: snapshot the ancestry state this run enforces
+        # (the #150 params-snapshot mold), and apply Learning 780's two-call
+        # contract -- formation receives the EFFECTIVE rules (each overridden
+        # rule downgraded to flag); the Ancestry tab's report and manifest
+        # below receive these ORIGINAL rules plus the overrides. With no
+        # rules the snapshot is NULL and behavior is byte-identical (D7).
+        ancestryRulesRun <- ancestryRulesForRun()
+        ancestryOverridesRun <- if (is.null(ancestryRulesRun)) {
+          emptyAncestryOverrides
+        } else {
+          ancestryOverridesRV()
+        }
+        effectiveRules <- if (is.null(ancestryRulesRun)) {
+          NULL
+        } else {
+          .effectiveAncestryRules(ancestryRulesRun, ancestryOverridesRun)
+        }
+
         # Run the MIS-based group formation algorithm. When any seed ID is not
         # in the pedigree, block formation with a clear notification rather than
         # forming a group with a phantom member.
@@ -535,7 +702,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
               withKin = withKin,
               maxCandidates = maxCandidates,
               exhaustive = exhaustive,
-              ancestryRules = ancestryRulesForRun(),
+              ancestryRules = effectiveRules,
               updateProgress = updateProgress
             )
           }, error = function(e) {
@@ -585,7 +752,18 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
         groupResults(list(
           candidates = candidateViews, kmat = kmat,
           exhaustive = result$exhaustive, examined = result$examined,
-          retentionRule = result$retentionRule
+          retentionRule = result$retentionRule,
+          # The run's ancestry snapshot (NULL rules = a rule-less run). The
+          # id/ancestry columns are copied so the report always describes
+          # the pedigree this run actually grouped, even if a new pedigree
+          # is uploaded afterwards.
+          ancestryRules = ancestryRulesRun,
+          ancestryOverrides = ancestryOverridesRun,
+          ancestryPed = if (is.null(ancestryRulesRun)) {
+            NULL
+          } else {
+            ped[, c("id", "ancestry")]
+          }
         ))
 
         incProgress(0.5, detail = "Complete")
@@ -664,6 +842,104 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     output$ancestryStatus <- renderUI({
       shiny::p(ancestryStatusText(), style = "color: gray;")
     })
+
+    # Issue #168 Slice 4b (D8): the active-overrides status inside the
+    # guardrails section -- an override is never silent.
+    output$overrideStatus <- renderUI({
+      txt <- overrideStatusText()
+      if (is.null(txt)) {
+        return(NULL)
+      }
+      shiny::p(txt, style = "color: darkorange;")
+    })
+
+    # The displayed run's violations + coverage (D3/D4): the selected
+    # candidate's FORMED groups only -- the unused-animals bucket is not a
+    # co-housed group and must never fabricate violations (Learning 781).
+    # Reporting sees the run's ORIGINAL rules plus its overrides (Learning
+    # 780), all from the run snapshot, never live input state. NULL when
+    # the displayed run had no rules in effect (or no run exists).
+    ancestryReport <- reactive({
+      res <- groupResults()
+      if (is.null(res) || is.null(res$ancestryRules)) {
+        return(NULL)
+      }
+      cand <- selectedCandidate()
+      formed <- cand$validGroups
+      if (isTRUE(cand$hasUnused) && length(formed) > 0L) {
+        formed <- formed[-length(formed)]
+      }
+      reportAncestryViolations(
+        formed, res$ancestryPed, res$ancestryRules,
+        overriddenRules = res$ancestryOverrides
+      )
+    })
+
+    # The run's downloadable audit record (D4, the #150 manifest mold).
+    ancestryManifest <- reactive({
+      res <- groupResults()
+      rep <- ancestryReport()
+      if (is.null(rep) || is.null(res$ancestryRules)) {
+        return(NULL)
+      }
+      .buildAncestryOverrideManifest(
+        res$ancestryRules, res$ancestryOverrides, rep,
+        .ancestryOverrideWarningText
+      )
+    })
+
+    # D8's tab guidance: NULL once a rules-run is displayed (the tables
+    # speak); otherwise say why there is nothing to show, reusing the 4a
+    # inactive wording for the no-ancestry-column case.
+    ancestryTabGuidanceText <- reactive({
+      res <- groupResults()
+      if (!is.null(res) && !is.null(res$ancestryRules)) {
+        return(NULL)
+      }
+      rules <- ancestryRulesData()
+      if (is.null(rules)) {
+        return(paste("No ancestry rules loaded -- upload a rules file in",
+                     "the Ancestry Guardrails section."))
+      }
+      ped <- pedigree()
+      if (is.null(ped) || !("ancestry" %in% names(ped))) {
+        return(paste("Pedigree has no ancestry column -- ancestry",
+                     "guardrails inactive."))
+      }
+      paste("Form groups with ancestry rules loaded to see rule",
+            "violations here.")
+    })
+
+    output$ancestryGuidance <- renderUI({
+      txt <- ancestryTabGuidanceText()
+      if (is.null(txt)) {
+        return(NULL)
+      }
+      shiny::p(txt, style = "color: gray;")
+    })
+
+    output$ancestryViolationsTable <- DT::renderDT({
+      rep <- ancestryReport()
+      req(!is.null(rep))
+      rep$violations
+    }, options = list(pageLength = 10L, dom = "tp"))
+
+    output$ancestryCoverageTable <- renderTable({
+      rep <- ancestryReport()
+      req(!is.null(rep))
+      rep$coverage
+    })
+
+    output$downloadAncestryManifest <- downloadHandler(
+      filename = function() {
+        getDatedFilename("AncestryAuditManifest.csv")
+      },
+      content = function(file) {
+        m <- ancestryManifest()
+        req(!is.null(m))
+        write.csv(m, file, na = "", row.names = FALSE)
+      }
+    )
 
     # Issue #146 Slice 2 (D8): reports the exhaustive-mode search outcome for
     # the run that produced the currently-displayed candidates. NULL (no
