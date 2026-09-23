@@ -160,6 +160,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-21.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S768
+date: 2026-09-23
+status: pending
+active_task: Resolve the broken x86_64 /usr/local/bin/pandoc (BACKLOG item, found S756) — owner-executed sudo step, then session verification WITHOUT the PATH workaround (rmarkdown::find_pandoc(), the 3 chromote live-render tests in test_positionMatingUnitForest.R, the tarball_size_clean_export ratchet gate), then BACKLOG item removal.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S767
 date: 2026-09-23
 status: complete

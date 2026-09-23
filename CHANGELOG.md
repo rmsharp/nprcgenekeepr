@@ -42,6 +42,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S768 claim: pandoc environment fix — resolve the broken x86_64 `/usr/local/bin/pandoc` (in progress)
+- Owner picked the BACKLOG "Replace the broken x86_64 pandoc" item (found S756,
+  owner action needing sudo) at the Phase 0 priorities gate. Session claimed:
+  stub + pending `HANDOFFS.md` receipt + this entry. Plan: owner executes the
+  sudo step; session verifies `rmarkdown::find_pandoc()`, the 3 chromote
+  live-render tests, and the ratchet gate WITHOUT the PATH workaround, then
+  removes the `BACKLOG.md` item. Docs/environment only — no package code.
+
 ### 2026-09-23 · [ad hoc] S767 sha: close-out commit sha recorded in HANDOFFS.md receipt
 - `HANDOFFS.md` S767 receipt `commit:`/`changelog_ref:` fields reconciled to
   `f167a8d3` (self-reconcile, S760–S766 precedent; carries its own ledger entry).

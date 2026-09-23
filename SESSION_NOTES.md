@@ -58,6 +58,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 768 Did
+**Deliverable:** Resolve the broken x86_64 `/usr/local/bin/pandoc`
+(BACKLOG "Replace the broken x86_64 pandoc" item, found S756) — owner
+executes the sudo step, session verifies `rmarkdown::find_pandoc()` and
+the previously-affected checks (chromote live-render tests, ratchet
+gate) work WITHOUT the PATH workaround, then removes the BACKLOG item.
+(IN PROGRESS)
+**Started:** 2026-09-23
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md`
+entry says (in progress); Phase 3F records the rest. Until close-out,
+this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 766 Handoff Evaluation (by Session 767)
 **Score: 10/10.** **What helped:** next-steps (A) WAS this session's
 owner-picked deliverable, with the exact mechanics that all held:
