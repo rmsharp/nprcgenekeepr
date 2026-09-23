@@ -42,6 +42,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S769 records: Slice 4b DONE, close-out committed
+- **Deliverable:** see the GREEN entries below. REFACTOR declared no-op
+  (owner-ratified — the one DRY candidate is test-pinned at both sites; the
+  S766 in-function-strings-are-the-idiom precedent). `devtools::check()`
+  completed after the GREEN commits: **0 errors / 0 warnings / 0 notes**.
+- **Records:** S768 handoff evaluated 10/10; S769 full handoff +
+  self-assessment 9/10; `HANDOFFS.md` receipt complete. **Learnings: none
+  appended** — the one candidate (`commented_code_linter` fires on a prose
+  comment with an inner `#` when the prefix parses as a symbol) is a
+  sub-case of existing reword-comment reflexes; carried as a handoff gotcha
+  instead (FM #28).
+- **BACKLOG:** the plan §5 deferred mate-pair guardrail follow-up extracted
+  as its own "Up Next" item (its tracking issue closed this session — the
+  S686 still-open-sub-thread rule).
+- **Reported, not fixed:** after these records, `CHANGELOG.md` (~68 KB) and
+  `HANDOFFS.md` (~77 KB) BOTH fire the ratified 65,536 B trim trigger — the
+  archive pass is the handoff's next-steps (A); a second archive pass here
+  would be a second deliverable.
+
+### 2026-09-23 · [issue #168] S769 issue close: #168 closed as completed (non-commit action)
+- `gh issue close 168 --reason completed` with a comment citing the slice
+  history (S763/S764/S765/S766/S769), the verification battery, and what is
+  deliberately NOT closed with it (the mate-pair follow-up — plan §5,
+  extracted to `BACKLOG.md`; the harem-sire hole — its own BACKLOG item).
+  Owner-ratified at the GREEN→REFACTOR gate's paired question.
+
 ### 2026-09-23 · [issue #168] S769 GREEN 2/2: NEWS + tutorial/article documentation for the completed guardrails (Slice 4b)
 - `NEWS.Rmd`: plain-language entry for the completed guardrails (Ancestry
   results tab, per-rule session override with required written reason,

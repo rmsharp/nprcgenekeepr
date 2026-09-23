@@ -62,17 +62,154 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 768 Handoff Evaluation (by Session 769)
+**Score: 10/10.** **What helped:** "expect 0 undocumented; measure it"
+measured 0 on both frontiers; "~86 unpushed (recount)" measured exactly
+86; gotcha (3) (receipt-citation comparison BEFORE any ratchet run) was
+followed and the S768 citation matched `.quality-gates-results.json`
+byte-for-byte; the pandoc-workaround-RETIRED gotcha held live — this
+session ran suite/check/ratchet/renders with NO workaround, all clean
+(Learning 783's retirement confirmed by use); next-steps (A) WAS the
+owner-picked deliverable, and its spec (plan `:371`, Learnings 780/781)
+governed the implementation exactly — both learnings were load-bearing
+and correct (the two-call contract and the formed-groups universe are
+now pinned by module tests); every key-file pin held
+(`R/modBreedingGroups.R:320/:352/:367/:538`, `PROJECT_LEARNINGS.md:2253`).
+**Missing/wrong:** trivia only — the carried "register its group regex in
+the SAME session" phrasing (from the plan) implied a workflow edit;
+the `^e2e-breeding-groups-` regex already existed, so naming the file
+`test-e2e-breeding-groups-ancestry.R` satisfied it by construction
+(cost: one grep). **ROI:** high.
+
 ### What Session 769 Did
-**Deliverable:** Issue #168 Slice 4b — ancestry-guardrails override controls
-(#150-style modal gate with required reason), "Ancestry" results tab (violations
-DT + coverage + manifest download), shinytest2 e2e registered same-session,
-tutorial/article docs, and the explicit #168 open/close call — strict TDD from
-`docs/planning/issue168-ancestry-guardrails-plan.md:371` (IN PROGRESS)
-**Started:** 2026-09-23
-**Status:** Session claimed at the Phase 0 priorities gate (owner pick). Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest. Until close-out, this line is the crash
-breadcrumb for the next session's reconcile.
+**Deliverable:** **Issue #168 Slice 4b — override gate, "Ancestry"
+results tab, audit-manifest download, e2e, tutorial/article docs — DONE;
+issue #168 CLOSED (owner-ratified explicit call). v1 of the ancestry
+guardrails is complete.** Strict TDD; five owner gates (priorities pick,
+two pre-RED design sub-decisions, PRE-RED→RED, RED→GREEN,
+GREEN→REFACTOR + the #168 close call). TDD phase declared every response.
+**Design sub-decisions (owner-ratified pre-RED):** override lifetime =
+until cleared / rules re-upload (each run SNAPSHOTS rules + overrides +
+ped id/ancestry — the #150 params-snapshot mold, so a late override never
+rewrites an earlier run's report/manifest); controls = select +
+"Override rule..." button + #150 modal (required reason).
+**RED** (`7bb10167`): 9 blocks appended to
+`test_modBreedingGroups_ancestryRules.R` + new
+`test-e2e-breeding-groups-ancestry.R`. Audit: 4a blocks 1–11 pass; all 9
+new blocks fail (2 by assertion on missing ids, 7 by error on missing
+symbols); no 4b property passed spuriously.
+**GREEN** (`b21bbcdd` code+man, `237fce3c` NEWS+docs+ledger):
+`R/modBreedingGroups.R` only — override controls in the guardrails
+panel, `ancestryOverridesRV` (reset on rules re-upload),
+`overridableRules()`, #150-mold modal, formation gets
+`.effectiveAncestryRules()` while `ancestryReport()`/`ancestryManifest()`
+get ORIGINAL rules + overrides from the run snapshot (Learning 780),
+report universe = selected candidate's FORMED groups only (Learning
+781), "Ancestry" tab (guidance/violations DT/coverage/manifest
+download). Return list unchanged (contract rule 4); NAMESPACE unchanged.
+**REFACTOR:** declared no-op after re-read (owner-ratified) — the one
+DRY candidate (duplicated inactive-notice string) is test-pinned at both
+sites and in-function strings are the module's idiom (S766 precedent).
+**Verification (all measured):** target file 20/20 blocks, 105
+expectations, 0/0 — first run after implementation; full suite (NOT_CRAN,
+`load_all`, unfiltered, NO pandoc workaround) **0 failed / 0 error /
+7662 passed / 186 skipped / 6 warnings** (pre-existing; +1 skip = the new
+e2e's opt-in gate); `devtools::check()` **0/0/0**; **live e2e**
+(`NPRC_RUN_E2E=true`, dev build R CMD INSTALLed first): new file 17/17 —
+full drive incl. both manifest downloads (block-rule `nPairs == 0`
+pre-override; overridden row + reason + verbatim gate wording
+post-override), zero console errors; sibling
+`e2e-breeding-groups-{module,detailed,tutorial}` 26/26; lint 0 on all
+three touched files; `a3manual.Rmd` + `colony-manager-guide.qmd` render
+clean; ratchet **1/1 at `237fce3c`** (3,528,749 B, +7,640 B vs S768 =
+CONTENT, results `94d35e35769a`, manifest `aa983075d6a2`).
+**Checklists:** NEWS.Rmd ✓ same-session (plain-language); tutorial ✓
+(component's stale two-tab list corrected to four while adding the
+Ancestry tab; D6 UNKNOWN/OTHER guidance in both surfaces); citation
+(#120) N/A confirmed (rule bookkeeping, not statistics); `_pkgdown.yml`
+N/A (no new export); `a2interactive` N/A (no new exported
+function/parameter); e2e CI registration ✓ by construction (existing
+regex + coverage guard in-suite); **issue #168 closed same-session**
+with verification comment; BACKLOG: no 4b item existed to remove; the
+plan §5 deferred mate-pair follow-up EXTRACTED to `BACKLOG.md` "Up Next"
+(its tracking issue closed, S686 still-open-sub-thread rule).
+**Disclosures:** (1) the full-suite background run started one
+comment-reword before final code (comment-only diff; `devtools::check()`
+covered the final code state); (2) the two vignette/article edits
+postdate check's source snapshot — verified by direct renders instead;
+(3) GREEN 1/2 committed `--no-verify` (code-only commit; both GREEN
+ledger entries rode GREEN 2/2, the documented fast-path bypass).
+
+**Self-assessment (Session 769): 9/10.** **Strengths:** (1) GREEN passed
+all 20 blocks AND the live e2e first try — the RED pins were specified
+tightly enough to be implementable without iteration; (2) Learnings
+780/781 and the #150 snapshot mold applied as designed and are now
+test-pinned in the module; (3) five owner gates, each with
+dry-run-derived specifics; (4) full battery measured, incl. the sibling
+e2e group and both doc renders; (5) same-session issue close with
+evidence, and the orphaned follow-up extracted to BACKLOG. **Weak:**
+(1) two lint round-trips on the `commented_code_linter` inner-`#`
+false positive — existing learnings (reword code-like comments) should
+have predicted the first fix; (2) suite/check/docs sequencing left the
+comment-reword and doc edits outside one of the two big runs each
+(disclosed above; covered by the other run + renders); (3) no FM #28
+reduction landed — both big ledgers now fire their trigger (next-steps
+A).
+
+**Learnings:** none appended — the one candidate (inner `#` in a prose
+comment, e.g. "#168", truncates the text so the prefix parses as a bare
+symbol and trips `commented_code_linter`) is a sub-case of the existing
+reword-code-like-comments reflexes (Learnings 17(d)/38/214(5) region);
+carried as gotcha (7) instead of a new entry (FM #28).
+
+**Next steps (specific):** (A) **CHANGELOG + HANDOFFS archive pass
+(READY, S — NOW DUE):** measured at close-out, `HANDOFFS.md` ~77 KB and
+`CHANGELOG.md` ~68 KB after these records — BOTH fire the ratified
+65,536 B trigger; `methodology_trim.py --file <F> --check
+--budget-bytes 65536` then owner-gated `--cut N --force --write` per
+file (SRF_RED expected, L549/586/587; `--cut N` = KEEP N, L777; the
+trimmer writes its own ledger entry, L782). (B) **Push+CI (READY, S,
+growing):** ~92 unpushed expected after close-out (recount with
+`git rev-list --count origin/master..HEAD`); CI current through
+`8007de81`; outward-facing — owner confirms first. (C) **Slice 5
+backfill scoping (DECISION NEEDED, L)** — `BACKLOG.md:43` region. (D)
+**Harem-sire seam hole (DECISION NEEDED, M)** — `BACKLOG.md:22` region.
+(E) **Mate-pair guardrail surface (DECISION NEEDED, M)** — the NEW
+`BACKLOG.md:8` item this session extracted; needs a new GitHub issue +
+design gate. (F) Standing list unchanged — S760's next-steps (E) via its
+live HANDOFFS receipt.
+
+**Key files:** `R/modBreedingGroups.R:79` (override controls UI), `:417`
+region (override machinery: RV/reset/overridable/modal/confirm/clear/
+status), `:590` region (formation snapshot + effective rules), `:770`
+region (ancestryReport/ancestryManifest/guidance/outputs — grep
+"Slice 4b" for exact lines);
+`tests/testthat/test_modBreedingGroups_ancestryRules.R:390` region (4b
+banner + blocks); `tests/testthat/test-e2e-breeding-groups-ancestry.R`
+(the full drive); `docs/planning/issue168-ancestry-guardrails-plan.md:399`
+(§5 deferred mate-pair item); `BACKLOG.md:8` (extracted follow-up);
+`CHANGELOG.md:45` region (S769 entries); `HANDOFFS.md:162` (S769
+receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~92 unpushed expected (recount). (2) **BOTH big
+ledgers fire the 65,536 B trigger after these records** — run the
+archive pass before anything grows them further. (3) Ratchet moved for
+CONTENT: 3,528,749 B at `237fce3c` (results `94d35e35769a`); cite from
+`.quality-gates-results.json`. (4) **The e2e app runs the INSTALLED
+package** (`inst/shinytest/app.R` does `library(nprcgenekeepr)`) — `R
+CMD INSTALL` the dev tree before any local live-e2e run, or the run
+exercises a stale build. (5) Overrides are session-scoped and reset on
+rules re-upload (owner-ratified) — don't "fix" persistence without a
+gate; any future consumer of the module's ancestry report must read the
+run SNAPSHOT fields (`groupResults()`'s `ancestryRules`/
+`ancestryOverrides`/`ancestryPed`), never live inputs (L780/#150 mold).
+(6) The Ancestry report universe is FORMED groups only (L781) — the
+module's `ancestryReport()` already drops the unused bucket; don't
+re-derive from raw `groups()`. (7) `commented_code_linter` fires on a
+prose comment containing an inner `#` (e.g. "#168") when the prefix
+parses as a symbol — write "issue 168" in R comments. (8) Standing set
+unchanged — S760's gotcha (9) via its live receipt.
 
 ### Session 767 Handoff Evaluation (by Session 768)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"

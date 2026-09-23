@@ -5,6 +5,18 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
+- [ ] **Mate-pair guardrail surface — extend the shipped #168 ancestry-rules
+      machinery to `reportMatePairs()`/`modMatePair` (recorded S762, extracted
+      here S769 when #168 closed; DECISION NEEDED — needs its own small design
+      gate before any code, Effort M)** -- the #168 plan's §5 "Deferred
+      (recorded, NOT ratified)" item: an additive violations/`reason` extension
+      of the existing `excluded`/`pairs` frames using the same rules machinery
+      (D5 deliberately kept it out of v1 to avoid re-opening #151's module
+      contract mid-cluster). #168 itself is CLOSED (v1 complete, S769), so this
+      item is the follow-up's only live tracker — a pickup session opens a new
+      GitHub issue and runs the design gate first. See
+      `docs/planning/issue168-ancestry-guardrails-plan.md` §5/D5.
+
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own
       design gate, Effort M)** -- a harem's sampled sire is seeded into the group
