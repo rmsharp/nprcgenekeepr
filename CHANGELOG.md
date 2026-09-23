@@ -42,6 +42,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S768 sha: close-out commit sha recorded in HANDOFFS.md receipt
+- `HANDOFFS.md` S768 receipt `commit:`/`changelog_ref:` fields reconciled to
+  `a220e212` (self-reconcile, S760–S767 precedent; carries its own ledger entry).
+
 ### 2026-09-23 · [ad hoc] S768 records: pandoc item DONE, close-out records committed
 - **Deliverable:** see the S768 deliverable entry below (`0fa0c067`). This entry
   records the close-out and the one owner-gated decision that rode with it.
