@@ -38,6 +38,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S766 RED: Slice 4a failing tests (11 blocks; fail only on the missing module symbols/ids)
+- Owner-ratified 4a/4b split (config + enforcement wiring this session;
+  override gate, Ancestry tab, manifest, e2e, article at 4b), then the
+  PRE-RED→RED gate. New `tests/testthat/test_modBreedingGroups_ancestryRules.R`:
+  3 UI blocks (guardrails ids, unprefixed conditionalPanel condition per
+  Learning 324, toggle unchecked by default), 4 validate-notify blocks
+  (`kinshipOverrideData()` mold — NULL/no-upload, valid 2-block/2-flag
+  example rules, malformed-severity → NULL, D6 warning muffled), 2 status
+  blocks (D8 wordings pinned verbatim incl. "2 block, 2 flag rule(s); 2
+  animal(s) uncovered." hand-derived — J1/J2 JAPANESE uncovered), 2
+  formation blocks (blocked pair never co-placed; no-ancestry ped forms as
+  today with rules withheld — D6 loud-not-fatal). Per-block audit: 11/11
+  fail, 0 passing expectations (no spurious passes); every message traces
+  to `ancestryRulesData`/`ancestryRulesForRun`/`ancestryStatusText` or the
+  3 missing UI ids. Lint 0.
+
 ### 2026-09-23 · [issue #168] S766 claim: Slice 4 — UI wiring, downloads, docs *(in progress)*
 - Session claimed after Phase 0 (0 undocumented on both frontiers; CI 10/10
   green; dashboard 96/100; ratchet citation matches the results file). Owner
