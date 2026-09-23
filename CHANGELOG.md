@@ -38,6 +38,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S765 GREEN: override + audit-manifest primitives (1 new file, internals only)
+- New `R/ancestryOverrides.R` (all `@noRd`): `.ancestryOverrideWarningText`
+  (ratified gate wording), `.checkAncestryOverrides()`, `.effectiveAncestryRules()`
+  (downgrade-to-flag), `.buildAncestryOverrideManifest()` (one row per rule,
+  17 columns). 16/16 RED blocks pass first run (103 expectations, 0 warnings);
+  lint 0 on both files; `devtools::document()` a verified no-op (no
+  `NAMESPACE`/`man/` change); spelling 0. **NEWS.Rmd N/A** (no export, no
+  user-visible behavior; plan §9 expected internals-only); **`_pkgdown.yml`
+  N/A** (no export); DESCRIPTION unchanged (no Collate field; no new import).
+
 ### 2026-09-23 · [issue #168] S765 RED: Slice 3 failing tests (16 blocks, 1 new file)
 - `tests/testthat/test_ancestryOverrides.R`: pins `.ancestryOverrideWarningText`
   (ratified wording, verbatim), `.checkAncestryOverrides()` (NULL/zero-row,
