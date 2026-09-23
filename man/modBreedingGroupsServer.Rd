@@ -79,6 +79,9 @@ The module supports multiple configuration options:
 \item \strong{Kinship threshold}: Maximum allowed kinship within groups
 \item \strong{Harem mode}: Form groups with exactly one male each
 \item \strong{Sex ratio}: Target female-to-male ratio in groups
+\item \strong{Ancestry guardrails}: Optional uploaded ancestry rules
+(see \code{\link{checkAncestryRules}}) enforced during group
+formation; inactive when the pedigree has no \code{ancestry} column
 }
 }
 \seealso{

@@ -317,19 +317,34 @@ test_that(paste(
       )
       session$setInputs(formGroups = 1)
 
-      groups <- session$getReturned()$groups()
-      expect_true(length(groups) >= 1L)
+      # The property holds for FORMED groups. The module's last group is
+      # the unused-animals bucket when hasUnused (addGroupOfUnusedAnimals();
+      # unplaced animals are not co-housed, so blocked animals legitimately
+      # accumulate there together). Check every retained candidate, not
+      # just the returned selection.
+      res <- groupResults()
       anc <- setNames(
         toupper(as.character(test_ped$ancestry)),
         test_ped$id
       )
-      for (g in groups) {
-        levelsInGroup <- unique(anc[g])
-        expect_false(
-          "INDIAN" %in% levelsInGroup &&
-            any(c("CHINESE", "HYBRID") %in% levelsInGroup)
-        )
+      expect_true(length(res$candidates) >= 1L)
+      sawFormedAnimal <- FALSE
+      for (cand in res$candidates) {
+        formed <- cand$validGroups
+        if (isTRUE(cand$hasUnused) && length(formed) > 0L) {
+          formed <- formed[-length(formed)]
+        }
+        for (g in formed) {
+          if (length(g) > 0L) sawFormedAnimal <- TRUE
+          levelsInGroup <- unique(anc[g])
+          expect_false(
+            "INDIAN" %in% levelsInGroup &&
+              any(c("CHINESE", "HYBRID") %in% levelsInGroup)
+          )
+        }
       }
+      # Anti-vacuity guard: the property must not pass via empty groups.
+      expect_true(sawFormedAnimal)
     }
   )
 })

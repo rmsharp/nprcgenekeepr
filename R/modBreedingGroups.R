@@ -62,6 +62,24 @@ modBreedingGroupsUI <- function(id) {
                             value = 3L, min = 1L, max = 20L),
                numericInput(ns("maxKinship"), "Max kinship threshold:",
                             value = 0.25, min = 0L, max = 0.5, step = 0.01),
+               # Issue #168 Slice 4a (D8): the ancestry guardrails live
+               # beside the kinship threshold they parallel -- collapsed by
+               # default, with one always-visible status line.
+               checkboxInput(ns("showAncestryGuardrails"),
+                             "Ancestry Guardrails",
+                             value = FALSE),
+               uiOutput(ns("ancestryStatus")),
+               conditionalPanel(
+                 # ns = ns already scopes this panel's input lookups to the
+                 # module namespace client-side, so the condition uses the
+                 # unprefixed field name (a ns()-built condition
+                 # double-prefixes and never matches; Learning 324).
+                 condition = "input.showAncestryGuardrails",
+                 ns = ns,
+                 fileInput(ns("ancestryRulesFile"),
+                           "Ancestry rules file:",
+                           accept = c(".csv", ".txt", ".xlsx", ".xls"))
+               ),
                radioButtons(ns("sexRatio"), "Sex ratio:",
                             choices = c(None = "none",
                                         "Harem (1M:NF)" = "harem",
@@ -171,6 +189,9 @@ modBreedingGroupsUI <- function(id) {
 #'   \item \strong{Kinship threshold}: Maximum allowed kinship within groups
 #'   \item \strong{Harem mode}: Form groups with exactly one male each
 #'   \item \strong{Sex ratio}: Target female-to-male ratio in groups
+#'   \item \strong{Ancestry guardrails}: Optional uploaded ancestry rules
+#'     (see \code{\link{checkAncestryRules}}) enforced during group
+#'     formation; inactive when the pedigree has no \code{ancestry} column
 #' }
 #'
 #' @param id character vector of length 1. Module namespace identifier.
@@ -288,6 +309,78 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
       })
       validGroups[!vapply(validGroups, is.null, logical(1L))]
     }
+
+    # Issue #168 Slice 4a: read and validate an uploaded ancestry rules
+    # file (D2; the kinshipOverrideData() validate-notify mold in
+    # R/modGeneticValue.R). Soft / non-fatal in the app: a bad file
+    # notifies and is ignored, never aborting a run; the D6 UNKNOWN/OTHER
+    # asymmetry warning is surfaced as a notification and muffled, keeping
+    # the validated rules. NULL when no file is uploaded or the file cannot
+    # be read/validated.
+    ancestryRulesData <- reactive({
+      if (is.null(input$ancestryRulesFile)) {
+        return(NULL)
+      }
+      tryCatch(
+        withCallingHandlers(
+          checkAncestryRules(
+            readAncestryRules(input$ancestryRulesFile$datapath)
+          ),
+          warning = function(w) {
+            showNotification(
+              paste("Ancestry rules warning:", conditionMessage(w)),
+              type = "warning", duration = 10L
+            )
+            invokeRestart("muffleWarning")
+          }
+        ),
+        error = function(e) {
+          showNotification(
+            paste("Could not read ancestry rules:", conditionMessage(e)),
+            type = "error", duration = 10L
+          )
+          NULL
+        }
+      )
+    })
+
+    # The rules formation actually receives (D6's app-side reading): NULL
+    # unless rules are loaded AND the pedigree carries an ancestry column,
+    # so groupAddAssign() never stop()s from the module over a missing
+    # column -- the status line below says why the guardrails are inactive
+    # instead (loud, never fatal).
+    ancestryRulesForRun <- reactive({
+      rules <- ancestryRulesData()
+      ped <- pedigree()
+      if (is.null(rules) || is.null(ped) ||
+            !("ancestry" %in% names(ped))) {
+        return(NULL)
+      }
+      rules
+    })
+
+    # D8's one-line status: "no rules loaded" / rule + coverage counts /
+    # the inactive notice. An animal is uncovered when its standardized
+    # ancestry level (convertAncestry()'s 6-level vocabulary) is named by
+    # no loaded rule -- D6's permissive default made visible. An NA level
+    # is never covered by a rule, so it counts as uncovered.
+    ancestryStatusText <- reactive({
+      rules <- ancestryRulesData()
+      if (is.null(rules)) {
+        return("No ancestry rules loaded.")
+      }
+      ped <- pedigree()
+      if (is.null(ped) || !("ancestry" %in% names(ped))) {
+        return(paste("Pedigree has no ancestry column -- ancestry",
+                     "guardrails inactive."))
+      }
+      covered <- unique(c(rules$ancestry1, rules$ancestry2))
+      ancestryLevels <- toupper(as.character(ped$ancestry))
+      sprintf("%d block, %d flag rule(s); %d animal(s) uncovered.",
+              sum(rules$severity == "block"),
+              sum(rules$severity == "flag"),
+              sum(!(ancestryLevels %in% covered)))
+    })
 
     # Runs groupAddAssign() once per "Form Groups" click and stores the full
     # multi-candidate result (issue #125 Slice 2). Kept separate from
@@ -442,6 +535,7 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
               withKin = withKin,
               maxCandidates = maxCandidates,
               exhaustive = exhaustive,
+              ancestryRules = ancestryRulesForRun(),
               updateProgress = updateProgress
             )
           }, error = function(e) {
@@ -563,6 +657,12 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
                         function(cand) length(cand$validGroups), integer(1L)),
         stringsAsFactors = FALSE
       )
+    })
+
+    # Issue #168 Slice 4a (D8): the guardrails section's always-visible
+    # one-line status.
+    output$ancestryStatus <- renderUI({
+      shiny::p(ancestryStatusText(), style = "color: gray;")
     })
 
     # Issue #146 Slice 2 (D8): reports the exhaustive-mode search outcome for

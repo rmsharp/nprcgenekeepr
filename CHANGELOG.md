@@ -38,6 +38,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S766 GREEN 1/2: ancestry-guardrails config + enforcement wiring in modBreedingGroups
+- `R/modBreedingGroups.R`: collapsed-by-default "Ancestry Guardrails" UI
+  beside the kinship threshold (toggle + always-visible status line +
+  conditionalPanel'd `fileInput`); `ancestryRulesData()` validate-notify
+  reactive (kinshipOverrideData mold), `ancestryRulesForRun()` (NULL unless
+  rules loaded AND ped has an ancestry column — D6 loud-not-fatal),
+  `ancestryStatusText()` (3 pinned D8 wordings) + its renderUI; the
+  `groupAddAssign()` call gains `ancestryRules = ancestryRulesForRun()`.
+  `man/modBreedingGroupsServer.Rd` regenerated (config-options item);
+  NAMESPACE unchanged (verified — no new imports/exports).
+- **Declared RED-test correction (TDD error-handling rule):** block 10's
+  RED assertion swept the module's trailing unused-animals bucket
+  (`addGroupOfUnusedAnimals()`) into the co-placement property; unplaced
+  animals are not co-housed, so blocked animals legitimately pool there.
+  Corrected to check formed groups across ALL retained candidates via
+  `groupResults()`/`hasUnused`, with an anti-vacuity guard. Kernel and
+  wiring verified correct by direct reproduction before the edit.
+- Measured: the Slice 4a file 11/11 blocks green; sibling corpus
+  (test_modBreedingGroups*.R ×6 + test_moduleContract.R + the new file)
+  0 failed / 0 error / 348 passed; lint 0 on both touched files
+  (one commented_code false positive reworded, not suppressed);
+  `spell_check_package()` 0.
+
 ### 2026-09-23 · [issue #168] S766 RED: Slice 4a failing tests (11 blocks; fail only on the missing module symbols/ids)
 - Owner-ratified 4a/4b split (config + enforcement wiring this session;
   override gate, Ancestry tab, manifest, e2e, article at 4b), then the
