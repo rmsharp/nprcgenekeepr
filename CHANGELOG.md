@@ -42,6 +42,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #168] S769 RED: Slice 4b failing tests committed (override gate + Ancestry tab + manifest + e2e)
+- 9 new blocks appended to `tests/testthat/test_modBreedingGroups_ancestryRules.R`
+  (header updated to cover 4a+4b): Ancestry-tab + override-control UI ids;
+  controls inside the guardrails panel; `overridableRules()` (block rules minus
+  overridden); blank-reason rejection; confirm/clear/reset-on-reupload; the
+  Learning 780 two-call wiring test (I1+C1 topRanked candidates: blocked →
+  override → co-placed; report row `severity` block / `status` overridden;
+  manifest row overridden TRUE + reason + verbatim gate wording; run-time
+  SNAPSHOT semantics — a late override never rewrites an earlier run's
+  manifest, the #150 mold); the Learning 781 universe test (coverage census =
+  formed groups only, unused bucket excluded); pinned guidance strings.
+  New `tests/testthat/test-e2e-breeding-groups-ancestry.R` (opt-in
+  `NPRC_RUN_E2E`) drives the plan §5 done-when path live, asserting through
+  the two downloaded manifests; its name matches the existing
+  `^e2e-breeding-groups-` CI group regex, so registration is by construction
+  (statically guarded by `test_shinytest2_workflow_coverage.R`).
+- **Per-block RED audit (measured):** 4a blocks 1–11 all pass (39 passing
+  expectations file-wide); all 9 new blocks FAIL — 2 by assertion on the
+  missing UI ids (13 failed expectations), 7 by error on the missing server
+  symbols (`overridableRules`, `ancestryOverridesRV`, `overrideStatusText`,
+  `ancestryReport`, `ancestryManifest`, `ancestryTabGuidanceText`). Passing
+  expectations inside failing blocks are 4a-behavior preconditions only.
+  The e2e file parses and self-skips without the opt-in env var.
+- Owner gates this session before RED: override lifetime = until cleared /
+  rules re-upload (each run snapshots what was in effect); control shape =
+  select + "Override rule…" button + #150 modal; PRE-RED→RED ratified with
+  the exact block list.
+
 ### 2026-09-23 · [issue #168] S769 claim: Slice 4b — ancestry override controls + Ancestry results tab *(in progress)*
 - Session claimed at the Phase 0 priorities gate (owner pick via `AskUserQuestion`).
   Deliverable: the §5 Slice 4 remainder from
