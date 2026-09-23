@@ -58,6 +58,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 767 Did
+**Deliverable:** CHANGELOG.md + HANDOFFS.md archive pass (IN PROGRESS) —
+both ledgers over the default 196,608 B trim trigger at Orient
+(CHANGELOG 201,379 B, HANDOFFS 204,862 B); owner picked this at Phase 0.
+**Started:** 2026-09-23
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md`
+entry says (in progress); Phase 3F records the rest. Until close-out,
+this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 765 Handoff Evaluation (by Session 766)
 **Score: 9/10.** **What helped:** "expect 0 undocumented; measure it"
 measured 0 on both frontiers; "~70 unpushed (recount)" measured exactly

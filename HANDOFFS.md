@@ -156,6 +156,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S767
+date: 2026-09-23
+status: pending
+active_task: CHANGELOG.md + HANDOFFS.md archive pass — both ledgers over the default 196,608 B trim trigger at Orient (CHANGELOG 201,379 B, HANDOFFS 204,862 B); owner picked this at Phase 0. Session claimed; work beginning.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S766
 date: 2026-09-23
 status: complete

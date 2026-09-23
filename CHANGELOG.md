@@ -38,6 +38,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S767 claim: CHANGELOG + HANDOFFS archive pass *(in progress)*
+- Session claimed; owner picked the archive pass at the Phase 0 priorities gate. Both
+  ledgers measured over the default 196,608 B trim trigger at Orient (`CHANGELOG.md`
+  201,379 B, `HANDOFFS.md` 204,862 B — S766 next-steps (A), now due). Owner-gated
+  `methodology_trim.py` runs to follow; budget-scope question (65,536 vs. default for
+  these two files) goes to the owner in-session (S765 gotcha 4).
+
 ### 2026-09-23 · [issue #168] S766 sha: close-out commit sha recorded in HANDOFFS.md receipt
 - `HANDOFFS.md` S766 receipt `commit:` field reconciled to `e11eb7b1`
   (self-reconcile, S760–S765 precedent; carries its own ledger entry).
