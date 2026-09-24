@@ -46,6 +46,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [ad hoc] `.Rprofile`: renv's plain startup sync check replaced by `renv::status(dev = TRUE)`
+- **Change:** opening R in the package root no longer prints a false "The project is out-of-sync"
+  message. Under `snapshot.type: "explicit"`, renv's automatic startup check (a plain
+  `renv::status()`) counts only `Imports`/`Depends`/`LinkingTo` as used, so every `Suggests`-only
+  package (dplyr, chromote, brio, callr, ...) read as installed and recorded but unused.
+  `.Rprofile` now sets `options(renv.config.synchronized.check = FALSE)` before sourcing
+  `renv/activate.R`, then runs `renv::status(dev = TRUE)` when `interactive()` and `DESCRIPTION`
+  exists. `renv.lock` and `renv/settings.json` are untouched: the reported drift was not real. The
+  edit is the owner's; this entry records the verification and commit.
+- **Commit/PR:** `23f20f3a`
+- **Session:** none -- owner-directed, outside a numbered session (follows S778) · **Verified:**
+  `renv::status(dev = TRUE)` reports "No issues found"; `Rscript` startup no longer prints the
+  out-of-sync line; a forced-interactive `R` start prints the `status(dev = TRUE)` result. **Not
+  run:** the test suite and `devtools::check()` -- `.Rprofile` is `.Rbuildignore`d
+  (`^\.Rprofile$`) and no package code changed.
+- **Caveat:** non-interactive runs (`Rscript`, CI) and R sessions started outside the package root
+  no longer get any startup sync check.
+
 ### 2026-09-24 · [ad hoc] S778 records: push + CI verification DONE, close-out records committed
 - **Deliverable:** the push and CI verification recorded in the entry below. Ratchet **1/1** at
   `bec2a976` (3,565,165 B, +26 B vs S777 = noise on a docs-only diff; results `81564f726622`,
