@@ -46,6 +46,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [ad hoc] S779 records: close-out for the ad hoc session (S778 handoff evaluated 8/10, receipt, Learnings 791-793, next-session BACKLOG items)
+- **Deliverable:** the close-out records for the owner-directed ad hoc work of 2026-09-24, recorded
+  in the entries below: the `.Rprofile` renv startup check (`23f20f3a`), the removal of
+  `nprcgenekeepr_notes.txt` (`c182511b`), the `BACKLOG.md` staleness review and cleanup
+  (`c67a3106`, `ab50aed1`, `0cc75dc4`, `59cb4406`, `8a616f15`, with the NEW-53 backfill) and three
+  pushes. **Numbering:** the session is called **S779** here, at close-out; the earlier entries for
+  this work say "outside a numbered session" and, being append-only, are not edited -- this entry
+  supplies the number. No Phase 0/1 claim was made (the session began with an owner question).
+- **Records:** `SESSION_NOTES.md` (S778 handoff evaluation 8/10, the S779 record, self-assessment
+  6/10); `HANDOFFS.md` receipt `status: complete` (`commit: pending`); `PROJECT_LEARNINGS.md`
+  Learnings **791** (trace a "resolved" section into the ledger by tag count and by ID plus name),
+  **792** (no CI wait for build-ignored, unread files) and **793** (measure remote state before
+  writing it into a menu); `BACKLOG.md` two items at the top of Up Next -- the owner's next-session
+  pick, **resolve the PED_GV audit's remaining findings, triage first** (`:8`), and the optional
+  `paths-ignore` decision (`:35`). Nothing was removed from `SESSION_NOTES.md` (45,210 B after
+  these records, under the read cap).
+- **Verification:** ratchet **1/1 at `b5166c8b`** (3,565,188 B, +23 B vs S778 = noise, every changed
+  file being build-ignored; results `0936149cc117`, manifest `aa983075d6a2`; the S778 citation
+  matched its results file BEFORE the run). Cross-references grepped: Learnings 791-793 resolve;
+  the BACKLOG pins `:8`, `:35`, `:48`, `:70`, `:86`, `:108`, `:128`; `CHANGELOG.md:49`,
+  `HANDOFFS.md:166`, `SESSION_NOTES.md:67`. **Not run:** the suite and `devtools::check()` -- no
+  package code changed. **Disclosed:** no Phase 0; the TDD phase declared on most responses, not
+  all; a wrong ahead-count in a picker (Learning 793); two CI watches the owner called a waste of
+  time (Learning 792).
+- **Commit:** this commit -- the five files above plus this entry. **Local, not pushed** (1
+  unpushed after close-out, as at S778).
+
+### 2026-09-24 · [ad hoc] Pushed `59cb4406..b5166c8b` to `origin/master` (2 docs-only commits); CI not awaited
+- **Action:** `git push origin master` -- 2 commits: `8a616f15` (the `BACKLOG.md` cut of the three
+  resolved sections plus the NEW-53 backfill entry) and `b5166c8b` (the ledger entry for the
+  previous push). Owner-directed ("push the two commits"). **Before the push:** `git fetch` showed
+  origin at `59cb4406`, an ancestor of HEAD (fast-forward); the outgoing diff was 2 files
+  (`BACKLOG.md`, `CHANGELOG.md`), +87/-67, with no secret-named files and no credential-shaped
+  strings in the added lines. **After:** local and `origin/master` both at `b5166c8b`.
+- **CI:** not awaited and not looked at, per the owner's standing direction ("do not wait for an
+  uninformative CI"): both changed files are matched by `.Rbuildignore` (`^BACKLOG.*\.md$`,
+  `^CHANGELOG.*\.md$`) and no test or workflow reads either.
+- **Session:** S779 (numbered at close-out) · **Verified:** the pre-push checks above only.
+- **Not pushed:** the S779 records commit is local.
+
 ### 2026-09-24 · [ad hoc] Pushed `af4f1eca..59cb4406` to `origin/master` (6 docs-only commits); CI not awaited
 - **Action:** `git push origin master` -- 6 commits: `c182511b` (removed `nprcgenekeepr_notes.txt`),
   `cb079f6b` (ledger entries for the previous push and that removal), and `c67a3106`, `ab50aed1`,

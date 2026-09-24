@@ -5,6 +5,46 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
+- [ ] **Resolve the PED_GV audit's remaining findings -- triage first (owner-directed
+      2026-09-24 for the next session; READY, Effort L; strict TDD for every fix)** --
+      `PED_GV_AUDIT_2026-05-30.md` (repo root) holds 61 confirmed findings in ~24 deduped roots
+      (`:218`) and 63 distinct `PED-`/`NEW-` ids in all; the ledger (`CHANGELOG.md` plus
+      `docs/archive/CHANGELOG-*.md`) records only 22 of those ids, but **ledger-absent does not
+      mean unresolved** (NEW-53 was fixed in `5f40b7af` and had no entry until 2026-09-24). So
+      the FIRST deliverable is a triage table, one row per ledger-absent id (41): still present
+      in today's code / already fixed (cite the commit) / moot / refuted, judged against the
+      current source, never the 2026-05-30 line numbers. Start with the correctness and
+      robustness block (audit `:64-141`), whose six ledger-absent ids are **NEW-31/NEW-32**
+      (`getRecordStatusIndex()` returns `integer(0)` when `recordStatus` is absent, so
+      `removeUnknownAnimals()` silently yields a 0-row pedigree), **NEW-38** (the "U"-prefix id
+      scheme in `addUIds()`/`removeAutoGenIds()` can collide with or wrongly strip real `U...`
+      ids), **NEW-41** (`getAncestors()` recurses with no cycle guard or dedup; no test),
+      **NEW-58** (`getAnimalsWithHighKinship()`'s `tapply` collapse drops animals with no
+      qualifying partner; no test) and **NEW-59** (`makeGeneticSummaryTable()`'s unnamed
+      `rep(NA, 6)` fallback). A quick look on 2026-09-24 (a lead, NOT a triage) found the
+      structures for NEW-31/32, NEW-41 and NEW-58 still visible (`R/getRecordStatusIndex.R:14`,
+      `R/getAncestors.R:53`/`:60`, `R/getAnimalsWithHighKinship.R:57`) and no `rep(NA, 6)` in
+      `R/makeGeneticSummaryTable.R`. The other 35 ids are the lower-severity duplication /
+      extensibility / complexity findings (tables at `:147` and `:178`). **Ledger-absent ids:**
+      NEW-14 18 19 21 24 26 27 28 31 32 33 35 36 38 39 41 42 43 44 50 51 54 55 56 57 58 59 60 61
+      62 63; PED-2 3 4 5 6 7 8 9 10 11. **Owner decisions after triage:** which "overhaul"
+      roots are worth doing at all, and whether a fixed-but-unrecorded id gets a ledger backfill
+      entry (the NEW-53 precedent says yes). The audit's own refuted findings are at `:251`, its
+      test gaps at `:263` and its sequencing at `:298`.
+
+- [ ] **(Optional, owner decision) Stop the four push workflows from running on pushes that
+      change only build-ignored files** (raised 2026-09-24; DECISION NEEDED, Effort S) -- lint,
+      pkgdown, R-CMD-check and test-coverage run on every push to `master` with no `paths-ignore`,
+      so a push of only `BACKLOG.md`/`CHANGELOG.md`/`HANDOFFS.md`/`SESSION_NOTES.md` still costs a
+      ~25-minute R-CMD-check that cannot say anything new. The owner's rule (2026-09-24: "if all
+      files edited are in .rbuildignore, there is no reason to ever run CI") is followed today
+      only by not waiting for the run. Options: a `paths-ignore` list mirroring `.Rbuildignore`
+      in each workflow, or `[skip ci]` in such commits' messages. Caveat for the first: some
+      ignored files ARE read by tests (`.github/workflows/*`, `_pkgdown.yml`,
+      `.quality-gates.json`, `.Rbuildignore`; e.g. `test_r_cmd_check_workflow_chrome_setup.R` and
+      `test_shinytest2_workflow_coverage.R` read the workflow files), so the list must exclude
+      those. Not done: it edits CI config, which the owner has not asked for.
+
 - [ ] **Mate-pair ancestry guardrails -- residue after issue #169 (found S776-S777,
       2026-09-24; DECISION NEEDED -- the owner picks which to pursue, each Effort S)**
       -- #169 shipped and closed S777 (kernel, module, override gate, Ancestry tab,
