@@ -23,7 +23,8 @@
 #' Assertion groups, tagged A1-A13 in each `info`, so a failure names the
 #' behavior it lost:
 #'   A1 status line   A2 pre-run Ancestry-tab guidance   A3 override select
-#'   A4 run-1 counts  A5 coverage table   A6 manifest 1 (a wording, b pair
+#'   A4 run-1 counts (b the 5 excluded pairs carry their rule, c the 3 flagged
+#'   pairs are marked in the export)  A5 coverage table   A6 manifest 1 (a wording, b pair
 #'   counts, c census)   A7 gate wording   A8 blank reason refused   A9 override
 #'   recorded   A10 displayed run's manifest unchanged   A11 run-2 counts and
 #'   `overridden` rows (a counts, b CSV, c visible)   A12 manifest 2   A13 no
@@ -138,6 +139,31 @@ test_that(
     "Showing 1 to 10 of 20 entries",
     info = "A4: run 1 shows 20 eligible pairs"
   )
+
+  ## A4c: the 3 pairs matching a FLAG rule stay in Eligible Pairs, marked with
+  ## the rule (the other 17 are unmarked) -- read from the export of the same
+  ## table (the DT shows one page).
+  runOneCsv <- download_csv_expect(app, "matePair-downloadPairs",
+                                   "run 1 Eligible Pairs CSV")
+  if (!is.null(runOneCsv)) {
+    expect_identical(dim(runOneCsv), c(20L, 11L),
+                     info = "A4c: run 1 export has 20 rows and 11 columns")
+    hasRule <- !is.na(runOneCsv$ancestryRule) & runOneCsv$ancestryRule != ""
+    marked <- runOneCsv[hasRule, c("sireId", "damId", "ancestryRule",
+                                   "ancestrySeverity", "ancestryStatus")]
+    marked <- marked[order(marked$sireId, marked$damId), ]
+    rownames(marked) <- NULL
+    expect_identical(
+      marked,
+      data.frame(
+        sireId = c("A1", "I1", "O1"), damId = c("U1", "U1", "I2"),
+        ancestryRule = "INDIAN-OTHER", ancestrySeverity = "flag",
+        ancestryStatus = "violation", stringsAsFactors = FALSE
+      ),
+      info = "A4c: exactly the 3 flagged pairs carry their rule in Eligible Pairs"
+    )
+  }
+
   if (!click_element_safe(app, tabSel("Excluded"))) {
     skip("Could not switch to the Excluded tab")
   }
@@ -145,6 +171,26 @@ test_that(
     poll_dt_info(app, "matePair-excludedTable", "Showing 1 to 5 of 5 entries"),
     "Showing 1 to 5 of 5 entries",
     info = "A4: run 1 shows 5 pairs excluded by ancestry rules"
+  )
+
+  ## A4b: each of the 5 excluded pairs carries the reason and the rule that
+  ## blocked it (row number dropped; the table is client-side, so every row is
+  ## in the DOM).
+  excludedRowsJs <- paste0(
+    "Array.from(document.querySelectorAll(",
+    "'#matePair-excludedTable table tbody tr')).map(",
+    "r => Array.from(r.cells).slice(1).map(c => c.textContent.trim())",
+    ".join('|')).join(';')"
+  )
+  excludedRows <- poll_js(app, excludedRowsJs)
+  expect_identical(
+    sort(strsplit(excludedRows, ";", fixed = TRUE)[[1L]]),
+    sort(c("C1|I2|ancestry rule|CHINESE-INDIAN",
+           "I1|C2|ancestry rule|CHINESE-INDIAN",
+           "A1|C2|ancestry rule|CHINESE-INDIAN",
+           "I1|H1|ancestry rule|HYBRID-INDIAN",
+           "A1|H1|ancestry rule|HYBRID-INDIAN")),
+    info = "A4b: each excluded pair carries the reason and the rule that blocked it"
   )
 
   ## A5: the coverage table -- the live census, JAPANESE reached by no rule.

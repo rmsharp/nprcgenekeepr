@@ -57,6 +57,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   `AskUserQuestion`-gated phases. Stub + pending receipt ride this commit; close-out
   records the rest. Issue #169 closes at close-out.
 
+### 2026-09-24 · [issue #169] S777 RED addendum: two done-when clauses the e2e missed (tests only)
+- **Commit:** RED addendum (this commit) — `test-e2e-mate-pair-analysis-module-ancestry.R`
+  only. Found at close-out, before closing #169: the plan's done-when says "5 blocked pairs on
+  Excluded with their rules, 3 flagged in Eligible" and the committed e2e asserted only the
+  5 / 20 counts. Owner chose "Add them via a RED addendum". New groups (measured live first):
+  **A4b** the 5 Excluded rows carry reason "ancestry rule" and their rule (CHINESE-INDIAN x3,
+  HYBRID-INDIAN x2); **A4c** the run-1 Eligible Pairs CSV is 20 x 11 with exactly 3 flagged
+  pairs (A1xU1, I1xU1, O1xI2: INDIAN-OTHER / flag / violation). The file now has 42
+  expectations; it passes 42/42 unmutated on the real tree.
+- **Mutation proof (three more throwaway trees, truncated after A4b):** B6 (excluded pair
+  loses its rule + flagged pairs lose the "violation" status) fails A4b and A4c; B7 (flagged
+  pairs carry no rule) fails A4c; B8 (flagged pairs carry no severity) fails A4c — each for its
+  planted cause. Running total: 24 seams in 8 mutant builds. Owner gate: RED addendum chosen
+  from three options (add / close-and-state-the-gap / leave open).
+
 ### 2026-09-24 · [issue #169] S777 records 1/2: plan Outcome, BACKLOG residue item, Learning 789
 - Plan `docs/planning/mate-pair-ancestry-guardrails-plan.md`: **Outcome (S777)** paragraph
   after Slice 3's S776 one. `BACKLOG.md`: the Slice 3b block REMOVED (completed; record in
