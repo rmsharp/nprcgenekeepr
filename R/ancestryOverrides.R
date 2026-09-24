@@ -21,6 +21,21 @@
   "responsibility, not this tool's."
 )
 
+# The Mate Pair Analysis sibling of the wording above (issue #169 Slice 3a,
+# plan D8a): it names the Mate Pair report rather than group formation. Shown
+# in the Mate Pair override modal and copied verbatim into every Mate Pair
+# audit-manifest row; owner-ratified as written, so change it only through
+# owner ratification.
+.matePairAncestryOverrideWarningText <- paste(
+  "Overriding this ancestry rule lets the Mate Pair Analysis list pairs the",
+  "rule would otherwise exclude, for this run only. The rule stays in your",
+  "rules file, and every pair it matches is still reported, marked",
+  "\"overridden\". Your stated reason is saved in the downloadable audit",
+  "manifest. Confirming that this override fits your colony's",
+  "genetic-management and research commitments is your responsibility, not",
+  "this tool's."
+)
+
 #' Canonical key for an unordered pair of ancestry levels
 #'
 #' Must stay identical to the \code{rule} strings
@@ -220,5 +235,43 @@
     overrideSummary = overrideSummary,
     warningText = warningText,
     stringsAsFactors = FALSE
+  )
+}
+
+#' Adapt a mate-pair report to the audit manifest's \code{report} argument
+#'
+#' \code{.buildAncestryOverrideManifest()} reads only
+#' \code{report$violations$rule} and \code{report$coverage} (issue #169 plan
+#' D8b). For the Mate Pair Analysis
+#' those are the rule keys of every ancestry-matched pair -- an overridden or
+#' flagged pair in \code{pairs}, a blocked pair in \code{excluded} -- and the
+#' result's own \code{ancestryCoverage}. A pair excluded for age or by the
+#' user's exclude list carries no rule and is never counted (plan D5).
+#'
+#' @param result the list returned by \code{\link{reportMatePairs}} called with
+#' \code{ancestryRules}.
+#' @return list with \code{violations} (a data.frame with a character
+#' \code{rule} column, one row per matched pair; zero rows when none) and
+#' \code{coverage} (\code{result$ancestryCoverage}, unchanged).
+#' @noRd
+.matePairAncestryReport <- function(result) {
+  if (!is.list(result) || !all(c("pairs", "excluded") %in% names(result))) {
+    stop("nprcgenekeepr: result must be the list returned by ",
+      "reportMatePairs().",
+      call. = FALSE
+    )
+  }
+  if (is.null(result$ancestryCoverage)) {
+    stop("nprcgenekeepr: result must come from reportMatePairs() called ",
+      "with ancestryRules; this one has no ancestry screen to record.",
+      call. = FALSE
+    )
+  }
+  rule <- c(result$pairs$ancestryRule, result$excluded$ancestryRule)
+  list(
+    violations = data.frame(
+      rule = as.character(rule[!is.na(rule)]), stringsAsFactors = FALSE
+    ),
+    coverage = result$ancestryCoverage
   )
 }

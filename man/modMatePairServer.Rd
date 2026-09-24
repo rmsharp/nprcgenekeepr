@@ -95,6 +95,26 @@ afterwards never rewrites a finished run's tables. The module checks for the
 without it); a rules-loaded run on a pedigree with no such column runs
 exactly as it does with no rules, and the status line says the guardrails
 are inactive. An always-visible status line reports the loaded state.
+
+\strong{Overriding a block rule.} With active rules, the "Ancestry
+Guardrails" section lists the block rules not yet overridden. "Override
+rule..." opens a confirmation step that shows the warning text
+verbatim and requires a written reason (a blank reason is refused);
+confirming relaxes that one rule for this tab's runs, for the session,
+until the overrides are cleared or the rules change. An overridden rule's
+pairs stay in Eligible Pairs marked \code{"overridden"} (severity still
+\code{"block"}); they are never silently dropped. Each override is
+recorded per tab -- Breeding Groups keeps its own -- and the next run
+applies it; a finished run is never rewritten.
+
+\strong{The Ancestry tab.} Shows the displayed run's coverage summary (how
+many candidate animals carry each ancestry classification and which
+classifications no rule reaches) and a "Download Audit Manifest" button.
+The manifest is one row per rule: the rule as written, whether it was
+overridden and why, how many otherwise-eligible pairs it matched, the
+animal census by classification, and the confirmation warning verbatim. It
+describes the displayed run's own rules and overrides, and is unavailable
+for a run that had no rules in effect.
 }
 \seealso{
 \code{\link{modMatePairUI}}
