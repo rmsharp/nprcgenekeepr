@@ -398,26 +398,14 @@ modBreedingGroupsServer <- function(id, pedigree, geneticValues = NULL,
     })
 
     # D8's one-line status: "no rules loaded" / rule + coverage counts /
-    # the inactive notice. An animal is uncovered when its standardized
-    # ancestry level (convertAncestry()'s 6-level vocabulary) is named by
-    # no loaded rule -- D6's permissive default made visible. An NA level
-    # is never covered by a rule, so it counts as uncovered.
+    # the inactive notice. The loaded-state wording is shared with the Mate
+    # Pair tab (.ancestryStatusLine()); D6's permissive default made visible.
     ancestryStatusText <- reactive({
       rules <- ancestryRulesData()
       if (is.null(rules)) {
         return("No ancestry rules loaded.")
       }
-      ped <- pedigree()
-      if (is.null(ped) || !("ancestry" %in% names(ped))) {
-        return(paste("Pedigree has no ancestry column -- ancestry",
-                     "guardrails inactive."))
-      }
-      covered <- unique(c(rules$ancestry1, rules$ancestry2))
-      ancestryLevels <- toupper(as.character(ped$ancestry))
-      sprintf("%d block, %d flag rule(s); %d animal(s) uncovered.",
-              sum(rules$severity == "block"),
-              sum(rules$severity == "flag"),
-              sum(!(ancestryLevels %in% covered)))
+      .ancestryStatusLine(rules, pedigree())
     })
 
     # Issue #168 Slice 4b (D4): the session's confirmed per-rule overrides.

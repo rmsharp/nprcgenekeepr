@@ -241,27 +241,16 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
       rules
     })
 
-    # D9's one-line status: "no rules loaded" / rule + coverage counts / the
-    # inactive notice. The counts read exactly as Breeding Groups' status does:
-    # an animal is uncovered when its standardized ancestry level is named by
-    # no loaded rule, and an NA level is never covered.
+    # D9's one-line status: "no rules loaded" (worded for this tab, which has
+    # no upload of its own) / rule + coverage counts / the inactive notice --
+    # the last two shared with Breeding Groups (.ancestryStatusLine()).
     ancestryStatusText <- reactive({
       rules <- ancestryRulesData()
       if (is.null(rules)) {
         return(paste("No ancestry rules loaded. Load a rules file on the",
                      "Breeding Groups tab to apply it here."))
       }
-      ped <- pedigree()
-      if (is.null(ped) || !("ancestry" %in% names(ped))) {
-        return(paste("Pedigree has no ancestry column -- ancestry",
-                     "guardrails inactive."))
-      }
-      covered <- unique(c(rules$ancestry1, rules$ancestry2))
-      ancestryLevels <- toupper(as.character(ped$ancestry))
-      sprintf("%d block, %d flag rule(s); %d animal(s) uncovered.",
-              sum(rules$severity == "block"),
-              sum(rules$severity == "flag"),
-              sum(!(ancestryLevels %in% covered)))
+      .ancestryStatusLine(rules, pedigree())
     })
 
     output$ancestryStatus <- renderUI({

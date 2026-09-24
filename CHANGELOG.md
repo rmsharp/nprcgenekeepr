@@ -46,6 +46,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #169] S775 REFACTOR: one shared `.ancestryStatusLine()` for the Breeding Groups and Mate Pair status text
+- Behavior-preserving (owner-gated "one small REFACTOR"; zero test edits): the loaded-state wording
+  ("N block, M flag rule(s); K animal(s) uncovered.") and the no-ancestry-column inactive notice, which GREEN 1/2
+  had duplicated verbatim in `modMatePairServer`, now live in one internal `@noRd` helper
+  `.ancestryStatusLine(rules, ped)` next to `.ancestryCoverage()` in `R/reportAncestryViolations.R`; both modules
+  call it. Each module keeps its own "no rules loaded" text (the Mate Pair one says where to load rules). Three
+  `R/` files, no `man/` change. Same counts before and after on the 7 files exercising it (new module file
+  75, BG ancestry 121, contract 119, appServer 37, Mate Pair 44, ancestry reporter 54, BG module 117; 0
+  failed / 0 error); lint 0. Pre-refactor `devtools::check()` on the GREEN tree: 0 / 0 / 0.
+
 ### 2026-09-23 · [issue #169] S775 GREEN 2/2: NEWS.Rmd release-state entry + UI roxygen (ledger for the three GREEN-phase commits)
 - `NEWS.Rmd`: the ONE existing #169 entry under "Mate Pair Analysis" REVISED (not appended; Learning 785) to the
   release state: load the rules on the Breeding Groups tab and the Mate Pair Analysis tab uses them (block ->

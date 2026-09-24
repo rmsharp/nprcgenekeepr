@@ -173,6 +173,35 @@ reportAncestryViolations <- function(groups, ped, rules,
   )
 }
 
+#' One-line ancestry-guardrails status for a loaded rules table
+#'
+#' Shared by \code{\link{modBreedingGroupsServer}} and
+#' \code{\link{modMatePairServer}} so the two tabs word the loaded state
+#' identically. An animal is uncovered when its standardized ancestry level
+#' (\code{\link{checkAncestryRules}}'s six-level vocabulary) is named by no
+#' loaded rule -- the permissive default made visible; an \code{NA} level is
+#' never covered, so it counts as uncovered. Each module words its own "no
+#' rules loaded" text.
+#'
+#' @param rules validated ancestry rules table (not \code{NULL}).
+#' @param ped the current pedigree data frame, or \code{NULL}.
+#' @return character(1): the inactive notice when \code{ped} is \code{NULL}
+#' or has no \code{ancestry} column, otherwise the rule and uncovered-animal
+#' counts.
+#' @noRd
+.ancestryStatusLine <- function(rules, ped) {
+  if (is.null(ped) || !("ancestry" %in% names(ped))) {
+    return(paste("Pedigree has no ancestry column -- ancestry",
+                 "guardrails inactive."))
+  }
+  covered <- unique(c(rules$ancestry1, rules$ancestry2))
+  ancestryLevels <- toupper(as.character(ped$ancestry))
+  sprintf("%d block, %d flag rule(s); %d animal(s) uncovered.",
+          sum(rules$severity == "block"),
+          sum(rules$severity == "flag"),
+          sum(!(ancestryLevels %in% covered)))
+}
+
 #' Find the id pairs matching ancestry rules of one severity
 #'
 #' Shared by \code{\link{groupAddAssign}} (block-pair merge) and
