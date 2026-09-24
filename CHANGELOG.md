@@ -46,6 +46,39 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [issue #169] S776 RED: Slice 3a failing tests committed (Mate Pair override gate + Ancestry tab + audit manifest)
+- Two new files, tests only — zero `R/`/`man/`/`NAMESPACE`/`NEWS` changes.
+  `tests/testthat/test_matePairAncestryManifest.R` (8 blocks, not CRAN-skipped):
+  the ratified gate wording pinned verbatim as `.matePairAncestryOverrideWarningText`
+  (owner gate: "plan text verbatim"); the `.matePairAncestryReport(result)`
+  manifest adapter (8 matches = CHINESE-INDIAN 3 / HYBRID-INDIAN 2 /
+  INDIAN-OTHER 1 / INDIAN-UNKNOWN 2, unchanged under an override, coverage passed
+  through, zero-row when nothing matches, errors on a result made without rules);
+  adapter -> `.buildAncestryOverrideManifest` end to end (nPairs, census 2/3/1/2/1/1,
+  nUncovered 2 / 9, reason on exactly the overridden rule's row).
+  `tests/testthat/test_modMatePair_ancestryOverrides.R` (14 blocks, testServer,
+  skip on CRAN): the Ancestry tab after Excluded and the override controls inside
+  the collapsed panel; `overridableRules()`; the confirm gate via mocked
+  `showModal`/`showNotification`/`removeModal` (verbatim text, reason box,
+  Confirm/Cancel; never on a routine run; not opened when nothing is overridable,
+  with a positive control); blank/missing reason; stored-trimmed override, status
+  line, Clear; reset when the rules change; the run/snapshot contract (20/5 ->
+  override -> displayed run and manifest unchanged -> re-run 23/2, three rows
+  `overridden` with severity `block` = the Learning-780 observable, equal to a
+  direct `reportMatePairs()` call); overrides recorded then the pedigree loses its
+  `ancestry` column (no rules, no overrides passed, no error); rules-off zero
+  change; guidance states and manifest lifecycle; coverage table; the dated
+  `MatePairAncestryAuditManifest.csv` download.
+- **RED audit (Learning 784):** every one of the 22 new blocks fails, each
+  failing expectation for the intended cause (missing function/object, missing UI
+  id or tab, gate never opens, missing output); the four error-path regexes do not
+  match R's own "could not find function" text (no false pass); the negatives in
+  the not-openable block are guarded by a positive control. Blocks that stop at the
+  first missing symbol leave deeper expectations unexercised until GREEN; those
+  numbers were cross-checked through the shipped kernel and manifest builder in
+  scratch, and the mock mechanism was proven against the existing Breeding Groups
+  gate. Lint 0 on both files.
+
 ### 2026-09-24 · [issue #169] S776 claim: Slice 3 — Mate Pair override gate, audit manifest, Ancestry tab, e2e, article *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (S775 next-steps (A),
   `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger frontiers
