@@ -46,6 +46,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [ad hoc] `BACKLOG.md`: removed two completed items (REUSE-badge registration; empty `untitled folder`)
+- **Change:** two open items that were already done are gone from `BACKLOG.md` (-21 lines): (1) **the
+  api.reuse.software registration item** -- it said the README badge rendered gray "unregistered"
+  pending an owner-only registration; the live badge now renders **"compliant"**, so the
+  registration was made at some point (when is unrecorded; the README badge URL is unchanged);
+  (2) **the empty untracked `inst/extdata/reference/untitled folder`** item -- the directory no
+  longer exists. Both were found by a read-only staleness review of the whole file (the owner asked
+  "are there items in BACKLOG.md that are stale?" and then picked the cleanups from a menu).
+- **Commit:** this commit -- `BACKLOG.md` and this entry only. **Local, not pushed.**
+- **Session:** none -- owner-directed, outside a numbered session (follows S778) · **Verified:** the
+  live badge SVG text read "REUSE" / "compliant" (HTTP 200, fetched 2026-09-24 via the host's
+  resolved address because `curl`'s own resolver failed in the shell; `dig` and `host` resolve it);
+  `find inst -iname 'untitled*'` returns nothing; `git diff --stat` shows 21 deletions and no other
+  change; the neighbouring items are byte-identical. **Not run:** the test suite and
+  `devtools::check()` -- no package code changed.
+
 ### 2026-09-24 · [ad hoc] Removed the stale `nprcgenekeepr_notes.txt` CRAN-readiness scratch note
 - **Change:** the 61-line "CRAN Submission Readiness Report" (a pasted checklist, unmodified since
   it entered history in `089e5213`) is no longer in the repo root. It was already `.Rbuildignore`d,

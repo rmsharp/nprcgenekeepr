@@ -248,19 +248,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       `browser-actions/setup-chrome`'s actual download/unzip pipeline; or filing a new
       `rstudio/chromote` upstream issue, since no existing issue there matches this exact
       macOS+GHA+live-CDP-timeout signature).
-- [ ] **Register `rmsharp/nprcgenekeepr` with api.reuse.software so the REUSE badge renders its
-      real compliance status** (found S607, 2026-08-18, DECISION NEEDED / owner action, Effort S)
-      -- the badge added above currently renders gray **"unregistered,"** not green: hitting
-      `https://api.reuse.software/badge/github.com/rmsharp/nprcgenekeepr` directly returns an
-      "unregistered" SVG, and `https://api.reuse.software/info/...` returns "Project not
-      registered." This REUSE API service requires a one-time manual registration at
-      https://api.reuse.software/register (repo URL + an email address, confirmed via a
-      confirmation email) before it will crawl and report a project's actual compliance state --
-      this is not something a session can or should do on the owner's behalf (it ties an email
-      address to the public registration and is a one-way "join the registry" action). The repo
-      itself IS `reuse lint`-compliant now (1234/1234, verified locally); only the badge's live
-      display is blocked on this registration step. A future session can verify the badge went
-      green after the owner registers, but cannot perform the registration itself.
 - [ ] **`CHANGELOG.md`'s own ~4-entries-per-session ledger convention (claim, Phase 0
       reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side analogue of the
       already-diagnosed `HANDOFFS.md` "Receipt Inflation" (H4) rate problem** (found S543,
@@ -315,14 +302,6 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       an empty `## Active` heading near the top, an empty `## Documents` heading, and two
       fully-resolved section stubs (`## Architecture follow-ups`, ~15 lines;
       `## Architecture (issue #122 / XARCH-2 ...)`, ~6 lines).
-- [ ] (found S568, 2026-08-14, incidental to this session's own `pkgbuild::build()` verification,
-      Effort S, not fixed this session) **An empty, untracked `inst/extdata/reference/untitled
-      folder` directory** (dated 2026-08-13, the same day as the now-resolved "Compounding Loop"
-      files) sits in the package source tree -- `R CMD build` silently drops it during staging
-      ("Removed empty directory..."), so it has no build-correctness impact, but it's a stray Finder
-      artifact with no content. A future session should confirm with the owner it's safe to delete
-      and remove it (no `.gitignore`/`.Rbuildignore` entry needed for an already-build-dropped empty
-      directory -- just a filesystem cleanup).
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
