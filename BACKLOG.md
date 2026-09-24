@@ -308,9 +308,18 @@ registration – the live badge now reads “compliant” – and the empty
 `## Up Next` and dropped the empty/resolved headings, and compressed the
 LabKey item (44 -\> 15 lines) and the kinship2 section’s S435-S500 DONE
 narrative (84 -\> 20 lines; the owner ratified this deeper cut at the
-pick). 15 of 16 open items are byte-identical; the LabKey item is the
-one compressed in place. **Method (every pass, all steps):** before
-compressing anything to a pointer, (1) verify `CHANGELOG.md` +
+pick). The LabKey item was compressed in place and the QC’d-copy Diagram
+item rewritten with its measured cause; every other open item is
+byte-identical. **Later the same day**, at the owner’s direction (“if
+the work really was done, it should be in `CHANGELOG.md`”), the last
+three resolved sections – `## Architecture (issue #122 ...)`,
+`## Audit follow-ups` and the Genetic-metrics section, 58 lines – were
+deleted after checking each against the ledger (issue \#122: 7 tagged
+entries; Genetic-metrics: 14 issues closed, 69 tagged entries; Audit
+follow-ups: 7 of its 8 items recorded, and the eighth, NEW-53, fixed
+2026-05-31 in `5f40b7af`, backfilled). The file now ends at
+`## Outreach`. **Method (every pass, all steps):** before compressing
+anything to a pointer, (1) verify `CHANGELOG.md` +
 `docs/archive/CHANGELOG-*.md` carry an entry heading for every session
 number cited AND that the load-bearing facts are inside those entries (a
 heading alone proves little); (2) confirm every cited Learning / doc
@@ -320,13 +329,10 @@ line ranges mechanically (Learning 537: a partial `old_string` leaves
 later paragraphs duplicated beside the new bullet); (5) leave open items
 byte-untouched; (6) re-read the compressed result end to end.
 **Candidates for the next pass (measured 2026-09-24; re-grep, sizes not
-anchors):** structural residue only – two fully-resolved section stubs
-(`## Architecture (issue #122 / XARCH-2 ...)`, ~6 lines, whose pointer
-to `docs/architecture/module-contract.md` should be re-homed before it
-goes; `## Audit follow-ups`, ~4 lines), and the Genetic-metrics section
-(~45 lines of resolved narrative around zero open items – a cut beyond
-what S606/S752 ratified, so it needs fresh owner ratification). Regrowth
-check: the file was 480 lines after S752 and 561 before this pass.
+anchors):** none – no resolved-narrative section or stub remains, and
+every remaining `##` section holds open items. Regrowth check: 378 lines
+now; the file was 480 lines after S752 and 561 before this pass. The
+next pass is a regrowth check, not a known cut.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 
@@ -471,87 +477,3 @@ own site). **Next steps are owner-executed, real-world actions**
 own §7 – pick this up in a future session only if the owner wants help
 drafting a specific follow-up, not as a general “send the emails” coding
 task. See `CHANGELOG.md`.
-
-## Architecture (issue \#122 / XARCH-2 – module contract)
-
-*Resolved – S372 planning session through S377 execution (Phases 1-5,
-all DONE); see `CHANGELOG.md` for the per-phase detail (S373
-vocabulary-composition fix, S374 kinship dedup, S375 vocabulary
-collapse, S376 dead-surface pruning, S377 contract doc + guard test).
-The living contract is `docs/architecture/module-contract.md`; it is
-enforced by `tests/testthat/test_moduleContract.R`. `modInput` is the
-reference implementation.*
-
-## Audit follow-ups
-
-*(From `PED_GV_AUDIT_2026-05-30.md`; all audit follow-up items are now
-resolved — see `CHANGELOG.md`. Per-item reachability notes and traps
-live in `CLAUDE.md` “Project-specific Learnings”.)*
-
-## Genetic-metrics PDF audit follow-ups (from GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md)
-
-*Every GitHub issue this cluster produced (#125-#130, \#146-#153) is
-shipped and closed – all 14 confirmed CLOSED via `gh issue view` (S752,
-2026-09-21); no open item remains in this section (the last one, the two
-unticketed High-priority audit gaps, became issues \#167 and \#168 in
-S753). Full session-by-session record: `CHANGELOG.md`; per-issue
-technical findings: `PROJECT_LEARNINGS.md` (Learnings 479, 532, 538-542,
-cited below).*
-
-**Origin and sequencing.** S419’s capability audit
-(`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`)
-compared the package against the 2015 NHP Genetics and Genomics Working
-Group PDF (37 findings: 12 missing / 9 partial); S422 (2026-07-29, owner
-`AskUserQuestion` picks) filed **\#125** (ranking-priority scheme +
-multiple breeding-group candidates), **\#126** (distribution-shape
-statistics), **\#127** (surface `correctUnknownParentMeanKinship()`’s
-dropped `flagged` list), **\#128** (genetic-value floor for
-breeding-group exclusion), **\#129** (pedigree diagram) and **\#130**
-(marker-based kinship/ heterozygosity/parentage + cross-center
-identity). One finding (NGS/whole-genome/MHC/ linkage-disequilibrium
-methods) was declined – the PDF itself frames it as speculative. A ghost
-session (reconciled S479, Learning 479) then produced two re-audits
-(`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-05.md`,
-`..._2026-08-06.md`) and filed **\#146** (candidate retention),
-**\#147** (likelihood-based candidate-parent assignment), **\#148** (MHC
-haplotype reporting), **\#149** (cross-center identity mapping),
-**\#150** (de-identified pedigree export), **\#151** (mate-pair
-analysis), **\#152** (sequence input + metrics) and **\#153**
-(linkage-aware metrics). Sequencing ratified S483 (owner-directed,
-`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md`):
-Tier 1 \#147; Tier 2 \#149 \> \#146 \> \#151; Tier 3 (policy-gated)
-\#150; Deferred (design-only) \#152 \> \#153 \> \#148, with \#148
-needing its own scope-narrowing conversation first. All shipped, each
-slice strict TDD with the citation / `NEWS.Rmd` / `_pkgdown.yml` /
-tutorial-article checklists applied per slice (`a2interactive.Rmd`
-deferred per `CLAUDE.md`’s standing rule).
-
-**Issue \#152** (sequence input + metrics; closed S535) – design S517
-(`docs/planning/issue152-sequence-input-genetic-metrics-plan.md`:
-sparse/GBS-scale tier, ~50,000- locus ceiling, a `locusMetadata` sidecar
-shared with \#153, a new tab in `R/modMarkerGenetics.R`), then 5
-vertical slices S525/S526/S532/S533/S535: the
-[`checkSequenceGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.md)
-validator + synthetic fixtures (`data-raw/generate_sequence_fixtures.R`,
-`inst/extdata/examples/example_sequence_*.csv`),
-[`markerKinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)/[`markerParentageLikelihood()`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
-speedups (Learning 532),
-[`computeGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/computeGenomicROH.md)
-F_ROH (Learning 538),
-[`obfuscateGenotypeMatrix()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenotypeMatrix.md)
-(Learnings 539/540), and the “Genomic ROH (F_ROH)” tab +
-[`obfuscateGenomicROH()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateGenomicROH.md)
-(Learning 541; Learning 542 retracts S535’s suspected chromote harness
-limitation – the cause was a test fixture missing `birth`).
-
-**Issue \#148** (MHC haplotype reporting; closed S708) – scoping S703
-(`docs/planning/issue148-mhc-haplotype-scoping-2026-09-17.md`, owner:
-design-first, same issue), plan ratified S704
-(`docs/planning/issue148-mhc-haplotype-reporting-plan.md`, D1-D10), then
-4 strict-TDD slices S705-S708: the
-[`checkMhcHaplotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMhcHaplotypeFile.md)
-validator,
-[`mhcHaplotypeFrequency()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeFrequency.md)/[`mhcHaplotypeCarriers()`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeCarriers.md),
-[`obfuscateMhcHaplotypes()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateMhcHaplotypes.md),
-and the 8th Marker Genetics tab “MHC Haplotype Reporting” with
-confirm-gate export.

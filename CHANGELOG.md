@@ -67,6 +67,116 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · \[ad hoc\] Pushed `af4f1eca..59cb4406` to `origin/master` (6 docs-only commits); CI not awaited
+
+- **Action:** `git push origin master` – 6 commits: `c182511b` (removed
+  `nprcgenekeepr_notes.txt`), `cb079f6b` (ledger entries for the
+  previous push and that removal), and `c67a3106`, `ab50aed1`,
+  `0cc75dc4`, `59cb4406` (the four `BACKLOG.md` passes, each with its
+  own ledger entry). Owner-directed (“push;”), after the plan had been
+  reviewed and picked from a menu. **Before the push:** `git fetch`
+  showed origin at `af4f1eca`, an ancestor of HEAD (fast-forward); the
+  outgoing diff was 3 files (`BACKLOG.md`, `CHANGELOG.md`,
+  `nprcgenekeepr_notes.txt` deleted), +198/-261, with no secret-named
+  files and no credential-shaped strings in the added lines. **After:**
+  local and `origin/master` both at `59cb4406`.
+- **CI:** the four push workflows (lint, pkgdown, R-CMD-check,
+  test-coverage) run automatically on every push to master – none has a
+  `paths-ignore` filter. **Not awaited, at the owner’s direction** (“do
+  not wait for an uninformative CI”): every changed file is matched by
+  `.Rbuildignore` (`^BACKLOG.*\.md$`, `^CHANGELOG.*\.md$`,
+  `^nprcgenekeepr_notes\.txt$`) and no test or workflow reads any of
+  them, so a green run could not say anything the previous one did not
+  (`af4f1eca`, all four `success`). **State when this entry was written
+  (one query, no waiting):** lint and pkgdown `completed success`;
+  R-CMD-check and test-coverage `in_progress`.
+- **Session:** none – owner-directed, outside a numbered session
+  (follows S778) · **Verified:** the pre-push checks above only; the
+  local suite was not run (no package code changed).
+- **Not pushed:** `8a616f15` (the `BACKLOG.md` cut and the NEW-53
+  backfill) and the commit carrying this entry are local.
+
+### 2026-09-24 · \[ad hoc\] `BACKLOG.md`: deleted the three resolved sections (Architecture \#122 stub, Audit follow-ups, Genetic-metrics)
+
+- **Change:** `BACKLOG.md` now ends at `## Outreach` (432 -\> 378 lines,
+  34,814 -\> 30,875 B; 561 lines and about 45 KB at the start of the
+  day’s review). Removed, at the owner’s direction (“if the work really
+  was done, it should be in `CHANGELOG.md`”): (1)
+  **`## Architecture (issue #122 / XARCH-2 -- module contract)`**, 6
+  lines – resolved; the full record is the 7 `[issue #122]` entries
+  (plan S372, Phases 1-5 S373-S377, and the issue close, 2026-07-14);
+  the living contract stays at `docs/architecture/module-contract.md`,
+  referenced from `tests/testthat/test_moduleContract.R`,
+  `R/modInput.R`, two other module tests and planning docs;
+  2.  **`## Audit follow-ups`**, 4 lines – born already resolved in the
+      Session 10 split; 7 of the 8 items it began with appear in the
+      ledger (by ID or by name; mention counts, not each entry read), as
+      do the two it gained later (NEW-22, NEW-46), and the eighth,
+      NEW-53, is backfilled by the entry beside this one; its pointer to
+      “`CLAUDE.md` Project-specific Learnings” was stale (`CLAUDE.md`
+      holds 0 Learnings; they live in `PROJECT_LEARNINGS.md`); (3)
+      **`## Genetic-metrics PDF audit follow-ups`**, 45 lines – all 14
+      issues (#125-#130, \#146-#153) CLOSED with 69 `[issue #N]` ledger
+      entries (#128 was implemented and closed in S427). Recoverable
+      with `git show 59cb4406:BACKLOG.md`. The S518 housekeeping item’s
+      pass history and candidates were updated (candidates: none; the
+      next pass is a regrowth check).
+- **Commit:** this commit – `BACKLOG.md` and this entry plus the NEW-53
+  backfill entry. **Local, not pushed.**
+- **Session:** none – owner-directed, outside a numbered session
+  (follows S778) · **Verified:** `gh issue view` gives \#122 and
+  \#125-#130, \#146-#153 all CLOSED; the per-issue tagged-entry counts
+  are \#125=3, \#126=2, \#127=2, \#128=2, \#129=3, \#130=6, \#146=3,
+  \#147=3, \#148=14, \#149=3, \#150=3, \#151=3, \#152=9, \#153=13; every
+  Learning the deleted text cited (479, 532, 538-542) resolves in
+  `PROJECT_LEARNINGS.md` and the 7 docs it cited exist; the sessions it
+  cited (S419, S422, S479, S483, S517, S525-S535, S703-S708) all appear
+  in the ledger; the deleted region held no `- [ ]` item (asserted
+  before deleting) and every remaining `##` section holds at least one.
+  **Limits:** only 21 of the PED_GV audit’s 63 finding IDs appear in the
+  ledger, and most of the rest were never queued in `BACKLOG.md` – this
+  cut makes no claim about them; the “Audit follow-ups” history was
+  scanned from the section’s earliest versions, not every version. **Not
+  run:** the test suite and `devtools::check()` – no package code
+  changed.
+
+### 2026-09-24 · \[ad hoc\] Backfill: NEW-53 (sim/parent functions mutated the caller’s pedigree) was fixed 2026-05-31 with no ledger entry
+
+- **Change:** records an action the ledger was missing (failure mode
+  \#27). On 2026-05-31, commit `5f40b7af` replaced
+  `data.table::setDT(ped)` with `ped <- data.table::as.data.table(ped)`
+  in
+  [`makeSimPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.md),
+  [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+  and
+  [`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md),
+  so calling them no longer silently turns the caller’s data.frame into
+  a data.table (a value-semantics violation that changes the caller’s
+  later `[` behavior). The commit also found two of the audit’s stronger
+  claims empirically false – “sire/dam overwritten” (`makeSimPed`) and
+  “adds a population column in place” (`createSimKinships`): only the
+  class leaked, content was preserved and
+  [`makeSimPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeSimPed.md)’s
+  deterministic output stayed byte-identical. A caller-non-mutation
+  regression test went into each function’s test file,
+  `@importFrom setDT` became `@importFrom as.data.table` and `NAMESPACE`
+  was regenerated (one now-unused import dropped). Verification recorded
+  in that commit’s message: full suite 0 failed / 0 error / 1943 passed;
+  lint 0.
+- **Commit/PR:** `5f40b7af` (2026-05-31). This entry’s own commit only
+  adds the record.
+- **Session:** none identified – the fix sits between the Session 10
+  methodology update and the Session 13 close-out (`89fc37cf`, the same
+  day); the ledger has entries for both and none for this fix. **Origin
+  of the gap:** it was the NEW-53 item under `BACKLOG.md`’s “Audit
+  follow-ups” section and was removed with no completion entry; found
+  2026-09-24 while checking that section against the ledger before
+  deleting it. · **Verified today (read-only):** all three functions
+  still use `as.data.table(ped)` and none uses `setDT`; the three
+  regression tests still exist (`test_makeSimPed.R:122`,
+  `test_getPotentialParents.R:108`, `test_createSimKinships.R:74`).
+  **Not re-run:** the suite – no code changed.
+
 ### 2026-09-24 · \[ad hoc\] `BACKLOG.md`: the “one fewer node” item rewritten with its measured cause (row order, not a dropped row)
 
 - **Change:** the open item about the app’s uploaded/QC’d copy of
