@@ -112,17 +112,134 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 777 Handoff Evaluation (by Session 778)
+
+**Score: 9/10.** **What helped:** every Orient measurement held exactly
+– 0 undocumented on both frontiers (`8666dc55` = HEAD), 38 unpushed,
+`origin/master` = `79206add` (also confirmed with `git ls-remote`), the
+ratchet citation byte-identical to the results file (compared BEFORE any
+run), the `BACKLOG.md` pins (`:8`, `:30`, `:46`, `:68`, `:88`), the
+three ledger sizes (91 KB / 71 KB / ~28 KB stated vs 90,905 / 70,929 /
+27,892 B measured) and the key-file lines
+(`PROJECT_LEARNINGS.md:2259-2260`, `HANDOFFS.md:167`, the e2e’s A5 at
+`:203`). Next-step (A) was the exact deliverable: it named the \#169
+plan path not on `origin` (now verified present) and that the nightly
+runs pushed code with “red = report-don’t-fix”; the standing-set items
+“sha from `git rev-parse`, smoke-test the filter” and “Monitor with an
+until loop” carried the 23-minute CI wait. **Missing:** whether the
+claim commit rides the push and the records commits stay local – I had
+to read S771’s ledger entries for that precedent. **Wrong:** next-step
+(B) listed a tool-based `SESSION_NOTES.md` archive as DUE beside the
+other two ledgers, but
+`methodology_trim.py --file SESSION_NOTES.md --check --budget-bytes 65536`
+says the trigger does not fire (27,892 B vs 65,536 B); only
+`HANDOFFS.md` and `CHANGELOG.md` fire. **ROI:** high.
+
 ### What Session 778 Did
 
-**Deliverable:** Push the 38 unpushed local commits (plus this claim) to
-`origin/master` and verify CI on the pushed head by exact SHA (IN
-PROGRESS) **Started:** 2026-09-24 19:17Z **Status:** Session claimed.
-Work beginning. Owner-picked at the Phase 0 priorities gate (S777
-next-steps (A)); ops session, no package code, TDD phase PRE-RED
-throughout (S771 precedent). **Ledger:** `CHANGELOG: pending` – the
-claim commit’s `CHANGELOG.md` entry says (in progress); Phase 3F records
-the rest. Until close-out, this line is the crash breadcrumb for the
-next session’s reconcile.
+**Deliverable:** **Pushed the 39 local commits to `origin/master`
+(`79206add..bec2a976`) and verified CI on the pushed head by exact SHA –
+DONE; all four push workflows `success`.** Owner-picked at the Phase 0
+priorities gate (S777 next-steps (A)); ops session, no package code, TDD
+phase PRE-RED throughout (S771 precedent), so no phase gates arose.
+**Commits:** claim `bec2a976` (the pushed head: Orient’s 38 plus this
+one); this records commit follows and stays LOCAL (1 unpushed after
+close-out). Detail: the `HANDOFFS.md` S778 receipt and `CHANGELOG.md`.
+**What happened:** Orient measured 0 undocumented on both frontiers, 38
+unpushed, the ratchet citation matching before any run. Claim, then
+pre-push checks – fast-forward (`79206add` is an ancestor of HEAD),
+outgoing diff 29 files / +6,371 / -773, no secret-named files, no
+credential-shaped strings in the added lines (the repo is PUBLIC) – then
+`git push origin master`; remote tip == local HEAD, 0 ahead. CI matched
+by exact SHA `bec2a9762562a563ce727b2ff43a7b4fe6b7cc95` (filter
+smoke-tested: 4 rows) and awaited with a Monitor: lint `36047211896`
+(4m02s), pkgdown `36047211887`, test-coverage `36047211913` (10m),
+R-CMD-check `36047212074` (23m18s) all `success`, the last at 19:41:27Z;
+re-queried independently at close-out. The \#169 plan path its close
+comment links is now on `origin`. **Verification (measured):** CI above;
+ratchet **1/1 at `bec2a976`** (3,565,165 B, +26 B vs S777 = noise on a
+docs-only diff; results `81564f726622`, manifest `aa983075d6a2`;
+citation compared at Orient BEFORE the run). **Not run:** the local full
+suite and `devtools::check()` – no package code changed; CI’s
+R-CMD-check and test-coverage on the pushed head are the independent
+verification. **Runtime (3E):** n/a, ops-only. **Not covered by the
+push’s CI:** the live-e2e (shinytest2) tier is nightly + manual only, so
+Slice 3b’s ancestry e2e first runs at the next nightly. **Disclosures:**
+(1) I took the Phase 0 pick (“Push 38 commits”, described “owner-gated”)
+as the go-ahead to push (S771 precedent) and asked no second
+confirmation; (2) the CLAUDE.md-prescribed
+`gh run list --branch master --limit 10` returned a stale 09-08 window
+at Orient and again mid-session, then current data on every later call
+(plain and `--json`) – intermittent, cause unexplained (gh 2.49.2); I
+cross-checked with the unfiltered listing and `--commit <sha>`, and I
+first wrote “reproducible” after one rerun, which was wrong (corrected);
+(3) that tangent cost about four commands; (4) `HANDOFFS.md` (91,276 B)
+and `CHANGELOG.md` (71,483 B) are over the 65,536 B trigger and grow
+again with these records – the archive pass is owed, reported not
+repaired; (5) nothing removed from this file: it is well under the read
+cap (28,495 B before these records vs 56,750 B), so no reduction was
+needed here. **Checklists:** lint, NEWS, `_pkgdown.yml`, citation,
+tutorial, `a2interactive` N/A (no code or user-facing change); no
+BACKLOG item completed and no issue closed.
+
+**Self-assessment (Session 778): 8/10.** **Strengths:** claim first;
+Orient fully measured (both frontiers, remote tip, ratchet citation
+before the run); the push gated on a fast-forward proof plus an
+outgoing-content scan for a public repo; CI matched by exact SHA with
+the filter smoke-tested and re-queried independently instead of trusting
+the stream; the S777 open loop (the \#169 plan link) closed by
+measurement; the anomaly reported with its own correction. **Weak:** (1)
+I read the pick as authorization without an explicit confirm (defensible
+by precedent, but the option text never said “the pick is the
+go-ahead”); (2) I called the CI-listing anomaly “reproducible” from one
+rerun – it was intermittent; (3) a four-command tangent on a check the
+deliverable did not need. **Learnings:** none appended (FM \#28) – the
+anomaly is a gotcha with a countermeasure, not yet a pattern.
+
+**Next steps (specific):** (A) **Check the nightly `shinytest2` run
+(READY, S):** its first run on pushed code includes Slice 3b’s ancestry
+e2e; nightlies started 07:12-07:24Z on each of the last five days, so
+~07:15Z 2026-09-25 (an estimate); red = report-don’t-fix (new-e2e flake
+risk). (B) **Ledger housekeeping (DUE, M):**
+`methodology_trim.py --budget-bytes 65536` on `HANDOFFS.md` and
+`CHANGELOG.md` (dry run, then owner-gated `--cut N --force --write`,
+verify scripts pre- and post-commit; an SRF refusal is expected,
+Learnings 549/586/587); `SESSION_NOTES.md` does NOT fire – S777’s
+next-step (B) included it wrongly. (C) **`NEWS.Rmd` release-state sweep
+(READY, M)** `BACKLOG.md:30`. (D) **Blank-ancestry read path (DECISION
+NEEDED, S-M)** `BACKLOG.md:46`. (E) **Mate-pair residue** `BACKLOG.md:8`
+(a2interactive demo READY; zero-rule manifest and Excluded export
+DECISION NEEDED; duplicated gate code READY). (F) Harem-sire (`:68`),
+slice-5 backfill (`:88`), the read-cap ceiling decision (handoff-only,
+not in BACKLOG), issue \#138: unchanged.
+
+**Key files:** `CHANGELOG.md:49` (the S778 entries), `HANDOFFS.md:166`
+(this receipt), `SESSION_NOTES.md:67` (this record),
+`.github/workflows/shinytest2.yaml:1` (the nightly-only header),
+`BACKLOG.md:8` / `:30` / `:46` / `:68` / `:88` (unchanged this session),
+`.quality-gates-results.json` (untracked; the citation source).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at Phase 0 –
+measure it; 1 unpushed (this records commit; recount); `origin/master` =
+`bec2a976`, CI-verified on all four push workflows. (2) Ratchet 1/1 at
+`bec2a976` (3,565,165 B, `81564f726622`, manifest `aa983075d6a2`);
+compare BEFORE any run, run AFTER committing. (3) The prescribed
+branch-filtered CI listing can return a stale window (intermittent, seen
+twice this session): before reading “all green” off a listing, check its
+newest `createdAt` against today or query `--commit <sha>`. (4) The push
+recipe worked: `git ls-remote` + `merge-base --is-ancestor` before, a
+scan of the diff’s added lines (public repo), a Monitor with an until
+loop for the 23-minute R-CMD-check. (5) **STANDING SET (carried,
+condensed):** full-40-char sha from `git rev-parse` and a smoke-tested
+`gh run` filter; `scratchpad/` invisible to git BY OWNER DECISION; renv
+banner expected; `CLAUDE.md` warn band (26,360 B) = headroom; zsh traps
+(no foreground sleep; no `&`/`disown` inside `run_in_background`;
+`sed -i` needs a suffix on macOS; the cwd resets after `cd`;
+`${PIPESTATUS[0]}` printed empty – zsh spells it `pipestatus`); trim
+budget 65,536 B for ALL THREE ledgers; shinytest2 0.5.1 `load_all()`s
+the checkout (Learning 789); the hook refuses a commit that GROWS an
+over-ceiling budgeted file (do not bypass). (6) 5 untracked render
+artifacts (Aug 15/25) are known residue.
 
 ### Session 776 Handoff Evaluation (by Session 777)
 

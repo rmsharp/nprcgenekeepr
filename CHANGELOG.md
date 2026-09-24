@@ -67,6 +67,86 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · \[ad hoc\] `.Rprofile`: renv’s plain startup sync check replaced by `renv::status(dev = TRUE)`
+
+- **Change:** opening R in the package root no longer prints a false
+  “The project is out-of-sync” message. Under
+  `snapshot.type: "explicit"`, renv’s automatic startup check (a plain
+  [`renv::status()`](https://rstudio.github.io/renv/reference/status.html))
+  counts only `Imports`/`Depends`/`LinkingTo` as used, so every
+  `Suggests`-only package (dplyr, chromote, brio, callr, …) read as
+  installed and recorded but unused. `.Rprofile` now sets
+  `options(renv.config.synchronized.check = FALSE)` before sourcing
+  `renv/activate.R`, then runs `renv::status(dev = TRUE)` when
+  [`interactive()`](https://rdrr.io/r/base/interactive.html) and
+  `DESCRIPTION` exists. `renv.lock` and `renv/settings.json` are
+  untouched: the reported drift was not real. The edit is the owner’s;
+  this entry records the verification and commit.
+- **Commit/PR:** `23f20f3a`
+- **Session:** none – owner-directed, outside a numbered session
+  (follows S778) · **Verified:** `renv::status(dev = TRUE)` reports “No
+  issues found”; `Rscript` startup no longer prints the out-of-sync
+  line; a forced-interactive `R` start prints the `status(dev = TRUE)`
+  result. **Not run:** the test suite and `devtools::check()` –
+  `.Rprofile` is `.Rbuildignore`d (`^\.Rprofile$`) and no package code
+  changed.
+- **Caveat:** non-interactive runs (`Rscript`, CI) and R sessions
+  started outside the package root no longer get any startup sync check.
+
+### 2026-09-24 · \[ad hoc\] S778 records: push + CI verification DONE, close-out records committed
+
+- **Deliverable:** the push and CI verification recorded in the entry
+  below. Ratchet **1/1** at `bec2a976` (3,565,165 B, +26 B vs S777 =
+  noise on a docs-only diff; results `81564f726622`, manifest
+  `aa983075d6a2`); the S777 citation was compared to the results file at
+  Orient BEFORE the run. **Not run:** the local full suite and
+  `devtools::check()` – no package code changed; CI’s R-CMD-check and
+  test-coverage on the pushed head are the independent verification.
+- **Records:** S777 handoff evaluated 9/10 (its next-step (B) listed a
+  `SESSION_NOTES.md` archive as due although
+  `methodology_trim.py --check` says that trigger does not fire); S778
+  self-assessment 8/10; `HANDOFFS.md` receipt `status: complete`.
+  Learnings: none appended (FM \#28). Nothing removed from
+  `SESSION_NOTES.md` (28,495 B before these records vs the 56,750 B read
+  cap: no reduction needed there).
+- **Housekeeping, reported not repaired:** measured before these
+  records, `HANDOFFS.md` is 91,276 B and `CHANGELOG.md` 71,483 B, both
+  over the 65,536 B trigger (`--check` fires) – the archive pass is owed
+  as its own deliverable (next-step B); these records grow both.
+- **Disclosed:** the Phase 0 pick was taken as the go-ahead to push,
+  with no second confirmation (S771 precedent); the records commit stays
+  LOCAL (1 unpushed after close-out), as at S771.
+
+### 2026-09-24 · \[ad hoc\] S778 push: `79206add..bec2a976` pushed to `origin/master`; CI green on all four push workflows
+
+- **Action:** `git push origin master` – 39 commits (Orient’s 38,
+  i.e. S771’s close-out records, S772-S777 through issue \#169 Slice 3b,
+  plus the S778 claim `bec2a976`), owner-gated (the Phase 0 priorities
+  pick “Push 38 commits”, taken as the go-ahead). **Before the push:**
+  fast-forward proven (remote tip `79206add` is an ancestor of HEAD);
+  the outgoing diff was inspected – 29 files, +6,371 / -773, no
+  secret-named files, no credential-shaped strings in the added lines
+  (the repo is PUBLIC). `origin/master` == local HEAD after (0 ahead).
+- **CI, matched by exact head SHA
+  `bec2a9762562a563ce727b2ff43a7b4fe6b7cc95`** (filter smoke-tested: 4
+  rows; independently re-queried at close-out): lint.yaml `36047211896`
+  success (4m02s); pkgdown.yaml `36047211887` success;
+  test-coverage.yaml `36047211913` success (10m); R-CMD-check.yaml
+  `36047212074` success (23m18s, completed 19:41:27Z). The first CI
+  verification of everything since `79206add`, including \#169’s Slices
+  3a/3b (module, override gate, Ancestry tab, the e2e file and helpers).
+- **Not covered by this push’s CI:** the live-e2e (shinytest2) tier runs
+  nightly + manual dispatch only, so Slice 3b’s ancestry e2e first runs
+  at the next nightly (last five nightlies started 07:12-07:24Z; ~07:15Z
+  2026-09-25 is an estimate).
+- **Observation, not fixed:** the CLAUDE.md-prescribed
+  `gh run list --branch master --limit 10` returned a stale 09-08 window
+  at Orient and again mid-session, then current data on every later call
+  (plain and `--json`) – intermittent, cause unexplained (gh 2.49.2);
+  cross-checked with the unfiltered listing and `--commit <sha>`. Not
+  filed as an issue or BACKLOG item: one session’s evidence, no
+  reproduction on demand.
+
 ### 2026-09-24 · \[ad hoc\] S778 claim: push to origin/master + CI verification *(in progress)*
 
 - Owner-picked at the Phase 0 priorities gate (S777 next-steps (A)).
