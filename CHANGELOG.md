@@ -46,6 +46,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #169] S774 docs: Learnings 784-785 + the plan's Slice 1 outcome (for Slice 2)
+- `PROJECT_LEARNINGS.md` Learning 784 (a RED audit for an added-optional-argument
+  slice must classify every failing expectation's message; a regex naming the
+  argument passes falsely on R's own `unused argument` text; an erroring block
+  leaves its later assertions and oracles unexercised) and Learning 785 (NEWS
+  entries are release-state relative to the prior release, never an in-progress
+  milestone; owner-directed). `docs/planning/mate-pair-ancestry-guardrails-plan.md`
+  §5 gained an **Outcome (S774)** paragraph: the override contract, columns,
+  `NA`-level coverage semantics, helper names/locations, measured timing, and the
+  Slice 2 trap (the module must check for the `ancestry` column BEFORE passing
+  rules, because `reportMatePairs()` now `stop()`s without it).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-23 · [issue #169] S774 REFACTOR: shared `.ancestryCoverage()` replaces the duplicated coverage block
 - Owner-gated (GREEN→REFACTOR, one candidate). The ~12-line coverage block
   inside `reportAncestryViolations()` and `reportMatePairs()`'s

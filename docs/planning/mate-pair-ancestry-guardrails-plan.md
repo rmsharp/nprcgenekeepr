@@ -323,6 +323,23 @@ clean.
 **Surface:** local test suite (`NOT_CRAN=true`, `load_all()` first) + `devtools::check()`. This
 surface cannot demonstrate app behavior — none is claimed until Slice 3.
 
+**Outcome (S774, shipped — `eb104544`, `f4ca894f`, `f852fcb9`):** as designed, with these facts
+fixed at RED/GREEN by owner gates. `overriddenRules` takes `ancestry1`/`ancestry2` like
+`reportAncestryViolations()`; an optional `reason` column is accepted and **ignored**; an
+override naming no rule, a **flag** rule, a duplicated rule, or given without `ancestryRules` is an
+error (messages pinned in `tests/testthat/test_reportMatePairsAncestry.R`). Columns are exactly
+D6c's proposal (`pairs` +`ancestryRule`/`ancestrySeverity`/`ancestryStatus` after `damGu`;
+`excluded` +`ancestryRule`; the list +`ancestryCoverage`, six fixed level rows). An
+`NA`/unrecognised-level animal matches nothing and is counted in **no** coverage row (this refines
+D1's looser "counted as uncovered"). Validation runs once, before the early returns, so the
+UNKNOWN/OTHER warning fires once. Helpers `checkMatePairAncestryArgs()`, `emptyMateResult()` and
+`matchAncestryPairs()` (no leading dot) live in `R/reportMatePairs.R`; `.ancestryCoverage()` is
+shared with `reportAncestryViolations()` (`R/reportAncestryViolations.R`). Measured: 102,400 pairs
+in 0.77 s with rules vs 0.89 s without. **For Slice 2:** `reportMatePairs()` now `stop()`s on rules
+with no `ancestry` column, so the module must check for the column FIRST and show the inactive
+notice instead of passing the rules (D1, app surface). The manifest `report` adapter (D8b) can be
+built from `pairs$ancestryRule` plus `excluded$ancestryRule` (overridden pairs stay in `pairs`).
+
 ### Slice 2 — Rules delivery + applying rules in the Mate Pair module (no override gate yet)
 **Touches:** `R/modBreedingGroups.R` (return `ancestryRules`), `R/modMatePair.R` (new argument,
 collapsed "Ancestry Guardrails" status section, rules snapshot at "Find Eligible Pairs", results
