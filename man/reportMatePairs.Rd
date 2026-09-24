@@ -11,7 +11,9 @@ reportMatePairs(
   geneticValues = NULL,
   minAge = 1L,
   populationIds = NULL,
-  exclude = character(0L)
+  exclude = character(0L),
+  ancestryRules = NULL,
+  overriddenRules = NULL
 )
 }
 \arguments{
@@ -47,18 +49,46 @@ to nobody and returns a zero-row result.}
 \item{exclude}{Character vector of ids to drop entirely, regardless of
 any other eligibility screen. Default \code{character(0)} (no
 caller-supplied exclusions).}
+
+\item{ancestryRules}{Optional data frame of ancestry compatibility rules
+in \code{\link{checkAncestryRules}}'s shape (\code{ancestry1},
+\code{ancestry2}, \code{severity}); validated here. \code{ped} must then
+carry an \code{ancestry} column, or the call stops. \code{NULL} (the
+default) applies no ancestry screen. A valid zero-rule table is accepted:
+the result then has the ancestry columns, with nothing moved.}
+
+\item{overriddenRules}{Optional data frame with \code{ancestry1} and
+\code{ancestry2} columns naming \code{block} rules to override for this
+call (unordered, case-insensitive match, as in
+\code{\link{reportAncestryViolations}}); a \code{reason} column is
+accepted and ignored. An override naming no rule in \code{ancestryRules},
+a \code{flag} rule, or the same rule twice is an error, as is giving
+overrides without \code{ancestryRules}. \code{NULL} or zero rows: none.}
 }
 \value{
-A list with two data.frames:
+A list with two data.frames (three when \code{ancestryRules} is
+given):
 \item{pairs}{One row per eligible opposite-sex pair surviving every
 screen: \code{sireId}, \code{damId}, \code{kinship}, \code{markerKinship}
 (\code{NA} if unavailable), \code{sireIndivMeanKin}, \code{sireGu},
 \code{damIndivMeanKin}, \code{damGu} (the latter four \code{NA} if
 \code{geneticValues} is not supplied or the parent is absent from its
-report).}
-\item{excluded}{One row per pair dropped by the age or user-exclude
-screen: \code{sireId}, \code{damId}, \code{reason} (\code{"under minimum
-age"} or \code{"user-excluded"}).}
+report). With \code{ancestryRules}, three columns follow:
+\code{ancestryRule} (the matched rule as a sorted \code{"LEVEL-LEVEL"}
+string), \code{ancestrySeverity} (\code{"flag"} or \code{"block"}) and
+\code{ancestryStatus} (\code{"violation"}, or \code{"overridden"} for an
+overridden block rule), all \code{NA} for a pair no rule matches.}
+\item{excluded}{One row per pair dropped by the age, user-exclude or
+ancestry screen: \code{sireId}, \code{damId}, \code{reason} (\code{"under
+minimum age"}, \code{"user-excluded"} or, with \code{ancestryRules},
+\code{"ancestry rule"}). With \code{ancestryRules} an \code{ancestryRule}
+column follows: the matched rule for an ancestry exclusion, \code{NA}
+otherwise.}
+\item{ancestryCoverage}{Only with \code{ancestryRules}: one row per
+standardized ancestry level (CHINESE, INDIAN, HYBRID, JAPANESE, OTHER,
+UNKNOWN) with \code{ancestry}, \code{n} (distinct animals at that level in
+\code{pairs} and \code{excluded}) and \code{covered} (\code{TRUE} when a
+rule names the level), so a level no rule covers is visible.}
 }
 \description{
 Issue #151 Slice 1: composes the existing pair-eligibility pipeline
@@ -98,6 +128,23 @@ are both \code{NULL}-safe: when absent (or when a specific pair is not
 covered by them), the corresponding columns are \code{NA} for that row --
 the pair itself is never dropped or the call errored, mirroring
 \code{modMarkerGeneticsServer}'s own "not yet uploaded" contract.
+
+\strong{Ancestry rules (issue #169).} \code{ancestryRules} applies the
+same center-configurable rules table as the Breeding Groups ancestry
+guardrails (\code{\link{checkAncestryRules}}) to individual pairs; a rule
+matches a pair whichever animal is the sire and whichever the dam. A
+\code{block} rule moves the matching pair out of \code{pairs} and into
+\code{excluded} with the reason \code{"ancestry rule"} (here "block" means
+"not listed as eligible", not "never placed together"); a \code{flag} rule
+keeps the pair in \code{pairs} and annotates it. Naming a block rule in
+\code{overriddenRules} keeps its pairs in \code{pairs}, marked
+\code{"overridden"} -- never silently absent. The ancestry screen runs
+last: a pair that already failed the age or user-exclude screen keeps that
+reason. Rules only move and label pairs; every pair is either in
+\code{pairs} or in \code{excluded}, with or without rules. An animal whose
+ancestry no rule names, or is missing, matches nothing. With
+\code{ancestryRules = NULL} (the default) the result is unchanged, and
+\code{ped} needs no \code{ancestry} column.
 }
 \examples{
 library(nprcgenekeepr)
@@ -113,4 +160,36 @@ ped$gen <- findGeneration(ped$id, ped$sire, ped$dam)
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen)
 result <- reportMatePairs(ped, kmat, minAge = 1)
 result$pairs
+
+# Ancestry rules (issue #169): the example rules block INDIAN x CHINESE
+# and INDIAN x HYBRID pairs and flag INDIAN x UNKNOWN / INDIAN x OTHER
+ancPed <- qcStudbook(
+  read.csv(
+    system.file("extdata", "examples", "example_ancestry_pedigree.csv",
+      package = "nprcgenekeepr"
+    ),
+    stringsAsFactors = FALSE, na.strings = c("", "NA")
+  ),
+  minSireAge = 2, minDamAge = 2, reportChanges = FALSE,
+  reportErrors = FALSE
+)
+ancPed$gen <- findGeneration(ancPed$id, ancPed$sire, ancPed$dam)
+ancKmat <- kinship(ancPed$id, ancPed$sire, ancPed$dam, ancPed$gen)
+rules <- checkAncestryRules(readAncestryRules(
+  system.file("extdata", "examples", "example_ancestry_rules.csv",
+    package = "nprcgenekeepr"
+  )
+))
+ancResult <- reportMatePairs(ancPed, ancKmat, ancestryRules = rules)
+ancResult$excluded
+ancResult$ancestryCoverage
+# overriding one block rule keeps its pairs listed, marked "overridden"
+overridden <- reportMatePairs(ancPed, ancKmat,
+  ancestryRules = rules,
+  overriddenRules = data.frame(ancestry1 = "CHINESE", ancestry2 = "INDIAN")
+)
+overridden$pairs[
+  which(overridden$pairs$ancestryStatus == "overridden"),
+  c("sireId", "damId", "ancestryRule", "ancestryStatus")
+]
 }

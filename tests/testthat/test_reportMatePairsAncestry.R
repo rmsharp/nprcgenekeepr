@@ -469,12 +469,19 @@ test_that("scaling guard: 10^5 candidate pairs are matched without a per-pair R 
   ## over two-animal groups measured ~0.5 ms per pair (~50 s)
   expect_lt(elapsed, 10)
 
-  ## independent oracle: count the block/flag pairs from the level table
-  male <- factor(ancestry[seq_len(n / 2L)], levels = mpaLevels)
-  female <- factor(ancestry[n / 2L + seq_len(n / 2L)], levels = mpaLevels)
-  tab <- table(male, female)
-  nBlock <- tab["INDIAN", "CHINESE"] + tab["CHINESE", "INDIAN"]
-  nFlag <- tab["HYBRID", "JAPANESE"] + tab["JAPANESE", "HYBRID"]
+  ## independent oracle: every male pairs with every female, so the pairs at
+  ## a (male level, female level) combination are the PRODUCT of the two
+  ## marginal counts. (S774 GREEN correction of the RED oracle: it used
+  ## table(male, female), which cross-tabulates the two factors position by
+  ## position -- 320 observations, not the 102,400 pairs.)
+  male <- table(factor(ancestry[seq_len(n / 2L)], levels = mpaLevels))
+  female <- table(
+    factor(ancestry[n / 2L + seq_len(n / 2L)], levels = mpaLevels)
+  )
+  nBlock <- male[["INDIAN"]] * female[["CHINESE"]] +
+    male[["CHINESE"]] * female[["INDIAN"]]
+  nFlag <- male[["HYBRID"]] * female[["JAPANESE"]] +
+    male[["JAPANESE"]] * female[["HYBRID"]]
   expect_identical(nrow(res$excluded), as.integer(nBlock))
   expect_identical(nrow(res$pairs), as.integer((n / 2L)^2 - nBlock))
   expect_identical(sum(!is.na(res$pairs$ancestryRule)), as.integer(nFlag))
