@@ -46,6 +46,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #169] S774 REFACTOR: shared `.ancestryCoverage()` replaces the duplicated coverage block
+- Owner-gated (GREEN→REFACTOR, one candidate). The ~12-line coverage block
+  inside `reportAncestryViolations()` and `reportMatePairs()`'s
+  `mateAncestryCoverage()` copy are now ONE internal `.ancestryCoverage(ids,
+  ped, rules)` (`@noRd`, `R/reportAncestryViolations.R`), called by both. No
+  behavior change: identical expectation counts in the 7 ancestry/mate-pair
+  corpora (153/42/44/54/103/31/105, 0 failures), the new file's
+  `identical(coverage, reportAncestryViolations(...)$coverage)` parity block
+  still passes, lint clean on both files, `document()` a no-op. Full
+  verification on the refactored tree: clean regression read 348 files / 8,007
+  expectations, **0 failed / 0 error** (unchanged from pre-refactor);
+  `devtools::check()` **0 / 0 / 0**.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-23 · [issue #169] S774 GREEN 2/2: NEWS.Rmd entry for the `reportMatePairs()` ancestry arguments
 - One `NEWS.Rmd` entry under Mate Pair Analysis, plain language for a colony
   manager (S628 criterion). **Owner correction mid-session:** the first draft

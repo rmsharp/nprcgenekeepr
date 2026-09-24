@@ -139,13 +139,31 @@ reportAncestryViolations <- function(groups, ped, rules,
     )
   }
 
-  ## D6 coverage: the vocabulary is checkAncestryRules()'s six levels
+  list(violations = v, coverage = .ancestryCoverage(allIds, ped, rules))
+}
+
+#' Ancestry-rule coverage of a set of animals
+#'
+#' D6 coverage: the vocabulary is \code{\link{checkAncestryRules}}'s six
+#' standardized levels, always reported in that order. Shared by
+#' \code{\link{reportAncestryViolations}} (the animals in the groups) and
+#' \code{\link{reportMatePairs}} (the animals in its candidate pairs). An
+#' animal whose level is \code{NA} or unrecognised is counted in no row.
+#'
+#' @param ids character vector of the distinct animals considered.
+#' @param ped data frame with \code{id} and \code{ancestry} columns.
+#' @param rules validated ancestry rules table.
+#' @return data.frame with one row per level: \code{ancestry}, \code{n}
+#' (animals in \code{ids} at that level) and \code{covered} (\code{TRUE} when
+#' at least one rule names the level).
+#' @noRd
+.ancestryCoverage <- function(ids, ped, rules) {
   levelsAll <- c(
     "CHINESE", "INDIAN", "HYBRID", "JAPANESE", "OTHER", "UNKNOWN"
   )
-  lev <- toupper(trimws(as.character(ped$ancestry[match(allIds, ped$id)])))
+  lev <- toupper(trimws(as.character(ped$ancestry[match(ids, ped$id)])))
   named <- unique(c(rules$ancestry1, rules$ancestry2))
-  coverage <- data.frame(
+  data.frame(
     ancestry = levelsAll,
     n = unname(vapply(
       levelsAll, function(l) sum(lev == l, na.rm = TRUE), integer(1L)
@@ -153,8 +171,6 @@ reportAncestryViolations <- function(groups, ped, rules,
     covered = levelsAll %in% named,
     stringsAsFactors = FALSE
   )
-
-  list(violations = v, coverage = coverage)
 }
 
 #' Find the id pairs matching ancestry rules of one severity

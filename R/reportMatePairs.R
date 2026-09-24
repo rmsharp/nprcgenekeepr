@@ -305,7 +305,7 @@ reportMatePairs <- function(ped, kmat, markerKmat = NULL, geneticValues = NULL,
   kin$ancestryStatus <- ancestryStatus
   list(
     pairs = kin, excluded = excluded,
-    ancestryCoverage = mateAncestryCoverage(candidateIds, ped, ancestry$rules)
+    ancestryCoverage = .ancestryCoverage(candidateIds, ped, ancestry$rules)
   )
 }
 
@@ -362,7 +362,7 @@ emptyMateResult <- function(ped, ancestry) {
   list(
     pairs = emptyMatePairsFrame(ancestry = TRUE),
     excluded = emptyMateExcludedFrame(ancestry = TRUE),
-    ancestryCoverage = mateAncestryCoverage(character(0L), ped, ancestry$rules)
+    ancestryCoverage = .ancestryCoverage(character(0L), ped, ancestry$rules)
   )
 }
 
@@ -462,31 +462,4 @@ matchAncestryPairs <- function(id1, id2, ped, rules) {
   ruleKey <- .ancestryPairKey(rules$ancestry1, rules$ancestry2)
   hit <- match(.ancestryPairKey(level(id1), level(id2)), ruleKey)
   list(rule = ruleKey[hit], severity = rules$severity[hit])
-}
-
-#' Ancestry-rule coverage of the animals a mate-pair report considered
-#'
-#' Same shape and level order as the coverage element of
-#' \code{\link{reportAncestryViolations}}: one row per standardized level with
-#' \code{ancestry}, \code{n} (animals in \code{ids} at that level) and
-#' \code{covered} (a rule names the level). An animal whose level is \code{NA}
-#' or unrecognised is counted in no row.
-#'
-#' @param ids character vector of the distinct animals considered.
-#' @param ped data frame with \code{id} and \code{ancestry} columns.
-#' @param rules validated ancestry rules table.
-#' @return data.frame with columns \code{ancestry}, \code{n}, \code{covered}.
-#' @noRd
-mateAncestryCoverage <- function(ids, ped, rules) {
-  levelsAll <- c("CHINESE", "INDIAN", "HYBRID", "JAPANESE", "OTHER", "UNKNOWN")
-  lev <- toupper(trimws(as.character(ped$ancestry[match(ids, ped$id)])))
-  named <- unique(c(rules$ancestry1, rules$ancestry2))
-  data.frame(
-    ancestry = levelsAll,
-    n = unname(vapply(
-      levelsAll, function(l) sum(lev == l, na.rm = TRUE), integer(1L)
-    )),
-    covered = levelsAll %in% named,
-    stringsAsFactors = FALSE
-  )
 }
