@@ -46,6 +46,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S775 records: Slice 2 of #169 DONE, close-out records committed
+- **Deliverable:** Slice 2 of issue #169 (the Mate Pair module applies the ancestry rules loaded on Breeding
+  Groups), recorded in the entries below: claim `8d722d6a`, RED `53e172d6`, RED correction `fdb705bd`, GREEN 1/2
+  `402549a7`, GREEN 2/2 `e4401806`, REFACTOR `4be16a12`. The two records commits add: the plan's Slice 2
+  **Outcome (S775)** paragraph (`docs/planning/mate-pair-ancestry-guardrails-plan.md`); the `BACKLOG.md`
+  mate-pair item rewritten forward-carrying at Slice 3 (not removed — Slice 3 is open, issue #169 stays open);
+  Learning 786 (`PROJECT_LEARNINGS.md`); the `SESSION_NOTES.md` S774 handoff evaluation (9/10) and completed
+  S775 record (self 8/10); the completed `HANDOFFS.md` receipt.
+- **Verification (measured):** clean unfiltered regression read (`NOT_CRAN=true`, `load_all()` first) 349 files /
+  8,105 expectations, 0 failed / 0 error before AND after the refactor; `devtools::check()` 0 / 0 / 0 before AND
+  after; lint 0; ratchet 1/1 at `4be16a12` (3,548,667 B, +9,285 B vs S774; results `9939380d9a6f`, manifest
+  `aa983075d6a2` unchanged; the citation comparison ran at Orient BEFORE the run). **Runtime (Phase 3E):** a
+  scratch-installed build driven by shinytest2 (one-off, not committed): live status across tabs, 20 eligible /
+  5 excluded with the rule shown, an 11-column CSV, explainer hidden then visible, zero console errors; the two
+  existing e2e files (mate-pair 8, BG-ancestry 17 expectations) pass locally. Slice 3 owns the committed e2e.
+- **Non-commit actions:** none (no push, no issue comment, no tag; the ratchet run rewrote the untracked
+  `.quality-gates-results.json`). Nothing removed from a mandated-read file this session (1-and-done): the draft
+  `SESSION_NOTES.md` records pushed it over its 56,750 B read cap and were compressed back to 55,795 B before
+  the commit (the installed pre-commit hook refuses growth of an over-ceiling file); `HANDOFFS.md` (74,358 B)
+  is past its trim trigger — both trims are owed as their own deliverables.
+
 ### 2026-09-23 · [issue #169] S775 REFACTOR: one shared `.ancestryStatusLine()` for the Breeding Groups and Mate Pair status text
 - Behavior-preserving (owner-gated "one small REFACTOR"; zero test edits): the loaded-state wording
   ("N block, M flag rule(s); K animal(s) uncovered.") and the no-ancestry-column inactive notice, which GREEN 1/2
