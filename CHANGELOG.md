@@ -67,6 +67,826 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · \[ad hoc\] S778 claim: push to origin/master + CI verification *(in progress)*
+
+- Owner-picked at the Phase 0 priorities gate (S777 next-steps (A)).
+  Orient measured: 0 undocumented on both ledger frontiers (both at
+  `8666dc55` = HEAD), 38 unpushed (`origin/master` = `79206add`,
+  confirmed with `git ls-remote`), CI green on every latest per-workflow
+  run, the S777 receipt’s ratchet citation matching
+  `.quality-gates-results.json` byte-for-byte BEFORE any run. Stub +
+  pending receipt ride this commit; close-out records the rest.
+
+### 2026-09-24 · \[issue \#169\] S777 records 2/2: Slice 3b DONE, issue \#169 CLOSED, close-out records
+
+- **Deliverable:** Slice 3b of issue \#169 (the final slice: the
+  committed live e2e, the colony-manager-guide documentation, the issue
+  close) — DONE, recorded in the entries below: claim `bf004003`, RED
+  `ad5dd344`, GREEN `8526e56b`, REFACTOR `2b59fde6`, records 1/2
+  `5b2146c6`, RED addendum `98264764`, REFACTOR addendum `0f4ede78`. No
+  product code changed.
+- **Non-commit action — issue \#169 CLOSED**
+  (`gh issue close 169 --reason completed`, 2026-09-24 18:10Z) under the
+  project’s GitHub-issue close-out checklist and the owner’s “RED
+  addendum, then close” choice at the gap gate; the comment cites these
+  entries and the evidence (e2e 67/67 with its two siblings, 24 mutation
+  seams, suite 352 files / 8,293 expectations 0 / 0, `check()` 0 / 0 /
+  0, lint 0) and says the commits are local, not pushed.
+- **Verification at the last product-tree commit `0f4ede78`:** ratchet
+  **1/1** (3,565,139 B, results `1fda9fb28cef`, manifest `aa983075d6a2`;
+  the S776 citation was compared to the results file BEFORE any run).
+  Learnings **789** and **790** (records 1/2 carried 789). `HANDOFFS.md`
+  receipt `status: complete` (self 8/10, S776 evaluated 9/10);
+  `SESSION_NOTES.md` S777 record and the S776 handoff evaluation, with
+  the S774/S775-era records removed by hand to fit (git holds them:
+  `git show bf004003:SESSION_NOTES.md`).
+- **Housekeeping, reported not repaired:** `CHANGELOG.md` crossed its
+  65,536 B trigger this session and `HANDOFFS.md` is far over it — an
+  archive pass is owed as its own deliverable. **Ledger hygiene:** the
+  S777 claim entry was stuck ABOVE its newer entries (each new entry
+  went in above the previous one but below the claim); this commit moves
+  it to the bottom of the S777 block — position only, no entry text was
+  edited.
+
+### 2026-09-24 · \[issue \#169\] S777 addendum GREEN + REFACTOR: verification, and one local helper in the e2e *(no behavior change)*
+
+- **Addendum GREEN (no commit, no product code):** the two new groups
+  pass on the shipped build — the 3 ancestry e2e files on the real tree
+  67/67 (17 + 42 + 8, 0 skipped), the two static guards 4/3, clean
+  regression read 352 files / 8,293 expectations 0 failed / 0 error,
+  `devtools::check()` 0 / 0 / 0, ratchet **1/1 at `98264764`**
+  (3,565,015 B, results `e89582e97c3a`, manifest `aa983075d6a2`). Owner
+  gate: RED to GREEN “Yes”.
+- **REFACTOR (this commit):** owner-chosen again at the GREEN to
+  REFACTOR gate (“Yes, proceed to REFACTOR”, against my recommendation
+  to skip). The two table-row serializers (A4b’s Excluded rows, A5’s
+  coverage table) were the one real duplication; they now share ONE
+  file-local `mpaTableRowsJs(tableSelector, dropFirstCell)` in the e2e
+  file. Proved behavior-neutral first at the string level (the generated
+  JS is byte-identical to both replaced expressions), then re-verified:
+  e2e trio 67/67; the B2 and B6 mutant trees re-run fail the same 9 and
+  2 expectations as before (B7/B8 exercise only A4c, whose code did not
+  change); static guards 4/3; suite 8,293 / 0 / 0; `check()` 0 / 0 / 0.
+
+### 2026-09-24 · \[issue \#169\] S777 RED addendum: two done-when clauses the e2e missed (tests only)
+
+- **Commit:** RED addendum (this commit) —
+  `test-e2e-mate-pair-analysis-module-ancestry.R` only. Found at
+  close-out, before closing \#169: the plan’s done-when says “5 blocked
+  pairs on Excluded with their rules, 3 flagged in Eligible” and the
+  committed e2e asserted only the 5 / 20 counts. Owner chose “Add them
+  via a RED addendum”. New groups (measured live first): **A4b** the 5
+  Excluded rows carry reason “ancestry rule” and their rule
+  (CHINESE-INDIAN x3, HYBRID-INDIAN x2); **A4c** the run-1 Eligible
+  Pairs CSV is 20 x 11 with exactly 3 flagged pairs (A1xU1, I1xU1,
+  O1xI2: INDIAN-OTHER / flag / violation). The file now has 42
+  expectations; it passes 42/42 unmutated on the real tree.
+- **Mutation proof (three more throwaway trees, truncated after A4b):**
+  B6 (excluded pair loses its rule + flagged pairs lose the “violation”
+  status) fails A4b and A4c; B7 (flagged pairs carry no rule) fails A4c;
+  B8 (flagged pairs carry no severity) fails A4c — each for its planted
+  cause. Running total: 24 seams in 8 mutant builds. Owner gate: RED
+  addendum chosen from three options (add / close-and-state-the-gap /
+  leave open).
+
+### 2026-09-24 · \[issue \#169\] S777 records 1/2: plan Outcome, BACKLOG residue item, Learning 789
+
+- Plan `docs/planning/mate-pair-ancestry-guardrails-plan.md`: **Outcome
+  (S777)** paragraph after Slice 3’s S776 one. `BACKLOG.md`: the Slice
+  3b block REMOVED (completed; record in the entries below) and replaced
+  by one residue item carrying what \#169 left (the `a2interactive`
+  demonstration, the zero-rule manifest edge, an Excluded-tab export,
+  the duplicated gate code); the blank-ancestry item now names the e2e
+  pins that move with it. `PROJECT_LEARNINGS.md`: **Learning 789**
+  (shinytest2 0.5.1 `load_all()`s the checkout from the working
+  directory, so the “e2e runs the INSTALLED package” gotcha is false
+  here and a scratch-installed mutant is never loaded; the
+  mutation-proof-RED method). Measured at this commit: lint 0 findings;
+  `CHANGELOG.md` 65,465 B before these records (71 B under the 65,536 B
+  trim trigger, so it crosses now) and `HANDOFFS.md` 83,216 B: both
+  archive passes are owed as their own deliverable, reported not
+  repaired.
+
+### 2026-09-24 · \[issue \#169\] S777 REFACTOR: hoist the e2e’s five generic helpers into `helper-shinytest2.R` *(no behavior change)*
+
+- **Commit:** REFACTOR (this commit) — owner-chosen at the GREEN to
+  REFACTOR gate (my recommendation was to skip it; the owner said “Yes,
+  proceed to REFACTOR”). The five file-local helpers of
+  `test-e2e-mate-pair-analysis-module-ancestry.R` (`mpaSquash`,
+  `mpaPollJs`, `mpaTextJs`, `mpaDtInfo`, `mpaDownload`) move to
+  `tests/testthat/helper-shinytest2.R` as `squash_whitespace()`,
+  `poll_js()`, `text_content_js()`, `poll_dt_info()` and
+  `download_csv_expect()`, documented in that file’s roxygen style, with
+  [`testthat::expect_true`](https://testthat.r-lib.org/reference/logical-expectations.html)
+  qualified for the nightly’s unattached `test_dir()` mode; 25 call
+  sites renamed; the sixth local definition (`mpaDtInfoJs`) is inlined
+  into `poll_dt_info()`; only `mpaRuleKeys()` (manifest-specific) stays
+  local. The name-collision grep across `tests/` and `R/` was empty
+  before the move.
+- **Verification after the move (all identical to GREEN):** the three
+  ancestry e2e files on the real tree 63/63 (0 skipped); the B1 and B5
+  throwaway mutant trees re-run with the moved helpers fail 11 and 8
+  expectations on the same groups as before; the two static e2e guards
+  4/3; clean regression read 352 files / 8,293 expectations, 0 failed /
+  0 error; `devtools::check()` 0 / 0 / 0. Disclosure: the shared helper
+  is loaded by every e2e file (about 30), which is the risk I named at
+  the gate; none of them exercises the five new names.
+
+### 2026-09-24 · \[issue \#169\] S777 GREEN: Slice 3b colony-manager-guide documentation (no product code)
+
+- **Commit:** GREEN (this commit) —
+  `vignettes/articles/colony-manager-guide.qmd` only: a new “Ancestry
+  guardrails on this tab” passage at the end of the Mate Pair Analysis
+  section (four paragraphs: rules come from the Breeding Groups upload
+  and are read at the click; block pairs go to Excluded with the reason
+  “ancestry rule”, flag pairs stay in Eligible Pairs and the CSV; the
+  “Override rule…” confirm gate with a required reason, per tab, cleared
+  on “Clear overrides” or a new rules file, applied at the next click;
+  the Ancestry tab’s coverage table and Download Audit Manifest, which
+  always describes the displayed run). Every claim checked against
+  `R/modMatePair.R` / `.ancestryStatusLine()` before commit (one
+  sentence tightened: the extra zero-pairs message appears when no
+  eligible pairs remain). Owner gate: RED to GREEN = “Yes, proceed to
+  GREEN”. No product code changed: the committed e2e already passes on
+  the real build (the RED baseline, 38/38). Left as-is on purpose: line
+  552’s “a truly blank entry becomes UNKNOWN” (wrong for app uploads;
+  the open blank-ancestry item owns that decision) and `NEWS.Rmd:429`
+  (already release-state).
+- **Verification:** the article renders (Quarto 1.7.33, exit 0, in a
+  scratch copy of `vignettes/articles/` so no tracked render output
+  moved); the new section and both “Override rule…” occurrences are in
+  the HTML. The article directory is build-ignored
+  (`^vignettes/articles$`), so the tarball and the size ratchet are
+  unaffected.
+
+### 2026-09-24 · \[issue \#169\] S777 RED: Slice 3b committed live-app e2e for the Mate Pair ancestry guardrails, mutation-proved *(tests only)*
+
+- **Commit:** RED (this commit) —
+  `tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R` only,
+  no product code. One live-app block, 38 expectations in 13 tagged
+  groups (A1-A13) pinning the LIVE-path numbers (status line; pre-run
+  guidance; the override select offers the 2 block rules; 20 eligible /
+  5 excluded; coverage table; manifest 1 wording / pair counts 3-2-0-3 /
+  census; modal wording; blank reason refused; override recorded; the
+  displayed run’s manifest NOT rewritten by a late override; 23 / 2 with
+  a 23 x 11 CSV and 3 `overridden` rows; manifest 2 reason / summary /
+  counts; 0 console errors). Behavior failures FAIL; only
+  upload/navigation infrastructure skips. It matches the
+  `^e2e-mate-pair-analysis-module` CI group by name (the two static
+  guards pass).
+- **Owner gates:** Pre-RED approach = “Mutation-proof RED” (a
+  characterization e2e cannot start red); PRE-RED to RED = “Yes, proceed
+  to RED”.
+- **Mutation proof (throwaway trees in the scratchpad, never
+  committed):** the unmutated harness passes 38/38 (0 failed, 0
+  skipped). 20 planted seams in 5 builds all fail the intended groups:
+  B1 rules not passed at the click (11 failures: 25 eligible / 0
+  excluded, empty coverage, manifest 500, no 23 / 2); B2 override not
+  applied + modal shows the Breeding Groups wording + status / guidance
+  wording + coverage drops JAPANESE (9); B3 blank reason accepted +
+  census wrong + pair counts inverted (5); B4 manifest read from LIVE
+  overrides + reason not stored + manifest carries the Breeding Groups
+  wording + select lists every rule + override-status wording (7); B5
+  no-override / override summary wording + overridden flag never set +
+  overridden rule’s counts dropped + severity forced + gate stays open
+  (8). Every failing message was classified against its planted cause.
+  **Not independently mutation-proved (stated, not skipped):** A13
+  (console errors), the manifest row count, “manifest 1 marks nothing
+  overridden”, and manifest 2’s rule-row existence.
+- **Incident, declared:** the first mutation round was INERT (5 runs,
+  all 38/38) — shinytest2 0.5.1 loads the package from the CURRENT
+  DIRECTORY tree via
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
+  in the app subprocess, so scratch-installed mutants were never loaded.
+  Diagnosed with a preflight app printing `system.file(package=)`;
+  re-aimed by running each mutant from its own mutated tree with the
+  tests inside it; every re-run’s preflight shows the mutant tree
+  loaded. The inert round’s results were discarded, not counted.
+
+### 2026-09-24 · \[issue \#169\] S777 claim: Slice 3b — committed Mate Pair ancestry e2e, colony-manager-guide docs, close \#169 *(in progress)*
+
+- Owner-picked at the Phase 0 priorities gate (S776 next-steps (A),
+  `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger
+  frontiers (both at `a6ee8c0d` = HEAD), 30 unpushed (`origin/master` =
+  `79206add`), CI green (all four push workflows on `79206add` plus
+  nightlies through 2026-09-24 07:15Z), the S776 receipt’s ratchet
+  citation matched `.quality-gates-results.json` byte-for-byte BEFORE
+  any run; `HANDOFFS.md` trim trigger FIRES (82,785 B vs 65,536 B) —
+  reported, not this session’s deliverable. Deliverable is Slice 3b of 3
+  (final); strict TDD, `AskUserQuestion`-gated phases. Stub + pending
+  receipt ride this commit; close-out records the rest. Issue \#169
+  closes at close-out.
+
+### 2026-09-24 · \[ad hoc\] S776 records: Slice 3a of \#169 DONE, close-out records committed
+
+- **Deliverable:** Slice 3a of issue \#169 (the Mate Pair override gate,
+  the Ancestry tab and the audit-manifest download), recorded in the
+  entries below: claim `a2e2be05`, RED `09b85a5a`, GREEN 1/2 `f65410f2`,
+  GREEN 2/2 `15addc42`, REFACTOR `ae41927b`. The two records commits
+  add: the plan’s Slice 3 **Outcome (S776)** paragraph; the `BACKLOG.md`
+  item rewritten forward-carrying at Slice 3b (live-measured numbers,
+  driver traps, the strict-TDD wrinkle for a characterization e2e) plus
+  a NEW item for the blank-ancestry read-path divergence; Learnings
+  787-788; the `HANDOFFS.md` S776 receipt (`status: complete`, self
+  8/10, S775 evaluated 9/10); the `SESSION_NOTES.md` S776 record and the
+  S775 handoff evaluation, with the S769-S773-era records removed by
+  hand to keep the file under the hook’s token ceiling (git holds them:
+  `git show a2e2be05:SESSION_NOTES.md`).
+- **Verification (measured):** unfiltered clean regression read
+  (`NOT_CRAN=true`, `load_all()` first) **351 files / 8,292
+  expectations, 0 failed / 0 error** after GREEN AND after the REFACTOR
+  (identical; S775 was 349 / 8,105); `devtools::check()` **0 / 0 / 0**
+  both times; lint 0; ratchet **1/1 at `ae41927b`** (3,559,430 B,
+  +10,763 B vs S775 = tests + docs; results `854128e69adc`, manifest
+  `aa983075d6a2` unchanged; the citation was compared to the results
+  file at Orient BEFORE the run). Runtime (3E): a scratch-installed
+  build driven by shinytest2 twice with identical results (20/5 -\>
+  override -\> 23/2, manifests, gate, 0 console errors).
+- **Findings recorded, not fixed:** the Shiny upload path reads CSV/text
+  with no `na.strings`, so a blank ancestry cell is OTHER live but
+  UNKNOWN on the script path (`BACKLOG.md:83`); a valid zero-rule table
+  makes the manifest builder stop (Breeding Groups identical); the
+  whole-file Read of `SESSION_NOTES.md` counted 25,148 tokens for a file
+  the hook’s estimator counted as 24,579.
+- **Not done, by design:** the committed shinytest2 e2e, the
+  colony-manager-guide article and the explicit \#169 close are Slice
+  3b; issue \#169 stays open; nothing pushed.
+
+### 2026-09-24 · \[issue \#169\] S776 REFACTOR: shared override helpers between Breeding Groups and Mate Pair
+
+- `ae41927b` (3 files): `.emptyAncestryOverrides()` and
+  `.overridableAncestryRules()` added to `R/ancestryOverrides.R` and
+  used by `R/modBreedingGroups.R`, `R/modMatePair.R` and
+  `.checkAncestryOverrides()` in place of four copies of the zero-row
+  overrides table and two copies of the “block rules not yet overridden”
+  computation. Structure only (owner gate “one small REFACTOR”); the
+  select-choices builder and the confirm-gate modal stay duplicated (not
+  unit-covered). Verified identical before and after: full suite 351
+  files / 8,292 expectations 0/0, `check()` 0/0/0, lint 0, the live
+  smoke.
+
+### 2026-09-24 · \[issue \#169\] S776 GREEN: Slice 3a implemented (Mate Pair override gate + Ancestry tab + audit manifest)
+
+- **GREEN 1/2 `f65410f2` (4 files):** `R/ancestryOverrides.R` gains
+  `.matePairAncestryOverrideWarningText` (the owner-ratified wording,
+  verbatim) and `.matePairAncestryReport()` (violations = the rule keys
+  of every ancestry-matched pair from `pairs` UNION `excluded`; coverage
+  passed through; [`stop()`](https://rdrr.io/r/base/stop.html) on a
+  non-result or a result made without rules). `R/modMatePair.R` gains
+  the per-rule override select + confirm-gate modal (required reason;
+  blank refused with an error notification) inside the collapsed
+  Ancestry Guardrails panel; per-tab `ancestryOverridesRV` reset when
+  the rules reaching the module change; `overridableRules()` and the
+  select-sync observer; a sibling `ancestryRun` snapshot (ORIGINAL
+  rules + overrides) set beside `matchResults` at the click, with
+  `overriddenRules` passed to the kernel (zero-row when the guardrails
+  are inactive); `ancestryManifest()`, `ancestryTabGuidanceText()`; and
+  the new Ancestry tab (guidance, coverage table, Download Audit
+  Manifest as a dated `MatePairAncestryAuditManifest.csv`).
+  `man/modMatePairUI.Rd` and `man/modMatePairServer.Rd` regenerated
+  (`NAMESPACE` unchanged: every import already existed).
+- **GREEN 2/2 (this commit):** `NEWS.Rmd` — the ONE \#169 entry revised
+  in place to the release-state description (Learning 785), now covering
+  the override step, the Ancestry tab and the manifest download in plain
+  language.
+- All 22 RED blocks pass (187 expectations) with no test edits during
+  GREEN; the sibling files that share the module or the primitives stay
+  green; lint 0. Full-suite and `check()` numbers are recorded at
+  close-out. The committed shinytest2 e2e, the colony-manager-guide
+  article and the explicit \#169 close are Slice 3b.
+
+### 2026-09-24 · \[issue \#169\] S776 RED: Slice 3a failing tests committed (Mate Pair override gate + Ancestry tab + audit manifest)
+
+- Two new files, tests only — zero `R/`/`man/`/`NAMESPACE`/`NEWS`
+  changes. `tests/testthat/test_matePairAncestryManifest.R` (8 blocks,
+  not CRAN-skipped): the ratified gate wording pinned verbatim as
+  `.matePairAncestryOverrideWarningText` (owner gate: “plan text
+  verbatim”); the `.matePairAncestryReport(result)` manifest adapter (8
+  matches = CHINESE-INDIAN 3 / HYBRID-INDIAN 2 / INDIAN-OTHER 1 /
+  INDIAN-UNKNOWN 2, unchanged under an override, coverage passed
+  through, zero-row when nothing matches, errors on a result made
+  without rules); adapter -\> `.buildAncestryOverrideManifest` end to
+  end (nPairs, census 2/3/1/2/1/1, nUncovered 2 / 9, reason on exactly
+  the overridden rule’s row).
+  `tests/testthat/test_modMatePair_ancestryOverrides.R` (14 blocks,
+  testServer, skip on CRAN): the Ancestry tab after Excluded and the
+  override controls inside the collapsed panel; `overridableRules()`;
+  the confirm gate via mocked
+  `showModal`/`showNotification`/`removeModal` (verbatim text, reason
+  box, Confirm/Cancel; never on a routine run; not opened when nothing
+  is overridable, with a positive control); blank/missing reason;
+  stored-trimmed override, status line, Clear; reset when the rules
+  change; the run/snapshot contract (20/5 -\> override -\> displayed run
+  and manifest unchanged -\> re-run 23/2, three rows `overridden` with
+  severity `block` = the Learning-780 observable, equal to a direct
+  [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+  call); overrides recorded then the pedigree loses its `ancestry`
+  column (no rules, no overrides passed, no error); rules-off zero
+  change; guidance states and manifest lifecycle; coverage table; the
+  dated `MatePairAncestryAuditManifest.csv` download.
+- **RED audit (Learning 784):** every one of the 22 new blocks fails,
+  each failing expectation for the intended cause (missing
+  function/object, missing UI id or tab, gate never opens, missing
+  output); the four error-path regexes do not match R’s own “could not
+  find function” text (no false pass); the negatives in the not-openable
+  block are guarded by a positive control. Blocks that stop at the first
+  missing symbol leave deeper expectations unexercised until GREEN;
+  those numbers were cross-checked through the shipped kernel and
+  manifest builder in scratch, and the mock mechanism was proven against
+  the existing Breeding Groups gate. Lint 0 on both files.
+
+### 2026-09-24 · \[issue \#169\] S776 claim: Slice 3 — Mate Pair override gate, audit manifest, Ancestry tab, e2e, article *(in progress)*
+
+- Owner-picked at the Phase 0 priorities gate (S775 next-steps (A),
+  `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger
+  frontiers (both at `ff53bf21` = HEAD), 23 unpushed (`origin/master` =
+  `79206add`), CI 20/20 green (four push workflows on `79206add` +
+  nightlies through 09-23), S775 receipt-citation vs
+  `.quality-gates-results.json` matched byte-for-byte BEFORE any ratchet
+  run; `HANDOFFS.md` trim trigger FIRES (74,611 B vs 65,536
+  2.  and `SESSION_NOTES.md` exceeds the Read tool’s 25,000-token cap
+      despite S775’s “under the cap” claim — both reported, not this
+      session’s deliverable. Deliverable is Slice 3 of 3 (scope may
+      split 3a/3b at the Pre-RED gate; strict TDD,
+      `AskUserQuestion`-gated phases). Stub + pending receipt ride this
+      commit; close-out records the rest. Issue \#169 closes at Slice 3
+      close-out.
+
+### 2026-09-23 · \[ad hoc\] S775 records: Slice 2 of \#169 DONE, close-out records committed
+
+- **Deliverable:** Slice 2 of issue \#169 (the Mate Pair module applies
+  the ancestry rules loaded on Breeding Groups), recorded in the entries
+  below: claim `8d722d6a`, RED `53e172d6`, RED correction `fdb705bd`,
+  GREEN 1/2 `402549a7`, GREEN 2/2 `e4401806`, REFACTOR `4be16a12`. The
+  two records commits add: the plan’s Slice 2 **Outcome (S775)**
+  paragraph (`docs/planning/mate-pair-ancestry-guardrails-plan.md`); the
+  `BACKLOG.md` mate-pair item rewritten forward-carrying at Slice 3 (not
+  removed — Slice 3 is open, issue \#169 stays open); Learning 786
+  (`PROJECT_LEARNINGS.md`); the `SESSION_NOTES.md` S774 handoff
+  evaluation (9/10) and completed S775 record (self 8/10); the completed
+  `HANDOFFS.md` receipt.
+- **Verification (measured):** clean unfiltered regression read
+  (`NOT_CRAN=true`, `load_all()` first) 349 files / 8,105 expectations,
+  0 failed / 0 error before AND after the refactor; `devtools::check()`
+  0 / 0 / 0 before AND after; lint 0; ratchet 1/1 at `4be16a12`
+  (3,548,667 B, +9,285 B vs S774; results `9939380d9a6f`, manifest
+  `aa983075d6a2` unchanged; the citation comparison ran at Orient BEFORE
+  the run). **Runtime (Phase 3E):** a scratch-installed build driven by
+  shinytest2 (one-off, not committed): live status across tabs, 20
+  eligible / 5 excluded with the rule shown, an 11-column CSV, explainer
+  hidden then visible, zero console errors; the two existing e2e files
+  (mate-pair 8, BG-ancestry 17 expectations) pass locally. Slice 3 owns
+  the committed e2e.
+- **Non-commit actions:** none (no push, no issue comment, no tag; the
+  ratchet run rewrote the untracked `.quality-gates-results.json`).
+  Nothing removed from a mandated-read file this session (1-and-done):
+  the draft `SESSION_NOTES.md` records pushed it over its 56,750 B read
+  cap and were compressed back to 55,795 B before the commit (the
+  installed pre-commit hook refuses growth of an over-ceiling file);
+  `HANDOFFS.md` (74,358 B) is past its trim trigger — both trims are
+  owed as their own deliverables.
+
+### 2026-09-23 · \[issue \#169\] S775 REFACTOR: one shared `.ancestryStatusLine()` for the Breeding Groups and Mate Pair status text
+
+- Behavior-preserving (owner-gated “one small REFACTOR”; zero test
+  edits): the loaded-state wording (“N block, M flag rule(s); K
+  animal(s) uncovered.”) and the no-ancestry-column inactive notice,
+  which GREEN 1/2 had duplicated verbatim in `modMatePairServer`, now
+  live in one internal `@noRd` helper `.ancestryStatusLine(rules, ped)`
+  next to `.ancestryCoverage()` in `R/reportAncestryViolations.R`; both
+  modules call it. Each module keeps its own “no rules loaded” text (the
+  Mate Pair one says where to load rules). Three `R/` files, no `man/`
+  change. Same counts before and after on the 7 files exercising it (new
+  module file 75, BG ancestry 121, contract 119, appServer 37, Mate Pair
+  44, ancestry reporter 54, BG module 117; 0 failed / 0 error); lint 0.
+  Pre-refactor `devtools::check()` on the GREEN tree: 0 / 0 / 0.
+
+### 2026-09-23 · \[issue \#169\] S775 GREEN 2/2: NEWS.Rmd release-state entry + UI roxygen (ledger for the three GREEN-phase commits)
+
+- `NEWS.Rmd`: the ONE existing \#169 entry under “Mate Pair Analysis”
+  REVISED (not appended; Learning 785) to the release state: load the
+  rules on the Breeding Groups tab and the Mate Pair Analysis tab uses
+  them (block -\> Excluded tab with the reason “ancestry rule”; flag -\>
+  stays in Eligible Pairs with its rule shown, also in the exported
+  file); a status line says whether rules are active and how many
+  animals no rule covers; the script arguments and the coverage result
+  stay described; without rules, or with no ancestry column, everything
+  is exactly as before. Plain-language criterion (S628) applied: no
+  “reactive”/“snapshot”/kernel wording. `R/modMatePair.R`
+  [`modMatePairUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modMatePairUI.md)
+  roxygen `@return` now mentions the collapsed section + status line;
+  `man/modMatePairUI.Rd` regenerated (`devtools::document()` touched
+  only this file).
+
+### 2026-09-23 · \[issue \#169\] S775 GREEN 1/2: Mate Pair module applies the ancestry rules loaded on Breeding Groups (`402549a7`)
+
+- `R/modBreedingGroups.R`: the return list gains
+  `ancestryRules = reactive(ancestryRulesData())` (the validated table
+  as loaded; NULL when none; deliberately NOT `ancestryRulesForRun()`) +
+  roxygen `@return`. `R/appServer.R`:
+  `ancestryRules = bgResults$ancestryRules` threaded into
+  `modMatePairServer` (the same object; a BG return without the element
+  gives an explicit NULL). `R/modMatePair.R`: new `ancestryRules = NULL`
+  parameter; collapsed “Ancestry Guardrails” toggle + always-visible
+  `ancestryStatus` output + explainer panel (unprefixed
+  `conditionalPanel` condition, Learning 324); `ancestryRulesData()` /
+  `ancestryRulesForRun()` (rules only when loaded AND the pedigree has
+  an `ancestry` column) / `ancestryStatusText()` (none / active /
+  inactive); the click passes `ancestryRules = ancestryRulesForRun()` to
+  [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+  so the stored result IS the run snapshot (D8c); the zero-pairs alert
+  keeps its text byte-for-byte and appends an ancestry-exclusion count
+  sentence only when \>=1 pair was excluded by a rule.
+  `man/modBreedingGroupsServer.Rd`, `man/modMatePairServer.Rd`
+  regenerated. Five files. GREEN result: the 16 new module blocks, the
+  two contract rows, 3 BG blocks and 2 appServer blocks pass; sibling
+  `test_modMatePair.R` (44) unchanged.
+
+### 2026-09-23 · \[issue \#169\] S775 RED correction: the malformed-rules block’s unobservable post-error read removed (`fdb705bd`)
+
+- Declared RED correction, test only (no implementation change). The RED
+  block pinning “a malformed rules table surfaces at the click” also
+  asserted `isReady()` was FALSE afterwards; at GREEN it errored with
+  `shiny.destroyed.error` — the observer error being pinned makes Shiny
+  destroy the module session, after which no module-domain reactive (the
+  returned `isReady()`, and the module-local `reactiveVal` run store
+  too) can be read. That half was unobservable, so it was dropped; the
+  surfaced warning carrying the `checkAncestryRules` message stays
+  pinned. Own commit to keep GREEN 1/2 within the 5-file cap.
+
+### 2026-09-23 · \[issue \#169\] S775 RED: Slice 2 failing tests committed (Mate Pair module ancestry rules)
+
+- New `tests/testthat/test_modMatePair_ancestry.R` (16 blocks) plus
+  additions to `test_moduleContract.R` (BG `names` +`ancestryRules`;
+  matePair `args` +`ancestryRules`),
+  `test_modBreedingGroups_ancestryRules.R` (3 blocks: the new BG return
+  element — NULL / validated / NULL-if-malformed and re-upload; the
+  element is the validated table even with no ancestry column, i.e. NOT
+  `ancestryRulesForRun()`) and `test_appServer_server.R` §9 (2 blocks:
+  the same reactive object threads through; a BG return without the
+  element gives an explicit NULL). Tests only — zero
+  `R/`/`man/`/`NAMESPACE`/`NEWS` changes; 4 files (under the 5-file
+  cap). Pinned on the shipped `example_ancestry_*` fixtures (re-measured
+  at Orient: 25 pairs → 20 eligible / 3 flagged / 5 ancestry-excluded):
+  UI toggle + always-visible status + explainer in order; three status
+  texts verbatim; rules applied with columns after `damGu`; rules-off
+  [`identical()`](https://rdrr.io/r/base/identical.html) to the kernel
+  for the omitted argument, a `NULL` reactive, and
+  rules-with-no-ancestry-column (D4-1/D1); conservation (D4-3); snapshot
+  both directions (D8c); CSV header with/without rules; the zero-pairs
+  alert (existing text byte-identical, plus an “N pair(s) were excluded
+  by ancestry rules – see the Excluded tab.” sentence only when \>=1
+  ancestry exclusion); a malformed table surfaces at the click; a
+  warning-bearing table still applies and its run-time warning is not
+  muffled (dragon 10).
+- Owner gates (S775): UI layout “toggle + visible status”; zero-pairs
+  message “yes, pinned”; PRE-RED→RED. **RED audit:** 15 of the 16 new
+  blocks fail — 1 block passes (the rules-off
+  [`identical()`](https://rdrr.io/r/base/identical.html) pin,
+  characterization), 1 more is partly green for the same reason (the
+  rules-off half of the zero-pairs alert block); every failing
+  expectation is the intended cause (absent UI element /
+  `ancestryStatus` output, `unused argument (ancestryRules = ...)`,
+  missing `ancestryRules` return element, argument not passed by
+  `appServer`). Blocks that stop at the `unused argument` seam leave
+  their deeper expectations unexercised until GREEN (Learning 784) —
+  cross-checked against the shipped kernel in scratch (zero-pairs 0/1
+  `I1|C2`, warn-rules 25/0 flagged `I1|U1`,`A1|U1`, the malformed
+  message, the 2/2/2 status). One vacuous ordering expectation (a `-1`
+  position sentinel passing `expect_lt`) was tightened before this
+  commit. Lint 0 on all four files.
+
+### 2026-09-23 · \[issue \#169\] S775 claim: Slice 2 — rules delivery + Mate Pair module wiring *(in progress)*
+
+- Owner-picked at the Phase 0 priorities gate (S774 next-steps (A),
+  `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger
+  frontiers (both at `a7628998` = HEAD), 15 unpushed (`origin/master` =
+  `79206add`), CI green (all four push workflows + the 2026-09-23
+  nightly), S774 receipt-citation vs `.quality-gates-results.json`
+  matched byte-for-byte BEFORE any ratchet run; `HANDOFFS.md` trim
+  trigger FIRES (68,434 B vs 65,536 B) — reported, not this session’s
+  deliverable. Deliverable is Slice 2 of 3 (the module; no override
+  gate; strict TDD, `AskUserQuestion`-gated phases). Stub + pending
+  receipt ride this commit; close-out records the rest. Issue \#169
+  stays open until Slice 3.
+
+### 2026-09-23 · \[ad hoc\] S774 records: Slice 1 of \#169 DONE, close-out records committed
+
+- **Deliverable:** Slice 1 of issue \#169 (the
+  [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+  ancestry kernel), recorded in the entries below: claim `0a4c155e`, RED
+  `a29e88bb`, GREEN 1/2 `eb104544`, GREEN 2/2 `f4ca894f`, REFACTOR
+  `f852fcb9`, docs `a0c81ea4`. Ratchet 1/1 at `f852fcb9` (3,539,382 B,
+  +10,649 B vs S773 = the new tests + docs; results `2a43ab2f7bf5`,
+  manifest `aa983075d6a2`); the receipt-citation comparison ran at
+  Orient BEFORE the run. Clean regression read 348 files / 8,007
+  expectations 0 failed / 0 error and `devtools::check()` 0 / 0 / 0,
+  each measured before AND after the refactor. Not run, stated: no live
+  app run (the module is untouched and does not pass the new arguments).
+  Checklists: lint ✓, NEWS ✓ (release-state),
+  `_pkgdown.yml`/citation/tutorial N/A, `a2interactive.Rmd` owed as the
+  deferred pass (in the BACKLOG item); the GitHub issue stays open
+  (Slices 2-3 remain).
+- **`BACKLOG.md`:** the mate-pair item rewritten forward-carrying (Slice
+  1 shipped; pickup = Slice 2, with the module’s `ancestry`-column check
+  called out as the trap); a NEW item, “`NEWS.Rmd` release-state sweep”
+  (owner-directed; four clusters found by heuristic grep, a floor not a
+  census), was added — recorded, NOT done.
+- **Receipt:** `HANDOFFS.md` S774 `status: complete` (self 8/10, S773
+  evaluated 9/10); its `commit:` names the last code commit `f852fcb9`
+  (the records commit cannot name its own sha). Handoff evaluation and
+  the S774 record are in `SESSION_NOTES.md`. Housekeeping sizes are
+  recorded in the receipt’s gotcha (9).
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-23 · \[issue \#169\] S774 docs: Learnings 784-785 + the plan’s Slice 1 outcome (for Slice 2)
+
+- `PROJECT_LEARNINGS.md` Learning 784 (a RED audit for an
+  added-optional-argument slice must classify every failing
+  expectation’s message; a regex naming the argument passes falsely on
+  R’s own `unused argument` text; an erroring block leaves its later
+  assertions and oracles unexercised) and Learning 785 (NEWS entries are
+  release-state relative to the prior release, never an in-progress
+  milestone; owner-directed).
+  `docs/planning/mate-pair-ancestry-guardrails-plan.md` §5 gained an
+  **Outcome (S774)** paragraph: the override contract, columns,
+  `NA`-level coverage semantics, helper names/locations, measured
+  timing, and the Slice 2 trap (the module must check for the `ancestry`
+  column BEFORE passing rules, because
+  [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+  now [`stop()`](https://rdrr.io/r/base/stop.html)s without it).
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-23 · \[issue \#169\] S774 REFACTOR: shared `.ancestryCoverage()` replaces the duplicated coverage block
+
+- Owner-gated (GREEN→REFACTOR, one candidate). The ~12-line coverage
+  block inside
+  [`reportAncestryViolations()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md)
+  and
+  [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)’s
+  `mateAncestryCoverage()` copy are now ONE internal
+  `.ancestryCoverage(ids, ped, rules)` (`@noRd`,
+  `R/reportAncestryViolations.R`), called by both. No behavior change:
+  identical expectation counts in the 7 ancestry/mate-pair corpora
+  (153/42/44/54/103/31/105, 0 failures), the new file’s
+  `identical(coverage, reportAncestryViolations(...)$coverage)` parity
+  block still passes, lint clean on both files, `document()` a no-op.
+  Full verification on the refactored tree: clean regression read 348
+  files / 8,007 expectations, **0 failed / 0 error** (unchanged from
+  pre-refactor); `devtools::check()` **0 / 0 / 0**.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-23 · \[issue \#169\] S774 GREEN 2/2: NEWS.Rmd entry for the `reportMatePairs()` ancestry arguments
+
+- One `NEWS.Rmd` entry under Mate Pair Analysis, plain language for a
+  colony manager (S628 criterion). **Owner correction mid-session:** the
+  first draft read “first step … a later step of this work”; the owner
+  ruled that NEWS entries state the release-time state relative to the
+  prior release (2.0.0), never an in-progress milestone, and the entry
+  was rewritten before commit. Saved as a feedback memory. The owner
+  also noted several EXISTING entries (the four \#168 ancestry entries,
+  `NEWS.Rmd` ~376-422) share the fault; not touched here — a
+  `BACKLOG.md` sweep item is recorded at close-out. `NEWS.md` not
+  re-rendered (last rendered S716; the \#168 slices set the same
+  precedent).
+- **Full verification on this tree (measured):** clean regression read,
+  unfiltered, `NOT_CRAN=true` + `load_all()` first: 348 files, 8,007
+  expectations, **0 failed / 0 error** (186 skipped =
+  opt-in/`skip_on_cran` blocks; 6 warnings, none from the new file).
+  `devtools::check()`: **0 errors / 0 warnings / 0 notes**, and
+  `document = TRUE` produced no churn.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-23 · \[issue \#169\] S774 GREEN 1/2: `reportMatePairs(ancestryRules, overriddenRules)` kernel shipped (`eb104544`)
+
+- `R/reportMatePairs.R` (+ regenerated `man/reportMatePairs.Rd`): two
+  optional arguments; `block` moves a pair to `excluded` (reason
+  `"ancestry rule"`), `flag` and overridden-block pairs stay in `pairs`
+  annotated (`ancestryRule`/`ancestrySeverity`/`ancestryStatus`,
+  appended after `damGu`), new `ancestryCoverage` element. Screen runs
+  LAST (D5), before marker/GV enrichment, on a vectorised matcher (one
+  [`match()`](https://rdrr.io/r/base/match.html) over all pairs); rules
+  and overrides validated once up front so bad arguments fail
+  identically on every path incl. the two early returns; shape depends
+  on the argument, never the data; `NULL` rules take the untouched path
+  ([`identical()`](https://rdrr.io/r/base/identical.html)). Internal
+  helpers `@noRd` in the same file; `ancestryOverrides.R` and
+  `reportAncestryViolations.R` NOT modified (the coverage helper
+  duplicates the group reporter’s ~12 lines, guarded by an
+  [`identical()`](https://rdrr.io/r/base/identical.html) parity test).
+- **Measured:** new file 18 blocks / 153 expectations, 0 failed/0
+  error/0 warnings; siblings unchanged (`reportMatePairs` 42,
+  `modMatePair` 44, `reportAncestryViolations` 54, `ancestryOverrides`
+  103); lint clean; 102,400 pairs in 0.77 s with rules vs 0.89 s without
+  (loop alternative ~49 s).
+- **Declared RED correction:** the scaling block’s independent oracle
+  used `table(male, female)` (a position-wise cross-tab, 320
+  observations) instead of the product of marginal counts over the
+  102,400 pairs; fixed in this commit (hand-verified 54 x 53 x 2 = 5,724
+  block, likewise flag). Assertion intent unchanged; invisible in RED
+  because the block errored on the missing argument.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-23 · \[issue \#169\] S774 RED: Slice 1 failing tests committed (`reportMatePairs()` ancestry kernel)
+
+- New `tests/testthat/test_reportMatePairsAncestry.R` (tests only; zero
+  `R/`/`man/`/`NAMESPACE`/`NEWS` changes): 18 blocks on the shipped
+  `example_ancestry_*` fixtures pinning plan §5 Slice 1 done-when 1-7 —
+  NULL-rules [`identical()`](https://rdrr.io/r/base/identical.html)
+  (D4-1); additivity/conservation with `minAge` + `exclude` active
+  (D4-2/3, D5); hand-derived counts 25 → 20/5 with the 5 block and 3
+  flag pairs named by id; overrides (either orientation, any case,
+  optional `reason` ignored) 23/2; zero-rule and flag-only tables;
+  self-pair rule; `ancestryCoverage` (census 2/3/1/2/1/1, equal to the
+  group reporter’s) and its universe; argument-determined shape on all
+  three empty paths (D4-4); stop paths with pinned messages; the
+  validator warning fires exactly once; case/whitespace/factor/NA level
+  normalisation; a 102,400-pair scaling guard (\< 10 s, independent
+  oracle). Owner-ratified at two gates: the `overriddenRules` contract
+  (“sibling shape, reject no-ops”: ancestry1/2, optional ignored
+  `reason`, error on an unknown/flag/duplicate override or overrides
+  without rules) and PRE-RED→RED.
+- **RED audit (measured):** 1 block passes (the fixture-premise
+  characterization), 17 fail; all 26 failing expectations cite the
+  missing arguments (`unused argument`) or the not-yet-implemented
+  messages. Two test defects were caught and fixed BEFORE this commit: a
+  helper hard-coding `minAge` (an unrelated collision error) and a
+  stop-path regex (`"ancestry"`) that matched R’s own
+  `unused argument (ancestryRules = ...)` text and passed for the wrong
+  reason — every stop-path phrase is now specific. The hand-derived
+  expectations were cross-checked against an independent base-R
+  computation (scratchpad); sibling corpus unchanged and green
+  (`test_reportMatePairs.R` 42, `test_modMatePair.R` 44,
+  `test_reportAncestryViolations.R` 54, `test_ancestryOverrides.R` 103
+  expectations, 0 failures). Lint clean.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-23 · \[issue \#169\] S774 claim: Slice 1 — `reportMatePairs()` ancestry kernel *(in progress)*
+
+- Owner-picked at the Phase 0 priorities gate (S773 next-steps (A),
+  `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger
+  frontiers (both at `d3603995` = HEAD), 8 unpushed, CI 10/10 green,
+  S773 receipt-citation vs `.quality-gates-results.json` matched
+  byte-for-byte BEFORE any ratchet run. Deliverable is Slice 1 of 3
+  (script-callable kernel only; strict TDD, `AskUserQuestion`-gated
+  phases). Stub + pending receipt ride this commit; close-out records
+  the rest. Issue \#169 stays open until Slice 3.
+
+### 2026-09-23 · \[ad hoc\] S773 records: mate-pair design gate DONE, close-out records committed
+
+- **Deliverable:** the design gate recorded in the `[issue #169]` entry
+  below (`6925d1a0`; issue \#169 opened, plan ratified, BACKLOG item
+  rewritten forward-carrying). Ratchet 1/1 at `6925d1a0` (3,528,733 B,
+  +16 B vs S772 = noise; results `1591937f7581`, manifest
+  `aa983075d6a2`); the receipt-citation comparison ran at Orient BEFORE
+  the run. Not run: local suite/`devtools::check()` — no package code
+  changed. No `.R`/export/UI/ statistic (all code checklists N/A); the
+  GitHub issue stays open (the implementation is not done).
+- **Receipt:** `HANDOFFS.md` S773 `status: complete` (self 9/10, S772
+  evaluated 9/10); its `commit:` names the deliverable commit `6925d1a0`
+  (the records commit cannot name its own sha). Handoff evaluation and
+  the S773 record are in `SESSION_NOTES.md`.
+- **Ledger sizes (measured at close-out, `--check --budget-bytes 65536`,
+  none fire):** `SESSION_NOTES.md` 35,867 B (records grew it +9.0 KB),
+  `HANDOFFS.md` 58,245 B, `CHANGELOG.md` 31,428 B (before this line).
+  The next `HANDOFFS.md` archive pass and `SESSION_NOTES.md` trim are
+  nearer than S772 forecast — recorded in the receipt’s gotcha (11).
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-23 · \[issue \#169\] Mate-pair ancestry guardrails design gate RATIFIED; issue \#169 opened
+
+- **Deliverable (design-only, zero `R/`/`tests/`/`man/` changes):**
+  `docs/planning/mate-pair-ancestry-guardrails-plan.md` — 10 decisions
+  (6 forced/evidence-determined; 4 owner judgment calls put in one
+  `AskUserQuestion` round, the owner took the recommended option in all
+  four: `block` moves a pair to Excluded with reason “ancestry rule” and
+  stays overridable; script API = optional
+  `ancestryRules`/`overriddenRules` on
+  [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md);
+  rules uploaded once on Breeding Groups and threaded to the Mate Pair
+  module with per-tab overrides/manifest; inline columns + a collapsed
+  section + a small Ancestry tab), three implementation slices, ten
+  dragons, alternatives, provenance. `BACKLOG.md`’s mate-pair item
+  rewritten forward-carrying (design RATIFIED, READY at Slice 1, tracked
+  by \#169) — not removed, because the implementation is still open.
+- **Non-commit action:** GitHub issue **\#169** opened (`enhancement`),
+  the full draft rendered inline and confirmed by the owner before
+  filing (Learning 776). Stays open through Slices 1-2; closes at Slice
+  3’s close-out.
+- **Findings that shaped the design (measured/read, not inferred):** the
+  rules live only inside `modBreedingGroups` (a module-local upload; no
+  return element; zero `appServer` wiring) — the crux the BACKLOG item
+  did not name; the shipped example fixtures suffice (25 candidate pairs
+  -\> 5 block / 3 flag / 17 unmatched, both rule orientations present);
+  looping
+  [`reportAncestryViolations()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md)
+  over two-animal groups measured 2.39 s per 5,000 pairs (minutes at
+  real 10⁵⁻¹⁰6-pair sizes is an ESTIMATE), so a vectorized matcher is
+  required.
+- Not run: local suite / `devtools::check()` — no package code changed;
+  all code checklists N/A (no `.R`, export, UI, or statistic).
+  Cross-references verified: every cited path exists (the one absent
+  path is the plan’s own proposed new e2e file) and the line pins match
+  the source.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-23 · \[ad hoc\] S773 claim: mate-pair guardrail surface design gate *(in progress)*
+
+- Owner-picked at the Phase 0 priorities gate (S772 next-steps (B),
+  `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger
+  frontiers (both at `897ffd8b` = HEAD), 5 unpushed, CI 10/10 green,
+  S772 receipt-citation vs `.quality-gates-results.json` matched
+  byte-for-byte BEFORE any ratchet run. Deliverable is a design
+  document + the new GitHub issue (design gate only, no code). Stub +
+  pending receipt ride this commit; close-out records the rest.
+
+### 2026-09-23 · \[ad hoc\] S772 records: SESSION_NOTES.md read-cap trim DONE, close-out records committed
+
+- **Deliverable:** the trim recorded in the tool-written entry below
+  (`3f78c7ac`, owner-ratified `--cut 5 --force`: 8 of 13 records → `-2`
+  shard, 54,857 → 21,099 B, verify script OK pre- AND post-commit).
+  Post-pass `--check --budget-bytes 65536`: CHANGELOG 26,786 B, HANDOFFS
+  44,468 B, SESSION_NOTES 21,099 B — none fire. Ratchet 1/1 at
+  `3f78c7ac` (3,528,717 B, −13 B vs S771 = noise; results
+  `7a1b249baa2d`, manifest `aa983075d6a2`); the receipt-citation
+  comparison ran at Orient BEFORE the run. Not run: local
+  suite/`devtools::check()` — no package code changed. No BACKLOG item
+  or GitHub issue involved; no `.R`/export/UI/statistic (all checklists
+  N/A).
+- **Receipt:** `HANDOFFS.md` S772 `status: complete` (self 9/10, S771
+  evaluated 9/10); its `commit:` names the deliverable commit `3f78c7ac`
+  (the records commit cannot name its own sha; no separate sha commit).
+  Surfaced, not filed: the read-cap ceiling decision (next-steps (E)).
+
+### 2026-09-23 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-23-2.md` (8 record(s), 54,857 B → 21,099 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **8** record(s) (2026-09-19 →
+2026-09-23) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-23-2.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-23-2.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-23-2.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-23-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 54,857 B → 21,099
+B (−61.5%).
+
+### 2026-09-23 · \[ad hoc\] S772 claim: SESSION_NOTES.md read-cap trim *(in progress)*
+
+- Owner-picked at the Phase 0 priorities gate (S771 next-steps (A)).
+  Orient measured: 0 undocumented on both ledger frontiers (both at
+  `5f7e362b` = HEAD), 2 unpushed, CI 10/10 green, S771 receipt-citation
+  vs `.quality-gates-results.json` matched byte-for-byte BEFORE any
+  ratchet run. `SESSION_NOTES.md` 54,172 B vs the 56,750 B read cap.
+  Stub + pending receipt ride this commit; close-out records the rest.
+
+### 2026-09-23 · \[ad hoc\] S771 sha: close-out commit sha recorded in HANDOFFS.md receipt
+
+- Receipt `commit:` reconciled to `f97b493c` (self-reconcile, S760–S770
+  precedent; carries its own ledger entry). Ledger sizes after:
+  `SESSION_NOTES.md` 54,172 B (2,578 B under the 56,750 B read cap —
+  trim is next-step A), `HANDOFFS.md` and `CHANGELOG.md` well under the
+  65,536 B budget.
+
+### 2026-09-23 · \[ad hoc\] S771 records: push + CI verification DONE, close-out records committed
+
+- **Deliverable:** the push and CI verification recorded in the entry
+  below. Ratchet 1/1 at `79206add` (3,528,730 B, −28 B vs S770 = noise
+  on a docs-only diff; results `c02aeda2c3db`, manifest `aa983075d6a2`);
+  the receipt-citation comparison ran at Orient BEFORE the run. Not run:
+  local full suite / `devtools::check()` — no package code changed this
+  session; CI’s R-CMD-check + test-coverage on the pushed head is the
+  independent verification.
+- **Records:** S770 handoff evaluated 9/10 (the read-cap rule had been
+  dropped from its standing set); S771 self-assessment 8/10;
+  `HANDOFFS.md` receipt complete. `SESSION_NOTES.md` measures 54,172 B
+  vs the 56,750 B read cap (2,578 B headroom) after the records were
+  condensed from a first draft that measured 57,640 B, 890 B over — a
+  trim is the top next-step. Learnings: none appended (FM \#28).
+  Disclosed: the claim commit carries a `Claude Fable 5` trailer, later
+  commits `Claude Sonnet 5` (a mid-session `/model` switch); a
+  mistyped-sha poll cost one round.
+- **Not covered by the push’s CI:** the live-e2e (shinytest2) tier is
+  nightly-schedule + manual-dispatch only per its workflow header, so
+  the pushed code’s e2e coverage (incl. S769’s ancestry e2e file) awaits
+  the next nightly run.
+
+### 2026-09-23 · \[ad hoc\] S771 push: `8007de81..79206add` pushed to `origin/master`; CI green on all four push workflows
+
+- **Action:** `git push origin master` — 98 commits (Orient’s 97
+  unpushed plus the S771 claim `79206add`), owner-gated (the Phase 0
+  priorities pick’s option text said choosing it was the go-ahead).
+  `origin/master` == local HEAD at push time (0 ahead).
+- **CI, matched by exact head SHA
+  `79206addff574f281176941bb31ee7ba90b91702`:** lint.yaml `35940154521`
+  success; pkgdown.yaml `35940154508` success; test-coverage.yaml
+  `35940154485` success; R-CMD-check.yaml `35940154498` success (all
+  completed by 2026-09-24T01:14:30Z, R-CMD-check the last at 25 m). The
+  first CI verification of everything since `8007de81` — the whole \#168
+  ancestry-guardrails cluster through Slice 4b, the three ledger archive
+  passes, and the pandoc close-out.
+
 ### 2026-09-23 · \[ad hoc\] S771 claim: push to origin/master + CI verification *(in progress)*
 
 - Owner-picked at the Phase 0 priorities gate (S770 next-steps (A)).

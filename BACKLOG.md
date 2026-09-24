@@ -6,19 +6,76 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
-**Mate-pair guardrail surface — extend the shipped \#168 ancestry-rules
-machinery to
-[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)/`modMatePair`
-(recorded S762, extracted here S769 when \#168 closed; DECISION NEEDED —
-needs its own small design gate before any code, Effort M)** – the \#168
-plan’s §5 “Deferred (recorded, NOT ratified)” item: an additive
-violations/`reason` extension of the existing `excluded`/`pairs` frames
-using the same rules machinery (D5 deliberately kept it out of v1 to
-avoid re-opening \#151’s module contract mid-cluster). \#168 itself is
-CLOSED (v1 complete, S769), so this item is the follow-up’s only live
-tracker — a pickup session opens a new GitHub issue and runs the design
-gate first. See `docs/planning/issue168-ancestry-guardrails-plan.md`
-§5/D5.
+**Mate-pair ancestry guardrails – residue after issue \#169 (found
+S776-S777, 2026-09-24; DECISION NEEDED – the owner picks which to
+pursue, each Effort S)** – \#169 shipped and closed S777 (kernel,
+module, override gate, Ancestry tab, committed e2e, article). Four small
+things it left, none started: (1) **`a2interactive` demonstration
+(READY, the deferred documentation pass per `CLAUDE.md`)** – add a
+section to `vignettes/a2interactive.Rmd` for
+`reportMatePairs(ancestryRules, overriddenRules)`: the `ancestryRule` /
+`ancestrySeverity` / `ancestryStatus` columns, `ancestryCoverage`, and
+the excluded reason “ancestry rule”. (2) **Zero-rule table (DECISION
+NEEDED)** – a valid rules table with zero rules makes
+`.buildAncestryOverrideManifest()` stop (“no rules in effect”), so
+Download Audit Manifest errors on BOTH Mate Pair and Breeding Groups;
+decide whether a zero-rule table should read as “inactive” or the
+manifest should say so. (3) **The Excluded tab has no export (DECISION
+NEEDED)** – plan section 7 dragon 8: a curator cannot get the list of
+blocked pairs as a file (the manifest carries per-rule COUNTS only). (4)
+**Duplicated gate code (READY refactor)** – the override select-choices
+builder and the confirm-gate modal are duplicated between
+`R/modBreedingGroups.R` and `R/modMatePair.R` (S776’s REFACTOR shared
+only `.emptyAncestryOverrides()` and `.overridableAncestryRules()`); the
+shared shape is a choices builder plus a modal constructor taking the
+warning text and the namespace. **Known, accepted:** an unhandled
+click-time error ends the Shiny session (Learning 786).
+
+**`NEWS.Rmd` release-state sweep — rewrite entries that describe
+in-progress milestones (owner-directed S774, 2026-09-23; READY, Effort
+M)** – the owner ruled that NEWS entries state the finished state at
+release relative to the PRIOR release (2.0.0), never a point between
+releases (Learning 785). A heuristic grep of the development section
+(pattern list: first/final step, “continued)”, groundwork, “later
+step(s)”, “arrive(s) in”) found four feature clusters: the MHC
+haplotype-frequency entry (`NEWS.Rmd:308`), the four \#168 ancestry
+entries (`:376-410`: “Groundwork…”, “…continued” x2, “…final step” —
+merge into one release-state entry), and the two \#167 longitudinal
+entries (`:452-457`, `:476`: “arrives in later steps/the next step”).
+The grep is a floor, not a census: the pickup should read the whole
+development section once. Plain-language criterion (S628) still applies.
+`NEWS.md` was last re-rendered S716, so it lags `NEWS.Rmd` and needs a
+render at release. Open, the owner’s call: adding the rule to
+`CLAUDE.md`’s NEWS checklist (its “matching existing style” wording
+conflicts with it).
+
+**Blank ancestry cells become OTHER, not UNKNOWN, on the Shiny upload
+path (found S776, 2026-09-24, DECISION NEEDED, Effort S-M)** – the Input
+module reads CSV/text uploads with no `na.strings`
+(`R/modInput.R:324-331`), while the script path
+[`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
+reads with `na.strings = c("", "NA")` (`R/getPedigree.R:34`). Measured:
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+maps a true `NA` ancestry to UNKNOWN but an empty string to OTHER, and
+the live app’s Mate Pair coverage table shows the fixture’s blank
+ancestry animal as OTHER (OTHER 2, UNKNOWN 0) where a script user gets
+UNKNOWN. Consequences: an UNKNOWN-vs-OTHER rule (the S769 article tells
+centers to name both) matches different animals depending on how the
+file was loaded, and `vignettes/articles/colony-manager-guide.qmd:552`
+(“a truly blank entry becomes UNKNOWN”) is wrong for app uploads.
+Decision for the owner: align the app read with
+[`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
+(a behavior change for EVERY blank character cell in an upload – audit
+QC effects on blank sire/dam/other columns first; not measured yet)
+versus documenting the difference. Needs its own investigation and
+Pre-RED gate; not part of \#169. **Pins that move with it:** the
+committed e2e
+`tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R` (S777)
+pins the LIVE numbers – coverage table OTHER 2 / UNKNOWN 0 (group A5),
+manifest pair counts INDIAN-UNKNOWN 0 / INDIAN-OTHER 3 (A6b, A12) and
+census nOther 2 / nUnknown 0 (A6c) – so aligning the read moves them on
+purpose; change those expectations in the same commit (the file’s header
+comment says so).
 
 **Harem-sire conflict enforcement hole — kinship AND ancestry (found
 S764, 2026-09-22, DECISION NEEDED — closing it is a behavior change

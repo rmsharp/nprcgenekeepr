@@ -138,6 +138,12 @@ one – identical to the single-solution behavior prior to issue #125.</p></dd>
 in groups</p></li>
 <li><p><code>groupKinship</code> - List of kinship matrices per group
 (if withKin=TRUE)</p></li>
+<li><p><code>ancestryRules</code> - The validated ancestry rules table loaded
+through the Ancestry Guardrails upload (see
+<code><a href="checkAncestryRules.html">checkAncestryRules</a></code>), or <code>NULL</code> when no usable file
+is loaded. It is the table as loaded, whether or not the pedigree has
+an <code>ancestry</code> column: each consumer (formation here,
+<code><a href="modMatePairServer.html">modMatePairServer</a></code>) applies its own column check</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

@@ -90,7 +90,8 @@ this module shares no code with it.</p>
 <span>  <span class="va">pedigree</span>,</span>
 <span>  <span class="va">kinshipMatrix</span>,</span>
 <span>  <span class="va">markerKinshipMatrix</span>,</span>
-<span>  <span class="va">geneticValues</span></span>
+<span>  <span class="va">geneticValues</span>,</span>
+<span>  ancestryRules <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -128,6 +129,15 @@ data.frame (<code>shared$geneticValues</code>, with <code>id</code>,
 <code>indivMeanKin</code>, <code>gu</code> columns), or <code>NULL</code> before the
 Genetic Value Analysis tab has been run.</p></dd>
 
+
+<dt id="arg-ancestryrules">ancestryRules<a class="anchor" aria-label="anchor" href="#arg-ancestryrules"></a></dt>
+<dd><p>optional reactive returning the validated ancestry
+rules table (see <code><a href="checkAncestryRules.html">checkAncestryRules</a></code>) from
+<code><a href="modBreedingGroupsServer.html">modBreedingGroupsServer</a></code>'s <code>ancestryRules</code> return
+element, or <code>NULL</code> when no rules are loaded. <code>NULL</code> (the
+default, or a reactive that returns <code>NULL</code>) applies no rules, and
+the results are identical to a run before this argument existed.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -157,6 +167,36 @@ upstream absence is <code>req()</code>), matching
 <code><a href="modMarkerGeneticsServer.html">modMarkerGeneticsServer</a></code>'s own simpler precedent – there is
 no standalone use case for this module that would need an independent
 recompute path.</p>
+<p><strong>Ancestry guardrails (issue #169).</strong> <code>ancestryRules</code> carries the
+rules loaded on the Breeding Groups tab. When rules are loaded and the
+pedigree has an <code>ancestry</code> column, each run hands them to
+<code><a href="reportMatePairs.html">reportMatePairs</a></code>: a pair matching a <code>block</code> rule moves to
+the Excluded tab (reason <code>"ancestry rule"</code>) and a pair matching a
+<code>flag</code> rule stays in Eligible Pairs, annotated. The rules are read
+once, at the "Find Eligible Pairs" click, so loading or clearing rules
+afterwards never rewrites a finished run's tables. The module checks for the
+<code>ancestry</code> column before passing rules (the report function stops
+without it); a rules-loaded run on a pedigree with no such column runs
+exactly as it does with no rules, and the status line says the guardrails
+are inactive. An always-visible status line reports the loaded state.</p>
+<p><strong>Overriding a block rule.</strong> With active rules, the "Ancestry
+Guardrails" section lists the block rules not yet overridden. "Override
+rule..." opens a confirmation step that shows the warning text
+verbatim and requires a written reason (a blank reason is refused);
+confirming relaxes that one rule for this tab's runs, for the session,
+until the overrides are cleared or the rules change. An overridden rule's
+pairs stay in Eligible Pairs marked <code>"overridden"</code> (severity still
+<code>"block"</code>); they are never silently dropped. Each override is
+recorded per tab – Breeding Groups keeps its own – and the next run
+applies it; a finished run is never rewritten.</p>
+<p><strong>The Ancestry tab.</strong> Shows the displayed run's coverage summary (how
+many candidate animals carry each ancestry classification and which
+classifications no rule reaches) and a "Download Audit Manifest" button.
+The manifest is one row per rule: the rule as written, whether it was
+overridden and why, how many otherwise-eligible pairs it matched, the
+animal census by classification, and the confirmation warning verbatim. It
+describes the displayed run's own rules and overrides, and is unavailable
+for a run that had no rules in effect.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

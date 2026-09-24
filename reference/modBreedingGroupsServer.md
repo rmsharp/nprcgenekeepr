@@ -90,6 +90,15 @@ List with reactive components:
 
 - `groupKinship` - List of kinship matrices per group (if withKin=TRUE)
 
+- `ancestryRules` - The validated ancestry rules table loaded through
+  the Ancestry Guardrails upload (see
+  [`checkAncestryRules`](https://github.com/rmsharp/nprcgenekeepr/reference/checkAncestryRules.md)),
+  or `NULL` when no usable file is loaded. It is the table as loaded,
+  whether or not the pedigree has an `ancestry` column: each consumer
+  (formation here,
+  [`modMatePairServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modMatePairServer.md))
+  applies its own column check
+
 ## Details
 
 The module supports multiple configuration options:

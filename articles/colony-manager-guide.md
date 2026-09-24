@@ -739,6 +739,49 @@ the Eligible Pairs table exactly like any other pair, with a high
 a pairing; this tab surfaces the information rather than making the
 decision for them.
 
+**Ancestry guardrails on this tab** (issue
+[\#169](https://github.com/rmsharp/nprcgenekeepr/issues/169)). The
+ancestry rules you load in the **Ancestry Guardrails** section of the
+**Breeding Groups** tab (described above) also apply here, so a pairing
+your center keeps apart when forming groups is kept out of the pair list
+too. There is nothing to upload on this tab. Check **Ancestry
+Guardrails** in the configuration panel to expand its section; the
+status line beneath it always says whether rules are loaded and, if so,
+how many `block` and `flag` rules there are and how many animals carry
+an ancestry no rule mentions. If the pedigree has no `ancestry` column
+the rules cannot apply, and the status line says the guardrails are
+inactive – the tab then works exactly as it always has. The rules are
+read when you click **Find Eligible Pairs**, so loading or changing
+rules afterward does not rewrite results already on screen; click the
+button again to apply them.
+
+A pair that matches a `block` rule moves to the **Excluded** tab with
+the reason “ancestry rule”. A pair that matches a `flag` rule stays in
+**Eligible Pairs**, with the matching rule shown beside it (the same
+columns are in the CSV export). If no eligible pairs remain, the message
+on screen also says how many pairs the ancestry rules excluded.
+
+When professional judgment says a block rule should not apply to a
+particular run – an approved founder import, for example – select the
+rule in the expanded section and choose **Override rule…**. A
+confirmation step shows a warning that overriding lets this tab list
+pairs the rule would otherwise exclude, and requires a written reason;
+an empty reason is refused. The override lasts for your session on this
+tab (Breeding Groups keeps its own overrides) until you choose **Clear
+overrides** or load a different rules file, and it takes effect the next
+time you click **Find Eligible Pairs**. The pairs that rule matches then
+appear in Eligible Pairs marked “overridden” rather than disappearing.
+
+The **Ancestry** tab shows, for the run on screen, how many candidate
+animals carry each ancestry classification and which classifications no
+rule covers – so a rule set that quietly covers too little stays visible
+– together with a **Download Audit Manifest** button. The manifest has
+one row per rule: the rule, whether it was overridden and the reason
+given, how many pairs it matched, the animal counts by ancestry
+classification, and the confirmation warning text verbatim. It always
+describes the run currently displayed, never a later override, and it is
+unavailable for a run made with no rules in effect.
+
 ### Genetic Diversity
 
 The **Genetic Diversity** tab (issue

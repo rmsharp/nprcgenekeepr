@@ -26,7 +26,9 @@ reportMatePairs(
   geneticValues = NULL,
   minAge = 1L,
   populationIds = NULL,
-  exclude = character(0L)
+  exclude = character(0L),
+  ancestryRules = NULL,
+  overriddenRules = NULL
 )
 ```
 
@@ -80,9 +82,30 @@ reportMatePairs(
   eligibility screen. Default `character(0)` (no caller-supplied
   exclusions).
 
+- ancestryRules:
+
+  Optional data frame of ancestry compatibility rules in
+  [`checkAncestryRules`](https://github.com/rmsharp/nprcgenekeepr/reference/checkAncestryRules.md)'s
+  shape (`ancestry1`, `ancestry2`, `severity`); validated here. `ped`
+  must then carry an `ancestry` column, or the call stops. `NULL` (the
+  default) applies no ancestry screen. A valid zero-rule table is
+  accepted: the result then has the ancestry columns, with nothing
+  moved.
+
+- overriddenRules:
+
+  Optional data frame with `ancestry1` and `ancestry2` columns naming
+  `block` rules to override for this call (unordered, case-insensitive
+  match, as in
+  [`reportAncestryViolations`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md));
+  a `reason` column is accepted and ignored. An override naming no rule
+  in `ancestryRules`, a `flag` rule, or the same rule twice is an error,
+  as is giving overrides without `ancestryRules`. `NULL` or zero rows:
+  none.
+
 ## Value
 
-A list with two data.frames:
+A list with two data.frames (three when `ancestryRules` is given):
 
 - pairs:
 
@@ -90,12 +113,27 @@ A list with two data.frames:
   `sireId`, `damId`, `kinship`, `markerKinship` (`NA` if unavailable),
   `sireIndivMeanKin`, `sireGu`, `damIndivMeanKin`, `damGu` (the latter
   four `NA` if `geneticValues` is not supplied or the parent is absent
-  from its report).
+  from its report). With `ancestryRules`, three columns follow:
+  `ancestryRule` (the matched rule as a sorted `"LEVEL-LEVEL"` string),
+  `ancestrySeverity` (`"flag"` or `"block"`) and `ancestryStatus`
+  (`"violation"`, or `"overridden"` for an overridden block rule), all
+  `NA` for a pair no rule matches.
 
 - excluded:
 
-  One row per pair dropped by the age or user-exclude screen: `sireId`,
-  `damId`, `reason` (`"under minimum age"` or `"user-excluded"`).
+  One row per pair dropped by the age, user-exclude or ancestry screen:
+  `sireId`, `damId`, `reason` (`"under minimum age"`, `"user-excluded"`
+  or, with `ancestryRules`, `"ancestry rule"`). With `ancestryRules` an
+  `ancestryRule` column follows: the matched rule for an ancestry
+  exclusion, `NA` otherwise.
+
+- ancestryCoverage:
+
+  Only with `ancestryRules`: one row per standardized ancestry level
+  (CHINESE, INDIAN, HYBRID, JAPANESE, OTHER, UNKNOWN) with `ancestry`,
+  `n` (distinct animals at that level in `pairs` and `excluded`) and
+  `covered` (`TRUE` when a rule names the level), so a level no rule
+  covers is visible.
 
 ## Details
 
@@ -124,6 +162,24 @@ them), the corresponding columns are `NA` for that row – the pair itself
 is never dropped or the call errored, mirroring
 `modMarkerGeneticsServer`'s own "not yet uploaded" contract.
 
+**Ancestry rules (issue \#169).** `ancestryRules` applies the same
+center-configurable rules table as the Breeding Groups ancestry
+guardrails
+([`checkAncestryRules`](https://github.com/rmsharp/nprcgenekeepr/reference/checkAncestryRules.md))
+to individual pairs; a rule matches a pair whichever animal is the sire
+and whichever the dam. A `block` rule moves the matching pair out of
+`pairs` and into `excluded` with the reason `"ancestry rule"` (here
+"block" means "not listed as eligible", not "never placed together"); a
+`flag` rule keeps the pair in `pairs` and annotates it. Naming a block
+rule in `overriddenRules` keeps its pairs in `pairs`, marked
+`"overridden"` – never silently absent. The ancestry screen runs last: a
+pair that already failed the age or user-exclude screen keeps that
+reason. Rules only move and label pairs; every pair is either in `pairs`
+or in `excluded`, with or without rules. An animal whose ancestry no
+rule names, or is missing, matches nothing. With `ancestryRules = NULL`
+(the default) the result is unchanged, and `ped` needs no `ancestry`
+column.
+
 ## Examples
 
 ``` r
@@ -150,4 +206,53 @@ result$pairs
 #> 2    NA
 #> 3    NA
 #> 4    NA
+
+# Ancestry rules (issue #169): the example rules block INDIAN x CHINESE
+# and INDIAN x HYBRID pairs and flag INDIAN x UNKNOWN / INDIAN x OTHER
+ancPed <- qcStudbook(
+  read.csv(
+    system.file("extdata", "examples", "example_ancestry_pedigree.csv",
+      package = "nprcgenekeepr"
+    ),
+    stringsAsFactors = FALSE, na.strings = c("", "NA")
+  ),
+  minSireAge = 2, minDamAge = 2, reportChanges = FALSE,
+  reportErrors = FALSE
+)
+ancPed$gen <- findGeneration(ancPed$id, ancPed$sire, ancPed$dam)
+ancKmat <- kinship(ancPed$id, ancPed$sire, ancPed$dam, ancPed$gen)
+rules <- checkAncestryRules(readAncestryRules(
+  system.file("extdata", "examples", "example_ancestry_rules.csv",
+    package = "nprcgenekeepr"
+  )
+))
+ancResult <- reportMatePairs(ancPed, ancKmat, ancestryRules = rules)
+ancResult$excluded
+#>   sireId damId        reason   ancestryRule
+#> 1     C1    I2 ancestry rule CHINESE-INDIAN
+#> 2     I1    C2 ancestry rule CHINESE-INDIAN
+#> 3     A1    C2 ancestry rule CHINESE-INDIAN
+#> 4     I1    H1 ancestry rule  HYBRID-INDIAN
+#> 5     A1    H1 ancestry rule  HYBRID-INDIAN
+ancResult$ancestryCoverage
+#>   ancestry n covered
+#> 1  CHINESE 2    TRUE
+#> 2   INDIAN 3    TRUE
+#> 3   HYBRID 1    TRUE
+#> 4 JAPANESE 2   FALSE
+#> 5    OTHER 1    TRUE
+#> 6  UNKNOWN 1    TRUE
+# overriding one block rule keeps its pairs listed, marked "overridden"
+overridden <- reportMatePairs(ancPed, ancKmat,
+  ancestryRules = rules,
+  overriddenRules = data.frame(ancestry1 = "CHINESE", ancestry2 = "INDIAN")
+)
+overridden$pairs[
+  which(overridden$pairs$ancestryStatus == "overridden"),
+  c("sireId", "damId", "ancestryRule", "ancestryStatus")
+]
+#>   sireId damId   ancestryRule ancestryStatus
+#> 2     C1    I2 CHINESE-INDIAN     overridden
+#> 6     I1    C2 CHINESE-INDIAN     overridden
+#> 9     A1    C2 CHINESE-INDIAN     overridden
 ```

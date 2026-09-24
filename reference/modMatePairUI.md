@@ -17,8 +17,11 @@ modMatePairUI(id)
 ## Value
 
 A `div` containing the mate-pair analysis UI: a candidate-
-population/age/exclude-list configuration panel and an "Eligible Pairs"
-/ "Excluded" tabbed result view.
+population/age/exclude-list configuration panel (with a collapsed
+"Ancestry Guardrails" section – holding the per-rule override controls –
+and an always-visible ancestry-rules status line) and an "Eligible
+Pairs" / "Excluded" / "Ancestry" tabbed result view (the last holding
+the coverage summary and the audit-manifest download).
 
 ## See also
 

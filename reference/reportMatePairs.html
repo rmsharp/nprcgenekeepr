@@ -92,7 +92,9 @@ Section 3, decision D3).</p>
 <span>  geneticValues <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  minAge <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  populationIds <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  exclude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span></span>
+<span>  exclude <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span>,</span>
+<span>  ancestryRules <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  overriddenRules <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -146,22 +148,56 @@ to nobody and returns a zero-row result.</p></dd>
 any other eligibility screen. Default <code>character(0)</code> (no
 caller-supplied exclusions).</p></dd>
 
+
+<dt id="arg-ancestryrules">ancestryRules<a class="anchor" aria-label="anchor" href="#arg-ancestryrules"></a></dt>
+<dd><p>Optional data frame of ancestry compatibility rules
+in <code><a href="checkAncestryRules.html">checkAncestryRules</a></code>'s shape (<code>ancestry1</code>,
+<code>ancestry2</code>, <code>severity</code>); validated here. <code>ped</code> must then
+carry an <code>ancestry</code> column, or the call stops. <code>NULL</code> (the
+default) applies no ancestry screen. A valid zero-rule table is accepted:
+the result then has the ancestry columns, with nothing moved.</p></dd>
+
+
+<dt id="arg-overriddenrules">overriddenRules<a class="anchor" aria-label="anchor" href="#arg-overriddenrules"></a></dt>
+<dd><p>Optional data frame with <code>ancestry1</code> and
+<code>ancestry2</code> columns naming <code>block</code> rules to override for this
+call (unordered, case-insensitive match, as in
+<code><a href="reportAncestryViolations.html">reportAncestryViolations</a></code>); a <code>reason</code> column is
+accepted and ignored. An override naming no rule in <code>ancestryRules</code>,
+a <code>flag</code> rule, or the same rule twice is an error, as is giving
+overrides without <code>ancestryRules</code>. <code>NULL</code> or zero rows: none.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with two data.frames:</p>
+    <p>A list with two data.frames (three when <code>ancestryRules</code> is
+given):</p>
 <dl><dt>pairs</dt>
 <dd><p>One row per eligible opposite-sex pair surviving every
 screen: <code>sireId</code>, <code>damId</code>, <code>kinship</code>, <code>markerKinship</code>
 (<code>NA</code> if unavailable), <code>sireIndivMeanKin</code>, <code>sireGu</code>,
 <code>damIndivMeanKin</code>, <code>damGu</code> (the latter four <code>NA</code> if
 <code>geneticValues</code> is not supplied or the parent is absent from its
-report).</p></dd>
+report). With <code>ancestryRules</code>, three columns follow:
+<code>ancestryRule</code> (the matched rule as a sorted <code>"LEVEL-LEVEL"</code>
+string), <code>ancestrySeverity</code> (<code>"flag"</code> or <code>"block"</code>) and
+<code>ancestryStatus</code> (<code>"violation"</code>, or <code>"overridden"</code> for an
+overridden block rule), all <code>NA</code> for a pair no rule matches.</p></dd>
 
 <dt>excluded</dt>
-<dd><p>One row per pair dropped by the age or user-exclude
-screen: <code>sireId</code>, <code>damId</code>, <code>reason</code> (<code>"under minimum
-age"</code> or <code>"user-excluded"</code>).</p></dd>
+<dd><p>One row per pair dropped by the age, user-exclude or
+ancestry screen: <code>sireId</code>, <code>damId</code>, <code>reason</code> (<code>"under
+minimum age"</code>, <code>"user-excluded"</code> or, with <code>ancestryRules</code>,
+<code>"ancestry rule"</code>). With <code>ancestryRules</code> an <code>ancestryRule</code>
+column follows: the matched rule for an ancestry exclusion, <code>NA</code>
+otherwise.</p></dd>
+
+<dt>ancestryCoverage</dt>
+<dd><p>Only with <code>ancestryRules</code>: one row per
+standardized ancestry level (CHINESE, INDIAN, HYBRID, JAPANESE, OTHER,
+UNKNOWN) with <code>ancestry</code>, <code>n</code> (distinct animals at that level in
+<code>pairs</code> and <code>excluded</code>) and <code>covered</code> (<code>TRUE</code> when a
+rule names the level), so a level no rule covers is visible.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -188,6 +224,22 @@ are both <code>NULL</code>-safe: when absent (or when a specific pair is not
 covered by them), the corresponding columns are <code>NA</code> for that row –
 the pair itself is never dropped or the call errored, mirroring
 <code>modMarkerGeneticsServer</code>'s own "not yet uploaded" contract.</p>
+<p><strong>Ancestry rules (issue #169).</strong> <code>ancestryRules</code> applies the
+same center-configurable rules table as the Breeding Groups ancestry
+guardrails (<code><a href="checkAncestryRules.html">checkAncestryRules</a></code>) to individual pairs; a rule
+matches a pair whichever animal is the sire and whichever the dam. A
+<code>block</code> rule moves the matching pair out of <code>pairs</code> and into
+<code>excluded</code> with the reason <code>"ancestry rule"</code> (here "block" means
+"not listed as eligible", not "never placed together"); a <code>flag</code> rule
+keeps the pair in <code>pairs</code> and annotates it. Naming a block rule in
+<code>overriddenRules</code> keeps its pairs in <code>pairs</code>, marked
+<code>"overridden"</code> – never silently absent. The ancestry screen runs
+last: a pair that already failed the age or user-exclude screen keeps that
+reason. Rules only move and label pairs; every pair is either in
+<code>pairs</code> or in <code>excluded</code>, with or without rules. An animal whose
+ancestry no rule names, or is missing, matches nothing. With
+<code>ancestryRules = NULL</code> (the default) the result is unchanged, and
+<code>ped</code> needs no <code>ancestry</code> column.</p>
     </div>
 
     <div class="section level2">
@@ -215,6 +267,55 @@ the pair itself is never dropped or the call errored, mirroring
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    NA</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Ancestry rules (issue #169): the example rules block INDIAN x CHINESE</span></span></span>
+<span class="r-in"><span><span class="co"># and INDIAN x HYBRID pairs and flag INDIAN x UNKNOWN / INDIAN x OTHER</span></span></span>
+<span class="r-in"><span><span class="va">ancPed</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"example_ancestry_pedigree.csv"</span>,</span></span>
+<span class="r-in"><span>      package <span class="op">=</span> <span class="st">"nprcgenekeepr"</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span>,</span></span>
+<span class="r-in"><span>    stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, na.strings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"NA"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>,</span></span>
+<span class="r-in"><span>  minSireAge <span class="op">=</span> <span class="fl">2</span>, minDamAge <span class="op">=</span> <span class="fl">2</span>, reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  reportErrors <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ancPed</span><span class="op">$</span><span class="va">gen</span> <span class="op">&lt;-</span> <span class="fu"><a href="findGeneration.html">findGeneration</a></span><span class="op">(</span><span class="va">ancPed</span><span class="op">$</span><span class="va">id</span>, <span class="va">ancPed</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ancPed</span><span class="op">$</span><span class="va">dam</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ancKmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="kinship.html">kinship</a></span><span class="op">(</span><span class="va">ancPed</span><span class="op">$</span><span class="va">id</span>, <span class="va">ancPed</span><span class="op">$</span><span class="va">sire</span>, <span class="va">ancPed</span><span class="op">$</span><span class="va">dam</span>, <span class="va">ancPed</span><span class="op">$</span><span class="va">gen</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rules</span> <span class="op">&lt;-</span> <span class="fu"><a href="checkAncestryRules.html">checkAncestryRules</a></span><span class="op">(</span><span class="fu"><a href="readAncestryRules.html">readAncestryRules</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"example_ancestry_rules.csv"</span>,</span></span>
+<span class="r-in"><span>    package <span class="op">=</span> <span class="st">"nprcgenekeepr"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ancResult</span> <span class="op">&lt;-</span> <span class="fu">reportMatePairs</span><span class="op">(</span><span class="va">ancPed</span>, <span class="va">ancKmat</span>, ancestryRules <span class="op">=</span> <span class="va">rules</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ancResult</span><span class="op">$</span><span class="va">excluded</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sireId damId        reason   ancestryRule</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     C1    I2 ancestry rule CHINESE-INDIAN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     I1    C2 ancestry rule CHINESE-INDIAN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     A1    C2 ancestry rule CHINESE-INDIAN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     I1    H1 ancestry rule  HYBRID-INDIAN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     A1    H1 ancestry rule  HYBRID-INDIAN</span>
+<span class="r-in"><span><span class="va">ancResult</span><span class="op">$</span><span class="va">ancestryCoverage</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ancestry n covered</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  CHINESE 2    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   INDIAN 3    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   HYBRID 1    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 JAPANESE 2   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    OTHER 1    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  UNKNOWN 1    TRUE</span>
+<span class="r-in"><span><span class="co"># overriding one block rule keeps its pairs listed, marked "overridden"</span></span></span>
+<span class="r-in"><span><span class="va">overridden</span> <span class="op">&lt;-</span> <span class="fu">reportMatePairs</span><span class="op">(</span><span class="va">ancPed</span>, <span class="va">ancKmat</span>,</span></span>
+<span class="r-in"><span>  ancestryRules <span class="op">=</span> <span class="va">rules</span>,</span></span>
+<span class="r-in"><span>  overriddenRules <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>ancestry1 <span class="op">=</span> <span class="st">"CHINESE"</span>, ancestry2 <span class="op">=</span> <span class="st">"INDIAN"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">overridden</span><span class="op">$</span><span class="va">pairs</span><span class="op">[</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">overridden</span><span class="op">$</span><span class="va">pairs</span><span class="op">$</span><span class="va">ancestryStatus</span> <span class="op">==</span> <span class="st">"overridden"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sireId"</span>, <span class="st">"damId"</span>, <span class="st">"ancestryRule"</span>, <span class="st">"ancestryStatus"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">]</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sireId damId   ancestryRule ancestryStatus</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     C1    I2 CHINESE-INDIAN     overridden</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     I1    C2 CHINESE-INDIAN     overridden</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     A1    C2 CHINESE-INDIAN     overridden</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
