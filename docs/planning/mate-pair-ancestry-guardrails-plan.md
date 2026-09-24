@@ -404,6 +404,35 @@ explicit issue #169 close** (v1 complete; any further follow-up is a new item).
 `devtools::check()`. This surface cannot enforce LabKey-connected behavior or non-headless
 browser quirks; neither is claimed.
 
+**Outcome (S776, Slice 3a shipped — RED `09b85a5a`, GREEN `f65410f2`/`15addc42`, REFACTOR
+`ae41927b`; 3b remains):** the owner split Slice 3 as the plan's own estimate suggested — **3a =
+the module layer (gate + manifest + Ancestry tab, `testServer`-verified), 3b = committed e2e +
+article + the #169 close** — and ratified the D8a gate wording **verbatim as proposed**
+(`.matePairAncestryOverrideWarningText`, `R/ancestryOverrides.R`). As built: the override
+controls (select of not-yet-overridden BLOCK rules, "Override rule...", status, "Clear
+overrides") sit inside the collapsed Ancestry Guardrails panel after the explainer; the modal is
+the #150/#168 mold (verbatim text, required reason, Cancel/Confirm; a blank reason is an error
+notification and the gate stays open); overrides are per tab, reset when the rules reaching the
+module change, and stored trimmed; the status reads "N block rule(s) overridden on this tab
+this session: ..." (D9's "must say this tab"). The click stores `list(rules, overrides)` in a
+sibling `ancestryRun` next to `matchResults` (rules `NULL`, hence no manifest, when the
+guardrails were inactive) and passes the ORIGINAL rules plus `overriddenRules` to the kernel —
+zero-row overrides when inactive, since the kernel stops on overrides without rules. The
+manifest `report` adapter (D8b) is `.matePairAncestryReport(result)`: `violations$rule` =
+every ancestry-matched pair's rule key from `pairs` UNION `excluded`, `coverage` = the
+result's `ancestryCoverage`. The Ancestry tab holds the guidance / coverage table / "Download
+Audit Manifest" (`MatePairAncestryAuditManifest.csv`); guidance is `NULL` once a rules-run is
+displayed, else the status line's own no-rules / inactive text, else "Find eligible pairs with
+ancestry rules loaded to see the coverage summary and audit manifest here." Testing facts:
+a `testServer()` gate is observable only by mocking the package's imported `showModal` /
+`showNotification` / `removeModal` (Learning 788). **The live path differs from the fixture
+numbers above (Learning 787):** through the real upload a blank ancestry cell is OTHER, not
+UNKNOWN (the Input module reads without `na.strings`), so the live counts are INDIAN-UNKNOWN 0 /
+INDIAN-OTHER 3 and census OTHER 2 / UNKNOWN 0 — **3b's e2e pins those** (all block/eligible/
+excluded counts, 20/5 -> 23/2, are unchanged). Known edges left: a valid zero-rule table makes
+the manifest builder stop (Breeding Groups identical); the select-choices builder and modal
+are duplicated between the two modules (the REFACTOR shared only the two pure helpers).
+
 ---
 
 ## 6. Impact analysis

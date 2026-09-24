@@ -5,48 +5,64 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Mate-pair ancestry guardrails — Slice 3 of 3 of GitHub issue #169 (Slices 1-2
-      SHIPPED S774/S775, 2026-09-23; design ratified S773; READY — pickup is Slice 3,
-      Effort L: override gate + audit manifest + e2e + documentation)** -- extends the
-      shipped #168 rules machinery to the Mate Pair Analysis tab. Full design and slice
-      plan: `docs/planning/mate-pair-ancestry-guardrails-plan.md` (D1-D10); its §5
-      "Outcome (S774)" (Slice 1) and "Outcome (S775)" (Slice 2) paragraphs record what
-      was fixed. **Shipped:** the script kernel (`reportMatePairs(ancestryRules,
-      overriddenRules)`), and the tab: rules loaded on Breeding Groups drive Mate Pair
-      Analysis (blocked pairs on Excluded with the rule, flags as columns in Eligible
-      Pairs and the CSV, a live status line, a collapsed "Ancestry Guardrails" toggle
-      whose panel holds an explainer, the zero-pairs alert naming ancestry exclusions,
-      the shared `.ancestryStatusLine()`); the module snapshots at the click. **Pickup =
-      Slice 3** (plan §5 Slice 3): Pre-RED gate first — sized L, so offer the owner a
-      3a/3b split there (gate + manifest + Ancestry tab; then e2e + article), the #168
-      Slice 4a/4b precedent (my estimate, not a measurement). (1) The per-rule override select
-      + button + confirm-gate modal with a REQUIRED reason go INSIDE the existing
-      collapsed panel (`R/modMatePair.R`); overrides are per surface, kept in the module,
-      cleared when the rules change (`.checkAncestryOverrides()` /
-      `.effectiveAncestryRules()` primitives, unchanged). (2) `matchResults` holds ONLY
-      the kernel result today — the manifest also needs the run's rules and overrides,
-      so extend what the click stores (never read live reactives at download time,
-      D8c/L780). Pass `overriddenRules` to `reportMatePairs()`. (3) The new "Ancestry"
-      tab (coverage from the result's `ancestryCoverage` + manifest `downloadHandler`
-      via `getDatedFilename()`), the sibling gate-wording constant
-      `.matePairAncestryOverrideWarningText`, and the manifest `report` adapter built
-      from `pairs$ancestryRule` + `excluded$ancestryRule` (plan D8b) --
-      **the owner ratifies the gate wording (D8a) at the RED gate**. (4) A NEW committed
-      e2e `tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R` (in the CI group
-      by file-name prefix); the e2e app runs the INSTALLED package, so `R CMD INSTALL`
-      to a scratch library first (S775 mold: `.libPaths(c(scratchLib, .libPaths()))` +
-      `NPRC_RUN_E2E=true`; a scratch run already confirmed 20 eligible / 5 excluded and
-      the live cross-tab status). (5) Docs: `vignettes/articles/colony-manager-guide.qmd`
-      (ancestry section `:523-566`, Mate Pair `:560`) — the tutorial/article checklist
-      is owed here, not deferred; the ONE `NEWS.Rmd` entry is REVISED (Learning 785),
-      never appended. Issue #169 closes at Slice 3 close-out and this item is removed in
-      that same commit. **Owed, deferred (checklist):** a `vignettes/a2interactive.Rmd`
-      demonstration for the new `reportMatePairs()` arguments, in the dedicated
-      documentation pass. **Surfaced, not fixed (plan §7 dragon 8):** the Excluded tab
-      has no export today — worth its own item only if the owner wants one. **Known,
-      accepted:** an unhandled click-time error ends the Shiny session (Learning 786);
-      Breeding Groups validates the table before it can reach this module, so the app
-      path cannot hit it.
+- [ ] **Mate-pair ancestry guardrails -- Slice 3b of 3 (final) of GitHub issue #169
+      (Slices 1, 2, 3a SHIPPED S774/S775/S776; design ratified S773; READY, Effort M:
+      committed e2e + documentation + issue close)** -- extends the shipped #168 rules
+      machinery to the Mate Pair Analysis tab. Design and slice plan:
+      `docs/planning/mate-pair-ancestry-guardrails-plan.md` (D1-D10, §5 Outcomes for
+      Slices 1-2). **Shipped (all local, unpushed):** the script kernel
+      (`reportMatePairs(ancestryRules, overriddenRules)`); the tab applying the rules
+      loaded on Breeding Groups (blocked pairs on Excluded with the rule, flags as
+      columns in Eligible Pairs and the CSV, live status, collapsed "Ancestry
+      Guardrails" panel); and, S776, the override gate (per-rule select + confirm modal
+      with a REQUIRED reason, per tab, cleared when the rules change, applied at the next
+      click; the owner ratified the gate text as the plan's D8a proposal, verbatim), the
+      new **Ancestry** tab (coverage table + Download Audit Manifest, dated
+      `MatePairAncestryAuditManifest.csv`), and the per-run snapshot (`ancestryRun`
+      beside `matchResults`; never live state at download time). Unit-level coverage:
+      `tests/testthat/test_modMatePair_ancestryOverrides.R` (14 blocks) and
+      `test_matePairAncestryManifest.R` (8); one scratch-installed shinytest2 smoke
+      (not committed) passed with 0 console errors. **Pickup = 3b** (plan §5 Slice 3):
+      (1) a NEW committed e2e `tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R`
+      (the `^e2e-mate-pair-analysis-module` CI group by name; the app runs the INSTALLED
+      package, so `R CMD INSTALL --library=<scratch>` + `.libPaths()` + `NPRC_RUN_E2E=true`
+      first). **Pin the LIVE-path numbers, not the `testServer` ones** (measured S776
+      through the real app, upload -> Breeding Groups rules -> Mate Pair): status "2
+      block, 2 flag rule(s); 2 animal(s) uncovered."; run 1 = 20 eligible / 5 excluded;
+      coverage CHINESE 2, INDIAN 3, HYBRID 1, JAPANESE 2 (uncovered), OTHER 2, UNKNOWN 0;
+      manifest 1 nPairs INDIAN-CHINESE 3, INDIAN-HYBRID 2, INDIAN-UNKNOWN **0**,
+      INDIAN-OTHER **3** (the blank ancestry cell arrives as OTHER -- see the
+      blank-ancestry item below); override CHINESE-INDIAN with a reason -> re-run = 23
+      eligible / 2 excluded, 3 rows `overridden` (CSV 23 x 11), manifest 2 overridden
+      row carrying the reason, summary "1 of 4 rules overridden for this run.", every
+      row's `warningText` = `nprcgenekeepr:::.matePairAncestryOverrideWarningText`; a
+      blank reason shows the notification "An override needs a non-empty reason." and
+      the gate stays open; the status line "1 block rule(s) overridden on this tab this
+      session: CHINESE-INDIAN." **Driver traps (each cost a rerun):** scope the tab
+      selector to `#matePair-moduleContainer a[data-value="Ancestry"]` (Breeding Groups
+      has an Ancestry tab too); DT renders lazily, so click Eligible Pairs / Excluded
+      before reading `.dataTables_info`; selectize keeps only the selected `<option>`
+      (read `$('#matePair-overrideRule')[0].selectize.options`);
+      `app$get_screenshot(file)` errors if the file exists. **Strict-TDD wrinkle for
+      the Pre-RED gate:** the e2e characterizes behavior that already exists, so it
+      passes at once and cannot be RED -- offer the owner a mutation-proof RED (each
+      assertion shown to fail against a deliberately broken scratch build) or an
+      explicit "verification slice" ruling. (2) Docs:
+      `vignettes/articles/colony-manager-guide.qmd` (ancestry section `:523-566`, Mate
+      Pair `:560`) describing the override step, the Ancestry tab and the manifest --
+      owed here, not deferred. The ONE `NEWS.Rmd` entry (`:429`) is already at release
+      state; touch it only if the e2e reveals a wording gap. (3) Close issue #169 in the
+      same session (`gh issue close --reason completed`, citing `CHANGELOG.md`) and
+      REMOVE this item in that commit. **Owed, deferred (checklist):** a
+      `vignettes/a2interactive.Rmd` demonstration for the new `reportMatePairs()`
+      arguments, in the dedicated documentation pass. **Surfaced, not fixed:** (a) a
+      valid ZERO-rule table makes `.buildAncestryOverrideManifest()` stop, so Download
+      Audit Manifest errors for it -- Breeding Groups has the identical edge; (b) the
+      Excluded tab has no export (plan §7 dragon 8); (c) the select-choices builder and
+      the confirm-gate modal are duplicated between the two modules (S776's REFACTOR
+      shared only `.emptyAncestryOverrides()` and `.overridableAncestryRules()`).
+      **Known, accepted:** an unhandled click-time error ends the Shiny session
+      (Learning 786).
 
 - [ ] **`NEWS.Rmd` release-state sweep — rewrite entries that describe in-progress
       milestones (owner-directed S774, 2026-09-23; READY, Effort M)** -- the owner
@@ -63,6 +79,22 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       re-rendered S716, so it lags `NEWS.Rmd` and needs a render at release. Open,
       the owner's call: adding the rule to `CLAUDE.md`'s NEWS checklist (its
       "matching existing style" wording conflicts with it).
+
+- [ ] **Blank ancestry cells become OTHER, not UNKNOWN, on the Shiny upload path
+      (found S776, 2026-09-24, DECISION NEEDED, Effort S-M)** -- the Input module reads
+      CSV/text uploads with no `na.strings` (`R/modInput.R:324-331`), while the script
+      path `getPedigree()` reads with `na.strings = c("", "NA")` (`R/getPedigree.R:34`).
+      Measured: `qcStudbook()` maps a true `NA` ancestry to UNKNOWN but an empty string
+      to OTHER, and the live app's Mate Pair coverage table shows the fixture's blank
+      ancestry animal as OTHER (OTHER 2, UNKNOWN 0) where a script user gets UNKNOWN.
+      Consequences: an UNKNOWN-vs-OTHER rule (the S769 article tells centers to name
+      both) matches different animals depending on how the file was loaded, and
+      `vignettes/articles/colony-manager-guide.qmd:552` ("a truly blank entry becomes
+      UNKNOWN") is wrong for app uploads. Decision for the owner: align the app read
+      with `getPedigree()` (a behavior change for EVERY blank character cell in an
+      upload -- audit QC effects on blank sire/dam/other columns first; not measured
+      yet) versus documenting the difference. Needs its own investigation and Pre-RED
+      gate; not part of #169.
 
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own
