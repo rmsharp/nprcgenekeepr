@@ -46,6 +46,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #169] S774 GREEN 2/2: NEWS.Rmd entry for the `reportMatePairs()` ancestry arguments
+- One `NEWS.Rmd` entry under Mate Pair Analysis, plain language for a colony
+  manager (S628 criterion). **Owner correction mid-session:** the first draft
+  read "first step ... a later step of this work"; the owner ruled that NEWS
+  entries state the release-time state relative to the prior release (2.0.0),
+  never an in-progress milestone, and the entry was rewritten before commit.
+  Saved as a feedback memory. The owner also noted several EXISTING entries
+  (the four #168 ancestry entries, `NEWS.Rmd` ~376-422) share the fault; not
+  touched here — a `BACKLOG.md` sweep item is recorded at close-out. `NEWS.md`
+  not re-rendered (last rendered S716; the #168 slices set the same precedent).
+- **Full verification on this tree (measured):** clean regression read,
+  unfiltered, `NOT_CRAN=true` + `load_all()` first: 348 files, 8,007
+  expectations, **0 failed / 0 error** (186 skipped = opt-in/`skip_on_cran`
+  blocks; 6 warnings, none from the new file). `devtools::check()`: **0 errors /
+  0 warnings / 0 notes**, and `document = TRUE` produced no churn.
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-23 · [issue #169] S774 GREEN 1/2: `reportMatePairs(ancestryRules, overriddenRules)` kernel shipped (`eb104544`)
+- `R/reportMatePairs.R` (+ regenerated `man/reportMatePairs.Rd`): two optional
+  arguments; `block` moves a pair to `excluded` (reason `"ancestry rule"`),
+  `flag` and overridden-block pairs stay in `pairs` annotated
+  (`ancestryRule`/`ancestrySeverity`/`ancestryStatus`, appended after `damGu`),
+  new `ancestryCoverage` element. Screen runs LAST (D5), before marker/GV
+  enrichment, on a vectorised matcher (one `match()` over all pairs); rules and
+  overrides validated once up front so bad arguments fail identically on every
+  path incl. the two early returns; shape depends on the argument, never the
+  data; `NULL` rules take the untouched path (`identical()`). Internal helpers
+  `@noRd` in the same file; `ancestryOverrides.R` and
+  `reportAncestryViolations.R` NOT modified (the coverage helper duplicates the
+  group reporter's ~12 lines, guarded by an `identical()` parity test).
+- **Measured:** new file 18 blocks / 153 expectations, 0 failed/0 error/0
+  warnings; siblings unchanged (`reportMatePairs` 42, `modMatePair` 44,
+  `reportAncestryViolations` 54, `ancestryOverrides` 103); lint clean; 102,400
+  pairs in 0.77 s with rules vs 0.89 s without (loop alternative ~49 s).
+- **Declared RED correction:** the scaling block's independent oracle used
+  `table(male, female)` (a position-wise cross-tab, 320 observations) instead
+  of the product of marginal counts over the 102,400 pairs; fixed in this
+  commit (hand-verified 54 x 53 x 2 = 5,724 block, likewise flag). Assertion
+  intent unchanged; invisible in RED because the block errored on the missing
+  argument.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-23 · [issue #169] S774 RED: Slice 1 failing tests committed (`reportMatePairs()` ancestry kernel)
 - New `tests/testthat/test_reportMatePairsAncestry.R` (tests only; zero
   `R/`/`man/`/`NAMESPACE`/`NEWS` changes): 18 blocks on the shipped
