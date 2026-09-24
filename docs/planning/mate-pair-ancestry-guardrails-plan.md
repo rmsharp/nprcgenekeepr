@@ -433,6 +433,26 @@ excluded counts, 20/5 -> 23/2, are unchanged). Known edges left: a valid zero-ru
 the manifest builder stop (Breeding Groups identical); the select-choices builder and modal
 are duplicated between the two modules (the REFACTOR shared only the two pure helpers).
 
+**Outcome (S777, Slice 3b shipped — RED `ad5dd344`, GREEN `8526e56b`, REFACTOR `2b59fde6`;
+issue #169 complete):** the committed live e2e `tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R`
+(one block, 38 expectations in 13 tagged groups A1-A13) drives this section's done-when list end
+to end and pins the LIVE numbers 3a measured (20 / 5 -> override CHINESE-INDIAN -> 23 / 2, a
+23 x 11 CSV with 3 `overridden` rows, manifest pair counts 3-2-0-3, census, the verbatim Mate
+Pair gate wording, a blank reason refused, the displayed run's manifest not rewritten by a late
+override, zero console errors). It passes on the real tree (63/63 with the two sibling ancestry
+e2e files) and is in the `^e2e-mate-pair-analysis-module` CI group by name. Because it
+characterizes behavior that already existed it could not start RED: the owner chose a
+**mutation-proof RED** at the Pre-RED gate — 20 planted seams in 5 throwaway trees, each
+caught for its intended cause (unproved by an independent seam: A13 and three manifest shape
+checks). The article passage "Ancestry guardrails on this tab" in `colony-manager-guide.qmd`
+documents the override step, the Ancestry tab and the manifest. The five generic helpers now
+live in `helper-shinytest2.R` (`poll_js()` and friends). **Testing fact (Learning 789):**
+shinytest2 0.5.1 `load_all()`s the CHECKOUT from the working directory in the app subprocess, so
+scratch-installed mutants are never loaded — a mutant must be a whole tree containing its own
+`tests/testthat`. Follow-ups (BACKLOG residue item, none started): the `a2interactive`
+demonstration, the zero-rule manifest edge, an Excluded-tab export, and the duplicated gate
+code.
+
 ---
 
 ## 6. Impact analysis

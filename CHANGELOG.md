@@ -57,6 +57,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   `AskUserQuestion`-gated phases. Stub + pending receipt ride this commit; close-out
   records the rest. Issue #169 closes at close-out.
 
+### 2026-09-24 · [issue #169] S777 records 1/2: plan Outcome, BACKLOG residue item, Learning 789
+- Plan `docs/planning/mate-pair-ancestry-guardrails-plan.md`: **Outcome (S777)** paragraph
+  after Slice 3's S776 one. `BACKLOG.md`: the Slice 3b block REMOVED (completed; record in
+  the entries below) and replaced by one residue item carrying what #169 left (the
+  `a2interactive` demonstration, the zero-rule manifest edge, an Excluded-tab export, the
+  duplicated gate code); the blank-ancestry item now names the e2e pins that move with it.
+  `PROJECT_LEARNINGS.md`: **Learning 789** (shinytest2 0.5.1 `load_all()`s the checkout from
+  the working directory, so the "e2e runs the INSTALLED package" gotcha is false here and a
+  scratch-installed mutant is never loaded; the mutation-proof-RED method). Measured at this
+  commit: lint 0 findings; `CHANGELOG.md` 65,465 B before these records (71 B under the
+  65,536 B trim trigger, so it crosses now) and `HANDOFFS.md` 83,216 B: both archive passes
+  are owed as their own deliverable, reported not repaired.
+
 ### 2026-09-24 · [issue #169] S777 REFACTOR: hoist the e2e's five generic helpers into `helper-shinytest2.R` *(no behavior change)*
 - **Commit:** REFACTOR (this commit) — owner-chosen at the GREEN to REFACTOR gate (my
   recommendation was to skip it; the owner said "Yes, proceed to REFACTOR"). The five
