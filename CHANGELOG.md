@@ -46,6 +46,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [ad hoc] Removed the stale `nprcgenekeepr_notes.txt` CRAN-readiness scratch note
+- **Change:** the 61-line "CRAN Submission Readiness Report" (a pasted checklist, unmodified since
+  it entered history in `089e5213`) is no longer in the repo root. It was already `.Rbuildignore`d,
+  so the built package is unaffected. Recover it with
+  `git show 089e5213:nprcgenekeepr_notes.txt`. **Left as-is:** the now-dead `.Rbuildignore` line 86
+  (`^nprcgenekeepr_notes\.txt$`) and five identical untracked, git-ignored copies under
+  `.claude/worktrees/wf_*/`, none of which the owner named. The commit is **local** (not pushed).
+- **Commit/PR:** `c182511b`
+- **Session:** none -- owner-directed, outside a numbered session (follows S778) · **Verified:** the
+  file was inspected first (tracked, unmodified vs `HEAD`, on `origin/master`); after the commit
+  `git show 089e5213:nprcgenekeepr_notes.txt` still returns all 61 lines. **Not run:** the test
+  suite and `devtools::check()` -- no package code changed and the file was build-ignored.
+
+### 2026-09-24 · [ad hoc] Pushed `bec2a976..af4f1eca` to `origin/master`; CI green on all four push workflows
+- **Action:** `git push origin master` -- 3 commits: `94974437` (S778 close-out records, which
+  S778's own records said would stay local), `23f20f3a` (`.Rprofile` renv startup check) and
+  `af4f1eca` (the ledger entry for `23f20f3a`). Owner-gated: the owner chose "Record in ledger,
+  then push", then confirmed a second time after being told the outgoing set was 3 commits -- the
+  choice's description had wrongly said origin was at `94974437` and 1 commit ahead. **Before the
+  push:** `git fetch` showed origin at `bec2a976`, an ancestor of HEAD (fast-forward); the outgoing
+  diff was inspected -- 4 files (`.Rprofile`, `CHANGELOG.md`, `HANDOFFS.md`, `SESSION_NOTES.md`),
+  +171/-12, no secret-named files, no credential-shaped strings in added lines. **After:** local
+  and `origin/master` both at `af4f1eca`.
+- **CI (by exact SHA `af4f1eca`, push events):** `lint.yaml` run 36060621202, `pkgdown.yaml`
+  36060621223, `R-CMD-check.yaml` 36060621264 and `test-coverage.yaml` 36060621306 all
+  `completed success`.
+- **Session:** none -- owner-directed, outside a numbered session (follows S778) · **Verified:**
+  the CI results above; the local suite was not run (`.Rprofile` is build-ignored; the other
+  changes are docs-only records).
+- **Not pushed:** the commits made after this push (`c182511b` and the commit carrying this entry)
+  are local; pushing them would need an entry of its own.
+
 ### 2026-09-24 · [ad hoc] `.Rprofile`: renv's plain startup sync check replaced by `renv::status(dev = TRUE)`
 - **Change:** opening R in the package root no longer prints a false "The project is out-of-sync"
   message. Under `snapshot.type: "explicit"`, renv's automatic startup check (a plain
