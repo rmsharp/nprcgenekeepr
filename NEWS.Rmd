@@ -433,12 +433,17 @@ knitr::opts_chunk$set(echo = TRUE)
   names stays in Eligible Pairs with its rule shown, in the exported file
   as well. A status line on the tab says whether rules are active and how
   many animals no rule covers, and the "Ancestry Guardrails" section
-  explains what the rules do there. In scripts, `reportMatePairs()` takes
-  the same rules through the new optional `ancestryRules` and
-  `overriddenRules` arguments; a rule you override keeps its pairs listed,
-  marked "overridden". The result also shows how many animals each
-  ancestry group holds and which ones no rule reaches. Without rules, or
-  when the pedigree has no ancestry column, the report and the tab are
+  explains what the rules do there. When a block rule should not apply to
+  a particular run, choose **Override rule...** in that section and give a
+  written reason: the rule's pairs then stay in Eligible Pairs, marked
+  "overridden", instead of moving to Excluded. The new **Ancestry** tab
+  shows how many animals each ancestry group holds and which ones no rule
+  reaches, and **Download Audit Manifest** saves the rules in effect, any
+  overrides with their reasons, pair counts, and the confirmation warning
+  text, so the decision trail leaves the tool with the results. In
+  scripts, `reportMatePairs()` takes the same rules through the new
+  optional `ancestryRules` and `overriddenRules` arguments. Without rules,
+  or when the pedigree has no ancestry column, the report and the tab are
   exactly as before.
 
 ## De-Identified Export

@@ -46,6 +46,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [issue #169] S776 GREEN: Slice 3a implemented (Mate Pair override gate + Ancestry tab + audit manifest)
+- **GREEN 1/2 `f65410f2` (4 files):** `R/ancestryOverrides.R` gains
+  `.matePairAncestryOverrideWarningText` (the owner-ratified wording, verbatim)
+  and `.matePairAncestryReport()` (violations = the rule keys of every
+  ancestry-matched pair from `pairs` UNION `excluded`; coverage passed through;
+  `stop()` on a non-result or a result made without rules). `R/modMatePair.R`
+  gains the per-rule override select + confirm-gate modal (required reason;
+  blank refused with an error notification) inside the collapsed Ancestry
+  Guardrails panel; per-tab `ancestryOverridesRV` reset when the rules reaching
+  the module change; `overridableRules()` and the select-sync observer; a
+  sibling `ancestryRun` snapshot (ORIGINAL rules + overrides) set beside
+  `matchResults` at the click, with `overriddenRules` passed to the kernel
+  (zero-row when the guardrails are inactive); `ancestryManifest()`,
+  `ancestryTabGuidanceText()`; and the new Ancestry tab (guidance, coverage
+  table, Download Audit Manifest as a dated `MatePairAncestryAuditManifest.csv`).
+  `man/modMatePairUI.Rd` and `man/modMatePairServer.Rd` regenerated
+  (`NAMESPACE` unchanged: every import already existed).
+- **GREEN 2/2 (this commit):** `NEWS.Rmd` — the ONE #169 entry revised in place
+  to the release-state description (Learning 785), now covering the override
+  step, the Ancestry tab and the manifest download in plain language.
+- All 22 RED blocks pass (187 expectations) with no test edits during GREEN;
+  the sibling files that share the module or the primitives stay green; lint 0.
+  Full-suite and `check()` numbers are recorded at close-out. The committed
+  shinytest2 e2e, the colony-manager-guide article and the explicit #169 close
+  are Slice 3b.
+
 ### 2026-09-24 · [issue #169] S776 RED: Slice 3a failing tests committed (Mate Pair override gate + Ancestry tab + audit manifest)
 - Two new files, tests only — zero `R/`/`man/`/`NAMESPACE`/`NEWS` changes.
   `tests/testthat/test_matePairAncestryManifest.R` (8 blocks, not CRAN-skipped):
