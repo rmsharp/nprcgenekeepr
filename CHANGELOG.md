@@ -57,6 +57,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   `AskUserQuestion`-gated phases. Stub + pending receipt ride this commit; close-out
   records the rest. Issue #169 closes at close-out.
 
+### 2026-09-24 · [issue #169] S777 addendum GREEN + REFACTOR: verification, and one local helper in the e2e *(no behavior change)*
+- **Addendum GREEN (no commit, no product code):** the two new groups pass on the shipped
+  build — the 3 ancestry e2e files on the real tree 67/67 (17 + 42 + 8, 0 skipped), the two
+  static guards 4/3, clean regression read 352 files / 8,293 expectations 0 failed / 0 error,
+  `devtools::check()` 0 / 0 / 0, ratchet **1/1 at `98264764`** (3,565,015 B, results
+  `e89582e97c3a`, manifest `aa983075d6a2`). Owner gate: RED to GREEN "Yes".
+- **REFACTOR (this commit):** owner-chosen again at the GREEN to REFACTOR gate ("Yes, proceed
+  to REFACTOR", against my recommendation to skip). The two table-row serializers (A4b's
+  Excluded rows, A5's coverage table) were the one real duplication; they now share ONE
+  file-local `mpaTableRowsJs(tableSelector, dropFirstCell)` in the e2e file. Proved
+  behavior-neutral first at the string level (the generated JS is byte-identical to both
+  replaced expressions), then re-verified: e2e trio 67/67; the B2 and B6 mutant trees re-run
+  fail the same 9 and 2 expectations as before (B7/B8 exercise only A4c, whose code did not
+  change); static guards 4/3; suite 8,293 / 0 / 0; `check()` 0 / 0 / 0.
+
 ### 2026-09-24 · [issue #169] S777 RED addendum: two done-when clauses the e2e missed (tests only)
 - **Commit:** RED addendum (this commit) — `test-e2e-mate-pair-analysis-module-ancestry.R`
   only. Found at close-out, before closing #169: the plan's done-when says "5 blocked pairs on

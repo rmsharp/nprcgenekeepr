@@ -40,6 +40,17 @@ library(testthat)
 ## The manifest's rule rows keyed the way the rules file writes them.
 mpaRuleKeys <- function(m) paste(m$ancestry1, m$ancestry2, sep = "-")
 
+## JS that serializes a rendered table's body rows as "cell|cell;cell|cell"
+## (`dropFirstCell` drops DT's leading row-number column).
+mpaTableRowsJs <- function(tableSelector, dropFirstCell = FALSE) {
+  sprintf(
+    paste0("Array.from(document.querySelectorAll('%s tbody tr')).map(",
+           "r => Array.from(r.cells)%s.map(c => c.textContent.trim())",
+           ".join('|')).join(';')"),
+    tableSelector, if (dropFirstCell) ".slice(1)" else ""
+  )
+}
+
 test_that(
   "E2E: Mate Pair ancestry rules, override gate, Ancestry tab and audit
    manifest work end to end (issue #169 Slice 3b)", {
@@ -176,13 +187,9 @@ test_that(
   ## A4b: each of the 5 excluded pairs carries the reason and the rule that
   ## blocked it (row number dropped; the table is client-side, so every row is
   ## in the DOM).
-  excludedRowsJs <- paste0(
-    "Array.from(document.querySelectorAll(",
-    "'#matePair-excludedTable table tbody tr')).map(",
-    "r => Array.from(r.cells).slice(1).map(c => c.textContent.trim())",
-    ".join('|')).join(';')"
+  excludedRows <- poll_js(
+    app, mpaTableRowsJs("#matePair-excludedTable table", dropFirstCell = TRUE)
   )
-  excludedRows <- poll_js(app, excludedRowsJs)
   expect_identical(
     sort(strsplit(excludedRows, ";", fixed = TRUE)[[1L]]),
     sort(c("C1|I2|ancestry rule|CHINESE-INDIAN",
@@ -197,13 +204,9 @@ test_that(
   if (!click_element_safe(app, tabSel("Ancestry"))) {
     skip("Could not switch to the Ancestry tab")
   }
-  coverageJs <- paste0(
-    "Array.from(document.querySelectorAll(",
-    "'#matePair-ancestryCoverageTable table tbody tr')).map(",
-    "r => Array.from(r.cells).map(c => c.textContent.trim()).join('|')",
-    ").join(';')"
+  coverage <- poll_js(
+    app, mpaTableRowsJs("#matePair-ancestryCoverageTable table")
   )
-  coverage <- poll_js(app, coverageJs)
   expect_identical(
     coverage,
     paste0("CHINESE|2|TRUE;INDIAN|3|TRUE;HYBRID|1|TRUE;",
