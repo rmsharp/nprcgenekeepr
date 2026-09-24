@@ -46,6 +46,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #169] S774 RED: Slice 1 failing tests committed (`reportMatePairs()` ancestry kernel)
+- New `tests/testthat/test_reportMatePairsAncestry.R` (tests only; zero
+  `R/`/`man/`/`NAMESPACE`/`NEWS` changes): 18 blocks on the shipped
+  `example_ancestry_*` fixtures pinning plan §5 Slice 1 done-when 1-7 — NULL-rules
+  `identical()` (D4-1); additivity/conservation with `minAge` + `exclude`
+  active (D4-2/3, D5); hand-derived counts 25 → 20/5 with the 5 block and 3
+  flag pairs named by id; overrides (either orientation, any case, optional
+  `reason` ignored) 23/2; zero-rule and flag-only tables; self-pair rule;
+  `ancestryCoverage` (census 2/3/1/2/1/1, equal to the group reporter's) and its
+  universe; argument-determined shape on all three empty paths (D4-4); stop
+  paths with pinned messages; the validator warning fires exactly once;
+  case/whitespace/factor/NA level normalisation; a 102,400-pair scaling guard
+  (< 10 s, independent oracle). Owner-ratified at two gates: the
+  `overriddenRules` contract ("sibling shape, reject no-ops": ancestry1/2,
+  optional ignored `reason`, error on an unknown/flag/duplicate override or
+  overrides without rules) and PRE-RED→RED.
+- **RED audit (measured):** 1 block passes (the fixture-premise
+  characterization), 17 fail; all 26 failing expectations cite the missing
+  arguments (`unused argument`) or the not-yet-implemented messages. Two test
+  defects were caught and fixed BEFORE this commit: a helper hard-coding
+  `minAge` (an unrelated collision error) and a stop-path regex (`"ancestry"`)
+  that matched R's own `unused argument (ancestryRules = ...)` text and passed
+  for the wrong reason — every stop-path phrase is now specific. The hand-derived
+  expectations were cross-checked against an independent base-R computation
+  (scratchpad); sibling corpus unchanged and green (`test_reportMatePairs.R` 42,
+  `test_modMatePair.R` 44, `test_reportAncestryViolations.R` 54,
+  `test_ancestryOverrides.R` 103 expectations, 0 failures). Lint clean.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-23 · [issue #169] S774 claim: Slice 1 — `reportMatePairs()` ancestry kernel *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (S773 next-steps (A),
   `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger frontiers
