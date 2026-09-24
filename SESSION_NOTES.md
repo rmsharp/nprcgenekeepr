@@ -66,19 +66,133 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 776 Handoff Evaluation (by Session 777)
+**Score: 9/10.** **What helped:** every Orient measurement held exactly -- 0
+undocumented on both frontiers (`a6ee8c0d`), 30 unpushed (`origin/master` =
+`79206add`), the ratchet citation byte-identical to the results file (compared
+BEFORE any run), the `BACKLOG.md` pins (`:8`, `:67`, `:83`, `:99`, `:119`) and every
+key-file line ref in `modMatePair.R` / `ancestryOverrides.R`. The Slice 3b pickup was
+the strongest yet: the LIVE numbers (20/5, 23/2, the coverage table, `nPairs` 3/2/0/3,
+the blank-reason notification, the status text) all held on the first baseline run with
+no number corrected; the driver traps (scoped tab selector, lazy DT, selectize options)
+were load-bearing; the strict-TDD wrinkle came framed as a clean two-option Pre-RED
+decision. **Missing:** (1) `wait_for_module_ready()` cannot tell run 2 from run 1 (the
+data-ready flag stays "true"), so the smoke worked by timing luck; (2)
+`set_inputs(matePair-overrideRule)` needs `wait_ = FALSE` (a timeout warning in its
+smoke output); (3) the manifest's census columns were not in the pinned list; (4)
+nothing said the plan's "5 blocked with their rules" and "3 flagged in Eligible"
+done-when clauses were NOT covered by the numbers listed -- found only at close-out
+(Learning 790). **Wrong:** "the e2e app runs the INSTALLED package (`R CMD INSTALL
+--library=<scratch>` ...)" -- false for shinytest2 0.5.1 from a cwd inside the package:
+it `load_all()`s the checkout, so scratch-installed mutants were never loaded (a whole
+inert mutation round; Learning 789). `HANDOFFS.md` read 82,785 B at Orient vs the 82,613
+B stated (+172 B, harmless). **ROI:** high.
+
 ### What Session 777 Did
-**Deliverable:** **Slice 3b of issue #169 -- committed live-app e2e for the Mate Pair
-ancestry override gate + Ancestry tab, the `colony-manager-guide.qmd` documentation, and
-closing #169** (IN PROGRESS). Owner-picked at the Phase 0 priorities gate (S776
-next-steps (A), `BACKLOG.md:8`). Strict TDD; the Pre-RED approach decision (mutation-proof
-RED vs "verification slice" ruling) goes to the owner before RED.
-**Started:** 2026-09-24 02:57 CDT
-**Status:** Session claimed. Work beginning. Orient measured: 0 undocumented on both
-frontiers (`a6ee8c0d` = HEAD), 30 unpushed (`origin/master` = `79206add`), CI all green
-(nightly `shinytest2` 2026-09-24 07:15Z success), ratchet citation = results file
-byte-for-byte (compared BEFORE any run), `HANDOFFS.md` trim trigger FIRES (82,785 B).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest.
+**Deliverable:** **Slice 3b of issue #169 (the final slice) -- the committed live-app e2e
+for the Mate Pair ancestry guardrails, the colony-manager-guide documentation and the
+close of #169 -- DONE; issue #169 CLOSED** (2026-09-24 18:10Z). Owner-picked at the Phase 0
+priorities gate (S776 next-steps (A)); strict TDD, every gate via `AskUserQuestion`.
+**Commits (all UNPUSHED by design; 38 unpushed after close-out):** claim `bf004003`; RED
+`ad5dd344`; GREEN `8526e56b`; REFACTOR `2b59fde6`; records 1/2 `5b2146c6`; RED addendum
+`98264764`; REFACTOR addendum `0f4ede78`; records 2/2 follows. Detail: the `HANDOFFS.md`
+S777 receipt and `CHANGELOG.md`.
+**Owner gates:** Phase 0 pick (Slice 3b); Pre-RED approach "Mutation-proof RED" (a
+characterization e2e cannot start red); PRE-RED->RED; RED->GREEN; GREEN->REFACTOR ("Yes",
+against my recommendation to skip); the gap decision "RED addendum" (add the two missed
+done-when clauses); RED->GREEN; GREEN->REFACTOR again ("Yes").
+**What shipped:** `tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R` (one
+live-app block, 42 expectations in 13 tagged groups A1-A13 incl. A4b/A4c; it pins the
+LIVE-path numbers and is in the `^e2e-mate-pair-analysis-module` CI group by name); five
+generic helpers in `helper-shinytest2.R` (`squash_whitespace`, `text_content_js`,
+`poll_js`, `poll_dt_info`, `download_csv_expect`); the article passage "Ancestry guardrails
+on this tab"; the BACKLOG 3b block replaced by a residue item; Learnings 789 and 790; the
+plan's Outcome (S777). **No product code changed.**
+**Verification (measured):** the unmutated e2e passes on the real tree (3 ancestry files
+**67/67**, 0 skipped); mutation proof: **24 planted seams in 8 throwaway trees**, each
+caught for its intended cause (A13 and three manifest shape checks not independently
+proved); clean regression read (unfiltered, `NOT_CRAN=true`, `load_all()` first) **352
+files / 8,293 expectations, 0 failed / 0 error** after GREEN, both REFACTORs and the
+addendum (identical; S776's 8,292 + the new e2e file's opt-in skip); `devtools::check()`
+**0 / 0 / 0** each time; lint 0; ratchet **1/1 at `0f4ede78`** (3,565,139 B, +5,709 B vs
+S776 = the test file and helpers; results `1fda9fb28cef`, manifest `aa983075d6a2`; citation
+compared at Orient BEFORE the run). The article renders (Quarto 1.7.33, in a scratch copy).
+**Runtime (3E):** the e2e IS the live drive (headless Chrome, the real app, 0 console
+errors); no screenshots were taken this session.
+**Disclosures:** (1) the first mutation round was INERT (baseline and all four mutants
+passed 38/38): shinytest2 0.5.1 `load_all()`s the working-directory checkout, so scratch
+installs were never loaded -- diagnosed with a preflight app, re-aimed at mutant TREES,
+the inert results discarded (Learning 789); (2) the gate promised ~4 mutant builds, the
+final count is 8; (3) at close-out, before closing #169, I found the e2e missed two
+done-when clauses (the Excluded rows' rule; the 3 flagged pairs marked in Eligible) --
+fixed through an owner-gated RED addendum instead of closing over the gap (Learning 790);
+(4) both REFACTORs were owner-chosen against my recommendation; the first touched the
+shared helper every e2e file loads; (5) 6 warning-bearing blocks in the full suite were
+not investigated (unchanged from S776); (6) commits unpushed; the first nightly on pushed
+code will be the new e2e's first CI run (flake risk; report-don't-fix); (7) I removed the
+S774/S775-era records from this file by hand to fit (git holds them; see the end of the
+file) -- the tool-based archive pass is still due; (8) `CHANGELOG.md` crossed its 65,536 B
+trigger this session and `HANDOFFS.md` was already over: both owed, reported not repaired;
+(9) I reordered the S777 ledger block (the claim entry sat above newer entries) -- position
+only, no entry text edited. **Checklists:** lint 0; NEWS N/A (no product change;
+`NEWS.Rmd:429` already covers); `_pkgdown.yml`, citation N/A; tutorial/article DONE (this
+deliverable); `a2interactive.Rmd` still owed (the residue item); issue #169 closed with the
+evidence comment; BACKLOG 3b block removed with its residue extracted.
+
+**Self-assessment (Session 777): 8/10.** **Strengths:** claim first; every phase transition
+through `AskUserQuestion`, the owner's REFACTOR picks honored; an inert-mutation signal
+(baseline == every mutant) noticed and diagnosed with a positive-control preflight instead of
+accepted as "robust", its results discarded and declared; 24 seams caught for their intended
+causes; the missing done-when clauses found before closing the issue and fixed through an
+owner-gated addendum; article claims checked against the code; verification repeated after
+every phase. **Weak:** (1) I applied "a result is a claim about the harness" (Learning 775)
+too late -- I trusted the inherited "installed package" gotcha and burned about 25 minutes on
+an inert round a one-line preflight would have caught; (2) I diffed the e2e against the plan's
+done-when only at close-out, so the two missing clauses cost an addendum cycle (~1.5 h with
+verification); (3) gate estimates were low (4 builds promised, 8 delivered); (4) A13 and three
+shape checks remain unproved. **Learnings:** 789, 790.
+
+**Next steps (specific):** (A) **Push (READY, S, owner-gated):** 38 unpushed (recount); the
+#169 close comment and body point at a plan path that is not on `origin`; the nightly
+`shinytest2` runs PUSHED code, so its first run after the push is the new e2e's first CI run
+(red = report-don't-fix). (B) **Ledger housekeeping (DUE, M):** `HANDOFFS.md` archive pass
+(over 90 KB, `--check` fires), `CHANGELOG.md` (over its trigger now) and a tool-based
+`SESSION_NOTES.md` archive (dry run, owner-gated `--cut N --force --write`, verify script) --
+S770 archived all three in one pass. (C) **`NEWS.Rmd` release-state sweep (READY, M)**
+`BACKLOG.md:30`. (D) **Blank-ancestry read path (DECISION NEEDED, S-M)** `BACKLOG.md:46` -- it
+now also names the e2e pins that move with it. (E) The residue item `BACKLOG.md:8`
+(a2interactive demo READY; zero-rule manifest and Excluded export DECISION NEEDED; duplicated
+gate code READY). (F) Harem-sire (`:68`), slice-5 backfill (`:88`), the read-cap ceiling
+decision, issue #138: unchanged.
+
+**Key files:** `tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R:54` (the block;
+A4c `:154`, A4b `:187`, A5 `:203`, A8 `:262`, A10 `:299`, A11 `:317`, A12 `:351`, A13 `:382`;
+local helpers `:41`, `:45`); `tests/testthat/helper-shinytest2.R:590`-`:656` (the five hoisted
+helpers); `vignettes/articles/colony-manager-guide.qmd:615` (the new passage);
+`docs/planning/mate-pair-ancestry-guardrails-plan.md:436` (Outcome S777); `BACKLOG.md:8`;
+`PROJECT_LEARNINGS.md:2259` (Learnings 789-790); `CHANGELOG.md:49`; `HANDOFFS.md:167`;
+`.quality-gates-results.json` (untracked).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at Phase 0 -- measure it; ~38
+unpushed; `origin/master` = `79206add`. (2) `BACKLOG.md` pins (measured): residue `:8`, NEWS
+sweep `:30`, blank-ancestry `:46`, harem-sire `:68`, slice-5 `:88` -- grep. (3) Ratchet 1/1 at
+`0f4ede78` (3,565,139 B, `1fda9fb28cef`, manifest `aa983075d6a2`); compare BEFORE any run,
+run AFTER committing. (4) **shinytest2 0.5.1 `load_all()`s the checkout from the working
+directory** (Learning 789): the S775/S776 "e2e runs the INSTALLED package" advice is FALSE
+here; to test an alternative build run from a TREE containing `tests/testthat`, print
+`system.file(package = )` from inside the app first, and give the test PROCESS a fresh
+installed copy on `.libPaths()` for its own `nprcgenekeepr:::` reads. The scratch mutation
+harness is gone with the scratchpad; the method is in Learning 789 and the S777 ledger. (5)
+Diff a characterization e2e against the plan's done-when list clause by clause BEFORE its RED
+commit (Learning 790); `read.csv` types an all-blank column as logical `NA`, so test
+`!is.na(x) & x != ""`. (6) **STANDING SET (carried):** full-40-char sha + smoke-test `gh run`
+filters (sha from `git rev-parse`); `scratchpad/` invisible to git BY OWNER DECISION; renv
+banner expected; `CLAUDE.md` warn band (26,360 B) = headroom; zsh traps (no foreground sleep;
+a foreground wait over 600 s is moved to the background -- use Monitor with an until loop; no
+`&`/`disown` inside `run_in_background`; `sed -i` needs a suffix on macOS; quote `echo`
+separators; the cwd resets after `cd`); trim budget 65,536 B for ALL THREE ledgers; consumers
+read run SNAPSHOT fields (L780/#150); the hook refuses a commit that GROWS an over-ceiling
+budgeted file (do not bypass). (7) 5 untracked render artifacts (Aug 15/25) are known residue.
 
 ### Session 775 Handoff Evaluation (by Session 776)
 **Score: 9/10.** **What helped:** every Orient measurement held exactly -- 0
@@ -210,274 +324,7 @@ use `qcStudbook(minSireAge=, minDamAge=)`, not `minParentAge`; the hook refuses 
 commit that GROWS an over-ceiling budgeted file (do not bypass). (7) 5 untracked render
 artifacts (Aug 15/25) are known residue.
 
-### Session 774 Handoff Evaluation (by Session 775)
-**Score: 9/10.** **What helped:** every measurement held exactly -- 0
-undocumented on both frontiers (both at `a7628998`), 15 unpushed
-(`origin/master` = `79206add`), the ratchet citation byte-identical to the
-results file (compared BEFORE any run), the `BACKLOG.md` pins (`:8`, `:37`,
-`:53`, `:73`) and the key-file line refs (`modMatePair.R:152,208`,
-`modBreedingGroups.R:352,1110`, `appServer.R:466`, `test_moduleContract.R:54,97`);
-gotcha (4) (check the `ancestry` column BEFORE passing rules; 11/4 columns; pin
-rules-off at module level) and gotcha (5) (the RED-audit pattern) were both
-load-bearing; the plan's Slice 2 done-when list mapped 1:1 onto the RED blocks.
-**Missing:** (1) the layout of the collapsed "Ancestry Guardrails" section was
-an owner-visible call (the plan says "collapsed section" but the status must
-stay visible) that neither the handoff nor `BACKLOG.md` flagged -- one
-`AskUserQuestion` round, correctly asked; (2) nobody had noted that the
-zero-pairs alert misleads once rules exclude every pair (found reading
-`output$guidance`; second gate question); (3) "the e2e app runs the INSTALLED
-package" did not say to use a SCRATCH library rather than the project's renv
-one (I used `R CMD INSTALL --library=<scratch>` + `.libPaths()`). **Wrong:**
-the sizes called "MEASURED just before the records commit" read 589 B
-(`SESSION_NOTES.md`) and 716 B (`HANDOFFS.md`) low at my Orient -- the same trait
-as S773's, harmless. **ROI:** high.
-
-### What Session 775 Did
-**Deliverable:** **Slice 2 of issue #169 -- rules delivery + the Mate Pair
-module applies the ancestry rules, no override gate -- DONE.** Owner-picked at
-the Phase 0 priorities gate (S774 next-steps (A)); strict TDD, every gate via
-`AskUserQuestion`. **Commits (all UNPUSHED by design; 23 unpushed after
-close-out):** claim `8d722d6a`; RED `53e172d6`; RED correction `fdb705bd`; GREEN
-`402549a7` + `e4401806` (NEWS + ledger); REFACTOR `4be16a12`; the records commit
-follows. Full detail: the `HANDOFFS.md` S775 receipt and `CHANGELOG.md`.
-**Owner gates:** UI layout "toggle + visible status"; zero-pairs alert "yes,
-pinned"; PRE-RED->RED; RED->GREEN; GREEN->REFACTOR ("one small REFACTOR").
-**What shipped:** BG returns `ancestryRules = reactive(ancestryRulesData())` (the
-validated table as loaded, NOT `ancestryRulesForRun()`); `appServer` threads it;
-the module has `ancestryRules = NULL`, a collapsed "Ancestry Guardrails" toggle +
-always-visible status (none / active / inactive) + explainer, checks the `ancestry`
-column before passing rules, and passes them at the click (the stored result IS the
-run snapshot, D8c); the zero-pairs alert appends an ancestry-exclusion sentence
-only when >=1; `.ancestryStatusLine()` is shared with BG; the ONE `NEWS.Rmd` entry
-revised to release state. New `test_modMatePair_ancestry.R` (16 blocks / 75
-expectations) + 3 BG + 2 appServer blocks + 2 contract rows.
-**Verification (measured):** clean regression read (unfiltered, `NOT_CRAN=true`,
-`load_all()` first) **349 files / 8,105 expectations, 0 failed / 0 error** before
-AND after the refactor; `devtools::check()` **0 / 0 / 0** before AND after; lint 0;
-ratchet **1/1 at `4be16a12`** (3,548,667 B, results `9939380d9a6f`, manifest
-`aa983075d6a2`; citation compared at Orient BEFORE the run). **Runtime (3E):** a
-scratch-installed build driven by shinytest2 (one-off, NOT committed; Slice 3 owns
-the committed e2e): live status across tabs, 20 eligible / 5 excluded with the rule
-shown, 20 x 11 CSV, explainer hidden then visible, zero console errors; the two
-existing e2e files (8 and 17 expectations) pass locally.
-**Disclosures:** (1) declared RED correction `fdb705bd`: the malformed-rules block
-asserted `isReady()` after the click, but the observer error destroys the module
-session; my first fix (`matchResults()`) failed identically, so after two guesses I
-removed the unobservable half (Learning 786); (2) one vacuous RED ordering check
-tightened pre-commit; (3) 15 of 16 new blocks stopped at the `unused argument` seam
-at RED (deeper expectations cross-checked against the kernel in scratch); (4) an
-unneeded `git stash`/`pop` pair in one command -- nothing lost (the one remaining
-stash is April 2025, not mine). **Checklists:** lint, NEWS ok; `_pkgdown.yml`,
-citation N/A; article in Slice 3 per the plan; `a2interactive.Rmd` still owed
-(`BACKLOG.md`); issue #169 stays open.
-
-**Self-assessment (Session 775): 8/10.** **Strengths:** claim first; two real UX
-decisions put to the owner with previews; mechanics probed in scratch before
-pinning; every RED failure classified by message; five verification levels, suite
-and `check()` repeated after the refactor; the RED correction declared in its own
-commit. **Weak:** (1) the RED block pinned an unobservable post-error state -- my
-probe covered the mechanism, not the whole assertion path (Learning 786), and I
-guessed twice (compounding errors); (2) the stray `git stash`/`pop`; (3) a bad
-selector in the first visibility probe. **Learnings:** 786.
-
-**Next steps (specific):** (A) **Slice 3 of #169 (READY, L):** Pre-RED gate first,
-offer a 3a/3b split; `BACKLOG.md:8` + the plan's **Outcome (S775)** carry the whole
-pickup. (B) **Push (READY, S, owner-gated):** 23 unpushed (recount); issue #169's
-body links a plan path not on `origin`; the nightly `shinytest2` runs PUSHED code
-(red = report-don't-fix). (C) **`HANDOFFS.md` archive pass (DUE, 74,611 B vs 65,536
-B)** and the `SESSION_NOTES.md` trim (gotcha (5)), each its own deliverable. (D)
-**`NEWS.Rmd` release-state sweep (READY, M)** `BACKLOG.md:51`. (E) Harem-sire
-(`:67`), slice-5 backfill (`:87`), read-cap ceiling, issue #138: unchanged.
-
-**Key files:** `R/modMatePair.R:68` (UI toggle/status/explainer), `:199` (server);
-`R/modBreedingGroups.R:1124`; `R/reportAncestryViolations.R:192`
-(`.ancestryStatusLine()`); `R/appServer.R:469` (new argument `:475`);
-`tests/testthat/test_modMatePair_ancestry.R`; `tests/testthat/test_appServer_server.R:699`;
-plan `:343` (Slice 2 + **Outcome (S775)**); `NEWS.Rmd:429`; `BACKLOG.md:8`;
-`CHANGELOG.md:49`; `HANDOFFS.md:167`; `.quality-gates-results.json` (untracked).
-
-**Gotchas for the next session:** (1) Expect 0 undocumented at Phase 0 -- measure
-it; ~23 unpushed; `origin/master` = `79206add`. (2) `BACKLOG.md` pins (measured):
-mate-pair `:8`, NEWS sweep `:51`, harem-sire `:67`, slice-5 `:87` -- grep. (3) Ratchet
-1/1 at `4be16a12` (3,548,667 B, `9939380d9a6f`, manifest `aa983075d6a2`); compare
-BEFORE any run, run AFTER committing. (4) **Slice 3 traps:** `matchResults` holds ONLY
-the kernel result -- store the run's rules and overrides at the click for the manifest
-(never live reactives); an unhandled click-time error ENDS the session and no
-module-domain reactive is readable afterwards (L786); the override control goes INSIDE
-the existing collapsed panel; the gate wording (D8a) is the owner's at RED; the e2e
-app runs the INSTALLED package -- install to a SCRATCH library and prepend `.libPaths()`
-(`NPRC_RUN_E2E=true`; local Chrome works; helpers `create_app_driver`, `upload_and_wait`,
-`navigate_to_tab` in `helper-shinytest2.R`). (5) **Sizes (MEASURED, `wc -c`):**
-`SESSION_NOTES.md` was pushed OVER its 25,000-token / 56,750 B read cap by these
-records (59,053 B) and compressed back under it before the records commit (the
-installed pre-commit hook refuses growth of an over-ceiling file; do not bypass it
--- a `methodology_trim.py --budget-bytes 65536` trim is due within ~1-2 sessions);
-`HANDOFFS.md` 74,611 B -- `--check` FIRES (archive pass DUE); `CHANGELOG.md` 50,509 B;
-`CLAUDE.md` 26,360 B warn band = headroom. (6) **STANDING SET:** carried unchanged --
-see the S774 block below and the `HANDOFFS.md` S775 receipt (full sha; renv banner;
-zsh traps: no foreground sleep -- use a background `until` loop, `sed -i` needs a
-suffix on macOS; scratchpad invisible to git by owner decision; trim budget 65,536 B).
-(7) 5 untracked render artifacts (Aug 15/25) are known residue.
-
-### Session 773 Handoff Evaluation (by Session 774)
-**Score: 9/10.** **What helped:** every measurement held exactly — 0
-undocumented on both frontiers (both at `d3603995`), 8 unpushed (`origin/master`
-= `79206add`), the ratchet citation byte-identical to the results file
-(compared BEFORE any run); plan §5 Slice 1's done-when list (items 1-8) mapped
-1:1 onto the RED blocks, and its hand-derived counts (25 -> 20/5, 23/2, census
-2/3/1/2/1/1) held exactly — I re-derived them independently in scratch base R;
-the `BACKLOG.md` pins (`:37`, `:57`) were right; gotcha (5)'s mechanics
-(`devtools::document()`, NEWS owed, lint, shipped fixtures, all ages >= 21)
-were all load-bearing; the standing set's zsh traps were avoided. **Missing:**
-(1) the `overriddenRules` contract (is a `reason` required? is a FLAG-rule
-override legal?) was left as "fixed at Slice 1 RED", but it is an exported-API
-decision that needed an owner gate (D3 said so; the handoff and `BACKLOG.md`
-listed only "the exact new-column list" as RED's) — cost one `AskUserQuestion`
-round, correctly asked; (2) plan D1's "an NA-level animal is counted as
-uncovered" is loose against the six-row coverage shape (resolved by mirroring
-the group reporter; now recorded in the plan's Outcome paragraph). **Wrong:**
-(1) gotcha (5) said to QC the fixture with `minParentAge = 2` — deprecated since
-2.0.0 (a lifecycle warning); I used `minSireAge`/`minDamAge`; (2) the sizes it
-called "measured at close-out" (35,867 / 58,245 / 31,428 B) read 476 / 456 / 355
-B low at my Orient (the records commit's last edits landed after the
-measurement) — harmless, but not "to the byte". **ROI:** high.
-
-### What Session 774 Did
-**Deliverable:** **Slice 1 of issue #169 — the `reportMatePairs(ancestryRules,
-overriddenRules)` kernel — DONE** (script-callable only: no module, no UI, no
-`appServer` change). Owner-picked at the Phase 0 priorities gate (S773
-next-steps (A)). Strict TDD, all four phase gates via `AskUserQuestion`.
-**Commits (all UNPUSHED by design; 15 unpushed after close-out):** claim
-`0a4c155e`; RED `a29e88bb` (tests only); GREEN 1/2 `eb104544` (kernel + roxygen
-+ `.Rd`); GREEN 2/2 `f4ca894f` (NEWS + ledger); REFACTOR `f852fcb9` (one shared
-`.ancestryCoverage()`); docs `a0c81ea4` (Learnings 784-785 + the plan's Outcome
-paragraph); the records commit follows.
-**Owner gates:** (1) the Phase 0 pick; (2) `overriddenRules` contract — "sibling
-shape, reject no-ops" (recommended); (3) PRE-RED→RED; (4) RED→GREEN; (5)
-GREEN→REFACTOR ("one small REFACTOR"). **Owner correction:** the first NEWS
-draft read "first step ... later step"; the owner ruled NEWS entries are the
-release-time state vs the prior release, not an in-progress milestone — rewritten
-before commit, saved as a memory and Learning 785, sweep of the existing entries
-filed as a `BACKLOG.md` item (not done).
-**What shipped:** `R/reportMatePairs.R` — `block` moves a pair to `excluded`
-(reason "ancestry rule"); `flag` and overridden-block pairs stay in `pairs`
-annotated (`ancestryRule`/`ancestrySeverity`/`ancestryStatus` after `damGu`); new
-`ancestryCoverage` (six fixed level rows); the screen runs last (D5) on a
-vectorised matcher; validated once up front; shape set by the argument on every
-path; NULL rules `identical()`. New file `tests/testthat/test_reportMatePairsAncestry.R`
-(18 blocks / 153 expectations). `NEWS.Rmd` entry (release-state).
-**Verification (measured):** new file 153/153; siblings unchanged (42/44/54/103,
-plus 31 + 105 for the groupAddAssign/BreedingGroups ancestry files after the
-refactor); lint 0 on both touched `.R`; 102,400 pairs in 0.77 s with rules vs
-0.89 s without; clean regression read (unfiltered, `NOT_CRAN=true`, `load_all()`
-first) **348 files / 8,007 expectations, 0 failed / 0 error** before AND after the
-refactor; `devtools::check()` **0 / 0 / 0** before AND after; ratchet **1/1 at
-`f852fcb9`** (3,539,382 B, +10,649 B vs S773 = the new tests + docs; results
-`2a43ab2f7bf5`, manifest `aa983075d6a2` unchanged; the citation comparison ran at
-Orient BEFORE the run). **Not run — stated, not skipped (Phase 3E):** no live app
-run; `modMatePair.R:208` calls `reportMatePairs()` without the new arguments, so
-the app's behavior is unchanged and none is claimed until Slices 2-3.
-**Disclosures:** (1) a declared RED correction — the scaling block's independent
-oracle used `table(male, female)` (a position-wise cross-tab), fixed at GREEN
-(Learning 784); (2) two RED defects (a helper hard-coding `minAge`; a stop-path
-regex matching R's own `unused argument` text) were caught by classifying every
-failing expectation and fixed before the RED commit; (3) the RED file has 18
-blocks, not the "about 12" in the gate text (same 11 areas, split finer); (4) a
-malformed `AskUserQuestion` JSON cost one round; (5) the Planning checklist's
-"deepest reasoning mode" item is N/A (not a planning session); (6) commits carry
-`Claude Sonnet 5`. **Checklists:** lint ✓; NEWS ✓; `_pkgdown.yml` N/A (no new
-export); citation checklist N/A (no new statistic); tutorial/article N/A (no
-Shiny feature until Slices 2-3); `a2interactive.Rmd` owed as the deferred pass
-(in the `BACKLOG.md` item); issue #169 stays open; BACKLOG removal N/A (item
-rewritten forward-carrying, not complete).
-
-**Self-assessment (Session 774): 8/10.** **Strengths:** claim before any
-technical work; read the code and measured the fixture before any gate; the
-override-contract decision went to the owner rather than being decided inside
-RED; classified every RED failure by message and caught a false green plus a
-helper defect before committing; cross-checked the hand-derived sets
-independently; declared the GREEN-time RED correction in the commit message and
-ledger rather than adjusting quietly; verified at four levels (targeted, siblings,
-full suite, `check()`) and re-ran the last two after the refactor; handled the
-owner's NEWS correction fully (fix, memory, Learning, BACKLOG). **Weak:** (1) the
-scaling oracle's arithmetic was wrong and survived RED because the block errored
-before reaching it — my scratch cross-check covered the pair sets, not that block
-(Learning 784); (2) the NEWS draft copied the visible in-progress style of the
-#168 entries instead of asking what a release note is for — it took an owner
-correction; (3) one malformed `AskUserQuestion` call (the S772 trait again); (4)
-the gate text promised "about 12" blocks and the file has 18.
-
-**Learnings:** 784 (RED audit for added-argument slices: classify every failing
-message; a regex naming the argument passes falsely; an erroring block is
-unexercised) and 785 (NEWS is release-state, owner-directed).
-
-**Next steps (specific):** (A) **Slice 2 of #169 (READY, M):** rules delivery +
-module, no override gate — Pre-RED gate first (`AskUserQuestion`,
-`TDD: PRE-RED→RED`); plan §5 Slice 2 done-when + the plan's new **Outcome (S774)**
-paragraph; `BACKLOG.md:8`. (B) **Check the nightly shinytest2 run (time-gated,
-S):** it was not due at close-out (04:04 UTC; first run on pushed code expected
-~07:15 UTC 2026-09-24, an ESTIMATE from prior runs); Phase 0's unfiltered `gh run
-list` shows it; red = report-don't-fix. NOTE the nightly runs the PUSHED code, and
-nothing since S771's push is on `origin`. (C) **Push (READY, S, owner-gated):** 15
-unpushed after close-out (recount); issue #169's body links a plan path that is
-not on `origin` until then. (D) **`NEWS.Rmd` release-state sweep (READY, M)**
-`BACKLOG.md:37`. (E) **`HANDOFFS.md` archive pass (DUE — its
-trim trigger FIRES at 67,718 B; report it at Orient, it is its own deliverable)
-+ the `SESSION_NOTES.md` trim (~S775-S776, an estimate):** sizes in gotcha (7). (F) Harem-sire seam hole
-(DECISION NEEDED, M), Slice 5 backfill scoping (DECISION NEEDED, L), read-cap
-ceiling (DECISION NEEDED, S, not filed), issue #138 (low priority, L): unchanged
-in `BACKLOG.md`/handoffs.
-
-**Key files:** `R/reportMatePairs.R:171` (signature) with the helpers
-`emptyMateResult()` (`:356`), `checkMatePairAncestryArgs()` (`:388`),
-`matchAncestryPairs()` (`:458`) below it; `R/reportAncestryViolations.R:160`
-(`.ancestryCoverage()`, now shared);
-`tests/testthat/test_reportMatePairsAncestry.R`;
-`docs/planning/mate-pair-ancestry-guardrails-plan.md` §5 (Slice 1 **Outcome**,
-Slice 2 done-when); `R/modMatePair.R:152,208` (Slice 2's edit sites);
-`R/modBreedingGroups.R:352,1110` (rules reactive, return list); `R/appServer.R:466`;
-`tests/testthat/test_moduleContract.R:54,97`; `NEWS.Rmd:429` (the entry);
-`BACKLOG.md:8,37`; `CHANGELOG.md:49`; `HANDOFFS.md:166`;
-`.quality-gates-results.json` (untracked; ratchet citation source).
-
-**Gotchas for the next session:** (1) Expect 0 undocumented at Phase 0 —
-measure it; ~15 unpushed (recount); `origin/master` = `79206add`. (2) **`BACKLOG.md`
-pins moved AGAIN (measured):** the mate-pair item spans `:8-35`; the NEWS sweep
-item is `:37`; harem-sire `:53`; slice-5 backfill `:73` — grep, don't trust older
-pins. (3) Ratchet
-1/1 at `f852fcb9` (3,539,382 B, results `2a43ab2f7bf5`, manifest `aa983075d6a2`);
-cite from `.quality-gates-results.json` (untracked); comparison BEFORE any run;
-run AFTER committing. (4) **Slice 2 trap:** `reportMatePairs()` now `stop()`s when
-rules are given and `ped` has no `ancestry` column — the module must check first
-and show the inactive notice (plan D1, app surface). With rules active `pairs` has
-11 columns and `excluded` 4, and the DT table and CSV export write them; with no
-rules they are byte-unchanged (D4-1) — pin that at module level. (5) The RED
-audit script pattern (Learning 784): list every failing expectation's message and
-require each to be the intended cause; stop-path regexes must not contain the new
-argument's name. (6) **STANDING SET (carried forward):** full-40-char sha +
-smoke-test `gh run` filters (sha from `git rev-parse`); `scratchpad/` invisible to
-git BY OWNER DECISION; renv banner expected; `CLAUDE.md` warn band (26,360 B) =
-headroom; zsh harness traps (no foreground sleep; no `&`/`disown` inside
-`run_in_background`; quote `echo` separators); trim budget 65,536 B for ALL THREE
-ledgers plus the read cap (56,750 B) which binds first for `SESSION_NOTES.md`; the
-e2e app runs the INSTALLED package (`R CMD INSTALL` the dev tree before any local
-live-e2e run — Slice 3); consumers read run SNAPSHOT fields (L780/#150);
-`commented_code_linter` fires on a prose comment with an inner `#`; use
-`qcStudbook(minSireAge=, minDamAge=)`, NOT the deprecated `minParentAge`. (7)
-**Housekeeping — sizes, MEASURED (`wc -c`) just before the records commit (this
-line adds a few hundred bytes):** `HANDOFFS.md` 67,718 B — `--check --budget-bytes
-65536` **FIRES** (2.2 KB over; the archive pass is DUE at S775's Orient — report
-it there; it is its own deliverable per 1-and-done, not an inline repair);
-`SESSION_NOTES.md` 47,205 B (records grew it +10.9 KB from 36,343 at Orient; 9.5
-KB under the 56,750 B read cap — at ~10-11 KB per session the trim is due at
-S775's close-out or S776's Orient, an estimate); `CHANGELOG.md` 40,929 B (+9.1 KB;
-does not fire); `context_budget.py`: `CLAUDE.md` 26,360 B warn band = headroom,
-growth run 58/10.
-(8) 5 untracked render artifacts (3 HTMLs Aug 15, 2 PDFs Aug 25) are known
-residue, not ghost-session evidence. (9) **Shell gotcha, new:** after a
-`cd` inside a Bash call the harness resets the working directory
-(`Shell cwd was reset`); use absolute paths or `cd` at the start of every call.
-
-*Older session records (S769-S773 era) were removed by hand at S776 to keep this file
-under the read cap; git holds them: `git show a2e2be05:SESSION_NOTES.md`. Receipts for
-S767 onward are in `HANDOFFS.md`; earlier records are in `docs/archive/`.*
+*Older session records (S769-S775 era) were removed by hand at S776/S777 to keep this file
+under the read cap; git holds them: `git show bf004003:SESSION_NOTES.md` (S774 and S775
+records) and `git show a2e2be05:SESSION_NOTES.md` (S769-S773). Receipts for S767 onward are
+in `HANDOFFS.md`; earlier records are in `docs/archive/`.*

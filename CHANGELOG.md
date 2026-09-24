@@ -46,16 +46,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-09-24 · [issue #169] S777 claim: Slice 3b — committed Mate Pair ancestry e2e, colony-manager-guide docs, close #169 *(in progress)*
-- Owner-picked at the Phase 0 priorities gate (S776 next-steps (A), `BACKLOG.md:8`).
-  Orient measured: 0 undocumented on both ledger frontiers (both at `a6ee8c0d` = HEAD),
-  30 unpushed (`origin/master` = `79206add`), CI green (all four push workflows on
-  `79206add` plus nightlies through 2026-09-24 07:15Z), the S776 receipt's ratchet
-  citation matched `.quality-gates-results.json` byte-for-byte BEFORE any run;
-  `HANDOFFS.md` trim trigger FIRES (82,785 B vs 65,536 B) — reported, not this
-  session's deliverable. Deliverable is Slice 3b of 3 (final); strict TDD,
-  `AskUserQuestion`-gated phases. Stub + pending receipt ride this commit; close-out
-  records the rest. Issue #169 closes at close-out.
+### 2026-09-24 · [issue #169] S777 records 2/2: Slice 3b DONE, issue #169 CLOSED, close-out records
+- **Deliverable:** Slice 3b of issue #169 (the final slice: the committed live e2e, the
+  colony-manager-guide documentation, the issue close) — DONE, recorded in the entries below:
+  claim `bf004003`, RED `ad5dd344`, GREEN `8526e56b`, REFACTOR `2b59fde6`, records 1/2
+  `5b2146c6`, RED addendum `98264764`, REFACTOR addendum `0f4ede78`. No product code changed.
+- **Non-commit action — issue #169 CLOSED** (`gh issue close 169 --reason completed`,
+  2026-09-24 18:10Z) under the project's GitHub-issue close-out checklist and the owner's
+  "RED addendum, then close" choice at the gap gate; the comment cites these entries and the
+  evidence (e2e 67/67 with its two siblings, 24 mutation seams, suite 352 files / 8,293
+  expectations 0 / 0, `check()` 0 / 0 / 0, lint 0) and says the commits are local, not pushed.
+- **Verification at the last product-tree commit `0f4ede78`:** ratchet **1/1** (3,565,139 B,
+  results `1fda9fb28cef`, manifest `aa983075d6a2`; the S776 citation was compared to the
+  results file BEFORE any run). Learnings **789** and **790** (records 1/2 carried 789).
+  `HANDOFFS.md` receipt `status: complete` (self 8/10, S776 evaluated 9/10);
+  `SESSION_NOTES.md` S777 record and the S776 handoff evaluation, with the S774/S775-era
+  records removed by hand to fit (git holds them: `git show bf004003:SESSION_NOTES.md`).
+- **Housekeeping, reported not repaired:** `CHANGELOG.md` crossed its 65,536 B trigger this
+  session and `HANDOFFS.md` is far over it — an archive pass is owed as its own deliverable.
+  **Ledger hygiene:** the S777 claim entry was stuck ABOVE its newer entries (each new entry
+  went in above the previous one but below the claim); this commit moves it to the bottom of
+  the S777 block — position only, no entry text was edited.
 
 ### 2026-09-24 · [issue #169] S777 addendum GREEN + REFACTOR: verification, and one local helper in the e2e *(no behavior change)*
 - **Addendum GREEN (no commit, no product code):** the two new groups pass on the shipped
@@ -168,6 +179,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   preflight app printing `system.file(package=)`; re-aimed by running each mutant from its
   own mutated tree with the tests inside it; every re-run's preflight shows the mutant tree
   loaded. The inert round's results were discarded, not counted.
+
+### 2026-09-24 · [issue #169] S777 claim: Slice 3b — committed Mate Pair ancestry e2e, colony-manager-guide docs, close #169 *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (S776 next-steps (A), `BACKLOG.md:8`).
+  Orient measured: 0 undocumented on both ledger frontiers (both at `a6ee8c0d` = HEAD),
+  30 unpushed (`origin/master` = `79206add`), CI green (all four push workflows on
+  `79206add` plus nightlies through 2026-09-24 07:15Z), the S776 receipt's ratchet
+  citation matched `.quality-gates-results.json` byte-for-byte BEFORE any run;
+  `HANDOFFS.md` trim trigger FIRES (82,785 B vs 65,536 B) — reported, not this
+  session's deliverable. Deliverable is Slice 3b of 3 (final); strict TDD,
+  `AskUserQuestion`-gated phases. Stub + pending receipt ride this commit; close-out
+  records the rest. Issue #169 closes at close-out.
 
 ### 2026-09-24 · [ad hoc] S776 records: Slice 3a of #169 DONE, close-out records committed
 - **Deliverable:** Slice 3a of issue #169 (the Mate Pair override gate, the Ancestry tab
