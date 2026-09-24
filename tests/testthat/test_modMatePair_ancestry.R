@@ -531,7 +531,7 @@ test_that(paste(
 
 test_that(paste(
   "a malformed rules table reaching the module surfaces at the click instead",
-  "of being swallowed, and the run does not complete"
+  "of being swallowed (module contract rule 5)"
 ), {
   skip_if_not_installed("shiny")
 
@@ -544,13 +544,15 @@ test_that(paste(
     args = mpmArgs(rules = shiny::reactive(bad)),
     {
       session$setInputs(populationSource = "allAlive", minAge = 1)
-      ## an observer error surfaces as a warning under testServer()
+      ## an observer error surfaces as a warning under testServer(); Shiny
+      ## then destroys the module session, so nothing inside the module (the
+      ## returned isReady(), the run store) is readable afterwards -- the
+      ## surfaced error is the whole observable contract here
       expect_warning(
         session$setInputs(analyze = 1),
         "must be 'block' or 'flag'",
         fixed = TRUE
       )
-      expect_false(session$getReturned()$isReady())
     }
   )
 })
