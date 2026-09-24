@@ -62,17 +62,101 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 770 Handoff Evaluation (by Session 771)
+**Score: 9/10.** **What helped:** every measurement held exactly — 0
+undocumented on both frontiers, 97 unpushed, the ratchet citation
+byte-identical to the results file (compared before any run), "CI current
+through `8007de81`"; next-steps (A) WAS the owner pick; the carried
+standing set was load-bearing (its "full-40-char sha + smoke-test `gh run`
+filters" item named the trap I hit once). **Missing:** the read-cap rule
+(25,000-token cap = 56,750 B binds before the trimmer's 65,536 B trigger;
+trim within ~8 KB of it) sat in S768's gotcha (4) but was dropped from
+S770's standing set, and S770's "41,867 B + these records" understated
+the records (~6 KB; 48,047 B at Orient). Cost: an unforecast trim now due.
+**Wrong:** trivia — "HANDOFFS.md:163" is line 166. **ROI:** high.
+
 ### What Session 771 Did
-**Deliverable:** Push 97 unpushed commits to `origin/master` + CI verification
-(all four push-triggered workflows green) (IN PROGRESS)
-**Started:** 2026-09-23
-**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0
-priorities gate (S770 next-steps (A)). Orient measured: 0 undocumented on both
-frontiers, 97 unpushed at `42c57ad6`, CI 10/10 green (current through
-`8007de81`), ratchet citation matched results file before any run.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
-(in progress); Phase 3F records the rest. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+**Deliverable:** **Push + CI verification — DONE.** `8007de81..79206add`
+pushed (98 commits: Orient's 97 + this claim), owner-gated (the priorities
+option's text said picking it was the go-ahead). **All four push-triggered
+workflows `success` on the pushed head `79206add`**, matched by exact SHA:
+lint `35940154521`, pkgdown `35940154508`, test-coverage `35940154485`,
+R-CMD-check `35940154498` (25 m). First CI verification of everything since
+`8007de81` (all of #168 through Slice 4b, the archive passes). TDD phase
+PRE-RED (ops/docs-only) throughout.
+**Not covered (derived from `.github/workflows/shinytest2.yaml`'s
+header):** the live-e2e tier is nightly `schedule` + `workflow_dispatch`
+only, so it has NOT run on the pushed code (incl. S769's new ancestry e2e
+file) until the next nightly.
+**Verification:** ratchet **1/1 at `79206add`** (3,528,730 B, results
+`c02aeda2c3db`, manifest `aa983075d6a2`, −28 B vs S770 = noise; the
+citation-vs-results comparison was done at Orient BEFORE this run). Not
+run: local suite/`devtools::check()` — no package code changed; CI's
+R-CMD-check + test-coverage on the pushed head is the independent check.
+**Commits:** claim `79206add` (the pushed head); records + sha follow,
+UNPUSHED by design (S751/S754 pattern). **Checklists:** all N/A (no `.R`,
+export, UI, or statistic; no CI break; no BACKLOG item or issue).
+**Disclosures:** `79206add` carries a `Claude Fable 5` trailer, later
+commits `Claude Sonnet 5` (a `/model` switch changed the attribution
+reminder mid-session; S768 precedent); my first CI poll used a mistyped
+sha (below).
+
+**Self-assessment (Session 771): 8/10.** **Strengths:** clean-tree push
+after an explicit owner pick; CI verified per workflow by exact SHA with
+run IDs; citation comparison before the ratchet run; derived (not assumed)
+that the e2e tier did not run; scope held. **Weak:** (1) my first poller
+filtered on a 40-char sha typed from memory, matched zero runs, and burned
+a 9-minute round — the standing set's "smoke-test `gh run` filters" item
+was in front of me; (2) two throwaway command slips; (3) my first draft of
+these records forecast "~3 KB under the read cap" without measuring — it
+measured 57,640 B, 890 B OVER; caught on measuring, records condensed. No
+archive-level reduction landed (next-steps A).
+
+**Learnings:** none appended — smoke-testing a `gh run` filter and taking
+the sha from `git rev-parse` are already standing-set items (a re-hit of a
+carried item is salience, not a new pattern; FM #28).
+
+**Next steps (specific):** (A) **SESSION_NOTES.md trim (READY, S — DUE):**
+size vs the 56,750 B cap is in gotcha (2); `python3 methodology_trim.py
+--file SESSION_NOTES.md --check --budget-bytes 65536` will say "does not
+fire" (the read cap binds first) — dry-run, then owner-gated `--cut N
+--force --write` (SRF_RED expected L549/586/587; `--cut N` = KEEP N L777;
+the trimmer writes its own ledger entry L782; verify script pre- AND
+post-commit). Do it first, before Phase 0's read crosses the cap. (B)
+**Check the nightly shinytest2 run (READY, S):** first run on the pushed
+code expected ~07:15 UTC 2026-09-24 (an estimate from prior runs'
+timestamps); Phase 0's unfiltered `gh run list --branch master --limit 10`
+shows it; red = report-don't-fix. (C) **Mate-pair guardrail surface
+(DECISION NEEDED, M)** `BACKLOG.md:8`. (D) **Harem-sire seam hole
+(DECISION NEEDED, M)** `BACKLOG.md:20`, Learning 778. (E) **Slice 5
+backfill scoping (DECISION NEEDED, L)** `BACKLOG.md:40`. (F) Lower
+priority unchanged in `BACKLOG.md` (incl. issue #138 scoping).
+
+**Key files:** `.github/workflows/shinytest2.yaml:1-30` (nightly-only
+header); `CHANGELOG.md:49` region (S771 entries); `HANDOFFS.md:166` (S771
+receipt); `.quality-gates-results.json`; `BACKLOG.md:8`/`:20`/`:40`.
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at Phase 0 —
+measure it; 2 unpushed records commits expected (recount); `origin/master`
+= `79206add`, CI-verified on the four push workflows. (2) **SESSION_NOTES
+read cap:** measured after these condensed records: 54,172 B vs 56,750 B
+(2,578 B headroom) — trim BEFORE adding more; the 65,536 B trigger
+is the wrong signal here. (3) Ratchet 1/1 at `79206add` (3,528,730 B,
+results `c02aeda2c3db`); cite from the results file; comparison BEFORE any
+run. (4) **`gh run` filters:** sha from `git rev-parse HEAD`, never typed;
+smoke-test >0 rows before backgrounding a poll. (5) **STANDING SET
+(carried forward):** full-40-char sha + smoke-test filters; `scratchpad/`
+invisible to git BY OWNER DECISION; ratchet AFTER committing; renv banner
+expected; `CLAUDE.md` warn band (26,360 B) = headroom, growth run 53/10;
+zsh harness traps (no foreground sleep; no `&`/`disown` inside
+`run_in_background`); trim budget 65,536 B for ALL THREE ledgers (S767)
+plus the read-cap rule in (2). (6) The e2e app runs the INSTALLED package —
+`R CMD INSTALL` the dev tree before any local live-e2e run. (7) Slice-4b:
+consumers read run SNAPSHOT fields, never live inputs (L780/#150); report
+universe = FORMED groups only (L781). (8) `commented_code_linter` fires on
+a prose comment with an inner `#` — write "issue 168". (9) 5 untracked
+render artifacts (3 HTMLs Aug 15, 2 PDFs Aug 25) are known residue, not
+ghost-session evidence.
 
 ### Session 769 Handoff Evaluation (by Session 770)
 **Score: 10/10.** **What helped:** gotcha (2)'s sizes predicted Orient

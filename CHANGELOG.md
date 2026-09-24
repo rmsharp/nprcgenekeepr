@@ -46,6 +46,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S771 records: push + CI verification DONE, close-out records committed
+- **Deliverable:** the push and CI verification recorded in the entry below.
+  Ratchet 1/1 at `79206add` (3,528,730 B, −28 B vs S770 = noise on a
+  docs-only diff; results `c02aeda2c3db`, manifest `aa983075d6a2`); the
+  receipt-citation comparison ran at Orient BEFORE the run. Not run: local
+  full suite / `devtools::check()` — no package code changed this session;
+  CI's R-CMD-check + test-coverage on the pushed head is the independent
+  verification.
+- **Records:** S770 handoff evaluated 9/10 (the read-cap rule had been
+  dropped from its standing set); S771 self-assessment 8/10; `HANDOFFS.md`
+  receipt complete. `SESSION_NOTES.md` measures 54,172 B vs the 56,750 B
+  read cap (2,578 B headroom) after the records were condensed from a
+  first draft that measured 57,640 B, 890 B over — a trim is the top
+  next-step. Learnings: none appended (FM #28). Disclosed: the claim
+  commit carries a `Claude Fable 5` trailer, later commits `Claude Sonnet 5`
+  (a mid-session `/model` switch); a mistyped-sha poll cost one round.
+- **Not covered by the push's CI:** the live-e2e (shinytest2) tier is
+  nightly-schedule + manual-dispatch only per its workflow header, so the
+  pushed code's e2e coverage (incl. S769's ancestry e2e file) awaits the
+  next nightly run.
+
+### 2026-09-23 · [ad hoc] S771 push: `8007de81..79206add` pushed to `origin/master`; CI green on all four push workflows
+- **Action:** `git push origin master` — 98 commits (Orient's 97 unpushed
+  plus the S771 claim `79206add`), owner-gated (the Phase 0 priorities
+  pick's option text said choosing it was the go-ahead). `origin/master`
+  == local HEAD at push time (0 ahead).
+- **CI, matched by exact head SHA `79206addff574f281176941bb31ee7ba90b91702`:**
+  lint.yaml `35940154521` success; pkgdown.yaml `35940154508` success;
+  test-coverage.yaml `35940154485` success; R-CMD-check.yaml `35940154498`
+  success (all completed by 2026-09-24T01:14:30Z, R-CMD-check the last at
+  25 m). The first CI verification of everything since `8007de81` — the
+  whole #168 ancestry-guardrails cluster through Slice 4b, the three
+  ledger archive passes, and the pandoc close-out.
+
 ### 2026-09-23 · [ad hoc] S771 claim: push to origin/master + CI verification *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (S770 next-steps (A)). Orient
   measured: 0 undocumented on both ledger frontiers (both at `42c57ad6` =
