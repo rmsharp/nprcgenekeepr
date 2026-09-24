@@ -46,6 +46,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S774 records: Slice 1 of #169 DONE, close-out records committed
+- **Deliverable:** Slice 1 of issue #169 (the `reportMatePairs()` ancestry
+  kernel), recorded in the entries below: claim `0a4c155e`, RED `a29e88bb`,
+  GREEN 1/2 `eb104544`, GREEN 2/2 `f4ca894f`, REFACTOR `f852fcb9`, docs
+  `a0c81ea4`. Ratchet 1/1 at `f852fcb9` (3,539,382 B, +10,649 B vs S773 = the new
+  tests + docs; results `2a43ab2f7bf5`, manifest `aa983075d6a2`); the
+  receipt-citation comparison ran at Orient BEFORE the run. Clean regression read
+  348 files / 8,007 expectations 0 failed / 0 error and `devtools::check()`
+  0 / 0 / 0, each measured before AND after the refactor. Not run, stated: no
+  live app run (the module is untouched and does not pass the new arguments).
+  Checklists: lint ✓, NEWS ✓ (release-state), `_pkgdown.yml`/citation/tutorial
+  N/A, `a2interactive.Rmd` owed as the deferred pass (in the BACKLOG item); the
+  GitHub issue stays open (Slices 2-3 remain).
+- **`BACKLOG.md`:** the mate-pair item rewritten forward-carrying (Slice 1
+  shipped; pickup = Slice 2, with the module's `ancestry`-column check called out
+  as the trap); a NEW item, "`NEWS.Rmd` release-state sweep" (owner-directed; four
+  clusters found by heuristic grep, a floor not a census), was added — recorded,
+  NOT done.
+- **Receipt:** `HANDOFFS.md` S774 `status: complete` (self 8/10, S773 evaluated
+  9/10); its `commit:` names the last code commit `f852fcb9` (the records commit
+  cannot name its own sha). Handoff evaluation and the S774 record are in
+  `SESSION_NOTES.md`. Housekeeping sizes are recorded in the receipt's gotcha (9).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-23 · [issue #169] S774 docs: Learnings 784-785 + the plan's Slice 1 outcome (for Slice 2)
 - `PROJECT_LEARNINGS.md` Learning 784 (a RED audit for an added-optional-argument
   slice must classify every failing expectation's message; a regex naming the

@@ -5,34 +5,50 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Mate-pair ancestry guardrails — extend the shipped #168 rules machinery
-      to `reportMatePairs()`/`modMatePair` (design RATIFIED S773, 2026-09-23;
-      tracked by GitHub issue #169; READY — pickup is Slice 1 of 3, Effort M per
-      slice)** -- the follow-up #168's plan §5/D5 deferred. Full design, all four
-      owner judgment calls and the slice plan:
-      `docs/planning/mate-pair-ancestry-guardrails-plan.md` (D1-D10). Ratified in
-      brief: `block` moves a matching pair from Eligible Pairs to the Excluded tab
-      (reason "ancestry rule", overridable per rule per run with a reason;
-      overridden pairs stay in Eligible marked "overridden"); the script API is
-      `reportMatePairs(..., ancestryRules = NULL, overriddenRules = NULL)` with
-      NULL rules `identical()` to today; rules are uploaded ONCE on the Breeding
-      Groups tab and threaded to the Mate Pair module through a new `ancestryRules`
-      reactive that `modBreedingGroupsServer` returns (+1 arg on
-      `modMatePairServer`, +1 `appServer.R` line, two `test_moduleContract.R`
-      rows), with overrides, gate and audit manifest per tab; UI = inline
-      annotation columns + a collapsed "Ancestry Guardrails" section + a small
-      "Ancestry" tab (coverage + manifest). **Pickup = Slice 1** (the kernel, script-
-      callable): Pre-RED gate first; RED pins the plan's D4 invariants and the
-      hand-derived fixture counts (25 candidate pairs -> 20 eligible / 5 excluded;
-      overriding CHINESE x INDIAN -> 23 / 2) and fixes the exact new-column list;
-      the matcher must be vectorized (a loop over `reportAncestryViolations()`
-      measured 2.39 s per 5,000 pairs; real pair tables run ~10^5-10^6). Slices 2-3
-      (rules delivery + module; override gate + manifest + e2e + docs) follow;
-      Slice 3's RED needs owner ratification of the mate-pair confirm-gate wording
-      proposed in plan D8a. Issue #169 closes at Slice 3 close-out, and this item is
-      removed in that same commit. **Surfaced, not fixed (plan §7 dragon 8):** the
-      Excluded tab has no export today — worth its own item only if the owner wants
-      one.
+- [ ] **Mate-pair ancestry guardrails — Slices 2-3 of GitHub issue #169 (Slice 1
+      SHIPPED S774, 2026-09-23; design ratified S773; READY — pickup is Slice 2 of
+      3, Effort M per slice)** -- extends the shipped #168 rules machinery to the
+      Mate Pair Analysis tab. Full design, the four owner judgment calls and the
+      slice plan: `docs/planning/mate-pair-ancestry-guardrails-plan.md` (D1-D10);
+      its §5 "Outcome (S774)" paragraph records what Slice 1 fixed. **Shipped
+      (Slice 1, script-callable):** `reportMatePairs(..., ancestryRules = NULL,
+      overriddenRules = NULL)` — `block` moves a pair to `excluded` (reason "ancestry
+      rule"), `flag` and overridden-block pairs stay in `pairs` annotated
+      (`ancestryRule`/`ancestrySeverity`/`ancestryStatus`), new `ancestryCoverage`
+      element, NULL rules `identical()` to before; `overriddenRules` takes
+      `ancestry1`/`ancestry2` (a `reason` column is accepted and ignored; an
+      unknown, flag, duplicated, or rules-less override is an error). **Pickup =
+      Slice 2** (rules delivery + module, no override gate): Pre-RED gate first;
+      `modBreedingGroupsServer` returns a new `ancestryRules` reactive (+1 arg on
+      `modMatePairServer`, +1 `appServer.R` line, two `test_moduleContract.R` rows;
+      plan §5 Slice 2 done-when); **the module must check for the `ancestry`
+      column BEFORE passing rules** — `reportMatePairs()` now `stop()`s without it,
+      so the module shows the inactive notice instead; snapshot the rules at the
+      "Find Eligible Pairs" click (plan D8c). Slice 3 (override gate + manifest +
+      e2e + docs) needs owner ratification of the mate-pair confirm-gate wording
+      (plan D8a) at its RED, and its `NEWS.Rmd` change REVISES the one release-state
+      entry (Learning 785) rather than appending. Issue #169 closes at Slice 3
+      close-out, and this item is removed in that same commit. **Owed, deferred
+      (checklist):** a `vignettes/a2interactive.Rmd` demonstration for the new
+      `reportMatePairs()` arguments, in the dedicated documentation pass.
+      **Surfaced, not fixed (plan §7 dragon 8):** the Excluded tab has no export
+      today — worth its own item only if the owner wants one.
+
+- [ ] **`NEWS.Rmd` release-state sweep — rewrite entries that describe in-progress
+      milestones (owner-directed S774, 2026-09-23; READY, Effort M)** -- the owner
+      ruled that NEWS entries state the finished state at release relative to the
+      PRIOR release (2.0.0), never a point between releases (Learning 785). A
+      heuristic grep of the development section (pattern list: first/final step,
+      "continued)", groundwork, "later step(s)", "arrive(s) in") found four feature
+      clusters: the MHC haplotype-frequency entry (`NEWS.Rmd:308`), the four #168
+      ancestry entries (`:376-410`: "Groundwork...", "...continued" x2, "...final
+      step" — merge into one release-state entry), and the two #167 longitudinal
+      entries (`:452-457`, `:476`: "arrives in later steps/the next step"). The grep
+      is a floor, not a census: the pickup should read the whole development section
+      once. Plain-language criterion (S628) still applies. `NEWS.md` was last
+      re-rendered S716, so it lags `NEWS.Rmd` and needs a render at release. Open,
+      the owner's call: adding the rule to `CLAUDE.md`'s NEWS checklist (its
+      "matching existing style" wording conflicts with it).
 
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own
