@@ -49,6 +49,46 @@
   paste(pmin(a, b), pmax(a, b), sep = "-")
 }
 
+#' The zero-row ancestry-overrides table
+#'
+#' The one definition of "no overrides": the columns every consumer
+#' (\code{.checkAncestryOverrides}, both modules' override state) expects.
+#'
+#' @return data.frame with character columns \code{ancestry1},
+#' \code{ancestry2} and \code{reason}, and zero rows.
+#' @noRd
+.emptyAncestryOverrides <- function() {
+  data.frame(
+    ancestry1 = character(0L), ancestry2 = character(0L),
+    reason = character(0L), stringsAsFactors = FALSE
+  )
+}
+
+#' The block rules a curator can still override
+#'
+#' Shared by \code{\link{modBreedingGroupsServer}} and
+#' \code{\link{modMatePairServer}}: active rules only (\code{NULL} when the
+#' guardrails are inactive), block severity, minus the rules already
+#' overridden this session.
+#'
+#' @param rules the validated rules table in effect, or \code{NULL}.
+#' @param overrides the session's confirmed overrides (zero rows for none).
+#' @return \code{NULL} when \code{rules} is \code{NULL}; otherwise the rows of
+#' \code{rules} with severity \code{"block"} that no override names.
+#' @noRd
+.overridableAncestryRules <- function(rules, overrides) {
+  if (is.null(rules)) {
+    return(NULL)
+  }
+  blocks <- rules[rules$severity == "block", , drop = FALSE]
+  if (nrow(overrides) > 0L) {
+    blockKeys <- .ancestryPairKey(blocks$ancestry1, blocks$ancestry2)
+    ovKeys <- .ancestryPairKey(overrides$ancestry1, overrides$ancestry2)
+    blocks <- blocks[!(blockKeys %in% ovKeys), , drop = FALSE]
+  }
+  blocks
+}
+
 #' Validate the ancestry-rule overrides for one formation run
 #'
 #' Each override names one \code{block} rule present in \code{rules}
@@ -67,10 +107,7 @@
 #' @noRd
 .checkAncestryOverrides <- function(overrides, rules) {
   rules <- checkAncestryRules(rules)
-  empty <- data.frame(
-    ancestry1 = character(0L), ancestry2 = character(0L),
-    reason = character(0L), stringsAsFactors = FALSE
-  )
+  empty <- .emptyAncestryOverrides()
   if (is.null(overrides)) {
     return(empty)
   }

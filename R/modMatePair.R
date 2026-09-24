@@ -313,10 +313,7 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
     # persisted; each run snapshots what is in effect (the #150
     # params-snapshot mold), so a late override never rewrites an earlier
     # run's tables or audit manifest.
-    emptyAncestryOverrides <- data.frame(
-      ancestry1 = character(0L), ancestry2 = character(0L),
-      reason = character(0L), stringsAsFactors = FALSE
-    )
+    emptyAncestryOverrides <- .emptyAncestryOverrides()
     ancestryOverridesRV <- reactiveVal(emptyAncestryOverrides)
 
     # A new rules table may not contain the overridden rules at all -- stale
@@ -330,18 +327,7 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
     # when the guardrails are inactive), block severity, minus the rules
     # already overridden this session.
     overridableRules <- reactive({
-      rules <- ancestryRulesForRun()
-      if (is.null(rules)) {
-        return(NULL)
-      }
-      blocks <- rules[rules$severity == "block", , drop = FALSE]
-      ov <- ancestryOverridesRV()
-      if (nrow(ov) > 0L) {
-        blockKeys <- .ancestryPairKey(blocks$ancestry1, blocks$ancestry2)
-        ovKeys <- .ancestryPairKey(ov$ancestry1, ov$ancestry2)
-        blocks <- blocks[!(blockKeys %in% ovKeys), , drop = FALSE]
-      }
-      blocks
+      .overridableAncestryRules(ancestryRulesForRun(), ancestryOverridesRV())
     })
 
     # Keep the override select in step with the overridable set.
