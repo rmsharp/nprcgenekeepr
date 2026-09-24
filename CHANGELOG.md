@@ -46,6 +46,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #169] Mate-pair ancestry guardrails design gate RATIFIED; issue #169 opened
+- **Deliverable (design-only, zero `R/`/`tests/`/`man/` changes):**
+  `docs/planning/mate-pair-ancestry-guardrails-plan.md` — 10 decisions (6
+  forced/evidence-determined; 4 owner judgment calls put in one
+  `AskUserQuestion` round, the owner took the recommended option in all four:
+  `block` moves a pair to Excluded with reason "ancestry rule" and stays
+  overridable; script API = optional `ancestryRules`/`overriddenRules` on
+  `reportMatePairs()`; rules uploaded once on Breeding Groups and threaded to
+  the Mate Pair module with per-tab overrides/manifest; inline columns + a
+  collapsed section + a small Ancestry tab), three implementation slices, ten
+  dragons, alternatives, provenance. `BACKLOG.md`'s mate-pair item rewritten
+  forward-carrying (design RATIFIED, READY at Slice 1, tracked by #169) — not
+  removed, because the implementation is still open.
+- **Non-commit action:** GitHub issue **#169** opened (`enhancement`), the full
+  draft rendered inline and confirmed by the owner before filing (Learning
+  776). Stays open through Slices 1-2; closes at Slice 3's close-out.
+- **Findings that shaped the design (measured/read, not inferred):** the rules
+  live only inside `modBreedingGroups` (a module-local upload; no return
+  element; zero `appServer` wiring) — the crux the BACKLOG item did not name;
+  the shipped example fixtures suffice (25 candidate pairs -> 5 block / 3 flag /
+  17 unmatched, both rule orientations present); looping
+  `reportAncestryViolations()` over two-animal groups measured 2.39 s per
+  5,000 pairs (minutes at real 10^5-10^6-pair sizes is an ESTIMATE), so a
+  vectorized matcher is required.
+- Not run: local suite / `devtools::check()` — no package code changed; all
+  code checklists N/A (no `.R`, export, UI, or statistic). Cross-references
+  verified: every cited path exists (the one absent path is the plan's own
+  proposed new e2e file) and the line pins match the source.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-23 · [ad hoc] S773 claim: mate-pair guardrail surface design gate *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (S772 next-steps (B),
   `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger frontiers

@@ -5,17 +5,34 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Mate-pair guardrail surface — extend the shipped #168 ancestry-rules
-      machinery to `reportMatePairs()`/`modMatePair` (recorded S762, extracted
-      here S769 when #168 closed; DECISION NEEDED — needs its own small design
-      gate before any code, Effort M)** -- the #168 plan's §5 "Deferred
-      (recorded, NOT ratified)" item: an additive violations/`reason` extension
-      of the existing `excluded`/`pairs` frames using the same rules machinery
-      (D5 deliberately kept it out of v1 to avoid re-opening #151's module
-      contract mid-cluster). #168 itself is CLOSED (v1 complete, S769), so this
-      item is the follow-up's only live tracker — a pickup session opens a new
-      GitHub issue and runs the design gate first. See
-      `docs/planning/issue168-ancestry-guardrails-plan.md` §5/D5.
+- [ ] **Mate-pair ancestry guardrails — extend the shipped #168 rules machinery
+      to `reportMatePairs()`/`modMatePair` (design RATIFIED S773, 2026-09-23;
+      tracked by GitHub issue #169; READY — pickup is Slice 1 of 3, Effort M per
+      slice)** -- the follow-up #168's plan §5/D5 deferred. Full design, all four
+      owner judgment calls and the slice plan:
+      `docs/planning/mate-pair-ancestry-guardrails-plan.md` (D1-D10). Ratified in
+      brief: `block` moves a matching pair from Eligible Pairs to the Excluded tab
+      (reason "ancestry rule", overridable per rule per run with a reason;
+      overridden pairs stay in Eligible marked "overridden"); the script API is
+      `reportMatePairs(..., ancestryRules = NULL, overriddenRules = NULL)` with
+      NULL rules `identical()` to today; rules are uploaded ONCE on the Breeding
+      Groups tab and threaded to the Mate Pair module through a new `ancestryRules`
+      reactive that `modBreedingGroupsServer` returns (+1 arg on
+      `modMatePairServer`, +1 `appServer.R` line, two `test_moduleContract.R`
+      rows), with overrides, gate and audit manifest per tab; UI = inline
+      annotation columns + a collapsed "Ancestry Guardrails" section + a small
+      "Ancestry" tab (coverage + manifest). **Pickup = Slice 1** (the kernel, script-
+      callable): Pre-RED gate first; RED pins the plan's D4 invariants and the
+      hand-derived fixture counts (25 candidate pairs -> 20 eligible / 5 excluded;
+      overriding CHINESE x INDIAN -> 23 / 2) and fixes the exact new-column list;
+      the matcher must be vectorized (a loop over `reportAncestryViolations()`
+      measured 2.39 s per 5,000 pairs; real pair tables run ~10^5-10^6). Slices 2-3
+      (rules delivery + module; override gate + manifest + e2e + docs) follow;
+      Slice 3's RED needs owner ratification of the mate-pair confirm-gate wording
+      proposed in plan D8a. Issue #169 closes at Slice 3 close-out, and this item is
+      removed in that same commit. **Surfaced, not fixed (plan §7 dragon 8):** the
+      Excluded tab has no export today — worth its own item only if the owner wants
+      one.
 
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own
