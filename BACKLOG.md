@@ -304,24 +304,23 @@ section's live work.*
       precluded -- remains open as a future, separately-scoped enhancement if the owner judges,
       from that live render, that remaining cross-generation mate-lines still benefit from
       signposting for legibility.
-- [ ] **The live app's uploaded/QC'd copy of `obfuscated_rhesus_mhc_ped.csv`
-      produces one fewer node than reading the same bundled CSV directly**
-      (found S472, incidental to issue #143's live verification, Effort
-      unknown, low priority) -- `direct`-style Diagram node count is 739 live
-      vs. 740 via `read.csv()` + `.buildMatingUnitForest()`/
-      `.positionMatingUnitForest()` directly (a stable, already-tested
-      figure, unaffected by this session's fix); the live rectilinear
-      -style projection-node count is correspondingly 50 vs. an offline
-      -computed 51. Not investigated further this session (out of the
-      issue #143 fix's own scope, per `PROJECT_LEARNINGS.md` Learning 382's
-      "report, don't fix mid-session" precedent) -- most likely explained by
-      the upload/QC pipeline (`modInput.R`'s `qcStudbook()` or similar)
-      dropping or merging exactly one row relative to a raw `read.csv()`,
-      but this was not confirmed. A future session should identify which
-      individual differs and why, and decide whether the app's own bundled
-      -fixture test coverage (`test-e2e-pedigree-module.R`, etc.) should
-      assert this QC'd count explicitly rather than relying on the
-      raw-CSV-read count as a proxy for what the live app actually renders.
+- [ ] **The live app's uploaded/QC'd copy of `obfuscated_rhesus_mhc_ped.csv` gets a different
+      Diagram layout than the same CSV read directly -- cause found (row order); decision open**
+      (found S472, cause measured 2026-09-24, low priority, Effort S) -- the S472 figures (739
+      live vs 740 offline nodes; 50 vs 51 projection nodes) no longer reproduce, since the layout
+      has changed since (e.g. Track 4, S573), and the original hypothesis -- that `qcStudbook()`
+      drops or merges a row -- is REFUTED: it keeps all 375 rows and ids (none lost or added, 0
+      duplicates), and `makePedigreeDiagramData()` returns the same 375 nodes / 502 edges for
+      both inputs. What differs is row ORDER -- `qcStudbook()` reorders the rows -- and the mating
+      layout depends on it: `makePedigreeMatingLayout()` gives 782 nodes for both inputs under
+      `edgeStyle = "direct"`, but **1456 (raw order) vs 1412 (QC order)** under `"rectilinear"`,
+      and the raw content re-ordered to QC's row order gives exactly 1412 (so order alone
+      reproduces QC's count; QC also normalizes some id/sire/dam/sex cells, not characterized).
+      Consequence: the app's rectilinear diagram of an uploaded file can carry a different
+      number of waypoint nodes than a script user's diagram of the same data, depending only on
+      row order. A future session should decide whether that row-order dependence is acceptable,
+      and whether the bundled-fixture tests (`test-e2e-pedigree-module.R`, etc.) should assert the
+      QC'd count rather than the raw-CSV count as a proxy for what the live app renders.
 - [ ] **`data-raw/rhesusPedigree.R`'s docstring claims
       `rhesusPedigree_fromCenter.csv` is an independent raw/pre-obfuscation
       source for `obfuscated_rhesus_mhc_ped.csv`, but the two shipped fixtures

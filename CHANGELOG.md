@@ -46,6 +46,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [ad hoc] `BACKLOG.md`: the "one fewer node" item rewritten with its measured cause (row order, not a dropped row)
+- **Change:** the open item about the app's uploaded/QC'd copy of `obfuscated_rhesus_mhc_ped.csv`
+  drawing a different Diagram than the same CSV read directly (found S472, "cause not
+  investigated") now states what was measured, and stays open as a decision. **Refuted:** the
+  hypothesis that `qcStudbook()` drops or merges a row -- it keeps all 375 rows and ids (none
+  lost or added, 0 duplicates) and `makePedigreeDiagramData()` returns the same 375 nodes / 502
+  edges for both inputs. **Found:** `qcStudbook()` reorders the rows, and the mating layout
+  depends on row order -- `makePedigreeMatingLayout()` gives 782 nodes for both inputs under
+  `edgeStyle = "direct"` but **1456 (raw order) vs 1412 (QC order)** under `"rectilinear"`, and
+  the raw content re-ordered to QC's row order gives exactly 1412. The S472 figures (739 vs 740;
+  50 vs 51) no longer reproduce because the layout changed since (e.g. Track 4, S573). Open for the
+  owner: whether that row-order dependence is acceptable, and whether the bundled-fixture e2e
+  tests should assert the QC'd count.
+- **Commit:** this commit -- `BACKLOG.md` and this entry only. **Local, not pushed.**
+- **Session:** none -- owner-directed, outside a numbered session (follows S778) · **Verified:**
+  `Rscript` with `pkgload::load_all()`: the counts above were computed directly, on the bundled
+  fixture, with `qcStudbook()`'s default arguments. **Limits, stated so the item is not
+  over-read:** the cause is "order alone reproduces the QC'd count", not "order is the only
+  difference" -- the re-ordered raw data is not `all.equal` to the QC'd data on
+  id/sire/dam/sex (QC normalizes some cells; not characterized) and the node counts still match;
+  the live Shiny app itself was not driven this time, so the claim is about the functions the app
+  calls, not a fresh live render; the mating-layout collision warning fires for both orders.
+  `git diff -U0` shows one hunk, in this item only. **Not run:** the test suite and
+  `devtools::check()` -- no package code changed.
+
 ### 2026-09-24 · [ad hoc] `BACKLOG.md`: compressed the LabKey item and the kinship2 section's DONE narrative
 - **Change:** `BACKLOG.md` 521 -> 433 lines (42,354 -> 34,503 B). (1) The **LabKey item**
   44 -> 15 lines: the Recs #1-#5 DONE narrative (S143-S152, S155) became a one-paragraph pointer
