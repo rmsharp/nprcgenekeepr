@@ -66,20 +66,143 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 772 Handoff Evaluation (by Session 773)
+**Score: 9/10.** **What helped:** every measurement held exactly — 0
+undocumented on both frontiers, 5 unpushed (`origin/master` = `79206add`),
+26,837 B at Orient (its "21,099 B + these records" confirmed: 5.7 KB of
+records, under its ~7.6 KB/session estimate), the ratchet citation
+byte-identical to the results file (compared BEFORE any run); next-steps (B)
+WAS the owner pick and `BACKLOG.md:8` said what the item needed (new issue +
+design gate first); the standing set was load-bearing — the run-SNAPSHOT
+mold (L780/#150) shaped plan D8c, the quoted-`echo` trap was avoided, the
+"e2e app runs the INSTALLED package" note is carried to Slice 3. **Missing:**
+(1) next-steps (A) was tagged READY but its own text says the nightly had not
+fired at 01:32 UTC — at pickup time it was time-gated (due ~07:15 UTC), so I
+rendered it BLOCKED; (2) nothing flagged that filing an issue is an
+outward-facing gate needing Learning 776's inline-render step (found by
+grepping Learnings 770-783; cost one grep); (3) neither it nor `BACKLOG.md:8`
+named the crux — the rules live only inside `modBreedingGroups` — which was
+not S772's to know. **Wrong:** nothing found (its `BACKLOG.md:20`/`:40` pins
+were right when written; they are stale only because this session rewrote the
+item above them). **ROI:** high.
+
 ### What Session 773 Did
-**Deliverable:** Mate-pair guardrail surface — the small design gate + the new
-GitHub issue `BACKLOG.md:8` calls for (IN PROGRESS). Design document only; NO
-code, NO tests this session.
-**Started:** 2026-09-23
-**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0
-priorities gate (S772 next-steps (B)). Orient measured: 0 undocumented on both
-frontiers (both at `897ffd8b` = HEAD), 5 unpushed (`origin/master` =
-`79206add`), CI 10/10 green, ratchet citation matched the results file before
-any run; `SESSION_NOTES.md` 26,837 B vs the 56,750 B read cap. TDD phase
-PRE-RED (docs-only design gate).
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
-(in progress); Phase 3F records the rest. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+**Deliverable:** **Mate-pair ancestry guardrails design gate — DONE,
+RATIFIED** (design-only: zero `R/`/`tests/`/`man/` changes). Owner-picked at
+the Phase 0 priorities gate (S772 next-steps (B)). TDD phase PRE-RED
+(docs-only) throughout; no RED transition (nothing implemented).
+**Landed:** `docs/planning/mate-pair-ancestry-guardrails-plan.md` (529 lines;
+10 decisions — 6 forced/evidence-determined, 4 owner judgment calls in one
+`AskUserQuestion` round, all four recommended options taken — 3 slices, 10
+dragons, alternatives, provenance); GitHub issue **#169** opened (`enhancement`;
+the owner confirmed the full inline-rendered draft first, L776); `BACKLOG.md`
+item rewritten forward-carrying (design RATIFIED, READY at Slice 1) — not
+removed, the implementation is open.
+**Ratified:** `block` moves a pair to the Excluded tab (reason "ancestry rule",
+overridable per rule per run); script API = optional `ancestryRules`/
+`overriddenRules` on `reportMatePairs()` (NULL rules `identical()` to today);
+rules uploaded ONCE on Breeding Groups and returned as a new reactive to the
+Mate Pair module (per-tab overrides/gate/manifest); UI = inline columns +
+collapsed section + small Ancestry tab.
+**Measured (not inferred):** the crux — rules are module-local to
+`modBreedingGroups` (no return element, zero `appServer` wiring); the shipped
+fixtures suffice (25 candidate pairs -> 5 block / 3 flag / 17 unmatched, both
+rule orientations); `reportAncestryViolations()` on 5,000 two-animal groups =
+2.39 s (the 315k/1.74M-pair figures are labeled ESTIMATES). **Verification:**
+22 cited path tokens checked (only the plan's own proposed new e2e file is
+absent) and 11 line pins re-read; ratchet **1/1 at `6925d1a0`** (3,528,733 B,
++16 B vs S772 = noise; results `1591937f7581`, manifest `aa983075d6a2`; the
+citation comparison ran at Orient BEFORE the run). Not run: local
+suite/`devtools::check()` — no package code changed.
+**Commits:** claim `aa5bfde9`; deliverable `6925d1a0`; records follow, UNPUSHED
+by design (8 unpushed after close-out). **Checklists:** all N/A (no `.R`,
+export, UI, or statistic; no CI break); issue close-out: #169 stays open;
+BACKLOG removal: N/A (item not complete).
+**Disclosures:** (1) the Planning-Sessions checklist asks for the deepest
+reasoning mode at session start — this harness has no tool to set it; not
+done. (2) I corrected one draft claim before commit (dragon 5 called a
+`testServer()` assertion "e2e"; verified by reading `test_modMatePair.R:261-263`).
+(3) Commits carry `Claude Sonnet 5`.
+
+**Self-assessment (Session 773): 9/10.** **Strengths:** claim before any
+technical work; read the #168 plan in full and inventoried the code before
+framing decisions; found the real crux from source instead of the item's text;
+measured the fixture and the kernel-cost fact; the forced/judgment split kept
+the owner round to four questions in one call; followed L776 for the outward
+issue; verified cross-references before committing; scope held to one
+deliverable. **Weak:** (1) the plan is 529 lines for a "small" gate — it mirrors
+#168's shape, and §7's ten dragons are the trim candidates if it reads heavy;
+(2) the reasoning-mode item above went unmet; (3) one inaccurate draft claim
+(caught pre-commit).
+
+**Learnings:** none appended — the one candidate ("a module-local design choice
+recorded as a benefit for the first surface — #168's 'no `appServer` change' —
+is the second surface's cost") is one instance and is already carried where it
+matters (plan §1.3/D7); FM #28.
+
+**Next steps (specific):** (A) **Slice 1 of #169 (READY, M):** the
+`reportMatePairs(ancestryRules, overriddenRules)` kernel — Pre-RED gate first
+(`AskUserQuestion`, `TDD: PRE-RED→RED`); plan §5 Slice 1 has the done-when list
+(D4 invariants, hand-derived counts 25 -> 20/5 and, overriding CHINESE x INDIAN,
+23/2, vectorized matcher, stop paths). (B) **Check the nightly shinytest2 run
+(time-gated, S):** first run on the pushed code expected ~07:15 UTC 2026-09-24
+(an estimate; it had not fired at 01:55 UTC); Phase 0's unfiltered `gh run list`
+shows it; red = report-don't-fix. (C) **Push (READY, S, owner-gated):** 8
+unpushed after close-out (recount); issue #169's body links a plan path that is
+NOT on `origin` until then (`git ls-tree origin/master -- docs/planning/
+mate-pair-ancestry-guardrails-plan.md` is empty — measured). (D) **Harem-sire
+seam hole (DECISION NEEDED, M)** `BACKLOG.md:37`, Learning 778. (E) **Slice 5
+backfill scoping (DECISION NEEDED, L)** `BACKLOG.md:57`. (F) **Read-cap ceiling
+(DECISION NEEDED, S; surfaced S772, NOT filed):** `.context-budget.json` and the
+trimmer sit at 65,536 B while the read cap binds at 56,750 B. (G) Issue #138
+scoping (low priority, L) and the rest of "Lower priority" unchanged in
+`BACKLOG.md`.
+
+**Key files:** `docs/planning/mate-pair-ancestry-guardrails-plan.md:133`
+(decisions), `:299` (slices; Slice 1 done-when), `:385` (dragons), `:499`
+(ratification); `R/reportMatePairs.R:154-165` (the screen's insertion point) and
+`:96` (signature); `R/modBreedingGroups.R:352` (rules reactive) and `:1110`
+(return list); `R/modMatePair.R:152`; `R/appServer.R:466`;
+`tests/testthat/test_moduleContract.R:54,97`; `BACKLOG.md:8`; `CHANGELOG.md:49`;
+`HANDOFFS.md:167`; `.quality-gates-results.json`.
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at Phase 0 —
+measure it; ~8 unpushed (recount); `origin/master` = `79206add`. (2)
+**BACKLOG line pins moved:** the mate-pair item now spans `:8-33`, so the
+harem-sire item is `:37` and slice-5 `:57` — grep, don't trust older handoffs'
+`:20`/`:40`. (3) Ratchet 1/1 at `6925d1a0` (3,528,733 B, results
+`1591937f7581`); cite from the results file; comparison BEFORE any run; run
+AFTER committing. (4) **Plan items left to later gates:** the exact new-column
+list is Slice 1 RED's; the mate-pair confirm-gate wording (plan D8a) needs owner
+ratification at Slice 3 RED; Slice 2 touches >5 files, so several commits (RED
+commit tests-only). The new column/element names `ancestryStatus`/
+`ancestryCoverage` overlap `modBreedingGroups`' module-local output ids
+(harmless, plan §1.3). (5) **Slice 1 mechanics:** `devtools::document()`
+regenerates `man/reportMatePairs.Rd`; a `NEWS.Rmd` entry is owed (new arguments
+on an exported function, plain language); `a2interactive.Rmd` is the deferred
+pass; lint touched `.R`; use the shipped `example_ancestry_*.csv` — never edit
+`examplePedigree`/`qcPed`; QC the fixture with `minParentAge = 2` (as the
+roxygen example does; all ages >= 21, so no age exclusion). (6) **STANDING SET
+(carried forward):** full-40-char sha + smoke-test `gh run` filters (sha from
+`git rev-parse`); `scratchpad/` invisible to git BY OWNER DECISION; renv banner
+expected; `CLAUDE.md` warn band (26,360 B) = headroom, growth run 56/10 at close-out; zsh
+harness traps (no foreground sleep; no `&`/`disown` inside
+`run_in_background`; quote `echo` separators); trim budget 65,536 B for ALL THREE
+ledgers (S767) plus the read cap (56,750 B) which binds first for
+`SESSION_NOTES.md`. (7) The e2e app runs the INSTALLED package — `R CMD INSTALL`
+the dev tree before any local live-e2e run (Slice 3). (8) Consumers read run
+SNAPSHOT fields, never live inputs (L780/#150); the group report universe is
+FORMED groups only (L781 — n/a to pairs). (9) `commented_code_linter` fires on
+a prose comment with an inner `#` — write "issue 168". (10) 5 untracked render
+artifacts (3 HTMLs Aug 15, 2 PDFs Aug 25) are known residue, not ghost-session
+evidence. (11) **Housekeeping is nearer than S772 forecast — sizes MEASURED at
+close-out:** `SESSION_NOTES.md` 35,867 B (this session's records grew it +9.0
+KB, vs S772's +5.7 KB; 20.9 KB of headroom under the 56,750 B read cap, so the
+trim is due ~S775-S776, an estimate), `HANDOFFS.md` 58,245 B (7.3 KB under the
+65,536 B trigger; one more ~7 KB receipt reaches it, so its archive pass is due
+at S774's close-out or S775's Orient, an estimate), `CHANGELOG.md` 31,428 B (has
+room); `--check --budget-bytes 65536` says "does not fire" for all three;
+`context_budget.py` growth run 56/10. `wc -c` at Orient.
 
 ### Session 771 Handoff Evaluation (by Session 772)
 **Score: 9/10.** **What helped:** every measurement held exactly — 0

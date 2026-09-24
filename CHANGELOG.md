@@ -46,6 +46,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S773 records: mate-pair design gate DONE, close-out records committed
+- **Deliverable:** the design gate recorded in the `[issue #169]` entry below
+  (`6925d1a0`; issue #169 opened, plan ratified, BACKLOG item rewritten
+  forward-carrying). Ratchet 1/1 at `6925d1a0` (3,528,733 B, +16 B vs S772 =
+  noise; results `1591937f7581`, manifest `aa983075d6a2`); the
+  receipt-citation comparison ran at Orient BEFORE the run. Not run: local
+  suite/`devtools::check()` — no package code changed. No `.R`/export/UI/
+  statistic (all code checklists N/A); the GitHub issue stays open (the
+  implementation is not done).
+- **Receipt:** `HANDOFFS.md` S773 `status: complete` (self 9/10, S772
+  evaluated 9/10); its `commit:` names the deliverable commit `6925d1a0`
+  (the records commit cannot name its own sha). Handoff evaluation and the
+  S773 record are in `SESSION_NOTES.md`.
+- **Ledger sizes (measured at close-out, `--check --budget-bytes 65536`, none
+  fire):** `SESSION_NOTES.md` 35,867 B (records grew it +9.0 KB), `HANDOFFS.md`
+  58,245 B, `CHANGELOG.md` 31,428 B (before this line). The next
+  `HANDOFFS.md` archive pass and `SESSION_NOTES.md` trim are nearer than S772
+  forecast — recorded in the receipt's gotcha (11).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-23 · [issue #169] Mate-pair ancestry guardrails design gate RATIFIED; issue #169 opened
 - **Deliverable (design-only, zero `R/`/`tests/`/`man/` changes):**
   `docs/planning/mate-pair-ancestry-guardrails-plan.md` — 10 decisions (6
