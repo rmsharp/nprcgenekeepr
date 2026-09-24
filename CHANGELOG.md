@@ -46,6 +46,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [ad hoc] `BACKLOG.md`: compressed the LabKey item and the kinship2 section's DONE narrative
+- **Change:** `BACKLOG.md` 521 -> 433 lines (42,354 -> 34,503 B). (1) The **LabKey item**
+  44 -> 15 lines: the Recs #1-#5 DONE narrative (S143-S152, S155) became a one-paragraph pointer
+  to `CHANGELOG.md`; the BLOCKED tag and the still-deferred remainder are kept in full. (2) The
+  **"Pedigree diagram vs kinship2" section's** S435-S436 triage intro, S480 sequencing note and the
+  Tier 1 / Tier 2 DONE blocks, 84 -> 20 lines: what remains states the outcome (8 issues filed in an
+  owner-set order, all closed except **#138**), the two tiers, and the pointers (audit, sequencing
+  audit, spike, plan docs, Learnings 410/411/485/488-499). (3) The **S518 housekeeping item's** pass
+  history and next-pass candidates were updated for this pass, with the regrowth measurement
+  (480 lines after S752, 561 before this pass). The per-slice detail that is no longer in the file
+  is in the ledger, the plan docs and the Learnings, and recoverable with
+  `git show ab50aed1:BACKLOG.md`. **The owner ratified this deeper cut** by picking "Compress DONE
+  narrative" (the S518 item had recorded it as needing fresh ratification).
+- **Commit:** this commit -- `BACKLOG.md` and this entry only. **Local, not pushed.**
+- **Session:** none -- owner-directed, outside a numbered session (follows S778) · **Verified:**
+  the S518 method, before cutting anything. **Ledger:** every LabKey session (S143, S144, S146-S152,
+  S155) has an entry heading naming it and all 8 load-bearing names are in the ledger
+  (`setLabKeyDefaults`, `defaultSiteParams`, `getPedigreeSource`, `getFileDirectRelatives`,
+  `getFocalAnimalPedFromFile`, `nprcgenekeeprFileErr`, `readFocalAnimalIds`, `Rlabkey (>= 3.2.0)`).
+  **Disclosed deviation:** for the kinship2 sessions (S435-S500) only S482 has a heading that
+  names its S-number -- the others are recorded inside entry bodies -- so step (1)'s "heading"
+  wording could not be met literally; the load-bearing facts were verified instead (all 8 design
+  and plan doc paths, `checkTwinRelations`, `obfuscateTwinRelations`, `orderBySex`, the
+  dangling-parent/#154 fixes, and the #136 disclosure defect as "`name` scrubbed to `NA` (D8)"
+  plus plan section D8). **Learnings** 410, 411, 485, 488-499 all resolve. **Issues** #131-#137,
+  #139, #141, #143-#145 and #154 are CLOSED and only #138 is OPEN (`gh issue view`). **Untouched:**
+  15 of the 16 open items are byte-identical before and after (a script compared each `- [ ]`
+  block); the LabKey item is the one compressed in place. No test reads `BACKLOG.md`
+  (`grep`), and `methodology_dashboard.py` runs without error against the new file. **Not run:**
+  the test suite and `devtools::check()` -- no package code changed.
+
 ### 2026-09-24 · [ad hoc] `BACKLOG.md`: fixed stale statements and dropped resolved section stubs
 - **Change:** (1) the Genetic-metrics section intro no longer points at "the open item at the end of
   this section" -- that item (the two unticketed High-priority audit gaps) became issues #167 and
