@@ -358,6 +358,32 @@ D8c); the Breeding Groups tab's own behavior and e2e are unchanged; full suite +
 prove the live cross-tab reactive graph through `appServer` — that is Slice 3's e2e, and no
 live-wiring claim is made before it.
 
+**Outcome (S775, shipped — RED `53e172d6`, correction `fdb705bd`, GREEN `402549a7`/`e4401806`,
+REFACTOR `4be16a12`):** as designed, with these facts fixed by owner gates. The Mate Pair config
+panel carries a collapsed "Ancestry Guardrails" toggle (Breeding Groups' layout) with the status
+line ALWAYS visible and an explainer inside the collapsed panel — **Slice 3 puts the override
+control inside that same panel; nothing moves.** Status texts: none = "No ancestry rules loaded. Load
+a rules file on the Breeding Groups tab to apply it here." (module-local); active / inactive are
+Breeding Groups' own texts via one shared `.ancestryStatusLine()` (`R/reportAncestryViolations.R`).
+`modBreedingGroupsServer` returns `ancestryRules = reactive(ancestryRulesData())` — the validated
+table as loaded, deliberately NOT `ancestryRulesForRun()`; `appServer` passes `bgResults$ancestryRules`
+verbatim (a BG return without the element gives an explicit NULL). The module's own
+`ancestryRulesForRun()` (rules only when loaded AND the pedigree has an `ancestry` column) feeds
+`reportMatePairs(ancestryRules =)` at the click, so the stored `matchResults` IS the run snapshot
+(D8c). **For Slice 3:** `matchResults` holds ONLY the kernel result today (its `ancestryCoverage` is
+in it) — the manifest also needs the run's rules and overrides, so extend what the click stores (or
+add a sibling `reactiveVal` set at the click); never read the live reactives at download time. The
+zero-pairs alert keeps its text byte-for-byte and appends "N pair(s) were excluded by ancestry rules
+-- see the Excluded tab." only when at least one pair was excluded by a rule. Dragon 10 resolved:
+the run-time re-validation warning is left unmuffled, as Breeding Groups does (console only; the
+upload notification is the user-facing surface), and pinned. Dragon 5 stands: `test_modMatePair.R`'s
+two-reason assertion is untouched (it supplies no rules). Two measured non-obvious facts: an observer
+error under `testServer()` destroys the module session, so a click-time error test can pin only the
+surfaced warning (Learning 786); and the scratch live run (a scratch-installed build, one-off, not
+committed) confirmed the real cross-tab graph — 20 eligible / 5 excluded, the 11-column CSV, the
+live status after loading rules on Breeding Groups, zero console errors — which Slice 3's committed
+e2e must still own.
+
 ### Slice 3 — Override gate + audit manifest + e2e + documentation
 **Touches:** `R/modMatePair.R` (per-rule override select + confirm-gate modal with required
 reason, per-surface override state, the "Ancestry" tab: coverage + manifest `downloadHandler`
