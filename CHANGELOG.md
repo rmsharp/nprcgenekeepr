@@ -46,6 +46,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #169] S775 claim: Slice 2 — rules delivery + Mate Pair module wiring *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (S774 next-steps (A),
+  `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger frontiers
+  (both at `a7628998` = HEAD), 15 unpushed (`origin/master` = `79206add`), CI
+  green (all four push workflows + the 2026-09-23 nightly), S774
+  receipt-citation vs `.quality-gates-results.json` matched byte-for-byte BEFORE
+  any ratchet run; `HANDOFFS.md` trim trigger FIRES (68,434 B vs 65,536 B) —
+  reported, not this session's deliverable. Deliverable is Slice 2 of 3 (the
+  module; no override gate; strict TDD, `AskUserQuestion`-gated phases). Stub +
+  pending receipt ride this commit; close-out records the rest. Issue #169 stays
+  open until Slice 3.
+
 ### 2026-09-23 · [ad hoc] S774 records: Slice 1 of #169 DONE, close-out records committed
 - **Deliverable:** Slice 1 of issue #169 (the `reportMatePairs()` ancestry
   kernel), recorded in the entries below: claim `0a4c155e`, RED `a29e88bb`,

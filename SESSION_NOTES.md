@@ -66,6 +66,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 775 Did
+**Deliverable:** **Slice 2 of issue #169 — rules delivery + applying the
+ancestry rules in the Mate Pair module, no override gate** (IN PROGRESS).
+`modBreedingGroupsServer` returns an `ancestryRules` reactive; `modMatePairServer`
+takes it, checks for the `ancestry` column before passing rules, snapshots them
+at the "Find Eligible Pairs" click (D8c), shows blocked pairs on Excluded and
+flags as columns in Eligible Pairs. Plan:
+`docs/planning/mate-pair-ancestry-guardrails-plan.md` §5 Slice 2 (+ its **Outcome
+(S774)** paragraph for Slice 1's facts).
+**Started:** 2026-09-23 (evening local; 2026-09-24 ~04:40 UTC)
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0
+priorities gate (S774 next-steps (A)). Orient measured: 0 undocumented on both
+frontiers (both at `a7628998` = HEAD), 15 unpushed (`origin/master` =
+`79206add`), CI green (all four push workflows + nightly shinytest2 on 09-21,
+09-22, 09-23; the 09-24 nightly not due at 04:28 UTC), ratchet citation matched
+the results file before any run; `SESSION_NOTES.md` 47,794 B (under the 56,750 B
+read cap and 65,536 B ceiling), `HANDOFFS.md` 68,434 B — `--check --budget-bytes
+65536` **FIRES** (reported, not this session's deliverable), `CHANGELOG.md`
+40,929 B. **TDD phase: PRE-RED**; the `PRE-RED→RED` `AskUserQuestion` gate (and
+any scope/approach decision that is the owner's) is owed before any test is
+written.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 773 Handoff Evaluation (by Session 774)
 **Score: 9/10.** **What helped:** every measurement held exactly — 0
 undocumented on both frontiers (both at `d3603995`), 8 unpushed (`origin/master`
