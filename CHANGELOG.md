@@ -46,6 +46,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S773 claim: mate-pair guardrail surface design gate *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (S772 next-steps (B),
+  `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger frontiers
+  (both at `897ffd8b` = HEAD), 5 unpushed, CI 10/10 green, S772
+  receipt-citation vs `.quality-gates-results.json` matched byte-for-byte
+  BEFORE any ratchet run. Deliverable is a design document + the new GitHub
+  issue (design gate only, no code). Stub + pending receipt ride this commit;
+  close-out records the rest.
+
 ### 2026-09-23 · [ad hoc] S772 records: SESSION_NOTES.md read-cap trim DONE, close-out records committed
 - **Deliverable:** the trim recorded in the tool-written entry below (`3f78c7ac`,
   owner-ratified `--cut 5 --force`: 8 of 13 records → `-2` shard, 54,857 →

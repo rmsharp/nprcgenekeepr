@@ -66,6 +66,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 773 Did
+**Deliverable:** Mate-pair guardrail surface — the small design gate + the new
+GitHub issue `BACKLOG.md:8` calls for (IN PROGRESS). Design document only; NO
+code, NO tests this session.
+**Started:** 2026-09-23
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0
+priorities gate (S772 next-steps (B)). Orient measured: 0 undocumented on both
+frontiers (both at `897ffd8b` = HEAD), 5 unpushed (`origin/master` =
+`79206add`), CI 10/10 green, ratchet citation matched the results file before
+any run; `SESSION_NOTES.md` 26,837 B vs the 56,750 B read cap. TDD phase
+PRE-RED (docs-only design gate).
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 771 Handoff Evaluation (by Session 772)
 **Score: 9/10.** **What helped:** every measurement held exactly — 0
 undocumented on both frontiers, 2 unpushed (`origin/master` = `79206add`),
