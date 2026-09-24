@@ -46,6 +46,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #169] S775 GREEN 2/2: NEWS.Rmd release-state entry + UI roxygen (ledger for the three GREEN-phase commits)
+- `NEWS.Rmd`: the ONE existing #169 entry under "Mate Pair Analysis" REVISED (not appended; Learning 785) to the
+  release state: load the rules on the Breeding Groups tab and the Mate Pair Analysis tab uses them (block ->
+  Excluded tab with the reason "ancestry rule"; flag -> stays in Eligible Pairs with its rule shown, also in the
+  exported file); a status line says whether rules are active and how many animals no rule covers; the script
+  arguments and the coverage result stay described; without rules, or with no ancestry column, everything is
+  exactly as before. Plain-language criterion (S628) applied: no "reactive"/"snapshot"/kernel wording.
+  `R/modMatePair.R` `modMatePairUI()` roxygen `@return` now mentions the collapsed section + status line;
+  `man/modMatePairUI.Rd` regenerated (`devtools::document()` touched only this file).
+
+### 2026-09-23 · [issue #169] S775 GREEN 1/2: Mate Pair module applies the ancestry rules loaded on Breeding Groups (`402549a7`)
+- `R/modBreedingGroups.R`: the return list gains `ancestryRules = reactive(ancestryRulesData())` (the validated
+  table as loaded; NULL when none; deliberately NOT `ancestryRulesForRun()`) + roxygen `@return`.
+  `R/appServer.R`: `ancestryRules = bgResults$ancestryRules` threaded into `modMatePairServer` (the same
+  object; a BG return without the element gives an explicit NULL). `R/modMatePair.R`: new `ancestryRules = NULL`
+  parameter; collapsed "Ancestry Guardrails" toggle + always-visible `ancestryStatus` output + explainer panel
+  (unprefixed `conditionalPanel` condition, Learning 324); `ancestryRulesData()` / `ancestryRulesForRun()` (rules
+  only when loaded AND the pedigree has an `ancestry` column) / `ancestryStatusText()` (none / active / inactive);
+  the click passes `ancestryRules = ancestryRulesForRun()` to `reportMatePairs()` so the stored result IS the run
+  snapshot (D8c); the zero-pairs alert keeps its text byte-for-byte and appends an ancestry-exclusion count
+  sentence only when >=1 pair was excluded by a rule. `man/modBreedingGroupsServer.Rd`,
+  `man/modMatePairServer.Rd` regenerated. Five files. GREEN result: the 16 new module blocks, the two
+  contract rows, 3 BG blocks and 2 appServer blocks pass; sibling `test_modMatePair.R` (44) unchanged.
+
+### 2026-09-23 · [issue #169] S775 RED correction: the malformed-rules block's unobservable post-error read removed (`fdb705bd`)
+- Declared RED correction, test only (no implementation change). The RED block pinning "a malformed rules
+  table surfaces at the click" also asserted `isReady()` was FALSE afterwards; at GREEN it errored with
+  `shiny.destroyed.error` — the observer error being pinned makes Shiny destroy the module session, after
+  which no module-domain reactive (the returned `isReady()`, and the module-local `reactiveVal` run store
+  too) can be read. That half was unobservable, so it was dropped; the surfaced warning carrying the
+  `checkAncestryRules` message stays pinned. Own commit to keep GREEN 1/2 within the 5-file cap.
+
 ### 2026-09-23 · [issue #169] S775 RED: Slice 2 failing tests committed (Mate Pair module ancestry rules)
 - New `tests/testthat/test_modMatePair_ancestry.R` (16 blocks) plus additions to
   `test_moduleContract.R` (BG `names` +`ancestryRules`; matePair `args`

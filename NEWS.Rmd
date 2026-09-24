@@ -426,14 +426,20 @@ knitr::opts_chunk$set(echo = TRUE)
   their relatedness and genetic-value context. Report-only (issue #151).
 - New **Mate Pair Analysis** tab: a curator view built on the report above,
   kept separate from Breeding Group Formation (issue #151).
-- `reportMatePairs()` can follow your center's ancestry rules (issue
-  #169): the new optional `ancestryRules` and `overriddenRules` arguments
-  take the same rules file used for breeding groups. A pair a "block" rule
-  names moves to the excluded list with the reason "ancestry rule", a pair
-  a "flag" rule names stays listed and is marked, and a rule you override
-  keeps its pairs listed, marked "overridden". The result also shows how
-  many animals each ancestry group holds and which ones no rule reaches.
-  Without rules the report is exactly as before.
+- Mate pair reports can follow your center's ancestry rules (issue #169).
+  Load the rules file on the Breeding Groups tab and the **Mate Pair
+  Analysis** tab uses it too: a pair a "block" rule names moves to the
+  Excluded tab with the reason "ancestry rule", and a pair a "flag" rule
+  names stays in Eligible Pairs with its rule shown, in the exported file
+  as well. A status line on the tab says whether rules are active and how
+  many animals no rule covers, and the "Ancestry Guardrails" section
+  explains what the rules do there. In scripts, `reportMatePairs()` takes
+  the same rules through the new optional `ancestryRules` and
+  `overriddenRules` arguments; a rule you override keeps its pairs listed,
+  marked "overridden". The result also shows how many animals each
+  ancestry group holds and which ones no rule reaches. Without rules, or
+  when the pedigree has no ancestry column, the report and the tab are
+  exactly as before.
 
 ## De-Identified Export
 - `obfuscatePed()` gained a **linkedDateShift** argument (default `TRUE`):

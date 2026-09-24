@@ -11,8 +11,9 @@ modMatePairUI(id)
 }
 \value{
 A \code{div} containing the mate-pair analysis UI: a candidate-
-population/age/exclude-list configuration panel and an "Eligible Pairs"
-/ "Excluded" tabbed result view.
+population/age/exclude-list configuration panel (with a collapsed
+"Ancestry Guardrails" section and an always-visible ancestry-rules
+status line) and an "Eligible Pairs" / "Excluded" tabbed result view.
 }
 \description{
 Mate Pair Analysis Module - UI Function
