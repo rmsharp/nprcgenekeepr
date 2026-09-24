@@ -80,275 +80,722 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+**Archived 11 record(s), 2026-09-21 → 2026-09-21** into
+[`docs/archive/SESSION_NOTES-through-2026-09-21-2.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-21-2.md)
+— same format, same order, frozen. Losslessness is proved by
+[`docs/archive/SESSION_NOTES-through-2026-09-21-2.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-21-2.md.verify.sh),
+which re-derives L1/L2/L3 from git; run it rather than trusting this
+sentence. Written by `methodology_trim.py` v1.5.0.
+
+**Archived 9 record(s), 2026-09-21 → 2026-09-22** into
+[`docs/archive/SESSION_NOTES-through-2026-09-22.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-22.md)
+— same format, same order, frozen. Losslessness is proved by
+[`docs/archive/SESSION_NOTES-through-2026-09-22.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-22.md.verify.sh),
+which re-derives L1/L2/L3 from git; run it rather than trusting this
+sentence. Written by `methodology_trim.py` v1.5.0.
+
+**Archived 9 record(s), 2026-09-22 → 2026-09-23** into
+[`docs/archive/SESSION_NOTES-through-2026-09-23.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-23.md)
+— same format, same order, frozen. Losslessness is proved by
+[`docs/archive/SESSION_NOTES-through-2026-09-23.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-23.md.verify.sh),
+which re-derives L1/L2/L3 from git; run it rather than trusting this
+sentence. Written by `methodology_trim.py` v1.5.0.
+
 ------------------------------------------------------------------------
 
 ## ACTIVE TASK
 
-### What Session 754 Did
+### What Session 771 Did
 
-**Deliverable:** Push to origin/master + CI verification — 13 docs-only
-commits unpushed at Orient (recounted, matches S753’s prediction); claim
-commit rides the push (IN PROGRESS) **Started:** 2026-09-21 **Status:**
-Session claimed. Work beginning. **Ledger:** `CHANGELOG: pending` — the
-claim commit’s `CHANGELOG.md` entry says (in progress); Phase 3F records
-the rest. Until close-out, this line is the crash breadcrumb for the
-next session’s reconcile.
+**Deliverable:** Push 97 unpushed commits to `origin/master` + CI
+verification (all four push-triggered workflows green) (IN PROGRESS)
+**Started:** 2026-09-23 **Status:** Session claimed. Work beginning.
+Owner-picked at the Phase 0 priorities gate (S770 next-steps (A)).
+Orient measured: 0 undocumented on both frontiers, 97 unpushed at
+`42c57ad6`, CI 10/10 green (current through `8007de81`), ratchet
+citation matched results file before any run. **Ledger:**
+`CHANGELOG: pending` — the claim commit’s `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session’s reconcile.
 
-### Session 752 Handoff Evaluation (by Session 753)
+### Session 769 Handoff Evaluation (by Session 770)
 
-**Score: 9/10.** **What helped:** “8 unpushed expected (recount)”
-measured exactly 8; “expect 0 undocumented; measure it” measured 0 on
-both frontiers at `0bcad910`; the S752 receipt’s ratchet citation
-matched `.quality-gates-results.json` byte-for-byte (15a11fe864f4,
-3,489,151 B at `37992d20`); growth run 32/10 at Orient (“read the value,
-measure don’t predict” — it had risen from 31 exactly as warned); the
-`BACKLOG.md:463` anchor was exact; next step (A) WAS this session’s
-deliverable, with the right first move (recompute the premise), the
-right sources (capability audit’s two High rows, sequencing audit
-Finding \#1 `:116-124` + Recommendation 2 `:309` — all found where
-cited), and the right gate (owner confirms titles/bodies before
-`gh issue create`, correctly labeled a recommendation). **What was
-missing:** HOW to present the drafts at the confirm gate — the first
-`AskUserQuestion` packed the bodies into option previews and
-round-tripped undecided (Learning 776); arguably not a knowable claim in
-S752’s scope. **What was wrong:** one phrasing imprecision — “across all
-166 issues in every state” counts issues+PRs (shared number sequence); a
-fresh `gh issue list --state all` returns 107 issues. Same population
-searched, so the verification’s substance stands. **ROI:** high.
+**Score: 10/10.** **What helped:** gotcha (2)’s sizes predicted Orient
+exactly — `HANDOFFS.md` fired (76,182 B) and `CHANGELOG.md` (65,527 B, 9
+B under) crossed with the claim’s own ledger entry, precisely as
+written; “expect 0 undocumented; measure it” measured 0 on both
+frontiers; “~92 unpushed (recount)” measured exactly 92; gotcha (3)
+followed — S769’s ratchet citation matched `.quality-gates-results.json`
+byte-for-byte, compared BEFORE any run; next-steps (A) WAS the
+owner-picked deliverable and every named mechanic held (SRF cleared by
+the ratified `--force`; Learning 777’s `--cut N` = KEEP N shaped both
+gate texts; Learning 782 held — the trimmer wrote all three of its own
+ledger entries, zero hand-written duplicates). **Missing/wrong:** trivia
+— the carried “S760’s next-steps (E)” standing-list pointer is off:
+S760’s receipt has next_steps (A)–(D) only; the standing set actually
+lives in its gotcha (9) (cost: one read of that receipt). **ROI:** high.
 
-### What Session 753 Did
+### What Session 770 Did
 
-**Deliverable:** File the 2 unticketed High-priority audit gaps as
-GitHub issues — **DONE**: **\#167** “Add longitudinal genetic-health
-monitoring (colony snapshots and trend reporting)” and **\#168** “Add
-ancestry guardrails to breeding-group formation (configurable
-compatibility rules with override/audit trail)”, both shaped like \#147
-per the sequencing audit’s Recommendation 2 (`## Source` citing both
-audits, capability gap, feature description, closing Pre-RED-design-gate
-line, no labels), both owner-approved **verbatim** via `AskUserQuestion`
-— after rendering the full drafts as blockquoted markdown
-in-conversation (the preview-only first gate round-tripped undecided;
-Learning 776). Premise recomputed BEFORE filing: 0 title hits
-(`longitudinal`/`ancestry`/`guardrail`/ `monitoring`), body hits only
-closed unrelated \#118/#76, positive control (`kinship in:title` = 5)
-proved the harness (Learning 775 discipline). Completed `BACKLOG.md`
-block (18 lines at :463) REMOVED in the deliverable commit (S686 rule);
-file 480→462 lines. **Started/completed:** 2026-09-21 (single session).
-Claim `33e66364`; deliverable `c823a9f7`; Learning `2c86a035`; records +
-sha commits follow this handoff. **Ledger:** one `CHANGELOG.md` entry
-per action — claim, issue \#167 filed, issue \#168 filed, deliverable
-commit, Learning 776, records, sha. TDD phases N/A (triage, no code;
-declared at every response top).
+**Deliverable:** **CHANGELOG.md + HANDOFFS.md archive pass — DONE**,
+owner-gated end to end (Phase 0 priorities pick; one 2-question gate
+ratifying both dry-run-verified cuts + `--force`). TDD phase PRE-RED
+(docs-only) declared throughout. **Trims (both dry-run first; SRF
+cleared by the ratified `--force`):** `CHANGELOG.md` `--cut 13`
+(`b57c35bc`): 52 of 65 records (2026-09-21 → 2026-09-23) →
+`docs/archive/CHANGELOG-through-2026-09-23.md`; live 66,092 → 20,120 B
+(−69.6%), keeps all S768–S770 entries. `HANDOFFS.md` `--cut 4`
+(`c195ea31`): 7 of 11 receipts (S760–S766) →
+`docs/archive/HANDOFFS-through-2026-09-23.md`; live 76,658 → 33,009 B
+(−56.9%), keeps S767–S770. **The S760 standing-set receipt is now
+ARCHIVED** — its standing set is carried forward in the S770 receipt’s
+gotchas (S686 forward-carrying rule), updated where stale (trim budget
+is 65,536 B for all three ledgers per the S767 ratification). Both
+verify scripts run twice (pre- and post-commit): L1/L2/L3 hold. The
+trimmer wrote its own ledger entries (Learning 782) — no duplicates.
+**Verification (measured):** post-pass `--check --budget-bytes 65536`:
+CHANGELOG 20,888 B, HANDOFFS 33,009 B, SESSION_NOTES 41,867 B — none
+fire. Ratchet **1/1 pass at `c195ea31`** (3,528,758 B, results
+`9649b761f9d3`, manifest `aa983075d6a2` — +9 B vs S769 = noise on a
+docs-only diff). CI 10/10 green at Orient; receipt-citation comparison
+done before the ratchet run. **Started/completed:** 2026-09-23. Claim
+`eaff866e`; trims `b57c35bc` + `c195ea31`; records + sha follow.
+**Checklists:** lint N/A (no `.R` touched); NEWS/pkgdown/citation/
+tutorial/a2interactive N/A (no export, UI, or statistic); no BACKLOG
+item existed for this pass (tracked via S769 next-steps (A)); no GitHub
+issue involved.
 
-**Self-assessment (Session 753): 9/10.** **Strengths:** (1) premise
-re-measured before acting (Learning 773 reflex) WITH a positive control
-beside the expect-zero sweep (Learning 775); (2) read \#147 before
-drafting instead of assuming its shape; (3) the outward-facing gate held
-— nothing was filed until verbatim approval, and the “don’t file” option
-was real; (4) S686 removal in the same commit as the deliverable entry;
-per-action ledger entries including the two non-commit actions (issue
-creates); (5) FM \#28 reduction: REAL — `BACKLOG.md` −18 lines, a
-mandated-read file got smaller. **Weaknesses:** (1) the first confirm
-gate was unreviewable (bodies in option previews only) and cost a full
-round trip — the owner had to ask to see the drafts; Learning 776
-written so the next outward-facing confirm renders first; (2) the
-166-vs-107 issue-count reconciliation was done mid-flight and recorded
-in the ledger entry, but I did not surface it to the owner at the gate.
+**Self-assessment (Session 770): 9/10.** **Strengths:** (1) both gates
+carried exact dry-run-derived numbers and the results matched the gates
+exactly; (2) both trims proved lossless twice; (3) per-action commits
+(claim, trim, trim, records, sha), ≤4 files each; (4) a real FM \#28
+reduction landed — ~89 KB moved out of mandated-read ledgers, all three
+under budget with ~4–5 sessions of headroom; (5) the receipt-citation
+comparison ran BEFORE the ratchet run (S768’s lost comparison not
+repeated); (6) the S760 standing-set pointer chain ended by
+forward-carrying instead of another “via its live receipt” hop.
+**Weak:** (1) the claim entry itself pushed `CHANGELOG.md` over budget
+mid-session — inherent to claim-first ordering, but the Phase 0 report
+could have said so explicitly; (2) the stale “S760 next-steps (E)”
+phrasing was inherited by three consecutive handoffs (incl. the one I
+evaluated 10/10) before being caught here — a reminder that carried
+pointers decay silently.
 
-**Learnings:** `PROJECT_LEARNINGS.md` Learning 776 appended (render
-document-shaped drafts inline before the structured confirm; `preview`
-is for comparing short artifacts, not proofreading prose).
+**Learnings:** none appended — the mechanics are covered by Learnings
+777/782; the one candidate (the “S760 next-steps (E)” mispointer) is a
+handoff correction carried in the receipt, not a general pattern (FM
+\#28).
 
-**Next steps (specific):** (A) **Push+CI: now the largest pending item**
-— 13 docs-only commits unpushed after close-out (8 inherited + S753’s 5:
-claim `33e66364`, deliverable `c823a9f7`, Learning `2c86a035`, records,
-sha; recount with `git rev-list --count origin/master..HEAD`); CI
-current through `a7613044`. Not urgent, but the gap grows each session.
-(B) **New issues \#167/#168 are now pickable** from `gh issue list` —
-each requires a Pre-RED design/scoping session FIRST when picked up
-(their closing gate line; \#147/#148’s precedent: scoping doc →
-owner-ratified plan → TDD slices). (C) Unchanged: chromote hang research
-(READY, M, research only, `BACKLOG.md:129`); inst/doc slimming (DECISION
-NEEDED, M, `:108`); REUSE registration (owner action, S, `:153`);
-kinship2-standalone BLOCKED on the S738 revisit conditions (`:71`);
-LabKey BLOCKED (`:27`); BACKLOG compression recurring (`:181`, measured
-candidates in the item).
-
-**Key files:** `BACKLOG.md` (now 462 lines; the :463 item is GONE — the
-Genetic-metrics section now ends with the \#148 pass-history block;
-anchors at/above :180 and the :419 section heading unchanged),
-`CHANGELOG.md:41` (S753 entries at top), `PROJECT_LEARNINGS.md:2242`
-(Learning 776), `HANDOFFS.md` (S753 receipt),
-`.quality-gates-results.json` (head `c823a9f7`).
-
-**Gotchas for the next session:** (1) Expect 0 undocumented commits at
-next Phase 0 — measure it; 13 unpushed expected (recount). (2) The
-retired premise: issue searches for
-`longitudinal`/`ancestry`/`guardrail` now legitimately HIT \#167/#168 —
-do not re-run the old “verify unfiled” check expecting zeros. (3)
-Ratchet baseline now 3,489,135 B at `c823a9f7` (−16 B vs `37992d20` —
-build-metadata noise again; the measured value drifts a few bytes
-between runs with no package change); cite from
-`.quality-gates-results.json` (results `b593a0c84084`), never the
-rounded run table. (4) No code touched, no test suite run (docs-only;
-suite baseline 0 failed / 0 error / 184 skipped stands, remotely
-confirmed through `a7613044`). (5) Standing set unchanged:
-`gh run list --commit` needs the FULL 40-char sha + smoke-test the
-filter; `scratchpad/` invisible to git BY OWNER DECISION; ratchet AFTER
-committing (Learning 772); trim needs `--budget-bytes 65536`; renv
-banner expected; CLAUDE.md warn band (26,360 B); growth run 32/10 at
-Orient — read the value at the next Orient; the two `SESSION_NOTES.md`
-ceilings differ (owner decision pending); zsh harness traps (Learning
-775).
-
-### Session 751 Handoff Evaluation (by Session 752)
-
-**Score: 9/10.** **What helped:** “2 unpushed expected (recount)”
-measured exactly 2; “expect 0 undocumented; measure it” measured 0 on
-both frontiers at `23107e60`; growth run measured 28/10 (exactly the
-“next if nothing shrinks” value); the S751 receipt’s ratchet citation
-matched `.quality-gates-results.json` byte-for-byte (e7499ae4e4a9,
-3,489,091 B at `a7613044`); CI-current-through-`a7613044` held (10/10
-green); every BACKLOG tag-line anchor cited (:110/:72/:131, :280
-heading) was exact; next step (A) named the right item and the right
-first move. **What was missing:** the handoff pointed only at the
-kinship2 section’s regrowth check, and never noticed that the section
-which actually regrew was “Genetic-metrics” (80→91 lines via the \#148
-chain, S703–S708, after S606’s compression) — now fully closed and
-hiding an unfiled-issues thread. One measurement found it; not a
-knowable claim in S751’s scope. **What was wrong:** nothing material —
-the `:181` anchor is the item’s second line (bullet starts `:180`),
-harmless. **ROI:** high.
-
-### What Session 752 Did
-
-**Deliverable:** `BACKLOG.md` editorial compression pass (S518 recurring
-item) — **DONE** (deliverable commit `37992d20`). Scope ratified at a
-structured gate AFTER measuring: the named regrowth check found
-“Pedigree diagram vs kinship2” **NOT regrown** (286→156 lines), so the
-real targets were “Genetic-metrics PDF audit follow-ups” (91→62 lines,
-incl. one extracted open item) + the S518 item’s own pass history
-(91→38); owner picked that pair. File 561→480 lines, 47,218→39,507 B
-(−81 lines, −16.3%); every other open item byte-identical (179 prefix +
-200 middle lines, proven by script). **Buried open thread EXTRACTED as
-its own item** (S686 rule): 2 audit-table High-priority rows
-(“Longitudinal genetic-health monitoring”, “Ancestry guardrails”) have
-NO GitHub issue — re-verified across all 166 issues in every state plus
-body searches. Now `BACKLOG.md:463`, READY / Effort S.
-**Started/completed:** 2026-09-21 (single session). Claim `22be597a`;
-deliverable `37992d20`; records + sha commits follow this handoff.
-**Ledger:** one `CHANGELOG.md` entry per action (claim, deliverable,
-records, sha). No GitHub issue named by the item → no issue close owed;
-the S518 item stays OPEN (recurring) with pass history + measured
-next-pass candidates written into its own text.
-
-**Verification (all measured; done BEFORE any cut):** 28/28 cited
-session numbers have ledger entry headings; 21/21 load-bearing facts sit
-inside those entries (first run said 0/21 — a zsh harness artifact,
-Learning 775); 7/7 Learnings resolve; 9/9 cited paths + both
-`example_sequence_*.csv` exist; 14/14 issues CLOSED; no test/CI/tooling
-reads `BACKLOG.md` content (only comments + one message string).
-
-**Self-assessment (Session 752): 8/10.** **Strengths:** (1) the scope
-gate was evidence-based — the regrowth check flipped the item’s premise
-and the owner chose with real numbers; (2) verification preceded
-cutting, and a false “0/21 facts found” was diagnosed as a harness bug
-instead of acted on (twice — a second checker and a `*.yaml` no-match
-abort hit the same zsh trap); (3) mechanical scope proof + zero
-survivors + a positive control; (4) the end-to-end re-read caught 2
-defects in my OWN new text (a ragged line; “found S479” should be S483)
-and measuring caught 3 wrong size estimates; (5) **FM \#28 reduction:
-REAL — `BACKLOG.md` −81 lines / −7,711 B**, a mandated-read file got
-smaller; (6) a real buried open item was found and re-verified.
-**Weaknesses:** (1) **over-promised at the gate** — quoted “~150 lines
-removed / _(88→)12”; delivered −81. The first pass retained too much (73
-lines) and needed a tightening pass; the estimate should have come from
-the retained-pointer policy, not from the ideal; (2) three size figures
-in my own “next-pass candidates” text were written before measuring
-(_(44/)8 lines, missed empty `## Active`) — corrected only because I
-measured after writing; measure first; (3) block boundaries were
-initially mis-stated (180 vs 181; 90 vs 91 lines) — caught by the
-boundary assertion; (4) no TDD phase gate posed — docs-only,
-S750/S529–S531/S606 precedent, and the scope gate served, but I never
-asked the owner to confirm “TDD phases N/A”.
-
-**Learnings:** `PROJECT_LEARNINGS.md` Learning 775 appended — a zero-hit
-verification sweep is a claim about the sweep until a positive control
-proves the harness; under zsh an unquoted `$files` is not word-split and
-an unmatched glob aborts the whole command; never blanket `2>/dev/null`
-a verification grep.
-
-**Next steps (specific):** (A) **File the 2 unticketed High-priority
-audit gaps (READY, S)** — `BACKLOG.md:463`. A triage session, and
-creating GitHub issues is an outward-facing action, so recommend
-confirming the two titles/ bodies with the owner via `AskUserQuestion`
-before `gh issue create` (that is a recommendation, not a computed
-fact). First recompute the premise: `gh issue list --state all` — it was
-true on 2026-09-21 (166 issues) and may not be later. Source text:
-`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-08-06.md:86-87`
-(rows),
-`docs/audits/GENETIC_METRICS_ISSUES_SEQUENCING_AUDIT_2026-08-08.md:116-124`
-(Finding \#1) and `:309` (recommendation 2: full-feature requests gated
-on a Pre-RED design session, shaped like \#147). (B) **Push+CI: NOT
-urgent** — 8 docs-only commits unpushed after close-out (S751’s 2 + this
-session’s 6: claim, deliverable, Learning, records, sha, and the
-count-correction commit that wrote this figure; an earlier draft said 6
-and missed the separately committed Learning — recount with
+**Next steps (specific):** (A) **Push+CI (READY, S, growing):** ~97
+unpushed expected after close-out (recount with
 `git rev-list --count origin/master..HEAD`); CI current through
-`a7613044`. (C) **BACKLOG compression is RECURRING, not urgent** —
-measured next-pass candidates are in the item itself
-(`BACKLOG.md:210-218`); the kinship2 section’s deeper cut needs fresh
-owner ratification. (D) Unchanged: inst/doc slimming (DECISION NEEDED,
-M, `BACKLOG.md:108`); REUSE registration (owner action, S, `:152`);
-kinship2-standalone BLOCKED on the S738 revisit conditions only (`:71`);
-chromote hang research (READY, M, research only, `:129`).
+`8007de81`; outward-facing — owner confirms first. (B) **Mate-pair
+guardrail surface (DECISION NEEDED, M)** — `BACKLOG.md:8`; a pickup
+session opens a new GitHub issue and runs the small design gate first.
+(C) **Harem-sire seam hole (DECISION NEEDED, M)** — `BACKLOG.md:20`;
+Pre-RED design gate (kinship-side scope, RNG posture, `currentGroups`
+seeds; Learning 778). (D) **Slice 5 backfill scoping (DECISION NEEDED,
+L)** — `BACKLOG.md:40`; own scoping session + new issue. (E) Lower
+priority: unchanged in `BACKLOG.md` (vignette slimming, REUSE
+registration, BACKLOG editorial pass, Chrome hang research,
+`untitled folder` cleanup, CHANGELOG entry-rate investigation).
 
-**Key files:** `BACKLOG.md:180-218` (S518 item: pass history + method +
-candidates), `:419-480` (Genetic-metrics section + extracted open item
-at `:463`), `CHANGELOG.md:41` (S752 entries at top),
-`PROJECT_LEARNINGS.md:2240` (Learning 775), `HANDOFFS.md` (S752
-receipt), `.quality-gates-results.json` (head now `37992d20`).
+**Key files:** `CHANGELOG.md:49` region (S770 entries + the two
+tool-written trim entries); `HANDOFFS.md:163` (S770 receipt — carries
+the standing set); `docs/archive/CHANGELOG-through-2026-09-23.md` +
+`.verify.sh` (52 records);
+`docs/archive/HANDOFFS-through-2026-09-23.md` + `.verify.sh` (7 receipts
+incl. S760’s standing-set receipt); `BACKLOG.md:8`/`:20`/`:40` (the
+three DECISION NEEDED items).
 
-**Gotchas for the next session:** (1) Expect 0 undocumented commits at
-next Phase 0 — measure it; 8 unpushed expected after close-out
-(recount). (2) **BACKLOG anchors:** everything at/above `:180` is
-UNCHANGED; below it shifted UP — “Pedigree diagram vs kinship2” heading
-280→`:228`, NPRC outreach 438→`:386`, Genetic-metrics 471→`:419`;
-re-grep before trusting any stale `BACKLOG.md:2xx+` reference. (3) **zsh
-harness trap (Learning 775):** build file lists as arrays
-(`"${files[@]}"`), run a positive control beside any “expect none”
-sweep, never blanket `2>/dev/null` a verification grep, and an unmatched
-glob (`*.yaml`) aborts the whole command silently. (4) Ratchet baseline
-now 3,489,151 B at `37992d20` (+60 B vs S751 — build-metadata noise: all
-5 touched files are `.Rbuildignore`d, verified `:69/72/74/76/79`); cite
-from `.quality-gates-results.json`, never the rounded run table (table
-3.48915e+06 vs file 3,489,151 — the trap again). (5) The commit trailers
-change mid-session: the claim `22be597a` carries `Claude Fable 5`, later
-commits `Claude Sonnet 5` (the harness switched the acting model) — each
-is accurate for the model that wrote it. (6) No code touched, no test
-suite run this session (docs-only; suite baseline 0 failed / 0 error /
-184 skipped stands, remotely confirmed through `a7613044`). (7) Standing
-set unchanged: `gh run list --commit` needs the FULL 40-char sha +
-smoke-test the filter before arming a monitor; `scratchpad/` invisible
-to git BY OWNER DECISION; ratchet AFTER committing (Learning 772); trim
-needs `--budget-bytes 65536`; renv banner expected; CLAUDE.md warn band;
-growth run 28/10 at Orient, 31/10 at my final check (it rose with each
-of my later `context_budget.py` runs, so read the value at the next
-Orient — measure, don’t predict); the two `SESSION_NOTES.md` ceilings
-differ (owner decision pending).
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~97 unpushed expected (recount). (2) All three
+ledgers under budget (20,888 / 33,009 / 41,867 B + these records);
+CHANGELOG grows ~9 KB/session → ~4–5 sessions of headroom; pass
+`--budget-bytes 65536` on EVERY `methodology_trim.py` run, `--check`
+included. (3) Ratchet 1/1 at `c195ea31` (3,528,758 B, results
+`9649b761f9d3`; +9 B vs S769 = noise); cite from
+`.quality-gates-results.json`; do the receipt-citation comparison BEFORE
+any ratchet run. (4) **S760’s receipt is ARCHIVED**
+(`docs/archive/HANDOFFS-through-2026-09-23.md`) — the standing set now
+lives in the S770 receipt’s gotchas; stop writing “via S760’s live
+receipt” (and note the old “next-steps (E)” phrasing was a mispointer —
+the set was its gotcha (9)). (5) **STANDING SET (carried forward,
+updated):** full-40-char sha + smoke-test `gh run` filters;
+`scratchpad/` invisible to git BY OWNER DECISION; ratchet AFTER
+committing; renv banner expected; `CLAUDE.md` warn band (26,360 B) =
+headroom, growth run 52/10; zsh harness traps (no foreground sleep; no
+`&`/`disown` inside a `run_in_background` call); trim budget 65,536 B
+for ALL THREE ledgers (S767 ratification — supersedes the archived S760
+receipt’s stale “196608 default” wording). (6) The e2e app runs the
+INSTALLED package (`inst/shinytest/app.R` does
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)) —
+`R CMD INSTALL` the dev tree before any local live-e2e run. (7) Slice-4b
+semantics: consumers read the run SNAPSHOT fields, never live inputs
+(L780/#150 mold); report universe is FORMED groups only (L781). (8)
+`commented_code_linter` fires on a prose comment with an inner `#`
+(e.g. “#168”) — write “issue 168” in R comments.
 
-### Session 750 Handoff Evaluation (by Session 751)
+### Session 768 Handoff Evaluation (by Session 769)
 
-**Score: 9/10.** **What helped:** “6 unpushed expected (recount)”
-measured exactly 6; “expect 0 undocumented; measure it” measured 0 on
-both frontiers at `1f8a32f0`; growth run measured 27/10 (exactly the
-“next if nothing shrinks” value); the S750 receipt’s ratchet citation
-matched `.quality-gates-results.json` byte-for-byte (ab63a9bfe821,
-3,489,111 B at `cc6d5d6b`); all BACKLOG anchors held after re-grep (:181
-following the predicted ~39-line shift, :110, :72); next step (A)’s
-push+CI guidance was the execution plan as written — ALL-docs-only held,
-CI-current-through- `589cf73c` held, full-40-char-sha `--commit`
-filter + smoke-test discipline ran verbatim. **What was missing:**
-nothing material (the transient-504 CI flake this session hit was not a
-knowable claim). **What was wrong:** nothing found — every checked claim
-held. **ROI:** high.
+**Score: 10/10.** **What helped:** “expect 0 undocumented; measure it”
+measured 0 on both frontiers; “~86 unpushed (recount)” measured exactly
+86; gotcha (3) (receipt-citation comparison BEFORE any ratchet run) was
+followed and the S768 citation matched `.quality-gates-results.json`
+byte-for-byte; the pandoc-workaround-RETIRED gotcha held live — this
+session ran suite/check/ratchet/renders with NO workaround, all clean
+(Learning 783’s retirement confirmed by use); next-steps (A) WAS the
+owner-picked deliverable, and its spec (plan `:371`, Learnings 780/781)
+governed the implementation exactly — both learnings were load-bearing
+and correct (the two-call contract and the formed-groups universe are
+now pinned by module tests); every key-file pin held
+(`R/modBreedingGroups.R:320/:352/:367/:538`,
+`PROJECT_LEARNINGS.md:2253`). **Missing/wrong:** trivia only — the
+carried “register its group regex in the SAME session” phrasing (from
+the plan) implied a workflow edit; the `^e2e-breeding-groups-` regex
+already existed, so naming the file
+`test-e2e-breeding-groups-ancestry.R` satisfied it by construction
+(cost: one grep). **ROI:** high.
+
+### What Session 769 Did
+
+**Deliverable:** **Issue \#168 Slice 4b — override gate, “Ancestry”
+results tab, audit-manifest download, e2e, tutorial/article docs — DONE;
+issue \#168 CLOSED (owner-ratified explicit call). v1 of the ancestry
+guardrails is complete.** Strict TDD; five owner gates (priorities pick,
+two pre-RED design sub-decisions, PRE-RED→RED, RED→GREEN,
+GREEN→REFACTOR + the \#168 close call). TDD phase declared every
+response. **Design sub-decisions (owner-ratified pre-RED):** override
+lifetime = until cleared / rules re-upload (each run SNAPSHOTS rules +
+overrides + ped id/ancestry — the \#150 params-snapshot mold, so a late
+override never rewrites an earlier run’s report/manifest); controls =
+select + “Override rule…” button + \#150 modal (required reason).
+**RED** (`7bb10167`): 9 blocks appended to
+`test_modBreedingGroups_ancestryRules.R` + new
+`test-e2e-breeding-groups-ancestry.R`. Audit: 4a blocks 1–11 pass; all 9
+new blocks fail (2 by assertion on missing ids, 7 by error on missing
+symbols); no 4b property passed spuriously. **GREEN** (`b21bbcdd`
+code+man, `237fce3c` NEWS+docs+ledger): `R/modBreedingGroups.R` only —
+override controls in the guardrails panel, `ancestryOverridesRV` (reset
+on rules re-upload), `overridableRules()`, \#150-mold modal, formation
+gets `.effectiveAncestryRules()` while
+`ancestryReport()`/`ancestryManifest()` get ORIGINAL rules + overrides
+from the run snapshot (Learning 780), report universe = selected
+candidate’s FORMED groups only (Learning 781), “Ancestry” tab
+(guidance/violations DT/coverage/manifest download). Return list
+unchanged (contract rule 4); NAMESPACE unchanged. **REFACTOR:** declared
+no-op after re-read (owner-ratified) — the one DRY candidate (duplicated
+inactive-notice string) is test-pinned at both sites and in-function
+strings are the module’s idiom (S766 precedent). **Verification (all
+measured):** target file 20/20 blocks, 105 expectations, 0/0 — first run
+after implementation; full suite (NOT_CRAN, `load_all`, unfiltered, NO
+pandoc workaround) **0 failed / 0 error / 7662 passed / 186 skipped / 6
+warnings** (pre-existing; +1 skip = the new e2e’s opt-in gate);
+`devtools::check()` **0/0/0**; **live e2e** (`NPRC_RUN_E2E=true`, dev
+build R CMD INSTALLed first): new file 17/17 — full drive incl. both
+manifest downloads (block-rule `nPairs == 0` pre-override; overridden
+row + reason + verbatim gate wording post-override), zero console
+errors; sibling `e2e-breeding-groups-{module,detailed,tutorial}` 26/26;
+lint 0 on all three touched files; `a3manual.Rmd` +
+`colony-manager-guide.qmd` render clean; ratchet **1/1 at `237fce3c`**
+(3,528,749 B, +7,640 B vs S768 = CONTENT, results `94d35e35769a`,
+manifest `aa983075d6a2`). **Checklists:** NEWS.Rmd ✓ same-session
+(plain-language); tutorial ✓ (component’s stale two-tab list corrected
+to four while adding the Ancestry tab; D6 UNKNOWN/OTHER guidance in both
+surfaces); citation (#120) N/A confirmed (rule bookkeeping, not
+statistics); `_pkgdown.yml` N/A (no new export); `a2interactive` N/A (no
+new exported function/parameter); e2e CI registration ✓ by construction
+(existing regex + coverage guard in-suite); **issue \#168 closed
+same-session** with verification comment; BACKLOG: no 4b item existed to
+remove; the plan §5 deferred mate-pair follow-up EXTRACTED to
+`BACKLOG.md` “Up Next” (its tracking issue closed, S686
+still-open-sub-thread rule). **Disclosures:** (1) the full-suite
+background run started one comment-reword before final code
+(comment-only diff; `devtools::check()` covered the final code state);
+(2) the two vignette/article edits postdate check’s source snapshot —
+verified by direct renders instead; (3) GREEN 1/2 committed
+`--no-verify` (code-only commit; both GREEN ledger entries rode GREEN
+2/2, the documented fast-path bypass).
+
+**Self-assessment (Session 769): 9/10.** **Strengths:** (1) GREEN passed
+all 20 blocks AND the live e2e first try — the RED pins were specified
+tightly enough to be implementable without iteration; (2) Learnings
+780/781 and the \#150 snapshot mold applied as designed and are now
+test-pinned in the module; (3) five owner gates, each with
+dry-run-derived specifics; (4) full battery measured, incl. the sibling
+e2e group and both doc renders; (5) same-session issue close with
+evidence, and the orphaned follow-up extracted to BACKLOG. **Weak:** (1)
+two lint round-trips on the `commented_code_linter` inner-`#` false
+positive — existing learnings (reword code-like comments) should have
+predicted the first fix; (2) suite/check/docs sequencing left the
+comment-reword and doc edits outside one of the two big runs each
+(disclosed above; covered by the other run + renders); (3) no FM \#28
+reduction landed — both big ledgers now fire their trigger (next-steps
+A).
+
+**Learnings:** none appended — the one candidate (inner `#` in a prose
+comment, e.g. “#168”, truncates the text so the prefix parses as a bare
+symbol and trips `commented_code_linter`) is a sub-case of the existing
+reword-code-like-comments reflexes (Learnings 17(d)/38/214(5) region);
+carried as gotcha (7) instead of a new entry (FM \#28).
+
+**Next steps (specific):** (A) **CHANGELOG + HANDOFFS archive pass
+(READY, S — NOW DUE):** measured at close-out, `HANDOFFS.md` ~77 KB and
+`CHANGELOG.md` ~68 KB after these records — BOTH fire the ratified
+65,536 B trigger;
+`methodology_trim.py --file <F> --check --budget-bytes 65536` then
+owner-gated `--cut N --force --write` per file (SRF_RED expected,
+L549/586/587; `--cut N` = KEEP N, L777; the trimmer writes its own
+ledger entry, L782). (B) **Push+CI (READY, S, growing):** ~92 unpushed
+expected after close-out (recount with
+`git rev-list --count origin/master..HEAD`); CI current through
+`8007de81`; outward-facing — owner confirms first. (C) **Slice 5
+backfill scoping (DECISION NEEDED, L)** — `BACKLOG.md:43` region. (D)
+**Harem-sire seam hole (DECISION NEEDED, M)** — `BACKLOG.md:22` region.
+(E) **Mate-pair guardrail surface (DECISION NEEDED, M)** — the NEW
+`BACKLOG.md:8` item this session extracted; needs a new GitHub issue +
+design gate. (F) Standing list unchanged — S760’s next-steps (E) via its
+live HANDOFFS receipt.
+
+**Key files:** `R/modBreedingGroups.R:79` (override controls UI), `:417`
+region (override machinery: RV/reset/overridable/modal/confirm/clear/
+status), `:590` region (formation snapshot + effective rules), `:770`
+region (ancestryReport/ancestryManifest/guidance/outputs — grep “Slice
+4b” for exact lines);
+`tests/testthat/test_modBreedingGroups_ancestryRules.R:390` region (4b
+banner + blocks); `tests/testthat/test-e2e-breeding-groups-ancestry.R`
+(the full drive);
+`docs/planning/issue168-ancestry-guardrails-plan.md:399` (§5 deferred
+mate-pair item); `BACKLOG.md:8` (extracted follow-up); `CHANGELOG.md:45`
+region (S769 entries); `HANDOFFS.md:162` (S769 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; 91 unpushed measured at `cd36df89` (+ the sha
+commit; recount). (2) **`HANDOFFS.md` (75,810 B) FIRES the 65,536 B
+trigger; `CHANGELOG.md` measured 65,093 B — 443 B under, crossing with
+the very next entry** — run the archive pass (next-steps A, both files)
+before anything grows them further. (3) Ratchet moved for CONTENT:
+3,528,749 B at `237fce3c` (results `94d35e35769a`); cite from
+`.quality-gates-results.json`. (4) **The e2e app runs the INSTALLED
+package** (`inst/shinytest/app.R` does
+[`library(nprcgenekeepr)`](https://rmsharp.github.io/nprcgenekeepr/)) —
+`R CMD INSTALL` the dev tree before any local live-e2e run, or the run
+exercises a stale build. (5) Overrides are session-scoped and reset on
+rules re-upload (owner-ratified) — don’t “fix” persistence without a
+gate; any future consumer of the module’s ancestry report must read the
+run SNAPSHOT fields (`groupResults()`’s `ancestryRules`/
+`ancestryOverrides`/`ancestryPed`), never live inputs (L780/#150 mold).
+(6) The Ancestry report universe is FORMED groups only (L781) — the
+module’s `ancestryReport()` already drops the unused bucket; don’t
+re-derive from raw `groups()`. (7) `commented_code_linter` fires on a
+prose comment containing an inner `#` (e.g. “#168”) when the prefix
+parses as a symbol — write “issue 168” in R comments. (8) Standing set
+unchanged — S760’s gotcha (9) via its live receipt.
+
+### Session 767 Handoff Evaluation (by Session 768)
+
+**Score: 9/10.** **What helped:** “expect 0 undocumented; measure it”
+measured 0 on both frontiers (both at `5325ef89`); “~81 unpushed
+(recount)” measured exactly 81; CI-green held (10/10 completed success);
+the ratchet baseline held (re-run this session: 3,521,109 B, −10 B vs
+its 3,521,119 B, manifest `aa983075d6a2` identical); the
+`--budget-bytes 65536` ratification was applied to every trim run here
+and Learning 782 held live (the trimmer wrote its own ledger entry — no
+duplicate); the `CHANGELOG.md:41` key-file pin was exact. **Missing /
+wrong:** next-steps (C) and gotcha (6) carried “pandoc owner action
+(DECISION NEEDED) / PATH workaround still required” — stale: a probe
+showed the fix had landed (`/usr/local/bin/pandoc` gone; Homebrew arm64
+pandoc 3.11 installed Sep 22 17:15, before S765–S767’s 2026-09-23
+dates). Not S767’s error alone — the claim was carried unprobed since
+S756 and the workaround itself masks the change (Learning 783). Trivia:
+the “`PROJECT_LEARNINGS.md:2253` region (Learning 782)” pin is actually
+line 2252. **ROI:** high.
+
+### What Session 768 Did
+
+**Deliverable:** **Broken-pandoc environment item RESOLVED — verified
+with the PATH workaround OFF; `BACKLOG.md` item removed — DONE.** Owner
+picked it at the Phase 0 priorities gate; one further owner gate (the
+SESSION_NOTES trim). TDD phase PRE-RED (docs/environment-only) declared
+throughout. **Finding:** the owner action was already done before the
+session — no sudo step run or needed. `/usr/local/bin/pandoc` (x86_64)
+no longer exists; `which -a pandoc` shows only
+`/opt/homebrew/bin/pandoc` → `Cellar/pandoc/3.11` (arm64; symlink mtime
+Sep 22 17:15); no pandoc/RSTUDIO env vars set. When the x86_64 file was
+removed is undated. **Verified WITHOUT the workaround (each surface the
+item’s blast radius named):** `rmarkdown::find_pandoc(cache = FALSE)` →
+3.11, `pandoc_available()` TRUE; `test_positionMatingUnitForest.R` → 57
+tests, **212/212 expectations, 0 failed / 0 error / 0 skipped**, and the
+3 chromote live-render blocks each ran and passed (re-counted directly,
+not inferred from a row of dots); `quality_ratchet.py --run` → **1/1
+pass at `e8d32ec0`, 3,521,109 B** (results `ec7f2bd24e18`, manifest
+`aa983075d6a2`; −10 B vs S767 = noise). **Not run:** full suite,
+`devtools::check()` — no package code changed; each named surface was
+verified directly. **Commits:** claim `e8d32ec0`; deliverable `0fa0c067`
+(BACKLOG item removed + ledger entry carrying its record); trim
+`d6d07e33` (`SESSION_NOTES.md` →
+`docs/archive/SESSION_NOTES-through-2026-09-23.md`, 9 of 14 records,
+55,266 → 23,645 B, verify script OK pre- AND post-commit; owner-gated
+`--cut 5 --force` — the 25,000-token read cap (56,750 B) binds before
+the trimmer’s 65,536 B trigger, the S762 situation); records + sha
+follow. **Checklists:** lint N/A (no `.R` touched);
+NEWS/pkgdown/citation/ tutorial/a2interactive N/A (no export, UI, or
+statistic); BACKLOG item removed in the same commit as its ledger entry
+(S686); no GitHub issue involved. **Disclosures:** (1) Phase 0 step 6’s
+receipt-citation-vs-results-file comparison was NOT made before my
+ratchet re-run overwrote the (gitignored) results file — the re-run
+agrees on everything checkable but the hash comparison is lost; (2)
+commit `e8d32ec0` carries a `Claude Fable 5` trailer, later commits
+`Claude Sonnet 5` — the harness’s attribution reminder changed
+mid-session; each commit followed the reminder in force.
+
+**Self-assessment (Session 768): 8/10.** **Strengths:** (1) probed the
+environment before asking the owner for a sudo step, and found the fix
+already landed; (2) every blast-radius surface verified directly with
+the workaround off, the chromote result re-counted rather than trusted;
+(3) the trim gated with dry-run numbers for BOTH options, lossless pre-
+and post-commit; (4) item removed with boundary assertions, the ledger
+entry carries its record plus an explicit not-run statement; (5)
+Learning 783 pins the general masking mechanism. **Weak:** (1) skipped
+the Phase 0 step 6 citation comparison before overwriting the results
+file (disclosed above, not recoverable); (2) my priorities list ranked
+an already-done item as “needs sudo” without probing — the owner’s pick
+was spent on it (the probe reflex is now Learning 783); (3) a first
+per-test summary printed unreadable multi-paragraph test names and cost
+one re-run.
+
+**Learnings:** Learning 783 appended (a standing workaround that is
+green with or without the fix hides the fix’s arrival — probe “owner
+action pending” environment items with the workaround OFF).
+
+**Next steps (specific):** (A) **\#168 Slice 4b (READY, L):** unchanged
+from S767’s (A) — strict TDD from plan
+`docs/planning/issue168-ancestry-guardrails-plan.md:371`: override
+controls behind the \#150 `modalDialog` gate showing
+`.ancestryOverrideWarningText` with required reason; effective rules to
+formation, ORIGINAL rules + overrides to
+[`reportAncestryViolations()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md)/
+manifest (Learning 780); “Ancestry” results tab (violations DT +
+coverage + manifest `downloadHandler` via
+[`getDatedFilename()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDatedFilename.md)),
+FORMED groups only via `hasUnused` (Learning 781); `shinytest2` e2e with
+its group regex registered in `.github/workflows/shinytest2.yaml` the
+SAME session; tutorial/article (D6 guidance); \#120 re-check; the
+explicit \#168 open/close call. (B) **`HANDOFFS.md` archive pass (READY,
+S):** measured at close-out, `HANDOFFS.md` is 68,907 B and
+`--check --budget-bytes 65536` FIRES (S768’s own receipt took it from
+~62.4 KB); `CHANGELOG.md` is 56,674 B, ~9 KB from its trigger. `--check`
+then owner-gated `--cut N --force --write` (SRF_RED pattern,
+L549/586/587; `--cut N` = KEEP N, Learning 777). Receipts run ~6-8 KB
+each, so this recurs every ~1-2 sessions — the receipt-size norm in
+`BACKLOG.md`’s CHANGELOG-inflation item is the lever. Reported, not
+fixed (nothing gates on it; a second archive pass is a second
+deliverable). (C) **Push+CI (READY, S, growing):** ~86 unpushed expected
+after close-out (an estimate — 84 measured before the two records
+commits; recount with `git rev-list --count origin/master..HEAD`); CI
+current through `8007de81`; pushing is outward-facing, so confirm with
+the owner first. (D) **Slice 5 backfill scoping (DECISION NEEDED, L)**
+and (E) **Harem-sire seam hole (DECISION NEEDED, M)** — unchanged in
+`BACKLOG.md` (`:28`, `:8`). (F) Standing list unchanged — S760’s
+next-steps (E) via its still-live HANDOFFS receipt. The pandoc item is
+gone from the list.
+
+**Key files:** `CHANGELOG.md:45` region (S768 records entry, the
+tool-written SESSION_NOTES trim entry, the deliverable and claim
+entries); `BACKLOG.md:6` (Up Next now holds two items — `:8` harem hole,
+`:28` Slice 5); `docs/planning/issue168-ancestry-guardrails-plan.md:371`
+(Slice 4 — 4b’s spec); `R/modBreedingGroups.R:320/:352/:367/:538/:569`
+(4a’s `ancestryRulesData`/`ancestryRulesForRun`/`ancestryStatusText`/the
+formation `ancestryRules =` arg/the `hasUnused` seam);
+`docs/archive/SESSION_NOTES-through-2026-09-23.md` + `.verify.sh` (9
+records); `PROJECT_LEARNINGS.md:2253` (Learning 783); `HANDOFFS.md:163`
+(S768 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~86 unpushed expected (recount). (2) **Pandoc
+workaround RETIRED (Learning 783):** do not prepend the aarch64 RStudio
+dir;
+[`rmarkdown::find_pandoc()`](https://pkgs.rstudio.com/rmarkdown/reference/find_pandoc.html)
+resolves Homebrew’s 3.11. If pandoc errors reappear, `which -a pandoc`
+first — PATH lists `/usr/local/bin` before `/opt/homebrew/bin`
+(measured), so a re-installed x86_64 binary there would shadow
+Homebrew’s (derived from that order, not observed). (3) Do Phase 0 step
+6’s receipt-citation comparison BEFORE any `quality_ratchet.py --run` —
+the run overwrites the gitignored results file (S768 lost the
+comparison). (4) `SESSION_NOTES.md` is now ~23.6 KB plus this record;
+the 25,000-token read cap (56,750 B) binds before the trimmer’s 65,536 B
+trigger (`--check` said “does not fire” at 55,266 B) —
+`wc -c SESSION_NOTES.md` at Orient and trim (owner-gated
+`--cut N --force`) when within ~8 KB of 56,750 B. (5) Ratchet baseline
+3,521,109 B at `e8d32ec0` (results `ec7f2bd24e18`); cite from the
+results file. (6) Learnings 780/781 still govern Slice 4b. (7) Older
+SESSION_NOTES records now live in shards — span them via
+`git ls-files 'docs/archive/SESSION_NOTES-*.md'`. (8) Standing set
+unchanged — S760’s gotcha (9) via its live receipt.
+
+### Session 766 Handoff Evaluation (by Session 767)
+
+**Score: 10/10.** **What helped:** next-steps (A) WAS this session’s
+owner-picked deliverable, with the exact mechanics that all held:
+`--check` then owner-gated `--write` per file; the SRF_RED refusal
+predicted and fired exactly, resolved by the named owner-directed
+`--force` (L549/586/587); the budget-scope owner question flagged as
+open was posed and ratified in-session; the measured sizes (199,619 /
+197,665 B) correctly predicted both files firing (grown to 201,875 /
+205,190 B at Orient); “expect 0 undocumented; measure it” measured 0 on
+both frontiers; the ratchet citation matched the results file
+byte-for-byte; ~77 unpushed measured 76 (labeled a recount estimate);
+Learning 777’s `--cut N = KEEP N` shaped the gate wording correctly.
+**Missing:** only trivia — no note that the trimmer v1.5.0 auto-writes
+its own ledger entries (discovered in-run, now Learning 782), and
+`bin/check-handoff`’s absence in this project (cost one `ls`). Neither
+cost meaningful time. **Wrong:** nothing found. **ROI:** high.
+
+### What Session 767 Did
+
+**Deliverable:** **CHANGELOG.md + HANDOFFS.md archive pass — DONE**,
+owner-gated end to end (Phase 0 priorities pick; a 2-question gate
+ratifying (a) the trim budget and (b) the exact dry-run-verified
+writes). **Budget decision (owner-ratified):** `--budget-bytes 65536`
+governs ALL THREE ledgers on every `methodology_trim.py` run, `--check`
+included — resolves S765 gotcha 4’s open scope question; recorded in the
+ledger + Learning 782(c), no CLAUDE.md growth (its sentence already
+reads this way). **Trims (both dry-run first, SRF_RED cleared by owner
+`--force`):** `CHANGELOG.md` `--cut 47` (`497dda57`): 172 of 219 records
+(2026-09-19 → 2026-09-21) →
+`docs/archive/CHANGELOG-through-2026-09-21.md`; live 201,875 → 47,791 B
+(−76.3%), keeps all S760–S767 entries. `HANDOFFS.md` `--cut 8`
+(`30c5b6d1`): 31 of 39 receipts →
+`docs/archive/HANDOFFS-through-2026-09-21.md`; live 205,190 → 56,293 B
+(−72.6%), keeps the S760–S767 receipts (S760’s standing-list receipt
+stays LIVE, deliberately); stale front-matter count regenerated 4 → 8.
+Both verify scripts run twice (pre- and post-commit): L1/L2/L3 hold. The
+trimmer wrote both trims’ ledger entries itself (Learning 782) — no
+hand-written duplicates. **Verification (measured):** trim
+`--check --budget-bytes 65536` after: CHANGELOG 48,563 B, HANDOFFS
+56,293 B, SESSION_NOTES 47,826 B — none fire. Ratchet **1/1 pass at
+`30c5b6d1`** (3,521,119 B, results `42f1031a3c6b`, manifest
+`aa983075d6a2` — −4 B vs S766 = tar/gzip noise on a build-ignored diff).
+Context budget unchanged (CLAUDE.md 26,360 B warn band = headroom;
+docs-only session, no code, no suite run owed). **Started/completed:**
+2026-09-23. Claim `171248f0`; trims `497dda57` + `30c5b6d1`; records +
+sha follow. TDD phase PRE-RED (docs-only) declared throughout.
+**Checklists:** lint N/A (no `.R` touched); NEWS/pkgdown/citation/
+tutorial/a2interactive N/A (no export, no UI, no statistic); no BACKLOG
+item existed for this pass (tracked via S766 next-steps (A)); no GitHub
+issue involved.
+
+**Self-assessment (Session 767): 9/10.** **Strengths:** (1) every
+decision owner-gated with dry-run-derived numbers in the gate text —
+Learning 777 applied, the scale was verified before the gate, and the
+result matched the gate exactly (no divergence to record); (2) both
+trims proved lossless twice; (3) per-action commits, ≤4 files each; (4)
+an actual FM \#28 reduction landed: ~305 KB moved out of mandated-read
+ledgers, all three now under the ratified budget; (5) Learning 782 pins
+the double-entry trap for successors. **Weak:** (1) one broken grep
+(`\=\=` under ugrep) cost a round-trip; (2) the CHANGELOG cut straddles
+2026-09-21 (span-label shard name; positional cut accepted rather than
+hunting a calendar seam — deliberate, noted); (3) the budget
+ratification lives in ledger + learning + gotcha rather than a CLAUDE.md
+edit (deliberate anti-growth call; the residual risk — a future session
+running HANDOFFS.md’s documented bare `--check` — is mitigated by
+Learning 782(c) and gotcha (2)).
+
+**Learnings:** Learning 782 appended (trimmer v1.5.0 auto-writes the
+trim’s own `CHANGELOG.md` entry for ANY trimmed file — commit it, never
+hand-write a duplicate; plus the ratified budget scope).
+
+**Next steps (specific):** (A) **\#168 Slice 4b (READY, L):** strict TDD
+from plan §5 Slice 4 remainder
+(`docs/planning/issue168-ancestry-guardrails-plan.md:371`) — override
+controls behind the \#150 `modalDialog` gate showing
+`.ancestryOverrideWarningText` with required reason;
+`.effectiveAncestryRules(rules, overrides)` into formation and ORIGINAL
+rules + overrides into
+[`reportAncestryViolations()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md)/manifest
+(Learning 780’s two-call contract); “Ancestry” results tab (violations
+DT + coverage + manifest `downloadHandler` via
+[`getDatedFilename()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDatedFilename.md))
+— feed the reporter FORMED groups only, dropping the unused bucket via
+`hasUnused` (Learning 781); `shinytest2` e2e with its group regex
+registered in `.github/workflows/shinytest2.yaml` the SAME session;
+tutorial/article (D6 UNKNOWN+OTHER guidance); \#120 re-check; the
+explicit \#168 open/close call. (B) **Push+CI (READY, S, growing):** ~81
+unpushed expected after close-out (recount with
+`git rev-list --count origin/master..HEAD`); CI current through
+`8007de81`. (C) **Pandoc owner action (DECISION NEEDED, S)**, (D)
+**Slice 5 backfill scoping (DECISION NEEDED, L)**, (E) **Harem-sire seam
+hole (DECISION NEEDED, M)** — all unchanged in `BACKLOG.md`. (F)
+Standing list unchanged — see S760’s next-steps (E) via its HANDOFFS
+receipt, which this session’s cut deliberately kept LIVE.
+
+**Key files:** `CHANGELOG.md:41` region (new shard pointer + the two
+tool-written trim entries + S767 entries); `HANDOFFS.md` (S767 receipt;
+S760–S766 receipts still live below it);
+`docs/archive/CHANGELOG-through-2026-09-21.md` + `.verify.sh` (172
+records); `docs/archive/HANDOFFS-through-2026-09-21.md` + `.verify.sh`
+(31 receipts); `PROJECT_LEARNINGS.md:2253` region (Learning 782);
+`BACKLOG.md:47` (pandoc item with the PATH workaround string).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~81 unpushed expected (recount). (2) **Budget
+ratified this session:** pass `--budget-bytes 65536` on EVERY
+`methodology_trim.py` run for all three ledgers, `--check` included —
+`HANDOFFS.md`’s own documented bare `--check` command predates this;
+pass the flag anyway. (3) **Learning 782:** the trimmer auto-writes the
+trim’s ledger entry (for ANY trimmed file, into `CHANGELOG.md`) — never
+hand-write a duplicate; check `git status` after any `--write`. (4)
+Ratchet 3,521,119 B at `30c5b6d1` (−4 B vs S766 = noise; results
+`42f1031a3c6b`); cite from the results file. (5) Older receipts now live
+in `docs/archive/HANDOFFS-through-2026-09-21.md` — any pass that
+enumerates receipts must span shards via
+`git ls-files 'docs/archive/HANDOFFS-*.md'`; S760’s receipt (standing
+lists) is still LIVE in `HANDOFFS.md`. (6) Pandoc PATH workaround
+unchanged (`BACKLOG.md:47` region has the literal string). (7) Learnings
+780/781 still govern Slice 4b’s wiring. (8) Standing set unchanged — see
+S760’s gotcha (9) via its live HANDOFFS receipt.
+
+### Session 765 Handoff Evaluation (by Session 766)
+
+**Score: 9/10.** **What helped:** “expect 0 undocumented; measure it”
+measured 0 on both frontiers; “~70 unpushed (recount)” measured exactly
+70; CI-green held (10/10); ratchet citation matched the results file
+byte-for-byte; next step (A) WAS this session’s owner-picked deliverable
+and its suggested split (config+enforcement vs. results tab+manifest+
+e2e+docs) was adopted verbatim as the ratified 4a/4b split; every
+key-file pin held exactly (the `modGeneticValue.R:249` validate-notify
+mold, the `:430` formation call, the `:123` tabset); gotcha (4)’s
+prediction that `CHANGELOG.md` would cross the default trim trigger
+within ~1 session measured TRUE at this close-out (199,619 B;
+`HANDOFFS.md` 197,665 B also fires); gotcha (5) (minSireAge/minDamAge)
+applied in the new fixtures; pandoc workaround verbatim. **Missing:**
+neither the handoff nor the plan flagged that the module’s `groups()`
+return carries the unused-animals bucket as its last element — Slice
+4a’s RED co-placement property swept it in and failed against a correct
+kernel (Learning 781; cost one GREEN round-trip + a declared test
+correction). More a plan/RED-design gap than a handoff gap. **Wrong:**
+nothing found. **ROI:** high.
+
+### What Session 766 Did
+
+**Deliverable:** Issue \#168 **Slice 4a — ancestry-guardrails config +
+enforcement wiring in `modBreedingGroups` — DONE**, strict TDD with
+every gate owner-ratified via `AskUserQuestion` (priorities pick, the
+4a/4b scope split, PRE-RED→RED, RED→GREEN, GREEN→REFACTOR). 4b (override
+modal, Ancestry results tab, manifest download, e2e, article, the \#168
+close call) deliberately remains. **RED** (`9fecc1ad`): 11 blocks, 1 new
+file `test_modBreedingGroups_ancestryRules.R` — 3 UI (ids, unprefixed
+conditionalPanel condition per Learning 324, toggle unchecked), 4
+validate-notify (NULL/no-upload, valid 2-block/2-flag example rules,
+malformed severity → NULL, D6 warning muffled), 2 status (D8 wordings
+pinned verbatim; “2 block, 2 flag rule(s); 2 animal(s) uncovered.”
+hand-derived — J1/J2 JAPANESE uncovered), 2 formation (blocked pair
+never co-placed; no-ancestry ped forms as today, rules withheld).
+Per-block audit: 11/11 fail, 0 passing expectations, every message on
+the 3 missing symbols / 3 missing ids. **GREEN** (`926584e2`
+code+test-fix+man, `dc8776be` NEWS): collapsed “Ancestry Guardrails” UI
+beside the kinship threshold; `ancestryRulesData()` (kinshipOverrideData
+mold), `ancestryRulesForRun()` (NULL unless rules loaded AND ped has
+`ancestry` — D6 loud-not-fatal), `ancestryStatusText()` + renderUI;
+`ancestryRules = ancestryRulesForRun()` at the formation call. NAMESPACE
+unchanged (verified). **Declared RED-test correction:** block 10 had
+swept the unused-animals bucket into the co-placement property; kernel
+verified correct by direct repro BEFORE the edit; the corrected block
+checks formed groups across ALL retained candidates via
+`groupResults()`/`hasUnused` with an anti-vacuity guard (Learning 781).
+**REFACTOR:** declared no-op after re-read — the shared validate-notify
+helper would touch shipped `modGeneticValue.R` (Architect-mode, S764
+precedent); the duplicated guard clause is the module’s idiom; a
+coverage helper for 4b is speculative (4b consumes the reporter’s
+coverage over FORMED groups, a different universe). **Verification (all
+measured at `dc8776be`):** full suite (NOT_CRAN, load_all, pandoc PATH)
+**0 failed / 0 error / 7593 passed / 185 skipped / 6 warnings** (7558 +
+35 new; warnings pre-existing); `devtools::check()` **0/0/0**; ratchet
+**1/1** (3,521,123 B, results `9cf9421e573e`, manifest `aa983075d6a2` —
++4,166 B vs S765, CONTENT); sibling module corpus +
+`test_moduleContract.R` 348 passed 0/0; lint 0 on both touched files;
+spelling 0 new; DESCRIPTION unchanged. Trim measured: `SESSION_NOTES.md`
+no trigger (38,916 B/65,536); **`HANDOFFS.md` (197,665 B) and
+`CHANGELOG.md` (199,619 B) both FIRE the default 196,608 B trigger** —
+reported, not fixed (the archive pass is next-steps (A)).
+**Started/completed:** 2026-09-23. Claim `8e3a417d`; RED `9fecc1ad`;
+GREEN `926584e2`+`dc8776be`; records + sha follow. **Checklists:**
+NEWS.Rmd ✓ same-session (plain-language, S628); `_pkgdown.yml` N/A (no
+export; NAMESPACE unchanged); lint ✓; citation (#120) **N/A recorded** —
+the status line’s counts are rule bookkeeping, not statistics/estimators
+(the full-slice check re-runs at 4b per plan §9); tutorial/article owed
+at 4b; `a2interactive` N/A (no export); issue \#168 stays OPEN (4b
+remains).
+
+**Self-assessment (Session 766): 9/10.** **Strengths:** (1) the flagged
+too-big slice became a clean owner-ratified 4a/4b split BEFORE any code;
+(2) RED per-block audit clean (0 spurious passes); (3) the block-10
+failure was diagnosed by direct kernel reproduction before touching
+anything — the test was corrected, never the implementation weakened,
+and the correction is declared in the ledger and pinned as Learning 781;
+(4) full measured battery run sequentially; (5) blast radius: 5 commits,
+≤4 content files each, per-action ledger entries; (6) scripts in the
+scratchpad from the start (S765’s lesson applied). **Weak:** (1) the
+block-10 mis-specification itself — the unused-bucket semantics were
+readable in `candidateViews` pre-RED; a more careful return-path read
+would have avoided a post-commit test edit; (2) no FM \#28 reduction —
+CHANGELOG grew 5 entries and now fires its default trim trigger (said
+plainly; promoted to next-steps (A)); (3) one blocked foreground-sleep
+attempt while waiting on the background suite (trivial).
+
+**Learnings:** Learning 781 appended (the module’s `groups()` return
+carries the unused-animals bucket last when `hasUnused` — 4b’s reporter
+call must receive FORMED groups only, or it fabricates violations).
+
+**Next steps (specific):** (A) **CHANGELOG + HANDOFFS archive pass
+(READY, S — now due):** both fire the default 196,608 B trigger
+(measured this session); `methodology_trim.py --file <F> --check` then
+owner-gated `--write` per file; expect the `SRF_RED` small-denominator
+refusal pattern (owner-directed `--force` is the established resolution,
+L549/586/587); the 65,536-vs-default budget-scope question for these two
+files remains the owner’s call (S765 gotcha 4). (B) **\#168 Slice 4b
+(READY, L):** strict TDD from plan §5 Slice 4 remainder — override
+controls behind the \#150 `modalDialog` gate showing
+`.ancestryOverrideWarningText` with required reason;
+`.effectiveAncestryRules(rules, overrides)` into formation and ORIGINAL
+rules + overrides into
+[`reportAncestryViolations()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md)/manifest
+(Learning 780’s two-call contract); “Ancestry” results tab (violations
+DT + coverage + manifest `downloadHandler` via
+[`getDatedFilename()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDatedFilename.md))
+— **feed the reporter FORMED groups only, dropping the unused bucket via
+`hasUnused` (Learning 781)**; `shinytest2` e2e with its group regex
+registered in `.github/workflows/shinytest2.yaml` the SAME session;
+tutorial/article (D6 UNKNOWN+OTHER guidance); \#120 re-check; the
+explicit \#168 open/close call. (C) **Push+CI (READY, S, growing):** ~77
+unpushed expected after close-out (recount); CI current through
+`8007de81`. (D) **Pandoc owner action (DECISION NEEDED, S)**, (E)
+**Slice 5 backfill scoping (DECISION NEEDED, L)**, (F) **Harem-sire seam
+hole (DECISION NEEDED, M)** — all unchanged in `BACKLOG.md`. (G)
+Standing list unchanged — see S760’s next-steps (E) via its HANDOFFS
+receipt.
+
+**Key files:** `R/modBreedingGroups.R:68` (guardrails UI), `:320`
+(`ancestryRulesData`), `:352` (`ancestryRulesForRun`), `:367`
+(`ancestryStatusText`), `:538` (the formation `ancestryRules` arg),
+`:664` (status render), `:655` region (`candidateViews`/`hasUnused` —
+Learning 781’s seam);
+`tests/testthat/test_modBreedingGroups_ancestryRules.R:299` (the
+corrected formed-groups property block — 4b’s mold);
+`docs/planning/issue168-ancestry-guardrails-plan.md:371` (§5 Slice 4
+remainder); `PROJECT_LEARNINGS.md:2251` (Learning 781); `CHANGELOG.md`
+(S766 entries); `HANDOFFS.md` (S766 receipt).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at next
+Phase 0 — measure it; ~77 unpushed expected (recount). (2) **Learning
+781:** the module `groups()` return’s last element is the unused-animals
+bucket when `hasUnused` — never compute violations/properties over the
+raw return. (3) **Learning 780** still governs 4b’s override wiring
+(effective rules to formation; ORIGINAL rules + overrides to
+reporter/manifest). (4) Ratchet moved for CONTENT: 3,521,123 B at
+`dc8776be` (results `9cf9421e573e`); cite from the results file. (5)
+Both big ledgers now fire their default trim trigger — archive pass (A)
+before they grow further; SESSION_NOTES has ample headroom. (6) Pandoc
+PATH workaround unchanged. (7) The suite-wide `warnings: 6` count is
+pre-existing; the new file contributes 0. (8) Standing set unchanged —
+see S760’s gotcha (9) via its HANDOFFS receipt.

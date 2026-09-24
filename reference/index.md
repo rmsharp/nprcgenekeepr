@@ -210,6 +210,8 @@ Funtions designed for interactive use
   : Add placeholder IDs for unknown parents
 - [`alleleFreq()`](https://github.com/rmsharp/nprcgenekeepr/reference/alleleFreq.md)
   : Count each allele in a vector
+- [`appendColonySnapshot()`](https://github.com/rmsharp/nprcgenekeepr/reference/appendColonySnapshot.md)
+  : Append a colony snapshot to a snapshot history
 - [`applyKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md)
   : Apply outside-information kinship overrides to a kinship matrix
 - [`appServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/appServer.md)
@@ -249,8 +251,12 @@ Funtions designed for interactive use
   : Calculate allelic retention
 - [`calcSkewness()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcSkewness.md)
   : Calculate bias-adjusted sample skewness
+- [`calcSnapshotDeltas()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcSnapshotDeltas.md)
+  : Compare two colony snapshots metric by metric
 - [`calculateSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calculateSexRatio.md)
   : Calculate the sex ratio of a set of animals
+- [`checkAncestryRules()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkAncestryRules.md)
+  : Validate an ancestry compatibility rules table
 - [`checkChangedColsLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkChangedColsLst.md)
   : Check a changed-columns list for non-empty fields
 - [`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
@@ -277,6 +283,8 @@ Funtions designed for interactive use
   : Check column names for required columns
 - [`checkSequenceGenotypeFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.md)
   : Check a long-format sequence-derived marker genotype file
+- [`checkSnapshotHistory()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSnapshotHistory.md)
+  : Validate a colony snapshot-history table
 - [`checkTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)
   : Validate a twin/zygosity relations table
 - [`chooseAlleles()`](https://github.com/rmsharp/nprcgenekeepr/reference/chooseAlleles.md)
@@ -307,6 +315,8 @@ Funtions designed for interactive use
   : Count the number of loops in a pedigree tree
 - [`create_wkbk()`](https://github.com/rmsharp/nprcgenekeepr/reference/create_wkbk.md)
   : Create an Excel workbook with worksheets
+- [`createColonySnapshot()`](https://github.com/rmsharp/nprcgenekeepr/reference/createColonySnapshot.md)
+  : Create a colony snapshot row from a genetic value report
 - [`createExampleFiles()`](https://github.com/rmsharp/nprcgenekeepr/reference/createExampleFiles.md)
   : Create example pedigree and ID-list CSV files
 - [`createPedTree()`](https://github.com/rmsharp/nprcgenekeepr/reference/createPedTree.md)
@@ -563,6 +573,10 @@ Funtions designed for interactive use
   : Age-Sex Pyramid Module - Server Function
 - [`modPyramidUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPyramidUI.md)
   : Age-Sex Pyramid Module - UI Function
+- [`modSnapshotTrendsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsServer.md)
+  : Genetic-Health Trends Module - Server Function
+- [`modSnapshotTrendsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsUI.md)
+  : Genetic-Health Trends Module - UI Function
 - [`modSummaryStatsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsServer.md)
   : Summary Statistics Module - Server Function
 - [`modSummaryStatsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsUI.md)
@@ -585,14 +599,20 @@ Funtions designed for interactive use
   : De-identify a twin/zygosity relations table
 - [`offspringCounts()`](https://github.com/rmsharp/nprcgenekeepr/reference/offspringCounts.md)
   : Tabulate offspring counts, optionally by population
+- [`plotSnapshotTrends()`](https://github.com/rmsharp/nprcgenekeepr/reference/plotSnapshotTrends.md)
+  : Plot colony genetic-health trends from a snapshot history
 - [`processQcStudbookResult()`](https://github.com/rmsharp/nprcgenekeepr/reference/processQcStudbookResult.md)
   : Process qcStudbook Result into UI-Friendly Format
 - [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
   : Run quality control on a studbook or pedigree
 - [`rankSubjects()`](https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.md)
   : Rank animals by genetic value
+- [`readAncestryRules()`](https://github.com/rmsharp/nprcgenekeepr/reference/readAncestryRules.md)
+  : Read an ancestry compatibility rules table from a file
 - [`readKinshipOverrides()`](https://github.com/rmsharp/nprcgenekeepr/reference/readKinshipOverrides.md)
   : Read a kinship overrides table from a file
+- [`readSnapshotHistory()`](https://github.com/rmsharp/nprcgenekeepr/reference/readSnapshotHistory.md)
+  : Read a colony snapshot-history table from a file
 - [`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md)
   : Read a twin/zygosity relations table from a file
 - [`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
@@ -607,6 +627,8 @@ Funtions designed for interactive use
   : Remove uninformative founders
 - [`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
   : Remove placeholder animals added for unknown parents
+- [`reportAncestryViolations()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md)
+  : Report ancestry-rule violations within formed groups
 - [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
   : Generate a genetic value report for a pedigree
 - [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)

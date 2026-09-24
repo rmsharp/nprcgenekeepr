@@ -48,7 +48,11 @@ modGeneticValueServer(
 ## Value
 
 List with `geneticValues`, `topAnimals`, `nAnalyzed`, `kinshipMatrix`,
-`founderStats`, `maleFounders`, and `femaleFounders`.
+`founderStats`, `maleFounders`, `femaleFounders`, and `snapshotSource`
+(issue \#167 Slice 4: the most recent run's analyzed pedigree, its
+`nprcgenekeeprGV` object, and its `guIter`/`guThresh`, captured
+atomically for
+[`modSnapshotTrendsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsServer.md)).
 
 ## References
 
@@ -87,5 +91,7 @@ Other Shiny modules:
 [`modPotentialParentsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsUI.md),
 [`modPyramidServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPyramidServer.md),
 [`modPyramidUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPyramidUI.md),
+[`modSnapshotTrendsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsServer.md),
+[`modSnapshotTrendsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsUI.md),
 [`modSummaryStatsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsServer.md),
 [`modSummaryStatsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsUI.md)

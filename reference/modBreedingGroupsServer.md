@@ -102,6 +102,16 @@ The module supports multiple configuration options:
 
 - **Sex ratio**: Target female-to-male ratio in groups
 
+- **Ancestry guardrails**: Optional uploaded ancestry rules (see
+  [`checkAncestryRules`](https://github.com/rmsharp/nprcgenekeepr/reference/checkAncestryRules.md))
+  enforced during group formation; inactive when the pedigree has no
+  `ancestry` column. A block rule can be overridden for the session
+  through a confirm gate requiring a stated reason; the "Ancestry"
+  results tab reports each run's rule violations (overridden rules stay
+  visible, marked `overridden` – see
+  [`reportAncestryViolations`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md))
+  and offers the run's downloadable audit manifest
+
 ## See also
 
 [`modBreedingGroupsUI`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsUI.md)
@@ -142,5 +152,7 @@ Other Shiny modules:
 [`modPotentialParentsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsUI.md),
 [`modPyramidServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPyramidServer.md),
 [`modPyramidUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPyramidUI.md),
+[`modSnapshotTrendsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsServer.md),
+[`modSnapshotTrendsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsUI.md),
 [`modSummaryStatsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsServer.md),
 [`modSummaryStatsUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsUI.md)

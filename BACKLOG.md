@@ -6,6 +6,66 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
+**Mate-pair guardrail surface — extend the shipped \#168 ancestry-rules
+machinery to
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)/`modMatePair`
+(recorded S762, extracted here S769 when \#168 closed; DECISION NEEDED —
+needs its own small design gate before any code, Effort M)** – the \#168
+plan’s §5 “Deferred (recorded, NOT ratified)” item: an additive
+violations/`reason` extension of the existing `excluded`/`pairs` frames
+using the same rules machinery (D5 deliberately kept it out of v1 to
+avoid re-opening \#151’s module contract mid-cluster). \#168 itself is
+CLOSED (v1 complete, S769), so this item is the follow-up’s only live
+tracker — a pickup session opens a new GitHub issue and runs the design
+gate first. See `docs/planning/issue168-ancestry-guardrails-plan.md`
+§5/D5.
+
+**Harem-sire conflict enforcement hole — kinship AND ancestry (found
+S764, 2026-09-22, DECISION NEEDED — closing it is a behavior change
+needing its own design gate, Effort M)** – a harem’s sampled sire is
+seeded into the group before the fill loop (`initializeHaremGroups()`),
+and the loop applies `kin[[id]]` exclusions only for animals it places
+itself (`R/fillGroupMembers.R:60-77`), so the sire’s own conflicts are
+never enforced against his group: a female with 0.25 kinship to the sire
+can join his harem today (M-F pairs are not F-F-exempt, yet go
+unenforced), and \#168 ancestry blocking inherits the identical hole
+(owner-ratified S764 as “inherit + document”: pinned by
+`tests/testthat/test_groupAddAssignAncestry.R`‘s harem-limitation test,
+documented in
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)’s
+`ancestryRules` roxygen and the NEWS caveat). The candidate fix —
+filtering each group’s `available` by its pre-seeded members’ `kin`
+entries after
+[`makeGroupMembers()`](https://github.com/rmsharp/nprcgenekeepr/reference/makeGroupMembers.md)
+— changes no-rules harem results (a D7-class zero-change violation if
+done casually) and alters
+[`sample()`](https://rdrr.io/r/base/sample.html) streams, so it needs
+its own Pre-RED design gate deciding kinship-side scope, RNG posture,
+and whether `currentGroups` seeds in position \>1 share the fix. Full
+mechanics: Learning 778; the S764 harem scope gate recorded the
+“inherit + document” decision.
+
+**(Optional, owner decision) Retrospective colony-snapshot backfill for
+longitudinal genetic-health monitoring** (deferred S760, 2026-09-22,
+from the closed issue \#167’s plan §5 Slice 5, DECISION NEEDED, Effort
+L, its own scoping session first) – issue \#167’s v1 (schema + history
+IO, snapshot generation, trend/delta computation, the Genetic-Health
+Trends tab; Slices 1-4, all shipped and closed) is prospective-only:
+snapshots are recorded from the analysis state a user is looking at when
+they generate one. A future, clearly-caveated feature could reconstruct
+APPROXIMATE historical snapshots from birth/exit dates alone, giving an
+immediate trend from a single studbook rather than waiting for
+prospective series to accumulate. **Never ratified as v1 scope** (plan
+§3 D5, §5 Slice 5) – the caveat model is the design problem, not an
+implementation detail: as-of-date reconstruction cannot recover
+historical breeder flags or focal-population designations, so
+`neSexRatio`/`neVariance` and focal-rule snapshots would be silently
+wrong, not merely approximate, unless the design session solves that.
+Requires its own fresh Pre-RED design gate (a new GitHub issue, since
+\#167 itself is closed) before any implementation. See
+`docs/planning/issue167-longitudinal-monitoring-plan.md` §5 Slice 5 / §7
+Dragon 1 for the full caveat inventory.
+
 ## Active
 
 ## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)

@@ -145,6 +145,14 @@ in groups</p></li>
 <li><p><strong>Kinship threshold</strong>: Maximum allowed kinship within groups</p></li>
 <li><p><strong>Harem mode</strong>: Form groups with exactly one male each</p></li>
 <li><p><strong>Sex ratio</strong>: Target female-to-male ratio in groups</p></li>
+<li><p><strong>Ancestry guardrails</strong>: Optional uploaded ancestry rules
+(see <code><a href="checkAncestryRules.html">checkAncestryRules</a></code>) enforced during group
+formation; inactive when the pedigree has no <code>ancestry</code> column.
+A block rule can be overridden for the session through a confirm
+gate requiring a stated reason; the "Ancestry" results tab reports
+each run's rule violations (overridden rules stay visible, marked
+<code>overridden</code> – see <code><a href="reportAncestryViolations.html">reportAncestryViolations</a></code>) and
+offers the run's downloadable audit manifest</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -178,6 +186,8 @@ in groups</p></li>
 <code><a href="modPotentialParentsUI.html">modPotentialParentsUI()</a></code>,
 <code><a href="modPyramidServer.html">modPyramidServer()</a></code>,
 <code><a href="modPyramidUI.html">modPyramidUI()</a></code>,
+<code><a href="modSnapshotTrendsServer.html">modSnapshotTrendsServer()</a></code>,
+<code><a href="modSnapshotTrendsUI.html">modSnapshotTrendsUI()</a></code>,
 <code><a href="modSummaryStatsServer.html">modSummaryStatsServer()</a></code>,
 <code><a href="modSummaryStatsUI.html">modSummaryStatsUI()</a></code></p></div>
     </div>

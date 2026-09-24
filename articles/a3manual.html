@@ -785,6 +785,22 @@ form (default: 3, range: 1-20).</p></li>
 coefficient between group members (default: 0.25). Lower values create
 more genetically diverse groups but may result in fewer animals being
 placed.</p></li>
+<li><p><strong>Ancestry Guardrails</strong>: An optional,
+collapsed-by-default section for centers that manage geographic ancestry
+(for example, Indian-origin vs. Chinese-origin rhesus). Upload a rules
+file in which each line names two ancestry classifications and a
+severity: <em>block</em> rules keep matching pairs out of the same group
+during formation; <em>flag</em> rules let groups form and report
+matching pairs afterward. A status line always shows how many rules are
+loaded and how many candidate animals no rule reaches; a pedigree
+without ancestry information leaves the guardrails inactive, with the
+status line saying so. A loaded <em>block</em> rule can be overridden
+for the session – select it, choose “Override rule…”, and confirm with a
+required written reason; overridden rules still report their pairings,
+marked “overridden”, never silently dropped. When writing rules for
+animals without usable ancestry information, name both UNKNOWN and OTHER
+(blank entries standardize to UNKNOWN; unrecognized text standardizes to
+OTHER) – the validator warns when only one of the two is named.</p></li>
 <li>
 <p><strong>Sex ratio</strong>: Control the male-to-female
 composition:</p>
@@ -824,11 +840,11 @@ applied.</p></li>
 <div class="section level3">
 <h3 id="results-display">Results Display<a class="anchor" aria-label="anchor" href="#results-display"></a>
 </h3>
-<p>After clicking “Form Groups”, results appear in two tabs:</p>
+<p>After clicking “Form Groups”, results appear in four tabs:</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>Groups</strong>: Visual display of each formed group
-showing:
+<p><strong>Groups</strong>: Visual display of each formed group
+showing:</p>
 <ul>
 <li>Group number and size</li>
 <li>Animal IDs and their genetic values</li>
@@ -836,7 +852,7 @@ showing:
 </ul>
 </li>
 <li>
-<strong>Statistics</strong>: Summary table showing:
+<p><strong>Statistics</strong>: Summary table showing:</p>
 <ul>
 <li>Number of animals per group</li>
 <li>Average kinship within each group</li>
@@ -845,6 +861,17 @@ showing:
 kinship threshold)</li>
 </ul>
 </li>
+<li><p><strong>Group Detail</strong>: One group at a time – annotated
+membership, the within-group kinship matrix (when “Include kinship in
+display of groups” was checked), and per-group export buttons.</p></li>
+<li><p><strong>Ancestry</strong>: When ancestry rules were in effect for
+the run, every within-group pairing a rule matched (with its rule,
+severity, and whether it was overridden), a coverage summary showing how
+many grouped animals carry each ancestry classification and which
+classifications no rule reaches, and a <strong>Download Audit
+Manifest</strong> button exporting the run’s audit record: the rules in
+effect, any overrides with their written reasons, pair counts, and the
+confirmation warning text verbatim.</p></li>
 </ol>
 </div>
 <div class="section level3">

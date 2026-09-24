@@ -634,6 +634,44 @@ A **Statistics** sub-tab summarizes all formed groups at once. Groups
 and their kinship matrices can each be exported individually to a file
 and location you choose.
 
+**Ancestry guardrails** (issue
+[\#168](https://github.com/rmsharp/nprcgenekeepr/issues/168)). Centers
+that manage geographic ancestry – for example keeping Indian-origin and
+Chinese-origin rhesus lines separate – can upload an ancestry rules file
+in the **Ancestry Guardrails** section of the configuration panel (check
+the box to expand it; the status line beneath always shows what is
+loaded). Each line of the rules file names two ancestry classifications
+and a severity: `block` rules keep matching pairs out of the same group
+during formation, while `flag` rules let the groups form and report the
+matching pairs afterward. After forming groups, the **Ancestry** sub-tab
+lists every within-group pairing a rule matched, alongside a coverage
+summary showing how many grouped animals carry each ancestry
+classification and which classifications no rule reaches – an animal
+whose ancestry no rule names participates in no conflict, so the
+coverage view is how a rule set that quietly covers too little stays
+visible.
+
+When professional judgment says a block rule should not apply to a
+particular run – an approved founder import, for example – select the
+rule and choose **Override rule…**: a confirmation step requiring a
+written reason relaxes that one rule for your session (until you clear
+the override or load a new rules file), and its matched pairings stay in
+the violations list marked “overridden” rather than disappearing. A
+**Download Audit Manifest** button exports the run’s audit record: the
+rules in effect, any overrides with their reasons, pair counts, and the
+confirmation warning text verbatim, so the decision trail leaves the
+tool with the groups.
+
+One practical note on writing rules: pedigree files record “unknown”
+ancestry in two ways that the standardized vocabulary keeps separate – a
+truly blank entry becomes UNKNOWN, while unrecognized text (including
+the literal word “unknown” after re-standardization) becomes OTHER. A
+center writing a conservative rule for animals without usable ancestry
+information should therefore name **both** UNKNOWN and OTHER; the
+validator warns when a rules file names one without the other, and the
+example rules file shipped with the package
+(`example_ancestry_rules.csv`) models naming both.
+
 ### Mate Pair Analysis
 
 The **Mate Pair Analysis** tab (issue
@@ -1182,6 +1220,44 @@ parent.](shiny_app_use/potential_parents_results.png)
 
 Potential Parents results for the full example pedigree (1,587 animals
 with at least one candidate parent found).
+
+### Genetic-Health Trends
+
+The **Genetic-Health Trends** tab (issue
+[\#167](https://github.com/rmsharp/nprcgenekeepr/issues/167)) turns the
+one-time snapshots on the Genetic Value Analysis tab into a longitudinal
+record: a running history of dated colony snapshots that lets you see
+whether the colony’s genetic health is improving or eroding over time.
+
+The workflow has three parts:
+
+1.  **Snapshot history.** Upload a snapshot-history file (the tab ships
+    a worked example) or start recording a new one. Each row is one
+    dated snapshot – mean kinship, founder representation, genome
+    uniqueness, and the population’s make-up – for a single membership
+    rule (the whole pedigree, or a designated focal population).
+2.  **Generate Snapshot.** After running Genetic Value Analysis on the
+    Genetic Value Analysis tab, clicking **Generate Snapshot** here
+    records a new dated row from that analysis and appends it to the
+    history. The membership rule is filled in automatically from the
+    analysis you just ran – it is not a setting you have to get right by
+    hand.
+3.  **Trends and comparisons.** The **Trends** tab plots every recorded
+    value over time, with shaded bands showing the uncertainty that
+    comes from repeated random sampling. The **Deltas** tab lists what
+    changed, value by value, between any two recorded dates you choose.
+    Both flag snapshots recorded under different settings or package
+    versions, so a jump in the numbers is not mistaken for a real change
+    in the colony. The updated history and the delta table are both
+    downloadable for record-keeping.
+
+> **Note**
+>
+> This section is text-only, matching the established precedent for a
+> straightforward new-tab addition (see the Cross-Center Identity
+> section above); the tab’s behavior is fully covered by the package’s
+> automated tests and a live end-to-end run, not only by this
+> description.
 
 ## Conclusion
 

@@ -55,6 +55,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/alleleFreq.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/appServer.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/appUI.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/appendColonySnapshot.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/assignAlleles.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.html</loc></url>
@@ -72,7 +73,9 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/calcRetention.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/calcSkewness.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/calcSnapshotDeltas.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/calculateSexRatio.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkAncestryRules.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkChangedColsLst.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkErrorLst.html</loc></url>
@@ -85,6 +88,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkParentAge.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkRequiredCols.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkSnapshotHistory.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/chooseAlleles.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/chooseDate.html</loc></url>
@@ -99,6 +103,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/countFirstOrder.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/countKinshipValues.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/countLoops.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/createColonySnapshot.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/createExampleFiles.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/createPedTree.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.html</loc></url>
@@ -237,6 +242,8 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsUI.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modPyramidServer.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modPyramidUI.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsServer.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsUI.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsServer.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/modSummaryStatsUI.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/nprcgenekeepr-package.html</loc></url>
@@ -260,6 +267,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/pedSix.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/pedWithGenotype.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/pedWithGenotypeReport.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/plotSnapshotTrends.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/print.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/processQcStudbookResult.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/qcBreeders.html</loc></url>
@@ -267,7 +275,9 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/qcPedGvReport.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/rankSubjects.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/readAncestryRules.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/readKinshipOverrides.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/readSnapshotHistory.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.html</loc></url>
@@ -275,6 +285,7 @@
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removePotentialSires.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removeUninformativeFounders.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.html</loc></url>
+<url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.html</loc></url>
 <url><loc>https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.html</loc></url>
