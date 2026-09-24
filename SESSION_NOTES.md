@@ -66,6 +66,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 774 Did
+**Deliverable:** **Slice 1 of issue #169 — the `reportMatePairs(ancestryRules,
+overriddenRules)` kernel** (IN PROGRESS). Script-callable only: no module, no
+UI, no `appServer` change. Plan: `docs/planning/mate-pair-ancestry-guardrails-plan.md`
+§5 Slice 1 (done-when items 1-8) under decisions D1-D6.
+**Started:** 2026-09-23 (evening local; 2026-09-24 ~02:30 UTC)
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0
+priorities gate (S773 next-steps (A)). Orient measured: 0 undocumented on both
+frontiers (both at `d3603995` = HEAD), 8 unpushed (`origin/master` =
+`79206add`), CI 10/10 green (the 2026-09-24 nightly `shinytest2` had not fired
+at 02:25 UTC), ratchet citation matched the results file before any run;
+`SESSION_NOTES.md` 36,343 B / `HANDOFFS.md` 58,701 B / `CHANGELOG.md` 31,783 B,
+`--check --budget-bytes 65536` fires for none. **TDD phase: PRE-RED**; the
+`PRE-RED→RED` `AskUserQuestion` gate is owed before any test is written.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 772 Handoff Evaluation (by Session 773)
 **Score: 9/10.** **What helped:** every measurement held exactly — 0
 undocumented on both frontiers, 5 unpushed (`origin/master` = `79206add`),

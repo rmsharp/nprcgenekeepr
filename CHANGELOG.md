@@ -46,6 +46,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #169] S774 claim: Slice 1 — `reportMatePairs()` ancestry kernel *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (S773 next-steps (A),
+  `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger frontiers
+  (both at `d3603995` = HEAD), 8 unpushed, CI 10/10 green, S773
+  receipt-citation vs `.quality-gates-results.json` matched byte-for-byte
+  BEFORE any ratchet run. Deliverable is Slice 1 of 3 (script-callable kernel
+  only; strict TDD, `AskUserQuestion`-gated phases). Stub + pending receipt
+  ride this commit; close-out records the rest. Issue #169 stays open until
+  Slice 3.
+
 ### 2026-09-23 · [ad hoc] S773 records: mate-pair design gate DONE, close-out records committed
 - **Deliverable:** the design gate recorded in the `[issue #169]` entry below
   (`6925d1a0`; issue #169 opened, plan ratified, BACKLOG item rewritten

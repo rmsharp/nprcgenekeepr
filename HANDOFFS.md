@@ -164,6 +164,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-23.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S774
+date: 2026-09-23
+status: pending
+active_task: Slice 1 of issue #169 — the reportMatePairs(ancestryRules, overriddenRules) kernel (script-callable only; docs/planning/mate-pair-ancestry-guardrails-plan.md section 5 Slice 1, decisions D1-D6). Strict TDD; owner-picked at the Phase 0 priorities gate (S773 next-steps (A)).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S773
 date: 2026-09-23
 status: complete
