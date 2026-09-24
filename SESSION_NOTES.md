@@ -66,17 +66,104 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 771 Handoff Evaluation (by Session 772)
+**Score: 9/10.** **What helped:** every measurement held exactly — 0
+undocumented on both frontiers, 2 unpushed (`origin/master` = `79206add`),
+CI 10/10 with the four push workflows green on that head, 54,172 B at Orient
+(its gotcha (2) figure to the byte), the ratchet citation byte-identical to
+the results file (compared BEFORE any run); next-steps (A) WAS the owner
+pick and every mechanic it named held — `--check` said "does not fire",
+dry-run then owner-gated `--cut N --force --write`, `--cut N` = KEEP N
+(L777), the trimmer's own ledger entry (L782), verify script pre- AND
+post-commit. **Missing:** no candidate N or live-record count (13) — three
+dry runs (3/5/7) derived them; nothing flagged that the `-2026-09-23` shard
+name was taken (the trimmer auto-suffixed `-2`; cost nothing). "SRF_RED
+expected" was never observed — I passed `--force` from the first `--write`.
+**Wrong:** nothing found. **ROI:** high.
+
 ### What Session 772 Did
-**Deliverable:** `SESSION_NOTES.md` read-cap trim (IN PROGRESS)
-**Started:** 2026-09-23
-**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0
-priorities gate (S771 next-steps (A)). Orient measured: 0 undocumented on both
-frontiers (both at `5f7e362b` = HEAD), 2 unpushed, CI 10/10 green, ratchet
-citation matched the results file before any run; `SESSION_NOTES.md` 54,172 B
-vs the 56,750 B read cap. TDD phase PRE-RED (docs-only).
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
-(in progress); Phase 3F records the rest. Until close-out, this line is the
-crash breadcrumb for the next session's reconcile.
+**Deliverable:** **`SESSION_NOTES.md` read-cap trim — DONE**, owner-gated
+(Phase 0 priorities pick; one gate ratifying the dry-run-derived `--cut 5
+--force --write`, alternatives offered: `--cut 3` → 14,033 B, or hold). TDD
+phase PRE-RED (docs-only) throughout.
+**Trim (`3f78c7ac`):** 8 of 13 records (2026-09-19 → 2026-09-23) →
+`docs/archive/SESSION_NOTES-through-2026-09-23-2.md`; live 54,857 → 21,099 B
+(−61.5%), matching the dry run to the byte; keeps the 5 newest at trim time
+(S772 stub, S770-eval, S771, S769-eval, S770). Verify script run pre- AND
+post-commit: L1/L2/L3 hold. The trimmer wrote its own ledger entry (L782,
+`P1A_OK` 22 → 23) — no hand-written duplicate.
+**Verification (measured):** post-pass `--check --budget-bytes 65536`:
+CHANGELOG 26,786 B, HANDOFFS 44,468 B, SESSION_NOTES 21,099 B — none fire.
+Ratchet **1/1 at `3f78c7ac`** (3,528,717 B, −13 B vs S771 = noise; results
+`7a1b249baa2d`, manifest `aa983075d6a2`); the citation comparison was done at
+Orient BEFORE the run. Not run: local suite/`devtools::check()` — no package
+code changed.
+**Commits:** claim `cef505a9`; trim `3f78c7ac`; records follow, UNPUSHED by
+design (~5 unpushed after close-out). **Checklists:** all N/A (no `.R`,
+export, UI, or statistic; no CI break; no BACKLOG item or issue).
+**Disclosures:** commits carry `Claude Sonnet 5`; the SRF_RED refusal itself
+was never observed (`--force` per the ratified gate).
+
+**Self-assessment (Session 772): 9/10.** **Strengths:** claim before any
+technical work; three dry runs derived the gate's numbers and the write
+matched them to the byte; verify pre- AND post-commit; the trimmer's ledger
+entry inspected, not duplicated; scope held (no BACKLOG/`CLAUDE.md` edits);
+one 4-file trim commit. **Weak:** (1) my first gate call was malformed JSON
+(one wasted round); (2) an unquoted `=====X=====` in `echo` is a zsh `=cmd`
+expansion and failed two commands (one round each).
+
+**Learnings:** none appended — the read cap has now forced three
+SESSION_NOTES trims (S762 per the archived S768 record, S768, S772); the
+mechanical fix is an owner decision on the ceiling (next-steps (E)), not a
+new learning (Phase 3C: a mechanical learning is a gate, not a row; FM #28).
+
+**Next steps (specific):** (A) **Check the nightly shinytest2 run (READY,
+S):** first run on the pushed code expected ~07:15 UTC 2026-09-24 (an
+estimate from prior timestamps; it had not fired at 01:32 UTC Orient);
+Phase 0's unfiltered `gh run list --branch master --limit 10` shows it; red
+= report-don't-fix. (B) **Mate-pair guardrail (DECISION NEEDED, M)**
+`BACKLOG.md:8`. (C) **Harem-sire seam hole (DECISION NEEDED, M)**
+`BACKLOG.md:20`, Learning 778. (D) **Slice 5 backfill scoping (DECISION
+NEEDED, L)** `BACKLOG.md:40`. (E) **Read-cap ceiling (DECISION NEEDED, S;
+surfaced, NOT filed):** `.context-budget.json` and the trimmer both sit at
+65,536 B while the read cap binds at 56,750 B; FM #28's countermeasure is a
+ceiling "just above what sessions actually read". `CLAUDE.md` records the
+same-number choice (S720, owner-ratified) — the owner's call; if wanted,
+file it as a BACKLOG item. (F) **Push (READY, S, owner-gated):** ~5
+unpushed (recount). (G) Lower priority unchanged in `BACKLOG.md`.
+
+**Key files:** `docs/archive/SESSION_NOTES-through-2026-09-23-2.md` +
+`.verify.sh` (8 records); `CHANGELOG.md:49` region (S772 entries incl. the
+tool-written trim entry); `HANDOFFS.md:166` (S772 receipt);
+`.quality-gates-results.json`; `.context-budget.json` (E);
+`BACKLOG.md:8`/`:20`/`:40`; `.github/workflows/shinytest2.yaml:1-30`.
+
+**Gotchas for the next session:** (1) Expect 0 undocumented at Phase 0 —
+measure it; ~5 unpushed expected (recount); `origin/master` = `79206add`.
+(2) **SESSION_NOTES read cap:** 21,099 B after the trim + these records;
+records grow it ~7.6 KB/session (estimate: 23.6 KB after S768's trim →
+54.2 KB after S771, four sessions), so the next trim is due ~S776–S777 —
+`wc -c` at Orient. `--check` says "does not fire" (the read cap binds
+first); `--cut N` = KEEP N; a taken shard name auto-suffixes (`-3` next).
+`HANDOFFS.md` is ~50 KB after this receipt (50,312 B measured before a small
+edit); its 65,536 B trigger is ~2–3 receipts away at ~5.7 KB each (an
+estimate from S770→S771 growth), so its archive pass is due ~S775;
+`CHANGELOG.md` (27,862 B) has more room.
+(3) Ratchet 1/1 at `3f78c7ac` (3,528,717 B, results `7a1b249baa2d`); cite
+from the results file; comparison BEFORE any run. (4) **STANDING SET
+(carried forward):** full-40-char sha + smoke-test `gh run` filters (sha
+from `git rev-parse`); `scratchpad/` invisible to git BY OWNER DECISION;
+ratchet AFTER committing; renv banner expected; `CLAUDE.md` warn band
+(26,360 B) = headroom, growth run 54/10; zsh harness traps (no foreground
+sleep; no `&`/`disown` inside `run_in_background`; quote `echo` separators —
+an unquoted `=====X=====` fails); trim budget 65,536 B for ALL THREE
+ledgers (S767) plus the read-cap rule in (2). (5) The e2e app runs the
+INSTALLED package — `R CMD INSTALL` the dev tree before any local live-e2e
+run. (6) Slice-4b: consumers read run SNAPSHOT fields, never live inputs
+(L780/#150); report universe = FORMED groups only (L781). (7)
+`commented_code_linter` fires on a prose comment with an inner `#` — write
+"issue 168". (8) 5 untracked render artifacts (3 HTMLs Aug 15, 2 PDFs
+Aug 25) are known residue, not ghost-session evidence.
 
 ### Session 770 Handoff Evaluation (by Session 771)
 **Score: 9/10.** **What helped:** every measurement held exactly — 0

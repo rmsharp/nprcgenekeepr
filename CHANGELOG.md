@@ -46,6 +46,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S772 records: SESSION_NOTES.md read-cap trim DONE, close-out records committed
+- **Deliverable:** the trim recorded in the tool-written entry below (`3f78c7ac`,
+  owner-ratified `--cut 5 --force`: 8 of 13 records → `-2` shard, 54,857 →
+  21,099 B, verify script OK pre- AND post-commit). Post-pass `--check
+  --budget-bytes 65536`: CHANGELOG 26,786 B, HANDOFFS 44,468 B,
+  SESSION_NOTES 21,099 B — none fire. Ratchet 1/1 at `3f78c7ac` (3,528,717 B,
+  −13 B vs S771 = noise; results `7a1b249baa2d`, manifest `aa983075d6a2`);
+  the receipt-citation comparison ran at Orient BEFORE the run. Not run:
+  local suite/`devtools::check()` — no package code changed. No BACKLOG item
+  or GitHub issue involved; no `.R`/export/UI/statistic (all checklists N/A).
+- **Receipt:** `HANDOFFS.md` S772 `status: complete` (self 9/10, S771
+  evaluated 9/10); its `commit:` names the deliverable commit `3f78c7ac`
+  (the records commit cannot name its own sha; no separate sha commit).
+  Surfaced, not filed: the read-cap ceiling decision (next-steps (E)).
+
 ### 2026-09-23 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-23-2.md` (8 record(s), 54,857 B → 21,099 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
