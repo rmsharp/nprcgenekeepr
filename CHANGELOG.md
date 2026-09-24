@@ -46,6 +46,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [ad hoc] S778 claim: push to origin/master + CI verification *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (S777 next-steps (A)). Orient measured: 0
+  undocumented on both ledger frontiers (both at `8666dc55` = HEAD), 38 unpushed
+  (`origin/master` = `79206add`, confirmed with `git ls-remote`), CI green on every latest
+  per-workflow run, the S777 receipt's ratchet citation matching
+  `.quality-gates-results.json` byte-for-byte BEFORE any run. Stub + pending receipt ride
+  this commit; close-out records the rest.
+
 ### 2026-09-24 · [issue #169] S777 records 2/2: Slice 3b DONE, issue #169 CLOSED, close-out records
 - **Deliverable:** Slice 3b of issue #169 (the final slice: the committed live e2e, the
   colony-manager-guide documentation, the issue close) — DONE, recorded in the entries below:

@@ -66,6 +66,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 778 Did
+**Deliverable:** Push the 38 unpushed local commits (plus this claim) to `origin/master` and
+verify CI on the pushed head by exact SHA (IN PROGRESS)
+**Started:** 2026-09-24 19:17Z
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (S777
+next-steps (A)); ops session, no package code, TDD phase PRE-RED throughout (S771 precedent).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 776 Handoff Evaluation (by Session 777)
 **Score: 9/10.** **What helped:** every Orient measurement held exactly -- 0
 undocumented on both frontiers (`a6ee8c0d`), 30 unpushed (`origin/master` =
