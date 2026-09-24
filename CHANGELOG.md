@@ -67,6 +67,194 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · \[ad hoc\] `BACKLOG.md`: the “one fewer node” item rewritten with its measured cause (row order, not a dropped row)
+
+- **Change:** the open item about the app’s uploaded/QC’d copy of
+  `obfuscated_rhesus_mhc_ped.csv` drawing a different Diagram than the
+  same CSV read directly (found S472, “cause not investigated”) now
+  states what was measured, and stays open as a decision. **Refuted:**
+  the hypothesis that
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  drops or merges a row – it keeps all 375 rows and ids (none lost or
+  added, 0 duplicates) and
+  [`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+  returns the same 375 nodes / 502 edges for both inputs. **Found:**
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  reorders the rows, and the mating layout depends on row order –
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  gives 782 nodes for both inputs under `edgeStyle = "direct"` but
+  **1456 (raw order) vs 1412 (QC order)** under `"rectilinear"`, and the
+  raw content re-ordered to QC’s row order gives exactly 1412. The S472
+  figures (739 vs 740; 50 vs 51) no longer reproduce because the layout
+  changed since (e.g. Track 4, S573). Open for the owner: whether that
+  row-order dependence is acceptable, and whether the bundled-fixture
+  e2e tests should assert the QC’d count.
+- **Commit:** this commit – `BACKLOG.md` and this entry only. **Local,
+  not pushed.**
+- **Session:** none – owner-directed, outside a numbered session
+  (follows S778) · **Verified:** `Rscript` with
+  [`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html):
+  the counts above were computed directly, on the bundled fixture, with
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)’s
+  default arguments. **Limits, stated so the item is not over-read:**
+  the cause is “order alone reproduces the QC’d count”, not “order is
+  the only difference” – the re-ordered raw data is not `all.equal` to
+  the QC’d data on id/sire/dam/sex (QC normalizes some cells; not
+  characterized) and the node counts still match; the live Shiny app
+  itself was not driven this time, so the claim is about the functions
+  the app calls, not a fresh live render; the mating-layout collision
+  warning fires for both orders. `git diff -U0` shows one hunk, in this
+  item only. **Not run:** the test suite and `devtools::check()` – no
+  package code changed.
+
+### 2026-09-24 · \[ad hoc\] `BACKLOG.md`: compressed the LabKey item and the kinship2 section’s DONE narrative
+
+- **Change:** `BACKLOG.md` 521 -\> 433 lines (42,354 -\> 34,503 B). (1)
+  The **LabKey item** 44 -\> 15 lines: the Recs \#1-#5 DONE narrative
+  (S143-S152, S155) became a one-paragraph pointer to `CHANGELOG.md`;
+  the BLOCKED tag and the still-deferred remainder are kept in full. (2)
+  The **“Pedigree diagram vs kinship2” section’s** S435-S436 triage
+  intro, S480 sequencing note and the Tier 1 / Tier 2 DONE blocks, 84
+  -\> 20 lines: what remains states the outcome (8 issues filed in an
+  owner-set order, all closed except **\#138**), the two tiers, and the
+  pointers (audit, sequencing audit, spike, plan docs, Learnings
+  410/411/485/488-499). (3) The **S518 housekeeping item’s** pass
+  history and next-pass candidates were updated for this pass, with the
+  regrowth measurement (480 lines after S752, 561 before this pass). The
+  per-slice detail that is no longer in the file is in the ledger, the
+  plan docs and the Learnings, and recoverable with
+  `git show ab50aed1:BACKLOG.md`. **The owner ratified this deeper cut**
+  by picking “Compress DONE narrative” (the S518 item had recorded it as
+  needing fresh ratification).
+- **Commit:** this commit – `BACKLOG.md` and this entry only. **Local,
+  not pushed.**
+- **Session:** none – owner-directed, outside a numbered session
+  (follows S778) · **Verified:** the S518 method, before cutting
+  anything. **Ledger:** every LabKey session (S143, S144, S146-S152,
+  S155) has an entry heading naming it and all 8 load-bearing names are
+  in the ledger (`setLabKeyDefaults`, `defaultSiteParams`,
+  `getPedigreeSource`, `getFileDirectRelatives`,
+  `getFocalAnimalPedFromFile`, `nprcgenekeeprFileErr`,
+  `readFocalAnimalIds`, `Rlabkey (>= 3.2.0)`). **Disclosed deviation:**
+  for the kinship2 sessions (S435-S500) only S482 has a heading that
+  names its S-number – the others are recorded inside entry bodies – so
+  step (1)’s “heading” wording could not be met literally; the
+  load-bearing facts were verified instead (all 8 design and plan doc
+  paths, `checkTwinRelations`, `obfuscateTwinRelations`, `orderBySex`,
+  the dangling-parent/#154 fixes, and the \#136 disclosure defect as
+  “`name` scrubbed to `NA` (D8)” plus plan section D8). **Learnings**
+  410, 411, 485, 488-499 all resolve. **Issues** \#131-#137, \#139,
+  \#141, \#143-#145 and \#154 are CLOSED and only \#138 is OPEN
+  (`gh issue view`). **Untouched:** 15 of the 16 open items are
+  byte-identical before and after (a script compared each `- [ ]`
+  block); the LabKey item is the one compressed in place. No test reads
+  `BACKLOG.md` (`grep`), and `methodology_dashboard.py` runs without
+  error against the new file. **Not run:** the test suite and
+  `devtools::check()` – no package code changed.
+
+### 2026-09-24 · \[ad hoc\] `BACKLOG.md`: fixed stale statements and dropped resolved section stubs
+
+- **Change:** (1) the Genetic-metrics section intro no longer points at
+  “the open item at the end of this section” – that item (the two
+  unticketed High-priority audit gaps) became issues \#167 and \#168 and
+  its block was removed in S753 (`c823a9f7`), so the pointer led
+  nowhere; (2) removed the `## Architecture follow-ups` section – its
+  claim that XARCH-2 was “STILL OPEN” in \#122 was wrong (#122 is
+  CLOSED; `docs/architecture/module-contract.md` records the resolution)
+  and it said “No items remain” itself; XARCH-5 stays tracked on GitHub
+  as **\#123 (open)**, and the detail stays in
+  `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` and the
+  ledger; (3) dropped the empty `## Active` and `## Documents` headings
+  and the duplicate `## Up Next`, so the file now has one
+  `## Up Next`; (4) corrected the `NEWS.Rmd` release-state-sweep item’s
+  line references for the \#167 entries (`:452-457`, `:476` drifted to
+  `:460-468`, `:478-488`; `:308` and `:376-410` were re-checked and are
+  unchanged); (5) updated the S518 housekeeping item’s
+  structural-residue clause to what remains. **Left as-is:** the
+  `## Architecture (issue #122 / XARCH-2 ...)` stub (its pointer to the
+  module-contract doc should be re-homed first) and the
+  `## Audit follow-ups` stub – both named in the S518 item as the next
+  pass’s candidates.
+- **Commit:** this commit – `BACKLOG.md` and this entry only. **Local,
+  not pushed.**
+- **Session:** none – owner-directed, outside a numbered session
+  (follows S778) · **Verified:** `gh issue view` gives \#122 CLOSED and
+  \#123 OPEN; the new `NEWS.Rmd` references were read (line 460 opens
+  the first \#167 entry and 468 closes it; 478 opens the trends entry
+  and 488 closes it); `git diff -U0` shows exactly five hunks, all in
+  the intended regions; `## Up Next` now appears once; every other open
+  item is byte-identical. **Not run:** the test suite and
+  `devtools::check()` – no package code changed.
+
+### 2026-09-24 · \[ad hoc\] `BACKLOG.md`: removed two completed items (REUSE-badge registration; empty `untitled folder`)
+
+- **Change:** two open items that were already done are gone from
+  `BACKLOG.md` (-21 lines): (1) **the api.reuse.software registration
+  item** – it said the README badge rendered gray “unregistered” pending
+  an owner-only registration; the live badge now renders
+  **“compliant”**, so the registration was made at some point (when is
+  unrecorded; the README badge URL is unchanged);
+  2.  **the empty untracked `inst/extdata/reference/untitled folder`**
+      item – the directory no longer exists. Both were found by a
+      read-only staleness review of the whole file (the owner asked “are
+      there items in BACKLOG.md that are stale?” and then picked the
+      cleanups from a menu).
+- **Commit:** this commit – `BACKLOG.md` and this entry only. **Local,
+  not pushed.**
+- **Session:** none – owner-directed, outside a numbered session
+  (follows S778) · **Verified:** the live badge SVG text read “REUSE” /
+  “compliant” (HTTP 200, fetched 2026-09-24 via the host’s resolved
+  address because `curl`’s own resolver failed in the shell; `dig` and
+  `host` resolve it); `find inst -iname 'untitled*'` returns nothing;
+  `git diff --stat` shows 21 deletions and no other change; the
+  neighbouring items are byte-identical. **Not run:** the test suite and
+  `devtools::check()` – no package code changed.
+
+### 2026-09-24 · \[ad hoc\] Removed the stale `nprcgenekeepr_notes.txt` CRAN-readiness scratch note
+
+- **Change:** the 61-line “CRAN Submission Readiness Report” (a pasted
+  checklist, unmodified since it entered history in `089e5213`) is no
+  longer in the repo root. It was already `.Rbuildignore`d, so the built
+  package is unaffected. Recover it with
+  `git show 089e5213:nprcgenekeepr_notes.txt`. **Left as-is:** the
+  now-dead `.Rbuildignore` line 86 (`^nprcgenekeepr_notes\.txt$`) and
+  five identical untracked, git-ignored copies under
+  `.claude/worktrees/wf_*/`, none of which the owner named. The commit
+  is **local** (not pushed).
+- **Commit/PR:** `c182511b`
+- **Session:** none – owner-directed, outside a numbered session
+  (follows S778) · **Verified:** the file was inspected first (tracked,
+  unmodified vs `HEAD`, on `origin/master`); after the commit
+  `git show 089e5213:nprcgenekeepr_notes.txt` still returns all 61
+  lines. **Not run:** the test suite and `devtools::check()` – no
+  package code changed and the file was build-ignored.
+
+### 2026-09-24 · \[ad hoc\] Pushed `bec2a976..af4f1eca` to `origin/master`; CI green on all four push workflows
+
+- **Action:** `git push origin master` – 3 commits: `94974437` (S778
+  close-out records, which S778’s own records said would stay local),
+  `23f20f3a` (`.Rprofile` renv startup check) and `af4f1eca` (the ledger
+  entry for `23f20f3a`). Owner-gated: the owner chose “Record in ledger,
+  then push”, then confirmed a second time after being told the outgoing
+  set was 3 commits – the choice’s description had wrongly said origin
+  was at `94974437` and 1 commit ahead. **Before the push:** `git fetch`
+  showed origin at `bec2a976`, an ancestor of HEAD (fast-forward); the
+  outgoing diff was inspected – 4 files (`.Rprofile`, `CHANGELOG.md`,
+  `HANDOFFS.md`, `SESSION_NOTES.md`), +171/-12, no secret-named files,
+  no credential-shaped strings in added lines. **After:** local and
+  `origin/master` both at `af4f1eca`.
+- **CI (by exact SHA `af4f1eca`, push events):** `lint.yaml` run
+  36060621202, `pkgdown.yaml` 36060621223, `R-CMD-check.yaml`
+  36060621264 and `test-coverage.yaml` 36060621306 all
+  `completed success`.
+- **Session:** none – owner-directed, outside a numbered session
+  (follows S778) · **Verified:** the CI results above; the local suite
+  was not run (`.Rprofile` is build-ignored; the other changes are
+  docs-only records).
+- **Not pushed:** the commits made after this push (`c182511b` and the
+  commit carrying this entry) are local; pushing them would need an
+  entry of its own.
+
 ### 2026-09-24 · \[ad hoc\] `.Rprofile`: renv’s plain startup sync check replaced by `renv::status(dev = TRUE)`
 
 - **Change:** opening R in the package root no longer prints a false

@@ -41,11 +41,11 @@ step(s)”, “arrive(s) in”) found four feature clusters: the MHC
 haplotype-frequency entry (`NEWS.Rmd:308`), the four \#168 ancestry
 entries (`:376-410`: “Groundwork…”, “…continued” x2, “…final step” —
 merge into one release-state entry), and the two \#167 longitudinal
-entries (`:452-457`, `:476`: “arrives in later steps/the next step”).
-The grep is a floor, not a census: the pickup should read the whole
-development section once. Plain-language criterion (S628) still applies.
-`NEWS.md` was last re-rendered S716, so it lags `NEWS.Rmd` and needs a
-render at release. Open, the owner’s call: adding the rule to
+entries (`:460-468`, `:478-488`: “arrives in later steps/the next
+step”). The grep is a floor, not a census: the pickup should read the
+whole development section once. Plain-language criterion (S628) still
+applies. `NEWS.md` was last re-rendered S716, so it lags `NEWS.Rmd` and
+needs a render at release. Open, the owner’s call: adding the rule to
 `CLAUDE.md`’s NEWS checklist (its “matching existing style” wording
 conflicts with it).
 
@@ -123,98 +123,31 @@ Requires its own fresh Pre-RED design gate (a new GitHub issue, since
 `docs/planning/issue167-longitudinal-monitoring-plan.md` §5 Slice 5 / §7
 Dragon 1 for the full caveat inventory.
 
-## Active
-
-## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
-
-*Resolves the former “Tracker reconciliation” decision item (S365) –
-`docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md`
-re-verified all 8 XARCH-1..8 findings against current source rather than
-trusting the six-week-old audit text. XARCH-1/3/7 are fully RESOLVED (no
-further tracking). XARCH-2 (implicit/ inconsistent module contract) and
-XARCH-5 (string-column-keyed pipeline, no validated seam) are STILL OPEN
-and owner-directed to GitHub issues \#122 and \#123 respectively – track
-them there, not here. XARCH-4 (sex-code literal centralization) is now
-also fully RESOLVED – S367 (2026-07-12): see `CHANGELOG.md`. XARCH-6
-([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)/`modInput.R`
-multi-call redundancy) is now also fully RESOLVED – S368 (2026-07-12):
-see `CHANGELOG.md`. XARCH-8’s narrower remaining gap is now also fully
-RESOLVED – S369 (2026-07-12): see `CHANGELOG.md`. The
-`man/filterPairs.Rd` staleness this recurring collateral regen left
-behind (S367 origin, flagged S368/S369) is now also RESOLVED – S370
-(2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
-
-## Up Next
-
 **Act on the LabKey integration research recommendations** (BLOCKED –
 remainder needs a live LabKey server to test/observe, Effort M) —
 research pass DONE
-(`docs/research/labkey-integration-options-2026-06-19.md`, S143).
-\*\*Rec \#3 (explicit optional API-key auth with `.netrc` fallback +
-clear error) DONE — S144,
-[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md).
-Rec \#1 (`Rlabkey` version floor) DONE — S146, `Rlabkey (>= 3.2.0)` in
-`DESCRIPTION` (all four EHR-module repos target LabKey 26.6; the live
-ONPRC/SNPRC server version, doc §8.1, is still unobserved). See
-`CHANGELOG.md`. Rec \#2 (config-ize the ONPRC defaults) DONE — S147:
-centralized into the internal `defaultSiteParams()` (single source of
-truth for
-[`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md)‘s
-no-config fallback; no behavior change) + documented the center-specific
-`lkPedColumns` form in the example config (flat `dam`/`sire` = SNPRC
-direct columns; `Id/parents/dam` = ONPRC curated lookup). All three
-quick wins (Rec \#1/#2/#3) DONE. **Rec \#4/#5 (formalize a data-source
-adapter on the `getPedDirectRelatives` seam + a deterministic mocked
-integration test) DONE (fetch-boundary slice) — S148: internal
-`getPedigreeSource()` (`labkey` \| `dataframe`) now backs
-[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)’s
-fetch with the walk byte-identical, plus the first deterministic walk
-test.** Walk-unification DONE — S149:\*\*
+(`docs/research/labkey-integration-options-2026-06-19.md`, S143); Recs
+\#1-#5 all DONE, S144-S152 (S155 added richer file-read errors), see
+`CHANGELOG.md`:
+[`setLabKeyDefaults()`](https://github.com/rmsharp/nprcgenekeepr/reference/setLabKeyDefaults.md)
+(optional API-key auth), `Rlabkey (>= 3.2.0)`, `defaultSiteParams()`,
+the internal `getPedigreeSource()` (`labkey`/`dataframe`/`file`),
 [`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
-now delegates its pedigree walk to
-[`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md),
-so the LabKey/EHR path returns the full connected pedigree component
-(collaterals included), consistent with the in-memory function — a
-deliberate, owner-accepted behavior change; the deterministic test now
-asserts the full component incl. the previously-excluded collateral
-sibling. **`file` provider DONE — S150:** `getPedigreeSource()` gained a
-`"file"` source (params `fileName`/`sep`) that reads a pedigree file
-(CSV or Excel) via the exported
-[`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md),
-alongside `"labkey"` and `"dataframe"`; offline-deterministic, validates
-id/sire/dam, errors loudly like the `dataframe` branch. **`"file"`
-provider WIRED to a first-class caller DONE — S151:** new exported
-`getFileDirectRelatives(ids, fileName, sep, unrelatedParents)`, a
-file-sourced sibling of
-[`getLkDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getLkDirectRelatives.md)
-(reads via the `"file"` provider, then the source-agnostic
+delegating its walk to
 [`getPedDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedDirectRelatives.md)
-walk). The clean symmetric family is now `getPedDirectRelatives`
-(in-memory) / `getLkDirectRelatives` (LabKey) / `getFileDirectRelatives`
-(file). **Option C — file pedigree source through the focal-animal app
-pipeline DONE — S152:** new exported
-`getFocalAnimalPedFromFile(fileName, pedigreeFileName, sep)`, a
-file-sourced sibling of
-[`getFocalAnimalPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPed.md)
-(reads focal Ids from one file, builds the connected component from a
-separate pedigree file via
-[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md);
-fail-soft to a classed `nprcgenekeeprFileErr` whose `message` names WHY
-the read failed — bad focal-id list file, a
-missing/not-found/unreadable/ wrong-column pedigree file, or no focal
-IDs matched — surfaced as the app’s “File Read Error” detail (richer
-error messages added S155). `modInput` gained an optional pedigree-file
-input on the focal-animals path and dispatches to the offline function
-when supplied, else the unchanged LabKey path — so the Shiny
-focal-animal workflow can now run offline with no LabKey/EHR connection.
-(The focal-id read was factored into a shared internal
-`readFocalAnimalIds()`.) **Still deferred:** a non-LabKey other-EHR
-provider on the same seam; server-side filtering / `executeSql` /
-consuming the centers’ `study.Pedigree`/`ehr.kinship` (research doc
-explicitly defers until pull size is measured + per-center query
-availability/permissions are confirmed; needs a live LabKey server to
-test/observe, and a naive focal-id server filter is incompatible with
-the client-side connected-component walk).
+(a deliberate, owner-accepted behavior change: it now returns the full
+connected component), and the exported
+[`getFileDirectRelatives()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFileDirectRelatives.md)
+and
+[`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)
+(the Shiny focal-animal workflow now runs offline). The live ONPRC/SNPRC
+server version (doc §8.1) is still unobserved. **Still deferred:** a
+non-LabKey other-EHR provider on the same seam; server-side filtering /
+`executeSql` / consuming the centers’ `study.Pedigree`/`ehr.kinship`
+(the research doc defers this until pull size is measured and per-center
+query availability/permissions are confirmed; it needs a live LabKey
+server to test/observe, and a naive focal-id server filter is
+incompatible with the client-side connected-component walk).
 
 **Build a kinship2-similar standalone pedigree package from this
 repository’s code — committed, deferred** (disposition S742, 2026-09-20;
@@ -320,24 +253,6 @@ which the same research found NOT evidenced for
 filing a new `rstudio/chromote` upstream issue, since no existing issue
 there matches this exact macOS+GHA+live-CDP-timeout signature).
 
-**Register `rmsharp/nprcgenekeepr` with api.reuse.software so the REUSE
-badge renders its real compliance status** (found S607, 2026-08-18,
-DECISION NEEDED / owner action, Effort S) – the badge added above
-currently renders gray **“unregistered,”** not green: hitting
-`https://api.reuse.software/badge/github.com/rmsharp/nprcgenekeepr`
-directly returns an “unregistered” SVG, and
-`https://api.reuse.software/info/...` returns “Project not registered.”
-This REUSE API service requires a one-time manual registration at
-<https://api.reuse.software/register> (repo URL + an email address,
-confirmed via a confirmation email) before it will crawl and report a
-project’s actual compliance state – this is not something a session can
-or should do on the owner’s behalf (it ties an email address to the
-public registration and is a one-way “join the registry” action). The
-repo itself IS `reuse lint`-compliant now (1234/1234, verified locally);
-only the badge’s live display is blocked on this registration step. A
-future session can verify the badge went green after the owner
-registers, but cannot perform the registration itself.
-
 **`CHANGELOG.md`’s own ~4-entries-per-session ledger convention (claim,
 Phase 0 reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side
 analogue of the already-diagnosed `HANDOFFS.md` “Receipt Inflation” (H4)
@@ -359,8 +274,9 @@ is worth adopting for `CHANGELOG.md` specifically.
 
 **`BACKLOG.md`’s own ledger-size housekeeping – editorial compression,
 not a `methodology_trim.py` config** (found S518, 2026-08-11, READY,
-Effort L; RECURRING – last pass S752, 2026-09-21) – `BACKLOG.md` is one
-of the dashboard’s HIGH-risk ledger-size items but does not fit
+Effort L; RECURRING – last pass 2026-09-24, ad hoc; last
+numbered-session pass S752, 2026-09-21) – `BACKLOG.md` is one of the
+dashboard’s HIGH-risk ledger-size items but does not fit
 `methodology_trim.py`’s chronological-record model: its `##` sections
 are standing *topical* categories that accumulate resolved-item
 narrative indefinitely, not dated newest-on-top records. The file’s own
@@ -383,205 +299,119 @@ condensed this item’s own pass history (91 -\> 38 lines), extracted the
 Genetic-metrics section’s one buried open thread as its own item, and
 ran the S606-requested regrowth check on “Pedigree diagram vs kinship2”:
 **NOT regrown** (286-\>156 lines; S686’s completed-item removals shrank
-it, and what remains is S530’s own ratified summary). **Method (every
-pass, all steps):** before compressing anything to a pointer, (1) verify
-`CHANGELOG.md` + `docs/archive/CHANGELOG-*.md` carry an entry heading
-for every session number cited AND that the load-bearing facts are
-inside those entries (a heading alone proves little); (2) confirm every
-cited Learning / doc path resolves and every issue state via
-`gh issue view`, not prose; (3) extract any buried open thread as its
-own item first; (4) replace whole line ranges mechanically (Learning
-537: a partial `old_string` leaves later paragraphs duplicated beside
-the new bullet); (5) leave open items byte-untouched; (6) re-read the
-compressed result end to end. **Candidates for the next pass (measured
-S752; re-grep, sizes not anchors):** “Pedigree diagram vs kinship2” –
-its ~30-line S436 triage intro + ~45-line “Tier 1/Tier 2 DONE” block are
-resolved narrative (~60-75 lines recoverable), but that is a DEEPER cut
-than S530 ratified, so it needs fresh owner ratification, and its 4 open
-items stay untouched; the LabKey item – ~44 lines, mostly DONE narrative
-for Recs \#1-#5 (S143-S152) around an ~6-line open remainder; structural
-residue – a duplicate empty `## Up Next` heading and an empty
-`## Active` heading near the top, an empty `## Documents` heading, and
-two fully-resolved section stubs (`## Architecture follow-ups`, ~15
-lines; `## Architecture (issue #122 / XARCH-2 ...)`, ~6 lines).
-
-(found S568, 2026-08-14, incidental to this session’s own
-[`pkgbuild::build()`](https://pkgbuild.r-lib.org/reference/build.html)
-verification, Effort S, not fixed this session) **An empty, untracked
-`inst/extdata/reference/untitled folder` directory** (dated 2026-08-13,
-the same day as the now-resolved “Compounding Loop” files) sits in the
-package source tree – `R CMD build` silently drops it during staging
-(“Removed empty directory…”), so it has no build-correctness impact, but
-it’s a stray Finder artifact with no content. A future session should
-confirm with the owner it’s safe to delete and remove it (no
-`.gitignore`/`.Rbuildignore` entry needed for an already-build-dropped
-empty directory – just a filesystem cleanup).
+it, and what remains is S530’s own ratified summary). **2026-09-24** (ad
+hoc, owner-picked from a staleness review; each cited session, Learning
+and issue checked against the ledger, `PROJECT_LEARNINGS.md` and
+`gh issue view` first): removed 2 completed items (the REUSE-badge
+registration – the live badge now reads “compliant” – and the empty
+`untitled folder`), fixed 4 stale statements, merged the duplicate
+`## Up Next` and dropped the empty/resolved headings, and compressed the
+LabKey item (44 -\> 15 lines) and the kinship2 section’s S435-S500 DONE
+narrative (84 -\> 20 lines; the owner ratified this deeper cut at the
+pick). 15 of 16 open items are byte-identical; the LabKey item is the
+one compressed in place. **Method (every pass, all steps):** before
+compressing anything to a pointer, (1) verify `CHANGELOG.md` +
+`docs/archive/CHANGELOG-*.md` carry an entry heading for every session
+number cited AND that the load-bearing facts are inside those entries (a
+heading alone proves little); (2) confirm every cited Learning / doc
+path resolves and every issue state via `gh issue view`, not prose; (3)
+extract any buried open thread as its own item first; (4) replace whole
+line ranges mechanically (Learning 537: a partial `old_string` leaves
+later paragraphs duplicated beside the new bullet); (5) leave open items
+byte-untouched; (6) re-read the compressed result end to end.
+**Candidates for the next pass (measured 2026-09-24; re-grep, sizes not
+anchors):** structural residue only – two fully-resolved section stubs
+(`## Architecture (issue #122 / XARCH-2 ...)`, ~6 lines, whose pointer
+to `docs/architecture/module-contract.md` should be re-homed before it
+goes; `## Audit follow-ups`, ~4 lines), and the Genetic-metrics section
+(~45 lines of resolved narrative around zero open items – a cut beyond
+what S606/S752 ratified, so it needs fresh owner ratification). Regrowth
+check: the file was 480 lines after S752 and 561 before this pass.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 
-*S435’s capability-comparison audit
+*S435’s capability comparison of the issue \#129 pedigree diagram
+against kinship2’s drawing feature set
 (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
-compared the just-shipped issue \#129 pedigree-diagram feature against
-kinship2’s pedigree-drawing feature set (17-point checklist, 8 findings,
-8 recommendations). Triaged S436 (2026-07-30) via explicit owner
-direction (free-text, not per-item `AskUserQuestion` picks): **all 8
-recommendations** filed as GitHub issues, tracked there, not here –
-including Recommendations 4-7, which the audit itself scored “no action”
-(data-model-gated, or an already-ratified Dragon-P3 scope tradeoff);
-filing tracks the idea for future consideration and does not reverse the
-audit’s own assessment (each issue body preserves the audit’s original
-disposition text verbatim). Owner set an explicit priority order that
-**inverts** the audit’s own suggested ordering (which rated Finding \#1
-highest): **\#131** (diagram image/print export, Finding \#3/Rec \#2,
-priority 1) – **\#132** (in-app shape-to-sex legend, Finding \#6/Rec
-\#3, priority 2, also resolves plan Dragon P5) – **\#133**
-(affected/phenotype/genotype status encoding, Finding \#2/Rec \#4,
-priority 3, data-model gated) – **\#134** (verify
-inbreeding-loop/consanguinity rendering, Finding \#1/Rec \#1, priority
-4, resolves plan Dragon P2 / `PROJECT_LEARNINGS.md` Learning 410) –
-**\#135** (hover tooltips + search/highlight, Rec \#8, priority 5) –
-**\#136** (name labels instead of ID-only, Finding \#8/Rec \#7, priority
-6, data-model gated) – **\#137** (twin/zygosity encoding, Finding
-\#5/Rec \#5, priority unranked by the owner, placed 7th as an inference
-not a stated decision) – **\#138** (full-colony rendering beyond the
-1,500-node cap, Finding \#7/Rec \#6, priority 8 – explicitly
-deprioritized/delayed by the owner, `low priority` GitHub label
-applied). Owner also directed (mid-session, 2026-07-30) a broader goal:
-overlay kinship2’s genetics-domain naming conventions onto the pedigree
-data model where applicable when these are implemented, and build test
-pedigree fixtures with the corresponding added columns – folded into
-\#133 (kinship2’s `affected` argument convention) and \#137 (kinship2’s
-`relation` argument convention), the two data-model-adding items. Owner
-also directed that any plan implementing one of \#131-#138 must include
-a documentation phase (`vignettes/articles/ colony-manager-guide.qmd`
-and/or `vignettes/manual_components/_pedigree_browser.Rmd`), now
-recorded as `CLAUDE.md`’s “Tutorial/article documentation checklist” –
-checking whether this was already true for the base feature found it was
-not: **issue \#139** tracks that issue \#129’s already-shipped Diagram
-tab has zero tutorial/article coverage today. See `PROJECT_LEARNINGS.md`
-Learning 411 and `CHANGELOG.md` for the full S436 triage record. None
-imply reopening issue \#129 or revisiting the visNetwork-vs-kinship2
-technology decision (D2), which stands as ratified.*
-
-**Sequencing note (S480, 2026-08-08):** the items below through the
-`highlightNearest` degree=6 item, plus GitHub issues
-\#133/#136/#137/#138/#141/#145, were jointly examined for implementation
-order in
+produced 8 recommendations; S436 (2026-07-30, owner direction) filed all
+8 as GitHub issues \#131-#138 in an owner-set priority order that
+inverts the audit’s own. **All are shipped and closed except \#138**
+(full-colony rendering beyond the 1,500-node cap: `low priority` label,
+needs its own scoping session first; tracked on GitHub, not here).
+Implementation followed
 `docs/audits/PEDIGREE_DIAGRAM_BACKLOG_SEQUENCING_AUDIT_2026-08-08.md`
-(kinship2-capability- and nomenclature-reference-informed). Recommended
-order: (1) the two dangling-parent crash bugs below + the
-free-pass-filter reachability check, (2) issue \#145’s verification
-spike, (3) refresh the stale `.qmd` comparison doc below, (4) the
-owner’s existing \#133 \> \#136 \> \#137 \> \#138 order, (5) \#141 and
-Candidate C stay deferred pending new evidence/owner sign-off.
+(S480). **Tier 1** (S481-S484): the dangling-parent crash fixes (issue
+\#154); the issue \#145 verification spike – kinship2 v1.9.6.2
+implements neither a hard male-left invariant nor a sex-aware
+crossing-minimizing default
+(`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`);
+and a refresh of
+`docs/planning/pedigree-diagram-kinship2-reference-comparison.qmd`.
+**Tier 2** (S485-S500): \#133 (affected status, closed S487), \#136
+(name labels, S490), \#137 (twin/zygosity, S494) and \#145 (sire/dam
+placement, S500, simple-pair scope), each from a ratified plan in
+`docs/planning/` and one to three strict-TDD slices with the citation /
+tutorial / `NEWS.Rmd` / `a2interactive.Rmd` checklists applied;
+kinship2’s `affected` and `relation` argument conventions were adopted
+in \#133 and \#137. None reopens issue \#129 or the
+visNetwork-vs-kinship2 technology decision (D2), which stands as
+ratified. Session-by-session record: `CHANGELOG.md`; technical findings:
+`PROJECT_LEARNINGS.md` Learnings 410, 411, 485, 488-499. The open items
+below are the section’s live work.*
 
-**Tier 1 – DONE (S481, S482, S484):** the 2 dangling-parent crash bugs +
-the free-pass-filter reachability check were filed and fixed as issue
-\#154 (S481). Issue \#145’s verification spike (S482,
-`docs/research/issue-145-kinship2-sire-dam-placement-spike-2026-08-08.md`)
-empirically confirmed (kinship2 v1.9.6.2 source read + 5
-synthetic-pedigree tests, not inferred from docs) that kinship2
-implements **neither** a hard male-left invariant **nor** a sex-aware
-crossing-minimizing default – once an individual has multiple mates,
-left/right is decided purely by pedigree-data discovery order; the
-issue’s own cited sources were found unreliable on this point.
-`docs/planning/pedigree-diagram- kinship2-reference-comparison.qmd` was
-refreshed (S484) to reflect issues \#143/#144’s fixes and to add a new
-Example 4 reproducing S482’s own kinship2 counter-example directly
-(`quarto render` clean, 37 chunks).
-
-**Tier 2 – DONE (S485-S494, S499-S500): issues \#133, \#136, \#137, and
-\#145 are all now fully implemented and closed.** Each followed
-design-document ratification (`AskUserQuestion`-gated judgment calls)
-then 1-3 implementation slices, each slice a full strict-TDD
-PRE-RED-\>RED-\>GREEN (-\>REFACTOR) cycle with clean regression +
-`devtools::check()` + live `shinytest2`/`chromote` verification, plus
-the citation/tutorial/`NEWS.Rmd`/`a2interactive.Rmd` documentation
-checklists applied per-slice: - **Issue \#133** (affected/phenotype
-status): design S485
-(`docs/planning/issue133-affected-status- pedigree-diagram-plan.md` –
-new `affected` logical column, `color.background` + tooltip, no new
-dependency). Slice 1 (data model + rendering) S486 – found and fixed a
-gap where the rectilinear edge style would have silently erased the new
-coloring. Slice 2 (legend + docs) S487. **Closed S487.** - **Issue
-\#136** (name labels): design S488
-(`docs/planning/issue136-name-labels-pedigree-diagram- plan.md` –
-corrected 3 premises in the issue itself; found and closed a disclosure
-defect,
-[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
-would have left `name` unscrubbed). Slice 1 (data model +
-de-identification) S489. Slice 2 (label rendering + off-by-default
-toggle + docs) S490 – found and fixed a real
-toggle-discarded-on-rerender defect via live verification
-(`PROJECT_LEARNINGS.md` Learning 490). **Closed S490.** - **Issue
-\#137** (twin/zygosity encoding): design S491
-(`docs/planning/issue137-twin-zygosity- pedigree-diagram-plan.md` – new
-sidecar `twinRelations` table, zero schema.R changes; a
-workflow-truncation tooling defect found and worked around,
-`PROJECT_LEARNINGS.md` Learning 491). Slice 1 (data model +
-de-identification,
-[`checkTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md)/[`obfuscateTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateTwinRelations.md))
-S492. Slice 2 (core rendering, MZ/DZ/UZ connector styles) S493. Slice 3
-(UI wiring, legend, docs) S494 – found and filed (not fixed) a Slice 2
-color-wiring gap as its own Housekeeping item. **Closed S494.** -
-**Issue \#145** (sire/dam left-right placement, deferred from Tier 1’s
-spike): design S499
-(`docs/planning/issue145-sire-dam-left-right-placement-plan.md` – a
-3-agent adversarial review refuted the first proposed mechanism,
-`orderBySex = TRUE` parameter ratified instead). Slice 1 (core
-positioning) S500. **Closed S500** for the ratified simple-pair scope.
-
-**Issue \#138** (full-colony rendering beyond the 1,500-node cap) is the
-one item in the owner’s Tier 2 order this cluster did not reach – still
-open, tracked as its own GitHub issue (`low priority` label), needing
-its own scoping session first, matching \#133/#136/#137/#145’s own
-precedent. See `CHANGELOG.md` for the full session-by-session record and
-`PROJECT_LEARNINGS.md` Learnings 485, 488-499 for the individual
-technical findings. - \[ \] **Candidate C’s connector/dogleg
-visual-signposting idea** (found S473, designing the issue \#144 plan;
-not adopted for \#144 itself, Effort unknown, low priority) – extends
-the existing D2 mate-line “dogleg” (issue \#142) to `edgeStyle="direct"`
-(which currently gets zero compensating treatment for any
-cross-generation connector) and adds dashed/colored/titled styling to
-both edge styles so a multi-generation-spanning mate-line reads as
-intentional rather than a positioning bug. Fully validated (including a
-real ~37% `edgeStyle="rectilinear"` performance regression found and
-fixed during design) but requires its own fresh, explicit owner
-product-level sign-off to pursue – independently valuable as a
-diagram-readability enhancement, decoupled from \#144’s own resolution
-(which does not need it). See
-`docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §5/§8. **Also
-considered and again not adopted for the kinship2-fidelity remediation
-plan’s Track 4 (design S572, implemented S573, 2026-08-14)** – Track 4
-ratified and shipped Candidate A (gen-aware D2 anchor selection)
-instead, see
+**Candidate C’s connector/dogleg visual-signposting idea** (found S473,
+designing the issue \#144 plan; not adopted for \#144 itself, Effort
+unknown, low priority) – extends the existing D2 mate-line “dogleg”
+(issue \#142) to `edgeStyle="direct"` (which currently gets zero
+compensating treatment for any cross-generation connector) and adds
+dashed/colored/titled styling to both edge styles so a
+multi-generation-spanning mate-line reads as intentional rather than a
+positioning bug. Fully validated (including a real ~37%
+`edgeStyle="rectilinear"` performance regression found and fixed during
+design) but requires its own fresh, explicit owner product-level
+sign-off to pursue – independently valuable as a diagram-readability
+enhancement, decoupled from \#144’s own resolution (which does not need
+it). See `docs/planning/issue144-anchor-row-mismatch-fix-plan.md` §5/§8.
+**Also considered and again not adopted for the kinship2-fidelity
+remediation plan’s Track 4 (design S572, implemented S573, 2026-08-14)**
+– Track 4 ratified and shipped Candidate A (gen-aware D2 anchor
+selection) instead, see
 `docs/planning/pedigree-diagram-track4-gen-aware-anchor-plan.md` §3/§8.
 Live-rendered (S573, both `edgeStyle` values, zero console errors) with
 the redistribution this decision predicted (duplicate nodes 128-\>102,
 multi-anchor individuals 2-\>22, max 5). Still not precluded – remains
 open as a future, separately-scoped enhancement if the owner judges,
 from that live render, that remaining cross-generation mate-lines still
-benefit from signposting for legibility. - \[ \] **The live app’s
-uploaded/QC’d copy of `obfuscated_rhesus_mhc_ped.csv` produces one fewer
-node than reading the same bundled CSV directly** (found S472,
-incidental to issue \#143’s live verification, Effort unknown, low
-priority) – `direct`-style Diagram node count is 739 live vs. 740 via
-[`read.csv()`](https://rdrr.io/r/utils/read.table.html) +
-`.buildMatingUnitForest()`/ `.positionMatingUnitForest()` directly (a
-stable, already-tested figure, unaffected by this session’s fix); the
-live rectilinear -style projection-node count is correspondingly 50
-vs. an offline -computed 51. Not investigated further this session (out
-of the issue \#143 fix’s own scope, per `PROJECT_LEARNINGS.md` Learning
-382’s “report, don’t fix mid-session” precedent) – most likely explained
-by the upload/QC pipeline (`modInput.R`’s
+benefit from signposting for legibility.
+
+**The live app’s uploaded/QC’d copy of `obfuscated_rhesus_mhc_ped.csv`
+gets a different Diagram layout than the same CSV read directly – cause
+found (row order); decision open** (found S472, cause measured
+2026-09-24, low priority, Effort S) – the S472 figures (739 live vs 740
+offline nodes; 50 vs 51 projection nodes) no longer reproduce, since the
+layout has changed since (e.g. Track 4, S573), and the original
+hypothesis – that
 [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-or similar) dropping or merging exactly one row relative to a raw
-[`read.csv()`](https://rdrr.io/r/utils/read.table.html), but this was
-not confirmed. A future session should identify which individual differs
-and why, and decide whether the app’s own bundled -fixture test coverage
-(`test-e2e-pedigree-module.R`, etc.) should assert this QC’d count
-explicitly rather than relying on the raw-CSV-read count as a proxy for
-what the live app actually renders. - \[ \]
+drops or merges a row – is REFUTED: it keeps all 375 rows and ids (none
+lost or added, 0 duplicates), and
+[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
+returns the same 375 nodes / 502 edges for both inputs. What differs is
+row ORDER –
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+reorders the rows – and the mating layout depends on it:
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+gives 782 nodes for both inputs under `edgeStyle = "direct"`, but **1456
+(raw order) vs 1412 (QC order)** under `"rectilinear"`, and the raw
+content re-ordered to QC’s row order gives exactly 1412 (so order alone
+reproduces QC’s count; QC also normalizes some id/sire/dam/sex cells,
+not characterized). Consequence: the app’s rectilinear diagram of an
+uploaded file can carry a different number of waypoint nodes than a
+script user’s diagram of the same data, depending only on row order. A
+future session should decide whether that row-order dependence is
+acceptable, and whether the bundled-fixture tests
+(`test-e2e-pedigree-module.R`, etc.) should assert the QC’d count rather
+than the raw-CSV count as a proxy for what the live app renders.
+
 **`data-raw/rhesusPedigree.R`’s docstring claims
 `rhesusPedigree_fromCenter.csv` is an independent raw/pre-obfuscation
 source for `obfuscated_rhesus_mhc_ped.csv`, but the two shipped fixtures
@@ -600,21 +430,23 @@ scope). A future session should reconcile the docstring against the
 shipped fixture (or regenerate `rhesusPedigree_fromCenter.csv` to match
 the documented provenance). See
 `docs/audits/FOUNDER_POSITIONING_DEFECT_AUDIT_2026-08-03.md` Finding
-\#4, `PROJECT_LEARNINGS.md` Learning 468. - \[ \] **`highlightNearest`
-degree=6 mitigation for the rectilinear style is bounded, not a full
-fix** (found S468, Effort M, low priority) – a very wide sibship’s D1
-sibship-bar chain can exceed 6 hops (chain length scales with the number
-of children in one mating unit), so a hover on an individual in a very
-large family could still light up nothing visible. A full fix would need
-either a custom JS `highlightNearest` reimplementation that specifically
-skips through invisible waypoint nodes regardless of hop count, or a
-data-layer change that keeps degree-1 semantics correct (e.g. tagging
-waypoint edges so a custom traversal treats them as zero-cost hops). Not
-designed this session – the degree=6 mitigation was explicitly scoped as
-a quick, bounded fix, owner-directed via `AskUserQuestion`. A future
-session should measure the real fixture’s own maximum sibship size to
-gauge how often 6 hops is actually insufficient in practice before
-deciding whether a full fix is warranted.
+\#4, `PROJECT_LEARNINGS.md` Learning 468.
+
+**`highlightNearest` degree=6 mitigation for the rectilinear style is
+bounded, not a full fix** (found S468, Effort M, low priority) – a very
+wide sibship’s D1 sibship-bar chain can exceed 6 hops (chain length
+scales with the number of children in one mating unit), so a hover on an
+individual in a very large family could still light up nothing visible.
+A full fix would need either a custom JS `highlightNearest`
+reimplementation that specifically skips through invisible waypoint
+nodes regardless of hop count, or a data-layer change that keeps
+degree-1 semantics correct (e.g. tagging waypoint edges so a custom
+traversal treats them as zero-cost hops). Not designed this session –
+the degree=6 mitigation was explicitly scoped as a quick, bounded fix,
+owner-directed via `AskUserQuestion`. A future session should measure
+the real fixture’s own maximum sibship size to gauge how often 6 hops is
+actually insufficient in practice before deciding whether a full fix is
+warranted.
 
 ## Outreach
 
@@ -650,8 +482,6 @@ The living contract is `docs/architecture/module-contract.md`; it is
 enforced by `tests/testthat/test_moduleContract.R`. `modInput` is the
 reference implementation.*
 
-## Documents (v1.0.8 -\> v2.0.0 write-up)
-
 ## Audit follow-ups
 
 *(From `PED_GV_AUDIT_2026-05-30.md`; all audit follow-up items are now
@@ -662,8 +492,9 @@ live in `CLAUDE.md` “Project-specific Learnings”.)*
 
 *Every GitHub issue this cluster produced (#125-#130, \#146-#153) is
 shipped and closed – all 14 confirmed CLOSED via `gh issue view` (S752,
-2026-09-21); the one live thread is the open item at the end of this
-section. Full session-by-session record: `CHANGELOG.md`; per-issue
+2026-09-21); no open item remains in this section (the last one, the two
+unticketed High-priority audit gaps, became issues \#167 and \#168 in
+S753). Full session-by-session record: `CHANGELOG.md`; per-issue
 technical findings: `PROJECT_LEARNINGS.md` (Learnings 479, 532, 538-542,
 cited below).*
 
