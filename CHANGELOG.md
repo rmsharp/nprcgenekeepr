@@ -57,6 +57,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   `AskUserQuestion`-gated phases. Stub + pending receipt ride this commit; close-out
   records the rest. Issue #169 closes at close-out.
 
+### 2026-09-24 · [issue #169] S777 GREEN: Slice 3b colony-manager-guide documentation (no product code)
+- **Commit:** GREEN (this commit) — `vignettes/articles/colony-manager-guide.qmd` only: a new
+  "Ancestry guardrails on this tab" passage at the end of the Mate Pair Analysis section
+  (four paragraphs: rules come from the Breeding Groups upload and are read at the click;
+  block pairs go to Excluded with the reason "ancestry rule", flag pairs stay in Eligible
+  Pairs and the CSV; the "Override rule..." confirm gate with a required reason, per tab,
+  cleared on "Clear overrides" or a new rules file, applied at the next click; the Ancestry
+  tab's coverage table and Download Audit Manifest, which always describes the displayed
+  run). Every claim checked against `R/modMatePair.R` / `.ancestryStatusLine()` before
+  commit (one sentence tightened: the extra zero-pairs message appears when no eligible pairs
+  remain). Owner gate: RED to GREEN = "Yes, proceed to GREEN". No product code changed: the
+  committed e2e already passes on the real build (the RED baseline, 38/38). Left as-is on
+  purpose: line 552's "a truly blank entry becomes UNKNOWN" (wrong for app uploads; the
+  open blank-ancestry item owns that decision) and `NEWS.Rmd:429` (already release-state).
+- **Verification:** the article renders (Quarto 1.7.33, exit 0, in a scratch copy of
+  `vignettes/articles/` so no tracked render output moved); the new section and both
+  "Override rule…" occurrences are in the HTML. The article directory is build-ignored
+  (`^vignettes/articles$`), so the tarball and the size ratchet are unaffected.
+
 ### 2026-09-24 · [issue #169] S777 RED: Slice 3b committed live-app e2e for the Mate Pair ancestry guardrails, mutation-proved *(tests only)*
 - **Commit:** RED (this commit) — `tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R`
   only, no product code. One live-app block, 38 expectations in 13 tagged groups (A1-A13)
