@@ -66,6 +66,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 780 Did
+**Deliverable:** `HANDOFFS.md` + `CHANGELOG.md` ledger archive pass (IN PROGRESS)
+**Started:** 2026-09-24
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (S779
+next-steps (B)). Orient measured: 0 undocumented on both frontiers (both at `84cb6155` = HEAD),
+1 unpushed, ratchet citation matched `.quality-gates-results.json` before any run, CI on
+`b5166c8b` green except R-CMD-check in progress; `HANDOFFS.md` 103,826 B and `CHANGELOG.md`
+97,220 B vs the 65,536 B trigger (both fire; `SESSION_NOTES.md` 45,210 B does not). Plan: S770
+precedent -- dry run per file, one owner gate ratifying the cuts and `--force` (SRF refusal
+expected), one commit per file, verify scripts pre- and post-commit. TDD phase PRE-RED (docs-only).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 778 Handoff Evaluation (by Session 779)
 **Score: 8/10.** **Basis, stated plainly:** this session did not start from the handoff (no
 Phase 0: it began with an owner question about `renv::status()`), so I scored it on the accuracy

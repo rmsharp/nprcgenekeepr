@@ -46,6 +46,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [ad hoc] S780 claim: HANDOFFS.md + CHANGELOG.md ledger archive pass *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (S779 next-steps (B)). Orient measured: 0
+  undocumented on both ledger frontiers (both at `84cb6155` = HEAD), 1 unpushed, S779
+  receipt-citation vs `.quality-gates-results.json` matched byte-for-byte BEFORE any ratchet run.
+  `HANDOFFS.md` 103,826 B and `CHANGELOG.md` 97,220 B vs the 65,536 B trigger. Stub + pending
+  receipt ride this commit; close-out records the rest.
+
 ### 2026-09-24 · [ad hoc] S779 records: close-out for the ad hoc session (S778 handoff evaluated 8/10, receipt, Learnings 791-793, next-session BACKLOG items)
 - **Deliverable:** the close-out records for the owner-directed ad hoc work of 2026-09-24, recorded
   in the entries below: the `.Rprofile` renv startup check (`23f20f3a`), the removal of

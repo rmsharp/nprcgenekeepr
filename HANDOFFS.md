@@ -164,6 +164,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-23.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S780
+date: 2026-09-24
+status: pending
+active_task: HANDOFFS.md + CHANGELOG.md ledger archive pass (HANDOFFS.md 103,826 B and CHANGELOG.md 97,220 B vs the 65,536 B trigger; SESSION_NOTES.md 45,210 B does not fire). Owner-picked at the Phase 0 priorities gate (S779 next-steps (B)).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S779
 date: 2026-09-24
 status: complete
