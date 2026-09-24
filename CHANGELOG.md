@@ -46,6 +46,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [ad hoc] `BACKLOG.md`: fixed stale statements and dropped resolved section stubs
+- **Change:** (1) the Genetic-metrics section intro no longer points at "the open item at the end of
+  this section" -- that item (the two unticketed High-priority audit gaps) became issues #167 and
+  #168 and its block was removed in S753 (`c823a9f7`), so the pointer led nowhere; (2) removed the
+  `## Architecture follow-ups` section -- its claim that XARCH-2 was "STILL OPEN" in #122 was wrong
+  (#122 is CLOSED; `docs/architecture/module-contract.md` records the resolution) and it said "No
+  items remain" itself; XARCH-5 stays tracked on GitHub as **#123 (open)**, and the detail stays in
+  `docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` and the ledger; (3) dropped the
+  empty `## Active` and `## Documents` headings and the duplicate `## Up Next`, so the file now has
+  one `## Up Next`; (4) corrected the `NEWS.Rmd` release-state-sweep item's line references for the
+  #167 entries (`:452-457`, `:476` drifted to `:460-468`, `:478-488`; `:308` and `:376-410` were
+  re-checked and are unchanged); (5) updated the S518 housekeeping item's structural-residue
+  clause to what remains. **Left as-is:** the `## Architecture (issue #122 / XARCH-2 ...)` stub
+  (its pointer to the module-contract doc should be re-homed first) and the `## Audit follow-ups`
+  stub -- both named in the S518 item as the next pass's candidates.
+- **Commit:** this commit -- `BACKLOG.md` and this entry only. **Local, not pushed.**
+- **Session:** none -- owner-directed, outside a numbered session (follows S778) · **Verified:**
+  `gh issue view` gives #122 CLOSED and #123 OPEN; the new `NEWS.Rmd` references were read
+  (line 460 opens the first #167 entry and 468 closes it; 478 opens the trends entry and 488
+  closes it); `git diff -U0` shows exactly five hunks, all in the intended regions; `## Up Next`
+  now appears once; every other open item is byte-identical. **Not run:** the test suite and
+  `devtools::check()` -- no package code changed.
+
 ### 2026-09-24 · [ad hoc] `BACKLOG.md`: removed two completed items (REUSE-badge registration; empty `untitled folder`)
 - **Change:** two open items that were already done are gone from `BACKLOG.md` (-21 lines): (1) **the
   api.reuse.software registration item** -- it said the README badge rendered gray "unregistered"

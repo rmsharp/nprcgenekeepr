@@ -36,7 +36,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       clusters: the MHC haplotype-frequency entry (`NEWS.Rmd:308`), the four #168
       ancestry entries (`:376-410`: "Groundwork...", "...continued" x2, "...final
       step" — merge into one release-state entry), and the two #167 longitudinal
-      entries (`:452-457`, `:476`: "arrives in later steps/the next step"). The grep
+      entries (`:460-468`, `:478-488`: "arrives in later steps/the next step"). The grep
       is a floor, not a census: the pickup should read the whole development section
       once. Plain-language criterion (S628) still applies. `NEWS.md` was last
       re-rendered S716, so it lags `NEWS.Rmd` and needs a render at release. Open,
@@ -104,25 +104,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `docs/planning/issue167-longitudinal-monitoring-plan.md` §5 Slice 5 / §7 Dragon 1
       for the full caveat inventory.
 
-## Active
-
-## Architecture follow-ups (from TECH_DEBT_AUDIT_2026-05-30.md, re-verified 2026-07-11)
-*Resolves the former "Tracker reconciliation" decision item (S365) --
-`docs/audits/XARCH_TRACKER_RECONCILIATION_AUDIT_2026-07-11.md` re-verified all 8
-XARCH-1..8 findings against current source rather than trusting the six-week-old
-audit text. XARCH-1/3/7 are fully RESOLVED (no further tracking). XARCH-2 (implicit/
-inconsistent module contract) and XARCH-5 (string-column-keyed pipeline, no
-validated seam) are STILL OPEN and owner-directed to GitHub issues #122 and #123
-respectively -- track them there, not here. XARCH-4 (sex-code literal
-centralization) is now also fully RESOLVED -- S367 (2026-07-12): see
-`CHANGELOG.md`. XARCH-6 (`qcStudbook()`/`modInput.R` multi-call redundancy) is
-now also fully RESOLVED -- S368 (2026-07-12): see `CHANGELOG.md`. XARCH-8's
-narrower remaining gap is now also fully RESOLVED -- S369 (2026-07-12): see
-`CHANGELOG.md`. The `man/filterPairs.Rd` staleness this recurring collateral
-regen left behind (S367 origin, flagged S368/S369) is now also RESOLVED --
-S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
-
-## Up Next
 - [ ] **Act on the LabKey integration research recommendations** (BLOCKED -- remainder
       needs a live LabKey server to test/observe, Effort M) — research pass DONE
       (`docs/research/labkey-integration-options-2026-06-19.md`, S143). **Rec #3 (explicit optional
@@ -298,10 +279,11 @@ S370 (2026-07-12): see `CHANGELOG.md`. No items remain in this section.*
       are resolved narrative (~60-75 lines recoverable), but that is a DEEPER cut than S530
       ratified, so it needs fresh owner ratification, and its 4 open items stay untouched; the
       LabKey item -- ~44 lines, mostly DONE narrative for Recs #1-#5 (S143-S152) around an
-      ~6-line open remainder; structural residue -- a duplicate empty `## Up Next` heading and
-      an empty `## Active` heading near the top, an empty `## Documents` heading, and two
-      fully-resolved section stubs (`## Architecture follow-ups`, ~15 lines;
-      `## Architecture (issue #122 / XARCH-2 ...)`, ~6 lines).
+      ~6-line open remainder; structural residue -- two fully-resolved section stubs remain
+      (`## Architecture (issue #122 / XARCH-2 ...)`, ~6 lines, whose pointer to
+      `docs/architecture/module-contract.md` should be re-homed before it goes; `## Audit
+      follow-ups`, ~4 lines). The 2026-09-24 ad hoc pass removed the duplicate `## Up Next`,
+      the empty `## Active`/`## Documents` headings and the `## Architecture follow-ups` stub.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 *S435's capability-comparison audit (`docs/audits/ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md`)
@@ -487,8 +469,6 @@ dedup, S375 vocabulary collapse, S376 dead-surface pruning, S377 contract doc + 
 test). The living contract is `docs/architecture/module-contract.md`; it is enforced by
 `tests/testthat/test_moduleContract.R`. `modInput` is the reference implementation.*
 
-## Documents (v1.0.8 -> v2.0.0 write-up)
-
 ## Audit follow-ups
 *(From `PED_GV_AUDIT_2026-05-30.md`; all audit follow-up items are now resolved — see
 `CHANGELOG.md`. Per-item reachability notes and traps live in `CLAUDE.md` "Project-specific
@@ -496,9 +476,10 @@ Learnings".)*
 
 ## Genetic-metrics PDF audit follow-ups (from GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md)
 *Every GitHub issue this cluster produced (#125-#130, #146-#153) is shipped and closed -- all 14
-confirmed CLOSED via `gh issue view` (S752, 2026-09-21); the one live thread is the open item at
-the end of this section. Full session-by-session record: `CHANGELOG.md`; per-issue technical
-findings: `PROJECT_LEARNINGS.md` (Learnings 479, 532, 538-542, cited below).*
+confirmed CLOSED via `gh issue view` (S752, 2026-09-21); no open item remains in this section
+(the last one, the two unticketed High-priority audit gaps, became issues #167 and #168 in S753).
+Full session-by-session record: `CHANGELOG.md`; per-issue technical findings:
+`PROJECT_LEARNINGS.md` (Learnings 479, 532, 538-542, cited below).*
 
 **Origin and sequencing.** S419's capability audit
 (`docs/audits/GENETIC_METRICS_PDF_CAPABILITY_AUDIT_2026-07-29.md`) compared the package against the
