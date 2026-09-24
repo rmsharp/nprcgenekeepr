@@ -36,61 +36,6 @@
 #' verified by test_shinytest2_workflow_coverage.R.
 library(testthat)
 
-## Collapse whitespace the way the browser renders it, so a wrapped string
-## compares equal to its source.
-mpaSquash <- function(x) {
-  trimws(gsub("\\s+", " ", paste(x, collapse = " ")))
-}
-
-## Poll a JS expression that returns a string until `done(value)` is TRUE (or
-## the timeout), and return the last value squashed. The caller asserts on the
-## returned value, so a timeout surfaces as a failed expectation showing the
-## actual text -- never a hang and never a skip. Used instead of the module's
-## data-ready flag for run 2: the flag stays "true" after run 1, so it cannot
-## tell run 2's tables from run 1's.
-mpaPollJs <- function(app, js, done = nzchar, timeout = 15000) {
-  start <- Sys.time()
-  repeat {
-    val <- tryCatch(app$get_js(js), error = function(e) "")
-    val <- if (is.character(val)) mpaSquash(val) else ""
-    elapsed <- as.numeric(difftime(Sys.time(), start, units = "secs")) * 1000
-    if (isTRUE(done(val)) || elapsed > timeout) {
-      return(val)
-    }
-    Sys.sleep(0.2)
-  }
-}
-
-mpaTextJs <- function(selector) {
-  sprintf(
-    "(() => { const el = document.querySelector('%s'); %s })()",
-    selector, "return el ? el.textContent : '';"
-  )
-}
-
-## DT's own "Showing 1 to 10 of 20 entries" line for a table output id.
-mpaDtInfoJs <- function(tableId) {
-  mpaTextJs(sprintf("#%s .dataTables_info", tableId))
-}
-
-## Poll a DT info line until it equals `expected` (or the timeout).
-mpaDtInfo <- function(app, tableId, expected) {
-  mpaPollJs(app, mpaDtInfoJs(tableId), done = function(v) identical(v, expected))
-}
-
-## Download a CSV output through the live app. A failed download is a
-## BEHAVIOR failure (the manifest / export is the deliverable): it fails an
-## expectation and returns NULL so the caller can guard later reads.
-mpaDownload <- function(app, outputId, what) {
-  path <- tryCatch(app$get_download(outputId), error = function(e) NA_character_)
-  ok <- length(path) == 1L && !is.na(path) && file.exists(path)
-  expect_true(ok, info = paste("download completes:", what))
-  if (!ok) {
-    return(NULL)
-  }
-  utils::read.csv(path, stringsAsFactors = FALSE, check.names = FALSE)
-}
-
 ## The manifest's rule rows keyed the way the rules file writes them.
 mpaRuleKeys <- function(m) paste(m$ancestry1, m$ancestry2, sep = "-")
 
@@ -115,7 +60,7 @@ test_that(
   rulesFixture <- system.file("extdata", "examples",
                               "example_ancestry_rules.csv",
                               package = "nprcgenekeepr")
-  gateText <- mpaSquash(nprcgenekeepr:::.matePairAncestryOverrideWarningText)
+  gateText <- squash_whitespace(nprcgenekeepr:::.matePairAncestryOverrideWarningText)
   reasonText <- "Founder import approved by the colony veterinarian"
   ## Tabs of the Mate Pair module only -- Breeding Groups has an "Ancestry"
   ## tab of its own.
@@ -139,8 +84,8 @@ test_that(
   }
 
   ## A1: the always-visible status line carries the loaded rule counts.
-  status <- mpaPollJs(
-    app, mpaTextJs("#matePair-ancestryStatus"),
+  status <- poll_js(
+    app, text_content_js("#matePair-ancestryStatus"),
     done = function(v) nzchar(v) && !grepl("^No ancestry rules", v)
   )
   expect_identical(
@@ -152,7 +97,7 @@ test_that(
   if (!click_element_safe(app, tabSel("Ancestry"))) {
     skip("Could not switch to the Ancestry tab")
   }
-  guidance <- mpaPollJs(app, mpaTextJs("#matePair-ancestryGuidance"))
+  guidance <- poll_js(app, text_content_js("#matePair-ancestryGuidance"))
   expect_identical(
     guidance,
     paste("Find eligible pairs with ancestry rules loaded to see the",
@@ -169,7 +114,7 @@ test_that(
     "return (s && s.selectize) ? ",
     "Object.keys(s.selectize.options).sort().join(',') : ''; })()"
   )
-  overridable <- mpaPollJs(app, optionsJs)
+  overridable <- poll_js(app, optionsJs)
   expect_identical(
     overridable, "CHINESE-INDIAN,HYBRID-INDIAN",
     info = "A3: only the block rules are offered for override"
@@ -189,7 +134,7 @@ test_that(
 
   ## A4: 20 eligible pairs, 5 pairs excluded by the block rules.
   expect_identical(
-    mpaDtInfo(app, "matePair-pairsTable", "Showing 1 to 10 of 20 entries"),
+    poll_dt_info(app, "matePair-pairsTable", "Showing 1 to 10 of 20 entries"),
     "Showing 1 to 10 of 20 entries",
     info = "A4: run 1 shows 20 eligible pairs"
   )
@@ -197,7 +142,7 @@ test_that(
     skip("Could not switch to the Excluded tab")
   }
   expect_identical(
-    mpaDtInfo(app, "matePair-excludedTable", "Showing 1 to 5 of 5 entries"),
+    poll_dt_info(app, "matePair-excludedTable", "Showing 1 to 5 of 5 entries"),
     "Showing 1 to 5 of 5 entries",
     info = "A4: run 1 shows 5 pairs excluded by ancestry rules"
   )
@@ -212,7 +157,7 @@ test_that(
     "r => Array.from(r.cells).map(c => c.textContent.trim()).join('|')",
     ").join(';')"
   )
-  coverage <- mpaPollJs(app, coverageJs)
+  coverage <- poll_js(app, coverageJs)
   expect_identical(
     coverage,
     paste0("CHINESE|2|TRUE;INDIAN|3|TRUE;HYBRID|1|TRUE;",
@@ -222,7 +167,7 @@ test_that(
 
   ## A6: manifest 1 -- one row per rule, nothing overridden, the Mate Pair
   ## gate wording on the record, the pair counts and the animal census.
-  m1 <- mpaDownload(app, "matePair-downloadAncestryManifest", "manifest 1")
+  m1 <- download_csv_expect(app, "matePair-downloadAncestryManifest", "manifest 1")
   if (!is.null(m1)) {
     expect_identical(nrow(m1), 4L, info = "A6: manifest 1 has one row per rule")
     expect_identical(m1$severity, c("block", "block", "flag", "flag"),
@@ -232,7 +177,7 @@ test_that(
                      "No rules were overridden for this run.",
                      info = "A6: manifest 1 override summary")
     expect_true(
-      all(vapply(m1$warningText, mpaSquash, character(1L)) == gateText),
+      all(vapply(m1$warningText, squash_whitespace, character(1L)) == gateText),
       info = "A6a: manifest 1 carries the Mate Pair gate wording verbatim"
     )
     expect_identical(
@@ -259,7 +204,7 @@ test_that(
   expect_true(gateUp, info = "A7: the override confirm gate opens")
 
   ## A7: the modal carries the Mate Pair wording verbatim.
-  modalText <- mpaPollJs(app, mpaTextJs(".modal-body"))
+  modalText <- poll_js(app, text_content_js(".modal-body"))
   expect_true(
     grepl(gateText, modalText, fixed = TRUE),
     info = "A7: the gate shows the Mate Pair wording verbatim"
@@ -268,8 +213,8 @@ test_that(
   ## A8: confirming with a blank reason is refused -- an error notification,
   ## and the gate stays open.
   app$click("matePair-overrideConfirm")
-  notice <- mpaPollJs(
-    app, mpaTextJs("#shiny-notification-panel"),
+  notice <- poll_js(
+    app, text_content_js("#shiny-notification-panel"),
     done = function(v) grepl("non-empty reason", v, fixed = TRUE)
   )
   expect_true(
@@ -287,8 +232,8 @@ test_that(
     app$wait_for_idle(timeout = E2E_TIMEOUT)
     app$click("matePair-overrideConfirm")
   }
-  overrideStatus <- mpaPollJs(
-    app, mpaTextJs("#matePair-overrideStatus"),
+  overrideStatus <- poll_js(
+    app, text_content_js("#matePair-overrideStatus"),
     done = function(v) grepl("overridden", v, fixed = TRUE)
   )
   expect_identical(
@@ -296,7 +241,7 @@ test_that(
     "1 block rule(s) overridden on this tab this session: CHINESE-INDIAN.",
     info = "A9: the override is recorded and named on this tab"
   )
-  gateClosed <- mpaPollJs(
+  gateClosed <- poll_js(
     app, "String(document.querySelector('#matePair-overrideConfirm') === null)",
     done = function(v) identical(v, "true"), timeout = 5000
   )
@@ -304,7 +249,7 @@ test_that(
 
   ## A10: the DISPLAYED run is a snapshot -- overriding afterwards never
   ## rewrites its audit manifest.
-  mLate <- mpaDownload(app, "matePair-downloadAncestryManifest",
+  mLate <- download_csv_expect(app, "matePair-downloadAncestryManifest",
                        "manifest of the displayed run after a late override")
   if (!is.null(mLate)) {
     expect_false(any(mLate$overridden),
@@ -322,7 +267,7 @@ test_that(
 
   ## A11: 23 eligible (the 3 override-relaxed pairs join them), 2 excluded.
   expect_identical(
-    mpaDtInfo(app, "matePair-pairsTable", "Showing 1 to 10 of 23 entries"),
+    poll_dt_info(app, "matePair-pairsTable", "Showing 1 to 10 of 23 entries"),
     "Showing 1 to 10 of 23 entries",
     info = "A11a: run 2 shows 23 eligible pairs"
   )
@@ -332,12 +277,12 @@ test_that(
     "|| ''))"
   )
   expect_identical(
-    mpaPollJs(app, visibleJs, done = function(v) identical(v, "true"),
+    poll_js(app, visibleJs, done = function(v) identical(v, "true"),
               timeout = 5000),
     "true",
     info = "A11c: overridden pairs are visible in Eligible Pairs"
   )
-  pairsCsv <- mpaDownload(app, "matePair-downloadPairs", "Eligible Pairs CSV")
+  pairsCsv <- download_csv_expect(app, "matePair-downloadPairs", "Eligible Pairs CSV")
   if (!is.null(pairsCsv)) {
     expect_identical(dim(pairsCsv), c(23L, 11L),
                      info = "A11b: the export has 23 rows and 11 columns")
@@ -349,7 +294,7 @@ test_that(
     skip("Could not switch to the Excluded tab")
   }
   expect_identical(
-    mpaDtInfo(app, "matePair-excludedTable", "Showing 1 to 2 of 2 entries"),
+    poll_dt_info(app, "matePair-excludedTable", "Showing 1 to 2 of 2 entries"),
     "Showing 1 to 2 of 2 entries",
     info = "A11a: run 2 shows 2 pairs excluded by ancestry rules"
   )
@@ -360,7 +305,7 @@ test_that(
   if (!click_element_safe(app, tabSel("Ancestry"))) {
     skip("Could not switch to the Ancestry tab")
   }
-  m2 <- mpaDownload(app, "matePair-downloadAncestryManifest", "manifest 2")
+  m2 <- download_csv_expect(app, "matePair-downloadAncestryManifest", "manifest 2")
   if (!is.null(m2)) {
     r <- m2[m2$ancestry1 == "INDIAN" & m2$ancestry2 == "CHINESE", ]
     expect_identical(nrow(r), 1L, info = "A12: manifest 2 has the overridden rule")
@@ -374,7 +319,7 @@ test_that(
                      "1 of 4 rules overridden for this run.",
                      info = "A12: manifest 2 override summary")
     expect_true(
-      all(vapply(m2$warningText, mpaSquash, character(1L)) == gateText),
+      all(vapply(m2$warningText, squash_whitespace, character(1L)) == gateText),
       info = "A12: manifest 2 carries the Mate Pair gate wording verbatim"
     )
     expect_identical(

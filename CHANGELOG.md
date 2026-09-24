@@ -57,6 +57,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   `AskUserQuestion`-gated phases. Stub + pending receipt ride this commit; close-out
   records the rest. Issue #169 closes at close-out.
 
+### 2026-09-24 · [issue #169] S777 REFACTOR: hoist the e2e's five generic helpers into `helper-shinytest2.R` *(no behavior change)*
+- **Commit:** REFACTOR (this commit) — owner-chosen at the GREEN to REFACTOR gate (my
+  recommendation was to skip it; the owner said "Yes, proceed to REFACTOR"). The five
+  file-local helpers of `test-e2e-mate-pair-analysis-module-ancestry.R` (`mpaSquash`,
+  `mpaPollJs`, `mpaTextJs`, `mpaDtInfo`, `mpaDownload`) move to
+  `tests/testthat/helper-shinytest2.R` as `squash_whitespace()`, `poll_js()`,
+  `text_content_js()`, `poll_dt_info()` and `download_csv_expect()`, documented in that
+  file's roxygen style, with `testthat::expect_true` qualified for the nightly's
+  unattached `test_dir()` mode; 25 call sites renamed; the sixth local definition
+  (`mpaDtInfoJs`) is inlined into `poll_dt_info()`; only `mpaRuleKeys()` (manifest-specific)
+  stays local. The name-collision grep across `tests/` and `R/` was empty before the move.
+- **Verification after the move (all identical to GREEN):** the three ancestry e2e files
+  on the real tree 63/63 (0 skipped); the B1 and B5 throwaway mutant trees re-run with the
+  moved helpers fail 11 and 8 expectations on the same groups as before; the two static
+  e2e guards 4/3; clean regression read 352 files / 8,293 expectations, 0 failed / 0
+  error; `devtools::check()` 0 / 0 / 0. Disclosure: the shared helper is loaded by every
+  e2e file (about 30), which is the risk I named at the gate; none of them exercises the
+  five new names.
+
 ### 2026-09-24 · [issue #169] S777 GREEN: Slice 3b colony-manager-guide documentation (no product code)
 - **Commit:** GREEN (this commit) — `vignettes/articles/colony-manager-guide.qmd` only: a new
   "Ancestry guardrails on this tab" passage at the end of the Mate Pair Analysis section

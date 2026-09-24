@@ -579,3 +579,86 @@ wait_for_dt_rendered <- function(app, selector, timeout = 10000,
   }
   FALSE
 }
+
+#' Collapse runs of whitespace the way the browser renders text
+#'
+#' A wrapped source string and the rendered DOM text compare equal after this.
+#'
+#' @param x Character vector; its elements are pasted together first.
+#' @return A single trimmed string with every whitespace run collapsed to one
+#'   space.
+squash_whitespace <- function(x) {
+  trimws(gsub("\\s+", " ", paste(x, collapse = " ")))
+}
+
+#' JavaScript that returns an element's text content ('' when it is absent)
+#'
+#' @param selector CSS selector for the element.
+#' @return A JavaScript expression (string) for `app$get_js()` / `poll_js()`.
+text_content_js <- function(selector) {
+  sprintf(
+    "(() => { const el = document.querySelector('%s'); %s })()",
+    selector, "return el ? el.textContent : '';"
+  )
+}
+
+#' Poll a JavaScript expression until a predicate holds
+#'
+#' Evaluates `js` (which returns a string) every 200 ms until `done(value)` is
+#' TRUE or `timeout` elapses, and returns the last value read, whitespace-
+#' collapsed. The caller asserts on the RETURNED value, so a timeout surfaces
+#' as a failed expectation showing the actual text -- never a hang and never a
+#' skip. Use it instead of a module's data-ready flag when that flag stays
+#' "true" across runs and so cannot tell a later run's output from an earlier
+#' one's.
+#'
+#' @param app AppDriver object.
+#' @param js JavaScript expression returning a string.
+#' @param done Predicate on the whitespace-collapsed value (default: non-empty).
+#' @param timeout Maximum wait in milliseconds (default 15000).
+#' @return The last value read, whitespace-collapsed ("" when unreadable).
+poll_js <- function(app, js, done = nzchar, timeout = 15000) {
+  start <- Sys.time()
+  repeat {
+    val <- tryCatch(app$get_js(js), error = function(e) "")
+    val <- if (is.character(val)) squash_whitespace(val) else ""
+    elapsed <- as.numeric(difftime(Sys.time(), start, units = "secs")) * 1000
+    if (isTRUE(done(val)) || elapsed > timeout) {
+      return(val)
+    }
+    Sys.sleep(0.2)
+  }
+}
+
+#' Poll a DT output's "Showing x to y of n entries" line until it matches
+#'
+#' @param app AppDriver object.
+#' @param table_id The DT output's full id (e.g. "matePair-pairsTable").
+#' @param expected The exact info text the table should end up showing.
+#' @return The last info text read (equal to `expected` once it has settled).
+poll_dt_info <- function(app, table_id, expected) {
+  poll_js(
+    app, text_content_js(sprintf("#%s .dataTables_info", table_id)),
+    done = function(v) identical(v, expected)
+  )
+}
+
+#' Download a CSV output through the live app and read it
+#'
+#' A failed download is a BEHAVIOR failure (the export is the deliverable):
+#' it fails an expectation, tagged with `what`, and returns NULL so the caller
+#' can guard later reads -- it is never a skip.
+#'
+#' @param app AppDriver object.
+#' @param output_id The downloadHandler output's full id.
+#' @param what Short label for the failure message.
+#' @return The downloaded CSV as a data frame, or NULL when the download failed.
+download_csv_expect <- function(app, output_id, what) {
+  path <- tryCatch(app$get_download(output_id), error = function(e) NA_character_)
+  ok <- length(path) == 1L && !is.na(path) && file.exists(path)
+  testthat::expect_true(ok, info = paste("download completes:", what))
+  if (!ok) {
+    return(NULL)
+  }
+  utils::read.csv(path, stringsAsFactors = FALSE, check.names = FALSE)
+}
