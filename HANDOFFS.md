@@ -164,6 +164,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-23.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S771
+date: 2026-09-23
+status: pending
+active_task: Push 97 unpushed commits to origin/master + CI verification (all four push-triggered workflows green). Owner-picked at the Phase 0 priorities gate (S770 next-steps (A)).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S770
 date: 2026-09-23
 status: complete

@@ -62,6 +62,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 771 Did
+**Deliverable:** Push 97 unpushed commits to `origin/master` + CI verification
+(all four push-triggered workflows green) (IN PROGRESS)
+**Started:** 2026-09-23
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0
+priorities gate (S770 next-steps (A)). Orient measured: 0 undocumented on both
+frontiers, 97 unpushed at `42c57ad6`, CI 10/10 green (current through
+`8007de81`), ratchet citation matched results file before any run.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 769 Handoff Evaluation (by Session 770)
 **Score: 10/10.** **What helped:** gotcha (2)'s sizes predicted Orient
 exactly — `HANDOFFS.md` fired (76,182 B) and `CHANGELOG.md` (65,527 B,
