@@ -46,6 +46,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S771 sha: close-out commit sha recorded in HANDOFFS.md receipt
+- Receipt `commit:` reconciled to `f97b493c` (self-reconcile, S760–S770
+  precedent; carries its own ledger entry). Ledger sizes after:
+  `SESSION_NOTES.md` 54,172 B (2,578 B under the 56,750 B read cap — trim is
+  next-step A), `HANDOFFS.md` and `CHANGELOG.md` well under the 65,536 B
+  budget.
+
 ### 2026-09-23 · [ad hoc] S771 records: push + CI verification DONE, close-out records committed
 - **Deliverable:** the push and CI verification recorded in the entry below.
   Ratchet 1/1 at `79206add` (3,528,730 B, −28 B vs S770 = noise on a
