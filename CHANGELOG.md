@@ -46,6 +46,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] S772 claim: SESSION_NOTES.md read-cap trim *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (S771 next-steps (A)). Orient
+  measured: 0 undocumented on both ledger frontiers (both at `5f7e362b` =
+  HEAD), 2 unpushed, CI 10/10 green, S771 receipt-citation vs
+  `.quality-gates-results.json` matched byte-for-byte BEFORE any ratchet run.
+  `SESSION_NOTES.md` 54,172 B vs the 56,750 B read cap. Stub + pending receipt
+  ride this commit; close-out records the rest.
+
 ### 2026-09-23 · [ad hoc] S771 sha: close-out commit sha recorded in HANDOFFS.md receipt
 - Receipt `commit:` reconciled to `f97b493c` (self-reconcile, S760–S770
   precedent; carries its own ledger entry). Ledger sizes after:

@@ -164,6 +164,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-23.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S772
+date: 2026-09-23
+status: pending
+active_task: SESSION_NOTES.md read-cap trim (54,172 B vs the 56,750 B read cap; the trimmer's 65,536 B trigger does not fire). Owner-picked at the Phase 0 priorities gate (S771 next-steps (A)).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S771
 date: 2026-09-23
 status: complete

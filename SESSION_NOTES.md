@@ -62,6 +62,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 772 Did
+**Deliverable:** `SESSION_NOTES.md` read-cap trim (IN PROGRESS)
+**Started:** 2026-09-23
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0
+priorities gate (S771 next-steps (A)). Orient measured: 0 undocumented on both
+frontiers (both at `5f7e362b` = HEAD), 2 unpushed, CI 10/10 green, ratchet
+citation matched the results file before any run; `SESSION_NOTES.md` 54,172 B
+vs the 56,750 B read cap. TDD phase PRE-RED (docs-only).
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says
+(in progress); Phase 3F records the rest. Until close-out, this line is the
+crash breadcrumb for the next session's reconcile.
+
 ### Session 770 Handoff Evaluation (by Session 771)
 **Score: 9/10.** **What helped:** every measurement held exactly — 0
 undocumented on both frontiers, 97 unpushed, the ratchet citation
