@@ -46,6 +46,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [issue #169] S775 RED: Slice 2 failing tests committed (Mate Pair module ancestry rules)
+- New `tests/testthat/test_modMatePair_ancestry.R` (16 blocks) plus additions to
+  `test_moduleContract.R` (BG `names` +`ancestryRules`; matePair `args`
+  +`ancestryRules`), `test_modBreedingGroups_ancestryRules.R` (3 blocks: the new
+  BG return element — NULL / validated / NULL-if-malformed and re-upload; the
+  element is the validated table even with no ancestry column, i.e. NOT
+  `ancestryRulesForRun()`) and `test_appServer_server.R` §9 (2 blocks: the same
+  reactive object threads through; a BG return without the element gives an
+  explicit NULL). Tests only — zero `R/`/`man/`/`NAMESPACE`/`NEWS` changes; 4
+  files (under the 5-file cap). Pinned on the shipped `example_ancestry_*`
+  fixtures (re-measured at Orient: 25 pairs → 20 eligible / 3 flagged / 5
+  ancestry-excluded): UI toggle + always-visible status + explainer in order;
+  three status texts verbatim; rules applied with columns after `damGu`;
+  rules-off `identical()` to the kernel for the omitted argument, a `NULL`
+  reactive, and rules-with-no-ancestry-column (D4-1/D1); conservation (D4-3);
+  snapshot both directions (D8c); CSV header with/without rules; the
+  zero-pairs alert (existing text byte-identical, plus an "N pair(s) were
+  excluded by ancestry rules -- see the Excluded tab." sentence only when >=1
+  ancestry exclusion); a malformed table surfaces at the click; a warning-bearing
+  table still applies and its run-time warning is not muffled (dragon 10).
+- Owner gates (S775): UI layout "toggle + visible status"; zero-pairs message
+  "yes, pinned"; PRE-RED→RED. **RED audit:** 15 of the 16 new blocks fail — 1
+  block passes (the rules-off `identical()` pin, characterization), 1 more is
+  partly green for the same reason (the rules-off half of the zero-pairs alert
+  block); every failing expectation is the intended cause (absent UI element /
+  `ancestryStatus` output, `unused argument (ancestryRules = ...)`, missing
+  `ancestryRules` return element, argument not passed by `appServer`). Blocks
+  that stop at the `unused argument` seam leave their deeper expectations
+  unexercised until GREEN (Learning 784) — cross-checked against the shipped
+  kernel in scratch (zero-pairs 0/1 `I1|C2`, warn-rules 25/0 flagged
+  `I1|U1`,`A1|U1`, the malformed message, the 2/2/2 status). One vacuous
+  ordering expectation (a `-1` position sentinel passing `expect_lt`) was
+  tightened before this commit. Lint 0 on all four files.
+
 ### 2026-09-23 · [issue #169] S775 claim: Slice 2 — rules delivery + Mate Pair module wiring *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (S774 next-steps (A),
   `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger frontiers

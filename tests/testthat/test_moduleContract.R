@@ -54,7 +54,8 @@ moduleContractServers <- list(
   modBreedingGroups = list(
     server = modBreedingGroupsServer,
     args = list(pedigree = shiny::reactive(NULL)),
-    names = c("groups", "nGroups", "score", "unassigned", "groupKinship")
+    names = c("groups", "nGroups", "score", "unassigned", "groupKinship",
+              "ancestryRules")
   ),
   modPyramid = list(
     server = modPyramidServer,
@@ -99,7 +100,8 @@ moduleContractServers <- list(
     args = list(pedigree = shiny::reactive(NULL),
                 kinshipMatrix = shiny::reactive(NULL),
                 markerKinshipMatrix = shiny::reactive(NULL),
-                geneticValues = shiny::reactive(NULL)),
+                geneticValues = shiny::reactive(NULL),
+                ancestryRules = shiny::reactive(NULL)),
     names = c("pairs", "excluded", "isReady")
   ),
   modDeidentifiedExport = list(

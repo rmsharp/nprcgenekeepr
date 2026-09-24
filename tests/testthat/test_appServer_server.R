@@ -694,3 +694,87 @@ silently swallowed", {
     }
   )
 })
+
+# =============================================================================
+# 9. Mate Pair ancestry-rules wiring (issue #169 Slice 2, D7): the rules the
+#    Breeding Groups module loads reach the Mate Pair Analysis module through
+#    appServer as the SAME reactive object (the shared-kinship mold in section
+#    7); appServer adds no ancestry logic of its own. testServer() proves the
+#    argument threading only -- the live cross-tab reactive graph is Slice 3's
+#    e2e (no live-wiring claim is made before it).
+# =============================================================================
+
+test_that(paste("appServer passes Breeding Groups' ancestryRules reactive,",
+                "as the same object, to modMatePairServer (issue #169 D7)"), {
+  bgRules <- shiny::reactive(NULL)
+  mateCalled <- FALSE
+  capturedMateRules <- "not captured"
+
+  stubBGWithRules <- function(id, ...) {
+    list(groups = shiny::reactive(NULL), ancestryRules = bgRules)
+  }
+  captureMate <- function(id, ..., ancestryRules = "not passed") {
+    mateCalled <<- TRUE
+    capturedMateRules <<- ancestryRules
+    invisible(NULL)
+  }
+
+  testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBGWithRules,
+    modMatePairServer = captureMate,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      muffleConfig(shiny::testServer(appServer, {
+        session$flushReact()
+      }))
+    }
+  )
+
+  expect_true(mateCalled)
+  expect_true(is.function(capturedMateRules))
+  # Same reactive OBJECT, not a wrapper or a copy: appServer only threads it.
+  expect_identical(capturedMateRules, bgRules)
+})
+
+test_that(paste("a Breeding Groups return with no ancestryRules element",
+                "leaves modMatePairServer's argument an explicit NULL",
+                "(issue #169 D7)"), {
+  mateCalled <- FALSE
+  capturedMateRules <- "not captured"
+
+  captureMate <- function(id, ..., ancestryRules = "not passed") {
+    mateCalled <<- TRUE
+    capturedMateRules <<- ancestryRules
+    invisible(NULL)
+  }
+
+  # stubBG (the shared legacy stub) returns no ancestryRules element, as every
+  # existing stub in this file does: the module must simply see NULL.
+  testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modMatePairServer = captureMate,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      muffleConfig(shiny::testServer(appServer, {
+        session$flushReact()
+      }))
+    }
+  )
+
+  expect_true(mateCalled)
+  expect_null(capturedMateRules)
+})

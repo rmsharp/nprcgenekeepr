@@ -836,3 +836,108 @@ test_that("the Ancestry tab guidance states are pinned (D8)", {
     }
   )
 })
+
+# =============================================================================
+# Issue #169 Slice 2 (D7): the validated rules reach the Mate Pair tab
+# =============================================================================
+#
+# modBreedingGroupsServer returns one new reactive, `ancestryRules` -- the
+# value ancestryRulesData() already computes (the validated table, NULL when
+# nothing usable is loaded). appServer hands it to modMatePairServer, which
+# applies its own column-present check, so the element is deliberately NOT
+# ancestryRulesForRun() (that one is NULL on a pedigree with no ancestry
+# column). Wiring: test_appServer_server.R; the consuming module:
+# test_modMatePair_ancestry.R; the returned-names row: test_moduleContract.R.
+
+test_that(paste(
+  "modBreedingGroupsServer returns the loaded rules as an ancestryRules",
+  "reactive: NULL before an upload, the validated table after (#169 D7)"
+), {
+  skip_if_not_installed("shiny")
+  test_ped <- arPed()
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(pedigree = shiny::reactive({
+      test_ped
+    })),
+    {
+      returned <- session$getReturned()
+      expect_true(is.function(returned$ancestryRules))
+      expect_null(returned$ancestryRules())
+
+      session$setInputs(ancestryRulesFile = arFileInfo(arRulesPath()))
+      rules <- returned$ancestryRules()
+      expect_s3_class(rules, "data.frame")
+      expect_identical(nrow(rules), 4L)
+      expect_identical(sum(rules$severity == "block"), 2L)
+      expect_identical(sum(rules$severity == "flag"), 2L)
+      expect_identical(rules, ancestryRulesData())
+    }
+  )
+})
+
+test_that(paste(
+  "the returned ancestryRules is the validated table even when the pedigree",
+  "has no ancestry column -- each consumer applies its own column check (D7)"
+), {
+  skip_if_not_installed("shiny")
+  test_ped_no_ancestry <- arNoAncestryPed()
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(pedigree = shiny::reactive({
+      test_ped_no_ancestry
+    })),
+    {
+      session$setInputs(ancestryRulesFile = arFileInfo(arRulesPath()))
+      # Formation's own reading is NULL here; the returned element is not.
+      expect_null(ancestryRulesForRun())
+      returned <- session$getReturned()
+      expect_true(is.function(returned$ancestryRules))
+      expect_identical(returned$ancestryRules(), ancestryRulesData())
+      expect_identical(nrow(returned$ancestryRules()), 4L)
+    }
+  )
+})
+
+test_that(paste(
+  "the returned ancestryRules is NULL for a malformed rules file",
+  "(error notified, never thrown) and follows a replacement upload"
+), {
+  skip_if_not_installed("shiny")
+  test_ped <- arPed()
+
+  badCsv <- tempfile(fileext = ".csv")
+  oneRuleCsv <- tempfile(fileext = ".csv")
+  on.exit(unlink(c(badCsv, oneRuleCsv)), add = TRUE)
+  writeLines(
+    c("ancestry1,ancestry2,severity", "INDIAN,CHINESE,banned"),
+    badCsv
+  )
+  writeLines(
+    c("ancestry1,ancestry2,severity", "INDIAN,CHINESE,block"),
+    oneRuleCsv
+  )
+
+  shiny::testServer(
+    modBreedingGroupsServer,
+    args = list(pedigree = shiny::reactive({
+      test_ped
+    })),
+    {
+      returned <- session$getReturned()
+      expect_true(is.function(returned$ancestryRules))
+
+      session$setInputs(ancestryRulesFile = arFileInfo(badCsv))
+      expect_no_error(bad <- returned$ancestryRules())
+      expect_null(bad)
+
+      session$setInputs(ancestryRulesFile = arFileInfo(oneRuleCsv))
+      replaced <- returned$ancestryRules()
+      expect_s3_class(replaced, "data.frame")
+      expect_identical(nrow(replaced), 1L)
+      expect_identical(replaced$severity, "block")
+    }
+  )
+})
