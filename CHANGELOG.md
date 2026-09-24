@@ -57,6 +57,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   `AskUserQuestion`-gated phases. Stub + pending receipt ride this commit; close-out
   records the rest. Issue #169 closes at close-out.
 
+### 2026-09-24 · [issue #169] S777 RED: Slice 3b committed live-app e2e for the Mate Pair ancestry guardrails, mutation-proved *(tests only)*
+- **Commit:** RED (this commit) — `tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R`
+  only, no product code. One live-app block, 38 expectations in 13 tagged groups (A1-A13)
+  pinning the LIVE-path numbers (status line; pre-run guidance; the override select offers
+  the 2 block rules; 20 eligible / 5 excluded; coverage table; manifest 1 wording / pair
+  counts 3-2-0-3 / census; modal wording; blank reason refused; override recorded; the
+  displayed run's manifest NOT rewritten by a late override; 23 / 2 with a 23 x 11 CSV and
+  3 `overridden` rows; manifest 2 reason / summary / counts; 0 console errors). Behavior
+  failures FAIL; only upload/navigation infrastructure skips. It matches the
+  `^e2e-mate-pair-analysis-module` CI group by name (the two static guards pass).
+- **Owner gates:** Pre-RED approach = "Mutation-proof RED" (a characterization e2e cannot
+  start red); PRE-RED to RED = "Yes, proceed to RED".
+- **Mutation proof (throwaway trees in the scratchpad, never committed):** the unmutated
+  harness passes 38/38 (0 failed, 0 skipped). 20 planted seams in 5 builds all fail the
+  intended groups: B1 rules not passed at the click (11 failures: 25 eligible / 0 excluded,
+  empty coverage, manifest 500, no 23 / 2); B2 override not applied + modal shows the
+  Breeding Groups wording + status / guidance wording + coverage drops JAPANESE (9); B3 blank
+  reason accepted + census wrong + pair counts inverted (5); B4 manifest read from LIVE
+  overrides + reason not stored + manifest carries the Breeding Groups wording + select lists
+  every rule + override-status wording (7); B5 no-override / override summary wording +
+  overridden flag never set + overridden rule's counts dropped + severity forced + gate stays
+  open (8). Every failing message was classified against its planted cause. **Not
+  independently mutation-proved (stated, not skipped):** A13 (console errors), the manifest
+  row count, "manifest 1 marks nothing overridden", and manifest 2's rule-row existence.
+- **Incident, declared:** the first mutation round was INERT (5 runs, all 38/38) —
+  shinytest2 0.5.1 loads the package from the CURRENT DIRECTORY tree via `pkgload::load_all()`
+  in the app subprocess, so scratch-installed mutants were never loaded. Diagnosed with a
+  preflight app printing `system.file(package=)`; re-aimed by running each mutant from its
+  own mutated tree with the tests inside it; every re-run's preflight shows the mutant tree
+  loaded. The inert round's results were discarded, not counted.
+
 ### 2026-09-24 · [ad hoc] S776 records: Slice 3a of #169 DONE, close-out records committed
 - **Deliverable:** Slice 3a of issue #169 (the Mate Pair override gate, the Ancestry tab
   and the audit-manifest download), recorded in the entries below: claim `a2e2be05`, RED
