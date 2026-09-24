@@ -46,6 +46,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [issue #169] S776 claim: Slice 3 — Mate Pair override gate, audit manifest, Ancestry tab, e2e, article *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (S775 next-steps (A),
+  `BACKLOG.md:8`). Orient measured: 0 undocumented on both ledger frontiers
+  (both at `ff53bf21` = HEAD), 23 unpushed (`origin/master` = `79206add`), CI
+  20/20 green (four push workflows on `79206add` + nightlies through 09-23),
+  S775 receipt-citation vs `.quality-gates-results.json` matched byte-for-byte
+  BEFORE any ratchet run; `HANDOFFS.md` trim trigger FIRES (74,611 B vs 65,536
+  B) and `SESSION_NOTES.md` exceeds the Read tool's 25,000-token cap despite
+  S775's "under the cap" claim — both reported, not this session's
+  deliverable. Deliverable is Slice 3 of 3 (scope may split 3a/3b at the
+  Pre-RED gate; strict TDD, `AskUserQuestion`-gated phases). Stub + pending
+  receipt ride this commit; close-out records the rest. Issue #169 closes at
+  Slice 3 close-out.
+
 ### 2026-09-23 · [ad hoc] S775 records: Slice 2 of #169 DONE, close-out records committed
 - **Deliverable:** Slice 2 of issue #169 (the Mate Pair module applies the ancestry rules loaded on Breeding
   Groups), recorded in the entries below: claim `8d722d6a`, RED `53e172d6`, RED correction `fdb705bd`, GREEN 1/2

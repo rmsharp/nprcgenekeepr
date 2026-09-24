@@ -66,6 +66,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 776 Did
+**Deliverable:** **Slice 3 of issue #169 -- Mate Pair override gate, audit
+manifest, Ancestry tab, e2e, article** (IN PROGRESS; may split 3a/3b at the
+Pre-RED gate). Plan §5 Slice 3 + Outcome (S775); `BACKLOG.md:8`.
+**Started:** 2026-09-24 (~06:45 UTC)
+**Status:** Claimed. Owner-picked at the Phase 0 gate (S775 next-steps (A)).
+Orient: 0 undocumented (both frontiers at `ff53bf21`), 23 unpushed, CI green,
+ratchet citation matched BEFORE any run; `SESSION_NOTES.md` exceeds the Read
+tool's 25,000-token cap (S775's "under the cap" was wrong -- record at 3A);
+`HANDOFFS.md` 74,611 B, `--check` FIRES (not this deliverable). **TDD phase:
+PRE-RED**; scope + `PRE-RED->RED` gates owed.
+**Ledger:** `CHANGELOG: pending` -- crash breadcrumb until close-out.
+
 ### Session 774 Handoff Evaluation (by Session 775)
 **Score: 9/10.** **What helped:** every measurement held exactly -- 0
 undocumented on both frontiers (both at `a7628998`), 15 unpushed
