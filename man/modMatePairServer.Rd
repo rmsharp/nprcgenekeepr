@@ -9,7 +9,8 @@ modMatePairServer(
   pedigree,
   kinshipMatrix,
   markerKinshipMatrix,
-  geneticValues
+  geneticValues,
+  ancestryRules = NULL
 )
 }
 \arguments{
@@ -33,6 +34,13 @@ genotype file has been uploaded.}
 data.frame (\code{shared$geneticValues}, with \code{id},
 \code{indivMeanKin}, \code{gu} columns), or \code{NULL} before the
 Genetic Value Analysis tab has been run.}
+
+\item{ancestryRules}{optional reactive returning the validated ancestry
+rules table (see \code{\link{checkAncestryRules}}) from
+\code{\link{modBreedingGroupsServer}}'s \code{ancestryRules} return
+element, or \code{NULL} when no rules are loaded. \code{NULL} (the
+default, or a reactive that returns \code{NULL}) applies no rules, and
+the results are identical to a run before this argument existed.}
 }
 \value{
 A list with three reactive elements: \code{pairs}, the eligible-
@@ -74,6 +82,19 @@ upstream absence is \code{req()}), matching
 \code{\link{modMarkerGeneticsServer}}'s own simpler precedent -- there is
 no standalone use case for this module that would need an independent
 recompute path.
+
+\strong{Ancestry guardrails (issue #169).} \code{ancestryRules} carries the
+rules loaded on the Breeding Groups tab. When rules are loaded and the
+pedigree has an \code{ancestry} column, each run hands them to
+\code{\link{reportMatePairs}}: a pair matching a \code{block} rule moves to
+the Excluded tab (reason \code{"ancestry rule"}) and a pair matching a
+\code{flag} rule stays in Eligible Pairs, annotated. The rules are read
+once, at the "Find Eligible Pairs" click, so loading or clearing rules
+afterwards never rewrites a finished run's tables. The module checks for the
+\code{ancestry} column before passing rules (the report function stops
+without it); a rules-loaded run on a pedigree with no such column runs
+exactly as it does with no rules, and the status line says the guardrails
+are inactive. An always-visible status line reports the loaded state.
 }
 \seealso{
 \code{\link{modMatePairUI}}

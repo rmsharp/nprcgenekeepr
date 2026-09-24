@@ -64,6 +64,33 @@ modMatePairUI <- function(id) {
                checkboxInput(ns("useExcludeList"),
                              "Exclude specific animals", value = FALSE),
                uiOutput(ns("excludeTextarea")),
+               # Issue #169 Slice 2 (D9): the ancestry guardrails sit here
+               # collapsed by default, with one always-visible status line
+               # (modBreedingGroupsUI's own layout). The rules come from the
+               # Breeding Groups tab's upload (D7); Slice 3 adds the per-rule
+               # override control inside the collapsed panel.
+               checkboxInput(ns("showAncestryGuardrails"),
+                             "Ancestry Guardrails", value = FALSE),
+               uiOutput(ns("ancestryStatus")),
+               conditionalPanel(
+                 # ns = ns already scopes this panel's input lookups to the
+                 # module namespace client-side, so the condition uses the
+                 # unprefixed field name (a ns()-built condition
+                 # double-prefixes and never matches; Learning 324).
+                 condition = "input.showAncestryGuardrails",
+                 ns = ns,
+                 shiny::p(
+                   paste(
+                     "Ancestry rules come from the Ancestry Guardrails",
+                     "section of the Breeding Groups tab. A pair that",
+                     "matches a block rule moves to the Excluded tab",
+                     "(reason \"ancestry rule\"); a pair that matches a",
+                     "flag rule stays in Eligible Pairs, with its rule",
+                     "shown."
+                   ),
+                   style = "color: gray;"
+                 )
+               ),
                actionButton(ns("analyze"), "Find Eligible Pairs",
                             icon = icon("heart"),
                             class = "btn-primary btn-block")
@@ -118,6 +145,19 @@ modMatePairUI <- function(id) {
 #' no standalone use case for this module that would need an independent
 #' recompute path.
 #'
+#' \strong{Ancestry guardrails (issue #169).} \code{ancestryRules} carries the
+#' rules loaded on the Breeding Groups tab. When rules are loaded and the
+#' pedigree has an \code{ancestry} column, each run hands them to
+#' \code{\link{reportMatePairs}}: a pair matching a \code{block} rule moves to
+#' the Excluded tab (reason \code{"ancestry rule"}) and a pair matching a
+#' \code{flag} rule stays in Eligible Pairs, annotated. The rules are read
+#' once, at the "Find Eligible Pairs" click, so loading or clearing rules
+#' afterwards never rewrites a finished run's tables. The module checks for the
+#' \code{ancestry} column before passing rules (the report function stops
+#' without it); a rules-loaded run on a pedigree with no such column runs
+#' exactly as it does with no rules, and the status line says the guardrails
+#' are inactive. An always-visible status line reports the loaded state.
+#'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigree reactive returning the current pedigree data frame
 #'   (columns \code{id}, \code{sire}, \code{dam}, \code{sex}, \code{age},
@@ -134,6 +174,12 @@ modMatePairUI <- function(id) {
 #'   data.frame (\code{shared$geneticValues}, with \code{id},
 #'   \code{indivMeanKin}, \code{gu} columns), or \code{NULL} before the
 #'   Genetic Value Analysis tab has been run.
+#' @param ancestryRules optional reactive returning the validated ancestry
+#'   rules table (see \code{\link{checkAncestryRules}}) from
+#'   \code{\link{modBreedingGroupsServer}}'s \code{ancestryRules} return
+#'   element, or \code{NULL} when no rules are loaded. \code{NULL} (the
+#'   default, or a reactive that returns \code{NULL}) applies no rules, and
+#'   the results are identical to a run before this argument existed.
 #'
 #' @return A list with three reactive elements: \code{pairs}, the eligible-
 #'   pairs data.frame from the most recent \code{reportMatePairs()} run (see
@@ -150,7 +196,8 @@ modMatePairUI <- function(id) {
 #' @family Shiny modules
 #' @export
 modMatePairServer <- function(id, pedigree, kinshipMatrix,
-                              markerKinshipMatrix, geneticValues) {
+                              markerKinshipMatrix, geneticValues,
+                              ancestryRules = NULL) {
   moduleServer(id, function(input, output, session) {
 
     # Delimiter-separated id parsing, mirroring modBreedingGroupsServer's own
@@ -171,6 +218,53 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
       req(isTRUE(input$useExcludeList))
       textAreaInput(session$ns("excludeIds"), "Animal IDs to exclude:",
                     rows = 3L, value = "")
+    })
+
+    # Issue #169 Slice 2 (D7): the rules loaded on the Breeding Groups tab. An
+    # absent argument (script or test use) is the same as no rules loaded.
+    ancestryRulesData <- reactive({
+      if (is.null(ancestryRules)) NULL else ancestryRules()
+    })
+
+    # The rules a run actually receives: NULL unless rules are loaded AND the
+    # pedigree carries an ancestry column. reportMatePairs() stop()s on rules
+    # with no ancestry column, so the module checks first (loud, never fatal:
+    # the status line below says why the guardrails are inactive).
+    ancestryRulesForRun <- reactive({
+      rules <- ancestryRulesData()
+      ped <- pedigree()
+      if (is.null(rules) || is.null(ped) ||
+            !("ancestry" %in% names(ped))) {
+        return(NULL)
+      }
+      rules
+    })
+
+    # D9's one-line status: "no rules loaded" / rule + coverage counts / the
+    # inactive notice. The counts read exactly as Breeding Groups' status does:
+    # an animal is uncovered when its standardized ancestry level is named by
+    # no loaded rule, and an NA level is never covered.
+    ancestryStatusText <- reactive({
+      rules <- ancestryRulesData()
+      if (is.null(rules)) {
+        return(paste("No ancestry rules loaded. Load a rules file on the",
+                     "Breeding Groups tab to apply it here."))
+      }
+      ped <- pedigree()
+      if (is.null(ped) || !("ancestry" %in% names(ped))) {
+        return(paste("Pedigree has no ancestry column -- ancestry",
+                     "guardrails inactive."))
+      }
+      covered <- unique(c(rules$ancestry1, rules$ancestry2))
+      ancestryLevels <- toupper(as.character(ped$ancestry))
+      sprintf("%d block, %d flag rule(s); %d animal(s) uncovered.",
+              sum(rules$severity == "block"),
+              sum(rules$severity == "flag"),
+              sum(!(ancestryLevels %in% covered)))
+    })
+
+    output$ancestryStatus <- renderUI({
+      shiny::p(ancestryStatusText(), style = "color: gray;")
     })
 
     observeEvent(input$analyze, {
@@ -205,13 +299,19 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
 
       minAge <- if (!is.null(input$minAge)) input$minAge else 1L
 
+      # D8c: the rules are read once, here, at the click (an observeEvent
+      # handler is isolated), and the stored result is that run's snapshot --
+      # loading or clearing rules afterwards never rewrites it. NULL rules
+      # (none loaded, or no ancestry column) leave the call, and so the
+      # result, exactly as it was before this argument existed (D4-1).
       res <- reportMatePairs(
         ped, kmat,
         markerKmat = markerKinshipMatrix(),
         geneticValues = gvArg,
         minAge = minAge,
         populationIds = popIds,
-        exclude = excludeIds
+        exclude = excludeIds,
+        ancestryRules = ancestryRulesForRun()
       )
       matchResults(res)
 
@@ -262,12 +362,18 @@ modMatePairServer <- function(id, pedigree, kinshipMatrix,
         ))
       }
       if (nrow(res$pairs) == 0L) {
-        div(
-          class = "alert alert-warning",
-          paste("No eligible pairs found under the current population",
-                "scope and age settings. Try including more animals or",
-                "lowering the minimum age.")
-        )
+        msg <- paste("No eligible pairs found under the current population",
+                     "scope and age settings. Try including more animals or",
+                     "lowering the minimum age.")
+        # Name the ancestry cause when rules excluded any pair; with none the
+        # text is exactly what it was before ancestry rules existed.
+        nAncestry <- sum(res$excluded$reason == "ancestry rule")
+        if (nAncestry > 0L) {
+          msg <- paste0(msg, sprintf(paste(" %d pair(s) were excluded by",
+                                           "ancestry rules -- see the",
+                                           "Excluded tab."), nAncestry))
+        }
+        div(class = "alert alert-warning", msg)
       }
     })
 

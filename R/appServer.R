@@ -462,13 +462,17 @@ appServer <- function(input, output, session) {
   # individual mate-pair report, distinct from and sharing no code with
   # Breeding Groups (D1). Reuses the same shared pedigree/kinship reactives
   # as Breeding Groups and Marker Genetics' own genotype-based kinship
-  # (D6, above) rather than recomputing anything independently.
+  # (D6, above) rather than recomputing anything independently. Issue #169
+  # Slice 2 (D7): the ancestry rules uploaded on the Breeding Groups tab are
+  # threaded through unchanged -- one rules file per session -- and the module
+  # applies its own ancestry-column check.
   modMatePairServer(
     "matePair",
     pedigree = reactive(shared$currentPedigree),
     kinshipMatrix = sharedKinshipMatrix,
     markerKinshipMatrix = markerResults$markerKinshipMatrix,
-    geneticValues = reactive(shared$geneticValues)
+    geneticValues = reactive(shared$geneticValues),
+    ancestryRules = bgResults$ancestryRules
   )
 
   # Cross-Center Identity Module (issue #149 Slice 2) -- a standalone

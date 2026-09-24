@@ -64,6 +64,12 @@ List with reactive components:
 in groups
 \item \code{groupKinship} - List of kinship matrices per group
 (if withKin=TRUE)
+\item \code{ancestryRules} - The validated ancestry rules table loaded
+through the Ancestry Guardrails upload (see
+\code{\link{checkAncestryRules}}), or \code{NULL} when no usable file
+is loaded. It is the table as loaded, whether or not the pedigree has
+an \code{ancestry} column: each consumer (formation here,
+\code{\link{modMatePairServer}}) applies its own column check
 }
 }
 \description{
