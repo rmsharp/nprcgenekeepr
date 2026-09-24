@@ -46,6 +46,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [ad hoc] S776 records: Slice 3a of #169 DONE, close-out records committed
+- **Deliverable:** Slice 3a of issue #169 (the Mate Pair override gate, the Ancestry tab
+  and the audit-manifest download), recorded in the entries below: claim `a2e2be05`, RED
+  `09b85a5a`, GREEN 1/2 `f65410f2`, GREEN 2/2 `15addc42`, REFACTOR `ae41927b`. The two
+  records commits add: the plan's Slice 3 **Outcome (S776)** paragraph; the `BACKLOG.md`
+  item rewritten forward-carrying at Slice 3b (live-measured numbers, driver traps, the
+  strict-TDD wrinkle for a characterization e2e) plus a NEW item for the blank-ancestry
+  read-path divergence; Learnings 787-788; the `HANDOFFS.md` S776 receipt
+  (`status: complete`, self 8/10, S775 evaluated 9/10); the `SESSION_NOTES.md` S776 record
+  and the S775 handoff evaluation, with the S769-S773-era records removed by hand to keep
+  the file under the hook's token ceiling (git holds them: `git show
+  a2e2be05:SESSION_NOTES.md`).
+- **Verification (measured):** unfiltered clean regression read (`NOT_CRAN=true`,
+  `load_all()` first) **351 files / 8,292 expectations, 0 failed / 0 error** after GREEN
+  AND after the REFACTOR (identical; S775 was 349 / 8,105); `devtools::check()` **0 / 0 /
+  0** both times; lint 0; ratchet **1/1 at `ae41927b`** (3,559,430 B, +10,763 B vs S775 =
+  tests + docs; results `854128e69adc`, manifest `aa983075d6a2` unchanged; the citation
+  was compared to the results file at Orient BEFORE the run). Runtime (3E): a
+  scratch-installed build driven by shinytest2 twice with identical results (20/5 ->
+  override -> 23/2, manifests, gate, 0 console errors).
+- **Findings recorded, not fixed:** the Shiny upload path reads CSV/text with no
+  `na.strings`, so a blank ancestry cell is OTHER live but UNKNOWN on the script path
+  (`BACKLOG.md:83`); a valid zero-rule table makes the manifest builder stop (Breeding
+  Groups identical); the whole-file Read of `SESSION_NOTES.md` counted 25,148 tokens for
+  a file the hook's estimator counted as 24,579.
+- **Not done, by design:** the committed shinytest2 e2e, the colony-manager-guide
+  article and the explicit #169 close are Slice 3b; issue #169 stays open; nothing pushed.
+
+### 2026-09-24 · [issue #169] S776 REFACTOR: shared override helpers between Breeding Groups and Mate Pair
+- `ae41927b` (3 files): `.emptyAncestryOverrides()` and `.overridableAncestryRules()`
+  added to `R/ancestryOverrides.R` and used by `R/modBreedingGroups.R`,
+  `R/modMatePair.R` and `.checkAncestryOverrides()` in place of four copies of the
+  zero-row overrides table and two copies of the "block rules not yet overridden"
+  computation. Structure only (owner gate "one small REFACTOR"); the select-choices
+  builder and the confirm-gate modal stay duplicated (not unit-covered). Verified
+  identical before and after: full suite 351 files / 8,292 expectations 0/0, `check()`
+  0/0/0, lint 0, the live smoke.
+
 ### 2026-09-24 · [issue #169] S776 GREEN: Slice 3a implemented (Mate Pair override gate + Ancestry tab + audit manifest)
 - **GREEN 1/2 `f65410f2` (4 files):** `R/ancestryOverrides.R` gains
   `.matePairAncestryOverrideWarningText` (the owner-ratified wording, verbatim)
