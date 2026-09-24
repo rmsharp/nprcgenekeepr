@@ -46,6 +46,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [ad hoc] Pushed `af4f1eca..59cb4406` to `origin/master` (6 docs-only commits); CI not awaited
+- **Action:** `git push origin master` -- 6 commits: `c182511b` (removed `nprcgenekeepr_notes.txt`),
+  `cb079f6b` (ledger entries for the previous push and that removal), and `c67a3106`, `ab50aed1`,
+  `0cc75dc4`, `59cb4406` (the four `BACKLOG.md` passes, each with its own ledger entry).
+  Owner-directed ("push;"), after the plan had been reviewed and picked from a menu. **Before the
+  push:** `git fetch` showed origin at `af4f1eca`, an ancestor of HEAD (fast-forward); the outgoing
+  diff was 3 files (`BACKLOG.md`, `CHANGELOG.md`, `nprcgenekeepr_notes.txt` deleted), +198/-261,
+  with no secret-named files and no credential-shaped strings in the added lines. **After:** local
+  and `origin/master` both at `59cb4406`.
+- **CI:** the four push workflows (lint, pkgdown, R-CMD-check, test-coverage) run automatically on
+  every push to master -- none has a `paths-ignore` filter. **Not awaited, at the owner's direction**
+  ("do not wait for an uninformative CI"): every changed file is matched by `.Rbuildignore`
+  (`^BACKLOG.*\.md$`, `^CHANGELOG.*\.md$`, `^nprcgenekeepr_notes\.txt$`) and no test or workflow
+  reads any of them, so a green run could not say anything the previous one did not (`af4f1eca`, all
+  four `success`). **State when this entry was written (one query, no waiting):** lint and pkgdown
+  `completed success`; R-CMD-check and test-coverage `in_progress`.
+- **Session:** none -- owner-directed, outside a numbered session (follows S778) · **Verified:** the
+  pre-push checks above only; the local suite was not run (no package code changed).
+- **Not pushed:** `8a616f15` (the `BACKLOG.md` cut and the NEW-53 backfill) and the commit carrying
+  this entry are local.
+
 ### 2026-09-24 · [ad hoc] `BACKLOG.md`: deleted the three resolved sections (Architecture #122 stub, Audit follow-ups, Genetic-metrics)
 - **Change:** `BACKLOG.md` now ends at `## Outreach` (432 -> 378 lines, 34,814 -> 30,875 B; 561
   lines and about 45 KB at the start of the day's review). Removed, at the owner's direction ("if the
