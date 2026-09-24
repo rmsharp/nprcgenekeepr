@@ -46,6 +46,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-23 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-23-2.md` (8 record(s), 54,857 B → 21,099 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **8** record(s) (2026-09-19 → 2026-09-23) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-23-2.md`](docs/archive/SESSION_NOTES-through-2026-09-23-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-23-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-23-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 54,857 B → 21,099 B (−61.5%).
+
 ### 2026-09-23 · [ad hoc] S772 claim: SESSION_NOTES.md read-cap trim *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (S771 next-steps (A)). Orient
   measured: 0 undocumented on both ledger frontiers (both at `5f7e362b` =
