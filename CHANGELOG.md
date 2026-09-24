@@ -46,6 +46,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-24 · [issue #169] S777 claim: Slice 3b — committed Mate Pair ancestry e2e, colony-manager-guide docs, close #169 *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (S776 next-steps (A), `BACKLOG.md:8`).
+  Orient measured: 0 undocumented on both ledger frontiers (both at `a6ee8c0d` = HEAD),
+  30 unpushed (`origin/master` = `79206add`), CI green (all four push workflows on
+  `79206add` plus nightlies through 2026-09-24 07:15Z), the S776 receipt's ratchet
+  citation matched `.quality-gates-results.json` byte-for-byte BEFORE any run;
+  `HANDOFFS.md` trim trigger FIRES (82,785 B vs 65,536 B) — reported, not this
+  session's deliverable. Deliverable is Slice 3b of 3 (final); strict TDD,
+  `AskUserQuestion`-gated phases. Stub + pending receipt ride this commit; close-out
+  records the rest. Issue #169 closes at close-out.
+
 ### 2026-09-24 · [ad hoc] S776 records: Slice 3a of #169 DONE, close-out records committed
 - **Deliverable:** Slice 3a of issue #169 (the Mate Pair override gate, the Ancestry tab
   and the audit-manifest download), recorded in the entries below: claim `a2e2be05`, RED

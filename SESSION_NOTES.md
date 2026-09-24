@@ -66,6 +66,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 777 Did
+**Deliverable:** **Slice 3b of issue #169 -- committed live-app e2e for the Mate Pair
+ancestry override gate + Ancestry tab, the `colony-manager-guide.qmd` documentation, and
+closing #169** (IN PROGRESS). Owner-picked at the Phase 0 priorities gate (S776
+next-steps (A), `BACKLOG.md:8`). Strict TDD; the Pre-RED approach decision (mutation-proof
+RED vs "verification slice" ruling) goes to the owner before RED.
+**Started:** 2026-09-24 02:57 CDT
+**Status:** Session claimed. Work beginning. Orient measured: 0 undocumented on both
+frontiers (`a6ee8c0d` = HEAD), 30 unpushed (`origin/master` = `79206add`), CI all green
+(nightly `shinytest2` 2026-09-24 07:15Z success), ratchet citation = results file
+byte-for-byte (compared BEFORE any run), `HANDOFFS.md` trim trigger FIRES (82,785 B).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest.
+
 ### Session 775 Handoff Evaluation (by Session 776)
 **Score: 9/10.** **What helped:** every Orient measurement held exactly -- 0
 undocumented on both frontiers (`ff53bf21`), 23 unpushed (`origin/master` =
