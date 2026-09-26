@@ -5,15 +5,15 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **PED_GV audit follow-through -- triage DONE (S781, 2026-09-26), F1 shipped (S782); fix
-      the other three correctness hazards, then the owner decides the rest (READY for F4,
-      DECISION NEEDED for F2 and F3, Effort S-M per slice; strict TDD for every fix)** --
+- [ ] **PED_GV audit follow-through -- triage DONE (S781, 2026-09-26), F1 shipped (S782), F4
+      shipped (S783); the owner decides F2 and F3, then the rest (DECISION NEEDED for both,
+      Effort S-M per slice; strict TDD for every fix)** --
       `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids against today's code (35
       present, 2 fixed, 4 moot, 2 refuted); its table is the plan, so read it first (its F1 is
       done: `removeUnknownAnimals()` now returns a pedigree with no `recordStatus` column
-      unchanged). **Slices, in this order, each with the phase gates via `AskUserQuestion`:**
-      **F4 (READY, S)** `getAncestors()` recurses until R aborts on a cycle (NEW-41,
-      `R/getAncestors.R:44`); keep the documented repeats and stop with a clear message.
+      unchanged; its F4 is done: `getAncestors()` now stops with a message naming the cycle
+      instead of recursing until R aborts, and keeps the documented diamond repeats).
+      **Slices, in this order, each with the phase gates via `AskUserQuestion`:**
       **F2 (DECISION NEEDED, M)** the `U`-prefix scheme (NEW-38): `addUIds()` can mint an id
       equal to a real one and `removeAutoGenIds()` strips real ids that start with the prefix;
       the owner decides how strict detection should be and whether any center's real ids start
@@ -51,6 +51,22 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       behavior change); (3) make the helper NA-safe with `which()` so every caller is covered
       (touches a shared helper; re-check the `"added"` use at
       `getDateErrorsAndConvertDatesInPed.R:39` and probe the other sites first).
+
+- [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
+      cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
+      S)** -- both left out of the F4 (cycle) slice by the owner's decision at its Pre-RED gate.
+      Probes (S783, hand-built trees; not run through `createPedTree()` of a raw pedigree with a
+      dangling parent): (1) `getAncestors("K", list(K = list(sire = "GONE", dam = NA)))` and
+      `getAncestors("NOPE", tree)` both stop with "argument is of length zero"
+      (`ptree[[id]]$sire` is `NULL`, so `is.na()` is `logical(0)` in `R/getAncestors.R:85-88`);
+      (2) an acyclic single-parent chain resolves up to 2,218 generations and aborts with
+      R's "evaluation nested too deeply" beyond that (997 before the S783 change; `options(expressions)`
+      is 5000; the cause of the increase was not investigated). Real pedigrees are a few dozen
+      generations deep, so (2) is recorded for completeness, not as a defect to fix. **Decision
+      for the owner on (1):** stop with a message naming the absent id (matches F4's wording
+      style), or treat an absent parent as a founder (returns fewer ancestors silently; a behavior
+      change for the exported `getAncestors()`, `findLoops()` and `countLoops()`). Callers: only
+      `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither reached from the app.
 
 - [ ] **(Optional, owner decision) Stop the four push workflows from running on pushes that
       change only build-ignored files** (raised 2026-09-24; DECISION NEEDED, Effort S) -- lint,

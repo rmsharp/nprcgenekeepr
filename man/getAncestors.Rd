@@ -28,6 +28,11 @@ The goal of sampling is to reduce the number of inbreeding
 loops in the resulting pedigree, and thus, reduce the
 amount of time required to perform calculations with
 SIMWALK2 or similar programs.
+
+An ancestor reached through both parents is returned once for each route.
+The function stops with an error that names the ids involved when
+\code{ptree} contains a cycle (an animal that is its own ancestor), which is
+a data error.
 }
 \examples{
 library(nprcgenekeepr)

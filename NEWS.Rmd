@@ -513,6 +513,10 @@ knitr::opts_chunk$set(echo = TRUE)
   as stand-ins for unknown parents, no longer returns an empty pedigree when
   the pedigree has no record of which animals were added. It now returns the
   pedigree as it was, since none of its animals were added.
+- Fixed: when a pedigree lists an animal as its own ancestor (for example, two
+  animals each entered as the other's sire), `getAncestors()`, `findLoops()`
+  and `countLoops()` now stop with a message that names the animals involved,
+  instead of failing with an unexplained "infinite recursion" error.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

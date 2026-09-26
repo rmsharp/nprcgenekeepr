@@ -15,6 +15,11 @@
 #' amount of time required to perform calculations with
 #' SIMWALK2 or similar programs.
 #'
+#' An ancestor reached through both parents is returned once for each route.
+#' The function stops with an error that names the ids involved when
+#' \code{ptree} contains a cycle (an animal that is its own ancestor), which is
+#' a data error.
+#'
 #' @param id character vector of length 1 having the ID of interest
 #' @param ptree a list of lists forming a pedigree tree as constructed by
 #' \code{createPedTree(ped)} where \code{ped} is a standard pedigree dataframe.

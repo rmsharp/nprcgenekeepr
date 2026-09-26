@@ -50,6 +50,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S783 docs: PED_GV F4 -- roxygen + `man/getAncestors.Rd`, `NEWS.Rmd` "Fixed" entry, `BACKLOG.md`; REFACTOR reviewed, no change
+- **REFACTOR (owner chose the review pass over my recommendation to skip it):** re-read
+  `R/getAncestors.R` and the six new tests; nothing worth changing (the worker is the original
+  recursion plus one guard; a helper for the four repeated `contains a cycle` + path assertion
+  pairs would hide what each test checks). **No REFACTOR commit.** One check added: a throwaway
+  mutation (a mocked binding whose message reports the whole route, `R/` untouched) fails exactly
+  the intended test, "names only the cycle when the start id is outside it" (1 of 12), so the
+  `expect_false(grepl("\\bZ\\b", msg))` guard the RED entry called "proven only by passing" can
+  fail. **Docs:** `getAncestors()` roxygen gains a paragraph (diamond repeats; stops with an
+  error naming the ids on a cycle); `devtools::document()` changed only `man/getAncestors.Rd`
+  (+5 lines; `tools::checkRd` 0 issues); `NEWS.Rmd` "General Fixes" gets one plain-language entry
+  (a judgment call beyond the checklist, which mandates one only for new exports or Shiny
+  features; the S782 F1 precedent; easy to drop); `BACKLOG.md`: F4 out of the PED_GV item (F2
+  and F3 remain, DECISION NEEDED), and the absent-id and depth-limit findings filed as their own
+  DECISION NEEDED item. The owner's uncommitted YAML header on `BACKLOG.md` is left out of the
+  commit (header-less blob). **Not re-run for this comment-only change:** the full suite and
+  `R CMD check` (both measured on the GREEN code, which is unchanged); re-run this session:
+  `test_getAncestors.R` 12/12, the three related files, lintr 0.
+
 ### 2026-09-26 · [ad hoc] S783 GREEN: PED_GV F4 fixed -- `getAncestors()` stops with a message naming a pedigree cycle
 - `R/getAncestors.R` only. The exported `getAncestors(id, ptree)` keeps its signature and is now a
   thin wrapper over a new unexported `.getAncestorsOnPath(id, ptree, path)` (`@noRd`) that carries
@@ -96,6 +115,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   passing. The existing diamond-repeats test (`test_getAncestors.R:28`) is the no-false-positive
   guard and passes. lintr 0 on the file. Commit left RED on purpose; GREEN follows behind an
   owner gate.
+
+### 2026-09-26 · [ad hoc] S783 push: 18 local commits to `origin/master` (`b5166c8b..38baa151`)
+- Non-commit action, owner-directed at the Phase 0 priorities gate ("push commits; then F4"):
+  `git push origin master` sent the 17 commits that were local at Orient (S775-S782 records, the
+  PED_GV triage, and the F1 RED/GREEN/REFACTOR/docs commits) plus the S783 claim; the remote head
+  matched local (`38baa151`) afterwards. CI on it: lint, pkgdown, test-coverage and R-CMD-check
+  all `completed success` (R-CMD-check 23 m 23 s) -- awaited, because the range carried real
+  `R/` and test changes (S782 F1), not only build-ignored files. The S783 commits after the claim
+  (RED, GREEN, docs, records) are NOT pushed; the owner did not ask for a second push.
 
 ### 2026-09-26 · [ad hoc] S783 claim: PED_GV F4 -- `getAncestors()` cycle guard *(in progress)*
 - Owner-picked at the Phase 0 priorities gate, with one owner-directed pre-step: "push commits; then
