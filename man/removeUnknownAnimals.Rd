@@ -10,9 +10,11 @@ removeUnknownAnimals(ped)
 \item{ped}{The pedigree information in data.frame format}
 }
 \value{
-Pedigree with unknown animals removed. A pedigree without a
-\code{recordStatus} column has no animals marked as added, so it is
-returned unchanged.
+Pedigree with the animals whose \code{recordStatus} is
+\code{"added"} removed. Every other animal is kept, including one whose
+\code{recordStatus} is missing (\code{NA}) or has any other value. A
+pedigree without a \code{recordStatus} column has no animals marked as
+added, so it is returned unchanged.
 }
 \description{
 Remove placeholder animals added for unknown parents

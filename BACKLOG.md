@@ -31,26 +31,30 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.
 
-- [ ] **A `recordStatus` value of `NA` gives `removeUnknownAnimals()` an all-NA phantom row
-      (found S782, 2026-09-26, DECISION NEEDED, Effort S)** -- probe (S782, `smallPed` with a
-      `recordStatus` column, one value set to `NA`): 17 rows in, 17 out, but one output row is
-      all `NA` and a real row is lost; one unrecognised string (`"weird"`) drops its row (17 ->
-      16). Cause: `getRecordStatusIndex()` builds its index as `seq_along(x)[x == status]`
-      (`R/getRecordStatusIndex.R:15`), and an `NA` comparison becomes an `NA` index. The helper
-      has two callers: `removeUnknownAnimals()` (`"original"`) and
-      `R/getDateErrorsAndConvertDatesInPed.R:39` (`"added"`); the same `== status` pattern
-      appears at `R/convertDate.R:95-96`, `R/removeDuplicates.R:39-40` and
-      `R/correctParentSex.R:90,92` (the row-level effect at those sites was NOT probed). Reach:
-      `addParents()` (`R/addParents.R:43-59`) is the only writer of the column in `R/` and
-      replaces any existing column with `"original"`/`"added"`, so only a caller who builds
-      `recordStatus` by hand can hit it (from a grep of `R/`; not tested through the app). Left
-      out of the F1 slice by the owner's decision at its Pre-RED gate. **Decision for the owner,
-      three shapes:** (1) make `removeUnknownAnimals()` NA-safe but keep "keep only `original`
-      rows" (NA and unrecognised rows dropped; 2-3 tests, one file); (2) redefine it as "remove
-      only `added` rows" (matches its roxygen title; unrecognised statuses are then KEPT, a small
-      behavior change); (3) make the helper NA-safe with `which()` so every caller is covered
-      (touches a shared helper; re-check the `"added"` use at
-      `getDateErrorsAndConvertDatesInPed.R:39` and probe the other sites first).
+- [ ] **Four more places test `recordStatus == "original"` or `"added"` with no NA guard and
+      misbehave on a hand-built `NA` status (found S784, 2026-09-26, DECISION NEEDED, Effort
+      S-M)** -- the S784 slice fixed only `removeUnknownAnimals()` (it now removes exactly the
+      `"added"` rows); the owner left these out at its Pre-RED gate. Probe (S784, `smallPed` with
+      a `recordStatus` column, one value set to `NA` at row 5; a scratch script, not in git):
+      `convertDate()` (`R/convertDate.R:95-96`) returns 18 rows from 17, two all-`NA`;
+      `removeDuplicates(reportErrors = TRUE)` (`R/removeDuplicates.R:39-40`, two `NA` statuses)
+      names an innocent id (`"F"`) as a duplicate; `getRecordStatusIndex(ped, "added")`
+      (`R/getRecordStatusIndex.R:15`) returns `NA_integer_`, and its only remaining caller,
+      `R/getDateErrorsAndConvertDatesInPed.R:39-42`, stops ("only 0's may be mixed with negative
+      subscripts") whenever the pedigree also has an invalid date; `correctParentSex()`
+      (`R/correctParentSex.R:90,92`) has the same `recordStatus == "original"` inside a logical
+      subscript and was read, not probed (an `NA` there would put an `NA` id in the female-sire
+      or male-dam report). Reach (read, not run through the app): `qcStudbook()` calls
+      `addParents()` (`R/qcStudbook.R:229`), which overwrites `recordStatus` unconditionally
+      (`R/addParents.R:43-44`), so neither the app nor `qcStudbook()` can carry an `NA` status;
+      only a script that hand-builds the column and calls `convertDate()`, `removeDuplicates()` or
+      `correctParentSex()` directly can. **Decision for the owner:** (1) treat `"added"` as the
+      only special status everywhere -- one shared NA-safe test used at all four sites (matches
+      the `removeUnknownAnimals()` contract; 4-5 files, so one small slice per file); (2) stop
+      early with a message naming rows whose status is neither `"original"` nor `"added"` (one
+      check; changes what a script sees); (3) leave it (unreachable from the app; roxygen note
+      only). **Trap:** a negative subscript built from an index that can be empty
+      (`ped[-getRecordStatusIndex(ped, "added"), ]`) drops EVERY row when nothing is `"added"`.
 
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort

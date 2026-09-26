@@ -510,9 +510,11 @@ knitr::opts_chunk$set(echo = TRUE)
   happened to sort -- not from any real difference in the data. All three
   now sort in a fixed, consistent order everywhere.
 - Fixed: `removeUnknownAnimals()`, which removes the animals that were added
-  as stand-ins for unknown parents, no longer returns an empty pedigree when
-  the pedigree has no record of which animals were added. It now returns the
-  pedigree as it was, since none of its animals were added.
+  as stand-ins for unknown parents, now removes only those animals and keeps
+  all the others. It used to return an empty pedigree when the pedigree had no
+  record of which animals were added, and it lost animals whose record of
+  being added was blank or unrecognized, sometimes leaving a blank row behind.
+  A pedigree with no added animals now comes back as it was.
 - Fixed: when a pedigree lists an animal as its own ancestor (for example, two
   animals each entered as the other's sire), `getAncestors()`, `findLoops()`
   and `countLoops()` now stop with a message that names the animals involved,

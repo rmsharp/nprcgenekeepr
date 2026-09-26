@@ -50,6 +50,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S784 docs: `removeUnknownAnimals()` roxygen + `man/`, `NEWS.Rmd`, `BACKLOG.md`; REFACTOR reviewed, no change
+- **REFACTOR (owner-approved gate, 2026-09-26):** re-read `R/removeUnknownAnimals.R` (a one-line body
+  plus a two-line comment) and the six new test blocks; no duplication or unclear structure worth
+  changing, so no code or test edit. The new "no added animals returns the pedigree unchanged"
+  guard overlaps the older nrow-only "removes nothing" test on purpose (it asserts whole-pedigree
+  identity, and M2 is killed by both).
+- **Docs:** `@return` in `R/removeUnknownAnimals.R` now says only `"added"` rows are removed and
+  every other animal is kept, including one with a missing (`NA`) or any other `recordStatus`;
+  `devtools::document()` changed only `man/removeUnknownAnimals.Rd` (`git status` checked, `tools::checkRd`
+  clean). `NEWS.Rmd`: the existing `removeUnknownAnimals()` "Fixed" bullet (S782's) is REWRITTEN to
+  the finished state against 2.0.0, not given a second bullet -- it now removes only the added
+  animals, and used to return an empty pedigree when no record of added animals existed and to lose
+  animals whose record was blank or unrecognized, sometimes leaving a blank row (the owner's
+  release-state rule; plain-language criterion applied). `NEWS.md` is not re-rendered (it is
+  rendered at release). The wordlist test caught my "unrecognised" (British) in the NEWS text
+  after the first draft; changed to "unrecognized" and the test re-run green.
+- **`BACKLOG.md`:** the NA phantom-row item is REMOVED (the completion record is the S784 GREEN entry
+  above, enriched with the verification detail); one new DECISION NEEDED item (Effort S-M) files
+  the four sibling sites the probe found (`convertDate` 18 rows from 17 with two all-NA rows;
+  `removeDuplicates(reportErrors = TRUE)` names an innocent id; `getRecordStatusIndex(.., "added")`
+  returns `NA_integer_` and its only remaining caller would stop on a mixed-sign subscript;
+  `correctParentSex` the same pattern, read not probed), the reach (unreachable through
+  `qcStudbook()`: `addParents()` overwrites the column), three shapes for the owner and the
+  empty-negative-subscript trap. The owner's uncommitted 5-line YAML header stays out of the
+  commit (header-less blob; `git diff HEAD -- BACKLOG.md` is checked after).
+- **Verification after the docs edit:** `test_removeUnknownAnimals.R` 11 tests / 25 expectations 0
+  failed; `test_wordlist_coverage.R` 0 failed (after the fix above); `test_pkgdown_reference_config.R`
+  1 failed (the owner's untracked NEWS draft, expected); `test_getRecordStatusIndex.R` 0 failed;
+  lintr 0 on the R file. **Disclosure:** the full suite and `R CMD check` ran on the GREEN code,
+  BEFORE this comment-only roxygen / `man/` / NEWS edit; after it I re-ran only the four test
+  files above, lintr and `tools::checkRd` (the same limit S783 disclosed).
+- **Checklists:** lint done; NEWS done (rewrite of the existing entry); `_pkgdown.yml` (no new
+  export), citation, tutorial, and `a2interactive` (no new parameter; a behavior fix) N/A; no GitHub
+  issue exists for this defect, so none closed.
+
 ### 2026-09-26 · [ad hoc] S784 GREEN: `removeUnknownAnimals()` removes only "added" rows and keeps NA and unrecognised statuses
 - **Change:** `R/removeUnknownAnimals.R:27-29` -- `ped[getRecordStatusIndex(ped, status =
   "original"), ]` becomes `ped[is.na(ped$recordStatus) | ped$recordStatus != "added", ]`, with a
