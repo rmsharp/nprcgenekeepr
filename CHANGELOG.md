@@ -50,6 +50,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S784 GREEN: `removeUnknownAnimals()` removes only "added" rows and keeps NA and unrecognised statuses
+- **Change:** `R/removeUnknownAnimals.R:27-29` -- `ped[getRecordStatusIndex(ped, status =
+  "original"), ]` becomes `ped[is.na(ped$recordStatus) | ped$recordStatus != "added", ]`, with a
+  two-line comment saying why the `is.na()` guard is there. No other `R/` file; `getRecordStatusIndex()`
+  is untouched (it keeps its one remaining caller, `getDateErrorsAndConvertDatesInPed()`, and its
+  own test). Roxygen, `man/` and `NEWS.Rmd` are deliberately NOT in this commit (the docs commit
+  follows behind the next gate).
+- **Measured:** `test_removeUnknownAnimals.R` 11 tests / 25 expectations, 0 failed (RED was 5 failing
+  tests / 11 failed expectations); eight related files (`addParents`, `convertDate`,
+  `correctParentSex`, `getRecordStatusIndex`, `modInput_qcStudbook`, `qcStudbook`,
+  `removeDuplicates`, `runQcStudbook`) 0 failed, 0 errors; full suite (`load_all` + `NOT_CRAN`, no
+  file filter) 352 files, 2,694 tests, 8,326 expectations, **1 failed**, 0 errors, 187 skipped, 6
+  warnings -- +6 tests and +12 expectations against S783's 2,688 / 8,314, exactly the six new
+  blocks; the 1 failure is `test_pkgdown_reference_config.R` "articles: contents covers every
+  real article", caused by the owner's untracked `suggested_NEWS_entry` draft (as in S782/S783);
+  lintr 0 on `R/removeUnknownAnimals.R`; `R CMD check --as-cran --no-manual` on a `git archive
+  $(git write-tree)` export (the change staged, so the tree is exactly this commit's): 0 errors, 0
+  warnings, 1 NOTE (the dev-version one, "Version contains large components (2.0.0.9000)"), with
+  `* DONE`, `Status: 1 NOTE`, `status == 0`, no timeout and the tests step present confirmed in the
+  saved result (Learning 795), about 5 minutes.
+- **Mutation checks (throwaway mocks of the exported binding, with controls):** control A (the
+  shipped body via the mock) 0 of 11 failing; control B (`ped[0L, ]`) 9 of 11 failing, so the mock
+  takes effect. M1 a bare `!= "added"` with no `is.na()` guard: killed by 4 tests (the NA, all-NA,
+  mixed and factor tests). M2 a negative index from `getRecordStatusIndex(ped, "added")` (the
+  `-integer(0)` trap): killed by 7 tests, including the new no-"added" guard and the pre-existing
+  "removes nothing" test. M3 the old keep-only-`original` behavior through `which()`: killed by 5
+  tests (the NA, all-NA, unrecognised, mixed and factor tests).
+- **Runtime (3E):** n/a -- no app caller (`removeUnknownAnimals()` has no caller in `R/`; from a grep
+  of `R/`, not an app test).
+
 ### 2026-09-26 · [ad hoc] S784 RED: tests for `removeUnknownAnimals()` keeping NA and unrecognised statuses
 - Owner decisions at the Pre-RED gate (2026-09-26): fix **shape (2)** -- `removeUnknownAnimals()`
   removes exactly the rows marked `"added"` and keeps every other row (NA, blank, unrecognised),
