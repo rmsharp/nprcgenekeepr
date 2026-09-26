@@ -70,6 +70,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 784 Did
+**Deliverable:** the NA phantom-row defect in `removeUnknownAnimals()` -- owner picks the fix shape,
+then one small strict-TDD slice (IN PROGRESS)
+**Started:** 2026-09-26
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (item 1,
+`BACKLOG.md` "A `recordStatus` value of `NA` gives `removeUnknownAnimals()` an all-NA phantom row",
+DECISION NEEDED, Effort S). Orient measured: 0 undocumented on both frontiers (`36300a61` = HEAD);
+no pending receipt (the one `status: pending` grep hit is the format template); 4 unpushed,
+`origin/master` = `38baa151`; the S783 ratchet citation (results `bc39c545844e`, manifest
+`aa983075d6a2`, head `4125c436`, 1/1) matched `.quality-gates-results.json` before any run; all 10
+recent `gh run` rows `success`; dashboard 96/100; context budget nothing over a ceiling
+(`CLAUDE.md` 26,360 B in the warn band); `HANDOFFS.md` 61,247 B and `CHANGELOG.md` 56,940 B against
+the 65,536 B archive trigger. Plan: Pre-RED reading and probe of `R/getRecordStatusIndex.R` and its
+callers, then the fix-shape question via `AskUserQuestion` (three shapes are written out in the
+`BACKLOG.md` item), then RED tests, GREEN fix, REFACTOR; each phase gate via `AskUserQuestion`. TDD
+phase PRE-RED at claim; no code touched.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 782 Handoff Evaluation (by Session 783)
 **Score: 9/10.** **What helped:** every Orient measurement held -- 0 undocumented on both
 frontiers (`636e1c45` = HEAD), 17 unpushed, `origin/master` = `b5166c8b`, the ratchet citation

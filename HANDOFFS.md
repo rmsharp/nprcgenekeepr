@@ -168,6 +168,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-24.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S784
+date: 2026-09-26
+status: pending
+active_task: The NA phantom-row defect in removeUnknownAnimals() -- a recordStatus value of NA leaves an all-NA row and loses a real one (R/getRecordStatusIndex.R:15; found S782, BACKLOG.md "Up Next" item 2). Owner-picked at the Phase 0 priorities gate; the owner decides the fix shape, then one small strict-TDD slice with AskUserQuestion gates.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S783
 date: 2026-09-26
 status: complete

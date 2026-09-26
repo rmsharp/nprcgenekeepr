@@ -50,6 +50,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S784 claim: the NA phantom-row defect in `removeUnknownAnimals()` *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (item 1: a `recordStatus` value of `NA` gives
+  `removeUnknownAnimals()` an all-NA phantom row; DECISION NEEDED, Effort S; found S782). The owner
+  picks the fix shape first, then one small strict-TDD slice. Orient measured: 0 undocumented on
+  both the `CHANGELOG.md` and `HANDOFFS.md` frontiers (`36300a61` = HEAD); the S783 receipt is
+  `status: complete`; 4 unpushed, `origin/master` = `38baa151`; the S783 ratchet citation (results
+  `bc39c545844e`, manifest `aa983075d6a2`, head `4125c436`, 1/1) matched
+  `.quality-gates-results.json` before any run; all 10 recent `gh run` rows `success`; dashboard
+  96/100; context budget nothing over a ceiling. Stub + pending receipt ride this commit; close-out
+  records the rest. TDD phase PRE-RED at claim; no code touched.
+
 ### 2026-09-26 · [ad hoc] S783 records: close-out for PED_GV F4 (S782 handoff evaluated 9/10, receipt, Learning 796, next-session items)
 - **Deliverable:** the close-out records for S783, whose work is recorded in the entries below:
   push `b5166c8b..38baa151`, RED `bebb26f5`, GREEN `c0ef7bc6`, docs `4125c436` (claim `38baa151`).
