@@ -168,6 +168,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-24.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S781
+date: 2026-09-26
+status: pending
+active_task: PED_GV audit triage -- one triage table (docs/audits/) with a row per ledger-absent id (41), each judged present / fixed (commit cited) / moot / refuted against today's code. Owner-picked at the Phase 0 priorities gate (S780 next-steps (A)). Read-only investigation, TDD phase PRE-RED; any fix is a separate session.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S780
 date: 2026-09-24
 status: complete

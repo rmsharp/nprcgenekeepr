@@ -50,6 +50,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S781 claim: PED_GV audit triage *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (S780 next-steps (A)). Orient measured: 0
+  undocumented on the `CHANGELOG.md` frontier (`44a6c5e1` = HEAD); 1 commit past the
+  `HANDOFFS.md` frontier, `44a6c5e1`, which is the owner-directed non-session addendum below (no
+  receipt owed, its own entry says so); 6 unpushed, `origin/master` = `b5166c8b`; the S780
+  receipt's ratchet citation matched `.quality-gates-results.json` byte-for-byte BEFORE any run;
+  all 10 recent `gh run` rows `success`. Stub + pending receipt ride this commit; close-out
+  records the rest.
+
 ### 2026-09-26 · [ad hoc] `BACKLOG.md`: recorded four owner-requested items (documentation staleness audit, contributor tutorial, LabKey collaboration, journal papers)
 - Owner-directed addendum after S780 closed; **not a session** -- the owner clarified it was only a
   group of backlog items to record, so no claim, receipt or handoff was written. Four new open

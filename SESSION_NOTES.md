@@ -66,6 +66,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 781 Did
+**Deliverable:** PED_GV audit triage table (IN PROGRESS)
+**Started:** 2026-09-26
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (S780
+next-steps (A)). Orient measured: 0 undocumented on the `CHANGELOG.md` frontier (= HEAD
+`44a6c5e1`); 1 past the `HANDOFFS.md` frontier (`44a6c5e1`, an owner-directed non-session, no
+receipt owed); 6 unpushed; ratchet citation matched before any run; CI green. Plan: a triage
+table under `docs/audits/`, one row per ledger-absent id (41), judged against today's code and
+searching `CHANGELOG.md` plus `docs/archive/CHANGELOG-*.md`; no code changes, TDD phase PRE-RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 779 Handoff Evaluation (by Session 780)
 **Score: 9/10.** **What helped:** every Orient measurement held exactly -- 0 undocumented on both
 frontiers (`84cb6155` = HEAD), 1 unpushed, `origin/master` = `b5166c8b`, the ratchet citation
