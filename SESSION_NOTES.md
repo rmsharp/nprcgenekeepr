@@ -119,23 +119,351 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 783 Handoff Evaluation (by Session 784)
+
+**Score: 9/10.** **What helped:** every Orient measurement held – 0
+undocumented on both frontiers (`36300a61` = HEAD), 4 unpushed,
+`origin/master` = `38baa151`, the ratchet citation (results
+`bc39c545844e`, manifest `aa983075d6a2`, head `4125c436`) matched the
+results file before any run, and the working-tree residue was exactly as
+described; all seven `BACKLOG.md` pins (HEAD
+`:8 :34 :55 :71 :84 :106 :122`) resolved to the named items; the
+clean-export `R CMD check` recipe worked as written (about 5 min); the
+header-less-blob method worked verbatim; the trigger forecast was right
+(`CHANGELOG.md` crossed 65,536 B before my records entry). **Missing:**
+(1) the item’s shape (3) says a helper fix covers “every caller”; it
+covers two of five sites, and only a probe showed it (S782 had flagged
+the sites as not probed); (2) nothing said mocking an EXPORTED
+function’s binding works under `load_all` (the gotcha implied a
+thin-wrapper refactor); (3) the STANDING SET is in the receipt’s gotcha
+(6), not here; I opened it only at close-out and hit none of its traps;
+(4) the handoff’s next-steps list omitted five tagged `BACKLOG.md`
+items, and my Orient inherited that omission on top of my own grep miss
+(Learning 797f). **Wrong:** nothing material; immaterial: `HANDOFFS.md`
+was 61,247 B at Orient, not the 60,744 B it measured at close-out
+(+0.8%). **ROI:** high.
+
+### What Session 784 Did
+
+**Deliverable:** **The NA phantom-row defect in
+[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
+– DONE.** It now removes exactly the rows whose `recordStatus` is
+`"added"` and keeps every other row (`NA`, blank, unrecognised); before,
+an `NA` gave an all-NA phantom row and lost a real animal, and `"weird"`
+dropped its row. Owner-picked at the Phase 0 priorities gate; strict TDD
+with an `AskUserQuestion` at every gate. **Commits:** claim `4aea6297`;
+RED `171c848e`; GREEN `f1a7d31a`; docs `9c078193` (REFACTOR reviewed, no
+change); ledger trims `HANDOFFS.md` `a118c70d` and `CHANGELOG.md`
+`7cbd32bd`; this records commit. **Push:** none (not asked); the local
+commits after `origin/master` = `38baa151` stay local. **Owner
+decisions:** the Phase 0 pick; at Pre-RED, **shape (2)** “remove only
+added” (over (1) keep-only- original and (3) shared helper) after my
+5-site probe; RED-\>GREEN yes; GREEN-\>REFACTOR yes; the archive pass
+“yes, both”, then “trim anyway, record + file the defect” when the
+`HANDOFFS.md` shard’s verify script FAILed a false-positive check.
+**Result (measured):** the 5-site probe and the reach finding
+([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+-\>
+[`addParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addParents.md)
+overwrites the column, so the app cannot carry an `NA`) are in the
+`CHANGELOG.md` RED entry and the new `BACKLOG.md` item (HEAD `:34`).
+RED: 5 failing tests (11 of 25 expectations), 6 passing, 0 errors.
+GREEN: 11/11 (25 expectations); 8 related files 0 failed; full suite
+(`load_all` + `NOT_CRAN`, no filter) 352 files, 2,694 tests, 8,326
+expectations, **1 failed** (the known `test_pkgdown_reference_config.R`,
+your untracked NEWS draft), 0 errors; lintr 0; clean-export
+`R CMD check --as-cran`: 0 errors, 0 warnings, 1 NOTE (dev version),
+completion markers confirmed; three mutants through a mocked binding,
+with controls, killed by 4, 7 and 5 tests. Ratchet **1/1 at `9c078193`**
+(3,566,802 B, +519 B; results `ecf49efe323b`, manifest `aa983075d6a2`).
+**Ledger pass:** `CHANGELOG.md` 68,367 -\> 33,122 B (verify OK);
+`HANDOFFS.md` 61,696 -\> 31,685 B (its verify script prints one
+false-positive L2 FAIL, BACKLOG HEAD `:336`, Learning 797e). **Runtime
+(3E):** n/a –
+[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
+has no caller in `R/` (grep); the roxygen example ran under
+`R CMD check`. **Disclosures:** (1) my Phase 0 priorities list omitted
+five tagged items (contributor tutorial, papers, harem-sire, two LabKey;
+a single-line grep matched 11 of 19), so you picked from an incomplete
+list (found at close-out; all four options shown were valid); (2) the
+archive pass diverged from the gate text (the FAIL above); (3)
+`R CMD check` and the full suite ran on the GREEN code, BEFORE the
+comment-only roxygen / `man/` / NEWS edit (after it: the target file,
+wordlist, pkgdown and helper test files, lintr, `checkRd`); the wordlist
+test then caught my “unrecognised” (fixed); (4) the `NEWS.Rmd` entry
+REWRITES S782’s
+[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
+bullet to the finished state rather than adding a second one (behavior
+change: an unrecognised status is now kept); (5) my first `R CMD check`
+reader printed `DONE: FALSE` (a `^` anchor on one multi-line string, my
+bug; the result was verified separately); (6) your working-tree residue
+is untouched and the `BACKLOG.md` header stayed unstaged (working-tree
+diff = the 5 header lines). **Checklists:** lint done; NEWS done;
+`_pkgdown.yml` (no new export), citation, tutorial and `a2interactive`
+(no new parameter) N/A; no GitHub issue exists for this defect; the
+completed `BACKLOG.md` item was removed in the docs commit and its four
+sibling sites filed as one new item.
+
+**Self-assessment (Session 784): 8/10.** **Strengths:** claim first;
+Orient measured (both frontiers, remote tip, ratchet citation before the
+run, CI, budget); code, callers, tests and the workstream read before
+the shape gate; the 5-site probe changed the decision and corrected the
+item’s “every caller” claim; RED for the right reason with a pre-check
+that [`identical()`](https://rdrr.io/r/base/identical.html) survives a
+row-subset; GREEN verified far past the minimum (related files, full
+suite, clean-export check with completion markers, three mutants with
+controls); scope held (sibling sites filed, not fixed); every gate
+through `AskUserQuestion`; the archive pass reproduced, diagnosed and
+disclosed rather than glossed. **Weak:** (1) the Orient priorities list
+was incomplete (my grep); (2) I promised a passing verify script at the
+archive gate without probing for the leak first (I probed after; the
+probe would have predicted it); (3) `R CMD check` and the suite predate
+the docs edit; (4) a misdiagnosed `DONE: FALSE` and a zsh quoting slip
+cost two calls; (5) I did not open the STANDING SET until close-out.
+**Learnings:** 797.
+
+**Next steps (specific):** (A) **The sibling `recordStatus` sites
+(DECISION NEEDED, S-M)** `BACKLOG.md` HEAD `:34` – `convertDate`,
+`removeDuplicates`, `getDateErrorsAndConvertDatesInPed`,
+`correctParentSex`; three shapes written out there; you pick, then one
+small slice per file. (B) **The absent-id decision for
+[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
+(DECISION NEEDED, S)** HEAD `:59`. (C) **F2 and F3 (DECISION NEEDED)**
+HEAD `:8`. (D) **READY now:** `NEWS.Rmd` sweep (M) HEAD `:110` (my S784
+rewrite of the
+[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
+bullet is already in release-state form); the docs staleness audit (L)
+HEAD `:126`; the trivial cleanup bundle (S) inside `:8`; the
+`a2interactive`
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+section (S) HEAD `:88`. (E) **Owner-requested items my Phase 0 list
+omitted (DECISION NEEDED / BLOCKED):** the contributor tutorial (M) HEAD
+`:149`, the peer-reviewed papers (L, its own scoping session first) HEAD
+`:533`, the harem-sire hole HEAD `:188`, the two LabKey items HEAD
+`:227` and `:242`. (F) The trimmer’s verify false positive (DECISION
+NEEDED, S) HEAD `:336`; `paths-ignore` (DECISION NEEDED, S) HEAD `:75`.
+(G) Your decisions open: the working-tree residue (the `BACKLOG.md`
+header, `BACKLOG.log`, the two NEWS drafts – the draft still turns one
+local test red – and 5 render artifacts), the push of the local commits
+after `38baa151`, closing the 11 recommended PED_GV ids.
+
+**Key files:** `R/removeUnknownAnimals.R:7-11` (`@return`), `:25-32`
+(the function; the guard at `:31`);
+`tests/testthat/test_removeUnknownAnimals.R:57-116` (the six new tests);
+`NEWS.Rmd:512` (the rewritten entry); `man/removeUnknownAnimals.Rd`;
+`R/getRecordStatusIndex.R:13-19` (untouched, one caller left:
+`R/getDateErrorsAndConvertDatesInPed.R:39`); `BACKLOG.md` HEAD
+`:8 :34 :59 :75 :88 :110 :126 :149 :188 :336 :533`; `CHANGELOG.md:57`
+(the S784 entries: records, two trims, docs, GREEN, RED, claim);
+`HANDOFFS.md:175` (the receipt); `PROJECT_LEARNINGS.md:2267` (Learning
+797); `docs/archive/HANDOFFS-through-2026-09-26.md` and
+`CHANGELOG-through-2026-09-26.md` (each with `.verify.sh`);
+`.quality-gates-results.json` (untracked; the citation source);
+scratchpad scripts `probe_na.R`, `probe_ident.R`, `mutation3.R`,
+`leakcheck.py`, `leakcheck_cl.py`, `run_check.R` (not in git).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented on both
+frontiers – measure; 11 unpushed after this records commit (recount);
+`origin/master` = `38baa151`; the working tree is NOT clean
+(`BACKLOG.md` = your 5-line header only, untracked `BACKLOG.log`, two
+`suggested_NEWS_entry` drafts, 5 render artifacts); stage by name;
+header-less blob: edit the working file, `tail -n +6 BACKLOG.md > blob`,
+`git hash-object -w blob`,
+`git update-index --cacheinfo 100644,<sha>,BACKLOG.md`, commit, then
+confirm `git diff HEAD -- BACKLOG.md` shows only the 5 header lines. (2)
+A local unfiltered suite reads **1 failed** until your draft leaves the
+tree (`test_pkgdown_reference_config.R`). For the clean-export
+`R CMD check`, the change must be STAGED (`git write-tree` exports the
+index), and read completion with a fixed-string match
+(`grepl("* DONE", res$stdout, fixed = TRUE)`), not a `^` anchor
+(Learning 797d); the recipe is in the S782 receipt’s gotcha (2). (3)
+**Enumerating `BACKLOG.md` tags:** it is hard-wrapped, so normalize
+whitespace per `- [ ]` item before matching and print items / tagged /
+matched as a control (24 / 19 / 11 with the single-line pattern in S784;
+Learning 797f). (4)
+[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
+is now defined by what it removes; do not “fix” the sibling sites with a
+negative subscript from an index that can be empty (zero rows). (5) The
+`HANDOFFS.md` shard’s verify script FAILs one L2 leak check (a known
+false positive, BACKLOG `:336`); do not treat it as a regression, and do
+not quote front-matter command lines verbatim in receipts. (6) Ratchet
+1/1 at `9c078193` (3,566,802 B, results `ecf49efe323b`, manifest
+`aa983075d6a2`); compare BEFORE any run, run AFTER committing. (7)
+Sizes: measure with `python3 context_budget.py --json` (the hook counts
+TOKENS, 2.27 B/token; ceiling 25,000 = 56,750 B); this file is **53,938
+B (about 23,760 tokens) after these records**, so the next claim stub
+(about 1.7 KB) fits and the next close-out (about +9 KB) will not:
+**trim it at or before the next close-out** (owner-gated; `--cut N`
+KEEPS the N newest, Learning 777; probe dry runs downward, Learning
+761). `CHANGELOG.md` 33,122 B and `HANDOFFS.md` 31,685 B after the
+archive pass, each gaining about 8-10 KB per session (an estimate), so
+their next pass is due in about three sessions. (8) The STANDING SET
+(trim, hook, zsh and CI rules) is in the S784 receipt’s gotcha (7), not
+repeated here; new zsh trap (S784): an apostrophe or parenthesis inside
+an unquoted `echo` argument aborts the whole command, so put probe
+scripts in files.
+
+### Session 782 Handoff Evaluation (by Session 783)
+
+**Score: 9/10.** **What helped:** every Orient measurement held – 0
+undocumented on both frontiers (`636e1c45` = HEAD), 17 unpushed,
+`origin/master` = `b5166c8b`, the ratchet citation (results
+`76631f2eafcc`, manifest `aa983075d6a2`, head `00610aed`) matched the
+results file before any run, and the working-tree residue was exactly as
+described; all five `BACKLOG.md` pins (HEAD `:8 :34 :55 :90 :106`)
+resolved to the named items (the working file is +5 for your header);
+`R/getAncestors.R:44` and the repeats pin `test_getAncestors.R:28` were
+right; the `R CMD check` recipe worked as written (`env`, background,
+confirm `* DONE`/`Status:`/`status == 0`; 5.2 min against the 6 min 20 s
+quoted); the header-less-blob method worked verbatim; the “Pre-RED
+question on the message wording” pointer was the right gate.
+**Missing:** (1) F4’s plan, copied from the triage report through
+`BACKLOG.md` (“carry a visited set, keep the documented repeats”),
+contradicts itself – a global visited set drops the diamond repeats; the
+per-route design came from my probe, not the handoff (Learning 796); (2)
+the STANDING SET lives in the receipt’s gotcha (6), not in this file,
+and I did not open it; I then hit two zsh traps of my own (`stat`,
+`echo =====`), neither on its list. **Wrong:** this file’s Key files
+line said `HANDOFFS.md:32 (the receipt)`; line 32 is the format
+template, and the receipt was at `:170` (its own `key_files` said so).
+**ROI:** high.
+
 ### What Session 783 Did
 
-**Deliverable:** PED_GV F4 –
+**Deliverable:** **PED_GV F4 – DONE.**
 [`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
-cycle guard (IN PROGRESS) **Started:** 2026-09-26 **Status:** Session
-claimed. Work beginning. Owner-picked at the Phase 0 priorities gate,
-with the owner-directed pre-step “push commits; then F4” (17 local
-commits at Orient, all on top of `origin/master` = `b5166c8b`). Orient
-measured: 0 undocumented on both frontiers (`636e1c45` = HEAD); no
-pending receipt; ratchet citation matched before any run; CI green.
-Plan: push, then strict TDD – Pre-RED question on the stop-message
-wording via `AskUserQuestion`, then RED tests, GREEN guard in
-`R/getAncestors.R:44`, REFACTOR; each phase gate via `AskUserQuestion`.
-TDD phase PRE-RED at claim; no code touched. **Ledger:**
-`CHANGELOG: pending` – the claim commit’s `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest. Until close-out, this line is the
-crash breadcrumb for the next session’s reconcile.
+now stops with a message naming the cycle (`X -> Y -> X`) instead of
+recursing until R aborts with “infinite recursion”; the diamond repeats
+are kept. Owner-picked at the Phase 0 priorities gate, with the
+owner-directed pre-step “push commits; then F4”; strict TDD with an
+`AskUserQuestion` at every gate. **Commits:** claim `38baa151`; RED
+`bebb26f5`; GREEN `c0ef7bc6`; docs `4125c436`; **no REFACTOR commit**
+(reviewed, nothing worth changing); this records commit. **Push
+(non-commit action):** `b5166c8b..38baa151`, 18 commits, at the start;
+all four push workflows `success` on it (R-CMD-check 23 m 23 s). The
+four commits after the claim are local. **Owner decisions:** the Phase 0
+pick; at Pre-RED, path-based detection through an unexported worker
+(exported signature unchanged), the error names the cycle, absent-id and
+depth-limit OUT of scope (filed); RED-\>GREEN yes; GREEN-\>REFACTOR the
+review pass, over my recommendation to skip. **Result (measured):** RED
+6 failing tests / 11 expectations, 6 passing, 0 errors; GREEN
+`test_getAncestors.R` 12 tests / 19 expectations, 0 failing; the four
+files touching the callers 59 expectations, 0 failed; full suite
+(`load_all` + `NOT_CRAN`, no filter) 352 files, 2,688 tests, 8,314
+expectations, **1 failed**, 0 errors, 187 skipped, 6 warnings (the 1
+failure is `test_pkgdown_reference_config.R` “articles: contents covers
+every real article”, your untracked `suggested_NEWS_entry` draft, as in
+S782); lintr 0 on both files; `R CMD check --as-cran --no-manual` on a
+`git archive $(git write-tree)` export: 0 errors, 0 warnings, 1 NOTE
+(the dev-version one), `* DONE` / `Status:` / `status 0` confirmed; two
+throwaway mutation checks through a mocked binding (a global visited set
+fails the two diamond tests; a whole-route message fails the one Z
+test); acyclic depth limit 997 -\> 2,218; ratchet **1/1 at `4125c436`**
+(3,566,283 B, +896 B vs S782 = noise; results `bc39c545844e`, manifest
+`aa983075d6a2`; the S782 citation matched BEFORE the run). **Runtime
+(3E):** n/a – no app caller (`R/` reaches
+[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
+only through `makesLoop()` and
+[`countLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/countLoops.md),
+and the app calls neither); the roxygen example ran under check.
+**Disclosures:** (1) the message wording you approved said “sire/dam”; I
+changed it to “sire and dam” because `nonportable_path_linter` reads the
+slash as a path (the alternative was a `# nolint`); (2) the `NEWS.Rmd`
+entry is a judgment call beyond the checklist (S782 precedent), easy to
+drop; (3) `R CMD check` and the full suite ran on the GREEN code, BEFORE
+the comment-only roxygen / `man/` / NEWS edit; after it I re-ran only
+the test file, three related files, lintr and
+[`tools::checkRd`](https://rdrr.io/r/tools/checkRd.html); (4) the
+depth-limit increase is unexplained and was not asked for; (5) my first
+depth script used an upper bound the new code passes (it stopped on its
+own assertion) and a foreground `sleep` was blocked by the harness –
+both harmless; (6) some interim messages lacked the TDD-phase
+declaration; (7) the “only two callers” claim rests on a grep of
+`R/ tests/ vignettes/ inst/ NAMESPACE _pkgdown.yml NEWS.Rmd`, not an app
+test; (8) your working-tree residue is untouched and the `BACKLOG.md`
+header stayed unstaged (working-tree diff = the 5 header lines).
+**Checklists:** lint done; NEWS done; `_pkgdown.yml` (no new export),
+citation, tutorial and `a2interactive` (no new parameter) N/A; no GitHub
+issue exists for F4, so none closed; the PED_GV `BACKLOG.md` item stays
+open (F4 removed; F2 and F3 remain).
+
+**Self-assessment (Session 783): 8/10.** **Strengths:** claim first;
+Orient fully measured; the function, its callers and its tests read
+before the Pre-RED gate; probes found that the plan’s “visited set”
+would have broken the pinned repeats and scoped two neighbouring defects
+out instead of folding them in; RED proven by measured failures for the
+right reason; both mutation checks closed a gap the RED entry had
+disclosed; every gate went through `AskUserQuestion`; CI awaited on a
+push that carried real `R/` changes; your header preserved. **Weak:**
+(1) I changed approved wording for a lint rule after the gate
+(disclosed, one word); (2) `R CMD check` predates the docs edit; (3)
+three small tooling missteps (a script bound, a blocked `sleep`, two zsh
+traps) that cost calls, not correctness; (4) interim phase declarations;
+(5) I did not open the STANDING SET. **Learnings:** 796.
+
+**Next steps (specific):** (A) **The NA phantom-row decision (DECISION
+NEEDED, S)** `BACKLOG.md` HEAD `:34` – three shapes written out there;
+you pick, then a small slice. (B) **The absent-id decision for
+[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
+(DECISION NEEDED, S)** HEAD `:55` – stop with a message naming the id,
+or treat an absent parent as a founder (a silent behavior change). (C)
+**F2 and F3 (DECISION NEEDED)** HEAD `:8`. (D) **READY now:** `NEWS.Rmd`
+sweep (M) HEAD `:106` – read your untracked 3.0.0 drafts first; the docs
+staleness audit (L) HEAD `:122`; the trivial cleanup bundle (S) inside
+the `:8` item; the `a2interactive`
+[`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+section (S) HEAD `:84`. (E) `paths-ignore` (DECISION NEEDED, S) HEAD
+`:71`. (F) Your decisions open: the working-tree residue (the
+`BACKLOG.md` header, `BACKLOG.log`, the two NEWS drafts – the draft
+still turns one local test red), the push of the local commits after
+`38baa151` (RED, GREEN, docs, records), closing the 11 recommended ids.
+
+**Key files:** `R/getAncestors.R:49` (wrapper), `:68-103` (worker; the
+guard at `:73-81`); `tests/testthat/test_getAncestors.R:45-121` (the six
+new tests); `NEWS.Rmd:516-519` (the entry); `man/getAncestors.Rd`;
+`BACKLOG.md` HEAD `:8 :34 :55 :71 :84 :106 :122`; `CHANGELOG.md:53` (the
+S783 entries: docs, GREEN, RED, push, claim); `HANDOFFS.md:170` (the
+receipt); `PROJECT_LEARNINGS.md:2266` (Learning 796);
+`.quality-gates-results.json` (untracked; the citation source);
+scratchpad scripts `probe_f4.R`, `mutation.R`, `mutation2.R`, `depth.R`
+(not in git).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented on both
+frontiers – measure; 4 unpushed after this records commit (recount);
+`origin/master` = `38baa151`; the working tree is NOT clean
+(`BACKLOG.md` = your 5-line header only, untracked `BACKLOG.log`, two
+`suggested_NEWS_entry` drafts, 5 render artifacts); stage by name;
+header-less blob: edit the working file, `tail -n +6 BACKLOG.md > blob`,
+`git hash-object -w blob`,
+`git update-index --cacheinfo 100644,<sha>,BACKLOG.md`, commit, then
+confirm `git diff HEAD -- BACKLOG.md` shows only the 5 header lines. (2)
+A local unfiltered suite reads **1 failed** until your draft leaves the
+tree (`test_pkgdown_reference_config.R`); expected, do not edit
+`_pkgdown.yml` for it; the clean-export `R CMD check` recipe is in the
+S782 receipt gotcha (2) (carried, condensed, in this session’s). (3) F2
+and F3 and the NA and absent-id items are all DECISIONS – no READY
+PED_GV slice remains. (4) Mutation-testing an unexported worker: keep
+the exported function a thin wrapper, then
+`testthat::with_mocked_bindings(code, .worker = mutant, .package = "nprcgenekeepr")`;
+run a control first (Learning 796). (5) Ratchet 1/1 at `4125c436`
+(3,566,283 B, results `bc39c545844e`, manifest `aa983075d6a2`); compare
+BEFORE any run, run AFTER committing. (6) Sizes: measure with
+`python3 context_budget.py --json` (the hook counts TOKENS, 2.27
+B/token; ceiling 25,000): this file was ~15,000 tokens before these
+records and is 42,626 B (~18,800 tokens) after; nothing was removed this
+session (`--check --budget-bytes 65536` fires on none of the three
+ledgers). **Measured at close-out: `HANDOFFS.md` 60,744 B and
+`CHANGELOG.md` 56,940 B against 65,536 B** – each session adds about
+8-10 KB to each (an estimate from S783’s own growth: +9.2 KB and +9.0
+KB), so the next close-out will cross the trigger and an owner-gated
+archive pass
+(`methodology_trim.py --file X --cut N --force --budget-bytes 65536`;
+`SRF_RED` is expected, Learnings 549/586/587; trim `CHANGELOG.md` LAST,
+Learning 761; pick N so the seam is a session boundary, Learning 777) is
+due at or before the next close-out, not “about three sessions out” as
+S782 estimated. This file needs one within about two sessions. (7) The
+STANDING SET is in the S783 receipt’s gotcha (6) (S782’s is carried,
+plus the two zsh traps found here).
 
 ### Session 781 Handoff Evaluation (by Session 782)
 

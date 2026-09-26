@@ -7,19 +7,18 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 ## Up Next
 
 **PED_GV audit follow-through – triage DONE (S781, 2026-09-26), F1
-shipped (S782); fix the other three correctness hazards, then the owner
-decides the rest (READY for F4, DECISION NEEDED for F2 and F3, Effort
-S-M per slice; strict TDD for every fix)** –
-`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids against
-today’s code (35 present, 2 fixed, 4 moot, 2 refuted); its table is the
-plan, so read it first (its F1 is done:
+shipped (S782), F4 shipped (S783); the owner decides F2 and F3, then the
+rest (DECISION NEEDED for both, Effort S-M per slice; strict TDD for
+every fix)** – `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43
+ids against today’s code (35 present, 2 fixed, 4 moot, 2 refuted); its
+table is the plan, so read it first (its F1 is done:
 [`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
-now returns a pedigree with no `recordStatus` column unchanged).
-**Slices, in this order, each with the phase gates via
-`AskUserQuestion`:** **F4 (READY, S)**
+now returns a pedigree with no `recordStatus` column unchanged; its F4
+is done:
 [`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
-recurses until R aborts on a cycle (NEW-41, `R/getAncestors.R:44`); keep
-the documented repeats and stop with a clear message. **F2 (DECISION
+now stops with a message naming the cycle instead of recursing until R
+aborts, and keeps the documented diamond repeats). **Slices, in this
+order, each with the phase gates via `AskUserQuestion`:** **F2 (DECISION
 NEEDED, M)** the `U`-prefix scheme (NEW-38):
 [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
 can mint an id equal to a real one and
@@ -43,37 +42,78 @@ lists them) once the owner agrees. **Trap:** an id grep of the ledger
 both under- and over-counts (`NEWS.md` once used “NEW-47/48/49” as entry
 labels), so use the report’s table, not the old 41-id list.
 
-**A `recordStatus` value of `NA` gives
+**Four more places test `recordStatus == "original"` or `"added"` with
+no NA guard and misbehave on a hand-built `NA` status (found S784,
+2026-09-26, DECISION NEEDED, Effort S-M)** – the S784 slice fixed only
 [`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
-an all-NA phantom row (found S782, 2026-09-26, DECISION NEEDED, Effort
-S)** – probe (S782, `smallPed` with a `recordStatus` column, one value
-set to `NA`): 17 rows in, 17 out, but one output row is all `NA` and a
-real row is lost; one unrecognised string (`"weird"`) drops its row (17
--\> 16). Cause: `getRecordStatusIndex()` builds its index as
-`seq_along(x)[x == status]` (`R/getRecordStatusIndex.R:15`), and an `NA`
-comparison becomes an `NA` index. The helper has two callers:
-[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
-(`"original"`) and `R/getDateErrorsAndConvertDatesInPed.R:39`
-(`"added"`); the same `== status` pattern appears at
-`R/convertDate.R:95-96`, `R/removeDuplicates.R:39-40` and
-`R/correctParentSex.R:90,92` (the row-level effect at those sites was
-NOT probed). Reach:
+(it now removes exactly the `"added"` rows); the owner left these out at
+its Pre-RED gate. Probe (S784, `smallPed` with a `recordStatus` column,
+one value set to `NA` at row 5; a scratch script, not in git):
+[`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
+(`R/convertDate.R:95-96`) returns 18 rows from 17, two all-`NA`;
+`removeDuplicates(reportErrors = TRUE)` (`R/removeDuplicates.R:39-40`,
+two `NA` statuses) names an innocent id (`"F"`) as a duplicate;
+`getRecordStatusIndex(ped, "added")` (`R/getRecordStatusIndex.R:15`)
+returns `NA_integer_`, and its only remaining caller,
+`R/getDateErrorsAndConvertDatesInPed.R:39-42`, stops (“only 0’s may be
+mixed with negative subscripts”) whenever the pedigree also has an
+invalid date;
+[`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
+(`R/correctParentSex.R:90,92`) has the same `recordStatus == "original"`
+inside a logical subscript and was read, not probed (an `NA` there would
+put an `NA` id in the female-sire or male-dam report). Reach (read, not
+run through the app):
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+calls
 [`addParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addParents.md)
-(`R/addParents.R:43-59`) is the only writer of the column in `R/` and
-replaces any existing column with `"original"`/`"added"`, so only a
-caller who builds `recordStatus` by hand can hit it (from a grep of
-`R/`; not tested through the app). Left out of the F1 slice by the
-owner’s decision at its Pre-RED gate. **Decision for the owner, three
-shapes:** (1) make
+(`R/qcStudbook.R:229`), which overwrites `recordStatus` unconditionally
+(`R/addParents.R:43-44`), so neither the app nor
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+can carry an `NA` status; only a script that hand-builds the column and
+calls
+[`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md),
+[`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
+or
+[`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
+directly can. **Decision for the owner:** (1) treat `"added"` as the
+only special status everywhere – one shared NA-safe test used at all
+four sites (matches the
 [`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
-NA-safe but keep “keep only `original` rows” (NA and unrecognised rows
-dropped; 2-3 tests, one file); (2) redefine it as “remove only `added`
-rows” (matches its roxygen title; unrecognised statuses are then KEPT, a
-small behavior change); (3) make the helper NA-safe with
-[`which()`](https://rdrr.io/r/base/which.html) so every caller is
-covered (touches a shared helper; re-check the `"added"` use at
-`getDateErrorsAndConvertDatesInPed.R:39` and probe the other sites
-first).
+contract; 4-5 files, so one small slice per file); (2) stop early with a
+message naming rows whose status is neither `"original"` nor `"added"`
+(one check; changes what a script sees); (3) leave it (unreachable from
+the app; roxygen note only). **Trap:** a negative subscript built from
+an index that can be empty
+(`ped[-getRecordStatusIndex(ped, "added"), ]`) drops EVERY row when
+nothing is `"added"`.
+
+**[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
+fails cryptically on an id or parent that is absent from the tree, and
+cannot resolve a very deep acyclic chain (found S783, 2026-09-26,
+DECISION NEEDED, Effort S)** – both left out of the F4 (cycle) slice by
+the owner’s decision at its Pre-RED gate. Probes (S783, hand-built
+trees; not run through
+[`createPedTree()`](https://github.com/rmsharp/nprcgenekeepr/reference/createPedTree.md)
+of a raw pedigree with a dangling parent): (1)
+`getAncestors("K", list(K = list(sire = "GONE", dam = NA)))` and
+`getAncestors("NOPE", tree)` both stop with “argument is of length zero”
+(`ptree[[id]]$sire` is `NULL`, so
+[`is.na()`](https://rdrr.io/r/base/NA.html) is `logical(0)` in
+`R/getAncestors.R:85-88`); (2) an acyclic single-parent chain resolves
+up to 2,218 generations and aborts with R’s “evaluation nested too
+deeply” beyond that (997 before the S783 change; `options(expressions)`
+is 5000; the cause of the increase was not investigated). Real pedigrees
+are a few dozen generations deep, so (2) is recorded for completeness,
+not as a defect to fix. **Decision for the owner on (1):** stop with a
+message naming the absent id (matches F4’s wording style), or treat an
+absent parent as a founder (returns fewer ancestors silently; a behavior
+change for the exported
+[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md),
+[`findLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/findLoops.md)
+and
+[`countLoops()`](https://github.com/rmsharp/nprcgenekeepr/reference/countLoops.md)).
+Callers: only `R/makesLoop.R:29-30` and `R/countLoops.R:50`, neither
+reached from the app.
 
 **(Optional, owner decision) Stop the four push workflows from running
 on pushes that change only build-ignored files** (raised 2026-09-24;
@@ -409,6 +449,32 @@ which the same research found NOT evidenced for
 `browser-actions/setup-chrome`’s actual download/unzip pipeline; or
 filing a new `rstudio/chromote` upstream issue, since no existing issue
 there matches this exact macOS+GHA+live-CDP-timeout signature).
+
+**`methodology_trim.py`’s generated shard verify script FAILs its L2
+“leak” check when an archived record quotes a front-matter line (found
+S784, 2026-09-26, DECISION NEEDED, Effort S)** – the check embedded in
+each shard’s `.verify.sh` is `ln in "".join(sr)`, a SUBSTRING test of
+every front-matter line over 24 characters against the whole archived
+records text. The archived S779 receipt’s `next_steps:` quotes the
+trimmer’s `--check` command (with `--budget-bytes 65536`), which
+contains the front-matter `--check` line, so
+`bash docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh` prints
+`FAIL: L2 FRONT MATTER leaked 1 line(s) into the shard` although the
+write-time L1/L2/L3 all passed and the script’s own L1/L3 checks hold
+(reproduced by a write, a rollback and a second write, and by a separate
+Python probe; the `CHANGELOG.md` shard from the same session is clean, 0
+hits). It recurs on every later `HANDOFFS.md` trim, because S779 is
+always in the archived tail. Nothing runs these scripts (no CI job, test
+or tool; only the dashboard recognizes the suffix). **Decision for the
+owner:** (1) fix it upstream in the `rmsharp/methodology` fork – compare
+against the SET of exact record lines, as that script’s BL-28 fix
+already does for its “lost line” check (a local patch would be a second
+local modification to `methodology_trim.py` to re-apply after every
+sync, per `CLAUDE.md`’s checklist); (2) leave it and accept the one
+known FAIL; (3) reword the front-matter command line in `HANDOFFS.md` so
+it is no longer a substring of what receipts quote (edits a ledger’s
+seed text; its L2 then checks the reworded line). Until decided, do not
+quote front-matter command lines verbatim in receipts (Learning 797e).
 
 **`CHANGELOG.md`’s own ~4-entries-per-session ledger convention (claim,
 Phase 0 reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side

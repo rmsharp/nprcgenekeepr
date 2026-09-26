@@ -89,6 +89,10 @@ of genotyped individuals.</p>
 loops in the resulting pedigree, and thus, reduce the
 amount of time required to perform calculations with
 SIMWALK2 or similar programs.</p>
+<p>An ancestor reached through both parents is returned once for each route.
+The function stops with an error that names the ids involved when
+<code>ptree</code> contains a cycle (an animal that is its own ancestor), which is
+a data error.</p>
     </div>
 
     <div class="section level2">
