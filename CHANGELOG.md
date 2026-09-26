@@ -50,6 +50,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S782 RED: PED_GV F1 -- tests for `removeUnknownAnimals()` on a pedigree without `recordStatus`
+- Owner decisions at the Pre-RED gate (2026-09-26): a pedigree with no `recordStatus` column is
+  returned unchanged (not `stop()`); NA / unrecognised `recordStatus` values are OUT of scope
+  (probe P2 found an all-NA phantom row from `x == status` indexing -- to be filed in `BACKLOG.md`
+  at close-out, with the same pattern at `R/convertDate.R:95-96`). Tests only
+  (`tests/testthat/test_removeUnknownAnimals.R`, +3 `test_that` blocks; existing 2 untouched; no
+  `R/` change). **Measured RED:** the file reports 2 failures and 10 passes -- both failures are the
+  no-column case (`smallPed` 17 -> 0 rows, `pedSix` 8 -> 0 rows); the all-`added` and zero-row
+  guards pass today by design. Commit left RED on purpose; GREEN follows behind an owner gate.
+
 ### 2026-09-26 · [ad hoc] S782 claim: PED_GV F1 -- `removeUnknownAnimals()` on a pedigree without `recordStatus` *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (S781 next-steps (A)). Orient measured: 0
   undocumented on both the `CHANGELOG.md` and `HANDOFFS.md` frontiers (`f9e0152b` = HEAD); no

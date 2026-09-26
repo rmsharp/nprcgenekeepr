@@ -26,3 +26,32 @@ test_that(stri_c(
   expect_false(nrow(ped2) == nrow(addedPed))
   expect_identical(nrow(ped2) + 3L, nrow(addedPed))
 })
+
+test_that(stri_c(
+  "removeUnknownAnimals returns a pedigree without a recordStatus column ",
+  "unchanged"
+), {
+  expect_false("recordStatus" %in% names(ped))
+  expect_identical(removeUnknownAnimals(ped), ped)
+  pedSix <- nprcgenekeepr::pedSix
+  expect_false("recordStatus" %in% names(pedSix))
+  expect_identical(removeUnknownAnimals(pedSix), pedSix)
+})
+
+test_that(stri_c(
+  "removeUnknownAnimals keeps the columns when every animal is \"added\""
+), {
+  allAddedPed <- newPed
+  allAddedPed$recordStatus <- "added"
+  noneLeft <- removeUnknownAnimals(allAddedPed)
+  expect_identical(nrow(noneLeft), 0L)
+  expect_identical(names(noneLeft), names(allAddedPed))
+})
+
+test_that("removeUnknownAnimals handles zero-row pedigrees", {
+  expect_identical(removeUnknownAnimals(ped[0L, ]), ped[0L, ])
+  zeroWithStatus <- newPed[0L, ]
+  result <- removeUnknownAnimals(zeroWithStatus)
+  expect_identical(nrow(result), 0L)
+  expect_identical(names(result), names(zeroWithStatus))
+})
