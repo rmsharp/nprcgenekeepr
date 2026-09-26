@@ -50,6 +50,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S782 claim: PED_GV F1 -- `removeUnknownAnimals()` on a pedigree without `recordStatus` *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (S781 next-steps (A)). Orient measured: 0
+  undocumented on both the `CHANGELOG.md` and `HANDOFFS.md` frontiers (`f9e0152b` = HEAD); no
+  `status: pending` receipt; 11 unpushed, `origin/master` = `b5166c8b`; the S781 receipt's ratchet
+  citation (results `b969c2dbef9b`, manifest `aa983075d6a2`, head `3c9aa076`) matched
+  `.quality-gates-results.json` byte-for-byte BEFORE any run; all 10 recent `gh run` rows
+  `success`. Stub + pending receipt ride this commit; close-out records the rest. TDD phase
+  PRE-RED at claim; no code touched.
+
 ### 2026-09-26 · [ad hoc] S781 records: close-out for the PED_GV audit triage (S780 handoff evaluated 8/10, receipt, Learning 794, next-session items)
 - **Deliverable:** the close-out records for S781, whose work is recorded in the entries below:
   the triage report (`737c2d17`), the `BACKLOG.md` rewrite (`3c9aa076`) and the owner-gated

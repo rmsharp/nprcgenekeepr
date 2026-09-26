@@ -70,6 +70,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 782 Did
+**Deliverable:** PED_GV F1 -- `removeUnknownAnimals()` on a pedigree without `recordStatus` (IN PROGRESS)
+**Started:** 2026-09-26
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (S781
+next-steps (A)). Orient measured: 0 undocumented on both frontiers (`f9e0152b` = HEAD); no pending
+receipt; 11 unpushed; ratchet citation matched before any run; CI green. Plan: strict TDD --
+Pre-RED scope decision (return-unchanged versus `stop()`) via `AskUserQuestion`, then RED tests,
+GREEN fix in `R/removeUnknownAnimals.R:22` (NOT in `getRecordStatusIndex()`), REFACTOR; each phase
+gate via `AskUserQuestion`. TDD phase PRE-RED at claim; no code touched.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 780 Handoff Evaluation (by Session 781)
 **Score: 8/10.** **What helped:** every Orient measurement held -- 0 undocumented on the
 `CHANGELOG.md` frontier (= HEAD `44a6c5e1`), 6 unpushed (its 5 plus the owner-requested

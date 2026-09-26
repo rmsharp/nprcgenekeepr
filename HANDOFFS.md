@@ -168,6 +168,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-24.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S782
+date: 2026-09-26
+status: pending
+active_task: PED_GV F1 -- removeUnknownAnimals() returns 0 rows (17 in) when the pedigree has no recordStatus column (R/removeUnknownAnimals.R:22; NEW-31/32 in docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md). Owner-picked at the Phase 0 priorities gate (S781 next-steps (A)). Strict TDD with AskUserQuestion gates; the owner picks return-unchanged versus stop() at the Pre-RED gate. TDD phase PRE-RED at claim.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S781
 date: 2026-09-26
 status: complete
