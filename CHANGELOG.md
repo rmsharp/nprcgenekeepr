@@ -50,6 +50,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S782 GREEN: PED_GV F1 fixed -- `removeUnknownAnimals()` returns a pedigree without a `recordStatus` column unchanged
+- **Fix:** `R/removeUnknownAnimals.R` -- a guard returns `ped` as-is when `"recordStatus"` is not in
+  `names(ped)` (was 17 rows in, 0 out, silently); the with-column line is untouched and
+  `getRecordStatusIndex()` was not changed. One roxygen `@return` sentence states the no-column
+  behavior; `devtools::document()` changed only `man/removeUnknownAnimals.Rd`.
+- **Verification (measured):** `test_removeUnknownAnimals.R` 13 expectations pass, 0 fail (RED had
+  2 failing); `test_getRecordStatusIndex.R` passes. **Full suite** (`load_all` + `NOT_CRAN`, no
+  file filter): 352 files, 2,682 tests, 1 failed, 0 errors, 6 warnings, 4.8 min. The 1 failure is
+  `test_pkgdown_reference_config.R` "articles: contents covers every real article", and its own
+  message names `suggested_NEWS_entry` -- the owner's UNTRACKED `vignettes/suggested_NEWS_entry.Rmd`,
+  which pkgdown lists as an article missing from `_pkgdown.yml`; it is not in a clean export, so
+  CI cannot see it, and I did not touch the file. All 6 warnings are in
+  `test_modGeneticValue_snapshotSource.R`, none in this change's files. **Lint:** 0 findings on
+  both touched files (after `load_all`). **`R CMD check --as-cran --no-manual`** on
+  `git archive $(git write-tree)` (HEAD plus these two staged files; 0 copies of the owner's
+  draft in it; tarball 3,565,400 B): 0 errors, 0 warnings, 1 NOTE ("Version contains large
+  components (2.0.0.9000)", from the development version; not re-measured on the parent commit);
+  examples OK, tests OK (267 s), exit status 0; env `_R_CHECK_CRAN_INCOMING_REMOTE_` and
+  `_R_CHECK_FORCE_SUGGESTS_` set to false.
+- **Disclosure:** my first two check runs were NOT clean evidence -- the first printed 0/0/0 with
+  exit status 1 because `--as-cran` aborted at "CRAN incoming feasibility" (a 404 fetching the
+  package index), and I only saw that by re-running with the output kept. **Runtime (3E):** no app
+  caller exists (`R/` never calls the function); the roxygen example ran under check.
+
 ### 2026-09-26 · [ad hoc] S782 RED: PED_GV F1 -- tests for `removeUnknownAnimals()` on a pedigree without `recordStatus`
 - Owner decisions at the Pre-RED gate (2026-09-26): a pedigree with no `recordStatus` column is
   returned unchanged (not `stop()`); NA / unrecognised `recordStatus` values are OUT of scope

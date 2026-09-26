@@ -4,7 +4,9 @@
 #' Remove placeholder animals added for unknown parents
 #'
 #' @inheritParams reportGV
-#' @return Pedigree with unknown animals removed
+#' @return Pedigree with unknown animals removed. A pedigree without a
+#' \code{recordStatus} column has no animals marked as added, so it is
+#' returned unchanged.
 #'
 #' @export
 #' @examples
@@ -19,5 +21,8 @@
 #' nrow(ped)
 #' nrow(ped2)
 removeUnknownAnimals <- function(ped) {
+  if (!("recordStatus" %in% names(ped))) {
+    return(ped)
+  }
   ped[getRecordStatusIndex(ped, status = "original"), ]
 }
