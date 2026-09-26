@@ -54,6 +54,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S784 push: `origin/master` `38baa151..4e2e6e06` (11 commits, owner-directed after close-out)
+- **Action (non-commit):** the owner asked "push the local commits" after the S784 close-out. Pre-push
+  check: fetched; branch `master`; 11 ahead, 0 behind (a fast-forward); the only uncommitted change was
+  the owner's 5-line `BACKLOG.md` header. Pushed with a plain `git push origin master`; `origin/master`
+  then equalled local `HEAD` (`4e2e6e06`). The 11 commits: S783 RED `bebb26f5`, GREEN `c0ef7bc6`, docs
+  `4125c436`, records `36300a61`; S784 claim `4aea6297`, RED `171c848e`, GREEN `f1a7d31a`, docs
+  `9c078193`, trims `a118c70d` and `7cbd32bd`, records `4e2e6e06`.
+- **CI (awaited, because `R/` and tests changed):** all four push workflows `completed success` on
+  `4e2e6e06` -- lint 4 m 46 s, pkgdown 6 m 19 s, test-coverage 11 m 35 s, R-CMD-check 22 m 48 s
+  (runs `36272617239`, `36272617200`, `36272617224`, `36272617228`; confirmed against the plain
+  unfiltered `gh run list`, since a `--commit`-filtered listing returned nothing).
+- **Disclosure:** my first wait script failed with an HTTP 404 (zsh did not word-split an unquoted
+  run-id list, a trap already in the standing set); it was a script bug, not a CI failure, and the
+  relaunched waits used one `gh` call per run. This entry rides a LOCAL commit, so `origin/master`
+  is one commit behind local until the next push (S783's precedent).
+
 ### 2026-09-26 · [ad hoc] S784 records: close-out for the NA phantom-row slice (S783 handoff evaluated 9/10, receipt, Learning 797, next-session items)
 - **Deliverable:** the close-out records for S784, whose work is recorded in the entries below and
   in the two tool-written trim entries: RED `171c848e`, GREEN `f1a7d31a`, docs `9c078193`, ledger
