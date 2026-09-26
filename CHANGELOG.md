@@ -50,6 +50,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S783 records: close-out for PED_GV F4 (S782 handoff evaluated 9/10, receipt, Learning 796, next-session items)
+- **Deliverable:** the close-out records for S783, whose work is recorded in the entries below:
+  push `b5166c8b..38baa151`, RED `bebb26f5`, GREEN `c0ef7bc6`, docs `4125c436` (claim `38baa151`).
+  Adds the S782 handoff evaluation (9/10: every Orient measurement and `BACKLOG.md` pin held; the
+  inherited F4 plan contradicted itself; one wrong pin), the S783 record and self-assessment
+  (8/10) in `SESSION_NOTES.md`, the completed `HANDOFFS.md` receipt, and Learning 796
+  (`PROJECT_LEARNINGS.md:2266`: a cycle guard on a repeat-keeping recursion tracks the route, not
+  a visited set; a mocked-binding mutation proves a guard; two zsh traps). **Ratchet (non-commit
+  measurement):** `quality_ratchet.py --run` at `4125c436` -- 1/1 pass, tarball 3,566,283 B (+896 B
+  vs S782 = noise), results `bc39c545844e`, manifest `aa983075d6a2`; the S782 citation (results
+  `76631f2eafcc`, head `00610aed`) matched the results file BEFORE the run. **Reduction:** nothing
+  was removed from a mandated-read file this session (no trim was due; the S782 handoff's estimate
+  was "within about two sessions"). **Not done, on purpose:** no second push (the four commits
+  after `38baa151` are local; the owner did not ask), no GitHub issue closed (F4 has none), the
+  owner-side working-tree residue untouched.
+
 ### 2026-09-26 · [ad hoc] S783 docs: PED_GV F4 -- roxygen + `man/getAncestors.Rd`, `NEWS.Rmd` "Fixed" entry, `BACKLOG.md`; REFACTOR reviewed, no change
 - **REFACTOR (owner chose the review pass over my recommendation to skip it):** re-read
   `R/getAncestors.R` and the six new tests; nothing worth changing (the worker is the original
