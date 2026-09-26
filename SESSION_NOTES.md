@@ -70,18 +70,112 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 781 Handoff Evaluation (by Session 782)
+**Score: 9/10.** **What helped:** every Orient measurement held -- 0 undocumented on both
+frontiers (`f9e0152b` = HEAD), 11 unpushed, `origin/master` = `b5166c8b`, the ratchet citation
+(results `b969c2dbef9b`, manifest `aa983075d6a2`, head `3c9aa076`) byte-identical to the results
+file before any run, and the working-tree residue exactly as described. The BACKLOG pins
+(`:8 :36 :71`) and `R/removeUnknownAnimals.R:22` all resolved at `f9e0152b`. Next-step (A) named the
+function, the trap (fix it there, NOT in `getRecordStatusIndex()`) and the owner's Pre-RED decision;
+I followed it as written. The header-less-blob method for `BACKLOG.md` worked verbatim. **Missing:**
+(1) the local full suite carries one failure while the owner's untracked
+`vignettes/suggested_NEWS_entry.Rmd` sits in the tree (S781 ran no suite, so it could not know);
+the file is not `.Rbuildignore`d, so it also pollutes a working-tree `R CMD check` -- diagnosing that
+cost about three calls. **Wrong:** one small figure -- gotcha (3) says this file was 23,863 B after
+its records; `git show f9e0152b:SESSION_NOTES.md | wc -c` is 24,039 B (0.7%, immaterial). Nothing
+else found. **ROI:** high.
+
 ### What Session 782 Did
-**Deliverable:** PED_GV F1 -- `removeUnknownAnimals()` on a pedigree without `recordStatus` (IN PROGRESS)
-**Started:** 2026-09-26
-**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (S781
-next-steps (A)). Orient measured: 0 undocumented on both frontiers (`f9e0152b` = HEAD); no pending
-receipt; 11 unpushed; ratchet citation matched before any run; CI green. Plan: strict TDD --
-Pre-RED scope decision (return-unchanged versus `stop()`) via `AskUserQuestion`, then RED tests,
-GREEN fix in `R/removeUnknownAnimals.R:22` (NOT in `getRecordStatusIndex()`), REFACTOR; each phase
-gate via `AskUserQuestion`. TDD phase PRE-RED at claim; no code touched.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** **PED_GV F1 -- DONE.** `removeUnknownAnimals()` now returns a pedigree with no
+`recordStatus` column unchanged (was 17 rows in, 0 out, silently). Owner-picked at the Phase 0
+priorities gate (S781 next-steps (A)); strict TDD with an `AskUserQuestion` at every gate.
+**Commits:** claim `a70e9dfe`; RED `3772dd70`; GREEN `3aae4b9c`; REFACTOR `e948f790`; docs (NEWS
+entry, BACKLOG) `00610aed`; this records commit (17 unpushed after it, all local).
+**Owner decisions:** the Pre-RED contract (return unchanged, not `stop()`); NA / unrecognised
+`recordStatus` OUT of scope (filed); at GREEN->REFACTOR the owner chose the review pass over my
+recommendation to skip it. **Result (measured):** RED 2 failing, 10 passing (the failures are the
+no-column case, `smallPed` 17->0 and `pedSix` 8->0); GREEN `test_removeUnknownAnimals.R` 13
+expectations, 0 failing; full suite (`load_all` + `NOT_CRAN`, no filter) 352 files, 2,682 tests,
+**1 failed**, 0 errors, 6 warnings (all `test_modGeneticValue_snapshotSource.R`); the 1 failure is
+`test_pkgdown_reference_config.R` "articles: contents covers every real article", whose message
+names the owner's untracked `suggested_NEWS_entry` draft (not in a clean export; not touched);
+lint 0 on both files; `R CMD check --as-cran --no-manual` on a `git archive $(git write-tree)`
+export: 0 errors, 0 warnings, 1 NOTE (dev-version "Version contains large components"; not
+re-measured on the parent), examples OK, tests OK, exit 0; ratchet **1/1 at `00610aed`**
+(3,565,387 B, +210 B vs S781 = noise; results `76631f2eafcc`, manifest `aa983075d6a2`; the S781
+citation matched BEFORE the run). Probe P2 found a second defect in the same function: a `NA`
+`recordStatus` gives an all-NA phantom row (17 in, 17 out, a real row lost); filed as its own
+DECISION NEEDED `BACKLOG.md` item. **Runtime (3E):** n/a -- no app caller (`R/` never calls the
+function); the roxygen example ran under check.
+**Disclosures:** (1) three `R CMD check` attempts preceded the one that counts, and none was
+evidence: the first printed 0/0/0 with exit status 1 because `--as-cran` aborted at "CRAN incoming
+feasibility" (a 404 fetching the package index), which I caught only because the status disagreed
+with the counts; the second, a re-run with the output kept, showed that abort; the third failed on
+a guessed argument name (`check_env`; the real one is `env`) before doing anything. Measured from
+the task files: 55 s, 23 s and 1 s of compute; the completing check took 6 min 20 s. I first
+wrote "about 40 minutes lost" and told the owner "about 20 minutes" for a check -- both were
+unmeasured guesses and wrong, corrected here; (2) REFACTOR's one change (a no-op `stri_c()` in a test title) did not re-run the
+full suite or check, said so in its ledger entry; (3) I added a `NEWS.Rmd` entry although the
+checklist mandates one only for new exports or Shiny features -- a judgment call, easy to drop; (4)
+only T1 was proven to fail; T2/T3 are guards proven by passing, with no mutation check; (5) "no
+NA status can arise in the app" rests on a grep of `R/` writers, not an app test; (6) the
+owner-side working-tree residue is untouched and the `BACKLOG.md` header stayed unstaged.
+**Checklists:** lint done; NEWS done; `_pkgdown.yml`, citation, tutorial, `a2interactive` N/A (no new
+export, statistic, tab or parameter); no GitHub issue exists for F1, so none closed; the PED_GV
+BACKLOG item stays open (F1 removed from it, F4/F2/F3 remain).
+
+**Self-assessment (Session 782): 8/10.** **Strengths:** claim first; Orient fully measured; the
+function and every reference read before the Pre-RED gate; probes found and scoped the NA defect
+instead of folding it in or hiding it; RED proven by a measured failure; every gate went through
+`AskUserQuestion`; the check re-run caught a false clean before it reached a ledger; a clean export
+kept the owner's draft out of the evidence; the owner's header preserved. **Weak:** (1) three bad
+check attempts (an offline `--as-cran` assumption, then an unchecked argument name), cheap in compute
+(about 1.3 min) but each a chance to record a false clean; and I stated two durations I had not
+measured; (2) I ran the suite in a tree I knew held untracked owner drafts and only then worked out why one
+test failed; (3) no mutation check on the guard tests; (4) the REFACTOR was marginal.
+**Learnings:** 795.
+
+**Next steps (specific):** (A) **F4 (READY, S):** `getAncestors()` cycle guard, `R/getAncestors.R:44`
+(function starts there; S781 pinned the body `:44-67`); keep the documented repeats
+(`test_getAncestors.R:28`); `BACKLOG.md` HEAD `:8`; strict TDD with `AskUserQuestion` gates and a
+Pre-RED question on the message wording. (B) **The NA phantom-row decision (DECISION NEEDED, S)**
+HEAD `:34` -- three shapes are written out there; the owner picks, then it is a small slice.
+(C) **F2 and F3 (DECISION NEEDED):** HEAD `:8`. (D) **`NEWS.Rmd` sweep (READY, M)** HEAD `:90` --
+read the owner's untracked 3.0.0 drafts first. (E) Docs staleness audit (READY, L) HEAD `:106`;
+`paths-ignore` (DECISION NEEDED, S) HEAD `:55`. (F) Owner decisions open: the working-tree residue
+-- and note `vignettes/suggested_NEWS_entry.Rmd` now has a measured cost (one red local test, and it
+would be built as a vignette by a working-tree check) -- the push (17 local commits), and closing
+the 11 recommended ids.
+
+**Key files:** `R/removeUnknownAnimals.R:23-28` (the fix), `tests/testthat/test_removeUnknownAnimals.R:30-57`
+(the three new tests), `R/getRecordStatusIndex.R:14-18` (untouched; two callers),
+`R/getDateErrorsAndConvertDatesInPed.R:39`; `BACKLOG.md` HEAD `:8 :34 :55 :90 :106`;
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:99` (F1-F4); `CHANGELOG.md:53` (the S782 entries);
+`HANDOFFS.md:32` (the receipt); `PROJECT_LEARNINGS.md` (Learning 795, last entry);
+`.quality-gates-results.json` (untracked; the citation source).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented on both frontiers -- measure; 17
+unpushed after this records commit (recount); `origin/master` = `b5166c8b`; the working tree is NOT
+clean (`BACKLOG.md` = the owner's 5-line header only, untracked `BACKLOG.log`, two
+`suggested_NEWS_entry` drafts, 5 render artifacts); stage by name; header-less blob: edit the
+working file, `tail -n +6 BACKLOG.md > blob`, `git hash-object -w blob`, `git update-index
+--cacheinfo 100644,<sha>,BACKLOG.md`, commit, then confirm `git diff BACKLOG.md` shows only the 5
+header lines. (2) A local unfiltered suite reads **1 failed** until the owner's draft leaves the
+tree (`test_pkgdown_reference_config.R`, "articles: contents covers every real article"); that is
+expected -- do not edit `_pkgdown.yml` for it. For a faithful build check use a clean export:
+`git archive $(git write-tree)` (index) or `HEAD` into the scratchpad, `pkgbuild::build(...,
+args = "--no-manual")`, then `rcmdcheck::rcmdcheck(tb, args = c("--no-manual", "--as-cran"),
+error_on = "never", env = c("_R_CHECK_CRAN_INCOMING_REMOTE_" = "false",
+"_R_CHECK_FORCE_SUGGESTS_" = "false"))` -- the argument is `env`, not `check_env`; run it in the
+background (6 min 20 s measured; the suite 4 min 50 s), and confirm `* DONE` / `Status:` in `res$stdout`
+and `res$status == 0` before believing 0/0/0 (Learning 795). (3) The NA defect: do not fix it inside
+`getRecordStatusIndex()` without the owner's pick -- it has two callers. (4) Ratchet 1/1 at
+`00610aed` (3,565,387 B, results `76631f2eafcc`, manifest `aa983075d6a2`); compare BEFORE any run,
+run AFTER committing. (5) Sizes: measure with `python3 context_budget.py --json` (the hook counts
+TOKENS, 2.27 B/token; the ceiling is 25,000 tokens); this file is one record heavier than S781's, so
+the next close-out should expect to trim (`--cut N --force`, owner-gated) within about two sessions
+-- an estimate. (6) The STANDING SET is in the S781 receipt's gotcha (6) and is carried in this
+session's receipt (condensed) -- the S781 receipt will move to the archive at the next `HANDOFFS.md` pass.
 
 ### Session 780 Handoff Evaluation (by Session 781)
 **Score: 8/10.** **What helped:** every Orient measurement held -- 0 undocumented on the

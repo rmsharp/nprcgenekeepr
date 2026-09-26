@@ -50,6 +50,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S782 records: close-out for PED_GV F1 (S781 handoff evaluated 9/10, receipt, Learning 795, next-session items)
+- **Deliverable:** the close-out records for S782, whose work is recorded in the entries below:
+  RED `3772dd70`, GREEN `3aae4b9c`, REFACTOR `e948f790`, docs `00610aed` (claim `a70e9dfe`). Adds
+  the `HANDOFFS.md` receipt, the `SESSION_NOTES.md` record with the S781 handoff evaluation, and
+  Learning 795 (an `rcmdcheck` 0/0/0 from an aborted run is not a clean check; measure a duration
+  before stating it). **Ratchet:** 1/1 at `00610aed`, 3,565,387 B (+210 B vs S781 = noise),
+  results `76631f2eafcc`, manifest `aa983075d6a2`; the S781 citation matched BEFORE the run.
+- **Correction to the GREEN entry's disclosure** (an entry once committed is never edited): it says
+  "my first two check runs were NOT clean evidence". Measured from the task files, three attempts
+  preceded the completing one -- the false 0/0/0, a diagnostic re-run that showed the abort, and an
+  argument-name failure (55 s, 23 s and 1 s of compute); the completing `R CMD check` took 6 min
+  20 s and the full suite 4 min 50 s. The "about 40 minutes lost" and "about 20 minutes" I first
+  wrote were unmeasured and are corrected in the receipt and `SESSION_NOTES.md`.
+- **Left for later:** the push (17 local commits after this one) is the owner's call; F4, F2, F3
+  and the NA-status decision stay open in `BACKLOG.md`; no GitHub issue exists for F1, so none
+  closed.
+
 ### 2026-09-26 · [ad hoc] S782 docs: `NEWS.Rmd` "Fixed:" entry for F1; `BACKLOG.md` -- F1 removed from the PED_GV item, NA phantom-row defect filed
 - `NEWS.Rmd` (General Fixes, development version): one plain-language "Fixed:" entry -- 
   `removeUnknownAnimals()` no longer returns an empty pedigree when the pedigree has no record of
