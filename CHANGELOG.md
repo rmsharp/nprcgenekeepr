@@ -50,6 +50,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S780 records: `HANDOFFS.md` + `CHANGELOG.md` archive pass DONE (S779 handoff evaluated 9/10, receipt, next-session items)
+- **Deliverable:** the ledger archive pass claimed 2026-09-24 (entry below, *(in progress)*),
+  recorded by the two tool-written trim entries above it and the commits `b8ea95fa` (CHANGELOG)
+  and `ff2f0f7f` (HANDOFFS). This entry adds what the tool does not know: **the owner gate**
+  (one two-question `AskUserQuestion`: `CHANGELOG.md --cut 16 --force` and `HANDOFFS.md`
+  default keep-3 `--force`, each ratified with the dry-run numbers and both SRF readings;
+  the calendar-seam `--cut 2026-09-23` and "hold" options were declined) and **the numbers**:
+  `HANDOFFS.md` 104,171 -> 26,031 B, `CHANGELOG.md` 97,745 -> 32,777 B with both trims' entries
+  (143,108 B out of the live ledgers), the verify scripts run pre- and post-commit, none of the
+  three ledgers firing `--check --budget-bytes 65536` afterward.
+- **Verification:** ratchet 1/1 at `ff2f0f7f` (3,565,131 B; results `bd73c59e2e67`, manifest
+  `aa983075d6a2`). No suite or `devtools::check()` run: no package code changed and every changed
+  file is build-ignored. Nothing pushed; 5 local commits. CI state refreshed on return: all four
+  workflows `success` on `b5166c8b`; nightly `shinytest2` `success` 2026-09-25 and 2026-09-26.
+- **Also recorded:** the context-budget hook refused the first records commit
+  (`SESSION_NOTES.md` 25,568 tokens vs the 25,000 ceiling); my removal of that file's oldest
+  group was denied by the harness and not retried by another route, so the records were
+  condensed instead (no committed content removed). Owner-side working-tree changes found on
+  return (`BACKLOG.md` YAML front matter; untracked `BACKLOG.log` and two `suggested_NEWS_entry`
+  drafts) were left untouched and unstaged.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-24 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-24.md` (11 record(s), 104,171 B → 26,031 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
