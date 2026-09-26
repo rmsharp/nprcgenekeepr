@@ -38,9 +38,7 @@ test_that(stri_c(
   expect_identical(removeUnknownAnimals(pedSix), pedSix)
 })
 
-test_that(stri_c(
-  "removeUnknownAnimals keeps the columns when every animal is \"added\""
-), {
+test_that("removeUnknownAnimals keeps columns when all animals are \"added\"", {
   allAddedPed <- newPed
   allAddedPed$recordStatus <- "added"
   noneLeft <- removeUnknownAnimals(allAddedPed)

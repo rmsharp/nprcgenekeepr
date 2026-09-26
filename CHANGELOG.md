@@ -50,6 +50,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S782 REFACTOR: PED_GV F1 -- one no-op `stri_c()` removed from a new test title
+- Owner-gated (chose the review pass over skipping). Review of `R/removeUnknownAnimals.R` (3
+  changed lines) found nothing to restructure; folding the guard into `getRecordStatusIndex()` or a
+  shared helper would cross function boundaries (plan-mode work, out of scope). The one change: the
+  all-`added` test title in `tests/testthat/test_removeUnknownAnimals.R` wrapped a single string in
+  `stri_c()`, which does nothing; it is now a plain, shorter title. **No behavior change; measured:**
+  the file still shows 13 expectations passing, 0 failing, and lint finds 0 on it. **Not re-run:**
+  the full suite and `R CMD check` -- only a test title in one file changed, and the GREEN entry
+  below holds those results for the same code.
+
 ### 2026-09-26 · [ad hoc] S782 GREEN: PED_GV F1 fixed -- `removeUnknownAnimals()` returns a pedigree without a `recordStatus` column unchanged
 - **Fix:** `R/removeUnknownAnimals.R` -- a guard returns `ped` as-is when `"recordStatus"` is not in
   `names(ped)` (was 17 rows in, 0 out, silently); the with-column line is untouched and
