@@ -50,6 +50,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S781 records: close-out for the PED_GV audit triage (S780 handoff evaluated 8/10, receipt, Learning 794, next-session items)
+- **Deliverable:** the close-out records for S781, whose work is recorded in the entries below:
+  the triage report (`737c2d17`), the `BACKLOG.md` rewrite (`3c9aa076`) and the owner-gated
+  `SESSION_NOTES.md` archive (`ad6e5e89`, tool-written entry). Adds the `HANDOFFS.md` receipt, the
+  `SESSION_NOTES.md` record with the S780 handoff evaluation, and Learning 794 (an id grep of the
+  ledger over-counts as well as under-counts).
+- **Ratchet:** 1/1 at `3c9aa076` (3,565,177 B, +46 B vs S780 = noise on a docs-only diff; results
+  `b969c2dbef9b`, manifest `aa983075d6a2`); the S780 citation matched the results file BEFORE the
+  run. **Not run:** the suite and `devtools::check()` -- no code changed and every changed file is
+  build-ignored with no reader in `tests/` or `.github/`.
+- **Not done, owner's call:** the push (11 local commits after this one) and the working-tree
+  residue (the `BACKLOG.md` YAML header, `BACKLOG.log`, the two `suggested_NEWS_entry` drafts).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-26 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-25.md` (8 record(s), 55,101 B → 17,581 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

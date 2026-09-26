@@ -70,18 +70,91 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 780 Handoff Evaluation (by Session 781)
+**Score: 8/10.** **What helped:** every Orient measurement held -- 0 undocumented on the
+`CHANGELOG.md` frontier (= HEAD `44a6c5e1`), 6 unpushed (its 5 plus the owner-requested
+`44a6c5e1`), `origin/master` = `b5166c8b`, the ratchet citation (results `bd73c59e2e67`, manifest
+`aa983075d6a2`, head `ff2f0f7f`) byte-identical to the results file before any run, and the
+working-tree residue exactly as described. Its (E) warning that this file would hit the token
+ceiling was right, and the tool route it named (`--cut N --force`, S772 precedent) worked as
+written; the "pick N so the seam is a session boundary" rule saved a dry run. **Missing:**
+headroom stated in TOKENS (the hook's unit), not bytes. **Wrong:** (1) "well under the
+25,000-token hook ceiling" -- measured 24,273 tokens (97%); (2) gotcha (5)'s "NEW-59's
+`rep(NA, 6)` was not found in `makeGeneticSummaryTable.R`" -- false: `R/makeGeneticSummaryTable.R:44,52`
+has `rep(NA, 6L)` and the search missed the `L`; (3) the 41-id premise (inherited from S779's
+BACKLOG item) was off by two and one lead (NEW-58) was by design -- S780 labelled leads as
+leads, so it cost little; (4) the `BACKLOG.md` pins `:86 :108 :128` went stale after the
+owner-requested items commit `44a6c5e1` (not S780's error). **ROI:** high.
+
 ### What Session 781 Did
-**Deliverable:** PED_GV audit triage table (IN PROGRESS)
-**Started:** 2026-09-26
-**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (S780
-next-steps (A)). Orient measured: 0 undocumented on the `CHANGELOG.md` frontier (= HEAD
-`44a6c5e1`); 1 past the `HANDOFFS.md` frontier (`44a6c5e1`, an owner-directed non-session, no
-receipt owed); 6 unpushed; ratchet citation matched before any run; CI green. Plan: a triage
-table under `docs/audits/`, one row per ledger-absent id (41), judged against today's code and
-searching `CHANGELOG.md` plus `docs/archive/CHANGELOG-*.md`; no code changes, TDD phase PRE-RED.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** **PED_GV audit triage -- DONE; nothing fixed, no code changed.** Owner-picked at
+the Phase 0 priorities gate (S780 next-steps (A)); TDD phase PRE-RED throughout. **Commits:** claim
+`40b9be61`; report `737c2d17`; `BACKLOG.md` rewrite `3c9aa076`; this file's archive `ad6e5e89`;
+this records commit (11 unpushed after it, all local). **Result (measured):**
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` -- 43 ids (BACKLOG's 41 plus NEW-29 and NEW-47),
+35 PRESENT, 2 FIXED (PED-8 `ea5d28fa`, PED-9 `14c8e84d`), 4 MOOT, 2 REFUTED (NEW-58 by design,
+NEW-60 the audit's own refuted candidate). Four correctness hazards, each a later TDD slice: **F1**
+`removeUnknownAnimals()` returns 0 rows (17 in) when `recordStatus` is absent; **F2** the
+`U`-prefix scheme collides with or strips real ids; **F3** an excluded dam is re-admitted by the
+fallback; **F4** `getAncestors()` recurses forever on a cycle. **Boundary finding:** of the 22
+"recorded" ids, 19 have a real record and 3 do not (NEW-47/49 are NEWS labels reused in four
+entries; NEW-29 is an "out of scope" line); 0 of the 43 ids appear in any commit message.
+**Verification:** 9 probes; 122 cited lines extracted and checked (2 roxygen cites corrected);
+the tally counted mechanically; ratchet **1/1 at `3c9aa076`** (3,565,177 B, +46 B vs S780 =
+noise; results `b969c2dbef9b`, manifest `aa983075d6a2`; the S780 citation matched BEFORE the run).
+**Not run:** suite and `devtools::check()` -- no code changed, every changed file is build-ignored
+with no reader. **Runtime (3E):** n/a. **Owner gates:** the Phase 0 pick; the trim gate ("Archive 8
+of 11 records", overriding `SRF_RED`; verify script run before and after the commit).
+**Disclosures:** (1) I widened scope from 41 to 43 ids on my own boundary check and said so in the
+report; (2) my first boundary listing capped hits at three headings per id, which hid NEW-45's
+real record until I re-ran it uncapped, and my first `git log --grep` used basic regex and
+silently returned nothing until a control caught it; (3) one Edit call was malformed and failed
+safely; (4) no independent second reader checked the "present" rows I settled by reading; (5)
+some interim messages lacked the TDD-phase declaration; (6) the owner has not answered the
+working-tree question (the YAML header, `BACKLOG.log`), so I left it untouched and staged a
+header-less `BACKLOG.md` blob (the working-tree diff is the header only); (7) F2's real impact
+depends on the centers' id schemes, which I cannot know. **Checklists:** lint, NEWS,
+`_pkgdown.yml`, citation, tutorial, `a2interactive` N/A (no `.R` or user-facing change); the
+BACKLOG PED_GV item stays open (rewritten, not removed); no issue closed.
+
+**Self-assessment (Session 781): 8/10.** **Strengths:** claim first; Orient fully measured; scope
+held to the triage table; every id judged against source, ten rows settled by a probe; the boundary
+check exposed the off-by-two list and the id-space collisions and the scope was widened openly;
+four audit claims that misread a contract were caught by reading the contract; citations checked
+mechanically; the archive gated on the owner with exact numbers and verified twice; the owner's
+uncommitted header preserved. **Weak:** (1) interim phase declarations; (2) a capped listing and
+a basic-regex search each hid evidence until re-run with a control; (3) a malformed Edit; (4) no
+second reader for the read-only rows. **Learnings:** 794.
+
+**Next steps (specific):** (A) **F1 (READY, S):** `removeUnknownAnimals()` on a pedigree without
+`recordStatus` -- `BACKLOG.md` HEAD line 8 has the plan; strict TDD with `AskUserQuestion` gates;
+fix it in `R/removeUnknownAnimals.R:22`, NOT in `getRecordStatusIndex()` (its `"added"` use at
+`getDateErrorsAndConvertDatesInPed.R:39` is correct); the owner picks return-unchanged versus
+`stop()` at the Pre-RED gate. (B) **F4 (READY, S):** `getAncestors()` cycle guard,
+`R/getAncestors.R:44-67`; keep the repeats (`test_getAncestors.R:28`). (C) **F2 and F3 (DECISION
+NEEDED):** the `U`-prefix scheme and the excluded-dam fallback `R/getPotentialParents.R:196-199`.
+(D) **`NEWS.Rmd` sweep (READY, M)** HEAD `BACKLOG.md:71` -- read the owner's untracked 3.0.0 drafts
+first. (E) Docs staleness audit (READY, L); `paths-ignore` (DECISION NEEDED, S, `:36`). (F) Owner
+decisions open: the working-tree residue, the push, closing the 11 recommended ids.
+
+**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md:51` (table), `:99` (F1-F4), `:129`
+(recommendations), `:145` (ledger boundary), `:190` (probe transcript); `BACKLOG.md` HEAD `:8 :36
+:71`; `R/removeUnknownAnimals.R:22`, `R/getPotentialParents.R:190-199`, `R/getAncestors.R:44-67`,
+`R/addUIds.R:41-58`, `R/removeAutoGenIds.R:22-27`; `docs/archive/SESSION_NOTES-through-2026-09-25.md`
+(+ `.verify.sh`); `CHANGELOG.md:53`; `HANDOFFS.md:171` (the receipt); `PROJECT_LEARNINGS.md:2264`
+(Learning 794).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented on both frontiers -- measure; 11
+unpushed after this records commit (recount); `origin/master` = `b5166c8b`; the working tree is
+NOT clean (`BACKLOG.md` = the owner's 5-line header only, plus untracked `BACKLOG.log`, two
+`suggested_NEWS_entry` drafts and the 5 render artifacts); stage by name; the header-less-blob
+method is in the receipt gotcha (1). (2) The triage table is the plan, not the old 41-id list;
+NEW-58 is by design and NEW-41's repeats are test-pinned -- do not re-litigate. (3) The hook
+counts TOKENS (2.27 B/token): this file is now 23,863 B = 10,512 of 25,000 tokens, room for
+about three more records (an estimate at 8-9 KB each). `HANDOFFS.md` (43,128 B) and `CHANGELOG.md`
+(40,887 B) are under 65,536 B; the next archive pass is about three sessions out (an estimate). (4) Ratchet 1/1 at `3c9aa076` (3,565,177 B, results `b969c2dbef9b`, manifest
+`aa983075d6a2`); compare BEFORE any run, run AFTER committing. (5) The STANDING SET lives in the
+S781 `HANDOFFS.md` receipt, gotcha (6) -- read it there.
 
 ### Session 779 Handoff Evaluation (by Session 780)
 **Score: 9/10.** **What helped:** every Orient measurement held exactly -- 0 undocumented on both
