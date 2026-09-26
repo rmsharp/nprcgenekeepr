@@ -5,32 +5,33 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Resolve the PED_GV audit's remaining findings -- triage first (owner-directed
-      2026-09-24 for the next session; READY, Effort L; strict TDD for every fix)** --
-      `PED_GV_AUDIT_2026-05-30.md` (repo root) holds 61 confirmed findings in ~24 deduped roots
-      (`:218`) and 63 distinct `PED-`/`NEW-` ids in all; the ledger (`CHANGELOG.md` plus
-      `docs/archive/CHANGELOG-*.md`) records only 22 of those ids, but **ledger-absent does not
-      mean unresolved** (NEW-53 was fixed in `5f40b7af` and had no entry until 2026-09-24). So
-      the FIRST deliverable is a triage table, one row per ledger-absent id (41): still present
-      in today's code / already fixed (cite the commit) / moot / refuted, judged against the
-      current source, never the 2026-05-30 line numbers. Start with the correctness and
-      robustness block (audit `:64-141`), whose six ledger-absent ids are **NEW-31/NEW-32**
-      (`getRecordStatusIndex()` returns `integer(0)` when `recordStatus` is absent, so
-      `removeUnknownAnimals()` silently yields a 0-row pedigree), **NEW-38** (the "U"-prefix id
-      scheme in `addUIds()`/`removeAutoGenIds()` can collide with or wrongly strip real `U...`
-      ids), **NEW-41** (`getAncestors()` recurses with no cycle guard or dedup; no test),
-      **NEW-58** (`getAnimalsWithHighKinship()`'s `tapply` collapse drops animals with no
-      qualifying partner; no test) and **NEW-59** (`makeGeneticSummaryTable()`'s unnamed
-      `rep(NA, 6)` fallback). A quick look on 2026-09-24 (a lead, NOT a triage) found the
-      structures for NEW-31/32, NEW-41 and NEW-58 still visible (`R/getRecordStatusIndex.R:14`,
-      `R/getAncestors.R:53`/`:60`, `R/getAnimalsWithHighKinship.R:57`) and no `rep(NA, 6)` in
-      `R/makeGeneticSummaryTable.R`. The other 35 ids are the lower-severity duplication /
-      extensibility / complexity findings (tables at `:147` and `:178`). **Ledger-absent ids:**
-      NEW-14 18 19 21 24 26 27 28 31 32 33 35 36 38 39 41 42 43 44 50 51 54 55 56 57 58 59 60 61
-      62 63; PED-2 3 4 5 6 7 8 9 10 11. **Owner decisions after triage:** which "overhaul"
-      roots are worth doing at all, and whether a fixed-but-unrecorded id gets a ledger backfill
-      entry (the NEW-53 precedent says yes). The audit's own refuted findings are at `:251`, its
-      test gaps at `:263` and its sequencing at `:298`.
+- [ ] **PED_GV audit follow-through -- triage DONE (S781, 2026-09-26); fix the four correctness
+      hazards, then the owner decides the rest (READY for F1 and F4, DECISION NEEDED for F2 and
+      F3, Effort S-M per slice; strict TDD for every fix)** --
+      `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids against today's code (35
+      present, 2 fixed, 4 moot, 2 refuted); its table is the plan, so read it first. **Slices, in
+      this order, each with the phase gates via `AskUserQuestion`:** **F1 (READY, S)**
+      `removeUnknownAnimals()` returns 0 rows when `recordStatus` is absent (NEW-31/32,
+      `R/removeUnknownAnimals.R:22`; probe: `smallPed` 17 rows in, 0 out) -- fix it in that
+      function, not in `getRecordStatusIndex()`, whose `"added"` use is correct; the owner picks
+      return-unchanged versus `stop()`. **F2 (DECISION NEEDED, M)** the `U`-prefix scheme
+      (NEW-38): `addUIds()` can mint an id equal to a real one and `removeAutoGenIds()` strips
+      real ids that start with the prefix; the owner decides how strict detection should be and
+      whether any center's real ids start with `U`. **F3 (DECISION NEEDED, S)** an excluded dam is
+      re-admitted by the fallback at `R/getPotentialParents.R:196-199` (NEW-35, with NEW-55): fall
+      back to the filtered set, return none, or label the tier. **F4 (READY, S)** `getAncestors()`
+      recurses until R aborts on a cycle (NEW-41, `R/getAncestors.R:44`); keep the documented
+      repeats and stop with a clear message. **Also open:** (a) a trivial cleanup bundle (READY,
+      S): PED-11, NEW-56, NEW-63, the `createPedOne`/`createPedSix` roxygen (PED-10/NEW-43), and
+      NEW-14 with its empty-list edge; (b) owner decisions on the overhaul roots, none urgent --
+      sex-code adoption (PED-2/NEW-29; 28 bare-literal comparison lines in 10 files remain), the
+      error/return contract (PED-5/6, NEW-28/36), splitting `getPotentialParents` (PED-4,
+      NEW-54), the walk helpers (PED-3, NEW-42; all exported, so an API change), the sim driver
+      (NEW-50/51), constants and HTML builders (NEW-18/19/21/26/57) and the founder definition
+      (NEW-61); (c) NEW-24 is already open issue #123. **Recommend closing 11 ids** (fixed, moot or
+      refuted; the report lists them) once the owner agrees. **Trap:** an id grep of the ledger
+      both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
+      report's table, not the old 41-id list.
 
 - [ ] **(Optional, owner decision) Stop the four push workflows from running on pushes that
       change only build-ignored files** (raised 2026-09-24; DECISION NEEDED, Effort S) -- lint,

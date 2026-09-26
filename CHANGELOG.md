@@ -50,6 +50,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] `BACKLOG.md`: rewrote the PED_GV item from "triage first" to the post-triage plan
+- **S781.** The item's first deliverable (the triage table) is done, so its "triage first" text
+  became the follow-through plan: four correctness-hazard slices in order (F1 and F4 ready, F2 and
+  F3 need an owner decision), a trivial-cleanup bundle, the owner-decision list for the overhaul
+  roots, NEW-24 pointed at issue #123, 11 ids recommended for closing, and a warning that an id
+  grep of the ledger both under- and over-counts. The item stays open: no fix has been made.
+- The owner's own uncommitted `BACKLOG.md` change (the 5-line YAML header) was left out of the
+  commit (staged from a header-less blob) and stays in the working tree. Docs-only; build-ignored.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-26 · [ad hoc] PED_GV audit triage report: 43 ids judged against today's code
 - **Deliverable (S781):** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`. One row per id, judged
   against today's source, with 9 R probes and the git history since the audit. **Result:** 35
