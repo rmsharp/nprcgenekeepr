@@ -50,6 +50,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-25.md` (8 record(s), 55,101 B → 17,581 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **8** record(s) (2026-09-24 → 2026-09-25) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-25.md`](docs/archive/SESSION_NOTES-through-2026-09-25.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-25.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-25.md.verify.sh)
+rather than trusting a digest printed here. Live file 55,101 B → 17,581 B (−68.1%).
+
 ### 2026-09-26 · [ad hoc] `BACKLOG.md`: rewrote the PED_GV item from "triage first" to the post-triage plan
 - **S781.** The item's first deliverable (the triage table) is done, so its "triage first" text
   became the follow-through plan: four correctness-hazard slices in order (F1 and F4 ready, F2 and
