@@ -50,6 +50,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S784 RED: tests for `removeUnknownAnimals()` keeping NA and unrecognised statuses
+- Owner decisions at the Pre-RED gate (2026-09-26): fix **shape (2)** -- `removeUnknownAnimals()`
+  removes exactly the rows marked `"added"` and keeps every other row (NA, blank, unrecognised),
+  matching its title and the S782 F1 contract; `getRecordStatusIndex()` is NOT touched. A `"weird"`
+  status is now kept (17 -> 17; it was dropped, 17 -> 16), a deliberate small behavior change to
+  disclose in `NEWS.Rmd`. **Probe before the gate** (scratch script, hand-built `smallPed` with
+  `recordStatus` NA at row 5): the same `== status` pattern misbehaves at three more inline sites,
+  all OUT of scope and to be filed in `BACKLOG.md` at close-out -- `convertDate()`
+  (`R/convertDate.R:95-96`) returns 18 rows from 17 with 2 all-NA rows; `removeDuplicates(reportErrors
+  = TRUE)` (`R/removeDuplicates.R:39-40`) names an innocent id (`"F"`) as a duplicate;
+  `getDateErrorsAndConvertDatesInPed()` (`:39-42`) would stop on `sb[-c(2, NA), ]` ("only 0's may be
+  mixed with negative subscripts"; `correctParentSex()` `:90,92` is the same pattern, read not
+  probed). Reach, read from `R/qcStudbook.R:229` and `R/addParents.R:43-44`: `qcStudbook()` calls
+  `addParents()`, which overwrites `recordStatus` unconditionally, so neither the app nor the
+  `qcStudbook()` path can carry an NA status; only a script that hand-builds the column and calls
+  these exported functions directly can. `removeUnknownAnimals()` has no caller in `R/`.
+  Tests only (`tests/testthat/test_removeUnknownAnimals.R`, +6 `test_that` blocks; the existing 5
+  untouched; no `R/` change): a status column with no `"added"` rows returns the pedigree
+  identical (guard for the `-integer(0)` trap), one NA status kept with no phantom row, all-NA
+  statuses kept, an unrecognised status kept, the mixed case (rows 1:3 `"added"` removed, NA and
+  `"weird"` kept, order preserved), and a factor `recordStatus` with an NA. **Measured RED:** the
+  file reports 11 tests: 5 failing (11 failed expectations of 25) and 6 passing (14 expectations;
+  the 5 existing plus the guard), 0 errors, 0 skipped. Each failure is for the right reason,
+  read from its message: a phantom NA id (`anyNA(result$id)`), animal 5 missing, `"weird"` dropped
+  (16 rows vs 17), the mixed case 13 rows vs 14. A probe first confirmed `identical()` holds for a
+  row-subset that keeps every row (row names survive), so the whole-pedigree assertions cannot
+  fail on row-name representation. The guard passes today by design (proven only by passing).
+  lintr 0 on the file. Commit left RED on purpose; GREEN follows behind an owner gate.
+
 ### 2026-09-26 · [ad hoc] S784 claim: the NA phantom-row defect in `removeUnknownAnimals()` *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (item 1: a `recordStatus` value of `NA` gives
   `removeUnknownAnimals()` an all-NA phantom row; DECISION NEEDED, Effort S; found S782). The owner
