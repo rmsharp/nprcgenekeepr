@@ -50,6 +50,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S782 docs: `NEWS.Rmd` "Fixed:" entry for F1; `BACKLOG.md` -- F1 removed from the PED_GV item, NA phantom-row defect filed
+- `NEWS.Rmd` (General Fixes, development version): one plain-language "Fixed:" entry -- 
+  `removeUnknownAnimals()` no longer returns an empty pedigree when the pedigree has no record of
+  which animals were added. Spell check found nothing new on the added lines; the two tests that
+  read `NEWS.Rmd` pass. `NEWS.md` not re-rendered (it lags by design until release).
+- `BACKLOG.md`: the PED_GV item now carries F4, F2, F3 (F1 is done; the fix's record is the GREEN
+  entry above); a new DECISION NEEDED item files the `recordStatus`-`NA` phantom-row defect the owner
+  ruled out of F1's scope, with the S782 probe numbers, the helper's two callers and three fix
+  shapes. Staged header-less (`tail -n +6` blob via `git update-index`), so the owner's uncommitted
+  5-line YAML header stays in the working tree only.
+
 ### 2026-09-26 · [ad hoc] S782 REFACTOR: PED_GV F1 -- one no-op `stri_c()` removed from a new test title
 - Owner-gated (chose the review pass over skipping). Review of `R/removeUnknownAnimals.R` (3
   changed lines) found nothing to restructure; folding the guard into `getRecordStatusIndex()` or a

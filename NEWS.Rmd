@@ -509,6 +509,10 @@ knitr::opts_chunk$set(echo = TRUE)
   depending on the server's own regional settings, purely from how ids
   happened to sort -- not from any real difference in the data. All three
   now sort in a fixed, consistent order everywhere.
+- Fixed: `removeUnknownAnimals()`, which removes the animals that were added
+  as stand-ins for unknown parents, no longer returns an empty pedigree when
+  the pedigree has no record of which animals were added. It now returns the
+  pedigree as it was, since none of its animals were added.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

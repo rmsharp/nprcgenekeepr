@@ -5,23 +5,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **PED_GV audit follow-through -- triage DONE (S781, 2026-09-26); fix the four correctness
-      hazards, then the owner decides the rest (READY for F1 and F4, DECISION NEEDED for F2 and
-      F3, Effort S-M per slice; strict TDD for every fix)** --
+- [ ] **PED_GV audit follow-through -- triage DONE (S781, 2026-09-26), F1 shipped (S782); fix
+      the other three correctness hazards, then the owner decides the rest (READY for F4,
+      DECISION NEEDED for F2 and F3, Effort S-M per slice; strict TDD for every fix)** --
       `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids against today's code (35
-      present, 2 fixed, 4 moot, 2 refuted); its table is the plan, so read it first. **Slices, in
-      this order, each with the phase gates via `AskUserQuestion`:** **F1 (READY, S)**
-      `removeUnknownAnimals()` returns 0 rows when `recordStatus` is absent (NEW-31/32,
-      `R/removeUnknownAnimals.R:22`; probe: `smallPed` 17 rows in, 0 out) -- fix it in that
-      function, not in `getRecordStatusIndex()`, whose `"added"` use is correct; the owner picks
-      return-unchanged versus `stop()`. **F2 (DECISION NEEDED, M)** the `U`-prefix scheme
-      (NEW-38): `addUIds()` can mint an id equal to a real one and `removeAutoGenIds()` strips
-      real ids that start with the prefix; the owner decides how strict detection should be and
-      whether any center's real ids start with `U`. **F3 (DECISION NEEDED, S)** an excluded dam is
-      re-admitted by the fallback at `R/getPotentialParents.R:196-199` (NEW-35, with NEW-55): fall
-      back to the filtered set, return none, or label the tier. **F4 (READY, S)** `getAncestors()`
-      recurses until R aborts on a cycle (NEW-41, `R/getAncestors.R:44`); keep the documented
-      repeats and stop with a clear message. **Also open:** (a) a trivial cleanup bundle (READY,
+      present, 2 fixed, 4 moot, 2 refuted); its table is the plan, so read it first (its F1 is
+      done: `removeUnknownAnimals()` now returns a pedigree with no `recordStatus` column
+      unchanged). **Slices, in this order, each with the phase gates via `AskUserQuestion`:**
+      **F4 (READY, S)** `getAncestors()` recurses until R aborts on a cycle (NEW-41,
+      `R/getAncestors.R:44`); keep the documented repeats and stop with a clear message.
+      **F2 (DECISION NEEDED, M)** the `U`-prefix scheme (NEW-38): `addUIds()` can mint an id
+      equal to a real one and `removeAutoGenIds()` strips real ids that start with the prefix;
+      the owner decides how strict detection should be and whether any center's real ids start
+      with `U`. **F3 (DECISION NEEDED, S)** an excluded dam is re-admitted by the fallback at
+      `R/getPotentialParents.R:196-199` (NEW-35, with NEW-55): fall back to the filtered set,
+      return none, or label the tier. **Also open:** (a) a trivial cleanup bundle (READY,
       S): PED-11, NEW-56, NEW-63, the `createPedOne`/`createPedSix` roxygen (PED-10/NEW-43), and
       NEW-14 with its empty-list edge; (b) owner decisions on the overhaul roots, none urgent --
       sex-code adoption (PED-2/NEW-29; 28 bare-literal comparison lines in 10 files remain), the
@@ -32,6 +30,27 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       refuted; the report lists them) once the owner agrees. **Trap:** an id grep of the ledger
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.
+
+- [ ] **A `recordStatus` value of `NA` gives `removeUnknownAnimals()` an all-NA phantom row
+      (found S782, 2026-09-26, DECISION NEEDED, Effort S)** -- probe (S782, `smallPed` with a
+      `recordStatus` column, one value set to `NA`): 17 rows in, 17 out, but one output row is
+      all `NA` and a real row is lost; one unrecognised string (`"weird"`) drops its row (17 ->
+      16). Cause: `getRecordStatusIndex()` builds its index as `seq_along(x)[x == status]`
+      (`R/getRecordStatusIndex.R:15`), and an `NA` comparison becomes an `NA` index. The helper
+      has two callers: `removeUnknownAnimals()` (`"original"`) and
+      `R/getDateErrorsAndConvertDatesInPed.R:39` (`"added"`); the same `== status` pattern
+      appears at `R/convertDate.R:95-96`, `R/removeDuplicates.R:39-40` and
+      `R/correctParentSex.R:90,92` (the row-level effect at those sites was NOT probed). Reach:
+      `addParents()` (`R/addParents.R:43-59`) is the only writer of the column in `R/` and
+      replaces any existing column with `"original"`/`"added"`, so only a caller who builds
+      `recordStatus` by hand can hit it (from a grep of `R/`; not tested through the app). Left
+      out of the F1 slice by the owner's decision at its Pre-RED gate. **Decision for the owner,
+      three shapes:** (1) make `removeUnknownAnimals()` NA-safe but keep "keep only `original`
+      rows" (NA and unrecognised rows dropped; 2-3 tests, one file); (2) redefine it as "remove
+      only `added` rows" (matches its roxygen title; unrecognised statuses are then KEPT, a small
+      behavior change); (3) make the helper NA-safe with `which()` so every caller is covered
+      (touches a shared helper; re-check the `"added"` use at
+      `getDateErrorsAndConvertDatesInPed.R:39` and probe the other sites first).
 
 - [ ] **(Optional, owner decision) Stop the four push workflows from running on pushes that
       change only build-ignored files** (raised 2026-09-24; DECISION NEEDED, Effort S) -- lint,
