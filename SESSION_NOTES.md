@@ -70,6 +70,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 783 Did
+**Deliverable:** PED_GV F4 -- `getAncestors()` cycle guard (IN PROGRESS)
+**Started:** 2026-09-26
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate, with the
+owner-directed pre-step "push commits; then F4" (17 local commits at Orient, all on top of
+`origin/master` = `b5166c8b`). Orient measured: 0 undocumented on both frontiers (`636e1c45` =
+HEAD); no pending receipt; ratchet citation matched before any run; CI green. Plan: push, then
+strict TDD -- Pre-RED question on the stop-message wording via `AskUserQuestion`, then RED tests,
+GREEN guard in `R/getAncestors.R:44`, REFACTOR; each phase gate via `AskUserQuestion`. TDD phase
+PRE-RED at claim; no code touched.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 781 Handoff Evaluation (by Session 782)
 **Score: 9/10.** **What helped:** every Orient measurement held -- 0 undocumented on both
 frontiers (`f9e0152b` = HEAD), 11 unpushed, `origin/master` = `b5166c8b`, the ratchet citation

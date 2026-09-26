@@ -50,6 +50,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S783 claim: PED_GV F4 -- `getAncestors()` cycle guard *(in progress)*
+- Owner-picked at the Phase 0 priorities gate, with one owner-directed pre-step: "push commits; then
+  F4". The push of the local commits (17 at Orient, plus this claim) is a non-commit action and gets
+  its own close-out entry. Orient measured: 0 undocumented on both the `CHANGELOG.md` and
+  `HANDOFFS.md` frontiers (`636e1c45` = HEAD); the S782 receipt is `status: complete`; 17
+  unpushed, `origin/master` = `b5166c8b`; the S782 ratchet citation (results `76631f2eafcc`,
+  manifest `aa983075d6a2`, head `00610aed`, 1/1) matched `.quality-gates-results.json`
+  before any run; all 10 recent `gh run` rows `success`; dashboard 96/100; context budget nothing
+  over a ceiling. Stub + pending receipt ride this commit; close-out records the rest. TDD phase
+  PRE-RED at claim; no code touched.
+
 ### 2026-09-26 · [ad hoc] S782 records: close-out for PED_GV F1 (S781 handoff evaluated 9/10, receipt, Learning 795, next-session items)
 - **Deliverable:** the close-out records for S782, whose work is recorded in the entries below:
   RED `3772dd70`, GREEN `3aae4b9c`, REFACTOR `e948f790`, docs `00610aed` (claim `a70e9dfe`). Adds

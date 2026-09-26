@@ -168,6 +168,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-24.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S783
+date: 2026-09-26
+status: pending
+active_task: PED_GV F4 -- getAncestors() recurses until R aborts on a pedigree cycle (R/getAncestors.R:44; NEW-41 in docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md). Owner-picked at the Phase 0 priorities gate, with the owner-directed pre-step "push commits; then F4". Strict TDD with AskUserQuestion gates.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S782
 date: 2026-09-26
 status: complete
