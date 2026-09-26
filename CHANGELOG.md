@@ -50,6 +50,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S783 GREEN: PED_GV F4 fixed -- `getAncestors()` stops with a message naming a pedigree cycle
+- `R/getAncestors.R` only. The exported `getAncestors(id, ptree)` keeps its signature and is now a
+  thin wrapper over a new unexported `.getAncestorsOnPath(id, ptree, path)` (`@noRd`) that carries
+  the ids on the CURRENT route (per branch, not a global visited set); an id already on its route
+  stops with `call. = FALSE`: "getAncestors: the pedigree contains a cycle (an animal is its own
+  ancestor): X -> Y -> X. Each id is a sire or dam of the one before it; correct the sire and dam
+  entries for these ids." (only the cycle's ids, not the route leading to it). Otherwise the
+  recursion is unchanged: sire lineage then dam lineage, diamond repeats kept. **Measured:**
+  `test_getAncestors.R` 12 tests / 19 expectations, 0 failing (RED was 6 failing tests); the four
+  files that touch `getAncestors`/`findLoops`/`countLoops`/`createPedTree` 59 expectations, 0
+  failed; full suite (`load_all` + `NOT_CRAN`, no filter) 352 files, 2,688 tests (S782's 2,682 + 6),
+  8,314 expectations, **1 failed**, 0 errors, 187 skipped, 6 warnings -- the 1 failure is
+  `test_pkgdown_reference_config.R` "articles: contents covers every real article", caused by the
+  owner's untracked `suggested_NEWS_entry` draft (same as S782; not touched); lintr 0 on both
+  files; `R CMD check --as-cran --no-manual` on a `git archive $(git write-tree)` export of the
+  index: 0 errors, 0 warnings, 1 NOTE (dev-version "Version contains large components", the same
+  as S782), `* DONE`, `Status:` and `res$status == 0` all confirmed, 5.2 min. **Mutation check
+  (throwaway, via a mocked binding, `R/` untouched):** swapping the route for a global visited set
+  makes the diamond guards ("with repeats", "full ancestor set") FAIL, so the repeats guard is
+  proven to fail on the wrong design; the real implementation passes all 12. **Incidental
+  measurement:** the longest acyclic chain that resolves rose from 997 to 2,218 generations
+  (binary search; the old function reproduced at 997 by two methods); cause not investigated,
+  and not a behavior anyone asked for. **One wording change from the Pre-RED gate:** "sire/dam" in
+  the message became "sire and dam" because `nonportable_path_linter` reads the slash in a string
+  as a file path (a `# nolint` was the alternative). CI on the earlier push (`b5166c8b..38baa151`,
+  which carried the S782 code) was `success` on all four push workflows. Commit left GREEN on
+  purpose; REFACTOR (if any) follows behind an owner gate.
+
 ### 2026-09-26 · [ad hoc] S783 RED: PED_GV F4 -- tests for a `getAncestors()` cycle guard
 - Owner decisions at the Pre-RED gate (2026-09-26): detection is **path-based** through an
   unexported recursive helper (the exported `getAncestors(id, ptree)` signature is unchanged; a

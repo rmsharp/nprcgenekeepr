@@ -42,22 +42,53 @@
 #'   names(allAncestors)[countOfAncestors == max(countOfAncestors)]
 #' allAncestors[idsWithMostAncestors]
 getAncestors <- function(id, ptree) {
+  .getAncestorsOnPath(id, ptree, character(0L))
+}
+
+#' Recursive worker for \code{getAncestors()}
+#'
+#' Carries the ids on the current route from the starting id down to \code{id}
+#' so a pedigree cycle (an animal that is its own ancestor) is named in an
+#' error instead of recursing until R aborts. The route is kept per branch,
+#' not as a global visited set: an ancestor reached through both parents is
+#' still returned once per route (the documented repeats), and only an id that
+#' reappears on its own route is a cycle.
+#'
+#' @param id character vector of length 1 having the ID of interest
+#' @param ptree a list of lists forming a pedigree tree as constructed by
+#' \code{createPedTree(ped)}.
+#' @param path character vector of the ids already on the current route.
+#' @return A character vector of ancestors for an individual ID.
+#' @noRd
+.getAncestorsOnPath <- function(id, ptree, path) {
   if (is.na(id)) {
     return(character(0L))
   }
+
+  if (id %in% path) {
+    cycle <- c(path[match(id, path):length(path)], id)
+    stop(
+      "getAncestors: the pedigree contains a cycle (an animal is its own ",
+      "ancestor): ", paste(cycle, collapse = " -> "), ". Each id is a sire ",
+      "or dam of the one before it; correct the sire and dam entries for ",
+      "these ids.",
+      call. = FALSE
+    )
+  }
+  path <- c(path, id)
 
   sire <- ptree[[id]]$sire
   dam <- ptree[[id]]$dam
 
   if (!is.na(sire)) {
-    sAnc <- getAncestors(sire, ptree)
+    sAnc <- .getAncestorsOnPath(sire, ptree, path)
     sireLineage <- c(sire, sAnc)
   } else {
     sireLineage <- character(0L)
   }
 
   if (!is.na(dam)) {
-    dAnc <- getAncestors(dam, ptree)
+    dAnc <- .getAncestorsOnPath(dam, ptree, path)
     damLineage <- c(dam, dAnc)
   } else {
     damLineage <- character(0L)
