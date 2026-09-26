@@ -54,6 +54,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S784 records: close-out for the NA phantom-row slice (S783 handoff evaluated 9/10, receipt, Learning 797, next-session items)
+- **Deliverable:** the close-out records for S784, whose work is recorded in the entries below and
+  in the two tool-written trim entries: RED `171c848e`, GREEN `f1a7d31a`, docs `9c078193`, ledger
+  trims `HANDOFFS.md` `a118c70d` and `CHANGELOG.md` `7cbd32bd` (claim `4aea6297`). Adds the S783
+  handoff evaluation (9/10) and the S784 self-assessment (8/10) to `SESSION_NOTES.md`; completes the
+  S784 receipt in `HANDOFFS.md` (`status: pending` to `complete`); appends Learning 797 to
+  `PROJECT_LEARNINGS.md`; files one `BACKLOG.md` item (the trimmer's verify false positive) through
+  the header-less blob, so the owner's 5-line YAML header stays unstaged.
+- **Ratchet:** 1/1 pass at `9c078193`, 3,566,802 B (+519 B against S783's 3,566,283 B, noise);
+  results `ecf49efe323b`, manifest `aa983075d6a2` unchanged. The S783 citation (results
+  `bc39c545844e`) matched `.quality-gates-results.json` BEFORE the run.
+- **Ledger reduction (this session's decay term):** the owner-gated archive pass ran because the
+  `CHANGELOG.md` trigger fired at 66,341 B: `CHANGELOG.md` 68,367 B to 33,122 B (25 of 42 records)
+  and `HANDOFFS.md` 61,696 B to 31,685 B (4 of 7 receipts). `SESSION_NOTES.md` was 44,630 B at the
+  start of close-out, under its ceiling, and nothing was removed from it.
+- **Disclosures:** (1) my Phase 0 priorities list omitted tagged `BACKLOG.md` items: the
+  hard-wrapped file splits tags across lines and my single-line pattern matched 11 of 19 tagged
+  items, dropping the contributor tutorial, the papers item, the harem-sire hole and the LabKey
+  items; found at close-out, so the owner picked from an incomplete list (all four options shown
+  were valid; the omitted ones are named in the handoff's next steps); (2) the archive pass
+  diverged from the gate text (the `HANDOFFS.md` shard's verify script FAILs one L2 check on a
+  false positive), approved as "trim anyway, record + file the defect" and recorded in the
+  tool-written `HANDOFFS.md` trim entry; (3) `R CMD check` and the full suite ran on the GREEN
+  code, BEFORE the comment-only roxygen / `man/` / NEWS edit (S783's same limit); (4) nothing was
+  pushed: the owner did not ask, so the local commits after `origin/master` stay local.
+- **Checklists:** lint done; NEWS done (the docs entry); `_pkgdown.yml`, citation, tutorial and
+  `a2interactive` (no new parameter) N/A; no GitHub issue exists for this defect; the BACKLOG
+  completed-item removal was done in the docs commit.
+
 ### 2026-09-26 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-26.md` (25 record(s), 68,367 B → 33,122 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

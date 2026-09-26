@@ -333,6 +333,26 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `browser-actions/setup-chrome`'s actual download/unzip pipeline; or filing a new
       `rstudio/chromote` upstream issue, since no existing issue there matches this exact
       macOS+GHA+live-CDP-timeout signature).
+- [ ] **`methodology_trim.py`'s generated shard verify script FAILs its L2 "leak" check when an
+      archived record quotes a front-matter line (found S784, 2026-09-26, DECISION NEEDED,
+      Effort S)** -- the check embedded in each shard's `.verify.sh` is `ln in "".join(sr)`, a
+      SUBSTRING test of every front-matter line over 24 characters against the whole archived
+      records text. The archived S779 receipt's `next_steps:` quotes the trimmer's `--check`
+      command (with `--budget-bytes 65536`), which contains the front-matter `--check` line, so
+      `bash docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh` prints `FAIL: L2 FRONT MATTER
+      leaked 1 line(s) into the shard` although the write-time L1/L2/L3 all passed and the
+      script's own L1/L3 checks hold (reproduced by a write, a rollback and a second write, and by
+      a separate Python probe; the `CHANGELOG.md` shard from the same session is clean, 0 hits).
+      It recurs on every later `HANDOFFS.md` trim, because S779 is always in the archived tail.
+      Nothing runs these scripts (no CI job, test or tool; only the dashboard recognizes the
+      suffix). **Decision for the owner:** (1) fix it upstream in the `rmsharp/methodology`
+      fork -- compare against the SET of exact record lines, as that script's BL-28 fix already
+      does for its "lost line" check (a local patch would be a second local modification to
+      `methodology_trim.py` to re-apply after every sync, per `CLAUDE.md`'s checklist); (2) leave
+      it and accept the one known FAIL; (3) reword the front-matter command line in `HANDOFFS.md`
+      so it is no longer a substring of what receipts quote (edits a ledger's seed text; its L2
+      then checks the reworded line). Until decided, do not quote front-matter command lines
+      verbatim in receipts (Learning 797e).
 - [ ] **`CHANGELOG.md`'s own ~4-entries-per-session ledger convention (claim, Phase 0
       reconcile, deliverable, close-out) may be a `CHANGELOG.md`-side analogue of the
       already-diagnosed `HANDOFFS.md` "Receipt Inflation" (H4) rate problem** (found S543,
