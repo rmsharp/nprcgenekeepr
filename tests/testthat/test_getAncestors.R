@@ -41,3 +41,81 @@ test_that("getAncestors works on a createPedTree() pedigree tree", {
   expect_setequal(unique(getAncestors("F", pt)), c("A", "B", "D", "E"))
   expect_false("F" %in% getAncestors("F", pt))
 })
+
+# A pedigree cycle (an animal that is its own ancestor) is a data error. It used
+# to recurse until R aborted with "evaluation nested too deeply: infinite
+# recursion"; getAncestors() now stops with a message that names the cycle.
+# The documented repeats (see the "with repeats" test above) are a diamond, not
+# a cycle, and must keep being returned.
+np <- NA_character_
+cycleMessage <- function(expr) {
+  tryCatch(
+    {
+      expr
+      NA_character_
+    },
+    error = function(e) conditionMessage(e)
+  )
+}
+
+test_that("getAncestors stops with a message naming a sire-side 2-cycle", {
+  cyc <- list(
+    X = list(sire = "Y", dam = np),
+    Y = list(sire = "X", dam = np)
+  )
+  msg <- cycleMessage(getAncestors("X", cyc))
+  expect_match(msg, "contains a cycle", fixed = TRUE)
+  expect_match(msg, "X -> Y -> X", fixed = TRUE)
+})
+
+test_that("getAncestors stops with a message naming a self-parent", {
+  cyc <- list(S = list(sire = "S", dam = np))
+  msg <- cycleMessage(getAncestors("S", cyc))
+  expect_match(msg, "contains a cycle", fixed = TRUE)
+  expect_match(msg, "S -> S", fixed = TRUE)
+})
+
+test_that("getAncestors stops with a message naming a dam-side 2-cycle", {
+  cyc <- list(
+    A = list(sire = np, dam = "B"),
+    B = list(sire = np, dam = "A")
+  )
+  msg <- cycleMessage(getAncestors("A", cyc))
+  expect_match(msg, "contains a cycle", fixed = TRUE)
+  expect_match(msg, "A -> B -> A", fixed = TRUE)
+})
+
+test_that("getAncestors names every id of a 3-cycle, in order", {
+  cyc <- list(
+    X = list(sire = "Y", dam = np),
+    Y = list(sire = np, dam = "W"),
+    W = list(sire = "X", dam = np)
+  )
+  msg <- cycleMessage(getAncestors("X", cyc))
+  expect_match(msg, "contains a cycle", fixed = TRUE)
+  expect_match(msg, "X -> Y -> W -> X", fixed = TRUE)
+})
+
+test_that("getAncestors names only the cycle when the start id is outside it", {
+  cyc <- list(
+    Z = list(sire = "X", dam = np),
+    X = list(sire = "Y", dam = np),
+    Y = list(sire = "X", dam = np)
+  )
+  msg <- cycleMessage(getAncestors("Z", cyc))
+  expect_match(msg, "X -> Y -> X", fixed = TRUE)
+  expect_false(grepl("\\bZ\\b", msg))
+})
+
+test_that("findLoops and countLoops surface the cycle message", {
+  cyc <- list(
+    X = list(sire = "Y", dam = np),
+    Y = list(sire = "X", dam = np)
+  )
+  expect_match(cycleMessage(findLoops(cyc)), "contains a cycle", fixed = TRUE)
+  expect_match(
+    cycleMessage(countLoops(list(X = FALSE, Y = FALSE), cyc)),
+    "contains a cycle",
+    fixed = TRUE
+  )
+})

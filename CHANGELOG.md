@@ -50,6 +50,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S783 RED: PED_GV F4 -- tests for a `getAncestors()` cycle guard
+- Owner decisions at the Pre-RED gate (2026-09-26): detection is **path-based** through an
+  unexported recursive helper (the exported `getAncestors(id, ptree)` signature is unchanged; a
+  global visited set would drop the documented diamond repeats); the error **names the cycle**
+  (`X -> Y -> X`, only the cycle's ids, plain `stop()`, no condition class); the neighbouring
+  defects (an id or parent absent from the tree fails with "argument is of length zero"; an
+  acyclic chain about 1,000 generations deep overflows R's expression limit) are OUT of scope,
+  to be filed in `BACKLOG.md` at close-out. Tests only (`tests/testthat/test_getAncestors.R`, +6
+  `test_that` blocks; the existing 6 untouched; no `R/` change): sire-side 2-cycle, self-parent,
+  dam-side 2-cycle, 3-cycle in order, a start id outside the cycle (names only the cycle), and
+  `findLoops()`/`countLoops()` surfacing the same message. **Measured RED:** the file reports 6
+  failing tests (11 failed expectations) and 6 passing (7 expectations), 0 errors; every failure
+  is "Expected `msg` to match ..." because the message is still R's "evaluation nested too
+  deeply: infinite recursion". One expectation (`expect_false(grepl("\\bZ\\b", msg))`) passes
+  today vacuously -- the test fails on its first expectation -- so it is a guard proven only by
+  passing. The existing diamond-repeats test (`test_getAncestors.R:28`) is the no-false-positive
+  guard and passes. lintr 0 on the file. Commit left RED on purpose; GREEN follows behind an
+  owner gate.
+
 ### 2026-09-26 · [ad hoc] S783 claim: PED_GV F4 -- `getAncestors()` cycle guard *(in progress)*
 - Owner-picked at the Phase 0 priorities gate, with one owner-directed pre-step: "push commits; then
   F4". The push of the local commits (17 at Orient, plus this claim) is a non-commit action and gets
