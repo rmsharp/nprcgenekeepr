@@ -50,6 +50,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] PED_GV audit triage report: 43 ids judged against today's code
+- **Deliverable (S781):** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`. One row per id, judged
+  against today's source, with 9 R probes and the git history since the audit. **Result:** 35
+  still present, 2 fixed (PED-8, PED-9), 4 moot (NEW-27, 33, 44, 47), 2 refuted (NEW-58, NEW-60).
+  Only 5 of the 35 are correctness hazards, in four groups: `removeUnknownAnimals()` returns 0 rows
+  when `recordStatus` is absent (NEW-31/32); the `U`-prefix id scheme can collide with or strip real
+  ids (NEW-38); an excluded dam is re-admitted by `getPotentialParents()`'s fallback (NEW-35); and
+  `getAncestors()` recurses forever on a cycle (NEW-41).
+- **The 41-id list was off by two.** The ledger mentions NEW-29 and NEW-47 without recording a fix
+  (NEW-47 is a NEWS label that collides with the audit id), so both were added: 43 rows. None of
+  the 43 ids appears in any commit message; fixes travelled under issue numbers and XARCH names.
+- **Nothing was fixed and no code changed.** Docs-only; `docs/` is build-ignored and no test or
+  workflow reads the file. The 122 cited lines were extracted and compared with the claims; two
+  cites that pointed at roxygen were corrected. Not pushed.
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-26 · [ad hoc] S781 claim: PED_GV audit triage *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (S780 next-steps (A)). Orient measured: 0
   undocumented on the `CHANGELOG.md` frontier (`44a6c5e1` = HEAD); 1 commit past the
