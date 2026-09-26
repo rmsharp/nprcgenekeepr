@@ -50,6 +50,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-26.md` (4 record(s), 61,696 B → 31,685 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **4** record(s) (2026-09-24 → 2026-09-26) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-26.md`](docs/archive/HANDOFFS-through-2026-09-26.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh)
+rather than trusting a digest printed here. Live file 61,696 B → 31,685 B (−48.6%).
+
+**Divergence from the S784 owner gate (recorded here per Learning 777(b); owner-approved "trim anyway,
+record + file the defect"):** the gate promised a passing `.verify.sh`. The generated script prints
+`FAIL: L2 FRONT MATTER leaked 1 line(s) into the shard, first: 'python3 methodology_trim.py --file
+HANDOFFS.md --check'`, while the write-time L1, L2 and L3 all reported OK and the script's own L1
+and L3 checks hold. Cause (read from the script's L2 block): its leak test is `ln in
+"".join(sr)`, a SUBSTRING test of each front-matter line (over 24 chars) against the whole archived
+records text, and the archived S779 receipt's `next_steps:` quotes `python3 methodology_trim.py
+--file HANDOFFS.md --check --budget-bytes 65536`, which contains that front-matter line. It is a
+false positive: the front matter did not move into the shard, and the same script's "lost line"
+check already uses exact-line-set membership (its BL-28 fix). Reproduced by a write, a rollback and
+a second write, and by a separate Python reproduction (1 hit, S779). It recurs on any later
+`HANDOFFS.md` trim, since S779 is always in the archived tail. No CI job, test or tool runs the
+`.verify.sh` scripts (only the dashboard recognizes the suffix). Filed as a `BACKLOG.md` item.
+
 ### 2026-09-26 · [ad hoc] S784 docs: `removeUnknownAnimals()` roxygen + `man/`, `NEWS.Rmd`, `BACKLOG.md`; REFACTOR reviewed, no change
 - **REFACTOR (owner-approved gate, 2026-09-26):** re-read `R/removeUnknownAnimals.R` (a one-line body
   plus a two-line comment) and the six new test blocks; no duplication or unclear structure worth
