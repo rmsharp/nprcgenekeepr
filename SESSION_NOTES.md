@@ -70,6 +70,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 785 Did
+**Deliverable:** the sibling `recordStatus` NA sites (`convertDate`, `removeDuplicates`,
+`getDateErrorsAndConvertDatesInPed`, `correctParentSex`) -- owner picks the fix shape and the slice
+scope, then strict TDD, one small slice per file (IN PROGRESS)
+**Started:** 2026-09-26
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (item 1,
+`BACKLOG.md` "Four more places test `recordStatus == "original"` or `"added"` with no NA guard",
+DECISION NEEDED, Effort S-M). Orient measured: 0 undocumented on the `CHANGELOG.md` frontier
+(`483b26a6` = HEAD); the `HANDOFFS.md` frontier is `4e2e6e06`, one ledger-only commit behind HEAD
+(`483b26a6`, S784's push record; the S784 receipt is complete, nothing to backfill); no pending
+receipt; 1 unpushed, `origin/master` = `4e2e6e06` (S784's "11 unpushed at `38baa151`" is superseded
+by the owner-directed push); the S784 ratchet citation (results `ecf49efe323b`, manifest
+`aa983075d6a2`, head `9c078193`, 1/1) matched `.quality-gates-results.json` before any run; all 10
+recent `gh run` rows `success`; dashboard 96/100; context budget nothing over a ceiling
+(`CLAUDE.md` 26,360 B in the warn band; this file 54,052 B before this stub). Plan: Pre-RED reading
+of the four sites, their callers and tests, then the shape / scope question via `AskUserQuestion`
+(three shapes are written out in the `BACKLOG.md` item), then RED tests, GREEN fix, REFACTOR; each
+phase gate via `AskUserQuestion`. TDD phase PRE-RED at claim; no code touched.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 783 Handoff Evaluation (by Session 784)
 **Score: 9/10.** **What helped:** every Orient measurement held -- 0 undocumented on both frontiers
 (`36300a61` = HEAD), 4 unpushed, `origin/master` = `38baa151`, the ratchet citation (results

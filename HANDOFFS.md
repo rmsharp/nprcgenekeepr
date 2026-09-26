@@ -172,6 +172,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S785
+date: 2026-09-26
+status: pending
+active_task: The sibling recordStatus NA sites (convertDate, removeDuplicates, getDateErrorsAndConvertDatesInPed, correctParentSex; BACKLOG.md item "Four more places test recordStatus", found S784, DECISION NEEDED, Effort S-M). Owner-picked at the Phase 0 priorities gate; the owner picks the fix shape and the slice scope, then strict TDD, one small slice per file.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S784
 date: 2026-09-26
 status: complete

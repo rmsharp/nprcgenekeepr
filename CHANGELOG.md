@@ -54,6 +54,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S785 claim: the sibling `recordStatus` NA sites (`convertDate`, `removeDuplicates`, `getDateErrorsAndConvertDatesInPed`, `correctParentSex`) *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` "Four more places test
+  `recordStatus == "original"` or `"added"` with no NA guard", DECISION NEEDED, Effort S-M; found
+  S784). The owner picks the fix shape and the slice scope first (three shapes are written out in the
+  item), then strict TDD, one small slice per file. Orient measured: 0 undocumented on the
+  `CHANGELOG.md` frontier (`483b26a6` = HEAD); the `HANDOFFS.md` frontier is `4e2e6e06` with one
+  commit after it (`483b26a6`, S784's own push record; the S784 receipt is `status: complete`, so
+  nothing to backfill); 1 unpushed, `origin/master` = `4e2e6e06` (the S784 notes' "11 unpushed at
+  `38baa151`" is superseded by the owner-directed push recorded below); the S784 ratchet citation
+  (results `ecf49efe323b`, manifest `aa983075d6a2`, head `9c078193`, 1/1) matched
+  `.quality-gates-results.json` before any run; all 10 recent `gh run` rows `success`; dashboard
+  96/100; context budget nothing over a ceiling (`CLAUDE.md` 26,360 B in the warn band,
+  `SESSION_NOTES.md` 54,052 B, a trim owed at or before the next close-out). Stub + pending receipt
+  ride this commit; close-out records the rest. TDD phase PRE-RED at claim; no code touched.
+
 ### 2026-09-26 · [ad hoc] S784 push: `origin/master` `38baa151..4e2e6e06` (11 commits, owner-directed after close-out)
 - **Action (non-commit):** the owner asked "push the local commits" after the S784 close-out. Pre-push
   check: fetched; branch `master`; 11 ahead, 0 behind (a fast-forward); the only uncommitted change was
