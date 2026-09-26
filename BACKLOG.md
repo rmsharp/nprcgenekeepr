@@ -6,6 +6,93 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 
 ## Up Next
 
+**PED_GV audit follow-through – triage DONE (S781, 2026-09-26), F1
+shipped (S782); fix the other three correctness hazards, then the owner
+decides the rest (READY for F4, DECISION NEEDED for F2 and F3, Effort
+S-M per slice; strict TDD for every fix)** –
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids against
+today’s code (35 present, 2 fixed, 4 moot, 2 refuted); its table is the
+plan, so read it first (its F1 is done:
+[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
+now returns a pedigree with no `recordStatus` column unchanged).
+**Slices, in this order, each with the phase gates via
+`AskUserQuestion`:** **F4 (READY, S)**
+[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
+recurses until R aborts on a cycle (NEW-41, `R/getAncestors.R:44`); keep
+the documented repeats and stop with a clear message. **F2 (DECISION
+NEEDED, M)** the `U`-prefix scheme (NEW-38):
+[`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
+can mint an id equal to a real one and
+[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
+strips real ids that start with the prefix; the owner decides how strict
+detection should be and whether any center’s real ids start with `U`.
+**F3 (DECISION NEEDED, S)** an excluded dam is re-admitted by the
+fallback at `R/getPotentialParents.R:196-199` (NEW-35, with NEW-55):
+fall back to the filtered set, return none, or label the tier. **Also
+open:** (a) a trivial cleanup bundle (READY, S): PED-11, NEW-56, NEW-63,
+the `createPedOne`/`createPedSix` roxygen (PED-10/NEW-43), and NEW-14
+with its empty-list edge; (b) owner decisions on the overhaul roots,
+none urgent – sex-code adoption (PED-2/NEW-29; 28 bare-literal
+comparison lines in 10 files remain), the error/return contract
+(PED-5/6, NEW-28/36), splitting `getPotentialParents` (PED-4, NEW-54),
+the walk helpers (PED-3, NEW-42; all exported, so an API change), the
+sim driver (NEW-50/51), constants and HTML builders (NEW-18/19/21/26/57)
+and the founder definition (NEW-61); (c) NEW-24 is already open issue
+\#123. **Recommend closing 11 ids** (fixed, moot or refuted; the report
+lists them) once the owner agrees. **Trap:** an id grep of the ledger
+both under- and over-counts (`NEWS.md` once used “NEW-47/48/49” as entry
+labels), so use the report’s table, not the old 41-id list.
+
+**A `recordStatus` value of `NA` gives
+[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
+an all-NA phantom row (found S782, 2026-09-26, DECISION NEEDED, Effort
+S)** – probe (S782, `smallPed` with a `recordStatus` column, one value
+set to `NA`): 17 rows in, 17 out, but one output row is all `NA` and a
+real row is lost; one unrecognised string (`"weird"`) drops its row (17
+-\> 16). Cause: `getRecordStatusIndex()` builds its index as
+`seq_along(x)[x == status]` (`R/getRecordStatusIndex.R:15`), and an `NA`
+comparison becomes an `NA` index. The helper has two callers:
+[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
+(`"original"`) and `R/getDateErrorsAndConvertDatesInPed.R:39`
+(`"added"`); the same `== status` pattern appears at
+`R/convertDate.R:95-96`, `R/removeDuplicates.R:39-40` and
+`R/correctParentSex.R:90,92` (the row-level effect at those sites was
+NOT probed). Reach:
+[`addParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addParents.md)
+(`R/addParents.R:43-59`) is the only writer of the column in `R/` and
+replaces any existing column with `"original"`/`"added"`, so only a
+caller who builds `recordStatus` by hand can hit it (from a grep of
+`R/`; not tested through the app). Left out of the F1 slice by the
+owner’s decision at its Pre-RED gate. **Decision for the owner, three
+shapes:** (1) make
+[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
+NA-safe but keep “keep only `original` rows” (NA and unrecognised rows
+dropped; 2-3 tests, one file); (2) redefine it as “remove only `added`
+rows” (matches its roxygen title; unrecognised statuses are then KEPT, a
+small behavior change); (3) make the helper NA-safe with
+[`which()`](https://rdrr.io/r/base/which.html) so every caller is
+covered (touches a shared helper; re-check the `"added"` use at
+`getDateErrorsAndConvertDatesInPed.R:39` and probe the other sites
+first).
+
+**(Optional, owner decision) Stop the four push workflows from running
+on pushes that change only build-ignored files** (raised 2026-09-24;
+DECISION NEEDED, Effort S) – lint, pkgdown, R-CMD-check and
+test-coverage run on every push to `master` with no `paths-ignore`, so a
+push of only
+`BACKLOG.md`/`CHANGELOG.md`/`HANDOFFS.md`/`SESSION_NOTES.md` still costs
+a ~25-minute R-CMD-check that cannot say anything new. The owner’s rule
+(2026-09-24: “if all files edited are in .rbuildignore, there is no
+reason to ever run CI”) is followed today only by not waiting for the
+run. Options: a `paths-ignore` list mirroring `.Rbuildignore` in each
+workflow, or `[skip ci]` in such commits’ messages. Caveat for the
+first: some ignored files ARE read by tests (`.github/workflows/*`,
+`_pkgdown.yml`, `.quality-gates.json`, `.Rbuildignore`;
+e.g. `test_r_cmd_check_workflow_chrome_setup.R` and
+`test_shinytest2_workflow_coverage.R` read the workflow files), so the
+list must exclude those. Not done: it edits CI config, which the owner
+has not asked for.
+
 **Mate-pair ancestry guardrails – residue after issue \#169 (found
 S776-S777, 2026-09-24; DECISION NEEDED – the owner picks which to
 pursue, each Effort S)** – \#169 shipped and closed S777 (kernel,
@@ -48,6 +135,60 @@ applies. `NEWS.md` was last re-rendered S716, so it lags `NEWS.Rmd` and
 needs a render at release. Open, the owner’s call: adding the rule to
 `CLAUDE.md`’s NEWS checklist (its “matching existing style” wording
 conflicts with it).
+
+**Audit the internal and user-facing documentation for stale information
+and stale diagrams** (owner-requested 2026-09-26; READY, Effort L – one
+audit report per session, so expect several slices) – the owner noticed
+that `vignettes/articles/pedigree-diagram.pdf` and
+`vignettes/articles/kinship2-fidelity-validation.pdf` show stale
+figures. Measured 2026-09-26 (the staleness itself is the owner’s
+observation, not yet re-checked): both PDFs are UNTRACKED renders dated
+2026-08-25 (`.gitignore:21` ignores `vignettes/*.pdf` but not
+`vignettes/articles/*.pdf`), while their `.qmd` sources were last edited
+2026-09-17/18; the tracked static image files sit under
+`vignettes/articles/pedigree-diagram-img/` (5),
+`vignettes/articles/kinship2-fidelity-validation-img/` (8) and
+`vignettes/articles/shiny_app_use/` (50). **First question for the
+pickup:** is the staleness only in the old local PDFs (fix: delete, or
+re-render and ignore them) or also in the committed sources and static
+images (fix: regenerate them from the current code)? Earlier handoffs
+recorded the PDFs as “sitting locally, uncommitted by design”. **Scope**
+(each a slice with its own report under `docs/audits/`, per
+`AUDIT_WORKSTREAM.md`): (1) user-facing – the README, `vignettes/` and
+`vignettes/articles/*.qmd` (including every static image), the pkgdown
+site, `NEWS.Rmd`, the in-app guidance pages under
+`inst/extdata/ui_guidance/`, and the `man/` pages; (2) internal –
+`docs/` (planning docs, audits, research), `ROADMAP.md`, `CLAUDE.md`,
+this file. **Method:** check every claim, number, screenshot and diagram
+against today’s code or output (regenerate the figure from the current
+source and compare; count, don’t recall); list each stale item with its
+source path; fix it or file it. Related, not duplicated: the `NEWS.Rmd`
+release-state sweep (above), the deferred `a2interactive` pass, and the
+`inst/doc/` slimming item.
+
+**Create a tutorial for prospective contributors** (owner-requested
+2026-09-26; DECISION NEEDED, Effort M) – there is no contributor guide
+today: measured 2026-09-26, no `CONTRIBUTING.md` or `CODE_OF_CONDUCT` at
+the repo root or in `.github/` (which holds only `workflows/`).
+Candidate contents, from what this project’s own docs already say:
+getting set up (clone,
+[`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html),
+[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html));
+where things live (`R/` functions, the modular Shiny app `appUI.R` +
+`appServer.R` + `mod*.R`, `tests/testthat/`, the Quarto articles under
+`vignettes/articles/`, `inst/extdata/`); running tests (the fast
+single-file command, the full suite, `devtools::check()`); the
+write-tests-first workflow; lint; roxygen / `man/` / `_pkgdown.yml` and
+`NEWS.Rmd` expectations; and how to propose a change. **Decisions the
+pickup needs from the owner first:** (a) form and home – a
+`CONTRIBUTING.md` plus a pkgdown article, or a Quarto article alone; (b)
+how much of this project’s internal discipline (strict
+RED/GREEN/REFACTOR phase gates, the session protocol) is asked of
+outside contributors versus kept internal; (c) audience – R developers,
+colony managers who script, or both. The tutorial/article documentation
+checklist in `CLAUDE.md` applies; take the commands from its “Build /
+Test / Verify” section and re-check them rather than copying them from
+here.
 
 **Blank ancestry cells become OTHER, not UNKNOWN, on the Shiny upload
 path (found S776, 2026-09-24, DECISION NEEDED, Effort S-M)** – the Input
@@ -148,6 +289,22 @@ non-LabKey other-EHR provider on the same seam; server-side filtering /
 query availability/permissions are confirmed; it needs a live LabKey
 server to test/observe, and a naive focal-id server filter is
 incompatible with the client-side connected-component walk).
+
+**Work with LabKey (Josh Eckels) to update the LabKey integration**
+(owner-requested 2026-09-26; BLOCKED – needs the owner to make contact,
+and the deferred technical work also needs a live LabKey server; Effort
+M, not a coding task until scoped) – companion to “Act on the LabKey
+integration research recommendations” above, which records what is DONE
+(Recs \#1-#5), what is unobserved (the live ONPRC/SNPRC server version)
+and what was deferred pending per-center confirmation (server-side
+filtering / `executeSql`, consuming the centers’ `study.Pedigree` /
+`ehr.kinship` queries, a non-LabKey EHR provider). Nothing in this
+repository records any contact with LabKey yet. **Suggested first step
+(the owner’s):** talk with Josh Eckels about the current LabKey API and
+`Rlabkey` direction and what he would change or add on the LabKey side,
+using the deferred questions from that item as the agenda; then decide
+which package changes follow and file each as its own item. Research
+base: `docs/research/labkey-integration-options-2026-06-19.md`.
 
 **Build a kinship2-similar standalone pedigree package from this
 repository’s code — committed, deferred** (disposition S742, 2026-09-20;
@@ -477,3 +634,35 @@ own site). **Next steps are owner-executed, real-world actions**
 own §7 – pick this up in a future session only if the owner wants help
 drafting a specific follow-up, not as a general “send the emails” coding
 task. See `CHANGELOG.md`.
+
+**Develop paper(s) for peer-reviewed journals** (owner-requested
+2026-09-26; DECISION NEEDED, Effort L, its own scoping session first;
+multi-session) – the owner supplied a venue-fit summary (from an
+AI-assisted conversation) to start from. **Treat its journal assessments
+as unverified leads:** check each journal’s current scope, article types
+and fees before committing. Its recommendation, in short: version 3.0 is
+more than an incremental update, so write **two complementary papers**
+that cite each other – (1) a **software paper** for *The R Journal* or
+the *Journal of Open Source Software* (package architecture, workflows,
+reproducibility, new features; the canonical citation for the package;
+per the summary, JOSS is very short and citation-like, while *The R
+Journal* allows longer technical descriptions with code examples) and
+(2) an **applied genetics paper** for the *American Journal of
+Primatology* or the *Journal of Medical Primatology* (how the software
+improves genetic management of captive primate colonies, with realistic
+examples and best practices) – and optionally (3) a **retrospective
+paper** on the evolution of computerized genetic management in NPRC
+colonies over past decades (historical and methodological, for readers
+interested in colony-management practice). The summary also grouped
+further candidates into tiers (computational-biology software,
+conservation genetics, statistical computing, and
+animal-colony-management journals), but **the journal names in those
+tiers were lost when it was pasted** – only the four above survive – so
+the pickup must get the original list from the owner. Open decisions:
+which papers, authorship, and what is new in 3.0 relative to the
+published reference (Vinson & Raboin 2015, *JAALAS* 54(6):700-707, the
+package’s key reference in `CLAUDE.md`, whose Project Overview also
+holds the NIH grant acknowledgment). Natural dependencies, the owner’s
+call: a released 3.0.0 to cite (`DESCRIPTION` reads 2.0.0.9000 today)
+and the documentation audit above, so the papers’ figures match the
+software.

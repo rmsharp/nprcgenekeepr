@@ -1445,7 +1445,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpzI9m1j/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmpyeqodb/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1480,7 +1480,7 @@ ped[ped$id %in% c("s2", "d2", "o3", "o4"), ]
 ```
 
     ##   id sire  dam sex gen      birth exit  age recordStatus
-    ## 2 d2 <NA> <NA>   F   0 2006-04-13 <NA> 20.4     original
+    ## 2 d2 <NA> <NA>   F   0 2006-04-13 <NA> 20.5     original
     ## 4 s2 <NA> <NA>   M   0 2006-06-19 <NA> 20.3     original
     ## 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.5     original
     ## 8 o4   s2   d2   M   1 2015-09-16 <NA> 11.0     original
@@ -2217,7 +2217,7 @@ into the de-identified table.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-09-24 22:41:02.733538. The processing
+The current date and time is 2026-09-26 17:30:11.015125. The processing
 time for this document was 23 seconds..
 
 ``` r

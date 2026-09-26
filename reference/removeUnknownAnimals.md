@@ -16,7 +16,9 @@ removeUnknownAnimals(ped)
 
 ## Value
 
-Pedigree with unknown animals removed
+Pedigree with unknown animals removed. A pedigree without a
+`recordStatus` column has no animals marked as added, so it is returned
+unchanged.
 
 ## Examples
 
