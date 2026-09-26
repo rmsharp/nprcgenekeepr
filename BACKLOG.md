@@ -83,6 +83,46 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the owner's call: adding the rule to `CLAUDE.md`'s NEWS checklist (its
       "matching existing style" wording conflicts with it).
 
+- [ ] **Audit the internal and user-facing documentation for stale information and stale
+      diagrams** (owner-requested 2026-09-26; READY, Effort L -- one audit report per session, so
+      expect several slices) -- the owner noticed that `vignettes/articles/pedigree-diagram.pdf`
+      and `vignettes/articles/kinship2-fidelity-validation.pdf` show stale figures. Measured
+      2026-09-26 (the staleness itself is the owner's observation, not yet re-checked): both PDFs
+      are UNTRACKED renders dated 2026-08-25 (`.gitignore:21` ignores `vignettes/*.pdf` but not
+      `vignettes/articles/*.pdf`), while their `.qmd` sources were last edited 2026-09-17/18; the
+      tracked static image files sit under `vignettes/articles/pedigree-diagram-img/` (5),
+      `vignettes/articles/kinship2-fidelity-validation-img/` (8) and
+      `vignettes/articles/shiny_app_use/` (50). **First question for the pickup:** is the
+      staleness only in the old local PDFs (fix: delete, or re-render and ignore them) or also in
+      the committed sources and static images (fix: regenerate them from the current code)? Earlier
+      handoffs recorded the PDFs as "sitting locally, uncommitted by design". **Scope** (each a
+      slice with its own report under `docs/audits/`, per `AUDIT_WORKSTREAM.md`): (1) user-facing
+      -- the README, `vignettes/` and `vignettes/articles/*.qmd` (including every static image),
+      the pkgdown site, `NEWS.Rmd`, the in-app guidance pages under `inst/extdata/ui_guidance/`,
+      and the `man/` pages; (2) internal -- `docs/` (planning docs, audits, research),
+      `ROADMAP.md`, `CLAUDE.md`, this file. **Method:** check every claim, number, screenshot and
+      diagram against today's code or output (regenerate the figure from the current source and
+      compare; count, don't recall); list each stale item with its source path; fix it or file it.
+      Related, not duplicated: the `NEWS.Rmd` release-state sweep (above), the deferred
+      `a2interactive` pass, and the `inst/doc/` slimming item.
+
+- [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
+      NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
+      `CONTRIBUTING.md` or `CODE_OF_CONDUCT` at the repo root or in `.github/` (which holds only
+      `workflows/`). Candidate contents, from what this project's own docs already say: getting set
+      up (clone, `renv::restore()`, `pkgload::load_all()`); where things live (`R/` functions, the
+      modular Shiny app `appUI.R` + `appServer.R` + `mod*.R`, `tests/testthat/`, the Quarto
+      articles under `vignettes/articles/`, `inst/extdata/`); running tests (the fast single-file
+      command, the full suite, `devtools::check()`); the write-tests-first workflow; lint;
+      roxygen / `man/` / `_pkgdown.yml` and `NEWS.Rmd` expectations; and how to propose a change.
+      **Decisions the pickup needs from the owner first:** (a) form and home -- a
+      `CONTRIBUTING.md` plus a pkgdown article, or a Quarto article alone; (b) how much of this
+      project's internal discipline (strict RED/GREEN/REFACTOR phase gates, the session protocol)
+      is asked of outside contributors versus kept internal; (c) audience -- R developers,
+      colony managers who script, or both. The tutorial/article documentation checklist in
+      `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
+      them rather than copying them from here.
+
 - [ ] **Blank ancestry cells become OTHER, not UNKNOWN, on the Shiny upload path
       (found S776, 2026-09-24, DECISION NEEDED, Effort S-M)** -- the Input module reads
       CSV/text uploads with no `na.strings` (`R/modInput.R:324-331`), while the script
@@ -159,6 +199,19 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       pull size is measured and per-center query availability/permissions are confirmed; it needs
       a live LabKey server to test/observe, and a naive focal-id server filter is incompatible
       with the client-side connected-component walk).
+- [ ] **Work with LabKey (Josh Eckels) to update the LabKey integration** (owner-requested
+      2026-09-26; BLOCKED -- needs the owner to make contact, and the deferred technical work also
+      needs a live LabKey server; Effort M, not a coding task until scoped) -- companion to
+      "Act on the LabKey integration research recommendations" above, which records what is DONE
+      (Recs #1-#5), what is unobserved (the live ONPRC/SNPRC server version) and what was
+      deferred pending per-center confirmation (server-side filtering / `executeSql`, consuming
+      the centers' `study.Pedigree` / `ehr.kinship` queries, a non-LabKey EHR provider). Nothing
+      in this repository records any contact with LabKey yet. **Suggested first step (the
+      owner's):** talk with Josh Eckels about the current LabKey API and `Rlabkey` direction and
+      what he would change or add on the LabKey side, using the deferred questions from that item
+      as the agenda; then decide which package changes follow and file each as its own item.
+      Research base: `docs/research/labkey-integration-options-2026-06-19.md`.
+
 - [ ] **Build a kinship2-similar standalone pedigree package from this repository's code —
       committed, deferred** (disposition S742, 2026-09-20; BLOCKED -- prep steps ALL DONE
       (D-1 S744, D-2 S745, D-3 S746); the remaining blocker is the S738 revisit conditions
@@ -416,3 +469,28 @@ section's live work.*
       recipients, send) per the plan's own §7 -- pick this up in a future session only
       if the owner wants help drafting a specific follow-up, not as a general "send the
       emails" coding task. See `CHANGELOG.md`.
+
+- [ ] **Develop paper(s) for peer-reviewed journals** (owner-requested 2026-09-26; DECISION
+      NEEDED, Effort L, its own scoping session first; multi-session) -- the owner supplied a
+      venue-fit summary (from an AI-assisted conversation) to start from. **Treat its journal
+      assessments as unverified leads:** check each journal's current scope, article types and
+      fees before committing. Its recommendation, in short: version 3.0 is more than an
+      incremental update, so write **two complementary papers** that cite each other -- (1) a
+      **software paper** for *The R Journal* or the *Journal of Open Source Software* (package
+      architecture, workflows, reproducibility, new features; the canonical citation for the
+      package; per the summary, JOSS is very short and citation-like, while *The R Journal* allows
+      longer technical descriptions with code examples) and (2) an **applied genetics paper** for
+      the *American Journal of Primatology* or the *Journal of Medical Primatology* (how the
+      software improves genetic management of captive primate colonies, with realistic examples and
+      best practices) -- and optionally (3) a **retrospective paper** on the evolution of
+      computerized genetic management in NPRC colonies over past decades (historical and
+      methodological, for readers interested in colony-management practice). The summary also
+      grouped further candidates into tiers (computational-biology software, conservation
+      genetics, statistical computing, and animal-colony-management journals), but **the journal
+      names in those tiers were lost when it was pasted** -- only the four above survive -- so the
+      pickup must get the original list from the owner. Open decisions: which papers, authorship,
+      and what is new in 3.0 relative to the published reference (Vinson & Raboin 2015, *JAALAS*
+      54(6):700-707, the package's key reference in `CLAUDE.md`, whose Project Overview also holds
+      the NIH grant acknowledgment). Natural dependencies, the owner's call: a released 3.0.0 to
+      cite (`DESCRIPTION` reads 2.0.0.9000 today) and the documentation audit above, so the
+      papers' figures match the software.

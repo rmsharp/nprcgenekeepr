@@ -50,6 +50,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] `BACKLOG.md`: recorded four owner-requested items (documentation staleness audit, contributor tutorial, LabKey collaboration, journal papers)
+- Owner-directed addendum after S780 closed; **not a session** -- the owner clarified it was only a
+  group of backlog items to record, so no claim, receipt or handoff was written. Four new open
+  items (78 lines, additions only): the documentation audit for stale information and diagrams
+  (READY, L) and the contributor tutorial (DECISION NEEDED, M), inserted after the `NEWS.Rmd`
+  sweep; the LabKey collaboration with Josh Eckels (BLOCKED, M), after the existing LabKey item;
+  and developing peer-reviewed papers (DECISION NEEDED, L), under Outreach. Placement is
+  provisional and unranked -- the owner orders priorities.
+- Facts stated in the items were measured 2026-09-26 (the two untracked PDFs dated 2026-08-25
+  against `.qmd` sources dated 2026-09-17/18; no `CONTRIBUTING.md` or `CODE_OF_CONDUCT`;
+  `DESCRIPTION` at 2.0.0.9000). The figures' staleness and the journal assessments are the
+  owner's observation and an unverified pasted summary, and the items say so.
+- The owner's own uncommitted `BACKLOG.md` change (a 5-line YAML header) was left out of the
+  commit (staged from a header-less blob) and stays in the working tree, with the untracked
+  `BACKLOG.log` and two `suggested_NEWS_entry` drafts. Docs-only; every changed file is
+  build-ignored; not pushed (6 local commits).
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-26 · [ad hoc] S780 records: `HANDOFFS.md` + `CHANGELOG.md` archive pass DONE (S779 handoff evaluated 9/10, receipt, next-session items)
 - **Deliverable:** the ledger archive pass claimed 2026-09-24 (entry below, *(in progress)*),
   recorded by the two tool-written trim entries above it and the commits `b8ea95fa` (CHANGELOG)
