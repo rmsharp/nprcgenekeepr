@@ -90,10 +90,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 **Deliverable:** BUNDLE/DOC cleanup of 5 trivial `PED_GV_AUDIT_TRIAGE_2026-09-26.md` findings:
 PED-11, NEW-56, NEW-63, PED-10/NEW-43, NEW-14 (with its empty-list edge) (IN PROGRESS).
 **Started:** 2026-09-27.
-**Status:** PRE-RED and RED done. GREEN done: `R/kinshipMatricesToKValues.R` guards against an
-empty list with a clear `stop()`; new test passes, 3 sibling tests + 2 caller test files
-unaffected. REFACTOR (the other 4 doc/cosmetic items, plus the accumulator-loop restyle) not yet
-started.
+**Status:** DONE. PRE-RED/RED/GREEN/REFACTOR all complete. REFACTOR applied the other 4 items
+(PED-11, NEW-56, NEW-63, PED-10/NEW-43 -- all behavior-neutral) plus the
+`kinshipMatricesToKValues()` accumulator restyle (first-flag/for-loop -> `lapply`, same guard and
+`cbind` accretion). Full unfiltered suite: 355 files / 2,756 tests / 8,603 expectations, 1 known
+pre-existing failure (`test_pkgdown_reference_config.R`, unrelated), 0 error. Lint: 0 on all 7
+touched files. BACKLOG.md's resolved sub-item removed (F2/F3/other sub-items untouched, stay
+open).
 **Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
 Phase 3F records the rest.
 

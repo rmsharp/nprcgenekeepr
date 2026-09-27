@@ -199,7 +199,7 @@ getPotentialParents <- function(ped, minSireAge = NULL, minDamAge = NULL,
       }
 
       potentialParents[[j]] <- list(
-        id = pUnknown$id[i][1L],
+        id = pUnknown$id[i],
         sires = potentialSires,
         dams = potentialDams$id
       )

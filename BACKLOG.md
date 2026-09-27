@@ -19,14 +19,12 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       the owner decides how strict detection should be and whether any center's real ids start
       with `U`. **F3 (DECISION NEEDED, S)** an excluded dam is re-admitted by the fallback at
       `R/getPotentialParents.R:196-199` (NEW-35, with NEW-55): fall back to the filtered set,
-      return none, or label the tier. **Also open:** (a) a trivial cleanup bundle (READY,
-      S): PED-11, NEW-56, NEW-63, the `createPedOne`/`createPedSix` roxygen (PED-10/NEW-43), and
-      NEW-14 with its empty-list edge; (b) owner decisions on the overhaul roots, none urgent --
-      sex-code adoption (PED-2/NEW-29; 28 bare-literal comparison lines in 10 files remain), the
-      error/return contract (PED-5/6, NEW-28/36), splitting `getPotentialParents` (PED-4,
-      NEW-54), the walk helpers (PED-3, NEW-42; all exported, so an API change), the sim driver
-      (NEW-50/51), constants and HTML builders (NEW-18/19/21/26/57) and the founder definition
-      (NEW-61); (c) NEW-24 is already open issue #123. **Recommend closing 11 ids** (fixed, moot or
+      return none, or label the tier. **Also open:** (a) owner decisions on the overhaul roots,
+      none urgent -- sex-code adoption (PED-2/NEW-29; 28 bare-literal comparison lines in 10 files
+      remain), the error/return contract (PED-5/6, NEW-28/36), splitting `getPotentialParents`
+      (PED-4, NEW-54), the walk helpers (PED-3, NEW-42; all exported, so an API change), the sim
+      driver (NEW-50/51), constants and HTML builders (NEW-18/19/21/26/57) and the founder
+      definition (NEW-61); (b) NEW-24 is already open issue #123. **Recommend closing 11 ids** (fixed, moot or
       refuted; the report lists them) once the owner agrees. **Trap:** an id grep of the ledger
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.

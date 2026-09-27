@@ -91,6 +91,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   passes; `test_kinshipMatricesToKValues.R`'s other 3 tests and the sibling caller files
   (`test_countKinshipValues.R`, `test_summarizeKinshipValues.R`) unaffected.
 
+### 2026-09-27 · [ad hoc] S795 REFACTOR: 4 remaining doc/cosmetic fixes plus the accumulator restyle; BACKLOG sub-item removed
+- **Model:** Claude Sonnet 5. No behavior change. `R/getRecordStatusIndex.R:14` drops the redundant
+  `any()` around a scalar `%in%`. `R/getPotentialParents.R:202` drops the redundant `[1L]` on the
+  already-scalar `pUnknown$id[i]`. `R/getMaxAx.R` roxygen corrected: `bins` is a list with
+  non-negative `male`/`female` counts, not an "integer vector" with "negative (males)" values (per
+  `test_getMaxAx.R`'s own fixtures). `R/createPedOne.R` and `R/createPedSix.R` roxygen corrected:
+  `savePed = TRUE` writes into a `data` subdirectory of `tempdir()`, not "the packages data
+  directory" (unchanged since 2020, `31eef7cf`). `R/kinshipMatricesToKValues.R`'s first-flag/
+  for-loop accumulator replaced with an `lapply`-built list plus the same `cbind` accretion loop,
+  guard clause unchanged. `devtools::document()` run: no `man/`/`NAMESPACE` diff (every touched
+  function is `@noRd` except `kinshipMatricesToKValues()`, whose roxygen text was untouched).
+  Verification: every touched function's own test file plus the two `kinshipMatricesToKValues()`
+  caller test files (`test_countKinshipValues.R`, `test_summarizeKinshipValues.R`) individually
+  0 failed/0 error; `lintr::lint()` on all 7 touched files (6 `R/`, 1 test) 0 lints; full unfiltered
+  suite 355 files / 2,756 tests / 8,603 expectations, 1 failed (the known pre-existing
+  `test_pkgdown_reference_config.R` draft failure, unrelated), 0 error. Per the BACKLOG completed-
+  item removal checklist, the "(a) a trivial cleanup bundle" sub-item is removed from the PED_GV
+  audit follow-through item in `BACKLOG.md` (its record now lives in this session's PRE-RED/RED/
+  GREEN/REFACTOR entries above); F2, F3 and the other two "Also open" sub-items are untouched and
+  stay open. Staged via the established `tail -n +6` / `hash-object` / `update-index --cacheinfo`
+  recipe (3 separate Bash calls) to exclude the pre-existing, unrelated `BACKLOG.md` YAML-header
+  residue from this commit.
+
 ### 2026-09-27 · [ad hoc] S794 records: shinytest2 CI timeout fix DONE (S793 handoff evaluated 7/10, self 8/10, receipt, Learning 808); full RED/GREEN/REFACTOR TDD cycle, BACKLOG item removed
 - **Model:** Claude Sonnet 5. Phase 3 close-out: Session 793's handoff evaluated 7/10 -- every
   Orient measurement held fresh except one: `gh run view --json jobs` showed the "hit its cap

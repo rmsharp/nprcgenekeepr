@@ -3,8 +3,8 @@
 
 #' Make the pedSix data object
 #'
-#' @param savePed logical value if TRUE the pedigree is saved into the
-#' packages \code{data} directory
+#' @param savePed logical value if TRUE the pedigree is saved into a
+#' \code{data} subdirectory of \code{tempdir()}
 #' @return A specific pedigree object used for testing and examples.
 #'
 #' @importFrom lubridate mdy dyears ymd

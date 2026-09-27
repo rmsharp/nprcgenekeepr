@@ -97,18 +97,11 @@ kinshipMatricesToKValues <- function(kinshipMatrices) {
   if (length(kinshipMatrices) == 0L) {
     stop("kinshipMatrices must contain at least one kinship matrix")
   }
-  first <- TRUE
-  for (i in seq_along(kinshipMatrices)) {
-    if (first) {
-      kValues <- kinshipMatrixToKValues(kinshipMatrices[[i]])
-      first <- FALSE
-    } else { # only need kinship value
-      kValues <-
-        cbind(
-          kValues,
-          kinshipMatrixToKValues(kinshipMatrices[[i]])[, "kinship"]
-        )
-    }
+  allKValues <- lapply(kinshipMatrices, kinshipMatrixToKValues)
+  kValues <- allKValues[[1L]]
+  for (i in seq_along(allKValues)[-1L]) {
+    ## only need the kinship column from each subsequent matrix
+    kValues <- cbind(kValues, allKValues[[i]][, "kinship"])
   }
   names(kValues) <- c(
     names(kValues[, 1L:2L]),
