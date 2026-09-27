@@ -135,3 +135,158 @@ test_that(paste0(
   ped <- qcStudbook(sb, reportErrors = FALSE)
   expect_identical(as.character(ped$sex[ped$id == "sU"]), "U")
 })
+
+## --- recordStatus contract of the report branch (S787) -----------------------
+## Only "added" is a special recordStatus (the removeUnknownAnimals(),
+## convertDate() and removeDuplicates() contract). An NA, blank or unrecognised
+## status is a real animal, and an absent (NULL) status means no added rows are
+## known, so every animal is checked. Script-only reach: qcStudbook() rewrites
+## the column through addParents() before this function sees it.
+## s1 is a female sire and d1 a male dam; sH (H) and dU (U) are exempt.
+statusPed <- data.frame(
+  id = c("s1", "d1", "sH", "dU", "o1", "o2", "o3", "o4"),
+  sire = c(NA, NA, NA, NA, "s1", "s1", "sH", "s1"),
+  dam = c(NA, NA, NA, NA, "d1", "d1", "dU", "d1"),
+  sex = c("F", "M", "H", "U", "F", "M", "F", "M"),
+  stringsAsFactors = FALSE
+)
+statusReport <- function(status, ped = statusPed) {
+  correctParentSex(ped$id, ped$sire, ped$dam, ped$sex, status,
+    reportErrors = TRUE
+  )
+}
+statusAt <- function(pos, value) {
+  status <- rep("original", nrow(statusPed))
+  status[pos] <- value
+  status
+}
+allStatus <- function(value) rep(value, nrow(statusPed))
+## The same status put on the sire, the dam, both, every row, and as a scalar.
+statusCases <- function(value) {
+  list(
+    sire = statusAt(1L, value), dam = statusAt(2L, value),
+    both = statusAt(1L:2L, value), all = allStatus(value), scalar = value
+  )
+}
+
+test_that("correctParentSex names a parent whose recordStatus is NA", {
+  cases <- statusCases(NA_character_)
+  for (nm in names(cases)) {
+    report <- statusReport(cases[[nm]])
+    expect_identical(report$femaleSires, "s1", info = nm)
+    expect_identical(report$maleDams, "d1", info = nm)
+  }
+})
+test_that("correctParentSex never puts an NA into the reported ids", {
+  cases <- statusCases(NA_character_)
+  for (nm in names(cases)) {
+    expect_false(anyNA(unlist(statusReport(cases[[nm]]))), info = nm)
+  }
+})
+test_that("correctParentSex treats a blank or unrecognised status as real", {
+  for (value in c("", "weird", "Original")) {
+    cases <- statusCases(value)
+    for (nm in names(cases)) {
+      report <- statusReport(cases[[nm]])
+      expect_identical(report$femaleSires, "s1", info = paste(nm, value))
+      expect_identical(report$maleDams, "d1", info = paste(nm, value))
+    }
+  }
+})
+test_that("correctParentSex checks every animal when recordStatus is NULL", {
+  report <- statusReport(NULL)
+  expect_identical(report$femaleSires, "s1")
+  expect_identical(report$maleDams, "d1")
+  expect_null(report$sireAndDam)
+})
+test_that("correctParentSex skips only the added parents of a mixed status", {
+  naAndAdded <- statusAt(1L, NA_character_)
+  naAndAdded[2L] <- "added"
+  report <- statusReport(naAndAdded)
+  expect_identical(report$femaleSires, "s1") # NA status: a real animal
+  expect_null(report$maleDams) # added: skipped
+  addedAndNA <- statusAt(2L, NA_character_)
+  addedAndNA[1L] <- "added"
+  report <- statusReport(addedAndNA)
+  expect_null(report$femaleSires)
+  expect_identical(report$maleDams, "d1")
+  weirdAndNA <- statusAt(1L, "weird")
+  weirdAndNA[2L] <- NA_character_
+  report <- statusReport(weirdAndNA)
+  expect_identical(report$femaleSires, "s1")
+  expect_identical(report$maleDams, "d1")
+})
+test_that("control: an added parent is still left out of the report", {
+  report <- statusReport(statusAt(1L, "added"))
+  expect_null(report$femaleSires)
+  expect_identical(report$maleDams, "d1")
+  report <- statusReport(statusAt(1L:2L, "added"))
+  expect_null(report$femaleSires)
+  expect_null(report$maleDams)
+  report <- statusReport("added")
+  expect_null(report$femaleSires)
+  expect_null(report$maleDams)
+})
+test_that("control: a status on a row that is not a parent changes nothing", {
+  for (value in list(NA_character_, "weird", "added")) {
+    report <- statusReport(statusAt(5L:8L, value))
+    expect_identical(report$femaleSires, "s1")
+    expect_identical(report$maleDams, "d1")
+  }
+})
+test_that("control: an all-original or scalar original status reports both", {
+  for (status in list(allStatus("original"), "original")) {
+    report <- statusReport(status)
+    expect_identical(report$femaleSires, "s1")
+    expect_identical(report$maleDams, "d1")
+    expect_null(report$sireAndDam)
+  }
+})
+test_that("control: H and U parents are never reported, whatever the status", {
+  statuses <- list(
+    original = allStatus("original"), na = allStatus(NA_character_),
+    weird = allStatus("weird"), added = allStatus("added"), null = NULL
+  )
+  for (nm in names(statuses)) {
+    reported <- unlist(statusReport(statuses[[nm]]))
+    expect_false(any(c("sH", "dU") %in% reported), info = nm)
+  }
+})
+test_that("control: the correction branch and sireAndDam ignore the status", {
+  expected <- c("M", "F", "H", "U", "F", "M", "F", "M")
+  bothPed <- statusPed
+  bothPed$dam[7L] <- "s1" # s1 is now listed as both a sire and a dam
+  statuses <- list(
+    original = allStatus("original"), na = allStatus(NA_character_),
+    weird = allStatus("weird"), null = NULL
+  )
+  for (nm in names(statuses)) {
+    corrected <- correctParentSex(
+      statusPed$id, statusPed$sire, statusPed$dam, statusPed$sex,
+      statuses[[nm]]
+    )
+    expect_identical(corrected, expected, info = nm)
+    expect_identical(statusReport(statuses[[nm]], bothPed)$sireAndDam, "s1",
+      info = nm
+    )
+  }
+})
+test_that(paste0(
+  "control: qcStudbook still reports a female sire and male dam by id when ",
+  "the input recordStatus column holds NA, blank or unrecognised values"
+), {
+  sb <- data.frame(
+    id = c("s1", "d1", "o1", "o2", "o3"),
+    sire = c(NA, NA, "s1", "s1", "u1"),
+    dam = c(NA, NA, "d1", "d1", NA),
+    sex = c("F", "M", "F", "M", "F"),
+    birth = as.Date(c(
+      "2000-01-01", "2000-01-01", "2010-01-01", "2010-01-01", "2011-01-01"
+    )),
+    recordStatus = c(NA, "weird", "", NA, "original"),
+    stringsAsFactors = FALSE
+  )
+  errorLst <- qcStudbook(sb, reportErrors = TRUE)
+  expect_identical(errorLst$femaleSires, "s1")
+  expect_identical(errorLst$maleDams, "d1")
+})

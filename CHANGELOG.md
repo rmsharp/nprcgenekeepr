@@ -54,6 +54,57 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S787 RED: tests for `correctParentSex(reportErrors = TRUE)` naming NA, blank and unrecognised `recordStatus` parents and checking every animal when the status is `NULL`
+- Owner decisions: the Phase 0 pick (the `correctParentSex()` slice), the Pre-RED shape decision
+  **"NULL = check every animal"** (over "same plus a `recordStatus = NULL` default" and "NULL = a
+  clear error"; an omitted argument stays R's "argument is missing" error), and the Pre-RED to RED
+  gate ("Yes, proceed to RED", 2026-09-26). The rest of the shape is the owner's S785 Pre-RED
+  decision: `"added"` is the only special status; an NA, blank or unrecognised status is a real
+  animal.
+- **Probe before the gate** (scratch scripts `probe_s787.R`, `probe_app_s787.R`, not in git; the
+  current `reportErrors = TRUE` result against a written reference, a fixture of eight animals:
+  `s1` a female sire, `d1` a male dam, `sH` (H) and `dU` (U) exempt, four offspring): **12 of 18
+  cases differ**, in three separate ways. An `NA` status on `s1` or `d1` reports `NA` in place of
+  the id (`fs=[NA]`, `md=[NA]`; also with a scalar `NA` and an all-`NA` vector); a blank, `"weird"`
+  or `"Original"` status skips the animal silently (`fs=NULL`); a `NULL` status reports nothing at
+  all (`fs=NULL md=NULL`, where `s1` and `d1` are right). Mixed statuses combine them (`NA` on `s1`
+  and `added` on `d1` gives `fs=[NA] md=NULL`). Six controls already agree with the reference:
+  all-original, a scalar `"original"`, `"added"` on `s1`, on both, and as a scalar, and an `NA` on
+  rows that are not parents (`FALSE & NA` is `FALSE`, so it is harmless). The `reportErrors =
+  FALSE` branch never reads the status (its result is identical for `NA`, `"weird"`, `NULL` and
+  all-`NA`), and `sireAndDam` is reported whatever the status.
+- **App path checked** (a namespace spy on `correctParentSex()` under `qcStudbook(reportErrors =
+  TRUE)`, input `recordStatus` = `NA, "weird", "", NA, "original"` plus one unlisted parent): the
+  function received only `original` (5) and `added` (2), no `NA`, because `addParents()` rewrites the
+  column at `R/qcStudbook.R:229` before the call at `:234`; the app reports `s1` and `d1` correctly.
+  So the defect is **script-only**, as the `BACKLOG.md` item said.
+- **Observed, not filed or fixed:** (1) in the report branch an omitted `recordStatus` fails with R's
+  "argument recordStatus is missing, with no default" (the correction branch never evaluates it, so
+  omitting it works there); (2) a status vector whose length does not divide the number of ids is
+  recycled with base R's "longer object length is not a multiple" warning; (3) an `NA` **sex** on a
+  sire is flagged as a female sire (`!NA %in% c("H","U","M")` is `TRUE`), and **the app reaches
+  it**: `convertSexCodes()` maps a missing sex to `"U"` but a blank or unrecognised code to `NA`
+  (`R/convertSexCodes.R:39,50`), so a fixture with a sire whose sex is `""` or `"xyz"` reports
+  `femaleSires = "s1"` from `qcStudbook(reportErrors = TRUE)` (measured with a namespace spy: the
+  function received `NA`); a sex of `NA` or `"M"` does not. Whether a sire with an unreadable sex
+  should be reported as a "female sire" is a question for the owner, not part of this slice. All
+  three are outside the `recordStatus` slice.
+- Tests only, 1 file, no `R/` change: `tests/testthat/test_correctParentSex.R` (+11 `test_that`, +5
+  helpers over a fixture `statusPed`): five failing (an `NA` status names the id; an `NA` never
+  reaches the reported ids; a blank or unrecognised status is a real animal; a `NULL` status checks
+  every animal; a mixed vector skips only the added parents) and six controls (an added parent
+  still skipped; a status on non-parent rows changes nothing; an all-original or scalar original
+  status reports both; H and U parents never reported under any status; the correction branch and
+  `sireAndDam` ignore the status; `qcStudbook(reportErrors = TRUE)` still reports `s1` and `d1` by
+  id with junk input statuses).
+- **Measured RED** (the file run alone against the unchanged `R/`, `load_all` + `NOT_CRAN`): 17
+  tests, **5 failing (43 of 101 expectations)**, 0 errors, 0 skipped, 0 warnings; the 6 existing
+  tests and the 6 new controls pass by design. Each failure read from its message: `NA` against
+  `"s1"` for the `NA` and mixed cases, `TRUE` against `FALSE` for `anyNA()`, and `NULL` against
+  `"s1"` for the blank, unrecognised and `NULL` cases; the per-test counts (8, 5, 24, 2, 4) match
+  the hand prediction. lintr 0 on the file. Commit left RED on purpose; GREEN follows behind an
+  owner gate.
+
 ### 2026-09-26 · [ad hoc] S787 claim: `correctParentSex()` slice 3 (the last) of the sibling `recordStatus` sites *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` "One more place tests
   `recordStatus == "original"` with no NA guard", READY, Effort S; found S784, narrowed S785 and
