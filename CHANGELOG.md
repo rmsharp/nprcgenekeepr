@@ -60,6 +60,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S790 RED: two release-note checks for the Pedigree Diagram mating-symbol placement/spacing entries (stage 2 piece (b))
+- **Model:** Claude Sonnet 5. `tests/testthat/test_newsReleaseState.R`: extended `promisesEveryPair()`
+  to also flag a leading "each" (`\beach\s+\w`, so a per-pair count idiom like "one mate each," does
+  not false-positive); added `matingUnitDuplicateCount()` (wraps `.buildMatingUnitForest()`) with its
+  own unit test on the GA204Z/8LKBV9 loop fixture (expected 1); two new real-file checks scoped to the
+  "## Pedigree Diagram" section via `newsSectionEntries()`/`diagramSectionEntries()`: the cited
+  duplicate-node count for the bundled 375-animal example must equal the CURRENT measured count, and
+  no mating-symbol-placement entry may overstate its own rule with "every"/"each" wording. Measured:
+  24 tests, 92 expectations, **3 failing by design** (the stale "22" claim at `:73`, and lines `:152`
+  and `:163` which promise "every"/"each" pair — the position engine's own tests document named,
+  disclosed centering residuals, so these are overstatements, the same class of finding as S789's
+  male-left entry), 0 errors, all prior tests in the file still pass. Commit `a2d440f1`. Owner
+  approved at the PRE-RED→RED gate after seeing this measured result (an `AskUserQuestion` protocol
+  slip: the tests were written before the gate was posed, caught and disclosed before commit, no
+  irreversible action taken in between).
+
 ### 2026-09-27 · [ad hoc] S790 claim: `NEWS.Rmd` release-state sweep stage 2 piece (b), mating-symbol placement and spacing entries (in progress)
 - **Model:** Claude Sonnet 5. Stub + pending `HANDOFFS.md` receipt + this in-progress entry.
   Owner-picked at the Phase 0 priorities gate (`NEWS.Rmd` sweep, piece (b)) from 4 offered options.
