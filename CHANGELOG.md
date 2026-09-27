@@ -56,6 +56,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S789 RED correction: the male-left check no longer asks for "always" (real layouts prove it false); stage 2 piece (a) of the `NEWS.Rmd` sweep
+- **Model:** Claude Sonnet 5. Test-only commit (`tests/testthat/test_newsReleaseState.R`). My
+  committed RED check (4523973e) required the male-left entry to say "always". Before the
+  RED-to-GREEN gate I checked the claim against real layouts instead of the roxygen text, and it
+  is FALSE: over every mixed-sex mating unit of the 5 bundled example pedigrees, `rhesusPedigree`
+  and `smallPed` (one `makePedigreeMatingLayout()` run per pedigree and style, the parents of each
+  `__union_` node read from `edges`, duplicates mapped through `duplicateToReal`), the male is on
+  the left in **227 of 257 (88.3%)** in the Rectilinear style; `rhesusPedigree` has 29 of 231
+  with him on the right, `smallPed` 1 of 6 (the Direct style: 30 of 237 and 1 of 6). Most
+  exceptions are pairs where a parent has several mates, which the issue #145 plan explicitly
+  leaves to the tree structure (`docs/planning/issue145-sire-dam-left-right-placement-plan.md`,
+  D5/D9); 2 of 34 pairs where each parent has exactly one mate are also on the right on
+  `rhesusPedigree`, unexplained by a partial-parentage child (measured, cause not chased). So the
+  release-note entry may not promise "every pair", and it may not say "by default" either (the
+  layout has no setting: `orderBySex` is not a parameter of `makePedigreeMatingLayout()`).
+  **Change:** the check is renamed "does not overstate male-left" and now asserts that the entry
+  does not say "by default", does not use "always", "every" or "all" (`promisesEveryPair()`, with
+  its own unit test on positives and controls), and that `orderBySex` is not a parameter; the
+  positive "always" requirement is dropped. **Measured:** the file runs 21 tests, 76
+  expectations, **9 failed** (was 10): limit 5, default style 1, shading 2, male-left 1 (line 53
+  still says "by default"), 0 errors, 0 skipped; the other 17 tests pass. This is my error
+  caught by verification before GREEN, not a change of scope. TDD phase RED.
+
 ### 2026-09-27 · [ad hoc] S789 RED: four checks that tie the Pedigree Diagram release notes to what the app does (4 failing by design); stage 2 piece (a) of the `NEWS.Rmd` sweep
 - **Model:** Claude Sonnet 5. Test-only commit (`tests/testthat/test_newsReleaseState.R`); no
   `NEWS.Rmd` or `R/` change. **Pre-RED (read, then owner decisions):** the whole `## Pedigree

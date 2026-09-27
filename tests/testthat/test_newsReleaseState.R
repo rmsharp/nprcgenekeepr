@@ -137,6 +137,12 @@ defaultStyles <- function(text) {
   found
 }
 
+## Whether a sentence promises something for every pair ("always", "every",
+## "all"), as opposed to "in most cases".
+promisesEveryPair <- function(text) {
+  grepl("\\b(always|every|all)\\b", text, ignore.case = TRUE)
+}
+
 ## The integer a source line "<name> <- <n>L" assigns; NA if there is none.
 readCap <- function(lines, name) {
   hit <- grep(paste0("^\\s*", name, "\\s*<-\\s*[0-9]+L"), lines, value = TRUE)
@@ -408,18 +414,38 @@ test_that("the Pedigree Diagram section describes shading as one rule", {
                                                 collapse = ", ")))
 })
 
-test_that("the Pedigree Diagram section says male-left is always applied", {
+test_that("promisesEveryPair() flags an unqualified promise only", {
+  for (txt in c("The male parent is always drawn on the left.",
+                "Every mated pair puts the male parent on the left.",
+                "All pairs are drawn male-left.")) {
+    expect_true(promisesEveryPair(txt), info = txt)
+  }
+  for (txt in c("The male parent is drawn on the left in most cases.",
+                "A parent with several mates is placed to fit the family.",
+                "Pairs can appear either way round.")) {
+    expect_false(promisesEveryPair(txt), info = txt)
+  }
+})
+
+test_that("the Pedigree Diagram section does not overstate male-left", {
   entries <- diagramSectionEntries()
   expect_gt(nrow(entries), 0L)
   maleLeft <- grepl("male parent on the left", entries$text,
                     ignore.case = TRUE)
   expect_equal(sum(maleLeft), 1L)
-  ## The layout has no setting for it, so the entry must not offer one.
+  ## The layout has no setting for it (the parameter was removed), so the
+  ## entry must not offer one ("by default").
+  expect_false("orderBySex" %in% names(formals(makePedigreeMatingLayout)))
   for (i in which(maleLeft)) {
     expect_false(grepl("by default", entries$text[i], ignore.case = TRUE),
                  info = sprintf("line %d says by default", entries$line[i]))
-    expect_true(grepl("\\balways\\b", entries$text[i], ignore.case = TRUE),
-                info = sprintf("line %d does not say always", entries$line[i]))
+    ## Real layouts do not always achieve it: a parent with several mates is
+    ## placed to fit the family (measured S789, Rectilinear style: 29 of 231
+    ## mixed-sex matings on the bundled rhesusPedigree and 1 of 6 on smallPed
+    ## have the male on the right; 227 of 257 across the bundled pedigrees
+    ## have him on the left). The entry must not promise every pair.
+    expect_false(promisesEveryPair(entries$text[i]),
+                 info = sprintf("line %d promises every pair", entries$line[i]))
   }
 })
 
