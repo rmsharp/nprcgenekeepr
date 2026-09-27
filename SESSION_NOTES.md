@@ -86,6 +86,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 792 Did
+**Deliverable:** `NEWS.Rmd` release-state sweep, stage 2 piece (d) -- the crash fixes, isolated-animal
+entries, example pedigrees/article, layout-origin/`kinshipMatrix` entries, and cross-references
+outside the Pedigree Diagram section (closes the sweep). (IN PROGRESS)
+**Started:** 2026-09-27
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 790 Handoff Evaluation (by Session 791)
 **Score: 9/10.** **What helped:** every Orient measurement held -- `CHANGELOG.md` frontier = HEAD
 (`176081f1`), 0 undocumented; `HANDOFFS.md` frontier 2 commits behind HEAD, both S790's own

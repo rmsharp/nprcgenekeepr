@@ -180,6 +180,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S792
+date: 2026-09-27
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: NEWS.Rmd release-state sweep, stage 2 piece (d) -- the crash fixes, isolated-animal entries, example pedigrees/article, layout-origin/kinshipMatrix entries, and cross-references outside the Pedigree Diagram section. Closes the sweep (stages 1, 2a-2c already DONE per S788-S791).
+what_was_done: pending
+next_steps: pending
+key_files: NEWS.Rmd:21- (Pedigree Diagram section); BACKLOG.md working item lines (piece (d) scope, confirmed unchanged from S790 as of S791 close: :32-42, :104-116, :117-121, :131-136, :147-152, :165-177); tests/testthat/test_newsReleaseState.R
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S791
 date: 2026-09-27
 status: complete

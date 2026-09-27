@@ -60,6 +60,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S792 claim: `NEWS.Rmd` release-state sweep stage 2 piece (d), crash fixes/isolated-animal/example-pedigree/layout-origin/`kinshipMatrix`/cross-reference entries -- closes the sweep (in progress)
+- **Model:** Claude Sonnet 5. Stub + pending `HANDOFFS.md` receipt + this in-progress entry, written
+  FIRST per Learning 804, before any PRE-RED fact-finding. Owner-picked at the Phase 0 priorities
+  gate (from 4 offered options: this item, the PED_GV cleanup bundle, the `a2interactive`
+  `reportMatePairs()` doc section, and the docs staleness audit). Orient measured: `CHANGELOG.md`
+  and `HANDOFFS.md` frontiers both = HEAD (`970d2dd8`), 0 undocumented; 23 unpushed at
+  `origin/master` = `ff8308a5` (recount from S791's predicted 21/22); 4/4 push-triggered CI
+  workflows green on the last pushed commit, but a same-day SCHEDULED `shinytest2` run was
+  cancelled after its 30-minute timeout (unrelated to push history, reported not diagnosed per the
+  CI-break tracking convention); dashboard health 96/100, 0 high+ risk; context budget: no file over
+  ceiling, `CLAUDE.md` in the documented warn band (headroom, not a defect); quality ratchet
+  unchanged from S790 (1/1, results `ce2ee7e8ec51`, manifest `aa983075d6a2` -- matches
+  `.quality-gates-results.json` exactly; its stale `head` field is inert since no `R/` file has
+  changed). Working tree matched the predicted residue exactly (`BACKLOG.md` owner header only,
+  `BACKLOG.log`, two `suggested_NEWS_entry` drafts, 5 render artifacts).
+
 ### 2026-09-27 · [ad hoc] S791 records: stage 2 piece (c) of the `NEWS.Rmd` release-state sweep DONE (S790 handoff evaluated 9/10, self 8/10, receipt, Learning 804, next-session items); full suite 354 files / 2,753 tests / 8,393 expectations with only the known pkgdown draft failing
 - **Model:** Claude Sonnet 5. Session close-out: `HANDOFFS.md` receipt completed (`status: complete`,
   self-score 8, predecessor-score 9); `SESSION_NOTES.md` records the Session 790 handoff evaluation
