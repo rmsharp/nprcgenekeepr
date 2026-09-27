@@ -60,6 +60,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S789 records: stage 2 piece (a) of the `NEWS.Rmd` sweep DONE (S788 handoff evaluated 9/10, self 8/10, receipt, Learning 802, next-session items); ratchet 1/1 on 9df0bac6
+- **Model:** Claude Sonnet 5. Close-out records for the S789 deliverable (the claim, RED, RED
+  correction, GREEN, REFACTOR and ledger-trim entries above and below hold the work). **Records
+  written:** the S788 handoff evaluation (9/10) and the S789 record with self-assessment (8/10),
+  next steps and gotchas in `SESSION_NOTES.md`; the `HANDOFFS.md` receipt (`status: complete`,
+  replacing the pending stub); Learning 802 in `PROJECT_LEARNINGS.md`. A wording-only change in the
+  same commit: the test title of `defaultStyles()`'s first unit test in
+  `tests/testthat/test_newsReleaseState.R` now reads "attaches it to the style just before, else
+  after" (it said "nearest", which is not the rule). **Measured at close-out:** ratchet **1/1 at
+  `9df0bac6`** (3,577,928 B against the 5,000,000 B ceiling, +2,987 B; results `40286d04f00e`,
+  manifest `aa983075d6a2`); the four push workflows on `ff8308a5` all finished `success` (lint
+  5m6s, pkgdown 6m18s, test-coverage 10m57s, R-CMD-check 22m49s), the first CI evidence for S785 to
+  S788; CI has not seen the S788 addendum or S789. No push (not asked): 8 local commits after
+  `origin/master` = `ff8308a5` with this one (recount). **Deliberate non-actions:** the male-left
+  cause (2 of 34 one-mate pairs on the right), the manual's misleading limit wording and the
+  roxygen for male-left are filed in `BACKLOG.md`, not fixed; pieces (b), (c) and (d) of the sweep
+  were not started. **Second owner-gated archive pass (commit `87118663`):** the commit hook counts `SESSION_NOTES.md` in tokens (25,000, about 56,750 B), not the 65,536 B of the size table, so my first close-out draft (65,177 B, about 28.7k tokens) would have been refused; the owner approved archiving it (`--cut 3`, 4 of 7 records, 53,844 B to 25,632 B, verify script OK on L1/L2/L3), the trimmer wrote its own entry below, and my record was put back on the trimmed file. No GitHub issue was opened
+  or closed (the item names none). TDD phase REFACTOR complete; session closed.
+
 ### 2026-09-27 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-26-3.md` (4 record(s), 53,844 B → 25,632 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

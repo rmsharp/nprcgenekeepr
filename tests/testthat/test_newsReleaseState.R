@@ -302,7 +302,7 @@ test_that("newsSectionEntries() is empty for a missing heading", {
   expect_identical(nrow(newsSectionEntries(block, "Alph")), 0L)
 })
 
-test_that("defaultStyles() attaches the default to the style named nearest", {
+test_that("defaultStyles() attaches it to the style just before, else after", {
   ## Named after the word: the first style after it.
   expect_identical(
     defaultStyles(paste("The tab uses a default \"Direct\" style and an",

@@ -82,33 +82,158 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 788 Handoff Evaluation (by Session 789)
+**Score: 9/10.** **What helped:** every Orient measurement held -- `CHANGELOG.md` frontier `5ff2f39c`
+= HEAD (0 undocumented); the one commit after the `HANDOFFS.md` frontier was the addendum the notes
+predicted; 1 unpushed and `origin/master` = `ff8308a5` as the addendum said; the ratchet citation
+(results `3205149f7059`, manifest `aa983075d6a2`, head `075443b2`) matched before any run; the
+untracked residue was exactly as listed; the STANDING SET (receipt gotcha 7) was read before the
+first command; the next-step pointers (`NEWS.Rmd:23` versus `:79`, "read `R/modPedigree.R` for the
+real limits") led straight to the constants (`:405,417`); the header-less blob method worked
+verbatim again; the guard file's helpers were reusable as they stood. **Missing:** (1) the item
+named ONE conflict for piece (a), but the section holds four inaccurate statements in five entries
+(750 alone at `:23`; "Direct" called the default at `:41-43`; shading told twice as a change;
+male-left "by default" at `:53-55`), which I found only by re-reading the section; (2) nothing
+warned that the code's roxygen ("unconditional" male-left) overstates real layouts (227 of 257
+matings), which I nearly wrote into a RED check. **Wrong:** gotcha (6) said an archive pass was
+"likely owed at the next Orient": it was not (no trigger fired: 51.6, 52.6 and 52.1 KB against
+65,536 B); `CHANGELOG.md` crossed the line only during this session's close-out (65,424 B before
+the records entry). The receipt's gotcha (1) still says "26 unpushed, `origin/master` =
+`4e2e6e06`", which the addendum in these notes superseded, so the two files disagreed until Orient.
+**ROI:** high.
+
 ### What Session 789 Did
-**Deliverable:** **`NEWS.Rmd` release-state sweep, stage 2 piece (a): the Pedigree Diagram
-section's display-and-defaults entries** (IN PROGRESS): restate them as finished-state notes
-against 2.0.0 (Learning 785), first resolving the conflict the item names (`NEWS.Rmd:23` says a
-pedigree above 750 animals shows a message; `:79` says the default limit is 400 animals and 750
-under "Direct") against `R/modPedigree.R`; the piece's phrase patterns are added to
-`tests/testthat/test_newsReleaseState.R` as a failing test FIRST, scoped to the section; strict
-TDD, one piece, each gate via `AskUserQuestion`.
-**Started:** 2026-09-27
-**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (item 1,
-`BACKLOG.md` "`NEWS.Rmd` release-state sweep", READY, Effort M). Orient measured: 0 undocumented
-on the `CHANGELOG.md` frontier (`5ff2f39c` = HEAD); the `HANDOFFS.md` frontier `ff8308a5` has one
-commit after it, the S788 addendum, which belongs to S788 (complete receipt; recorded in
-`CHANGELOG.md` and the S788 addendum below), so no reconcile block; 1 unpushed (`5ff2f39c`),
-`origin/master` = `ff8308a5`; the S788 ratchet citation (results `3205149f7059`, manifest
-`aa983075d6a2`, head `075443b2`, 1/1) matched `.quality-gates-results.json` before any run; CI:
-the four workflows on `ff8308a5` were `in_progress` at Orient (first CI evidence for S785 to
-S788; read the result, do not assume); dashboard 96/100; context budget nothing over a ceiling
-(`CLAUDE.md` 26,731 B; this file 51,580 B, 5,170 B under the 56,750 B one-read cap, so an archive
-pass is likely owed at close-out; `HANDOFFS.md` 52,131 B, `CHANGELOG.md` 52,638 B; the trim check
-fires on none); NEW, report-only: `SESSION_RUNNER.md` and `SAFEGUARDS.md` "match no revision in
-canonical history" per `context_budget.py`. Plan: Pre-RED reading (`R/modPedigree.R` for the real
-limits, the section's display and defaults entries with line numbers, the `v2.0.0` absence check),
-then RED, GREEN, REFACTOR. TDD phase PRE-RED; no code touched.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's
-reconcile.
+**Deliverable:** **`NEWS.Rmd` release-state sweep, stage 2 piece (a) (the Pedigree Diagram display
+and defaults entries) -- DONE.** The section's entries now state the finished state against 2.0.0:
+the display limit is stated once (400 animals with the default "Rectilinear" connector style, 750
+with "Direct"), Rectilinear is named the default (the notes called "Direct" the default), shading
+is one rule (only animals marked affected are shaded; unaffected, unknown and every animal with no
+`affected` column are drawn open), and male-left is "in most cases" (not "by default": there is no
+setting; not "always": real layouts refute it). 45 entries became 42. Four section-scoped checks
+in `tests/testthat/test_newsReleaseState.R` tie the notes to the app (limits parsed from
+`R/modPedigree.R`, default read from `formals(makePedigreeMatingLayout)`). Owner-picked at the
+Phase 0 priorities gate; strict TDD with an `AskUserQuestion` at every gate.
+**Commits:** claim `95d0d2de`; RED `4523973e`; RED correction `a4b61e66`; GREEN `4e8ada74`;
+REFACTOR `9df0bac6`; ledger trims `43179247` (`CHANGELOG.md`) and `87118663`
+(this file); this records commit.
+**Push:** none (not asked); 8 local commits after `origin/master` = `ff8308a5` before this records
+commit (the S788 addendum `5ff2f39c` plus 7 of S789), 9 after (recount). CI on `ff8308a5`: all four
+workflows `success` (lint 5m6s, pkgdown 6m18s, test-coverage 10m57s, R-CMD-check 22m49s), the first
+CI evidence for S785 to S788; CI has NOT seen the S788 addendum or S789.
+**Owner decisions:** the Phase 0 pick; scope = limits and defaults together (limit, default style,
+shading, male-left; the plain-words question was accepted first time); guard = check only what this
+piece rewrites; PRE-RED to RED, RED to GREEN, GREEN to REFACTOR all yes; the `CHANGELOG.md`
+archive pass yes; then, because the hook counts `SESSION_NOTES.md` in tokens (about 28.7k against
+25,000 with my record in), a second archive pass on this file yes.
+**Result (measured; full detail in the S789 entries of `CHANGELOG.md`):** Pre-RED facts: default
+style Rectilinear (`R/modPedigree.R:423-429`), limits 400 and 750 (`:405,417`), the count behind the
+limit is the focal-trimmed pedigree (`:354-382`), no bundled pedigree has an `affected` column, the
+diagram code is absent at `v2.0.0`. RED: 4 real-file checks failing by design (predicted 10 failing
+expectations, measured 10). Before the gate I probed male-left over every mixed-sex mating of the
+bundled pedigrees: **227 of 257 (88.3%)**, so my committed RED check requiring "always" was FALSE;
+corrected in its own commit `a4b61e66` (9 failing). GREEN: the file 21 tests, 74 expectations, 0
+failed; full unfiltered suite (`load_all` + `NOT_CRAN`, alone, load about 6) **354 files, 2,749
+tests, 8,568 expectations, 1 failed** (the known `test_pkgdown_reference_config.R`), 0 errors, 187
+skipped, 6 warnings, 4.6 minutes (predicted 2,749 tests); `NEWS.Rmd` knits. REFACTOR: one unit test
+moved, the file re-run 21/74/0; `BACKLOG.md` sweep item narrowed, one item filed, audit item
+extended. Ratchet **1/1 at `9df0bac6`** (3,577,928 B, +2,987 B; results `40286d04f00e`, manifest
+`aa983075d6a2`). Archive pass (owner-approved, `--cut 12 --force`): `CHANGELOG.md` 65,424 to 37,593
+B (13 of 25 records), verify script OK on L1/L2/L3; then this file 53,844 to 25,632 B (`--cut 3`,
+4 of 7 records, verify OK) before my record was put back.
+**Runtime (3E):** n/a -- `NEWS.Rmd`, a test file and records only; no runtime behavior changed; the
+ratchet is the mechanical half. Not a live click-through of the Shiny Diagram tab: the limit and
+default are read from the code and the shading and male-left claims from real `makePedigreeMatingLayout()`
+output.
+**Disclosures:** (1) I committed a RED check asserting a false claim ("always"), caught it by
+probing real layouts before GREEN and corrected it in a separate commit and ledger entry; (2) a
+ledger draft said "12 bundled pedigree data frames" where my scan printed 7, caught before commit;
+(3) two `AskUserQuestion` calls failed to parse (payload passed as one string) and were re-sent; (4)
+the full suite ran once, on the GREEN code; the REFACTOR move and a later test-title rename
+(wording only) re-ran or need only the one file; (5) 2 of 34 one-mate pairs on `rhesusPedigree` are
+on the right and I did not chase why (filed); (6) the manual's "750, drops to 400" wording and the
+male-left roxygen were found, NOT fixed (audit item, new item); (7) no clean-export `R CMD check` (no
+`R/` change); `NEWS.md` not re-rendered (lags by design); (8) your residue is untouched and the
+`BACKLOG.md` header stayed unstaged (working diff = the 5 header lines, checked); (9) the S789 claim
+entry keeps its "(in progress)" marker by the ledger rule; (10) `context_budget.py` says
+`SESSION_RUNNER.md` and `SAFEGUARDS.md` match no canonical revision: NOT investigated.
+**Checklists:** lint: no `R/` file touched, `tests/` is excluded by `.lintr`, no test line over 80
+columns; NEWS: this session IS the rewrite, no new exported function or feature; `_pkgdown.yml`,
+citation, tutorial and `a2interactive` N/A; no GitHub issue exists for this item; the `BACKLOG.md`
+sweep item was NARROWED, not removed (pieces remain), one item filed (27 to 28 items).
+
+**Self-assessment (Session 789): 8/10.** **Strengths:** STANDING SET read before the first
+command; Orient measured; the plain-words scope question was accepted at once; every claim checked
+against the code AND real output, which caught the false "always" before it reached the notes; RED,
+suite and test-count predictions matched; the RED correction was its own commit and ledger entry;
+scope held (pieces (b), (c), (d) not attempted, the male-left cause filed not chased); every gate
+through `AskUserQuestion`. **Weak:** (1) I trusted the roxygen and committed a false RED check first
+(one extra commit); (2) a ledger count slip caught before commit; (3) two malformed
+`AskUserQuestion` calls; (4) a long Phase 0 report again. **Learnings:** 802.
+
+**Next steps (specific):** (A) **Stage 2, piece (b): mating-symbol placement and spacing (READY, M)**
+-- `BACKLOG.md` working `:136`; the item lists the `NEWS.Rmd` lines (`:70-78`, `:91-100`,
+`:119-131`, `:152-156`, `:163-167`; re-derive by reading the section); add the piece's checks to
+`test_newsReleaseState.R` as failing tests FIRST, scoped with `newsSectionEntries(block, "Pedigree
+Diagram")`; check every sentence against real output, and NOTE the entry at `NEWS.Rmd:73-78`
+states "22 individuals in the bundled example pedigree" -- a number I did NOT verify (measure it
+with `makePedigreeMatingLayout()` on the bundled pedigree). (B) **Also READY:** the docs staleness
+audit (L) `:195` (now carries the manual's limit wording); the `a2interactive` `reportMatePairs()`
+section (S), sub-item (1) of `:114`; the PED_GV cleanup bundle (S) `:13`; the Chrome-for-Testing
+hang root cause (M, optional, low) `:386`; the `BACKLOG.md` ledger-size housekeeping (L) `:444`.
+(C) **DECISION NEEDED:** male-left placement, roxygen versus real layouts (S to find the cause)
+`:176`; a sire or dam with a blank or unrecognized sex reported as a "female sire" or "male dam" (S)
+`:39`; the shared `isAddedRecord()` helper (S, optional) `:56`; `convertDate(reportErrors)` row
+numbering (S, low) `:70`; the absent-id decision for `getAncestors()` (S) `:85`; F2 and F3 `:13`;
+`paths-ignore` (S) `:101`. (D) **Owner-requested or owner-decision:** the contributor tutorial (M)
+`:222`, the peer-reviewed papers (L, its own scoping session first) `:606`, the harem-sire hole
+`:261`, blank ancestry OTHER vs UNKNOWN `:239`, the two LabKey items `:300` and `:315`, the
+retrospective backfill `:281`, the trimmer's verify false positive (S) `:409`. (E) Your decisions
+open: the working-tree residue (the `BACKLOG.md` header, `BACKLOG.log`, the two NEWS drafts -- the
+draft still turns one local test red -- and 5 render artifacts); **the push of the 8 local commits
+after `ff8308a5`** (CI has not seen S789 or the S788 addendum; `NEWS.Rmd`, a test file and records
+only, so the tests must be watched, not skipped: a test file changed); closing the 11 recommended
+PED_GV ids; whether to delete the `## Package` entry (`NEWS.Rmd:18`); the two methodology files
+`context_budget.py` says match no canonical revision (last sync S719 from the fork's `main`).
+
+**Key files:** `tests/testthat/test_newsReleaseState.R` (older helpers `newsTopBlock` `:32`,
+`newsEntries` `:44`, `milestonePhrases` `:64`, `findMilestones` `:77`; new in S789 `newsSectionEntries`
+`:100`, `defaultStyles` `:117`, `promisesEveryPair` `:142`, `readCap` `:147`, `diagramCaps` `:155`,
+`diagramSectionEntries` `:165`; helper unit tests `:276-367`; the four real-file checks `:369`,
+`:396`, `:413`, `:430`); `NEWS.Rmd:21-` (the `## Pedigree Diagram` section, 42 entries; the rewritten
+entries at `:22`, `:43`, `:46`, `:58`); `R/modPedigree.R:405,417,423-429,505` (limits, default style,
+the over-limit message); `R/makePedigreeDiagramData.R:173` (`.affectedColor`), `:1682` (the layout
+signature), roxygen at about `:1590-1610` (male-left); `BACKLOG.md` working `:136-175` (sweep
+item), `:176-194` (male-left item); `CHANGELOG.md:63` (the S789 records entry; the two trim entries at `:82` and `:90`; then REFACTOR
+`:98`, GREEN `:114`, RED correction `:149`, RED `:172`, claim `:208`); `HANDOFFS.md:179` (the S789 receipt);
+`PROJECT_LEARNINGS.md:2272` (Learning 802); `docs/archive/CHANGELOG-through-2026-09-26-3.md` (the
+new shard and its `.verify.sh`); `.quality-gates-results.json` (untracked; the citation source);
+this session's scratchpad scripts (`probe_maleleft*_s789.R`, `run_full_s789.R`; not in git) are in
+`/private/tmp/claude-501/-Users-rmsharp-Development-nprcgenekeepr/5ad32219-5cec-4c2e-84ac-bfdb74516d4d/scratchpad/`.
+
+**Gotchas for the next session:** (1) Expect 0 undocumented on both frontiers -- measure; 8 unpushed
+after this records commit (recount); `origin/master` = `ff8308a5`; CI on it was green; the working
+tree is NOT clean (`BACKLOG.md` = your 5-line header only, untracked `BACKLOG.log`, two
+`suggested_NEWS_entry` drafts, 5 render artifacts); stage by name; for a `BACKLOG.md` commit edit
+the working file, `tail -n +6 BACKLOG.md > blob`, `git hash-object -w blob`, `git update-index
+--cacheinfo 100644,<sha>,BACKLOG.md`, commit, then confirm `git diff HEAD -- BACKLOG.md` shows only
+the 5 header lines (worked verbatim again); working-file `BACKLOG.md` line numbers are HEAD +5 (this
+note cites working-file numbers). (2) A local unfiltered suite reads 1 failed on a QUIET machine
+(the pkgdown draft); under host load two wall-clock benchmarks also fail (Learnings 760, 800). Baseline
+now: **354 files, 2,749 tests, 8,568 expectations, 187 skipped, 6 warnings**. (3) Ratchet 1/1 at
+`9df0bac6` (3,577,928 B, results `40286d04f00e`, manifest `aa983075d6a2`); compare BEFORE any run,
+run AFTER committing. (4) The new checks are wording contracts: a limit number is followed within 60
+non-digit characters by its style name; "default" attaches to the style named just before it in the
+same sentence, else the first after; exactly one shading entry (the words shade, shaded, shading,
+filled, unfilled); the male-left entry has no "by default" and no always, every or all. Each later
+piece adds its own; scope them with `newsSectionEntries()`. (5) THE HOOK COUNTS TOKENS: this file's real ceiling is 25,000 tokens (56,750 B at 2.27 B per
+token), not the 65,536 B in the size table; my first close-out wrote it to 65,177 B (about 28.7k
+tokens) and the commit would have been refused, so it was archived (owner-approved). Measure with
+`python3 context_budget.py` (it prints tokens), not `wc -c`. `HANDOFFS.md` is near 62 KB against the
+65,536 B trim budget, so it needs the owner-gated archive pass soon. (6) STANDING SET carried in the S789 receipt's gotcha (7); READ IT BEFORE THE FIRST COMMAND. New in
+S789: `AskUserQuestion` takes the `questions` array, not a pasted string; `methodology_trim.py`
+dry-run first (`--cut 12 --force --budget-bytes 65536`), it names its own shard (`-3` when the
+day's name is taken) and adds its own ledger entry; verify a claim about behavior against the real
+function's output, not the roxygen (Learning 802).
 
 ### Session 787 Handoff Evaluation (by Session 788)
 **Score: 9/10.** **What helped:** every Orient measurement held -- 0 undocumented on both frontiers
