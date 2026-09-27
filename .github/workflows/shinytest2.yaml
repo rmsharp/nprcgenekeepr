@@ -43,7 +43,7 @@ jobs:
   shinytest2:
     runs-on: ubuntu-latest
 
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

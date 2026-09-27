@@ -76,6 +76,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   text-parsing style as `test_shinytest2_workflow_coverage.R`. Confirmed FAILING against the
   current file (`timeout_minutes` = 30, expected 45).
 
+### 2026-09-27 · [ad hoc] S794 GREEN: shinytest2.yaml's job timeout-minutes raised 30 -> 45
+- **Model:** Claude Sonnet 5. `.github/workflows/shinytest2.yaml:46`, minimum change only. New
+  test passes; `test_shinytest2_workflow_coverage.R` unaffected (4/4 pass); unfiltered full-suite
+  regression read 355 files / 2,755 tests / 8,408 passed, 1 failed (the known pre-existing
+  `test_pkgdown_reference_config.R` draft failure, unrelated), 0 error; `lintr::lint()` on the new
+  test file: 0 lints.
+
 ### 2026-09-27 · [ad hoc] S793 records: suggested_NEWS_entry.md/.Rmd review DONE (14 findings: 8 ADOPT, 5 MODIFY, 1 REJECT-as-drafted); one confirmed factual error found in the draft (groupAddAssign()'s `candidates` return-value field mislabeled as a new argument); one BACKLOG.md item filed for a second shinytest2 CI timeout occurrence; Learnings 806-807
 - **Model:** Claude Sonnet 5. Phase 3 close-out: Session 792's handoff evaluated 8/10 (every Orient
   measurement held except two related, minor inaccuracies -- the "27 unpushed" figure undercounted
