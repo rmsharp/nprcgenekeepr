@@ -60,6 +60,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S790 REFACTOR: `BACKLOG.md` sweep item narrowed to pieces (c) and (d) with current `NEWS.Rmd` lines (stage 2 piece (b))
+- **Model:** Claude Sonnet 5. No code or test behavior change -- reviewed the rewritten `NEWS.Rmd`
+  entries and the new test code once more (both read clean; plain-language criterion S628 holds).
+  `BACKLOG.md`'s `NEWS.Rmd` sweep item: marked pieces (a) and (b) DONE with a one-line summary of
+  each; re-derived pieces (c) and (d)'s `NEWS.Rmd` line ranges fresh against the post-piece-(b) file
+  (piece (b) removed 21 net lines, shifting everything after it) -- piece (c) `:67-69`, `:79-90`,
+  `:122-130`, `:137-142`, `:153-164`, `:178-198`; piece (d) `:32-42`, `:104-116`, `:117-121`,
+  `:131-136`, `:147-152`, `:165-177`. Target file re-run: 24 tests, 0 failed (no behavior change, so
+  the full suite was not re-run; the GREEN entry's full-suite result stands). Ratchet 1/1 at
+  `b007682c` (results `ce2ee7e8ec51`, manifest `aa983075d6a2`).
+- **Checklists:** lint 0 (no `R/` file touched this piece); NEWS -- this session IS the rewrite, no
+  new exported function or feature; `_pkgdown.yml`, citation, tutorial and `a2interactive` N/A; no
+  GitHub issue exists for this item; the `BACKLOG.md` item was NARROWED, not removed (pieces (c) and
+  (d) remain).
+
 ### 2026-09-27 · [ad hoc] S790 GREEN: NEWS.Rmd Pedigree Diagram mating-symbol placement and spacing entries restated as the finished state (stage 2 piece (b))
 - **Model:** Claude Sonnet 5. `NEWS.Rmd`'s "## Pedigree Diagram" section, 42 entries become 37:
   merged the 6-entry "mating symbol sits centered/spaced" cluster (old `:91-93`, `:94-97`,
