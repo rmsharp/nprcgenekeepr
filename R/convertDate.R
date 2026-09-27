@@ -90,10 +90,13 @@
 #' convertDate(ped4)
 convertDate <- function(ped, timeOrigin = as.Date("1970-01-01"),
                         reportErrors = FALSE) {
-  ## Ignore records added because of unknown parents
+  ## Ignore records added because of unknown parents. Only "added" records are
+  ## set aside; an NA or unrecognized status is a real animal, and an NA in a
+  ## row subscript would return an all-NA phantom row, so mask explicitly.
   if (any("recordStatus" %in% names(ped))) {
-    addedPed <- ped[ped$recordStatus == "added", ]
-    ped <- ped[ped$recordStatus == "original", ]
+    isAdded <- !is.na(ped$recordStatus) & ped$recordStatus == "added"
+    addedPed <- ped[isAdded, ]
+    ped <- ped[!isAdded, ]
     if (nrow(ped) == 0L) {
       return(rbind(ped, addedPed))
     }

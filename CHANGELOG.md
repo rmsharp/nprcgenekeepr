@@ -54,6 +54,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S785 GREEN: `convertDate()` and `getRecordStatusIndex()` treat only `"added"` as special
+- Two R files, minimum change, no new functionality (owner-approved at the RED to GREEN gate):
+  `R/getRecordStatusIndex.R:15` is now `which(ped$recordStatus == status)` (drops NA, integer);
+  `R/convertDate.R:96-99` builds `isAdded <- !is.na(ped$recordStatus) & ped$recordStatus ==
+  "added"` and splits with `ped[isAdded, ]` / `ped[!isAdded, ]`, a logical mask, never a negative
+  subscript from a possibly-empty index; the `nrow(ped) == 0L` early return and the closing
+  `rbind()` are untouched. An NA, blank or unrecognised status is now a real animal that is kept
+  in place with its date converted and validated; the pipeline function
+  (`getDateErrorsAndConvertDatesInPed()`) needed no edit, its fix comes through the helper.
+- **Measured GREEN:** the three target files 3 + 14 + 5 tests, 7 + 26 + 21 = 54 expectations, 0
+  failed, 0 errors (RED was 8 failing tests / 20 failed expectations). Related files (qcStudbook,
+  modInput_qcStudbook, removeUnknownAnimals, removeDuplicates, correctParentSex, wordlist_coverage,
+  setExit, checkParentAge) 0 failed; `test_pkgdown_reference_config.R` 1 failed, read from its
+  message: "1 article(s) not covered ... suggested_NEWS_entry", the owner's untracked
+  `vignettes/suggested_NEWS_entry.Rmd` draft, not this change. **Full suite** (`load_all` +
+  `NOT_CRAN`, no file filter): 353 files, 2,706 tests, 8,366 expectations, **1 failed** (that same
+  one), 0 errors, 187 skipped; against S784's 352 / 2,694 / 8,326 the delta is +1 file, +12 tests,
+  +40 expectations, exactly this slice's additions. lintr 0 on both R files and all three test
+  files.
+- **Mutants** (each edits one fix, runs the three target files, restores byte-identical): a control
+  with no mutation 0 / 0 / 0 failing tests; dropping the `is.na()` guard killed by 3 `convertDate`
+  and 1 pipeline test; treating NA as added, killed by 3 + 1; keeping only `"original"` (the old
+  behavior), killed by 4 + 2; the old `seq_along` subscript in the helper, killed by 2 index and 1
+  pipeline test; an inverted comparison in the helper, killed by 2 + 3. The helper mutants leave
+  the `convertDate` file at 0 and the `convertDate` mutants leave the index file at 0. All 5
+  killed. Not yet run: the clean-export `R CMD check` (it follows the docs edit, so it sees the
+  final tree).
+
 ### 2026-09-26 · [ad hoc] S785 RED: tests for the date-conversion path keeping NA and unrecognised `recordStatus` animals
 - Owner decisions at the Pre-RED gate (2026-09-26): **fix shape (1)** -- `"added"` is the only
   special status, so an NA, blank or unrecognised status is a real animal, processed like an

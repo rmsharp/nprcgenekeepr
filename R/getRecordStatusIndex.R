@@ -12,7 +12,7 @@
 #' @noRd
 getRecordStatusIndex <- function(ped, status = "added") {
   if (any("recordStatus" %in% names(ped))) {
-    seq_along(ped$recordStatus)[ped$recordStatus == status]
+    which(ped$recordStatus == status)
   } else {
     integer(0L)
   }
