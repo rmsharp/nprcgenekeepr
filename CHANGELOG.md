@@ -60,6 +60,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S790 GREEN: NEWS.Rmd Pedigree Diagram mating-symbol placement and spacing entries restated as the finished state (stage 2 piece (b))
+- **Model:** Claude Sonnet 5. `NEWS.Rmd`'s "## Pedigree Diagram" section, 42 entries become 37:
+  merged the 6-entry "mating symbol sits centered/spaced" cluster (old `:91-93`, `:94-97`,
+  `:119-124`, `:125-127`, `:128-131`, `:152-156`) into 1 entry stating the rule "in most cases"
+  with a clear gap between parents and between neighboring row symbols (issue #166 kept); replaced
+  the stale "22 individuals in the bundled example pedigree" duplicate-node count with the current
+  measured 113 (`:73-78`, also renamed to "the bundled 375-animal example pedigree" for consistency
+  with the article-comparison entry later in the section); reworded "Every mating symbol now sits
+  between the two parents...and each mated pair is drawn on the side..." to "Many mated pairs are
+  drawn on the side..." (`:163-167`), dropping the now-redundant "every mating symbol" clause
+  (covered by the merged entry) and the "each" overstatement. Target file: 24 tests, 88
+  expectations, 0 failed. Full unfiltered suite (`load_all` + `NOT_CRAN`, run alone): **354 files,
+  2,752 tests, 8,582 expectations, 1 failed** (the known `test_pkgdown_reference_config.R`, the
+  owner's untracked draft), 0 errors, 187 skipped, 6 warnings -- every count matched the S789
+  baseline plus the target file's own delta exactly (+3 tests, +14 expectations). `NEWS.Rmd` knits
+  (scratch output). Lint: `lintr::lint_package()` on the touched test file, 0 lints (no `R/` file
+  touched this piece). (A commit cannot name its own hash; see `git log`.)
+
 ### 2026-09-27 · [ad hoc] S790 RED: two release-note checks for the Pedigree Diagram mating-symbol placement/spacing entries (stage 2 piece (b))
 - **Model:** Claude Sonnet 5. `tests/testthat/test_newsReleaseState.R`: extended `promisesEveryPair()`
   to also flag a leading "each" (`\beach\s+\w`, so a per-pair count idiom like "one mate each," does
