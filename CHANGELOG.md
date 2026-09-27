@@ -18,8 +18,6 @@ it is failure mode #27.
 [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger), which `bin/sync`
 keeps current. ledger-format: 2 — keep this marker; `bin/status` reads it.
 
-## 2026-08
-
 ## 2026-09
 
 **Archived 328 record(s), 2026-08-14 → 2026-09-17** into [`docs/archive/CHANGELOG-through-2026-09-17.md`](docs/archive/CHANGELOG-through-2026-09-17.md) — same format, same order, frozen.
@@ -57,6 +55,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 **Archived 26 record(s), 2026-09-26 → 2026-09-26** into [`docs/archive/CHANGELOG-through-2026-09-26-2.md`](docs/archive/CHANGELOG-through-2026-09-26-2.md) — same format, same order, frozen.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
+
+### 2026-09-26 · [ad hoc] Owner-directed after the S788 close-out: pushed the 26 local commits; removed the empty `## 2026-08` heading from this file
+- **Push (a non-commit action):** `git push origin master` moved `origin/master` from `4e2e6e06`
+  to `ff8308a5`, 26 commits (S785 to S788), a fast-forward (fetched first: 0 behind). All four push
+  workflows (`R-CMD-check`, `test-coverage`, `pkgdown`, `lint`) started on `ff8308a5`; they were
+  still running when this entry was written, so their results are NOT recorded here. This is the
+  first CI run on any of S785 to S788.
+- **Heading removal:** the empty `## 2026-08` heading (old line 21, from `850e3671b`, 2026-08-15)
+  and the blank line after it, at the owner's direction after the owner flagged it as an error.
+  Before the edit I captured the trimmer's check and a 19-record dry-run split; after it, both
+  are identical apart from sizes (L1, L2 and L3 all OK, the same 14-of-19 split), the newest
+  shard's verify script still passes, and the dashboard is unchanged at 96/100. `CLAUDE.md`'s
+  "legacy forms" paragraph said the heading sat above `## 2026-09`, which would now be false, so
+  its clause (b) became the prepend rule plus a one-clause note of the removal (+73 B: 26,658 to
+  26,731 B, ceiling 28,000 B).
+- **This entry's commit is local:** the owner asked for the 26 commits, so it is not pushed.
 
 ### 2026-09-26 · [ad hoc] S788 records: close-out for stage 1 of the `NEWS.Rmd` release-state sweep (S787 handoff evaluated 9/10, receipt, Learning 801, next-session items)
 - **Deliverable:** the close-out records for S788, whose work is recorded in the entries below:

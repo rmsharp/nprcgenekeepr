@@ -97,6 +97,13 @@ the host was near load 50 for part of the session (Learning 760 again). **Wrong:
 material. **ROI:** high.
 
 ### What Session 788 Did
+**Addendum (owner-directed, after the close-out, same day):** the 26 local commits were PUSHED
+(`4e2e6e06..ff8308a5`, a fast-forward); all four push workflows started on `ff8308a5` and were still
+running when this was written, so read their results at Phase 0 (`gh run list --branch master`,
+unfiltered): it is the first CI evidence for S785 to S788. `CHANGELOG.md`'s empty `## 2026-08` heading
+was REMOVED (the trimmer's L1/L2/L3 proofs and the dashboard are unchanged; `CLAUDE.md`'s "legacy
+forms" clause updated, +73 B). So the "Push" line and decisions (E) below (the push, line 21) are
+CLOSED; expect 1 unpushed commit (the addendum commit) at Orient -- recount.
 **Deliverable:** **`NEWS.Rmd` release-state sweep -- STAGE 1 DONE.** The 12 development-block entries
 that carried an in-progress diary phrase now state the finished state against 2.0.0: the four staged
 #168 ancestry entries became one, the two #167 "arrives in later steps" entries and the MHC "first
