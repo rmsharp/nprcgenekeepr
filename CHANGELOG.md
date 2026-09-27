@@ -54,6 +54,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S787 claim: `correctParentSex()` slice 3 (the last) of the sibling `recordStatus` sites *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` "One more place tests
+  `recordStatus == "original"` with no NA guard", READY, Effort S; found S784, narrowed S785 and
+  S786). The fix shape is already the owner's S785 Pre-RED decision (`"added"` is the only special
+  status), so this session goes straight to strict TDD: Pre-RED reading and probe, RED, GREEN,
+  REFACTOR review, each phase gate via `AskUserQuestion`. Orient measured: 0 undocumented on both
+  the `CHANGELOG.md` and `HANDOFFS.md` frontiers (`b5b4512c` = HEAD; the S786 receipt is
+  `status: complete`, nothing to backfill); 12 unpushed, `origin/master` = `4e2e6e06`; the S786
+  ratchet citation (results `7f7a4d08491b`, manifest `aa983075d6a2`, head `e7d87c4a`, 1/1) matched
+  `.quality-gates-results.json` before any run; the pushed tip's 4 workflows and the scheduled
+  `shinytest2` run all `success`; dashboard 96/100; context budget nothing over a ceiling
+  (`CLAUDE.md` 26,360 B in the warn band; `SESSION_NOTES.md` 47,336 B, `CHANGELOG.md` 63,458 B and
+  `HANDOFFS.md` 59,015 B before this claim; the trim check fires on none); the untracked residue is
+  the owner's (`BACKLOG.log`, two NEWS drafts) plus 5 Quarto renders of tracked `.qmd` sources
+  (date- and source-checked). The archive pass is proposed and undecided. Stub + pending receipt
+  ride this commit; close-out records the rest. TDD phase PRE-RED at claim; no code touched.
+
 ### 2026-09-26 · [ad hoc] S786 records: close-out for the `removeDuplicates()` slice (S785 handoff evaluated 9/10, receipt, Learning 799, next-session items)
 - **Deliverable:** the close-out records for S786, whose work is recorded in the entries below: RED
   `f00d8696`, GREEN `32f2b406`, docs `e7d87c4a` (claim `62df6441`, whose "(in progress)" marker this

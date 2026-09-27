@@ -172,6 +172,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S787
+date: 2026-09-26
+status: pending
+active_task: correctParentSex() slice 3 (the last) of the sibling recordStatus sites (BACKLOG.md item "One more place tests recordStatus == original with no NA guard", READY, Effort S; found S784, narrowed S785 and S786): treat only "added" as special so an NA, blank or unrecognized status is a real animal; decide what an absent recordStatus column means; strict TDD, one slice.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S786
 date: 2026-09-26
 status: complete

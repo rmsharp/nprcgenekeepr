@@ -74,6 +74,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 787 Did
+**Deliverable:** **`correctParentSex()` -- slice 3 (the LAST) of the sibling `recordStatus` sites**
+(IN PROGRESS): treat only `"added"` as special, so an `NA`, blank or unrecognized status is a real
+animal (`R/correctParentSex.R:89-92`); decide what an absent `recordStatus` column means as part of
+the slice; strict TDD, one slice, each phase gate via `AskUserQuestion`.
+**Started:** 2026-09-26
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (item 1,
+`BACKLOG.md` "One more place tests `recordStatus == "original"` with no NA guard", READY, Effort S;
+the shape was decided by the owner at S785 Pre-RED). Orient measured: 0 undocumented on both
+frontiers (`b5b4512c` = HEAD); no pending receipt; 12 unpushed, `origin/master` = `4e2e6e06`; the S786
+ratchet citation (results `7f7a4d08491b`, manifest `aa983075d6a2`, head `e7d87c4a`, 1/1, 3,570,428 B)
+matched `.quality-gates-results.json` before any run; the pushed tip's 4 workflows and the scheduled
+`shinytest2` run all `success` (the 12 local commits have not been through CI); dashboard 96/100;
+context budget nothing over a ceiling (`CLAUDE.md` 26,360 B in the warn band; this file 47,336 B,
+`CHANGELOG.md` 63,458 B, `HANDOFFS.md` 59,015 B before this claim; `methodology_trim.py --check`
+fires on none); `BACKLOG.md` 26 items / 21 tagged (control); both sequencing audits checked (only
+#138 is open, owner-deprioritized). The archive pass S786 asked to propose was offered in the Phase 0
+report and NOT yet decided; it needs an owner decision before the records commit (this file's hook
+ceiling is 56,750 B). Plan: Pre-RED reading of `correctParentSex()`, its callers and tests, a probe of
+the current code against a written reference (NA, blank, unrecognized, absent column, `"added"` and
+all-original controls), a Pre-RED `AskUserQuestion` on what an absent `recordStatus` means and on
+the shared `isAddedRecord()` helper, then RED, GREEN, REFACTOR review, each gate via
+`AskUserQuestion`. TDD phase PRE-RED at claim; no code touched.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 785 Handoff Evaluation (by Session 786)
 **Score: 9/10.** **What helped:** every Orient measurement held -- 0 undocumented on both frontiers
 (`6fbf264b` = HEAD), 7 unpushed, `origin/master` = `4e2e6e06`, the ratchet citation (results
