@@ -58,6 +58,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S788 REFACTOR and docs: review with no code change; the `CLAUDE.md` NEWS-checklist rule; the `BACKLOG.md` sweep item narrowed to the remaining Diagram stages
+- **REFACTOR (no behavior change):** I read the `NEWS.Rmd` diff and `test_newsReleaseState.R` for
+  readability and found nothing to change (the newest block has no phrase left; the Pedigree
+  Diagram section is now 45 entries, one folded). The tests still pass: the guard 9 of 9 (32
+  expectations), `test_effectivePopulationSizeDocs.R` 5 tests (23), `test_wordlist_coverage.R` 3
+  of 3. No test reads `CLAUDE.md` or `BACKLOG.md` as data (a grep of path and `readLines` calls
+  found none).
+- **`CLAUDE.md` (the owner said yes to this line at the scope question):** the `NEWS.Rmd` entry
+  checklist now says "release-state wording -- one entry per feature, stating the finished state
+  against the PRIOR release, never an in-progress milestone", names
+  `tests/testthat/test_newsReleaseState.R` as the guard and cites Learning 785, in place of
+  "matching existing style"; the plain-language sentence notes that the guard matches only
+  structural milestone markers, so the two do not contradict. **+298 B** (26,360 to 26,658 B; a
+  little over my 170 to 250 B estimate), still the warn band under the 28,000 B ceiling; the
+  budget tool reports nothing over and the `budget:protected` fence was not touched.
+- **`BACKLOG.md`:** the sweep item is narrowed to what remains, the `## Pedigree Diagram`
+  section (45 entries), in four proposed pieces (display and defaults with the 750-versus-400
+  limit conflict to resolve first; mating-symbol placement; connector routing and collisions;
+  crash fixes, examples and outside cross-references), each starting with its phrase patterns
+  added to the guard as a failing test. Two stage-1 loose ends are recorded in it: the `:83`
+  "Two rarer related cases" limitation kept but not re-verified, and the `## Package` entry that
+  reports the prior release. Committed header-less by the blob method; the owner's 5-line YAML
+  header stays unstaged. The item is not complete, so it stays.
+- **Slip disclosed:** my first check for tests that read the touched files matched ten test
+  files that only mention the names in comments, and started slow ones (the whole-package lint
+  baseline, an end-to-end qualification file) at a host load average near 50; I stopped it and
+  replaced it with a grep for real reads (none) and the three relevant files. TDD phase
+  REFACTOR; the quality ratchet runs after this commit.
+
 ### 2026-09-26 · [ad hoc] S788 GREEN: `NEWS.Rmd` stage 1, the 12 flagged entries rewritten as release-state wording; the guard test passes
 - **Changed `NEWS.Rmd` only** (development block): the new test file goes from 2 failing to
   **9 of 9 passing** (32 expectations), both real-file guards green.
