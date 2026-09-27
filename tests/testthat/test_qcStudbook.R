@@ -171,6 +171,46 @@ test_that(
   }
 )
 test_that(
+  stri_c(
+    "qcStudbook reports only the real duplicate id, not the ids it adds for ",
+    "unlisted parents, when reportErrors == TRUE"
+  ),
+  {
+    ## Three original records (id x twice) whose four parents have no record
+    ## of their own, so qcStudbook() appends four "added" records.
+    pedDupUnlisted <- data.frame(
+      id = c("x", "x", "z"),
+      sire = c("s1", "s1", "s2"),
+      dam = c("d1", "d1", "d2"),
+      sex = c("F", "F", "M"),
+      birth = as.Date(c("2010-01-01", "2010-01-01", "2012-01-01")),
+      stringsAsFactors = FALSE
+    )
+    errorLst <- qcStudbook(pedDupUnlisted,
+      minParentAge = NULL,
+      reportErrors = TRUE
+    )
+    expect_identical(errorLst$duplicateIds, "x")
+  }
+)
+test_that(
+  stri_c(
+    "control: qcStudbook reports no duplicate id for unlisted parents when ",
+    "no id is duplicated and reportErrors == TRUE"
+  ),
+  {
+    pedUnlisted <- data.frame(
+      id = c("x", "y", "z"),
+      sire = c("s1", "s1", "s2"),
+      dam = c("d1", "d1", "d2"),
+      sex = c("F", "F", "M"),
+      birth = as.Date(c("2010-01-01", "2011-01-01", "2012-01-01")),
+      stringsAsFactors = FALSE
+    )
+    expect_null(qcStudbook(pedUnlisted, minParentAge = NULL, reportErrors = TRUE))
+  }
+)
+test_that(
   "qcStudbook returns NULL with reportErrors == TRUE and no errors present",
   {
     pedClean <- qcStudbook(pedOne, minParentAge = NULL)

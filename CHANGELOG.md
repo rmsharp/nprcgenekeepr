@@ -54,6 +54,49 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S786 RED: tests for `removeDuplicates(reportErrors = TRUE)` keeping NA and unrecognised `recordStatus` animals and never naming an added record
+- Owner decisions: the Phase 0 pick (the `removeDuplicates()` slice) and the Pre-RED to RED gate
+  ("Yes, proceed to RED", 2026-09-26). The fix shape is the owner's S785 Pre-RED decision:
+  `"added"` is the only special status; an NA, blank or unrecognised status is a real animal.
+- **Probe before the gate** (scratch scripts `probe_s786.R`, `probe_app_s786.R`, not in git; the
+  current `reportErrors = TRUE` result against the reference `ids <- ped$id[<non-added>];
+  ids[duplicated(ids)]`, `smallPed` plus a `recordStatus` column, three duplicated rows `A B C`):
+  NA on the duplicate rows returns `B C`; NA on the first-occurrence rows `B C`; NA on two innocent
+  rows `Q A B C` (names `Q`); all NA a 19-id list; `"weird"` on the duplicates `NULL` (misses all
+  three); a blank on one duplicate row `A B`; originals `x, x, z` plus four added rows `x a2`;
+  added rows first (`a1, x, z, x`) `z` (wrong id, misses `x`); two added first `a2 x`; added in
+  the middle (`x, a1, x, z`) `a1`. Controls that already agree with the reference: no duplicates,
+  three duplicate rows, a triple `x, x, x` (`x x`, one entry per extra occurrence), zero rows,
+  added-only rows, added rows that share an id. So the line is wrong in three separate ways
+  (an NA in a row subscript, an unrecognised status excluded, a recycled logical), a wider set than
+  the `BACKLOG.md` item listed.
+- **App path reproduced** (`qcStudbook(reportErrors = TRUE)`, fixtures need a `birth` column or the
+  call returns at `missingColumns` before it reaches `removeDuplicates()`): three rows (`x, x, z`)
+  with four unlisted parents report `duplicateIds = c("x", "s2")`, and the user reads "Duplicate
+  IDs found: x, s2"; with the dam left `NA` the app-minted `U0003` is named too; the same shape
+  with no duplicate reports nothing. `qcStudbook()` hands `removeDuplicates()` the originals first
+  and the added rows last, so on the app path only the recycling false positive is reachable (no
+  false negative), and only when a real duplicate is present.
+- **Observed, not filed:** the `reportErrors = FALSE` branch stops with "Duplicate IDs with
+  mismatched information present" when duplicate rows differ only in `recordStatus` (`NA` against
+  `"original"`), because `unique()` compares whole rows. That is arguably correct (different
+  information), the branch never reads the status, and the app cannot produce it; left alone.
+- Tests only, 2 files, no `R/` change: `tests/testthat/test_removeDuplicates.R` (+8 `test_that`:
+  NA on first-occurrence, duplicate and all rows; NA on innocent rows, and NA statuses with no
+  duplicate must give `NULL`; blank and unrecognised status; recycled added rows; added rows first,
+  two first and in the middle; and three controls: the ordinary results, a factor status, and the
+  `reportErrors = FALSE` branch ignoring the status); `tests/testthat/test_qcStudbook.R` (+2: the
+  app-path case above must report exactly `"x"`, and a no-duplicate control).
+- **Measured RED** (each file run alone against the unchanged `R/`, `load_all` + `NOT_CRAN`):
+  `test_removeDuplicates.R` 11 tests, 5 failing (11 of 27 expectations); `test_qcStudbook.R` 29
+  tests, 1 failing (1 of 54); **6 failing tests, 12 failed expectations of 81, 0 errors, 0 skipped,
+  0 warnings**; the 4 new controls pass by design, and so do the 3 existing `removeDuplicates`
+  tests. Each failure read from its message: lengths 2, 2, 19 and 4 against 3 (missed or invented
+  ids); `noDups` returns `"E"` where `NULL` is expected; `NULL` against `c("A","B","C")` for both
+  the unrecognised and the blank status; lengths 2 against 1 for the recycled case; `"z"`, length
+  2 and `"a1"` against `"x"` for the three orderings; the app path returns length 2 against 1.
+  lintr 0 on both files. Commit left RED on purpose; GREEN follows behind an owner gate.
+
 ### 2026-09-26 · [ad hoc] S786 claim: `removeDuplicates()` NA and recycled-subscript slice (slice 2 of the sibling `recordStatus` sites) *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` "Two more places test
   `recordStatus == "original"` with no NA guard", READY, Effort S; found S784, narrowed S785). The
