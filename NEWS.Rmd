@@ -34,12 +34,11 @@ knitr::opts_chunk$set(echo = TRUE)
   an individual with more than one mate is drawn once per mating rather
   than once total. `makePedigreeMatingLayout()` builds this layout;
   `makePedigreeDiagramData()` is unrelated to it.
-- `makePedigreeMatingLayout()` can now be handed an already-computed
-  kinship table (a new optional `kinshipMatrix` argument) instead of
-  always recalculating relatedness itself when flagging consanguineous
-  matings. Scripts that already have a kinship table can reuse it and
-  skip the recalculation; when the argument is not used, the function
-  behaves exactly as before.
+- `makePedigreeMatingLayout()` accepts an optional `kinshipMatrix`
+  argument: an already-computed kinship table to reuse when flagging
+  consanguineous matings, instead of recalculating relatedness. Scripts
+  that already have a kinship table can supply it directly and skip the
+  recalculation; without it, the function computes kinship itself.
 - The Diagram tab includes a **Diagram Edge Style** toggle: choose between
   the "Rectilinear (kinship2-style)" right-angle connector style (the
   default) and a "Direct" straight-line style (issue #142).
@@ -101,24 +100,21 @@ knitr::opts_chunk$set(echo = TRUE)
   tangled families (issue #141). `makePedigreeMatingLayout()` has no
   `orderBySex` argument -- the male-left/female-right convention is
   always applied.
-- Fixed a crash in the Diagram tab: narrowing to a small set of focal
-  animals and their family could make the diagram fail to display at all
-  under the default connector style. The diagram now always displays
-  correctly for this kind of narrowed view.
+- The Diagram tab displays correctly under the default connector style
+  when narrowed to a small set of focal animals and their family.
 - The published article comparing pedigree diagrams against kinship2 (a
-  well-known reference pedigree tool) is now checked directly by code, not
-  just by eye -- confirming its example diagrams show the same family
-  relationships kinship2 does, in every case checked.
-- The Diagram tab no longer shows an individual as a disconnected, floating
+  well-known reference pedigree tool) is checked directly by code: its
+  example diagrams show the same family relationships kinship2 does, in
+  every case checked.
+- The Diagram tab does not show an individual as a disconnected, floating
   box when they have no recorded parents, mates, or offspring -- matching
   how the reference tool kinship2 draws the same family. Loading a set of
-  animals with no such relationships among any of them no longer crashes
-  the diagram (issue #164).
+  animals with none of these relationships among any of them does not
+  crash the diagram (issue #164).
 - When the Diagram tab leaves an animal out because it has no recorded
-  parents, mates, or offspring (see above), it now tells you so, naming
-  which animal(s) were left out -- and shows a clear message instead of an
-  empty diagram when none of the loaded animals have any such
-  relationships.
+  parents, mates, or offspring (see above), it names which animal(s) were
+  left out -- and shows a clear message instead of an empty diagram when
+  none of the loaded animals have any such relationships.
 - A small number of duplicate-animal markers that could land close enough
   to an unrelated animal (not part of the same family) to visually touch,
   in large colony pedigrees with many repeated individuals, are now kept a
@@ -129,11 +125,10 @@ knitr::opts_chunk$set(echo = TRUE)
   touch or overlap, in large colony pedigrees, are now kept a clear
   distance apart.
 - When a pedigree contains families that are not related to each other,
-  each family is now drawn as its own block, side by side with a clear gap
-  between blocks -- the same way kinship2 draws them. Previously two
-  unrelated families could be drawn interleaved on the same rows, with a
-  mate line running through an unrelated animal's symbol, so two strangers
-  could look related.
+  each family is drawn as its own block, side by side with a clear gap
+  between blocks -- the same way kinship2 draws them, so a mate line never
+  runs through an unrelated animal's symbol and two strangers never look
+  related.
 - When a mate also belongs to another family drawn elsewhere in the
   diagram, that mate now appears as a duplicate marker directly beside
   their partner -- the same duplication convention kinship2 uses --
@@ -144,12 +139,10 @@ knitr::opts_chunk$set(echo = TRUE)
   children, so the lines from parents down to their children run
   straighter, with fewer sideways detours, especially in large or
   tangled colony pedigrees.
-- Fixed an error in the Diagram tab that appeared for some trimmed
-  pedigrees under the default Rectilinear connector style: when trimming
-  to focal animals kept an animal's children but dropped that animal's
-  own record, the tab showed an error message instead of a diagram. The
-  diagram now draws normally, leaving out the parent who has no record
-  to draw.
+- The Diagram tab draws normally under the default Rectilinear connector
+  style when trimming to focal animals keeps an animal's children but
+  drops that animal's own record, leaving out the parent who has no
+  record to draw.
 - When a mate appears as a duplicate marker beside their partner (because
   that mate also belongs to another family drawn elsewhere in the
   diagram), the pair and their children now stay directly above and below
@@ -162,17 +155,17 @@ knitr::opts_chunk$set(echo = TRUE)
   the animal's symbol instead of still cutting through it, and a detour
   running between two rows no longer clips the symbols of the row below.
   Most detours are unchanged; only the ones that touched a symbol moved.
-- The package now includes five small example pedigrees, one for each
-  classic mating structure a colony manager may need to recognize: a
+- The package includes five small example pedigrees, one for each classic
+  mating structure a colony manager may need to recognize: a
   brother-sister mating, linebreeding back to a single influential
   ancestor, a daughter bred back to her own sire, a first-cousin mating,
   and a mating of half-siblings who share a sire. Each is small enough
   (11-14 animals) to read at a glance on the Diagram tab, and each
   contains exactly one consanguineous mating for the diagram to highlight
   (`example_pedigree_*.csv` in the package's `extdata/examples` folder).
-- The Pedigree Diagram article on the package website now walks through
-  those five example pedigrees one diagram at a time, with a short guide
-  to reading each structure on the diagram: how the dashed line marks an
+- The Pedigree Diagram article on the package website walks through those
+  five example pedigrees one diagram at a time, with a short guide to
+  reading each structure on the diagram: how the dashed line marks an
   animal drawn twice, and how the vermillion mate-line marks each
   pedigree's one consanguineous mating.
 - Within each family, the branches descending from different founding

@@ -60,6 +60,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S792 GREEN: NEWS.Rmd Pedigree Diagram piece (d) entries restated as the finished state (stage 2 piece (d))
+- **Model:** Claude Sonnet 5. Rewrote the 9 stale-framed entries at `NEWS.Rmd` lines :37-42, :104-107,
+  :108-111, :112-116, :117-121, :131-136, :147-152, :165-172, :173-177 -- dropped "can now"/"Fixed"/
+  "no longer"/"is now"/"Previously" narration, stated each capability plainly. No facts, numbers, or
+  cross-references changed; the "(see above)" reference at :117-121 stays valid (its target entry
+  just above it was rewritten, not moved). Section stays at 37 entries (verified:
+  `awk '/^## Pedigree Diagram/{f=1;next} /^## /{f=0} f' NEWS.Rmd | grep -c '^- '` = 37). `NEWS.Rmd`
+  knits clean (`rmarkdown::render(..., output_format = "github_document")`, no errors). GREEN:
+  `test_newsReleaseState.R` alone: 26 test_that blocks, 107 passed expectations, 0 failed, 0 errors
+  (up from 93 passed/14 failed at RED, confirming all 14 phrases now absent). Full unfiltered suite
+  (`load_all` + `NOT_CRAN`, host load 17.64): **354 files, 2,754 tests, 8,408 expectations (8,407
+  passed), 1 failed** (the known `test_pkgdown_reference_config.R` draft, pre-existing and
+  unrelated), 0 errors, 187 skipped, 6 warnings.
+
 ### 2026-09-27 · [ad hoc] S792 RED: one release-note wording check for piece (d)'s remaining Pedigree Diagram entries (stage 2 piece (d))
 - **Model:** Claude Sonnet 5. PRE-RED found every underlying factual claim in piece (d)'s 6 line
   ranges (:32-42, :104-116, :117-121, :131-136, :147-152, :165-177) TRUE and current -- the crash
