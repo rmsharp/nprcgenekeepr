@@ -54,6 +54,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S786 claim: `removeDuplicates()` NA and recycled-subscript slice (slice 2 of the sibling `recordStatus` sites) *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` "Two more places test
+  `recordStatus == "original"` with no NA guard", READY, Effort S; found S784, narrowed S785). The
+  fix shape is already the owner's S785 Pre-RED decision (`"added"` is the only special status), so
+  this session goes straight to strict TDD: Pre-RED reading, RED, GREEN, REFACTOR review, each phase
+  gate via `AskUserQuestion`. Orient measured: 0 undocumented on both the `CHANGELOG.md` and
+  `HANDOFFS.md` frontiers (`6fbf264b` = HEAD; the S785 receipt is `status: complete`, nothing to
+  backfill); 7 unpushed, `origin/master` = `4e2e6e06`; the S785 ratchet citation (results
+  `e743300ed559`, manifest `aa983075d6a2`, head `e7eaf320`, 1/1) matched
+  `.quality-gates-results.json` before any run; all 10 recent `gh run` rows `success`; dashboard
+  96/100; context budget nothing over a ceiling (`CLAUDE.md` 26,360 B in the warn band;
+  `SESSION_NOTES.md` 33,171 B, `CHANGELOG.md` 50,469 B and `HANDOFFS.md` 49,153 B before this
+  claim); the untracked residue is the owner's (`BACKLOG.log`, two NEWS drafts) plus 5 Quarto
+  renders of tracked `.qmd` sources (date- and source-checked). Stub + pending receipt ride this
+  commit; close-out records the rest. TDD phase PRE-RED at claim; no code touched.
+
 ### 2026-09-26 · [ad hoc] S785 records: close-out for the date-conversion slice (S784 handoff evaluated 9/10, receipt, Learning 798, next-session items)
 - **Deliverable:** the close-out records for S785, whose work is recorded in the entries below: RED
   `8829239b`, GREEN `d701f1e0`, docs `e7eaf320`, the owner-gated `SESSION_NOTES.md` trim `84f3a6ea`

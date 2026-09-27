@@ -74,6 +74,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 786 Did
+**Deliverable:** **`removeDuplicates()` -- slice 2 of the sibling `recordStatus` sites** (IN PROGRESS):
+treat only `"added"` as special, so an `NA`, blank or unrecognized status is a real animal, and fix
+the recycled-subscript false positive on the same line (`R/removeDuplicates.R:39-40`); strict TDD,
+one slice, each phase gate via `AskUserQuestion`.
+**Started:** 2026-09-26
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (item 1,
+`BACKLOG.md` "Two more places test `recordStatus == "original"` with no NA guard", READY, Effort S;
+the shape was decided by the owner at S785 Pre-RED). Orient measured: 0 undocumented on both
+frontiers (`6fbf264b` = HEAD); no pending receipt; 7 unpushed, `origin/master` = `4e2e6e06`; the S785
+ratchet citation (results `e743300ed559`, manifest `aa983075d6a2`, head `e7eaf320`, 1/1) matched
+`.quality-gates-results.json` before any run; all 10 recent `gh run` rows `success`; dashboard
+96/100; context budget nothing over a ceiling (`CLAUDE.md` 26,360 B in the warn band; this file
+33,171 B before this stub). Plan: Pre-RED reading of `removeDuplicates()`, its callers
+(`qcStudbook()`) and tests, then RED tests (an `NA` case, an unrecognized-status case, the recycling
+case, the app-path case, controls), GREEN, REFACTOR review, each gate via `AskUserQuestion`. TDD phase
+PRE-RED at claim; no code touched.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
+session's reconcile.
+
 ### Session 784 Handoff Evaluation (by Session 785)
 **Score: 9/10.** **What helped:** every Orient measurement held except the push state (below) -- 0
 undocumented on the `CHANGELOG.md` frontier (`483b26a6` = HEAD), the ratchet citation (results
