@@ -54,6 +54,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S787 GREEN: `correctParentSex(reportErrors = TRUE)` sets aside only `"added"` records and checks every animal when the status is `NULL`
+- Owner decision: the RED to GREEN gate ("Yes, proceed to GREEN", 2026-09-26). One file, the
+  report branch only (`R/correctParentSex.R:89-98`): one mask `isAdded` (`rep(FALSE, length(id))`
+  for a `NULL` status, otherwise `!is.na(recordStatus) & recordStatus == "added"`) replaces both
+  `recordStatus == "original"` terms with `!isAdded`. The correction branch, the sex handling, an
+  omitted argument's error and the recycling of a mismatched-length status are untouched; roxygen,
+  `man/`, `NEWS.Rmd` and `BACKLOG.md` follow in the docs commit.
+- **Measured GREEN:** the target file 17 tests, **101 of 101 expectations**, 0 errors, 0 warnings
+  (the 5 failing tests pass, the 12 others stay green). Full suite (`load_all` + `NOT_CRAN`, no
+  filter): 353 files, 2,727 tests, 8,474 expectations, 0 errors, 187 skipped, 6 warnings (+11
+  tests, +87 expectations against S786, exactly this slice: 101 minus the 14 already there), and
+  **3 failed**: the known `test_pkgdown_reference_config.R` (the owner's untracked NEWS draft)
+  plus two runtime benchmarks, `test_markerKinship.R` (median 0.101 s against a 0.1 s limit) and
+  `test_markerParentageLikelihood.R` (0.516 s against 0.5 s), which touch none of this code. Both
+  fail the same way on the pre-change tree exported from `HEAD` (0.107 s and 0.575 s), and the host
+  load average was 350 (`uptime`, processes outside this session) with the suite taking 8.9 min
+  against about 4.6 min, so they are environmental, not caused by this change; they are rechecked
+  at close-out. lintr 0 on `R/correctParentSex.R` and the test file.
+- **Mutation testing** (13 mutants of the report-branch mask over the target file plus
+  `test_qcStudbook.R`, controls first): the real function and a builder configured as GREEN both
+  fail 0 tests, and the pre-change code as a mutant fails exactly the RED count (5 tests, 43
+  expectations), so the harness is faithful. **12 of 13 killed** (an unguarded `NA` negation, a
+  missing `NULL` branch, only-`"original"`-counts, `NA` counted as added, blank counted as added,
+  added not excluded, any added row skipping all, each of the sire and dam masks dropped, `NULL`
+  meaning none, and a scalar-only-first mask). **One survivor, M7:** a case-insensitive `"added"`
+  passes every test, because no test pins that `"Added"` or `"ADDED"` is an unrecognised status and
+  so a real animal; raised at the GREEN to REFACTOR gate, not patched in GREEN.
+- **Runtime (3E), differential:** `correctParentSex()` is on the app's upload path, so 140
+  `qcStudbook()` calls (`reportErrors` both ways over 13 package datasets, 13 example pedigree
+  files, `ExamplePedigree.txt` and, for each, a variant with a sire flipped to female and one with a
+  dam flipped to male where the pedigree has them, plus 5 probe fixtures) on the pre-change tree
+  (`HEAD`, `git archive`) and the working tree, in separate `Rscript`s: **all identical**, including
+  the 29 error results. The report branch was exercised: 70 report-mode calls, 34 with a non-empty
+  `femaleSires`, `maleDams` or `sireAndDam`. Not a live click-through of the Shiny app.
+
 ### 2026-09-26 · [ad hoc] S787 RED: tests for `correctParentSex(reportErrors = TRUE)` naming NA, blank and unrecognised `recordStatus` parents and checking every animal when the status is `NULL`
 - Owner decisions: the Phase 0 pick (the `correctParentSex()` slice), the Pre-RED shape decision
   **"NULL = check every animal"** (over "same plus a `recordStatus = NULL` default" and "NULL = a
