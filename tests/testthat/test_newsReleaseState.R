@@ -353,6 +353,19 @@ test_that("readCap() reads the constant and not a longer name or a comment", {
                    NA_integer_)
 })
 
+test_that("promisesEveryPair() flags an unqualified promise only", {
+  for (txt in c("The male parent is always drawn on the left.",
+                "Every mated pair puts the male parent on the left.",
+                "All pairs are drawn male-left.")) {
+    expect_true(promisesEveryPair(txt), info = txt)
+  }
+  for (txt in c("The male parent is drawn on the left in most cases.",
+                "A parent with several mates is placed to fit the family.",
+                "Pairs can appear either way round.")) {
+    expect_false(promisesEveryPair(txt), info = txt)
+  }
+})
+
 test_that("the Pedigree Diagram section states the display limits once", {
   caps <- diagramCaps()
   ## The constants were found in the source (a check that read nothing would
@@ -412,19 +425,6 @@ test_that("the Pedigree Diagram section describes shading as one rule", {
                    info = paste("entries narrating a shading change start at",
                                 "lines:", paste(entries$line[narrated],
                                                 collapse = ", ")))
-})
-
-test_that("promisesEveryPair() flags an unqualified promise only", {
-  for (txt in c("The male parent is always drawn on the left.",
-                "Every mated pair puts the male parent on the left.",
-                "All pairs are drawn male-left.")) {
-    expect_true(promisesEveryPair(txt), info = txt)
-  }
-  for (txt in c("The male parent is drawn on the left in most cases.",
-                "A parent with several mates is placed to fit the family.",
-                "Pairs can appear either way round.")) {
-    expect_false(promisesEveryPair(txt), info = txt)
-  }
 })
 
 test_that("the Pedigree Diagram section does not overstate male-left", {

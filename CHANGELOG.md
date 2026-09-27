@@ -56,6 +56,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S789 REFACTOR: test tidy-up; `BACKLOG.md` sweep item narrowed, one new item filed, audit item extended; stage 2 piece (a) of the sweep
+- **Model:** Claude Sonnet 5. **Review of the new test code:** one structural change, no
+  behavior change: the `promisesEveryPair()` unit test moved up beside the other helper unit tests
+  (it sat between two real-file checks); the file re-runs 21 tests, 74 expectations, 0 failed,
+  no line over 80 columns. No `R/` change and no `NEWS.Rmd` wording change. **`BACKLOG.md`:** the
+  sweep item now records stage 1 and piece (a) as done and lists the remaining pieces (b), (c) and
+  (d) with their `NEWS.Rmd` lines at this session (42 entries remain in the section) and the rule
+  that a check on a claim must be grounded in the code or real output, not the roxygen; one item
+  filed, "male-on-the-left placement is stricter in the code's documentation than in real
+  layouts" (DECISION NEEDED, Effort S to find the cause: 227 of 257 matings have the male on the
+  left, 2 of 34 simple pairs on `rhesusPedigree` are on the right without the plan's own
+  exclusion explaining them); the docs staleness audit item gained the user manual's misleading
+  "750, drops to 400 under Rectilinear" wording. The `BACKLOG.md` header the owner keeps
+  uncommitted (5 lines) was left out of the commit (blob method). No CI or `R/` change: the
+  ratchet is run after this commit and cited in the records entry. TDD phase REFACTOR.
+
 ### 2026-09-27 · [ad hoc] S789 GREEN: `NEWS.Rmd` Pedigree Diagram display and defaults entries restated as the finished state (45 entries become 42); stage 2 piece (a) of the sweep
 - **Model:** Claude Sonnet 5. `NEWS.Rmd` only (15 insertions, 17 deletions); no `R/` change.
   **(1)** The Diagram-view entry (`:22-27`) now carries the display limit: 400 animals with the
