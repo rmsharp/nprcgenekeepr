@@ -82,6 +82,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 790 Did
+**Deliverable:** `NEWS.Rmd` release-state sweep, stage 2 piece (b): the mating-symbol
+placement/spacing entries in the Pedigree Diagram section (IN PROGRESS).
+**Started:** 2026-09-27.
+**Status:** Session claimed. PRE-RED fact-finding done (see the S790 claim entry in
+`CHANGELOG.md`): the "22 individuals" duplicate-count claim (`NEWS.Rmd:77`) is stale (measured
+113 today); the "every mating symbol...sits between the two parents" claim (`:163`) looks
+overstated (the position engine's own tests disclose named residuals). Owner picked **full
+consolidation** at the scope gate. Work beginning on RED.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest.
+
 ### Session 788 Handoff Evaluation (by Session 789)
 **Score: 9/10.** **What helped:** every Orient measurement held -- `CHANGELOG.md` frontier `5ff2f39c`
 = HEAD (0 undocumented); the one commit after the `HANDOFFS.md` frontier was the addendum the notes

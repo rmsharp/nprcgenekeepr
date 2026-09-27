@@ -60,7 +60,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-09-27 · [ad hoc] S789 records: stage 2 piece (a) of the `NEWS.Rmd` sweep DONE (S788 handoff evaluated 9/10, self 8/10, receipt, Learning 802, next-session items); ratchet 1/1 on 9df0bac6
+### 2026-09-27 · [ad hoc] S790 claim: `NEWS.Rmd` release-state sweep stage 2 piece (b), mating-symbol placement and spacing entries (in progress)
+- **Model:** Claude Sonnet 5. Stub + pending `HANDOFFS.md` receipt + this in-progress entry.
+  Owner-picked at the Phase 0 priorities gate (`NEWS.Rmd` sweep, piece (b)) from 4 offered options.
+  Orient measured: both ledger frontiers = HEAD (`8684c8d3`), 0 undocumented; 9 unpushed at
+  `origin/master` = `ff8308a5` (CI green, 4/4); ratchet citation (results `40286d04f00e`, manifest
+  `aa983075d6a2`, head `9df0bac6`) matched `.quality-gates-results.json` before any run; working
+  tree matched the predicted residue exactly (`BACKLOG.md` owner header only, `BACKLOG.log`, two
+  `suggested_NEWS_entry` drafts, 5 render artifacts). PRE-RED fact-finding before the scope gate:
+  measured the NEWS.Rmd:77 "22 individuals in the bundled example pedigree" claim against
+  `.buildMatingUnitForest()` on `obfuscated_rhesus_mhc_ped.csv` (both raw and QC row order) — **113**
+  multi-anchor individuals today, not 22 (170 duplicate nodes total; distribution 79/18/11/3/2 for
+  2/3/4/5/6-way anchors); the number was measured at S573 (Track 4) and never re-checked since. Also
+  found `tests/testthat/test_positionMatingUnitForest.R:2917-2974` documents the mating-symbol
+  centering invariant as holding "up to six disclosed structural residuals" on the real fixture, so
+  NEWS.Rmd:163's "Every mating symbol now sits between the two parents" looks overstated the same way
+  last session's male-left claim was. Owner scope decision (plain-language `AskUserQuestion`, 3
+  options): **full consolidation** — merge the 6 overlapping "mating symbol sits centered/spaced"
+  entries (`:91-97`, `:119-131`, `:152-156`, `:163-167`) into fewer accurate entries, replace the
+  stale 22 with the measured 113, and soften the "every" claim to "in most cases" per the disclosed
+  residuals.
 - **Model:** Claude Sonnet 5. Close-out records for the S789 deliverable (the claim, RED, RED
   correction, GREEN, REFACTOR and ledger-trim entries above and below hold the work). **Records
   written:** the S788 handoff evaluation (9/10) and the S789 record with self-assessment (8/10),

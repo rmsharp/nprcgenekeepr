@@ -176,6 +176,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S790
+date: 2026-09-27
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: `NEWS.Rmd` release-state sweep, stage 2 piece (b): mating-symbol placement/spacing entries in the Pedigree Diagram section. Owner picked full consolidation at the scope gate -- merge 6 overlapping entries, replace the stale 22-individuals count with the measured 113, soften the overstated "every mating symbol" claim.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending (the S790 claim entry)
+commit: pending
+```
+
+```handoff
 session: S789
 date: 2026-09-27
 status: complete
