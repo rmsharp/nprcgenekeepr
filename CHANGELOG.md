@@ -54,6 +54,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S786 GREEN: `removeDuplicates(reportErrors = TRUE)` treats only `"added"` as special and never recycles a mask over the added rows
+- Owner decision: the RED to GREEN gate ("Yes, proceed to GREEN", 2026-09-26).
+- **Change (one file, the `reportErrors = TRUE` branch only):** `R/removeDuplicates.R:38-47` builds
+  `isAdded <- !is.na(ped$recordStatus) & ped$recordStatus == "added"`, takes `ids <-
+  ped$id[!isAdded]` and returns `ids[duplicated(ids)]` (else `NULL`). An `NA`, blank or
+  unrecognised status is now a real animal, the ids come from the non-added rows alone (no logical
+  mask shorter than `ped$id`), and the result keeps one entry per extra occurrence. No roxygen,
+  `man/`, `NEWS.Rmd` or `BACKLOG.md` change in this commit (the docs commit follows).
+- **Measured:** the two target files 40 tests, **81 of 81 expectations pass** (RED: 6 failing tests,
+  12 failed expectations); 12 related files (`name_first_class`, `geneDrop`, `modInput_qcStudbook`,
+  `runQcStudbook`, `checkErrorLst`, `summary.nprcgenekeeprErr`, `removeUnknownAnimals`,
+  `correctParentSex`, `convertDate`, `getDateErrorsAndConvertDatesInPed`, `getRecordStatusIndex`,
+  `addParents`) 99 tests / 249 expectations, 0 failing; **full suite** (`load_all` + `NOT_CRAN`,
+  no filter) 353 files, 2,716 tests, 8,387 expectations, **1 failed** (the known
+  `test_pkgdown_reference_config.R`, the owner's untracked NEWS draft), 0 errors, 187 skipped, 6
+  warnings (not attributed; the two touched files report 0), 4.8 min; +10 tests and +21
+  expectations over S785's 2,706 / 8,366, exactly this slice's new tests. lintr 0 on
+  `R/removeDuplicates.R` and both test files.
+- **Mutants** (8, the function binding replaced in memory in both the namespace and the attached
+  package environment, each changing only the report branch; a no-mutation control first): control 0
+  failing; **8 of 8 killed**: the pre-change code (6 tests / 12 expectations, the RED count), an
+  unguarded NA mask (2 / 5), only-`"original"`-counts (2 / 5), `unique()` on the result (1 / 1),
+  the recycled `ped$id[duplicated(ids)]` (3 / 5), `character(0)` instead of `NULL` (3 / 5), blank
+  counted as added (1 / 1), added rows counted (2 / 2).
+- **Runtime (3E), differential app path:** 87 `qcStudbook()` calls (`reportErrors` both ways over 13
+  package datasets, 13 example pedigree files, each of those files with its first 3 rows repeated
+  as a real duplicate, `ExamplePedigree.txt`, and the 3 probe fixtures) on the pre-change tree
+  (`f00d8696`, extracted with `git archive`) and on the working tree, in separate `Rscript`s:
+  **85 identical; exactly 2 differ, and both are the intended change**: a real duplicate `x` plus
+  app-added parents reports `x` (was `c("x","s2")`, and `c("x","s2","U0003")` with the dam `NA`).
+  19 calls end in an error in both trees for unrelated reasons (`reportErrors = FALSE` stops:
+  missing `birth` in five diagram example files, a sire-and-dam animal, the mismatched-duplicate
+  fixture). **Limit:** those five example files, and their duplicated variants, return before
+  `removeDuplicates()` is reached, so they do not exercise it; the 9 duplicated variants that do
+  reach it (no unlisted parents in them) are identical. Not a live click-through of the Shiny app.
+- **Disclosure:** the full suite ran on this code before the docs edit that follows (roxygen,
+  `man/`, `NEWS.Rmd`, `BACKLOG.md`); the docs commit re-runs the target files, the wordlist and
+  pkgdown tests, lintr and the clean-export `R CMD check` on the final tree.
+
 ### 2026-09-26 · [ad hoc] S786 RED: tests for `removeDuplicates(reportErrors = TRUE)` keeping NA and unrecognised `recordStatus` animals and never naming an added record
 - Owner decisions: the Phase 0 pick (the `removeDuplicates()` slice) and the Pre-RED to RED gate
   ("Yes, proceed to RED", 2026-09-26). The fix shape is the owner's S785 Pre-RED decision:

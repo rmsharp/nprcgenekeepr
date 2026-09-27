@@ -36,8 +36,13 @@ removeDuplicates <- function(ped, reportErrors = FALSE) {
     stop("ped must have columns \"id\" and \"recordStatus\".")
   }
   if (reportErrors) {
-    if (anyDuplicated(ped$id[ped$recordStatus == "original"]) > 0L) {
-      ped$id[duplicated(ped$id[ped$recordStatus == "original"])]
+    ## Only "added" records are set aside. An NA, blank or unrecognized status
+    ## is a real animal. The ids come from the remaining rows alone, so no
+    ## logical mask shorter than ped$id is recycled over the added rows.
+    isAdded <- !is.na(ped$recordStatus) & ped$recordStatus == "added"
+    ids <- ped$id[!isAdded]
+    if (anyDuplicated(ids) > 0L) {
+      ids[duplicated(ids)]
     } else {
       NULL
     }
