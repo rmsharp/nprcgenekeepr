@@ -60,6 +60,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S790 records: stage 2 piece (b) of the `NEWS.Rmd` sweep DONE (S789 handoff evaluated 9/10, self 8/10, receipt, Learning 803, next-session items); ratchet 1/1 on `ff682ffb`
+- **Model:** Claude Sonnet 5. Close-out records for the S790 deliverable (the claim, RED, RED
+  ledger backfill, GREEN and REFACTOR entries above hold the work). **Records written:** the S789
+  handoff evaluation (9/10) and the S790 record with self-assessment (8/10), next steps and gotchas
+  in `SESSION_NOTES.md`; the `HANDOFFS.md` receipt (`status: complete`, replacing the pending stub);
+  Learning 803 in `PROJECT_LEARNINGS.md`. Full unfiltered suite (from the GREEN entry, unchanged
+  through REFACTOR): 354 files, 2,752 tests, 8,582 expectations, 1 failed (the known
+  `test_pkgdown_reference_config.R`), 0 errors, 187 skipped, 6 warnings. `HANDOFFS.md` crossed its
+  65,536 B trim budget at 70,218 B before this receipt; owner-approved archive pass (`--force` for
+  the known SRF small-denominator refusal, `docs/archive/HANDOFFS-through-2026-09-26-3.md`, 4 of 6
+  records, verify script confirms L1/L2/L3 with the expected BL-27 frontier-finalize note) brought
+  it to 32,212 B. `SESSION_NOTES.md` and `CHANGELOG.md` stayed under budget; no archive pass owed on
+  either. Working-tree residue untouched (owner's `BACKLOG.md` YAML header left out again).
+
+### 2026-09-27 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-26-3.md` (4 record(s), 70,218 B → 32,212 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **4** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-26-3.md`](docs/archive/HANDOFFS-through-2026-09-26-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 70,218 B → 32,212 B (−54.1%).
+
 ### 2026-09-27 · [ad hoc] S790 REFACTOR: `BACKLOG.md` sweep item narrowed to pieces (c) and (d) with current `NEWS.Rmd` lines (stage 2 piece (b))
 - **Model:** Claude Sonnet 5. No code or test behavior change -- reviewed the rewritten `NEWS.Rmd`
   entries and the new test code once more (both read clean; plain-language criterion S628 holds).

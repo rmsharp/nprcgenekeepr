@@ -82,17 +82,167 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 789 Handoff Evaluation (by Session 790)
+**Score: 9/10.** **What helped:** every Orient measurement held -- both ledger frontiers = HEAD
+(`8684c8d3`, 0 undocumented); 9 unpushed and `origin/master` = `ff8308a5` exactly as the receipt
+said; CI on `ff8308a5` green (4/4); the ratchet citation (results `40286d04f00e`, manifest
+`aa983075d6a2`, head `9df0bac6`) matched `.quality-gates-results.json` before any run; the
+working-tree residue was exactly as listed (the 5-line owner header, `BACKLOG.log`, two
+`suggested_NEWS_entry` drafts, 5 render artifacts); the STANDING SET (receipt gotcha 7) was read
+before the first command; the next-step line numbers for piece (b) (`:70-78`, `:91-100`,
+`:119-131`, `:152-156`, `:163-167`) were exact; the explicit instruction to verify the "22
+individuals" number rather than trust it (next_steps A) led straight to the stale-count finding.
+**Missing:** nothing material -- the receipt could not have anticipated that six of piece (b)'s
+ten entries described the same final capability in successive historical refinements (that surfaced
+only from reading the cluster together, not from anything the handoff could have flagged in
+advance). **Wrong:** nothing found. **ROI:** high.
+
 ### What Session 790 Did
-**Deliverable:** `NEWS.Rmd` release-state sweep, stage 2 piece (b): the mating-symbol
-placement/spacing entries in the Pedigree Diagram section (IN PROGRESS).
-**Started:** 2026-09-27.
-**Status:** Session claimed. PRE-RED fact-finding done (see the S790 claim entry in
-`CHANGELOG.md`): the "22 individuals" duplicate-count claim (`NEWS.Rmd:77`) is stale (measured
-113 today); the "every mating symbol...sits between the two parents" claim (`:163`) looks
-overstated (the position engine's own tests disclose named residuals). Owner picked **full
-consolidation** at the scope gate. Work beginning on RED.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest.
+**Deliverable:** **`NEWS.Rmd` release-state sweep, stage 2 piece (b) (the mating-symbol
+placement/spacing entries in the Pedigree Diagram section) -- DONE.** The section's 10 entries in
+this piece's scope become 5: a stale duplicate-node count ("22 individuals in the bundled example
+pedigree", measured at S573 and never re-checked) is now "113", the current measured count; six
+overlapping "mating symbol sits centered/spaced" entries, landed piecemeal across many sessions
+(roughly S468-S679), are merged into one entry stating the rule "in most cases" (the position
+engine's own tests document named, disclosed centering residuals, so an unqualified "every"/"each"
+promise is an overstatement -- the same class of finding as S789's male-left claim); the "Every
+mating symbol...each mated pair is drawn on the side" claim is reworded to "Many mated pairs...".
+Section total: 42 to 37 entries. Two new section-scoped checks in `test_newsReleaseState.R`
+(`matingUnitDuplicateCount()`, and an extended `promisesEveryPair()` that also catches a leading
+"each"). Owner-picked at the Phase 0 priorities gate (from 4 offered options); strict TDD with an
+`AskUserQuestion` at every gate (plus a separate plain-language scope gate for piece (b)'s
+consolidation approach).
+**Commits:** claim `f953672e`; RED `a2d440f1`; RED ledger backfill `7d0fae64` (see Disclosures);
+GREEN `b007682c`; REFACTOR `ff682ffb`; this records commit.
+**Push:** none (not asked); 14 local commits after `origin/master` = `ff8308a5` before this records
+commit, 15 after (recount). CI has not seen any S790 commit.
+**Owner decisions:** the Phase 0 pick (from a 4-option picker); the piece (b) scope gate (3
+options) -- **full consolidation**: merge the 6-entry cluster, replace the stale count with the
+measured one, soften the "every"/"each" claim; PRE-RED to RED yes (after a disclosed process
+correction, see below); RED to GREEN yes; GREEN to REFACTOR yes.
+**Result (measured; full detail in the S790 entries of `CHANGELOG.md`):** PRE-RED facts: measured
+113 multi-anchor individuals via `.buildMatingUnitForest()` on `obfuscated_rhesus_mhc_ped.csv`
+(both raw and QC row order gave 113; 170 duplicate nodes total, distribution 79/18/11/3/2 for
+2/3/4/5/6-way anchors); `test_positionMatingUnitForest.R:2917-2974` documents the mating-symbol
+centering invariant as holding only "up to six disclosed structural residuals" on the real fixture.
+RED: 24 tests, 92 expectations, 3 failing by design (the stale count, and 2 entries -- `:152` and
+`:163` in the pre-piece numbering -- that promised "every"/"each" pair), 0 errors; a first version
+of the extended `promisesEveryPair()` false-positived on the idiom "one mate each," (caught by
+reading the RED failure list before committing, fixed by requiring "each" to be followed by a word,
+not punctuation). GREEN: target file 24 tests, 88 expectations, 0 failed; full unfiltered suite
+(`load_all` + `NOT_CRAN`, alone) **354 files, 2,752 tests, 8,582 expectations, 1 failed** (the known
+`test_pkgdown_reference_config.R`), 0 errors, 187 skipped, 6 warnings -- matched the S789 baseline
+plus this piece's own +3 tests/+14 expectations exactly; `NEWS.Rmd` knits. REFACTOR: no behavior
+change (re-confirmed: 24 tests, 0 failed); `BACKLOG.md` sweep item narrowed, pieces (c)/(d)'s
+`NEWS.Rmd` line ranges re-derived against the post-piece-(b) file (piece (b) removed 21 net lines,
+shifting everything after it). Ratchet **1/1 at `ff682ffb`** (results `ce2ee7e8ec51`, manifest
+`aa983075d6a2`).
+**Runtime (3E):** n/a -- `NEWS.Rmd`, a test file and records only; no runtime behavior changed; the
+ratchet is the mechanical half. Claims verified against real function output
+(`.buildMatingUnitForest()`, the position engine's own test suite), not roxygen or memory.
+**Disclosures:** (1) I wrote and ran the RED tests before posing the PRE-RED->RED `AskUserQuestion`
+gate CLAUDE.md requires; caught before any commit, disclosed, and the gate was posed retroactively
+showing the actual measured RED result -- corrected going forward by posing the phase gate as the
+very next action after PRE-RED fact-finding, before opening any test file (Learning 803d); (2) the
+RED commit (`a2d440f1`) omitted its own `CHANGELOG.md` entry (every prior session's RED commit had
+one, confirmed by checking S789's `git show --stat`); caught before the next commit and backfilled
+in its own small ledger commit (`7d0fae64`) rather than folded silently into a later one; (3) I
+also initially posed the Phase-0 priorities-picker `AskUserQuestion` before rendering the prose
+orientation report, out of the order the priorities-list convention specifies; caught and the full
+report was given afterward in the same turn, before any technical work began; (4) 2 of 34 one-mate
+pairs where `rhesusPedigree` puts the male on the right (filed by S789, not re-chased this session
+-- outside piece (b)'s scope); (5) no clean-export `R CMD check` (no `R/` change); `NEWS.md` not
+re-rendered (lags by design); (6) your residue is untouched and the `BACKLOG.md` header stayed
+unstaged (working diff = the 5 header lines, checked after each BACKLOG.md commit); (7) the S790
+claim entry keeps its "(in progress)" marker by the ledger rule.
+**Checklists:** lint: no `R/` file touched, 0 lints on the modified test file (`lintr::lint()` with
+the package loaded); NEWS: this session IS the rewrite, no new exported function or feature;
+`_pkgdown.yml`, citation, tutorial and `a2interactive` N/A; no GitHub issue exists for this item;
+the `BACKLOG.md` sweep item was NARROWED, not removed (pieces (c) and (d) remain).
+
+**Self-assessment (Session 790): 8/10.** **Strengths:** STANDING SET read before the first
+command; Orient measured; PRE-RED fact-finding done BEFORE writing any test, catching two real
+findings (a stale number, an overstated claim) by measuring real output rather than trusting the
+prior entry; every suite/count prediction matched exactly; caught and disclosed 3 of my own process
+slips promptly, before they compounded (the phase-gate ordering, the missed ledger entry, the
+false-positive regex); the `BACKLOG.md` line-range re-derivation for pieces (c)/(d) was done fresh
+against the actual post-edit file, not hand-shifted from memory. **Weak:** (1) the PRE-RED->RED
+gate ordering slip; (2) the missed RED ledger entry; (3) the "each" regex false positive, caught
+only by running the tests, not by design review; (4) a long Phase 0 report again, and I initially
+sequenced the priorities picker before the prose report. **Learnings:** 803.
+
+**Next steps (specific):** (A) **Stage 2, piece (c): connector routing, collision avoidance and the
+Rectilinear sibling-bar entries (READY, M)** -- `BACKLOG.md` working (re-derive at pickup by
+reading the section again -- line numbers shift with every piece; as of this session's close:
+`:67-69`, `:79-90`, `:122-130`, `:137-142`, `:153-164`, `:178-198`); the item flags that
+`NEWS.Rmd:82`'s "Two rarer related cases are not corrected" (issue #160) was kept but NOT
+re-checked against the code -- piece (c) must find what the two cases are and whether they still
+hold. Add the piece's checks as failing tests FIRST, scoped with `newsSectionEntries()`; check
+every sentence against the code and real output, not memory or the roxygen (Learning 802/803).
+(B) **Also READY:** the docs staleness audit (L) (re-derive line); the `a2interactive`
+`reportMatePairs()` section (S), sub-item (1); the PED_GV cleanup bundle (S); the Chrome-for-Testing
+hang root cause (M, optional, low); the `BACKLOG.md` ledger-size housekeeping (L). (C) **DECISION
+NEEDED:** male-left placement, roxygen versus real layouts (S to find the cause); a sire or dam
+with a blank or unrecognized sex reported as a "female sire" or "male dam" (S); the shared
+`isAddedRecord()` helper (S, optional); `convertDate(reportErrors)` row numbering (S, low); the
+absent-id decision for `getAncestors()` (S); F2 and F3 of the PED_GV item; `paths-ignore` (S).
+(D) **Owner-requested or owner-decision:** the contributor tutorial (M), the peer-reviewed papers
+(L, its own scoping session first), the harem-sire hole, blank ancestry OTHER vs UNKNOWN, the two
+LabKey items, the retrospective backfill, the trimmer's verify false positive (S). (E) Your
+decisions open: the working-tree residue (the `BACKLOG.md` header, `BACKLOG.log`, the two NEWS
+drafts, and 5 render artifacts, all untouched this session); **the push of the 15 local commits
+after `ff8308a5`** (CI has not seen S790; `NEWS.Rmd` and a test file changed, so the tests must be
+watched, not skipped); closing the 11 recommended PED_GV ids; whether to delete the `## Package`
+entry (`NEWS.Rmd:18`); the two methodology files `context_budget.py` says match no canonical
+revision (last sync S719, still not investigated). **`HANDOFFS.md` is close to its 65,536 B trim
+budget** (see Gotchas) -- measure and propose the owner-gated archive pass early next session if it
+crosses.
+
+**Key files:** `tests/testthat/test_newsReleaseState.R` (new in S790: `matingUnitDuplicateCount()`
+and its unit test, the extended `promisesEveryPair()` with its "each"-idiom control, the two new
+real-file checks near the end of the file, before the #168 test); `NEWS.Rmd:21-` (the
+`## Pedigree Diagram` section, 37 entries; the rewritten entries at `:73-78`, `:91-95`, `:143-146`);
+`R/makePedigreeDiagramData.R` (`.buildMatingUnitForest()`, the `duplicates` data frame);
+`tests/testthat/test_positionMatingUnitForest.R:2917-2974` (the disclosed-residuals centering test
+that grounded the overstatement finding); `BACKLOG.md` working (the sweep item, narrowed; re-derive
+line by reading top-to-bottom); `CHANGELOG.md` (the S790 entries, newest first: REFACTOR, GREEN,
+RED ledger backfill, RED, claim); `HANDOFFS.md` (the S790 receipt); `PROJECT_LEARNINGS.md:2273`
+(Learning 803); this session's scratchpad scripts (`probe_dupcount_s790.R`,
+`probe_dupcount2_s790.R`; not in git) are in
+`/private/tmp/claude-501/-Users-rmsharp-Development-nprcgenekeepr/4a4c9c4a-a77e-4c0a-b920-0d7fe1bac2f6/scratchpad/`.
+
+**Gotchas for the next session:** (1) Expect 0 undocumented on both frontiers -- measure; 15
+unpushed after this records commit (recount); `origin/master` = `ff8308a5`; CI on it was green (4/4)
+but has NOT seen any S790 commit. The working tree is NOT clean (`BACKLOG.md` = the owner's 5-line
+header only, untracked `BACKLOG.log`, two `suggested_NEWS_entry` drafts, 5 render artifacts); stage
+by name; for a `BACKLOG.md` commit edit the working file, `tail -n +6 BACKLOG.md > blob`,
+`git hash-object -w blob`, `git update-index --cacheinfo 100644,<sha>,BACKLOG.md`, commit, then
+confirm `git diff HEAD -- BACKLOG.md` shows only the 5 header lines (worked verbatim again).
+(2) Full suite baseline now: **354 files, 2,752 tests, 8,582 expectations, 187 skipped, 6
+warnings**, 1 failed (the pkgdown draft) on a quiet machine; under host load, wall-clock benchmarks
+may also fail (Learnings 760, 800) -- check `uptime` first. (3) Ratchet 1/1 at `ff682ffb`
+(results `ce2ee7e8ec51`, manifest `aa983075d6a2`); compare BEFORE any run, run AFTER committing.
+(4) The wording contracts from pieces (a) and (b): a limit number followed within 60 non-digit
+characters by its style name; "default" attaches to the style named just before it in the same
+sentence, else the first after; exactly one shading entry; the male-left entry has no "by default"
+and no every-pair word; the mating-symbol-count entry cites the CURRENT measured count (a test
+recomputes it, so it self-corrects -- do not hand-edit the number without re-running the test); no
+mating-symbol-placement entry may use "every"/"each" as a leading quantifier (`promisesEveryPair()`
+now also flags "each" followed by a word, not punctuation). Each later piece scopes its own new
+patterns with `newsSectionEntries()`. (5) **HANDOFFS.md measured 62,993 B before this session's
+receipt** (against the 65,536 B trim budget); this receipt will likely cross it -- if the commit
+hook refuses, propose the owner-gated archive pass (`methodology_trim.py --file HANDOFFS.md --write
+--budget-bytes 65536`, expect the SRF small-denominator refusal and `--force`, trim CHANGELOG.md
+LAST per Learning 761). `SESSION_NOTES.md` measured 38,082 B and `CHANGELOG.md` 46,815 B before this
+session's records, both with headroom. (6) STANDING SET carried in the S790 receipt's gotcha (7);
+READ IT BEFORE THE FIRST COMMAND. New in S790: pose the PRE-RED->RED phase gate as the very next
+action after PRE-RED fact-finding, before opening any test file (Learning 803d); each TDD-phase
+commit (claim/RED/GREEN/REFACTOR) needs its OWN `CHANGELOG.md` entry as it happens, not only at the
+final records commit -- verify this against a recent session's `git show --stat` if in doubt, don't
+assume; a shared lexical guard extended for a new trigger word needs a control for that word's
+other, harmless use (Learning 803c); a number cited in a NEWS entry can go stale from LATER,
+unrelated code changes even though it was correct when written -- pin it with a test that
+recomputes it from real output, not a one-time re-check (Learning 803a).
 
 ### Session 788 Handoff Evaluation (by Session 789)
 **Score: 9/10.** **What helped:** every Orient measurement held -- `CHANGELOG.md` frontier `5ff2f39c`
