@@ -180,6 +180,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S795
+date: 2026-09-27
+status: pending
+self_score: TBD
+predecessor_score: TBD
+active_task: BUNDLE/DOC cleanup of 5 trivial PED_GV audit findings (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md): PED-11 (redundant any() in getRecordStatusIndex.R), NEW-56 (redundant [1L] in getPotentialParents.R), NEW-63 (stale getMaxAx.R roxygen), PED-10/NEW-43 (stale createPedOne.R/createPedSix.R roxygen), NEW-14 (kinshipMatricesToKValues()'s first-flag accumulator plus its empty-list edge). PRE-RED investigation done; owner picked stop() with a clear message for the empty-list case and approved the PRE-RED->RED gate. RED in progress.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S794
 date: 2026-09-27
 status: complete

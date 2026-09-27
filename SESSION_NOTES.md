@@ -86,6 +86,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 795 Did
+**Deliverable:** BUNDLE/DOC cleanup of 5 trivial `PED_GV_AUDIT_TRIAGE_2026-09-26.md` findings:
+PED-11, NEW-56, NEW-63, PED-10/NEW-43, NEW-14 (with its empty-list edge) (IN PROGRESS).
+**Started:** 2026-09-27.
+**Status:** Session claimed. PRE-RED investigation done (read the audit and all 5 target files);
+owner picked `stop()` with a clear message for NEW-14's empty-list case, then approved the
+PRE-RED->RED gate. RED in progress.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest.
+
 ### Session 793 Handoff Evaluation (by Session 794)
 **Score: 7/10.** Orient measurements held (ledger frontiers = HEAD, 0 undocumented; dashboard
 96/100; `CHANGELOG.md` over budget; working-tree residue matched, pre-dates this session). **Wrong:**
