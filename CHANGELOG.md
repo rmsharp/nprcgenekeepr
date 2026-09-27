@@ -60,6 +60,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S792 REFACTOR: NEWS.Rmd release-state sweep CLOSED (stage 2 piece (d) DONE, all 4 stages complete); BACKLOG sweep item removed, two open threads extracted
+- **Model:** Claude Sonnet 5. No behavior change: target test file re-confirmed 26/107/0 failed, 0
+  lints on `tests/testthat/test_newsReleaseState.R`. Per the BACKLOG completed-item removal
+  checklist, the whole "`NEWS.Rmd` release-state sweep" item is removed from `BACKLOG.md` (all 4
+  stages DONE): stage 1 (S788, 12 entries rewritten, guard test added); stage 2 piece (a) (S789,
+  display/defaults, 45->42 entries); piece (b) (S790, mating-symbol placement/spacing, 6 entries
+  merged into 1, stale duplicate count 22->113 corrected, 42->37 entries); piece (c) (S791,
+  sibling-bar/connecting-bar entry, one stale "not corrected" clause dropped, 37 entries
+  unchanged); piece (d) (S792, this session -- the section's remaining 9 stale-framed entries
+  restated, all underlying facts verified true and current, 37 entries unchanged). The `##
+  Pedigree Diagram` section now states its finished capabilities throughout; none is narrated as a
+  fix or change against a pre-2.0.0 state the diagram feature never had. Two open threads this
+  session found, neither resolved, extracted into `BACKLOG.md` as their own items: (1) the owner's
+  untracked `suggested_NEWS_entry.md`/`.Rmd` 3.0.0 consolidation drafts' disposition (deferred at
+  S791, unblocked now that the sweep is closed); (2) whether to keep or delete the `## Package`
+  entry (`NEWS.Rmd:18`), which reports the PRIOR release rather than a change in this one.
+
 ### 2026-09-27 · [ad hoc] S792 GREEN: NEWS.Rmd Pedigree Diagram piece (d) entries restated as the finished state (stage 2 piece (d))
 - **Model:** Claude Sonnet 5. Rewrote the 9 stale-framed entries at `NEWS.Rmd` lines :37-42, :104-107,
   :108-111, :112-116, :117-121, :131-136, :147-152, :165-172, :173-177 -- dropped "can now"/"Fixed"/

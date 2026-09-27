@@ -128,58 +128,29 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Known, accepted:** an unhandled click-time error ends the Shiny session
       (Learning 786).
 
-- [ ] **`NEWS.Rmd` release-state sweep -- STAGE 1 (S788), STAGE 2 PIECES (a) (S789), (b) (S790)
-      AND (c) (S791) DONE; only piece (d) remains (owner-directed S774; staged by the owner's S788
-      decision; READY, Effort M)** -- the rule is Learning 785: NEWS entries state the finished
-      state against the PRIOR release (2.0.0), never a point between releases. **Done (records:
-      the S788, S789, S790 and S791 entries in `CHANGELOG.md`):** stage 1 rewrote 12 entries with
-      an explicit diary phrase and added the guard `tests/testthat/test_newsReleaseState.R` (a
-      phrase list over the newest `NEWS.Rmd` block); piece (a) restated the display-and-defaults
-      entries (400/750 limit stated once with its style, Rectilinear named the default, one
-      shading rule, male-left "in most cases"; 45 to 42 entries); piece (b) restated the
-      mating-symbol placement/spacing cluster -- merged 6 overlapping entries into 1, replaced a
-      stale duplicate-node count (measured 113, not the "22" measured at S573 and never
-      re-checked), softened an "every"/"each" overstatement to "many"; 42 to 37 entries; piece (c)
-      fixed the sibling-bar/connecting-bar entry (`NEWS.Rmd:79-82`, issue #160): "Two rarer related
-      cases are not corrected" was true right after Track 1 shipped (S593) but stale since Track 2
-      (`.resolveEdgeNodeCollisions()`, S595) generalized same-row collision repair the next day --
-      measured fresh by running the real rectilinear pipeline on the bundled 375-animal example, 0
-      `"straight-residual"` collisions of any kind remain (only the already-disclosed
-      `"curved-heuristic"` ones do, covered by the entry just below it, matching S715's shipped arc
-      count of 72 exactly); the clause was dropped, no entries merged (37 entries unchanged in
-      count). The other 11 entries in piece (c)'s scope were checked against the code and its test
-      suite and found still accurate. **What is left is the `## Pedigree Diagram` section's piece
-      (d) entries (still 37 in the section; piece (c) touched one entry's wording without changing
-      the count).** The diagram code is entirely absent at the `v2.0.0` tag
-      (`git cat-file -e v2.0.0:R/makePedigreeMatingLayout.R` fails), so a 2.0.0 reader never saw
-      the behavior many of these entries describe as a fix or improvement ("now", "no longer",
-      "Fixed", "Previously", "(see above)", "(see the rerouting entry above)"); they should
-      collapse into finished-state entries. **Strict TDD: add the piece's checks as failing tests
-      FIRST (scoped to the section; a check on a claim must be grounded in the code or in real
-      output, not the roxygen or a number carried forward from an earlier session -- pieces (a),
-      (b) and (c) each found one such overstatement/stale claim), then rewrite, checking every
-      sentence against the code and the bundled example before keeping it.** Piece (d), with the
-      `NEWS.Rmd` lines at S791 (unchanged from S790 -- piece (c)'s edit was a net 3-lines-for-3-lines
-      swap, confirmed by `git diff --stat`; re-derive at pickup anyway by reading the section
-      again): the crash fixes, the isolated-animal entries, the example pedigrees and the article,
-      the layout-origin and `kinshipMatrix` entries (`:32-42`, whose "can now" wording narrates a
-      function that did not exist at 2.0.0), and the cross-references outside this section
-      ("described below" and "... above" in Marker Genetics and Mate Pair): `:32-42`, `:104-116`,
-      `:117-121`, `:131-136`, `:147-152`, `:165-177`. Scope new patterns to the section being
-      condensed: "no longer" and "Fixed" are legitimate in `## General Fixes`, where they describe
-      2.0.0 code. **Also open:** the `## Package` entry (`:18`, "CRAN accepted the 2.0.0
-      submission...") reports the prior release, not a change in this one, so the owner may prefer
-      to delete it. `NEWS.md` was last re-rendered S716, so it lags `NEWS.Rmd` and needs a render
-      at release. The plain-language criterion (S628) still applies to every rewritten entry.
-      **Separately, the owner's untracked `suggested_NEWS_entry.md`/`.Rmd` drafts (dated
-      2026-09-25, found S791) propose consolidating the WHOLE Pedigree Diagram section (and every
-      other dev-block section) into short, user-facing feature-group bullets for the eventual
-      3.0.0 release note, explicitly replacing the issue-by-issue development history this sweep
-      is restating -- not filed here before S791. Owner-ratified S791 disposition: this sweep
-      continues piece by piece as scoped (pieces a-c's precedent); the draft is its own separate,
-      later deliverable for when 3.0.0 actually ships, not something this sweep merges in. A future
-      session should decide whether/how to adopt it (its own scoping question) once piece (d)
-      closes the sweep.
+- [ ] **Decide whether/how to adopt the owner's `suggested_NEWS_entry.md`/`.Rmd` 3.0.0
+      consolidation draft (raised S791, 2026-09-27; DECISION NEEDED, Effort M -- its own scoping
+      session first)** -- untracked owner drafts (dated 2026-09-25) propose consolidating the
+      WHOLE `NEWS.Rmd` dev-block -- every section, not just Pedigree Diagram -- into short,
+      user-facing feature-group bullets for the eventual 3.0.0 release note, explicitly replacing
+      the issue-by-issue development history the now-complete `NEWS.Rmd` release-state sweep
+      (S788-S792, see `CHANGELOG.md`) restated piece by piece. Owner-ratified S791 disposition: the
+      sweep continued piece by piece as scoped rather than merging the draft in; the draft's own
+      "Rationale" text names connector routing, duplicate-node placement, spacing, and
+      mating-symbol positioning as content it would condense. Now that the sweep has closed, this
+      decision is unblocked: whether to adopt the draft's consolidated style for the actual 3.0.0
+      release note, when (at release, or before), and how it relates to the detailed dev-block
+      entries the sweep just finished restating. Files: `suggested_NEWS_entry.md`,
+      `vignettes/suggested_NEWS_entry.Rmd` (both untracked, the owner's own).
+
+- [ ] **(Optional, owner decision) `NEWS.Rmd`'s `## Package` entry reports the PRIOR release, not
+      a change in this one (found S791, 2026-09-27, Effort S, low priority)** -- `NEWS.Rmd:18`,
+      "CRAN accepted the 2.0.0 submission (tagged `v2.0.0`); published 2026-07-26," describes
+      2.0.0 itself, not anything new in the 2.0.0.9000 development version. Decide: keep it as
+      historical context at the top of the dev-block, or delete it now that the release-state
+      sweep (S788-S792) has restated every other section's entries as finished-state claims about
+      THIS release. `NEWS.md` was last re-rendered S716, so it lags `NEWS.Rmd` and needs a render
+      at the next actual release regardless.
 
 - [ ] **Male-on-the-left placement is stricter in the code's documentation than in real layouts
       (found S789, 2026-09-27, DECISION NEEDED, Effort S to find the cause, more to fix)** --
