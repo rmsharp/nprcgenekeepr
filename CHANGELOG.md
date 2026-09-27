@@ -58,6 +58,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S788 records: close-out for stage 1 of the `NEWS.Rmd` release-state sweep (S787 handoff evaluated 9/10, receipt, Learning 801, next-session items)
+- **Deliverable:** the close-out records for S788, whose work is recorded in the entries below:
+  RED `2c8b8f1b`, GREEN `f2b9b897`, REFACTOR and docs `075443b2`; claim `b2e6e7b6`, whose
+  "(in progress)" marker stays by the ledger rule (an entry once committed is never edited). The
+  quality ratchet ran after `075443b2`: 1/1 pass, tarball 3,574,941 B (+2,742 B from the new test
+  file), results `3205149f7059`, manifest `aa983075d6a2`.
+- **Written:** the S787 handoff evaluation (9/10) and the S788 self-assessment (8/10) in
+  `SESSION_NOTES.md`, with next steps that cite working-file `BACKLOG.md` line numbers, key files
+  and gotchas (every cited line number re-checked against the files before the commit, and three
+  corrected); the complete `HANDOFFS.md` receipt, overwriting the `status: pending` stub;
+  Learning 801 in `PROJECT_LEARNINGS.md` (a grep-defined sweep scope is a floor and the prior
+  release tag decides what a "now / no longer" sentence means; a wording guard is code and needs
+  detector tests plus a failure message that names offenders; ask the owner in plain words); two
+  memory notes (the NEWS release-state note updated for the finished stage, and a new feedback
+  note on plain-language scope questions).
+- **Sizes (measured just before this entry):** `SESSION_NOTES.md` 50,912 B against its 56,750 B
+  hook ceiling, `HANDOFFS.md` 52,131 B and `CHANGELOG.md` 49,057 B against the 65,536 B trim
+  budget; a four- or five-commit session adds about 12 KB to `CHANGELOG.md` and 9 KB to the other
+  two, so an owner-gated archive pass is likely owed at the next Orient (measure first).
+- **Non-commit actions:** none beyond the memory notes: no push (26 local commits after
+  `origin/master` = `4e2e6e06` once this lands), no issue closed or opened, no release. The
+  owner's mid-session note on line 21 of this file is recorded in the GREEN entry; nothing was
+  changed for it. The `NEWS.Rmd` sweep item stays open in `BACKLOG.md`, narrowed to the Pedigree
+  Diagram stages, so no `BACKLOG.md` item was removed.
+
 ### 2026-09-26 · [ad hoc] S788 REFACTOR and docs: review with no code change; the `CLAUDE.md` NEWS-checklist rule; the `BACKLOG.md` sweep item narrowed to the remaining Diagram stages
 - **REFACTOR (no behavior change):** I read the `NEWS.Rmd` diff and `test_newsReleaseState.R` for
   readability and found nothing to change (the newest block has no phrase left; the Pedigree
