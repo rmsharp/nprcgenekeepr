@@ -83,6 +83,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   `test_pkgdown_reference_config.R` draft failure, unrelated), 0 error; `lintr::lint()` on the new
   test file: 0 lints.
 
+### 2026-09-27 · [ad hoc] S794 REFACTOR: resolved shinytest2 timeout item removed from BACKLOG.md
+- **Model:** Claude Sonnet 5. No behavior change. Per the BACKLOG completed-item removal
+  checklist, the "Up Next" shinytest2 item (root cause found, fix shipped this session) is
+  removed -- its record now lives in this session's PRE-RED/RED/GREEN entries above. Staged via
+  the established `tail -n +6` / `hash-object` / `update-index --cacheinfo` recipe (3 separate
+  Bash calls) to exclude the pre-existing, unrelated `BACKLOG.md` YAML-header residue from this
+  commit -- that residue stays in the working tree untouched, unexplained, owner's own open
+  decision (S791-793's gotcha), not swept in silently.
+
 ### 2026-09-27 · [ad hoc] S793 records: suggested_NEWS_entry.md/.Rmd review DONE (14 findings: 8 ADOPT, 5 MODIFY, 1 REJECT-as-drafted); one confirmed factual error found in the draft (groupAddAssign()'s `candidates` return-value field mislabeled as a new argument); one BACKLOG.md item filed for a second shinytest2 CI timeout occurrence; Learnings 806-807
 - **Model:** Claude Sonnet 5. Phase 3 close-out: Session 792's handoff evaluated 8/10 (every Orient
   measurement held except two related, minor inaccuracies -- the "27 unpushed" figure undercounted

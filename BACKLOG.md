@@ -5,23 +5,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **The scheduled `shinytest2` GitHub Actions workflow has now hit its 30-minute execution
-      cap twice** (found S791, 2026-09-27; recurred S793, 2026-09-27; Effort M, root cause not
-      yet investigated) -- both are SCHEDULED (nightly, 07:00 UTC) runs on `ubuntu-latest`
-      (`.github/workflows/shinytest2.yaml`), unrelated to any push; `gh run view` shows only "The
-      job has exceeded the maximum execution time of 30m0s," no other error. The workflow runs
-      its 21 E2E module groups sequentially, each a fresh `Rscript` process (Phase-8e-7's flake
-      mitigation) -- a design that trades wall-clock time for process isolation, so the 30-minute
-      cap may simply have been outgrown as e2e coverage grew, rather than one group hanging.
-      Two occurrences 2 days apart crosses the "not worth a BACKLOG item on one occurrence"
-      threshold S792 applied. **Next steps for the pickup:** check `gh run list
-      --workflow=shinytest2.yaml` for the full run-duration history/trend (not just the two
-      failures) to see whether normal runs are already close to 30 minutes; if so, this is
-      capacity growth, not a hang, and the fix is raising `timeout-minutes` or splitting the
-      groups across parallel matrix jobs -- not the same class of problem as the already-open
-      Chrome-for-Testing hang item below (that one is `R-CMD-check.yaml` on `macos-latest`
-      specifically; this is a different workflow, a different OS, and a different symptom).
-
 - [ ] **PED_GV audit follow-through -- triage DONE (S781, 2026-09-26), F1 shipped (S782), F4
       shipped (S783); the owner decides F2 and F3, then the rest (DECISION NEEDED for both,
       Effort S-M per slice; strict TDD for every fix)** --
