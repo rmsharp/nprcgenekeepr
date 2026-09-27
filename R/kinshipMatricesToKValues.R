@@ -94,6 +94,9 @@
 #' kValue <- kinshipMatricesToKValues(simKinships)
 #' extractKValue(kValue, id1 = "A", id2 = "F", simulation = 1:n)
 kinshipMatricesToKValues <- function(kinshipMatrices) {
+  if (length(kinshipMatrices) == 0L) {
+    stop("kinshipMatrices must contain at least one kinship matrix")
+  }
   first <- TRUE
   for (i in seq_along(kinshipMatrices)) {
     if (first) {

@@ -85,6 +85,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   kinship matrix", fixed = TRUE)`. Confirmed FAILING against the current file -- actual message is
   "object 'kValues' not found".
 
+### 2026-09-27 · [ad hoc] S795 GREEN: kinshipMatricesToKValues() guards against an empty list
+- **Model:** Claude Sonnet 5. `R/kinshipMatricesToKValues.R`, minimum change only: a
+  `if (length(kinshipMatrices) == 0L) stop(...)` guard before the accumulator loop. New test
+  passes; `test_kinshipMatricesToKValues.R`'s other 3 tests and the sibling caller files
+  (`test_countKinshipValues.R`, `test_summarizeKinshipValues.R`) unaffected.
+
 ### 2026-09-27 · [ad hoc] S794 records: shinytest2 CI timeout fix DONE (S793 handoff evaluated 7/10, self 8/10, receipt, Learning 808); full RED/GREEN/REFACTOR TDD cycle, BACKLOG item removed
 - **Model:** Claude Sonnet 5. Phase 3 close-out: Session 793's handoff evaluated 7/10 -- every
   Orient measurement held fresh except one: `gh run view --json jobs` showed the "hit its cap
