@@ -58,6 +58,53 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S788 GREEN: `NEWS.Rmd` stage 1, the 12 flagged entries rewritten as release-state wording; the guard test passes
+- **Changed `NEWS.Rmd` only** (development block): the new test file goes from 2 failing to
+  **9 of 9 passing** (32 expectations), both real-file guards green.
+  **#168:** the four staged entries ("Groundwork", "continued" twice, "final step"; 47 lines, 479
+  words) became ONE entry (36 lines, 383 words) that keeps every original claim: block and flag
+  rules in every formation mode, the status line, a bad file reported and ignored, the guardrails
+  inactive without ancestry information, the Ancestry results tab and coverage summary, the
+  per-rule override with a written reason, the audit record, the harem-sire limitation (now
+  stated without "yet"), the script functions and the shipped example files. **#167:** the two
+  "arrives in later steps / the next step" sentences were deleted and "the groundwork for
+  seeing" became "to see"; the four per-function and per-tab entries stay four. **MHC:** "the
+  first step toward" became "the frequency and rare-haplotype reports read files in this same
+  format". **`:236`, `:241`:** "no Shiny screen yet" became "the Shiny app has no screen for it".
+  **`:58` and `:66`:** the mate-line bullet now says it applies to both edge styles, including a
+  "Rectilinear" mate line that bends around an obstacle, and the `:66` bullet was folded into it
+  and removed. **`:83`:** "remain open, disclosed follow-ups for a future pass" became "are not
+  corrected". **`:18`:** "Development continues here on top of it." dropped.
+- **Checked against the code before writing:** all 13 cited functions are exported (`NAMESPACE`);
+  the Ancestry Guardrails section, "Override rule...", "Ancestry" tab and "Download Audit
+  Manifest" are in `R/modBreedingGroups.R`, the Genetic-Health Trends tab in `R/appUI.R:296`;
+  `groupAddAssign(ancestryRules =)` is `R/groupAddAssign.R:183` and its harem limitation is the
+  roxygen at `:82-85`; the example rules, ancestry pedigree and snapshot history files ship in
+  `inst/extdata/examples`; no app code references `chrtype` or `shrinkPedigree` (recursive
+  grep), so both are script-only; `mhcHaplotypeFrequency()` and `mhcHaplotypeCarriers()` both
+  take the `checkMhcHaplotypeFile()` format.
+- **Measured:** related docs tests green (`test_effectivePopulationSizeDocs.R` 5 tests, 23
+  expectations; `test_wordlist_coverage.R` 3 of 3). Full unfiltered suite (`load_all` +
+  `NOT_CRAN`, run alone at a load of 5 to 9): **354 files, 2,737 tests, 8,526 expectations, 1
+  failed** (the known `test_pkgdown_reference_config.R`, the owner's untracked
+  `suggested_NEWS_entry` draft), 0 errors, 187 skipped, 6 warnings; the counts I predicted from
+  the S787 baseline (+1 file, +10 tests, +52 expectations). `NEWS.Rmd` still knits
+  (`knitr::knit` to a scratch file: 1,278 lines, #168 in one place). The new test skips cleanly
+  when `NEWS.Rmd` is absent, as in an R CMD check tarball (simulated in a scratch directory: 7
+  pass, 2 skip, 0 fail).
+- **Not run, and disclosures:** the clean-export `R CMD check` was not run (no `R/` change;
+  the only tarball file is a test that skips there, simulated above); the quality ratchet runs
+  after this commit; `NEWS.md` was not re-rendered (it lags `NEWS.Rmd` by design until release);
+  the `:83` "two rarer related cases" was NOT re-verified against the code (the limitation is
+  kept, only the follow-up promise is gone) and the `:18` entry reports the prior release's CRAN
+  acceptance, not a change in this release; both are queued for the Diagram stages or the
+  owner. **The owner noted mid-session that line 21 of this file looks like an error:** it is
+  the empty `## 2026-08` heading above `## 2026-09`, the shape `CLAUDE.md` records as known (from
+  `850e3671b`, 2026-08-15); it was NOT changed this session (unrelated to this deliverable, and
+  the trimmer's verify scripts read the ledger structure) and is left for the owner's decision.
+  Runtime smoke n/a (docs-only). TDD phase GREEN; REFACTOR (the `CLAUDE.md` line and the
+  `BACKLOG.md` stage plan) is behind its own gate.
+
 ### 2026-09-26 · [ad hoc] S788 RED: `tests/testthat/test_newsReleaseState.R`, the release-note wording guard (stage 1 of the `NEWS.Rmd` release-state sweep)
 - **Failing tests only** -- one new test file; no `NEWS.Rmd`, `CLAUDE.md` or production change.
   Owner decisions this session: at the scope question, **the large scope, in stages** (this

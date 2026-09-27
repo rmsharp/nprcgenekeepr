@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Package
 - CRAN accepted the 2.0.0 submission (tagged `v2.0.0`); published
-  2026-07-26. Development continues here on top of it.
+  2026-07-26.
 
 ## Pedigree Diagram
 - The Pedigree Browser tab gained an interactive **Diagram** view: click
@@ -58,13 +58,11 @@ knitr::opts_chunk$set(echo = TRUE)
 - The Diagram tab draws a mate line thicker and in a distinct color for a
   consanguineous mating (parents who are blood relatives), matching
   kinship2's convention -- detected automatically from the pedigree, no
-  extra column needed. Applies to the "Direct" edge style; "Rectilinear"
-  support follows below.
+  extra column needed. Applies to both edge styles, including a
+  "Rectilinear" mate line that has to bend around an obstacle.
 - The Rectilinear edge style correctly avoids an unnecessary extra bend in
   unrelated mate lines even when a pedigree has one parent recorded but
   missing their own row.
-- The consanguineous-mating marker above also survives a "Rectilinear"
-  reroute (a mate line that needs to bend around an obstacle).
 - When a pedigree has no `affected` column at all, animals default to
   unshaded (open) rather than shaded as affected, matching kinship2's
   convention -- including the package's own bundled example pedigree.
@@ -83,8 +81,7 @@ knitr::opts_chunk$set(echo = TRUE)
 - In the Rectilinear edge style, a sibling group's connecting bar avoids
   visually crossing an unrelated animal's own row in the common case --
   most importantly when a sibling also anchors her own mating at the same
-  generation (issue #160). Two rarer related cases remain open, disclosed
-  follow-ups for a future pass.
+  generation (issue #160). Two rarer related cases are not corrected.
 - In the Rectilinear edge style, the layout detects when a straight
   connector line would visually pass through an unrelated animal -- most
   often in large, many-founder colony pedigrees -- and reroutes around
@@ -237,14 +234,16 @@ knitr::opts_chunk$set(echo = TRUE)
   usual whole-genome average) via a new `chrtype = "x"` option -- useful
   for traits carried on the X chromosome. The default behavior (`chrtype =
   "autosome"`) is unchanged; every existing use of `kinship()` keeps
-  working exactly as before. Script-callable only; no Shiny screen yet.
+  working exactly as before. Script-callable only; the Shiny app has no
+  screen for it.
 - New `shrinkPedigree()` trims a large pedigree down to just the animals
   needed to keep it genetically informative within a genotyping budget,
   given which animals are already genotyped and, optionally, which are
   affected by a condition of interest. Ties are broken in a fixed,
   repeatable order (kinship2's own equivalent function breaks ties
   randomly, so the same input there can give a different answer from one
-  run to the next). Script-callable only; no Shiny screen yet.
+  run to the next). Script-callable only; the Shiny app has no screen
+  for it.
 
 ## Marker Genetics
 - New **Marker Genetics** tab, starting with a **Kinship Comparison**
@@ -304,9 +303,9 @@ knitr::opts_chunk$set(echo = TRUE)
 - New `checkMhcHaplotypeFile()` validates a file of MHC haplotype
   designations -- two named haplotypes per animal, one row per animal,
   like the bundled `rhesusGenotypes` example data. Designations are taken
-  exactly as written (a trailing `?` marks a provisional call). This is
-  the first step toward MHC haplotype frequency and rare-haplotype
-  reporting (issue #148).
+  exactly as written (a trailing `?` marks a provisional call). The MHC
+  haplotype frequency and rare-haplotype reports read files in this same
+  format (issue #148).
 - New `mhcHaplotypeFrequency()` summarizes how common each MHC haplotype
   is in a colony: copies, carriers, and frequency per haplotype, with
   missing and provisional calls disclosed rather than silently dropped.
@@ -373,53 +372,42 @@ knitr::opts_chunk$set(echo = TRUE)
   mode** checkbox: checks every possible single-group split instead of
   sampling, for the simplest case. Script users: `groupAddAssign()` gained
   a matching `exhaustive` argument (issue #146).
-- Groundwork for ancestry guardrails in breeding-group formation
-  (issue #168): centers can now describe their ancestry compatibility
-  policy in a simple rules file -- each line names two ancestry groups
-  (for example Indian-origin and Chinese-origin rhesus) and says whether
-  mixing them should be blocked or just pointed out. Script users: new
-  `readAncestryRules()` and `checkAncestryRules()` read and validate the
-  file; a worked example rules file and a matching example pedigree ship
-  with the package. Enforcement during group formation arrives in later
-  steps of this work.
-- Ancestry rules are now enforced during group formation (issue #168,
-  continued): hand a rules file to group formation and animal pairs a
-  "block" rule names can no longer end up in the same group -- whatever
-  their sexes, and in every formation mode. Pairs a "flag" rule names
-  still form freely and are pointed out afterward. With no rules file,
-  formation behaves exactly as before. Script users: `groupAddAssign()`
-  gained a matching optional `ancestryRules` argument, and the new
-  `reportAncestryViolations()` lists every flagged or blocked pairing in
-  groups you already have, plus a summary showing how many animals each
-  rule does and does not reach. One caveat, stated in the documentation:
-  in harem formation the automatically chosen sire himself is not checked
-  against the rules yet (his groupmates are checked against each other).
-  The in-app upload and violations view arrive in the final step of this
-  work.
-- The Breeding Group Formation tab gained an **Ancestry Guardrails**
-  section (issue #168, continued): upload your center's ancestry rules
-  file next to the kinship threshold, and group formation applies it --
-  a status line always shows what is loaded ("2 block, 2 flag rule(s)")
-  and how many animals no rule reaches, so a rule set that quietly covers
-  too little is visible at a glance. A problem in the file is reported as
-  a notice and ignored rather than stopping your run, and a pedigree
-  without ancestry information simply leaves the guardrails inactive,
-  with the status line saying so. The in-app violations view, per-rule
-  overrides, and the downloadable audit record arrive in the final step
-  of this work.
-- The ancestry guardrails are now complete (issue #168, final step): a
-  new **Ancestry** results tab lists every within-group pairing your
-  rules matched for the groups just formed, alongside a coverage summary
-  showing how many animals each ancestry group holds and which ones no
-  rule reaches. When professional judgment says a block rule should not
-  apply -- say, an approved founder import -- you can override that one
-  rule for your session through a confirmation step that requires a
-  written reason; overridden pairings stay visible in the violations
-  list, marked "overridden", never silently dropped. A downloadable
-  audit record accompanies each formation run, listing the rules in
-  effect, any overrides with their reasons, and the warning text shown
-  at the confirmation step, so the decision trail leaves the tool with
-  the groups.
+- The Breeding Group Formation tab can follow your center's ancestry
+  rules (issue #168). Describe your ancestry compatibility policy in a
+  simple rules file -- each line names two ancestry groups (for example
+  Indian-origin and Chinese-origin rhesus) and says whether mixing them
+  should be blocked or just pointed out -- and upload it in the new
+  **Ancestry Guardrails** section next to the kinship threshold. Animal
+  pairs a "block" rule names can no longer end up in the same group,
+  whatever their sexes and in every formation mode; pairs a "flag" rule
+  names still form freely and are pointed out afterward. A status line
+  always shows what is loaded ("2 block, 2 flag rule(s)") and how many
+  animals no rule reaches, so a rule set that quietly covers too little
+  is visible at a glance. A problem in the file is reported as a notice
+  and ignored rather than stopping your run, and a pedigree without
+  ancestry information simply leaves the guardrails inactive, with the
+  status line saying so. A new **Ancestry** results tab lists every
+  within-group pairing your rules matched for the groups just formed,
+  alongside a coverage summary showing how many animals each ancestry
+  group holds and which ones no rule reaches. When professional judgment
+  says a block rule should not apply -- say, an approved founder import
+  -- you can override that one rule for your session through a
+  confirmation step that requires a written reason; overridden pairings
+  stay visible in the violations list, marked "overridden", never
+  silently dropped. A downloadable audit record accompanies each
+  formation run, listing the rules in effect, any overrides with their
+  reasons, and the warning text shown at the confirmation step, so the
+  decision trail leaves the tool with the groups. With no rules file,
+  formation behaves exactly as before. One caveat, stated in the
+  documentation: in harem formation the automatically chosen sire
+  himself is not checked against the rules (his groupmates are checked
+  against each other). Script users: `readAncestryRules()` and
+  `checkAncestryRules()` read and validate the rules file,
+  `groupAddAssign()` takes a matching optional `ancestryRules` argument,
+  and `reportAncestryViolations()` lists every flagged or blocked
+  pairing in groups you already have, plus a summary showing how many
+  animals each rule does and does not reach; a worked example rules file
+  and a matching example pedigree ship with the package.
 
 ## Mate Pair Analysis
 - New `reportMatePairs()` reports individual mate-pair candidates with
@@ -460,12 +448,11 @@ knitr::opts_chunk$set(echo = TRUE)
 - Colony managers can now keep a running history file of dated colony
   snapshots -- one row of colony-level genetic-health values per recorded
   date (mean kinship, founder representation, genome uniqueness, and
-  related summaries) -- the groundwork for seeing whether a colony's
-  genetic health is improving or eroding over time (issue #167). Script
-  users: new `readSnapshotHistory()`, `checkSnapshotHistory()`, and
+  related summaries) -- to see whether a colony's genetic health is
+  improving or eroding over time (issue #167). Script users: new
+  `readSnapshotHistory()`, `checkSnapshotHistory()`, and
   `appendColonySnapshot()` read, validate, and extend the history; a
-  worked example history ships with the package. Viewing trends in the
-  app arrives in later steps of this work.
+  worked example history ships with the package.
 - Colony managers can now record a snapshot directly from a finished
   genetic value analysis with the new `createColonySnapshot()` function:
   it captures the analysis's colony-level results and the population's
@@ -484,8 +471,7 @@ knitr::opts_chunk$set(echo = TRUE)
   the plots and the change table point out when two snapshots were
   recorded under different settings or software versions, so a jump in
   the numbers is not mistaken for a real change in the colony
-  (issue #167). Viewing trends in the app arrives in the next step of
-  this work.
+  (issue #167).
 - Colony managers can now see genetic-health trends directly in the app:
   a new **Genetic-Health Trends** tab lets you upload a snapshot history
   (or start a new one), record a new dated snapshot from the genetic
