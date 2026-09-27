@@ -78,6 +78,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 788 Did
+**Deliverable:** **`NEWS.Rmd` release-state sweep** (IN PROGRESS): rewrite the development-section
+entries that describe in-progress milestones (MHC haplotype-frequency, the four #168 ancestry
+entries, the two #167 longitudinal entries, and whatever a full read of `NEWS.Rmd:15-540` finds) as
+finished-state notes relative to 2.0.0 (Learning 785); strict TDD, one deliverable, each phase gate
+via `AskUserQuestion`.
+**Started:** 2026-09-26
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (item 1,
+`BACKLOG.md` "`NEWS.Rmd` release-state sweep", READY, Effort M). Orient measured: 0 undocumented on
+both frontiers (`2692cb97` = HEAD); no pending receipt; 21 unpushed, `origin/master` = `4e2e6e06`;
+the S787 ratchet citation (results `3ad0c74e0635`, manifest `aa983075d6a2`, head `9effbe81`, 1/1)
+matched `.quality-gates-results.json` before any run (not re-run); the 10 most recent master
+workflow runs all `success` (the 21 local commits have not been through CI); dashboard 96/100;
+context budget nothing over a ceiling (`CLAUDE.md` 26,360 B in the warn band; this file 37,322 B,
+`HANDOFFS.md` 41,745 B, `CHANGELOG.md` 37,203 B before this claim; the trim check fires on none, so
+no archive pass is owed); the untracked residue is the owner's plus 5 renders of tracked `.qmd`
+sources; both sequencing audits checked (only #138 is open, owner-deprioritized). Plan: read the
+whole development section once, list every in-progress-milestone entry with its line, ask the owner
+the Pre-RED scope question (a docs guard test or not, the exact phrase list), then RED, GREEN,
+REFACTOR. TDD phase PRE-RED; no code touched.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's
+reconcile.
+
 ### Session 786 Handoff Evaluation (by Session 787)
 **Score: 9/10.** **What helped:** every Orient measurement held -- 0 undocumented on both frontiers
 (`b5b4512c` = HEAD), 12 unpushed (recounted), `origin/master` = `4e2e6e06`, the ratchet citation

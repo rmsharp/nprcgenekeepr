@@ -176,6 +176,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S788
+date: 2026-09-26
+status: pending
+active_task: NEWS.Rmd release-state sweep (BACKLOG.md item "NEWS.Rmd release-state sweep", READY, Effort M; owner-directed S774, Learning 785): rewrite the development-section entries that describe in-progress milestones as finished-state notes relative to 2.0.0 (the MHC entry, the four #168 ancestry entries, the two #167 longitudinal entries, plus whatever a full read of NEWS.Rmd:15-540 finds); strict TDD, one deliverable.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S787
 date: 2026-09-26
 status: complete

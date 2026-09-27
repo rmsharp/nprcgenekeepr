@@ -58,6 +58,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S788 claim: `NEWS.Rmd` release-state sweep *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` "`NEWS.Rmd` release-state
+  sweep", READY, Effort M; owner-directed S774, Learning 785). Deliverable: rewrite the
+  development-section entries that describe in-progress milestones as finished-state notes relative
+  to the prior release (2.0.0); read the whole development section (`NEWS.Rmd:15-540`) once, since
+  the item's heuristic grep is a floor, not a census. Strict TDD: Pre-RED reading, then RED, GREEN,
+  REFACTOR, each gate via `AskUserQuestion`; whether a docs guard test is warranted is a Pre-RED
+  scope decision for the owner. Orient measured: 0 undocumented on both the `CHANGELOG.md` and
+  `HANDOFFS.md` frontiers (`2692cb97` = HEAD; the S787 receipt is `status: complete`, nothing to
+  backfill); 21 unpushed, `origin/master` = `4e2e6e06`; the S787 ratchet citation (results
+  `3ad0c74e0635`, manifest `aa983075d6a2`, head `9effbe81`, 1/1) matched
+  `.quality-gates-results.json` before any run (not re-run this Orient); the 10 most recent master
+  workflow runs all `success` (the 21 local commits have not been through CI); dashboard 96/100;
+  context budget nothing over a ceiling (`CLAUDE.md` 26,360 B in the warn band; `SESSION_NOTES.md`
+  37,322 B, `HANDOFFS.md` 41,745 B, `CHANGELOG.md` 37,203 B before this claim; the trim check fires
+  on none, so no archive pass is owed); the untracked residue is the owner's (`BACKLOG.log`, two
+  NEWS drafts) plus 5 renders of tracked `.qmd` sources (date- and source-checked); the
+  `BACKLOG.md` working diff is the owner's 5-line header only. Stub + pending receipt ride this
+  commit; close-out records the rest. TDD phase PRE-RED at claim; no code touched.
+
 ### 2026-09-26 · [ad hoc] S787 records: close-out for the `correctParentSex()` slice (S786 handoff evaluated 9/10, receipt, Learning 800, next-session items)
 - **Deliverable:** the close-out records for S787, whose work is recorded in the entries below: RED
   `9da678e6`, GREEN `d20e7b1c`, the REFACTOR test-only step `0a3c4473`, docs `9effbe81`, and the
