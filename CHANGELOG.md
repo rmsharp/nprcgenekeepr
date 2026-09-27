@@ -54,6 +54,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-26.md` (7 record(s), 55,796 B → 22,338 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **7** record(s) (2026-09-24 → 2026-09-26) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-26.md`](docs/archive/SESSION_NOTES-through-2026-09-26.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-26.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-26.md.verify.sh)
+rather than trusting a digest printed here. Live file 55,796 B → 22,338 B (−60.0%).
+
 ### 2026-09-26 · [ad hoc] S785 docs: `convertDate()` roxygen + `man/`, `NEWS.Rmd` Fixed entry, `BACKLOG.md` narrowed to two sites; REFACTOR reviewed, no change
 - **REFACTOR (owner-approved at the GREEN to REFACTOR gate): reviewed, no code change.** The
   added-record mask is one line in two places (`convertDate()` here, `removeUnknownAnimals()` from
