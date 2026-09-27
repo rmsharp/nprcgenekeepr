@@ -60,6 +60,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S791 records: stage 2 piece (c) of the `NEWS.Rmd` release-state sweep DONE (S790 handoff evaluated 9/10, self 8/10, receipt, Learning 804, next-session items); full suite 354 files / 2,753 tests / 8,393 expectations with only the known pkgdown draft failing
+- **Model:** Claude Sonnet 5. Session close-out: `HANDOFFS.md` receipt completed (`status: complete`,
+  self-score 8, predecessor-score 9); `SESSION_NOTES.md` records the Session 790 handoff evaluation
+  and the full Session 791 write-up; `PROJECT_LEARNINGS.md` gains Learning 804 (the issue-thread-
+  tracing / proportion-reverification / 1B-ordering / mid-session-scope-draft findings). `BACKLOG.md`
+  sweep item: piece (c) DONE, piece (d) remains (unchanged line ranges). Cross-references checked:
+  `PROJECT_LEARNINGS.md:2275` resolves to Learning 804; the learning count is now 804
+  (`grep -c '^#### Learning ' PROJECT_LEARNINGS.md`). No debug instrumentation added this session
+  (docs/tests only). (A commit cannot name its own hash; see `git log`.)
+
 ### 2026-09-27 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-26-4.md` (5 record(s), 68,163 B → 27,309 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

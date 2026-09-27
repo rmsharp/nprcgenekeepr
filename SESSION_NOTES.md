@@ -134,7 +134,7 @@ positioning... better represented by the higher-level statement"). Posed as a 3-
 draft as a separate future deliverable (its disposition recorded in `BACKLOG.md` and
 `CHANGELOG.md` so the untracked file is not lost).
 **Commits:** claim `642202ef`; RED `ac2ca6c0`; GREEN `8434a88c`; REFACTOR `97e7ce60`; this records
-commit. Every TDD-phase commit carries its OWN `CHANGELOG.md` entry (Learning 803e below -- S790's
+commit. Every TDD-phase commit carries its OWN `CHANGELOG.md` entry (Learning 804 below -- S790's
 own disclosed slip, corrected).
 **Push:** none (not asked); 17 local commits after `origin/master` = `ff8308a5` before this records
 commit, 21 after (recount). CI has not seen any S791 commit; a same-day SCHEDULED `shinytest2` run
@@ -196,7 +196,7 @@ the `BACKLOG.md` line-range claim (unchanged from S790) was verified with `git d
 assumed. **Weak:** (1) the Phase 1B claim stub was written late (disclosed, corrected); (2) a long
 Phase 0 report again; (3) the "8,582 vs 8,393 expectations" figure was left unreconciled rather than
 tracked down to its exact source (a minor loose end, not a defect in what was verified). **Learnings:**
-803e (this session's own).
+804 (this session's own).
 
 **Next steps (specific):** (A) **Stage 2, piece (d): the crash fixes, isolated-animal entries,
 example pedigrees/article, layout-origin/`kinshipMatrix` entries, and cross-references outside the
@@ -230,9 +230,10 @@ the sibling-bar wording test, before the #168 test); `NEWS.Rmd:21-` (the `## Ped
 section, 37 entries; the rewritten entry at `:79-82`); `R/makePedigreeDiagramData.R`
 (`.addRectilinearWaypoints()` `:2166`, `.resolveEdgeNodeCollisions()` `:2646`); `BACKLOG.md` working
 (the sweep item, narrowed to piece (d); the `suggested_NEWS_entry` disposition, its own new item);
-`CHANGELOG.md` (the S791 entries, newest first: REFACTOR, GREEN, RED, claim); `HANDOFFS.md` (the
-S791 receipt); `suggested_NEWS_entry.md` / `vignettes/suggested_NEWS_entry.Rmd` (the owner's
-untracked 3.0.0 consolidation draft, disposition recorded, files themselves untouched).
+`CHANGELOG.md` (the S791 entries, newest first: ledger trim, REFACTOR, GREEN, RED, claim);
+`HANDOFFS.md` (the S791 receipt); `PROJECT_LEARNINGS.md:2275` (Learning 804);
+`suggested_NEWS_entry.md` / `vignettes/suggested_NEWS_entry.Rmd` (the owner's untracked 3.0.0
+consolidation draft, disposition recorded, files themselves untouched).
 
 **Gotchas for the next session:** (1) Expect 0 undocumented on both frontiers -- measure; 21
 unpushed after this records commit (recount); `origin/master` = `ff8308a5`; CI on it was green (4/4)
@@ -259,7 +260,7 @@ its own new patterns with `newsSectionEntries()`. (5) `HANDOFFS.md`/`CHANGELOG.m
 sizes: measure fresh with `python3 context_budget.py` (tokens) and `wc -c` (bytes against the
 65,536 B trim budget) before this session's own records commit lands -- do not assume S790's
 measured headroom still holds. (6) STANDING SET carried in the S791 receipt's gotcha (7); READ IT
-BEFORE THE FIRST COMMAND. New in S791 (Learning 803e): **Phase 1B (the claim stub) comes FIRST,
+BEFORE THE FIRST COMMAND. New in S791 (Learning 804): **Phase 1B (the claim stub) comes FIRST,
 before any PRE-RED fact-finding or scope questions -- do not let "pose the gate right after PRE-RED
 fact-finding" (Learning 803d) push 1B itself later; claim the session, THEN fact-find, THEN gate.**
 Also new: an untracked owner draft found mid-session that proposes a DIFFERENT scope than the
