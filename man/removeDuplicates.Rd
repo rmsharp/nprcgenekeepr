@@ -11,15 +11,19 @@ removeDuplicates(ped, reportErrors = FALSE)
 information. The \code{id} and \code{recordStatus} columns are required.}
 
 \item{reportErrors}{logical value if TRUE the function returns a
-character vector of duplicate \code{id} values found among
-original records (or \code{NULL} when none are found) instead of
-the de-duplicated pedigree.}
+character vector of duplicate \code{id} values (or \code{NULL} when none
+are found) instead of the de-duplicated pedigree. Only records whose
+\code{recordStatus} is \code{"added"} (the records made for parents that
+have no record of their own) are left out of the search; a record with
+any other \code{recordStatus}, including \code{NA} or a blank, is a real
+animal and is searched.}
 }
 \value{
 When \code{reportErrors} is \code{FALSE}, a \code{Pedigree}
 object with duplicate rows removed; when \code{reportErrors} is
-\code{TRUE}, a character vector of duplicate \code{id} values (or
-\code{NULL} when none are found).
+\code{TRUE}, a character vector of duplicate \code{id} values, one entry
+for each extra occurrence of an \code{id} (or \code{NULL} when none are
+found).
 }
 \description{
 Part of Pedigree Curation

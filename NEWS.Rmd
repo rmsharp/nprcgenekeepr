@@ -521,6 +521,12 @@ knitr::opts_chunk$set(echo = TRUE)
   unrecognized, sometimes leaving a blank row behind, and the invalid-date
   check could stop with an unexplained error. Those animals are now kept and
   their dates are checked like any other animal's.
+- Fixed: the pedigree check's "Duplicate IDs found" list could name animals
+  that were not duplicated at all -- stand-ins the program had added for
+  unknown parents -- whenever the pedigree also held a real duplicate. It now
+  lists only the ids that really appear more than once, and `removeDuplicates()`
+  now also checks animals whose record of being added is blank or unrecognized,
+  which it used to skip or report wrongly.
 - Fixed: when a pedigree lists an animal as its own ancestor (for example, two
   animals each entered as the other's sire), `getAncestors()`, `findLoops()`
   and `countLoops()` now stop with a message that names the animals involved,

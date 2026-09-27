@@ -54,6 +54,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S786 docs + REFACTOR review: `removeDuplicates()` roxygen and man page, `NEWS.Rmd` Fixed entry, `BACKLOG.md` narrowed to `correctParentSex()`
+- Owner decision: the GREEN to REFACTOR gate ("Yes: review + docs, no code refactor",
+  2026-09-26).
+- **REFACTOR reviewed, no change:** `R/removeDuplicates.R` re-read after GREEN; the code is one
+  named mask and one subscript, nothing to simplify. The shared `isAddedRecord()` helper stays
+  deferred (three inline copies now: `convertDate()` and `removeDuplicates()` write `!is.na(x) & x
+  == "added"`, `removeUnknownAnimals()` writes its complement); the decision is carried in the
+  `BACKLOG.md` item for the last slice.
+- **Docs:** roxygen `@param reportErrors` and `@return` in `R/removeDuplicates.R` no longer say
+  "found among original records": they say that only `"added"` records are left out and that any
+  other status, including `NA` or blank, is searched, and that the result has one entry per extra
+  occurrence. `man/removeDuplicates.Rd` regenerated with `devtools::document()`; nothing else in
+  `man/` changed, and `tools::checkRd` is clean. `NEWS.Rmd` (after the `convertDate()` bullet): one
+  plain-language "Fixed" bullet in release-state wording (the "Duplicate IDs found" list no longer
+  names stand-in parents when a real duplicate is present; `removeDuplicates()` now checks animals
+  whose record of being added is blank or unrecognized). `NEWS.md` is rendered separately and was
+  not touched (S785's convention).
+- **`BACKLOG.md`:** the item is narrowed to `correctParentSex()` and retitled; the finished
+  `removeDuplicates()` record lives in the RED and GREEN entries, and what the remaining slice needs
+  (the `recordStatus = NULL` decision, the reach note, the `isAddedRecord()` question, the
+  negative-subscript trap) is written into the item. Committed through the header-less blob; the
+  owner's 5-line YAML header stays unstaged.
+- **Verification after the docs edit:** the two target files 81/81; `test_wordlist_coverage.R`
+  passes; `test_pkgdown_reference_config.R` still shows its 1 known failure (the owner's untracked
+  `vignettes/suggested_NEWS_entry.Rmd` is not covered by `_pkgdown.yml` articles); lintr 0 on
+  `R/removeDuplicates.R`. The clean-export `R CMD check --as-cran` on the committed HEAD runs next
+  and is recorded in the close-out entry.
+
 ### 2026-09-26 · [ad hoc] S786 GREEN: `removeDuplicates(reportErrors = TRUE)` treats only `"added"` as special and never recycles a mask over the added rows
 - Owner decision: the RED to GREEN gate ("Yes, proceed to GREEN", 2026-09-26).
 - **Change (one file, the `reportErrors = TRUE` branch only):** `R/removeDuplicates.R:38-47` builds
