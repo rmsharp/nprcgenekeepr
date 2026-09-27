@@ -60,6 +60,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S793 records: suggested_NEWS_entry.md/.Rmd review DONE (14 findings: 8 ADOPT, 5 MODIFY, 1 REJECT-as-drafted); one confirmed factual error found in the draft (groupAddAssign()'s `candidates` return-value field mislabeled as a new argument); one BACKLOG.md item filed for a second shinytest2 CI timeout occurrence; Learnings 806-807
+- **Model:** Claude Sonnet 5. Phase 3 close-out: Session 792's handoff evaluated 8/10 (every Orient
+  measurement held except two related, minor inaccuracies -- the "27 unpushed" figure undercounted
+  by 1, and a self-contradictory HANDOFFS.md-frontier gotcha, both now Learning 806; the
+  CHANGELOG.md ledger-size warning proved prescient, confirmed over budget this session). Self-
+  assessed 8/10: completed full Phase 0 orientation before accepting the task; correctly recognized
+  the owner's first task-scope answer needed clarification rather than guessing (BACKLOG.md's own
+  S791-authored framing of the suggested_NEWS_entry item had drifted from the owner's actual intent
+  across two sessions -- Learning 807); correctly scoped this as an Audit-workstream, non-TDD
+  deliverable and said so explicitly; verified all 31 cited function/argument names against `R/` by
+  direct grep rather than trusting the draft or NEWS.Rmd's own prose, which is what surfaced the
+  `candidates` mislabeling and the dropped harem-sire caveat; weak points: a long Phase 0 report,
+  and the first AskUserQuestion was posed before closely re-reading item 1's own unusually heavy
+  framing. Wrote `docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md` (100% coverage, 14 of 14
+  suggested items examined against `NEWS.Rmd:15-495`); filed a new `BACKLOG.md` item for the
+  `shinytest2` scheduled-workflow CI timeout's second occurrence (report-don't-fix, no GitHub issue
+  per the CI-break tracking convention); appended `PROJECT_LEARNINGS.md` Learnings 806 (a receipt's
+  post-commit unpushed-count/frontier-gap figure is undercounted by construction unless phrased as
+  "just before this commit") and 807 (a BACKLOG item describing an owner's own draft is a session's
+  interpretation of intent, not confirmed intent, and needs re-confirming in plain language at
+  pickup, especially across multiple sessions). Full detail: `SESSION_NOTES.md`, this session's
+  entries below, and `HANDOFFS.md`'s S793 receipt. No `NEWS.Rmd`, `R/`, or test file changed this
+  session -- review and records only.
+
 ### 2026-09-27 · [ad hoc] S793 claim: review suggested_NEWS_entry.md/.Rmd against current NEWS.Rmd for adopt/reject/modify verdicts (in progress)
 - **Model:** Claude Sonnet 5. Phase 1B claim: owner scoped the task 2026-09-27 (examine the
   untracked suggested_NEWS_entry.md / vignettes/suggested_NEWS_entry.Rmd draft, dated 2026-09-25,

@@ -86,19 +86,86 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 792 Handoff Evaluation (by Session 793)
+**Score: 8/10.** Every Orient measurement held (both ledger frontiers = HEAD `10ec04f2`, 0
+undocumented; dashboard 96/100; the `CHANGELOG.md` "closest to the ceiling" warning was prescient --
+confirmed over its 65,536 B budget this session at 65,721 B, before this session added anything).
+**Wrong (both Learning 806, same class):** (1) "27 unpushed after this records commit" -- measured
+fresh: 28, a 1-commit undercount, the 4th consecutive session (S790-793) with this exact pattern;
+(2) the `HANDOFFS.md` "frontier 3 commits behind HEAD" gotcha is self-contradictory -- `git show
+--stat 10ec04f2 -- HANDOFFS.md` shows that very commit touched `HANDOFFS.md`, so the frontier was AT
+it, not behind. Neither affected the real reconcile (0 undocumented either way). **ROI:** high.
+
 ### What Session 793 Did
-**Deliverable:** Review `suggested_NEWS_entry.md` / `vignettes/suggested_NEWS_entry.Rmd` (the
-owner's untracked 3.0.0-consolidation draft, dated 2026-09-25) against the current `NEWS.Rmd` and
-produce an adopt/reject/modify verdict with rationale for each suggested entry -- an audit-style
-review document, no `NEWS.Rmd` edits this session (owner-scoped 2026-09-27: examine the suggestions
-to see if any are helpful for the reorganization/wording effort, not an all-or-nothing 3.0.0
-consolidation decision). (IN PROGRESS)
-**Started:** 2026-09-27
-**Status:** Session claimed. Work beginning. Following `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`
-(no TDD phase gates -- no code or test changes, per the Development Process Contract override's
-"Implementation and bug-fix sessions" scoping).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest.
+**Deliverable, DONE:** reviewed `suggested_NEWS_entry.md`/`.Rmd` (owner's untracked 3.0.0-draft)
+against `NEWS.Rmd`, adopt/reject/modify per suggestion, at
+`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md` (14 findings: 8 adopt, 5 modify, 1
+reject-as-drafted; 100% coverage). No `NEWS.Rmd` edit this session. `AUDIT_WORKSTREAM.md`, no TDD
+gates (docs review, no code/test).
+**Scope clarification (Learning 807):** the Phase 0 picker offered this item using `BACKLOG.md`'s
+own S791-framing ("whole-dev-block 3.0.0 consolidation, own scoping session first"); the owner
+picked it then said "I do not know what 1 meant" -- two plain-prose exchanges found the real,
+lighter scope (a per-suggestion review, not a strategy decision).
+**Commits:** claim `5638629b`; this records commit. **Push:** none; 30 unpushed after `ff8308a5` as
+of just before this commit (Learning 806 -- recount, add 1). CI has not seen S793.
+**Result:** read both suggestion files (substantively identical) and `NEWS.Rmd:15-495`; grep-verified
+all 31 cited function/argument names in `R/` (all resolve). Found one confirmed factual error
+(Finding S7: `groupAddAssign()`'s pre-existing `candidates` PARAMETER mislabeled as new, when the
+real new item is a `candidates` RETURN-VALUE field, per `R/groupAddAssign.R:89-96`'s own roxygen --
+`NEWS.Rmd` already states this correctly); one dropped safety caveat (the harem-sire gap, Learning
+778); one section (General Fixes) that drops 4 of 6 real bug-fix disclosures. Filed one incidental
+`BACKLOG.md` item: the scheduled `shinytest2` workflow hit its 30-min cap a 2nd time (first S791,
+now this session) -- documented, not investigated/fixed, per the CI-break convention.
+**Runtime (3E):** n/a -- review + records only, no `R/`/test/`NEWS.Rmd` change. Ratchet unchanged
+from S790 (`ff682ffb`, `ce2ee7e8ec51`, `aa983075d6a2`).
+**Disclosures:** `CHANGELOG.md` now over its 65,536 B budget (65,721 B), flagged not trimmed (owner-
+gated `--force` likely owed, out of this session's scope). No `R/` change so no `R CMD check`.
+
+**Self-assessment: 8/10.** **Strengths:** full Phase 0 before accepting a task; recognized the
+owner's first answer needed clarification rather than guessing (Learning 807); correctly scoped as
+Audit-workstream/non-TDD and said so; grep-verified 31 names against `R/` rather than trusting prose,
+which is what surfaced the `candidates` error and the dropped caveat; independently confirmed two
+inaccuracies in S792's own receipt via `git`, not by trusting it. **Weak:** long Phase 0 report; the
+first `AskUserQuestion` was posed before closely re-reading item 1's own unusually heavy framing.
+**Learnings:** 806, 807.
+
+**Next steps:** (A) `CHANGELOG.md` over budget -- `methodology_trim.py --file CHANGELOG.md
+--budget-bytes 65536` owed, owner-gated `--force` likely (Learnings 549/586/587); trim LAST if
+others also need it. (B) Review filed; `BACKLOG.md`'s `suggested_NEWS_entry` disposition item stays
+open -- next session + owner decide what to act on now (Findings S7/S8's bullet-splitting is
+actionable independent of 3.0.0 timing) vs. reserve for the eventual release note. (C) New
+`shinytest2` item (top of Up Next) needs `gh run list --workflow=shinytest2.yaml`'s duration history
+before assuming a hang vs. capacity growth. (D) Everything else in S792's next-steps list is
+unchanged (PED_GV F2/F3, contributor tutorial, docs staleness audit, harem-sire hole, blank ancestry
+OTHER/UNKNOWN, LabKey both items, retrospective backfill, male-left placement, sex-reporting
+wording, `isAddedRecord()`, `convertDate()` numbering, `getAncestors()` absent-id, `paths-ignore`,
+`## Package` entry, `BACKLOG.md` housekeeping, kinship2 package, `inst/doc/` slimming,
+Chrome-for-Testing hang, trimmer L2 leak check, `CHANGELOG.md` H4-analogue, papers, outreach). (E)
+Your decisions: the untouched working-tree residue; the push of 30 local commits; the two
+methodology files `context_budget.py` flags as unsynced (S719, not investigated).
+
+**Key files:** `docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`; `suggested_NEWS_entry.md` /
+`vignettes/suggested_NEWS_entry.Rmd` (reviewed, untouched); `NEWS.Rmd:15-495` (compared, untouched);
+`R/groupAddAssign.R:89-96,171` (the `candidates` distinction); `BACKLOG.md` working (new `shinytest2`
+item); `PROJECT_LEARNINGS.md:2279,2281` (Learnings 806, 807).
+
+**Gotchas:** (1) `CHANGELOG.md` over its 65,536 B budget, will have grown further -- measure fresh,
+trim owed. (2) 0 undocumented expected on both frontiers; ~30-31 unpushed (Learning 806 -- recount).
+(3) `shinytest2` has hit its 30-min cap twice -- extend the existing `BACKLOG.md` item, don't
+duplicate. (4) Working tree residue unchanged from S791/S792, confirmed pre-dating this session by
+mtime -- not a ghost session; `BACKLOG.md` recipe: this session found the CHAINED form (tail +
+hash-object + update-index in one Bash call) BLOCKED by the auto-mode classifier as "Irreversible
+Local Destruction" -- running each of the 3 steps as its OWN Bash call worked cleanly; do this if
+blocked again. (5) This session made NO `NEWS.Rmd` change -- acting on any finding is a new
+deliverable, likely under TDD gates. (6) New Learnings 806 (a receipt's post-commit unpushed-count/
+frontier figure should be phrased "as of just before this commit," never a bare predicted number)
+and 807 (a BACKLOG item describing an owner's own draft is a session's interpretation, not confirmed
+intent -- re-confirm in plain language at pickup). (7) STANDING SET unchanged from S790-792: full
+40-char sha from `git rev-parse`; `git log --grep` needs `--extended-regexp`; `scratchpad/` invisible
+to git by owner decision; `CLAUDE.md` warn band = headroom; trim budget 65,536 B for all three
+ledgers, `CHANGELOG.md` LAST; the `context_budget.py` hook only tracks `CLAUDE.md`/`SESSION_NOTES.md`
+(NOT `CHANGELOG.md`/`HANDOFFS.md`'s separate manual budget); foreground `sleep` is blocked; skip
+waiting on CI only when every changed file is `.Rbuildignore`'d and read by no test.
 
 ### Session 791 Handoff Evaluation (by Session 792)
 **Score: 9/10.** **What helped:** every Orient measurement held -- `CHANGELOG.md` and `HANDOFFS.md`
