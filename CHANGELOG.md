@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S790 -- Learning 803 committed separately (`e9e90d63`) from the records commit, to hold the 5-file blast-radius cap (the records commit already carried the 4 HANDOFFS.md archive-pass files); no other change
+
 ### 2026-09-27 · [ad hoc] S790 records: stage 2 piece (b) of the `NEWS.Rmd` sweep DONE (S789 handoff evaluated 9/10, self 8/10, receipt, Learning 803, next-session items); ratchet 1/1 on `ff682ffb`
 - **Model:** Claude Sonnet 5. Close-out records for the S790 deliverable (the claim, RED, RED
   ledger backfill, GREEN and REFACTOR entries above hold the work). **Records written:** the S789
