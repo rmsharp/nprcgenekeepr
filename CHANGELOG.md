@@ -58,6 +58,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S787 records: close-out for the `correctParentSex()` slice (S786 handoff evaluated 9/10, receipt, Learning 800, next-session items)
+- **Deliverable:** the close-out records for S787, whose work is recorded in the entries below: RED
+  `9da678e6`, GREEN `d20e7b1c`, the REFACTOR test-only step `0a3c4473`, docs `9effbe81`, and the
+  three owner-approved ledger trims (`7a55e198` `SESSION_NOTES.md`, `d0c80d24` `HANDOFFS.md`,
+  `bc87e5e7` `CHANGELOG.md`, each with its tool-written entry); claim `3287ba8c`, whose "(in
+  progress)" marker this entry closes. No push (not asked): 21 local commits after `origin/master`
+  = `4e2e6e06`, none of which has been through CI.
+- **Verification that ran after the docs commit** (the docs entry said it would follow):
+  clean-export `R CMD check --as-cran` on `9effbe81`: **as-is 1 error, 0 warnings, 1 NOTE**, the
+  error being the two wall-clock benchmarks (`test_markerKinship.R`, `test_markerParentageLikelihood.R`)
+  failing under a host load average of 100-350 from processes outside the session, with 7,079 other
+  expectations passing; **with `CI=true`** in the check's `env` (it removes exactly those two blocks,
+  the only `skip_on_ci()` uses in the suite) **0 errors, 0 warnings, 1 NOTE (dev version), status 0,
+  `* DONE` confirmed by a fixed-string match**. Ratchet **1/1 at `9effbe81`** (3,572,199 B, +1,771 B
+  against S786's 3,570,428 B; results `3ad0c74e0635`, manifest `aa983075d6a2`). Both benchmark
+  files pass on the final code in isolation once the load fell to 39 (5 and 25 tests, 0 failed),
+  and both fail identically on the pre-change tree under load, so they are environmental.
+- **Handoff and learning:** the S786 handoff evaluated **9/10**; self-assessment **8/10**;
+  `HANDOFFS.md` receipt written `status: complete`; `SESSION_NOTES.md` written; **Learning 800**
+  (`PROJECT_LEARNINGS.md:2270`): verify every "the app cannot reach this" sentence with a spy (mine
+  was false: a blank or unrecognized sex becomes `NA`); capture the original function before mocking
+  it; a "only the exact value is special" contract needs a case-variant mutant; a wall-clock benchmark
+  red under host load is settled by the pre-change tree plus `CI=true`, and heavy jobs must be
+  serialized (Learning 760). The `BACKLOG.md` item was removed in the docs commit; two items were
+  extracted and filed there (the shared `isAddedRecord()` helper; an unreadable-sex parent reported as
+  a "female sire" or "male dam", filed at the owner's answer).
+- **Left for the owner:** the push of the 21 local commits, the working-tree residue (`BACKLOG.md`
+  header, `BACKLOG.log`, the two NEWS drafts, 5 render artifacts), closing the 11 recommended PED_GV
+  ids, and the two new `BACKLOG.md` decisions. TDD phase REFACTOR complete.
+
 ### 2026-09-26 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-26-2.md` (26 record(s), 78,761 B → 34,405 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
