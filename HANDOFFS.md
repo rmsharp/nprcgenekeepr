@@ -180,6 +180,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S793
+date: 2026-09-27
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Review suggested_NEWS_entry.md / vignettes/suggested_NEWS_entry.Rmd (owner's untracked 3.0.0-consolidation draft) against current NEWS.Rmd; produce adopt/reject/modify verdicts per suggested entry. No NEWS.Rmd edits this session. Following AUDIT_WORKSTREAM.md, no TDD gates (no code/test change).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S792
 date: 2026-09-27
 status: complete

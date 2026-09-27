@@ -60,6 +60,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S793 claim: review suggested_NEWS_entry.md/.Rmd against current NEWS.Rmd for adopt/reject/modify verdicts (in progress)
+- **Model:** Claude Sonnet 5. Phase 1B claim: owner scoped the task 2026-09-27 (examine the
+  untracked suggested_NEWS_entry.md / vignettes/suggested_NEWS_entry.Rmd draft, dated 2026-09-25,
+  entry by entry against the current NEWS.Rmd, and judge adopt/reject/modify per suggestion --
+  not the larger "whole-dev-block 3.0.0 consolidation" decision BACKLOG.md's existing item frames).
+  Deliverable is a review document only, no NEWS.Rmd edits this session. Following
+  docs/methodology/workstreams/AUDIT_WORKSTREAM.md; no TDD phase gates (no code/test change).
+  (in progress)
+
 ### 2026-09-27 · [ad hoc] S792 records: stage 2 piece (d) of the NEWS.Rmd release-state sweep DONE, closing the sweep (S791 handoff evaluated 9/10, self 9/10, receipt, Learning 805, next-session items); full suite 354 files / 2,754 tests / 8,408 expectations with only the known pkgdown draft failing
 - **Model:** Claude Sonnet 5. Phase 3 close-out: Session 791's handoff evaluated 9/10 (every Orient
   measurement held; the one wrong figure -- 22 vs 23 unpushed -- was already self-flagged as

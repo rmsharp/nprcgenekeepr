@@ -86,6 +86,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 793 Did
+**Deliverable:** Review `suggested_NEWS_entry.md` / `vignettes/suggested_NEWS_entry.Rmd` (the
+owner's untracked 3.0.0-consolidation draft, dated 2026-09-25) against the current `NEWS.Rmd` and
+produce an adopt/reject/modify verdict with rationale for each suggested entry -- an audit-style
+review document, no `NEWS.Rmd` edits this session (owner-scoped 2026-09-27: examine the suggestions
+to see if any are helpful for the reorganization/wording effort, not an all-or-nothing 3.0.0
+consolidation decision). (IN PROGRESS)
+**Started:** 2026-09-27
+**Status:** Session claimed. Work beginning. Following `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`
+(no TDD phase gates -- no code or test changes, per the Development Process Contract override's
+"Implementation and bug-fix sessions" scoping).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest.
+
 ### Session 791 Handoff Evaluation (by Session 792)
 **Score: 9/10.** **What helped:** every Orient measurement held -- `CHANGELOG.md` and `HANDOFFS.md`
 frontiers both = HEAD (`970d2dd8`), 0 undocumented; dashboard 96/100, 0 high+ risk; context budget
