@@ -54,6 +54,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S785 RED: tests for the date-conversion path keeping NA and unrecognised `recordStatus` animals
+- Owner decisions at the Pre-RED gate (2026-09-26): **fix shape (1)** -- `"added"` is the only
+  special status, so an NA, blank or unrecognised status is a real animal, processed like an
+  original (the `removeUnknownAnimals()` contract from S784); **slice = the date-conversion path**:
+  `convertDate()` + `getRecordStatusIndex()`, plus a new test file for
+  `getDateErrorsAndConvertDatesInPed()` (it had no direct test). `removeDuplicates()` and
+  `correctParentSex()` stay in `BACKLOG.md` as their own items.
+- **Probe before the gate** (scratch scripts, not in git; `smallPed` plus a `recordStatus` column,
+  one value changed at row 5): `convertDate()` gives 18 rows from 17 with 2 all-NA rows and loses
+  the real animal for an NA status, and gives 16 rows from 17 for `"weird"` (the animal is silently
+  dropped); `getRecordStatusIndex(ped, "added")` returns `NA_integer_`; the pipeline function stops
+  with "only 0's may be mixed with negative subscripts" when the pedigree also has an invalid date
+  (its all-original control returns `"7"`); `removeDuplicates(reportErrors = TRUE)` with two NA
+  statuses returns `"F" "A" "B" "C"` (control `"A" "B" "C"`); `correctParentSex(reportErrors =
+  TRUE)` with an NA status on a female sire reports `NA` instead of `"s1"`, with `"weird"` skips
+  `"s1"` silently, and with `recordStatus = NULL` reports nothing.
+- **New finding, out of scope, to be filed at close-out:** `removeDuplicates(reportErrors = TRUE)`
+  (`R/removeDuplicates.R:39-40`) subscripts the full-length `ped$id` with `duplicated()` of the
+  shorter original-only vector, and R recycles that logical. Originals `x, x, z` plus four added
+  rows return `"x" "a2"` (an added placeholder named as a duplicate), with no NA involved. It IS
+  reachable from the app path: `qcStudbook(reportErrors = TRUE)` on a 3-row pedigree with one
+  duplicate id and unlisted parents reported `x, s2` (`s2` is a placeholder).
+- Tests only, 3 files, no `R/` change: `tests/testthat/test_getRecordStatusIndex.R` (+2
+  `test_that`: NA and unrecognised never match, all-NA gives `integer(0)`);
+  `tests/testthat/test_convertDate.R` (+5: NA kept in place with its date converted and no phantom
+  row, unrecognised kept, all-NA kept, `reportErrors = TRUE` validates an NA or unrecognised
+  animal's date, and a control that a bad date on an `"added"` row is still ignored);
+  `tests/testthat/test_getDateErrorsAndConvertDatesInPed.R` (NEW, 5: an all-original control, NA
+  and unrecognised statuses alongside invalid dates, added rows retained, and every original
+  invalid leaves the pedigree unconverted). The function is returned-not-signalled through a
+  `tryCatch` helper so a defect is one clean failed expectation.
+- **Measured RED** (each file run alone against the unchanged `R/`): `getRecordStatusIndex` 3
+  tests, 2 failing (4 of 7 expectations); `convertDate` 14 tests, 4 failing (11 of 26); pipeline
+  file 5 tests, 2 failing (5 of 21); **8 failing tests, 20 failed expectations of 54, 0 errors, 0
+  skipped**; the 4 controls pass today by design. Each failure read from its message: index
+  lengths 3 vs 2 and 3 vs 0 (the NA leaks in); a phantom NA id and 7 rows from 6; `"weird"` 5 rows
+  from 6; all-NA 10 rows from 5; `reportErrors` returns `NULL` where `"3"` / `"4"` is expected;
+  the pipeline stops with the exact "only 0's may be mixed with negative subscripts"; `"weird"` 7
+  rows from 8. lintr 0 on the three files. Commit left RED on purpose; GREEN follows behind an
+  owner gate.
+
 ### 2026-09-26 · [ad hoc] S785 claim: the sibling `recordStatus` NA sites (`convertDate`, `removeDuplicates`, `getDateErrorsAndConvertDatesInPed`, `correctParentSex`) *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` "Four more places test
   `recordStatus == "original"` or `"added"` with no NA guard", DECISION NEEDED, Effort S-M; found

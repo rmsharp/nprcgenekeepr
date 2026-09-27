@@ -71,6 +71,69 @@ test_that("convertDate ignores added records", {
   expect_identical(nrow(convertDate(ped5)), 10L)
   expect_true(all(convertDate(ped5)$recordStatus == "added"))
 })
+## Only "added" records (placeholders for unlisted parents) are skipped. An NA
+## or unrecognized recordStatus is a real animal: it is kept, in place, with
+## its date converted and validated like any original record.
+statusPed <- data.frame(
+  id = c("a", "b", "c", "d", "e", "x1"),
+  birth = c(
+    "2001-01-05", "2002-02-06", "2003-03-07", "2004-04-08", "2005-05-09", NA
+  ),
+  recordStatus = c(rep("original", 5L), "added"),
+  stringsAsFactors = FALSE
+)
+naStatusPed <- statusPed
+naStatusPed$recordStatus[3L] <- NA_character_
+weirdStatusPed <- statusPed
+weirdStatusPed$recordStatus[4L] <- "weird"
+
+test_that(paste0(
+  "convertDate keeps an animal whose recordStatus is NA and converts its ",
+  "date without adding a phantom row"
+), {
+  result <- convertDate(naStatusPed)
+  expect_false(anyNA(result$id))
+  expect_identical(result$id, naStatusPed$id)
+  expect_s3_class(result$birth, "Date")
+  expect_identical(result$birth[3L], as.Date("2003-03-07"))
+  expect_identical(result$recordStatus, naStatusPed$recordStatus)
+})
+test_that(paste0(
+  "convertDate keeps an animal with an unrecognized recordStatus and ",
+  "converts its date"
+), {
+  result <- convertDate(weirdStatusPed)
+  expect_identical(result$id, weirdStatusPed$id)
+  expect_s3_class(result$birth, "Date")
+  expect_identical(result$birth[4L], as.Date("2004-04-08"))
+  expect_identical(result$recordStatus, weirdStatusPed$recordStatus)
+})
+test_that("convertDate keeps every animal when every recordStatus is NA", {
+  allNaPed <- statusPed[1L:5L, ]
+  allNaPed$recordStatus <- NA_character_
+  result <- convertDate(allNaPed)
+  expect_false(anyNA(result$id))
+  expect_identical(result$id, allNaPed$id)
+  expect_s3_class(result$birth, "Date")
+})
+test_that(paste0(
+  "convertDate with error flag validates the date of an animal whose ",
+  "recordStatus is NA or unrecognized"
+), {
+  badNaPed <- naStatusPed
+  badNaPed$birth[3L] <- "03-07-2003"
+  expect_identical(convertDate(badNaPed, reportErrors = TRUE), "3")
+  badWeirdPed <- weirdStatusPed
+  badWeirdPed$birth[4L] <- "04-08-2004"
+  expect_identical(convertDate(badWeirdPed, reportErrors = TRUE), "4")
+})
+test_that(paste0(
+  "convertDate with error flag still ignores a bad date on an added record"
+), {
+  badAddedPed <- statusPed
+  badAddedPed$birth[6L] <- "04-08-2004"
+  expect_null(convertDate(badAddedPed, reportErrors = TRUE))
+})
 test_that("convertDate fails when date column class is real", {
   ped5 <- ped3
   ped5$birth <- rnorm(10L, 10L, 100L)
