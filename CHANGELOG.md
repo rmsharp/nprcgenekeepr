@@ -58,6 +58,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S788 RED: `tests/testthat/test_newsReleaseState.R`, the release-note wording guard (stage 1 of the `NEWS.Rmd` release-state sweep)
+- **Failing tests only** -- one new test file; no `NEWS.Rmd`, `CLAUDE.md` or production change.
+  Owner decisions this session: at the scope question, **the large scope, in stages** (this
+  session is stage 1: the explicit diary phrases, the guard test and the `CLAUDE.md` line; later
+  stages condense the Pedigree Diagram section in pieces, each stage adding its own phrases to
+  the guard as a failing test first), **a guard test** for RED, **yes** to the `CLAUDE.md` line;
+  then PRE-RED to RED yes.
+- **Pre-RED (measured):** the whole development block was read (`NEWS.Rmd:15-540`, 526 lines,
+  102 entries; the Pedigree Diagram section holds 46). At the `v2.0.0` tag the diagram layout
+  code, the marker, MHC, ancestry, mate-pair and snapshot functions are all absent
+  (`git cat-file -e v2.0.0:<file>`), so the diagram's refinement bullets ("now", "no longer",
+  "Fixed", "(see above)"; about 20 by a hand read) narrate development history a 2.0.0 reader
+  never saw, and the section states two different limits (`:22-25` above 750 animals shows a
+  message, `:80-82` a default limit of 400). The 147 entries of the older release blocks carry
+  none of the nine phrases. A scratch detector found the phrases in exactly 12 entries (22
+  line/phrase pairs); the four #168 entries and the two #167 "arrives in" entries are the
+  backlog's named clusters, and `:18`, `:58`, `:83`, `:236`, `:241` and `:304` are the rest.
+- **RED result (measured, `NOT_CRAN=true`, `load_all`):** 9 tests, 32 expectations, **2 failing**,
+  0 errors, 0 skipped. The phrase guard fails naming exactly the 12 predicted entries (`:18`,
+  `:58`, `:83`, `:236`, `:241`, `:304`, `:376`, `:385`, `:399`, `:410`, `:460`, `:478`; 22
+  line/phrase pairs, the count I predicted from the scratch detector); the #168 pin fails with 4
+  entries (`:376`, `:385`, `:399`, `:410`) against the expected 1. The 7 unit tests and controls
+  pass: block scoping, wrapped-line joining and start lines, the detector firing on all 12
+  in-progress wordings (each of the nine patterns, `first/final/next` three ways, `later step`
+  singular and plural), case-insensitivity, five controls that must stay silent (release-state
+  wording plus the near-misses "Continued fractions", "step-by-step" and "yeti"), and the
+  per-entry line and phrase report. Each failure message was read; the first version of the
+  phrase guard said only "Lengths differ: 22", so its message now lists every line and phrase.
+  Lint: 0 findings (`tests/` is excluded by `.lintr`; run with the defaults at 80 columns
+  anyway).
+- **Design:** the guard scans the NEWEST `# nprcgenekeepr` block, so it keeps working the day
+  the development heading becomes a release heading; the two real-file tests use
+  `skip_if_not(file.exists(...))` because `NEWS.Rmd` is build-ignored (the pattern of
+  `test_effectivePopulationSizeDocs.R:94`); a test asserts the scan is non-empty so a guard that
+  reads nothing cannot pass. The `yet` pattern is the strictest of the nine (Learning 785:
+  never mention work that has not shipped); a legitimate future use is reworded, not exempted.
+  TDD phase RED; GREEN (the `NEWS.Rmd` rewrite, each claim checked against the code) is behind
+  its own gate.
+
 ### 2026-09-26 · [ad hoc] S788 claim: `NEWS.Rmd` release-state sweep *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` "`NEWS.Rmd` release-state
   sweep", READY, Effort M; owner-directed S774, Learning 785). Deliverable: rewrite the
