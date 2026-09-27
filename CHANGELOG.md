@@ -54,6 +54,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S786 records: close-out for the `removeDuplicates()` slice (S785 handoff evaluated 9/10, receipt, Learning 799, next-session items)
+- **Deliverable:** the close-out records for S786, whose work is recorded in the entries below: RED
+  `f00d8696`, GREEN `32f2b406`, docs `e7d87c4a` (claim `62df6441`, whose "(in progress)" marker this
+  entry closes). No push (not asked): 12 local commits after `origin/master` = `4e2e6e06`.
+- **Verification that ran after the docs commit** (the docs entry said it would follow): the
+  clean-export `R CMD check --as-cran` on `e7d87c4a` -- 0 errors, 0 warnings, 1 NOTE (CRAN incoming
+  feasibility: the maintainer line and the development version), `* DONE` confirmed by a fixed-string
+  match, status 0. Ratchet **1/1 at `e7d87c4a`**: 3,570,428 B (+1,595 B over S785's 3,568,833 B),
+  results `7f7a4d08491b`, manifest `aa983075d6a2` (unchanged).
+- **Not fixed, recorded:** `correctParentSex()` remains (READY, S) in the narrowed `BACKLOG.md` item;
+  the `reportErrors = FALSE` branch's "mismatched information" stop for rows that differ only in
+  `recordStatus` is in the RED entry and is not filed.
+- **Records:** S785 handoff evaluated 9/10, self-assessment 8/10, receipt `status: complete`
+  (`HANDOFFS.md`), Learning 799 (`PROJECT_LEARNINGS.md:2269`), next-session items in
+  `SESSION_NOTES.md`. `CHANGELOG.md` is about 63,500 B against the 65,536 B trim budget (nothing over a
+  limit, so no reduction was owed now); at this session's growth all three ledgers cross theirs during
+  the next session, so the archive pass is owed first (owner-gated).
+
 ### 2026-09-26 · [ad hoc] S786 docs + REFACTOR review: `removeDuplicates()` roxygen and man page, `NEWS.Rmd` Fixed entry, `BACKLOG.md` narrowed to `correctParentSex()`
 - Owner decision: the GREEN to REFACTOR gate ("Yes: review + docs, no code refactor",
   2026-09-26).
