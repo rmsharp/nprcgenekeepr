@@ -60,6 +60,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-26-4.md` (5 record(s), 68,163 B → 27,309 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **5** record(s) (2026-08-15 → 2026-09-26) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-26-4.md`](docs/archive/SESSION_NOTES-through-2026-09-26-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-26-4.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-26-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 68,163 B → 27,309 B (−59.9%).
+
 ### 2026-09-27 · [ad hoc] S791 REFACTOR: BACKLOG sweep item narrowed to piece (d) only (stage 2 piece (c))
 - **Model:** Claude Sonnet 5. No behavior change (re-confirmed: target file 25 tests, 0 failed; 0
   lints on the touched test file). `BACKLOG.md`'s `NEWS.Rmd` release-state sweep item: piece (c)
