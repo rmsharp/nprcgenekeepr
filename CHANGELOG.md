@@ -54,6 +54,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S785 docs: `convertDate()` roxygen + `man/`, `NEWS.Rmd` Fixed entry, `BACKLOG.md` narrowed to two sites; REFACTOR reviewed, no change
+- **REFACTOR (owner-approved at the GREEN to REFACTOR gate): reviewed, no code change.** The
+  added-record mask is one line in two places (`convertDate()` here, `removeUnknownAnimals()` from
+  S784) and takes two different forms (a keep-mask there, a set-aside mask here); a shared
+  `isAddedRecord()` helper is better cut when `removeDuplicates()` and `correctParentSex()` land, so
+  it is recorded in the `BACKLOG.md` item instead of extracted now (it would also touch S784's
+  file).
+- Docs, 5 files (the per-commit cap): `R/convertDate.R` roxygen (`@param ped` says only `"added"`
+  records are left unconverted and that an `NA` or unrecognized status is a real animal whose dates
+  are converted and checked; `@return` says added records are not checked and come back after the
+  others -- an earlier draft said "unchanged", corrected because the closing `rbind()` can coerce an
+  added row's date cell); `man/convertDate.Rd` regenerated with `roxygen2::roxygenise()` (8.0.0),
+  which changed only that file (`git status`), `tools::checkRd` silent; `NEWS.Rmd` one plain-language
+  "Fixed" bullet under General Fixes after the S784 `removeUnknownAnimals()` one, in release-state
+  wording against 2.0.0 (the animals `convertDate()` used to lose, the blank row, the unexplained
+  invalid-date stop); `BACKLOG.md` item "Four more places ..." rewritten forward-carrying as "Two more
+  places ..." (`removeDuplicates()`, `correctParentSex()`), shape decided, READY, Effort S per slice,
+  with the S785 probes, the recycling defect and its app-path reach (`qcStudbook(reportErrors =
+  TRUE)` reported `x, s2`), the `NULL`-status observation, the deferred `isAddedRecord()` idea and the
+  negative-subscript trap; staged through the header-less blob so the owner's 5-line YAML header
+  stays unstaged.
+- **Re-verified on the final tree** (after the docs edit, so the S784 disclosure about a check that
+  predated its docs does not recur): the three target files 3 + 14 + 5 tests, 54 expectations, 0
+  failed; the related files 0 failed except the known `test_pkgdown_reference_config.R` (the owner's
+  untracked `suggested_NEWS_entry.Rmd`); the wordlist test passes with the new roxygen words; lintr 0
+  on both R files and the three test files. The clean-export `R CMD check --as-cran` runs on HEAD
+  after this commit; its result is recorded in the S785 records entry.
+- **Checklists:** lint done; NEWS done; `_pkgdown.yml` (no new export), citation, tutorial and
+  `a2interactive` (no new function or parameter) N/A; no GitHub issue exists for this defect
+  (BACKLOG-only, found S784); the BACKLOG item is narrowed, not complete, so it stays.
+
 ### 2026-09-26 · [ad hoc] S785 GREEN: `convertDate()` and `getRecordStatusIndex()` treat only `"added"` as special
 - Two R files, minimum change, no new functionality (owner-approved at the RED to GREEN gate):
   `R/getRecordStatusIndex.R:15` is now `which(ped$recordStatus == status)` (drops NA, integer);

@@ -9,7 +9,11 @@ convertDate(ped, timeOrigin = as.Date("1970-01-01"), reportErrors = FALSE)
 \arguments{
 \item{ped}{a dataframe of pedigree information that may contain birth,
 death, departure, or exit dates. The fields are optional, but will be used
-if present.(optional fields: birth, death, departure, and exit).}
+if present.(optional fields: birth, death, departure, and exit). If it has a
+\code{recordStatus} column, only the records marked \code{"added"} (animals
+added as stand-ins for unknown parents) are left unconverted. Every other
+record, including one whose \code{recordStatus} is \code{NA} or not
+recognized, is a real animal and has its dates converted and checked.}
 
 \item{timeOrigin}{date object used by \code{as.Date} to set \code{origin}.}
 
@@ -21,6 +25,8 @@ list of list where each sublist is a type of error found.}
 A dataframe with an updated table with date columns converted from
 \code{character} data type to \code{Date} data type. Values that do not
 conform to the format \%Y\%m\%d are set to NA. NA values are left as NA.
+Records marked \code{"added"} are not checked and are returned after the
+other records.
 }
 \description{
 Part of Pedigree Curation

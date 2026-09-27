@@ -515,6 +515,12 @@ knitr::opts_chunk$set(echo = TRUE)
   record of which animals were added, and it lost animals whose record of
   being added was blank or unrecognized, sometimes leaving a blank row behind.
   A pedigree with no added animals now comes back as it was.
+- Fixed: `convertDate()`, the date-conversion step of the pedigree check, now
+  sets aside only the animals that were added as stand-ins for unknown
+  parents. It used to lose any animal whose record of being added was blank or
+  unrecognized, sometimes leaving a blank row behind, and the invalid-date
+  check could stop with an unexplained error. Those animals are now kept and
+  their dates are checked like any other animal's.
 - Fixed: when a pedigree lists an animal as its own ancestor (for example, two
   animals each entered as the other's sire), `getAncestors()`, `findLoops()`
   and `countLoops()` now stop with a message that names the animals involved,

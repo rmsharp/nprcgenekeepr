@@ -31,30 +31,44 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.
 
-- [ ] **Four more places test `recordStatus == "original"` or `"added"` with no NA guard and
-      misbehave on a hand-built `NA` status (found S784, 2026-09-26, DECISION NEEDED, Effort
-      S-M)** -- the S784 slice fixed only `removeUnknownAnimals()` (it now removes exactly the
-      `"added"` rows); the owner left these out at its Pre-RED gate. Probe (S784, `smallPed` with
-      a `recordStatus` column, one value set to `NA` at row 5; a scratch script, not in git):
-      `convertDate()` (`R/convertDate.R:95-96`) returns 18 rows from 17, two all-`NA`;
-      `removeDuplicates(reportErrors = TRUE)` (`R/removeDuplicates.R:39-40`, two `NA` statuses)
-      names an innocent id (`"F"`) as a duplicate; `getRecordStatusIndex(ped, "added")`
-      (`R/getRecordStatusIndex.R:15`) returns `NA_integer_`, and its only remaining caller,
-      `R/getDateErrorsAndConvertDatesInPed.R:39-42`, stops ("only 0's may be mixed with negative
-      subscripts") whenever the pedigree also has an invalid date; `correctParentSex()`
-      (`R/correctParentSex.R:90,92`) has the same `recordStatus == "original"` inside a logical
-      subscript and was read, not probed (an `NA` there would put an `NA` id in the female-sire
-      or male-dam report). Reach (read, not run through the app): `qcStudbook()` calls
-      `addParents()` (`R/qcStudbook.R:229`), which overwrites `recordStatus` unconditionally
-      (`R/addParents.R:43-44`), so neither the app nor `qcStudbook()` can carry an `NA` status;
-      only a script that hand-builds the column and calls `convertDate()`, `removeDuplicates()` or
-      `correctParentSex()` directly can. **Decision for the owner:** (1) treat `"added"` as the
-      only special status everywhere -- one shared NA-safe test used at all four sites (matches
-      the `removeUnknownAnimals()` contract; 4-5 files, so one small slice per file); (2) stop
-      early with a message naming rows whose status is neither `"original"` nor `"added"` (one
-      check; changes what a script sees); (3) leave it (unreachable from the app; roxygen note
-      only). **Trap:** a negative subscript built from an index that can be empty
-      (`ped[-getRecordStatusIndex(ped, "added"), ]`) drops EVERY row when nothing is `"added"`.
+- [ ] **Two more places test `recordStatus == "original"` with no NA guard and misbehave on a
+      hand-built `NA` or unrecognized status: `removeDuplicates()` and `correctParentSex()`
+      (found S784, 2026-09-26, narrowed S785; READY, Effort S per slice)** -- the shape is decided
+      (owner, S785 Pre-RED): `"added"` is the only special status, so an `NA`, blank or
+      unrecognized status is a real animal, processed like an original (the
+      `removeUnknownAnimals()` contract from S784). Already done with that shape:
+      `removeUnknownAnimals()` (S784) and the date-conversion path, `convertDate()` +
+      `getRecordStatusIndex()` (S785; `getDateErrorsAndConvertDatesInPed()` needed no edit); the
+      idiom is a logical mask (`!is.na(x) & x == "added"`) or `which()`, never a negative subscript
+      from an index that can be empty. **One slice per file, strict TDD, each with its phase gates.**
+      (1) **`removeDuplicates()` (`R/removeDuplicates.R:39-40`; READY, S).** Probe (S785, `smallPed`
+      plus `recordStatus`, two `NA` statuses among duplicated rows): `removeDuplicates(reportErrors
+      = TRUE)` returns `"F" "A" "B" "C"` where `"A" "B" "C"` is right, an innocent id named as a
+      duplicate. **A separate defect sits on the same line and needs no NA:**
+      `ped$id[duplicated(ped$id[ped$recordStatus == "original"])]` subscripts the full-length
+      `ped$id` with a SHORTER logical vector, which R recycles; originals `x, x, z` plus four added
+      rows return `"x" "a2"` (an added placeholder named as a duplicate). It IS reachable from the
+      app path: `qcStudbook(reportErrors = TRUE)` on a 3-row pedigree with one duplicate id and
+      unlisted parents reported `x, s2` (`s2` is a placeholder). The natural rewrite, `ids <-
+      ped$id[<non-added mask>]; ids[duplicated(ids)]`, fixes both; give the recycling case its own
+      test and disclose the behavior change (the duplicate-id report loses its false positives) in
+      `NEWS.Rmd`. Existing tests: `tests/testthat/test_removeDuplicates.R` (3 tests) and the
+      `qcStudbook()` test files. (2) **`correctParentSex()` (`R/correctParentSex.R:89-92`; READY,
+      S).** Probe (S785, the roxygen example pedigree, `reportErrors = TRUE`): an `NA` status on
+      the female sire `s1` reports `NA` instead of `"s1"`; an unrecognized status on `s1` skips it
+      silently; `recordStatus = NULL` reports nothing at all (an absent status also means "no added
+      rows", so every animal should be checked -- decide that with the slice); an `"added"` status
+      is skipped correctly (keep it as a control). The `reportErrors = FALSE` branch never reads
+      the status. Existing tests: `tests/testthat/test_correctParentSex.R` (6 tests, every status
+      `"original"`). **Reach:** `qcStudbook()` calls `addParents()` (`R/qcStudbook.R:229`), which
+      overwrites `recordStatus` unconditionally (`R/addParents.R:43-44`), so neither the app nor
+      `qcStudbook()` can carry an `NA` status into these; only a script that hand-builds the column
+      and calls the exported functions directly can (the recycling defect above is the exception).
+      **When the last slice lands,** consider one internal `isAddedRecord()` helper for the mask
+      now written inline in `convertDate()`, `removeUnknownAnimals()` and these two (deferred at
+      the S785 REFACTOR: two copies were not yet worth a helper). **Trap:** a negative subscript
+      built from an index that can be empty (`ped[-getRecordStatusIndex(ped, "added"), ]`) drops
+      EVERY row when nothing is `"added"`.
 
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort

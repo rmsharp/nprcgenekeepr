@@ -10,7 +10,11 @@
 #'
 #' @param ped a dataframe of pedigree information that may contain birth,
 #' death, departure, or exit dates. The fields are optional, but will be used
-#' if present.(optional fields: birth, death, departure, and exit).
+#' if present.(optional fields: birth, death, departure, and exit). If it has a
+#' \code{recordStatus} column, only the records marked \code{"added"} (animals
+#' added as stand-ins for unknown parents) are left unconverted. Every other
+#' record, including one whose \code{recordStatus} is \code{NA} or not
+#' recognized, is a real animal and has its dates converted and checked.
 #' @param timeOrigin date object used by \code{as.Date} to set \code{origin}.
 #' @param reportErrors logical value if TRUE will scan the entire file and
 #' make a list of all errors found. The errors will be returned in a
@@ -18,6 +22,8 @@
 #' @return A dataframe with an updated table with date columns converted from
 #' \code{character} data type to \code{Date} data type. Values that do not
 #' conform to the format %Y%m%d are set to NA. NA values are left as NA.
+#' Records marked \code{"added"} are not checked and are returned after the
+#' other records.
 #'
 #' @importFrom stringi stri_trim_both stri_c
 #' @export
