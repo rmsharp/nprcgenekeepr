@@ -176,6 +176,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S789
+date: 2026-09-27
+status: pending
+active_task: NEWS.Rmd release-state sweep, stage 2 piece (a) (BACKLOG.md item "NEWS.Rmd release-state sweep", READY, Effort M; owner-directed S774, Learning 785; stage 1 shipped S788): restate the Pedigree Diagram section's display-and-defaults entries as finished-state notes against 2.0.0, after resolving the 750-versus-400 display-limit conflict (NEWS.Rmd:23 and :79) against R/modPedigree.R; phrase patterns go into tests/testthat/test_newsReleaseState.R as a failing test first, scoped to that section; strict TDD, one piece, each gate via AskUserQuestion.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S788
 date: 2026-09-26
 status: complete

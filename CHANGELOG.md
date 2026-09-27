@@ -56,6 +56,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S789 claim: `NEWS.Rmd` release-state sweep, stage 2 piece (a) (Pedigree Diagram display and defaults entries) *(in progress)*
+- Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` "`NEWS.Rmd` release-state
+  sweep", READY, Effort M; owner-directed S774, Learning 785; stage 1 shipped S788). Deliverable:
+  the `## Pedigree Diagram` section's display-and-defaults entries in `NEWS.Rmd` restated as
+  finished-state notes against 2.0.0, after resolving the text conflict the item names (`NEWS.Rmd:23`
+  says a pedigree above 750 animals shows a message; `:79` says the default limit is 400 animals and
+  750 under "Direct") against `R/modPedigree.R`. Strict TDD: the piece's phrase patterns go into
+  `tests/testthat/test_newsReleaseState.R` as a failing test FIRST, scoped to that section; then the
+  rewrite, checking every sentence against the code; each phase gate via `AskUserQuestion`. One piece
+  only: pieces (b), (c) and (d) stay in `BACKLOG.md`. Orient measured: 0 undocumented on the
+  `CHANGELOG.md` frontier (`5ff2f39c` = HEAD); the `HANDOFFS.md` frontier `ff8308a5` has 1 commit
+  after it, the S788 addendum, which belongs to S788 (receipt `status: complete`) and is recorded in
+  this file and in `SESSION_NOTES.md`, so no reconcile block was written; no `status: pending`
+  receipt; 1 unpushed (`5ff2f39c`), `origin/master` = `ff8308a5` (fetched); the S788 ratchet
+  citation (results `3205149f7059`, manifest `aa983075d6a2`, head `075443b2`, 1/1) matched
+  `.quality-gates-results.json` before any run (not re-run this Orient); CI: the four workflows on
+  `ff8308a5` were still `in_progress` (started 2026-09-27T04:58Z), the last completed set (S784's
+  records commit) all `success`; dashboard 96/100; context budget nothing over a ceiling
+  (`CLAUDE.md` 26,731 B in the warn band; `SESSION_NOTES.md` 51,580 B, `HANDOFFS.md` 52,131 B,
+  `CHANGELOG.md` 52,638 B before this claim; the trim check fires on none, but `SESSION_NOTES.md`
+  sits 5,170 B under the 56,750 B one-read cap, so an archive pass is likely owed at close-out); a
+  NEW finding, report-only: `context_budget.py` says `SESSION_RUNNER.md` and `SAFEGUARDS.md` match
+  no revision in canonical history (last sync S719 from the fork's `main`); the untracked residue is
+  the owner's (`BACKLOG.log`, two NEWS drafts) plus 5 renders of tracked sources, all as S787 and
+  S788 recorded; both sequencing audits re-checked (only #138 is open, owner-deprioritized). Stub +
+  pending receipt ride this commit; close-out records the rest. TDD phase PRE-RED at claim; no code
+  touched.
+
 ### 2026-09-26 · [ad hoc] Owner-directed after the S788 close-out: pushed the 26 local commits; removed the empty `## 2026-08` heading from this file
 - **Push (a non-commit action):** `git push origin master` moved `origin/master` from `4e2e6e06`
   to `ff8308a5`, 26 commits (S785 to S788), a fast-forward (fetched first: 0 behind). All four push

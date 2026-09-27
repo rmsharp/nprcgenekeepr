@@ -78,6 +78,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 789 Did
+**Deliverable:** **`NEWS.Rmd` release-state sweep, stage 2 piece (a): the Pedigree Diagram
+section's display-and-defaults entries** (IN PROGRESS): restate them as finished-state notes
+against 2.0.0 (Learning 785), first resolving the conflict the item names (`NEWS.Rmd:23` says a
+pedigree above 750 animals shows a message; `:79` says the default limit is 400 animals and 750
+under "Direct") against `R/modPedigree.R`; the piece's phrase patterns are added to
+`tests/testthat/test_newsReleaseState.R` as a failing test FIRST, scoped to the section; strict
+TDD, one piece, each gate via `AskUserQuestion`.
+**Started:** 2026-09-27
+**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (item 1,
+`BACKLOG.md` "`NEWS.Rmd` release-state sweep", READY, Effort M). Orient measured: 0 undocumented
+on the `CHANGELOG.md` frontier (`5ff2f39c` = HEAD); the `HANDOFFS.md` frontier `ff8308a5` has one
+commit after it, the S788 addendum, which belongs to S788 (complete receipt; recorded in
+`CHANGELOG.md` and the S788 addendum below), so no reconcile block; 1 unpushed (`5ff2f39c`),
+`origin/master` = `ff8308a5`; the S788 ratchet citation (results `3205149f7059`, manifest
+`aa983075d6a2`, head `075443b2`, 1/1) matched `.quality-gates-results.json` before any run; CI:
+the four workflows on `ff8308a5` were `in_progress` at Orient (first CI evidence for S785 to
+S788; read the result, do not assume); dashboard 96/100; context budget nothing over a ceiling
+(`CLAUDE.md` 26,731 B; this file 51,580 B, 5,170 B under the 56,750 B one-read cap, so an archive
+pass is likely owed at close-out; `HANDOFFS.md` 52,131 B, `CHANGELOG.md` 52,638 B; the trim check
+fires on none); NEW, report-only: `SESSION_RUNNER.md` and `SAFEGUARDS.md` "match no revision in
+canonical history" per `context_budget.py`. Plan: Pre-RED reading (`R/modPedigree.R` for the real
+limits, the section's display and defaults entries with line numbers, the `v2.0.0` absence check),
+then RED, GREEN, REFACTOR. TDD phase PRE-RED; no code touched.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's
+reconcile.
+
 ### Session 787 Handoff Evaluation (by Session 788)
 **Score: 9/10.** **What helped:** every Orient measurement held -- 0 undocumented on both frontiers
 (`2692cb97` = HEAD), 21 unpushed (recounted), `origin/master` = `4e2e6e06`, the ratchet citation
