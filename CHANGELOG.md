@@ -114,6 +114,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
   recipe (3 separate Bash calls) to exclude the pre-existing, unrelated `BACKLOG.md` YAML-header
   residue from this commit.
 
+### 2026-09-27 · [ad hoc] S795 records: PED_GV BUNDLE/DOC cleanup DONE (S794 handoff evaluated 8/10, self 9/10, receipt, Learning 809); full RED/GREEN/REFACTOR TDD cycle for the one behavior-changing item, 4 behavior-neutral items folded into REFACTOR, BACKLOG sub-item removed
+- **Model:** Claude Sonnet 5. Phase 3 close-out: Session 794's handoff evaluated 8/10 -- every
+  Orient measurement held fresh on re-check (ledger frontiers = HEAD, 0 undocumented; dashboard
+  96/100; `CHANGELOG.md` over-budget warning held, grown further; `origin/master` had caught up to
+  0 ahead/0 behind since S794's own snapshot, not a discrepancy). Self-assessed 9/10: read the
+  audit and all 5 target files directly before any claim; correctly split the substantive NEW-14
+  approach decision into its own `AskUserQuestion`, separate from the phase-gate questions;
+  recognized 4 of 5 items were provably behavior-neutral before writing any test, so wrote a RED
+  test only for the one item that actually changed behavior; verified every touched function's own
+  test file individually before folding the rest into REFACTOR; kept the unrelated `BACKLOG.md`
+  YAML-header residue out of every commit. Weak point -- the local full-suite run took several
+  minutes and needed a few iterations of polling before settling into a clean background-monitor
+  wait. Ledger sizes measured fresh at close-out: `CHANGELOG.md` 76,593 B (further over its 65,536 B
+  budget, trim owed, not done this session), `SESSION_NOTES.md` 62,233 B (approaching its own
+  budget faster than recent sessions), `HANDOFFS.md` 57,727 B (under budget).
+
 ### 2026-09-27 · [ad hoc] S794 records: shinytest2 CI timeout fix DONE (S793 handoff evaluated 7/10, self 8/10, receipt, Learning 808); full RED/GREEN/REFACTOR TDD cycle, BACKLOG item removed
 - **Model:** Claude Sonnet 5. Phase 3 close-out: Session 793's handoff evaluated 7/10 -- every
   Orient measurement held fresh except one: `gh run view --json jobs` showed the "hit its cap

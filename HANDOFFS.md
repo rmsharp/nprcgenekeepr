@@ -182,17 +182,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S795
 date: 2026-09-27
-status: pending
-self_score: TBD
-predecessor_score: TBD
-active_task: BUNDLE/DOC cleanup of 5 trivial PED_GV audit findings (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md): PED-11 (redundant any() in getRecordStatusIndex.R), NEW-56 (redundant [1L] in getPotentialParents.R), NEW-63 (stale getMaxAx.R roxygen), PED-10/NEW-43 (stale createPedOne.R/createPedSix.R roxygen), NEW-14 (kinshipMatricesToKValues()'s first-flag accumulator plus its empty-list edge). PRE-RED investigation done; owner picked stop() with a clear message for the empty-list case and approved the PRE-RED->RED gate. RED in progress.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE -- BUNDLE/DOC cleanup of 5 trivial PED_GV audit findings (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md): PED-11 (redundant any() in getRecordStatusIndex.R), NEW-56 (redundant [1L] in getPotentialParents.R), NEW-63 (stale getMaxAx.R roxygen), PED-10/NEW-43 (stale createPedOne.R/createPedSix.R roxygen), NEW-14 (kinshipMatricesToKValues()'s first-flag accumulator plus its empty-list edge, fixed with stop() on an empty list per owner decision). Full RED/GREEN/REFACTOR TDD cycle for the one behavior-changing item (NEW-14); the other 4, confirmed behavior-neutral by their own existing tests, folded directly into REFACTOR. BACKLOG item's resolved sub-item removed.
+what_was_done: claim 5592b052; RED (PRE-RED + RED entries) 84dcfc87 (tests/testthat/test_kinshipMatricesToKValues.R, confirmed failing against "object 'kValues' not found"); GREEN a2fe3443 (R/kinshipMatricesToKValues.R, one guard clause; new test passes, siblings unaffected); REFACTOR 926cc907 (getRecordStatusIndex.R, getPotentialParents.R, getMaxAx.R roxygen, createPedOne.R/createPedSix.R roxygen, kinshipMatricesToKValues.R accumulator restyled to lapply; BACKLOG.md sub-item removed via the tail -n +6/hash-object/update-index --cacheinfo recipe); this records commit. Verification: every touched function's own test file 0 failed/0 error; lintr::lint() 0 lints on all 7 touched files; full unfiltered suite 355 files/2,756 tests/8,603 expectations, 1 known-pre-existing failure, 0 error. Learning 809 added (PROJECT_LEARNINGS.md, appended after Learning 808).
+next_steps: (A) Ledger sizes measured fresh at close: CHANGELOG.md 76,593 B, well past its 65,536 B trim budget, trim owed (--force likely), still LAST among the three ledgers. SESSION_NOTES.md 62,233 B, approaching its own 65,536 B budget faster than recent sessions -- watch it. HANDOFFS.md 57,727 B, under budget. (B) S794's own next-step (A) -- push/dispatch to verify the shinytest2 45-min cap live -- and S793's carried-forward items (suggested_NEWS_entry disposition, PED_GV F2/F3 decisions, working-tree residue, unsynced methodology files) are all still open and untouched by this session. (C) The PED_GV audit's remaining "Also open" sub-items ((a) overhaul-root owner decisions, (b) NEW-24/issue #123) are unaffected by this session's cleanup and still open.
+key_files: R/getRecordStatusIndex.R:14; R/getPotentialParents.R:202; R/getMaxAx.R:4-16; R/createPedOne.R:6-7; R/createPedSix.R:6-7; R/kinshipMatricesToKValues.R:96-111; tests/testthat/test_kinshipMatricesToKValues.R (new test); BACKLOG.md (sub-item removed); PROJECT_LEARNINGS.md (Learning 809)
+gotchas: CHANGELOG.md 76,593 B, well over budget, trim owed (measure fresh -- stale the moment this commit lands). SESSION_NOTES.md 62,233 B, closing in on its own budget faster than recent sessions. 0 undocumented expected both ledger frontiers; origin/master was caught up (0 ahead/0 behind) as of this session's Orient -- recount fresh per Learning 806's reflex. The kinshipMatricesToKValues() accumulator restyle is a real code change to an @export'ed function's internals, not just docs -- verified via its own + 2 caller test files + the full suite, but re-verify if any other caller exists that this session's grep missed. Working-tree residue unchanged from S791-794, pre-dates this session by mtime; the BACKLOG.md YAML-header residue again survived this session's own edit via the 3-separate-Bash-call recipe. New Learning 809: a "trivial cleanup bundle" mixing behavior-neutral and behavior-changing findings only needs RED/GREEN for the behavior-changing one(s) -- check each item's existing test coverage at PRE-RED first. STANDING SET unchanged from S790-794 (see SESSION_NOTES.md gotcha 6 for the full list).
+runtime_smoke: n/a -- pure R/ function-level fixes (2 doc-only, 2 behavior-neutral, 1 error-message change reachable only via a direct empty-list argument no real caller ever passes); no service registration, config resolution, or Shiny dispatch changed. The full unfiltered suite (includes test-app-*/test-e2e-* files per the S624 no-exclusion-filter convention) came back 0 error, but that is a test-suite read, not a live app launch -- stated explicitly per FM #24.
+changelog_ref: 5592b052 (claim), 84dcfc87 (RED), a2fe3443 (GREEN), 926cc907 (REFACTOR), and this records commit
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log); claim 5592b052
 ```
 
 ```handoff

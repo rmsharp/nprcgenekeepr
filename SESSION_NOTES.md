@@ -86,19 +86,49 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 794 Handoff Evaluation (by Session 795)
+**Score: 8/10.** All Orient measurements held (frontiers, dashboard, budget, CI); the "34 unpushed"
+figure since resolved (not a discrepancy, Learning 806). Nothing wrong found.
+
 ### What Session 795 Did
-**Deliverable:** BUNDLE/DOC cleanup of 5 trivial `PED_GV_AUDIT_TRIAGE_2026-09-26.md` findings:
-PED-11, NEW-56, NEW-63, PED-10/NEW-43, NEW-14 (with its empty-list edge) (IN PROGRESS).
-**Started:** 2026-09-27.
-**Status:** DONE. PRE-RED/RED/GREEN/REFACTOR all complete. REFACTOR applied the other 4 items
-(PED-11, NEW-56, NEW-63, PED-10/NEW-43 -- all behavior-neutral) plus the
-`kinshipMatricesToKValues()` accumulator restyle (first-flag/for-loop -> `lapply`, same guard and
-`cbind` accretion). Full unfiltered suite: 355 files / 2,756 tests / 8,603 expectations, 1 known
-pre-existing failure (`test_pkgdown_reference_config.R`, unrelated), 0 error. Lint: 0 on all 7
-touched files. BACKLOG.md's resolved sub-item removed (F2/F3/other sub-items untouched, stay
-open).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest.
+**Deliverable, DONE:** BUNDLE/DOC cleanup of 5 trivial `PED_GV_AUDIT_TRIAGE_2026-09-26.md`
+findings: PED-11, NEW-56, NEW-63, PED-10/NEW-43, NEW-14. Full TDD cycle, every phase gate via
+`AskUserQuestion`, plus a separate pre-RED approach-decision question for NEW-14.
+**PRE-RED:** confirmed all 5 findings hold; grepped every caller of
+`kinshipMatricesToKValues()` -- all pass non-empty lists, so NEW-14's empty-list path is
+unreachable today. Owner picked `stop()` with a clear message. **RED/GREEN:** one new test in
+`test_kinshipMatricesToKValues.R`, confirmed failing, then one guard clause in
+`R/kinshipMatricesToKValues.R`. **REFACTOR** the other 4 items (behavior-neutral per their
+existing tests): `getRecordStatusIndex.R:14` drops a redundant `any()`;
+`getPotentialParents.R:202` drops a redundant `[1L]`; `getMaxAx.R`/`createPedOne.R`/
+`createPedSix.R` roxygen corrected; the accumulator restyled to `lapply`. No `man/`/`NAMESPACE`
+diff. `BACKLOG.md`'s resolved sub-item removed (F2/F3 untouched) via the `tail -n +6`/
+`hash-object`/`update-index --cacheinfo` recipe (excludes the YAML-header residue).
+**Verification:** each touched file 0 failed/0 error; lint 0 on all 7 files; full suite 355 files
+/ 2,756 tests / 8,603 expectations, 1 known pre-existing failure, 0 error.
+**Commits:** claim `5592b052`; RED `84dcfc87`; GREEN `a2fe3443`; REFACTOR `926cc907`; records
+(this). **Runtime (3E):** n/a -- pure `R/` fixes, no Shiny dispatch change (FM #24: full suite incl.
+app/e2e 0 error, but that's a test read, not a live launch). **Learnings:** 809.
+
+**Self-assessment: 9/10.** Read the audit + all 5 files directly; split NEW-14's approach decision
+into its own question; verified each function's tests before REFACTOR. **Weak:** the full-suite
+run took a few polling iterations before a clean wait.
+
+**Next steps:** S794's push/dispatch to verify shinytest2 live, S793's carried-forward items
+(`suggested_NEWS_entry`, PED_GV F2/F3, working-tree residue, unsynced methodology files), and
+PED_GV's remaining "Also open" sub-items (overhaul decisions, NEW-24/#123) -- all unaffected by
+this session, still open.
+
+**Key files:** `getRecordStatusIndex.R:14`, `getPotentialParents.R:202`, `getMaxAx.R:4-16`,
+`createPedOne.R:6-7`, `createPedSix.R:6-7`, `kinshipMatricesToKValues.R:96-111` (all `R/`);
+`test_kinshipMatricesToKValues.R`; `BACKLOG.md`; Learning 809.
+
+**Gotchas:** `CHANGELOG.md`/`SESSION_NOTES.md` both over/near their 65,536 B budgets -- recount
+fresh, trim owed on `CHANGELOG.md` (LAST). Recount ledger frontiers/unpushed count fresh (Learning
+806). `kinshipMatricesToKValues()`'s restyle is real internal code, not just docs -- re-verify
+callers beyond this session's grep. Working-tree residue unchanged from S791-794, pre-dates this
+session. Learning 809: check a bundle item's existing tests at PRE-RED first. STANDING SET
+unchanged from S790-794 (see that gotcha there for the full list).
 
 ### Session 793 Handoff Evaluation (by Session 794)
 **Score: 7/10.** Orient measurements held (ledger frontiers = HEAD, 0 undocumented; dashboard
