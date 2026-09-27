@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S794 claim: investigate and fix the recurring shinytest2 GitHub Actions 30-minute execution-time cap (BACKLOG.md "Up Next" item 1, found S791, recurred S793) (in progress)
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-27 · [ad hoc] S793 records: suggested_NEWS_entry.md/.Rmd review DONE (14 findings: 8 ADOPT, 5 MODIFY, 1 REJECT-as-drafted); one confirmed factual error found in the draft (groupAddAssign()'s `candidates` return-value field mislabeled as a new argument); one BACKLOG.md item filed for a second shinytest2 CI timeout occurrence; Learnings 806-807
 - **Model:** Claude Sonnet 5. Phase 3 close-out: Session 792's handoff evaluated 8/10 (every Orient
   measurement held except two related, minor inaccuracies -- the "27 unpushed" figure undercounted

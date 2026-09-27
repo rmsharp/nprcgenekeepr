@@ -86,6 +86,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 793 Handoff Evaluation (by Session 794)
+**Score: TBD -- fill at close-out after re-reading S793's own claims fresh.**
+
+### What Session 794 Did
+**Deliverable:** Investigate and fix the `shinytest2` GitHub Actions workflow's recurring 30-minute
+execution-time cap (hit S791, recurred S793; `BACKLOG.md` "Up Next" item 1) (IN PROGRESS).
+**Started:** 2026-09-27.
+**Status:** Session claimed. Work beginning -- PRE-RED fact-finding (run-duration history via `gh
+run list --workflow=shinytest2.yaml`, existing test coverage of the workflow file) before any
+approach decision or test/code change.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest.
+
 ### Session 792 Handoff Evaluation (by Session 793)
 **Score: 8/10.** Every Orient measurement held (both ledger frontiers = HEAD `10ec04f2`, 0
 undocumented; dashboard 96/100; the `CHANGELOG.md` "closest to the ceiling" warning was prescient --
