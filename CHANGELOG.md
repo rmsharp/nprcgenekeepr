@@ -60,6 +60,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S792 RED: one release-note wording check for piece (d)'s remaining Pedigree Diagram entries (stage 2 piece (d))
+- **Model:** Claude Sonnet 5. PRE-RED found every underlying factual claim in piece (d)'s 6 line
+  ranges (:32-42, :104-116, :117-121, :131-136, :147-152, :165-177) TRUE and current -- the crash
+  fixes are still in the code (S630's `xOf`/`yOf` list fix; S682's dangling-parent `__dup_` guard),
+  the isolated-individual behavior is pinned by `test_findIsolatedIds.R` and
+  `test_makePedigreeMatingLayout.R`'s all-isolated cases, the disconnected-component block
+  separation is S667's shipped code, `kinshipMatrix` exists exactly as described, and
+  `test_examplePedigreeFixtures.R` already pins the "11-14 animals"/"exactly one consanguineous
+  mating" claims (nRows 11/12/12/14/14, one marked union each) plus the dashed duplicate-connector
+  and vermillion (`#D55E00`) consanguineous-marker colors. The only defect is release-state framing:
+  9 of the 10 entries narrate a fix/change ("Fixed", "now", "no longer", "Previously") against a
+  pre-2.0.0 state the diagram feature never had (`git cat-file -e
+  v2.0.0:R/makePedigreeMatingLayout.R` fails). Investigated separately: BACKLOG.md's claim of stale
+  cross-references in Marker Genetics/Mate Pair does not hold -- the only "described below"/"above"
+  wording there points at unrelated content (Marker Genetics' Cross-Center tab note; Mate Pair's own
+  prior entry), not at Pedigree Diagram; no change needed there. **RED:** added
+  `pieceDNarrationPhrases` (14 exact phrases copied verbatim from the current stale text) plus one
+  scoped test asserting none remain in the section; ran alone: 26 test_that blocks, 93 passed
+  expectations, 14 failed (exactly the 14 phrases), 0 errors -- confirms the test fails for the
+  right reason before GREEN. PRE-RED->RED `AskUserQuestion` gate: yes, proceed to RED (the exact
+  phrase list and rewrite plan were shown before writing test code, per Learning 803d).
+
 ### 2026-09-27 · [ad hoc] S792 claim: `NEWS.Rmd` release-state sweep stage 2 piece (d), crash fixes/isolated-animal/example-pedigree/layout-origin/`kinshipMatrix`/cross-reference entries -- closes the sweep (in progress)
 - **Model:** Claude Sonnet 5. Stub + pending `HANDOFFS.md` receipt + this in-progress entry, written
   FIRST per Learning 804, before any PRE-RED fact-finding. Owner-picked at the Phase 0 priorities

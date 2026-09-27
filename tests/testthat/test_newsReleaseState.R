@@ -45,6 +45,34 @@
 ## the section's own separate entry) -- so the claim is checked against real
 ## output, not carried forward from the issue's own historical comments.
 ##
+## Stage 2, piece (d) (S792): the section's remaining entries -- the crash
+## fixes (narrowing to focal animals; a trimmed pedigree that keeps a child
+## but drops that child's own record), the isolated-animal entries, the
+## example pedigrees and the article, and the layout-origin/kinshipMatrix
+## entries. One check: none of piece (d)'s entries narrate a fix or a change
+## against a PRE-2.0.0 state -- the diagram feature is entirely absent at the
+## v2.0.0 tag (`git cat-file -e v2.0.0:R/makePedigreeMatingLayout.R` fails),
+## so a 2.0.0 reader never experienced any "before" these entries describe.
+## Every underlying claim was checked against real code/tests first (all
+## true, none stale): the crash fixes are still in the code (S630's
+## xOf/yOf list fix, S682's dangling-parent __dup_ guard); the isolated-
+## individual behavior is pinned by test_findIsolatedIds.R and
+## test_makePedigreeMatingLayout.R's all-isolated cases; the
+## disconnected-component block separation is S667's shipped code; the
+## kinshipMatrix argument exists exactly as described
+## (makePedigreeMatingLayout()'s own formals); the example pedigrees'
+## "11-14 animals" and "exactly one consanguineous mating" claims are pinned
+## by test_examplePedigreeFixtures.R (nRows 11/12/12/14/14; one marked union
+## per fixture); the dashed duplicate-connector and vermillion (#D55E00)
+## consanguineous-marker colors are in the code
+## (R/makePedigreeDiagramData.R:1946-2012, :1973). So this piece is a
+## wording-only fix: state each entry's finished behavior, not the fix
+## narration. (BACKLOG.md's separate claim of stale cross-references in
+## Marker Genetics/Mate Pair was investigated and found not to hold: the
+## only "described below"/"above" wording there points at unrelated content
+## -- Marker Genetics' Cross-Center tab note and Mate Pair's own prior
+## entry -- not at the Pedigree Diagram section; no change needed there.)
+##
 ## NEWS.Rmd is build-ignored, so the real-file tests skip inside an R CMD
 ## check tarball, like test_effectivePopulationSizeDocs.R.
 
@@ -592,6 +620,41 @@ test_that("the Pedigree Diagram section's sibling-bar/connecting-bar entry
                    info = paste("entries claiming something is not",
                                 "corrected start at lines:",
                                 paste(entries$line[stale], collapse = ", ")))
+})
+
+## The exact release-state-narration phrases piece (d) removes from the
+## Pedigree Diagram section's remaining entries -- each copied verbatim from
+## NEWS.Rmd's current text, so the test fails for the right reason (the
+## phrase is really there) before GREEN, and cannot silently match nothing.
+pieceDNarrationPhrases <- c(
+  "can now be handed",
+  "behaves exactly as before",
+  "Fixed a crash in the Diagram tab",
+  "now always displays correctly",
+  "is now checked directly by code, not just by eye",
+  "no longer shows an individual as a disconnected",
+  "no longer crashes the diagram",
+  "it now tells you so",
+  "is now drawn as its own block",
+  "Previously two unrelated families",
+  "Fixed an error in the Diagram tab",
+  "diagram now draws normally",
+  "The package now includes five small example pedigrees",
+  "The Pedigree Diagram article on the package website now walks through"
+)
+
+test_that("the Pedigree Diagram section's piece (d) entries (crash fixes,
+           isolated-animal entries, example pedigrees and article,
+           layout-origin/kinshipMatrix, unrelated-families block) state the
+           finished behavior, not a change from a pre-2.0.0 state the
+           diagram feature never had", {
+  entries <- diagramSectionEntries()
+  expect_gt(nrow(entries), 0L)
+  text <- paste(entries$text, collapse = " ")
+  for (phrase in pieceDNarrationPhrases) {
+    expect_false(grepl(phrase, text, fixed = TRUE),
+                 info = sprintf("still present: %s", phrase))
+  }
 })
 
 test_that("NEWS.Rmd describes issue #168 (ancestry guardrails) in one entry", {
