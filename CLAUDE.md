@@ -473,17 +473,18 @@ alternatives: Learning 770.
 
 **`CHANGELOG.md` legacy forms under the current ledger rules (S719):**
 ledger-format: 2; the rules live in the synced
-`docs/methodology/FRAMEWORK_APPARATUS.md` §The Action Ledger. Two
-pre-existing shapes stay as written (nothing already written is
-retrofitted): (a) **13 headings use a bare `[BL]` tag** the anchored
-audit doesn’t count — expected, not a defect; new entries use the closed
+`docs/methodology/FRAMEWORK_APPARATUS.md` §The Action Ledger. One
+pre-existing shape stays as written (nothing already written is
+retrofitted): **13 headings use a bare `[BL]` tag** the anchored audit
+doesn’t count — expected, not a defect; new entries use the closed
 vocabulary `[issue #<N>]`, `[BL-<id>]` (this project’s own backlog ids
-only — methodology-fork work is `[ad hoc]`), or `[ad hoc]`. (b) **The
-empty `## 2026-08` sits ABOVE `## 2026-09`**, so read “prepend under the
-topmost month” as: prepend under the pointer blocks beneath the month
-the entry belongs to; open a new month’s heading at the top. A claim
-commit’s entry is marked *(in progress)* and close-out adds its own
-entry — an entry once committed is never edited.
+only — methodology-fork work is `[ad hoc]`), or `[ad hoc]`. “Prepend
+under the topmost month” means: prepend under the archive pointer blocks
+beneath that month’s heading, and open a new month’s heading at the top
+when the month changes (the empty `## 2026-08` heading that once sat
+above `## 2026-09` was removed at the owner’s request, 2026-09-26). A
+claim commit’s entry is marked *(in progress)* and close-out adds its
+own entry — an entry once committed is never edited.
 
 **`SESSION_NOTES.md` archive fence-scanner defect (found S518; RESOLVED
 S527/S528) — historical:** two `methodology_trim.py` regex defects once

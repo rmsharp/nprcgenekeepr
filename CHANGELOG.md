@@ -21,8 +21,6 @@ Ledger](https://github.com/rmsharp/nprcgenekeepr/docs/methodology/FRAMEWORK_APPA
 which `bin/sync` keeps current. ledger-format: 2 — keep this marker;
 `bin/status` reads it.
 
-## 2026-08
-
 ## 2026-09
 
 **Archived 328 record(s), 2026-08-14 → 2026-09-17** into
@@ -87,6 +85,785 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh),
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
+
+**Archived 13 record(s), 2026-09-26 → 2026-09-26** into
+[`docs/archive/CHANGELOG-through-2026-09-26-3.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-26-3.md)
+— same format, same order, frozen. Losslessness is proved by
+[`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh),
+which re-derives L1/L2/L3 from git; run it rather than trusting this
+sentence. Written by `methodology_trim.py` v1.5.0.
+
+### 2026-09-27 · \[ad hoc\] S794 records: shinytest2 CI timeout fix DONE (S793 handoff evaluated 7/10, self 8/10, receipt, Learning 808); full RED/GREEN/REFACTOR TDD cycle, BACKLOG item removed
+
+- **Model:** Claude Sonnet 5. Phase 3 close-out: Session 793’s handoff
+  evaluated 7/10 – every Orient measurement held fresh except one:
+  `gh run view --json jobs` showed the “hit its cap twice” framing
+  (found S791, recurred S793) was actually ONE cancelled run
+  (2026-09-27T07:13:43Z) observed by three same-day sessions hours
+  apart, not two separate incidents (Learning 808). Self-assessed 8/10
+  (caught the predecessor-chain error before acting on it; precise
+  job-level timestamps used, not run-level; every TDD gate posed via
+  `AskUserQuestion`; full regression + lint before REFACTOR; weak point
+  – did not push or trigger a live CI run to close the real-world
+  verification loop, deliberately left to the owner). `HANDOFFS.md`
+  receipt completed (`status: complete`). Ledger sizes measured fresh at
+  close-out: `CHANGELOG.md` 70,735 B (further over its 65,536 B budget,
+  trim owed, not done this session). 34 local commits ahead of
+  `origin/master` as of just before this commit; not pushed (owner’s
+  decision, per this session’s own gotchas).
+
+### 2026-09-27 · \[ad hoc\] S794 PRE-RED: shinytest2 CI timeout is capacity growth, not two occurrences – BACKLOG.md’s “found S791…recurred S793” double-counts one event
+
+- **Model:** Claude Sonnet 5. `gh run list --workflow=shinytest2.yaml`
+  (60 runs) + `gh run view --json jobs` (precise job start/complete)
+  show exactly ONE recent cancelled run (2026-09-27T07:13:43Z, job
+  duration 30.02 min); S791/S792/S793 all ran on the SAME calendar day,
+  hours after that single nightly job had already finished, so all three
+  observed the same event, not two separate cancellations. Job duration
+  trend: ~20-22 min (early August) -\> consistently 24-30 min
+  (September), with 2026-09-26 succeeding at 29.87 min (8s under the
+  cap) the night before today’s cancellation – capacity growth, not a
+  hang (no single module group stuck). An isolated unrelated
+  cancellation on 2026-08-19 (30.17 min) sat amid otherwise-fast runs at
+  the time. Owner picked “raise timeout-minutes” (30-\>45) over
+  splitting into a parallel matrix.
+
+### 2026-09-27 · \[ad hoc\] S794 RED: one test pinning shinytest2.yaml’s job timeout-minutes at 45
+
+- **Model:** Claude Sonnet 5.
+  `tests/testthat/test_shinytest2_workflow_timeout.R`, same text-parsing
+  style as `test_shinytest2_workflow_coverage.R`. Confirmed FAILING
+  against the current file (`timeout_minutes` = 30, expected 45).
+
+### 2026-09-27 · \[ad hoc\] S794 GREEN: shinytest2.yaml’s job timeout-minutes raised 30 -\> 45
+
+- **Model:** Claude Sonnet 5. `.github/workflows/shinytest2.yaml:46`,
+  minimum change only. New test passes;
+  `test_shinytest2_workflow_coverage.R` unaffected (4/4 pass);
+  unfiltered full-suite regression read 355 files / 2,755 tests / 8,408
+  passed, 1 failed (the known pre-existing
+  `test_pkgdown_reference_config.R` draft failure, unrelated), 0 error;
+  `lintr::lint()` on the new test file: 0 lints.
+
+### 2026-09-27 · \[ad hoc\] S794 REFACTOR: resolved shinytest2 timeout item removed from BACKLOG.md
+
+- **Model:** Claude Sonnet 5. No behavior change. Per the BACKLOG
+  completed-item removal checklist, the “Up Next” shinytest2 item (root
+  cause found, fix shipped this session) is removed – its record now
+  lives in this session’s PRE-RED/RED/GREEN entries above. Staged via
+  the established `tail -n +6` / `hash-object` /
+  `update-index --cacheinfo` recipe (3 separate Bash calls) to exclude
+  the pre-existing, unrelated `BACKLOG.md` YAML-header residue from this
+  commit – that residue stays in the working tree untouched,
+  unexplained, owner’s own open decision (S791-793’s gotcha), not swept
+  in silently.
+
+### 2026-09-27 · \[ad hoc\] S793 records: suggested_NEWS_entry.md/.Rmd review DONE (14 findings: 8 ADOPT, 5 MODIFY, 1 REJECT-as-drafted); one confirmed factual error found in the draft (groupAddAssign()’s `candidates` return-value field mislabeled as a new argument); one BACKLOG.md item filed for a second shinytest2 CI timeout occurrence; Learnings 806-807
+
+- **Model:** Claude Sonnet 5. Phase 3 close-out: Session 792’s handoff
+  evaluated 8/10 (every Orient measurement held except two related,
+  minor inaccuracies – the “27 unpushed” figure undercounted by 1, and a
+  self-contradictory HANDOFFS.md-frontier gotcha, both now Learning 806;
+  the CHANGELOG.md ledger-size warning proved prescient, confirmed over
+  budget this session). Self- assessed 8/10: completed full Phase 0
+  orientation before accepting the task; correctly recognized the
+  owner’s first task-scope answer needed clarification rather than
+  guessing (BACKLOG.md’s own S791-authored framing of the
+  suggested_NEWS_entry item had drifted from the owner’s actual intent
+  across two sessions – Learning 807); correctly scoped this as an
+  Audit-workstream, non-TDD deliverable and said so explicitly; verified
+  all 31 cited function/argument names against `R/` by direct grep
+  rather than trusting the draft or NEWS.Rmd’s own prose, which is what
+  surfaced the `candidates` mislabeling and the dropped harem-sire
+  caveat; weak points: a long Phase 0 report, and the first
+  AskUserQuestion was posed before closely re-reading item 1’s own
+  unusually heavy framing. Wrote
+  `docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md` (100%
+  coverage, 14 of 14 suggested items examined against
+  `NEWS.Rmd:15-495`); filed a new `BACKLOG.md` item for the `shinytest2`
+  scheduled-workflow CI timeout’s second occurrence (report-don’t-fix,
+  no GitHub issue per the CI-break tracking convention); appended
+  `PROJECT_LEARNINGS.md` Learnings 806 (a receipt’s post-commit
+  unpushed-count/frontier-gap figure is undercounted by construction
+  unless phrased as “just before this commit”) and 807 (a BACKLOG item
+  describing an owner’s own draft is a session’s interpretation of
+  intent, not confirmed intent, and needs re-confirming in plain
+  language at pickup, especially across multiple sessions). Full detail:
+  `SESSION_NOTES.md`, this session’s entries below, and `HANDOFFS.md`’s
+  S793 receipt. No `NEWS.Rmd`, `R/`, or test file changed this session –
+  review and records only.
+
+### 2026-09-27 · \[ad hoc\] S793 claim: review suggested_NEWS_entry.md/.Rmd against current NEWS.Rmd for adopt/reject/modify verdicts (in progress)
+
+- **Model:** Claude Sonnet 5. Phase 1B claim: owner scoped the task
+  2026-09-27 (examine the untracked suggested_NEWS_entry.md /
+  vignettes/suggested_NEWS_entry.Rmd draft, dated 2026-09-25, entry by
+  entry against the current NEWS.Rmd, and judge adopt/reject/modify per
+  suggestion – not the larger “whole-dev-block 3.0.0 consolidation”
+  decision BACKLOG.md’s existing item frames). Deliverable is a review
+  document only, no NEWS.Rmd edits this session. Following
+  docs/methodology/workstreams/AUDIT_WORKSTREAM.md; no TDD phase gates
+  (no code/test change). (in progress)
+
+### 2026-09-27 · \[ad hoc\] S792 records: stage 2 piece (d) of the NEWS.Rmd release-state sweep DONE, closing the sweep (S791 handoff evaluated 9/10, self 9/10, receipt, Learning 805, next-session items); full suite 354 files / 2,754 tests / 8,408 expectations with only the known pkgdown draft failing
+
+- **Model:** Claude Sonnet 5. Phase 3 close-out: Session 791’s handoff
+  evaluated 9/10 (every Orient measurement held; the one wrong figure –
+  22 vs 23 unpushed – was already self-flagged as needing a recount).
+  Self-assessed 9/10 (1B written first this time, per Learning 804’s own
+  fix; PRE-RED fact-finding surfaced both piece (d)’s different defect
+  class and BACKLOG’s own stale scope sub-claim; the phase gates posed
+  at the right points per Learning 803d; weak points: two pointless Bash
+  placeholder calls while waiting on the backgrounded suite run,
+  disclosed). Learning 805 recorded (`PROJECT_LEARNINGS.md:2277`): a
+  release-state sweep piece can find every fact true and still have a
+  real (framing) defect; a BACKLOG item’s own scope text can itself
+  carry a stale sub-claim; closing the last stage of a tracked item
+  folds the completed-item removal checklist into that piece’s own
+  REFACTOR. `HANDOFFS.md` receipt completed (`status: complete`). Ledger
+  sizes measured fresh: `SESSION_NOTES.md` 27,936 B, `HANDOFFS.md`
+  41,837 B, `CHANGELOG.md` 63,315 B (pre this entry) – all under the
+  65,536 B trim budget, no trim owed. CI checked fresh: 4/4
+  push-triggered workflows still green on `ff8308a5`; the `shinytest2`
+  scheduled timeout first seen at S791’s Phase 0 has not recurred. 27
+  local commits ahead of `origin/master`; not pushed (not asked).
+
+### 2026-09-27 · \[ad hoc\] S792 REFACTOR: NEWS.Rmd release-state sweep CLOSED (stage 2 piece (d) DONE, all 4 stages complete); BACKLOG sweep item removed, two open threads extracted
+
+- **Model:** Claude Sonnet 5. No behavior change: target test file
+  re-confirmed 26/107/0 failed, 0 lints on
+  `tests/testthat/test_newsReleaseState.R`. Per the BACKLOG
+  completed-item removal checklist, the whole “`NEWS.Rmd` release-state
+  sweep” item is removed from `BACKLOG.md` (all 4 stages DONE): stage 1
+  (S788, 12 entries rewritten, guard test added); stage 2 piece (a)
+  (S789, display/defaults, 45-\>42 entries); piece (b) (S790,
+  mating-symbol placement/spacing, 6 entries merged into 1, stale
+  duplicate count 22-\>113 corrected, 42-\>37 entries); piece (c) (S791,
+  sibling-bar/connecting-bar entry, one stale “not corrected” clause
+  dropped, 37 entries unchanged); piece (d) (S792, this session – the
+  section’s remaining 9 stale-framed entries restated, all underlying
+  facts verified true and current, 37 entries unchanged). The
+  `## Pedigree Diagram` section now states its finished capabilities
+  throughout; none is narrated as a fix or change against a pre-2.0.0
+  state the diagram feature never had. Two open threads this session
+  found, neither resolved, extracted into `BACKLOG.md` as their own
+  items: (1) the owner’s untracked `suggested_NEWS_entry.md`/`.Rmd`
+  3.0.0 consolidation drafts’ disposition (deferred at S791, unblocked
+  now that the sweep is closed); (2) whether to keep or delete the
+  `## Package` entry (`NEWS.Rmd:18`), which reports the PRIOR release
+  rather than a change in this one.
+
+### 2026-09-27 · \[ad hoc\] S792 GREEN: NEWS.Rmd Pedigree Diagram piece (d) entries restated as the finished state (stage 2 piece (d))
+
+- **Model:** Claude Sonnet 5. Rewrote the 9 stale-framed entries at
+  `NEWS.Rmd` lines :37-42, :104-107, :108-111, :112-116, :117-121,
+  :131-136, :147-152, :165-172, :173-177 – dropped “can now”/“Fixed”/
+  “no longer”/“is now”/“Previously” narration, stated each capability
+  plainly. No facts, numbers, or cross-references changed; the “(see
+  above)” reference at :117-121 stays valid (its target entry just above
+  it was rewritten, not moved). Section stays at 37 entries (verified:
+  `awk '/^## Pedigree Diagram/{f=1;next} /^## /{f=0} f' NEWS.Rmd | grep -c '^- '`
+  = 37). `NEWS.Rmd` knits clean
+  (`rmarkdown::render(..., output_format = "github_document")`, no
+  errors). GREEN: `test_newsReleaseState.R` alone: 26 test_that blocks,
+  107 passed expectations, 0 failed, 0 errors (up from 93 passed/14
+  failed at RED, confirming all 14 phrases now absent). Full unfiltered
+  suite (`load_all` + `NOT_CRAN`, host load 17.64): **354 files, 2,754
+  tests, 8,408 expectations (8,407 passed), 1 failed** (the known
+  `test_pkgdown_reference_config.R` draft, pre-existing and unrelated),
+  0 errors, 187 skipped, 6 warnings.
+
+### 2026-09-27 · \[ad hoc\] S792 RED: one release-note wording check for piece (d)’s remaining Pedigree Diagram entries (stage 2 piece (d))
+
+- **Model:** Claude Sonnet 5. PRE-RED found every underlying factual
+  claim in piece (d)‘s 6 line ranges (:32-42, :104-116, :117-121,
+  :131-136, :147-152, :165-177) TRUE and current – the crash fixes are
+  still in the code (S630’s `xOf`/`yOf` list fix; S682’s dangling-parent
+  `__dup_` guard), the isolated-individual behavior is pinned by
+  `test_findIsolatedIds.R` and `test_makePedigreeMatingLayout.R`’s
+  all-isolated cases, the disconnected-component block separation is
+  S667’s shipped code, `kinshipMatrix` exists exactly as described, and
+  `test_examplePedigreeFixtures.R` already pins the “11-14
+  animals”/“exactly one consanguineous mating” claims (nRows
+  11/12/12/14/14, one marked union each) plus the dashed
+  duplicate-connector and vermillion (`#D55E00`) consanguineous-marker
+  colors. The only defect is release-state framing: 9 of the 10 entries
+  narrate a fix/change (“Fixed”, “now”, “no longer”, “Previously”)
+  against a pre-2.0.0 state the diagram feature never had
+  (`git cat-file -e v2.0.0:R/makePedigreeMatingLayout.R` fails).
+  Investigated separately: BACKLOG.md’s claim of stale cross-references
+  in Marker Genetics/Mate Pair does not hold – the only “described
+  below”/“above” wording there points at unrelated content (Marker
+  Genetics’ Cross-Center tab note; Mate Pair’s own prior entry), not at
+  Pedigree Diagram; no change needed there. **RED:** added
+  `pieceDNarrationPhrases` (14 exact phrases copied verbatim from the
+  current stale text) plus one scoped test asserting none remain in the
+  section; ran alone: 26 test_that blocks, 93 passed expectations, 14
+  failed (exactly the 14 phrases), 0 errors – confirms the test fails
+  for the right reason before GREEN. PRE-RED-\>RED `AskUserQuestion`
+  gate: yes, proceed to RED (the exact phrase list and rewrite plan were
+  shown before writing test code, per Learning 803d).
+
+### 2026-09-27 · \[ad hoc\] S792 claim: `NEWS.Rmd` release-state sweep stage 2 piece (d), crash fixes/isolated-animal/example-pedigree/layout-origin/`kinshipMatrix`/cross-reference entries – closes the sweep (in progress)
+
+- **Model:** Claude Sonnet 5. Stub + pending `HANDOFFS.md` receipt +
+  this in-progress entry, written FIRST per Learning 804, before any
+  PRE-RED fact-finding. Owner-picked at the Phase 0 priorities gate
+  (from 4 offered options: this item, the PED_GV cleanup bundle, the
+  `a2interactive`
+  [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
+  doc section, and the docs staleness audit). Orient measured:
+  `CHANGELOG.md` and `HANDOFFS.md` frontiers both = HEAD (`970d2dd8`), 0
+  undocumented; 23 unpushed at `origin/master` = `ff8308a5` (recount
+  from S791’s predicted 21/22); 4/4 push-triggered CI workflows green on
+  the last pushed commit, but a same-day SCHEDULED `shinytest2` run was
+  cancelled after its 30-minute timeout (unrelated to push history,
+  reported not diagnosed per the CI-break tracking convention);
+  dashboard health 96/100, 0 high+ risk; context budget: no file over
+  ceiling, `CLAUDE.md` in the documented warn band (headroom, not a
+  defect); quality ratchet unchanged from S790 (1/1, results
+  `ce2ee7e8ec51`, manifest `aa983075d6a2` – matches
+  `.quality-gates-results.json` exactly; its stale `head` field is inert
+  since no `R/` file has changed). Working tree matched the predicted
+  residue exactly (`BACKLOG.md` owner header only, `BACKLOG.log`, two
+  `suggested_NEWS_entry` drafts, 5 render artifacts).
+
+### 2026-09-27 · \[ad hoc\] S791 records: stage 2 piece (c) of the `NEWS.Rmd` release-state sweep DONE (S790 handoff evaluated 9/10, self 8/10, receipt, Learning 804, next-session items); full suite 354 files / 2,753 tests / 8,393 expectations with only the known pkgdown draft failing
+
+- **Model:** Claude Sonnet 5. Session close-out: `HANDOFFS.md` receipt
+  completed (`status: complete`, self-score 8, predecessor-score 9);
+  `SESSION_NOTES.md` records the Session 790 handoff evaluation and the
+  full Session 791 write-up; `PROJECT_LEARNINGS.md` gains Learning 804
+  (the issue-thread- tracing / proportion-reverification / 1B-ordering /
+  mid-session-scope-draft findings). `BACKLOG.md` sweep item: piece (c)
+  DONE, piece (d) remains (unchanged line ranges). Cross-references
+  checked: `PROJECT_LEARNINGS.md:2275` resolves to Learning 804; the
+  learning count is now 804
+  (`grep -c '^#### Learning ' PROJECT_LEARNINGS.md`). No debug
+  instrumentation added this session (docs/tests only). (A commit cannot
+  name its own hash; see `git log`.)
+
+### 2026-09-27 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-26-4.md` (5 record(s), 68,163 B → 27,309 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **5** record(s) (2026-08-15 →
+2026-09-26) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-26-4.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-26-4.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-26-4.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-26-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 68,163 B → 27,309
+B (−59.9%).
+
+### 2026-09-27 · \[ad hoc\] S791 REFACTOR: BACKLOG sweep item narrowed to piece (d) only (stage 2 piece (c))
+
+- **Model:** Claude Sonnet 5. No behavior change (re-confirmed: target
+  file 25 tests, 0 failed; 0 lints on the touched test file).
+  `BACKLOG.md`’s `NEWS.Rmd` release-state sweep item: piece (c) recorded
+  DONE with its measured finding; only piece (d) remains, its `NEWS.Rmd`
+  line ranges confirmed UNCHANGED from S790 (piece (c)’s edit was a net
+  3-lines-for-3-lines swap, `git diff --stat` confirmed 3 insertions/3
+  deletions). Also filed: the owner’s untracked
+  `suggested_NEWS_entry.md`/`.Rmd` drafts (found S791, dated 2026-09-25)
+  proposing a consolidated 3.0.0 release-note style, with the S791
+  disposition (continue the sweep as scoped; the draft is a separate
+  future deliverable) recorded so it is not lost as an untracked file.
+
+### 2026-09-27 · \[ad hoc\] S791 GREEN: NEWS.Rmd Pedigree Diagram sibling-bar/connecting-bar entry restated as the finished state (stage 2 piece (c))
+
+- **Model:** Claude Sonnet 5. `NEWS.Rmd:79-82`: dropped “in the common
+  case” and “Two rarer related cases are not corrected” from the
+  sibling-bar/connecting-bar entry (issue \#160) – both stale per the
+  RED commit’s measurement (0 straight-residual collisions of any kind
+  on the bundled fixture). A net 3-lines-for-3-lines edit (the entry
+  re-wraps to the same 4 physical lines), so every other entry’s line
+  number in the section is unchanged. Section stays at 37 entries (a
+  wording fix, not a merge). Target file: 25 tests, 92 expectations, 0
+  failed. `NEWS.Rmd` knits (scratch output). Full unfiltered suite
+  (`load_all` + `NOT_CRAN`, run alone, host load 22.82): **354 files,
+  2,753 tests, 8,393 expectations (8,392 passed), 1 failed** (the known
+  `test_pkgdown_reference_config.R`), 0 errors, 187 skipped, 6 warnings
+  – the two wall-clock benchmarks Learnings 760/800 warn about held
+  today despite the load. Lint: `lintr::lint_package()` on the touched
+  test file, 0 lints (no `R/` file touched this piece). (A commit cannot
+  name its own hash; see `git log`.)
+
+### 2026-09-27 · \[ad hoc\] S791 RED: one release-note check for the Pedigree Diagram sibling-bar entry (stage 2 piece (c))
+
+- **Model:** Claude Sonnet 5. `tests/testthat/test_newsReleaseState.R`:
+  added `straightResidualCount()` (runs the real rectilinear pipeline –
+  `makePedigreeMatingLayout(edgeStyle = "direct")` +
+  `.buildMatingUnitForest()` + `.positionMatingUnitForest()` +
+  `.addRectilinearWaypoints()` + `.resolveEdgeNodeCollisions()` – and
+  counts `residuals$kind == "straight-residual"`) and one test scoped to
+  the “## Pedigree Diagram” section via `diagramSectionEntries()`: the
+  count must be 0 on the bundled 375-animal example, and no entry may
+  say “not corrected”. Measured: 25 tests, 92 expectations, **1 failing
+  by design** (the stale “Two rarer related cases are not corrected”
+  wording at `NEWS.Rmd:79`; the real-output assertion already passes
+  today, 0 as predicted), 0 errors, all 24 prior tests in the file still
+  pass. (A commit cannot name its own hash; see `git log`.)
+
+### 2026-09-27 · \[ad hoc\] S791 claim: `NEWS.Rmd` release-state sweep stage 2 piece (c), connector routing/collision avoidance/sibling-bar entries (in progress)
+
+- **Model:** Claude Sonnet 5. Stub + pending `HANDOFFS.md` receipt +
+  this in-progress entry. Owner-picked at the Phase 0 priorities gate
+  (`NEWS.Rmd` sweep, piece (c)) from 4 offered options. Orient measured:
+  `CHANGELOG.md` frontier = HEAD (`176081f1`), 0 undocumented;
+  `HANDOFFS.md` frontier 2 commits behind HEAD, both S790’s own
+  in-session ledger fixups, not a new session; 17 unpushed at
+  `origin/master` = `ff8308a5` (4/4 push workflows green; a same-day
+  scheduled `shinytest2` run timed out at its 30-minute cap, unrelated,
+  reported not fixed); working tree matched the predicted residue
+  exactly (`BACKLOG.md` owner header only, `BACKLOG.log`, two
+  `suggested_NEWS_entry` drafts, 5 render artifacts). **Disclosure:**
+  this claim was written LATE – PRE-RED fact-finding (re-reading the
+  section, tracing issue \#160’s Track 1/Track 2 history in the code and
+  `git log`/`gh issue view`, live-measuring the current residual count)
+  happened first, then a scope question about the owner’s untracked
+  `suggested_NEWS_entry.md`/`.Rmd` draft (resolved: keep piece (c) as
+  scoped, treat the draft as a separate future deliverable), then the
+  PRE-RED→RED `AskUserQuestion` gate, and only then this stub – caught
+  before the RED commit, corrected by writing it now rather than
+  silently skipping it. **PRE-RED finding:** `NEWS.Rmd:82`’s “Two rarer
+  related cases are not corrected” (issue \#160) is stale – true right
+  after Track 1 shipped (S593), superseded the next day when Track 2
+  (`.resolveEdgeNodeCollisions()`, S595) generalized same-row collision
+  repair to every straight edge. Measured fresh today by running the
+  real rectilinear pipeline
+  (`makePedigreeMatingLayout(edgeStyle = "direct")` +
+  `.buildMatingUnitForest()` + `.positionMatingUnitForest()` +
+  `.addRectilinearWaypoints()` + `.resolveEdgeNodeCollisions()`) on the
+  bundled 375-animal example: 72 residuals, **all**
+  `kind == "curved-heuristic"` (the already-disclosed
+  duplicate-connector-arc entry just below it), **0**
+  `"straight-residual"` – matching S715’s own shipped arc count (72)
+  exactly, so nothing has drifted since. All other 11 entries in piece
+  (c)’s scope (`:67-69`, `:83-90`, `:122-142`, `:153-198`) checked
+  against the code and its own test suite and found still accurate as
+  written (dangling-parent dogleg: covered by
+  `test_addRectilinearWaypoints.R`’s issue \#154 tests; the “about a
+  quarter shorter”/“roughly three quarters” measured proportions: traced
+  to the S695 root-subtree-ordering close-out and the S715 arc-census
+  close-out respectively, both confirmed current by the same live
+  measurement).
+
+### 2026-09-27 · \[ad hoc\] S790 – Learning 803 committed separately (`e9e90d63`) from the records commit, to hold the 5-file blast-radius cap (the records commit already carried the 4 HANDOFFS.md archive-pass files); no other change
+
+### 2026-09-27 · \[ad hoc\] S790 records: stage 2 piece (b) of the `NEWS.Rmd` sweep DONE (S789 handoff evaluated 9/10, self 8/10, receipt, Learning 803, next-session items); ratchet 1/1 on `ff682ffb`
+
+- **Model:** Claude Sonnet 5. Close-out records for the S790 deliverable
+  (the claim, RED, RED ledger backfill, GREEN and REFACTOR entries above
+  hold the work). **Records written:** the S789 handoff evaluation
+  (9/10) and the S790 record with self-assessment (8/10), next steps and
+  gotchas in `SESSION_NOTES.md`; the `HANDOFFS.md` receipt
+  (`status: complete`, replacing the pending stub); Learning 803 in
+  `PROJECT_LEARNINGS.md`. Full unfiltered suite (from the GREEN entry,
+  unchanged through REFACTOR): 354 files, 2,752 tests, 8,582
+  expectations, 1 failed (the known `test_pkgdown_reference_config.R`),
+  0 errors, 187 skipped, 6 warnings. `HANDOFFS.md` crossed its 65,536 B
+  trim budget at 70,218 B before this receipt; owner-approved archive
+  pass (`--force` for the known SRF small-denominator refusal,
+  `docs/archive/HANDOFFS-through-2026-09-26-3.md`, 4 of 6 records,
+  verify script confirms L1/L2/L3 with the expected BL-27
+  frontier-finalize note) brought it to 32,212 B. `SESSION_NOTES.md` and
+  `CHANGELOG.md` stayed under budget; no archive pass owed on either.
+  Working-tree residue untouched (owner’s `BACKLOG.md` YAML header left
+  out again).
+
+### 2026-09-27 · \[ad hoc\] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-26-3.md` (4 record(s), 70,218 B → 32,212 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **4** record(s) (2026-09-26 →
+2026-09-26) out of
+[`HANDOFFS.md`](https://github.com/rmsharp/nprcgenekeepr/HANDOFFS.md)
+into
+[`docs/archive/HANDOFFS-through-2026-09-26-3.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-26-3.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 70,218 B → 32,212
+B (−54.1%).
+
+### 2026-09-27 · \[ad hoc\] S790 REFACTOR: `BACKLOG.md` sweep item narrowed to pieces (c) and (d) with current `NEWS.Rmd` lines (stage 2 piece (b))
+
+- **Model:** Claude Sonnet 5. No code or test behavior change – reviewed
+  the rewritten `NEWS.Rmd` entries and the new test code once more (both
+  read clean; plain-language criterion S628 holds). `BACKLOG.md`’s
+  `NEWS.Rmd` sweep item: marked pieces (a) and (b) DONE with a one-line
+  summary of each; re-derived pieces (c) and (d)’s `NEWS.Rmd` line
+  ranges fresh against the post-piece-(b) file (piece (b) removed 21 net
+  lines, shifting everything after it) – piece (c) `:67-69`, `:79-90`,
+  `:122-130`, `:137-142`, `:153-164`, `:178-198`; piece (d) `:32-42`,
+  `:104-116`, `:117-121`, `:131-136`, `:147-152`, `:165-177`. Target
+  file re-run: 24 tests, 0 failed (no behavior change, so the full suite
+  was not re-run; the GREEN entry’s full-suite result stands). Ratchet
+  1/1 at `b007682c` (results `ce2ee7e8ec51`, manifest `aa983075d6a2`).
+- **Checklists:** lint 0 (no `R/` file touched this piece); NEWS – this
+  session IS the rewrite, no new exported function or feature;
+  `_pkgdown.yml`, citation, tutorial and `a2interactive` N/A; no GitHub
+  issue exists for this item; the `BACKLOG.md` item was NARROWED, not
+  removed (pieces (c) and
+  4.  remain).
+
+### 2026-09-27 · \[ad hoc\] S790 GREEN: NEWS.Rmd Pedigree Diagram mating-symbol placement and spacing entries restated as the finished state (stage 2 piece (b))
+
+- **Model:** Claude Sonnet 5. `NEWS.Rmd`’s “## Pedigree Diagram”
+  section, 42 entries become 37: merged the 6-entry “mating symbol sits
+  centered/spaced” cluster (old `:91-93`, `:94-97`, `:119-124`,
+  `:125-127`, `:128-131`, `:152-156`) into 1 entry stating the rule “in
+  most cases” with a clear gap between parents and between neighboring
+  row symbols (issue \#166 kept); replaced the stale “22 individuals in
+  the bundled example pedigree” duplicate-node count with the current
+  measured 113 (`:73-78`, also renamed to “the bundled 375-animal
+  example pedigree” for consistency with the article-comparison entry
+  later in the section); reworded “Every mating symbol now sits between
+  the two parents…and each mated pair is drawn on the side…” to “Many
+  mated pairs are drawn on the side…” (`:163-167`), dropping the
+  now-redundant “every mating symbol” clause (covered by the merged
+  entry) and the “each” overstatement. Target file: 24 tests, 88
+  expectations, 0 failed. Full unfiltered suite (`load_all` +
+  `NOT_CRAN`, run alone): **354 files, 2,752 tests, 8,582 expectations,
+  1 failed** (the known `test_pkgdown_reference_config.R`, the owner’s
+  untracked draft), 0 errors, 187 skipped, 6 warnings – every count
+  matched the S789 baseline plus the target file’s own delta exactly (+3
+  tests, +14 expectations). `NEWS.Rmd` knits (scratch output). Lint:
+  `lintr::lint_package()` on the touched test file, 0 lints (no `R/`
+  file touched this piece). (A commit cannot name its own hash; see
+  `git log`.)
+
+### 2026-09-27 · \[ad hoc\] S790 RED: two release-note checks for the Pedigree Diagram mating-symbol placement/spacing entries (stage 2 piece (b))
+
+- **Model:** Claude Sonnet 5. `tests/testthat/test_newsReleaseState.R`:
+  extended `promisesEveryPair()` to also flag a leading “each”
+  (`\beach\s+\w`, so a per-pair count idiom like “one mate each,” does
+  not false-positive); added `matingUnitDuplicateCount()` (wraps
+  `.buildMatingUnitForest()`) with its own unit test on the
+  GA204Z/8LKBV9 loop fixture (expected 1); two new real-file checks
+  scoped to the “## Pedigree Diagram” section via
+  `newsSectionEntries()`/`diagramSectionEntries()`: the cited
+  duplicate-node count for the bundled 375-animal example must equal the
+  CURRENT measured count, and no mating-symbol-placement entry may
+  overstate its own rule with “every”/“each” wording. Measured: 24
+  tests, 92 expectations, **3 failing by design** (the stale “22” claim
+  at `:73`, and lines `:152` and `:163` which promise “every”/“each”
+  pair — the position engine’s own tests document named, disclosed
+  centering residuals, so these are overstatements, the same class of
+  finding as S789’s male-left entry), 0 errors, all prior tests in the
+  file still pass. Commit `a2d440f1`. Owner approved at the PRE-RED→RED
+  gate after seeing this measured result (an `AskUserQuestion` protocol
+  slip: the tests were written before the gate was posed, caught and
+  disclosed before commit, no irreversible action taken in between).
+
+### 2026-09-27 · \[ad hoc\] S790 claim: `NEWS.Rmd` release-state sweep stage 2 piece (b), mating-symbol placement and spacing entries (in progress)
+
+- **Model:** Claude Sonnet 5. Stub + pending `HANDOFFS.md` receipt +
+  this in-progress entry. Owner-picked at the Phase 0 priorities gate
+  (`NEWS.Rmd` sweep, piece (b)) from 4 offered options. Orient measured:
+  both ledger frontiers = HEAD (`8684c8d3`), 0 undocumented; 9 unpushed
+  at `origin/master` = `ff8308a5` (CI green, 4/4); ratchet citation
+  (results `40286d04f00e`, manifest `aa983075d6a2`, head `9df0bac6`)
+  matched `.quality-gates-results.json` before any run; working tree
+  matched the predicted residue exactly (`BACKLOG.md` owner header only,
+  `BACKLOG.log`, two `suggested_NEWS_entry` drafts, 5 render artifacts).
+  PRE-RED fact-finding before the scope gate: measured the NEWS.Rmd:77
+  “22 individuals in the bundled example pedigree” claim against
+  `.buildMatingUnitForest()` on `obfuscated_rhesus_mhc_ped.csv` (both
+  raw and QC row order) — **113** multi-anchor individuals today, not 22
+  (170 duplicate nodes total; distribution 79/18/11/3/2 for
+  2/3/4/5/6-way anchors); the number was measured at S573 (Track 4) and
+  never re-checked since. Also found
+  `tests/testthat/test_positionMatingUnitForest.R:2917-2974` documents
+  the mating-symbol centering invariant as holding “up to six disclosed
+  structural residuals” on the real fixture, so NEWS.Rmd:163’s “Every
+  mating symbol now sits between the two parents” looks overstated the
+  same way last session’s male-left claim was. Owner scope decision
+  (plain-language `AskUserQuestion`, 3 options): **full consolidation**
+  — merge the 6 overlapping “mating symbol sits centered/spaced” entries
+  (`:91-97`, `:119-131`, `:152-156`, `:163-167`) into fewer accurate
+  entries, replace the stale 22 with the measured 113, and soften the
+  “every” claim to “in most cases” per the disclosed residuals.
+- **Model:** Claude Sonnet 5. Close-out records for the S789 deliverable
+  (the claim, RED, RED correction, GREEN, REFACTOR and ledger-trim
+  entries above and below hold the work). **Records written:** the S788
+  handoff evaluation (9/10) and the S789 record with self-assessment
+  (8/10), next steps and gotchas in `SESSION_NOTES.md`; the
+  `HANDOFFS.md` receipt (`status: complete`, replacing the pending
+  stub); Learning 802 in `PROJECT_LEARNINGS.md`. A wording-only change
+  in the same commit: the test title of `defaultStyles()`’s first unit
+  test in `tests/testthat/test_newsReleaseState.R` now reads “attaches
+  it to the style just before, else after” (it said “nearest”, which is
+  not the rule). **Measured at close-out:** ratchet **1/1 at
+  `9df0bac6`** (3,577,928 B against the 5,000,000 B ceiling, +2,987 B;
+  results `40286d04f00e`, manifest `aa983075d6a2`); the four push
+  workflows on `ff8308a5` all finished `success` (lint 5m6s, pkgdown
+  6m18s, test-coverage 10m57s, R-CMD-check 22m49s), the first CI
+  evidence for S785 to S788; CI has not seen the S788 addendum or S789.
+  No push (not asked): 8 local commits after `origin/master` =
+  `ff8308a5` with this one (recount). **Deliberate non-actions:** the
+  male-left cause (2 of 34 one-mate pairs on the right), the manual’s
+  misleading limit wording and the roxygen for male-left are filed in
+  `BACKLOG.md`, not fixed; pieces (b), (c) and (d) of the sweep were not
+  started. **Second owner-gated archive pass (commit `87118663`):** the
+  commit hook counts `SESSION_NOTES.md` in tokens (25,000, about 56,750
+  B), not the 65,536 B of the size table, so my first close-out draft
+  (65,177 B, about 28.7k tokens) would have been refused; the owner
+  approved archiving it (`--cut 3`, 4 of 7 records, 53,844 B to 25,632
+  B, verify script OK on L1/L2/L3), the trimmer wrote its own entry
+  below, and my record was put back on the trimmed file. No GitHub issue
+  was opened or closed (the item names none). TDD phase REFACTOR
+  complete; session closed.
+
+### 2026-09-27 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-26-3.md` (4 record(s), 53,844 B → 25,632 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **4** record(s) (2026-09-26 →
+2026-09-26) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-26-3.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-26-3.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-26-3.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-26-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 53,844 B → 25,632
+B (−52.4%).
+
+### 2026-09-27 · \[ad hoc\] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-26-3.md` (13 record(s), 65,424 B → 37,593 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **13** record(s) (2026-09-26 →
+2026-09-26) out of
+[`CHANGELOG.md`](https://github.com/rmsharp/nprcgenekeepr/CHANGELOG.md)
+into
+[`docs/archive/CHANGELOG-through-2026-09-26-3.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-26-3.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 65,424 B → 37,593
+B (−42.5%).
+
+### 2026-09-27 · \[ad hoc\] S789 REFACTOR: test tidy-up; `BACKLOG.md` sweep item narrowed, one new item filed, audit item extended; stage 2 piece (a) of the sweep
+
+- **Model:** Claude Sonnet 5. **Review of the new test code:** one
+  structural change, no behavior change: the `promisesEveryPair()` unit
+  test moved up beside the other helper unit tests (it sat between two
+  real-file checks); the file re-runs 21 tests, 74 expectations, 0
+  failed, no line over 80 columns. No `R/` change and no `NEWS.Rmd`
+  wording change. **`BACKLOG.md`:** the sweep item now records stage 1
+  and piece (a) as done and lists the remaining pieces (b), (c) and
+  4.  with their `NEWS.Rmd` lines at this session (42 entries remain in
+      the section) and the rule that a check on a claim must be grounded
+      in the code or real output, not the roxygen; one item filed,
+      “male-on-the-left placement is stricter in the code’s
+      documentation than in real layouts” (DECISION NEEDED, Effort S to
+      find the cause: 227 of 257 matings have the male on the left, 2 of
+      34 simple pairs on `rhesusPedigree` are on the right without the
+      plan’s own exclusion explaining them); the docs staleness audit
+      item gained the user manual’s misleading “750, drops to 400 under
+      Rectilinear” wording. The `BACKLOG.md` header the owner keeps
+      uncommitted (5 lines) was left out of the commit (blob method). No
+      CI or `R/` change: the ratchet is run after this commit and cited
+      in the records entry. TDD phase REFACTOR.
+
+### 2026-09-27 · \[ad hoc\] S789 GREEN: `NEWS.Rmd` Pedigree Diagram display and defaults entries restated as the finished state (45 entries become 42); stage 2 piece (a) of the sweep
+
+- **Model:** Claude Sonnet 5. `NEWS.Rmd` only (15 insertions, 17
+  deletions); no `R/` change. **(1)** The Diagram-view entry (`:22-27`)
+  now carries the display limit: 400 animals with the default
+  “Rectilinear” connector style, 750 with “Direct”, and trimming to
+  fewer focal animals brings a pedigree back under it; the separate
+  defaults-and-limit entry (was `:78-80`) is deleted. **(2)** The
+  Diagram Edge Style entry (`:43-45`) now names Rectilinear as the
+  default (it called “Direct” the default). **(3)** The affected-status
+  entry (`:46-51`) absorbs the two shading entries (were `:56-57` and
+  `:66-68`, deleted): only individuals marked affected are shaded;
+  unaffected, unknown, and every individual in a pedigree with no
+  `affected` column are drawn open. **(4)** The male-parent entry
+  (`:58-61`) says the male is drawn on the left in most cases (no “by
+  default”: there is no setting), and that a parent with several mates
+  is placed to fit the family layout so those pairs can appear either
+  way round. **Checked against the code and real output before keeping
+  each sentence:** the two limits and the default style are the
+  constants and defaults in `R/modPedigree.R:405,417,423-429` and
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md);
+  the count behind the limit is the pedigree after unknown-id filtering
+  and optional focal trimming (`R/modPedigree.R:354-382`, so “trimming
+  to fewer focal animals” is accurate, and the in-app message’s “narrow
+  the focal-animal selection” refers to the same control); a real layout
+  of the backcross example with `affected` set to TRUE, FALSE and NA
+  gave `#CC79A7` for TRUE and `#FFFFFF` for FALSE and NA, and `#FFFFFF`
+  for every animal with no column and for every animal of
+  `rhesusPedigree` and `smallPed`; male-left is 227 of 257 (see the RED
+  correction). **Measured:** the target file runs 21 tests, 74
+  expectations, **0 failed** (RED: 9 failed; 2 fewer expectations
+  because the limit check now loops over one entry, not two); full
+  unfiltered suite (`load_all` + `NOT_CRAN`, run alone at load about 6,
+  no filter) **354 files, 2,749 tests, 8,568 expectations, 1 failed**
+  (the known `test_pkgdown_reference_config.R`, the owner’s untracked
+  `suggested_NEWS_entry` draft), 0 errors, 187 skipped, 6 warnings, 4.6
+  minutes; predicted 2,749 tests and about 8,570 expectations, so the
+  counts matched; `NEWS.Rmd` knits (scratch output, 1,399 lines, the
+  three edited entries present). Not verified: a live click-through of
+  the Shiny Diagram tab (the change is prose only, and the limit and
+  default are read from the code). Two doc findings left for the docs
+  staleness audit, not fixed here: the user manual
+  (`vignettes/manual_components/_pedigree_browser.Rmd:56`) words the
+  limit as “750, drops to 400 under Rectilinear”, which reads
+  misleadingly since Rectilinear is the default, and the roxygen for
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  (`R/makePedigreeDiagramData.R:1590-1600`) describes male-left as
+  unconditional. TDD phase GREEN.
+
+### 2026-09-27 · \[ad hoc\] S789 RED correction: the male-left check no longer asks for “always” (real layouts prove it false); stage 2 piece (a) of the `NEWS.Rmd` sweep
+
+- **Model:** Claude Sonnet 5. Test-only commit
+  (`tests/testthat/test_newsReleaseState.R`). My committed RED check
+  (4523973e) required the male-left entry to say “always”. Before the
+  RED-to-GREEN gate I checked the claim against real layouts instead of
+  the roxygen text, and it is FALSE: over every mixed-sex mating unit of
+  the 5 bundled example pedigrees, `rhesusPedigree` and `smallPed` (one
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  run per pedigree and style, the parents of each `__union_` node read
+  from `edges`, duplicates mapped through `duplicateToReal`), the male
+  is on the left in **227 of 257 (88.3%)** in the Rectilinear style;
+  `rhesusPedigree` has 29 of 231 with him on the right, `smallPed` 1 of
+  6 (the Direct style: 30 of 237 and 1 of 6). Most exceptions are pairs
+  where a parent has several mates, which the issue \#145 plan
+  explicitly leaves to the tree structure
+  (`docs/planning/issue145-sire-dam-left-right-placement-plan.md`,
+  D5/D9); 2 of 34 pairs where each parent has exactly one mate are also
+  on the right on `rhesusPedigree`, unexplained by a partial-parentage
+  child (measured, cause not chased). So the release-note entry may not
+  promise “every pair”, and it may not say “by default” either (the
+  layout has no setting: `orderBySex` is not a parameter of
+  [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)).
+  **Change:** the check is renamed “does not overstate male-left” and
+  now asserts that the entry does not say “by default”, does not use
+  “always”, “every” or “all” (`promisesEveryPair()`, with its own unit
+  test on positives and controls), and that `orderBySex` is not a
+  parameter; the positive “always” requirement is dropped. **Measured:**
+  the file runs 21 tests, 76 expectations, **9 failed** (was 10): limit
+  5, default style 1, shading 2, male-left 1 (line 53 still says “by
+  default”), 0 errors, 0 skipped; the other 17 tests pass. This is my
+  error caught by verification before GREEN, not a change of scope. TDD
+  phase RED.
+
+### 2026-09-27 · \[ad hoc\] S789 RED: four checks that tie the Pedigree Diagram release notes to what the app does (4 failing by design); stage 2 piece (a) of the `NEWS.Rmd` sweep
+
+- **Model:** Claude Sonnet 5. Test-only commit
+  (`tests/testthat/test_newsReleaseState.R`); no `NEWS.Rmd` or `R/`
+  change. **Pre-RED (read, then owner decisions):** the whole
+  `## Pedigree Diagram` section read (`NEWS.Rmd:21-221`) and each claim
+  checked against the code. Facts: the default connector style is
+  **Rectilinear** in the app (`R/modPedigree.R:423-429`) and in
+  `makePedigreeMatingLayout(edgeStyle = c("rectilinear", "direct"))`
+  (`R/makePedigreeDiagramData.R:1682`); the display limit is **400
+  animals under Rectilinear, 750 under Direct**
+  (`R/modPedigree.R:405,417`; the over-limit message is at `:505-515`);
+  only an animal marked affected is drawn filled (`.affectedColor()`,
+  `R/makePedigreeDiagramData.R:173`), and none of the 7 bundled pedigree
+  data frames with `id`, `sire` and `dam` columns (measured by a scan of
+  `data(package = "nprcgenekeepr")`) or the 5 example-pedigree CSV files
+  has an `affected` column, so all draw open; the male-parent-left
+  placement has no setting
+  ([`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  has no `orderBySex`); the diagram code is absent at the `v2.0.0` tag
+  (`git cat-file -e v2.0.0:R/makePedigreeMatingLayout.R` fails;
+  `modPedigree.R` at that tag has 0 diagram mentions). The
+  750-versus-400 conflict the item names resolves as: `NEWS.Rmd:23` (750
+  alone) is wrong for the default, `:78-80` is right. Also found:
+  `NEWS.Rmd:41-43` calls “Direct” the default (wrong), and `:53-55` says
+  male-left is “by default” (it cannot be turned off). The user manual
+  (`vignettes/manual_components/_pedigree_browser.Rmd:56`) also words
+  the limit as “750, drops to 400 under Rectilinear”, which reads
+  misleadingly since Rectilinear is the default: left for the docs
+  staleness audit, not this piece. **Owner decisions (plain-words
+  gate):** scope = limits and defaults together (limit, default style,
+  shading rule, male-left wording; about 6 entries become 3 or 4); guard
+  = check only what this piece rewrites (each later piece adds its own);
+  PRE-RED to RED yes. **RED:** 3 helpers with unit tests on made-up text
+  (`newsSectionEntries()`, `defaultStyles()`, `readCap()`) and two
+  skip-aware readers (`diagramCaps()`, `diagramSectionEntries()`), and 4
+  real-file checks scoped to the section: (1) exactly one entry names a
+  display limit, with 400 followed by Rectilinear and 750 by Direct, the
+  two numbers read from `R/modPedigree.R`;
+  2.  every sentence that makes a style the default names the style the
+      code defaults to; (3) exactly one entry describes shading and none
+      says “rather than filled/shaded”; (4) the male-left entry does not
+      say “by default” and does say “always”. **Measured:** the file
+      runs 20 tests, 69 expectations, **10 failed** in exactly the 4
+      predicted tests (5 in the limit check: 2 entries name a limit, at
+      lines 22 and 78, and neither states each number beside its style;
+      1 in the default check, line 41; 2 in the shading check, entries
+      at lines 44, 56 and 66 with 56 and 66 narrating a change; 2 in the
+      male-left check, line 53), 0 errors, 0 skipped, 0 warnings; the 16
+      other tests, stage 1 included, pass; every failure message read
+      and names its lines. The full suite was not run (test-only
+      commit). TDD phase RED.
+
+### 2026-09-27 · \[ad hoc\] S789 claim: `NEWS.Rmd` release-state sweep, stage 2 piece (a) (Pedigree Diagram display and defaults entries) *(in progress)*
+
+- Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md`
+  “`NEWS.Rmd` release-state sweep”, READY, Effort M; owner-directed
+  S774, Learning 785; stage 1 shipped S788). Deliverable: the
+  `## Pedigree Diagram` section’s display-and-defaults entries in
+  `NEWS.Rmd` restated as finished-state notes against 2.0.0, after
+  resolving the text conflict the item names (`NEWS.Rmd:23` says a
+  pedigree above 750 animals shows a message; `:79` says the default
+  limit is 400 animals and 750 under “Direct”) against
+  `R/modPedigree.R`. Strict TDD: the piece’s phrase patterns go into
+  `tests/testthat/test_newsReleaseState.R` as a failing test FIRST,
+  scoped to that section; then the rewrite, checking every sentence
+  against the code; each phase gate via `AskUserQuestion`. One piece
+  only: pieces (b), (c) and (d) stay in `BACKLOG.md`. Orient measured: 0
+  undocumented on the `CHANGELOG.md` frontier (`5ff2f39c` = HEAD); the
+  `HANDOFFS.md` frontier `ff8308a5` has 1 commit after it, the S788
+  addendum, which belongs to S788 (receipt `status: complete`) and is
+  recorded in this file and in `SESSION_NOTES.md`, so no reconcile block
+  was written; no `status: pending` receipt; 1 unpushed (`5ff2f39c`),
+  `origin/master` = `ff8308a5` (fetched); the S788 ratchet citation
+  (results `3205149f7059`, manifest `aa983075d6a2`, head `075443b2`,
+  1/1) matched `.quality-gates-results.json` before any run (not re-run
+  this Orient); CI: the four workflows on `ff8308a5` were still
+  `in_progress` (started 2026-09-27T04:58Z), the last completed set
+  (S784’s records commit) all `success`; dashboard 96/100; context
+  budget nothing over a ceiling (`CLAUDE.md` 26,731 B in the warn band;
+  `SESSION_NOTES.md` 51,580 B, `HANDOFFS.md` 52,131 B, `CHANGELOG.md`
+  52,638 B before this claim; the trim check fires on none, but
+  `SESSION_NOTES.md` sits 5,170 B under the 56,750 B one-read cap, so an
+  archive pass is likely owed at close-out); a NEW finding, report-only:
+  `context_budget.py` says `SESSION_RUNNER.md` and `SAFEGUARDS.md` match
+  no revision in canonical history (last sync S719 from the fork’s
+  `main`); the untracked residue is the owner’s (`BACKLOG.log`, two NEWS
+  drafts) plus 5 renders of tracked sources, all as S787 and S788
+  recorded; both sequencing audits re-checked (only \#138 is open,
+  owner-deprioritized). Stub + pending receipt ride this commit;
+  close-out records the rest. TDD phase PRE-RED at claim; no code
+  touched.
+
+### 2026-09-26 · \[ad hoc\] Owner-directed after the S788 close-out: pushed the 26 local commits; removed the empty `## 2026-08` heading from this file
+
+- **Push (a non-commit action):** `git push origin master` moved
+  `origin/master` from `4e2e6e06` to `ff8308a5`, 26 commits (S785 to
+  S788), a fast-forward (fetched first: 0 behind). All four push
+  workflows (`R-CMD-check`, `test-coverage`, `pkgdown`, `lint`) started
+  on `ff8308a5`; they were still running when this entry was written, so
+  their results are NOT recorded here. This is the first CI run on any
+  of S785 to S788.
+- **Heading removal:** the empty `## 2026-08` heading (old line 21, from
+  `850e3671b`, 2026-08-15) and the blank line after it, at the owner’s
+  direction after the owner flagged it as an error. Before the edit I
+  captured the trimmer’s check and a 19-record dry-run split; after it,
+  both are identical apart from sizes (L1, L2 and L3 all OK, the same
+  14-of-19 split), the newest shard’s verify script still passes, and
+  the dashboard is unchanged at 96/100. `CLAUDE.md`’s “legacy forms”
+  paragraph said the heading sat above `## 2026-09`, which would now be
+  false, so its clause (b) became the prepend rule plus a one-clause
+  note of the removal (+73 B: 26,658 to 26,731 B, ceiling 28,000 B).
+- **This entry’s commit is local:** the owner asked for the 26 commits,
+  so it is not pushed.
 
 ### 2026-09-26 · \[ad hoc\] S788 records: close-out for stage 1 of the `NEWS.Rmd` release-state sweep (S787 handoff evaluated 9/10, receipt, Learning 801, next-session items)
 
@@ -355,499 +1132,3 @@ sentence. Written by `methodology_trim.py` v1.5.0.
   working-tree residue (`BACKLOG.md` header, `BACKLOG.log`, the two NEWS
   drafts, 5 render artifacts), closing the 11 recommended PED_GV ids,
   and the two new `BACKLOG.md` decisions. TDD phase REFACTOR complete.
-
-### 2026-09-26 · \[ad hoc\] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-26-2.md` (26 record(s), 78,761 B → 34,405 B)
-
-**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
-session’s judgment. Moved the oldest **26** record(s) (2026-09-26 →
-2026-09-26) out of
-[`CHANGELOG.md`](https://github.com/rmsharp/nprcgenekeepr/CHANGELOG.md)
-into
-[`docs/archive/CHANGELOG-through-2026-09-26-2.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-26-2.md).
-Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
-pinning) and L3 (record partition), and is **re-derivable** — run
-[`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh)
-rather than trusting a digest printed here. Live file 78,761 B → 34,405
-B (−56.3%).
-
-### 2026-09-26 · \[ad hoc\] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-26-2.md` (3 record(s), 59,498 B → 32,555 B)
-
-**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
-session’s judgment. Moved the oldest **3** record(s) (2026-09-26 →
-2026-09-26) out of
-[`HANDOFFS.md`](https://github.com/rmsharp/nprcgenekeepr/HANDOFFS.md)
-into
-[`docs/archive/HANDOFFS-through-2026-09-26-2.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-26-2.md).
-Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
-pinning) and L3 (record partition), and is **re-derivable** — run
-[`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh)
-rather than trusting a digest printed here. Live file 59,498 B → 32,555
-B (−45.3%).
-
-### 2026-09-26 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-26-2.md` (5 record(s), 49,605 B → 25,068 B)
-
-**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
-session’s judgment. Moved the oldest **5** record(s) (2026-09-26 →
-2026-09-26) out of
-[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
-into
-[`docs/archive/SESSION_NOTES-through-2026-09-26-2.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-26-2.md).
-Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
-pinning) and L3 (record partition), and is **re-derivable** — run
-[`docs/archive/SESSION_NOTES-through-2026-09-26-2.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-26-2.md.verify.sh)
-rather than trusting a digest printed here. Live file 49,605 B → 25,068
-B (−49.5%).
-
-### 2026-09-26 · \[ad hoc\] S787 docs: `correctParentSex()` roxygen + man page, `NEWS.Rmd` Fixed entry; the `recordStatus` sibling-sites item COMPLETE and removed from `BACKLOG.md`, two extracted items filed
-
-- **Completed (the last slice):** the `BACKLOG.md` item “One more place
-  tests `recordStatus == "original"` with no NA guard” (found S784,
-  narrowed S785 and S786) is done: all four sibling sites now use the
-  “added-only special” contract,
-  [`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
-  (S784),
-  [`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
-  with `getRecordStatusIndex()` (S785),
-  [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
-  (S786) and
-  [`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
-  (this session, GREEN `d20e7b1c`, test control `0a3c4473`); the item’s
-  block was REMOVED from `BACKLOG.md` in this commit, per the
-  completed-item removal rule. No GitHub issue exists for it, so none is
-  closed.
-- **Files:** `R/correctParentSex.R` (roxygen only: `@details` gets a
-  paragraph on what the `recordStatus` does in the report branch;
-  `@param recordStatus` says only `"added"` is special, an `NA`, blank
-  or unrecognized value is an original animal, `NULL` means no added
-  records are known, and it is used only when `reportErrors = TRUE`),
-  `man/correctParentSex.Rd` (regenerated by `devtools::document()`,
-  which changed no other file), `NEWS.Rmd` (one plain-language “Fixed”
-  bullet, `NEWS.Rmd:530`, stating the finished state and that the Shiny
-  app was not affected), `BACKLOG.md` (staged header-less; your 5-line
-  header stays unstaged).
-- **Extracted from the removed block, so nothing open is lost** (item
-  count 26 to 27, tagged 21 to 22): (1) the deferred shared
-  `isAddedRecord()` helper, now its own optional DECISION NEEDED item
-  with the four inline copies named by file and line and the
-  negative-subscript trap carried over;
-  2.  the S787 finding that a sire or dam with a blank or unrecognized
-      sex is reported as a “female sire” or “male dam” (DECISION NEEDED,
-      Effort S), filed at the owner’s answer to a gate question, with
-      the measured reach and three options; the `reportErrors = FALSE`
-      half of it (the sire’s sex silently set to `"M"`, the dam’s to
-      `"F"`) was measured just before filing.
-- **Checklists:** lint done (0 on `R/correctParentSex.R`, and 0 on the
-  test file at RED and after the control); NEWS done; `_pkgdown.yml` (no
-  new export), citation, tutorial and `a2interactive` (no new function
-  or parameter; a documented-behavior change only) N/A. **Measured after
-  the edits:** `test_correctParentSex.R` 18 tests, 121 of 121;
-  `test_wordlist_coverage.R` 3 of 3; `test_pkgdown_reference_config.R` 1
-  failed of 5 (the known one: your untracked `suggested_NEWS_entry`
-  draft is an article no `_pkgdown.yml` list covers);
-  [`tools::checkRd`](https://rdrr.io/r/tools/checkRd.html) clean.
-  REFACTOR review: `R/correctParentSex.R` needed no code change.
-
-### 2026-09-26 · \[ad hoc\] S787 REFACTOR (test-only step): one control test closes mutant M7 (only the exact status `"added"` is set aside)
-
-- Owner decision: the GREEN to REFACTOR gate (“Yes, REFACTOR: review +
-  docs + M7 test”, 2026-09-26), which offered the alternatives “docs
-  only, no M7 test” and “extract the shared `isAddedRecord()` helper”
-  (declined). Review of `R/correctParentSex.R`: no code change; the
-  shared `isAddedRecord()` helper stays deferred (four inline copies
-  now: `convertDate.R:103`, `removeDuplicates.R:46`,
-  `removeUnknownAnimals.R:31` as the complement, and this function).
-- The one test-only addition, `tests/testthat/test_correctParentSex.R`
-  (+1 `test_that`, the control “only the exact status added is set
-  aside”: `"Added"` and `"ADDED"` are unrecognised statuses, so real
-  animals, in the five status layouts). It passes on the GREEN code by
-  design (the exact-match behaviour already existed), so it is a
-  control, not a RED test; against the pre-change code it fails, which
-  is why that mutant now fails 6 tests and 59 expectations instead of
-  the RED count of 5 and 43.
-- **Measured:** the target file 18 tests, **121 of 121 expectations**, 0
-  errors, 0 warnings; lintr 0; the mutants re-run with the same controls
-  (the real function and the GREEN-equivalent builder both fail 0
-  tests): **13 of 13 killed**, no survivors (M7 is now killed by the new
-  test, 1 test and 16 expectations). The host load average was still
-  about 327 (`uptime`).
-
-### 2026-09-26 · \[ad hoc\] S787 GREEN: `correctParentSex(reportErrors = TRUE)` sets aside only `"added"` records and checks every animal when the status is `NULL`
-
-- Owner decision: the RED to GREEN gate (“Yes, proceed to GREEN”,
-  2026-09-26). One file, the report branch only
-  (`R/correctParentSex.R:89-98`): one mask `isAdded`
-  (`rep(FALSE, length(id))` for a `NULL` status, otherwise
-  `!is.na(recordStatus) & recordStatus == "added"`) replaces both
-  `recordStatus == "original"` terms with `!isAdded`. The correction
-  branch, the sex handling, an omitted argument’s error and the
-  recycling of a mismatched-length status are untouched; roxygen,
-  `man/`, `NEWS.Rmd` and `BACKLOG.md` follow in the docs commit.
-- **Measured GREEN:** the target file 17 tests, **101 of 101
-  expectations**, 0 errors, 0 warnings (the 5 failing tests pass, the 12
-  others stay green). Full suite (`load_all` + `NOT_CRAN`, no filter):
-  353 files, 2,727 tests, 8,474 expectations, 0 errors, 187 skipped, 6
-  warnings (+11 tests, +87 expectations against S786, exactly this
-  slice: 101 minus the 14 already there), and **3 failed**: the known
-  `test_pkgdown_reference_config.R` (the owner’s untracked NEWS draft)
-  plus two runtime benchmarks, `test_markerKinship.R` (median 0.101 s
-  against a 0.1 s limit) and `test_markerParentageLikelihood.R` (0.516 s
-  against 0.5 s), which touch none of this code. Both fail the same way
-  on the pre-change tree exported from `HEAD` (0.107 s and 0.575 s), and
-  the host load average was 350 (`uptime`, processes outside this
-  session) with the suite taking 8.9 min against about 4.6 min, so they
-  are environmental, not caused by this change; they are rechecked at
-  close-out. lintr 0 on `R/correctParentSex.R` and the test file.
-- **Mutation testing** (13 mutants of the report-branch mask over the
-  target file plus `test_qcStudbook.R`, controls first): the real
-  function and a builder configured as GREEN both fail 0 tests, and the
-  pre-change code as a mutant fails exactly the RED count (5 tests, 43
-  expectations), so the harness is faithful. **12 of 13 killed** (an
-  unguarded `NA` negation, a missing `NULL` branch,
-  only-`"original"`-counts, `NA` counted as added, blank counted as
-  added, added not excluded, any added row skipping all, each of the
-  sire and dam masks dropped, `NULL` meaning none, and a
-  scalar-only-first mask). **One survivor, M7:** a case-insensitive
-  `"added"` passes every test, because no test pins that `"Added"` or
-  `"ADDED"` is an unrecognised status and so a real animal; raised at
-  the GREEN to REFACTOR gate, not patched in GREEN.
-- **Runtime (3E), differential:**
-  [`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
-  is on the app’s upload path, so 140
-  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-  calls (`reportErrors` both ways over 13 package datasets, 13 example
-  pedigree files, `ExamplePedigree.txt` and, for each, a variant with a
-  sire flipped to female and one with a dam flipped to male where the
-  pedigree has them, plus 5 probe fixtures) on the pre-change tree
-  (`HEAD`, `git archive`) and the working tree, in separate `Rscript`s:
-  **all identical**, including the 29 error results. The report branch
-  was exercised: 70 report-mode calls, 34 with a non-empty
-  `femaleSires`, `maleDams` or `sireAndDam`. Not a live click-through of
-  the Shiny app.
-
-### 2026-09-26 · \[ad hoc\] S787 RED: tests for `correctParentSex(reportErrors = TRUE)` naming NA, blank and unrecognised `recordStatus` parents and checking every animal when the status is `NULL`
-
-- Owner decisions: the Phase 0 pick (the
-  [`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
-  slice), the Pre-RED shape decision **“NULL = check every animal”**
-  (over “same plus a `recordStatus = NULL` default” and “NULL = a clear
-  error”; an omitted argument stays R’s “argument is missing” error),
-  and the Pre-RED to RED gate (“Yes, proceed to RED”, 2026-09-26). The
-  rest of the shape is the owner’s S785 Pre-RED decision: `"added"` is
-  the only special status; an NA, blank or unrecognised status is a real
-  animal.
-- **Probe before the gate** (scratch scripts `probe_s787.R`,
-  `probe_app_s787.R`, not in git; the current `reportErrors = TRUE`
-  result against a written reference, a fixture of eight animals: `s1` a
-  female sire, `d1` a male dam, `sH` (H) and `dU` (U) exempt, four
-  offspring): **12 of 18 cases differ**, in three separate ways. An `NA`
-  status on `s1` or `d1` reports `NA` in place of the id (`fs=[NA]`,
-  `md=[NA]`; also with a scalar `NA` and an all-`NA` vector); a blank,
-  `"weird"` or `"Original"` status skips the animal silently
-  (`fs=NULL`); a `NULL` status reports nothing at all
-  (`fs=NULL md=NULL`, where `s1` and `d1` are right). Mixed statuses
-  combine them (`NA` on `s1` and `added` on `d1` gives
-  `fs=[NA] md=NULL`). Six controls already agree with the reference:
-  all-original, a scalar `"original"`, `"added"` on `s1`, on both, and
-  as a scalar, and an `NA` on rows that are not parents (`FALSE & NA` is
-  `FALSE`, so it is harmless). The `reportErrors = FALSE` branch never
-  reads the status (its result is identical for `NA`, `"weird"`, `NULL`
-  and all-`NA`), and `sireAndDam` is reported whatever the status.
-- **App path checked** (a namespace spy on
-  [`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
-  under `qcStudbook(reportErrors = TRUE)`, input `recordStatus` =
-  `NA, "weird", "", NA, "original"` plus one unlisted parent): the
-  function received only `original` (5) and `added` (2), no `NA`,
-  because
-  [`addParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addParents.md)
-  rewrites the column at `R/qcStudbook.R:229` before the call at `:234`;
-  the app reports `s1` and `d1` correctly. So the defect is
-  **script-only**, as the `BACKLOG.md` item said.
-- **Observed, not filed or fixed:** (1) in the report branch an omitted
-  `recordStatus` fails with R’s “argument recordStatus is missing, with
-  no default” (the correction branch never evaluates it, so omitting it
-  works there); (2) a status vector whose length does not divide the
-  number of ids is recycled with base R’s “longer object length is not a
-  multiple” warning; (3) an `NA` **sex** on a sire is flagged as a
-  female sire (`!NA %in% c("H","U","M")` is `TRUE`), and **the app
-  reaches it**:
-  [`convertSexCodes()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertSexCodes.md)
-  maps a missing sex to `"U"` but a blank or unrecognised code to `NA`
-  (`R/convertSexCodes.R:39,50`), so a fixture with a sire whose sex is
-  `""` or `"xyz"` reports `femaleSires = "s1"` from
-  `qcStudbook(reportErrors = TRUE)` (measured with a namespace spy: the
-  function received `NA`); a sex of `NA` or `"M"` does not. Whether a
-  sire with an unreadable sex should be reported as a “female sire” is a
-  question for the owner, not part of this slice. All three are outside
-  the `recordStatus` slice.
-- Tests only, 1 file, no `R/` change:
-  `tests/testthat/test_correctParentSex.R` (+11 `test_that`, +5 helpers
-  over a fixture `statusPed`): five failing (an `NA` status names the
-  id; an `NA` never reaches the reported ids; a blank or unrecognised
-  status is a real animal; a `NULL` status checks every animal; a mixed
-  vector skips only the added parents) and six controls (an added parent
-  still skipped; a status on non-parent rows changes nothing; an
-  all-original or scalar original status reports both; H and U parents
-  never reported under any status; the correction branch and
-  `sireAndDam` ignore the status; `qcStudbook(reportErrors = TRUE)`
-  still reports `s1` and `d1` by id with junk input statuses).
-- **Measured RED** (the file run alone against the unchanged `R/`,
-  `load_all` + `NOT_CRAN`): 17 tests, **5 failing (43 of 101
-  expectations)**, 0 errors, 0 skipped, 0 warnings; the 6 existing tests
-  and the 6 new controls pass by design. Each failure read from its
-  message: `NA` against `"s1"` for the `NA` and mixed cases, `TRUE`
-  against `FALSE` for [`anyNA()`](https://rdrr.io/r/base/NA.html), and
-  `NULL` against `"s1"` for the blank, unrecognised and `NULL` cases;
-  the per-test counts (8, 5, 24, 2, 4) match the hand prediction. lintr
-  0 on the file. Commit left RED on purpose; GREEN follows behind an
-  owner gate.
-
-### 2026-09-26 · \[ad hoc\] S787 claim: `correctParentSex()` slice 3 (the last) of the sibling `recordStatus` sites *(in progress)*
-
-- Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` “One
-  more place tests `recordStatus == "original"` with no NA guard”,
-  READY, Effort S; found S784, narrowed S785 and S786). The fix shape is
-  already the owner’s S785 Pre-RED decision (`"added"` is the only
-  special status), so this session goes straight to strict TDD: Pre-RED
-  reading and probe, RED, GREEN, REFACTOR review, each phase gate via
-  `AskUserQuestion`. Orient measured: 0 undocumented on both the
-  `CHANGELOG.md` and `HANDOFFS.md` frontiers (`b5b4512c` = HEAD; the
-  S786 receipt is `status: complete`, nothing to backfill); 12 unpushed,
-  `origin/master` = `4e2e6e06`; the S786 ratchet citation (results
-  `7f7a4d08491b`, manifest `aa983075d6a2`, head `e7d87c4a`, 1/1) matched
-  `.quality-gates-results.json` before any run; the pushed tip’s 4
-  workflows and the scheduled `shinytest2` run all `success`; dashboard
-  96/100; context budget nothing over a ceiling (`CLAUDE.md` 26,360 B in
-  the warn band; `SESSION_NOTES.md` 47,336 B, `CHANGELOG.md` 63,458 B
-  and `HANDOFFS.md` 59,015 B before this claim; the trim check fires on
-  none); the untracked residue is the owner’s (`BACKLOG.log`, two NEWS
-  drafts) plus 5 Quarto renders of tracked `.qmd` sources (date- and
-  source-checked). The archive pass is proposed and undecided. Stub +
-  pending receipt ride this commit; close-out records the rest. TDD
-  phase PRE-RED at claim; no code touched.
-
-### 2026-09-26 · \[ad hoc\] S786 records: close-out for the `removeDuplicates()` slice (S785 handoff evaluated 9/10, receipt, Learning 799, next-session items)
-
-- **Deliverable:** the close-out records for S786, whose work is
-  recorded in the entries below: RED `f00d8696`, GREEN `32f2b406`, docs
-  `e7d87c4a` (claim `62df6441`, whose “(in progress)” marker this entry
-  closes). No push (not asked): 12 local commits after `origin/master` =
-  `4e2e6e06`.
-- **Verification that ran after the docs commit** (the docs entry said
-  it would follow): the clean-export `R CMD check --as-cran` on
-  `e7d87c4a` – 0 errors, 0 warnings, 1 NOTE (CRAN incoming feasibility:
-  the maintainer line and the development version), `* DONE` confirmed
-  by a fixed-string match, status 0. Ratchet **1/1 at `e7d87c4a`**:
-  3,570,428 B (+1,595 B over S785’s 3,568,833 B), results
-  `7f7a4d08491b`, manifest `aa983075d6a2` (unchanged).
-- **Not fixed, recorded:**
-  [`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
-  remains (READY, S) in the narrowed `BACKLOG.md` item; the
-  `reportErrors = FALSE` branch’s “mismatched information” stop for rows
-  that differ only in `recordStatus` is in the RED entry and is not
-  filed.
-- **Records:** S785 handoff evaluated 9/10, self-assessment 8/10,
-  receipt `status: complete` (`HANDOFFS.md`), Learning 799
-  (`PROJECT_LEARNINGS.md:2269`), next-session items in
-  `SESSION_NOTES.md`. `CHANGELOG.md` is about 63,500 B against the
-  65,536 B trim budget (nothing over a limit, so no reduction was owed
-  now); at this session’s growth all three ledgers cross theirs during
-  the next session, so the archive pass is owed first (owner-gated).
-
-### 2026-09-26 · \[ad hoc\] S786 docs + REFACTOR review: `removeDuplicates()` roxygen and man page, `NEWS.Rmd` Fixed entry, `BACKLOG.md` narrowed to `correctParentSex()`
-
-- Owner decision: the GREEN to REFACTOR gate (“Yes: review + docs, no
-  code refactor”, 2026-09-26).
-- **REFACTOR reviewed, no change:** `R/removeDuplicates.R` re-read after
-  GREEN; the code is one named mask and one subscript, nothing to
-  simplify. The shared `isAddedRecord()` helper stays deferred (three
-  inline copies now:
-  [`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
-  and
-  [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
-  write `!is.na(x) & x == "added"`,
-  [`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
-  writes its complement); the decision is carried in the `BACKLOG.md`
-  item for the last slice.
-- **Docs:** roxygen `@param reportErrors` and `@return` in
-  `R/removeDuplicates.R` no longer say “found among original records”:
-  they say that only `"added"` records are left out and that any other
-  status, including `NA` or blank, is searched, and that the result has
-  one entry per extra occurrence. `man/removeDuplicates.Rd` regenerated
-  with `devtools::document()`; nothing else in `man/` changed, and
-  [`tools::checkRd`](https://rdrr.io/r/tools/checkRd.html) is clean.
-  `NEWS.Rmd` (after the
-  [`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
-  bullet): one plain-language “Fixed” bullet in release-state wording
-  (the “Duplicate IDs found” list no longer names stand-in parents when
-  a real duplicate is present;
-  [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
-  now checks animals whose record of being added is blank or
-  unrecognized). `NEWS.md` is rendered separately and was not touched
-  (S785’s convention).
-- **`BACKLOG.md`:** the item is narrowed to
-  [`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
-  and retitled; the finished
-  [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
-  record lives in the RED and GREEN entries, and what the remaining
-  slice needs (the `recordStatus = NULL` decision, the reach note, the
-  `isAddedRecord()` question, the negative-subscript trap) is written
-  into the item. Committed through the header-less blob; the owner’s
-  5-line YAML header stays unstaged.
-- **Verification after the docs edit:** the two target files 81/81;
-  `test_wordlist_coverage.R` passes; `test_pkgdown_reference_config.R`
-  still shows its 1 known failure (the owner’s untracked
-  `vignettes/suggested_NEWS_entry.Rmd` is not covered by `_pkgdown.yml`
-  articles); lintr 0 on `R/removeDuplicates.R`. The clean-export
-  `R CMD check --as-cran` on the committed HEAD runs next and is
-  recorded in the close-out entry.
-
-### 2026-09-26 · \[ad hoc\] S786 GREEN: `removeDuplicates(reportErrors = TRUE)` treats only `"added"` as special and never recycles a mask over the added rows
-
-- Owner decision: the RED to GREEN gate (“Yes, proceed to GREEN”,
-  2026-09-26).
-- **Change (one file, the `reportErrors = TRUE` branch only):**
-  `R/removeDuplicates.R:38-47` builds
-  `isAdded <- !is.na(ped$recordStatus) & ped$recordStatus == "added"`,
-  takes `ids <- ped$id[!isAdded]` and returns `ids[duplicated(ids)]`
-  (else `NULL`). An `NA`, blank or unrecognised status is now a real
-  animal, the ids come from the non-added rows alone (no logical mask
-  shorter than `ped$id`), and the result keeps one entry per extra
-  occurrence. No roxygen, `man/`, `NEWS.Rmd` or `BACKLOG.md` change in
-  this commit (the docs commit follows).
-- **Measured:** the two target files 40 tests, **81 of 81 expectations
-  pass** (RED: 6 failing tests, 12 failed expectations); 12 related
-  files (`name_first_class`, `geneDrop`, `modInput_qcStudbook`,
-  `runQcStudbook`, `checkErrorLst`, `summary.nprcgenekeeprErr`,
-  `removeUnknownAnimals`, `correctParentSex`, `convertDate`,
-  `getDateErrorsAndConvertDatesInPed`, `getRecordStatusIndex`,
-  `addParents`) 99 tests / 249 expectations, 0 failing; **full suite**
-  (`load_all` + `NOT_CRAN`, no filter) 353 files, 2,716 tests, 8,387
-  expectations, **1 failed** (the known
-  `test_pkgdown_reference_config.R`, the owner’s untracked NEWS draft),
-  0 errors, 187 skipped, 6 warnings (not attributed; the two touched
-  files report 0), 4.8 min; +10 tests and +21 expectations over S785’s
-  2,706 / 8,366, exactly this slice’s new tests. lintr 0 on
-  `R/removeDuplicates.R` and both test files.
-- **Mutants** (8, the function binding replaced in memory in both the
-  namespace and the attached package environment, each changing only the
-  report branch; a no-mutation control first): control 0 failing; **8 of
-  8 killed**: the pre-change code (6 tests / 12 expectations, the RED
-  count), an unguarded NA mask (2 / 5), only-`"original"`-counts (2 /
-  5), [`unique()`](https://rdrr.io/r/base/unique.html) on the result (1
-  / 1), the recycled `ped$id[duplicated(ids)]` (3 / 5), `character(0)`
-  instead of `NULL` (3 / 5), blank counted as added (1 / 1), added rows
-  counted (2 / 2).
-- **Runtime (3E), differential app path:** 87
-  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-  calls (`reportErrors` both ways over 13 package datasets, 13 example
-  pedigree files, each of those files with its first 3 rows repeated as
-  a real duplicate, `ExamplePedigree.txt`, and the 3 probe fixtures) on
-  the pre-change tree (`f00d8696`, extracted with `git archive`) and on
-  the working tree, in separate `Rscript`s: **85 identical; exactly 2
-  differ, and both are the intended change**: a real duplicate `x` plus
-  app-added parents reports `x` (was `c("x","s2")`, and
-  `c("x","s2","U0003")` with the dam `NA`). 19 calls end in an error in
-  both trees for unrelated reasons (`reportErrors = FALSE` stops:
-  missing `birth` in five diagram example files, a sire-and-dam animal,
-  the mismatched-duplicate fixture). **Limit:** those five example
-  files, and their duplicated variants, return before
-  [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
-  is reached, so they do not exercise it; the 9 duplicated variants that
-  do reach it (no unlisted parents in them) are identical. Not a live
-  click-through of the Shiny app.
-- **Disclosure:** the full suite ran on this code before the docs edit
-  that follows (roxygen, `man/`, `NEWS.Rmd`, `BACKLOG.md`); the docs
-  commit re-runs the target files, the wordlist and pkgdown tests, lintr
-  and the clean-export `R CMD check` on the final tree.
-
-### 2026-09-26 · \[ad hoc\] S786 RED: tests for `removeDuplicates(reportErrors = TRUE)` keeping NA and unrecognised `recordStatus` animals and never naming an added record
-
-- Owner decisions: the Phase 0 pick (the
-  [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
-  slice) and the Pre-RED to RED gate (“Yes, proceed to RED”,
-  2026-09-26). The fix shape is the owner’s S785 Pre-RED decision:
-  `"added"` is the only special status; an NA, blank or unrecognised
-  status is a real animal.
-- **Probe before the gate** (scratch scripts `probe_s786.R`,
-  `probe_app_s786.R`, not in git; the current `reportErrors = TRUE`
-  result against the reference
-  `ids <- ped$id[<non-added>]; ids[duplicated(ids)]`, `smallPed` plus a
-  `recordStatus` column, three duplicated rows `A B C`): NA on the
-  duplicate rows returns `B C`; NA on the first-occurrence rows `B C`;
-  NA on two innocent rows `Q A B C` (names `Q`); all NA a 19-id list;
-  `"weird"` on the duplicates `NULL` (misses all three); a blank on one
-  duplicate row `A B`; originals `x, x, z` plus four added rows `x a2`;
-  added rows first (`a1, x, z, x`) `z` (wrong id, misses `x`); two added
-  first `a2 x`; added in the middle (`x, a1, x, z`) `a1`. Controls that
-  already agree with the reference: no duplicates, three duplicate rows,
-  a triple `x, x, x` (`x x`, one entry per extra occurrence), zero rows,
-  added-only rows, added rows that share an id. So the line is wrong in
-  three separate ways (an NA in a row subscript, an unrecognised status
-  excluded, a recycled logical), a wider set than the `BACKLOG.md` item
-  listed.
-- **App path reproduced** (`qcStudbook(reportErrors = TRUE)`, fixtures
-  need a `birth` column or the call returns at `missingColumns` before
-  it reaches
-  [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)):
-  three rows (`x, x, z`) with four unlisted parents report
-  `duplicateIds = c("x", "s2")`, and the user reads “Duplicate IDs
-  found: x, s2”; with the dam left `NA` the app-minted `U0003` is named
-  too; the same shape with no duplicate reports nothing.
-  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-  hands
-  [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
-  the originals first and the added rows last, so on the app path only
-  the recycling false positive is reachable (no false negative), and
-  only when a real duplicate is present.
-- **Observed, not filed:** the `reportErrors = FALSE` branch stops with
-  “Duplicate IDs with mismatched information present” when duplicate
-  rows differ only in `recordStatus` (`NA` against `"original"`),
-  because [`unique()`](https://rdrr.io/r/base/unique.html) compares
-  whole rows. That is arguably correct (different information), the
-  branch never reads the status, and the app cannot produce it; left
-  alone.
-- Tests only, 2 files, no `R/` change:
-  `tests/testthat/test_removeDuplicates.R` (+8 `test_that`: NA on
-  first-occurrence, duplicate and all rows; NA on innocent rows, and NA
-  statuses with no duplicate must give `NULL`; blank and unrecognised
-  status; recycled added rows; added rows first, two first and in the
-  middle; and three controls: the ordinary results, a factor status, and
-  the `reportErrors = FALSE` branch ignoring the status);
-  `tests/testthat/test_qcStudbook.R` (+2: the app-path case above must
-  report exactly `"x"`, and a no-duplicate control).
-- **Measured RED** (each file run alone against the unchanged `R/`,
-  `load_all` + `NOT_CRAN`): `test_removeDuplicates.R` 11 tests, 5
-  failing (11 of 27 expectations); `test_qcStudbook.R` 29 tests, 1
-  failing (1 of 54); **6 failing tests, 12 failed expectations of 81, 0
-  errors, 0 skipped, 0 warnings**; the 4 new controls pass by design,
-  and so do the 3 existing `removeDuplicates` tests. Each failure read
-  from its message: lengths 2, 2, 19 and 4 against 3 (missed or invented
-  ids); `noDups` returns `"E"` where `NULL` is expected; `NULL` against
-  `c("A","B","C")` for both the unrecognised and the blank status;
-  lengths 2 against 1 for the recycled case; `"z"`, length 2 and `"a1"`
-  against `"x"` for the three orderings; the app path returns length 2
-  against 1. lintr 0 on both files. Commit left RED on purpose; GREEN
-  follows behind an owner gate.
-
-### 2026-09-26 · \[ad hoc\] S786 claim: `removeDuplicates()` NA and recycled-subscript slice (slice 2 of the sibling `recordStatus` sites) *(in progress)*
-
-- Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` “Two
-  more places test `recordStatus == "original"` with no NA guard”,
-  READY, Effort S; found S784, narrowed S785). The fix shape is already
-  the owner’s S785 Pre-RED decision (`"added"` is the only special
-  status), so this session goes straight to strict TDD: Pre-RED reading,
-  RED, GREEN, REFACTOR review, each phase gate via `AskUserQuestion`.
-  Orient measured: 0 undocumented on both the `CHANGELOG.md` and
-  `HANDOFFS.md` frontiers (`6fbf264b` = HEAD; the S785 receipt is
-  `status: complete`, nothing to backfill); 7 unpushed, `origin/master`
-  = `4e2e6e06`; the S785 ratchet citation (results `e743300ed559`,
-  manifest `aa983075d6a2`, head `e7eaf320`, 1/1) matched
-  `.quality-gates-results.json` before any run; all 10 recent `gh run`
-  rows `success`; dashboard 96/100; context budget nothing over a
-  ceiling (`CLAUDE.md` 26,360 B in the warn band; `SESSION_NOTES.md`
-  33,171 B, `CHANGELOG.md` 50,469 B and `HANDOFFS.md` 49,153 B before
-  this claim); the untracked residue is the owner’s (`BACKLOG.log`, two
-  NEWS drafts) plus 5 Quarto renders of tracked `.qmd` sources (date-
-  and source-checked). Stub + pending receipt ride this commit;
-  close-out records the rest. TDD phase PRE-RED at claim; no code
-  touched.

@@ -186,46 +186,60 @@ shared shape is a choices builder plus a modal constructor taking the
 warning text and the namespace. **Known, accepted:** an unhandled
 click-time error ends the Shiny session (Learning 786).
 
-**`NEWS.Rmd` release-state sweep – STAGE 1 DONE (S788, 2026-09-26); the
-Pedigree Diagram section remains, in stages (owner-directed S774; staged
-by the owner’s S788 decision; READY, Effort M per stage)** – the rule is
-Learning 785: NEWS entries state the finished state against the PRIOR
-release (2.0.0), never a point between releases. **Stage 1 (record: the
-S788 entries in `CHANGELOG.md`)** rewrote the 12 entries that carried an
-explicit diary phrase (MHC, \#168 merged from four entries into one,
-\#167, and five others), added the guard
-`tests/testthat/test_newsReleaseState.R` (a phrase list over the newest
-`NEWS.Rmd` block) and put the rule into `CLAUDE.md`’s NEWS checklist.
-**What is left is the `## Pedigree Diagram` section (45 entries).** The
-diagram code is entirely absent at the `v2.0.0` tag (checked S788:
-`git cat-file -e v2.0.0:R/makePedigreeMatingLayout.R` fails), so a 2.0.0
-reader never saw the behavior that about 20 of those bullets describe as
-a fix or an improvement (“now”, “no longer”, “Fixed”, “Previously”,
-“(see above)”, “(see the rerouting entry above)”); they should collapse
-into finished-state entries. **One piece per session, strict TDD each:
-add the piece’s phrase patterns to the guard as a failing test FIRST,
-then rewrite, checking every sentence against the code and the bundled
-example before keeping it.** Proposed pieces (re-derive at pickup by
-reading the section again): (a) display and defaults – **first resolve a
-conflict in the text: it says a pedigree above 750 animals shows a
-message (`NEWS.Rmd:23`) and also that the default limit is 400 animals,
-750 under “Direct” (`:79`); read `R/modPedigree.R` for the real
-limits**; (b) mating-symbol placement and spacing (the largest group);
-(c) connector routing, collision avoidance and the Rectilinear
-sibling-bar entries; (d) the crash fixes, the example pedigrees, and the
-cross-references outside this section (“described below” and “… above”
-in Marker Genetics and Mate Pair). Scope the new patterns to the section
-being condensed: “no longer” and “Fixed” are legitimate in
-`## General Fixes`, where they describe 2.0.0 code. **Also open from
-stage 1:** the sentence “Two rarer related cases are not corrected”
-(issue \#160, closed 2026-08-16; `NEWS.Rmd:84`) was kept but NOT
-re-checked against the code, so piece (c) must find what the two cases
-are and whether they still hold; the `## Package` entry (`:18`, “CRAN
-accepted the 2.0.0 submission…”) reports the prior release, not a change
-in this one, so the owner may prefer to delete it. `NEWS.md` was last
-re-rendered S716, so it lags `NEWS.Rmd` and needs a render at release.
-The plain-language criterion (S628) still applies to every rewritten
-entry.
+**Decide whether/how to adopt the owner’s
+`suggested_NEWS_entry.md`/`.Rmd` 3.0.0 consolidation draft (raised S791,
+2026-09-27; DECISION NEEDED, Effort M – its own scoping session first)**
+– untracked owner drafts (dated 2026-09-25) propose consolidating the
+WHOLE `NEWS.Rmd` dev-block – every section, not just Pedigree Diagram –
+into short, user-facing feature-group bullets for the eventual 3.0.0
+release note, explicitly replacing the issue-by-issue development
+history the now-complete `NEWS.Rmd` release-state sweep (S788-S792, see
+`CHANGELOG.md`) restated piece by piece. Owner-ratified S791
+disposition: the sweep continued piece by piece as scoped rather than
+merging the draft in; the draft’s own “Rationale” text names connector
+routing, duplicate-node placement, spacing, and mating-symbol
+positioning as content it would condense. Now that the sweep has closed,
+this decision is unblocked: whether to adopt the draft’s consolidated
+style for the actual 3.0.0 release note, when (at release, or before),
+and how it relates to the detailed dev-block entries the sweep just
+finished restating. Files: `suggested_NEWS_entry.md`,
+`vignettes/suggested_NEWS_entry.Rmd` (both untracked, the owner’s own).
+
+**(Optional, owner decision) `NEWS.Rmd`’s `## Package` entry reports the
+PRIOR release, not a change in this one (found S791, 2026-09-27, Effort
+S, low priority)** – `NEWS.Rmd:18`, “CRAN accepted the 2.0.0 submission
+(tagged `v2.0.0`); published 2026-07-26,” describes 2.0.0 itself, not
+anything new in the 2.0.0.9000 development version. Decide: keep it as
+historical context at the top of the dev-block, or delete it now that
+the release-state sweep (S788-S792) has restated every other section’s
+entries as finished-state claims about THIS release. `NEWS.md` was last
+re-rendered S716, so it lags `NEWS.Rmd` and needs a render at the next
+actual release regardless.
+
+**Male-on-the-left placement is stricter in the code’s documentation
+than in real layouts (found S789, 2026-09-27, DECISION NEEDED, Effort S
+to find the cause, more to fix)** – the roxygen of
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+(`R/makePedigreeDiagramData.R`, “Male-left/ female-right ordering (issue
+\#145) … is now unconditional”) says every simple two-parent mating
+renders the male on the left. Measured S789 over every mixed-sex mating
+unit (the two parents of each `__union_` node read from `layout$edges`,
+duplicates mapped through `layout$duplicateToReal`, x from
+`layout$nodes`; the 5 example pedigrees, `rhesusPedigree` and
+`smallPed`): 227 of 257 (88.3%) have the male on the left in the
+Rectilinear style (`rhesusPedigree`: 29 of 231 on the right; `smallPed`:
+1 of 6; the Direct style: 30 of 237 and 1 of 6). Most exceptions are
+pairs where a parent has several mates, which the issue \#145 plan
+leaves to the tree structure on purpose
+(`docs/planning/issue145-sire-dam-left-right-placement-plan.md`, D5/D9);
+but 2 of 34 pairs on `rhesusPedigree` where each parent has exactly one
+mate and neither is a duplicate are also on the right, and neither
+parent has a child of unknown parentage, so the plan’s own exclusion
+does not explain them (cause not chased). **Decide:** (1) find the two
+and fix the layout (a placement change, so a re-run of the diagram
+fidelity checks); or (2) correct the roxygen to say the rule covers
+simple pairs “in most cases” and leave the layout alone. The release
+note already says “in most cases” (S789).
 
 **Audit the internal and user-facing documentation for stale information
 and stale diagrams** (owner-requested 2026-09-26; READY, Effort L – one
@@ -253,9 +267,14 @@ site, `NEWS.Rmd`, the in-app guidance pages under
 this file. **Method:** check every claim, number, screenshot and diagram
 against today’s code or output (regenerate the figure from the current
 source and compare; count, don’t recall); list each stale item with its
-source path; fix it or file it. Related, not duplicated: the `NEWS.Rmd`
-release-state sweep (above), the deferred `a2interactive` pass, and the
-`inst/doc/` slimming item.
+source path; fix it or file it. **Found S789, for this audit:** the user
+manual (`vignettes/manual_components/_pedigree_browser.Rmd:56`) words
+the Diagram limit as “750 animals … the limit drops to 400 when the
+Rectilinear edge style is selected”, which reads misleadingly since
+Rectilinear is the default (the default limit is 400); the roxygen point
+in the male-left item above is the same kind of finding. Related, not
+duplicated: the `NEWS.Rmd` release-state sweep (above), the deferred
+`a2interactive` pass, and the `inst/doc/` slimming item.
 
 **Create a tutorial for prospective contributors** (owner-requested
 2026-09-26; DECISION NEEDED, Effort M) – there is no contributor guide
