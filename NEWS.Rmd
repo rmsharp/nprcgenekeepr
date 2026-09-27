@@ -77,9 +77,9 @@ knitr::opts_chunk$set(echo = TRUE)
   single-row placement would produce (113 individuals in the bundled
   375-animal example pedigree).
 - In the Rectilinear edge style, a sibling group's connecting bar avoids
-  visually crossing an unrelated animal's own row in the common case --
-  most importantly when a sibling also anchors her own mating at the same
-  generation (issue #160). Two rarer related cases are not corrected.
+  visually crossing an unrelated animal's own row, including when a
+  sibling also anchors her own mating at the same generation (issue
+  #160).
 - In the Rectilinear edge style, the layout detects when a straight
   connector line would visually pass through an unrelated animal -- most
   often in large, many-founder colony pedigrees -- and reroutes around

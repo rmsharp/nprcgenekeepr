@@ -60,6 +60,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S791 GREEN: NEWS.Rmd Pedigree Diagram sibling-bar/connecting-bar entry restated as the finished state (stage 2 piece (c))
+- **Model:** Claude Sonnet 5. `NEWS.Rmd:79-82`: dropped "in the common case" and "Two rarer related
+  cases are not corrected" from the sibling-bar/connecting-bar entry (issue #160) -- both stale per
+  the RED commit's measurement (0 straight-residual collisions of any kind on the bundled fixture).
+  A net 3-lines-for-3-lines edit (the entry re-wraps to the same 4 physical lines), so every other
+  entry's line number in the section is unchanged. Section stays at 37 entries (a wording fix, not a
+  merge). Target file: 25 tests, 92 expectations, 0 failed. `NEWS.Rmd` knits (scratch output). Full
+  unfiltered suite (`load_all` + `NOT_CRAN`, run alone, host load 22.82): **354 files, 2,753 tests,
+  8,393 expectations (8,392 passed), 1 failed** (the known `test_pkgdown_reference_config.R`), 0
+  errors, 187 skipped, 6 warnings -- the two wall-clock benchmarks Learnings 760/800 warn about held
+  today despite the load. Lint: `lintr::lint_package()` on the touched test file, 0 lints (no `R/`
+  file touched this piece). (A commit cannot name its own hash; see `git log`.)
+
 ### 2026-09-27 · [ad hoc] S791 RED: one release-note check for the Pedigree Diagram sibling-bar entry (stage 2 piece (c))
 - **Model:** Claude Sonnet 5. `tests/testthat/test_newsReleaseState.R`: added `straightResidualCount()`
   (runs the real rectilinear pipeline -- `makePedigreeMatingLayout(edgeStyle = "direct")` +
