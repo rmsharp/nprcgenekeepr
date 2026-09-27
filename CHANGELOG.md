@@ -60,6 +60,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S791 REFACTOR: BACKLOG sweep item narrowed to piece (d) only (stage 2 piece (c))
+- **Model:** Claude Sonnet 5. No behavior change (re-confirmed: target file 25 tests, 0 failed; 0
+  lints on the touched test file). `BACKLOG.md`'s `NEWS.Rmd` release-state sweep item: piece (c)
+  recorded DONE with its measured finding; only piece (d) remains, its `NEWS.Rmd` line ranges
+  confirmed UNCHANGED from S790 (piece (c)'s edit was a net 3-lines-for-3-lines swap, `git diff
+  --stat` confirmed 3 insertions/3 deletions). Also filed: the owner's untracked
+  `suggested_NEWS_entry.md`/`.Rmd` drafts (found S791, dated 2026-09-25) proposing a consolidated
+  3.0.0 release-note style, with the S791 disposition (continue the sweep as scoped; the draft is
+  a separate future deliverable) recorded so it is not lost as an untracked file.
+
 ### 2026-09-27 · [ad hoc] S791 GREEN: NEWS.Rmd Pedigree Diagram sibling-bar/connecting-bar entry restated as the finished state (stage 2 piece (c))
 - **Model:** Claude Sonnet 5. `NEWS.Rmd:79-82`: dropped "in the common case" and "Two rarer related
   cases are not corrected" from the sibling-bar/connecting-bar entry (issue #160) -- both stale per
