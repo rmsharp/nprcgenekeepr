@@ -33,6 +33,18 @@
 ## "each"/"every" wording here is also an overstatement -- promisesEveryPair()
 ## now flags "each" too, alongside "always/every/all").
 ##
+## Stage 2, piece (c) (S791): the section's connector-routing, collision-
+## avoidance and sibling-bar entries. One check: the sibling-bar/connecting-
+## bar entry (issue #160) once said "Two rarer related cases are not
+## corrected" -- true right after Track 1 shipped (S593), stale since Track 2
+## (.resolveEdgeNodeCollisions(), S595) generalized same-row collision repair
+## to every straight edge, not just the sibling bar. Measured fresh by
+## running the real rectilinear pipeline on the bundled 375-animal example:
+## 0 "straight-residual" collisions of any kind remain (only already-
+## disclosed "curved-heuristic" duplicate-connector residuals do, covered by
+## the section's own separate entry) -- so the claim is checked against real
+## output, not carried forward from the issue's own historical comments.
+##
 ## NEWS.Rmd is build-ignored, so the real-file tests skip inside an R CMD
 ## check tarball, like test_effectivePopulationSizeDocs.R.
 
@@ -192,6 +204,25 @@ diagramSectionEntries <- function() {
 ## (piece (a)'s Learning 802: verify a claim against real output, not memory).
 matingUnitDuplicateCount <- function(ped) {
   length(unique(.buildMatingUnitForest(ped)$duplicates$realId))
+}
+
+## The number of Track 2 (.resolveEdgeNodeCollisions()) residuals that are
+## still an uncorrected STRAIGHT same-row edge/node collision -- as opposed to
+## a "curved-heuristic" residual (an already-disclosed duplicate-connector
+## arc, covered by the section's own separate entry). Runs the real
+## rectilinear pipeline end to end via the same internal functions
+## test_addRectilinearWaypoints.R exercises, never a hardcoded or recalled
+## figure (piece (c)'s Learning: a claim from an issue's historical comments
+## can go stale once a LATER, more general fix supersedes it, same class as
+## piece (a)'s male-left roxygen and piece (b)'s stale duplicate count).
+straightResidualCount <- function(ped) {
+  layout <- makePedigreeMatingLayout(ped, edgeStyle = "direct")
+  forest <- .buildMatingUnitForest(ped)
+  pos <- .positionMatingUnitForest(ped, forest)
+  waypoints <- .addRectilinearWaypoints(layout$nodes, layout$edges, forest,
+                                        pos)
+  resolved <- .resolveEdgeNodeCollisions(waypoints$nodes, waypoints$edges)
+  sum(resolved$residuals$kind == "straight-residual")
 }
 
 test_that("newsTopBlock() returns only the newest version block", {
@@ -535,6 +566,32 @@ test_that("the Pedigree Diagram section does not overstate mating-symbol
                  info = sprintf("line %d promises every pair: %s",
                                 entries$line[i], entries$text[i]))
   }
+})
+
+test_that("the Pedigree Diagram section's sibling-bar/connecting-bar entry
+           (issue #160) does not claim a rarer related case remains
+           uncorrected -- measured fresh on the bundled 375-animal example,
+           Track 2's general same-row repair framework now leaves 0
+           uncorrected straight-edge collisions of any kind (only the
+           already-disclosed curved-connector residuals remain, covered by
+           the section's own separate entry)", {
+  src <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                     package = "nprcgenekeepr")
+  skip_if_not(nzchar(src), "obfuscated_rhesus_mhc_ped.csv not present in this build")
+  ped <- read.csv(src, stringsAsFactors = FALSE)
+  n <- straightResidualCount(ped)
+  ## The count was actually measured (a check that silently read NA would
+  ## otherwise pass for the wrong reason).
+  expect_false(is.na(n))
+  expect_equal(n, 0L)
+
+  entries <- diagramSectionEntries()
+  expect_gt(nrow(entries), 0L)
+  stale <- grepl("not corrected", entries$text, ignore.case = TRUE)
+  expect_identical(entries$line[stale], integer(0L),
+                   info = paste("entries claiming something is not",
+                                "corrected start at lines:",
+                                paste(entries$line[stale], collapse = ", ")))
 })
 
 test_that("NEWS.Rmd describes issue #168 (ancestry guardrails) in one entry", {

@@ -60,6 +60,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S791 RED: one release-note check for the Pedigree Diagram sibling-bar entry (stage 2 piece (c))
+- **Model:** Claude Sonnet 5. `tests/testthat/test_newsReleaseState.R`: added `straightResidualCount()`
+  (runs the real rectilinear pipeline -- `makePedigreeMatingLayout(edgeStyle = "direct")` +
+  `.buildMatingUnitForest()` + `.positionMatingUnitForest()` + `.addRectilinearWaypoints()` +
+  `.resolveEdgeNodeCollisions()` -- and counts `residuals$kind == "straight-residual"`) and one test
+  scoped to the "## Pedigree Diagram" section via `diagramSectionEntries()`: the count must be 0 on
+  the bundled 375-animal example, and no entry may say "not corrected". Measured: 25 tests, 92
+  expectations, **1 failing by design** (the stale "Two rarer related cases are not corrected"
+  wording at `NEWS.Rmd:79`; the real-output assertion already passes today, 0 as predicted), 0
+  errors, all 24 prior tests in the file still pass. (A commit cannot name its own hash; see
+  `git log`.)
+
 ### 2026-09-27 · [ad hoc] S791 claim: `NEWS.Rmd` release-state sweep stage 2 piece (c), connector routing/collision avoidance/sibling-bar entries (in progress)
 - **Model:** Claude Sonnet 5. Stub + pending `HANDOFFS.md` receipt + this in-progress entry.
   Owner-picked at the Phase 0 priorities gate (`NEWS.Rmd` sweep, piece (c)) from 4 offered options.
