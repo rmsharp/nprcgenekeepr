@@ -70,6 +70,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       built from an index that can be empty (`ped[-getRecordStatusIndex(ped, "added"), ]`) drops
       EVERY row when nothing is `"added"`.
 
+- [ ] **`convertDate(reportErrors = TRUE)` numbers an invalid date among the non-added records only
+      (found S785, 2026-09-26, DECISION NEEDED, Effort S, low priority)** -- probe (S785, a 3-row
+      pedigree: `x1` `"added"`, `a` valid, `b` with a bad date on row 3): it reports row `2`, not `3`;
+      the pre-change code reports `2` too, so the S785 slice did not cause it. With the added row
+      LAST, the order `addParents()` produces, it reports the right row, so the app and
+      `qcStudbook()` are unaffected; only a script that puts an added row ahead of an original can
+      see it. `R/convertDate.R` numbers `seq_along(originalDates)` after the added records are set
+      aside, and `getDateErrorsAndConvertDatesInPed()` copies those numbers into
+      `errorLst$invalidDateRows` (`R/getDateErrorsAndConvertDatesInPed.R:36`), the list the user
+      reads, and uses them as full-pedigree row numbers in `sb[-invalidAndAdded, ]` (`:37-41`).
+      **Decision for the owner:** (1) map the reported numbers back to full-pedigree rows inside
+      `convertDate()` (`which(!isAdded)[rows]`; one line plus a test; changes the numbers a script
+      sees only in that order); or (2) document the numbering in `@return` and leave it. The test
+      must pin BOTH orders (added first and added last).
+
 - [ ] **`getAncestors()` fails cryptically on an id or parent that is absent from the tree, and
       cannot resolve a very deep acyclic chain (found S783, 2026-09-26, DECISION NEEDED, Effort
       S)** -- both left out of the F4 (cycle) slice by the owner's decision at its Pre-RED gate.

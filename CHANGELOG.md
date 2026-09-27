@@ -54,6 +54,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S785 records: close-out for the date-conversion slice (S784 handoff evaluated 9/10, receipt, Learning 798, next-session items)
+- **Deliverable:** the close-out records for S785, whose work is recorded in the entries below: RED
+  `8829239b`, GREEN `d701f1e0`, docs `e7eaf320`, the owner-gated `SESSION_NOTES.md` trim `84f3a6ea`
+  (claim `a83be7ca`). No push (not asked): 7 local commits after `origin/master` = `4e2e6e06`.
+- **Verification that ran after the docs commit** (the docs entry said it would follow): the
+  clean-export `R CMD check --as-cran` on `e7eaf320` -- 0 errors, 0 warnings, 1 NOTE (CRAN incoming
+  feasibility: the maintainer line and the development version 2.0.0.9000), `* DONE` confirmed by a
+  fixed-string match, status 0. Ratchet **1/1 at `e7eaf320`**: 3,568,833 B (+2,031 B over S784's
+  3,566,802 B), results `e743300ed559`, manifest `aa983075d6a2` (unchanged). Differential runtime
+  smoke of the app path: 28 `qcStudbook()` calls (9 over package datasets and the reach probe, 19
+  over 13 pedigree files under `inst/extdata`, up to 2,791 rows) on the pre-change tree (`8829239b`)
+  and on HEAD, in separate `Rscript`s: identical (one error message differs only by the
+  per-process `tempdir()` path; identical once masked). Not a live click-through of the Shiny app.
+- **Filed, not fixed:** a new `BACKLOG.md` item (HEAD `:73`, DECISION NEEDED, Effort S, low
+  priority): `convertDate(reportErrors = TRUE)` numbers an invalid date among the non-added records
+  only (probe: an `"added"` row first, a bad date on full row 3, reported as row 2; the pre-change
+  code reports 2 too; correct when the added row is last, the order `addParents()` produces, so the
+  app is unaffected). The `removeDuplicates()` recycling defect and the `correctParentSex()`
+  behaviors are in the narrowed item (HEAD `:34`), recorded in the RED and docs entries.
+- **Records:** S784 handoff evaluated 9/10, self-assessment 8/10, receipt `status: complete`
+  (`HANDOFFS.md`), Learning 798 (`PROJECT_LEARNINGS.md:2268`), next-session items in
+  `SESSION_NOTES.md`. The `BACKLOG.md` change rides this commit through the header-less blob (the
+  owner's 5-line YAML header stays unstaged).
+
 ### 2026-09-26 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-26.md` (7 record(s), 55,796 B → 22,338 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

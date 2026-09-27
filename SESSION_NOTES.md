@@ -74,27 +74,144 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 784 Handoff Evaluation (by Session 785)
+**Score: 9/10.** **What helped:** every Orient measurement held except the push state (below) -- 0
+undocumented on the `CHANGELOG.md` frontier (`483b26a6` = HEAD), the ratchet citation (results
+`ecf49efe323b`, manifest `aa983075d6a2`, head `9c078193`) matched the results file before any run, and
+the working-tree residue was exactly as described; item (A)'s `BACKLOG.md` entry reproduced in every
+claim (18 rows from 17 with 2 all-NA, `"F"` named as a duplicate, the `NA` index, the pipeline stop),
+and its "read, not probed" flag on `correctParentSex()` is what sent me to probe it; the header-less
+blob method and the clean-export `R CMD check` recipe worked verbatim (about 6 min); the trim forecast
+was right (this file needed trimming at this close-out); Learning 797d's completion-marker rule
+applied. **Missing:** (1) the item covered only the NA trigger: the same `removeDuplicates()` line
+also has a recycled-subscript defect, found only by a probe whose control had no NA; (2) nothing said
+`getDateErrorsAndConvertDatesInPed()` has no direct test file (a grep of `tests/` by name found none),
+which shaped the slice; (3) `smallPed` has no date column, so the item's probe recipe cannot exercise
+`convertDate()` dates (I added a `birth` column); (4) the pins are HEAD line numbers, but the working
+file carries your 5-line header, so every pin is +5 in the working tree; (5) the STANDING SET is in
+the receipt's gotcha (7), not here; I opened it only at close-out and re-hit one of its listed traps
+(an unquoted `--include=*.R` glob), the weakness S784 itself recorded. **Wrong:** nothing material;
+the push state ("11 unpushed after this records commit, `origin/master` = `38baa151`") was superseded
+by your push after close-out (`483b26a6`); the note said to recount, and recounting caught it.
+**ROI:** high.
+
 ### What Session 785 Did
-**Deliverable:** the sibling `recordStatus` NA sites (`convertDate`, `removeDuplicates`,
-`getDateErrorsAndConvertDatesInPed`, `correctParentSex`) -- owner picks the fix shape and the slice
-scope, then strict TDD, one small slice per file (IN PROGRESS)
-**Started:** 2026-09-26
-**Status:** Session claimed. Work beginning. Owner-picked at the Phase 0 priorities gate (item 1,
-`BACKLOG.md` "Four more places test `recordStatus == "original"` or `"added"` with no NA guard",
-DECISION NEEDED, Effort S-M). Orient measured: 0 undocumented on the `CHANGELOG.md` frontier
-(`483b26a6` = HEAD); the `HANDOFFS.md` frontier is `4e2e6e06`, one ledger-only commit behind HEAD
-(`483b26a6`, S784's push record; the S784 receipt is complete, nothing to backfill); no pending
-receipt; 1 unpushed, `origin/master` = `4e2e6e06` (S784's "11 unpushed at `38baa151`" is superseded
-by the owner-directed push); the S784 ratchet citation (results `ecf49efe323b`, manifest
-`aa983075d6a2`, head `9c078193`, 1/1) matched `.quality-gates-results.json` before any run; all 10
-recent `gh run` rows `success`; dashboard 96/100; context budget nothing over a ceiling
-(`CLAUDE.md` 26,360 B in the warn band; this file 54,052 B before this stub). Plan: Pre-RED reading
-of the four sites, their callers and tests, then the shape / scope question via `AskUserQuestion`
-(three shapes are written out in the `BACKLOG.md` item), then RED tests, GREEN fix, REFACTOR; each
-phase gate via `AskUserQuestion`. TDD phase PRE-RED at claim; no code touched.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** **The date-conversion path of the `recordStatus` NA defect -- DONE (slice 1 of the
+four sibling sites).** `convertDate()` now sets aside only the rows marked `"added"` and keeps every
+other row (`NA`, blank, unrecognized) in place with its date converted and checked; before, an `NA`
+gave two all-NA phantom rows and lost the real animal, and `"weird"` silently dropped its row.
+`getRecordStatusIndex()` no longer returns `NA`, so `getDateErrorsAndConvertDatesInPed()` no longer
+stops with "only 0's may be mixed with negative subscripts". Owner-picked at the Phase 0 priorities
+gate; strict TDD with an `AskUserQuestion` at every gate.
+**Commits:** claim `a83be7ca`; RED `8829239b`; GREEN `d701f1e0`; docs `e7eaf320` (REFACTOR reviewed,
+no change); ledger trim `84f3a6ea` (this file); this records commit.
+**Push:** none (not asked); 7 local commits after `origin/master` = `4e2e6e06` (recount).
+**Owner decisions:** the Phase 0 pick (the sibling NA sites); at Pre-RED, **shape (1)** "added-only
+special" (over stop-early and leave-it) and the slice = the date-conversion path (over
+`convertDate()`-only, `removeDuplicates()`-with-recycling, all four); PRE-RED to RED yes; RED to GREEN
+yes; GREEN to REFACTOR yes ("review + docs, no code refactor"); the `SESSION_NOTES.md` trim "keep 4
+newest" (with `--force` for the known SRF small-denominator refusal).
+**Result (measured):** probes of all five sites reproduced the S784 item and found three things it did
+not have: a recycled-subscript defect in `removeDuplicates()` (originals `x, x, z` plus 4 added rows
+return `"x" "a2"`; `qcStudbook(reportErrors = TRUE)` reported `x, s2`), three `correctParentSex()`
+behaviors, and that the pipeline function has no direct test (all in the `CHANGELOG.md` RED entry and
+the narrowed `BACKLOG.md` item). RED: 8 failing tests, 20 of 54 expectations, 0 errors, 4 controls
+passing, each failure's reason read from its message. GREEN: the three target files 3 + 14 + 5 tests,
+54/54; related files 0 failed except the known one; full suite (`load_all` + `NOT_CRAN`, no filter) 353
+files, 2,706 tests, 8,366 expectations, **1 failed** (the known `test_pkgdown_reference_config.R`, your
+untracked NEWS draft), 0 errors, 187 skipped (+1 file, +12 tests, +40 expectations vs S784, exactly this
+slice); lintr 0 on all 5 files; 5 of 5 mutants killed with a no-mutation control at 0. Clean-export `R CMD
+check --as-cran` on HEAD `e7eaf320` (after the docs edit): 0 errors, 0 warnings, 1 NOTE (dev version),
+`* DONE` confirmed by a fixed-string match, status 0. Ratchet **1/1 at `e7eaf320`** (3,568,833 B,
++2,031 B; results `e743300ed559`, manifest `aa983075d6a2`).
+**Runtime (3E):** `convertDate()` is on the app's upload path (`qcStudbook()`), so I ran it
+differentially: 28 `qcStudbook()` calls (9 over package datasets and the reach probe, 19 over 13
+pedigree files under `inst/extdata`, up to 2,791 rows), the pre-change tree (`8829239b`) vs HEAD, in
+separate `Rscript`s: all identical (the one textual difference is the per-process `tempdir()` path
+inside one error message, identical once masked). This is not a live click-through of the Shiny app.
+**Disclosures:** (1) the recycling defect is NOT fixed (out of slice); it is in the narrowed item; (2)
+the full suite ran BEFORE the docs edit (roxygen, `man/`, NEWS, BACKLOG); after it I re-ran the three
+target files, the related files (including the wordlist and pkgdown tests) and lintr, and the
+`R CMD check` ran on the final code; (3) my first `@return` draft said added records come back
+"unchanged", which the closing `rbind()` can falsify; I corrected it before committing; (4) a late
+read-only probe confirmed a second pre-existing quirk (`convertDate(reportErrors = TRUE)` numbers an
+invalid date among the non-added records only) and I filed it as its own item, not fixed; (5) your
+working-tree residue is untouched and the `BACKLOG.md` header stayed unstaged (working-tree diff = the 5
+header lines, checked after each `BACKLOG.md` commit); (6) the trim needed `--force` (owner-approved).
+**Checklists:** lint done; NEWS done (one plain-language "Fixed" bullet, `NEWS.Rmd:518`);
+`_pkgdown.yml` (no new export), citation, tutorial and `a2interactive` (no new function or parameter)
+N/A; no GitHub issue exists for this defect; the `BACKLOG.md` item is narrowed, not complete, so it
+stays.
+
+**Self-assessment (Session 785): 8/10.** **Strengths:** claim first; Orient measured (both
+frontiers, remote tip, ratchet citation before the run, CI, budget, the whitespace-normalized tag
+enumeration with a control: 25 items / 20 tagged); code, callers, tests and the workstream read
+before the shape gate; the probe covered all five sites plus a no-NA control, which found a second,
+app-reachable defect and turned a "read, not probed" claim into a measured one; every gate through
+`AskUserQuestion`; RED for the right reasons (each message read); GREEN verified far past the minimum
+(related files, full suite, clean-export check on the FINAL tree, ratchet after committing, mutants
+with a control, and a differential runtime run of the app path); scope held (two sibling sites and two
+new findings filed, not fixed); a wrong doc draft caught before commit. **Weak:** (1) I again did not
+open the STANDING SET until close-out and re-hit its unquoted-glob trap, plus a persisted `cd` and a
+BSD `sed -i` slip (three wasted calls); (2) my first probe assumed a `birth` column `smallPed` lacks;
+(3) the full suite predates the docs edit (mitigated, see disclosure 2); (4) the Phase 0 picker showed
+4 of 11 numbered items by rule, so the two READY documentation items were reachable only via "Other".
+**Learnings:** 798.
+
+**Next steps (specific):** (A) **Sibling sites, slice 2: `removeDuplicates()` (READY, S)**
+`BACKLOG.md` HEAD `:34` (the working file is +5): the shape is decided (added-only special); rewrite
+the report branch as `ids <- ped$id[<non-added mask>]; ids[duplicated(ids)]`, which fixes the NA case
+AND the recycling false positive; tests in `tests/testthat/test_removeDuplicates.R` (3 today) plus a
+recycling test with an app-path case, and a `NEWS.Rmd` "Fixed" line. Slice 3 is `correctParentSex()`
+(READY, S): decide what `recordStatus = NULL` means as part of it. (B) The `convertDate(reportErrors)`
+row-numbering item (DECISION NEEDED, S, low priority) HEAD `:73`. (C) The absent-id decision for
+`getAncestors()` (DECISION NEEDED, S) HEAD `:88`. (D) F2 and F3 (DECISION NEEDED) HEAD `:8`. (E) **READY
+now:** `NEWS.Rmd` sweep (M) HEAD `:139` (my S785 bullet is already release-state); the docs staleness
+audit (L) HEAD `:155`; the trivial cleanup bundle (S) inside `:8`; the `a2interactive`
+`reportMatePairs()` section (S) HEAD `:117`, sub-item (1). (F) **Owner-requested or owner-decision
+items:** the contributor tutorial (M) HEAD `:178`, the peer-reviewed papers (L, its own scoping
+session first) HEAD `:562`, the harem-sire hole HEAD `:217`, blank ancestry OTHER vs UNKNOWN HEAD
+`:195`, the two LabKey items and the retrospective backfill (grep `LabKey` / `Retrospective`). (G) The
+trimmer's verify false positive (DECISION NEEDED, S) HEAD `:365`; `paths-ignore` (DECISION NEEDED, S)
+HEAD `:104`. (H) Your decisions open: the working-tree residue (the `BACKLOG.md` header,
+`BACKLOG.log`, the two NEWS drafts -- the draft still turns one local test red -- and 5 render
+artifacts), the push of the local commits after `4e2e6e06`, closing the 11 recommended PED_GV ids.
+
+**Key files:** `R/convertDate.R:99-105` (the mask; roxygen `:11-17` and `:22-26`);
+`R/getRecordStatusIndex.R:15` (`which()`); `tests/testthat/test_convertDate.R:74-136` (the five new
+tests and their fixtures), `tests/testthat/test_getRecordStatusIndex.R:26-59` (two new),
+`tests/testthat/test_getDateErrorsAndConvertDatesInPed.R` (new file, 5 tests); `NEWS.Rmd:518`;
+`man/convertDate.Rd`; `BACKLOG.md` HEAD `:34` (the narrowed item) and `:73` (the new item);
+`CHANGELOG.md:57` (the S785 entries, newest first: records, trim, docs, GREEN, RED, claim);
+`HANDOFFS.md` (the S785 receipt at the top of the receipts); `PROJECT_LEARNINGS.md:2268` (Learning
+798); `docs/archive/SESSION_NOTES-through-2026-09-26.md` (with `.verify.sh`);
+`.quality-gates-results.json` (untracked; the citation source); scratchpad scripts `probe_s785.R`,
+`probe_reach_s785.R`, `probe_rownum.R`, `run_red.R`, `mutants.R`, `diffrun.R`, `diffrun2.R`,
+`run_check.R` (not in git).
+
+**Gotchas for the next session:** (1) Expect 0 undocumented on both frontiers -- measure; 7 unpushed
+after this records commit (recount); `origin/master` = `4e2e6e06`; the working tree is NOT clean
+(`BACKLOG.md` = your 5-line header only, untracked `BACKLOG.log`, two `suggested_NEWS_entry` drafts, 5
+render artifacts); stage by name; header-less blob for any `BACKLOG.md` commit (edit the working file,
+`tail -n +6 BACKLOG.md > blob`, `git hash-object -w blob`, `git update-index --cacheinfo
+100644,<sha>,BACKLOG.md`, commit, then confirm `git diff HEAD -- BACKLOG.md` shows only the 5 header
+lines); working-tree `BACKLOG.md` line numbers are HEAD +5. (2) A local unfiltered suite reads **1
+failed** until your draft leaves the tree (`test_pkgdown_reference_config.R`); the clean-export `R CMD
+check` recipe is in the S782 receipt's gotcha (2) and worked unchanged here (build from `git archive
+HEAD`, background, about 6 min, accept only on a fixed-string `"* DONE"` plus status 0). (3) For the
+`removeDuplicates()` slice: build the mask with `is.na()` and never a negative subscript from an index
+that can be empty; the recycling case needs its own test, and the fix changes what the app's
+duplicate-id report says (disclose it in `NEWS.Rmd`). (4) `getRecordStatusIndex()` now has ONE caller
+(`getDateErrorsAndConvertDatesInPed()`); do not reintroduce `seq_along(x)[cond]` there. (5) Ratchet
+1/1 at `e7eaf320` (3,568,833 B, results `e743300ed559`, manifest `aa983075d6a2`); compare BEFORE any
+run, run AFTER committing. (6) Sizes (measured before the final commit): this file about 33.2 KB (about 14,600 tokens)
+after these records (the hook counts TOKENS at 2.27 B/token, ceiling 25,000 = 56,750 B), `CHANGELOG.md`
+50,469 B and `HANDOFFS.md` 49,153 B against the 65,536 B trim budget; each ledger gains
+about 8-10 KB per session (an estimate), so the next `CHANGELOG.md` and `HANDOFFS.md` archive pass is
+due within about two sessions, this file's about three; `--cut N` KEEPS the N newest; trim
+`CHANGELOG.md` last (Learning 761). (7) The STANDING SET is in the S785 receipt's gotcha (7); READ IT
+BEFORE THE FIRST COMMAND. New traps (S785): a `cd <dir> && ...` persists across Bash calls (start each
+command with `cd <root> &&`), and BSD `sed -i` needs `-i ''` (or use Python).
 
 ### Session 783 Handoff Evaluation (by Session 784)
 **Score: 9/10.** **What helped:** every Orient measurement held -- 0 undocumented on both frontiers
