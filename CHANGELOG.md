@@ -60,6 +60,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S792 records: stage 2 piece (d) of the NEWS.Rmd release-state sweep DONE, closing the sweep (S791 handoff evaluated 9/10, self 9/10, receipt, Learning 805, next-session items); full suite 354 files / 2,754 tests / 8,408 expectations with only the known pkgdown draft failing
+- **Model:** Claude Sonnet 5. Phase 3 close-out: Session 791's handoff evaluated 9/10 (every Orient
+  measurement held; the one wrong figure -- 22 vs 23 unpushed -- was already self-flagged as
+  needing a recount). Self-assessed 9/10 (1B written first this time, per Learning 804's own fix;
+  PRE-RED fact-finding surfaced both piece (d)'s different defect class and BACKLOG's own stale
+  scope sub-claim; the phase gates posed at the right points per Learning 803d; weak points: two
+  pointless Bash placeholder calls while waiting on the backgrounded suite run, disclosed). Learning
+  805 recorded (`PROJECT_LEARNINGS.md:2277`): a release-state sweep piece can find every fact true
+  and still have a real (framing) defect; a BACKLOG item's own scope text can itself carry a stale
+  sub-claim; closing the last stage of a tracked item folds the completed-item removal checklist
+  into that piece's own REFACTOR. `HANDOFFS.md` receipt completed (`status: complete`). Ledger
+  sizes measured fresh: `SESSION_NOTES.md` 27,936 B, `HANDOFFS.md` 41,837 B, `CHANGELOG.md`
+  63,315 B (pre this entry) -- all under the 65,536 B trim budget, no trim owed. CI checked fresh:
+  4/4 push-triggered workflows still green on `ff8308a5`; the `shinytest2` scheduled timeout first
+  seen at S791's Phase 0 has not recurred. 27 local commits ahead of `origin/master`; not pushed
+  (not asked).
+
 ### 2026-09-27 · [ad hoc] S792 REFACTOR: NEWS.Rmd release-state sweep CLOSED (stage 2 piece (d) DONE, all 4 stages complete); BACKLOG sweep item removed, two open threads extracted
 - **Model:** Claude Sonnet 5. No behavior change: target test file re-confirmed 26/107/0 failed, 0
   lints on `tests/testthat/test_newsReleaseState.R`. Per the BACKLOG completed-item removal

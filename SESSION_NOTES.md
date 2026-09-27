@@ -86,15 +86,171 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 791 Handoff Evaluation (by Session 792)
+**Score: 9/10.** **What helped:** every Orient measurement held -- `CHANGELOG.md` and `HANDOFFS.md`
+frontiers both = HEAD (`970d2dd8`), 0 undocumented; dashboard 96/100, 0 high+ risk; context budget
+no file over ceiling; 4/4 push-triggered CI workflows green; the `NEWS.Rmd` piece (d) line ranges
+(`:32-42`, `:104-116`, `:117-121`, `:131-136`, `:147-152`, `:165-177`) were exact, re-derived by
+reading the section fresh per the handoff's own instruction and confirmed identical; the STANDING
+SET/gotchas (BACKLOG.md's owner-header commit recipe, the ratchet citation, the full-suite
+baseline) all held and the BACKLOG.md recipe (`tail -n +6`, hash-object, update-index
+--cacheinfo) worked verbatim at REFACTOR close-out. Most valuable: the explicit instruction to
+"re-derive at pickup anyway by reading the section again" rather than trust the cited ranges blindly
+-- doing so is what let PRE-RED fact-finding catch that piece (d)'s defect class differs from (a)-(c):
+every underlying fact checked out true, and the actual defect was pure release-state narration
+("Fixed"/"now"/"no longer"/"Previously" describing a change a 2.0.0 reader never saw). **Missing:**
+nothing that blocked the session. **Wrong:** the "22 unpushed after this records commit (recount)"
+figure was 23 in this session's own Orient -- a 1-commit undercount, but explicitly flagged by S791
+itself as needing a recount, so not a real error. Separately (not the handoff's fault, but worth
+recording): BACKLOG.md's own scope text for piece (d) named "cross-references outside this section
+... in Marker Genetics and Mate Pair" as part of the work; a fresh grep found those phrases point at
+UNRELATED content (Cross-Center Identity, Mate Pair's own prior entry), not at Pedigree Diagram --
+investigated and reported as a non-finding, same treatment as an entry checked and found accurate.
+**ROI:** high.
+
 ### What Session 792 Did
-**Deliverable:** `NEWS.Rmd` release-state sweep, stage 2 piece (d) -- the crash fixes, isolated-animal
-entries, example pedigrees/article, layout-origin/`kinshipMatrix` entries, and cross-references
-outside the Pedigree Diagram section (closes the sweep). (IN PROGRESS)
-**Started:** 2026-09-27
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next
-session's reconcile.
+**Deliverable:** **`NEWS.Rmd` release-state sweep, stage 2 piece (d) -- DONE, closing the whole
+4-stage sweep (stages 1, 2a-2c already DONE per S788-S791).** PRE-RED fact-finding checked all 10
+entries in piece (d)'s 6 line ranges against real code and existing tests and found every
+underlying claim TRUE and current: the narrowing-crash fix (S630's `xOf`/`yOf` list fix) and the
+trimmed-pedigree-drops-parent fix (S682's dangling-parent `__dup_` guard) are both still in the
+code; the isolated-individual behavior is pinned by `test_findIsolatedIds.R` and
+`test_makePedigreeMatingLayout.R`'s all-isolated cases; the disconnected-component block separation
+is S667's shipped code; the `kinshipMatrix` argument exists exactly as described
+(`makePedigreeMatingLayout()`'s own formals); `test_examplePedigreeFixtures.R` already pins the
+"11-14 animals"/"exactly one consanguineous mating" claims (nRows 11/12/12/14/14, one marked union
+each) and the dashed duplicate-connector / vermillion (`#D55E00`) consanguineous-marker colors are
+in `R/makePedigreeDiagramData.R`. So unlike pieces (a)-(c), which each found ONE stale/wrong fact,
+piece (d)'s defect was uniform and purely one of framing: 9 of the 10 entries narrated a fix or
+change ("Fixed a crash", "is now checked", "no longer shows", "Previously ... could be") against a
+PRE-2.0.0 state the diagram feature never had (`git cat-file -e v2.0.0:R/makePedigreeMatingLayout.R`
+fails -- the whole feature is new in this dev cycle, so no 2.0.0 reader ever saw any "before").
+Rewrote all 9 into plain finished-state statements; no facts, numbers, or cross-references changed
+(the `(see above)` reference at `:117-121` stays valid). Section stays at 37 entries. Separately
+investigated and found NOT to hold: BACKLOG.md's claim of stale cross-references pointing at
+Pedigree Diagram from Marker Genetics/Mate Pair (see the handoff evaluation above) -- no change
+made there. Piece (d) being the LAST stage triggered the BACKLOG completed-item removal checklist:
+the whole "`NEWS.Rmd` release-state sweep" item removed from `BACKLOG.md` at REFACTOR, its
+completion record folded into that commit's `CHANGELOG.md` entry, and two still-open sub-threads
+the sweep had surfaced but never resolved extracted as their own new `BACKLOG.md` items (the
+owner's `suggested_NEWS_entry.md`/`.Rmd` 3.0.0-consolidation disposition; whether to keep or delete
+the `## Package` entry at `NEWS.Rmd:18`). Owner-picked at the Phase 0 priorities gate (from 4
+offered options); strict TDD with an `AskUserQuestion` at every gate.
+**Commits:** claim `35f19cc6`; RED `3d26dd6f`; GREEN `f5bb6428`; REFACTOR `eff424a6`; this records
+commit. Every TDD-phase commit carries its OWN `CHANGELOG.md` entry (Learning 804's fix, applied
+cleanly this session -- no repeat of S790's original gap).
+**Push:** none (not asked); 27 local commits after `origin/master` = `ff8308a5`. CI has not seen any
+S792 commit; the same-day scheduled `shinytest2` timeout reported at S791's Phase 0 has NOT
+recurred (checked fresh at this session's close-out: no new runs since the S788 push).
+**Owner decisions:** the Phase 0 pick (from a 4-option picker); PRE-RED to RED yes; RED to GREEN
+yes; GREEN to REFACTOR yes.
+**Result (measured; full detail in the S792 entries of `CHANGELOG.md`):** RED: added
+`pieceDNarrationPhrases` (14 exact phrases copied verbatim from the current stale text) plus one
+scoped test; target file alone: 26 test_that blocks, 93 passed expectations, 14 failed (exactly the
+14 phrases), 0 errors. GREEN: rewrote the 9 entries; entry count re-confirmed 37
+(`awk '/^## Pedigree Diagram/{f=1;next} /^## /{f=0} f' NEWS.Rmd | grep -c '^- '`); `NEWS.Rmd` knits
+clean (`rmarkdown::render(..., output_format = "github_document")`); target file alone: 26/107/0
+failed; full unfiltered suite (`load_all` + `NOT_CRAN`, host load 17.64, run moved to background
+past the 120s foreground timeout): **354 files, 2,754 tests, 8,408 expectations (8,407 passed), 1
+failed** (the known `test_pkgdown_reference_config.R` draft), 0 errors, 187 skipped, 6 warnings.
+REFACTOR: no behavior change (re-confirmed target file 26/0 failed, 0 lints on the touched test
+file); `BACKLOG.md` sweep item removed via the owner-header-preserving commit recipe (`tail -n +6`
+blob, hash-object, update-index `--cacheinfo`; post-commit working diff confirmed to show only the
+5-line header), two new items filed.
+**Runtime (3E):** n/a -- `NEWS.Rmd`, a test file, and records only; no `R/` file touched, no
+runtime behavior changed. The ratchet was not re-run (no `R/` change; citation unchanged from S790:
+`ff682ffb`, results `ce2ee7e8ec51`, manifest `aa983075d6a2`).
+**Disclosures:** (1) while waiting on the backgrounded full-suite run, two Bash no-op calls
+("waiting" placeholders) were made that added nothing -- the instruction not to poll was followed
+(no reading of the output file mid-flight), but the placeholder calls themselves were pointless;
+correct behavior next time is to simply end the turn and let the notification arrive, with no
+filler tool call at all. (2) `SESSION_NOTES.md`/`HANDOFFS.md`/`CHANGELOG.md` sizes checked fresh
+before this records commit (see gotcha 4 below) -- all under the 65,536 B trim budget, no trim
+owed this session. (3) `NEWS.md` was not re-rendered (lags by design, per BACKLOG's now-removed
+sweep item; needs a render at the next actual release).
+**Checklists:** lint: `test_newsReleaseState.R` (the only touched `.R` file), 0 lints, package
+loaded first; NEWS: this session IS the rewrite, no new exported function/feature; `_pkgdown.yml`,
+citation, tutorial and `a2interactive` N/A; issue #164 (cited in one entry) already closed, no new
+GitHub close-out owed; the BACKLOG completed-item removal checklist applied (see above) since this
+was the sweep's last piece; CI-break tracking: the `shinytest2` timeout checked for recurrence,
+none found, still no BACKLOG item (single occurrence).
+
+**Self-assessment (Session 792): 9/10.** **Strengths:** Phase 1B claim stub written FIRST, before
+any PRE-RED fact-finding -- correctly applying Learning 804's own fix rather than repeating the
+gap it documented; PRE-RED fact-finding checked EVERY claim in piece (d)'s scope against real
+code/tests before writing any test code, which is what surfaced piece (d)'s defect class differing
+from (a)-(c) (framing, not facts) and what surfaced BACKLOG.md's own stale scope sub-claim; the
+PRE-RED->RED gate was posed immediately after fact-finding finished, before opening the test file,
+correctly applying Learning 803d; RED failed for exactly the right reason (14/14 phrases, confirmed
+via `as.data.frame()`, not just eyeballing console output); GREEN verified at three levels (target
+file, full unfiltered suite, and an actual `rmarkdown::render()` knit -- not just "the tests pass");
+REFACTOR correctly recognized and applied the BACKLOG completed-item removal checklist as part of
+closing the sweep's last piece, rather than treating BACKLOG cleanup as a separate future task, and
+extracted both open sub-threads instead of letting them evaporate with the deleted block; the
+owner-header-preserving BACKLOG.md commit recipe was applied and its result verified
+(`git diff HEAD -- BACKLOG.md` shown to contain only the header) rather than assumed. **Weak:** (1)
+two pointless Bash placeholder calls while waiting on the backgrounded suite run (disclosed above);
+(2) a long Phase 0 report, matching the pattern of every recent session in this sweep. **Learnings:**
+805 (this session's own, on the two defect classes a release-state sweep can find, a stale claim
+inside the BACKLOG item's own scope text, and folding the completed-item checklist into a closing
+piece's REFACTOR).
+
+**Next steps (specific):** (A) **The `NEWS.Rmd` release-state sweep is CLOSED -- no more pieces.**
+The next NEWS-adjacent work is the two items just extracted: **the owner's `suggested_NEWS_entry`
+3.0.0-consolidation disposition (DECISION NEEDED, M, its own scoping session)** and **the
+`## Package` entry keep-or-delete decision (Optional, S, low priority)** -- both in `BACKLOG.md`'s
+"Up Next" section now. (B) **Also READY:** the docs staleness audit (L); the `a2interactive`
+`reportMatePairs()` section (S); the PED_GV cleanup bundle (S); the Chrome-for-Testing hang root
+cause (M, optional, low); the `BACKLOG.md` ledger-size housekeeping (L, likely due for a regrowth
+check soon -- not measured this session). (C) **DECISION NEEDED:** male-left placement (roxygen vs
+real layouts, S); blank/unrecognized sex reported as wrong-sex parent (S); the `isAddedRecord()`
+helper (S, optional); `convertDate()` row numbering (S, low); `getAncestors()` absent id (S); F2/F3
+of the PED_GV item; `paths-ignore` (S). (D) **Owner items:** contributor tutorial (M), peer-reviewed
+papers (L, own scoping session), harem-sire hole, blank ancestry OTHER/UNKNOWN, LabKey (both
+items), retrospective backfill, trimmer verify false positive (S). (E) Your decisions open: the
+working-tree residue (untouched this session: `BACKLOG.log`, two `suggested_NEWS_entry` drafts, 5
+render artifacts, `BACKLOG.md`'s 5-line header); the push of the 27 local commits after `ff8308a5`
+(CI has not seen S792; `NEWS.Rmd` and a test file changed, so the tests must be watched, not
+skipped, once pushed); the two methodology files `context_budget.py` still flags as matching no
+canonical revision (last sync S719, still not investigated).
+
+**Key files:** `tests/testthat/test_newsReleaseState.R` (new in S792: `pieceDNarrationPhrases` and
+the piece (d) wording test, before the `#168` test; header comment documents piece (d)'s scope and
+grounding); `NEWS.Rmd:21-` (the `## Pedigree Diagram` section, still 37 entries; the 9 rewritten
+entries span `:37-` through `:174-`); `R/makePedigreeDiagramData.R` (the S630/S682 crash-fix code,
+`kinshipMatrix` formal `:1685`, duplicate/consanguineous colors `:1946-2012`, `:1973`); `BACKLOG.md`
+working (the sweep item REMOVED; two new items added -- the `suggested_NEWS_entry` disposition and
+the `## Package` entry decision); `CHANGELOG.md` (the S792 entries, newest first: REFACTOR, GREEN,
+RED, claim); `HANDOFFS.md` (the S792 receipt); `PROJECT_LEARNINGS.md:2277` (Learning 805).
+
+**Gotchas for the next session:** (1) The `NEWS.Rmd` release-state sweep BACKLOG item is GONE --
+don't look for "piece (e)"; the sweep is fully closed, its history is in `CHANGELOG.md`'s S788-S792
+entries. (2) Expect `CHANGELOG.md`/`HANDOFFS.md` frontiers both at HEAD (`eff424a6`) or very close
+(HANDOFFS.md's frontier is 3 commits behind HEAD -- the claim commit only, since RED/GREEN/REFACTOR
+don't touch `HANDOFFS.md` by convention; that gap is NOT a reconcile finding). 27 unpushed after
+this records commit; `origin/master` = `ff8308a5`, CI green (4/4) on it but has NOT seen any S792
+commit; the `shinytest2` scheduled timeout has not recurred (checked twice now, S791 and S792) --
+still not worth a BACKLOG item on one occurrence. Working tree NOT clean: same residue as S791
+(`BACKLOG.md` header, `BACKLOG.log`, two `suggested_NEWS_entry` drafts, 5 render artifacts); the
+commit recipe worked again verbatim (`tail -n +6 BACKLOG.md`, hash-object, update-index
+`--cacheinfo`, confirm `git diff HEAD -- BACKLOG.md` shows only the 5 header lines). (3) Full suite
+baseline now: **354 files, 2,754 tests, 8,408 expectations (8,407 passed), 187 skipped, 6
+warnings**, 1 failed (the pkgdown draft) -- the test count and expectation count both rose by
+exactly this session's additions (+1 test_that, +14 expectations net at GREEN vs RED's baseline).
+Foreground timeout hit at 120s on this run; it was moved to background automatically and completed
+fine -- expect this on a fresh host, don't shrink the suite to dodge it. (4) Ledger sizes measured
+fresh this session (bytes, `wc -c`, against the 65,536 B trim budget): `SESSION_NOTES.md` 27,936 B,
+`HANDOFFS.md` 41,837 B, `CHANGELOG.md` 63,315 B -- CHANGELOG.md is the closest to the ceiling and
+likely due for a trim within a session or two; check fresh, don't assume this session's numbers
+still hold. Ratchet unchanged from S790: 1/1 at `ff682ffb` (results `ce2ee7e8ec51`, manifest
+`aa983075d6a2`) -- no `R/` change this session either. (5) STANDING SET carried in the S792
+receipt's own gotcha; READ IT BEFORE THE FIRST COMMAND. (6) New this session: when a piece closes
+the LAST stage of a tracked multi-session BACKLOG item, the BACKLOG completed-item removal
+checklist is part of THAT piece's own REFACTOR -- fold it in, including extracting any open
+sub-threads the item's own text still carries, rather than treating cleanup as separate future
+work. And: a scope description inside a BACKLOG item (not just the target content) can itself carry
+a stale sub-claim -- verify it fresh rather than executing it on trust (this session's
+"cross-references in Marker Genetics/Mate Pair" investigation, which did not pan out).
 
 ### Session 790 Handoff Evaluation (by Session 791)
 **Score: 9/10.** **What helped:** every Orient measurement held -- `CHANGELOG.md` frontier = HEAD
