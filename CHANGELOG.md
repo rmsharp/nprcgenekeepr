@@ -60,8 +60,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-09-27 · [ad hoc] S794 claim: investigate and fix the recurring shinytest2 GitHub Actions 30-minute execution-time cap (BACKLOG.md "Up Next" item 1, found S791, recurred S793) (in progress)
-- **Model:** Claude Sonnet 5.
+### 2026-09-27 · [ad hoc] S794 PRE-RED: shinytest2 CI timeout is capacity growth, not two occurrences -- BACKLOG.md's "found S791...recurred S793" double-counts one event
+- **Model:** Claude Sonnet 5. `gh run list --workflow=shinytest2.yaml` (60 runs) + `gh run view
+  --json jobs` (precise job start/complete) show exactly ONE recent cancelled run
+  (2026-09-27T07:13:43Z, job duration 30.02 min); S791/S792/S793 all ran on the SAME calendar day,
+  hours after that single nightly job had already finished, so all three observed the same event,
+  not two separate cancellations. Job duration trend: ~20-22 min (early August) -> consistently
+  24-30 min (September), with 2026-09-26 succeeding at 29.87 min (8s under the cap) the night
+  before today's cancellation -- capacity growth, not a hang (no single module group stuck). An
+  isolated unrelated cancellation on 2026-08-19 (30.17 min) sat amid otherwise-fast runs at the
+  time. Owner picked "raise timeout-minutes" (30->45) over splitting into a parallel matrix.
+
+### 2026-09-27 · [ad hoc] S794 RED: one test pinning shinytest2.yaml's job timeout-minutes at 45
+- **Model:** Claude Sonnet 5. `tests/testthat/test_shinytest2_workflow_timeout.R`, same
+  text-parsing style as `test_shinytest2_workflow_coverage.R`. Confirmed FAILING against the
+  current file (`timeout_minutes` = 30, expected 45).
 
 ### 2026-09-27 · [ad hoc] S793 records: suggested_NEWS_entry.md/.Rmd review DONE (14 findings: 8 ADOPT, 5 MODIFY, 1 REJECT-as-drafted); one confirmed factual error found in the draft (groupAddAssign()'s `candidates` return-value field mislabeled as a new argument); one BACKLOG.md item filed for a second shinytest2 CI timeout occurrence; Learnings 806-807
 - **Model:** Claude Sonnet 5. Phase 3 close-out: Session 792's handoff evaluated 8/10 (every Orient
