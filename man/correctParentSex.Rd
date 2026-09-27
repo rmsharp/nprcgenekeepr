@@ -20,7 +20,10 @@ individual.}
 
 \item{recordStatus}{character vector with value of \code{"added"} or
 \code{"original"}, which indicates whether an animal was added or an
-original animal.}
+original animal. Only \code{"added"} is special: an \code{NA}, blank or
+unrecognized value is treated as an original animal, and \code{NULL} means
+no added records are known. It is used only when
+\code{reportErrors = TRUE}.}
 
 \item{reportErrors}{logical value if TRUE will scan the entire file and
 make a list of all errors found. The errors will be returned in a
@@ -42,6 +45,12 @@ Only true female-sires (\code{"F"}) and male-dams (\code{"M"}) are
 corrected (to \code{"M"} and \code{"F"} respectively). Parents recorded as
 hermaphrodite (\code{"H"}) or unknown (\code{"U"}) sex are left unchanged,
 consistent with \code{reportErrors = TRUE} mode, which does not flag them.
+
+When \code{reportErrors = TRUE}, only records whose \code{recordStatus} is
+exactly \code{"added"} are left out of the report. A missing (\code{NA}),
+blank or unrecognized status is treated as an original animal, and a
+\code{NULL} \code{recordStatus} means no added records are known, so every
+animal is checked.
 }
 \examples{
 library(nprcgenekeepr)

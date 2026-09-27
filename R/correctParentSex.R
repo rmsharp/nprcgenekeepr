@@ -10,6 +10,12 @@
 #' hermaphrodite (\code{"H"}) or unknown (\code{"U"}) sex are left unchanged,
 #' consistent with \code{reportErrors = TRUE} mode, which does not flag them.
 #'
+#' When \code{reportErrors = TRUE}, only records whose \code{recordStatus} is
+#' exactly \code{"added"} are left out of the report. A missing (\code{NA}),
+#' blank or unrecognized status is treated as an original animal, and a
+#' \code{NULL} \code{recordStatus} means no added records are known, so every
+#' animal is checked.
+#'
 #' @param id character vector with unique identifier for an individual
 #' @param sire character vector with unique identifier for an
 #' individual's father (\code{NA} if unknown).
@@ -22,7 +28,10 @@
 #' list of list where each sublist is a type of error found.
 #' @param recordStatus character vector with value of \code{"added"} or
 #' \code{"original"}, which indicates whether an animal was added or an
-#' original animal.
+#' original animal. Only \code{"added"} is special: an \code{NA}, blank or
+#' unrecognized value is treated as an original animal, and \code{NULL} means
+#' no added records are known. It is used only when
+#' \code{reportErrors = TRUE}.
 #' @return When \code{reportErrors = FALSE}, a factor (or character
 #' vector) of corrected sex codes with levels \code{"M"}, \code{"F"},
 #' \code{"H"}, and \code{"U"} for the ids provided. When

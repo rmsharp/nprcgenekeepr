@@ -527,6 +527,12 @@ knitr::opts_chunk$set(echo = TRUE)
   lists only the ids that really appear more than once, and `removeDuplicates()`
   now also checks animals whose record of being added is blank or unrecognized,
   which it used to skip or report wrongly.
+- Fixed: `correctParentSex()`, which reports sires recorded as female and dams
+  recorded as male, could list `NA` in place of an animal's id, or skip an
+  animal, when a script gave it a record of which animals were added that was
+  missing, blank or unrecognized. It now sets aside only the animals recorded
+  as added and checks every other animal, including when no such record is
+  given. The Shiny app was not affected.
 - Fixed: when a pedigree lists an animal as its own ancestor (for example, two
   animals each entered as the other's sire), `getAncestors()`, `findLoops()`
   and `countLoops()` now stop with a message that names the animals involved,

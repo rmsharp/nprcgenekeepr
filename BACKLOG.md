@@ -31,33 +31,35 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.
 
-- [ ] **One more place tests `recordStatus == "original"` with no NA guard and misbehaves on a
-      hand-built `NA` or unrecognized status: `correctParentSex()` (found S784, 2026-09-26,
-      narrowed S785 and S786; READY, Effort S)** -- the shape is decided (owner, S785 Pre-RED):
-      `"added"` is the only special status, so an `NA`, blank or unrecognized status is a real
-      animal, processed like an original (the `removeUnknownAnimals()` contract from S784).
-      Already done with that shape: `removeUnknownAnimals()` (S784), the date-conversion path,
-      `convertDate()` + `getRecordStatusIndex()` (S785; `getDateErrorsAndConvertDatesInPed()`
-      needed no edit), and `removeDuplicates()` (S786, which also fixed a recycled-subscript false
-      positive); the idiom is a logical mask (`!is.na(x) & x == "added"`) or `which()`, never a
-      negative subscript from an index that can be empty. **One slice, strict TDD, with its phase
-      gates.** **`correctParentSex()` (`R/correctParentSex.R:89-92`; READY, S).** Probe (S785, the
-      roxygen example pedigree, `reportErrors = TRUE`): an `NA` status on the female sire `s1`
-      reports `NA` instead of `"s1"`; an unrecognized status on `s1` skips it silently;
-      `recordStatus = NULL` reports nothing at all (an absent status also means "no added rows", so
-      every animal should be checked -- decide that with the slice); an `"added"` status is skipped
-      correctly (keep it as a control). The `reportErrors = FALSE` branch never reads the status.
-      Existing tests: `tests/testthat/test_correctParentSex.R` (6 tests, every status
-      `"original"`). **Reach:** `qcStudbook()` calls `addParents()` (`R/qcStudbook.R:229`), which
-      overwrites `recordStatus` unconditionally (`R/addParents.R:43-44`), so neither the app nor
-      `qcStudbook()` can carry an `NA` status into this function; only a script that hand-builds
-      the column and calls the exported function directly can (the one app-reachable defect of the
-      four, `removeDuplicates()`'s recycled subscript, is fixed). **When this last slice lands,**
-      consider one internal `isAddedRecord()` helper for the mask now written inline in
-      `convertDate()` and `removeDuplicates()` (each `!is.na(x) & x == "added"`) and
-      `removeUnknownAnimals()` (its complement): three copies today, a fourth with this slice
-      (deferred at the S785 and S786 REFACTORs; the owner may judge four copies enough). **Trap:**
-      a negative subscript built from an index that can be empty
+- [ ] **A sire or dam whose sex is blank or unrecognized is reported as a "female sire" or "male
+      dam" by the pedigree check (found S787, 2026-09-26, DECISION NEEDED, Effort S)** --
+      measured S787 (a namespace spy under `qcStudbook(reportErrors = TRUE)`, then a plain
+      `reportErrors = FALSE` call): `convertSexCodes()` maps a MISSING sex to `"U"`
+      (`R/convertSexCodes.R:39`) but a blank or unrecognized code (`""`, `"xyz"`) to `NA` (the
+      final `factor()`, `:50`), and `correctParentSex()` tests `!sex %in% c("H", "U", "M")`, which
+      is `TRUE` for `NA`. So a sire whose sex cannot be read comes back in `femaleSires` (a dam in
+      `maleDams`), and the app's error list says "female sire" (measured: `femaleSires = "s1"` and
+      `maleDams = "d1"`); with `reportErrors = FALSE` the same sire's sex is silently set to `"M"`
+      (the dam's to `"F"`) in the returned pedigree. A sex of `NA` (missing) or `"M"` is not
+      reported. **Decide:** (1) leave it (an unreadable sex on a parent is worth a flag and the
+      wording is close enough); (2) report it under its own heading as an unreadable-sex parent
+      rather than a wrong-sex one; or (3) map a blank or unrecognized sex to `"U"` like a missing
+      one in `convertSexCodes()` (a behavior change for every consumer of that function). Outside
+      the `recordStatus` slices; the measurement is in the S787 RED entry of `CHANGELOG.md`. Tests
+      to extend: `tests/testthat/test_correctParentSex.R`, `tests/testthat/test_convertSexCodes.R`.
+
+- [ ] **(Optional, owner decision) One internal `isAddedRecord()` helper for the "added" mask
+      (raised S785, deferred at the S785, S786 and S787 REFACTORs; DECISION NEEDED, Effort S)** --
+      the mask is written inline four times, all meaning "only the exact status `"added"` is
+      special; an `NA`, blank or unrecognized status is a real animal": `convertDate()`
+      (`R/convertDate.R:103`) and `removeDuplicates()` (`R/removeDuplicates.R:46`) as
+      `!is.na(x) & x == "added"`, `removeUnknownAnimals()` (`R/removeUnknownAnimals.R:31`) as its
+      complement, and `correctParentSex()` (`R/correctParentSex.R`, `isAdded`, which also answers
+      a `NULL` status with "no added rows"). One helper would put that contract in one place; the
+      cost is a cross-file refactor (four R files plus a new file and its tests, so staged commits
+      under the 5-file cap, and `SAFEGUARDS.md` asks for plan-mode approval of refactoring), and the
+      owner may judge four short copies enough. **Trap** to keep in any helper or caller: a
+      negative subscript built from an index that can be empty
       (`ped[-getRecordStatusIndex(ped, "added"), ]`) drops EVERY row when nothing is `"added"`.
 
 - [ ] **`convertDate(reportErrors = TRUE)` numbers an invalid date among the non-added records only
