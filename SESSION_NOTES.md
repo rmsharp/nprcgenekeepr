@@ -90,9 +90,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 **Deliverable:** BUNDLE/DOC cleanup of 5 trivial `PED_GV_AUDIT_TRIAGE_2026-09-26.md` findings:
 PED-11, NEW-56, NEW-63, PED-10/NEW-43, NEW-14 (with its empty-list edge) (IN PROGRESS).
 **Started:** 2026-09-27.
-**Status:** Session claimed. PRE-RED investigation done (read the audit and all 5 target files);
-owner picked `stop()` with a clear message for NEW-14's empty-list case, then approved the
-PRE-RED->RED gate. RED in progress.
+**Status:** PRE-RED done (read the audit and all 5 target files; owner picked `stop()` with a
+clear message for NEW-14's empty-list case). RED done: one new test in
+`tests/testthat/test_kinshipMatricesToKValues.R` confirmed FAILING (actual: "object 'kValues' not
+found"; expected: the new clear message). GREEN not yet started.
 **Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
 Phase 3F records the rest.
 

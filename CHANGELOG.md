@@ -60,8 +60,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-09-27 · [ad hoc] S795 claim: BUNDLE/DOC cleanup of 5 trivial PED_GV audit findings (PED-11, NEW-56, NEW-63, PED-10/NEW-43, NEW-14) (in progress)
-- **Model:** Claude Sonnet 5.
+### 2026-09-27 · [ad hoc] S795 PRE-RED: scoped the 5-item BUNDLE/DOC cleanup, decided NEW-14's empty-list fix
+- **Model:** Claude Sonnet 5. Read `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` and all 5 target
+  files. Confirmed each finding still holds: PED-11 (`getRecordStatusIndex.R:14`, `any()` wrapping
+  a scalar `%in%`), NEW-56 (`getPotentialParents.R:202`, `[1L]` on an already-scalar
+  `pUnknown$id[i]` -- `i` is a `for (i in seq_len(nrow(pUnknown)))` scalar index), NEW-63
+  (`getMaxAx.R:6,16` roxygen says "negative (males)" and "integer vector" but `bins` is a list of
+  non-negative `male`/`female` counts, per `test_getMaxAx.R`), PED-10/NEW-43 (`createPedOne.R:6-7`,
+  `createPedSix.R:6-7` roxygen says "packages `data` directory" but `savePed = TRUE` writes to
+  `tempdir()/data`), NEW-14 (`kinshipMatricesToKValues.R:96-115`'s first-flag accumulator never
+  initializes `kValues` for an empty list, so `kinshipMatricesToKValues(list())` stops with the
+  unrelated "object 'kValues' not found"; grepped every `R/`/vignette caller -- all always pass
+  `createSimKinships()` output, `n >= 1`, so the empty-list path is unreachable in practice).
+  Owner decision (`AskUserQuestion`) on NEW-14: `stop()` with a clear message
+  ("kinshipMatrices must contain at least one kinship matrix") rather than returning an empty
+  data.frame -- matches how the same audit's F1/F4 findings were fixed elsewhere (a silent/
+  confusing failure becomes a deliberate, named guard). PED-11/NEW-56/NEW-63/PED-10/NEW-43 are
+  behavior-neutral (existing tests already pin the current, unchanged output), so they are pure
+  REFACTOR; only NEW-14 gets a RED/GREEN cycle.
+
+### 2026-09-27 · [ad hoc] S795 RED: one test pinning kinshipMatricesToKValues(list())'s error message
+- **Model:** Claude Sonnet 5. `tests/testthat/test_kinshipMatricesToKValues.R`: added
+  `expect_error(kinshipMatricesToKValues(list()), "kinshipMatrices must contain at least one
+  kinship matrix", fixed = TRUE)`. Confirmed FAILING against the current file -- actual message is
+  "object 'kValues' not found".
 
 ### 2026-09-27 · [ad hoc] S794 records: shinytest2 CI timeout fix DONE (S793 handoff evaluated 7/10, self 8/10, receipt, Learning 808); full RED/GREEN/REFACTOR TDD cycle, BACKLOG item removed
 - **Model:** Claude Sonnet 5. Phase 3 close-out: Session 793's handoff evaluated 7/10 -- every

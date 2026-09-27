@@ -92,3 +92,14 @@ test_that("kinshipMatricesToKValues gets correct kinship values", {
     extractKValue(kValue, id1 = "A", id2 = "B", simulation = 3L)
   )
 })
+
+test_that(
+  "kinshipMatricesToKValues stops with a clear message when given no matrices",
+  {
+    expect_error(
+      kinshipMatricesToKValues(list()),
+      "kinshipMatrices must contain at least one kinship matrix",
+      fixed = TRUE
+    )
+  }
+)
