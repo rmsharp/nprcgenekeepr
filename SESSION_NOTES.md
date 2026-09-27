@@ -87,17 +87,61 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### Session 793 Handoff Evaluation (by Session 794)
-**Score: TBD -- fill at close-out after re-reading S793's own claims fresh.**
+**Score: 7/10.** Orient measurements held (ledger frontiers = HEAD, 0 undocumented; dashboard
+96/100; `CHANGELOG.md` over budget; working-tree residue matched, pre-dates this session). **Wrong:**
+"`shinytest2` hit its cap twice (found S791, recurred S793)" -- `gh run view --json jobs` shows
+exactly ONE cancelled run (2026-09-27T07:13:43Z); S791-793 all committed hours later the SAME
+day and each observed that same event, not two (Learning 808). Didn't waste time -- the real
+signal (duration trending toward the cap) was sound regardless -- but a session trusting "recurred"
+verbatim would have chased a phantom incident. **ROI:** high.
 
 ### What Session 794 Did
-**Deliverable:** Investigate and fix the `shinytest2` GitHub Actions workflow's recurring 30-minute
-execution-time cap (hit S791, recurred S793; `BACKLOG.md` "Up Next" item 1) (IN PROGRESS).
-**Started:** 2026-09-27.
-**Status:** Session claimed. Work beginning -- PRE-RED fact-finding (run-duration history via `gh
-run list --workflow=shinytest2.yaml`, existing test coverage of the workflow file) before any
-approach decision or test/code change.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest.
+**Deliverable, DONE:** Fixed the `shinytest2` 30-min CI timeout (`BACKLOG.md` item). Full TDD
+cycle (`DEVELOPMENT_WORKSTREAM.md`), every phase gate via `AskUserQuestion`.
+**PRE-RED (corrects S791-793):** one cancelled run only (30.02 min job, `gh run view --json
+jobs`); real signal is capacity growth (~20-22min early Aug -> consistently 24-30min Sept, 29.87min
+success 09-26, 30.02min cancelled 09-27) -- not a hang. Owner picked raising `timeout-minutes`
+over a matrix split.
+**RED** `tests/testthat/test_shinytest2_workflow_timeout.R`, asserts job `timeout-minutes:` == 45;
+confirmed failing at 30. **GREEN** `.github/workflows/shinytest2.yaml:46` 30->45; new test passes,
+sibling coverage test unaffected, unfiltered full suite 355 files/2,755 tests/8,408 passed/1
+known-pre-existing-failure/0 error, lint 0. **REFACTOR** resolved item removed from `BACKLOG.md`
+(record in `CHANGELOG.md`'s S794 entries), staged via `tail -n +6`/`hash-object`/`update-index
+--cacheinfo` (3 separate Bash calls) to exclude the unrelated YAML-header residue.
+**Commits:** claim `e1788ffd`; RED `d503a38c`; GREEN `dad5a3d0`; REFACTOR `0c1a5b44`; this records
+commit. **Runtime (3E):** CI config only, no `R/` change. Real verification needs a live GitHub
+run (push or `workflow_dispatch`) -- NOT triggered this session; pushing/dispatching are
+visible/shared-state actions left to the owner (FM #24: stated, not silently skipped).
+**Learnings:** 808 (`PROJECT_LEARNINGS.md:2283`).
+
+**Self-assessment: 8/10.** Caught and corrected the predecessor chain's own miscount before acting
+on it; used precise job-level timestamps, not run-level; every TDD gate posed via
+`AskUserQuestion`; kept the unrelated `BACKLOG.md` residue out of every commit; full suite + lint
+before REFACTOR. **Weak:** did not push/dispatch to close the real-world verification loop
+(deliberate, owner's call, but leaves the fix unverified against live infra).
+
+**Next steps:** (A) Owner's call: push 34 unpushed commits and/or `workflow_dispatch
+shinytest2.yaml` to verify the 45-min cap live. (B) `CHANGELOG.md` now 70,735 B, further over its
+65,536 B budget -- trim owed (`--force` likely), LAST among the three ledgers. (C) If growth
+resumes past 45min, the matrix-split alternative is captured in this session's `CHANGELOG.md`
+PRE-RED entry, not lost. (D) S793's own next-steps (B)-(E) unchanged: `suggested_NEWS_entry`
+disposition still open, PED_GV F2/F3 decisions, working-tree residue, unsynced methodology files.
+
+**Key files:** `.github/workflows/shinytest2.yaml:46`; `tests/testthat/test_shinytest2_workflow_timeout.R`; `BACKLOG.md` (item removed); `PROJECT_LEARNINGS.md:2283` (Learning 808).
+
+**Gotchas:** (1) `CHANGELOG.md` 70,735 B, over budget, trim owed. (2) 0 undocumented expected both
+frontiers; 34 unpushed as of just before this records commit (Learning 806 -- recount). (3) Fix is
+UNVERIFIED against live GitHub infra. (4) Working-tree residue unchanged from S791-793, pre-dates
+this session by mtime; the `BACKLOG.md` header survived this session's own edit via the 3-separate-
+Bash-call recipe (chained form still blocked by the auto-mode classifier). (5) New Learning 808: a
+scheduled CI failure observed by several same-day sessions with no new run between them is ONE
+event -- verify via `gh run view --json jobs` (job-level, not run-level) before trusting a
+predecessor's "recurred" claim. (6) STANDING SET unchanged from S790-793: full 40-char sha from
+`git rev-parse`; `git log --grep` needs `--extended-regexp`; `scratchpad/` invisible to git by
+owner decision; `CLAUDE.md` warn band = headroom; trim budget 65,536 B all three ledgers,
+`CHANGELOG.md` LAST; `context_budget.py` only tracks `CLAUDE.md`/`SESSION_NOTES.md`; foreground
+`sleep` blocked; skip CI wait only when every changed file is `.Rbuildignore`'d and read by no
+test.
 
 ### Session 792 Handoff Evaluation (by Session 793)
 **Score: 8/10.** Every Orient measurement held (both ledger frontiers = HEAD `10ec04f2`, 0

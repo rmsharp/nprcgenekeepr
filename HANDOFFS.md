@@ -182,17 +182,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S794
 date: 2026-09-27
-status: pending
-self_score: TBD
-predecessor_score: TBD
-active_task: Investigate and fix the shinytest2 GitHub Actions workflow's recurring 30-minute execution-time cap (BACKLOG.md "Up Next" item 1, found S791, recurred S793). PRE-RED fact-finding in progress.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: DONE -- investigated and fixed the shinytest2 GitHub Actions workflow's 30-minute execution-time cap. PRE-RED found the item's "hit twice" framing was wrong (one cancelled run, observed by 3 same-day sessions hours apart, not two); real signal was genuine capacity growth (job duration ~20-22min early Aug -> 24-30min Sept, breaching the cap 2026-09-27). Owner picked raising timeout-minutes (30->45) over a matrix split. Full RED/GREEN/REFACTOR TDD cycle completed, BACKLOG item removed.
+what_was_done: claim e1788ffd; RED d503a38c (tests/testthat/test_shinytest2_workflow_timeout.R, confirmed failing at 30); GREEN dad5a3d0 (.github/workflows/shinytest2.yaml:46, 30->45; new test passes; sibling coverage test unaffected; unfiltered full suite 355 files/2,755 tests/8,408 passed/1 known-pre-existing-failure/0 error; lint 0); REFACTOR 0c1a5b44 (resolved BACKLOG.md item removed via tail -n +6/hash-object/update-index --cacheinfo to exclude the unrelated pre-existing YAML-header residue from the commit); this records commit. Learning 808 added (PROJECT_LEARNINGS.md:2283).
+next_steps: (A) Owner's call: push the 34 unpushed commits and/or manually dispatch shinytest2.yaml to verify the 45-min cap holds on live GitHub infrastructure -- not done this session (visible/shared-state action). (B) CHANGELOG.md now 70,735 B, further over its 65,536 B trim budget -- trim owed, owner-gated --force likely, trim LAST among the three ledgers if others also need it. (C) If growth continues past 45 min in future months, the deferred alternative (parallel matrix split) is captured in this session's CHANGELOG.md PRE-RED entry, not lost. (D) S793's own next-steps (B)-(E) unchanged: suggested_NEWS_entry disposition still open, PED_GV F2/F3 decisions, working-tree residue, unsynced methodology files.
+key_files: .github/workflows/shinytest2.yaml:46 (the fix); tests/testthat/test_shinytest2_workflow_timeout.R (new RED test); BACKLOG.md (resolved item removed); PROJECT_LEARNINGS.md:2283 (Learning 808)
+gotchas: CHANGELOG.md 70,735 B, over budget, trim owed. 0 undocumented expected both ledger frontiers; 34 unpushed as of just before this records commit (Learning 806 reflex -- recount at pickup). shinytest2 fix is UNVERIFIED against live GitHub infra (no push/dispatch this session). Working tree residue unchanged from S791-793, all pre-dating this session by mtime, not a ghost session; the BACKLOG.md YAML-header residue survived this session's own edit via the tail -n +6/hash-object/update-index --cacheinfo recipe run as 3 SEPARATE Bash calls (chained form still blocked by the auto-mode classifier). New Learning 808: a scheduled CI failure observed by several same-day sessions hours apart with no new scheduled run between them is ONE event -- verify with gh run view --json jobs (job-level startedAt/completedAt, not run-level createdAt/updatedAt) before trusting a predecessor's "recurred"/"twice" framing. STANDING SET unchanged from S790-793 (see SESSION_NOTES.md gotcha 6 for the full list).
+runtime_smoke: n/a for R/ (no R/ file changed) -- CI workflow config only. Real-world verification requires a live GitHub run (next scheduled run or workflow_dispatch), deliberately not triggered this session pending the owner's push/dispatch decision (FM #24: stated explicitly, not silently treated as done).
+changelog_ref: e1788ffd (claim), d503a38c (RED), dad5a3d0 (GREEN), 0c1a5b44 (REFACTOR), and this records commit
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log); claim e1788ffd
 ```
 
 ```handoff

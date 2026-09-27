@@ -60,6 +60,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S794 records: shinytest2 CI timeout fix DONE (S793 handoff evaluated 7/10, self 8/10, receipt, Learning 808); full RED/GREEN/REFACTOR TDD cycle, BACKLOG item removed
+- **Model:** Claude Sonnet 5. Phase 3 close-out: Session 793's handoff evaluated 7/10 -- every
+  Orient measurement held fresh except one: `gh run view --json jobs` showed the "hit its cap
+  twice" framing (found S791, recurred S793) was actually ONE cancelled run
+  (2026-09-27T07:13:43Z) observed by three same-day sessions hours apart, not two separate
+  incidents (Learning 808). Self-assessed 8/10 (caught the predecessor-chain error before acting
+  on it; precise job-level timestamps used, not run-level; every TDD gate posed via
+  `AskUserQuestion`; full regression + lint before REFACTOR; weak point -- did not push or trigger
+  a live CI run to close the real-world verification loop, deliberately left to the owner).
+  `HANDOFFS.md` receipt completed (`status: complete`). Ledger sizes measured fresh at close-out:
+  `CHANGELOG.md` 70,735 B (further over its 65,536 B budget, trim owed, not done this session).
+  34 local commits ahead of `origin/master` as of just before this commit; not pushed (owner's
+  decision, per this session's own gotchas).
+
 ### 2026-09-27 · [ad hoc] S794 PRE-RED: shinytest2 CI timeout is capacity growth, not two occurrences -- BACKLOG.md's "found S791...recurred S793" double-counts one event
 - **Model:** Claude Sonnet 5. `gh run list --workflow=shinytest2.yaml` (60 runs) + `gh run view
   --json jobs` (precise job start/complete) show exactly ONE recent cancelled run
