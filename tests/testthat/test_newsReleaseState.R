@@ -21,6 +21,18 @@
 ## the one shading rule, and the male-parent-left rule. Each later piece adds
 ## its own checks below.
 ##
+## Stage 2, piece (b) (S790): the section's mating-symbol placement and
+## spacing entries. Two checks: the duplicate-node count the section cites
+## for the bundled 375-animal example is the CURRENT count, measured fresh
+## from .buildMatingUnitForest() (not a number carried forward from an
+## earlier session and never re-checked -- the "22" this piece replaces was
+## measured at S573 and had drifted to 113 by this session, Learning 802);
+## and no mating-symbol-placement entry overstates its own rule the way the
+## S789 male-left entry once did (the position engine's own tests document
+## named, disclosed exceptions to exact centering on the real fixture, so
+## "each"/"every" wording here is also an overstatement -- promisesEveryPair()
+## now flags "each" too, alongside "always/every/all").
+##
 ## NEWS.Rmd is build-ignored, so the real-file tests skip inside an R CMD
 ## check tarball, like test_effectivePopulationSizeDocs.R.
 
@@ -138,9 +150,13 @@ defaultStyles <- function(text) {
 }
 
 ## Whether a sentence promises something for every pair ("always", "every",
-## "all"), as opposed to "in most cases".
+## "all", or "each" used as a leading universal quantifier: "each mated
+## pair"), as opposed to "in most cases"/"many". "each" is matched only when
+## followed by a word, not by punctuation, so a per-pair COUNT ("one mate
+## each,") is not mistaken for a promise.
 promisesEveryPair <- function(text) {
-  grepl("\\b(always|every|all)\\b", text, ignore.case = TRUE)
+  grepl("\\b(always|every|all)\\b", text, ignore.case = TRUE) |
+    grepl("\\beach\\s+\\w", text, ignore.case = TRUE)
 }
 
 ## The integer a source line "<name> <- <n>L" assigns; NA if there is none.
@@ -167,6 +183,15 @@ diagramSectionEntries <- function() {
   skip_if_not(file.exists(path), "NEWS.Rmd not present in this build")
   newsSectionEntries(newsTopBlock(readLines(path, warn = FALSE)),
                      "Pedigree Diagram")
+}
+
+## The number of individuals whose mating symbol anchors more than one mating
+## unit (so at least one extra "duplicate" node is drawn for them elsewhere in
+## the diagram), via .buildMatingUnitForest() directly -- the layout engine's
+## own accounting of duplicate nodes, never a hardcoded or recalled figure
+## (piece (a)'s Learning 802: verify a claim against real output, not memory).
+matingUnitDuplicateCount <- function(ped) {
+  length(unique(.buildMatingUnitForest(ped)$duplicates$realId))
 }
 
 test_that("newsTopBlock() returns only the newest version block", {
@@ -356,14 +381,34 @@ test_that("readCap() reads the constant and not a longer name or a comment", {
 test_that("promisesEveryPair() flags an unqualified promise only", {
   for (txt in c("The male parent is always drawn on the left.",
                 "Every mated pair puts the male parent on the left.",
-                "All pairs are drawn male-left.")) {
+                "All pairs are drawn male-left.",
+                "Each mated pair is drawn on the side nearest the children.")) {
     expect_true(promisesEveryPair(txt), info = txt)
   }
   for (txt in c("The male parent is drawn on the left in most cases.",
                 "A parent with several mates is placed to fit the family.",
-                "Pairs can appear either way round.")) {
+                "Pairs can appear either way round.",
+                "Many mated pairs are drawn on the side nearest the children.",
+                paste("For most simple mated pairs (one mate each, no other",
+                     "family complications), the gap is clear."))) {
     expect_false(promisesEveryPair(txt), info = txt)
   }
+})
+
+test_that("matingUnitDuplicateCount() counts distinct multi-anchor
+           individuals, not duplicate nodes -- the GA204Z/8LKBV9 loop fixture
+           (also used in test_positionMatingUnitForest.R) has exactly one
+           duplicate node, all for the same individual, 8LKBV9", {
+  ped <- data.frame(
+    id = c("5A6DFT", "8DKELJ", "G8EBU9", "8P17E3",
+           "8LKBV9", "FJIB3R", "9VGCCV", "GA204Z"),
+    sire = c(NA, NA, NA, NA, "5A6DFT", "8LKBV9", "8LKBV9", "8LKBV9"),
+    dam = c(NA, NA, NA, NA, "8DKELJ", "G8EBU9", "8P17E3", "FJIB3R"),
+    sex = c("M", "F", "F", "F", "M", "F", "F", "M"),
+    gen = c(0L, 0L, 0L, 0L, 1L, 2L, 2L, 3L),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(matingUnitDuplicateCount(ped), 1L)
 })
 
 test_that("the Pedigree Diagram section states the display limits once", {
@@ -446,6 +491,49 @@ test_that("the Pedigree Diagram section does not overstate male-left", {
     ## have him on the left). The entry must not promise every pair.
     expect_false(promisesEveryPair(entries$text[i]),
                  info = sprintf("line %d promises every pair", entries$line[i]))
+  }
+})
+
+test_that("the Pedigree Diagram section cites the CURRENT mating-symbol
+           duplicate-node count for the bundled 375-animal example, not a
+           stale historical measurement", {
+  entries <- diagramSectionEntries()
+  expect_gt(nrow(entries), 0L)
+  hits <- grepl("duplicate node", entries$text, ignore.case = TRUE) &
+    grepl("bundled", entries$text, ignore.case = TRUE)
+  expect_equal(sum(hits), 1L,
+               info = paste("entries citing a bundled-example duplicate-node",
+                            "count start at lines:",
+                            paste(entries$line[hits], collapse = ", ")))
+  src <- system.file("extdata", "examples", "obfuscated_rhesus_mhc_ped.csv",
+                     package = "nprcgenekeepr")
+  skip_if_not(nzchar(src), "obfuscated_rhesus_mhc_ped.csv not present in this build")
+  ped <- read.csv(src, stringsAsFactors = FALSE)
+  n <- matingUnitDuplicateCount(ped)
+  ## The count was actually measured (a check that read 0 individuals would
+  ## otherwise pass for the wrong reason).
+  expect_gt(n, 0L)
+  expect_true(grepl(paste0("\\b", n, "\\b"), entries$text[hits]),
+              info = sprintf(
+                "line %d does not cite the current count (%d): %s",
+                entries$line[hits], n, entries$text[hits]))
+})
+
+test_that("the Pedigree Diagram section does not overstate mating-symbol
+           placement or spacing (the position engine's own tests document
+           named, disclosed exceptions to exact centering on the real
+           fixture, so an unqualified 'each pair'/'every symbol' promise is
+           an overstatement, the same class of finding as S789's male-left
+           entry)", {
+  entries <- diagramSectionEntries()
+  expect_gt(nrow(entries), 0L)
+  placement <- grepl("mating (symbol|dot)", entries$text, ignore.case = TRUE) |
+    grepl("drawn on the side of the family", entries$text, ignore.case = TRUE)
+  expect_gt(sum(placement), 0L)
+  for (i in which(placement)) {
+    expect_false(promisesEveryPair(entries$text[i]),
+                 info = sprintf("line %d promises every pair: %s",
+                                entries$line[i], entries$text[i]))
   }
 })
 
