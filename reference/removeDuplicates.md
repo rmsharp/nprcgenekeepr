@@ -18,14 +18,18 @@ removeDuplicates(ped, reportErrors = FALSE)
 - reportErrors:
 
   logical value if TRUE the function returns a character vector of
-  duplicate `id` values found among original records (or `NULL` when
-  none are found) instead of the de-duplicated pedigree.
+  duplicate `id` values (or `NULL` when none are found) instead of the
+  de-duplicated pedigree. Only records whose `recordStatus` is `"added"`
+  (the records made for parents that have no record of their own) are
+  left out of the search; a record with any other `recordStatus`,
+  including `NA` or a blank, is a real animal and is searched.
 
 ## Value
 
 When `reportErrors` is `FALSE`, a `Pedigree` object with duplicate rows
 removed; when `reportErrors` is `TRUE`, a character vector of duplicate
-`id` values (or `NULL` when none are found).
+`id` values, one entry for each extra occurrence of an `id` (or `NULL`
+when none are found).
 
 ## Details
 

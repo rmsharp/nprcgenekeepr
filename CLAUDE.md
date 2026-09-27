@@ -360,17 +360,21 @@ Learning 770; the report-don’t-fix precedent it followed: Learning 382.
 **NEWS.Rmd entry checklist (owner-directed, S448; plain-language
 criterion added S628):** any session that ships a new exported function
 or user-facing Shiny feature/control must add a `NEWS.Rmd` entry
-(current development-version section, matching existing style) in the
-same session it ships (origin — issue \#130’s five slices shipped with
-none: Learning 433). **Plain-language criterion:** the entry must read
-plainly for a colony-manager/veterinarian reader, not an R programmer —
-what changed and why it matters, in one or two short sentences; domain
-vocabulary (“kinship”/“genotype”/“heterozygosity”) is fine,
-implementation-flavored phrasing (“vectorized matrix algebra,”
+(current development-version section; **release-state wording** — one
+entry per feature, stating the finished state against the PRIOR release,
+never an in-progress milestone such as “first step” or “continued”;
+`tests/testthat/test_newsReleaseState.R` guards the phrases, Learning
+785) in the same session it ships (origin — issue \#130’s five slices
+shipped with none: Learning 433). **Plain-language criterion:** the
+entry must read plainly for a colony-manager/veterinarian reader, not an
+R programmer — what changed and why it matters, in one or two short
+sentences; domain vocabulary (“kinship”/“genotype”/“heterozygosity”) is
+fine, implementation-flavored phrasing (“vectorized matrix algebra,”
 “KING-robust,” “a CERVUS-style multilocus LOD score”) is not.
 Deliberately a per-session judgment check, not an automated word list (a
-banned-term lint would false-positive on legitimate domain vocabulary).
-Drift history behind the criterion: Learnings 544/770.
+banned-term lint would false-positive on legitimate domain vocabulary;
+the release-state guard above matches only structural milestone
+markers). Drift history behind the criterion: Learnings 544/770.
 
 **`a2interactive.Rmd` script-callable-function checklist (owner-directed
 S450; scope broadened S478):** any new exported, script-callable

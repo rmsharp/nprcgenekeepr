@@ -84,7 +84,10 @@ individual.</p></dd>
 <dt id="arg-recordstatus">recordStatus<a class="anchor" aria-label="anchor" href="#arg-recordstatus"></a></dt>
 <dd><p>character vector with value of <code>"added"</code> or
 <code>"original"</code>, which indicates whether an animal was added or an
-original animal.</p></dd>
+original animal. Only <code>"added"</code> is special: an <code>NA</code>, blank or
+unrecognized value is treated as an original animal, and <code>NULL</code> means
+no added records are known. It is used only when
+<code>reportErrors = TRUE</code>.</p></dd>
 
 
 <dt id="arg-reporterrors">reportErrors<a class="anchor" aria-label="anchor" href="#arg-reporterrors"></a></dt>
@@ -108,6 +111,11 @@ elements <code>sireAndDam</code>, <code>femaleSires</code>, and <code>maleDams</
 corrected (to <code>"M"</code> and <code>"F"</code> respectively). Parents recorded as
 hermaphrodite (<code>"H"</code>) or unknown (<code>"U"</code>) sex are left unchanged,
 consistent with <code>reportErrors = TRUE</code> mode, which does not flag them.</p>
+<p>When <code>reportErrors = TRUE</code>, only records whose <code>recordStatus</code> is
+exactly <code>"added"</code> are left out of the report. A missing (<code>NA</code>),
+blank or unrecognized status is treated as an original animal, and a
+<code>NULL</code> <code>recordStatus</code> means no added records are known, so every
+animal is checked.</p>
     </div>
 
     <div class="section level2">

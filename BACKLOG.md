@@ -42,50 +42,78 @@ lists them) once the owner agrees. **Trap:** an id grep of the ledger
 both under- and over-counts (`NEWS.md` once used “NEW-47/48/49” as entry
 labels), so use the report’s table, not the old 41-id list.
 
-**Four more places test `recordStatus == "original"` or `"added"` with
-no NA guard and misbehave on a hand-built `NA` status (found S784,
-2026-09-26, DECISION NEEDED, Effort S-M)** – the S784 slice fixed only
-[`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
-(it now removes exactly the `"added"` rows); the owner left these out at
-its Pre-RED gate. Probe (S784, `smallPed` with a `recordStatus` column,
-one value set to `NA` at row 5; a scratch script, not in git):
+**A sire or dam whose sex is blank or unrecognized is reported as a
+“female sire” or “male dam” by the pedigree check (found S787,
+2026-09-26, DECISION NEEDED, Effort S)** – measured S787 (a namespace
+spy under `qcStudbook(reportErrors = TRUE)`, then a plain
+`reportErrors = FALSE` call):
+[`convertSexCodes()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertSexCodes.md)
+maps a MISSING sex to `"U"` (`R/convertSexCodes.R:39`) but a blank or
+unrecognized code (`""`, `"xyz"`) to `NA` (the final
+[`factor()`](https://rdrr.io/r/base/factor.html), `:50`), and
+[`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
+tests `!sex %in% c("H", "U", "M")`, which is `TRUE` for `NA`. So a sire
+whose sex cannot be read comes back in `femaleSires` (a dam in
+`maleDams`), and the app’s error list says “female sire” (measured:
+`femaleSires = "s1"` and `maleDams = "d1"`); with `reportErrors = FALSE`
+the same sire’s sex is silently set to `"M"` (the dam’s to `"F"`) in the
+returned pedigree. A sex of `NA` (missing) or `"M"` is not reported.
+**Decide:** (1) leave it (an unreadable sex on a parent is worth a flag
+and the wording is close enough); (2) report it under its own heading as
+an unreadable-sex parent rather than a wrong-sex one; or (3) map a blank
+or unrecognized sex to `"U"` like a missing one in
+[`convertSexCodes()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertSexCodes.md)
+(a behavior change for every consumer of that function). Outside the
+`recordStatus` slices; the measurement is in the S787 RED entry of
+`CHANGELOG.md`. Tests to extend:
+`tests/testthat/test_correctParentSex.R`,
+`tests/testthat/test_convertSexCodes.R`.
+
+**(Optional, owner decision) One internal `isAddedRecord()` helper for
+the “added” mask (raised S785, deferred at the S785, S786 and S787
+REFACTORs; DECISION NEEDED, Effort S)** – the mask is written inline
+four times, all meaning “only the exact status `"added"` is special; an
+`NA`, blank or unrecognized status is a real animal”:
 [`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
-(`R/convertDate.R:95-96`) returns 18 rows from 17, two all-`NA`;
-`removeDuplicates(reportErrors = TRUE)` (`R/removeDuplicates.R:39-40`,
-two `NA` statuses) names an innocent id (`"F"`) as a duplicate;
-`getRecordStatusIndex(ped, "added")` (`R/getRecordStatusIndex.R:15`)
-returns `NA_integer_`, and its only remaining caller,
-`R/getDateErrorsAndConvertDatesInPed.R:39-42`, stops (“only 0’s may be
-mixed with negative subscripts”) whenever the pedigree also has an
-invalid date;
-[`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
-(`R/correctParentSex.R:90,92`) has the same `recordStatus == "original"`
-inside a logical subscript and was read, not probed (an `NA` there would
-put an `NA` id in the female-sire or male-dam report). Reach (read, not
-run through the app):
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-calls
-[`addParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addParents.md)
-(`R/qcStudbook.R:229`), which overwrites `recordStatus` unconditionally
-(`R/addParents.R:43-44`), so neither the app nor
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-can carry an `NA` status; only a script that hand-builds the column and
-calls
-[`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md),
+(`R/convertDate.R:103`) and
 [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
-or
-[`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
-directly can. **Decision for the owner:** (1) treat `"added"` as the
-only special status everywhere – one shared NA-safe test used at all
-four sites (matches the
+(`R/removeDuplicates.R:46`) as `!is.na(x) & x == "added"`,
 [`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
-contract; 4-5 files, so one small slice per file); (2) stop early with a
-message naming rows whose status is neither `"original"` nor `"added"`
-(one check; changes what a script sees); (3) leave it (unreachable from
-the app; roxygen note only). **Trap:** a negative subscript built from
-an index that can be empty
+(`R/removeUnknownAnimals.R:31`) as its complement, and
+[`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
+(`R/correctParentSex.R`, `isAdded`, which also answers a `NULL` status
+with “no added rows”). One helper would put that contract in one place;
+the cost is a cross-file refactor (four R files plus a new file and its
+tests, so staged commits under the 5-file cap, and `SAFEGUARDS.md` asks
+for plan-mode approval of refactoring), and the owner may judge four
+short copies enough. **Trap** to keep in any helper or caller: a
+negative subscript built from an index that can be empty
 (`ped[-getRecordStatusIndex(ped, "added"), ]`) drops EVERY row when
 nothing is `"added"`.
+
+**`convertDate(reportErrors = TRUE)` numbers an invalid date among the
+non-added records only (found S785, 2026-09-26, DECISION NEEDED, Effort
+S, low priority)** – probe (S785, a 3-row pedigree: `x1` `"added"`, `a`
+valid, `b` with a bad date on row 3): it reports row `2`, not `3`; the
+pre-change code reports `2` too, so the S785 slice did not cause it.
+With the added row LAST, the order
+[`addParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addParents.md)
+produces, it reports the right row, so the app and
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+are unaffected; only a script that puts an added row ahead of an
+original can see it. `R/convertDate.R` numbers
+`seq_along(originalDates)` after the added records are set aside, and
+[`getDateErrorsAndConvertDatesInPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDateErrorsAndConvertDatesInPed.md)
+copies those numbers into `errorLst$invalidDateRows`
+(`R/getDateErrorsAndConvertDatesInPed.R:36`), the list the user reads,
+and uses them as full-pedigree row numbers in `sb[-invalidAndAdded, ]`
+(`:37-41`). **Decision for the owner:** (1) map the reported numbers
+back to full-pedigree rows inside
+[`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
+(`which(!isAdded)[rows]`; one line plus a test; changes the numbers a
+script sees only in that order); or (2) document the numbering in
+`@return` and leave it. The test must pin BOTH orders (added first and
+added last).
 
 **[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
 fails cryptically on an id or parent that is absent from the tree, and
@@ -158,23 +186,46 @@ shared shape is a choices builder plus a modal constructor taking the
 warning text and the namespace. **Known, accepted:** an unhandled
 click-time error ends the Shiny session (Learning 786).
 
-**`NEWS.Rmd` release-state sweep — rewrite entries that describe
-in-progress milestones (owner-directed S774, 2026-09-23; READY, Effort
-M)** – the owner ruled that NEWS entries state the finished state at
-release relative to the PRIOR release (2.0.0), never a point between
-releases (Learning 785). A heuristic grep of the development section
-(pattern list: first/final step, “continued)”, groundwork, “later
-step(s)”, “arrive(s) in”) found four feature clusters: the MHC
-haplotype-frequency entry (`NEWS.Rmd:308`), the four \#168 ancestry
-entries (`:376-410`: “Groundwork…”, “…continued” x2, “…final step” —
-merge into one release-state entry), and the two \#167 longitudinal
-entries (`:460-468`, `:478-488`: “arrives in later steps/the next
-step”). The grep is a floor, not a census: the pickup should read the
-whole development section once. Plain-language criterion (S628) still
-applies. `NEWS.md` was last re-rendered S716, so it lags `NEWS.Rmd` and
-needs a render at release. Open, the owner’s call: adding the rule to
-`CLAUDE.md`’s NEWS checklist (its “matching existing style” wording
-conflicts with it).
+**`NEWS.Rmd` release-state sweep – STAGE 1 DONE (S788, 2026-09-26); the
+Pedigree Diagram section remains, in stages (owner-directed S774; staged
+by the owner’s S788 decision; READY, Effort M per stage)** – the rule is
+Learning 785: NEWS entries state the finished state against the PRIOR
+release (2.0.0), never a point between releases. **Stage 1 (record: the
+S788 entries in `CHANGELOG.md`)** rewrote the 12 entries that carried an
+explicit diary phrase (MHC, \#168 merged from four entries into one,
+\#167, and five others), added the guard
+`tests/testthat/test_newsReleaseState.R` (a phrase list over the newest
+`NEWS.Rmd` block) and put the rule into `CLAUDE.md`’s NEWS checklist.
+**What is left is the `## Pedigree Diagram` section (45 entries).** The
+diagram code is entirely absent at the `v2.0.0` tag (checked S788:
+`git cat-file -e v2.0.0:R/makePedigreeMatingLayout.R` fails), so a 2.0.0
+reader never saw the behavior that about 20 of those bullets describe as
+a fix or an improvement (“now”, “no longer”, “Fixed”, “Previously”,
+“(see above)”, “(see the rerouting entry above)”); they should collapse
+into finished-state entries. **One piece per session, strict TDD each:
+add the piece’s phrase patterns to the guard as a failing test FIRST,
+then rewrite, checking every sentence against the code and the bundled
+example before keeping it.** Proposed pieces (re-derive at pickup by
+reading the section again): (a) display and defaults – **first resolve a
+conflict in the text: it says a pedigree above 750 animals shows a
+message (`NEWS.Rmd:23`) and also that the default limit is 400 animals,
+750 under “Direct” (`:79`); read `R/modPedigree.R` for the real
+limits**; (b) mating-symbol placement and spacing (the largest group);
+(c) connector routing, collision avoidance and the Rectilinear
+sibling-bar entries; (d) the crash fixes, the example pedigrees, and the
+cross-references outside this section (“described below” and “… above”
+in Marker Genetics and Mate Pair). Scope the new patterns to the section
+being condensed: “no longer” and “Fixed” are legitimate in
+`## General Fixes`, where they describe 2.0.0 code. **Also open from
+stage 1:** the sentence “Two rarer related cases are not corrected”
+(issue \#160, closed 2026-08-16; `NEWS.Rmd:84`) was kept but NOT
+re-checked against the code, so piece (c) must find what the two cases
+are and whether they still hold; the `## Package` entry (`:18`, “CRAN
+accepted the 2.0.0 submission…”) reports the prior release, not a change
+in this one, so the owner may prefer to delete it. `NEWS.md` was last
+re-rendered S716, so it lags `NEWS.Rmd` and needs a render at release.
+The plain-language criterion (S628) still applies to every rewritten
+entry.
 
 **Audit the internal and user-facing documentation for stale information
 and stale diagrams** (owner-requested 2026-09-26; READY, Effort L – one

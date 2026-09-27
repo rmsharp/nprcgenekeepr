@@ -69,17 +69,21 @@ information. The <code>id</code> and <code>recordStatus</code> columns are requi
 
 <dt id="arg-reporterrors">reportErrors<a class="anchor" aria-label="anchor" href="#arg-reporterrors"></a></dt>
 <dd><p>logical value if TRUE the function returns a
-character vector of duplicate <code>id</code> values found among
-original records (or <code>NULL</code> when none are found) instead of
-the de-duplicated pedigree.</p></dd>
+character vector of duplicate <code>id</code> values (or <code>NULL</code> when none
+are found) instead of the de-duplicated pedigree. Only records whose
+<code>recordStatus</code> is <code>"added"</code> (the records made for parents that
+have no record of their own) are left out of the search; a record with
+any other <code>recordStatus</code>, including <code>NA</code> or a blank, is a real
+animal and is searched.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>When <code>reportErrors</code> is <code>FALSE</code>, a <code>Pedigree</code>
 object with duplicate rows removed; when <code>reportErrors</code> is
-<code>TRUE</code>, a character vector of duplicate <code>id</code> values (or
-<code>NULL</code> when none are found).</p>
+<code>TRUE</code>, a character vector of duplicate <code>id</code> values, one entry
+for each extra occurrence of an <code>id</code> (or <code>NULL</code> when none are
+found).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

@@ -14,7 +14,11 @@ convertDate(ped, timeOrigin = as.Date("1970-01-01"), reportErrors = FALSE)
 
   a dataframe of pedigree information that may contain birth, death,
   departure, or exit dates. The fields are optional, but will be used if
-  present.(optional fields: birth, death, departure, and exit).
+  present.(optional fields: birth, death, departure, and exit). If it
+  has a `recordStatus` column, only the records marked `"added"`
+  (animals added as stand-ins for unknown parents) are left unconverted.
+  Every other record, including one whose `recordStatus` is `NA` or not
+  recognized, is a real animal and has its dates converted and checked.
 
 - timeOrigin:
 
@@ -30,7 +34,9 @@ convertDate(ped, timeOrigin = as.Date("1970-01-01"), reportErrors = FALSE)
 
 A dataframe with an updated table with date columns converted from
 `character` data type to `Date` data type. Values that do not conform to
-the format %Y%m%d are set to NA. NA values are left as NA.
+the format %Y%m%d are set to NA. NA values are left as NA. Records
+marked `"added"` are not checked and are returned after the other
+records.
 
 ## Examples
 

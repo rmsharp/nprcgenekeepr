@@ -31,7 +31,10 @@ correctParentSex(id, sire, dam, sex, recordStatus, reportErrors = FALSE)
 - recordStatus:
 
   character vector with value of `"added"` or `"original"`, which
-  indicates whether an animal was added or an original animal.
+  indicates whether an animal was added or an original animal. Only
+  `"added"` is special: an `NA`, blank or unrecognized value is treated
+  as an original animal, and `NULL` means no added records are known. It
+  is used only when `reportErrors = TRUE`.
 
 - reportErrors:
 
@@ -53,6 +56,12 @@ Only true female-sires (`"F"`) and male-dams (`"M"`) are corrected (to
 `"M"` and `"F"` respectively). Parents recorded as hermaphrodite (`"H"`)
 or unknown (`"U"`) sex are left unchanged, consistent with
 `reportErrors = TRUE` mode, which does not flag them.
+
+When `reportErrors = TRUE`, only records whose `recordStatus` is exactly
+`"added"` are left out of the report. A missing (`NA`), blank or
+unrecognized status is treated as an original animal, and a `NULL`
+`recordStatus` means no added records are known, so every animal is
+checked.
 
 ## Examples
 
