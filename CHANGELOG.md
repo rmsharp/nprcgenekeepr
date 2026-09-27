@@ -56,6 +56,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S789 RED: four checks that tie the Pedigree Diagram release notes to what the app does (4 failing by design); stage 2 piece (a) of the `NEWS.Rmd` sweep
+- **Model:** Claude Sonnet 5. Test-only commit (`tests/testthat/test_newsReleaseState.R`); no
+  `NEWS.Rmd` or `R/` change. **Pre-RED (read, then owner decisions):** the whole `## Pedigree
+  Diagram` section read (`NEWS.Rmd:21-221`) and each claim checked against the code. Facts:
+  the default connector style is **Rectilinear** in the app (`R/modPedigree.R:423-429`) and in
+  `makePedigreeMatingLayout(edgeStyle = c("rectilinear", "direct"))`
+  (`R/makePedigreeDiagramData.R:1682`); the display limit is **400 animals under Rectilinear, 750
+  under Direct** (`R/modPedigree.R:405,417`; the over-limit message is at `:505-515`); only an
+  animal marked affected is drawn filled (`.affectedColor()`, `R/makePedigreeDiagramData.R:173`),
+  and none of the 7 bundled pedigree data frames with `id`, `sire` and `dam` columns (measured by
+  a scan of `data(package = "nprcgenekeepr")`) or the 5 example-pedigree CSV files has an
+  `affected` column, so all draw open; the male-parent-left placement has no setting
+  (`makePedigreeMatingLayout()` has no `orderBySex`); the diagram code is absent at the `v2.0.0`
+  tag (`git cat-file -e v2.0.0:R/makePedigreeMatingLayout.R` fails; `modPedigree.R` at that tag
+  has 0 diagram mentions). The 750-versus-400 conflict the item names resolves as: `NEWS.Rmd:23`
+  (750 alone) is wrong for the default, `:78-80` is right. Also found: `NEWS.Rmd:41-43` calls
+  "Direct" the default (wrong), and `:53-55` says male-left is "by default" (it cannot be turned
+  off). The user manual (`vignettes/manual_components/_pedigree_browser.Rmd:56`) also words the
+  limit as "750, drops to 400 under Rectilinear", which reads misleadingly since Rectilinear is
+  the default: left for the docs staleness audit, not this piece. **Owner decisions (plain-words
+  gate):** scope = limits and defaults together (limit, default style, shading rule, male-left
+  wording; about 6 entries become 3 or 4); guard = check only what this piece rewrites (each
+  later piece adds its own); PRE-RED to RED yes. **RED:** 3 helpers with unit tests on made-up
+  text (`newsSectionEntries()`, `defaultStyles()`, `readCap()`) and two skip-aware readers
+  (`diagramCaps()`, `diagramSectionEntries()`), and 4 real-file checks scoped to the section: (1) exactly one entry names a display limit, with
+  400 followed by Rectilinear and 750 by Direct, the two numbers read from `R/modPedigree.R`;
+  (2) every sentence that makes a style the default names the style the code defaults to; (3)
+  exactly one entry describes shading and none says "rather than filled/shaded"; (4) the
+  male-left entry does not say "by default" and does say "always". **Measured:** the file runs 20
+  tests, 69 expectations, **10 failed** in exactly the 4 predicted tests (5 in the limit check:
+  2 entries name a limit, at lines 22 and 78, and neither states each number beside its style; 1 in
+  the default check, line 41; 2 in the shading check, entries at lines 44, 56 and 66 with 56 and 66
+  narrating a change; 2 in the male-left check, line 53), 0 errors, 0 skipped, 0 warnings; the 16
+  other tests, stage 1 included, pass; every failure message read and names its lines. The
+  full suite was not run (test-only commit). TDD phase RED.
+
 ### 2026-09-27 · [ad hoc] S789 claim: `NEWS.Rmd` release-state sweep, stage 2 piece (a) (Pedigree Diagram display and defaults entries) *(in progress)*
 - Owner-picked at the Phase 0 priorities gate (item 1, `BACKLOG.md` "`NEWS.Rmd` release-state
   sweep", READY, Effort M; owner-directed S774, Learning 785; stage 1 shipped S788). Deliverable:
