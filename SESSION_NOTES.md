@@ -82,6 +82,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 791 Did
+**Deliverable:** `NEWS.Rmd` release-state sweep stage 2 piece (c): connector routing, collision
+avoidance, and the Rectilinear sibling-bar entries (IN PROGRESS).
+**Started:** 2026-09-27.
+**Status:** Session claimed. Work beginning (claim written late -- see the `HANDOFFS.md` receipt's
+`active_task` disclosure: PRE-RED fact-finding and the PRE-RED->RED gate happened before this stub).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest.
+
 ### Session 789 Handoff Evaluation (by Session 790)
 **Score: 9/10.** **What helped:** every Orient measurement held -- both ledger frontiers = HEAD
 (`8684c8d3`, 0 undocumented); 9 unpushed and `origin/master` = `ff8308a5` exactly as the receipt

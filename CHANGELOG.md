@@ -60,6 +60,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S791 claim: `NEWS.Rmd` release-state sweep stage 2 piece (c), connector routing/collision avoidance/sibling-bar entries (in progress)
+- **Model:** Claude Sonnet 5. Stub + pending `HANDOFFS.md` receipt + this in-progress entry.
+  Owner-picked at the Phase 0 priorities gate (`NEWS.Rmd` sweep, piece (c)) from 4 offered options.
+  Orient measured: `CHANGELOG.md` frontier = HEAD (`176081f1`), 0 undocumented; `HANDOFFS.md`
+  frontier 2 commits behind HEAD, both S790's own in-session ledger fixups, not a new session;
+  17 unpushed at `origin/master` = `ff8308a5` (4/4 push workflows green; a same-day scheduled
+  `shinytest2` run timed out at its 30-minute cap, unrelated, reported not fixed); working tree
+  matched the predicted residue exactly (`BACKLOG.md` owner header only, `BACKLOG.log`, two
+  `suggested_NEWS_entry` drafts, 5 render artifacts). **Disclosure:** this claim was written LATE
+  -- PRE-RED fact-finding (re-reading the section, tracing issue #160's Track 1/Track 2 history in
+  the code and `git log`/`gh issue view`, live-measuring the current residual count) happened
+  first, then a scope question about the owner's untracked `suggested_NEWS_entry.md`/`.Rmd` draft
+  (resolved: keep piece (c) as scoped, treat the draft as a separate future deliverable), then the
+  PRE-RED→RED `AskUserQuestion` gate, and only then this stub -- caught before the RED commit,
+  corrected by writing it now rather than silently skipping it.
+  **PRE-RED finding:** `NEWS.Rmd:82`'s "Two rarer related cases are not corrected" (issue #160) is
+  stale -- true right after Track 1 shipped (S593), superseded the next day when Track 2
+  (`.resolveEdgeNodeCollisions()`, S595) generalized same-row collision repair to every straight
+  edge. Measured fresh today by running the real rectilinear pipeline
+  (`makePedigreeMatingLayout(edgeStyle = "direct")` + `.buildMatingUnitForest()` +
+  `.positionMatingUnitForest()` + `.addRectilinearWaypoints()` + `.resolveEdgeNodeCollisions()`) on
+  the bundled 375-animal example: 72 residuals, **all** `kind == "curved-heuristic"` (the
+  already-disclosed duplicate-connector-arc entry just below it), **0** `"straight-residual"` --
+  matching S715's own shipped arc count (72) exactly, so nothing has drifted since. All other 11
+  entries in piece (c)'s scope (`:67-69`, `:83-90`, `:122-142`, `:153-198`) checked against the code
+  and its own test suite and found still accurate as written (dangling-parent dogleg: covered by
+  `test_addRectilinearWaypoints.R`'s issue #154 tests; the "about a quarter shorter"/"roughly three
+  quarters" measured proportions: traced to the S695 root-subtree-ordering close-out and the S715
+  arc-census close-out respectively, both confirmed current by the same live measurement).
+
 ### 2026-09-27 · [ad hoc] S790 -- Learning 803 committed separately (`e9e90d63`) from the records commit, to hold the 5-file blast-radius cap (the records commit already carried the 4 HANDOFFS.md archive-pass files); no other change
 
 ### 2026-09-27 · [ad hoc] S790 records: stage 2 piece (b) of the `NEWS.Rmd` sweep DONE (S789 handoff evaluated 9/10, self 8/10, receipt, Learning 803, next-session items); ratchet 1/1 on `ff682ffb`

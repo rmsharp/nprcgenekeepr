@@ -180,6 +180,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S791
+date: 2026-09-27
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: IN PROGRESS -- NEWS.Rmd release-state sweep, stage 2 piece (c) (connector routing, collision avoidance, and the Rectilinear sibling-bar entries). Owner-picked at the Phase 0 priorities gate. Disclosure: this claim stub was written LATE -- PRE-RED fact-finding (re-reading the section, tracing issue #160's Track 1/Track 2 history, measuring the current residual count) happened first, and only after that did the PRE-RED->RED AskUserQuestion gate get posed and RED get written; caught before the RED commit, corrected by writing this stub now rather than silently skipping it (same class of self-caught process slip as S790's own disclosures).
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S790
 date: 2026-09-27
 status: complete
