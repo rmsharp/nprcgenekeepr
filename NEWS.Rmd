@@ -20,9 +20,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Pedigree Diagram
 - The Pedigree Browser tab gained an interactive **Diagram** view: click
-  any animal to re-center the diagram on it. Pedigrees above 750 animals
-  show an informative message instead of rendering, to keep diagrams
-  readable (issue #129).
+  any animal to re-center the diagram on it. A pedigree above the display
+  limit -- 400 animals with the default "Rectilinear" connector style, 750
+  with "Direct" -- shows an informative message instead of rendering, to
+  keep diagrams readable; trimming the pedigree to fewer focal animals
+  brings it back under the limit (issue #129).
 - The Diagram tab includes an in-app legend explaining what each shape
   means for an animal's sex (issue #132).
 - The Diagram tab includes hover tooltips and a search/highlight box for
@@ -39,22 +41,24 @@ knitr::opts_chunk$set(echo = TRUE)
   skip the recalculation; when the argument is not used, the function
   behaves exactly as before.
 - The Diagram tab includes a **Diagram Edge Style** toggle: choose between
-  a default "Direct" straight-line connector style and an alternative
-  "Rectilinear (kinship2-style)" right-angle style (issue #142).
+  the "Rectilinear (kinship2-style)" right-angle connector style (the
+  default) and a "Direct" straight-line style (issue #142).
 - The Diagram tab can shade individuals as affected by a condition, using
   an optional `affected` column, matching a kinship2 shading convention
-  (issue #133).
+  (issue #133). Only individuals marked affected are shaded: unaffected
+  and unknown-status individuals, and every individual in a pedigree with
+  no `affected` column (including the package's bundled example
+  pedigrees), are drawn open.
 - The Diagram tab can show each animal's name next to its id, via an
   optional `name` column and a **Show Names on Diagram** toggle;
   de-identified exports automatically remove names (issue #136).
 - The Diagram tab can show twin connectors (identical, fraternal, or
   unknown zygosity), using the same twin-code convention as kinship2
   (issue #137).
-- The Diagram tab places the male parent on the left within a mated pair
-  by default, matching the convention most pedigree readers expect (issue
-  #145).
-- Unaffected and unknown-status individuals are shown unshaded (open)
-  rather than filled, matching kinship2's own shading convention.
+- The Diagram tab draws the male parent on the left of a mated pair in
+  most cases, matching the convention most pedigree readers expect (issue
+  #145). A parent with several mates is placed to fit the family layout,
+  so those pairs can appear either way round.
 - The Diagram tab draws a mate line thicker and in a distinct color for a
   consanguineous mating (parents who are blood relatives), matching
   kinship2's convention -- detected automatically from the pedigree, no
@@ -63,9 +67,6 @@ knitr::opts_chunk$set(echo = TRUE)
 - The Rectilinear edge style correctly avoids an unnecessary extra bend in
   unrelated mate lines even when a pedigree has one parent recorded but
   missing their own row.
-- When a pedigree has no `affected` column at all, animals default to
-  unshaded (open) rather than shaded as affected, matching kinship2's
-  convention -- including the package's own bundled example pedigree.
 - Every pair of animals at the same generation keeps at least a
   consistent minimum gap apart, so nearby unrelated animals are never
   drawn closer together than directly-related ones.
@@ -75,9 +76,6 @@ knitr::opts_chunk$set(echo = TRUE)
   generation appears as a duplicate node more often than a naive
   single-row placement would produce (22 individuals in the bundled
   example pedigree).
-- The Diagram tab defaults to the "Rectilinear (kinship2-style)" edge
-  style; with no style chosen, the display limit is 400 animals
-  (switching to "Direct" raises it to 750).
 - In the Rectilinear edge style, a sibling group's connecting bar avoids
   visually crossing an unrelated animal's own row in the common case --
   most importantly when a sibling also anchors her own mating at the same

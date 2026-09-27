@@ -56,6 +56,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S789 GREEN: `NEWS.Rmd` Pedigree Diagram display and defaults entries restated as the finished state (45 entries become 42); stage 2 piece (a) of the sweep
+- **Model:** Claude Sonnet 5. `NEWS.Rmd` only (15 insertions, 17 deletions); no `R/` change.
+  **(1)** The Diagram-view entry (`:22-27`) now carries the display limit: 400 animals with the
+  default "Rectilinear" connector style, 750 with "Direct", and trimming to fewer focal animals
+  brings a pedigree back under it; the separate defaults-and-limit entry (was `:78-80`) is
+  deleted. **(2)** The Diagram Edge Style entry (`:43-45`) now names Rectilinear as the default
+  (it called "Direct" the default). **(3)** The affected-status entry (`:46-51`) absorbs the two
+  shading entries (were `:56-57` and `:66-68`, deleted): only individuals marked affected are
+  shaded; unaffected, unknown, and every individual in a pedigree with no `affected` column are
+  drawn open. **(4)** The male-parent entry (`:58-61`) says the male is drawn on the left in
+  most cases (no "by default": there is no setting), and that a parent with several mates is
+  placed to fit the family layout so those pairs can appear either way round. **Checked
+  against the code and real output before keeping each sentence:** the two limits and the
+  default style are the constants and defaults in `R/modPedigree.R:405,417,423-429` and
+  `makePedigreeMatingLayout()`; the count behind the limit is the pedigree after unknown-id
+  filtering and optional focal trimming (`R/modPedigree.R:354-382`, so "trimming to fewer focal
+  animals" is accurate, and the in-app message's "narrow the focal-animal selection" refers to
+  the same control); a real layout of the backcross example with `affected` set to TRUE, FALSE
+  and NA gave `#CC79A7` for TRUE and `#FFFFFF` for FALSE and NA, and `#FFFFFF` for every animal
+  with no column and for every animal of `rhesusPedigree` and `smallPed`; male-left is 227 of 257
+  (see the RED correction). **Measured:** the target file runs 21 tests, 74 expectations, **0
+  failed** (RED: 9 failed; 2 fewer expectations because the limit check now loops over one entry,
+  not two); full unfiltered suite (`load_all` + `NOT_CRAN`, run alone at load about 6, no
+  filter) **354 files, 2,749 tests, 8,568 expectations, 1 failed** (the known
+  `test_pkgdown_reference_config.R`, the owner's untracked `suggested_NEWS_entry` draft), 0
+  errors, 187 skipped, 6 warnings, 4.6 minutes; predicted 2,749 tests and about 8,570
+  expectations, so the counts matched; `NEWS.Rmd` knits (scratch output, 1,399 lines, the three
+  edited entries present). Not verified: a live click-through of the Shiny Diagram tab (the
+  change is prose only, and the limit and default are read from the code). Two doc findings
+  left for the docs staleness audit, not fixed here: the user manual
+  (`vignettes/manual_components/_pedigree_browser.Rmd:56`) words the limit as "750, drops to 400
+  under Rectilinear", which reads misleadingly since Rectilinear is the default, and the
+  roxygen for `makePedigreeMatingLayout()` (`R/makePedigreeDiagramData.R:1590-1600`) describes
+  male-left as unconditional. TDD phase GREEN.
+
 ### 2026-09-27 · [ad hoc] S789 RED correction: the male-left check no longer asks for "always" (real layouts prove it false); stage 2 piece (a) of the `NEWS.Rmd` sweep
 - **Model:** Claude Sonnet 5. Test-only commit (`tests/testthat/test_newsReleaseState.R`). My
   committed RED check (4523973e) required the male-left entry to say "always". Before the
