@@ -54,6 +54,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-26 · [ad hoc] S787 REFACTOR (test-only step): one control test closes mutant M7 (only the exact status `"added"` is set aside)
+- Owner decision: the GREEN to REFACTOR gate ("Yes, REFACTOR: review + docs + M7 test",
+  2026-09-26), which offered the alternatives "docs only, no M7 test" and "extract the shared
+  `isAddedRecord()` helper" (declined). Review of `R/correctParentSex.R`: no code change; the
+  shared `isAddedRecord()` helper stays deferred (four inline copies now: `convertDate.R:103`,
+  `removeDuplicates.R:46`, `removeUnknownAnimals.R:31` as the complement, and this function).
+- The one test-only addition, `tests/testthat/test_correctParentSex.R` (+1 `test_that`, the
+  control "only the exact status added is set aside": `"Added"` and `"ADDED"` are unrecognised
+  statuses, so real animals, in the five status layouts). It passes on the GREEN code by design
+  (the exact-match behaviour already existed), so it is a control, not a RED test; against the
+  pre-change code it fails, which is why that mutant now fails 6 tests and 59 expectations
+  instead of the RED count of 5 and 43.
+- **Measured:** the target file 18 tests, **121 of 121 expectations**, 0 errors, 0 warnings;
+  lintr 0; the mutants re-run with the same controls (the real function and the GREEN-equivalent
+  builder both fail 0 tests): **13 of 13 killed**, no survivors (M7 is now killed by the new test,
+  1 test and 16 expectations). The host load average was still about 327 (`uptime`).
+
 ### 2026-09-26 · [ad hoc] S787 GREEN: `correctParentSex(reportErrors = TRUE)` sets aside only `"added"` records and checks every animal when the status is `NULL`
 - Owner decision: the RED to GREEN gate ("Yes, proceed to GREEN", 2026-09-26). One file, the
   report branch only (`R/correctParentSex.R:89-98`): one mask `isAdded` (`rep(FALSE, length(id))`

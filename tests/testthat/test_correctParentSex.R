@@ -193,6 +193,17 @@ test_that("correctParentSex treats a blank or unrecognised status as real", {
     }
   }
 })
+test_that("control: only the exact status added is set aside", {
+  ## a case variant of "added" is an unrecognised status, so a real animal
+  for (value in c("Added", "ADDED")) {
+    cases <- statusCases(value)
+    for (nm in names(cases)) {
+      report <- statusReport(cases[[nm]])
+      expect_identical(report$femaleSires, "s1", info = paste(nm, value))
+      expect_identical(report$maleDams, "d1", info = paste(nm, value))
+    }
+  }
+})
 test_that("correctParentSex checks every animal when recordStatus is NULL", {
   report <- statusReport(NULL)
   expect_identical(report$femaleSires, "s1")
