@@ -93,6 +93,395 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · \[ad hoc\] S798 records: PED_GV F3 DONE – the `getPotentialParents()` dam fallback no longer re-admits a female ruled out by the gestation window (S797 handoff evaluated 9/10, self 9/10, receipt, Learning 814)
+
+- **Model:** Claude Opus 5.5. Phase 3 close-out: S797’s handoff
+  evaluated 9/10 (every Orient measurement held; its “run each option on
+  `qcPed`” could not apply – `qcPed` has no `fromCenter` column). Self
+  9/10. `SESSION_NOTES.md` stub replaced with the full record,
+  `HANDOFFS.md` receipt completed, `PROJECT_LEARNINGS.md` Learning 814
+  appended. Runtime:
+  [`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+  on
+  [`modPotentialParentsServer()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPotentialParentsServer.md)
+  with the P5 pedigree plus an open female -\> K1’s row lists dam
+  `F_OPEN` only (the pre-fix code listed `F1, F_OPEN`); the opt-in e2e
+  file (`NPRC_RUN_E2E=true`, real app in headless Chrome) 4 tests, 0
+  failed/0 skipped/0 error. Not pushed (unpushed count is the owner’s
+  call).
+
+### 2026-09-27 · \[ad hoc\] S798 REFACTOR: fallback reuses the gestation-filtered set; roxygen + man page, NEWS.Rmd Fixed entry; BACKLOG: F3 out of the PED_GV item, recorded-dam finding filed
+
+- **Model:** Claude Opus 5.5. No behavior change.
+  `R/getPotentialParents.R`: the gestation-filtered females are held
+  once (`eligibleDams`) and the fallback reuses them; the stale “accept
+  all females old enough” comment rewritten; `@return` now says the
+  fallback never lists a ruled-out female (`devtools::document()`
+  changed only `man/getPotentialParents.Rd`, `NAMESPACE` untouched).
+  `NEWS.Rmd` General Fixes: plain-language “Fixed:” entry. `BACKLOG.md`:
+  the PED_GV item’s F3 paragraph removed (every F-slice now done;
+  NEW-55’s label, not taken, stays with the split-`getPotentialParents`
+  decision) and a new DECISION NEEDED item filed – an animal’s own
+  recorded dam is never among its candidate dams (0 of 1,351 on
+  `qcStudbook(examplePedigree)`), not caused by F3. Staged with the
+  `tail -n +6` / `hash-object` / `update-index --cacheinfo` recipe (3
+  separate Bash calls) so the owner’s YAML header stays out.
+  Verification: full unfiltered suite 355 files / 2,760 tests, 1 failed
+  (the known `test_pkgdown_reference_config.R` failure from the
+  untracked `vignettes/suggested_NEWS_entry.Rmd`), 0 error; lint 0;
+  `test_newsReleaseState.R` and `test_wordlist_coverage.R` 0 failed.
+  Commit `b29ee018`.
+
+### 2026-09-27 · \[ad hoc\] S798 GREEN: the dam fallback no longer re-admits a female ruled out by the gestation window (PED_GV F3, NEW-35)
+
+- **Model:** Claude Opus 5.5. `R/getPotentialParents.R`: the fallback’s
+  female filter also drops any female in `births$dam`, the same rule the
+  main path applies. Shipped data unchanged (`rhesusPedigree` 244 /
+  `qcStudbook(examplePedigree)` 52,012 candidate dams, 0 animals with no
+  dam). Full unfiltered suite 355 files / 2,760 tests, 1 known failure,
+  0 error; lint 0. Commit `174be7f5`.
+
+### 2026-09-27 · \[ad hoc\] S798 RED: the dam fallback must not re-admit a ruled-out female (PED_GV F3, NEW-35)
+
+- **Model:** Claude Opus 5.5.
+  `tests/testthat/test_getPotentialParents.R` gains a `fallbackPed()`
+  fixture builder and 3 tests: audit probe P5 (no dam; sires still
+  `M1`), a mixed fixture where only the never-ruled-out female survives
+  (window checked on both sides, +59 d and -100 d), and the window-width
+  check (+100 d ruled out at 210 d; still offered at 90 d, which passes
+  today and guards against over-exclusion). Confirmed exactly 3
+  failures, all today’s fallback re-admitting the ruled-out female (1
+  dam vs 0, 3 vs 1, 1 vs 0). Lint 0. Commit `4bbcb071`.
+
+### 2026-09-27 · \[ad hoc\] S798 PRE-RED: F3 measured; owner picked “skip ruled-out females” in the fallback
+
+- **Model:** Claude Opus 5.5. Per Learning 812, a copy of the dam logic
+  with the fallback switchable was checked against the shipped function
+  (identical output) and then run on every shipped dataset that
+  [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+  can use (only `examplePedigree` carries `fromCenter`; `rhesusPedigree`
+  with one added): the fallback runs for 0 of 50 and 1 of 1,587 animals
+  and re-admits nobody; dropping it leaves 1 animal with no dam and
+  breaks 2 tests; a tier label changes the app table. Owner picked “skip
+  ruled-out” (plain-language `AskUserQuestion`, counts in the option
+  text); NEW-55’s label not taken.
+
+### 2026-09-27 · \[ad hoc\] S798 claim: PED_GV F3 slice – an excluded dam is re-admitted by the `getPotentialParents()` fallback (NEW-35/NEW-55) (in progress)
+
+- **Model:** Claude Opus 5.5.
+
+### 2026-09-27 · \[ad hoc\] S797 records: PED_GV F2 HALF DONE by owner decision – addUIds() duplicate-id fix shipped, stricter detection withdrawn and re-filed (S796 handoff evaluated 8/10, self 7/10, receipt, Learnings 812-813)
+
+- **Model:** Claude Opus 5.5. Phase 3 close-out: S796’s handoff
+  evaluated 8/10 (every Orient measurement held; one number stale by its
+  own records commit, Learning 806’s class). Self 7/10: the full suite
+  caught the regression before REFACTOR, but Pre-RED missed the producer
+  ([`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md))
+  and the shipped data, so an unworkable option was offered as
+  “Recommended” (Learning 812); a helper inserted between a roxygen
+  block and its function nearly moved
+  [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)’s
+  export (Learning 813). `SESSION_NOTES.md` stub replaced with the full
+  record, `HANDOFFS.md` receipt completed, `PROJECT_LEARNINGS.md`
+  Learnings 812-813 appended. Runtime:
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  on a pedigree holding a real `U0001` mints `U0002`/`U0003` with 0
+  duplicate ids; `qcStudbook(examplePedigree)` 3,694 rows, 0 duplicates.
+  Not pushed (12 unpushed; the owner’s call).
+
+### 2026-09-27 · \[ad hoc\] S797 REFACTOR: addUIds() roxygen + man page, NEWS.Rmd Fixed entry; BACKLOG: F2 out of the PED_GV item, the detection half filed as its own item
+
+- **Model:** Claude Opus 5.5. No behavior change. `R/addUIds.R` roxygen
+  gains one sentence (a candidate id already in the pedigree is
+  skipped); `devtools::document()` changed only `man/addUIds.Rd`.
+  `NEWS.Rmd` General Fixes: plain-language “Fixed:” entry after the
+  [`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
+  one. `BACKLOG.md`: the PED_GV item’s F2 paragraph removed (F3 is now
+  its next slice) and a new “Up Next” item filed for real ids like
+  `"Uma"`/`"U123"` treated as placeholders, carrying this session’s
+  measurements and four options. Staged with the `tail -n +6` /
+  `hash-object` / `update-index --cacheinfo` recipe (3 separate Bash
+  calls) so the owner’s YAML header stays out. Verification: lint 0 on
+  `R/addUIds.R`; `test_addUIds.R`, `test_autoIdFormat.R`,
+  `test_removeAutoGenIds.R` 0 failed/0 error; `test_newsReleaseState.R`
+  26 tests and `test_wordlist_coverage.R` 3 tests, 0 failed. Commit
+  `5dc89a2e`.
+
+### 2026-09-27 · \[ad hoc\] S797 GREEN: addUIds() never mints a duplicate of an existing id (NEW-38 F2, duplicate half)
+
+- **Model:** Claude Opus 5.5. `R/addUIds.R`: new internal `@noRd`
+  `mintAvailableIds()` mints from a running counter, skipping any
+  candidate already in the pedigree or already minted in the same call;
+  [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
+  calls it for sire slots then dam slots, carrying the counter across.
+  Output is unchanged when nothing collides. The helper sits AFTER
+  [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md):
+  the first draft put it between
+  [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)’s
+  roxygen and its definition, merging the two blocks (caught by
+  re-reading; `devtools::document()` then showed no `man/`/`NAMESPACE`
+  diff). Full unfiltered suite 355 files / 2,757 tests, 1 failed (the
+  known `test_pkgdown_reference_config.R` failure from the untracked
+  `vignettes/suggested_NEWS_entry.Rmd`), 0 error; lint 0 on
+  `R/addUIds.R` and `test_addUIds.R`. Commit `cf956da8`.
+
+### 2026-09-27 · \[ad hoc\] S797 first GREEN attempt failed; owner re-decided; detection RED tests withdrawn
+
+- **Model:** Claude Sonnet 5 (first attempt), Claude Opus 5.5 (diagnosis
+  onward). The first GREEN also rewrote `isGeneratedUnknownId()`
+  (`R/autoIdFormat.R`) to require the prefix AND a remainder of exactly
+  the format’s digit width (a new internal `getAutoIdDigitWidth()`
+  parsed it from the sprintf spec). The three touched test files passed;
+  the unfiltered full suite went to 24 failed + 1 error across
+  `test_reportGV.R` (10), `test_classifyParentage.R`,
+  `test_calcNeVariance.R`, `test_getPotentialParents.R`,
+  `test_gvaConvergence_kinshipOverrides.R`, `test_modPedigree.R` and
+  `test_obfuscateId.R` (error). Isolation: restoring only the committed
+  `R/autoIdFormat.R` with the new
+  [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
+  kept made all 8 affected files pass (0/0). Cause:
+  [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+  (`R/obfuscateId.R:40-46`) disguises a placeholder as the prefix plus
+  random capital letters and digits, and all 43 `qcPed` and 1,372
+  `examplePedigree` placeholder ids look like `"U05X3C"` – 0 match
+  `^U[0-9]{4}$`. Under the stricter rule, `qcPed`’s 43
+  one-unknown-parent animals became “known”,
+  [`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md)
+  went 26.4 -\> 205, `examplePedigree` potential parents 1,587 -\> 234,
+  and
+  [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+  stopped with “too short to easily avoid duplicates”. Owner decision
+  (`AskUserQuestion`): ship the duplicate fix only. `R/autoIdFormat.R`
+  restored to HEAD (never committed); `test_autoIdFormat.R` and
+  `test_removeAutoGenIds.R` restored byte-exact to their pre-RED content
+  in commit `4155665f`, reason in its message.
+
+### 2026-09-27 · \[ad hoc\] S797 RED: exact-format detection and addUIds() collision avoidance pinned (NEW-38 F2)
+
+- **Model:** Claude Sonnet 5. `test_autoIdFormat.R`: the pinned
+  `isGeneratedUnknownId("U123")` flipped to FALSE, plus width cases for
+  `"U%04d"` (`"U0001"` TRUE; `"U12345"`, `"Uma"`, `"U"` FALSE) and
+  `"AUTO%05d"` (`"AUTO00001"` TRUE; `"AUTO1"`, `"AUTO000001"` FALSE).
+  `test_removeAutoGenIds.R`: real `"Uma"`/`"U123"` survive
+  [`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
+  (audit probe P3). `test_addUIds.R`: a pedigree holding a real
+  `"U0001"` gets `"U0002"` minted, never a duplicate. All 9 assertions
+  confirmed FAILING for the stated reasons (no errors). Commit
+  `a01e13af`; the two detection files were later withdrawn (entry
+  above).
+
+### 2026-09-27 · \[ad hoc\] S797 PRE-RED: F2 scoped; owner picked exact-digit-width detection and skip-past minting
+
+- **Model:** Claude Sonnet 5. Read the audit’s F2 section and probe P3,
+  `R/addUIds.R`, `R/removeAutoGenIds.R`, `R/autoIdFormat.R`; grepped
+  `isGeneratedUnknownId()` – 7 files in `R/` (`removeAutoGenIds`,
+  `obfuscateId`, `getLivingBreeders`, `classifyParentage`, `reportGV`,
+  `modPedigree`, `correctUnknownParentMeanKinship`). Owner picked (1)
+  tighten detection to the exact digit width the format implies and (2)
+  skip past a candidate id that already exists. Gap, found only at
+  GREEN: the shipped data’s placeholder shapes and
+  [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)’s
+  aliasing were not checked (Learning 812).
+
+### 2026-09-27 · \[ad hoc\] S797 claim: PED_GV F2 slice – U-id-prefix scheme (NEW-38) collision-at-generation + wrongful-strip-at-detection (in progress)
+
+- **Model:** Claude Sonnet 5.
+
+### 2026-09-27 · \[ad hoc\] S796 records: PED_GV F2/F3 NOT STARTED (S795 handoff evaluated 7/10, self 6/10, receipt, Learnings 810-811); session became `SESSION_NOTES.md` read-cap fix + `methodology` dashboard drift delegation
+
+- **Model:** Claude Sonnet 5. The owner-chosen deliverable (PED_GV
+  F2/F3, `BACKLOG.md` “Up Next” item 1) was never started — no `R/`
+  file, test, or `BACKLOG.md` change this session. `BACKLOG.md` is
+  untouched and the item remains fully open for the next session’s fresh
+  Pre-RED.
+- **What the session actually produced:** (1) investigated the prior ad
+  hoc “trim `SESSION_NOTES.md`” ask rather than executing it blind,
+  found `methodology_trim.py`’s own 65,536 B trigger did not fire, and
+  instead found and delegated a real, evidence-verified cross-repo
+  finding — `methodology_dashboard.py`’s declared
+  `READ_CAP_CLASS_A`/`READ_CAP_CLASS_B` split
+  (`methodology_dashboard.py:423-424`) hardcodes `SESSION_NOTES.md` as
+  Class B (“the trimmer answers `NO_CONFIG` for it”), false in this repo
+  because of this project’s own local, unsynced `methodology_trim.py`
+  `LedgerSpec` patch for that file (`CLAUDE.md`’s local-customization
+  checklist entry); confirmed nprcgenekeepr’s dashboard copy is
+  byte-identical to the `methodology` fork’s canonical
+  `tools/methodology_dashboard.py` (not stale), and that the fork’s own
+  two pinning tests (`tools/test_methodology_dashboard.py:5464,5485`)
+  only guard the fork’s own `LEDGERS` table, never an adopter’s local
+  patch. Handed a full, self-contained prompt to the `methodology`
+  fork’s own live session (`methodology-bf`); the owner pasted it there
+  directly — the fix/decision is that repo’s, not this one’s. (2)
+  Starting Phase 1B for PED_GV, the mandatory claim-stub write tripped a
+  SEPARATE, harder ceiling: `.context-budget.json`’s read-cap
+  (`max_tokens: 25000` ≈ 56,750 B), independent of and smaller than the
+  65,536 B archive-trim budget every recent session’s gotcha has tracked
+  — refused by the installed `context_budget.py --precommit` hook, the
+  first time this specific ceiling has fired in this repo’s history.
+  `methodology_trim.py --budget-bytes 65536` said `NOTHING_TO_DO`; a
+  `--budget-bytes 45000 --force` dry run (accepting the project’s
+  established `SRF_RED` resolution) produced a verified-lossless cut
+  (`L1_OK`/`L2_OK`/`L3_OK`, 57,871 B → 19,719 B). The `--write` itself
+  was denied by the harness’s own auto-mode permission classifier
+  (“Irreversible Local Destruction”); per that denial’s instructions,
+  stopped and handed the exact command to the owner, who ran it —
+  verified after the fact via
+  `docs/archive/SESSION_NOTES-through-2026-09-27.md.verify.sh`
+  (`OK: L1, L2/front-matter, L3`).
+- **Commits:** this records commit (single commit — claim, trim, and
+  close-out were never split, since no code was touched). **Runtime
+  (3E):** n/a — pure docs/ledger operations.
+- **Learnings:** 810 (`SESSION_NOTES.md`’s read-cap ceiling, not its
+  archive budget, is the real binding constraint once the file is dense
+  and near 56,750 B), 811 (a forced `methodology_trim.py --write` needs
+  the owner’s own hands; the auto-mode classifier blocks the agent even
+  after a verified-lossless dry run).
+
+### 2026-09-27 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-27.md` (6 record(s), 57,871 B → 19,719 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **6** record(s) (2026-08-15 →
+2026-09-27) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-27.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-27.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-27.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-27.md.verify.sh)
+rather than trusting a digest printed here. Live file 57,871 B → 19,719
+B (−65.9%).
+
+### 2026-09-27 · \[ad hoc\] S796 claim: PED_GV F2/F3 decisions and implementation (in progress)
+
+- **Model:** Claude Sonnet 5. Session claimed to decide and implement
+  `BACKLOG.md`’s top “Up Next” item’s F2 (the `U`-prefix id-detection
+  scheme in
+  [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)/[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md),
+  NEW-38) and F3 (the excluded-dam re-admission fallback in
+  [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md),
+  NEW-35/NEW-55), each its own Pre-RED owner decision plus a strict
+  RED/GREEN/REFACTOR slice. Non-commit-adjacent claim entry per Phase
+  1B; the rest of this entry is filled at close-out.
+- **Prior task this session** (“trim `SESSION_NOTES.md`”) investigated
+  and resolved to not-needed (56,752 B, under its 65,536 B budget,
+  trigger does not fire); the real finding — a
+  `methodology_dashboard.py` false-positive HIGH risk flag caused by
+  this project’s local `methodology_trim.py` `SESSION_NOTES.md`
+  `LedgerSpec` patch not being reflected in the (synced, do-not-edit)
+  dashboard’s declared Class A/B split — was handed to the `methodology`
+  fork’s own session via a prepared prompt, owner-pasted there directly.
+  No nprcgenekeepr file was changed by that investigation; recorded here
+  for completeness per FM \#27 (an investigation is an action even when
+  it changes nothing).
+
+### 2026-09-27 · \[ad hoc\] S795 PRE-RED: scoped the 5-item BUNDLE/DOC cleanup, decided NEW-14’s empty-list fix
+
+- **Model:** Claude Sonnet 5. Read
+  `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` and all 5 target
+  files. Confirmed each finding still holds: PED-11
+  (`getRecordStatusIndex.R:14`,
+  [`any()`](https://rdrr.io/r/base/any.html) wrapping a scalar `%in%`),
+  NEW-56 (`getPotentialParents.R:202`, `[1L]` on an already-scalar
+  `pUnknown$id[i]` – `i` is a `for (i in seq_len(nrow(pUnknown)))`
+  scalar index), NEW-63 (`getMaxAx.R:6,16` roxygen says “negative
+  (males)” and “integer vector” but `bins` is a list of non-negative
+  `male`/`female` counts, per `test_getMaxAx.R`), PED-10/NEW-43
+  (`createPedOne.R:6-7`, `createPedSix.R:6-7` roxygen says “packages
+  `data` directory” but `savePed = TRUE` writes to `tempdir()/data`),
+  NEW-14 (`kinshipMatricesToKValues.R:96-115`’s first-flag accumulator
+  never initializes `kValues` for an empty list, so
+  `kinshipMatricesToKValues(list())` stops with the unrelated “object
+  ‘kValues’ not found”; grepped every `R/`/vignette caller – all always
+  pass
+  [`createSimKinships()`](https://github.com/rmsharp/nprcgenekeepr/reference/createSimKinships.md)
+  output, `n >= 1`, so the empty-list path is unreachable in practice).
+  Owner decision (`AskUserQuestion`) on NEW-14:
+  [`stop()`](https://rdrr.io/r/base/stop.html) with a clear message
+  (“kinshipMatrices must contain at least one kinship matrix”) rather
+  than returning an empty data.frame – matches how the same audit’s
+  F1/F4 findings were fixed elsewhere (a silent/ confusing failure
+  becomes a deliberate, named guard). PED-11/NEW-56/NEW-63/PED-10/NEW-43
+  are behavior-neutral (existing tests already pin the current,
+  unchanged output), so they are pure REFACTOR; only NEW-14 gets a
+  RED/GREEN cycle.
+
+### 2026-09-27 · \[ad hoc\] S795 RED: one test pinning kinshipMatricesToKValues(list())’s error message
+
+- **Model:** Claude Sonnet 5.
+  `tests/testthat/test_kinshipMatricesToKValues.R`: added
+  `expect_error(kinshipMatricesToKValues(list()), "kinshipMatrices must contain at least one kinship matrix", fixed = TRUE)`.
+  Confirmed FAILING against the current file – actual message is “object
+  ‘kValues’ not found”.
+
+### 2026-09-27 · \[ad hoc\] S795 GREEN: kinshipMatricesToKValues() guards against an empty list
+
+- **Model:** Claude Sonnet 5. `R/kinshipMatricesToKValues.R`, minimum
+  change only: a `if (length(kinshipMatrices) == 0L) stop(...)` guard
+  before the accumulator loop. New test passes;
+  `test_kinshipMatricesToKValues.R`’s other 3 tests and the sibling
+  caller files (`test_countKinshipValues.R`,
+  `test_summarizeKinshipValues.R`) unaffected.
+
+### 2026-09-27 · \[ad hoc\] S795 REFACTOR: 4 remaining doc/cosmetic fixes plus the accumulator restyle; BACKLOG sub-item removed
+
+- **Model:** Claude Sonnet 5. No behavior change.
+  `R/getRecordStatusIndex.R:14` drops the redundant
+  [`any()`](https://rdrr.io/r/base/any.html) around a scalar `%in%`.
+  `R/getPotentialParents.R:202` drops the redundant `[1L]` on the
+  already-scalar `pUnknown$id[i]`. `R/getMaxAx.R` roxygen corrected:
+  `bins` is a list with non-negative `male`/`female` counts, not an
+  “integer vector” with “negative (males)” values (per
+  `test_getMaxAx.R`’s own fixtures). `R/createPedOne.R` and
+  `R/createPedSix.R` roxygen corrected: `savePed = TRUE` writes into a
+  `data` subdirectory of
+  [`tempdir()`](https://rdrr.io/r/base/tempfile.html), not “the packages
+  data directory” (unchanged since 2020, `31eef7cf`).
+  `R/kinshipMatricesToKValues.R`’s first-flag/ for-loop accumulator
+  replaced with an `lapply`-built list plus the same `cbind` accretion
+  loop, guard clause unchanged. `devtools::document()` run: no
+  `man/`/`NAMESPACE` diff (every touched function is `@noRd` except
+  [`kinshipMatricesToKValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinshipMatricesToKValues.md),
+  whose roxygen text was untouched). Verification: every touched
+  function’s own test file plus the two
+  [`kinshipMatricesToKValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinshipMatricesToKValues.md)
+  caller test files (`test_countKinshipValues.R`,
+  `test_summarizeKinshipValues.R`) individually 0 failed/0 error;
+  `lintr::lint()` on all 7 touched files (6 `R/`, 1 test) 0 lints; full
+  unfiltered suite 355 files / 2,756 tests / 8,603 expectations, 1
+  failed (the known pre-existing `test_pkgdown_reference_config.R` draft
+  failure, unrelated), 0 error. Per the BACKLOG completed- item removal
+  checklist, the “(a) a trivial cleanup bundle” sub-item is removed from
+  the PED_GV audit follow-through item in `BACKLOG.md` (its record now
+  lives in this session’s PRE-RED/RED/ GREEN/REFACTOR entries above);
+  F2, F3 and the other two “Also open” sub-items are untouched and stay
+  open. Staged via the established `tail -n +6` / `hash-object` /
+  `update-index --cacheinfo` recipe (3 separate Bash calls) to exclude
+  the pre-existing, unrelated `BACKLOG.md` YAML-header residue from this
+  commit.
+
+### 2026-09-27 · \[ad hoc\] S795 records: PED_GV BUNDLE/DOC cleanup DONE (S794 handoff evaluated 8/10, self 9/10, receipt, Learning 809); full RED/GREEN/REFACTOR TDD cycle for the one behavior-changing item, 4 behavior-neutral items folded into REFACTOR, BACKLOG sub-item removed
+
+- **Model:** Claude Sonnet 5. Phase 3 close-out: Session 794’s handoff
+  evaluated 8/10 – every Orient measurement held fresh on re-check
+  (ledger frontiers = HEAD, 0 undocumented; dashboard 96/100;
+  `CHANGELOG.md` over-budget warning held, grown further;
+  `origin/master` had caught up to 0 ahead/0 behind since S794’s own
+  snapshot, not a discrepancy). Self-assessed 9/10: read the audit and
+  all 5 target files directly before any claim; correctly split the
+  substantive NEW-14 approach decision into its own `AskUserQuestion`,
+  separate from the phase-gate questions; recognized 4 of 5 items were
+  provably behavior-neutral before writing any test, so wrote a RED test
+  only for the one item that actually changed behavior; verified every
+  touched function’s own test file individually before folding the rest
+  into REFACTOR; kept the unrelated `BACKLOG.md` YAML-header residue out
+  of every commit. Weak point – the local full-suite run took several
+  minutes and needed a few iterations of polling before settling into a
+  clean background-monitor wait. Ledger sizes measured fresh at
+  close-out: `CHANGELOG.md` 76,593 B (further over its 65,536 B budget,
+  trim owed, not done this session), `SESSION_NOTES.md` 62,233 B
+  (approaching its own budget faster than recent sessions),
+  `HANDOFFS.md` 57,727 B (under budget).
+
 ### 2026-09-27 · \[ad hoc\] S794 records: shinytest2 CI timeout fix DONE (S793 handoff evaluated 7/10, self 8/10, receipt, Learning 808); full RED/GREEN/REFACTOR TDD cycle, BACKLOG item removed
 
 - **Model:** Claude Sonnet 5. Phase 3 close-out: Session 793’s handoff

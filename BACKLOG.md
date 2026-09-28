@@ -7,40 +7,112 @@ inventory & future plans → `ROADMAP.md`. (Methodology file model — see
 ## Up Next
 
 **PED_GV audit follow-through – triage DONE (S781, 2026-09-26), F1
-shipped (S782), F4 shipped (S783); the owner decides F2 and F3, then the
-rest (DECISION NEEDED for both, Effort S-M per slice; strict TDD for
-every fix)** – `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43
-ids against today’s code (35 present, 2 fixed, 4 moot, 2 refuted); its
-table is the plan, so read it first (its F1 is done:
+shipped (S782), F4 shipped (S783), F2’s duplicate-id half shipped
+(S797), F3 shipped (S798); every F-slice is done, and what remains is
+owner decisions (DECISION NEEDED, Effort S each; strict TDD for every
+fix)** – `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` judged 43 ids
+against today’s code (35 present, 2 fixed, 4 moot, 2 refuted); its table
+is the plan, so read it first (its F1 is done:
 [`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
 now returns a pedigree with no `recordStatus` column unchanged; its F4
 is done:
 [`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
 now stops with a message naming the cycle instead of recursing until R
-aborts, and keeps the documented diamond repeats). **Slices, in this
-order, each with the phase gates via `AskUserQuestion`:** **F2 (DECISION
-NEEDED, M)** the `U`-prefix scheme (NEW-38):
+aborts, and keeps the documented diamond repeats; F2’s
 [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
-can mint an id equal to a real one and
+half is done: a minted id now skips any id already in the pedigree; F2’s
+other half, real ids mistaken for placeholders, is its own item below;
+F3 is done: the
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+dam fallback no longer re-admits a female the gestation window ruled
+out). **Open, all owner decisions:** (a) the overhaul roots, none urgent
+– sex-code adoption (PED-2/NEW-29; 28 bare-literal comparison lines in
+10 files remain), the error/return contract (PED-5/6, NEW-28/36),
+splitting `getPotentialParents` (PED-4, NEW-54, and NEW-55 – labelling
+whether a dam list came from proven breeders or the fallback, which the
+owner did not take at S798’s F3 decision), the walk helpers (PED-3,
+NEW-42; all exported, so an API change), the sim driver (NEW-50/51),
+constants and HTML builders (NEW-18/19/21/26/57) and the founder
+definition (NEW-61); (b) NEW-24 is already open issue \#123. **Recommend
+closing 11 ids** (fixed, moot or refuted; the report lists them) once
+the owner agrees. **Trap:** an id grep of the ledger both under- and
+over-counts (`NEWS.md` once used “NEW-47/48/49” as entry labels), so use
+the report’s table, not the old 41-id list.
+
+**Potential Parents never lists an animal’s own recorded dam among its
+candidate dams (found S798, 2026-09-27, DECISION NEEDED, Effort S)** –
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+searches every in-colony animal with at least one unknown parent, and
+returns both a sire list and a dam list even when one parent is
+recorded. The gestation-window rule (`R/getPotentialParents.R:190`, the
+`eligibleDams` line) rules out any female who gave birth within
+`maxGestationalPeriod` days of the focal birth, and the focal animal’s
+own birth counts, so its recorded dam is always ruled out. Measured S798
+on `qcStudbook(examplePedigree)` (stand-in `U` ids counted as unknown):
+of 1,587 animals searched, 1,351 have a recorded dam and no sire, 2 a
+recorded sire and no dam, 234 neither; the recorded dam is among its own
+candidate dams for 0 of 1,351, while the recorded sire is among its own
+candidate sires for 2 of 2. The app’s Potential Parents table and CSV
+show those 1,351 dam lists anyway. Not caused by the F3 fix (S798):
+before it, only the fallback could re-admit the recorded dam, and it did
+so for none of these animals. **Decide:** (1) return candidates only for
+the unknown parent (an empty `dams` when the dam is recorded; the app’s
+dam column goes blank for those rows); (2) leave the lists as they are
+and say in the roxygen/app help that a recorded parent is not re-listed;
+or (3) leave it. Tests to extend:
+`tests/testthat/test_getPotentialParents.R`, and
+`test_modPotentialParents.R` if the table changes.
+
+**Real animal ids that start with the placeholder prefix (`"Uma"`,
+`"U123"`) are treated as stand-ins for unknown parents – the other half
+of PED_GV F2 / NEW-38 (found S781; a stricter check was tried and
+withdrawn S797; DECISION NEEDED, Effort M)** – `isGeneratedUnknownId()`
+(`R/autoIdFormat.R:109-111`) counts any id that starts with the
+configured prefix (default `"U"`) as a placeholder, and seven files act
+on it:
 [`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
-strips real ids that start with the prefix; the owner decides how strict
-detection should be and whether any center’s real ids start with `U`.
-**F3 (DECISION NEEDED, S)** an excluded dam is re-admitted by the
-fallback at `R/getPotentialParents.R:196-199` (NEW-35, with NEW-55):
-fall back to the filtered set, return none, or label the tier. **Also
-open:** (a) a trivial cleanup bundle (READY, S): PED-11, NEW-56, NEW-63,
-the `createPedOne`/`createPedSix` roxygen (PED-10/NEW-43), and NEW-14
-with its empty-list edge; (b) owner decisions on the overhaul roots,
-none urgent – sex-code adoption (PED-2/NEW-29; 28 bare-literal
-comparison lines in 10 files remain), the error/return contract
-(PED-5/6, NEW-28/36), splitting `getPotentialParents` (PED-4, NEW-54),
-the walk helpers (PED-3, NEW-42; all exported, so an API change), the
-sim driver (NEW-50/51), constants and HTML builders (NEW-18/19/21/26/57)
-and the founder definition (NEW-61); (c) NEW-24 is already open issue
-\#123. **Recommend closing 11 ids** (fixed, moot or refuted; the report
-lists them) once the owner agrees. **Trap:** an id grep of the ledger
-both under- and over-counts (`NEWS.md` once used “NEW-47/48/49” as entry
-labels), so use the report’s table, not the old 41-id list.
+drops such animals (the Potential Parents feature calls it,
+`R/getPotentialParents.R:93`), the app’s “display unknown IDs” filter
+hides them (`R/modPedigree.R:361`), and
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
+`classifyParentage()`, `correctUnknownParentMeanKinship()`,
+`getLivingBreeders()` and
+[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+treat them as unknown. **Why the obvious fix fails (measured S797):**
+also requiring the remainder to be exactly the format’s digit width (4
+digits for `"U%04d"`) broke 24 tests and caused 1 error in 7 files,
+because
+[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+(`R/obfuscateId.R:40-46`) disguises a placeholder as the prefix plus
+random capital letters and digits, and the shipped example data was
+built that way: all 43 placeholder ids in `qcPed` and all 1,372 in
+`examplePedigree` look like `"U05X3C"`, and none matches `U%04d`. With
+the stricter check, `qcPed`’s 43 one-unknown-parent animals became
+“known”, its
+[`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md)
+effective size went from 26.4 to 205, the `examplePedigree`
+potential-parents result went from 1,587 to 234, and
+[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+stopped with “too short to easily avoid duplicates”. The withdrawn RED
+tests are in commit `a01e13af` (`git show a01e13af`). **Decide:** (1)
+leave it – it matters only if a center’s real ids start with the prefix,
+which
+[`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
+can change; (2) count only the prefix followed by capital letters and
+digits (what both
+[`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
+and
+[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+produce) – `"Uma"` would be kept, `"U123"` still dropped; (3) record
+which ids were minted (a column or attribute) instead of guessing from
+an id’s shape – the record must survive every copy, merge and save of a
+pedigree; (4) make
+[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+keep the digit format and regenerate the shipped data, then tighten the
+check – moves many pinned numbers. Tests to extend:
+`test_autoIdFormat.R` (it pins `"U123"` as a placeholder today),
+`test_removeAutoGenIds.R`, `test_obfuscateId.R`,
+`test_classifyParentage.R`.
 
 **A sire or dam whose sex is blank or unrecognized is reported as a
 “female sire” or “male dam” by the pedigree check (found S787,

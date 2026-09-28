@@ -82,7 +82,11 @@ getPotentialParents(
 a list of list with each internal list being made up of an animal id
 (`id`), a vector of possible sires (`sires`) and a vector of possible
 dams (`dams`). The `id` must be defined while the vectors `sires` and
-`dams` can be empty.
+`dams` can be empty. Candidate dams are females who gave birth near the
+time of the focal birth (proven breeders); when there are none, `dams`
+lists every female old enough and present at the birth instead. Either
+way, a female who delivered another offspring within
+`maxGestationalPeriod` days of the focal birth is never listed.
 
 ## Examples
 

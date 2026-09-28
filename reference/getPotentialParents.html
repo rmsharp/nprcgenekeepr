@@ -128,7 +128,12 @@ to <code>NULL</code>, which uses the bundled <code><a href="speciesGestation.htm
     <p>a list of list with each internal list being made up of an animal
 id (<code>id</code>), a vector of possible sires (<code>sires</code>) and a vector of
 possible dams (<code>dams</code>). The <code>id</code> must be defined while the
-vectors <code>sires</code> and <code>dams</code> can be empty.</p>
+vectors <code>sires</code> and <code>dams</code> can be empty. Candidate dams are
+females who gave birth near the time of the focal birth (proven
+breeders); when there are none, <code>dams</code> lists every female old enough
+and present at the birth instead. Either way, a female who delivered
+another offspring within <code>maxGestationalPeriod</code> days of the focal
+birth is never listed.</p>
     </div>
 
     <div class="section level2">

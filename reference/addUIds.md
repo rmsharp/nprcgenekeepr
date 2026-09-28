@@ -34,7 +34,8 @@ a period ("."), honoring the ID rule enforced at data input by
 [`qcStudbook`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md).
 The format is configurable via
 [`setAutoIdFormat`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
-(default `"U%04d"`).
+(default `"U%04d"`). A candidate ID that is already in the pedigree is
+skipped, so a placeholder never duplicates the ID of a real animal.
 
 ## Examples
 

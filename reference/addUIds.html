@@ -85,7 +85,9 @@ defaults to <code><a href="getAutoIdFormat.html">getAutoIdFormat()</a></code> (<
 "U" plus a zero-padded integer), so they are alphanumeric and never contain a
 period ("."), honoring the ID rule enforced at data input by
 <code><a href="qcStudbook.html">qcStudbook</a></code>. The format is configurable via
-<code><a href="setAutoIdFormat.html">setAutoIdFormat</a></code> (default <code>"U%04d"</code>).</p>
+<code><a href="setAutoIdFormat.html">setAutoIdFormat</a></code> (default <code>"U%04d"</code>). A candidate ID
+that is already in the pedigree is skipped, so a placeholder never
+duplicates the ID of a real animal.</p>
     </div>
 
     <div class="section level2">
