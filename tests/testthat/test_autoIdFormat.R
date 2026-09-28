@@ -55,9 +55,32 @@ test_that("isGeneratedUnknownId() detects default-format ids, case-sensitively",
   on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
   options(nprcgenekeepr.autoIdFormat = NULL) # default U%04d
   expect_true(isGeneratedUnknownId("U0001"))
-  expect_true(isGeneratedUnknownId("U123")) # prefix-only: any U-leading id
   expect_false(isGeneratedUnknownId("abc"))
   expect_false(isGeneratedUnknownId("u001")) # case-sensitive
+})
+
+# --- isGeneratedUnknownId() exact-format match (NEW-38 F2) -----------------
+# A real id that merely starts with the configured prefix must NOT be
+# mistaken for a generated placeholder -- detection requires the exact digit
+# width the sprintf format implies, not just the literal prefix.
+test_that("isGeneratedUnknownId() requires the exact digit width, not just the prefix", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL) # default U%04d (4 digits)
+  expect_true(isGeneratedUnknownId("U0001")) # exactly 4 digits: matches
+  expect_false(isGeneratedUnknownId("U123")) # 3 digits: a real id, not generated
+  expect_false(isGeneratedUnknownId("U12345")) # 5 digits: a real id, not generated
+  expect_false(isGeneratedUnknownId("Uma")) # non-digit suffix: a real id
+  expect_false(isGeneratedUnknownId("U")) # no digits at all
+})
+
+test_that("isGeneratedUnknownId() honors a configured format's digit width", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  setAutoIdFormat("AUTO%05d") # 5 digits
+  expect_true(isGeneratedUnknownId("AUTO00001")) # exactly 5 digits: matches
+  expect_false(isGeneratedUnknownId("AUTO1")) # 1 digit: a real id, not generated
+  expect_false(isGeneratedUnknownId("AUTO000001")) # 6 digits: a real id, not generated
 })
 
 test_that("isGeneratedUnknownId() preserves NA like startsWith()", {

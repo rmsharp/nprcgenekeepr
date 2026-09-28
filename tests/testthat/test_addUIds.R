@@ -33,6 +33,24 @@ test_that("addUIds modifies the correct IDs in the right way", {
   expect_equal(newPed$dam[newPed$id == "s1"], "U0001")
 })
 
+## NEW-38 F2 (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md, probe P3): addUIds()
+## minted a duplicate "U0001" for a pedigree that already had a real "U0001".
+## It must now skip past any candidate id that already exists in the pedigree.
+test_that("addUIds() skips candidate ids that already exist in the pedigree", {
+  ped <- data.frame(
+    id = c("U0001", "s1", "d0"),
+    sire = c(NA, NA, NA),
+    dam = c(NA, "d0", NA),
+    sex = c("M", "M", "F"),
+    stringsAsFactors = FALSE
+  )
+  newPed <- addUIds(ped)
+  minted <- newPed$sire[newPed$id == "s1"]
+  expect_false(identical(minted, "U0001")) # never duplicate the existing real id
+  expect_equal(minted, "U0002") # advances to the next available id
+  expect_equal(sum(newPed$id == "U0001"), 1L) # no duplicate id created
+})
+
 ## NEW-45 guarantee: auto-generated placeholder IDs (U####) must never contain
 ## a period ('.'). pedTwo/pedThree force U-id generation. This property holds on
 ## current code and must continue to hold (characterization guard).
