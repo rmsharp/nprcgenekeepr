@@ -180,6 +180,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S805
+date: 2026-09-28
+status: pending
+active_task: Re-render the 2 stale Pedigree Diagram article figures (exemplar-linebreeding-rectilinear.png, exemplar-half_sib-rectilinear.png) with pedigree-diagram-exemplar-renders.R, owner look, commit -- IN PROGRESS.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S804
 date: 2026-09-28
 status: complete

@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S805 claim: re-render the 2 stale Pedigree Diagram article figures (`exemplar-linebreeding-rectilinear.png`, `exemplar-half_sib-rectilinear.png`; dashed duplicate-animal arcs drawn flatter since S715) with `pedigree-diagram-exemplar-renders.R`, owner look, commit (in progress)
+- **Model:** Claude Opus 5.5.
+
 ### 2026-09-28 · [ad hoc] Owner-directed after the S804 close-out: pushed the records commit
 - **Model:** Claude Opus 5.5. **Push (a non-commit action):** `git push origin master` moved
   `origin/master` from `0868249f` to `fd2056ca` (the S804 records commit), a fast-forward after a

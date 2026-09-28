@@ -94,6 +94,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 805 Did
+**Deliverable:** re-render the 2 stale Pedigree Diagram article figures (`vignettes/articles/pedigree-diagram-img/exemplar-linebreeding-rectilinear.png`, `exemplar-half_sib-rectilinear.png`) with `vignettes/articles/pedigree-diagram-exemplar-renders.R`, owner look, commit (IN PROGRESS)
+**Started:** 2026-09-28 ~22:05 UTC
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 803 Handoff Evaluation (by Session 804)
 **Score: 8/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `b5b6e82c`, 0
 undocumented; the S803 receipt `status: complete`, its `quality_ratchet` citation matching
