@@ -93,6 +93,70 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · \[ad hoc\] S805 records: 2 stale Pedigree Diagram article figures re-rendered DONE (S804 handoff evaluated 9/10, self 8/10, receipt, Learning 821)
+
+- **Model:** Claude Opus 5.5. Session notes (S804 evaluation, S805
+  record), the `HANDOFFS.md` S805 receipt `status: complete`, and
+  `PROJECT_LEARNINGS.md` Learning 821 (a change to how diagrams are
+  drawn needs the figure script re-run in the same session; a flipped
+  test pin does not force it, and a script comment that contradicts a
+  pin is the stale one). Commits this session: claim `54a3a7bd`, figures
+  `2a247184`, header `16bc27bd`, records (this).
+  `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 5deafc2db4bb · manifest aa983075d6a2`
+  (3,589,736 B at `16bc27bd`). CI on `fd2056ca` (S804’s records push,
+  `in_progress` at Orient): lint and pkgdown green; R-CMD-check and
+  test-coverage green (R-CMD-check run 36489531079 green on all 5 legs
+  incl. `windows-latest`, re-read at close-out). Not pushed (5 unpushed;
+  the owner’s call).
+
+### 2026-09-28 · \[ad hoc\] S805: `pedigree-diagram-exemplar-renders.R` header now expects no layout warnings (owner-approved)
+
+- **Model:** Claude Opus 5.5. The header still told the re-renderer to
+  expect two linebreeding/half_sib collision warnings and to stop if
+  they vanished; S715 retired them on purpose
+  (`test_examplePedigreeFixtures.R` pins
+  `rectilinearCollisionWarning = FALSE` for all five). Comment only: it
+  now expects none, says any warning means a re-review, and records that
+  a drawing change needs a re-run even when no pin moves (S715 -\> S805
+  staleness). Parses; lint 0.
+
+### 2026-09-28 · \[ad hoc\] S805: re-rendered and committed the 2 stale Pedigree Diagram article figures (`exemplar-linebreeding-rectilinear.png`, `exemplar-half_sib-rectilinear.png`), owner-approved
+
+- **Model:** Claude Opus 5.5.
+  `Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R`
+  re-rendered all 5 classic-structure figures (no layout warning, as
+  `test_examplePedigreeFixtures.R` pins since S715). Against the
+  committed PNGs: linebreeding 2,228 and half_sib 1,210 pixels differ
+  (max channel difference 0.831), only in the dashed duplicate-animal
+  arcs, now flatter (S715’s roundness change, never re-rendered);
+  consanguinity 134, backcross 189, first_cousin 121 (max 0.055,
+  anti-aliasing) – those 3 restored from git, not committed. New arcs
+  clear the nearest circle by ~5-6 px (LB2 over LA2) and ~3 px (HB1 over
+  HA2) at 1200x900; the old LB2 arc crossed the LX1/LA3 labels. Fixture
+  test 14 tests / 303 expectations, 0 failed. Article text and alt text
+  still fit. Owner looked at old/new/overlay strips and approved
+  (AskUserQuestion). `vignettes/articles` is build-ignored and no test
+  or workflow reads these images (grep). `BACKLOG.md`: the documentation
+  audit’s S802 finding replaced by the S805 measurement (the other two
+  image folders still unchecked).
+
+### 2026-09-28 · \[ad hoc\] S805 claim: re-render the 2 stale Pedigree Diagram article figures (`exemplar-linebreeding-rectilinear.png`, `exemplar-half_sib-rectilinear.png`; dashed duplicate-animal arcs drawn flatter since S715) with `pedigree-diagram-exemplar-renders.R`, owner look, commit (in progress)
+
+- **Model:** Claude Opus 5.5.
+
+### 2026-09-28 · \[ad hoc\] Owner-directed after the S804 close-out: pushed the records commit
+
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):**
+  `git push origin master` moved `origin/master` from `0868249f` to
+  `fd2056ca` (the S804 records commit), a fast-forward after a fresh
+  fetch (0 behind). The four changed files (`CHANGELOG.md`,
+  `HANDOFFS.md`, `PROJECT_LEARNINGS.md`, `SESSION_NOTES.md`) are all
+  `.Rbuildignore`’d and read by no test or workflow (the only
+  non-comment test mentions are two `test_that()` description strings in
+  `test_comparePedigreeStructure.R`), so the CI runs this push starts
+  were not awaited. This entry’s commit stays local and rides with the
+  next push.
+
 ### 2026-09-28 · \[ad hoc\] S804 records: Windows R-CMD-check fixed and green on CI DONE (S803 handoff evaluated 8/10, self 8/10, receipt, Learning 820)
 
 - **Model:** Claude Opus 5.5. **REFACTOR:** no change (owner-approved
