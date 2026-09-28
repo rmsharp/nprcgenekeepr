@@ -60,6 +60,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S802 GREEN (2/2): first_cousin and half_sib written -- all five classic-structure example pedigrees now upload in the app with 0 errors
+- **Model:** Claude Opus 5.5. Test file: 14 tests / 303 expectations, 0 failed, 0 error. Full
+  unfiltered suite: 357 files / 2,788 tests / 8,776 expectations, 1 failed (the known
+  `test_pkgdown_reference_config.R`), 0 error. Lint 0 on the script. Article figures: the layout from
+  each committed (pre-change) file is `identical()` to the layout from its new file, all 5 files and
+  both edge styles; the five figures re-rendered with `pedigree-diagram-exemplar-renders.R` from the
+  old and the new files are pixel-identical (0 pixels differ). **Found, pre-existing and not changed
+  here:** today's renders (from either file) differ from the committed article images for
+  linebreeding (2,228 pixels) and half_sib (1,210 pixels): the dashed duplicate-animal arcs are
+  flatter now. The images were committed S694 (2026-09-17) and S715 (2026-09-18) changed arc
+  roundness without re-rendering them; the other three differ only by anti-aliasing (121-189 pixels,
+  max channel difference 0.055). Filed into the documentation-audit item at REFACTOR.
+
 ### 2026-09-28 · [ad hoc] S802 GREEN (1/2): data-raw/example_pedigree_birth.R adds a birth column to the classic-structure example pedigrees; consanguinity, linebreeding and backcross written
 - **Model:** Claude Opus 5.5. The rule: each animal sits on a drawing row (its generation, or for a
   founder the row above its earliest offspring, so an outside mate is born with its partner); 6 years
