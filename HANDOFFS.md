@@ -251,6 +251,15 @@ which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
 ``` handoff
+session: S804
+date: 2026-09-28
+status: pending
+active_task: Fix the Windows R-CMD-check failure (test_examplePedigreeTxt.R:52: ExamplePedigree.txt has carriage returns on the windows-latest checkout) -- IN PROGRESS.
+what_was_done: pending
+commit: pending
+```
+
+``` handoff
 session: S803
 date: 2026-09-28
 status: complete

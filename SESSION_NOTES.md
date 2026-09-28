@@ -161,6 +161,16 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 804 Did
+
+**Deliverable:** fix the Windows R-CMD-check failure
+(`test_examplePedigreeTxt.R:52`: `ExamplePedigree.txt` has carriage
+returns on the `windows-latest` checkout) (IN PROGRESS) **Started:**
+2026-09-28 ~20:55 UTC **Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` – the claim commit’s `CHANGELOG.md`
+entry says (in progress); Phase 3F records the rest. Until close-out,
+this line is the crash breadcrumb for the next session’s reconcile.
+
 ### Session 802 Handoff Evaluation (by Session 803)
 
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier
@@ -262,7 +272,13 @@ use `/usr/bin/stat -f` for BSD format. (6) STANDING SET unchanged from
 S790-802 (full suite in the background; `x[["f"]]` not `x$f`; recount
 frontiers/unpushed fresh; `scratchpad/` invisible to git; `CLAUDE.md`
 warn band = headroom). (7) No reduction this session: `SESSION_NOTES.md`
-is under budget; the ledger trims need the owner.
+is under budget; the ledger trims need the owner. **Owner-directed after
+close-out (2026-09-28 ~20:50 UTC):** pushed the 4 commits
+(`origin/master` `4f13b10a` -\> `bc0624ac`, a fast-forward; 0 unpushed
+then – this push-record commit stays local). All five changed files are
+build-ignored and read by no test or workflow (the two test-file hits
+for `PROJECT_LEARNINGS.md` are `test_that()` description strings), so CI
+was not awaited.
 
 ### Session 801 Handoff Evaluation (by Session 802)
 

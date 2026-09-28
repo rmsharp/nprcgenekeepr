@@ -93,6 +93,72 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · \[ad hoc\] S804 GREEN: `.gitattributes` pins `ExamplePedigree.txt` to LF on every checkout; `.Rbuildignore` excludes it
+
+- **Model:** Claude Opus 5.5. **Owner decision (RED -\> GREEN gate):**
+  proceed with the one-file rule, not a wider rule over every example
+  file (`inst/extdata/examples/deidentified_jmac_ped.csv` is stored CRLF
+  in git, so a wider `eol=lf` rule would change that shipped file’s
+  bytes). **Change:** new repo-root `.gitattributes` with
+  `inst/extdata/examples/ExamplePedigree.txt text eol=lf` and a comment
+  saying why; `.Rbuildignore` gains `^\.gitattributes$` beside
+  `^\.gitignore$`. **Verified before commit:** both RED files pass (15
+  and 3 expectations); `git ls-files --eol` shows the file
+  `i/lf w/lf attr/text eol=lf` and `git status` does not list it as
+  modified (no renormalization); a tarball built from the working tree
+  has 1,050 entries (the S803 count), none `.gitattributes`, and still
+  ships `inst/extdata/examples/ExamplePedigree.txt`. No `.R` file
+  changed, so no lint run.
+
+### 2026-09-28 · \[ad hoc\] S804 RED: a Windows-style checkout of `ExamplePedigree.txt` must keep plain LF line endings; `.Rbuildignore` must keep a repo-root `.gitattributes` out of the tarball
+
+- **Model:** Claude Opus 5.5. **Found at Orient:** R-CMD-check’s
+  `windows-latest (release)` leg failed `test_examplePedigreeTxt.R:52`
+  (“no carriage return”) on both S802 pushes (runs 36472173902,
+  36472806892; `[ FAIL 1 | WARN 8 | SKIP 263 | PASS 8378 ]`); the other
+  four legs, lint, pkgdown and test-coverage were green. S803 read CI
+  while that run was still going and did not re-read it. **PRE-RED
+  (measured):** the file is stored LF (`git ls-files --eol`: `i/lf`);
+  the repo has no `.gitattributes`; a scratch clone with
+  `core.autocrlf=true` (Git for Windows’ default) checks it out with
+  3,695 CR bytes, one per line, and
+  `git -c core.autocrlf=true cat-file --filters HEAD:inst/extdata/examples/ExamplePedigree.txt`
+  shows the same 3,695 (0 with `core.autocrlf=false`). R’s
+  `check_dot_files` lists `.gitattributes` only among CRAN-mode known
+  hidden files, and this project build-ignores `.gitignore`, so the new
+  file gets a `.Rbuildignore` line too. **Owner decision (PRE-RED -\>
+  RED gate):** fix the checkout with `.gitattributes`, not skip the byte
+  test on Windows (a Windows-built tarball would then ship CRLF
+  unnoticed). **Tests:** `test_examplePedigreeTxt.R` gains “a Windows
+  checkout of ExamplePedigree.txt keeps plain line endings” (settings
+  `core.autocrlf=true` and `core.autocrlf=false` + `core.eol=crlf`;
+  bytes must hold no CR and equal the shipped file; skips outside the
+  source repository, so under R CMD check); `test_rbuildignore.R` gains
+  “.Rbuildignore keeps the repo-root .gitattributes out of the tarball”
+  (and must not match the example file). **Fails today as intended:**
+  autocrlf 222,382 vs 218,687 bytes (3,695 more); the `core.eol=crlf`
+  case passes today (no text attribute) and pins that the fix forces LF
+  even then; no `.Rbuildignore` pattern. Every other test in both files
+  passes; lint 0.
+
+### 2026-09-28 · \[ad hoc\] S804 claim: fix the Windows R-CMD-check failure (`test_examplePedigreeTxt.R:52` finds carriage returns in `ExamplePedigree.txt` on the `windows-latest` checkout; red on runs 36472173902 and 36472806892) (in progress)
+
+- **Model:** Claude Opus 5.5.
+
+### 2026-09-28 · \[ad hoc\] Owner-directed after the S803 close-out: pushed the 4 local commits (S802 push record, S803 claim, sync, records)
+
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):**
+  `git push origin master` moved `origin/master` from `4f13b10a` to
+  `bc0624ac` (`852439b4`, `a1b83754`, `0058e7f8`, `bc0624ac`), a
+  fast-forward after a fresh fetch (0 behind). The five changed files
+  (`CHANGELOG.md`, `HANDOFFS.md`, `PROJECT_LEARNINGS.md`,
+  `SESSION_NOTES.md`, `methodology_dashboard.py`) are all
+  `.Rbuildignore`’d and read by no test or workflow (the only test-file
+  mentions are two `test_that()` description strings in
+  `test_comparePedigreeStructure.R`), so the CI runs the push starts
+  were not awaited. This entry’s commit stays local and rides with the
+  next push.
+
 ### 2026-09-28 · \[ad hoc\] S803 records: `methodology_dashboard.py` synced to v2.19.0 DONE (S802 handoff evaluated 9/10, self 8/10, receipt, Learning 819)
 
 - **Model:** Claude Opus 5.5. Session notes, `HANDOFFS.md` receipt
