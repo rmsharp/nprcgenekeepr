@@ -90,6 +90,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 800 Did
+**Deliverable:** Blank cells in app uploads -- the Input module reads CSV/text uploads with no
+`na.strings`, so a blank ancestry cell becomes OTHER (not UNKNOWN) and a blank sire/dam cell
+arrives as the id `""` (`BACKLOG.md` "Up Next" item, found S776, extended S799) (IN PROGRESS)
+**Started:** 2026-09-27
+**Status:** Session claimed. Work beginning (PRE-RED).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 798 Handoff Evaluation (by Session 799)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` 95,223 B and `HANDOFFS.md` 76,392 B
 (the "~94 KB"/"~76 KB" it predicted, plus the owner-directed push record `a57caf67`); S798 receipt

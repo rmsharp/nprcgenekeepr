@@ -180,6 +180,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S800
+date: 2026-09-27
+status: pending
+self_score: TBD
+predecessor_score: TBD
+active_task: Blank cells in app uploads (BACKLOG.md "Up Next", found S776, extended S799): R/modInput.R reads CSV/text uploads with no na.strings while getPedigree() uses na.strings = c("", "NA"), so blank ancestry becomes OTHER not UNKNOWN and blank sire/dam cells arrive as the id "". Owner picked this from the Phase 0 picker. PRE-RED investigation beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S799
 date: 2026-09-27
 status: complete

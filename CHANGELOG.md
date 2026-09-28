@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S800 claim: blank cells in app uploads -- the Input module reads a blank CSV cell as "" where getPedigree() reads it as missing, so blank ancestry becomes OTHER and blank sire/dam cells block the upload (in progress)
+- **Model:** Claude Opus 5.5.
+
 ### 2026-09-27 · [ad hoc] S799 records: unreadable parent sex DONE -- a blank, unrecognized or space-padded sex is read as unknown / as the sex it names, not reported as a "female sire" / "male dam" (S798 handoff evaluated 9/10, self 9/10, receipt, Learning 815)
 - **Model:** Claude Opus 5.5. Phase 3 close-out: S798's handoff evaluated 9/10 (every Orient
   measurement held; its "read the 07:00 UTC shinytest2 run at Orient" could not apply -- Orient
