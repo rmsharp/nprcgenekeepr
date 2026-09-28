@@ -223,18 +223,14 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (`vignettes/manual_components/_pedigree_browser.Rmd:56`) words the Diagram limit as "750 animals
       ... the limit drops to 400 when the Rectilinear edge style is selected", which reads
       misleadingly since Rectilinear is the default (the default limit is 400); the roxygen point in
-      the male-left item above is the same kind of finding. **Found S802, for this audit:** two of
-      the five committed classic-structure figures are stale --
-      `vignettes/articles/pedigree-diagram-img/exemplar-linebreeding-rectilinear.png` and
-      `exemplar-half_sib-rectilinear.png` differ from a fresh
-      `Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R` run by 2,228 and 1,210
-      pixels: the dashed duplicate-animal arcs are drawn flatter today. The images were committed
-      S694 (2026-09-17); S715 (2026-09-18) changed the arc roundness (its test comments say the
-      renders were owner-re-reviewed) but never re-rendered them. The other three differ only by
-      anti-aliasing (121-189 pixels, max channel difference 0.055). The fix is re-running that
-      script and committing the images after an owner look. Related, not duplicated: the
-      `NEWS.Rmd` release-state sweep (above), the deferred `a2interactive` pass, and the
-      `inst/doc/` slimming item.
+      the male-left item above is the same kind of finding. **Measured S805, for this audit:** the
+      5 classic-structure figures under `vignettes/articles/pedigree-diagram-img/` are current (2
+      re-rendered and committed S805; the other 3 differ from a fresh
+      `pedigree-diagram-exemplar-renders.R` run by anti-aliasing only), so the committed images WERE
+      partly stale, not just the local PDFs; the `kinship2-fidelity-validation-img/` (8) and
+      `shiny_app_use/` (50) images are not yet checked. Related, not duplicated: the `NEWS.Rmd`
+      release-state sweep (above), the deferred `a2interactive` pass, and the `inst/doc/` slimming
+      item.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no

@@ -60,6 +60,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S805: re-rendered and committed the 2 stale Pedigree Diagram article figures (`exemplar-linebreeding-rectilinear.png`, `exemplar-half_sib-rectilinear.png`), owner-approved
+- **Model:** Claude Opus 5.5. `Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R`
+  re-rendered all 5 classic-structure figures (no layout warning, as `test_examplePedigreeFixtures.R`
+  pins since S715). Against the committed PNGs: linebreeding 2,228 and half_sib 1,210 pixels differ
+  (max channel difference 0.831), only in the dashed duplicate-animal arcs, now flatter (S715's
+  roundness change, never re-rendered); consanguinity 134, backcross 189, first_cousin 121 (max
+  0.055, anti-aliasing) -- those 3 restored from git, not committed. New arcs clear the nearest
+  circle by ~5-6 px (LB2 over LA2) and ~3 px (HB1 over HA2) at 1200x900; the old LB2 arc crossed the
+  LX1/LA3 labels. Fixture test 14 tests / 303 expectations, 0 failed. Article text and alt text
+  still fit. Owner looked at old/new/overlay strips and approved (AskUserQuestion). `vignettes/articles`
+  is build-ignored and no test or workflow reads these images (grep). `BACKLOG.md`: the documentation
+  audit's S802 finding replaced by the S805 measurement (the other two image folders still unchecked).
+
 ### 2026-09-28 · [ad hoc] S805 claim: re-render the 2 stale Pedigree Diagram article figures (`exemplar-linebreeding-rectilinear.png`, `exemplar-half_sib-rectilinear.png`; dashed duplicate-animal arcs drawn flatter since S715) with `pedigree-diagram-exemplar-renders.R`, owner look, commit (in progress)
 - **Model:** Claude Opus 5.5.
 
