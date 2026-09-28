@@ -90,13 +90,95 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 799 Handoff Evaluation (by Session 800)
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` 100,814 B and `HANDOFFS.md`
+81,631 B exactly as stated; S799 receipt `status: complete`; both ledger frontiers = HEAD
+`f7586bf1`, 0 undocumented; 7 unpushed (its "6 before this records commit" + the records commit);
+the residue list matched file by file. Next step (A) named this exact item with the jmac state
+(67 parent-age errors, which held exactly), and gotcha (1) -- measure blanks on both read paths
+and through `modInputServer` with a real file -- was the method this session used. **Could not
+apply:** (D) "read the 07:00 UTC shinytest2 run" -- Orient ran at 04:39 UTC, before it fired
+(again). **Gap, not a fault:** the item said files writing missing parents as `NA` (e.g.
+`ExamplePedigree.csv`) were "unaffected" -- true for parents, but that file's blank `origin`
+column was the largest effect of all (Learning 816). **ROI:** high.
+
 ### What Session 800 Did
-**Deliverable:** Blank cells in app uploads -- the Input module reads CSV/text uploads with no
-`na.strings`, so a blank ancestry cell becomes OTHER (not UNKNOWN) and a blank sire/dam cell
-arrives as the id `""` (`BACKLOG.md` "Up Next" item, found S776, extended S799) (IN PROGRESS)
-**Started:** 2026-09-27
-**Status:** Session claimed. Work beginning (PRE-RED).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE:** blank cells in app uploads (`BACKLOG.md` item, found S776, extended S799).
+The Input module now reads an empty cell in a CSV or text upload as missing
+(`na.strings = c("", "NA")`, the `getPedigree()` rule; Excel uploads already did).
+**PRE-RED (measured before asking):** all 16 shipped pedigree files read both ways and run
+through `runQcStudbook()`, plus `getPedigree()`: `deidentified_jmac_ped.csv` loses its "both a
+sire and a dam" error (67 real parent-age errors remain, same as the script path);
+`example_ancestry_pedigree.csv` OTHER 2 / UNKNOWN 0 -> 1 / 1; `ExamplePedigree.csv`: 241
+founders with a blank `origin` were counted as imports (`reportGV()`/`orderReport()`/
+`gvaConvergence()` test `is.na(origin)`), Genetic Value High 926 -> 685, Undetermined 1,372 ->
+1,613, 2,081 of 3,694 ranks change -- the new numbers equal the script path's;
+`ExamplePedigree.txt` 106 rows OTHER -> UNKNOWN; 8 other files unchanged; blank `status` ->
+UNKNOWN. Owner picked **read as missing** (one plain-language question; "document only" and
+"call `getPedigree()`" were the alternatives -- the latter cannot read `ExamplePedigree.txt`).
+**RED** `0c7f527a`: new `tests/testthat/test_modInput_blankCells.R` (real uploads through
+`modInputServer`): 9 tests / 26 assertions failing for the expected reason, 2 `control:` tests
+passing (one first failed only because `ancestry` is a factor -- test helper fixed, Learning
+816); the opt-in ancestry e2e re-pinned to the aligned numbers, failing on exactly its 5 moved
+pins with `NPRC_RUN_E2E=true`. **GREEN** `99df405a`: `na.strings` on both reads in
+`readDataFile()`. **REFACTOR** (A) `54fae557`: code comment; Input Format help sentence; (B)
+`599a0803`: `NEWS.Rmd` General Fixes entry; `BACKLOG.md` -- the item removed, two measured items
+split out in its place (jmac's 67 parent-age errors = 65 dams under the 4-year floor + 2 sires
+born after their offspring; `ExamplePedigree.txt`'s 106 `#####` age cells read as comments),
+staged with the three-call recipe so the owner's YAML header stays out.
+**Verification:** full unfiltered suite at GREEN 356 files / 2,780 tests / 8,675 expectations,
+1 failed (the known `test_pkgdown_reference_config.R`), 0 error; REFACTOR run: 356 files / 2,780 tests / 8,675 expectations, 1 failed (the known `test_pkgdown_reference_config.R`), 0 error;
+lint 0 on `R/modInput.R` and both test files; `test_newsReleaseState.R` 26/0,
+`test_wordlist_coverage.R` 3/0. Opt-in e2e (`NPRC_RUN_E2E=true`, real app, headless Chrome) at
+GREEN: mate-pair ancestry 42/0, breeding-groups ancestry 18/0 (one pre-existing shinytest2
+warning: two tabs match `a[data-value="Ancestry"]`), input module 5/0, input detailed 6/0; at
+REFACTOR input tutorial 8/0. **Runtime (3E):** the shipped `ExamplePedigree.csv` uploaded through
+the real `modInputServer`: 0 errors, 3,694 rows, no `""` origins, Genetic Value order
+685 / 1,396 / 1,613 -- identical to the script path (pre-fix app: 926 / 1,396 / 1,372).
+**Commits:** claim `c130ab1c`, RED `0c7f527a`, GREEN `99df405a`, REFACTOR `54fae557` +
+`599a0803`, records (this). **Learnings:** 816.
+
+**Self-assessment: 9/10.** + Measured every shipped file on both read paths, then followed each
+changed column to its consumers, which found the Genetic Value effect before the owner was asked;
+one decision question, answered first time; every TDD gate via `AskUserQuestion`; RED checked
+assertion by assertion, and the one failing control diagnosed as a test bug before commit; the
+live-app e2e run at RED (5 exact pins) and GREEN; runtime through the real module compared with
+the script path; the two still-open sub-threads split out with numbers. - I wrote "66 dams" into
+`BACKLOG.md` before recounting (65; caught before commit); - no ledger reduction again:
+`CHANGELOG.md`/`HANDOFFS.md` still over budget and growing.
+
+**Next steps:** (A) Every "Up Next" item is still an owner decision; measure each option on real
+files through both read paths before asking (Learnings 812/815/816). Nearest this session's code:
+the two new items at `BACKLOG.md:251-283` -- `ExamplePedigree.txt`'s `#` cells (regenerate the
+`.txt` from the `.csv`, and/or `comment.char = ""`) and the jmac parent-age errors (document,
+correct the 2 sire records, or review the 4-year floor). (B) The U-prefix real-id item: the
+ancestry example's real animal `U1` counts as a placeholder (`isGeneratedUnknownId("U1")` is
+TRUE; consequence not measured). The recorded-dam item and the PED_GV decisions are untouched.
+(C) Carried: `CHANGELOG.md`/`HANDOFFS.md` trims (both over 65,536 B; a forced write needs the
+owner, Learning 811); `suggested_NEWS_entry` disposition; working-tree residue; unpushed commits
+(13 after this records commit; pushing is the owner's call); dashboard script v2.18.0 vs
+canonical v2.19.0; the methodology fork's Class A/B decision. (D) The 07:00 UTC 2026-09-28
+scheduled shinytest2 run had not fired at 05:17 UTC -- read it next Orient with
+`gh run list --branch master --limit 10`. It tests `origin/master`, which has neither S799 nor
+S800 until the owner pushes.
+
+**Key files:** `R/modInput.R:300-337` (comment, `readDataFile()`, the two reads at `:330`/`:336`);
+`tests/testthat/test_modInput_blankCells.R` (all 11 tests); `tests/testthat/
+test-e2e-mate-pair-analysis-module-ancestry.R:14-20` (header), `:171`, `:214`, `:236`, `:245`,
+`:378` (moved pins); `inst/extdata/ui_guidance/input_format.html:20-24`; `NEWS.Rmd:509-514`;
+`BACKLOG.md:251-283` (two new items); `PROJECT_LEARNINGS.md` Learning 816.
+
+**Gotchas:** (1) Since S800 an empty upload cell is `NA` everywhere -- code or tests that expect
+`""` from an app upload are now wrong; `test_modInput_blankCells.R` pins the new behavior. (2) A
+column whose meaning is "was it recorded?" (`origin`) is decided by `is.na()` downstream: grep a
+changed column's consumers, not only QC (Learning 816). (3) `read.table()` treats `#` in a cell as
+a comment (the app's text upload and `getPedigree()` both; open item). (4) The ancestry e2e pins
+the aligned numbers now; it runs only with `NPRC_RUN_E2E=true` or in the scheduled shinytest2 CI
+job. (5) STANDING SET unchanged from S790-799: full suite in the background; full 40-char sha from
+`git rev-parse`; `git log --grep` needs `--extended-regexp`; `scratchpad/` invisible to git by
+owner decision; `CLAUDE.md` warn band = headroom; three-call `BACKLOG.md` staging recipe; recount
+ledger frontiers and the unpushed count fresh (Learning 806). No reduction this session:
+`SESSION_NOTES.md` is under budget; the ledger trims need the owner.
 
 ### Session 798 Handoff Evaluation (by Session 799)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` 95,223 B and `HANDOFFS.md` 76,392 B

@@ -181,19 +181,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
 session: S800
-date: 2026-09-27
-status: pending
-self_score: TBD
-predecessor_score: TBD
-active_task: Blank cells in app uploads (BACKLOG.md "Up Next", found S776, extended S799): R/modInput.R reads CSV/text uploads with no na.strings while getPedigree() uses na.strings = c("", "NA"), so blank ancestry becomes OTHER not UNKNOWN and blank sire/dam cells arrive as the id "". Owner picked this from the Phase 0 picker. PRE-RED investigation beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+date: 2026-09-28
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Blank cells in app uploads (BACKLOG.md item found S776, extended S799) -- DONE. The Input module reads an empty CSV or text upload cell as missing (na.strings = c("", "NA"), the getPedigree() rule), so blank-parent files load, blank ancestry is UNKNOWN, and a founder with a blank origin is "Undetermined" in the Genetic Value report instead of an import. Two measured follow-up items filed in its place.
+what_was_done: Pre-RED measured all 16 shipped pedigree files both ways through runQcStudbook() and getPedigree(): jmac loses its "both a sire and a dam" error (67 parent-age errors remain); ancestry example OTHER 2/UNKNOWN 0 -> 1/1; ExamplePedigree.csv 241 blank-origin founders were imports (Genetic Value High 926 -> 685, Undetermined 1,372 -> 1,613, 2,081 of 3,694 ranks change, matching the script path). Owner picked "read as missing". RED 0c7f527a (new test_modInput_blankCells.R, 9 failing tests / 26 assertions, 2 controls; ancestry e2e re-pinned, 5 exact pin failures live); GREEN 99df405a (na.strings on both reads in readDataFile()); REFACTOR 54fae557 (code comment, Input Format help) and 599a0803 (NEWS.Rmd entry; BACKLOG item removed, jmac parent-age and ExamplePedigree.txt '#####' items split out). Full unfiltered suite GREEN 356 files / 2,780 tests, 1 known failure, 0 error; REFACTOR 356 files / 2,780 tests / 8,675 expectations, 1 failed (the known test_pkgdown_reference_config.R), 0 error. Learning 816.
+next_steps: (A) Every Up Next item is an owner decision; measure options on real files through both read paths first (Learnings 812/815/816). Nearest: the two new items at BACKLOG.md:251-283 (ExamplePedigree.txt '#' cells: regenerate the .txt and/or comment.char = ""; jmac: document, correct the 2 sire records, or review the 4-year floor). (B) U-prefix item: the ancestry example's real animal U1 counts as a placeholder (isGeneratedUnknownId("U1") TRUE, consequence unmeasured); recorded-dam item and PED_GV decisions untouched. (C) Carried: CHANGELOG.md/HANDOFFS.md trims (owner runs the forced write), suggested_NEWS_entry, residue, 13 unpushed (owner's call), dashboard script v2.18.0 vs v2.19.0, methodology fork Class A/B. (D) Read the 2026-09-28 07:00 UTC shinytest2 run at next Orient (not fired at 05:17 UTC); it tests origin/master, without S799/S800 until pushed.
+key_files: R/modInput.R:300-337 (comment, readDataFile(), reads at :330/:336); tests/testthat/test_modInput_blankCells.R:1-176 (11 tests); tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R:14-20 (header), :171, :214, :236, :245, :378 (moved pins); inst/extdata/ui_guidance/input_format.html:20-24; NEWS.Rmd:509-514; BACKLOG.md:251-283 (two new items); PROJECT_LEARNINGS.md Learning 816.
+gotchas: An empty upload cell is now NA everywhere; code expecting "" from an app upload is wrong. A column meaning "was it recorded?" (origin) is decided with is.na() downstream, so grep a changed column's consumers, not only QC (Learning 816). read.table() treats '#' in a cell as a comment on both the app text path and getPedigree() (open item). The ancestry e2e pins the aligned numbers and runs only with NPRC_RUN_E2E=true or in scheduled shinytest2 CI. STANDING SET unchanged from S790-799.
+runtime_smoke: The shipped ExamplePedigree.csv uploaded through the real modInputServer: 0 errors, 3,694 rows, no "" origins, Genetic Value order 685/1,396/1,613, identical to the script path (pre-fix app 926/1,396/1,372). Opt-in e2e with the real app in headless Chrome: mate-pair ancestry 42/0, breeding-groups ancestry 18/0, input module 5/0, input detailed 6/0, input tutorial 8/0.
+changelog_ref: this records commit (S800 records entry, prepended above the S800 REFACTOR B/A, GREEN, RED, PRE-RED and claim entries)
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log)
 ```
+Predecessor (S799) scored 9/10: every Orient measurement held (CHANGELOG.md/HANDOFFS.md sizes, the receipt, 7 unpushed, the residue list); its next step (A) named this item with the jmac state that held exactly, and its gotcha (1) -- measure blanks on both read paths and through modInputServer with a real file -- was this session's method. One step could not apply (reading the 07:00 UTC shinytest2 run -- Orient at 04:39 UTC). Gap, not a fault: the item called files that write missing parents as NA "unaffected", yet ExamplePedigree.csv's blank origin column was the largest effect. Self-score 9/10: +every shipped file measured on both read paths and each changed column followed to its consumers, which found the Genetic Value effect before the owner was asked; +one decision question, answered first time; +RED checked assertion by assertion, the one failing control diagnosed as a test bug before commit; +live-app e2e at RED (5 exact pins) and GREEN; +runtime through the real module compared with the script path; +two still-open sub-threads split out with numbers. -wrote "66 dams" into BACKLOG.md before recounting (65, caught before commit); -no ledger reduction again (CHANGELOG.md/HANDOFFS.md still over budget).
 
 ```handoff
 session: S799

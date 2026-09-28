@@ -60,6 +60,67 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S800 records: blank cells in app uploads DONE -- an empty CSV or text upload cell is read as missing, so blank-parent files load, blank ancestry is UNKNOWN and a blank-origin founder is "Undetermined" (S799 handoff evaluated 9/10, self 9/10, receipt, Learning 816)
+- **Model:** Claude Opus 5.5. Phase 3 close-out: S799's handoff evaluated 9/10 (every Orient
+  measurement held; its (D) "read the 07:00 UTC shinytest2 run" could not apply -- Orient ran at
+  04:39 UTC). Self 9/10. `SESSION_NOTES.md` stub replaced with the full handoff; `HANDOFFS.md`
+  S800 receipt `status: complete`; `PROJECT_LEARNINGS.md` Learning 816 (measure a blank's
+  downstream consumers, not only QC; `#` in a cell is a `read.table()` comment). Full unfiltered
+  suite at REFACTOR: 356 files / 2,780 tests / 8,675 expectations, 1 failed (the known `test_pkgdown_reference_config.R`), 0 error. Runtime (3E): the shipped `ExamplePedigree.csv` through
+  the real `modInputServer` -- 0 errors, 3,694 rows, no `""` origins, Genetic Value order
+  685 / 1,396 / 1,613, identical to the script path (pre-fix app 926 / 1,396 / 1,372).
+  Unpushed after this commit: 13 (pushing is the owner's call).
+
+### 2026-09-28 · [ad hoc] S800 REFACTOR (B): NEWS.Rmd Fixed entry; BACKLOG: item removed, two measured items split out
+- **Model:** Claude Opus 5.5. `NEWS.Rmd` General Fixes: a plain-language entry (blank upload
+  cells now read as missing; blank-parent files load; blank ancestry UNKNOWN; a blank-origin
+  founder is no longer ranked as an import). `BACKLOG.md`: the blank-cells item removed; in its
+  place (1) `deidentified_jmac_ped.csv` still stops on 67 "Parent age too young" errors -- 65
+  dams aged 3.43-3.99 under the 4-year Japanese macaque floor and 2 sires born after their
+  offspring (`3A34N` of `82I5M`, `NX5RM` of `8PPD8`), and (2) `ExamplePedigree.txt`'s 106 `#####`
+  age cells are read as comments, so the app's text upload drops those rows' age, ancestry,
+  origin and status and `getPedigree()` cannot read the file. Staged with the three-call recipe
+  (owner's YAML header left out). `test_newsReleaseState.R` 26/0, `test_wordlist_coverage.R` 3/0.
+  Commit `599a0803`.
+
+### 2026-09-28 · [ad hoc] S800 REFACTOR (A): readDataFile() comment and the app's Input Format help describe the new reading
+- **Model:** Claude Opus 5.5. No behavior change. `R/modInput.R` comment above `readDataFile()`;
+  `inst/extdata/ui_guidance/input_format.html` new bullet: an empty cell is missing, a blank parent
+  is unknown, a blank ancestry is UNKNOWN, a blank origin is none recorded.
+  `test_modInput_blankCells.R` 11/0, `test_modInput.R` 53/0, `test_modInput_coverage.R` 9/0,
+  `test_modGeneticValue.R` 70/0, `test_qcStudbook.R` 29/0, `test_geneDrop.R` 5/0,
+  `test_wordlist_coverage.R` 3/0; opt-in `test-e2e-input-tutorial.R` 8/0; lint 0. Commit `54fae557`.
+
+### 2026-09-28 · [ad hoc] S800 GREEN: the Input module reads an empty CSV or text cell as missing
+- **Model:** Claude Opus 5.5. `na.strings = c("", "NA")` on the `read.table()` and `read.csv()`
+  calls in `readDataFile()` (`R/modInput.R`), the `getPedigree()` rule. `test_modInput_blankCells.R`
+  11/0; opt-in e2e (`NPRC_RUN_E2E=true`, real app): mate-pair ancestry 42/0, breeding-groups
+  ancestry 18/0, input module 5/0, input detailed 6/0; full unfiltered suite 356 files / 2,780
+  tests / 8,675 expectations, 1 failed (the known `test_pkgdown_reference_config.R`, from the
+  untracked `vignettes/suggested_NEWS_entry.Rmd`), 0 error; lint 0. Commit `99df405a`.
+
+### 2026-09-28 · [ad hoc] S800 RED: blank upload cells must read as missing
+- **Model:** Claude Opus 5.5. New `tests/testthat/test_modInput_blankCells.R` (real uploads through
+  `modInputServer`): `readDataFile()` CSV and tab-text branches; a blank-parent CSV and text upload
+  loads; blank ancestry -> UNKNOWN; blank origin -> `NA`; a blank-origin founder is "Undetermined"
+  in `orderReport()`; the shipped ancestry example's `U1` is UNKNOWN; the shipped jmac file has no
+  "both a sire and a dam" error, only its 67 parent-age errors -- 9 tests / 26 assertions failing
+  for the expected reason, 2 `control:` tests passing (one first failed only because `ancestry` is
+  a factor; helper fixed). `test-e2e-mate-pair-analysis-module-ancestry.R` re-pinned to the aligned
+  numbers (coverage OTHER 1 / UNKNOWN 1, pairs INDIAN-UNKNOWN 2 / INDIAN-OTHER 1, census 1 / 1, the
+  flagged `U1` pairs carry INDIAN-UNKNOWN): 5 failures on exactly those pins with
+  `NPRC_RUN_E2E=true`, 37 passing. Lint 0. Commit `0c7f527a`.
+
+### 2026-09-28 · [ad hoc] S800 PRE-RED: blank upload cells measured on all 16 shipped pedigree files; owner picked "read as missing"
+- **Model:** Claude Opus 5.5. Each file read the app's way and with `na.strings`, run through
+  `runQcStudbook()` and compared with `getPedigree()`: jmac loses its "both a sire and a dam" error
+  (67 parent-age errors remain); ancestry example OTHER 2 / UNKNOWN 0 -> 1 / 1; `ExamplePedigree.csv`
+  241 blank-origin founders counted as imports (Genetic Value High 926 -> 685, Undetermined
+  1,372 -> 1,613, 2,081 of 3,694 ranks change, matching the script path); `ExamplePedigree.txt`
+  106 rows OTHER -> UNKNOWN; 8 files unchanged. The app's own Input Format help asks for blank
+  parent cells. Owner picked "read as missing" over "document the difference" and "call
+  `getPedigree()`" (which cannot read `ExamplePedigree.txt`), one plain-language question.
+
 ### 2026-09-27 · [ad hoc] S800 claim: blank cells in app uploads -- the Input module reads a blank CSV cell as "" where getPedigree() reads it as missing, so blank ancestry becomes OTHER and blank sire/dam cells block the upload (in progress)
 - **Model:** Claude Opus 5.5.
 
