@@ -162,6 +162,12 @@ Carried: `CHANGELOG.md` (~122 KB) and `HANDOFFS.md` (~94 KB) trims (a forced wri
 owner, Learning 811); `suggested_NEWS_entry`; working-tree residue; 26 unpushed after this records
 commit (owner's call); dashboard v2.18.0 vs v2.19.0; the methodology fork's Class A/B decision.
 (C) The shinytest2 job's runtime (29m36s) is worth watching against its 45-minute limit.
+**Owner-directed after close-out (2026-09-28 ~19:25 UTC):** pushed all 26 commits
+(`origin/master` `337a633d` -> `51d4081d`; 0 unpushed then -- the push-record commit itself stays
+local). The four push workflows were still running at that commit: read them at next Orient. The
+**next session updates the dashboard script** (`methodology_dashboard.py` v2.18.0 -> v2.19.0,
+owner's instruction); the owner will examine the `suggested_NEWS_entry` draft personally, so it
+is no longer a session pickup.
 
 **Key files:** `inst/extdata/examples/example_pedigree_*.csv` (birth added);
 `data-raw/example_pedigree_birth.R:1-53` (the rule; re-run after editing a file);

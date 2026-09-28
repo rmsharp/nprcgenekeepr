@@ -60,6 +60,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] Owner-directed after the S802 close-out: pushed the 26 local commits (S799 to S802)
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):** `git push origin master` moved
+  `origin/master` from `337a633d` to `51d4081d`, 26 commits (S799's records, S800's blank-cells fix,
+  S801's `ExamplePedigree.txt` rebuild, S802's classic-structure example birth dates), a
+  fast-forward; 0 unpushed afterwards. All four push workflows (`R-CMD-check`, `lint`, `pkgdown`,
+  `test-coverage`) were in progress on `51d4081d` (runs 36472173902, 36472173858, 36472173847,
+  36472173852) when this entry was written, so their results are NOT recorded here -- the next
+  Orient's `gh run list` reads them. Owner direction recorded in `SESSION_NOTES.md`: the next
+  session updates `methodology_dashboard.py` (v2.18.0 -> v2.19.0); the owner examines the
+  `suggested_NEWS_entry` draft personally. This entry's commit changes only build-ignored files
+  read by no test, so it is left unpushed; it rides with the next push.
+
 ### 2026-09-28 · [ad hoc] S802 records: the five classic-structure example pedigrees now upload in the app DONE -- each carries birth dates, the article's figures unchanged (S801 handoff evaluated 9/10, self 8/10, receipt, Learning 818)
 - **Model:** Claude Opus 5.5. `SESSION_NOTES.md` S801 evaluation and S802 handoff (the claim stub
   replaced); `HANDOFFS.md` S802 receipt `status: complete`; `PROJECT_LEARNINGS.md` Learning 818 (the
