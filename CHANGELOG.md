@@ -60,6 +60,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] Owner-directed after the S802 close-out: pushed the 2 local ledger/notes commits
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):** `git push origin master` moved
+  `origin/master` from `51d4081d` to `4f13b10a` (the push record `3ce74d54` and the `BACKLOG.md`
+  header cleanup record `4f13b10a`), a fast-forward. Both change only build-ignored files read by no
+  test, so the CI runs they start say nothing new; the runs on `51d4081d` (S802's code) were not
+  cancelled (no workflow sets `cancel-in-progress`; `lint` had already passed). This entry's commit
+  stays local and rides with the next push.
+
 ### 2026-09-28 · [ad hoc] Owner-directed after the S802 close-out: dropped the uncommitted YAML header on `BACKLOG.md` and deleted the untracked `BACKLOG.log`
 - **Model:** Claude Opus 5.5. The header (5 lines, `output: html_document / pdf_document`) had sat
   uncommitted since about 2026-09-24, and S799-S802 staged `BACKLOG.md` without it (`tail -n +6` +
