@@ -286,6 +286,72 @@ test_that("getPotentialParents falls back to all old-enough females", {
   expect_identical(pp[[1L]]$dams, "DAM")
 })
 
+## PED_GV F3 (NEW-35) --------------------------------------------------------
+## The all-old-enough-females fallback must not re-admit a female the
+## gestation window already ruled out: she delivered another offspring within
+## maxGestationalPeriod days of the focal birth, so she cannot have gestated
+## the focal animal too. In each fixture below no female is a proven breeder
+## (no offspring in the +/- 0.5-1.5 y band), so the fallback always runs.
+fallbackPed <- function(otherBirths) {
+  ## otherBirths: named integer vector, female id -> day offset (from the
+  ## focal birth) of that female's other offspring; NA means she has none.
+  D0 <- as.Date("2010-01-01")
+  females <- names(otherBirths)
+  kids <- females[!is.na(otherBirths)]
+  data.frame(
+    id = c("FOCAL", "M1", females, paste0("KID_", kids)),
+    sire = NA_character_,
+    dam = c(NA, NA, rep(NA, length(females)), kids),
+    sex = c("F", "M", rep("F", length(females)), rep("M", length(kids))),
+    birth = c(
+      D0, as.Date("2000-01-01"), rep(as.Date("2000-01-01"), length(females)),
+      D0 + otherBirths[kids]
+    ),
+    exit = as.Date(NA),
+    fromCenter = c(TRUE, rep(FALSE, 1L + length(females) + length(kids))),
+    stringsAsFactors = FALSE
+  )
+}
+
+test_that("the dam fallback never re-admits a female ruled out by gestation (NEW-35, probe P5)", {
+  ## Audit probe P5: F1 delivered another offspring 59 days after the focal
+  ## birth and is the only adult female, so no candidate dam remains. The
+  ## entry is still emitted with its sires.
+  pp <- getPotentialParents(
+    ped = fallbackPed(c(F1 = 59L)), minSireAge = 2, minDamAge = 2,
+    maxGestationalPeriod = 210L
+  )
+  expect_identical(pp[[1L]]$id, "FOCAL")
+  expect_identical(pp[[1L]]$sires, "M1")
+  expect_identical(pp[[1L]]$dams, character(0L))
+})
+
+test_that("the dam fallback keeps the females the gestation window did not rule out (NEW-35)", {
+  ## F_AFTER delivered 59 d after the focal birth and F_BEFORE 100 d before
+  ## it: both inside the +/- 210 d window, so both are ruled out. F_OPEN has
+  ## no offspring at all, so the fallback still offers her.
+  pp <- getPotentialParents(
+    ped = fallbackPed(c(F_AFTER = 59L, F_BEFORE = -100L, F_OPEN = NA)),
+    minSireAge = 2, minDamAge = 2, maxGestationalPeriod = 210L
+  )
+  expect_identical(pp[[1L]]$id, "FOCAL")
+  expect_identical(pp[[1L]]$dams, "F_OPEN")
+})
+
+test_that("the dam fallback's exclusion follows the gestation window (NEW-35)", {
+  ## F1's other offspring is 100 d after the focal birth: inside a 210 d
+  ## window (ruled out) but outside a 90 d one (still offered). 100 d is also
+  ## short of the 0.5 y proven-breeder band, so the fallback runs either way.
+  damsAt <- function(g) {
+    getPotentialParents(
+      ped = fallbackPed(c(F1 = 100L)), minSireAge = 2, minDamAge = 2,
+      maxGestationalPeriod = g
+    )[[1L]]$dams
+  }
+  expect_identical(damsAt(210L), character(0L))
+  expect_identical(damsAt(90L), "F1")
+})
+
 ## Issue #119 Slice 2 -----------------------------------------------------
 ## getPotentialParents now keys the minimum breeding-age floor on each
 ## candidate's own species+sex (via resolveBreedingAge), replacing the single
