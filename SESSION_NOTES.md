@@ -90,12 +90,89 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 798 Handoff Evaluation (by Session 799)
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` 95,223 B and `HANDOFFS.md` 76,392 B
+(the "~94 KB"/"~76 KB" it predicted, plus the owner-directed push record `a57caf67`); S798 receipt
+`status: complete`; the residue list matched file by file (mtimes Aug 15 / Aug 25 / Sep 24-25); the
+one standing failure and its cause were right. The "16 unpushed" was superseded by the owner's push,
+which the ledger records (1 unpushed at Orient, the push-record commit itself). Gotcha (4) (background
+the full suite) and Learning 812's "measure first, counts in the option text" carried straight into
+this session. **Could not apply:** (C) "read the 07:00 UTC shinytest2 run at Orient" -- Orient ran at
+03:47 UTC, before it fired. The item picked (unreadable parent sex) was only a name in (B); its
+`BACKLOG.md` block held everything needed and was accurate to the line. **ROI:** high.
+
 ### What Session 799 Did
-**Deliverable:** A sire or dam whose sex is blank or unrecognized is reported as a "female sire"
-or "male dam" by the pedigree check (`BACKLOG.md` item, found S787) (IN PROGRESS)
-**Started:** 2026-09-27
-**Status:** Session claimed. Work beginning (PRE-RED).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE:** the unreadable-parent-sex item (found S787). A sire or dam whose sex cell is
+blank, unrecognized (`"xyz"`) or space-padded (`"M "`) is no longer reported as a "female sire" /
+"male dam". `convertSexCodes()` now trims spaces and reads any leftover code as `"U"`.
+**PRE-RED (measured before asking):** 0 blank/unrecognized sex codes in all 12 shipped datasets; in
+`inst/extdata/examples/`, 1 blank on a non-parent (`deidentified_jmac_ped.csv`), read as `""` by the
+app and `NA` by `getPedigree()`; `read.csv()` keeps spaces, so `"M "` was unreadable; a blank-sex
+non-parent stayed `NA` and was counted as both sexes (`getSexRatioWithAdditions()` on a 7-animal
+toy: 5 F + 3 M). Owner picked **treat as unknown** and **ignore spaces** (two plain-language
+questions, one call). **RED** `b2c26fe4`: 3 tests in `test_convertSexCodes.R` (7 failing
+assertions) and 6 in `test_correctParentSex.R` (13 failing, incl. the app's `runQcStudbook()`
+step); one padded-parent test passed by accident (the old correction guessed M/F for the `NA`) and
+was relabelled `control:` with the reason. **GREEN** `566f8fce`: `trimws()` before `toupper()`, plus
+a catch-all mapping anything outside F/M/H/U to `"U"`. **REFACTOR** (A) `e76fb2e4`: dropped the
+now-redundant `sex[is.na(sex)] <- "U"`; roxygen of `convertSexCodes()`/`qcStudbook()`, both man
+pages, the app's Input Format help page; (B) `89f240b6`: `studbook-quality-control.qmd` sentence,
+`NEWS.Rmd` General Fixes entry, `BACKLOG.md` (item removed; the blank-ancestry item gains the side
+finding below), staged with the three-call recipe so the owner's YAML header stays out.
+**Side finding (filed, not fixed):** the app cannot load the shipped `deidentified_jmac_ped.csv`:
+its 2,789 blank sire cells arrive as the id `""`, "both a sire and a dam" (68 errors incl. 67
+parent-age ones that the script path shows too). Same root cause as the blank-ancestry item
+(`R/modInput.R:324-331` reads with no `na.strings`), so it went into that item, not a new one.
+**Verification:** full unfiltered suite at GREEN and REFACTOR: 355 files / 2,769 tests / 8,640
+expectations, 1 failed (the known `test_pkgdown_reference_config.R`), 0 error; lint 0 on the 2 R
+and 2 test files; `test_newsReleaseState.R` 26/0, `test_wordlist_coverage.R` 3/0;
+`devtools::document()` changed only `man/convertSexCodes.Rd` and `man/qcStudbook.Rd`.
+**Runtime (3E):** `shiny::testServer(modInputServer)` with a real CSV upload (blank, `"xyz"`, `"M "`,
+`" F"` parents plus a blank non-parent): loads, 0 errors, sexes U/U/M/F/U; the same upload with the
+pre-fix function: 4 "is female but listed as a sire"/"is male but listed as a dam" errors, nothing
+loaded. Opt-in e2e with `NPRC_RUN_E2E=true` (real app, headless Chrome):
+`test-e2e-input-module.R` 5 tests and `test-e2e-input-detailed.R` 6 tests, 0 failed/0 skipped/0 error.
+**Commits:** claim `a98fbe7a`, RED `b2c26fe4`, GREEN `566f8fce`, REFACTOR `e76fb2e4` + `89f240b6`,
+records (this). **Learnings:** 815.
+
+**Self-assessment: 9/10.** + Measured on shipped data, both read paths and the real module before
+asking; the space-padding case came from measuring, not reasoning, and was offered as its own
+yes/no; one decision call, answered first time; every TDD gate via `AskUserQuestion`; RED failures
+all for the expected reason and the one accidental pass caught and labelled; full suite at GREEN and
+REFACTOR; runtime through the real Input module with a pre-fix comparison; the side finding measured
+at the module level and folded into the item that owns its fix. - One probe call had a wrong
+argument list (cost a rerun); - no ledger reduction again: `CHANGELOG.md`/`HANDOFFS.md` still over
+budget (this session's `BACKLOG.md` commit removed 17 lines and added 10).
+
+**Next steps:** (A) Every "Up Next" item is still an owner decision; measure each option on real
+files before asking (Learnings 812/814/815). Nearest this session's code: the blank-ancestry item
+(`BACKLOG.md` "Up Next", now with S799's blank sire/dam measurement): aligning the app read with
+`getPedigree()` would also make `deidentified_jmac_ped.csv`'s parents readable, but the file still
+has 67 parent-age errors, and the S777 e2e pins move. (B) S798's (A) recorded-dam item, the
+`U`-prefix real-id item, the PED_GV owner decisions: untouched. (C) Carried: `CHANGELOG.md`
+(100,814 B at this records commit) and `HANDOFFS.md` (81,631 B) trims, both over 65,536 B, `CHANGELOG.md`
+last, a forced write needs the owner (Learning 811); `suggested_NEWS_entry` disposition;
+working-tree residue; unpushed commits (6 before this records commit; the owner's call); dashboard
+script v2.18.0 vs canonical v2.19.0; the methodology fork's Class A/B decision. (D) The 07:00 UTC
+2026-09-28 shinytest2 run (first live test of S794's 45-minute limit) had not fired at this Orient
+-- read it next Orient with `gh run list --branch master --limit 10`.
+
+**Key files:** `R/convertSexCodes.R:18-22` (roxygen), `:42` (`trimws`), `:52-53` (catch-all);
+`R/qcStudbook.R:114-117`; `tests/testthat/test_convertSexCodes.R:37-71`;
+`tests/testthat/test_correctParentSex.R:305-361`; `inst/extdata/ui_guidance/input_format.html:118-120`;
+`vignettes/articles/studbook-quality-control.qmd:102-105`; `NEWS.Rmd:505-508`; `BACKLOG.md:272-282`
+(the S799 paragraph in the blank-ancestry item); `PROJECT_LEARNINGS.md` Learning 815.
+
+**Gotchas:** (1) The app reads an empty CSV cell as `""`, `getPedigree()` as `NA`; measure
+blank-cell behavior on both, and through `modInputServer` with a real file (Learning 815). (2) An
+unreadable sire now comes back `"U"`, not a guessed `"M"`, in `qcStudbook(reportErrors = FALSE)`
+too -- scripts that relied on the guess see `U` (NEWS says so). (3) The Diagram's "Other /
+Unrecorded" label still exists for data that never went through `qcStudbook()`; QC output no
+longer produces an `NA` sex. (4) Opt-in e2e files need `NPRC_RUN_E2E=true`; the full suite skips
+them silently (187 skipped). (5) STANDING SET unchanged from S790-798: full suite in the
+background; full 40-char sha from `git rev-parse`; `git log --grep` needs `--extended-regexp`;
+`scratchpad/` invisible to git by owner decision; `CLAUDE.md` warn band = headroom; three-call
+`BACKLOG.md` staging recipe; recount ledger frontiers and the unpushed count fresh (Learning 806).
 
 ### Session 797 Handoff Evaluation (by Session 798)
 **Score: 9/10.** Every Orient measurement held: both ledger frontiers = HEAD `350546b2`, 0

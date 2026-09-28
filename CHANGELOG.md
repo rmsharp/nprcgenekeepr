@@ -60,6 +60,67 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S799 records: unreadable parent sex DONE -- a blank, unrecognized or space-padded sex is read as unknown / as the sex it names, not reported as a "female sire" / "male dam" (S798 handoff evaluated 9/10, self 9/10, receipt, Learning 815)
+- **Model:** Claude Opus 5.5. Phase 3 close-out: S798's handoff evaluated 9/10 (every Orient
+  measurement held; its "read the 07:00 UTC shinytest2 run at Orient" could not apply -- Orient
+  ran at 03:47 UTC, before the run). Self 9/10. `SESSION_NOTES.md` stub replaced with the full
+  record, `HANDOFFS.md` receipt completed, `PROJECT_LEARNINGS.md` Learning 815 appended (blank
+  cells read differently by the app and `getPedigree()`; measure both and through the real
+  module). Runtime: `shiny::testServer(modInputServer)` with a real CSV upload holding blank,
+  `"xyz"`, `"M "` and `" F"` parents plus a blank non-parent -> loads, 0 errors, sexes U/U/M/F/U;
+  the same upload with the pre-fix function -> 4 female-sire / male-dam errors, nothing loaded.
+  Opt-in e2e (`NPRC_RUN_E2E=true`, real app in headless Chrome): `test-e2e-input-module.R` 5 and
+  `test-e2e-input-detailed.R` 6 tests, 0 failed/0 skipped/0 error. No GitHub issue to close (the
+  item named none). Not pushed (the owner's call).
+
+### 2026-09-27 · [ad hoc] S799 REFACTOR (B): article sentence, NEWS.Rmd Fixed entry; BACKLOG: item removed, blank sire/dam upload finding filed under the blank-ancestry item
+- **Model:** Claude Opus 5.5. `vignettes/articles/studbook-quality-control.qmd`: the sex-code
+  sentence now says case and spaces are ignored and a blank or unrecognized sex becomes `U`.
+  `NEWS.Rmd` General Fixes: plain-language "Fixed:" entry. `BACKLOG.md`: the unreadable-parent-sex
+  item removed (done); the "Blank ancestry cells become OTHER" item gains S799's measurement that
+  the same no-`na.strings` app read (`R/modInput.R:324-331`) turns a blank sire/dam cell into the id
+  `""`, so the real Input module cannot load the shipped `deidentified_jmac_ped.csv` (2,789 blank
+  sire cells; 68 errors, 67 of them parent-age errors that `getPedigree()` shows too), while
+  `ExamplePedigree.csv` (missing parents written `NA`) and Excel uploads are unaffected. Staged
+  with the three-call recipe so the owner's YAML header stays out. `test_newsReleaseState.R` 26/0,
+  `test_wordlist_coverage.R` 3/0. Commit `89f240b6`.
+
+### 2026-09-27 · [ad hoc] S799 REFACTOR (A): redundant NA line dropped; roxygen, man pages and the app's Input Format help describe the new reading
+- **Model:** Claude Opus 5.5. No behavior change. `R/convertSexCodes.R`: `sex[is.na(sex)] <- "U"`
+  removed (the GREEN catch-all already maps `NA` to `"U"`), comment on the catch-all; roxygen of
+  `convertSexCodes()` and `qcStudbook()` gain "a missing, blank or unrecognized value becomes U" and
+  "case and spaces around a code are ignored" (`devtools::document()` changed only
+  `man/convertSexCodes.Rd` and `man/qcStudbook.Rd`, `NAMESPACE` untouched);
+  `inst/extdata/ui_guidance/input_format.html` says the same. Affected test files 0 failed / 0
+  error; lint 0; full unfiltered suite at REFACTOR 355 files / 2,769 tests / 8,640 expectations, 1
+  failed (the known `test_pkgdown_reference_config.R` failure from the untracked
+  `vignettes/suggested_NEWS_entry.Rmd`), 0 error. Commit `e76fb2e4`.
+
+### 2026-09-27 · [ad hoc] S799 GREEN: `convertSexCodes()` trims spaces and reads any leftover code as "U"
+- **Model:** Claude Opus 5.5. `R/convertSexCodes.R`: `toupper(trimws(sex))`, and any value still
+  outside F/M/H/U becomes `"U"` before the `factor()` call. Both test files 0 failed / 0 error;
+  lint 0; full unfiltered suite 355 files / 2,769 tests, 1 known failure, 0 error. Commit
+  `566f8fce`.
+
+### 2026-09-27 · [ad hoc] S799 RED: a blank, unrecognized or space-padded sex must not make a parent a "female sire" / "male dam"
+- **Model:** Claude Opus 5.5. `test_convertSexCodes.R`: 3 tests (blank/whitespace/unrecognized ->
+  `U` under both `ignoreHerm` settings; `"M "`, `" F"`, `" male "`, `"F\t"`, `" 4 "` read as named;
+  a control on the factor levels, `NA` and numeric codes) -- 7 failing assertions.
+  `test_correctParentSex.R`: 6 tests on one fixture (`qcStudbook()` report and no-report paths,
+  the app's `runQcStudbook()` step, a control that a real `"F"` sire is still reported) -- 13
+  failing assertions, each for the expected reason (still reported; guessed `M`/`F`; `NA`). One
+  padded-parent test passed today only because the old correction guessed `M`/`F` for the `NA`; it
+  was relabelled `control:` with that reason. Lint 0. Commit `b2c26fe4`.
+
+### 2026-09-27 · [ad hoc] S799 PRE-RED: unreadable parent sex measured; owner picked "treat it as unknown" and "ignore spaces"
+- **Model:** Claude Opus 5.5. Measured: 0 blank or unrecognized sex codes in all 12 shipped
+  datasets; in `inst/extdata/examples/` 1 blank on a non-parent (`deidentified_jmac_ped.csv`), read
+  as `""` by the app's `read.csv()` and `NA` by `getPedigree()`; `read.csv()` keeps spaces, so a male
+  sire written `"M "` was reported as a female sire; a blank-sex non-parent stayed `NA` and was
+  counted as both sexes (`getSexRatioWithAdditions()` on a 7-animal toy: 5 F + 3 M). Owner picked
+  "treat it as unknown" over "its own message" and "leave it", and "ignore spaces" (one
+  `AskUserQuestion` call, two plain-language questions with the consequences in each option).
+
 ### 2026-09-27 · [ad hoc] S799 claim: a sire or dam whose sex is blank or unrecognized is reported as a "female sire" / "male dam" by the pedigree check (in progress)
 - **Model:** Claude Opus 5.5.
 
