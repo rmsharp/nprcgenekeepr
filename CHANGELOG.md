@@ -60,6 +60,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-28.md` (13 record(s), 61,948 B → 26,273 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **13** record(s) (2026-09-26 → 2026-09-28) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-28.md`](docs/archive/SESSION_NOTES-through-2026-09-28.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-28.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-28.md.verify.sh)
+rather than trusting a digest printed here. Live file 61,948 B → 26,273 B (−57.6%).
+
+### 2026-09-28 · [ad hoc] S801 records: ExamplePedigree.txt rebuilt DONE -- the only text-format example now holds the same cells as ExamplePedigree.csv, so it uploads with real ages, ancestry and status and reads with getPedigree() (S800 handoff evaluated 8/10, self 8/10, receipt, Learning 817)
+- **Model:** Claude Opus 5.5. Phase 3 close-out: S800's handoff evaluated 8/10 (every Orient
+  measurement held; the item scoped 106 `#####` cells where the whole age column, 2,262 cells, and
+  one id were Excel display text). Self 8/10. `HANDOFFS.md` S801 receipt `status: complete`;
+  `SESSION_NOTES.md` handoff; `PROJECT_LEARNINGS.md` Learning 817 (supersedes Learning 318(d)'s
+  claim that the example pedigrees are all error-laden). **Correction to the S801 PRE-RED entry
+  below:** it says 6 example pedigrees load with 0 errors; the printed table shows **8** (both
+  `ExamplePedigree` files, the 4 `obfuscated_rhesus_mhc_ped*` files,
+  `rhesusPedigree_fromCenter.csv`, `example_ancestry_pedigree.csv`). Full unfiltered suite at
+  REFACTOR 357 files / 2,784 tests / 8,686 expectations, 1 failed (the known
+  `test_pkgdown_reference_config.R`), 0 error. `quality_ratchet: 1/1 pass · 0 fail · 0
+  unmeasured · results 05ed18700c1f · manifest aa983075d6a2` (tarball 3,587,520 B). The owner
+  ran the forced `SESSION_NOTES.md` trim (`--budget-bytes 65536 --cut 4 --force --write`; its
+  tool-written entry is above): these close-out notes put the file at 61,948 B, over the
+  25,000-token read ceiling, so the pre-commit hook would have refused this commit. Its verify
+  script flags the S801 claim stub as missing (the BL-27 finalize pattern); checked by hand, all
+  13 archived records are verbatim in HEAD. No push, no issue action.
+
 ### 2026-09-28 · [ad hoc] S801 REFACTOR: NEWS.Rmd Fixed entry; BACKLOG: the ExamplePedigree.txt item removed (done; owner closed the '#'-in-a-cell reader question), the classic-structure example files filed
 - **Model:** Claude Opus 5.5. `NEWS.Rmd` General Fixes: the example tab-delimited file had been
   saved through Excel (ages as dates or `#####`, one ID changed; on upload its ages arrived as
