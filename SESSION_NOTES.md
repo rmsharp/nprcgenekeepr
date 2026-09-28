@@ -90,12 +90,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 797 Handoff Evaluation (by Session 798)
+**Score: 9/10.** Every Orient measurement held: both ledger frontiers = HEAD `350546b2`, 0
+undocumented; S797 receipt `status: complete`; 12 unpushed; `CHANGELOG.md` 89,813 B and
+`HANDOFFS.md` 71,322 B exactly as stated; the residue list matched file by file; the one standing
+test failure and its cause were right. Next step (A) named the exact lines F3 needed, and its
+"measure each option first and put the counts in the option text" made the owner's decision one
+question. **Could not apply:** "run each option on `examplePedigree`/`qcPed`" -- `qcPed` has no
+`fromCenter` column, so `getPotentialParents()` returns `NULL` for it (Learning 814). **ROI:** high.
+
 ### What Session 798 Did
-**Deliverable:** PED_GV F3 (NEW-35/NEW-55) -- the `getPotentialParents()` fallback at
-`R/getPotentialParents.R:196-199` re-admits an excluded dam (IN PROGRESS)
-**Started:** 2026-09-27
-**Status:** Session claimed. Work beginning (PRE-RED).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE:** PED_GV F3 (NEW-35). The `getPotentialParents()` dam fallback no longer
+re-admits a female the gestation window ruled out. Every PED_GV F-slice is now done.
+**PRE-RED:** read the audit's F3 section and probe P5, `R/getPotentialParents.R`, its tests and its
+two callers (`R/modPotentialParents.R:273`, `R/markerParentageLikelihood.R:302,318`). Built a copy
+of the dam logic with the fallback switchable, checked it reproduced the shipped function exactly
+on both datasets, then measured: the fallback runs for 0 of 50 animals (`rhesusPedigree` with
+`fromCenter` added) and 1 of 1,587 (`qcStudbook(examplePedigree)`) and re-admits nobody; dropping it
+leaves that 1 animal with no dam and breaks 2 tests; a tier label changes the app table. Owner
+picked **"skip ruled-out"** (one plain-language `AskUserQuestion`, counts in each option); NEW-55's
+label not taken. **RED** `4bbcb071`: a `fallbackPed()` fixture builder and 3 tests in
+`test_getPotentialParents.R` (P5; only the never-ruled-out female survives, window checked both
+sides; +100 d ruled out at 210 d, still offered at 90 d) -- exactly 3 failures. **GREEN** `174be7f5`:
+one filter clause in the fallback. **REFACTOR** `b29ee018`: `eligibleDams` held once and reused by
+the fallback, comment and `@return` rewritten, `man/getPotentialParents.Rd`, `NEWS.Rmd` General
+Fixes entry, `BACKLOG.md` (F3 out of the PED_GV item; new DECISION NEEDED item: an animal's own
+recorded dam is never among its candidate dams, 0 of 1,351 on `qcStudbook(examplePedigree)` -- not
+caused by F3), staged with the three-call recipe so the owner's YAML header stays out.
+**Verification:** full unfiltered suite at GREEN and at REFACTOR, 355 files / 2,760 tests, 1 failed
+(the known `test_pkgdown_reference_config.R` one, from the untracked
+`vignettes/suggested_NEWS_entry.Rmd`), 0 error; lint 0 on both touched files;
+`test_newsReleaseState.R` and `test_wordlist_coverage.R` 0 failed; `devtools::document()` changed only
+`man/getPotentialParents.Rd`. Shipped data unchanged (244 / 52,012 candidate dams). **Runtime (3E):**
+`shiny::testServer()` on `modPotentialParentsServer()` with P5 plus an open female -- K1's row lists
+dam `F_OPEN` only (pre-fix: `F1, F_OPEN`); opt-in e2e `test-e2e-potential-parents-module.R` with
+`NPRC_RUN_E2E=true` (real app, headless Chrome) 4 tests, 0 failed/0 skipped/0 error. **Commits:**
+claim `33b4de7c`, RED `4bbcb071`, GREEN `174be7f5`, REFACTOR `b29ee018`, records (this).
+**Learnings:** 814.
+
+**Self-assessment: 9/10.** + Applied Learning 812 before asking, with the harness checked against the
+real function first; one decision question, answered first time, no stakeholder corrections;
+exactly the planned RED failures; full unfiltered suite at GREEN and REFACTOR; runtime through the
+real module and the live-app e2e (which the ordinary suite skips); a related pre-existing defect
+measured and filed rather than fixed in passing. - My first recorded-parent count was wrong
+(stand-in `U` ids counted as known parents); its impossibility caught it before it was used. - No
+reduction this session: the `CHANGELOG.md`/`HANDOFFS.md` trims are still carried.
+
+**Next steps:** (A) Every Up Next item is now an owner decision. Nearest this session's code: the
+new recorded-dam item (`BACKLOG.md` "Up Next" item 2): return candidates only for the unknown
+parent, document the behavior, or leave it; measure on `qcStudbook(examplePedigree)` before asking.
+(B) Carried, untouched: the `U`-prefix real-id item (four written options, withdrawn RED tests in
+`git show a01e13af`), the unreadable-parent-sex item, the `CHANGELOG.md` (~94 KB after this commit)
+and `HANDOFFS.md` (~76 KB) trims, both over the 65,536 B budget, `CHANGELOG.md` last, a forced
+write needs the owner (Learning 811), `suggested_NEWS_entry` disposition, working-tree residue,
+unpushed commits (16 before this records commit; pushing is the owner's call), the methodology
+fork's Class A/B decision. (C) The 07:00 UTC 2026-09-28 scheduled `shinytest2` run is the first live
+test of S794's 45-minute limit -- read it at Orient.
+
+**Key files:** `R/getPotentialParents.R:44-52` (`@return`), `:190-203` (`eligibleDams`, proven-breeder
+filter, fallback); `tests/testthat/test_getPotentialParents.R:289-353`; `man/getPotentialParents.Rd`;
+`NEWS.Rmd:500-504`; `BACKLOG.md` "Up Next" items 1-2; `PROJECT_LEARNINGS.md` Learning 814.
+
+**Gotchas:** (1) Only `examplePedigree` ships with `fromCenter`; `getPotentialParents()` returns
+`NULL` for `qcPed` and every other shipped dataset. (2) On a `qcStudbook()`-cleaned pedigree every
+unknown parent is a `U` stand-in -- count known parents with `isGeneratedUnknownId()`, never
+`is.na()` alone. (3) The Potential Parents e2e file only runs with `NPRC_RUN_E2E=true`; the full
+suite skips it silently. (4) The full suite outlasts the 2-minute Bash timeout: background it and
+wait for the notification. (5) STANDING SET unchanged from S790-797: full 40-char sha from
+`git rev-parse`; `git log --grep` needs `--extended-regexp`; `scratchpad/` invisible to git by owner
+decision; `CLAUDE.md` warn band = headroom; three-call `BACKLOG.md` staging recipe; recount ledger
+frontiers and the unpushed count fresh (Learning 806).
 
 ### Session 796 Handoff Evaluation (by Session 797)
 **Score: 8/10.** Every Orient measurement held: both ledger frontiers = HEAD `cdb670f0`, 0

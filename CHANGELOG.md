@@ -60,6 +60,55 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S798 records: PED_GV F3 DONE -- the `getPotentialParents()` dam fallback no longer re-admits a female ruled out by the gestation window (S797 handoff evaluated 9/10, self 9/10, receipt, Learning 814)
+- **Model:** Claude Opus 5.5. Phase 3 close-out: S797's handoff evaluated 9/10 (every Orient
+  measurement held; its "run each option on `qcPed`" could not apply -- `qcPed` has no `fromCenter`
+  column). Self 9/10. `SESSION_NOTES.md` stub replaced with the full record, `HANDOFFS.md` receipt
+  completed, `PROJECT_LEARNINGS.md` Learning 814 appended. Runtime: `shiny::testServer()` on
+  `modPotentialParentsServer()` with the P5 pedigree plus an open female -> K1's row lists dam
+  `F_OPEN` only (the pre-fix code listed `F1, F_OPEN`); the opt-in e2e file
+  (`NPRC_RUN_E2E=true`, real app in headless Chrome) 4 tests, 0 failed/0 skipped/0 error. Not
+  pushed (unpushed count is the owner's call).
+
+### 2026-09-27 · [ad hoc] S798 REFACTOR: fallback reuses the gestation-filtered set; roxygen + man page, NEWS.Rmd Fixed entry; BACKLOG: F3 out of the PED_GV item, recorded-dam finding filed
+- **Model:** Claude Opus 5.5. No behavior change. `R/getPotentialParents.R`: the gestation-filtered
+  females are held once (`eligibleDams`) and the fallback reuses them; the stale "accept all females
+  old enough" comment rewritten; `@return` now says the fallback never lists a ruled-out female
+  (`devtools::document()` changed only `man/getPotentialParents.Rd`, `NAMESPACE` untouched).
+  `NEWS.Rmd` General Fixes: plain-language "Fixed:" entry. `BACKLOG.md`: the PED_GV item's F3
+  paragraph removed (every F-slice now done; NEW-55's label, not taken, stays with the
+  split-`getPotentialParents` decision) and a new DECISION NEEDED item filed -- an animal's own
+  recorded dam is never among its candidate dams (0 of 1,351 on `qcStudbook(examplePedigree)`),
+  not caused by F3. Staged with the `tail -n +6` / `hash-object` / `update-index --cacheinfo`
+  recipe (3 separate Bash calls) so the owner's YAML header stays out. Verification: full
+  unfiltered suite 355 files / 2,760 tests, 1 failed (the known `test_pkgdown_reference_config.R`
+  failure from the untracked `vignettes/suggested_NEWS_entry.Rmd`), 0 error; lint 0;
+  `test_newsReleaseState.R` and `test_wordlist_coverage.R` 0 failed. Commit `b29ee018`.
+
+### 2026-09-27 · [ad hoc] S798 GREEN: the dam fallback no longer re-admits a female ruled out by the gestation window (PED_GV F3, NEW-35)
+- **Model:** Claude Opus 5.5. `R/getPotentialParents.R`: the fallback's female filter also drops
+  any female in `births$dam`, the same rule the main path applies. Shipped data unchanged
+  (`rhesusPedigree` 244 / `qcStudbook(examplePedigree)` 52,012 candidate dams, 0 animals with no
+  dam). Full unfiltered suite 355 files / 2,760 tests, 1 known failure, 0 error; lint 0. Commit
+  `174be7f5`.
+
+### 2026-09-27 · [ad hoc] S798 RED: the dam fallback must not re-admit a ruled-out female (PED_GV F3, NEW-35)
+- **Model:** Claude Opus 5.5. `tests/testthat/test_getPotentialParents.R` gains a `fallbackPed()`
+  fixture builder and 3 tests: audit probe P5 (no dam; sires still `M1`), a mixed fixture where
+  only the never-ruled-out female survives (window checked on both sides, +59 d and -100 d), and
+  the window-width check (+100 d ruled out at 210 d; still offered at 90 d, which passes today and
+  guards against over-exclusion). Confirmed exactly 3 failures, all today's fallback re-admitting
+  the ruled-out female (1 dam vs 0, 3 vs 1, 1 vs 0). Lint 0. Commit `4bbcb071`.
+
+### 2026-09-27 · [ad hoc] S798 PRE-RED: F3 measured; owner picked "skip ruled-out females" in the fallback
+- **Model:** Claude Opus 5.5. Per Learning 812, a copy of the dam logic with the fallback
+  switchable was checked against the shipped function (identical output) and then run on every
+  shipped dataset that `getPotentialParents()` can use (only `examplePedigree` carries
+  `fromCenter`; `rhesusPedigree` with one added): the fallback runs for 0 of 50 and 1 of 1,587
+  animals and re-admits nobody; dropping it leaves 1 animal with no dam and breaks 2 tests; a
+  tier label changes the app table. Owner picked "skip ruled-out" (plain-language
+  `AskUserQuestion`, counts in the option text); NEW-55's label not taken.
+
 ### 2026-09-27 · [ad hoc] S798 claim: PED_GV F3 slice -- an excluded dam is re-admitted by the `getPotentialParents()` fallback (NEW-35/NEW-55) (in progress)
 - **Model:** Claude Opus 5.5.
 

@@ -182,18 +182,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S798
 date: 2026-09-27
-status: pending
-self_score: TBD
-predecessor_score: TBD
-active_task: PED_GV F3 slice (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md, NEW-35/NEW-55): the fallback at R/getPotentialParents.R:196-199 re-admits an excluded dam. Owner picked F3 from the Phase 0 picker. PRE-RED investigation beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: PED_GV F3 (NEW-35) -- DONE. The getPotentialParents() dam fallback no longer re-admits a female the gestation window ruled out. Every PED_GV F-slice is now done; the PED_GV BACKLOG.md item holds only owner decisions (overhaul roots, closing 11 ids). New DECISION NEEDED item filed right below it: an animal's own recorded dam is never among its candidate dams.
+what_was_done: Full TDD cycle, every gate via AskUserQuestion, plus a separate plain-language pre-RED decision question with measured counts in each option (Learning 812): a switchable copy of the dam logic reproduced the shipped function exactly, then showed the fallback runs for 0 of 50 (rhesusPedigree) and 1 of 1,587 (qcStudbook(examplePedigree)) animals and re-admits nobody. Owner picked "skip ruled-out females". Claim 33b4de7c; RED 4bbcb071 (3 tests in test_getPotentialParents.R, exactly 3 failures); GREEN 174be7f5 (one filter clause in the fallback); REFACTOR b29ee018 (eligibleDams reused by the fallback, comment + @return + man/getPotentialParents.Rd, NEWS.Rmd General Fixes entry, BACKLOG.md F3 out + recorded-dam item filed, owner's YAML header kept out). Full unfiltered suite at GREEN and REFACTOR: 355 files / 2,760 tests, 1 known failure, 0 error. Learning 814.
+next_steps: (A) Pick among the Up Next DECISION NEEDED items; each is Effort S-M and needs an owner choice first -- measure each option on qcStudbook(examplePedigree) before asking (Learnings 812/814). Closest to this session's code: the new recorded-dam item (return candidates only for the unknown parent, document it, or leave it; R/getPotentialParents.R around the eligibleDams line, ~190-203). (B) Carried and untouched: the "U"-prefix real-id item (four written options), the unreadable-parent-sex item, CHANGELOG.md (~94 KB) and HANDOFFS.md (~76 KB) trims, both over the 65,536 B budget, CHANGELOG.md last, and a forced write needs the owner (Learning 811); suggested_NEWS_entry disposition; working-tree residue; push of the unpushed commits (owner's call); the methodology fork's Class A/B decision. (C) The next scheduled shinytest2 run (07:00 UTC 2026-09-28) is the first live test of S794's 45-minute limit -- check it at Orient.
+key_files: R/getPotentialParents.R:44-52 (@return), :190-203 (eligibleDams, proven-breeder filter, fallback); tests/testthat/test_getPotentialParents.R:289-353 (fallbackPed() + the 3 F3 tests); man/getPotentialParents.Rd; NEWS.Rmd:500-504; BACKLOG.md "Up Next" items 1-2 (PED_GV, recorded-dam); PROJECT_LEARNINGS.md Learning 814.
+gotchas: Only examplePedigree ships with a fromCenter column; getPotentialParents() returns NULL for qcPed and every other shipped dataset (add fromCenter to rhesusPedigree to use it). On a qcStudbook()-cleaned pedigree every unknown parent is a U placeholder, so count known parents with isGeneratedUnknownId(), never is.na() alone (Learning 814). The Potential Parents e2e file is opt-in: NPRC_RUN_E2E=true, otherwise the full suite silently skips it. The full suite outlasts the 2-minute Bash timeout: run it in the background and wait for the notification. The one standing failure is test_pkgdown_reference_config.R, from the untracked vignettes/suggested_NEWS_entry.Rmd. Stage BACKLOG.md with the three-call tail/hash-object/update-index recipe. Recount ledger frontiers and the unpushed count fresh (Learning 806).
+runtime_smoke: shiny::testServer() on modPotentialParentsServer() with the P5 pedigree plus an open female: K1's row lists dam F_OPEN only (pre-fix code: F1, F_OPEN). Opt-in e2e test-e2e-potential-parents-module.R with NPRC_RUN_E2E=true (real app in headless Chrome): 4 tests, 0 failed / 0 skipped / 0 error. Shipped data unchanged: rhesusPedigree 244 and examplePedigree 52,012 candidate dams.
+changelog_ref: this records commit (S798 records entry, prepended above the S798 REFACTOR/GREEN/RED/PRE-RED/claim entries)
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log)
 ```
+Predecessor (S797) scored 9/10: every Orient measurement held (ledger frontiers at HEAD, receipt complete, 12 unpushed, CHANGELOG.md 89,813 B, HANDOFFS.md 71,322 B, the residue list, the one known test failure and its cause); its "measure first, counts in the option text" instruction made F3's decision a single question. One step could not apply: "run each option on qcPed" -- qcPed has no fromCenter column, so getPotentialParents() returns NULL for it. Self-score 9/10: +harness checked against the real function before any count was trusted; +one plain-language decision question, answered first time; +exactly the planned RED failures; +full unfiltered suite at GREEN and REFACTOR; +runtime through the real module and the live-app e2e; +a related defect found, measured and filed, not fixed in passing. -The first recorded-parent count was wrong (placeholders counted as known parents), caught by its own impossibility before use; -the over-budget ledger trims are still carried, not reduced.
 
 ```handoff
 session: S797
