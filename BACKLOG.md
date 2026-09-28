@@ -14,7 +14,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       done: `removeUnknownAnimals()` now returns a pedigree with no `recordStatus` column
       unchanged; its F4 is done: `getAncestors()` now stops with a message naming the cycle
       instead of recursing until R aborts, and keeps the documented diamond repeats; F2's
-      `addUIds()` half is done: a minted id now skips any id already in the pedigree; F2's other
+      `addUIds()` half is done: a minted id now skips any id already in the `id` column (S806 found it
+      still reuses an id used only as a sire or dam; the placeholder-marking plan's Slice 2 fixes it); F2's other
       half, real ids mistaken for placeholders, is its own item below; F3 is done: the
       `getPotentialParents()` dam fallback no longer re-admits a female the gestation window
       ruled out).
@@ -48,33 +49,43 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       leave it. Tests to extend: `tests/testthat/test_getPotentialParents.R`, and
       `test_modPotentialParents.R` if the table changes.
 
-- [ ] **Real animal ids that start with the placeholder prefix (`"Uma"`, `"U123"`) are treated as
-      stand-ins for unknown parents -- the other half of PED_GV F2 / NEW-38 (found S781; a
-      stricter check was tried and withdrawn S797; DECISION NEEDED, Effort M)** --
+- [ ] **Real animal ids that start with the placeholder prefix (`"Uma"`, `"U123"`, the shipped
+      ancestry example's real founder `"U1"`) are treated as stand-ins for unknown parents -- the
+      other half of PED_GV F2 / NEW-38 (found S781; approach chosen S806: mark ids when they are
+      made; plan written S806; DECISION NEEDED on 4 plan choices, then 5 slices, Effort M each,
+      strict TDD)** -- the plan is `docs/planning/unknown-parent-placeholder-marking-plan.md`:
+      read it first (its §1.3 measurements, §2 inventory with the grep commands, §5 slices). Today
       `isGeneratedUnknownId()` (`R/autoIdFormat.R:109-111`) counts any id that starts with the
-      configured prefix (default `"U"`) as a placeholder, and seven files act on it:
-      `removeAutoGenIds()` drops such animals (the Potential Parents feature calls it,
-      `R/getPotentialParents.R:93`), the app's "display unknown IDs" filter hides them
-      (`R/modPedigree.R:361`), and `reportGV()`, `classifyParentage()`,
-      `correctUnknownParentMeanKinship()`, `getLivingBreeders()` and `obfuscateId()` treat them as
-      unknown. **Why the obvious fix fails (measured S797):** also requiring the remainder to be
-      exactly the format's digit width (4 digits for `"U%04d"`) broke 24 tests and caused 1 error
-      in 7 files, because `obfuscateId()` (`R/obfuscateId.R:40-46`) disguises a placeholder as the
-      prefix plus random capital letters and digits, and the shipped example data was built that
-      way: all 43 placeholder ids in `qcPed` and all 1,372 in `examplePedigree` look like
-      `"U05X3C"`, and none matches `U%04d`. With the stricter check, `qcPed`'s 43
-      one-unknown-parent animals became "known", its `calcNeVariance()` effective size went from
-      26.4 to 205, the `examplePedigree` potential-parents result went from 1,587 to 234, and
-      `obfuscateId()` stopped with "too short to easily avoid duplicates". The withdrawn RED tests
-      are in commit `a01e13af` (`git show a01e13af`). **Decide:** (1) leave it -- it matters only
-      if a center's real ids start with the prefix, which `setAutoIdFormat()` can change; (2)
-      count only the prefix followed by capital letters and digits (what both `addUIds()` and
-      `obfuscateId()` produce) -- `"Uma"` would be kept, `"U123"` still dropped; (3) record which
-      ids were minted (a column or attribute) instead of guessing from an id's shape -- the record
-      must survive every copy, merge and save of a pedigree; (4) make `obfuscateId()` keep the
-      digit format and regenerate the shipped data, then tighten the check -- moves many pinned
-      numbers. Tests to extend: `test_autoIdFormat.R` (it pins `"U123"` as a placeholder today),
-      `test_removeAutoGenIds.R`, `test_obfuscateId.R`, `test_classifyParentage.R`.
+      prefix (default `"U"`) as a placeholder; seven files act on it. Measured S806: the shipped
+      `inst/extdata/examples/example_ancestry_pedigree.csv` reports 3 female founders instead of 4
+      because its real `U1` is skipped. The owner chose (S806) a logical column written once by
+      `qcStudbook()` over guessing from the id's shape; `recordStatus` cannot carry it (rebuilt
+      every QC run) and an attribute cannot (lost by `merge()` and CSV). **Owner decisions before
+      Slice 1 (plan §11):** D1 the column name (`placeholder` recommended); D3 the rule for files
+      without the column (the tighter "prefix + at least 4 capitals/digits" rule recommended, as
+      Slice 1: in a full-suite trial it moved 3 tests and changed only `U1` among the 1,470 `U`
+      ids in the shipped data); D5 what a bad value in the column does; D6 whether the shipped data
+      gets the column (leave it unmarked recommended). Also found S806 (plan M11): `addUIds()` can
+      give a missing sire the id of another animal's recorded sire when that sire has no row
+      (`existingIds <- ped$id`, `R/addUIds.R:46`), making false half-sibs; Slice 2 fixes it first.
+      The S797 exact-digits attempt and its withdrawn tests stay recorded in commit `a01e13af`.
+
+- [ ] **Unticking "Display Unknown IDs" breaks the Genetic Value analysis (found S806,
+      2026-09-28, DECISION NEEDED, Effort S)** -- every downstream module gets the Pedigree
+      Browser's filtered pedigree (`R/appServer.R:312`), and the filter
+      (`R/modPedigree.R:359-361`) removes placeholder rows while their children still name them as
+      sire/dam. Measured S806 on `qcPed` with the Genetic Value module's own steps
+      (`R/modGeneticValue.R:290-335`: `population <- is.na(exit)`, `trimPedigree(probands, ped,
+      removeUninformative = FALSE, addBackParents = FALSE)`, `reportGV()`): 236 rows, 43 name a
+      removed row, and `reportGV()` stops with "sire and dam must have had alleles assigned: logic
+      error"; the same steps with the box ticked run. Not run through the Shiny module itself.
+      `calcNeVariance()` is unaffected (26.41 both ways). **Decide:** (1) the box filters only the
+      displayed table, and downstream modules get the unfiltered pedigree; (2) downstream modules
+      keep the filtered pedigree and the filter also blanks those sire/dam values (as
+      `removeAutoGenIds()` does), which changes genetic results for the 43 animals; (3) leave it
+      and say in the help that the box must stay ticked for analysis. Related: the placeholder
+      marking plan (`docs/planning/unknown-parent-placeholder-marking-plan.md` §7 dragon 2)
+      relies on this wiring, so a fix here should keep what every tab sees the same.
 
 - [ ] **(Optional, owner decision) One internal `isAddedRecord()` helper for the "added" mask
       (raised S785, deferred at the S785, S786 and S787 REFACTORs; DECISION NEEDED, Effort S)** --

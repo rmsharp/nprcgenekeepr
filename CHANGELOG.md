@@ -60,6 +60,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S806: plan written for marking unknown-parent placeholder ids when they are made (the real-`U`-id half of PED_GV F2 / NEW-38)
+- **Model:** Claude Opus 5.5. **Owner decisions (AskUserQuestion):** of the backlog item's options, "mark ids when they are made"; this session writes the plan, not code.
+- **Deliverable:** `docs/planning/unknown-parent-placeholder-marking-plan.md`: 11 measurements (M1-M11), a grep-based inventory (mint site, the 7 reading files and their callers, 4 exports, shipped data, docs, 27 test files), decisions D1-D9 (a logical column written once by `qcStudbook()`, with a fallback rule for unmarked files), 5 slices, each its own strict-TDD session. Owner decisions D1/D3/D5/D6 still needed before Slice 1.
+- **Measured:** the shipped `example_ancestry_pedigree.csv` reports 3 female founders instead of 4 (its real `U1` is skipped); the tighter "prefix + at least 4 capitals/digits" rule changes only `U1` among 1,470 `U` ids in the shipped data and moved 3 tests in a full-suite trial; adding the column alone moved 1 test (`test_qcStudbook.R:105`).
+- **Found and recorded in `BACKLOG.md`:** unticking "Display Unknown IDs" makes `reportGV()` stop on `qcPed` after the Genetic Value module's own steps (new item); `addUIds()` can reuse another animal's recorded sire id when that sire has no row (`R/addUIds.R:46`; added to the placeholder item and the PED_GV item; the plan's Slice 2 fixes it first). The placeholder item now points at the plan.
+
 ### 2026-09-28 · [ad hoc] S806 claim: real animal ids that start with the placeholder prefix (`"Uma"`, `"U123"`) are treated as stand-ins for unknown parents (the other half of PED_GV F2 / NEW-38): measure, owner picks the fix, strict TDD (in progress)
 - **Model:** Claude Opus 5.5.
 
