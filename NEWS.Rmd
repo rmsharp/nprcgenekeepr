@@ -502,6 +502,10 @@ knitr::opts_chunk$set(echo = TRUE)
   also carried this one. When no female nearby was a proven breeder, it fell
   back to listing every female old enough to be the dam and let such a female
   back in. The fallback now leaves her out too.
+- Fixed: the pedigree check reported a sire or dam whose sex was blank,
+  misspelled, or had an extra space (such as `"M "`) as a "female sire" or
+  "male dam", and stopped the upload. Spaces around a sex code are now ignored,
+  and a blank or unreadable sex is read as unknown, the same as a missing one.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

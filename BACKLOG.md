@@ -76,23 +76,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       numbers. Tests to extend: `test_autoIdFormat.R` (it pins `"U123"` as a placeholder today),
       `test_removeAutoGenIds.R`, `test_obfuscateId.R`, `test_classifyParentage.R`.
 
-- [ ] **A sire or dam whose sex is blank or unrecognized is reported as a "female sire" or "male
-      dam" by the pedigree check (found S787, 2026-09-26, DECISION NEEDED, Effort S)** --
-      measured S787 (a namespace spy under `qcStudbook(reportErrors = TRUE)`, then a plain
-      `reportErrors = FALSE` call): `convertSexCodes()` maps a MISSING sex to `"U"`
-      (`R/convertSexCodes.R:39`) but a blank or unrecognized code (`""`, `"xyz"`) to `NA` (the
-      final `factor()`, `:50`), and `correctParentSex()` tests `!sex %in% c("H", "U", "M")`, which
-      is `TRUE` for `NA`. So a sire whose sex cannot be read comes back in `femaleSires` (a dam in
-      `maleDams`), and the app's error list says "female sire" (measured: `femaleSires = "s1"` and
-      `maleDams = "d1"`); with `reportErrors = FALSE` the same sire's sex is silently set to `"M"`
-      (the dam's to `"F"`) in the returned pedigree. A sex of `NA` (missing) or `"M"` is not
-      reported. **Decide:** (1) leave it (an unreadable sex on a parent is worth a flag and the
-      wording is close enough); (2) report it under its own heading as an unreadable-sex parent
-      rather than a wrong-sex one; or (3) map a blank or unrecognized sex to `"U"` like a missing
-      one in `convertSexCodes()` (a behavior change for every consumer of that function). Outside
-      the `recordStatus` slices; the measurement is in the S787 RED entry of `CHANGELOG.md`. Tests
-      to extend: `tests/testthat/test_correctParentSex.R`, `tests/testthat/test_convertSexCodes.R`.
-
 - [ ] **(Optional, owner decision) One internal `isAddedRecord()` helper for the "added" mask
       (raised S785, deferred at the S785, S786 and S787 REFACTORs; DECISION NEEDED, Effort S)** --
       the mask is written inline four times, all meaning "only the exact status `"added"` is
@@ -281,6 +264,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       INDIAN-UNKNOWN 0 / INDIAN-OTHER 3 (A6b, A12) and census nOther 2 / nUnknown 0
       (A6c) -- so aligning the read moves them on purpose; change those expectations in
       the same commit (the file's header comment says so).
+      **Measured S799 -- the same read also blocks uploads whose founders have blank
+      sire/dam cells:** a blank sire or dam cell reaches `qcStudbook()` as the id `""`,
+      which is then both a sire and a dam, so QC stops with "Animal  appears as both a sire
+      and a dam". Through the real Input module (`shiny::testServer(modInputServer)`, a
+      CSV upload) the shipped `inst/extdata/examples/deidentified_jmac_ped.csv` (2,789
+      blank sire cells) does not load: 68 errors, that one plus 67 "Parent age too young"
+      (the age errors also appear on the `getPedigree()` path, so aligning the read alone
+      will not make that file load). Files that write a missing parent as `NA` (e.g.
+      `ExamplePedigree.csv`) are unaffected. Excel uploads read blank cells as `NA` and are
+      unaffected too.
 
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own
