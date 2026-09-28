@@ -10,7 +10,9 @@
 #' "U" plus a zero-padded integer), so they are alphanumeric and never contain a
 #' period ("."), honoring the ID rule enforced at data input by
 #' \code{\link{qcStudbook}}. The format is configurable via
-#' \code{\link{setAutoIdFormat}} (default \code{"U\%04d"}).
+#' \code{\link{setAutoIdFormat}} (default \code{"U\%04d"}). A candidate ID
+#' that is already in the pedigree is skipped, so a placeholder never
+#' duplicates the ID of a real animal.
 #'
 #' @inheritParams trimPedigree
 #' @param format \code{sprintf} template for the generated placeholder IDs;

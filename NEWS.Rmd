@@ -493,6 +493,10 @@ knitr::opts_chunk$set(echo = TRUE)
   animals each entered as the other's sire), `getAncestors()`, `findLoops()`
   and `countLoops()` now stop with a message that names the animals involved,
   instead of failing with an unexplained "infinite recursion" error.
+- Fixed: the pedigree check gives each unknown parent a stand-in id (`U0001`,
+  `U0002`, and so on). If a real animal already had one of those ids, the
+  stand-in could be given the same id, so two different animals shared it. The
+  check, and `addUIds()`, now skip any id already in the pedigree.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes
