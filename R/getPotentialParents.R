@@ -195,7 +195,8 @@ getPotentialParents <- function(ped, minSireAge = NULL, minDamAge = NULL,
       ## old enough to be the dam.
       if (nrow(potentialDams) == 0L) {
         potentialDams <-
-          ba[sex == "F" & (is.na(ba$exit) | exit >= pUnknown$birth[i]), ]
+          ba[sex == "F" & (is.na(ba$exit) | exit >= pUnknown$birth[i]) &
+            !id %in% births$dam, ]
       }
 
       potentialParents[[j]] <- list(
