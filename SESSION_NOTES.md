@@ -94,11 +94,79 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 802 Handoff Evaluation (by Session 803)
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `852439b4`, 0
+undocumented; the S802 receipt `status: complete`, its `quality_ratchet` citation matching
+`.quality-gates-results.json` (results `9f0d10e7e4d3`, 3,588,737 B); 1 unpushed (the push-record
+commit, as the notes said); the residue list matched file by file (7 untracked). The three
+post-close-out commits after the receipt are S802's own owner-directed records, each with a ledger
+entry -- no receipt owed. The owner's direction ("the next session updates the dashboard script")
+was stated plainly and made the pick obvious; "read the four push workflows at next Orient" was
+done (lint/pkgdown/test-coverage green for `51d4081d`, the rest still running at Orient).
+**Missing:** the carried "methodology fork's Class A/B decision" and "dashboard v2.18.0 vs v2.19.0"
+were listed as two items but are one -- the fork's v2.19.0 commit message (`161181c`, 2026-09-27)
+names BL-88 and the Class B row. **ROI:** high.
+
 ### What Session 803 Did
-**Deliverable:** update the synced `methodology_dashboard.py` from v2.18.0 to canonical v2.19.0 (owner-directed at the S802 close-out) (IN PROGRESS)
-**Started:** 2026-09-28 ~19:45 UTC
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE:** `methodology_dashboard.py` synced from v2.18.0 to canonical v2.19.0
+(owner-directed at the S802 close-out). Not a TDD session (no R code; a synced tool).
+**Before writing:** the sibling `methodology/` checkout is on `main` at `016b3ae`
+(`v3.7-1277-g016b3ae`), clean, level with `origin/main` (Learning 645). The local copy's blob equals
+canonical `e1b6bdf` (v2.18.0) exactly, so no local edit could be lost. Canonical changes since then:
+`cb9b0ed` + `161181c` (fork BL-88 P1/P2), which only touch the Class B read-cap row. The dry run
+skipped the file ("git-tracked -- needs Phase 3 untrack").
+**Sync** `0058e7f8`: `--sync <project> --force`; `cmp`-identical to canonical; diff 158+/27- = the
+canonical diff. **What changes here:** the Class B over-cap row no longer claims "the trimmer
+answers NO_CONFIG" (false here since this project's `SESSION_NOTES.md` `LedgerSpec` -- the S796
+finding the fork fixed); where the project's own `methodology_trim.py` lists the file in `LEDGERS`
+(parsed, never run) it names `python3 methodology_trim.py --file <f> --check` and drops HIGH to LOW.
+This **closes the carried "Class A/B decision" item.**
+**Verification:** v2.19.0's parse of this project's trimmer = its executed `LEDGERS` (`CHANGELOG.md`,
+`HANDOFFS.md`, `SESSION_NOTES.md`). Both versions on this project today: the same 4 risk rows
+(health 96/100, 0 high). Scratch clone with `SESSION_NOTES.md` padded to 60,809 B: v2.18.0 HIGH with
+the NO_CONFIG claim, v2.19.0 LOW with the remedy; the remedy ran, exit 0. Dashboard now shows no
+stale-version warning. `.Rbuildignore:84` excludes the file and no test/workflow reads it (grep), so
+the R suite and CI say nothing about it -- not run, not awaited (memory: build-ignored changes). The
+tarball built from HEAD `0058e7f8` holds none of the dashboard/trimmer/ledger files (1,050 entries).
+`quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 8d60dc76ee85 · manifest aa983075d6a2`
+(3,588,715 B, measured at `0058e7f8`). **Commits:** claim `a1b83754`, sync `0058e7f8`, records
+(this). **Learnings:** 819.
+
+**Self-assessment: 8/10.** + Checked the source checkout and the local blob before syncing; dry run
+first; tested the new code on this project's own customized trimmer (parse vs executed table) and
+showed the behavior change in a padded clone, including running the named remedy; tied the two
+carried items together. - Ran the quality gate before committing, so it measured the claim commit
+(Learning 772 already says so; caught by reading the gate command, re-ran after the commit); - the
+GNU-vs-BSD `stat` slip again (S802 had it too; use `/usr/bin/stat -f`); - two probe slips (risks sit
+under `scores`; an R string escape) each cost a re-run; - no reduction of a mandated-read file.
+
+**Next steps:** (A) Every "Up Next" item is still an owner decision; measure first and count from
+printed output (Learnings 812/815-818). Nearest in the priorities list: the stale linebreeding/half_sib
+article figures inside the documentation-audit item (`BACKLOG.md:202-237`): re-run
+`Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R` and commit the images after an
+owner look; then the jmac item (`BACKLOG.md:256`), U-prefix ids (`:51`), the recorded dam (`:32`),
+PED_GV (`:8`). (B) Owner question raised by this sync, not acted on: the sync tool labels the tracked
+dashboard "needs Phase 3 untrack" (the fork's 2026-06-01 recommendation: gitignore + sync, not
+track); this project has kept it tracked -- keep `--force` on each sync, or untrack it. (C) Carried:
+`CHANGELOG.md` (~127 KB) / `HANDOFFS.md` (~101 KB) trims (a forced write needs the owner, Learning
+811); working-tree residue; unpushed commits (4 after this records commit: `852439b4`, the claim, the
+sync, the records; pushing is the owner's call); the owner is reviewing `suggested_NEWS_entry` personally.
+
+**Key files:** `methodology_dashboard.py:95` (version), `:1033` (`find_trim_tool`), `:1088`
+(`_parse_trim_ledgers`), `:2280` (`tool_ledgers`), `:3625-3658` (the Class B row and its remedy);
+`methodology_trim.py:316` (`LEDGERS`, which the dashboard now reads); `.Rbuildignore:84`;
+`CLAUDE.md:256` (the `--budget-bytes 65536` rule); `PROJECT_LEARNINGS.md` Learning 819.
+
+**Gotchas:** (1) The dashboard's remedy command omits `--budget-bytes 65536`; always add it
+(`CLAUDE.md:256`) -- between 65,536 and 196,608 B the bare command says "does not fire" where this
+project's budget fires. (2) `BACKLOG.md` is Class B but not in the trimmer's `LEDGERS`: at 54,143 B it
+is 2,607 B under the 56,750 B read cap; past it, both versions report HIGH with no remedy. (3) A
+dashboard sync of this tracked file needs `--force` (the dry run skips it). (4) `quality_ratchet.py
+--run` builds `git archive HEAD`: run it after the commit it should cover (Learning 772). (5) This
+shell's `stat` is GNU; use `/usr/bin/stat -f` for BSD format. (6) STANDING SET unchanged from
+S790-802 (full suite in the background; `x[["f"]]` not `x$f`; recount frontiers/unpushed fresh;
+`scratchpad/` invisible to git; `CLAUDE.md` warn band = headroom). (7) No reduction this session:
+`SESSION_NOTES.md` is under budget; the ledger trims need the owner.
 
 ### Session 801 Handoff Evaluation (by Session 802)
 **Score: 9/10.** Every Orient measurement held: both ledger frontiers = HEAD `93e3346f`, 0

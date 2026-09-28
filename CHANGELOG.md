@@ -60,6 +60,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S803 records: `methodology_dashboard.py` synced to v2.19.0 DONE (S802 handoff evaluated 9/10, self 8/10, receipt, Learning 819)
+- **Model:** Claude Opus 5.5. Session notes, `HANDOFFS.md` receipt `status: complete`, and
+  `PROJECT_LEARNINGS.md` Learning 819 (how to sync the dashboard safely here; the v2.19.0 remedy
+  command needs this project's `--budget-bytes 65536` added). **Verified after the sync commit:**
+  the synced dashboard reports v2.19.0, 96/100, 0 high, no stale-version warning; the tarball built
+  from `0058e7f8` holds no dashboard, trimmer or ledger file (1,050 entries);
+  `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 8d60dc76ee85 · manifest
+  aa983075d6a2` (3,588,715 B). The first ratchet run measured the claim commit (it builds
+  `git archive HEAD`, Learning 772) and was re-run after the sync commit. R suite and CI not run or
+  awaited: the file is `.Rbuildignore`'d and read by no test or workflow. **Closed:** the carried
+  "methodology fork's Class A/B decision" handoff item. **Raised for the owner:** keep the dashboard
+  tracked (each sync then needs `--force`) or untrack it, as the sync tool's label suggests.
+
 ### 2026-09-28 · [ad hoc] S803: synced `methodology_dashboard.py` from v2.18.0 to canonical v2.19.0 (owner-directed)
 - **Model:** Claude Opus 5.5. **Source:** the sibling `methodology/` checkout, branch `main` at
   `016b3ae` (`v3.7-1277-g016b3ae`), clean and level with `origin/main`. The local copy was
