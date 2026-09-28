@@ -60,6 +60,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S801 REFACTOR: NEWS.Rmd Fixed entry; BACKLOG: the ExamplePedigree.txt item removed (done; owner closed the '#'-in-a-cell reader question), the classic-structure example files filed
+- **Model:** Claude Opus 5.5. `NEWS.Rmd` General Fixes: the example tab-delimited file had been
+  saved through Excel (ages as dates or `#####`, one ID changed; on upload its ages arrived as
+  dates and 106 animals lost ancestry and status; `getPedigree()` could not read it) and now holds
+  the same data as `ExamplePedigree.csv`. `BACKLOG.md`: the found-S800 `ExamplePedigree.txt` item
+  removed -- option (1) shipped S801; option (2), reading uploads and `getPedigree()` with
+  `comment.char = ""` so a `#` in a cell is data, closed by the owner (no shipped file has one
+  after the rebuild; raise it again if a real center file does). New item: the five
+  `example_pedigree_*.csv` classic-structure files are refused by the app ("Missing required
+  columns: birth") although `vignettes/articles/pedigree-diagram.qmd:96-111` tells the reader to
+  upload one. Owner's uncommitted YAML header left out (staged copy = working file minus its
+  first 5 lines, via `git hash-object -w` + `git update-index --cacheinfo`).
+  `test_newsReleaseState.R` 26/0, `test_wordlist_coverage.R` 3/0.
+
 ### 2026-09-28 · [ad hoc] S801 GREEN: ExamplePedigree.txt rebuilt from ExamplePedigree.csv
 - **Model:** Claude Opus 5.5. New `data-raw/ExamplePedigree_txt.R` reads the `.csv` with every cell
   kept as written and writes it tab-separated, unquoted, plain line endings; run once to replace

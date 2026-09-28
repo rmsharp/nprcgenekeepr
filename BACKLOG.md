@@ -261,21 +261,21 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `tests/testthat/test_modInput_blankCells.R` (last test: exactly 67 errors, all
       "Parent age too young"), which moves with (2) or (3).
 
-- [ ] **`ExamplePedigree.txt`'s 106 `#####` age cells cut those rows short on upload, and
-      `getPedigree()` cannot read the file at all (found S800, 2026-09-28, DECISION NEEDED,
-      Effort S)** -- 106 rows of the shipped `inst/extdata/examples/ExamplePedigree.txt`
-      hold `###...###` in the `age` column (Excel's display of a negative value, saved as
-      text; `ExamplePedigree.csv` holds the real value, e.g. `-0.1` for `JDVB5M`), and all
-      106 are JAPANESE. `read.table()`'s default `comment.char = "#"` treats the `#` as the
-      start of a comment: the app's text upload (`readDataFile()` in `R/modInput.R`, which
-      reads with `fill = TRUE`) silently drops the rest of each such row -- its `age`,
-      `ancestry`, `origin` and `status` -- so those 106 animals arrive with no ancestry
-      (UNKNOWN since S800, OTHER before), while `getPedigree(f, sep = "\t")` (no `fill`)
-      stops with "line 17 did not have 11 elements". **Decide:** (1) regenerate the `.txt`
-      from the `.csv` (fixes the example only); (2) also read uploads and `getPedigree()`
-      with `comment.char = ""` so a `#` in a cell is data (a behavior change for any center
-      file that uses `#` comment lines -- none measured); or (3) both. Tests to extend:
-      `test_modInput_blankCells.R` (a `#` cell in a text upload), `test_getPedigree.R`.
+- [ ] **The five small classic-structure example pedigrees cannot be loaded in the app
+      (found S801, 2026-09-28, DECISION NEEDED, Effort S)** --
+      `inst/extdata/examples/example_pedigree_{backcross,consanguinity,first_cousin,half_sib,linebreeding}.csv`
+      (11-14 animals each, shipped S692) hold only `id`, `sire`, `dam`, `sex` and `gen`. Read
+      the way the app reads an upload and run through `runQcStudbook()`, each is refused with
+      "Missing required columns: birth" (measured S801). Yet
+      `vignettes/articles/pedigree-diagram.qmd:96-111` presents them as practice material for
+      the app's Diagram tab and tells the reader: "To try one in the app, ask R for the file's
+      location on disk and upload it like any pedigree file". The article's figures come
+      from `vignettes/articles/pedigree-diagram-exemplar-renders.R`, which calls
+      `makePedigreeMatingLayout()` directly and needs no `birth`.
+      **Decide:** (1) add a `birth` column to each file, with dates that pass the pedigree
+      check (`tests/testthat/test_examplePedigreeFixtures.R:249` pins the five column names
+      and moves; the exemplar figures must not change); or (2) reword the article to drop the
+      upload instruction and say the files are for scripts.
 
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own

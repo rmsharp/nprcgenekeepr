@@ -512,6 +512,12 @@ knitr::opts_chunk$set(echo = TRUE)
   was counted as OTHER instead of UNKNOWN, and the Genetic Value report ranked a
   founder with a blank origin as an import instead of "Undetermined". An empty
   cell is now read as missing, so the app gives the same results as a script.
+- Fixed: the example tab-delimited pedigree file `ExamplePedigree.txt` had
+  been saved through Excel, which wrote every age as a date (or as `#####` for
+  a negative age) and changed one animal's ID. Uploaded to the app, its ages
+  arrived as dates and 106 animals lost their ancestry and status, and
+  `getPedigree()` could not read it. It now holds the same data as
+  `ExamplePedigree.csv`.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes
