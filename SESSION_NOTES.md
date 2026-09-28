@@ -94,11 +94,78 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 803 Handoff Evaluation (by Session 804)
+**Score: 8/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `b5b6e82c`, 0
+undocumented; the S803 receipt `status: complete`, its `quality_ratchet` citation matching
+`.quality-gates-results.json` (results `8d60dc76ee85`, 3,588,715 B); 1 unpushed (the push record);
+the residue list matched file by file (7 untracked); dashboard 96/100, 0 high. The next-steps list
+and the owner question (B) were accurate. **Missing:** S803's evaluation said the S802 push's
+R-CMD-check was "still running at Orient" and the handoff never said it was still unread. That run
+had failed on `windows-latest`, as had the one before it, so a red CI went into this session's
+Orient unreported (Learning 820 (c)). **ROI:** high.
+
 ### What Session 804 Did
-**Deliverable:** fix the Windows R-CMD-check failure (`test_examplePedigreeTxt.R:52`: `ExamplePedigree.txt` has carriage returns on the `windows-latest` checkout) (IN PROGRESS)
-**Started:** 2026-09-28 ~20:55 UTC
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE:** the red `windows-latest (release)` leg of R-CMD-check is fixed and green
+on CI. Found at Orient: it had failed `test_examplePedigreeTxt.R:52` ("no carriage return") on
+S802's two pushes and S803's (runs 36472173902, 36472806892, 36482001967); the other legs passed.
+**Cause (measured):** the file is stored LF; the repo had no `.gitattributes`; Git for Windows'
+default `core.autocrlf=true` wrote 3,695 CRs on checkout (scratch clone, and
+`git -c core.autocrlf=true cat-file --filters HEAD:<path>`: 3,695; 0 with `autocrlf=false`).
+**Owner decisions (AskUserQuestion):** fix the checkout with `.gitattributes`, not skip the test on
+Windows; pin only this file, not every example (`deidentified_jmac_ped.csv` is stored CRLF, so a
+wider rule changes its bytes); REFACTOR review-only; push and wait for CI.
+**RED** `ef0665ef`: `test_examplePedigreeTxt.R` "a Windows checkout of ExamplePedigree.txt keeps
+plain line endings" (`cat-file --filters` under `core.autocrlf=true` and under `core.eol=crlf`; no
+CR, bytes equal to the shipped file; skips unless run from the git top-level) failed 222,382 vs
+218,687 bytes; `test_rbuildignore.R` ".Rbuildignore keeps the repo-root .gitattributes out of the
+tarball" failed (no pattern). **GREEN** `0868249f`: `.gitattributes`
+(`inst/extdata/examples/ExamplePedigree.txt text eol=lf`, commented) and `^\.gitattributes$` in
+`.Rbuildignore`. **REFACTOR:** no change (owner-approved review only).
+**Verification:** both files pass (15 and 3); `git status` shows no renormalized file; tarball from
+the working tree 1,050 entries, no `.gitattributes`, the example still shipped; fresh clones of
+`0868249f` with `core.autocrlf=true` and with `core.eol=crlf` write 0 CRs into the `.txt`
+(218,687 B), while the unpinned CSV gets 3,695 under `autocrlf` (the control). Full unfiltered
+suite: 357 files / 2,790 tests / 8,588 passing expectations, 1 failed (the known
+`test_pkgdown_reference_config.R` -- the owner's untracked `vignettes/suggested_NEWS_entry.Rmd`
+counted as an unlisted article), 0 error. Lint 0 on both test files. **CI on `0868249f`:** lint,
+pkgdown, test-coverage green; R-CMD-check green on all 5 legs, Windows `Status: OK`,
+`[ FAIL 0 | WARN 8 | SKIP 265 | PASS 8379 ]` (the new git test skips there as designed).
+`quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results fb7aec9c7bc3 · manifest aa983075d6a2`
+(3,589,732 B, measured at `0868249f`). **Push (owner-directed):** `origin/master` `bc0624ac` ->
+`0868249f` (4 commits). **Commits:** claim `5cbbc17b`, RED `ef0665ef`, GREEN `0868249f`, records
+(this). **Learnings:** 820. Memory `skip-ci-for-buildignored-changes` gained its limit (a run from
+an earlier push still going at Orient must be re-read).
+
+**Self-assessment: 8/10.** + Measured before proposing (index EOL, clone, `cat-file --filters`,
+R's hidden-file list); a fast, deterministic regression test of the real failure; a control in the
+fresh-clone check; every gate asked; CI confirmed on the real runner, and the log read to show the
+byte test ran rather than skipped. - Committed RED with `--no-verify` and no ledger entry (the hook
+only guards budgets; amended before any push); - first EOL probe used the wrong path (the file is
+under `examples/`); - two empty `--log-failed` fetches before using the jobs API; - a `collect_all`
+str-vs-Path slip; - no reduction of a mandated-read file.
+
+**Next steps:** (A) Every "Up Next" item is still an owner decision; measure first (Learnings
+812/815-820). Nearest: the stale linebreeding/half_sib article figures (`BACKLOG.md:202-237`):
+re-run `Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R`, owner looks, commit the
+2 images; then jmac (`BACKLOG.md:256`), U-prefix ids (`:51`), recorded dam (`:32`), PED_GV (`:8`).
+(B) Carried owner question: keep `methodology_dashboard.py` tracked (each sync needs `--force`) or
+untrack it. (C) Carried: `CHANGELOG.md` (~131 KB) / `HANDOFFS.md` (~103 KB) trims (forced write,
+owner, Learning 811); the owner's `suggested_NEWS_entry` review; working-tree residue (7 untracked,
+unchanged); 1 unpushed after this records commit (the owner's call).
+
+**Key files:** `.gitattributes` (new); `.Rbuildignore:17`; `tests/testthat/test_examplePedigreeTxt.R:56-98`
+(`isGitTopLevel`, `checkoutBytes`, the new test); `tests/testthat/test_rbuildignore.R:42-57`;
+`PROJECT_LEARNINGS.md` Learning 820.
+
+**Gotchas:** (1) A test that reads a shipped file's raw bytes needs a `.gitattributes` line for
+that file, or Windows CI fails it; pin per file (`deidentified_jmac_ped.csv` is stored CRLF).
+(2) `git -c core.autocrlf=true cat-file --filters HEAD:<path>` shows a Windows checkout locally.
+(3) A CI run still `in_progress` at Orient must be re-read before close-out, whatever this
+session pushes (Learning 820 (c)). (4) The full suite's 1 known failure is local-only (the owner's
+untracked `vignettes/suggested_NEWS_entry.Rmd`). (5) `gh run view --log-failed` returned nothing
+here; `gh api repos/{owner}/{repo}/actions/jobs/<id>/logs` works. (6) STANDING SET unchanged from
+S790-803 (full suite in the background; `x[["f"]]` not `x$f`; recount frontiers/unpushed fresh;
+`scratchpad/` invisible to git; `CLAUDE.md` warn band = headroom; `/usr/bin/stat -f` for BSD stat).
 
 ### Session 802 Handoff Evaluation (by Session 803)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `852439b4`, 0

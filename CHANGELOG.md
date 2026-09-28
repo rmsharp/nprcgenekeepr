@@ -60,6 +60,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S804 records: Windows R-CMD-check fixed and green on CI DONE (S803 handoff evaluated 8/10, self 8/10, receipt, Learning 820)
+- **Model:** Claude Opus 5.5. **REFACTOR:** no change (owner-approved review only; both test files
+  re-run, pass). **Full unfiltered suite (GREEN):** 357 files / 2,790 tests / 8,588 passing
+  expectations, 1 failed (the known local-only `test_pkgdown_reference_config.R`: the owner's
+  untracked `vignettes/suggested_NEWS_entry.Rmd` read as an unlisted article), 0 error. **Fresh
+  clones of `0868249f`:** with `core.autocrlf=true` and with `core.eol=crlf`, `ExamplePedigree.txt`
+  has 0 CR and 218,687 B; the unpinned `ExamplePedigree.csv` gets 3,695 CR under `autocrlf` (the
+  control). **Push (owner-directed, a non-commit action):** `git push origin master` moved
+  `origin/master` from `bc0624ac` to `0868249f` (`b5b6e82c`, `5cbbc17b`, `ef0665ef`, `0868249f`), a
+  fast-forward after a fresh fetch (0 behind). **CI on `0868249f`:** lint 36485069510, pkgdown
+  36485068932, test-coverage 36485069148 green; R-CMD-check 36485068983 green on all 5 legs, Windows
+  `Status: OK`, `[ FAIL 0 | WARN 8 | SKIP 265 | PASS 8379 ]` (before: `FAIL 1 ... SKIP 263 | PASS
+  8378`); the byte test ran under `NOT_CRAN: true`, the new git test skipped as designed.
+  `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results fb7aec9c7bc3 · manifest
+  aa983075d6a2` (3,589,732 B, measured at `0868249f`). Session notes, `HANDOFFS.md` receipt
+  `status: complete`, `PROJECT_LEARNINGS.md` Learning 820. No GitHub issue or `BACKLOG.md` item
+  existed (CI-break convention: fixed as found). This commit stays local.
+
 ### 2026-09-28 · [ad hoc] S804 GREEN: `.gitattributes` pins `ExamplePedigree.txt` to LF on every checkout; `.Rbuildignore` excludes it
 - **Model:** Claude Opus 5.5. **Owner decision (RED -> GREEN gate):** proceed with the one-file rule, not
   a wider rule over every example file (`inst/extdata/examples/deidentified_jmac_ped.csv` is stored
