@@ -60,6 +60,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S802 RED: the five classic-structure example pedigrees must carry birth dates, upload in the app with 0 errors, draw unchanged, and keep the article's structure on the Diagram tab
+- **Model:** Claude Opus 5.5. `tests/testthat/test_examplePedigreeFixtures.R`: the column pin now
+  expects `birth`; four new tests -- birth is YYYY-MM-DD and every animal is born after both parents;
+  each file uploads through the real `modInputServer` with 0 errors and 0 warnings and keeps every
+  animal; the birth column changes nothing in either drawing; the real `modPedigreeServer`
+  `diagramLayout()` of each upload has the same animals drawn twice, the same marked mating and the
+  same (child, sire, dam) links. File run: the 5 changed/new tests fail for the expected reason (40
+  failures: no birth column, 1 upload error each, no cleaned studbook), the 9 existing tests pass, 0
+  errors. The same file run against trial copies with birth dates: 14 tests, 0 failed, 0 error. Lint 0.
+  Full unfiltered suite: 357 files / 2,788 tests / 8,746 expectations, 41 failed (these 40 + the known
+  `test_pkgdown_reference_config.R`, from the owner's untracked `vignettes/suggested_NEWS_entry.Rmd`), 0 error.
+
+### 2026-09-28 · [ad hoc] S802 PRE-RED: the five classic-structure example pedigrees measured through the app; owner picked "add birth dates + a note in the article"
+- **Model:** Claude Opus 5.5. Each `example_pedigree_*.csv` uploaded through the real `modInputServer`
+  (read, then `runQcStudbook()`): all 5 refused with 1 error, "Missing required columns: birth". With a
+  trial birth column (about 6 years per generation): 0 errors, 0 warnings, every animal kept; the
+  article's drawing path (`makePedigreeMatingLayout()` on the file as read) gives the identical layout
+  with and without the column -- every node position and edge the same, all 5 files, both edge
+  styles. The app's Diagram tab matches the article's drawing for 4 of 5; for consanguinity every
+  node id is the same but positions and routing differ (CS1's second copy lands at the far right and
+  its dashed line crosses the sibship), because `qcStudbook()` sorts rows by generation and id
+  (`R/qcStudbook.R:329`) before drawing -- birth dates play no part (the app's layout equals the
+  article path run on the (gen, id)-sorted file). Both consanguinity renders were shown to the owner.
+  Owner picked: add birth dates to all five files; one article sentence saying the app may order a
+  row differently (same animals, relationships and markers); NEWS line updated. Rejected: dates only
+  (the difference unexplained), reword the article only (files stay script-only).
+
 ### 2026-09-28 · [ad hoc] S802 claim: the five classic-structure example pedigrees (example_pedigree_*.csv) cannot be loaded in the app -- refused for having no birth column -- while the pedigree-diagram article tells the reader to upload one (in progress)
 - **Model:** Claude Opus 5.5.
 

@@ -20,6 +20,15 @@
 ## A count pin failing here means the drawing of a reviewed structure
 ## changed -- re-measure by running the engine and get the new render
 ## re-reviewed before updating the pin; never hand-derive a new value.
+##
+## Uploading them in the app (BACKLOG.md, found S801; fixed S802): the
+## pedigree-diagram article tells the reader to upload these files, but the
+## app refused all five ("Missing required columns: birth"). Each now carries
+## a birth column, which must change nothing in the article's figures. The
+## app sorts animals by generation and id before drawing, so its Diagram tab
+## may order a row differently from the article's figure (the consanguinity
+## file does); the animals drawn twice, the marked mating and every
+## parent-child link must still match.
 
 ## ---- test helpers (not exported, local to this file) ------------------
 
@@ -42,6 +51,42 @@
     }
   )
   list(layout = layout, warnings = warnings)
+}
+
+## Uploads a shipped exemplar through the real Input module (read, then
+## runQcStudbook()) and returns the module's qcResults().
+.uploadExemplar <- function(name) {
+  path <- system.file("extdata", "examples",
+                      sprintf("example_pedigree_%s.csv", name),
+                      package = "nprcgenekeepr")
+  got <- new.env()
+  shiny::testServer(modInputServer, {
+    session$setInputs(fileContent = "pedFile", fileType = "fileTypeExcel",
+                      separator = ",", minSireAge = "", minDamAge = "")
+    session$setInputs(pedigreeFileOne = list(name = basename(path),
+                                             datapath = path))
+    session$setInputs(getData = 1L)
+    got$res <- qcResults()
+  })
+  got$res
+}
+
+## The layout the app's Diagram tab draws for an uploaded (cleaned)
+## pedigree, taken from the real Pedigree module with its default display
+## options.
+.appDiagramLayout <- function(cleaned, edgeStyle) {
+  got <- new.env()
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(studbook = shiny::reactive(cleaned)),
+    {
+      session$setInputs(displayUnknownIds = TRUE, trimPedigree = FALSE,
+                        pedigreeEdgeStyle = edgeStyle)
+      session$flushReact()
+      got$layout <- diagramLayout()
+    }
+  )
+  got$layout
 }
 
 .realIds <- function(ids, layout) {
@@ -246,7 +291,7 @@ test_that(
   for (name in names(.exemplarSpecs)) {
     spec <- .exemplarSpecs[[name]]
     ped <- .readExemplarPedigree(name)
-    expect_identical(names(ped), c("id", "sire", "dam", "sex", "gen"),
+    expect_identical(names(ped), c("id", "sire", "dam", "sex", "gen", "birth"),
                      info = name)
     expect_identical(nrow(ped), spec$nRows, info = name)
     expect_false(anyDuplicated(ped$id) > 0L, info = name)
@@ -263,6 +308,87 @@ test_that(
     expect_identical(ped$gen,
                      as.integer(findGeneration(ped$id, ped$sire, ped$dam)),
                      info = name)
+  }
+})
+
+test_that(
+  "each exemplar pedigree's birth dates are real YYYY-MM-DD dates, and every
+   animal is born after both of its parents", {
+  for (name in names(.exemplarSpecs)) {
+    ped <- .readExemplarPedigree(name)
+    birthText <- as.character(ped[["birth"]])
+    expect_identical(length(birthText), nrow(ped), info = name)
+    expect_true(all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", birthText)),
+                info = name)
+    birth <- as.Date(birthText, format = "%Y-%m-%d")
+    expect_false(anyNA(birth), info = name)
+    hasParents <- !is.na(ped$sire)
+    kidBirth <- birth[hasParents]
+    expect_true(all(kidBirth > birth[match(ped$sire[hasParents], ped$id)]),
+                info = name)
+    expect_true(all(kidBirth > birth[match(ped$dam[hasParents], ped$id)]),
+                info = name)
+  }
+})
+
+test_that(
+  "each exemplar pedigree uploads through the app's Input module with no
+   errors or warnings and keeps every animal (the article tells the reader
+   to upload one)", {
+  skip_on_cran()
+  skip_if_not_installed("shiny")
+  for (name in names(.exemplarSpecs)) {
+    res <- .uploadExemplar(name)
+    expect_identical(nrow(res[["errors"]]), 0L, info = name)
+    expect_identical(nrow(res[["warnings"]]), 0L, info = name)
+    expect_identical(nrow(res[["cleaned"]]), .exemplarSpecs[[name]]$nRows,
+                     info = name)
+  }
+})
+
+test_that(
+  "the birth column changes nothing in either drawing of each exemplar
+   pedigree (the article's figures are drawn from these files)", {
+  for (name in names(.exemplarSpecs)) {
+    ped <- .readExemplarPedigree(name)
+    expect_true("birth" %in% names(ped), info = name)
+    withoutBirth <- ped[, setdiff(names(ped), "birth"), drop = FALSE]
+    for (edgeStyle in c("direct", "rectilinear")) {
+      expect_identical(.layoutCapturingWarnings(ped, edgeStyle),
+                       .layoutCapturingWarnings(withoutBirth, edgeStyle),
+                       info = paste(name, edgeStyle))
+    }
+  }
+})
+
+test_that(
+  "the app's Diagram tab draws each uploaded exemplar pedigree with the
+   article's structure: the same animals drawn twice, the same marked
+   mating and the same parent-child links (a row's order may differ)", {
+  skip_on_cran()
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("visNetwork")
+  for (name in names(.exemplarSpecs)) {
+    spec <- .exemplarSpecs[[name]]
+    ped <- .readExemplarPedigree(name)
+    cleaned <- .uploadExemplar(name)[["cleaned"]]
+    expect_false(is.null(cleaned), info = name)
+    if (is.null(cleaned)) next
+    for (edgeStyle in c("direct", "rectilinear")) {
+      layout <- .appDiagramLayout(cleaned, edgeStyle)
+      info <- paste(name, edgeStyle)
+      expect_identical(sort(unname(layout$duplicateToReal)), spec$duplicated,
+                       info = info)
+      marked <- .consanguineousEdges(layout)
+      expect_identical(sort(.realIds(marked$from, layout)),
+                       sort(spec$consanguineousMating), info = info)
+    }
+    traced <- .traceDirectTriples(ped, .appDiagramLayout(cleaned, "direct"))
+    expect_identical(traced$badUnions, character(), info = name)
+    expected <- ped[!is.na(ped$sire), c("id", "sire", "dam")]
+    expected <- expected[order(expected$id), , drop = FALSE]
+    rownames(expected) <- NULL
+    expect_identical(traced$triples, expected, info = name)
   }
 })
 
