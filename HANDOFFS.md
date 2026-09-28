@@ -182,11 +182,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S805
 date: 2026-09-28
-status: pending
-active_task: Re-render the 2 stale Pedigree Diagram article figures (exemplar-linebreeding-rectilinear.png, exemplar-half_sib-rectilinear.png) with pedigree-diagram-exemplar-renders.R, owner look, commit -- IN PROGRESS.
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Re-render the 2 stale Pedigree Diagram article figures (exemplar-linebreeding-rectilinear.png, exemplar-half_sib-rectilinear.png) -- DONE, owner-approved and committed; the render script's stale header (expected two collision warnings S715 retired) also fixed, owner-approved.
+what_was_done: Ran vignettes/articles/pedigree-diagram-exemplar-renders.R (all 5 renders, node/edge counts matching the fixture pins, no layout warnings; the header's expected two warnings were retired S715, confirmed from test_examplePedigreeFixtures.R's rectilinearCollisionWarning = FALSE pins). Against the committed PNGs: linebreeding 2,228 and half_sib 1,210 pixels differ (1,257 / 782 by more than 0.25), only in the dashed duplicate-animal arcs, now flatter; the other 3 differ by anti-aliasing only (121-189 px, max 0.055) and were restored from git. New arcs clear LA2 by ~5-6 px and HA2 by ~3 px at 1200x900. Owner viewed old/new/overlay strips and approved both images and the header fix. Commits: claim 54a3a7bd, figures 2a247184 (+ BACKLOG documentation-audit finding updated), header 16bc27bd (comment only), records. Fixture test 14 tests / 303 expectations, 0 failed; script parses, lint 0; article and alt text still fit. Learning 821.
+next_steps: (A) Documentation audit next slice: check vignettes/articles/kinship2-fidelity-validation-img/ (8) and vignettes/articles/shiny_app_use/ (50) against current code; find each image's generator first (an estimate of where to look, not checked). (B) Up Next owner decisions: jmac example file, U-prefix ids, recorded dam, PED_GV. (C) Carried: methodology_dashboard.py tracked vs untracked; CHANGELOG.md/HANDOFFS.md trims (owner runs the forced write); suggested_NEWS_entry review; 7 untracked residue; 5 unpushed after this records commit (owner's call; a push publishes the new figures via pkgdown).
+key_files: vignettes/articles/pedigree-diagram-img/exemplar-{linebreeding,half_sib}-rectilinear.png; vignettes/articles/pedigree-diagram-exemplar-renders.R:16-24; tests/testthat/test_examplePedigreeFixtures.R:228-282 and :520-535; vignettes/articles/pedigree-diagram.qmd:120-126; PROJECT_LEARNINGS.md Learning 821.
+gotchas: The render script overwrites all 5 PNGs; commit only files with pixels changed by more than 0.25 and git checkout -- the rest. It needs Chrome (chromote); 23 s here. gh run list --json returned older runs than plain gh run list; query by id with gh run view. The full suite's 1 known failure is local-only. STANDING SET unchanged from S790-804.
+runtime_smoke: No runtime behavior changed (build-ignored images and a comment). Fixture test (the pinned drawn structure) 303 expectations pass; renders inspected by pixel diff and zoomed closest-approach checks; owner visual approval. CI on fd2056ca (in_progress at Orient): lint, pkgdown, test-coverage green; R-CMD-check run 36489531079 green on all 5 legs incl. windows-latest (re-read at close-out). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 5deafc2db4bb · manifest aa983075d6a2
+changelog_ref: this records commit (S805 records entry, prepended above the S805 header, figures and claim entries)
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log)
 ```
+Predecessor (S804) scored 9/10: every Orient measurement held and next step (A) was exact to the pixel; missing: the render script's header contradicts the test pins (expects two retired warnings). Self-score 8/10: +reproduced S802's numbers first; +checked the missing warnings against the pins; +committed only the real change; +measured each arc's closest approach; +overlay strips for the owner look. -first zoom crop missed; -one call failed on an uninstalled abind; -no mandated-read reduction.
 
 ```handoff
 session: S804

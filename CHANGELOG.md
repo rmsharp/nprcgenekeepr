@@ -60,6 +60,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S805 records: 2 stale Pedigree Diagram article figures re-rendered DONE (S804 handoff evaluated 9/10, self 8/10, receipt, Learning 821)
+- **Model:** Claude Opus 5.5. Session notes (S804 evaluation, S805 record), the `HANDOFFS.md` S805
+  receipt `status: complete`, and `PROJECT_LEARNINGS.md` Learning 821 (a change to how diagrams are
+  drawn needs the figure script re-run in the same session; a flipped test pin does not force it, and
+  a script comment that contradicts a pin is the stale one). Commits this session: claim `54a3a7bd`,
+  figures `2a247184`, header `16bc27bd`, records (this). `quality_ratchet: 1/1 pass · 0 fail ·
+  0 unmeasured · results 5deafc2db4bb · manifest aa983075d6a2` (3,589,736 B at `16bc27bd`). CI on
+  `fd2056ca` (S804's records push, `in_progress` at Orient): lint and pkgdown green; R-CMD-check and
+  test-coverage green (R-CMD-check run 36489531079 green on all 5 legs incl. `windows-latest`,
+  re-read at close-out). Not pushed (5 unpushed; the owner's call).
+
 ### 2026-09-28 · [ad hoc] S805: `pedigree-diagram-exemplar-renders.R` header now expects no layout warnings (owner-approved)
 - **Model:** Claude Opus 5.5. The header still told the re-renderer to expect two linebreeding/half_sib
   collision warnings and to stop if they vanished; S715 retired them on purpose
