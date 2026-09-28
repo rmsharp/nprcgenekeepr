@@ -180,6 +180,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S801
+date: 2026-09-28
+status: pending
+self_score: TBD
+predecessor_score: TBD
+active_task: Rebuild inst/extdata/examples/ExamplePedigree.txt from ExamplePedigree.csv (BACKLOG.md item found S800; owner-directed in Phase 0 discussion). Measured at Orient: all 2,262 non-blank age cells are Excel's date display of the CSV age (1,536 whole-day dates, 620 '1900-01-00', 106 '#####' for negative ages), id 15FEBR became 15-Feb; it is the only text-format file shipped under inst/extdata. Owner scope: rebuild + test + data-raw script + NEWS line; close the '#'-in-a-cell reader question. PRE-RED beginning.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S800
 date: 2026-09-28
 status: complete

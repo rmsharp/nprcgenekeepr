@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S801 claim: rebuild the shipped ExamplePedigree.txt from ExamplePedigree.csv -- the only shipped text-format example had every age cell saved as an Excel date or "#####" and one id renamed, so the app's text upload got bad ages and getPedigree() could not read it (in progress)
+- **Model:** Claude Opus 5.5.
+
 ### 2026-09-28 · [ad hoc] S800 records: blank cells in app uploads DONE -- an empty CSV or text upload cell is read as missing, so blank-parent files load, blank ancestry is UNKNOWN and a blank-origin founder is "Undetermined" (S799 handoff evaluated 9/10, self 9/10, receipt, Learning 816)
 - **Model:** Claude Opus 5.5. Phase 3 close-out: S799's handoff evaluated 9/10 (every Orient
   measurement held; its (D) "read the 07:00 UTC shinytest2 run" could not apply -- Orient ran at

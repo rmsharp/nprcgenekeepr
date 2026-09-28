@@ -90,6 +90,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 801 Did
+**Deliverable:** Rebuild the shipped `inst/extdata/examples/ExamplePedigree.txt` from
+`ExamplePedigree.csv` (the only text-format example; every age cell had been saved as an Excel
+date or `#####`, and id `15FEBR` as `15-Feb`), with a test and a `data-raw/` script (IN PROGRESS)
+**Started:** 2026-09-28
+**Status:** Session claimed. Work beginning (PRE-RED).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 799 Handoff Evaluation (by Session 800)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` 100,814 B and `HANDOFFS.md`
 81,631 B exactly as stated; S799 receipt `status: complete`; both ledger frontiers = HEAD
