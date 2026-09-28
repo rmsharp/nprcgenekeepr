@@ -159,10 +159,12 @@ knitr::opts_chunk$set(echo = TRUE)
   mating structure a colony manager may need to recognize: a
   brother-sister mating, linebreeding back to a single influential
   ancestor, a daughter bred back to her own sire, a first-cousin mating,
-  and a mating of half-siblings who share a sire. Each is small enough
-  (11-14 animals) to read at a glance on the Diagram tab, and each
-  contains exactly one consanguineous mating for the diagram to highlight
-  (`example_pedigree_*.csv` in the package's `extdata/examples` folder).
+  and a mating of half-siblings who share a sire. Each includes birth
+  dates, so it can be uploaded in the app like any pedigree file; each is
+  small enough (11-14 animals) to read at a glance on the Diagram tab, and
+  each contains exactly one consanguineous mating for the diagram to
+  highlight (`example_pedigree_*.csv` in the package's `extdata/examples`
+  folder).
 - The Pedigree Diagram article on the package website walks through those
   five example pedigrees one diagram at a time, with a short guide to
   reading each structure on the diagram: how the dashed line marks an

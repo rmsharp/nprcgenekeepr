@@ -60,6 +60,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S802 REFACTOR: article note and NEWS.Rmd wording for the uploadable example pedigrees; BACKLOG: the classic-structure item removed (done), the stale linebreeding/half_sib figures filed into the documentation-audit item
+- **Model:** Claude Opus 5.5. `vignettes/articles/pedigree-diagram.qmd`, after the upload
+  instruction: the app sorts animals by generation and ID before drawing, so its Diagram tab can
+  order a row differently from the figures (the full-sibling example's CS1 second appearance sits at
+  the right-hand end of his row), with the same animals, dashed line and vermillion mating.
+  `NEWS.Rmd`, the existing five-examples entry (not a new Fixes entry: the files are new in this
+  release, so the entry states their finished state): each includes birth dates, so it can be
+  uploaded in the app like any pedigree file. `BACKLOG.md`: the item removed; the S802 stale-figure
+  measurement written into "Audit the internal and user-facing documentation" (staged without the
+  owner's uncommitted YAML header). `test_newsReleaseState.R` 26/0, `test_wordlist_coverage.R` 3/0.
+
 ### 2026-09-28 · [ad hoc] S802 GREEN (2/2): first_cousin and half_sib written -- all five classic-structure example pedigrees now upload in the app with 0 errors
 - **Model:** Claude Opus 5.5. Test file: 14 tests / 303 expectations, 0 failed, 0 error. Full
   unfiltered suite: 357 files / 2,788 tests / 8,776 expectations, 1 failed (the known

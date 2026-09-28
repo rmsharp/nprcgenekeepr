@@ -223,8 +223,18 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (`vignettes/manual_components/_pedigree_browser.Rmd:56`) words the Diagram limit as "750 animals
       ... the limit drops to 400 when the Rectilinear edge style is selected", which reads
       misleadingly since Rectilinear is the default (the default limit is 400); the roxygen point in
-      the male-left item above is the same kind of finding. Related, not duplicated: the `NEWS.Rmd` release-state sweep (above), the deferred
-      `a2interactive` pass, and the `inst/doc/` slimming item.
+      the male-left item above is the same kind of finding. **Found S802, for this audit:** two of
+      the five committed classic-structure figures are stale --
+      `vignettes/articles/pedigree-diagram-img/exemplar-linebreeding-rectilinear.png` and
+      `exemplar-half_sib-rectilinear.png` differ from a fresh
+      `Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R` run by 2,228 and 1,210
+      pixels: the dashed duplicate-animal arcs are drawn flatter today. The images were committed
+      S694 (2026-09-17); S715 (2026-09-18) changed the arc roundness (its test comments say the
+      renders were owner-re-reviewed) but never re-rendered them. The other three differ only by
+      anti-aliasing (121-189 pixels, max channel difference 0.055). The fix is re-running that
+      script and committing the images after an owner look. Related, not duplicated: the
+      `NEWS.Rmd` release-state sweep (above), the deferred `a2interactive` pass, and the
+      `inst/doc/` slimming item.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no
@@ -260,22 +270,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       Japanese macaque result. The pinned test is
       `tests/testthat/test_modInput_blankCells.R` (last test: exactly 67 errors, all
       "Parent age too young"), which moves with (2) or (3).
-
-- [ ] **The five small classic-structure example pedigrees cannot be loaded in the app
-      (found S801, 2026-09-28, DECISION NEEDED, Effort S)** --
-      `inst/extdata/examples/example_pedigree_{backcross,consanguinity,first_cousin,half_sib,linebreeding}.csv`
-      (11-14 animals each, shipped S692) hold only `id`, `sire`, `dam`, `sex` and `gen`. Read
-      the way the app reads an upload and run through `runQcStudbook()`, each is refused with
-      "Missing required columns: birth" (measured S801). Yet
-      `vignettes/articles/pedigree-diagram.qmd:96-111` presents them as practice material for
-      the app's Diagram tab and tells the reader: "To try one in the app, ask R for the file's
-      location on disk and upload it like any pedigree file". The article's figures come
-      from `vignettes/articles/pedigree-diagram-exemplar-renders.R`, which calls
-      `makePedigreeMatingLayout()` directly and needs no `birth`.
-      **Decide:** (1) add a `birth` column to each file, with dates that pass the pedigree
-      check (`tests/testthat/test_examplePedigreeFixtures.R:249` pins the five column names
-      and moves; the exemplar figures must not change); or (2) reword the article to drop the
-      upload instruction and say the files are for scripts.
 
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own

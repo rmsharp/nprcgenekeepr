@@ -111,6 +111,12 @@ system.file("extdata", "examples", "example_pedigree_consanguinity.csv",
             package = "nprcgenekeepr")
 ```
 
+The app sorts the animals by generation and ID before drawing, so its
+Diagram tab can order the animals within a row differently from the
+figures below: in the full-sibling example, CS1's second appearance sits
+at the right-hand end of his row. It shows the same animals, the same
+dashed line and the same vermillion mating.
+
 The diagrams below use the default Rectilinear edge style; the Direct
 style shows exactly the same animals and relationships. In each one,
 follow the dashed line first -- it tells you the two occurrences are the
