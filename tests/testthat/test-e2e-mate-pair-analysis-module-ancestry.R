@@ -12,13 +12,13 @@
 #' shiny::testServer() unit test cannot pin the modal round-trip, the real
 #' downloadHandler content or the DT render the way a live AppDriver run can.
 #'
-#' The numbers pinned here are the LIVE-path ones (S776, Learning 787): a blank
-#' ancestry cell in the uploaded file reaches the app as OTHER, not UNKNOWN,
-#' because the Input module reads uploads without na.strings, so the manifest
-#' pair counts are INDIAN-UNKNOWN 0 / INDIAN-OTHER 3 and the census is
-#' OTHER 2 / UNKNOWN 0. (The script path, getPedigree(), differs -- see the
-#' blank-ancestry item in BACKLOG.md; if that read is ever aligned, these
-#' numbers move on purpose.)
+#' The numbers pinned here are the LIVE-path ones. Since S800 the Input module
+#' reads a blank upload cell as missing, the same as getPedigree(), so U1's
+#' blank ancestry arrives as UNKNOWN: the manifest pair counts are
+#' INDIAN-UNKNOWN 2 / INDIAN-OTHER 1 and the census is OTHER 1 / UNKNOWN 1,
+#' the numbers the testServer() and script-path tests pin. (S776-S799 pinned
+#' 0 / 3 and 2 / 0 here, because the upload then read the blank as "" and
+#' standardized it to OTHER; Learning 787.)
 #'
 #' Assertion groups, tagged A1-A13 in each `info`, so a failure names the
 #' behavior it lost:
@@ -168,7 +168,8 @@ test_that(
       marked,
       data.frame(
         sireId = c("A1", "I1", "O1"), damId = c("U1", "U1", "I2"),
-        ancestryRule = "INDIAN-OTHER", ancestrySeverity = "flag",
+        ancestryRule = c("INDIAN-UNKNOWN", "INDIAN-UNKNOWN", "INDIAN-OTHER"),
+        ancestrySeverity = "flag",
         ancestryStatus = "violation", stringsAsFactors = FALSE
       ),
       info = "A4c: exactly the 3 flagged pairs carry their rule in Eligible Pairs"
@@ -210,8 +211,8 @@ test_that(
   expect_identical(
     coverage,
     paste0("CHINESE|2|TRUE;INDIAN|3|TRUE;HYBRID|1|TRUE;",
-           "JAPANESE|2|FALSE;OTHER|2|TRUE;UNKNOWN|0|TRUE"),
-    info = "A5: coverage table (blank ancestry arrives as OTHER)"
+           "JAPANESE|2|FALSE;OTHER|1|TRUE;UNKNOWN|1|TRUE"),
+    info = "A5: coverage table (blank ancestry arrives as UNKNOWN)"
   )
 
   ## A6: manifest 1 -- one row per rule, nothing overridden, the Mate Pair
@@ -232,7 +233,7 @@ test_that(
     expect_identical(
       stats::setNames(m1$nPairs, mpaRuleKeys(m1)),
       c(`INDIAN-CHINESE` = 3L, `INDIAN-HYBRID` = 2L,
-        `INDIAN-UNKNOWN` = 0L, `INDIAN-OTHER` = 3L),
+        `INDIAN-UNKNOWN` = 2L, `INDIAN-OTHER` = 1L),
       info = "A6b: manifest 1 pair counts per rule"
     )
     census <- unique(m1[, c("nChinese", "nIndian", "nHybrid", "nJapanese",
@@ -241,7 +242,7 @@ test_that(
     expect_identical(
       census,
       data.frame(nChinese = 2L, nIndian = 3L, nHybrid = 1L, nJapanese = 2L,
-                 nOther = 2L, nUnknown = 0L, nUncovered = 2L),
+                 nOther = 1L, nUnknown = 1L, nUncovered = 2L),
       info = "A6c: manifest 1 animal census"
     )
   }
@@ -374,7 +375,7 @@ test_that(
     expect_identical(
       stats::setNames(m2$nPairs, mpaRuleKeys(m2)),
       c(`INDIAN-CHINESE` = 3L, `INDIAN-HYBRID` = 2L,
-        `INDIAN-UNKNOWN` = 0L, `INDIAN-OTHER` = 3L),
+        `INDIAN-UNKNOWN` = 2L, `INDIAN-OTHER` = 1L),
       info = "A12: the override does not change what each rule matched"
     )
   }
