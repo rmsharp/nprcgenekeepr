@@ -60,6 +60,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S802 records: the five classic-structure example pedigrees now upload in the app DONE -- each carries birth dates, the article's figures unchanged (S801 handoff evaluated 9/10, self 8/10, receipt, Learning 818)
+- **Model:** Claude Opus 5.5. `SESSION_NOTES.md` S801 evaluation and S802 handoff (the claim stub
+  replaced); `HANDOFFS.md` S802 receipt `status: complete`; `PROJECT_LEARNINGS.md` Learning 818 (the
+  app draws the (gen, id)-sorted studbook; test RED tests against a trial GREEN fixture; compare
+  renders by pixel against a control). Runtime: package reinstalled, real app headless -- old file
+  "The missing column is: birth"; new file "QC passed! 14 records processed.", Diagram 33 nodes /
+  33 edges, CS1 drawn twice, CS1 x CD1 marked. `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured ·
+  results 9f0d10e7e4d3 · manifest aa983075d6a2` (tarball 3,588,737 B). CI read at close-out: the
+  2026-09-28 07:30 UTC scheduled shinytest2 run passed in 29m36s (45-minute limit since S794). No
+  GitHub issue (the item had none); no push (26 unpushed after this commit, the owner's call); no
+  ledger reduction (`CHANGELOG.md`/`HANDOFFS.md` trims need the owner, Learning 811).
+
 ### 2026-09-28 · [ad hoc] S802 REFACTOR: article note and NEWS.Rmd wording for the uploadable example pedigrees; BACKLOG: the classic-structure item removed (done), the stale linebreeding/half_sib figures filed into the documentation-audit item
 - **Model:** Claude Opus 5.5. `vignettes/articles/pedigree-diagram.qmd`, after the upload
   instruction: the app sorts animals by generation and ID before drawing, so its Diagram tab can

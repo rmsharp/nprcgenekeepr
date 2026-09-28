@@ -94,11 +94,91 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 801 Handoff Evaluation (by Session 802)
+**Score: 9/10.** Every Orient measurement held: both ledger frontiers = HEAD `93e3346f`, 0
+undocumented; S801 receipt `status: complete`, its `quality_ratchet` citation matching
+`.quality-gates-results.json`; 20 unpushed exactly; the residue list matched file by file; the
+known failure and its cause right. Next step (A) named this item with both options, the pin
+(`test_examplePedigreeFixtures.R:249`) and the constraint "the exemplar figures must not change"
+-- all accurate, and the constraint shaped the tests. Gotcha (4), the YAML-free staging recipe,
+was used as written. **Missing, not knowable then:** the app re-sorts rows by (gen, id) before
+drawing, so one example draws differently in the app than in the article. **Could not apply at
+Orient:** (C) the 07:00 UTC shinytest2 run (Orient 06:37 UTC); read at close-out, below. **ROI:** high.
+
 ### What Session 802 Did
-**Deliverable:** the five classic-structure example pedigrees cannot be loaded in the app (`BACKLOG.md` item found S801) -- add a `birth` column or reword the article (IN PROGRESS)
-**Started:** 2026-09-28 ~06:45 UTC
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE:** the five classic-structure example pedigrees
+(`inst/extdata/examples/example_pedigree_*.csv`) now carry birth dates, so the app accepts them
+(`BACKLOG.md` item found S801); article note and NEWS wording updated.
+**PRE-RED (measured before asking):** each file through the real `modInputServer`: all 5 refused
+("Missing required columns: birth"). With trial dates: 0 errors, 0 warnings; the article's
+drawing path (`makePedigreeMatingLayout()` on the file as read) is `identical()` with and without
+the column. The app's Diagram tab matches the article for 4 of 5; consanguinity differs in
+arrangement (CS1's second copy at the far right) because `qcStudbook()` sorts rows by (gen, id)
+(`R/qcStudbook.R:329`); dates play no part. Both renders shown to the owner. Owner picked: add
+dates + a one-sentence article note + NEWS wording (rejected: dates only; reword the article only).
+**RED** `595d3b01`: `tests/testthat/test_examplePedigreeFixtures.R` -- column pin + `birth`; 4 new
+tests (birth is YYYY-MM-DD and after both parents; upload through `modInputServer` 0 errors/0
+warnings/every animal; birth changes neither drawing; the real `modPedigreeServer`
+`diagramLayout()` keeps the article's duplicates, marked mating and parent-child links). 40
+failures for the expected reason, 9 existing tests passing, 0 errors; a scratch copy run against
+trial fixtures passed 14/14 before commit. **GREEN** `a2c7e66f` + `8c0116f2` (5-file cap):
+`data-raw/example_pedigree_birth.R` (the date rule is in its header) run once; the first five
+columns byte-identical to before; rerun byte-identical. No `R/` change. **REFACTOR** `893d485c`:
+article sentence (`pedigree-diagram.qmd:114-118`), `NEWS.Rmd:162-167` (the existing entry,
+release-state wording), `BACKLOG.md` item removed and the stale-figure finding (below) written into
+the documentation-audit item, YAML header left out.
+**Verification:** test file 14 tests / 303 expectations, 0 failed. Full unfiltered suite at GREEN
+and REFACTOR: 357 files / 2,788 tests / 8,776 expectations, 1 failed (the known
+`test_pkgdown_reference_config.R`), 0 error. Lint 0 (test file, script). `test_newsReleaseState.R`
+26/0, `test_wordlist_coverage.R` 3/0. Article rendered with `quarto render` in a scratch copy.
+Figures: the article's five images re-rendered from the old and the new files are pixel-identical.
+`quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 9f0d10e7e4d3 · manifest aa983075d6a2`
+(tarball 3,588,737 B). **Runtime (3E):** package reinstalled, real app headless: the old
+consanguinity file shows "The missing column is: birth"; the installed new file shows "QC passed!
+14 records processed." and a Diagram of 33 nodes / 33 edges with CS1 drawn twice and the marked
+mating CS1 x CD1; linebreeding 35/35, LK and LB2 twice, LB2 x LA2 marked.
+**Found, not fixed:** the committed article images for linebreeding and half_sib are stale (2,228
+and 1,210 pixels differ from a fresh render: flatter dashed arcs since S715; committed S694).
+**CI:** the 2026-09-28 07:30 UTC scheduled shinytest2 run passed in 29m36s -- inside S794's 45-minute
+limit, but only 24 s under the old 30. **Commits:** claim `295edb58`, RED `595d3b01`, GREEN
+`a2c7e66f`/`8c0116f2`, REFACTOR `893d485c`, records (this). **Learnings:** 818.
+
+**Self-assessment: 8/10.** + Measured both options through the real app path before asking, found
+the arrangement difference and showed the images first; one plain-language question, answered
+first time; every TDD gate via `AskUserQuestion`; tested the RED tests against trial fixtures;
+pixel comparison with a control render; live app old vs new. - Several tool slips cost retries
+(GNU vs BSD `stat`; an unexported variable; `base::system.file()` under `load_all()`; a wrong
+`devtools::install()` argument; a first QC-panel probe that read nothing; a zsh backtick parse
+error that silently skipped a ledger write, caught on the next check); - re-ran the data-raw
+script while the full suite ran in the background (byte-identical, suite clean, but a Learning 529
+risk); - no ledger reduction: `CHANGELOG.md`/`HANDOFFS.md` still over budget and growing.
+
+**Next steps:** (A) Every "Up Next" item is still an owner decision; measure first, count from
+printed output (Learnings 812/815-818). Nearest this session's work: the stale linebreeding/
+half_sib figures (inside the documentation-audit item, committed `BACKLOG.md:226-237`): re-run
+`Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R` and commit the images after an
+owner look. Then the jmac item (`BACKLOG.md:256`), U-prefix ids, the recorded dam, PED_GV. (B)
+Carried: `CHANGELOG.md` (~122 KB) and `HANDOFFS.md` (~94 KB) trims (a forced write needs the
+owner, Learning 811); `suggested_NEWS_entry`; working-tree residue; 26 unpushed after this records
+commit (owner's call); dashboard v2.18.0 vs v2.19.0; the methodology fork's Class A/B decision.
+(C) The shinytest2 job's runtime (29m36s) is worth watching against its 45-minute limit.
+
+**Key files:** `inst/extdata/examples/example_pedigree_*.csv` (birth added);
+`data-raw/example_pedigree_birth.R:1-53` (the rule; re-run after editing a file);
+`tests/testthat/test_examplePedigreeFixtures.R:58` (`.uploadExemplar`), `:77`
+(`.appDiagramLayout`), `:294` (column pin), `:314`, `:334`, `:349`, `:364` (the 4 new tests);
+`vignettes/articles/pedigree-diagram.qmd:114-118`; `NEWS.Rmd:162-167`; `R/qcStudbook.R:329` (the
+(gen, id) sort); `PROJECT_LEARNINGS.md` Learning 818.
+
+**Gotchas:** (1) The app's Diagram tab draws the (gen, id)-sorted studbook, the article draws the
+file as read -- a figure can differ from the app with nothing wrong (Learning 818). (2) The birth
+column is derived: after editing an example file's rows, re-run `data-raw/example_pedigree_birth.R`.
+(3) PNG screenshots differ byte-wise run to run; compare by pixel (`png::readPNG()`) against a
+control render. (4) `base::system.file()` returns "" under `pkgload::load_all()`. (5) STANDING SET
+unchanged from S790-801 (full suite in the background; YAML-free `BACKLOG.md` staging recipe; `x[["f"]]`
+not `x$f`; recount frontiers/unpushed fresh; `scratchpad/` invisible to git; `CLAUDE.md` warn band
+= headroom). (6) No reduction this session: `SESSION_NOTES.md` is under budget; the ledger trims
+need the owner.
 
 ### Session 800 Handoff Evaluation (by Session 801)
 **Score: 8/10.** Every Orient measurement held: both ledger frontiers = HEAD `e0ffe319`, 0
