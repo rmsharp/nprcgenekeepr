@@ -60,7 +60,12 @@ to \code{NULL}, which uses the bundled \code{\link{speciesGestation}} table.}
 a list of list with each internal list being made up of an animal
 id (\code{id}), a vector of possible sires (\code{sires}) and a vector of
 possible dams (\code{dams}). The \code{id} must be defined while the
-vectors \code{sires} and \code{dams} can be empty.
+vectors \code{sires} and \code{dams} can be empty. Candidate dams are
+females who gave birth near the time of the focal birth (proven
+breeders); when there are none, \code{dams} lists every female old enough
+and present at the birth instead. Either way, a female who delivered
+another offspring within \code{maxGestationalPeriod} days of the focal
+birth is never listed.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

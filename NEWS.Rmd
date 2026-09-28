@@ -497,6 +497,11 @@ knitr::opts_chunk$set(echo = TRUE)
   `U0002`, and so on). If a real animal already had one of those ids, the
   stand-in could be given the same id, so two different animals shared it. The
   check, and `addUIds()`, now skip any id already in the pedigree.
+- Fixed: Potential Parents (`getPotentialParents()`) rules out as a possible
+  dam any female who gave birth to another animal too close in time to have
+  also carried this one. When no female nearby was a proven breeder, it fell
+  back to listing every female old enough to be the dam and let such a female
+  back in. The fallback now leaves her out too.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

@@ -44,7 +44,12 @@
 #' @return a list of list with each internal list being made up of an animal
 #' id (\code{id}), a vector of possible sires (\code{sires}) and a vector of
 #' possible dams (\code{dams}). The \code{id} must be defined while the
-#' vectors \code{sires} and \code{dams} can be empty.
+#' vectors \code{sires} and \code{dams} can be empty. Candidate dams are
+#' females who gave birth near the time of the focal birth (proven
+#' breeders); when there are none, \code{dams} lists every female old enough
+#' and present at the birth instead. Either way, a female who delivered
+#' another offspring within \code{maxGestationalPeriod} days of the focal
+#' birth is never listed.
 #'
 #' @importFrom data.table as.data.table
 #' @importFrom stringi stri_sub
@@ -187,16 +192,15 @@ getPotentialParents <- function(ped, minSireAge = NULL, minDamAge = NULL,
       ## at a time, such a female cannot also have gestated the focal animal.
       ## (#31 -- replaces the former fixed half-year window with this
       ## gestation-derived one, driven by the existing maxGestationalPeriod.)
-      potentialDams <- potentialDams[!id %in% births$dam, ]
+      eligibleDams <- potentialDams[!id %in% births$dam, ]
       ## Preferrentially accept dams that are proven breeders near the time of
       ## the birth.
-      potentialDams <- potentialDams[id %in% births_plus_minus_one$dam, ]
-      ## If no potential dams have been identified thus far, accept all females
-      ## old enough to be the dam.
+      potentialDams <- eligibleDams[id %in% births_plus_minus_one$dam, ]
+      ## If no proven breeder remains, accept every eligible female: old enough
+      ## to be the dam and present at the birth, but never one the gestation
+      ## window above has already ruled out (PED_GV F3, NEW-35).
       if (nrow(potentialDams) == 0L) {
-        potentialDams <-
-          ba[sex == "F" & (is.na(ba$exit) | exit >= pUnknown$birth[i]) &
-            !id %in% births$dam, ]
+        potentialDams <- eligibleDams
       }
 
       potentialParents[[j]] <- list(
