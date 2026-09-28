@@ -167,6 +167,10 @@ here; `gh api repos/{owner}/{repo}/actions/jobs/<id>/logs` works. (6) STANDING S
 S790-803 (full suite in the background; `x[["f"]]` not `x$f`; recount frontiers/unpushed fresh;
 `scratchpad/` invisible to git; `CLAUDE.md` warn band = headroom; `/usr/bin/stat -f` for BSD stat).
 
+**Owner-directed after close-out (2026-09-28 ~21:50 UTC):** pushed the records commit (`origin/master`
+`0868249f` -> `fd2056ca`, a fast-forward; 0 unpushed then -- this push-record commit stays local).
+All four changed files are build-ignored and read by no test or workflow, so CI was not awaited.
+
 ### Session 802 Handoff Evaluation (by Session 803)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `852439b4`, 0
 undocumented; the S802 receipt `status: complete`, its `quality_ratchet` citation matching

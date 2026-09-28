@@ -60,6 +60,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] Owner-directed after the S804 close-out: pushed the records commit
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):** `git push origin master` moved
+  `origin/master` from `0868249f` to `fd2056ca` (the S804 records commit), a fast-forward after a
+  fresh fetch (0 behind). The four changed files (`CHANGELOG.md`, `HANDOFFS.md`,
+  `PROJECT_LEARNINGS.md`, `SESSION_NOTES.md`) are all `.Rbuildignore`'d and read by no test or
+  workflow (the only non-comment test mentions are two `test_that()` description strings in
+  `test_comparePedigreeStructure.R`), so the CI runs this push starts were not awaited. This entry's
+  commit stays local and rides with the next push.
+
 ### 2026-09-28 · [ad hoc] S804 records: Windows R-CMD-check fixed and green on CI DONE (S803 handoff evaluated 8/10, self 8/10, receipt, Learning 820)
 - **Model:** Claude Opus 5.5. **REFACTOR:** no change (owner-approved review only; both test files
   re-run, pass). **Full unfiltered suite (GREEN):** 357 files / 2,790 tests / 8,588 passing
