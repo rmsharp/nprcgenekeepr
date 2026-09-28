@@ -182,18 +182,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S801
 date: 2026-09-28
-status: pending
-self_score: TBD
-predecessor_score: TBD
-active_task: Rebuild inst/extdata/examples/ExamplePedigree.txt from ExamplePedigree.csv (BACKLOG.md item found S800; owner-directed in Phase 0 discussion). Measured at Orient: all 2,262 non-blank age cells are Excel's date display of the CSV age (1,536 whole-day dates, 620 '1900-01-00', 106 '#####' for negative ages), id 15FEBR became 15-Feb; it is the only text-format file shipped under inst/extdata. Owner scope: rebuild + test + data-raw script + NEWS line; close the '#'-in-a-cell reader question. PRE-RED beginning.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Rebuild the shipped inst/extdata/examples/ExamplePedigree.txt from ExamplePedigree.csv (BACKLOG.md item found S800) -- DONE. The only text-format example had every non-blank age cell saved as Excel display text (2,262: 1,536 '1900-01-DD' day serials, 620 '1900-01-00', 106 '#####') and id 15FEBR as 15-Feb; it now holds the same cells as the .csv. Owner closed the '#'-in-a-cell reader question.
+what_was_done: Orient discussion answered the owner's questions (the .txt's only reference is the always-skipped test-shinytest2-debug.R; it is the only text-format example; all 15 example pedigrees measured through the app path: 8 with 0 errors, xlsx 1, jmac 67, the 5 example_pedigree_*.csv refused for no birth column -- first told the owner "six", corrected to 8). RED cc6f575a (new test_examplePedigreeTxt.R, 4 tests / 11 assertions, 8 failing for the expected reason, 3 passing, 0 errors); GREEN b31f44f0 (data-raw/ExamplePedigree_txt.R, run once; exactly the 2,262 age lines changed ignoring line endings; rerun byte-identical; no R/ change); REFACTOR 1daa0301 (NEWS.Rmd General Fixes entry; BACKLOG item removed, classic-structure item filed). Full unfiltered suite GREEN and REFACTOR 357 files / 2,784 tests / 8,686 expectations, 1 failed (the known test_pkgdown_reference_config.R), 0 error; lint 0; NEWS guards 26/0 and 3/0. Learning 817.
+next_steps: (A) Every Up Next item is an owner decision; measure first and count from printed output (Learnings 812/815/816/817). Nearest: the classic-structure item (BACKLOG.md:264-278 committed numbering): add a birth column to the five example_pedigree_*.csv files (test_examplePedigreeFixtures.R:249 pins the columns; the exemplar figures must not change) or reword pedigree-diagram.qmd:104-111. Then jmac (BACKLOG.md:246), U-prefix ids, recorded dam, PED_GV. (B) Carried: CHANGELOG.md/HANDOFFS.md trims (owner runs the forced write), suggested_NEWS_entry, residue, 18 unpushed (owner's call), dashboard v2.18.0 vs v2.19.0, methodology fork Class A/B. (C) Read the 2026-09-28 07:00 UTC shinytest2 run at next Orient (not fired at 06:23 UTC).
+key_files: inst/extdata/examples/ExamplePedigree.txt; data-raw/ExamplePedigree_txt.R:1-34; tests/testthat/test_examplePedigreeTxt.R:37,:50,:56,:62; NEWS.Rmd:515-520; BACKLOG.md:264-278; vignettes/articles/pedigree-diagram.qmd:96-111; R/qcStudbook.R:303; PROJECT_LEARNINGS.md Learning 817.
+gotchas: qcStudbook() keeps a supplied age column unchecked, so date text in it loads with 0 errors. test_examplePedigreeTxt.R pins the .txt to the .csv cell for cell -- re-run data-raw/ExamplePedigree_txt.R after any .csv edit. Learning 318(d)'s "every example pedigree is error-laden" is wrong (8 of 15 load clean). BACKLOG staging without the owner's YAML header: tail -n +6 BACKLOG.md > f; git update-index --cacheinfo 100644,$(git hash-object -w f),BACKLOG.md. In R probes use x[["field"]], not x$field (partial matching). STANDING SET unchanged from S790-800.
+runtime_smoke: Real app in headless Chrome (installed package, current R/), Text + Tab upload, Pedigree Browser. Old file: JDVB5M age blank, ancestry UNKNOWN, status UNKNOWN; 2ZMHG7 age 1900-01-07; 15FEBR not found. Rebuilt file: JDVB5M -0.1 / JAPANESE / DECEASED; 2ZMHG7 7.8; 15FEBR 0.2; both 3,694 entries. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 05ed18700c1f · manifest aa983075d6a2
+changelog_ref: this records commit (S801 records entry, prepended above the S801 REFACTOR, GREEN, RED, PRE-RED and claim entries)
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log)
 ```
+Predecessor (S800) scored 8/10: every Orient measurement held (ledger frontiers, the receipt, 13 unpushed, the residue list, the known failure); its next step (A) named this item with both options and its gotcha (3) framed it. Wrong in scope, not fact: the item described 106 '#####' cells, while the whole age column (2,262 cells) and one id were Excel display text and the file passed QC with 0 errors. Missing: the .txt being the only text-format example and having no live reference, which decided rebuild vs delete. Could not apply: the 07:00 UTC shinytest2 read (Orient 05:23 UTC). Self-score 8/10: +cell-by-cell comparison with the source before scoping; +all 15 example files measured when the owner questioned a claim, which found the classic-structure item; +plain scope question answered first time; +every TDD gate via AskUserQuestion; +live app old vs rebuilt. -repeated Learning 318(d) as fact (owner corrected); -"every age is wrong" named no comparison; -"six" clean files from memory (8), reaching a committed ledger entry; -a probe bug cost a rerun; -my notes pushed SESSION_NOTES.md past its 25,000-token read ceiling, caught only at the records commit (owner ran the forced trim: 13 records to docs/archive/SESSION_NOTES-through-2026-09-28.md, 61,948 -> 26,273 B); CHANGELOG.md/HANDOFFS.md still over budget.
 
 ```handoff
 session: S800
