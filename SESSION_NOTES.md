@@ -167,6 +167,10 @@ shell's `stat` is GNU; use `/usr/bin/stat -f` for BSD format. (6) STANDING SET u
 S790-802 (full suite in the background; `x[["f"]]` not `x$f`; recount frontiers/unpushed fresh;
 `scratchpad/` invisible to git; `CLAUDE.md` warn band = headroom). (7) No reduction this session:
 `SESSION_NOTES.md` is under budget; the ledger trims need the owner.
+**Owner-directed after close-out (2026-09-28 ~20:50 UTC):** pushed the 4 commits (`origin/master`
+`4f13b10a` -> `bc0624ac`, a fast-forward; 0 unpushed then -- this push-record commit stays local).
+All five changed files are build-ignored and read by no test or workflow (the two test-file hits
+for `PROJECT_LEARNINGS.md` are `test_that()` description strings), so CI was not awaited.
 
 ### Session 801 Handoff Evaluation (by Session 802)
 **Score: 9/10.** Every Orient measurement held: both ledger frontiers = HEAD `93e3346f`, 0
