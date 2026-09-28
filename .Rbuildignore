@@ -14,6 +14,7 @@
 ^codecov\.yml$
 ^docs$
 ^\.gitignore$
+^\.gitattributes$
 ^tests/testthat/test_basic\.R$
 ^R/testingScript\.R$
 ^R/depricated_gene\.drop\.R$

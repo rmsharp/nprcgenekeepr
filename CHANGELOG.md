@@ -60,6 +60,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S804 GREEN: `.gitattributes` pins `ExamplePedigree.txt` to LF on every checkout; `.Rbuildignore` excludes it
+- **Model:** Claude Opus 5.5. **Owner decision (RED -> GREEN gate):** proceed with the one-file rule, not
+  a wider rule over every example file (`inst/extdata/examples/deidentified_jmac_ped.csv` is stored
+  CRLF in git, so a wider `eol=lf` rule would change that shipped file's bytes). **Change:** new
+  repo-root `.gitattributes` with `inst/extdata/examples/ExamplePedigree.txt text eol=lf` and a comment
+  saying why; `.Rbuildignore` gains `^\.gitattributes$` beside `^\.gitignore$`. **Verified before
+  commit:** both RED files pass (15 and 3 expectations); `git ls-files --eol` shows the file
+  `i/lf w/lf attr/text eol=lf` and `git status` does not list it as modified (no renormalization); a
+  tarball built from the working tree has 1,050 entries (the S803 count), none `.gitattributes`, and
+  still ships `inst/extdata/examples/ExamplePedigree.txt`. No `.R` file changed, so no lint run.
+
 ### 2026-09-28 · [ad hoc] S804 RED: a Windows-style checkout of `ExamplePedigree.txt` must keep plain LF line endings; `.Rbuildignore` must keep a repo-root `.gitattributes` out of the tarball
 - **Model:** Claude Opus 5.5. **Found at Orient:** R-CMD-check's `windows-latest (release)` leg failed
   `test_examplePedigreeTxt.R:52` ("no carriage return") on both S802 pushes (runs 36472173902,

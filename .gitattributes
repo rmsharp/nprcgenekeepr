@@ -1,0 +1,7 @@
+# ExamplePedigree.txt is a shipped example whose bytes a test pins
+# (tests/testthat/test_examplePedigreeTxt.R): plain LF line endings. Git for
+# Windows defaults to core.autocrlf=true, which the windows-latest CI runner
+# gets, and without this rule a Windows checkout writes the file with CRLF, so
+# R-CMD-check's windows-latest leg failed that test (S804). eol=lf holds even
+# when a user sets core.eol=crlf.
+inst/extdata/examples/ExamplePedigree.txt text eol=lf
