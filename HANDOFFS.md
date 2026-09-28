@@ -251,6 +251,37 @@ which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
 ``` handoff
+session: S803
+date: 2026-09-28
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Update the synced methodology_dashboard.py from v2.18.0 to canonical v2.19.0 (owner-directed at the S802 close-out) -- DONE. The Class B read-cap row no longer claims the trimmer answers NO_CONFIG, and for a file this project's own methodology_trim.py declares in LEDGERS it names the --check remedy at LOW severity. This closes the carried "methodology fork's Class A/B decision" item (S796's finding, fixed by the fork as BL-88).
+what_was_done: Checked first: sibling methodology/ on main at 016b3ae (v3.7-1277-g016b3ae), clean, level with origin/main; the local copy's blob equals canonical e1b6bdf (v2.18.0), so no local edit could be lost; canonical changes since are cb9b0ed + 161181c only; dry run skipped the tracked file. Sync 0058e7f8 (--sync --force): cmp-identical to canonical, diff 158+/27- = the canonical diff. Verified: v2.19.0's parse of this project's trimmer = its executed LEDGERS (CHANGELOG.md, HANDOFFS.md, SESSION_NOTES.md); both versions give the same 4 risk rows here today (96/100, 0 high); in a scratch clone with SESSION_NOTES.md padded to 60,809 B, v2.18.0 HIGH with the NO_CONFIG claim vs v2.19.0 LOW with the remedy, which ran with exit 0; no stale-version warning; tarball built from HEAD 0058e7f8 holds no dashboard/trimmer/ledger file. R suite and CI not run or awaited: the file is .Rbuildignore'd and no test or workflow reads it. Learning 819.
+next_steps: (A) Every Up Next item is an owner decision; measure first (Learnings 812/815-819). Nearest: the stale linebreeding/half_sib article figures inside the documentation-audit item (BACKLOG.md:202-237): re-run vignettes/articles/pedigree-diagram-exemplar-renders.R, commit the images after an owner look. Then jmac (BACKLOG.md:256), U-prefix ids (:51), recorded dam (:32), PED_GV (:8). (B) Owner question from this sync: keep the dashboard tracked (then every sync needs --force) or untrack it as the sync tool's "Phase 3 untrack" label suggests. (C) Carried: CHANGELOG.md/HANDOFFS.md trims (owner runs the forced write), residue, 4 unpushed after this records commit (owner's call).
+key_files: methodology_dashboard.py:95 (version), :1033 (find_trim_tool), :1088 (_parse_trim_ledgers), :2280 (tool_ledgers), :3625-3658 (Class B row and remedy); methodology_trim.py:316 (LEDGERS); .Rbuildignore:84; CLAUDE.md:256 (the --budget-bytes 65536 rule); PROJECT_LEARNINGS.md Learning 819.
+gotchas: The dashboard's remedy command omits --budget-bytes 65536; always add it (CLAUDE.md:256). BACKLOG.md is Class B but not in the trimmer's LEDGERS: 54,143 B, 2,607 B under the 56,750 B read cap; past it, a HIGH row with no remedy. A sync of this tracked file needs --force. quality_ratchet.py --run builds git archive HEAD: run it after the commit it covers (Learning 772). This shell's stat is GNU; use /usr/bin/stat -f. STANDING SET unchanged from S790-802.
+runtime_smoke: Ran the synced dashboard on the project (v2.19.0, 96/100, 0 high, no stale warning) and both versions via collect_all() on the project and on a padded scratch clone (HIGH -> LOW with the remedy; the remedy ran, exit 0). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 8d60dc76ee85 · manifest aa983075d6a2
+changelog_ref: this records commit (S803 records entry, prepended above the S803 sync and claim entries)
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log)
+```
+
+Predecessor (S802) scored 9/10: every Orient measurement held (ledger
+frontier = HEAD, the receipt and its quality-gate citation, 1 unpushed,
+the residue list); the owner’s direction for this session was stated
+plainly and the four push workflows were read as asked. Missing: the
+carried “Class A/B decision” and “dashboard v2.18.0 vs v2.19.0” items
+were one item, which the fork’s v2.19.0 commit message names. Self-score
+8/10: +source checkout and local blob checked before syncing; +dry run
+first; +new behavior tested on this project’s own customized trimmer and
+in a padded clone, remedy run; +the two carried items tied together.
+-ran the quality gate before committing, so it measured the claim commit
+(Learning 772; caught by reading the gate command, re-ran after the
+commit); -the GNU-vs-BSD stat slip again; -two probe slips (risks under
+scores; an R string escape) each cost a re-run; -no reduction of a
+mandated-read file.
+
+``` handoff
 session: S802
 date: 2026-09-28
 status: complete

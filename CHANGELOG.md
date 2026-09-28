@@ -93,6 +93,68 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · \[ad hoc\] S803 records: `methodology_dashboard.py` synced to v2.19.0 DONE (S802 handoff evaluated 9/10, self 8/10, receipt, Learning 819)
+
+- **Model:** Claude Opus 5.5. Session notes, `HANDOFFS.md` receipt
+  `status: complete`, and `PROJECT_LEARNINGS.md` Learning 819 (how to
+  sync the dashboard safely here; the v2.19.0 remedy command needs this
+  project’s `--budget-bytes 65536` added). **Verified after the sync
+  commit:** the synced dashboard reports v2.19.0, 96/100, 0 high, no
+  stale-version warning; the tarball built from `0058e7f8` holds no
+  dashboard, trimmer or ledger file (1,050 entries);
+  `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 8d60dc76ee85 · manifest aa983075d6a2`
+  (3,588,715 B). The first ratchet run measured the claim commit (it
+  builds `git archive HEAD`, Learning 772) and was re-run after the sync
+  commit. R suite and CI not run or awaited: the file is
+  `.Rbuildignore`’d and read by no test or workflow. **Closed:** the
+  carried “methodology fork’s Class A/B decision” handoff item. **Raised
+  for the owner:** keep the dashboard tracked (each sync then needs
+  `--force`) or untrack it, as the sync tool’s label suggests.
+
+### 2026-09-28 · \[ad hoc\] S803: synced `methodology_dashboard.py` from v2.18.0 to canonical v2.19.0 (owner-directed)
+
+- **Model:** Claude Opus 5.5. **Source:** the sibling `methodology/`
+  checkout, branch `main` at `016b3ae` (`v3.7-1277-g016b3ae`), clean and
+  level with `origin/main`. The local copy was byte-identical to
+  canonical `e1b6bdf` (v2.18.0), so no local edit was lost. Written with
+  `methodology_dashboard.py --sync <this project> --force` (the dry run
+  skips a git-tracked target); the result `cmp`-matches canonical, and
+  its diff (158 added, 27 removed) is the canonical `e1b6bdf..016b3ae`
+  diff: fork commits `cb9b0ed` and `161181c` (BL-88 P1/P2).
+- **What changes for this project:** the over-cap row for a Class B file
+  (`SESSION_NOTES.md`, `BACKLOG.md`) no longer claims “the trimmer
+  answers NO_CONFIG” – false here since the local `SESSION_NOTES.md`
+  `LedgerSpec` (the finding S796 handed to the fork; S796 records
+  entry). Where the project’s own `methodology_trim.py` lists the file
+  in `LEDGERS` (read by parsing its source, never running it), the row
+  names `python3 methodology_trim.py --file <f> --check` and drops HIGH
+  to LOW. This closes the carried “methodology fork’s Class A/B
+  decision” handoff item.
+- **Measured:** v2.19.0’s parse of this project’s trimmer equals the
+  trimmer’s executed `LEDGERS` (`CHANGELOG.md`, `HANDOFFS.md`,
+  `SESSION_NOTES.md`); on this project today both versions give the same
+  4 risk rows (no Class B file is over 56,750 B: `SESSION_NOTES.md`
+  35,610 B, `BACKLOG.md` 54,143 B); in a scratch clone with
+  `SESSION_NOTES.md` padded to 60,809 B, v2.18.0 gives HIGH with the
+  NO_CONFIG claim and v2.19.0 gives LOW with the remedy, which ran with
+  exit 0. The file stays tracked: the sync tool’s “Phase 3 untrack”
+  suggestion is not acted on.
+
+### 2026-09-28 · \[ad hoc\] S803 claim: update the synced `methodology_dashboard.py` from v2.18.0 to canonical v2.19.0 (owner-directed at the S802 close-out) (in progress)
+
+- **Model:** Claude Opus 5.5.
+
+### 2026-09-28 · \[ad hoc\] Owner-directed after the S802 close-out: pushed the 2 local ledger/notes commits
+
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):**
+  `git push origin master` moved `origin/master` from `51d4081d` to
+  `4f13b10a` (the push record `3ce74d54` and the `BACKLOG.md` header
+  cleanup record `4f13b10a`), a fast-forward. Both change only
+  build-ignored files read by no test, so the CI runs they start say
+  nothing new; the runs on `51d4081d` (S802’s code) were not cancelled
+  (no workflow sets `cancel-in-progress`; `lint` had already passed).
+  This entry’s commit stays local and rides with the next push.
+
 ### 2026-09-28 · \[ad hoc\] Owner-directed after the S802 close-out: dropped the uncommitted YAML header on `BACKLOG.md` and deleted the untracked `BACKLOG.log`
 
 - **Model:** Claude Opus 5.5. The header (5 lines,
