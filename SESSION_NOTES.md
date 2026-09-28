@@ -94,6 +94,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 806 Did
+**Deliverable:** real animal ids that start with the placeholder prefix (`"Uma"`, `"U123"`) are treated as stand-ins for unknown parents (`BACKLOG.md` item, the other half of PED_GV F2 / NEW-38): measure, owner picks the fix, strict TDD (IN PROGRESS)
+**Started:** 2026-09-28 ~22:50 UTC
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 804 Handoff Evaluation (by Session 805)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `2138c813`, 0
 undocumented; the S804 receipt `status: complete`, its `quality_ratchet` citation matching

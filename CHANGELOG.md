@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S806 claim: real animal ids that start with the placeholder prefix (`"Uma"`, `"U123"`) are treated as stand-ins for unknown parents (the other half of PED_GV F2 / NEW-38): measure, owner picks the fix, strict TDD (in progress)
+- **Model:** Claude Opus 5.5.
+
 ### 2026-09-28 · [ad hoc] Owner-directed after the S805 close-out: pushed 5 commits; `methodology_dashboard.py` stays tracked; `NEWS.Rmd` deferred
 - **Model:** Claude Opus 5.5. **Push (a non-commit action):** `git push origin master` moved
   `origin/master` from `fd2056ca` to `e5e007f8` (`2138c813`, `54a3a7bd`, `2a247184`, `16bc27bd`,
