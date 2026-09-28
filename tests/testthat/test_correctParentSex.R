@@ -301,3 +301,61 @@ test_that(paste0(
   expect_identical(errorLst$femaleSires, "s1")
   expect_identical(errorLst$maleDams, "d1")
 })
+
+## --- Blank, unreadable and space-padded parent sex (S799) --------------------
+## convertSexCodes() reads a blank or unrecognized sex as "U" and ignores
+## spaces around a code, so qcStudbook() no longer reports such a parent as a
+## "female sire" or "male dam". Before S799 it did, and with
+## reportErrors = FALSE it silently set the sire to "M" and the dam to "F".
+unreadableSexPed <- data.frame(
+  id = c("sBlank", "dXyz", "sPad", "dPad", "o1", "o2", "o3"),
+  sire = c(NA, NA, NA, NA, "sBlank", "sPad", NA),
+  dam = c(NA, NA, NA, NA, "dXyz", "dPad", NA),
+  sex = c("", "xyz", "M ", " F", "F", "M", ""),
+  birth = as.Date(c(
+    "2000-01-01", "2000-01-01", "2000-01-01", "2000-01-01",
+    "2010-01-01", "2010-01-01", "2011-01-01"
+  )),
+  stringsAsFactors = FALSE
+)
+sexOf <- function(ped, id) as.character(ped$sex[ped$id == id])
+
+test_that("qcStudbook does not report a parent whose sex cannot be read", {
+  errorLst <- qcStudbook(unreadableSexPed, reportErrors = TRUE)
+  expect_false("sBlank" %in% errorLst$femaleSires)
+  expect_false("dXyz" %in% errorLst$maleDams)
+})
+test_that("qcStudbook does not report a parent whose sex code has spaces", {
+  errorLst <- qcStudbook(unreadableSexPed, reportErrors = TRUE)
+  expect_false("sPad" %in% errorLst$femaleSires)
+  expect_false("dPad" %in% errorLst$maleDams)
+  expect_length(errorLst$femaleSires, 0L)
+  expect_length(errorLst$maleDams, 0L)
+})
+test_that("qcStudbook returns an unreadable sex as U, never NA or a guess", {
+  ped <- qcStudbook(unreadableSexPed, reportErrors = FALSE)
+  expect_identical(sexOf(ped, "sBlank"), "U") # was silently set to "M"
+  expect_identical(sexOf(ped, "dXyz"), "U") # was silently set to "F"
+  expect_identical(sexOf(ped, "o3"), "U") # a non-parent; was NA
+  expect_false(anyNA(ped$sex))
+})
+## Holds before S799 only because the unreadable padded code became NA and
+## the correction step then guessed "M" / "F"; after S799 the code is read.
+test_that("control: qcStudbook returns a space-padded parent sex as named", {
+  ped <- qcStudbook(unreadableSexPed, reportErrors = FALSE)
+  expect_identical(sexOf(ped, "sPad"), "M")
+  expect_identical(sexOf(ped, "dPad"), "F")
+})
+test_that("the app's QC step loads a pedigree with an unreadable parent sex", {
+  result <- runQcStudbook(unreadableSexPed)
+  expect_false(any(result$qcResult$errors$Error %in%
+    c("Female listed as sire", "Male listed as dam")))
+  expect_false(is.null(result$cleaned))
+  expect_identical(sexOf(result$cleaned, "sBlank"), "U")
+})
+test_that("control: a sire recorded as female is still reported", {
+  femaleSirePed <- unreadableSexPed
+  femaleSirePed$sex[femaleSirePed$id == "sBlank"] <- "F"
+  errorLst <- qcStudbook(femaleSirePed, reportErrors = TRUE)
+  expect_true("sBlank" %in% errorLst$femaleSires)
+})
