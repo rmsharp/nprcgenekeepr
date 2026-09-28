@@ -60,6 +60,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S805: `pedigree-diagram-exemplar-renders.R` header now expects no layout warnings (owner-approved)
+- **Model:** Claude Opus 5.5. The header still told the re-renderer to expect two linebreeding/half_sib
+  collision warnings and to stop if they vanished; S715 retired them on purpose
+  (`test_examplePedigreeFixtures.R` pins `rectilinearCollisionWarning = FALSE` for all five). Comment
+  only: it now expects none, says any warning means a re-review, and records that a drawing change
+  needs a re-run even when no pin moves (S715 -> S805 staleness). Parses; lint 0.
+
 ### 2026-09-28 · [ad hoc] S805: re-rendered and committed the 2 stale Pedigree Diagram article figures (`exemplar-linebreeding-rectilinear.png`, `exemplar-half_sib-rectilinear.png`), owner-approved
 - **Model:** Claude Opus 5.5. `Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R`
   re-rendered all 5 classic-structure figures (no layout warning, as `test_examplePedigreeFixtures.R`

@@ -13,12 +13,15 @@
 # tests/testthat/test_examplePedigreeFixtures.R (S693) -- if that test file's
 # spec list changes, re-run this script and get the new renders re-reviewed.
 #
-# Expected console output includes exactly two layout warnings, both
-# owner-accepted at S691's visual gate (see the test file's
-# rectilinearCollisionWarning pins): the linebreeding and half_sib
-# Rectilinear layouts each report "2 same-row edge-node collision(s) could
-# not be fully resolved". Any OTHER warning, or those warnings vanishing,
-# means the engine changed -- stop and re-review before committing images.
+# Expected console output has no layout warnings: since S715 (arc-verified
+# roundness selection) the test file's rectilinearCollisionWarning pins are
+# FALSE for all five exemplars, retiring the two linebreeding/half_sib
+# "same-row edge-node collision(s)" warnings accepted at S691's visual gate.
+# Any warning means the layout changed -- stop, compare the new renders with
+# the committed images, and get them re-reviewed before committing. A change
+# to the drawing needs this script re-run even when no pin moves: S715 made
+# the dashed duplicate-animal arcs flatter without re-running it, and the
+# committed linebreeding and half_sib images stayed stale until S805.
 #
 # Run from the package root:
 #   Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R
