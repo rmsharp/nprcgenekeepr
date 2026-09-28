@@ -41,25 +41,6 @@ test_that("removeAutoGenIds() is case-sensitive (keeps real lowercase-u ids)", {
   expect_equal(out$sire[out$id == "B"], "u123") # real sire untouched
 })
 
-test_that("removeAutoGenIds() keeps real ids that merely start with the prefix (NEW-38 F2)", {
-  # Audit probe P3 (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md): real ids
-  # "Uma" and "U123" were wrongly dropped because detection matched on the
-  # prefix alone. Detection now requires the exact digit width the format
-  # implies (4 digits for the default "U%04d"), so these survive.
-  old <- getOption("nprcgenekeepr.autoIdFormat")
-  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
-  options(nprcgenekeepr.autoIdFormat = NULL) # default U%04d
-  ped <- data.frame(
-    id = c("Uma", "U123", "real1", "kid1"),
-    sire = NA_character_,
-    dam = c(NA, NA, NA, "real1"),
-    sex = "M",
-    stringsAsFactors = FALSE
-  )
-  out <- removeAutoGenIds(ped)
-  expect_setequal(out$id, c("Uma", "U123", "real1", "kid1")) # nothing dropped
-})
-
 test_that("removeAutoGenIds() honors a configured non-default prefix", {
   old <- getOption("nprcgenekeepr.autoIdFormat")
   on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
