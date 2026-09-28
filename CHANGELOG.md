@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S803 claim: update the synced `methodology_dashboard.py` from v2.18.0 to canonical v2.19.0 (owner-directed at the S802 close-out) (in progress)
+- **Model:** Claude Opus 5.5.
+
 ### 2026-09-28 · [ad hoc] Owner-directed after the S802 close-out: pushed the 2 local ledger/notes commits
 - **Model:** Claude Opus 5.5. **Push (a non-commit action):** `git push origin master` moved
   `origin/master` from `51d4081d` to `4f13b10a` (the push record `3ce74d54` and the `BACKLOG.md`

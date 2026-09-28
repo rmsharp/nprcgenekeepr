@@ -94,6 +94,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 803 Did
+**Deliverable:** update the synced `methodology_dashboard.py` from v2.18.0 to canonical v2.19.0 (owner-directed at the S802 close-out) (IN PROGRESS)
+**Started:** 2026-09-28 ~19:45 UTC
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 801 Handoff Evaluation (by Session 802)
 **Score: 9/10.** Every Orient measurement held: both ledger frontiers = HEAD `93e3346f`, 0
 undocumented; S801 receipt `status: complete`, its `quality_ratchet` citation matching

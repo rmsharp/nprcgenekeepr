@@ -180,6 +180,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S803
+date: 2026-09-28
+status: pending
+active_task: Update the synced methodology_dashboard.py from v2.18.0 to canonical v2.19.0 (owner-directed at the S802 close-out) -- IN PROGRESS.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S802
 date: 2026-09-28
 status: complete
