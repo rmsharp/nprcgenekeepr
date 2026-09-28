@@ -60,6 +60,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] Owner-directed after the S798 close-out: pushed the 17 local commits (S795 to S798)
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):** `git push origin master` moved
+  `origin/master` from `32cc4d53` to `337a633d`, 17 commits (S795's BUNDLE/DOC cleanup, S796's
+  records, S797's `addUIds()` duplicate-id fix, S798's `getPotentialParents()` F3 fix), a
+  fast-forward; 0 unpushed afterwards. All four push workflows (`R-CMD-check`, `test-coverage`,
+  `pkgdown`, `lint`) were queued on `337a633d`; they were still running when this entry was
+  written, so their results are NOT recorded here -- the next Orient's `gh run list` reads them.
+  This is the first CI run on any of S795 to S798. This entry's own commit changes only
+  `CHANGELOG.md` (build-ignored, read by no test), so it was left unpushed rather than start a
+  second ~25-minute CI round that could say nothing new; it rides with the next push.
+
 ### 2026-09-27 · [ad hoc] S798 records: PED_GV F3 DONE -- the `getPotentialParents()` dam fallback no longer re-admits a female ruled out by the gestation window (S797 handoff evaluated 9/10, self 9/10, receipt, Learning 814)
 - **Model:** Claude Opus 5.5. Phase 3 close-out: S797's handoff evaluated 9/10 (every Orient
   measurement held; its "run each option on `qcPed`" could not apply -- `qcPed` has no `fromCenter`
