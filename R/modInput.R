@@ -297,7 +297,11 @@ modInputServer <- function(id) {
              NULL)
     })
 
-    # Helper function to read file based on type
+    # Helper function to read file based on type. An empty cell is read as
+    # missing (na.strings = c("", "NA")), as getPedigree() and Excel uploads
+    # read it: a blank sire/dam is an unknown parent, not the id "", a blank
+    # ancestry becomes UNKNOWN (not OTHER), and a blank origin is no recorded
+    # origin (not an import).
     readDataFile <- function(file, fileType, separator) {
       if (is.null(file)) return(NULL)
 
