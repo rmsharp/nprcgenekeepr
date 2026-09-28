@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S802 claim: the five classic-structure example pedigrees (example_pedigree_*.csv) cannot be loaded in the app -- refused for having no birth column -- while the pedigree-diagram article tells the reader to upload one (in progress)
+- **Model:** Claude Opus 5.5.
+
 ### 2026-09-28 · [ad hoc] S801 records fix: the unpushed count in the notes and receipt
 - **Model:** Claude Opus 5.5. The records commit touched 6 files, over the `SAFEGUARDS.md` 5-file
   per-commit cap; it was soft-reset (local, unpushed) and re-made as two commits (4 + 2 files),

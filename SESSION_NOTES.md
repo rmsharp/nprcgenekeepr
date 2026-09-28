@@ -94,6 +94,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 802 Did
+**Deliverable:** the five classic-structure example pedigrees cannot be loaded in the app (`BACKLOG.md` item found S801) -- add a `birth` column or reword the article (IN PROGRESS)
+**Started:** 2026-09-28 ~06:45 UTC
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 800 Handoff Evaluation (by Session 801)
 **Score: 8/10.** Every Orient measurement held: both ledger frontiers = HEAD `e0ffe319`, 0
 undocumented; S800 receipt `status: complete`; 13 unpushed exactly as stated; the residue list
