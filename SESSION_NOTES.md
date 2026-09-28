@@ -90,6 +90,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 797 Did
+**Deliverable:** PED_GV audit follow-through -- F2 slice (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`,
+NEW-38): the `U`-id-prefix scheme's collision-at-generation and wrongful-strip-at-detection defects
+(IN PROGRESS).
+**Started:** 2026-09-27.
+**Status:** Session claimed. PRE-RED investigation done (read the audit's F2 section, `R/addUIds.R`,
+`R/removeAutoGenIds.R`, `R/autoIdFormat.R`, and grepped all 7+ callers of `isGeneratedUnknownId()` --
+`obfuscateId.R`, `getLivingBreeders.R`, `classifyParentage.R`, `reportGV.R`, `modPedigree.R`,
+`correctUnknownParentMeanKinship.R`, plus `removeAutoGenIds()` itself). Owner picked exact-format-match
+detection (tightens `isGeneratedUnknownId()` to require the full digit pattern implied by the
+configured sprintf format, not just the literal prefix) and silent skip-past collision avoidance in
+`addUIds()` (advance past any candidate id that already exists in the pedigree). PRE-RED->RED gate
+approved. RED in progress.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
+Phase 3F records the rest.
+
 ### Session 795 Handoff Evaluation (by Session 796)
 **Score: 7/10.** Every Orient measurement held (ledger frontiers = HEAD, 0 undocumented;
 dashboard 96/100; `CHANGELOG.md` over its 65,536 B budget confirmed at 78,204 B). **Gap, not a

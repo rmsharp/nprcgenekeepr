@@ -180,6 +180,22 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S797
+date: 2026-09-27
+status: pending
+self_score: TBD
+predecessor_score: TBD
+active_task: PED_GV F2 slice (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md, NEW-38): U-id-prefix scheme collision-at-generation (addUIds() can mint a duplicate of a real id) and wrongful-strip-at-detection (isGeneratedUnknownId() treats any prefix-leading id as generated). PRE-RED investigation done; owner picked exact-format-match detection and silent skip-past collision avoidance; PRE-RED->RED gate approved. RED in progress.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S796
 date: 2026-09-27
 status: complete

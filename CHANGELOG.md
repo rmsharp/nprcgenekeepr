@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S797 claim: PED_GV F2 slice -- U-id-prefix scheme (NEW-38) collision-at-generation + wrongful-strip-at-detection (in progress)
+- **Model:** Claude Sonnet 5.
+
 ### 2026-09-27 · [ad hoc] S796 records: PED_GV F2/F3 NOT STARTED (S795 handoff evaluated 7/10, self 6/10, receipt, Learnings 810-811); session became `SESSION_NOTES.md` read-cap fix + `methodology` dashboard drift delegation
 - **Model:** Claude Sonnet 5. The owner-chosen deliverable (PED_GV F2/F3, `BACKLOG.md` "Up Next"
   item 1) was never started — no `R/` file, test, or `BACKLOG.md` change this session. `BACKLOG.md`
