@@ -60,6 +60,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S802 GREEN (1/2): data-raw/example_pedigree_birth.R adds a birth column to the classic-structure example pedigrees; consanguinity, linebreeding and backcross written
+- **Model:** Claude Opus 5.5. The rule: each animal sits on a drawing row (its generation, or for a
+  founder the row above its earliest offspring, so an outside mate is born with its partner); 6 years
+  per row from 2000; a dam's offspring a year apart in file order; month (March-June) and day vary
+  with the file row. Run once over all five files: ignoring the new column, every file is
+  byte-identical to the committed one, and a rerun is byte-identical. The other two files follow in
+  GREEN (2/2) (the 5-file per-commit cap). No `R/` change.
+
 ### 2026-09-28 · [ad hoc] S802 RED: the five classic-structure example pedigrees must carry birth dates, upload in the app with 0 errors, draw unchanged, and keep the article's structure on the Diagram tab
 - **Model:** Claude Opus 5.5. `tests/testthat/test_examplePedigreeFixtures.R`: the column pin now
   expects `birth`; four new tests -- birth is YYYY-MM-DD and every animal is born after both parents;
