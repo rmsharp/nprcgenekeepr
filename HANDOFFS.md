@@ -182,18 +182,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S797
 date: 2026-09-27
-status: pending
-self_score: TBD
-predecessor_score: TBD
-active_task: PED_GV F2 slice (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md, NEW-38): U-id-prefix scheme collision-at-generation (addUIds() can mint a duplicate of a real id) and wrongful-strip-at-detection (isGeneratedUnknownId() treats any prefix-leading id as generated). PRE-RED investigation done; owner picked exact-format-match detection and silent skip-past collision avoidance; PRE-RED->RED gate approved. RED in progress.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: PED_GV F2 (NEW-38) -- HALF DONE by owner decision. The addUIds() duplicate-id half shipped; the stricter-detection half was tried, broke the shipped data, was withdrawn, and is now its own BACKLOG.md "Up Next" item (DECISION NEEDED). PED_GV item's next slice is F3.
+what_was_done: Full TDD cycle with every gate via AskUserQuestion. RED a01e13af (9 assertions, 3 files, all failing). First GREEN (exact-digit-width detection + skip-past minting) passed those files but the unfiltered full suite went to 24 failed + 1 error in 7 files; isolated to the detection change by restoring only R/autoIdFormat.R (all 8 affected files then passed). Cause: obfuscateId() disguises placeholders as prefix + random capitals/digits, and all 43 qcPed / 1,372 examplePedigree placeholders look like "U05X3C". Owner re-decided: ship the duplicate fix only. Withdrew the detection tests 4155665f (restored byte-exact); GREEN cf956da8 (internal mintAvailableIds(), placed after addUIds() so the roxygen blocks stay separate); REFACTOR 5dc89a2e (roxygen + man/addUIds.Rd, NEWS.Rmd General Fixes entry, BACKLOG.md: F2 out of the PED_GV item, detection half filed with measurements; owner's YAML header kept out). Claim b0c28655. Learnings 812-813.
+next_steps: (A) PED_GV F3: the fallback at R/getPotentialParents.R:196-199 re-admits an excluded dam (NEW-35/NEW-55); owner picks fall back to the filtered set, return none, or label the tier -- run each option on examplePedigree/qcPed and put the counts in the option text before asking (Learning 812). (B) The new detection item (real ids like "Uma" treated as placeholders) has four written options; the rejected approach's RED tests are in commit a01e13af. (C) Carried and untouched: suggested_NEWS_entry disposition, working-tree residue, CHANGELOG.md and HANDOFFS.md trims (both over 65,536 B), push of 12 unpushed commits (owner's call), the methodology fork's Class A/B decision.
+key_files: R/addUIds.R:43-91 (addUIds 43-62, mintAvailableIds 64-91); tests/testthat/test_addUIds.R:36-52; R/autoIdFormat.R:109-111 (predicate, unchanged); R/obfuscateId.R:40-46 (why stricter detection fails); NEWS.Rmd:496-499; BACKLOG.md "Up Next" items 1-2; PROJECT_LEARNINGS.md Learnings 812-813.
+gotchas: isGeneratedUnknownId() must stay prefix-tolerant for the shipped obfuscated placeholders -- measure any change on qcPed and examplePedigree first. The full suite outlasts the Bash 2-minute timeout: run it in the background and wait for the notification, no sleep polling. The one standing failure is test_pkgdown_reference_config.R, caused by the untracked vignettes/suggested_NEWS_entry.Rmd. Stage BACKLOG.md with the three-step tail/hash-object/update-index recipe to keep the owner's YAML header out. Recount ledger frontiers and the unpushed count fresh (Learning 806).
+runtime_smoke: qcStudbook() on a pedigree holding a real U0001 minted U0002 (sire) and U0003 (dam), 0 duplicate ids; qcStudbook(examplePedigree) 3,694 rows, 0 duplicates. Shiny app not launched live; its app/e2e test files passed in the full suite (355 files / 2,757 tests, 1 known unrelated failure, 0 error).
+changelog_ref: this records commit (S797 records entry, prepended above the S797 claim entry)
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log)
 ```
+Predecessor (S796) scored 8/10: every Orient measurement held (frontiers, receipt status, HANDOFFS.md size, residue list file by file); its next steps pointed at exactly the files F2 needed. One stale number, same class as Learning 806 ("CHANGELOG.md now 80,265 B", 83,492 B at Orient because S796's own records commit landed after it was written). Self-score 7/10: +ran the unfiltered full suite before REFACTOR and so caught the regression instead of shipping it; +isolated the cause in one run; +stopped and re-asked in plain words instead of rewriting seven files of pinned tests; +shipped the independent, verified half; +caught a roxygen-block merge by re-reading; +runtime check through the real QC path. -Pre-RED checked the predicate's consumers but not its producers or the shipped data, and marked the unworkable option "Recommended" -- one R probe would have shown it; -one stray sleep-poll against harness guidance; -F2 only half closed.
 
 ```handoff
 session: S796

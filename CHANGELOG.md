@@ -60,6 +60,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S797 records: PED_GV F2 HALF DONE by owner decision -- addUIds() duplicate-id fix shipped, stricter detection withdrawn and re-filed (S796 handoff evaluated 8/10, self 7/10, receipt, Learnings 812-813)
+- **Model:** Claude Opus 5.5. Phase 3 close-out: S796's handoff evaluated 8/10 (every Orient
+  measurement held; one number stale by its own records commit, Learning 806's class). Self 7/10:
+  the full suite caught the regression before REFACTOR, but Pre-RED missed the producer
+  (`obfuscateId()`) and the shipped data, so an unworkable option was offered as "Recommended"
+  (Learning 812); a helper inserted between a roxygen block and its function nearly moved
+  `addUIds()`'s export (Learning 813). `SESSION_NOTES.md` stub replaced with the full record,
+  `HANDOFFS.md` receipt completed, `PROJECT_LEARNINGS.md` Learnings 812-813 appended. Runtime:
+  `qcStudbook()` on a pedigree holding a real `U0001` mints `U0002`/`U0003` with 0 duplicate ids;
+  `qcStudbook(examplePedigree)` 3,694 rows, 0 duplicates. Not pushed (12 unpushed; the owner's call).
+
+### 2026-09-27 · [ad hoc] S797 REFACTOR: addUIds() roxygen + man page, NEWS.Rmd Fixed entry; BACKLOG: F2 out of the PED_GV item, the detection half filed as its own item
+- **Model:** Claude Opus 5.5. No behavior change. `R/addUIds.R` roxygen gains one sentence (a
+  candidate id already in the pedigree is skipped); `devtools::document()` changed only
+  `man/addUIds.Rd`. `NEWS.Rmd` General Fixes: plain-language "Fixed:" entry after the `getAncestors()`
+  one. `BACKLOG.md`: the PED_GV item's F2 paragraph removed (F3 is now its next slice) and a new
+  "Up Next" item filed for real ids like `"Uma"`/`"U123"` treated as placeholders, carrying this
+  session's measurements and four options. Staged with the `tail -n +6` / `hash-object` /
+  `update-index --cacheinfo` recipe (3 separate Bash calls) so the owner's YAML header stays out.
+  Verification: lint 0 on `R/addUIds.R`; `test_addUIds.R`, `test_autoIdFormat.R`,
+  `test_removeAutoGenIds.R` 0 failed/0 error; `test_newsReleaseState.R` 26 tests and
+  `test_wordlist_coverage.R` 3 tests, 0 failed. Commit `5dc89a2e`.
+
+### 2026-09-27 · [ad hoc] S797 GREEN: addUIds() never mints a duplicate of an existing id (NEW-38 F2, duplicate half)
+- **Model:** Claude Opus 5.5. `R/addUIds.R`: new internal `@noRd` `mintAvailableIds()` mints from a
+  running counter, skipping any candidate already in the pedigree or already minted in the same
+  call; `addUIds()` calls it for sire slots then dam slots, carrying the counter across. Output is
+  unchanged when nothing collides. The helper sits AFTER `addUIds()`: the first draft put it between
+  `addUIds()`'s roxygen and its definition, merging the two blocks (caught by re-reading;
+  `devtools::document()` then showed no `man/`/`NAMESPACE` diff). Full unfiltered suite 355 files /
+  2,757 tests, 1 failed (the known `test_pkgdown_reference_config.R` failure from the untracked
+  `vignettes/suggested_NEWS_entry.Rmd`), 0 error; lint 0 on `R/addUIds.R` and `test_addUIds.R`.
+  Commit `cf956da8`.
+
+### 2026-09-27 · [ad hoc] S797 first GREEN attempt failed; owner re-decided; detection RED tests withdrawn
+- **Model:** Claude Sonnet 5 (first attempt), Claude Opus 5.5 (diagnosis onward). The first GREEN
+  also rewrote `isGeneratedUnknownId()` (`R/autoIdFormat.R`) to require the prefix AND a remainder
+  of exactly the format's digit width (a new internal `getAutoIdDigitWidth()` parsed it from the
+  sprintf spec). The three touched test files passed; the unfiltered full suite went to 24 failed +
+  1 error across `test_reportGV.R` (10), `test_classifyParentage.R`, `test_calcNeVariance.R`,
+  `test_getPotentialParents.R`, `test_gvaConvergence_kinshipOverrides.R`, `test_modPedigree.R` and
+  `test_obfuscateId.R` (error). Isolation: restoring only the committed `R/autoIdFormat.R` with the
+  new `addUIds()` kept made all 8 affected files pass (0/0). Cause: `obfuscateId()`
+  (`R/obfuscateId.R:40-46`) disguises a placeholder as the prefix plus random capital letters and
+  digits, and all 43 `qcPed` and 1,372 `examplePedigree` placeholder ids look like `"U05X3C"` -- 0
+  match `^U[0-9]{4}$`. Under the stricter rule, `qcPed`'s 43 one-unknown-parent animals became
+  "known", `calcNeVariance()` went 26.4 -> 205, `examplePedigree` potential parents 1,587 -> 234,
+  and `obfuscateId()` stopped with "too short to easily avoid duplicates". Owner decision
+  (`AskUserQuestion`): ship the duplicate fix only. `R/autoIdFormat.R` restored to HEAD (never
+  committed); `test_autoIdFormat.R` and `test_removeAutoGenIds.R` restored byte-exact to their
+  pre-RED content in commit `4155665f`, reason in its message.
+
+### 2026-09-27 · [ad hoc] S797 RED: exact-format detection and addUIds() collision avoidance pinned (NEW-38 F2)
+- **Model:** Claude Sonnet 5. `test_autoIdFormat.R`: the pinned `isGeneratedUnknownId("U123")`
+  flipped to FALSE, plus width cases for `"U%04d"` (`"U0001"` TRUE; `"U12345"`, `"Uma"`, `"U"`
+  FALSE) and `"AUTO%05d"` (`"AUTO00001"` TRUE; `"AUTO1"`, `"AUTO000001"` FALSE).
+  `test_removeAutoGenIds.R`: real `"Uma"`/`"U123"` survive `removeAutoGenIds()` (audit probe P3).
+  `test_addUIds.R`: a pedigree holding a real `"U0001"` gets `"U0002"` minted, never a duplicate.
+  All 9 assertions confirmed FAILING for the stated reasons (no errors). Commit `a01e13af`; the two
+  detection files were later withdrawn (entry above).
+
+### 2026-09-27 · [ad hoc] S797 PRE-RED: F2 scoped; owner picked exact-digit-width detection and skip-past minting
+- **Model:** Claude Sonnet 5. Read the audit's F2 section and probe P3, `R/addUIds.R`,
+  `R/removeAutoGenIds.R`, `R/autoIdFormat.R`; grepped `isGeneratedUnknownId()` -- 7 files in `R/`
+  (`removeAutoGenIds`, `obfuscateId`, `getLivingBreeders`, `classifyParentage`, `reportGV`,
+  `modPedigree`, `correctUnknownParentMeanKinship`). Owner picked (1) tighten detection to the exact
+  digit width the format implies and (2) skip past a candidate id that already exists. Gap, found
+  only at GREEN: the shipped data's placeholder shapes and `obfuscateId()`'s aliasing were not
+  checked (Learning 812).
+
 ### 2026-09-27 · [ad hoc] S797 claim: PED_GV F2 slice -- U-id-prefix scheme (NEW-38) collision-at-generation + wrongful-strip-at-detection (in progress)
 - **Model:** Claude Sonnet 5.
 

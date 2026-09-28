@@ -90,21 +90,79 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 796 Handoff Evaluation (by Session 797)
+**Score: 8/10.** Every Orient measurement held: both ledger frontiers = HEAD `cdb670f0`, 0
+undocumented; S796 receipt `status: complete`; `HANDOFFS.md` 66,954 B exactly as stated; the
+working-tree residue list matched file by file (mtimes Aug 15 / Aug 25 / Sep 24-25); the read-cap
+gotcha was right and is now moot (`SESSION_NOTES.md` 26,678 B after the owner's trim). Next steps
+named the exact files the F2 work needed. **Stale, same class as Learning 806:** "`CHANGELOG.md` now
+80,265 B" -- 83,492 B at this Orient, because S796's own records commit landed after the number was
+written. **Not S796's gap, but the costliest one this session:** neither the audit nor the BACKLOG
+item said the shipped data holds disguised placeholders (see Learning 812). **ROI:** high.
+
 ### What Session 797 Did
-**Deliverable:** PED_GV audit follow-through -- F2 slice (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`,
-NEW-38): the `U`-id-prefix scheme's collision-at-generation and wrongful-strip-at-detection defects
-(IN PROGRESS).
-**Started:** 2026-09-27.
-**Status:** Session claimed. PRE-RED investigation done (read the audit's F2 section, `R/addUIds.R`,
-`R/removeAutoGenIds.R`, `R/autoIdFormat.R`, and grepped all 7+ callers of `isGeneratedUnknownId()` --
-`obfuscateId.R`, `getLivingBreeders.R`, `classifyParentage.R`, `reportGV.R`, `modPedigree.R`,
-`correctUnknownParentMeanKinship.R`, plus `removeAutoGenIds()` itself). Owner picked exact-format-match
-detection (tightens `isGeneratedUnknownId()` to require the full digit pattern implied by the
-configured sprintf format, not just the literal prefix) and silent skip-past collision avoidance in
-`addUIds()` (advance past any candidate id that already exists in the pedigree). PRE-RED->RED gate
-approved. RED in progress.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress);
-Phase 3F records the rest.
+**Deliverable, HALF DONE by owner decision:** PED_GV F2 (NEW-38). Shipped: `addUIds()` never mints
+a duplicate of an existing id. Not shipped: stricter placeholder detection -- tried, broke the
+shipped data, withdrawn; now its own `BACKLOG.md` "Up Next" item with the measurements.
+**PRE-RED:** read the audit's F2 section, `R/addUIds.R`, `R/removeAutoGenIds.R`,
+`R/autoIdFormat.R`; grepped the 7 files that use `isGeneratedUnknownId()`. Owner picked
+exact-digit-width detection and silent skip-past collision avoidance. **RED** `a01e13af` (9
+assertions in 3 test files, all confirmed failing). **GREEN, first attempt:** both fixes; the three
+files passed, but the unfiltered full suite went to 24 failed + 1 error in 7 files. Cause, isolated by
+restoring only `R/autoIdFormat.R` (all 8 affected files then passed): `obfuscateId()`
+(`R/obfuscateId.R:40-46`) disguises placeholders as prefix + random capitals/digits, and all 43
+`qcPed` / 1,372 `examplePedigree` placeholders look like `"U05X3C"`, so none matched `U%04d` (Ne 26.4
+-> 205, potential parents 1,587 -> 234, `obfuscateId()` itself errored). **Owner re-decided** (plain-
+language `AskUserQuestion`): ship the duplicate fix only. Withdrew the detection tests `4155665f`
+(both files restored byte-exact to pre-RED); **GREEN** `cf956da8` (`mintAvailableIds()`, `@noRd`,
+placed AFTER `addUIds()` -- my first edit had merged the two roxygen blocks, Learning 813).
+**REFACTOR** `5dc89a2e`: roxygen sentence + `man/addUIds.Rd`, `NEWS.Rmd` General Fixes entry, `BACKLOG.md`
+(F2 out of the PED_GV item; the detection half filed as its own item), staged with the
+`tail -n +6`/`hash-object`/`update-index --cacheinfo` recipe so the owner's YAML header stays out.
+**Verification:** full unfiltered suite 355 files / 2,757 tests, 1 failed (the known
+`test_pkgdown_reference_config.R` failure from the untracked `vignettes/suggested_NEWS_entry.Rmd`),
+0 error; lint 0 on `R/addUIds.R` + `test_addUIds.R`; `test_newsReleaseState.R` 26/0 and
+`test_wordlist_coverage.R` 3/0; `devtools::document()` -> only `man/addUIds.Rd` changed, `NAMESPACE`
+untouched. **Runtime (3E):** `qcStudbook()` on a pedigree holding a real `U0001` -> minted `U0002`
+(sire) and `U0003` (dam), 0 duplicate ids; `qcStudbook(examplePedigree)` 3,694 rows, 0 duplicates. The
+Shiny app itself was not launched (the app/e2e test files passed with 0 errors -- a test run, not a
+live launch). **Commits:** claim `b0c28655`, RED `a01e13af`, withdraw `4155665f`, GREEN `cf956da8`,
+REFACTOR `5dc89a2e`, records (this). **Learnings:** 812, 813.
+
+**Self-assessment: 7/10.** + Full suite unfiltered before REFACTOR, which caught the regression
+instead of shipping it; isolated the cause in one decisive run; stopped and re-asked in plain words
+rather than rewriting 7 files of pinned tests; shipped the independent, verified half; caught the
+roxygen merge by re-reading; runtime check through the real QC path; the open half is filed with
+numbers a successor can act on. - Pre-RED checked consumers but not producers or the shipped data,
+and I marked the unworkable option "Recommended" -- one R probe would have shown 0 matches and
+spared the owner a second decision and a withdrawn commit; one stray `sleep 300` background poll
+against the harness guidance; F2 is only half closed.
+
+**Next steps:** (A) PED_GV **F3** is now the item's next slice (`BACKLOG.md` "Up Next" item 1):
+the fallback at `R/getPotentialParents.R:196-199` re-admits an excluded dam; owner picks fall back to
+the filtered set, return none, or label the tier (NEW-35/NEW-55). Before offering options, run each
+one on `examplePedigree`/`qcPed` and put the counts in the option text (Learning 812). (B) The new
+item right below it, real ids like `"Uma"` treated as placeholders, is DECISION NEEDED with four
+options written out; the RED tests for the rejected approach are in `git show a01e13af`. (C) Carried,
+untouched: `suggested_NEWS_entry` disposition, working-tree residue, `CHANGELOG.md` trim (89,813 B
+at this records commit, budget 65,536 B), `HANDOFFS.md` trim (71,322 B, same budget), unpushed commits (6 at Orient, 12 after this records commit -- push is
+the owner's call), the methodology fork's Class A/B decision.
+
+**Key files:** `R/addUIds.R:43-91` (`addUIds()` 43-62, `mintAvailableIds()` 64-91);
+`tests/testthat/test_addUIds.R:36-52` (collision test); `R/autoIdFormat.R:109-111` (the predicate,
+unchanged); `R/obfuscateId.R:40-46` (why stricter detection fails); `NEWS.Rmd:496-499`;
+`BACKLOG.md` "Up Next" items 1-2; `PROJECT_LEARNINGS.md` Learnings 812-813.
+
+**Gotchas:** (1) `isGeneratedUnknownId()` is prefix-only ON PURPOSE as far as the shipped data is
+concerned -- obfuscated placeholders depend on it; any change must be measured on `qcPed` and
+`examplePedigree` first. (2) The full suite takes longer than the Bash tool's 2-minute timeout; run
+it with `run_in_background` and wait for the notification -- don't add a `sleep` poll. (3) The one
+standing failure is `test_pkgdown_reference_config.R`, caused by the untracked
+`vignettes/suggested_NEWS_entry.Rmd`; it disappears if that draft is moved or tracked. (4) The staging
+recipe for `BACKLOG.md` still needs three separate Bash calls. (5) STANDING SET unchanged from
+S790-796: full 40-char sha from `git rev-parse`; `git log --grep` needs `--extended-regexp`;
+`scratchpad/` invisible to git by owner decision; `CLAUDE.md` warn band = headroom; recount ledger
+frontiers and the unpushed count fresh (Learning 806).
 
 ### Session 795 Handoff Evaluation (by Session 796)
 **Score: 7/10.** Every Orient measurement held (ledger frontiers = HEAD, 0 undocumented;
