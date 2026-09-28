@@ -251,6 +251,146 @@ which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
 ``` handoff
+session: S802
+date: 2026-09-28
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: The five classic-structure example pedigrees (inst/extdata/examples/example_pedigree_*.csv) cannot be loaded in the app (BACKLOG.md item found S801) -- DONE. Each file now carries a birth column (made-up dates by a written rule), so it uploads in the app with 0 errors; the article's figures are unchanged; the article notes that the app's Diagram tab can order a row differently (consanguinity), and NEWS.Rmd's entry says the files can be uploaded.
+what_was_done: PRE-RED measured both options through the real modInputServer: all 5 refused ("Missing required columns: birth"); with trial dates 0 errors, drawing identical with and without the column; the app's Diagram matches the article for 4 of 5 (consanguinity arranged differently because qcStudbook() sorts by (gen, id), R/qcStudbook.R:329); owner picked dates + article note. RED 595d3b01 (test_examplePedigreeFixtures.R: column pin + 4 new tests, 40 expected failures, 0 errors; 14/14 against trial fixtures before commit). GREEN a2c7e66f + 8c0116f2 (data-raw/example_pedigree_birth.R run once; other columns byte-identical; rerun byte-identical; no R/ change). REFACTOR 893d485c (article sentence, NEWS.Rmd entry, BACKLOG item removed, stale-figure finding filed). Full suite GREEN and REFACTOR 357 files / 2,788 tests / 8,776 expectations, 1 failed (the known test_pkgdown_reference_config.R), 0 error; lint 0; NEWS guards 26/0 and 3/0; article renders; old and new figure renders pixel-identical. Learning 818.
+next_steps: (A) Every Up Next item is an owner decision; measure first (Learnings 812/815-818). Nearest: the stale linebreeding/half_sib article figures inside the documentation-audit item (committed BACKLOG.md:226-237): re-run vignettes/articles/pedigree-diagram-exemplar-renders.R, commit the images after an owner look. Then jmac (BACKLOG.md:256), U-prefix ids, recorded dam, PED_GV. (B) Carried: CHANGELOG.md/HANDOFFS.md trims (owner runs the forced write), suggested_NEWS_entry, residue, 26 unpushed after this records commit (owner's call), dashboard v2.18.0 vs v2.19.0, methodology fork Class A/B. (C) Watch the shinytest2 job's runtime (29m36s on 2026-09-28) against its 45-minute limit.
+key_files: inst/extdata/examples/example_pedigree_consanguinity.csv:1 (birth column, likewise the other four); data-raw/example_pedigree_birth.R:1-53; tests/testthat/test_examplePedigreeFixtures.R:58 (.uploadExemplar), :77 (.appDiagramLayout), :294 (column pin), :314, :334, :349, :364 (new tests); vignettes/articles/pedigree-diagram.qmd:114-118; NEWS.Rmd:162-167; R/qcStudbook.R:329; PROJECT_LEARNINGS.md Learning 818.
+gotchas: The app's Diagram tab draws the (gen, id)-sorted studbook while the article draws the file as read, so a figure can differ from the app with nothing wrong. The birth column is derived: re-run data-raw/example_pedigree_birth.R after editing an example file's rows. PNG renders differ byte-wise run to run; compare by pixel against a control render. base::system.file() returns "" under pkgload::load_all(). STANDING SET unchanged from S790-801.
+runtime_smoke: Package reinstalled; real app headless (shinytest2). Old consanguinity file: Error List "The missing column is: birth". Installed new file: "QC passed! 14 records processed."; Diagram 33 nodes / 33 edges, CS1 drawn twice, marked mating CS1 x CD1; linebreeding 35/35, LK and LB2 twice, LB2 x LA2 marked. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 9f0d10e7e4d3 · manifest aa983075d6a2
+changelog_ref: this records commit (S802 records entry, prepended above the S802 REFACTOR, GREEN 2/2 and 1/2, RED, PRE-RED and claim entries)
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log)
+```
+
+Predecessor (S801) scored 9/10: every Orient measurement held (ledger
+frontiers, the receipt and its quality-gate citation, 20 unpushed, the
+residue list, the known failure); next step (A) named this item with
+both options, the pin and the “figures must not change” constraint, all
+accurate; the YAML-free staging recipe worked as written. Missing, not
+knowable then: the app’s (gen, id) sort, which makes one example draw
+differently in the app. Could not apply at Orient: the 07:00 UTC
+shinytest2 read (read at close-out: passed, 29m36s). Self-score 8/10:
++both options measured through the real app path, the arrangement
+difference found and shown as images before the owner decided; +one
+plain question answered first time; +every TDD gate via AskUserQuestion;
++RED tests run against trial fixtures before commit; +pixel comparison
+with a control render; +live app old vs new. -several tool slips cost
+retries (BSD vs GNU stat, an unexported variable, base::system.file()
+under load_all(), a wrong devtools::install() argument, a first QC-panel
+probe that read nothing, a zsh backtick parse error that silently
+skipped a ledger write, caught on the next check); -re-ran the data-raw
+script while the suite ran in the background (byte-identical, suite
+clean, but a Learning 529 risk); -no ledger reduction.
+
+``` handoff
+session: S801
+date: 2026-09-28
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Rebuild the shipped inst/extdata/examples/ExamplePedigree.txt from ExamplePedigree.csv (BACKLOG.md item found S800) -- DONE. The only text-format example had every non-blank age cell saved as Excel display text (2,262: 1,536 '1900-01-DD' day serials, 620 '1900-01-00', 106 '#####') and id 15FEBR as 15-Feb; it now holds the same cells as the .csv. Owner closed the '#'-in-a-cell reader question.
+what_was_done: Orient discussion answered the owner's questions (the .txt's only reference is the always-skipped test-shinytest2-debug.R; it is the only text-format example; all 15 example pedigrees measured through the app path: 8 with 0 errors, xlsx 1, jmac 67, the 5 example_pedigree_*.csv refused for no birth column -- first told the owner "six", corrected to 8). RED cc6f575a (new test_examplePedigreeTxt.R, 4 tests / 11 assertions, 8 failing for the expected reason, 3 passing, 0 errors); GREEN b31f44f0 (data-raw/ExamplePedigree_txt.R, run once; exactly the 2,262 age lines changed ignoring line endings; rerun byte-identical; no R/ change); REFACTOR 1daa0301 (NEWS.Rmd General Fixes entry; BACKLOG item removed, classic-structure item filed). Full unfiltered suite GREEN and REFACTOR 357 files / 2,784 tests / 8,686 expectations, 1 failed (the known test_pkgdown_reference_config.R), 0 error; lint 0; NEWS guards 26/0 and 3/0. Learning 817.
+next_steps: (A) Every Up Next item is an owner decision; measure first and count from printed output (Learnings 812/815/816/817). Nearest: the classic-structure item (BACKLOG.md:264-278 committed numbering): add a birth column to the five example_pedigree_*.csv files (test_examplePedigreeFixtures.R:249 pins the columns; the exemplar figures must not change) or reword pedigree-diagram.qmd:104-111. Then jmac (BACKLOG.md:246), U-prefix ids, recorded dam, PED_GV. (B) Carried: CHANGELOG.md/HANDOFFS.md trims (owner runs the forced write), suggested_NEWS_entry, residue, 20 unpushed after the S801 records commits (owner's call), dashboard v2.18.0 vs v2.19.0, methodology fork Class A/B. (C) Read the 2026-09-28 07:00 UTC shinytest2 run at next Orient (not fired at 06:23 UTC).
+key_files: inst/extdata/examples/ExamplePedigree.txt; data-raw/ExamplePedigree_txt.R:1-34; tests/testthat/test_examplePedigreeTxt.R:37,:50,:56,:62; NEWS.Rmd:515-520; BACKLOG.md:264-278; vignettes/articles/pedigree-diagram.qmd:96-111; R/qcStudbook.R:303; PROJECT_LEARNINGS.md Learning 817.
+gotchas: qcStudbook() keeps a supplied age column unchecked, so date text in it loads with 0 errors. test_examplePedigreeTxt.R pins the .txt to the .csv cell for cell -- re-run data-raw/ExamplePedigree_txt.R after any .csv edit. Learning 318(d)'s "every example pedigree is error-laden" is wrong (8 of 15 load clean). BACKLOG staging without the owner's YAML header: tail -n +6 BACKLOG.md > f; git update-index --cacheinfo 100644,$(git hash-object -w f),BACKLOG.md. In R probes use x[["field"]], not x$field (partial matching). STANDING SET unchanged from S790-800.
+runtime_smoke: Real app in headless Chrome (installed package, current R/), Text + Tab upload, Pedigree Browser. Old file: JDVB5M age blank, ancestry UNKNOWN, status UNKNOWN; 2ZMHG7 age 1900-01-07; 15FEBR not found. Rebuilt file: JDVB5M -0.1 / JAPANESE / DECEASED; 2ZMHG7 7.8; 15FEBR 0.2; both 3,694 entries. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 05ed18700c1f · manifest aa983075d6a2
+changelog_ref: this records commit (S801 records entry, prepended above the S801 REFACTOR, GREEN, RED, PRE-RED and claim entries)
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log)
+```
+
+Predecessor (S800) scored 8/10: every Orient measurement held (ledger
+frontiers, the receipt, 13 unpushed, the residue list, the known
+failure); its next step (A) named this item with both options and its
+gotcha (3) framed it. Wrong in scope, not fact: the item described 106
+‘#####’ cells, while the whole age column (2,262 cells) and one id were
+Excel display text and the file passed QC with 0 errors. Missing: the
+.txt being the only text-format example and having no live reference,
+which decided rebuild vs delete. Could not apply: the 07:00 UTC
+shinytest2 read (Orient 05:23 UTC). Self-score 8/10: +cell-by-cell
+comparison with the source before scoping; +all 15 example files
+measured when the owner questioned a claim, which found the
+classic-structure item; +plain scope question answered first time;
++every TDD gate via AskUserQuestion; +live app old vs rebuilt. -repeated
+Learning 318(d) as fact (owner corrected); -“every age is wrong” named
+no comparison; -“six” clean files from memory (8), reaching a committed
+ledger entry; -a probe bug cost a rerun; -my notes pushed
+SESSION_NOTES.md past its 25,000-token read ceiling, caught only at the
+records commit (owner ran the forced trim: 13 records to
+docs/archive/SESSION_NOTES-through-2026-09-28.md, 61,948 -\> 26,273 B);
+CHANGELOG.md/HANDOFFS.md still over budget.
+
+``` handoff
+session: S800
+date: 2026-09-28
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Blank cells in app uploads (BACKLOG.md item found S776, extended S799) -- DONE. The Input module reads an empty CSV or text upload cell as missing (na.strings = c("", "NA"), the getPedigree() rule), so blank-parent files load, blank ancestry is UNKNOWN, and a founder with a blank origin is "Undetermined" in the Genetic Value report instead of an import. Two measured follow-up items filed in its place.
+what_was_done: Pre-RED measured all 16 shipped pedigree files both ways through runQcStudbook() and getPedigree(): jmac loses its "both a sire and a dam" error (67 parent-age errors remain); ancestry example OTHER 2/UNKNOWN 0 -> 1/1; ExamplePedigree.csv 241 blank-origin founders were imports (Genetic Value High 926 -> 685, Undetermined 1,372 -> 1,613, 2,081 of 3,694 ranks change, matching the script path). Owner picked "read as missing". RED 0c7f527a (new test_modInput_blankCells.R, 9 failing tests / 26 assertions, 2 controls; ancestry e2e re-pinned, 5 exact pin failures live); GREEN 99df405a (na.strings on both reads in readDataFile()); REFACTOR 54fae557 (code comment, Input Format help) and 599a0803 (NEWS.Rmd entry; BACKLOG item removed, jmac parent-age and ExamplePedigree.txt '#####' items split out). Full unfiltered suite GREEN 356 files / 2,780 tests, 1 known failure, 0 error; REFACTOR 356 files / 2,780 tests / 8,675 expectations, 1 failed (the known test_pkgdown_reference_config.R), 0 error. Learning 816.
+next_steps: (A) Every Up Next item is an owner decision; measure options on real files through both read paths first (Learnings 812/815/816). Nearest: the two new items at BACKLOG.md:251-283 (ExamplePedigree.txt '#' cells: regenerate the .txt and/or comment.char = ""; jmac: document, correct the 2 sire records, or review the 4-year floor). (B) U-prefix item: the ancestry example's real animal U1 counts as a placeholder (isGeneratedUnknownId("U1") TRUE, consequence unmeasured); recorded-dam item and PED_GV decisions untouched. (C) Carried: CHANGELOG.md/HANDOFFS.md trims (owner runs the forced write), suggested_NEWS_entry, residue, 13 unpushed (owner's call), dashboard script v2.18.0 vs v2.19.0, methodology fork Class A/B. (D) Read the 2026-09-28 07:00 UTC shinytest2 run at next Orient (not fired at 05:17 UTC); it tests origin/master, without S799/S800 until pushed.
+key_files: R/modInput.R:300-337 (comment, readDataFile(), reads at :330/:336); tests/testthat/test_modInput_blankCells.R:1-176 (11 tests); tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R:14-20 (header), :171, :214, :236, :245, :378 (moved pins); inst/extdata/ui_guidance/input_format.html:20-24; NEWS.Rmd:509-514; BACKLOG.md:251-283 (two new items); PROJECT_LEARNINGS.md Learning 816.
+gotchas: An empty upload cell is now NA everywhere; code expecting "" from an app upload is wrong. A column meaning "was it recorded?" (origin) is decided with is.na() downstream, so grep a changed column's consumers, not only QC (Learning 816). read.table() treats '#' in a cell as a comment on both the app text path and getPedigree() (open item). The ancestry e2e pins the aligned numbers and runs only with NPRC_RUN_E2E=true or in scheduled shinytest2 CI. STANDING SET unchanged from S790-799.
+runtime_smoke: The shipped ExamplePedigree.csv uploaded through the real modInputServer: 0 errors, 3,694 rows, no "" origins, Genetic Value order 685/1,396/1,613, identical to the script path (pre-fix app 926/1,396/1,372). Opt-in e2e with the real app in headless Chrome: mate-pair ancestry 42/0, breeding-groups ancestry 18/0, input module 5/0, input detailed 6/0, input tutorial 8/0.
+changelog_ref: this records commit (S800 records entry, prepended above the S800 REFACTOR B/A, GREEN, RED, PRE-RED and claim entries)
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log)
+```
+
+Predecessor (S799) scored 9/10: every Orient measurement held
+(CHANGELOG.md/HANDOFFS.md sizes, the receipt, 7 unpushed, the residue
+list); its next step (A) named this item with the jmac state that held
+exactly, and its gotcha (1) – measure blanks on both read paths and
+through modInputServer with a real file – was this session’s method. One
+step could not apply (reading the 07:00 UTC shinytest2 run – Orient at
+04:39 UTC). Gap, not a fault: the item called files that write missing
+parents as NA “unaffected”, yet ExamplePedigree.csv’s blank origin
+column was the largest effect. Self-score 9/10: +every shipped file
+measured on both read paths and each changed column followed to its
+consumers, which found the Genetic Value effect before the owner was
+asked; +one decision question, answered first time; +RED checked
+assertion by assertion, the one failing control diagnosed as a test bug
+before commit; +live-app e2e at RED (5 exact pins) and GREEN; +runtime
+through the real module compared with the script path; +two still-open
+sub-threads split out with numbers. -wrote “66 dams” into BACKLOG.md
+before recounting (65, caught before commit); -no ledger reduction again
+(CHANGELOG.md/HANDOFFS.md still over budget).
+
+``` handoff
+session: S799
+date: 2026-09-27
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Unreadable parent sex (BACKLOG.md item found S787) -- DONE. convertSexCodes() now trims spaces and reads a blank or unrecognized sex as "U", so qcStudbook() no longer reports such a parent as a "female sire" / "male dam" and the app upload goes through. Side finding filed under the blank-ancestry BACKLOG.md item: the app cannot load the shipped deidentified_jmac_ped.csv (blank sire/dam cells read as the id "").
+what_was_done: Pre-RED measured before asking: 0 blank/unrecognized sex codes in the 12 shipped datasets; 1 blank in the example files, read as "" by the app and NA by getPedigree(); read.csv() keeps spaces so "M " was unreadable; a blank-sex non-parent stayed NA and was counted as both sexes. Owner picked "treat it as unknown" and "ignore spaces" (one plain-language AskUserQuestion). Claim a98fbe7a; RED b2c26fe4 (7 failing assertions in test_convertSexCodes.R, 13 in test_correctParentSex.R incl. the app's runQcStudbook() step; one accidental pass relabelled control:); GREEN 566f8fce (trimws before toupper, catch-all to "U"); REFACTOR e76fb2e4 (redundant NA line dropped; roxygen + man pages for convertSexCodes/qcStudbook; app Input Format help) and 89f240b6 (studbook-quality-control article, NEWS.Rmd Fixed entry, BACKLOG item removed + side finding filed, owner's YAML header kept out). Full unfiltered suite at GREEN and REFACTOR: 355 files / 2,769 tests, 1 known failure, 0 error. Learning 815.
+next_steps: (A) Every Up Next item is an owner decision; measure each option on real files and both read paths before asking (Learnings 812/814/815). Nearest this session's code: the blank-ancestry item, now with S799's blank sire/dam measurement (aligning the app read with getPedigree() would make deidentified_jmac_ped.csv's parents readable, but that file still has 67 parent-age errors, and the S777 e2e pins move). (B) Untouched: the recorded-dam item, the U-prefix real-id item, the PED_GV owner decisions. (C) Carried: CHANGELOG.md and HANDOFFS.md trims (both over 65,536 B; CHANGELOG.md last; a forced write needs the owner, Learning 811), suggested_NEWS_entry disposition, working-tree residue, unpushed commits (owner's call), dashboard script v2.18.0 vs v2.19.0, the methodology fork's Class A/B decision. (D) Read the 07:00 UTC 2026-09-28 shinytest2 run at the next Orient (first live test of S794's 45-minute limit; it had not fired at this Orient).
+key_files: R/convertSexCodes.R:18-22 (roxygen), :42 (trimws), :52-53 (catch-all); R/qcStudbook.R:114-117; tests/testthat/test_convertSexCodes.R:37-71; tests/testthat/test_correctParentSex.R:305-361; inst/extdata/ui_guidance/input_format.html:118-120; vignettes/articles/studbook-quality-control.qmd:102-105; NEWS.Rmd:505-508; BACKLOG.md:272-282 (S799 paragraph in the blank-ancestry item); PROJECT_LEARNINGS.md Learning 815.
+gotchas: The app reads an empty CSV cell as "" and getPedigree() as NA; measure blank-cell behavior on both and through modInputServer with a real file (Learning 815). An unreadable sire now comes back "U" rather than a guessed "M" in qcStudbook(reportErrors = FALSE) too (NEWS says so). QC output no longer produces an NA sex; the Diagram's "Other / Unrecorded" label remains for data that never went through qcStudbook(). Opt-in e2e files need NPRC_RUN_E2E=true; the full suite skips them silently. Stage BACKLOG.md with the three-call tail/hash-object/update-index recipe. Recount ledger frontiers and the unpushed count fresh (Learning 806).
+runtime_smoke: shiny::testServer(modInputServer) with a real CSV upload (blank, "xyz", "M ", " F" parents plus a blank non-parent): loads with 0 errors, sexes U/U/M/F/U; same upload with the pre-fix function: 4 female-sire / male-dam errors, nothing loaded. Opt-in e2e with NPRC_RUN_E2E=true (real app, headless Chrome): test-e2e-input-module.R 5 tests and test-e2e-input-detailed.R 6 tests, 0 failed / 0 skipped / 0 error.
+changelog_ref: this records commit (S799 records entry, prepended above the S799 REFACTOR B/A, GREEN, RED, PRE-RED and claim entries)
+commit: the records commit that carries this receipt (a commit cannot name its own hash; see git log)
+```
+
+Predecessor (S798) scored 9/10: every Orient measurement held
+(CHANGELOG.md/HANDOFFS.md sizes, the receipt, the residue list, the one
+known test failure and its cause); its background-the-suite gotcha and
+Learning 812 carried straight into this session. One step could not
+apply: reading the 07:00 UTC shinytest2 run at Orient – Orient ran at
+03:47 UTC, before it fired. Self-score 9/10: +measured on shipped data,
+both read paths and the real Input module before asking; +the
+space-padding case found by measuring and offered as its own yes/no;
++one decision call answered first time; +RED failures all for the
+expected reason, the one accidental pass caught and labelled; +full
+unfiltered suite at GREEN and REFACTOR; +runtime through the real module
+with a pre-fix comparison and two live-app e2e files; +a side finding
+measured at module level and filed with the item that owns its fix. -one
+probe call had a wrong argument list; -no ledger reduction again
+(CHANGELOG.md/HANDOFFS.md still over budget).
+
+``` handoff
 session: S798
 date: 2026-09-27
 status: complete

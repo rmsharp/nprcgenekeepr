@@ -38,6 +38,11 @@ Standard sex codes are
 
 - `U` – replacing "UNKNOWN" or "3"
 
+- `U` – replacing a missing, blank or unrecognized value
+
+Case and any spaces around a code are ignored, so `" male "` and `"M "`
+both become `M`.
+
 ## Examples
 
 ``` r

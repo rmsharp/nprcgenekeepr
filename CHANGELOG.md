@@ -93,6 +93,467 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · \[ad hoc\] S802 records: the five classic-structure example pedigrees now upload in the app DONE – each carries birth dates, the article’s figures unchanged (S801 handoff evaluated 9/10, self 8/10, receipt, Learning 818)
+
+- **Model:** Claude Opus 5.5. `SESSION_NOTES.md` S801 evaluation and
+  S802 handoff (the claim stub replaced); `HANDOFFS.md` S802 receipt
+  `status: complete`; `PROJECT_LEARNINGS.md` Learning 818 (the app draws
+  the (gen, id)-sorted studbook; test RED tests against a trial GREEN
+  fixture; compare renders by pixel against a control). Runtime: package
+  reinstalled, real app headless – old file “The missing column is:
+  birth”; new file “QC passed! 14 records processed.”, Diagram 33 nodes
+  / 33 edges, CS1 drawn twice, CS1 x CD1 marked.
+  `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 9f0d10e7e4d3 · manifest aa983075d6a2`
+  (tarball 3,588,737 B). CI read at close-out: the 2026-09-28 07:30 UTC
+  scheduled shinytest2 run passed in 29m36s (45-minute limit since
+  S794). No GitHub issue (the item had none); no push (26 unpushed after
+  this commit, the owner’s call); no ledger reduction
+  (`CHANGELOG.md`/`HANDOFFS.md` trims need the owner, Learning 811).
+
+### 2026-09-28 · \[ad hoc\] S802 REFACTOR: article note and NEWS.Rmd wording for the uploadable example pedigrees; BACKLOG: the classic-structure item removed (done), the stale linebreeding/half_sib figures filed into the documentation-audit item
+
+- **Model:** Claude Opus 5.5. `vignettes/articles/pedigree-diagram.qmd`,
+  after the upload instruction: the app sorts animals by generation and
+  ID before drawing, so its Diagram tab can order a row differently from
+  the figures (the full-sibling example’s CS1 second appearance sits at
+  the right-hand end of his row), with the same animals, dashed line and
+  vermillion mating. `NEWS.Rmd`, the existing five-examples entry (not a
+  new Fixes entry: the files are new in this release, so the entry
+  states their finished state): each includes birth dates, so it can be
+  uploaded in the app like any pedigree file. `BACKLOG.md`: the item
+  removed; the S802 stale-figure measurement written into “Audit the
+  internal and user-facing documentation” (staged without the owner’s
+  uncommitted YAML header). `test_newsReleaseState.R` 26/0,
+  `test_wordlist_coverage.R` 3/0.
+
+### 2026-09-28 · \[ad hoc\] S802 GREEN (2/2): first_cousin and half_sib written – all five classic-structure example pedigrees now upload in the app with 0 errors
+
+- **Model:** Claude Opus 5.5. Test file: 14 tests / 303 expectations, 0
+  failed, 0 error. Full unfiltered suite: 357 files / 2,788 tests /
+  8,776 expectations, 1 failed (the known
+  `test_pkgdown_reference_config.R`), 0 error. Lint 0 on the script.
+  Article figures: the layout from each committed (pre-change) file is
+  [`identical()`](https://rdrr.io/r/base/identical.html) to the layout
+  from its new file, all 5 files and both edge styles; the five figures
+  re-rendered with `pedigree-diagram-exemplar-renders.R` from the old
+  and the new files are pixel-identical (0 pixels differ). **Found,
+  pre-existing and not changed here:** today’s renders (from either
+  file) differ from the committed article images for linebreeding (2,228
+  pixels) and half_sib (1,210 pixels): the dashed duplicate-animal arcs
+  are flatter now. The images were committed S694 (2026-09-17) and S715
+  (2026-09-18) changed arc roundness without re-rendering them; the
+  other three differ only by anti-aliasing (121-189 pixels, max channel
+  difference 0.055). Filed into the documentation-audit item at
+  REFACTOR.
+
+### 2026-09-28 · \[ad hoc\] S802 GREEN (1/2): data-raw/example_pedigree_birth.R adds a birth column to the classic-structure example pedigrees; consanguinity, linebreeding and backcross written
+
+- **Model:** Claude Opus 5.5. The rule: each animal sits on a drawing
+  row (its generation, or for a founder the row above its earliest
+  offspring, so an outside mate is born with its partner); 6 years per
+  row from 2000; a dam’s offspring a year apart in file order; month
+  (March-June) and day vary with the file row. Run once over all five
+  files: ignoring the new column, every file is byte-identical to the
+  committed one, and a rerun is byte-identical. The other two files
+  follow in GREEN (2/2) (the 5-file per-commit cap). No `R/` change.
+
+### 2026-09-28 · \[ad hoc\] S802 RED: the five classic-structure example pedigrees must carry birth dates, upload in the app with 0 errors, draw unchanged, and keep the article’s structure on the Diagram tab
+
+- **Model:** Claude Opus 5.5.
+  `tests/testthat/test_examplePedigreeFixtures.R`: the column pin now
+  expects `birth`; four new tests – birth is YYYY-MM-DD and every animal
+  is born after both parents; each file uploads through the real
+  `modInputServer` with 0 errors and 0 warnings and keeps every animal;
+  the birth column changes nothing in either drawing; the real
+  `modPedigreeServer` `diagramLayout()` of each upload has the same
+  animals drawn twice, the same marked mating and the same (child, sire,
+  dam) links. File run: the 5 changed/new tests fail for the expected
+  reason (40 failures: no birth column, 1 upload error each, no cleaned
+  studbook), the 9 existing tests pass, 0 errors. The same file run
+  against trial copies with birth dates: 14 tests, 0 failed, 0 error.
+  Lint 0. Full unfiltered suite: 357 files / 2,788 tests / 8,746
+  expectations, 41 failed (these 40 + the known
+  `test_pkgdown_reference_config.R`, from the owner’s untracked
+  `vignettes/suggested_NEWS_entry.Rmd`), 0 error.
+
+### 2026-09-28 · \[ad hoc\] S802 PRE-RED: the five classic-structure example pedigrees measured through the app; owner picked “add birth dates + a note in the article”
+
+- **Model:** Claude Opus 5.5. Each `example_pedigree_*.csv` uploaded
+  through the real `modInputServer` (read, then
+  [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)):
+  all 5 refused with 1 error, “Missing required columns: birth”. With a
+  trial birth column (about 6 years per generation): 0 errors, 0
+  warnings, every animal kept; the article’s drawing path
+  ([`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
+  on the file as read) gives the identical layout with and without the
+  column – every node position and edge the same, all 5 files, both edge
+  styles. The app’s Diagram tab matches the article’s drawing for 4 of
+  5; for consanguinity every node id is the same but positions and
+  routing differ (CS1’s second copy lands at the far right and its
+  dashed line crosses the sibship), because
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  sorts rows by generation and id (`R/qcStudbook.R:329`) before drawing
+  – birth dates play no part (the app’s layout equals the article path
+  run on the (gen, id)-sorted file). Both consanguinity renders were
+  shown to the owner. Owner picked: add birth dates to all five files;
+  one article sentence saying the app may order a row differently (same
+  animals, relationships and markers); NEWS line updated. Rejected:
+  dates only (the difference unexplained), reword the article only
+  (files stay script-only).
+
+### 2026-09-28 · \[ad hoc\] S802 claim: the five classic-structure example pedigrees (example_pedigree\_\*.csv) cannot be loaded in the app – refused for having no birth column – while the pedigree-diagram article tells the reader to upload one (in progress)
+
+- **Model:** Claude Opus 5.5.
+
+### 2026-09-28 · \[ad hoc\] S801 records fix: the unpushed count in the notes and receipt
+
+- **Model:** Claude Opus 5.5. The records commit touched 6 files, over
+  the `SAFEGUARDS.md` 5-file per-commit cap; it was soft-reset (local,
+  unpushed) and re-made as two commits (4 + 2 files), which made the
+  handoff’s “18 unpushed” wrong. `SESSION_NOTES.md` and the
+  `HANDOFFS.md` receipt now say 20, counting this commit.
+
+### 2026-09-28 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-28.md` (13 record(s), 61,948 B → 26,273 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **13** record(s) (2026-09-26 →
+2026-09-28) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-28.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-28.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-28.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-28.md.verify.sh)
+rather than trusting a digest printed here. Live file 61,948 B → 26,273
+B (−57.6%).
+
+### 2026-09-28 · \[ad hoc\] S801 records: ExamplePedigree.txt rebuilt DONE – the only text-format example now holds the same cells as ExamplePedigree.csv, so it uploads with real ages, ancestry and status and reads with getPedigree() (S800 handoff evaluated 8/10, self 8/10, receipt, Learning 817)
+
+- **Model:** Claude Opus 5.5. Phase 3 close-out: S800’s handoff
+  evaluated 8/10 (every Orient measurement held; the item scoped 106
+  `#####` cells where the whole age column, 2,262 cells, and one id were
+  Excel display text). Self 8/10. `HANDOFFS.md` S801 receipt
+  `status: complete`; `SESSION_NOTES.md` handoff; `PROJECT_LEARNINGS.md`
+  Learning 817 (supersedes Learning 318(d)’s claim that the example
+  pedigrees are all error-laden). **Correction to the S801 PRE-RED entry
+  below:** it says 6 example pedigrees load with 0 errors; the printed
+  table shows **8** (both `ExamplePedigree` files, the 4
+  `obfuscated_rhesus_mhc_ped*` files, `rhesusPedigree_fromCenter.csv`,
+  `example_ancestry_pedigree.csv`). Full unfiltered suite at REFACTOR
+  357 files / 2,784 tests / 8,686 expectations, 1 failed (the known
+  `test_pkgdown_reference_config.R`), 0 error.
+  `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 05ed18700c1f · manifest aa983075d6a2`
+  (tarball 3,587,520 B). The owner ran the forced `SESSION_NOTES.md`
+  trim (`--budget-bytes 65536 --cut 4 --force --write`; its tool-written
+  entry is above): these close-out notes put the file at 61,948 B, over
+  the 25,000-token read ceiling, so the pre-commit hook would have
+  refused this commit. Its verify script flags the S801 claim stub as
+  missing (the BL-27 finalize pattern); checked by hand, all 13 archived
+  records are verbatim in HEAD. No push, no issue action.
+
+### 2026-09-28 · \[ad hoc\] S801 REFACTOR: NEWS.Rmd Fixed entry; BACKLOG: the ExamplePedigree.txt item removed (done; owner closed the ‘#’-in-a-cell reader question), the classic-structure example files filed
+
+- **Model:** Claude Opus 5.5. `NEWS.Rmd` General Fixes: the example
+  tab-delimited file had been saved through Excel (ages as dates or
+  `#####`, one ID changed; on upload its ages arrived as dates and 106
+  animals lost ancestry and status;
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
+  could not read it) and now holds the same data as
+  `ExamplePedigree.csv`. `BACKLOG.md`: the found-S800
+  `ExamplePedigree.txt` item removed – option (1) shipped S801; option
+  (2), reading uploads and
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
+  with `comment.char = ""` so a `#` in a cell is data, closed by the
+  owner (no shipped file has one after the rebuild; raise it again if a
+  real center file does). New item: the five `example_pedigree_*.csv`
+  classic-structure files are refused by the app (“Missing required
+  columns: birth”) although
+  `vignettes/articles/pedigree-diagram.qmd:96-111` tells the reader to
+  upload one. Owner’s uncommitted YAML header left out (staged copy =
+  working file minus its first 5 lines, via `git hash-object -w` +
+  `git update-index --cacheinfo`). `test_newsReleaseState.R` 26/0,
+  `test_wordlist_coverage.R` 3/0.
+
+### 2026-09-28 · \[ad hoc\] S801 GREEN: ExamplePedigree.txt rebuilt from ExamplePedigree.csv
+
+- **Model:** Claude Opus 5.5. New `data-raw/ExamplePedigree_txt.R` reads
+  the `.csv` with every cell kept as written and writes it
+  tab-separated, unquoted, plain line endings; run once to replace
+  `inst/extdata/examples/ExamplePedigree.txt` (264,615 -\> 218,687
+  bytes; ignoring line endings, exactly the 2,262 age lines change, one
+  of them restoring id `15FEBR`; a rerun is byte-identical). No `R/`
+  change. `test_examplePedigreeTxt.R` 4 tests / 11 assertions pass. Full
+  unfiltered suite: 357 files / 2,784 tests / 8,686 expectations, 1
+  failed (the known `test_pkgdown_reference_config.R`), 0 error. Lint 0
+  on the script and the test file. Runtime: the real app in headless
+  Chrome (installed package, current `R/`), Text + Tab upload, Pedigree
+  Browser: old file – `JDVB5M` age blank, ancestry UNKNOWN, status
+  UNKNOWN; `2ZMHG7` age `1900-01-07`; `15FEBR` not found. Rebuilt file –
+  `JDVB5M` -0.1 / JAPANESE / DECEASED; `2ZMHG7` 7.8; `15FEBR` 0.2. Both
+  3,694 entries.
+
+### 2026-09-28 · \[ad hoc\] S801 RED: the shipped ExamplePedigree.txt must hold the same cells as ExamplePedigree.csv
+
+- **Model:** Claude Opus 5.5. New
+  `tests/testthat/test_examplePedigreeTxt.R`, 4 tests / 11 assertions:
+  the `.txt` holds the `.csv`’s cells (every recorded age a number, id
+  `15FEBR` present); plain line endings with a final newline;
+  `getPedigree(txt, sep = "\t")` reads it as `getPedigree(csv)` does; a
+  real upload through `modInputServer` gives the same checked pedigree
+  as the CSV upload. 8 assertions fail for the expected reason (2,262
+  non-numeric ages; `15FEBR` missing; carriage returns and no final
+  newline; “line 17 did not have 11 elements”; the uploaded pedigree’s
+  `age` is character, 106 ancestry and 106 status cells differ, 1 id
+  differs), 3 pass (0 upload errors each, 3,694 animals), 0 errors. Lint
+  0.
+
+### 2026-09-28 · \[ad hoc\] S801 PRE-RED: ExamplePedigree.txt measured against ExamplePedigree.csv; owner picked rebuild + test + data-raw script, and closed the ‘#’-in-a-cell reader question
+
+- **Model:** Claude Opus 5.5. The `.txt` is the only text-format file
+  under `inst/extdata`; only the always-skipped
+  `test-shinytest2-debug.R` names it. Against the `.csv` (same 3,694
+  rows, same columns): all 2,262 non-blank age cells are Excel’s date
+  display of the CSV age (1,536 whole-day dates, 620 `1900-01-00` for
+  ages 0-0.9, 106 `#####` for negative ages), and id `15FEBR` reads
+  `15-Feb`; the 1,432 blank ages match. All 15 shipped example pedigrees
+  run through the app’s read +
+  [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md):
+  6 load with 0 errors (incl. both `ExamplePedigree` files), the `.xlsx`
+  1 invalid date, jmac 67 parent-age errors, the 5
+  `example_pedigree_*.csv` classic-structure files are refused (“Missing
+  required columns: birth”). A candidate rebuilt from the `.csv` reads
+  identically on the app path and
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md).
+  Owner decisions: rebuild with a `data-raw/` script and a test, no doc
+  pointer; close the `#` reader question.
+
+### 2026-09-28 · \[ad hoc\] S801 claim: rebuild the shipped ExamplePedigree.txt from ExamplePedigree.csv – the only shipped text-format example had every age cell saved as an Excel date or “#####” and one id renamed, so the app’s text upload got bad ages and getPedigree() could not read it (in progress)
+
+- **Model:** Claude Opus 5.5.
+
+### 2026-09-28 · \[ad hoc\] S800 records: blank cells in app uploads DONE – an empty CSV or text upload cell is read as missing, so blank-parent files load, blank ancestry is UNKNOWN and a blank-origin founder is “Undetermined” (S799 handoff evaluated 9/10, self 9/10, receipt, Learning 816)
+
+- **Model:** Claude Opus 5.5. Phase 3 close-out: S799’s handoff
+  evaluated 9/10 (every Orient measurement held; its (D) “read the 07:00
+  UTC shinytest2 run” could not apply – Orient ran at 04:39 UTC). Self
+  9/10. `SESSION_NOTES.md` stub replaced with the full handoff;
+  `HANDOFFS.md` S800 receipt `status: complete`; `PROJECT_LEARNINGS.md`
+  Learning 816 (measure a blank’s downstream consumers, not only QC; `#`
+  in a cell is a
+  [`read.table()`](https://rdrr.io/r/utils/read.table.html) comment).
+  Full unfiltered suite at REFACTOR: 356 files / 2,780 tests / 8,675
+  expectations, 1 failed (the known `test_pkgdown_reference_config.R`),
+  0 error. Runtime (3E): the shipped `ExamplePedigree.csv` through the
+  real `modInputServer` – 0 errors, 3,694 rows, no `""` origins, Genetic
+  Value order 685 / 1,396 / 1,613, identical to the script path (pre-fix
+  app 926 / 1,396 / 1,372). Unpushed after this commit: 13 (pushing is
+  the owner’s call).
+
+### 2026-09-28 · \[ad hoc\] S800 REFACTOR (B): NEWS.Rmd Fixed entry; BACKLOG: item removed, two measured items split out
+
+- **Model:** Claude Opus 5.5. `NEWS.Rmd` General Fixes: a plain-language
+  entry (blank upload cells now read as missing; blank-parent files
+  load; blank ancestry UNKNOWN; a blank-origin founder is no longer
+  ranked as an import). `BACKLOG.md`: the blank-cells item removed; in
+  its place (1) `deidentified_jmac_ped.csv` still stops on 67 “Parent
+  age too young” errors – 65 dams aged 3.43-3.99 under the 4-year
+  Japanese macaque floor and 2 sires born after their offspring (`3A34N`
+  of `82I5M`, `NX5RM` of `8PPD8`), and (2) `ExamplePedigree.txt`‘s 106
+  `#####` age cells are read as comments, so the app’s text upload drops
+  those rows’ age, ancestry, origin and status and
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
+  cannot read the file. Staged with the three-call recipe (owner’s YAML
+  header left out). `test_newsReleaseState.R` 26/0,
+  `test_wordlist_coverage.R` 3/0. Commit `599a0803`.
+
+### 2026-09-28 · \[ad hoc\] S800 REFACTOR (A): readDataFile() comment and the app’s Input Format help describe the new reading
+
+- **Model:** Claude Opus 5.5. No behavior change. `R/modInput.R` comment
+  above `readDataFile()`; `inst/extdata/ui_guidance/input_format.html`
+  new bullet: an empty cell is missing, a blank parent is unknown, a
+  blank ancestry is UNKNOWN, a blank origin is none recorded.
+  `test_modInput_blankCells.R` 11/0, `test_modInput.R` 53/0,
+  `test_modInput_coverage.R` 9/0, `test_modGeneticValue.R` 70/0,
+  `test_qcStudbook.R` 29/0, `test_geneDrop.R` 5/0,
+  `test_wordlist_coverage.R` 3/0; opt-in `test-e2e-input-tutorial.R`
+  8/0; lint 0. Commit `54fae557`.
+
+### 2026-09-28 · \[ad hoc\] S800 GREEN: the Input module reads an empty CSV or text cell as missing
+
+- **Model:** Claude Opus 5.5. `na.strings = c("", "NA")` on the
+  [`read.table()`](https://rdrr.io/r/utils/read.table.html) and
+  [`read.csv()`](https://rdrr.io/r/utils/read.table.html) calls in
+  `readDataFile()` (`R/modInput.R`), the
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
+  rule. `test_modInput_blankCells.R` 11/0; opt-in e2e
+  (`NPRC_RUN_E2E=true`, real app): mate-pair ancestry 42/0,
+  breeding-groups ancestry 18/0, input module 5/0, input detailed 6/0;
+  full unfiltered suite 356 files / 2,780 tests / 8,675 expectations, 1
+  failed (the known `test_pkgdown_reference_config.R`, from the
+  untracked `vignettes/suggested_NEWS_entry.Rmd`), 0 error; lint 0.
+  Commit `99df405a`.
+
+### 2026-09-28 · \[ad hoc\] S800 RED: blank upload cells must read as missing
+
+- **Model:** Claude Opus 5.5. New
+  `tests/testthat/test_modInput_blankCells.R` (real uploads through
+  `modInputServer`): `readDataFile()` CSV and tab-text branches; a
+  blank-parent CSV and text upload loads; blank ancestry -\> UNKNOWN;
+  blank origin -\> `NA`; a blank-origin founder is “Undetermined” in
+  `orderReport()`; the shipped ancestry example’s `U1` is UNKNOWN; the
+  shipped jmac file has no “both a sire and a dam” error, only its 67
+  parent-age errors – 9 tests / 26 assertions failing for the expected
+  reason, 2 `control:` tests passing (one first failed only because
+  `ancestry` is a factor; helper fixed).
+  `test-e2e-mate-pair-analysis-module-ancestry.R` re-pinned to the
+  aligned numbers (coverage OTHER 1 / UNKNOWN 1, pairs INDIAN-UNKNOWN 2
+  / INDIAN-OTHER 1, census 1 / 1, the flagged `U1` pairs carry
+  INDIAN-UNKNOWN): 5 failures on exactly those pins with
+  `NPRC_RUN_E2E=true`, 37 passing. Lint 0. Commit `0c7f527a`.
+
+### 2026-09-28 · \[ad hoc\] S800 PRE-RED: blank upload cells measured on all 16 shipped pedigree files; owner picked “read as missing”
+
+- **Model:** Claude Opus 5.5. Each file read the app’s way and with
+  `na.strings`, run through
+  [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+  and compared with
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md):
+  jmac loses its “both a sire and a dam” error (67 parent-age errors
+  remain); ancestry example OTHER 2 / UNKNOWN 0 -\> 1 / 1;
+  `ExamplePedigree.csv` 241 blank-origin founders counted as imports
+  (Genetic Value High 926 -\> 685, Undetermined 1,372 -\> 1,613, 2,081
+  of 3,694 ranks change, matching the script path);
+  `ExamplePedigree.txt` 106 rows OTHER -\> UNKNOWN; 8 files unchanged.
+  The app’s own Input Format help asks for blank parent cells. Owner
+  picked “read as missing” over “document the difference” and “call
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)”
+  (which cannot read `ExamplePedigree.txt`), one plain-language
+  question.
+
+### 2026-09-27 · \[ad hoc\] S800 claim: blank cells in app uploads – the Input module reads a blank CSV cell as “” where getPedigree() reads it as missing, so blank ancestry becomes OTHER and blank sire/dam cells block the upload (in progress)
+
+- **Model:** Claude Opus 5.5.
+
+### 2026-09-27 · \[ad hoc\] S799 records: unreadable parent sex DONE – a blank, unrecognized or space-padded sex is read as unknown / as the sex it names, not reported as a “female sire” / “male dam” (S798 handoff evaluated 9/10, self 9/10, receipt, Learning 815)
+
+- **Model:** Claude Opus 5.5. Phase 3 close-out: S798’s handoff
+  evaluated 9/10 (every Orient measurement held; its “read the 07:00 UTC
+  shinytest2 run at Orient” could not apply – Orient ran at 03:47 UTC,
+  before the run). Self 9/10. `SESSION_NOTES.md` stub replaced with the
+  full record, `HANDOFFS.md` receipt completed, `PROJECT_LEARNINGS.md`
+  Learning 815 appended (blank cells read differently by the app and
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md);
+  measure both and through the real module). Runtime:
+  `shiny::testServer(modInputServer)` with a real CSV upload holding
+  blank, `"xyz"`, `"M "` and `" F"` parents plus a blank non-parent -\>
+  loads, 0 errors, sexes U/U/M/F/U; the same upload with the pre-fix
+  function -\> 4 female-sire / male-dam errors, nothing loaded. Opt-in
+  e2e (`NPRC_RUN_E2E=true`, real app in headless Chrome):
+  `test-e2e-input-module.R` 5 and `test-e2e-input-detailed.R` 6 tests, 0
+  failed/0 skipped/0 error. No GitHub issue to close (the item named
+  none). Not pushed (the owner’s call).
+
+### 2026-09-27 · \[ad hoc\] S799 REFACTOR (B): article sentence, NEWS.Rmd Fixed entry; BACKLOG: item removed, blank sire/dam upload finding filed under the blank-ancestry item
+
+- **Model:** Claude Opus 5.5.
+  `vignettes/articles/studbook-quality-control.qmd`: the sex-code
+  sentence now says case and spaces are ignored and a blank or
+  unrecognized sex becomes `U`. `NEWS.Rmd` General Fixes: plain-language
+  “Fixed:” entry. `BACKLOG.md`: the unreadable-parent-sex item removed
+  (done); the “Blank ancestry cells become OTHER” item gains S799’s
+  measurement that the same no-`na.strings` app read
+  (`R/modInput.R:324-331`) turns a blank sire/dam cell into the id `""`,
+  so the real Input module cannot load the shipped
+  `deidentified_jmac_ped.csv` (2,789 blank sire cells; 68 errors, 67 of
+  them parent-age errors that
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
+  shows too), while `ExamplePedigree.csv` (missing parents written `NA`)
+  and Excel uploads are unaffected. Staged with the three-call recipe so
+  the owner’s YAML header stays out. `test_newsReleaseState.R` 26/0,
+  `test_wordlist_coverage.R` 3/0. Commit `89f240b6`.
+
+### 2026-09-27 · \[ad hoc\] S799 REFACTOR (A): redundant NA line dropped; roxygen, man pages and the app’s Input Format help describe the new reading
+
+- **Model:** Claude Opus 5.5. No behavior change. `R/convertSexCodes.R`:
+  `sex[is.na(sex)] <- "U"` removed (the GREEN catch-all already maps
+  `NA` to `"U"`), comment on the catch-all; roxygen of
+  [`convertSexCodes()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertSexCodes.md)
+  and
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  gain “a missing, blank or unrecognized value becomes U” and “case and
+  spaces around a code are ignored” (`devtools::document()` changed only
+  `man/convertSexCodes.Rd` and `man/qcStudbook.Rd`, `NAMESPACE`
+  untouched); `inst/extdata/ui_guidance/input_format.html` says the
+  same. Affected test files 0 failed / 0 error; lint 0; full unfiltered
+  suite at REFACTOR 355 files / 2,769 tests / 8,640 expectations, 1
+  failed (the known `test_pkgdown_reference_config.R` failure from the
+  untracked `vignettes/suggested_NEWS_entry.Rmd`), 0 error. Commit
+  `e76fb2e4`.
+
+### 2026-09-27 · \[ad hoc\] S799 GREEN: `convertSexCodes()` trims spaces and reads any leftover code as “U”
+
+- **Model:** Claude Opus 5.5. `R/convertSexCodes.R`:
+  `toupper(trimws(sex))`, and any value still outside F/M/H/U becomes
+  `"U"` before the [`factor()`](https://rdrr.io/r/base/factor.html)
+  call. Both test files 0 failed / 0 error; lint 0; full unfiltered
+  suite 355 files / 2,769 tests, 1 known failure, 0 error. Commit
+  `566f8fce`.
+
+### 2026-09-27 · \[ad hoc\] S799 RED: a blank, unrecognized or space-padded sex must not make a parent a “female sire” / “male dam”
+
+- **Model:** Claude Opus 5.5. `test_convertSexCodes.R`: 3 tests
+  (blank/whitespace/unrecognized -\> `U` under both `ignoreHerm`
+  settings; `"M "`, `" F"`, `" male "`, `"F\t"`, `" 4 "` read as named;
+  a control on the factor levels, `NA` and numeric codes) – 7 failing
+  assertions. `test_correctParentSex.R`: 6 tests on one fixture
+  ([`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  report and no-report paths, the app’s
+  [`runQcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/runQcStudbook.md)
+  step, a control that a real `"F"` sire is still reported) – 13 failing
+  assertions, each for the expected reason (still reported; guessed
+  `M`/`F`; `NA`). One padded-parent test passed today only because the
+  old correction guessed `M`/`F` for the `NA`; it was relabelled
+  `control:` with that reason. Lint 0. Commit `b2c26fe4`.
+
+### 2026-09-27 · \[ad hoc\] S799 PRE-RED: unreadable parent sex measured; owner picked “treat it as unknown” and “ignore spaces”
+
+- **Model:** Claude Opus 5.5. Measured: 0 blank or unrecognized sex
+  codes in all 12 shipped datasets; in `inst/extdata/examples/` 1 blank
+  on a non-parent (`deidentified_jmac_ped.csv`), read as `""` by the
+  app’s [`read.csv()`](https://rdrr.io/r/utils/read.table.html) and `NA`
+  by
+  [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md);
+  [`read.csv()`](https://rdrr.io/r/utils/read.table.html) keeps spaces,
+  so a male sire written `"M "` was reported as a female sire; a
+  blank-sex non-parent stayed `NA` and was counted as both sexes
+  (`getSexRatioWithAdditions()` on a 7-animal toy: 5 F + 3 M). Owner
+  picked “treat it as unknown” over “its own message” and “leave it”,
+  and “ignore spaces” (one `AskUserQuestion` call, two plain-language
+  questions with the consequences in each option).
+
+### 2026-09-27 · \[ad hoc\] S799 claim: a sire or dam whose sex is blank or unrecognized is reported as a “female sire” / “male dam” by the pedigree check (in progress)
+
+- **Model:** Claude Opus 5.5.
+
+### 2026-09-27 · \[ad hoc\] Owner-directed after the S798 close-out: pushed the 17 local commits (S795 to S798)
+
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):**
+  `git push origin master` moved `origin/master` from `32cc4d53` to
+  `337a633d`, 17 commits (S795’s BUNDLE/DOC cleanup, S796’s records,
+  S797’s
+  [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
+  duplicate-id fix, S798’s
+  [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+  F3 fix), a fast-forward; 0 unpushed afterwards. All four push
+  workflows (`R-CMD-check`, `test-coverage`, `pkgdown`, `lint`) were
+  queued on `337a633d`; they were still running when this entry was
+  written, so their results are NOT recorded here – the next Orient’s
+  `gh run list` reads them. This is the first CI run on any of S795 to
+  S798. This entry’s own commit changes only `CHANGELOG.md`
+  (build-ignored, read by no test), so it was left unpushed rather than
+  start a second ~25-minute CI round that could say nothing new; it
+  rides with the next push.
+
 ### 2026-09-27 · \[ad hoc\] S798 records: PED_GV F3 DONE – the `getPotentialParents()` dam fallback no longer re-admits a female ruled out by the gestation window (S797 handoff evaluated 9/10, self 9/10, receipt, Learning 814)
 
 - **Model:** Claude Opus 5.5. Phase 3 close-out: S797’s handoff

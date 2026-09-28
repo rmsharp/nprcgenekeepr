@@ -179,7 +179,9 @@ codes:</p>
 <li><p><code>H</code> – replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE</p></li>
 <li><p><code>U</code> – replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE</p></li>
 <li><p><code>U</code> – replacing "UNKNOWN" or "3"</p></li>
-</ul><p>The function <code>correctParentSex</code> is used to ensure no parent is both
+<li><p><code>U</code> – replacing a missing, blank or unrecognized value</p></li>
+</ul><p>Case and any spaces around a code are ignored.</p>
+<p>The function <code>correctParentSex</code> is used to ensure no parent is both
 a sire and a dam. If this error is detected, the function throws an error
 and halts the program.</p>
 <p>The function <code>convertStatusCodes</code> converts status indicators to the

@@ -132,11 +132,12 @@ Filter(length, chg$changedCols)
 
 [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
 also standardizes coded values: sex to `M` / `F` / `U` (from `MALE` /
-`FEMALE` / `1` / `2` / …; by default the hermaphrodite codes `H` /
-`HERMAPHRODITE` / `4` are folded into `U`), status to `ALIVE` /
-`DECEASED` / `SHIPPED` / `UNKNOWN`, and ancestry to `INDIAN` / `CHINESE`
-/ `HYBRID` / `JAPANESE` / `UNKNOWN` / `OTHER`. Character dates are
-parsed to `Date`, and `UNKNOWN` parents become either `NA` or
+`FEMALE` / `1` / `2` / …; case and spaces around a code are ignored, a
+blank or unrecognized sex becomes `U`, and by default the hermaphrodite
+codes `H` / `HERMAPHRODITE` / `4` are folded into `U`), status to
+`ALIVE` / `DECEASED` / `SHIPPED` / `UNKNOWN`, and ancestry to `INDIAN` /
+`CHINESE` / `HYBRID` / `JAPANESE` / `UNKNOWN` / `OTHER`. Character dates
+are parsed to `Date`, and `UNKNOWN` parents become either `NA` or
 auto-generated `Unnnn` placeholder IDs.
 
 ## Diagnosing problems without stopping

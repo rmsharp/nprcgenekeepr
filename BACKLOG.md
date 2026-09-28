@@ -114,33 +114,6 @@ check – moves many pinned numbers. Tests to extend:
 `test_removeAutoGenIds.R`, `test_obfuscateId.R`,
 `test_classifyParentage.R`.
 
-**A sire or dam whose sex is blank or unrecognized is reported as a
-“female sire” or “male dam” by the pedigree check (found S787,
-2026-09-26, DECISION NEEDED, Effort S)** – measured S787 (a namespace
-spy under `qcStudbook(reportErrors = TRUE)`, then a plain
-`reportErrors = FALSE` call):
-[`convertSexCodes()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertSexCodes.md)
-maps a MISSING sex to `"U"` (`R/convertSexCodes.R:39`) but a blank or
-unrecognized code (`""`, `"xyz"`) to `NA` (the final
-[`factor()`](https://rdrr.io/r/base/factor.html), `:50`), and
-[`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
-tests `!sex %in% c("H", "U", "M")`, which is `TRUE` for `NA`. So a sire
-whose sex cannot be read comes back in `femaleSires` (a dam in
-`maleDams`), and the app’s error list says “female sire” (measured:
-`femaleSires = "s1"` and `maleDams = "d1"`); with `reportErrors = FALSE`
-the same sire’s sex is silently set to `"M"` (the dam’s to `"F"`) in the
-returned pedigree. A sex of `NA` (missing) or `"M"` is not reported.
-**Decide:** (1) leave it (an unreadable sex on a parent is worth a flag
-and the wording is close enough); (2) report it under its own heading as
-an unreadable-sex parent rather than a wrong-sex one; or (3) map a blank
-or unrecognized sex to `"U"` like a missing one in
-[`convertSexCodes()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertSexCodes.md)
-(a behavior change for every consumer of that function). Outside the
-`recordStatus` slices; the measurement is in the S787 RED entry of
-`CHANGELOG.md`. Tests to extend:
-`tests/testthat/test_correctParentSex.R`,
-`tests/testthat/test_convertSexCodes.R`.
-
 **(Optional, owner decision) One internal `isAddedRecord()` helper for
 the “added” mask (raised S785, deferred at the S785, S786 and S787
 REFACTORs; DECISION NEEDED, Effort S)** – the mask is written inline
@@ -344,9 +317,21 @@ manual (`vignettes/manual_components/_pedigree_browser.Rmd:56`) words
 the Diagram limit as “750 animals … the limit drops to 400 when the
 Rectilinear edge style is selected”, which reads misleadingly since
 Rectilinear is the default (the default limit is 400); the roxygen point
-in the male-left item above is the same kind of finding. Related, not
-duplicated: the `NEWS.Rmd` release-state sweep (above), the deferred
-`a2interactive` pass, and the `inst/doc/` slimming item.
+in the male-left item above is the same kind of finding. **Found S802,
+for this audit:** two of the five committed classic-structure figures
+are stale –
+`vignettes/articles/pedigree-diagram-img/exemplar-linebreeding-rectilinear.png`
+and `exemplar-half_sib-rectilinear.png` differ from a fresh
+`Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R` run by
+2,228 and 1,210 pixels: the dashed duplicate-animal arcs are drawn
+flatter today. The images were committed S694 (2026-09-17); S715
+(2026-09-18) changed the arc roundness (its test comments say the
+renders were owner-re-reviewed) but never re-rendered them. The other
+three differ only by anti-aliasing (121-189 pixels, max channel
+difference 0.055). The fix is re-running that script and committing the
+images after an owner look. Related, not duplicated: the `NEWS.Rmd`
+release-state sweep (above), the deferred `a2interactive` pass, and the
+`inst/doc/` slimming item.
 
 **Create a tutorial for prospective contributors** (owner-requested
 2026-09-26; DECISION NEEDED, Effort M) – there is no contributor guide
@@ -372,33 +357,27 @@ checklist in `CLAUDE.md` applies; take the commands from its “Build /
 Test / Verify” section and re-check them rather than copying them from
 here.
 
-**Blank ancestry cells become OTHER, not UNKNOWN, on the Shiny upload
-path (found S776, 2026-09-24, DECISION NEEDED, Effort S-M)** – the Input
-module reads CSV/text uploads with no `na.strings`
-(`R/modInput.R:324-331`), while the script path
+**The shipped `deidentified_jmac_ped.csv` still does not load: 67
+“Parent age too young” errors (split out S800 from the blank-cells item,
+which S800 fixed; DECISION NEEDED, Effort S)** – since S800 the app
+reads its 2,789 blank sire cells as unknown parents, so the old “appears
+as both a sire and a dam” error is gone, but the pedigree check still
+stops on 67 parent-age errors, on the app path and the
 [`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
-reads with `na.strings = c("", "NA")` (`R/getPedigree.R:34`). Measured:
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-maps a true `NA` ancestry to UNKNOWN but an empty string to OTHER, and
-the live app’s Mate Pair coverage table shows the fixture’s blank
-ancestry animal as OTHER (OTHER 2, UNKNOWN 0) where a script user gets
-UNKNOWN. Consequences: an UNKNOWN-vs-OTHER rule (the S769 article tells
-centers to name both) matches different animals depending on how the
-file was loaded, and `vignettes/articles/colony-manager-guide.qmd:552`
-(“a truly blank entry becomes UNKNOWN”) is wrong for app uploads.
-Decision for the owner: align the app read with
-[`getPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPedigree.md)
-(a behavior change for EVERY blank character cell in an upload – audit
-QC effects on blank sire/dam/other columns first; not measured yet)
-versus documenting the difference. Needs its own investigation and
-Pre-RED gate; not part of \#169. **Pins that move with it:** the
-committed e2e
-`tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R` (S777)
-pins the LIVE numbers – coverage table OTHER 2 / UNKNOWN 0 (group A5),
-manifest pair counts INDIAN-UNKNOWN 0 / INDIAN-OTHER 3 (A6b, A12) and
-census nOther 2 / nUnknown 0 (A6c) – so aligning the read moves them on
-purpose; change those expectations in the same commit (the file’s header
-comment says so).
+path alike (measured S800,
+`qcStudbook(getPedigree(f), reportErrors = TRUE)$suspiciousParents`, 67
+rows): 65 dams aged 3.43-3.99 years at the birth, under the 4-year
+female floor `getSpeciesMinBreedingAge("JAPANESE MACAQUE", "F")`
+returns, and 2 sires with negative ages (sire `3A34N` of `82I5M`, -37.10
+years; sire `NX5RM` of `8PPD8`, -34.77: born after their offspring, a
+data error in the file). **Decide:** (1) leave the file as a QC example
+and say in its documentation that it loads only with Minimum Dam Age
+lowered and still shows the 2 sire errors; (2) correct the 2 impossible
+sire records in the example; (3) review the 4-year Japanese macaque dam
+floor (5 for sires) against the literature – a species-table change
+moves every Japanese macaque result. The pinned test is
+`tests/testthat/test_modInput_blankCells.R` (last test: exactly 67
+errors, all “Parent age too young”), which moves with (2) or (3).
 
 **Harem-sire conflict enforcement hole — kinship AND ancestry (found
 S764, 2026-09-22, DECISION NEEDED — closing it is a behavior change

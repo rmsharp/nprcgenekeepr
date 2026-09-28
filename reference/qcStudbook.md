@@ -151,6 +151,10 @@ qcStudbook(
 
   - `U` – replacing "UNKNOWN" or "3"
 
+  - `U` – replacing a missing, blank or unrecognized value
+
+  Case and any spaces around a code are ignored.
+
   The function `correctParentSex` is used to ensure no parent is both a
   sire and a dam. If this error is detected, the function throws an
   error and halts the program.
