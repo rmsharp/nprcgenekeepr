@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S799 claim: a sire or dam whose sex is blank or unrecognized is reported as a "female sire" / "male dam" by the pedigree check (in progress)
+- **Model:** Claude Opus 5.5.
+
 ### 2026-09-27 · [ad hoc] Owner-directed after the S798 close-out: pushed the 17 local commits (S795 to S798)
 - **Model:** Claude Opus 5.5. **Push (a non-commit action):** `git push origin master` moved
   `origin/master` from `32cc4d53` to `337a633d`, 17 commits (S795's BUNDLE/DOC cleanup, S796's

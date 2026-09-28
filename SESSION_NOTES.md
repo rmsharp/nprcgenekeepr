@@ -90,6 +90,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 799 Did
+**Deliverable:** A sire or dam whose sex is blank or unrecognized is reported as a "female sire"
+or "male dam" by the pedigree check (`BACKLOG.md` item, found S787) (IN PROGRESS)
+**Started:** 2026-09-27
+**Status:** Session claimed. Work beginning (PRE-RED).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 797 Handoff Evaluation (by Session 798)
 **Score: 9/10.** Every Orient measurement held: both ledger frontiers = HEAD `350546b2`, 0
 undocumented; S797 receipt `status: complete`; 12 unpushed; `CHANGELOG.md` 89,813 B and
