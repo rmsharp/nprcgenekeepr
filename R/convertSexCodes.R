@@ -35,7 +35,7 @@
 #' sexCodes <- convertSexCodes(original)
 #' sexCodes
 convertSexCodes <- function(sex, ignoreHerm = TRUE) {
-  sex <- toupper(sex)
+  sex <- toupper(trimws(sex))
   sex[is.na(sex)] <- "U"
 
   sex[sex %in% c("MALE", "M", "1")] <- "M"
@@ -47,6 +47,7 @@ convertSexCodes <- function(sex, ignoreHerm = TRUE) {
   } else {
     sex[sex %in% c("HERMAPHRODITE", "H", "4")] <- "H"
   }
+  sex[!sex %in% c("F", "M", "H", "U")] <- "U"
   sex <- factor(sex, levels = c("F", "M", "H", "U"))
   sex
 }
