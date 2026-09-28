@@ -506,6 +506,12 @@ knitr::opts_chunk$set(echo = TRUE)
   misspelled, or had an extra space (such as `"M "`) as a "female sire" or
   "male dam", and stopped the upload. Spaces around a sex code are now ignored,
   and a blank or unreadable sex is read as unknown, the same as a missing one.
+- Fixed: the Shiny app read an empty cell in an uploaded CSV or text file as a
+  value rather than as missing, unlike Excel uploads and `getPedigree()`. A file
+  whose founders had blank sire and dam cells would not load, a blank ancestry
+  was counted as OTHER instead of UNKNOWN, and the Genetic Value report ranked a
+  founder with a blank origin as an import instead of "Undetermined". An empty
+  cell is now read as missing, so the app gives the same results as a script.
 
 # nprcgenekeepr 2.0.0 (20260708)
 - Major changes

@@ -243,37 +243,39 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `CLAUDE.md` applies; take the commands from its "Build / Test / Verify" section and re-check
       them rather than copying them from here.
 
-- [ ] **Blank ancestry cells become OTHER, not UNKNOWN, on the Shiny upload path
-      (found S776, 2026-09-24, DECISION NEEDED, Effort S-M)** -- the Input module reads
-      CSV/text uploads with no `na.strings` (`R/modInput.R:324-331`), while the script
-      path `getPedigree()` reads with `na.strings = c("", "NA")` (`R/getPedigree.R:34`).
-      Measured: `qcStudbook()` maps a true `NA` ancestry to UNKNOWN but an empty string
-      to OTHER, and the live app's Mate Pair coverage table shows the fixture's blank
-      ancestry animal as OTHER (OTHER 2, UNKNOWN 0) where a script user gets UNKNOWN.
-      Consequences: an UNKNOWN-vs-OTHER rule (the S769 article tells centers to name
-      both) matches different animals depending on how the file was loaded, and
-      `vignettes/articles/colony-manager-guide.qmd:552` ("a truly blank entry becomes
-      UNKNOWN") is wrong for app uploads. Decision for the owner: align the app read
-      with `getPedigree()` (a behavior change for EVERY blank character cell in an
-      upload -- audit QC effects on blank sire/dam/other columns first; not measured
-      yet) versus documenting the difference. Needs its own investigation and Pre-RED
-      gate; not part of #169.
-      **Pins that move with it:** the committed e2e
-      `tests/testthat/test-e2e-mate-pair-analysis-module-ancestry.R` (S777) pins the LIVE
-      numbers -- coverage table OTHER 2 / UNKNOWN 0 (group A5), manifest pair counts
-      INDIAN-UNKNOWN 0 / INDIAN-OTHER 3 (A6b, A12) and census nOther 2 / nUnknown 0
-      (A6c) -- so aligning the read moves them on purpose; change those expectations in
-      the same commit (the file's header comment says so).
-      **Measured S799 -- the same read also blocks uploads whose founders have blank
-      sire/dam cells:** a blank sire or dam cell reaches `qcStudbook()` as the id `""`,
-      which is then both a sire and a dam, so QC stops with "Animal  appears as both a sire
-      and a dam". Through the real Input module (`shiny::testServer(modInputServer)`, a
-      CSV upload) the shipped `inst/extdata/examples/deidentified_jmac_ped.csv` (2,789
-      blank sire cells) does not load: 68 errors, that one plus 67 "Parent age too young"
-      (the age errors also appear on the `getPedigree()` path, so aligning the read alone
-      will not make that file load). Files that write a missing parent as `NA` (e.g.
-      `ExamplePedigree.csv`) are unaffected. Excel uploads read blank cells as `NA` and are
-      unaffected too.
+- [ ] **The shipped `deidentified_jmac_ped.csv` still does not load: 67 "Parent age too young"
+      errors (split out S800 from the blank-cells item, which S800 fixed; DECISION NEEDED,
+      Effort S)** -- since S800 the app reads its 2,789 blank sire cells as unknown parents,
+      so the old "appears as both a sire and a dam" error is gone, but the pedigree check
+      still stops on 67 parent-age errors, on the app path and the `getPedigree()` path
+      alike (measured S800, `qcStudbook(getPedigree(f), reportErrors = TRUE)$suspiciousParents`,
+      67 rows): 65 dams aged 3.43-3.99 years at the birth, under the 4-year female floor
+      `getSpeciesMinBreedingAge("JAPANESE MACAQUE", "F")` returns, and 2 sires with
+      negative ages (sire `3A34N` of `82I5M`, -37.10 years; sire `NX5RM` of `8PPD8`, -34.77:
+      born after their offspring, a data error in the file).
+      **Decide:** (1) leave the file as a QC example and say in its documentation that it
+      loads only with Minimum Dam Age lowered and still shows the 2 sire errors; (2) correct
+      the 2 impossible sire records in the example; (3) review the 4-year Japanese macaque
+      dam floor (5 for sires) against the literature -- a species-table change moves every
+      Japanese macaque result. The pinned test is
+      `tests/testthat/test_modInput_blankCells.R` (last test: exactly 67 errors, all
+      "Parent age too young"), which moves with (2) or (3).
+
+- [ ] **`ExamplePedigree.txt`'s 106 `#####` age cells cut those rows short on upload, and
+      `getPedigree()` cannot read the file at all (found S800, 2026-09-28, DECISION NEEDED,
+      Effort S)** -- 106 rows of the shipped `inst/extdata/examples/ExamplePedigree.txt`
+      hold `###...###` in the `age` column (Excel's display of a negative value, saved as
+      text; `ExamplePedigree.csv` holds the real value, e.g. `-0.1` for `JDVB5M`), and all
+      106 are JAPANESE. `read.table()`'s default `comment.char = "#"` treats the `#` as the
+      start of a comment: the app's text upload (`readDataFile()` in `R/modInput.R`, which
+      reads with `fill = TRUE`) silently drops the rest of each such row -- its `age`,
+      `ancestry`, `origin` and `status` -- so those 106 animals arrive with no ancestry
+      (UNKNOWN since S800, OTHER before), while `getPedigree(f, sep = "\t")` (no `fill`)
+      stops with "line 17 did not have 11 elements". **Decide:** (1) regenerate the `.txt`
+      from the `.csv` (fixes the example only); (2) also read uploads and `getPedigree()`
+      with `comment.char = ""` so a `#` in a cell is data (a behavior change for any center
+      file that uses `#` comment lines -- none measured); or (3) both. Tests to extend:
+      `test_modInput_blankCells.R` (a `#` cell in a text upload), `test_getPedigree.R`.
 
 - [ ] **Harem-sire conflict enforcement hole — kinship AND ancestry (found S764,
       2026-09-22, DECISION NEEDED — closing it is a behavior change needing its own
