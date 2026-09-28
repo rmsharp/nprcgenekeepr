@@ -94,6 +94,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 804 Did
+**Deliverable:** fix the Windows R-CMD-check failure (`test_examplePedigreeTxt.R:52`: `ExamplePedigree.txt` has carriage returns on the `windows-latest` checkout) (IN PROGRESS)
+**Started:** 2026-09-28 ~20:55 UTC
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 802 Handoff Evaluation (by Session 803)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `852439b4`, 0
 undocumented; the S802 receipt `status: complete`, its `quality_ratchet` citation matching
