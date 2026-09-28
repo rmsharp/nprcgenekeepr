@@ -202,6 +202,17 @@ warn band (headroom).
    query runs by id with `gh run view <id>`.
 6. STANDING SET unchanged from S790-804.
 
+**Owner-directed after close-out (2026-09-28 ~22:24 UTC):**
+- **Pushed** the 5 commits: `origin/master` `fd2056ca` -> `e5e007f8`, a fast-forward (0 behind after a
+  fresh fetch). The push carries the 2 new figures, which the pkgdown workflow builds into the site,
+  so the pkgdown run was awaited: green (run 36492193748),
+  and the GitHub Pages deploy it triggered (run 36492871606) succeeded. The other 3 workflows read none of the
+  changed files (all build-ignored), so they were not awaited. This push-record commit stays local.
+- **Decided: keep `methodology_dashboard.py` tracked.** This closes carried question (B). Every sync
+  of it keeps needing `bin/sync --force` (Learning 819). Do not raise the question again.
+- **Deferred:** the owner will take up `NEWS.Rmd` (their `suggested_NEWS_entry` drafts) later. It
+  stays in the `BACKLOG.md` item as it is; don't carry it as an open question in handoffs.
+
 ### Session 803 Handoff Evaluation (by Session 804)
 **Score: 8/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `b5b6e82c`, 0
 undocumented; the S803 receipt `status: complete`, its `quality_ratchet` citation matching

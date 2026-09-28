@@ -60,6 +60,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] Owner-directed after the S805 close-out: pushed 5 commits; `methodology_dashboard.py` stays tracked; `NEWS.Rmd` deferred
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):** `git push origin master` moved
+  `origin/master` from `fd2056ca` to `e5e007f8` (`2138c813`, `54a3a7bd`, `2a247184`, `16bc27bd`,
+  `e5e007f8`), a fast-forward after a fresh fetch (0 behind). The pkgdown workflow builds
+  `vignettes/articles/` into the site, so its run was awaited because it publishes the 2 new
+  figures: green (run
+  36492193748), and the GitHub Pages deploy it triggered (run 36492871606) succeeded. The other changed files are build-ignored and read by no
+  test, so lint, R-CMD-check and test-coverage were not awaited. **Decision (a grooming action):**
+  the owner keeps `methodology_dashboard.py` tracked, closing the question carried since S802;
+  every sync of it keeps needing `bin/sync --force` (Learning 819). **Deferred:** the owner will
+  address `NEWS.Rmd` (the `suggested_NEWS_entry` drafts) later; the `BACKLOG.md` item stands
+  unchanged. This entry's commit stays local and rides with the next push.
+
 ### 2026-09-28 · [ad hoc] S805 records: 2 stale Pedigree Diagram article figures re-rendered DONE (S804 handoff evaluated 9/10, self 8/10, receipt, Learning 821)
 - **Model:** Claude Opus 5.5. Session notes (S804 evaluation, S805 record), the `HANDOFFS.md` S805
   receipt `status: complete`, and `PROJECT_LEARNINGS.md` Learning 821 (a change to how diagrams are
