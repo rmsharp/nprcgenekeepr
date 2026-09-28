@@ -124,7 +124,10 @@ codes:
 \item \code{H} -- replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE
 \item \code{U} -- replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE
 \item \code{U} -- replacing "UNKNOWN" or "3"
+\item \code{U} -- replacing a missing, blank or unrecognized value
 }
+
+Case and any spaces around a code are ignored.
 
 The function \code{correctParentSex} is used to ensure no parent is both
 a sire and a dam. If this error is detected, the function throws an error

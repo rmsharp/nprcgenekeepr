@@ -30,7 +30,11 @@ Standard sex codes are
 \item \code{U} -- replacing "HERMAPHRODITE" or "4", if
 \code{ignoreHerm} == TRUE
 \item \code{U} -- replacing "UNKNOWN" or "3"
+\item \code{U} -- replacing a missing, blank or unrecognized value
 }
+
+Case and any spaces around a code are ignored, so \code{" male "} and
+\code{"M "} both become \code{M}.
 }
 \examples{
 library(nprcgenekeepr)
