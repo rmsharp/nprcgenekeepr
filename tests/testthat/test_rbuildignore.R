@@ -38,3 +38,20 @@ test_that(".Rbuildignore covers the real methodology_trim.py at the repo root", 
     )
   )
 })
+
+## The repo-root .gitattributes (S804) keeps a shipped example's line endings
+## plain on a Windows checkout. It is git configuration, not package content,
+## so it stays out of the tarball, as .gitignore does; the pattern must not be
+## so broad that it drops the example file it protects.
+test_that(".Rbuildignore keeps the repo-root .gitattributes out of the tarball", {
+  skip_if_not(file.exists(rbuildignore_path), no_rbuildignore_msg)
+
+  patterns <- readRbuildignorePatterns()
+  expect_true(
+    anyPatternMatches(patterns, ".gitattributes"),
+    info = "no .Rbuildignore pattern matches the repo-root \".gitattributes\""
+  )
+  expect_false(
+    anyPatternMatches(patterns, "inst/extdata/examples/ExamplePedigree.txt")
+  )
+})

@@ -60,6 +60,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S804 RED: a Windows-style checkout of `ExamplePedigree.txt` must keep plain LF line endings; `.Rbuildignore` must keep a repo-root `.gitattributes` out of the tarball
+- **Model:** Claude Opus 5.5. **Found at Orient:** R-CMD-check's `windows-latest (release)` leg failed
+  `test_examplePedigreeTxt.R:52` ("no carriage return") on both S802 pushes (runs 36472173902,
+  36472806892; `[ FAIL 1 | WARN 8 | SKIP 263 | PASS 8378 ]`); the other four legs, lint, pkgdown and
+  test-coverage were green. S803 read CI while that run was still going and did not re-read it.
+  **PRE-RED (measured):** the file is stored LF (`git ls-files --eol`: `i/lf`); the repo has no
+  `.gitattributes`; a scratch clone with `core.autocrlf=true` (Git for Windows' default) checks it out
+  with 3,695 CR bytes, one per line, and `git -c core.autocrlf=true cat-file --filters
+  HEAD:inst/extdata/examples/ExamplePedigree.txt` shows the same 3,695 (0 with `core.autocrlf=false`).
+  R's `check_dot_files` lists `.gitattributes` only among CRAN-mode known hidden files, and this
+  project build-ignores `.gitignore`, so the new file gets a `.Rbuildignore` line too. **Owner
+  decision (PRE-RED -> RED gate):** fix the checkout with `.gitattributes`, not skip the byte test on
+  Windows (a Windows-built tarball would then ship CRLF unnoticed). **Tests:** `test_examplePedigreeTxt.R`
+  gains "a Windows checkout of ExamplePedigree.txt keeps plain line endings" (settings
+  `core.autocrlf=true` and `core.autocrlf=false` + `core.eol=crlf`; bytes must hold no CR and equal the
+  shipped file; skips outside the source repository, so under R CMD check); `test_rbuildignore.R`
+  gains ".Rbuildignore keeps the repo-root .gitattributes out of the tarball" (and must not match
+  the example file). **Fails today as intended:** autocrlf 222,382 vs 218,687 bytes (3,695 more); the
+  `core.eol=crlf` case passes today (no text attribute) and pins that the fix forces LF even then; no
+  `.Rbuildignore` pattern. Every other test in both files passes; lint 0.
+
 ### 2026-09-28 · [ad hoc] S804 claim: fix the Windows R-CMD-check failure (`test_examplePedigreeTxt.R:52` finds carriage returns in `ExamplePedigree.txt` on the `windows-latest` checkout; red on runs 36472173902 and 36472806892) (in progress)
 - **Model:** Claude Opus 5.5.
 

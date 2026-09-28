@@ -53,6 +53,50 @@ test_that("ExamplePedigree.txt uses plain line endings and ends with one", {
   expect_identical(bytes[length(bytes)], as.raw(10L))
 })
 
+## A Windows checkout must keep those plain line endings too (found S804). Git
+## for Windows ships with core.autocrlf=true, which the windows-latest CI
+## runner gets, and that setting writes every line ending as CRLF on checkout
+## unless the repository's .gitattributes pins the file to LF; that is how
+## R-CMD-check's windows-latest leg came to fail the test above. `git cat-file
+## --filters` prints the bytes a checkout under the given settings would
+## write, without making one. It runs only from the source repository, so it
+## skips under R CMD check.
+isGitTopLevel <- function(dir) {
+  if (!nzchar(Sys.which("git"))) return(FALSE)
+  top <- suppressWarnings(system2("git", c("-C", shQuote(dir), "rev-parse",
+                                           "--show-toplevel"),
+                                  stdout = TRUE, stderr = FALSE))
+  is.null(attr(top, "status")) && length(top) == 1L &&
+    normalizePath(top) == normalizePath(dir)
+}
+
+checkoutBytes <- function(root, gitConfig, path) {
+  out <- tempfile()
+  on.exit(unlink(out))
+  configArgs <- as.vector(rbind("-c", gitConfig))
+  status <- system2("git", c("-C", shQuote(root), configArgs, "cat-file",
+                             "--filters", paste0("HEAD:", path)),
+                    stdout = out, stderr = FALSE)
+  if (!identical(status, 0L)) stop("git cat-file --filters failed: ", status)
+  readBin(out, "raw", file.size(out))
+}
+
+test_that("a Windows checkout of ExamplePedigree.txt keeps plain line endings", {
+  root <- normalizePath(testthat::test_path("..", ".."), mustWork = FALSE)
+  skip_if_not(isGitTopLevel(root), "not run from the source git repository")
+  shipped <- readBin(txtPath, "raw", file.size(txtPath))
+  ## core.autocrlf=true: Git for Windows' default and the windows-latest
+  ## runner's. core.eol=crlf: a user who asks for CRLF in every text file.
+  settings <- list(autocrlf = "core.autocrlf=true",
+                   eol = c("core.autocrlf=false", "core.eol=crlf"))
+  for (setting in names(settings)) {
+    bytes <- checkoutBytes(root, settings[[setting]],
+                           "inst/extdata/examples/ExamplePedigree.txt")
+    expect_false(any(bytes == as.raw(13L)), info = setting)
+    expect_identical(bytes, shipped, info = setting)
+  }
+})
+
 test_that("getPedigree() reads ExamplePedigree.txt as it reads the CSV", {
   expect_no_error(getPedigree(txtPath, sep = "\t"))
   got <- tryCatch(getPedigree(txtPath, sep = "\t"), error = function(e) NULL)
