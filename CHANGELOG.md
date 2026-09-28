@@ -60,6 +60,64 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S796 records: PED_GV F2/F3 NOT STARTED (S795 handoff evaluated 7/10, self 6/10, receipt, Learnings 810-811); session became `SESSION_NOTES.md` read-cap fix + `methodology` dashboard drift delegation
+- **Model:** Claude Sonnet 5. The owner-chosen deliverable (PED_GV F2/F3, `BACKLOG.md` "Up Next"
+  item 1) was never started — no `R/` file, test, or `BACKLOG.md` change this session. `BACKLOG.md`
+  is untouched and the item remains fully open for the next session's fresh Pre-RED.
+- **What the session actually produced:** (1) investigated the prior ad hoc "trim
+  `SESSION_NOTES.md`" ask rather than executing it blind, found `methodology_trim.py`'s own
+  65,536 B trigger did not fire, and instead found and delegated a real, evidence-verified
+  cross-repo finding — `methodology_dashboard.py`'s declared `READ_CAP_CLASS_A`/`READ_CAP_CLASS_B`
+  split (`methodology_dashboard.py:423-424`) hardcodes `SESSION_NOTES.md` as Class B ("the trimmer
+  answers `NO_CONFIG` for it"), false in this repo because of this project's own local, unsynced
+  `methodology_trim.py` `LedgerSpec` patch for that file (`CLAUDE.md`'s local-customization
+  checklist entry); confirmed nprcgenekeepr's dashboard copy is byte-identical to the
+  `methodology` fork's canonical `tools/methodology_dashboard.py` (not stale), and that the fork's
+  own two pinning tests (`tools/test_methodology_dashboard.py:5464,5485`) only guard the fork's
+  own `LEDGERS` table, never an adopter's local patch. Handed a full, self-contained prompt to the
+  `methodology` fork's own live session (`methodology-bf`); the owner pasted it there directly —
+  the fix/decision is that repo's, not this one's. (2) Starting Phase 1B for PED_GV, the mandatory
+  claim-stub write tripped a SEPARATE, harder ceiling: `.context-budget.json`'s read-cap
+  (`max_tokens: 25000` ≈ 56,750 B), independent of and smaller than the 65,536 B archive-trim
+  budget every recent session's gotcha has tracked — refused by the installed
+  `context_budget.py --precommit` hook, the first time this specific ceiling has fired in this
+  repo's history. `methodology_trim.py --budget-bytes 65536` said `NOTHING_TO_DO`; a
+  `--budget-bytes 45000 --force` dry run (accepting the project's established `SRF_RED` resolution)
+  produced a verified-lossless cut (`L1_OK`/`L2_OK`/`L3_OK`, 57,871 B → 19,719 B). The `--write`
+  itself was denied by the harness's own auto-mode permission classifier ("Irreversible Local
+  Destruction"); per that denial's instructions, stopped and handed the exact command to the
+  owner, who ran it — verified after the fact via
+  `docs/archive/SESSION_NOTES-through-2026-09-27.md.verify.sh` (`OK: L1, L2/front-matter, L3`).
+- **Commits:** this records commit (single commit — claim, trim, and close-out were never split,
+  since no code was touched). **Runtime (3E):** n/a — pure docs/ledger operations.
+- **Learnings:** 810 (`SESSION_NOTES.md`'s read-cap ceiling, not its archive budget, is the real
+  binding constraint once the file is dense and near 56,750 B), 811 (a forced
+  `methodology_trim.py --write` needs the owner's own hands; the auto-mode classifier blocks the
+  agent even after a verified-lossless dry run).
+
+### 2026-09-27 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-27.md` (6 record(s), 57,871 B → 19,719 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **6** record(s) (2026-08-15 → 2026-09-27) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-27.md`](docs/archive/SESSION_NOTES-through-2026-09-27.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-27.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-27.md.verify.sh)
+rather than trusting a digest printed here. Live file 57,871 B → 19,719 B (−65.9%).
+
+### 2026-09-27 · [ad hoc] S796 claim: PED_GV F2/F3 decisions and implementation (in progress)
+- **Model:** Claude Sonnet 5. Session claimed to decide and implement `BACKLOG.md`'s top "Up
+  Next" item's F2 (the `U`-prefix id-detection scheme in `addUIds()`/`removeAutoGenIds()`, NEW-38)
+  and F3 (the excluded-dam re-admission fallback in `getPotentialParents()`, NEW-35/NEW-55), each
+  its own Pre-RED owner decision plus a strict RED/GREEN/REFACTOR slice. Non-commit-adjacent claim
+  entry per Phase 1B; the rest of this entry is filled at close-out.
+- **Prior task this session** ("trim `SESSION_NOTES.md`") investigated and resolved to
+  not-needed (56,752 B, under its 65,536 B budget, trigger does not fire); the real finding — a
+  `methodology_dashboard.py` false-positive HIGH risk flag caused by this project's local
+  `methodology_trim.py` `SESSION_NOTES.md` `LedgerSpec` patch not being reflected in the
+  (synced, do-not-edit) dashboard's declared Class A/B split — was handed to the `methodology`
+  fork's own session via a prepared prompt, owner-pasted there directly. No nprcgenekeepr file
+  was changed by that investigation; recorded here for completeness per FM #27 (an investigation
+  is an action even when it changes nothing).
+
 ### 2026-09-27 · [ad hoc] S795 PRE-RED: scoped the 5-item BUNDLE/DOC cleanup, decided NEW-14's empty-list fix
 - **Model:** Claude Sonnet 5. Read `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` and all 5 target
   files. Confirmed each finding still holds: PED-11 (`getRecordStatusIndex.R:14`, `any()` wrapping
