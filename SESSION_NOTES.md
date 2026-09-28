@@ -168,7 +168,7 @@ change) or reword `vignettes/articles/pedigree-diagram.qmd:104-111`. Then the jm
 (`BACKLOG.md:246`), the U-prefix real-id item, the recorded-dam item, PED_GV decisions. (B)
 Carried: `CHANGELOG.md` (112,527 B) and `HANDOFFS.md` (91,589 B, both at this records commit) trims, both over 65,536 B (a forced
 write needs the owner, Learning 811); `suggested_NEWS_entry` disposition; working-tree residue;
-unpushed commits (18 after this records commit; pushing is the owner's call); dashboard script
+unpushed commits (20: the records went in as two commits for the 5-file cap, plus this count fix; pushing is the owner's call); dashboard script
 v2.18.0 vs canonical v2.19.0; the methodology fork's Class A/B decision. (C) The 07:00 UTC
 2026-09-28 scheduled shinytest2 run had not fired at 06:23 UTC -- read it next Orient with
 `gh run list --branch master --limit 10`; it tests `origin/master`, without S799-S801 until pushed.

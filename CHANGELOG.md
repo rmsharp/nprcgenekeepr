@@ -60,6 +60,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S801 records fix: the unpushed count in the notes and receipt
+- **Model:** Claude Opus 5.5. The records commit touched 6 files, over the `SAFEGUARDS.md` 5-file
+  per-commit cap; it was soft-reset (local, unpushed) and re-made as two commits (4 + 2 files),
+  which made the handoff's "18 unpushed" wrong. `SESSION_NOTES.md` and the `HANDOFFS.md` receipt
+  now say 20, counting this commit.
+
 ### 2026-09-28 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-28.md` (13 record(s), 61,948 B → 26,273 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
