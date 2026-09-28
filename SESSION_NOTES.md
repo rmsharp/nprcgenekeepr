@@ -168,6 +168,9 @@ local). The four push workflows were still running at that commit: read them at 
 **next session updates the dashboard script** (`methodology_dashboard.py` v2.18.0 -> v2.19.0,
 owner's instruction); the owner will examine the `suggested_NEWS_entry` draft personally, so it
 is no longer a session pickup.
+Then, also owner-directed: the uncommitted YAML header on `BACKLOG.md` was dropped and the
+untracked `BACKLOG.log` deleted. **The YAML-free `BACKLOG.md` staging recipe (S801 gotcha 4) is
+retired** -- stage `BACKLOG.md` normally.
 
 **Key files:** `inst/extdata/examples/example_pedigree_*.csv` (birth added);
 `data-raw/example_pedigree_birth.R:1-53` (the rule; re-run after editing a file);
@@ -181,7 +184,7 @@ file as read -- a figure can differ from the app with nothing wrong (Learning 81
 column is derived: after editing an example file's rows, re-run `data-raw/example_pedigree_birth.R`.
 (3) PNG screenshots differ byte-wise run to run; compare by pixel (`png::readPNG()`) against a
 control render. (4) `base::system.file()` returns "" under `pkgload::load_all()`. (5) STANDING SET
-unchanged from S790-801 (full suite in the background; YAML-free `BACKLOG.md` staging recipe; `x[["f"]]`
+unchanged from S790-801 (full suite in the background; `x[["f"]]`
 not `x$f`; recount frontiers/unpushed fresh; `scratchpad/` invisible to git; `CLAUDE.md` warn band
 = headroom). (6) No reduction this session: `SESSION_NOTES.md` is under budget; the ledger trims
 need the owner.
