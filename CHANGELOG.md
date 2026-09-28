@@ -60,6 +60,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S803: synced `methodology_dashboard.py` from v2.18.0 to canonical v2.19.0 (owner-directed)
+- **Model:** Claude Opus 5.5. **Source:** the sibling `methodology/` checkout, branch `main` at
+  `016b3ae` (`v3.7-1277-g016b3ae`), clean and level with `origin/main`. The local copy was
+  byte-identical to canonical `e1b6bdf` (v2.18.0), so no local edit was lost. Written with
+  `methodology_dashboard.py --sync <this project> --force` (the dry run skips a git-tracked target);
+  the result `cmp`-matches canonical, and its diff (158 added, 27 removed) is the canonical
+  `e1b6bdf..016b3ae` diff: fork commits `cb9b0ed` and `161181c` (BL-88 P1/P2).
+- **What changes for this project:** the over-cap row for a Class B file (`SESSION_NOTES.md`,
+  `BACKLOG.md`) no longer claims "the trimmer answers NO_CONFIG" -- false here since the local
+  `SESSION_NOTES.md` `LedgerSpec` (the finding S796 handed to the fork; S796 records entry). Where the
+  project's own `methodology_trim.py` lists the file in `LEDGERS` (read by parsing its source,
+  never running it), the row names `python3 methodology_trim.py --file <f> --check` and drops
+  HIGH to LOW. This closes the carried "methodology fork's Class A/B decision" handoff item.
+- **Measured:** v2.19.0's parse of this project's trimmer equals the trimmer's executed `LEDGERS`
+  (`CHANGELOG.md`, `HANDOFFS.md`, `SESSION_NOTES.md`); on this project today both versions give
+  the same 4 risk rows (no Class B file is over 56,750 B: `SESSION_NOTES.md` 35,610 B,
+  `BACKLOG.md` 54,143 B); in a scratch clone with `SESSION_NOTES.md` padded to 60,809 B, v2.18.0
+  gives HIGH with the NO_CONFIG claim and v2.19.0 gives LOW with the remedy, which ran with exit 0.
+  The file stays tracked: the sync tool's "Phase 3 untrack" suggestion is not acted on.
+
 ### 2026-09-28 · [ad hoc] S803 claim: update the synced `methodology_dashboard.py` from v2.18.0 to canonical v2.19.0 (owner-directed at the S802 close-out) (in progress)
 - **Model:** Claude Opus 5.5.
 

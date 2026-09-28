@@ -67,6 +67,7 @@ CUSTOMIZATION
   is exact where detection is a guess.
 """
 
+import ast
 import hashlib
 import json
 import os
@@ -85,13 +86,13 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-# 2.18.0: the fork's resync with upstream/main (docs/planning/upstream-resync-2026-09-plan.md, D3)
-# merges upstream's two releases on its own numbering line into this one at 2.17.0 -- 2.11.0 (quality-
-# gate outcomes scored, advisory, and the gates panel) and 2.11.1 (the gate-history walk fixes). The
-# gates panel is changed output on a distributed tool: MINOR, the next above both lines. Upstream's
-# line continues from 2.11.1, so the two stay apart until a dashboard PR reconciles them. (2.17.0,
-# Phase C2's per-class read-cap risk row, is described in git: `git log -S'2.17.0'` on this file.)
-DASHBOARD_VERSION = "2.18.0"
+# 2.19.0: BL-88 (docs/planning/dashboard-read-cap-class-adopter-drift-plan.md). The Class B read-cap
+# row stops asserting a trimmer config it never read (P1, cb9b0ed, which shipped without a bump) and
+# names a remedy only where the scanned project's own trimmer SOURCE declares the file, taking Class
+# A's severity there (P2). Changed output on a distributed tool: MINOR. Fork-only -- upstream's line
+# continues from 2.11.1, so the two stay apart until a dashboard PR reconciles them. (2.18.0, the
+# resync's merge of upstream's 2.11.x line, is described in git: `git log -S'2.18.0'` on this file.)
+DASHBOARD_VERSION = "2.19.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -378,6 +379,11 @@ CLASS_A_STOP_BYTES = 96 * 1024    # 98,304  — reported, never applied here; th
 #             (SESSION_RUNNER.md steps 2 and 3), with NO REMEDY the reader can reach -- no
 #             distributed file says what to do about an oversized one, which is the gap that
 #             separates this class from A far more sharply than any threshold does.
+#             ⚠ BL-88 P2: in a project whose OWN trimmer declares a Class B basename -- read from
+#             that trimmer's source by _parse_trim_ledgers, never by running it -- the NO_CONFIG
+#             conjunct and the NO-REMEDY half of the second are false FOR THAT PROJECT, so its row
+#             names the remedy and takes Class A's severity. The access path is still the file,
+#             and the name stays Class B: membership is declared, never read from LEDGERS.
 #             ⚠ ORDERING: no Class B file has an ordering that GUARANTEES the needed part is in
 #             the delivered prefix -- and the qualifier is the whole claim, so it is not dropped
 #             here. An earlier draft of this comment said flatly "there is no record ordering that
@@ -1035,7 +1041,8 @@ def find_trim_tool(path, role="adopter"):
     Content-verified by regex, exactly as parse_version verifies a dashboard copy: a bare
     `.is_file()` would accept a directory or an unrelated same-named script. Nothing here
     imports or executes the file it found -- §7.1's precedent, and the reason the rows stay
-    read-only."""
+    read-only. That holds for `ledgers` too (BL-88 P2): _parse_trim_ledgers PARSES the source
+    and runs none of it."""
     candidates = [path / TRIM_TOOL_NAME]
     if role == "framework":
         candidates.append(path / TRIM_TOOL_FRAMEWORK_REL)
@@ -1049,7 +1056,8 @@ def find_trim_tool(path, role="adopter"):
         m = _TRIM_VERSION_RE.search(text)
         if m:
             return {"path": cand, "version": m.group(1),
-                    "budget": _parse_trim_budget(text)}
+                    "budget": _parse_trim_budget(text),
+                    "ledgers": _parse_trim_ledgers(text)}
     return None
 
 
@@ -1069,6 +1077,72 @@ def _parse_trim_budget(text):
             return None
         total *= int(part)
     return total or None
+
+
+# BL-88 P2: the attribute uses of LEDGERS a reading survives -- each one only READS the table.
+# Anything else on the name (`.pop`, `.update`, `.setdefault`, `.clear`, ...) could change what
+# the literal says, so the reading abstains rather than follow it.
+_TRIM_LEDGERS_READ_ONLY = frozenset(("get", "keys", "items", "values", "copy"))
+
+
+def _parse_trim_ledgers(text):
+    """The basenames a trimmer's LEDGERS table declares, read out of its SOURCE. None when the
+    source alone cannot say.
+
+    BL-88 P2 (docs/planning/dashboard-read-cap-class-adopter-drift-plan.md §8). The operator
+    decided this is a SOURCE-TEXT read, never an execution: no adopter code runs inside the
+    scanner -- §7.1's precedent and find_trim_tool's own contract. `ast.parse` honours that, since
+    it builds a syntax tree and runs nothing, and it is used instead of a grep because a grep
+    cannot tell an entry from a mention: nprcgenekeepr's widened trimmer spells SESSION_NOTES.md
+    on three lines -- a comment, the key, and a `basename=` argument -- and one of them is a key.
+
+    ABSTAIN, NEVER GUESS. The answer is the keys of ONE module-level `LEDGERS = {...}` display
+    whose keys are all string constants, and only while nothing else in the file binds the name
+    (assignment, import, def, class, except-as), stores into it, deletes from it, or calls a
+    method on it that is not a read. Anything else returns None. The asymmetry is the reason: None
+    leaves the Class B row exactly as P1 wrote it, so a false negative costs nothing, while a key
+    the running tool would not have makes the row name a remedy that does not work. What no
+    source read can see -- a mutation through `globals()` or from another module -- is the residue
+    accepted in exchange for never executing the file."""
+    try:
+        tree = ast.parse(text)
+    except (SyntaxError, ValueError, MemoryError, RecursionError):
+        # ValueError: a null byte, on the 3.10 interpreter the suite runs (SyntaxError from 3.12).
+        # MemoryError: the parser's own stack on a pathologically deep expression. RecursionError
+        # is what other interpreters raise for that case; no input reaches it on 3.10.
+        return None
+    name = "LEDGERS"
+    display = None
+    for stmt in tree.body:
+        if (isinstance(stmt, ast.Assign) and len(stmt.targets) == 1
+                and isinstance(stmt.targets[0], ast.Name) and stmt.targets[0].id == name):
+            display = stmt       # a second one is caught by the walk below, as any binding is
+    if display is None or not isinstance(display.value, ast.Dict):
+        return None
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and node.id == name:
+            if not isinstance(node.ctx, ast.Load) and node is not display.targets[0]:
+                return None
+        elif isinstance(node, ast.alias):
+            if (node.asname or node.name.split(".")[0]) == name:
+                return None
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef,
+                               ast.ExceptHandler)):
+            if node.name == name:
+                return None
+        elif isinstance(node, (ast.Subscript, ast.Attribute)):
+            on_name = isinstance(node.value, ast.Name) and node.value.id == name
+            if on_name and isinstance(node, ast.Subscript) and not isinstance(node.ctx, ast.Load):
+                return None
+            if (on_name and isinstance(node, ast.Attribute)
+                    and node.attr not in _TRIM_LEDGERS_READ_ONLY):
+                return None
+    keys = set()
+    for k in display.value.keys:
+        if not (isinstance(k, ast.Constant) and isinstance(k.value, str)):
+            return None      # a computed key -- or None, which is how ast spells `**` unpacking
+        keys.add(k.value)
+    return sorted(keys)
 
 
 def _trim_record_count(text, basename):
@@ -2200,6 +2274,10 @@ def collect_trim_metrics(path, files, role="adopter"):
         "tool_path": None,
         "tool_version": None,
         "budget_bytes": None,
+        # BL-88 P2: the basenames the installed trimmer's OWN LEDGERS table declares, parsed from
+        # its source -- None when it is absent or the reading abstained. Not to be confused with
+        # "ledgers" below, which is THIS row's population: the watched Class A files it measured.
+        "tool_ledgers": None,
         "ledgers": [],
         "signals": [],
     }
@@ -2216,6 +2294,7 @@ def collect_trim_metrics(path, files, role="adopter"):
         result["tool_present"] = True
         result["tool_version"] = tool["version"]
         result["budget_bytes"] = tool["budget"]
+        result["tool_ledgers"] = tool["ledgers"]
         try:
             result["tool_path"] = tool["path"].relative_to(path).as_posix()
         except ValueError:
@@ -3453,7 +3532,9 @@ def assess_risks(metrics):
     # which owns the conditional wording and the abstentions; duplicating it here would give a
     # ledger past both thresholds two remedies for one problem. The dedup between the two rows is
     # raised and undecided (S38's residual 1), so this comment states the coupling rather than
-    # pretending the rows are independent.
+    # pretending the rows are independent. ONE EXCEPTION since BL-88 P2: a Class B file whose
+    # project's own trimmer declares it gets its remedy HERE, because the trim row's population
+    # is Class A and never reaches that file -- still one remedy per problem, not two.
     if owes_ledger:
         for w in metrics["files"]["read_cap_watch"]:
             wb = w.get("bytes")
@@ -3508,23 +3589,73 @@ def assess_risks(metrics):
                                        f"{CLASS_A_FIRE_BYTES - wb:,} B away. If you need the "
                                        "whole file, read it with an explicit offset/limit"})
                 else:
-                    risks.append({
-                        "severity": "high",
-                        "description": f"{w['path']} is {wb:,} B ({w['lines']:,} lines) — past the "
-                                       f"{READ_CAP_BYTES:,} B one-read budget for the agent read cap, "
-                                       f"which is denominated in tokens ({READ_CAP_TOKENS:,}) and "
-                                       f"converted here at the densest content measured "
-                                       f"({MIN_BYTES_PER_TOKEN} B/token). A session reading it whole "
-                                       "gets a PARTIAL view — truncated to the prefix that fits the "
-                                       "token cap, and it SAYS SO in a banner naming the true "
-                                       "length, so the failure is loud rather than silent; an "
-                                       "explicit line range spanning the excess errors outright, "
-                                       "returning nothing. This is a CLASS B file: the trimmer "
-                                       "answers NO_CONFIG for it, and nothing guarantees the part "
-                                       "you need is in the delivered prefix — a backlog's bottom "
-                                       "items are as live as its top ones, so what truncates may "
-                                       "be open work, and you are told THAT something was cut, "
-                                       "never WHAT"})
+                    # BL-88 — THIS ROW MAY ASSERT ONLY WHAT THIS MODULE EVALUATED. It used to print
+                    # "the trimmer answers NO_CONFIG for it": a fact about a NEIGHBOURING TOOL's
+                    # config table, read from nothing. That was true here only because LEDGERS and
+                    # the declared classes coincide -- which a canonical test pins -- and FALSE in
+                    # any tree that widened LEDGERS. This module is DISTRIBUTED to exactly such
+                    # trees while its suite is not (absent from bin/_manifest.py), so the claim was
+                    # being evaluated where nothing could check it: one adopter's trimmer gained a
+                    # SESSION_NOTES.md spec and this row went on denying it. The class stays
+                    # DECLARED (READ_CAP_CLASS_A/B above, and section 10 dragon 6 with it); only the
+                    # prose stops speaking for the trimmer.
+                    #
+                    # AND THE REASON IS NOW PER-NAME. The comment above READ_CAP_CLASS_B already
+                    # records that carrying the backlog justification to every Class B name is
+                    # FALSE of SESSION_NOTES.md, and states the true weaker form -- but that
+                    # correction reached the comment and never reached this row, so the row
+                    # contradicted its own module. Measured across 12 fleet repos: every
+                    # SESSION_NOTES.md with an `## ACTIVE TASK` heading has it at byte 132-9,490,
+                    # inside READ_CAP_BYTES in all of them; one repo has no such heading at all,
+                    # which is the case the weaker form exists for.
+                    #
+                    # P2 — AND WHERE IT HAS EVALUATED SOMETHING, IT MAY SAY SO. collect_trim_metrics
+                    # reads the scanned project's own trimmer SOURCE (_parse_trim_ledgers: a parse,
+                    # never an execution -- the operator's decision). Where that reading lists this
+                    # file's BASENAME -- the key the trimmer itself looks up,
+                    # `LEDGERS.get(path.name)` at any depth -- the conjunct that sets Class B apart
+                    # from A, NO REMEDY the reader can reach, is checked false FOR THIS PROJECT, so
+                    # the row appends the remedy and takes Class A's severity. Anything else -- no
+                    # trimmer, a reading that abstained, a name it does not list, a metrics dict
+                    # from an older copy -- leaves P1's row byte for byte, and a canonical test pins
+                    # that against P1's output frozen as a literal: the failure path is the
+                    # criterion. The CLASS does not move (dragon 6): read_cap_class() and both sets
+                    # are untouched and the trim row's population stays Class A even here -- prose
+                    # and severity consult a reading; membership does not.
+                    if w["path"] in _BACKLOG_LOCATIONS:
+                        why = ("a backlog's bottom items are as live as its top ones, so what "
+                               "truncates may be open work")
+                    else:
+                        why = ("nothing ENFORCES that the part you need is inside that prefix — "
+                               "the protocol says to focus on the ACTIVE TASK section at the top "
+                               "and the seed puts it there, but no check holds it there, and a "
+                               "file carrying no such heading has no ordering to rely on")
+                    desc = (f"{w['path']} is {wb:,} B ({w['lines']:,} lines) — past the "
+                            f"{READ_CAP_BYTES:,} B one-read budget for the agent read cap, "
+                            f"which is denominated in tokens ({READ_CAP_TOKENS:,}) and "
+                            f"converted here at the densest content measured "
+                            f"({MIN_BYTES_PER_TOKEN} B/token). A session reading it whole "
+                            "gets a PARTIAL view — truncated to the prefix that fits the "
+                            "token cap, and it SAYS SO in a banner naming the true "
+                            "length, so the failure is loud rather than silent; an "
+                            "explicit line range spanning the excess errors outright, "
+                            "returning nothing. This is a CLASS B file and the "
+                            f"instructed access path IS the file: {why}, and you are "
+                            "told THAT something was cut, never WHAT")
+                    trim = metrics.get("trim", {})
+                    tool = trim.get("tool_path")
+                    base = w["path"].rsplit("/", 1)[-1]
+                    if (trim.get("tool_present") and tool
+                            and base in (trim.get("tool_ledgers") or ())):
+                        risks.append({
+                            "severity": "low",
+                            "description": desc + (
+                                f". BUT THIS PROJECT HAS A REMEDY: its own `{tool}` declares a "
+                                f"`LEDGERS` entry for `{base}` (read from its source, never "
+                                f"run), so run `python3 {tool} --file {w['path']} --check` for "
+                                "the full report and whether a trim is the right move")})
+                    else:
+                        risks.append({"severity": "high", "description": desc})
 
     # S38: the trim-trigger rows, re-emitted VERBATIM from the collector -- the same arrangement
     # the Component C signals above use. The collector owns the gate, the population and the
