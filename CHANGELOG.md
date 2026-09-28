@@ -60,6 +60,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S801 RED: the shipped ExamplePedigree.txt must hold the same cells as ExamplePedigree.csv
+- **Model:** Claude Opus 5.5. New `tests/testthat/test_examplePedigreeTxt.R`, 4 tests / 11
+  assertions: the `.txt` holds the `.csv`'s cells (every recorded age a number, id `15FEBR`
+  present); plain line endings with a final newline; `getPedigree(txt, sep = "\t")` reads it as
+  `getPedigree(csv)` does; a real upload through `modInputServer` gives the same checked pedigree
+  as the CSV upload. 8 assertions fail for the expected reason (2,262 non-numeric ages; `15FEBR`
+  missing; carriage returns and no final newline; "line 17 did not have 11 elements"; the
+  uploaded pedigree's `age` is character, 106 ancestry and 106 status cells differ, 1 id
+  differs), 3 pass (0 upload errors each, 3,694 animals), 0 errors. Lint 0.
+
+### 2026-09-28 · [ad hoc] S801 PRE-RED: ExamplePedigree.txt measured against ExamplePedigree.csv; owner picked rebuild + test + data-raw script, and closed the '#'-in-a-cell reader question
+- **Model:** Claude Opus 5.5. The `.txt` is the only text-format file under `inst/extdata`; only the
+  always-skipped `test-shinytest2-debug.R` names it. Against the `.csv` (same 3,694 rows, same
+  columns): all 2,262 non-blank age cells are Excel's date display of the CSV age (1,536
+  whole-day dates, 620 `1900-01-00` for ages 0-0.9, 106 `#####` for negative ages), and id
+  `15FEBR` reads `15-Feb`; the 1,432 blank ages match. All 15 shipped example pedigrees run through
+  the app's read + `runQcStudbook()`: 6 load with 0 errors (incl. both `ExamplePedigree` files),
+  the `.xlsx` 1 invalid date, jmac 67 parent-age errors, the 5 `example_pedigree_*.csv`
+  classic-structure files are refused ("Missing required columns: birth"). A candidate rebuilt
+  from the `.csv` reads identically on the app path and `getPedigree()`. Owner decisions: rebuild
+  with a `data-raw/` script and a test, no doc pointer; close the `#` reader question.
+
 ### 2026-09-28 · [ad hoc] S801 claim: rebuild the shipped ExamplePedigree.txt from ExamplePedigree.csv -- the only shipped text-format example had every age cell saved as an Excel date or "#####" and one id renamed, so the app's text upload got bad ages and getPedigree() could not read it (in progress)
 - **Model:** Claude Opus 5.5.
 
