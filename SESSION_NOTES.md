@@ -90,6 +90,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 798 Did
+**Deliverable:** PED_GV F3 (NEW-35/NEW-55) -- the `getPotentialParents()` fallback at
+`R/getPotentialParents.R:196-199` re-admits an excluded dam (IN PROGRESS)
+**Started:** 2026-09-27
+**Status:** Session claimed. Work beginning (PRE-RED).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 796 Handoff Evaluation (by Session 797)
 **Score: 8/10.** Every Orient measurement held: both ledger frontiers = HEAD `cdb670f0`, 0
 undocumented; S796 receipt `status: complete`; `HANDOFFS.md` 66,954 B exactly as stated; the

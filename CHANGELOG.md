@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-27 · [ad hoc] S798 claim: PED_GV F3 slice -- an excluded dam is re-admitted by the `getPotentialParents()` fallback (NEW-35/NEW-55) (in progress)
+- **Model:** Claude Opus 5.5.
+
 ### 2026-09-27 · [ad hoc] S797 records: PED_GV F2 HALF DONE by owner decision -- addUIds() duplicate-id fix shipped, stricter detection withdrawn and re-filed (S796 handoff evaluated 8/10, self 7/10, receipt, Learnings 812-813)
 - **Model:** Claude Opus 5.5. Phase 3 close-out: S796's handoff evaluated 8/10 (every Orient
   measurement held; one number stale by its own records commit, Learning 806's class). Self 7/10:
