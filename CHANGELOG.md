@@ -60,6 +60,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S801 GREEN: ExamplePedigree.txt rebuilt from ExamplePedigree.csv
+- **Model:** Claude Opus 5.5. New `data-raw/ExamplePedigree_txt.R` reads the `.csv` with every cell
+  kept as written and writes it tab-separated, unquoted, plain line endings; run once to replace
+  `inst/extdata/examples/ExamplePedigree.txt` (264,615 -> 218,687 bytes; ignoring line endings,
+  exactly the 2,262 age lines change, one of them restoring id `15FEBR`; a rerun is
+  byte-identical). No `R/` change. `test_examplePedigreeTxt.R` 4 tests / 11 assertions pass. Full
+  unfiltered suite: 357 files / 2,784 tests / 8,686 expectations, 1 failed (the known
+  `test_pkgdown_reference_config.R`), 0 error. Lint 0 on the script and the test file. Runtime:
+  the real app in headless Chrome (installed package, current `R/`), Text + Tab upload, Pedigree
+  Browser: old file -- `JDVB5M` age blank, ancestry UNKNOWN, status UNKNOWN; `2ZMHG7` age
+  `1900-01-07`; `15FEBR` not found. Rebuilt file -- `JDVB5M` -0.1 / JAPANESE / DECEASED; `2ZMHG7`
+  7.8; `15FEBR` 0.2. Both 3,694 entries.
+
 ### 2026-09-28 · [ad hoc] S801 RED: the shipped ExamplePedigree.txt must hold the same cells as ExamplePedigree.csv
 - **Model:** Claude Opus 5.5. New `tests/testthat/test_examplePedigreeTxt.R`, 4 tests / 11
   assertions: the `.txt` holds the `.csv`'s cells (every recorded age a number, id `15FEBR`
