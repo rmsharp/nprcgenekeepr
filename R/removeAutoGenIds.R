@@ -23,8 +23,11 @@
 #' length(ped$id)
 #'
 removeAutoGenIds <- function(ped) {
-  ped <- ped[!isGeneratedUnknownId(ped$id), ]
-  ped$sire[isGeneratedUnknownId(ped$sire)] <- NA
-  ped$dam[isGeneratedUnknownId(ped$dam)] <- NA
+  idIsPlaceholder <- isGeneratedUnknownId(ped$id, ped = ped)
+  sireIsPlaceholder <- isGeneratedUnknownId(ped$sire, ped = ped)
+  damIsPlaceholder <- isGeneratedUnknownId(ped$dam, ped = ped)
+  ped <- ped[!idIsPlaceholder, ]
+  ped$sire[sireIsPlaceholder[!idIsPlaceholder]] <- NA
+  ped$dam[damIsPlaceholder[!idIsPlaceholder]] <- NA
   ped
 }

@@ -140,12 +140,17 @@ getAutoIdWidth <- function(format = getAutoIdFormat()) {
 #' @return A logical vector the length of \code{id} (\code{NA} where \code{id}
 #' is \code{NA}).
 #' @noRd
-isGeneratedUnknownId <- function(id, format = getAutoIdFormat()) {
+isGeneratedUnknownId <- function(id, format = getAutoIdFormat(), ped = NULL) {
   id <- as.character(id)
   prefix <- getAutoIdPrefix(format)
   pattern <- sprintf("^[A-Z0-9]{%d,}", getAutoIdWidth(format))
   isPlaceholder <- startsWith(id, prefix) &
     grepl(pattern, substring(id, nchar(prefix) + 1L))
   isPlaceholder[is.na(id)] <- NA
+  if (!is.null(ped) && "placeholder" %in% names(ped)) {
+    mark <- as.logical(ped$placeholder[match(id, as.character(ped$id))])
+    isMarked <- !is.na(mark) & !is.na(id)
+    isPlaceholder[isMarked] <- mark[isMarked]
+  }
   isPlaceholder
 }

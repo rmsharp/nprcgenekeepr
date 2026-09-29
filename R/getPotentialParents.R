@@ -87,15 +87,17 @@ getPotentialParents <- function(ped, minSireAge = NULL, minDamAge = NULL,
     }
   }
 
-  ## No point in looking at animals without a birth record.
   ped <- data.table::as.data.table(ped)
+  ## Remove the records of automatically generated IDs. This comes first: an
+  ## animal's placeholder mark is read from the whole pedigree, so a real parent
+  ## with no birth date is still a recorded parent.
+  ped <- removeAutoGenIds(ped)
+  ## No point in looking at animals without a birth record.
   ped <- ped[!is.na(ped$birth), ]
   ## No point in looking for potential parents without a "fromCenter" column.
   if (!any(names(ped) == "fromCenter")) {
     return(NULL)
   }
-  ## Remove the records of automatically generated IDs
-  ped <- removeAutoGenIds(ped)
 
   ## Per-candidate minimum breeding-age floor, keyed on each candidate's own
   ## species (when present) and sex via resolveBreedingAge. Absent species ->

@@ -43,7 +43,7 @@
 addUIds <- function(ped, format = getAutoIdFormat()) {
   s <- which(is.na(ped$sire) & !is.na(ped$dam))
   d <- which(!is.na(ped$sire) & is.na(ped$dam))
-  existingIds <- ped$id
+  existingIds <- c(ped$id, ped$sire, ped$dam)
   nextStart <- 1L
 
   if (!identical(s, integer(0L))) {
