@@ -44,3 +44,18 @@ test_that("classifyParentage matches the qcPed parentage counts", {
   expect_identical(sum(cls == "one unknown parent"), 43L)
   expect_identical(sum(cls == "known"), 113L)
 })
+
+test_that("classifyParentage treats real ids that merely start with U as known parents", {
+  # Placeholder-marking plan D3 (b), S807: U123, Uma and U1 are real animals
+  # (shorter than "U" + 4 capitals/digits); U05X3C is a placeholder.
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  expect_identical(
+    nprcgenekeepr:::classifyParentage(
+      c("U123", "R1", "U1"),
+      c("Uma", "Uma", "U05X3C")
+    ),
+    c("known", "known", "one unknown parent")
+  )
+})

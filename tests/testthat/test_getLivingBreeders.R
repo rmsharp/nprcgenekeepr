@@ -81,3 +81,21 @@ test_that("getLivingBreeders returns an empty character vector when no breeders"
   expect_length(lb, 0L)
   expect_type(lb, "character")
 })
+
+test_that("getLivingBreeders counts real parents whose ids merely start with U", {
+  # Placeholder-marking plan D3 (b), S807: Uma and U123 are real animals
+  # (shorter than "U" + 4 capitals/digits), so as parents they are breeders.
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  ped <- data.frame(
+    id   = c("R1", "R2", "Uma", "U123", "K1", "K2", "K3"),
+    sire = c(NA,   NA,   NA,    NA,     "U123", "R1", "R1"),
+    dam  = c(NA,   NA,   NA,    NA,     "Uma",  "R2", "Uma"),
+    sex  = c("M",  "F",  "F",   "M",    "F",    "M",  "F"),
+    exit = NA,
+    stringsAsFactors = FALSE
+  )
+  expect_setequal(nprcgenekeepr:::getLivingBreeders(ped),
+                  c("R1", "R2", "Uma", "U123"))
+})

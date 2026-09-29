@@ -56,3 +56,37 @@ test_that("removeAutoGenIds() honors a configured non-default prefix", {
   expect_false("AUTO00001" %in% out$id) # auto-generated row removed
   expect_true(is.na(out$sire[out$id == "A"])) # AUTO-sire cleared to NA
 })
+
+# --- the tighter rule (placeholder-marking plan D3 (b), S807) --------------
+test_that("removeAutoGenIds() keeps real ids that merely start with U", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL) # default U%04d
+  ped <- data.frame(
+    id = c("U1", "Uma", "U123", "K1", "K2", "U0001"),
+    sire = c(NA, NA, NA, "U123", "U0001", NA),
+    dam = c(NA, NA, NA, "Uma", "U1", NA),
+    sex = c("F", "F", "M", "F", "M", "M"),
+    stringsAsFactors = FALSE
+  )
+  out <- removeAutoGenIds(ped)
+  expect_setequal(out$id, c("U1", "Uma", "U123", "K1", "K2"))
+  expect_identical(out$sire[out$id == "K1"], "U123") # real sire kept
+  expect_identical(out$dam[out$id == "K1"], "Uma") # real dam kept
+  expect_true(is.na(out$sire[out$id == "K2"])) # placeholder sire cleared
+  expect_identical(out$dam[out$id == "K2"], "U1") # real dam kept
+})
+
+test_that("removeAutoGenIds() keeps the shipped ancestry example's real founder U1", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  ped <- qcStudbook(utils::read.csv(
+    system.file("extdata", "examples", "example_ancestry_pedigree.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE, na.strings = c("", "NA")
+  ))
+  out <- removeAutoGenIds(ped)
+  expect_true("U1" %in% out$id)
+  expect_identical(nrow(out), nrow(ped)) # the example has no placeholders
+})

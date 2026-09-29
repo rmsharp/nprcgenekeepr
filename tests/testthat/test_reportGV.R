@@ -860,3 +860,47 @@ test_that("reportGV without twinRelations is unaffected (backward compatibility,
   expect_equal(gv$kinship["9", "10"], 0.15625)
 })
 
+
+# ---------------------------------------------------------------------------
+# Placeholder-marking plan Slice 1 (D3 (b), S807): a real animal whose id
+# merely starts with "U" (U1, Uma, U123 -- shorter than the "U" + 4 capitals/
+# digits of a placeholder) is counted as a founder, and its offspring's
+# parentage is "known". The shipped ancestry example has such a founder, U1.
+# ---------------------------------------------------------------------------
+test_that("reportGV counts the shipped ancestry example's real founder U1", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  ped <- qcStudbook(utils::read.csv(
+    system.file("extdata", "examples", "example_ancestry_pedigree.csv",
+                package = "nprcgenekeepr"),
+    stringsAsFactors = FALSE, na.strings = c("", "NA")
+  ))
+  set_seed(1L)
+  gv <- reportGV(ped, guIter = 10L)
+  expect_setequal(gv$femaleFounders$id, c("C2", "I2", "J2", "U1"))
+  expect_identical(gv$nFemaleFounders, 4L)
+  expect_setequal(gv$maleFounders$id, c("C1", "I1", "J1", "O1"))
+})
+
+test_that("reportGV counts real U-leading founders and calls their offspring known", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  ped <- qcStudbook(data.frame(
+    id = c("R1", "R2", "Uma", "U123", "K1", "K2", "K3"),
+    sire = c(NA, NA, NA, NA, "U123", "R1", "R1"),
+    dam = c(NA, NA, NA, NA, "Uma", "R2", "Uma"),
+    sex = c("M", "F", "F", "M", "F", "M", "F"),
+    birth = as.Date(c(rep("2000-01-01", 4L), rep("2008-01-01", 3L))),
+    stringsAsFactors = FALSE
+  ))
+  set_seed(1L)
+  gv <- reportGV(ped, guIter = 10L)
+  expect_setequal(gv$femaleFounders$id, c("R2", "Uma"))
+  expect_setequal(gv$maleFounders$id, c("R1", "U123"))
+  parentage <- stats::setNames(as.character(gv$report$parentage),
+                               as.character(gv$report$id))
+  expect_identical(parentage[["K1"]], "known") # U123 x Uma
+  expect_identical(parentage[["K3"]], "known") # R1 x Uma
+})

@@ -60,6 +60,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S807 RED (2 of 2): failing tests for the functions that read the placeholder rule (placeholder-marking plan Slice 1)
+- **Model:** Claude Opus 5.5. Tests only. `test_removeAutoGenIds.R` (keeps `U1`/`Uma`/`U123` rows and parent references; keeps the shipped ancestry example's `U1`), `test_reportGV.R` (ancestry example: female founders `C2 I2 J2 U1`, 4; hand-built pedigree: founders `R2 Uma` / `R1 U123`, `K1` and `K3` "known"), `test_classifyParentage.R`, `test_getLivingBreeders.R` (`Uma`, `U123` are breeders).
+- **Run:** 6 tests fail, each on today's behavior (ancestry example 3 female founders, `U1` dropped; `K1` "both unknown", `K3` "one unknown parent"; breeders `R1 R2` only); every existing test in the 4 files passes.
+
 ### 2026-09-28 · [ad hoc] S807 RED (1 of 2): failing tests for the tighter placeholder rule, format refusal and placeholder-alias lengthening (placeholder-marking plan Slice 1)
 - **Model:** Claude Opus 5.5. Tests only. `test_autoIdFormat.R` (`U123` pin flipped to real; `U1`/`U123`/`Uma`/`Umbra`/`U12a` real; `AUTO%05d` needs 5 after the prefix; `setAutoIdFormat()` refuses `U%04x`, `U%4d`, `U%-4d`), `test_obfuscateId.R` (size-4 test rewritten at size 5; placeholder aliases lengthened to 5 at size 4 and to 9 for `AUTO%05d` at size 6), `test_modPedigree.R` (filter fixture `U1`/`U2` -> `U0001`/`U0002`; a real `U1` stays when unknown ids are hidden), `test_modDeidentifiedExport.R` (preview at alias length 4 on `qcPed`).
 - **Run:** 10 tests fail, each on the old behavior (messages checked); 5 new guard tests pass today and must stay green (minted/de-identified placeholders, every id of `U%04d`/`AUTO%05d`/`U%04d-x` recognized, the suffix round trip, valid formats accepted, a long enough alias keeps its size); every existing test in the 4 files passes.
