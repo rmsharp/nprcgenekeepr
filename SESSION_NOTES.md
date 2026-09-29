@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 807 Did
+**Deliverable:** real animal ids that start with the placeholder prefix (`U1`, `Uma`, `U123`) are treated as stand-ins for unknown parents: the owner answers the plan's 4 decisions (D1/D3/D5/D6, `docs/planning/unknown-parent-placeholder-marking-plan.md` §11), then one slice with strict TDD (Slice 1 if D3 = the tighter rule, else Slice 2) (IN PROGRESS)
+**Started:** 2026-09-28
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 805 Handoff Evaluation (by Session 806)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `abd82c92`, 0
 undocumented; the S805 receipt `status: complete`, its `quality_ratchet` citation matching

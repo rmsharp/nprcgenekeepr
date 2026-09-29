@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S807 claim: real animal ids that start with the placeholder prefix (`U1`, `Uma`, `U123`) treated as stand-ins for unknown parents (PED_GV F2 / NEW-38 other half): owner answers the plan's 4 decisions (D1/D3/D5/D6), then one slice with strict TDD (Slice 1 if D3 = the tighter rule, else Slice 2) (in progress)
+- **Model:** Claude Opus 5.5.
+
 ### 2026-09-28 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-28-2.md` (10 record(s), 62,232 B → 25,099 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
