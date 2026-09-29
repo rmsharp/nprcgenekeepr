@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S807: `NEWS.Rmd` entry reworded ("unticked" -> "turned off") after the second full-suite run flagged it in `test_wordlist_coverage.R`
+- **Model:** Claude Opus 5.5. The docs 3 of 3 commit (`93640b3f`) introduced "unticked", which `spelling::spell_check_package()` flags and `inst/WORDLIST` does not cover; the S807 docs-3 check ran only the 3 `NEWS.Rmd`-reading tests, not the spelling guard. Reworded rather than added to the word list. `test_wordlist_coverage.R` (3) and `test_newsReleaseState.R` (26) pass.
+
 ### 2026-09-28 · [ad hoc] S807: placeholder-marking plan Slice 1 marked DONE; `BACKLOG.md` item updated (Slice 2 next, READY)
 - **Model:** Claude Opus 5.5. Plan §5 Slice 1: DONE S807 with its commits and what went beyond the original list (D10/D11, `getAutoIdWidth()`, the manual line already states the rule). `BACKLOG.md`: the placeholder item now says Slice 1 is done, lists the 6 ratified decisions, and names Slice 2's first change (the `addUIds()` reuse fix, `R/addUIds.R:46`); the item is 320 B shorter (`BACKLOG.md` 54,517 B). The item stays open: Slices 2-5 remain.
 

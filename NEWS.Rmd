@@ -502,7 +502,7 @@ knitr::opts_chunk$set(echo = TRUE)
 - Fixed: a real animal whose id happens to start with a capital U (such as
   `U1`, `U123` or `Uma`) was mistaken for one of those stand-ins, so it was
   left out of the founder and breeder counts, hidden when "Display Unknown IDs"
-  was unticked, and its offspring were shown as having an unknown parent. Only
+  was turned off, and its offspring were shown as having an unknown parent. Only
   ids shaped like a stand-in -- a U followed by at least four capital letters
   or digits, such as `U0001` -- are now treated that way; the shipped ancestry
   example now counts its founder `U1` (4 female founders, not 3).
