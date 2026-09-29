@@ -477,3 +477,18 @@ D6 = (a), the shipped data stays unmarked. Re-measured S807 before asking: 1,470
   **Owner:** `setAutoIdFormat()` refuses a format whose own ids the rule would not recognize.
   Rejected: allow it and document the limit. The only formats the package and its tests use
   (`"U%04d"`, `"AUTO%05d"`) pass.
+
+**Two more decisions, found and ratified S808 before Slice 2's RED:**
+
+- **D12 — Potential Parents reads the mark before it sets aside animals with no birth date.**
+  `getPotentialParents()` drops rows with no birth date (`R/getPotentialParents.R:92`) before it
+  calls `removeAutoGenIds()` (`:98`), so a real `U1234` parent marked `FALSE` but with no birth
+  date has no row left when the mark is read, falls back to the id-shape rule, and is blanked as a
+  parent; its offspring are then searched for a parent that is on record. **Owner:** fix it in
+  Slice 2 by reading the mark first. Rejected: leave it for a later slice.
+- **D13 — the values the `placeholder` column accepts (D5's detail).** `TRUE`/`FALSE` in R's own
+  spellings (`TRUE`, `true`, `True`, `T`, and the same for `FALSE`), `1`/`0`, and blank or `NA`.
+  Anything else (`yes`, `2`) stops QC and lists the rows. Measured S808: `getPedigree()` reads a
+  column of only such spellings as logical, but a column that mixes them with other text stays
+  character (`"yes"`, `"true"`, `"T"`), and a column of `1`/`0` arrives as numbers. **Owner:** also
+  accept `1` and `0`. Rejected: TRUE/FALSE spellings only; exact `TRUE`/`FALSE` only.

@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S808: placeholder-marking plan §11 records two owner decisions made before Slice 2's RED -- D12, Potential Parents reads the stand-in mark before it sets aside animals with no birth date (a real `U1234` parent with no birth date stays recorded); D13, the `placeholder` column accepts TRUE/FALSE in R's spellings, 1/0 and blank, anything else stops QC and lists the rows
+
 ### 2026-09-29 · [ad hoc] S808 claim: placeholder-marking plan Slice 2 (`docs/planning/unknown-parent-placeholder-marking-plan.md` §5): `addUIds()` stops reusing an id already used only as a sire or dam, then `qcStudbook()` writes and checks the logical `placeholder` column, `isGeneratedUnknownId(ped =)` reads it and `removeAutoGenIds()` passes the pedigree; strict TDD (in progress)
 - **Model:** Claude Opus 5.5.
 
