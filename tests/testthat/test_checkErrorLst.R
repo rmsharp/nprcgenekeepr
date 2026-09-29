@@ -31,3 +31,12 @@ test_that("checkErrorLst does not see errors when notreported", {
 test_that("checkErrorLst returns FALSE is given NULL", {
   expect_false(checkErrorLst(NULL))
 })
+## Placeholder-marking plan Slice 2 (D5, S808): rows whose placeholder value
+## QC does not accept are an error.
+test_that("checkErrorLst sees rows with an invalid placeholder value", {
+  errorLst <- getEmptyErrorLst()
+  expect_identical(errorLst$invalidPlaceholderRows, character(0L))
+  expect_false(checkErrorLst(errorLst))
+  errorLst$invalidPlaceholderRows <- c("1", "3")
+  expect_true(checkErrorLst(errorLst))
+})

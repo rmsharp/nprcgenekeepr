@@ -78,3 +78,10 @@ test_that("summary.nprcgenekeeprErr reports IDs containing a period (NEW-45)", {
   expect_true(stri_detect_fixed(summary(el)$txt, "period"))
   expect_true(stri_detect_fixed(summary(el)$txt, "o1.2"))
 })
+## Placeholder-marking plan Slice 2 (D5, S808).
+test_that("summary.nprcgenekeeprErr reports rows with an invalid placeholder value", {
+  el <- getEmptyErrorLst()
+  el$invalidPlaceholderRows <- c("1", "3")
+  expect_true(stri_detect_fixed(summary(el)$txt, "placeholder"))
+  expect_true(stri_detect_fixed(summary(el)$txt, "1 and 3"))
+})

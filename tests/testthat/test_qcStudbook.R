@@ -106,7 +106,7 @@ test_that("qcStudbook corrects column names", {
   newPedOne <- suppressWarnings(qcStudbook(pedOne, minParentAge = NULL))
   expect_named(newPedOne, c(
     "id", "sire", "dam", "sex", "gen",
-    "birth", "exit", "age", "recordStatus"
+    "birth", "exit", "age", "recordStatus", "placeholder"
   ))
   expect_identical(as.character(newPedOne$sex[newPedOne$id == "d1"]), "F")
   expect_identical(as.character(newPedOne$sex[newPedOne$id == "s1"]), "M")
@@ -473,4 +473,129 @@ test_that("qcStudbook orders same-generation ids by byte/radix order, not locale
   )
   out <- suppressWarnings(qcStudbook(qcOrderPed, minParentAge = NULL))
   expect_identical(out$id, c("A1", "B2", "_ctrl", "a9", "b17"))
+})
+
+## --- the placeholder mark (placeholder-marking plan Slice 2, S808) --------
+## qcStudbook() writes a logical `placeholder` column: TRUE for a made-up
+## stand-in for an unknown parent, FALSE for a real animal (D2). It marks the
+## stand-ins it makes TRUE, keeps a user's TRUE/FALSE, and marks every other
+## row by the id-shape rule. K2 has no recorded sire and K3 no recorded dam, so
+## QC makes one stand-in for each; U1 is a real animal (D3, Slice 1).
+pedMade <- data.frame(
+  id = c("S1", "D1", "U1", "K1", "K2", "K3"),
+  sire = c(NA, NA, NA, "S1", NA, "S1"),
+  dam = c(NA, NA, NA, "D1", "D1", NA),
+  sex = c("M", "F", "F", "F", "M", "F"),
+  birth = as.Date(c("2000-01-01", "2000-01-01", "2000-01-01",
+                    "2008-01-01", "2009-01-01", "2010-01-01")),
+  stringsAsFactors = FALSE
+)
+## U1234 is a real sire; K1 is its offspring.
+pedU1234 <- data.frame(
+  id = c("S1", "D1", "U1234", "K1", "K2"),
+  sire = c(NA, NA, NA, "U1234", NA),
+  dam = c(NA, NA, NA, "D1", "D1"),
+  sex = c("M", "F", "M", "F", "M"),
+  birth = as.Date(c("2000-01-01", "2000-01-01", "2000-01-01",
+                    "2008-01-01", "2009-01-01")),
+  placeholder = c(NA, NA, FALSE, NA, NA),
+  stringsAsFactors = FALSE
+)
+markOf <- function(ped, ids) ped$placeholder[match(ids, ped$id)]
+
+test_that("qcStudbook() adds a logical placeholder column marking exactly the stand-ins it made", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL) # default U%04d
+  q <- qcStudbook(pedMade, minSireAge = 2, minDamAge = 2)
+  made <- c(q$sire[q$id == "K2"], q$dam[q$id == "K3"])
+  expect_true(is.logical(q$placeholder))
+  expect_false(anyNA(q$placeholder))
+  expect_setequal(q$id[q$placeholder], made)
+})
+
+## A format set directly with options() skips setAutoIdFormat()'s check (D11),
+## so its ids ("U   1") need not look like stand-ins. The mark records what QC
+## made, not what an id looks like (D2).
+test_that("qcStudbook() marks the stand-ins it made TRUE even when their ids do not look like stand-ins", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = "U%4d")
+  q <- qcStudbook(pedMade, minSireAge = 2, minDamAge = 2)
+  made <- q$sire[q$id == "K2"]
+  expect_false(isGeneratedUnknownId(made)) # the id-shape rule cannot read it
+  expect_true(markOf(q, made))
+})
+
+test_that("qcStudbook() keeps a real U1234 marked FALSE real, through removeAutoGenIds()", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  q <- qcStudbook(pedU1234, minSireAge = 2, minDamAge = 2)
+  expect_false(markOf(q, "U1234"))
+  out <- removeAutoGenIds(q)
+  expect_true("U1234" %in% out$id)
+  expect_identical(out$sire[out$id == "K1"], "U1234")
+})
+
+## M4: recordStatus is rebuilt on every QC run; the mark must not be.
+test_that("running qcStudbook() again keeps every placeholder mark", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  q1 <- qcStudbook(pedU1234, minSireAge = 2, minDamAge = 2)
+  q2 <- qcStudbook(q1, minSireAge = 2, minDamAge = 2)
+  expect_false(anyNA(q1$placeholder))
+  expect_identical(sum(q1$placeholder), 1L) # K2's made sire
+  expect_identical(markOf(q2, q1$id), q1$placeholder)
+})
+
+test_that("qcStudbook() marks a pedigree with no placeholder column by the id-shape rule", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  q <- qcStudbook(nprcgenekeepr::examplePedigree, minSireAge = 2, minDamAge = 2)
+  expect_false(anyNA(q$placeholder))
+  expect_identical(q$placeholder, isGeneratedUnknownId(q$id))
+  expect_gt(sum(q$placeholder), 0L)
+})
+
+## D13: TRUE/FALSE in R's own spellings, 1/0 and blank are accepted.
+test_that("qcStudbook() reads TRUE/FALSE spellings, 1/0 and blanks in the placeholder column", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  ids <- c("S1", "D1", "U1", "K1", "K2", "K3")
+  asText <- pedMade
+  asText$placeholder <- c("TRUE", "F", "true", "False", "", NA)
+  q <- qcStudbook(asText, minSireAge = 2, minDamAge = 2)
+  expect_identical(markOf(q, ids), c(TRUE, FALSE, TRUE, FALSE, FALSE, FALSE))
+  asNumber <- pedMade
+  asNumber$placeholder <- c(1, 0, 1L, 0, NA, NA)
+  q <- qcStudbook(asNumber, minSireAge = 2, minDamAge = 2)
+  expect_identical(markOf(q, ids), c(TRUE, FALSE, TRUE, FALSE, FALSE, FALSE))
+})
+
+## D5/D13: any other value stops QC and lists the rows (data rows, as for
+## invalid dates).
+test_that("qcStudbook(reportErrors = TRUE) lists the rows with a placeholder value it does not accept", {
+  bad <- pedMade
+  bad$placeholder <- c("yes", NA, "2", "TRUE", NA, NA)
+  errorLst <- qcStudbook(bad, minSireAge = 2, minDamAge = 2,
+                         reportErrors = TRUE)
+  expect_identical(errorLst$invalidPlaceholderRows, c("1", "3"))
+  badNumber <- pedMade
+  badNumber$placeholder <- c(1, 2, 0, NA, NA, -1)
+  errorLst <- qcStudbook(badNumber, minSireAge = 2, minDamAge = 2,
+                         reportErrors = TRUE)
+  expect_identical(errorLst$invalidPlaceholderRows, c("2", "6"))
+})
+
+test_that("qcStudbook() stops, naming the rows, on a placeholder value it does not accept", {
+  bad <- pedMade
+  bad$placeholder <- c("yes", NA, "2", "TRUE", NA, NA)
+  expect_error(
+    qcStudbook(bad, minSireAge = 2, minDamAge = 2),
+    "placeholder.*1, 3"
+  )
 })
