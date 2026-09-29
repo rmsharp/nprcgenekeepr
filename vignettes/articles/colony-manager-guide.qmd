@@ -228,7 +228,7 @@ reports **Records Processed: 3,694, Errors: 0, Warnings: 1**.
 errorTypes <- c(
   "failedDatabaseConnection", "missingColumns", "invalidDateRows",
   "suspiciousParents", "femaleSires", "maleDams", "sireAndDam",
-  "duplicateIds", "invalidIdChars", "changedCols"
+  "duplicateIds", "invalidIdChars", "invalidPlaceholderRows", "changedCols"
 )
 errorDescriptions <- c(
   "Database connection failed: configuration or permissions are invalid.",
@@ -240,6 +240,7 @@ errorDescriptions <- c(
   "Individuals listed as both a sire and a dam.",
   "IDs listed more than once.",
   "IDs (id, sire, or dam) containing a disallowed period ('.'); IDs must be alphanumeric with no symbols.",
+  "Values in an optional placeholder column (TRUE or FALSE, marking stand-in unknown parents) other than TRUE, FALSE, 1, 0 or blank.",
   "Columns renamed to conform to internal naming conventions, and what they were changed to."
 )
 knitr::kable(

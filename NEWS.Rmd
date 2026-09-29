@@ -498,14 +498,20 @@ knitr::opts_chunk$set(echo = TRUE)
 - Fixed: the pedigree check gives each unknown parent a stand-in id (`U0001`,
   `U0002`, and so on). If a real animal already had one of those ids, the
   stand-in could be given the same id, so two different animals shared it. The
-  check, and `addUIds()`, now skip any id already in the pedigree.
+  check, and `addUIds()`, now skip any id already in the pedigree, including
+  an id that appears only as a sire or dam and has no row of its own.
 - Fixed: a real animal whose id happens to start with a capital U (such as
   `U1`, `U123` or `Uma`) was mistaken for one of those stand-ins, so it was
   left out of the founder and breeder counts, hidden when "Display Unknown IDs"
   was turned off, and its offspring were shown as having an unknown parent. Only
   ids shaped like a stand-in -- a U followed by at least four capital letters
   or digits, such as `U0001` -- are now treated that way; the shipped ancestry
-  example now counts its founder `U1` (4 female founders, not 3).
+  example now counts its founder `U1` (4 female founders, not 3). The pedigree
+  check also adds a yes/no `placeholder` column recording which animals are
+  stand-ins. A center can enter `FALSE` for a real animal whose id looks like a
+  stand-in (such as `U1234`) and it is kept as a real animal, including in
+  Potential Parents; a value other than TRUE, FALSE, 1, 0 or blank stops the
+  check and names the rows.
 - Fixed: Potential Parents (`getPotentialParents()`) rules out as a possible
   dam any female who gave birth to another animal too close in time to have
   also carried this one. When no female nearby was a proven breeder, it fell

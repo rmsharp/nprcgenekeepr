@@ -163,7 +163,8 @@ qcStudbook(pedSameMaleIsSireAndDam, reportErrors = TRUE)$sireAndDam
 
 Diagnostic mode also reports parents younger than their minimum breeding age
 (`minSireAge` for sires, `minDamAge` for dams) at an offspring's birth (in
-`suspiciousParents`) and any ID containing a period (in `invalidIdChars`).
+`suspiciousParents`) any ID containing a period (in `invalidIdChars`), and any `placeholder` value
+other than TRUE, FALSE, 1, 0 or blank (in `invalidPlaceholderRows`).
 
 ## Production mode vs diagnostic mode {#sec-modes}
 
@@ -181,6 +182,7 @@ mode never stops, so a single pass surfaces every issue at once.
 | Sire is also a dam | **stops** | `sireAndDam` |
 | Parent below `minSireAge`/`minDamAge` | **stops** | `suspiciousParents` |
 | Period in an ID | **stops** | `invalidIdChars` |
+| Unrecognized `placeholder` value | **stops** | `invalidPlaceholderRows` |
 
 Production mode silently corrects the safe cases. We can confirm it on
 `pedFemaleSireMaleDam` -- `s1` becomes male and `d1` female -- and on
