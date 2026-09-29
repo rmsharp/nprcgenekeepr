@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S808 claim: placeholder-marking plan Slice 2 (`docs/planning/unknown-parent-placeholder-marking-plan.md` §5): `addUIds()` stops reusing an id already used only as a sire or dam, then `qcStudbook()` writes and checks the logical `placeholder` column, `isGeneratedUnknownId(ped =)` reads it and `removeAutoGenIds()` passes the pedigree; strict TDD (in progress)
+- **Model:** Claude Opus 5.5.
+
 ### 2026-09-29 · [ad hoc] Owner-directed after the S807 close-out: pushed 15 commits; all 4 CI workflows green
 - **Model:** Claude Opus 5.5. **Push (a non-commit action):** `git push origin master` moved `origin/master` from `e5e007f8` to `1d93590d` (S806's 4 local commits and S807's 11), a fast-forward after a fresh fetch (0 behind).
 - **CI on `1d93590d`** (the push changes `R/`, so every run was awaited; runs found by commit sha, because the plain `gh run list --branch master` first returned stale S680 runs): lint 36517811103, pkgdown 36517811074, test-coverage 36517811115, R-CMD-check 36517811053, all success; R-CMD-check green on all 5 legs (macos-latest, windows-latest, ubuntu-latest release/devel/oldrel-1); Pages deploy 36518278161 succeeded. This record commit stays local.

@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 808 Did
+**Deliverable:** Slice 2 of `docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD): `addUIds()` stops reusing an id already used only as a sire or dam (M11), then `qcStudbook()` writes the logical `placeholder` column (D2) and stops on a bad value (D5), `isGeneratedUnknownId(ped =)` reads the mark (D4) and `removeAutoGenIds()` passes the pedigree (IN PROGRESS)
+**Started:** 2026-09-29
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 806 Handoff Evaluation (by Session 807)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontier = HEAD
 `0fc874f9`, 0 undocumented; the S806 receipt `status: complete`, its `quality_ratchet` citation

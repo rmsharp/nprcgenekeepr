@@ -180,6 +180,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S808
+date: 2026-09-29
+status: pending
+active_task: Real animal ids that start with the placeholder prefix treated as stand-ins for unknown parents (PED_GV F2 / NEW-38 other half). Plan docs/planning/unknown-parent-placeholder-marking-plan.md; this session: Slice 2 with strict TDD (addUIds reuse fix, qcStudbook writes and validates the placeholder column, isGeneratedUnknownId(ped =), removeAutoGenIds passes ped).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S807
 date: 2026-09-28
 status: complete
