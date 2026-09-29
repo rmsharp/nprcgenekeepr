@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S810 claim (in progress): placeholder-marking plan Slice 4 (`docs/planning/unknown-parent-placeholder-marking-plan.md` §5): the "Display Unknown IDs" filter reads the `placeholder` mark, the column's display name, help text and §2.5 documents, exports round-trip the mark; strict TDD
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-29 · [ad hoc] S809 close-out: Slice 3 DONE; records, Learning 825, `HANDOFFS.md` receipt complete
 - **Model:** Claude Sonnet 5.5. `devtools::check` 0 errors / 0 warnings / 2 notes (owner's drafts); full suite 2,844 tests, 0 errors, 1 known local-only failure; lint 0; smoke HTTP 200. S808 handoff scored 9/10, self 8/10. Nothing pushed.
 

@@ -180,6 +180,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S810
+date: 2026-09-29
+status: pending
+active_task: Placeholder-marking plan Slice 4 (docs/planning/unknown-parent-placeholder-marking-plan.md section 5): the Display Unknown IDs filter reads the placeholder mark, display name, help text and section 2.5 documents, exports round-trip the mark. Strict TDD.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S809
 date: 2026-09-29
 status: complete

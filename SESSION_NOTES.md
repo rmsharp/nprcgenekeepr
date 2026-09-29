@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 810 Did
+**Deliverable:** Slice 4 of `docs/planning/unknown-parent-placeholder-marking-plan.md`: the "Display Unknown IDs" filter (`R/modPedigree.R:363`) reads the `placeholder` mark, the column's display name, help text and §2.5 documents, exports round-trip the mark (IN PROGRESS)
+**Started:** 2026-09-29
+**Status:** Session claimed. Work beginning (PRE-RED: re-run plan section 2 greps, then decisions).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 808 Handoff Evaluation (by Session 809)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier one docs-only commit behind
 HEAD (`f443b6d93`, ledgered this session), the S808 receipt `status: complete`, the 7 untracked files
