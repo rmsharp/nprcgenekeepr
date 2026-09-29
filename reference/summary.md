@@ -50,14 +50,14 @@ summary(errorList)
 #>  
 #> Animal records where parent records are suspicous because of dates.
 #> One or more parents appear too young at time of birth.
-#>   dam sire id sex      birth recordStatus exit  sireBirth   damBirth sireAge
-#> 2  d2   s1 o2   F 2009-03-17     original <NA> 2000-07-18 2015-09-16    8.66
-#> 3  d2   s2 o3   F 2012-04-11     original <NA> 2006-06-19 2015-09-16    5.81
-#> 4  d2   s2 o4   M 2006-04-13     original <NA> 2006-06-19 2015-09-16   -0.18
-#>   damAge
-#> 2   -6.5
-#> 3   -3.4
-#> 4   -9.4
+#>   dam sire id sex      birth recordStatus placeholder exit  sireBirth
+#> 2  d2   s1 o2   F 2009-03-17     original       FALSE <NA> 2000-07-18
+#> 3  d2   s2 o3   F 2012-04-11     original       FALSE <NA> 2006-06-19
+#> 4  d2   s2 o4   M 2006-04-13     original       FALSE <NA> 2006-06-19
+#>     damBirth sireAge damAge
+#> 2 2015-09-16    8.66   -6.5
+#> 3 2015-09-16    5.81   -3.4
+#> 4 2015-09-16   -0.18   -9.4
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
   minParentAge = 2L,

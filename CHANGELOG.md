@@ -93,6 +93,56 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · \[ad hoc\] S808 close-out: placeholder-marking plan Slice 2 DONE (S807 handoff evaluated 9/10, self 8/10); session notes, `HANDOFFS.md` receipt complete, plan §5 DONE note, `BACKLOG.md` item updated (Slice 3 next), Learning 824 (a new error-list field breaks a vignette table only `devtools::check()` builds); full suite 2,830 tests / 0 errors, `devtools::check` 0/0/2 notes (owner’s drafts), lint 0, runtime smoke HTTP 200, quality_ratchet pass
+
+### 2026-09-29 · \[ad hoc\] S808 REFACTOR (docs, found by `devtools::check`): `vignettes/a2interactive.Rmd`’s error-type table gains the `invalidPlaceholderRows` description (11 fields, 10 descriptions failed the vignette build); check now 0 errors / 0 warnings / 2 notes (the owner’s untracked drafts); full suite 358 files, 2,830 tests, 0 errors, only the known local-only pkgdown failure; runtime smoke `runGeneKeepR(port = 6098L)` HTTP 200, no log errors
+
+### 2026-09-29 · \[ad hoc\] S808 REFACTOR (docs 4 of 4): `NEWS.Rmd` (the stand-in id entries now cover ids used only as a parent and the `placeholder` column), the QC article’s problems table and the colony manager guide’s QC error list gain `invalidPlaceholderRows`, `inst/WORDLIST` gains the field name (spelling guard)
+
+### 2026-09-29 · \[ad hoc\] S808 REFACTOR (docs 3 of 4): `processQcStudbookResult()` roxygen lists `invalidPlaceholderRows`
+
+### 2026-09-29 · \[ad hoc\] S808 REFACTOR (docs 2 of 4): `removeAutoGenIds()` and `isGeneratedUnknownId(ped =)` roxygen describe the mark overriding the id shape
+
+### 2026-09-29 · \[ad hoc\] S808 REFACTOR (docs 1 of 4): `qcStudbook()` roxygen and man page describe the `placeholder` column
+
+### 2026-09-29 · \[ad hoc\] S808 GREEN (lint): the 3 lint findings on the Slice 2 code fixed (`nzchar()` in `readPlaceholderMark()`, two long strings in `summary()`); lint 0 on the 9 touched R files; full unfiltered suite (`NOT_CRAN=true`) 358 files, 2,830 tests, 0 errors, 1 failure (the known local-only `test_pkgdown_reference_config.R`)
+
+### 2026-09-29 · \[ad hoc\] S808 GREEN (3 of 3): placeholder-marking plan Slice 2’s error reporting – `summary()` of the QC error list names the rows with an invalid placeholder value and `processQcStudbookResult()` adds an “Invalid placeholder values” row; `test_summary.nprcgenekeeprErr.R`, `test_modInput_qcStudbook.R` and the two end-to-end upload tests in `test_modInput_placeholder.R` pass
+
+### 2026-09-29 · \[ad hoc\] S808 GREEN (2 of 3): placeholder-marking plan Slice 2 in QC – `qcStudbook()` writes a logical `placeholder` column (the stand-ins it made TRUE, a user’s TRUE/FALSE/1/0 kept, every other row by the id-shape rule) and stops on, or with `reportErrors` lists in `errorLst$invalidPlaceholderRows`, a value it does not accept (D5, D13); `getEmptyErrorLst()` gains that field (11) and `checkErrorLst()` sees it; `test_qcStudbook.R`, `test_checkErrorLst.R`, `test_getFocalAnimalPed.R` pass
+
+### 2026-09-29 · \[ad hoc\] S808 GREEN (1 of 3): placeholder-marking plan Slice 2 at the id level – `isGeneratedUnknownId()` takes the pedigree and answers with its `placeholder` mark (no row or an NA mark = the id-shape rule); `addUIds()` treats an id used only as a sire or dam as in use (M11); `removeAutoGenIds()` reads every mark before removing rows; `getPotentialParents()` runs it before setting aside animals with no birth date (D12); the 4 id-level test files and the other 25 rule-touching test files pass
+
+### 2026-09-29 · \[ad hoc\] S808 RED (3 of 3): failing tests for placeholder-marking plan Slice 2’s error reporting – `processQcStudbookResult()` turns `errorLst$invalidPlaceholderRows` into an “Invalid placeholder values” row naming the rows; `getEmptyErrorLst()` grows from 10 to 11 fields (`test_getFocalAnimalPed.R`); 2 failing
+
+### 2026-09-29 · \[ad hoc\] S808 RED (2 of 3): failing tests for placeholder-marking plan Slice 2 in QC and the app – `qcStudbook()` adds a logical `placeholder` column (the stand-ins it made TRUE, even under a format the id-shape rule cannot read; a user’s `U1234` FALSE kept, also on a second QC run; no column = the id-shape rule; TRUE/FALSE spellings and 1/0 read, D13; `yes`/`2`/`-1` listed in `errorLst$invalidPlaceholderRows` or a stop naming the rows, D5); the column-name pin gains `placeholder` (M10); `checkErrorLst()` and `summary()` see the new entry; a file upload keeps a real `U1234` through Potential Parents and shows a QC error naming rows 1, 3; 13 failing
+
+- **Correction to RED (1 of 3):** that commit holds 8 tests – 7 failing
+  on behavior and 1 guard failing only on the missing `ped` argument –
+  not “9 failing, 1 guard”.
+
+### 2026-09-29 · \[ad hoc\] S808 RED (1 of 3): failing tests for placeholder-marking plan Slice 2 at the id level – `addUIds()` never reuses an id used only as a sire or a dam (M11); `isGeneratedUnknownId(ped =)` answers with the pedigree’s `placeholder` mark (no row or NA mark = the id-shape rule); `removeAutoGenIds()` keeps a real `U1234` marked FALSE and removes a stand-in marked TRUE; `getPotentialParents()` keeps a real `U1234` as a recorded sire and a candidate, also with no birth date (D12); 9 failing, 1 guard
+
+### 2026-09-29 · \[ad hoc\] S808: placeholder-marking plan §11 records two owner decisions made before Slice 2’s RED – D12, Potential Parents reads the stand-in mark before it sets aside animals with no birth date (a real `U1234` parent with no birth date stays recorded); D13, the `placeholder` column accepts TRUE/FALSE in R’s spellings, 1/0 and blank, anything else stops QC and lists the rows
+
+### 2026-09-29 · \[ad hoc\] S808 claim: placeholder-marking plan Slice 2 (`docs/planning/unknown-parent-placeholder-marking-plan.md` §5): `addUIds()` stops reusing an id already used only as a sire or dam, then `qcStudbook()` writes and checks the logical `placeholder` column, `isGeneratedUnknownId(ped =)` reads it and `removeAutoGenIds()` passes the pedigree; strict TDD (in progress)
+
+- **Model:** Claude Opus 5.5.
+
+### 2026-09-29 · \[ad hoc\] Owner-directed after the S807 close-out: pushed 15 commits; all 4 CI workflows green
+
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):**
+  `git push origin master` moved `origin/master` from `e5e007f8` to
+  `1d93590d` (S806’s 4 local commits and S807’s 11), a fast-forward
+  after a fresh fetch (0 behind).
+- **CI on `1d93590d`** (the push changes `R/`, so every run was awaited;
+  runs found by commit sha, because the plain
+  `gh run list --branch master` first returned stale S680 runs): lint
+  36517811103, pkgdown 36517811074, test-coverage 36517811115,
+  R-CMD-check 36517811053, all success; R-CMD-check green on all 5 legs
+  (macos-latest, windows-latest, ubuntu-latest release/devel/oldrel-1);
+  Pages deploy 36518278161 succeeded. This record commit stays local.
+
 ### 2026-09-28 · \[ad hoc\] S807 records: placeholder-marking plan Slice 1 (the tighter placeholder rule) DONE (S806 handoff evaluated 9/10, self 8/10)
 
 - **Model:** Claude Opus 5.5. Session notes, `HANDOFFS.md` receipt

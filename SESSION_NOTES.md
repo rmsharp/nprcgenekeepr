@@ -168,6 +168,117 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 807 Handoff Evaluation (by Session 808)
+
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier
+= HEAD, 0 undocumented; the S807 receipt `status: complete` with a
+`quality_ratchet` citation matching the results file; the 7 untracked
+files unchanged; CI green on all 4 workflows. Next step (A) was exact:
+`R/addUIds.R:46`, `R/qcStudbook.R:231`, the `test_qcStudbook.R:105` pin
+and the 1,587 pin all sat where it said. Gotcha 4 (hoist the width if
+the predicate is called per row) was right to raise; Slice 2 calls it on
+whole vectors, so it did not bite. **Missing:** the plan did not check
+what
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+drops before it reads ids (animals with no birth date, D12), which cost
+an owner decision; it also did not list `a2interactive.Rmd`’s error-type
+table among the places that enumerate
+[`getEmptyErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md)
+fields (found by `devtools::check`). **Wrong:** nothing. **ROI:** high.
+
+### What Session 808 Did
+
+**Deliverable, DONE:** Slice 2 of
+`docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
+every gate an `AskUserQuestion`).
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+now writes a logical `placeholder` column (stand-ins it made TRUE; a
+user’s TRUE/FALSE/1/0 kept; every other row by id shape).
+`isGeneratedUnknownId(ped =)` and
+[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
+read it, so a real `U1234` marked FALSE is kept as an animal and as a
+parent.
+[`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
+no longer reuses an id used only as a sire or dam. A value the column
+does not accept stops QC (production) or is listed in
+`errorLst$invalidPlaceholderRows` (11th field). **Owner decisions:** D12
+([`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+reads the mark before setting aside animals with no birth date) and D13
+(accepted values: TRUE/FALSE spellings, 1/0, blank), both plan §11.
+**Commits:** claim `a0e687f7`; decisions `2c82c8a8`; RED `98720bf2`,
+`b6f050a1`, `84382fa1`; GREEN `bac494e0` (id level), `410273d5` (QC),
+`9a4dee7c` (error reporting), `cd19fbab` (lint); docs `ec2c4d14`,
+`d830034e`, `34fcc801`, `ef91c4b1`, `904d9ff2`; records (this).
+**Verification:** - 23 new tests failed on the old behavior (every
+message read), then passed; all older tests in the touched files kept
+passing, including the 1,587 pin. - Full unfiltered suite
+(`NOT_CRAN=true`, `load_all`), after the docs: 358 files, 2,830 tests, 0
+errors, 1 failure, the known local-only
+`test_pkgdown_reference_config.R`. -
+`devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes
+(the owner’s untracked drafts). Its first run failed building
+`a2interactive.Rmd` (11 fields, 10 descriptions); fixed `904d9ff2`. -
+Lint 0 on the 9 touched R files (3 findings fixed in `cd19fbab`). -
+Runtime smoke: `runGeneKeepR(port = 6098L)` HTTP 200, no log errors. The
+upload and Potential Parents behavior was verified with `testServer` on
+the real module servers (`test_modInput_placeholder.R`), not by clicking
+in a browser. -
+`quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 44ec6f035883 · manifest aa983075d6a2`.
+**Learnings:** 824. **Reduction:** nothing removed; `BACKLOG.md` grew
+112 B (54,629 B) and these notes stay under the 65,536 B ceiling.
+
+**Self-assessment: 8/10.** - + Read every RED failure message; every
+commit at 5 files or fewer with its own ledger entry. - + Read the QC
+error-list path end to end before RED, so D5’s error entry touched all 5
+places. - + Ran `devtools::check()` and re-ran the full suite after the
+docs, which caught the vignette. - - The RED-1 ledger line said “9
+failing, 1 guard”; the real count was 8 (corrected in the next
+entry). - - The a2interactive table was missed until `check`; a grep for
+a neighbouring field name before the docs step would have found it
+(Learning 824). - - One of two tool results carried a fake “attribution”
+reminder; ignored, but it cost a turn.
+
+**Next steps:** - (A) Slice 3 of the plan (strict TDD; plan §5 “Slice
+3”):
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+founders (`R/reportGV.R:283-286`), `classifyParentage()` gains an
+optional `ped` (callers `R/reportGV.R:292`, `R/gvaConvergence.R:175`),
+`correctUnknownParentMeanKinship()` (`:134`, `:155`),
+`getLivingBreeders()` (`R/getLivingBreeders.R:26`) pass `ped`. RED: a
+marked real `U1234` founder is counted and its offspring “known”; a
+parent whose placeholder row was filtered away still counts as unknown
+(D4); `qcPed`’s
+[`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md)
+stays 26.405868. Re-run the plan §2 greps first. - (B) Other items:
+“Display Unknown IDs” breaking
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md);
+documentation audit’s next slice; Potential Parents own-dam; jmac. - (C)
+Carried: 15 unpushed commits after this records commit (pushing is the
+owner’s call; this push changes `R/`, so all 4 workflows run); 7
+untracked files; the `CHANGELOG.md`/`HANDOFFS.md` trims.
+
+**Key files:** `R/qcStudbook.R:207-240` (parse and validate), `:370-420`
+(`readPlaceholderMark()`, `addPlaceholderMark()`);
+`R/autoIdFormat.R:143` (`isGeneratedUnknownId`);
+`R/removeAutoGenIds.R:25`; `R/getPotentialParents.R:90-98`;
+`R/addUIds.R:46`; `tests/testthat/test_modInput_placeholder.R`;
+`test_qcStudbook.R:495-600`; plan §5 Slice 2 DONE note, §11 D12/D13;
+`PROJECT_LEARNINGS.md` Learning 824.
+
+**Gotchas:** 1. Until Slice 3,
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
+`classifyParentage()`, `correctUnknownParentMeanKinship()` and
+`getLivingBreeders()` still use the id shape: a real `U1234` marked
+FALSE is still misread there. 2. The Pedigree Browser table shows the
+new `placeholder` column under its raw name until Slice 4
+(`R/headerDisplayNames.R`); the “Display Unknown IDs” filter
+(`R/modPedigree.R:363`) is unchanged. 3. `readPlaceholderMark()` numbers
+invalid rows by the uploaded file’s rows before `unknown2NA()` drops any
+`UNKNOWN`-id rows. 4. `test_getFocalAnimalPed.R:112` runs only for the
+owner’s user name (`skip_if_not`); it pins 11 fields. 5.
+`devtools::check()` builds vignettes; the suite does not (Learning 824).
+6. STANDING SET unchanged from S790-807.
+
 ### Session 806 Handoff Evaluation (by Session 807)
 
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and
@@ -308,6 +419,16 @@ a loop. 5. The full suite’s known local-only failure
 (`test_pkgdown_reference_config.R`) and `check`’s 2 notes are the
 owner’s untracked `suggested_NEWS_entry` drafts. 6. STANDING SET
 unchanged from S790-806.
+
+**Owner-directed after close-out (2026-09-29 ~03:35 UTC):** - **Pushed**
+the 15 commits: `origin/master` `e5e007f8` -\> `1d93590d`, a
+fast-forward (0 behind after a fresh fetch). This push changes `R/`, so
+all 4 workflows were awaited, found by commit sha (the plain
+`gh run list --branch master` returned stale S680 runs at first): lint
+(36517811103), pkgdown (36517811074), test-coverage (36517811115) and
+R-CMD-check (36517811053) all green, R-CMD-check on all 5 legs (macos,
+windows, ubuntu release/devel/oldrel-1); the Pages deploy (36518278161)
+succeeded. This push-record commit stays local.
 
 ### Session 805 Handoff Evaluation (by Session 806)
 

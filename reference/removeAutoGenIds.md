@@ -8,7 +8,11 @@ With the default `"U%04d"`, an automatically generated ID is a capital
 "U" followed by at least four capital letters or digits (`"U0001"`, or
 `"U05X3C"` after de-identification). A real animal whose ID merely
 starts with "U" (`"U1"`, `"U123"`, `"Uma"`) is kept, and so is its place
-as a sire or dam; a real ID of the full shape (`"U1234"`) is removed.
+as a sire or dam; a real ID of the full shape (`"U1234"`) is removed
+unless the pedigree's `placeholder` column (see
+[`qcStudbook`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md))
+marks it `FALSE`, and a `TRUE` mark removes a stand-in whatever its ID
+looks like.
 
 ## Usage
 

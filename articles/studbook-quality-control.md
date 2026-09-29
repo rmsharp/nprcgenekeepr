@@ -70,11 +70,11 @@ ped <- qcStudbook(examplePedigree,
   reportErrors  = FALSE
 )
 dim(ped)
-#> [1] 3694   13
+#> [1] 3694   14
 names(ped)
 #>  [1] "id"           "sire"         "dam"          "sex"          "gen"         
 #>  [6] "birth"        "exit"         "age"          "ancestry"     "origin"      
-#> [11] "status"       "recordStatus" "fromCenter"
+#> [11] "status"       "recordStatus" "fromCenter"   "placeholder"
 head(ped[, c("id", "sire", "dam", "sex", "gen", "birth", "exit", "age")])
 #>       id sire  dam sex gen      birth       exit age
 #> 1 01WY5E <NA> <NA>   M   0 2005-07-07 2005-08-26 0.1
@@ -209,8 +209,9 @@ qcStudbook(pedSameMaleIsSireAndDam, reportErrors = TRUE)$sireAndDam
 
 Diagnostic mode also reports parents younger than their minimum breeding
 age (`minSireAge` for sires, `minDamAge` for dams) at an offspring’s
-birth (in `suspiciousParents`) and any ID containing a period (in
-`invalidIdChars`).
+birth (in `suspiciousParents`) any ID containing a period (in
+`invalidIdChars`), and any `placeholder` value other than TRUE, FALSE,
+1, 0 or blank (in `invalidPlaceholderRows`).
 
 ## Production mode vs diagnostic mode
 
@@ -229,6 +230,7 @@ issue at once.
 | Sire is also a dam | **stops** | `sireAndDam` |
 | Parent below `minSireAge`/`minDamAge` | **stops** | `suspiciousParents` |
 | Period in an ID | **stops** | `invalidIdChars` |
+| Unrecognized `placeholder` value | **stops** | `invalidPlaceholderRows` |
 
 Production mode silently corrects the safe cases. We can confirm it on
 `pedFemaleSireMaleDam` – `s1` becomes male and `d1` female – and on

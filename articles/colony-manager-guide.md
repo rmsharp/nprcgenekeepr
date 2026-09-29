@@ -248,6 +248,7 @@ QC Summary after reading and checking the example pedigree.
 | sireAndDam | Individuals listed as both a sire and a dam. |
 | duplicateIds | IDs listed more than once. |
 | invalidIdChars | IDs (id, sire, or dam) containing a disallowed period (‘.’); IDs must be alphanumeric with no symbols. |
+| invalidPlaceholderRows | Values in an optional placeholder column (TRUE or FALSE, marking stand-in unknown parents) other than TRUE, FALSE, 1, 0 or blank. |
 | changedCols | Columns renamed to conform to internal naming conventions, and what they were changed to. |
 
 QC error types checked by Read and Check Pedigree. {.table .caption-top}

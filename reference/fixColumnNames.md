@@ -62,6 +62,9 @@ fixColumnNames(c("Sire_ID", "EGO", "DAM", "Id", "birth_date"),
 #> $invalidIdChars
 #> character(0)
 #> 
+#> $invalidPlaceholderRows
+#> character(0)
+#> 
 #> $changedCols
 #> $changedCols$caseChange
 #> [1] "Sire_ID, EGO, DAM, and Id to sire_id, ego, dam, and id"

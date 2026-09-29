@@ -75,7 +75,7 @@ trimmedPed <- trimPedigree(focalAnimals, breederPed)
 length(focalAnimals)
 #> [1] 327
 dim(trimmedPed)
-#> [1] 704  14
+#> [1] 704  15
 ```
 
 [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)

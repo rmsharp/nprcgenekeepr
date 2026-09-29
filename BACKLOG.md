@@ -21,9 +21,9 @@ now stops with a message naming the cycle instead of recursing until R
 aborts, and keeps the documented diamond repeats; F2’s
 [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
 half is done: a minted id now skips any id already in the `id` column
-(S806 found it still reuses an id used only as a sire or dam; the
-placeholder-marking plan’s Slice 2 fixes it); F2’s other half, real ids
-mistaken for placeholders, is its own item below; F3 is done: the
+(S806 found it still reuses an id used only as a sire or dam; fixed
+S808); F2’s other half, real ids mistaken for placeholders, is its own
+item below; F3 is done: the
 [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
 dam fallback no longer re-admits a female the gestation window ruled
 out). **Open, all owner decisions:** (a) the overhaul roots, none urgent
@@ -67,31 +67,34 @@ or (3) leave it. Tests to extend:
 **Real animal ids that start with the placeholder prefix are treated as
 stand-ins for unknown parents – the other half of PED_GV F2 / NEW-38
 (found S781; approach chosen S806: mark ids when they are made; plan
-written S806; Slice 1 DONE S807; READY: Slice 2 next, then 3-5, Effort M
-each, strict TDD)** – the plan is
+written S806; Slices 1-2 DONE S807-S808; READY: Slice 3 next, then 4-5,
+Effort M each, strict TDD)** – the plan is
 `docs/planning/unknown-parent-placeholder-marking-plan.md`: read it
 first (§1.3 measurements, §2 inventory with the grep commands, §5
-slices, §11 the ratified decisions). **Slice 1 (S807):**
-`isGeneratedUnknownId()` now needs the prefix plus at least as many
-capital letters/digits as the format’s number prints
-(`getAutoIdWidth()`, 4 for `"U%04d"`), so `U1`/`U123`/`Uma` are real and
-the shipped ancestry example counts `U1` (4 female founders); a real id
-of the full shape (`U1234`) is still misread, which Slices 2-5 fix with
-a logical `placeholder` column written once by
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md).
-**Ratified S807 (plan §11):** D1 `placeholder`; D3 the tighter rule; D5
-a bad value stops QC and lists the rows; D6 shipped data unmarked; D10
-placeholder aliases lengthened when
-[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)’s
-`size` is too short; D11
-[`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
-refuses formats whose ids the rule cannot read. **Slice 2 starts with**
-the
+slices, §11 the ratified decisions). **Done:** Slice 1 (S807):
+`isGeneratedUnknownId()` needs the prefix plus at least as many capital
+letters/digits as the format’s number prints, so `U1`/`U123`/`Uma` are
+real. Slice 2 (S808):
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+writes a logical `placeholder` column (made stand-ins TRUE, a user’s
+TRUE/FALSE/1/0 kept, the rest by id shape; other values stop QC,
+`errorLst$invalidPlaceholderRows`), `isGeneratedUnknownId(ped =)` and
+[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
+read it,
 [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
-fix (plan M11): it can give a missing sire the id of another animal’s
-recorded sire when that sire has no row (`existingIds <- ped$id`,
-`R/addUIds.R:46`), making false half-sibs. The S797 exact-digits attempt
-and its withdrawn tests stay recorded in commit `a01e13af`.
+no longer reuses an id used only as a sire or dam, and
+[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
+reads the mark before setting aside animals with no birth date.
+**Ratified (plan §11):** D1, D3, D5, D6, D10-D13. **Slice 3 next:**
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+founders, `classifyParentage(ped =)` (both callers, `R/reportGV.R:292`,
+`R/gvaConvergence.R:175`), `correctUnknownParentMeanKinship()`,
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+and `getLivingBreeders()` pass `ped`, so a marked real `U1234` founder
+is counted (plan §5 Slice 3; re-run the §2 greps first). Until then
+those readers still use the id shape, so a real `U1234` marked FALSE is
+still misread there. The S797 exact-digits attempt and its withdrawn
+tests stay recorded in commit `a01e13af`.
 
 **Unticking “Display Unknown IDs” breaks the Genetic Value analysis
 (found S806, 2026-09-28, DECISION NEEDED, Effort S)** – every downstream

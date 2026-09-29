@@ -16,8 +16,9 @@ processQcStudbookResult(errorLst)
   list object returned by `qcStudbook` with `reportErrors = TRUE`, or
   NULL. Expected to be of class `nprcgenekeeprErr` containing error
   fields such as femaleSires, maleDams, sireAndDam, duplicateIds,
-  invalidIdChars, missingColumns, invalidDateRows, suspiciousParents,
-  failedDatabaseConnection, and changedCols.
+  invalidIdChars, invalidPlaceholderRows, missingColumns,
+  invalidDateRows, suspiciousParents, failedDatabaseConnection, and
+  changedCols.
 
 ## Value
 

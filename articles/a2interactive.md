@@ -1391,7 +1391,8 @@ names(getEmptyErrorLst())
     ##  [3] "invalidDateRows"          "suspiciousParents"       
     ##  [5] "femaleSires"              "maleDams"                
     ##  [7] "sireAndDam"               "duplicateIds"            
-    ##  [9] "invalidIdChars"           "changedCols"
+    ##  [9] "invalidIdChars"           "invalidPlaceholderRows"  
+    ## [11] "changedCols"
 
 Each is defined below.
 
@@ -1406,6 +1407,7 @@ Each is defined below.
 | sireAndDam | Individuals who are listed as both a sire and a dam. |
 | duplicateIds | IDs listed more than once. |
 | invalidIdChars | IDs (id, sire, or dam) that contain a period (‘.’), which is not allowed. |
+| invalidPlaceholderRows | Rows with a placeholder value other than TRUE, FALSE, 1, 0 or blank (the optional column that marks stand-ins for unknown parents). |
 | changedCols | Columns that have been changed to conform to internal naming conventions and what they were changed to. |
 
 We are going to use the small imaginary pedigree listed below that has
@@ -1445,15 +1447,15 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpTWOzWp/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpIL5aq1/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
-| dam | sire | id  | sex | birth      | recordStatus | exit | sireBirth  | damBirth   | sireAge | damAge |
-|:----|:-----|:----|:----|:-----------|:-------------|:-----|:-----------|:-----------|--------:|-------:|
-| d2  | s1   | o2  | F   | 2009-03-17 | original     | NA   | 2000-07-18 | 2015-09-16 |    8.66 |  -6.50 |
-| d2  | s2   | o3  | F   | 2012-04-11 | original     | NA   | 2006-06-19 | 2015-09-16 |    5.81 |  -3.43 |
-| d2  | s2   | o4  | M   | 2006-04-13 | original     | NA   | 2006-06-19 | 2015-09-16 |   -0.18 |  -9.43 |
+| dam | sire | id | sex | birth | recordStatus | placeholder | exit | sireBirth | damBirth | sireAge | damAge |
+|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|---:|---:|
+| d2 | s1 | o2 | F | 2009-03-17 | original | FALSE | NA | 2000-07-18 | 2015-09-16 | 8.66 | -6.50 |
+| d2 | s2 | o3 | F | 2012-04-11 | original | FALSE | NA | 2006-06-19 | 2015-09-16 | 5.81 | -3.43 |
+| d2 | s2 | o4 | M | 2006-04-13 | original | FALSE | NA | 2006-06-19 | 2015-09-16 | -0.18 | -9.43 |
 
 Examination of the ages of the parents reveals the issues being
 reported.
@@ -1479,11 +1481,11 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ped[ped$id %in% c("s2", "d2", "o3", "o4"), ]
 ```
 
-    ##   id sire  dam sex gen      birth exit  age recordStatus
-    ## 2 d2 <NA> <NA>   F   0 2006-04-13 <NA> 20.5     original
-    ## 4 s2 <NA> <NA>   M   0 2006-06-19 <NA> 20.3     original
-    ## 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.5     original
-    ## 8 o4   s2   d2   M   1 2015-09-16 <NA> 11.0     original
+    ##   id sire  dam sex gen      birth exit  age recordStatus placeholder
+    ## 2 d2 <NA> <NA>   F   0 2006-04-13 <NA> 20.5     original       FALSE
+    ## 4 s2 <NA> <NA>   M   0 2006-06-19 <NA> 20.3     original       FALSE
+    ## 7 o3   s2   d2   F   1 2012-04-11 <NA> 14.5     original       FALSE
+    ## 8 o4   s2   d2   M   1 2015-09-16 <NA> 11.0     original       FALSE
 
 However, the preferred method of creating the standardized studbook
 format with **qcStudbook** is to examine all errors found and correcting
@@ -1539,10 +1541,14 @@ summary(errorList)
     ##  
     ## Animal records where parent records are suspicous because of dates.
     ## One or more parents appear too young at time of birth.
-    ##   dam sire id sex      birth recordStatus exit  sireBirth   damBirth sireAge damAge
-    ## 2  d2   s1 o2   F 2009-03-17     original <NA> 2000-07-18 2015-09-16    8.66   -6.5
-    ## 3  d2   s2 o3   F 2012-04-11     original <NA> 2006-06-19 2015-09-16    5.81   -3.4
-    ## 4  d2   s2 o4   M 2006-04-13     original <NA> 2006-06-19 2015-09-16   -0.18   -9.4
+    ##   dam sire id sex      birth recordStatus placeholder exit  sireBirth   damBirth sireAge
+    ## 2  d2   s1 o2   F 2009-03-17     original       FALSE <NA> 2000-07-18 2015-09-16    8.66
+    ## 3  d2   s2 o3   F 2012-04-11     original       FALSE <NA> 2006-06-19 2015-09-16    5.81
+    ## 4  d2   s2 o4   M 2006-04-13     original       FALSE <NA> 2006-06-19 2015-09-16   -0.18
+    ##   damAge
+    ## 2   -6.5
+    ## 3   -3.4
+    ## 4   -9.4
 
 The first two errors mentioned are of particular interest. Currently
 **qcStudbook** automatically changes the sex of dams to *F* (female) and
@@ -2217,8 +2223,8 @@ into the de-identified table.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-09-29 03:40:01.990849. The processing
-time for this document was 24 seconds..
+The current date and time is 2026-09-29 19:20:25.193912. The processing
+time for this document was 23 seconds..
 
 ``` r
 

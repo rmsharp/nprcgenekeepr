@@ -89,6 +89,9 @@ pedAndErrors$errorLst
 #> $invalidIdChars
 #> character(0)
 #> 
+#> $invalidPlaceholderRows
+#> character(0)
+#> 
 #> $changedCols
 #> $changedCols$caseChange
 #> character(0)

@@ -125,11 +125,11 @@
 <span>  reportErrors  <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 3694   13</span></span>
+<span><span class="co">#&gt; [1] 3694   14</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">ped</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "id"           "sire"         "dam"          "sex"          "gen"         </span></span>
 <span><span class="co">#&gt;  [6] "birth"        "exit"         "age"          "ancestry"     "origin"      </span></span>
-<span><span class="co">#&gt; [11] "status"       "recordStatus" "fromCenter"</span></span>
+<span><span class="co">#&gt; [11] "status"       "recordStatus" "fromCenter"   "placeholder"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ped</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"id"</span>, <span class="st">"sire"</span>, <span class="st">"dam"</span>, <span class="st">"sex"</span>, <span class="st">"gen"</span>, <span class="st">"birth"</span>, <span class="st">"exit"</span>, <span class="st">"age"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       id sire  dam sex gen      birth       exit age</span></span>
 <span><span class="co">#&gt; 1 01WY5E &lt;NA&gt; &lt;NA&gt;   M   0 2005-07-07 2005-08-26 0.1</span></span>
@@ -210,7 +210,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedSameMaleIsSireAndDam</span>, reportErrors <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">sireAndDam</span></span>
 <span><span class="co">#&gt; [1] "s1"</span></span></code></pre></div>
 </div>
-<p>Diagnostic mode also reports parents younger than their minimum breeding age (<code>minSireAge</code> for sires, <code>minDamAge</code> for dams) at an offspring’s birth (in <code>suspiciousParents</code>) and any ID containing a period (in <code>invalidIdChars</code>).</p>
+<p>Diagnostic mode also reports parents younger than their minimum breeding age (<code>minSireAge</code> for sires, <code>minDamAge</code> for dams) at an offspring’s birth (in <code>suspiciousParents</code>) any ID containing a period (in <code>invalidIdChars</code>), and any <code>placeholder</code> value other than TRUE, FALSE, 1, 0 or blank (in <code>invalidPlaceholderRows</code>).</p>
 </section><section class="level2"><h2 id="sec-modes">Production mode vs diagnostic mode<a class="anchor" aria-label="anchor" href="#sec-modes"></a>
 </h2>
 <p>The two modes treat the same problems differently. Production mode fixes what it can prove is safe and refuses to return a pedigree it cannot trust; diagnostic mode never stops, so a single pass surfaces every issue at once.</p>
@@ -270,6 +270,11 @@
 <td>Period in an ID</td>
 <td><strong>stops</strong></td>
 <td><code>invalidIdChars</code></td>
+</tr>
+<tr class="odd">
+<td>Unrecognized <code>placeholder</code> value</td>
+<td><strong>stops</strong></td>
+<td><code>invalidPlaceholderRows</code></td>
 </tr>
 </tbody>
 </table>

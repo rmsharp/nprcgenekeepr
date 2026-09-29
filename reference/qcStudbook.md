@@ -64,6 +64,14 @@ qcStudbook(
     restricted status of an animal. "Nonrestricted" animals are
     generally assumed to be naive.
 
+  - `placeholder` — Logical or `NA` (optional) `TRUE` marks a made-up
+    stand-in for an unknown parent, `FALSE` a real animal. `TRUE`,
+    `true`, `True`, `T` and `1` count as `TRUE`; `FALSE`, `false`,
+    `False`, `F` and `0` as `FALSE`; a blank as unmarked. Any other
+    value is an error (listed in `errorLst$invalidPlaceholderRows` with
+    `reportErrors == TRUE`, otherwise the function throws an error
+    naming the rows).
+
 - minSireAge:
 
   numeric minimum age in years for a male to have sired an offspring.
@@ -215,6 +223,14 @@ qcStudbook(
 
   Finally the columns `id` `sire`, and `dam` are coerce to character.
 
+  The returned pedigree always has a logical `placeholder` column with
+  no `NA`: `TRUE` for the stand-ins made here (see `addUIds`), the value
+  the input gave for any other row that had one, and for the rest `TRUE`
+  when the ID looks like a stand-in (see
+  [`removeAutoGenIds`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)).
+  A center can mark a real animal whose ID looks like a stand-in (for
+  example `"U1234"`) as `FALSE`.
+
 ## Value
 
 A data.frame with standardized and quality controlled pedigree
@@ -231,5 +247,5 @@ ped <- qcStudbook(examplePedigree,
 names(ped)
 #>  [1] "id"           "sire"         "dam"          "sex"          "gen"         
 #>  [6] "birth"        "exit"         "age"          "ancestry"     "origin"      
-#> [11] "status"       "recordStatus" "fromCenter"  
+#> [11] "status"       "recordStatus" "fromCenter"   "placeholder" 
 ```

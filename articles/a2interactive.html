@@ -1526,12 +1526,13 @@ call considers.</p>
 <span><span class="co">##  [3] "invalidDateRows"          "suspiciousParents"       </span></span>
 <span><span class="co">##  [5] "femaleSires"              "maleDams"                </span></span>
 <span><span class="co">##  [7] "sireAndDam"               "duplicateIds"            </span></span>
-<span><span class="co">##  [9] "invalidIdChars"           "changedCols"</span></span></code></pre>
+<span><span class="co">##  [9] "invalidIdChars"           "invalidPlaceholderRows"  </span></span>
+<span><span class="co">## [11] "changedCols"</span></span></code></pre>
 <p>Each is defined below.</p>
 <table class="table">
 <colgroup>
-<col width="19%">
-<col width="80%">
+<col width="15%">
+<col width="84%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Error</th>
@@ -1582,6 +1583,12 @@ dam.</td>
 which is not allowed.</td>
 </tr>
 <tr class="even">
+<td align="left">invalidPlaceholderRows</td>
+<td align="left">Rows with a placeholder value other than TRUE, FALSE,
+1, 0 or blank (the optional column that marks stand-ins for unknown
+parents).</td>
+</tr>
+<tr class="odd">
 <td align="left">changedCols</td>
 <td align="left">Columns that have been changed to conform to internal
 naming conventions and what they were changed to.</td>
@@ -1673,21 +1680,22 @@ that have generated the errors.</p>
 <code class="sourceCode R"><span><span class="va">pedOne</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="../reference/pedOne.html">pedOne</a></span> <span class="co"># put it in the local environment</span></span>
 <span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minSireAge <span class="op">=</span> <span class="fl">0.0</span>, minDamAge <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `qcStudbook()`:</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> Parents with low age at birth of offspring are listed in /tmp/RtmpTWOzWp/lowParentAge.csv.</span></span></code></pre>
+<span><span class="co">## <span style="color: #BBBB00;">!</span> Parents with low age at birth of offspring are listed in /tmp/RtmpIL5aq1/lowParentAge.csv.</span></span></code></pre>
 <p>The contents of <em>lowParentAge.csv</em> is shown below.</p>
 <table class="table">
 <colgroup>
 <col width="4%">
-<col width="6%">
+<col width="5%">
 <col width="3%">
 <col width="4%">
+<col width="11%">
 <col width="13%">
-<col width="15%">
-<col width="6%">
-<col width="13%">
-<col width="13%">
-<col width="9%">
+<col width="12%">
+<col width="5%">
+<col width="11%">
+<col width="11%">
 <col width="8%">
+<col width="7%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">dam</th>
@@ -1696,6 +1704,7 @@ that have generated the errors.</p>
 <th align="left">sex</th>
 <th align="left">birth</th>
 <th align="left">recordStatus</th>
+<th align="left">placeholder</th>
 <th align="left">exit</th>
 <th align="left">sireBirth</th>
 <th align="left">damBirth</th>
@@ -1710,6 +1719,7 @@ that have generated the errors.</p>
 <td align="left">F</td>
 <td align="left">2009-03-17</td>
 <td align="left">original</td>
+<td align="left">FALSE</td>
 <td align="left">NA</td>
 <td align="left">2000-07-18</td>
 <td align="left">2015-09-16</td>
@@ -1723,6 +1733,7 @@ that have generated the errors.</p>
 <td align="left">F</td>
 <td align="left">2012-04-11</td>
 <td align="left">original</td>
+<td align="left">FALSE</td>
 <td align="left">NA</td>
 <td align="left">2006-06-19</td>
 <td align="left">2015-09-16</td>
@@ -1736,6 +1747,7 @@ that have generated the errors.</p>
 <td align="left">M</td>
 <td align="left">2006-04-13</td>
 <td align="left">original</td>
+<td align="left">FALSE</td>
 <td align="left">NA</td>
 <td align="left">2006-06-19</td>
 <td align="left">2015-09-16</td>
@@ -1760,11 +1772,11 @@ in <strong>pedOne</strong> and <strong>ped</strong> respectively.</p>
 <div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ped</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">pedOne</span>, minSireAge <span class="op">=</span> <span class="fl">0.0</span>, minDamAge <span class="op">=</span> <span class="fl">0.0</span><span class="op">)</span></span>
 <span><span class="va">ped</span><span class="op">[</span><span class="va">ped</span><span class="op">$</span><span class="va">id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s2"</span>, <span class="st">"d2"</span>, <span class="st">"o3"</span>, <span class="st">"o4"</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">##   id sire  dam sex gen      birth exit  age recordStatus</span></span>
-<span><span class="co">## 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2006-04-13 &lt;NA&gt; 20.5     original</span></span>
-<span><span class="co">## 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2006-06-19 &lt;NA&gt; 20.3     original</span></span>
-<span><span class="co">## 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 14.5     original</span></span>
-<span><span class="co">## 8 o4   s2   d2   M   1 2015-09-16 &lt;NA&gt; 11.0     original</span></span></code></pre>
+<pre><code><span><span class="co">##   id sire  dam sex gen      birth exit  age recordStatus placeholder</span></span>
+<span><span class="co">## 2 d2 &lt;NA&gt; &lt;NA&gt;   F   0 2006-04-13 &lt;NA&gt; 20.5     original       FALSE</span></span>
+<span><span class="co">## 4 s2 &lt;NA&gt; &lt;NA&gt;   M   0 2006-06-19 &lt;NA&gt; 20.3     original       FALSE</span></span>
+<span><span class="co">## 7 o3   s2   d2   F   1 2012-04-11 &lt;NA&gt; 14.5     original       FALSE</span></span>
+<span><span class="co">## 8 o4   s2   d2   M   1 2015-09-16 &lt;NA&gt; 11.0     original       FALSE</span></span></code></pre>
 <p>However, the preferred method of creating the standardized studbook
 format with <strong>qcStudbook</strong> is to examine all errors found
 and correcting them before proceeding. This is done by explicitly
@@ -1812,10 +1824,14 @@ function.</p>
 <span><span class="co">##  </span></span>
 <span><span class="co">## Animal records where parent records are suspicous because of dates.</span></span>
 <span><span class="co">## One or more parents appear too young at time of birth.</span></span>
-<span><span class="co">##   dam sire id sex      birth recordStatus exit  sireBirth   damBirth sireAge damAge</span></span>
-<span><span class="co">## 2  d2   s1 o2   F 2009-03-17     original &lt;NA&gt; 2000-07-18 2015-09-16    8.66   -6.5</span></span>
-<span><span class="co">## 3  d2   s2 o3   F 2012-04-11     original &lt;NA&gt; 2006-06-19 2015-09-16    5.81   -3.4</span></span>
-<span><span class="co">## 4  d2   s2 o4   M 2006-04-13     original &lt;NA&gt; 2006-06-19 2015-09-16   -0.18   -9.4</span></span></code></pre>
+<span><span class="co">##   dam sire id sex      birth recordStatus placeholder exit  sireBirth   damBirth sireAge</span></span>
+<span><span class="co">## 2  d2   s1 o2   F 2009-03-17     original       FALSE &lt;NA&gt; 2000-07-18 2015-09-16    8.66</span></span>
+<span><span class="co">## 3  d2   s2 o3   F 2012-04-11     original       FALSE &lt;NA&gt; 2006-06-19 2015-09-16    5.81</span></span>
+<span><span class="co">## 4  d2   s2 o4   M 2006-04-13     original       FALSE &lt;NA&gt; 2006-06-19 2015-09-16   -0.18</span></span>
+<span><span class="co">##   damAge</span></span>
+<span><span class="co">## 2   -6.5</span></span>
+<span><span class="co">## 3   -3.4</span></span>
+<span><span class="co">## 4   -9.4</span></span></code></pre>
 <p>The first two errors mentioned are of particular interest. Currently
 <strong>qcStudbook</strong> automatically changes the sex of dams to
 <em>F</em> (female) and sires to <em>M</em> (male) when
@@ -2391,8 +2407,8 @@ on every call and are not reproduced here; what matters is that no real
 id from the input survives into the de-identified table.</p>
 <div class="sourceCode" id="cb151"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">elapsed_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_elapsed_time_str.html">get_elapsed_time_str</a></span><span class="op">(</span><span class="va">start_time</span><span class="op">)</span></span></code></pre></div>
-<p>The current date and time is 2026-09-29 03:40:01.990849. The
-processing time for this document was 24 seconds..</p>
+<p>The current date and time is 2026-09-29 19:20:25.193912. The
+processing time for this document was 23 seconds..</p>
 <div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.6.1 (2026-06-24)</span></span>
