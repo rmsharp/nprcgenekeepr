@@ -251,6 +251,38 @@ which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
 ``` handoff
+session: S807
+date: 2026-09-28
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Real animal ids that start with the placeholder prefix (U1, Uma, U123) treated as stand-ins for unknown parents (PED_GV F2 / NEW-38 other half). Plan docs/planning/unknown-parent-placeholder-marking-plan.md: Slice 1 (the tighter rule) DONE S807; owner ratified D1/D3/D5/D6 plus D10/D11. Next: Slice 2 (addUIds reuse fix, then qcStudbook writes the placeholder column).
+what_was_done: Strict TDD Slice 1. isGeneratedUnknownId() now needs the prefix plus at least getAutoIdWidth() capitals/digits (U1/U123/Uma real; ancestry example counts U1, 4 female founders); setAutoIdFormat() refuses formats whose ids fail the rule (D11); obfuscateId() lengthens only placeholder aliases when size is too short (D10, found by measuring the app's alias-length minimum 4). 16 RED tests + 5 guards; docs-only REFACTOR (roxygen/man for 4 functions, app help text, manual line, NEWS.Rmd). Commits: claim 0647abea, decisions 95a4e5fa, RED 9b8431dd 9dd49380, GREEN aeccac96, docs 9e89cd3d 32cae6cc 93640b3f, plan/backlog f673d78d, NEWS spelling fix 02a83f49, records (this).
+next_steps: Slice 2 (plan section 5): first make addUIds() skip ids used only as a sire or dam (R/addUIds.R:46, plan M11 repro); then qcStudbook() writes the logical placeholder column after addUIds/addParents (R/qcStudbook.R:231), keeps user TRUE/FALSE, stops on bad values (D5), fills blanks with the Slice 1 rule; isGeneratedUnknownId(ped =) reads the mark (D4); removeAutoGenIds passes ped. Moves test_qcStudbook.R:105; keep test_getPotentialParents.R:452 at 1587. Re-run the plan section 2 greps before RED.
+key_files: R/autoIdFormat.R:116 (getAutoIdWidth); R/autoIdFormat.R:143 (isGeneratedUnknownId); R/autoIdFormat.R:75 (setAutoIdFormat probe); R/obfuscateId.R:40; R/modPedigree.R:110; tests/testthat/test_autoIdFormat.R:140; tests/testthat/test_reportGV.R:870; tests/testthat/test_modDeidentifiedExport.R:189; R/addUIds.R:46; R/qcStudbook.R:231; PROJECT_LEARNINGS.md:2311 (Learning 823)
+gotchas: getAutoIdWidth() errors if the option is set directly (options()) to a format with no conversion; setAutoIdFormat() refuses those, untested. test_wordlist_coverage.R runs only in the full suite with NOT_CRAN=true; run it after NEWS/roxygen wording changes. obfuscateId() random streams changed for real ids at small size (short U-leading aliases now accepted). The width is recomputed per predicate call; hoist if Slice 2 loops per row. Known local-only failure test_pkgdown_reference_config.R and check's 2 notes = the owner's untracked suggested_NEWS_entry drafts.
+runtime_smoke: runGeneKeepR(port = 6099L) served HTTP 200 with the new Pedigree Browser help text, old text absent, no log errors; filter and de-identified export behavior verified via testServer on the real module servers. Full suite 357 files / 2,809 tests / 0 errors (known local-only pkgdown failure; spelling guard fixed in 02a83f49). devtools::check 0 errors / 0 warnings / 2 notes (owner's untracked drafts). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4e12678a802c · manifest aa983075d6a2
+changelog_ref: aeccac96
+commit: pending
+```
+
+``` handoff
+session: S806
+date: 2026-09-28
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Real animal ids that start with the placeholder prefix (U1, Uma, U123) are treated as stand-ins for unknown parents (PED_GV F2 / NEW-38 other half). Owner chose "mark ids when they are made"; plan written (docs/planning/unknown-parent-placeholder-marking-plan.md). Next: owner decisions D1/D3/D5/D6 (plan section 11), then Slice 1 or 2.
+what_was_done: Planning session, no code. Measured 11 facts (M1-M11: shipped U-id shapes, rule trials over the full suite, recordStatus reset, attribute loss, column survival, filtered downstream pedigree, reportGV error when filtered, obfuscatePed aliases, addUIds reusing a sire-only id); owner picked the approach and plan-first via AskUserQuestion; plan with grep inventory, decisions D1-D9, 5 TDD slices. BACKLOG: item points at the plan; new item for reportGV stopping when Display Unknown IDs is unticked; the addUIds reuse added to the placeholder and PED_GV items. Commits: claim cb4601aa, plan 2d327d7f, records (this).
+next_steps: Ask the owner the plan's 4 decisions (section 11) in plain words. If D3 = the tighter rule, implement Slice 1 with strict TDD: R/autoIdFormat.R:109-111, obfuscateId() alias length at R/obfuscateId.R:40-46, the 3 moved tests (test_autoIdFormat.R:58, test_modPedigree.R:113-169, test_obfuscateId.R:31), NEWS.Rmd entry. Otherwise start at Slice 2 (addUIds sire/dam reuse fix first, then qcStudbook writes the mark).
+key_files: docs/planning/unknown-parent-placeholder-marking-plan.md:1 (sections 1.3, 2, 5, 11); R/autoIdFormat.R:109; R/addUIds.R:46; R/qcStudbook.R:231; R/qcStudbook.R:324; R/addParents.R:43; R/modPedigree.R:359; R/appServer.R:312; tests/testthat/test_qcStudbook.R:105; BACKLOG.md:51
+gotchas: Trial a rule by assigning into both asNamespace("nprcgenekeepr") and package:nprcgenekeepr after load_all; a wrapper breaks mockery::stub tests on that function (test_qcStudbook.R:443). recordStatus is rebuilt every QC run. fixColumnNames rewrites "ego" to "id" in any header and lowercases camelCase. BACKLOG.md is 54,837 B, 1,913 B under the 56,750 B read cap. Full suite's 1 known failure is local-only (untracked vignettes/suggested_NEWS_entry.Rmd).
+runtime_smoke: n/a -- docs-only (a plan and BACKLOG.md; both build-ignored, read by no test). Two full-suite trials in scratch (357 files, 2,790 tests each): tighter rule moved 3 tests; a qcStudbook mark column moved 1 (plus 1 trial artifact). CI on e5e007f8 (in_progress at Orient) re-read green: R-CMD-check all 5 legs, test-coverage. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 3749928c8792 · manifest aa983075d6a2
+changelog_ref: 2d327d7f
+commit: pending
+```
+
+``` handoff
 session: S805
 date: 2026-09-28
 status: complete

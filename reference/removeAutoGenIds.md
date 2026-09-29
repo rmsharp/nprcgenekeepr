@@ -3,10 +3,12 @@
 Identifies automatically generated IDs via `isGeneratedUnknownId()`, the
 shared detection predicate derived from the configurable auto-ID format
 (see
-[`getAutoIdFormat`](https://github.com/rmsharp/nprcgenekeepr/reference/getAutoIdFormat.md);
-default a leading "U"). Routing detection through that single predicate
-is the "function call" the former inline leading-"U" check was flagged
-to become.
+[`getAutoIdFormat`](https://github.com/rmsharp/nprcgenekeepr/reference/getAutoIdFormat.md)).
+With the default `"U%04d"`, an automatically generated ID is a capital
+"U" followed by at least four capital letters or digits (`"U0001"`, or
+`"U05X3C"` after de-identification). A real animal whose ID merely
+starts with "U" (`"U1"`, `"U123"`, `"Uma"`) is kept, and so is its place
+as a sire or dam; a real ID of the full shape (`"U1234"`) is removed.
 
 ## Usage
 

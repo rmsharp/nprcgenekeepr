@@ -84,7 +84,7 @@ ldBlockResult <- data.frame(
 obfuscated <- obfuscatePed(ped, map = TRUE)
 obfuscateLdBlocks(ldBlockResult, obfuscated$map)
 #>   locus1 locus2 chrom Dprime  r2 nUsed       idsUsed
-#> 1     L1     L2     1    0.5 0.3     2 XNZZUQ,QKV6EP
+#> 1     L1     L2     1    0.5 0.3     2 4MENXN,ZZUQQK
 #>                        caveat
 #> 1 Descriptive statistic only.
 ```

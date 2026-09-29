@@ -5,7 +5,12 @@ unknown parents (see
 [`addUIds`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)).
 The format must have a non-empty literal prefix before its first `"%"`
 (used for detection) and must consume a single integer (used for
-generation), e.g. `"U%04d"` or `"AUTO%05d"`. The setting is stored in
+generation), e.g. `"U%04d"` or `"AUTO%05d"`. The number must print as
+capital letters or digits, so that the IDs the format makes are
+recognized as placeholders (see
+[`removeAutoGenIds`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md));
+a format that prints lowercase letters (`"U%04x"`) or pads with spaces
+(`"U%4d"`) is refused. The setting is stored in
 `options(nprcgenekeepr.autoIdFormat=)` and read by
 [`getAutoIdFormat`](https://github.com/rmsharp/nprcgenekeepr/reference/getAutoIdFormat.md).
 

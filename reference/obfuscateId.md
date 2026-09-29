@@ -20,7 +20,13 @@ obfuscateId(id, size = 10L, existingIds = character(0L))
 
 - size:
 
-  character length of each alias
+  character length of each alias. An ID that is a placeholder for an
+  unknown parent (see
+  [`removeAutoGenIds`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md))
+  gets an alias of the same shape, the placeholder prefix plus random
+  characters; when `size` is too short for that shape to be recognized
+  (shorter than 5 for the default `"U%04d"` format), only those aliases
+  are made longer, to the shortest recognizable length.
 
 - existingIds:
 
@@ -54,5 +60,5 @@ obfuscateId(integerIds, size = 4L)
 characterIds <- paste0(paste0(sample(LETTERS, 1L, replace = FALSE)), 1L:10L)
 obfuscateId(characterIds, size = 4L)
 #>     Y1     Y2     Y3     Y4     Y5     Y6     Y7     Y8     Y9    Y10 
-#> "7JVD" "4L2J" "HTJG" "TUEI" "08D1" "83KX" "88LJ" "FLS7" "SJBP" "4MEN" 
+#> "UZND" "7JVD" "4L2J" "HTJG" "TUEI" "08D1" "83KX" "88LJ" "FLS7" "SJBP" 
 ```

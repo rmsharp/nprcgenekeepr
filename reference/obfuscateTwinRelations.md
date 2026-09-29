@@ -74,5 +74,5 @@ twinRelations <- data.frame(
 obfuscated <- obfuscatePed(ped, map = TRUE)
 obfuscateTwinRelations(twinRelations, obfuscated$map)
 #>      id1    id2    code
-#> 1 0SC2P9 J4C6RD MZ twin
+#> 1 JRGM0S C2P9J4 MZ twin
 ```

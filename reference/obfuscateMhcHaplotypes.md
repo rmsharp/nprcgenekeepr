@@ -84,8 +84,8 @@ carriers <- mhcHaplotypeCarriers(genotype, rareOnly = FALSE)
 obfuscated <- obfuscatePed(ped, map = TRUE)
 obfuscateMhcHaplotypes(carriers, obfuscated$map)
 #>    haplotype     id uncertain
-#> 1  A001_B001 FCDNFK     FALSE
-#> 2  A001_B001 GJGR1A     FALSE
-#> 3  A002_B012 FCDNFK     FALSE
-#> 4 A008_B015b GJGR1A     FALSE
+#> 1  A001_B001 FC1WFC     FALSE
+#> 2  A001_B001 DNFKGJ     FALSE
+#> 3  A002_B012 FC1WFC     FALSE
+#> 4 A008_B015b DNFKGJ     FALSE
 ```

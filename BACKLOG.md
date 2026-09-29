@@ -20,9 +20,10 @@ is done:
 now stops with a message naming the cycle instead of recursing until R
 aborts, and keeps the documented diamond repeats; F2’s
 [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
-half is done: a minted id now skips any id already in the pedigree; F2’s
-other half, real ids mistaken for placeholders, is its own item below;
-F3 is done: the
+half is done: a minted id now skips any id already in the `id` column
+(S806 found it still reuses an id used only as a sire or dam; the
+placeholder-marking plan’s Slice 2 fixes it); F2’s other half, real ids
+mistaken for placeholders, is its own item below; F3 is done: the
 [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
 dam fallback no longer re-admits a female the gestation window ruled
 out). **Open, all owner decisions:** (a) the overhaul roots, none urgent
@@ -63,56 +64,61 @@ or (3) leave it. Tests to extend:
 `tests/testthat/test_getPotentialParents.R`, and
 `test_modPotentialParents.R` if the table changes.
 
-**Real animal ids that start with the placeholder prefix (`"Uma"`,
-`"U123"`) are treated as stand-ins for unknown parents – the other half
-of PED_GV F2 / NEW-38 (found S781; a stricter check was tried and
-withdrawn S797; DECISION NEEDED, Effort M)** – `isGeneratedUnknownId()`
-(`R/autoIdFormat.R:109-111`) counts any id that starts with the
-configured prefix (default `"U"`) as a placeholder, and seven files act
-on it:
-[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
-drops such animals (the Potential Parents feature calls it,
-`R/getPotentialParents.R:93`), the app’s “display unknown IDs” filter
-hides them (`R/modPedigree.R:361`), and
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md),
-`classifyParentage()`, `correctUnknownParentMeanKinship()`,
-`getLivingBreeders()` and
-[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
-treat them as unknown. **Why the obvious fix fails (measured S797):**
-also requiring the remainder to be exactly the format’s digit width (4
-digits for `"U%04d"`) broke 24 tests and caused 1 error in 7 files,
-because
-[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
-(`R/obfuscateId.R:40-46`) disguises a placeholder as the prefix plus
-random capital letters and digits, and the shipped example data was
-built that way: all 43 placeholder ids in `qcPed` and all 1,372 in
-`examplePedigree` look like `"U05X3C"`, and none matches `U%04d`. With
-the stricter check, `qcPed`’s 43 one-unknown-parent animals became
-“known”, its
-[`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md)
-effective size went from 26.4 to 205, the `examplePedigree`
-potential-parents result went from 1,587 to 234, and
-[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
-stopped with “too short to easily avoid duplicates”. The withdrawn RED
-tests are in commit `a01e13af` (`git show a01e13af`). **Decide:** (1)
-leave it – it matters only if a center’s real ids start with the prefix,
-which
+**Real animal ids that start with the placeholder prefix are treated as
+stand-ins for unknown parents – the other half of PED_GV F2 / NEW-38
+(found S781; approach chosen S806: mark ids when they are made; plan
+written S806; Slice 1 DONE S807; READY: Slice 2 next, then 3-5, Effort M
+each, strict TDD)** – the plan is
+`docs/planning/unknown-parent-placeholder-marking-plan.md`: read it
+first (§1.3 measurements, §2 inventory with the grep commands, §5
+slices, §11 the ratified decisions). **Slice 1 (S807):**
+`isGeneratedUnknownId()` now needs the prefix plus at least as many
+capital letters/digits as the format’s number prints
+(`getAutoIdWidth()`, 4 for `"U%04d"`), so `U1`/`U123`/`Uma` are real and
+the shipped ancestry example counts `U1` (4 female founders); a real id
+of the full shape (`U1234`) is still misread, which Slices 2-5 fix with
+a logical `placeholder` column written once by
+[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md).
+**Ratified S807 (plan §11):** D1 `placeholder`; D3 the tighter rule; D5
+a bad value stops QC and lists the rows; D6 shipped data unmarked; D10
+placeholder aliases lengthened when
+[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)’s
+`size` is too short; D11
 [`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
-can change; (2) count only the prefix followed by capital letters and
-digits (what both
+refuses formats whose ids the rule cannot read. **Slice 2 starts with**
+the
 [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
-and
-[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
-produce) – `"Uma"` would be kept, `"U123"` still dropped; (3) record
-which ids were minted (a column or attribute) instead of guessing from
-an id’s shape – the record must survive every copy, merge and save of a
-pedigree; (4) make
-[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
-keep the digit format and regenerate the shipped data, then tighten the
-check – moves many pinned numbers. Tests to extend:
-`test_autoIdFormat.R` (it pins `"U123"` as a placeholder today),
-`test_removeAutoGenIds.R`, `test_obfuscateId.R`,
-`test_classifyParentage.R`.
+fix (plan M11): it can give a missing sire the id of another animal’s
+recorded sire when that sire has no row (`existingIds <- ped$id`,
+`R/addUIds.R:46`), making false half-sibs. The S797 exact-digits attempt
+and its withdrawn tests stay recorded in commit `a01e13af`.
+
+**Unticking “Display Unknown IDs” breaks the Genetic Value analysis
+(found S806, 2026-09-28, DECISION NEEDED, Effort S)** – every downstream
+module gets the Pedigree Browser’s filtered pedigree
+(`R/appServer.R:312`), and the filter (`R/modPedigree.R:359-361`)
+removes placeholder rows while their children still name them as
+sire/dam. Measured S806 on `qcPed` with the Genetic Value module’s own
+steps (`R/modGeneticValue.R:290-335`: `population <- is.na(exit)`,
+`trimPedigree(probands, ped, removeUninformative = FALSE, addBackParents = FALSE)`,
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)):
+236 rows, 43 name a removed row, and
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+stops with “sire and dam must have had alleles assigned: logic error”;
+the same steps with the box ticked run. Not run through the Shiny module
+itself.
+[`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md)
+is unaffected (26.41 both ways). **Decide:** (1) the box filters only
+the displayed table, and downstream modules get the unfiltered pedigree;
+(2) downstream modules keep the filtered pedigree and the filter also
+blanks those sire/dam values (as
+[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
+does), which changes genetic results for the 43 animals; (3) leave it
+and say in the help that the box must stay ticked for analysis. Related:
+the placeholder marking plan
+(`docs/planning/unknown-parent-placeholder-marking-plan.md` §7 dragon 2)
+relies on this wiring, so a fix here should keep what every tab sees the
+same.
 
 **(Optional, owner decision) One internal `isAddedRecord()` helper for
 the “added” mask (raised S785, deferred at the S785, S786 and S787

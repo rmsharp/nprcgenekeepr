@@ -93,6 +93,239 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · \[ad hoc\] S807 records: placeholder-marking plan Slice 1 (the tighter placeholder rule) DONE (S806 handoff evaluated 9/10, self 8/10)
+
+- **Model:** Claude Opus 5.5. Session notes, `HANDOFFS.md` receipt
+  complete, Learning 823 (when tightening a detection rule, check every
+  generator of the values it must recognize and every input that bounds
+  a generator; a full-suite trial covers only the settings the tests
+  use).
+- **Verification:** full suite twice, 357 files / 2,809 tests / 0 errors
+  (only the known local-only `test_pkgdown_reference_config.R` after the
+  `02a83f49` spelling fix); `devtools::check()` 0 errors / 0 warnings /
+  2 notes (the owner’s untracked `suggested_NEWS_entry` drafts); lint 0
+  on 4 touched R files; runtime smoke `runGeneKeepR(port = 6099L)` HTTP
+  200 with the new help text.
+- **Gate:**
+  `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4e12678a802c · manifest aa983075d6a2`
+  (3,594,042 B at `02a83f49`).
+- **Not closed:** the `BACKLOG.md` item stays open (Slices 2-5); no
+  GitHub issue exists for it. 15 commits unpushed (4 from S806, 11 from
+  S807); this push changes `R/`, so pushing is the owner’s call.
+
+### 2026-09-28 · \[ad hoc\] S807: `NEWS.Rmd` entry reworded (“unticked” -\> “turned off”) after the second full-suite run flagged it in `test_wordlist_coverage.R`
+
+- **Model:** Claude Opus 5.5. The docs 3 of 3 commit (`93640b3f`)
+  introduced “unticked”, which
+  [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html)
+  flags and `inst/WORDLIST` does not cover; the S807 docs-3 check ran
+  only the 3 `NEWS.Rmd`-reading tests, not the spelling guard. Reworded
+  rather than added to the word list. `test_wordlist_coverage.R` (3) and
+  `test_newsReleaseState.R` (26) pass.
+
+### 2026-09-28 · \[ad hoc\] S807: placeholder-marking plan Slice 1 marked DONE; `BACKLOG.md` item updated (Slice 2 next, READY)
+
+- **Model:** Claude Opus 5.5. Plan §5 Slice 1: DONE S807 with its
+  commits and what went beyond the original list (D10/D11,
+  `getAutoIdWidth()`, the manual line already states the rule).
+  `BACKLOG.md`: the placeholder item now says Slice 1 is done, lists the
+  6 ratified decisions, and names Slice 2’s first change (the
+  [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
+  reuse fix, `R/addUIds.R:46`); the item is 320 B shorter (`BACKLOG.md`
+  54,517 B). The item stays open: Slices 2-5 remain.
+
+### 2026-09-28 · \[ad hoc\] S807 REFACTOR (docs 3 of 3): `NEWS.Rmd` entry for real `U`-leading ids no longer mistaken for unknown-parent stand-ins
+
+- **Model:** Claude Opus 5.5. One plain-language, release-state entry
+  under `## General Fixes`, after the stand-in-id entry: a real
+  `U1`/`U123`/`Uma` was left out of founder and breeder counts, hidden
+  by “Display Unknown IDs”, and made its offspring look parent-unknown;
+  only “U + at least four capitals/digits” ids are now stand-ins; the
+  ancestry example counts `U1` (4 female founders, not 3).
+  `test_newsReleaseState.R` (26) and the other 2 `NEWS.Rmd` readers
+  pass.
+
+### 2026-09-28 · \[ad hoc\] S807 REFACTOR (docs 2 of 3): `removeAutoGenIds()` roxygen/man page, the Pedigree Browser help text and the user manual say which ids count as unknown-parent placeholders
+
+- **Model:** Claude Opus 5.5. Documentation only.
+  `R/removeAutoGenIds.R` + `man/removeAutoGenIds.Rd`: a placeholder is
+  “U” + at least four capitals/digits; `U1`/`U123`/`Uma` kept, `U1234`
+  removed. `R/modPedigree.R` help text and
+  `vignettes/manual_components/_pedigree_browser.Rmd:38`: the same, and
+  a real `U1` is always shown. Lint 0 on the touched R files;
+  `test_modPedigree*.R` (3 files, 91 tests) pass.
+
+### 2026-09-28 · \[ad hoc\] S807 REFACTOR (docs 1 of 3): roxygen and man pages for `setAutoIdFormat()`, `isGeneratedUnknownId()` and `obfuscateId()` describe the tighter placeholder rule
+
+- **Model:** Claude Opus 5.5. Documentation only (owner chose a
+  docs-only REFACTOR).
+  [`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md):
+  the number must print as capital letters or digits, and
+  `"U%04x"`/`"U%4d"` are refused; `isGeneratedUnknownId()` (`@noRd`):
+  prefix + at least *W* capitals/digits, with `U1`/`U123`/`Uma` real and
+  `U1234` still misread;
+  [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+  `size`: placeholder aliases are lengthened when `size` is too short.
+  `devtools::document()` regenerated `man/setAutoIdFormat.Rd` and
+  `man/obfuscateId.Rd`; `NAMESPACE` unchanged.
+
+### 2026-09-28 · \[ad hoc\] S807 GREEN: the tighter placeholder rule, format refusal and placeholder-alias lengthening (placeholder-marking plan Slice 1)
+
+- **Model:** Claude Opus 5.5. `R/autoIdFormat.R`: new internal
+  `getAutoIdWidth()` (the number part’s printed width, 4 for `"U%04d"`);
+  `isGeneratedUnknownId()` = starts with the prefix and the next *W*
+  characters are capital letters or digits (`NA` kept);
+  [`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
+  stops (“would not be recognized”) when any probe id its format makes
+  fails the rule. `R/obfuscateId.R`: placeholder aliases use
+  `max(size, prefix + W)` characters.
+- **Verified:** the 8 RED files green (all 16 failing tests and the 5
+  guards pass); full unfiltered suite (`NOT_CRAN=true`, `load_all`): 357
+  files, 2,809 tests, 0 errors, 1 failure = the known local-only
+  `test_pkgdown_reference_config.R` (the owner’s untracked
+  `vignettes/suggested_NEWS_entry.Rmd`); lint 0 on both files.
+  [`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+  on 10,000 real ids: 1.35 s (0.87 s with the old rule).
+
+### 2026-09-28 · \[ad hoc\] S807 RED (2 of 2): failing tests for the functions that read the placeholder rule (placeholder-marking plan Slice 1)
+
+- **Model:** Claude Opus 5.5. Tests only. `test_removeAutoGenIds.R`
+  (keeps `U1`/`Uma`/`U123` rows and parent references; keeps the shipped
+  ancestry example’s `U1`), `test_reportGV.R` (ancestry example: female
+  founders `C2 I2 J2 U1`, 4; hand-built pedigree: founders `R2 Uma` /
+  `R1 U123`, `K1` and `K3` “known”), `test_classifyParentage.R`,
+  `test_getLivingBreeders.R` (`Uma`, `U123` are breeders).
+- **Run:** 6 tests fail, each on today’s behavior (ancestry example 3
+  female founders, `U1` dropped; `K1` “both unknown”, `K3` “one unknown
+  parent”; breeders `R1 R2` only); every existing test in the 4 files
+  passes.
+
+### 2026-09-28 · \[ad hoc\] S807 RED (1 of 2): failing tests for the tighter placeholder rule, format refusal and placeholder-alias lengthening (placeholder-marking plan Slice 1)
+
+- **Model:** Claude Opus 5.5. Tests only. `test_autoIdFormat.R` (`U123`
+  pin flipped to real; `U1`/`U123`/`Uma`/`Umbra`/`U12a` real; `AUTO%05d`
+  needs 5 after the prefix;
+  [`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
+  refuses `U%04x`, `U%4d`, `U%-4d`), `test_obfuscateId.R` (size-4 test
+  rewritten at size 5; placeholder aliases lengthened to 5 at size 4 and
+  to 9 for `AUTO%05d` at size 6), `test_modPedigree.R` (filter fixture
+  `U1`/`U2` -\> `U0001`/`U0002`; a real `U1` stays when unknown ids are
+  hidden), `test_modDeidentifiedExport.R` (preview at alias length 4 on
+  `qcPed`).
+- **Run:** 10 tests fail, each on the old behavior (messages checked); 5
+  new guard tests pass today and must stay green (minted/de-identified
+  placeholders, every id of `U%04d`/`AUTO%05d`/`U%04d-x` recognized, the
+  suffix round trip, valid formats accepted, a long enough alias keeps
+  its size); every existing test in the 4 files passes.
+
+### 2026-09-28 · \[ad hoc\] S807: owner ratified the placeholder-marking plan’s decisions D1/D3/D5/D6 and two new ones (D10 alias length, D11 unrecognizable formats), recorded in the plan §11
+
+- **Model:** Claude Opus 5.5. **Owner (AskUserQuestion), all as
+  recommended:** D1 column `placeholder`; D3 the tighter rule, shipped
+  first as Slice 1; D5 a bad value stops QC and lists the rows; D6
+  shipped data stays unmarked.
+- **Found before RED, then ratified:** D10 – the De-identified Export
+  allows alias length 4, and with the tighter rule
+  `obfuscatePed(qcPed, size = 4L)` stops (measured; runs today and at
+  5/6); the owner chose to lengthen only placeholder aliases to the
+  shortest recognizable length. D11 –
+  [`setAutoIdFormat()`](https://github.com/rmsharp/nprcgenekeepr/reference/setAutoIdFormat.md)
+  accepts formats whose ids the tighter rule cannot recognize
+  (`"U%04x"`, `"U%4d"`); the owner chose to refuse them.
+- **Re-measured before asking:** 1,470 distinct `U`-leading ids in the
+  shipped datasets and example files; the tighter rule changes only
+  `U1`.
+
+### 2026-09-28 · \[ad hoc\] S807 claim: real animal ids that start with the placeholder prefix (`U1`, `Uma`, `U123`) treated as stand-ins for unknown parents (PED_GV F2 / NEW-38 other half): owner answers the plan’s 4 decisions (D1/D3/D5/D6), then one slice with strict TDD (Slice 1 if D3 = the tighter rule, else Slice 2) (in progress)
+
+- **Model:** Claude Opus 5.5.
+
+### 2026-09-28 · \[ad hoc\] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-28-2.md` (10 record(s), 62,232 B → 25,099 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a
+session’s judgment. Moved the oldest **10** record(s) (1900-01-07 →
+2026-09-28) out of
+[`SESSION_NOTES.md`](https://github.com/rmsharp/nprcgenekeepr/SESSION_NOTES.md)
+into
+[`docs/archive/SESSION_NOTES-through-2026-09-28-2.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-28-2.md).
+Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run
+[`docs/archive/SESSION_NOTES-through-2026-09-28-2.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/SESSION_NOTES-through-2026-09-28-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 62,232 B → 25,099
+B (−59.7%).
+
+### 2026-09-28 · \[ad hoc\] S806 records: plan for marking unknown-parent placeholder ids DONE (S805 handoff evaluated 9/10, self 8/10)
+
+- **Model:** Claude Opus 5.5. Session notes, `HANDOFFS.md` receipt
+  complete, Learning 822 (run every candidate rule over the shipped data
+  and the whole suite before an owner decision; count every number given
+  to the owner).
+- **CI re-read (Learning 820 (c)):** R-CMD-check (run 36492193844) and
+  test-coverage (36492193789) on `e5e007f8`, `in_progress` at Orient,
+  both green, R-CMD-check on all 5 legs.
+- **Gate:**
+  `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 3749928c8792 · manifest aa983075d6a2`
+  (3,589,729 B at `2d327d7f`).
+- **Owner-run trim (its tool-written entry is above):**
+  `--budget-bytes 65536 --cut 4 --force --write`; these notes put
+  `SESSION_NOTES.md` at 62,232 B (about 27,414 tokens, over the
+  25,000-token read ceiling), so the pre-commit hook refused this
+  commit. The verify script flags only the S806 claim stub (the BL-27
+  finalize pattern); checked by hand, the other 12 records are verbatim
+  in the live file or the shard.
+
+### 2026-09-28 · \[ad hoc\] S806: plan written for marking unknown-parent placeholder ids when they are made (the real-`U`-id half of PED_GV F2 / NEW-38)
+
+- **Model:** Claude Opus 5.5. **Owner decisions (AskUserQuestion):** of
+  the backlog item’s options, “mark ids when they are made”; this
+  session writes the plan, not code.
+- **Deliverable:**
+  `docs/planning/unknown-parent-placeholder-marking-plan.md`: 11
+  measurements (M1-M11), a grep-based inventory (mint site, the 7
+  reading files and their callers, 4 exports, shipped data, docs, 27
+  test files), decisions D1-D9 (a logical column written once by
+  [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md),
+  with a fallback rule for unmarked files), 5 slices, each its own
+  strict-TDD session. Owner decisions D1/D3/D5/D6 still needed before
+  Slice 1.
+- **Measured:** the shipped `example_ancestry_pedigree.csv` reports 3
+  female founders instead of 4 (its real `U1` is skipped); the tighter
+  “prefix + at least 4 capitals/digits” rule changes only `U1` among
+  1,470 `U` ids in the shipped data and moved 3 tests in a full-suite
+  trial; adding the column alone moved 1 test (`test_qcStudbook.R:105`).
+- **Found and recorded in `BACKLOG.md`:** unticking “Display Unknown
+  IDs” makes
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  stop on `qcPed` after the Genetic Value module’s own steps (new item);
+  [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
+  can reuse another animal’s recorded sire id when that sire has no row
+  (`R/addUIds.R:46`; added to the placeholder item and the PED_GV item;
+  the plan’s Slice 2 fixes it first). The placeholder item now points at
+  the plan.
+
+### 2026-09-28 · \[ad hoc\] S806 claim: real animal ids that start with the placeholder prefix (`"Uma"`, `"U123"`) are treated as stand-ins for unknown parents (the other half of PED_GV F2 / NEW-38): measure, owner picks the fix, strict TDD (in progress)
+
+- **Model:** Claude Opus 5.5.
+
+### 2026-09-28 · \[ad hoc\] Owner-directed after the S805 close-out: pushed 5 commits; `methodology_dashboard.py` stays tracked; `NEWS.Rmd` deferred
+
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):**
+  `git push origin master` moved `origin/master` from `fd2056ca` to
+  `e5e007f8` (`2138c813`, `54a3a7bd`, `2a247184`, `16bc27bd`,
+  `e5e007f8`), a fast-forward after a fresh fetch (0 behind). The
+  pkgdown workflow builds `vignettes/articles/` into the site, so its
+  run was awaited because it publishes the 2 new figures: green (run
+  36492193748), and the GitHub Pages deploy it triggered
+  (run 36492871606) succeeded. The other changed files are build-ignored
+  and read by no test, so lint, R-CMD-check and test-coverage were not
+  awaited. **Decision (a grooming action):** the owner keeps
+  `methodology_dashboard.py` tracked, closing the question carried since
+  S802; every sync of it keeps needing `bin/sync --force` (Learning
+  819). **Deferred:** the owner will address `NEWS.Rmd` (the
+  `suggested_NEWS_entry` drafts) later; the `BACKLOG.md` item stands
+  unchanged. This entry’s commit stays local and rides with the next
+  push.
+
 ### 2026-09-28 · \[ad hoc\] S805 records: 2 stale Pedigree Diagram article figures re-rendered DONE (S804 handoff evaluated 9/10, self 8/10, receipt, Learning 821)
 
 - **Model:** Claude Opus 5.5. Session notes (S804 evaluation, S805

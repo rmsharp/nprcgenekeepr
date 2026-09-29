@@ -3,14 +3,20 @@
 unknown parents (see addUIds). The format must have a non-empty
 literal prefix before its first "%" (used for detection) and must
 consume a single integer (used for generation), e.g. "U%04d" or
-"AUTO%05d". The setting is stored in
-options(nprcgenekeepr.autoIdFormat=) and read by
+"AUTO%05d". The number must print as capital letters or digits, so
+that the IDs the format makes are recognized as placeholders (see
+removeAutoGenIds); a format that prints lowercase letters
+("U%04x") or pads with spaces ("U%4d") is refused. The
+setting is stored in options(nprcgenekeepr.autoIdFormat=) and read by
 getAutoIdFormat.'><meta property="og:description" content='Sets the sprintf template used to mint and detect placeholder IDs for
 unknown parents (see addUIds). The format must have a non-empty
 literal prefix before its first "%" (used for detection) and must
 consume a single integer (used for generation), e.g. "U%04d" or
-"AUTO%05d". The setting is stored in
-options(nprcgenekeepr.autoIdFormat=) and read by
+"AUTO%05d". The number must print as capital letters or digits, so
+that the IDs the format makes are recognized as placeholders (see
+removeAutoGenIds); a format that prints lowercase letters
+("U%04x") or pads with spaces ("U%4d") is refused. The
+setting is stored in options(nprcgenekeepr.autoIdFormat=) and read by
 getAutoIdFormat.'><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
@@ -66,8 +72,11 @@ getAutoIdFormat.'><meta property="og:image" content="https://github.com/rmsharp/
 unknown parents (see <code><a href="addUIds.html">addUIds</a></code>). The format must have a non-empty
 literal prefix before its first <code>"%"</code> (used for detection) and must
 consume a single integer (used for generation), e.g. <code>"U%04d"</code> or
-<code>"AUTO%05d"</code>. The setting is stored in
-<code>options(nprcgenekeepr.autoIdFormat=)</code> and read by
+<code>"AUTO%05d"</code>. The number must print as capital letters or digits, so
+that the IDs the format makes are recognized as placeholders (see
+<code><a href="removeAutoGenIds.html">removeAutoGenIds</a></code>); a format that prints lowercase letters
+(<code>"U%04x"</code>) or pads with spaces (<code>"U%4d"</code>) is refused. The
+setting is stored in <code>options(nprcgenekeepr.autoIdFormat=)</code> and read by
 <code><a href="getAutoIdFormat.html">getAutoIdFormat</a></code>.</p>
     </div>
 
