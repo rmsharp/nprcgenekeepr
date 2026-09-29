@@ -195,3 +195,47 @@ test_that("a non-default format round-trips through generation and detection", {
   cleaned <- removeAutoGenIds(newPed)
   expect_true(is.na(cleaned$sire[cleaned$id == "s1"])) # minted sire removed
 })
+
+# --- the placeholder mark (placeholder-marking plan Slice 2, D4, S808) -----
+## Given the pedigree, the predicate answers with a row's placeholder mark; an
+## id with no row (a parent whose placeholder row was filtered away) or an NA
+## mark falls back to the id-shape rule; an NA id stays NA.
+test_that("isGeneratedUnknownId(ped =) answers with the pedigree's placeholder mark", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL) # default U%04d
+  ped <- data.frame(
+    id = c("U1234", "U0001", "K1", "UNK7"),
+    placeholder = c(FALSE, TRUE, FALSE, TRUE),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(
+    isGeneratedUnknownId(c("U1234", "U0001", "K1", "UNK7"), ped = ped),
+    c(FALSE, TRUE, FALSE, TRUE)
+  )
+})
+
+test_that("isGeneratedUnknownId(ped =) uses the id-shape rule for an id with no row or an NA mark", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  ped <- data.frame(
+    id = c("U5678", "Uma"),
+    placeholder = c(NA, NA),
+    stringsAsFactors = FALSE
+  )
+  expect_identical(
+    isGeneratedUnknownId(c("U5678", "Uma", "U9999", "U12", NA), ped = ped),
+    c(TRUE, FALSE, TRUE, FALSE, NA)
+  )
+})
+
+test_that("isGeneratedUnknownId(ped =) without a placeholder column matches the id-shape rule", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  ped <- data.frame(id = c("U1234", "U1", "K1"), stringsAsFactors = FALSE)
+  ids <- c("U1234", "U1", "K1", "U0001", NA)
+  expect_identical(isGeneratedUnknownId(ids, ped = ped),
+                   isGeneratedUnknownId(ids))
+})

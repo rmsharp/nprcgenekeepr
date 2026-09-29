@@ -60,3 +60,28 @@ test_that("addUIds generates period-free IDs (NEW-45 guarantee)", {
   expect_false(any(grepl(".", npTwo$sire[!is.na(npTwo$sire)], fixed = TRUE)))
   expect_false(any(grepl(".", npThree$dam[!is.na(npThree$dam)], fixed = TRUE)))
 })
+
+## Placeholder-marking plan Slice 2 (M11, S808): an id used only as a sire or a
+## dam, with no row of its own, is in use too. Minting it again for another
+## animal's missing parent would merge a recorded parent with a made-up one
+## (K2 would become K1's paternal half-sib through U0001).
+test_that("addUIds() never reuses an id used only as a sire or a dam", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL) # default U%04d
+  ped <- data.frame(
+    id = c("K1", "K2", "K3", "K4", "D1", "S1"),
+    sire = c("U0001", NA, "S1", "S1", NA, NA),
+    dam = c("D1", "D1", "U0002", NA, NA, NA),
+    sex = c("M", "F", "F", "M", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+  newPed <- addUIds(ped)
+  mintedSire <- newPed$sire[newPed$id == "K2"]
+  mintedDam <- newPed$dam[newPed$id == "K4"]
+  expect_false(mintedSire %in% c("U0001", "U0002"))
+  expect_false(mintedDam %in% c("U0001", "U0002"))
+  expect_false(identical(mintedSire, mintedDam))
+  expect_identical(newPed$sire[newPed$id == "K1"], "U0001") # recorded, kept
+  expect_identical(newPed$dam[newPed$id == "K3"], "U0002") # recorded, kept
+})

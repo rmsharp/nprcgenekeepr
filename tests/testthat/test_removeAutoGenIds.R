@@ -90,3 +90,43 @@ test_that("removeAutoGenIds() keeps the shipped ancestry example's real founder 
   expect_true("U1" %in% out$id)
   expect_identical(nrow(out), nrow(ped)) # the example has no placeholders
 })
+
+# --- the placeholder mark (placeholder-marking plan Slice 2, D4, S808) -----
+test_that("removeAutoGenIds() keeps a real U1234 marked FALSE, as an animal and as a parent", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL) # default U%04d
+  ped <- data.frame(
+    id = c("U1234", "U0001", "D1", "K1", "K2"),
+    sire = c(NA, NA, NA, "U1234", "U0001"),
+    dam = c(NA, NA, NA, "D1", "D1"),
+    sex = c("M", "M", "F", "F", "M"),
+    placeholder = c(FALSE, TRUE, FALSE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  out <- removeAutoGenIds(ped)
+  expect_setequal(out$id, c("U1234", "D1", "K1", "K2"))
+  expect_identical(out$sire[out$id == "K1"], "U1234") # real sire kept
+  expect_true(is.na(out$sire[out$id == "K2"])) # placeholder sire cleared
+})
+
+## The marks are read from the whole pedigree before any row is removed: once
+## UNK7's row is gone, its id has no row and the id-shape rule (which reads
+## "UNK7" as real) would keep it as K1's sire.
+test_that("removeAutoGenIds() removes a stand-in marked TRUE, as an animal and as a parent", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  ped <- data.frame(
+    id = c("UNK7", "D1", "K1"),
+    sire = c(NA, NA, "UNK7"),
+    dam = c(NA, NA, "D1"),
+    sex = c("M", "F", "F"),
+    placeholder = c(TRUE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+  out <- removeAutoGenIds(ped)
+  expect_setequal(out$id, c("D1", "K1"))
+  expect_true(is.na(out$sire[out$id == "K1"]))
+  expect_identical(out$dam[out$id == "K1"], "D1")
+})

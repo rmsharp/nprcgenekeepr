@@ -451,3 +451,43 @@ test_that("getPotentialParents finds a populated result using the shipped exampl
   )
   expect_identical(length(pp), 1587L)
 })
+
+## Placeholder-marking plan Slice 2 (S808): Potential Parents trusts the
+## placeholder mark. U1234 is a real sire (marked FALSE), U0001 a stand-in
+## (marked TRUE, no birth date, as addParents() adds it).
+markedPed <- function(u1234Birth) {
+  data.frame(
+    id = c("S1", "U1234", "U0001", "D1", "D2", "K1", "K2"),
+    sire = c(NA, NA, NA, NA, NA, "U1234", "U0001"),
+    dam = c(NA, NA, NA, NA, NA, "D1", "D2"),
+    sex = c("M", "M", "M", "F", "F", "F", "M"),
+    birth = as.Date(c("2000-01-01", u1234Birth, NA, "2000-01-01",
+                      "2000-01-01", "2008-01-01", "2010-01-01")),
+    exit = as.Date(NA),
+    fromCenter = TRUE,
+    placeholder = c(FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE),
+    stringsAsFactors = FALSE
+  )
+}
+focalIds <- function(pp) vapply(pp, function(x) x$id, character(1L))
+
+test_that("getPotentialParents() keeps a real U1234 marked FALSE as a recorded sire and a candidate", {
+  pp <- getPotentialParents(
+    ped = markedPed("2000-01-01"), minSireAge = 2, minDamAge = 2,
+    maxGestationalPeriod = 210L
+  )
+  expect_false("K1" %in% focalIds(pp)) # both parents on record
+  expect_true("K2" %in% focalIds(pp)) # its sire is a stand-in
+  expect_true("U1234" %in% pp[[which(focalIds(pp) == "K2")]]$sires)
+})
+
+## D12: the mark is read before animals with no birth date are set aside, so a
+## real sire with no birth date is still a recorded sire.
+test_that("getPotentialParents() keeps a real U1234 with no birth date as a recorded sire", {
+  pp <- getPotentialParents(
+    ped = markedPed(NA), minSireAge = 2, minDamAge = 2,
+    maxGestationalPeriod = 210L
+  )
+  expect_false("K1" %in% focalIds(pp))
+  expect_true("K2" %in% focalIds(pp))
+})
