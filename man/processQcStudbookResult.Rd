@@ -10,7 +10,8 @@ processQcStudbookResult(errorLst)
 \item{errorLst}{list object returned by \code{qcStudbook} with
 \code{reportErrors = TRUE}, or NULL. Expected to be of class
 \code{nprcgenekeeprErr} containing error fields such as femaleSires,
-maleDams, sireAndDam, duplicateIds, invalidIdChars, missingColumns,
+maleDams, sireAndDam, duplicateIds, invalidIdChars,
+invalidPlaceholderRows, missingColumns,
 invalidDateRows, suspiciousParents, failedDatabaseConnection, and
 changedCols.}
 }

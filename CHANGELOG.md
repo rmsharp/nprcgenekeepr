@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S808 REFACTOR (docs 3 of 4): `processQcStudbookResult()` roxygen lists `invalidPlaceholderRows`
+
 ### 2026-09-29 · [ad hoc] S808 REFACTOR (docs 2 of 4): `removeAutoGenIds()` and `isGeneratedUnknownId(ped =)` roxygen describe the mark overriding the id shape
 
 ### 2026-09-29 · [ad hoc] S808 REFACTOR (docs 1 of 4): `qcStudbook()` roxygen and man page describe the `placeholder` column
