@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S809 claim (in progress): placeholder-marking plan Slice 3 (`docs/planning/unknown-parent-placeholder-marking-plan.md` §5): `reportGV()` founders, `classifyParentage()` (optional `ped`), `correctUnknownParentMeanKinship()` and `getLivingBreeders()` read the `placeholder` mark; strict TDD
+- **Model:** Claude Sonnet 5.5. Also records the un-ledgered S808 notes commit `f443b6d93` (Pages deploy for `16da1062` succeeded, owner-confirmed; a `SESSION_NOTES.md`-only edit).
+
 ### 2026-09-29 · [ad hoc] S808 push (owner-directed): 17 commits pushed, `origin/master` `1d93590d` -> `16da1062`, a fast-forward (0 behind after a fresh fetch); CI on `16da1062`: lint (36617669752), pkgdown (36617669607), test-coverage (36617669621) and R-CMD-check (36617669618, all 5 legs: macos, windows, ubuntu release/devel/oldrel-1) all green
 
 ### 2026-09-29 · [ad hoc] S808 close-out: placeholder-marking plan Slice 2 DONE (S807 handoff evaluated 9/10, self 8/10); session notes, `HANDOFFS.md` receipt complete, plan §5 DONE note, `BACKLOG.md` item updated (Slice 3 next), Learning 824 (a new error-list field breaks a vignette table only `devtools::check()` builds); full suite 2,830 tests / 0 errors, `devtools::check` 0/0/2 notes (owner's drafts), lint 0, runtime smoke HTTP 200, quality_ratchet pass

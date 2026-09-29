@@ -180,6 +180,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S809
+date: 2026-09-29
+status: pending
+active_task: Placeholder-marking plan Slice 3 (docs/planning/unknown-parent-placeholder-marking-plan.md section 5): reportGV founders, classifyParentage, correctUnknownParentMeanKinship and getLivingBreeders read the placeholder mark. Strict TDD.
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S808
 date: 2026-09-29
 status: complete

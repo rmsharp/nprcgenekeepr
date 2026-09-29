@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 809 Did
+**Deliverable:** Slice 3 of `docs/planning/unknown-parent-placeholder-marking-plan.md`: `reportGV()` founders, `classifyParentage()` (optional `ped`), `correctUnknownParentMeanKinship()`, `getLivingBreeders()` read the `placeholder` mark (IN PROGRESS)
+**Started:** 2026-09-29
+**Status:** Session claimed. Work beginning (PRE-RED: re-run plan section 2 greps, then decisions).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 **Owner-directed after close-out (2026-09-29):**
 - **Pushed** 17 commits: `origin/master` `1d93590d` -> `16da1062`, a fast-forward. Runs found by head sha:
   lint (36617669752), pkgdown (36617669607), test-coverage (36617669621) and R-CMD-check (36617669618)
