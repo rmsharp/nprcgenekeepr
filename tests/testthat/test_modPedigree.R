@@ -141,8 +141,10 @@ test_that("modPedigreeServer returns correct pedigree data", {
 test_that("modPedigreeServer filters unknown IDs correctly", {
   skip_if_not_installed("shiny")
 
+  # Placeholder-shaped ids ("U" + 4 digits, as addUIds() makes them); a
+  # shorter "U1" is a real animal under the tighter rule (S807).
   test_studbook <- data.frame(
-    id = c("A", "B", "C", "U1", "U2"),
+    id = c("A", "B", "C", "U0001", "U0002"),
     sire = c(NA, NA, "A", NA, NA),
     dam = c(NA, NA, "B", NA, NA),
     sex = c("M", "F", "F", "M", "F"),
@@ -166,7 +168,38 @@ test_that("modPedigreeServer filters unknown IDs correctly", {
 
       expect_equal(nrow(ped), 3)
       expect_true(all(c("A", "B", "C") %in% ped$id))
-      expect_false(any(c("U1", "U2") %in% ped$id))
+      expect_false(any(c("U0001", "U0002") %in% ped$id))
+    }
+  )
+})
+
+test_that("modPedigreeServer keeps a real U-leading animal when unknown IDs are hidden", {
+  skip_if_not_installed("shiny")
+
+  # U1 is a real founder (the shipped ancestry example has one); only the
+  # placeholder-shaped U0001 is a stand-in for an unknown parent (S807).
+  test_studbook <- data.frame(
+    id = c("A", "U1", "C", "U0001"),
+    sire = c(NA, NA, "U0001", NA),
+    dam = c(NA, NA, "U1", NA),
+    sex = c("M", "F", "F", "M"),
+    stringsAsFactors = FALSE
+  )
+
+  shiny::testServer(
+    modPedigreeServer,
+    args = list(
+      studbook = shiny::reactive({ test_studbook })
+    ),
+    {
+      session$setInputs(
+        displayUnknownIds = FALSE,
+        trimPedigree = FALSE
+      )
+
+      ped <- session$getReturned()$pedigree()
+
+      expect_setequal(ped$id, c("A", "U1", "C"))
     }
   )
 })

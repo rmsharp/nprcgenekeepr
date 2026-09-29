@@ -186,6 +186,34 @@ test_that("modDeidentifiedExportServer's manifest reflects the params actually u
   })
 })
 
+test_that("modDeidentifiedExportServer's preview at the smallest alias length keeps placeholders recognizable (placeholder-marking plan D10, S807)", {
+  skip_if_not_installed("shiny")
+
+  # The alias-length box allows 4. A placeholder alias of 4 characters ("U" +
+  # 3) is not recognizable under the tighter rule, so the placeholder aliases
+  # are lengthened to "U" + 4 and real animals keep 4 characters.
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  ped <- nprcgenekeepr::qcPed # 43 placeholders shaped like "U05X3C"
+  isPlaceholder <- grepl("^U[A-Z0-9]{5}$", ped$id)
+
+  set_seed(4L)
+  shiny::testServer(modDeidentifiedExportServer,
+                     args = list(pedigree = shiny::reactive(ped)), {
+    session$setInputs(size = 4L, maxDelta = 30L, linkedDateShift = TRUE)
+    session$setInputs(preview = 1)
+
+    map <- session$getReturned()$map()
+    expect_identical(unname(nchar(map[ped$id[isPlaceholder]])),
+                     rep(5L, sum(isPlaceholder)))
+    expect_identical(unname(nchar(map[ped$id[!isPlaceholder]])),
+                     rep(4L, sum(!isPlaceholder)))
+    expect_true(all(isGeneratedUnknownId(map[ped$id[isPlaceholder]])))
+    expect_false(any(isGeneratedUnknownId(map[ped$id[!isPlaceholder]])))
+  })
+})
+
 ## -- Server: confirm gate (D2/D6) --------------------------------------------
 
 test_that("modDeidentifiedExportServer's confirmed reactive starts FALSE and only flips TRUE after the modal confirm click", {

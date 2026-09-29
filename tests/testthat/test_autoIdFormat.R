@@ -55,9 +55,108 @@ test_that("isGeneratedUnknownId() detects default-format ids, case-sensitively",
   on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
   options(nprcgenekeepr.autoIdFormat = NULL) # default U%04d
   expect_true(isGeneratedUnknownId("U0001"))
-  expect_true(isGeneratedUnknownId("U123")) # prefix-only: any U-leading id
+  expect_false(isGeneratedUnknownId("U123")) # too short to be a placeholder
   expect_false(isGeneratedUnknownId("abc"))
   expect_false(isGeneratedUnknownId("u001")) # case-sensitive
+})
+
+# --- the tighter rule (placeholder-marking plan D3 (b), S807) --------------
+# A placeholder is the prefix followed by at least as many capital letters or
+# digits as the format's number part prints (4 for "U%04d"). So a real animal
+# whose id merely starts with "U" is no longer taken for a stand-in.
+test_that("isGeneratedUnknownId() reads short or lowercase U-leading ids as real", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL) # default U%04d
+  ## U1 is the real founder in the shipped ancestry example
+  expect_identical(
+    isGeneratedUnknownId(c("U1", "U123", "Uma", "Umbra", "U12a")),
+    c(FALSE, FALSE, FALSE, FALSE, FALSE)
+  )
+})
+
+test_that("isGeneratedUnknownId() still reads minted and de-identified placeholders", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  ## U0001: addUIds() output; U05X3C: obfuscateId() output in the shipped data
+  expect_identical(
+    isGeneratedUnknownId(c("U0001", "U05X3C", "U12345", "UABCD")),
+    c(TRUE, TRUE, TRUE, TRUE)
+  )
+})
+
+test_that("isGeneratedUnknownId() keeps NA in a mixed vector", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  expect_identical(
+    isGeneratedUnknownId(c("U1", NA, "U0001")),
+    c(FALSE, NA, TRUE)
+  )
+})
+
+test_that("isGeneratedUnknownId() needs the width of a non-default format", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  setAutoIdFormat("AUTO%05d") # number part prints 5 characters
+  expect_identical(
+    isGeneratedUnknownId(c("AUTO00001", "AUTO1234", "AUTO123", "AUTOX7K2Q")),
+    c(TRUE, FALSE, FALSE, TRUE)
+  )
+})
+
+test_that("every id the format makes is recognized (default, wider, suffix)", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  n <- c(1L, 9L, 10L, 15L, 16L, 99L, 100L, 999L, 1000L, 9999L, 10000L,
+         99999L, 100000L)
+  for (fmt in c("U%04d", "AUTO%05d", "U%04d-x")) {
+    setAutoIdFormat(fmt)
+    expect_true(all(isGeneratedUnknownId(sprintf(fmt, n))), info = fmt)
+  }
+})
+
+test_that("a suffix format round-trips through addUIds() and removeAutoGenIds()", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  setAutoIdFormat("U%04d-x")
+  ped <- data.frame(
+    id = c("s1", "d1", "o1"),
+    sire = c(NA, NA, "s1"),
+    dam = c("d0", NA, "d1"),
+    sex = c("M", "F", "F"),
+    stringsAsFactors = FALSE
+  )
+  newPed <- addUIds(ped)
+  minted <- newPed$sire[newPed$id == "s1"]
+  expect_identical(minted, "U0001-x")
+  expect_true(isGeneratedUnknownId(minted))
+  cleaned <- removeAutoGenIds(newPed)
+  expect_true(is.na(cleaned$sire[cleaned$id == "s1"]))
+})
+
+# --- setAutoIdFormat() refuses formats the rule cannot read (D11, S807) -----
+test_that("setAutoIdFormat() refuses a format whose ids would not be recognized", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  options(nprcgenekeepr.autoIdFormat = NULL)
+  ## lowercase hex: sprintf("U%04x", 10L) is "U000a"
+  expect_error(setAutoIdFormat("U%04x"), "would not be recognized")
+  ## space padding: sprintf("U%4d", 1L) is "U   1"
+  expect_error(setAutoIdFormat("U%4d"), "would not be recognized")
+  expect_error(setAutoIdFormat("U%-4d"), "would not be recognized")
+  ## a refused format leaves the setting as it was
+  expect_identical(getAutoIdFormat(), "U%04d")
+})
+
+test_that("setAutoIdFormat() still accepts formats whose ids are recognized", {
+  old <- getOption("nprcgenekeepr.autoIdFormat")
+  on.exit(options(nprcgenekeepr.autoIdFormat = old), add = TRUE)
+  for (fmt in c("U%04d", "AUTO%05d", "U%04d-x", "U%d", "U%04X")) {
+    expect_no_error(setAutoIdFormat(fmt))
+    expect_identical(getAutoIdFormat(), fmt)
+  }
 })
 
 test_that("isGeneratedUnknownId() preserves NA like startsWith()", {
