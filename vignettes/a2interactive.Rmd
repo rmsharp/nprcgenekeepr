@@ -1101,6 +1101,10 @@ errorDescriptions <- c(
   "IDs listed more than once.",
   "IDs (id, sire, or dam) that contain a period ('.'), which is not allowed.",
   stri_c(
+    "Rows with a placeholder value other than TRUE, FALSE, 1, 0 or blank ",
+    "(the optional column that marks stand-ins for unknown parents)."
+  ),
+  stri_c(
     "Columns that have been changed to conform to internal naming ",
     "conventions and what they were changed to."
   )

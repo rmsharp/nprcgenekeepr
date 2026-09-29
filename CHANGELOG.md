@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S808 REFACTOR (docs, found by `devtools::check`): `vignettes/a2interactive.Rmd`'s error-type table gains the `invalidPlaceholderRows` description (11 fields, 10 descriptions failed the vignette build); check now 0 errors / 0 warnings / 2 notes (the owner's untracked drafts); full suite 358 files, 2,830 tests, 0 errors, only the known local-only pkgdown failure; runtime smoke `runGeneKeepR(port = 6098L)` HTTP 200, no log errors
+
 ### 2026-09-29 · [ad hoc] S808 REFACTOR (docs 4 of 4): `NEWS.Rmd` (the stand-in id entries now cover ids used only as a parent and the `placeholder` column), the QC article's problems table and the colony manager guide's QC error list gain `invalidPlaceholderRows`, `inst/WORDLIST` gains the field name (spelling guard)
 
 ### 2026-09-29 · [ad hoc] S808 REFACTOR (docs 3 of 4): `processQcStudbookResult()` roxygen lists `invalidPlaceholderRows`
