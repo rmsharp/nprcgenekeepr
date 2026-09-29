@@ -60,6 +60,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] Ledger trim: `SESSION_NOTES.md` → `docs/archive/SESSION_NOTES-through-2026-09-28-2.md` (10 record(s), 62,232 B → 25,099 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **10** record(s) (1900-01-07 → 2026-09-28) out of [`SESSION_NOTES.md`](SESSION_NOTES.md) into
+[`docs/archive/SESSION_NOTES-through-2026-09-28-2.md`](docs/archive/SESSION_NOTES-through-2026-09-28-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/SESSION_NOTES-through-2026-09-28-2.md.verify.sh`](docs/archive/SESSION_NOTES-through-2026-09-28-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 62,232 B → 25,099 B (−59.7%).
+
+### 2026-09-28 · [ad hoc] S806 records: plan for marking unknown-parent placeholder ids DONE (S805 handoff evaluated 9/10, self 8/10)
+- **Model:** Claude Opus 5.5. Session notes, `HANDOFFS.md` receipt complete, Learning 822 (run every candidate rule over the shipped data and the whole suite before an owner decision; count every number given to the owner).
+- **CI re-read (Learning 820 (c)):** R-CMD-check (run 36492193844) and test-coverage (36492193789) on `e5e007f8`, `in_progress` at Orient, both green, R-CMD-check on all 5 legs.
+- **Gate:** `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 3749928c8792 · manifest aa983075d6a2` (3,589,729 B at `2d327d7f`).
+- **Owner-run trim (its tool-written entry is above):** `--budget-bytes 65536 --cut 4 --force --write`; these notes put `SESSION_NOTES.md` at 62,232 B (about 27,414 tokens, over the 25,000-token read ceiling), so the pre-commit hook refused this commit. The verify script flags only the S806 claim stub (the BL-27 finalize pattern); checked by hand, the other 12 records are verbatim in the live file or the shard.
+
 ### 2026-09-28 · [ad hoc] S806: plan written for marking unknown-parent placeholder ids when they are made (the real-`U`-id half of PED_GV F2 / NEW-38)
 - **Model:** Claude Opus 5.5. **Owner decisions (AskUserQuestion):** of the backlog item's options, "mark ids when they are made"; this session writes the plan, not code.
 - **Deliverable:** `docs/planning/unknown-parent-placeholder-marking-plan.md`: 11 measurements (M1-M11), a grep-based inventory (mint site, the 7 reading files and their callers, 4 exports, shipped data, docs, 27 test files), decisions D1-D9 (a logical column written once by `qcStudbook()`, with a fallback rule for unmarked files), 5 slices, each its own strict-TDD session. Owner decisions D1/D3/D5/D6 still needed before Slice 1.

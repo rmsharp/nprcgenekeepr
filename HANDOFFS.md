@@ -182,9 +182,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S806
 date: 2026-09-28
-status: pending
-active_task: Real animal ids that start with the placeholder prefix ("Uma", "U123") are treated as stand-ins for unknown parents (PED_GV F2 / NEW-38 other half): measure, owner picks the fix, strict TDD -- IN PROGRESS.
-what_was_done: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Real animal ids that start with the placeholder prefix (U1, Uma, U123) are treated as stand-ins for unknown parents (PED_GV F2 / NEW-38 other half). Owner chose "mark ids when they are made"; plan written (docs/planning/unknown-parent-placeholder-marking-plan.md). Next: owner decisions D1/D3/D5/D6 (plan section 11), then Slice 1 or 2.
+what_was_done: Planning session, no code. Measured 11 facts (M1-M11: shipped U-id shapes, rule trials over the full suite, recordStatus reset, attribute loss, column survival, filtered downstream pedigree, reportGV error when filtered, obfuscatePed aliases, addUIds reusing a sire-only id); owner picked the approach and plan-first via AskUserQuestion; plan with grep inventory, decisions D1-D9, 5 TDD slices. BACKLOG: item points at the plan; new item for reportGV stopping when Display Unknown IDs is unticked; the addUIds reuse added to the placeholder and PED_GV items. Commits: claim cb4601aa, plan 2d327d7f, records (this).
+next_steps: Ask the owner the plan's 4 decisions (section 11) in plain words. If D3 = the tighter rule, implement Slice 1 with strict TDD: R/autoIdFormat.R:109-111, obfuscateId() alias length at R/obfuscateId.R:40-46, the 3 moved tests (test_autoIdFormat.R:58, test_modPedigree.R:113-169, test_obfuscateId.R:31), NEWS.Rmd entry. Otherwise start at Slice 2 (addUIds sire/dam reuse fix first, then qcStudbook writes the mark).
+key_files: docs/planning/unknown-parent-placeholder-marking-plan.md:1 (sections 1.3, 2, 5, 11); R/autoIdFormat.R:109; R/addUIds.R:46; R/qcStudbook.R:231; R/qcStudbook.R:324; R/addParents.R:43; R/modPedigree.R:359; R/appServer.R:312; tests/testthat/test_qcStudbook.R:105; BACKLOG.md:51
+gotchas: Trial a rule by assigning into both asNamespace("nprcgenekeepr") and package:nprcgenekeepr after load_all; a wrapper breaks mockery::stub tests on that function (test_qcStudbook.R:443). recordStatus is rebuilt every QC run. fixColumnNames rewrites "ego" to "id" in any header and lowercases camelCase. BACKLOG.md is 54,837 B, 1,913 B under the 56,750 B read cap. Full suite's 1 known failure is local-only (untracked vignettes/suggested_NEWS_entry.Rmd).
+runtime_smoke: n/a -- docs-only (a plan and BACKLOG.md; both build-ignored, read by no test). Two full-suite trials in scratch (357 files, 2,790 tests each): tighter rule moved 3 tests; a qcStudbook mark column moved 1 (plus 1 trial artifact). CI on e5e007f8 (in_progress at Orient) re-read green: R-CMD-check all 5 legs, test-coverage. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 3749928c8792 · manifest aa983075d6a2
+changelog_ref: 2d327d7f
 commit: pending
 ```
 
