@@ -137,6 +137,10 @@ getAutoIdWidth <- function(format = getAutoIdFormat()) {
 #' @param id character vector of IDs to test.
 #' @param format auto-ID \code{sprintf} format; defaults to
 #' \code{getAutoIdFormat()}.
+#' @param ped optional pedigree. When it has a logical \code{placeholder}
+#' column (written by \code{\link{qcStudbook}}), an ID with a row and a
+#' non-\code{NA} mark there answers with that mark; any other ID answers with
+#' the shape rule above.
 #' @return A logical vector the length of \code{id} (\code{NA} where \code{id}
 #' is \code{NA}).
 #' @noRd

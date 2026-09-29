@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S808 REFACTOR (docs 2 of 4): `removeAutoGenIds()` and `isGeneratedUnknownId(ped =)` roxygen describe the mark overriding the id shape
+
 ### 2026-09-29 · [ad hoc] S808 REFACTOR (docs 1 of 4): `qcStudbook()` roxygen and man page describe the `placeholder` column
 
 ### 2026-09-29 · [ad hoc] S808 GREEN (lint): the 3 lint findings on the Slice 2 code fixed (`nzchar()` in `readPlaceholderMark()`, two long strings in `summary()`); lint 0 on the 9 touched R files; full unfiltered suite (`NOT_CRAN=true`) 358 files, 2,830 tests, 0 errors, 1 failure (the known local-only `test_pkgdown_reference_config.R`)

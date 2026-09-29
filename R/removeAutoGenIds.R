@@ -10,7 +10,10 @@
 #' capital letters or digits (\code{"U0001"}, or \code{"U05X3C"} after
 #' de-identification). A real animal whose ID merely starts with "U"
 #' (\code{"U1"}, \code{"U123"}, \code{"Uma"}) is kept, and so is its place as
-#' a sire or dam; a real ID of the full shape (\code{"U1234"}) is removed.
+#' a sire or dam; a real ID of the full shape (\code{"U1234"}) is removed
+#' unless the pedigree's \code{placeholder} column (see
+#' \code{\link{qcStudbook}}) marks it \code{FALSE}, and a \code{TRUE} mark
+#' removes a stand-in whatever its ID looks like.
 #' @inheritParams getDescendantPedigree
 #'
 #' @return A pedigree with automatically generated IDs removed.
