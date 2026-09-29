@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S807 REFACTOR (docs 2 of 3): `removeAutoGenIds()` roxygen/man page, the Pedigree Browser help text and the user manual say which ids count as unknown-parent placeholders
+- **Model:** Claude Opus 5.5. Documentation only. `R/removeAutoGenIds.R` + `man/removeAutoGenIds.Rd`: a placeholder is "U" + at least four capitals/digits; `U1`/`U123`/`Uma` kept, `U1234` removed. `R/modPedigree.R` help text and `vignettes/manual_components/_pedigree_browser.Rmd:38`: the same, and a real `U1` is always shown. Lint 0 on the touched R files; `test_modPedigree*.R` (3 files, 91 tests) pass.
+
 ### 2026-09-28 · [ad hoc] S807 REFACTOR (docs 1 of 3): roxygen and man pages for `setAutoIdFormat()`, `isGeneratedUnknownId()` and `obfuscateId()` describe the tighter placeholder rule
 - **Model:** Claude Opus 5.5. Documentation only (owner chose a docs-only REFACTOR). `setAutoIdFormat()`: the number must print as capital letters or digits, and `"U%04x"`/`"U%4d"` are refused; `isGeneratedUnknownId()` (`@noRd`): prefix + at least *W* capitals/digits, with `U1`/`U123`/`Uma` real and `U1234` still misread; `obfuscateId()` `size`: placeholder aliases are lengthened when `size` is too short. `devtools::document()` regenerated `man/setAutoIdFormat.Rd` and `man/obfuscateId.Rd`; `NAMESPACE` unchanged.
 

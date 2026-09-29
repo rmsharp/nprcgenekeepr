@@ -16,9 +16,12 @@ A pedigree with automatically generated IDs removed.
 \description{
 Identifies automatically generated IDs via \code{isGeneratedUnknownId()},
 the shared detection predicate derived from the configurable auto-ID format
-(see \code{\link{getAutoIdFormat}}; default a leading "U"). Routing detection
-through that single predicate is the "function call" the former inline
-leading-"U" check was flagged to become.
+(see \code{\link{getAutoIdFormat}}). With the default \code{"U\%04d"}, an
+automatically generated ID is a capital "U" followed by at least four
+capital letters or digits (\code{"U0001"}, or \code{"U05X3C"} after
+de-identification). A real animal whose ID merely starts with "U"
+(\code{"U1"}, \code{"U123"}, \code{"Uma"}) is kept, and so is its place as
+a sire or dam; a real ID of the full shape (\code{"U1234"}) is removed.
 }
 \examples{
 examplePedigree <- nprcgenekeepr::examplePedigree

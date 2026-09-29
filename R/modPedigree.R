@@ -107,9 +107,11 @@ modPedigreeUI <- function(id) {
           helpText(
             style = "font-size: 14px; color: darkblue; font-weight: bold;",
             paste0(
-              "Unknown IDs, by default beginning with a capital U (the ",
-              "format is configurable via setAutoIdFormat()), are created ",
-              "by the application for all animals with only one parent."
+              "Unknown IDs are created by the application for all animals ",
+              "with only one parent. By default they are a capital U ",
+              "followed by at least four capital letters or digits (the ",
+              "format is configurable via setAutoIdFormat()); a real ",
+              "animal whose ID merely starts with U, such as U1, is kept."
             )
           ),
           br(),
