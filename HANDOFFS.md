@@ -182,10 +182,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S809
 date: 2026-09-29
-status: pending
-active_task: Placeholder-marking plan Slice 3 (docs/planning/unknown-parent-placeholder-marking-plan.md section 5): reportGV founders, classifyParentage, correctUnknownParentMeanKinship and getLivingBreeders read the placeholder mark. Strict TDD.
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Placeholder-marking plan (docs/planning/unknown-parent-placeholder-marking-plan.md): Slices 1-3 DONE (S807-S809). Next: Slice 4 (Display Unknown IDs filter, display name, help/docs, exports keep the mark).
+what_was_done: Strict TDD Slice 3. reportGV() founder counts and parentage, classifyParentage(ped =), correctUnknownParentMeanKinship() (whole ped), getLivingBreeders() (so the effective sizes) and gvaConvergence() parentage read the placeholder mark; an id with no row is read by shape (D4). 14 new tests in test_placeholderMarkReaders.R (11 failed on old behavior, 2 guards). NEWS.Rmd entry extended; plan and BACKLOG updated. Learning 825.
+next_steps: Slice 4 (plan section 5): R/modPedigree.R:363 filter passes ped; R/headerDisplayNames.R display name for placeholder; help text and colony-manager-guide.qmd / _pedigree_browser.Rmd; summary_stats.html; exports keep the mark (D8). RED first; re-run the plan section 2 greps.
+key_files: R/classifyParentage.R:20; R/getLivingBreeders.R:26; R/correctUnknownParentMeanKinship.R:155; R/reportGV.R:282-293; R/gvaConvergence.R:175; tests/testthat/test_placeholderMarkReaders.R; PROJECT_LEARNINGS.md (Learning 825)
+gotchas: Until Slice 4 the Display Unknown IDs filter still uses the id shape. Shipped data is unmarked, so only a fixture shows a mark changing an answer (makeMarkedPed() in the new test file). gh run list can return stale runs or time out; find runs by head sha. 22 commits unpushed; pushing is the owner's call.
+runtime_smoke: runGeneKeepR(port = 6097L) HTTP 200, no log errors; module behavior verified with testServer on modGeneticValueServer. Full suite 359 files / 2,844 tests / 0 errors (known local-only pkgdown failure). devtools::check 0 errors / 0 warnings / 2 notes (owner's drafts). Lint 0. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4f4491dfc876 · manifest aa983075d6a2
+changelog_ref: 4802843c6
+commit: cc1eca898
 ```
 
 ```handoff

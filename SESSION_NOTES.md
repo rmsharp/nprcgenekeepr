@@ -98,11 +98,70 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 808 Handoff Evaluation (by Session 809)
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier one docs-only commit behind
+HEAD (`f443b6d93`, ledgered this session), the S808 receipt `status: complete`, the 7 untracked files
+unchanged, dashboard 96/100. Next step (A) was exact: `R/reportGV.R:283-286` and `:292`,
+`R/gvaConvergence.R:175`, `R/getLivingBreeders.R:26` and `R/correctUnknownParentMeanKinship.R:155` all sat
+where it said, and the 26.405868 pin was right. **Missing:** (A) named `classifyParentage`'s callers but
+not `gvaConvergence()` as a function to pass `ped` (the plan §5 has it); it also did not say the shipped
+data is unmarked, so no shipped pedigree can show a mark changing an answer (a fixture must be built).
+**Wrong:** nothing. **ROI:** high.
+
 ### What Session 809 Did
-**Deliverable:** Slice 3 of `docs/planning/unknown-parent-placeholder-marking-plan.md`: `reportGV()` founders, `classifyParentage()` (optional `ped`), `correctUnknownParentMeanKinship()`, `getLivingBreeders()` read the `placeholder` mark (IN PROGRESS)
-**Started:** 2026-09-29
-**Status:** Session claimed. Work beginning (PRE-RED: re-run plan section 2 greps, then decisions).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE:** Slice 3 of `docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
+every gate an `AskUserQuestion`). `reportGV()` (founder counts, parentage), `classifyParentage(ped =)`,
+`correctUnknownParentMeanKinship()` (whole `ped`, not the proband subset), `getLivingBreeders()` (so
+`calcNeSexRatio()`/`calcNeVariance()`) and `gvaConvergence()` (parentage) now read the `placeholder` mark;
+an id with no row in the pedigree is read by its shape (D4). No new owner decisions.
+**Commits:** claim `8164ed80a`; RED `deb75ec4f` (`tests/testthat/test_placeholderMarkReaders.R`, 14 tests,
+11 failing, 2 guards); GREEN `03c455a73`, `4802843c6`; docs `cc1eca898` (NEWS.Rmd, plan, BACKLOG); records (this).
+**Verification:**
+- The 11 RED tests failed on the old behavior (every message read), then passed; the older tests of every
+  touched function still pass.
+- Full unfiltered suite (`NOT_CRAN=true`, `load_all`), after GREEN: 359 files, 2,844 tests, 0 errors,
+  1 failure, the known local-only `test_pkgdown_reference_config.R`. After the docs, `test_newsReleaseState.R`
+  and `test_wordlist_coverage.R` pass.
+- `devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes (the owner's untracked drafts).
+- Lint 0 on the 5 touched R files.
+- Runtime smoke: `runGeneKeepR(port = 6097L)` HTTP 200, no log errors. The module behavior was verified with
+  `testServer` on `modGeneticValueServer`, not by clicking in a browser.
+- `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4f4491dfc876 · manifest aa983075d6a2`.
+- CI: not checked at Phase 0 (`gh run list` timed out, TLS handshake); nothing pushed this session.
+**Learnings:** 825.
+**Reduction:** nothing removed; `BACKLOG.md`'s placeholder item is about 60 B shorter net; these notes stay
+under the 65,536 B ceiling.
+
+**Self-assessment: 8/10.**
+- \+ Read every RED failure message; controls that pass before and after; every commit at 5 files or fewer.
+- \+ Ran the full suite, `devtools::check`, lint and the smoke test before close-out.
+- \+ Found the whole-`ped` trap in `correctUnknownParentMeanKinship()` before writing GREEN (Learning 825).
+- \- First lint call passed a vector to `lintr::lint()` (one file per call); two background waits hit their limit.
+- \- Phase 0 CI check failed on a network timeout and was reported, not retried.
+
+**Next steps:**
+- (A) Slice 4 of the plan (strict TDD; plan §5 "Slice 4"): the "Display Unknown IDs" filter
+  (`R/modPedigree.R:363`, `ped[!isGeneratedUnknownId(ped$id), ]`) passes `ped`; the column's display name
+  (`R/headerDisplayNames.R`); help text and the §2.5 documents (`vignettes/articles/colony-manager-guide.qmd`,
+  `vignettes/manual_components/_pedigree_browser.Rmd`); `summary_stats.html`; exports round-trip the mark
+  (D8). RED: the filter hides marked rows only (a real `U1` stays); round trips of the cleaned-studbook and
+  Pedigree Browser exports keep the marks. Re-run the plan §2 greps first.
+- (B) Other items: "Display Unknown IDs" breaking `reportGV()`; documentation audit's next slice; Potential
+  Parents own-dam; jmac.
+- (C) Carried: 22 unpushed commits after this records commit (pushing is the owner's call; this push changes
+  `R/`, so all 4 workflows run); 7 untracked files; the `CHANGELOG.md`/`HANDOFFS.md` trims.
+
+**Key files:** `R/classifyParentage.R:20`, `R/getLivingBreeders.R:26`,
+`R/correctUnknownParentMeanKinship.R:155-157`, `R/reportGV.R:282-293`, `R/gvaConvergence.R:175-176`,
+`tests/testthat/test_placeholderMarkReaders.R`; plan §5 Slice 3 DONE note; `PROJECT_LEARNINGS.md` Learning 825.
+
+**Gotchas:**
+1. Until Slice 4, the "Display Unknown IDs" filter (`R/modPedigree.R:363`) still uses the id shape, so a real
+   `U1234` marked FALSE is hidden when it is turned off.
+2. The shipped data is unmarked; only a fixture with a mark shows a changed answer (`makeMarkedPed()` in the
+   new test file is reusable).
+3. `gh run list --branch master` can return stale runs or time out; find runs by head sha.
+4. STANDING SET unchanged from S790-808.
 
 **Owner-directed after close-out (2026-09-29):**
 - **Pushed** 17 commits: `origin/master` `1d93590d` -> `16da1062`, a fast-forward. Runs found by head sha:
