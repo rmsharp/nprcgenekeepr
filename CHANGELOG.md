@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S808 RED (3 of 3): failing tests for placeholder-marking plan Slice 2's error reporting -- `processQcStudbookResult()` turns `errorLst$invalidPlaceholderRows` into an "Invalid placeholder values" row naming the rows; `getEmptyErrorLst()` grows from 10 to 11 fields (`test_getFocalAnimalPed.R`); 2 failing
+
 ### 2026-09-29 · [ad hoc] S808 RED (2 of 3): failing tests for placeholder-marking plan Slice 2 in QC and the app -- `qcStudbook()` adds a logical `placeholder` column (the stand-ins it made TRUE, even under a format the id-shape rule cannot read; a user's `U1234` FALSE kept, also on a second QC run; no column = the id-shape rule; TRUE/FALSE spellings and 1/0 read, D13; `yes`/`2`/`-1` listed in `errorLst$invalidPlaceholderRows` or a stop naming the rows, D5); the column-name pin gains `placeholder` (M10); `checkErrorLst()` and `summary()` see the new entry; a file upload keeps a real `U1234` through Potential Parents and shows a QC error naming rows 1, 3; 13 failing
 - **Correction to RED (1 of 3):** that commit holds 8 tests -- 7 failing on behavior and 1 guard failing only on the missing `ped` argument -- not "9 failing, 1 guard".
 

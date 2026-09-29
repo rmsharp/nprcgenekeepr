@@ -76,6 +76,21 @@ test_that("processQcStudbookResult detects IDs containing a period (NEW-45)", {
   expect_true(any(grepl("A.1", result$errors$Details, fixed = TRUE)))
 })
 
+## Placeholder-marking plan Slice 2 (D5, S808).
+test_that("processQcStudbookResult detects rows with an invalid placeholder value", {
+  errorLst <- getEmptyErrorLst()
+  errorLst$invalidPlaceholderRows <- c("1", "3")
+
+  result <- processQcStudbookResult(errorLst)
+
+  expect_true(result$hasErrors)
+  expect_true("Invalid placeholder values" %in% result$errors$Error)
+  details <- result$errors$Details[
+    result$errors$Error == "Invalid placeholder values"
+  ]
+  expect_true(grepl("1, 3", details, fixed = TRUE))
+})
+
 test_that("processQcStudbookResult detects missing columns", {
   errorLst <- getEmptyErrorLst()
   errorLst$missingColumns <- c("id", "sire")

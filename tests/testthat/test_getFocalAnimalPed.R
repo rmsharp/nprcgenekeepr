@@ -109,8 +109,10 @@ test_that(
       result <- getFocalAnimalPed(fileName = qcPedEmptyTxt),
       "The nprcgenekeepr configuration file is missing."
     )
-    ## NEW-45: getEmptyErrorLst() gained the invalidIdChars field (9 -> 10).
-    expect_length(result, 10L)
+    ## NEW-45: getEmptyErrorLst() gained the invalidIdChars field (9 -> 10);
+    ## placeholder-marking plan Slice 2 (S808) added invalidPlaceholderRows
+    ## (10 -> 11).
+    expect_length(result, 11L)
   }
 )
 
