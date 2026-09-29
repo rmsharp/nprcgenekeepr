@@ -377,7 +377,7 @@ readPlaceholderMark <- function(x) {
     mark[text %in% c("TRUE", "true", "True", "T", "1")] <- TRUE
     mark[text %in% c("FALSE", "false", "False", "F", "0")] <- FALSE
   }
-  isBlank <- is.na(x) | (!is.logical(x) & trimws(as.character(x)) == "")
+  isBlank <- is.na(x) | (!is.logical(x) & !nzchar(trimws(as.character(x))))
   list(mark = mark, invalid = which(is.na(mark) & !isBlank))
 }
 

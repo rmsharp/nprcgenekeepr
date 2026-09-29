@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S808 GREEN (lint): the 3 lint findings on the Slice 2 code fixed (`nzchar()` in `readPlaceholderMark()`, two long strings in `summary()`); lint 0 on the 9 touched R files; full unfiltered suite (`NOT_CRAN=true`) 358 files, 2,830 tests, 0 errors, 1 failure (the known local-only `test_pkgdown_reference_config.R`)
+
 ### 2026-09-29 · [ad hoc] S808 GREEN (3 of 3): placeholder-marking plan Slice 2's error reporting -- `summary()` of the QC error list names the rows with an invalid placeholder value and `processQcStudbookResult()` adds an "Invalid placeholder values" row; `test_summary.nprcgenekeeprErr.R`, `test_modInput_qcStudbook.R` and the two end-to-end upload tests in `test_modInput_placeholder.R` pass
 
 ### 2026-09-29 · [ad hoc] S808 GREEN (2 of 3): placeholder-marking plan Slice 2 in QC -- `qcStudbook()` writes a logical `placeholder` column (the stand-ins it made TRUE, a user's TRUE/FALSE/1/0 kept, every other row by the id-shape rule) and stops on, or with `reportErrors` lists in `errorLst$invalidPlaceholderRows`, a value it does not accept (D5, D13); `getEmptyErrorLst()` gains that field (11) and `checkErrorLst()` sees it; `test_qcStudbook.R`, `test_checkErrorLst.R`, `test_getFocalAnimalPed.R` pass
