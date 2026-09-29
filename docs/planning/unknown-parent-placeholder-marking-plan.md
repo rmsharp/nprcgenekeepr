@@ -336,6 +336,7 @@ reaches the mark through `qcStudbook()`, which is covered locally).
   is unchanged; `modGeneticValueServer`
   (`testServer`) on a marked pedigree.
 - **DONE / boundary:** as above; one session.
+- **DONE S809** (RED `deb75ec4f`; GREEN `03c455a73`, `4802843c6`). `classifyParentage(sire, dam, ped = NULL)`; `getLivingBreeders()`, `correctUnknownParentMeanKinship()` (whole `ped`, not the proband subset), `reportGV()` (founders, parentage) and `gvaConvergence()` (parentage) pass `ped`. An id with no row in `ped` is read by shape (D4). Tests: `tests/testthat/test_placeholderMarkReaders.R`. Not done, left for Slice 4: the "Display Unknown IDs" filter.
 
 ### Slice 4 — App display, exports and help
 

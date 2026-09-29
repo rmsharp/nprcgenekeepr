@@ -510,8 +510,9 @@ knitr::opts_chunk$set(echo = TRUE)
   check also adds a yes/no `placeholder` column recording which animals are
   stand-ins. A center can enter `FALSE` for a real animal whose id looks like a
   stand-in (such as `U1234`) and it is kept as a real animal, including in
-  Potential Parents; a value other than TRUE, FALSE, 1, 0 or blank stops the
-  check and names the rows.
+  Potential Parents, the genetic value report's founder counts and parentage
+  labels, and the breeder counts behind the effective population size; a value
+  other than TRUE, FALSE, 1, 0 or blank stops the check and names the rows.
 - Fixed: Potential Parents (`getPotentialParents()`) rules out as a possible
   dam any female who gave birth to another animal too close in time to have
   also carried this one. When no female nearby was a proven breeder, it fell

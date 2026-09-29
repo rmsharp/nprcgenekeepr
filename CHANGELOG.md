@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S809 REFACTOR (docs only): `NEWS.Rmd` placeholder entry, plan §5 Slice 3 DONE note, BACKLOG item (Slice 4 next)
+- **Model:** Claude Sonnet 5.5. `NEWS.Rmd` (`test_newsReleaseState.R`, `test_wordlist_coverage.R` pass), `BACKLOG.md`, `docs/planning/unknown-parent-placeholder-marking-plan.md`.
+
 ### 2026-09-29 · [ad hoc] S809 GREEN 2 of 2: `reportGV()` founders and parentage, and `gvaConvergence()` parentage, pass the pedigree
 - **Model:** Claude Sonnet 5.5. Files: `R/reportGV.R` (founder counts, `classifyParentage`), `R/gvaConvergence.R`. All 14 new tests and the older tests of every touched function pass (`test_reportGV.R`, `test_gvaConvergence*.R`, `test_modGeneticValue.R`, `test_calcNe*.R`).
 
