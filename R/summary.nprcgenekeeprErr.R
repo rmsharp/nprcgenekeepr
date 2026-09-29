@@ -92,6 +92,12 @@ summary.nprcgenekeeprErr <- function(object, ...) {
   )
   txt <- addErrTxt(
     txt,
+    errorLst$invalidPlaceholderRows,
+    "Error: The row with a placeholder value that is not TRUE, FALSE, 1, 0 or blank is",
+    "Error: The rows with placeholder values that are not TRUE, FALSE, 1, 0 or blank are"
+  )
+  txt <- addErrTxt(
+    txt,
     errorLst$changedCols$caseChange,
     "Change: The column where case was changed is",
     "Change: The columns where case was changed are"

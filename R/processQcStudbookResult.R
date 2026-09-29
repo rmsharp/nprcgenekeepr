@@ -148,6 +148,15 @@ processQcStudbookResult <- function(errorLst) {
     )
   }
 
+  # Check for placeholder values that are not TRUE, FALSE, 1, 0 or blank
+  if (length(errorLst$invalidPlaceholderRows) > 0L) {
+    result$errors <- rbind(
+      result$errors,
+      makeErrorRow("Invalid placeholder values",
+                   toString(errorLst$invalidPlaceholderRows))
+    )
+  }
+
   # Check for invalid date rows
   if (length(errorLst$invalidDateRows) > 0L) {
     result$errors <- rbind(

@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S808 GREEN (3 of 3): placeholder-marking plan Slice 2's error reporting -- `summary()` of the QC error list names the rows with an invalid placeholder value and `processQcStudbookResult()` adds an "Invalid placeholder values" row; `test_summary.nprcgenekeeprErr.R`, `test_modInput_qcStudbook.R` and the two end-to-end upload tests in `test_modInput_placeholder.R` pass
+
 ### 2026-09-29 · [ad hoc] S808 GREEN (2 of 3): placeholder-marking plan Slice 2 in QC -- `qcStudbook()` writes a logical `placeholder` column (the stand-ins it made TRUE, a user's TRUE/FALSE/1/0 kept, every other row by the id-shape rule) and stops on, or with `reportErrors` lists in `errorLst$invalidPlaceholderRows`, a value it does not accept (D5, D13); `getEmptyErrorLst()` gains that field (11) and `checkErrorLst()` sees it; `test_qcStudbook.R`, `test_checkErrorLst.R`, `test_getFocalAnimalPed.R` pass
 
 ### 2026-09-29 · [ad hoc] S808 GREEN (1 of 3): placeholder-marking plan Slice 2 at the id level -- `isGeneratedUnknownId()` takes the pedigree and answers with its `placeholder` mark (no row or an NA mark = the id-shape rule); `addUIds()` treats an id used only as a sire or dam as in use (M11); `removeAutoGenIds()` reads every mark before removing rows; `getPotentialParents()` runs it before setting aside animals with no birth date (D12); the 4 id-level test files and the other 25 rule-touching test files pass
