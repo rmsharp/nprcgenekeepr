@@ -49,6 +49,14 @@ animal is intact, assume all other values indicate surgical alteration
 \item \code{condition} --- Character or \code{NA} (optional)
 Indicator of the restricted status of an animal. "Nonrestricted" animals
 are generally assumed to be naive.
+\item \code{placeholder} --- Logical or \code{NA} (optional)
+\code{TRUE} marks a made-up stand-in for an unknown parent, \code{FALSE} a
+real animal. \code{TRUE}, \code{true}, \code{True}, \code{T} and
+\code{1} count as \code{TRUE}; \code{FALSE}, \code{false},
+\code{False}, \code{F} and \code{0} as \code{FALSE}; a blank as
+unmarked. Any other value is an error (listed in
+\code{errorLst$invalidPlaceholderRows} with \code{reportErrors == TRUE},
+otherwise the function throws an error naming the rows).
 }}
 
 \item{minSireAge}{numeric minimum age in years for a male to have sired an
@@ -182,7 +190,14 @@ Columns that cannot be used subsequently are removed and the rows are
 ordered by generation number and then ID.
 
 Finally the columns \code{id} \code{sire}, and \code{dam} are coerce to
-character.}
+character.
+
+The returned pedigree always has a logical \code{placeholder} column with no
+\code{NA}: \code{TRUE} for the stand-ins made here (see \code{addUIds}),
+the value the input gave for any other row that had one, and for the rest
+\code{TRUE} when the ID looks like a stand-in (see
+\code{\link{removeAutoGenIds}}). A center can mark a real animal whose ID
+looks like a stand-in (for example \code{"U1234"}) as \code{FALSE}.}
 }
 \value{
 A data.frame with standardized and quality controlled pedigree
