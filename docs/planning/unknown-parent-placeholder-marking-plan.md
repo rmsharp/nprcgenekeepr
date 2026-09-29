@@ -450,3 +450,24 @@ Slice 1 and do D6 (c) inside Slice 2.
 
 D2, D4, D7, D8 and D9 follow from the measurements and the owner's S806 choice. A slice session
 re-checks §2's line numbers with the §2 commands before its RED phase.
+
+**Ratified S807 (2026-09-28, owner, AskUserQuestion), all as recommended:** D1 = `placeholder`;
+D3 = (b), the tighter rule, shipped first as Slice 1; D5 = a bad value stops QC and lists the rows;
+D6 = (a), the shipped data stays unmarked. Re-measured S807 before asking: 1,470 distinct
+`U`-leading ids in the shipped datasets and example files; the tighter rule changes only `U1`.
+
+**Two more decisions, found and ratified S807 before Slice 1's RED:**
+
+- **D10 — alias length.** The De-identified Export's alias-length box allows 4
+  (`R/modDeidentifiedExport.R:104-105`, `min = 4L`). Measured: with the tighter rule patched in,
+  `obfuscatePed(qcPed, size = 4L)` stops ("too short to easily avoid duplicates"), because a
+  placeholder alias of 4 characters is `U` + 3 and is no longer recognized; today it runs, and at
+  sizes 5 and 6 it runs under the new rule. **Owner:** lengthen only the placeholder aliases to the
+  shortest recognizable length (prefix + *W*, 5 for `"U%04d"`) when `size` is shorter; real animals
+  keep `size`. Rejected: stop with a message and raise the box's minimum to 5 (a typed 4 would still
+  end the app session). This replaces the §4 catalog's "too short" stop for `obfuscateId()`.
+- **D11 — formats the rule cannot recognize.** `setAutoIdFormat()` accepts formats whose ids fail
+  the tighter rule (lowercase hex `"U%04x"` → `U000a`; space-padded `"U%4d"` → `"U   1"`).
+  **Owner:** `setAutoIdFormat()` refuses a format whose own ids the rule would not recognize.
+  Rejected: allow it and document the limit. The only formats the package and its tests use
+  (`"U%04d"`, `"AUTO%05d"`) pass.

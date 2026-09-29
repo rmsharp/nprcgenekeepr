@@ -60,6 +60,11 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S807: owner ratified the placeholder-marking plan's decisions D1/D3/D5/D6 and two new ones (D10 alias length, D11 unrecognizable formats), recorded in the plan §11
+- **Model:** Claude Opus 5.5. **Owner (AskUserQuestion), all as recommended:** D1 column `placeholder`; D3 the tighter rule, shipped first as Slice 1; D5 a bad value stops QC and lists the rows; D6 shipped data stays unmarked.
+- **Found before RED, then ratified:** D10 -- the De-identified Export allows alias length 4, and with the tighter rule `obfuscatePed(qcPed, size = 4L)` stops (measured; runs today and at 5/6); the owner chose to lengthen only placeholder aliases to the shortest recognizable length. D11 -- `setAutoIdFormat()` accepts formats whose ids the tighter rule cannot recognize (`"U%04x"`, `"U%4d"`); the owner chose to refuse them.
+- **Re-measured before asking:** 1,470 distinct `U`-leading ids in the shipped datasets and example files; the tighter rule changes only `U1`.
+
 ### 2026-09-28 · [ad hoc] S807 claim: real animal ids that start with the placeholder prefix (`U1`, `Uma`, `U123`) treated as stand-ins for unknown parents (PED_GV F2 / NEW-38 other half): owner answers the plan's 4 decisions (D1/D3/D5/D6), then one slice with strict TDD (Slice 1 if D3 = the tighter rule, else Slice 2) (in progress)
 - **Model:** Claude Opus 5.5.
 
