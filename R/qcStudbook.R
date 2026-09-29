@@ -217,6 +217,18 @@ qcStudbook <- function(sb, minSireAge = NULL, minDamAge = NULL,
   }
   names(sb) <- cols
 
+  if ("placeholder" %in% cols) {
+    placeholderMark <- readPlaceholderMark(sb$placeholder)
+    if (length(placeholderMark$invalid) > 0L) {
+      if (!reportErrors) {
+        stop("qcStudbook(): the placeholder column may hold only TRUE, FALSE, ",
+             "1, 0 or a blank; offending row(s): ",
+             toString(placeholderMark$invalid), call. = TRUE)
+      }
+      errorLst$invalidPlaceholderRows <- as.character(placeholderMark$invalid)
+    }
+    sb$placeholder <- placeholderMark$mark
+  }
   sb <- toCharacter(sb, headers = c("id", "sire", "dam"))
   sb <- unknown2NA(sb)
   idVals <- c(sb$id, sb$sire, sb$dam)
@@ -228,9 +240,14 @@ qcStudbook <- function(sb, minSireAge = NULL, minDamAge = NULL,
     }
     errorLst$invalidIdChars <- invalidIds
   }
+  sireBefore <- sb$sire
+  damBefore <- sb$dam
   sb <- addUIds(sb)
+  madeIds <- unique(c(sb$sire[is.na(sireBefore) & !is.na(sb$sire)],
+                      sb$dam[is.na(damBefore) & !is.na(sb$dam)]))
   sb <- addParents(sb) # add parent record for parents that don't have
   # their own line entry
+  sb <- addPlaceholderMark(sb, madeIds)
   # Add and standardize needed fields
   sb$sex <- convertSexCodes(sb$sex)
   if (reportErrors) {
@@ -336,4 +353,53 @@ qcStudbook <- function(sb, minSireAge = NULL, minDamAge = NULL,
   } else {
     sb
   }
+}
+
+#' Read a user's placeholder column
+#'
+#' Reads the \code{placeholder} column of an uploaded pedigree. \code{TRUE},
+#' \code{true}, \code{True}, \code{T} and \code{1} are \code{TRUE};
+#' \code{FALSE}, \code{false}, \code{False}, \code{F} and \code{0} are
+#' \code{FALSE}; a blank or \code{NA} is \code{NA}. Any other value is
+#' invalid.
+#'
+#' @param x the column, of any type.
+#' @return A list with \code{mark} (a logical vector the length of \code{x},
+#' \code{NA} where blank or invalid) and \code{invalid} (the positions of the
+#' invalid values).
+#' @noRd
+readPlaceholderMark <- function(x) {
+  mark <- rep(NA, length(x))
+  if (is.logical(x)) {
+    mark <- x
+  } else {
+    text <- trimws(as.character(x))
+    mark[text %in% c("TRUE", "true", "True", "T", "1")] <- TRUE
+    mark[text %in% c("FALSE", "false", "False", "F", "0")] <- FALSE
+  }
+  isBlank <- is.na(x) | (!is.logical(x) & trimws(as.character(x)) == "")
+  list(mark = mark, invalid = which(is.na(mark) & !isBlank))
+}
+
+#' Write the placeholder column of a quality-controlled pedigree
+#'
+#' A row is a placeholder (\code{TRUE}) when its id was made in this run, else
+#' keeps a \code{TRUE} or \code{FALSE} the user gave, else is marked by the id
+#' shape (\code{\link{isGeneratedUnknownId}}).
+#'
+#' @param sb the pedigree, after \code{addUIds()} and \code{addParents()}.
+#' @param madeIds the ids \code{addUIds()} made.
+#' @return \code{sb} with a logical \code{placeholder} column and no \code{NA}.
+#' @noRd
+addPlaceholderMark <- function(sb, madeIds) {
+  mark <- if ("placeholder" %in% names(sb)) {
+    sb$placeholder
+  } else {
+    rep(NA, nrow(sb))
+  }
+  byShape <- isGeneratedUnknownId(sb$id)
+  mark[is.na(mark)] <- byShape[is.na(mark)]
+  mark[sb$id %in% madeIds] <- TRUE
+  sb$placeholder <- mark
+  sb
 }

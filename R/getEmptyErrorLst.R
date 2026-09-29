@@ -22,6 +22,7 @@ getEmptyErrorLst <- function() {
     sireAndDam = character(0L),
     duplicateIds = character(0L),
     invalidIdChars = character(0L),
+    invalidPlaceholderRows = character(0L),
     changedCols = list(
       caseChange = character(0L),
       spaceRemoved = character(0L),
