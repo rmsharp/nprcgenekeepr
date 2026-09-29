@@ -281,15 +281,16 @@ reportGV <- function(ped, guIter = 1000L, guThresh = 1L, pop = NULL,
   assertRequiredColsPresent(names(ped), c("id", "sex"), "reportGV(ped)")
   founders <- ped[isFounder(ped), ]
   males <- founders[(founders$sex == "M") &
-    !isGeneratedUnknownId(founders$id), ]
+    !isGeneratedUnknownId(founders$id, ped = ped), ]
   females <- founders[(founders$sex == "F") &
-    !isGeneratedUnknownId(founders$id), ]
+    !isGeneratedUnknownId(founders$id, ped = ped), ]
 
   # Issue #9 Slice 3: classify each proband's parentage (U-id aware) so the
   # report can flag both-unknown founders and the displayed rank can demote
   # those lacking a recorded origin. Both-known and one-unknown animals rank
   # normally; kinship() is untouched.
-  parentage <- classifyParentage(demographics$sire, demographics$dam)
+  parentage <- classifyParentage(demographics$sire, demographics$dam,
+                                 ped = ped)
 
   # Issue #76 (Reading A): decline to credit genome uniqueness whose apparent
   # rarity is an artifact of unknown parentage. Both-unknown animals (U-id

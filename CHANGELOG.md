@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S809 GREEN 2 of 2: `reportGV()` founders and parentage, and `gvaConvergence()` parentage, pass the pedigree
+- **Model:** Claude Sonnet 5.5. Files: `R/reportGV.R` (founder counts, `classifyParentage`), `R/gvaConvergence.R`. All 14 new tests and the older tests of every touched function pass (`test_reportGV.R`, `test_gvaConvergence*.R`, `test_modGeneticValue.R`, `test_calcNe*.R`).
+
 ### 2026-09-29 · [ad hoc] S809 GREEN 1 of 2: `classifyParentage()` gains `ped`; `getLivingBreeders()` and `correctUnknownParentMeanKinship()` pass the whole pedigree to `isGeneratedUnknownId()`
 - **Model:** Claude Sonnet 5.5. Files: `R/classifyParentage.R`, `R/getLivingBreeders.R`, `R/correctUnknownParentMeanKinship.R`. A real `U1234` marked FALSE now counts as a living breeder and no longer makes its offspring 'one unknown parent'. `correctUnknownParentMeanKinship()` reads the whole pedigree, not the proband subset (a parent's mark is on its own row).
 

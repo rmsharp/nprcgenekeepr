@@ -172,7 +172,8 @@ gvaConvergence <- function(ped, pop = NULL, nMax = 3000L, guThresh = 1L,
   rownames(ped) <- ped$id
   includeCols <- intersect(getIncludeColumns(), names(ped))
   demographics <- ped[probands, c(includeCols, "sire", "dam")]
-  parentage <- classifyParentage(demographics$sire, demographics$dam)
+  parentage <- classifyParentage(demographics$sire, demographics$dam,
+                                 ped = ped)
   origin <- if ("origin" %in% names(demographics)) {
     demographics$origin
   } else {
