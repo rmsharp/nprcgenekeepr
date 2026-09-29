@@ -60,6 +60,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] Owner-directed after the S807 close-out: pushed 15 commits; all 4 CI workflows green
+- **Model:** Claude Opus 5.5. **Push (a non-commit action):** `git push origin master` moved `origin/master` from `e5e007f8` to `1d93590d` (S806's 4 local commits and S807's 11), a fast-forward after a fresh fetch (0 behind).
+- **CI on `1d93590d`** (the push changes `R/`, so every run was awaited; runs found by commit sha, because the plain `gh run list --branch master` first returned stale S680 runs): lint 36517811103, pkgdown 36517811074, test-coverage 36517811115, R-CMD-check 36517811053, all success; R-CMD-check green on all 5 legs (macos-latest, windows-latest, ubuntu-latest release/devel/oldrel-1); Pages deploy 36518278161 succeeded. This record commit stays local.
+
 ### 2026-09-28 · [ad hoc] S807 records: placeholder-marking plan Slice 1 (the tighter placeholder rule) DONE (S806 handoff evaluated 9/10, self 8/10)
 - **Model:** Claude Opus 5.5. Session notes, `HANDOFFS.md` receipt complete, Learning 823 (when tightening a detection rule, check every generator of the values it must recognize and every input that bounds a generator; a full-suite trial covers only the settings the tests use).
 - **Verification:** full suite twice, 357 files / 2,809 tests / 0 errors (only the known local-only `test_pkgdown_reference_config.R` after the `02a83f49` spelling fix); `devtools::check()` 0 errors / 0 warnings / 2 notes (the owner's untracked `suggested_NEWS_entry` drafts); lint 0 on 4 touched R files; runtime smoke `runGeneKeepR(port = 6099L)` HTTP 200 with the new help text.

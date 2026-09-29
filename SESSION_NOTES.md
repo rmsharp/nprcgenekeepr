@@ -213,6 +213,14 @@ removed; these notes grow `SESSION_NOTES.md`, which stays under its 65,536 B cei
    notes are the owner's untracked `suggested_NEWS_entry` drafts.
 6. STANDING SET unchanged from S790-806.
 
+**Owner-directed after close-out (2026-09-29 ~03:35 UTC):**
+- **Pushed** the 15 commits: `origin/master` `e5e007f8` -> `1d93590d`, a fast-forward (0 behind after a
+  fresh fetch). This push changes `R/`, so all 4 workflows were awaited, found by commit sha (the plain
+  `gh run list --branch master` returned stale S680 runs at first): lint (36517811103), pkgdown
+  (36517811074), test-coverage (36517811115) and R-CMD-check (36517811053) all green, R-CMD-check on
+  all 5 legs (macos, windows, ubuntu release/devel/oldrel-1); the Pages deploy (36518278161) succeeded.
+  This push-record commit stays local.
+
 ### Session 805 Handoff Evaluation (by Session 806)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `abd82c92`, 0
 undocumented; the S805 receipt `status: complete`, its `quality_ratchet` citation matching
