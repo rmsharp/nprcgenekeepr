@@ -69,6 +69,16 @@ setAutoIdFormat <- function(format) {
       call. = FALSE
     )
   }
+  probe <- sprintf(format, c(seq_len(16L), 99L, 100L, 999L, 1000L, 9999L,
+                              10000L, 99999L, 100000L))
+  if (!all(isGeneratedUnknownId(probe, format))) {
+    stop(
+      "setAutoIdFormat(): the ids 'format' makes would not be recognized as ",
+      "placeholders; after the prefix, the number must print as capital ",
+      "letters or digits (e.g. \"U%04d\", \"AUTO%05d\"); got: ", format,
+      call. = FALSE
+    )
+  }
   old <- getAutoIdFormat()
   # intentional permanent session setter (this IS the public setter); a scoped
   # withr::with_options() would defeat its purpose
@@ -91,6 +101,22 @@ getAutoIdPrefix <- function(format = getAutoIdFormat()) {
   sub("%.*$", "", format)
 }
 
+#' Get the width of the number part of an auto-ID format
+#'
+#' Returns how many characters the format's integer conversion prints for 1.
+#' For \code{"U\%04d"} this is 4; for \code{"AUTO\%05d"} it is 5.
+#'
+#' @param format auto-ID \code{sprintf} format; defaults to
+#' \code{getAutoIdFormat()}.
+#' @return A single integer.
+#' @noRd
+getAutoIdWidth <- function(format = getAutoIdFormat()) {
+  conversion <- regmatches(
+    format, regexpr("%[-+ 0#]*[0-9]*(\\.[0-9]*)?[a-zA-Z]", format)
+  )
+  nchar(sprintf(conversion, 1L))
+}
+
 #' Check whether an ID is an auto-generated unknown ID
 #'
 #' The single detection predicate for placeholder IDs minted for unknown
@@ -107,5 +133,11 @@ getAutoIdPrefix <- function(format = getAutoIdFormat()) {
 #' is \code{NA}).
 #' @noRd
 isGeneratedUnknownId <- function(id, format = getAutoIdFormat()) {
-  startsWith(as.character(id), getAutoIdPrefix(format))
+  id <- as.character(id)
+  prefix <- getAutoIdPrefix(format)
+  pattern <- sprintf("^[A-Z0-9]{%d,}", getAutoIdWidth(format))
+  isPlaceholder <- startsWith(id, prefix) &
+    grepl(pattern, substring(id, nchar(prefix) + 1L))
+  isPlaceholder[is.na(id)] <- NA
+  isPlaceholder
 }

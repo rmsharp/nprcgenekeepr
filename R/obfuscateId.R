@@ -32,6 +32,7 @@ obfuscateId <- function(id, size = 10L, existingIds = character(0L)) {
     "Z"
   )
   prefix <- getAutoIdPrefix()
+  placeholderSize <- max(size, nchar(prefix) + getAutoIdWidth())
   existingIds <- c(character(length(id)), existingIds)
   obfuscatedId <- character(length(id))
   for (i in seq_along(id)) {
@@ -40,7 +41,7 @@ obfuscateId <- function(id, size = 10L, existingIds = character(0L)) {
       if (isGeneratedUnknownId(id[i])) {
         obfuscatedId[i] <- stri_c(
           c(prefix, sample(c(noOInLetters, stri_c(0L:9L)),
-            size = size - nchar(prefix), replace = TRUE
+            size = placeholderSize - nchar(prefix), replace = TRUE
           )),
           collapse = ""
         )

@@ -60,6 +60,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S807 GREEN: the tighter placeholder rule, format refusal and placeholder-alias lengthening (placeholder-marking plan Slice 1)
+- **Model:** Claude Opus 5.5. `R/autoIdFormat.R`: new internal `getAutoIdWidth()` (the number part's printed width, 4 for `"U%04d"`); `isGeneratedUnknownId()` = starts with the prefix and the next *W* characters are capital letters or digits (`NA` kept); `setAutoIdFormat()` stops ("would not be recognized") when any probe id its format makes fails the rule. `R/obfuscateId.R`: placeholder aliases use `max(size, prefix + W)` characters.
+- **Verified:** the 8 RED files green (all 16 failing tests and the 5 guards pass); full unfiltered suite (`NOT_CRAN=true`, `load_all`): 357 files, 2,809 tests, 0 errors, 1 failure = the known local-only `test_pkgdown_reference_config.R` (the owner's untracked `vignettes/suggested_NEWS_entry.Rmd`); lint 0 on both files. `obfuscateId()` on 10,000 real ids: 1.35 s (0.87 s with the old rule).
+
 ### 2026-09-28 · [ad hoc] S807 RED (2 of 2): failing tests for the functions that read the placeholder rule (placeholder-marking plan Slice 1)
 - **Model:** Claude Opus 5.5. Tests only. `test_removeAutoGenIds.R` (keeps `U1`/`Uma`/`U123` rows and parent references; keeps the shipped ancestry example's `U1`), `test_reportGV.R` (ancestry example: female founders `C2 I2 J2 U1`, 4; hand-built pedigree: founders `R2 Uma` / `R1 U123`, `K1` and `K3` "known"), `test_classifyParentage.R`, `test_getLivingBreeders.R` (`Uma`, `U123` are breeders).
 - **Run:** 6 tests fail, each on today's behavior (ancestry example 3 female founders, `U1` dropped; `K1` "both unknown", `K3` "one unknown parent"; breeders `R1 R2` only); every existing test in the 4 files passes.
