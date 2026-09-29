@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S809 RED: `tests/testthat/test_placeholderMarkReaders.R` (new) -- placeholder-marking plan Slice 3 tests
+- **Model:** Claude Sonnet 5.5. 14 tests: 11 fail or error on the old behavior (every message read: `classifyParentage` has no `ped` argument; `getLivingBreeders`, `correctUnknownParentMeanKinship`, `reportGV` founders/parentage, `gvaConvergence` `nUndetermined` and the `modGeneticValueServer` report all read only the id shape), 2 guards pass (stand-ins marked TRUE/unmarked stay excluded; no mark column reads by shape). `qcPed`'s `calcNeVariance()` 26.405868 pinned with an all-NA mark column.
+
 ### 2026-09-29 · [ad hoc] S809 claim (in progress): placeholder-marking plan Slice 3 (`docs/planning/unknown-parent-placeholder-marking-plan.md` §5): `reportGV()` founders, `classifyParentage()` (optional `ped`), `correctUnknownParentMeanKinship()` and `getLivingBreeders()` read the `placeholder` mark; strict TDD
 - **Model:** Claude Sonnet 5.5. Also records the un-ledgered S808 notes commit `f443b6d93` (Pages deploy for `16da1062` succeeded, owner-confirmed; a `SESSION_NOTES.md`-only edit).
 
