@@ -9,7 +9,12 @@ obfuscateId(id, size = 10L, existingIds = character(0L))
 \arguments{
 \item{id}{character vector of IDs to be obfuscated (alias creation).}
 
-\item{size}{character length of each alias}
+\item{size}{character length of each alias. An ID that is a placeholder for
+an unknown parent (see \code{\link{removeAutoGenIds}}) gets an alias of the
+same shape, the placeholder prefix plus random characters; when \code{size}
+is too short for that shape to be recognized (shorter than 5 for the default
+\code{"U\%04d"} format), only those aliases are made longer, to the shortest
+recognizable length.}
 
 \item{existingIds}{character vector of existing aliases to avoid duplication.}
 }

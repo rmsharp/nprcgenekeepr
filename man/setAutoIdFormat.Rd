@@ -17,8 +17,11 @@ Sets the \code{sprintf} template used to mint and detect placeholder IDs for
 unknown parents (see \code{\link{addUIds}}). The format must have a non-empty
 literal prefix before its first \code{"\%"} (used for detection) and must
 consume a single integer (used for generation), e.g. \code{"U\%04d"} or
-\code{"AUTO\%05d"}. The setting is stored in
-\code{options(nprcgenekeepr.autoIdFormat=)} and read by
+\code{"AUTO\%05d"}. The number must print as capital letters or digits, so
+that the IDs the format makes are recognized as placeholders (see
+\code{\link{removeAutoGenIds}}); a format that prints lowercase letters
+(\code{"U\%04x"}) or pads with spaces (\code{"U\%4d"}) is refused. The
+setting is stored in \code{options(nprcgenekeepr.autoIdFormat=)} and read by
 \code{\link{getAutoIdFormat}}.
 }
 \examples{

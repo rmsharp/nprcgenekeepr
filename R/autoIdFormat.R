@@ -27,8 +27,11 @@ getAutoIdFormat <- function() {
 #' unknown parents (see \code{\link{addUIds}}). The format must have a non-empty
 #' literal prefix before its first \code{"\%"} (used for detection) and must
 #' consume a single integer (used for generation), e.g. \code{"U\%04d"} or
-#' \code{"AUTO\%05d"}. The setting is stored in
-#' \code{options(nprcgenekeepr.autoIdFormat=)} and read by
+#' \code{"AUTO\%05d"}. The number must print as capital letters or digits, so
+#' that the IDs the format makes are recognized as placeholders (see
+#' \code{\link{removeAutoGenIds}}); a format that prints lowercase letters
+#' (\code{"U\%04x"}) or pads with spaces (\code{"U\%4d"}) is refused. The
+#' setting is stored in \code{options(nprcgenekeepr.autoIdFormat=)} and read by
 #' \code{\link{getAutoIdFormat}}.
 #'
 #' @param format A single character string: the auto-ID \code{sprintf} format.
@@ -122,9 +125,14 @@ getAutoIdWidth <- function(format = getAutoIdFormat()) {
 #' The single detection predicate for placeholder IDs minted for unknown
 #' parents (see \code{\link{addUIds}}). An ID is auto-generated when it begins
 #' with the literal prefix of the configured format (see
-#' \code{\link{getAutoIdFormat}}). Matching is case-sensitive (generation always
-#' emits the prefix verbatim) and preserves \code{NA} like \code{startsWith()},
-#' so it is a drop-in for the leading-prefix checks it replaces.
+#' \code{\link{getAutoIdFormat}}) followed by at least as many capital letters
+#' or digits as the format's number part prints (\code{getAutoIdWidth()}; 4 for
+#' \code{"U\%04d"}). So \code{"U0001"} and the de-identified \code{"U05X3C"}
+#' are placeholders, while a real animal whose ID merely starts with the prefix
+#' (\code{"U1"}, \code{"U123"}, \code{"Uma"}) is not; a real ID of the full
+#' shape (\code{"U1234"}) is still read as a placeholder. Matching is
+#' case-sensitive (generation always emits the prefix verbatim) and preserves
+#' \code{NA}.
 #'
 #' @param id character vector of IDs to test.
 #' @param format auto-ID \code{sprintf} format; defaults to
