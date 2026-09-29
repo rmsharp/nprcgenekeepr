@@ -49,26 +49,24 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       leave it. Tests to extend: `tests/testthat/test_getPotentialParents.R`, and
       `test_modPotentialParents.R` if the table changes.
 
-- [ ] **Real animal ids that start with the placeholder prefix (`"Uma"`, `"U123"`, the shipped
-      ancestry example's real founder `"U1"`) are treated as stand-ins for unknown parents -- the
-      other half of PED_GV F2 / NEW-38 (found S781; approach chosen S806: mark ids when they are
-      made; plan written S806; DECISION NEEDED on 4 plan choices, then 5 slices, Effort M each,
-      strict TDD)** -- the plan is `docs/planning/unknown-parent-placeholder-marking-plan.md`:
-      read it first (its §1.3 measurements, §2 inventory with the grep commands, §5 slices). Today
-      `isGeneratedUnknownId()` (`R/autoIdFormat.R:109-111`) counts any id that starts with the
-      prefix (default `"U"`) as a placeholder; seven files act on it. Measured S806: the shipped
-      `inst/extdata/examples/example_ancestry_pedigree.csv` reports 3 female founders instead of 4
-      because its real `U1` is skipped. The owner chose (S806) a logical column written once by
-      `qcStudbook()` over guessing from the id's shape; `recordStatus` cannot carry it (rebuilt
-      every QC run) and an attribute cannot (lost by `merge()` and CSV). **Owner decisions before
-      Slice 1 (plan §11):** D1 the column name (`placeholder` recommended); D3 the rule for files
-      without the column (the tighter "prefix + at least 4 capitals/digits" rule recommended, as
-      Slice 1: in a full-suite trial it moved 3 tests and changed only `U1` among the 1,470 `U`
-      ids in the shipped data); D5 what a bad value in the column does; D6 whether the shipped data
-      gets the column (leave it unmarked recommended). Also found S806 (plan M11): `addUIds()` can
-      give a missing sire the id of another animal's recorded sire when that sire has no row
-      (`existingIds <- ped$id`, `R/addUIds.R:46`), making false half-sibs; Slice 2 fixes it first.
-      The S797 exact-digits attempt and its withdrawn tests stay recorded in commit `a01e13af`.
+- [ ] **Real animal ids that start with the placeholder prefix are treated as stand-ins for unknown
+      parents -- the other half of PED_GV F2 / NEW-38 (found S781; approach chosen S806: mark ids
+      when they are made; plan written S806; Slice 1 DONE S807; READY: Slice 2 next, then 3-5,
+      Effort M each, strict TDD)** -- the plan is
+      `docs/planning/unknown-parent-placeholder-marking-plan.md`: read it first (§1.3
+      measurements, §2 inventory with the grep commands, §5 slices, §11 the ratified decisions).
+      **Slice 1 (S807):** `isGeneratedUnknownId()` now needs the prefix plus at least as many
+      capital letters/digits as the format's number prints (`getAutoIdWidth()`, 4 for `"U%04d"`),
+      so `U1`/`U123`/`Uma` are real and the shipped ancestry example counts `U1` (4 female
+      founders); a real id of the full shape (`U1234`) is still misread, which Slices 2-5 fix
+      with a logical `placeholder` column written once by `qcStudbook()`. **Ratified S807
+      (plan §11):** D1 `placeholder`; D3 the tighter rule; D5 a bad value stops QC and lists the
+      rows; D6 shipped data unmarked; D10 placeholder aliases lengthened when `obfuscateId()`'s
+      `size` is too short; D11 `setAutoIdFormat()` refuses formats whose ids the rule cannot
+      read. **Slice 2 starts with** the `addUIds()` fix (plan M11): it can give a missing sire the
+      id of another animal's recorded sire when that sire has no row (`existingIds <- ped$id`,
+      `R/addUIds.R:46`), making false half-sibs. The S797 exact-digits attempt and its withdrawn
+      tests stay recorded in commit `a01e13af`.
 
 - [ ] **Unticking "Display Unknown IDs" breaks the Genetic Value analysis (found S806,
       2026-09-28, DECISION NEEDED, Effort S)** -- every downstream module gets the Pedigree

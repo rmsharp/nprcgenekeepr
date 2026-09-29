@@ -303,6 +303,12 @@ reaches the mark through `qcStudbook()`, which is covered locally).
 - **Verify:** `Rscript -e 'Sys.setenv(NOT_CRAN="true"); pkgload::load_all("."); testthat::test_file("tests/testthat/test_autoIdFormat.R")'`,
   then the full suite; `lintr::lint_package()` on touched files.
 - **Session boundary:** one session. Close out.
+- **DONE S807** (RED `9b8431dd`, `9dd49380`; GREEN `aeccac96`; docs `9e89cd3d`, `32cae6cc`,
+  `93640b3f`). Beyond the list above, by the S807 decisions D10/D11 (§11): `getAutoIdWidth()`
+  (internal, `R/autoIdFormat.R`) gives *W*; `setAutoIdFormat()` refuses a format whose probe ids
+  fail the rule; `obfuscateId()` makes placeholder aliases `max(size, prefix + W)` long. The
+  manual's "Display Unknown IDs" line (`_pedigree_browser.Rmd:38`, a §2.5 document) already
+  states the new rule; Slice 4 adds the column to it.
 
 ### Slice 2 — QC writes the mark; Potential Parents trusts it
 

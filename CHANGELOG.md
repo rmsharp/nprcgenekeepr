@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S807: placeholder-marking plan Slice 1 marked DONE; `BACKLOG.md` item updated (Slice 2 next, READY)
+- **Model:** Claude Opus 5.5. Plan §5 Slice 1: DONE S807 with its commits and what went beyond the original list (D10/D11, `getAutoIdWidth()`, the manual line already states the rule). `BACKLOG.md`: the placeholder item now says Slice 1 is done, lists the 6 ratified decisions, and names Slice 2's first change (the `addUIds()` reuse fix, `R/addUIds.R:46`); the item is 320 B shorter (`BACKLOG.md` 54,517 B). The item stays open: Slices 2-5 remain.
+
 ### 2026-09-28 · [ad hoc] S807 REFACTOR (docs 3 of 3): `NEWS.Rmd` entry for real `U`-leading ids no longer mistaken for unknown-parent stand-ins
 - **Model:** Claude Opus 5.5. One plain-language, release-state entry under `## General Fixes`, after the stand-in-id entry: a real `U1`/`U123`/`Uma` was left out of founder and breeder counts, hidden by "Display Unknown IDs", and made its offspring look parent-unknown; only "U + at least four capitals/digits" ids are now stand-ins; the ancestry example counts `U1` (4 female founders, not 3). `test_newsReleaseState.R` (26) and the other 2 `NEWS.Rmd` readers pass.
 
