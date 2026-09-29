@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S808 close-out: placeholder-marking plan Slice 2 DONE (S807 handoff evaluated 9/10, self 8/10); session notes, `HANDOFFS.md` receipt complete, plan §5 DONE note, `BACKLOG.md` item updated (Slice 3 next), Learning 824 (a new error-list field breaks a vignette table only `devtools::check()` builds); full suite 2,830 tests / 0 errors, `devtools::check` 0/0/2 notes (owner's drafts), lint 0, runtime smoke HTTP 200, quality_ratchet pass
+
 ### 2026-09-29 · [ad hoc] S808 REFACTOR (docs, found by `devtools::check`): `vignettes/a2interactive.Rmd`'s error-type table gains the `invalidPlaceholderRows` description (11 fields, 10 descriptions failed the vignette build); check now 0 errors / 0 warnings / 2 notes (the owner's untracked drafts); full suite 358 files, 2,830 tests, 0 errors, only the known local-only pkgdown failure; runtime smoke `runGeneKeepR(port = 6098L)` HTTP 200, no log errors
 
 ### 2026-09-29 · [ad hoc] S808 REFACTOR (docs 4 of 4): `NEWS.Rmd` (the stand-in id entries now cover ids used only as a parent and the `placeholder` column), the QC article's problems table and the colony manager guide's QC error list gain `invalidPlaceholderRows`, `inst/WORDLIST` gains the field name (spelling guard)

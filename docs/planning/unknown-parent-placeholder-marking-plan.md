@@ -324,6 +324,7 @@ reaches the mark through `qcStudbook()`, which is covered locally).
   `modPotentialParentsServer` (`testServer`), the real `U1234` is kept.
 - **DONE:** those pass; the M10 move (`test_qcStudbook.R:105`, §1.4) updated; full suite clean.
 - **Session boundary:** one session. Close out.
+- **DONE S808** (RED `98720bf2`, `b6f050a1`, `84382fa1`; GREEN `bac494e0`, `410273d5`, `9a4dee7c`, lint `cd19fbab`; docs `ec2c4d14`, `d830034e`, `34fcc801`, `ef91c4b1`, `904d9ff2`). Beyond the list above, by D12/D13 (§11): `getPotentialParents()` runs `removeAutoGenIds()` before it sets aside animals with no birth date; the column accepts TRUE/FALSE spellings, 1/0 and blank, and any other value stops QC (`errorLst$invalidPlaceholderRows`, the 11th field). Not done, left for Slices 3-4: the other readers (`reportGV()`, `classifyParentage()`, `correctUnknownParentMeanKinship()`, `getLivingBreeders()`, the "Display Unknown IDs" filter) still use the id shape.
 
 ### Slice 3 — Genetic value and effective size read the mark
 
