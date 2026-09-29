@@ -111,7 +111,10 @@ modPedigreeUI <- function(id) {
               "with only one parent. By default they are a capital U ",
               "followed by at least four capital letters or digits (the ",
               "format is configurable via setAutoIdFormat()); a real ",
-              "animal whose ID merely starts with U, such as U1, is kept."
+              "animal whose ID merely starts with U, such as U1, is kept. ",
+              "The placeholder column says which rows are made up: TRUE ",
+              "hides the row, FALSE keeps it, so a real animal with an ",
+              "ID such as U1234 can be marked FALSE in the uploaded file."
             )
           ),
           br(),
@@ -359,8 +362,9 @@ modPedigreeServer <- function(id, studbook) {
 
       # Filter out unknown IDs if requested
       if (!input$displayUnknownIds) {
-        # Auto-generated unknown IDs are detected via the shared predicate
-        ped <- ped[!isGeneratedUnknownId(ped$id), ]
+        # Auto-generated unknown IDs are detected via the shared predicate,
+        # which reads the pedigree's placeholder mark when it has one
+        ped <- ped[!isGeneratedUnknownId(ped$id, ped = ped), ]
       }
 
       # Trim to focal animals, their ancestors, and their descendants if

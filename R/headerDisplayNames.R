@@ -51,7 +51,8 @@ headerDisplayNames <- function(headers) {
     second = "Second Allele Code",
     first_name = "First Allele",
     second_name = "Second Allele",
-    recordStatus = "Original/ Added" # nolint: nonportable_path_linter
+    recordStatus = "Original/ Added", # nolint: nonportable_path_linter
+    placeholder = "Generated Unknown ID"
   )
   as.character(nameConversion[headers])
 }
