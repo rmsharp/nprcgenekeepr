@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S807 REFACTOR (docs 3 of 3): `NEWS.Rmd` entry for real `U`-leading ids no longer mistaken for unknown-parent stand-ins
+- **Model:** Claude Opus 5.5. One plain-language, release-state entry under `## General Fixes`, after the stand-in-id entry: a real `U1`/`U123`/`Uma` was left out of founder and breeder counts, hidden by "Display Unknown IDs", and made its offspring look parent-unknown; only "U + at least four capitals/digits" ids are now stand-ins; the ancestry example counts `U1` (4 female founders, not 3). `test_newsReleaseState.R` (26) and the other 2 `NEWS.Rmd` readers pass.
+
 ### 2026-09-28 · [ad hoc] S807 REFACTOR (docs 2 of 3): `removeAutoGenIds()` roxygen/man page, the Pedigree Browser help text and the user manual say which ids count as unknown-parent placeholders
 - **Model:** Claude Opus 5.5. Documentation only. `R/removeAutoGenIds.R` + `man/removeAutoGenIds.Rd`: a placeholder is "U" + at least four capitals/digits; `U1`/`U123`/`Uma` kept, `U1234` removed. `R/modPedigree.R` help text and `vignettes/manual_components/_pedigree_browser.Rmd:38`: the same, and a real `U1` is always shown. Lint 0 on the touched R files; `test_modPedigree*.R` (3 files, 91 tests) pass.
 
