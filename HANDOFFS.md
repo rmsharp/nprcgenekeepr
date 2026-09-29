@@ -182,9 +182,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S807
 date: 2026-09-28
-status: pending
-active_task: Real animal ids that start with the placeholder prefix (U1, Uma, U123) are treated as stand-ins for unknown parents (PED_GV F2 / NEW-38 other half). Plan docs/planning/unknown-parent-placeholder-marking-plan.md; this session: owner decisions D1/D3/D5/D6, then Slice 1 (or 2) with strict TDD.
-what_was_done: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Real animal ids that start with the placeholder prefix (U1, Uma, U123) treated as stand-ins for unknown parents (PED_GV F2 / NEW-38 other half). Plan docs/planning/unknown-parent-placeholder-marking-plan.md: Slice 1 (the tighter rule) DONE S807; owner ratified D1/D3/D5/D6 plus D10/D11. Next: Slice 2 (addUIds reuse fix, then qcStudbook writes the placeholder column).
+what_was_done: Strict TDD Slice 1. isGeneratedUnknownId() now needs the prefix plus at least getAutoIdWidth() capitals/digits (U1/U123/Uma real; ancestry example counts U1, 4 female founders); setAutoIdFormat() refuses formats whose ids fail the rule (D11); obfuscateId() lengthens only placeholder aliases when size is too short (D10, found by measuring the app's alias-length minimum 4). 16 RED tests + 5 guards; docs-only REFACTOR (roxygen/man for 4 functions, app help text, manual line, NEWS.Rmd). Commits: claim 0647abea, decisions 95a4e5fa, RED 9b8431dd 9dd49380, GREEN aeccac96, docs 9e89cd3d 32cae6cc 93640b3f, plan/backlog f673d78d, NEWS spelling fix 02a83f49, records (this).
+next_steps: Slice 2 (plan section 5): first make addUIds() skip ids used only as a sire or dam (R/addUIds.R:46, plan M11 repro); then qcStudbook() writes the logical placeholder column after addUIds/addParents (R/qcStudbook.R:231), keeps user TRUE/FALSE, stops on bad values (D5), fills blanks with the Slice 1 rule; isGeneratedUnknownId(ped =) reads the mark (D4); removeAutoGenIds passes ped. Moves test_qcStudbook.R:105; keep test_getPotentialParents.R:452 at 1587. Re-run the plan section 2 greps before RED.
+key_files: R/autoIdFormat.R:116 (getAutoIdWidth); R/autoIdFormat.R:143 (isGeneratedUnknownId); R/autoIdFormat.R:75 (setAutoIdFormat probe); R/obfuscateId.R:40; R/modPedigree.R:110; tests/testthat/test_autoIdFormat.R:140; tests/testthat/test_reportGV.R:870; tests/testthat/test_modDeidentifiedExport.R:189; R/addUIds.R:46; R/qcStudbook.R:231; PROJECT_LEARNINGS.md:2311 (Learning 823)
+gotchas: getAutoIdWidth() errors if the option is set directly (options()) to a format with no conversion; setAutoIdFormat() refuses those, untested. test_wordlist_coverage.R runs only in the full suite with NOT_CRAN=true; run it after NEWS/roxygen wording changes. obfuscateId() random streams changed for real ids at small size (short U-leading aliases now accepted). The width is recomputed per predicate call; hoist if Slice 2 loops per row. Known local-only failure test_pkgdown_reference_config.R and check's 2 notes = the owner's untracked suggested_NEWS_entry drafts.
+runtime_smoke: runGeneKeepR(port = 6099L) served HTTP 200 with the new Pedigree Browser help text, old text absent, no log errors; filter and de-identified export behavior verified via testServer on the real module servers. Full suite 357 files / 2,809 tests / 0 errors (known local-only pkgdown failure; spelling guard fixed in 02a83f49). devtools::check 0 errors / 0 warnings / 2 notes (owner's untracked drafts). quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4e12678a802c · manifest aa983075d6a2
+changelog_ref: aeccac96
 commit: pending
 ```
 

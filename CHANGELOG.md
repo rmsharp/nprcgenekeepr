@@ -60,6 +60,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-28 · [ad hoc] S807 records: placeholder-marking plan Slice 1 (the tighter placeholder rule) DONE (S806 handoff evaluated 9/10, self 8/10)
+- **Model:** Claude Opus 5.5. Session notes, `HANDOFFS.md` receipt complete, Learning 823 (when tightening a detection rule, check every generator of the values it must recognize and every input that bounds a generator; a full-suite trial covers only the settings the tests use).
+- **Verification:** full suite twice, 357 files / 2,809 tests / 0 errors (only the known local-only `test_pkgdown_reference_config.R` after the `02a83f49` spelling fix); `devtools::check()` 0 errors / 0 warnings / 2 notes (the owner's untracked `suggested_NEWS_entry` drafts); lint 0 on 4 touched R files; runtime smoke `runGeneKeepR(port = 6099L)` HTTP 200 with the new help text.
+- **Gate:** `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4e12678a802c · manifest aa983075d6a2` (3,594,042 B at `02a83f49`).
+- **Not closed:** the `BACKLOG.md` item stays open (Slices 2-5); no GitHub issue exists for it. 15 commits unpushed (4 from S806, 11 from S807); this push changes `R/`, so pushing is the owner's call.
+
 ### 2026-09-28 · [ad hoc] S807: `NEWS.Rmd` entry reworded ("unticked" -> "turned off") after the second full-suite run flagged it in `test_wordlist_coverage.R`
 - **Model:** Claude Opus 5.5. The docs 3 of 3 commit (`93640b3f`) introduced "unticked", which `spelling::spell_check_package()` flags and `inst/WORDLIST` does not cover; the S807 docs-3 check ran only the 3 `NEWS.Rmd`-reading tests, not the spelling guard. Reworded rather than added to the word list. `test_wordlist_coverage.R` (3) and `test_newsReleaseState.R` (26) pass.
 
