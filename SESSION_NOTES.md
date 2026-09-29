@@ -101,7 +101,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 **Owner-directed after close-out (2026-09-29):**
 - **Pushed** 17 commits: `origin/master` `1d93590d` -> `16da1062`, a fast-forward. Runs found by head sha:
   lint (36617669752), pkgdown (36617669607), test-coverage (36617669621) and R-CMD-check (36617669618)
-  all green, R-CMD-check on all 5 legs. This push-record commit stays local.
+  all green, R-CMD-check on all 5 legs. The Pages deploy also succeeded (owner-confirmed; run id not
+  checked here). This push-record commit stays local.
 
 ### Session 807 Handoff Evaluation (by Session 808)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD, 0 undocumented; the
