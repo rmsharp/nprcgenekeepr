@@ -13,12 +13,17 @@
 #' @param sire character vector of sire ids (\code{NA} or a U-id when unknown).
 #' @param dam character vector of dam ids (\code{NA} or a U-id when unknown),
 #' the same length as \code{sire}.
+#' @param ped optional pedigree (the whole one, not the animals being
+#' classified). Where it has a \code{placeholder} column (written by
+#' \code{\link{qcStudbook}}), a parent id with a mark there is unknown exactly
+#' when the mark says so; any other id is read by its shape (see
+#' \code{\link{isGeneratedUnknownId}}).
 #' @return a character vector the length of \code{sire}: \code{"known"} when
 #' both parents are known, \code{"one unknown parent"} when exactly one is
 #' unknown, and \code{"both unknown"} when neither parent is known.
 #' @noRd
-classifyParentage <- function(sire, dam) {
-  isU <- function(x) is.na(x) | isGeneratedUnknownId(x)
+classifyParentage <- function(sire, dam, ped = NULL) {
+  isU <- function(x) is.na(x) | isGeneratedUnknownId(x, ped = ped)
   sireUnknown <- isU(sire)
   damUnknown <- isU(dam)
   out <- rep("known", length(sireUnknown))

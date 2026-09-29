@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S809 GREEN 1 of 2: `classifyParentage()` gains `ped`; `getLivingBreeders()` and `correctUnknownParentMeanKinship()` pass the whole pedigree to `isGeneratedUnknownId()`
+- **Model:** Claude Sonnet 5.5. Files: `R/classifyParentage.R`, `R/getLivingBreeders.R`, `R/correctUnknownParentMeanKinship.R`. A real `U1234` marked FALSE now counts as a living breeder and no longer makes its offspring 'one unknown parent'. `correctUnknownParentMeanKinship()` reads the whole pedigree, not the proband subset (a parent's mark is on its own row).
+
 ### 2026-09-29 · [ad hoc] S809 RED: `tests/testthat/test_placeholderMarkReaders.R` (new) -- placeholder-marking plan Slice 3 tests
 - **Model:** Claude Sonnet 5.5. 14 tests: 11 fail or error on the old behavior (every message read: `classifyParentage` has no `ped` argument; `getLivingBreeders`, `correctUnknownParentMeanKinship`, `reportGV` founders/parentage, `gvaConvergence` `nUndetermined` and the `modGeneticValueServer` report all read only the id shape), 2 guards pass (stand-ins marked TRUE/unmarked stay excluded; no mark column reads by shape). `qcPed`'s `calcNeVariance()` 26.405868 pinned with an all-NA mark column.
 

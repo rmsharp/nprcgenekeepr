@@ -23,7 +23,7 @@ getLivingBreeders <- function(ped) {
   }
   parentIds <- c(ped$sire, ped$dam)
   parentIds <- parentIds[!is.na(parentIds)]
-  parentIds <- parentIds[!isGeneratedUnknownId(parentIds)]
+  parentIds <- parentIds[!isGeneratedUnknownId(parentIds, ped = ped)]
   isBreeder <- ped$id %in% unique(parentIds)
   as.character(ped$id[living & isBreeder])
 }

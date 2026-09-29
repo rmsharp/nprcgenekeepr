@@ -152,7 +152,9 @@ correctUnknownParentMeanKinship <- function(indivMeanKin, ped,
     candPed$exit <- as.Date(NA)
   }
 
-  isU <- function(x) is.na(x) | isGeneratedUnknownId(x)
+  ## the whole pedigree, not candPed: a parent's mark lives on its own row,
+  ## which need not be one of the analysis probands
+  isU <- function(x) is.na(x) | isGeneratedUnknownId(x, ped = ped)
   sireMiss <- isU(candPed$sire)
   damMiss <- isU(candPed$dam)
   oneU <- xor(sireMiss, damMiss)
