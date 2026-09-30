@@ -32,15 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S814
 date: 2026-09-30
-status: pending
-active_task: Display Unknown IDs vs reportGV() (BACKLOG item found S806; R/appServer.R:312, R/modPedigree.R:359-364); PRE-RED, scope decision pending
-what_was_done: pending
-next_steps: pending
-key_files: R/appServer.R:312
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: S814 claim entry
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: Display Unknown IDs vs reportGV() BACKLOG item DONE: the box now filters only the Pedigree Browser table; other tabs get the new analysisPedigree return element
+what_was_done: Strict TDD with owner-decided scope (table only). Claim 86df3a042, RED cb26af5d5 (8 new tests, 6 failing, 2 guards; contract and stub updates), GREEN 9a7657865 (R/modPedigree.R analysisPedigree + R/appServer.R wiring), docs c5968028a (help text, manual, guide, NEWS.Rmd), records in the S814 close-out commit. Full suite 2,881 tests with 2 failures (known pkgdown-config and S813's wordlist); lint 0; smoke HTTP 200.
+next_steps: Add the 6 words S813 left out of inst/WORDLIST (BACKLOG top item, READY, Effort S) so test_wordlist_coverage.R and devtools::check() pass, then the owner pushes master (11 commits ahead, all 4 workflows run). Then pick from the priorities list starting with Potential Parents own-dam (R/getPotentialParents.R:190).
+key_files: R/modPedigree.R:358 (applyFocalTrim, analysisPedigreeData); R/appServer.R:310 (shared$currentPedigree from analysisPedigree); tests/testthat/test_displayUnknownIdsDownstream.R:1; tests/testthat/test_appServer_server.R:65 (stub); BACKLOG.md:7 (wordlist item)
+gotchas: analysisPedigree keeps the focal-animal trim; the table, diagram and CSV export still use the filtered pedigree(); a new modPedigreeServer stub needs an analysisPedigree element; NEWS.md lags NEWS.Rmd (last rendered S716); no browser click-through, testServer only
+runtime_smoke: runGeneKeepR(port = 6099L) HTTP 200, no log errors; behavior verified with testServer on modPedigreeServer and appServer
+changelog_ref: S814 close-out entry
+commit: see git log (S814 close-out)
 ```
 
 ```handoff

@@ -98,56 +98,67 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 813 Handoff Evaluation (by Session 814)
+**Score: 7/10.** Orient measurements held: `git status -sb` "ahead 5", `CHANGELOG.md`/`HANDOFFS.md` frontiers at HEAD
+(0 undocumented), the 7 untracked files unchanged, `R/appServer.R:312` and `R/modPedigree.R:359-364` where it said,
+the priorities list accurate. **Missing:** it did not say the new `a2interactive.Rmd` identifiers were not in
+`inst/WORDLIST`; its "Not run: the full suite and `devtools::check()`" line was honest, but next step (A) then
+promised the push would run "all 4 workflows" with `lint.yaml` going green and never warned that R-CMD-check and
+test-coverage would go red on 6 flagged words (Learning 831). **Wrong:** nothing stated, but the implied clean
+push was not true. **ROI:** high for orientation, one costly omission.
+
 ### What Session 814 Did
-**Deliverable:** Resolve the BACKLOG item "Unticking Display Unknown IDs breaks the Genetic Value analysis" (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. PRE-RED; scope decision (which of the item's three options) goes to the owner first.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
-
-### Session 812 Handoff Evaluation (by Session 813)
-**Score: 8/10.** Orient measurements held: `git status -sb` showed "ahead 3" (claim, fix, records), matching the
-handoff's "2 commits ahead after this one plus the claim"; `CHANGELOG.md`/`HANDOFFS.md` frontiers one docs commit
-behind HEAD, as expected; the 7 untracked files unchanged; unfiltered `gh run list` all green. The priorities list
-and its `file:line` pointers (`R/appServer.R:312`, `R/getPotentialParents.R:190`) were accurate. **Missing:** the
-`a2interactive` option said only "READY, Effort S" and did not say its named scope is item (1) of the BACKLOG
-"Mate-pair ancestry guardrails" block (two functions), not a full inventory of exports since the last pass.
-**Wrong:** nothing found. **ROI:** high.
-
-### What Session 813 Did
-**Deliverable, DONE:** `vignettes/a2interactive.Rmd` gained two demonstration sections (+104 lines): "Ancestry Rules for
-Mate Pairs" (`reportMatePairs(ancestryRules, overriddenRules)`: the `ancestryRule`/`ancestrySeverity`/`ancestryStatus`
-columns, `ancestryCoverage`, the excluded reason "ancestry rule", the override path) before "Pedigree Errors", and
-"Aliasing Ids with a Known Placeholder Status" (`obfuscateId(placeholder =)`) before the elapsed-time chunk.
-TDD phase: PRE-RED, docs-only (no production code, so no RED/GREEN gates).
-**Commits:** claim `30537e2fe`; work + records (this commit, see `HANDOFFS.md` S813 `commit:`).
+**Deliverable, DONE:** the BACKLOG item "Unticking Display Unknown IDs breaks the Genetic Value analysis" (found
+S806). Owner decision (AskUserQuestion, option 1): the box filters only the Pedigree Browser table. `modPedigreeServer()`
+now also returns `analysisPedigree` (the full pedigree; the focal-animal trim still applies) and `appServer` feeds
+`shared$currentPedigree` from it. Strict TDD, every gate an `AskUserQuestion`.
+**Commits:** claim `86df3a042`; RED `cb26af5d5` (new `tests/testthat/test_displayUnknownIdsDownstream.R`, 8 tests:
+6 failing, 2 guards; contract test names; two `stubPed` stubs; one new appServer wiring test); GREEN `9a7657865`
+(`R/modPedigree.R` `applyFocalTrim()` helper + `analysisPedigreeData` + return element, `R/appServer.R:310-314`);
+REFACTOR/docs `c5968028a` (help text, `_pedigree_browser.Rmd`, `colony-manager-guide.qmd`, `NEWS.Rmd`); records (this).
 **Verification:**
-- `rmarkdown::render("vignettes/a2interactive.Rmd")` completed with no error; the new sections' rendered output was
-  read back and matches the prose (3 flagged pairs in `pairs`, 5 blocked in `excluded`, JAPANESE uncovered, 3
-  `overridden` after overriding CHINESE-INDIAN, seeded aliases as printed).
-- `test_r_cmd_check_clean_baseline.R` passes (no stray `vignettes/figure`). Not run: the full suite and
-  `devtools::check()` (no R, test or NAMESPACE change; the render is the vignette build).
-**Learnings:** 829.
-**Reduction:** removed the superseded S811-eval, S812 "What Session 812 Did" and S811 "What Session 811 Did" blocks
-(all live in git and the `HANDOFFS.md` receipts).
+- RED: 6 new tests failed on the old behavior, the contract test and the wiring test failed, 2 guards passed (every
+  message read). GREEN: the 4 touched files plus `test_modPedigree*`, `test_placeholderMarkDisplay` all pass.
+- Full unfiltered suite (`NOT_CRAN=true`, `load_all`): 362 files, 2,881 tests, 0 errors, 2 failures: the known
+  local-only `test_pkgdown_reference_config.R`, and `test_wordlist_coverage.R` (S813's six words, not this change).
+- `devtools::check(vignettes = FALSE)`: 1 error (that same wordlist issue, in `tests/spelling.R` and the test), 0
+  warnings, 1 note (the owner's untracked `suggested_NEWS_entry.md`). Lint 0 on all 6 touched `.R` files and after the
+  docs commit on `R/modPedigree.R`. `test_newsReleaseState.R` passes.
+- Runtime smoke: `runGeneKeepR(port = 6099L)` HTTP 200, no log errors. The wiring was verified with `testServer`
+  (module and `appServer`), not by clicking through the Shiny UI.
+- CI: Phase 0 `gh run list --branch master` returned only 2026-09-08 runs (nothing pushed since S809's push); the
+  unfiltered list showed one old red R-CMD-check (the S680 claim), superseded by green S680 runs. Nothing pushed now.
+**Learnings:** 830, 831.
+**Reduction:** removed the S812-eval and "What Session 813 Did" blocks (in git and the `HANDOFFS.md` receipt); the
+finished BACKLOG item block was removed.
 
 **Self-assessment: 8/10.**
-- \+ Prototyped the code first, then read the rendered output back against every prose claim, which caught that
-  the seeded aliases differ in the vignette (Learning 829).
-- \+ Scoped to the named BACKLOG item; removed only the finished sub-item.
-- \- A first grep-based check of the render printed nothing (md output cannot hold HTML tables) and cost three calls.
-- \- Did not inventory other exports/parameters added since the last `a2interactive` pass; the item did not ask for it.
+- \+ Read every RED message and caught 2 vacuous passes and 2 crashed guards before the RED commit (Learning 830).
+- \+ Kept the change to 2 production files; ran full suite, check, lint and smoke before close-out.
+- \+ Kept the scope decision with the owner and logged S813's wordlist break instead of fixing it (1 and done).
+- \- The first RED helper crashed on the missing element; the first grep of the failure messages hit a shell
+  backtick error (two extra calls).
+- \- No browser click-through of the unticked box; `testServer` only.
 
 **Next steps:**
-- (A) Owner: push `master` (5 commits ahead after this one: S812 claim, fix, records, S813 claim, S813 close-out;
-  the push includes S812's `R/` comment edit, so all 4 workflows run, and `lint.yaml` should go green).
-- (B) Pick from the priorities list: "Display Unknown IDs" breaking `reportGV()` (DECISION NEEDED, Effort S;
-  `R/appServer.R:312`, `R/modPedigree.R:359-364`), Potential Parents own-dam (DECISION NEEDED, Effort S;
-  `R/getPotentialParents.R:190`), the PED_GV owner decisions, or the other two residues of the Mate-pair ancestry
-  guardrails item (zero-rule manifest, Excluded-tab export; both DECISION NEEDED).
-- (C) Optional, owner's call: a full `a2interactive.Rmd` inventory pass (exported functions and new parameters since
-  S541/S808); not started.
-- (D) Carried: 7 untracked owner drafts (ask once "commit or drop?"); `CHANGELOG.md`/`HANDOFFS.md` trims;
-  `CLAUDE.md` in the warn band (26,731 B).
+- (A) **First:** add the 6 words to `inst/WORDLIST` (BACKLOG top item, READY, Effort S; `test_wordlist_coverage.R`
+  must pass and `devtools::check()` must have 0 errors), then push `master` (11 commits ahead: all 4 workflows run).
+- (B) Pick from the priorities list: Potential Parents own-dam (DECISION NEEDED, `R/getPotentialParents.R:190`), the
+  PED_GV owner decisions, the other two Mate-pair guardrail residues (zero-rule table, Excluded-tab export), or the
+  optional full `a2interactive.Rmd` inventory pass.
+- (C) Carried: 7 untracked owner drafts (ask once "commit or drop?"); `NEWS.md` lags `NEWS.Rmd` (last rendered S716);
+  `CHANGELOG.md`/`HANDOFFS.md` trims; `CLAUDE.md` in the warn band (26,731 B).
+
+**Key files:** `R/modPedigree.R:358-401` (`applyFocalTrim`, `pedigreeData`, `analysisPedigreeData`), the return
+list near `R/modPedigree.R:885`, `R/appServer.R:309-315`, `tests/testthat/test_displayUnknownIdsDownstream.R`,
+`tests/testthat/test_appServer_server.R:65-80` (stub) and `:236-270` (wiring test), `inst/WORDLIST`.
+
+**Gotchas:**
+1. `analysisPedigree` keeps the focal-animal trim, so the Pedigree Browser's "Trim pedigree" box still narrows what
+   the other tabs analyze; only the Display Unknown IDs box was separated.
+2. The Pedigree Browser table, diagram and CSV export still use the filtered `pedigree()`, by design.
+3. Any new test stub of `modPedigreeServer` needs an `analysisPedigree` element or `appServer` errors.
+4. `NEWS.md` (rendered) does not yet carry this entry; `NEWS.Rmd` does.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809
