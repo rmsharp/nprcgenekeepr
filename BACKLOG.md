@@ -5,6 +5,18 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
+- [ ] **Add the six words S813's vignette demos introduced to `inst/WORDLIST` (found S814,
+      2026-09-30, READY, Effort S; blocks a green push)** -- `a2interactive.Rmd` (S813) uses
+      `ancestryCoverage`, `ancestryRule`, `ancestryRules`, `ancestrySeverity`, `ancestryStatus` and
+      `overriddenRules` (lines 1085-1151); `spelling::spell_check_package()` flags them, so
+      `tests/testthat/test_wordlist_coverage.R` fails and `devtools::check()` reports one ERROR
+      (`tests/spelling.R` output differs from `spelling.Rout.save`). Measured S814 with the full
+      unfiltered suite (362 files, 2,881 tests: 2 failures, this one and the known local-only
+      `test_pkgdown_reference_config.R`) and `devtools::check(vignettes = FALSE)` (1 error, 0
+      warnings, 1 note: the owner's untracked `suggested_NEWS_entry.md`). Fix: add the six words
+      to `inst/WORDLIST` (alphabetical), re-run `test_wordlist_coverage.R` and `check()`. The
+      unpushed commits run all 4 workflows, so R-CMD-check and test-coverage go red until this lands.
+
 - [ ] **PED_GV audit follow-through -- triage DONE (S781, 2026-09-26), F1 shipped (S782), F4
       shipped (S783), F2's duplicate-id half shipped (S797), F3 shipped (S798); every F-slice is
       done, and what remains is owner decisions (DECISION NEEDED, Effort S each; strict TDD for
@@ -48,23 +60,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       they are and say in the roxygen/app help that a recorded parent is not re-listed; or (3)
       leave it. Tests to extend: `tests/testthat/test_getPotentialParents.R`, and
       `test_modPotentialParents.R` if the table changes.
-
-- [ ] **Unticking "Display Unknown IDs" breaks the Genetic Value analysis (found S806,
-      2026-09-28, DECISION NEEDED, Effort S)** -- every downstream module gets the Pedigree
-      Browser's filtered pedigree (`R/appServer.R:312`), and the filter
-      (`R/modPedigree.R:359-361`) removes placeholder rows while their children still name them as
-      sire/dam. Measured S806 on `qcPed` with the Genetic Value module's own steps
-      (`R/modGeneticValue.R:290-335`: `population <- is.na(exit)`, `trimPedigree(probands, ped,
-      removeUninformative = FALSE, addBackParents = FALSE)`, `reportGV()`): 236 rows, 43 name a
-      removed row, and `reportGV()` stops with "sire and dam must have had alleles assigned: logic
-      error"; the same steps with the box ticked run. Not run through the Shiny module itself.
-      `calcNeVariance()` is unaffected (26.41 both ways). **Decide:** (1) the box filters only the
-      displayed table, and downstream modules get the unfiltered pedigree; (2) downstream modules
-      keep the filtered pedigree and the filter also blanks those sire/dam values (as
-      `removeAutoGenIds()` does), which changes genetic results for the 43 animals; (3) leave it
-      and say in the help that the box must stay ticked for analysis. Related: the placeholder
-      marking plan (`docs/planning/unknown-parent-placeholder-marking-plan.md` §7 dragon 2)
-      relies on this wiring, so a fix here should keep what every tab sees the same.
 
 - [ ] **(Optional, owner decision) One internal `isAddedRecord()` helper for the "added" mask
       (raised S785, deferred at the S785, S786 and S787 REFACTORs; DECISION NEEDED, Effort S)** --

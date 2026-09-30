@@ -393,6 +393,9 @@ Slice 1 and do D6 (c) inside Slice 2.
    lost for children whose placeholder parent was filtered away; D4's "no row → fallback" is
    what keeps them unknown. Do not "fix" this by reading `shared$currentStudbook` in one module
    only; that forks what different tabs see.
+   *(S814: no longer true for the "Display Unknown IDs" box. It now filters only the Pedigree
+   Browser table, and the other tabs get `modPedigreeServer()`'s `analysisPedigree`, which keeps
+   every row; D4's fallback still covers an id with no row.)*
 3. **`fixColumnNames()` lowercases and strips `_` and `.`**, and rewrites `ego` → `id` anywhere
    in a name (M6, `R/fixColumnNames.R`). A camelCase name needs a mapping line.
 4. **`obfuscateId()` insists** that an alias and its source are both placeholders or both real
@@ -438,7 +441,7 @@ Slice 1 and do D6 (c) inside Slice 2.
 
 1. **`reportGV()` stops when "Display Unknown IDs" is unticked** (M8): "sire and dam must have had
    alleles assigned: logic error" on `qcPed` with placeholder rows removed. Pre-existing; recorded
-   as its own `BACKLOG.md` item.
+   as its own `BACKLOG.md` item. *(Fixed S814: the box no longer reaches the other tabs.)*
 2. **Cross-center merge of two files that both contain made-up ids:** `.checkCrossCenterCollision()`
    (`R/resolveCrossCenterIds.R:193-201`) reports any id found in both files and not in the mapping,
    so two files that both hold `U0001` would be refused until the mapping links them (read from the
