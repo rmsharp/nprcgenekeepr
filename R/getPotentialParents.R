@@ -205,10 +205,12 @@ getPotentialParents <- function(ped, minSireAge = NULL, minDamAge = NULL,
         potentialDams <- eligibleDams
       }
 
+      ## Candidates are listed only for the parent that is missing; a recorded
+      ## parent is never re-listed.
       potentialParents[[j]] <- list(
         id = pUnknown$id[i],
-        sires = potentialSires,
-        dams = potentialDams$id
+        sires = if (is.na(pUnknown$sire[i])) potentialSires else character(0L),
+        dams = if (is.na(pUnknown$dam[i])) potentialDams$id else character(0L)
       )
     }
   }
