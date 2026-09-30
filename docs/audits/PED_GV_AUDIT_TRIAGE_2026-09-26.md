@@ -142,6 +142,28 @@ cycle. *RED test:* a 2-cycle. *Effort S.*
    fixed ones: PED-8 is recorded under NEW-40 and PED-9 under #44/#38.
 5. **Leave NEW-24 to issue #123.**
 
+## Closure record (owner-ratified 2026-09-30, S818)
+
+The owner agreed to Recommendation 4: these **11 ids are closed**. Closing records a decision; it
+changes no code, and the table above is left as the frozen S781 reading.
+
+| id | closed because |
+|---|---|
+| PED-8 | FIXED: `findGeneration` warns naming unplaced ids (`ea5d28fa`, recorded under NEW-40) |
+| PED-9 | FIXED: id width is configurable, and the 9999 ceiling was never real (`14c8e84d`, #44/#38) |
+| NEW-27 | MOOT: a positive finding, nothing to fix |
+| NEW-33 | MOOT: the half-year window was replaced by the gestation-derived one (#31, #46) |
+| NEW-44 | MOOT: factor and POSIXct columns pass; the only caller is `addParents.R` |
+| NEW-47 | MOOT: `calcGU` and `calcA` count the same columns by construction |
+| NEW-58 | REFUTED: `addAnimalsWithNoRelative.R` re-adds the dropped animals by design |
+| NEW-60 | REFUTED: `findOffspring` orders by `probands`; never a finding |
+| PED-7 | accepted design: a sire is male by role; any constant-adoption question folds into PED-2 |
+| NEW-39 | same as PED-7 |
+| NEW-59 | harmless: guarded by `fmt()`, a frame with no `indivMeanKin` or `gu` gives a table of `N/A` |
+
+Open after closure: 43 - 11 = **32 ids**, of which NEW-24 is issue #123 and the rest are the
+overhaul roots and small no-behavior-change items in Recommendations 2 and 3.
+
 ## Ledger boundary — what the "ledger-absent" list gets wrong both ways
 
 `BACKLOG.md` said the ledger records 22 of the audit's 63 ids, leaving 41. Checking each of the 22

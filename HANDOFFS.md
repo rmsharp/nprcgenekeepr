@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S818
 date: 2026-09-30
-status: pending
-active_task: Close the 11 settled PED_GV audit ids (docs only)
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE: closed the 11 settled PED_GV audit ids (docs only); 32 remain
+what_was_done: Claim 8a11781b0; closure record added to docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md and BACKLOG.md:8 updated (close-out commit follows the claim). No code, no suite run.
+next_steps: Push master and watch CI (S817 R code), or Mate-pair residues (BACKLOG.md:91), or the 6 no-behavior-change PED_GV items (triage Recommendation 2). Ask once whether to commit or drop the 7 untracked drafts.
+key_files: docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Closure record), BACKLOG.md:8
+gotchas: master is unpushed, 8 ahead; only S817 R-code commits need CI; the 32 open ids include NEW-24 = issue #123.
 ```
 
 ```handoff

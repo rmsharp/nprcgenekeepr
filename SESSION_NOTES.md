@@ -98,17 +98,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 818 Did
-**Deliverable:** Close the 11 settled PED_GV audit ids in the triage report and `BACKLOG.md` (IN PROGRESS; docs only)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### Session 817 Handoff Evaluation (by Session 818)
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD (`2b6a023a2`),
+`master` 6 ahead, the 7 untracked files unchanged, CI green, `CLAUDE.md` 26,731 B, and the PED_GV item sat at
+`BACKLOG.md:8` as said. **Missing:** it did not say the "close 11 ids" recommendation lives in the triage report's
+Recommendation 4 (found by grep). **Wrong:** nothing. **ROI:** high.
 
-### Session 816 Handoff Evaluation (by Session 817)
-**Score: 9/10.** Measurements held: frontiers at HEAD, `master` 1 ahead, the 7 untracked files unchanged, CI green,
-`CLAUDE.md` at 26,731 B, and the Up Next list was exact (the own-dam item sat at `BACKLOG.md:33`, the code at
-`R/getPotentialParents.R:190`). **Missing:** it did not say which tests would conflict with a behavior change there
-(none did). **Wrong:** nothing. **ROI:** high.
+### What Session 818 Did
+**Deliverable, DONE (docs only):** closed the 11 settled PED_GV audit ids (PED-7, NEW-39, PED-8, PED-9, NEW-27,
+NEW-33, NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) on the owner's pick (Phase 0 picker, then a plain-words scope
+question). Added a "Closure record" section to `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (table left as the
+frozen S781 reading) and updated `BACKLOG.md:8` (32 ids remain). No code, so no TDD cycle and no suite run.
+**Commits:** claim `8a11781b0`; deliverable + records (this, amended).
+**Learnings:** none new. **Reduction:** removed the S816 handoff-evaluation block (kept in git and the S816 receipt).
+
+**Self-assessment: 9/10.** + One deliverable, scope asked in plain words, closure rationale taken from the report's
+own evidence. - Did not ask again about the 7 untracked drafts; my first records script half-failed and the commit
+briefly lacked the records (amended).
+
+**Next steps:**
+- (A) Pick from the priorities list: push `master` and watch CI (R code changed in S817), Mate-pair residues
+  (`BACKLOG.md:91`), the 6 no-behavior-change PED_GV items (Recommendation 2), or an overhaul question.
+- (B) Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band.
+
+**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` ("Closure record"), `BACKLOG.md:8`.
+
+**Gotchas:** `master` is 8 commits ahead after this one; only the S817 R-code commits need CI (this session's files
+are docs). The 32 open ids include NEW-24 = issue #123.
 
 ### What Session 817 Did
 **Deliverable, DONE:** Potential Parents now lists candidates only for the parent that is missing (owner chose

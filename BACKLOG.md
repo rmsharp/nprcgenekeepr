@@ -25,8 +25,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       (PED-4, NEW-54, and NEW-55 -- labelling whether a dam list came from proven breeders or the
       fallback, which the owner did not take at S798's F3 decision), the walk helpers (PED-3, NEW-42; all exported, so an API change), the sim
       driver (NEW-50/51), constants and HTML builders (NEW-18/19/21/26/57) and the founder
-      definition (NEW-61); (b) NEW-24 is already open issue #123. **Recommend closing 11 ids** (fixed, moot or
-      refuted; the report lists them) once the owner agrees. **Trap:** an id grep of the ledger
+      definition (NEW-61); (b) NEW-24 is already open issue #123. **The 11 settled ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33,
+      NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) were closed S818**, so 32 remain (the report's "Closure record" lists them). **Trap:** an id grep of the ledger
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.
 
