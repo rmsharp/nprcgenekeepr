@@ -38,10 +38,49 @@ Minimum Handoff Requirements (`SESSION_RUNNER.md` §3D).
 ## Format — a fenced `handoff` block
 
     ```handoff
-    session: S816
+    session: S819
     date: 2026-09-30
     status: pending
-    active_task: Push master (13 commits ahead) and report CI; owner-chosen from the Phase 0 picker
+    active_task: Push master (8 commits ahead) and watch CI on the S817 R-code change
+    ```
+
+    ```handoff
+    session: S818
+    date: 2026-09-30
+    status: complete
+    self_score: 9
+    predecessor_score: 9
+    active_task: DONE: closed the 11 settled PED_GV audit ids (docs only); 32 remain
+    what_was_done: Claim 8a11781b0; closure record added to docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md and BACKLOG.md:8 updated (close-out commit follows the claim). No code, no suite run.
+    next_steps: Push master and watch CI (S817 R code), or Mate-pair residues (BACKLOG.md:91), or the 6 no-behavior-change PED_GV items (triage Recommendation 2). Ask once whether to commit or drop the 7 untracked drafts.
+    key_files: docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md (Closure record), BACKLOG.md:8
+    gotchas: master is unpushed, 8 ahead; only S817 R-code commits need CI; the 32 open ids include NEW-24 = issue #123.
+    ```
+
+    ```handoff
+    session: S817
+    date: 2026-09-30
+    status: complete
+    self_score: 9
+    predecessor_score: 9
+    active_task: DONE: Potential Parents (getPotentialParents) lists candidates only for the missing parent; owner chose "blank it"
+    what_was_done: Claim 370e9a1c0; RED 604d4ac9a (5 tests, 3 failing); GREEN c8b7fc794 (R/getPotentialParents.R); docs ada8616ca (roxygen, Rd, tab intro, NEWS.Rmd). Full suite 2,886 tests, 1 known local-only failure; lint clean. Removed the BACKLOG item. Not pushed.
+    next_steps: Push master and watch CI (R code changed). Then pick from priorities: PED_GV owner decisions (BACKLOG.md:8), Mate-pair residues, optional a2interactive.Rmd pass. Still ask once whether to commit or drop the 7 untracked drafts.
+    key_files: R/getPotentialParents.R (end of the per-animal loop), tests/testthat/test_getPotentialParents.R:497, NEWS.Rmd (Changed entry after the dam-fallback Fixed entry)
+    gotchas: master is unpushed and the push triggers all four workflows; no app launch (only intro text changed); NEWS.md lags NEWS.Rmd; test_pkgdown_reference_config.R fails locally only.
+    ```
+
+    ```handoff
+    session: S816
+    date: 2026-09-30
+    status: complete
+    self_score: 9
+    predecessor_score: 9
+    active_task: DONE: pushed master (6d34fe5f9..d40b734c9) and confirmed CI; all four push workflows green, S811 lint red fixed
+    what_was_done: Phase 0 report and picker; claim d40b734c9; pushed 14 commits; gh run list for d40b734c9: lint, pkgdown, test-coverage, R-CMD-check all success. No code change.
+    next_steps: Pick from priorities: Potential Parents own-dam (R/getPotentialParents.R:190, DECISION NEEDED), PED_GV owner decisions (docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md), Mate-pair residues. Still ask once whether to commit or drop the 7 untracked drafts.
+    key_files: BACKLOG.md:6-50, R/getPotentialParents.R:190
+    gotchas: master is 1 commit ahead after the records commit (build-ignored only, no CI watch owed); test_pkgdown_reference_config.R fails locally only.
     ```
 
     ```handoff

@@ -87,6 +87,9 @@ time of the focal birth (proven breeders); when there are none, `dams`
 lists every female old enough and present at the birth instead. Either
 way, a female who delivered another offspring within
 `maxGestationalPeriod` days of the focal birth is never listed.
+Candidates are listed only for the parent that is missing: when an
+animal's dam is recorded its `dams` is empty, and when its sire is
+recorded its `sires` is empty.
 
 ## Examples
 

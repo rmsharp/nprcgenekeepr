@@ -93,6 +93,22 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · \[ad hoc\] S819 claim (in progress): push `master` (8 commits ahead, incl. S817’s `getPotentialParents` R change) and watch the four CI workflows. Owner chose this from the Phase 0 picker.
+
+### 2026-09-30 · \[ad hoc\] S818 close-out: closed the 11 settled PED_GV audit ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33, NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) on the owner’s pick; added a “Closure record” to `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` and updated `BACKLOG.md` (32 ids remain). Docs only, no code or tests; nothing pushed; no GitHub issue named; no new learning (S817 handoff evaluated 9/10, self 9/10).
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S818 claim (in progress): record the 11 settled PED_GV audit ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33, NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) as closed in the triage report and `BACKLOG.md`. Owner chose it at the Phase 0 picker and the scope question. Docs only, no code.
+
+### 2026-09-30 · \[ad hoc\] S817 close-out: Potential Parents (`getPotentialParents()`) now lists candidates only for the missing parent (recorded dam gives empty `dams`, recorded sire empty `sires`; stand-ins do not count as recorded); owner chose “blank it” over document-only/leave (S816 handoff evaluated 9/10, self 9/10). Strict TDD: RED `604d4ac9a` (5 tests, 3 failing, 2 guards, no existing test conflicted), GREEN `c8b7fc794`, docs `ada8616ca` (roxygen, Rd, tab intro, `NEWS.Rmd`). Full unfiltered suite 362 files, 2,886 tests, 1 failure (known local-only `test_pkgdown_reference_config.R`); lint clean. Measured S798 effect: 1,351 of 1,587 example-pedigree animals had a recorded dam and got a dam list that could never contain it. Removed the item from `BACKLOG.md`. No GitHub issue named; no new learning; nothing pushed.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S817 claim (in progress): Potential Parents own-dam decision (BACKLOG item found S798): settle with the owner whether `getPotentialParents()` lists candidate dams only for the unknown parent, then implement under strict TDD. Owner chose it at the Phase 0 picker.
+
+### 2026-09-30 · \[ad hoc\] S816 close-out: pushed `master` (`6d34fe5f9..d40b734c9`, 14 commits incl. S812’s lint fix) on the owner’s pick; CI for `d40b734c9`: lint, pkgdown, test-coverage, R-CMD-check all success, so the S811 lint red is resolved (S815 handoff evaluated 9/10, self 9/10). No code change, no GitHub issue named, no new learning.
+
 ### 2026-09-30 · \[ad hoc\] S816 claim (in progress): push `master` (13 commits ahead, includes S812’s lint fix) and report CI; owner chose it at the Phase 0 picker. No code change.
 
 ### 2026-09-30 · \[ad hoc\] S815 close-out: added the six words S813’s `a2interactive.Rmd` demos introduced (`ancestryCoverage`, `ancestryRule`, `ancestryRules`, `ancestrySeverity`, `ancestryStatus`, `overriddenRules`) to `inst/WORDLIST` (S814 handoff evaluated 9/10, self 9/10). Strict TDD: RED was the existing failing `test_wordlist_coverage.R:121` (same six words), GREEN the two WORDLIST insertions, nothing to refactor. Full unfiltered suite 362 files, 2,881 tests, 1 failure (known local-only `test_pkgdown_reference_config.R`; was 2); `devtools::check(vignettes = FALSE)` 0 errors, 0 warnings, 1 note (owner’s untracked `suggested_NEWS_entry.md`). Removed the item from `BACKLOG.md`. No GitHub issue named; no new learning (Learning 831 covers it); nothing pushed.

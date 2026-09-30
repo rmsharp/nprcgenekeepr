@@ -168,84 +168,100 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 816 Did
+### What Session 819 Did
 
-**Deliverable:** push `master` and report CI (IN PROGRESS) **Started:**
-2026-09-30 **Status:** Session claimed. Work beginning. **Ledger:**
-`CHANGELOG: pending`
+**Deliverable:** Push `master` (8 commits ahead) and watch CI on the
+S817 R-code change (IN PROGRESS; no code edits) **Started:** 2026-09-30
+**Status:** Session claimed. Work beginning. **Ledger:**
+`CHANGELOG: pending` – the claim commit’s `CHANGELOG.md` entry says (in
+progress); Phase 3F records the rest.
 
-### Session 814 Handoff Evaluation (by Session 815)
+### Session 817 Handoff Evaluation (by Session 818)
 
-**Score: 9/10.** Every Orient measurement held: `git status -sb` “ahead
-11”, `CHANGELOG.md`/`HANDOFFS.md` frontiers at HEAD (0 undocumented),
-the 7 untracked files unchanged, and the top BACKLOG item (the six
-words) was exact: the failing test flagged exactly `ancestryCoverage`,
-`ancestryRule`, `ancestryRules`, `ancestrySeverity`, `ancestryStatus`,
-`overriddenRules`, and adding them took the suite to its one known
-failure. Next step (A) also warned correctly that a push would go red
-until the words landed. **Missing:** nothing that cost time; it did not
-say where in `inst/WORDLIST` the words belong (the file has two sorted
-runs, see Gotcha 1). **Wrong:** nothing found. **ROI:** high.
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and
+`HANDOFFS.md` frontiers at HEAD (`2b6a023a2`), `master` 6 ahead, the 7
+untracked files unchanged, CI green, `CLAUDE.md` 26,731 B, and the
+PED_GV item sat at `BACKLOG.md:8` as said. **Missing:** it did not say
+the “close 11 ids” recommendation lives in the triage report’s
+Recommendation 4 (found by grep). **Wrong:** nothing. **ROI:** high.
 
-### What Session 815 Did
+### What Session 818 Did
 
-**Deliverable, DONE:** the BACKLOG READY item “Add the six words S813’s
-vignette demos introduced to `inst/WORDLIST`” (found S814). Strict TDD:
-the existing failing `tests/testthat/test_wordlist_coverage.R:121` was
-the RED (run, message read: 6 words flagged, the same six), the gate was
-an `AskUserQuestion`, GREEN added the six words, REFACTOR had nothing to
-change (data-only fix). **Commits:** claim `d26c85241`; GREEN + records
-(this close-out commit; `git log` has its hash). **Verification:** -
-`test_wordlist_coverage.R` passes. - Full unfiltered suite
-(`NOT_CRAN=true`, `load_all`): 362 files, 2,881 tests, 0 errors, 1
-failure: the known local-only `test_pkgdown_reference_config.R` (was 2
-before this session). - `devtools::check(vignettes = FALSE)`: 0 errors,
-0 warnings, 1 note (the owner’s untracked `suggested_NEWS_entry.md`);
-`spelling.Rout` matches `spelling.Rout.save`. - No `.R` file touched, so
-no lint run owed; no runtime change, so no smoke test (docs/data
-only). - CI: Phase 0 `gh run list --branch master` showed the S811
-push’s `lint.yaml` red; S812’s style commit `4ccdb0dd4` fixed it but is
-unpushed, so CI has not confirmed it. Nothing pushed this session.
-**Learnings:** none new; Learning 831 already records why a vignette
-change needs the wordlist run. **Reduction:** removed the S813-eval,
-“What Session 814 Did” and S814 next-steps/gotchas blocks (in git and
-the `HANDOFFS.md` S814 receipt); the finished BACKLOG item block was
-removed.
+**Deliverable, DONE (docs only):** closed the 11 settled PED_GV audit
+ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33, NEW-44, NEW-47,
+NEW-58, NEW-59, NEW-60) on the owner’s pick (Phase 0 picker, then a
+plain-words scope question). Added a “Closure record” section to
+`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (table left as the
+frozen S781 reading) and updated `BACKLOG.md:8` (32 ids remain). No
+code, so no TDD cycle and no suite run. **Commits:** claim `8a11781b0`;
+deliverable + records (this, amended). **Learnings:** none new.
+**Reduction:** removed the S816 handoff-evaluation block (kept in git
+and the S816 receipt).
 
-**Self-assessment: 9/10.** - + Ran the failing test first and read its
-message before touching the file; one production-neutral file
-changed. - + Ran the full suite and `check()` in parallel, so
-verification cost one wait. - + Kept to one deliverable; asked the owner
-the one phase gate. - - Did not ask the “commit or drop?” question about
-the 7 untracked drafts as a separate prompt; it is in the Phase 0 report
-and the picker header, and the owner answered only the picker (still
-open).
+**Self-assessment: 9/10.** + One deliverable, scope asked in plain
+words, closure rationale taken from the report’s own evidence. - Did not
+ask again about the 7 untracked drafts; my first records script
+half-failed and the commit briefly lacked the records (amended).
 
-**Next steps:** - (A) **Push `master`** (12 commits ahead; owner
-action): all 4 workflows should now be green, including `lint.yaml`
-(S812’s fix). Check `gh run list --branch master` afterwards and report,
-do not fix inline. - (B) Pick from the priorities list: Potential
-Parents own-dam (DECISION NEEDED, `R/getPotentialParents.R:190`), the
-PED_GV owner decisions
-(`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`), the other two
-Mate-pair guardrail residues (zero-rule table, Excluded-tab export) or
-the optional full `a2interactive.Rmd` inventory pass. - (C) Carried: 7
-untracked owner drafts (still unanswered: commit or drop?); `NEWS.md`
-lags `NEWS.Rmd` (last rendered S716); `CHANGELOG.md`/`HANDOFFS.md`
-trims; `CLAUDE.md` in the warn band (26,731 B).
+**Next steps:** - (A) Pick from the priorities list: push `master` and
+watch CI (R code changed in S817), Mate-pair residues (`BACKLOG.md:91`),
+the 6 no-behavior-change PED_GV items (Recommendation 2), or an overhaul
+question. - (B) Carried: 7 untracked owner drafts (commit or drop?);
+`NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band.
 
-**Key files:** `inst/WORDLIST:260-264` (ancestry words),
-`inst/WORDLIST:496` (`overriddenRules`),
-`tests/testthat/test_wordlist_coverage.R:121`, `BACKLOG.md:6` (Up Next,
-now starts with the PED_GV item).
+**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (“Closure
+record”), `BACKLOG.md:8`.
 
-**Gotchas:** 1. `inst/WORDLIST` has two sorted runs: capitalized/acronym
-words at the top (lines ~1-254), then lowercase and camelCase words
-(line ~255 on, C-locale order); put a new camelCase identifier in the
-second run. 2. `test_wordlist_coverage.R` needs `NOT_CRAN=true` or it
-bare-skips (Learning 417). 3. The 12 unpushed commits include S812’s
-lint fix; the last red CI run (`lint.yaml`, S811 push) is fixed locally
-only.
+**Gotchas:** `master` is 8 commits ahead after this one; only the S817
+R-code commits need CI (this session’s files are docs). The 32 open ids
+include NEW-24 = issue \#123.
+
+### What Session 817 Did
+
+**Deliverable, DONE:** Potential Parents now lists candidates only for
+the parent that is missing (owner chose “blank it” at a scope question;
+strict TDD, every gate an `AskUserQuestion`). An animal with a recorded
+dam gets `dams` empty (sires still listed); a recorded sire gets `sires`
+empty; both unknown keeps both. “Recorded” is read after
+[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md),
+so a stand-in (placeholder TRUE) does not count and a real `U1234`
+(FALSE) does. **Commits:** claim `370e9a1c0`; RED `604d4ac9a` (5 tests
+in `tests/testthat/test_getPotentialParents.R:497` on, 3 failing, 2
+guards); GREEN `c8b7fc794` (`R/getPotentialParents.R`, the `list(...)`
+at the loop’s end); docs `ada8616ca` (roxygen `@return`,
+`man/getPotentialParents.Rd`, the tab’s intro text in
+`R/modPotentialParents.R`, `NEWS.Rmd` “Changed” entry); records (this).
+**Verification:** RED 3 failed for the right reason, no existing test
+conflicted; full unfiltered suite 362 files, 2,886 tests, 1 failure
+(known local-only `test_pkgdown_reference_config.R`); the two
+modPotentialParents files, `test_newsReleaseState.R`,
+`test_wordlist_coverage.R` pass; `lintr::lint_package()` clean for the
+touched files. No app launch: only the intro paragraph’s wording changed
+in the UI (no runtime wiring), so 3E is noted as not done. Nothing
+pushed; `master` is 6 commits ahead after this records commit.
+**Learnings:** none new. **Reduction:** removed the S816 “What Session
+816 Did” block and the done BACKLOG item (in git and the S816 receipt).
+
+**Self-assessment: 9/10.** + One deliverable, owner decision asked in
+plain words, all gates used, full suite and lint run. - Did not ask
+about the 7 untracked drafts again (asked each session with no answer).
+
+**Next steps:** - (A) Pick from the priorities list: PED_GV owner
+decisions (`BACKLOG.md:8`), Mate-pair guardrail residues, or the
+optional `a2interactive.Rmd` pass (the `getPotentialParents` behavior
+change is covered only by its existing demo, which does not print dam
+lists, so no edit is owed there). - (B) Carried: 7 untracked owner
+drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd` (this change’s entry
+is in `NEWS.Rmd` only); `CLAUDE.md` in the warn band (26,731 B); push
+owed (CI watch owed: R code changed).
+
+**Key files:** `R/getPotentialParents.R` (end of the loop),
+`tests/testthat/test_getPotentialParents.R:497`.
+
+**Gotchas:** 1. The Potential Parents table still shows the dam
+count/column for rows where the dam is recorded, now 0 and blank;
+`modPotentialParents.R:38-42` needed no change. 2. `master` is unpushed;
+the push triggers all four workflows because R files changed.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 
