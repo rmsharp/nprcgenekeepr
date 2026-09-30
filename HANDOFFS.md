@@ -180,6 +180,20 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S813
+date: 2026-09-30
+status: pending
+active_task: a2interactive.Rmd demo section for reportMatePairs ancestry columns and obfuscateId(placeholder =) (BACKLOG Mate-pair ancestry guardrails item 1); docs-only
+what_was_done: pending
+next_steps: pending
+key_files: vignettes/a2interactive.Rmd:1021
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: S813 claim entry
+commit: pending
+```
+
+```handoff
 session: S812
 date: 2026-09-30
 status: complete

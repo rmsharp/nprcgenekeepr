@@ -106,6 +106,12 @@ push. **Wrong:** (1) "lint 0 on the 3 R files" was true at GREEN but a later doc
 83-character roxygen line, so `lint.yaml` went red on `6d34fe5f9` (Learning 828); (2) the carried item "18 unpushed
 commits" was stale: `origin/master` was already at HEAD when this session began. **ROI:** high.
 
+### What Session 813 Did
+**Deliverable:** a2interactive.Rmd demo section: `reportMatePairs()` ancestry columns + `obfuscateId(placeholder =)` (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 812 Did
 **Deliverable, DONE:** Fixed the red `lint.yaml` run on `6d34fe5f9`. Re-wrapped the roxygen paragraph at
 `R/resolveCrossCenterIds.R:367` (comment text only, no code) and regenerated `man/resolveCrossCenterIds.Rd`
