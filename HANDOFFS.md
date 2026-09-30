@@ -30,6 +30,20 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S814
+date: 2026-09-30
+status: pending
+active_task: Display Unknown IDs vs reportGV() (BACKLOG item found S806; R/appServer.R:312, R/modPedigree.R:359-364); PRE-RED, scope decision pending
+what_was_done: pending
+next_steps: pending
+key_files: R/appServer.R:312
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: S814 claim entry
+commit: pending
+```
+
+```handoff
 session: S<N>
 date: YYYY-MM-DD
 status: <pending | complete>

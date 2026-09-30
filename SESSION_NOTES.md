@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 814 Did
+**Deliverable:** Resolve the BACKLOG item "Unticking Display Unknown IDs breaks the Genetic Value analysis" (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. PRE-RED; scope decision (which of the item's three options) goes to the owner first.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 812 Handoff Evaluation (by Session 813)
 **Score: 8/10.** Orient measurements held: `git status -sb` showed "ahead 3" (claim, fix, records), matching the
 handoff's "2 commits ahead after this one plus the claim"; `CHANGELOG.md`/`HANDOFFS.md` frontiers one docs commit
