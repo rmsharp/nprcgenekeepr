@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S811 close-out: placeholder-marking plan Slice 5 DONE, so the whole plan is done (S810 handoff evaluated 8/10, self 9/10): `obfuscateId(placeholder =)` and `obfuscatePed()` read the mark, `resolveCrossCenterIds()` keeps and resolves a linked pair's mark, real wins (RED `6de83f4d8`, GREEN `665e9c475`, docs `a229b3bb1`); plan Slice 5 DONE note, `NEWS.Rmd` entry, PED_GV F2 / NEW-38 marked done, placeholder `BACKLOG.md` item removed (the plan record lives in `docs/planning/unknown-parent-placeholder-marking-plan.md` §5); session notes, `HANDOFFS.md` receipt complete, Learning 827; full suite 2,872 tests / 0 errors / 1 known local failure, `devtools::check` 0/0/2 notes (owner's untracked drafts), lint 0, smoke HTTP 200 on port 6111. Nothing pushed; no GitHub issue named
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-29 · [ad hoc] S811 claim (in progress): placeholder-marking plan Slice 5 (`docs/planning/unknown-parent-placeholder-marking-plan.md` §5): de-identification (`obfuscateId()`/`obfuscatePed()`) and the cross-center merge (`resolveCrossCenterIds()`) read the `placeholder` mark; strict TDD
 - **Model:** Claude Sonnet 5.5.
 

@@ -182,10 +182,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S811
 date: 2026-09-29
-status: pending
-active_task: Placeholder-marking plan Slice 5 (docs/planning/unknown-parent-placeholder-marking-plan.md section 5): obfuscateId() optional placeholder vector, obfuscatePed() fills it from the column, cross-center merge (resolveCrossCenterIds) reads the mark. Strict TDD.
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Placeholder-marking plan (docs/planning/unknown-parent-placeholder-marking-plan.md): all 5 slices DONE (S807-S811); the BACKLOG.md item is removed. Next: pick from the priorities list.
+what_was_done: Strict TDD Slice 5. obfuscateId gets an optional placeholder vector, obfuscatePed passes the column, and resolveCrossCenterIds resolves a linked pair's mark (real wins, one-sided mark kept, no error on disagreement; owner decision S811). RED 6de83f4d8 (18 tests, 11 failing, 7 guards), GREEN 665e9c475, docs a229b3bb1. Full suite 2872 tests 0 errors 1 known local failure; check 0/0/2 notes; lint 0.
+next_steps: No placeholder slice remains. Options: Display Unknown IDs breaking reportGV (DECISION NEEDED, R/appServer.R:312), Potential Parents own-dam (DECISION NEEDED, R/getPotentialParents.R:190), PED_GV audit decisions, or the deferred a2interactive pass (reportMatePairs and obfuscateId(placeholder =)).
+key_files: R/obfuscateId.R:41; R/obfuscatePed.R:43; R/resolveCrossCenterIds.R:322; tests/testthat/test_placeholderMarkDeidMerge.R:1; docs/planning/unknown-parent-placeholder-marking-plan.md:362
+gotchas: checkCrossCenterMapping reports only sire/dam conflicts; a column on only one file is not merged by the generic otherCols loop in resolveCrossCenterIds, so a new column that must survive a linked pair needs its own line; a port answering HTTP 200 may belong to another process (check the log says Listening).
+runtime_smoke: runGeneKeepR(port = 6111L) HTTP 200, no log errors (port 6099 was held by another process and is not counted); de-identified export verified with testServer on modDeidentifiedExportServer.
+changelog_ref: a229b3bb1
+commit: a229b3bb1
 ```
 
 ```handoff
