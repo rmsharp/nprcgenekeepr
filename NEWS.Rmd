@@ -317,6 +317,10 @@ knitr::opts_chunk$set(echo = TRUE)
   results behind a confirmation step (issue #149).
 
 ## Genetic Value Analysis
+- Fixed: unchecking "Display Unknown IDs" in the Pedigree Browser no longer
+  stops the Genetic Value Analysis with a "logic error". The box now hides
+  rows only in the Pedigree Browser table; every other tab uses the full
+  pedigree (the "Trim pedigree based on focal animals" box still narrows it).
 - The Genetic Value Analysis tab gained a configurable **Ranking Scheme**
   control: choose a priority-tier ranking alongside the existing combined
   kinship/uniqueness score (issue #125). Script users: `reportGV()` gained

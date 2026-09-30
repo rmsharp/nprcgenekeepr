@@ -114,7 +114,9 @@ modPedigreeUI <- function(id) {
               "animal whose ID merely starts with U, such as U1, is kept. ",
               "The placeholder column says which rows are made up: TRUE ",
               "hides the row, FALSE keeps it, so a real animal with an ",
-              "ID such as U1234 can be marked FALSE in the uploaded file."
+              "ID such as U1234 can be marked FALSE in the uploaded file. ",
+              "Unticking the box changes only this table: the other tabs ",
+              "still use every animal."
             )
           ),
           br(),

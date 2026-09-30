@@ -268,7 +268,9 @@ files you download, so the marks survive a save and re-upload.
 Unchecking **Display Unknown IDs** removes those placeholder rows. For the
 example pedigree, the row count reduces from **3,694 to 2,322** -- the
 difference, 1,372, is the number of UNKNOWN placeholder animals the
-application generated to stand in for unrecorded parents.
+application generated to stand in for unrecorded parents. The box changes only
+this table: the other tabs, such as Genetic Value Analysis, still use every
+animal, so unchecking it never breaks an analysis.
 
 ![Pedigree Browser with Display Unknown IDs unchecked.](shiny_app_use/pb_no_unknown_displayed.png){fig-alt="Pedigree Browser table with Display Unknown IDs unchecked, showing 2322 rows."}
 

@@ -42,6 +42,8 @@ The interface is organized into three panels:
      FALSE = real animal); a real animal whose ID looks like a made-up one, such
      as "U1234", stays visible if you enter FALSE for it in your file. A real
      animal whose ID merely starts with "U", such as "U1", is always shown.
+     Unchecking the box changes only this table; the other tabs (for example
+     Genetic Value Analysis) still use every animal.
    - **Trim Pedigree**: When checked, trims the pedigree to include only the
      focal animals and their relatives, removing unrelated lineages.
    - **Export Button**: Download the current pedigree view as a CSV file.
