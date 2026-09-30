@@ -60,7 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-09-30 · [ad hoc] S819 claim (in progress): push `master` (8 commits ahead, incl. S817's `getPotentialParents` R change) and watch the four CI workflows. Owner chose this from the Phase 0 picker.
+### 2026-09-30 · [ad hoc] S819 close-out: pushed `master` (9 commits incl. S817's `getPotentialParents` change) and watched CI; pkgdown, test-coverage, R-CMD-check and lint all succeeded on `7bcfdcc68`. Owner chose this from the Phase 0 picker. No code edits.
+- **Model:** Claude Sonnet 5.5.
 
 ### 2026-09-30 · [ad hoc] S818 close-out: closed the 11 settled PED_GV audit ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33, NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) on the owner's pick; added a "Closure record" to `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` and updated `BACKLOG.md` (32 ids remain). Docs only, no code or tests; nothing pushed; no GitHub issue named; no new learning (S817 handoff evaluated 9/10, self 9/10).
 - **Model:** Claude Sonnet 5.5.

@@ -98,17 +98,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 819 Did
-**Deliverable:** Push `master` (8 commits ahead) and watch CI on the S817 R-code change (IN PROGRESS; no code edits)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### Session 818 Handoff Evaluation (by Session 819)
+**Score: 9/10.** Orient measurements held: `CHANGELOG.md`/`HANDOFFS.md` frontiers at HEAD (`4fb6ae0ca`), `master` 8 ahead,
+the 7 untracked files unchanged, `CLAUDE.md` 26,731 B, and "push and watch CI" was listed first and was exactly
+the work owed. **Missing:** nothing needed. **Wrong:** nothing. **ROI:** high.
 
-### Session 817 Handoff Evaluation (by Session 818)
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD (`2b6a023a2`),
-`master` 6 ahead, the 7 untracked files unchanged, CI green, `CLAUDE.md` 26,731 B, and the PED_GV item sat at
-`BACKLOG.md:8` as said. **Missing:** it did not say the "close 11 ids" recommendation lives in the triage report's
-Recommendation 4 (found by grep). **Wrong:** nothing. **ROI:** high.
+### What Session 819 Did
+**Deliverable, DONE (no code edits):** pushed `master` (9 commits including the claim, incl. S817's
+`getPotentialParents` R change) and watched CI to completion. All four workflows (pkgdown, test-coverage,
+R-CMD-check, lint) succeeded on `7bcfdcc68`.
+**Commits:** claim `7bcfdcc68`; records (this).
+**Learnings:** none new. **Reduction:** removed the S817 handoff-evaluation block (kept in git and the S817 receipt).
+
+**Self-assessment: 9/10.** + One deliverable, CI watched by a background poll rather than repeated checks.
+- Did not re-ask about the 7 untracked drafts; no runtime smoke test (no behavior change this session).
+
+**Next steps:**
+- (A) Pick from the priorities list: the 6 no-behavior-change PED_GV items (triage Recommendation 2), Mate-pair
+  residues (`BACKLOG.md:91`), or the docs staleness audit.
+- (B) Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band.
+
+**Key files:** `BACKLOG.md:8` (PED_GV), `BACKLOG.md:91` (Mate-pair).
+
+**Gotchas:** `master` is now in sync with `origin` except this records commit (unpushed; docs only, no CI owed).
 
 ### What Session 818 Did
 **Deliverable, DONE (docs only):** closed the 11 settled PED_GV audit ids (PED-7, NEW-39, PED-8, PED-9, NEW-27,
