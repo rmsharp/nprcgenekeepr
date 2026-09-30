@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S819
+date: 2026-09-30
+status: pending
+active_task: Push master (8 commits ahead) and watch CI on the S817 R-code change
+```
+
+```handoff
 session: S818
 date: 2026-09-30
 status: complete
