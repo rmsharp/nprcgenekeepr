@@ -63,12 +63,19 @@ stubInput <- function(id, ...) {
 }
 
 stubPed <- function(id, ...) {
+  # ctl$ped drives the pedigree the other tabs analyze (analysisPedigree);
+  # ctl$displayPed, when set, is the table's own filtered pedigree and lets a
+  # test tell the two apart. Left NULL, the table shows the same as ctl$ped.
   ctl$ped <- shiny::reactiveVal(NULL)
+  ctl$displayPed <- shiny::reactiveVal(NULL)
   # BL-N Slice 3: a controllable stand-in for modPedigreeServer()'s own new
   # twinRelations return-list entry (the raw, ungated twinRelationsData()).
   ctl$twins <- shiny::reactiveVal(NULL)
   list(
-    pedigree = shiny::reactive(ctl$ped()),
+    pedigree = shiny::reactive({
+      if (is.null(ctl$displayPed())) ctl$ped() else ctl$displayPed()
+    }),
+    analysisPedigree = shiny::reactive(ctl$ped()),
     processedPedigree = shiny::reactive(NULL),
     focalAnimals = shiny::reactive(NULL),
     nAnimals = shiny::reactive(0L),
@@ -221,6 +228,38 @@ test_that("appServer wires child-module outputs into shared state", {
   expect_true(pedSet)
   expect_true(gvSet)
   expect_identical(bgGroups, list(c("a", "b")))
+})
+
+# Unticking "Display Unknown IDs" filters only the Pedigree Browser table
+# (BACKLOG item found S806, owner decision S814): the other tabs are handed
+# the pedigree module's analysisPedigree, not the table's filtered pedigree.
+test_that("appServer hands the other tabs the analysis pedigree, not the table's filtered one", {
+  full <- data.frame(id = c("a", "b", "c"), stringsAsFactors = FALSE)
+  shown <- data.frame(id = c("a", "b"), stringsAsFactors = FALSE)
+  current <- NULL
+
+  testthat::with_mocked_bindings(
+    modInputServer = stubInput,
+    modPedigreeServer = stubPed,
+    modGeneticValueServer = stubGV,
+    modBreedingGroupsServer = stubBG,
+    modPyramidServer = noopServer,
+    modSummaryStatsServer = noopServer,
+    modGeneticDiversityServer = noopServer,
+    modPotentialParentsServer = noopServer,
+    .package = "nprcgenekeepr",
+    {
+      muffleConfig(shiny::testServer(appServer, {
+        session$flushReact()
+        ctl$displayPed(shown)
+        ctl$ped(full)
+        suppressWarnings(session$flushReact())
+        current <<- shared$currentPedigree
+      }))
+    }
+  )
+
+  expect_identical(current, full)
 })
 
 # =============================================================================

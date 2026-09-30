@@ -26,8 +26,9 @@ moduleContractServers <- list(
   modPedigree = list(
     server = modPedigreeServer,
     args = list(studbook = shiny::reactive(NULL)),
-    names = c("pedigree", "processedPedigree", "focalAnimals", "nAnimals",
-              "populationCount", "isReady", "twinRelations")
+    names = c("pedigree", "analysisPedigree", "processedPedigree",
+              "focalAnimals", "nAnimals", "populationCount", "isReady",
+              "twinRelations")
   ),
   modGeneticValue = list(
     server = modGeneticValueServer,

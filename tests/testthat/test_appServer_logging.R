@@ -63,7 +63,8 @@ muffleConfig <- function(expr) {
 # downstream modules. Stubbing those keeps each testServer(appServer, ...)
 # mount from paying for real modules whose output no test here reads.
 stubPed <- function(id, ...) list(
-  pedigree = shiny::reactive(NULL), processedPedigree = shiny::reactive(NULL),
+  pedigree = shiny::reactive(NULL), analysisPedigree = shiny::reactive(NULL),
+  processedPedigree = shiny::reactive(NULL),
   focalAnimals = shiny::reactive(NULL), nAnimals = shiny::reactive(0L),
   populationCount = shiny::reactive(0L), isReady = shiny::reactive(FALSE),
   # BL-N Slice 3: appServer's own shared$twinRelations observer reads this
