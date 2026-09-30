@@ -98,11 +98,67 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 809 Handoff Evaluation (by Session 810)
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809
+receipt `status: complete`, the 7 untracked files unchanged. Next step (A) was exact: the filter sat at
+`R/modPedigree.R:363`, `headerDisplayNames.R` and the §2.5 documents where it said, and the plan §5 Slice 4
+list was complete. **Missing:** it did not say the Pedigree Browser table shows raw column names (`DT` gets
+the data frame directly), so the "display name" only reaches `headerDisplayNames()` callers such as
+`a2interactive`; and it did not say `summary_stats.html` needs no change. **Wrong:** nothing. **ROI:** high.
+
 ### What Session 810 Did
-**Deliverable:** Slice 4 of `docs/planning/unknown-parent-placeholder-marking-plan.md`: the "Display Unknown IDs" filter (`R/modPedigree.R:363`) reads the `placeholder` mark, the column's display name, help text and §2.5 documents, exports round-trip the mark (IN PROGRESS)
-**Started:** 2026-09-29
-**Status:** Session claimed. Work beginning (PRE-RED: re-run plan section 2 greps, then decisions).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE:** Slice 4 of `docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD, every
+gate an `AskUserQuestion`). The Pedigree Browser's "Display Unknown IDs" filter now reads the `placeholder`
+mark (a real `U1234` marked FALSE stays; a stand-in marked TRUE is hidden whatever its id looks like; an
+unmarked row is read by its id shape); `headerDisplayNames("placeholder")` is "Generated Unknown ID"; the help
+text, `_pedigree_browser.Rmd`, `colony-manager-guide.qmd` and `NEWS.Rmd` say what the column is. Both exports
+already carried the column; two round-trip guard tests now pin it. No new owner decisions.
+**Commits:** claim `27510590b`; RED `056bceda4` (`tests/testthat/test_placeholderMarkDisplay.R`, 10 tests,
+5 failing, 5 guards); GREEN `83dbbee34` (`R/modPedigree.R`, `R/headerDisplayNames.R`); docs `b406e7ead`;
+records (this).
+**Verification:**
+- The 5 RED tests failed on the old behavior, then passed; `test_modPedigree.R` (70), `test_modPedigree_coverage.R`
+  and `test_headerDisplayNames.R` still pass.
+- Full unfiltered suite (`NOT_CRAN=true`, `load_all`) after GREEN: 360 files, 2,854 tests, 0 errors, 1 failure,
+  the known local-only `test_pkgdown_reference_config.R`. After the docs: `test_newsReleaseState.R` and
+  `test_wordlist_coverage.R` pass.
+- `devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes (the owner's untracked drafts).
+- Lint 0 on `R/modPedigree.R`, `R/headerDisplayNames.R` and the new test file.
+- Runtime smoke: `runGeneKeepR(port = 6098L)` HTTP 200, no log errors. The filter itself was verified with
+  `testServer` on `modPedigreeServer`, not by clicking in a browser.
+- CI: Phase 0 `gh run list --branch master`: all four workflows and the scheduled shinytest2 green on the last
+  pushed commit; nothing pushed this session.
+**Learnings:** 826.
+**Reduction:** nothing removed; `BACKLOG.md`'s placeholder item is about the same size; these notes stay under
+the 65,536 B ceiling (checked below).
+
+**Self-assessment: 9/10.**
+- \+ Read every RED failure message; caught a help-text test that passed by accident (the HTML `placeholder`
+  attribute) before GREEN; every commit at 5 files or fewer.
+- \+ Ran the full suite, `devtools::check`, lint and the smoke test before close-out.
+- \- Left one garbled expectation in the first draft of the RED file (fixed before running).
+- \- No browser click-through of the unticked box; `testServer` only.
+
+**Next steps:**
+- (A) Slice 5 of the plan (strict TDD; plan §5 "Slice 5"): de-identification (`obfuscateId()` gets an optional
+  `placeholder` vector that `obfuscatePed()` fills from the column) and the cross-center merge
+  (`R/resolveCrossCenterIds.R:17-26`, NA-fills the unmarked side). Re-run the plan §2 greps first.
+- (B) Other items: "Display Unknown IDs" breaking `reportGV()` (DECISION NEEDED; Slice 4 fixed which rows are
+  hidden but not the dangling sire/dam ids); documentation audit's next slice; `a2interactive` demonstration
+  for `reportMatePairs`; Potential Parents own-dam; jmac.
+- (C) Carried: 8 unpushed commits before this session plus this session's 5 (pushing is the owner's call; the
+  push changes `R/`, so all 4 workflows run); 7 untracked files; the `CHANGELOG.md`/`HANDOFFS.md` trims.
+
+**Key files:** `R/modPedigree.R:361-364` (filter), `R/modPedigree.R:107-120` (help text),
+`R/headerDisplayNames.R:56-57`, `tests/testthat/test_placeholderMarkDisplay.R`; plan §5 Slice 4 DONE note;
+`PROJECT_LEARNINGS.md` Learning 826.
+
+**Gotchas:**
+1. The unticked box still leaves children naming a hidden stand-in as sire/dam, so the Genetic Value module
+   still receives that filtered pedigree (`R/appServer.R:312`); that is the separate DECISION NEEDED item.
+2. The browser table shows raw column names, so a display name in `headerDisplayNames()` does not change it.
+3. A test that greps rendered UI html for a word (`placeholder`) can match an HTML attribute; grep a phrase.
+4. STANDING SET unchanged from S790-809.
 
 ### Session 808 Handoff Evaluation (by Session 809)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier one docs-only commit behind

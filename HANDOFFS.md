@@ -182,10 +182,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S810
 date: 2026-09-29
-status: pending
-active_task: Placeholder-marking plan Slice 4 (docs/planning/unknown-parent-placeholder-marking-plan.md section 5): the Display Unknown IDs filter reads the placeholder mark, display name, help text and section 2.5 documents, exports round-trip the mark. Strict TDD.
-what_was_done: pending
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Placeholder-marking plan (docs/planning/unknown-parent-placeholder-marking-plan.md): Slices 1-4 DONE (S807-S810). Next: Slice 5 (de-identification and cross-center merge).
+what_was_done: Strict TDD Slice 4. The Display Unknown IDs filter passes the pedigree so it reads the placeholder mark; headerDisplayNames maps placeholder to Generated Unknown ID; help text, manual, guide and NEWS.Rmd updated; both exports pinned as round trips. RED 056bceda4, GREEN 83dbbee34, docs b406e7ead. Full suite 2854 tests 0 errors 1 known local failure; check 0/0/2 notes.
+next_steps: Slice 5 (plan section 5): obfuscateId() optional placeholder vector filled by obfuscatePed() from the column (R/obfuscateId.R:28, R/obfuscatePed.R:43) and the cross-center merge NA-fill (R/resolveCrossCenterIds.R:17-26). Re-run the plan section 2 greps first; strict TDD with AskUserQuestion gates.
+key_files: R/modPedigree.R:361; R/modPedigree.R:107; R/headerDisplayNames.R:56; tests/testthat/test_placeholderMarkDisplay.R:1; docs/planning/unknown-parent-placeholder-marking-plan.md:341
+gotchas: The unticked box still leaves children naming a hidden stand-in (R/appServer.R:312 feeds the filtered pedigree downstream); the browser table shows raw column names; grep UI html for a phrase not the word placeholder (matches an HTML attribute).
+runtime_smoke: runGeneKeepR(port = 6098L) HTTP 200, no log errors; filter verified with testServer on modPedigreeServer.
+changelog_ref: b406e7ead
+commit: b406e7ead
 ```
 
 ```handoff
