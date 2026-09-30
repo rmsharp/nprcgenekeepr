@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S812 close-out: fixed the red `lint.yaml` run on `6d34fe5f9` (S811 handoff evaluated 8/10, self 8/10): re-wrapped the 83-character roxygen line at `R/resolveCrossCenterIds.R:367` (comment only) and regenerated `man/resolveCrossCenterIds.Rd` (whitespace only); `lint_package()` 0, `test_resolveCrossCenterIds.R` and `test_placeholderMarkDeidMerge.R` pass; Learning 828; session notes, `HANDOFFS.md` receipt complete. Nothing pushed, so CI on the fix is unconfirmed; no GitHub issue named (CI breaks get no issue per the S636 convention)
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S812 claim (in progress): fix the red `lint.yaml` run on `6d34fe5f9` -- `R/resolveCrossCenterIds.R:367` is 83 characters (`line_length_linter`); style-only, no behavior change
 - **Model:** Claude Sonnet 5.5.
 
