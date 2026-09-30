@@ -251,6 +251,54 @@ which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
 ``` handoff
+session: S811
+date: 2026-09-29
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Placeholder-marking plan (docs/planning/unknown-parent-placeholder-marking-plan.md): all 5 slices DONE (S807-S811); the BACKLOG.md item is removed. Next: pick from the priorities list.
+what_was_done: Strict TDD Slice 5. obfuscateId gets an optional placeholder vector, obfuscatePed passes the column, and resolveCrossCenterIds resolves a linked pair's mark (real wins, one-sided mark kept, no error on disagreement; owner decision S811). RED 6de83f4d8 (18 tests, 11 failing, 7 guards), GREEN 665e9c475, docs a229b3bb1. Full suite 2872 tests 0 errors 1 known local failure; check 0/0/2 notes; lint 0.
+next_steps: No placeholder slice remains. Options: Display Unknown IDs breaking reportGV (DECISION NEEDED, R/appServer.R:312), Potential Parents own-dam (DECISION NEEDED, R/getPotentialParents.R:190), PED_GV audit decisions, or the deferred a2interactive pass (reportMatePairs and obfuscateId(placeholder =)).
+key_files: R/obfuscateId.R:41; R/obfuscatePed.R:43; R/resolveCrossCenterIds.R:322; tests/testthat/test_placeholderMarkDeidMerge.R:1; docs/planning/unknown-parent-placeholder-marking-plan.md:362
+gotchas: checkCrossCenterMapping reports only sire/dam conflicts; a column on only one file is not merged by the generic otherCols loop in resolveCrossCenterIds, so a new column that must survive a linked pair needs its own line; a port answering HTTP 200 may belong to another process (check the log says Listening).
+runtime_smoke: runGeneKeepR(port = 6111L) HTTP 200, no log errors (port 6099 was held by another process and is not counted); de-identified export verified with testServer on modDeidentifiedExportServer.
+changelog_ref: a229b3bb1
+commit: a229b3bb1
+```
+
+``` handoff
+session: S810
+date: 2026-09-29
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Placeholder-marking plan (docs/planning/unknown-parent-placeholder-marking-plan.md): Slices 1-4 DONE (S807-S810). Next: Slice 5 (de-identification and cross-center merge).
+what_was_done: Strict TDD Slice 4. The Display Unknown IDs filter passes the pedigree so it reads the placeholder mark; headerDisplayNames maps placeholder to Generated Unknown ID; help text, manual, guide and NEWS.Rmd updated; both exports pinned as round trips. RED 056bceda4, GREEN 83dbbee34, docs b406e7ead. Full suite 2854 tests 0 errors 1 known local failure; check 0/0/2 notes.
+next_steps: Slice 5 (plan section 5): obfuscateId() optional placeholder vector filled by obfuscatePed() from the column (R/obfuscateId.R:28, R/obfuscatePed.R:43) and the cross-center merge NA-fill (R/resolveCrossCenterIds.R:17-26). Re-run the plan section 2 greps first; strict TDD with AskUserQuestion gates.
+key_files: R/modPedigree.R:361; R/modPedigree.R:107; R/headerDisplayNames.R:56; tests/testthat/test_placeholderMarkDisplay.R:1; docs/planning/unknown-parent-placeholder-marking-plan.md:341
+gotchas: The unticked box still leaves children naming a hidden stand-in (R/appServer.R:312 feeds the filtered pedigree downstream); the browser table shows raw column names; grep UI html for a phrase not the word placeholder (matches an HTML attribute).
+runtime_smoke: runGeneKeepR(port = 6098L) HTTP 200, no log errors; filter verified with testServer on modPedigreeServer.
+changelog_ref: b406e7ead
+commit: b406e7ead
+```
+
+``` handoff
+session: S809
+date: 2026-09-29
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Placeholder-marking plan (docs/planning/unknown-parent-placeholder-marking-plan.md): Slices 1-3 DONE (S807-S809). Next: Slice 4 (Display Unknown IDs filter, display name, help/docs, exports keep the mark).
+what_was_done: Strict TDD Slice 3. reportGV() founder counts and parentage, classifyParentage(ped =), correctUnknownParentMeanKinship() (whole ped), getLivingBreeders() (so the effective sizes) and gvaConvergence() parentage read the placeholder mark; an id with no row is read by shape (D4). 14 new tests in test_placeholderMarkReaders.R (11 failed on old behavior, 2 guards). NEWS.Rmd entry extended; plan and BACKLOG updated. Learning 825.
+next_steps: Slice 4 (plan section 5): R/modPedigree.R:363 filter passes ped; R/headerDisplayNames.R display name for placeholder; help text and colony-manager-guide.qmd / _pedigree_browser.Rmd; summary_stats.html; exports keep the mark (D8). RED first; re-run the plan section 2 greps.
+key_files: R/classifyParentage.R:20; R/getLivingBreeders.R:26; R/correctUnknownParentMeanKinship.R:155; R/reportGV.R:282-293; R/gvaConvergence.R:175; tests/testthat/test_placeholderMarkReaders.R; PROJECT_LEARNINGS.md (Learning 825)
+gotchas: Until Slice 4 the Display Unknown IDs filter still uses the id shape. Shipped data is unmarked, so only a fixture shows a mark changing an answer (makeMarkedPed() in the new test file). gh run list can return stale runs or time out; find runs by head sha. 22 commits unpushed; pushing is the owner's call.
+runtime_smoke: runGeneKeepR(port = 6097L) HTTP 200, no log errors; module behavior verified with testServer on modGeneticValueServer. Full suite 359 files / 2,844 tests / 0 errors (known local-only pkgdown failure). devtools::check 0 errors / 0 warnings / 2 notes (owner's drafts). Lint 0. quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4f4491dfc876 · manifest aa983075d6a2
+changelog_ref: 4802843c6
+commit: cc1eca898
+```
+
+``` handoff
 session: S808
 date: 2026-09-29
 status: complete

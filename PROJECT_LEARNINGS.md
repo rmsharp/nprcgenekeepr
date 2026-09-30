@@ -12462,3 +12462,80 @@ chased this session).
 #### Learning 823 – **When you tighten a detection rule that is paired with something that GENERATES the values it must recognize, check every generator and every input that sets a generator’s parameters, not just the readers: a full-suite trial of the new rule only covers generator settings the tests happen to use. Here the De-identified Export’s alias-length box allows 4, no test used 4 with placeholders present, and at 4 the tighter rule made the export stop.** (S807, 2026-09-28, placeholder-marking plan Slice 1, strict TDD.) (a) S806’s full-suite trial of the tighter rule (prefix + at least 4 capitals/digits) moved 3 tests and was recorded as the slice’s whole cost. Before RED, S807 listed the generators paired with `isGeneratedUnknownId()`: `addUIds()` (via `setAutoIdFormat()`) and `obfuscateId()` (placeholder aliases are prefix + `size - nchar(prefix)` characters). Then it read each generator’s callers for parameter ranges and found `numericInput(ns("size"), ..., min = 4L)` (`R/modDeidentifiedExport.R:104-105`). A probe with the rule patched in showed `obfuscatePed(qcPed, size = 4L)` stopping (“too short to easily avoid duplicates”), while today’s code and sizes 5-6 ran; an unhandled error on a button click ends the app session (Learning 786). The same inventory found that `setAutoIdFormat()` accepts formats whose own ids the rule cannot recognize (`"U%04x"` makes `U000a`; `"U%4d"` makes `"U 1"`). (b) Both went to the owner as plain-language pre-RED decisions (plan §11 D10/D11: lengthen only placeholder aliases; refuse such formats), each with its measured consequence. (c) The resulting guard tests pin the generator/detector invariant directly: every id `U%04d`, `AUTO%05d` and a suffix format `U%04d-x` make (1 to 100,000) is recognized, the app preview at alias length 4 works (`testServer`), and `setAutoIdFormat()` probes its own format’s ids before accepting it. **Apply:** before RED on any change to a shared predicate, grep for what produces the values it classifies (id minting, aliasing, imports, defaults) and for every UI input or argument that bounds those producers (`numericInput` `min`/`max`, argument defaults, documented ranges), then probe the extremes with the new rule patched in. A green full-suite trial is evidence about the tested settings only.
 
 #### Learning 824 – **When a change adds a field to a list whose names a vignette or article prints or pairs with hand-written descriptions, the full test suite will not catch it; `devtools::check()` (which builds the vignettes) does. Run it before calling docs done, and grep for the list’s other field names (`invalidIdChars`) to find every place that enumerates them.** (S808, 2026-09-29, placeholder-marking plan Slice 2, strict TDD.) (a) `getEmptyErrorLst()` gained `invalidPlaceholderRows` (10 -\> 11). The 2,830-test suite passed, but `check` failed building `a2interactive.Rmd` (“arguments imply differing number of rows: 11, 10”): its table pairs `names(getEmptyErrorLst())` with a hand-written description vector (`vignettes/a2interactive.Rmd:1091`). Fixed in `904d9ff2`. (b) The same grep found two more places that list the fields (`colony-manager-guide.qmd:229`, `studbook-quality-control.qmd:166-183`); a plain-word grep on the field name also caught `inst/WORDLIST` (the spelling guard flags a new camelCase identifier only in the full suite). (c) A second, different miss was found by reading code order, not by a test: `getPotentialParents()` set aside animals with no birth date before it called `removeAutoGenIds()`, so a mark on such an animal would never be read (plan §11 D12). **Apply:** after adding a list field, run `grep -rn '<neighbouring field>' R vignettes inst man` and `devtools::check()`; when a new value must be read by an existing function, trace what that function drops or filters before it reads the value.
+
+#### Learning 825
+
+**A reader that looks up a per-row mark by id must be given the whole
+pedigree, not the subset it is analysing; and a test needs a pedigree
+where the mark changes the answer, which the shipped data never is (it
+is unmarked, D6).** (S809, 2026-09-29, placeholder-marking plan Slice 3,
+strict TDD.) (a) `correctUnknownParentMeanKinship()` works on `candPed`,
+the probands’ rows, but a parent’s mark sits on the parent’s own row,
+which need not be a proband; it reads
+`isGeneratedUnknownId(x, ped = ped)` with the full pedigree, and an id
+with no row falls back to its shape (D4). (b) Because `qcPed` carries no
+marks, the RED tests use a hand-built 8-animal pedigree (real
+`U1234`/`U5678` marked FALSE, six offspring) plus `qcPed` with the
+founder `UL1ZA5` marked FALSE (a living male, sire of `K7QBLH`), with
+all-NA-mark and no-column controls that pass before and after. (c)
+`testthat`’s summary reporter stops at 10 failures; to read every RED
+message loop over `testthat::test_file(..., reporter = "silent")`
+results. **Apply:** when a function subsets a pedigree before it reads a
+per-id property, pass the unsubsetted pedigree to the lookup; write at
+least one control test that passes before and after.
+
+#### Learning 826
+
+**A UI test that greps rendered html for a word can pass by matching an
+HTML attribute, and a “display name” only changes what a table shows if
+that table actually calls the renaming function; check both before
+writing the test or the doc.** (S810, 2026-09-29, placeholder-marking
+plan Slice 4, strict TDD.) (a) The first help-text test asked for
+`placeholder` in
+[`modPedigreeUI()`](https://github.com/rmsharp/nprcgenekeepr/reference/modPedigreeUI.md)’s
+html and passed before any code change, because the focal-animal text
+box has a `placeholder=` attribute; it now asks for the phrase
+`placeholder column`. Reading every result of the RED run (5 failing, 5
+passing) is what exposed it. (b)
+[`headerDisplayNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/headerDisplayNames.md)
+is used only by script callers (`vignettes/a2interactive.Rmd:755`); the
+Pedigree Browser’s
+[`DT::renderDT`](https://rdrr.io/pkg/DT/man/dataTableOutput.html) gets
+the data frame directly, so the column shows as `placeholder` there. The
+plan’s “display name” item therefore lands in the function and the
+manual wording, not in the browser table. (c) Both exports already
+carried the column (`write.csv` of the whole data frame), so the D8
+round trips were guards that pass from the start; label them so.
+**Apply:** when a RED test passes at once, find out why before calling
+it a guard; grep a phrase, not a common word; before promising a display
+change, grep who calls the renamer.
+
+#### Learning 827
+
+**A merge that “NA-fills the missing side” silently drops a mark for the
+very rows it links, and a generic column-conflict rule turns a
+legitimate disagreement into a stop; probe the merge with the real cases
+before trusting the plan’s one-line description.** (S811, 2026-09-29,
+placeholder-marking plan Slice 5, strict TDD.) The plan said the
+cross-center merge “NA-fills the unmarked side, and QC then marks it by
+shape” (D8). Three probes on the code showed otherwise for a linked
+(mapped) pair: (a) a column present on only one file is not in the
+merged row’s fields (`otherCols` is the intersection of the two rows’
+names), so `bindPedigreeRows()` NA-filled the mark of the linked animal,
+and QC then read a real `U1234` by shape as a stand-in; (b) when both
+files had the column and disagreed (real vs stand-in), the D10 generic
+rule stopped with “conflicting placeholder values”, which
+[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
+never reports; (c)
+[`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+gave a marked-real `U1234` a random alias that the shape rule read as a
+stand-in. The owner chose “real wins” for (b) (linking a stand-in to a
+known animal makes it known). The de-identified export round trip was a
+guard from the start (the column rides along), as Learning 826(c)
+predicts. **Apply:** when a plan describes a merge as “fills with NA”,
+run the linked-pair case with the column on one side, on both sides
+agreeing, and on both disagreeing; treat a new column as a special case
+in any generic “prefer non-NA, stop on conflict” loop rather than
+letting it fall into that loop; read the message of every RED failure,
+including `expect_error` ones that can pass on an “unused argument”
+error (tighten the regex to the new message).

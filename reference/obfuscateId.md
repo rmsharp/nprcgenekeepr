@@ -9,7 +9,7 @@ using. Because aliases are alphanumeric, they never contain a period
 ## Usage
 
 ``` r
-obfuscateId(id, size = 10L, existingIds = character(0L))
+obfuscateId(id, size = 10L, existingIds = character(0L), placeholder = NULL)
 ```
 
 ## Arguments
@@ -31,6 +31,17 @@ obfuscateId(id, size = 10L, existingIds = character(0L))
 - existingIds:
 
   character vector of existing aliases to avoid duplication.
+
+- placeholder:
+
+  optional logical vector, one value per `id`, saying which ids are
+  placeholders for unknown parents (`TRUE`) and which are real animals
+  (`FALSE`), as recorded in the `placeholder` column that
+  [`qcStudbook`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
+  writes. A placeholder gets a placeholder-shaped alias and a real
+  animal a real-shaped one, even when the id's own shape says otherwise
+  (a real animal named `"U1234"`). `NA` or `NULL` (the default) reads
+  the id by its shape.
 
 ## Value
 

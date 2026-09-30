@@ -284,8 +284,11 @@ The interface is organized into three panels:
     - **Display Unknown IDs**: Toggle display of unknown IDs (by default
       a capital “U” followed by at least four capital letters or digits,
       such as “U0001”) that are created for animals with only one known
-      parent. A real animal whose ID merely starts with “U”, such as
-      “U1”, is always shown.
+      parent. Which rows are made up is recorded in the `placeholder`
+      column (TRUE = made up, FALSE = real animal); a real animal whose
+      ID looks like a made-up one, such as “U1234”, stays visible if you
+      enter FALSE for it in your file. A real animal whose ID merely
+      starts with “U”, such as “U1”, is always shown.
     - **Trim Pedigree**: When checked, trims the pedigree to include
       only the focal animals and their relatives, removing unrelated
       lineages.

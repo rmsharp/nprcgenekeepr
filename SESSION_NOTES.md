@@ -168,6 +168,291 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 810 Handoff Evaluation (by Session 811)
+
+**Score: 8/10.** Orient measurements held: `CHANGELOG.md` and
+`HANDOFFS.md` frontiers at HEAD, the S810 receipt `status: complete`,
+the 7 untracked files unchanged, dashboard 96/100. Next step (A) named
+the right files (`R/obfuscateId.R`, `R/obfuscatePed.R`,
+`R/resolveCrossCenterIds.R`) and the plan §5 Slice 5 test list was
+usable. **Missing:** it did not say that a linked pair’s mark is lost
+when only one file has the column, or that two disagreeing marks stop
+the merge; the plan’s D8 line (“NA-fills the unmarked side, QC marks it
+by shape”) hid both, and they needed an owner decision. **Wrong:** the
+“NA-fill” description of the merge was true only for unlinked rows
+(Learning 827). **ROI:** high.
+
+### What Session 811 Did
+
+**Deliverable, DONE:** Slice 5 of
+`docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
+every gate an `AskUserQuestion`). `obfuscateId(placeholder =)` (a marked
+stand-in gets a stand-in-shaped alias, a marked real animal a
+real-shaped one, NA/NULL by shape; wrong length or non-logical stops);
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+passes the column;
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
+resolves a linked pair’s mark (real wins, two stand-ins stay one, a mark
+on one side is kept, no error on disagreement). One new owner decision
+(S811): “Real wins”. The placeholder-marking `BACKLOG.md` item is
+removed (all 5 slices done) and PED_GV F2 / NEW-38 marked done in the
+PED_GV item. **Commits:** claim `4477ef718`; RED `6de83f4d8`
+(`tests/testthat/test_placeholderMarkDeidMerge.R`, 18 tests, 11 failing,
+7 guards); GREEN `665e9c475` (`R/obfuscateId.R`, `R/obfuscatePed.R`,
+`R/resolveCrossCenterIds.R`, `man/obfuscateId.Rd`); docs `a229b3bb1`;
+records (this). **Verification:** - The 11 RED tests failed on the old
+behavior (every message read; two `expect_error` tests passed by
+accident on an “unused argument” message and were tightened before the
+RED commit), then passed; the older
+obfuscate/cross-center/de-identified-export tests still pass. - Full
+unfiltered suite (`NOT_CRAN=true`, `load_all`) after GREEN: 361 files,
+2,872 tests, 0 errors, 1 failure, the known local-only
+`test_pkgdown_reference_config.R`. After the docs:
+`test_newsReleaseState.R`, `test_wordlist_coverage.R`, the new file and
+`test_resolveCrossCenterIds.R` pass. -
+`devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes
+(the owner’s untracked drafts). - Lint 0 on the 3 R files and the new
+test file. - Runtime smoke: `runGeneKeepR(port = 6111L)` HTTP 200, no
+log errors. (Port 6099 was already held by another R process, PID 82416,
+not started by this session; that first attempt is not counted.) The
+de-identified export was checked with `testServer` on
+`modDeidentifiedExportServer`, not by clicking in a browser. - CI: Phase
+0 `gh run list --branch master`: last pushed commit green on all four
+workflows; nothing pushed. **Learnings:** 827. **Reduction:** the
+placeholder `BACKLOG.md` item (about 3 KB) removed; these notes stay
+under the 65,536 B ceiling.
+
+**Self-assessment: 9/10.** - + Probed the merge and de-identification
+with the real cases before asking, so the one owner question was
+concrete (and found a bug the plan did not describe). - + Read every RED
+failure message; caught two tests that passed for the wrong reason and a
+guard that errored. - + Every commit at 5 files or fewer; full suite,
+`devtools::check`, lint and smoke run before close-out. - - First smoke
+test hit a busy port and printed HTTP 200 from another process; caught
+and re-run on a free port. - - A `sed -i` call failed on macOS syntax
+(used Edit instead); nothing lost. - - No browser click-through of the
+De-identified Export tab; `testServer` only.
+
+**Next steps:** - (A) No slice of the placeholder plan remains. Pick
+from the priorities list: “Display Unknown IDs” breaking
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+(DECISION NEEDED, Effort S; `R/appServer.R:312`,
+`R/modPedigree.R:359-364`), Potential Parents own-dam (DECISION NEEDED,
+Effort S; `R/getPotentialParents.R:190`), or the PED_GV audit
+decisions. - (B) Deferred documentation pass: `a2interactive.Rmd`
+demonstrations for `reportMatePairs` and `obfuscateId(placeholder =)`
+(in the BACKLOG item at “a2interactive demonstration”). - (C) Carried:
+18 unpushed commits after this records commit (13 before this session, 4
+from it, and this records commit; pushing is the owner’s call and the
+push changes `R/`, so all 4 workflows run); 7 untracked files; the
+`CHANGELOG.md`/`HANDOFFS.md` trims; `CLAUDE.md` is in the warn band
+(26,731 B of 28,000 B).
+
+**Key files:** `R/obfuscateId.R:41-60` (mark handling),
+`R/obfuscatePed.R:43-47`, `R/resolveCrossCenterIds.R:313-336`
+(`.mergeCrossCenterPlaceholder`) and its call in
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md),
+`tests/testthat/test_placeholderMarkDeidMerge.R`; plan §5 Slice 5 DONE
+note; `PROJECT_LEARNINGS.md` Learning 827.
+
+**Gotchas:** 1.
+[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
+reports only sire/dam conflicts, so it never warns about a mark
+disagreement; that is now correct because the merge no longer stops on
+one. 2. A column that exists on only one file is not merged by the
+generic `otherCols` loop in
+[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md);
+any future column that must survive a linked pair needs its own line
+like `placeholder`’s. 3. A port that answers HTTP 200 may belong to
+another process; check the log says “Listening”. 4. STANDING SET
+unchanged from S790-810.
+
+### Session 809 Handoff Evaluation (by Session 810)
+
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and
+`HANDOFFS.md` frontiers at HEAD, the S809 receipt `status: complete`,
+the 7 untracked files unchanged. Next step (A) was exact: the filter sat
+at `R/modPedigree.R:363`, `headerDisplayNames.R` and the §2.5 documents
+where it said, and the plan §5 Slice 4 list was complete. **Missing:**
+it did not say the Pedigree Browser table shows raw column names (`DT`
+gets the data frame directly), so the “display name” only reaches
+[`headerDisplayNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/headerDisplayNames.md)
+callers such as `a2interactive`; and it did not say `summary_stats.html`
+needs no change. **Wrong:** nothing. **ROI:** high.
+
+### What Session 810 Did
+
+**Deliverable, DONE:** Slice 4 of
+`docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
+every gate an `AskUserQuestion`). The Pedigree Browser’s “Display
+Unknown IDs” filter now reads the `placeholder` mark (a real `U1234`
+marked FALSE stays; a stand-in marked TRUE is hidden whatever its id
+looks like; an unmarked row is read by its id shape);
+`headerDisplayNames("placeholder")` is “Generated Unknown ID”; the help
+text, `_pedigree_browser.Rmd`, `colony-manager-guide.qmd` and `NEWS.Rmd`
+say what the column is. Both exports already carried the column; two
+round-trip guard tests now pin it. No new owner decisions. **Commits:**
+claim `27510590b`; RED `056bceda4`
+(`tests/testthat/test_placeholderMarkDisplay.R`, 10 tests, 5 failing, 5
+guards); GREEN `83dbbee34` (`R/modPedigree.R`,
+`R/headerDisplayNames.R`); docs `b406e7ead`; records (this).
+**Verification:** - The 5 RED tests failed on the old behavior, then
+passed; `test_modPedigree.R` (70), `test_modPedigree_coverage.R` and
+`test_headerDisplayNames.R` still pass. - Full unfiltered suite
+(`NOT_CRAN=true`, `load_all`) after GREEN: 360 files, 2,854 tests, 0
+errors, 1 failure, the known local-only
+`test_pkgdown_reference_config.R`. After the docs:
+`test_newsReleaseState.R` and `test_wordlist_coverage.R` pass. -
+`devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes
+(the owner’s untracked drafts). - Lint 0 on `R/modPedigree.R`,
+`R/headerDisplayNames.R` and the new test file. - Runtime smoke:
+`runGeneKeepR(port = 6098L)` HTTP 200, no log errors. The filter itself
+was verified with `testServer` on `modPedigreeServer`, not by clicking
+in a browser. - CI: Phase 0 `gh run list --branch master`: all four
+workflows and the scheduled shinytest2 green on the last pushed commit;
+nothing pushed this session. **Learnings:** 826. **Reduction:** nothing
+removed; `BACKLOG.md`’s placeholder item is about the same size; these
+notes stay under the 65,536 B ceiling (checked below).
+
+**Self-assessment: 9/10.** - + Read every RED failure message; caught a
+help-text test that passed by accident (the HTML `placeholder`
+attribute) before GREEN; every commit at 5 files or fewer. - + Ran the
+full suite, `devtools::check`, lint and the smoke test before
+close-out. - - Left one garbled expectation in the first draft of the
+RED file (fixed before running). - - No browser click-through of the
+unticked box; `testServer` only.
+
+**Next steps:** - (A) Slice 5 of the plan (strict TDD; plan §5 “Slice
+5”): de-identification
+([`obfuscateId()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateId.md)
+gets an optional `placeholder` vector that
+[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
+fills from the column) and the cross-center merge
+(`R/resolveCrossCenterIds.R:17-26`, NA-fills the unmarked side). Re-run
+the plan §2 greps first. - (B) Other items: “Display Unknown IDs”
+breaking
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+(DECISION NEEDED; Slice 4 fixed which rows are hidden but not the
+dangling sire/dam ids); documentation audit’s next slice;
+`a2interactive` demonstration for `reportMatePairs`; Potential Parents
+own-dam; jmac. - (C) Carried: 8 unpushed commits before this session
+plus this session’s 5 (pushing is the owner’s call; the push changes
+`R/`, so all 4 workflows run); 7 untracked files; the
+`CHANGELOG.md`/`HANDOFFS.md` trims.
+
+**Key files:** `R/modPedigree.R:361-364` (filter),
+`R/modPedigree.R:107-120` (help text), `R/headerDisplayNames.R:56-57`,
+`tests/testthat/test_placeholderMarkDisplay.R`; plan §5 Slice 4 DONE
+note; `PROJECT_LEARNINGS.md` Learning 826.
+
+**Gotchas:** 1. The unticked box still leaves children naming a hidden
+stand-in as sire/dam, so the Genetic Value module still receives that
+filtered pedigree (`R/appServer.R:312`); that is the separate DECISION
+NEEDED item. 2. The browser table shows raw column names, so a display
+name in
+[`headerDisplayNames()`](https://github.com/rmsharp/nprcgenekeepr/reference/headerDisplayNames.md)
+does not change it. 3. A test that greps rendered UI html for a word
+(`placeholder`) can match an HTML attribute; grep a phrase. 4. STANDING
+SET unchanged from S790-809.
+
+### Session 808 Handoff Evaluation (by Session 809)
+
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier
+one docs-only commit behind HEAD (`f443b6d93`, ledgered this session),
+the S808 receipt `status: complete`, the 7 untracked files unchanged,
+dashboard 96/100. Next step (A) was exact: `R/reportGV.R:283-286` and
+`:292`, `R/gvaConvergence.R:175`, `R/getLivingBreeders.R:26` and
+`R/correctUnknownParentMeanKinship.R:155` all sat where it said, and the
+26.405868 pin was right. **Missing:** (A) named `classifyParentage`’s
+callers but not
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+as a function to pass `ped` (the plan §5 has it); it also did not say
+the shipped data is unmarked, so no shipped pedigree can show a mark
+changing an answer (a fixture must be built). **Wrong:** nothing.
+**ROI:** high.
+
+### What Session 809 Did
+
+**Deliverable, DONE:** Slice 3 of
+`docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
+every gate an `AskUserQuestion`).
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+(founder counts, parentage), `classifyParentage(ped =)`,
+`correctUnknownParentMeanKinship()` (whole `ped`, not the proband
+subset), `getLivingBreeders()` (so
+[`calcNeSexRatio()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeSexRatio.md)/[`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md))
+and
+[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
+(parentage) now read the `placeholder` mark; an id with no row in the
+pedigree is read by its shape (D4). No new owner decisions. **Commits:**
+claim `8164ed80a`; RED `deb75ec4f`
+(`tests/testthat/test_placeholderMarkReaders.R`, 14 tests, 11 failing, 2
+guards); GREEN `03c455a73`, `4802843c6`; docs `cc1eca898` (NEWS.Rmd,
+plan, BACKLOG); records (this). **Verification:** - The 11 RED tests
+failed on the old behavior (every message read), then passed; the older
+tests of every touched function still pass. - Full unfiltered suite
+(`NOT_CRAN=true`, `load_all`), after GREEN: 359 files, 2,844 tests, 0
+errors, 1 failure, the known local-only
+`test_pkgdown_reference_config.R`. After the docs,
+`test_newsReleaseState.R` and `test_wordlist_coverage.R` pass. -
+`devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes
+(the owner’s untracked drafts). - Lint 0 on the 5 touched R files. -
+Runtime smoke: `runGeneKeepR(port = 6097L)` HTTP 200, no log errors. The
+module behavior was verified with `testServer` on
+`modGeneticValueServer`, not by clicking in a browser. -
+`quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 4f4491dfc876 · manifest aa983075d6a2`. -
+CI: not checked at Phase 0 (`gh run list` timed out, TLS handshake);
+nothing pushed this session. **Learnings:** 825. **Reduction:** nothing
+removed; `BACKLOG.md`’s placeholder item is about 60 B shorter net;
+these notes stay under the 65,536 B ceiling.
+
+**Self-assessment: 8/10.** - + Read every RED failure message; controls
+that pass before and after; every commit at 5 files or fewer. - + Ran
+the full suite, `devtools::check`, lint and the smoke test before
+close-out. - + Found the whole-`ped` trap in
+`correctUnknownParentMeanKinship()` before writing GREEN (Learning
+825). - - First lint call passed a vector to `lintr::lint()` (one file
+per call); two background waits hit their limit. - - Phase 0 CI check
+failed on a network timeout and was reported, not retried.
+
+**Next steps:** - (A) Slice 4 of the plan (strict TDD; plan §5 “Slice
+4”): the “Display Unknown IDs” filter (`R/modPedigree.R:363`,
+`ped[!isGeneratedUnknownId(ped$id), ]`) passes `ped`; the column’s
+display name (`R/headerDisplayNames.R`); help text and the §2.5
+documents (`vignettes/articles/colony-manager-guide.qmd`,
+`vignettes/manual_components/_pedigree_browser.Rmd`);
+`summary_stats.html`; exports round-trip the mark (D8). RED: the filter
+hides marked rows only (a real `U1` stays); round trips of the
+cleaned-studbook and Pedigree Browser exports keep the marks. Re-run the
+plan §2 greps first. - (B) Other items: “Display Unknown IDs” breaking
+[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md);
+documentation audit’s next slice; Potential Parents own-dam; jmac. - (C)
+Carried: 22 unpushed commits after this records commit (pushing is the
+owner’s call; this push changes `R/`, so all 4 workflows run); 7
+untracked files; the `CHANGELOG.md`/`HANDOFFS.md` trims.
+
+**Key files:** `R/classifyParentage.R:20`, `R/getLivingBreeders.R:26`,
+`R/correctUnknownParentMeanKinship.R:155-157`, `R/reportGV.R:282-293`,
+`R/gvaConvergence.R:175-176`,
+`tests/testthat/test_placeholderMarkReaders.R`; plan §5 Slice 3 DONE
+note; `PROJECT_LEARNINGS.md` Learning 825.
+
+**Gotchas:** 1. Until Slice 4, the “Display Unknown IDs” filter
+(`R/modPedigree.R:363`) still uses the id shape, so a real `U1234`
+marked FALSE is hidden when it is turned off. 2. The shipped data is
+unmarked; only a fixture with a mark shows a changed answer
+(`makeMarkedPed()` in the new test file is reusable). 3.
+`gh run list --branch master` can return stale runs or time out; find
+runs by head sha. 4. STANDING SET unchanged from S790-808.
+
+**Owner-directed after close-out (2026-09-29):** - **Pushed** 17
+commits: `origin/master` `1d93590d` -\> `16da1062`, a fast-forward. Runs
+found by head sha: lint (36617669752), pkgdown (36617669607),
+test-coverage (36617669621) and R-CMD-check (36617669618) all green,
+R-CMD-check on all 5 legs. The Pages deploy also succeeded
+(owner-confirmed; run id not checked here). This push-record commit
+stays local.
+
 ### Session 807 Handoff Evaluation (by Session 808)
 
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier

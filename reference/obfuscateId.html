@@ -70,7 +70,7 @@ honoring the ID rule enforced at data input by <code>qcStudbook</code>.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">obfuscateId</span><span class="op">(</span><span class="va">id</span>, size <span class="op">=</span> <span class="fl">10L</span>, existingIds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">obfuscateId</span><span class="op">(</span><span class="va">id</span>, size <span class="op">=</span> <span class="fl">10L</span>, existingIds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0L</span><span class="op">)</span>, placeholder <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -92,6 +92,16 @@ recognizable length.</p></dd>
 
 <dt id="arg-existingids">existingIds<a class="anchor" aria-label="anchor" href="#arg-existingids"></a></dt>
 <dd><p>character vector of existing aliases to avoid duplication.</p></dd>
+
+
+<dt id="arg-placeholder">placeholder<a class="anchor" aria-label="anchor" href="#arg-placeholder"></a></dt>
+<dd><p>optional logical vector, one value per <code>id</code>, saying
+which ids are placeholders for unknown parents (<code>TRUE</code>) and which are
+real animals (<code>FALSE</code>), as recorded in the <code>placeholder</code> column
+that <code><a href="qcStudbook.html">qcStudbook</a></code> writes. A placeholder gets a placeholder-shaped
+alias and a real animal a real-shaped one, even when the id's own shape says
+otherwise (a real animal named <code>"U1234"</code>). <code>NA</code> or <code>NULL</code>
+(the default) reads the id by its shape.</p></dd>
 
 </dl></div>
     <div class="section level2">

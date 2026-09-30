@@ -22,8 +22,8 @@ aborts, and keeps the documented diamond repeats; F2’s
 [`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
 half is done: a minted id now skips any id already in the `id` column
 (S806 found it still reuses an id used only as a sire or dam; fixed
-S808); F2’s other half, real ids mistaken for placeholders, is its own
-item below; F3 is done: the
+S808); F2’s other half, real ids mistaken for placeholders, is done
+(S807-S811, the `placeholder` mark); F3 is done: the
 [`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
 dam fallback no longer re-admits a female the gestation window ruled
 out). **Open, all owner decisions:** (a) the overhaul roots, none urgent
@@ -63,38 +63,6 @@ and say in the roxygen/app help that a recorded parent is not re-listed;
 or (3) leave it. Tests to extend:
 `tests/testthat/test_getPotentialParents.R`, and
 `test_modPotentialParents.R` if the table changes.
-
-**Real animal ids that start with the placeholder prefix are treated as
-stand-ins for unknown parents – the other half of PED_GV F2 / NEW-38
-(found S781; approach chosen S806: mark ids when they are made; plan
-written S806; Slices 1-2 DONE S807-S808; READY: Slice 3 next, then 4-5,
-Effort M each, strict TDD)** – the plan is
-`docs/planning/unknown-parent-placeholder-marking-plan.md`: read it
-first (§1.3 measurements, §2 inventory with the grep commands, §5
-slices, §11 the ratified decisions). **Done:** Slice 1 (S807):
-`isGeneratedUnknownId()` needs the prefix plus at least as many capital
-letters/digits as the format’s number prints, so `U1`/`U123`/`Uma` are
-real. Slice 2 (S808):
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-writes a logical `placeholder` column (made stand-ins TRUE, a user’s
-TRUE/FALSE/1/0 kept, the rest by id shape; other values stop QC,
-`errorLst$invalidPlaceholderRows`), `isGeneratedUnknownId(ped =)` and
-[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
-read it,
-[`addUIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/addUIds.md)
-no longer reuses an id used only as a sire or dam, and
-[`getPotentialParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
-reads the mark before setting aside animals with no birth date.
-**Ratified (plan §11):** D1, D3, D5, D6, D10-D13. **Slice 3 next:**
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-founders, `classifyParentage(ped =)` (both callers, `R/reportGV.R:292`,
-`R/gvaConvergence.R:175`), `correctUnknownParentMeanKinship()`,
-[`gvaConvergence()`](https://github.com/rmsharp/nprcgenekeepr/reference/gvaConvergence.md)
-and `getLivingBreeders()` pass `ped`, so a marked real `U1234` founder
-is counted (plan §5 Slice 3; re-run the §2 greps first). Until then
-those readers still use the id shape, so a real `U1234` marked FALSE is
-still misread there. The S797 exact-digits attempt and its withdrawn
-tests stay recorded in commit `a01e13af`.
 
 **Unticking “Display Unknown IDs” breaks the Genetic Value analysis
 (found S806, 2026-09-28, DECISION NEEDED, Effort S)** – every downstream
@@ -224,21 +192,23 @@ things it left, none started: (1) **`a2interactive` demonstration
 section to `vignettes/a2interactive.Rmd` for
 `reportMatePairs(ancestryRules, overriddenRules)`: the `ancestryRule` /
 `ancestrySeverity` / `ancestryStatus` columns, `ancestryCoverage`, and
-the excluded reason “ancestry rule”. (2) **Zero-rule table (DECISION
-NEEDED)** – a valid rules table with zero rules makes
-`.buildAncestryOverrideManifest()` stop (“no rules in effect”), so
-Download Audit Manifest errors on BOTH Mate Pair and Breeding Groups;
-decide whether a zero-rule table should read as “inactive” or the
-manifest should say so. (3) **The Excluded tab has no export (DECISION
-NEEDED)** – plan section 7 dragon 8: a curator cannot get the list of
-blocked pairs as a file (the manifest carries per-rule COUNTS only). (4)
-**Duplicated gate code (READY refactor)** – the override select-choices
-builder and the confirm-gate modal are duplicated between
-`R/modBreedingGroups.R` and `R/modMatePair.R` (S776’s REFACTOR shared
-only `.emptyAncestryOverrides()` and `.overridableAncestryRules()`); the
-shared shape is a choices builder plus a modal constructor taking the
-warning text and the namespace. **Known, accepted:** an unhandled
-click-time error ends the Shiny session (Learning 786).
+the excluded reason “ancestry rule”. The same pass covers
+`obfuscateId(placeholder =)` (S811): a marked real `U1234` gets a
+real-shaped alias. (2) **Zero-rule table (DECISION NEEDED)** – a valid
+rules table with zero rules makes `.buildAncestryOverrideManifest()`
+stop (“no rules in effect”), so Download Audit Manifest errors on BOTH
+Mate Pair and Breeding Groups; decide whether a zero-rule table should
+read as “inactive” or the manifest should say so. (3) **The Excluded tab
+has no export (DECISION NEEDED)** – plan section 7 dragon 8: a curator
+cannot get the list of blocked pairs as a file (the manifest carries
+per-rule COUNTS only). (4) **Duplicated gate code (READY refactor)** –
+the override select-choices builder and the confirm-gate modal are
+duplicated between `R/modBreedingGroups.R` and `R/modMatePair.R` (S776’s
+REFACTOR shared only `.emptyAncestryOverrides()` and
+`.overridableAncestryRules()`); the shared shape is a choices builder
+plus a modal constructor taking the warning text and the namespace.
+**Known, accepted:** an unhandled click-time error ends the Shiny
+session (Learning 786).
 
 **Decide whether/how to adopt the owner’s
 `suggested_NEWS_entry.md`/`.Rmd` 3.0.0 consolidation draft (raised S791,

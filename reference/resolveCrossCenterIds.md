@@ -59,7 +59,13 @@ never assumed from a coincidentally matching id string across the two
 centers' independent namespaces. As of issue \#149 Slice 1 (D10), a
 merged pair's other shared columns (beyond `id`/ `sire`/`dam`) follow
 the identical non-`NA`-preferred/ error-on-conflict rule – previously
-they were silently dropped.
+they were silently dropped. The one exception is the `placeholder` mark
+(see
+[`qcStudbook`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)):
+a stand-in for an unknown parent that a curator links to a known animal
+is that animal, so the merged animal is real (`FALSE`) when either
+center recorded it as real, a stand-in (`TRUE`) when both did, and a
+mark on only one side is kept; a disagreement is not an error.
 
 ## See also
 

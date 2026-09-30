@@ -93,6 +93,71 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · \[ad hoc\] S811 close-out: placeholder-marking plan Slice 5 DONE, so the whole plan is done (S810 handoff evaluated 8/10, self 9/10): `obfuscateId(placeholder =)` and `obfuscatePed()` read the mark, `resolveCrossCenterIds()` keeps and resolves a linked pair’s mark, real wins (RED `6de83f4d8`, GREEN `665e9c475`, docs `a229b3bb1`); plan Slice 5 DONE note, `NEWS.Rmd` entry, PED_GV F2 / NEW-38 marked done, placeholder `BACKLOG.md` item removed (the plan record lives in `docs/planning/unknown-parent-placeholder-marking-plan.md` §5); session notes, `HANDOFFS.md` receipt complete, Learning 827; full suite 2,872 tests / 0 errors / 1 known local failure, `devtools::check` 0/0/2 notes (owner’s untracked drafts), lint 0, smoke HTTP 200 on port 6111. Nothing pushed; no GitHub issue named
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-29 · \[ad hoc\] S811 claim (in progress): placeholder-marking plan Slice 5 (`docs/planning/unknown-parent-placeholder-marking-plan.md` §5): de-identification (`obfuscateId()`/`obfuscatePed()`) and the cross-center merge (`resolveCrossCenterIds()`) read the `placeholder` mark; strict TDD
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-29 · \[ad hoc\] S810 close-out: placeholder-marking plan Slice 4 DONE (S809 handoff evaluated 9/10, self 9/10): the “Display Unknown IDs” filter reads the `placeholder` mark (RED `056bceda4`, GREEN `83dbbee34`), `headerDisplayNames()` names the column, help text, manual, guide and `NEWS.Rmd` updated (`b406e7ead`), both exports pinned as round trips; session notes, `HANDOFFS.md` receipt complete, Learning 826; full suite 2,854 tests / 0 errors / 1 known local failure, `devtools::check` 0/0/2 notes (owner’s untracked drafts), lint 0, smoke HTTP 200
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-29 · \[ad hoc\] S810 claim (in progress): placeholder-marking plan Slice 4 (`docs/planning/unknown-parent-placeholder-marking-plan.md` §5): the “Display Unknown IDs” filter reads the `placeholder` mark, the column’s display name, help text and §2.5 documents, exports round-trip the mark; strict TDD
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-29 · \[ad hoc\] S809 close-out: Slice 3 DONE; records, Learning 825, `HANDOFFS.md` receipt complete
+
+- **Model:** Claude Sonnet 5.5. `devtools::check` 0 errors / 0 warnings
+  / 2 notes (owner’s drafts); full suite 2,844 tests, 0 errors, 1 known
+  local-only failure; lint 0; smoke HTTP 200. S808 handoff scored 9/10,
+  self 8/10. Nothing pushed.
+
+### 2026-09-29 · \[ad hoc\] S809 REFACTOR (docs only): `NEWS.Rmd` placeholder entry, plan §5 Slice 3 DONE note, BACKLOG item (Slice 4 next)
+
+- **Model:** Claude Sonnet 5.5. `NEWS.Rmd` (`test_newsReleaseState.R`,
+  `test_wordlist_coverage.R` pass), `BACKLOG.md`,
+  `docs/planning/unknown-parent-placeholder-marking-plan.md`.
+
+### 2026-09-29 · \[ad hoc\] S809 GREEN 2 of 2: `reportGV()` founders and parentage, and `gvaConvergence()` parentage, pass the pedigree
+
+- **Model:** Claude Sonnet 5.5. Files: `R/reportGV.R` (founder counts,
+  `classifyParentage`), `R/gvaConvergence.R`. All 14 new tests and the
+  older tests of every touched function pass (`test_reportGV.R`,
+  `test_gvaConvergence*.R`, `test_modGeneticValue.R`, `test_calcNe*.R`).
+
+### 2026-09-29 · \[ad hoc\] S809 GREEN 1 of 2: `classifyParentage()` gains `ped`; `getLivingBreeders()` and `correctUnknownParentMeanKinship()` pass the whole pedigree to `isGeneratedUnknownId()`
+
+- **Model:** Claude Sonnet 5.5. Files: `R/classifyParentage.R`,
+  `R/getLivingBreeders.R`, `R/correctUnknownParentMeanKinship.R`. A real
+  `U1234` marked FALSE now counts as a living breeder and no longer
+  makes its offspring ‘one unknown parent’.
+  `correctUnknownParentMeanKinship()` reads the whole pedigree, not the
+  proband subset (a parent’s mark is on its own row).
+
+### 2026-09-29 · \[ad hoc\] S809 RED: `tests/testthat/test_placeholderMarkReaders.R` (new) – placeholder-marking plan Slice 3 tests
+
+- **Model:** Claude Sonnet 5.5. 14 tests: 11 fail or error on the old
+  behavior (every message read: `classifyParentage` has no `ped`
+  argument; `getLivingBreeders`, `correctUnknownParentMeanKinship`,
+  `reportGV` founders/parentage, `gvaConvergence` `nUndetermined` and
+  the `modGeneticValueServer` report all read only the id shape), 2
+  guards pass (stand-ins marked TRUE/unmarked stay excluded; no mark
+  column reads by shape). `qcPed`’s
+  [`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md)
+  26.405868 pinned with an all-NA mark column.
+
+### 2026-09-29 · \[ad hoc\] S809 claim (in progress): placeholder-marking plan Slice 3 (`docs/planning/unknown-parent-placeholder-marking-plan.md` §5): `reportGV()` founders, `classifyParentage()` (optional `ped`), `correctUnknownParentMeanKinship()` and `getLivingBreeders()` read the `placeholder` mark; strict TDD
+
+- **Model:** Claude Sonnet 5.5. Also records the un-ledgered S808 notes
+  commit `f443b6d93` (Pages deploy for `16da1062` succeeded,
+  owner-confirmed; a `SESSION_NOTES.md`-only edit).
+
+### 2026-09-29 · \[ad hoc\] S808 push (owner-directed): 17 commits pushed, `origin/master` `1d93590d` -\> `16da1062`, a fast-forward (0 behind after a fresh fetch); CI on `16da1062`: lint (36617669752), pkgdown (36617669607), test-coverage (36617669621) and R-CMD-check (36617669618, all 5 legs: macos, windows, ubuntu release/devel/oldrel-1) all green
+
 ### 2026-09-29 · \[ad hoc\] S808 close-out: placeholder-marking plan Slice 2 DONE (S807 handoff evaluated 9/10, self 8/10); session notes, `HANDOFFS.md` receipt complete, plan §5 DONE note, `BACKLOG.md` item updated (Slice 3 next), Learning 824 (a new error-list field breaks a vignette table only `devtools::check()` builds); full suite 2,830 tests / 0 errors, `devtools::check` 0/0/2 notes (owner’s drafts), lint 0, runtime smoke HTTP 200, quality_ratchet pass
 
 ### 2026-09-29 · \[ad hoc\] S808 REFACTOR (docs, found by `devtools::check`): `vignettes/a2interactive.Rmd`’s error-type table gains the `invalidPlaceholderRows` description (11 fields, 10 descriptions failed the vignette build); check now 0 errors / 0 warnings / 2 notes (the owner’s untracked drafts); full suite 358 files, 2,830 tests, 0 errors, only the known local-only pkgdown failure; runtime smoke `runGeneKeepR(port = 6098L)` HTTP 200, no log errors
