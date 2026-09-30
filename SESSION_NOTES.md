@@ -98,64 +98,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 816 Did
-**Deliverable:** push `master` and report CI (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending`
-
-### Session 814 Handoff Evaluation (by Session 815)
-**Score: 9/10.** Every Orient measurement held: `git status -sb` "ahead 11", `CHANGELOG.md`/`HANDOFFS.md`
-frontiers at HEAD (0 undocumented), the 7 untracked files unchanged, and the top BACKLOG item (the six words) was
-exact: the failing test flagged exactly `ancestryCoverage`, `ancestryRule`, `ancestryRules`, `ancestrySeverity`,
-`ancestryStatus`, `overriddenRules`, and adding them took the suite to its one known failure. Next step (A) also
-warned correctly that a push would go red until the words landed. **Missing:** nothing that cost time; it did not say
-where in `inst/WORDLIST` the words belong (the file has two sorted runs, see Gotcha 1). **Wrong:** nothing found.
+### Session 815 Handoff Evaluation (by Session 816)
+**Score: 9/10.** Measurements held: `CHANGELOG.md`/`HANDOFFS.md` frontiers at HEAD, the 7 untracked files unchanged,
+the red `lint.yaml` run and its unpushed fix exactly as described, and next step (A) (push, then report CI) was
+exact. **Missing:** it said "12 commits ahead" but its own close-out commit made it 13. **Wrong:** nothing else.
 **ROI:** high.
 
-### What Session 815 Did
-**Deliverable, DONE:** the BACKLOG READY item "Add the six words S813's vignette demos introduced to `inst/WORDLIST`"
-(found S814). Strict TDD: the existing failing `tests/testthat/test_wordlist_coverage.R:121` was the RED (run, message
-read: 6 words flagged, the same six), the gate was an `AskUserQuestion`, GREEN added the six words, REFACTOR had
-nothing to change (data-only fix).
-**Commits:** claim `d26c85241`; GREEN + records (this close-out commit; `git log` has its hash).
-**Verification:**
-- `test_wordlist_coverage.R` passes.
-- Full unfiltered suite (`NOT_CRAN=true`, `load_all`): 362 files, 2,881 tests, 0 errors, 1 failure: the known
-  local-only `test_pkgdown_reference_config.R` (was 2 before this session).
-- `devtools::check(vignettes = FALSE)`: 0 errors, 0 warnings, 1 note (the owner's untracked `suggested_NEWS_entry.md`);
-  `spelling.Rout` matches `spelling.Rout.save`.
-- No `.R` file touched, so no lint run owed; no runtime change, so no smoke test (docs/data only).
-- CI: Phase 0 `gh run list --branch master` showed the S811 push's `lint.yaml` red; S812's style commit `4ccdb0dd4`
-  fixed it but is unpushed, so CI has not confirmed it. Nothing pushed this session.
-**Learnings:** none new; Learning 831 already records why a vignette change needs the wordlist run.
-**Reduction:** removed the S813-eval, "What Session 814 Did" and S814 next-steps/gotchas blocks (in git and the
-`HANDOFFS.md` S814 receipt); the finished BACKLOG item block was removed.
+### What Session 816 Did
+**Deliverable, DONE:** pushed `master` (`6d34fe5f9..d40b734c9`, 14 commits incl. S812's lint fix) on the owner's pick
+at the Phase 0 picker, then waited for CI. No code changed, so no TDD phases, no lint, no smoke test.
+**Commits:** claim `d40b734c9`; records (this close-out commit).
+**Verification:** `gh run list --branch master --commit d40b734c9`: `lint.yaml`, `pkgdown.yaml`,
+`test-coverage.yaml`, `R-CMD-check.yaml` all completed/success. The S811 lint red is fixed. Scheduled `shinytest2`
+was green at Phase 0.
+**Learnings:** none new. **Reduction:** removed the S815 "What Session 815 Did" and S814-eval blocks (in git and
+the S815 receipt).
 
-**Self-assessment: 9/10.**
-- \+ Ran the failing test first and read its message before touching the file; one production-neutral file changed.
-- \+ Ran the full suite and `check()` in parallel, so verification cost one wait.
-- \+ Kept to one deliverable; asked the owner the one phase gate.
-- \- Did not ask the "commit or drop?" question about the 7 untracked drafts as a separate prompt; it is in the
-  Phase 0 report and the picker header, and the owner answered only the picker (still open).
+**Self-assessment: 9/10.** + Full Phase 0 report and picker; one deliverable; waited for CI instead of assuming.
+- Again did not get an answer on the 7 untracked drafts (commit or drop?).
 
 **Next steps:**
-- (A) **Push `master`** (12 commits ahead; owner action): all 4 workflows should now be green, including `lint.yaml`
-  (S812's fix). Check `gh run list --branch master` afterwards and report, do not fix inline.
-- (B) Pick from the priorities list: Potential Parents own-dam (DECISION NEEDED, `R/getPotentialParents.R:190`), the
-  PED_GV owner decisions (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`), the other two Mate-pair guardrail
-  residues (zero-rule table, Excluded-tab export) or the optional full `a2interactive.Rmd` inventory pass.
-- (C) Carried: 7 untracked owner drafts (still unanswered: commit or drop?); `NEWS.md` lags `NEWS.Rmd` (last rendered
-  S716); `CHANGELOG.md`/`HANDOFFS.md` trims; `CLAUDE.md` in the warn band (26,731 B).
+- (A) Pick from the priorities list: Potential Parents own-dam (DECISION NEEDED, `R/getPotentialParents.R:190`),
+  PED_GV owner decisions, Mate-pair guardrail residues, or the optional `a2interactive.Rmd` inventory pass.
+- (B) Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band
+  (26,731 B).
 
-**Key files:** `inst/WORDLIST:260-264` (ancestry words), `inst/WORDLIST:496` (`overriddenRules`),
-`tests/testthat/test_wordlist_coverage.R:121`, `BACKLOG.md:6` (Up Next, now starts with the PED_GV item).
+**Key files:** `BACKLOG.md:6-50` (Up Next), `R/getPotentialParents.R:190`.
 
-**Gotchas:**
-1. `inst/WORDLIST` has two sorted runs: capitalized/acronym words at the top (lines ~1-254), then lowercase and
-   camelCase words (line ~255 on, C-locale order); put a new camelCase identifier in the second run.
-2. `test_wordlist_coverage.R` needs `NOT_CRAN=true` or it bare-skips (Learning 417).
-3. The 12 unpushed commits include S812's lint fix; the last red CI run (`lint.yaml`, S811 push) is fixed locally only.
+**Gotchas:** 1. `master` is 1 commit ahead after this records commit (build-ignored files only; no CI watch owed).
+2. `test_pkgdown_reference_config.R` still fails locally only.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809
