@@ -65,7 +65,9 @@ females who gave birth near the time of the focal birth (proven
 breeders); when there are none, \code{dams} lists every female old enough
 and present at the birth instead. Either way, a female who delivered
 another offspring within \code{maxGestationalPeriod} days of the focal
-birth is never listed.
+birth is never listed. Candidates are listed only for the parent that is
+missing: when an animal's dam is recorded its \code{dams} is empty, and
+when its sire is recorded its \code{sires} is empty.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

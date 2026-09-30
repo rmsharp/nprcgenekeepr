@@ -527,6 +527,11 @@ knitr::opts_chunk$set(echo = TRUE)
   also carried this one. When no female nearby was a proven breeder, it fell
   back to listing every female old enough to be the dam and let such a female
   back in. The fallback now leaves her out too.
+- Changed: Potential Parents (`getPotentialParents()`) now lists candidates
+  only for the parent that is missing. An animal with a recorded dam and no
+  recorded sire gets candidate sires and a blank dam column, and the reverse
+  for a recorded sire. Before, the recorded dam was always ruled out of her own
+  animal's list, so those dam lists were never useful.
 - Fixed: the pedigree check reported a sire or dam whose sex was blank,
   misspelled, or had an extra space (such as `"M "`) as a "female sire" or
   "male dam", and stopped the upload. Spaces around a sex code are now ignored,

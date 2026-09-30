@@ -141,7 +141,9 @@ modPotentialParentsUI <- function(id) {
     h3("Potential Parents"),
     p("Identify candidate sires and dams for in-colony animals that have at ",
       "least one unknown parent. Candidates are screened using estimated ",
-      "conception dates (birth minus the maximum gestational period)."),
+      "conception dates (birth minus the maximum gestational period). ",
+      "Candidates are shown only for the parent that is missing; a recorded ",
+      "sire or dam is not listed again."),
 
     fluidRow(
       column(
