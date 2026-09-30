@@ -180,6 +180,15 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
+session: S812
+date: 2026-09-30
+status: pending
+active_task: Fix the red lint.yaml run on 6d34fe5f9 (R/resolveCrossCenterIds.R:367, 83 chars, line_length_linter).
+what_was_done: pending
+commit: pending
+```
+
+```handoff
 session: S811
 date: 2026-09-29
 status: complete

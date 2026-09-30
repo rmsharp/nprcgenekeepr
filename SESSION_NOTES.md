@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 812 Did
+**Deliverable:** Fix the red `lint.yaml` run on `6d34fe5f9`: `R/resolveCrossCenterIds.R:367` is 83 characters
+(`line_length_linter`, limit 80). Style-only, no behavior change. (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 810 Handoff Evaluation (by Session 811)
 **Score: 8/10.** Orient measurements held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S810 receipt
 `status: complete`, the 7 untracked files unchanged, dashboard 96/100. Next step (A) named the right files
