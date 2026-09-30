@@ -306,10 +306,12 @@ appServer <- function(input, output, session) {
     studbook = reactive(shared$currentStudbook)
   )
 
-  # Update shared data when pedigree is created
+  # Update shared data when pedigree is created. The other tabs get the
+  # analysis pedigree, not the table's: the Pedigree Browser's "Display
+  # Unknown IDs" box filters only what that table shows.
   observe({
-    req(pedigreeResults$pedigree())
-    shared$currentPedigree <- pedigreeResults$pedigree()
+    req(pedigreeResults$analysisPedigree())
+    shared$currentPedigree <- pedigreeResults$analysisPedigree()
   })
 
   # BL-N Slice 3: propagate the Diagram tab's validated twinRelations sidecar

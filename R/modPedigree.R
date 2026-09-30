@@ -355,20 +355,9 @@ modPedigreeServer <- function(id, studbook) {
       ped
     })
 
-    # Get the filtered pedigree data for display
-    pedigreeData <- reactive({
-      req(processedPedigree())
-      ped <- processedPedigree()
-
-      # Filter out unknown IDs if requested
-      if (!input$displayUnknownIds) {
-        # Auto-generated unknown IDs are detected via the shared predicate,
-        # which reads the pedigree's placeholder mark when it has one
-        ped <- ped[!isGeneratedUnknownId(ped$id, ped = ped), ]
-      }
-
-      # Trim to focal animals, their ancestors, and their descendants if
-      # requested
+    # Trim to focal animals, their ancestors, and their descendants if
+    # requested
+    applyFocalTrim <- function(ped) {
       if (input$trimPedigree && length(focalIds()) > 0L) {
         focal <- focalIds()
         # Get focal animals that exist in pedigree
@@ -385,6 +374,30 @@ modPedigreeServer <- function(id, studbook) {
       }
 
       ped
+    }
+
+    # Get the filtered pedigree data for display
+    pedigreeData <- reactive({
+      req(processedPedigree())
+      ped <- processedPedigree()
+
+      # Filter out unknown IDs if requested
+      if (!input$displayUnknownIds) {
+        # Auto-generated unknown IDs are detected via the shared predicate,
+        # which reads the pedigree's placeholder mark when it has one
+        ped <- ped[!isGeneratedUnknownId(ped$id, ped = ped), ]
+      }
+
+      applyFocalTrim(ped)
+    })
+
+    # The pedigree the other tabs analyze: the Display Unknown IDs box only
+    # filters the table above, so a hidden stand-in never leaves its children
+    # naming a parent the analysis cannot find. The focal-animal trim is a
+    # deliberate narrowing and still applies.
+    analysisPedigreeData <- reactive({
+      req(processedPedigree())
+      applyFocalTrim(processedPedigree())
     })
 
     # Render pedigree table
@@ -859,6 +872,9 @@ modPedigreeServer <- function(id, studbook) {
     list(
       pedigree = reactive({
         pedigreeData()
+      }),
+      analysisPedigree = reactive({
+        analysisPedigreeData()
       }),
       processedPedigree = reactive({
         processedPedigree()
