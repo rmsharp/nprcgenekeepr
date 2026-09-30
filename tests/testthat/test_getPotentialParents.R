@@ -491,3 +491,63 @@ test_that("getPotentialParents() keeps a real U1234 with no birth date as a reco
   expect_false("K1" %in% focalIds(pp))
   expect_true("K2" %in% focalIds(pp))
 })
+
+## Own-parent rule (S817, owner-chosen): candidates are listed only for the
+## parent that is missing. A recorded parent is never re-listed, so the
+## candidate list is empty for that side. (Before, a recorded dam was always
+## ruled out by the gestation window because the focal animal's own birth
+## counts, so every dam list for such an animal was wrong by construction.)
+recordedParentPed <- function() {
+  adults <- c("M1", "F1", "F2", "U1234", "U0001")
+  data.frame(
+    id = c(adults, "K_DAMREC", "K_SIREREC", "K_BOTH", "K_REALU", "K_STAND"),
+    sire = NA_character_,
+    dam = c(rep(NA, length(adults)), "F1", NA, NA, "U1234", "U0001"),
+    sex = c("M", "F", "F", "F", "F", "M", "M", "F", "M", "F"),
+    birth = as.Date(c(
+      rep("2000-01-01", 4L), NA, "2010-01-01", "2012-01-01", "2014-01-01",
+      "2016-01-01", "2018-01-01"
+    )),
+    exit = as.Date(NA),
+    fromCenter = c(rep(FALSE, length(adults)), rep(TRUE, 5L)),
+    placeholder = c(rep(FALSE, 4L), TRUE, rep(FALSE, 5L)),
+    stringsAsFactors = FALSE
+  )
+}
+recordedParentPp <- function() {
+  ped <- recordedParentPed()
+  ped$sire[ped$id == "K_SIREREC"] <- "M1"
+  getPotentialParents(
+    ped = ped, minSireAge = 2, minDamAge = 2, maxGestationalPeriod = 210L
+  )
+}
+entryFor <- function(pp, id) pp[[which(focalIds(pp) == id)]]
+
+test_that("a recorded dam is not re-listed: dams is empty, sires still listed", {
+  e <- entryFor(recordedParentPp(), "K_DAMREC")
+  expect_identical(e$dams, character(0L))
+  expect_true("M1" %in% e$sires)
+})
+
+test_that("a recorded sire is not re-listed: sires is empty, dams still listed", {
+  e <- entryFor(recordedParentPp(), "K_SIREREC")
+  expect_identical(e$sires, character(0L))
+  expect_true(all(c("F1", "F2") %in% e$dams))
+})
+
+test_that("an animal with neither parent recorded keeps both candidate lists", {
+  e <- entryFor(recordedParentPp(), "K_BOTH")
+  expect_true("M1" %in% e$sires)
+  expect_true(all(c("F1", "F2") %in% e$dams))
+})
+
+test_that("a real U1234 marked FALSE counts as a recorded dam (no dam list)", {
+  e <- entryFor(recordedParentPp(), "K_REALU")
+  expect_identical(e$dams, character(0L))
+  expect_true("M1" %in% e$sires)
+})
+
+test_that("a stand-in dam (placeholder TRUE) is not a recorded dam, so dams is listed", {
+  e <- entryFor(recordedParentPp(), "K_STAND")
+  expect_true(all(c("F1", "F2") %in% e$dams))
+})
