@@ -30,6 +30,20 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S815
+date: 2026-09-30
+status: pending
+active_task: Add the 6 words S813's a2interactive.Rmd demos introduced to inst/WORDLIST (BACKLOG top item, READY, Effort S); PRE-RED
+what_was_done: pending
+next_steps: pending
+key_files: inst/WORDLIST:1
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: S815 claim entry
+commit: pending
+```
+
+```handoff
 session: S814
 date: 2026-09-30
 status: complete

@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S815 claim (in progress): add the six words S813's `a2interactive.Rmd` demos introduced to `inst/WORDLIST` (BACKLOG READY item found S814) so `test_wordlist_coverage.R` and `devtools::check()` pass; strict TDD, no production code.
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S814 close-out: fixed the BACKLOG item "Unticking Display Unknown IDs breaks the Genetic Value analysis" (found S806; S813 handoff evaluated 7/10, self 8/10). Owner chose "table only": `modPedigreeServer()` returns a new `analysisPedigree` (full pedigree, focal trim still applied) and `appServer` feeds `shared$currentPedigree` from it, so a hidden stand-in no longer leaves children naming a missing parent (43 of 236 animals on `qcPed`). Strict TDD: RED `cb26af5d5` (8 tests, 6 failing, 2 guards), GREEN `9a7657865`, docs `c5968028a` (help text, `_pedigree_browser.Rmd`, `colony-manager-guide.qmd`, `NEWS.Rmd`); plan sections 7 and 10 annotated. Full suite 2,881 tests, 2 failures (known `test_pkgdown_reference_config.R`; `test_wordlist_coverage.R` from S813's vignette words, logged as a BACKLOG READY item, not fixed here); lint 0; `devtools::check(vignettes = FALSE)` 1 error (that wordlist issue); smoke HTTP 200. Removed the item from `BACKLOG.md`; Learnings 830, 831. No GitHub issue named. Nothing pushed.
 - **Model:** Claude Sonnet 5.5.
 

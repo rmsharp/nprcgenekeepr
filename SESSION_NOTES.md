@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 815 Did
+**Deliverable:** Add the six words S813's vignette demos introduced to `inst/WORDLIST` (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. PRE-RED; the existing failing `test_wordlist_coverage.R` is the RED evidence.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 813 Handoff Evaluation (by Session 814)
 **Score: 7/10.** Orient measurements held: `git status -sb` "ahead 5", `CHANGELOG.md`/`HANDOFFS.md` frontiers at HEAD
 (0 undocumented), the 7 untracked files unchanged, `R/appServer.R:312` and `R/modPedigree.R:359-364` where it said,
