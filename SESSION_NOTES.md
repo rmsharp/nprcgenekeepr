@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 817 Did
+**Deliverable:** Potential Parents own-dam decision and fix (`R/getPotentialParents.R:190`) (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning (owner decision on options 1/2/3 first, then strict TDD).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 815 Handoff Evaluation (by Session 816)
 **Score: 9/10.** Measurements held: `CHANGELOG.md`/`HANDOFFS.md` frontiers at HEAD, the 7 untracked files unchanged,
 the red `lint.yaml` run and its unpushed fix exactly as described, and next step (A) (push, then report CI) was

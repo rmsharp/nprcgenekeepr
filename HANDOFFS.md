@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S817
+date: 2026-09-30
+status: pending
+active_task: Potential Parents own-dam decision and fix (R/getPotentialParents.R:190)
+```
+
+```handoff
 session: S816
 date: 2026-09-30
 status: complete

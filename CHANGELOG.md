@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S817 claim (in progress): Potential Parents own-dam decision (BACKLOG item found S798): settle with the owner whether `getPotentialParents()` lists candidate dams only for the unknown parent, then implement under strict TDD. Owner chose it at the Phase 0 picker.
+
 ### 2026-09-30 · [ad hoc] S816 close-out: pushed `master` (`6d34fe5f9..d40b734c9`, 14 commits incl. S812's lint fix) on the owner's pick; CI for `d40b734c9`: lint, pkgdown, test-coverage, R-CMD-check all success, so the S811 lint red is resolved (S815 handoff evaluated 9/10, self 9/10). No code change, no GitHub issue named, no new learning.
 
 ### 2026-09-30 · [ad hoc] S816 claim (in progress): push `master` (13 commits ahead, includes S812's lint fix) and report CI; owner chose it at the Phase 0 picker. No code change.
