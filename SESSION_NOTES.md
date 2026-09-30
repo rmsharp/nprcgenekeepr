@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 818 Did
+**Deliverable:** Close the 11 settled PED_GV audit ids in the triage report and `BACKLOG.md` (IN PROGRESS; docs only)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 816 Handoff Evaluation (by Session 817)
 **Score: 9/10.** Measurements held: frontiers at HEAD, `master` 1 ahead, the 7 untracked files unchanged, CI green,
 `CLAUDE.md` at 26,731 B, and the Up Next list was exact (the own-dam item sat at `BACKLOG.md:33`, the code at

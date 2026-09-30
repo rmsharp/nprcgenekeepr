@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S818 claim (in progress): record the 11 settled PED_GV audit ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33, NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) as closed in the triage report and `BACKLOG.md`. Owner chose it at the Phase 0 picker and the scope question. Docs only, no code.
+
 ### 2026-09-30 · [ad hoc] S817 close-out: Potential Parents (`getPotentialParents()`) now lists candidates only for the missing parent (recorded dam gives empty `dams`, recorded sire empty `sires`; stand-ins do not count as recorded); owner chose "blank it" over document-only/leave (S816 handoff evaluated 9/10, self 9/10). Strict TDD: RED `604d4ac9a` (5 tests, 3 failing, 2 guards, no existing test conflicted), GREEN `c8b7fc794`, docs `ada8616ca` (roxygen, Rd, tab intro, `NEWS.Rmd`). Full unfiltered suite 362 files, 2,886 tests, 1 failure (known local-only `test_pkgdown_reference_config.R`); lint clean. Measured S798 effect: 1,351 of 1,587 example-pedigree animals had a recorded dam and got a dam list that could never contain it. Removed the item from `BACKLOG.md`. No GitHub issue named; no new learning; nothing pushed.
 - **Model:** Claude Sonnet 5.5.
 
