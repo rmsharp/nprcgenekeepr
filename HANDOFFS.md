@@ -32,15 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S815
 date: 2026-09-30
-status: pending
-active_task: Add the 6 words S813's a2interactive.Rmd demos introduced to inst/WORDLIST (BACKLOG top item, READY, Effort S); PRE-RED
-what_was_done: pending
-next_steps: pending
-key_files: inst/WORDLIST:1
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: S815 claim entry
-commit: pending
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: BACKLOG READY item DONE: the six S813 vignette words (ancestryCoverage, ancestryRule, ancestryRules, ancestrySeverity, ancestryStatus, overriddenRules) are in inst/WORDLIST, so test_wordlist_coverage.R and devtools::check() pass
+what_was_done: Strict TDD: claim d26c85241; RED was the existing failing test_wordlist_coverage.R:121 (6 words flagged); GREEN added the six words to inst/WORDLIST (two alphabetical insertions); REFACTOR had nothing to change. Full unfiltered suite 362 files, 2,881 tests, 1 failure (known local-only test_pkgdown_reference_config.R); devtools::check(vignettes = FALSE) 0 errors, 0 warnings, 1 note (owner's untracked suggested_NEWS_entry.md). Records and BACKLOG item removal in the S815 close-out commit.
+next_steps: Owner pushes master (12 commits ahead; all 4 workflows should go green, including lint.yaml via S812's fix), then report gh run list and do not fix inline. Then pick from the priorities list starting with Potential Parents own-dam (R/getPotentialParents.R:190, DECISION NEEDED); still ask once whether to commit or drop the 7 untracked owner drafts.
+key_files: inst/WORDLIST:260 (ancestry words); inst/WORDLIST:496 (overriddenRules); tests/testthat/test_wordlist_coverage.R:121; BACKLOG.md:6 (Up Next now starts with the PED_GV item)
+gotchas: inst/WORDLIST has two sorted runs (capitalized words first, then lowercase/camelCase from line ~255); test_wordlist_coverage.R needs NOT_CRAN=true or it bare-skips; last red CI run (lint.yaml, S811 push) is fixed only in unpushed commit 4ccdb0dd4
+runtime_smoke: n/a: data-only change (inst/WORDLIST), no runtime behavior touched; check() and the full suite passed
+changelog_ref: S815 close-out entry
+commit: see git log (S815 close-out)
 ```
 
 ```handoff

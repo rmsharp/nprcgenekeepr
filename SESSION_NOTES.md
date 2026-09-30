@@ -98,73 +98,58 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 814 Handoff Evaluation (by Session 815)
+**Score: 9/10.** Every Orient measurement held: `git status -sb` "ahead 11", `CHANGELOG.md`/`HANDOFFS.md`
+frontiers at HEAD (0 undocumented), the 7 untracked files unchanged, and the top BACKLOG item (the six words) was
+exact: the failing test flagged exactly `ancestryCoverage`, `ancestryRule`, `ancestryRules`, `ancestrySeverity`,
+`ancestryStatus`, `overriddenRules`, and adding them took the suite to its one known failure. Next step (A) also
+warned correctly that a push would go red until the words landed. **Missing:** nothing that cost time; it did not say
+where in `inst/WORDLIST` the words belong (the file has two sorted runs, see Gotcha 1). **Wrong:** nothing found.
+**ROI:** high.
+
 ### What Session 815 Did
-**Deliverable:** Add the six words S813's vignette demos introduced to `inst/WORDLIST` (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. PRE-RED; the existing failing `test_wordlist_coverage.R` is the RED evidence.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
-
-### Session 813 Handoff Evaluation (by Session 814)
-**Score: 7/10.** Orient measurements held: `git status -sb` "ahead 5", `CHANGELOG.md`/`HANDOFFS.md` frontiers at HEAD
-(0 undocumented), the 7 untracked files unchanged, `R/appServer.R:312` and `R/modPedigree.R:359-364` where it said,
-the priorities list accurate. **Missing:** it did not say the new `a2interactive.Rmd` identifiers were not in
-`inst/WORDLIST`; its "Not run: the full suite and `devtools::check()`" line was honest, but next step (A) then
-promised the push would run "all 4 workflows" with `lint.yaml` going green and never warned that R-CMD-check and
-test-coverage would go red on 6 flagged words (Learning 831). **Wrong:** nothing stated, but the implied clean
-push was not true. **ROI:** high for orientation, one costly omission.
-
-### What Session 814 Did
-**Deliverable, DONE:** the BACKLOG item "Unticking Display Unknown IDs breaks the Genetic Value analysis" (found
-S806). Owner decision (AskUserQuestion, option 1): the box filters only the Pedigree Browser table. `modPedigreeServer()`
-now also returns `analysisPedigree` (the full pedigree; the focal-animal trim still applies) and `appServer` feeds
-`shared$currentPedigree` from it. Strict TDD, every gate an `AskUserQuestion`.
-**Commits:** claim `86df3a042`; RED `cb26af5d5` (new `tests/testthat/test_displayUnknownIdsDownstream.R`, 8 tests:
-6 failing, 2 guards; contract test names; two `stubPed` stubs; one new appServer wiring test); GREEN `9a7657865`
-(`R/modPedigree.R` `applyFocalTrim()` helper + `analysisPedigreeData` + return element, `R/appServer.R:310-314`);
-REFACTOR/docs `c5968028a` (help text, `_pedigree_browser.Rmd`, `colony-manager-guide.qmd`, `NEWS.Rmd`); records (this).
+**Deliverable, DONE:** the BACKLOG READY item "Add the six words S813's vignette demos introduced to `inst/WORDLIST`"
+(found S814). Strict TDD: the existing failing `tests/testthat/test_wordlist_coverage.R:121` was the RED (run, message
+read: 6 words flagged, the same six), the gate was an `AskUserQuestion`, GREEN added the six words, REFACTOR had
+nothing to change (data-only fix).
+**Commits:** claim `d26c85241`; GREEN + records (this close-out commit; `git log` has its hash).
 **Verification:**
-- RED: 6 new tests failed on the old behavior, the contract test and the wiring test failed, 2 guards passed (every
-  message read). GREEN: the 4 touched files plus `test_modPedigree*`, `test_placeholderMarkDisplay` all pass.
-- Full unfiltered suite (`NOT_CRAN=true`, `load_all`): 362 files, 2,881 tests, 0 errors, 2 failures: the known
-  local-only `test_pkgdown_reference_config.R`, and `test_wordlist_coverage.R` (S813's six words, not this change).
-- `devtools::check(vignettes = FALSE)`: 1 error (that same wordlist issue, in `tests/spelling.R` and the test), 0
-  warnings, 1 note (the owner's untracked `suggested_NEWS_entry.md`). Lint 0 on all 6 touched `.R` files and after the
-  docs commit on `R/modPedigree.R`. `test_newsReleaseState.R` passes.
-- Runtime smoke: `runGeneKeepR(port = 6099L)` HTTP 200, no log errors. The wiring was verified with `testServer`
-  (module and `appServer`), not by clicking through the Shiny UI.
-- CI: Phase 0 `gh run list --branch master` returned only 2026-09-08 runs (nothing pushed since S809's push); the
-  unfiltered list showed one old red R-CMD-check (the S680 claim), superseded by green S680 runs. Nothing pushed now.
-**Learnings:** 830, 831.
-**Reduction:** removed the S812-eval and "What Session 813 Did" blocks (in git and the `HANDOFFS.md` receipt); the
-finished BACKLOG item block was removed.
+- `test_wordlist_coverage.R` passes.
+- Full unfiltered suite (`NOT_CRAN=true`, `load_all`): 362 files, 2,881 tests, 0 errors, 1 failure: the known
+  local-only `test_pkgdown_reference_config.R` (was 2 before this session).
+- `devtools::check(vignettes = FALSE)`: 0 errors, 0 warnings, 1 note (the owner's untracked `suggested_NEWS_entry.md`);
+  `spelling.Rout` matches `spelling.Rout.save`.
+- No `.R` file touched, so no lint run owed; no runtime change, so no smoke test (docs/data only).
+- CI: Phase 0 `gh run list --branch master` showed the S811 push's `lint.yaml` red; S812's style commit `4ccdb0dd4`
+  fixed it but is unpushed, so CI has not confirmed it. Nothing pushed this session.
+**Learnings:** none new; Learning 831 already records why a vignette change needs the wordlist run.
+**Reduction:** removed the S813-eval, "What Session 814 Did" and S814 next-steps/gotchas blocks (in git and the
+`HANDOFFS.md` S814 receipt); the finished BACKLOG item block was removed.
 
-**Self-assessment: 8/10.**
-- \+ Read every RED message and caught 2 vacuous passes and 2 crashed guards before the RED commit (Learning 830).
-- \+ Kept the change to 2 production files; ran full suite, check, lint and smoke before close-out.
-- \+ Kept the scope decision with the owner and logged S813's wordlist break instead of fixing it (1 and done).
-- \- The first RED helper crashed on the missing element; the first grep of the failure messages hit a shell
-  backtick error (two extra calls).
-- \- No browser click-through of the unticked box; `testServer` only.
+**Self-assessment: 9/10.**
+- \+ Ran the failing test first and read its message before touching the file; one production-neutral file changed.
+- \+ Ran the full suite and `check()` in parallel, so verification cost one wait.
+- \+ Kept to one deliverable; asked the owner the one phase gate.
+- \- Did not ask the "commit or drop?" question about the 7 untracked drafts as a separate prompt; it is in the
+  Phase 0 report and the picker header, and the owner answered only the picker (still open).
 
 **Next steps:**
-- (A) **First:** add the 6 words to `inst/WORDLIST` (BACKLOG top item, READY, Effort S; `test_wordlist_coverage.R`
-  must pass and `devtools::check()` must have 0 errors), then push `master` (11 commits ahead: all 4 workflows run).
+- (A) **Push `master`** (12 commits ahead; owner action): all 4 workflows should now be green, including `lint.yaml`
+  (S812's fix). Check `gh run list --branch master` afterwards and report, do not fix inline.
 - (B) Pick from the priorities list: Potential Parents own-dam (DECISION NEEDED, `R/getPotentialParents.R:190`), the
-  PED_GV owner decisions, the other two Mate-pair guardrail residues (zero-rule table, Excluded-tab export), or the
-  optional full `a2interactive.Rmd` inventory pass.
-- (C) Carried: 7 untracked owner drafts (ask once "commit or drop?"); `NEWS.md` lags `NEWS.Rmd` (last rendered S716);
-  `CHANGELOG.md`/`HANDOFFS.md` trims; `CLAUDE.md` in the warn band (26,731 B).
+  PED_GV owner decisions (`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`), the other two Mate-pair guardrail
+  residues (zero-rule table, Excluded-tab export) or the optional full `a2interactive.Rmd` inventory pass.
+- (C) Carried: 7 untracked owner drafts (still unanswered: commit or drop?); `NEWS.md` lags `NEWS.Rmd` (last rendered
+  S716); `CHANGELOG.md`/`HANDOFFS.md` trims; `CLAUDE.md` in the warn band (26,731 B).
 
-**Key files:** `R/modPedigree.R:358-401` (`applyFocalTrim`, `pedigreeData`, `analysisPedigreeData`), the return
-list near `R/modPedigree.R:885`, `R/appServer.R:309-315`, `tests/testthat/test_displayUnknownIdsDownstream.R`,
-`tests/testthat/test_appServer_server.R:65-80` (stub) and `:236-270` (wiring test), `inst/WORDLIST`.
+**Key files:** `inst/WORDLIST:260-264` (ancestry words), `inst/WORDLIST:496` (`overriddenRules`),
+`tests/testthat/test_wordlist_coverage.R:121`, `BACKLOG.md:6` (Up Next, now starts with the PED_GV item).
 
 **Gotchas:**
-1. `analysisPedigree` keeps the focal-animal trim, so the Pedigree Browser's "Trim pedigree" box still narrows what
-   the other tabs analyze; only the Display Unknown IDs box was separated.
-2. The Pedigree Browser table, diagram and CSV export still use the filtered `pedigree()`, by design.
-3. Any new test stub of `modPedigreeServer` needs an `analysisPedigree` element or `appServer` errors.
-4. `NEWS.md` (rendered) does not yet carry this entry; `NEWS.Rmd` does.
+1. `inst/WORDLIST` has two sorted runs: capitalized/acronym words at the top (lines ~1-254), then lowercase and
+   camelCase words (line ~255 on, C-locale order); put a new camelCase identifier in the second run.
+2. `test_wordlist_coverage.R` needs `NOT_CRAN=true` or it bare-skips (Learning 417).
+3. The 12 unpushed commits include S812's lint fix; the last red CI run (`lint.yaml`, S811 push) is fixed locally only.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809

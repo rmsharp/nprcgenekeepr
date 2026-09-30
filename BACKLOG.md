@@ -5,18 +5,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Add the six words S813's vignette demos introduced to `inst/WORDLIST` (found S814,
-      2026-09-30, READY, Effort S; blocks a green push)** -- `a2interactive.Rmd` (S813) uses
-      `ancestryCoverage`, `ancestryRule`, `ancestryRules`, `ancestrySeverity`, `ancestryStatus` and
-      `overriddenRules` (lines 1085-1151); `spelling::spell_check_package()` flags them, so
-      `tests/testthat/test_wordlist_coverage.R` fails and `devtools::check()` reports one ERROR
-      (`tests/spelling.R` output differs from `spelling.Rout.save`). Measured S814 with the full
-      unfiltered suite (362 files, 2,881 tests: 2 failures, this one and the known local-only
-      `test_pkgdown_reference_config.R`) and `devtools::check(vignettes = FALSE)` (1 error, 0
-      warnings, 1 note: the owner's untracked `suggested_NEWS_entry.md`). Fix: add the six words
-      to `inst/WORDLIST` (alphabetical), re-run `test_wordlist_coverage.R` and `check()`. The
-      unpushed commits run all 4 workflows, so R-CMD-check and test-coverage go red until this lands.
-
 - [ ] **PED_GV audit follow-through -- triage DONE (S781, 2026-09-26), F1 shipped (S782), F4
       shipped (S783), F2's duplicate-id half shipped (S797), F3 shipped (S798); every F-slice is
       done, and what remains is owner decisions (DECISION NEEDED, Effort S each; strict TDD for

@@ -257,6 +257,11 @@ addIdRecords
 al
 alleleFreq
 allelic
+ancestryCoverage
+ancestryRule
+ancestryRules
+ancestrySeverity
+ancestryStatus
 autosome
 backcross
 baseUrl
@@ -488,6 +493,7 @@ obfuscatePed
 obfuscateTwinRelations
 outputing
 ovariectomy
+overriddenRules
 parentages
 parseable
 pdepth
