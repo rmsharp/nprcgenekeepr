@@ -309,6 +309,30 @@ bindPedigreeRows <- function(dfs) {
   .bindCrossCenterProblems(problems)
 }
 
+#' Merge the placeholder mark of a linked cross-center pair
+#'
+#' A stand-in for an unknown parent that a curator links to a known animal is
+#' that known animal, so a real record wins: \code{FALSE} when either side is
+#' \code{FALSE}, else \code{TRUE} when either side is \code{TRUE}, else
+#' \code{NA}. A file without the column counts as \code{NA}. Never stops.
+#'
+#' @param rowA,rowB single-row data.frames for the same physical animal.
+#' @return \code{FALSE}, \code{TRUE} or \code{NA}.
+#' @noRd
+.mergeCrossCenterPlaceholder <- function(rowA, rowB) {
+  marks <- c(
+    if ("placeholder" %in% names(rowA)) as.logical(rowA$placeholder),
+    if ("placeholder" %in% names(rowB)) as.logical(rowB$placeholder)
+  )
+  if (!all(marks, na.rm = TRUE)) {
+    FALSE
+  } else if (any(marks, na.rm = TRUE)) {
+    TRUE
+  } else {
+    NA
+  }
+}
+
 #' Merge two centers' pedigrees via a curator-confirmed identity link
 #'
 #' Collapses a transferred animal's two center-specific records into ONE
@@ -450,7 +474,7 @@ resolveCrossCenterIds <- function(pedA, pedB, mapping) {
     # section 2.12 / D10). Columns present on only one side are unaffected
     # here -- bindPedigreeRows() below NA-fills those as it always has.
     otherCols <- setdiff(
-      intersect(names(rowA), names(rowB)), c("id", "sire", "dam")
+      intersect(names(rowA), names(rowB)), c("id", "sire", "dam", "placeholder")
     )
     for (col in otherCols) {
       colResult <- .pickCrossCenterParent(rowA, rowB, col)
@@ -463,6 +487,10 @@ resolveCrossCenterIds <- function(pedA, pedB, mapping) {
         )
       }
       rowData[[col]] <- colResult$value
+    }
+
+    if ("placeholder" %in% c(names(rowA), names(rowB))) {
+      rowData$placeholder <- .mergeCrossCenterPlaceholder(rowA, rowB)
     }
 
     do.call(data.frame, c(rowData, stringsAsFactors = FALSE))

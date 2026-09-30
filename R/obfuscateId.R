@@ -18,6 +18,13 @@
 #' \code{"U\%04d"} format), only those aliases are made longer, to the shortest
 #' recognizable length.
 #' @param existingIds character vector of existing aliases to avoid duplication.
+#' @param placeholder optional logical vector, one value per \code{id}, saying
+#' which ids are placeholders for unknown parents (\code{TRUE}) and which are
+#' real animals (\code{FALSE}), as recorded in the \code{placeholder} column
+#' that \code{\link{qcStudbook}} writes. A placeholder gets a placeholder-shaped
+#' alias and a real animal a real-shaped one, even when the id's own shape says
+#' otherwise (a real animal named \code{"U1234"}). \code{NA} or \code{NULL}
+#' (the default) reads the id by its shape.
 #' @return A named character vector of aliases where the name is the original
 #' ID value.
 #'
@@ -30,7 +37,18 @@
 #' obfuscateId(integerIds, size = 4L)
 #' characterIds <- paste0(paste0(sample(LETTERS, 1L, replace = FALSE)), 1L:10L)
 #' obfuscateId(characterIds, size = 4L)
-obfuscateId <- function(id, size = 10L, existingIds = character(0L)) {
+obfuscateId <- function(id, size = 10L, existingIds = character(0L),
+                        placeholder = NULL) {
+  if (!is.null(placeholder)) {
+    if (!is.logical(placeholder)) {
+      stop("obfuscateId(): placeholder must be logical (TRUE, FALSE or NA)",
+           call. = FALSE)
+    }
+    if (length(placeholder) != length(id)) {
+      stop("obfuscateId(): placeholder must have one value per id",
+           call. = FALSE)
+    }
+  }
   noOInLetters <- c(
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
     "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
@@ -40,10 +58,14 @@ obfuscateId <- function(id, size = 10L, existingIds = character(0L)) {
   placeholderSize <- max(size, nchar(prefix) + getAutoIdWidth())
   existingIds <- c(character(length(id)), existingIds)
   obfuscatedId <- character(length(id))
+  isPlaceholder <- isGeneratedUnknownId(id)
+  if (!is.null(placeholder)) {
+    isPlaceholder[!is.na(placeholder)] <- placeholder[!is.na(placeholder)]
+  }
   for (i in seq_along(id)) {
     counter <- 0L
     repeat {
-      if (isGeneratedUnknownId(id[i])) {
+      if (isPlaceholder[i]) {
         obfuscatedId[i] <- stri_c(
           c(prefix, sample(c(noOInLetters, stri_c(0L:9L)),
             size = placeholderSize - nchar(prefix), replace = TRUE
@@ -58,8 +80,7 @@ obfuscateId <- function(id, size = 10L, existingIds = character(0L)) {
       }
       ## ensure the alias and source are both auto-generated or both not
       if (!any(obfuscatedId[i] %in% existingIds) &&
-        (isGeneratedUnknownId(obfuscatedId[i]) ==
-          isGeneratedUnknownId(id[i]))) {
+        (isGeneratedUnknownId(obfuscatedId[i]) == isPlaceholder[i])) {
         break
       }
       counter <- counter + 1L

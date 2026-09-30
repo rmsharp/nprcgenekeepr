@@ -40,7 +40,10 @@
 obfuscatePed <- function(ped, size = 6L, maxDelta = 30L,
                          existingIds = character(0L), map = FALSE,
                          linkedDateShift = TRUE) {
-  alias <- obfuscateId(ped$id, size = size, existingIds = existingIds)
+  alias <- obfuscateId(ped$id, size = size, existingIds = existingIds,
+                       placeholder = if ("placeholder" %in% names(ped)) {
+                         as.logical(ped$placeholder)
+                       })
   ped$sire <- alias[ped$sire]
   ped$dam <- alias[ped$dam]
   ped$id <- alias

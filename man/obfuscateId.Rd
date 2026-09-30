@@ -4,7 +4,7 @@
 \alias{obfuscateId}
 \title{Create ID aliases of a specified length}
 \usage{
-obfuscateId(id, size = 10L, existingIds = character(0L))
+obfuscateId(id, size = 10L, existingIds = character(0L), placeholder = NULL)
 }
 \arguments{
 \item{id}{character vector of IDs to be obfuscated (alias creation).}
@@ -17,6 +17,14 @@ is too short for that shape to be recognized (shorter than 5 for the default
 recognizable length.}
 
 \item{existingIds}{character vector of existing aliases to avoid duplication.}
+
+\item{placeholder}{optional logical vector, one value per \code{id}, saying
+which ids are placeholders for unknown parents (\code{TRUE}) and which are
+real animals (\code{FALSE}), as recorded in the \code{placeholder} column
+that \code{\link{qcStudbook}} writes. A placeholder gets a placeholder-shaped
+alias and a real animal a real-shaped one, even when the id's own shape says
+otherwise (a real animal named \code{"U1234"}). \code{NA} or \code{NULL}
+(the default) reads the id by its shape.}
 }
 \value{
 A named character vector of aliases where the name is the original
