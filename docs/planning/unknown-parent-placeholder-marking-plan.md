@@ -348,6 +348,7 @@ reaches the mark through `qcStudbook()`, which is covered locally).
 - **DONE:** those pass; the `NEWS.Rmd` entry updated to its finished state; the shiny_app_use
   screenshots that show the Pedigree Browser table are noted for the documentation audit if the new
   column appears in them.
+- **DONE S810** (RED `056bceda4`; GREEN `83dbbee34`). The filter passes `ped`; `headerDisplayNames()` maps `placeholder` to "Generated Unknown ID"; help text, `_pedigree_browser.Rmd`, `colony-manager-guide.qmd` and `NEWS.Rmd` updated. Tests: `tests/testthat/test_placeholderMarkDisplay.R` (5 failing before, 5 guards incl. both export round trips, which already passed because the column rides along). `summary_stats.html` describes founders, not the id rule, so it needed no change. No screenshot shows the new column (the browser table already displayed it raw), noted for the documentation audit.
 - **Session boundary:** one session. Close out.
 
 ### Slice 5 — De-identification and cross-center merge

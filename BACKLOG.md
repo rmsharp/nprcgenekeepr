@@ -51,8 +51,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 - [ ] **Real animal ids that start with the placeholder prefix are treated as stand-ins for unknown
       parents -- the other half of PED_GV F2 / NEW-38 (found S781; approach chosen S806: mark ids
-      when they are made; plan written S806; Slices 1-3 DONE S807-S809; READY: Slice 4 next, then 5,
-      Effort M each, strict TDD)** -- the plan is
+      when they are made; plan written S806; Slices 1-4 DONE S807-S810; READY: Slice 5 next,
+      Effort M, strict TDD)** -- the plan is
       `docs/planning/unknown-parent-placeholder-marking-plan.md`: read it first (§1.3
       measurements, §2 inventory with the grep commands, §5 slices, §11 the ratified decisions).
       **Done:** Slice 1 (S807): `isGeneratedUnknownId()` needs the prefix plus at least as many
@@ -65,10 +65,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `classifyParentage(ped =)`, `correctUnknownParentMeanKinship()`, `gvaConvergence()` and
       `getLivingBreeders()` (so the effective sizes) read the mark; a parent with no row in the
       pedigree is read by its shape (D4). **Ratified (plan §11):** D1, D3, D5, D6, D10-D13.
-      **Slice 4 next:** the "Display Unknown IDs" filter (`R/modPedigree.R:363`) uses the mark, the
-      column's display name (`R/headerDisplayNames.R`), the help text and §2.5 documents, exports
-      round-trip the mark (plan §5 Slice 4; re-run the §2 greps first). Until then that filter still
-      uses the id shape. The S797 exact-digits attempt and its withdrawn
+      Slice 4 (S810): the "Display Unknown IDs" filter (`R/modPedigree.R:363`) reads the mark, the
+      column has a display name, the help text and manual/guide say what it is, and both exports
+      round-trip it. **Slice 5 next:** de-identification and cross-center merge (plan §5 Slice 5;
+      re-run the §2 greps first). The S797 exact-digits attempt and its withdrawn
       tests stay recorded in commit `a01e13af`.
 
 - [ ] **Unticking "Display Unknown IDs" breaks the Genetic Value analysis (found S806,

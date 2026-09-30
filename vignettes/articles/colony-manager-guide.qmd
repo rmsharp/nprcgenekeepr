@@ -259,6 +259,12 @@ known parent.
 
 ![Pedigree Browser with Display Unknown IDs checked (the default).](shiny_app_use/pb_10_rows_display_unknown_ids.png){fig-alt="Pedigree Browser table with Display Unknown IDs checked, showing UNKNOWN placeholder IDs."}
 
+Which rows are placeholders is recorded in a yes/no `placeholder` column that
+the quality check adds (TRUE for a made-up parent, FALSE for a real animal). If
+a real animal's ID looks like a made-up one, such as `U1234`, enter FALSE for
+it in that column of your file and it stays visible. The column is kept in the
+files you download, so the marks survive a save and re-upload.
+
 Unchecking **Display Unknown IDs** removes those placeholder rows. For the
 example pedigree, the row count reduces from **3,694 to 2,322** -- the
 difference, 1,372, is the number of UNKNOWN placeholder animals the
