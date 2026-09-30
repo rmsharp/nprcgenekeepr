@@ -1376,6 +1376,129 @@ silently disqualify an otherwise-eligible animal. **populationIds**, not
 **minAge**, is the reliable way to bound which candidates a call
 considers.
 
+### Ancestry Rules for Mate Pairs
+
+Some centers do not want certain ancestry combinations paired (for
+example, Indian-origin with Chinese-origin rhesus macaques).
+**reportMatePairs** accepts the same center-configurable rules table the
+**Breeding Groups** ancestry guardrails use, through *ancestryRules*. A
+rule matches a pair whichever animal is the sire and whichever the dam.
+A *block* rule moves the matching pair out of *pairs* and into
+*excluded* with the reason `"ancestry rule"` – here “block” means “not
+listed as eligible”, not “never placed together”. A *flag* rule keeps
+the pair in *pairs* and annotates it. The pedigree must carry an
+*ancestry* column, which the example pedigree below does.
+
+``` r
+
+ancPed <- qcStudbook(
+  read.csv(system.file("extdata", "examples", "example_ancestry_pedigree.csv",
+                       package = "nprcgenekeepr"),
+           stringsAsFactors = FALSE, na.strings = c("", "NA")),
+  minSireAge = 2, minDamAge = 2, reportChanges = FALSE, reportErrors = FALSE)
+ancPed$gen <- findGeneration(ancPed$id, ancPed$sire, ancPed$dam)
+ancKmat <- kinship(ancPed$id, ancPed$sire, ancPed$dam, ancPed$gen)
+ancestryRules <- checkAncestryRules(readAncestryRules(
+  system.file("extdata", "examples", "example_ancestry_rules.csv",
+              package = "nprcgenekeepr")))
+ancestryRules
+```
+
+    ##   ancestry1 ancestry2 severity
+    ## 1    INDIAN   CHINESE    block
+    ## 2    INDIAN    HYBRID    block
+    ## 3    INDIAN   UNKNOWN     flag
+    ## 4    INDIAN     OTHER     flag
+
+``` r
+
+ancMatePairs <- reportMatePairs(ancPed, ancKmat, ancestryRules = ancestryRules)
+names(ancMatePairs)
+```
+
+    ## [1] "pairs"            "excluded"         "ancestryCoverage"
+
+With rules supplied, *pairs* gains three columns: *ancestryRule* (the
+matched rule as a sorted `"LEVEL-LEVEL"` string), *ancestrySeverity*
+(`"flag"` or `"block"`) and *ancestryStatus* (`"violation"`, or
+`"overridden"` for an overridden block rule). All three are `NA` for a
+pair no rule matches. Here the only rows with a rule are the three
+flagged pairs; the five blocked pairs are in *excluded*.
+
+``` r
+
+ancMatePairs$pairs[!is.na(ancMatePairs$pairs$ancestryRule),
+                   c("sireId", "damId", "ancestryRule", "ancestrySeverity",
+                     "ancestryStatus")]
+```
+
+    ##    sireId damId   ancestryRule ancestrySeverity ancestryStatus
+    ## 9      I1    U1 INDIAN-UNKNOWN             flag      violation
+    ## 11     O1    I2   INDIAN-OTHER             flag      violation
+    ## 20     A1    U1 INDIAN-UNKNOWN             flag      violation
+
+``` r
+
+ancMatePairs$excluded
+```
+
+    ##   sireId damId        reason   ancestryRule
+    ## 1     C1    I2 ancestry rule CHINESE-INDIAN
+    ## 2     I1    C2 ancestry rule CHINESE-INDIAN
+    ## 3     A1    C2 ancestry rule CHINESE-INDIAN
+    ## 4     I1    H1 ancestry rule  HYBRID-INDIAN
+    ## 5     A1    H1 ancestry rule  HYBRID-INDIAN
+
+The third element, *ancestryCoverage*, lists every standardized ancestry
+level with the number of distinct animals at that level (*n*) and
+whether any rule names it (*covered*). A level with animals but
+`covered = FALSE` – here JAPANESE – is one no rule speaks to, which is
+worth a second look before relying on the rules as complete.
+
+``` r
+
+ancMatePairs$ancestryCoverage
+```
+
+    ##   ancestry n covered
+    ## 1  CHINESE 2    TRUE
+    ## 2   INDIAN 3    TRUE
+    ## 3   HYBRID 1    TRUE
+    ## 4 JAPANESE 2   FALSE
+    ## 5    OTHER 1    TRUE
+    ## 6  UNKNOWN 1    TRUE
+
+A curator can override a *block* rule for one call with
+*overriddenRules*, a data frame with *ancestry1* and *ancestry2* columns
+(unordered, case-insensitive). The blocked pairs then return to *pairs*,
+marked `"overridden"`, rather than silently reappearing.
+
+``` r
+
+overriddenMatePairs <- reportMatePairs(
+  ancPed, ancKmat, ancestryRules = ancestryRules,
+  overriddenRules = data.frame(ancestry1 = "CHINESE", ancestry2 = "INDIAN"))
+table(overriddenMatePairs$pairs$ancestryStatus, useNA = "ifany")
+```
+
+    ## 
+    ## overridden  violation       <NA> 
+    ##          3          3         17
+
+``` r
+
+table(overriddenMatePairs$excluded$reason)
+```
+
+    ## 
+    ## ancestry rule 
+    ##             2
+
+Naming a rule that is not in *ancestryRules*, a *flag* rule, or the same
+rule twice is an error, as is giving *overriddenRules* without
+*ancestryRules*. A valid rules table with zero rules is accepted: the
+result has the ancestry columns, with nothing moved.
+
 ## Pedigree Errors
 
 As stated earlier you can see which types of errors are detected by
@@ -1447,7 +1570,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpSrGK1p/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/Rtmpcvj2Qj/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -2218,13 +2341,56 @@ alias strings are randomly generated on every call and are not
 reproduced here; what matters is that no real id from the input survives
 into the de-identified table.
 
+### Aliasing Ids with a Known Placeholder Status
+
+**obfuscateId** gives each id a random alias. By default it reads an
+id’s *shape* to decide whether it stands for an unknown parent: an id
+like `"U0007"` gets a placeholder-shaped alias (the placeholder prefix
+plus random characters) and every other id gets a plain one. That guess
+is wrong for a real animal that happens to be named `"U1234"`.
+**qcStudbook** records the truth in a *placeholder* column, and
+**obfuscateId**’s *placeholder* argument takes that information, one
+logical value per id: `TRUE` for a placeholder and `FALSE` for a real
+animal. `NA` (or leaving the argument out) reads that id by its shape.
+
+The aliases are random; the seed is fixed here only so the printed
+values are reproducible.
+
+``` r
+
+ids <- c("U1234", "A100", "U0007", "B200")
+isPlaceholder <- c(FALSE, FALSE, TRUE, FALSE)
+set.seed(1)
+obfuscateId(ids, size = 6L)
+```
+
+    ##    U1234     A100    U0007     B200 
+    ## "UJNV6H" "68YXCH" "UGZN1S" "09N27H"
+
+``` r
+
+set.seed(1)
+obfuscateId(ids, size = 6L, placeholder = isPlaceholder)
+```
+
+    ##    U1234     A100    U0007     B200 
+    ## "JNV6H6" "8YXCHG" "UZN1S0" "9N27HX"
+
+The first call reads *U1234* by its shape and gives it a
+placeholder-shaped alias, so the real animal looks like an unknown
+parent after de-identification. The second call marks it real, so it
+gets a plain alias (random, so it could begin with `U` by chance; with
+this seed it does not), while *U0007*, marked `TRUE`, keeps a
+placeholder-shaped one. The argument must be logical and the same length
+as *id*, or the call stops.
+
 ``` r
 
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-09-30 04:50:36.246378. The processing
-time for this document was 22 seconds..
+The current date and time is 2026-09-30 21:04:43.422563. The processing
+time for this document was 23 seconds..
 
 ``` r
 

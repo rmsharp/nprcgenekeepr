@@ -64,33 +64,6 @@ or (3) leave it. Tests to extend:
 `tests/testthat/test_getPotentialParents.R`, and
 `test_modPotentialParents.R` if the table changes.
 
-**Unticking “Display Unknown IDs” breaks the Genetic Value analysis
-(found S806, 2026-09-28, DECISION NEEDED, Effort S)** – every downstream
-module gets the Pedigree Browser’s filtered pedigree
-(`R/appServer.R:312`), and the filter (`R/modPedigree.R:359-361`)
-removes placeholder rows while their children still name them as
-sire/dam. Measured S806 on `qcPed` with the Genetic Value module’s own
-steps (`R/modGeneticValue.R:290-335`: `population <- is.na(exit)`,
-`trimPedigree(probands, ped, removeUninformative = FALSE, addBackParents = FALSE)`,
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)):
-236 rows, 43 name a removed row, and
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-stops with “sire and dam must have had alleles assigned: logic error”;
-the same steps with the box ticked run. Not run through the Shiny module
-itself.
-[`calcNeVariance()`](https://github.com/rmsharp/nprcgenekeepr/reference/calcNeVariance.md)
-is unaffected (26.41 both ways). **Decide:** (1) the box filters only
-the displayed table, and downstream modules get the unfiltered pedigree;
-(2) downstream modules keep the filtered pedigree and the filter also
-blanks those sire/dam values (as
-[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md)
-does), which changes genetic results for the 43 animals; (3) leave it
-and say in the help that the box must stay ticked for analysis. Related:
-the placeholder marking plan
-(`docs/planning/unknown-parent-placeholder-marking-plan.md` §7 dragon 2)
-relies on this wiring, so a fix here should keep what every tab sees the
-same.
-
 **(Optional, owner decision) One internal `isAddedRecord()` helper for
 the “added” mask (raised S785, deferred at the S785, S786 and S787
 REFACTORs; DECISION NEEDED, Effort S)** – the mask is written inline
@@ -186,29 +159,22 @@ has not asked for.
 **Mate-pair ancestry guardrails – residue after issue \#169 (found
 S776-S777, 2026-09-24; DECISION NEEDED – the owner picks which to
 pursue, each Effort S)** – \#169 shipped and closed S777 (kernel,
-module, override gate, Ancestry tab, committed e2e, article). Four small
-things it left, none started: (1) **`a2interactive` demonstration
-(READY, the deferred documentation pass per `CLAUDE.md`)** – add a
-section to `vignettes/a2interactive.Rmd` for
-`reportMatePairs(ancestryRules, overriddenRules)`: the `ancestryRule` /
-`ancestrySeverity` / `ancestryStatus` columns, `ancestryCoverage`, and
-the excluded reason “ancestry rule”. The same pass covers
-`obfuscateId(placeholder =)` (S811): a marked real `U1234` gets a
-real-shaped alias. (2) **Zero-rule table (DECISION NEEDED)** – a valid
-rules table with zero rules makes `.buildAncestryOverrideManifest()`
-stop (“no rules in effect”), so Download Audit Manifest errors on BOTH
-Mate Pair and Breeding Groups; decide whether a zero-rule table should
-read as “inactive” or the manifest should say so. (3) **The Excluded tab
-has no export (DECISION NEEDED)** – plan section 7 dragon 8: a curator
-cannot get the list of blocked pairs as a file (the manifest carries
-per-rule COUNTS only). (4) **Duplicated gate code (READY refactor)** –
-the override select-choices builder and the confirm-gate modal are
-duplicated between `R/modBreedingGroups.R` and `R/modMatePair.R` (S776’s
-REFACTOR shared only `.emptyAncestryOverrides()` and
-`.overridableAncestryRules()`); the shared shape is a choices builder
-plus a modal constructor taking the warning text and the namespace.
-**Known, accepted:** an unhandled click-time error ends the Shiny
-session (Learning 786).
+module, override gate, Ancestry tab, committed e2e, article). Three
+small things it left, none started: (1) **Zero-rule table (DECISION
+NEEDED)** – a valid rules table with zero rules makes
+`.buildAncestryOverrideManifest()` stop (“no rules in effect”), so
+Download Audit Manifest errors on BOTH Mate Pair and Breeding Groups;
+decide whether a zero-rule table should read as “inactive” or the
+manifest should say so. (2) **The Excluded tab has no export (DECISION
+NEEDED)** – plan section 7 dragon 8: a curator cannot get the list of
+blocked pairs as a file (the manifest carries per-rule COUNTS only). (3)
+**Duplicated gate code (READY refactor)** – the override select-choices
+builder and the confirm-gate modal are duplicated between
+`R/modBreedingGroups.R` and `R/modMatePair.R` (S776’s REFACTOR shared
+only `.emptyAncestryOverrides()` and `.overridableAncestryRules()`); the
+shared shape is a choices builder plus a modal constructor taking the
+warning text and the namespace. **Known, accepted:** an unhandled
+click-time error ends the Shiny session (Learning 786).
 
 **Decide whether/how to adopt the owner’s
 `suggested_NEWS_entry.md`/`.Rmd` 3.0.0 consolidation draft (raised S791,

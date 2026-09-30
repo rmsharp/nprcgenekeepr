@@ -93,6 +93,40 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · \[ad hoc\] S816 claim (in progress): push `master` (13 commits ahead, includes S812’s lint fix) and report CI; owner chose it at the Phase 0 picker. No code change.
+
+### 2026-09-30 · \[ad hoc\] S815 close-out: added the six words S813’s `a2interactive.Rmd` demos introduced (`ancestryCoverage`, `ancestryRule`, `ancestryRules`, `ancestrySeverity`, `ancestryStatus`, `overriddenRules`) to `inst/WORDLIST` (S814 handoff evaluated 9/10, self 9/10). Strict TDD: RED was the existing failing `test_wordlist_coverage.R:121` (same six words), GREEN the two WORDLIST insertions, nothing to refactor. Full unfiltered suite 362 files, 2,881 tests, 1 failure (known local-only `test_pkgdown_reference_config.R`; was 2); `devtools::check(vignettes = FALSE)` 0 errors, 0 warnings, 1 note (owner’s untracked `suggested_NEWS_entry.md`). Removed the item from `BACKLOG.md`. No GitHub issue named; no new learning (Learning 831 covers it); nothing pushed.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S815 claim (in progress): add the six words S813’s `a2interactive.Rmd` demos introduced to `inst/WORDLIST` (BACKLOG READY item found S814) so `test_wordlist_coverage.R` and `devtools::check()` pass; strict TDD, no production code.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S814 close-out: fixed the BACKLOG item “Unticking Display Unknown IDs breaks the Genetic Value analysis” (found S806; S813 handoff evaluated 7/10, self 8/10). Owner chose “table only”: `modPedigreeServer()` returns a new `analysisPedigree` (full pedigree, focal trim still applied) and `appServer` feeds `shared$currentPedigree` from it, so a hidden stand-in no longer leaves children naming a missing parent (43 of 236 animals on `qcPed`). Strict TDD: RED `cb26af5d5` (8 tests, 6 failing, 2 guards), GREEN `9a7657865`, docs `c5968028a` (help text, `_pedigree_browser.Rmd`, `colony-manager-guide.qmd`, `NEWS.Rmd`); plan sections 7 and 10 annotated. Full suite 2,881 tests, 2 failures (known `test_pkgdown_reference_config.R`; `test_wordlist_coverage.R` from S813’s vignette words, logged as a BACKLOG READY item, not fixed here); lint 0; `devtools::check(vignettes = FALSE)` 1 error (that wordlist issue); smoke HTTP 200. Removed the item from `BACKLOG.md`; Learnings 830, 831. No GitHub issue named. Nothing pushed.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S814 claim (in progress): resolve the BACKLOG “Unticking Display Unknown IDs breaks the Genetic Value analysis” item (found S806); strict TDD, scope decision to the owner first, no production code yet.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S813 close-out: added the deferred `vignettes/a2interactive.Rmd` demonstrations (S812 handoff evaluated 8/10, self 8/10): “Ancestry Rules for Mate Pairs” (`reportMatePairs(ancestryRules, overriddenRules)`, the three ancestry columns, `ancestryCoverage`, the override path) and “Aliasing Ids with a Known Placeholder Status” (`obfuscateId(placeholder =)`), +104 lines, docs-only. The vignette rendered with no error and each claim was checked against the rendered output; `test_r_cmd_check_clean_baseline.R` passes. Removed the finished sub-item from the BACKLOG “Mate-pair ancestry guardrails” item (three residues remain). Learning 829. Not run: full suite, `devtools::check()` (no R/test/NAMESPACE change). Issue \#169 was already closed S777.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S813 claim (in progress): add the deferred `vignettes/a2interactive.Rmd` demonstration for `reportMatePairs()`’s ancestry columns and `obfuscateId(placeholder =)` (BACKLOG “Mate-pair ancestry guardrails” item 1); docs-only, no production code.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S812 close-out: fixed the red `lint.yaml` run on `6d34fe5f9` (S811 handoff evaluated 8/10, self 8/10): re-wrapped the 83-character roxygen line at `R/resolveCrossCenterIds.R:367` (comment only) and regenerated `man/resolveCrossCenterIds.Rd` (whitespace only); `lint_package()` 0, `test_resolveCrossCenterIds.R` and `test_placeholderMarkDeidMerge.R` pass; Learning 828; session notes, `HANDOFFS.md` receipt complete. Nothing pushed, so CI on the fix is unconfirmed; no GitHub issue named (CI breaks get no issue per the S636 convention)
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S812 claim (in progress): fix the red `lint.yaml` run on `6d34fe5f9` – `R/resolveCrossCenterIds.R:367` is 83 characters (`line_length_linter`); style-only, no behavior change
+
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-29 · \[ad hoc\] S811 close-out: placeholder-marking plan Slice 5 DONE, so the whole plan is done (S810 handoff evaluated 8/10, self 9/10): `obfuscateId(placeholder =)` and `obfuscatePed()` read the mark, `resolveCrossCenterIds()` keeps and resolves a linked pair’s mark, real wins (RED `6de83f4d8`, GREEN `665e9c475`, docs `a229b3bb1`); plan Slice 5 DONE note, `NEWS.Rmd` entry, PED_GV F2 / NEW-38 marked done, placeholder `BACKLOG.md` item removed (the plan record lives in `docs/planning/unknown-parent-placeholder-marking-plan.md` §5); session notes, `HANDOFFS.md` receipt complete, Learning 827; full suite 2,872 tests / 0 errors / 1 known local failure, `devtools::check` 0/0/2 notes (owner’s untracked drafts), lint 0, smoke HTTP 200 on port 6111. Nothing pushed; no GitHub issue named
 
 - **Model:** Claude Sonnet 5.5.

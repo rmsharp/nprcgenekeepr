@@ -38,6 +38,45 @@ Minimum Handoff Requirements (`SESSION_RUNNER.md` §3D).
 ## Format — a fenced `handoff` block
 
     ```handoff
+    session: S816
+    date: 2026-09-30
+    status: pending
+    active_task: Push master (13 commits ahead) and report CI; owner-chosen from the Phase 0 picker
+    ```
+
+    ```handoff
+    session: S815
+    date: 2026-09-30
+    status: complete
+    self_score: 9
+    predecessor_score: 9
+    active_task: BACKLOG READY item DONE: the six S813 vignette words (ancestryCoverage, ancestryRule, ancestryRules, ancestrySeverity, ancestryStatus, overriddenRules) are in inst/WORDLIST, so test_wordlist_coverage.R and devtools::check() pass
+    what_was_done: Strict TDD: claim d26c85241; RED was the existing failing test_wordlist_coverage.R:121 (6 words flagged); GREEN added the six words to inst/WORDLIST (two alphabetical insertions); REFACTOR had nothing to change. Full unfiltered suite 362 files, 2,881 tests, 1 failure (known local-only test_pkgdown_reference_config.R); devtools::check(vignettes = FALSE) 0 errors, 0 warnings, 1 note (owner's untracked suggested_NEWS_entry.md). Records and BACKLOG item removal in the S815 close-out commit.
+    next_steps: Owner pushes master (12 commits ahead; all 4 workflows should go green, including lint.yaml via S812's fix), then report gh run list and do not fix inline. Then pick from the priorities list starting with Potential Parents own-dam (R/getPotentialParents.R:190, DECISION NEEDED); still ask once whether to commit or drop the 7 untracked owner drafts.
+    key_files: inst/WORDLIST:260 (ancestry words); inst/WORDLIST:496 (overriddenRules); tests/testthat/test_wordlist_coverage.R:121; BACKLOG.md:6 (Up Next now starts with the PED_GV item)
+    gotchas: inst/WORDLIST has two sorted runs (capitalized words first, then lowercase/camelCase from line ~255); test_wordlist_coverage.R needs NOT_CRAN=true or it bare-skips; last red CI run (lint.yaml, S811 push) is fixed only in unpushed commit 4ccdb0dd4
+    runtime_smoke: n/a: data-only change (inst/WORDLIST), no runtime behavior touched; check() and the full suite passed
+    changelog_ref: S815 close-out entry
+    commit: see git log (S815 close-out)
+    ```
+
+    ```handoff
+    session: S814
+    date: 2026-09-30
+    status: complete
+    self_score: 8
+    predecessor_score: 7
+    active_task: Display Unknown IDs vs reportGV() BACKLOG item DONE: the box now filters only the Pedigree Browser table; other tabs get the new analysisPedigree return element
+    what_was_done: Strict TDD with owner-decided scope (table only). Claim 86df3a042, RED cb26af5d5 (8 new tests, 6 failing, 2 guards; contract and stub updates), GREEN 9a7657865 (R/modPedigree.R analysisPedigree + R/appServer.R wiring), docs c5968028a (help text, manual, guide, NEWS.Rmd), records in the S814 close-out commit. Full suite 2,881 tests with 2 failures (known pkgdown-config and S813's wordlist); lint 0; smoke HTTP 200.
+    next_steps: Add the 6 words S813 left out of inst/WORDLIST (BACKLOG top item, READY, Effort S) so test_wordlist_coverage.R and devtools::check() pass, then the owner pushes master (11 commits ahead, all 4 workflows run). Then pick from the priorities list starting with Potential Parents own-dam (R/getPotentialParents.R:190).
+    key_files: R/modPedigree.R:358 (applyFocalTrim, analysisPedigreeData); R/appServer.R:310 (shared$currentPedigree from analysisPedigree); tests/testthat/test_displayUnknownIdsDownstream.R:1; tests/testthat/test_appServer_server.R:65 (stub); BACKLOG.md:7 (wordlist item)
+    gotchas: analysisPedigree keeps the focal-animal trim; the table, diagram and CSV export still use the filtered pedigree(); a new modPedigreeServer stub needs an analysisPedigree element; NEWS.md lags NEWS.Rmd (last rendered S716); no browser click-through, testServer only
+    runtime_smoke: runGeneKeepR(port = 6099L) HTTP 200, no log errors; behavior verified with testServer on modPedigreeServer and appServer
+    changelog_ref: S814 close-out entry
+    commit: see git log (S814 close-out)
+    ```
+
+    ```handoff
     session: S<N>
     date: YYYY-MM-DD
     status: <pending | complete>
@@ -249,6 +288,38 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh),
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
+
+``` handoff
+session: S813
+date: 2026-09-30
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: a2interactive.Rmd demo sections for reportMatePairs ancestry columns and obfuscateId(placeholder =) DONE; BACKLOG Mate-pair ancestry guardrails item now has 3 open residues (zero-rule manifest, Excluded-tab export, duplicated gate code). Nothing in progress.
+what_was_done: Added two sections to vignettes/a2interactive.Rmd (+104 lines): Ancestry Rules for Mate Pairs (rules table, pairs/excluded/ancestryCoverage, override) and Aliasing Ids with a Known Placeholder Status. Rendered the vignette and checked each prose claim against the rendered output. Removed the finished sub-item from BACKLOG.md. Learning 829. Claim commit 30537e2fe.
+next_steps: Owner pushes master (5 commits ahead; all 4 workflows run, lint should go green). Then pick from: Display Unknown IDs breaking reportGV (DECISION NEEDED, R/appServer.R:312, R/modPedigree.R:359-364), Potential Parents own-dam (DECISION NEEDED, R/getPotentialParents.R:190), PED_GV owner decisions, or the zero-rule manifest and Excluded-tab export residues. Optional: a full a2interactive inventory pass of exports and parameters since S541/S808 (not started).
+key_files: vignettes/a2interactive.Rmd:1080 (Ancestry Rules for Mate Pairs); vignettes/a2interactive.Rmd:1786 (Aliasing Ids with a Known Placeholder Status); BACKLOG.md:127 (Mate-pair ancestry guardrails residue); PROJECT_LEARNINGS.md:2326
+gotchas: The vignette's setup calls set_seed(1L) (line 30), which sets sample.kind to Rounding, so seeded output differs from a console run; the prose about the aliases is seed-dependent (Learning 829). Rendering to md_document fails on the HTML tables; render HTML and strip tags to read output. vignettes/*.html are gitignored and pre-existing.
+runtime_smoke: n/a - docs-only; the vignette render (rmarkdown::render of a2interactive.Rmd) is the build equivalent and completed with no error
+changelog_ref: S813 close-out entry
+commit: see git log (S813 close-out)
+```
+
+``` handoff
+session: S812
+date: 2026-09-30
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Red lint.yaml run on 6d34fe5f9 fixed locally (comment re-wrap at R/resolveCrossCenterIds.R:367); not pushed, so CI green is unconfirmed. Next: owner pushes, then pick from the priorities list.
+what_was_done: Reproduced the single line_length_linter finding locally, re-wrapped the roxygen paragraph (comment only) and regenerated man/resolveCrossCenterIds.Rd (whitespace only); lint_package 0, two related test files pass; Learning 828.
+next_steps: Owner pushes master (all 4 workflows run; lint should go green). Then pick: Display Unknown IDs breaking reportGV (DECISION NEEDED, R/appServer.R:312), Potential Parents own-dam (DECISION NEEDED, R/getPotentialParents.R:190), a2interactive demos (READY).
+key_files: R/resolveCrossCenterIds.R:364; man/resolveCrossCenterIds.Rd:1; PROJECT_LEARNINGS.md:2323
+gotchas: Lint after the last docs/roxygen edit, not only after GREEN (Learning 828). gh run list can print oldest-first within one push; use --json createdAt. Full suite and devtools::check were not re-run (comment-only change).
+runtime_smoke: n/a - comment-only change, no runtime behavior touched
+changelog_ref: S812 close-out entry
+commit: see git log (S812 close-out)
+```
 
 ``` handoff
 session: S811

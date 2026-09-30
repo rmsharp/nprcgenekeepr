@@ -12539,3 +12539,66 @@ in any generic “prefer non-NA, stop on conflict” loop rather than
 letting it fall into that loop; read the message of every RED failure,
 including `expect_error` ones that can pass on an “unused argument”
 error (tighten the regex to the new message).
+
+#### Learning 828
+
+**A roxygen edit in an `R/` file is an R edit even when the commit is
+labelled docs-only, so `lintr::lint_package()` must run after the last
+such commit, not only after GREEN.** (S812, 2026-09-30.) S811 linted its
+three `R/` files clean at GREEN, then the docs commit `a229b3bb1` added
+a roxygen paragraph to `R/resolveCrossCenterIds.R` with one 83-character
+line; `lint.yaml` failed on the push (`line_length_linter`, line 367)
+while `R-CMD-check`, `test-coverage` and `pkgdown` stayed green. Fix:
+re-wrap the comment (S812). How to apply: run the lint close-out check
+as the last step before the records commit, after every
+docs/NEWS/roxygen edit, and re-run `devtools::document()` since a
+re-wrap also changes the `.Rd` (whitespace only). Related: the lint
+close-out checklist in `CLAUDE.md` (Learning 477).
+
+#### Learning 829
+
+**A seeded vignette chunk prints different values from the same call at
+the console, so read the printed aliases from the rendered output, never
+from a prototype.** (S813, 2026-09-30.) The `obfuscateId(placeholder =)`
+demo gave `"UDA8XN"`-style values in a console prototype with
+`set.seed(1)` and different ones in `a2interactive.Rmd`, because the
+vignette’s setup calls `set_seed(1L)` (line 30), which changes the
+sample kind to `"Rounding"`. The prose claim “the marked-real animal
+gets a plain alias” held in both, but only by the seed (a random
+real-shaped alias can begin with `U`), so the prose now says so. How to
+apply: prototype vignette code with the vignette’s own setup chunk,
+render, and check each prose claim against the rendered text (HTML to
+text), not the prototype; word any claim about a random value as
+seed-dependent.
+
+#### Learning 830
+
+**A RED test on a value that does not exist yet can pass for the wrong
+reason: `all(x %in% y)` on `NULL` is `TRUE` and `identical(NULL, NULL)`
+is `TRUE`, so assert the type before the property, and keep the test
+helper from crashing on the missing piece.** (S814, 2026-09-30.) The
+first RED run of `test_displayUnknownIdsDownstream.R` had 2 “failing”
+tests that passed (no child names a missing parent, analysis pedigree
+same ticked or not) because `analysisPedigree` was `NULL`, and 2 guards
+that failed because the helper called `returned$analysisPedigree()` on a
+missing element. Fixed before the RED commit with
+`expect_s3_class(x, "data.frame")` ahead of each property and a helper
+that returns `NULL` for a missing reactive. How to apply: after the
+first RED run, list per test which passed and which failed; a test that
+passes before the feature exists is either a guard (say so in its name)
+or vacuous (fix it).
+
+#### Learning 831
+
+**A vignette-only change can break `devtools::check()`, because
+`tests/spelling.R` and `test_wordlist_coverage.R` read the vignette’s
+words; a docs-only session that touches a `.Rmd` runs the wordlist
+test.** (S814, 2026-09-30, found while verifying a different change.)
+S813 added `a2interactive.Rmd` demos naming `ancestryRule`,
+`ancestryStatus` and four more identifiers; it ran the render and
+`test_r_cmd_check_clean_baseline.R` but not the full suite, so 6 flagged
+words reached master (1 check ERROR, 1 test failure, both red on the
+first push). How to apply: for any `vignettes/*.Rmd` or `man/` prose
+edit, run `test_wordlist_coverage.R` (or
+[`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html))
+before close-out, and put new code identifiers in `inst/WORDLIST`.

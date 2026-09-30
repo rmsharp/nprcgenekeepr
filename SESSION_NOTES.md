@@ -168,104 +168,84 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### Session 810 Handoff Evaluation (by Session 811)
+### What Session 816 Did
 
-**Score: 8/10.** Orient measurements held: `CHANGELOG.md` and
-`HANDOFFS.md` frontiers at HEAD, the S810 receipt `status: complete`,
-the 7 untracked files unchanged, dashboard 96/100. Next step (A) named
-the right files (`R/obfuscateId.R`, `R/obfuscatePed.R`,
-`R/resolveCrossCenterIds.R`) and the plan §5 Slice 5 test list was
-usable. **Missing:** it did not say that a linked pair’s mark is lost
-when only one file has the column, or that two disagreeing marks stop
-the merge; the plan’s D8 line (“NA-fills the unmarked side, QC marks it
-by shape”) hid both, and they needed an owner decision. **Wrong:** the
-“NA-fill” description of the merge was true only for unlinked rows
-(Learning 827). **ROI:** high.
+**Deliverable:** push `master` and report CI (IN PROGRESS) **Started:**
+2026-09-30 **Status:** Session claimed. Work beginning. **Ledger:**
+`CHANGELOG: pending`
 
-### What Session 811 Did
+### Session 814 Handoff Evaluation (by Session 815)
 
-**Deliverable, DONE:** Slice 5 of
-`docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD,
-every gate an `AskUserQuestion`). `obfuscateId(placeholder =)` (a marked
-stand-in gets a stand-in-shaped alias, a marked real animal a
-real-shaped one, NA/NULL by shape; wrong length or non-logical stops);
-[`obfuscatePed()`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)
-passes the column;
-[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)
-resolves a linked pair’s mark (real wins, two stand-ins stay one, a mark
-on one side is kept, no error on disagreement). One new owner decision
-(S811): “Real wins”. The placeholder-marking `BACKLOG.md` item is
-removed (all 5 slices done) and PED_GV F2 / NEW-38 marked done in the
-PED_GV item. **Commits:** claim `4477ef718`; RED `6de83f4d8`
-(`tests/testthat/test_placeholderMarkDeidMerge.R`, 18 tests, 11 failing,
-7 guards); GREEN `665e9c475` (`R/obfuscateId.R`, `R/obfuscatePed.R`,
-`R/resolveCrossCenterIds.R`, `man/obfuscateId.Rd`); docs `a229b3bb1`;
-records (this). **Verification:** - The 11 RED tests failed on the old
-behavior (every message read; two `expect_error` tests passed by
-accident on an “unused argument” message and were tightened before the
-RED commit), then passed; the older
-obfuscate/cross-center/de-identified-export tests still pass. - Full
-unfiltered suite (`NOT_CRAN=true`, `load_all`) after GREEN: 361 files,
-2,872 tests, 0 errors, 1 failure, the known local-only
-`test_pkgdown_reference_config.R`. After the docs:
-`test_newsReleaseState.R`, `test_wordlist_coverage.R`, the new file and
-`test_resolveCrossCenterIds.R` pass. -
-`devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes
-(the owner’s untracked drafts). - Lint 0 on the 3 R files and the new
-test file. - Runtime smoke: `runGeneKeepR(port = 6111L)` HTTP 200, no
-log errors. (Port 6099 was already held by another R process, PID 82416,
-not started by this session; that first attempt is not counted.) The
-de-identified export was checked with `testServer` on
-`modDeidentifiedExportServer`, not by clicking in a browser. - CI: Phase
-0 `gh run list --branch master`: last pushed commit green on all four
-workflows; nothing pushed. **Learnings:** 827. **Reduction:** the
-placeholder `BACKLOG.md` item (about 3 KB) removed; these notes stay
-under the 65,536 B ceiling.
+**Score: 9/10.** Every Orient measurement held: `git status -sb` “ahead
+11”, `CHANGELOG.md`/`HANDOFFS.md` frontiers at HEAD (0 undocumented),
+the 7 untracked files unchanged, and the top BACKLOG item (the six
+words) was exact: the failing test flagged exactly `ancestryCoverage`,
+`ancestryRule`, `ancestryRules`, `ancestrySeverity`, `ancestryStatus`,
+`overriddenRules`, and adding them took the suite to its one known
+failure. Next step (A) also warned correctly that a push would go red
+until the words landed. **Missing:** nothing that cost time; it did not
+say where in `inst/WORDLIST` the words belong (the file has two sorted
+runs, see Gotcha 1). **Wrong:** nothing found. **ROI:** high.
 
-**Self-assessment: 9/10.** - + Probed the merge and de-identification
-with the real cases before asking, so the one owner question was
-concrete (and found a bug the plan did not describe). - + Read every RED
-failure message; caught two tests that passed for the wrong reason and a
-guard that errored. - + Every commit at 5 files or fewer; full suite,
-`devtools::check`, lint and smoke run before close-out. - - First smoke
-test hit a busy port and printed HTTP 200 from another process; caught
-and re-run on a free port. - - A `sed -i` call failed on macOS syntax
-(used Edit instead); nothing lost. - - No browser click-through of the
-De-identified Export tab; `testServer` only.
+### What Session 815 Did
 
-**Next steps:** - (A) No slice of the placeholder plan remains. Pick
-from the priorities list: “Display Unknown IDs” breaking
-[`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
-(DECISION NEEDED, Effort S; `R/appServer.R:312`,
-`R/modPedigree.R:359-364`), Potential Parents own-dam (DECISION NEEDED,
-Effort S; `R/getPotentialParents.R:190`), or the PED_GV audit
-decisions. - (B) Deferred documentation pass: `a2interactive.Rmd`
-demonstrations for `reportMatePairs` and `obfuscateId(placeholder =)`
-(in the BACKLOG item at “a2interactive demonstration”). - (C) Carried:
-18 unpushed commits after this records commit (13 before this session, 4
-from it, and this records commit; pushing is the owner’s call and the
-push changes `R/`, so all 4 workflows run); 7 untracked files; the
-`CHANGELOG.md`/`HANDOFFS.md` trims; `CLAUDE.md` is in the warn band
-(26,731 B of 28,000 B).
+**Deliverable, DONE:** the BACKLOG READY item “Add the six words S813’s
+vignette demos introduced to `inst/WORDLIST`” (found S814). Strict TDD:
+the existing failing `tests/testthat/test_wordlist_coverage.R:121` was
+the RED (run, message read: 6 words flagged, the same six), the gate was
+an `AskUserQuestion`, GREEN added the six words, REFACTOR had nothing to
+change (data-only fix). **Commits:** claim `d26c85241`; GREEN + records
+(this close-out commit; `git log` has its hash). **Verification:** -
+`test_wordlist_coverage.R` passes. - Full unfiltered suite
+(`NOT_CRAN=true`, `load_all`): 362 files, 2,881 tests, 0 errors, 1
+failure: the known local-only `test_pkgdown_reference_config.R` (was 2
+before this session). - `devtools::check(vignettes = FALSE)`: 0 errors,
+0 warnings, 1 note (the owner’s untracked `suggested_NEWS_entry.md`);
+`spelling.Rout` matches `spelling.Rout.save`. - No `.R` file touched, so
+no lint run owed; no runtime change, so no smoke test (docs/data
+only). - CI: Phase 0 `gh run list --branch master` showed the S811
+push’s `lint.yaml` red; S812’s style commit `4ccdb0dd4` fixed it but is
+unpushed, so CI has not confirmed it. Nothing pushed this session.
+**Learnings:** none new; Learning 831 already records why a vignette
+change needs the wordlist run. **Reduction:** removed the S813-eval,
+“What Session 814 Did” and S814 next-steps/gotchas blocks (in git and
+the `HANDOFFS.md` S814 receipt); the finished BACKLOG item block was
+removed.
 
-**Key files:** `R/obfuscateId.R:41-60` (mark handling),
-`R/obfuscatePed.R:43-47`, `R/resolveCrossCenterIds.R:313-336`
-(`.mergeCrossCenterPlaceholder`) and its call in
-[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md),
-`tests/testthat/test_placeholderMarkDeidMerge.R`; plan §5 Slice 5 DONE
-note; `PROJECT_LEARNINGS.md` Learning 827.
+**Self-assessment: 9/10.** - + Ran the failing test first and read its
+message before touching the file; one production-neutral file
+changed. - + Ran the full suite and `check()` in parallel, so
+verification cost one wait. - + Kept to one deliverable; asked the owner
+the one phase gate. - - Did not ask the “commit or drop?” question about
+the 7 untracked drafts as a separate prompt; it is in the Phase 0 report
+and the picker header, and the owner answered only the picker (still
+open).
 
-**Gotchas:** 1.
-[`checkCrossCenterMapping()`](https://github.com/rmsharp/nprcgenekeepr/reference/checkCrossCenterMapping.md)
-reports only sire/dam conflicts, so it never warns about a mark
-disagreement; that is now correct because the merge no longer stops on
-one. 2. A column that exists on only one file is not merged by the
-generic `otherCols` loop in
-[`resolveCrossCenterIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md);
-any future column that must survive a linked pair needs its own line
-like `placeholder`’s. 3. A port that answers HTTP 200 may belong to
-another process; check the log says “Listening”. 4. STANDING SET
-unchanged from S790-810.
+**Next steps:** - (A) **Push `master`** (12 commits ahead; owner
+action): all 4 workflows should now be green, including `lint.yaml`
+(S812’s fix). Check `gh run list --branch master` afterwards and report,
+do not fix inline. - (B) Pick from the priorities list: Potential
+Parents own-dam (DECISION NEEDED, `R/getPotentialParents.R:190`), the
+PED_GV owner decisions
+(`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md`), the other two
+Mate-pair guardrail residues (zero-rule table, Excluded-tab export) or
+the optional full `a2interactive.Rmd` inventory pass. - (C) Carried: 7
+untracked owner drafts (still unanswered: commit or drop?); `NEWS.md`
+lags `NEWS.Rmd` (last rendered S716); `CHANGELOG.md`/`HANDOFFS.md`
+trims; `CLAUDE.md` in the warn band (26,731 B).
+
+**Key files:** `inst/WORDLIST:260-264` (ancestry words),
+`inst/WORDLIST:496` (`overriddenRules`),
+`tests/testthat/test_wordlist_coverage.R:121`, `BACKLOG.md:6` (Up Next,
+now starts with the PED_GV item).
+
+**Gotchas:** 1. `inst/WORDLIST` has two sorted runs: capitalized/acronym
+words at the top (lines ~1-254), then lowercase and camelCase words
+(line ~255 on, C-locale order); put a new camelCase identifier in the
+second run. 2. `test_wordlist_coverage.R` needs `NOT_CRAN=true` or it
+bare-skips (Learning 417). 3. The 12 unpushed commits include S812’s
+lint fix; the last red CI run (`lint.yaml`, S811 push) is fixed locally
+only.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 
