@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S816 claim (in progress): push `master` (13 commits ahead, includes S812's lint fix) and report CI; owner chose it at the Phase 0 picker. No code change.
+
 ### 2026-09-30 · [ad hoc] S815 close-out: added the six words S813's `a2interactive.Rmd` demos introduced (`ancestryCoverage`, `ancestryRule`, `ancestryRules`, `ancestrySeverity`, `ancestryStatus`, `overriddenRules`) to `inst/WORDLIST` (S814 handoff evaluated 9/10, self 9/10). Strict TDD: RED was the existing failing `test_wordlist_coverage.R:121` (same six words), GREEN the two WORDLIST insertions, nothing to refactor. Full unfiltered suite 362 files, 2,881 tests, 1 failure (known local-only `test_pkgdown_reference_config.R`; was 2); `devtools::check(vignettes = FALSE)` 0 errors, 0 warnings, 1 note (owner's untracked `suggested_NEWS_entry.md`). Removed the item from `BACKLOG.md`. No GitHub issue named; no new learning (Learning 831 covers it); nothing pushed.
 - **Model:** Claude Sonnet 5.5.
 
