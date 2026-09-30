@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S817
 date: 2026-09-30
-status: pending
-active_task: Potential Parents own-dam decision and fix (R/getPotentialParents.R:190)
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE: Potential Parents (getPotentialParents) lists candidates only for the missing parent; owner chose "blank it"
+what_was_done: Claim 370e9a1c0; RED 604d4ac9a (5 tests, 3 failing); GREEN c8b7fc794 (R/getPotentialParents.R); docs ada8616ca (roxygen, Rd, tab intro, NEWS.Rmd). Full suite 2,886 tests, 1 known local-only failure; lint clean. Removed the BACKLOG item. Not pushed.
+next_steps: Push master and watch CI (R code changed). Then pick from priorities: PED_GV owner decisions (BACKLOG.md:8), Mate-pair residues, optional a2interactive.Rmd pass. Still ask once whether to commit or drop the 7 untracked drafts.
+key_files: R/getPotentialParents.R (end of the per-animal loop), tests/testthat/test_getPotentialParents.R:497, NEWS.Rmd (Changed entry after the dam-fallback Fixed entry)
+gotchas: master is unpushed and the push triggers all four workflows; no app launch (only intro text changed); NEWS.md lags NEWS.Rmd; test_pkgdown_reference_config.R fails locally only.
 ```
 
 ```handoff

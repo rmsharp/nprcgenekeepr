@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S817 close-out: Potential Parents (`getPotentialParents()`) now lists candidates only for the missing parent (recorded dam gives empty `dams`, recorded sire empty `sires`; stand-ins do not count as recorded); owner chose "blank it" over document-only/leave (S816 handoff evaluated 9/10, self 9/10). Strict TDD: RED `604d4ac9a` (5 tests, 3 failing, 2 guards, no existing test conflicted), GREEN `c8b7fc794`, docs `ada8616ca` (roxygen, Rd, tab intro, `NEWS.Rmd`). Full unfiltered suite 362 files, 2,886 tests, 1 failure (known local-only `test_pkgdown_reference_config.R`); lint clean. Measured S798 effect: 1,351 of 1,587 example-pedigree animals had a recorded dam and got a dam list that could never contain it. Removed the item from `BACKLOG.md`. No GitHub issue named; no new learning; nothing pushed.
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S817 claim (in progress): Potential Parents own-dam decision (BACKLOG item found S798): settle with the owner whether `getPotentialParents()` lists candidate dams only for the unknown parent, then implement under strict TDD. Owner chose it at the Phase 0 picker.
 
 ### 2026-09-30 · [ad hoc] S816 close-out: pushed `master` (`6d34fe5f9..d40b734c9`, 14 commits incl. S812's lint fix) on the owner's pick; CI for `d40b734c9`: lint, pkgdown, test-coverage, R-CMD-check all success, so the S811 lint red is resolved (S815 handoff evaluated 9/10, self 9/10). No code change, no GitHub issue named, no new learning.

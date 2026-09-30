@@ -98,41 +98,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 816 Handoff Evaluation (by Session 817)
+**Score: 9/10.** Measurements held: frontiers at HEAD, `master` 1 ahead, the 7 untracked files unchanged, CI green,
+`CLAUDE.md` at 26,731 B, and the Up Next list was exact (the own-dam item sat at `BACKLOG.md:33`, the code at
+`R/getPotentialParents.R:190`). **Missing:** it did not say which tests would conflict with a behavior change there
+(none did). **Wrong:** nothing. **ROI:** high.
+
 ### What Session 817 Did
-**Deliverable:** Potential Parents own-dam decision and fix (`R/getPotentialParents.R:190`) (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning (owner decision on options 1/2/3 first, then strict TDD).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** Potential Parents now lists candidates only for the parent that is missing (owner chose
+"blank it" at a scope question; strict TDD, every gate an `AskUserQuestion`). An animal with a recorded dam gets
+`dams` empty (sires still listed); a recorded sire gets `sires` empty; both unknown keeps both. "Recorded" is read
+after `removeAutoGenIds()`, so a stand-in (placeholder TRUE) does not count and a real `U1234` (FALSE) does.
+**Commits:** claim `370e9a1c0`; RED `604d4ac9a` (5 tests in `tests/testthat/test_getPotentialParents.R:497` on,
+3 failing, 2 guards); GREEN `c8b7fc794` (`R/getPotentialParents.R`, the `list(...)` at the loop's end); docs
+`ada8616ca` (roxygen `@return`, `man/getPotentialParents.Rd`, the tab's intro text in `R/modPotentialParents.R`,
+`NEWS.Rmd` "Changed" entry); records (this).
+**Verification:** RED 3 failed for the right reason, no existing test conflicted; full unfiltered suite 362
+files, 2,886 tests, 1 failure (known local-only `test_pkgdown_reference_config.R`); the two modPotentialParents
+files, `test_newsReleaseState.R`, `test_wordlist_coverage.R` pass; `lintr::lint_package()` clean for the touched
+files. No app launch: only the intro paragraph's wording changed in the UI (no runtime wiring), so 3E is noted as
+not done. Nothing pushed; `master` is 6 commits ahead after this records commit.
+**Learnings:** none new. **Reduction:** removed the S816 "What Session 816 Did" block and the done BACKLOG item
+(in git and the S816 receipt).
 
-### Session 815 Handoff Evaluation (by Session 816)
-**Score: 9/10.** Measurements held: `CHANGELOG.md`/`HANDOFFS.md` frontiers at HEAD, the 7 untracked files unchanged,
-the red `lint.yaml` run and its unpushed fix exactly as described, and next step (A) (push, then report CI) was
-exact. **Missing:** it said "12 commits ahead" but its own close-out commit made it 13. **Wrong:** nothing else.
-**ROI:** high.
-
-### What Session 816 Did
-**Deliverable, DONE:** pushed `master` (`6d34fe5f9..d40b734c9`, 14 commits incl. S812's lint fix) on the owner's pick
-at the Phase 0 picker, then waited for CI. No code changed, so no TDD phases, no lint, no smoke test.
-**Commits:** claim `d40b734c9`; records (this close-out commit).
-**Verification:** `gh run list --branch master --commit d40b734c9`: `lint.yaml`, `pkgdown.yaml`,
-`test-coverage.yaml`, `R-CMD-check.yaml` all completed/success. The S811 lint red is fixed. Scheduled `shinytest2`
-was green at Phase 0.
-**Learnings:** none new. **Reduction:** removed the S815 "What Session 815 Did" and S814-eval blocks (in git and
-the S815 receipt).
-
-**Self-assessment: 9/10.** + Full Phase 0 report and picker; one deliverable; waited for CI instead of assuming.
-- Again did not get an answer on the 7 untracked drafts (commit or drop?).
+**Self-assessment: 9/10.** + One deliverable, owner decision asked in plain words, all gates used, full suite and
+lint run. - Did not ask about the 7 untracked drafts again (asked each session with no answer).
 
 **Next steps:**
-- (A) Pick from the priorities list: Potential Parents own-dam (DECISION NEEDED, `R/getPotentialParents.R:190`),
-  PED_GV owner decisions, Mate-pair guardrail residues, or the optional `a2interactive.Rmd` inventory pass.
-- (B) Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band
-  (26,731 B).
+- (A) Pick from the priorities list: PED_GV owner decisions (`BACKLOG.md:8`), Mate-pair guardrail residues, or the
+  optional `a2interactive.Rmd` pass (the `getPotentialParents` behavior change is covered only by its existing
+  demo, which does not print dam lists, so no edit is owed there).
+- (B) Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd` (this change's entry is in
+  `NEWS.Rmd` only); `CLAUDE.md` in the warn band (26,731 B); push owed (CI watch owed: R code changed).
 
-**Key files:** `BACKLOG.md:6-50` (Up Next), `R/getPotentialParents.R:190`.
+**Key files:** `R/getPotentialParents.R` (end of the loop), `tests/testthat/test_getPotentialParents.R:497`.
 
-**Gotchas:** 1. `master` is 1 commit ahead after this records commit (build-ignored files only; no CI watch owed).
-2. `test_pkgdown_reference_config.R` still fails locally only.
+**Gotchas:** 1. The Potential Parents table still shows the dam count/column for rows where the dam is recorded,
+now 0 and blank; `modPotentialParents.R:38-42` needed no change. 2. `master` is unpushed; the push triggers all four
+workflows because R files changed.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809

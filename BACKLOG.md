@@ -30,25 +30,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       both under- and over-counts (`NEWS.md` once used "NEW-47/48/49" as entry labels), so use the
       report's table, not the old 41-id list.
 
-- [ ] **Potential Parents never lists an animal's own recorded dam among its candidate dams
-      (found S798, 2026-09-27, DECISION NEEDED, Effort S)** -- `getPotentialParents()` searches
-      every in-colony animal with at least one unknown parent, and returns both a sire list and a
-      dam list even when one parent is recorded. The gestation-window rule
-      (`R/getPotentialParents.R:190`, the `eligibleDams` line) rules out any female who gave
-      birth within `maxGestationalPeriod` days of the focal birth, and the focal animal's own
-      birth counts, so its recorded dam is always ruled out. Measured S798 on
-      `qcStudbook(examplePedigree)` (stand-in `U` ids counted as unknown): of 1,587 animals
-      searched, 1,351 have a recorded dam and no sire, 2 a recorded sire and no dam, 234 neither;
-      the recorded dam is among its own candidate dams for 0 of 1,351, while the recorded sire
-      is among its own candidate sires for 2 of 2. The app's Potential Parents table and CSV
-      show those 1,351 dam lists anyway. Not caused by the F3 fix (S798): before it, only the
-      fallback could re-admit the recorded dam, and it did so for none of these animals.
-      **Decide:** (1) return candidates only for the unknown parent (an empty `dams` when the
-      dam is recorded; the app's dam column goes blank for those rows); (2) leave the lists as
-      they are and say in the roxygen/app help that a recorded parent is not re-listed; or (3)
-      leave it. Tests to extend: `tests/testthat/test_getPotentialParents.R`, and
-      `test_modPotentialParents.R` if the table changes.
-
 - [ ] **(Optional, owner decision) One internal `isAddedRecord()` helper for the "added" mask
       (raised S785, deferred at the S785, S786 and S787 REFACTORs; DECISION NEEDED, Effort S)** --
       the mask is written inline four times, all meaning "only the exact status `"added"` is
