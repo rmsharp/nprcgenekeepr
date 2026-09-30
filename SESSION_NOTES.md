@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 811 Did
+**Deliverable:** Slice 5 of `docs/planning/unknown-parent-placeholder-marking-plan.md`: de-identification (`obfuscateId()` optional `placeholder` vector, `obfuscatePed()` fills it from the column) and the cross-center merge (`R/resolveCrossCenterIds.R`) read the `placeholder` mark (IN PROGRESS)
+**Started:** 2026-09-29
+**Status:** Session claimed. Work beginning (PRE-RED: re-run plan section 2 greps, then decisions).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809
 receipt `status: complete`, the 7 untracked files unchanged. Next step (A) was exact: the filter sat at

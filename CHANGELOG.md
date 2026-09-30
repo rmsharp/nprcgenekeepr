@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-29 · [ad hoc] S811 claim (in progress): placeholder-marking plan Slice 5 (`docs/planning/unknown-parent-placeholder-marking-plan.md` §5): de-identification (`obfuscateId()`/`obfuscatePed()`) and the cross-center merge (`resolveCrossCenterIds()`) read the `placeholder` mark; strict TDD
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-29 · [ad hoc] S810 close-out: placeholder-marking plan Slice 4 DONE (S809 handoff evaluated 9/10, self 9/10): the "Display Unknown IDs" filter reads the `placeholder` mark (RED `056bceda4`, GREEN `83dbbee34`), `headerDisplayNames()` names the column, help text, manual, guide and `NEWS.Rmd` updated (`b406e7ead`), both exports pinned as round trips; session notes, `HANDOFFS.md` receipt complete, Learning 826; full suite 2,854 tests / 0 errors / 1 known local failure, `devtools::check` 0/0/2 notes (owner's untracked drafts), lint 0, smoke HTTP 200
 - **Model:** Claude Sonnet 5.5.
 
