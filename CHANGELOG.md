@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S813 close-out: added the deferred `vignettes/a2interactive.Rmd` demonstrations (S812 handoff evaluated 8/10, self 8/10): "Ancestry Rules for Mate Pairs" (`reportMatePairs(ancestryRules, overriddenRules)`, the three ancestry columns, `ancestryCoverage`, the override path) and "Aliasing Ids with a Known Placeholder Status" (`obfuscateId(placeholder =)`), +104 lines, docs-only. The vignette rendered with no error and each claim was checked against the rendered output; `test_r_cmd_check_clean_baseline.R` passes. Removed the finished sub-item from the BACKLOG "Mate-pair ancestry guardrails" item (three residues remain). Learning 829. Not run: full suite, `devtools::check()` (no R/test/NAMESPACE change). Issue #169 was already closed S777.
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S813 claim (in progress): add the deferred `vignettes/a2interactive.Rmd` demonstration for `reportMatePairs()`'s ancestry columns and `obfuscateId(placeholder =)` (BACKLOG "Mate-pair ancestry guardrails" item 1); docs-only, no production code.
 - **Model:** Claude Sonnet 5.5.
 

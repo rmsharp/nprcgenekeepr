@@ -182,15 +182,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ```handoff
 session: S813
 date: 2026-09-30
-status: pending
-active_task: a2interactive.Rmd demo section for reportMatePairs ancestry columns and obfuscateId(placeholder =) (BACKLOG Mate-pair ancestry guardrails item 1); docs-only
-what_was_done: pending
-next_steps: pending
-key_files: vignettes/a2interactive.Rmd:1021
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: S813 claim entry
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: a2interactive.Rmd demo sections for reportMatePairs ancestry columns and obfuscateId(placeholder =) DONE; BACKLOG Mate-pair ancestry guardrails item now has 3 open residues (zero-rule manifest, Excluded-tab export, duplicated gate code). Nothing in progress.
+what_was_done: Added two sections to vignettes/a2interactive.Rmd (+104 lines): Ancestry Rules for Mate Pairs (rules table, pairs/excluded/ancestryCoverage, override) and Aliasing Ids with a Known Placeholder Status. Rendered the vignette and checked each prose claim against the rendered output. Removed the finished sub-item from BACKLOG.md. Learning 829. Claim commit 30537e2fe.
+next_steps: Owner pushes master (5 commits ahead; all 4 workflows run, lint should go green). Then pick from: Display Unknown IDs breaking reportGV (DECISION NEEDED, R/appServer.R:312, R/modPedigree.R:359-364), Potential Parents own-dam (DECISION NEEDED, R/getPotentialParents.R:190), PED_GV owner decisions, or the zero-rule manifest and Excluded-tab export residues. Optional: a full a2interactive inventory pass of exports and parameters since S541/S808 (not started).
+key_files: vignettes/a2interactive.Rmd:1080 (Ancestry Rules for Mate Pairs); vignettes/a2interactive.Rmd:1786 (Aliasing Ids with a Known Placeholder Status); BACKLOG.md:127 (Mate-pair ancestry guardrails residue); PROJECT_LEARNINGS.md:2326
+gotchas: The vignette's setup calls set_seed(1L) (line 30), which sets sample.kind to Rounding, so seeded output differs from a console run; the prose about the aliases is seed-dependent (Learning 829). Rendering to md_document fails on the HTML tables; render HTML and strip tags to read output. vignettes/*.html are gitignored and pre-existing.
+runtime_smoke: n/a - docs-only; the vignette render (rmarkdown::render of a2interactive.Rmd) is the build equivalent and completed with no error
+changelog_ref: S813 close-out entry
+commit: see git log (S813 close-out)
 ```
 
 ```handoff

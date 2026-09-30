@@ -127,19 +127,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 - [ ] **Mate-pair ancestry guardrails -- residue after issue #169 (found S776-S777,
       2026-09-24; DECISION NEEDED -- the owner picks which to pursue, each Effort S)**
       -- #169 shipped and closed S777 (kernel, module, override gate, Ancestry tab,
-      committed e2e, article). Four small things it left, none started: (1) **`a2interactive`
-      demonstration (READY, the deferred documentation pass per `CLAUDE.md`)** -- add a
-      section to `vignettes/a2interactive.Rmd` for
-      `reportMatePairs(ancestryRules, overriddenRules)`: the `ancestryRule` /
-      `ancestrySeverity` / `ancestryStatus` columns, `ancestryCoverage`, and the excluded
-      reason "ancestry rule". The same pass covers `obfuscateId(placeholder =)` (S811): a marked
-      real `U1234` gets a real-shaped alias. (2) **Zero-rule table (DECISION NEEDED)** -- a valid rules
+      committed e2e, article). Three small things it left, none started: (1) **Zero-rule table (DECISION NEEDED)** -- a valid rules
       table with zero rules makes `.buildAncestryOverrideManifest()` stop ("no rules in
       effect"), so Download Audit Manifest errors on BOTH Mate Pair and Breeding Groups;
       decide whether a zero-rule table should read as "inactive" or the manifest should
-      say so. (3) **The Excluded tab has no export (DECISION NEEDED)** -- plan section 7
+      say so. (2) **The Excluded tab has no export (DECISION NEEDED)** -- plan section 7
       dragon 8: a curator cannot get the list of blocked pairs as a file (the manifest
-      carries per-rule COUNTS only). (4) **Duplicated gate code (READY refactor)** -- the
+      carries per-rule COUNTS only). (3) **Duplicated gate code (READY refactor)** -- the
       override select-choices builder and the confirm-gate modal are duplicated between
       `R/modBreedingGroups.R` and `R/modMatePair.R` (S776's REFACTOR shared only
       `.emptyAncestryOverrides()` and `.overridableAncestryRules()`); the shared shape is a
