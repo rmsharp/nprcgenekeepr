@@ -514,7 +514,10 @@ knitr::opts_chunk$set(echo = TRUE)
   genetic value report's founder counts and parentage labels, and the breeder
   counts behind the effective population size; a value other than TRUE, FALSE,
   1, 0 or blank stops the check and names the rows. The column is kept in the
-  files you download from the app, so the marks survive a save and re-upload.
+  files you download from the app, so the marks survive a save and re-upload. The de-identified export gives a real
+  animal whose id looks like a stand-in an alias that still reads as a real
+  animal, and linking one animal across two centers keeps its mark (the real
+  record wins if the centers disagree).
 - Fixed: Potential Parents (`getPotentialParents()`) rules out as a possible
   dam any female who gave birth to another animal too close in time to have
   also carried this one. When no female nearby was a proven breeder, it fell

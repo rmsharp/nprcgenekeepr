@@ -364,6 +364,11 @@ bindPedigreeRows <- function(dfs) {
 #' (D10), a merged pair's other shared columns (beyond \code{id}/
 #' \code{sire}/\code{dam}) follow the identical non-\code{NA}-preferred/
 #' error-on-conflict rule -- previously they were silently dropped.
+#' The one exception is the \code{placeholder} mark (see \code{\link{qcStudbook}}):
+#' a stand-in for an unknown parent that a curator links to a known animal is
+#' that animal, so the merged animal is real (\code{FALSE}) when either center
+#' recorded it as real, a stand-in (\code{TRUE}) when both did, and a mark on
+#' only one side is kept; a disagreement is not an error.
 #'
 #' @param pedA a pedigree data.frame for the first center, with (at least)
 #' columns \code{id}, \code{sire}, and \code{dam}.

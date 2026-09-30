@@ -362,6 +362,7 @@ reaches the mark through `qcStudbook()`, which is covered locally).
 - **DONE:** those pass; `BACKLOG.md` item removed and recorded in `CHANGELOG.md`; the PED_GV
   triage F2 / NEW-38 marked done in the backlog's PED_GV item; the `a2interactive` note for the
   new `obfuscateId()` parameter (deferred pass, `CLAUDE.md`).
+- **DONE S811** (RED `6de83f4d8`; GREEN `665e9c475`). `obfuscateId(placeholder = NULL)` (a stand-in gets a stand-in-shaped alias, a real animal a real-shaped one, NA/NULL by shape; a non-logical or wrong-length vector stops); `obfuscatePed()` passes the column; `resolveCrossCenterIds()` resolves a linked pair's mark by the owner's S811 rule (real wins, two stand-ins stay one, a mark on one side is kept, no error on disagreement; before, a one-sided mark was blanked and a disagreement stopped the merge). Tests: `tests/testthat/test_placeholderMarkDeidMerge.R` (11 failing before, 7 guards incl. the de-identified export round trip, which already passed because the column rides along). `checkCrossCenterMapping()` reports only sire/dam conflicts and is unchanged. The `a2interactive` note is carried in `BACKLOG.md`'s deferred-pass item.
 - **Session boundary:** one session. Close out.
 
 **Order:** 1 → 2 → 3 → 4 → 5. Slice 1 stands alone and fixes the reported cases for every
