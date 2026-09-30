@@ -98,21 +98,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 812 Did
-**Deliverable:** Fix the red `lint.yaml` run on `6d34fe5f9`: `R/resolveCrossCenterIds.R:367` is 83 characters
-(`line_length_linter`, limit 80). Style-only, no behavior change. (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### Session 811 Handoff Evaluation (by Session 812)
+**Score: 8/10.** Orient measurements held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S811 receipt
+`status: complete`, the 7 untracked files unchanged, dashboard 96/100. The priorities list and file:line pointers
+(`R/appServer.R:312`, `R/getPotentialParents.R:190`) were accurate. **Missing:** nothing on the CI state of the
+push. **Wrong:** (1) "lint 0 on the 3 R files" was true at GREEN but a later docs commit (`a229b3bb1`) added an
+83-character roxygen line, so `lint.yaml` went red on `6d34fe5f9` (Learning 828); (2) the carried item "18 unpushed
+commits" was stale: `origin/master` was already at HEAD when this session began. **ROI:** high.
 
-### Session 810 Handoff Evaluation (by Session 811)
-**Score: 8/10.** Orient measurements held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S810 receipt
-`status: complete`, the 7 untracked files unchanged, dashboard 96/100. Next step (A) named the right files
-(`R/obfuscateId.R`, `R/obfuscatePed.R`, `R/resolveCrossCenterIds.R`) and the plan §5 Slice 5 test list was usable.
-**Missing:** it did not say that a linked pair's mark is lost when only one file has the column, or that two
-disagreeing marks stop the merge; the plan's D8 line ("NA-fills the unmarked side, QC marks it by shape") hid both,
-and they needed an owner decision. **Wrong:** the "NA-fill" description of the merge was true only for unlinked
-rows (Learning 827). **ROI:** high.
+### What Session 812 Did
+**Deliverable, DONE:** Fixed the red `lint.yaml` run on `6d34fe5f9`. Re-wrapped the roxygen paragraph at
+`R/resolveCrossCenterIds.R:367` (comment text only, no code) and regenerated `man/resolveCrossCenterIds.Rd`
+(same re-wrap, whitespace only). TDD phase: PRE-RED -> REFACTOR (style-only, gated by `AskUserQuestion`; the
+reproduced lint finding was the failing check).
+**Commits:** claim `fb5008c96`; fix + records (this commit, see `HANDOFFS.md` S812 `commit:`).
+**Verification:**
+- Reproduced locally first: `lintr::lint()` on the file gave exactly 1 finding, line 367 col 81, matching the CI log.
+- After: `lintr::lint_package()` (package loaded) 0 findings; `test_resolveCrossCenterIds.R` and
+  `test_placeholderMarkDeidMerge.R` pass. Not re-run: the full suite and `devtools::check` (comment-only change;
+  S811 ran both on the same code).
+- CI on the fix: not pushed, so not yet confirmed; the push is the owner's call.
+**Learnings:** 828.
+**Reduction:** the pre-commit hook refused the records commit (25,785 tok against the 25,000 tok ceiling; the trimmer refused too, `SRF_RED`, and `--force` is the owner's call), so S811's superseded Next steps / Key files and the S810 evaluation were removed here (both live in git and the `HANDOFFS.md` receipts).
+
+**Self-assessment: 8/10.**
+- \+ Found the red run in Phase 0 from the unfiltered `gh run list`, read the failing log, reproduced locally before editing.
+- \+ One comment-only edit, 2 files, gated.
+- \- The gate text said the `.Rd` would be "confirmed unchanged"; it changed by the same re-wrap (whitespace only).
+- \- First `gh run list` output was sorted oldest-first and briefly read as "no runs since 2026-09-08"; re-queried with JSON.
+- \- Fix not verified on CI (unpushed).
+
+**Next steps:**
+- (A) Owner: push `master` (2 commits ahead after this one plus the claim); the push changes `R/`, so all 4 workflows run,
+  and `lint.yaml` should go green.
+- (B) Pick from the priorities list: "Display Unknown IDs" breaking `reportGV()` (DECISION NEEDED, Effort S;
+  `R/appServer.R:312`, `R/modPedigree.R:359-364`), Potential Parents own-dam (DECISION NEEDED, Effort S;
+  `R/getPotentialParents.R:190`), `a2interactive.Rmd` demos (READY, Effort S), or the PED_GV owner decisions.
+- (C) Carried: 7 untracked files (owner drafts, ask once "commit or drop?"); `CHANGELOG.md`/`HANDOFFS.md` trims;
+  `CLAUDE.md` in the warn band (26,731 B of 28,000 B).
+
+**Key files:** `R/resolveCrossCenterIds.R:364-370` (re-wrapped paragraph), `man/resolveCrossCenterIds.Rd`,
+`PROJECT_LEARNINGS.md` Learning 828.
+
+**Gotchas:**
+1. Run `lintr::lint_package()` after the LAST docs/roxygen edit of a session, not only after GREEN (Learning 828).
+2. `gh run list` prints oldest-first within a batch of same-time runs; use `--json createdAt,...` to see the newest.
+3. STANDING SET unchanged from S790-811.
 
 ### What Session 811 Did
 **Deliverable, DONE:** Slice 5 of `docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD, every
@@ -124,19 +155,7 @@ side is kept, no error on disagreement). One new owner decision (S811): "Real wi
 **Commits:** claim `4477ef718`; RED `6de83f4d8` (`tests/testthat/test_placeholderMarkDeidMerge.R`, 18 tests, 11
 failing, 7 guards); GREEN `665e9c475` (`R/obfuscateId.R`, `R/obfuscatePed.R`, `R/resolveCrossCenterIds.R`,
 `man/obfuscateId.Rd`); docs `a229b3bb1`; records (this).
-**Verification:**
-- The 11 RED tests failed on the old behavior (every message read; two `expect_error` tests passed by accident on
-  an "unused argument" message and were tightened before the RED commit), then passed; the older
-  obfuscate/cross-center/de-identified-export tests still pass.
-- Full unfiltered suite (`NOT_CRAN=true`, `load_all`) after GREEN: 361 files, 2,872 tests, 0 errors, 1 failure, the
-  known local-only `test_pkgdown_reference_config.R`. After the docs: `test_newsReleaseState.R`,
-  `test_wordlist_coverage.R`, the new file and `test_resolveCrossCenterIds.R` pass.
-- `devtools::check(error_on = "never")`: 0 errors, 0 warnings, 2 notes (the owner's untracked drafts).
-- Lint 0 on the 3 R files and the new test file.
-- Runtime smoke: `runGeneKeepR(port = 6111L)` HTTP 200, no log errors. (Port 6099 was already held by another R
-  process, PID 82416, not started by this session; that first attempt is not counted.) The de-identified export
-  was checked with `testServer` on `modDeidentifiedExportServer`, not by clicking in a browser.
-- CI: Phase 0 `gh run list --branch master`: last pushed commit green on all four workflows; nothing pushed.
+**Verification:** full suite 2,872 tests / 0 errors / 1 known local failure, `devtools::check` 0/0/2 notes, smoke HTTP 200 on port 6111 (details in the S811 `CHANGELOG.md` entry).
 **Learnings:** 827.
 **Reduction:** the placeholder `BACKLOG.md` item (about 3 KB) removed; these notes stay under the 65,536 B ceiling.
 
@@ -149,19 +168,7 @@ failing, 7 guards); GREEN `665e9c475` (`R/obfuscateId.R`, `R/obfuscatePed.R`, `R
 - \- A `sed -i` call failed on macOS syntax (used Edit instead); nothing lost.
 - \- No browser click-through of the De-identified Export tab; `testServer` only.
 
-**Next steps:**
-- (A) No slice of the placeholder plan remains. Pick from the priorities list: "Display Unknown IDs" breaking
-  `reportGV()` (DECISION NEEDED, Effort S; `R/appServer.R:312`, `R/modPedigree.R:359-364`), Potential Parents
-  own-dam (DECISION NEEDED, Effort S; `R/getPotentialParents.R:190`), or the PED_GV audit decisions.
-- (B) Deferred documentation pass: `a2interactive.Rmd` demonstrations for `reportMatePairs` and
-  `obfuscateId(placeholder =)` (in the BACKLOG item at "a2interactive demonstration").
-- (C) Carried: 18 unpushed commits after this records commit (13 before this session, 4 from it, and this
-  records commit; pushing is the owner's call and the push changes `R/`, so all 4 workflows run); 7 untracked
-  files; the `CHANGELOG.md`/`HANDOFFS.md` trims; `CLAUDE.md` is in the warn band (26,731 B of 28,000 B).
-
-**Key files:** `R/obfuscateId.R:41-60` (mark handling), `R/obfuscatePed.R:43-47`,
-`R/resolveCrossCenterIds.R:313-336` (`.mergeCrossCenterPlaceholder`) and its call in `resolveCrossCenterIds()`,
-`tests/testthat/test_placeholderMarkDeidMerge.R`; plan §5 Slice 5 DONE note; `PROJECT_LEARNINGS.md` Learning 827.
+**Next steps / key files:** superseded by S812's; the durable copy is the S811 receipt in `HANDOFFS.md`.
 
 **Gotchas:**
 1. `checkCrossCenterMapping()` reports only sire/dam conflicts, so it never warns about a mark disagreement; that
