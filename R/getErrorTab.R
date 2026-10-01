@@ -5,7 +5,8 @@
 #'
 #' @param errorLst list of errors and changes made by \code{qcStudbook}
 #' @param pedigreeFileName name of file provided by user on Input tab
-#' @return HTML formatted error list
+#' @return A Shiny \code{tabPanel} titled "Error List" that holds the
+#' HTML-formatted list of errors found by \code{qcStudbook}.
 #'
 #' @export
 getErrorTab <- function(errorLst, pedigreeFileName) {

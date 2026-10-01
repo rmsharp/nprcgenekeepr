@@ -12,7 +12,8 @@ getChangedColsTab(errorLst, pedigreeFileName)
 \item{pedigreeFileName}{name of file provided by user on Input tab}
 }
 \value{
-HTML formatted error list
+A Shiny \code{tabPanel} titled "Changed Columns" that holds the
+HTML-formatted list of column changes made by \code{qcStudbook}.
 }
 \description{
 Build the changed-columns tab panel

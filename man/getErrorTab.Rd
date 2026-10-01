@@ -12,7 +12,8 @@ getErrorTab(errorLst, pedigreeFileName)
 \item{pedigreeFileName}{name of file provided by user on Input tab}
 }
 \value{
-HTML formatted error list
+A Shiny \code{tabPanel} titled "Error List" that holds the
+HTML-formatted list of errors found by \code{qcStudbook}.
 }
 \description{
 Build the error-list tab panel

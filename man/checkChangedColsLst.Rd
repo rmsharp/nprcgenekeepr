@@ -8,7 +8,7 @@ checkChangedColsLst(changedCols)
 }
 \arguments{
 \item{changedCols}{list with fields for each type of column change
-\code{qcStudbook}.}
+made by \code{qcStudbook}.}
 }
 \value{
 Returns \code{TRUE} if any changed-columns field is

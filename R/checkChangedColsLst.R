@@ -4,7 +4,7 @@
 #' Check a changed-columns list for non-empty fields
 #'
 #' @param changedCols list with fields for each type of column change
-#' \code{qcStudbook}.
+#' made by \code{qcStudbook}.
 #' @return Returns \code{TRUE} if any changed-columns field is
 #' non-empty, otherwise \code{FALSE}.
 #'

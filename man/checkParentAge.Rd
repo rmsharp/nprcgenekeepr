@@ -14,7 +14,10 @@ checkParentAge(
 }
 \arguments{
 \item{sb}{A dataframe containing a table of pedigree and demographic
-information.}
+information. It needs the columns \code{id}, \code{sire}, \code{dam},
+\code{birth} and \code{exit}; \code{species} is optional (see
+\code{minSireAge}). Without \code{exit} the function fails with an
+uninformative error.}
 
 \item{minSireAge}{numeric minimum age in years for a male to have sired an
 offspring. \code{NULL} (default) looks up the floor for each sire's species
@@ -32,14 +35,20 @@ all dams.}
 minimum parent age. Supplying it sets both \code{minSireAge} and
 \code{minDamAge}; use those sex-specific parameters instead.}
 
-\item{reportErrors}{logical value if TRUE will scan the entire file and
-make a list of all errors found. The errors will be returned in a
-list of list where each sublist is a type of error found.}
+\item{reportErrors}{logical value. If \code{TRUE}, \code{NULL} is
+returned instead of stopping (or returning \code{sb}) when the input cannot
+be checked: the data frame has no rows, lacks \code{id}, \code{sire} or
+\code{dam}, or \code{birth} is not of class \code{Date},
+\code{POSIXct} or \code{character}. It does not change the result for
+valid input.}
 }
 \value{
 A dataframe containing rows for each animal where one or more
-parent was less than \code{minParentAge}. It contains all of the columns
-in the original \code{sb} dataframe with the following added columns:
+parent was younger than the minimum breeding age (\code{minSireAge} or
+\code{minDamAge}, or the species floor when they are \code{NULL}) at the
+animal's birth. It contains all of the columns
+in the original \code{sb} dataframe, with \code{exit} converted to
+character and the rows reordered, plus the following added columns:
 \enumerate{
 \item \code{sireBirth} -- sire's birth date
 \item \code{sireAge} -- age of sire in years on the date indicated by

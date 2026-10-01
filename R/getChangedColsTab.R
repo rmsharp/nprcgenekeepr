@@ -5,7 +5,8 @@
 #'
 #' @param errorLst list of errors and changes made by \code{qcStudbook}
 #' @param pedigreeFileName name of file provided by user on Input tab
-#' @return HTML formatted error list
+#' @return A Shiny \code{tabPanel} titled "Changed Columns" that holds the
+#' HTML-formatted list of column changes made by \code{qcStudbook}.
 #'
 #' @export
 getChangedColsTab <- function(errorLst, pedigreeFileName) {
