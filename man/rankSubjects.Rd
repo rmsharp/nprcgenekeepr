@@ -7,18 +7,29 @@
 rankSubjects(rpt)
 }
 \arguments{
-\item{rpt}{a list of data.frame (req. colnames: value) containing genetic
-value data for the population. Dataframes separate out those animals that
-are imports, those that have high genome uniqueness (gu > 10\%), those that
-have low mean kinship (mk < 0.25), and the remainder.}
+\item{rpt}{a named list of data.frames containing genetic value data for the
+population, as made by the report ordering step. The element names decide
+the designation: \code{lowVal} and \code{noParentage} as described above,
+and every other element (for example \code{imports}, \code{lowMk} and
+\code{highGu}) is \dQuote{High Value}. The tiers separate out the animals
+that are imports, those with low mean kinship (a mean-kinship z-score at or
+below \code{zScoreCutoff}), those with high genome uniqueness (\code{gu}
+above \code{guCutoff}), and the remainder; see \code{\link{reportGV}}.}
 }
 \value{
 A list of dataframes with value and ranking information added.
+Elements with no rows are returned unchanged.
 }
 \description{
 Part of Genetic Value Analysis
-Adds a column to \code{rpt} containing integers from 1 to nrow, and provides
-a value designation for each animal of "high value" or "low value"
+}
+\details{
+Adds a \code{rank} column to each data.frame in \code{rpt}: integers from 1
+to the total number of ranked animals, running on from one tier to the next
+in the order of the list. Animals in the \code{noParentage} element get an
+\code{NA} rank. Adds a \code{value} column designating each animal
+\code{"High Value"}, \code{"Low Value"} (the \code{lowVal} element) or
+\code{"Undetermined"} (the \code{noParentage} element).
 }
 \examples{
 library(nprcgenekeepr)

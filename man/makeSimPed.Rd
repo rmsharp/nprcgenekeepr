@@ -14,10 +14,13 @@ has the offspring ID \code{id}, a vector of representative sires
 (\code{sires}), and a vector of representative dams (\code{dams}).}
 
 \item{verbose}{logical vector of length one that indicates whether or not
-to print out when an animal is missing a sire or a dam.}
+to print a message when a sire or dam is unknown and there are no
+representative sires or dams to draw from, so it stays \code{NA}.}
 }
 \value{
-simulated pedigree in data.frame format with the id, sire, and dam.
+the input pedigree as a \code{data.table} (all of its columns), with
+each unknown sire and dam replaced by a random draw where
+representatives were supplied.
 }
 \description{
 For each \code{id} in \code{allSimParents}, an \emph{unknown} (\code{NA})

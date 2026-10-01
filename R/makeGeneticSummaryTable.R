@@ -4,7 +4,8 @@
 #' Create Genetic Summary Statistics HTML Table
 #'
 #' Generates an HTML table displaying summary statistics (Min, Q1, Mean,
-#' Median, Q3, Max) for mean kinship and genome uniqueness values.
+#' Median, Q3, Max, Skewness, Kurtosis) for mean kinship and genome
+#' uniqueness values.
 #'
 #' @param geneticValues data.frame containing genetic value columns, in
 #'   either of two accepted vocabularies:

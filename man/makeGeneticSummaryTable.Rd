@@ -23,7 +23,8 @@ Character string containing HTML table markup.
 }
 \description{
 Generates an HTML table displaying summary statistics (Min, Q1, Mean,
-Median, Q3, Max) for mean kinship and genome uniqueness values.
+Median, Q3, Max, Skewness, Kurtosis) for mean kinship and genome
+uniqueness values.
 }
 \examples{
 gv <- data.frame(

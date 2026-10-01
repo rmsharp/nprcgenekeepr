@@ -17,10 +17,11 @@
 #'        \code{pop} with the subset of interest. The default is NULL.
 #' @param n integer value of the number of simulated pedigrees to generate.
 #' @param verbose logical vector of length one that indicates whether or not
-#'        to print out when an animal is missing a sire or a dam.
-#' @return A list of \code{n} lists with each internal list containing a
-#'         kinship matrix from simulated pedigrees of possible
-#'         parents for animals with unknown parents.
+#'        to print a message when a sire or dam is unknown and there are no
+#'        representative sires or dams to draw from, so it stays \code{NA}.
+#' @return A list of \code{n} kinship matrices, each from one simulated
+#'         pedigree with possible parents drawn for animals with unknown
+#'         parents.
 #'
 #' @importFrom data.table as.data.table
 #' @export

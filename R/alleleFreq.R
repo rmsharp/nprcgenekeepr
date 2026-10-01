@@ -9,11 +9,11 @@
 #' for an individual (homozygous alleles will be counted as 1).
 #'
 #'
-#' @param alleles an integer vector of alleles in the population
+#' @param alleles a numeric vector of alleles (integer codes) in the population
 #' @param ids character vector of IDs indicating to which animal each allele
-#' in \code{alleles} belongs.
-#' @return A data.frame with columns \code{allele} and \code{freq}. This is a
-#'  table of allele counts within the population.
+#' in \code{alleles} belongs. It must be the same length as \code{alleles}.
+#' @return A data.frame with columns \code{allele} (a factor) and
+#'  \code{freq}. This is a table of allele counts within the population.
 #'
 #' @export
 #' @examples

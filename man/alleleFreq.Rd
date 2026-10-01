@@ -7,14 +7,14 @@
 alleleFreq(alleles, ids = NULL)
 }
 \arguments{
-\item{alleles}{an integer vector of alleles in the population}
+\item{alleles}{a numeric vector of alleles (integer codes) in the population}
 
 \item{ids}{character vector of IDs indicating to which animal each allele
-in \code{alleles} belongs.}
+in \code{alleles} belongs. It must be the same length as \code{alleles}.}
 }
 \value{
-A data.frame with columns \code{allele} and \code{freq}. This is a
-table of allele counts within the population.
+A data.frame with columns \code{allele} (a factor) and
+\code{freq}. This is a table of allele counts within the population.
 }
 \description{
 Part of Genetic Value Analysis

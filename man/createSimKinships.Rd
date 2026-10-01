@@ -28,7 +28,8 @@ has more animals than you want to use in the simulation by defining
 \item{n}{integer value of the number of simulated pedigrees to generate.}
 
 \item{verbose}{logical vector of length one that indicates whether or not
-to print out when an animal is missing a sire or a dam.}
+to print a message when a sire or dam is unknown and there are no
+representative sires or dams to draw from, so it stays \code{NA}.}
 
 \item{twinRelations}{Optional data.frame of declared twin pairs
 (\code{id1}, \code{id2}, \code{code}) passed straight through to the
@@ -39,9 +40,9 @@ no-op, matching today's behavior. See \code{\link{kinship}}'s own
 precondition.}
 }
 \value{
-A list of \code{n} lists with each internal list containing a
-kinship matrix from simulated pedigrees of possible
-parents for animals with unknown parents.
+A list of \code{n} kinship matrices, each from one simulated
+pedigree with possible parents drawn for animals with unknown
+parents.
 }
 \description{
 \code{createSimKinships} uses \code{makeSimPed} with the \code{ped} object
