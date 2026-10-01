@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 848 Did
+**Deliverable:** scope the 3.0.0 NEWS consolidation: how the owner's `suggested_NEWS_entry.md` draft relates to `NEWS.Rmd` (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 847 Did
 **Deliverable, DONE:** rewrote the `NEWS.Rmd` "Pedigree Diagram" section (S845 audit NA2-NA4) as a new feature described against kinship2, then re-rendered `NEWS.md`. Docs only, so no TDD phase applies.
 **Commits:** claim `de5191418`; the rewrite, BACKLOG item and records in the close-out commit.
