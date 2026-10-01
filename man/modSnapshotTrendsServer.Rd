@@ -24,7 +24,8 @@ A list with reactive components:
 \item \code{deltas} - the current delta comparison (see
 \code{\link{calcSnapshotDeltas}}), keyed off the sidebar's rule/from/
 to selectors.
-\item \code{isReady} - logical: is a non-empty history loaded.
+\item \code{isReady} - logical: \code{TRUE} once \code{history} is
+non-\code{NULL} (a history has been uploaded or generated).
 }
 
 The generated snapshot's \code{membershipRule} is auto-derived from

@@ -12,14 +12,18 @@ runModularApp(port = 6013L, launch.browser = TRUE)
 \item{launch.browser}{Logical; whether to launch browser (default TRUE)}
 }
 \value{
-Returns the error condition of the Shiny application when it
-terminates (from \code{\link{runGeneKeepR}}).
+Called for its side effect; blocks until the app is stopped.
+Returns, invisibly, the value passed to \code{shiny::stopApp()}
+(normally \code{NULL}), as \code{\link{runGeneKeepR}} does.
 }
 \description{
 \code{runModularApp()} has been renamed to \code{\link{runGeneKeepR}}, a
 name that says what the function does. \code{runModularApp()} is now a
 soft-deprecated alias that launches the application via
-\code{\link{runGeneKeepR}}. Existing callers continue to work.
+\code{\link{runGeneKeepR}}, passing all arguments through. Existing callers
+continue to work. Called directly, it emits a lifecycle message ("was
+deprecated in nprcgenekeepr 2.0.0"); soft deprecation is silent for calls
+made from inside another package.
 }
 \examples{
 \dontrun{

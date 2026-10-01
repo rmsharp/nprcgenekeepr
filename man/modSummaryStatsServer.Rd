@@ -18,15 +18,19 @@ modSummaryStatsServer(
 \item{id}{character vector of length 1. Module namespace identifier.}
 
 \item{geneticValues}{reactive returning genetic value analysis results.
-Must be a data frame with columns \code{id}, \code{indivMeanKin}, and
-\code{gu}. Optional \code{zScore} column enables z-score
-plots.}
+Must be a data frame with columns \code{indivMeanKin} and \code{gu}
+(the \code{id} column is not read). Optional \code{zScores} column (what
+\code{reportGV()} emits; the legacy name \code{zScore} is also
+accepted) enables z-score plots.}
 
 \item{pedigree}{reactive returning pedigree data frame with columns
 \code{id}, \code{sire}, \code{dam}, and \code{sex}. Optionally \code{gen}.}
 
-\item{kinshipMatrix}{optional reactive returning kinship matrix. If NULL,
-the module will calculate kinship from the pedigree.}
+\item{kinshipMatrix}{optional reactive returning kinship matrix. When
+supplied it is used unchanged, so it should already carry any twin
+correction and kinship overrides (the app passes the shared matrix, which
+does). If NULL, or if the reactive errors or returns NULL, the module
+calculates kinship from the pedigree.}
 
 \item{founderStats}{optional reactive returning a list of founder statistics
 (\code{fe}, \code{fg}, \code{total}, \code{nMaleFounders},
@@ -36,7 +40,8 @@ on the Summary Statistics tab (monolith parity). If NULL, it is omitted.}
 \item{kinshipOverrides}{optional reactive returning a validated
 outside-information kinship-override data frame (\code{id1}, \code{id2},
 \code{kinship}); see \code{\link{applyKinshipOverrides}}.
-When the module recomputes kinship from the pedigree (the usual path), the
+When the module recomputes kinship from the pedigree (the fallback; the
+app normally supplies a matrix that already carries them), the
 overrides are applied to that matrix, so the relationship table and the
 kinship CSV export reflect the supplied values regardless of tab order.
 The override moves the kinship \emph{value} only; the \code{relation}
@@ -48,7 +53,8 @@ with a logical \code{overridden} column in the relationship table.
 \item{twinRelations}{optional reactive returning a validated twin/zygosity
 sidecar data.frame (\code{id1}, \code{id2}, \code{code}); see
 \code{\link{checkTwinRelations}}. When the module recomputes kinship from
-the pedigree (the usual path), it is passed straight through to
+the pedigree (the fallback; the app normally supplies a matrix that
+already reflects it), it is passed straight through to
 \code{\link{kinship}} so the relationship table and the kinship CSV
 export reflect a declared MZ-twin pair's corrected identity regardless
 of tab order (BL-N Slice 3). \code{NULL} (the default) is a no-op.}
@@ -67,6 +73,12 @@ came from an override.
 \code{countFirstOrder()}
 \item \code{mkSummary} - Six-number summary of mean kinship
 \item \code{guSummary} - Six-number summary of genome uniqueness
+\item \code{mkShape}, \code{guShape} - Shape statistics (skewness and
+kurtosis) of mean kinship and genome uniqueness
+\item \code{mkHistogram}, \code{zscoreHistogram}, \code{guHistogram} -
+The histogram plots (\code{ggplot} objects)
+\item \code{meanKinshipBoxPlot}, \code{zscoreBoxPlot},
+\code{guBoxPlot} - The box plots (\code{ggplot} objects)
 }
 }
 \description{
@@ -77,13 +89,17 @@ relationship designation analysis.
 \details{
 This module provides:
 \itemize{
-\item Summary statistics (counts, mean kinship, genome uniqueness)
-\item Histograms and box plots for genetic value distributions
+\item Summary statistics (counts, mean kinship, genome uniqueness), a
+six-number summary with skewness and kurtosis, a founder table and
+an Effective Population Size block
+\item Histograms and box plots for genetic value distributions, each
+exportable as PNG (six plots)
 \item Relationship classification using \code{convertRelationships()}
 \item Relationship class frequency tables using
 \code{makeRelationClassesTable()}
 \item First-order relative counts using \code{countFirstOrder()}
-\item Export functionality for kinship matrix, founders, and relationships
+\item CSV export for the kinship matrix, founders, relationships, the
+first-order counts and the relationship class table
 }
 }
 \seealso{

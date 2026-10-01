@@ -12,24 +12,36 @@ runGeneKeepR(port = 6013L, launch.browser = TRUE)
 \item{launch.browser}{Logical; whether to launch browser (default TRUE)}
 }
 \value{
-Returns the error condition of the Shiny application when it
-terminates.
+Called for its side effect; blocks until the app is stopped.
+Returns, invisibly, the value passed to \code{shiny::stopApp()}
+(normally \code{NULL}).
 }
 \description{
 Launches the GeneKeepR Shiny application. It uses a module-based
-architecture with a Home tab and improved UI components.
+architecture with a Home tab and improved UI components. The call blocks
+the R session until the application is stopped.
 }
 \details{
-The application includes:
+The application has 16 top-level tabs (15 when the ORIP Reporting tab is
+hidden) and a "More" menu (Settings, About, Help):
 \itemize{
 \item Home tab with navigation buttons
-\item Input tab with enhanced QC display
-\item Dynamic error and changed columns tabs
-\item Enhanced Pedigree Browser with focal animal support
+\item Input tab with enhanced QC display, plus dynamic error and changed
+columns tabs
+\item Pedigree Browser with focal animal support and a Diagram tab
+\item Age-Sex Pyramid with enhanced controls
 \item Genetic Value Analysis with visualizations
 \item Summary Statistics with popovers
+\item ORIP Reporting (shown only for the ONPRC site configuration)
 \item Breeding Groups with group panels
-\item Age-Sex Pyramid with enhanced controls
+\item Mate Pair Analysis
+\item Genetic Diversity
+\item Marker Genetics
+\item Cross-Center Identity
+\item De-Identified Export
+\item Potential Parents
+\item Genetic Value Analysis and Breeding Group Description
+\item Genetic-Health Trends
 }
 
 \code{\link{runModularApp}} is a soft-deprecated alias for this function.
