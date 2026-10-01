@@ -103,7 +103,7 @@ getPyramidPlot(qcPed, binWidth = 5, colorScheme = "viridis")
 ```
 
 `ageUnit = "months"` is useful for young or short-lived cohorts (the bands and
-the title switch to months), and `showCounts = FALSE` hides the per-bar counts
+the age-axis label switch to months), and `showCounts = FALSE` hides the per-bar counts
 for a cleaner figure.
 
 ## Key arguments {#sec-arguments}
