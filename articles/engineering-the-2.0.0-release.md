@@ -139,9 +139,9 @@ flowchart TB
   end
   subgraph After["After -- R/appUI.R +<br/>R/appServer.R, port 6013"]
     direction TB
-    ui2["appUI.R<br/>composes 10 modXXXUI() calls"]
+    ui2["appUI.R<br/>composes 10 modXXXUI() calls (at 2.0.0)"]
     srv2["appServer.R<br/>shared reactiveValues()"]
-    mods["10 R/mod*.R modules:<br/>modInput, modPedigree, modPyramid,<br/>modGeneticValue, modSummaryStats,<br/>modBreedingGroups, modGvAndBgDesc,<br/>modORIPReporting, modGeneticDiversity,<br/>modPotentialParents"]
+    mods["10 R/mod*.R modules (at 2.0.0):<br/>modInput, modPedigree, modPyramid,<br/>modGeneticValue, modSummaryStats,<br/>modBreedingGroups, modGvAndBgDesc,<br/>modORIPReporting, modGeneticDiversity,<br/>modPotentialParents"]
     ui2 --> mods
     srv2 --> mods
     mods -- "reactive() returns" --> srv2
@@ -618,9 +618,9 @@ evaluates the previous session’s handoff, self-assesses against a
 written score, records new learnings, writes the next session’s handoff,
 and appends a dated entry to `CHANGELOG.md` before committing.
 `SESSION_RUNNER.md` names the failure to do that last step **“unrecorded
-action”** – one of 27 named, numbered failure modes the protocol
-maintains, each added after a session was observed failing that specific
-way.
+action”** – one of the named, numbered failure modes the protocol
+maintains (27 at the 2.0.0 freeze; 28 today), each added after a session
+was observed failing that specific way.
 
 ### Strict TDD, gated by explicit confirmation
 
@@ -729,14 +729,14 @@ Orient steps caught it.
 freeze, each naming a concrete finding, file, mechanism, and verdict,
 plus a glossary of named recurring reflexes cited by tag – is this
 project’s running record of what went wrong and what fixed it.
-`SESSION_RUNNER.md` maintains a parallel, numbered catalog of 27 named
-failure modes at the methodology level – among them “Eager to start”
-(skipping orientation), “Minimal handoff” (a technically-present but
-functionally useless handoff), and “Unrecorded action” (the gap the
-receipt-sha backfills above illustrates) – each added after a session
-was observed failing that way. Neither catalog is edited to remove an
-entry once a session outgrows it; corrections accumulate rather than get
-erased.
+`SESSION_RUNNER.md` maintains a parallel, numbered catalog of named
+failure modes (27 at the 2.0.0 freeze; 28 today) at the methodology
+level – among them “Eager to start” (skipping orientation), “Minimal
+handoff” (a technically-present but functionally useless handoff), and
+“Unrecorded action” (the gap the receipt-sha backfills above
+illustrates) – each added after a session was observed failing that way.
+Neither catalog is edited to remove an entry once a session outgrows it;
+corrections accumulate rather than get erased.
 
 [Table 5](#tbl-process-metrics)’s stakeholder-correction figures are the
 least precise numbers in this section, and are presented with that

@@ -93,6 +93,100 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · \[ad hoc\] S831 close-out: untracked the owner’s draft `vignettes/suggested_NEWS_entry.Rmd` and `vignettes/articles/pedigree-diagram.pdf` (owner decision), fixing the pkgdown index test and `check_pkgdown()` failure from S825’s `9a2a5ddb7`; full suite 0 failed / 0 error; BACKLOG item removed; Learning 836. Commits `46a7d9e56` (claim), `3a8c026bb` (fix).
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S830 close-out: reworded the “supports five groups of functions” text in `DESCRIPTION` and the `_pkgdown.yml` home description (docs audit BB14) to “these main groups of functions” plus a sentence naming the further tabs (the `README.md` wording); BACKLOG item removed. Checked with `devtools::check()` (no tests or vignettes): 0 errors, 0 warnings. Found and recorded a separate pre-existing break: `test_pkgdown_reference_config.R` and `pkgdown::check_pkgdown()` fail at HEAD because S825 (`9a2a5ddb7`) tracked `vignettes/suggested_NEWS_entry.Rmd`. Learning 835.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S830 claim (in progress): reword the “five groups of functions” text in `DESCRIPTION` and `_pkgdown.yml` (BACKLOG item, docs audit BB14)
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S829 close-out: trimmed `CLAUDE.md` from 26,731 B to 19,486 B (under the 24,000 B warn line) by moving the 13 “Additional close-out checks” paragraphs verbatim to `docs/conventions/CLOSEOUT_CHECKLISTS.md`; `CLAUDE.md` keeps one trigger line per checklist plus a link, and the session-protocol close-out rule tells sessions to read the new file. The file is in `docs/conventions/` rather than `docs/` because top-level `docs/` files are git-ignored; its one relative link now reads `../archive/`. Completes the BACKLOG item (removed). Commits `5bc5dbe34`, `70de12168`, plus the records commit. Verified: `diff` of the moved text is empty, `context_budget.py` reports OK, no test or code reads `docs/`. Not run: full suite, `devtools::check()`, app smoke test (no built or tested file changed). Learning 834.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S829 claim (in progress): trim `CLAUDE.md` out of the warn band by moving the “Additional close-out checks” checklists to `docs/CLOSEOUT_CHECKLISTS.md` (BACKLOG item, step 1 only; docs only)
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S828 follow-up 2 (owner-directed): added a `BACKLOG.md` Up Next item to trim `CLAUDE.md` by moving the close-out checklists to `docs/CLOSEOUT_CHECKLISTS.md` (step 1 only). No code or docs changed.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S828 follow-up (owner-directed): added a `BACKLOG.md` Up Next item to reword the “five groups of functions” text in `DESCRIPTION` and `_pkgdown.yml` together (docs audit finding BB14). No code or docs changed.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S828: fixed docs-audit slice 4 cluster 4 (BB1-BB17, UG22, UG23, RM1-RM4), which closes slice 4. Corrected `_pedigree_browser.Rmd`, `_summary_statistics.Rmd`, `_orip_reporting.Rmd`, `_summary_of_major_functions.Rmd`, `_software_development.Rmd`, `_introduction.Rmd`, `_online_documentation.Rmd`, `pedigree_browser.html`, `pyramidPlot.html`; re-rendered `README.md`; updated the page-text assertions in `test_modPedigree.R` and `test-e2e-pyramid-detailed.R`. Commits `2ceac67a8`, `4ed44b77a`, `8c35cd311`, plus the README/test and records commits. Verified: claims re-read against the R modules; doc unit tests, wordlist test and two opt-in e2e files pass. Not run: full suite, app smoke test. Learning 833.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S828 claim (in progress): fix docs-audit slice 4 cluster 4, the pedigree browser, summary stats, ORIP, introduction and README pages (findings UG22, UG23, RM1-RM4, BA24 and the other cluster 4 rows of `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md`; docs only)
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S826 close-out: fixed docs-audit slice 4 cluster 2, the breeding-group pages: `vignettes/manual_components/_breeding_group_formation.Rmd`, `_breeding_group_algorithm.Rmd`, `_gv_and_bg_desc.Rmd`, `inst/extdata/ui_guidance/group_formation.html` and `gvAndBgDesc.html` (BA1-BA16, BA30-31, UG11-UG21). Now stated: “Upload list” behaves like “All available”; app kinship default 0.25 (0.015625 is the function default); pairs at or above the threshold are kept apart; Statistics, Groups and Group Detail contents; module return values; exhaustive mode’s 20-candidate and 10-second limits; the score is the smallest group’s size; ranking schemes (Combined default, Categorical tiers), Undetermined, no highlighting; genome-uniqueness threshold 1-5, default 4, counts the animal itself; simulations default 10. Commits `f2c2c4e54` (claim), `6a55bf613` (fixes). Verified against code (and `calcA()` executed); three Rmd components render; wordlist, `test_modGvAndBgDesc.R`, `test_modBreedingGroups.R`, minParentAge scan and the opt-in breeding-groups e2e pass. `BACKLOG.md` item updated (still open: clusters 3-4, slice 5). Nothing pushed; no GitHub issue named; no new learning (S825 handoff evaluated 9/10, self 8/10).
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S827 close-out: fixed docs-audit slice 4 cluster 3 (BA17-BA22, UG12 second half, UG24, UG25) in `vignettes/manual_components/_genetic_value_analysis.Rmd`, `_genome_uniqueness_algorithm.Rmd`, `inst/extdata/ui_guidance/genetic_value.html`, `population_genetics_terms.html` and `summary_stats.html`. Now stated: the real Genetic Value controls (the two checkboxes have no effect), the Rankings, Visualizations and Summary tab contents, no 6,000-animal limit, genome uniqueness as a percentage, and the rare-allele threshold counting the animal itself (1-5, default 4). Commits: claim `172ddba8c`, fixes `9d6dacb47`. Verified against the module and algorithm code; related doc tests, `test_modGeneticValue.R` and the genetic-value e2e pass. Docs only; not opened in the running app.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S827 claim (in progress): fix docs-audit slice 4 cluster 3, the genetic-value pages (`vignettes/manual_components/_genetic_value_analysis.Rmd`, `_genome_uniqueness_algorithm.Rmd`, `inst/extdata/ui_guidance/genetic_value.html`, `population_genetics_terms.html`; findings BA17-BA22, UG12 second half, UG24-UG25). Owner chose it at the Phase 0 picker. Docs only.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S826 claim (in progress): fix docs-audit slice 4 cluster 2, the breeding-group pages (`vignettes/manual_components/_breeding_group_formation.Rmd`, `_breeding_group_algorithm.Rmd`, `_gv_and_bg_desc.Rmd`, `inst/extdata/ui_guidance/group_formation.html`, `gvAndBgDesc.html`; findings BA1-BA16, BA30-31, UG11-UG21). Owner chose it at the Phase 0 picker. Docs only.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S825 close-out: fixed docs-audit slice 4 cluster 1, all 17 findings (UG1-UG10, BA23-BA29), in `inst/extdata/ui_guidance/input_format.html` and `vignettes/manual_components/_input.Rmd`, and deleted the orphan `vignettes/manual_components/_database_access.Rmd` (no file referenced it). Now stated: `birth` is a required column; IDs reject only a period; one-file pedigree genotypes need integer `first`/`second`; hermaphrodite reads as Unknown; age = (exit - birth)/365.25; real button names; optional sire and dam minimum ages; download buttons on Errors, Warnings and Cleaned Data only. Commits `bd0f3134c` (claim), `9a2a5ddb7` (fixes). Verified by executing `qcStudbook()` cases; HTML parses; `test_qcStudbook.R`, two doc tests, `test_wordlist_coverage.R` and the opt-in `test-e2e-input-tutorial.R` pass. New Learning 832. `BACKLOG.md` item updated (still open: clusters 2-4, slice 5). Nothing pushed; no GitHub issue named (S824 handoff evaluated 9/10, self 8/10).
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S825 claim (in progress): fix docs-audit slice 4 cluster 1, the findings in `inst/extdata/ui_guidance/input_format.html`, `vignettes/manual_components/_input.Rmd` and `_database_access.Rmd` (required columns, ID rule, genotype columns, minimum parent ages, the orphan). Owner chose it at the Phase 0 picker. Docs only.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S824 close-out: docs staleness audit slice 4 (read-only). Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md`: the 16 `vignettes/manual_components/*.Rmd`, 8 `inst/extdata/ui_guidance/*.html` pages and `README.md` have 33 moderate and 44 minor findings (71 distinct after merging cross-agent duplicates); no broken link, anchor or function name. Main causes: breeding-group and genetic-value pages describe an earlier UI; stale defaults (minimum parent age, breeding-group kinship 0.25 vs “second cousin”, simulations 10 vs “10,000”, required `birth` column, genome-uniqueness threshold meaning). Four read-only subagents did the first pass; 26 of 33 Moderate findings were re-read against code. Four likely code defects flagged as owner decisions. `README.md` fixes belong in the five child components. `BACKLOG.md` item updated (still open: fix slice 4, then slice 5). No code, nothing pushed; no GitHub issue named; no new learning (S823 handoff evaluated 9/10, self 8/10).
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S824 claim (in progress): docs staleness audit slice 4, read-only report on the 16 `vignettes/manual_components/*.Rmd`, the 8 `inst/extdata/ui_guidance/*.html` pages and `README.md`. Owner chose it at the Phase 0 picker. `a2interactive.Rmd`, `man/`, `NEWS.Rmd` and internal docs deferred to slice 5.
+
+### 2026-09-30 · \[ad hoc\] S823 close-out: fixed all 29 findings of the docs staleness audit slice 3 (7 moderate, 22 minor) in the 11 `vignettes/articles/*.qmd`, plus the `orderReport` (tier list), `qcStudbook` and `hasInvalidIdChar` roxygen (the ID rule is “no period”; `man/qcStudbook.Rd` regenerated). Highlights: export count now computed inline (233), “six” feature articles now “seven”, Undetermined and Production descriptions, `minAge`/`threshold`/`ignore` in the breeding-group article, line citations replaced by names, engineering counts dated “(at 2.0.0)”. Commits `5d934ecc3`, `0ca073234`, `930cd1ca8`, `2b42611a4`. All 11 touched articles rendered; related tests and lintr pass; `test_pkgdown_reference_config.R` fails locally on the untracked owner draft `vignettes/suggested_NEWS_entry.Rmd` (not CI-visible). `BACKLOG.md` item updated (still open: slice 4). Nothing pushed; no GitHub issue named; no new learning (S822 handoff evaluated 9/10, self 8/10).
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S823 claim (in progress): fix the stale claims found by docs audit slice 3 in the 11 `vignettes/articles/*.qmd` and the `orderReport` and `qcStudbook` roxygen. Owner chose it at the Phase 0 picker. Docs only.
+
+### 2026-09-30 · \[ad hoc\] S822 close-out: docs staleness audit slice 3 (read-only). Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md`: prose of the 11 `vignettes/articles/*.qmd` has 7 moderate and 22 minor stale claims (hand-typed counts and one-line rule summaries: colony guide export count 182 vs 233, “six” vs 7 feature articles, Production and Undetermined descriptions; `genetic-value-analysis` tier 1; `breeding-group-formation` `minAge`/`threshold`/default female-female `ignore`); no broken chunk, link or function name. Scope narrowed at claim from “articles and manual components” to the 11 articles (manual components move to slice 4). Four read-only subagents did the claim checking; the Moderate findings were re-read against code. `BACKLOG.md` item updated (still open: fix the findings, then slice 4). No code, nothing pushed; no GitHub issue named; no new learning (S821 handoff evaluated 9/10, self 8/10).
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S822 claim (in progress): docs staleness audit, slice 3 (prose claims in the articles and manual components against the current code and app). Owner chose it at the Phase 0 picker. Read-only audit; one report under `docs/audits/`.
+
+### 2026-09-30 · \[ad hoc\] S821 close-out: docs staleness audit slice 2 (read-only). Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`: 31 of 38 regenerable `shiny_app_use/` screenshots differ from the app (Pedigree Browser family +147 px from the longer Display Unknown IDs help, Home, Input, Summary Statistics, Breeding Groups, GVA), the colony capture script’s tail fails identically in two runs (cause undiagnosed), 12 images have no generator, 1 orphan. `BACKLOG.md` item updated (still open: slice 3 next). Committed PNGs overwritten by the capture scripts and restored with `git checkout`; no code, nothing pushed; no GitHub issue named; no new learning (S820 handoff evaluated 9/10, self 9/10).
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S821 claim (in progress): docs staleness audit, slice 2 (the 50 `vignettes/articles/shiny_app_use/` screenshots against the current app UI). Owner chose it at the Phase 0 picker. Read-only audit; one report under `docs/audits/`.
+
+### 2026-09-30 · \[ad hoc\] S820 close-out: docs staleness audit slice 1 (read-only). Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE1_2026-09-30.md`: stale in both the local PDFs and 1 of 8 committed kinship2 images (`trackC-nprc-rectilinear.png`), plus a misleading manual sentence and a stale code comment; 7 images current. `BACKLOG.md` item updated (still open: slice 2 next). Nothing deleted, no code, nothing pushed; no GitHub issue named; no new learning (S819 handoff evaluated 9/10, self 9/10).
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-09-30 · \[ad hoc\] S820 claim (in progress): docs staleness audit, slice 1 (the owner-flagged stale `pedigree-diagram.pdf` / `kinship2-fidelity-validation.pdf` and the article figures). Owner chose it at the Phase 0 picker. Read-only audit; one report under `docs/audits/`.
+
+### 2026-09-30 · \[ad hoc\] S819 close-out: pushed `master` (9 commits incl. S817’s `getPotentialParents` change) and watched CI; pkgdown, test-coverage, R-CMD-check and lint all succeeded on `7bcfdcc68`. Owner chose this from the Phase 0 picker. No code edits.
+
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · \[ad hoc\] S819 claim (in progress): push `master` (8 commits ahead, incl. S817’s `getPotentialParents` R change) and watch the four CI workflows. Owner chose this from the Phase 0 picker.
 
 ### 2026-09-30 · \[ad hoc\] S818 close-out: closed the 11 settled PED_GV audit ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33, NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) on the owner’s pick; added a “Closure record” to `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` and updated `BACKLOG.md` (32 ids remain). Docs only, no code or tests; nothing pushed; no GitHub issue named; no new learning (S817 handoff evaluated 9/10, self 9/10).

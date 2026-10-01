@@ -12602,3 +12602,74 @@ first push). How to apply: for any `vignettes/*.Rmd` or `man/` prose
 edit, run `test_wordlist_coverage.R` (or
 [`spelling::spell_check_package()`](https://docs.ropensci.org/spelling//reference/spell_check_package.html))
 before close-out, and put new code identifiers in `inst/WORDLIST`.
+
+#### Learning 832
+
+**A docs-only edit to an in-app help page can break an opt-in end-to-end
+test that asserts the page’s text; before rewording a `ui_guidance`
+page, grep `tests/testthat` for the file name and for the phrases you
+remove, and run that e2e file with `NPRC_RUN_E2E=true`.** (S825,
+2026-09-30.) Rewriting `input_format.html` dropped the word
+“tab-delimited”, which `test-e2e-input-tutorial.R:109-110` checks via
+`assert_active_pane(app, "Input", "tab-delimited")`. The unit tests and
+the wordlist test all passed; only the e2e run, skipped by default,
+failed (baseline passed with the edits stashed). Restoring the phrase
+fixed it. Complements Learning 831 (a `.Rmd` edit can break the wordlist
+test): help text and vignettes are both read by tests.
+
+#### Learning 833
+
+**Grepping `tests/testthat` for a help page’s file name does not find
+every test that reads its text; a module’s own unit test may grep the
+rendered UI for a phrase from the embedded page, so also run that
+module’s unit test and grep for each phrase you remove.** (S828,
+2026-09-30.) Rewording `pedigree_browser.html` removed “Ego ID”, which
+`test_modPedigree.R:64` checks through
+`grepl("Ego ID", as.character(modPedigreeUI("test")))`; the file name
+appears only in comments there. The file-name grep found the two e2e
+files but not this one; running `test_modPedigree.R` caught it. Extends
+Learning 832 (e2e) and 831 (wordlist).
+
+#### Learning 834
+
+**Before writing a new file under `docs/`, run
+`git check-ignore -v <path>`: `.gitignore:24` (`docs/*`) ignores every
+top-level `docs/` file except whitelisted subdirectories (`methodology`,
+`planning`, `audits`, `research`, `setup`, `conventions`,
+`architecture`, `archive`), so a BACKLOG item that names a top-level
+path can be uncommittable as written.** (S829, 2026-09-30.) The S828
+item named `docs/CLOSEOUT_CHECKLISTS.md`; the file was written, and only
+a later `git check-ignore -v` named line 24 as the reason it could not
+be committed. It moved to `docs/conventions/` (already whitelisted)
+rather than editing `.gitignore`. Also: relative links inside a moved
+block must be re-based to the new directory (here `docs/archive/...`
+became `../archive/...`).
+
+#### Learning 835
+
+**Before attributing a failing check to your change, rerun it with the
+change stashed, and before believing “the draft is untracked”, run
+`git ls-files` for its other forms: an owner draft can sit untracked as
+`.md` and tracked as `.Rmd`.** (S830, 2026-09-30.)
+`test_pkgdown_reference_config.R` and
+[`pkgdown::check_pkgdown()`](https://pkgdown.r-lib.org/reference/check_pkgdown.html)
+both failed on “suggested_NEWS_entry”; moving the untracked
+`suggested_NEWS_entry.md` away changed nothing, because S825’s commit
+`9a2a5ddb7` had swept `vignettes/suggested_NEWS_entry.Rmd` into HEAD.
+The stash run showed the failure was already there. Complements Learning
+834 (check the git state before assuming a file’s status).
+
+#### Learning 836
+
+**When a fix-commit’s message names one change, `git show --stat <sha>`
+before pushing: a broad `git add` can sweep unrelated drafts and a 1 MB
+binary into the same commit, and nothing fails until CI runs the checks
+that read those directories.** (S831, 2026-09-30.) S825’s “fix slice 4
+cluster 1” commit also tracked the owner’s draft
+`vignettes/suggested_NEWS_entry.Rmd` and
+`vignettes/articles/pedigree-diagram.pdf`; the pkgdown index test and
+[`pkgdown::check_pkgdown()`](https://pkgdown.r-lib.org/reference/check_pkgdown.html)
+failed for six sessions until S831 untracked both (owner decision).
+`git rm` also deletes the working copy, which was right here because the
+test reads the directory, not the index; recoverable from `9a2a5ddb7`.
+Complements Learning 835.

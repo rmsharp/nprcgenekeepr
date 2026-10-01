@@ -168,100 +168,59 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 819 Did
+### Session 830 Handoff Evaluation (by Session 831)
 
-**Deliverable:** Push `master` (8 commits ahead) and watch CI on the
-S817 R-code change (IN PROGRESS; no code edits) **Started:** 2026-09-30
-**Status:** Session claimed. Work beginning. **Ledger:**
-`CHANGELOG: pending` – the claim commit’s `CHANGELOG.md` entry says (in
-progress); Phase 3F records the rest.
+**Score: 9/10.** The BACKLOG item named the cause (S825 commit
+`9a2a5ddb7`), both files, the two verification commands and the exact
+owner decision, so the session needed one question and one `git rm`. “Do
+not push before (A)” was correct. **Missing:** nothing needed; it did
+not say the .Rmd copy must also leave the working tree (the test reads
+the directory), which I confirmed by running it. **Wrong:** nothing;
+“master is 37 ahead” was 38 by the time of orientation, because the S830
+close-out commit landed after the count. **ROI:** high.
 
-### Session 817 Handoff Evaluation (by Session 818)
+### What Session 831 Did
 
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and
-`HANDOFFS.md` frontiers at HEAD (`2b6a023a2`), `master` 6 ahead, the 7
-untracked files unchanged, CI green, `CLAUDE.md` 26,731 B, and the
-PED_GV item sat at `BACKLOG.md:8` as said. **Missing:** it did not say
-the “close 11 ids” recommendation lives in the triage report’s
-Recommendation 4 (found by grep). **Wrong:** nothing. **ROI:** high.
+**Deliverable, DONE:** fixed the pkgdown breakage. Owner chose “untrack
+both”: `git rm` of `vignettes/suggested_NEWS_entry.Rmd` and
+`vignettes/articles/pedigree-diagram.pdf` (both added by S825’s
+`9a2a5ddb7`, still recoverable from it). The untracked top-level
+`suggested_NEWS_entry.md` is untouched. **Commits:** claim `46a7d9e56`;
+fix `3a8c026bb`; records in the close-out commit. **TDD:** RED was the
+existing `test_pkgdown_reference_config.R` failure (confirmed at HEAD
+before the change); GREEN the `git rm`; REFACTOR a no-op.
+**Verification:** `test_pkgdown_reference_config.R` passes;
+[`pkgdown::check_pkgdown()`](https://pkgdown.r-lib.org/reference/check_pkgdown.html)
+“No problems found”; full clean regression read (`load_all`,
+`NOT_CRAN=true`, no file filter): 0 failed, 0 error over 2,886 results.
+**Not run:** `devtools::check()` (no R, DESCRIPTION or NAMESPACE
+change); lint (no `.R` file changed); app smoke test (no runtime
+change). **NEWS.Rmd:** no entry (no feature or behavior change).
+**Learnings:** Learning 836. **Reduction:** removed the S829 handoff
+evaluation and the “What Session 830 Did” block (in git and the S830
+receipt).
 
-### What Session 818 Did
+**Self-assessment: 9/10.** + One deliverable; confirmed RED before
+acting; asked the one real question in plain words; ran the unfiltered
+suite. - The first combined command ran past the foreground timeout, so
+I had to go to a background run and re-run the test file to see its
+result.
 
-**Deliverable, DONE (docs only):** closed the 11 settled PED_GV audit
-ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33, NEW-44, NEW-47,
-NEW-58, NEW-59, NEW-60) on the owner’s pick (Phase 0 picker, then a
-plain-words scope question). Added a “Closure record” section to
-`docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (table left as the
-frozen S781 reading) and updated `BACKLOG.md:8` (32 ids remain). No
-code, so no TDD cycle and no suite run. **Commits:** claim `8a11781b0`;
-deliverable + records (this, amended). **Learnings:** none new.
-**Reduction:** removed the S816 handoff-evaluation block (kept in git
-and the S816 receipt).
+**Next steps:** - (A) Push master (38 commits ahead of origin, no push
+since S819) only on the owner’s say-so, then watch all four workflows:
+this is the first CI run since S819 and covers S820-S831. The pkgdown
+blocker is gone. - (B) Docs-staleness audit slice 5 (BACKLOG, READY,
+Effort L); owner decisions pending: `suggested_NEWS_entry` adopt/drop,
+the four code defects.
 
-**Self-assessment: 9/10.** + One deliverable, scope asked in plain
-words, closure rationale taken from the report’s own evidence. - Did not
-ask again about the 7 untracked drafts; my first records script
-half-failed and the commit briefly lacked the records (amended).
+**Key files:** `tests/testthat/test_pkgdown_reference_config.R`,
+`_pkgdown.yml` (articles list), `BACKLOG.md` (docs-audit item),
+untracked `suggested_NEWS_entry.md` (top level).
 
-**Next steps:** - (A) Pick from the priorities list: push `master` and
-watch CI (R code changed in S817), Mate-pair residues (`BACKLOG.md:91`),
-the 6 no-behavior-change PED_GV items (Recommendation 2), or an overhaul
-question. - (B) Carried: 7 untracked owner drafts (commit or drop?);
-`NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band.
-
-**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (“Closure
-record”), `BACKLOG.md:8`.
-
-**Gotchas:** `master` is 8 commits ahead after this one; only the S817
-R-code commits need CI (this session’s files are docs). The 32 open ids
-include NEW-24 = issue \#123.
-
-### What Session 817 Did
-
-**Deliverable, DONE:** Potential Parents now lists candidates only for
-the parent that is missing (owner chose “blank it” at a scope question;
-strict TDD, every gate an `AskUserQuestion`). An animal with a recorded
-dam gets `dams` empty (sires still listed); a recorded sire gets `sires`
-empty; both unknown keeps both. “Recorded” is read after
-[`removeAutoGenIds()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeAutoGenIds.md),
-so a stand-in (placeholder TRUE) does not count and a real `U1234`
-(FALSE) does. **Commits:** claim `370e9a1c0`; RED `604d4ac9a` (5 tests
-in `tests/testthat/test_getPotentialParents.R:497` on, 3 failing, 2
-guards); GREEN `c8b7fc794` (`R/getPotentialParents.R`, the `list(...)`
-at the loop’s end); docs `ada8616ca` (roxygen `@return`,
-`man/getPotentialParents.Rd`, the tab’s intro text in
-`R/modPotentialParents.R`, `NEWS.Rmd` “Changed” entry); records (this).
-**Verification:** RED 3 failed for the right reason, no existing test
-conflicted; full unfiltered suite 362 files, 2,886 tests, 1 failure
-(known local-only `test_pkgdown_reference_config.R`); the two
-modPotentialParents files, `test_newsReleaseState.R`,
-`test_wordlist_coverage.R` pass; `lintr::lint_package()` clean for the
-touched files. No app launch: only the intro paragraph’s wording changed
-in the UI (no runtime wiring), so 3E is noted as not done. Nothing
-pushed; `master` is 6 commits ahead after this records commit.
-**Learnings:** none new. **Reduction:** removed the S816 “What Session
-816 Did” block and the done BACKLOG item (in git and the S816 receipt).
-
-**Self-assessment: 9/10.** + One deliverable, owner decision asked in
-plain words, all gates used, full suite and lint run. - Did not ask
-about the 7 untracked drafts again (asked each session with no answer).
-
-**Next steps:** - (A) Pick from the priorities list: PED_GV owner
-decisions (`BACKLOG.md:8`), Mate-pair guardrail residues, or the
-optional `a2interactive.Rmd` pass (the `getPotentialParents` behavior
-change is covered only by its existing demo, which does not print dam
-lists, so no edit is owed there). - (B) Carried: 7 untracked owner
-drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd` (this change’s entry
-is in `NEWS.Rmd` only); `CLAUDE.md` in the warn band (26,731 B); push
-owed (CI watch owed: R code changed).
-
-**Key files:** `R/getPotentialParents.R` (end of the loop),
-`tests/testthat/test_getPotentialParents.R:497`.
-
-**Gotchas:** 1. The Potential Parents table still shows the dam
-count/column for rows where the dam is recorded, now 0 and blank;
-`modPotentialParents.R:38-42` needed no change. 2. `master` is unpushed;
-the push triggers all four workflows because R files changed.
+**Gotchas:** `R CMD check` NOTEs on the untracked top-level
+`suggested_NEWS_entry.md` until it is dropped or `.Rbuildignore`d. The
+first push in 12 sessions may surface other CI findings unrelated to
+this fix (estimate, not computed).
 
 ### Session 809 Handoff Evaluation (by Session 810)
 

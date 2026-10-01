@@ -144,7 +144,7 @@
 <blockquote>
 <p>The small <code>guIter</code> above keeps this article quick to render. For real analyses use <code>guIter &gt;= 1000</code>; the genome-uniqueness estimates stabilize only with many iterations.</p>
 </blockquote>
-<p><code><a href="../reference/reportGV.html">reportGV()</a></code> returns a list. The two elements you will use most are <code>report</code> (the ranked table) and <code>kinship</code> (the pairwise kinship matrix, which <code><a href="../reference/groupAddAssign.html">groupAddAssign()</a></code> consumes when forming breeding groups – see the <em>Forming Breeding Groups</em> article). The rest summarize founder diversity (below).</p>
+<p><code><a href="../reference/reportGV.html">reportGV()</a></code> returns a list. The two elements you will use most are <code>report</code> (the ranked table) and <code>kinship</code> (the pairwise kinship matrix, which <code><a href="../reference/groupAddAssign.html">groupAddAssign()</a></code> consumes when forming breeding groups – see the <em>Forming Breeding Groups</em> article). The rest summarize founder diversity and the effective sizes of the current breeders (below).</p>
 </section><section class="level2"><h2 id="sec-report">The ranking report<a class="anchor" aria-label="anchor" href="#sec-report"></a>
 </h2>
 <p><code>report</code> is a data frame with one row per animal in the population of interest, already sorted from most to least genetically valuable.</p>
@@ -212,10 +212,11 @@
 </table>
 <p>The <code>rank</code> and <code>value</code> columns above come from the <strong>categorical</strong> ranking scheme in <code>orderReport()</code> and <code><a href="../reference/rankSubjects.html">rankSubjects()</a></code> – calling <code><a href="../reference/reportGV.html">reportGV()</a></code> directly, as this article does, always uses it. It sorts the population into ordered tiers:</p>
 <ol type="1">
-<li>imported founders with no offspring;</li>
-<li>animals with genome uniqueness above a high-uniqueness cutoff (10% by default), by <strong>descending genome uniqueness</strong> (ties broken by ascending mean kinship) – this is where carrying rare alleles earns a high rank;</li>
+<li>imported animals (both parents unknown, origin recorded), youngest first;</li>
+<li>animals with genome uniqueness above a high-uniqueness cutoff (10% by default), by <strong>descending genome uniqueness</strong> (uniqueness compared in whole percent; ties broken by ascending mean kinship) – this is where carrying rare alleles earns a high rank;</li>
 <li>the remaining animals whose standardized mean kinship is at or below a low-kinship z-score cutoff (0.25 by default), by <strong>ascending mean kinship</strong> – least related ranked highest;</li>
-<li>everyone else, flagged <code>Low Value</code>, by ascending mean kinship.</li>
+<li>everyone else, flagged <code>Low Value</code>, by ascending mean kinship;</li>
+<li>animals with both parents unknown and no recorded origin, placed last and flagged <code>Undetermined</code> with no rank (<code>rank</code> is <code>NA</code>).</li>
 </ol>
 <p>Which cutoff is checked first – so it claims any animal that qualifies for both – is the tiers’ <strong>priority axis</strong> (genome uniqueness by default).</p>
 <p>Tiers 1–3 are flagged <code>High Value</code>. Because tier 2 ranks on genome uniqueness and tier 3 on mean kinship, the two metrics can disagree – and the top of the table shows it:</p>

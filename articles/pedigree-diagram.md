@@ -30,8 +30,10 @@ Two related resources cover the same feature from other angles:
 
 ## Node shapes and the legend
 
-Every animal is one node, shaped by sex: dot = Female, square = Male,
-star = Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded. A
+Every animal with at least one recorded parent, mate, or offspring is
+one node (an animal with none of these is left out, and a banner above
+the diagram lists it), shaped by sex: dot = Female, square = Male, star
+= Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded. A
 legend to the right of the diagram shows the same mapping, so it never
 has to be memorized.
 
@@ -48,11 +50,11 @@ mating marker” below.
 
 Diagrams render up to **400 animals** under the default Rectilinear edge
 style (**750** if switched to Direct, below) – for a larger population,
-narrow the focal-animal selection first (the **Focal Animals** panel to
-the left of the diagram; see the Colony Manager’s Guide article for the
-full trimming workflow). Rectilinear’s lower cap reflects it rendering
-more total diagram nodes per animal (invisible routing waypoints,
-described below) for the same visual complexity.
+narrow the focal-animal selection first (the **Focal Animals** panel
+above the diagram; see the Colony Manager’s Guide article for the full
+trimming workflow). Rectilinear’s lower cap reflects it rendering more
+total diagram nodes per animal (invisible routing waypoints, described
+below) for the same visual complexity.
 
 An animal that mates more than once, or whose lineage loops back on
 itself (e.g. a consanguineous mating), appears once per mating; each
@@ -97,7 +99,8 @@ mating at a glance. This marker needs no optional column and no toggle –
 it is detected directly from the pedigree’s own sire/dam data, via the
 same kinship computation the rest of the package uses (including any
 uploaded Twin/Zygosity Relations file described below, for correctness
-parity). It applies under both edge styles above.
+parity, while **Show Twin Connectors** is on). It applies under both
+edge styles above.
 
 The marker is a real, if visually subtle, cue: the two marked segments
 sit immediately between each parent’s own icon and the small mating dot
@@ -279,8 +282,8 @@ longer than 15 characters is truncated with an ellipsis on the diagram
 itself, with the full name always available in the hover tooltip (see
 “Interacting with the diagram” below). Not every animal needs a name –
 one with no name, or a pedigree with no `name` column at all, always
-renders with just its id, and the **Select by id** search dropdown below
-always lists ids, never names, regardless of the toggle.
+renders with just its id, and the **Select by id** search dropdown above
+the diagram always lists ids, never names, regardless of the toggle.
 
 ![Pedigree Browser Diagram tab with Show Names on Diagram enabled,
 showing several nodes labeled with both id and name, including one long
@@ -342,8 +345,11 @@ correction; only a declared MZ pair’s kinship changes.
   occurrence (see “Node shapes and the legend” above) resolves to the
   same animal as clicking its main occurrence.
 - **Select by id** – the dropdown above the diagram – jumps straight to
-  one animal by ID, dimming every other node except it and its direct
-  connections, useful for finding one animal in a large, busy diagram.
+  one animal by ID, dimming every other node except it and its close
+  connections (a few hops out under the default Rectilinear style, whose
+  waypoint nodes sit between visible animals; direct neighbors only
+  under the Direct style), useful for finding one animal in a large,
+  busy diagram.
 - **Export Diagram (PNG)** – the button in the diagram’s own corner –
   saves the current view as an image file, useful for husbandry reports,
   IACUC documents, or presentations.

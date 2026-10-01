@@ -155,7 +155,7 @@
 </div>
 </section><section class="level2"><h2 id="sec-harem">Harem groups<a class="anchor" aria-label="anchor" href="#sec-harem"></a>
 </h2>
-<p>With <code>harem = TRUE</code>, <code><a href="../reference/groupAddAssign.html">groupAddAssign()</a></code> seeds each of the <code>numGp</code> groups with one eligible male and then fills it with other animals, never placing two animals whose kinship exceeds <code>threshold</code> (default <code>0.015625</code>, i.e. 1/64 – the kinship of second cousins) in the same group.</p>
+<p>With <code>harem = TRUE</code>, <code><a href="../reference/groupAddAssign.html">groupAddAssign()</a></code> seeds each of the <code>numGp</code> groups with one eligible male and then fills it with other animals, never placing two animals whose kinship reaches or exceeds <code>threshold</code> (default <code>0.015625</code>, i.e. 1/64 – the kinship of second cousins) in the same group. By default kinship between two females is not checked (see <code>ignore</code> below).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">haremGrp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/groupAddAssign.html">groupAddAssign</a></span><span class="op">(</span></span>
@@ -235,24 +235,29 @@
 <tr class="odd">
 <td><code>threshold</code></td>
 <td><code>0.015625</code></td>
-<td>maximum within-group kinship (1/64 = second cousins)</td>
+<td>kinship at which a pair conflicts: a pair at or above it is never grouped together (1/64 = second cousins)</td>
 </tr>
 <tr class="even">
-<td><code>minAge</code></td>
-<td><code>1.0</code></td>
-<td>minimum age (years) to be placed</td>
+<td><code>ignore</code></td>
+<td><code>list(c("F", "F"))</code></td>
+<td>sex pairs whose kinship is not checked; the default ignores female-female kinship</td>
 </tr>
 <tr class="odd">
+<td><code>minAge</code></td>
+<td><code>1.0</code></td>
+<td>animals this age (years) or younger are exempt from kinship conflicts; also the minimum age of a harem sire</td>
+</tr>
+<tr class="even">
 <td><code>harem</code></td>
 <td><code>FALSE</code></td>
 <td>seed each group with a single male</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>sexRatio</code></td>
 <td><code>0.0</code></td>
 <td>target females per male (0 = unconstrained)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>iter</code></td>
 <td><code>1000</code></td>
 <td>group-search iterations (more = better groups)</td>

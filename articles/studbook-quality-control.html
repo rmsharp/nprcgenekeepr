@@ -90,7 +90,7 @@
 <li>
 <strong>required columns</strong> – the studbook must contain <code>id</code>, <code>sire</code>, <code>dam</code>, <code>sex</code>, and <code>birth</code>;</li>
 <li>
-<strong>identifier validity</strong> – animal IDs must be alphanumeric (a period is not allowed, because it breaks formulas, file names, and namespaces across software environments);</li>
+<strong>identifier validity</strong> – animal IDs must not contain a period, because it breaks formulas, file names, and namespaces across software environments (other characters are accepted);</li>
 <li>
 <strong>sex consistency</strong> – an animal used as a sire must be male and one used as a dam must be female;</li>
 <li>
@@ -357,7 +357,7 @@
 <li>
 <code><a href="../reference/qcStudbook.html">qcStudbook()</a></code> – the function documented here.</li>
 <li>
-<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code> – the Shiny app, whose Quality Control tab drives this same function interactively.</li>
+<code><a href="../reference/runGeneKeepR.html">runGeneKeepR()</a></code> – the Shiny app, whose Input tab (QC Summary sub-tab) drives this same function interactively.</li>
 </ul>
 <p><strong>Reference.</strong></p>
 <p>Vinson A, Raboin MJ (2015). “A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques (<em>Macaca mulatta</em>).” <em>Journal of the American Association for Laboratory Animal Science</em> 54(6):700-707.</p>

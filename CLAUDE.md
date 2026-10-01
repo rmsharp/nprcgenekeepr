@@ -13,7 +13,8 @@ report findings → WAIT FOR THE USER TO SPEAK 2. **1 and done** — One
 deliverable per session. When it’s complete, close out. Do not start the
 next thing. 3. **Auto-close** — When done: evaluate previous handoff,
 self-assess, document learnings, write handoff notes, commit, report,
-STOP.
+STOP. Read `docs/conventions/CLOSEOUT_CHECKLISTS.md` first (project
+checklists).
 
 `SESSION_RUNNER.md` documents known failure modes and their
 countermeasures. The protocol compensates for documented tendencies to
@@ -339,161 +340,39 @@ gitignored (S719 decision).
 
 ### Additional close-out checks
 
-**Citation checklist (issue \#120, 2026-07-08):** any session that adds
-a new displayed statistic/estimator must update
-`inst/extdata/ui_guidance/population_genetics_terms.html` (or the
-relevant UI guidance page) and the statistic’s own roxygen `@references`
-in the same session it ships. (Source:
-`docs/audits/ISSUE_120_CITATION_COVERAGE_AUDIT_2026-07-08.md`,
-Structural Observation 1.)
+**At Phase 3 (close-out), read
+[`docs/conventions/CLOSEOUT_CHECKLISTS.md`](https://github.com/rmsharp/nprcgenekeepr/docs/conventions/CLOSEOUT_CHECKLISTS.md)
+and apply every checklist whose trigger matches what the session
+shipped.** One line per checklist (full text in that file):
 
-**Tutorial/article documentation checklist (owner-directed, S436,
-2026-07-30):** a plan that ships a new user-facing Shiny feature (a new
-tab, control, or interaction pattern) must include a documentation phase
-updating the relevant tutorial/article
-(`vignettes/articles/colony-manager-guide.qmd` and/or the matching
-`vignettes/manual_components/*.Rmd`) describing the feature’s purpose
-and use — not just code + tests + `NEWS.md`. Origin (issue \#129’s
-Diagram tab shipped with zero vignette/article mentions → issue \#139):
-Learning 770; the report-don’t-fix precedent it followed: Learning 382.
-
-**NEWS.Rmd entry checklist (owner-directed, S448; plain-language
-criterion added S628):** any session that ships a new exported function
-or user-facing Shiny feature/control must add a `NEWS.Rmd` entry
-(current development-version section; **release-state wording** — one
-entry per feature, stating the finished state against the PRIOR release,
-never an in-progress milestone such as “first step” or “continued”;
-`tests/testthat/test_newsReleaseState.R` guards the phrases, Learning
-785) in the same session it ships (origin — issue \#130’s five slices
-shipped with none: Learning 433). **Plain-language criterion:** the
-entry must read plainly for a colony-manager/veterinarian reader, not an
-R programmer — what changed and why it matters, in one or two short
-sentences; domain vocabulary (“kinship”/“genotype”/“heterozygosity”) is
-fine, implementation-flavored phrasing (“vectorized matrix algebra,”
-“KING-robust,” “a CERVUS-style multilocus LOD score”) is not.
-Deliberately a per-session judgment check, not an automated word list (a
-banned-term lint would false-positive on legitimate domain vocabulary;
-the release-state guard above matches only structural milestone
-markers). Drift history behind the criterion: Learnings 544/770.
-
-**`a2interactive.Rmd` script-callable-function checklist (owner-directed
-S450; scope broadened S478):** any new exported, script-callable
-function **or new parameter added to an already-documented exported
-function** should get a demonstration section (or update) in
-`vignettes/a2interactive.Rmd` — **deferred, not same-session**: a
-dedicated documentation pass after the feature has been reviewed and
-stabilized, to avoid documenting what may still change. A session
-picking this up inventories exported functions (not Shiny-UI-only
-features — the tutorial/article checklist covers those) and new
-parameters on documented ones since the last such pass. Origins:
-Learning 435 (issue \#130’s marker-genetics family shipped
-undemonstrated), Learning 478 (the `edgeStyle` parameter gap that
-broadened the scope to parameters).
-
-**GitHub issue close-out checklist (found S475, 2026-08-04):** a session
-whose close-out marks a `BACKLOG.md` item fully DONE, where the item
-names a GitHub issue number, must close the issue in the *same* session
-— `gh issue close --reason completed --comment "..."` citing the
-`CHANGELOG.md` entry and verification evidence — never “a future session
-should consider closing this.” Ratified after 3 consecutive deferred
-closes (issues \#142/#143/#144): Learning 475.
-
-**CI-break tracking convention (owner-directed, S636, 2026-08-26):** a
-CI break found live in-session does **not** get its own GitHub issue.
-Fix it as found if the fix is in scope and clear; otherwise defer it via
-a `BACKLOG.md` “Up Next” item with full root-cause detail. (Deliberate
-contrast with the issue *close-out* checklist above, which governs
-closing issues on shipped DONE items, not opening ones for CI-health
-findings.) Full incident: Learning 669.
-
-**Lint close-out checklist (found S477, 2026-08-04):** any session that
-adds or modifies a tracked `.R` file must run `lintr::lint_package()` —
-package loaded first via
-[`pkgload::load_all()`](https://pkgload.r-lib.org/reference/load_all.html)
-(an unloaded run produces spurious `object_usage_linter` noise CI never
-sees: Learning 224) — on touched files before close-out, and fix or
-`# nolint`-suppress (with documented rationale: Learnings 224/461)
-anything flagged, never relying on the post-push `lint.yaml` CI run
-(`master` has no branch protection, so a red run blocks nothing). Origin
-(a red lint run unnoticed for 4 sessions): Learning 477.
-
-**`_pkgdown.yml` reference-coverage checklist (found S496,
-2026-08-09):** any session that adds a new exported function must add it
-to a `_pkgdown.yml` reference: group in the same session (any existing
-group satisfies `test_pkgdown_reference_config.R`’s coverage guard — the
-“All exposed functions” catch-all in alphabetical position is the
-default choice). The guard evaluates coverage collectively, so one
-missing entry blocks unrelated fixes. Origin (the gap hit twice,
-incl. [`readTwinRelations()`](https://github.com/rmsharp/nprcgenekeepr/reference/readTwinRelations.md))
-and the adjacent `devtools::document()` verification discipline:
-Learning 495.
-
-**BACKLOG completed-item removal checklist (owner-directed, S686,
-2026-09-11):** a session that completes a `BACKLOG.md` item REMOVES the
-item’s block entirely in the same commit — never an inline `[x]`: the
-completed record goes to `CHANGELOG.md` (enriched with any load-bearing
-verification detail the block held); detail a live open item needs is
-written INTO that item’s own description (forward-carrying, never a
-pointer back at a DONE block); any still-open sub-thread is extracted as
-its own item first. Rationale (a kept DONE block is a weaker record and
-compounds FM \#28’s mandated read) and the S687 backfill sweep: Learning
-740.
-
-**`CHANGELOG.md` legacy history (S325 froze it; S547 relocated it):**
-the pre-ledger-format history (Sessions 1-324, ~935 KB) lives in
-[`docs/archive/CHANGELOG-legacy-pre-S325.md`](https://github.com/rmsharp/nprcgenekeepr/docs/archive/CHANGELOG-legacy-pre-S325.md)
-— frozen as-is (S325 owner decision: no retroactive re-tagging),
-relocated out of the live ledger S547 after the S546 owner-directed
-decision and full verification (Learning 554 carries the record:
-`classify_zones()` proof, fence scan, shard discovery, the
-SRF-denominator side effect). New entries never go in it; decision chain
-detail: Learning 770.
-
-**`methodology_trim.py` local-customization checklist (S518; corrected
-S617/S719):** the tool ships from the `rmsharp/methodology` fork’s
-`main` (a sync against an official *tag* never touches it) and carries
-**one local modification** — this project’s `SESSION_NOTES.md`
-`LedgerSpec` + `_session_notes_date` helper; a **`NO_CONFIG` result**
-from `python3 methodology_trim.py --file SESSION_NOTES.md --check` is
-the signal a sync dropped it. Every sync from the fork’s `main`: (1)
-save the extension first — after S719,
-`git show 63b3286f -- methodology_trim.py` is the patch (re-derive from
-the latest re-apply commit after future syncs); (2) `bin/sync --force`
-and commit exactly the files the dry run listed; (3) `git apply --check`
-then `git apply` the patch, in its own commit; (4) confirm `--check` no
-longer says `NO_CONFIG` and a `--file SESSION_NOTES.md --cut 1 --force`
-dry run prints `L1_OK`/`L2_OK`/`L3_OK`. Stays until the framework
-supports project-supplied ledger configs (fork BL-32). **Budget (decided
-S720, owner-ratified): pass `--budget-bytes 65536` on every
-`methodology_trim.py` run, `--check` included** — the 1.5.0 default is
-196,608 B and this project keeps the old 65,536 B cadence;
-`.context-budget.json`’s `SESSION_NOTES.md` ceiling is the same number
-so the two tools tell one story. Provenance history and rejected
-alternatives: Learning 770.
-
-**`CHANGELOG.md` legacy forms under the current ledger rules (S719):**
-ledger-format: 2; the rules live in the synced
-`docs/methodology/FRAMEWORK_APPARATUS.md` §The Action Ledger. One
-pre-existing shape stays as written (nothing already written is
-retrofitted): **13 headings use a bare `[BL]` tag** the anchored audit
-doesn’t count — expected, not a defect; new entries use the closed
-vocabulary `[issue #<N>]`, `[BL-<id>]` (this project’s own backlog ids
-only — methodology-fork work is `[ad hoc]`), or `[ad hoc]`. “Prepend
-under the topmost month” means: prepend under the archive pointer blocks
-beneath that month’s heading, and open a new month’s heading at the top
-when the month changes (the empty `## 2026-08` heading that once sat
-above `## 2026-09` was removed at the owner’s request, 2026-09-26). A
-claim commit’s entry is marked *(in progress)* and close-out adds its
-own entry — an entry once committed is never edited.
-
-**`SESSION_NOTES.md` archive fence-scanner defect (found S518; RESOLVED
-S527/S528) — historical:** two `methodology_trim.py` regex defects once
-hid most session-record headings from the archive partition; both fixes
-live in the tool’s `SESSION_NOTES.md` `LedgerSpec` (Learning 533). No
-known defect blocks `SESSION_NOTES.md` archiving — every pass since S539
-has verified L1/L2/L3. Expect the recurring `SRF_RED` small-denominator
-refusal pattern on any ledger whose last archive was small (Learnings
-549/586/587; owner-directed `--force` is the established resolution).
+- **Citation checklist** — new displayed statistic/estimator → update
+  the UI guidance page and roxygen `@references`, same session.
+- **Tutorial/article documentation** — new user-facing Shiny feature →
+  update the tutorial/article, not just code, tests and `NEWS.md`.
+- **NEWS.Rmd entry** — new exported function or user-facing feature → a
+  release-state, plain-language entry in the same session.
+- **`a2interactive.Rmd` checklist** — new exported function or new
+  parameter on a documented one → demonstrate it in a later, dedicated
+  pass.
+- **GitHub issue close-out** — a DONE `BACKLOG.md` item naming an issue
+  → close that issue in the same session.
+- **CI-break tracking** — a live-found CI break gets no issue of its
+  own; fix it or defer via `BACKLOG.md`.
+- **Lint close-out** — any tracked `.R` file added or changed →
+  `lintr::lint_package()` (package loaded first) before close-out.
+- **`_pkgdown.yml` reference coverage** — new exported function → add it
+  to a `_pkgdown.yml` reference group, same session.
+- **BACKLOG completed-item removal** — completing an item → remove its
+  block entirely in the same commit; the record goes to `CHANGELOG.md`.
+- **`CHANGELOG.md` legacy history** — pre-S325 history lives in
+  `docs/archive/CHANGELOG-legacy-pre-S325.md`; never add entries there.
+- **`methodology_trim.py` local customization** — after any sync from
+  the fork’s `main`, re-apply the `SESSION_NOTES.md` ledger patch; pass
+  `--budget-bytes 65536` on every run.
+- **`CHANGELOG.md` legacy forms** — bare `[BL]` headings stay as
+  written; new entries use `[issue #<N>]`, `[BL-<id>]` or `[ad hoc]`.
+- **`SESSION_NOTES.md` archive fence-scanner defect** — resolved
+  S527/S528; historical note only.
 
 ### Development Process Contract override
 

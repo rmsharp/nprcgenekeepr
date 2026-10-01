@@ -27,7 +27,7 @@ This work has been supported in part by NIH grants P51 RR13986 to the
 Southwest National Primate Research Center and P51 OD011092 to the
 Oregon National Primate Research Center.
 
-At present, the application supports 5 functions:
+The application’s main functions include:
 
 1.  Quality control of studbooks contained in text files or Excel
     workbooks and of pedigrees within LabKey Electronic Health Records
@@ -39,6 +39,11 @@ At present, the application supports 5 functions:
 4.  Generation of Genetic Value Analysis Reports
 5.  Creation of potential breeding groups with and without proscribed
     sex ratios and defined maximum kinships.
+
+The application has further tabs for mate pair analysis, genetic
+diversity, marker genetics, potential parents, cross-center identity
+mapping, de-identified export, and genetic-health trends. The Colony
+Manager Guide article describes them.
 
 **For more information see:**  
 A Practical Approach for Designing Breeding Groups to Maximize Genetic
@@ -58,28 +63,32 @@ parents have the appropriate sex listed, no animals are listed as both a
 sire and a dam, duplicate entries are removed, pedigree generation
 numbers are added, and all dates are valid dates. In addition, exit
 dates are added if possible and are consistent with other information
-such as departure dates and death dates. Current ages of animals that
-are still alive are added if a database connection is provided via a
-configuration file and the user has read permission on a LabKey server
-with the demographic data in an *EHR* (Electronic Health Record) module.
-See [LabKey
-documentation](https://www.labkey.org/Documentation/wiki-page.view?name=netrc).
+such as departure dates and death dates. Ages are added from the birth
+and exit dates when the file has valid birth dates and no age column;
+the current date is used as the end point for animals with no exit date.
+No database connection is needed. (A connection is used only to build a
+pedigree from a list of animals with LabKey, described below.)
 
-Parents with ages below a user selected threshold are identified. A
-minimum parent age in years is set by the user and is used to ensure
-each parent is at least that age on the birth date of an offspring. The
-minimum parent age defaults to 2 years. This check is not performed for
-animals with missing birth dates.
+Parents with ages below a user selected threshold are identified. The
+user can set a minimum sire age and a minimum dam age in years, and each
+is used to ensure every sire or dam is at least that age on the birth
+date of an offspring. Leaving a field blank uses the minimum breeding
+age for the animal’s species; 2 years is used only when the species is
+missing or unknown. This check is not performed for animals with missing
+birth dates.
 
-### Creation of Pedigree From a List of Potential Breeders and LabKey 
+### Creation of Pedigree From a List of Potential Breeders and LabKey
 
 The user can enter a list of focal animals in a CSV file that will be
-used to create a pedigree containing all direct relative (ancestors and
+used to create a pedigree containing all direct relatives (ancestors and
 descendants) via the **labkey.selectRows** function within the
 **Rlabkey** package if a database connection is provided via a
 configuration file and the user has read permission on a LabKey server
 with the demographic data in an **EHR** (Electronic Health Record)
-module.
+module. Without a database connection, the user can instead upload a
+pedigree file together with the list of focal animals, and the pedigree
+of the focal animals is built from that file
+([`getFocalAnimalPedFromFile()`](https://github.com/rmsharp/nprcgenekeepr/reference/getFocalAnimalPedFromFile.md)).
 
 Two configuration files are needed to use the database features of
 nprcgenekeepr with LabKey. The first file is named **\_netrc** on
@@ -121,8 +130,11 @@ percentage of the population at that age. The center of the pyramid
 starts at zero population and extends out to the left for males and
 right for females in increasing size, or proportion of the population.
 
-Along the vertical axis (y-axis), age-sex pyramids display two-year age
-increments, from birth at the bottom to old age at the top.
+Along the vertical axis (y-axis), age-sex pyramids display age
+increments, from birth at the bottom to old age at the top. The
+application uses two-year increments by default; the **Bin Size**
+control accepts 1 to 10, and **Age Unit** switches between years and
+months.
 
 ### Genetic Value Analysis Reports
 
@@ -214,15 +226,18 @@ Tab).
 ### Required and Optional Columns
 
 The only columns required are those specifying the Ego ID, Sire ID, Dam
-ID, and Sex. The remaining columns listed are optional but will be used
-if they are present in the uploaded file. The Input Format tab provides
-detailed information on allowable columns and how they will be used in
-quality control.
+ID, Sex, and Birth (the Birth values may be blank for animals when an
+Age column is supplied). The remaining columns listed are optional but
+will be used if they are present in the uploaded file. The Input Format
+tab provides detailed information on allowable columns and how they will
+be used in quality control.
 
 ### Minimum Parent Age
 
-You can specify the minimum parent age (in years) that parents must be
-at the birthdate of an offspring. The default is 2.0 years. This helps
+You can specify a minimum sire age and a minimum dam age (in years) that
+parents must have reached at the birthdate of an offspring. Both fields
+are optional: leave one blank to use the species-specific default for
+that sex (2 years when the species is missing or unknown). This helps
 identify potential data entry errors where parents appear too young.
 
 ### Quality Control Results
@@ -236,8 +251,8 @@ and displays results across multiple tabs:
 - **Warnings**: Lists potential issues that may need review
 - **Cleaned Data**: Preview of the validated studbook data
 
-Each results tab includes a download button to export the data for
-offline review.
+The Errors, Warnings and Cleaned Data tabs each include a download
+button to export the data for offline review.
 
 ### Module Interface
 
@@ -292,8 +307,10 @@ The interface is organized into three panels:
       changes only this table; the other tabs (for example Genetic Value
       Analysis) still use every animal.
     - **Trim Pedigree**: When checked, trims the pedigree to include
-      only the focal animals and their relatives, removing unrelated
-      lineages.
+      only the focal animals, their ancestors, and their descendants,
+      removing unrelated lineages. Siblings, cousins, and mates that are
+      not themselves ancestors or descendants of a focal animal are
+      removed too.
     - **Export Button**: Download the current pedigree view as a CSV
       file.
 
@@ -310,16 +327,16 @@ The **Table** tab is an interactive data table. Features include:
 - Sortable columns
 
 The **Diagram** tab renders the same pedigree as a family-tree diagram
-(up to 750 animals – narrow the focal-animal selection above that; the
-limit drops to 400 animals when the Rectilinear edge style below is
-selected, since it renders more total diagram nodes per animal). Each
-animal is shaped by sex – dot = Female, square = Male, star =
-Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded – with a
-legend to the right of the diagram showing the same mapping. If the
-pedigree data includes an optional `affected` column, individuals marked
-affected are additionally shaded a distinct color on the diagram, with a
-matching “Affected” entry in the same legend; pedigrees without an
-`affected` column render unshaded, as before. If the pedigree data
+(up to 400 animals with the default Rectilinear edge style below, or up
+to 750 if you switch to the Direct style, since Rectilinear renders more
+total diagram nodes per animal – narrow the focal-animal selection above
+the limit). Each animal is shaped by sex – dot = Female, square = Male,
+star = Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded –
+with a legend to the right of the diagram showing the same mapping. If
+the pedigree data includes an optional `affected` column, individuals
+marked affected are additionally shaded a distinct color on the diagram,
+with a matching “Affected” entry in the same legend; pedigrees without
+an `affected` column render unshaded, as before. If the pedigree data
 includes an optional `name` column, a **Show Names on Diagram** toggle
 (off by default) switches each node’s label from id-only to id plus name
 on a second line; a name longer than 15 characters is truncated with an
@@ -332,9 +349,9 @@ small connector between the two parents, with a line down to their
 shared children, rather than two independent lines running straight from
 each parent – the same convention traditional pedigree charts use. A
 **Diagram Edge Style** toggle above the diagram switches between
-“Direct” (the default straight-line connector) and “Rectilinear
-(kinship2-style),” which routes the same connectors as strict right
-angles instead, matching the more traditional pedigree-chart look. An
+“Rectilinear (kinship2-style)” (the default), which routes the
+connectors as strict right angles, matching the more traditional
+pedigree-chart look, and “Direct”, the straight-line connector. An
 animal that mates more than once, or whose lineage loops back on itself
 (e.g. a consanguineous mating), appears once per mating, with each
 occurrence joined back to its main occurrence by a curved, dashed line;
@@ -393,10 +410,18 @@ correction; only a declared MZ pair’s kinship changes.
 The `modPedigree` module accepts input from `modInput` and returns
 reactive values for downstream modules:
 
-- `pedigree`: The filtered pedigree data frame
+- `pedigree`: The filtered pedigree data frame (respects the trim and
+  unknown-ID settings)
+- `analysisPedigree`: The pedigree the other tabs analyze; it applies
+  the focal-animal trim but never hides unknown IDs
+- `processedPedigree`: The full pedigree with the population, pedigree
+  number, and generation columns added
 - `focalAnimals`: Character vector of focal animal IDs
 - `nAnimals`: Count of animals in the current view
+- `populationCount`: Count of animals marked as population
 - `isReady`: Logical indicating if pedigree data is available
+- `twinRelations`: The validated twin/zygosity relations, or `NULL` when
+  none were uploaded or the file was invalid
 
 ### Workflow
 
@@ -422,15 +447,24 @@ The left panel contains controls for configuring the analysis:
   simulation (default: 1000, range: 100-10,000). More iterations provide
   more accurate genome uniqueness estimates but take longer to compute.
 
-- **Calculate Genome Uniqueness**: Toggle whether to run the gene-drop
-  simulation to estimate genome uniqueness values.
+- **Genome Uniqueness Threshold**: An allele counts as rare when it is
+  carried by at most this many animals in all, counting the animal
+  itself (choices 1-5, default 4).
 
-- **Calculate Mean Kinship**: Toggle whether to compute pairwise kinship
-  coefficients and individual mean kinship values.
+- **Ranking Scheme**: “Combined (kinship - uniqueness)” (the default)
+  ranks animals by mean kinship minus genome uniqueness. “Categorical
+  (priority order)” sorts animals into tiers instead and shows three
+  more controls: the priority axis (genome uniqueness first or mean
+  kinship first), the high-uniqueness cutoff (default 10), and the
+  low-kinship z-score cutoff (default 0.25).
 
-- **Minimum Breeding Age**: Slider to set the minimum age (in years) for
-  animals to be considered in the breeding population (default: 2
-  years).
+- **Calculate Genome Uniqueness** and **Calculate Mean Kinship**: Two
+  checkboxes, both checked. They currently have no effect: the analysis
+  always calculates both measures.
+
+- **Kinship Overrides (optional)**: Upload a CSV or Excel file with the
+  columns `id1`, `id2` and `kinship` to replace the pedigree-derived
+  kinship for the listed pairs.
 
 - **Run Analysis**: Click to start the genetic value computation.
 
@@ -443,10 +477,11 @@ The information panel explains the key metrics:
   better** as they indicate the animal is less related to the
   population.
 
-- **Genome Uniqueness**: The proportion of an individual’s genome that
-  is unique in the population based on gene-drop simulation. **Higher
-  values are better** as they indicate the animal carries rare genetic
-  material.
+- **Genome Uniqueness**: The percentage of an individual’s simulated
+  allele copies that are rare in the population, based on gene-drop
+  simulation. It is shown on a 0-100 scale, not as a proportion.
+  **Higher values are better** as they indicate the animal carries rare
+  genetic material.
 
 ### Results Tabs
 
@@ -455,29 +490,38 @@ After running the analysis, results are displayed across three tabs:
 1.  **Rankings**: Interactive table showing animals ranked by genetic
     value.
 
-    - Adjust “Show top N” to view more or fewer animals
-    - Download button exports the full rankings to CSV
+    - Adjust “Show top N” to view more or fewer animals (default 20)
+    - “Filter by IDs” with “Filter View” shows only the animals you list
+    - “Export All” saves the full rankings to CSV and “Export Subset”
+      saves the filtered view
 
 2.  **Visualizations**: Scatter plot showing the relationship between
-    mean kinship and genome uniqueness values.
+    mean kinship and genome uniqueness values. The ten highest-ranked
+    animals are red and all others are blue.
 
-3.  **Summary**: Statistical summary of genetic value metrics including
-    means, standard deviations, and distributions.
+3.  **Summary**: A Metric/Value table with the number of animals
+    analyzed, the average mean kinship and genome uniqueness, the
+    largest genome-uniqueness standard error, and the founder statistics
+    (total, male and female founders, founder equivalents, founder
+    genome equivalents, gene diversity, and the sex-ratio and variance
+    effective population sizes). It shows no standard deviations or
+    distributions.
 
 ### Module Interface
 
 The `modGeneticValue` module returns reactive values for downstream use:
 
 - `geneticValues`: Data frame with genetic value metrics for all animals
-- `topAnimals`: Subset of highest-value animals
+- `topAnimals`: The ten highest-ranked animals
 - `nAnalyzed`: Count of animals included in the analysis
 
 ### Performance Notes
 
-The kinship calculation can handle pedigrees up to approximately 6,000
-individuals. For larger pedigrees, the input studbook will automatically
-be trimmed to the ancestors of the currently-specified population before
-analysis begins.
+Before the analysis begins, the pedigree is always trimmed to the
+ancestors of the current population (the living animals, or every animal
+when the pedigree has no `exit` column). The application sets no fixed
+limit on pedigree size, so a large pedigree simply takes longer to
+analyze.
 
 ## Summary Statistics
 
@@ -497,6 +541,8 @@ The module provides a structured display with three main sections:
     - Male Founders (CSV)
     - Female Founders (CSV)
     - First-Order Relationships (CSV)
+    - All Relationships (CSV)
+    - Relationship Classes (CSV)
 
 3.  **Population Summary**: Dynamic HTML output showing:
 
@@ -547,9 +593,9 @@ discrete generations, random union of gametes), so each is best read as
 an index of one source of diversity loss rather than a literal head
 count.
 
-For Mean Kinship and Genome Uniqueness, displays the Tukey five-number
-summary: minimum, 1^(st) quartile, median, mean, 3^(rd) quartile, and
-maximum.
+For Mean Kinship and Genome Uniqueness, displays the minimum, 1^(st)
+quartile, mean, median, 3^(rd) quartile, and maximum, followed by the
+skewness and kurtosis of each distribution.
 
 ### Module Interface
 
@@ -560,6 +606,12 @@ returns:
   - `nAnimals`: Count of animals in the analysis
   - `meanMK`: Average mean kinship value
   - `meanGU`: Average genome uniqueness value
+- `relationships`, `relationClasses`, and `firstOrderCounts`: the data
+  behind the three relationship exports
+- `mkSummary`, `guSummary`, `mkShape`, and `guShape`: the summary values
+  and the skewness and kurtosis for mean kinship and genome uniqueness
+- `mkHistogram`, `zscoreHistogram`, `guHistogram`, `meanKinshipBoxPlot`,
+  `zscoreBoxPlot`, and `guBoxPlot`: the six plots
 
 ### Population Genetics Terms
 
@@ -580,8 +632,11 @@ The left panel provides controls for group formation:
 
   - *Top ranked*: Use the highest-ranked animals from the Genetic Value
     Analysis
-  - *Upload list*: Provide a custom list of candidate animal IDs
-  - *All available*: Use all animals in the current population
+  - *Upload list*: Currently behaves exactly like “All available”; the
+    choice does not yet provide a way to upload or type a list of
+    candidate IDs
+  - *All available*: Use every animal in the current pedigree (not
+    limited to the living population)
 
 - **Include animals by**: Choose how candidates are screened for
   eligibility, independent of Source:
@@ -607,9 +662,10 @@ The left panel provides controls for group formation:
 - **Number of groups**: How many breeding groups to form (default: 3,
   range: 1-20).
 
-- **Max kinship threshold**: Maximum allowed kinship coefficient between
-  group members (default: 0.25). Lower values create more genetically
-  diverse groups but may result in fewer animals being placed.
+- **Max kinship threshold**: Two animals whose kinship coefficient is at
+  or above this value are kept out of the same group (default: 0.25).
+  Lower values create more genetically diverse groups but may result in
+  fewer animals being placed.
 
 - **Ancestry Guardrails**: An optional, collapsed-by-default section for
   centers that manage geographic ancestry (for example, Indian-origin
@@ -617,22 +673,32 @@ The left panel provides controls for group formation:
   names two ancestry classifications and a severity: *block* rules keep
   matching pairs out of the same group during formation; *flag* rules
   let groups form and report matching pairs afterward. A status line
-  always shows how many rules are loaded and how many candidate animals
-  no rule reaches; a pedigree without ancestry information leaves the
-  guardrails inactive, with the status line saying so. A loaded *block*
-  rule can be overridden for the session – select it, choose “Override
-  rule…”, and confirm with a required written reason; overridden rules
-  still report their pairings, marked “overridden”, never silently
-  dropped. When writing rules for animals without usable ancestry
-  information, name both UNKNOWN and OTHER (blank entries standardize to
-  UNKNOWN; unrecognized text standardizes to OTHER) – the validator
-  warns when only one of the two is named.
+  always shows the state of the guardrails: “No ancestry rules loaded.”
+  before a file is uploaded; afterward, how many block and flag rules
+  are loaded and how many animals in the pedigree no rule names; a
+  pedigree without ancestry information leaves the guardrails inactive,
+  with the status line saying so. A loaded *block* rule can be
+  overridden for the session – select it, choose “Override rule…”, and
+  confirm with a required written reason; overridden rules still report
+  their pairings, marked “overridden”, never silently dropped. When
+  writing rules for animals without usable ancestry information, name
+  both UNKNOWN and OTHER (blank entries standardize to UNKNOWN;
+  unrecognized text standardizes to OTHER) – the validator warns when
+  only one of the two is named.
 
 - **Sex ratio**: Control the male-to-female composition:
 
   - *None*: No sex ratio constraint
   - *Harem (1M:NF)*: One male per group with multiple females
   - *Custom*: Specify a custom ratio
+
+- **Minimum breeding age (years)**: Kinship involving an animal younger
+  than this age is ignored (default: 1). With a harem sex ratio, the
+  male in each group must be at least this old.
+
+- **Number of simulations**: How many random groupings the search tries
+  (default: 10). More simulations sample more of the possible groupings
+  but take longer; raise it for a final run.
 
 - **Candidates to retain**: How many distinct candidate group solutions
   to keep for comparison (default: 5, range: 1-50). Each retained
@@ -645,38 +711,34 @@ The left panel provides controls for group formation:
   `Number of simulations` attempts), so the retained candidates are
   guaranteed to include the best possible groupings, not merely the best
   the sample happened to find. Only available when forming exactly one
-  group with no harem or custom sex ratio, since checking every
-  combination becomes computationally intractable for more than a couple
-  dozen candidates once multiple groups or those constraints are
-  involved – the checkbox itself is hidden whenever the current
-  configuration falls outside that scope. A status message beneath the
-  checkbox reports the outcome after each run: how many distinct
-  groupings were found, whether the search completed exhaustively or was
-  cut short by its internal time limit (shown in orange when truncated,
-  since the search may not have found every possibility), and which
-  “Candidates to retain” cutoff was applied.
+  group with no harem or custom sex ratio – the checkbox itself is
+  hidden whenever the current configuration falls outside that scope.
+  Checking every combination is only feasible for a small pool: with
+  more than 20 candidates the run stops with an error message instead of
+  starting, and the search is cut short after 10 seconds. A status
+  message beneath the checkbox reports the outcome after each run: how
+  many distinct groupings were found, whether the search completed
+  exhaustively or was cut short by its internal time limit (shown in
+  orange when truncated, since the search may not have found every
+  possibility), and which “Candidates to retain” cutoff was applied.
 
 ### Results Display
 
 After clicking “Form Groups”, results appear in four tabs:
 
-1.  **Groups**: Visual display of each formed group showing:
+1.  **Groups**: One panel per formed group, headed “Group N (M
+    animals)”, with a table of its members showing ID, sex, birth date,
+    sire and dam.
 
-    - Group number and size
-    - Animal IDs and their genetic values
-    - Mean kinship within the group
+2.  **Statistics**: Summary table with one row per group and four
+    columns: Group, Total, Males and Females.
 
-2.  **Statistics**: Summary table showing:
-
-    - Number of animals per group
-    - Average kinship within each group
-    - Sex composition
-    - Unassigned animals (those that couldn’t be placed without
-      exceeding kinship threshold)
-
-3.  **Group Detail**: One group at a time – annotated membership, the
-    within-group kinship matrix (when “Include kinship in display of
-    groups” was checked), and per-group export buttons.
+3.  **Group Detail**: One group at a time – annotated membership (ID,
+    sex and age in years), the within-group kinship matrix, and
+    per-group export buttons. The kinship matrix is shown whether or not
+    “Include kinship in display of groups” is checked; that checkbox
+    only controls whether each group’s kinship matrix is also included
+    in the `groupKinship` value the module returns.
 
 4.  **Ancestry**: When ancestry rules were in effect for the run, every
     within-group pairing a rule matched (with its rule, severity, and
@@ -691,9 +753,19 @@ After clicking “Form Groups”, results appear in four tabs:
 
 The `modBreedingGroups` module returns reactive values:
 
-- `groups`: List of data frames, one per breeding group
-- `nGroups`: Number of groups successfully formed
-- `unassigned`: IDs of animals that couldn’t be placed
+- `groups`: List of character vectors of animal IDs, one per breeding
+  group of the selected candidate grouping; when some candidates fit no
+  group, the last element is the “Unused” group
+- `nGroups`: Number of elements in `groups` (this counts the “Unused”
+  group when there is one)
+- `unassigned`: IDs of candidates that appear in no group, including the
+  “Unused” group
+- `score`: Score of the selected candidate grouping (the size of its
+  smallest group)
+- `groupKinship`: The kinship matrix for each group, when “Include
+  kinship in display of groups” was checked
+- `ancestryRules`: The validated ancestry rules table, or `NULL` when no
+  rules were uploaded
 
 ### Algorithm Notes
 
@@ -705,16 +777,20 @@ The group formation algorithm:
 3.  Optimizes for maximum genetic diversity within groups
 4.  Respects sex ratio constraints when specified
 
-By default, the analysis ignores relatedness more distant than second
-cousins, pairwise relatedness involving animals under 1 year of age, and
-relatedness between females. The guidance panel at the bottom provides a
-table of kinship values for common relationship categories.
+By default, the analysis ignores kinship below the Max kinship threshold
+(0.25 in the application; the
+[`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+function’s own default of 0.015625 is the second-cousin level), pairwise
+relatedness involving animals younger than the Minimum breeding age (1
+year), and relatedness between females. The guidance panel at the bottom
+provides a table of kinship values for common relationship categories.
 
 ## Genetic Value Analysis and Breeding Group Formation Description
 
-The GV & BG Description tab (`modGvAndBgDesc`) provides comprehensive
-documentation about the algorithms and methodologies used in genetic
-value analysis and breeding group formation.
+The Genetic Value Analysis and Breeding Group Description tab
+(`modGvAndBgDesc`) provides comprehensive documentation about the
+algorithms and methodologies used in genetic value analysis and breeding
+group formation.
 
 ### Purpose
 
@@ -733,7 +809,8 @@ The documentation explains:
     - Interpretation of genetic value metrics
 2.  **Breeding Group Formation**:
     - The optimization algorithm for minimizing within-group relatedness
-    - How sex ratio constraints are applied
+    - Which relationships may be ignored (kinship below a threshold,
+      young animals, and females) when forming groups
     - The iterative assignment process
 
 ### Module Interface
@@ -755,14 +832,26 @@ documentation reference for the other analysis modules.
 
 ## ORIP Reporting
 
-The ORIP Reporting tab will eventually contain information for reporting
-to the Office of Research Infrastructure Programs (ORIP). This tab may
-end up being merged with the Summary Statistics tab and contain a number
-of statistics, tables and histograms. Alternatively, this may contain a
-subset of information from the Summary Statistics tab presented as a
-formatted report that can be exported and submitted to ORIP. The exact
-information that needs to be submitted for ORIP recordkeeping is still
-under discussion.
+The ORIP Reporting tab (`modORIPReporting`) collects information for
+reporting to the Office of Research Infrastructure Programs (ORIP). The
+tab is shown only when a site configuration file is present and names
+ONPRC as the center; other sites do not see it.
+
+The tab has:
+
+- a guidance panel,
+- **Export ORIP Report** and **Export Demographics** buttons,
+- a **Site Information** section (center, node, user, and system),
+- a **Colony Summary** table (animals by sex and the number of founders
+  by sex), and
+- a **Genetic Diversity Metrics** section (mean kinship, mean genome
+  uniqueness, and the number of animals analyzed).
+
+The tab is still under development. A “Coming Soon” list names founder
+contribution analysis, inbreeding trends over time, breeding success
+rates, age structure analysis, and formatted PDF report generation. The
+exact information that needs to be submitted for ORIP recordkeeping is
+still under discussion.
 
 ## Algorithm: Breeding Group Formation
 
@@ -799,11 +888,13 @@ not be considered.
 
 Specifically:
 
-1.  The candidate animals provided are checked, and any that were
-    designated as low-value by the genetic value analysis will be
-    removed from further consideration.  
-    \* This behavior can be toggled off to allow low-value animals in
-    the formation process  
+1.  The candidate animals are chosen. In the application, “Include
+    animals by” selects either the top-N ranked animals (the default) or
+    a genetic-value floor.  
+    \* With the genetic-value floor, any animal that the genetic value
+    analysis labeled “Low Value” is removed from further consideration
+    (animals labeled “Undetermined” still pass).  
+    \* The floor is optional and off by default.  
 2.  The pairwise kinship data is filtered down to only the kinship
     between candidate animals.  
 3.  If an age threshold has been set, kinships involving animals below
@@ -812,12 +903,16 @@ Specifically:
     animals typically go to whatever social group their dam does.  
     \* By default, we ignore animals under 1 year of age  
 4.  Pairwise kinships below the specified level will be filtered out.  
-    \* By default, we ignore relatedness more distant than 2nd cousin  
+    \* The application’s default Max kinship threshold is 0.25, so
+    kinship below 0.25 is ignored; the
+    [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+    function’s own default, 0.015625, is the 2nd-cousin level  
 5.  Pairwise kinships between females will be filtered out  
     \* This allows females of the same matriline to be part of the same
     group like they would be in the wild.  
-    \* This behavior can be toggled off to prevent relatedness between
-    females.
+    \* The application always applies this; script users can change it
+    with the `ignore` argument of
+    [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md).
 
 #### Random Maximum Independent Set Generation
 
@@ -831,20 +926,25 @@ The algorithm proceeds by the following steps:
     1.  Generate **N** empty sets, where **N** is the desired number of
         groups to be created.  
     2.  While there are candidate animals remaining:  
-        i. Pick an animal **A** randomly from the set of candidate
-        animals  
-        ii. Choose a group **G** randomly from one of the **N** groups,
-        and assign **A** to it  
+        i. Pick a group **G** randomly from the groups that still have
+        an animal available to add  
+        ii. Pick an animal **A** randomly from the animals still
+        available for **G**, and assign **A** to it  
         iii. Remove animal **A** from consideration for all **N**
         groups  
-        iv. Remove all animals related to **A** from consideration from
-        for group **G**  
+        iv. Remove all animals related to **A** from consideration for
+        group **G**  
     3.  Score the groups that were generated  
-        i. For our purposes, we calculate the average group size  
-    4.  If the score of the new groups is higher than groups that were
-        previously generated, save the new groups.  
-2.  Return the currently saved groups
-    1.  This should be the best groups encountered in **I** iterations.
+        i. For our purposes, the score is the size of the smallest
+        group, so a higher score means the groups are larger and more
+        even  
+    4.  If this set of groups differs from those already saved, save it
+        when fewer than the number of candidates to retain (default 5)
+        are saved, or when its score beats the lowest saved score.  
+2.  Return the saved sets of groups, best score first
+    1.  These are the best distinct sets of groups encountered in **I**
+        iterations; each set also has an “Unused” group holding any
+        candidates that fit in no group.
 
 Vinson, A. and Raboin, M.J. (2015) “A Practical Approach for Designing
 Breeding Groups to Maximize Genetic Diversity in a Large Colony of
@@ -857,7 +957,7 @@ pp.700-707.
 Genome uniqueness is calculated through the use of a gene-drop
 simulation to estimate how frequently an animal will possess founder
 alleles not present in other members of the focal population, or present
-in a specified number or fewer.
+in a specified number of animals or fewer, counting the animal itself.
 
 The gene-drop simulation used by the web application is a vectorized
 version and is shown in the figure below. In an un-vectorized version,
@@ -884,7 +984,8 @@ Once every animal has been assigned a genotype by mendelian inheritance
 tally the number of unique alleles possessed by each member of the focal
 population. In the case of this algorithm, we do allow the ‘uniqueness’
 threshold to be adjusted so that an allele can be considered unique if
-it is possessed by N or fewer other members of the focal population.
+it is possessed by N or fewer members of the focal population in all,
+counting the animal itself (the application offers 1-5, default 4).
 
 #### Vectorized Gene-Drop Details
 
@@ -928,13 +1029,15 @@ pedigree, the focal population can be subset out. Within this population
 of allele vectors, unique alleles can be determined:
 
 For each position on the allele vectors (1:N) - Gather each animal’s two
-alleles - If the number of other animals possessing that allele is equal
-to, or below the threshold, score the allele as unique (1) - Otherwise,
-score the allele as non-unique (0)
+alleles - If the number of animals possessing that allele, counting this
+animal, is equal to or below the threshold, score the allele as unique
+(1) - Otherwise, score the allele as non-unique (0)
 
 Once every position on each animal’s two allele vector’s has been
 scored, sum all of the scores for an animal and divide by the total
-number of alleles being considered (2 \* number of simulations).
+number of alleles being considered (2 \* number of simulations). The
+application reports this fraction multiplied by 100, so genome
+uniqueness is shown as a percentage.
 
 ![Generation of a vector of five gametes from one parent. Showing how
 the transmission vectors (row 2) determine which alleles are passed from
@@ -976,9 +1079,10 @@ There is a logging system integrated into the package using the package
 **futile.logger**. Note the checkbox at the bottom of the side panel on
 the *Input* tab. When the *Debug on* checkbox is checked (it is not
 checked by default), the application writes to a file named
-*nprcgenekeepr.log* in the users home directory. Currently, events
-occurring the the *server.R* file are logged as that is where most
-errors are exposed.
+*nprcgenekeepr.log* in the users home directory. Currently, events in
+the Input tab (`R/modInput.R`), the application server
+(`R/appServer.R`), and the functions that read pedigree and genotype
+data are logged, as that is where most errors are exposed.
 
 ### Code Coverage
 
@@ -989,4 +1093,5 @@ file system have coverage with unit tests. Many of these have 100
 percent of the lines covered. However, the unit tests are not
 exhaustive. The practice is to add further tests as errors are detected
 or when working on the code and a new unit test possibility is
-discovered. As of 20241223 95.70 percent of the lines are covered.
+discovered. The percentage of lines covered is shown by the Codecov
+badge at the top of the README file.

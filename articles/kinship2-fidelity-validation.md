@@ -7,9 +7,10 @@ the field’s standard reference implementation for pedigree kinship
 computation and pedigree drawing (Sinnwell, Therneau & Schaid 2014). Its
 own supplementary material (Sinnwell, Therneau & Schaid, “The kinship2 R
 Package for Pedigree Data: Supplementary Material”) works a small,
-fully-specified 10-subject example pedigree through kinship2’s own
-kinship matrix, X-chromosome kinship matrix, and pedigree-trimming
-(“shrink”) functions.
+fully-specified example pedigree (the 17-subject `fam1`, of which this
+repository reproduces a 10-subject subset; see [Caveats](#sec-caveats))
+through kinship2’s own kinship matrix, X-chromosome kinship matrix, and
+pedigree-trimming (“shrink”) functions.
 
 The ratified [kinship2 supplement full-reproduction
 plan](https://github.com/rmsharp/docs/planning/kinship2-supplement-full-reproduction-plan.md)
@@ -17,8 +18,9 @@ closed 3 tracks against that supplement:
 
 - **Track A** –
   [`kinship()`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
-  gained `chrtype = c("autosome", "x")` and `sex` arguments, reproducing
-  the supplement’s X-chromosome kinship matrix (Table S2).
+  gained a `chrtype` argument (`"autosome"`, the default, or `"x"`) and
+  a `sex` argument, reproducing the supplement’s X-chromosome kinship
+  matrix (Table S2).
 - **Track B** – new
   [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md),
   a
@@ -250,7 +252,7 @@ Track 4’s own structural invariant (`genOf[[anchor]] == unitGen`,
 unconditionally) makes this specific dogleg permanently unreachable, not
 just for this fixture – see
 `tests/testthat/test_makePedigreeMatingLayout.R`’s own “Track 4” comment
-and test (`:1297-1368`), which documents and asserts exactly this.
+and test, which document and assert exactly this.
 
 ### Graphic fidelity
 
@@ -319,14 +321,14 @@ of
 [`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
 output respectively – at the level of *who is related to whom, and who
 is shown at all*, not *which duplicate copy of a multi-union individual
-each package’s layout happens to draw* (the two packages duplicate
-different individuals for the same union above: `Y` in kinship2’s
-rendering, `A` in nprcgenekeepr’s). `.comparePedigreeStructures()` then
-diffs all three sets directly – “structurally identical” in this article
-means identical on these three sets, never identical mate-line layout or
-node placement; see the caveat in [Graphic fidelity](#sec-trackb) above
-and [Caveats carried forward](#sec-caveats) below for the specific,
-visible layout convention the two packages do not share.
+each package’s layout happens to draw* (the two packages do not
+duplicate the same individuals for the unions above).
+`.comparePedigreeStructures()` then diffs all three sets directly –
+“structurally identical” in this article means identical on these three
+sets, never identical mate-line layout or node placement; see the caveat
+in [Graphic fidelity](#sec-trackb) above and [Caveats carried
+forward](#sec-caveats) below for the specific, visible layout convention
+the two packages do not share.
 
 **A real gap in this comparator was found and fixed 2026-08-26.** The
 original version diffed only the parent-child edge set and mate-pair set

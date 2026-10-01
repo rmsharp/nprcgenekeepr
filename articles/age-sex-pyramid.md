@@ -104,8 +104,8 @@ getPyramidPlot(qcPed, binWidth = 5, colorScheme = "viridis")
 ![](age-sex-pyramid_files/figure-html/viridis-1.png)
 
 `ageUnit = "months"` is useful for young or short-lived cohorts (the
-bands and the title switch to months), and `showCounts = FALSE` hides
-the per-bar counts for a cleaner figure.
+bands and the age-axis label switch to months), and `showCounts = FALSE`
+hides the per-bar counts for a cleaner figure.
 
 ## Key arguments
 

@@ -117,7 +117,8 @@ returns a list. The two elements you will use most are `report` (the
 ranked table) and `kinship` (the pairwise kinship matrix, which
 [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
 consumes when forming breeding groups – see the *Forming Breeding
-Groups* article). The rest summarize founder diversity (below).
+Groups* article). The rest summarize founder diversity and the effective
+sizes of the current breeders (below).
 
 ## The ranking report
 
@@ -167,15 +168,18 @@ ranking scheme in `orderReport()` and
 directly, as this article does, always uses it. It sorts the population
 into ordered tiers:
 
-1.  imported founders with no offspring;
+1.  imported animals (both parents unknown, origin recorded), youngest
+    first;
 2.  animals with genome uniqueness above a high-uniqueness cutoff (10%
-    by default), by **descending genome uniqueness** (ties broken by
-    ascending mean kinship) – this is where carrying rare alleles earns
-    a high rank;
+    by default), by **descending genome uniqueness** (uniqueness
+    compared in whole percent; ties broken by ascending mean kinship) –
+    this is where carrying rare alleles earns a high rank;
 3.  the remaining animals whose standardized mean kinship is at or below
     a low-kinship z-score cutoff (0.25 by default), by **ascending mean
     kinship** – least related ranked highest;
-4.  everyone else, flagged `Low Value`, by ascending mean kinship.
+4.  everyone else, flagged `Low Value`, by ascending mean kinship;
+5.  animals with both parents unknown and no recorded origin, placed
+    last and flagged `Undetermined` with no rank (`rank` is `NA`).
 
 Which cutoff is checked first – so it claims any animal that qualifies
 for both – is the tiers’ **priority axis** (genome uniqueness by

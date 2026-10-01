@@ -12,18 +12,19 @@ screenshot-illustrated guide for colony managers and primate-center
 bioinformatics staff, complementing the engineering account in
 [“Engineering nprcgenekeepr
 2.0.0”](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.md)
-and the six feature-depth articles listed in [Section 4](#sec-approach).
-Section 1 explains why the package exists; Section 2 maps its five
-function groups onto the app’s tabs and onto the two ways to use them
-(point-and-click or scripted); Section 3 walks a colony manager through
-the entire application, tab by tab, using the package’s own shipped
-example pedigree. This article’s own preparation surfaced and fixed
-three production issues along the way – an Excel-upload defect that
-could silently corrupt sire/dam IDs, a “Custom” breeding-group sex ratio
-option with no numeric input, and a shipped example pedigree missing a
-column the Potential Parents tab needs to demonstrate populated results
-– each described where it arose rather than glossed over. All claims in
-this article are current as of 2026-07-17.
+and the seven feature-depth articles listed in
+[Section 4](#sec-approach). Section 1 explains why the package exists;
+Section 2 maps its five function groups onto the app’s tabs and onto the
+two ways to use them (point-and-click or scripted); Section 3 walks a
+colony manager through the entire application, tab by tab, using the
+package’s own shipped example pedigree. This article’s own preparation
+surfaced and fixed three production issues along the way – an
+Excel-upload defect that could silently corrupt sire/dam IDs, a “Custom”
+breeding-group sex ratio option with no numeric input, and a shipped
+example pedigree missing a column the Potential Parents tab needs to
+demonstrate populated results – each described where it arose rather
+than glossed over. All claims in this article are current as of
+2026-09-30.
 
 ## Introduction
 
@@ -41,7 +42,7 @@ different angles. [“Engineering nprcgenekeepr
 2.0.0”](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.md)
 documents the modular-architecture migration and development process
 behind the current application – read it for the *how it was built*
-story. Six shorter feature articles (linked from
+story. Seven shorter feature articles (linked from
 [Section 4](#sec-approach)’s table) each walk one capability in depth,
 directly through the R API rather than the Shiny app. This article does
 neither of those jobs: it is the practical, tab-by-tab guide to *using*
@@ -51,7 +52,7 @@ pedigree and get results, not read source code.
 **Scope.** Every claim below describing the current application – tab
 list, control labels, default values, and any number tied to the
 package’s own `data(examplePedigree)` example data – was re-verified
-directly against the source and a live run of the app, as of 2026-07-17.
+directly against the source and a live run of the app, as of 2026-09-30.
 Nothing here is carried forward uncritically from earlier tutorials.
 
 ## Section 1 – Purpose: Why nprcgenekeepr Exists
@@ -124,8 +125,8 @@ flowchart LR
 
 **Two ways to use it.** Everything in this pipeline is available both
 through the Shiny application walked in [Section 5](#sec-practice) and
-as directly callable R functions – `NAMESPACE` exports 182 functions as
-of 2026-07-17. An open GitHub issue
+as directly callable R functions – `NAMESPACE` exports 233 functions
+(counted when this article is rendered). An open GitHub issue
 ([\#37](https://github.com/rmsharp/nprcgenekeepr/issues/37)) tracks,
 function by function, which exports the Shiny app itself exercises
 versus which exist primarily for scripted or batch workflows; its own
@@ -134,15 +135,16 @@ count, so treat its exact split as directional rather than a precise
 current figure. The practical takeaway for this article’s audience: if a
 task in [Section 5](#sec-practice) feels like it should be scriptable –
 batch-processing several pedigrees, or running a workflow without a
-browser – it very likely already is; the six feature articles in
+browser – it very likely already is; the feature articles in
 [Table 1](#tbl-function-groups) are worked examples of exactly that.
 
 ## Section 3 – Practice: A Colony Manager’s Walkthrough
 
-This section walks every tab of the Shiny application in order, using
-the package’s own shipped example data (`data(examplePedigree)`,
-`data(focalAnimals)`) throughout so every step below is reproducible.
-Start the application with:
+This section walks every tab of the Shiny application in order (except
+the ONPRC-only **ORIP Reporting** tab, which appears only on ONPRC
+installations), using the package’s own shipped example data
+(`data(examplePedigree)`, `data(focalAnimals)`) throughout so every step
+below is reproducible. Start the application with:
 
 ``` r
 
@@ -255,11 +257,11 @@ QC error types checked by Read and Check Pedigree. {.table .caption-top}
 
 ### Pedigree Browser
 
-The **Pedigree Browser** tab displays the pedigree in a paged table (10,
-25, 50, or 100 rows at a time) with a **Display Unknown IDs** option.
-Unknown IDs (UIDs) are placeholder IDs the application generates, by
-default starting with the letter U, for the unrecorded parent of an
-animal with only one known parent.
+The **Pedigree Browser** tab displays the pedigree in a paged table (15
+rows at a time by default, adjustable) with a **Display Unknown IDs**
+option. Unknown IDs (UIDs) are placeholder IDs the application
+generates, by default starting with the letter U, for the unrecorded
+parent of an animal with only one known parent.
 
 ![Pedigree Browser table with Display Unknown IDs checked, showing
 UNKNOWN placeholder
@@ -469,9 +471,10 @@ genetic value.](shiny_app_use/gva_first_high_value.png)
 Genetic Value Analysis results, default view (top 20).
 
 **A correction to an older claim.** Animals with no recorded parentage
-(“Undetermined” – typically imports or very young animals not yet
-assigned parents) are *not* automatically high value. Since issue \#9’s
-ranking correction (`R/modGeneticValue.R:289-301`), the results table
+(“Undetermined”: both parents unknown and no recorded origin; animals
+that are genuine imports, with a recorded origin, are ranked normally)
+are *not* automatically high value. Since issue \#9’s ranking correction
+(the Undetermined demotion in `R/modGeneticValue.R`), the results table
 sorts Undetermined animals to the *bottom* of the ranking, so a
 genuinely uncertain genome-uniqueness estimate no longer inflates them
 to the top. Because the exact row at which values transition from High
@@ -530,7 +533,8 @@ summary plots below as PNGs, not illustrated here:
 
 - The founders files have columns `id`, `sire`, `dam`, `sex`, `gen`,
   `birth`, `exit`, `age`, `ancestry`, `origin`, `status`,
-  `recordStatus`, `population`, and `pedNum`.
+  `recordStatus`, `fromCenter`, `placeholder`, `population`, and
+  `pedNum`.
 
   ![Spreadsheet view of an exported female-founders CSV
   file.](shiny_app_use/ss_female_founders.png)
@@ -802,8 +806,9 @@ diversity of breeding groups *after* they are formed: once groups exist
 renders a red/yellow/green heat map with one row per group and one
 column per metric – **Value** (the proportion of low-value animals in
 the group), **Origin** (Indian- vs. Chinese-origin status, shown only
-when the pedigree has an `ancestry` column), **Production** (whether
-age-appropriate breeding females are present for the selected **Housing
+when the pedigree has an `ancestry` column), **Production** (births per
+breeding-age female over the last two calendar years, scored
+red/yellow/green against cut-offs that depend on the selected **Housing
 type**, “Shelter pens” or “Corral”), and **Inbreeding** (within-group
 kinship risk involving the group’s male). A group with no assessed
 value, or an undefined Inbreeding result, is scored red rather than
@@ -1062,9 +1067,10 @@ A run of consecutive homozygous, non-missing loci (ordered by physical
 position along each chromosome) qualifies as an ROH segment only if it
 meets *both* a minimum SNP-count threshold and a minimum base-pair span
 threshold – the same field-standard dual-threshold convention PLINK
-uses, adjustable via the two fields above the table (pre-filled with
-PLINK’s own defaults). F_ROH is the proportion of the genome covered by
-qualifying segments.
+uses, adjustable via the two fields above the table (pre-filled with 50
+SNPs, a scaled-down version of PLINK’s default of 100, and 1,000,000
+base pairs, which is PLINK’s own default). F_ROH is the proportion of
+the genome covered by qualifying segments.
 
 ![Marker Genetics Genomic ROH (F_ROH) tab showing the minimum SNP count
 and minimum ROH segment span inputs above a table of 50 rows (S001
@@ -1284,11 +1290,12 @@ whether the colony’s genetic health is improving or eroding over time.
 
 The workflow has three parts:
 
-1.  **Snapshot history.** Upload a snapshot-history file (the tab ships
-    a worked example) or start recording a new one. Each row is one
-    dated snapshot – mean kinship, founder representation, genome
-    uniqueness, and the population’s make-up – for a single membership
-    rule (the whole pedigree, or a designated focal population).
+1.  **Snapshot history.** Upload a snapshot-history file (the package
+    ships a worked example file for this tab) or start recording a new
+    one. Each row is one dated snapshot – mean kinship, founder
+    representation, genome uniqueness, and the population’s make-up –
+    for a single membership rule (the whole pedigree, or a designated
+    focal population).
 2.  **Generate Snapshot.** After running Genetic Value Analysis on the
     Genetic Value Analysis tab, clicking **Generate Snapshot** here
     records a new dated row from that analysis and appends it to the
@@ -1318,7 +1325,7 @@ This article covered why `nprcgenekeepr` exists, how its five function
 groups map onto the Shiny application’s tabs and onto a scriptable R
 API, and what it looks like to actually use every tab of that
 application against the package’s own example data. For more depth on
-any one capability, see the six feature articles in
+any one capability, see the feature articles in
 [Table 1](#tbl-function-groups); for the story of how the current
 modular application came to be, see [“Engineering nprcgenekeepr
 2.0.0”](https://github.com/rmsharp/nprcgenekeepr/articles/engineering-the-2.0.0-release.md).

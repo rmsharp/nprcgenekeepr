@@ -17,9 +17,9 @@ performs several families of checks:
 
 - **required columns** – the studbook must contain `id`, `sire`, `dam`,
   `sex`, and `birth`;
-- **identifier validity** – animal IDs must be alphanumeric (a period is
-  not allowed, because it breaks formulas, file names, and namespaces
-  across software environments);
+- **identifier validity** – animal IDs must not contain a period,
+  because it breaks formulas, file names, and namespaces across software
+  environments (other characters are accepted);
 - **sex consistency** – an animal used as a sire must be male and one
   used as a dam must be female;
 - **date validity** – birth and exit dates must parse to real calendar
@@ -297,8 +297,8 @@ mode to get the clean pedigree the analyses consume.
 - [`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
   – the function documented here.
 - [`runGeneKeepR()`](https://github.com/rmsharp/nprcgenekeepr/reference/runGeneKeepR.md)
-  – the Shiny app, whose Quality Control tab drives this same function
-  interactively.
+  – the Shiny app, whose Input tab (QC Summary sub-tab) drives this same
+  function interactively.
 
 **Reference.**
 

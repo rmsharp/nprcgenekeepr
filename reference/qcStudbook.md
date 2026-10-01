@@ -124,15 +124,14 @@ qcStudbook(
   (`id`, `sire`, `dam`, `sex`), and `birth` the function throws an error
   by calling [`stop()`](https://rdrr.io/r/base/stop.html).
 
-  Animal IDs (`id`, `sire`, `dam`) must be alphanumeric with no symbols;
-  in particular a period (".") is not allowed. Periods cause problems
-  across software environments (R column-name and formula parsing,
-  file-name extensions, programming-language namespaces, and regular
-  expressions), so any `id`, `sire`, or `dam` value containing a period
-  is treated as an error. With `reportErrors == TRUE` the offending
-  values are returned in `errorLst$invalidIdChars`; otherwise the
-  function throws an error. All automatically generated IDs (see
-  `addUIds`) honor this rule.
+  Animal IDs (`id`, `sire`, `dam`) must not contain a period (".");
+  other characters are accepted. Periods cause problems across software
+  environments (R column-name and formula parsing, file-name extensions,
+  programming-language namespaces, and regular expressions), so any
+  `id`, `sire`, or `dam` value containing a period is treated as an
+  error. With `reportErrors == TRUE` the offending values are returned
+  in `errorLst$invalidIdChars`; otherwise the function throws an error.
+  All automatically generated IDs (see `addUIds`) honor this rule.
 
   If the `id` field has the string *UNKNOWN* (any case) or both the
   fields `sire` or `dam` have `NA` or *UNKNOWN* (any case), the record

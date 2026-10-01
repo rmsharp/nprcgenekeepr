@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Genetic Tools for Colony Management">
-<meta name="description" content="Provides genetic tools for colony management and is a derivation of the work in Amanda Vinson and Michael J Raboin (2015) &lt;https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/&gt; &quot;A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques ('Macaca' 'mulatta')&quot;. It provides a 'Shiny' application with an exposed API. The application supports five groups of functions - (1) Quality control of studbooks contained in text files or 'Excel' workbooks and of pedigrees within 'LabKey' Electronic Health Records (EHR); (2) Creation of pedigrees from a list of animals using the 'LabKey' EHR integration; (3) Creation and display of an age by sex pyramid plot of the living animals within the designated pedigree; (4) Generation of genetic value analysis reports; and (5) Creation of potential breeding groups with and without proscribed sex ratios and defined maximum kinships.">
-<meta property="og:description" content="Provides genetic tools for colony management and is a derivation of the work in Amanda Vinson and Michael J Raboin (2015) &lt;https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/&gt; &quot;A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques ('Macaca' 'mulatta')&quot;. It provides a 'Shiny' application with an exposed API. The application supports five groups of functions - (1) Quality control of studbooks contained in text files or 'Excel' workbooks and of pedigrees within 'LabKey' Electronic Health Records (EHR); (2) Creation of pedigrees from a list of animals using the 'LabKey' EHR integration; (3) Creation and display of an age by sex pyramid plot of the living animals within the designated pedigree; (4) Generation of genetic value analysis reports; and (5) Creation of potential breeding groups with and without proscribed sex ratios and defined maximum kinships.">
+<meta name="description" content="Provides genetic tools for colony management and is a derivation of the work in Amanda Vinson and Michael J Raboin (2015) &lt;https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/&gt; &quot;A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques ('Macaca' 'mulatta')&quot;. It provides a 'Shiny' application with an exposed API. The application supports these main groups of functions - (1) Quality control of studbooks contained in text files or 'Excel' workbooks and of pedigrees within 'LabKey' Electronic Health Records (EHR); (2) Creation of pedigrees from a list of animals using the 'LabKey' EHR integration; (3) Creation and display of an age by sex pyramid plot of the living animals within the designated pedigree; (4) Generation of genetic value analysis reports; and (5) Creation of potential breeding groups with and without proscribed sex ratios and defined maximum kinships. Further tabs cover mate pair analysis, genetic diversity, marker genetics, potential parents, cross-center identity mapping, de-identified export, and genetic-health trends.">
+<meta property="og:description" content="Provides genetic tools for colony management and is a derivation of the work in Amanda Vinson and Michael J Raboin (2015) &lt;https://pmc.ncbi.nlm.nih.gov/articles/PMC4671785/&gt; &quot;A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques ('Macaca' 'mulatta')&quot;. It provides a 'Shiny' application with an exposed API. The application supports these main groups of functions - (1) Quality control of studbooks contained in text files or 'Excel' workbooks and of pedigrees within 'LabKey' Electronic Health Records (EHR); (2) Creation of pedigrees from a list of animals using the 'LabKey' EHR integration; (3) Creation and display of an age by sex pyramid plot of the living animals within the designated pedigree; (4) Generation of genetic value analysis reports; and (5) Creation of potential breeding groups with and without proscribed sex ratios and defined maximum kinships. Further tabs cover mate pair analysis, genetic diversity, marker genetics, potential parents, cross-center identity mapping, de-identified export, and genetic-health trends.">
 <meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png">
 <meta property="og:image:alt" content="Conserve Genes">
 </head>
@@ -72,13 +72,13 @@
 <img src="logo.png" class="logo" alt=""><h1 id="readme">README<a class="anchor" aria-label="anchor" href="#readme"></a>
 </h1>
 </div>
-<p>R. Mark Sharp, Ph.D. 2026-08-18</p>
+<p>R. Mark Sharp, Ph.D. 2026-09-30</p>
 </div>
 <div class="section level1">
 <h1 id="nprcgenekeepr-">nprcgenekeepr 
 <a class="anchor" aria-label="anchor" href="#nprcgenekeepr-"></a>
 </h1>
-<p>Version 2.0.0.9000 (2026-08-18)</p>
+<p>Version 2.0.0.9000 (2026-09-28)</p>
 <!-- badges: start -->
 
 <div class="section level2">
@@ -89,7 +89,7 @@
 <!--It is now managed and maintained as a joint effort between ONPRC-->
 <!--and Southwest National Primate Research Center (SNPRC) with the -->
 <!--coding being done by R. Mark Sharp, Ph.D.-->
-<p>At present, the application supports 5 functions:</p>
+<p>The application’s main functions include:</p>
 <ol style="list-style-type: decimal">
 <li>Quality control of studbooks contained in text files or Excel workbooks and of pedigrees within LabKey Electronic Health Records (EHR)</li>
 <li>Creation of pedigrees from a lists of animals using the LabKey EHR integration</li>
@@ -97,6 +97,7 @@
 <li>Generation of Genetic Value Analysis Reports</li>
 <li>Creation of potential breeding groups with and without proscribed sex ratios and defined maximum kinships.</li>
 </ol>
+<p>The application has further tabs for mate pair analysis, genetic diversity, marker genetics, potential parents, cross-center identity mapping, de-identified export, and genetic-health trends. The Colony Manager Guide article describes them.</p>
 <p><strong>For more information see:</strong><br>
 A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity in a Large Colony of Captive Rhesus Macaques (<em>Macaca mulatta</em>) Vinson, A ; Raboin, MJ <em>Journal Of The American Association For Laboratory Animal Science</em>, 2015 Nov, Vol.54(6), pp.700-707 [Peer Reviewed Journal]</p>
 </div>
@@ -118,7 +119,7 @@ A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity
 <p>You can find the complete online documentation at <a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link uri">https://rmsharp.github.io/nprcgenekeepr/</a>.</p>
 <p>At the top of the page are three menus to the right of the <code>Home</code> icon: <code>Reference</code>, <code>Articles</code>, and <code>Changelog</code>.</p>
 <p>The <code>Reference</code> menu at the top of the page brings up the list of documentation for <code>Data objects</code>, <code>Major Features and Functions</code>, <code>Primary interactive functions</code> and <code>All exposed functions</code>.</p>
-<p>The <code>Articles</code> menu brings up the list of vignettes, which are, except for <code>Development Plans</code>, tutorials for using the package.</p>
+<p>The <code>Articles</code> menu brings up the list of articles and vignettes. Most are tutorials for using the package; a few, such as the validation and release engineering articles, document how the software was checked and built.</p>
 <p>The <code>Changelog</code> brings up a copy of the NEWS file of the package, which records the major changes made for each version.</p>
 </div>
 <div class="section level2">
@@ -136,13 +137,13 @@ A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity
 <div class="section level3">
 <h3 id="quality-control">Quality Control<a class="anchor" aria-label="anchor" href="#quality-control"></a>
 </h3>
-<p>Studbooks maintained by breeding colonies generally contain information of varying quality. The quality control functions of the toolkit check to ensure all animals listed as parents have their own line entries, all parents have the appropriate sex listed, no animals are listed as both a sire and a dam, duplicate entries are removed, pedigree generation numbers are added, and all dates are valid dates. In addition, exit dates are added if possible and are consistent with other information such as departure dates and death dates. Current ages of animals that are still alive are added if a database connection is provided via a configuration file and the user has read permission on a LabKey server with the demographic data in an <em>EHR</em> (Electronic Health Record) module. See <a href="https://www.labkey.org/Documentation/wiki-page.view?name=netrc" class="external-link">LabKey documentation</a>.</p>
-<p>Parents with ages below a user selected threshold are identified. A minimum parent age in years is set by the user and is used to ensure each parent is at least that age on the birth date of an offspring. The minimum parent age defaults to 2 years. This check is not performed for animals with missing birth dates.</p>
+<p>Studbooks maintained by breeding colonies generally contain information of varying quality. The quality control functions of the toolkit check to ensure all animals listed as parents have their own line entries, all parents have the appropriate sex listed, no animals are listed as both a sire and a dam, duplicate entries are removed, pedigree generation numbers are added, and all dates are valid dates. In addition, exit dates are added if possible and are consistent with other information such as departure dates and death dates. Ages are added from the birth and exit dates when the file has valid birth dates and no age column; the current date is used as the end point for animals with no exit date. No database connection is needed. (A connection is used only to build a pedigree from a list of animals with LabKey, described below.)</p>
+<p>Parents with ages below a user selected threshold are identified. The user can set a minimum sire age and a minimum dam age in years, and each is used to ensure every sire or dam is at least that age on the birth date of an offspring. Leaving a field blank uses the minimum breeding age for the animal’s species; 2 years is used only when the species is missing or unknown. This check is not performed for animals with missing birth dates.</p>
 </div>
 <div class="section level3">
 <h3 id="creation-of-pedigree-from-a-list-of-potential-breeders-and-labkey">Creation of Pedigree From a List of Potential Breeders and LabKey<a class="anchor" aria-label="anchor" href="#creation-of-pedigree-from-a-list-of-potential-breeders-and-labkey"></a>
 </h3>
-<p>The user can enter a list of focal animals in a CSV file that will be used to create a pedigree containing all direct relative (ancestors and descendants) via the <strong>labkey.selectRows</strong> function within the <strong>Rlabkey</strong> package if a database connection is provided via a configuration file and the user has read permission on a LabKey server with the demographic data in an <strong>EHR</strong> (Electronic Health Record) module.</p>
+<p>The user can enter a list of focal animals in a CSV file that will be used to create a pedigree containing all direct relatives (ancestors and descendants) via the <strong>labkey.selectRows</strong> function within the <strong>Rlabkey</strong> package if a database connection is provided via a configuration file and the user has read permission on a LabKey server with the demographic data in an <strong>EHR</strong> (Electronic Health Record) module. Without a database connection, the user can instead upload a pedigree file together with the list of focal animals, and the pedigree of the focal animals is built from that file (<code><a href="reference/getFocalAnimalPedFromFile.html">getFocalAnimalPedFromFile()</a></code>).</p>
 <p>Two configuration files are needed to use the database features of nprcgenekeepr with LabKey. The first file is named <strong>_netrc</strong> on Microsoft Windows operating systems and <strong>.netrc</strong> otherwise, allows the user to authenticate with LabKey through the LabKey API and is fully described by <a href="https://www.labkey.org/Documentation/wiki-page.view?name=netrc" class="external-link">LabKey documentation</a></p>
 <p>The second file is named <strong>_nprcgenekeepr_config</strong> on Microsoft Windows operating systems and <strong>.nprcgenekeepr_config</strong> otherwise and is the <code>nprcgenekeepr</code> <a href="https://github.com/rmsharp/nprcgenekeepr/blob/master/inst/extdata/examples/example_nprcgenekeepr_config">configuration file</a> An image of this example configuration file is included as a data object and can be loaded and viewed with the following lines of R code in the R console.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -159,7 +160,7 @@ A Practical Approach for Designing Breeding Groups to Maximize Genetic Diversity
 </h4>
 <p>An age-sex pyramid breaks down a population into male and female genders and age ranges. Usually, you’ll find the left side of the pyramid graphing the male population and the right side of the pyramid displaying the female population.</p>
 <p>Along the horizontal axis (x-axis) of a population pyramid, the graph displays the population either as a total population of that age or as a percentage of the population at that age. The center of the pyramid starts at zero population and extends out to the left for males and right for females in increasing size, or proportion of the population.</p>
-<p>Along the vertical axis (y-axis), age-sex pyramids display two-year age increments, from birth at the bottom to old age at the top.</p>
+<p>Along the vertical axis (y-axis), age-sex pyramids display age increments, from birth at the bottom to old age at the top. The application uses two-year increments by default; the <strong>Bin Size</strong> control accepts 1 to 10, and <strong>Age Unit</strong> switches between years and months.</p>
 </div>
 </div>
 <div class="section level3">

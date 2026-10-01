@@ -160,8 +160,8 @@ of parents.</p>
 </ul><p>If the dataframe (<code>sb</code> does not contain the five required columns
 (<code>id</code>, <code>sire</code>, <code>dam</code>, <code>sex</code>), and
 <code>birth</code> the function throws an error by calling <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code>.</p>
-<p>Animal IDs (<code>id</code>, <code>sire</code>, <code>dam</code>) must be alphanumeric with no
-symbols; in particular a period (".") is not allowed. Periods cause problems
+<p>Animal IDs (<code>id</code>, <code>sire</code>, <code>dam</code>) must not contain a period
+("."); other characters are accepted. Periods cause problems
 across software environments (R column-name and formula parsing, file-name
 extensions, programming-language namespaces, and regular expressions), so any
 <code>id</code>, <code>sire</code>, or <code>dam</code> value containing a period is treated as

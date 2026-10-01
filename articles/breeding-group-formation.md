@@ -116,9 +116,10 @@ length(candidates)
 With `harem = TRUE`,
 [`groupAddAssign()`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
 seeds each of the `numGp` groups with one eligible male and then fills
-it with other animals, never placing two animals whose kinship exceeds
-`threshold` (default `0.015625`, i.e. 1/64 – the kinship of second
-cousins) in the same group.
+it with other animals, never placing two animals whose kinship reaches
+or exceeds `threshold` (default `0.015625`, i.e. 1/64 – the kinship of
+second cousins) in the same group. By default kinship between two
+females is not checked (see `ignore` below).
 
 ``` r
 
@@ -189,8 +190,9 @@ place more of them.
 | `kmat` | – | kinship matrix from `reportGV()[["kinship"]]` |
 | `ped` | – | the (trimmed) pedigree the candidates belong to |
 | `numGp` | `1` | number of groups to form |
-| `threshold` | `0.015625` | maximum within-group kinship (1/64 = second cousins) |
-| `minAge` | `1.0` | minimum age (years) to be placed |
+| `threshold` | `0.015625` | kinship at which a pair conflicts: a pair at or above it is never grouped together (1/64 = second cousins) |
+| `ignore` | `list(c("F", "F"))` | sex pairs whose kinship is not checked; the default ignores female-female kinship |
+| `minAge` | `1.0` | animals this age (years) or younger are exempt from kinship conflicts; also the minimum age of a harem sire |
 | `harem` | `FALSE` | seed each group with a single male |
 | `sexRatio` | `0.0` | target females per male (0 = unconstrained) |
 | `iter` | `1000` | group-search iterations (more = better groups) |
