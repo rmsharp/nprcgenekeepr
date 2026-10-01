@@ -5,6 +5,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
+- [ ] **Reword the "supports five groups of functions" text in `DESCRIPTION` and the `_pkgdown.yml` home description** (READY, Effort S;
+      from docs audit finding BB14, S828) -- both say the application "supports five groups of functions" (QC, pedigree creation from LabKey,
+      age-sex pyramid, genetic value reports, breeding groups), but `R/appUI.R` has 14 analysis tabs (plus ORIP Reporting at ONPRC). Change
+      both together so they stay identical; `DESCRIPTION` is the CRAN-visible text, so run `devtools::check()` afterwards and add a `NEWS.Rmd`
+      line only if the change is user-visible. `_introduction.Rmd` and `README.md` were already reworded S828 (a non-numeric list plus a sentence
+      naming the further tabs); use that wording as the model.
+
 - [ ] **PED_GV audit follow-through -- triage DONE (S781, 2026-09-26), F1 shipped (S782), F4
       shipped (S783), F2's duplicate-id half shipped (S797), F3 shipped (S798); every F-slice is
       done, and what remains is owner decisions (DECISION NEEDED, Effort S each; strict TDD for

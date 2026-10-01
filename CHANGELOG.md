@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S828 follow-up (owner-directed): added a `BACKLOG.md` Up Next item to reword the "five groups of functions" text in `DESCRIPTION` and `_pkgdown.yml` together (docs audit finding BB14). No code or docs changed.
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S828: fixed docs-audit slice 4 cluster 4 (BB1-BB17, UG22, UG23, RM1-RM4), which closes slice 4. Corrected `_pedigree_browser.Rmd`, `_summary_statistics.Rmd`, `_orip_reporting.Rmd`, `_summary_of_major_functions.Rmd`, `_software_development.Rmd`, `_introduction.Rmd`, `_online_documentation.Rmd`, `pedigree_browser.html`, `pyramidPlot.html`; re-rendered `README.md`; updated the page-text assertions in `test_modPedigree.R` and `test-e2e-pyramid-detailed.R`. Commits `2ceac67a8`, `4ed44b77a`, `8c35cd311`, plus the README/test and records commits. Verified: claims re-read against the R modules; doc unit tests, wordlist test and two opt-in e2e files pass. Not run: full suite, app smoke test. Learning 833.
 - **Model:** Claude Sonnet 5.5.
 
