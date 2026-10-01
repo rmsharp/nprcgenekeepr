@@ -66,6 +66,12 @@
 #' by \code{reportGV}. It is created inside \code{orderReport}. This version
 #' is at the state just prior to calling \code{rankSubjects} inside
 #' \code{orderReport}.
+#'
+#' It is a list of three data frames: \code{highGu}, \code{lowMk} and
+#' \code{lowVal}. Each has the 13 columns \code{id}, \code{sex}, \code{age},
+#' \code{birth}, \code{exit}, \code{population}, \code{first_name},
+#' \code{second_name}, \code{indivMeanKin}, \code{zScores}, \code{gu},
+#' \code{totalOffspring} and \code{livingOffspring}.
 #' @examples
 #' library(nprcgenekeepr)
 #' data("finalRpt")
@@ -268,7 +274,7 @@
 #' examples and unit tests.
 #' It was created using the following commands.
 #'   \itemize{
-#'     \item set_seed(10)
+#'     \item set.seed(10)
 #'     \item pedWithGenotypeReport <- reportGV(nprcgenekeepr::pedWithGenotype,
 #'           guIter = 10000)
 #'     \item save(pedWithGenotypeReport,
@@ -284,10 +290,8 @@
 #' @source qcBreeders is a character vector of 3 males and 26 females from
 #' the \code{qcPed} data set.
 #'
-#' \describe{
 #' These 29 animal IDs are used for examples and unit tests.
 #' They were initially selected for having low kinship coefficients.
-#' }
 "qcBreeders"
 #' Example quality-controlled baboon pedigree
 #'
@@ -298,13 +302,13 @@
 #' \item{dam}{the female parent of the animal indicated by the \code{id}
 #' column.}
 #' \item{sex}{sex of the animal indicated by the \code{id} column.}
-#' \item{gen}{generation number (integers beginning with 0 for the founder
-#' generation) of the animal indicated by the \code{id} column.}
+#' \item{gen}{generation number (numeric, whole numbers beginning with 0 for
+#' the founder generation) of the animal indicated by the \code{id} column.}
 #' \item{birth}{birth date in \code{Date} format of the animal indicated by the
 #'  \code{id} column.}
 #' \item{exit}{exit date in \code{Date} format of the animal indicated by the
 #'  \code{id} column.}
-#' \item{age}{age in year (numeric) of the animal indicated by the \code{id}
+#' \item{age}{age in years (numeric) of the animal indicated by the \code{id}
 #' column.}
 #' }
 "qcPed"
@@ -314,7 +318,7 @@
 #' It is used in examples and unit tests with the nprcgenekeepr package.
 #' It was created using the following commands.
 #'   \itemize{
-#'     \item set_seed(10)
+#'     \item set.seed(10)
 #'     \item qcPedGvReport <- reportGV(nprcgenekeepr::qcPed, guIter = 10000)
 #'     \item save(qcPedGvReport, file = "data/qcPedGvReport.RData")
 #'   }

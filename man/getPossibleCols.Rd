@@ -37,7 +37,8 @@ not the \code{id} is part of the extant population.}
 the name of the facility that the individual was imported from.
 \code{NA} indicates the individual was not imported.}
 \item{status}{ -- an optional factor indicating the status of an
-individual with levels \code{ALIVE}, \code{DEAD}, and \code{SHIPPED}.}
+individual with levels \code{ALIVE}, \code{DECEASED}, \code{SHIPPED}, and
+\code{UNKNOWN}.}
 \item{condition}{ --  character vector or \code{NA} (optional) that
 indicates the restricted status of an animal. "Nonrestricted" animals
 are generally assumed to be naive.}

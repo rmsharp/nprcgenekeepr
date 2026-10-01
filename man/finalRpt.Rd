@@ -16,6 +16,13 @@ by \code{reportGV}. It is created inside \code{orderReport}. This version
 is at the state just prior to calling \code{rankSubjects} inside
 \code{orderReport}.
 }
+\details{
+It is a list of three data frames: \code{highGu}, \code{lowMk} and
+\code{lowVal}. Each has the 13 columns \code{id}, \code{sex}, \code{age},
+\code{birth}, \code{exit}, \code{population}, \code{first_name},
+\code{second_name}, \code{indivMeanKin}, \code{zScores}, \code{gu},
+\code{totalOffspring} and \code{livingOffspring}.
+}
 \examples{
 library(nprcgenekeepr)
 data("finalRpt")

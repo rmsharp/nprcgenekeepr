@@ -7,8 +7,13 @@
 getEmptyErrorLst()
 }
 \value{
-An errorLst object with placeholders for error types found in a
-pedigree file by \code{qcStudbook}.
+An errorLst object (a list of class \code{nprcgenekeeprErr}) with
+placeholders for error types found in a pedigree file by \code{qcStudbook}.
+Its 11 fields are \code{failedDatabaseConnection}, \code{missingColumns},
+\code{invalidDateRows}, \code{suspiciousParents}, \code{femaleSires},
+\code{maleDams}, \code{sireAndDam}, \code{duplicateIds},
+\code{invalidIdChars}, \code{invalidPlaceholderRows} and
+\code{changedCols} (a list of the column-name changes).
 }
 \description{
 Create an empty errorLst object

@@ -9,9 +9,9 @@ filterReport(ids, rpt)
 \arguments{
 \item{ids}{character vector of animal IDs}
 
-\item{rpt}{a dataframe with required colnames \code{id}, \code{gu},
-\code{zScores}, \code{import}, \code{totalOffspring}, which is
-a data.frame of results from a genetic value analysis.}
+\item{rpt}{a dataframe with the required colname \code{id}, such as the
+data.frame of results from a genetic value analysis. Only \code{id} is
+used; all other columns are returned unchanged.}
 }
 \value{
 A copy of report specific to the specified animals.

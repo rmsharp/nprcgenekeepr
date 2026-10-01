@@ -630,3 +630,6 @@ yml
 zygosity
 vermillion
 invalidPlaceholderRows
+colname
+ignoreHerm
+unanchored

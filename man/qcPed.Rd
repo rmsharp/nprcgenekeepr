@@ -18,13 +18,13 @@ A data frame with 280 rows and 8 columns.
 \item{dam}{the female parent of the animal indicated by the \code{id}
 column.}
 \item{sex}{sex of the animal indicated by the \code{id} column.}
-\item{gen}{generation number (integers beginning with 0 for the founder
-generation) of the animal indicated by the \code{id} column.}
+\item{gen}{generation number (numeric, whole numbers beginning with 0 for
+the founder generation) of the animal indicated by the \code{id} column.}
 \item{birth}{birth date in \code{Date} format of the animal indicated by the
 \code{id} column.}
 \item{exit}{exit date in \code{Date} format of the animal indicated by the
 \code{id} column.}
-\item{age}{age in year (numeric) of the animal indicated by the \code{id}
+\item{age}{age in years (numeric) of the animal indicated by the \code{id}
 column.}
 }
 }
