@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · [ad hoc] S841 claim: fix the 42 slice-6d docs-staleness findings in `R/*.R` roxygen (in progress).
+
 ### 2026-10-01 · [ad hoc] S840 close-out: docs-staleness audit slice 6d, the 34 Shiny app and module `man/` pages: 8 moderate and 34 minor findings plus 22 code candidates, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`; BACKLOG docs-audit item updated (126 pages left). Read-only, no code changed. Commits `cffbb16cc` (claim) and the close-out commit.
 
 ### 2026-10-01 · [ad hoc] S840 claim: docs-staleness audit slice 6d (superseded by the close-out entry above).

@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 841 Did
+**Deliverable:** fix the 42 slice-6d docs-staleness findings in `R/*.R` roxygen, then `devtools::document()` (IN PROGRESS). Docs only; code candidates untouched.
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 840 Did
 **Deliverable, DONE:** docs-staleness audit slice 6d, the 34 Shiny application and module `man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`): 8 moderate, 34 minor, 22 code candidates. Read-only; no code, no tests, so no TDD phase applies.
 **Commits:** claim `cffbb16cc`; report, BACKLOG and records in the close-out commit.
