@@ -10,11 +10,13 @@ getGVPopulation(ped, pop)
 \item{ped}{The pedigree information in data.frame format}
 
 \item{pop}{character vector with animal IDs to consider as the population of
-interest. The default is NULL.}
+interest. The default is NULL: an existing \code{population} column of
+\code{ped} is used if there is one, otherwise all animals.}
 }
 \value{
-A logical vector corresponding to the IDs in the vector of
-animal IDs provided to the function in \code{pop}.
+A logical vector with one element per row of \code{ped}, in the
+order of \code{ped}: \code{TRUE} if the animal is in the population of
+interest. IDs in \code{pop} that are not in \code{ped} are ignored.
 }
 \description{
 If user has limited the population of interest by defining \code{pop},

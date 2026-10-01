@@ -29,7 +29,8 @@ gvaConvergence(
 \code{\link{reportGV}} takes).}
 
 \item{pop}{Character vector with animal IDs to consider as the population of
-interest. The default is NULL (all animals).}
+interest. The default is NULL: an existing \code{population} column of
+\code{ped} is used if there is one, otherwise all animals.}
 
 \item{nMax}{Integer gene-drop budget: the number of iteration columns to
 simulate. Reproducibility is assessed for iteration counts \code{N} with
@@ -37,7 +38,7 @@ simulate. Reproducibility is assessed for iteration counts \code{N} with
 3000.}
 
 \item{guThresh}{Integer threshold number of animals for defining a rare
-(unique) allele, passed to \code{\link{calcGU}} / \code{\link{calcA}}.
+(unique) allele, passed to \code{\link{calcA}}.
 Default 1.}
 
 \item{byID}{Logical passed to \code{alleleFreq()} via \code{\link{calcA}}; if
@@ -60,7 +61,8 @@ Default 0.95.}
 gene-drop RNG so the convergence curve is reproducible. Default NULL.}
 
 \item{updateProgress}{Function or NULL passed through to \code{geneDrop()} to
-update a \code{shiny::Progress} object. Default NULL.}
+update a \code{shiny::Progress} object; it is called once at the start and
+then once for each animal processed. Default NULL.}
 
 \item{breedingTable, gestationTable, breedingAgeDefault, gestationDefault}{Optional overrides for the unknown-parent mean-kinship correction, passed
 through to \code{correctUnknownParentMeanKinship()} exactly as
@@ -91,9 +93,11 @@ An object of class \code{nprcgenekeeprGVConv}: a list with
 \item \code{convergence} -- a data.frame with one row per assessed iteration
 count: \code{iterations}, \code{topOverlap} (top-\code{k} selected-set
 overlap, from 0 to 1), and \code{rankAgreement} (Kendall rank agreement
-of the commonly-ranked animals, from -1 to 1).
+of the commonly-ranked animals, from -1 to 1). Either metric can be
+\code{NA} when it cannot be computed.
 \item \code{recommendedIter} -- the smallest assessed iteration count
-meeting both criteria, or \code{NA} if none did within \code{grid}.
+meeting both criteria, or \code{NA_integer_} if none did within
+\code{grid}.
 \item \code{converged} -- \code{TRUE} if any assessed count met both
 criteria.
 \item \code{criteria} -- the \code{k}, \code{oMin}, and \code{rhoMin} used.
@@ -148,7 +152,8 @@ sampling reproducibility of the \emph{estimate}.
 }
 \examples{
 library(nprcgenekeepr)
-## A quick, small illustration (use a larger nMax in practice).
+## A quick, small illustration (use a larger nMax in practice). With
+## nMax = 200 only the grid counts 25, 50 and 100 can be assessed.
 conv <- gvaConvergence(nprcgenekeepr::qcPed, nMax = 200L, seed = 1L)
 conv$convergence
 conv$recommendedIter

@@ -8,9 +8,11 @@
 #'
 #' @inheritParams reportGV
 #' @param pop character vector with animal IDs to consider as the population of
-#' interest. The default is NULL.
-#' @return A logical vector corresponding to the IDs in the vector of
-#' animal IDs provided to the function in \code{pop}.
+#' interest. The default is NULL: an existing \code{population} column of
+#' \code{ped} is used if there is one, otherwise all animals.
+#' @return A logical vector with one element per row of \code{ped}, in the
+#' order of \code{ped}: \code{TRUE} if the animal is in the population of
+#' interest. IDs in \code{pop} that are not in \code{ped} are ignored.
 #'
 #' @export
 #' @examples

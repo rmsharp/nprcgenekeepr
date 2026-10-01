@@ -19,15 +19,16 @@
 #' defining a unique allele. Default considers an allele "unique"
 #' if it is found in only 1 animal.
 #' @param pop Character vector with animal IDs to consider as the population of
-#' interest. The default is NULL.
+#' interest. The default is NULL: an existing \code{population} column of
+#' \code{ped} is used if there is one, otherwise all animals.
 #' @param byID Logical variable of length 1 that is passed through to
 #' eventually be used by \code{alleleFreq()}, which calculates the count of each
 #'  allele in the provided vector. If \code{byID} is TRUE and ids are provided,
 #'  the function will only count the unique alleles for an individual
 #'   (homozygous alleles will be counted as 1).
 #' @param updateProgress Function or NULL. If this function is defined, it
-#' will be called during each iteration to update a
-#' \code{shiny::Progress} object.
+#' will be called once at the start and then once for each animal processed
+#' by the gene drop, to update a \code{shiny::Progress} object.
 #' @param breedingTable Optional data.frame overriding the bundled per-species
 #' minimum breeding ages used by the unknown-parent mean-kinship correction.
 #' \code{NULL} (the default) uses the bundled
@@ -111,7 +112,7 @@
 #' library(nprcgenekeepr)
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
-#'   minParentAge = 2,
+#'   minSireAge = 2, minDamAge = 2,
 #'   reportChanges = FALSE,
 #'   reportErrors = FALSE
 #' )
@@ -125,6 +126,8 @@
 #'   removeUninformative = FALSE,
 #'   addBackParents = FALSE
 #' )
+#' ## guIter = 50 only keeps the example fast. With so few iterations `fg` and
+#' ## `fgSE` can be degenerate, and a warning about that may be printed.
 #' geneticValue <- reportGV(ped,
 #'   guIter = 50, # should be >= 1000
 #'   guThresh = 3,

@@ -13,14 +13,16 @@ getGVGenotype(ped)
 A data.frame with the columns \code{id}, \code{first}, and
 \code{second} extracted from a pedigree object (a data.frame) containing
 genotypic data.
-If the pedigree object does not contain genotypic data the \code{NULL} is
-returned.
+If the pedigree object does not contain genotypic data (columns \code{id},
+\code{first} and \code{second}, with numeric \code{first} and
+\code{second}), \code{NULL} is returned.
 }
 \description{
 Extracts genotype data if available otherwise NULL is returned.
 }
 \examples{
-## We usually define `n` to be >= 1000
+## We usually define `n` to be >= 1000. The first part of this example is the
+## same as the one for `geneDrop()`; `getGVGenotype()` is used on the last lines.
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,
