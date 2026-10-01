@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 849 Did
+**Deliverable:** label the `NEWS.Rmd` dev-block bullets as a Major list then a Minor list per section (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Sorting to be proposed to the owner before any edit.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress).
+
 ### What Session 848 Did
 **Deliverable, DONE:** made `NEWS.Rmd` complete and accurate before the owner compares it with `suggested_NEWS_entry.md`. Docs only, so no TDD phase applies. Claim `82a5dc655`; edits in the close-out commit.
 **Scoping finding:** S793 already reviewed the draft (`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`); I did not redo it. The `.Rmd` copy no longer exists; only the `.md` remains untracked.
