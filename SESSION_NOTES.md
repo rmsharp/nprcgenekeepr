@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 837 Did
+**Deliverable:** fix the 57 slice 6b docs-staleness findings in `R/*.R` roxygen, then `devtools::document()` (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's entry says (in progress); Phase 3F records the rest.
+
 ### Session 835 Handoff Evaluation (by Session 836)
 **Score: 9/10.** Orient measurements held: ledger and receipt frontiers at HEAD, master 16 ahead of origin, the one untracked file, "232 pages left" (268 - 36). **Missing:** no suggested topic split for the remaining `man/` pages (I chose the pedigree QC and curation group from the page list). **Wrong:** nothing found. **ROI:** high.
 
