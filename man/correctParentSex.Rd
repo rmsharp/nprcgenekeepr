@@ -15,8 +15,9 @@ individual's father (\code{NA} if unknown).}
 \item{dam}{character vector with unique identifier for an
 individual's mother (\code{NA} if unknown).}
 
-\item{sex}{factor with levels: "M", "F", "U". Sex specifier for an
-individual.}
+\item{sex}{factor or character vector of sex codes ("M", "F", "H", "U").
+Sex specifier for an individual. A character input returns a character
+vector.}
 
 \item{recordStatus}{character vector with value of \code{"added"} or
 \code{"original"}, which indicates whether an animal was added or an
@@ -27,7 +28,9 @@ no added records are known. It is used only when
 
 \item{reportErrors}{logical value if TRUE will scan the entire file and
 make a list of all errors found. The errors will be returned in a
-list of list where each sublist is a type of error found.}
+list of list where each sublist is a type of error found.
+When \code{FALSE}, an ID listed as both a sire and a dam stops with an
+error; when \code{TRUE} it is returned as \code{sireAndDam}.}
 }
 \value{
 When \code{reportErrors = FALSE}, a factor (or character
@@ -81,7 +84,7 @@ pedOneCorrected[pedOne$sex != pedOneCorrected$sex, ]
 pedTwoCorrected <- pedTwo
 pedTwoCorrected$sex <- correctParentSex(
   pedTwo$id, pedTwo$sire, pedTwo$dam,
-  pedTwo$sex, pedOne$recordStatus
+  pedTwo$sex, pedTwo$recordStatus
 )
 pedTwo[pedTwo$sex != pedTwoCorrected$sex, ]
 pedTwoCorrected[pedTwo$sex != pedTwoCorrected$sex, ]

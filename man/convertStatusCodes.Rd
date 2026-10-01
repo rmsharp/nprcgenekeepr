@@ -12,10 +12,19 @@ status as alive, dead, sold, etc.}
 }
 \value{
 A factor vector of the standardized status codes with levels:
-\code{ALIVE}, \code{DECEASED}, \code{SHIPPED}, and \code{UNKNOWN}.
+\code{ALIVE}, \code{DECEASED}, \code{SHIPPED}, and \code{UNKNOWN}. A
+value that is not recognized becomes \code{NA}, not \code{UNKNOWN}.
 }
 \description{
 Part of Pedigree Curation
+}
+\details{
+Case is ignored, but spaces are not trimmed. The recognized codes are
+\code{ALIVE}, \code{A}, \code{1} for alive; \code{DECEASED},
+\code{DEAD}, \code{DIED}, \code{D}, \code{2} for deceased;
+\code{SHIPPED}, \code{SHIPED}, \code{SOLD}, \code{SALE}, \code{S},
+\code{3} for shipped; and \code{UNKNOWN}, \code{U}, \code{4} or
+\code{NA} for unknown.
 }
 \examples{
 library(nprcgenekeepr)
@@ -23,7 +32,9 @@ original <- c(
   "A", "alive", "Alive", "1", "S", "Sale", "sold", "shipped",
   "D", "d", "dead", "died", "deceased", "2",
   "shiped", "3", "U", "4", "unknown", NA,
-  "Unknown", "H", "hermaphrodite", "U", "Unknown", "4"
+  "Unknown", "U", "Unknown", "4"
 )
+## A value that is not recognized becomes NA
+convertStatusCodes("hermaphrodite")
 convertStatusCodes(original)
 }

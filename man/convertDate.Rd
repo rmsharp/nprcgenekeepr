@@ -17,16 +17,26 @@ recognized, is a real animal and has its dates converted and checked.}
 
 \item{timeOrigin}{date object used by \code{as.Date} to set \code{origin}.}
 
-\item{reportErrors}{logical value if TRUE will scan the entire file and
-make a list of all errors found. The errors will be returned in a
-list of list where each sublist is a type of error found.}
+\item{reportErrors}{logical value. If \code{FALSE} (default), an invalid
+date stops with an error naming the column and the rows. If \code{TRUE},
+every date column is scanned and the converted pedigree is not returned;
+instead the result is a sorted character vector of the row numbers with an
+invalid date (a row is repeated once for each column in which it has one),
+or \code{NULL} when there are none. The row numbers count only the records
+that are not marked \code{"added"}, not the positions in the input.}
 }
 \value{
 A dataframe with an updated table with date columns converted from
-\code{character} data type to \code{Date} data type. Values that do not
-conform to the format \%Y\%m\%d are set to NA. NA values are left as NA.
-Records marked \code{"added"} are not checked and are returned after the
-other records.
+\code{character} data type to \code{Date} data type. A date must be in the
+form \code{YYYY-MM-DD} (month and day may have one digit), or
+\code{YYYYMMDD} when no date in the column has a separator. A year before
+1000 is invalid. A value that does not conform is an error (see
+\code{reportErrors}), not set to NA. NA values and blank strings are left
+as NA. A date column must be \code{character}, \code{factor},
+\code{logical}, \code{integer} or \code{Date}; any other class stops with
+an error. Records marked \code{"added"} are not checked and are returned
+after the other records. With \code{reportErrors = TRUE} see that
+argument instead.
 }
 \description{
 Part of Pedigree Curation
