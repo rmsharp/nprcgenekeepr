@@ -98,51 +98,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 829 Handoff Evaluation (by Session 830)
+**Score: 8/10.** The BACKLOG item named the files, the model wording (`README.md`, already reworded S828) and the `devtools::check()` step, so
+scoping took minutes; "docs only, no TDD gate" saved a question. **Missing:** the handoff said `suggested_NEWS_entry.md` was untracked but not that
+a tracked copy, `vignettes/suggested_NEWS_entry.Rmd`, sits in HEAD and breaks `test_pkgdown_reference_config.R`; the item also did not say which
+tests read `DESCRIPTION`/`_pkgdown.yml`. **Wrong:** nothing found; "master is 35 ahead of origin" was exact. **ROI:** high.
+
 ### What Session 830 Did
-**Deliverable:** reword the "supports five groups of functions" text in `DESCRIPTION` and the `_pkgdown.yml` home description (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (docs only):** reworded the "supports five groups of functions" text in `DESCRIPTION` and the `_pkgdown.yml` home
+description (docs audit BB14). Both now read "supports these main groups of functions" (the same five-item list kept) and end with the same new
+sentence: "Further tabs cover mate pair analysis, genetic diversity, marker genetics, potential parents, cross-center identity mapping,
+de-identified export, and genetic-health trends." (the `README.md` wording). The two texts differ only in the existing `:` / ` -` before the list.
+**Commits:** claim `a80ccc514`; content and records (close-out commit).
+**Verification:** `devtools::check(document = FALSE, vignettes = FALSE, args = c("--no-tests", "--no-manual", "--no-build-vignettes"))` ran with
+0 errors, 0 warnings, 1 note (the untracked `suggested_NEWS_entry.md` at top level, the owner's file); `test_wordlist_coverage.R`,
+`test_r_cmd_check_clean_baseline.R` and `test_appUI_version.R` pass. **Not run:** full suite, full check with tests and vignettes (only the
+`Description` field and a pkgdown YAML string changed), app smoke test (no runtime change).
+**Found, not fixed (out of scope):** `test_pkgdown_reference_config.R` fails and `pkgdown::check_pkgdown()` errors at HEAD
+("1 vignette missing from index: suggested_NEWS_entry"), identically with my edits stashed. Cause: S825's commit `9a2a5ddb7` tracked
+`vignettes/suggested_NEWS_entry.Rmd` (plus `vignettes/articles/pedigree-diagram.pdf`). The next push would fail the pkgdown workflow and the
+test-coverage job. BACKLOG item added. **NEWS.Rmd:** no entry (CRAN-visible wording only, no feature or behavior change).
+**Learnings:** Learning 835. **Reduction:** removed the S828 handoff evaluation and the "What Session 829 Did" block (in git and the S829 receipt).
 
-### Session 828 Handoff Evaluation (by Session 829)
-**Score: 8/10.** The BACKLOG item S828 left for this session was precise: it listed the ~15 paragraphs to move, the pointer-line rule,
-the Phase 3 wording change, the `budget:protected` fence and the `context_budget.py` check, so there was nothing to scope.
-The "docs only, no TDD gate" note and the owner-directed marker saved a question. **Missing:** a check that the named destination can be
-committed. **Wrong:** the item names `docs/CLOSEOUT_CHECKLISTS.md`, but `.gitignore` line 24 (`docs/*`) ignores every top-level file in
-`docs/` except whitelisted subdirectories, so that file could never be committed; the handoff's "master is 28 ahead of origin" was 32 at
-orientation (three commits of backlog notes and records landed after it was written). **ROI:** high.
-
-### What Session 829 Did
-**Deliverable, DONE (docs only):** trimmed `CLAUDE.md` out of the warn band. Moved the 13 "Additional close-out checks" paragraphs verbatim
-(confirmed by `diff` against `HEAD~` text) into `docs/conventions/CLOSEOUT_CHECKLISTS.md`; `CLAUDE.md` now has one trigger line per
-checklist plus a link, and Phase 3 rule 3 of the session protocol says to read the new file first. `CLAUDE.md` went from 26,731 B to
-19,486 B; `python3 context_budget.py` reports OK and the `budget:protected` fence is untouched.
-**Deviation from the BACKLOG item:** the file lives in `docs/conventions/`, not `docs/`, because top-level `docs/` files are git-ignored
-(`.gitignore:24`; `docs/conventions/` is whitelisted). Its one relative link (`CHANGELOG-legacy-pre-S325.md`) now reads `../archive/...`, the only
-non-verbatim edit.
-**Commits:** claim `5bc5dbe34`; content `70de12168`; records (this).
-**Verification:** `diff` of moved text against the old `CLAUDE.md` lines is empty; the link target resolves; `grep` found no test, code or
-script that reads `docs/` or the old section heading. Not run: full test suite and `devtools::check()` (no R, test or build-included file
-changed; `docs/` is `.Rbuildignore`d), no app smoke test (no runtime change).
-**Learnings:** Learning 834. **Reduction:** removed the S827 handoff evaluation and the "What Session 828 Did" block (in git and the S828 receipt).
-
-**Self-assessment: 8/10.** + One deliverable; moved text proven verbatim; found the git-ignore trap and fixed the path before committing;
-under-warn-line result measured, not estimated. - Wrote the new file into the ignored location first and only learned it was ignored
-from `git check-ignore` afterwards (I should have run it before writing); a shell heredoc with backticks ate the first script run (no
-damage, caught by the error output).
+**Self-assessment: 8/10.** + One deliverable; checked the pkgdown failure against a stash before attributing it; kept it out of scope.
+- The first full-file test run was needed to learn that moving the untracked copy away does not help (a tracked vignette copy exists), so I lost two
+runs on the wrong theory.
 
 **Next steps:**
-- (A) The other BACKLOG READY items: reword the "five groups of functions" text in `DESCRIPTION` and `_pkgdown.yml` (Effort S), or docs-staleness
-  audit slice 5 (`a2interactive.Rmd`, `man/`, `NEWS.Rmd`, internal docs; read-only audit first, Effort L).
-- (B) Owner decisions still open: `suggested_NEWS_entry.md` (untracked since Sep 25; commit or drop?), the four code defects, the stale comment at
-  `R/modPedigree.R:440-443`; master is 35 ahead of origin (docs-only commits, never pushed since S819).
+- (A) Fix the pkgdown breakage first (BACKLOG, READY, Effort S): decide whether `vignettes/suggested_NEWS_entry.Rmd` (and the pdf) stay tracked;
+  then `pkgdown::check_pkgdown()` and `test_pkgdown_reference_config.R` must pass before any push.
+- (B) Docs-staleness audit slice 5 (READY, Effort L); owner decisions: `suggested_NEWS_entry` adopt/drop, the four code defects;
+  master is 37 ahead of origin and has never been pushed since S819.
 
-**Key files:** `CLAUDE.md:234-251` (new pointer list), `docs/conventions/CLOSEOUT_CHECKLISTS.md` (full checklists), `.gitignore:24-40` (docs whitelist),
-`BACKLOG.md` (Up Next).
+**Key files:** `DESCRIPTION:17-30`, `_pkgdown.yml:14-27`, `README.md:61-64` (the model), `vignettes/suggested_NEWS_entry.Rmd`,
+`tests/testthat/test_pkgdown_reference_config.R`.
 
-**Gotchas:** Close-out sessions must now read `docs/conventions/CLOSEOUT_CHECKLISTS.md`; `CLAUDE.md` only carries one-line triggers, so a session that
-skips the link will miss details such as the `--budget-bytes 65536` flag and the `methodology_trim.py` re-apply steps. A new file directly under
-`docs/` will not commit; use a whitelisted subdirectory or add a `!docs/<name>` line to `.gitignore`.
+**Gotchas:** `R CMD check` NOTEs on top-level `suggested_NEWS_entry.md` until it is dropped or `.Rbuildignore`d. Do not push before (A): the
+pkgdown workflow will fail. `DESCRIPTION` is also read by `test_appUI_version.R` (version only).
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809

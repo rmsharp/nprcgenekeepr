@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S830 close-out: reworded the "supports five groups of functions" text in `DESCRIPTION` and the `_pkgdown.yml` home description (docs audit BB14) to "these main groups of functions" plus a sentence naming the further tabs (the `README.md` wording); BACKLOG item removed. Checked with `devtools::check()` (no tests or vignettes): 0 errors, 0 warnings. Found and recorded a separate pre-existing break: `test_pkgdown_reference_config.R` and `pkgdown::check_pkgdown()` fail at HEAD because S825 (`9a2a5ddb7`) tracked `vignettes/suggested_NEWS_entry.Rmd`. Learning 835.
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S830 claim (in progress): reword the "five groups of functions" text in `DESCRIPTION` and `_pkgdown.yml` (BACKLOG item, docs audit BB14)
 - **Model:** Claude Sonnet 5.5.
 

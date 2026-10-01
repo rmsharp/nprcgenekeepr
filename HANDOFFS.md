@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S830
 date: 2026-09-30
-status: pending
-active_task: Reword the "five groups of functions" text in DESCRIPTION and _pkgdown.yml (docs audit BB14)
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE: reworded "supports five groups of functions" in DESCRIPTION and _pkgdown.yml (BB14), adding the README sentence naming the further tabs; docs only
+what_was_done: Claim a80ccc514; content and records in the close-out commit. Both files now say "supports these main groups of functions" with the five-item list kept plus "Further tabs cover mate pair analysis, genetic diversity, marker genetics, potential parents, cross-center identity mapping, de-identified export, and genetic-health trends." Check with --no-tests/--no-vignettes: 0 errors, 0 warnings, 1 note (untracked suggested_NEWS_entry.md). Found test_pkgdown_reference_config.R failing at HEAD from S825's tracked vignettes/suggested_NEWS_entry.Rmd; BACKLOG item added. Learning 835.
+next_steps: Fix the pkgdown breakage (BACKLOG, READY, Effort S) before any push; then docs-staleness audit slice 5 (Effort L). Owner decisions open: suggested_NEWS_entry adopt/drop, four code defects. Master is 37 ahead of origin.
+key_files: DESCRIPTION:17-30, _pkgdown.yml:14-27, vignettes/suggested_NEWS_entry.Rmd, tests/testthat/test_pkgdown_reference_config.R, BACKLOG.md
+gotchas: Do not push until pkgdown::check_pkgdown() passes (the vignette is missing from the articles index). R CMD check NOTEs on the untracked top-level suggested_NEWS_entry.md. Not run: full suite, full check with tests and vignettes, app smoke test.
 ```
 
 ```handoff
