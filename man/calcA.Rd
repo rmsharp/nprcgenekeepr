@@ -23,8 +23,9 @@ the function will only count the unique alleles for an individual
 (homozygous alleles will be counted as 1).}
 }
 \value{
-A matrix with named rows indicating the number of unique alleles
-an animal had during each round of simulation (indicated in columns).
+A matrix with named rows indicating the number of rare alleles
+(0, 1 or 2) an animal had during each round of simulation (indicated in
+columns).
 }
 \description{
 Part of Genetic Value Analysis

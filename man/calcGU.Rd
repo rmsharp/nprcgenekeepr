@@ -17,7 +17,7 @@ It contains the following columns:
 \item \code{...} --- Unnamed integer columns representing alleles.
 \item \code{Vn} --- Unnamed integer column representing the nth column.
 \item \code{id} --- A character vector of IDs for a set of animals.
-\item \code{parent} --- A factor with levels of sire and dam.
+\item \code{parent} --- A character vector with values of sire and dam.
 }}
 
 \item{threshold}{an integer indicating the maximum number of copies of an

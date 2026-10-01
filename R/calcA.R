@@ -15,8 +15,9 @@
 #'  allele in the provided vector. If \code{byID} is TRUE and ids are provided,
 #'  the function will only count the unique alleles for an individual
 #'   (homozygous alleles will be counted as 1).
-#' @return A matrix with named rows indicating the number of unique alleles
-#'   an animal had during each round of simulation (indicated in columns).
+#' @return A matrix with named rows indicating the number of rare alleles
+#'   (0, 1 or 2) an animal had during each round of simulation (indicated in
+#'   columns).
 #'
 #' @references Ballou JD, Lacy RC.  1995. Identifying genetically important
 #' individuals for management of genetic variation in pedigreed populations,

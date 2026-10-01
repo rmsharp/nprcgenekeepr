@@ -11,8 +11,8 @@ calcGeneDiversity(fg)
 or the \code{$FG} element of \code{calcFEFG()}. \code{NA} yields \code{NA}.}
 }
 \value{
-The gene diversity \code{GD = 1 - 1 / (2 * fg)}: a single number in
-\code{[0, 1)}, or \code{NA} when \code{fg} is \code{NA}.
+The gene diversity \code{GD = 1 - 1 / (2 * fg)}: a single number below 1
+(realized values lie in \code{[0, 1)}), or \code{NA} when \code{fg} is \code{NA}.
 }
 \description{
 Part of the Genetic Value Analysis
@@ -21,8 +21,9 @@ Part of the Genetic Value Analysis
 Gene diversity is the expected heterozygosity retained relative to the
 founding gene pool, \code{GD = 1 - 1 / (2 * FG)}, where \code{FG} is the
 founder genome equivalents (see \code{\link{calcFG}}). It summarizes how
-much of the founders' allelic diversity still survives: 0 means none is
-retained, and it approaches (never reaches) 1 as \code{FG} grows.
+much of the founders' allelic diversity still survives: it is 0 when
+\code{FG = 0.5} (the smallest value \code{FG} takes in practice) and
+approaches (never reaches) 1 as \code{FG} grows.
 
 \code{GD} is a diversity proportion, not a count of effective individuals,
 and it is computed over the same analysis set as \code{FG}. \code{NA}

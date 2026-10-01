@@ -10,11 +10,12 @@
 #' m2^1.5} and \code{m2}/\code{m3} are the second/third central sample
 #' moments of \code{x} -- the "Method 2" adjustment of Joanes and Gill
 #' (1998), the same convention SPSS, SAS, and Excel report by default and
-#' the \code{type = 2} option in the \code{moments}/\code{e1071} CRAN
-#' packages. A positive value indicates a longer right tail; negative, a
+#' the \code{type = 2} option in the \code{e1071} CRAN
+#' package. A positive value indicates a longer right tail; negative, a
 #' longer left tail; \code{0}, a symmetric distribution.
 #'
-#' Returns \code{NA} when \code{x} has fewer than 3 non-\code{NA} values
+#' Returns \code{NA} when \code{na.rm = FALSE} and \code{x} contains an
+#' \code{NA}, when \code{x} has fewer than 3 non-\code{NA} values
 #' (\code{n <= 2}, the adjustment term divides by \code{n - 2}) or has zero
 #' variance (all remaining values identical) -- both would otherwise divide
 #' by zero.

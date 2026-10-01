@@ -51,7 +51,7 @@ order.
 
 A contributing founder (\code{p > 0}) that is retained in zero of the
 iterations (\code{r == 0}) makes \code{FG} undefined (the same
-degeneracy that \code{\link{calcFG}} now reports as \code{NA}); in that
+degeneracy that \code{\link{calcFG}} reports as \code{NA}); in that
 case this function returns \code{NA} with a warning advising more
 iterations. Founders that do not contribute to the current population
 (\code{p == 0}) are dropped, so the standard error refers to exactly the

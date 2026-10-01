@@ -11,12 +11,13 @@
 #' second/fourth central sample moments of \code{x} -- the "Method 2"
 #' adjustment of Joanes and Gill (1998), the same convention SPSS, SAS, and
 #' Excel report by default and the \code{type = 2} option in the
-#' \code{moments}/\code{e1071} CRAN packages. Excess (not raw) kurtosis: a
+#' \code{e1071} CRAN package. Excess (not raw) kurtosis: a
 #' normal distribution reads \code{0}. Positive values indicate heavier
 #' tails / a sharper peak than normal; negative, lighter tails / a flatter
 #' peak.
 #'
-#' Returns \code{NA} when \code{x} has fewer than 4 non-\code{NA} values
+#' Returns \code{NA} when \code{na.rm = FALSE} and \code{x} contains an
+#' \code{NA}, when \code{x} has fewer than 4 non-\code{NA} values
 #' (\code{n <= 3}, the adjustment term divides by \code{(n - 2) * (n - 3)})
 #' or has zero variance (all remaining values identical) -- both would
 #' otherwise divide by zero.
