@@ -101,19 +101,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ### What Session 843 Did
 **Deliverable, DONE:** split the 10 `SESSION_NOTES.md` lines over the 280 B per-line ceiling (they sat in the S842 and S841 records) at word boundaries outside backtick spans, each piece at most 260 B. Docs only, so no TDD phase applies.
 **Commits:** claim `f407e5a1c`; the split, records and ledger are in the close-out commit.
-**Verified:** `awk 'length($0)>280' SESSION_NOTES.md` now returns 0 lines; `git diff -w --word-diff` shows no word changed (re-wrapping only); `python3 context_budget.py` went from OVER to OK (SESSION_NOTES 49,127 B to 49,413 B, ceiling 65,536 B). **Not run:** `lint_package()` (no `.R` changed), the test suite (no code or tests changed).
+**Verified:** `awk 'length($0)>280' SESSION_NOTES.md` now returns 0 lines; `git diff -w --word-diff` shows no word changed (re-wrapping only); `python3 context_budget.py` went from OVER to OK (SESSION_NOTES 49,127 B to 49,413 B, ceiling 65,536 B). **Not run:**
+`lint_package()` (no `.R` changed), the test suite (no code or tests changed).
 **NEWS.Rmd:** none. **Reduction:** none of the content was removed; the deliverable was the line-length fix. The file is still in its growth run (18/10), so the next close-out that adds a record should remove an old one.
 
 **Self-assessment: 9/10.** + One deliverable; claim commit passed the hook; the check was run before and after. - The claim stub lands on a 49 KB file, so the notes are still large.
 
-**Next steps:** same as S842: (A) fix the 95 slice-6e findings in `R/*.R` roxygen, then `devtools::document()` and `git checkout man/nprcgenekeepr-package.Rd` (READY, Effort M); (B) owner decisions on the audit code candidates (46 slice-6e, 22 slice-6d, 8 slice-6c, older PB/PA/PD/MC/MB); (C) master may be ahead of origin, so push only on the owner's say-so (S842's "47 ahead" was not re-checked, CI is already running on `c0632d61d`).
+**Next steps:** same as S842: (A) fix the 95 slice-6e findings in `R/*.R` roxygen, then `devtools::document()` and `git checkout man/nprcgenekeepr-package.Rd` (READY, Effort M); (B) owner decisions on the audit code candidates (46 slice-6e, 22 slice-6d, 8
+slice-6c, older PB/PA/PD/MC/MB); (C) master may be ahead of origin, so push only on the owner's say-so (S842's "47 ahead" was not re-checked, CI is already running on `c0632d61d`).
 
 **Key files:** `SESSION_NOTES.md` (the ten split lines were the S842 and S841 `Slips`, `Next steps`, `Gotchas` and `Score` paragraphs), `context_budget.py`, `.context-budget.json`.
 
 **Gotchas:** keep every `SESSION_NOTES.md` line at or under 280 B (`awk 'length($0)>280' SESSION_NOTES.md`), or the context-budget check goes OVER again. Same S837-S841 roxygen gotchas apply to step (A). Do NOT use `echo ====` in the Bash tool.
 
 ### Session 842 Handoff Evaluation (by Session 843)
-**Score: 8/10.** Orient measurements held: both ledger frontiers were at HEAD, the untracked file was the one it named, and the next-step recipe was exact. **What helped:** the explicit ordered options (A)-(C) and the "do not ask about `suggested_NEWS_entry.md`" pointer. **Missing:** it did not say the dashboard would flag SESSION_NOTES.md as OVER on line length, which was the cheapest thing to fix. **Wrong:** its "47 ahead of origin" was not re-checked, and CI was already running on the close-out commit. **ROI:** high.
+**Score: 8/10.** Orient measurements held: both ledger frontiers were at HEAD, the untracked file was the one it named, and the next-step recipe was exact. **What helped:** the explicit ordered options (A)-(C) and the "do not ask about
+`suggested_NEWS_entry.md`" pointer. **Missing:** it did not say the dashboard would flag SESSION_NOTES.md as OVER on line length, which was the cheapest thing to fix. **Wrong:** its "47 ahead of origin" was not re-checked, and CI was already running on the
+close-out commit. **ROI:** high.
 
 ### What Session 842 Did
 **Deliverable, DONE:** docs-staleness audit slice 6e, the last 126 `man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`): 26 moderate, 69 minor, 46 code candidates; all 267 pages now audited. Read-only; no code or tests, so no TDD phase applies.
