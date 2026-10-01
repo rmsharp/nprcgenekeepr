@@ -15,7 +15,7 @@ vignette: >
 
 ## Genetic Value Analysis and Breeding Group Formation Description
 
-The GV & BG Description tab (`modGvAndBgDesc`) provides comprehensive documentation
+The Genetic Value Analysis and Breeding Group Description tab (`modGvAndBgDesc`) provides comprehensive documentation
 about the algorithms and methodologies used in genetic value analysis and breeding
 group formation.
 
@@ -36,7 +36,8 @@ The documentation explains:
 
 2. **Breeding Group Formation**:
    - The optimization algorithm for minimizing within-group relatedness
-   - How sex ratio constraints are applied
+   - Which relationships may be ignored (kinship below a threshold, young
+     animals, and females) when forming groups
    - The iterative assignment process
 
 ### Module Interface

@@ -38,11 +38,12 @@
 		according to MacCluer et al. (1986) and Ballou & Lacy (1995), by assigning unique
 		alleles to all pedigree founders, and simulating their segregation throughout the
 		pedigree according to Mendelian rules.  Genome uniqueness is a measure of the
-		probability that an animal possesses founder alleles that are present in at most
-		<em>x</em> other animals (usually 0-3), and thus are rare and at risk of being lost from
+		probability that an animal possesses founder alleles that are carried by at most
+		<em>x</em> animals in all, counting the animal itself (the application offers 1-5,
+		default 4), and thus are rare and at risk of being lost from
 		the population.  A range of 100 to 10,000 simulations may be selected.  A minimum
 		of 1,000 simulations is recommended, and 1,000 is the default.  A genome uniqueness
-		threshold value between 0-3 should also be selected, as desired.
+		threshold value between 1 and 5 should also be selected, as desired.
 		<p style="padding-top:10px">
 		Because genome uniqueness is estimated from a finite number of gene-drop
 		iterations, each value carries a sampling <b>standard error</b> (the <b>guSE</b>
@@ -59,30 +60,50 @@
 	<li style="padding-bottom:15px">
 		Following the calculation of mean kinship, related z-scores, and genome uniqueness
 		for all animals, animals are ranked from the highest genetic value (ranking = 1)
-		to the lowest, according to the following rules:
-		<ol type=i>
+		to the lowest. The <b>Ranking Scheme</b> control offers two schemes:
+		<ul style="list-style-type:disc">
 			<li style="padding-top:5px; padding-bottom:5px">
-				Imported animals without offspring are automatically ranked highest in
-				genetic value, followed by
+				<b>Combined (kinship - uniqueness)</b>, the default: each animal's mean
+				kinship minus its genome uniqueness is ranked from smallest to largest, so
+				animals with low mean kinship and high genome uniqueness rank highest.
+				Animals whose value is Undetermined (see below) are ranked last.
 			</li>
 			<li style="padding-bottom:5px">
-				All animals with greater than 10% genome uniqueness, ordered first by
-				genome uniqueness from largest to smallest values, and by z-score within
-				the same genome uniqueness from smallest to largest values; followed by
+				<b>Categorical (priority order)</b>: animals are sorted into tiers, in this
+				order, with the "Genome uniqueness first" priority axis (choosing "Mean
+				kinship first" swaps tiers ii and iii):
+				<ol type=i>
+					<li style="padding-top:5px; padding-bottom:5px">
+						Imported animals (both parents unknown, with a recorded origin) are
+						ranked highest, followed by
+					</li>
+					<li style="padding-bottom:5px">
+						All animals with greater than 10% genome uniqueness (the
+						high-uniqueness cutoff), ordered first by genome uniqueness from
+						largest to smallest values, and by z-score within the same genome
+						uniqueness from smallest to largest values; followed by
+					</li>
+					<li style="padding-bottom:5px">
+						All remaining animals with a z-score of 0.25 or less (the
+						low-kinship cutoff), ranked by z-score from smallest to largest
+						values; followed by
+					</li>
+					<li>
+						All other animals, ranked by z-score from smallest to largest values.
+						Animals with both parents unknown and no recorded origin are
+						labeled Undetermined and placed last, without a rank.
+					</li>
+				</ol>
 			</li>
-			<li style="padding-bottom:5px">
-				All remaining animals (those with = 10% genome uniqueness), ranked by
-				z-score from smallest to largest values; followed by
-			</li>
-			<li>
-				A threshold drawn at those animals with genome uniqueness = 10% and
-				z-scores = 0.25.  Animals falling below this threshold are indicated by
-				highlighting in the results.  Animals ranking above this threshold are
-				considered to be of high genetic value, while animals that rank below this
-				threshold are not recommended for breeding, but may be suitable for research
-				assignment or sale.
-			</li>
-		</ol>
+		</ul>
+		<p style="padding-top:5px">
+		Under either scheme, the <b>value</b> column labels each animal High Value (imported
+		animals and those above the high-uniqueness or low-kinship cutoff), Low Value
+		(all others), or Undetermined. Animals labeled High Value are considered to be of
+		high genetic value, while animals labeled Low Value are not recommended for breeding,
+		but may be suitable for research assignment or sale. Low Value animals are not
+		highlighted; read the <b>value</b> column.
+		</p>
 		<p style="padding-top:5px">
 		This ranking scheme follows Vinson &amp; Raboin (2015).
 		</p>
@@ -107,22 +128,25 @@
 	</li>
 	<li style="padding-bottom: 15px">
 		Following a genetic value analysis of all breeding colony animals,
-		only animals lying above the threshold will be considered for potential
-		new breeding groups.  In this analysis, potential new breeding groups
+		the candidates for potential new breeding groups are chosen as the
+		highest-ranked animals (by default), the animals not labeled Low Value,
+		or every animal in the pedigree.  In this analysis, potential new breeding groups
 		are formed based on relationships that must be excluded, the threshold
 		value of within-group relatedness that may be tolerated, relationships
 		that can be safely ignored, and any additional specific group criteria.
-		For example, relatedness greater than second cousin between breeding males,
-		and between breeding males and females should be of concern; however,
-		relatedness between breeding adults and animals &le; 1 year of age, or between
-		females of any age might be ignored, depending on the social group structure desired.
+		For example, with a threshold of 0.015625 (second cousin), relatedness at or above
+		second cousin between breeding males, and between breeding males and females, is
+		of concern; the application's default threshold is 0.25. Relatedness between breeding
+		adults and animals under 1 year of age, or between females of any age, might be
+		ignored, depending on the social group structure desired.
 	</li>
 	<li style="padding-bottom: 15px">
 		This algorithm will assign randomly-selected animals to hypothetical groups,
 		with the constraint that they cannot be related at the specified threshold
 		level or greater to animals already assigned to the group.  This process is
-		repeated 10,000 times to thoroughly sample the collection of possible groups
-		that can be formed from the high-value set of candidate animals being considered.
+		repeated for the chosen number of simulations (10 by default in the application;
+		raise it for a final run) to sample the collection of possible groups
+		that can be formed from the set of candidate animals being considered.
 		Upon completion, this algorithm will return the best set of groups, defined as
 		the set with the largest minimum group size.
 	</li>

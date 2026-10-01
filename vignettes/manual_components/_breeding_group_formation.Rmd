@@ -24,8 +24,10 @@ The left panel provides controls for group formation:
 
 - **Source**: Select which animals to use as candidates:
   - *Top ranked*: Use the highest-ranked animals from the Genetic Value Analysis
-  - *Upload list*: Provide a custom list of candidate animal IDs
-  - *All available*: Use all animals in the current population
+  - *Upload list*: Currently behaves exactly like "All available"; the
+    choice does not yet provide a way to upload or type a list of candidate IDs
+  - *All available*: Use every animal in the current pedigree (not limited to
+    the living population)
 
 - **Include animals by**: Choose how candidates are screened for eligibility,
   independent of Source:
@@ -49,19 +51,22 @@ The left panel provides controls for group formation:
 
 - **Number of groups**: How many breeding groups to form (default: 3, range: 1-20).
 
-- **Max kinship threshold**: Maximum allowed kinship coefficient between
-  group members (default: 0.25). Lower values create more genetically diverse
-  groups but may result in fewer animals being placed.
+- **Max kinship threshold**: Two animals whose kinship coefficient is at or
+  above this value are kept out of the same group (default: 0.25). Lower
+  values create more genetically diverse groups but may result in fewer
+  animals being placed.
 
 - **Ancestry Guardrails**: An optional, collapsed-by-default section for
   centers that manage geographic ancestry (for example, Indian-origin vs.
   Chinese-origin rhesus). Upload a rules file in which each line names two
   ancestry classifications and a severity: *block* rules keep matching
   pairs out of the same group during formation; *flag* rules let groups
-  form and report matching pairs afterward. A status line always shows how
-  many rules are loaded and how many candidate animals no rule reaches; a
-  pedigree without ancestry information leaves the guardrails inactive,
-  with the status line saying so. A loaded *block* rule can be overridden
+  form and report matching pairs afterward. A status line always shows the
+  state of the guardrails: "No ancestry rules loaded." before a file is
+  uploaded; afterward, how many block and flag rules are loaded and how many
+  animals in the pedigree no rule names; a pedigree without ancestry
+  information leaves the guardrails inactive, with the status line saying so.
+  A loaded *block* rule can be overridden
   for the session -- select it, choose "Override rule...", and confirm
   with a required written reason; overridden rules still report their
   pairings, marked "overridden", never silently dropped. When writing
@@ -75,6 +80,14 @@ The left panel provides controls for group formation:
   - *Harem (1M:NF)*: One male per group with multiple females
   - *Custom*: Specify a custom ratio
 
+- **Minimum breeding age (years)**: Kinship involving an animal younger than
+  this age is ignored (default: 1). With a harem sex ratio, the male in each
+  group must be at least this old.
+
+- **Number of simulations**: How many random groupings the search tries
+  (default: 10). More simulations sample more of the possible groupings but
+  take longer; raise it for a final run.
+
 - **Candidates to retain**: How many distinct candidate group solutions to
   keep for comparison (default: 5, range: 1-50). Each retained solution has
   its own score and membership, browsable via the "Candidate grouping"
@@ -86,10 +99,11 @@ The left panel provides controls for group formation:
   attempts), so the retained candidates are guaranteed to include the best
   possible groupings, not merely the best the sample happened to find. Only
   available when forming exactly one group with no harem or custom sex
-  ratio, since checking every combination becomes computationally
-  intractable for more than a couple dozen candidates once multiple groups
-  or those constraints are involved -- the checkbox itself is hidden
-  whenever the current configuration falls outside that scope. A status
+  ratio -- the checkbox itself is hidden whenever the current
+  configuration falls outside that scope. Checking every combination is
+  only feasible for a small pool: with more than 20 candidates the run
+  stops with an error message instead of starting, and the search is cut
+  short after 10 seconds. A status
   message beneath the checkbox reports the outcome after each run: how many
   distinct groupings were found, whether the search completed exhaustively
   or was cut short by its internal time limit (shown in orange when
@@ -100,21 +114,18 @@ The left panel provides controls for group formation:
 
 After clicking "Form Groups", results appear in four tabs:
 
-1. **Groups**: Visual display of each formed group showing:
-   - Group number and size
-   - Animal IDs and their genetic values
-   - Mean kinship within the group
+1. **Groups**: One panel per formed group, headed "Group N (M animals)",
+   with a table of its members showing ID, sex, birth date, sire and dam.
 
-2. **Statistics**: Summary table showing:
-   - Number of animals per group
-   - Average kinship within each group
-   - Sex composition
-   - Unassigned animals (those that couldn't be placed without exceeding
-     kinship threshold)
+2. **Statistics**: Summary table with one row per group and four columns:
+   Group, Total, Males and Females.
 
-3. **Group Detail**: One group at a time -- annotated membership, the
-   within-group kinship matrix (when "Include kinship in display of
-   groups" was checked), and per-group export buttons.
+3. **Group Detail**: One group at a time -- annotated membership (ID, sex and
+   age in years), the within-group kinship matrix, and per-group export
+   buttons. The kinship matrix is shown whether or not "Include kinship in
+   display of groups" is checked; that checkbox only controls whether each
+   group's kinship matrix is also included in the `groupKinship` value the
+   module returns.
 
 4. **Ancestry**: When ancestry rules were in effect for the run, every
    within-group pairing a rule matched (with its rule, severity, and
@@ -129,9 +140,19 @@ After clicking "Form Groups", results appear in four tabs:
 
 The `modBreedingGroups` module returns reactive values:
 
-- `groups`: List of data frames, one per breeding group
-- `nGroups`: Number of groups successfully formed
-- `unassigned`: IDs of animals that couldn't be placed
+- `groups`: List of character vectors of animal IDs, one per breeding group
+  of the selected candidate grouping; when some candidates fit no group, the
+  last element is the "Unused" group
+- `nGroups`: Number of elements in `groups` (this counts the "Unused" group
+  when there is one)
+- `unassigned`: IDs of candidates that appear in no group, including the
+  "Unused" group
+- `score`: Score of the selected candidate grouping (the size of its smallest
+  group)
+- `groupKinship`: The kinship matrix for each group, when "Include kinship in
+  display of groups" was checked
+- `ancestryRules`: The validated ancestry rules table, or `NULL` when no
+  rules were uploaded
 
 ### Algorithm Notes
 
@@ -142,8 +163,9 @@ The group formation algorithm:
 3. Optimizes for maximum genetic diversity within groups
 4. Respects sex ratio constraints when specified
 
-By default, the analysis ignores relatedness more distant than second cousins,
-pairwise relatedness involving animals under 1 year of age, and relatedness
-between females. The guidance panel at the bottom provides a table of kinship
+By default, the analysis ignores kinship below the Max kinship threshold (0.25
+in the application; the `groupAddAssign()` function's own default of 0.015625
+is the second-cousin level), pairwise relatedness involving animals younger
+than the Minimum breeding age (1 year), and relatedness between females. The guidance panel at the bottom provides a table of kinship
 values for common relationship categories.
 

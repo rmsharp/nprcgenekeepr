@@ -3,12 +3,15 @@
 <p>
 	In the group formation simulation, potential new breeding groups are
 	formed from the list of candidate animals based on the genetic value
-	of thoese candidates, and within-group relationships that must be avoided.
-	If no candidate IDs are specified above or in the input pedigree,
-	all population members will be used.
+	of those candidates, and within-group relationships that must be avoided.
+	Candidates are chosen with the Source and "Include animals by" controls
+	above: the highest-ranked <em>N</em> animals from the Genetic Value Analysis,
+	every animal not labeled Low Value (the genetic-value floor), or every animal
+	in the current pedigree.
 </p>
 <p>
-	Please see the README tab for a full description of this process.
+	Please see the Genetic Value Analysis and Breeding Group Description tab
+	for a fuller description of this process.
 </p>
 
 <br>
@@ -18,12 +21,19 @@
 	The algorithm ignores between-animal kinship that is:
 	<ol type=1>
 		<li style="padding-bottom: 5px;">
-			Smaller than the specified level (default is to ignore relatedness
-			between animals more distantly related than second-cousin).
+			Smaller than the specified level (the default is a kinship of 0.25,
+			which ignores everything more distant than parent-offspring or full
+			siblings; use 0.015625 to ignore only relatedness more distant than
+			second cousins).
+			Pairs at or above the level are kept apart.
 		</li>
 		<li style="padding-bottom: 5px;">
-			Where one of the animals is less-than, or equal-to the specified age
-			(default is to ignore any relationship involving an animal 1 year or younger).
+			Where one of the animals is younger than the specified minimum breeding
+			age (default is to ignore any relationship involving an animal under 1 year
+			old). An animal exactly at the minimum age is not ignored.
+		</li>
+		<li style="padding-bottom: 5px;">
+			Between two females, which is always ignored in the application.
 		</li>
 	</ol>
 </p>
