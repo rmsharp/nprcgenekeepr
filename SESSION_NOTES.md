@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 847 Did
+**Deliverable:** condense the `NEWS.Rmd` Pedigree Diagram section (S845 audit NA2-NA4), in rounds the owner accepts or changes (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning. Docs only, so no TDD phase applies.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 846 Did
 **Deliverable, DONE:** fixed the slice-7a `NEWS.Rmd` audit findings, in three owner-reviewed rounds, then re-rendered `NEWS.md`. Docs only, so no TDD phase applies.
 **Commits:** claim `40a1e529f`; fixes and re-render `54130dfe1`; records in the close-out commit.
