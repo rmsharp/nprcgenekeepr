@@ -14,7 +14,12 @@ A \code{div} object containing pedigree browser UI.
 }
 \description{
 Creates user interface for browsing and filtering pedigree data,
-including focal animal selection, trimming options, and export.
+including focal animal selection (typed or pasted IDs, or an uploaded
+file), trimming options, the Display Unknown IDs filter, and export. A
+Diagram tab draws the pedigree (rectilinear or direct edge style, optional
+names and twin connectors, PNG export, and click-to-focal), with a
+twin/zygosity sidecar upload; the diagram is drawn only up to 400 animals
+(rectilinear) or 750 animals (direct).
 }
 \seealso{
 \code{\link{modPedigreeServer}} for server logic.

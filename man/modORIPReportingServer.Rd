@@ -16,12 +16,21 @@ modORIPReportingServer(
 
 \item{pedigree}{reactive returning pedigree data frame.}
 
-\item{geneticValues}{reactive returning genetic value analysis results.}
+\item{geneticValues}{reactive returning the flat genetic value report data
+frame (with \code{indivMeanKin} and \code{gu} columns), not a
+\code{list(report = )}.}
 
-\item{siteConfig}{reactive returning site configuration from getSiteInfo().}
+\item{siteConfig}{reactive returning site configuration from
+\code{getSiteInfo()}, with \code{center}, \code{nodename},
+\code{user}, \code{sysname} and \code{release}. When \code{NULL}, the
+module falls back to \code{getSiteInfo(expectConfigFile = FALSE)}.}
 }
 \value{
-A list with reactive components for ORIP reporting.
+A list with one reactive component, \code{colonySummary}, which
+returns \code{list(nTotal, nMales, nFemales, nFounders)}.
+
+The tab is mounted only when \code{\link{shouldShowOripTab}} is
+\code{TRUE} (the ONPRC site configuration; see \code{\link{appUI}}).
 }
 \description{
 Server logic for ORIP reporting module. Generates summary statistics

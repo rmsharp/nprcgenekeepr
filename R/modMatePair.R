@@ -141,7 +141,8 @@ modMatePairUI <- function(id) {
 #' \code{\link{reportMatePairs}} (issue #151 Slice 1), wrapped in a
 #' curator-facing configuration panel for the D4-ratified population scope
 #' (\code{populationSource}: \code{"allAlive"} -- ids with no recorded
-#' \code{ped$exit} date; \code{"topRanked"} -- the top \code{nTopAnimals}
+#' \code{ped$exit} date, or every id when the pedigree has no \code{exit}
+#' column; \code{"topRanked"} -- the top \code{nTopAnimals}
 #' ids in \code{geneticValues}' own report order, mirroring
 #' \code{\link{modBreedingGroupsServer}}'s own \code{topRanked} reading;
 #' \code{"custom"} -- a pasted, delimiter-separated id list), the D2 minimum-
@@ -229,7 +230,9 @@ modMatePairUI <- function(id) {
 #'   pairs data.frame from the most recent \code{reportMatePairs()} run (see
 #'   that function's own return documentation for columns); \code{excluded},
 #'   the corresponding excluded-pairs data.frame; and \code{isReady},
-#'   \code{TRUE} once a run has completed.
+#'   \code{TRUE} once a run has completed. Before the first run
+#'   \code{pairs()} and \code{excluded()} halt (via
+#'   \code{\link[shiny]{req}}) rather than returning \code{NULL}.
 #'
 #' @seealso \code{\link{modMatePairUI}}
 #' @seealso \code{\link{reportMatePairs}}

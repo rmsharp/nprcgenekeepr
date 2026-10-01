@@ -16,7 +16,9 @@ modPotentialParentsServer(
 \arguments{
 \item{id}{character vector of length 1. Module namespace identifier.}
 
-\item{pedigree}{reactive returning the current pedigree data.frame.}
+\item{pedigree}{reactive returning the current pedigree data.frame. The
+default \code{NULL} is not usable: the module calls \code{pedigree()},
+so pass a reactive (which may itself return \code{NULL}).}
 
 \item{minSireAge}{minimum age in years for a male to be proposed as a sire.
 May be a plain numeric, \code{NULL}, or a reactive returning either.
@@ -51,9 +53,9 @@ A list of reactive expressions:
 Server logic for the Potential Parents module. On button press, it calls
 \code{\link{getPotentialParents}} against the current pedigree, flattens the
 result into a sortable table, and exposes it for CSV download. The surface
-degrades gracefully when no pedigree is loaded, when the pedigree lacks the
-\code{fromCenter} colony-origin field, or when no in-colony animal has an
-unknown parent.
+degrades gracefully when the pedigree reactive returns \code{NULL} or zero
+rows, when the pedigree lacks the \code{fromCenter} colony-origin field, or
+when no in-colony animal has an unknown parent.
 }
 \seealso{
 \code{\link{modPotentialParentsUI}} for the user interface.

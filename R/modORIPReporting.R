@@ -6,19 +6,21 @@
 #' ORIP Reporting Module - UI Function
 #'
 #' Creates user interface for ORIP (Office of Research Infrastructure Programs)
-#' reporting. This module will contain formatted reports suitable for submission
-#' to ORIP as part of primate center grant reporting requirements.
+#' reporting. The module is under development and is intended to grow into
+#' formatted reports suitable for submission to ORIP as part of primate center
+#' grant reporting requirements.
 #'
 #' @details
-#' The ORIP Reporting tab provides summary statistics and formatted reports
-#' for submission to the Office of Research Infrastructure Programs. This
-#' includes:
+#' The ORIP Reporting tab currently shows:
 #' \itemize{
-#'   \item Colony demographics summary
-#'   \item Genetic diversity metrics
-#'   \item Breeding program statistics
-#'   \item Founder representation analysis
+#'   \item A site information table
+#'   \item A colony summary (animal, sex and founder counts)
+#'   \item Mean kinship and mean genome uniqueness
 #' }
+#' with two CSV exports. Breeding-program statistics, founder analysis and
+#' formatted reports are not implemented. The tab is mounted only when
+#' \code{\link{shouldShowOripTab}} is \code{TRUE} (the ONPRC site
+#' configuration; see \code{\link{appUI}}).
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #'
@@ -123,10 +125,19 @@ modORIPReportingUI <- function(id) {
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param pedigree reactive returning pedigree data frame.
-#' @param geneticValues reactive returning genetic value analysis results.
-#' @param siteConfig reactive returning site configuration from getSiteInfo().
+#' @param geneticValues reactive returning the flat genetic value report data
+#'   frame (with \code{indivMeanKin} and \code{gu} columns), not a
+#'   \code{list(report = )}.
+#' @param siteConfig reactive returning site configuration from
+#'   \code{getSiteInfo()}, with \code{center}, \code{nodename},
+#'   \code{user}, \code{sysname} and \code{release}. When \code{NULL}, the
+#'   module falls back to \code{getSiteInfo(expectConfigFile = FALSE)}.
 #'
-#' @return A list with reactive components for ORIP reporting.
+#' @return A list with one reactive component, \code{colonySummary}, which
+#'   returns \code{list(nTotal, nMales, nFemales, nFounders)}.
+#'
+#' The tab is mounted only when \code{\link{shouldShowOripTab}} is
+#' \code{TRUE} (the ONPRC site configuration; see \code{\link{appUI}}).
 #'
 #' @seealso \code{\link{modORIPReportingUI}} for the user interface
 #' @seealso \code{\link{getSiteInfo}} for site configuration

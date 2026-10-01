@@ -187,12 +187,14 @@ modPotentialParentsUI <- function(id) {
 #' Server logic for the Potential Parents module. On button press, it calls
 #' \code{\link{getPotentialParents}} against the current pedigree, flattens the
 #' result into a sortable table, and exposes it for CSV download. The surface
-#' degrades gracefully when no pedigree is loaded, when the pedigree lacks the
-#' \code{fromCenter} colony-origin field, or when no in-colony animal has an
-#' unknown parent.
+#' degrades gracefully when the pedigree reactive returns \code{NULL} or zero
+#' rows, when the pedigree lacks the \code{fromCenter} colony-origin field, or
+#' when no in-colony animal has an unknown parent.
 #'
 #' @param id character vector of length 1. Module namespace identifier.
-#' @param pedigree reactive returning the current pedigree data.frame.
+#' @param pedigree reactive returning the current pedigree data.frame. The
+#'   default \code{NULL} is not usable: the module calls \code{pedigree()},
+#'   so pass a reactive (which may itself return \code{NULL}).
 #' @param minSireAge minimum age in years for a male to be proposed as a sire.
 #'   May be a plain numeric, \code{NULL}, or a reactive returning either.
 #'   \code{NULL} (the default) uses the species- and sex-specific breeding-age

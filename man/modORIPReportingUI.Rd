@@ -14,19 +14,21 @@ A \code{div} object containing the ORIP reporting UI.
 }
 \description{
 Creates user interface for ORIP (Office of Research Infrastructure Programs)
-reporting. This module will contain formatted reports suitable for submission
-to ORIP as part of primate center grant reporting requirements.
+reporting. The module is under development and is intended to grow into
+formatted reports suitable for submission to ORIP as part of primate center
+grant reporting requirements.
 }
 \details{
-The ORIP Reporting tab provides summary statistics and formatted reports
-for submission to the Office of Research Infrastructure Programs. This
-includes:
+The ORIP Reporting tab currently shows:
 \itemize{
-\item Colony demographics summary
-\item Genetic diversity metrics
-\item Breeding program statistics
-\item Founder representation analysis
+\item A site information table
+\item A colony summary (animal, sex and founder counts)
+\item Mean kinship and mean genome uniqueness
 }
+with two CSV exports. Breeding-program statistics, founder analysis and
+formatted reports are not implemented. The tab is mounted only when
+\code{\link{shouldShowOripTab}} is \code{TRUE} (the ONPRC site
+configuration; see \code{\link{appUI}}).
 }
 \seealso{
 \code{\link{modORIPReportingServer}} for server logic.

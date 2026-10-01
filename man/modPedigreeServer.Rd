@@ -16,14 +16,25 @@ A list of reactive values:
 \itemize{
 \item \code{pedigree} - Filtered pedigree for display (respects
 trim/unknown settings)
+\item \code{analysisPedigree} - The pedigree the other tabs analyze
+(focal-animal trim applied, no Display Unknown IDs filter, which
+affects only the table); \code{appServer} uses it, not
+\code{pedigree}, as the shared current pedigree
 \item \code{processedPedigree} - Full pedigree with population, pedNum,
 gen columns
 \item \code{focalAnimals} - Character vector of focal animal IDs
 \item \code{nAnimals} - Count of animals in filtered pedigree
 \item \code{populationCount} - Count of animals marked as population
-\item \code{isReady} - Logical indicating if pedigree data is ready
+\item \code{isReady} - Logical indicating if pedigree data is ready.
+With no studbook loaded, \code{isReady()} and \code{nAnimals()} halt
+with a silent \code{\link[shiny]{req}} error instead of returning
+\code{FALSE} and 0
 \item \code{twinRelations} - The validated twin/zygosity sidecar
-(\code{NULL} if none uploaded or invalid). Unlike the Diagram tab's
+(\code{NULL} if none uploaded or invalid). It is validated against the
+filtered \code{pedigree} (focal trim applied, unknown IDs hidden);
+one id outside that pedigree fails the validation, an error
+notification is shown and the whole sidecar becomes \code{NULL}. Unlike
+the Diagram tab's
 own rendering, this is the raw, ungated reactive -- not filtered by
 the "Show Twin Connectors" toggle -- so callers outside this module
 (e.g. \code{appServer}) see the validated data regardless of that
@@ -32,7 +43,10 @@ toggle's state (BL-N Slice 3).
 }
 \description{
 Server logic for pedigree browser module handling focal animal
-selection, pedigree processing, filtering, and data export.
+selection (typed, pasted or uploaded, or set by clicking a diagram node),
+pedigree processing, filtering (focal trim and the Display Unknown IDs
+filter), the Diagram tab (edge style, names, twin connectors, PNG export),
+the twin/zygosity sidecar upload, and data export.
 }
 \details{
 This module processes the studbook by:
