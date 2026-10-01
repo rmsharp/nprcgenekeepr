@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 845 Did
+**Deliverable:** docs-staleness audit slice 7, `NEWS.Rmd` (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim entry says in progress; Phase 3F records the rest.
+
 ### What Session 844 Did
 **Deliverable, DONE:** fixed all 95 slice-6e docs-staleness findings (26 moderate, 69 minor; RE-RL ids) in `R/*.R` roxygen, 67 files, then `devtools::document()`. Docs only, no function body or signature changed, so no TDD phase applies.
 **Commits:** claim `56668e779`; fixes `54c2f64e5` (RE+RF), `ff8f3c941` (RG+RH), `52335a523` (RI+RJ), `9c650237f` (RK+RL), each with its regenerated `man/` pages; records in the close-out commit.
