@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · [ad hoc] S839 claim: fix the 29 slice-6c docs-staleness findings in `R/*.R` roxygen (in progress; close-out entry follows).
+
 ### 2026-10-01 · [ad hoc] S838 close-out: docs-staleness audit slice 6c, the 35 marker-genetics, genotype and MHC `man/` pages: 4 moderate and 25 minor findings plus 8 code candidates, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md`; BACKLOG docs-audit item updated; page count corrected to 160 left (the earlier 196 counted `man/figures/`). Read-only, no code changed. Commits `542ccce38` (claim), close-out commit. Model: Claude Sonnet 5.5.
 
 ### 2026-10-01 · [ad hoc] S838 claim: docs-staleness audit slice 6c (superseded by the close-out entry above).

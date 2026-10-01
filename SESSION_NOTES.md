@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 839 Did
+**Deliverable:** fix the 29 slice-6c docs-staleness findings (QA/QB/QC/QD) in `R/*.R` roxygen, then `devtools::document()` (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning. Code candidates are not changed; today's behavior is documented (the S835/S837 pattern).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 837 Handoff Evaluation (by Session 838)
 **Score: 9/10.** Orient measurements held: ledger and receipt frontiers at HEAD, the one untracked file, PB4/PB7/PB11 untouched, next step (A) exact and the gotchas (`Rd2ex`, WORDLIST append, `git checkout man/nprcgenekeepr-package.Rd`) right. **Wrong:** "196 pages left" (and "28 ahead of origin", 29 after its close-out commit) -- the 196 counted the `man/figures/` directory; there are 267 `.Rd` pages, 195 after 6b. **Missing:** which topic groups remain. **ROI:** high.
 
