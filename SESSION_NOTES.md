@@ -98,49 +98,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 820 Handoff Evaluation (by Session 821)
+**Score: 9/10.** The Next-steps list and the gotcha about `data-raw/kinship2FidelityValidation.R` overwriting committed
+PNGs (compare pixels, restore with `git checkout`) carried straight over to this slice, and the `BACKLOG.md` "Slice 2
+next" line named the exact scope. **Missing:** nothing needed. **Wrong:** "master is 3 ahead of origin"; it was 4 at
+Orient (the claim commit counted). **ROI:** high.
+
 ### What Session 821 Did
-**Deliverable:** Docs staleness audit, slice 2: the 50 `shiny_app_use/` screenshots (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning (AUDIT_WORKSTREAM.md; read-only audit, one report under `docs/audits/`).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (read-only audit, docs only):** docs staleness audit slice 2, report
+`docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`. Ran both capture scripts (colony twice, diagram once), pixel-compared
+38 of 50 images, viewed the suspicious pairs, restored the committed PNGs with `git checkout` (no tracked diff).
+Result: 31 of 38 differ (Pedigree Browser family 15 images, all +147 px from the longer "Display Unknown IDs" help;
+Home, 4 Input, 3 Summary Statistics, 6 Breeding Groups, 2 GVA tables); 3 current; 4 not judgeable. 5 findings (0 critical,
+2 moderate, 3 minor). Main one: the colony script's tail fails identically in both runs (5 steps, after the seeded
+6-group formation), cause not diagnosed. 12 images have no generator; 1 orphan (`pb_unknown_displayed.png`).
+**Commits:** claim `1d15ed59b`; report + records (this).
+**Learnings:** none new. **Reduction:** removed the S819 block and the S820 "What Session 820 Did" block (in git and the
+S819/S820 receipts); the claim commit needed it (context-budget hook refused, 75 tokens over).
+No code, so no TDD cycle, suite run or app smoke test (3E not applicable); the app was driven by the capture scripts only.
 
-### Session 819 Handoff Evaluation (by Session 820)
-**Score: 9/10.** The Orient measurements held (ledger and receipt frontiers at HEAD, the 7 untracked files
-unchanged, CI all green) and the priorities list led straight to this session's pick, including the docs-audit
-item's "first question". **Missing:** nothing needed. **Wrong:** one detail: the gotcha said only the records
-commit was unpushed, but `master` was 2 ahead (records plus the ledger-restore commit); both docs only.
-**ROI:** high.
-
-### What Session 820 Did
-**Deliverable, DONE (read-only audit, docs only):** docs staleness audit slice 1, report
-`docs/audits/DOCS_STALENESS_AUDIT_SLICE1_2026-09-30.md`. Answer to the backlog's first question: stale in both the
-local PDFs (rendered 2026-08-25; carry since-retracted claims; untracked, unignored, unreferenced) and the committed
-images (1 of 8 kinship2 figures, `trackC-nprc-rectilinear.png`, differs from a fresh render by a real arc-shape change;
-the other 7 differ only by anti-aliasing). Figures regenerated twice (identical both times) and committed images
-restored with `git checkout`. Also found: manual wording at `_pedigree_browser.Rmd:62-65` (default is Rectilinear, cap
-400) and a stale "defaulting to direct" comment at `R/modPedigree.R:440-443`. 5 findings (0 critical, 2 moderate, 3
-minor). Nothing deleted: the PDFs are the owner's local files.
-**Commits:** claim `2522ee676`; report + records (this).
-**Learnings:** none new. **Reduction:** removed the S818 "What Session 818 Did" block and the S818 handoff evaluation
-(in git and the S818 receipt). No code, so no TDD cycle, suite run or app smoke test (3E not applicable: no runtime change).
-
-**Self-assessment: 9/10.** + One deliverable, measured not recalled (pixel diff, determinism check, pdf text),
-restored the images it overwrote, left owner files alone. - Did not re-ask about the 7 untracked drafts; slice 1 only
-spot-checked the prose of the two articles.
+**Self-assessment: 9/10.** + One deliverable, measured (pixels, two runs, determinism compared), caught that run-failed
+captures are not evidence, restored owner-tracked images. - Causes for Input, Summary Statistics and Breeding Groups changes
+not viewed; marker images only judged by commit counts.
 
 **Next steps:**
-- (A) Owner picks: delete-or-ignore the two PDFs; then regenerate `trackC-nprc-rectilinear.png` (own session; look at
-  the fresh arc touching the `W` square first); fix the manual sentence and the code comment (both small).
-- (B) Docs audit slice 2: the 50 `shiny_app_use/` images (`BACKLOG.md:151` item, "Slice 1 DONE S820" note).
-- (C) Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band;
-  `master` is 3 ahead of `origin` after this commit (docs only, no CI owed).
+- (A) Diagnose the capture-script tail failure (finding 2; `diagnose` skill, reproduce by hand in the app first); then
+  regenerate images by module, viewing each pair.
+- (B) Still open from slice 1: owner decides delete-or-ignore for the two PDFs; regen `trackC-nprc-rectilinear.png`; reword
+  `_pedigree_browser.Rmd:62-65`; fix the comment at `R/modPedigree.R:440-443`.
+- (C) Docs audit slice 3: prose claims in the articles. Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md`
+  lags `NEWS.Rmd`; `CLAUDE.md` in the warn band; `master` 6 ahead of `origin` (docs only, no CI owed).
 
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE1_2026-09-30.md`, `data-raw/kinship2FidelityValidation.R:67`
-(writes straight into the committed image dir), `R/modPedigree.R:440-446`, `BACKLOG.md:151-190`.
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`,
+`vignettes/articles/colony-manager-guide-screenshots.R:84-110` (shot helper), `:496-655` (failing tail), `BACKLOG.md:151-192`.
 
-**Gotchas:** running `data-raw/kinship2FidelityValidation.R` overwrites the 8 committed PNGs (every one changes byte for
-byte; compare pixels, not bytes) and takes about a minute; restore with
-`git checkout -- vignettes/articles/kinship2-fidelity-validation-img` if the images are not meant to change.
+**Gotchas:** running the colony script takes about 10 minutes and overwrites the 46 committed PNGs it writes; restore with
+`git checkout -- vignettes/articles/shiny_app_use`. Measurement copies were in the session scratchpad and are gone.
 
 ### What Session 817 Did
 **Deliverable, DONE:** Potential Parents now lists candidates only for the parent that is missing (owner chose

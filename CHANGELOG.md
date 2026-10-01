@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S821 close-out: docs staleness audit slice 2 (read-only). Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`: 31 of 38 regenerable `shiny_app_use/` screenshots differ from the app (Pedigree Browser family +147 px from the longer Display Unknown IDs help, Home, Input, Summary Statistics, Breeding Groups, GVA), the colony capture script's tail fails identically in two runs (cause undiagnosed), 12 images have no generator, 1 orphan. `BACKLOG.md` item updated (still open: slice 3 next). Committed PNGs overwritten by the capture scripts and restored with `git checkout`; no code, nothing pushed; no GitHub issue named; no new learning (S820 handoff evaluated 9/10, self 9/10).
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S821 claim (in progress): docs staleness audit, slice 2 (the 50 `vignettes/articles/shiny_app_use/` screenshots against the current app UI). Owner chose it at the Phase 0 picker. Read-only audit; one report under `docs/audits/`.
 
 ### 2026-09-30 · [ad hoc] S820 close-out: docs staleness audit slice 1 (read-only). Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE1_2026-09-30.md`: stale in both the local PDFs and 1 of 8 committed kinship2 images (`trackC-nprc-rectilinear.png`), plus a misleading manual sentence and a stale code comment; 7 images current. `BACKLOG.md` item updated (still open: slice 2 next). Nothing deleted, no code, nothing pushed; no GitHub issue named; no new learning (S819 handoff evaluated 9/10, self 9/10).

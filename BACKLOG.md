@@ -186,7 +186,10 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       from slice 1:** owner decides delete-or-ignore for the two PDFs; regenerate `trackC-nprc-rectilinear.png`
       (`data-raw/kinship2FidelityValidation.R`; look at the fresh arc touching the `W` square first); reword
       `_pedigree_browser.Rmd:62-65` (default is Rectilinear, cap 400); fix the stale "defaulting to direct"
-      comment at `R/modPedigree.R:440-443`. **Slice 2 next:** the 50 `shiny_app_use/` images, then the prose
+      comment at `R/modPedigree.R:440-443`. **Slice 2 DONE S821** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`): 31 of 38
+      regenerable `shiny_app_use/` images differ from the app (Pedigree Browser family +147 px; Home, Input, Summary
+      Statistics, Breeding Groups, GVA); the colony script's tail fails identically every run (diagnose first, then
+      regenerate by module); 12 images have no generator; `pb_unknown_displayed.png` is an orphan. **Slice 3 next:** the prose
       claims, then the rest of the user-facing and internal scope above.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION

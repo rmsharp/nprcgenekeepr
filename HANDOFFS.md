@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S821
 date: 2026-09-30
-status: pending
-active_task: Docs staleness audit, slice 2 (the 50 shiny_app_use/ screenshots); IN PROGRESS
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE: docs staleness audit slice 2 (read-only); 31 of 38 regenerable shiny_app_use images differ from the app, 4 not judgeable, 12 have no generator
+what_was_done: Claim 1d15ed59b; report docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md (5 findings: stale images by module, colony script tail fails identically in 2 runs, 12 ungenerated images, 1 orphan, GVA tie-order content). Committed PNGs restored after measuring.
+next_steps: Diagnose the capture-script tail failure (diagnose skill, reproduce by hand first), then regenerate by module viewing each pair; open slice 1 items (PDFs delete-or-ignore, trackC image, manual sentence, code comment); then slice 3 prose claims.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md, vignettes/articles/colony-manager-guide-screenshots.R:84-110 and :496-655, BACKLOG.md:151-192
+gotchas: colony script takes about 10 minutes and overwrites committed PNGs in place (restore with git checkout -- vignettes/articles/shiny_app_use); master 6 ahead of origin, docs only, no CI owed.
 ```
 
 ```handoff
