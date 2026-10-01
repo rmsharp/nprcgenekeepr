@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 822 Did
+**Deliverable:** Docs staleness audit, slice 3: prose claims in the articles and manual components (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning (AUDIT_WORKSTREAM.md; read-only audit, one report under `docs/audits/`).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 820 Handoff Evaluation (by Session 821)
 **Score: 9/10.** The Next-steps list and the gotcha about `data-raw/kinship2FidelityValidation.R` overwriting committed
 PNGs (compare pixels, restore with `git checkout`) carried straight over to this slice, and the `BACKLOG.md` "Slice 2
