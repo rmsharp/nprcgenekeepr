@@ -3,9 +3,12 @@
 
 #' Check whether an animal has both parents
 #'
-#' @param id character vector of IDs to examine for parents
+#' @param id a single ID to examine for parents. A vector of IDs is not
+#' supported and gives a recycling warning.
 #' @inheritParams reportGV
-#' @return TRUE if ID has both sire and dam identified in \code{ped}.
+#' @return TRUE if ID has both sire and dam identified in \code{ped}, FALSE
+#' if one or both are unknown, and \code{logical(0)} if \code{id} is not in
+#' \code{ped}.
 #'
 #' @export
 #' @examples

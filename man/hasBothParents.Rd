@@ -7,12 +7,15 @@
 hasBothParents(id, ped)
 }
 \arguments{
-\item{id}{character vector of IDs to examine for parents}
+\item{id}{a single ID to examine for parents. A vector of IDs is not
+supported and gives a recycling warning.}
 
 \item{ped}{The pedigree information in data.frame format}
 }
 \value{
-TRUE if ID has both sire and dam identified in \code{ped}.
+TRUE if ID has both sire and dam identified in \code{ped}, FALSE
+if one or both are unknown, and \code{logical(0)} if \code{id} is not in
+\code{ped}.
 }
 \description{
 Check whether an animal has both parents
