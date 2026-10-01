@@ -20,8 +20,12 @@ modBreedingGroupsServer(
 id, sire, dam, sex, and optionally birth, exit, gen.}
 
 \item{geneticValues}{optional reactive returning genetic value results
-from \code{\link{modGeneticValueServer}}, used to source the
-\code{topRanked} animal-source candidate list. Unrelated to kinship.}
+from \code{\link{modGeneticValueServer}}. Used to source the
+\code{topRanked} animal-source candidate list and, with any animal
+source, for the "Genetic-value floor" inclusion criterion, which drops
+"Low Value" animals and IDs absent from the report. Group formation
+halts until it is available in either of those cases. Unrelated to
+kinship.}
 
 \item{kinshipMatrix}{optional reactive returning a kinship matrix,
 typically a full-pedigree matrix shared with
@@ -45,25 +49,24 @@ the pedigree (the shared \code{kinshipMatrix} is unavailable), it is
 passed straight through to \code{\link{kinship}} so group formation
 reflects a declared MZ-twin pair's corrected identity regardless of tab
 order (BL-N Slice 3). \code{NULL} (the default) is a no-op. A provided
-\code{kinshipMatrix} is expected to already reflect it at its source.
-
-Up to 5 distinct candidate groupings are formed per run (issue #125), with
-a "Candidate grouping" selector letting the user switch among them without
-re-running \code{\link{groupAddAssign}}. All reactive components below
-reflect the currently-selected candidate, defaulting to the best-scoring
-one -- identical to the single-solution behavior prior to issue #125.}
+\code{kinshipMatrix} is expected to already reflect it at its source.}
 }
 \value{
 List with reactive components:
 \itemize{
-\item \code{groups} - List of character vectors with animal IDs per group
-\item \code{nGroups} - Number of groups formed
+\item \code{groups} - List with one character vector of animal IDs per
+formed group; when candidates remain unplaced a final "Unused" element
+is appended
+\item \code{nGroups} - Number of elements of \code{groups}, counting the
+"Unused" element when present
 \item \code{score} - Optimization score from groupAddAssign
 (minimum group size)
-\item \code{unassigned} - Character vector of candidate IDs not placed
-in groups
-\item \code{groupKinship} - List of kinship matrices per group
-(if withKin=TRUE)
+\item \code{unassigned} - Character vector of candidate IDs that appear
+in no element of \code{groups}; leftovers are collected in the trailing
+"Unused" element, so this is normally empty
+\item \code{groupKinship} - List of kinship matrices per group when the
+"Include kinship in display of groups" box is checked (default
+unchecked); \code{NULL} otherwise
 \item \code{ancestryRules} - The validated ancestry rules table loaded
 through the Ancestry Guardrails upload (see
 \code{\link{checkAncestryRules}}), or \code{NULL} when no usable file
@@ -81,7 +84,17 @@ groups while maximizing group sizes.
 \details{
 The module supports multiple configuration options:
 \itemize{
-\item \strong{Animal source}: Select top-ranked animals or all available
+\item \strong{Animal source}: "Top ranked", "Upload list" or "All
+available". "Upload list" has no upload control and currently behaves
+exactly like "All available"
+\item \strong{Inclusion criterion}: Include animals by "Top N ranked"
+(with the number of top animals) or "Genetic-value floor"
+\item \strong{Group counts and ages}: The number of groups and the
+minimum breeding age
+\item \strong{Simulations and exhaustive mode}: The number of
+simulations; "Exhaustive enumeration mode" is offered only when the
+number of groups is 1 and the sex ratio is "none"
+\item \strong{Seed groups}: Optionally seed groups with specific animals
 \item \strong{Kinship threshold}: Maximum allowed kinship within groups
 \item \strong{Harem mode}: Form groups with exactly one male each
 \item \strong{Sex ratio}: Target female-to-male ratio in groups
@@ -94,6 +107,17 @@ each run's rule violations (overridden rules stay visible, marked
 \code{overridden} -- see \code{\link{reportAncestryViolations}}) and
 offers the run's downloadable audit manifest
 }
+
+Up to \code{maxCandidates} (the "Candidates to retain" input; default 5,
+range 1-50) distinct candidate groupings are formed per run (issue #125);
+fewer are returned when the run finds fewer distinct ones. A "Candidate
+grouping" selector lets the user switch among them without re-running
+\code{\link{groupAddAssign}}. All reactive components below reflect the
+currently-selected candidate, defaulting to the best-scoring one --
+identical to the single-solution behavior prior to issue #125.
+
+The results are shown on the Groups, Statistics, Group Detail and Ancestry
+tabs.
 }
 \seealso{
 \code{\link{modBreedingGroupsUI}} for the UI component

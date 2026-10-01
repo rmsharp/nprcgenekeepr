@@ -14,7 +14,9 @@ modDeidentifiedExportServer(id, pedigree)
 \code{\link{modCrossCenterIdentityServer}}.}
 }
 \value{
-A list with reactive components:
+A list with reactive components. \code{exportedPedigree},
+\code{map} and \code{manifest} halt (via \code{\link[shiny]{req}}, not
+\code{NULL}) until Preview has been run:
 \itemize{
 \item \code{exportedPedigree} - the most recent \code{\link{obfuscatePed}}
 output

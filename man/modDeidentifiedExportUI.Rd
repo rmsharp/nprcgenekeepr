@@ -14,8 +14,8 @@ A \code{div} object containing the module's UI.
 }
 \description{
 A Shiny workflow around the existing, tested de-identification primitives
-(\code{\link{obfuscatePed}}) and this file's \code{
-.buildDeidentificationManifest}: configure export parameters, preview the
+(\code{\link{obfuscatePed}}) and an internal manifest builder: configure
+export parameters, preview the
 de-identified output for the pedigree already loaded in the current
 session, confirm via a modal gate, and download 3 artifacts -- the
 de-identified pedigree, a transformation manifest, and a distinctly

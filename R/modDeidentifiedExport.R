@@ -58,8 +58,8 @@
 #' De-Identified Export Module - UI Function
 #'
 #' A Shiny workflow around the existing, tested de-identification primitives
-#' (\code{\link{obfuscatePed}}) and this file's \code{
-#' .buildDeidentificationManifest}: configure export parameters, preview the
+#' (\code{\link{obfuscatePed}}) and an internal manifest builder: configure
+#' export parameters, preview the
 #' de-identified output for the pedigree already loaded in the current
 #' session, confirm via a modal gate, and download 3 artifacts -- the
 #' de-identified pedigree, a transformation manifest, and a distinctly
@@ -160,7 +160,9 @@ modDeidentifiedExportUI <- function(id) {
 #' (\code{shared$currentPedigree}, D1) -- not a fresh upload, unlike
 #' \code{\link{modCrossCenterIdentityServer}}.
 #'
-#' @return A list with reactive components:
+#' @return A list with reactive components. \code{exportedPedigree},
+#' \code{map} and \code{manifest} halt (via \code{\link[shiny]{req}}, not
+#' \code{NULL}) until Preview has been run:
 #' \itemize{
 #'   \item \code{exportedPedigree} - the most recent \code{\link{obfuscatePed}}
 #'     output

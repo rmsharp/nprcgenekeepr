@@ -208,7 +208,10 @@ modCrossCenterIdentityUI <- function(id) {
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #'
-#' @return A list with reactive components:
+#' @return A list with reactive components. \code{mergedPedigree} and
+#' \code{issues} halt (via \code{\link[shiny]{req}}, not \code{NULL}) until
+#' Validate has been run, and \code{mergedPedigree} also halts while issues
+#' remain:
 #' \itemize{
 #'   \item \code{mergedPedigree} - the \code{\link{resolveCrossCenterIds}}
 #'     output, once the uploaded mapping validates clean

@@ -55,19 +55,27 @@ modGeneticDiversityUI <- function(id) {
 #' @param id character vector of length 1. Module namespace identifier.
 #' @param groups reactive returning a list of character vectors of animal IDs,
 #'   one per breeding group (the \code{groups} returned by
-#'   \code{\link{modBreedingGroupsServer}}).
+#'   \code{\link{modBreedingGroupsServer}}). That list includes the trailing
+#'   "Unused" element when candidates remain unplaced, and the heat map scores
+#'   it as another group.
 #' @param pedigree reactive returning the quality-controlled pedigree data
 #'   frame.
 #' @param geneticValues reactive returning the genetic value report data frame
 #'   (with \code{id} and \code{value} columns).
-#' @param kinshipMatrix reactive returning the full kinship matrix (row and
-#'   column names are animal IDs).
+#' @param kinshipMatrix reactive returning a square kinship matrix (row and
+#'   column names are animal IDs) covering every member of every group;
+#'   \code{\link{getGeneticDiversityStats}} stops when a group member is
+#'   missing from it. In the app this is the genetic-value tab's
+#'   population-filtered matrix, not the full-pedigree matrix.
 #' @param currentDate Date used to derive age and the production birth window.
 #'   Defaults to \code{Sys.Date()}.
 #'
 #' @return A list with two reactive elements: \code{stats}, the per-group
 #'   metric data frame (or \code{NULL} when data are not ready), and
-#'   \code{heatmap}, the \code{ggplot} heat map (or \code{NULL}).
+#'   \code{heatmap}, the \code{ggplot} heat map (or \code{NULL}). Errors
+#'   raised inside \code{getGeneticDiversityStats} (a group member missing
+#'   from the kinship matrix, or a group member with a missing birth date)
+#'   are not caught, so the reactives error instead of returning \code{NULL}.
 #'
 #' @seealso \code{\link{modGeneticDiversityUI}}
 #' @importFrom shiny moduleServer reactive renderPlot renderUI observe req div
