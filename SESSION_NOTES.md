@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 827 Did
+**Deliverable:** fix docs-audit slice 4 cluster 3, the genetic-value pages (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 825 Handoff Evaluation (by Session 826)
 **Score: 9/10.** Next step (A) named all five files and the finding ids (BA1-BA16, BA30-31, UG11-UG21), and the audit tables carried
 file:line, claim, evidence and fix, so Orient to first edit was quick. The Learning 832 gotcha paid off: grepping `tests/testthat`
