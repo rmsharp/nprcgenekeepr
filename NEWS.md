@@ -6,6 +6,8 @@ R. Mark Sharp, Ph.D.
 
 ## Pedigree Diagram
 
+**Major**
+
 - The Pedigree Browser has a new interactive **Diagram** view that draws
   a pedigree using most of kinship2's pedigree-drawing conventions: sex
   symbols, a mate line joining each mated pair with descent drawn from
@@ -45,6 +47,9 @@ R. Mark Sharp, Ph.D.
   "Rectilinear" connector style, 750 with "Direct" -- shows an
   informative message instead of rendering; trimming the pedigree to
   fewer focal animals brings it back under the limit.
+
+**Minor**
+
 - An animal with no recorded parents, mates, or offspring is not drawn
   as a disconnected box, matching kinship2. The diagram names which
   animals were left out, shows a clear message instead of an empty
@@ -99,6 +104,8 @@ R. Mark Sharp, Ph.D.
 
 ## Kinship & Pedigree Calculations
 
+**Major**
+
 - Declaring a pair of animals as identical (MZ) twins now corrects their
   computed relatedness to genetic identity, and that correction flows
   through to every other relative reached through either twin -- not
@@ -113,12 +120,6 @@ R. Mark Sharp, Ph.D.
   file (columns `id1`, `id2`, `code`); a fraternal or identical pair
   must share both recorded parents, and an identical pair must be the
   same sex.
-- New: `kinship()` can now compute X-chromosome relatedness (instead of
-  the usual whole-genome average) via a new `chrtype = "x"` option --
-  useful for traits carried on the X chromosome. It needs the animals'
-  `sex` supplied. The default behavior (`chrtype = "autosome"`) is
-  unchanged; every existing use of `kinship()` keeps working exactly as
-  before. Script-callable only; the Shiny app has no screen for it.
 - New `shrinkPedigree()` trims a large pedigree down to just the animals
   needed to keep it genetically informative within a genotyping budget,
   given which animals are already genotyped and, optionally, which are
@@ -128,16 +129,22 @@ R. Mark Sharp, Ph.D.
   run to the next). Script-callable only; the Shiny app has no screen
   for it.
 
+**Minor**
+
+- New: `kinship()` can now compute X-chromosome relatedness (instead of
+  the usual whole-genome average) via a new `chrtype = "x"` option --
+  useful for traits carried on the X chromosome. It needs the animals'
+  `sex` supplied. The default behavior (`chrtype = "autosome"`) is
+  unchanged; every existing use of `kinship()` keeps working exactly as
+  before. Script-callable only; the Shiny app has no screen for it.
+
 ## Marker Genetics
+
+**Major**
 
 - New **Marker Genetics** tab, starting with a **Kinship Comparison**
   sub-tab: compares DNA-based relatedness (from marker genotypes) side
   by side with pedigree-based relatedness (issue \#130).
-- New `checkMarkerGenotypeFile()` checks a marker genotype file with one
-  row per animal and locus (columns `id`, `locus`, `allele1`, `allele2`)
-  and rejects a locus with more than two alleles; new
-  `buildMarkerGenotypeMatrix()` turns the checked file into the
-  animal-by-locus table the marker functions use.
 - The Marker Genetics tab includes a **Heterozygosity** sub-tab:
   compares each animal's own genetic diversity to what's expected for
   the population (issue \#130). Script users:
@@ -161,6 +168,21 @@ R. Mark Sharp, Ph.D.
   ranks which other genotyped animals could be the real parent instead,
   based on DNA evidence. Report-only. New `markerParentageLikelihood()`
   (issue \#147).
+- The Marker Genetics tab includes a **Linkage and LD Block Metrics**
+  sub-tab, combining the locus-coverage, relatedness-variance, and
+  linkage-block reports below in one place, with de-identified export
+  (issue \#153).
+- The Marker Genetics tab includes a **Genomic ROH (F_ROH)** tab: the
+  sequence-based inbreeding calculation below, with de-identified export
+  (new `obfuscateGenomicROH()`) (issue \#152).
+
+**Minor**
+
+- New `checkMarkerGenotypeFile()` checks a marker genotype file with one
+  row per animal and locus (columns `id`, `locus`, `allele1`, `allele2`)
+  and rejects a locus with more than two alleles; new
+  `buildMarkerGenotypeMatrix()` turns the checked file into the
+  animal-by-locus table the marker functions use.
 - The Candidate Parent Assignment sub-tab's automatic suggestion covers
   the common case where a flagged animal's recorded parent is present in
   the data but simply wrong (issue \#155).
@@ -177,10 +199,6 @@ R. Mark Sharp, Ph.D.
 - New `markerLdBlock()` reports which nearby markers on the same
   chromosome tend to be inherited together, with a matching
   `obfuscateLdBlocks()` for de-identified export (issue \#153).
-- The Marker Genetics tab includes a **Linkage and LD Block Metrics**
-  sub-tab, combining the locus-coverage, relatedness-variance, and
-  linkage-block reports above in one place, with de-identified export
-  (issue \#153).
 - New sequence-scale marker genotype check
   (`checkSequenceGenotypeFile()`), for genotype files with far more
   markers than a standard panel (issue \#152).
@@ -192,18 +210,11 @@ R. Mark Sharp, Ph.D.
   `computeGenomicROH()` (issue \#152).
 - New `obfuscateGenotypeMatrix()` de-identifies a sequence-scale
   genotype file's animal ids (issue \#152).
-- The Marker Genetics tab includes a **Genomic ROH (F_ROH)** tab: the
-  sequence-based inbreeding calculation above, with de-identified export
-  (new `obfuscateGenomicROH()`) (issue \#152).
 
 ## MHC Haplotype Reporting
 
-- New `checkMhcHaplotypeFile()` validates a file of MHC haplotype
-  designations -- two named haplotypes per animal, one row per animal,
-  like the bundled `rhesusGenotypes` example data. Designations are
-  taken exactly as written (a trailing `?` marks a provisional call).
-  The MHC haplotype frequency and rare-haplotype reports read files in
-  this same format (issue \#148).
+**Major**
+
 - New `mhcHaplotypeFrequency()` summarizes how common each MHC haplotype
   is in a colony: copies, carriers, and frequency per haplotype, with
   missing and provisional calls disclosed rather than silently dropped.
@@ -213,12 +224,6 @@ R. Mark Sharp, Ph.D.
   haplotype (or every haplotype), including provisionally typed
   carriers, so a manager can see which animals to consider before a rare
   haplotype is lost from the colony (issue \#148).
-- New `obfuscateMhcHaplotypes()` replaces the animal ids in a haplotype
-  carrier list with the same aliases used to de-identify the pedigree,
-  so a shared report never reveals which real animals carry a rare
-  haplotype. Haplotype names are left exactly as written; an id the
-  de-identification never covered stops with an error rather than
-  slipping through (issue \#148).
 - The Marker Genetics tab includes an **MHC Haplotype Reporting** tab:
   upload a file of MHC haplotype designations to see how common each
   haplotype is, which ones are rare, and which animals carry the rare
@@ -226,24 +231,46 @@ R. Mark Sharp, Ph.D.
   adjust them. After you confirm, you can download a de-identified
   summary, carrier list, and a record of the settings used; every animal
   in the file must be in the loaded pedigree first (issue \#148).
+
+**Minor**
+
+- New `checkMhcHaplotypeFile()` validates a file of MHC haplotype
+  designations -- two named haplotypes per animal, one row per animal,
+  like the bundled `rhesusGenotypes` example data. Designations are
+  taken exactly as written (a trailing `?` marks a provisional call).
+  The MHC haplotype frequency and rare-haplotype reports read files in
+  this same format (issue \#148).
+- New `obfuscateMhcHaplotypes()` replaces the animal ids in a haplotype
+  carrier list with the same aliases used to de-identify the pedigree,
+  so a shared report never reveals which real animals carry a rare
+  haplotype. Haplotype names are left exactly as written; an id the
+  de-identification never covered stops with an error rather than
+  slipping through (issue \#148).
 - The MHC haplotype summary's frequency column now shows four decimal
   places on screen instead of long full-precision numbers; downloaded
   files keep the exact values (issue \#148).
 
 ## Cross-Center Identity Matching
 
+**Major**
+
 - New `resolveCrossCenterIds()` merges pedigree records for the same
   animals held by two different centers, using a curator-confirmed
   id-matching table. Merging preserves every one of an animal's own data
   columns (issue \#149).
-- New `checkCrossCenterMapping()` reports every problem with a
-  cross-center id-matching table at once, instead of stopping at the
-  first one found (issue \#149).
 - New **Cross-Center Identity** tab: walks a curator through matching
   and merging records from two centers, with a preview and downloadable
   results behind a confirmation step (issue \#149).
 
+**Minor**
+
+- New `checkCrossCenterMapping()` reports every problem with a
+  cross-center id-matching table at once, instead of stopping at the
+  first one found (issue \#149).
+
 ## Genetic Value Analysis
+
+**Major**
 
 - Fixed: unchecking "Display Unknown IDs" in the Pedigree Browser no
   longer stops the Genetic Value Analysis with a "logic error". The box
@@ -255,6 +282,9 @@ R. Mark Sharp, Ph.D.
   existing combined kinship/uniqueness score (issue \#125). Script
   users: `reportGV()` gained matching
   `guCutoff`/`zScoreCutoff`/`axisPriority` arguments.
+
+**Minor**
+
 - The Genetic Value Analysis Summary Statistics table gained
   **Skewness** and **Kurtosis** columns, describing the shape of the
   genetic-value distribution (issue \#126). Script users: new
@@ -265,22 +295,13 @@ R. Mark Sharp, Ph.D.
 
 ## Breeding Group Formation
 
+**Major**
+
 - The Breeding Group Formation tab shows several candidate groupings per
   run, with a selector and comparison table (issue \#125). A
   **Candidates to retain** control sets how many are kept (default 5,
   from 1 to 50). Script users: `groupAddAssign()` returns a `candidates`
   field and takes a matching `maxCandidates` argument (issue \#146).
-- The Breeding Group Formation tab gained an **Include animals by**
-  control: an alternative genetic-value-floor option alongside the
-  existing top-N cutoff (issue \#128).
-- The Breeding Group Formation tab gained an **Exhaustive enumeration
-  mode** checkbox: instead of sampling, it lists every maximal group of
-  animals that can be housed together, for the simplest case only (one
-  group, no harem, no custom sex ratio). It stops with a message when
-  more than 20 candidate animals are eligible, and it returns what it
-  has found after 10 seconds. Script users: `groupAddAssign()` gained
-  matching `exhaustive`, `maxExhaustiveCandidates` and
-  `exhaustiveTimeLimit` arguments (issue \#146).
 - The Breeding Group Formation tab can follow your center's ancestry
   rules (issue \#168). Describe your ancestry compatibility policy in a
   simple rules file -- each line names two ancestry groups (for example
@@ -291,16 +312,6 @@ R. Mark Sharp, Ph.D.
   whatever their sexes and in every formation mode; pairs a "flag" rule
   names still form freely and are pointed out afterward. With no rules
   file, formation behaves exactly as before.
-- Ancestry Guardrails status and results: a status line always shows
-  what is loaded (for example "2 block, 2 flag rule(s)") and how many
-  animals no rule reaches, so a rule set that quietly covers too little
-  is visible at a glance. A problem in the file is reported as a notice
-  and ignored rather than stopping your run, and a pedigree without
-  ancestry information simply leaves the guardrails inactive, with the
-  status line saying so. A new **Ancestry** results tab lists every
-  within-group pairing your rules matched for the groups just formed,
-  alongside a coverage summary showing how many animals each ancestry
-  group holds and which ones no rule reaches.
 - Ancestry Guardrails overrides and audit record: when professional
   judgment says a block rule should not apply -- say, an approved
   founder import -- you can override that one rule for your session
@@ -313,6 +324,30 @@ R. Mark Sharp, Ph.D.
   the documentation: in harem formation the automatically chosen sire
   himself is not checked against the rules (his groupmates are checked
   against each other).
+
+**Minor**
+
+- The Breeding Group Formation tab gained an **Include animals by**
+  control: an alternative genetic-value-floor option alongside the
+  existing top-N cutoff (issue \#128).
+- The Breeding Group Formation tab gained an **Exhaustive enumeration
+  mode** checkbox: instead of sampling, it lists every maximal group of
+  animals that can be housed together, for the simplest case only (one
+  group, no harem, no custom sex ratio). It stops with a message when
+  more than 20 candidate animals are eligible, and it returns what it
+  has found after 10 seconds. Script users: `groupAddAssign()` gained
+  matching `exhaustive`, `maxExhaustiveCandidates` and
+  `exhaustiveTimeLimit` arguments (issue \#146).
+- Ancestry Guardrails status and results: a status line always shows
+  what is loaded (for example "2 block, 2 flag rule(s)") and how many
+  animals no rule reaches, so a rule set that quietly covers too little
+  is visible at a glance. A problem in the file is reported as a notice
+  and ignored rather than stopping your run, and a pedigree without
+  ancestry information simply leaves the guardrails inactive, with the
+  status line saying so. A new **Ancestry** results tab lists every
+  within-group pairing your rules matched for the groups just formed,
+  alongside a coverage summary showing how many animals each ancestry
+  group holds and which ones no rule reaches.
 - Ancestry Guardrails for script users: `readAncestryRules()` and
   `checkAncestryRules()` read and validate the rules file,
   `groupAddAssign()` takes a matching optional `ancestryRules` argument,
@@ -323,11 +358,10 @@ R. Mark Sharp, Ph.D.
 
 ## Mate Pair Analysis
 
-- New `reportMatePairs()` reports individual mate-pair candidates with
-  their relatedness and genetic-value context. Report-only (issue
-  \#151).
+**Major**
+
 - New **Mate Pair Analysis** tab: a curator view built on the report
-  above, kept separate from Breeding Group Formation (issue \#151).
+  below, kept separate from Breeding Group Formation (issue \#151).
 - Mate pair reports can follow your center's ancestry rules (issue
   \#169). Load the rules file on the Breeding Groups tab and the **Mate
   Pair Analysis** tab uses it too: a pair a "block" rule names moves to
@@ -348,18 +382,31 @@ R. Mark Sharp, Ph.D.
   `overriddenRules` arguments. Without rules, or when the pedigree has
   no ancestry column, the report and the tab are exactly as before.
 
+**Minor**
+
+- New `reportMatePairs()` reports individual mate-pair candidates with
+  their relatedness and genetic-value context. Report-only (issue
+  \#151).
+
 ## De-Identified Export
 
-- `obfuscatePed()` gained a **linkedDateShift** argument (default
-  `TRUE`): shifts all of one animal's dates by the same offset when
-  de-identifying, so the gaps between its own dates stay realistic
-  instead of possibly ending up out of order (issue \#150).
+**Major**
+
 - New **De-Identified Export** tab: a curator workflow with a preview
   generated on request and 3 downloadable files (the de-identified
   pedigree, a record of what was changed, and a private key to
   re-identify records later) behind a confirmation step (issue \#150).
 
+**Minor**
+
+- `obfuscatePed()` gained a **linkedDateShift** argument (default
+  `TRUE`): shifts all of one animal's dates by the same offset when
+  de-identifying, so the gaps between its own dates stay realistic
+  instead of possibly ending up out of order (issue \#150).
+
 ## Longitudinal Monitoring
+
+**Major**
 
 - Colony managers can now keep a running history file of dated colony
   snapshots -- one row of colony-level genetic-health values per
@@ -369,6 +416,18 @@ R. Mark Sharp, Ph.D.
   users: new `readSnapshotHistory()`, `checkSnapshotHistory()`, and
   `appendColonySnapshot()` read, validate, and extend the history; a
   worked example history ships with the package.
+- Colony managers can now see genetic-health trends directly in the app:
+  a new **Genetic-Health Trends** tab lets you upload a snapshot history
+  (or start a new one), record a new dated snapshot from the genetic
+  value analysis you just ran, view the trend plot for every recorded
+  value, and compare any two dates side by side. Both the plot and the
+  comparison point out when snapshots were recorded under different
+  settings or software versions, so a jump in the numbers is not
+  mistaken for a real change in the colony. Updated histories and
+  comparison tables can be downloaded for record-keeping (issue \#167).
+
+**Minor**
+
 - Colony managers can now record a snapshot directly from a finished
   genetic value analysis with the new `createColonySnapshot()` function:
   it captures the analysis's colony-level results and the population's
@@ -388,17 +447,51 @@ R. Mark Sharp, Ph.D.
   recorded under different settings or software versions, so a jump in
   the numbers is not mistaken for a real change in the colony (issue
   \#167).
-- Colony managers can now see genetic-health trends directly in the app:
-  a new **Genetic-Health Trends** tab lets you upload a snapshot history
-  (or start a new one), record a new dated snapshot from the genetic
-  value analysis you just ran, view the trend plot for every recorded
-  value, and compare any two dates side by side. Both the plot and the
-  comparison point out when snapshots were recorded under different
-  settings or software versions, so a jump in the numbers is not
-  mistaken for a real change in the colony. Updated histories and
-  comparison tables can be downloaded for record-keeping (issue \#167).
 
 ## General Fixes
+
+**Major**
+
+- Fixed: a real animal whose id happens to start with a capital U (such
+  as `U1`, `U123` or `Uma`) was mistaken for one of those stand-ins, so
+  it was left out of the founder and breeder counts, hidden when
+  "Display Unknown IDs" was turned off, and its offspring were shown as
+  having an unknown parent. Only ids shaped like a stand-in -- a U
+  followed by at least four capital letters or digits, such as `U0001`
+  -- are now treated that way.
+- New `placeholder` column: the pedigree check adds a yes/no
+  `placeholder` column recording which animals are stand-ins. A center
+  can enter `FALSE` for a real animal whose id looks like a stand-in
+  (such as `U1234`) and it is kept as a real animal, including in
+  Potential Parents, the Pedigree Browser's "Display Unknown IDs" box,
+  the genetic value report's founder counts and parentage labels, and
+  the breeder counts behind the effective population size; a value other
+  than TRUE, FALSE, 1, 0 or blank stops the check and names the rows.
+  The column is kept in the files you download from the app, so the
+  marks survive a save and re-upload. The de-identified export gives a
+  real animal whose id looks like a stand-in an alias that still reads
+  as a real animal, and linking one animal across two centers keeps its
+  mark (the real record wins if the centers disagree).
+- Changed: Potential Parents (`getPotentialParents()`) now lists
+  candidates only for the parent that is missing. An animal with a
+  recorded dam and no recorded sire gets candidate sires and a blank dam
+  column, and the reverse for a recorded sire. Before, the recorded dam
+  was always ruled out of her own animal's list, so those dam lists were
+  never useful.
+- Fixed: the pedigree check reported a sire or dam whose sex was blank,
+  misspelled, or had an extra space (such as `"M "`) as a "female sire"
+  or "male dam", and stopped the upload. Spaces around a sex code are
+  now ignored, and a blank or unreadable sex is read as unknown, the
+  same as a missing one.
+- Fixed: the Shiny app read an empty cell in an uploaded CSV or text
+  file as a value rather than as missing, unlike Excel uploads and
+  `getPedigree()`. A file whose founders had blank sire and dam cells
+  would not load, a blank ancestry was counted as OTHER instead of
+  UNKNOWN, and the Genetic Value report ranked a founder with a blank
+  origin as an import instead of "Undetermined". An empty cell is now
+  read as missing, so the app gives the same results as a script.
+
+**Minor**
 
 - Fixed: the sort order in a few tables (the Genetic Value Analysis
   tiers, the main pedigree table, and the Breeding Group member table)
@@ -444,49 +537,11 @@ R. Mark Sharp, Ph.D.
   animals shared it. The check, and `addUIds()`, now skip any id already
   in the pedigree, including an id that appears only as a sire or dam
   and has no row of its own.
-- Fixed: a real animal whose id happens to start with a capital U (such
-  as `U1`, `U123` or `Uma`) was mistaken for one of those stand-ins, so
-  it was left out of the founder and breeder counts, hidden when
-  "Display Unknown IDs" was turned off, and its offspring were shown as
-  having an unknown parent. Only ids shaped like a stand-in -- a U
-  followed by at least four capital letters or digits, such as `U0001`
-  -- are now treated that way.
-- New `placeholder` column: the pedigree check adds a yes/no
-  `placeholder` column recording which animals are stand-ins. A center
-  can enter `FALSE` for a real animal whose id looks like a stand-in
-  (such as `U1234`) and it is kept as a real animal, including in
-  Potential Parents, the Pedigree Browser's "Display Unknown IDs" box,
-  the genetic value report's founder counts and parentage labels, and
-  the breeder counts behind the effective population size; a value other
-  than TRUE, FALSE, 1, 0 or blank stops the check and names the rows.
-  The column is kept in the files you download from the app, so the
-  marks survive a save and re-upload. The de-identified export gives a
-  real animal whose id looks like a stand-in an alias that still reads
-  as a real animal, and linking one animal across two centers keeps its
-  mark (the real record wins if the centers disagree).
 - Fixed: Potential Parents (`getPotentialParents()`) rules out as a
   possible dam any female who gave birth to another animal too close in
   time to have also carried this one. When no female nearby was a proven
   breeder, it fell back to listing every female old enough to be the dam
   and let such a female back in. The fallback now leaves her out too.
-- Changed: Potential Parents (`getPotentialParents()`) now lists
-  candidates only for the parent that is missing. An animal with a
-  recorded dam and no recorded sire gets candidate sires and a blank dam
-  column, and the reverse for a recorded sire. Before, the recorded dam
-  was always ruled out of her own animal's list, so those dam lists were
-  never useful.
-- Fixed: the pedigree check reported a sire or dam whose sex was blank,
-  misspelled, or had an extra space (such as `"M "`) as a "female sire"
-  or "male dam", and stopped the upload. Spaces around a sex code are
-  now ignored, and a blank or unreadable sex is read as unknown, the
-  same as a missing one.
-- Fixed: the Shiny app read an empty cell in an uploaded CSV or text
-  file as a value rather than as missing, unlike Excel uploads and
-  `getPedigree()`. A file whose founders had blank sire and dam cells
-  would not load, a blank ancestry was counted as OTHER instead of
-  UNKNOWN, and the Genetic Value report ranked a founder with a blank
-  origin as an import instead of "Undetermined". An empty cell is now
-  read as missing, so the app gives the same results as a script.
 
 # nprcgenekeepr 2.0.0 (20260721)
 

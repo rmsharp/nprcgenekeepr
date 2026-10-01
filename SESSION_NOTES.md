@@ -99,10 +99,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 849 Did
-**Deliverable:** label the `NEWS.Rmd` dev-block bullets as a Major list then a Minor list per section (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Sorting to be proposed to the owner before any edit.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress).
+**Deliverable, DONE:** labeled the `NEWS.Rmd` dev block: every section now has a bold **Major** list then a bold **Minor** list. Docs only, so no TDD phase applies. Claim `8415e4fab`; edits in the close-out commit.
+**How:** the owner chose the format (two lists), delayed the brevity pass, and approved my sorting table ("go"). A script moved bullets whole; no wording changed except three "above" references that became "below" (Marker Genetics x2, Mate Pair).
+**Verified by me:** 75 bullets before and after; 11 Major and 11 Minor labels in `NEWS.md`; `test_newsReleaseState.R` and `test_wordlist_coverage.R` pass after re-render.
+**Not verified:** full suite and lint not run (no `.R` changed).
+**Reduction:** removed the S846 evaluation and record.
+
+**Self-assessment: 8/10.** + Proposed first, applied only after "go"; found the directional-wording trap before the owner did. - A BSD `sed -i` failure went unnoticed for one step (caught by a count check).
+
+**Next steps:** (A) Brevity pass on `NEWS.Rmd`, to follow the owner's comparison with the draft; the guard test pins wording in the Diagram and Ancestry entries, so add checks first. (B) Slice 7b docs audit (READY, Effort L). (C) Master is 20 ahead of origin after this commit (18 at last close-out, plus claim and close-out); push only on the owner's say-so.
+
+**Key files:** `NEWS.Rmd:14-470` (Major/Minor lists), `tests/testthat/test_newsReleaseState.R:96-163` (parser reads `## ` and `- ` only).
+
+**Gotchas:** on macOS use Python, not `sed -i`, for in-place edits. New bullets go under the right Major or Minor label. Re-render `NEWS.md`, then run the guard test.
+
+### Session 848 Handoff Evaluation (by Session 849)
+**Score: 9/10.** **Helped:** the next steps and the note that the Breeding Group and Mate Pair splitting was the owner's call. **Missing:** nothing found. **Wrong:** nothing found. **ROI:** high.
 
 ### What Session 848 Did
 **Deliverable, DONE:** made `NEWS.Rmd` complete and accurate before the owner compares it with `suggested_NEWS_entry.md`. Docs only, so no TDD phase applies. Claim `82a5dc655`; edits in the close-out commit.
@@ -147,27 +159,6 @@ plus the claim and close-out); push only on the owner's say-so.
 
 **Gotchas:** `test_newsReleaseState.R` pins wording: the male-left bullet needs "male parent on the left"; the duplicate bullet needs "duplicate node" and "bundled" with the measured count; any bullet
 about mating-symbol placement may not contain "every", "all", "always" or "each <word>". Re-render `NEWS.md` after the text, then run the test. Do NOT use `echo ====` in the Bash tool (zsh).
-
-### Session 846 Handoff Evaluation (by Session 847)
-**Score: 9/10.** The audit ids, line range and (A)-(D) options were exact; the untracked-file question and the "13 ahead" count held (14 at Orient, one close-out commit later). **Helped:** the NA2-NA4
-table with fix verdicts and the "re-render last" gotcha. **Missing:** the guard test's phrase-pinned checks (cost four failing assertions). **Wrong:** nothing found. **ROI:** high.
-
-### What Session 846 Did
-**Deliverable, DONE:** fixed the slice-7a `NEWS.Rmd` audit findings, in three owner-reviewed rounds, then re-rendered `NEWS.md`. Docs only, so no TDD phase applies.
-**Commits:** claim `40a1e529f`; fixes and re-render `54130dfe1`; records in the close-out commit.
-**Fixed:** NC1-NC5, NB1-NB4, NB6, ND1-ND3, NA1. Owner choices: the 2.0.0 heading date is 20260721 (the tag date); the `## Package` section removed; the YAML `date` line dropped; NC6 left as "Changed:"; NC5 split but not trimmed; the NB6 status-line example has no count.
-**Verified by me:** NB2 against `R/groupAddAssign.R` (pool ceiling 20 stops, 10 s limit truncates) and the status-line format; `test_newsReleaseState.R` passes; `NEWS.md` has none of the deleted wording.
-**Not done:** NA2-NA4 (Pedigree Diagram condense, its own staged pass); NB5/NB7 were dropped by S845. Lint not run (no `.R` changed); full suite not run.
-**NEWS.Rmd:** this was the deliverable. **Reduction:** removed the S843 evaluation and record, and the resolved BACKLOG `## Package` item.
-
-**Self-assessment: 9/10.** + One deliverable; each round showed the change and waited; NB2 checked in code before wording. - Slips: two Edit anchors mistyped, a rewrap left over-long lines twice (caught by `awk`).
-
-**Next steps:** (A) condense the Pedigree Diagram section, NA2-NA4, in its own staged pass (READY, Effort M). (B) Slice 7b: audit the internal docs (`docs/`, `ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`), READY, Effort L. (C) Owner decisions on the audit
-code candidates. (D) The owner's untracked `suggested_NEWS_entry.md`: commit, move or drop? Master was 13 commits ahead of origin when close-out began (counted); push only on the owner's say-so.
-
-**Key files:** `NEWS.Rmd:21-195` (Diagram section, NA2-NA4), `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`, `tests/testthat/test_newsReleaseState.R`, `R/appServer.R:114` (lead: comment says CRAN archived 2.0.0).
-
-**Gotchas:** after any `NEWS.Rmd` change run `rmarkdown::render("NEWS.Rmd")` last, then the guard test. Check wraps with `awk 'length($0)>80'`. Same roxygen gotchas apply if code changes. Keep `SESSION_NOTES.md` lines at or under 280 B.
 
 ### Session 842 Handoff Evaluation (by Session 843)
 **Score: 8/10.** Orient measurements held: both ledger frontiers were at HEAD, the untracked file was the one it named, and the next-step recipe was exact. **What helped:** the explicit ordered options (A)-(C) and the "do not ask about

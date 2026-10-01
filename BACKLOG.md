@@ -110,7 +110,7 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       judged the draft idea by idea (`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`: 8
       adopt, 5 modify, 1 reject). S848 brought `NEWS.Rmd` up to date first (nine post-2.0.0
       exports it never named are now covered; display cap, default style, parity wording checked),
-      so the comparison starts from a complete file. Still open for the owner: split the long
+      so the comparison starts from a complete file; S849 then split each section into Major and Minor lists. A brevity pass follows your comparison. Still open for the owner: split the long
       Breeding Group and Mate Pair paragraphs into bullets (review S7/S8, restore the harem-sire
       caveat, fix the draft's `candidates` mislabel); use the draft as the 3.0.0 release-note
       template (add default style, display cap, twin consistency, the bug-fix list); decide

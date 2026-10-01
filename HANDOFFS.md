@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S849
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: label NEWS.Rmd dev-block bullets Major/Minor (Major list then Minor list per section), owner approves sorting first; brevity pass later
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- labeled the NEWS.Rmd dev block with a Major list then a Minor list in each of 11 sections, sorting approved by the owner first. Docs only, no TDD phase. Brevity pass deliberately not done.
+what_was_done: claim 8415e4fab; close-out commit. Moved 75 bullets whole (wording unchanged), fixed three "above" references to "below", re-rendered NEWS.md, guard and wordlist tests pass.
+next_steps: (A) Brevity pass after the owner's comparison with suggested_NEWS_entry.md; add guard checks first because the Diagram and Ancestry wording is pinned. (B) Slice 7b internal-docs audit, READY, Effort L. Push only on the owner's say-so; master is 20 ahead after this commit.
+key_files: NEWS.Rmd:14-470, tests/testthat/test_newsReleaseState.R:96-163 (parser reads "## " and "- " only).
+gotchas: Use Python, not macOS sed -i, for in-place edits. New bullets go under the right Major or Minor label. Re-render NEWS.md after any edit, then run the guard test.
+runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run (no R/ change)
+changelog_ref: S849 close-out entry
+commit: the close-out commit that carries this receipt; claim 8415e4fab
 ```
 
 ```handoff
