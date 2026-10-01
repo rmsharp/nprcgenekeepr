@@ -9,9 +9,10 @@
 #' sequence-derived panels (issue #152): a soft, overridable warning above a
 #' sparse/GBS-scale panel-size ceiling, and an explicit rejection of a
 #' literal \code{"."} allele value (VCF's missing-genotype placeholder),
-#' rather than silently counting it as a real allele. Optionally
-#' cross-validates an accompanying locus-metadata sidecar by reusing
-#' \code{\link{checkLocusMetadata}}, rather than reinventing that check.
+#' rather than silently counting it as a real allele. Optionally validates
+#' the accompanying locus-metadata sidecar's own structure by reusing
+#' \code{\link{checkLocusMetadata}}, rather than reinventing that check; the
+#' sidecar is not cross-checked against the genotype's loci.
 #'
 #' @details
 #' All of \code{\link{checkMarkerGenotypeFile}}'s structural checks are

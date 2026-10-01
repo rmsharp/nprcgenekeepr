@@ -30,9 +30,10 @@
 #' above -- which divides by zero whenever an individual has no heterozygous
 #' loci at all.
 #'
-#' When neither individual in a pair has a shared heterozygous locus (the
-#' formula's denominator is zero), the pair's kinship is undefined; that
-#' pair's entry is \code{NA} and a warning names the pair.
+#' When at least one individual in a pair has no heterozygous locus among
+#' the loci genotyped in both (so \eqn{\min(N_{Aa}^{(i)}, N_{Aa}^{(j)}) = 0}
+#' and the formula's denominator is zero), the pair's kinship is undefined;
+#' that pair's entry is \code{NA} and a warning names the pair.
 #'
 #' @param genotypeMatrix a character matrix as returned by
 #' \code{\link{buildMarkerGenotypeMatrix}}: rows are individual \code{id}s,

@@ -5,14 +5,17 @@
 #'
 #' Checks to ensure the content and structure are appropriate for genotype
 #' data are in the dataframe and ready for the \code{geneDrop} function by
-#' already being mapped to integers and placed in columns named \code{first}
-#' and \code{second}. These checks are simply based on expected columns
-#' and legal domains.
+#' already being mapped to numbers (integer codes are expected, but any numeric
+#' value passes) and placed in columns named \code{first} and \code{second}. Only the \code{id} column is matched loosely (any
+#' column whose lower-cased name contains \code{"id"}). The allele columns
+#' must be named exactly \code{first} and \code{second} and be numeric; no
+#' check is made of the values' range, so negative, missing or very large
+#' numbers still give \code{TRUE}.
 #'
 #' @param genotype dataframe with genotype data
 #' @return A logical value representing whether or not the data.frame passed in
-#' contains genotypic data that can be used. Non-standard column names are
-#' accepted for this assessment.
+#' contains genotypic data that can be used. Columns named \code{First} or
+#' \code{Second} (other cases) give \code{FALSE}.
 #'
 #' @importFrom stringi stri_detect_fixed
 #' @export
