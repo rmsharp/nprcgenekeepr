@@ -5,6 +5,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
+- [ ] **Trim `CLAUDE.md` out of the warn band: move the "Additional close-out checks" checklists to `docs/CLOSEOUT_CHECKLISTS.md`** (READY, Effort M;
+      owner-directed S828) -- `CLAUDE.md` is 26,731 B against a 24,000 B warn line (ceiling 34,000 B); that section is 9.3 KB of it. Do this one
+      step only, in its own session: move the ~15 close-out checklist paragraphs (citation, tutorial/article docs, NEWS.Rmd, `a2interactive`,
+      lint, `_pkgdown.yml`, GitHub issue close, CI-break tracking, BACKLOG completed-item removal, `methodology_trim.py` local customization,
+      CHANGELOG legacy forms, the archive fence-scanner note) verbatim into the new doc, leave one line each in `CLAUDE.md` (trigger + link),
+      and make the Phase 3 close-out wording in `CLAUDE.md` say to read the new doc, so no session misses a checklist. Keep the
+      `budget:protected` fence on Project Overview; confirm with `python3 context_budget.py` that `CLAUDE.md` is under 24,000 B and nothing grows.
+      Not part of this item: the Phase 0 detail move, replacing hand-kept counts, and deleting the Build/Test/Verify repeats (steps 2-4 of the
+      S828 trim plan; separate items if wanted). Docs only, no TDD gate.
+
 - [ ] **Reword the "supports five groups of functions" text in `DESCRIPTION` and the `_pkgdown.yml` home description** (READY, Effort S;
       from docs audit finding BB14, S828) -- both say the application "supports five groups of functions" (QC, pedigree creation from LabKey,
       age-sex pyramid, genetic value reports, breeding groups), but `R/appUI.R` has 14 analysis tabs (plus ORIP Reporting at ONPRC). Change

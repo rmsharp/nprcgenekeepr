@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S828 follow-up 2 (owner-directed): added a `BACKLOG.md` Up Next item to trim `CLAUDE.md` by moving the close-out checklists to `docs/CLOSEOUT_CHECKLISTS.md` (step 1 only). No code or docs changed.
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S828 follow-up (owner-directed): added a `BACKLOG.md` Up Next item to reword the "five groups of functions" text in `DESCRIPTION` and `_pkgdown.yml` together (docs audit finding BB14). No code or docs changed.
 - **Model:** Claude Sonnet 5.5.
 
