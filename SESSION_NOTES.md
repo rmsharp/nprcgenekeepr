@@ -99,10 +99,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 847 Did
-**Deliverable:** condense the `NEWS.Rmd` Pedigree Diagram section (S845 audit NA2-NA4), in rounds the owner accepts or changes (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning. Docs only, so no TDD phase applies.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** rewrote the `NEWS.Rmd` "Pedigree Diagram" section (S845 audit NA2-NA4) as a new feature described against kinship2, then re-rendered `NEWS.md`. Docs only, so no TDD phase applies.
+**Commits:** claim `de5191418`; the rewrite, BACKLOG item and records in the close-out commit.
+**How:** the owner rejected my first plan (merge bullets) and redirected to "a new feature that provides most of kinship2's drawing conventions and adds ...". About 40 bullets became 13; no issue numbers, no before/after figures, no "now"/"no longer".
+**Verified by me:** no deceased marker exists and `affected` is one logical column (`R/makePedigreeDiagramData.R:73-85`), so the text says "most of" and names both gaps. Re-ran
+`makePedigreeMatingLayout()` on `obfuscated_rhesus_mhc_ped.csv`: 113 individuals are drawn more than once (170 duplicate markers). `test_newsReleaseState.R` and `test_wordlist_coverage.R` pass.
+**Not verified:** the kinship2-parity wording rests on the fidelity article's own scope (same individuals and relationships, layouts not identical); I did not re-run that comparison. Full suite and
+lint not run (no `.R` changed). The PNG-export bullet rests on `R/modPedigree.R:715-720`, not a run of the app.
+**BACKLOG:** added "Two kinship2 drawing features the Diagram tab still lacks" (deceased marker; several affected conditions; DECISION NEEDED, Effort M each). Slice-7a entry updated.
+**NEWS.Rmd:** this was the deliverable. **Reduction:** removed the S844 evaluation and record.
+
+**Self-assessment: 8/10.** + One deliverable; the 113 and the two gaps were checked first-hand; each step showed the change and waited. - My first plan merged bullets, the wrong altitude (the owner
+had to redirect); I drafted before reading the guard test's phrase-pinned checks, so it failed 4 ways until I reworded.
+
+**Next steps:** (A) slice 7b: audit the internal docs (`docs/`, `ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`), READY, Effort L. (B) Owner decisions on the audit code candidates and on the two new Diagram
+features. (C) The untracked `suggested_NEWS_entry.md` (dated 2026-09-25): commit, move or drop? Asked at Orient; not answered. (D) Master is 16 ahead of origin with this close-out commit (14 at Orient
+plus the claim and close-out); push only on the owner's say-so.
+
+**Key files:** `NEWS.Rmd:16-105` (new section), `tests/testthat/test_newsReleaseState.R:197-200, 515-600` (phrase checks), `BACKLOG.md` (new Diagram-gaps item), `vignettes/articles/kinship2-fidelity-validation.qmd:151-166` (what "matches" means).
+
+**Gotchas:** `test_newsReleaseState.R` pins wording: the male-left bullet needs "male parent on the left"; the duplicate bullet needs "duplicate node" and "bundled" with the measured count; any bullet
+about mating-symbol placement may not contain "every", "all", "always" or "each <word>". Re-render `NEWS.md` after the text, then run the test. Do NOT use `echo ====` in the Bash tool (zsh).
+
+### Session 846 Handoff Evaluation (by Session 847)
+**Score: 9/10.** The audit ids, line range and (A)-(D) options were exact; the untracked-file question and the "13 ahead" count held (14 at Orient, one close-out commit later). **Helped:** the NA2-NA4
+table with fix verdicts and the "re-render last" gotcha. **Missing:** the guard test's phrase-pinned checks (cost four failing assertions). **Wrong:** nothing found. **ROI:** high.
 
 ### What Session 846 Did
 **Deliverable, DONE:** fixed the slice-7a `NEWS.Rmd` audit findings, in three owner-reviewed rounds, then re-rendered `NEWS.md`. Docs only, so no TDD phase applies.
@@ -142,28 +163,6 @@ only on the owner's say-so.
 **Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`, `NEWS.Rmd:462-468` and `:545-550` (NC1, NC2), `NEWS.Rmd:311-314` (NB4), `NEWS.Rmd:732-734` (ND3), `R/appServer.R:114` (lead: comment says CRAN archived 2.0.0).
 
 **Gotchas:** NEWS.md must be re-rendered after, not before, the text fixes. Dev-section edits must follow the release-state rule: state the end state against 2.0.0. Same S837-S844 roxygen gotchas apply if code changes. Keep `SESSION_NOTES.md` lines at or under 280 B.
-
-### Session 844 Handoff Evaluation (by Session 845)
-**Score: 9/10.** Orient measurements held: ledger and receipt frontiers at HEAD, one untracked file, CI green. **Helped:** the ordered options (A)-(C) and BACKLOG:197 pointer to slice 7. **Wrong:** "8 commits ahead" was 9 at Orient (the count was
-taken before the close-out commit). **Missing:** nothing that cost time. **ROI:** high.
-
-### What Session 844 Did
-**Deliverable, DONE:** fixed all 95 slice-6e docs-staleness findings (26 moderate, 69 minor; RE-RL ids) in `R/*.R` roxygen, 67 files, then `devtools::document()`. Docs only, no function body or signature changed, so no TDD phase applies.
-**Commits:** claim `56668e779`; fixes `54c2f64e5` (RE+RF), `ff8f3c941` (RG+RH), `52335a523` (RI+RJ), `9c650237f` (RK+RL), each with its regenerated `man/` pages; records in the close-out commit.
-**How:** four subagents, one per pair of audit sets, edited disjoint files. Each re-read the source before writing a claim and ran changed examples. Every finding still held; none was skipped.
-**Verified by me:** every changed line in `R/` begins with `#'` (diff check); `lint_package()` 0; `test_wordlist_coverage.R` passes; `devtools::check(--no-tests)` 0 errors, 0 warnings, 1 note (untracked `suggested_NEWS_entry.md`).
-**Not verified:** the full test suite was not run (roxygen only). The wording of the 95 fixes rests on the agents' source reads, and I did not re-read each one.
-**NEWS.Rmd:** none. **Reduction:** removed the S805 evaluation and S806 record (in git and receipts).
-**Slips caught:** the wordlist test flagged 5 words (`jpeg`, `jpg`, `ohsu`, `primeuat`, `unmapped`); reworded or put in `\code{}`, not added to `inst/WORDLIST`. One reword broke the 80-column lint, fixed. A zsh 1-indexed array mislabeled commits; reset and redone before any push.
-
-**Self-assessment: 8/10.** + One deliverable; parallel agents on disjoint files; code-untouched check, lint, wordlist and check all run. - Per-finding wording not re-read by me; the zsh array slip cost a redo.
-
-**Next steps:** (A) owner decisions on the audit code candidates: 46 slice-6e (CE-CL), 22 slice-6d, 8 slice-6c, older PB/PA/PD/MC/MB; reword the docs if the code changes. (B) Docs-audit slice 7: `NEWS.Rmd`, then the internal docs (READY, Effort L).
-(C) Master is 8 commits ahead of origin (counted this session); push only on the owner's say-so.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`, `BACKLOG.md:197`, `R/makeGroupNum.R` (still says `numGp` "Default is 1"), `R/fillGroupMembersWithSexRatio.R:37` and `R/groupAddAssign.R:128` (examples still pass deprecated `minParentAge`).
-
-**Gotchas:** zsh arrays are 1-indexed, so a `${M[$i]}` loop from 0 mislabels. Same S837-S843 roxygen gotchas (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; reword rather than extend `inst/WORDLIST`; keep `SESSION_NOTES.md` lines at or under 280 B).
 
 ### Session 842 Handoff Evaluation (by Session 843)
 **Score: 8/10.** Orient measurements held: both ledger frontiers were at HEAD, the untracked file was the one it named, and the next-step recipe was exact. **What helped:** the explicit ordered options (A)-(C) and the "do not ask about

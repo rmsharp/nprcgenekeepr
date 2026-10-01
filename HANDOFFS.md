@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S847
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: condense the NEWS.Rmd Pedigree Diagram section (S845 audit NA2-NA4), owner-reviewed in rounds
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: rewrote the NEWS.Rmd Pedigree Diagram section (S845 audit NA2-NA4) as a new feature described against kinship2; NEWS.md re-rendered; docs only
+what_was_done: Claim de5191418; rewrite, BACKLOG item (deceased marker, several affected conditions) and records in the close-out commit. About 40 bullets to 13, no issue numbers. Measured 113 individuals drawn more than once on the 375-animal example (170 markers). Guard and wordlist tests pass
+next_steps: Slice 7b internal-docs audit (READY, Effort L); or owner decisions on audit code candidates and the two Diagram feature gaps; owner to decide on untracked suggested_NEWS_entry.md. Master 16 ahead of origin, push only on the owner's say-so
+key_files: NEWS.Rmd:16-105; tests/testthat/test_newsReleaseState.R:197-200,515-600; BACKLOG.md (Diagram-gaps item); vignettes/articles/kinship2-fidelity-validation.qmd:151-166
+gotchas: test_newsReleaseState.R pins wording (male parent on the left; duplicate node + bundled + count; no every/all/always/each in placement bullets). Re-render NEWS.md after the text, then run the test. Kinship2-parity wording rests on the fidelity article scope, not a re-run
 ```
 
 ```handoff

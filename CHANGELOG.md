@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · [ad hoc] S847 close-out: rewrote the `NEWS.Rmd` Pedigree Diagram section (S845 audit NA2-NA4) as a new feature described against kinship2, about 40 bullets to 13, `NEWS.md` re-rendered; added a BACKLOG item for the two kinship2 features the Diagram lacks (deceased marker, several affected conditions). Claim `de5191418`. Docs only.
+
 ### 2026-10-01 · [ad hoc] S847 claim: condense the Pedigree Diagram section of `NEWS.Rmd` (S845 audit findings NA2-NA4), owner-reviewed in rounds (in progress).
 
 ### 2026-10-01 · [ad hoc] S846 close-out: fixed the slice-7a `NEWS.Rmd` audit findings (NC1-NC5, NB1-NB4, NB6, ND1-ND3, NA1) in three owner-reviewed rounds; 2.0.0 heading date set to 20260721, `## Package` section and YAML date removed; `NEWS.md` re-rendered; guard test passes. Commit `54130dfe1`, claim `40a1e529f`. NA2-NA4 left for a staged pass. Removed the resolved BACKLOG `## Package` item. Docs only.
