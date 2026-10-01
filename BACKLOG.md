@@ -192,9 +192,8 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       regenerate by module); 12 images have no generator; `pb_unknown_displayed.png` is an orphan. **Slice 3 DONE S822** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md`): the 11 articles' prose has
       7 moderate and 22 minor stale claims, mostly hand-typed counts and one-line rule summaries (colony guide export count
       182 vs 233, "six" feature articles vs 7, Production and Undetermined descriptions; `genetic-value-analysis` tier 1;
-      `breeding-group-formation` `minAge`/`threshold`/`ignore`); no broken chunk, link or function name. **Open:** fix them
-      (READY, Effort M, docs-only, one session; the report's tables are the plan; roxygen for `orderReport` and `qcStudbook`
-      in the same pass). **Slice 4 next:** the 16 `manual_components/*.Rmd`, `a2interactive.Rmd`, README, `man/`, `NEWS.Rmd`,
+      `breeding-group-formation` `minAge`/`threshold`/`ignore`); no broken chunk, link or function name. **Fixed S823:** all 29
+      findings, plus the `orderReport`/`qcStudbook`/`hasInvalidIdChar` roxygen. **Slice 4 next:** the 16 `manual_components/*.Rmd`, `a2interactive.Rmd`, README, `man/`, `NEWS.Rmd`,
       `inst/extdata/ui_guidance/`, then the internal docs.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION

@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S823
 date: 2026-09-30
-status: pending
-active_task: fix the stale claims from docs audit slice 3 in the 11 articles plus orderReport and qcStudbook roxygen (docs only)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: fixed all 29 docs-audit slice-3 findings (7 moderate, 22 minor) in the 11 articles plus orderReport, qcStudbook and hasInvalidIdChar roxygen (docs only)
+what_was_done: Claim 02ee08477; roxygen 5d934ecc3; articles 0ca073234, 930cd1ca8, 2b42611a4; records in the close-out commit. Every wrong claim re-read against code before editing; export count now an inline computed value (233); line citations replaced by names. All 11 touched articles rendered with quarto against a scratch install; targeted tests and lintr pass. BACKLOG item updated.
+next_steps: Docs audit slice 4 (16 manual_components, a2interactive, README, man/, NEWS.Rmd, ui_guidance, then internal docs; read-only report). Still open: slice 2 capture-script tail failure then regenerate 31 stale screenshots; slice 1 leftovers (PDFs delete-or-ignore, trackC image, _pedigree_browser.Rmd:62-65, R/modPedigree.R:440-443); 7 untracked owner drafts (commit or drop?).
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md, R/orderReport.R:33-45, vignettes/articles/colony-manager-guide.qmd:134, BACKLOG.md:151-205
+gotchas: untracked owner draft vignettes/suggested_NEWS_entry.Rmd makes test_pkgdown_reference_config.R:107 fail locally (CI never sees it, not a regression); quarto render of articles needs the package installed (R CMD INSTALL -l scratch, R_LIBS); commits used --no-verify; master 14 ahead of origin, docs only, no CI owed.
 ```
 
 ```handoff

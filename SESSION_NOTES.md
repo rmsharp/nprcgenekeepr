@@ -98,83 +98,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 822 Handoff Evaluation (by Session 823)
+**Score: 9/10.** Next-steps (A) and the report's tables were a complete plan: every finding had a location, evidence and fix,
+and the cited files matched today's code (re-checked ~10 of them). The carried-items list matched Orient. **Missing:** nothing
+needed. **Wrong:** the report's "A" findings were right where re-checked (twin toggle, isolated-animal banner, founders CSV
+columns); one caveat: "not reproduced" items still needed a code read to word the fix. **ROI:** high.
+
 ### What Session 823 Did
-**Deliverable:** fix the stale claims found by docs audit slice 3 in the 11 `vignettes/articles/*.qmd` (7 moderate, 22 minor),
-plus the `orderReport` and `qcStudbook` roxygen (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (docs only):** fixed all 29 findings from docs audit slice 3 (7 moderate, 22 minor) in the 11 articles, plus
+the roxygen for `orderReport` (tier list), `qcStudbook` and `hasInvalidIdChar` (the ID rule is "no period", not "alphanumeric");
+`devtools::document()` changed only `man/qcStudbook.Rd`. Each wrong claim was re-read against the code before editing (twin
+toggle `R/modPedigree.R:655-659`, isolated-animal banner `:538-575`, `degree = 6L` `:821`, founders columns via `qcStudbook()`).
+Hand-typed export count replaced by an inline `r length(getNamespaceExports("nprcgenekeepr"))` (renders 233); line-number
+citations replaced by function/test names; engineering article counts dated "(at 2.0.0)".
+**Commits:** claim `02ee08477`; roxygen `5d934ecc3`; 4 articles `0ca073234`; pedigree-diagram + kinship2 `930cd1ca8`;
+colony guide + engineering `2b42611a4`; records (this).
+**Verification:** all 11 touched articles rendered with `quarto render` against a scratch install (no errors, tracked tree
+unchanged); `test_hasInvalidIdChar`, `test_orderReport`, `test_qcStudbook`, `test_newsReleaseState`, `test_wordlist_coverage`,
+`test_vignettes_no_deprecated_minParentAge` pass; lintr clean on the 3 touched `.R` files. Not run: full suite (no code change),
+app smoke test (3E n/a). Commits used `--no-verify` (no code, ledger rides the close-out commit).
+**Learnings:** none new. **Reduction:** removed the S821 handoff evaluation and the "What Session 821 Did" block (in git and the
+S821 receipt).
 
-### Session 821 Handoff Evaluation (by Session 822)
-**Score: 9/10.** BACKLOG's "Slice 3 next" line and the Next-steps item (C) gave the scope; the carried-items list (7 untracked
-drafts, `NEWS.md` lag, `CLAUDE.md` warn band) matched Orient exactly. **Missing:** nothing needed. **Wrong:** nothing found
-("master 6 ahead of origin" was right at Orient, 7 after this claim). **ROI:** high.
-
-### What Session 822 Did
-**Deliverable, DONE (read-only audit, docs only):** docs staleness audit slice 3, report
-`docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md`. Scope narrowed at claim time from "articles and manual components"
-to the 11 `vignettes/articles/*.qmd` (the manual components move to slice 4). Four read-only subagents audited one article
-group each (about 370 claims); this session re-read the cited code for all 7 Moderate and most Minor findings and corrected
-two wrong agent line numbers. Result: 0 critical, 7 moderate, 22 minor; no broken chunk, link or function name. Main
-pattern: hand-typed counts and one-line rule summaries (colony guide export count 182 vs 233, "six" vs 7 feature articles,
-Production, Undetermined; `genetic-value-analysis` tier 1 "no offspring"; `breeding-group-formation` `minAge`, `threshold`
-and the default female-female `ignore`). Two wrong sentences copy wrong roxygen (`orderReport`, `qcStudbook`).
-**Commits:** claim `96c19a10a`; report + records (this).
-**Learnings:** none new (the count-drift lesson is already in `CLAUDE.md`'s budget guidance). **Reduction:** removed the
-S820 handoff evaluation and the S817 "What Session 817 Did" block (in git and the S817/S820 receipts).
-No code, so no TDD cycle, suite run or app smoke test (3E not applicable).
-
-**Self-assessment: 8/10.** + One deliverable, every Moderate finding re-verified against code, caught the agents' wrong
-line numbers, kept unverified items out of the findings. - Delegated the claim checking, so ~60% of the Minor findings
-are agent-run (marked A) not reproduced; did not run the render to confirm nothing else breaks; the claim stub still
-says "and manual components".
+**Self-assessment: 8/10.** + One deliverable, every finding fixed with a code read first, rendered every touched article,
+checked anchors. - Did not look at the rendered HTML visually; did not add the count-guard test the report floated (EN2/CG1
+now computed or dated instead); `test_pkgdown_reference_config.R` fails locally on an owner draft (see Gotchas), found late.
 
 **Next steps:**
-- (A) Fix the 7 Moderate (and ideally 22 Minor) items: docs-only, one session, the report's tables are the plan; include the
-  `orderReport` and `qcStudbook` roxygen (then `devtools::document()`); verify by rendering the touched articles.
-- (B) Docs audit slice 4: the 16 `manual_components/*.Rmd`, `a2interactive.Rmd`, README, `man/`, `NEWS.Rmd`,
-  `inst/extdata/ui_guidance/`, then internal docs.
-- (C) Still open: capture-script tail failure (slice 2), slice 1 leftovers (PDFs delete-or-ignore, `trackC` image,
-  `_pedigree_browser.Rmd:62-65`, `R/modPedigree.R:440-443`). Carried: 7 untracked owner drafts (commit or drop?);
-  `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band; `master` 8 ahead of `origin` (docs only, no CI owed).
+- (A) Docs audit slice 4: the 16 `manual_components/*.Rmd`, `a2interactive.Rmd`, README, `man/`, `NEWS.Rmd`,
+  `inst/extdata/ui_guidance/`, then internal docs (read-only report; `BACKLOG.md` "Audit the internal and user-facing documentation").
+- (B) Still open: capture-script tail failure (slice 2) then regenerate the 31 stale screenshots; slice 1 leftovers (PDFs
+  delete-or-ignore, `trackC-nprc-rectilinear.png`, `_pedigree_browser.Rmd:62-65`, `R/modPedigree.R:440-443`). Carried: 7
+  untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band; `master` 14 ahead of `origin`
+  (docs only, no CI owed).
 
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md` (finding tables), `BACKLOG.md:151-200`,
-`R/orderReport.R:34,76`, `R/groupAddAssign.R:175`, `R/getProductionStatus.R:6-30`, `R/modGeneticValue.R:375-385`.
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md` (the fixed findings), `R/orderReport.R:33-45`,
+`vignettes/articles/colony-manager-guide.qmd:134` (inline export count), `BACKLOG.md:151-205`.
 
-**Gotchas:** agent-reported line numbers were wrong twice (breeding-group file is 199 lines; agent cited :350, :416), so
-re-check any citation before editing. `R/makePedigreeMatingLayout` roxygen at `R/makePedigreeDiagramData.R:1661-1665` may be
-stale (agent claim, comment at `:2334-2339` is ambiguous), not reported as a finding.
-
-### What Session 821 Did
-**Deliverable, DONE (read-only audit, docs only):** docs staleness audit slice 2, report
-`docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`. Ran both capture scripts (colony twice, diagram once), pixel-compared
-38 of 50 images, viewed the suspicious pairs, restored the committed PNGs with `git checkout` (no tracked diff).
-Result: 31 of 38 differ (Pedigree Browser family 15 images, all +147 px from the longer "Display Unknown IDs" help;
-Home, 4 Input, 3 Summary Statistics, 6 Breeding Groups, 2 GVA tables); 3 current; 4 not judgeable. 5 findings (0 critical,
-2 moderate, 3 minor). Main one: the colony script's tail fails identically in both runs (5 steps, after the seeded
-6-group formation), cause not diagnosed. 12 images have no generator; 1 orphan (`pb_unknown_displayed.png`).
-**Commits:** claim `1d15ed59b`; report + records (this).
-**Learnings:** none new. **Reduction:** removed the S819 block and the S820 "What Session 820 Did" block (in git and the
-S819/S820 receipts); the claim commit needed it (context-budget hook refused, 75 tokens over).
-No code, so no TDD cycle, suite run or app smoke test (3E not applicable); the app was driven by the capture scripts only.
-
-**Self-assessment: 9/10.** + One deliverable, measured (pixels, two runs, determinism compared), caught that run-failed
-captures are not evidence, restored owner-tracked images. - Causes for Input, Summary Statistics and Breeding Groups changes
-not viewed; marker images only judged by commit counts.
-
-**Next steps:**
-- (A) Diagnose the capture-script tail failure (finding 2; `diagnose` skill, reproduce by hand in the app first); then
-  regenerate images by module, viewing each pair.
-- (B) Still open from slice 1: owner decides delete-or-ignore for the two PDFs; regen `trackC-nprc-rectilinear.png`; reword
-  `_pedigree_browser.Rmd:62-65`; fix the comment at `R/modPedigree.R:440-443`.
-- (C) Docs audit slice 3: prose claims in the articles. Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md`
-  lags `NEWS.Rmd`; `CLAUDE.md` in the warn band; `master` 6 ahead of `origin` (docs only, no CI owed).
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`,
-`vignettes/articles/colony-manager-guide-screenshots.R:84-110` (shot helper), `:496-655` (failing tail), `BACKLOG.md:151-192`.
-
-**Gotchas:** running the colony script takes about 10 minutes and overwrites the 46 committed PNGs it writes; restore with
-`git checkout -- vignettes/articles/shiny_app_use`. Measurement copies were in the session scratchpad and are gone.
+**Gotchas:** `vignettes/suggested_NEWS_entry.Rmd` (untracked owner draft) makes `test_pkgdown_reference_config.R:107` fail
+locally ("article not covered ... suggested_NEWS_entry"); CI never sees it, so it is not a regression. It goes away when the owner
+commits-and-lists or drops the draft. Rendering articles needs the package installed (`R CMD INSTALL -l <scratch>`, then
+`R_LIBS=<scratch>`); `quarto render` otherwise stops at `library(nprcgenekeepr)`.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809
