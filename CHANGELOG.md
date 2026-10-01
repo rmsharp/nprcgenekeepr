@@ -60,7 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-10-01 · [ad hoc] S840 claim: docs-staleness audit slice 6d, the 32 Shiny app and module `man/` pages (in progress; close-out entry follows).
+### 2026-10-01 · [ad hoc] S840 close-out: docs-staleness audit slice 6d, the 34 Shiny app and module `man/` pages: 8 moderate and 34 minor findings plus 22 code candidates, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`; BACKLOG docs-audit item updated (126 pages left). Read-only, no code changed. Commits `cffbb16cc` (claim) and the close-out commit.
+
+### 2026-10-01 · [ad hoc] S840 claim: docs-staleness audit slice 6d (superseded by the close-out entry above).
 
 ### 2026-10-01 · [ad hoc] S839 close-out: fixed all 29 slice-6c docs-staleness findings (QA1-QA16, QB1-QB4, QC1-QC4, QC6, QC7, QD2-QD4) in the `R/*.R` roxygen of 19 marker-genetics, genotype and MHC files, regenerated `man/`; commits `48aabebb6`, `65be5d010`, `4d0042987`, `03493492a`, claim `3075b7b50`. Docs only; the 8 code candidates stay owner decisions. Lint 0, wordlist test and examples pass, `devtools::check(--no-tests)` 0 errors / 0 warnings / 1 note (untracked `suggested_NEWS_entry.md`). Found that `checkMarkerGenotypeFile` does not reject a missing allele (worsens code candidate 7). BACKLOG docs-audit item updated. Model: Claude Sonnet 5.5.
 

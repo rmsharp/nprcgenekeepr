@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S840
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: docs-staleness audit slice 6d, 32 Shiny app/module man/ pages (read-only report)
+status: complete
+active_task: DONE: docs-staleness audit slice 6d, 34 Shiny app and module man/ pages (read-only report)
+what_was_done: Audited 34 pages with 4 read-only subagents; report docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md has 8 moderate, 34 minor, 22 code candidates. Re-read all 8 moderates in source, re-ran RA8 and CA4, downgraded RD6. Commits: claim cffbb16cc; close-out commit holds report, BACKLOG, records.
+next_steps: Fix the 42 slice-6d findings in R/*.R roxygen then devtools::document() (decide CA1-CA4, CB1, CC1 first), or audit slice 6e (126 man/ pages left). Start at BACKLOG.md:197 and the report's code-candidates table.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md; R/modBreedingGroups.R:257-272; R/modGeneticDiversity.R:63-64; R/appServer.R:441-446; R/getKinshipWithMaleStatus.R:49-61; R/modPedigree.R:209-225,878; R/runGeneKeepR.R:27
+gotchas: roxygen folds a blank-line paragraph into the preceding @param (RA1); git checkout man/nprcgenekeepr-package.Rd after document(); minors are agent-checked, not re-run by me; RA12 and RD10 are not findings.
+predecessor_score: 9
+self_score: 8
 ```
 
 ```handoff

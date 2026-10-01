@@ -99,13 +99,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 840 Did
-**Deliverable:** docs-staleness audit slice 6d, the 32 Shiny app and module `man/` pages (28 `mod*Server/UI`, `appServer`, `appUI`, `runGeneKeepR`, `runModularApp`); read-only report (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** docs-staleness audit slice 6d, the 34 Shiny application and module `man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`): 8 moderate, 34 minor, 22 code candidates. Read-only; no code, no tests, so no TDD phase applies.
+**Commits:** claim `cffbb16cc`; report, BACKLOG and records in the close-out commit.
+**Verified:** all 8 moderates (RA1, RA3, RA4, RA8, RB1, RC1, RC5, RD1) re-read in the source; RA8 and CA4 re-run (`getGeneticDiversityStats` stops on a partial kinship matrix; `subscript out of bounds` for NA-birth group members). One agent moderate (RD6) downgraded to minor after reading `appServer.R:353-378`.
+**Not verified:** the 34 minors and the other 20 code candidates rest on the four subagents' own checks (A = ran it, R = re-read); not run: `lint_package()` (no `.R` changed), full suite, `devtools::check`.
+**NEWS.Rmd:** none. **Reduction:** removed the S838 handoff evaluation and the S838 record (in git and their receipts).
+**Slips caught:** my first R call for CA4 omitted `geneticValues` and proved nothing; I fixed the call and re-ran. The first draft said 26 of 34 pages had no moderate finding; counting gave 27.
 
-### Session 838 Handoff Evaluation (by Session 839)
-**Score: 9/10.** Orient measurements held: ledger and receipt frontiers at HEAD, master 31 ahead, the one untracked file, the 29 findings (4 + 25) and the 160-page count exactly as stated; the key-file line numbers were right and the fix texts in the report were usable almost verbatim. **Wrong:** code candidate 7 said `buildMarkerGenotypeMatrix`'s `"NA/NA"` is "safe only if `checkMarkerGenotypeFile` always runs first"; I ran it and the checker does not reject a missing allele, so running it first does not protect. **Missing:** which of QA1/QA2/QB1 to document without a code decision (the S835/S837 precedent answered it). **ROI:** high.
+**Self-assessment: 8/10.** + One deliverable; every moderate checked first-hand, one downgraded on evidence; the page count and the 107 audited pages derived from the reports' tables, not from memory. - Minors unverified by me; the "28 mod pages" scope guess was wrong (30) and I only found it by counting.
+
+**Next steps:** (A) fix the 42 slice-6d findings in `R/*.R` roxygen, then `devtools::document()` (READY, Effort M); decide code candidates CA1-CA4, CB1, CC1 first (RA3/RA4/RA6/RA8/RB10/RC7 wording depends on them). (B) Or slice 6e: 126 `man/` pages left (list: `comm -13` of the three reports' "Items audited" ids against `ls man`, minus the 34 here). (C) Owner decisions still open: the 8 slice-6c candidates, PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3, `suggested_NEWS_entry.md` commit or drop (asked again at Orient; not answered). (D) Master is 39 ahead of origin with the close-out commit (37 before this session); push only on the owner's say-so.
+
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`, `R/modBreedingGroups.R:257-272`, `R/modGeneticDiversity.R:63-64`, `R/appServer.R:441-446`, `R/getKinshipWithMaleStatus.R:49-61`, `R/modPedigree.R:209-225,878`, `R/runGeneKeepR.R:27`, `BACKLOG.md:197`.
+
+**Gotchas:** same as S837-S839 (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; use `Rd2ex()`+`source()`; append to `inst/WORDLIST`; `lint_package()` after joined roxygen lines). Module pages: roxygen folds a blank-line paragraph into the preceding `@param` (RA1), so check the generated Rd. The 42 count is 8 + 34; RA12 and RD10 are deliberately not findings.
+
+### Session 839 Handoff Evaluation (by Session 840)
+**Score: 9/10.** Orient measurements held: ledger and receipt frontiers at HEAD, master 37 ahead, the one untracked file, and the 160-page count (I re-derived it from the slice 6a-6c "Items audited" tables). The step (A) description was enough to pick the work with no discovery. **Wrong:** "Shiny `mod*` ~28": there are 30 module pages (15 modules x Server and UI). **Missing:** how to list the 160 remaining pages (the reports' tables, split on commas, give the done set). **ROI:** high.
 
 ### What Session 839 Did
 **Deliverable, DONE:** fixed all 29 slice-6c docs-staleness findings (QA1-QA16, QB1-QB4, QC1-QC4, QC6, QC7, QD2-QD4) in the roxygen of 19 `R/*.R` files and regenerated `man/` (`devtools::document()`, then `git checkout man/nprcgenekeepr-package.Rd`). Docs only: no code or test change, so no TDD phase applies. The 8 code candidates are untouched; the docs state today's behavior.
@@ -123,22 +133,6 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 **Gotchas:** same as S837/S838 (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; use `Rd2ex()`+`source()`; append to `inst/WORDLIST`). Reword rather than add words: `genotype's` is not in the wordlist. Run `lint_package()` after a roxygen edit that joins lines; a replacement that does not re-wrap makes an over-80 line.
 
-
-### What Session 838 Did
-**Deliverable, DONE:** docs-staleness audit slice 6c, 35 marker-genetics, genotype and MHC `man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md`): 4 moderate (QA1, QA2, QB1, QC1), 25 minor, 8 code candidates. Read-only; no TDD phase applies (no code, no tests).
-**Commits:** claim `542ccce38`; report, BACKLOG and records in the close-out commit.
-**Verified:** all 4 moderates re-read in the source and QA2, QC1 re-run (`hasGenotype` `First`/`Second` FALSE; `markerKinship` NA for h-x, h-y while x-y is 0.375). QA1 and QB1 confirmed by reading the code (`R/computeGenomicROH.R:104-105`, `R/checkSequenceGenotypeFile.R:126-128`), not re-run.
-**Not verified:** all 25 minors and the 8 code candidates rest on the four subagents' own checks (A = ran it, R = re-read); I did not re-run them, including the He = 1.0 all-NA claim. Not run: `lint_package()` (no `.R` changed), full suite, `devtools::check`.
-**NEWS.Rmd:** none. **Reduction:** removed the S836 handoff evaluation and the S835 record (in git and their receipts).
-**Slip caught:** my first report draft had a "pages with no moderate" row for 6a/6b and an "18 pages" count I had not measured; removed before commit.
-
-**Self-assessment: 8/10.** + One deliverable; all moderates checked first-hand; page count corrected (267, not 268). - Minors unverified by me; I wrote two unmeasured numbers into the first draft and caught them only on re-read; four agents' tables were pasted with light editing, not re-derived.
-
-**Next steps:** (A) fix the 29 slice-6c findings in `R/*.R` roxygen then `devtools::document()` (Effort M); decide code candidates 1-4 first, since QA1/QA2/QB1 depend on them. (B) Or slice 6d: 160 `man/` pages left (Shiny `mod*` pages ~28, `obfuscate*`, pedigree-tree/getters). (C) Owner decisions still open: PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3, `suggested_NEWS_entry.md` commit or drop, stale `man/nprcgenekeepr-package.Rd`. (D) Master is 31 ahead of origin; push only on the owner's say-so.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md`, `R/computeGenomicROH.R:99-146`, `R/hasGenotype.R:22-35`, `R/checkSequenceGenotypeFile.R:126-128`, `R/markerKinship.R:20-25,118-127`, `BACKLOG.md:197`.
-
-**Gotchas:** same as S837 (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; `example()` fails, use `Rd2ex()`+`source()`; append to `inst/WORDLIST`). The report's QB5/QD5 ids are deliberately unused (non-findings). The 29 count is 4 + 25.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809
