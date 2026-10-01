@@ -120,15 +120,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       entries the sweep just finished restating. Files: `suggested_NEWS_entry.md`,
       `vignettes/suggested_NEWS_entry.Rmd` (both untracked, the owner's own).
 
-- [ ] **(Optional, owner decision) `NEWS.Rmd`'s `## Package` entry reports the PRIOR release, not
-      a change in this one (found S791, 2026-09-27, Effort S, low priority)** -- `NEWS.Rmd:18`,
-      "CRAN accepted the 2.0.0 submission (tagged `v2.0.0`); published 2026-07-26," describes
-      2.0.0 itself, not anything new in the 2.0.0.9000 development version. Decide: keep it as
-      historical context at the top of the dev-block, or delete it now that the release-state
-      sweep (S788-S792) has restated every other section's entries as finished-state claims about
-      THIS release. `NEWS.md` was last re-rendered S716, so it lags `NEWS.Rmd` and needs a render
-      at the next actual release regardless.
-
 - [ ] **Male-on-the-left placement is stricter in the code's documentation than in real layouts
       (found S789, 2026-09-27, DECISION NEEDED, Effort S to find the cause, more to fix)** --
       the roxygen of `makePedigreeMatingLayout()` (`R/makePedigreeDiagramData.R`, "Male-left/

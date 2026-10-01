@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S846
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: fix NEWS.Rmd audit findings (S845 slice 7a), owner-reviewed in rounds
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE: fixed the slice-7a NEWS.Rmd audit findings (owner-reviewed in 3 rounds), NEWS.md re-rendered; docs only
+what_was_done: Claim 40a1e529f; fixes and re-render 54130dfe1; records in close-out commit. Fixed NC1-NC5, NB1-NB4, NB6, ND1-ND3, NA1; 2.0.0 heading date 20260721, Package section and YAML date removed. Guard test passes. NA2-NA4 not done.
+next_steps: Condense the Pedigree Diagram section NA2-NA4 in its own staged pass (READY, Effort M); or slice 7b internal-docs audit (READY, Effort L); or owner decisions on audit code candidates. Owner to decide on untracked suggested_NEWS_entry.md. Master 13 ahead of origin at close-out start; push only on owner say-so.
+key_files: NEWS.Rmd:21-195 (Diagram section); docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md; tests/testthat/test_newsReleaseState.R; R/appServer.R:114 (lead)
+gotchas: Re-render NEWS.md last after any NEWS.Rmd text change, then run the guard test; check wraps with awk length>80; keep SESSION_NOTES.md lines at or under 280 B.
 ```
 
 ```handoff

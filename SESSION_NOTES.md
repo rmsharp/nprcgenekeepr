@@ -99,10 +99,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 846 Did
-**Deliverable:** fix the `NEWS.Rmd` docs-staleness audit findings (S845 slice 7a), in rounds the owner accepts or changes (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning. Docs only, so no TDD phase applies.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** fixed the slice-7a `NEWS.Rmd` audit findings, in three owner-reviewed rounds, then re-rendered `NEWS.md`. Docs only, so no TDD phase applies.
+**Commits:** claim `40a1e529f`; fixes and re-render `54130dfe1`; records in the close-out commit.
+**Fixed:** NC1-NC5, NB1-NB4, NB6, ND1-ND3, NA1. Owner choices: the 2.0.0 heading date is 20260721 (the tag date); the `## Package` section removed; the YAML `date` line dropped; NC6 left as "Changed:"; NC5 split but not trimmed; the NB6 status-line example has no count.
+**Verified by me:** NB2 against `R/groupAddAssign.R` (pool ceiling 20 stops, 10 s limit truncates) and the status-line format; `test_newsReleaseState.R` passes; `NEWS.md` has none of the deleted wording.
+**Not done:** NA2-NA4 (Pedigree Diagram condense, its own staged pass); NB5/NB7 were dropped by S845. Lint not run (no `.R` changed); full suite not run.
+**NEWS.Rmd:** this was the deliverable. **Reduction:** removed the S843 evaluation and record, and the resolved BACKLOG `## Package` item.
+
+**Self-assessment: 9/10.** + One deliverable; each round showed the change and waited; NB2 checked in code before wording. - Slips: two Edit anchors mistyped, a rewrap left over-long lines twice (caught by `awk`).
+
+**Next steps:** (A) condense the Pedigree Diagram section, NA2-NA4, in its own staged pass (READY, Effort M). (B) Slice 7b: audit the internal docs (`docs/`, `ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`), READY, Effort L. (C) Owner decisions on the audit
+code candidates. (D) The owner's untracked `suggested_NEWS_entry.md`: commit, move or drop? Master was 13 commits ahead of origin when close-out began (counted); push only on the owner's say-so.
+
+**Key files:** `NEWS.Rmd:21-195` (Diagram section, NA2-NA4), `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`, `tests/testthat/test_newsReleaseState.R`, `R/appServer.R:114` (lead: comment says CRAN archived 2.0.0).
+
+**Gotchas:** after any `NEWS.Rmd` change run `rmarkdown::render("NEWS.Rmd")` last, then the guard test. Check wraps with `awk 'length($0)>80'`. Same roxygen gotchas apply if code changes. Keep `SESSION_NOTES.md` lines at or under 280 B.
+
+### Session 845 Handoff Evaluation (by Session 846)
+**Score: 9/10.** The audit ids, line numbers and the (A)-(D) options were exact. **Helped:** the per-finding Fix column and the ND2 flag. **Wrong:** nothing found; the "10 ahead" count was not re-checked until close-out (12 now, two commits added
+here). **Missing:** the NB2 and NB6 findings were agent-only; I re-checked them. **ROI:** high.
 
 ### What Session 845 Did
 **Deliverable, DONE:** docs-staleness audit slice 7a, `NEWS.Rmd` and `NEWS.md`: `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`. Read-only audit, no fixes, no code touched, so no TDD phase applies.
@@ -143,26 +158,6 @@ taken before the close-out commit). **Missing:** nothing that cost time. **ROI:*
 **Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`, `BACKLOG.md:197`, `R/makeGroupNum.R` (still says `numGp` "Default is 1"), `R/fillGroupMembersWithSexRatio.R:37` and `R/groupAddAssign.R:128` (examples still pass deprecated `minParentAge`).
 
 **Gotchas:** zsh arrays are 1-indexed, so a `${M[$i]}` loop from 0 mislabels. Same S837-S843 roxygen gotchas (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; reword rather than extend `inst/WORDLIST`; keep `SESSION_NOTES.md` lines at or under 280 B).
-
-### Session 843 Handoff Evaluation (by Session 844)
-**Score: 9/10.** Orient measurements held: ledger frontiers current, one untracked file, the exact next-step recipe for (A). **Helped:** the ordered options (A)-(C) and the line-length gotcha. **Wrong:** "master may be ahead of origin" was right to
-hedge; it was 8 ahead, not 47. **Missing:** nothing that cost time. **ROI:** high.
-
-### What Session 843 Did
-**Deliverable, DONE:** split the 10 `SESSION_NOTES.md` lines over the 280 B per-line ceiling (they sat in the S842 and S841 records) at word boundaries outside backtick spans, each piece at most 260 B. Docs only, so no TDD phase applies.
-**Commits:** claim `f407e5a1c`; the split, records and ledger are in the close-out commit.
-**Verified:** `awk 'length($0)>280' SESSION_NOTES.md` now returns 0 lines; `git diff -w --word-diff` shows no word changed (re-wrapping only); `python3 context_budget.py` went from OVER to OK (SESSION_NOTES 49,127 B to 49,413 B, ceiling 65,536 B). **Not run:**
-`lint_package()` (no `.R` changed), the test suite (no code or tests changed).
-**NEWS.Rmd:** none. **Reduction:** none of the content was removed; the deliverable was the line-length fix. The file is still in its growth run (18/10), so the next close-out that adds a record should remove an old one.
-
-**Self-assessment: 9/10.** + One deliverable; claim commit passed the hook; the check was run before and after. - The claim stub lands on a 49 KB file, so the notes are still large.
-
-**Next steps:** same as S842: (A) fix the 95 slice-6e findings in `R/*.R` roxygen, then `devtools::document()` and `git checkout man/nprcgenekeepr-package.Rd` (READY, Effort M); (B) owner decisions on the audit code candidates (46 slice-6e, 22 slice-6d, 8
-slice-6c, older PB/PA/PD/MC/MB); (C) master may be ahead of origin, so push only on the owner's say-so (S842's "47 ahead" was not re-checked, CI is already running on `c0632d61d`).
-
-**Key files:** `SESSION_NOTES.md` (the ten split lines were the S842 and S841 `Slips`, `Next steps`, `Gotchas` and `Score` paragraphs), `context_budget.py`, `.context-budget.json`.
-
-**Gotchas:** keep every `SESSION_NOTES.md` line at or under 280 B (`awk 'length($0)>280' SESSION_NOTES.md`), or the context-budget check goes OVER again. Same S837-S841 roxygen gotchas apply to step (A). Do NOT use `echo ====` in the Bash tool.
 
 ### Session 842 Handoff Evaluation (by Session 843)
 **Score: 8/10.** Orient measurements held: both ledger frontiers were at HEAD, the untracked file was the one it named, and the next-step recipe was exact. **What helped:** the explicit ordered options (A)-(C) and the "do not ask about
