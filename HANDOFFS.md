@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S835
+date: 2026-10-01
+status: pending
+active_task: IN PROGRESS: fix the 54 slice-6a docs-staleness findings in R/*.R roxygen, then devtools::document()
+```
+
+```handoff
 session: S834
 date: 2026-10-01
 status: complete
