@@ -14,7 +14,8 @@ runQcStudbook(
 }
 \arguments{
 \item{ped}{data.frame containing pedigree data with columns including
-id, sire, dam, sex, and optionally birth, death, departure, etc.}
+id, sire, dam, sex, and birth (all required), and optionally death,
+departure, etc.}
 
 \item{minSireAge}{numeric minimum age in years for a male to have sired an
 offspring. \code{NULL} (default) looks up each sire's species floor via
@@ -31,8 +32,9 @@ minimum parent age. Supplying it sets both \code{minSireAge} and
 \code{minDamAge}; use those sex-specific parameters instead.}
 
 \item{reportChanges}{logical whether to report column name changes in the
-result (default FALSE). When TRUE, warnings about renamed columns are
-included in the qcResult.}
+result (default FALSE). When TRUE, \code{changedCols} and
+\code{hasChangedCols} in the qcResult report all renamed columns, while
+\code{warnings} lists only the case and space changes.}
 }
 \value{
 A list with the following components:

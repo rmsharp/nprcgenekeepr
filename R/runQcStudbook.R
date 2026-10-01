@@ -8,7 +8,8 @@
 #' first to check for errors, then to get the cleaned data if no errors exist.
 #'
 #' @param ped data.frame containing pedigree data with columns including
-#'   id, sire, dam, sex, and optionally birth, death, departure, etc.
+#'   id, sire, dam, sex, and birth (all required), and optionally death,
+#'   departure, etc.
 #' @param minSireAge numeric minimum age in years for a male to have sired an
 #'   offspring. \code{NULL} (default) looks up each sire's species floor via
 #'   \code{\link{getSpeciesMinBreedingAge}} (2 years when species is unknown);
@@ -21,8 +22,9 @@
 #'   minimum parent age. Supplying it sets both \code{minSireAge} and
 #'   \code{minDamAge}; use those sex-specific parameters instead.
 #' @param reportChanges logical whether to report column name changes in the
-#'   result (default FALSE). When TRUE, warnings about renamed columns are
-#'   included in the qcResult.
+#'   result (default FALSE). When TRUE, \code{changedCols} and
+#'   \code{hasChangedCols} in the qcResult report all renamed columns, while
+#'   \code{warnings} lists only the case and space changes.
 #'
 #' @return A list with the following components:
 #' \itemize{

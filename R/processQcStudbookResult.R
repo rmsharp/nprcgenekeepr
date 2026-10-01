@@ -7,7 +7,12 @@
 #' into a format suitable for display in the Shiny UI.
 #'
 #' @param errorLst list object returned by \code{qcStudbook} with
-#'   \code{reportErrors = TRUE}, or NULL. Expected to be of class
+#'   \code{reportErrors = TRUE}. A \code{NULL} is treated as a failed check
+#'   (\code{hasErrors} is \code{TRUE} with the error "No result returned from
+#'   quality control check"), yet \code{qcStudbook} returns \code{NULL} when
+#'   it finds no errors and no column changes. Use \code{runQcStudbook}, which
+#'   handles that case, or pass \code{getEmptyErrorLst()} instead of
+#'   \code{NULL}. Expected to be of class
 #'   \code{nprcgenekeeprErr} containing error fields such as femaleSires,
 #'   maleDams, sireAndDam, duplicateIds, invalidIdChars,
 #'   invalidPlaceholderRows, missingColumns,
