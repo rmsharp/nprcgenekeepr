@@ -60,7 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-10-01 · [ad hoc] S837 claim: fix the 57 slice-6b docs-staleness findings in `R/*.R` roxygen (in progress; close-out entry follows).
+### 2026-10-01 · [ad hoc] S837 close-out: fixed 54 of the 57 slice-6b docs-staleness findings (PA, PB except PB4/PB7/PB11, PC, PD) in the `R/*.R` roxygen of 32 pedigree QC and curation files, regenerated `man/`; commits `da62c124d`, `18f215ec0`, `b6cd4ffc6`, `e6c434bec`, `cfcd9d11f`, `f2a21abef`, `fdacad923`, `01a6bfda1`, `7c1497876`, claim `ba41d2fc0`. Added `colname`, `ignoreHerm`, `unanchored` to `inst/WORDLIST`. PB4, PB7, PB11 left as owner decisions (code). Lint 0, spelling test and examples pass, `devtools::check(--no-tests)` 0 errors / 0 warnings / 1 note (untracked `suggested_NEWS_entry.md`). BACKLOG docs-audit item updated. Model: Claude Sonnet 5.5.
+
+### 2026-10-01 · [ad hoc] S837 claim: fix the 57 slice-6b docs-staleness findings in `R/*.R` roxygen (superseded by the close-out entry above).
 
 ### 2026-10-01 · [ad hoc] S836 close-out: docs-staleness audit slice 6b, the 36 pedigree QC and curation `man/` pages: 20 moderate and 37 minor findings, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6B_2026-10-01.md`; BACKLOG docs-audit item updated. Read-only, no code changed. Commits `714780074` (claim), close-out commit.
 - **Model:** Claude Sonnet 5.5.

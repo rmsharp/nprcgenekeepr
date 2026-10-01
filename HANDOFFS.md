@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S837
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: fix the 57 slice-6b docs-staleness findings in R/*.R roxygen, then devtools::document()
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: fixed 54 of 57 slice-6b docs-staleness findings in R/*.R roxygen (32 files), man/ regenerated; PB4, PB7, PB11 left for owner
+what_was_done: Claim ba41d2fc0; fixes da62c124d, 18f215ec0, b6cd4ffc6, e6c434bec, cfcd9d11f, f2a21abef, fdacad923, 01a6bfda1, 7c1497876; records in the close-out commit. Roxygen and examples only, no code or test change. Three forks edited disjoint file sets; lint 0, wordlist test pass (3 words added), examples run, devtools::check(--no-tests) 0 errors / 0 warnings / 1 note (untracked suggested_NEWS_entry.md). Full suite and runtime smoke not run (no behavior change).
+next_steps: Slice 6c: audit the next topic group of man/ (196 pages left), read-only. Owner decisions: PB4, PB7, PB11 (then their docs), PB13, PA4, PD12, PD1, MC1, MB3, suggested_NEWS_entry.md commit or drop, stale man/nprcgenekeepr-package.Rd. Master is 28 ahead of origin; push only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6B_2026-10-01.md, R/checkRequiredCols.R:6-41, R/checkChangedColsLst.R:8-9, R/getDateErrorsAndConvertDatesInPed.R:6-17, BACKLOG.md:197
+gotchas: git checkout man/nprcgenekeepr-package.Rd after document(). Append to inst/WORDLIST, do not re-sort. Fork 1 (qcStudbook) did not re-run each claim; PC13 and PD10 wording rest on the audit. PB4/PB7/PB11 docs still carry the audited false claims; PB13, PA4, PD12, PD1 document today's behavior and need rewording if the code changes.
 ```
 
 ```handoff
