@@ -27,9 +27,11 @@ of animals.}
 \item{pdepth}{integer vector indicating the generation number for each
 animal.}
 
-\item{sparse}{logical flag. If \code{TRUE}, \code{Matrix::Diagnol()} is
-used to make a unit diagonal matrix. If \code{FALSE}, \code{base::diag()} is
-used to make a unit square matrix.}
+\item{sparse}{logical flag. If \code{TRUE}, \code{Matrix::Diagonal()} is
+used to make the starting diagonal matrix (one half of the identity matrix,
+the founders' self-kinship) and the result is a sparse
+\code{dgCMatrix}. If \code{FALSE}, \code{base::diag()} is used and the
+result is a base matrix.}
 
 \item{twinRelations}{\code{NULL} (default, no-op) or a data.frame with
 columns \code{id1}, \code{id2}, \code{code} declaring twin pairs (see
@@ -83,7 +85,8 @@ the function.
 The rows (cols) of founders are just 0.5 * identity matrix, no further
 processing is needed for them.
 Parents must be processed before their children, and then a child's
-kinship is just a sum of the kinship's for his or her parents.
+kinship is just the average of the kinship values for his or her
+parents.
 
 The code for the kinship function was written by Terry Therneau
 at the Mayo clinic and taken from his website. This function is part of a

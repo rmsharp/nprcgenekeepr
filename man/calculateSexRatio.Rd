@@ -13,15 +13,22 @@ calculateSexRatio(ids, ped, additionalMales = 0L, additionalFemales = 0L)
 information including the IDs listed in \code{ids}.}
 
 \item{additionalMales}{Integer value of males to add to those within the
-group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.
-Default is 0.}
+group when calculating the ratio. The additions always count, except when
+\code{ids} has no animals or no males: with no males, the ratio is
+\code{Inf} unless \code{additionalMales} is greater than 0 (then
+\code{additionalFemales} still counts); with no animals, see
+\emph{Value}. Default is 0.}
 
 \item{additionalFemales}{Integer value of females to add to those within the
-group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.
-Default is 0.}
+group when calculating the ratio. The additions always count, except as
+described for \code{additionalMales}. Default is 0.}
 }
 \value{
-Numeric value of sex ratio of the animals provided.
+Numeric value of the sex ratio of the animals provided, expressed as
+the number of non-males per male. It is \code{Inf} when there are no males
+(and no males are added) but at least one non-male; \code{0} when
+\code{ids} is empty, no females are added and males are added; and
+\code{NA} when \code{ids} is empty and nothing is added.
 }
 \description{
 The Males are counted when the \code{ped$sex} value is

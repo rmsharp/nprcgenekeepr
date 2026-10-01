@@ -3,9 +3,7 @@
 
 #' Extract a kValue table from a kinship matrix
 #'
-#' A \code{kValue} matrix has one row for each pair of individuals in the
-#' kinship matrix and one column for each kinship matrix. A
-#' \code{kValue} matrix has one row for each pair of individuals in the kinship
+#' A \code{kValue} matrix has one row for each pair of individuals in the kinship
 #' matrix and one column for each kinship matrix. Thus, in a kinship matrix with
 #' 20 individuals the kinship matrix will have 20 rows by 20 columns but only
 #' the upper or lower triangle has unique information as the diagonal values are
@@ -13,7 +11,7 @@
 #' upper triangle has the same values as the lower triangle. The \code{kValue}
 #' table will have 210 rows. The calculation for
 #' the number or row in the \code{kValue} table is  \eqn{20 + (20 * 19) / 2}
-#' rows with the 20 values from the kinship coeficient matrix diagonal and
+#' rows with the 20 values from the kinship coefficient matrix diagonal and
 #' \eqn{(20 * 19) / 2} elements from one of either of the two triangles.
 #'
 #' The \code{kValue} matrix for 1
@@ -26,13 +24,14 @@
 #'
 #'
 #' @param kinshipMatrix square kinship matrix. May or may not have named
-#' rows and columns.
-#' @return data.frame object with columns \code{id_1}, \code{id_2}, and
+#' rows and columns. When the matrix has no row and column names, the IDs are
+#' generated (\code{"A"}, \code{"B"}, ... \code{"Z"}, \code{"A1"},
+#' \code{"B1"}, ...), not the row and column indices.
+#' @return A \code{data.table} with columns \code{id_1}, \code{id_2}, and
 #' \code{kinship} where the first two columns contain the IDs of the
 #' individuals in the kinship matrix provided to the function and the
-#' \code{kinship} columm contains the corresponding kinship coefficient.
-#' In contrast to the kinship matrix. Each possible pairing of IDs appears
-#' once.
+#' \code{kinship} column contains the corresponding kinship coefficient.
+#' Unlike the kinship matrix, each possible pairing of IDs appears once.
 #'
 #' @importFrom data.table as.data.table
 #' @export
@@ -73,21 +72,6 @@
 #'   simParent_1, simParent_2, simParent_3,
 #'   simParent_4, simParent_5, simParent_6
 #' )
-#'
-#' extractKinship <- function(simKinships, id1, id2, simulation) {
-#'   ids <- dimnames(simKinships[[simulation]])[[1]]
-#'   simKinships[[simulation]][
-#'     seq_along(ids)[ids == id1],
-#'     seq_along(ids)[ids == id2]
-#'   ]
-#' }
-#'
-#' extractKValue <- function(kValue, id1, id2, simulation) {
-#'   kValue[
-#'     kValue$id_1 == id1 & kValue$id_2 == id2,
-#'     paste0("sim_", simulation)
-#'   ]
-#' }
 #'
 #' simPed <- makeSimPed(ped, allSimParents)
 #' simKinship <- kinship(

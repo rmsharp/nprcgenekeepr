@@ -8,16 +8,19 @@ calcRetention(ped, alleles)
 }
 \arguments{
 \item{ped}{the pedigree information in datatable format.  Pedigree
-(req. fields: id, sire, dam, gen, population).
+(req. fields: id, sire, dam, population).
 
-It is assumed that the pedigree has no partial parentage}
+It is assumed that the pedigree has no partial parentage. When the
+\code{population} column is missing or has no \code{TRUE} values, there
+are no descendants and every retention value is 0.}
 
 \item{alleles}{dataframe of containing an \code{AlleleTable}. This is a
 table of allele information produced by \code{geneDrop()}.}
 }
 \value{
-A vector of the mean number of founder alleles retained in the
-gene dropping simulation.
+A named one-dimensional array with one value per founder: the
+proportion of the gene-drop simulations (a number from 0 to 1, not a count)
+in which the founder's allele is retained in the population's descendants.
 }
 \description{
 Part of Genetic Value Analysis

@@ -3,9 +3,7 @@
 
 #' Build a kValue table from a list of kinship matrices
 #'
-#' A \code{kValue} matrix has one row for each pair of individuals in the
-#' kinship matrix and one column for each kinship matrix. A
-#' \code{kValue} matrix has one row for each pair of individuals in the kinship
+#' A \code{kValue} matrix has one row for each pair of individuals in the kinship
 #' matrix and one column for each kinship matrix. Thus, in a kinship matrix with
 #' 20 individuals the kinship matrix will have 20 rows by 20 columns but only
 #' the upper or lower triangle has unique information as the diagonal values
@@ -13,7 +11,7 @@
 #' animal), and the upper triangle has the same values as the lower
 #' triangle. The \code{kValue} table will have 210 rows. The calculation for
 #' the number or row in the \code{kValue} table is  \eqn{20 + (20 * 19) / 2}
-#' rows with the 20 values from the kinship coeficient matrix diagonal and
+#' rows with the 20 values from the kinship coefficient matrix diagonal and
 #' \eqn{(20 * 19) / 2} elements from one of either of the two triangles.
 #'
 #' The \code{kValue} matrix for 1
@@ -23,17 +21,20 @@
 #'
 #' Thus, the number of rows in the kValues matrix will
 #'  be \eqn{n + n(n-1) / 2} and the number of columns will be 2 plus one
-#'  additional column for each kinship matrix (\eqn{2 + n}).
+#'  additional column for each kinship matrix (\eqn{2 + m}, where \eqn{m} is
+#'  the number of kinship matrices).
 #'
 #' @param kinshipMatrices list of square matrices of kinship values. May or
-#' may not have named rows and columns.
-#' @return Dataframe object with columns \code{id_1}, \code{id_2}, and one
-#' \code{kinship} column for each kinship matrix in \code{kinshipMatricies}
-#' where the first two columns contain the IDs of the
-#' individuals in the kinship matrix provided to the function and the
-#' \code{kinship} columms contain the corresponding kinship coefficients.
-#' In contrast to the kinship matrix. Each possible pairing of IDs appears
-#' once.
+#' may not have named rows and columns. The list must contain at least one
+#' matrix (an empty list is an error), and every matrix must have its
+#' individuals in the same order because the kinship columns are combined by
+#' position.
+#' @return A \code{data.table} with columns \code{id_1}, \code{id_2}, and
+#' \code{sim_1} through \code{sim_m}, one column for each kinship matrix in
+#' \code{kinshipMatrices}. The first two columns contain the IDs of the
+#' individuals in the kinship matrices provided to the function and the
+#' \code{sim_} columns contain the corresponding kinship coefficients.
+#' Unlike the kinship matrix, each possible pairing of IDs appears once.
 #'
 #' @export
 #' @examples
@@ -73,14 +74,6 @@
 #'   simParent_1, simParent_2, simParent_3,
 #'   simParent_4, simParent_5, simParent_6
 #' )
-#'
-#' extractKinship <- function(simKinships, id1, id2, simulation) {
-#'   ids <- dimnames(simKinships[[simulation]])[[1]]
-#'   simKinships[[simulation]][
-#'     seq_along(ids)[ids == id1],
-#'     seq_along(ids)[ids == id2]
-#'   ]
-#' }
 #'
 #' extractKValue <- function(kValue, id1, id2, simulation) {
 #'   kValue[kValue$id_1 == id1 & kValue$id_2 == id2, paste0(
