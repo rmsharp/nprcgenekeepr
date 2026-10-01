@@ -98,17 +98,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 822 Did
-**Deliverable:** Docs staleness audit, slice 3: prose claims in the articles and manual components (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning (AUDIT_WORKSTREAM.md; read-only audit, one report under `docs/audits/`).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### Session 821 Handoff Evaluation (by Session 822)
+**Score: 9/10.** BACKLOG's "Slice 3 next" line and the Next-steps item (C) gave the scope; the carried-items list (7 untracked
+drafts, `NEWS.md` lag, `CLAUDE.md` warn band) matched Orient exactly. **Missing:** nothing needed. **Wrong:** nothing found
+("master 6 ahead of origin" was right at Orient, 7 after this claim). **ROI:** high.
 
-### Session 820 Handoff Evaluation (by Session 821)
-**Score: 9/10.** The Next-steps list and the gotcha about `data-raw/kinship2FidelityValidation.R` overwriting committed
-PNGs (compare pixels, restore with `git checkout`) carried straight over to this slice, and the `BACKLOG.md` "Slice 2
-next" line named the exact scope. **Missing:** nothing needed. **Wrong:** "master is 3 ahead of origin"; it was 4 at
-Orient (the claim commit counted). **ROI:** high.
+### What Session 822 Did
+**Deliverable, DONE (read-only audit, docs only):** docs staleness audit slice 3, report
+`docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md`. Scope narrowed at claim time from "articles and manual components"
+to the 11 `vignettes/articles/*.qmd` (the manual components move to slice 4). Four read-only subagents audited one article
+group each (about 370 claims); this session re-read the cited code for all 7 Moderate and most Minor findings and corrected
+two wrong agent line numbers. Result: 0 critical, 7 moderate, 22 minor; no broken chunk, link or function name. Main
+pattern: hand-typed counts and one-line rule summaries (colony guide export count 182 vs 233, "six" vs 7 feature articles,
+Production, Undetermined; `genetic-value-analysis` tier 1 "no offspring"; `breeding-group-formation` `minAge`, `threshold`
+and the default female-female `ignore`). Two wrong sentences copy wrong roxygen (`orderReport`, `qcStudbook`).
+**Commits:** claim `96c19a10a`; report + records (this).
+**Learnings:** none new (the count-drift lesson is already in `CLAUDE.md`'s budget guidance). **Reduction:** removed the
+S820 handoff evaluation and the S817 "What Session 817 Did" block (in git and the S817/S820 receipts).
+No code, so no TDD cycle, suite run or app smoke test (3E not applicable).
+
+**Self-assessment: 8/10.** + One deliverable, every Moderate finding re-verified against code, caught the agents' wrong
+line numbers, kept unverified items out of the findings. - Delegated the claim checking, so ~60% of the Minor findings
+are agent-run (marked A) not reproduced; did not run the render to confirm nothing else breaks; the claim stub still
+says "and manual components".
+
+**Next steps:**
+- (A) Fix the 7 Moderate (and ideally 22 Minor) items: docs-only, one session, the report's tables are the plan; include the
+  `orderReport` and `qcStudbook` roxygen (then `devtools::document()`); verify by rendering the touched articles.
+- (B) Docs audit slice 4: the 16 `manual_components/*.Rmd`, `a2interactive.Rmd`, README, `man/`, `NEWS.Rmd`,
+  `inst/extdata/ui_guidance/`, then internal docs.
+- (C) Still open: capture-script tail failure (slice 2), slice 1 leftovers (PDFs delete-or-ignore, `trackC` image,
+  `_pedigree_browser.Rmd:62-65`, `R/modPedigree.R:440-443`). Carried: 7 untracked owner drafts (commit or drop?);
+  `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band; `master` 8 ahead of `origin` (docs only, no CI owed).
+
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md` (finding tables), `BACKLOG.md:151-200`,
+`R/orderReport.R:34,76`, `R/groupAddAssign.R:175`, `R/getProductionStatus.R:6-30`, `R/modGeneticValue.R:375-385`.
+
+**Gotchas:** agent-reported line numbers were wrong twice (breeding-group file is 199 lines; agent cited :350, :416), so
+re-check any citation before editing. `R/makePedigreeMatingLayout` roxygen at `R/makePedigreeDiagramData.R:1661-1665` may be
+stale (agent claim, comment at `:2334-2339` is ambiguous), not reported as a finding.
 
 ### What Session 821 Did
 **Deliverable, DONE (read-only audit, docs only):** docs staleness audit slice 2, report
@@ -140,39 +168,6 @@ not viewed; marker images only judged by commit counts.
 
 **Gotchas:** running the colony script takes about 10 minutes and overwrites the 46 committed PNGs it writes; restore with
 `git checkout -- vignettes/articles/shiny_app_use`. Measurement copies were in the session scratchpad and are gone.
-
-### What Session 817 Did
-**Deliverable, DONE:** Potential Parents now lists candidates only for the parent that is missing (owner chose
-"blank it" at a scope question; strict TDD, every gate an `AskUserQuestion`). An animal with a recorded dam gets
-`dams` empty (sires still listed); a recorded sire gets `sires` empty; both unknown keeps both. "Recorded" is read
-after `removeAutoGenIds()`, so a stand-in (placeholder TRUE) does not count and a real `U1234` (FALSE) does.
-**Commits:** claim `370e9a1c0`; RED `604d4ac9a` (5 tests in `tests/testthat/test_getPotentialParents.R:497` on,
-3 failing, 2 guards); GREEN `c8b7fc794` (`R/getPotentialParents.R`, the `list(...)` at the loop's end); docs
-`ada8616ca` (roxygen `@return`, `man/getPotentialParents.Rd`, the tab's intro text in `R/modPotentialParents.R`,
-`NEWS.Rmd` "Changed" entry); records (this).
-**Verification:** RED 3 failed for the right reason, no existing test conflicted; full unfiltered suite 362
-files, 2,886 tests, 1 failure (known local-only `test_pkgdown_reference_config.R`); the two modPotentialParents
-files, `test_newsReleaseState.R`, `test_wordlist_coverage.R` pass; `lintr::lint_package()` clean for the touched
-files. No app launch: only the intro paragraph's wording changed in the UI (no runtime wiring), so 3E is noted as
-not done. Nothing pushed; `master` is 6 commits ahead after this records commit.
-**Learnings:** none new. **Reduction:** removed the S816 "What Session 816 Did" block and the done BACKLOG item
-(in git and the S816 receipt).
-
-**Self-assessment: 9/10.** + One deliverable, owner decision asked in plain words, all gates used, full suite and
-lint run. - Did not ask about the 7 untracked drafts again (asked each session with no answer).
-
-**Next steps:**
-- (A) Pick from the priorities list: PED_GV owner decisions (`BACKLOG.md:8`), Mate-pair guardrail residues, or the
-  optional `a2interactive.Rmd` pass (the `getPotentialParents` behavior change is covered only by its existing
-  demo, which does not print dam lists, so no edit is owed there).
-- (B) Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd` (this change's entry is in
-  `NEWS.Rmd` only); `CLAUDE.md` in the warn band (26,731 B); push owed (CI watch owed: R code changed).
-
-**Key files:** `R/getPotentialParents.R` (end of the loop), `tests/testthat/test_getPotentialParents.R:497`.
-
-**Gotchas:** 1. The Potential Parents table still shows the dam count/column for rows where the dam is recorded,
-now 0 and blank; `modPotentialParents.R:38-42` needed no change. 2. `master` is unpushed; the push triggers all four
-workflows because R files changed.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809

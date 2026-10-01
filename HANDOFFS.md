@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S822
 date: 2026-09-30
-status: pending
-active_task: Docs staleness audit, slice 3 (prose claims in articles and manual components); IN PROGRESS
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: docs staleness audit slice 3 (read-only); prose of the 11 articles has 7 moderate and 22 minor stale claims, no broken chunk, link or function name
+what_was_done: Claim 96c19a10a; report docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md. Four subagents checked about 370 claims, this session re-read the code for all Moderate findings and corrected two wrong agent line numbers. BACKLOG item updated; scope narrowed from "articles and manual components" to the 11 articles.
+next_steps: Fix the findings in one docs-only session (report tables are the plan; include orderReport and qcStudbook roxygen then devtools::document(); render the touched articles); then slice 4 (16 manual_components, a2interactive, README, man/, NEWS.Rmd, ui_guidance, internal docs); slice 1 and 2 leftovers still open.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md, BACKLOG.md:151-200, R/orderReport.R:34,76, R/groupAddAssign.R:175, R/getProductionStatus.R:6-30, R/modGeneticValue.R:375-385
+gotchas: agent-cited line numbers were wrong twice (breeding-group-formation.qmd is 199 lines; agent cited :350 and :416), re-check every citation before editing; about 60% of Minor findings are agent-run, not reproduced (marked A); master 8 ahead of origin, docs only, no CI owed.
 ```
 
 ```handoff
