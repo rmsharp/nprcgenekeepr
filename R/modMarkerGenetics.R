@@ -408,8 +408,9 @@ modMarkerGeneticsUI <- function(id) {
 #' visible: a multiallelic file uploaded through the shared input would
 #' break the other five tabs' own DT outputs simultaneously, not just this
 #' tab's. Validated through the multiallelic-tolerant sibling validator
-#' (\code{\link{checkLinkageMarkerGenotypeFile}}) rather than the shared
-#' upload's \code{\link{checkSequenceGenotypeFile}}. Any exported LD-block
+#' (\code{\link{checkLinkageMarkerGenotypeFile}}) rather than
+#' \code{\link{checkSequenceGenotypeFile}}, the validator for the shared
+#' upload. Any exported LD-block
 #' table is de-identified (\code{\link{obfuscateLdBlocks}}) behind a
 #' curator confirm-gate reusing \code{\link{modDeidentifiedExportServer}}'s
 #' tested Generate-Preview -> Confirm -> Confirm-OK pattern (D9).
@@ -460,7 +461,7 @@ modMarkerGeneticsUI <- function(id) {
 #'   \code{\link{markerParentageExclusion}} data frame: one row per recorded
 #'   dam/sire pair with \code{exclusionCount}, \code{nLoci} and a
 #'   \code{flagged} column (\code{TRUE} where the count exceeds the
-#'   tolerance), so unflagged pairs are included (or
+#'   tolerance), so pairs that are not flagged are included (or
 #'   \code{NULL} before a genotype file and a pedigree are both available);
 #'   \code{crossCenterGenotypeB}, the raw uploaded Center B genotype data
 #'   frame (or \code{NULL} before upload); \code{crossCenterTable}, the
