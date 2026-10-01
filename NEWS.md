@@ -1,21 +1,17 @@
 NEWS
 ================
 R. Mark Sharp, Ph.D.
-2026-01-26
 
 # nprcgenekeepr 2.0.0.9000 (development version)
-
-## Package
-
-- CRAN accepted the 2.0.0 submission (tagged `v2.0.0`); published
-  2026-07-26. Development continues here on top of it.
 
 ## Pedigree Diagram
 
 - The Pedigree Browser tab gained an interactive **Diagram** view: click
-  any animal to re-center the diagram on it. Pedigrees above 750 animals
-  show an informative message instead of rendering, to keep diagrams
-  readable (issue \#129).
+  any animal to re-center the diagram on it. A pedigree above the
+  display limit -- 400 animals with the default "Rectilinear" connector
+  style, 750 with "Direct" -- shows an informative message instead of
+  rendering, to keep diagrams readable; trimming the pedigree to fewer
+  focal animals brings it back under the limit (issue \#129).
 - The Diagram tab includes an in-app legend explaining what each shape
   means for an animal's sex (issue \#132).
 - The Diagram tab includes hover tooltips and a search/highlight box for
@@ -25,37 +21,38 @@ R. Mark Sharp, Ph.D.
   and an individual with more than one mate is drawn once per mating
   rather than once total. `makePedigreeMatingLayout()` builds this
   layout; `makePedigreeDiagramData()` is unrelated to it.
+- `makePedigreeMatingLayout()` accepts an optional `kinshipMatrix`
+  argument: an already-computed kinship table to reuse when flagging
+  consanguineous matings, instead of recalculating relatedness. Scripts
+  that already have a kinship table can supply it directly and skip the
+  recalculation; without it, the function computes kinship itself.
 - The Diagram tab includes a **Diagram Edge Style** toggle: choose
-  between a default "Direct" straight-line connector style and an
-  alternative "Rectilinear (kinship2-style)" right-angle style (issue
-  \#142).
+  between the "Rectilinear (kinship2-style)" right-angle connector style
+  (the default) and a "Direct" straight-line style (issue \#142).
 - The Diagram tab can shade individuals as affected by a condition,
   using an optional `affected` column, matching a kinship2 shading
-  convention (issue \#133).
+  convention (issue \#133). Only individuals marked affected are shaded:
+  unaffected and unknown-status individuals, and every individual in a
+  pedigree with no `affected` column (including the package's bundled
+  example pedigrees), are drawn open.
 - The Diagram tab can show each animal's name next to its id, via an
   optional `name` column and a **Show Names on Diagram** toggle;
   de-identified exports automatically remove names (issue \#136).
 - The Diagram tab can show twin connectors (identical, fraternal, or
   unknown zygosity), using the same twin-code convention as kinship2
   (issue \#137).
-- The Diagram tab places the male parent on the left within a mated pair
-  by default, matching the convention most pedigree readers expect
-  (issue \#145).
-- Unaffected and unknown-status individuals are shown unshaded (open)
-  rather than filled, matching kinship2's own shading convention.
+- The Diagram tab draws the male parent on the left of a mated pair in
+  most cases, matching the convention most pedigree readers expect
+  (issue \#145). A parent with several mates is placed to fit the family
+  layout, so those pairs can appear either way round.
 - The Diagram tab draws a mate line thicker and in a distinct color for
   a consanguineous mating (parents who are blood relatives), matching
   kinship2's convention -- detected automatically from the pedigree, no
-  extra column needed. Applies to the "Direct" edge style; "Rectilinear"
-  support follows below.
+  extra column needed. Applies to both edge styles, including a
+  "Rectilinear" mate line that has to bend around an obstacle.
 - The Rectilinear edge style correctly avoids an unnecessary extra bend
   in unrelated mate lines even when a pedigree has one parent recorded
   but missing their own row.
-- The consanguineous-mating marker above also survives a "Rectilinear"
-  reroute (a mate line that needs to bend around an obstacle).
-- When a pedigree has no `affected` column at all, animals default to
-  unshaded (open) rather than shaded as affected, matching kinship2's
-  convention -- including the package's own bundled example pedigree.
 - Every pair of animals at the same generation keeps at least a
   consistent minimum gap apart, so nearby unrelated animals are never
   drawn closer together than directly-related ones.
@@ -63,16 +60,12 @@ R. Mark Sharp, Ph.D.
   their shared mating symbol is placed on the correct row by
   construction. A visible consequence: a parent who anchors matings at
   more than one generation appears as a duplicate node more often than a
-  naive single-row placement would produce (22 individuals in the
-  bundled example pedigree).
-- The Diagram tab defaults to the "Rectilinear (kinship2-style)" edge
-  style; with no style chosen, the display limit is 400 animals
-  (switching to "Direct" raises it to 750).
+  naive single-row placement would produce (113 individuals in the
+  bundled 375-animal example pedigree).
 - In the Rectilinear edge style, a sibling group's connecting bar avoids
-  visually crossing an unrelated animal's own row in the common case --
-  most importantly when a sibling also anchors her own mating at the
-  same generation (issue \#160). Two rarer related cases remain open,
-  disclosed follow-ups for a future pass.
+  visually crossing an unrelated animal's own row, including when a
+  sibling also anchors her own mating at the same generation (issue
+  \#160).
 - In the Rectilinear edge style, the layout detects when a straight
   connector line would visually pass through an unrelated animal -- most
   often in large, many-founder colony pedigrees -- and reroutes around
@@ -81,13 +74,11 @@ R. Mark Sharp, Ph.D.
 - The small hidden markers used to bend a connector line around an
   obstacle (see above) no longer occasionally show up as a stray dot
   near an unrelated animal.
-- Two parents in a straightforward one-mate pairing (each mated only
-  once, sex clearly recorded) are drawn with a clearer gap between them,
-  matching kinship2's convention.
-- The small mating symbol for that same kind of pairing sits centered
-  between the two parents, and the connecting line down to their
-  children stays straight -- both at once, not one at the cost of the
-  other (issue \#166).
+- A mating symbol sits centered between its two parents in most cases,
+  with a clear gap from them and from nearby symbols on the same row --
+  matching kinship2's own spacing convention (issue \#166) -- so symbols
+  no longer overlap even in large colony pedigrees. Diagrams are
+  correspondingly wider as a result; pan and zoom as needed.
 - Which parent a mating symbol anchors to is consistent across computers
   and regional settings: the anchor tie-break uses a locale-independent
   comparison (issue \#162).
@@ -96,38 +87,21 @@ R. Mark Sharp, Ph.D.
   tangled families (issue \#141). `makePedigreeMatingLayout()` has no
   `orderBySex` argument -- the male-left/female-right convention is
   always applied.
-- Fixed a crash in the Diagram tab: narrowing to a small set of focal
-  animals and their family could make the diagram fail to display at all
-  under the default connector style. The diagram now always displays
-  correctly for this kind of narrowed view.
+- The Diagram tab displays correctly under the default connector style
+  when narrowed to a small set of focal animals and their family.
 - The published article comparing pedigree diagrams against kinship2 (a
-  well-known reference pedigree tool) is now checked directly by code,
-  not just by eye -- confirming its example diagrams show the same
-  family relationships kinship2 does, in every case checked.
-- The Diagram tab no longer shows an individual as a disconnected,
+  well-known reference pedigree tool) is checked directly by code: its
+  example diagrams show the same family relationships kinship2 does, in
+  every case checked.
+- The Diagram tab does not show an individual as a disconnected,
   floating box when they have no recorded parents, mates, or offspring
   -- matching how the reference tool kinship2 draws the same family.
-  Loading a set of animals with no such relationships among any of them
-  no longer crashes the diagram (issue \#164).
-- For most simple mated pairs (one mate each, no other family
-  complications), the small mating symbol between them now sits clearly
-  between the two animals, with a visible gap, instead of sitting right
-  on top of one parent -- matching how the reference tool kinship2 draws
-  the same pairing. Pairs with more complicated family situations (a
-  parent with more than one mate, for example) are unaffected and
-  unchanged.
-- For mating pairs the layout can safely spread apart, the small mating
-  symbol now sits closer to the true midpoint between the two parents,
-  instead of drifting toward one parent.
-- A small number of mating symbols that could land close enough to an
-  unrelated duplicate-animal marker to visually touch, in large colony
-  pedigrees with many repeated individuals, are now kept a clear
-  distance apart.
+  Loading a set of animals with none of these relationships among any of
+  them does not crash the diagram (issue \#164).
 - When the Diagram tab leaves an animal out because it has no recorded
-  parents, mates, or offspring (see above), it now tells you so, naming
-  which animal(s) were left out -- and shows a clear message instead of
-  an empty diagram when none of the loaded animals have any such
-  relationships.
+  parents, mates, or offspring (see above), it names which animal(s)
+  were left out -- and shows a clear message instead of an empty diagram
+  when none of the loaded animals have any such relationships.
 - A small number of duplicate-animal markers that could land close
   enough to an unrelated animal (not part of the same family) to
   visually touch, in large colony pedigrees with many repeated
@@ -138,33 +112,24 @@ R. Mark Sharp, Ph.D.
   touch or overlap, in large colony pedigrees, are now kept a clear
   distance apart.
 - When a pedigree contains families that are not related to each other,
-  each family is now drawn as its own block, side by side with a clear
-  gap between blocks -- the same way kinship2 draws them. Previously two
-  unrelated families could be drawn interleaved on the same rows, with a
-  mate line running through an unrelated animal's symbol, so two
-  strangers could look related.
-- The Diagram tab now keeps every neighboring pair of symbols on a row
-  at least one full symbol width apart and centers each mating dot
-  between the two parents, following kinship2's own spacing convention,
-  so symbols no longer overlap in large colony pedigrees. Diagrams are
-  wider as a result; pan and zoom as needed.
+  each family is drawn as its own block, side by side with a clear gap
+  between blocks -- the same way kinship2 draws them, so a mate line
+  never runs through an unrelated animal's symbol and two strangers
+  never look related.
 - When a mate also belongs to another family drawn elsewhere in the
   diagram, that mate now appears as a duplicate marker directly beside
   their partner -- the same duplication convention kinship2 uses --
   instead of a bent connector line reaching across generations to their
   other appearance. Large colony diagrams show more duplicate markers as
   a result, and the bent cross-generation mate lines are gone.
-- Every mating symbol now sits between the two parents it connects, and
-  each mated pair is drawn on the side of the family nearest their
+- Many mated pairs are drawn on the side of the family nearest their
   children, so the lines from parents down to their children run
   straighter, with fewer sideways detours, especially in large or
   tangled colony pedigrees.
-- Fixed an error in the Diagram tab that appeared for some trimmed
-  pedigrees under the default Rectilinear connector style: when trimming
-  to focal animals kept an animal's children but dropped that animal's
-  own record, the tab showed an error message instead of a diagram. The
-  diagram now draws normally, leaving out the parent who has no record
-  to draw.
+- The Diagram tab draws normally under the default Rectilinear connector
+  style when trimming to focal animals keeps an animal's children but
+  drops that animal's own record, leaving out the parent who has no
+  record to draw.
 - When a mate appears as a duplicate marker beside their partner
   (because that mate also belongs to another family drawn elsewhere in
   the diagram), the pair and their children now stay directly above and
@@ -178,16 +143,17 @@ R. Mark Sharp, Ph.D.
   detour running between two rows no longer clips the symbols of the row
   below. Most detours are unchanged; only the ones that touched a symbol
   moved.
-- The package now includes five small example pedigrees, one for each
+- The package includes five small example pedigrees, one for each
   classic mating structure a colony manager may need to recognize: a
   brother-sister mating, linebreeding back to a single influential
   ancestor, a daughter bred back to her own sire, a first-cousin mating,
-  and a mating of half-siblings who share a sire. Each is small enough
-  (11-14 animals) to read at a glance on the Diagram tab, and each
-  contains exactly one consanguineous mating for the diagram to
-  highlight (`example_pedigree_*.csv` in the package's
+  and a mating of half-siblings who share a sire. Each includes birth
+  dates, so it can be uploaded in the app like any pedigree file; each
+  is small enough (11-14 animals) to read at a glance on the Diagram
+  tab, and each contains exactly one consanguineous mating for the
+  diagram to highlight (`example_pedigree_*.csv` in the package's
   `extdata/examples` folder).
-- The Pedigree Diagram article on the package website now walks through
+- The Pedigree Diagram article on the package website walks through
   those five example pedigrees one diagram at a time, with a short guide
   to reading each structure on the diagram: how the dashed line marks an
   animal drawn twice, and how the vermillion mate-line marks each
@@ -228,17 +194,18 @@ R. Mark Sharp, Ph.D.
   argument.
 - New: `kinship()` can now compute X-chromosome relatedness (instead of
   the usual whole-genome average) via a new `chrtype = "x"` option --
-  useful for traits carried on the X chromosome. The default behavior
-  (`chrtype =   "autosome"`) is unchanged; every existing use of
-  `kinship()` keeps working exactly as before. Script-callable only; no
-  Shiny screen yet.
+  useful for traits carried on the X chromosome. It needs the animals'
+  `sex` supplied. The default behavior (`chrtype = "autosome"`) is
+  unchanged; every existing use of `kinship()` keeps working exactly as
+  before. Script-callable only; the Shiny app has no screen for it.
 - New `shrinkPedigree()` trims a large pedigree down to just the animals
   needed to keep it genetically informative within a genotyping budget,
   given which animals are already genotyped and, optionally, which are
   affected by a condition of interest. Ties are broken in a fixed,
   repeatable order (kinship2's own equivalent function breaks ties
   randomly, so the same input there can give a different answer from one
-  run to the next). Script-callable only; no Shiny screen yet.
+  run to the next). Script-callable only; the Shiny app has no screen
+  for it.
 
 ## Marker Genetics
 
@@ -301,8 +268,8 @@ R. Mark Sharp, Ph.D.
   designations -- two named haplotypes per animal, one row per animal,
   like the bundled `rhesusGenotypes` example data. Designations are
   taken exactly as written (a trailing `?` marks a provisional call).
-  This is the first step toward MHC haplotype frequency and
-  rare-haplotype reporting (issue \#148).
+  The MHC haplotype frequency and rare-haplotype reports read files in
+  this same format (issue \#148).
 - New `mhcHaplotypeFrequency()` summarizes how common each MHC haplotype
   is in a colony: copies, carriers, and frequency per haplotype, with
   missing and provisional calls disclosed rather than silently dropped.
@@ -333,17 +300,22 @@ R. Mark Sharp, Ph.D.
 
 - New `resolveCrossCenterIds()` merges pedigree records for the same
   animals held by two different centers, using a curator-confirmed
-  id-matching table.
+  id-matching table. Merging preserves every one of an animal's own data
+  columns (issue \#149).
 - New `checkCrossCenterMapping()` reports every problem with a
   cross-center id-matching table at once, instead of stopping at the
-  first one found. Merging preserves every one of an animal's own data
-  columns (issue \#149).
+  first one found (issue \#149).
 - New **Cross-Center Identity** tab: walks a curator through matching
   and merging records from two centers, with a preview and downloadable
   results behind a confirmation step (issue \#149).
 
 ## Genetic Value Analysis
 
+- Fixed: unchecking "Display Unknown IDs" in the Pedigree Browser no
+  longer stops the Genetic Value Analysis with a "logic error". The box
+  now hides rows only in the Pedigree Browser table; every other tab
+  uses the full pedigree (the "Trim pedigree based on focal animals" box
+  still narrows it).
 - The Genetic Value Analysis tab gained a configurable **Ranking
   Scheme** control: choose a priority-tier ranking alongside the
   existing combined kinship/uniqueness score (issue \#125). Script
@@ -359,20 +331,61 @@ R. Mark Sharp, Ph.D.
 
 ## Breeding Group Formation
 
-- The Breeding Group Formation tab now shows up to 5 candidate groupings
-  per run, with a selector and comparison table (issue \#125). Script
-  users: `groupAddAssign()` gained a matching `candidates` field in its
-  return value.
+- The Breeding Group Formation tab shows several candidate groupings per
+  run, with a selector and comparison table (issue \#125). A
+  **Candidates to retain** control sets how many are kept (default 5,
+  from 1 to 50). Script users: `groupAddAssign()` returns a `candidates`
+  field and takes a matching `maxCandidates` argument (issue \#146).
 - The Breeding Group Formation tab gained an **Include animals by**
   control: an alternative genetic-value-floor option alongside the
   existing top-N cutoff (issue \#128).
-- The Breeding Group Formation tab gained a **Candidates to retain**
-  control, replacing a fixed cap of 5. Script users: `groupAddAssign()`
-  gained a matching `maxCandidates` argument (issue \#146).
 - The Breeding Group Formation tab gained an **Exhaustive enumeration
-  mode** checkbox: checks every possible single-group split instead of
-  sampling, for the simplest case. Script users: `groupAddAssign()`
-  gained a matching `exhaustive` argument (issue \#146).
+  mode** checkbox: instead of sampling, it lists every maximal group of
+  animals that can be housed together, for the simplest case only (one
+  group, no harem, no custom sex ratio). It stops with a message when
+  more than 20 candidate animals are eligible, and it returns what it
+  has found after 10 seconds. Script users: `groupAddAssign()` gained
+  matching `exhaustive`, `maxExhaustiveCandidates` and
+  `exhaustiveTimeLimit` arguments (issue \#146).
+- The Breeding Group Formation tab can follow your center's ancestry
+  rules (issue \#168). Describe your ancestry compatibility policy in a
+  simple rules file -- each line names two ancestry groups (for example
+  Indian-origin and Chinese-origin rhesus) and says whether mixing them
+  should be blocked or just pointed out -- and upload it in the new
+  **Ancestry Guardrails** section next to the kinship threshold. Animal
+  pairs a "block" rule names can no longer end up in the same group,
+  whatever their sexes and in every formation mode; pairs a "flag" rule
+  names still form freely and are pointed out afterward. With no rules
+  file, formation behaves exactly as before.
+- Ancestry Guardrails status and results: a status line always shows
+  what is loaded (for example "2 block, 2 flag rule(s)") and how many
+  animals no rule reaches, so a rule set that quietly covers too little
+  is visible at a glance. A problem in the file is reported as a notice
+  and ignored rather than stopping your run, and a pedigree without
+  ancestry information simply leaves the guardrails inactive, with the
+  status line saying so. A new **Ancestry** results tab lists every
+  within-group pairing your rules matched for the groups just formed,
+  alongside a coverage summary showing how many animals each ancestry
+  group holds and which ones no rule reaches.
+- Ancestry Guardrails overrides and audit record: when professional
+  judgment says a block rule should not apply -- say, an approved
+  founder import -- you can override that one rule for your session
+  through a confirmation step that requires a written reason; overridden
+  pairings stay visible in the violations list, marked "overridden",
+  never silently dropped. A downloadable audit record accompanies each
+  formation run, listing the rules in effect, any overrides with their
+  reasons, and the warning text shown at the confirmation step, so the
+  decision trail leaves the tool with the groups. One caveat, stated in
+  the documentation: in harem formation the automatically chosen sire
+  himself is not checked against the rules (his groupmates are checked
+  against each other).
+- Ancestry Guardrails for script users: `readAncestryRules()` and
+  `checkAncestryRules()` read and validate the rules file,
+  `groupAddAssign()` takes a matching optional `ancestryRules` argument,
+  and `reportAncestryViolations()` lists every flagged or blocked
+  pairing in groups you already have, plus a summary showing how many
+  animals each rule does and does not reach; a worked example rules file
+  and a matching example pedigree ship with the package.
 
 ## Mate Pair Analysis
 
@@ -381,6 +394,25 @@ R. Mark Sharp, Ph.D.
   \#151).
 - New **Mate Pair Analysis** tab: a curator view built on the report
   above, kept separate from Breeding Group Formation (issue \#151).
+- Mate pair reports can follow your center's ancestry rules (issue
+  \#169). Load the rules file on the Breeding Groups tab and the **Mate
+  Pair Analysis** tab uses it too: a pair a "block" rule names moves to
+  the Excluded tab with the reason "ancestry rule", and a pair a "flag"
+  rule names stays in Eligible Pairs with its rule shown, in the
+  exported file as well. A status line on the tab says whether rules are
+  active and how many animals no rule covers, and the "Ancestry
+  Guardrails" section explains what the rules do there. When a block
+  rule should not apply to a particular run, choose **Override rule...**
+  in that section and give a written reason: the rule's pairs then stay
+  in Eligible Pairs, marked "overridden", instead of moving to Excluded.
+  The new **Ancestry** tab shows how many animals each ancestry group
+  holds and which ones no rule reaches, and **Download Audit Manifest**
+  saves the rules in effect, any overrides with their reasons, pair
+  counts, and the confirmation warning text, so the decision trail
+  leaves the tool with the results. In scripts, `reportMatePairs()`
+  takes the same rules through the new optional `ancestryRules` and
+  `overriddenRules` arguments. Without rules, or when the pedigree has
+  no ancestry column, the report and the tab are exactly as before.
 
 ## De-Identified Export
 
@@ -388,27 +420,141 @@ R. Mark Sharp, Ph.D.
   `TRUE`): shifts all of one animal's dates by the same offset when
   de-identifying, so the gaps between its own dates stay realistic
   instead of possibly ending up out of order (issue \#150).
-- New **De-Identified Export** tab: a curator workflow with a live
-  preview and 3 downloadable files (the de-identified pedigree, a record
-  of what was changed, and a private key to re-identify records later)
-  behind a confirmation step (issue \#150).
+- New **De-Identified Export** tab: a curator workflow with a preview
+  generated on request and 3 downloadable files (the de-identified
+  pedigree, a record of what was changed, and a private key to
+  re-identify records later) behind a confirmation step (issue \#150).
+
+## Longitudinal Monitoring
+
+- Colony managers can now keep a running history file of dated colony
+  snapshots -- one row of colony-level genetic-health values per
+  recorded date (mean kinship, founder representation, genome
+  uniqueness, and related summaries) -- to see whether a colony's
+  genetic health is improving or eroding over time (issue \#167). Script
+  users: new `readSnapshotHistory()`, `checkSnapshotHistory()`, and
+  `appendColonySnapshot()` read, validate, and extend the history; a
+  worked example history ships with the package.
+- Colony managers can now record a snapshot directly from a finished
+  genetic value analysis with the new `createColonySnapshot()` function:
+  it captures the analysis's colony-level results and the population's
+  make-up in a single dated row, together with the settings used, so
+  snapshots recorded months apart can be compared fairly. As a
+  safeguard, it double-checks that the stated animal-membership rule
+  (the whole pedigree, or the designated focal population) matches the
+  animals that were actually analyzed, and refuses to record a snapshot
+  that misstates it (issue \#167).
+- Colony managers can now see where their colony is heading: the new
+  `plotSnapshotTrends()` function draws each recorded genetic-health
+  value over time from a snapshot history, and the new
+  `calcSnapshotDeltas()` function lists what changed, value by value,
+  between any two recorded dates. Trend lines show the uncertainty
+  around the values that come from repeated random sampling, and both
+  the plots and the change table point out when two snapshots were
+  recorded under different settings or software versions, so a jump in
+  the numbers is not mistaken for a real change in the colony (issue
+  \#167).
+- Colony managers can now see genetic-health trends directly in the app:
+  a new **Genetic-Health Trends** tab lets you upload a snapshot history
+  (or start a new one), record a new dated snapshot from the genetic
+  value analysis you just ran, view the trend plot for every recorded
+  value, and compare any two dates side by side. Both the plot and the
+  comparison point out when snapshots were recorded under different
+  settings or software versions, so a jump in the numbers is not
+  mistaken for a real change in the colony. Updated histories and
+  comparison tables can be downloaded for record-keeping (issue \#167).
 
 ## General Fixes
 
-- Fixed: on the Marker Genetics tab, generating a de-identified export
-  preview could abruptly end the session -- the app grayed out and
-  stopped responding -- when the uploaded genotype file included an
-  animal missing from the loaded pedigree, or when an uploaded file had
-  failed its format check (in that case even uploading the file could
-  end the session). The app now stays connected, skips building the
-  preview, and explains why next to the export controls.
 - Fixed: the sort order in a few tables (the Genetic Value Analysis
   tiers, the main pedigree table, and the Breeding Group member table)
   could vary depending on the server's own regional settings, purely
   from how ids happened to sort -- not from any real difference in the
   data. All three now sort in a fixed, consistent order everywhere.
+- Fixed: `removeUnknownAnimals()`, which removes the animals that were
+  added as stand-ins for unknown parents, now removes only those animals
+  and keeps all the others. It used to return an empty pedigree when the
+  pedigree had no record of which animals were added, and it lost
+  animals whose record of being added was blank or unrecognized,
+  sometimes leaving a blank row behind. A pedigree with no added animals
+  now comes back as it was.
+- Fixed: `convertDate()`, the date-conversion step of the pedigree
+  check, now sets aside only the animals that were added as stand-ins
+  for unknown parents. It used to lose any animal whose record of being
+  added was blank or unrecognized, sometimes leaving a blank row behind,
+  and the invalid-date check could stop with an unexplained error. Those
+  animals are now kept and their dates are checked like any other
+  animal's.
+- Fixed: the pedigree check's "Duplicate IDs found" list could name
+  animals that were not duplicated at all -- stand-ins the program had
+  added for unknown parents -- whenever the pedigree also held a real
+  duplicate. It now lists only the ids that really appear more than
+  once, and `removeDuplicates()` now also checks animals whose record of
+  being added is blank or unrecognized, which it used to skip or report
+  wrongly.
+- Fixed: `correctParentSex()`, which reports sires recorded as female
+  and dams recorded as male, could list `NA` in place of an animal's id,
+  or skip an animal, when a script gave it a record of which animals
+  were added that was missing, blank or unrecognized. It now sets aside
+  only the animals recorded as added and checks every other animal,
+  including when no such record is given. The Shiny app was not
+  affected.
+- Fixed: when a pedigree lists an animal as its own ancestor (for
+  example, two animals each entered as the other's sire),
+  `getAncestors()`, `findLoops()` and `countLoops()` now stop with a
+  message that names the animals involved, instead of failing with an
+  unexplained "infinite recursion" error.
+- Fixed: the pedigree check gives each unknown parent a stand-in id
+  (`U0001`, `U0002`, and so on). If a real animal already had one of
+  those ids, the stand-in could be given the same id, so two different
+  animals shared it. The check, and `addUIds()`, now skip any id already
+  in the pedigree, including an id that appears only as a sire or dam
+  and has no row of its own.
+- Fixed: a real animal whose id happens to start with a capital U (such
+  as `U1`, `U123` or `Uma`) was mistaken for one of those stand-ins, so
+  it was left out of the founder and breeder counts, hidden when
+  "Display Unknown IDs" was turned off, and its offspring were shown as
+  having an unknown parent. Only ids shaped like a stand-in -- a U
+  followed by at least four capital letters or digits, such as `U0001`
+  -- are now treated that way.
+- New `placeholder` column: the pedigree check adds a yes/no
+  `placeholder` column recording which animals are stand-ins. A center
+  can enter `FALSE` for a real animal whose id looks like a stand-in
+  (such as `U1234`) and it is kept as a real animal, including in
+  Potential Parents, the Pedigree Browser's "Display Unknown IDs" box,
+  the genetic value report's founder counts and parentage labels, and
+  the breeder counts behind the effective population size; a value other
+  than TRUE, FALSE, 1, 0 or blank stops the check and names the rows.
+  The column is kept in the files you download from the app, so the
+  marks survive a save and re-upload. The de-identified export gives a
+  real animal whose id looks like a stand-in an alias that still reads
+  as a real animal, and linking one animal across two centers keeps its
+  mark (the real record wins if the centers disagree).
+- Fixed: Potential Parents (`getPotentialParents()`) rules out as a
+  possible dam any female who gave birth to another animal too close in
+  time to have also carried this one. When no female nearby was a proven
+  breeder, it fell back to listing every female old enough to be the dam
+  and let such a female back in. The fallback now leaves her out too.
+- Changed: Potential Parents (`getPotentialParents()`) now lists
+  candidates only for the parent that is missing. An animal with a
+  recorded dam and no recorded sire gets candidate sires and a blank dam
+  column, and the reverse for a recorded sire. Before, the recorded dam
+  was always ruled out of her own animal's list, so those dam lists were
+  never useful.
+- Fixed: the pedigree check reported a sire or dam whose sex was blank,
+  misspelled, or had an extra space (such as `"M "`) as a "female sire"
+  or "male dam", and stopped the upload. Spaces around a sex code are
+  now ignored, and a blank or unreadable sex is read as unknown, the
+  same as a missing one.
+- Fixed: the Shiny app read an empty cell in an uploaded CSV or text
+  file as a value rather than as missing, unlike Excel uploads and
+  `getPedigree()`. A file whose founders had blank sire and dam cells
+  would not load, a blank ancestry was counted as OTHER instead of
+  UNKNOWN, and the Genetic Value report ranked a founder with a blank
+  origin as an import instead of "Undetermined". An empty cell is now
+  read as missing, so the app gives the same results as a script.
 
-# nprcgenekeepr 2.0.0 (20260708)
+# nprcgenekeepr 2.0.0 (20260721)
 
 - Major changes
   - **(breaking)** `qcStudbook()` and `geneDrop()` now reject `id`,
@@ -602,9 +748,9 @@ R. Mark Sharp, Ph.D.
     visible on page load.
   - `data(examplePedigree)` now includes a `fromCenter` (colony-origin)
     column, derived from its existing `origin`/`recordStatus` fields, so
-    the Potential Parents tab can show a populated result (1,587
-    candidates) against the package's own example data instead of only
-    its graceful-degradation message.
+    the Potential Parents tab can show a populated result (1,587 animals
+    with an unknown parent) against the package's own example data
+    instead of only its graceful-degradation message.
 
 # nprcgenekeepr 1.0.8 (20250723)
 
@@ -660,7 +806,7 @@ R. Mark Sharp, Ph.D.
   - Changed call `as.character(date_object)` to `format(date_object)` in
     getDatedFileName.R to prepare for newer code in development version
     of
-    18. 
+    18\.
   - Technical edits of R code based on `lintr::lint_dir("R")`
 
 # nprcgenekeepr 1.0.5.9003 (20220625)
@@ -911,9 +1057,9 @@ R. Mark Sharp, Ph.D.
     into the Rd-files. Since I have tests, I am wrapping the examples in
     .
   - Added code prior to changing `par()` in *getPyramidPlot.R* to reset
-    `par()` with  
-    `opar <- par(no.readonly =TRUE)`  
-    `on.exit(par(opar))`  
+    `par()` with\
+    `opar <- par(no.readonly =TRUE)`\
+    `on.exit(par(opar))`\
   - Removed the word "Implements" from the title.
   - Reworded the first sentence of the Description element and therein
     removing "implements" and "nprcmanager" as unnecessary words.

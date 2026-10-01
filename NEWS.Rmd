@@ -1,7 +1,6 @@
 ---
 title: "NEWS"
 author: "R. Mark Sharp, Ph.D."
-date: "2026-01-26"
 output:
    github_document:
      html_preview: false
@@ -13,10 +12,6 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 # nprcgenekeepr 2.0.0.9000 (development version)
-
-## Package
-- CRAN accepted the 2.0.0 submission (tagged `v2.0.0`); published
-  2026-07-26.
 
 ## Pedigree Diagram
 - The Pedigree Browser tab gained an interactive **Diagram** view: click
@@ -204,7 +199,8 @@ knitr::opts_chunk$set(echo = TRUE)
   `cumulateSimKinships()` all gained a matching `twinRelations` argument.
 - New: `kinship()` can now compute X-chromosome relatedness (instead of the
   usual whole-genome average) via a new `chrtype = "x"` option -- useful
-  for traits carried on the X chromosome. The default behavior (`chrtype =
+  for traits carried on the X chromosome. It needs the animals' `sex`
+  supplied. The default behavior (`chrtype =
   "autosome"`) is unchanged; every existing use of `kinship()` keeps
   working exactly as before. Script-callable only; the Shiny app has no
   screen for it.
@@ -307,11 +303,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Cross-Center Identity Matching
 - New `resolveCrossCenterIds()` merges pedigree records for the same
   animals held by two different centers, using a curator-confirmed
-  id-matching table.
+  id-matching table. Merging preserves every one of an animal's own data
+  columns (issue #149).
 - New `checkCrossCenterMapping()` reports every problem with a
   cross-center id-matching table at once, instead of stopping at the
-  first one found. Merging preserves every one of an animal's own data
-  columns (issue #149).
+  first one found (issue #149).
 - New **Cross-Center Identity** tab: walks a curator through matching
   and merging records from two centers, with a preview and downloadable
   results behind a confirmation step (issue #149).
@@ -334,20 +330,22 @@ knitr::opts_chunk$set(echo = TRUE)
   a comparable peer group (issue #127).
 
 ## Breeding Group Formation
-- The Breeding Group Formation tab now shows up to 5 candidate groupings
-  per run, with a selector and comparison table (issue #125). Script users:
-  `groupAddAssign()` gained a matching `candidates` field in its return
-  value.
+- The Breeding Group Formation tab shows several candidate groupings per
+  run, with a selector and comparison table (issue #125). A **Candidates to
+  retain** control sets how many are kept (default 5, from 1 to 50). Script
+  users: `groupAddAssign()` returns a `candidates` field and takes a
+  matching `maxCandidates` argument (issue #146).
 - The Breeding Group Formation tab gained an **Include animals by**
   control: an alternative genetic-value-floor option alongside the existing
   top-N cutoff (issue #128).
-- The Breeding Group Formation tab gained a **Candidates to retain**
-  control, replacing a fixed cap of 5. Script users: `groupAddAssign()`
-  gained a matching `maxCandidates` argument (issue #146).
 - The Breeding Group Formation tab gained an **Exhaustive enumeration
-  mode** checkbox: checks every possible single-group split instead of
-  sampling, for the simplest case. Script users: `groupAddAssign()` gained
-  a matching `exhaustive` argument (issue #146).
+  mode** checkbox: instead of sampling, it lists every maximal group of
+  animals that can be housed together, for the simplest case only (one
+  group, no harem, no custom sex ratio). It stops with a message when more
+  than 20 candidate animals are eligible, and it returns what it has found
+  after 10 seconds. Script users: `groupAddAssign()` gained matching
+  `exhaustive`, `maxExhaustiveCandidates` and `exhaustiveTimeLimit`
+  arguments (issue #146).
 - The Breeding Group Formation tab can follow your center's ancestry
   rules (issue #168). Describe your ancestry compatibility policy in a
   simple rules file -- each line names two ancestry groups (for example
@@ -356,28 +354,30 @@ knitr::opts_chunk$set(echo = TRUE)
   **Ancestry Guardrails** section next to the kinship threshold. Animal
   pairs a "block" rule names can no longer end up in the same group,
   whatever their sexes and in every formation mode; pairs a "flag" rule
-  names still form freely and are pointed out afterward. A status line
-  always shows what is loaded ("2 block, 2 flag rule(s)") and how many
-  animals no rule reaches, so a rule set that quietly covers too little
-  is visible at a glance. A problem in the file is reported as a notice
-  and ignored rather than stopping your run, and a pedigree without
-  ancestry information simply leaves the guardrails inactive, with the
-  status line saying so. A new **Ancestry** results tab lists every
+  names still form freely and are pointed out afterward. With no rules
+  file, formation behaves exactly as before.
+- Ancestry Guardrails status and results: a status line always shows what
+  is loaded (for example "2 block, 2 flag rule(s)") and how many animals no
+  rule reaches, so a rule set that quietly covers too little is visible at a
+  glance. A problem in the file is reported as a notice and ignored rather
+  than stopping your run, and a pedigree without ancestry information simply
+  leaves the guardrails inactive, with the status line saying so. A new **Ancestry** results tab lists every
   within-group pairing your rules matched for the groups just formed,
   alongside a coverage summary showing how many animals each ancestry
-  group holds and which ones no rule reaches. When professional judgment
-  says a block rule should not apply -- say, an approved founder import
-  -- you can override that one rule for your session through a
+  group holds and which ones no rule reaches.
+- Ancestry Guardrails overrides and audit record: when professional
+  judgment says a block rule should not apply -- say, an approved founder
+  import -- you can override that one rule for your session through a
   confirmation step that requires a written reason; overridden pairings
   stay visible in the violations list, marked "overridden", never
   silently dropped. A downloadable audit record accompanies each
   formation run, listing the rules in effect, any overrides with their
   reasons, and the warning text shown at the confirmation step, so the
-  decision trail leaves the tool with the groups. With no rules file,
-  formation behaves exactly as before. One caveat, stated in the
-  documentation: in harem formation the automatically chosen sire
+  decision trail leaves the tool with the groups. One caveat, stated in
+  the documentation: in harem formation the automatically chosen sire
   himself is not checked against the rules (his groupmates are checked
-  against each other). Script users: `readAncestryRules()` and
+  against each other).
+- Ancestry Guardrails for script users: `readAncestryRules()` and
   `checkAncestryRules()` read and validate the rules file,
   `groupAddAssign()` takes a matching optional `ancestryRules` argument,
   and `reportAncestryViolations()` lists every flagged or blocked
@@ -415,9 +415,10 @@ knitr::opts_chunk$set(echo = TRUE)
   shifts all of one animal's dates by the same offset when de-identifying,
   so the gaps between its own dates stay realistic instead of possibly
   ending up out of order (issue #150).
-- New **De-Identified Export** tab: a curator workflow with a live preview
-  and 3 downloadable files (the de-identified pedigree, a record of what
-  was changed, and a private key to re-identify records later) behind a
+- New **De-Identified Export** tab: a curator workflow with a preview
+  generated on request and 3 downloadable files (the de-identified pedigree,
+  a record of what was changed, and a private key to re-identify records
+  later) behind a
   confirmation step (issue #150).
 
 ## Longitudinal Monitoring
@@ -459,13 +460,6 @@ knitr::opts_chunk$set(echo = TRUE)
   comparison tables can be downloaded for record-keeping (issue #167).
 
 ## General Fixes
-- Fixed: on the Marker Genetics tab, generating a de-identified export
-  preview could abruptly end the session -- the app grayed out and stopped
-  responding -- when the uploaded genotype file included an animal missing
-  from the loaded pedigree, or when an uploaded file had failed its format
-  check (in that case even uploading the file could end the session). The
-  app now stays connected, skips building the preview, and explains why
-  next to the export controls.
 - Fixed: the sort order in a few tables (the Genetic Value Analysis tiers,
   the main pedigree table, and the Breeding Group member table) could vary
   depending on the server's own regional settings, purely from how ids
@@ -509,16 +503,16 @@ knitr::opts_chunk$set(echo = TRUE)
   left out of the founder and breeder counts, hidden when "Display Unknown IDs"
   was turned off, and its offspring were shown as having an unknown parent. Only
   ids shaped like a stand-in -- a U followed by at least four capital letters
-  or digits, such as `U0001` -- are now treated that way; the shipped ancestry
-  example now counts its founder `U1` (4 female founders, not 3). The pedigree
-  check also adds a yes/no `placeholder` column recording which animals are
-  stand-ins. A center can enter `FALSE` for a real animal whose id looks like a
-  stand-in (such as `U1234`) and it is kept as a real animal, including in
-  Potential Parents, the Pedigree Browser's "Display Unknown IDs" box, the
-  genetic value report's founder counts and parentage labels, and the breeder
-  counts behind the effective population size; a value other than TRUE, FALSE,
-  1, 0 or blank stops the check and names the rows. The column is kept in the
-  files you download from the app, so the marks survive a save and re-upload. The de-identified export gives a real
+  or digits, such as `U0001` -- are now treated that way.
+- New `placeholder` column: the pedigree check adds a yes/no `placeholder`
+  column recording which animals are stand-ins. A center can enter `FALSE` for a
+  real animal whose id looks like a stand-in (such as `U1234`) and it is kept as
+  a real animal, including in Potential Parents, the Pedigree Browser's
+  "Display Unknown IDs" box, the genetic value report's founder counts and
+  parentage labels, and the breeder counts behind the effective population
+  size; a value other than TRUE, FALSE, 1, 0 or blank stops the check and names
+  the rows. The column is kept in the files you download from the app, so the
+  marks survive a save and re-upload. The de-identified export gives a real
   animal whose id looks like a stand-in an alias that still reads as a real
   animal, and linking one animal across two centers keeps its mark (the real
   record wins if the centers disagree).
@@ -542,14 +536,8 @@ knitr::opts_chunk$set(echo = TRUE)
   was counted as OTHER instead of UNKNOWN, and the Genetic Value report ranked a
   founder with a blank origin as an import instead of "Undetermined". An empty
   cell is now read as missing, so the app gives the same results as a script.
-- Fixed: the example tab-delimited pedigree file `ExamplePedigree.txt` had
-  been saved through Excel, which wrote every age as a date (or as `#####` for
-  a negative age) and changed one animal's ID. Uploaded to the app, its ages
-  arrived as dates and 106 animals lost their ancestry and status, and
-  `getPedigree()` could not read it. It now holds the same data as
-  `ExamplePedigree.csv`.
 
-# nprcgenekeepr 2.0.0 (20260708)
+# nprcgenekeepr 2.0.0 (20260721)
 - Major changes
   - **(breaking)** `qcStudbook()` and `geneDrop()` now reject `id`, `sire`, or
     `dam` values containing a period (offenders returned in
@@ -730,8 +718,8 @@ knitr::opts_chunk$set(echo = TRUE)
     page load.
   - `data(examplePedigree)` now includes a `fromCenter` (colony-origin)
     column, derived from its existing `origin`/`recordStatus` fields, so the
-    Potential Parents tab can show a populated result (1,587 candidates)
-    against the package's own example data instead of only its
+    Potential Parents tab can show a populated result (1,587 animals with an
+    unknown parent) against the package's own example data instead of only its
     graceful-degradation message.
 
 # nprcgenekeepr 1.0.8 (20250723)
