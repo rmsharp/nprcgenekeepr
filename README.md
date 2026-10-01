@@ -1,11 +1,11 @@
 README
 ================
 R. Mark Sharp, Ph.D.
-2026-08-18
+2026-09-30
 
 # nprcgenekeepr <a href="https://github.com/rmsharp/nprcgenekeepr"><img src="man/figures/logo.png" align="right" height="138" alt="" /></a>
 
-Version 2.0.0.9000 (2026-08-18)
+Version 2.0.0.9000 (2026-09-28)
 
 <!-- badges: start -->
 
@@ -40,10 +40,12 @@ Southwest National Primate Research Center and P51 OD011092 to the
 Oregon National Primate Research Center.
 
 <!--It is now managed and maintained as a joint effort between ONPRC-->
+
 <!--and Southwest National Primate Research Center (SNPRC) with the -->
+
 <!--coding being done by R. Mark Sharp, Ph.D.-->
 
-At present, the application supports 5 functions:
+The application’s main functions include:
 
 1.  Quality control of studbooks contained in text files or Excel
     workbooks and of pedigrees within LabKey Electronic Health Records
@@ -56,7 +58,12 @@ At present, the application supports 5 functions:
 5.  Creation of potential breeding groups with and without proscribed
     sex ratios and defined maximum kinships.
 
-**For more information see:**  
+The application has further tabs for mate pair analysis, genetic
+diversity, marker genetics, potential parents, cross-center identity
+mapping, de-identified export, and genetic-health trends. The Colony
+Manager Guide article describes them.
+
+**For more information see:**\
 A Practical Approach for Designing Breeding Groups to Maximize Genetic
 Diversity in a Large Colony of Captive Rhesus Macaques (*Macaca
 mulatta*) Vinson, A ; Raboin, MJ *Journal Of The American Association
@@ -94,8 +101,10 @@ The `Reference` menu at the top of the page brings up the list of
 documentation for `Data objects`, `Major Features and Functions`,
 `Primary interactive functions` and `All exposed functions`.
 
-The `Articles` menu brings up the list of vignettes, which are, except
-for `Development Plans`, tutorials for using the package.
+The `Articles` menu brings up the list of articles and vignettes. Most
+are tutorials for using the package; a few, such as the validation and
+release engineering articles, document how the software was checked and
+built.
 
 The `Changelog` brings up a copy of the NEWS file of the package, which
 records the major changes made for each version.
@@ -125,28 +134,32 @@ parents have the appropriate sex listed, no animals are listed as both a
 sire and a dam, duplicate entries are removed, pedigree generation
 numbers are added, and all dates are valid dates. In addition, exit
 dates are added if possible and are consistent with other information
-such as departure dates and death dates. Current ages of animals that
-are still alive are added if a database connection is provided via a
-configuration file and the user has read permission on a LabKey server
-with the demographic data in an *EHR* (Electronic Health Record) module.
-See [LabKey
-documentation](https://www.labkey.org/Documentation/wiki-page.view?name=netrc).
+such as departure dates and death dates. Ages are added from the birth
+and exit dates when the file has valid birth dates and no age column;
+the current date is used as the end point for animals with no exit date.
+No database connection is needed. (A connection is used only to build a
+pedigree from a list of animals with LabKey, described below.)
 
-Parents with ages below a user selected threshold are identified. A
-minimum parent age in years is set by the user and is used to ensure
-each parent is at least that age on the birth date of an offspring. The
-minimum parent age defaults to 2 years. This check is not performed for
-animals with missing birth dates.
+Parents with ages below a user selected threshold are identified. The
+user can set a minimum sire age and a minimum dam age in years, and each
+is used to ensure every sire or dam is at least that age on the birth
+date of an offspring. Leaving a field blank uses the minimum breeding
+age for the animal’s species; 2 years is used only when the species is
+missing or unknown. This check is not performed for animals with missing
+birth dates.
 
-### Creation of Pedigree From a List of Potential Breeders and LabKey 
+### Creation of Pedigree From a List of Potential Breeders and LabKey
 
 The user can enter a list of focal animals in a CSV file that will be
-used to create a pedigree containing all direct relative (ancestors and
+used to create a pedigree containing all direct relatives (ancestors and
 descendants) via the **labkey.selectRows** function within the
 **Rlabkey** package if a database connection is provided via a
 configuration file and the user has read permission on a LabKey server
 with the demographic data in an **EHR** (Electronic Health Record)
-module.
+module. Without a database connection, the user can instead upload a
+pedigree file together with the list of focal animals, and the pedigree
+of the focal animals is built from that file
+(`getFocalAnimalPedFromFile()`).
 
 Two configuration files are needed to use the database features of
 nprcgenekeepr with LabKey. The first file is named **\_netrc** on
@@ -193,8 +206,11 @@ percentage of the population at that age. The center of the pyramid
 starts at zero population and extends out to the left for males and
 right for females in increasing size, or proportion of the population.
 
-Along the vertical axis (y-axis), age-sex pyramids display two-year age
-increments, from birth at the bottom to old age at the top.
+Along the vertical axis (y-axis), age-sex pyramids display age
+increments, from birth at the bottom to old age at the top. The
+application uses two-year increments by default; the **Bin Size**
+control accepts 1 to 10, and **Age Unit** switches between years and
+months.
 
 ### Genetic Value Analysis Reports
 

@@ -38,8 +38,8 @@ bottom of the side panel on the _Input_ tab.
 When the _Debug on_ checkbox is checked (it is not checked by default), 
 the application writes to a file named 
 _nprcgenekeepr.log_ in the users home directory. 
-Currently, events in the Input tab (_R/modInput.R_), the application server
-(_R/appServer.R_), and the functions that read pedigree and genotype data are
+Currently, events in the Input tab (`R/modInput.R`), the application server
+(`R/appServer.R`), and the functions that read pedigree and genotype data are
 logged, as that is where most errors are exposed. 
 
 ### Code Coverage

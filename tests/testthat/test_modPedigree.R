@@ -61,8 +61,8 @@ test_that("modPedigreeUI includes guidance HTML content", {
   ui_html <- as.character(ui)
 
   # Check for actual content from the guidance HTML
-  expect_true(grepl("processed pedigree file", ui_html, ignore.case = TRUE) ||
-                grepl("Ego ID", ui_html))
+  expect_true(grepl("processed pedigree table", ui_html, ignore.case = TRUE) ||
+                grepl("stored column names", ui_html))
 })
 
 test_that("modPedigreeServer returns expected reactive list", {
