@@ -98,6 +98,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 823 Did
+**Deliverable:** fix the stale claims found by docs audit slice 3 in the 11 `vignettes/articles/*.qmd` (7 moderate, 22 minor),
+plus the `orderReport` and `qcStudbook` roxygen (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 821 Handoff Evaluation (by Session 822)
 **Score: 9/10.** BACKLOG's "Slice 3 next" line and the Next-steps item (C) gave the scope; the carried-items list (7 untracked
 drafts, `NEWS.md` lag, `CLAUDE.md` warn band) matched Orient exactly. **Missing:** nothing needed. **Wrong:** nothing found

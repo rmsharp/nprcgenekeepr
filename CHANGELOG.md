@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S823 claim (in progress): fix the stale claims found by docs audit slice 3 in the 11 `vignettes/articles/*.qmd` and the `orderReport` and `qcStudbook` roxygen. Owner chose it at the Phase 0 picker. Docs only.
+
 ### 2026-09-30 · [ad hoc] S822 close-out: docs staleness audit slice 3 (read-only). Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md`: prose of the 11 `vignettes/articles/*.qmd` has 7 moderate and 22 minor stale claims (hand-typed counts and one-line rule summaries: colony guide export count 182 vs 233, "six" vs 7 feature articles, Production and Undetermined descriptions; `genetic-value-analysis` tier 1; `breeding-group-formation` `minAge`/`threshold`/default female-female `ignore`); no broken chunk, link or function name. Scope narrowed at claim from "articles and manual components" to the 11 articles (manual components move to slice 4). Four read-only subagents did the claim checking; the Moderate findings were re-read against code. `BACKLOG.md` item updated (still open: fix the findings, then slice 4). No code, nothing pushed; no GitHub issue named; no new learning (S821 handoff evaluated 9/10, self 8/10).
 - **Model:** Claude Sonnet 5.5.
 

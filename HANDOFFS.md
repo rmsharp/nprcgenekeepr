@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S823
+date: 2026-09-30
+status: pending
+active_task: fix the stale claims from docs audit slice 3 in the 11 articles plus orderReport and qcStudbook roxygen (docs only)
+```
+
+```handoff
 session: S822
 date: 2026-09-30
 status: complete
