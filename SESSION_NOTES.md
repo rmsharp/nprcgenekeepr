@@ -98,56 +98,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 828 Handoff Evaluation (by Session 829)
+**Score: 8/10.** The BACKLOG item S828 left for this session was precise: it listed the ~15 paragraphs to move, the pointer-line rule,
+the Phase 3 wording change, the `budget:protected` fence and the `context_budget.py` check, so there was nothing to scope.
+The "docs only, no TDD gate" note and the owner-directed marker saved a question. **Missing:** a check that the named destination can be
+committed. **Wrong:** the item names `docs/CLOSEOUT_CHECKLISTS.md`, but `.gitignore` line 24 (`docs/*`) ignores every top-level file in
+`docs/` except whitelisted subdirectories, so that file could never be committed; the handoff's "master is 28 ahead of origin" was 32 at
+orientation (three commits of backlog notes and records landed after it was written). **ROI:** high.
+
 ### What Session 829 Did
-**Deliverable:** trim `CLAUDE.md` out of the warn band by moving the close-out checklists to `docs/CLOSEOUT_CHECKLISTS.md` (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (docs only):** trimmed `CLAUDE.md` out of the warn band. Moved the 13 "Additional close-out checks" paragraphs verbatim
+(confirmed by `diff` against `HEAD~` text) into `docs/conventions/CLOSEOUT_CHECKLISTS.md`; `CLAUDE.md` now has one trigger line per
+checklist plus a link, and Phase 3 rule 3 of the session protocol says to read the new file first. `CLAUDE.md` went from 26,731 B to
+19,486 B; `python3 context_budget.py` reports OK and the `budget:protected` fence is untouched.
+**Deviation from the BACKLOG item:** the file lives in `docs/conventions/`, not `docs/`, because top-level `docs/` files are git-ignored
+(`.gitignore:24`; `docs/conventions/` is whitelisted). Its one relative link (`CHANGELOG-legacy-pre-S325.md`) now reads `../archive/...`, the only
+non-verbatim edit.
+**Commits:** claim `5bc5dbe34`; content `70de12168`; records (this).
+**Verification:** `diff` of moved text against the old `CLAUDE.md` lines is empty; the link target resolves; `grep` found no test, code or
+script that reads `docs/` or the old section heading. Not run: full test suite and `devtools::check()` (no R, test or build-included file
+changed; `docs/` is `.Rbuildignore`d), no app smoke test (no runtime change).
+**Learnings:** Learning 834. **Reduction:** removed the S827 handoff evaluation and the "What Session 828 Did" block (in git and the S828 receipt).
 
-### Session 827 Handoff Evaluation (by Session 828)
-**Score: 9/10.** The next step (A) named the cluster 4 pages and finding ids, and "`summary_stats.html` UG24 is already fixed" saved
-a re-check; the audit's cluster 4 rows were complete and the evidence column let every claim be re-verified in minutes. The
-"grep `tests/testthat` for each page name first" gotcha was necessary but not sufficient: it finds the e2e files but missed
-`test_modPedigree.R:64`, which greps the rendered UI for a phrase from `pedigree_browser.html`. **Missing:** which tests read
-page *content* (not just file names). **Wrong:** nothing found (master is now 28 ahead of origin, not 24 as written).
-**ROI:** high.
-
-### What Session 828 Did
-**Deliverable, DONE (docs only, plus two page-text test assertions):** fixed slice 4 cluster 4, which closes slice 4. Fixed BB1-BB17, UG22,
-UG23, RM1-RM4 in `_pedigree_browser.Rmd`, `_summary_statistics.Rmd`, `_orip_reporting.Rmd`, `_summary_of_major_functions.Rmd`,
-`_software_development.Rmd`, `_introduction.Rmd`, `_online_documentation.Rmd`, `pedigree_browser.html`, `pyramidPlot.html`, and
-re-rendered `README.md`. Truths now stated: Rectilinear is the default edge style and the diagram cap is 400 (750 for Direct); the
-focal trim keeps ancestors and descendants only; the module returns eight reactives; Summary Statistics has six export buttons and
-shows min/1st/mean/median/3rd/max plus skewness and kurtosis; ORIP Reporting is a built tab shown only when the config file names
-ONPRC; ages are added from birth/exit dates with no database; minimum sire and dam age are separate fields (blank = species default);
-the offline focal-pedigree path exists; pyramid Bin Size 1-10 and Age Unit; the application has more tabs than five; the pedigree
-table shows raw column names; the tab is "Age-Sex Pyramid"; the logging call sites; the dated coverage number is gone.
-**Commits:** claim `2ceac67a8`; fixes `4ed44b77a`, `8c35cd311`, and the README/test commit; records (this).
-**Verification:** each claim re-read against `R/modSummaryStats.R`, `R/modPedigree.R`, `R/modORIPReporting.R`, `R/shouldShowOripTab.R`,
-`R/qcStudbook.R`, `R/modInput.R`, `R/modPyramid.R`, `R/appUI.R`; HTML tag balance checked on both pages; `test_wordlist_coverage.R`,
-`test_effectivePopulationSizeDocs.R`, `test_appServer_logging.R`, `test_modPyramid.R`, `test_modPedigree.R`, `test_modSummaryStats.R`,
-`test_modORIPReporting.R` pass; `NPRC_RUN_E2E=true` `test-e2e-pyramid-detailed.R` and `test-e2e-pedigree-tutorial.R` pass; lint clean on the two
-edited test files. Two failures found and fixed: `test_modPedigree.R:64` (asserted the removed "Ego ID" text) and the "Age Plot"
-pattern in `test-e2e-pyramid-detailed.R`. Not run: full suite, app smoke test (3E: help text only, pages not opened in the running
-app). `test_pkgdown_reference_config.R` still fails locally on the untracked `suggested_NEWS_entry` (known).
-**Learnings:** Learning 833. **Reduction:** removed the S826 handoff evaluation and the "What Session 827 Did" block (in git and the S827 receipt).
-
-**Self-assessment: 8/10.** + One deliverable, all cluster 4 findings closed; every claim traced to code; found and fixed two test
-couplings before commit. - Committed nine files across two commits first (the 5-file cap is per commit; I split them 5 + 5 after the
-edits, not at each boundary); did not open the pages in the running app; left `DESCRIPTION` and `_pkgdown.yml` "five groups" text for an
-owner decision; `README.md` render also shifted unrelated whitespace around HTML comments (pandoc version).
+**Self-assessment: 8/10.** + One deliverable; moved text proven verbatim; found the git-ignore trap and fixed the path before committing;
+under-warn-line result measured, not estimated. - Wrote the new file into the ignored location first and only learned it was ignored
+from `git check-ignore` afterwards (I should have run it before writing); a shell heredoc with backticks ate the first script run (no
+damage, caught by the error output).
 
 **Next steps:**
-- (A) Slice 5: `a2interactive.Rmd`, `man/`, `NEWS.Rmd`, then the internal docs (a read-only audit first, as slices 1-4 were; then fix by cluster).
-  Grep `tests/testthat` for the page name AND for the phrases you remove, and run the unit test for the module that embeds the page.
-- (B) Owner decisions: `DESCRIPTION`/`_pkgdown.yml` "five groups of functions" wording (BACKLOG slice 4 note), the four code defects, the stale
-  comment at `R/modPedigree.R:440-443`, `suggested_NEWS_entry.md` (commit or drop?), `NEWS.md` lag, `CLAUDE.md` in the warn band; master is 28 ahead
-  of origin (docs-only commits).
+- (A) The other BACKLOG READY items: reword the "five groups of functions" text in `DESCRIPTION` and `_pkgdown.yml` (Effort S), or docs-staleness
+  audit slice 5 (`a2interactive.Rmd`, `man/`, `NEWS.Rmd`, internal docs; read-only audit first, Effort L).
+- (B) Owner decisions still open: `suggested_NEWS_entry.md` (untracked since Sep 25; commit or drop?), the four code defects, the stale comment at
+  `R/modPedigree.R:440-443`; master is 35 ahead of origin (docs-only commits, never pushed since S819).
 
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md` (done), `BACKLOG.md` (slice 5 line), `vignettes/a2interactive.Rmd`.
+**Key files:** `CLAUDE.md:234-251` (new pointer list), `docs/conventions/CLOSEOUT_CHECKLISTS.md` (full checklists), `.gitignore:24-40` (docs whitelist),
+`BACKLOG.md` (Up Next).
 
-**Gotchas:** `test_pkgdown_reference_config.R` still fails locally on the untracked `suggested_NEWS_entry` article. `README.md` renders with
-pandoc-version whitespace noise around HTML comments (harmless). The `colony-manager-guide.qmd:527-529` caption lead from S826 is still not verified in the app.
+**Gotchas:** Close-out sessions must now read `docs/conventions/CLOSEOUT_CHECKLISTS.md`; `CLAUDE.md` only carries one-line triggers, so a session that
+skips the link will miss details such as the `--budget-bytes 65536` flag and the `methodology_trim.py` re-apply steps. A new file directly under
+`docs/` will not commit; use a whitelisted subdirectory or add a `!docs/<name>` line to `.gitignore`.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809

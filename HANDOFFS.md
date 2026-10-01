@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S829
 date: 2026-09-30
-status: pending
-active_task: Trim CLAUDE.md out of the warn band: move the close-out checklists to docs/CLOSEOUT_CHECKLISTS.md (docs only)
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE: trimmed CLAUDE.md out of the warn band (26,731 B to 19,486 B) by moving the 13 close-out checklists verbatim to docs/conventions/CLOSEOUT_CHECKLISTS.md; docs only
+what_was_done: Claim 5bc5dbe34; content 70de12168; records in the close-out commit. Moved text proven verbatim by diff; CLAUDE.md keeps one trigger line per checklist plus a link, and session-protocol rule 3 says to read the new file at close-out. File placed in docs/conventions/ (not docs/, which .gitignore:24 ignores); one relative link fixed to ../archive/. context_budget.py reports OK. Learning 834.
+next_steps: Pick another READY item: reword the five-groups text in DESCRIPTION and _pkgdown.yml (Effort S), or docs-staleness audit slice 5 (Effort L). Owner decisions open: suggested_NEWS_entry.md commit-or-drop, four code defects, stale comment R/modPedigree.R:440-443. Master is 35 ahead of origin.
+key_files: CLAUDE.md:234-251, docs/conventions/CLOSEOUT_CHECKLISTS.md, .gitignore:24-40, BACKLOG.md
+gotchas: Read docs/conventions/CLOSEOUT_CHECKLISTS.md at every close-out; CLAUDE.md only has one-line triggers. New files directly under docs/ are git-ignored. Not run: full suite, devtools::check() (no built or tested file changed), app smoke test.
 ```
 
 ```handoff
