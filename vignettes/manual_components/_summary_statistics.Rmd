@@ -30,6 +30,8 @@ The module provides a structured display with three main sections:
    - Male Founders (CSV)
    - Female Founders (CSV)
    - First-Order Relationships (CSV)
+   - All Relationships (CSV)
+   - Relationship Classes (CSV)
 
 3. **Population Summary**: Dynamic HTML output showing:
    - Total number of animals analyzed
@@ -80,8 +82,9 @@ Both effective sizes idealize a Wright-Fisher population (constant size,
 discrete generations, random union of gametes), so each is best read as an
 index of one source of diversity loss rather than a literal head count.
 
-For Mean Kinship and Genome Uniqueness, displays the Tukey five-number summary:
-minimum, 1^st^ quartile, median, mean, 3^rd^ quartile, and maximum.
+For Mean Kinship and Genome Uniqueness, displays the minimum, 1^st^ quartile,
+mean, median, 3^rd^ quartile, and maximum, followed by the skewness and kurtosis
+of each distribution.
 
 ### Module Interface
 
@@ -91,6 +94,12 @@ The `modSummaryStats` module accepts inputs from upstream modules and returns:
   - `nAnimals`: Count of animals in the analysis
   - `meanMK`: Average mean kinship value
   - `meanGU`: Average genome uniqueness value
+- `relationships`, `relationClasses`, and `firstOrderCounts`: the data behind
+  the three relationship exports
+- `mkSummary`, `guSummary`, `mkShape`, and `guShape`: the summary values and the
+  skewness and kurtosis for mean kinship and genome uniqueness
+- `mkHistogram`, `zscoreHistogram`, `guHistogram`, `meanKinshipBoxPlot`,
+  `zscoreBoxPlot`, and `guBoxPlot`: the six plots
 
 ### Population Genetics Terms
 

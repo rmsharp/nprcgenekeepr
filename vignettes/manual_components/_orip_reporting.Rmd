@@ -13,10 +13,22 @@ vignette: >
   %\usepackage[UTF-8]{inputenc}
 ---
 ## ORIP Reporting
-The ORIP Reporting tab will eventually contain information for reporting to the
-Office of Research Infrastructure Programs (ORIP). This tab may end up being merged
-with the Summary Statistics tab and contain a number of statistics, tables and
-histograms. Alternatively, this may contain a subset of information from the
-Summary Statistics tab presented as a formatted report that can be exported and
-submitted to ORIP. The exact information that needs to be submitted for ORIP
-recordkeeping is still under discussion.
+The ORIP Reporting tab (`modORIPReporting`) collects information for reporting to
+the Office of Research Infrastructure Programs (ORIP). The tab is shown only
+when a site configuration file is present and names ONPRC as the center;
+other sites do not see it.
+
+The tab has:
+
+- a guidance panel,
+- **Export ORIP Report** and **Export Demographics** buttons,
+- a **Site Information** section (center, node, user, and system),
+- a **Colony Summary** table (animals by sex and the number of founders by
+  sex), and
+- a **Genetic Diversity Metrics** section (mean kinship, mean genome
+  uniqueness, and the number of animals analyzed).
+
+The tab is still under development. A "Coming Soon" list names founder
+contribution analysis, inbreeding trends over time, breeding success rates, age
+structure analysis, and formatted PDF report generation. The exact information
+that needs to be submitted for ORIP recordkeeping is still under discussion.

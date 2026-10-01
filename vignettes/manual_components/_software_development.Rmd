@@ -38,8 +38,9 @@ bottom of the side panel on the _Input_ tab.
 When the _Debug on_ checkbox is checked (it is not checked by default), 
 the application writes to a file named 
 _nprcgenekeepr.log_ in the users home directory. 
-Currently, events occurring the the 
-_server.R_ file are logged as that is where most errors are exposed. 
+Currently, events in the Input tab (_R/modInput.R_), the application server
+(_R/appServer.R_), and the functions that read pedigree and genotype data are
+logged, as that is where most errors are exposed. 
 
 ### Code Coverage
 
@@ -51,4 +52,5 @@ Many of these have
 100 percent of the lines covered. However, the unit tests are not 
 exhaustive. The practice is to add further tests as errors are detected
 or when working on the code and a new unit test possibility is 
-discovered. As of 20241223 95.70 percent of the lines are covered.
+discovered. The percentage of lines covered is shown by the Codecov badge at the
+top of the README file.
