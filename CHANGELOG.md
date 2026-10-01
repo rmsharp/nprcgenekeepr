@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S825 claim (in progress): fix docs-audit slice 4 cluster 1, the findings in `inst/extdata/ui_guidance/input_format.html`, `vignettes/manual_components/_input.Rmd` and `_database_access.Rmd` (required columns, ID rule, genotype columns, minimum parent ages, the orphan). Owner chose it at the Phase 0 picker. Docs only.
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S824 close-out: docs staleness audit slice 4 (read-only). Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md`: the 16 `vignettes/manual_components/*.Rmd`, 8 `inst/extdata/ui_guidance/*.html` pages and `README.md` have 33 moderate and 44 minor findings (71 distinct after merging cross-agent duplicates); no broken link, anchor or function name. Main causes: breeding-group and genetic-value pages describe an earlier UI; stale defaults (minimum parent age, breeding-group kinship 0.25 vs "second cousin", simulations 10 vs "10,000", required `birth` column, genome-uniqueness threshold meaning). Four read-only subagents did the first pass; 26 of 33 Moderate findings were re-read against code. Four likely code defects flagged as owner decisions. `README.md` fixes belong in the five child components. `BACKLOG.md` item updated (still open: fix slice 4, then slice 5). No code, nothing pushed; no GitHub issue named; no new learning (S823 handoff evaluated 9/10, self 8/10).
 - **Model:** Claude Sonnet 5.5.
 

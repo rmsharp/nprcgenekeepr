@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 825 Did
+**Deliverable:** Fix docs-audit slice 4 cluster 1: `input_format.html`, `_input.Rmd`, `_database_access.Rmd` (IN PROGRESS)
+**Started:** 2026-09-30 21:08
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+
 ### Session 823 Handoff Evaluation (by Session 824)
 **Score: 9/10.** Next-step (A) named slice 4's exact file list and the BACKLOG pointer was right, so Orient took minutes. The
 Gotchas were accurate (master 14 ahead of origin confirmed by `git status -sb`; the untracked-draft test failure was not re-run,
