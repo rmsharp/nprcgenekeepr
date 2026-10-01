@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S841
 date: 2026-10-01
-status: pending
-active_task: Fix the 42 slice-6d docs-staleness findings in R/*.R roxygen, then devtools::document() (docs only)
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE: fixed all 42 slice-6d docs-staleness findings in R/*.R roxygen (15 files), man/ regenerated; docs only, code candidates untouched
+what_was_done: Claim c33cfd543; fixes 8b2e51b54 (RA), 9b66199cd (RB), 53409c805 (RC), 21d33c54f (RD), fd573b5c8 (wordlist rewording); records in the close-out commit. Roxygen only, no code or test change. lintr 0 after each group, wordlist test pass, devtools::check(--no-tests) 0 errors / 0 warnings / 1 note (untracked suggested_NEWS_entry.md). Caught two of my own wrong claims against the code (geneticValues requirement, exhaustive-mode scope) before commit. Minors rest on the audit plus a source read, not a re-run; full suite not run.
+next_steps: Audit slice 6e (126 man/ pages left: obfuscate*, pedigree-tree and getters, get*/calc*/check* helpers, datasets), read-only. Or owner decisions on code (22 slice-6d candidates, 8 slice-6c candidates, PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3) then reword docs (RA3/RA4/RA6, RA8, RB10, RC7 first). suggested_NEWS_entry.md commit-or-drop still unanswered. Master is 46 ahead of origin; push only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md; R/modBreedingGroups.R:205-290; R/modPedigree.R:190-250; R/modSummaryStats.R:235-310; R/runGenekeepr.R:1-40; BACKLOG.md:197
+gotchas: git checkout man/nprcgenekeepr-package.Rd after document(); lint_package() after joined roxygen lines; reword rather than add words to inst/WORDLIST; prose after a @param folds into it, so put it before the first @param; some audit Location line numbers point at code not roxygen, grep the claim text; avoid `echo ====` in the Bash tool (zsh).
 ```
 
 ```handoff
