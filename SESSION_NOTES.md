@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 828 Did
+**Deliverable:** fix docs-audit slice 4 cluster 4, the pedigree browser, summary stats, ORIP, introduction and README pages (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 826 Handoff Evaluation (by Session 827)
 **Score: 9/10.** Next step (A) named the four cluster 3 files and finding ids, and the pointer to the BA21 wording in
 `gvAndBgDesc.html` saved a re-derivation; the "grep `tests/testthat` first" gotcha held (four test files read these pages, all
