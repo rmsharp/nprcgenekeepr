@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 846 Did
+**Deliverable:** fix the `NEWS.Rmd` docs-staleness audit findings (S845 slice 7a), in rounds the owner accepts or changes (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning. Docs only, so no TDD phase applies.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 845 Did
 **Deliverable, DONE:** docs-staleness audit slice 7a, `NEWS.Rmd` and `NEWS.md`: `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`. Read-only audit, no fixes, no code touched, so no TDD phase applies.
 **Commits:** claim `34cf56826`; the report and records in the close-out commit.

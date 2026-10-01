@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · [ad hoc] S846 claim: fix the `NEWS.Rmd` docs-staleness audit findings (S845 slice 7a), owner-reviewed in rounds (in progress).
+
 ### 2026-10-01 · [ad hoc] S845 close-out: docs-staleness audit slice 7a, `NEWS.Rmd` and `NEWS.md` (report `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`: 3 moderate, 16 minor, no fixes). Claim `34cf56826`. Docs only.
 
 ### 2026-10-01 · [ad hoc] S845 claim: docs-staleness audit slice 7, `NEWS.Rmd` (in progress); audit report only, no fixes.
