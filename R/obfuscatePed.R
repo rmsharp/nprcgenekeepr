@@ -7,8 +7,17 @@
 #' used for alias IDs (\code{size}), and the maximum number of days that the
 #' birthdate can be shifted (\code{maxDelta}).
 #'
+#' Any \code{name} column is overwritten with \code{NA}. Every Date column
+#' (e.g. \code{birth}, \code{exit}, \code{death}) is shifted, not only the
+#' birthdate. When the \code{age}, \code{birth} and \code{exit} columns are
+#' all present and \code{birth} is a Date, \code{age} is recomputed from the
+#' shifted dates.
+#'
 #' @inheritParams reportGV
-#' @param size integer value indicating number of characters in alias IDs
+#' @param size integer value indicating number of characters in alias IDs.
+#' IDs that stand for unknown parents get longer aliases when \code{size} is
+#' too short to keep them recognizable as placeholders (see
+#' \code{\link{obfuscateId}}).
 #' @param maxDelta integer value indicating maximum number of days that
 #' the birthdate can be shifted
 #' @param existingIds character vector of existing aliases to avoid duplication.
@@ -25,7 +34,9 @@
 #' \code{age} (issue #150 D3). When \code{FALSE}, each Date column is shifted
 #' independently via \code{\link{obfuscateDate}} (the original, pre-#150
 #' behavior).
-#' @return An obfuscated pedigree
+#' @return An obfuscated pedigree: IDs aliased, \code{name} set to \code{NA},
+#' Date columns shifted and \code{age} recomputed. With \code{map = TRUE}, a
+#' list holding that pedigree and the alias map.
 #'
 #' @importFrom lubridate is.Date ddays
 #' @importFrom stats runif

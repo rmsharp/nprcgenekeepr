@@ -9,7 +9,10 @@
 #' @param fromCenter character or logical vector or NA indicating whether or
 #' not the animal is from the center.
 #' @return A logical vector specifying TRUE if an animal
-#' is from the center otherwise FALSE.
+#' is from the center otherwise FALSE. An \code{NA} input stays \code{NA}.
+#' Any other value that is not recognized as a yes or a no (including numbers
+#' such as \code{1L} and empty strings), or that matches both, stops with an
+#' error naming the offending rows.
 #'
 #' @importFrom stringi stri_c stri_detect_fixed
 #' @export

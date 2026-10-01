@@ -20,6 +20,7 @@
 #' -relations file (typically the temporary \code{datapath} from a Shiny
 #' file upload).
 #' @param sep column separator for delimited text files (default \code{","}).
+#' Ignored for Excel files.
 #' @return A data frame of the rows read from \code{fileName} (typically with
 #' columns \code{id1}, \code{id2}, and \code{code}). Validate it with
 #' \code{\link{checkTwinRelations}} before use.

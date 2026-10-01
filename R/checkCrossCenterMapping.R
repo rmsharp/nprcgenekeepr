@@ -35,9 +35,10 @@
 #' \code{type} (\code{"existence"}, \code{"uniqueness"}, \code{"collision"},
 #' or \code{"conflict"}), \code{ids} (the offending id(s), as a single
 #' comma-separated string), and \code{message} (a human-readable
-#' description). Zero rows means the mapping is clean, and
-#' \code{\link{resolveCrossCenterIds}} can be called on the same inputs
-#' without error.
+#' description). Zero rows means none of these four kinds of problem was
+#' found. \code{\link{resolveCrossCenterIds}} can still stop on conflicting
+#' values in other columns shared by both pedigrees (e.g. \code{sex}), which
+#' this function does not check.
 #'
 #' @seealso \code{\link{resolveCrossCenterIds}}
 #' @export

@@ -18,7 +18,8 @@
 #' pairs -- with \code{status} \code{"overridden"} rather than
 #' \code{"violation"}, never silently absent. An \code{overriddenRules} row
 #' that matches no rule in \code{rules} is an error, so a typo cannot
-#' silently disable nothing.
+#' silently disable nothing. Any id in \code{groups} that is absent from
+#' \code{ped$id} stops the function with an error.
 #'
 #' @param groups list of character vectors of animal IDs, one vector per
 #' formed group. \code{NA} entries (the empty unused-animals marker
@@ -54,7 +55,7 @@
 #'     ),
 #'     stringsAsFactors = FALSE, na.strings = c("", "NA")
 #'   ),
-#'   minParentAge = 2, reportChanges = FALSE, reportErrors = FALSE
+#'   minSireAge = 2, minDamAge = 2, reportChanges = FALSE, reportErrors = FALSE
 #' )
 #' rules <- checkAncestryRules(readAncestryRules(
 #'   system.file("extdata", "examples", "example_ancestry_rules.csv",

@@ -10,6 +10,10 @@
 #' \code{\link{checkSnapshotHistory}} for the column groups). Excel
 #' (\code{.xls}/\code{.xlsx}) and delimited text (\code{.csv}/\code{.txt})
 #' files are both accepted, mirroring \code{\link{readKinshipOverrides}}.
+#' Excel files are read with every column as text, so the numeric columns
+#' (e.g. \code{schemaVersion}) must be converted before
+#' \code{\link{checkSnapshotHistory}} will accept them. Delimited text files
+#' need no such conversion.
 #'
 #' This reader does not validate structure or domain — that is
 #' \code{\link{checkSnapshotHistory}}'s job, matching the reader/validator
@@ -19,6 +23,7 @@
 #' history file (typically the temporary \code{datapath} from a Shiny file
 #' upload, or a path the user's own scripts maintain).
 #' @param sep column separator for delimited text files (default \code{","}).
+#' Ignored for Excel files.
 #' @return A data frame of the rows read from \code{fileName}. Validate it
 #' with \code{\link{checkSnapshotHistory}} before use.
 #'

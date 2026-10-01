@@ -17,7 +17,8 @@ A character vector with original IDs replaced by their obfuscated
 counterparts.
 }
 \description{
-This is not robust as it fails if all IDs are found not within \code{map}.
+This is not robust: it stops with an error if any ID in \code{ids} is not
+one of the names of \code{map}.
 }
 \examples{
 set_seed(1)

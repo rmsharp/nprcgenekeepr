@@ -10,7 +10,9 @@
 #' to a long-format table.
 #' @param ped Dataframe of pedigree information that must contain an
 #' \code{id} column and a \code{sex} column. The \code{id} values should
-#' include the animals referenced in \code{kin}.
+#' include the animals referenced in \code{kin}. Pairs involving an animal
+#' with a missing sex, or one absent from \code{ped}, can be silently
+#' removed from the result.
 #' @param ignore a list containing zero or more character vectors of length 2
 #' indicating which sex pairs should be ignored with regard to kinship.
 #' Defaults to \code{list(c("F", "F"))}.

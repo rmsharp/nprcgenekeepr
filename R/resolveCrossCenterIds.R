@@ -381,7 +381,9 @@ bindPedigreeRows <- function(dfs) {
 #' appear at most once in \code{idA} and at most once in \code{idB}.
 #' @return A single merged pedigree data.frame over the union of
 #' \code{pedA}'s and \code{pedB}'s columns, with one row per distinct
-#' animal (mapped pairs collapsed to their canonical \code{idA} id).
+#' animal (mapped pairs collapsed to their canonical \code{idA} id). Rows
+#' are ordered as the \code{pedA} rows not in the mapping, then the merged
+#' mapped pairs, then the \code{pedB} rows not in the mapping.
 #'
 #' @seealso \code{\link{getFileDirectRelatives}},
 #' \code{\link{checkCrossCenterMapping}}

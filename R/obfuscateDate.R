@@ -3,14 +3,17 @@
 
 #' Obfuscate dates with a random day offset
 #'
-#' Get the base_date add a random number of days taken from a uniform
-#' distribution bounded by -max_delta and max_delta.
-#' Insure the resulting date is as least as large as the min_date.
+#' Get the \code{baseDate} and add a random number of days taken from a
+#' uniform distribution bounded by -\code{maxDelta} and \code{maxDelta}.
+#' Insure the resulting date is as least as large as the \code{minDate}.
 #'
-#' @param baseDate list of Date objects with dates to be obfuscated
-#' @param minDate list object of Date objects that has the lower bound of
-#' resulting obfuscated dates
-#' @param maxDelta integer vector that is used to create min and max arguments
+#' @param baseDate vector of Date values with dates to be obfuscated
+#' @param minDate optional vector of Date values, the same length as
+#' \code{baseDate}, that has the lower bound of resulting obfuscated dates.
+#' When missing, the lower bound is each \code{baseDate} minus its
+#' \code{maxDelta}, so the bound never binds.
+#' @param maxDelta integer vector of length 1 or the same length as
+#' \code{baseDate} that is used to create min and max arguments
 #' to \code{runif} (\code{runif(n, min = 0, max = 1)})
 #' @return A vector of dates that have be obfuscated.
 #'

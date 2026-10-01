@@ -8,24 +8,28 @@
 #' @inheritParams filterThreshold
 #' @param currentGroups list of character vectors of IDs of animals currently
 #' assigned
-#' to the group. Defaults to character(0) assuming no groups are existent.
+#' to the group. Required (no default); use \code{character(0L)} when
+#' no groups exist.
 #' @param ignore list of character vectors representing the sex combinations
 #' to be ignored. If provided, the vectors in the list specify if pairwise
-#' kinship should be ignored between certain sexes.
-#' Default is to ignore all pairwise kinship between females.
+#' kinship should be ignored between certain sexes. Required (no default);
+#' \code{filterPairs()} itself ignores female-female pairs when called
+#' directly.
 #' @param minAge integer value indicating the minimum age to consider in group
-#' formation. Pairwise kinships involving an animal of this age or younger will
-#'  be ignored. Default is 1 year.
+#' formation. Required (no default). Pairwise kinships involving an animal
+#' younger than this age are ignored; animals of exactly this age or with a
+#' missing age are retained.
 #'
-#' @return A list of named character vectors where each name is an animal Id
-#' and the character vectors are made up of animals sharing a kinship value
-#' greater than our equal to the \code{threshold} value.
+#' @return A one-dimensional array of mode list (from \code{tapply()}), not a
+#' plain list. Its names are animal IDs, and each element is a character
+#' vector of animals sharing a kinship value greater than or equal to the
+#' \code{threshold} value. \code{names()} and \code{[[} work as for a list.
 #'
 #' @export
 #' @examples
 #' qcPed <- nprcgenekeepr::qcPed
 #' ped <- qcStudbook(qcPed,
-#'   minParentAge = 2L, reportChanges = FALSE,
+#'   minSireAge = 2L, minDamAge = 2L, reportChanges = FALSE,
 #'   reportErrors = FALSE
 #' )
 #' kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)

@@ -11,7 +11,8 @@ readTwinRelations(fileName, sep = ",")
 -relations file (typically the temporary \code{datapath} from a Shiny
 file upload).}
 
-\item{sep}{column separator for delimited text files (default \code{","}).}
+\item{sep}{column separator for delimited text files (default \code{","}).
+Ignored for Excel files.}
 }
 \value{
 A data frame of the rows read from \code{fileName} (typically with

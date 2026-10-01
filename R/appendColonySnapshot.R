@@ -19,7 +19,8 @@
 #' \code{\link{checkSnapshotHistory}}), or \code{NULL} / a zero-row history
 #' when recording the first snapshot.
 #' @param snapshot one-row data.frame holding the new snapshot, in the same
-#' schema as the history.
+#' schema as the history. The row count and columns are not checked; rows
+#' are bound to the history as given.
 #' @return The merged history, ordered by \code{snapshotDate}.
 #' @export
 #' @examples

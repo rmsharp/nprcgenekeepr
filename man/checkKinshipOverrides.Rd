@@ -30,7 +30,10 @@ allele drawn at random from each of the two animals is identical by descent),
 \strong{not} the coefficient of relatedness \emph{r} (= 2\emph{f} for
 non-inbred animals). Supplying \emph{r} -- e.g. 0.25 for half-sibs whose true
 \emph{f} is 0.125 -- silently corrupts the matrix, so an off-diagonal value
-above 0.5 (the maximum for a non-inbred pair) draws a warning here. The exact
+above 0.5 (the maximum for a non-inbred pair) draws a warning here. It also
+\code{stop()}s on a missing (\code{NA}) or negative \code{kinship}, on a row
+whose \code{id1} equals its \code{id2}, and on a duplicated unordered
+pair. The exact
 positive-semi-definiteness bound is enforced by
 \code{\link{applyKinshipOverrides}} once the matrix diagonal is known.
 }

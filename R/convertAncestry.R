@@ -7,7 +7,12 @@
 #'
 #'
 #' @param ancestry character vector or NA with free-form text providing
-#' information about the geographic population of origin.
+#' information about the geographic population of origin. Matching ignores
+#' case and looks for text inside each value: a value containing "chin" but
+#' not "ind" is CHINESE, one containing "ind" but not "chin" is INDIAN, one
+#' containing both, or "hyb", is HYBRID, and one containing "jap" is
+#' JAPANESE. \code{NA} is UNKNOWN and anything else is OTHER. For example,
+#' "Indonesian" is INDIAN.
 #' @return A factor vector of standardized designators specifying if an animal
 #' is a Chinese rhesus, Indian rhesus, Chinese-Indian hybrid rhesus, or
 #' Japanese macaque. Levels: CHINESE, INDIAN, HYBRID, JAPANESE, OTHER, UNKNOWN.

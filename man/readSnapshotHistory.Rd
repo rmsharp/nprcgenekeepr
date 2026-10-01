@@ -11,7 +11,8 @@ readSnapshotHistory(fileName, sep = ",")
 history file (typically the temporary \code{datapath} from a Shiny file
 upload, or a path the user's own scripts maintain).}
 
-\item{sep}{column separator for delimited text files (default \code{","}).}
+\item{sep}{column separator for delimited text files (default \code{","}).
+Ignored for Excel files.}
 }
 \value{
 A data frame of the rows read from \code{fileName}. Validate it
@@ -25,6 +26,10 @@ per recorded snapshot in the 27-column version-1 schema (see
 \code{\link{checkSnapshotHistory}} for the column groups). Excel
 (\code{.xls}/\code{.xlsx}) and delimited text (\code{.csv}/\code{.txt})
 files are both accepted, mirroring \code{\link{readKinshipOverrides}}.
+Excel files are read with every column as text, so the numeric columns
+(e.g. \code{schemaVersion}) must be converted before
+\code{\link{checkSnapshotHistory}} will accept them. Delimited text files
+need no such conversion.
 }
 \details{
 This reader does not validate structure or domain — that is

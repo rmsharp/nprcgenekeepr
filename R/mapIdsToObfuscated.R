@@ -3,7 +3,8 @@
 
 #' Map IDs to Obfuscated IDs
 #'
-#' This is not robust as it fails if all IDs are found not within \code{map}.
+#' This is not robust: it stops with an error if any ID in \code{ids} is not
+#' one of the names of \code{map}.
 #'
 #' @param ids character vector with original IDs
 #' @param map named character vector where the values are the obfuscated IDs

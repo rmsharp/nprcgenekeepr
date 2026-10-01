@@ -26,10 +26,11 @@
 #' @param rules data.frame with columns \code{ancestry1} and \code{ancestry2}
 #' (standardized ancestry levels) and \code{severity} (\code{"block"} or
 #' \code{"flag"}); each row is one unordered level pair. Any extra columns
-#' are ignored.
+#' are kept in the returned table.
 #' @return The validated \code{rules} data.frame with \code{ancestry1} and
 #' \code{ancestry2} coerced to uppercase character and \code{severity} to
-#' lowercase character.
+#' lowercase character. Leading and trailing white space is trimmed from
+#' these three columns.
 #' @export
 #' @examples
 #' rules <- data.frame(

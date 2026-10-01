@@ -23,7 +23,8 @@ pedigree-derived value for the named pairs. Each
 \code{(id1, id2, kinship)} row sets both \code{kmat[id1, id2]} and its
 symmetric twin \code{kmat[id2, id1]}; all other cells are unchanged.
 This is a direct cell replacement -- it does not propagate to descendant
-rows.
+rows. A successful call reports the number of overrides applied with a
+\code{message()}.
 }
 \details{
 \code{kmat} must be a dense, symmetric, id-named base R matrix (the object
