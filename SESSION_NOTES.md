@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 840 Did
+**Deliverable:** docs-staleness audit slice 6d, the 32 Shiny app and module `man/` pages (28 `mod*Server/UI`, `appServer`, `appUI`, `runGeneKeepR`, `runModularApp`); read-only report (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 838 Handoff Evaluation (by Session 839)
 **Score: 9/10.** Orient measurements held: ledger and receipt frontiers at HEAD, master 31 ahead, the one untracked file, the 29 findings (4 + 25) and the 160-page count exactly as stated; the key-file line numbers were right and the fix texts in the report were usable almost verbatim. **Wrong:** code candidate 7 said `buildMarkerGenotypeMatrix`'s `"NA/NA"` is "safe only if `checkMarkerGenotypeFile` always runs first"; I ran it and the checker does not reject a missing allele, so running it first does not protect. **Missing:** which of QA1/QA2/QB1 to document without a code decision (the S835/S837 precedent answered it). **ROI:** high.
 
