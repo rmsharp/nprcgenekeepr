@@ -7,8 +7,7 @@
 #' table supplies pairwise twin declarations (\code{id1}, \code{id2},
 #' \code{code}) that record which individuals in a pedigree are twins and
 #' with what twin zygosity certainty -- a fact this package's per-individual
-#' pedigree data frame cannot represent directly (see
-#' \code{docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md}).
+#' pedigree data frame cannot represent directly.
 #' It mirrors \code{\link{checkKinshipOverrides}}: it \code{stop()}s on
 #' structural or domain errors and returns the (id-coerced) table when the
 #' input is acceptable.

@@ -3,10 +3,20 @@
 
 #' Standardize pedigree column names
 #'
+#' Standardizing converts the names to lower case, removes spaces, periods and
+#' underscores, and then renames by substring: \code{egoid} and \code{ego}
+#' become \code{id}, \code{sireid} becomes \code{sire}, \code{damid} becomes
+#' \code{dam}, \code{birthdate} becomes \code{birth} and \code{deathdate}
+#' becomes \code{death}. \code{recordstatus}, \code{fromcenter} and
+#' \code{geographicorigin} are restored to their camel case forms. The
+#' headers \code{first_name} and \code{second_name} keep their underscore.
+#' The matching is unanchored, so any name that contains one of these strings
+#' is changed (for example, \code{category} becomes \code{catidry}).
+#'
 #' @param orgCols character vector with ordered list of column names
 #' found in a pedigree file.
 #' @param errorLst list object with places to store the various column
-#' name changes.
+#' name changes, as returned by \code{\link{getEmptyErrorLst}}.
 #' @return A list object with \code{newColNames} and \code{errorLst} with
 #' a record of all changes made.
 #'

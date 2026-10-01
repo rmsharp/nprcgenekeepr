@@ -12,7 +12,8 @@ checkErrorLst(errorLst)
 }
 \value{
 Returns FALSE if all fields are empty or the list is NULL
-otherwise TRUE.
+otherwise TRUE. The \code{changedCols} field is not examined; use
+\code{\link{checkChangedColsLst}} for it.
 }
 \description{
 Check an error list for non-empty fields

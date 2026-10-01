@@ -14,7 +14,9 @@
 #' @param errorLst object with placeholders for error types found in a pedigree
 #' file by \code{qcStudbook} through the functions it calls.
 #' @return A list with the pedigree, \code{sb}, and the \code{errorLst} with
-#' invalid date rows (\code{errorLst$invalidDateRows})
+#' invalid date rows (\code{errorLst$invalidDateRows}), a character vector of
+#' row numbers (\code{character(0)} when all dates are valid). When the dates
+#' are converted, \code{sb} also gains an \code{exit} column.
 #'
 #' @export
 #' @examples

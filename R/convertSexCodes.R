@@ -21,12 +21,14 @@
 #' Case and any spaces around a code are ignored, so \code{" male "} and
 #' \code{"M "} both become \code{M}.
 #'
-#' @param sex factor with levels: "M", "F", "U". Sex specifier for an
-#' individual.
+#' @param sex character vector or factor of sex codes (see above) for
+#' individuals; any other value is treated as unknown.
 #' @param ignoreHerm logical flag indicating if hermaphrodites should be
 #' treated as unknown sex ("U"), default is \code{TRUE}.
-#' @return A vector of factors representing standardized sex codes after
-#' transformation from non-standard codes.
+#' @return A single factor with levels \code{F}, \code{M}, \code{H} and
+#' \code{U} holding the standardized sex codes after transformation from
+#' non-standard codes. Level \code{H} is used only when
+#' \code{ignoreHerm = FALSE}.
 #'
 #' @export
 #' @examples

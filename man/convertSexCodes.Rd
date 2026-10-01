@@ -7,15 +7,17 @@
 convertSexCodes(sex, ignoreHerm = TRUE)
 }
 \arguments{
-\item{sex}{factor with levels: "M", "F", "U". Sex specifier for an
-individual.}
+\item{sex}{character vector or factor of sex codes (see above) for
+individuals; any other value is treated as unknown.}
 
 \item{ignoreHerm}{logical flag indicating if hermaphrodites should be
 treated as unknown sex ("U"), default is \code{TRUE}.}
 }
 \value{
-A vector of factors representing standardized sex codes after
-transformation from non-standard codes.
+A single factor with levels \code{F}, \code{M}, \code{H} and
+\code{U} holding the standardized sex codes after transformation from
+non-standard codes. Level \code{H} is used only when
+\code{ignoreHerm = FALSE}.
 }
 \description{
 Part of Pedigree Curation
