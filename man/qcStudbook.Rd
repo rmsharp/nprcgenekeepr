@@ -35,8 +35,8 @@ birth date
 sold or shipped from the colony
 \item \code{death} --- date or \code{NA} (optional)
 Date of death, if applicable
-\item \code{status} --- Factor (levels: ALIVE, DEAD, SHIPPED) (optional)
-Status of an individual
+\item \code{status} --- Factor (levels: ALIVE, DECEASED, SHIPPED, UNKNOWN)
+(optional) Status of an individual (see \code{convertStatusCodes})
 \item \code{origin} --- Character or \code{NA} (optional)
 Facility an individual originated from, if other than ONPRC
 \item \code{ancestry} --- Character or \code{NA} (optional)
@@ -83,22 +83,31 @@ list of list where each sublist is a type of change or error found.
 Changes will include column names, case of categorical values (male,
 female, unknown), etc.
 Errors will include missing columns, invalid date rows, male dams,
-female sires, and records with one or more parents  below minimum age
-of parents.
+female sires, an ID that is both a sire and a dam, duplicated IDs,
+IDs with invalid characters, invalid \code{placeholder} values, and records
+with one or more parents below minimum age of parents.
 
-The following changes are made to the cols.
+The following changes are made to the column names.
 
 \itemize{
-\item Column cols are converted to all lower case
-\item Periods (".") within column cols are collapsed to no space ""
-\item \code{egoid} is converted to \code{id}
-\item \code{sireid} is convert to \code{sire}
+\item Column names are converted to all lower case
+\item Spaces, periods (".") and underscores ("_") within column names are
+removed
+\item \code{egoid} and \code{ego} are converted to \code{id}
+\item \code{sireid} is converted to \code{sire}
 \item \code{damid} is converted to \code{dam}
+\item \code{birthdate} and \code{deathdate} are converted to \code{birth}
+and \code{death}
+\item \code{recordstatus}, \code{fromcenter} and \code{geographicorigin}
+are converted to \code{recordStatus}, \code{fromCenter} and
+\code{geographicOrigin}
 }
 
-If the dataframe (\code{sb} does not contain the five required columns
-(\code{id}, \code{sire}, \code{dam}, \code{sex}), and
-\code{birth} the function throws an error by calling \code{stop()}.
+If the dataframe (\code{sb}) does not contain the five required columns
+(\code{id}, \code{sire}, \code{dam}, \code{sex}, and
+\code{birth}) and \code{reportErrors == FALSE}, the function throws an
+error by calling \code{stop()}. With \code{reportErrors == TRUE} the
+missing names are returned in \code{errorLst$missingColumns}.
 
 Animal IDs (\code{id}, \code{sire}, \code{dam}) must not contain a period
 ("."); other characters are accepted. Periods cause problems
@@ -109,11 +118,12 @@ an error. With \code{reportErrors == TRUE} the offending values are returned
 in \code{errorLst$invalidIdChars}; otherwise the function throws an error.
 All automatically generated IDs (see \code{addUIds}) honor this rule.
 
-If the \code{id} field has the string \emph{UNKNOWN} (any case) or both
-the fields \code{sire} or \code{dam} have \code{NA} or \emph{UNKNOWN}
-(any case), the record is removed.
-If either of the fields \code{sire} or \code{dam} have the
-string \emph{UNKNOWN} (any case), they are replaced with a unique identifier
+If the \code{id} field has the string \emph{UNKNOWN} (any case), the record
+is removed. A record whose \code{sire} and \code{dam} are both \code{NA} or
+\emph{UNKNOWN} (any case) is kept as a founder; \emph{UNKNOWN} in either
+field becomes \code{NA}.
+If only one of the fields \code{sire} or \code{dam} is missing, the missing
+parent is replaced with a unique identifier
 with the form \code{Unnnn}, where \code{nnnn} represents one of a series
 of sequential integers representing the number of missing sires and
 dams right justified in a pattern of \code{0000}. See \code{addUIds}
@@ -129,17 +139,24 @@ codes:
 \itemize{
 \item \code{F} -- replacing "FEMALE" or "2"
 \item \code{M} -- replacing "MALE" or "1"
-\item \code{H} -- replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE
-\item \code{U} -- replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE
+\item \code{H} -- replacing "HERMAPHRODITE" or "4", if ignoreHerm == FALSE
+\item \code{U} -- replacing "HERMAPHRODITE" or "4", if ignoreHerm == TRUE
 \item \code{U} -- replacing "UNKNOWN" or "3"
 \item \code{U} -- replacing a missing, blank or unrecognized value
 }
 
-Case and any spaces around a code are ignored.
+Case and any spaces around a code are ignored. \code{qcStudbook} always uses
+the default \code{ignoreHerm == TRUE}, so \code{H} is never assigned,
+although the returned factor keeps the level \code{H}.
 
 The function \code{correctParentSex} is used to ensure no parent is both
-a sire and a dam. If this error is detected, the function throws an error
-and halts the program.
+a sire and a dam. If this error is detected and
+\code{reportErrors == FALSE}, the function throws an error and halts the
+program (with \code{reportErrors == TRUE} the IDs are returned in
+\code{errorLst$sireAndDam}). It also recodes a female sire as male and a male
+dam as female; with \code{reportErrors == FALSE} this is silent, otherwise
+the IDs are reported in \code{errorLst$femaleSires} and
+\code{errorLst$maleDams}.
 
 The function \code{convertStatusCodes} converts status indicators to the
 following factors of standardized codes. Case of the original status value
@@ -153,7 +170,7 @@ is ignored.
 \item \code{"UNKNOWN"} --- replacing "unknown", "U", "4"
 }
 
-The function \code{convertAncestry} coverts ancestry indicators using
+The function \code{convertAncestry} converts ancestry indicators using
 regular expressions such that the following conversions are made from
 character strings that match selected substrings to the following factors.
 
@@ -174,7 +191,7 @@ The function \code{setExit} uses heuristics and the columns \code{death}
 and \code{departure} to set \code{exit} if it is not already defined.
 
 The function \code{calcAge} uses the \code{birth} and the \code{exit}
-columns to define the \code{age} column. The numerical values is rounded
+columns to define the \code{age} column. The numerical value is rounded
 to the nearest 0.1 of a year. If \code{exit} is not defined, the
 current system date (\code{Sys.Date()}) is used.
 
@@ -182,14 +199,14 @@ The function \code{findGeneration} is used to define the generation number
 for each animal in the pedigree.
 
 The function \code{removeDuplicates} checks for any duplicated records and
-removes the duplicates. I also throws an error and stops the program if an
+removes the duplicates. It also throws an error and stops the program if an
 ID appears in more
 than one record where one or more of the other columns have a difference.
 
-Columns that cannot be used subsequently are removed and the rows are
-ordered by generation number and then ID.
+The standard columns come first, followed by any unrecognized columns, which
+are retained. The rows are ordered by generation number and then ID.
 
-Finally the columns \code{id} \code{sire}, and \code{dam} are coerce to
+Finally the columns \code{id}, \code{sire}, and \code{dam} are coerced to
 character.
 
 The returned pedigree always has a logical \code{placeholder} column with no
@@ -200,8 +217,10 @@ the value the input gave for any other row that had one, and for the rest
 looks like a stand-in (for example \code{"U1234"}) as \code{FALSE}.}
 }
 \value{
-A data.frame with standardized and quality controlled pedigree
-information.
+With \code{reportErrors == FALSE}, a data.frame with standardized and
+quality controlled pedigree information. With \code{reportErrors == TRUE},
+an \code{nprcgenekeeprErr} list of the changes and errors found, or
+\code{NULL} when there are no errors and no column changes to report.
 }
 \description{
 Main pedigree curation function that performs basic quality control on
