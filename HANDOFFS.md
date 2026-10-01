@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S838
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: docs-staleness audit slice 6c, next man/ topic group (read-only)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: docs-staleness audit slice 6c, 35 marker-genetics, genotype and MHC man/ pages (4 moderate, 25 minor, 8 code candidates); findings not yet fixed
+what_was_done: Claim 542ccce38; report docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md, BACKLOG and records in the close-out commit. Read-only; four subagents audited 8-9 pages each; I re-read the source for all 4 moderates and re-ran QA2 and QC1. Minors and code candidates are agent-checked only
+next_steps: Fix the 29 slice-6c findings in R/*.R roxygen then devtools::document() (decide code candidates 1-4 first), or audit slice 6d (160 man/ pages left). Owner decisions open: PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3, suggested_NEWS_entry.md commit or drop, stale man/nprcgenekeepr-package.Rd. Master is 31 ahead of origin; push only on owner say-so
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md, R/computeGenomicROH.R:99-146, R/hasGenotype.R:22-35, R/checkSequenceGenotypeFile.R:126-128, R/markerKinship.R:20-25, BACKLOG.md:197
+gotchas: man/ is generated; fix roxygen then document(), then git checkout man/nprcgenekeepr-package.Rd. Example() fails; use Rd2ex()+source(). Append to inst/WORDLIST, do not re-sort. The earlier 196 pages-left count included man/figures; real count is 160. QB5 and QD5 ids intentionally unused
 ```
 
 ```handoff
