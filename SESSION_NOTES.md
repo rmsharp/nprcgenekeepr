@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 838 Did
+**Deliverable:** docs-staleness audit slice 6c: audit the next `man/` topic group, read-only, one report under `docs/audits/` (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 836 Handoff Evaluation (by Session 837)
 **Score: 9/10.** Every Orient measurement held: ledger and receipt frontiers at HEAD, master 18 ahead of origin, the one untracked file, the 57 findings and 7 code candidates exactly as listed. Next step (A) was exact, and the gotchas (`git checkout man/nprcgenekeepr-package.Rd`, hold PB4/PB7/PB11) were right. **Missing:** nothing needing a rewrite. **Wrong:** its split of "doc-only" versus code candidates left PA4, PB13, PD12 and PD1 ambiguous (I documented today's behavior). **ROI:** high.
 
