@@ -98,40 +98,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 832 Handoff Evaluation (by Session 833)
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S832 receipt complete, the one untracked
+file as described, and next step (A) named the exact findings, line ranges and build equivalent. **Missing:** it did not say the findings' inline
+numbers are random-run dependent (the vignette samples, so counts must be inline R, not typed); it did not say `test_wordlist_coverage.R` spell-checks
+the vignette, which flagged 14 new argument names. **Wrong:** nothing found; AI1-AI3 reproduced as reported. **ROI:** high.
+
 ### What Session 833 Did
-**Deliverable:** fix the 30 findings (AI1-AI30) in `vignettes/a2interactive.Rmd` (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** fixed all 30 findings (AI1-AI30) of the S832 audit in `vignettes/a2interactive.Rmd`. Prose, hand-typed lists and inline R only;
+no R code, test, DESCRIPTION or NAMESPACE change. The `group[-1]` inline counts now count groups `1:6` by female id; the last element of `$group` is
+explained (lone `NA` for harem, 103 unplaced candidates for a sex ratio, computed inline); the `groupAddAssign`/`reportGV` lists say they are principal
+arguments and name the rest; `listLoops` selects ids with `names(exampleLoops)[unlist(exampleLoops)]` and indexes `breederPed`; the `smallPed`
+chunk recomputes `gen` with `findGeneration()` so parent-offspring `varR` is 0 for every pair; the other findings are wording fixes.
+**Commits:** claim `8d41e1229`; fixes and records in the close-out commit.
+**Verification:** full knit in a scratch dir, no chunk error, rendered numbers read back (184/184 harem, 157/184 sex ratio, 103 unplaced, loops 3694/145/258);
+`test_wordlist_coverage.R` and `test_r_cmd_check_clean_baseline.R` pass (new argument names put in code font, WORDLIST untouched);
+`devtools::check(--no-tests)`: 0 errors, 0 warnings, 2 notes (the owner's untracked `suggested_NEWS_entry.md`, and a stray `vignettes/Rplots.pdf` from my
+own scratch run, deleted afterwards). Not run: full test suite (no code changed), lint (no `.R` file changed), runtime smoke (no runtime change).
+**NEWS.Rmd:** no entry (documentation fix, no user-facing feature). **Reduction:** removed the S831 handoff evaluation and the S832 "What Session 832 Did" block (in git and the S832 receipt).
 
-### Session 831 Handoff Evaluation (by Session 832)
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, no `status: pending` receipt, the one untracked
-file as described, and the BACKLOG item named slice 5's scope and the open owner decisions. **Missing:** it said "master 38 ahead" and push (A) as
-open, but the push had already happened and CI was green by the time of orientation (the ledger commit said so); it did not size `man/` (268
-pages), so slice 5 as worded was too big for one session. **Wrong:** nothing. **ROI:** high.
-
-### What Session 832 Did
-**Deliverable, DONE:** docs-staleness audit slice 5, scoped by me to `vignettes/a2interactive.Rmd` (`man/` and `NEWS.Rmd` are slices 6 and 7).
-Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE5_2026-10-01.md`: 12 moderate, 18 minor, 0 critical, no code defects, no chunk error on a full knit.
-Method as slices 3-4: four read-only subagents by line range, then I re-read the cited code for the findings marked R (argument lists, `femaleSires`,
-`lowParentAge.csv` path, `twinRelations`, `isolatedIds`, sex-ratio range). **Commits:** claim `0838d80d3`; report and records in the close-out commit.
-**Verification:** audit only; no code, test, DESCRIPTION or NAMESPACE change, so no suite, check, lint or smoke test was owed. **NEWS.Rmd:** no entry.
-**Learnings:** none new (the argument-list drift is recorded in the report's Structural observations). **Reduction:** removed the S830 handoff
-evaluation and the "What Session 831 Did" block (in git and the S831 receipt).
-
-**Self-assessment: 8/10.** + One deliverable; every finding has evidence; moderates re-read against code; scope narrowed to what fits one session.
-- Of 30 findings only 7 were re-read by me (the rest are agent-run, marked A); the diagram-layout and footnote findings rest on agent runs.
+**Self-assessment: 8/10.** + One deliverable; every moderate re-derived by running the code; spelling and check gates run, not assumed.
+- Ran scratch scripts from `vignettes/` once, which dropped an `Rplots.pdf` and loaded the wrong library path; AI9's cause sentence was first written as a guess and cut.
+- AI20/AI26 wording rests on the audit's agent runs (A), not re-read by me.
 
 **Next steps:**
-- (A) Fix the 30 findings in `vignettes/a2interactive.Rmd` (BACKLOG, READY, Effort M), starting with AI1-AI3 (`:920-1019`) and AI4-AI6; build
-  equivalent is a knit plus `devtools::check()` (the vignette is built).
-- (B) Slice 6: `man/` audit (268 pages; split by topic). Owner decisions still pending: `suggested_NEWS_entry` adopt/drop, the four code defects.
+- (A) Slice 6: audit `man/` (268 pages; split by topic, one topic group per session). BACKLOG docs-audit item.
+- (B) Owner decisions still pending: adopt/drop `suggested_NEWS_entry.md` (it triggers an R CMD check NOTE), the four code defects.
+- (C) Master is 4 ahead of origin after this commit; push only on the owner's say-so.
 
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE5_2026-10-01.md`, `vignettes/a2interactive.Rmd:920-1019, 851-899, 680-699, 1315`,
-`R/groupAddAssign.R:172-186`, `R/correctParentSex.R:105`, `R/qcStudbook.R:323`.
+**Key files:** `vignettes/a2interactive.Rmd` (diff of 30 fixes), `docs/audits/DOCS_STALENESS_AUDIT_SLICE5_2026-10-01.md`, `BACKLOG.md:197`.
 
-**Gotchas:** AI1/AI2 use inline R, so the numbers change if the chunk's inputs change; recompute by running, do not copy the report's figures
-blindly. `a2interactive.Rmd` is also the file the deferred `a2interactive` checklist and the `inst/doc/` slimming item touch.
+**Gotchas:** the vignette is random (`sample()` in the first chunks), so any typed count goes stale; keep counts inline. Run R scripts from the repo root, not `vignettes/` (renv library path). Footnote 3's chunk still drops NA-birth animals by design; the footnote now says so.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809
