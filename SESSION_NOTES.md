@@ -99,10 +99,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 844 Did
-**Deliverable:** fix the 95 slice-6e docs-staleness findings in `R/*.R` roxygen (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim entry says in progress; Phase 3F records the rest.
+**Deliverable, DONE:** fixed all 95 slice-6e docs-staleness findings (26 moderate, 69 minor; RE-RL ids) in `R/*.R` roxygen, 67 files, then `devtools::document()`. Docs only, no function body or signature changed, so no TDD phase applies.
+**Commits:** claim `56668e779`; fixes `54c2f64e5` (RE+RF), `ff8f3c941` (RG+RH), `52335a523` (RI+RJ), `9c650237f` (RK+RL), each with its regenerated `man/` pages; records in the close-out commit.
+**How:** four subagents, one per pair of audit sets, edited disjoint files. Each re-read the source before writing a claim and ran changed examples. Every finding still held; none was skipped.
+**Verified by me:** every changed line in `R/` begins with `#'` (diff check); `lint_package()` 0; `test_wordlist_coverage.R` passes; `devtools::check(--no-tests)` 0 errors, 0 warnings, 1 note (untracked `suggested_NEWS_entry.md`).
+**Not verified:** the full test suite was not run (roxygen only). The wording of the 95 fixes rests on the agents' source reads, and I did not re-read each one.
+**NEWS.Rmd:** none. **Reduction:** removed the S805 evaluation and S806 record (in git and receipts).
+**Slips caught:** the wordlist test flagged 5 words (`jpeg`, `jpg`, `ohsu`, `primeuat`, `unmapped`); reworded or put in `\code{}`, not added to `inst/WORDLIST`. One reword broke the 80-column lint, fixed. A zsh 1-indexed array mislabeled commits; reset and redone before any push.
+
+**Self-assessment: 8/10.** + One deliverable; parallel agents on disjoint files; code-untouched check, lint, wordlist and check all run. - Per-finding wording not re-read by me; the zsh array slip cost a redo.
+
+**Next steps:** (A) owner decisions on the audit code candidates: 46 slice-6e (CE-CL), 22 slice-6d, 8 slice-6c, older PB/PA/PD/MC/MB; reword the docs if the code changes. (B) Docs-audit slice 7: `NEWS.Rmd`, then the internal docs (READY, Effort L).
+(C) Master is 8 commits ahead of origin (counted this session); push only on the owner's say-so.
+
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`, `BACKLOG.md:197`, `R/makeGroupNum.R` (still says `numGp` "Default is 1"), `R/fillGroupMembersWithSexRatio.R:37` and `R/groupAddAssign.R:128` (examples still pass deprecated `minParentAge`).
+
+**Gotchas:** zsh arrays are 1-indexed, so a `${M[$i]}` loop from 0 mislabels. Same S837-S843 roxygen gotchas (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; reword rather than extend `inst/WORDLIST`; keep `SESSION_NOTES.md` lines at or under 280 B).
+
+### Session 843 Handoff Evaluation (by Session 844)
+**Score: 9/10.** Orient measurements held: ledger frontiers current, one untracked file, the exact next-step recipe for (A). **Helped:** the ordered options (A)-(C) and the line-length gotcha. **Wrong:** "master may be ahead of origin" was right to
+hedge; it was 8 ahead, not 47. **Missing:** nothing that cost time. **ROI:** high.
 
 ### What Session 843 Did
 **Deliverable, DONE:** split the 10 `SESSION_NOTES.md` lines over the 280 B per-line ceiling (they sat in the S842 and S841 records) at word boundaries outside backtick spans, each piece at most 260 B. Docs only, so no TDD phase applies.
@@ -504,120 +520,3 @@ removed; these notes grow `SESSION_NOTES.md`, which stays under its 65,536 B cei
   (36517811074), test-coverage (36517811115) and R-CMD-check (36517811053) all green, R-CMD-check on
   all 5 legs (macos, windows, ubuntu release/devel/oldrel-1); the Pages deploy (36518278161) succeeded.
   This push-record commit stays local.
-
-### Session 805 Handoff Evaluation (by Session 806)
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `abd82c92`, 0
-undocumented; the S805 receipt `status: complete`, its `quality_ratchet` citation matching
-`.quality-gates-results.json` (results `5deafc2db4bb`, 3,589,736 B); 1 unpushed (the push record);
-the 7 untracked files unchanged. The push note was exact, and gotcha 5 (query runs by id) was used:
-the 2 runs still going at Orient (R-CMD-check 36492193844, test-coverage 36492193789 on `e5e007f8`)
-were re-read at close-out, both green, all 5 R-CMD-check legs. Next step (B) listed this session's
-item among the owner decisions, accurately. **Missing:** nothing S805 could have known; the
-backlog item's option (2) (from S797) did not say it would miss the one real case in the shipped
-data (`U1`). **ROI:** high.
-
-### What Session 806 Did
-**Deliverable, DONE:** a plan, not code: `docs/planning/unknown-parent-placeholder-marking-plan.md`
-for the `BACKLOG.md` item "Real animal ids that start with the placeholder prefix ... are treated as
-stand-ins for unknown parents" (PED_GV F2 / NEW-38, the other half). A planning session (no TDD
-phase), following `ARCHITECTURE_WORKSTREAM.md`.
-**Owner decisions (AskUserQuestion):**
-- The pick: this item.
-- The approach, from 4 measured options: "Mark ids when they are made" (record which ids the
-  package made, instead of guessing from the id's shape). Rejected: the tighter rule; digits only
-  plus new example data; keep the rule and fix the example and help.
-- The scope: write the plan this session. Rejected: a first slice now; the tighter rule now.
-**Measured (plan §1.3, M1-M11):**
-- The shipped `example_ancestry_pedigree.csv` has a real founder `U1`. Today `reportGV()` counts 3
-  female founders instead of 4, and `removeAutoGenIds()` drops it.
-- The shipped data holds 1,470 distinct `U` ids; every stand-in is `U` + 4-5 capitals/digits. I
-  first told the owner "2,934", a figure I had not counted; I corrected it before the owner's
-  scope decision.
-- The tighter rule ("prefix + at least 4 capitals/digits") changes only `U1`. A full-suite trial
-  with it patched in moved 3 tests.
-- `recordStatus` is rebuilt on every QC run, and an attribute is lost by `merge()`/CSV. A column
-  survives CSV, QC, trimming and obfuscation. Adding the column alone moved 1 test
-  (`test_qcStudbook.R:105`); a second failure was a trial artifact.
-- Downstream modules get the filtered pedigree (`R/appServer.R:312`).
-**Found, recorded in `BACKLOG.md`:**
-- (1) New item: with "Display Unknown IDs" unticked, `reportGV()` stops ("sire and dam must have
-  had alleles assigned") on `qcPed`, after the Genetic Value module's own steps.
-- (2) `addUIds()` can reuse another animal's recorded sire id when that sire has no row
-  (`R/addUIds.R:46`), making false half-sibs. Added to the placeholder item and the PED_GV item;
-  it is the plan's Slice 2 first fix.
-- The placeholder item now points at the plan and lists the 4 owner decisions still needed
-  (D1, D3, D5, D6).
-**Commits:**
-- claim `cb4601aa`
-- plan + backlog `2d327d7f`
-- records (this)
-**Verification:**
-- Every claim in the plan was printed by a command this session. The two pinned numbers it cites
-  exist (`test_getPotentialParents.R:452` 1587, `test_calcNeVariance.R:146` 26.405868).
-- `docs/` and `BACKLOG.md` are build-ignored (`.Rbuildignore:15`, `:75`), and no test reads them
-  (grep: comment mentions only), so the suite was not run for the commit; the two trial runs used
-  the whole suite.
-- `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 3749928c8792 · manifest aa983075d6a2`
-  (3,589,729 B, measured at `2d327d7f`).
-- CI on `e5e007f8` (S805's push, `in_progress` at Orient): R-CMD-check green on all 5 legs,
-  test-coverage green.
-**Learnings:** 822.
-**Reduction:** the owner ran the forced trim (`methodology_trim.py --file SESSION_NOTES.md
---budget-bytes 65536 --cut 4 --force --write`), because these notes put the file at 62,232 B, about
-27,414 tokens, over the 25,000-token read ceiling, so the pre-commit hook refused the records commit.
-10 records went to `docs/archive/SESSION_NOTES-through-2026-09-28-2.md`; live 62,232 B to 25,099 B.
-Its verify script flags only the S806 claim stub (the BL-27 finalize pattern); checked by hand, the
-other 12 records in HEAD are verbatim in the live file or the shard.
-
-**Self-assessment: 8/10.**
-- \+ Measured the shipped data against each candidate rule before asking, and so found the real
-  `U1` case.
-- \+ Ran full-suite trials, so each option came with a test count.
-- \+ Checked the side finding through the module's own steps instead of assuming.
-- \+ Found the `addUIds()` reuse by testing a claim I had just written into the plan.
-- \- The "2,934" count reached the owner unmeasured (corrected, but it should have been counted
-  first).
-- \- One wasted trial run (a sanity check on a dataset with no sex/birth columns).
-- \- Two scratch-script slips (a zsh glob, an R string escape).
-- \- The planning protocol asks for maximum reasoning depth, which I cannot set myself; I told the
-  owner `/effort max` exists.
-
-**Next steps:**
-- (A) The plan's 4 owner decisions (§11): D1 the column name, D3 the fallback rule, D5 bad values,
-  D6 shipped data. Ask them first, in plain words, with the plan's recommendations. If D3 = the
-  tighter rule, implement Slice 1 (strict TDD):
-  - `R/autoIdFormat.R:109-111`, and `obfuscateId()`'s alias length (`R/obfuscateId.R:38-46`)
-  - the 3 moved tests: `test_autoIdFormat.R:58`, `test_modPedigree.R:113-169`,
-    `test_obfuscateId.R:31`
-  - a `NEWS.Rmd` entry
-  Otherwise start at Slice 2 (plan §5).
-- (B) Other items:
-  - the documentation audit's next slice (`BACKLOG.md` "Audit the internal and user-facing
-    documentation")
-  - the new "Display Unknown IDs" / `reportGV()` item
-  - jmac, recorded dam, PED_GV roots
-- (C) Carried:
-  - the `CHANGELOG.md`/`HANDOFFS.md` trims (the owner runs the forced write)
-  - residue: 7 untracked files
-  - 4 unpushed after this records commit (`abd82c92`, claim, plan, records); pushing is the
-    owner's call; all build-ignored
-
-**Key files:**
-- `docs/planning/unknown-parent-placeholder-marking-plan.md` (§1.3 measurements, §2 inventory with
-  the grep commands, §5 slices, §11 decisions)
-- `R/autoIdFormat.R:109-111`, `R/addUIds.R:46`, `R/qcStudbook.R:231-232` and `:324-325`
-- `R/addParents.R:43-44`, `R/modPedigree.R:359-361`, `R/appServer.R:312`
-- `tests/testthat/test_qcStudbook.R:105`, `PROJECT_LEARNINGS.md` Learning 822
-
-**Gotchas:**
-1. To trial a rule across the suite, swap the function into `asNamespace("nprcgenekeepr")` and
-   `as.environment("package:nprcgenekeepr")` (after `load_all`). A wrapper around `qcStudbook()`
-   makes `test_qcStudbook.R:443` fail spuriously (`mockery::stub` stubs the wrapper).
-2. `recordStatus` is rebuilt on every QC run; never read the mark from it.
-3. `fixColumnNames()` rewrites `ego` to `id` anywhere in a header, and lowercases camelCase names.
-4. `BACKLOG.md` is 54,837 B, 1,913 B under the dashboard's 56,750 B read cap. The next few items
-   may push it over (HIGH, with no trim remedy: S803 gotcha 2).
-5. The full suite's 1 known failure is local-only (the owner's untracked
-   `vignettes/suggested_NEWS_entry.Rmd`).
-6. STANDING SET unchanged from S790-805.
-

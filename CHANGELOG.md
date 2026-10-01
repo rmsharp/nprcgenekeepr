@@ -60,7 +60,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-10-01 · [ad hoc] S844 claim: fix the 95 slice-6e docs-staleness findings in `R/*.R` roxygen (in progress); also records S843's untracked-ledger follow-up commit `47992f6ae` (re-wrapped three new `SESSION_NOTES.md` record lines over the 280 B ceiling).
+### 2026-10-01 · [ad hoc] S844 close-out: fixed all 95 slice-6e docs-staleness findings (26 moderate, 69 minor) in `R/*.R` roxygen, 67 files, `man/` regenerated; commits `54c2f64e5`, `ff8f3c941`, `52335a523`, `9c650237f`. Claim `56668e779`. Also records S843's follow-up `47992f6ae` (re-wrapped three `SESSION_NOTES.md` lines). Docs only; lint 0, wordlist test, `devtools::check(--no-tests)` 0/0/1. Model: Claude Sonnet 5.5.
 
 ### 2026-10-01 · [ad hoc] S843 close-out: split the 10 `SESSION_NOTES.md` lines over the 280 B per-line ceiling (re-wrap only, no word changed); `context_budget.py` OVER to OK. Claim `f407e5a1c`. Docs only.
 

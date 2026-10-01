@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S844
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: fix the 95 slice-6e docs-staleness findings (26 moderate, 69 minor) in R/*.R roxygen; docs only
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: fixed all 95 slice-6e docs-staleness findings in R/*.R roxygen (67 files), man/ regenerated; docs only, code candidates untouched
+what_was_done: Claim 56668e779; fixes 54c2f64e5 (RE+RF), ff8f3c941 (RG+RH), 52335a523 (RI+RJ), 9c650237f (RK+RL). Four subagents on disjoint files. Only #' lines changed (diff-checked); lint 0; wordlist test pass; devtools::check(--no-tests) 0/0/1 note. Full suite not run.
+next_steps: Owner decisions on the audit code candidates (46 slice-6e CE-CL, 22 slice-6d, 8 slice-6c, older). Or docs-audit slice 7: NEWS.Rmd then internal docs (READY, Effort L). Push of 8 local commits only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md; BACKLOG.md:197; R/makeGroupNum.R (numGp "Default is 1" still stale); R/fillGroupMembersWithSexRatio.R:37 and R/groupAddAssign.R:128 (deprecated minParentAge in examples)
+gotchas: zsh arrays are 1-indexed (a commit loop mislabeled messages; reset and redone). After document() restore man/nprcgenekeepr-package.Rd. Reword rather than extend inst/WORDLIST. Keep SESSION_NOTES.md lines at or under 280 B. Per-finding wording rests on the agents' source reads.
 ```
 
 ```handoff
