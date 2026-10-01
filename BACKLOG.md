@@ -180,6 +180,14 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       `shiny_app_use/` (50) images are not yet checked. Related, not duplicated: the `NEWS.Rmd`
       release-state sweep (above), the deferred `a2interactive` pass, and the `inst/doc/` slimming
       item.
+      **Slice 1 DONE S820** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE1_2026-09-30.md`): the staleness is in both
+      the local PDFs (rendered 2026-08-25, carry since-retracted claims) and the committed images (1 of 8
+      `kinship2-fidelity-validation-img/` is stale: `trackC-nprc-rectilinear.png`; the other 7 are current). **Open
+      from slice 1:** owner decides delete-or-ignore for the two PDFs; regenerate `trackC-nprc-rectilinear.png`
+      (`data-raw/kinship2FidelityValidation.R`; look at the fresh arc touching the `W` square first); reword
+      `_pedigree_browser.Rmd:62-65` (default is Rectilinear, cap 400); fix the stale "defaulting to direct"
+      comment at `R/modPedigree.R:440-443`. **Slice 2 next:** the 50 `shiny_app_use/` images, then the prose
+      claims, then the rest of the user-facing and internal scope above.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no

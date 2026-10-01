@@ -98,16 +98,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 820 Did
-**Deliverable:** Docs staleness audit, slice 1: the owner-flagged stale PDFs and figures (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning (AUDIT_WORKSTREAM.md; read-only audit, one report under `docs/audits/`).
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### Session 819 Handoff Evaluation (by Session 820)
+**Score: 9/10.** The Orient measurements held (ledger and receipt frontiers at HEAD, the 7 untracked files
+unchanged, CI all green) and the priorities list led straight to this session's pick, including the docs-audit
+item's "first question". **Missing:** nothing needed. **Wrong:** one detail: the gotcha said only the records
+commit was unpushed, but `master` was 2 ahead (records plus the ledger-restore commit); both docs only.
+**ROI:** high.
 
-### Session 818 Handoff Evaluation (by Session 819)
-**Score: 9/10.** Orient measurements held: `CHANGELOG.md`/`HANDOFFS.md` frontiers at HEAD (`4fb6ae0ca`), `master` 8 ahead,
-the 7 untracked files unchanged, `CLAUDE.md` 26,731 B, and "push and watch CI" was listed first and was exactly
-the work owed. **Missing:** nothing needed. **Wrong:** nothing. **ROI:** high.
+### What Session 820 Did
+**Deliverable, DONE (read-only audit, docs only):** docs staleness audit slice 1, report
+`docs/audits/DOCS_STALENESS_AUDIT_SLICE1_2026-09-30.md`. Answer to the backlog's first question: stale in both the
+local PDFs (rendered 2026-08-25; carry since-retracted claims; untracked, unignored, unreferenced) and the committed
+images (1 of 8 kinship2 figures, `trackC-nprc-rectilinear.png`, differs from a fresh render by a real arc-shape change;
+the other 7 differ only by anti-aliasing). Figures regenerated twice (identical both times) and committed images
+restored with `git checkout`. Also found: manual wording at `_pedigree_browser.Rmd:62-65` (default is Rectilinear, cap
+400) and a stale "defaulting to direct" comment at `R/modPedigree.R:440-443`. 5 findings (0 critical, 2 moderate, 3
+minor). Nothing deleted: the PDFs are the owner's local files.
+**Commits:** claim `2522ee676`; report + records (this).
+**Learnings:** none new. **Reduction:** removed the S818 "What Session 818 Did" block and the S818 handoff evaluation
+(in git and the S818 receipt). No code, so no TDD cycle, suite run or app smoke test (3E not applicable: no runtime change).
+
+**Self-assessment: 9/10.** + One deliverable, measured not recalled (pixel diff, determinism check, pdf text),
+restored the images it overwrote, left owner files alone. - Did not re-ask about the 7 untracked drafts; slice 1 only
+spot-checked the prose of the two articles.
+
+**Next steps:**
+- (A) Owner picks: delete-or-ignore the two PDFs; then regenerate `trackC-nprc-rectilinear.png` (own session; look at
+  the fresh arc touching the `W` square first); fix the manual sentence and the code comment (both small).
+- (B) Docs audit slice 2: the 50 `shiny_app_use/` images (`BACKLOG.md:151` item, "Slice 1 DONE S820" note).
+- (C) Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band;
+  `master` is 3 ahead of `origin` after this commit (docs only, no CI owed).
+
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE1_2026-09-30.md`, `data-raw/kinship2FidelityValidation.R:67`
+(writes straight into the committed image dir), `R/modPedigree.R:440-446`, `BACKLOG.md:151-190`.
+
+**Gotchas:** running `data-raw/kinship2FidelityValidation.R` overwrites the 8 committed PNGs (every one changes byte for
+byte; compare pixels, not bytes) and takes about a minute; restore with
+`git checkout -- vignettes/articles/kinship2-fidelity-validation-img` if the images are not meant to change.
 
 ### What Session 819 Did
 **Deliverable, DONE (no code edits):** pushed `master` (9 commits including the claim, incl. S817's
@@ -127,28 +154,6 @@ R-CMD-check, lint) succeeded on `7bcfdcc68`.
 **Key files:** `BACKLOG.md:8` (PED_GV), `BACKLOG.md:91` (Mate-pair).
 
 **Gotchas:** `master` is now in sync with `origin` except this records commit (unpushed; docs only, no CI owed).
-
-### What Session 818 Did
-**Deliverable, DONE (docs only):** closed the 11 settled PED_GV audit ids (PED-7, NEW-39, PED-8, PED-9, NEW-27,
-NEW-33, NEW-44, NEW-47, NEW-58, NEW-59, NEW-60) on the owner's pick (Phase 0 picker, then a plain-words scope
-question). Added a "Closure record" section to `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` (table left as the
-frozen S781 reading) and updated `BACKLOG.md:8` (32 ids remain). No code, so no TDD cycle and no suite run.
-**Commits:** claim `8a11781b0`; deliverable + records (this, amended).
-**Learnings:** none new. **Reduction:** removed the S816 handoff-evaluation block (kept in git and the S816 receipt).
-
-**Self-assessment: 9/10.** + One deliverable, scope asked in plain words, closure rationale taken from the report's
-own evidence. - Did not ask again about the 7 untracked drafts; my first records script half-failed and the commit
-briefly lacked the records (amended).
-
-**Next steps:**
-- (A) Pick from the priorities list: push `master` and watch CI (R code changed in S817), Mate-pair residues
-  (`BACKLOG.md:91`), the 6 no-behavior-change PED_GV items (Recommendation 2), or an overhaul question.
-- (B) Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band.
-
-**Key files:** `docs/audits/PED_GV_AUDIT_TRIAGE_2026-09-26.md` ("Closure record"), `BACKLOG.md:8`.
-
-**Gotchas:** `master` is 8 commits ahead after this one; only the S817 R-code commits need CI (this session's files
-are docs). The 32 open ids include NEW-24 = issue #123.
 
 ### What Session 817 Did
 **Deliverable, DONE:** Potential Parents now lists candidates only for the parent that is missing (owner chose

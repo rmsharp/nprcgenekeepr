@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S820
 date: 2026-09-30
-status: pending
-active_task: Docs staleness audit, slice 1 (stale PDFs and article figures); IN PROGRESS
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE: docs staleness audit slice 1 (read-only); staleness is in both the local PDFs and 1 of 8 committed kinship2 images
+what_was_done: Claim 2522ee676; report docs/audits/DOCS_STALENESS_AUDIT_SLICE1_2026-09-30.md (5 findings: PDFs stale and unignored, trackC-nprc-rectilinear.png stale, manual limit wording, stale code comment, 7 images current); BACKLOG item updated. Figures regenerated twice and the committed images restored. No code, no suite run.
+next_steps: Owner decides delete-or-ignore for the two PDFs; regenerate trackC-nprc-rectilinear.png (own session); fix _pedigree_browser.Rmd:62-65 and the R/modPedigree.R:440-443 comment; then audit slice 2 (50 shiny_app_use images). Ask once whether to commit or drop the 7 untracked drafts.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE1_2026-09-30.md, data-raw/kinship2FidelityValidation.R:67, R/modPedigree.R:440-446, BACKLOG.md:151-190
+gotchas: the kinship2 script overwrites the committed PNGs in place (compare pixels, not bytes; restore with git checkout); master is 3 ahead of origin, docs only, no CI owed.
 ```
 
 ```handoff
