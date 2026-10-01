@@ -18,7 +18,8 @@ that locus).}
 \value{
 A named numeric vector, allele -> frequency, computed from the
 non-\code{NA} cells at \code{locus} only. A locus monomorphic among
-genotyped individuals returns a length-1 vector.
+genotyped individuals returns a length-1 vector; a locus with no genotyped
+individual returns \code{numeric(0)}.
 }
 \description{
 Internal helper for \code{\link{markerParentageLikelihood}} (issue #147

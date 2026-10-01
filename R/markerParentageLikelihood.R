@@ -375,10 +375,11 @@ markerParentageLikelihood <- function(genotypeMatrix, pedigree, id = NULL,
 #' Probability a parent transmits the reference allele
 #'
 #' Internal helper for \code{\link{markerParentageLikelihood}} (issue #147
-#' Slice 1, D2). For a biallelic locus with reference allele
-#' \code{refAllele}: a parent homozygous for \code{refAllele} transmits it
-#' with probability 1; a heterozygous parent, 0.5; a parent homozygous for
-#' the other allele, 0.
+#' Slice 1, D2). For reference allele \code{refAllele}, the value is the
+#' fraction of the parent's two alleles equal to \code{refAllele}: a parent
+#' homozygous for \code{refAllele} transmits it with probability 1; a
+#' heterozygous parent, 0.5; a parent homozygous for any other allele, 0. At
+#' a multiallelic locus all non-reference alleles are lumped together.
 #'
 #' @param genoStr a single genotype string (\code{"lo/hi"} format, as in one
 #' cell of a \code{\link{buildMarkerGenotypeMatrix}} result).

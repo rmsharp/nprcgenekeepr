@@ -127,7 +127,7 @@
 #' Compute a descriptive, same-chromosome pairwise LD/block statistic
 #'
 #' Estimates a descriptive linkage-disequilibrium (LD) block statistic
-#' (D', a chi-squared-based generalization of r2) for every pair of loci
+#' (the two columns \code{Dprime} and \code{r2}) for every pair of loci
 #' on the same chromosome (issue #153, D3b). This is deliberately the
 #' \emph{secondary}, exploratory-use statistic in the design's two-metric
 #' pair -- \code{\link{markerRealizedRelatednessVariance}} is the primary,
@@ -156,7 +156,11 @@
 #' panels). A pair with fewer than 2 individuals genotyped at both loci
 #' (after any \code{founderIds} restriction) returns \code{NA} with a
 #' named warning, matching \code{\link{markerFst}}'s precedent for an
-#' insufficient-evidence pair -- not a \code{stop()}.
+#' insufficient-evidence pair -- not a \code{stop()}. The function does
+#' \code{stop()} when no locus has a non-\code{NA} \code{chrom}. A locus
+#' missing from either \code{locusMetadata} or \code{genotypeMatrix} is
+#' dropped silently, and when no chromosome has two or more loci the result
+#' is a zero-row dataframe with the full column set.
 #'
 #' @param genotypeMatrix a character matrix as returned by
 #' \code{\link{buildMarkerGenotypeMatrix}}: rows are individual \code{id}s,

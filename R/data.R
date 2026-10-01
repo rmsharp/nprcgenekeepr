@@ -127,8 +127,8 @@
 #' Founder Equivalents and Founder Genome Equivalents" Zoo Biology 8:111-123
 #' (1989).
 #'
-#' \describe{
-#' There are 5000 columns, one for each iteration in \code{geneDrop}
+#' @format A dataframe with 14 rows and 5002 columns. There are 5000 columns
+#' (\code{V1} to \code{V5000}), one for each iteration in \code{geneDrop}
 #' containing alleles randomly selected at each
 #' generation of the pedigree using Mendelian rules.
 #'
@@ -137,7 +137,6 @@
 #'
 #' Column 5002 is the \code{parent} column with values of \code{sire} and
 #' \code{dam} alternating.
-#' }
 "lacy1989PedAlleles"
 #' Gene-drop alleles example (baboon pedigree)
 #'
@@ -258,11 +257,10 @@
 #'
 #' A dataframe produced from qcPed by adding made up
 #' genotypes.
-#' \describe{
-#' A dataframe containing 280 records with 12 columns: \code{id}, \code{sire},
-#'  \code{dam}, \code{sex}, \code{gen}, \code{birth}, \code{exit}, \code{age},
-#'  \code{first}, \code{second}, \code{first_name}, and \code{second_name}.
-#' }
+#' @format A dataframe containing 280 records with 12 columns: \code{id},
+#' \code{sire}, \code{dam}, \code{sex} (factor), \code{gen}, \code{birth},
+#' \code{exit}, \code{age}, \code{first} and \code{second} (numeric allele
+#' codes), and \code{first_name} and \code{second_name} (the allele names).
 "pedWithGenotype"
 #' Genetic-value report for pedWithGenotype
 #'

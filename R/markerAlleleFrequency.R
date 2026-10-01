@@ -20,7 +20,8 @@
 #' @param locus a single locus name (one of \code{colnames(genotypeMatrix)}).
 #' @return A named numeric vector, allele -> frequency, computed from the
 #' non-\code{NA} cells at \code{locus} only. A locus monomorphic among
-#' genotyped individuals returns a length-1 vector.
+#' genotyped individuals returns a length-1 vector; a locus with no genotyped
+#' individual returns \code{numeric(0)}.
 #' @keywords internal
 .markerAlleleFrequencyTable <- function(genotypeMatrix, locus) {
   col <- genotypeMatrix[, locus]

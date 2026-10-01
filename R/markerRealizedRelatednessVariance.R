@@ -72,8 +72,9 @@
 #' @param kmat square kinship matrix, as produced by \code{\link{kinship}}.
 #' @param ped dataframe with (at least) \code{id}, \code{sire}, and
 #' \code{dam} columns, as used by \code{\link{convertRelationships}}.
-#' @param nChr integer; chromosome count (e.g. autosome count for the
-#' species). Must be a single positive value.
+#' @param nChr chromosome count (e.g. autosome count for the species), meant
+#' to be a whole number. Only a single positive numeric value is enforced, so
+#' a non-integer such as \code{20.5} is accepted.
 #' @param mapLength numeric; total autosomal genetic map length in Morgans.
 #' Must be a single positive value.
 #' @param ids character vector of IDs or \code{NULL} to which the analysis

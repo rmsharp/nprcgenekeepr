@@ -5,16 +5,8 @@
 \alias{lacy1989PedAlleles}
 \title{Gene-drop alleles for lacy1989Ped (5000 iterations)}
 \format{
-An object of class \code{data.frame} with 14 rows and 5002 columns.
-}
-\source{
-lacy1989Ped is a dataframe containing the small example pedigree used
-by Robert C. Lacy in "Analysis of Founder Representation in Pedigrees:
-Founder Equivalents and Founder Genome Equivalents" Zoo Biology 8:111-123
-(1989).
-
-\describe{
-There are 5000 columns, one for each iteration in \code{geneDrop}
+A dataframe with 14 rows and 5002 columns. There are 5000 columns
+(\code{V1} to \code{V5000}), one for each iteration in \code{geneDrop}
 containing alleles randomly selected at each
 generation of the pedigree using Mendelian rules.
 
@@ -24,6 +16,11 @@ pedigree (2 * 7).
 Column 5002 is the \code{parent} column with values of \code{sire} and
 \code{dam} alternating.
 }
+\source{
+lacy1989Ped is a dataframe containing the small example pedigree used
+by Robert C. Lacy in "Analysis of Founder Representation in Pedigrees:
+Founder Equivalents and Founder Genome Equivalents" Zoo Biology 8:111-123
+(1989).
 }
 \usage{
 data(lacy1989PedAlleles)

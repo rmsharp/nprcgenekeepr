@@ -12,8 +12,9 @@ markerRealizedRelatednessVariance(kmat, ped, nChr, mapLength, ids = NULL)
 \item{ped}{dataframe with (at least) \code{id}, \code{sire}, and
 \code{dam} columns, as used by \code{\link{convertRelationships}}.}
 
-\item{nChr}{integer; chromosome count (e.g. autosome count for the
-species). Must be a single positive value.}
+\item{nChr}{chromosome count (e.g. autosome count for the species), meant
+to be a whole number. Only a single positive numeric value is enforced, so
+a non-integer such as \code{20.5} is accepted.}
 
 \item{mapLength}{numeric; total autosomal genetic map length in Morgans.
 Must be a single positive value.}

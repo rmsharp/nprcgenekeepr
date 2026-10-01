@@ -5,7 +5,10 @@
 \alias{pedWithGenotype}
 \title{Pedigree with simulated genotypes (from qcPed)}
 \format{
-An object of class \code{data.frame} with 280 rows and 12 columns.
+A dataframe containing 280 records with 12 columns: \code{id},
+\code{sire}, \code{dam}, \code{sex} (factor), \code{gen}, \code{birth},
+\code{exit}, \code{age}, \code{first} and \code{second} (numeric allele
+codes), and \code{first_name} and \code{second_name} (the allele names).
 }
 \usage{
 data(pedWithGenotype)
@@ -13,10 +16,5 @@ data(pedWithGenotype)
 \description{
 A dataframe produced from qcPed by adding made up
 genotypes.
-\describe{
-A dataframe containing 280 records with 12 columns: \code{id}, \code{sire},
-\code{dam}, \code{sex}, \code{gen}, \code{birth}, \code{exit}, \code{age},
-\code{first}, \code{second}, \code{first_name}, and \code{second_name}.
-}
 }
 \keyword{datasets}

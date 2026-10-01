@@ -75,7 +75,11 @@ markerObservedHeterozygosity <- function(genotypeMatrix) {
 #' @return A list with two elements: \code{perLocus}, a named numeric vector
 #' of expected heterozygosity per locus (names taken from
 #' \code{colnames(genotypeMatrix)}); and \code{meanHe}, the unweighted mean
-#' of \code{perLocus} across all loci.
+#' of \code{perLocus} across all loci. A locus with no genotyped individual
+#' gets \code{1} (the empty sum of squared frequencies is 0), not \code{NA},
+#' and that value is included in \code{meanHe}; unlike
+#' \code{\link{markerObservedHeterozygosity}}, which returns \code{NA} for
+#' an individual with no genotyped locus.
 #'
 #' @references Nei, M. (1973). Analysis of gene diversity in subdivided
 #' populations. \emph{Proceedings of the National Academy of Sciences USA},

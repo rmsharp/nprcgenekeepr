@@ -38,7 +38,7 @@ literal \code{"."} allele value (VCF's missing-genotype placeholder),
 rather than silently counting it as a real allele. Optionally validates
 the accompanying locus-metadata sidecar's own structure by reusing
 \code{\link{checkLocusMetadata}}, rather than reinventing that check; the
-sidecar is not cross-checked against the genotype's loci.
+sidecar is not cross-checked against the loci of the genotype table.
 }
 \details{
 All of \code{\link{checkMarkerGenotypeFile}}'s structural checks are
