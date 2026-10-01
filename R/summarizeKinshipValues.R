@@ -1,16 +1,18 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Summarize imputed kinship values
+#' Summarize simulated kinship values
 #'
 #' Makes a data.frame object containing simulated kinship summary statistics
 #' using the counts of kinship values list from \code{countKinshipValues}.
 #'
 #' @param countedKValues list object from countKinshipValues function that
-#' containes the lists \code{kIds}, \code{kValues},
-#' and \code{kCounts}.
-#' @return a data.frame with one row of summary statistics for each imputed
-#' kinship value. The columns are as follows:
+#' contains the lists \code{kIds}, \code{kValues},
+#' and \code{kCounts} and no other elements.
+#' @return a data.frame with one row of summary statistics for each pair of
+#' IDs. Pairs whose simulated kinship values include \code{NA} are left out,
+#' and a data.frame with no rows and no columns is returned when every pair is
+#' left out. The columns are as follows:
 #'  \code{id_1},
 #'  \code{id_2},
 #'  \code{min},
@@ -65,14 +67,6 @@
 #'   simParent_1, simParent_2, simParent_3,
 #'   simParent_4, simParent_5, simParent_6
 #' )
-#'
-#' extractKinship <- function(simKinships, id1, id2, simulation) {
-#'   ids <- dimnames(simKinships[[simulation]])[[1]]
-#'   simKinships[[simulation]][
-#'     seq_along(ids)[ids == id1],
-#'     seq_along(ids)[ids == id2]
-#'   ]
-#' }
 #'
 #' extractKValue <- function(kValue, id1, id2, simulation) {
 #'   kValue[

@@ -20,7 +20,9 @@ Part of Genetic Value Analysis
 \details{
 The mean kinship of animal \emph{i} is \deqn{MK_i = \Sigma f_ij / N},
 in which the summation is over all animals, \emph{j}, including the kinship
-of animal \emph{i} to itself.
+of animal \emph{i} to itself. \code{NA} values are dropped, so \emph{N} is
+the number of non-\code{NA} kinship values in the animal's column, not
+the number of animals.
 }
 \examples{
 library(nprcgenekeepr)

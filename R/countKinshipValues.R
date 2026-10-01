@@ -3,12 +3,14 @@
 
 #' Count kinship-value occurrences across simulated pedigrees
 #'
-#' @param kinshipValues matrix of kinship values from simulated pedigrees where
-#'  each row represents a pair of individuals in the pedigree and each column
-#'  represents the vector of kinship values generated in a simulated
-#'  pedigree.
+#' @param kinshipValues data.table of kinship values from simulated pedigrees,
+#'  as returned by \code{\link{kinshipMatricesToKValues}}: columns
+#'  \code{id_1} and \code{id_2} identify a pair of individuals and each
+#'  remaining column holds the kinship values from one simulated pedigree.
 #' @param accummulatedKValueCounts list object with same structure as that
-#'  returned by this function.
+#'  returned by this function, from an earlier call. Its ID pairs must be the
+#'  same, in the same order, as those in \code{kinshipValues}; the new counts
+#'  are added to its counts.
 #'
 #' @return A list of three lists named \code{kIds} (kinship IDs), \code{kValues}
 #'         (kinship values), and \code{kCounts} (kinship counts).
@@ -52,14 +54,6 @@
 #'   simParent_4, simParent_5, simParent_6
 #' )
 #'
-#' extractKinship <- function(simKinships, id1, id2, simulation) {
-#'   ids <- dimnames(simKinships[[simulation]])[[1]]
-#'   simKinships[[simulation]][
-#'     seq_along(ids)[ids == id1],
-#'     seq_along(ids)[ids == id2]
-#'   ]
-#' }
-#'
 #' extractKValue <- function(kValue, id1, id2, simulation) {
 #'   kValue[
 #'     kValue$id_1 == id1 & kValue$id_2 == id2,
@@ -74,6 +68,8 @@
 #' kValues <- kinshipMatricesToKValues(simKinships)
 #' extractKValue(kValues, id1 = "A", id2 = "F", simulation = 1:n)
 #' counts <- countKinshipValues(kValues)
+#'
+#' # A second, independent set of simulations is added to the first counts
 #' n <- 10
 #' simKinships <- createSimKinships(ped, allSimParents, pop = ped$id, n = n)
 #' kValues <- kinshipMatricesToKValues(simKinships)
