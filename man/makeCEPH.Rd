@@ -7,13 +7,15 @@
 makeCEPH(id, sire, dam)
 }
 \arguments{
-\item{id}{character vector with unique identifier for an individual}
+\item{id}{character vector of the unique identifiers of all individuals;
+a duplicated id stops the function with a \code{duplicate row.names}
+error.}
 
-\item{sire}{character vector with unique identifier for an
-individual's father (\code{NA} if unknown).}
+\item{sire}{character vector, parallel to \code{id}, with the identifier
+of each individual's father (\code{NA} if unknown).}
 
-\item{dam}{character vector with unique identifier for an
-individual's mother (\code{NA} if unknown).}
+\item{dam}{character vector, parallel to \code{id}, with the identifier
+of each individual's mother (\code{NA} if unknown).}
 }
 \value{
 List of lists: fields: id, subfields: parents, pgp, mgp.

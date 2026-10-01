@@ -13,7 +13,9 @@
 }
 \value{
 A data.frame with one row per (animal x designation column),
-i.e. 2 rows per animal: \code{id} (character), \code{haplotype}
+i.e. 2 rows per animal, ordered as all \code{haplotype1} rows followed by
+all \code{haplotype2} rows (not interleaved per animal): \code{id}
+(character), \code{haplotype}
 (character; the designation with any trailing \code{?} stripped, or
 \code{NA} when missing), \code{uncertain} (logical), \code{missing}
 (logical).
@@ -27,6 +29,9 @@ else is a certain call. Labels are otherwise opaque (design plan D9):
 a bare \code{"?"} has no label part to strip, so it is treated as a
 certain call of the literal label \code{"?"}, not judged. Total
 function over \code{\link{checkMhcHaplotypeFile}}-validated input --
-no error paths.
+no error paths. Values are not trimmed: a whitespace-only value, or
+whitespace followed by \code{?}, is not treated as missing (for example
+\code{"  ?"} gives the haplotype \code{"  "} and \code{uncertain}
+\code{TRUE}), so trimming is assumed to happen upstream.
 }
 \keyword{internal}

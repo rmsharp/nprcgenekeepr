@@ -10,7 +10,9 @@
 #' tiers, following a PLINK-style three-state coverage model:
 #' \code{"full"} (both \code{chrom} and \code{pos} present; \code{cM} is
 #' optional even within \code{"full"}), \code{"partial"} (exactly one of
-#' \code{chrom}/\code{pos} present), or \code{"none"} (neither present).
+#' \code{chrom}/\code{pos} present), or \code{"none"} (neither present). A
+#' value counts as present when it is not \code{NA}, so an empty-string
+#' \code{chrom} counts as present.
 #'
 #' @details
 #' A locus-metadata table has one row per locus (not per individual x
@@ -26,7 +28,9 @@
 #' count, first-column identity, and row uniqueness are all valid, with a
 #' new \code{coverage} column appended (\code{"full"}/\code{"partial"}/
 #' \code{"none"}). The returned dataframe has \code{locus} and \code{chrom}
-#' coerced to character.
+#' coerced to character, and its column names forced to \code{locus},
+#' \code{chrom}, \code{pos} (and \code{cM} when there are four columns)
+#' whatever the input names were.
 #'
 #' @references Purcell, S., Neale, B., Todd-Brown, K., Thomas, L., Ferreira,
 #' M. A. R., Bender, D., Maller, J., Sklar, P., de Bakker, P. I. W., Daly,

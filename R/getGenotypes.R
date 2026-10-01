@@ -3,9 +3,14 @@
 
 #' Get genotypes from file
 #'
-#' @param fileName character vector of temporary file path.
-#' @param sep column separator in CSV file
-#' @return A genotype file compatible with others in this package.
+#' @param fileName character vector of length one: the path of a delimited
+#' text file or an Excel (\code{xls}/\code{xlsx}) file.
+#' @param sep column separator in a delimited text file; ignored for an Excel
+#' file.
+#' @return The file's contents as an unchecked dataframe (column names are
+#' not changed). In a delimited text file an empty string and \code{"NA"} are
+#' read as \code{NA}. Pass the result to \code{\link{checkGenotypeFile}}
+#' to make it compatible with the other functions in this package.
 #'
 #' @importFrom futile.logger flog.debug
 #' @importFrom readxl excel_format

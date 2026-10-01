@@ -10,13 +10,20 @@ checkGenotypeFile(genotype)
 \item{genotype}{dataframe with genotype data}
 }
 \value{
-A genotype file that has been checked to ensure the column types and
-number required are present. The returned genotype file has the first column
-name forced to "id".
+The genotype dataframe, checked for the column count, the first
+column's name and the allele range described above; no column types are
+checked. The returned genotype file has the first column name forced to
+"id".
 }
 \description{
 Checks to ensure the content and structure are appropriate for a genotype
 file. These checks are simply based on expected columns and legal domains.
+The function stops (an error, not a warning) when the dataframe has fewer
+than three columns, when the first column name does not contain
+\code{"id"} (any case), when any column is named \code{first} or
+\code{second} (any case), or when an allele in columns 2 or 3 that reads
+as an integer is above 10000 (it would collide with the integer codes
+\code{\link{addGenotype}} assigns).
 }
 \examples{
 library(nprcgenekeepr)

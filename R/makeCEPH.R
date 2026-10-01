@@ -9,11 +9,13 @@
 #' the id, the parents, and the grandparents. Inserts NA for unknown pedigree
 #' members.
 #'
-#' @param id character vector with unique identifier for an individual
-#' @param sire character vector with unique identifier for an
-#' individual's father (\code{NA} if unknown).
-#' @param dam character vector with unique identifier for an
-#' individual's mother (\code{NA} if unknown).
+#' @param id character vector of the unique identifiers of all individuals;
+#' a duplicated id stops the function with a \code{duplicate row.names}
+#' error.
+#' @param sire character vector, parallel to \code{id}, with the identifier
+#' of each individual's father (\code{NA} if unknown).
+#' @param dam character vector, parallel to \code{id}, with the identifier
+#' of each individual's mother (\code{NA} if unknown).
 #' @return List of lists: fields: id, subfields: parents, pgp, mgp.
 #' Pedigree information converted into a CEPH-style list. The top level
 #' list elements are the IDs from id. Below each ID is a list of three
