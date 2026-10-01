@@ -3,10 +3,11 @@
 
 #' Combine two allele vectors by Mendelian sampling
 #'
-#' @param a1 integer vector with first allele for each individual
-#' @param a2 integer vector with second allele for each individual
-#' \code{a1} and \code{a2} are equal length vectors of alleles for one
-#' individual
+#' @param a1 integer vector with the alleles of one parent, one per simulated
+#' iteration
+#' @param a2 integer vector with the other alleles of the same parent, one per
+#' simulated iteration. \code{a1} and \code{a2} are expected to be equal length
+#' vectors; if they are not, the shorter is recycled silently.
 #' @return An integer vector with the result of sampling from \code{a1}
 #' and \code{a2} according to Mendelian inheritance.
 #'

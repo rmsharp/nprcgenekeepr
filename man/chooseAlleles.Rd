@@ -7,11 +7,12 @@
 chooseAlleles(a1, a2)
 }
 \arguments{
-\item{a1}{integer vector with first allele for each individual}
+\item{a1}{integer vector with the alleles of one parent, one per simulated
+iteration}
 
-\item{a2}{integer vector with second allele for each individual
-\code{a1} and \code{a2} are equal length vectors of alleles for one
-individual}
+\item{a2}{integer vector with the other alleles of the same parent, one per
+simulated iteration. \code{a1} and \code{a2} are expected to be equal length
+vectors; if they are not, the shorter is recycled silently.}
 }
 \value{
 An integer vector with the result of sampling from \code{a1}

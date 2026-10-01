@@ -9,13 +9,19 @@
 #' The two allele columns are coerced to character internally so the name-keyed
 #' allele dictionary is both built and indexed by allele label. This keeps the
 #' integer encoding consistent even when the allele columns are supplied as
-#' factors (a factor would otherwise be indexed by its integer codes).
+#' factors (a factor would otherwise be indexed by its integer codes). The
+#' allele columns are taken by position (columns 2 and 3 of \code{genotype}),
+#' not by name. The result is the output of a full outer \code{merge()} on
+#' \code{id}, so genotype ids that are absent from \code{ped} are added as
+#' extra rows.
 #'
 #' @param ped pedigree dataframe. \code{ped} is to be provided by
 #' \code{qcStudbook} so it is not checked.
 #' @param genotype genotype dataframe. \code{genotype} is to be provided by
 #' \code{checkGenotypeFile} so it is not checked.
-#' @return A pedigree object with genotype data added.
+#' @return A plain \code{data.frame} (not a special pedigree class) with the
+#' rows of \code{ped} plus integer columns \code{first} and \code{second}
+#' holding the allele codes (numbered from 10001).
 #'
 #' @export
 #' @examples

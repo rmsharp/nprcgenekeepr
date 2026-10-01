@@ -14,9 +14,12 @@ returned by \code{\link{checkMarkerGenotypeFile}}: columns \code{id},
 \value{
 A character matrix with one row per unique \code{id} and one
 column per unique \code{locus}. Each cell holds that individual's two
-alleles at that locus, sorted alphabetically and joined by \code{"/"}
-(e.g. \code{"A/B"}), or \code{NA} when that individual has no genotype
-record at that locus.
+alleles at that locus, sorted (by string collation, so locale-dependent
+for mixed-case alleles) and joined by \code{"/"} (e.g. \code{"A/B"}), or
+\code{NA} when that individual has no genotype record at that locus. A
+record with a missing allele gives the string \code{"NA/NA"} (not
+\code{NA}); \code{\link{checkMarkerGenotypeFile}} does not reject such
+rows.
 }
 \description{
 Converts a validated long-format marker genotype table (see
@@ -28,7 +31,9 @@ consumes.
 Row and column order follow first appearance in \code{genotype}, not a
 string sort -- a string sort would place \code{"L10"} before
 \code{"L2"} for any panel with more than nine loci, silently scrambling
-locus order.
+locus order. If \code{genotype} has more than one row for the same
+\code{id} x \code{locus}, the last row silently overwrites the others, so
+run \code{\link{checkMarkerGenotypeFile}} first.
 }
 \examples{
 library(nprcgenekeepr)

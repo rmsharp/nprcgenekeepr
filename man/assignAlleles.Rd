@@ -19,7 +19,11 @@ to track the lists of\code{alleles$alleles}.}
 
 \item{id}{character vector of length one containing the animal ID}
 
-\item{n}{integer indicating the number of iterations to simulate.}
+\item{n}{integer indicating the number of iterations to simulate. It is
+used only when \code{parent} is \code{NA}; for a known parent the number of
+iterations is taken from that parent's already assigned alleles. If a
+known parent has no alleles assigned yet the function stops with the message
+"sire and dam must have had alleles assigned: logic error".}
 }
 \value{
 The original list \code{alleles} passed into the function with newly
