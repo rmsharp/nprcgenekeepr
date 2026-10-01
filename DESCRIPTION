@@ -21,7 +21,7 @@ Description: Provides genetic tools for colony management and is a derivation
     Approach for Designing Breeding Groups to Maximize Genetic Diversity in a
     Large Colony of Captive Rhesus Macaques ('Macaca' 'mulatta')".
     It provides a 'Shiny' application with an exposed API.
-    The application supports five groups of functions:
+    The application supports these main groups of functions:
     (1) Quality control of studbooks contained in text files or 'Excel'
     workbooks and of pedigrees within 'LabKey' Electronic Health Records
     (EHR);
@@ -32,6 +32,9 @@ Description: Provides genetic tools for colony management and is a derivation
     (4) Generation of genetic value analysis reports; and
     (5) Creation of potential breeding groups with and without proscribed sex
     ratios and defined maximum kinships.
+    Further tabs cover mate pair analysis, genetic diversity, marker
+    genetics, potential parents, cross-center identity mapping,
+    de-identified export, and genetic-health trends.
 URL: https://rmsharp.github.io/nprcgenekeepr/, https://github.com/rmsharp/nprcgenekeepr
 BugReports: https://github.com/rmsharp/nprcgenekeepr/issues
 Depends:
