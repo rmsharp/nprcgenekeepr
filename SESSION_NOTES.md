@@ -98,55 +98,50 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 823 Handoff Evaluation (by Session 824)
+**Score: 9/10.** Next-step (A) named slice 4's exact file list and the BACKLOG pointer was right, so Orient took minutes. The
+Gotchas were accurate (master 14 ahead of origin confirmed by `git status -sb`; the untracked-draft test failure was not re-run,
+taken on trust). **Missing:** nothing needed; it did not say the README is generated from `README.Rmd` plus five manual-component
+children, which decided where README fixes must go. **Wrong:** nothing found. **ROI:** high.
+
 ### What Session 824 Did
-**Deliverable:** docs staleness audit slice 4 (read-only report): the 16 `vignettes/manual_components/*.Rmd`, the 8
-`inst/extdata/ui_guidance/*.html` pages and `README.md` (IN PROGRESS). `a2interactive.Rmd`, `man/`, `NEWS.Rmd` and the
-internal docs move to slice 5 (same narrowing S822 made).
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (read-only audit):** docs staleness audit slice 4, `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md`:
+the 16 `manual_components/*.Rmd`, 8 `ui_guidance/*.html` pages and `README.md` have **33 moderate and 44 minor** findings (77 as
+reported, 71 after merging 6 duplicates); no broken link, anchor or function name. Dominant causes: breeding-group and
+genetic-value pages describe an earlier UI (candidate source, ranking scheme, group tabs), and stale hand-typed defaults
+(min parent age "2 years", breeding-group kinship "second cousin" vs app 0.25, "10,000" simulations vs 10, required columns
+missing `birth`, genome-uniqueness threshold "other animals"). Four read-only subagents did the first pass; this session re-read
+the code for 26 of the 33 Moderate findings. Scope narrowed at claim: `a2interactive.Rmd`, `man/`, `NEWS.Rmd`, internal docs -> slice 5.
+**Commits:** claim `d69808512`; report and records (this).
+**Verification:** no code or doc changed besides the report; findings spot-checked by `sed`/`grep` against `R/` and
+`getRequiredCols()` executed. Not run: tests, lint (no `.R` change), app smoke test (3E n/a).
+**Learnings:** none new. **Reduction:** removed the S822 handoff evaluation and the "What Session 823 Did" block (in git and the
+S823 receipt).
 
-### Session 822 Handoff Evaluation (by Session 823)
-**Score: 9/10.** Next-steps (A) and the report's tables were a complete plan: every finding had a location, evidence and fix,
-and the cited files matched today's code (re-checked ~10 of them). The carried-items list matched Orient. **Missing:** nothing
-needed. **Wrong:** the report's "A" findings were right where re-checked (twin toggle, isolated-animal banner, founders CSV
-columns); one caveat: "not reproduced" items still needed a code read to word the fix. **ROI:** high.
-
-### What Session 823 Did
-**Deliverable, DONE (docs only):** fixed all 29 findings from docs audit slice 3 (7 moderate, 22 minor) in the 11 articles, plus
-the roxygen for `orderReport` (tier list), `qcStudbook` and `hasInvalidIdChar` (the ID rule is "no period", not "alphanumeric");
-`devtools::document()` changed only `man/qcStudbook.Rd`. Each wrong claim was re-read against the code before editing (twin
-toggle `R/modPedigree.R:655-659`, isolated-animal banner `:538-575`, `degree = 6L` `:821`, founders columns via `qcStudbook()`).
-Hand-typed export count replaced by an inline `r length(getNamespaceExports("nprcgenekeepr"))` (renders 233); line-number
-citations replaced by function/test names; engineering article counts dated "(at 2.0.0)".
-**Commits:** claim `02ee08477`; roxygen `5d934ecc3`; 4 articles `0ca073234`; pedigree-diagram + kinship2 `930cd1ca8`;
-colony guide + engineering `2b42611a4`; records (this).
-**Verification:** all 11 touched articles rendered with `quarto render` against a scratch install (no errors, tracked tree
-unchanged); `test_hasInvalidIdChar`, `test_orderReport`, `test_qcStudbook`, `test_newsReleaseState`, `test_wordlist_coverage`,
-`test_vignettes_no_deprecated_minParentAge` pass; lintr clean on the 3 touched `.R` files. Not run: full suite (no code change),
-app smoke test (3E n/a). Commits used `--no-verify` (no code, ledger rides the close-out commit).
-**Learnings:** none new. **Reduction:** removed the S821 handoff evaluation and the "What Session 821 Did" block (in git and the
-S821 receipt).
-
-**Self-assessment: 8/10.** + One deliverable, every finding fixed with a code read first, rendered every touched article,
-checked anchors. - Did not look at the rendered HTML visually; did not add the count-guard test the report floated (EN2/CG1
-now computed or dated instead); `test_pkgdown_reference_config.R` fails locally on an owner draft (see Gotchas), found late.
+**Self-assessment: 8/10.** + One deliverable; every Moderate finding the report relies on was re-read or marked agent-only; merged
+duplicate findings across agents; flagged four likely code defects as owner decisions instead of folding them into doc fixes.
+- Read the Moderate findings' code but only spot-checked Minor ones (most are marked A); first summary count of re-read findings
+was wrong and had to be corrected against the check column; did not view the rendered pages.
 
 **Next steps:**
-- (A) Docs audit slice 4: the 16 `manual_components/*.Rmd`, `a2interactive.Rmd`, README, `man/`, `NEWS.Rmd`,
-  `inst/extdata/ui_guidance/`, then internal docs (read-only report; `BACKLOG.md` "Audit the internal and user-facing documentation").
-- (B) Still open: capture-script tail failure (slice 2) then regenerate the 31 stale screenshots; slice 1 leftovers (PDFs
-  delete-or-ignore, `trackC-nprc-rectilinear.png`, `_pedigree_browser.Rmd:62-65`, `R/modPedigree.R:440-443`). Carried: 7
-  untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band; `master` 14 ahead of `origin`
-  (docs only, no CI owed).
+- (A) Fix slice 4 in four docs-only sessions, in the report's "Recommendation" order: (1) `input_format.html`, `_input.Rmd`,
+  `_database_access.Rmd` (delete or fix the orphan); (2) breeding-group pages; (3) genetic-value pages; (4) pedigree browser,
+  summary statistics, ORIP, introduction, then re-render `README.md` from `README.Rmd`. Strict TDD does not apply (docs), but
+  re-read each A-marked finding's code first.
+- (B) Slice 5 audit: `a2interactive.Rmd`, `man/`, `NEWS.Rmd`, then internal docs (`docs/`, `ROADMAP.md`, `CLAUDE.md`, BACKLOG).
+- (C) Owner decisions the audit surfaced (report, Structural observation 3): does "Upload list" need a real upload; should the
+  "Calculate Genome Uniqueness / Mean Kinship" checkboxes exist; `groupAddAssign` roxygen "average"/"or younger"; silent genotype
+  drop for `allele_1/allele_2` pedigree columns. Still open: slice 2 capture-script tail failure then 31 screenshots; slice 1
+  leftovers; 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band; master 15 ahead
+  of origin (docs only, no CI owed).
 
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE3_2026-09-30.md` (the fixed findings), `R/orderReport.R:33-45`,
-`vignettes/articles/colony-manager-guide.qmd:134` (inline export count), `BACKLOG.md:151-205`.
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md`, `R/modBreedingGroups.R:40-46,63-64,113-115,532-537,967-1011`,
+`R/modGeneticValue.R:42-66,424-492`, `R/modPedigree.R:444-457`, `BACKLOG.md:151-210`.
 
-**Gotchas:** `vignettes/suggested_NEWS_entry.Rmd` (untracked owner draft) makes `test_pkgdown_reference_config.R:107` fail
-locally ("article not covered ... suggested_NEWS_entry"); CI never sees it, so it is not a regression. It goes away when the owner
-commits-and-lists or drops the draft. Rendering articles needs the package installed (`R CMD INSTALL -l <scratch>`, then
-`R_LIBS=<scratch>`); `quarto render` otherwise stops at `library(nprcgenekeepr)`.
+**Gotchas:** 4 of 7 untracked drafts are unchanged and `vignettes/suggested_NEWS_entry.Rmd` still makes
+`test_pkgdown_reference_config.R` fail locally (taken from S823, not re-run). README.md is a render: edit
+`vignettes/manual_components/_*.Rmd` and `README.Rmd`, never README.md. The agents' line numbers are mostly unverified for Minor
+findings; two earlier slices had wrong agent line numbers.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809

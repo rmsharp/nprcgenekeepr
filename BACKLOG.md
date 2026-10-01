@@ -193,8 +193,13 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       7 moderate and 22 minor stale claims, mostly hand-typed counts and one-line rule summaries (colony guide export count
       182 vs 233, "six" feature articles vs 7, Production and Undetermined descriptions; `genetic-value-analysis` tier 1;
       `breeding-group-formation` `minAge`/`threshold`/`ignore`); no broken chunk, link or function name. **Fixed S823:** all 29
-      findings, plus the `orderReport`/`qcStudbook`/`hasInvalidIdChar` roxygen. **Slice 4 next:** the 16 `manual_components/*.Rmd`, `a2interactive.Rmd`, README, `man/`, `NEWS.Rmd`,
-      `inst/extdata/ui_guidance/`, then the internal docs.
+      findings, plus the `orderReport`/`qcStudbook`/`hasInvalidIdChar` roxygen. **Slice 4 DONE S824** (`docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md`): the 16 `manual_components`, 8
+      `ui_guidance` pages and README have 33 moderate and 44 minor findings (breeding-group and genetic-value pages describe an
+      earlier UI; stale defaults; `birth` is a required column). **Next:** fix them in four docs-only sessions (order in the
+      report's Recommendation; README.md is rendered from `README.Rmd` plus 5 child components, so fix the children); then
+      **slice 5:** `a2interactive.Rmd`, `man/`, `NEWS.Rmd`, then the internal docs. Four likely code defects the audit found
+      (candidate "Upload list" uploads nothing; no-op GU/MK checkboxes; `groupAddAssign` roxygen; silent `allele_1/2` genotype
+      drop) are owner decisions, DECISION NEEDED, Effort S each, not part of the doc fixes.
 
 - [ ] **Create a tutorial for prospective contributors** (owner-requested 2026-09-26; DECISION
       NEEDED, Effort M) -- there is no contributor guide today: measured 2026-09-26, no

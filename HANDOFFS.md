@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S824
 date: 2026-09-30
-status: pending
-active_task: docs staleness audit slice 4 (read-only report): 16 manual_components, 8 ui_guidance pages, README
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: docs staleness audit slice 4 (read-only); 16 manual_components, 8 ui_guidance pages and README have 33 moderate and 44 minor findings (71 distinct), no broken link or function name
+what_was_done: Claim d69808512; report docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md in the close-out commit. Four read-only subagents did the first pass; this session re-read the code for 26 of 33 Moderate findings and executed getRequiredCols(). Scope narrowed at claim (a2interactive, man/, NEWS.Rmd, internal docs move to slice 5). BACKLOG item updated.
+next_steps: Fix slice 4 in four docs-only sessions in the report's Recommendation order (input pages; breeding-group pages; genetic-value pages; pedigree browser/summary stats/ORIP/intro then re-render README.md from README.Rmd); slice 5 audit (a2interactive, man/, NEWS.Rmd, internal docs); owner decisions on four likely code defects (Upload list, no-op GU/MK checkboxes, groupAddAssign roxygen, silent allele_1/allele_2 genotype drop). Still open: slice 2 capture-script tail then 31 screenshots; slice 1 leftovers; 7 untracked owner drafts.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md, R/modBreedingGroups.R:40-46,63-64,113-115,532-537,967-1011, R/modGeneticValue.R:42-66,424-492, R/modPedigree.R:444-457, BACKLOG.md:151-210
+gotchas: README.md is rendered from README.Rmd plus 5 manual-component children, fix the children then re-render; 7 of 33 Moderate findings are agent-only (BA11, BA24, BB9, UG2, UG13, RM1, RM2) and most Minor ones too, re-read code before fixing; suggested_NEWS_entry.Rmd draft still fails test_pkgdown_reference_config.R locally (CI never sees it); master 15 ahead of origin, docs only, no CI owed.
 ```
 
 ```handoff
