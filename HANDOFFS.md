@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S829
+date: 2026-09-30
+status: pending
+active_task: Trim CLAUDE.md out of the warn band: move the close-out checklists to docs/CLOSEOUT_CHECKLISTS.md (docs only)
+```
+
+```handoff
 session: S828
 date: 2026-09-30
 status: complete

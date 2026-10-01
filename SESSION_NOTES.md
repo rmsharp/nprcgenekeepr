@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 829 Did
+**Deliverable:** trim `CLAUDE.md` out of the warn band by moving the close-out checklists to `docs/CLOSEOUT_CHECKLISTS.md` (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 827 Handoff Evaluation (by Session 828)
 **Score: 9/10.** The next step (A) named the cluster 4 pages and finding ids, and "`summary_stats.html` UG24 is already fixed" saved
 a re-check; the audit's cluster 4 rows were complete and the evidence column let every claim be re-verified in minutes. The

@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S829 claim (in progress): trim `CLAUDE.md` out of the warn band by moving the "Additional close-out checks" checklists to `docs/CLOSEOUT_CHECKLISTS.md` (BACKLOG item, step 1 only; docs only)
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S828 follow-up 2 (owner-directed): added a `BACKLOG.md` Up Next item to trim `CLAUDE.md` by moving the close-out checklists to `docs/CLOSEOUT_CHECKLISTS.md` (step 1 only). No code or docs changed.
 - **Model:** Claude Sonnet 5.5.
 
