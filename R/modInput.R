@@ -31,7 +31,12 @@ parseOptionalAge <- function(x) {
 #'
 #' Creates user interface for data input including file uploads for
 #' pedigree and genotype data with various format options, followed by
-#' quality control validation.
+#' quality control validation. The File Content choices are a pedigree file
+#' only, pedigree and genotypes in one file, pedigree and genotypes in
+#' separate files, and "Focal animals only; pedigree built from database".
+#' Optional minimum sire and dam age fields and a "Debug on" box sit with the
+#' file options; the results appear on the QC Summary, Errors, Warnings and
+#' Cleaned Data tabs.
 #'
 #' @param id character vector of length 1. Module namespace identifier.
 #'
@@ -246,12 +251,21 @@ modInputUI <- function(id) {
 #' @return A list with reactive components:
 #' \itemize{
 #'   \item \code{cleanedStudbook} - The QC-cleaned studbook data
-#'   \item \code{genotypeData} - Genotype data if provided
-#'   \item \code{qcSummary} - Summary of QC results (error/warning counts)
+#'   \item \code{genotypeData} - Genotype data (\code{id}, \code{first},
+#'     \code{second}) taken from the cleaned studbook when it carries
+#'     genotypes. A separately uploaded genotype file that fails
+#'     \code{\link{checkGenotypeFile}} is dropped without a message, leaving
+#'     \code{NULL}
+#'   \item \code{qcSummary} - Summary of QC results: a list with
+#'     \code{errors}, \code{warnings} and \code{records} (counts of error
+#'     rows, warning rows and cleaned records)
 #'   \item \code{minSireAge} - The minimum sire age floor (numeric, or
-#'     \code{NULL} to use the species+sex breeding-age table default)
+#'     \code{NULL} to use the species+sex breeding-age table default). It is
+#'     re-parsed from the live text box, so it can differ from the value the
+#'     last "Read and Check Pedigree" used if the box was edited afterward
 #'   \item \code{minDamAge} - The minimum dam age floor (numeric, or
-#'     \code{NULL} to use the species+sex breeding-age table default)
+#'     \code{NULL} to use the species+sex breeding-age table default); the
+#'     same live-box caveat as \code{minSireAge} applies
 #'   \item \code{isReady} - Logical indicating if data is ready for next step
 #'   \item \code{debugMode} - Logical reflecting the Input tab's "Debug on"
 #'     checkbox

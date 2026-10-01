@@ -164,15 +164,19 @@ modGeneticValueUI <- function(id) {
 #' so no config file means bundled behavior.
 #' @param twinRelations reactive returning a validated twin/zygosity sidecar
 #' data.frame (\code{id1}, \code{id2}, \code{code}), or \code{NULL}. Unlike
-#' \code{kinshipOverrideFile} below, this data does not originate inside this
-#' module -- it is uploaded on the Pedigree Browser's Diagram tab and threaded
+#' the kinship-override file (uploaded through this module's own UI), this
+#' data does not originate inside this module -- it is uploaded on the
+#' Pedigree Browser's Diagram tab and threaded
 #' in by \code{appServer} (BL-N Slice 3), so a declared MZ-twin pair's
 #' corrected kinship is reflected in \code{\link{reportGV}}'s output
 #' regardless of which tab the user visits first. Defaults to
 #' \code{reactive(NULL)} (no twins declared).
 #'
 #' @return List with \code{geneticValues}, \code{topAnimals},
-#' \code{nAnalyzed}, \code{kinshipMatrix}, \code{founderStats},
+#' \code{nAnalyzed}, \code{kinshipMatrix}, \code{kinshipOverrides} (the
+#' validated kinship-override data frame loaded through this module's
+#' kinship-override upload, or \code{NULL} when none is loaded or it cannot
+#' be read), \code{founderStats},
 #' \code{maleFounders}, \code{femaleFounders}, and \code{snapshotSource}
 #' (issue #167 Slice 4: the most recent run's analyzed pedigree, its
 #' \code{nprcgenekeeprGV} object, and its \code{guIter}/\code{guThresh},

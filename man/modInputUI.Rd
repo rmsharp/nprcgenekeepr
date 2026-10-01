@@ -15,7 +15,12 @@ A \code{div} object containing the data input UI.
 \description{
 Creates user interface for data input including file uploads for
 pedigree and genotype data with various format options, followed by
-quality control validation.
+quality control validation. The File Content choices are a pedigree file
+only, pedigree and genotypes in one file, pedigree and genotypes in
+separate files, and "Focal animals only; pedigree built from database".
+Optional minimum sire and dam age fields and a "Debug on" box sit with the
+file options; the results appear on the QC Summary, Errors, Warnings and
+Cleaned Data tabs.
 }
 \seealso{
 \code{\link{modInputServer}} for server logic.

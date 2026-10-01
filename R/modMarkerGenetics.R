@@ -359,8 +359,11 @@ modMarkerGeneticsUI <- function(id) {
 #'
 #' Reads an uploaded long-format marker genotype file (D1 format: \code{id},
 #' \code{locus}, \code{allele1}, \code{allele2}), validates and pivots it
-#' (\code{\link{checkMarkerGenotypeFile}},
-#' \code{\link{buildMarkerGenotypeMatrix}}),
+#' (\code{\link{checkSequenceGenotypeFile}}, which applies the
+#' \code{\link{checkMarkerGenotypeFile}} checks plus a literal-"." rejection
+#' and a \code{maxLoci} warning, then
+#' \code{\link{buildMarkerGenotypeMatrix}}; the Center B upload is validated
+#' the same way),
 #' estimates marker-based kinship independent of pedigree
 #' (\code{\link{markerKinship}}), and surfaces a per-animal comparison of
 #' pedigree-based mean kinship (\code{indivMeanKin}, already computed
@@ -404,10 +407,9 @@ modMarkerGeneticsUI <- function(id) {
 #' every \code{tabPanel}'s output bindings regardless of which tab is
 #' visible: a multiallelic file uploaded through the shared input would
 #' break the other five tabs' own DT outputs simultaneously, not just this
-#' tab's (found empirically this session, correcting the original PRE-RED
-#' plan). Validated through the multiallelic-tolerant sibling validator
-#' (\code{\link{checkLinkageMarkerGenotypeFile}}) rather than
-#' \code{\link{checkMarkerGenotypeFile}}. Any exported LD-block
+#' tab's. Validated through the multiallelic-tolerant sibling validator
+#' (\code{\link{checkLinkageMarkerGenotypeFile}}) rather than the shared
+#' upload's \code{\link{checkSequenceGenotypeFile}}. Any exported LD-block
 #' table is de-identified (\code{\link{obfuscateLdBlocks}}) behind a
 #' curator confirm-gate reusing \code{\link{modDeidentifiedExportServer}}'s
 #' tested Generate-Preview -> Confirm -> Confirm-OK pattern (D9).
@@ -449,11 +451,16 @@ modMarkerGeneticsUI <- function(id) {
 #'   \code{markerKinshipMatrix}, the marker-based \code{id} x \code{id}
 #'   kinship matrix (or \code{NULL}); \code{comparisonTable}, the per-animal
 #'   \code{indivMeanKin}/\code{markerMeanKin} comparison data frame (or
-#'   \code{NULL}); \code{heterozygosityTable}, the per-animal
+#'   \code{NULL}; \code{indivMeanKin} is \code{NA} for every row when the
+#'   pedigree kinship matrix is \code{NULL} or errors, and for any genotyped
+#'   id absent from it); \code{heterozygosityTable}, the per-animal
 #'   \code{ho}/\code{he} heterozygosity data frame (\code{he} is the
 #'   population-wide mean expected heterozygosity, repeated per row) (or
 #'   \code{NULL}); \code{exclusionTable}, the
-#'   \code{\link{markerParentageExclusion}} flagged-pairs data frame (or
+#'   \code{\link{markerParentageExclusion}} data frame: one row per recorded
+#'   dam/sire pair with \code{exclusionCount}, \code{nLoci} and a
+#'   \code{flagged} column (\code{TRUE} where the count exceeds the
+#'   tolerance), so unflagged pairs are included (or
 #'   \code{NULL} before a genotype file and a pedigree are both available);
 #'   \code{crossCenterGenotypeB}, the raw uploaded Center B genotype data
 #'   frame (or \code{NULL} before upload); \code{crossCenterTable}, the
@@ -485,7 +492,9 @@ modMarkerGeneticsUI <- function(id) {
 #'   and \code{sequenceExportManifest}, the de-identified genotype matrix,
 #'   de-identified F_ROH table and export manifest captured at
 #'   "Generate De-Identified Export Preview" (each \code{NULL} before
-#'   then); \code{sequenceExportConfirmed}, \code{FALSE} until that
+#'   then, and when any genotype id is absent from the pedigree or the ROH
+#'   table or pedigree is \code{NULL}); \code{sequenceExportConfirmed},
+#'   \code{FALSE} until that
 #'   export's confirm-gate modal is accepted for the current preview;
 #'   \code{mhcHaplotypeSummaryTable}, the \code{\link{mhcHaplotypeFrequency}}
 #'   \code{summary} data frame (or \code{NULL} before an MHC haplotype file
