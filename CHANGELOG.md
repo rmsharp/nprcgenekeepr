@@ -60,7 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-10-01 · [ad hoc] S843 claim: trim `SESSION_NOTES.md` long lines (in progress; Phase 3F records the rest).
+### 2026-10-01 · [ad hoc] S843 close-out: split the 10 `SESSION_NOTES.md` lines over the 280 B per-line ceiling (re-wrap only, no word changed); `context_budget.py` OVER to OK. Claim `f407e5a1c`. Docs only.
+
+### 2026-10-01 · [ad hoc] S843 claim: trim `SESSION_NOTES.md` long lines (superseded by the close-out entry above).
 
 ### 2026-10-01 · [ad hoc] S842 close-out: docs-staleness audit slice 6e, the last 126 `man/` pages (all 267 now audited): 26 moderate, 69 minor, 46 code candidates, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`; BACKLOG docs-audit item updated (next: fix the 95 findings). Read-only; 23 of 26 moderates re-checked first-hand. Model: Claude Sonnet 5.5.
 

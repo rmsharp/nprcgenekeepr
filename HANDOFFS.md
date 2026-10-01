@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S843
 date: 2026-10-01
-status: pending
-active_task: Trim SESSION_NOTES.md: split the 10 lines over the 280 B per-line ceiling (context_budget.py); docs only (IN PROGRESS)
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: DONE: split the 10 SESSION_NOTES.md lines over the 280 B per-line ceiling; context_budget.py now OK; docs only
+what_was_done: Claim f407e5a1c; the line split, records and ledger in the close-out commit. Re-wrapped at word boundaries outside backtick spans, no word changed.
+next_steps: Fix the 95 slice-6e findings in R/*.R roxygen, then devtools::document() and git checkout man/nprcgenekeepr-package.Rd (READY, Effort M). Or owner decisions on the audit code candidates.
+key_files: SESSION_NOTES.md (former S842/S841 long paragraphs); context_budget.py; .context-budget.json
+gotchas: Keep every SESSION_NOTES.md line at or under 280 B (awk 'length($0)>280' SESSION_NOTES.md). Master may be ahead of origin; S842's 47-ahead figure was not re-checked.
 ```
 
 ```handoff
