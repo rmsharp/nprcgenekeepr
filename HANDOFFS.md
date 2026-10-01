@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S835
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: fix the 54 slice-6a docs-staleness findings in R/*.R roxygen, then devtools::document()
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: fixed 52 of 54 slice-6a docs-staleness findings in R/*.R roxygen (27 genetic-value/kinship pages), man/ regenerated; MC1 and MB3 left for owner
+what_was_done: Claim d84dede31; fixes 7382be400, 4a9d8efdf, 8cecc2e49, 6f65ce721, 42197fb0e, d5129f551, 63f5c7a5d; records in the close-out commit. Roxygen and examples only, no code or test change. Examples run, wordlist test pass, lint 0, devtools::check(--no-tests) 0 errors / 0 warnings / 1 note (owner's untracked suggested_NEWS_entry.md). Full test suite and runtime smoke not run (no behavior change).
+next_steps: Slice 6b: audit the next topic group of man/ (232 pages left), read-only, one group per session. Owner decisions: MC1 filterKinMatrix drop=FALSE, MB3 unknown-sex founder kinship, suggested_NEWS_entry.md commit or drop, stale man/nprcgenekeepr-package.Rd. Master is 16 ahead of origin; push only on the owner's say-so.
+key_files: R/reportGV.R:15-30,110-135, R/geneDrop.R:42-70, R/rankSubjects.R:4-30, R/kinshipMatricesToKValues.R:4-40, BACKLOG.md:197
+gotchas: devtools::document() rewrites man/nprcgenekeepr-package.Rd from DESCRIPTION; git checkout it unless intended. example() fails (package not installed): use tools::Rd2ex() then source(). Roxygen lines over 80 characters fail lint; lint per batch. MA3/MB14 cite only e1071 from recall (moments and e1071 not installed here).
 ```
 
 ```handoff

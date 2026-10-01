@@ -98,14 +98,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 835 Did
-**Deliverable:** fix the 54 slice-6a docs-staleness findings in `R/*.R` roxygen, then `devtools::document()` (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### Session 834 Handoff Evaluation (by Session 835)
+**Score: 9/10.** Orient measurements held (frontiers at HEAD, master 7 ahead, the one untracked file). **Missing:** no warning that `devtools::document()` also rewrites `man/nprcgenekeepr-package.Rd` (drifted from `DESCRIPTION`). **Wrong:** nothing. **ROI:** high.
 
-### Session 833 Handoff Evaluation (by Session 834)
-**Score: 9/10.** Orient measurements held: ledger and receipt frontiers at HEAD (`024014dc2`), the one untracked file as described, master 5 ahead (the note said 4 "after this commit", off by the close-out commit itself), and next step (A) named `man/` with the 268-page count. **Missing:** no suggested split of `man/` by topic (I chose the genetic-value/kinship group from the page list); no note that `man/` is generated, so fixes go in `R/*.R` roxygen. **Wrong:** nothing found. **ROI:** high.
+### What Session 835 Did
+**Deliverable, DONE:** fixed 52 of the 54 slice 6a findings (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md`) in the `R/*.R` roxygen of 27 pages, then `devtools::document()`. MC1 and MB3 (code questions) left to the owner. Roxygen and examples only; no TDD gate applied.
+**Commits:** claim `d84dede31`; fixes `7382be400`, `4a9d8efdf`, `8cecc2e49`, `6f65ce721`, `42197fb0e`, `d5129f551`, `63f5c7a5d`; close-out in the final commit.
+**Verified:** changed pages' examples run (Rd2ex); wordlist test passes; `lint_package()` 0; `devtools::check(--no-tests)` 0 errors, 0 warnings, 1 note (owner's untracked `suggested_NEWS_entry.md`). Not run: full test suite, runtime smoke (no behavior change).
+**Not done:** MA3/MB14 cite only `e1071`, from recall (neither it nor `moments` is installed). MD7's `alleleFreq` example with `ids` not added.
+**NEWS.Rmd:** none. **Reduction:** removed the S833 handoff evaluation.
+
+**Self-assessment: 8/10.** + One deliverable; behavior claims run before writing; caught my wrong "at least" wording in `summarizeKinshipValues`; reverted the unrelated package `.Rd` diff. - Lint run only at the end (5 long lines); `man/` pairs put commits over 5 files (cap applied to `R/` files).
+
+**Next steps:** (A) slice 6b: audit the next `man/` topic group, 232 pages left (Effort L). (B) Owner decisions: MC1, MB3, `suggested_NEWS_entry.md` commit or drop (trips a `check` NOTE), stale `man/nprcgenekeepr-package.Rd`. (C) Master is 16 ahead of origin; push only on the owner's say-so.
+
+**Key files:** `R/reportGV.R:15-30`, `R/geneDrop.R:42-70`, `R/rankSubjects.R:4-30`, `BACKLOG.md:197`.
+
+**Gotchas:** `git checkout man/nprcgenekeepr-package.Rd` after `document()` unless intended. `example()` fails here (not installed): use `tools::Rd2ex()` + `source()`. Roxygen lines over 80 characters fail lint; lint per batch.
 
 ### What Session 834 Did
 **Deliverable, DONE:** docs-staleness audit slice 6a, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md`: the 36 genetic-value and kinship-calculation `man/` pages, 9 moderate and 45 minor findings (ids MA/MB/MC/MD), 8 pages clean. Read-only: no R, test or `man/` change. Method: four subagents (nine pages each) comparing roxygen with code and running the calls; I re-read the source for 9 findings (marked S in the report; all held).
@@ -117,14 +126,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 - Most findings rest on agent runs (A/R marks), only 9 re-read by me; MA3/MB14 (`moments` has no `type` argument) are recall, flagged as such.
 - A scratch-file name collision between agents happened once (set B renamed its files); no result lost.
 
-**Next steps:**
-- (A) Fix the 54 slice 6a findings in `R/*.R` roxygen, then `devtools::document()` (S823/S833 pattern; Effort M). Fix shared sentences (MC8, MC12/MC16, MD2, MA3/MB14) on every page at once. Build equivalent: `devtools::document()`, `test_wordlist_coverage.R`, `devtools::check(--no-tests)`.
-- (B) Or slice 6b: next `man/` topic group (232 pages left). Owner decisions pending: MC1 and MB3 (code), `suggested_NEWS_entry.md`, the four earlier code defects.
-- (C) Master is 7 ahead of origin after this commit (5 at Orient plus the claim and close-out commits); push only on the owner's say-so.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md`, `BACKLOG.md:197`, `R/filterKinMatrix.R:27`, `R/kinship.R:14,28,216`, `R/reportGV.R:113-117`.
-
-**Gotchas:** editing roxygen changes `man/*.Rd` only through `devtools::document()`; a typed example number in roxygen can go stale. The reportGV example uses `guIter = 50`, so raising it slows the examples. The `moments` claims (MA3, MB14) were not verified by running; check `args(moments::kurtosis)` before editing. The owner's question on `suggested_NEWS_entry.md` (commit or drop?) went unanswered this session.
+*(S834 next steps, key files and gotchas dropped at S835 close-out: step A was done in S835; the S834 receipt in `HANDOFFS.md` keeps them.)*
 
 ### What Session 833 Did
 **Deliverable, DONE:** fixed all 30 findings (AI1-AI30) of the S832 audit in `vignettes/a2interactive.Rmd`. Prose, hand-typed lists and inline R only;

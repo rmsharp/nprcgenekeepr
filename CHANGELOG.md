@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · [ad hoc] S835 close-out: fixed 52 of the 54 slice-6a docs-staleness findings (MA, MB except MB3, MC except MC1, MD) in the `R/*.R` roxygen of 27 genetic-value/kinship pages, regenerated `man/`; commits `7382be400`, `4a9d8efdf`, `8cecc2e49`, `6f65ce721`, `42197fb0e`, `d5129f551`, `63f5c7a5d`. MC1 and MB3 left as owner decisions (code). Examples run, spelling test pass, lint 0, `devtools::check(--no-tests)` 0 errors / 0 warnings / 1 note (untracked `suggested_NEWS_entry.md`). BACKLOG docs-audit item updated. Model: Claude Sonnet 5.5.
+
 ### 2026-10-01 · [ad hoc] S835 claim: fix the 54 slice-6a docs-staleness findings in `R/*.R` roxygen (in progress; close-out entry follows).
 
 ### 2026-10-01 · [ad hoc] S834 close-out: docs-staleness audit slice 6a, the 36 genetic-value and kinship `man/` pages: 9 moderate and 45 minor findings, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md`; BACKLOG docs-audit item updated. Read-only, no code changed. Commits `5fc891cb9` (claim), close-out commit.
