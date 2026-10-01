@@ -98,49 +98,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 830 Handoff Evaluation (by Session 831)
+**Score: 9/10.** The BACKLOG item named the cause (S825 commit `9a2a5ddb7`), both files, the two verification commands and the exact owner
+decision, so the session needed one question and one `git rm`. "Do not push before (A)" was correct. **Missing:** nothing needed; it did not
+say the .Rmd copy must also leave the working tree (the test reads the directory), which I confirmed by running it. **Wrong:** nothing; "master
+is 37 ahead" was 38 by the time of orientation, because the S830 close-out commit landed after the count. **ROI:** high.
+
 ### What Session 831 Did
-**Deliverable:** Fix the pkgdown breakage: untrack `vignettes/suggested_NEWS_entry.Rmd` and `vignettes/articles/pedigree-diagram.pdf` (owner chose "untrack both") (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** fixed the pkgdown breakage. Owner chose "untrack both": `git rm` of `vignettes/suggested_NEWS_entry.Rmd` and
+`vignettes/articles/pedigree-diagram.pdf` (both added by S825's `9a2a5ddb7`, still recoverable from it). The untracked top-level
+`suggested_NEWS_entry.md` is untouched. **Commits:** claim `46a7d9e56`; fix `3a8c026bb`; records in the close-out commit.
+**TDD:** RED was the existing `test_pkgdown_reference_config.R` failure (confirmed at HEAD before the change); GREEN the `git rm`; REFACTOR a no-op.
+**Verification:** `test_pkgdown_reference_config.R` passes; `pkgdown::check_pkgdown()` "No problems found"; full clean regression read
+(`load_all`, `NOT_CRAN=true`, no file filter): 0 failed, 0 error over 2,886 results. **Not run:** `devtools::check()` (no R, DESCRIPTION or
+NAMESPACE change); lint (no `.R` file changed); app smoke test (no runtime change). **NEWS.Rmd:** no entry (no feature or behavior change).
+**Learnings:** Learning 836. **Reduction:** removed the S829 handoff evaluation and the "What Session 830 Did" block (in git and the S830 receipt).
 
-### Session 829 Handoff Evaluation (by Session 830)
-**Score: 8/10.** The BACKLOG item named the files, the model wording (`README.md`, already reworded S828) and the `devtools::check()` step, so
-scoping took minutes; "docs only, no TDD gate" saved a question. **Missing:** the handoff said `suggested_NEWS_entry.md` was untracked but not that
-a tracked copy, `vignettes/suggested_NEWS_entry.Rmd`, sits in HEAD and breaks `test_pkgdown_reference_config.R`; the item also did not say which
-tests read `DESCRIPTION`/`_pkgdown.yml`. **Wrong:** nothing found; "master is 35 ahead of origin" was exact. **ROI:** high.
-
-### What Session 830 Did
-**Deliverable, DONE (docs only):** reworded the "supports five groups of functions" text in `DESCRIPTION` and the `_pkgdown.yml` home
-description (docs audit BB14). Both now read "supports these main groups of functions" (the same five-item list kept) and end with the same new
-sentence: "Further tabs cover mate pair analysis, genetic diversity, marker genetics, potential parents, cross-center identity mapping,
-de-identified export, and genetic-health trends." (the `README.md` wording). The two texts differ only in the existing `:` / ` -` before the list.
-**Commits:** claim `a80ccc514`; content and records (close-out commit).
-**Verification:** `devtools::check(document = FALSE, vignettes = FALSE, args = c("--no-tests", "--no-manual", "--no-build-vignettes"))` ran with
-0 errors, 0 warnings, 1 note (the untracked `suggested_NEWS_entry.md` at top level, the owner's file); `test_wordlist_coverage.R`,
-`test_r_cmd_check_clean_baseline.R` and `test_appUI_version.R` pass. **Not run:** full suite, full check with tests and vignettes (only the
-`Description` field and a pkgdown YAML string changed), app smoke test (no runtime change).
-**Found, not fixed (out of scope):** `test_pkgdown_reference_config.R` fails and `pkgdown::check_pkgdown()` errors at HEAD
-("1 vignette missing from index: suggested_NEWS_entry"), identically with my edits stashed. Cause: S825's commit `9a2a5ddb7` tracked
-`vignettes/suggested_NEWS_entry.Rmd` (plus `vignettes/articles/pedigree-diagram.pdf`). The next push would fail the pkgdown workflow and the
-test-coverage job. BACKLOG item added. **NEWS.Rmd:** no entry (CRAN-visible wording only, no feature or behavior change).
-**Learnings:** Learning 835. **Reduction:** removed the S828 handoff evaluation and the "What Session 829 Did" block (in git and the S829 receipt).
-
-**Self-assessment: 8/10.** + One deliverable; checked the pkgdown failure against a stash before attributing it; kept it out of scope.
-- The first full-file test run was needed to learn that moving the untracked copy away does not help (a tracked vignette copy exists), so I lost two
-runs on the wrong theory.
+**Self-assessment: 9/10.** + One deliverable; confirmed RED before acting; asked the one real question in plain words; ran the unfiltered suite.
+- The first combined command ran past the foreground timeout, so I had to go to a background run and re-run the test file to see its result.
 
 **Next steps:**
-- (A) Fix the pkgdown breakage first (BACKLOG, READY, Effort S): decide whether `vignettes/suggested_NEWS_entry.Rmd` (and the pdf) stay tracked;
-  then `pkgdown::check_pkgdown()` and `test_pkgdown_reference_config.R` must pass before any push.
-- (B) Docs-staleness audit slice 5 (READY, Effort L); owner decisions: `suggested_NEWS_entry` adopt/drop, the four code defects;
-  master is 37 ahead of origin and has never been pushed since S819.
+- (A) Push master (38 commits ahead of origin, no push since S819) only on the owner's say-so, then watch all four workflows: this is the first
+  CI run since S819 and covers S820-S831. The pkgdown blocker is gone.
+- (B) Docs-staleness audit slice 5 (BACKLOG, READY, Effort L); owner decisions pending: `suggested_NEWS_entry` adopt/drop, the four code defects.
 
-**Key files:** `DESCRIPTION:17-30`, `_pkgdown.yml:14-27`, `README.md:61-64` (the model), `vignettes/suggested_NEWS_entry.Rmd`,
-`tests/testthat/test_pkgdown_reference_config.R`.
+**Key files:** `tests/testthat/test_pkgdown_reference_config.R`, `_pkgdown.yml` (articles list), `BACKLOG.md` (docs-audit item),
+untracked `suggested_NEWS_entry.md` (top level).
 
-**Gotchas:** `R CMD check` NOTEs on top-level `suggested_NEWS_entry.md` until it is dropped or `.Rbuildignore`d. Do not push before (A): the
-pkgdown workflow will fail. `DESCRIPTION` is also read by `test_appUI_version.R` (version only).
+**Gotchas:** `R CMD check` NOTEs on the untracked top-level `suggested_NEWS_entry.md` until it is dropped or `.Rbuildignore`d. The first push in
+12 sessions may surface other CI findings unrelated to this fix (estimate, not computed).
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809

@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S831
 date: 2026-09-30
-status: pending
-active_task: Fix the pkgdown breakage by untracking vignettes/suggested_NEWS_entry.Rmd and vignettes/articles/pedigree-diagram.pdf (owner decision)
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE: fixed the pkgdown breakage by untracking vignettes/suggested_NEWS_entry.Rmd and vignettes/articles/pedigree-diagram.pdf (owner decision "untrack both")
+what_was_done: Claim 46a7d9e56; fix 3a8c026bb (git rm of both files); records in the close-out commit. RED = existing test_pkgdown_reference_config.R failure; now passes, check_pkgdown() clean, full unfiltered suite 0 failed / 0 error (2886 results). BACKLOG item removed; Learning 836.
+next_steps: Push master only on the owner's say-so (38 ahead, none since S819) and watch all four workflows; then docs-staleness audit slice 5 (Effort L) with owner decisions on suggested_NEWS_entry adopt/drop and the four code defects.
+key_files: tests/testthat/test_pkgdown_reference_config.R, _pkgdown.yml (articles list), BACKLOG.md (docs-audit item), suggested_NEWS_entry.md (untracked, top level)
+gotchas: R CMD check NOTEs on the untracked top-level suggested_NEWS_entry.md. First push in 12 sessions may show other CI findings unrelated to this fix (estimate). Deleted files recoverable from 9a2a5ddb7.
 ```
 
 ```handoff

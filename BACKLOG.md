@@ -5,16 +5,6 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
 
 ## Up Next
 
-- [ ] **Fix the pkgdown breakage from the tracked `vignettes/suggested_NEWS_entry.Rmd` (found S830, 2026-09-30; READY once the owner
-      says whether the draft stays tracked, Effort S)** -- `tests/testthat/test_pkgdown_reference_config.R` fails and
-      `pkgdown::check_pkgdown()` errors at HEAD with "1 vignette missing from index: suggested_NEWS_entry" (checked identical with the S830
-      edits stashed). Cause: S825's commit `9a2a5ddb7` ("fix slice 4 cluster 1 ...") also added the owner's draft
-      `vignettes/suggested_NEWS_entry.Rmd` (225 lines, dated 2026-09-25) and `vignettes/articles/pedigree-diagram.pdf` (1 MB). The last green CI
-      run on master is S819's, before S825, so the next push will fail the pkgdown workflow and the test-coverage job. **Decision for the owner:**
-      drop the vignette copy from git (`git rm`; it stays alongside the untracked `suggested_NEWS_entry.md`, tracked by the NEWS-adoption item
-      below), or keep it and add it to `_pkgdown.yml`'s articles list (then also confirm the pdf was meant to be tracked). Run
-      `pkgdown::check_pkgdown()` and the test file before any push. Not a standalone issue (CI-break convention).
-
 - [ ] **PED_GV audit follow-through -- triage DONE (S781, 2026-09-26), F1 shipped (S782), F4
       shipped (S783), F2's duplicate-id half shipped (S797), F3 shipped (S798); every F-slice is
       done, and what remains is owner decisions (DECISION NEEDED, Effort S each; strict TDD for
