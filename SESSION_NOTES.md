@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 821 Did
+**Deliverable:** Docs staleness audit, slice 2: the 50 `shiny_app_use/` screenshots (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning (AUDIT_WORKSTREAM.md; read-only audit, one report under `docs/audits/`).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 819 Handoff Evaluation (by Session 820)
 **Score: 9/10.** The Orient measurements held (ledger and receipt frontiers at HEAD, the 7 untracked files
 unchanged, CI all green) and the priorities list led straight to this session's pick, including the docs-audit
@@ -135,25 +141,6 @@ spot-checked the prose of the two articles.
 **Gotchas:** running `data-raw/kinship2FidelityValidation.R` overwrites the 8 committed PNGs (every one changes byte for
 byte; compare pixels, not bytes) and takes about a minute; restore with
 `git checkout -- vignettes/articles/kinship2-fidelity-validation-img` if the images are not meant to change.
-
-### What Session 819 Did
-**Deliverable, DONE (no code edits):** pushed `master` (9 commits including the claim, incl. S817's
-`getPotentialParents` R change) and watched CI to completion. All four workflows (pkgdown, test-coverage,
-R-CMD-check, lint) succeeded on `7bcfdcc68`.
-**Commits:** claim `7bcfdcc68`; records (this).
-**Learnings:** none new. **Reduction:** removed the S817 handoff-evaluation block (kept in git and the S817 receipt).
-
-**Self-assessment: 9/10.** + One deliverable, CI watched by a background poll rather than repeated checks.
-- Did not re-ask about the 7 untracked drafts; no runtime smoke test (no behavior change this session).
-
-**Next steps:**
-- (A) Pick from the priorities list: the 6 no-behavior-change PED_GV items (triage Recommendation 2), Mate-pair
-  residues (`BACKLOG.md:91`), or the docs staleness audit.
-- (B) Carried: 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band.
-
-**Key files:** `BACKLOG.md:8` (PED_GV), `BACKLOG.md:91` (Mate-pair).
-
-**Gotchas:** `master` is now in sync with `origin` except this records commit (unpushed; docs only, no CI owed).
 
 ### What Session 817 Did
 **Deliverable, DONE:** Potential Parents now lists candidates only for the parent that is missing (owner chose

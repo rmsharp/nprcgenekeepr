@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S821
+date: 2026-09-30
+status: pending
+active_task: Docs staleness audit, slice 2 (the 50 shiny_app_use/ screenshots); IN PROGRESS
+```
+
+```handoff
 session: S820
 date: 2026-09-30
 status: complete
