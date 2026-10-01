@@ -112,6 +112,10 @@ knitr::opts_chunk$set(echo = TRUE)
   regardless of which tab is opened first. Script users: `kinship()`,
   `reportGV()`, `gvaConvergence()`, `createSimKinships()`, and
   `cumulateSimKinships()` all gained a matching `twinRelations` argument.
+  New `readTwinRelations()`, `checkTwinRelations()` and
+  `obfuscateTwinRelations()` read, validate and de-identify the twin file
+  (columns `id1`, `id2`, `code`); a fraternal or identical pair must share
+  both recorded parents, and an identical pair must be the same sex.
 - New: `kinship()` can now compute X-chromosome relatedness (instead of the
   usual whole-genome average) via a new `chrtype = "x"` option -- useful
   for traits carried on the X chromosome. It needs the animals' `sex`
@@ -132,17 +136,29 @@ knitr::opts_chunk$set(echo = TRUE)
 - New **Marker Genetics** tab, starting with a **Kinship Comparison**
   sub-tab: compares DNA-based relatedness (from marker genotypes) side by
   side with pedigree-based relatedness (issue #130).
+- New `checkMarkerGenotypeFile()` checks a marker genotype file with one
+  row per animal and locus (columns `id`, `locus`, `allele1`, `allele2`)
+  and rejects a locus with more than two alleles; new
+  `buildMarkerGenotypeMatrix()` turns the checked file into the
+  animal-by-locus table the marker functions use.
 - The Marker Genetics tab includes a **Heterozygosity** sub-tab: compares
   each animal's own genetic diversity to what's expected for the
-  population (issue #130).
+  population (issue #130). Script users:
+  `markerObservedHeterozygosity()` gives each animal's value and
+  `markerExpectedHeterozygosity()` the expected value for each locus and
+  their mean.
 - The Marker Genetics tab includes a **Parentage Exclusion** sub-tab:
   flags a pedigree-recorded parent that the DNA evidence contradicts
-  (issue #130).
+  (issue #130). Script users: `markerParentageExclusion()` counts the loci
+  where an animal and its recorded parent cannot share an allele, and
+  flags the parent when that count exceeds `maxExclusions` (default 2).
 - The Marker Genetics tab includes a **Cross-Center** sub-tab comparing
   genetic diversity between two centers' populations (issue #130) -- not
   to be confused with the separate **Cross-Center Identity** tab
   described below, which matches and merges individual animal records
-  rather than comparing population-level diversity.
+  rather than comparing population-level diversity. Script users:
+  `markerFst()` gives the differentiation between the two centers (Hudson's
+  Fst) at each locus and pooled across loci.
 - New **Candidate Parent Assignment** sub-tab: for a flagged animal,
   ranks which other genotyped animals could be the real parent instead,
   based on DNA evidence. Report-only. New `markerParentageLikelihood()`

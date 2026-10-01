@@ -99,10 +99,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 848 Did
-**Deliverable:** scope the 3.0.0 NEWS consolidation: how the owner's `suggested_NEWS_entry.md` draft relates to `NEWS.Rmd` (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** made `NEWS.Rmd` complete and accurate before the owner compares it with `suggested_NEWS_entry.md`. Docs only, so no TDD phase applies. Claim `82a5dc655`; edits in the close-out commit.
+**Scoping finding:** S793 already reviewed the draft (`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`); I did not redo it. The `.Rmd` copy no longer exists; only the `.md` remains untracked.
+**Verified by me:** the 400/750 display cap and Rectilinear default are in the S847 text; PNG export = `visExport` in `R/modPedigree.R`; `test_comparePedigreeStructure.R` and `test_newsReleaseState.R` pass.
+**Gap found and fixed:** 9 exports added after v2.0.0 were never named in NEWS (`checkMarkerGenotypeFile`, `buildMarkerGenotypeMatrix`, `markerObserved/ExpectedHeterozygosity`, `markerParentageExclusion`, `markerFst`, `read/check/obfuscateTwinRelations`).
+Added them to five existing bullets (NEWS.Rmd:105-120, 132-165); re-rendered `NEWS.md`; guard and wordlist tests pass. The module UI/server exports were left out as internal.
+**Left on purpose:** splitting the long Breeding Group and Mate Pair paragraphs (S793 findings S7/S8) is the owner's call after comparing with the draft. BACKLOG item rewritten.
+**Not verified:** full suite and lint not run (no `.R` changed). The "default 2" for `maxExclusions` is from roxygen, not a run.
+
+**Self-assessment: 7/10.** + Found a real completeness gap by diffing `NAMESPACE` against the v2.0.0 tag. + Reused S793 instead of redoing it. - I opened with a menu pick and a scoping reading that S793's Learning 807 warns against; the owner's question redirected me.
+
+**Next steps:** (A) Owner compares the draft with `NEWS.Rmd` and decides what to adopt. (B) Slice 7b internal-docs audit (READY, Effort L). (C) Diagram feature decisions. (D) Master is 18 ahead of origin after this commit (16 at Orient, plus
+claim and close-out); push only on the owner's say-so.
+
+**Key files:** `NEWS.Rmd:105-120, 132-165`, `docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`, `BACKLOG.md` (rewritten draft item).
+
+**Gotchas:** `NEWS.Rmd` has a pre-existing over-80 line in the Ancestry bullet. Re-render `NEWS.md` after any text edit, then run the guard test. Keep `SESSION_NOTES.md` lines at or under 280 B.
+
+### Session 847 Handoff Evaluation (by Session 848)
+**Score: 8/10.** **Helped:** the (A)-(D) next steps and the untracked-file question were exact; the 16-ahead count held. **Missing:** it did not say S793 had already reviewed the draft, nor that the `.Rmd` copy was gone. **Wrong:** nothing else found. **ROI:** good.
 
 ### What Session 847 Did
 **Deliverable, DONE:** rewrote the `NEWS.Rmd` "Pedigree Diagram" section (S845 audit NA2-NA4) as a new feature described against kinship2, then re-rendered `NEWS.md`. Docs only, so no TDD phase applies.
@@ -147,28 +162,6 @@ code candidates. (D) The owner's untracked `suggested_NEWS_entry.md`: commit, mo
 **Key files:** `NEWS.Rmd:21-195` (Diagram section, NA2-NA4), `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`, `tests/testthat/test_newsReleaseState.R`, `R/appServer.R:114` (lead: comment says CRAN archived 2.0.0).
 
 **Gotchas:** after any `NEWS.Rmd` change run `rmarkdown::render("NEWS.Rmd")` last, then the guard test. Check wraps with `awk 'length($0)>80'`. Same roxygen gotchas apply if code changes. Keep `SESSION_NOTES.md` lines at or under 280 B.
-
-### Session 845 Handoff Evaluation (by Session 846)
-**Score: 9/10.** The audit ids, line numbers and the (A)-(D) options were exact. **Helped:** the per-finding Fix column and the ND2 flag. **Wrong:** nothing found; the "10 ahead" count was not re-checked until close-out (12 now, two commits added
-here). **Missing:** the NB2 and NB6 findings were agent-only; I re-checked them. **ROI:** high.
-
-### What Session 845 Did
-**Deliverable, DONE:** docs-staleness audit slice 7a, `NEWS.Rmd` and `NEWS.md`: `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`. Read-only audit, no fixes, no code touched, so no TDD phase applies.
-**Commits:** claim `34cf56826`; the report and records in the close-out commit.
-**Result:** 0 critical, 3 moderate, 16 minor (ids NA-ND, NE1). Moderates: NC1 and NC2 (two "Fixed" bullets for a tab and a file that never shipped in 2.0.0) and NE1 (`NEWS.md` is 37 commits stale).
-**How:** four read-only subagents by line range (about 210 claims). I re-ran or re-read NC1, NC2, NC3, NC4, NB3, NB4, ND2 and ND3 myself. Dropped NB5 and NB7 (correct as written).
-**Not verified:** rendered Diagram behavior, issue numbers, the CRAN date, the percentages in NA4, and agent-only minors (NB2, NB6, NC5, NC6, NA1-NA4).
-**NEWS.Rmd:** none. **Reduction:** removed the S809 evaluation (in git and receipts).
-
-**Self-assessment: 8/10.** + One deliverable; every moderate re-checked first-hand; two agent findings dropped on a grep. - Minor findings rest on the agents' reads; internal docs (rest of slice 7) not started.
-
-**Next steps:** (A) Fix the NEWS.Rmd findings: delete NC1 and NC2, reword NB1-NB4, NC3-NC5, ND1-ND3, NA1; owner confirms the 2.0.0 date (ND2); then re-render `NEWS.md` last and run the NEWS guard test (READY, Effort S). (B) Condense the Pedigree
-Diagram section (NA2-NA4) in its own staged pass. (C) Slice 7b: audit the internal docs (`docs/`, `ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`), READY, Effort L. (D) Owner decisions on the audit code candidates. Master is 10 commits ahead of origin; push
-only on the owner's say-so.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`, `NEWS.Rmd:462-468` and `:545-550` (NC1, NC2), `NEWS.Rmd:311-314` (NB4), `NEWS.Rmd:732-734` (ND3), `R/appServer.R:114` (lead: comment says CRAN archived 2.0.0).
-
-**Gotchas:** NEWS.md must be re-rendered after, not before, the text fixes. Dev-section edits must follow the release-state rule: state the end state against 2.0.0. Same S837-S844 roxygen gotchas apply if code changes. Keep `SESSION_NOTES.md` lines at or under 280 B.
 
 ### Session 842 Handoff Evaluation (by Session 843)
 **Score: 8/10.** Orient measurements held: both ledger frontiers were at HEAD, the untracked file was the one it named, and the next-step recipe was exact. **What helped:** the explicit ordered options (A)-(C) and the "do not ask about

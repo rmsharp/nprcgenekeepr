@@ -105,20 +105,16 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Known, accepted:** an unhandled click-time error ends the Shiny session
       (Learning 786).
 
-- [ ] **Decide whether/how to adopt the owner's `suggested_NEWS_entry.md`/`.Rmd` 3.0.0
-      consolidation draft (raised S791, 2026-09-27; DECISION NEEDED, Effort M -- its own scoping
-      session first)** -- untracked owner drafts (dated 2026-09-25) propose consolidating the
-      WHOLE `NEWS.Rmd` dev-block -- every section, not just Pedigree Diagram -- into short,
-      user-facing feature-group bullets for the eventual 3.0.0 release note, explicitly replacing
-      the issue-by-issue development history the now-complete `NEWS.Rmd` release-state sweep
-      (S788-S792, see `CHANGELOG.md`) restated piece by piece. Owner-ratified S791 disposition: the
-      sweep continued piece by piece as scoped rather than merging the draft in; the draft's own
-      "Rationale" text names connector routing, duplicate-node placement, spacing, and
-      mating-symbol positioning as content it would condense. Now that the sweep has closed, this
-      decision is unblocked: whether to adopt the draft's consolidated style for the actual 3.0.0
-      release note, when (at release, or before), and how it relates to the detailed dev-block
-      entries the sweep just finished restating. Files: `suggested_NEWS_entry.md`,
-      `vignettes/suggested_NEWS_entry.Rmd` (both untracked, the owner's own).
+- [ ] **Owner compares `suggested_NEWS_entry.md` with `NEWS.Rmd` and decides what to adopt
+      (DECISION NEEDED -- the owner's own comparison, Effort S-M after that)** -- S793 already
+      judged the draft idea by idea (`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`: 8
+      adopt, 5 modify, 1 reject). S848 brought `NEWS.Rmd` up to date first (nine post-2.0.0
+      exports it never named are now covered; display cap, default style, parity wording checked),
+      so the comparison starts from a complete file. Still open for the owner: split the long
+      Breeding Group and Mate Pair paragraphs into bullets (review S7/S8, restore the harem-sire
+      caveat, fix the draft's `candidates` mislabel); use the draft as the 3.0.0 release-note
+      template (add default style, display cap, twin consistency, the bug-fix list); decide
+      whether the draft file is committed. Only the `.md` remains, untracked.
 
 - [ ] **Male-on-the-left placement is stricter in the code's documentation than in real layouts
       (found S789, 2026-09-27, DECISION NEEDED, Effort S to find the cause, more to fix)** --

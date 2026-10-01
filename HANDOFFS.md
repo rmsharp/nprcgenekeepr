@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S848
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: scope the 3.0.0 NEWS consolidation (suggested_NEWS_entry.md vs NEWS.Rmd), decision/scoping session
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE -- made NEWS.Rmd complete and accurate before the owner compares it with suggested_NEWS_entry.md. Docs only, no TDD phase. S793 had already reviewed the draft, so no new scoping document was written.
+what_was_done: claim 82a5dc655; close-out commit. Verified display cap, Rectilinear default, PNG export and the kinship2-parity wording (structure test and guard test pass). Found 9 post-2.0.0 exports absent from NEWS and added them to five existing bullets; NEWS.md re-rendered; BACKLOG draft item rewritten.
+next_steps: (A) Owner compares the draft with NEWS.Rmd and decides what to adopt. (B) Slice 7b internal-docs audit, READY, Effort L. (C) Owner decisions on the two missing Diagram features. Push only on the owner's say-so; master is 18 ahead after this commit.
+key_files: NEWS.Rmd:105-120 and 132-165 (new text), docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md, BACKLOG.md (draft item).
+gotchas: Re-render NEWS.md after any NEWS.Rmd edit, then run test_newsReleaseState.R. One pre-existing over-80 line sits in the Ancestry bullet. The splitting of the Breeding Group and Mate Pair paragraphs was left for the owner.
+runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run (no R/ change)
+changelog_ref: S848 close-out entry
+commit: the close-out commit that carries this receipt; claim 82a5dc655
 ```
 
 ```handoff

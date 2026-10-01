@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · [ad hoc] S848 close-out: made `NEWS.Rmd` complete and accurate before the owner's comparison with `suggested_NEWS_entry.md`: named nine post-2.0.0 exports it lacked (marker genotype check/matrix, heterozygosity, parentage exclusion, Fst, twin-file read/check/obfuscate) in five bullets; checked cap, default style, PNG export, kinship2-parity wording; `NEWS.md` re-rendered; guard test passes. BACKLOG draft item rewritten; S845 record trimmed. Claim `82a5dc655`. Docs only.
+
 ### 2026-10-01 · [ad hoc] S848 claim: scope the 3.0.0 NEWS consolidation (owner's `suggested_NEWS_entry.md` draft vs. the finished `NEWS.Rmd` dev block); scoping only, no NEWS edits (in progress).
 
 ### 2026-10-01 · [ad hoc] S847 close-out: rewrote the `NEWS.Rmd` Pedigree Diagram section (S845 audit NA2-NA4) as a new feature described against kinship2, about 40 bullets to 13, `NEWS.md` re-rendered; added a BACKLOG item for the two kinship2 features the Diagram lacks (deceased marker, several affected conditions). Claim `de5191418`. Docs only.
