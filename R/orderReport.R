@@ -31,12 +31,15 @@
 #' @return A dataframe, which is \code{rpt} sorted according to the ranking
 #' scheme:
 #' \itemize{
-#'  \item imported animals with no offspring
+#'  \item imported animals (both parents unknown, origin recorded), youngest
+#'  first
 #'  \item animals with genome uniqueness above \code{guCutoff}, ranked by
 #'  descending gu
 #'  \item animals with mean-kinship z-score no greater than
 #'  \code{zScoreCutoff}, ranked by ascending zScores
 #'  \item all remaining animals, ranked by ascending zScores
+#'  \item animals with both parents unknown and no recorded origin, youngest
+#'  first (shown as "Undetermined" and left unranked)
 #' }
 #'
 #' @noRd

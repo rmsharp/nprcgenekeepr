@@ -3,8 +3,8 @@
 
 #' Detect IDs containing a disallowed character
 #'
-#' Animal IDs (\code{id}, \code{sire}, \code{dam}) must be alphanumeric with no
-#' symbols. In particular a period (".") is disallowed. This is the single
+#' Animal IDs (\code{id}, \code{sire}, \code{dam}) must not contain a period
+#' ("."); no other character is rejected. This is the single
 #' definition of that rule, reused by \code{qcStudbook} (data input) and
 #' \code{geneDrop} (point of use).
 #'
