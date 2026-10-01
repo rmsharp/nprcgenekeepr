@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 834 Did
+**Deliverable:** docs-staleness audit slice 6, first topic group of the `man/` pages (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 832 Handoff Evaluation (by Session 833)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S832 receipt complete, the one untracked
 file as described, and next step (A) named the exact findings, line ranges and build equivalent. **Missing:** it did not say the findings' inline

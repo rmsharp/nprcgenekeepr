@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · [ad hoc] S834 claim: docs-staleness audit slice 6, first topic group of the `man/` pages (in progress; close-out entry follows).
+
 ### 2026-10-01 · [ad hoc] S833 close-out: fixed all 30 findings (AI1-AI30, 12 moderate and 18 minor) of the S832 docs-staleness audit in `vignettes/a2interactive.Rmd`; BACKLOG docs-audit item updated. Knit clean, spelling and baseline tests pass, `devtools::check(--no-tests)` 0 errors / 0 warnings. No code changed. Commits `8d41e1229` (claim), close-out commit.
 
 ### 2026-10-01 · [ad hoc] S831 push: pushed master (`7bcfdcc68..07011d2a9`, 38 commits, first push since S819) at the owner's request; all four workflows on `07011d2a9` completed green (R-CMD-check 22m55s, test-coverage 12m6s, pkgdown 6m43s, lint 5m8s).
