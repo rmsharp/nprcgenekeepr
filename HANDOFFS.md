@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S825
 date: 2026-09-30
-status: pending
-active_task: Fix docs-audit slice 4 cluster 1: input_format.html, _input.Rmd, _database_access.Rmd (docs only)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: fixed docs-audit slice 4 cluster 1, all 17 findings (UG1-UG10, BA23-BA29) in input_format.html and _input.Rmd; deleted orphan _database_access.Rmd (docs only)
+what_was_done: Claim bd0f3134c; fixes 9a2a5ddb7; records in the close-out commit. Every claim re-read against code or executed (qcStudbook with first/second, allele_1/2, age without birth, blank birth, sex H). birth is required; IDs only reject a period; one-file genotypes need integer first/second; hermaphrodite reads Unknown; age = (exit - birth)/365.25; real button names; sire and dam minimum ages optional. Tests: qcStudbook, two doc tests, wordlist coverage, and the opt-in input-tutorial e2e pass (first e2e run failed on the removed word tab-delimited, fixed).
+next_steps: Slice 4 cluster 2: breeding-group pages (_breeding_group_formation.Rmd, _breeding_group_algorithm.Rmd, group_formation.html, gvAndBgDesc.html, _gv_and_bg_desc.Rmd; BA1-BA16, BA30-31, UG11-UG21), then cluster 3 genetic-value pages, cluster 4 pedigree browser/summary stats/ORIP/intro plus README re-render, then slice 5 audit. Owner decisions unchanged (four code defects, slice 2 screenshots, slice 1 leftovers, 7 untracked drafts).
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md, R/modBreedingGroups.R:40-46,63-64,113-115,532-537,967-1011, tests/testthat/test-e2e-input-tutorial.R:109-110, R/modInput.R:79-158,474-495
+gotchas: opt-in e2e files (NPRC_RUN_E2E=true) assert help-page text, so grep tests/testthat for a ui_guidance page name and the text you remove before editing it (Learning 832); README.md is a render, fix the _*.Rmd children; A-marked findings need a code re-read; master 18 ahead of origin, docs only, no CI owed; suggested_NEWS_entry.Rmd draft still fails test_pkgdown_reference_config.R locally.
 ```
 
 ```handoff

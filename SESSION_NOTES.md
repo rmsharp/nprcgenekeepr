@@ -98,56 +98,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 824 Handoff Evaluation (by Session 825)
+**Score: 9/10.** Next step (A) named the exact first cluster and the report's tables carried file:line, claim, evidence and fix, so
+Orient to first edit took minutes. The gotchas held: README.md is a render, agent-only findings need a re-read (I re-ran the
+genotype, birth and hermaphrodite claims and they all held). **Missing:** it did not say that the opt-in end-to-end test
+`test-e2e-input-tutorial.R` asserts text on the Input help page ("tab-delimited"), which my first rewrite broke. **Wrong:** nothing
+found (BA29's "orphan" held: no file references `_database_access.Rmd`). **ROI:** high.
+
 ### What Session 825 Did
-**Deliverable:** Fix docs-audit slice 4 cluster 1: `input_format.html`, `_input.Rmd`, `_database_access.Rmd` (IN PROGRESS)
-**Started:** 2026-09-30 21:08
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
+**Deliverable, DONE (docs only):** fixed slice 4 cluster 1, all 17 findings (UG1-UG10, BA23-BA29) in
+`inst/extdata/ui_guidance/input_format.html` and `vignettes/manual_components/_input.Rmd`, and deleted the orphan
+`_database_access.Rmd` (no file referenced it; its content duplicated `_input.Rmd` and was stale). Truths now stated: `birth` is a
+required column (5 required fields; blank values allowed when `age` is supplied); IDs must not contain a period (nothing else is
+rejected); in a one-file pedigree, `first`/`second` must be whole-number codes (text alleles are silently not used; labeled alleles
+go in the separate genotype file, read by column position); hermaphrodite codes read as Unknown; age = (exit - birth)/365.25
+rounded to 0.1; real button names and Excel-default file type; separate optional sire and dam minimum ages; Errors, Warnings and
+Cleaned Data tabs have download buttons (QC Summary has none); placeholder IDs are marked in the `placeholder` column and shown
+via "Display Unknown IDs"; markup defects and the `nprcmanager` mail subject fixed.
+**Commits:** claim `bd0f3134c`; fixes `9a2a5ddb7`; records (this).
+**Verification:** every claim re-read against code or executed (`qcStudbook()` with `first/second`, `allele_1/2`, `first_name/second_name`,
+age without birth, blank birth with age, sex "H"); HTML parses (xml2); `test_qcStudbook.R`, the two doc tests and
+`test_wordlist_coverage.R` pass; `NPRC_RUN_E2E=true test-e2e-input-tutorial.R` passes (first run failed on the removed word, fixed).
+Not run: full suite, lint (no `.R` change), app smoke test (3E: help text only, covered by the e2e file).
+**Learnings:** 832. **Reduction:** removed the S823 handoff evaluation and the "What Session 824 Did" block (in git and the S824 receipt).
 
-### Session 823 Handoff Evaluation (by Session 824)
-**Score: 9/10.** Next-step (A) named slice 4's exact file list and the BACKLOG pointer was right, so Orient took minutes. The
-Gotchas were accurate (master 14 ahead of origin confirmed by `git status -sb`; the untracked-draft test failure was not re-run,
-taken on trust). **Missing:** nothing needed; it did not say the README is generated from `README.Rmd` plus five manual-component
-children, which decided where README fixes must go. **Wrong:** nothing found. **ROI:** high.
-
-### What Session 824 Did
-**Deliverable, DONE (read-only audit):** docs staleness audit slice 4, `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md`:
-the 16 `manual_components/*.Rmd`, 8 `ui_guidance/*.html` pages and `README.md` have **33 moderate and 44 minor** findings (77 as
-reported, 71 after merging 6 duplicates); no broken link, anchor or function name. Dominant causes: breeding-group and
-genetic-value pages describe an earlier UI (candidate source, ranking scheme, group tabs), and stale hand-typed defaults
-(min parent age "2 years", breeding-group kinship "second cousin" vs app 0.25, "10,000" simulations vs 10, required columns
-missing `birth`, genome-uniqueness threshold "other animals"). Four read-only subagents did the first pass; this session re-read
-the code for 26 of the 33 Moderate findings. Scope narrowed at claim: `a2interactive.Rmd`, `man/`, `NEWS.Rmd`, internal docs -> slice 5.
-**Commits:** claim `d69808512`; report and records (this).
-**Verification:** no code or doc changed besides the report; findings spot-checked by `sed`/`grep` against `R/` and
-`getRequiredCols()` executed. Not run: tests, lint (no `.R` change), app smoke test (3E n/a).
-**Learnings:** none new. **Reduction:** removed the S822 handoff evaluation and the "What Session 823 Did" block (in git and the
-S823 receipt).
-
-**Self-assessment: 8/10.** + One deliverable; every Moderate finding the report relies on was re-read or marked agent-only; merged
-duplicate findings across agents; flagged four likely code defects as owner decisions instead of folding them into doc fixes.
-- Read the Moderate findings' code but only spot-checked Minor ones (most are marked A); first summary count of re-read findings
-was wrong and had to be corrected against the check column; did not view the rendered pages.
+**Self-assessment: 8/10.** + One deliverable, all findings closed; every doc claim checked by running the code, which also
+sharpened UG2 (text alleles in a one-file pedigree are dropped, the report said only `allele_1/2` names); caught the e2e break by
+running the opt-in file rather than trusting the unit tests.
+- Broke an e2e assertion before checking which tests read the page (a grep first would have found it); did not render the help page in
+the app to look at it.
 
 **Next steps:**
-- (A) Fix slice 4 in four docs-only sessions, in the report's "Recommendation" order: (1) `input_format.html`, `_input.Rmd`,
-  `_database_access.Rmd` (delete or fix the orphan); (2) breeding-group pages; (3) genetic-value pages; (4) pedigree browser,
-  summary statistics, ORIP, introduction, then re-render `README.md` from `README.Rmd`. Strict TDD does not apply (docs), but
-  re-read each A-marked finding's code first.
-- (B) Slice 5 audit: `a2interactive.Rmd`, `man/`, `NEWS.Rmd`, then internal docs (`docs/`, `ROADMAP.md`, `CLAUDE.md`, BACKLOG).
-- (C) Owner decisions the audit surfaced (report, Structural observation 3): does "Upload list" need a real upload; should the
-  "Calculate Genome Uniqueness / Mean Kinship" checkboxes exist; `groupAddAssign` roxygen "average"/"or younger"; silent genotype
-  drop for `allele_1/allele_2` pedigree columns. Still open: slice 2 capture-script tail failure then 31 screenshots; slice 1
-  leftovers; 7 untracked owner drafts (commit or drop?); `NEWS.md` lags `NEWS.Rmd`; `CLAUDE.md` in the warn band; master 15 ahead
-  of origin (docs only, no CI owed).
+- (A) Slice 4 cluster 2: breeding-group pages (`_breeding_group_formation.Rmd`, `_breeding_group_algorithm.Rmd`, `group_formation.html`,
+  `gvAndBgDesc.html`, `_gv_and_bg_desc.Rmd`): BA1-BA16, BA30-31, UG11-UG21; re-read each A-marked finding's code first. Before
+  editing a `ui_guidance` page, grep `tests/testthat` for its file name and for the text you remove (Learning 832).
+- (B) Then cluster 3 (genetic-value pages), cluster 4 (pedigree browser, summary stats, ORIP, introduction, README re-render from
+  `README.Rmd`), slice 5 audit.
+- (C) Owner decisions and leftovers unchanged from S824: the four code defects, slice 2 screenshots, slice 1 leftovers, 7 untracked
+  drafts (commit or drop?), `NEWS.md` lag, `CLAUDE.md` in the warn band; master 18 ahead of origin, docs only, no CI owed.
 
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md`, `R/modBreedingGroups.R:40-46,63-64,113-115,532-537,967-1011`,
-`R/modGeneticValue.R:42-66,424-492`, `R/modPedigree.R:444-457`, `BACKLOG.md:151-210`.
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md` (cluster 2 rows: BA1-BA16, BA30-31, UG11-UG21),
+`R/modBreedingGroups.R:40-46,63-64,113-115,532-537,967-1011`, `tests/testthat/test-e2e-input-tutorial.R:109-110`,
+`R/modInput.R:79-158,474-495`.
 
-**Gotchas:** 4 of 7 untracked drafts are unchanged and `vignettes/suggested_NEWS_entry.Rmd` still makes
-`test_pkgdown_reference_config.R` fail locally (taken from S823, not re-run). README.md is a render: edit
-`vignettes/manual_components/_*.Rmd` and `README.Rmd`, never README.md. The agents' line numbers are mostly unverified for Minor
-findings; two earlier slices had wrong agent line numbers.
+**Gotchas:** the e2e files are opt-in (`NPRC_RUN_E2E=true`), so a plain `test_dir` run cannot see help-page text assertions; the
+5-vs-4 required-field count also lives in `docs/audits` text only (not a test). `vignettes/suggested_NEWS_entry.Rmd` still fails
+`test_pkgdown_reference_config.R` locally (taken from S824, not re-run).
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809

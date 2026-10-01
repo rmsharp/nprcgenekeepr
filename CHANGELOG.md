@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S825 close-out: fixed docs-audit slice 4 cluster 1, all 17 findings (UG1-UG10, BA23-BA29), in `inst/extdata/ui_guidance/input_format.html` and `vignettes/manual_components/_input.Rmd`, and deleted the orphan `vignettes/manual_components/_database_access.Rmd` (no file referenced it). Now stated: `birth` is a required column; IDs reject only a period; one-file pedigree genotypes need integer `first`/`second`; hermaphrodite reads as Unknown; age = (exit - birth)/365.25; real button names; optional sire and dam minimum ages; download buttons on Errors, Warnings and Cleaned Data only. Commits `bd0f3134c` (claim), `9a2a5ddb7` (fixes). Verified by executing `qcStudbook()` cases; HTML parses; `test_qcStudbook.R`, two doc tests, `test_wordlist_coverage.R` and the opt-in `test-e2e-input-tutorial.R` pass. New Learning 832. `BACKLOG.md` item updated (still open: clusters 2-4, slice 5). Nothing pushed; no GitHub issue named (S824 handoff evaluated 9/10, self 8/10).
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S825 claim (in progress): fix docs-audit slice 4 cluster 1, the findings in `inst/extdata/ui_guidance/input_format.html`, `vignettes/manual_components/_input.Rmd` and `_database_access.Rmd` (required columns, ID rule, genotype columns, minimum parent ages, the orphan). Owner chose it at the Phase 0 picker. Docs only.
 - **Model:** Claude Sonnet 5.5.
 
