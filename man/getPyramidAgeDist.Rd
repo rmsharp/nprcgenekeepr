@@ -7,10 +7,14 @@
 getPyramidAgeDist(ped = NULL)
 }
 \arguments{
-\item{ped}{The pedigree information in data.frame format}
+\item{ped}{data.frame whose first six columns are id, sire, dam, sex,
+birth and exit, in that order (see Details above). Defaults to
+\code{NULL}, which uses the packaged \code{qcPed} example data.}
 }
 \value{
-A pedigree with \code{status} column added, which describes the
+A pedigree with the six columns of \code{ped} (\code{id},
+\code{sire}, \code{dam}, \code{sex}, \code{birth}, \code{exit}) and a
+\code{status} column added, which describes the
 animal as \code{ALIVE} or \code{DECEASED} and a \code{age} column added,
 which has the animal's age in years or \code{NA} if it cannot be calculated.
 The \code{exit} column values have been remapped to valid dates or \code{NA}.
@@ -19,9 +23,19 @@ The \code{exit} column values have been remapped to valid dates or \code{NA}.
 Returns the pedigree with all animals, adding a \code{status} column
 describing each animal as \code{ALIVE} or \code{DECEASED} and a
 computed \code{age} column (age at exit for deceased animals). All
-animals are returned, not only living ones.
+animals are returned, not only living ones. An animal is \code{DECEASED}
+when it has an exit date or when its birth date is \code{NA}; otherwise it
+is \code{ALIVE}. When \code{ped} is \code{NULL} (the default), the
+packaged \code{qcPed} example data are used.
 }
 \details{
+The columns of \code{ped} are read by position, not by name: the first six
+columns must be the id, sire, dam, sex, birth and exit values in that order,
+and are renamed accordingly. Any further columns are dropped. If birth is
+not in the fifth column and of class \code{Date}, \code{POSIXct} or
+\code{character}, the error message reports that the birth column is of
+the wrong class.
+
 The lubridate package is used here because of the way the modern Gregorian
 calendar is constructed, there is no straightforward arithmetic method
 that produces a person’s age, stated according to common usage — common

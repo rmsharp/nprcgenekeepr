@@ -13,14 +13,13 @@ set_seed(seed = 1L)
 NULL, invisibly.
 }
 \description{
-The change in how \code{set.seed} works in R 3.6 prompted the creation of
-this R version agnostic replacement to get unit test code to work on multiple
-versions of R in a CICD test build.
-}
-\details{
-It seems \code{RNGkind(sample.kind="Rounding")} does not work prior to
-version 3.6 so I resorted to using version dependent construction of the
-argument list to set.seed() in do.call().
+R 3.6 changed how \code{set.seed} and \code{sample} work. For R 3.6 and
+later this function calls \code{set.seed(seed, sample.kind = "Rounding")},
+which restores the earlier \code{sample()} behavior, so results of
+\code{sample()} differ from those after a plain \code{set.seed(seed)}.
+For earlier versions of R it calls \code{set.seed(seed)}. This lets unit
+tests give the same results on multiple versions of R in a CICD test build.
+Messages and warnings from \code{set.seed} are suppressed.
 }
 \examples{
 set_seed(1)

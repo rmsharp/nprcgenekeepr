@@ -17,8 +17,7 @@ individual's father (\code{NA} if unknown).
 individual's mother (\code{NA} if unknown).
 \item \code{sex} -- factor (levels: "M", "F", "U") Sex specifier for an
 individual
-\item \code{birth} -- Date or \code{NA} (optional) with the individual's
-birth date
+\item \code{birth} -- Date or \code{NA} with the individual's birth date
 }
 }
 \description{

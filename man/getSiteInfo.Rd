@@ -11,21 +11,36 @@ getSiteInfo(expectConfigFile = TRUE)
 configuration is looked for. Default value is \code{TRUE}.}
 }
 \value{
-A list of site specific information used by the application.
+A named list of 20 elements of site specific information used by
+the application.
 
-Currently this returns the following character strings in a named list.
+The first seven elements (\code{center}, \code{baseUrl},
+\code{schemaName}, \code{folderPath}, \code{queryName},
+\code{lkPedColumns} and \code{mapPedColumns}) are read from the
+configuration file when one exists. A configuration file that lacks one of
+these keys causes an error ("Could not find ..."). When no configuration
+file exists, the defaults for the ONPRC are returned instead: center
+"ONPRC", baseUrl \code{"https://primeuat.ohsu.edu"}, schemaName "study",
+folderPath "/ONPRC/EHR" and queryName "demographics". A warning is
+signaled for the missing file only when \code{expectConfigFile} is
+\code{TRUE}.
+
+The returned list contains the following elements.
 \enumerate{
-\item \code{center} -- One of "SNPRC" or "ONPRC"
-\item \code{baseUrl} -- If \code{center} is "SNPRC", baseUrl is one of
-"https://boomer.txbiomed.local:8080/labkey" or
-"https://vger.txbiomed.local:8080/labkey".
-To allow testing, if \code{center} is "ONPRC" baseUrl is
-"https://boomer.txbiomed.local:8080/labkey".
-\item \code{schemaName} -- If \code{center} is "SNPRC", schemaName is
-"study". If \code{center} is "ONPRC", schemaName is "study"
-\item \code{folderPath} -- If \code{center} is "SNPRC", folderPath is
-"/SNPRC". If \code{center} is "ONPRC", folderPath is "/ONPRC"
-\item \code{queryName} -- is "demographics"
+\item \code{center} -- center name, such as "ONPRC" or "SNPRC"
+\item \code{baseUrl} -- base URL of the LabKey server
+\item \code{schemaName} -- LabKey schema name
+\item \code{folderPath} -- LabKey folder path
+\item \code{queryName} -- LabKey query name, "demographics" by default
+\item \code{lkPedColumns} -- LabKey column names for the pedigree
+\item \code{mapPedColumns} -- the package column names that
+\code{lkPedColumns} are renamed to
+\item \code{sysname}, \code{release}, \code{version},
+\code{nodename}, \code{machine}, \code{login}, \code{user} and
+\code{effective_user} -- character strings from \code{Sys.info()}
+\item \code{homeDir} and \code{configFile} -- the home directory and
+the expected configuration file path, from
+\code{\link{getConfigFileName}}
 \item \code{requiredCols} -- the required studbook columns, from
 \code{\link{getRequiredCols}}
 \item \code{possibleCols} -- the possible studbook columns, from

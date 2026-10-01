@@ -8,11 +8,11 @@ makeGroupMembers(numGp, currentGroups, candidates, ped, harem, minAge)
 }
 \arguments{
 \item{numGp}{integer value indicating the number of groups that should be
-formed from the list of IDs. Default is 1.}
+formed from the list of IDs. There is no default.}
 
 \item{currentGroups}{list of character vectors of IDs of animals currently
-assigned to the group. Defaults to character(0) assuming no groups are
-existent.}
+assigned to the group. There is no default; use an empty list when no
+groups are existent.}
 
 \item{candidates}{character vector of IDs of the animals available for
 use in the group.}
@@ -24,8 +24,8 @@ information including the IDs listed in \code{ids}.}
 have a single male at least \code{minAge} old.}
 
 \item{minAge}{integer value indicating the minimum age to consider in group
-formation. Pairwise kinships involving an animal of this age or younger will
-be ignored. Default is 1 year.}
+formation. Pairwise kinships involving an animal younger than this age are
+ignored; an animal exactly this old is not ignored. There is no default.}
 }
 \value{
 Initial groupMembers list

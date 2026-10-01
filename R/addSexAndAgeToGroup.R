@@ -10,7 +10,10 @@
 #'
 #' @inheritParams getParents
 #' @inheritParams reportGV
-#' @return Dataframe with Id, Sex, and Current Age
+#' @return A data frame with columns \code{ids}, \code{sex} and \code{age}
+#' (current age). Every id must occur exactly once in \code{ped$id}; an id
+#' that is missing from or duplicated in \code{ped} causes an error rather
+#' than an \code{NA}.
 #'
 #' @export
 #' @examples

@@ -37,7 +37,9 @@ not present in the table -- and any sex that is not \code{"M"} or \code{"F"}
 parent age). Used by the Genetic Value Analysis unknown-parent mean-kinship
 correction to form a focal animal's contemporaneous breeding-age peer
 cohort. The bundled table is populated for the common colony NHP species;
-the user-configurable override path is a separate feature.
+a user's overrides, merged onto the bundled table by
+\code{\link{loadSpeciesOverrides}}, are supplied through
+\code{breedingTable} and \code{default}.
 }
 \examples{
 getSpeciesMinBreedingAge("RHESUS", "M")

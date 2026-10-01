@@ -7,17 +7,18 @@
 chooseDate(d1, d2, earlier = TRUE)
 }
 \arguments{
-\item{d1}{\code{Date} vector with the first of two dates to compare.}
+\item{d1}{single \code{Date} value, the first of two dates to compare.}
 
-\item{d2}{\code{Date} vector with the second of two dates to compare.}
+\item{d2}{single \code{Date} value, the second of two dates to compare.}
 
 \item{earlier}{logical variable with \code{TRUE} if the earlier of the two
 dates is to be returned, otherwise the later is returned. Default is
 \code{TRUE}.}
 }
 \value{
-\code{Date} vector of chosen dates or \code{NA} where neither
-is provided
+A single \code{Date} value, the chosen date, or \code{NA} where
+neither is provided. Vectors longer than one are not supported; use
+\code{pmin} or \code{pmax}, or \code{mapply}, for vectors.
 }
 \description{
 Part of Pedigree Curation

@@ -12,8 +12,10 @@ calcAge(birth, exit)
 \item{exit}{Date vector of exit dates.}
 }
 \value{
-A numeric vector (\code{NA} allowed) indicating age in decimal years
-from "birth" to "exit" or the current date if "exit" is NA.
+A numeric vector (\code{NA} allowed) indicating age in years,
+rounded to one decimal place, from "birth" to "exit" or the current date if
+"exit" is NA. If \code{birth} has length zero, it is returned unchanged
+(a \code{Date}, not numeric, vector).
 }
 \description{
 Part of Pedigree Curation

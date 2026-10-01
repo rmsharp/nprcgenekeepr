@@ -16,7 +16,9 @@ getPyramidPlot(
 \arguments{
 \item{ped}{The pedigree information in data.frame format}
 
-\item{binWidth}{numeric bin width for age groups (default 2).}
+\item{binWidth}{numeric bin width for age groups (default 2). The value is
+truncated to a whole number and is at least 1, so 0.5 gives 1 and 2.9
+gives 2.}
 
 \item{ageUnit}{character either "years" (default) or "months".}
 
@@ -35,6 +37,15 @@ The return value of par("mar") when the function was called.
 The pedigree provided must have the following columns: \code{sex} and
 \code{age}. This needs to be augmented to allow pedigrees structures that
 are provided by the nprcgenekeepr package.
+}
+\details{
+Only living animals are plotted: when \code{ped} has an \code{exit}
+column, animals with a non-\code{NA} \code{exit} are dropped, and only
+animals with sex "M" or "F" are counted. The age axis is, however, sized
+from the oldest animal in \code{ped}, including deceased ones. When
+\code{ped} is \code{NULL} (the default), the packaged \code{qcPed} example
+data are used. An unrecognized \code{colorScheme} silently falls back to
+"default".
 }
 \examples{
 library(nprcgenekeepr)

@@ -23,9 +23,11 @@ ages. Rhesus gestation is 210 days (the historical conservative bound;
 typical rhesus gestation is about 165 days, per Vinson & Raboin 2015), and
 rhesus minimum breeding ages are male = 4, female = 2.5. The table is
 populated for the common colony NHP species, with gestation
-values as conservative upper bounds; making the values user-configurable is
-a separate planned enhancement. Extend or adjust it by editing
-\code{data-raw/speciesGestation.R} and re-running that script.
+values as conservative upper bounds. A user can override the values
+through a species overrides file named in the site configuration file;
+\code{\link{loadSpeciesOverrides}} merges that file onto this table.
+To change the bundled table itself, edit
+\code{data-raw/speciesGestation.R} and re-run that script.
 \describe{
 \item{species}{-- character species name (e.g. "RHESUS").}
 \item{gestation}{-- integer maximum gestation period in days (a conservative

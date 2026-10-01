@@ -11,7 +11,12 @@ An object of class \code{list} of length 17.
 data(smallPedTree)
 }
 \description{
-A pedigree tree made from \code{smallPed}.
+A pedigree tree made from \code{smallPed}. It is a named list with one
+element per animal (17 elements, named by animal ID). Each element is a
+list with the components \code{sire} and \code{dam}, which hold the IDs of
+the animal's parents (\code{NA} when a parent is unknown).
+}
+\details{
 Access it using the following commands.
 }
 \examples{

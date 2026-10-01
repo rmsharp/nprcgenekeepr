@@ -22,8 +22,9 @@ use in the group.}
 \item{groupMembers}{list initialized and ready to receive groups with the
 desired sex ratios that are created within this function}
 
-\item{grpNum}{is a list \code{numGp} long with each member an integer
-vector of \code{1:numGp}.}
+\item{grpNum}{is a list \code{numGp} long with each member a single integer
+group number, \code{1} through \code{numGp}, as made by
+\code{\link{makeGroupNum}}.}
 
 \item{kin}{list of animals and those animals who are related above a
 threshold value.}
@@ -32,22 +33,25 @@ threshold value.}
 information including the IDs listed in \code{ids}.}
 
 \item{minAge}{integer value indicating the minimum age to consider in group
-formation. Pairwise kinships involving an animal of this age or younger will
-be ignored. Default is 1 year.}
+formation. Pairwise kinships involving an animal younger than this age are
+ignored; an animal exactly this old is not ignored. There is no default.}
 
 \item{numGp}{integer value indicating the number of groups that should be
-formed from the list of IDs. Default is 1.}
+formed from the list of IDs. There is no default.}
 
-\item{sexRatio}{numeric value indicating the ratio of females to males x
-from 0.5 to 20 by increments of 0.5.}
+\item{sexRatio}{numeric value indicating the number of non-males per male.
+Values from 0.5 to 20 in steps of 0.5 are typical, but the range is not
+enforced.}
 }
 \value{
-A list containing one character vector of animal IDs such that the
-sex ratio of the group is as close as possible to the ratio
-specified by \code{sexRatio}.
+The \code{groupMembers} list, with one character vector of animal
+IDs per group (\code{numGp} groups), each filled so that its sex
+ratio is as close as possible to the ratio specified by
+\code{sexRatio}.
 }
 \description{
-The sex ratio is the ratio of females to males.
+The sex ratio is the number of non-males (females and animals of other or
+unknown sex) per male.
 }
 \examples{
 library(nprcgenekeepr)

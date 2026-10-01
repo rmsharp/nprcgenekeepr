@@ -4,8 +4,11 @@
 #' Get pedigree from file
 #'
 #' @param fileName character vector of temporary file path.
-#' @param sep column separator in CSV file
-#' @return A pedigree file compatible with others in this package.
+#' @param sep column separator in CSV file. It is ignored for Excel (xls and
+#' xlsx) files.
+#' @return A data.frame of the pedigree as read from the file, with no
+#' quality control applied (see \code{\link{qcStudbook}}). Every column read
+#' from an Excel file is returned as character.
 #'
 #' @importFrom futile.logger flog.debug
 #' @importFrom readxl excel_format

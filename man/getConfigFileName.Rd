@@ -10,7 +10,11 @@ getConfigFileName(sysInfo)
 \item{sysInfo}{object returned by Sys.info()}
 }
 \value{
-Character vector with expected configuration file
+A named character vector of length two: \code{homeDir} is the
+user's home directory and \code{configFile} is the expected configuration
+file path. Only \code{sysInfo[["sysname"]]} is used, to choose the file
+name (\code{_nprcgenekeepr_config} on Windows, otherwise
+\code{.nprcgenekeepr_config}).
 }
 \description{
 Get the configuration file name for the system

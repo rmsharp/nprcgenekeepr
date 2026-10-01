@@ -9,13 +9,14 @@
 #' it occurred earlier or later than the other. \code{NAs} are ignored if
 #' possible.
 #'
-#' @param d1 \code{Date} vector with the first of two dates to compare.
-#' @param d2 \code{Date} vector with the second of two dates to compare.
+#' @param d1 single \code{Date} value, the first of two dates to compare.
+#' @param d2 single \code{Date} value, the second of two dates to compare.
 #' @param earlier logical variable with \code{TRUE} if the earlier of the two
 #' dates is to be returned, otherwise the later is returned. Default is
 #' \code{TRUE}.
-#' @return \code{Date} vector of chosen dates or \code{NA} where neither
-#' is provided
+#' @return A single \code{Date} value, the chosen date, or \code{NA} where
+#' neither is provided. Vectors longer than one are not supported; use
+#' \code{pmin} or \code{pmax}, or \code{mapply}, for vectors.
 #'
 #' @export
 #' @examples

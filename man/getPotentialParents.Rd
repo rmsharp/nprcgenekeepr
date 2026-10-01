@@ -15,8 +15,9 @@ getPotentialParents(
 }
 \arguments{
 \item{ped}{the pedigree information in data.frame format. Pedigree
-(req. fields: id, sire, dam, gen, population).
-This requires complete pedigree information.}
+(req. fields: id, sire, dam, sex, birth, exit, fromCenter; the
+\code{species} field is optional). The \code{gen} and \code{population}
+fields are not used. This requires complete pedigree information.}
 
 \item{minSireAge}{numeric minimum age in years for a male to be proposed
 as a potential sire. \code{NULL} (default) looks up the floor for each
@@ -33,7 +34,8 @@ overrides that floor for all female candidates.}
 
 \item{minParentAge}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Deprecated scalar
 minimum parent age. Supplying it sets both \code{minSireAge} and
-\code{minDamAge}; use those sex-specific parameters instead.}
+\code{minDamAge}; use those sex-specific parameters instead. Supplying
+\code{NULL} disables the age check entirely.}
 
 \item{maxGestationalPeriod}{integer maximum number of days between conception
 and birth for the species being analyzed (a conservative upper bound, e.g.
@@ -67,7 +69,9 @@ and present at the birth instead. Either way, a female who delivered
 another offspring within \code{maxGestationalPeriod} days of the focal
 birth is never listed. Candidates are listed only for the parent that is
 missing: when an animal's dam is recorded its \code{dams} is empty, and
-when its sire is recorded its \code{sires} is empty.
+when its sire is recorded its \code{sires} is empty. \code{NULL} (not a
+list) is returned when no animal has an unknown parent with a candidate
+and when \code{ped} has no \code{fromCenter} column.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

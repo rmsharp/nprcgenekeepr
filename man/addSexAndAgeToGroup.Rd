@@ -12,7 +12,10 @@ addSexAndAgeToGroup(ids, ped)
 \item{ped}{The pedigree information in data.frame format}
 }
 \value{
-Dataframe with Id, Sex, and Current Age
+A data frame with columns \code{ids}, \code{sex} and \code{age}
+(current age). Every id must occur exactly once in \code{ped$id}; an id
+that is missing from or duplicated in \code{ped} causes an error rather
+than an \code{NA}.
 }
 \description{
 Build a group data frame with ID, sex, and age

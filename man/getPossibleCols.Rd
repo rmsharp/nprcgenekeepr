@@ -47,6 +47,23 @@ specific pathogen-free status of an individual.}
 \item{vasxOvx}{ -- character vector indicating the vasectomy/ovariectomy
 status of an animal where \code{NA} indicates an intact animal and all other
 values indicate surgical alteration.}
+\item{death}{ -- Date or \code{NA} (optional) with the individual's death
+date.}
+\item{departure}{ -- Date or \code{NA} (optional) with the individual's
+departure date.}
+\item{first}{ -- character vector or \code{NA} (optional) with the first
+value of a genotype pair. The name is reserved; genotype files may not use
+it.}
+\item{second}{ -- character vector or \code{NA} (optional) with the second
+value of a genotype pair. The name is reserved; genotype files may not use
+it.}
+\item{first_name}{ -- character vector or \code{NA} (optional) with the
+first value of a genotype pair in the single-locus genotype format.}
+\item{second_name}{ -- character vector or \code{NA} (optional) with the
+second value of a genotype pair in the single-locus genotype format.}
+\item{recordStatus}{ -- character vector with value \code{"original"} for
+records that were in the input and \code{"added"} for records added for
+parents that had no record of their own.}
 \item{pedNum}{ -- integer vector indicating generation numbers for each
 id, starting at 0 for individuals lacking IDs for both parents.}
 \item{affected}{ -- logical vector or \code{NA} (optional) indicating

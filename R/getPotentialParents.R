@@ -6,8 +6,9 @@
 #' `r lifecycle::badge('experimental')`
 #'
 #' @param ped the pedigree information in data.frame format. Pedigree
-#' (req. fields: id, sire, dam, gen, population).
-#' This requires complete pedigree information.
+#' (req. fields: id, sire, dam, sex, birth, exit, fromCenter; the
+#' \code{species} field is optional). The \code{gen} and \code{population}
+#' fields are not used. This requires complete pedigree information.
 #' @param minSireAge numeric minimum age in years for a male to be proposed
 #' as a potential sire. \code{NULL} (default) looks up the floor for each
 #' candidate's species via \code{\link{getSpeciesMinBreedingAge}} (falling
@@ -21,7 +22,8 @@
 #' overrides that floor for all female candidates.
 #' @param minParentAge `r lifecycle::badge("deprecated")` Deprecated scalar
 #' minimum parent age. Supplying it sets both \code{minSireAge} and
-#' \code{minDamAge}; use those sex-specific parameters instead.
+#' \code{minDamAge}; use those sex-specific parameters instead. Supplying
+#' \code{NULL} disables the age check entirely.
 #' @param maxGestationalPeriod integer maximum number of days between conception
 #' and birth for the species being analyzed (a conservative upper bound, e.g.
 #' 210 for rhesus whose typical gestation is about 165 days). When \code{NULL}
@@ -51,7 +53,9 @@
 #' another offspring within \code{maxGestationalPeriod} days of the focal
 #' birth is never listed. Candidates are listed only for the parent that is
 #' missing: when an animal's dam is recorded its \code{dams} is empty, and
-#' when its sire is recorded its \code{sires} is empty.
+#' when its sire is recorded its \code{sires} is empty. \code{NULL} (not a
+#' list) is returned when no animal has an unknown parent with a candidate
+#' and when \code{ped} has no \code{fromCenter} column.
 #'
 #' @importFrom data.table as.data.table
 #' @importFrom stringi stri_sub

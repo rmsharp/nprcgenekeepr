@@ -3,7 +3,11 @@
 
 #' Get demographic data
 #'
-#' This is a thin wrapper around \code{labkey.selectRows()}.
+#' This is a thin wrapper around \code{labkey.selectRows()}. It uses the site
+#' configuration from \code{\link{getSiteInfo}} (the configuration file, or
+#' the defaults plus a warning when there is no file) and sets the LabKey
+#' credentials with \code{\link{setLabKeyDefaults}}. All columns are
+#' returned, including hidden ones, when \code{colSelect} is \code{NULL}.
 #'
 #' @param colSelect (optional) a vector of comma separated strings specifying
 #' which columns of a dataset or view to import

@@ -2,12 +2,16 @@
 % Please edit documentation in R/getIncludeColumns.R
 \name{getIncludeColumns}
 \alias{getIncludeColumns}
-\title{Get the superset of columns that can be in a pedigree file}
+\title{Get the superset of report-inclusion columns}
 \usage{
 getIncludeColumns()
 }
 \value{
-Superset of columns that can be in a pedigree file.
+A character vector of the ten columns kept in genetic-value
+reports (\code{id}, \code{sex}, \code{age}, \code{birth}, \code{exit},
+\code{population}, \code{condition}, \code{origin}, \code{first_name}
+and \code{second_name}). It is not the set of columns a pedigree file may
+contain; that is returned by \code{\link{getPossibleCols}}.
 }
 \description{
 Part of Genetic Value Functions

@@ -16,7 +16,8 @@ under consideration.}
 \value{
 An updated pedigree with the \code{population} column added or
 updated by being set to \code{TRUE} for the animal IDs in \code{ped$id} and
-\code{FALSE} otherwise.
+\code{FALSE} otherwise. If \code{ids} is empty, all animals are flagged
+\code{TRUE}.
 }
 \description{
 Part of the pedigree filtering toolset.

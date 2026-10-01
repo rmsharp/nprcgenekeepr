@@ -23,8 +23,8 @@
 #' \code{currentGroups} are not included within \code{candidates}.
 #' @param currentGroups List of character vectors of IDs of animals currently
 #' assigned to groups.
-#' Defaults to a list with character(0) in each sublist element (one for each
-#' group being formed) assuming no groups are prepopulated.
+#' Defaults to \code{list(character(0L))}, a list with a single empty
+#' element regardless of \code{numGp}, assuming no groups are prepopulated.
 #' @inheritParams meanKinship
 #' @inheritParams getPotentialSires
 #' @param threshold Numeric value indicating the minimum kinship level to be
@@ -35,16 +35,18 @@
 #' kinship should be ignored between certain sexes.
 #' Default is to ignore all pairwise kinship between females.
 #' @param minAge Integer value indicating the minimum age to consider in group
-#' formation. Pairwise kinships involving an animal of this age or younger will
-#'  be ignored. Default is 1 year.
+#' formation. Pairwise kinships involving an animal younger than this age
+#' (by the \code{age} column of \code{ped}) are ignored; an animal exactly
+#' this old is not ignored. Default is 1 year.
 #' @param iter Integer indicating the number of times to perform the random
 #' group formation process. Default value is 1000 iterations.
 #' @param numGp Integer value indicating the number of groups that should be
 #' formed from the list of IDs. Default is 1.
 #' @param harem Logical variable when set to \code{TRUE}, the formed groups
 #' have a single male at least \code{minAge} old.
-#' @param sexRatio Numeric value indicating the ratio of females to males x
-#' from 0.5 to 20 by increments of 0.5.
+#' @param sexRatio Numeric value indicating the number of non-males (females
+#' and animals of other or unknown sex) per male. Values from 0.5 to 20 in
+#' steps of 0.5 are typical, but the range is not enforced.
 #' @param withKin Logical variable when set to \code{TRUE}, the kinship
 #' matrix for the group is returned along with the group and score.
 #' Defaults to not return the kinship matrix. This maintains compatibility with
@@ -90,9 +92,11 @@
 #' and optionally \code{groupKin}.
 #' The list item \code{group} contains a list of the best group(s) produced
 #' during the simulation (an alias for \code{candidates[[1]]$group}, kept for
-#' backward compatibility).
+#' backward compatibility). It has \code{numGp} groups plus a final element
+#' holding the IDs of the unused candidates, or a bare \code{NA} if none
+#' remain. The same holds for each \code{candidates[[i]]$group}.
 #' The list item \code{score} provides the score associated with the group(s)
-#' (an alias for \code{candidates[[1]]$score}).
+#' (an alias for \code{candidates[[1]]$score}); it ignores that final element.
 #' The list item \code{candidates} is a list of up to \code{maxCandidates}
 #' distinct candidate solutions (default 5; issue #125, configurable per
 #' issue #146 Slice 1), each a list with its own \code{group}, \code{score}

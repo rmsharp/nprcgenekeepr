@@ -9,10 +9,13 @@ getPedigree(fileName, sep = ",")
 \arguments{
 \item{fileName}{character vector of temporary file path.}
 
-\item{sep}{column separator in CSV file}
+\item{sep}{column separator in CSV file. It is ignored for Excel (xls and
+xlsx) files.}
 }
 \value{
-A pedigree file compatible with others in this package.
+A data.frame of the pedigree as read from the file, with no
+quality control applied (see \code{\link{qcStudbook}}). Every column read
+from an Excel file is returned as character.
 }
 \description{
 Get pedigree from file
