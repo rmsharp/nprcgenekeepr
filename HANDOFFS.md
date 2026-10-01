@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S826
 date: 2026-09-30
-status: pending
-active_task: Fix docs-audit slice 4 cluster 2: breeding-group pages (docs only)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: fixed docs-audit slice 4 cluster 2 (breeding-group pages: _breeding_group_formation.Rmd, _breeding_group_algorithm.Rmd, _gv_and_bg_desc.Rmd, group_formation.html, gvAndBgDesc.html; docs only)
+what_was_done: Claim f2c2c4e54; fixes 6a55bf613; records in the close-out commit. Every claim re-read against the module and algorithm code; allele-count claim executed. Fixed BA1-BA16, BA30-31, UG11-UG21 (BA12 and UG17 on the help and manual pages only; the groupAddAssign roxygen wording left with the code-defect decisions). Tests: wordlist, modGvAndBgDesc, modBreedingGroups, minParentAge scan and the opt-in breeding-groups e2e pass; three Rmd components render.
+next_steps: Slice 4 cluster 3, genetic-value pages (_genetic_value_analysis.Rmd, _genome_uniqueness_algorithm.Rmd, genetic_value.html, population_genetics_terms.html; BA17-BA22, UG12 second half, UG24-UG25), reusing the genome-uniqueness wording now in gvAndBgDesc.html; then cluster 4 plus README re-render, then slice 5. Owner decisions unchanged (four code defects plus the groupAddAssign roxygen wording, slice 2 screenshots, slice 1 leftovers, 4 untracked files).
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md, R/modGeneticValue.R:32-75,318-342,368-390, R/calcA.R:41-48, R/orderReport.R:55-145, inst/extdata/ui_guidance/gvAndBgDesc.html
+gotchas: grep tests/testthat for a page name and run its opt-in e2e (Learning 832); lead not verified in the app: colony-manager-guide.qmd:527-529 captions tie Group Detail kinship to the checkbox but the module always shows the table; suggested_NEWS_entry still fails test_pkgdown_reference_config.R locally; master 21 ahead of origin, docs only, no CI owed.
 ```
 
 ```handoff
