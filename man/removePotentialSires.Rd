@@ -10,8 +10,8 @@ removePotentialSires(ids, minAge, ped)
 \item{ids}{character vector of animal IDs}
 
 \item{minAge}{integer value giving the inclusive minimum current age (in
-years) a male must have to be listed as a potential sire. Default is 1
-year.}
+years) a male must have to be listed as a potential sire. Unlike
+\code{getPotentialSires}, there is no default; it is required.}
 
 \item{ped}{dataframe that is the \code{Pedigree}. It contains pedigree
 information including the IDs listed in \code{ids}.}

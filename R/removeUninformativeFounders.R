@@ -5,16 +5,19 @@
 #'
 #' Founders (having unknown sire and dam) that appear only one time in a
 #' pedigree are uninformative and can be removed from a pedigree without loss
-#' of information.
+#' of information. Removal repeats until no such founder remains, because
+#' removing one can leave another founder appearing only once.
 #'
 #' @inheritParams trimPedigree
+#' @param ped dataframe that is the \code{Pedigree}. The \code{id},
+#' \code{sire} and \code{dam} columns are required.
 #' @return A reduced pedigree.
 #'
 #' @export
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
-#'   minParentAge = 2,
+#'   minSireAge = 2, minDamAge = 2,
 #'   reportChanges = FALSE,
 #'   reportErrors = FALSE
 #' )

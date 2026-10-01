@@ -19,8 +19,8 @@ any other \code{recordStatus}, including \code{NA} or a blank, is a real
 animal and is searched.}
 }
 \value{
-When \code{reportErrors} is \code{FALSE}, a \code{Pedigree}
-object with duplicate rows removed; when \code{reportErrors} is
+When \code{reportErrors} is \code{FALSE}, a dataframe (the
+\code{Pedigree}) with duplicate rows removed; when \code{reportErrors} is
 \code{TRUE}, a character vector of duplicate \code{id} values, one entry
 for each extra occurrence of an \code{id} (or \code{NULL} when none are
 found).
@@ -31,7 +31,9 @@ Part of Pedigree Curation
 \details{
 Returns an updated dataframe with duplicate rows removed.
 
-Returns an error if the table has duplicate IDs with differing data.
+Returns an error if the table has duplicate IDs with differing data. The
+error applies only when \code{reportErrors} is \code{FALSE}. Rows are
+compared on all columns, including \code{recordStatus}.
 }
 \examples{
 ped <- nprcgenekeepr::smallPed

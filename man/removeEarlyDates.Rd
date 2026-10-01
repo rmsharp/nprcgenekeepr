@@ -13,8 +13,9 @@ removeEarlyDates(dates, firstYear)
 date range.}
 }
 \value{
-A vector of dates after the year indicated by the numeric value of
-\code{firstYear}.
+A vector of dates with every date before the year indicated by the
+numeric value of \code{firstYear} set to \code{NA}. Dates in
+\code{firstYear} itself are kept.
 }
 \description{
 Dates before a specified year are set to NA. This is often used for dates

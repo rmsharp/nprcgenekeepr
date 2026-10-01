@@ -5,6 +5,9 @@
 #'
 #' @inheritParams getParents
 #' @inheritParams getPotentialSires
+#' @param minAge integer value giving the inclusive minimum current age (in
+#' years) a male must have to be listed as a potential sire. Unlike
+#' \code{getPotentialSires}, there is no default; it is required.
 #' @return character vector of Ids with any potential sire Ids removed.
 #'
 #' @export

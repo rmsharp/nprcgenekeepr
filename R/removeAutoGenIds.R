@@ -13,7 +13,9 @@
 #' a sire or dam; a real ID of the full shape (\code{"U1234"}) is removed
 #' unless the pedigree's \code{placeholder} column (see
 #' \code{\link{qcStudbook}}) marks it \code{FALSE}, and a \code{TRUE} mark
-#' removes a stand-in whatever its ID looks like.
+#' removes a stand-in whatever its ID looks like. The "four or more" match is
+#' a prefix, so an ID such as \code{"U1234abc"} is removed too. Sire and dam
+#' entries that are generated IDs are set to \code{NA}.
 #' @inheritParams getDescendantPedigree
 #'
 #' @return A pedigree with automatically generated IDs removed.

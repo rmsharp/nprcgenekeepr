@@ -7,7 +7,9 @@
 #'
 #' Returns an updated dataframe with duplicate rows removed.
 #'
-#' Returns an error if the table has duplicate IDs with differing data.
+#' Returns an error if the table has duplicate IDs with differing data. The
+#' error applies only when \code{reportErrors} is \code{FALSE}. Rows are
+#' compared on all columns, including \code{recordStatus}.
 #'
 #' @param ped dataframe that is the \code{Pedigree}. It contains pedigree
 #' information. The \code{id} and \code{recordStatus} columns are required.
@@ -18,8 +20,8 @@
 #' have no record of their own) are left out of the search; a record with
 #' any other \code{recordStatus}, including \code{NA} or a blank, is a real
 #' animal and is searched.
-#' @return When \code{reportErrors} is \code{FALSE}, a \code{Pedigree}
-#' object with duplicate rows removed; when \code{reportErrors} is
+#' @return When \code{reportErrors} is \code{FALSE}, a dataframe (the
+#' \code{Pedigree}) with duplicate rows removed; when \code{reportErrors} is
 #' \code{TRUE}, a character vector of duplicate \code{id} values, one entry
 #' for each extra occurrence of an \code{id} (or \code{NULL} when none are
 #' found).
