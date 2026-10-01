@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 850 Did
+**Deliverable:** brevity pass on the `NEWS.Rmd` dev block (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress).
+
 ### What Session 849 Did
 **Deliverable, DONE:** labeled the `NEWS.Rmd` dev block: every section now has a bold **Major** list then a bold **Minor** list. Docs only, so no TDD phase applies. Claim `8415e4fab`; edits in the close-out commit.
 **How:** the owner chose the format (two lists), delayed the brevity pass, and approved my sorting table ("go"). A script moved bullets whole; no wording changed except three "above" references that became "below" (Marker Genetics x2, Mate Pair).
