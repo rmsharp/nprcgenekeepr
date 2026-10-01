@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 831 Did
+**Deliverable:** Fix the pkgdown breakage: untrack `vignettes/suggested_NEWS_entry.Rmd` and `vignettes/articles/pedigree-diagram.pdf` (owner chose "untrack both") (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 829 Handoff Evaluation (by Session 830)
 **Score: 8/10.** The BACKLOG item named the files, the model wording (`README.md`, already reworded S828) and the `devtools::check()` step, so
 scoping took minutes; "docs only, no TDD gate" saved a question. **Missing:** the handoff said `suggested_NEWS_entry.md` was untracked but not that

@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S831
+date: 2026-09-30
+status: pending
+active_task: Fix the pkgdown breakage by untracking vignettes/suggested_NEWS_entry.Rmd and vignettes/articles/pedigree-diagram.pdf (owner decision)
+```
+
+```handoff
 session: S830
 date: 2026-09-30
 status: complete
