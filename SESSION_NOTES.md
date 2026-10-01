@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 844 Did
+**Deliverable:** fix the 95 slice-6e docs-staleness findings in `R/*.R` roxygen (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim entry says in progress; Phase 3F records the rest.
+
 ### What Session 843 Did
 **Deliverable, DONE:** split the 10 `SESSION_NOTES.md` lines over the 280 B per-line ceiling (they sat in the S842 and S841 records) at word boundaries outside backtick spans, each piece at most 260 B. Docs only, so no TDD phase applies.
 **Commits:** claim `f407e5a1c`; the split, records and ledger are in the close-out commit.
