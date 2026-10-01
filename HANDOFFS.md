@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S843
+date: 2026-10-01
+status: pending
+active_task: Trim SESSION_NOTES.md: split the 10 lines over the 280 B per-line ceiling (context_budget.py); docs only (IN PROGRESS)
+```
+
+```handoff
 session: S842
 date: 2026-10-01
 status: complete
