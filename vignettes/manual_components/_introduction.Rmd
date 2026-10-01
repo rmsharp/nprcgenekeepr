@@ -29,7 +29,7 @@ Primate Research Center.
 <!--and Southwest National Primate Research Center (SNPRC) with the -->
 <!--coding being done by R. Mark Sharp, Ph.D.-->
 
-At present, the application supports 5 functions:
+The application's main functions include:
 
 1.  Quality control of studbooks contained in text files or Excel workbooks and 
     of pedigrees within LabKey Electronic Health Records (EHR)
@@ -40,6 +40,11 @@ At present, the application supports 5 functions:
 1.  Generation of Genetic Value Analysis Reports
 1.  Creation of potential breeding groups with and without proscribed sex
     ratios and defined maximum kinships.
+
+The application has further tabs for mate pair analysis, genetic diversity,
+marker genetics, potential parents, cross-center identity mapping,
+de-identified export, and genetic-health trends. The Colony Manager Guide
+article describes them.
 
 
 

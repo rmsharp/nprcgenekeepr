@@ -21,8 +21,9 @@ for `Data objects`,
 `Major Features and Functions`, `Primary interactive functions` and 
 `All exposed functions`.
 
-The `Articles` menu brings up the list of vignettes, which are, except for
-`Development Plans`, tutorials for using the package.
+The `Articles` menu brings up the list of articles and vignettes. Most are
+tutorials for using the package; a few, such as the validation and release
+engineering articles, document how the software was checked and built.
 
 The `Changelog` brings up a copy of the NEWS file of the package, which records
 the major changes made for each version.

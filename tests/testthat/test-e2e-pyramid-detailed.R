@@ -117,11 +117,11 @@ test_that("E2E: Pyramid module shows data requirement message", {
   if (!success) skip("Could not navigate to Age-Sex Pyramid tab")
 
   # The instructional guidance is the "placeholder or instruction" shown before
-  # data is loaded: pyramidPlot.html ("A Pedigree Age Plot plots an
+  # data is loaded: pyramidPlot.html ("The Age-Sex Pyramid tab plots an
   # age-distribution of live animals...") is always rendered (no req guard,
   # modPyramid.R:55-58). The data-bearing empty-vs-loaded distinction is 8e-6.
   expect_true(
-    assert_active_pane(app, "Age-Sex Pyramid", "Age Plot"),
+    assert_active_pane(app, "Age-Sex Pyramid", "age-distribution"),
     info = "Should show instructional guidance before data is loaded"
   )
 })
