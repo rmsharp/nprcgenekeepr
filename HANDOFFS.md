@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S830
+date: 2026-09-30
+status: pending
+active_task: Reword the "five groups of functions" text in DESCRIPTION and _pkgdown.yml (docs audit BB14)
+```
+
+```handoff
 session: S829
 date: 2026-09-30
 status: complete

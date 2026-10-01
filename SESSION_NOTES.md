@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 830 Did
+**Deliverable:** reword the "supports five groups of functions" text in `DESCRIPTION` and the `_pkgdown.yml` home description (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 828 Handoff Evaluation (by Session 829)
 **Score: 8/10.** The BACKLOG item S828 left for this session was precise: it listed the ~15 paragraphs to move, the pointer-line rule,
 the Phase 3 wording change, the `budget:protected` fence and the `context_budget.py` check, so there was nothing to scope.

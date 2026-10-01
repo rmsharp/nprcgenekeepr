@@ -60,6 +60,9 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S830 claim (in progress): reword the "five groups of functions" text in `DESCRIPTION` and `_pkgdown.yml` (BACKLOG item, docs audit BB14)
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · [ad hoc] S829 close-out: trimmed `CLAUDE.md` from 26,731 B to 19,486 B (under the 24,000 B warn line) by moving the 13 "Additional close-out checks" paragraphs verbatim to `docs/conventions/CLOSEOUT_CHECKLISTS.md`; `CLAUDE.md` keeps one trigger line per checklist plus a link, and the session-protocol close-out rule tells sessions to read the new file. The file is in `docs/conventions/` rather than `docs/` because top-level `docs/` files are git-ignored; its one relative link now reads `../archive/`. Completes the BACKLOG item (removed). Commits `5bc5dbe34`, `70de12168`, plus the records commit. Verified: `diff` of the moved text is empty, `context_budget.py` reports OK, no test or code reads `docs/`. Not run: full suite, `devtools::check()`, app smoke test (no built or tested file changed). Learning 834.
 - **Model:** Claude Sonnet 5.5.
 
