@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 842 Did
+**Deliverable:** docs-staleness audit slice 6e, the remaining 126 `man/` pages (IN PROGRESS). Read-only audit; no code or test change, so no TDD phase applies.
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 841 Did
 **Deliverable, DONE:** fixed all 42 slice-6d docs-staleness findings (RA1-RA13 except the non-findings, RB1-RB11, RC1-RC10, RD1-RD9) in the roxygen of 15 `R/*.R` files and regenerated `man/` (`devtools::document()`, then `git checkout man/nprcgenekeepr-package.Rd`). Docs only: no code or test change, so no TDD phase applies. The 22 code candidates are untouched; the docs state today's behavior.
 **Commits:** claim `c33cfd543`; fixes `8b2e51b54` (RA, 4 files), `9b66199cd` (RB, 3 files), `53409c805` (RC, 4 files), `21d33c54f` (RD, 4 files), `fd573b5c8` (wordlist rewording); records in the close-out commit.
@@ -580,123 +586,4 @@ other 12 records in HEAD are verbatim in the live file or the shard.
 5. The full suite's 1 known failure is local-only (the owner's untracked
    `vignettes/suggested_NEWS_entry.Rmd`).
 6. STANDING SET unchanged from S790-805.
-
-### Session 804 Handoff Evaluation (by Session 805)
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier = HEAD `2138c813`, 0
-undocumented; the S804 receipt `status: complete`, its `quality_ratchet` citation matching
-`.quality-gates-results.json` (results `fb7aec9c7bc3`, 3,589,732 B); 1 unpushed (the push record);
-the 7 untracked files unchanged. The one commit after the receipt is S804's own push record, with a
-ledger entry, so no receipt was owed. Next step (A) was exact: the script, the 2 image names, the
-pixel counts (reproduced here to the pixel: 2,228 and 1,210), and "owner looks, commit".
-**Missing:** neither S804 nor S802's backlog finding said the render script's header contradicts
-the test pins (it says to expect two collision warnings and stop if they vanish; S715 retired
-them), which cost a detour to check the pins before going on. **ROI:** high.
-
-### What Session 805 Did
-**Deliverable, DONE:** the 2 stale Pedigree Diagram article figures are re-rendered and committed,
-owner-approved: `vignettes/articles/pedigree-diagram-img/exemplar-linebreeding-rectilinear.png` and
-`exemplar-half_sib-rectilinear.png`. Not a TDD session (no production code; regenerated
-documentation images and a comment).
-**Run:** `Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R` (23 s) re-rendered all 5,
-with node/edge counts matching the fixture pins and no layout warnings. The header said to expect
-two warnings, but `test_examplePedigreeFixtures.R` pins `rectilinearCollisionWarning = FALSE` for
-all 5 since S715, so the header was stale, not the engine.
-**Measured against the committed PNGs:**
-
-| Figure | Pixels changed | Max channel difference | Pixels changed by more than 0.25 |
-|---|---|---|---|
-| linebreeding | 2,228 | 0.831 | 1,257 |
-| half_sib | 1,210 | 0.831 | 782 |
-| consanguinity | 134 | 0.039 | 0 |
-| backcross | 189 | 0.055 | 0 |
-| first_cousin | 121 | 0.039 | 0 |
-
-The last 3 differ by anti-aliasing only, so they were restored from git and not committed. The real
-change is only the dashed duplicate-animal arcs, now flatter (S715's roundness change). At 1200x900
-the new arcs clear the nearest circle by about 5-6 px (LB2 over LA2) and about 3 px (HB1 over HA2),
-each crossing one drop line. The old LB2 arc ran through the LX1/LA3 labels.
-**Owner look:** old/new/overlay strips (red = old arc, blue = new) and both full renders were opened
-in Preview; the owner approved both via AskUserQuestion, and also approved fixing the header.
-**Commits:**
-- claim `54a3a7bd`
-- figures `2a247184`: the 2 PNGs, plus the `BACKLOG.md` documentation-audit item, whose S802 finding
-  is replaced by the S805 measurement; the `kinship2-fidelity-validation-img/` (8) and
-  `shiny_app_use/` (50) images are still unchecked
-- header `16bc27bd`: comment only; expects no warnings, and says a drawing change needs a re-run
-  even when no pin moves
-- records (this)
-
-**Verification:**
-- Fixture test: 14 tests, 303 expectations, 0 failed.
-- Article text (`vignettes/articles/pedigree-diagram.qmd:120-126`, `:157`, `:179`) and alt text
-  still fit.
-- The script parses; lint 0.
-- `vignettes/articles` is build-ignored (`.Rbuildignore:52`), and no test or workflow reads these
-  images (grep), so the full suite was not run.
-- `quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 5deafc2db4bb · manifest aa983075d6a2`
-  (3,589,736 B, measured at `16bc27bd`).
-- CI on `fd2056ca` (S804's records push, `in_progress` at Orient): lint and pkgdown green;
-  R-CMD-check (run 36489531079) green on all 5 legs incl. `windows-latest` and test-coverage
-  green, re-read at close-out.
-
-**Learnings:** 821.
-**Reduction:** none. `SESSION_NOTES.md` is under its 65,536 B ceiling, and `CLAUDE.md` is in its
-warn band (headroom).
-
-**Self-assessment: 8/10.**
-- \+ Reproduced S802's numbers before touching anything.
-- \+ Checked the missing warnings against the test pins instead of trusting the header either way.
-- \+ Kept the commit to the real change (the 3 noise-only renders restored).
-- \+ Measured the closest approach of each new arc instead of eyeballing it.
-- \+ The owner saw red/blue overlays, not just the new images.
-- \+ One ledger entry per commit.
-- \- The first zoom crop used guessed coordinates and missed.
-- \- One call failed on an uninstalled `abind`.
-- \- No mandated-read reduction.
-
-**Next steps:**
-- (A) The documentation audit (`BACKLOG.md`, "Audit the internal and user-facing documentation"):
-  the next slice checks `vignettes/articles/kinship2-fidelity-validation-img/` (8) and
-  `vignettes/articles/shiny_app_use/` (50) against the current code. Find each image's generator
-  first, e.g. `grep -rn 'kinship2-fidelity-validation-img' vignettes/ data-raw/ inst/`. That is an
-  estimate of where to look; I did not check whether scripts exist for them.
-- (B) The other Up Next owner decisions: jmac (`BACKLOG.md`, "deidentified_jmac_ped.csv"), U-prefix
-  ids, recorded dam, PED_GV.
-- (C) Carried:
-  - keep `methodology_dashboard.py` tracked, or untrack it?
-  - the `CHANGELOG.md` / `HANDOFFS.md` trims (the owner runs the forced write)
-  - the owner's `suggested_NEWS_entry` review
-  - residue: 7 untracked files
-  - 5 unpushed after this records commit (the owner's call; pushing publishes the new figures via
-    the pkgdown workflow)
-
-**Key files:**
-- `vignettes/articles/pedigree-diagram-img/exemplar-{linebreeding,half_sib}-rectilinear.png`
-- `vignettes/articles/pedigree-diagram-exemplar-renders.R:16-24` (the new header)
-- `tests/testthat/test_examplePedigreeFixtures.R:228-282` (the spec pins) and `:520-535` (the
-  warning test)
-- `vignettes/articles/pedigree-diagram.qmd:120-126`
-- `PROJECT_LEARNINGS.md` Learning 821
-
-**Gotchas:**
-1. The render script overwrites all 5 PNGs. Commit only the ones with pixels changed by more than
-   0.25 in max channel difference; restore the rest with `git checkout --`.
-2. The script needs Chrome (chromote). It ran cleanly here in 23 s.
-3. The comparison images live in the session scratchpad; they are not in the repo.
-4. The full suite's 1 known failure is local-only (the owner's untracked
-   `vignettes/suggested_NEWS_entry.Rmd`).
-5. `gh run list --json` returned OLDER runs (other ids and SHAs) than the plain `gh run list`;
-   query runs by id with `gh run view <id>`.
-6. STANDING SET unchanged from S790-804.
-
-**Owner-directed after close-out (2026-09-28 ~22:24 UTC):**
-- **Pushed** the 5 commits: `origin/master` `fd2056ca` -> `e5e007f8`, a fast-forward (0 behind after a
-  fresh fetch). The push carries the 2 new figures, which the pkgdown workflow builds into the site,
-  so the pkgdown run was awaited: green (run 36492193748),
-  and the GitHub Pages deploy it triggered (run 36492871606) succeeded. The other 3 workflows read none of the
-  changed files (all build-ignored), so they were not awaited. This push-record commit stays local.
-- **Decided: keep `methodology_dashboard.py` tracked.** This closes carried question (B). Every sync
-  of it keeps needing `bin/sync --force` (Learning 819). Do not raise the question again.
-- **Deferred:** the owner will take up `NEWS.Rmd` (their `suggested_NEWS_entry` drafts) later. It
-  stays in the `BACKLOG.md` item as it is; don't carry it as an open question in handoffs.
 

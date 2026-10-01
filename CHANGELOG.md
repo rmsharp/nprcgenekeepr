@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · [ad hoc] S842 claim: docs-staleness audit slice 6e, the remaining 126 `man/` pages (in progress).
+
 ### 2026-10-01 · [ad hoc] S841 close-out: fixed all 42 slice-6d docs-staleness findings (8 moderate, 34 minor) in the `R/*.R` roxygen of 15 Shiny app and module files (modBreedingGroups, modGeneticDiversity, modDeidentifiedExport, modCrossCenterIdentity, modMarkerGenetics, modGeneticValue, modInput, modORIPReporting, modPedigree, modPotentialParents, modMatePair, modSummaryStats, modSnapshotTrends, runGeneKeepR, runModularApp), regenerated `man/`; commits `8b2e51b54`, `9b66199cd`, `53409c805`, `21d33c54f`, `fd573b5c8`, claim `c33cfd543`. Docs only; the 22 code candidates stay owner decisions. Lint 0, wordlist test pass, `devtools::check(--no-tests)` 0 errors / 0 warnings / 1 note (untracked `suggested_NEWS_entry.md`). BACKLOG docs-audit item updated (next: slice 6e). Model: Claude Sonnet 5.5.
 
 ### 2026-10-01 · [ad hoc] S841 claim: fix the 42 slice-6d docs-staleness findings in `R/*.R` roxygen (superseded by the close-out entry above).
