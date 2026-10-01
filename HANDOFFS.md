@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S842
 date: 2026-10-01
-status: pending
-active_task: Docs-staleness audit slice 6e, the remaining 126 man/ pages (read-only audit report)
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE: docs-staleness audit slice 6e, the last 126 man/ pages; all 267 now audited; 26 moderate, 69 minor, 46 code candidates; read-only
+what_was_done: Claim 89042b761; report docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md, BACKLOG and records in the close-out commit. Eight subagents (sets RE-RL); I re-ran or re-read 23 of 26 moderates (not RF2, RH2, RJ3); corrected RE4 line cites and narrowed RJ4.
+next_steps: Fix the 95 slice-6e findings in R/*.R roxygen, then devtools::document() and git checkout man/nprcgenekeepr-package.Rd (READY, Effort M). Or owner decisions on the 46 slice-6e, 22 slice-6d and 8 slice-6c code candidates. Push of 47 local commits only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md; BACKLOG.md:197; R/trimPedigree.R; R/getAnimalsWithHighKinship.R:5-42; R/readKinshipOverrides.R; R/getPotentialParents.R
+gotchas: Report Location line numbers can be off (RE4 was), grep for the text. SESSION_NOTES.md sits at the token ceiling, so a claim commit needs a trim (removed S804/S805 and S840 records). After document() restore the package Rd. Reword rather than add to inst/WORDLIST. Minors and code candidates are agent-checked only.
 ```
 
 ```handoff

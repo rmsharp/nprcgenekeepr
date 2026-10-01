@@ -99,10 +99,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 842 Did
-**Deliverable:** docs-staleness audit slice 6e, the remaining 126 `man/` pages (IN PROGRESS). Read-only audit; no code or test change, so no TDD phase applies.
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** docs-staleness audit slice 6e, the last 126 `man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`): 26 moderate, 69 minor, 46 code candidates; all 267 pages now audited. Read-only; no code or tests, so no TDD phase applies.
+**Commits:** claim `89042b761`; report, BACKLOG and records in the close-out commit.
+**Verified:** re-ran in R or re-read in source 23 of the 26 moderates (all but RF2, RH2, RJ3; listed in the report's "Verified by me"); two agent claims corrected (RE4 line cites, RJ4 narrower: extra columns are dropped, not an error).
+**Not verified:** RF2, RH2, RJ3, all 69 minors and all 46 code candidates rest on the agents' own checks; not run: `lint_package()` (no `.R` changed), full suite, `devtools::check`.
+**NEWS.Rmd:** none. **Reduction:** removed the S804 evaluation and S805 record at claim, and the S840 evaluation and record at close-out (in git and receipts).
+**Slips caught:** the claim commit was refused by the context-budget hook (SESSION_NOTES over its token ceiling); trimmed with the owner's OK. My first RG1 re-run used an id not in `examplePedigree` and proved nothing; fixed. One agent ran `roxygenise()` by mistake and restored `man/` (git status clean).
+
+**Self-assessment: 8/10.** + One deliverable; every set covered, 126 of 126 pages from a computed list; moderates checked first-hand before the report. - Minors and code candidates unverified; RF2/RH2/RJ3 not re-checked.
+
+**Next steps:** (A) fix the 95 slice-6e findings (26 + 69) in `R/*.R` roxygen, then `devtools::document()` and `git checkout man/nprcgenekeepr-package.Rd` (READY, Effort M); document today's behavior, as S839/S841 did. (B) Owner decisions on code: 46 slice-6e candidates (CE-CL), 22 slice-6d, 8 slice-6c, and the older PB/PA/PD/MC/MB items. (C) Master is 47 ahead of origin after the close-out commit; push only on the owner's say-so. The `suggested_NEWS_entry.md` question was asked at Orient and S805 already says do not carry it.
+
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md` (findings by set), `BACKLOG.md:197`, `R/trimPedigree.R`, `R/getAnimalsWithHighKinship.R:5-42`, `R/readKinshipOverrides.R`, `R/getPotentialParents.R`.
+
+**Gotchas:** same as S837-S841 (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; `lint_package()` after joined roxygen lines; reword rather than add to `inst/WORDLIST`; prose after a `@param` folds into it). The report's "Location" line numbers can be off (RE4 was); grep for the text. Do NOT use `echo ====` in the Bash tool.
+
+### Session 841 Handoff Evaluation (by Session 842)
+**Score: 8/10.** Orient measurements held: both ledger frontiers at HEAD, 46 ahead, one untracked file, 126 pages left. Step (A) gave the exact recipe (`comm -13` of the "Items audited" ids against `ls man`) and it produced 126. **Wrong:** none. **Missing:** it did not say that SESSION_NOTES.md was at the token ceiling, so the claim commit was refused and needed a trim (the dashboard showed it). It re-asked about `suggested_NEWS_entry.md` although S805 says not to carry it. **ROI:** high.
 
 ### What Session 841 Did
 **Deliverable, DONE:** fixed all 42 slice-6d docs-staleness findings (RA1-RA13 except the non-findings, RB1-RB11, RC1-RC10, RD1-RD9) in the roxygen of 15 `R/*.R` files and regenerated `man/` (`devtools::document()`, then `git checkout man/nprcgenekeepr-package.Rd`). Docs only: no code or test change, so no TDD phase applies. The 22 code candidates are untouched; the docs state today's behavior.
@@ -119,25 +132,6 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 **Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md` (the code candidates), `R/modBreedingGroups.R:205-290`, `R/modPedigree.R:190-250`, `R/modSummaryStats.R:235-310`, `R/runGenekeepr.R:1-40`, `BACKLOG.md:197`.
 
 **Gotchas:** same as S837-S840 (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; `lint_package()` after joined roxygen lines; reword rather than add words to `inst/WORDLIST`). `R/runGenekeepr.R` (lowercase k) holds `runGeneKeepR`. A blank-line paragraph after a `@param` folds into it, so put prose before the first `@param`. Do NOT use `echo ====` in the Bash tool (zsh `=` expansion errors).
-
-### Session 840 Handoff Evaluation (by Session 841)
-**Score: 8/10.** Orient measurements held: both ledger frontiers at HEAD, master 39 ahead, the one untracked file, 126 pages left. Step (A) named the work, the files and the gotchas (`document()` checkout, blank-line `@param` fold), so no discovery was needed. **Wrong:** several report "Location" line numbers do not match the roxygen (RB2 `:301-307` and RB3 `:340-345` are UI code; the text sits near `:362-415`), so each needed a grep. **Missing:** it said to decide CA1-CA4, CB1, CC1 first; with the S839 precedent (document today's behavior) that was not needed, and saying so would have saved a question. **ROI:** high.
-
-### What Session 840 Did
-**Deliverable, DONE:** docs-staleness audit slice 6d, the 34 Shiny application and module `man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`): 8 moderate, 34 minor, 22 code candidates. Read-only; no code, no tests, so no TDD phase applies.
-**Commits:** claim `cffbb16cc`; report, BACKLOG and records in the close-out commit.
-**Verified:** all 8 moderates (RA1, RA3, RA4, RA8, RB1, RC1, RC5, RD1) re-read in the source; RA8 and CA4 re-run (`getGeneticDiversityStats` stops on a partial kinship matrix; `subscript out of bounds` for NA-birth group members). One agent moderate (RD6) downgraded to minor after reading `appServer.R:353-378`.
-**Not verified:** the 34 minors and the other 20 code candidates rest on the four subagents' own checks (A = ran it, R = re-read); not run: `lint_package()` (no `.R` changed), full suite, `devtools::check`.
-**NEWS.Rmd:** none. **Reduction:** removed the S838 handoff evaluation and the S838 record (in git and their receipts).
-**Slips caught:** my first R call for CA4 omitted `geneticValues` and proved nothing; I fixed the call and re-ran. The first draft said 26 of 34 pages had no moderate finding; counting gave 27.
-
-**Self-assessment: 8/10.** + One deliverable; every moderate checked first-hand, one downgraded on evidence; the page count and the 107 audited pages derived from the reports' tables, not from memory. - Minors unverified by me; the "28 mod pages" scope guess was wrong (30) and I only found it by counting.
-
-**Next steps:** (A) fix the 42 slice-6d findings in `R/*.R` roxygen, then `devtools::document()` (READY, Effort M); decide code candidates CA1-CA4, CB1, CC1 first (RA3/RA4/RA6/RA8/RB10/RC7 wording depends on them). (B) Or slice 6e: 126 `man/` pages left (list: `comm -13` of the three reports' "Items audited" ids against `ls man`, minus the 34 here). (C) Owner decisions still open: the 8 slice-6c candidates, PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3, `suggested_NEWS_entry.md` commit or drop (asked again at Orient; not answered). (D) Master is 39 ahead of origin with the close-out commit (37 before this session); push only on the owner's say-so.
-
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`, `R/modBreedingGroups.R:257-272`, `R/modGeneticDiversity.R:63-64`, `R/appServer.R:441-446`, `R/getKinshipWithMaleStatus.R:49-61`, `R/modPedigree.R:209-225,878`, `R/runGeneKeepR.R:27`, `BACKLOG.md:197`.
-
-**Gotchas:** same as S837-S839 (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; use `Rd2ex()`+`source()`; append to `inst/WORDLIST`; `lint_package()` after joined roxygen lines). Module pages: roxygen folds a blank-line paragraph into the preceding `@param` (RA1), so check the generated Rd. The 42 count is 8 + 34; RA12 and RD10 are deliberately not findings.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809
