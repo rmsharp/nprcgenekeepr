@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S845
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: docs-staleness audit slice 7, NEWS.Rmd (audit report only)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: docs-staleness audit slice 7a, NEWS.Rmd and NEWS.md; report only (3 moderate, 16 minor); no fixes, no code
+what_was_done: Claim 34cf56826; report docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md plus records in the close-out commit. Four read-only subagents by line range; moderates and several minors re-checked first-hand (v2.0.0 tag file checks, Rscript run for ND3).
+next_steps: Fix the NEWS.Rmd findings (delete NC1 and NC2, reword the minors, owner confirms 2.0.0 date), then re-render NEWS.md last (READY, Effort S). Or condense the Pedigree Diagram section (NA2-NA4); or slice 7b internal docs (READY, Effort L). Push of 10 local commits only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md; NEWS.Rmd:462-468 and 545-550 (NC1, NC2), 311-314 (NB4), 732-734 (ND3), 552 (ND2); R/appServer.R:114 (lead)
+gotchas: Re-render NEWS.md after the text fixes, not before. Dev-section edits follow the release-state rule. Minor findings NB2, NB6, NC5, NC6, NA1-NA4 rest on agent reads only. Keep SESSION_NOTES.md lines at or under 280 B.
 ```
 
 ```handoff

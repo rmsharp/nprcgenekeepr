@@ -99,10 +99,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 845 Did
-**Deliverable:** docs-staleness audit slice 7, `NEWS.Rmd` (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim entry says in progress; Phase 3F records the rest.
+**Deliverable, DONE:** docs-staleness audit slice 7a, `NEWS.Rmd` and `NEWS.md`: `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`. Read-only audit, no fixes, no code touched, so no TDD phase applies.
+**Commits:** claim `34cf56826`; the report and records in the close-out commit.
+**Result:** 0 critical, 3 moderate, 16 minor (ids NA-ND, NE1). Moderates: NC1 and NC2 (two "Fixed" bullets for a tab and a file that never shipped in 2.0.0) and NE1 (`NEWS.md` is 37 commits stale).
+**How:** four read-only subagents by line range (about 210 claims). I re-ran or re-read NC1, NC2, NC3, NC4, NB3, NB4, ND2 and ND3 myself. Dropped NB5 and NB7 (correct as written).
+**Not verified:** rendered Diagram behavior, issue numbers, the CRAN date, the percentages in NA4, and agent-only minors (NB2, NB6, NC5, NC6, NA1-NA4).
+**NEWS.Rmd:** none. **Reduction:** removed the S809 evaluation (in git and receipts).
+
+**Self-assessment: 8/10.** + One deliverable; every moderate re-checked first-hand; two agent findings dropped on a grep. - Minor findings rest on the agents' reads; internal docs (rest of slice 7) not started.
+
+**Next steps:** (A) Fix the NEWS.Rmd findings: delete NC1 and NC2, reword NB1-NB4, NC3-NC5, ND1-ND3, NA1; owner confirms the 2.0.0 date (ND2); then re-render `NEWS.md` last and run the NEWS guard test (READY, Effort S). (B) Condense the Pedigree
+Diagram section (NA2-NA4) in its own staged pass. (C) Slice 7b: audit the internal docs (`docs/`, `ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`), READY, Effort L. (D) Owner decisions on the audit code candidates. Master is 10 commits ahead of origin; push
+only on the owner's say-so.
+
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE7_2026-10-01.md`, `NEWS.Rmd:462-468` and `:545-550` (NC1, NC2), `NEWS.Rmd:311-314` (NB4), `NEWS.Rmd:732-734` (ND3), `R/appServer.R:114` (lead: comment says CRAN archived 2.0.0).
+
+**Gotchas:** NEWS.md must be re-rendered after, not before, the text fixes. Dev-section edits must follow the release-state rule: state the end state against 2.0.0. Same S837-S844 roxygen gotchas apply if code changes. Keep `SESSION_NOTES.md` lines at or under 280 B.
+
+### Session 844 Handoff Evaluation (by Session 845)
+**Score: 9/10.** Orient measurements held: ledger and receipt frontiers at HEAD, one untracked file, CI green. **Helped:** the ordered options (A)-(C) and BACKLOG:197 pointer to slice 7. **Wrong:** "8 commits ahead" was 9 at Orient (the count was
+taken before the close-out commit). **Missing:** nothing that cost time. **ROI:** high.
 
 ### What Session 844 Did
 **Deliverable, DONE:** fixed all 95 slice-6e docs-staleness findings (26 moderate, 69 minor; RE-RL ids) in `R/*.R` roxygen, 67 files, then `devtools::document()`. Docs only, no function body or signature changed, so no TDD phase applies.
@@ -194,14 +210,6 @@ drop (asked at Orient again; not answered). (D) Master is 46 ahead of origin wit
 
 **Gotchas:** same as S837-S840 (`git checkout man/nprcgenekeepr-package.Rd` after `document()`; `lint_package()` after joined roxygen lines; reword rather than add words to `inst/WORDLIST`). `R/runGenekeepr.R` (lowercase k) holds `runGeneKeepR`. A blank-line
 paragraph after a `@param` folds into it, so put prose before the first `@param`. Do NOT use `echo ====` in the Bash tool (zsh `=` expansion errors).
-
-### Session 809 Handoff Evaluation (by Session 810)
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809
-receipt `status: complete`, the 7 untracked files unchanged. Next step (A) was exact: the filter sat at
-`R/modPedigree.R:363`, `headerDisplayNames.R` and the §2.5 documents where it said, and the plan §5 Slice 4
-list was complete. **Missing:** it did not say the Pedigree Browser table shows raw column names (`DT` gets
-the data frame directly), so the "display name" only reaches `headerDisplayNames()` callers such as
-`a2interactive`; and it did not say `summary_stats.html` needs no change. **Wrong:** nothing. **ROI:** high.
 
 ### What Session 810 Did
 **Deliverable, DONE:** Slice 4 of `docs/planning/unknown-parent-placeholder-marking-plan.md` (strict TDD, every
