@@ -17,7 +17,8 @@
 #' @inheritParams trimPedigree
 #' @param format \code{sprintf} template for the generated placeholder IDs;
 #' defaults to \code{\link{getAutoIdFormat}()} (\code{"U\%04d"}).
-#' @return The updated pedigree with partial parentage removed.
+#' @return The updated pedigree in which each missing sire or dam of a
+#' single-parent record is replaced by a generated placeholder ID.
 #'
 #' @export
 #' @examples

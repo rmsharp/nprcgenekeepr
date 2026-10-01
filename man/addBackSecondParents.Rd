@@ -2,17 +2,19 @@
 % Please edit documentation in R/addBackSecondParents.R
 \name{addBackSecondParents}
 \alias{addBackSecondParents}
-\title{Add back single parents trimmed pedigree}
+\title{Add back second parents to a trimmed pedigree}
 \usage{
 addBackSecondParents(uPed, ped)
 }
 \arguments{
 \item{uPed}{a trimmed pedigree dataframe with uninformative founders removed.}
 
-\item{ped}{a trimmed pedigree}
+\item{ped}{the full (untrimmed) pedigree dataframe, from which the second
+parents are taken.}
 }
 \value{
-A dataframe with pedigree with single parents added.
+A pedigree with single parents added. It is a \code{data.table}
+once any record is added and a plain dataframe when none is.
 }
 \description{
 Uses the \code{ped} dataframe, which has full complement of parents and the
@@ -24,7 +26,7 @@ NA for both sire and dam of the added back ID.
 \examples{
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge = 2,
+  minSireAge = 2, minDamAge = 2,
   reportChanges = FALSE,
   reportErrors = FALSE
 )

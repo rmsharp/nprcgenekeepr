@@ -7,13 +7,17 @@
 #' Given a pedigree, find any IDs listed in the "sire" or "dam" columns
 #' that lack their own line entry and generate one.
 #'
-#' This must be run after to \code{addUIds} since the IDs made there are
+#' This must be run after \code{addUIds} since the IDs made there are
 #' used by \code{addParents}
 #'
 #' @inheritParams reportGV
+#' @param ped dataframe that is the \code{Pedigree}. The \code{id},
+#' \code{sire}, \code{dam} and \code{sex} columns are required.
 #' @return An updated pedigree with entries added as necessary.
-#' Entries have the id and sex specified; all remaining columns are filled
-#' with \code{NA}.
+#' Entries have the id and sex specified; all remaining columns except
+#' \code{recordStatus} are filled with \code{NA}. A \code{recordStatus}
+#' column is added (replacing any existing one) with \code{"original"} for
+#' the existing records and \code{"added"} for the new ones.
 #'
 #' @export
 #' @examples

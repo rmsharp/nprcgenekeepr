@@ -10,13 +10,16 @@ addIdRecords(ids, fullPed, partialPed)
 \item{ids}{character vector of IDs to be added as Ego records having
 NAs for parent IDs}
 
-\item{fullPed}{a trimmed pedigree}
+\item{fullPed}{the full (untrimmed) pedigree dataframe, the source of the
+records to add. It must have the same columns as \code{partialPed}.}
 
 \item{partialPed}{a trimmed pedigree dataframe with uninformative founders
 removed.}
 }
 \value{
-Pedigree with Ego records added having NAs for parent IDs
+Pedigree with Ego records added having NAs for parent IDs. It is a
+\code{data.table} once any record is added and a plain dataframe when
+none is.
 }
 \description{
 Add ego records with NA parent IDs

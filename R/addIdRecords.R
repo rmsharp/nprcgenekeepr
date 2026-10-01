@@ -5,10 +5,13 @@
 #'
 #' @param ids character vector of IDs to be added as Ego records having
 #' NAs for parent IDs
-#' @param fullPed a trimmed pedigree
+#' @param fullPed the full (untrimmed) pedigree dataframe, the source of the
+#' records to add. It must have the same columns as \code{partialPed}.
 #' @param partialPed a trimmed pedigree dataframe with uninformative founders
 #' removed.
-#' @return Pedigree with Ego records added having NAs for parent IDs
+#' @return Pedigree with Ego records added having NAs for parent IDs. It is a
+#' \code{data.table} once any record is added and a plain dataframe when
+#' none is.
 #'
 #' @importFrom data.table rbindlist
 #' @export

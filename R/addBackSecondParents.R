@@ -1,7 +1,7 @@
 ## Copyright(c) 2017-2026 R. Mark Sharp
 ## This file is part of nprcgenekeepr
 
-#' Add back single parents trimmed pedigree
+#' Add back second parents to a trimmed pedigree
 #'
 #' Uses the \code{ped} dataframe, which has full complement of parents and the
 #' \code{uPed} dataframe, which has all uninformative parents removed to
@@ -10,14 +10,16 @@
 #' NA for both sire and dam of the added back ID.
 #'
 #' @param uPed a trimmed pedigree dataframe with uninformative founders removed.
-#' @param ped a trimmed pedigree
-#' @return A dataframe with pedigree with single parents added.
+#' @param ped the full (untrimmed) pedigree dataframe, from which the second
+#' parents are taken.
+#' @return A pedigree with single parents added. It is a \code{data.table}
+#' once any record is added and a plain dataframe when none is.
 #'
 #' @export
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
-#'   minParentAge = 2,
+#'   minSireAge = 2, minDamAge = 2,
 #'   reportChanges = FALSE,
 #'   reportErrors = FALSE
 #' )

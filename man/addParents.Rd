@@ -7,12 +7,15 @@
 addParents(ped)
 }
 \arguments{
-\item{ped}{The pedigree information in data.frame format}
+\item{ped}{dataframe that is the \code{Pedigree}. The \code{id},
+\code{sire}, \code{dam} and \code{sex} columns are required.}
 }
 \value{
 An updated pedigree with entries added as necessary.
-Entries have the id and sex specified; all remaining columns are filled
-with \code{NA}.
+Entries have the id and sex specified; all remaining columns except
+\code{recordStatus} are filled with \code{NA}. A \code{recordStatus}
+column is added (replacing any existing one) with \code{"original"} for
+the existing records and \code{"added"} for the new ones.
 }
 \description{
 Pedigree curation function
@@ -20,7 +23,7 @@ Given a pedigree, find any IDs listed in the "sire" or "dam" columns
 that lack their own line entry and generate one.
 }
 \details{
-This must be run after to \code{addUIds} since the IDs made there are
+This must be run after \code{addUIds} since the IDs made there are
 used by \code{addParents}
 }
 \examples{

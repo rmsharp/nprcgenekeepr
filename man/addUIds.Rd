@@ -14,7 +14,8 @@ information. The fields \code{sire} and \code{dam} are required.}
 defaults to \code{\link{getAutoIdFormat}()} (\code{"U\%04d"}).}
 }
 \value{
-The updated pedigree with partial parentage removed.
+The updated pedigree in which each missing sire or dam of a
+single-parent record is replaced by a generated placeholder ID.
 }
 \description{
 This must be run prior to \code{addParents} since the IDs made herein are

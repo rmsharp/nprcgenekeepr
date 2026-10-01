@@ -35,7 +35,7 @@ following: in \strong{groupAddAssign}
 library(nprcgenekeepr)
 qcPed <- nprcgenekeepr::qcPed
 ped <- qcStudbook(qcPed,
-  minParentAge = 2.0, reportChanges = FALSE,
+  minSireAge = 2, minDamAge = 2, reportChanges = FALSE,
   reportErrors = FALSE
 )
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
@@ -53,6 +53,6 @@ conflicts <- unique(c(
 ))
 candidates <- setdiff(candidates, conflicts)
 kin <- addAnimalsWithNoRelative(kin, candidates)
-length(kin) # should be 259
+length(kin) # should be 591
 kin[["0DAV0I"]] # should have 34 IDs
 }
