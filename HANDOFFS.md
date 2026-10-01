@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S836
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: docs-staleness audit slice 6b (36 pedigree QC and curation man pages), read-only report
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: docs-staleness audit slice 6b, 36 pedigree QC and curation man/ pages (20 moderate, 37 minor)
+what_was_done: Claim 714780074; report docs/audits/DOCS_STALENESS_AUDIT_SLICE6B_2026-10-01.md, BACKLOG and records in the close-out commit. Read-only; four subagents audited nine pages each, I re-ran or re-read the source for all 20 moderate findings. No code, test or man/ change; suite, lint, check not run (nothing built changed).
+next_steps: Fix the 57 findings in R/*.R roxygen then devtools::document() (shared reportErrors sentence on all pages at once), or audit slice 6c (196 man/ pages left). Owner decisions: MC1, MB3, seven 6b code candidates (PB4, PB7, PB11, PB13, PA4, PD12, PD1), suggested_NEWS_entry.md. Push master (18 ahead) only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6B_2026-10-01.md, R/qcStudbook.R:67-190, R/checkRequiredCols.R:6-41, R/convertDate.R:19-24, BACKLOG.md:197
+gotchas: man/ is generated; fix roxygen then document(), then git checkout man/nprcgenekeepr-package.Rd. Minor findings are agent-verified (A/R) only. Do not word docs for PB4, PB7, PB11 until the owner decides the code question. PA7 stale DEAD level also in R/getPossibleCols.R (outside the slice).
 ```
 
 ```handoff
