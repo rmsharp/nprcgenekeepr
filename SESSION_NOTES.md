@@ -98,58 +98,50 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 827 Handoff Evaluation (by Session 828)
+**Score: 9/10.** The next step (A) named the cluster 4 pages and finding ids, and "`summary_stats.html` UG24 is already fixed" saved
+a re-check; the audit's cluster 4 rows were complete and the evidence column let every claim be re-verified in minutes. The
+"grep `tests/testthat` for each page name first" gotcha was necessary but not sufficient: it finds the e2e files but missed
+`test_modPedigree.R:64`, which greps the rendered UI for a phrase from `pedigree_browser.html`. **Missing:** which tests read
+page *content* (not just file names). **Wrong:** nothing found (master is now 28 ahead of origin, not 24 as written).
+**ROI:** high.
+
 ### What Session 828 Did
-**Deliverable:** fix docs-audit slice 4 cluster 4, the pedigree browser, summary stats, ORIP, introduction and README pages (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (docs only, plus two page-text test assertions):** fixed slice 4 cluster 4, which closes slice 4. Fixed BB1-BB17, UG22,
+UG23, RM1-RM4 in `_pedigree_browser.Rmd`, `_summary_statistics.Rmd`, `_orip_reporting.Rmd`, `_summary_of_major_functions.Rmd`,
+`_software_development.Rmd`, `_introduction.Rmd`, `_online_documentation.Rmd`, `pedigree_browser.html`, `pyramidPlot.html`, and
+re-rendered `README.md`. Truths now stated: Rectilinear is the default edge style and the diagram cap is 400 (750 for Direct); the
+focal trim keeps ancestors and descendants only; the module returns eight reactives; Summary Statistics has six export buttons and
+shows min/1st/mean/median/3rd/max plus skewness and kurtosis; ORIP Reporting is a built tab shown only when the config file names
+ONPRC; ages are added from birth/exit dates with no database; minimum sire and dam age are separate fields (blank = species default);
+the offline focal-pedigree path exists; pyramid Bin Size 1-10 and Age Unit; the application has more tabs than five; the pedigree
+table shows raw column names; the tab is "Age-Sex Pyramid"; the logging call sites; the dated coverage number is gone.
+**Commits:** claim `2ceac67a8`; fixes `4ed44b77a`, `8c35cd311`, and the README/test commit; records (this).
+**Verification:** each claim re-read against `R/modSummaryStats.R`, `R/modPedigree.R`, `R/modORIPReporting.R`, `R/shouldShowOripTab.R`,
+`R/qcStudbook.R`, `R/modInput.R`, `R/modPyramid.R`, `R/appUI.R`; HTML tag balance checked on both pages; `test_wordlist_coverage.R`,
+`test_effectivePopulationSizeDocs.R`, `test_appServer_logging.R`, `test_modPyramid.R`, `test_modPedigree.R`, `test_modSummaryStats.R`,
+`test_modORIPReporting.R` pass; `NPRC_RUN_E2E=true` `test-e2e-pyramid-detailed.R` and `test-e2e-pedigree-tutorial.R` pass; lint clean on the two
+edited test files. Two failures found and fixed: `test_modPedigree.R:64` (asserted the removed "Ego ID" text) and the "Age Plot"
+pattern in `test-e2e-pyramid-detailed.R`. Not run: full suite, app smoke test (3E: help text only, pages not opened in the running
+app). `test_pkgdown_reference_config.R` still fails locally on the untracked `suggested_NEWS_entry` (known).
+**Learnings:** Learning 833. **Reduction:** removed the S826 handoff evaluation and the "What Session 827 Did" block (in git and the S827 receipt).
 
-### Session 826 Handoff Evaluation (by Session 827)
-**Score: 9/10.** Next step (A) named the four cluster 3 files and finding ids, and the pointer to the BA21 wording in
-`gvAndBgDesc.html` saved a re-derivation; the "grep `tests/testthat` first" gotcha held (four test files read these pages, all
-pass). The lead about `colony-manager-guide.qmd:527-529` was clearly marked unverified, which was honest. **Missing:** UG24 also
-lives in `summary_stats.html` (cluster 4's file), and the R `helpText` at `R/modGeneticValue.R:88` repeats the same
-"Summary Statistics relationship table" wording but is code, not docs. **Wrong:** nothing found; the "4 untracked files" is now 1
-(`suggested_NEWS_entry.md`; the evidence HTMLs are gitignored or gone). **ROI:** high.
-
-### What Session 827 Did
-**Deliverable, DONE (docs only):** fixed slice 4 cluster 3 in `vignettes/manual_components/_genetic_value_analysis.Rmd`,
-`_genome_uniqueness_algorithm.Rmd`, `inst/extdata/ui_guidance/genetic_value.html`, `population_genetics_terms.html` and one
-sentence of `summary_stats.html`: BA17-BA22, UG12 second half, UG24, UG25. Truths now stated: the real controls (threshold 1-5
-default 4, Ranking Scheme with its categorical sub-controls, kinship-overrides upload, the two no-op checkboxes said to have no
-effect); no Minimum Breeding Age control; Rankings tab has Show top N (20), Filter by IDs / Filter View, Export All / Export Subset;
-scatter plot colours the top 10 red; the Summary tab is a Metric/Value table with the founder statistics, no SDs or
-distributions; `topAnimals` is the top 10; the analysis always trims to the current population's ancestors and sets no 6,000
-limit; genome uniqueness is a percentage (x100); an allele is rare when carried by at most N animals counting the animal itself.
-UG24: the relationship table is only an export, so the pages now say "exported relationships table".
-**Commits:** claim `172ddba8c`; fixes `9d6dacb47`; records (this).
-**Verification:** every claim re-read against `R/modGeneticValue.R` (UI at 25-130, trim at 295-315, summary table at 424-520),
-`R/calcA.R:36-48`, `R/calcGU.R:90-105`, `R/modSummaryStats.R`; HTML tag balance checked on the three pages; the two Rmd components
-render; `test_wordlist_coverage.R`, `test_kinshipOverrideDocs.R`, `test_effectivePopulationSizeDocs.R`, `test_modGvAndBgDesc.R`,
-`test_modGeneticValue.R` and `NPRC_RUN_E2E=true test-e2e-genetic-value-detailed.R` pass. Not run: full suite, lint (no `.R` change),
-app smoke test (3E: help text only, so the pages were not opened in the running app).
-**Learnings:** none new. **Reduction:** removed the S825 handoff evaluation and the "What Session 826 Did" block (in git and the S826 receipt).
-
-**Self-assessment: 8/10.** + One deliverable, all cluster 3 findings closed; every claim traced to code; kept every phrase the doc tests
-assert. - Did not open the pages in the running app; left the R `helpText` at `R/modGeneticValue.R:88` (code, not docs) saying
-"Summary Statistics relationship table", so the in-app upload help and the html guidance now differ slightly; wording of "ten
-highest-ranked animals" in the Rmd rests on `topAnimals` using `rank <= 10`.
+**Self-assessment: 8/10.** + One deliverable, all cluster 4 findings closed; every claim traced to code; found and fixed two test
+couplings before commit. - Committed nine files across two commits first (the 5-file cap is per commit; I split them 5 + 5 after the
+edits, not at each boundary); did not open the pages in the running app; left `DESCRIPTION` and `_pkgdown.yml` "five groups" text for an
+owner decision; `README.md` render also shifted unrelated whitespace around HTML comments (pandoc version).
 
 **Next steps:**
-- (A) Slice 4 cluster 4: pedigree browser, summary stats, ORIP, introduction, and README re-render from `README.Rmd` (children first);
-  findings UG22, UG23, RM1-RM4, BA24 and the rest of the cluster 4 rows in the audit. Grep `tests/testthat` for each page name first.
-  `summary_stats.html` UG24 is already fixed.
-- (B) Then slice 5 (`a2interactive.Rmd`, `man/`, `NEWS.Rmd`, internal docs).
-- (C) Owner decisions and leftovers: the four code defects (no-op GU/MK checkboxes now documented as no-ops; the `helpText` wording
-  above), `suggested_NEWS_entry.md` (commit or drop?), `NEWS.md` lag, `CLAUDE.md` in the warn band; master is 24 ahead of origin
-  (docs-only commits).
+- (A) Slice 5: `a2interactive.Rmd`, `man/`, `NEWS.Rmd`, then the internal docs (a read-only audit first, as slices 1-4 were; then fix by cluster).
+  Grep `tests/testthat` for the page name AND for the phrases you remove, and run the unit test for the module that embeds the page.
+- (B) Owner decisions: `DESCRIPTION`/`_pkgdown.yml` "five groups of functions" wording (BACKLOG slice 4 note), the four code defects, the stale
+  comment at `R/modPedigree.R:440-443`, `suggested_NEWS_entry.md` (commit or drop?), `NEWS.md` lag, `CLAUDE.md` in the warn band; master is 28 ahead
+  of origin (docs-only commits).
 
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md` (cluster 4 rows), `R/modPedigreeBrowser.R`, `R/modSummaryStats.R`,
-`README.Rmd` and its child components under `vignettes/manual_components/`.
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md` (done), `BACKLOG.md` (slice 5 line), `vignettes/a2interactive.Rmd`.
 
-**Gotchas:** `test_pkgdown_reference_config.R` still fails locally on the untracked `suggested_NEWS_entry` article. A lead, not
-verified in the app: `vignettes/articles/colony-manager-guide.qmd:527-529` captions say Group Detail shows "no kinship" vs "with
-kinship values", but the module always renders the kinship table (`R/modBreedingGroups.R:1055-1070`).
+**Gotchas:** `test_pkgdown_reference_config.R` still fails locally on the untracked `suggested_NEWS_entry` article. `README.md` renders with
+pandoc-version whitespace noise around HTML comments (harmless). The `colony-manager-guide.qmd:527-529` caption lead from S826 is still not verified in the app.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809

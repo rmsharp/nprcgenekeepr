@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S828
 date: 2026-09-30
-status: pending
-active_task: Fix docs-audit slice 4 cluster 4: pedigree browser, summary stats, ORIP, introduction, README (docs only)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: fixed docs-audit slice 4 cluster 4 (pedigree browser, summary stats, ORIP, major functions, software development, introduction, online documentation components; pedigree_browser.html, pyramidPlot.html; README re-rendered); slice 4 is complete
+what_was_done: Claim 2ceac67a8; fixes 4ed44b77a, 8c35cd311 and the README/test commit; records in the close-out commit. Every claim re-read against modSummaryStats.R, modPedigree.R, modORIPReporting.R, qcStudbook.R, modInput.R, modPyramid.R, appUI.R. Fixed BB1-BB17, UG22, UG23, RM1-RM4. Updated two page-text test assertions (test_modPedigree.R, test-e2e-pyramid-detailed.R). Doc unit tests and the two opt-in e2e files pass.
+next_steps: Slice 5 (a2interactive.Rmd, man/, NEWS.Rmd, internal docs): read-only audit first, then fix by cluster. Owner decisions: DESCRIPTION/_pkgdown.yml "five groups of functions" wording, the four code defects, stale comment R/modPedigree.R:440-443, suggested_NEWS_entry.md commit-or-drop.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md, BACKLOG.md (slice 5 line), vignettes/a2interactive.Rmd, tests/testthat/test_modPedigree.R:64
+gotchas: Grep tests for page content phrases, not only file names (Learning 833). test_pkgdown_reference_config.R fails locally on the untracked suggested_NEWS_entry. Not run: full suite, app smoke test.
 ```
 
 ```handoff
