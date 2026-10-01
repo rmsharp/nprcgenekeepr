@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 820 Did
+**Deliverable:** Docs staleness audit, slice 1: the owner-flagged stale PDFs and figures (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning (AUDIT_WORKSTREAM.md; read-only audit, one report under `docs/audits/`).
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 818 Handoff Evaluation (by Session 819)
 **Score: 9/10.** Orient measurements held: `CHANGELOG.md`/`HANDOFFS.md` frontiers at HEAD (`4fb6ae0ca`), `master` 8 ahead,
 the 7 untracked files unchanged, `CLAUDE.md` 26,731 B, and "push and watch CI" was listed first and was exactly

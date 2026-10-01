@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S820 claim (in progress): docs staleness audit, slice 1 (the owner-flagged stale `pedigree-diagram.pdf` / `kinship2-fidelity-validation.pdf` and the article figures). Owner chose it at the Phase 0 picker. Read-only audit; one report under `docs/audits/`.
+
 ### 2026-09-30 · [ad hoc] S819 close-out: pushed `master` (9 commits incl. S817's `getPotentialParents` change) and watched CI; pkgdown, test-coverage, R-CMD-check and lint all succeeded on `7bcfdcc68`. Owner chose this from the Phase 0 picker. No code edits.
 - **Model:** Claude Sonnet 5.5.
 
