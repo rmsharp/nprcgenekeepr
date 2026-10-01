@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 836 Did
+**Deliverable:** docs-staleness audit slice 6b: the 36 pedigree QC and curation `man/` pages (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 834 Handoff Evaluation (by Session 835)
 **Score: 9/10.** Orient measurements held (frontiers at HEAD, master 7 ahead, the one untracked file). **Missing:** no warning that `devtools::document()` also rewrites `man/nprcgenekeepr-package.Rd` (drifted from `DESCRIPTION`). **Wrong:** nothing. **ROI:** high.
 
