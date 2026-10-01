@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 826 Did
+**Deliverable:** fix docs-audit slice 4 cluster 2, the breeding-group pages (IN PROGRESS)
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 824 Handoff Evaluation (by Session 825)
 **Score: 9/10.** Next step (A) named the exact first cluster and the report's tables carried file:line, claim, evidence and fix, so
 Orient to first edit took minutes. The gotchas held: README.md is a render, agent-only findings need a re-read (I re-ran the
