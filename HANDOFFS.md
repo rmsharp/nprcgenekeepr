@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S832
+date: 2026-10-01
+status: pending
+active_task: Docs-staleness audit slice 5: audit report on vignettes/a2interactive.Rmd (man/ and NEWS.Rmd later slices)
+```
+
+```handoff
 session: S831
 date: 2026-09-30
 status: complete

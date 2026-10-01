@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 832 Did
+**Deliverable:** Docs-staleness audit slice 5: one audit report on `vignettes/a2interactive.Rmd` (the executable function tour); `man/` and `NEWS.Rmd` stay later slices (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 830 Handoff Evaluation (by Session 831)
 **Score: 9/10.** The BACKLOG item named the cause (S825 commit `9a2a5ddb7`), both files, the two verification commands and the exact owner
 decision, so the session needed one question and one `git rm`. "Do not push before (A)" was correct. **Missing:** nothing needed; it did not

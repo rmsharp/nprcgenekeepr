@@ -63,6 +63,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ### 2026-10-01 · [ad hoc] S831 push: pushed master (`7bcfdcc68..07011d2a9`, 38 commits, first push since S819) at the owner's request; all four workflows on `07011d2a9` completed green (R-CMD-check 22m55s, test-coverage 12m6s, pkgdown 6m43s, lint 5m8s).
 - **Model:** Claude Sonnet 5.5.
 
+### 2026-10-01 · [ad hoc] S832 claim (in progress): docs-staleness audit slice 5, one audit report on `vignettes/a2interactive.Rmd` (BACKLOG item)
+
 ### 2026-09-30 · [ad hoc] S831 close-out: untracked the owner's draft `vignettes/suggested_NEWS_entry.Rmd` and `vignettes/articles/pedigree-diagram.pdf` (owner decision), fixing the pkgdown index test and `check_pkgdown()` failure from S825's `9a2a5ddb7`; full suite 0 failed / 0 error; BACKLOG item removed; Learning 836. Commits `46a7d9e56` (claim), `3a8c026bb` (fix).
 - **Model:** Claude Sonnet 5.5.
 
