@@ -35,6 +35,12 @@ logs the error and returns a default value instead of stopping execution.
 This is particularly useful in Shiny reactive contexts where errors
 should be handled gracefully.
 }
+\details{
+A warning is also caught. It is logged (unless \code{silent} is TRUE) and
+\code{expr} is then evaluated a second time with warnings suppressed, so
+\code{expr} runs twice when it signals a warning. The value from the
+second evaluation is returned.
+}
 \examples{
 # Returns 4
 safeExecute({ 2 + 2 }, module = "test")

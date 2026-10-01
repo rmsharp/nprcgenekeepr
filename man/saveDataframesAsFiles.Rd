@@ -7,19 +7,27 @@
 saveDataframesAsFiles(dfList, baseDir, fileType = "csv")
 }
 \arguments{
-\item{dfList}{list of dataframes to be stored as files.}
+\item{dfList}{named list of dataframes to be stored as files. The names
+of the list supply the file names.}
 
-\item{baseDir}{character vector of length on with the directory path.}
+\item{baseDir}{character vector of length one with the directory path. The
+directory must already exist.}
 
 \item{fileType}{character vector of length one with possible values of
 \code{"txt"}, \code{"csv"}, or \code{"excel"}. Default value is \code{"csv"}.}
 }
 \value{
-Full path name of files saved.
+A character vector of the path names of the files saved, built as
+\code{baseDir}, a slash, the list name, a period and \code{fileType}.
+\code{baseDir} is used exactly as supplied, so a relative path stays
+relative.
 }
 \description{
 Takes a list of dataframes and creates a file based on the list name of
-the dataframe and the extension for the file type.
+the dataframe and the extension for the file type. The extension is the
+value of \code{fileType} itself, so Excel files get the extension
+\code{.excel}, not \code{.xlsx}. The list must be named; an unnamed list
+gives files without a base name.
 }
 \examples{
 library(nprcgenekeepr)

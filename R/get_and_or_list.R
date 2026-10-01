@@ -8,10 +8,11 @@
 #' @param conjunction The conjunction to be used as the connector.
 #' This is usually \sQuote{and} or \sQuote{or} with \sQuote{and} being
 #' the default.
-#' @return A character vector of length one containing the a single correctly
-#' punctuated character string that list each element in the first arguments
+#' @return A character vector of length one containing a single correctly
+#' punctuated character string that lists each element in the first argument
 #' vector with commas between if there are more than two elements with the
-#' last two elements joined by the selected conjunction.
+#' last two elements joined by the selected conjunction. A zero-length input
+#' returns an empty string and a single element is returned unchanged.
 #'
 #' @importFrom stringi stri_c
 #' @export

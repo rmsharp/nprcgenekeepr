@@ -7,11 +7,13 @@
 #' and error handling. Supports PNG, PDF, and SVG formats with configurable
 #' dimensions and resolution.
 #'
-#' @param plot A ggplot2 plot object to save. If NULL, returns FALSE.
+#' @param plot A ggplot2 plot object to save. If NULL or not a ggplot2 object,
+#'   returns FALSE.
 #' @param file character. The file path to save the plot to.
-#' @param format character. Output format: "png", "pdf", or "svg".
-#'   Defaults to "png". If not specified, format is inferred from file
-#'   extension.
+#' @param format character. Output format, such as "png", "pdf", "svg",
+#'   \code{"jpg"}, \code{"jpeg"}, or "tiff". Defaults to \code{NULL}, in
+#'   which case the format is inferred from the file extension, falling
+#'   back to "png" when the extension is not recognized.
 #' @param width numeric. Plot width in inches. Defaults to 8.
 #' @param height numeric. Plot height in inches. Defaults to 6.
 #' @param dpi numeric. Resolution in dots per inch for raster formats.

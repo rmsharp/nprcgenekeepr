@@ -17,8 +17,12 @@ create_wkbk(file, df_list, sheetnames, replace = FALSE)
 already exist (default is FALSE).}
 }
 \value{
-TRUE if the Excel file was successfully created. FALSE if any errors
-occurred.
+\code{TRUE} if the Excel file was successfully created.
+\code{FALSE}, with a warning, if the file already exists and
+\code{replace} is \code{FALSE}. Other problems are signaled as errors
+rather than returned as \code{FALSE}; examples are a number of
+\code{sheetnames} that differs from the length of \code{df_list} and an
+invalid worksheet name.
 }
 \description{
 Create an Excel workbook with worksheets
@@ -41,16 +45,14 @@ make_df_list <- function(size) {
 }
 df_list <- make_df_list(3)
 sheetnames <- names(df_list)
-if (any(file.exists(file.path(tempdir(), "example_excel_wkbk.xlsx")))) {
-  file.remove(file.path(tempdir(), "example_excel_wkbk.xlsx"))
-  create_wkbk(
-    file = file.path(tempdir(), "example_excel_wkbk.xlsx"),
-    df_list = df_list,
-    sheetnames = sheetnames,
-    replace = FALSE
-  )
-}
-if (any(file.exists(file.path(tempdir(), "example_excel_wkbk.xlsx")))) {
-  file.remove(file.path(tempdir(), "example_excel_wkbk.xlsx"))
+wkbkFile <- file.path(tempdir(), "example_excel_wkbk.xlsx")
+create_wkbk(
+  file = wkbkFile,
+  df_list = df_list,
+  sheetnames = sheetnames,
+  replace = FALSE
+)
+if (file.exists(wkbkFile)) {
+  file.remove(wkbkFile)
 }
 }

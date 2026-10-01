@@ -22,8 +22,11 @@ instead of \code{FALSE} for strings that are not valid dates.
 Defaults to FALSE.}
 }
 \value{
-A logical value or \code{NA} indicating whether or not the provided
-character vector represented a valid date string.
+A logical vector with one element per element of \code{date_str}
+(zero-length input gives a zero-length result) indicating whether or not
+each string is a valid date. Elements are \code{NA} instead of
+\code{FALSE} when \code{optional} is \code{TRUE}. Numeric input is never
+treated as a date and always gives \code{FALSE}.
 }
 \description{
 Taken from github.com/rmsharp/rmsutilityr

@@ -6,6 +6,14 @@
 #' Centralized logging function for Shiny module events. Provides consistent
 #' logging format across all modules with configurable log levels.
 #'
+#' \code{"WARN"} and \code{"ERROR"} entries are always emitted with
+#' \code{message()}. \code{"INFO"} entries are written to standard output
+#' with \code{cat()} only when \code{options(nprcgenekeepr.verbose = TRUE)}
+#' is set. \code{"DEBUG"} entries are written the same way only when
+#' \code{options(nprcgenekeepr.debug = TRUE)} is set. Otherwise those two
+#' levels produce no output. An unrecognized level is treated as
+#' \code{"INFO"}.
+#'
 #' @param module character. Name of the module generating the log message.
 #' @param message character. The log message to record.
 #' @param level character. Log level: "DEBUG", "INFO", "WARN", or "ERROR".

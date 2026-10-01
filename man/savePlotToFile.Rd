@@ -16,13 +16,15 @@ savePlotToFile(
 )
 }
 \arguments{
-\item{plot}{A ggplot2 plot object to save. If NULL, returns FALSE.}
+\item{plot}{A ggplot2 plot object to save. If NULL or not a ggplot2 object,
+returns FALSE.}
 
 \item{file}{character. The file path to save the plot to.}
 
-\item{format}{character. Output format: "png", "pdf", or "svg".
-Defaults to "png". If not specified, format is inferred from file
-extension.}
+\item{format}{character. Output format, such as "png", "pdf", "svg",
+\code{"jpg"}, \code{"jpeg"}, or "tiff". Defaults to \code{NULL}, in
+which case the format is inferred from the file extension, falling
+back to "png" when the extension is not recognized.}
 
 \item{width}{numeric. Plot width in inches. Defaults to 8.}
 

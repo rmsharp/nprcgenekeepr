@@ -19,7 +19,10 @@ makeExamplePedigreeFile(
 Full path name of file saved.
 }
 \description{
-Uses \code{examplePedigree} data structure to create an example data file
+Uses \code{examplePedigree} data structure to create an example data file.
+Files of type \code{"csv"} and \code{"txt"} are silently overwritten if
+they already exist. A file of type \code{"excel"} is never overwritten;
+if the file already exists, an error is signaled.
 }
 \examples{
 library(nprcgenekeepr)

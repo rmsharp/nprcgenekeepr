@@ -3,9 +3,16 @@
 
 #' Summarize a studbook quality-control error list
 #'
-#' @param object object of class nprcgenekeeprErr and class list
-#' @param ... additional arguments for the \code{summary.default} statement
-#' @return Object of class summary.nprcgenekeeprErr
+#' Summarizes either a studbook quality-control error list (class
+#' \code{nprcgenekeeprErr}) or a genetic value report (class
+#' \code{nprcgenekeeprGV}); this page covers both methods.
+#'
+#' @param object object of class nprcgenekeeprErr or nprcgenekeeprGV
+#' @param ... currently unused by either method
+#' @return For an error list, an object of class
+#' summary.nprcgenekeeprErr. It is a list with the elements \code{txt} (a
+#' character string describing the problems found) and \code{sp} (the data
+#' frame of suspicious parents).
 #'
 #' @importFrom stringi stri_c stri_length
 #' @rdname summary
@@ -14,7 +21,8 @@
 #' @export
 #' @examples
 #' errorList <- qcStudbook(nprcgenekeepr::pedOne,
-#'   minParentAge = 0,
+#'   minSireAge = 0,
+#'   minDamAge = 0,
 #'   reportChanges = TRUE,
 #'   reportErrors = TRUE
 #' )
@@ -171,7 +179,8 @@ summary.nprcgenekeeprErr <- function(object, ...) {
   class(txt) <- "summary.nprcgenekeeprErr"
   txt
 }
-#' @return object of class summary.nprcgenekeeprGV
+#' @return For a genetic value report, a character vector of class
+#' summary.nprcgenekeeprGV
 #' @importFrom stringi stri_c
 #' @rdname summary
 #' @method summary nprcgenekeeprGV
@@ -179,7 +188,8 @@ summary.nprcgenekeeprErr <- function(object, ...) {
 #' @examples
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
-#'   minParentAge = 2L,
+#'   minSireAge = 2L,
+#'   minDamAge = 2L,
 #'   reportChanges = FALSE,
 #'   reportErrors = FALSE
 #' )

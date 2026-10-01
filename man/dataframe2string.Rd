@@ -7,19 +7,22 @@
 dataframe2string(object, ..., digits = NULL, addRowNames = TRUE)
 }
 \arguments{
-\item{object}{dataframe}
+\item{object}{dataframe
+Rows are joined with newline characters, so the result is one string.}
 
-\item{...}{optional arguments to print or plot methods.}
+\item{...}{currently unused; accepted for compatibility with print methods.}
 
 \item{digits}{the minimum number of significant digits to be used:
 see print.default.}
 
-\item{addRowNames}{logical (or character vector), indicating whether
-(or what) row names should be printed.}
+\item{addRowNames}{single logical value. If \code{TRUE} (the default), the
+row names of the data frame are printed. Any other value, including a
+character vector, is treated as \code{FALSE}.}
 }
 \value{
-A character vector representation of the data.frame provided to the
-function.
+A character vector of length one holding the text representation of
+the data.frame provided to the function, with rows separated by newline
+characters.
 }
 \description{
 Adapted from print.data.frame

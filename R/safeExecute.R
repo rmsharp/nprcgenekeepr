@@ -8,6 +8,11 @@
 #' This is particularly useful in Shiny reactive contexts where errors
 #' should be handled gracefully.
 #'
+#' A warning is also caught. It is logged (unless \code{silent} is TRUE) and
+#' \code{expr} is then evaluated a second time with warnings suppressed, so
+#' \code{expr} runs twice when it signals a warning. The value from the
+#' second evaluation is returned.
+#'
 #' @param expr An expression to evaluate.
 #' @param module character. Name of the calling module for logging purposes.
 #' @param default The value to return if an error occurs. Defaults to NULL.

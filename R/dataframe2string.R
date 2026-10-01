@@ -6,13 +6,17 @@
 #' Adapted from print.data.frame
 #'
 #' @param object dataframe
-#' @param ... optional arguments to print or plot methods.
+#' Rows are joined with newline characters, so the result is one string.
+#'
+#' @param ... currently unused; accepted for compatibility with print methods.
 #' @param digits the minimum number of significant digits to be used:
 #' see print.default.
-#' @param addRowNames	logical (or character vector), indicating whether
-#'  (or what) row names should be printed.
-#' @return A character vector representation of the data.frame provided to the
-#' function.
+#' @param addRowNames single logical value. If \code{TRUE} (the default), the
+#'  row names of the data frame are printed. Any other value, including a
+#'  character vector, is treated as \code{FALSE}.
+#' @return A character vector of length one holding the text representation of
+#' the data.frame provided to the function, with rows separated by newline
+#' characters.
 #'
 #' @importFrom stringi stri_length
 #' @importFrom stringi stri_pad_both

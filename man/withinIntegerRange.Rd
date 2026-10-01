@@ -18,12 +18,16 @@ If "max" then non-numerics are forced to the maximum in the range.
 If not either "min" or "max" it is forced to "min".}
 }
 \value{
-A vector of integers forced to be within the specified range.
+A vector of values forced to be within the specified range. These
+are integers unless a limit is not an integer.
 }
 \description{
 Assures that what is returned is an integer within the specified range.
 Real values are truncated. Non-numerics are forced to minimum without
-warning.
+warning. Character values that look like numbers are converted. The limits
+themselves are not coerced, so non-integer limits can be returned as
+given. If \code{minimum} is greater than \code{maximum}, \code{maximum}
+wins.
 }
 \examples{
 library(nprcgenekeepr)

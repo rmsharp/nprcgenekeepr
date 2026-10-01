@@ -3,10 +3,12 @@
 
 #' Print an nprcgenekeepr summary object
 #'
-#' @param x object of class summary.nprcgenekeeprErr and class list
+#' @param x object of class summary.nprcgenekeeprErr (from
+#'   \code{summary()} of a studbook error list) or summary.nprcgenekeeprGV
+#'   (from \code{summary()} of a genetic value report)
 #' @param ... further arguments passed to the \code{print()} call for the
 #'   suspicious-parents table (and ignored by the GV method)
-#' @return An object to send to the generic print function
+#' @return The summary object, returned invisibly after it is printed.
 #'
 #' @importFrom stringi stri_c
 #' @rdname print
@@ -37,7 +39,7 @@ print.summary.nprcgenekeeprErr <- function(x, ...) {
   # output and returns the reclassified object invisibly.
   invisible(txt)
 }
-#' @return object to send to generic print function
+#' @return The summary object, returned invisibly after it is printed.
 #' @rdname print
 #' @method print summary.nprcgenekeeprGV
 #' @export

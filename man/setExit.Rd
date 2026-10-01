@@ -21,6 +21,13 @@ on date information that was available.
 \description{
 Part of Pedigree Curation
 }
+\details{
+An \code{exit} column is added only when the pedigree has a \code{birth}
+column and no \code{exit} column. When both \code{death} and
+\code{departure} are present the exit is the earlier of the two; it is
+\code{NA} if neither column exists. A pedigree without a \code{birth}
+column, or with no rows, is returned unchanged.
+}
 \examples{
 library(lubridate)
 library(nprcgenekeepr)

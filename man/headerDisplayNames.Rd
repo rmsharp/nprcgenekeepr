@@ -10,7 +10,9 @@ headerDisplayNames(headers)
 \item{headers}{a character vector of column (header) names}
 }
 \value{
-Updated list of column names
+A character vector the same length as \code{headers} with the
+display name for each header. The lookup is case sensitive, and a header
+with no display name gives \code{NA}.
 }
 \description{
 Converts the column names of a Pedigree or Genetic value Report to

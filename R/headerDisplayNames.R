@@ -7,7 +7,9 @@
 #' something more descriptive.
 #'
 #' @param headers a character vector of column (header) names
-#' @return Updated list of column names
+#' @return A character vector the same length as \code{headers} with the
+#' display name for each header. The lookup is case sensitive, and a header
+#' with no display name gives \code{NA}.
 #'
 #' @export
 #' @examples

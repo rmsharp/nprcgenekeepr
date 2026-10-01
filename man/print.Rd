@@ -10,15 +10,17 @@
 \method{print}{summary.nprcgenekeeprGV}(x, ...)
 }
 \arguments{
-\item{x}{object of class summary.nprcgenekeeprErr and class list}
+\item{x}{object of class summary.nprcgenekeeprErr (from
+\code{summary()} of a studbook error list) or summary.nprcgenekeeprGV
+(from \code{summary()} of a genetic value report)}
 
 \item{...}{further arguments passed to the \code{print()} call for the
 suspicious-parents table (and ignored by the GV method)}
 }
 \value{
-An object to send to the generic print function
+The summary object, returned invisibly after it is printed.
 
-object to send to generic print function
+The summary object, returned invisibly after it is printed.
 }
 \description{
 Print an nprcgenekeepr summary object

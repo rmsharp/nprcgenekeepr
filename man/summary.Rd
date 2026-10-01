@@ -10,28 +10,36 @@
 \method{summary}{nprcgenekeeprGV}(object, ...)
 }
 \arguments{
-\item{object}{object of class nprcgenekeeprErr and class list}
+\item{object}{object of class nprcgenekeeprErr or nprcgenekeeprGV}
 
-\item{...}{additional arguments for the \code{summary.default} statement}
+\item{...}{currently unused by either method}
 }
 \value{
-Object of class summary.nprcgenekeeprErr
+For an error list, an object of class
+summary.nprcgenekeeprErr. It is a list with the elements \code{txt} (a
+character string describing the problems found) and \code{sp} (the data
+frame of suspicious parents).
 
-object of class summary.nprcgenekeeprGV
+For a genetic value report, a character vector of class
+summary.nprcgenekeeprGV
 }
 \description{
-Summarize a studbook quality-control error list
+Summarizes either a studbook quality-control error list (class
+\code{nprcgenekeeprErr}) or a genetic value report (class
+\code{nprcgenekeeprGV}); this page covers both methods.
 }
 \examples{
 errorList <- qcStudbook(nprcgenekeepr::pedOne,
-  minParentAge = 0,
+  minSireAge = 0,
+  minDamAge = 0,
   reportChanges = TRUE,
   reportErrors = TRUE
 )
 summary(errorList)
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge = 2L,
+  minSireAge = 2L,
+  minDamAge = 2L,
   reportChanges = FALSE,
   reportErrors = FALSE
 )

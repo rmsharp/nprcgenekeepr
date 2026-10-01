@@ -7,13 +7,15 @@
 createExampleFiles()
 }
 \value{
-A vector of the names of the files written.
+A character vector of the full path names of the files written.
 }
 \description{
 Creates a folder named \code{ExamplePedigrees} under the R session temporary
 directory (as returned by \code{tempdir()}) if it does not already exist. It
-then proceeds to write each example pedigree into a CSV file named based on
-the name of the example pedigree.
+then proceeds to write each example data set into a CSV file named based on
+the name of the data set. The data sets include pedigrees and related
+lists, such as \code{focalAnimals}, \code{qcBreeders},
+\code{pedWithGenotype}, and \code{qcPed}.
 }
 \examples{
 library(nprcgenekeepr)

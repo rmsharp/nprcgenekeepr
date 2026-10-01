@@ -3,7 +3,10 @@
 
 #' Write copy of nprcgenekeepr::examplePedigree into a file
 #'
-#' Uses \code{examplePedigree} data structure to create an example data file
+#' Uses \code{examplePedigree} data structure to create an example data file.
+#' Files of type \code{"csv"} and \code{"txt"} are silently overwritten if
+#' they already exist. A file of type \code{"excel"} is never overwritten;
+#' if the file already exists, an error is signaled.
 #'
 #' @param file character vector of length one providing the file name
 #' @param fileType character vector of length one with possible values of
