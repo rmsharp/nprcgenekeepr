@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S827
 date: 2026-09-30
-status: pending
-active_task: Fix docs-audit slice 4 cluster 3: genetic-value pages (docs only)
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: fixed docs-audit slice 4 cluster 3 (genetic-value pages: _genetic_value_analysis.Rmd, _genome_uniqueness_algorithm.Rmd, genetic_value.html, population_genetics_terms.html, one sentence of summary_stats.html; docs only)
+what_was_done: Claim 172ddba8c; fixes 9d6dacb47; records in the close-out commit. Every claim re-read against modGeneticValue.R, calcA.R, calcGU.R, modSummaryStats.R. Fixed BA17-BA22, UG12 second half, UG24, UG25. Related doc tests, test_modGeneticValue.R and the genetic-value e2e pass; Rmd components render.
+next_steps: Slice 4 cluster 4 (pedigree browser, summary stats, ORIP, introduction, README re-render from README.Rmd children first; UG22, UG23, RM1-RM4, BA24), then slice 5. Grep tests/testthat for each page name first.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md, R/modPedigreeBrowser.R, R/modSummaryStats.R, README.Rmd
+gotchas: The R helpText at R/modGeneticValue.R:88 still says Summary Statistics relationship table (code, left alone). suggested_NEWS_entry.md untracked and breaks test_pkgdown_reference_config.R locally; ask owner commit or drop. Pages not opened in the running app.
 ```
 
 ```handoff

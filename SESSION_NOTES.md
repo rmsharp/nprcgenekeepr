@@ -98,64 +98,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 826 Handoff Evaluation (by Session 827)
+**Score: 9/10.** Next step (A) named the four cluster 3 files and finding ids, and the pointer to the BA21 wording in
+`gvAndBgDesc.html` saved a re-derivation; the "grep `tests/testthat` first" gotcha held (four test files read these pages, all
+pass). The lead about `colony-manager-guide.qmd:527-529` was clearly marked unverified, which was honest. **Missing:** UG24 also
+lives in `summary_stats.html` (cluster 4's file), and the R `helpText` at `R/modGeneticValue.R:88` repeats the same
+"Summary Statistics relationship table" wording but is code, not docs. **Wrong:** nothing found; the "4 untracked files" is now 1
+(`suggested_NEWS_entry.md`; the evidence HTMLs are gitignored or gone). **ROI:** high.
+
 ### What Session 827 Did
-**Deliverable:** fix docs-audit slice 4 cluster 3, the genetic-value pages (IN PROGRESS)
-**Started:** 2026-09-30
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE (docs only):** fixed slice 4 cluster 3 in `vignettes/manual_components/_genetic_value_analysis.Rmd`,
+`_genome_uniqueness_algorithm.Rmd`, `inst/extdata/ui_guidance/genetic_value.html`, `population_genetics_terms.html` and one
+sentence of `summary_stats.html`: BA17-BA22, UG12 second half, UG24, UG25. Truths now stated: the real controls (threshold 1-5
+default 4, Ranking Scheme with its categorical sub-controls, kinship-overrides upload, the two no-op checkboxes said to have no
+effect); no Minimum Breeding Age control; Rankings tab has Show top N (20), Filter by IDs / Filter View, Export All / Export Subset;
+scatter plot colours the top 10 red; the Summary tab is a Metric/Value table with the founder statistics, no SDs or
+distributions; `topAnimals` is the top 10; the analysis always trims to the current population's ancestors and sets no 6,000
+limit; genome uniqueness is a percentage (x100); an allele is rare when carried by at most N animals counting the animal itself.
+UG24: the relationship table is only an export, so the pages now say "exported relationships table".
+**Commits:** claim `172ddba8c`; fixes `9d6dacb47`; records (this).
+**Verification:** every claim re-read against `R/modGeneticValue.R` (UI at 25-130, trim at 295-315, summary table at 424-520),
+`R/calcA.R:36-48`, `R/calcGU.R:90-105`, `R/modSummaryStats.R`; HTML tag balance checked on the three pages; the two Rmd components
+render; `test_wordlist_coverage.R`, `test_kinshipOverrideDocs.R`, `test_effectivePopulationSizeDocs.R`, `test_modGvAndBgDesc.R`,
+`test_modGeneticValue.R` and `NPRC_RUN_E2E=true test-e2e-genetic-value-detailed.R` pass. Not run: full suite, lint (no `.R` change),
+app smoke test (3E: help text only, so the pages were not opened in the running app).
+**Learnings:** none new. **Reduction:** removed the S825 handoff evaluation and the "What Session 826 Did" block (in git and the S826 receipt).
 
-### Session 825 Handoff Evaluation (by Session 826)
-**Score: 9/10.** Next step (A) named all five files and the finding ids (BA1-BA16, BA30-31, UG11-UG21), and the audit tables carried
-file:line, claim, evidence and fix, so Orient to first edit was quick. The Learning 832 gotcha paid off: grepping `tests/testthat`
-first found that `test-e2e-breeding-groups-detailed.R:146` asserts the word "algorithm" on `group_formation.html`, which I kept; the
-e2e file passes. **Missing:** it did not say that UG11 (my cluster) depends on BA21's genome-uniqueness meaning (cluster 3), or that
-BA12/UG17 each include an `R/groupAddAssign.R` roxygen fix, which is not docs-only. **Wrong:** "7 untracked drafts" (only 4 untracked
-files exist now: 3 evidence HTMLs and `suggested_NEWS_entry.md`); "master 18 ahead" is now 21. **ROI:** high.
-
-### What Session 826 Did
-**Deliverable, DONE (docs only):** fixed slice 4 cluster 2 in `vignettes/manual_components/_breeding_group_formation.Rmd`,
-`_breeding_group_algorithm.Rmd`, `_gv_and_bg_desc.Rmd`, `inst/extdata/ui_guidance/group_formation.html` and `gvAndBgDesc.html`:
-BA1-BA11, BA13-BA16, BA30-31, UG11-UG21 (BA12 and UG17 fixed on the help/manual pages only). Truths now stated: "Upload list"
-behaves like "All available" (every animal in the current pedigree, not only the living population); the Statistics tab has Group,
-Total, Males, Females; Groups tab shows "Group N (M animals)" plus id/sex/birth/sire/dam; the Group Detail kinship table is always
-shown (the checkbox only fills the module's `groupKinship` value); the app's kinship threshold default is 0.25 (0.015625 is only the
-`groupAddAssign()` default); pairs at or above the threshold are kept apart; an animal exactly at the minimum age is not ignored;
-exhaustive mode stops with an error above 20 candidates and truncates after 10 s; the module returns character-vector groups
-(including an "Unused" group), `score`, `groupKinship`, `ancestryRules`; the score is the smallest group's size; the search picks
-the group first, then an animal, and keeps up to 5 distinct best sets; the genetic-value floor replaces "low-value toggle"; the female
-filter is always on in the app; ranking has two schemes (Combined is the default) with the tiers only under Categorical; Undetermined
-animals rank last; no highlighting, read the `value` column; genome-uniqueness threshold offers 1-5 (default 4) and counts the animal
-itself; simulations default to 10. Added short Minimum breeding age and Number of simulations bullets to the Rmd.
-**Commits:** claim `f2c2c4e54`; fixes `6a55bf613`; records (this).
-**Verification:** every claim re-read against `R/modBreedingGroups.R`, `R/groupAddAssign.R`, `R/fillGroupMembers.R`, `R/filterAge.R`,
-`R/filterThreshold.R`, `R/orderReport.R`, `R/rankSubjects.R`, `R/modGeneticValue.R`; the allele-count claim executed (`calcA()` with
-threshold 1 on an allele only A carries returns 1); HTML tag balance checked; three Rmd components render; `test_wordlist_coverage.R`,
-`test_modGvAndBgDesc.R`, `test_vignettes_no_deprecated_minParentAge.R`, `test_modBreedingGroups.R` and
-`NPRC_RUN_E2E=true test-e2e-breeding-groups-detailed.R` pass; `test_pkgdown_reference_config.R` fails only on the untracked
-`suggested_NEWS_entry` article, as S825 recorded. Not run: full suite, lint (no `.R` change), app smoke test (3E: help text only).
-**Learnings:** none new. **Reduction:** removed the S824 handoff evaluation and the "What Session 825 Did" block (in git and the S825 receipt).
-
-**Self-assessment: 8/10.** + One deliverable, all findings closed; every claim traced to code before writing; kept the e2e anchor
-word; caught that the kinship table is not in `gvAndBgDesc.html` and fixed my own wording; left R roxygen alone (not docs-only).
-- Did not open the pages in the running app (the e2e file only checks one word); the lead about the article captions below came
-  from reading code only, not from looking at the screenshots.
+**Self-assessment: 8/10.** + One deliverable, all cluster 3 findings closed; every claim traced to code; kept every phrase the doc tests
+assert. - Did not open the pages in the running app; left the R `helpText` at `R/modGeneticValue.R:88` (code, not docs) saying
+"Summary Statistics relationship table", so the in-app upload help and the html guidance now differ slightly; wording of "ten
+highest-ranked animals" in the Rmd rests on `topAnimals` using `rank <= 10`.
 
 **Next steps:**
-- (A) Slice 4 cluster 3, genetic-value pages (`_genetic_value_analysis.Rmd`, `_genome_uniqueness_algorithm.Rmd`, `genetic_value.html`,
-  `population_genetics_terms.html`; BA17-BA22, UG12 second half, UG24-UG25). BA21's meaning is now written in `gvAndBgDesc.html`
-  ("carried by at most N animals in all, counting the animal itself"); copy that wording. Grep `tests/testthat` for each page name first.
-- (B) Then cluster 4 (pedigree browser, summary stats, ORIP, introduction, README re-render from `README.Rmd`), slice 5 audit.
-- (C) Owner decisions and leftovers: the four code defects (now also the `groupAddAssign` roxygen "average" and "or younger" wording,
-  BA12/UG17), slice 2 screenshots, slice 1 leftovers, 4 untracked files (commit or drop?), `NEWS.md` lag, `CLAUDE.md` in the warn
-  band; master 21 ahead of origin (S825 recorded the first 18 as docs-only; this session's two commits are docs-only).
+- (A) Slice 4 cluster 4: pedigree browser, summary stats, ORIP, introduction, and README re-render from `README.Rmd` (children first);
+  findings UG22, UG23, RM1-RM4, BA24 and the rest of the cluster 4 rows in the audit. Grep `tests/testthat` for each page name first.
+  `summary_stats.html` UG24 is already fixed.
+- (B) Then slice 5 (`a2interactive.Rmd`, `man/`, `NEWS.Rmd`, internal docs).
+- (C) Owner decisions and leftovers: the four code defects (no-op GU/MK checkboxes now documented as no-ops; the `helpText` wording
+  above), `suggested_NEWS_entry.md` (commit or drop?), `NEWS.md` lag, `CLAUDE.md` in the warn band; master is 24 ahead of origin
+  (docs-only commits).
 
-**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md` (cluster 3 rows), `R/modGeneticValue.R:32-75,318-342,368-390`,
-`R/calcA.R:41-48`, `R/orderReport.R:55-145`, `inst/extdata/ui_guidance/gvAndBgDesc.html` (ranking section, now rewritten).
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE4_2026-09-30.md` (cluster 4 rows), `R/modPedigreeBrowser.R`, `R/modSummaryStats.R`,
+`README.Rmd` and its child components under `vignettes/manual_components/`.
 
-**Gotchas:** a lead, not verified in the app: `vignettes/articles/colony-manager-guide.qmd:527-529` captions describe Group Detail
-"no kinship shown" vs "with kinship values included", but the module always renders the within-group kinship table
-(`R/modBreedingGroups.R:1055-1070`); the screenshots may predate that. `test_pkgdown_reference_config.R` still fails locally on the
-untracked `suggested_NEWS_entry` article.
+**Gotchas:** `test_pkgdown_reference_config.R` still fails locally on the untracked `suggested_NEWS_entry` article. A lead, not
+verified in the app: `vignettes/articles/colony-manager-guide.qmd:527-529` captions say Group Detail shows "no kinship" vs "with
+kinship values", but the module always renders the kinship table (`R/modBreedingGroups.R:1055-1070`).
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809
