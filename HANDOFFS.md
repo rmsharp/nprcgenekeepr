@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S839
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: fix the 29 slice-6c docs-staleness findings in R/*.R roxygen (docs only)
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE: fixed all 29 slice-6c docs-staleness findings in R/*.R roxygen (19 files), man/ regenerated; docs only, code candidates untouched
+what_was_done: Claim 3075b7b50; fixes 48aabebb6, 65be5d010, 4d0042987, 03493492a; records in the close-out commit. Roxygen only, no code or test change. Examples run, lintr 0, wordlist test pass, devtools::check(--no-tests) 0 errors / 0 warnings / 1 note (untracked suggested_NEWS_entry.md). Re-ran the behaviors I newly documented (all-NA He, numeric(0) frequency, markerLdBlock edge cases, checker accepts a missing allele); the rest of the wording rests on the audit and a source read
+next_steps: Audit slice 6d (160 man/ pages left, one topic group: Shiny mod* ~28, obfuscate*, pedigree-tree/getters), read-only. Owner decisions on code: 8 slice-6c candidates, PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3, then reword their docs; suggested_NEWS_entry.md commit or drop. Master is 37 ahead of origin; push only on owner say-so
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md, R/computeGenomicROH.R:19-32, R/hasGenotype.R:4-15, R/buildMarkerGenotypeMatrix.R:11-30, BACKLOG.md:197
+gotchas: git checkout man/nprcgenekeepr-package.Rd after document(). Append to inst/WORDLIST rather than re-sort, but prefer rewording (genotype's was flagged). Run lint_package() after roxygen edits that join lines. Code candidate 7 is worse than the audit said: checkMarkerGenotypeFile does not reject a missing allele, so buildMarkerGenotypeMatrix yields "NA/NA" even after it
 ```
 
 ```handoff
