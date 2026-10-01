@@ -3,7 +3,13 @@
 	to their genetic value to the breeding colony, based on an algorithm
 	that incorporates measures of mean kinship to the rest of the colony,
 	as well as the probability that an animal contains rare founder alleles
-	that should be conserved in the colony.
+	that should be conserved in the colony. The <b>Ranking Scheme</b> control
+	chooses how the two are combined: <b>Combined (kinship - uniqueness)</b>,
+	the default, ranks animals by mean kinship minus genome uniqueness, and
+	<b>Categorical (priority order)</b> sorts animals into tiers. The
+	<b>Genome Uniqueness Threshold</b> (1-5, default 4) is the largest number
+	of animals, counting the animal itself, that may carry an allele for it to
+	count as rare.
 </p>
 
 <p>
@@ -60,7 +66,7 @@
 	values on this tab, they replace the pedigree-derived kinship for the
 	listed pairs and feed the rankings, breeding groups, and summary
 	statistics regardless of tab order. They change the kinship
-	<em>value</em> only: in the Summary Statistics relationship table the
+	<em>value</em> only: in the relationship table exported from the Summary Statistics tab the
 	relationship label stays pedigree-derived, so a label and its
 	overridden value can disagree. The iteration-convergence check above
 	(<b>gvaConvergence()</b>) applies these overrides as well, ranking on the

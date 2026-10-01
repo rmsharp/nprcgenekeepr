@@ -27,14 +27,24 @@ The left panel contains controls for configuring the analysis:
   (default: 1000, range: 100-10,000). More iterations provide more accurate
   genome uniqueness estimates but take longer to compute.
 
-- **Calculate Genome Uniqueness**: Toggle whether to run the gene-drop simulation
-  to estimate genome uniqueness values.
+- **Genome Uniqueness Threshold**: An allele counts as rare when it is carried
+  by at most this many animals in all, counting the animal itself (choices
+  1-5, default 4).
 
-- **Calculate Mean Kinship**: Toggle whether to compute pairwise kinship
-  coefficients and individual mean kinship values.
+- **Ranking Scheme**: "Combined (kinship - uniqueness)" (the default) ranks
+  animals by mean kinship minus genome uniqueness. "Categorical (priority
+  order)" sorts animals into tiers instead and shows three more controls: the
+  priority axis (genome uniqueness first or mean kinship first), the
+  high-uniqueness cutoff (default 10), and the low-kinship z-score cutoff
+  (default 0.25).
 
-- **Minimum Breeding Age**: Slider to set the minimum age (in years) for animals
-  to be considered in the breeding population (default: 2 years).
+- **Calculate Genome Uniqueness** and **Calculate Mean Kinship**: Two
+  checkboxes, both checked. They currently have no effect: the analysis always
+  calculates both measures.
+
+- **Kinship Overrides (optional)**: Upload a CSV or Excel file with the columns
+  `id1`, `id2` and `kinship` to replace the pedigree-derived kinship for the
+  listed pairs.
 
 - **Run Analysis**: Click to start the genetic value computation.
 
@@ -46,34 +56,43 @@ The information panel explains the key metrics:
   all other members of the population. **Lower values are better** as they
   indicate the animal is less related to the population.
 
-- **Genome Uniqueness**: The proportion of an individual's genome that is unique
-  in the population based on gene-drop simulation. **Higher values are better**
-  as they indicate the animal carries rare genetic material.
+- **Genome Uniqueness**: The percentage of an individual's simulated allele
+  copies that are rare in the population, based on gene-drop simulation. It is
+  shown on a 0-100 scale, not as a proportion. **Higher values are better** as
+  they indicate the animal carries rare genetic material.
 
 ### Results Tabs
 
 After running the analysis, results are displayed across three tabs:
 
 1. **Rankings**: Interactive table showing animals ranked by genetic value.
-   - Adjust "Show top N" to view more or fewer animals
-   - Download button exports the full rankings to CSV
+   - Adjust "Show top N" to view more or fewer animals (default 20)
+   - "Filter by IDs" with "Filter View" shows only the animals you list
+   - "Export All" saves the full rankings to CSV and "Export Subset" saves the
+     filtered view
 
 2. **Visualizations**: Scatter plot showing the relationship between
-   mean kinship and genome uniqueness values.
+   mean kinship and genome uniqueness values. The ten highest-ranked animals
+   are red and all others are blue.
 
-3. **Summary**: Statistical summary of genetic value metrics including
-   means, standard deviations, and distributions.
+3. **Summary**: A Metric/Value table with the number of animals analyzed, the
+   average mean kinship and genome uniqueness, the largest genome-uniqueness
+   standard error, and the founder statistics (total, male and female founders,
+   founder equivalents, founder genome equivalents, gene diversity, and the
+   sex-ratio and variance effective population sizes). It shows no standard
+   deviations or distributions.
 
 ### Module Interface
 
 The `modGeneticValue` module returns reactive values for downstream use:
 
 - `geneticValues`: Data frame with genetic value metrics for all animals
-- `topAnimals`: Subset of highest-value animals
+- `topAnimals`: The ten highest-ranked animals
 - `nAnalyzed`: Count of animals included in the analysis
 
 ### Performance Notes
 
-The kinship calculation can handle pedigrees up to approximately 6,000 individuals.
-For larger pedigrees, the input studbook will automatically be trimmed to the
-ancestors of the currently-specified population before analysis begins.
+Before the analysis begins, the pedigree is always trimmed to the ancestors of
+the current population (the living animals, or every animal when the pedigree
+has no `exit` column). The application sets no fixed limit on pedigree size, so
+a large pedigree simply takes longer to analyze.
