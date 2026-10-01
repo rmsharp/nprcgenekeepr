@@ -3,9 +3,10 @@
 
 #' Build a kValue table from a list of kinship matrices
 #'
-#' A \code{kValue} matrix has one row for each pair of individuals in the kinship
-#' matrix and one column for each kinship matrix. Thus, in a kinship matrix with
-#' 20 individuals the kinship matrix will have 20 rows by 20 columns but only
+#' A \code{kValue} matrix has one row for each pair of individuals in the
+#' kinship matrix and one column for each kinship matrix. Thus, in a kinship
+#' matrix with 20 individuals the kinship matrix will have 20 rows by 20
+#' columns but only
 #' the upper or lower triangle has unique information as the diagonal values
 #' are the self-kinship coefficients, \eqn{(1 + F) / 2} (0.5 for a non-inbred
 #' animal), and the upper triangle has the same values as the lower

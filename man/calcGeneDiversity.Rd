@@ -11,8 +11,9 @@ calcGeneDiversity(fg)
 or the \code{$FG} element of \code{calcFEFG()}. \code{NA} yields \code{NA}.}
 }
 \value{
-The gene diversity \code{GD = 1 - 1 / (2 * fg)}: a single number below 1
-(realized values lie in \code{[0, 1)}), or \code{NA} when \code{fg} is \code{NA}.
+The gene diversity \code{GD = 1 - 1 / (2 * fg)}: a single number
+below 1 (realized values lie in \code{[0, 1)}), or \code{NA} when \code{fg}
+is \code{NA}.
 }
 \description{
 Part of the Genetic Value Analysis

@@ -20,9 +20,10 @@ individuals in the kinship matrix provided to the function and the
 Unlike the kinship matrix, each possible pairing of IDs appears once.
 }
 \description{
-A \code{kValue} matrix has one row for each pair of individuals in the kinship
-matrix and one column for each kinship matrix. Thus, in a kinship matrix with
-20 individuals the kinship matrix will have 20 rows by 20 columns but only
+A \code{kValue} matrix has one row for each pair of individuals in the
+kinship matrix and one column for each kinship matrix. Thus, in a kinship
+matrix with 20 individuals the kinship matrix will have 20 rows by 20
+columns but only
 the upper or lower triangle has unique information as the diagonal values are
 each animal's self-kinship, \eqn{(1 + F) / 2} (0.5 when not inbred), and the
 upper triangle has the same values as the lower triangle. The \code{kValue}
