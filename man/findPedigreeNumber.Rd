@@ -18,7 +18,10 @@ individual's mother (\code{NA} if unknown).}
 \value{
 Integer vector indicating the pedigree (family group) number for
 each id. Ids that are connected through parent-offspring links share the
-same number; numbering starts at 1.
+same number; numbering starts at 1. Numbering starts from ids with both
+parents unknown (\code{NA}), so an id that cannot be reached from such an
+id, for example one whose only parent is absent from \code{id}, or one in
+a cycle, is returned as \code{NA}.
 }
 \description{
 One of Pedigree Curation functions

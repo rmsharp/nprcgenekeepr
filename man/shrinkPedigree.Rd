@@ -49,23 +49,13 @@ counts: original, after tiers 1-2, and final.}
 }
 }
 \description{
-A \code{kinship2::pedigree.shrink()} equivalent (Track B of
-\code{docs/planning/kinship2-supplement-full-reproduction-plan.md} §4):
-trims a pedigree down to the individuals needed to keep it genetically
+Trims a pedigree down to the individuals needed to keep it genetically
 informative within a genotyping-cost budget (\code{maxBits}), given which
 individuals are genotyped (\code{genotyped}) and, optionally, which are
-affected by a trait of interest (\code{affected}).
-}
-\details{
-Ported from kinship2's own \code{pedigree.shrink()} orchestrator and its 5
-internal helpers (\code{bitSize}, \code{findUnavailable} --
-\code{excludeUnavailFounders}/\code{excludeStrayMarryin} --,
-\code{findAvailNonInform}, \code{findAvailAffected},
-\code{pedigree.trim}), all deparsed directly from the installed
-\code{kinship2} namespace (1.9.6.2), over this package's own
-\code{id}/\code{sire}/\code{dam} data-frame pedigree representation
-(kinship2 uses an S3 \code{pedigree} object with integer row indices
-instead). Three tiers, applied in order:
+affected by a trait of interest (\code{affected}). It is equivalent to
+\code{kinship2::pedigree.shrink()}, working on this package's
+\code{id}/\code{sire}/\code{dam} data-frame pedigree. Three tiers are
+applied in order:
 \enumerate{
 \item \strong{Unavailable trim.} Iteratively removes terminal (leaf)
 individuals who are not genotyped, then removes any founder couple
@@ -73,47 +63,32 @@ with exactly one child together and no other mate, when both parents
 are themselves founders and neither is genotyped (the couple's shared
 child is promoted to founder status rather than removed), then removes
 any remaining childless founder ("stray marry-in") \emph{regardless of
-genotyped status} -- matching kinship2's own \code{excludeStrayMarryin},
-which does not consult availability at all.
+genotyped status}.
 \item \strong{Non-informative trim.} Removes a genotyped, non-parent
 individual whose own \code{sire} and \code{dam} are both known and both
 genotyped, when the individual is not \code{affected} (an \code{NA}
-\code{affected} status counts as unaffected here, matching kinship2's
-own \code{all(x == 0, na.rm = TRUE)} rule) -- they add no genotype
-information beyond what their parents already supply. A single-known-
-parent individual (one of \code{sire}/\code{dam} known, the other
-\code{NA}) is never trimmed by this tier: kinship2's own
-\code{pedigree()} constructor forbids that input shape entirely
-("Subjects must have both a father and mother, or have neither",
-confirmed against the installed namespace), so its algorithm never has
-to define this case -- this package's pedigrees allow partial
-parentage as ordinary data (see \code{\link{getIdsWithOneParent}}), so
-a literal port would divide a zero-length vector and error. This is a
-deliberate, documented package-specific extension, not a kinship2
-behavior.
+\code{affected} status counts as unaffected here) -- they add no
+genotype information beyond what their parents already supply. An
+individual with only one known parent (one of \code{sire}/\code{dam}
+known, the other \code{NA}) is never trimmed by this tier. Such partial
+parentage is ordinary data in this package (see
+\code{\link{getIdsWithOneParent}}), whereas kinship2 does not allow it.
 \item \strong{Affected-priority trim.} While the pedigree's bit size
 (\code{2 * nNonFounder - nFounder}) still exceeds \code{maxBits},
 removes one genotyped, non-parent individual at a time -- trying
 \code{NA}-affected candidates first, then unaffected, then affected --
 choosing whichever single candidate's removal (including any cascade
 through tiers 1-2 above) minimizes the resulting bit size. Ties are
-broken deterministically by lowest \code{id}, compared as a string
-(ratified design decision D-B2) -- kinship2's own reference
-implementation breaks ties via \code{runif()} against the global RNG
-state, so the \emph{same} input can produce a \emph{different} answer
-run-to-run; a live, multi-seed comparison against the installed
-\code{kinship2} confirmed this is a genuine difference in reference
-behavior, not a hypothetical one. Unlike kinship2's own
-\code{idTrimmed}/\code{idList$affect} fields, which record only the
-single trial candidate per round even when its removal cascades
-further (confirmed live: a fixture exists where kinship2's own
-\code{pedSizeFinal} drops by 2 in one round but \code{idTrimmed} names
-only 1) -- \code{shrinkPedigree()}'s \code{idTrimmed}/
-\code{idList$affected} record every id actually removed each round, so
+broken deterministically by lowest \code{id}, compared as a string, so
+the same input always gives the same answer (kinship2 breaks ties at
+random). \code{idTrimmed} and \code{idList$affected} record every id
+actually removed each round, including those removed by a cascade, so
 \code{pedSizeOriginal - pedSizeFinal} always equals
-\code{length(idTrimmed)}. This does not change which individuals
-survive, only the completeness of the returned audit trail.
+\code{length(idTrimmed)}.
 }
+}
+\details{
+A fully genotyped pedigree can shrink to zero rows (see the example).
 }
 \examples{
 library(nprcgenekeepr)
@@ -121,6 +96,7 @@ ped <- nprcgenekeepr::examplePedigree[, c("id", "sire", "dam")]
 genotyped <- rep(TRUE, nrow(ped))
 result <- shrinkPedigree(ped, genotyped, maxBits = 16L)
 nrow(ped)
+## With every individual genotyped, the whole pedigree can be trimmed away.
 nrow(result$ped)
 }
 \references{

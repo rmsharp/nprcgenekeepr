@@ -8,7 +8,8 @@ addUIds(ped, format = getAutoIdFormat())
 }
 \arguments{
 \item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
-information. The fields \code{sire} and \code{dam} are required.}
+information. The fields \code{id}, \code{sire} and \code{dam} are
+required.}
 
 \item{format}{\code{sprintf} template for the generated placeholder IDs;
 defaults to \code{\link{getAutoIdFormat}()} (\code{"U\%04d"}).}

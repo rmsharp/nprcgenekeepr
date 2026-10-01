@@ -30,7 +30,7 @@
 #' @examples
 #' library(nprcgenekeepr)
 #' ped <- nprcgenekeepr::qcPed
-#' ped <- qcStudbook(ped, minParentAge = 0)
+#' ped <- qcStudbook(ped, minSireAge = 0, minDamAge = 0)
 #' pedTree <- createPedTree(ped)
 #' pedLoops <- findLoops(pedTree)
 #' ids <- names(pedTree)

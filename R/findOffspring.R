@@ -8,17 +8,19 @@
 #' @param probands character vector of egos for which offspring should be
 #' counted and returned.
 #' @param ped the pedigree information in datatable format.  Pedigree
-#' (req. fields: id, sire, dam, gen, population).
+#' (req. fields: id, sire, dam).
 #' This requires complete pedigree information.
-#' @return A named vector containing the offspring counts for each animal in
-#' \code{probands}. Rownames are set to the IDs from \code{probands}.
+#' @return A named integer vector containing the offspring counts for each
+#' animal in \code{probands}. The names are set to the IDs from
+#' \code{probands}, and an ID that is not a parent in \code{ped} gets 0.
 #'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
-#'   minParentAge = 2,
+#'   minSireAge = 2,
+#'   minDamAge = 2,
 #'   reportChanges = FALSE,
 #'   reportErrors = FALSE
 #' )

@@ -17,7 +17,8 @@ a place holder record where parent (\code{sire},
 \value{
 A data.frame with pedigree structure containing all direct relatives
 -- the full connected pedigree component (ancestors, descendants, and
-collaterals) -- for the Ids provided.
+collaterals) -- for the Ids provided. \code{NULL} is returned when the
+LabKey data cannot be fetched.
 }
 \description{
 Builds the pedigree of relatives for the provided focal animals from the

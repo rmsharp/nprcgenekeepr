@@ -19,7 +19,9 @@ include all IDs in the pedigree.}
 A dataframe with column \code{id}, \code{parents}, \code{offspring},
 \code{siblings}, and \code{total}. A table of first-order relationship
 counts, broken down to indicate the number of parents, offspring, and
-siblings that are part of the subset under consideration.
+siblings that are part of the subset under consideration. Siblings are
+animals with the same sire and the same dam, so half-siblings are not
+counted and an animal with an unknown sire or dam has 0 siblings.
 }
 \description{
 Part of Relations

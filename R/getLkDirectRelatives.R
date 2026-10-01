@@ -18,7 +18,8 @@
 #'
 #' @return A data.frame with pedigree structure containing all direct relatives
 #' -- the full connected pedigree component (ancestors, descendants, and
-#' collaterals) -- for the Ids provided.
+#' collaterals) -- for the Ids provided. \code{NULL} is returned when the
+#' LabKey data cannot be fetched.
 #'
 #' @family direct relatives
 #' @export

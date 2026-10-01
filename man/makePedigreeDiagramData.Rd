@@ -10,21 +10,27 @@ makePedigreeDiagramData(ped, twinRelations = NULL)
 \item{ped}{data frame with \code{id}, \code{sire}, \code{dam}, \code{sex},
 and \code{gen} columns (\code{sire}/\code{dam} \code{NA} for unknown
 parents; \code{gen} an integer generation number, 0 for founders, as
-produced by \code{\link{findGeneration}}).}
+produced by \code{\link{findGeneration}}). Two optional columns are
+used when present: a logical \code{affected} column, which adds an
+affected-status line to \code{title} and fills affected nodes with
+\code{color.background} \code{"#CC79A7"} (all other nodes are white,
+\code{"#FFFFFF"}); and a character \code{name} column, which is shown
+in \code{label} (long names are truncated) and in \code{title}.}
 
 \item{twinRelations}{optional data.frame with columns \code{id1},
-\code{id2}, \code{code} (see \code{\link{checkTwinRelations}}) --
-issue #137 D1/D6. Not validated here; validate with
-\code{\link{checkTwinRelations}} first. \code{NULL} (default) adds no
-connector edges and leaves \code{edges} unchanged from the pre-#137
-contract (\code{from}, \code{to} only).}
+\code{id2}, \code{code} (see \code{\link{checkTwinRelations}}). Not
+validated here; validate with \code{\link{checkTwinRelations}} first.
+\code{NULL} (default) adds no connector edges, so \code{edges} has
+only \code{from} and \code{to}.}
 }
 \value{
 A list with two data frames: \code{nodes} (\code{id}, \code{label},
-\code{shape}, \code{level}, \code{title}) and \code{edges} (\code{from},
-\code{to}, plus \code{dashes}/\code{label}/\code{color} when
-\code{twinRelations} is supplied). \code{title} is an HTML hover-tooltip
-string (issue #135) giving ID, sex, generation, sire, and dam.
+\code{shape}, \code{level}, \code{title}, \code{color.background})
+and \code{edges} (\code{from}, \code{to}, plus
+\code{dashes}/\code{label}/\code{color} when \code{twinRelations} is
+supplied). \code{title} is an HTML hover-tooltip string giving ID, sex,
+generation, sire, and dam (and affected status and name when those
+optional columns are present).
 }
 \description{
 Builds the node and edge tables consumed by \code{visNetwork::visNetwork()}

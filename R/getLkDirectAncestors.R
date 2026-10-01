@@ -7,8 +7,10 @@
 #' table.
 #'
 #' @inheritParams getParents
-#' @return data.frame with pedigree structure having all of the direct ancestors
-#' for the Ids provided.
+#' @return data.frame with pedigree structure having the records of the Ids
+#' provided (the focal animals themselves) and all of their direct ancestors.
+#' \code{NULL} is returned when the site configuration cannot be read or the
+#' LabKey data cannot be fetched.
 #'
 #' @importFrom futile.logger flog.debug
 #' @importFrom stringi stri_c

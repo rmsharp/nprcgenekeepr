@@ -11,18 +11,24 @@
 #' @param ped data frame with \code{id}, \code{sire}, \code{dam}, \code{sex},
 #'   and \code{gen} columns (\code{sire}/\code{dam} \code{NA} for unknown
 #'   parents; \code{gen} an integer generation number, 0 for founders, as
-#'   produced by \code{\link{findGeneration}}).
+#'   produced by \code{\link{findGeneration}}). Two optional columns are
+#'   used when present: a logical \code{affected} column, which adds an
+#'   affected-status line to \code{title} and fills affected nodes with
+#'   \code{color.background} \code{"#CC79A7"} (all other nodes are white,
+#'   \code{"#FFFFFF"}); and a character \code{name} column, which is shown
+#'   in \code{label} (long names are truncated) and in \code{title}.
 #' @param twinRelations optional data.frame with columns \code{id1},
-#'   \code{id2}, \code{code} (see \code{\link{checkTwinRelations}}) --
-#'   issue #137 D1/D6. Not validated here; validate with
-#'   \code{\link{checkTwinRelations}} first. \code{NULL} (default) adds no
-#'   connector edges and leaves \code{edges} unchanged from the pre-#137
-#'   contract (\code{from}, \code{to} only).
+#'   \code{id2}, \code{code} (see \code{\link{checkTwinRelations}}). Not
+#'   validated here; validate with \code{\link{checkTwinRelations}} first.
+#'   \code{NULL} (default) adds no connector edges, so \code{edges} has
+#'   only \code{from} and \code{to}.
 #' @return A list with two data frames: \code{nodes} (\code{id}, \code{label},
-#'   \code{shape}, \code{level}, \code{title}) and \code{edges} (\code{from},
-#'   \code{to}, plus \code{dashes}/\code{label}/\code{color} when
-#'   \code{twinRelations} is supplied). \code{title} is an HTML hover-tooltip
-#'   string (issue #135) giving ID, sex, generation, sire, and dam.
+#'   \code{shape}, \code{level}, \code{title}, \code{color.background})
+#'   and \code{edges} (\code{from}, \code{to}, plus
+#'   \code{dashes}/\code{label}/\code{color} when \code{twinRelations} is
+#'   supplied). \code{title} is an HTML hover-tooltip string giving ID, sex,
+#'   generation, sire, and dam (and affected status and name when those
+#'   optional columns are present).
 #'
 #' @examples
 #' library(nprcgenekeepr)
@@ -1564,114 +1570,87 @@ makePedigreeDiagramData <- function(ped, twinRelations = NULL) {
              stringsAsFactors = FALSE)
 }
 
-#' Combine the Option 2 mating-unit forest into visNetwork-ready diagram data
+#' Combine the mating-unit forest into visNetwork-ready diagram data
 #'
-#' The exported wrapper for the kinship2-parity pedigree layout (Pedigree
-#' Diagram Option 2,
-#' \code{docs/planning/pedigree-diagram-option2-layout-design-plan.md}).
-#' Combines \code{.buildMatingUnitForest()} (D1/D2) and
-#' \code{.positionMatingUnitForest()} (D3/D4/D5) into the same
-#' \code{list(nodes, edges)} shape \code{\link{makePedigreeDiagramData}}
-#' already returns, plus the \code{duplicateNodeId -> realId} lookup table
-#' D6 needs. \code{\link{makePedigreeDiagramData}} itself is unaffected --
-#' this is an additive sibling function (Migration Path step 2).
+#' Builds a kinship2-style pedigree layout in which each mating (a sire and
+#' dam pair) is drawn as a union node between the parents and their
+#' offspring. Returns the same \code{list(nodes, edges)} shape that
+#' \code{\link{makePedigreeDiagramData}} returns, plus a lookup table that
+#' maps each duplicate node id to the real individual it stands for.
+#' \code{\link{makePedigreeDiagramData}} itself is unaffected; this is a
+#' separate function.
 #'
 #' Mating-unit nodes render as a small, unlabeled dot with an
-#' offspring-count tooltip -- visually distinct from the 5 sex-coded
-#' shapes without a dedicated legend entry (D6, verified via a live
-#' \code{chromote} render this session). Duplicate nodes keep their real
-#' individual's own shape/label/tooltip content (plus a duplicate-
-#' occurrence cue) so they read as that individual, connected to it by a
-#' dashed edge. Edges are direct parent -> mating-unit and mating-unit ->
-#' child segments (owner-directed, S461) -- not the fully rectilinear
-#' mate-line/sibship-bar waypoint style S457's original Case C2
-#' proof-of-concept used; that style is tracked as a deferred, additive
-#' follow-up (issue #142) rather than built speculatively here.
+#' offspring-count tooltip, visually distinct from the 5 sex-coded shapes.
+#' An individual who has to appear more than once in the layout gets
+#' duplicate nodes. A duplicate node keeps the real individual's own
+#' shape, label and tooltip content (plus a cue that it is a duplicate), so
+#' it reads as that individual, and is connected to it by a dashed edge.
 #'
-#' Male-left/female-right ordering (issue #145) -- every simple two-real-
-#' parent mating unit (mate-count exactly 1 each, unambiguous
-#' \code{"M"}/\code{"F"} sex codes, neither parent with a D5 direct child
-#' of their own) renders with the male parent to the left of the female
-#' parent -- is now unconditional, folded directly into the positioning
-#' engine's own provisional-seeding rules
-#' (\code{.positionMatingUnitForest()}, an internal function -- the S666
-#' conditional-shift pass's sex-sign rule and Decision 1's
-#' order-consistent seeding side rule); since the QP migration
-#' (\code{docs/planning/pedigree-diagram-joint-qp-solver-plan.md}) the
-#' final x for every node comes from \code{.solveJointQP()}, which
-#' preserves each row's provisional left-to-right order, so the rule
-#' survives into the rendered layout. The former \code{orderBySex}
-#' parameter that toggled this is removed: the Phase 1b design note found
-#' the mechanism "restructured, not preserved unchanged -- eliminated
-#' as a separate pass," with no way to disable it in the new engine, and
-#' this function had zero real callers ever passing \code{orderBySex =
-#' FALSE} (grep-confirmed).
+#' In the default \code{"rectilinear"} edge style, mate-line and
+#' sibship-bar edges are routed through invisible waypoint nodes so they
+#' render as strict right angles, as kinship2 draws them. In the
+#' \code{"direct"} edge style, edges are straight segments from each parent
+#' to the mating unit and from the mating unit to each child.
+#'
+#' A simple two-real-parent mating unit (each parent has exactly one
+#' mate and both have unambiguous \code{"M"}/\code{"F"} sex codes) is
+#' drawn with the male parent to the left of the female parent. The final
+#' horizontal positions come from a joint quadratic program that preserves
+#' each row's provisional left-to-right order, so this rule carries into
+#' the rendered layout. It cannot be turned off.
 #'
 #' @param ped data frame with \code{id}, \code{sire}, \code{dam},
 #'   \code{sex}, and \code{gen} columns, same contract as
 #'   \code{\link{makePedigreeDiagramData}}.
-#' @param edgeStyle one of \code{"rectilinear"} (default since Track 2,
-#'   docs/planning/pedigree-diagram-kinship2-fidelity-remediation-plan.md --
-#'   issue #142's routing of mate-line and sibship-bar edges through
-#'   invisible waypoint nodes via \code{.addRectilinearWaypoints()} so they
-#'   render as a strict right angle, kinship2-style, instead of a direct
-#'   diagonal/straight segment) or \code{"direct"} (this function's own
-#'   original behavior -- a straight edge from each parent to their mating
-#'   unit and from each mating unit to each child).
+#' @param edgeStyle one of \code{"rectilinear"} (default), which routes
+#'   mate-line and sibship-bar edges through invisible waypoint nodes so
+#'   they render as a strict right angle, kinship2-style, or
+#'   \code{"direct"}, which draws a straight edge from each parent to
+#'   their mating unit and from each mating unit to each child.
 #' @param twinRelations optional data.frame with columns \code{id1},
-#'   \code{id2}, \code{code} (see \code{\link{checkTwinRelations}}) --
-#'   issue #137 D1/D6/D7. Not validated here; validate with
-#'   \code{\link{checkTwinRelations}} first. \code{NULL} (default) adds no
-#'   connector edges and leaves \code{edges} unchanged from the pre-#137
-#'   contract. A connector always targets the two individuals' REAL node
-#'   ids (D7) and always renders as a direct edge regardless of
-#'   \code{edgeStyle} (D9).
+#'   \code{id2}, \code{code} (see \code{\link{checkTwinRelations}}). Not
+#'   validated here; validate with \code{\link{checkTwinRelations}} first.
+#'   \code{NULL} (default) adds no connector edges. A connector always
+#'   targets the two individuals' real node ids and always renders as a
+#'   direct edge regardless of \code{edgeStyle}.
 #' @param kinshipMatrix optional precomputed kinship matrix (a base
 #'   \code{matrix} or a \code{Matrix}) with row AND column names set to
-#'   individual ids -- Prep D-1 (S744; package-split scoping doc
-#'   \code{docs/research/pedigree-diagram-package-split-scoping-2026-09-02.md}
-#'   §4 D3 option ii, the dependency inversion). When supplied, it
-#'   replaces this function's internal \code{\link{kinship}()} call as the
-#'   SOLE source of the consanguineous-mating-unit flags
-#'   (\code{kinshipMatrix[sire, dam] > 0}): \code{twinRelations} then
-#'   drives twin CONNECTOR edges only, so a caller wanting twin-corrected
-#'   consanguinity must bake it into the matrix (e.g.
-#'   \code{kinship(..., twinRelations = ...)}). A sire/dam id absent from
-#'   the matrix's dimnames leaves that unit at the safe \code{FALSE}
-#'   default, exactly like the dangling-parent guard on the default path.
-#'   \code{NULL} (default) computes
+#'   individual ids. When supplied, it replaces this function's internal
+#'   \code{\link{kinship}()} call as the sole source of the
+#'   consanguineous-mating-unit flags (\code{kinshipMatrix[sire, dam] > 0}):
+#'   \code{twinRelations} then drives twin connector edges only, so a
+#'   caller wanting twin-corrected consanguinity must bake it into the
+#'   matrix (e.g. \code{kinship(..., twinRelations = ...)}). A sire/dam id
+#'   absent from the matrix's dimnames leaves that unit at the safe
+#'   \code{FALSE} default, exactly as a dangling parent does on the default
+#'   path. \code{NULL} (default) computes
 #'   \code{kinship(ped$id, ped$sire, ped$dam, ped$gen,
-#'   twinRelations = twinRelations)} exactly as before, so no existing
-#'   caller changes.
+#'   twinRelations = twinRelations)}.
 #' @return A list with \code{nodes} (\code{id}, \code{label}, \code{shape},
-#'   \code{title}, \code{size}, \code{x}, \code{y}), \code{edges}
-#'   (\code{from}, \code{to}, \code{dashes}, \code{color}, \code{width} --
-#'   the latter 2 ALWAYS present once any mating unit exists, S549 Finding
-#'   #2 fixed S555: a consanguineous mating unit's (\code{kinship(sire,
-#'   dam) > 0}) 2 spouse-to-union edges get \code{"#D55E00"}/\code{4} (an
-#'   Okabe-Ito colorblind-safe vermillion, kinship2's own doubled/
-#'   thickened mate-line convention), every other edge \code{NA}; plus
-#'   \code{label} when \code{twinRelations} is supplied -- D10, found
-#'   never wired at S494, fixed S506), and \code{duplicateToReal} (a named
-#'   character vector, duplicate node id -> real individual id). Under
-#'   \code{edgeStyle = "rectilinear"}, \code{nodes} gains
-#'   \code{color.background}/\code{color.border} and \code{edges}
-#'   unconditionally gains \code{color} (see
-#'   \code{.addRectilinearWaypoints()}) -- an already-set edge \code{color}
-#'   (e.g. the twin connector's or the consanguinity marker's) is
-#'   preserved when the edge is KEPT as-is; a marked mate edge that gets
-#'   replaced by a D2 dogleg projection currently falls back to the
-#'   generic routing color/width (edgeStyle = "rectilinear" propagation is
-#'   a deferred follow-up, BACKLOG.md Housekeeping). Also
-#'   \code{isolatedIds} (issue #164 / P5-suppression plan, Dragon 2-3,
-#'   RATIFIED S643): a character vector of ids suppressed from
-#'   \code{nodes}/\code{edges} because they have no known parent, are
-#'   never a parent, and are not \code{twinRelations}-connected --
-#'   \code{character(0)} when nothing was suppressed. When every
-#'   individual in \code{ped} is isolated, \code{nodes}/\code{edges} are
-#'   both 0-row and \code{duplicateToReal} is empty (this is also issue
-#'   #164's fix -- the function no longer crashes on an all-isolated
-#'   \code{ped}).
+#'   \code{title}, \code{size}, \code{color.background}, \code{x},
+#'   \code{y}; \code{color.border} is added under
+#'   \code{edgeStyle = "rectilinear"}), \code{edges} (\code{from},
+#'   \code{to}, \code{dashes}, \code{smooth.enabled}, \code{smooth.type},
+#'   \code{smooth.roundness}, \code{color}, \code{width}; the \code{color}
+#'   and \code{width} columns are always present once any mating unit
+#'   exists: a consanguineous mating unit's (\code{kinship(sire, dam) > 0})
+#'   2 spouse-to-union edges get \code{"#D55E00"}/\code{4}, an Okabe-Ito
+#'   colorblind-safe vermillion in kinship2's doubled/thickened mate-line
+#'   convention, and every other edge gets \code{NA}; \code{label} is added
+#'   when \code{twinRelations} is supplied), and \code{duplicateToReal} (a
+#'   named character vector, duplicate node id -> real individual id).
+#'   Under \code{edgeStyle = "rectilinear"}, an already-set edge
+#'   \code{color} (e.g. the twin connector's or the consanguinity
+#'   marker's) is preserved when the edge is kept as-is; a marked mate edge
+#'   that gets replaced by a right-angle projection currently falls back to
+#'   the generic routing color and width. Also \code{isolatedIds}, a
+#'   character vector of ids suppressed from \code{nodes}/\code{edges}
+#'   because they have no known parent, are never a parent, and are not
+#'   connected by \code{twinRelations}; it is \code{character(0)} when
+#'   nothing was suppressed. When every individual in \code{ped} is
+#'   isolated, \code{nodes}/\code{edges} are both 0-row and
+#'   \code{duplicateToReal} is empty.
 #'
 #' @examples
 #' library(nprcgenekeepr)

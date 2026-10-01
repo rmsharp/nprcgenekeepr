@@ -3,8 +3,9 @@
 
 #' Reduce a pedigree to probands and their ancestors
 #'
-#' Filters a pedigree down to only the ancestors of the provided group,
-#' removing unnecessary individuals from the studbook. This version builds
+#' Filters a pedigree down to the provided group (the probands) together
+#' with all of their ancestors, removing unnecessary individuals from the
+#' studbook. This version builds
 #' the pedigree back in time starting from a group of probands. This will
 #' include all ancestors of the probands, even ones that might be
 #' uninformative.

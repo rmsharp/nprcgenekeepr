@@ -3,15 +3,18 @@
 
 #' Trim a pedigree to a group's ancestors
 #'
-#' Filters a pedigree down to only the ancestors of the provided group,
-#' removing unnecessary individuals from the studbook. This version builds
-#' the pedigree back in time starting from a group of probands, then moves
-#' back down the tree trimming off uninformative ancestors.
+#' Filters a pedigree down to the provided group (the probands) and all of
+#' their ancestors, removing unnecessary individuals from the studbook. By
+#' default only that filtering is done. Uninformative founders are removed
+#' only when \code{removeUninformative = TRUE}, and single parents are added
+#' back only when both \code{removeUninformative} and \code{addBackParents}
+#' are \code{TRUE}.
 #'
 #' @param probands a character vector with the list of animals whose ancestors
 #' should be included in the final pedigree.
 #' @param ped datatable that is the \code{Pedigree}. It contains pedigree
-#' information. The fields \code{sire} and \code{dam} are required.
+#' information. The fields \code{id}, \code{sire} and \code{dam} are
+#' required.
 #' @param removeUninformative logical defaults to \code{FALSE}. If set to
 #' \code{TRUE}, uninformative founders are removed.
 #'
@@ -20,20 +23,24 @@
 #' of information.
 #' @param addBackParents logical defaults to \code{FALSE}. If set to
 #' \code{TRUE}, the function adds back single parents to the \code{p} dataframe
-#' when one parent is known.
+#' when one parent is known. It is ignored unless
+#' \code{removeUninformative = TRUE}.
 #' The function \code{addBackSecondParents} uses the \code{ped} dataframe,
 #' which has full complement of parents and the
 #' \code{p} dataframe, which has all uninformative parents removed to add
 #' back single parents to the \code{p} dataframe.
-#' @return A pedigree that has been trimmed, had uninformative founders
-#' removed and single parents added back.
+#' @return A pedigree containing the probands and all of their ancestors.
+#' Uninformative founders are removed only when \code{removeUninformative}
+#' is \code{TRUE}, and single parents are added back only when
+#' \code{addBackParents} is also \code{TRUE}.
 #'
 #' @export
 #' @examples
 #' library(nprcgenekeepr)
 #' examplePedigree <- nprcgenekeepr::examplePedigree
 #' breederPed <- qcStudbook(examplePedigree,
-#'   minParentAge = 2,
+#'   minSireAge = 2,
+#'   minDamAge = 2,
 #'   reportChanges = FALSE,
 #'   reportErrors = FALSE
 #' )

@@ -11,14 +11,16 @@ getProbandPedigree(probands, ped)
 should be included in the final pedigree.}
 
 \item{ped}{datatable that is the \code{Pedigree}. It contains pedigree
-information. The fields \code{sire} and \code{dam} are required.}
+information. The fields \code{id}, \code{sire} and \code{dam} are
+required.}
 }
 \value{
 A reduced pedigree.
 }
 \description{
-Filters a pedigree down to only the ancestors of the provided group,
-removing unnecessary individuals from the studbook. This version builds
+Filters a pedigree down to the provided group (the probands) together
+with all of their ancestors, removing unnecessary individuals from the
+studbook. This version builds
 the pedigree back in time starting from a group of probands. This will
 include all ancestors of the probands, even ones that might be
 uninformative.

@@ -11,17 +11,22 @@ offspringCounts(probands, ped, considerPop = FALSE)
 counted.}
 
 \item{ped}{the pedigree information in datatable format.  Pedigree
-(req. fields: id, sire, dam, gen, population).
+(req. fields: id, sire, dam; \code{population} is also read when
+\code{considerPop} is \code{TRUE}).
 This is the complete pedigree.}
 
 \item{considerPop}{logical value indication whether or not the number of
 offspring that are part of the focal population are to be counted?
-Default is \code{FALSE}.}
+Default is \code{FALSE}. If \code{ped} has no \code{population} column,
+\code{considerPop} has no effect and only \code{totalOffspring} is
+returned.}
 }
 \value{
 A dataframe containing the column \code{totalOffspring} (and
-\code{livingOffspring} when \code{considerPop} is \code{TRUE}), with the
-animal ids as the data frame row names.
+\code{livingOffspring} when \code{considerPop} is \code{TRUE} and
+\code{ped} has a \code{population} column). The animal ids are the data
+frame row names when \code{probands} are unique; duplicated
+\code{probands} give sequential row names.
 }
 \description{
 Optionally find the number that are part of the population of interest.
@@ -30,7 +35,8 @@ Optionally find the number that are part of the population of interest.
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge = 2,
+  minSireAge = 2,
+  minDamAge = 2,
   reportChanges = FALSE,
   reportErrors = FALSE
 )
