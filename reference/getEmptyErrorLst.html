@@ -60,8 +60,13 @@
 
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An errorLst object with placeholders for error types found in a
-pedigree file by <code>qcStudbook</code>.</p>
+    <p>An errorLst object (a list of class <code>nprcgenekeeprErr</code>) with
+placeholders for error types found in a pedigree file by <code>qcStudbook</code>.
+Its 11 fields are <code>failedDatabaseConnection</code>, <code>missingColumns</code>,
+<code>invalidDateRows</code>, <code>suspiciousParents</code>, <code>femaleSires</code>,
+<code>maleDams</code>, <code>sireAndDam</code>, <code>duplicateIds</code>,
+<code>invalidIdChars</code>, <code>invalidPlaceholderRows</code> and
+<code>changedCols</code> (a list of the column-name changes).</p>
     </div>
 
     <div class="section level2">

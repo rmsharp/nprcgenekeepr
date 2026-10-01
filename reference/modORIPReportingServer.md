@@ -27,15 +27,26 @@ modORIPReportingServer(
 
 - geneticValues:
 
-  reactive returning genetic value analysis results.
+  reactive returning the flat genetic value report data frame (with
+  `indivMeanKin` and `gu` columns), not a `list(report = )`.
 
 - siteConfig:
 
-  reactive returning site configuration from getSiteInfo().
+  reactive returning site configuration from
+  [`getSiteInfo()`](https://github.com/rmsharp/nprcgenekeepr/reference/getSiteInfo.md),
+  with `center`, `nodename`, `user`, `sysname` and `release`. When
+  `NULL`, the module falls back to
+  `getSiteInfo(expectConfigFile = FALSE)`.
 
 ## Value
 
-A list with reactive components for ORIP reporting.
+A list with one reactive component, `colonySummary`, which returns
+`list(nTotal, nMales, nFemales, nFounders)`.
+
+The tab is mounted only when
+[`shouldShowOripTab`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)
+is `TRUE` (the ONPRC site configuration; see
+[`appUI`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)).
 
 ## See also
 

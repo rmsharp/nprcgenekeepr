@@ -70,7 +70,10 @@
 
 <dl><dt id="arg-sb">sb<a class="anchor" aria-label="anchor" href="#arg-sb"></a></dt>
 <dd><p>A dataframe containing a table of pedigree and demographic
-information.</p></dd>
+information. It needs the columns <code>id</code>, <code>sire</code>, <code>dam</code>,
+<code>birth</code> and <code>exit</code>; <code>species</code> is optional (see
+<code>minSireAge</code>). Without <code>exit</code> the function fails with an
+uninformative error.</p></dd>
 
 
 <dt id="arg-minsireage">minSireAge<a class="anchor" aria-label="anchor" href="#arg-minsireage"></a></dt>
@@ -96,16 +99,22 @@ minimum parent age. Supplying it sets both <code>minSireAge</code> and
 
 
 <dt id="arg-reporterrors">reportErrors<a class="anchor" aria-label="anchor" href="#arg-reporterrors"></a></dt>
-<dd><p>logical value if TRUE will scan the entire file and
-make a list of all errors found. The errors will be returned in a
-list of list where each sublist is a type of error found.</p></dd>
+<dd><p>logical value. If <code>TRUE</code>, <code>NULL</code> is
+returned instead of stopping (or returning <code>sb</code>) when the input cannot
+be checked: the data frame has no rows, lacks <code>id</code>, <code>sire</code> or
+<code>dam</code>, or <code>birth</code> is not of class <code>Date</code>,
+<code>POSIXct</code> or <code>character</code>. It does not change the result for
+valid input.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A dataframe containing rows for each animal where one or more
-parent was less than <code>minParentAge</code>. It contains all of the columns
-in the original <code>sb</code> dataframe with the following added columns:</p><ol><li><p><code>sireBirth</code> – sire's birth date</p></li>
+parent was younger than the minimum breeding age (<code>minSireAge</code> or
+<code>minDamAge</code>, or the species floor when they are <code>NULL</code>) at the
+animal's birth. It contains all of the columns
+in the original <code>sb</code> dataframe, with <code>exit</code> converted to
+character and the rows reordered, plus the following added columns:</p><ol><li><p><code>sireBirth</code> – sire's birth date</p></li>
 <li><p><code>sireAge</code> – age of sire in years on the date indicated by
 <code>birth</code>.</p></li>
 <li><p><code>damBirth</code> – dam's birth date</p></li>

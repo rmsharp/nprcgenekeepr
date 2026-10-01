@@ -20,8 +20,8 @@ calcGeneDiversity(fg)
 
 ## Value
 
-The gene diversity `GD = 1 - 1 / (2 * fg)`: a single number in `[0, 1)`,
-or `NA` when `fg` is `NA`.
+The gene diversity `GD = 1 - 1 / (2 * fg)`: a single number below 1
+(realized values lie in `[0, 1)`), or `NA` when `fg` is `NA`.
 
 ## Details
 
@@ -30,8 +30,8 @@ founding gene pool, `GD = 1 - 1 / (2 * FG)`, where `FG` is the founder
 genome equivalents (see
 [`calcFG`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md)).
 It summarizes how much of the founders' allelic diversity still
-survives: 0 means none is retained, and it approaches (never reaches) 1
-as `FG` grows.
+survives: it is 0 when `FG = 0.5` (the smallest value `FG` takes in
+practice) and approaches (never reaches) 1 as `FG` grows.
 
 `GD` is a diversity proportion, not a count of effective individuals,
 and it is computed over the same analysis set as `FG`. `NA` propagates:

@@ -12,12 +12,14 @@ chooseAlleles(a1, a2)
 
 - a1:
 
-  integer vector with first allele for each individual
+  integer vector with the alleles of one parent, one per simulated
+  iteration
 
 - a2:
 
-  integer vector with second allele for each individual `a1` and `a2`
-  are equal length vectors of alleles for one individual
+  integer vector with the other alleles of the same parent, one per
+  simulated iteration. `a1` and `a2` are expected to be equal length
+  vectors; if they are not, the shorter is recycled silently.
 
 ## Value
 

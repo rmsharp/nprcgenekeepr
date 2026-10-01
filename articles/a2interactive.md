@@ -17,12 +17,12 @@ GitHub issue tracker at
 
 ## Installation and Help
 
-You can install **nprcgenekeepr** from GitHub with the following code.
+You can install **nprcgenekeepr** from CRAN with the following code.
 
 ``` r
 
-install.packages(nprcgenekeepr)
-## Use the following code to get the development version
+install.packages("nprcgenekeepr")
+## Use the following code to get the development version from GitHub
 # install.packages("devtools")
 # devtools::install_github("rmsharp/nprcgenekeepr")
 ```
@@ -36,9 +36,6 @@ You can get help from the **R** console with
 ?nprcgenekeepr
 ```
 
-**The help provided by this (*nprcgenekeepr.R*) needs to be more
-complete and include links to the tutorials.**
-
 ## Reading in a Pedigree
 
 A pedigrees can be imported using either Excel worksheets or text files
@@ -51,7 +48,10 @@ This tutorial will use a pedigree file that can be created using the
 **makeExamplePedigreeFile** function as shown below. The function
 **makeExamplePedigreeFile** both saves a file and returns the full path
 name to the saved file, which we are saving into the variable
-*pedigreeFile*. Note: the user will select where to store the file.
+*pedigreeFile*. Note: by default the file is written to the session’s
+temporary directory
+([`tempdir()`](https://rdrr.io/r/base/tempfile.html)); pass the *file*
+argument to choose a different location.
 
 ``` r
 
@@ -59,8 +59,8 @@ library(nprcgenekeepr)
 pedigreeFile <- makeExamplePedigreeFile()
 ```
 
-This writes *ExamplePedigree.csv* to a place you select within your file
-system.
+This writes *examplePedigree.csv* to the session’s temporary directory
+unless you supply a *file* argument.
 
 You use the file name provided by the **makeExamplePedigreeFile**
 function to tell **read.table** what file to read.
@@ -265,8 +265,8 @@ length(notFocalNotParent)
 Since the trimming process is supposed to retain the focal animals and
 their ancestors, we will leave it as an exercise for you to demonstrate
 that at least some of the remaining animals are grandparents of the
-focal animals. *Hint: there are 490 grandparents in both the trimmed and
-the complete pedigree*.
+focal animals. *Hint: there are 490 grandparents of the focal animals in
+the trimmed pedigree*.
 
 As you can see from the number of rows in the full pedigree (3694)
 versus the trimmed pedigree (704), trimmed pedigrees can be much
@@ -445,17 +445,20 @@ nrow(diagramData$edges)
 
     ## [1] 61
 
-**makePedigreeMatingLayout** returns a list of three elements: *nodes*
-(one row per real animal – shaped by sex, dot = Female, square = Male,
-star = Hermaphrodite, triangle = Unknown, diamond = Other/Unrecorded,
-with an HTML hover-tooltip giving ID, sex, generation, sire, and dam –
-plus one small, unlabeled dot per mating and one extra row per duplicate
+**makePedigreeMatingLayout** returns a list of four elements: *nodes*
+(one row per real animal that has recorded parents, mates, or offspring
+– shaped by sex, dot = Female, square = Male, star = Hermaphrodite,
+triangle = Unknown, diamond = Other/Unrecorded, with an HTML
+hover-tooltip giving ID, sex, generation, sire, and dam – plus one
+small, unlabeled dot per mating and one extra row per duplicate
 occurrence, each carrying its animal’s own shape, label, and tooltip
 with a note that it is a duplicate occurrence), *edges*
 (parent-to-mating and mating-to-child edges, plus a dashed edge from
-each duplicate occurrence back to the real animal), and
-*duplicateToReal* (a named lookup from each duplicate occurrence’s id
-back to the real animal it represents).
+each duplicate occurrence back to the real animal), *duplicateToReal* (a
+named lookup from each duplicate occurrence’s id back to the real animal
+it represents), and `isolatedIds` (the ids of animals with no recorded
+parents, mates, or offspring, which are left out of the diagram; the
+function also prints a message naming them).
 
 Each node already carries its own fixed **x**/**y** position (computed
 by **makePedigreeMatingLayout** itself), so rendering it turns vis.js’s
@@ -553,13 +556,10 @@ nrow(diagramDataRectilinear$edges)
 extra invisible “waypoint” nodes/edges that carry out the right-angle
 routing (zero size, transparent color, excluded from the **Select by
 id** dropdown below just like the mating dots above), not any change to
-which animals or relationships are shown.[^6] *nodes* and *edges* also
-gain extra `color.background`/`color.border` (nodes) and `color` (edges)
-columns under *rectilinear* – **visNetwork::visNetwork()** reads these
-directly, so no extra rendering code is needed; they exist because
-vis.js otherwise defaults every waypoint-touching edge to inheriting its
-parent node’s border color, which would route the new right angles in
-the wrong color.
+which animals or relationships are shown.[^6] *nodes* also gains an
+extra `color.border` column under *rectilinear* –
+**visNetwork::visNetwork()** reads it directly, so no extra rendering
+code is needed.
 
 Rendering it uses the identical chain as the *direct* style above, with
 one difference: **highlightNearest**’s hover-highlight *degree* is
@@ -625,11 +625,12 @@ columns *id1*, *id2*, *code*) with no validation of its own;
 both ids must exist, an *MZ twin* (monozygotic) or *DZ twin* (dizygotic)
 pair must already share both recorded parents, and an *MZ twin* pair
 must additionally match in recorded sex, while a *UZ twin* (zygosity
-undetermined) pair has no such precondition. Only the validated result
-is accepted by **makePedigreeMatingLayout**’s optional *twinRelations*
-argument, which adds a dashed twin-connector edge between the pair,
-styled by zygosity code – the same connectors shown in the live app’s
-Diagram tab.
+undetermined) pair has no such precondition. The result of
+**checkTwinRelations** should be passed to
+**makePedigreeMatingLayout**’s optional *twinRelations* argument; the
+layout function does not validate it itself. The argument adds a dashed
+twin-connector edge between the pair, styled by zygosity code – the same
+connectors shown in the live app’s Diagram tab.
 
 ``` r
 
@@ -714,7 +715,12 @@ ped <- trimPedigree(probands, ped,
 ```
 
 The arguments to **reportGV** are all optional except for *ped*, but you
-may often want to use non-default values.
+may often want to use non-default values. The principal arguments are
+described below. Further arguments (**updateProgress**, `breedingTable`,
+`gestationTable`, `breedingAgeDefault`, `gestationDefault`,
+`kinshipOverrides`, **twinRelations**, `guCutoff`, `zScoreCutoff` and
+`axisPriority`) are described in
+[`?reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md).
 
 - **ped** Pedigree information in data.frame format
 
@@ -880,11 +886,7 @@ guBox <- ggplot(data.frame(gu = gu), aes(x = "", y = gu)) +
   geom_boxplot(
     color = "darkblue",
     fill = "lightblue",
-    notch = TRUE, #| fig.alt: >
-    #|   Histogram of time between eruptions for Old Faithful.
-    #|   It is a bimodal distribution with peaks at 50-55 and
-    #|   80-90 minutes.
-
+    notch = TRUE,
     outlier.color = "red",
     outlier.shape = 1L
   ) +
@@ -929,7 +931,7 @@ There are several options you must consider when forming groups using
 - Sex ratio
   - Randomly assign animals without regard to sex
   - Use a harem structure with one breeding male per group
-  - Specify the sex ratio between 0.5 and 10 (F/M)
+  - Specify the sex ratio between 0.5 and 20 (F/M)
 - Whether or not to pre-populate (seed) groups with animals of your
   choice
 - Number of groups to be formed
@@ -946,8 +948,16 @@ function and its arguments is available using the code shown below.
 ?groupAddAssign
 ```
 
-Below is the descriptions of the function parameters extracted from the
-documentation near the time this tutorial was prepared.
+Below are the descriptions of the principal function parameters
+extracted from the documentation near the time this tutorial was
+prepared. The function has further parameters (`maxCandidates`,
+**exhaustive**, `maxExhaustiveCandidates`, `exhaustiveTimeLimit`, and
+**ancestryRules**, which is used in the *Ancestry Rules* section below),
+and it returns a list with the items **group**, **score**,
+**candidates** (up to `maxCandidates` distinct candidate solutions, best
+first) and, when **withKin** is **TRUE**, `groupKin`; see
+[`?groupAddAssign`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md)
+for their descriptions.
 
 - **candidates** Character vector of IDs of the animals available for
   use in forming the groups. The animals that may be present in
@@ -1005,7 +1015,7 @@ candidates, groups, and iterations fairly small.
 
 We will get first some animal IDs to use for our candidates by selecting
 animals at least 2 years old at the time this pedigree was sampled
-(01-01-2015).
+(01-01-2015) that are still in the colony.
 
 ``` r
 
@@ -1022,13 +1032,8 @@ table(trimmedPed$sex[trimmedPed$id %in% candidates])
 Our candidates are made up of 184 females and 96 males. The parameters
 **currentGroups**, **threshold**, **ignore**, **minAge**, **sexRatio**,
 **withKin**, and **updateProgress** are allowed to take their default
-values. The setting of the **sexRatio** parameter to 0 is ignored in the
-following call of the **groupAddAssign** function. This is consistent
-with the a value of 0 making little since in a breeding colony.
-
-The empty seventh group at the bottom is evidence that all of the
-candidate animals could be placed in a group without exceeding the
-default value of 0.015625.
+values in the calls below. The default **sexRatio** of 0 means that no
+sex ratio is imposed.
 
 ### Harems
 
@@ -1090,6 +1095,11 @@ haremGrp$group
     ## [[7]]
     ## [1] NA
 
+Notice that the list has one more element than the six groups requested.
+The last element is not a breeding group. With harem groups it is a lone
+`NA`, which is not an animal (the next section shows what it holds when
+a sex ratio is set).
+
 We can identify and list the males in each group with the following
 code.
 
@@ -1147,13 +1157,15 @@ for (line in lines) print(line)
     ## [1] "Count: 30 Sex Ratio: 29"
     ## [1] "Count: 1 Sex Ratio: Inf"
 
-Examination of this table shows that of the 184 females 156 are
-included.
+Examination of this table shows that of the 184 females 184 are included
+in the six groups.
 
 ### Controlling Sex Ratios
 
-The following group assignments will be forming harem groups. This is
-done by setting **harem** to .
+The following group assignments control the sex ratio of the groups
+formed. This is done by setting **sexRatio** to the desired number of
+females per male (here 9, with **harem** left at its default of
+**FALSE**).
 
 ``` r
 
@@ -1221,6 +1233,9 @@ sexRatioGrp$group
     ##  [89] "GM371F" "MEUZ85" "PA9F3J" "SXSVEH" "TJN1AD" "WNKKW3" "XZH41H" "YDRD81"
     ##  [97] "Z25D52" "ZDRSG0" "3P9BX6" "AR5U44" "DGZLV3" "S63QDN" "ZW2X4N"
 
+As before, the last element of the list is not a breeding group. Here it
+holds the 103 candidates that were not placed in any of the six groups.
+
 Again we can identify and list the males in each group with the
 following code.
 
@@ -1283,30 +1298,32 @@ for (line in lines) print(line)
     ## [1] "Count: 31 Sex Ratio: 9.33"
     ## [1] "Count: 103 Sex Ratio: 0.36"
 
-Examination of this table shows that of the 184 females 239 are
-included.
+Examination of this table shows that of the 184 females 157 are included
+in the six groups.
 
 ## Individual Mate-Pair Analysis
 
 **groupAddAssign**, used throughout the previous section, forms whole
 breeding groups. **reportMatePairs** instead answers a narrower question
 – for a candidate population, which individual sire/dam pairs are even
-eligible to be considered (opposite sex, both above **minAge**), and
-what does every available kinship/genetic-value signal say about each
-pair? It composes the package’s existing pair-eligibility machinery into
-a single report, returning two tables: *pairs*, one row per eligible
-sire/dam combination, and *excluded*, one row per pair dropped and why.
-It computes no composite ranking score of its own – sort or filter the
-returned columns as your own workflow requires. Marker-based kinship
-(**markerKinship**’s output) and each parent’s genetic-value context
-(*indivMeanKin*/*gu*, from **reportGV**’s report) can both be supplied
-as optional enrichment and default to `NA` when not.
+eligible to be considered (opposite sex, both at or above **minAge**, or
+of unknown age), and what does every available kinship/genetic-value
+signal say about each pair? It composes the package’s existing
+pair-eligibility machinery into a single report, returning two tables:
+*pairs*, one row per eligible sire/dam combination, and *excluded*, one
+row per pair dropped and why. It computes no composite ranking score of
+its own – sort or filter the returned columns as your own workflow
+requires. Marker-based kinship (**markerKinship**’s output) and each
+parent’s genetic-value context (*indivMeanKin*/*gu*, from **reportGV**’s
+report) can both be supplied as optional enrichment and default to `NA`
+when not.
 
 We reuse the *candidates* vector already built above, restricted further
 to a small illustrative slice – one male and seven females – so the
-output stays readable; a full call against all 280 candidates would
-return one row per opposite-sex, age-eligible pair, which quickly runs
-into the thousands.
+output stays readable. One of those females is not in the kinship
+matrix, so six pairs come back below and the *excluded* table is empty.
+A full call against all 280 candidates would return one row per
+opposite-sex, age-eligible pair, which runs into the tens of thousands.
 
 ``` r
 
@@ -1524,8 +1541,8 @@ Each is defined below.
 | failedDatabaseConnection | Database connection failed: configuration or permissions are invalid |
 | missingColumns | Columns that must be within the pedigree file are missing. |
 | invalidDateRows | Values, which are supposed to be dates, cannot be interpreted as a date. |
-| suspiciousParents | Parents were too young on the date of birth of to have been the parent. |
-| femaleSires | Individuals listed as female or hermaphroditic and as a sire. |
+| suspiciousParents | Parents were too young on the date of birth of the offspring to have been the parent. |
+| femaleSires | Individuals listed as female and as a sire. |
 | maleDams | Individuals are listed as male and as a dam. |
 | sireAndDam | Individuals who are listed as both a sire and a dam. |
 | duplicateIds | IDs listed more than once. |
@@ -1570,7 +1587,7 @@ ped <- qcStudbook(pedOne, minSireAge = 0.0, minDamAge = 0.0)
 ```
 
     ## Error in `qcStudbook()`:
-    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpVxH24z/lowParentAge.csv.
+    ## ! Parents with low age at birth of offspring are listed in /tmp/RtmpQrHdu3/lowParentAge.csv.
 
 The contents of *lowParentAge.csv* is shown below.
 
@@ -1682,10 +1699,10 @@ sires to *M* (male) when **reportErrors** is set to .
 This feature is not supported within the Shiny application and is not
 fully implemented.
 
-To use the **findLoops** function run the following code and select a
-pedigree as your input file that has a loop in it. We are continuing to
-use the example pedigree that comes with the software
-*Example_Pedigree.csv*.
+To use the **findLoops** function run the following code on a pedigree
+that has a loop in it. We are continuing to use the example pedigree
+that comes with the software, *ExamplePedigree.csv*, which is held in
+memory as `breederPed`.
 
 ``` r
 
@@ -1693,42 +1710,52 @@ exampleTree <- createPedTree(breederPed)
 exampleLoops <- findLoops(exampleTree)
 ```
 
-You can count how many loops you have with the following code.
+You can count the animals checked, the animals that are in loops, and
+the total of the per-animal loop counts returned by **countLoops** with
+the following code.
 
 ``` r
 
-length(exampleLoops)
+cat("Animals checked:", length(exampleLoops), "\n")
 ```
 
-    ## [1] 3694
+    ## Animals checked: 3694
+
+``` r
+
+cat("Animals in loops:", sum(unlist(exampleLoops)), "\n")
+```
+
+    ## Animals in loops: 145
 
 ``` r
 
 nLoops <- countLoops(exampleLoops, exampleTree)
-sum(unlist(nLoops[nLoops > 0L]))
+cat("Total of per-animal loop counts:", sum(unlist(nLoops[nLoops > 0L])), "\n")
 ```
 
-    ## [1] 258
+    ## Total of per-animal loop counts: 258
 
 You can list the first 10 sets of ids, sires and dams in loops with the
 following line of code:
 
 ``` r
 
-examplePedigree[unlist(exampleLoops), c("id", "sire", "dam")][1L:10L, ]
+loopIds <- names(exampleLoops)[unlist(exampleLoops)]
+breederPed[match(loopIds, breederPed$id), c("id", "sire", "dam")][1L:10L, ]
 ```
 
     ##          id   sire    dam
-    ## 2519 V49H3Y UFI88T 9T7Y2Z
-    ## 2572 61FUGE UDQ5WC GL88CF
-    ## 2695 LWJ3A5 KZM9RB GCBYDW
-    ## 2722 RNQU14 H2RDE2 DKIM6U
-    ## 2752 L9M1DC 3PU50K WFQENR
-    ## 2755 Q8U9LB 3PU50K CLSVU6
-    ## 2905 FVJ14K UXC40T L5VC2M
-    ## 2922 531HAC UMV4BE 5DIPZN
-    ## 2924 85ESBB UQFY9C Q2RK1E
-    ## 2941 0VLW56 6KPKH7 MMEHXV
+    ## 2519 MRC4BF 7ZEGLB L1VRM7
+    ## 2572 SZ05LQ 7ZEGLB 4H5RS1
+    ## 2695 6FDURN B2CKHA L1VRM7
+    ## 2722 BWM2Z2 B2CKHA 4Y8JHT
+    ## 2752 EZ2F8A 7ZEGLB DCJJYS
+    ## 2755 FAPEMV 7ZEGLB 2SIP77
+    ## 2905 X4UZJS B2CKHA L1VRM7
+    ## 2922 ZQFCR5 7ZEGLB DCJJYS
+    ## 2924 027TLR TR5L57 TEACA3
+    ## 2941 1EXT8T TR5L57 ZPS15A
 
 ## Marker Genetics
 
@@ -1741,9 +1768,11 @@ a marker genotype panel (e.g. a SNP or STR panel), independent of any
 known pedigree. This is the same functionality behind the Shiny
 application’s **Marker Genetics** tab – see the “Marker Genetics”
 section of the *colony-manager-guide* article for the equivalent
-point-and-click workflow and screenshots. The small example genotypes
-below match the ones used there, so the numbers you see printed here are
-the same numbers shown in that article’s tables.
+point-and-click workflow and screenshots. Several of the small example
+genotypes below (kinship, heterozygosity, exclusion, and Fst) match the
+ones used there, so those numbers are the same ones shown in that
+article’s tables; the candidate-parent likelihood example here differs
+from the article’s.
 
 ### Preparing a Marker Genotype File
 
@@ -1775,13 +1804,13 @@ markerGenotype <- data.frame(
 )
 ```
 
-**checkMarkerGenotypeFile** validates the column shape and rejects any
+**checkMarkerGenotypeFile** validates the column shape, rejects any
 locus with more than two distinct alleles (the estimators below all
-require biallelic markers). **buildMarkerGenotypeMatrix** then pivots
-the checked long-format table into the wide *id* x *locus* matrix the
-rest of this section’s functions consume, one cell per individual/locus
-combination (e.g. `"A/B"`), or `NA` where that individual has no
-genotype call at that locus.
+require biallelic markers), and stops on duplicate *id* x *locus* rows.
+**buildMarkerGenotypeMatrix** then pivots the checked long-format table
+into the wide *id* x *locus* matrix the rest of this section’s functions
+consume, one cell per individual/locus combination (e.g. `"A/B"`), or
+`NA` where that individual has no genotype call at that locus.
 
 ``` r
 
@@ -2036,11 +2065,12 @@ checkCrossCenterMapping(pedA, pedB, badMapping)
 
 One subtlety: a genuine undeclared id collision between the two centers
 (an id present in both *pedA* and *pedB* but never named in *mapping*)
-is only ever reported once every problem above is already clean – a
-collision check on a mapping that doesn’t resolve to real pedigree rows
-would be meaningless. A clean result from this function is what licenses
-trusting the absence of a collision, not merely the absence of a
-`"collision"` row in a dirty one.
+is only ever reported once the existence and uniqueness problems above
+are already clean – a collision check on a mapping that doesn’t resolve
+to real pedigree rows would be meaningless. The same second check also
+reports a mapped pair whose recorded parents conflict. A clean result
+from this function is what licenses trusting the absence of a collision,
+not merely the absence of a `"collision"` row in a dirty one.
 
 ### Cross-Center Identity Linking
 
@@ -2207,6 +2237,8 @@ map length (in Morgans).
 
 ``` r
 
+smallPed <- nprcgenekeepr::smallPed
+smallPed$gen <- findGeneration(smallPed$id, smallPed$sire, smallPed$dam)
 smallPedKmat <- kinship(smallPed$id, smallPed$sire, smallPed$dam, smallPed$gen,
                          sparse = FALSE)
 ## Rhesus macaque autosome count/map length are used here only as an
@@ -2244,7 +2276,7 @@ rrv[rrv$relation %in% c("Parent-Offspring", "Full-Siblings", "Half-Siblings"), ]
     ## 146   I   J   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000
     ## 149   I   M   0.125    Half-Siblings 0.25 0.0009175099 0.03029043
     ## 182   K   L   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000
-    ## 218   M   N   0.000 Parent-Offspring 0.00 0.0000000000 0.00000000
+    ## 218   M   N   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000
     ## 220   M   P   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000
     ## 254   O   P   0.250 Parent-Offspring 0.50 0.0000000000 0.00000000
 
@@ -2389,7 +2421,7 @@ as *id*, or the call stops.
 elapsed_time <- get_elapsed_time_str(start_time)
 ```
 
-The current date and time is 2026-10-01 04:31:22.700731. The processing
+The current date and time is 2026-10-01 20:55:39.241487. The processing
 time for this document was 23 seconds..
 
 ``` r
@@ -2449,16 +2481,20 @@ sessionInfo()
     ## [77] systemfonts_1.3.2    fs_2.1.0
 
 [^1]: Setting *minDamAge* to 3.5 and above will cause an error along
-    with the creation of a file *~/lowParentAge.csv* that will list the
-    parents with low age at the birth of an offspring: two dams in this
-    pedigree were about 3.3 years old at a birth. The sires are all
-    older, so raising *minSireAge* alone to 3.5 does not trigger the
-    error – exactly the sex-specific control the two floors provide.
+    with the creation of a file *lowParentAge.csv* in the session’s
+    temporary directory
+    ([`tempdir()`](https://rdrr.io/r/base/tempfile.html); the error
+    message prints the path) that will list the parents with low age at
+    the birth of an offspring: two dams in this pedigree were about 3.3
+    years old at a birth. The sires are all older, so raising
+    *minSireAge* alone to 3.5 does not trigger the error – exactly the
+    sex-specific control the two floors provide.
 
 [^2]: The *population* column is created and added to the pedigree
     object if it does not already exist.
 
-[^3]: All animals within the colony have a known birth date.
+[^3]: Animals with an unknown birth date, and animals that have left the
+    colony, are not considered in this comparison.
 
 [^4]: This pedigree is entirely synthetic – constructed for this
     tutorial, not drawn from any real colony’s records.

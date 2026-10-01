@@ -68,7 +68,8 @@ NAs for parent IDs</p></dd>
 
 
 <dt id="arg-fullped">fullPed<a class="anchor" aria-label="anchor" href="#arg-fullped"></a></dt>
-<dd><p>a trimmed pedigree</p></dd>
+<dd><p>the full (untrimmed) pedigree dataframe, the source of the
+records to add. It must have the same columns as <code>partialPed</code>.</p></dd>
 
 
 <dt id="arg-partialped">partialPed<a class="anchor" aria-label="anchor" href="#arg-partialped"></a></dt>
@@ -78,7 +79,9 @@ removed.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Pedigree with Ego records added having NAs for parent IDs</p>
+    <p>Pedigree with Ego records added having NAs for parent IDs. It is a
+<code>data.table</code> once any record is added and a plain dataframe when
+none is.</p>
     </div>
 
     <div class="section level2">

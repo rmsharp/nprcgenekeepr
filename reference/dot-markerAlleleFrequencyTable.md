@@ -35,4 +35,5 @@ was chosen over a shared extraction touching three existing files).
 
 A named numeric vector, allele -\> frequency, computed from the non-`NA`
 cells at `locus` only. A locus monomorphic among genotyped individuals
-returns a length-1 vector.
+returns a length-1 vector; a locus with no genotyped individual returns
+`numeric(0)`.

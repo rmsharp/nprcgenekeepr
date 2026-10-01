@@ -68,14 +68,15 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Character vector of all single parents</p>
+    <p>Character vector of the IDs of animals with exactly one known
+parent.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">examplePedigree</span> <span class="op">&lt;-</span> <span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="examplePedigree.html">examplePedigree</a></span></span></span>
 <span class="r-in"><span><span class="va">breederPed</span> <span class="op">&lt;-</span> <span class="fu"><a href="qcStudbook.html">qcStudbook</a></span><span class="op">(</span><span class="va">examplePedigree</span>,</span></span>
-<span class="r-in"><span>  minParentAge <span class="op">=</span> <span class="fl">2</span>,</span></span>
+<span class="r-in"><span>  minSireAge <span class="op">=</span> <span class="fl">2</span>, minDamAge <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>  reportChanges <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>  reportErrors <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>

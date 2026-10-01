@@ -32,9 +32,12 @@ modBreedingGroupsServer(
 - geneticValues:
 
   optional reactive returning genetic value results from
-  [`modGeneticValueServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticValueServer.md),
-  used to source the `topRanked` animal-source candidate list. Unrelated
-  to kinship.
+  [`modGeneticValueServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modGeneticValueServer.md).
+  Used to source the `topRanked` animal-source candidate list and, with
+  any animal source, for the "Genetic-value floor" inclusion criterion,
+  which drops "Low Value" animals and IDs absent from the report. Group
+  formation halts until it is available in either of those cases.
+  Unrelated to kinship.
 
 - kinshipMatrix:
 
@@ -68,27 +71,26 @@ modBreedingGroupsServer(
   is a no-op. A provided `kinshipMatrix` is expected to already reflect
   it at its source.
 
-  Up to 5 distinct candidate groupings are formed per run (issue \#125),
-  with a "Candidate grouping" selector letting the user switch among
-  them without re-running
-  [`groupAddAssign`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md).
-  All reactive components below reflect the currently-selected
-  candidate, defaulting to the best-scoring one – identical to the
-  single-solution behavior prior to issue \#125.
-
 ## Value
 
 List with reactive components:
 
-- `groups` - List of character vectors with animal IDs per group
+- `groups` - List with one character vector of animal IDs per formed
+  group; when candidates remain unplaced a final "Unused" element is
+  appended
 
-- `nGroups` - Number of groups formed
+- `nGroups` - Number of elements of `groups`, counting the "Unused"
+  element when present
 
 - `score` - Optimization score from groupAddAssign (minimum group size)
 
-- `unassigned` - Character vector of candidate IDs not placed in groups
+- `unassigned` - Character vector of candidate IDs that appear in no
+  element of `groups`; leftovers are collected in the trailing "Unused"
+  element, so this is normally empty
 
-- `groupKinship` - List of kinship matrices per group (if withKin=TRUE)
+- `groupKinship` - List of kinship matrices per group when the "Include
+  kinship in display of groups" box is checked (default unchecked);
+  `NULL` otherwise
 
 - `ancestryRules` - The validated ancestry rules table loaded through
   the Ancestry Guardrails upload (see
@@ -103,7 +105,21 @@ List with reactive components:
 
 The module supports multiple configuration options:
 
-- **Animal source**: Select top-ranked animals or all available
+- **Animal source**: "Top ranked", "Upload list" or "All available".
+  "Upload list" has no upload control and currently behaves exactly like
+  "All available"
+
+- **Inclusion criterion**: Include animals by "Top N ranked" (with the
+  number of top animals) or "Genetic-value floor"
+
+- **Group counts and ages**: The number of groups and the minimum
+  breeding age
+
+- **Simulations and exhaustive mode**: The number of simulations;
+  "Exhaustive enumeration mode" is offered only when the number of
+  groups is 1 and the sex ratio is "none"
+
+- **Seed groups**: Optionally seed groups with specific animals
 
 - **Kinship threshold**: Maximum allowed kinship within groups
 
@@ -120,6 +136,19 @@ The module supports multiple configuration options:
   visible, marked `overridden` – see
   [`reportAncestryViolations`](https://github.com/rmsharp/nprcgenekeepr/reference/reportAncestryViolations.md))
   and offers the run's downloadable audit manifest
+
+Up to `maxCandidates` (the "Candidates to retain" input; default 5,
+range 1-50) distinct candidate groupings are formed per run (issue
+\#125); fewer are returned when the run finds fewer distinct ones. A
+"Candidate grouping" selector lets the user switch among them without
+re-running
+[`groupAddAssign`](https://github.com/rmsharp/nprcgenekeepr/reference/groupAddAssign.md).
+All reactive components below reflect the currently-selected candidate,
+defaulting to the best-scoring one – identical to the single-solution
+behavior prior to issue \#125.
+
+The results are shown on the Groups, Statistics, Group Detail and
+Ancestry tabs.
 
 ## See also
 

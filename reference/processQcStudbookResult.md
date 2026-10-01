@@ -13,10 +13,15 @@ processQcStudbookResult(errorLst)
 
 - errorLst:
 
-  list object returned by `qcStudbook` with `reportErrors = TRUE`, or
-  NULL. Expected to be of class `nprcgenekeeprErr` containing error
-  fields such as femaleSires, maleDams, sireAndDam, duplicateIds,
-  invalidIdChars, invalidPlaceholderRows, missingColumns,
+  list object returned by `qcStudbook` with `reportErrors = TRUE`. A
+  `NULL` is treated as a failed check (`hasErrors` is `TRUE` with the
+  error "No result returned from quality control check"), yet
+  `qcStudbook` returns `NULL` when it finds no errors and no column
+  changes. Use `runQcStudbook`, which handles that case, or pass
+  [`getEmptyErrorLst()`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md)
+  instead of `NULL`. Expected to be of class `nprcgenekeeprErr`
+  containing error fields such as femaleSires, maleDams, sireAndDam,
+  duplicateIds, invalidIdChars, invalidPlaceholderRows, missingColumns,
   invalidDateRows, suspiciousParents, failedDatabaseConnection, and
   changedCols.
 

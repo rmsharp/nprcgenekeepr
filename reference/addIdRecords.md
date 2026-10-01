@@ -17,7 +17,8 @@ addIdRecords(ids, fullPed, partialPed)
 
 - fullPed:
 
-  a trimmed pedigree
+  the full (untrimmed) pedigree dataframe, the source of the records to
+  add. It must have the same columns as `partialPed`.
 
 - partialPed:
 
@@ -25,7 +26,9 @@ addIdRecords(ids, fullPed, partialPed)
 
 ## Value
 
-Pedigree with Ego records added having NAs for parent IDs
+Pedigree with Ego records added having NAs for parent IDs. It is a
+`data.table` once any record is added and a plain dataframe when none
+is.
 
 ## Examples
 

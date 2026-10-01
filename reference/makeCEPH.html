@@ -63,17 +63,19 @@
 
 
 <dl><dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
-<dd><p>character vector with unique identifier for an individual</p></dd>
+<dd><p>character vector of the unique identifiers of all individuals;
+a duplicated id stops the function with a <code>duplicate row.names</code>
+error.</p></dd>
 
 
 <dt id="arg-sire">sire<a class="anchor" aria-label="anchor" href="#arg-sire"></a></dt>
-<dd><p>character vector with unique identifier for an
-individual's father (<code>NA</code> if unknown).</p></dd>
+<dd><p>character vector, parallel to <code>id</code>, with the identifier
+of each individual's father (<code>NA</code> if unknown).</p></dd>
 
 
 <dt id="arg-dam">dam<a class="anchor" aria-label="anchor" href="#arg-dam"></a></dt>
-<dd><p>character vector with unique identifier for an
-individual's mother (<code>NA</code> if unknown).</p></dd>
+<dd><p>character vector, parallel to <code>id</code>, with the identifier
+of each individual's mother (<code>NA</code> if unknown).</p></dd>
 
 </dl></div>
     <div class="section level2">

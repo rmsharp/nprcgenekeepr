@@ -21,15 +21,23 @@ A list with reactive components:
 
 - `cleanedStudbook` - The QC-cleaned studbook data
 
-- `genotypeData` - Genotype data if provided
+- `genotypeData` - Genotype data (`id`, `first`, `second`) taken from
+  the cleaned studbook when it carries genotypes. A separately uploaded
+  genotype file that fails
+  [`checkGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkGenotypeFile.md)
+  is dropped without a message, leaving `NULL`
 
-- `qcSummary` - Summary of QC results (error/warning counts)
+- `qcSummary` - Summary of QC results: a list with `errors`, `warnings`
+  and `records` (counts of error rows, warning rows and cleaned records)
 
 - `minSireAge` - The minimum sire age floor (numeric, or `NULL` to use
-  the species+sex breeding-age table default)
+  the species+sex breeding-age table default). It is re-parsed from the
+  live text box, so it can differ from the value the last "Read and
+  Check Pedigree" used if the box was edited afterward
 
 - `minDamAge` - The minimum dam age floor (numeric, or `NULL` to use the
-  species+sex breeding-age table default)
+  species+sex breeding-age table default); the same live-box caveat as
+  `minSireAge` applies
 
 - `isReady` - Logical indicating if data is ready for next step
 

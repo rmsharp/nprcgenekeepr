@@ -40,7 +40,9 @@ geneDrop(
 
   A dataframe containing known genotypes. It has three columns: `id`,
   `first`, and `second`. The second and third columns contain the
-  integers indicating the observed genotypes.
+  integers indicating the observed genotypes. The codes must not collide
+  with the integer codes the function assigns to unknown founder alleles
+  (1, 2, 3, ...).
 
 - n:
 
@@ -49,8 +51,9 @@ geneDrop(
 
 - updateProgress:
 
-  function or NULL. If this function is defined, it will be called
-  during each iteration to update a
+  function or NULL. If this function is defined, it will be called once
+  at the start (with `reset = TRUE`) and then once for each animal
+  processed, to update a
   [`shiny::Progress`](https://rdrr.io/pkg/shiny/man/Progress.html)
   object.
 
@@ -60,7 +63,8 @@ A data.frame `V1 ... Vn, id, parent` A data.frame providing the maternal
 and paternal alleles for an animal for each iteration. The first `n`
 columns indicate the allele for each iteration. These are followed by
 two columns: `id`, the animal's ID, and `parent`, whether the allele
-came from the sire or dam.
+came from the sire (`"sire"`) or dam (`"dam"`). Each animal has two
+rows, and the animals are ordered by generation, oldest first.
 
 ## Details
 
@@ -68,11 +72,11 @@ The gene dropping method from *Pedigree analysis by computer simulation*
 by Jean W MacCluer, John L Vandeberg, and Oliver A Ryder (1986)
 <doi:10.1002/zoo.1430050209> is used in the genetic value calculations.
 
-Currently there is no means of handling knowing only one haplotype. It
-will be easy to add another column to handle situations where only one
-allele is observed and it is not known to be homozygous or heterozygous.
-The new fourth column could have a frequency for homozygosity that could
-be used in the gene dropping algorithm.
+Currently there is no means of handling knowing only one haplotype.
+Another column could be added to handle situations where only one allele
+is observed and it is not known to be homozygous or heterozygous. The
+new fourth column could have a frequency for homozygosity that could be
+used in the gene dropping algorithm.
 
 The genotypes are using indirection (integer instead of character) to
 indicate the genes because the manipulation of character strings was

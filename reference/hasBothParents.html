@@ -63,7 +63,8 @@
 
 
 <dl><dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
-<dd><p>character vector of IDs to examine for parents</p></dd>
+<dd><p>a single ID to examine for parents. A vector of IDs is not
+supported and gives a recycling warning.</p></dd>
 
 
 <dt id="arg-ped">ped<a class="anchor" aria-label="anchor" href="#arg-ped"></a></dt>
@@ -72,7 +73,9 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>TRUE if ID has both sire and dam identified in <code>ped</code>.</p>
+    <p>TRUE if ID has both sire and dam identified in <code>ped</code>, FALSE
+if one or both are unknown, and <code>logical(0)</code> if <code>id</code> is not in
+<code>ped</code>.</p>
     </div>
 
     <div class="section level2">

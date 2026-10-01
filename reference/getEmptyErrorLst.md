@@ -10,8 +10,12 @@ getEmptyErrorLst()
 
 ## Value
 
-An errorLst object with placeholders for error types found in a pedigree
-file by `qcStudbook`.
+An errorLst object (a list of class `nprcgenekeeprErr`) with
+placeholders for error types found in a pedigree file by `qcStudbook`.
+Its 11 fields are `failedDatabaseConnection`, `missingColumns`,
+`invalidDateRows`, `suspiciousParents`, `femaleSires`, `maleDams`,
+`sireAndDam`, `duplicateIds`, `invalidIdChars`, `invalidPlaceholderRows`
+and `changedCols` (a list of the column-name changes).
 
 ## Examples
 

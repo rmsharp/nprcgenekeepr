@@ -24,7 +24,8 @@ addUIds(ped, format = getAutoIdFormat())
 
 ## Value
 
-The updated pedigree with partial parentage removed.
+The updated pedigree in which each missing sire or dam of a
+single-parent record is replaced by a generated placeholder ID.
 
 ## Details
 

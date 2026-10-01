@@ -6,7 +6,9 @@ Validates the structure of a locus-metadata sidecar table (`locus`,
 classifies each locus into one of three coverage tiers, following a
 PLINK-style three-state coverage model: `"full"` (both `chrom` and `pos`
 present; `cM` is optional even within `"full"`), `"partial"` (exactly
-one of `chrom`/`pos` present), or `"none"` (neither present).
+one of `chrom`/`pos` present), or `"none"` (neither present). A value
+counts as present when it is not `NA`, so an empty-string `chrom` counts
+as present.
 
 ## Usage
 
@@ -26,7 +28,9 @@ checkLocusMetadata(locusMetadata)
 The locus-metadata dataframe, checked to ensure the column count,
 first-column identity, and row uniqueness are all valid, with a new
 `coverage` column appended (`"full"`/`"partial"`/ `"none"`). The
-returned dataframe has `locus` and `chrom` coerced to character.
+returned dataframe has `locus` and `chrom` coerced to character, and its
+column names forced to `locus`, `chrom`, `pos` (and `cM` when there are
+four columns) whatever the input names were.
 
 ## Details
 

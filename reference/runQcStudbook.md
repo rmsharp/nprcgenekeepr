@@ -22,7 +22,8 @@ runQcStudbook(
 - ped:
 
   data.frame containing pedigree data with columns including id, sire,
-  dam, sex, and optionally birth, death, departure, etc.
+  dam, sex, and birth (all required), and optionally death, departure,
+  etc.
 
 - minSireAge:
 
@@ -49,8 +50,9 @@ runQcStudbook(
 - reportChanges:
 
   logical whether to report column name changes in the result (default
-  FALSE). When TRUE, warnings about renamed columns are included in the
-  qcResult.
+  FALSE). When TRUE, `changedCols` and `hasChangedCols` in the qcResult
+  report all renamed columns, while `warnings` lists only the case and
+  space changes.
 
 ## Value
 

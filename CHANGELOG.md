@@ -93,6 +93,52 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · \[ad hoc\] S842 close-out: docs-staleness audit slice 6e, the last 126 `man/` pages (all 267 now audited): 26 moderate, 69 minor, 46 code candidates, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`; BACKLOG docs-audit item updated (next: fix the 95 findings). Read-only; 23 of 26 moderates re-checked first-hand. Model: Claude Sonnet 5.5.
+
+### 2026-10-01 · \[ad hoc\] S842 claim: docs-staleness audit slice 6e (superseded by the close-out entry above).
+
+### 2026-10-01 · \[ad hoc\] S841 close-out: fixed all 42 slice-6d docs-staleness findings (8 moderate, 34 minor) in the `R/*.R` roxygen of 15 Shiny app and module files (modBreedingGroups, modGeneticDiversity, modDeidentifiedExport, modCrossCenterIdentity, modMarkerGenetics, modGeneticValue, modInput, modORIPReporting, modPedigree, modPotentialParents, modMatePair, modSummaryStats, modSnapshotTrends, runGeneKeepR, runModularApp), regenerated `man/`; commits `8b2e51b54`, `9b66199cd`, `53409c805`, `21d33c54f`, `fd573b5c8`, claim `c33cfd543`. Docs only; the 22 code candidates stay owner decisions. Lint 0, wordlist test pass, `devtools::check(--no-tests)` 0 errors / 0 warnings / 1 note (untracked `suggested_NEWS_entry.md`). BACKLOG docs-audit item updated (next: slice 6e). Model: Claude Sonnet 5.5.
+
+### 2026-10-01 · \[ad hoc\] S841 claim: fix the 42 slice-6d docs-staleness findings in `R/*.R` roxygen (superseded by the close-out entry above).
+
+### 2026-10-01 · \[ad hoc\] S840 close-out: docs-staleness audit slice 6d, the 34 Shiny app and module `man/` pages: 8 moderate and 34 minor findings plus 22 code candidates, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`; BACKLOG docs-audit item updated (126 pages left). Read-only, no code changed. Commits `cffbb16cc` (claim) and the close-out commit.
+
+### 2026-10-01 · \[ad hoc\] S840 claim: docs-staleness audit slice 6d (superseded by the close-out entry above).
+
+### 2026-10-01 · \[ad hoc\] S839 close-out: fixed all 29 slice-6c docs-staleness findings (QA1-QA16, QB1-QB4, QC1-QC4, QC6, QC7, QD2-QD4) in the `R/*.R` roxygen of 19 marker-genetics, genotype and MHC files, regenerated `man/`; commits `48aabebb6`, `65be5d010`, `4d0042987`, `03493492a`, claim `3075b7b50`. Docs only; the 8 code candidates stay owner decisions. Lint 0, wordlist test and examples pass, `devtools::check(--no-tests)` 0 errors / 0 warnings / 1 note (untracked `suggested_NEWS_entry.md`). Found that `checkMarkerGenotypeFile` does not reject a missing allele (worsens code candidate 7). BACKLOG docs-audit item updated. Model: Claude Sonnet 5.5.
+
+### 2026-10-01 · \[ad hoc\] S839 claim: fix the 29 slice-6c docs-staleness findings in `R/*.R` roxygen (superseded by the close-out entry above).
+
+### 2026-10-01 · \[ad hoc\] S838 close-out: docs-staleness audit slice 6c, the 35 marker-genetics, genotype and MHC `man/` pages: 4 moderate and 25 minor findings plus 8 code candidates, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md`; BACKLOG docs-audit item updated; page count corrected to 160 left (the earlier 196 counted `man/figures/`). Read-only, no code changed. Commits `542ccce38` (claim), close-out commit. Model: Claude Sonnet 5.5.
+
+### 2026-10-01 · \[ad hoc\] S838 claim: docs-staleness audit slice 6c (superseded by the close-out entry above).
+
+### 2026-10-01 · \[ad hoc\] S837 close-out: fixed 54 of the 57 slice-6b docs-staleness findings (PA, PB except PB4/PB7/PB11, PC, PD) in the `R/*.R` roxygen of 32 pedigree QC and curation files, regenerated `man/`; commits `da62c124d`, `18f215ec0`, `b6cd4ffc6`, `e6c434bec`, `cfcd9d11f`, `f2a21abef`, `fdacad923`, `01a6bfda1`, `7c1497876`, claim `ba41d2fc0`. Added `colname`, `ignoreHerm`, `unanchored` to `inst/WORDLIST`. PB4, PB7, PB11 left as owner decisions (code). Lint 0, spelling test and examples pass, `devtools::check(--no-tests)` 0 errors / 0 warnings / 1 note (untracked `suggested_NEWS_entry.md`). BACKLOG docs-audit item updated. Model: Claude Sonnet 5.5.
+
+### 2026-10-01 · \[ad hoc\] S837 claim: fix the 57 slice-6b docs-staleness findings in `R/*.R` roxygen (superseded by the close-out entry above).
+
+### 2026-10-01 · \[ad hoc\] S836 close-out: docs-staleness audit slice 6b, the 36 pedigree QC and curation `man/` pages: 20 moderate and 37 minor findings, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6B_2026-10-01.md`; BACKLOG docs-audit item updated. Read-only, no code changed. Commits `714780074` (claim), close-out commit.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-10-01 · \[ad hoc\] S835 close-out: fixed 52 of the 54 slice-6a docs-staleness findings (MA, MB except MB3, MC except MC1, MD) in the `R/*.R` roxygen of 27 genetic-value/kinship pages, regenerated `man/`; commits `7382be400`, `4a9d8efdf`, `8cecc2e49`, `6f65ce721`, `42197fb0e`, `d5129f551`, `63f5c7a5d`. MC1 and MB3 left as owner decisions (code). Examples run, spelling test pass, lint 0, `devtools::check(--no-tests)` 0 errors / 0 warnings / 1 note (untracked `suggested_NEWS_entry.md`). BACKLOG docs-audit item updated. Model: Claude Sonnet 5.5.
+
+### 2026-10-01 · \[ad hoc\] S835 claim: fix the 54 slice-6a docs-staleness findings in `R/*.R` roxygen (in progress; close-out entry follows).
+
+### 2026-10-01 · \[ad hoc\] S834 close-out: docs-staleness audit slice 6a, the 36 genetic-value and kinship `man/` pages: 9 moderate and 45 minor findings, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md`; BACKLOG docs-audit item updated. Read-only, no code changed. Commits `5fc891cb9` (claim), close-out commit.
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-10-01 · \[ad hoc\] S833 close-out: fixed all 30 findings (AI1-AI30, 12 moderate and 18 minor) of the S832 docs-staleness audit in `vignettes/a2interactive.Rmd`; BACKLOG docs-audit item updated. Knit clean, spelling and baseline tests pass, `devtools::check(--no-tests)` 0 errors / 0 warnings. No code changed. Commits `8d41e1229` (claim), close-out commit.
+
+### 2026-10-01 · \[ad hoc\] S831 push: pushed master (`7bcfdcc68..07011d2a9`, 38 commits, first push since S819) at the owner’s request; all four workflows on `07011d2a9` completed green (R-CMD-check 22m55s, test-coverage 12m6s, pkgdown 6m43s, lint 5m8s).
+
+- **Model:** Claude Sonnet 5.5.
+
+### 2026-10-01 · \[ad hoc\] S832 close-out: docs-staleness audit slice 5, scoped to `vignettes/a2interactive.Rmd`; report `docs/audits/DOCS_STALENESS_AUDIT_SLICE5_2026-10-01.md` (12 moderate, 18 minor, 0 critical, no code defects; full knit clean). BACKLOG docs-audit item updated with the result and next steps. No code changed.
+
+- **Model:** Claude Sonnet 5.5.
+
 ### 2026-09-30 · \[ad hoc\] S831 close-out: untracked the owner’s draft `vignettes/suggested_NEWS_entry.Rmd` and `vignettes/articles/pedigree-diagram.pdf` (owner decision), fixing the pkgdown index test and `check_pkgdown()` failure from S825’s `9a2a5ddb7`; full suite 0 failed / 0 error; BACKLOG item removed; Learning 836. Commits `46a7d9e56` (claim), `3a8c026bb` (fix).
 
 - **Model:** Claude Sonnet 5.5.

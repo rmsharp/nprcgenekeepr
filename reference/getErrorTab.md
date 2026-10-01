@@ -20,4 +20,5 @@ getErrorTab(errorLst, pedigreeFileName)
 
 ## Value
 
-HTML formatted error list
+A Shiny `tabPanel` titled "Error List" that holds the HTML-formatted
+list of errors found by `qcStudbook`.

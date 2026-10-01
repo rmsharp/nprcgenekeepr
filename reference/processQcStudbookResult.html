@@ -67,7 +67,12 @@ into a format suitable for display in the Shiny UI.</p>
 
 <dl><dt id="arg-errorlst">errorLst<a class="anchor" aria-label="anchor" href="#arg-errorlst"></a></dt>
 <dd><p>list object returned by <code>qcStudbook</code> with
-<code>reportErrors = TRUE</code>, or NULL. Expected to be of class
+<code>reportErrors = TRUE</code>. A <code>NULL</code> is treated as a failed check
+(<code>hasErrors</code> is <code>TRUE</code> with the error "No result returned from
+quality control check"), yet <code>qcStudbook</code> returns <code>NULL</code> when
+it finds no errors and no column changes. Use <code>runQcStudbook</code>, which
+handles that case, or pass <code><a href="getEmptyErrorLst.html">getEmptyErrorLst()</a></code> instead of
+<code>NULL</code>. Expected to be of class
 <code>nprcgenekeeprErr</code> containing error fields such as femaleSires,
 maleDams, sireAndDam, duplicateIds, invalidIdChars,
 invalidPlaceholderRows, missingColumns,

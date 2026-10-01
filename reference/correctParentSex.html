@@ -77,8 +77,9 @@ individual's mother (<code>NA</code> if unknown).</p></dd>
 
 
 <dt id="arg-sex">sex<a class="anchor" aria-label="anchor" href="#arg-sex"></a></dt>
-<dd><p>factor with levels: "M", "F", "U". Sex specifier for an
-individual.</p></dd>
+<dd><p>factor or character vector of sex codes ("M", "F", "H", "U").
+Sex specifier for an individual. A character input returns a character
+vector.</p></dd>
 
 
 <dt id="arg-recordstatus">recordStatus<a class="anchor" aria-label="anchor" href="#arg-recordstatus"></a></dt>
@@ -93,7 +94,9 @@ no added records are known. It is used only when
 <dt id="arg-reporterrors">reportErrors<a class="anchor" aria-label="anchor" href="#arg-reporterrors"></a></dt>
 <dd><p>logical value if TRUE will scan the entire file and
 make a list of all errors found. The errors will be returned in a
-list of list where each sublist is a type of error found.</p></dd>
+list of list where each sublist is a type of error found.
+When <code>FALSE</code>, an ID listed as both a sire and a dam stops with an
+error; when <code>TRUE</code> it is returned as <code>sireAndDam</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -152,7 +155,7 @@ animal is checked.</p>
 <span class="r-in"><span><span class="va">pedTwoCorrected</span> <span class="op">&lt;-</span> <span class="va">pedTwo</span></span></span>
 <span class="r-in"><span><span class="va">pedTwoCorrected</span><span class="op">$</span><span class="va">sex</span> <span class="op">&lt;-</span> <span class="fu">correctParentSex</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">pedTwo</span><span class="op">$</span><span class="va">id</span>, <span class="va">pedTwo</span><span class="op">$</span><span class="va">sire</span>, <span class="va">pedTwo</span><span class="op">$</span><span class="va">dam</span>,</span></span>
-<span class="r-in"><span>  <span class="va">pedTwo</span><span class="op">$</span><span class="va">sex</span>, <span class="va">pedOne</span><span class="op">$</span><span class="va">recordStatus</span></span></span>
+<span class="r-in"><span>  <span class="va">pedTwo</span><span class="op">$</span><span class="va">sex</span>, <span class="va">pedTwo</span><span class="op">$</span><span class="va">recordStatus</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pedTwo</span><span class="op">[</span><span class="va">pedTwo</span><span class="op">$</span><span class="va">sex</span> <span class="op">!=</span> <span class="va">pedTwoCorrected</span><span class="op">$</span><span class="va">sex</span>, <span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id sire dam sex recordStatus</span>

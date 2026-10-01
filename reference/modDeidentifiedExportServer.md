@@ -22,7 +22,9 @@ modDeidentifiedExportServer(id, pedigree)
 
 ## Value
 
-A list with reactive components:
+A list with reactive components. `exportedPedigree`, `map` and
+`manifest` halt (via [`req`](https://rdrr.io/pkg/shiny/man/req.html),
+not `NULL`) until Preview has been run:
 
 - `exportedPedigree` - the most recent
   [`obfuscatePed`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md)

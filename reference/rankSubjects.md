@@ -1,8 +1,6 @@
 # Rank animals by genetic value
 
-Part of Genetic Value Analysis Adds a column to `rpt` containing
-integers from 1 to nrow, and provides a value designation for each
-animal of "high value" or "low value"
+Part of Genetic Value Analysis
 
 ## Usage
 
@@ -14,14 +12,29 @@ rankSubjects(rpt)
 
 - rpt:
 
-  a list of data.frame (req. colnames: value) containing genetic value
-  data for the population. Dataframes separate out those animals that
-  are imports, those that have high genome uniqueness (gu \> 10%), those
-  that have low mean kinship (mk \< 0.25), and the remainder.
+  a named list of data.frames containing genetic value data for the
+  population, as made by the report ordering step. The element names
+  decide the designation: `lowVal` and `noParentage` as described above,
+  and every other element (for example `imports`, `lowMk` and `highGu`)
+  is “High Value”. The tiers separate out the animals that are imports,
+  those with low mean kinship (a mean-kinship z-score at or below
+  `zScoreCutoff`), those with high genome uniqueness (`gu` above
+  `guCutoff`), and the remainder; see
+  [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md).
 
 ## Value
 
-A list of dataframes with value and ranking information added.
+A list of dataframes with value and ranking information added. Elements
+with no rows are returned unchanged.
+
+## Details
+
+Adds a `rank` column to each data.frame in `rpt`: integers from 1 to the
+total number of ranked animals, running on from one tier to the next in
+the order of the list. Animals in the `noParentage` element get an `NA`
+rank. Adds a `value` column designating each animal `"High Value"`,
+`"Low Value"` (the `lowVal` element) or `"Undetermined"` (the
+`noParentage` element).
 
 ## References
 

@@ -20,4 +20,5 @@ getChangedColsTab(errorLst, pedigreeFileName)
 
 ## Value
 
-HTML formatted error list
+A Shiny `tabPanel` titled "Changed Columns" that holds the
+HTML-formatted list of column changes made by `qcStudbook`.

@@ -22,8 +22,9 @@ removeEarlyDates(dates, firstYear)
 
 ## Value
 
-A vector of dates after the year indicated by the numeric value of
-`firstYear`.
+A vector of dates with every date before the year indicated by the
+numeric value of `firstYear` set to `NA`. Dates in `firstYear` itself
+are kept.
 
 ## Details
 

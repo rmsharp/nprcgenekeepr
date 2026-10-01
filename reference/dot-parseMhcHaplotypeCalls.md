@@ -8,7 +8,10 @@ call. Labels are otherwise opaque (design plan D9): a bare `"?"` has no
 label part to strip, so it is treated as a certain call of the literal
 label `"?"`, not judged. Total function over
 [`checkMhcHaplotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMhcHaplotypeFile.md)-validated
-input – no error paths.
+input – no error paths. Values are not trimmed: a whitespace-only value,
+or whitespace followed by `?`, is not treated as missing (for example
+`" ?"` gives the haplotype `" "` and `uncertain` `TRUE`), so trimming is
+assumed to happen upstream.
 
 ## Usage
 
@@ -27,6 +30,7 @@ input – no error paths.
 ## Value
 
 A data.frame with one row per (animal x designation column), i.e. 2 rows
-per animal: `id` (character), `haplotype` (character; the designation
-with any trailing `?` stripped, or `NA` when missing), `uncertain`
-(logical), `missing` (logical).
+per animal, ordered as all `haplotype1` rows followed by all
+`haplotype2` rows (not interleaved per animal): `id` (character),
+`haplotype` (character; the designation with any trailing `?` stripped,
+or `NA` when missing), `uncertain` (logical), `missing` (logical).

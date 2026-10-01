@@ -1,6 +1,13 @@
 # Standardize pedigree column names
 
-Standardize pedigree column names
+Standardizing converts the names to lower case, removes spaces, periods
+and underscores, and then renames by substring: `egoid` and `ego` become
+`id`, `sireid` becomes `sire`, `damid` becomes `dam`, `birthdate`
+becomes `birth` and `deathdate` becomes `death`. `recordstatus`,
+`fromcenter` and `geographicorigin` are restored to their camel case
+forms. The headers `first_name` and `second_name` keep their underscore.
+The matching is unanchored, so any name that contains one of these
+strings is changed (for example, `category` becomes `catidry`).
 
 ## Usage
 
@@ -17,7 +24,9 @@ fixColumnNames(orgCols, errorLst)
 
 - errorLst:
 
-  list object with places to store the various column name changes.
+  list object with places to store the various column name changes, as
+  returned by
+  [`getEmptyErrorLst`](https://github.com/rmsharp/nprcgenekeepr/reference/getEmptyErrorLst.md).
 
 ## Value
 

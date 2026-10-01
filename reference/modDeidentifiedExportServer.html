@@ -74,7 +74,9 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with reactive components:</p><ul><li><p><code>exportedPedigree</code> - the most recent <code><a href="obfuscatePed.html">obfuscatePed</a></code>
+    <p>A list with reactive components. <code>exportedPedigree</code>,
+<code>map</code> and <code>manifest</code> halt (via <code><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></code>, not
+<code>NULL</code>) until Preview has been run:</p><ul><li><p><code>exportedPedigree</code> - the most recent <code><a href="obfuscatePed.html">obfuscatePed</a></code>
 output</p></li>
 <li><p><code>map</code> - the corresponding id alias map (<code>obfuscatePed</code>'s
 <code>map=TRUE</code> return)</p></li>

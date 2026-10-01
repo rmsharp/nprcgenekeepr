@@ -64,10 +64,10 @@ order.
 A contributing founder (`p > 0`) that is retained in zero of the
 iterations (`r == 0`) makes `FG` undefined (the same degeneracy that
 [`calcFG`](https://github.com/rmsharp/nprcgenekeepr/reference/calcFG.md)
-now reports as `NA`); in that case this function returns `NA` with a
-warning advising more iterations. Founders that do not contribute to the
-current population (`p == 0`) are dropped, so the standard error refers
-to exactly the founder set `FG` is computed from.
+reports as `NA`); in that case this function returns `NA` with a warning
+advising more iterations. Founders that do not contribute to the current
+population (`p == 0`) are dropped, so the standard error refers to
+exactly the founder set `FG` is computed from.
 
 ## See also
 

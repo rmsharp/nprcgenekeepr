@@ -79,8 +79,8 @@ animal and is searched.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>When <code>reportErrors</code> is <code>FALSE</code>, a <code>Pedigree</code>
-object with duplicate rows removed; when <code>reportErrors</code> is
+    <p>When <code>reportErrors</code> is <code>FALSE</code>, a dataframe (the
+<code>Pedigree</code>) with duplicate rows removed; when <code>reportErrors</code> is
 <code>TRUE</code>, a character vector of duplicate <code>id</code> values, one entry
 for each extra occurrence of an <code>id</code> (or <code>NULL</code> when none are
 found).</p>
@@ -88,7 +88,9 @@ found).</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Returns an updated dataframe with duplicate rows removed.</p>
-<p>Returns an error if the table has duplicate IDs with differing data.</p>
+<p>Returns an error if the table has duplicate IDs with differing data. The
+error applies only when <code>reportErrors</code> is <code>FALSE</code>. Rows are
+compared on all columns, including <code>recordStatus</code>.</p>
     </div>
 
     <div class="section level2">

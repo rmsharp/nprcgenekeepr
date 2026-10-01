@@ -17,7 +17,9 @@ checkErrorLst(errorLst)
 ## Value
 
 Returns FALSE if all fields are empty or the list is NULL otherwise
-TRUE.
+TRUE. The `changedCols` field is not examined; use
+[`checkChangedColsLst`](https://github.com/rmsharp/nprcgenekeepr/reference/checkChangedColsLst.md)
+for it.
 
 ## Examples
 

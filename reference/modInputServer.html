@@ -72,12 +72,21 @@ of pedigree and genotype data files, and quality control validation.</p>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with reactive components:</p><ul><li><p><code>cleanedStudbook</code> - The QC-cleaned studbook data</p></li>
-<li><p><code>genotypeData</code> - Genotype data if provided</p></li>
-<li><p><code>qcSummary</code> - Summary of QC results (error/warning counts)</p></li>
+<li><p><code>genotypeData</code> - Genotype data (<code>id</code>, <code>first</code>,
+<code>second</code>) taken from the cleaned studbook when it carries
+genotypes. A separately uploaded genotype file that fails
+<code><a href="checkGenotypeFile.html">checkGenotypeFile</a></code> is dropped without a message, leaving
+<code>NULL</code></p></li>
+<li><p><code>qcSummary</code> - Summary of QC results: a list with
+<code>errors</code>, <code>warnings</code> and <code>records</code> (counts of error
+rows, warning rows and cleaned records)</p></li>
 <li><p><code>minSireAge</code> - The minimum sire age floor (numeric, or
-<code>NULL</code> to use the species+sex breeding-age table default)</p></li>
+<code>NULL</code> to use the species+sex breeding-age table default). It is
+re-parsed from the live text box, so it can differ from the value the
+last "Read and Check Pedigree" used if the box was edited afterward</p></li>
 <li><p><code>minDamAge</code> - The minimum dam age floor (numeric, or
-<code>NULL</code> to use the species+sex breeding-age table default)</p></li>
+<code>NULL</code> to use the species+sex breeding-age table default); the
+same live-box caveat as <code>minSireAge</code> applies</p></li>
 <li><p><code>isReady</code> - Logical indicating if data is ready for next step</p></li>
 <li><p><code>debugMode</code> - Logical reflecting the Input tab's "Debug on"
 checkbox</p></li>

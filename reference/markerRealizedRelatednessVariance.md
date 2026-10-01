@@ -35,8 +35,9 @@ markerRealizedRelatednessVariance(kmat, ped, nChr, mapLength, ids = NULL)
 
 - nChr:
 
-  integer; chromosome count (e.g. autosome count for the species). Must
-  be a single positive value.
+  chromosome count (e.g. autosome count for the species), meant to be a
+  whole number. Only a single positive numeric value is enforced, so a
+  non-integer such as `20.5` is accepted.
 
 - mapLength:
 

@@ -33,7 +33,8 @@ A list with reactive components:
   [`calcSnapshotDeltas`](https://github.com/rmsharp/nprcgenekeepr/reference/calcSnapshotDeltas.md)),
   keyed off the sidebar's rule/from/ to selectors.
 
-- `isReady` - logical: is a non-empty history loaded.
+- `isReady` - logical: `TRUE` once `history` is non-`NULL` (a history
+  has been uploaded or generated).
 
 The generated snapshot's `membershipRule` is auto-derived from
 `snapshotSource()$ped$population` (issue \#167 Slice 4, S760 owner

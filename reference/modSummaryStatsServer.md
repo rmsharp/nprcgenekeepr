@@ -27,8 +27,11 @@ modSummaryStatsServer(
 - geneticValues:
 
   reactive returning genetic value analysis results. Must be a data
-  frame with columns `id`, `indivMeanKin`, and `gu`. Optional `zScore`
-  column enables z-score plots.
+  frame with columns `indivMeanKin` and `gu` (the `id` column is not
+  read). Optional `zScores` column (what
+  [`reportGV()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)
+  emits; the legacy name `zScore` is also accepted) enables z-score
+  plots.
 
 - pedigree:
 
@@ -37,8 +40,11 @@ modSummaryStatsServer(
 
 - kinshipMatrix:
 
-  optional reactive returning kinship matrix. If NULL, the module will
-  calculate kinship from the pedigree.
+  optional reactive returning kinship matrix. When supplied it is used
+  unchanged, so it should already carry any twin correction and kinship
+  overrides (the app passes the shared matrix, which does). If NULL, or
+  if the reactive errors or returns NULL, the module calculates kinship
+  from the pedigree.
 
 - founderStats:
 
@@ -52,10 +58,11 @@ modSummaryStatsServer(
   optional reactive returning a validated outside-information
   kinship-override data frame (`id1`, `id2`, `kinship`); see
   [`applyKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/applyKinshipOverrides.md).
-  When the module recomputes kinship from the pedigree (the usual path),
-  the overrides are applied to that matrix, so the relationship table
-  and the kinship CSV export reflect the supplied values regardless of
-  tab order. The override moves the kinship *value* only; the `relation`
+  When the module recomputes kinship from the pedigree (the fallback;
+  the app normally supplies a matrix that already carries them), the
+  overrides are applied to that matrix, so the relationship table and
+  the kinship CSV export reflect the supplied values regardless of tab
+  order. The override moves the kinship *value* only; the `relation`
   *label* stays pedigree-derived (it is computed from pedigree
   structure, not from the kinship value). Overridden pairs are flagged
   with a logical `overridden` column in the relationship table. `NULL`
@@ -66,8 +73,9 @@ modSummaryStatsServer(
   optional reactive returning a validated twin/zygosity sidecar
   data.frame (`id1`, `id2`, `code`); see
   [`checkTwinRelations`](https://github.com/rmsharp/nprcgenekeepr/reference/checkTwinRelations.md).
-  When the module recomputes kinship from the pedigree (the usual path),
-  it is passed straight through to
+  When the module recomputes kinship from the pedigree (the fallback;
+  the app normally supplies a matrix that already reflects it), it is
+  passed straight through to
   [`kinship`](https://github.com/rmsharp/nprcgenekeepr/reference/kinship.md)
   so the relationship table and the kinship CSV export reflect a
   declared MZ-twin pair's corrected identity regardless of tab order
@@ -94,13 +102,25 @@ A list with reactive components:
 
 - `guSummary` - Six-number summary of genome uniqueness
 
+- `mkShape`, `guShape` - Shape statistics (skewness and kurtosis) of
+  mean kinship and genome uniqueness
+
+- `mkHistogram`, `zscoreHistogram`, `guHistogram` - The histogram plots
+  (`ggplot` objects)
+
+- `meanKinshipBoxPlot`, `zscoreBoxPlot`, `guBoxPlot` - The box plots
+  (`ggplot` objects)
+
 ## Details
 
 This module provides:
 
-- Summary statistics (counts, mean kinship, genome uniqueness)
+- Summary statistics (counts, mean kinship, genome uniqueness), a
+  six-number summary with skewness and kurtosis, a founder table and an
+  Effective Population Size block
 
-- Histograms and box plots for genetic value distributions
+- Histograms and box plots for genetic value distributions, each
+  exportable as PNG (six plots)
 
 - Relationship classification using
   [`convertRelationships()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertRelationships.md)
@@ -111,7 +131,8 @@ This module provides:
 - First-order relative counts using
   [`countFirstOrder()`](https://github.com/rmsharp/nprcgenekeepr/reference/countFirstOrder.md)
 
-- Export functionality for kinship matrix, founders, and relationships
+- CSV export for the kinship matrix, founders, relationships, the
+  first-order counts and the relationship class table
 
 ## See also
 

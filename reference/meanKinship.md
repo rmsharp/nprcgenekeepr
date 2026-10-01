@@ -24,7 +24,9 @@ ID. Elements are named with the IDs from the columns of kmat.
 
 The mean kinship of animal *i* is \$\$MK_i = \Sigma f_ij / N\$\$, in
 which the summation is over all animals, *j*, including the kinship of
-animal *i* to itself.
+animal *i* to itself. `NA` values are dropped, so *N* is the number of
+non-`NA` kinship values in the animal's column, not the number of
+animals.
 
 ## References
 

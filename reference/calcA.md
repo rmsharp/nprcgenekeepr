@@ -35,8 +35,8 @@ calcA(alleles, threshold = 1L, byID = FALSE)
 
 ## Value
 
-A matrix with named rows indicating the number of unique alleles an
-animal had during each round of simulation (indicated in columns).
+A matrix with named rows indicating the number of rare alleles (0, 1 or
+2) an animal had during each round of simulation (indicated in columns).
 
 ## References
 

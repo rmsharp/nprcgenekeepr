@@ -63,13 +63,14 @@
 
 
 <dl><dt id="arg-a-">a1<a class="anchor" aria-label="anchor" href="#arg-a-"></a></dt>
-<dd><p>integer vector with first allele for each individual</p></dd>
+<dd><p>integer vector with the alleles of one parent, one per simulated
+iteration</p></dd>
 
 
 <dt id="arg-a-">a2<a class="anchor" aria-label="anchor" href="#arg-a-"></a></dt>
-<dd><p>integer vector with second allele for each individual
-<code>a1</code> and <code>a2</code> are equal length vectors of alleles for one
-individual</p></dd>
+<dd><p>integer vector with the other alleles of the same parent, one per
+simulated iteration. <code>a1</code> and <code>a2</code> are expected to be equal length
+vectors; if they are not, the shorter is recycled silently.</p></dd>
 
 </dl></div>
     <div class="section level2">

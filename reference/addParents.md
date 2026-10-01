@@ -13,16 +13,20 @@ addParents(ped)
 
 - ped:
 
-  The pedigree information in data.frame format
+  dataframe that is the `Pedigree`. The `id`, `sire`, `dam` and `sex`
+  columns are required.
 
 ## Value
 
 An updated pedigree with entries added as necessary. Entries have the id
-and sex specified; all remaining columns are filled with `NA`.
+and sex specified; all remaining columns except `recordStatus` are
+filled with `NA`. A `recordStatus` column is added (replacing any
+existing one) with `"original"` for the existing records and `"added"`
+for the new ones.
 
 ## Details
 
-This must be run after to `addUIds` since the IDs made there are used by
+This must be run after `addUIds` since the IDs made there are used by
 `addParents`
 
 ## Examples

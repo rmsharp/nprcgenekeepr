@@ -31,7 +31,11 @@ assignAlleles(alleles, parentType, parent, id, n)
 
 - n:
 
-  integer indicating the number of iterations to simulate.
+  integer indicating the number of iterations to simulate. It is used
+  only when `parent` is `NA`; for a known parent the number of
+  iterations is taken from that parent's already assigned alleles. If a
+  known parent has no alleles assigned yet the function stops with the
+  message "sire and dam must have had alleles assigned: logic error".
 
 ## Value
 

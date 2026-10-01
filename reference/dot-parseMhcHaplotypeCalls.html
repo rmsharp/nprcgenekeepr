@@ -7,7 +7,10 @@ else is a certain call. Labels are otherwise opaque (design plan D9):
 a bare "?" has no label part to strip, so it is treated as a
 certain call of the literal label "?", not judged. Total
 function over checkMhcHaplotypeFile-validated input –
-no error paths.'><meta property="og:description" content='Internal parse rule for MHC haplotype reporting (issue #148 design plan
+no error paths. Values are not trimmed: a whitespace-only value, or
+whitespace followed by ?, is not treated as missing (for example
+"  ?" gives the haplotype "  " and uncertain
+TRUE), so trimming is assumed to happen upstream.'><meta property="og:description" content='Internal parse rule for MHC haplotype reporting (issue #148 design plan
 D3, ratified S704): NA or an empty string is a MISSING call; a
 designation matching ^(.+)\?$ is an UNCERTAIN (provisional)
 call of the haplotype with the trailing ? stripped; anything
@@ -15,7 +18,10 @@ else is a certain call. Labels are otherwise opaque (design plan D9):
 a bare "?" has no label part to strip, so it is treated as a
 certain call of the literal label "?", not judged. Total
 function over checkMhcHaplotypeFile-validated input –
-no error paths.'><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
+no error paths. Values are not trimmed: a whitespace-only value, or
+whitespace followed by ?, is not treated as missing (for example
+"  ?" gives the haplotype "  " and uncertain
+TRUE), so trimming is assumed to happen upstream.'><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -74,7 +80,10 @@ else is a certain call. Labels are otherwise opaque (design plan D9):
 a bare <code>"?"</code> has no label part to strip, so it is treated as a
 certain call of the literal label <code>"?"</code>, not judged. Total
 function over <code><a href="checkMhcHaplotypeFile.html">checkMhcHaplotypeFile</a></code>-validated input –
-no error paths.</p>
+no error paths. Values are not trimmed: a whitespace-only value, or
+whitespace followed by <code>?</code>, is not treated as missing (for example
+<code>"  ?"</code> gives the haplotype <code>"  "</code> and <code>uncertain</code>
+<code>TRUE</code>), so trimming is assumed to happen upstream.</p>
     </div>
 
     <div class="section level2">
@@ -95,7 +104,9 @@ no error paths.</p>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A data.frame with one row per (animal x designation column),
-i.e. 2 rows per animal: <code>id</code> (character), <code>haplotype</code>
+i.e. 2 rows per animal, ordered as all <code>haplotype1</code> rows followed by
+all <code>haplotype2</code> rows (not interleaved per animal): <code>id</code>
+(character), <code>haplotype</code>
 (character; the designation with any trailing <code>?</code> stripped, or
 <code>NA</code> when missing), <code>uncertain</code> (logical), <code>missing</code>
 (logical).</p>

@@ -99,7 +99,8 @@ that locus).</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A named numeric vector, allele -&gt; frequency, computed from the
 non-<code>NA</code> cells at <code>locus</code> only. A locus monomorphic among
-genotyped individuals returns a length-1 vector.</p>
+genotyped individuals returns a length-1 vector; a locus with no genotyped
+individual returns <code>numeric(0)</code>.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -78,7 +78,9 @@ file by <code>qcStudbook</code> through the functions it calls.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with the pedigree, <code>sb</code>, and the <code>errorLst</code> with
-invalid date rows (<code>errorLst$invalidDateRows</code>)</p>
+invalid date rows (<code>errorLst$invalidDateRows</code>), a character vector of
+row numbers (<code>character(0)</code> when all dates are valid). When the dates
+are converted, <code>sb</code> also gains an <code>exit</code> column.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

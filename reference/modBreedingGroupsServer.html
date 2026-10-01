@@ -89,8 +89,12 @@ id, sire, dam, sex, and optionally birth, exit, gen.</p></dd>
 
 <dt id="arg-geneticvalues">geneticValues<a class="anchor" aria-label="anchor" href="#arg-geneticvalues"></a></dt>
 <dd><p>optional reactive returning genetic value results
-from <code><a href="modGeneticValueServer.html">modGeneticValueServer</a></code>, used to source the
-<code>topRanked</code> animal-source candidate list. Unrelated to kinship.</p></dd>
+from <code><a href="modGeneticValueServer.html">modGeneticValueServer</a></code>. Used to source the
+<code>topRanked</code> animal-source candidate list and, with any animal
+source, for the "Genetic-value floor" inclusion criterion, which drops
+"Low Value" animals and IDs absent from the report. Group formation
+halts until it is available in either of those cases. Unrelated to
+kinship.</p></dd>
 
 
 <dt id="arg-kinshipmatrix">kinshipMatrix<a class="anchor" aria-label="anchor" href="#arg-kinshipmatrix"></a></dt>
@@ -120,24 +124,24 @@ the pedigree (the shared <code>kinshipMatrix</code> is unavailable), it is
 passed straight through to <code><a href="kinship.html">kinship</a></code> so group formation
 reflects a declared MZ-twin pair's corrected identity regardless of tab
 order (BL-N Slice 3). <code>NULL</code> (the default) is a no-op. A provided
-<code>kinshipMatrix</code> is expected to already reflect it at its source.</p>
-<p>Up to 5 distinct candidate groupings are formed per run (issue #125), with
-a "Candidate grouping" selector letting the user switch among them without
-re-running <code><a href="groupAddAssign.html">groupAddAssign</a></code>. All reactive components below
-reflect the currently-selected candidate, defaulting to the best-scoring
-one – identical to the single-solution behavior prior to issue #125.</p></dd>
+<code>kinshipMatrix</code> is expected to already reflect it at its source.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>List with reactive components:</p><ul><li><p><code>groups</code> - List of character vectors with animal IDs per group</p></li>
-<li><p><code>nGroups</code> - Number of groups formed</p></li>
+    <p>List with reactive components:</p><ul><li><p><code>groups</code> - List with one character vector of animal IDs per
+formed group; when candidates remain unplaced a final "Unused" element
+is appended</p></li>
+<li><p><code>nGroups</code> - Number of elements of <code>groups</code>, counting the
+"Unused" element when present</p></li>
 <li><p><code>score</code> - Optimization score from groupAddAssign
 (minimum group size)</p></li>
-<li><p><code>unassigned</code> - Character vector of candidate IDs not placed
-in groups</p></li>
-<li><p><code>groupKinship</code> - List of kinship matrices per group
-(if withKin=TRUE)</p></li>
+<li><p><code>unassigned</code> - Character vector of candidate IDs that appear
+in no element of <code>groups</code>; leftovers are collected in the trailing
+"Unused" element, so this is normally empty</p></li>
+<li><p><code>groupKinship</code> - List of kinship matrices per group when the
+"Include kinship in display of groups" box is checked (default
+unchecked); <code>NULL</code> otherwise</p></li>
 <li><p><code>ancestryRules</code> - The validated ancestry rules table loaded
 through the Ancestry Guardrails upload (see
 <code><a href="checkAncestryRules.html">checkAncestryRules</a></code>), or <code>NULL</code> when no usable file
@@ -147,7 +151,17 @@ an <code>ancestry</code> column: each consumer (formation here,
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The module supports multiple configuration options:</p><ul><li><p><strong>Animal source</strong>: Select top-ranked animals or all available</p></li>
+    <p>The module supports multiple configuration options:</p><ul><li><p><strong>Animal source</strong>: "Top ranked", "Upload list" or "All
+available". "Upload list" has no upload control and currently behaves
+exactly like "All available"</p></li>
+<li><p><strong>Inclusion criterion</strong>: Include animals by "Top N ranked"
+(with the number of top animals) or "Genetic-value floor"</p></li>
+<li><p><strong>Group counts and ages</strong>: The number of groups and the
+minimum breeding age</p></li>
+<li><p><strong>Simulations and exhaustive mode</strong>: The number of
+simulations; "Exhaustive enumeration mode" is offered only when the
+number of groups is 1 and the sex ratio is "none"</p></li>
+<li><p><strong>Seed groups</strong>: Optionally seed groups with specific animals</p></li>
 <li><p><strong>Kinship threshold</strong>: Maximum allowed kinship within groups</p></li>
 <li><p><strong>Harem mode</strong>: Form groups with exactly one male each</p></li>
 <li><p><strong>Sex ratio</strong>: Target female-to-male ratio in groups</p></li>
@@ -159,7 +173,16 @@ gate requiring a stated reason; the "Ancestry" results tab reports
 each run's rule violations (overridden rules stay visible, marked
 <code>overridden</code> – see <code><a href="reportAncestryViolations.html">reportAncestryViolations</a></code>) and
 offers the run's downloadable audit manifest</p></li>
-</ul></div>
+</ul><p>Up to <code>maxCandidates</code> (the "Candidates to retain" input; default 5,
+range 1-50) distinct candidate groupings are formed per run (issue #125);
+fewer are returned when the run finds fewer distinct ones. A "Candidate
+grouping" selector lets the user switch among them without re-running
+<code><a href="groupAddAssign.html">groupAddAssign</a></code>. All reactive components below reflect the
+currently-selected candidate, defaulting to the best-scoring one –
+identical to the single-solution behavior prior to issue #125.</p>
+<p>The results are shown on the Groups, Statistics, Group Detail and Ancestry
+tabs.</p>
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="modBreedingGroupsUI.html">modBreedingGroupsUI</a></code> for the UI component</p>

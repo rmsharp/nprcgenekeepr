@@ -63,15 +63,17 @@
 
 
 <dl><dt id="arg-kinshipvalues">kinshipValues<a class="anchor" aria-label="anchor" href="#arg-kinshipvalues"></a></dt>
-<dd><p>matrix of kinship values from simulated pedigrees where
-each row represents a pair of individuals in the pedigree and each column
-represents the vector of kinship values generated in a simulated
-pedigree.</p></dd>
+<dd><p>data.table of kinship values from simulated pedigrees,
+as returned by <code><a href="kinshipMatricesToKValues.html">kinshipMatricesToKValues</a></code>: columns
+<code>id_1</code> and <code>id_2</code> identify a pair of individuals and each
+remaining column holds the kinship values from one simulated pedigree.</p></dd>
 
 
 <dt id="arg-accummulatedkvaluecounts">accummulatedKValueCounts<a class="anchor" aria-label="anchor" href="#arg-accummulatedkvaluecounts"></a></dt>
 <dd><p>list object with same structure as that
-returned by this function.</p></dd>
+returned by this function, from an earlier call. Its ID pairs must be the
+same, in the same order, as those in <code>kinshipValues</code>; the new counts
+are added to its counts.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -119,14 +121,6 @@ returned by this function.</p></dd>
 <span class="r-in"><span>  <span class="va">simParent_4</span>, <span class="va">simParent_5</span>, <span class="va">simParent_6</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">extractKinship</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">simKinships</span>, <span class="va">id1</span>, <span class="va">id2</span>, <span class="va">simulation</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">simKinships</span><span class="op">[[</span><span class="va">simulation</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-in"><span>  <span class="va">simKinships</span><span class="op">[[</span><span class="va">simulation</span><span class="op">]</span><span class="op">]</span><span class="op">[</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span><span class="op">[</span><span class="va">ids</span> <span class="op">==</span> <span class="va">id1</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">ids</span><span class="op">)</span><span class="op">[</span><span class="va">ids</span> <span class="op">==</span> <span class="va">id2</span><span class="op">]</span></span></span>
-<span class="r-in"><span>  <span class="op">]</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">extractKValue</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">kValue</span>, <span class="va">id1</span>, <span class="va">id2</span>, <span class="va">simulation</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">kValue</span><span class="op">[</span></span></span>
 <span class="r-in"><span>    <span class="va">kValue</span><span class="op">$</span><span class="va">id_1</span> <span class="op">==</span> <span class="va">id1</span> <span class="op">&amp;</span> <span class="va">kValue</span><span class="op">$</span><span class="va">id_2</span> <span class="op">==</span> <span class="va">id2</span>,</span></span>
@@ -143,6 +137,8 @@ returned by this function.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "sim_1"  "sim_2"  "sim_3"  "sim_4"  "sim_5"  "sim_6"  "sim_7"  "sim_8" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "sim_9"  "sim_10"</span>
 <span class="r-in"><span><span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu">countKinshipValues</span><span class="op">(</span><span class="va">kValues</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># A second, independent set of simulations is added to the first counts</span></span></span>
 <span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10</span></span></span>
 <span class="r-in"><span><span class="va">simKinships</span> <span class="op">&lt;-</span> <span class="fu"><a href="createSimKinships.html">createSimKinships</a></span><span class="op">(</span><span class="va">ped</span>, <span class="va">allSimParents</span>, pop <span class="op">=</span> <span class="va">ped</span><span class="op">$</span><span class="va">id</span>, n <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">kValues</span> <span class="op">&lt;-</span> <span class="fu"><a href="kinshipMatricesToKValues.html">kinshipMatricesToKValues</a></span><span class="op">(</span><span class="va">simKinships</span><span class="op">)</span></span></span>

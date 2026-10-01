@@ -1,4 +1,4 @@
-# Summarize imputed kinship values
+# Summarize simulated kinship values
 
 Makes a data.frame object containing simulated kinship summary
 statistics using the counts of kinship values list from
@@ -14,13 +14,15 @@ summarizeKinshipValues(countedKValues)
 
 - countedKValues:
 
-  list object from countKinshipValues function that containes the lists
-  `kIds`, `kValues`, and `kCounts`.
+  list object from countKinshipValues function that contains the lists
+  `kIds`, `kValues`, and `kCounts` and no other elements.
 
 ## Value
 
-a data.frame with one row of summary statistics for each imputed kinship
-value. The columns are as follows: `id_1`, `id_2`, `min`,
+a data.frame with one row of summary statistics for each pair of IDs.
+Pairs whose simulated kinship values include `NA` are left out, and a
+data.frame with no rows and no columns is returned when every pair is
+left out. The columns are as follows: `id_1`, `id_2`, `min`,
 `secondQuartile`, `mean`, `median`, `thirdQuartile`, `max`, and `sd`.
 
 The five-number-summary columns are taken from
@@ -67,14 +69,6 @@ allSimParents <- list(
   simParent_1, simParent_2, simParent_3,
   simParent_4, simParent_5, simParent_6
 )
-
-extractKinship <- function(simKinships, id1, id2, simulation) {
-  ids <- dimnames(simKinships[[simulation]])[[1]]
-  simKinships[[simulation]][
-    seq_along(ids)[ids == id1],
-    seq_along(ids)[ids == id2]
-  ]
-}
 
 extractKValue <- function(kValue, id1, id2, simulation) {
   kValue[

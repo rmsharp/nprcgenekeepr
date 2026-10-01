@@ -32,6 +32,8 @@ modGeneticDiversityServer(
   reactive returning a list of character vectors of animal IDs, one per
   breeding group (the `groups` returned by
   [`modBreedingGroupsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md)).
+  That list includes the trailing "Unused" element when candidates
+  remain unplaced, and the heat map scores it as another group.
 
 - pedigree:
 
@@ -44,8 +46,12 @@ modGeneticDiversityServer(
 
 - kinshipMatrix:
 
-  reactive returning the full kinship matrix (row and column names are
-  animal IDs).
+  reactive returning a square kinship matrix (row and column names are
+  animal IDs) covering every member of every group;
+  [`getGeneticDiversityStats`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
+  stops when a group member is missing from it. In the app this is the
+  genetic-value tab's population-filtered matrix, not the full-pedigree
+  matrix.
 
 - currentDate:
 
@@ -56,7 +62,10 @@ modGeneticDiversityServer(
 
 A list with two reactive elements: `stats`, the per-group metric data
 frame (or `NULL` when data are not ready), and `heatmap`, the `ggplot`
-heat map (or `NULL`).
+heat map (or `NULL`). Errors raised inside `getGeneticDiversityStats` (a
+group member missing from the kinship matrix, or a group member with a
+missing birth date) are not caught, so the reactives error instead of
+returning `NULL`.
 
 ## See also
 

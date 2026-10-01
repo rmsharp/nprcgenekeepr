@@ -24,14 +24,22 @@ buildMarkerGenotypeMatrix(genotype)
 
 A character matrix with one row per unique `id` and one column per
 unique `locus`. Each cell holds that individual's two alleles at that
-locus, sorted alphabetically and joined by `"/"` (e.g. `"A/B"`), or `NA`
-when that individual has no genotype record at that locus.
+locus, sorted (by string collation, so locale-dependent for mixed-case
+alleles) and joined by `"/"` (e.g. `"A/B"`), or `NA` when that
+individual has no genotype record at that locus. A record with a missing
+allele gives the string `"NA/NA"` (not `NA`);
+[`checkMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+does not reject such rows.
 
 ## Details
 
 Row and column order follow first appearance in `genotype`, not a string
 sort – a string sort would place `"L10"` before `"L2"` for any panel
-with more than nine loci, silently scrambling locus order.
+with more than nine loci, silently scrambling locus order. If `genotype`
+has more than one row for the same `id` x `locus`, the last row silently
+overwrites the others, so run
+[`checkMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+first.
 
 ## See also
 

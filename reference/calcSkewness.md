@@ -30,12 +30,13 @@ The bias-adjusted Fisher-Pearson standardized skewness coefficient,
 `m2`/`m3` are the second/third central sample moments of `x` – the
 "Method 2" adjustment of Joanes and Gill (1998), the same convention
 SPSS, SAS, and Excel report by default and the `type = 2` option in the
-`moments`/`e1071` CRAN packages. A positive value indicates a longer
-right tail; negative, a longer left tail; `0`, a symmetric distribution.
+`e1071` CRAN package. A positive value indicates a longer right tail;
+negative, a longer left tail; `0`, a symmetric distribution.
 
-Returns `NA` when `x` has fewer than 3 non-`NA` values (`n <= 2`, the
-adjustment term divides by `n - 2`) or has zero variance (all remaining
-values identical) – both would otherwise divide by zero.
+Returns `NA` when `na.rm = FALSE` and `x` contains an `NA`, when `x` has
+fewer than 3 non-`NA` values (`n <= 2`, the adjustment term divides by
+`n - 2`) or has zero variance (all remaining values identical) – both
+would otherwise divide by zero.
 
 ## References
 

@@ -87,7 +87,8 @@
 
 <dt id="arg-pop">pop<a class="anchor" aria-label="anchor" href="#arg-pop"></a></dt>
 <dd><p>Character vector with animal IDs to consider as the population of
-interest. The default is NULL (all animals).</p></dd>
+interest. The default is NULL: an existing <code>population</code> column of
+<code>ped</code> is used if there is one, otherwise all animals.</p></dd>
 
 
 <dt id="arg-nmax">nMax<a class="anchor" aria-label="anchor" href="#arg-nmax"></a></dt>
@@ -99,7 +100,7 @@ simulate. Reproducibility is assessed for iteration counts <code>N</code> with
 
 <dt id="arg-guthresh">guThresh<a class="anchor" aria-label="anchor" href="#arg-guthresh"></a></dt>
 <dd><p>Integer threshold number of animals for defining a rare
-(unique) allele, passed to <code><a href="calcGU.html">calcGU</a></code> / <code><a href="calcA.html">calcA</a></code>.
+(unique) allele, passed to <code><a href="calcA.html">calcA</a></code>.
 Default 1.</p></dd>
 
 
@@ -136,7 +137,8 @@ gene-drop RNG so the convergence curve is reproducible. Default NULL.</p></dd>
 
 <dt id="arg-updateprogress">updateProgress<a class="anchor" aria-label="anchor" href="#arg-updateprogress"></a></dt>
 <dd><p>Function or NULL passed through to <code><a href="geneDrop.html">geneDrop()</a></code> to
-update a <code><a href="https://rdrr.io/pkg/shiny/man/Progress.html" class="external-link">shiny::Progress</a></code> object. Default NULL.</p></dd>
+update a <code><a href="https://rdrr.io/pkg/shiny/man/Progress.html" class="external-link">shiny::Progress</a></code> object; it is called once at the start and
+then once for each animal processed. Default NULL.</p></dd>
 
 
 <dt id="arg-breedingtable-gestationtable-breedingagedefault-gestationdefault">breedingTable, gestationTable, breedingAgeDefault, gestationDefault<a class="anchor" aria-label="anchor" href="#arg-breedingtable-gestationtable-breedingagedefault-gestationdefault"></a></dt>
@@ -173,9 +175,11 @@ passes it. Only <code>code == "MZ twin"</code> rows affect the computed matrix.
     <p>An object of class <code>nprcgenekeeprGVConv</code>: a list with</p><ul><li><p><code>convergence</code> – a data.frame with one row per assessed iteration
 count: <code>iterations</code>, <code>topOverlap</code> (top-<code>k</code> selected-set
 overlap, from 0 to 1), and <code>rankAgreement</code> (Kendall rank agreement
-of the commonly-ranked animals, from -1 to 1).</p></li>
+of the commonly-ranked animals, from -1 to 1). Either metric can be
+<code>NA</code> when it cannot be computed.</p></li>
 <li><p><code>recommendedIter</code> – the smallest assessed iteration count
-meeting both criteria, or <code>NA</code> if none did within <code>grid</code>.</p></li>
+meeting both criteria, or <code>NA_integer_</code> if none did within
+<code>grid</code>.</p></li>
 <li><p><code>converged</code> – <code>TRUE</code> if any assessed count met both
 criteria.</p></li>
 <li><p><code>criteria</code> – the <code>k</code>, <code>oMin</code>, and <code>rhoMin</code> used.</p></li>
@@ -228,7 +232,8 @@ sampling reproducibility of the <em>estimate</em>.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rmsharp.github.io/nprcgenekeepr/" class="external-link">nprcgenekeepr</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co">## A quick, small illustration (use a larger nMax in practice).</span></span></span>
+<span class="r-in"><span><span class="co">## A quick, small illustration (use a larger nMax in practice). With</span></span></span>
+<span class="r-in"><span><span class="co">## nMax = 200 only the grid counts 25, 50 and 100 can be assessed.</span></span></span>
 <span class="r-in"><span><span class="va">conv</span> <span class="op">&lt;-</span> <span class="fu">gvaConvergence</span><span class="op">(</span><span class="fu">nprcgenekeepr</span><span class="fu">::</span><span class="va"><a href="qcPed.html">qcPed</a></span>, nMax <span class="op">=</span> <span class="fl">200L</span>, seed <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">conv</span><span class="op">$</span><span class="va">convergence</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iterations topOverlap rankAgreement</span>

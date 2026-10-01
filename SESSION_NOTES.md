@@ -168,59 +168,125 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### Session 830 Handoff Evaluation (by Session 831)
+### What Session 842 Did
 
-**Score: 9/10.** The BACKLOG item named the cause (S825 commit
-`9a2a5ddb7`), both files, the two verification commands and the exact
-owner decision, so the session needed one question and one `git rm`. “Do
-not push before (A)” was correct. **Missing:** nothing needed; it did
-not say the .Rmd copy must also leave the working tree (the test reads
-the directory), which I confirmed by running it. **Wrong:** nothing;
-“master is 37 ahead” was 38 by the time of orientation, because the S830
-close-out commit landed after the count. **ROI:** high.
+**Deliverable, DONE:** docs-staleness audit slice 6e, the last 126
+`man/` pages (`docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`):
+26 moderate, 69 minor, 46 code candidates; all 267 pages now audited.
+Read-only; no code or tests, so no TDD phase applies. **Commits:** claim
+`89042b761`; report, BACKLOG and records in the close-out commit.
+**Verified:** re-ran in R or re-read in source 23 of the 26 moderates
+(all but RF2, RH2, RJ3; listed in the report’s “Verified by me”); two
+agent claims corrected (RE4 line cites, RJ4 narrower: extra columns are
+dropped, not an error). **Not verified:** RF2, RH2, RJ3, all 69 minors
+and all 46 code candidates rest on the agents’ own checks; not run:
+`lint_package()` (no `.R` changed), full suite, `devtools::check`.
+**NEWS.Rmd:** none. **Reduction:** removed the S804 evaluation and S805
+record at claim, and the S840 evaluation and record at close-out (in git
+and receipts). **Slips caught:** the claim commit was refused by the
+context-budget hook (SESSION_NOTES over its token ceiling); trimmed with
+the owner’s OK. My first RG1 re-run used an id not in `examplePedigree`
+and proved nothing; fixed. One agent ran `roxygenise()` by mistake and
+restored `man/` (git status clean).
 
-### What Session 831 Did
+**Self-assessment: 8/10.** + One deliverable; every set covered, 126 of
+126 pages from a computed list; moderates checked first-hand before the
+report. - Minors and code candidates unverified; RF2/RH2/RJ3 not
+re-checked.
 
-**Deliverable, DONE:** fixed the pkgdown breakage. Owner chose “untrack
-both”: `git rm` of `vignettes/suggested_NEWS_entry.Rmd` and
-`vignettes/articles/pedigree-diagram.pdf` (both added by S825’s
-`9a2a5ddb7`, still recoverable from it). The untracked top-level
-`suggested_NEWS_entry.md` is untouched. **Commits:** claim `46a7d9e56`;
-fix `3a8c026bb`; records in the close-out commit. **TDD:** RED was the
-existing `test_pkgdown_reference_config.R` failure (confirmed at HEAD
-before the change); GREEN the `git rm`; REFACTOR a no-op.
-**Verification:** `test_pkgdown_reference_config.R` passes;
-[`pkgdown::check_pkgdown()`](https://pkgdown.r-lib.org/reference/check_pkgdown.html)
-“No problems found”; full clean regression read (`load_all`,
-`NOT_CRAN=true`, no file filter): 0 failed, 0 error over 2,886 results.
-**Not run:** `devtools::check()` (no R, DESCRIPTION or NAMESPACE
-change); lint (no `.R` file changed); app smoke test (no runtime
-change). **NEWS.Rmd:** no entry (no feature or behavior change).
-**Learnings:** Learning 836. **Reduction:** removed the S829 handoff
-evaluation and the “What Session 830 Did” block (in git and the S830
-receipt).
+**Next steps:** (A) fix the 95 slice-6e findings (26 + 69) in `R/*.R`
+roxygen, then `devtools::document()` and
+`git checkout man/nprcgenekeepr-package.Rd` (READY, Effort M); document
+today’s behavior, as S839/S841 did. (B) Owner decisions on code: 46
+slice-6e candidates (CE-CL), 22 slice-6d, 8 slice-6c, and the older
+PB/PA/PD/MC/MB items. (C) Master is 47 ahead of origin after the
+close-out commit; push only on the owner’s say-so. The
+`suggested_NEWS_entry.md` question was asked at Orient and S805 already
+says do not carry it.
 
-**Self-assessment: 9/10.** + One deliverable; confirmed RED before
-acting; asked the one real question in plain words; ran the unfiltered
-suite. - The first combined command ran past the foreground timeout, so
-I had to go to a background run and re-run the test file to see its
-result.
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md`
+(findings by set), `BACKLOG.md:197`, `R/trimPedigree.R`,
+`R/getAnimalsWithHighKinship.R:5-42`, `R/readKinshipOverrides.R`,
+`R/getPotentialParents.R`.
 
-**Next steps:** - (A) Push master (38 commits ahead of origin, no push
-since S819) only on the owner’s say-so, then watch all four workflows:
-this is the first CI run since S819 and covers S820-S831. The pkgdown
-blocker is gone. - (B) Docs-staleness audit slice 5 (BACKLOG, READY,
-Effort L); owner decisions pending: `suggested_NEWS_entry` adopt/drop,
-the four code defects.
+**Gotchas:** same as S837-S841
+(`git checkout man/nprcgenekeepr-package.Rd` after `document()`;
+`lint_package()` after joined roxygen lines; reword rather than add to
+`inst/WORDLIST`; prose after a `@param` folds into it). The report’s
+“Location” line numbers can be off (RE4 was); grep for the text. Do NOT
+use `echo ====` in the Bash tool.
 
-**Key files:** `tests/testthat/test_pkgdown_reference_config.R`,
-`_pkgdown.yml` (articles list), `BACKLOG.md` (docs-audit item),
-untracked `suggested_NEWS_entry.md` (top level).
+### Session 841 Handoff Evaluation (by Session 842)
 
-**Gotchas:** `R CMD check` NOTEs on the untracked top-level
-`suggested_NEWS_entry.md` until it is dropped or `.Rbuildignore`d. The
-first push in 12 sessions may surface other CI findings unrelated to
-this fix (estimate, not computed).
+**Score: 8/10.** Orient measurements held: both ledger frontiers at
+HEAD, 46 ahead, one untracked file, 126 pages left. Step (A) gave the
+exact recipe (`comm -13` of the “Items audited” ids against `ls man`)
+and it produced 126. **Wrong:** none. **Missing:** it did not say that
+SESSION_NOTES.md was at the token ceiling, so the claim commit was
+refused and needed a trim (the dashboard showed it). It re-asked about
+`suggested_NEWS_entry.md` although S805 says not to carry it. **ROI:**
+high.
+
+### What Session 841 Did
+
+**Deliverable, DONE:** fixed all 42 slice-6d docs-staleness findings
+(RA1-RA13 except the non-findings, RB1-RB11, RC1-RC10, RD1-RD9) in the
+roxygen of 15 `R/*.R` files and regenerated `man/`
+(`devtools::document()`, then
+`git checkout man/nprcgenekeepr-package.Rd`). Docs only: no code or test
+change, so no TDD phase applies. The 22 code candidates are untouched;
+the docs state today’s behavior. **Commits:** claim `c33cfd543`; fixes
+`8b2e51b54` (RA, 4 files), `9b66199cd` (RB, 3 files), `53409c805` (RC, 4
+files), `21d33c54f` (RD, 4 files), `fd573b5c8` (wordlist rewording);
+records in the close-out commit. **Verified:** `lintr::lint_package()` 0
+lints after each group; `test_wordlist_coverage.R` passes (it caught
+“unflagged” and “upload’s”; reworded, not added);
+`devtools::check(--no-tests)` 0 errors / 0 warnings / 1 note (untracked
+`suggested_NEWS_entry.md`), examples OK; the top-level tab count (16, 15
+without ORIP) read from `appUI.R` titles; the RA1 fix read in the
+generated Rd (paragraph now outside `\item{twinRelations}`); each option
+bullet I wrote for `modBreedingGroupsServer` and the `geneticValues`
+wording checked against `R/modBreedingGroups.R:545-600` and the UI
+controls. **Not verified:** the minors’ new wording rests on the audit’s
+own checks plus my source read (RA13, RC6, RC9, RC10, RD4, RD7 were not
+re-run); not run: the full test suite, a live Shiny launch.
+**NEWS.Rmd:** none. **Reduction:** removed the S839 handoff evaluation
+and the S839 record (in git and their receipts). **Slips caught:** my
+first `geneticValues` wording said group formation always halts without
+it; the code needs it only for “Top ranked” or the genetic-value floor,
+and I corrected it. My first option list said “exhaustive mode forms one
+group”; the UI offers it only when groups = 1 and sex ratio = “none”.
+Two wordlist failures from new words.
+
+**Self-assessment: 8/10.** + One deliverable; five commits, each group
+linted and regenerated; two of my own wrong claims caught against the
+code before commit; all gates run. - Minors’ wording not re-run; several
+audit “Location” line numbers (RB2, RB3) pointed at code, not the
+roxygen, so I found the text by grep.
+
+**Next steps:** (A) slice 6e audit (READY, Effort L): 126 `man/` pages
+left (`obfuscate*`, pedigree-tree and getters, `get*`/`calc*`/`check*`
+helpers, datasets); list = `comm -13` of the slice 6a-6d reports’ “Items
+audited” ids against `ls man`. (B) Owner decisions on code: the 22
+slice-6d candidates (CA1-CA5, CB1-CB5, CC1-CC5, CD1-CD6), the 8 slice-6c
+candidates, PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3; then reword
+their docs (RA3/RA4/RA6, RA8, RB10, RC7 first). (C)
+`suggested_NEWS_entry.md` commit or drop (asked at Orient again; not
+answered). (D) Master is 46 ahead of origin with the close-out commit;
+push only on the owner’s say-so.
+
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md`
+(the code candidates), `R/modBreedingGroups.R:205-290`,
+`R/modPedigree.R:190-250`, `R/modSummaryStats.R:235-310`,
+`R/runGenekeepr.R:1-40`, `BACKLOG.md:197`.
+
+**Gotchas:** same as S837-S840
+(`git checkout man/nprcgenekeepr-package.Rd` after `document()`;
+`lint_package()` after joined roxygen lines; reword rather than add
+words to `inst/WORDLIST`). `R/runGenekeepr.R` (lowercase k) holds
+`runGeneKeepR`. A blank-line paragraph after a `@param` folds into it,
+so put prose before the first `@param`. Do NOT use `echo ====` in the
+Bash tool (zsh `=` expansion errors).
 
 ### Session 809 Handoff Evaluation (by Session 810)
 
@@ -802,131 +868,3 @@ B read cap. The next few items may push it over (HIGH, with no trim
 remedy: S803 gotcha 2). 5. The full suite’s 1 known failure is
 local-only (the owner’s untracked `vignettes/suggested_NEWS_entry.Rmd`).
 6. STANDING SET unchanged from S790-805.
-
-### Session 804 Handoff Evaluation (by Session 805)
-
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` frontier
-= HEAD `2138c813`, 0 undocumented; the S804 receipt `status: complete`,
-its `quality_ratchet` citation matching `.quality-gates-results.json`
-(results `fb7aec9c7bc3`, 3,589,732 B); 1 unpushed (the push record); the
-7 untracked files unchanged. The one commit after the receipt is S804’s
-own push record, with a ledger entry, so no receipt was owed. Next step
-(A) was exact: the script, the 2 image names, the pixel counts
-(reproduced here to the pixel: 2,228 and 1,210), and “owner looks,
-commit”. **Missing:** neither S804 nor S802’s backlog finding said the
-render script’s header contradicts the test pins (it says to expect two
-collision warnings and stop if they vanish; S715 retired them), which
-cost a detour to check the pins before going on. **ROI:** high.
-
-### What Session 805 Did
-
-**Deliverable, DONE:** the 2 stale Pedigree Diagram article figures are
-re-rendered and committed, owner-approved:
-`vignettes/articles/pedigree-diagram-img/exemplar-linebreeding-rectilinear.png`
-and `exemplar-half_sib-rectilinear.png`. Not a TDD session (no
-production code; regenerated documentation images and a comment).
-**Run:**
-`Rscript vignettes/articles/pedigree-diagram-exemplar-renders.R` (23 s)
-re-rendered all 5, with node/edge counts matching the fixture pins and
-no layout warnings. The header said to expect two warnings, but
-`test_examplePedigreeFixtures.R` pins
-`rectilinearCollisionWarning = FALSE` for all 5 since S715, so the
-header was stale, not the engine. **Measured against the committed
-PNGs:**
-
-| Figure | Pixels changed | Max channel difference | Pixels changed by more than 0.25 |
-|----|----|----|----|
-| linebreeding | 2,228 | 0.831 | 1,257 |
-| half_sib | 1,210 | 0.831 | 782 |
-| consanguinity | 134 | 0.039 | 0 |
-| backcross | 189 | 0.055 | 0 |
-| first_cousin | 121 | 0.039 | 0 |
-
-The last 3 differ by anti-aliasing only, so they were restored from git
-and not committed. The real change is only the dashed duplicate-animal
-arcs, now flatter (S715’s roundness change). At 1200x900 the new arcs
-clear the nearest circle by about 5-6 px (LB2 over LA2) and about 3 px
-(HB1 over HA2), each crossing one drop line. The old LB2 arc ran through
-the LX1/LA3 labels. **Owner look:** old/new/overlay strips (red = old
-arc, blue = new) and both full renders were opened in Preview; the owner
-approved both via AskUserQuestion, and also approved fixing the header.
-**Commits:** - claim `54a3a7bd` - figures `2a247184`: the 2 PNGs, plus
-the `BACKLOG.md` documentation-audit item, whose S802 finding is
-replaced by the S805 measurement; the
-`kinship2-fidelity-validation-img/` (8) and `shiny_app_use/` (50) images
-are still unchecked - header `16bc27bd`: comment only; expects no
-warnings, and says a drawing change needs a re-run even when no pin
-moves - records (this)
-
-**Verification:** - Fixture test: 14 tests, 303 expectations, 0
-failed. - Article text
-(`vignettes/articles/pedigree-diagram.qmd:120-126`, `:157`, `:179`) and
-alt text still fit. - The script parses; lint 0. - `vignettes/articles`
-is build-ignored (`.Rbuildignore:52`), and no test or workflow reads
-these images (grep), so the full suite was not run. -
-`quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 5deafc2db4bb · manifest aa983075d6a2`
-(3,589,736 B, measured at `16bc27bd`). - CI on `fd2056ca` (S804’s
-records push, `in_progress` at Orient): lint and pkgdown green;
-R-CMD-check (run 36489531079) green on all 5 legs incl. `windows-latest`
-and test-coverage green, re-read at close-out.
-
-**Learnings:** 821. **Reduction:** none. `SESSION_NOTES.md` is under its
-65,536 B ceiling, and `CLAUDE.md` is in its warn band (headroom).
-
-**Self-assessment: 8/10.** - + Reproduced S802’s numbers before touching
-anything. - + Checked the missing warnings against the test pins instead
-of trusting the header either way. - + Kept the commit to the real
-change (the 3 noise-only renders restored). - + Measured the closest
-approach of each new arc instead of eyeballing it. - + The owner saw
-red/blue overlays, not just the new images. - + One ledger entry per
-commit. - - The first zoom crop used guessed coordinates and missed. - -
-One call failed on an uninstalled `abind`. - - No mandated-read
-reduction.
-
-**Next steps:** - (A) The documentation audit (`BACKLOG.md`, “Audit the
-internal and user-facing documentation”): the next slice checks
-`vignettes/articles/kinship2-fidelity-validation-img/` (8) and
-`vignettes/articles/shiny_app_use/` (50) against the current code. Find
-each image’s generator first,
-e.g. `grep -rn 'kinship2-fidelity-validation-img' vignettes/ data-raw/ inst/`.
-That is an estimate of where to look; I did not check whether scripts
-exist for them. - (B) The other Up Next owner decisions: jmac
-(`BACKLOG.md`, “deidentified_jmac_ped.csv”), U-prefix ids, recorded dam,
-PED_GV. - (C) Carried: - keep `methodology_dashboard.py` tracked, or
-untrack it? - the `CHANGELOG.md` / `HANDOFFS.md` trims (the owner runs
-the forced write) - the owner’s `suggested_NEWS_entry` review - residue:
-7 untracked files - 5 unpushed after this records commit (the owner’s
-call; pushing publishes the new figures via the pkgdown workflow)
-
-**Key files:** -
-`vignettes/articles/pedigree-diagram-img/exemplar-{linebreeding,half_sib}-rectilinear.png` -
-`vignettes/articles/pedigree-diagram-exemplar-renders.R:16-24` (the new
-header) - `tests/testthat/test_examplePedigreeFixtures.R:228-282` (the
-spec pins) and `:520-535` (the warning test) -
-`vignettes/articles/pedigree-diagram.qmd:120-126` -
-`PROJECT_LEARNINGS.md` Learning 821
-
-**Gotchas:** 1. The render script overwrites all 5 PNGs. Commit only the
-ones with pixels changed by more than 0.25 in max channel difference;
-restore the rest with `git checkout --`. 2. The script needs Chrome
-(chromote). It ran cleanly here in 23 s. 3. The comparison images live
-in the session scratchpad; they are not in the repo. 4. The full suite’s
-1 known failure is local-only (the owner’s untracked
-`vignettes/suggested_NEWS_entry.Rmd`). 5. `gh run list --json` returned
-OLDER runs (other ids and SHAs) than the plain `gh run list`; query runs
-by id with `gh run view <id>`. 6. STANDING SET unchanged from S790-804.
-
-**Owner-directed after close-out (2026-09-28 ~22:24 UTC):** - **Pushed**
-the 5 commits: `origin/master` `fd2056ca` -\> `e5e007f8`, a fast-forward
-(0 behind after a fresh fetch). The push carries the 2 new figures,
-which the pkgdown workflow builds into the site, so the pkgdown run was
-awaited: green (run 36492193748), and the GitHub Pages deploy it
-triggered (run 36492871606) succeeded. The other 3 workflows read none
-of the changed files (all build-ignored), so they were not awaited. This
-push-record commit stays local. - **Decided: keep
-`methodology_dashboard.py` tracked.** This closes carried question (B).
-Every sync of it keeps needing `bin/sync --force` (Learning 819). Do not
-raise the question again. - **Deferred:** the owner will take up
-`NEWS.Rmd` (their `suggested_NEWS_entry` drafts) later. It stays in the
-`BACKLOG.md` item as it is; don’t carry it as an open question in
-handoffs.

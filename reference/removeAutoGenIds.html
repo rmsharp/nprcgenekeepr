@@ -9,7 +9,9 @@ de-identification). A real animal whose ID merely starts with &quot;U&quot;
 a sire or dam; a real ID of the full shape (&quot;U1234&quot;) is removed
 unless the pedigree's placeholder column (see
 qcStudbook) marks it FALSE, and a TRUE mark
-removes a stand-in whatever its ID looks like."><meta property="og:description" content="Identifies automatically generated IDs via isGeneratedUnknownId(),
+removes a stand-in whatever its ID looks like. The &quot;four or more&quot; match is
+a prefix, so an ID such as &quot;U1234abc&quot; is removed too. Sire and dam
+entries that are generated IDs are set to NA."><meta property="og:description" content="Identifies automatically generated IDs via isGeneratedUnknownId(),
 the shared detection predicate derived from the configurable auto-ID format
 (see getAutoIdFormat). With the default &quot;U%04d&quot;, an
 automatically generated ID is a capital &quot;U&quot; followed by at least four
@@ -19,7 +21,9 @@ de-identification). A real animal whose ID merely starts with &quot;U&quot;
 a sire or dam; a real ID of the full shape (&quot;U1234&quot;) is removed
 unless the pedigree's placeholder column (see
 qcStudbook) marks it FALSE, and a TRUE mark
-removes a stand-in whatever its ID looks like."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
+removes a stand-in whatever its ID looks like. The &quot;four or more&quot; match is
+a prefix, so an ID such as &quot;U1234abc&quot; is removed too. Sire and dam
+entries that are generated IDs are set to NA."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -80,7 +84,9 @@ de-identification). A real animal whose ID merely starts with "U"
 a sire or dam; a real ID of the full shape (<code>"U1234"</code>) is removed
 unless the pedigree's <code>placeholder</code> column (see
 <code><a href="qcStudbook.html">qcStudbook</a></code>) marks it <code>FALSE</code>, and a <code>TRUE</code> mark
-removes a stand-in whatever its ID looks like.</p>
+removes a stand-in whatever its ID looks like. The "four or more" match is
+a prefix, so an ID such as <code>"U1234abc"</code> is removed too. Sire and dam
+entries that are generated IDs are set to <code>NA</code>.</p>
     </div>
 
     <div class="section level2">

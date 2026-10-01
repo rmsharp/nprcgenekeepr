@@ -4,9 +4,7 @@ Checks the structure and domain of a twin/zygosity sidecar table. The
 table supplies pairwise twin declarations (`id1`, `id2`, `code`) that
 record which individuals in a pedigree are twins and with what twin
 zygosity certainty – a fact this package's per-individual pedigree data
-frame cannot represent directly (see
-`docs/planning/issue137-twin-zygosity-pedigree-diagram-plan.md`). It
-mirrors
+frame cannot represent directly. It mirrors
 [`checkKinshipOverrides`](https://github.com/rmsharp/nprcgenekeepr/reference/checkKinshipOverrides.md):
 it [`stop()`](https://rdrr.io/r/base/stop.html)s on structural or domain
 errors and returns the (id-coerced) table when the input is acceptable.

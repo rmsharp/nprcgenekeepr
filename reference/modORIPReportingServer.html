@@ -82,16 +82,24 @@ submissions.</p>
 
 
 <dt id="arg-geneticvalues">geneticValues<a class="anchor" aria-label="anchor" href="#arg-geneticvalues"></a></dt>
-<dd><p>reactive returning genetic value analysis results.</p></dd>
+<dd><p>reactive returning the flat genetic value report data
+frame (with <code>indivMeanKin</code> and <code>gu</code> columns), not a
+<code>list(report = )</code>.</p></dd>
 
 
 <dt id="arg-siteconfig">siteConfig<a class="anchor" aria-label="anchor" href="#arg-siteconfig"></a></dt>
-<dd><p>reactive returning site configuration from getSiteInfo().</p></dd>
+<dd><p>reactive returning site configuration from
+<code><a href="getSiteInfo.html">getSiteInfo()</a></code>, with <code>center</code>, <code>nodename</code>,
+<code>user</code>, <code>sysname</code> and <code>release</code>. When <code>NULL</code>, the
+module falls back to <code>getSiteInfo(expectConfigFile = FALSE)</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with reactive components for ORIP reporting.</p>
+    <p>A list with one reactive component, <code>colonySummary</code>, which
+returns <code>list(nTotal, nMales, nFemales, nFounders)</code>.</p>
+<p>The tab is mounted only when <code><a href="shouldShowOripTab.html">shouldShowOripTab</a></code> is
+<code>TRUE</code> (the ONPRC site configuration; see <code><a href="appUI.html">appUI</a></code>).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

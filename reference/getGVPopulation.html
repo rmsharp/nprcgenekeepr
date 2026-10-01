@@ -71,13 +71,15 @@ that information is incorporated via the <code>ped$population</code> column.</p>
 
 <dt id="arg-pop">pop<a class="anchor" aria-label="anchor" href="#arg-pop"></a></dt>
 <dd><p>character vector with animal IDs to consider as the population of
-interest. The default is NULL.</p></dd>
+interest. The default is NULL: an existing <code>population</code> column of
+<code>ped</code> is used if there is one, otherwise all animals.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A logical vector corresponding to the IDs in the vector of
-animal IDs provided to the function in <code>pop</code>.</p>
+    <p>A logical vector with one element per row of <code>ped</code>, in the
+order of <code>ped</code>: <code>TRUE</code> if the animal is in the population of
+interest. IDs in <code>pop</code> that are not in <code>ped</code> are ignored.</p>
     </div>
 
     <div class="section level2">

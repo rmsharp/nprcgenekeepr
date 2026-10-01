@@ -1,4 +1,4 @@
-# Add back single parents trimmed pedigree
+# Add back second parents to a trimmed pedigree
 
 Uses the `ped` dataframe, which has full complement of parents and the
 `uPed` dataframe, which has all uninformative parents removed to add
@@ -20,18 +20,20 @@ addBackSecondParents(uPed, ped)
 
 - ped:
 
-  a trimmed pedigree
+  the full (untrimmed) pedigree dataframe, from which the second parents
+  are taken.
 
 ## Value
 
-A dataframe with pedigree with single parents added.
+A pedigree with single parents added. It is a `data.table` once any
+record is added and a plain dataframe when none is.
 
 ## Examples
 
 ``` r
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge = 2,
+  minSireAge = 2, minDamAge = 2,
   reportChanges = FALSE,
   reportErrors = FALSE
 )

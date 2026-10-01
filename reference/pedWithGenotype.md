@@ -10,4 +10,7 @@ data(pedWithGenotype)
 
 ## Format
 
-An object of class `data.frame` with 280 rows and 12 columns.
+A dataframe containing 280 records with 12 columns: `id`, `sire`, `dam`,
+`sex` (factor), `gen`, `birth`, `exit`, `age`, `first` and `second`
+(numeric allele codes), and `first_name` and `second_name` (the allele
+names).

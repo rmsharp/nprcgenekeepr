@@ -11,7 +11,16 @@ data(lacy1989PedAlleles)
 
 ## Format
 
-An object of class `data.frame` with 14 rows and 5002 columns.
+A dataframe with 14 rows and 5002 columns. There are 5000 columns (`V1`
+to `V5000`), one for each iteration in `geneDrop` containing alleles
+randomly selected at each generation of the pedigree using Mendelian
+rules.
+
+Column 5001 is the `id` column with two rows for each member of the
+pedigree (2 \* 7).
+
+Column 5002 is the `parent` column with values of `sire` and `dam`
+alternating.
 
 ## Source
 

@@ -44,7 +44,8 @@ reportGV(
 - pop:
 
   Character vector with animal IDs to consider as the population of
-  interest. The default is NULL.
+  interest. The default is NULL: an existing `population` column of
+  `ped` is used if there is one, otherwise all animals.
 
 - byID:
 
@@ -58,8 +59,9 @@ reportGV(
 
 - updateProgress:
 
-  Function or NULL. If this function is defined, it will be called
-  during each iteration to update a
+  Function or NULL. If this function is defined, it will be called once
+  at the start and then once for each animal processed by the gene drop,
+  to update a
   [`shiny::Progress`](https://rdrr.io/pkg/shiny/man/Progress.html)
   object.
 
@@ -189,7 +191,7 @@ itself is unchanged.
 library(nprcgenekeepr)
 examplePedigree <- nprcgenekeepr::examplePedigree
 breederPed <- qcStudbook(examplePedigree,
-  minParentAge = 2,
+  minSireAge = 2, minDamAge = 2,
   reportChanges = FALSE,
   reportErrors = FALSE
 )
@@ -203,6 +205,8 @@ ped <- trimPedigree(probands, ped,
   removeUninformative = FALSE,
   addBackParents = FALSE
 )
+## guIter = 50 only keeps the example fast. With so few iterations `fg` and
+## `fgSE` can be degenerate, and a warning about that may be printed.
 geneticValue <- reportGV(ped,
   guIter = 50, # should be >= 1000
   guThresh = 3,

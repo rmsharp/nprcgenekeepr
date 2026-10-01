@@ -76,7 +76,9 @@ animal ID. Elements are named with the IDs from the columns of kmat.</p>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The mean kinship of animal <em>i</em> is $$MK_i = \Sigma f_ij / N$$,
 in which the summation is over all animals, <em>j</em>, including the kinship
-of animal <em>i</em> to itself.</p>
+of animal <em>i</em> to itself. <code>NA</code> values are dropped, so <em>N</em> is
+the number of non-<code>NA</code> kinship values in the animal's column, not
+the number of animals.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

@@ -36,11 +36,11 @@ modGeneticValueServer(
 - twinRelations:
 
   reactive returning a validated twin/zygosity sidecar data.frame
-  (`id1`, `id2`, `code`), or `NULL`. Unlike `kinshipOverrideFile` below,
-  this data does not originate inside this module – it is uploaded on
-  the Pedigree Browser's Diagram tab and threaded in by `appServer`
-  (BL-N Slice 3), so a declared MZ-twin pair's corrected kinship is
-  reflected in
+  (`id1`, `id2`, `code`), or `NULL`. Unlike the kinship-override file
+  (uploaded through this module's own UI), this data does not originate
+  inside this module – it is uploaded on the Pedigree Browser's Diagram
+  tab and threaded in by `appServer` (BL-N Slice 3), so a declared
+  MZ-twin pair's corrected kinship is reflected in
   [`reportGV`](https://github.com/rmsharp/nprcgenekeepr/reference/reportGV.md)'s
   output regardless of which tab the user visits first. Defaults to
   `reactive(NULL)` (no twins declared).
@@ -48,10 +48,12 @@ modGeneticValueServer(
 ## Value
 
 List with `geneticValues`, `topAnimals`, `nAnalyzed`, `kinshipMatrix`,
-`founderStats`, `maleFounders`, `femaleFounders`, and `snapshotSource`
-(issue \#167 Slice 4: the most recent run's analyzed pedigree, its
-`nprcgenekeeprGV` object, and its `guIter`/`guThresh`, captured
-atomically for
+`kinshipOverrides` (the validated kinship-override data frame loaded
+through this module's kinship-override upload, or `NULL` when none is
+loaded or it cannot be read), `founderStats`, `maleFounders`,
+`femaleFounders`, and `snapshotSource` (issue \#167 Slice 4: the most
+recent run's analyzed pedigree, its `nprcgenekeeprGV` object, and its
+`guIter`/`guThresh`, captured atomically for
 [`modSnapshotTrendsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modSnapshotTrendsServer.md)).
 
 ## References

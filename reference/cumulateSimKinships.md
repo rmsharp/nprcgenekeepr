@@ -1,10 +1,10 @@
 # Compute kinship summary statistics across simulations
 
-`cumulateSimKinships` creates a named list of length 4 is generated
-where the first element is the mean of the simulated kinships, the
-second element is the standard deviation of the simulated kinships the
-third element is the minimum value of the kinships, and the forth
-element is the maximum value of the kinships.
+`cumulateSimKinships` returns a named list of length 4 where the first
+element is the mean of the simulated kinships, the second element is the
+standard deviation of the simulated kinships, the third element is the
+minimum value of the kinships, and the fourth element is the maximum
+value of the kinships.
 
 ## Usage
 

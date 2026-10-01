@@ -82,7 +82,8 @@ happened.</p></dd>
 <li><p><code>deltas</code> - the current delta comparison (see
 <code><a href="calcSnapshotDeltas.html">calcSnapshotDeltas</a></code>), keyed off the sidebar's rule/from/
 to selectors.</p></li>
-<li><p><code>isReady</code> - logical: is a non-empty history loaded.</p></li>
+<li><p><code>isReady</code> - logical: <code>TRUE</code> once <code>history</code> is
+non-<code>NULL</code> (a history has been uploaded or generated).</p></li>
 </ul><p>The generated snapshot's <code>membershipRule</code> is auto-derived from
 <code>snapshotSource()$ped$population</code> (issue #167 Slice 4, S760 owner
 decision): <code>"focalPopulation"</code> when the analyzed pedigree's

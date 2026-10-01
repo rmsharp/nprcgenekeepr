@@ -81,16 +81,21 @@ returned by <code><a href="checkMarkerGenotypeFile.html">checkMarkerGenotypeFile
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A character matrix with one row per unique <code>id</code> and one
 column per unique <code>locus</code>. Each cell holds that individual's two
-alleles at that locus, sorted alphabetically and joined by <code>"/"</code>
-(e.g. <code>"A/B"</code>), or <code>NA</code> when that individual has no genotype
-record at that locus.</p>
+alleles at that locus, sorted (by string collation, so locale-dependent
+for mixed-case alleles) and joined by <code>"/"</code> (e.g. <code>"A/B"</code>), or
+<code>NA</code> when that individual has no genotype record at that locus. A
+record with a missing allele gives the string <code>"NA/NA"</code> (not
+<code>NA</code>); <code><a href="checkMarkerGenotypeFile.html">checkMarkerGenotypeFile</a></code> does not reject such
+rows.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Row and column order follow first appearance in <code>genotype</code>, not a
 string sort – a string sort would place <code>"L10"</code> before
 <code>"L2"</code> for any panel with more than nine loci, silently scrambling
-locus order.</p>
+locus order. If <code>genotype</code> has more than one row for the same
+<code>id</code> x <code>locus</code>, the last row silently overwrites the others, so
+run <code><a href="checkMarkerGenotypeFile.html">checkMarkerGenotypeFile</a></code> first.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

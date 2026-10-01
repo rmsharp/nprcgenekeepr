@@ -41,10 +41,13 @@ kinship(
 
 - sparse:
 
-  logical flag. If `TRUE`, `Matrix::Diagnol()` is used to make a unit
-  diagonal matrix. If `FALSE`,
-  [`base::diag()`](https://rdrr.io/r/base/diag.html) is used to make a
-  unit square matrix.
+  logical flag. If `TRUE`,
+  [`Matrix::Diagonal()`](https://rdrr.io/pkg/Matrix/man/Diagonal.html)
+  is used to make the starting diagonal matrix (one half of the identity
+  matrix, the founders' self-kinship) and the result is a sparse
+  `dgCMatrix`. If `FALSE`,
+  [`base::diag()`](https://rdrr.io/r/base/diag.html) is used and the
+  result is a base matrix.
 
 - twinRelations:
 
@@ -98,8 +101,8 @@ A kinship square matrix
 
 The rows (cols) of founders are just 0.5 \* identity matrix, no further
 processing is needed for them. Parents must be processed before their
-children, and then a child's kinship is just a sum of the kinship's for
-his or her parents.
+children, and then a child's kinship is just the average of the kinship
+values for his or her parents.
 
 The code for the kinship function was written by Terry Therneau at the
 Mayo clinic and taken from his website. This function is part of a

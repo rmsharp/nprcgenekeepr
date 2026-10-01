@@ -12,17 +12,17 @@ alleleFreq(alleles, ids = NULL)
 
 - alleles:
 
-  an integer vector of alleles in the population
+  a numeric vector of alleles (integer codes) in the population
 
 - ids:
 
   character vector of IDs indicating to which animal each allele in
-  `alleles` belongs.
+  `alleles` belongs. It must be the same length as `alleles`.
 
 ## Value
 
-A data.frame with columns `allele` and `freq`. This is a table of allele
-counts within the population.
+A data.frame with columns `allele` (a factor) and `freq`. This is a
+table of allele counts within the population.
 
 ## Details
 

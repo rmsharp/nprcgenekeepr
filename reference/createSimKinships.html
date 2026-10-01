@@ -98,7 +98,8 @@ has more animals than you want to use in the simulation by defining
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>logical vector of length one that indicates whether or not
-to print out when an animal is missing a sire or a dam.</p></dd>
+to print a message when a sire or dam is unknown and there are no
+representative sires or dams to draw from, so it stays <code>NA</code>.</p></dd>
 
 
 <dt id="arg-twinrelations">twinRelations<a class="anchor" aria-label="anchor" href="#arg-twinrelations"></a></dt>
@@ -113,9 +114,9 @@ precondition.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list of <code>n</code> lists with each internal list containing a
-kinship matrix from simulated pedigrees of possible
-parents for animals with unknown parents.</p>
+    <p>A list of <code>n</code> kinship matrices, each from one simulated
+pedigree with possible parents drawn for animals with unknown
+parents.</p>
     </div>
 
     <div class="section level2">

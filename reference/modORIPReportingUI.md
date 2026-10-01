@@ -1,9 +1,9 @@
 # ORIP Reporting Module - UI Function
 
 Creates user interface for ORIP (Office of Research Infrastructure
-Programs) reporting. This module will contain formatted reports suitable
-for submission to ORIP as part of primate center grant reporting
-requirements.
+Programs) reporting. The module is under development and is intended to
+grow into formatted reports suitable for submission to ORIP as part of
+primate center grant reporting requirements.
 
 ## Usage
 
@@ -23,17 +23,19 @@ A `div` object containing the ORIP reporting UI.
 
 ## Details
 
-The ORIP Reporting tab provides summary statistics and formatted reports
-for submission to the Office of Research Infrastructure Programs. This
-includes:
+The ORIP Reporting tab currently shows:
 
-- Colony demographics summary
+- A site information table
 
-- Genetic diversity metrics
+- A colony summary (animal, sex and founder counts)
 
-- Breeding program statistics
+- Mean kinship and mean genome uniqueness
 
-- Founder representation analysis
+with two CSV exports. Breeding-program statistics, founder analysis and
+formatted reports are not implemented. The tab is mounted only when
+[`shouldShowOripTab`](https://github.com/rmsharp/nprcgenekeepr/reference/shouldShowOripTab.md)
+is `TRUE` (the ONPRC site configuration; see
+[`appUI`](https://github.com/rmsharp/nprcgenekeepr/reference/appUI.md)).
 
 ## See also
 

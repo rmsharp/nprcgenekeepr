@@ -28,7 +28,7 @@ calcGU(alleles, threshold = 1L, byID = FALSE, pop = NULL)
 
   - `id` — A character vector of IDs for a set of animals.
 
-  - `parent` — A factor with levels of sire and dam.
+  - `parent` — A character vector with values of sire and dam.
 
 - threshold:
 

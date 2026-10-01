@@ -70,7 +70,17 @@ status as alive, dead, sold, etc.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A factor vector of the standardized status codes with levels:
-<code>ALIVE</code>, <code>DECEASED</code>, <code>SHIPPED</code>, and <code>UNKNOWN</code>.</p>
+<code>ALIVE</code>, <code>DECEASED</code>, <code>SHIPPED</code>, and <code>UNKNOWN</code>. A
+value that is not recognized becomes <code>NA</code>, not <code>UNKNOWN</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Case is ignored, but spaces are not trimmed. The recognized codes are
+<code>ALIVE</code>, <code>A</code>, <code>1</code> for alive; <code>DECEASED</code>,
+<code>DEAD</code>, <code>DIED</code>, <code>D</code>, <code>2</code> for deceased;
+<code>SHIPPED</code>, <code>SHIPED</code>, <code>SOLD</code>, <code>SALE</code>, <code>S</code>,
+<code>3</code> for shipped; and <code>UNKNOWN</code>, <code>U</code>, <code>4</code> or
+<code>NA</code> for unknown.</p>
     </div>
 
     <div class="section level2">
@@ -80,13 +90,16 @@ status as alive, dead, sold, etc.</p></dd>
 <span class="r-in"><span>  <span class="st">"A"</span>, <span class="st">"alive"</span>, <span class="st">"Alive"</span>, <span class="st">"1"</span>, <span class="st">"S"</span>, <span class="st">"Sale"</span>, <span class="st">"sold"</span>, <span class="st">"shipped"</span>,</span></span>
 <span class="r-in"><span>  <span class="st">"D"</span>, <span class="st">"d"</span>, <span class="st">"dead"</span>, <span class="st">"died"</span>, <span class="st">"deceased"</span>, <span class="st">"2"</span>,</span></span>
 <span class="r-in"><span>  <span class="st">"shiped"</span>, <span class="st">"3"</span>, <span class="st">"U"</span>, <span class="st">"4"</span>, <span class="st">"unknown"</span>, <span class="cn">NA</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"Unknown"</span>, <span class="st">"H"</span>, <span class="st">"hermaphrodite"</span>, <span class="st">"U"</span>, <span class="st">"Unknown"</span>, <span class="st">"4"</span></span></span>
+<span class="r-in"><span>  <span class="st">"Unknown"</span>, <span class="st">"U"</span>, <span class="st">"Unknown"</span>, <span class="st">"4"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">## A value that is not recognized becomes NA</span></span></span>
+<span class="r-in"><span><span class="fu">convertStatusCodes</span><span class="op">(</span><span class="st">"hermaphrodite"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Levels: ALIVE DECEASED SHIPPED UNKNOWN</span>
 <span class="r-in"><span><span class="fu">convertStatusCodes</span><span class="op">(</span><span class="va">original</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] ALIVE    ALIVE    ALIVE    ALIVE    SHIPPED  SHIPPED  SHIPPED  SHIPPED </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] DECEASED DECEASED DECEASED DECEASED DECEASED DECEASED SHIPPED  SHIPPED </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] UNKNOWN  UNKNOWN  UNKNOWN  UNKNOWN  UNKNOWN  &lt;NA&gt;     &lt;NA&gt;     UNKNOWN </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] UNKNOWN  UNKNOWN </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] UNKNOWN  UNKNOWN  UNKNOWN  UNKNOWN  UNKNOWN  UNKNOWN  UNKNOWN  UNKNOWN </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Levels: ALIVE DECEASED SHIPPED UNKNOWN</span>
 </code></pre></div>
     </div>

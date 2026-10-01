@@ -16,7 +16,10 @@ modCrossCenterIdentityServer(id)
 
 ## Value
 
-A list with reactive components:
+A list with reactive components. `mergedPedigree` and `issues` halt (via
+[`req`](https://rdrr.io/pkg/shiny/man/req.html), not `NULL`) until
+Validate has been run, and `mergedPedigree` also halts while issues
+remain:
 
 - `mergedPedigree` - the
   [`resolveCrossCenterIds`](https://github.com/rmsharp/nprcgenekeepr/reference/resolveCrossCenterIds.md)

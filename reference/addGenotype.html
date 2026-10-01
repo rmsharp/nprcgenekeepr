@@ -74,14 +74,20 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A pedigree object with genotype data added.</p>
+    <p>A plain <code>data.frame</code> (not a special pedigree class) with the
+rows of <code>ped</code> plus integer columns <code>first</code> and <code>second</code>
+holding the allele codes (numbered from 10001).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The two allele columns are coerced to character internally so the name-keyed
 allele dictionary is both built and indexed by allele label. This keeps the
 integer encoding consistent even when the allele columns are supplied as
-factors (a factor would otherwise be indexed by its integer codes).</p>
+factors (a factor would otherwise be indexed by its integer codes). The
+allele columns are taken by position (columns 2 and 3 of <code>genotype</code>),
+not by name. The result is the output of a full outer <code><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge()</a></code> on
+<code>id</code>, so genotype ids that are absent from <code>ped</code> are added as
+extra rows.</p>
     </div>
 
     <div class="section level2">

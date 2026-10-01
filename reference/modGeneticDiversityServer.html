@@ -91,7 +91,9 @@ the module shows guidance instead of an empty plot.</p>
 <dt id="arg-groups">groups<a class="anchor" aria-label="anchor" href="#arg-groups"></a></dt>
 <dd><p>reactive returning a list of character vectors of animal IDs,
 one per breeding group (the <code>groups</code> returned by
-<code><a href="modBreedingGroupsServer.html">modBreedingGroupsServer</a></code>).</p></dd>
+<code><a href="modBreedingGroupsServer.html">modBreedingGroupsServer</a></code>). That list includes the trailing
+"Unused" element when candidates remain unplaced, and the heat map scores
+it as another group.</p></dd>
 
 
 <dt id="arg-pedigree">pedigree<a class="anchor" aria-label="anchor" href="#arg-pedigree"></a></dt>
@@ -105,8 +107,11 @@ frame.</p></dd>
 
 
 <dt id="arg-kinshipmatrix">kinshipMatrix<a class="anchor" aria-label="anchor" href="#arg-kinshipmatrix"></a></dt>
-<dd><p>reactive returning the full kinship matrix (row and
-column names are animal IDs).</p></dd>
+<dd><p>reactive returning a square kinship matrix (row and
+column names are animal IDs) covering every member of every group;
+<code><a href="getGeneticDiversityStats.html">getGeneticDiversityStats</a></code> stops when a group member is
+missing from it. In the app this is the genetic-value tab's
+population-filtered matrix, not the full-pedigree matrix.</p></dd>
 
 
 <dt id="arg-currentdate">currentDate<a class="anchor" aria-label="anchor" href="#arg-currentdate"></a></dt>
@@ -118,7 +123,10 @@ Defaults to <code><a href="https://rdrr.io/r/base/Sys.time.html" class="external
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list with two reactive elements: <code>stats</code>, the per-group
 metric data frame (or <code>NULL</code> when data are not ready), and
-<code>heatmap</code>, the <code>ggplot</code> heat map (or <code>NULL</code>).</p>
+<code>heatmap</code>, the <code>ggplot</code> heat map (or <code>NULL</code>). Errors
+raised inside <code>getGeneticDiversityStats</code> (a group member missing
+from the kinship matrix, or a group member with a missing birth date)
+are not caught, so the reactives error instead of returning <code>NULL</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

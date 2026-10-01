@@ -92,7 +92,9 @@ animal.</p></dd>
 <dt id="arg-genotype">genotype<a class="anchor" aria-label="anchor" href="#arg-genotype"></a></dt>
 <dd><p>A dataframe containing known genotypes. It has three
 columns:  <code>id</code>, <code>first</code>, and <code>second</code>. The second and third
-columns contain the integers indicating the observed genotypes.</p></dd>
+columns contain the integers indicating the observed genotypes. The codes
+must not collide with the integer codes the function assigns to unknown
+founder alleles (1, 2, 3, ...).</p></dd>
 
 
 <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
@@ -102,8 +104,8 @@ Default is 1000.</p></dd>
 
 <dt id="arg-updateprogress">updateProgress<a class="anchor" aria-label="anchor" href="#arg-updateprogress"></a></dt>
 <dd><p>function or NULL. If this function is defined, it
-will be called during each iteration to update a
-<code><a href="https://rdrr.io/pkg/shiny/man/Progress.html" class="external-link">shiny::Progress</a></code> object.</p></dd>
+will be called once at the start (with <code>reset = TRUE</code>) and then once
+for each animal processed, to update a <code><a href="https://rdrr.io/pkg/shiny/man/Progress.html" class="external-link">shiny::Progress</a></code> object.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -113,7 +115,8 @@ A data.frame providing the maternal and paternal alleles for an animal
 for each iteration. The first <code>n</code> columns indicate the allele for
 each iteration. These are followed by two columns: <code>id</code>, the
 animal's ID, and <code>parent</code>, whether the allele came from the sire
-or dam.</p>
+(<code>"sire"</code>) or dam (<code>"dam"</code>). Each animal has two rows, and
+the animals are ordered by generation, oldest first.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -121,7 +124,7 @@ or dam.</p>
 by Jean W MacCluer, John L Vandeberg, and Oliver A Ryder (1986)
 <a href="doi:10.1002/zoo.1430050209">doi:10.1002/zoo.1430050209</a> is used in the genetic value calculations.</p>
 <p>Currently there is no means of handling knowing only one haplotype.
-It will be easy to add another column to handle situations where only one
+Another column could be added to handle situations where only one
 allele is observed and it is not known to be homozygous or heterozygous. The
 new fourth column could have a frequency for homozygosity that could be
 used in the gene dropping algorithm.</p>

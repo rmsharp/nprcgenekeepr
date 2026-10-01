@@ -1,7 +1,10 @@
 # Pedigree Browser Module - Server Function
 
-Server logic for pedigree browser module handling focal animal
-selection, pedigree processing, filtering, and data export.
+Server logic for pedigree browser module handling focal animal selection
+(typed, pasted or uploaded, or set by clicking a diagram node), pedigree
+processing, filtering (focal trim and the Display Unknown IDs filter),
+the Diagram tab (edge style, names, twin connectors, PNG export), the
+twin/zygosity sidecar upload, and data export.
 
 ## Usage
 
@@ -26,6 +29,11 @@ A list of reactive values:
 - `pedigree` - Filtered pedigree for display (respects trim/unknown
   settings)
 
+- `analysisPedigree` - The pedigree the other tabs analyze (focal-animal
+  trim applied, no Display Unknown IDs filter, which affects only the
+  table); `appServer` uses it, not `pedigree`, as the shared current
+  pedigree
+
 - `processedPedigree` - Full pedigree with population, pedNum, gen
   columns
 
@@ -35,13 +43,20 @@ A list of reactive values:
 
 - `populationCount` - Count of animals marked as population
 
-- `isReady` - Logical indicating if pedigree data is ready
+- `isReady` - Logical indicating if pedigree data is ready. With no
+  studbook loaded, `isReady()` and `nAnimals()` halt with a silent
+  [`req`](https://rdrr.io/pkg/shiny/man/req.html) error instead of
+  returning `FALSE` and 0
 
 - `twinRelations` - The validated twin/zygosity sidecar (`NULL` if none
-  uploaded or invalid). Unlike the Diagram tab's own rendering, this is
-  the raw, ungated reactive – not filtered by the "Show Twin Connectors"
-  toggle – so callers outside this module (e.g. `appServer`) see the
-  validated data regardless of that toggle's state (BL-N Slice 3).
+  uploaded or invalid). It is validated against the filtered `pedigree`
+  (focal trim applied, unknown IDs hidden); one id outside that pedigree
+  fails the validation, an error notification is shown and the whole
+  sidecar becomes `NULL`. Unlike the Diagram tab's own rendering, this
+  is the raw, ungated reactive – not filtered by the "Show Twin
+  Connectors" toggle – so callers outside this module (e.g. `appServer`)
+  see the validated data regardless of that toggle's state (BL-N Slice
+  3).
 
 ## Details
 

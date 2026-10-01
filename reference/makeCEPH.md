@@ -12,17 +12,18 @@ makeCEPH(id, sire, dam)
 
 - id:
 
-  character vector with unique identifier for an individual
+  character vector of the unique identifiers of all individuals; a
+  duplicated id stops the function with a `duplicate row.names` error.
 
 - sire:
 
-  character vector with unique identifier for an individual's father
-  (`NA` if unknown).
+  character vector, parallel to `id`, with the identifier of each
+  individual's father (`NA` if unknown).
 
 - dam:
 
-  character vector with unique identifier for an individual's mother
-  (`NA` if unknown).
+  character vector, parallel to `id`, with the identifier of each
+  individual's mother (`NA` if unknown).
 
 ## Value
 

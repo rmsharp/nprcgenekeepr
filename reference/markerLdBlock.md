@@ -1,9 +1,9 @@
 # Compute a descriptive, same-chromosome pairwise LD/block statistic
 
-Estimates a descriptive linkage-disequilibrium (LD) block statistic (D',
-a chi-squared-based generalization of r2) for every pair of loci on the
-same chromosome (issue \#153, D3b). This is deliberately the
-*secondary*, exploratory-use statistic in the design's two-metric pair –
+Estimates a descriptive linkage-disequilibrium (LD) block statistic (the
+two columns `Dprime` and `r2`) for every pair of loci on the same
+chromosome (issue \#153, D3b). This is deliberately the *secondary*,
+exploratory-use statistic in the design's two-metric pair –
 [`markerRealizedRelatednessVariance`](https://github.com/rmsharp/nprcgenekeepr/reference/markerRealizedRelatednessVariance.md)
 is the primary, genuinely pedigree-valid metric. No CRAN package is both
 pedigree-aware and multiallelic-capable (issue \#153 design doc sec
@@ -70,7 +70,11 @@ with fewer than 2 individuals genotyped at both loci (after any
 `founderIds` restriction) returns `NA` with a named warning, matching
 [`markerFst`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)'s
 precedent for an insufficient-evidence pair – not a
-[`stop()`](https://rdrr.io/r/base/stop.html).
+[`stop()`](https://rdrr.io/r/base/stop.html). The function does
+[`stop()`](https://rdrr.io/r/base/stop.html) when no locus has a
+non-`NA` `chrom`. A locus missing from either `locusMetadata` or
+`genotypeMatrix` is dropped silently, and when no chromosome has two or
+more loci the result is a zero-row dataframe with the full column set.
 
 ## References
 

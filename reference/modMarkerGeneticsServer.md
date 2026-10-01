@@ -2,9 +2,13 @@
 
 Reads an uploaded long-format marker genotype file (D1 format: `id`,
 `locus`, `allele1`, `allele2`), validates and pivots it
-([`checkMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md),
-[`buildMarkerGenotypeMatrix`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md)),
-estimates marker-based kinship independent of pedigree
+([`checkSequenceGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.md),
+which applies the
+[`checkMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md)
+checks plus a literal-"." rejection and a `maxLoci` warning, then
+[`buildMarkerGenotypeMatrix`](https://github.com/rmsharp/nprcgenekeepr/reference/buildMarkerGenotypeMatrix.md);
+the Center B upload is validated the same way), estimates marker-based
+kinship independent of pedigree
 ([`markerKinship`](https://github.com/rmsharp/nprcgenekeepr/reference/markerKinship.md)),
 and surfaces a per-animal comparison of pedigree-based mean kinship
 (`indivMeanKin`, already computed upstream and passed in via
@@ -68,15 +72,19 @@ A named list of reactive elements: `markerGenotype`, the raw uploaded
 genotype data frame (or `NULL` before upload); `markerKinshipMatrix`,
 the marker-based `id` x `id` kinship matrix (or `NULL`);
 `comparisonTable`, the per-animal `indivMeanKin`/`markerMeanKin`
-comparison data frame (or `NULL`); `heterozygosityTable`, the per-animal
+comparison data frame (or `NULL`; `indivMeanKin` is `NA` for every row
+when the pedigree kinship matrix is `NULL` or errors, and for any
+genotyped id absent from it); `heterozygosityTable`, the per-animal
 `ho`/`he` heterozygosity data frame (`he` is the population-wide mean
 expected heterozygosity, repeated per row) (or `NULL`);
 `exclusionTable`, the
 [`markerParentageExclusion`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageExclusion.md)
-flagged-pairs data frame (or `NULL` before a genotype file and a
-pedigree are both available); `crossCenterGenotypeB`, the raw uploaded
-Center B genotype data frame (or `NULL` before upload);
-`crossCenterTable`, the
+data frame: one row per recorded dam/sire pair with `exclusionCount`,
+`nLoci` and a `flagged` column (`TRUE` where the count exceeds the
+tolerance), so pairs that are not flagged are included (or `NULL` before
+a genotype file and a pedigree are both available);
+`crossCenterGenotypeB`, the raw uploaded Center B genotype data frame
+(or `NULL` before upload); `crossCenterTable`, the
 [`markerFst`](https://github.com/rmsharp/nprcgenekeepr/reference/markerFst.md)
 `locus`/`fst` data frame with a trailing `"Pooled"` row (or `NULL`
 before both center files are uploaded); `candidateAssignmentTable`, the
@@ -107,10 +115,11 @@ both uploaded, or while a threshold input is invalid);
 `sequenceExportGenotypeMatrix`, `sequenceExportRohTable` and
 `sequenceExportManifest`, the de-identified genotype matrix,
 de-identified F_ROH table and export manifest captured at "Generate
-De-Identified Export Preview" (each `NULL` before then);
-`sequenceExportConfirmed`, `FALSE` until that export's confirm-gate
-modal is accepted for the current preview; `mhcHaplotypeSummaryTable`,
-the
+De-Identified Export Preview" (each `NULL` before then, and when any
+genotype id is absent from the pedigree or the ROH table or pedigree is
+`NULL`); `sequenceExportConfirmed`, `FALSE` until that export's
+confirm-gate modal is accepted for the current preview;
+`mhcHaplotypeSummaryTable`, the
 [`mhcHaplotypeFrequency`](https://github.com/rmsharp/nprcgenekeepr/reference/mhcHaplotypeFrequency.md)
 `summary` data frame (or `NULL` before an MHC haplotype file is
 uploaded, or while a rarity threshold is invalid);
@@ -142,13 +151,13 @@ deliberately independent of the other five tabs' shared `genotypeFile`,
 since Shiny renders every `tabPanel`'s output bindings regardless of
 which tab is visible: a multiallelic file uploaded through the shared
 input would break the other five tabs' own DT outputs simultaneously,
-not just this tab's (found empirically this session, correcting the
-original PRE-RED plan). Validated through the multiallelic-tolerant
-sibling validator
+not just this tab's. Validated through the multiallelic-tolerant sibling
+validator
 ([`checkLinkageMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLinkageMarkerGenotypeFile.md))
 rather than
-[`checkMarkerGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkMarkerGenotypeFile.md).
-Any exported LD-block table is de-identified
+[`checkSequenceGenotypeFile`](https://github.com/rmsharp/nprcgenekeepr/reference/checkSequenceGenotypeFile.md),
+the validator for the shared upload. Any exported LD-block table is
+de-identified
 ([`obfuscateLdBlocks`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscateLdBlocks.md))
 behind a curator confirm-gate reusing
 [`modDeidentifiedExportServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modDeidentifiedExportServer.md)'s

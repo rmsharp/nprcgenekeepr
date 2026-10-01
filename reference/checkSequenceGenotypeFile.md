@@ -7,10 +7,11 @@ checks – but sized and hardened for sequence-derived panels (issue
 \#152): a soft, overridable warning above a sparse/GBS-scale panel-size
 ceiling, and an explicit rejection of a literal `"."` allele value
 (VCF's missing-genotype placeholder), rather than silently counting it
-as a real allele. Optionally cross-validates an accompanying
-locus-metadata sidecar by reusing
+as a real allele. Optionally validates the accompanying locus-metadata
+sidecar's own structure by reusing
 [`checkLocusMetadata`](https://github.com/rmsharp/nprcgenekeepr/reference/checkLocusMetadata.md),
-rather than reinventing that check.
+rather than reinventing that check; the sidecar is not cross-checked
+against the loci of the genotype table.
 
 ## Usage
 

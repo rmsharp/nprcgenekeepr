@@ -4,8 +4,9 @@ Reports eligible individual mate-pair candidates via
 [`reportMatePairs`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
 (issue \#151 Slice 1), wrapped in a curator-facing configuration panel
 for the D4-ratified population scope (`populationSource`: `"allAlive"` –
-ids with no recorded `ped$exit` date; `"topRanked"` – the top
-`nTopAnimals` ids in `geneticValues`' own report order, mirroring
+ids with no recorded `ped$exit` date, or every id when the pedigree has
+no `exit` column; `"topRanked"` – the top `nTopAnimals` ids in
+`geneticValues`' own report order, mirroring
 [`modBreedingGroupsServer`](https://github.com/rmsharp/nprcgenekeepr/reference/modBreedingGroupsServer.md)'s
 own `topRanked` reading; `"custom"` – a pasted, delimiter-separated id
 list), the D2 minimum- age floor, and the D5-ratified exclude-list
@@ -74,7 +75,10 @@ data.frame from the most recent
 [`reportMatePairs()`](https://github.com/rmsharp/nprcgenekeepr/reference/reportMatePairs.md)
 run (see that function's own return documentation for columns);
 `excluded`, the corresponding excluded-pairs data.frame; and `isReady`,
-`TRUE` once a run has completed.
+`TRUE` once a run has completed. Before the first run
+[`pairs()`](https://rdrr.io/r/graphics/pairs.html) and `excluded()` halt
+(via [`req`](https://rdrr.io/pkg/shiny/man/req.html)) rather than
+returning `NULL`.
 
 ## Details
 

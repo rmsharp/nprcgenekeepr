@@ -3,9 +3,10 @@
 Server logic for the Potential Parents module. On button press, it calls
 [`getPotentialParents`](https://github.com/rmsharp/nprcgenekeepr/reference/getPotentialParents.md)
 against the current pedigree, flattens the result into a sortable table,
-and exposes it for CSV download. The surface degrades gracefully when no
-pedigree is loaded, when the pedigree lacks the `fromCenter`
-colony-origin field, or when no in-colony animal has an unknown parent.
+and exposes it for CSV download. The surface degrades gracefully when
+the pedigree reactive returns `NULL` or zero rows, when the pedigree
+lacks the `fromCenter` colony-origin field, or when no in-colony animal
+has an unknown parent.
 
 ## Usage
 
@@ -28,7 +29,9 @@ modPotentialParentsServer(
 
 - pedigree:
 
-  reactive returning the current pedigree data.frame.
+  reactive returning the current pedigree data.frame. The default `NULL`
+  is not usable: the module calls `pedigree()`, so pass a reactive
+  (which may itself return `NULL`).
 
 - minSireAge:
 

@@ -66,7 +66,7 @@ Brief codebook and Major Functions
 Funtions designed for interactive use
 
 - [`addBackSecondParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addBackSecondParents.md)
-  : Add back single parents trimmed pedigree
+  : Add back second parents to a trimmed pedigree
 - [`addGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/addGenotype.md)
   : Add genotype data to pedigree file
 - [`addParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addParents.md)
@@ -197,7 +197,7 @@ Funtions designed for interactive use
 - [`addAnimalsWithNoRelative()`](https://github.com/rmsharp/nprcgenekeepr/reference/addAnimalsWithNoRelative.md)
   : Add an NA value for animals with no relative
 - [`addBackSecondParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addBackSecondParents.md)
-  : Add back single parents trimmed pedigree
+  : Add back second parents to a trimmed pedigree
 - [`addGenotype()`](https://github.com/rmsharp/nprcgenekeepr/reference/addGenotype.md)
   : Add genotype data to pedigree file
 - [`addIdRecords()`](https://github.com/rmsharp/nprcgenekeepr/reference/addIdRecords.md)
@@ -665,7 +665,7 @@ Funtions designed for interactive use
 - [`shrinkPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/shrinkPedigree.md)
   : Shrink a pedigree to fit within a bit-size budget
 - [`summarizeKinshipValues()`](https://github.com/rmsharp/nprcgenekeepr/reference/summarizeKinshipValues.md)
-  : Summarize imputed kinship values
+  : Summarize simulated kinship values
 - [`toCharacter()`](https://github.com/rmsharp/nprcgenekeepr/reference/toCharacter.md)
   : Force dataframe columns to character
 - [`trimPedigree()`](https://github.com/rmsharp/nprcgenekeepr/reference/trimPedigree.md)

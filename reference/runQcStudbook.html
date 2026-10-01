@@ -76,7 +76,8 @@ first to check for errors, then to get the cleaned data if no errors exist.</p>
 
 <dl><dt id="arg-ped">ped<a class="anchor" aria-label="anchor" href="#arg-ped"></a></dt>
 <dd><p>data.frame containing pedigree data with columns including
-id, sire, dam, sex, and optionally birth, death, departure, etc.</p></dd>
+id, sire, dam, sex, and birth (all required), and optionally death,
+departure, etc.</p></dd>
 
 
 <dt id="arg-minsireage">minSireAge<a class="anchor" aria-label="anchor" href="#arg-minsireage"></a></dt>
@@ -101,8 +102,9 @@ minimum parent age. Supplying it sets both <code>minSireAge</code> and
 
 <dt id="arg-reportchanges">reportChanges<a class="anchor" aria-label="anchor" href="#arg-reportchanges"></a></dt>
 <dd><p>logical whether to report column name changes in the
-result (default FALSE). When TRUE, warnings about renamed columns are
-included in the qcResult.</p></dd>
+result (default FALSE). When TRUE, <code>changedCols</code> and
+<code>hasChangedCols</code> in the qcResult report all renamed columns, while
+<code>warnings</code> lists only the case and space changes.</p></dd>
 
 </dl></div>
     <div class="section level2">

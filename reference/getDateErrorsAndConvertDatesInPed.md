@@ -24,7 +24,9 @@ getDateErrorsAndConvertDatesInPed(sb, errorLst)
 ## Value
 
 A list with the pedigree, `sb`, and the `errorLst` with invalid date
-rows (`errorLst$invalidDateRows`)
+rows (`errorLst$invalidDateRows`), a character vector of row numbers
+(`character(0)` when all dates are valid). When the dates are converted,
+`sb` also gains an `exit` column.
 
 ## Details
 

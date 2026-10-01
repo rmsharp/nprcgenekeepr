@@ -16,9 +16,9 @@ filterReport(ids, rpt)
 
 - rpt:
 
-  a dataframe with required colnames `id`, `gu`, `zScores`, `import`,
-  `totalOffspring`, which is a data.frame of results from a genetic
-  value analysis.
+  a dataframe with the required colname `id`, such as the data.frame of
+  results from a genetic value analysis. Only `id` is used; all other
+  columns are returned unchanged.
 
 ## Value
 

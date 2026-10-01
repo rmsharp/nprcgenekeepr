@@ -77,7 +77,7 @@ The possible columns are as follows:
 - status:
 
   – an optional factor indicating the status of an individual with
-  levels `ALIVE`, `DEAD`, and `SHIPPED`.
+  levels `ALIVE`, `DECEASED`, `SHIPPED`, and `UNKNOWN`.
 
 - condition:
 

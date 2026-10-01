@@ -12673,3 +12673,19 @@ failed for six sessions until S831 untracked both (owner decision).
 `git rm` also deletes the working copy, which was right here because the
 test reads the directory, not the index; recoverable from `9a2a5ddb7`.
 Complements Learning 835.
+
+#### Learning 837
+
+**When fixing audit findings in roxygen, check each new sentence you
+write against the code and the UI, not only the finding’s suggested
+wording; and grep the claim text, because a report’s “Location” line
+numbers can point at code rather than the roxygen block.** (S841,
+2026-10-01.) Two sentences I drafted from the audit’s summary were wrong
+when read against `R/modBreedingGroups.R`: `geneticValues` is required
+only for the “Top ranked” source or the genetic-value floor (not
+always), and “Exhaustive enumeration mode” is offered only when groups =
+1 and sex ratio = “none”. Audit rows RB2 and RB3 cited
+`R/modMarkerGenetics.R:301-307` and `:340-345`, which are UI code; the
+roxygen sat near `:362-415`. Also, `test_wordlist_coverage.R` flags new
+words (“unflagged”, “upload’s”) in roxygen: reword rather than extend
+`inst/WORDLIST`.

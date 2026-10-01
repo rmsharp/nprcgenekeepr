@@ -20,8 +20,8 @@ A data frame with 280 rows and 8 columns.
 
 - gen:
 
-  generation number (integers beginning with 0 for the founder
-  generation) of the animal indicated by the `id` column.
+  generation number (numeric, whole numbers beginning with 0 for the
+  founder generation) of the animal indicated by the `id` column.
 
 - birth:
 
@@ -34,7 +34,7 @@ A data frame with 280 rows and 8 columns.
 
 - age:
 
-  age in year (numeric) of the animal indicated by the `id` column.
+  age in years (numeric) of the animal indicated by the `id` column.
 
 ## Usage
 

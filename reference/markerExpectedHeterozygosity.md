@@ -27,7 +27,12 @@ markerExpectedHeterozygosity(genotypeMatrix)
 
 A list with two elements: `perLocus`, a named numeric vector of expected
 heterozygosity per locus (names taken from `colnames(genotypeMatrix)`);
-and `meanHe`, the unweighted mean of `perLocus` across all loci.
+and `meanHe`, the unweighted mean of `perLocus` across all loci. A locus
+with no genotyped individual gets `1` (the empty sum of squared
+frequencies is 0), not `NA`, and that value is included in `meanHe`;
+unlike
+[`markerObservedHeterozygosity`](https://github.com/rmsharp/nprcgenekeepr/reference/markerObservedHeterozygosity.md),
+which returns `NA` for an individual with no genotyped locus.
 
 ## References
 

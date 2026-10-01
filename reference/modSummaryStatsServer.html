@@ -82,9 +82,10 @@ relationship designation analysis.</p>
 
 <dt id="arg-geneticvalues">geneticValues<a class="anchor" aria-label="anchor" href="#arg-geneticvalues"></a></dt>
 <dd><p>reactive returning genetic value analysis results.
-Must be a data frame with columns <code>id</code>, <code>indivMeanKin</code>, and
-<code>gu</code>. Optional <code>zScore</code> column enables z-score
-plots.</p></dd>
+Must be a data frame with columns <code>indivMeanKin</code> and <code>gu</code>
+(the <code>id</code> column is not read). Optional <code>zScores</code> column (what
+<code><a href="reportGV.html">reportGV()</a></code> emits; the legacy name <code>zScore</code> is also
+accepted) enables z-score plots.</p></dd>
 
 
 <dt id="arg-pedigree">pedigree<a class="anchor" aria-label="anchor" href="#arg-pedigree"></a></dt>
@@ -93,8 +94,11 @@ plots.</p></dd>
 
 
 <dt id="arg-kinshipmatrix">kinshipMatrix<a class="anchor" aria-label="anchor" href="#arg-kinshipmatrix"></a></dt>
-<dd><p>optional reactive returning kinship matrix. If NULL,
-the module will calculate kinship from the pedigree.</p></dd>
+<dd><p>optional reactive returning kinship matrix. When
+supplied it is used unchanged, so it should already carry any twin
+correction and kinship overrides (the app passes the shared matrix, which
+does). If NULL, or if the reactive errors or returns NULL, the module
+calculates kinship from the pedigree.</p></dd>
 
 
 <dt id="arg-founderstats">founderStats<a class="anchor" aria-label="anchor" href="#arg-founderstats"></a></dt>
@@ -108,7 +112,8 @@ on the Summary Statistics tab (monolith parity). If NULL, it is omitted.</p></dd
 <dd><p>optional reactive returning a validated
 outside-information kinship-override data frame (<code>id1</code>, <code>id2</code>,
 <code>kinship</code>); see <code><a href="applyKinshipOverrides.html">applyKinshipOverrides</a></code>.
-When the module recomputes kinship from the pedigree (the usual path), the
+When the module recomputes kinship from the pedigree (the fallback; the
+app normally supplies a matrix that already carries them), the
 overrides are applied to that matrix, so the relationship table and the
 kinship CSV export reflect the supplied values regardless of tab order.
 The override moves the kinship <em>value</em> only; the <code>relation</code>
@@ -122,7 +127,8 @@ with a logical <code>overridden</code> column in the relationship table.
 <dd><p>optional reactive returning a validated twin/zygosity
 sidecar data.frame (<code>id1</code>, <code>id2</code>, <code>code</code>); see
 <code><a href="checkTwinRelations.html">checkTwinRelations</a></code>. When the module recomputes kinship from
-the pedigree (the usual path), it is passed straight through to
+the pedigree (the fallback; the app normally supplies a matrix that
+already reflects it), it is passed straight through to
 <code><a href="kinship.html">kinship</a></code> so the relationship table and the kinship CSV
 export reflect a declared MZ-twin pair's corrected identity regardless
 of tab order (BL-N Slice 3). <code>NULL</code> (the default) is a no-op.</p></dd>
@@ -141,16 +147,26 @@ came from an override.</p></li>
 <code><a href="countFirstOrder.html">countFirstOrder()</a></code></p></li>
 <li><p><code>mkSummary</code> - Six-number summary of mean kinship</p></li>
 <li><p><code>guSummary</code> - Six-number summary of genome uniqueness</p></li>
+<li><p><code>mkShape</code>, <code>guShape</code> - Shape statistics (skewness and
+kurtosis) of mean kinship and genome uniqueness</p></li>
+<li><p><code>mkHistogram</code>, <code>zscoreHistogram</code>, <code>guHistogram</code> -
+The histogram plots (<code>ggplot</code> objects)</p></li>
+<li><p><code>meanKinshipBoxPlot</code>, <code>zscoreBoxPlot</code>,
+<code>guBoxPlot</code> - The box plots (<code>ggplot</code> objects)</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This module provides:</p><ul><li><p>Summary statistics (counts, mean kinship, genome uniqueness)</p></li>
-<li><p>Histograms and box plots for genetic value distributions</p></li>
+    <p>This module provides:</p><ul><li><p>Summary statistics (counts, mean kinship, genome uniqueness), a
+six-number summary with skewness and kurtosis, a founder table and
+an Effective Population Size block</p></li>
+<li><p>Histograms and box plots for genetic value distributions, each
+exportable as PNG (six plots)</p></li>
 <li><p>Relationship classification using <code><a href="convertRelationships.html">convertRelationships()</a></code></p></li>
 <li><p>Relationship class frequency tables using
 <code><a href="makeRelationClassesTable.html">makeRelationClassesTable()</a></code></p></li>
 <li><p>First-order relative counts using <code><a href="countFirstOrder.html">countFirstOrder()</a></code></p></li>
-<li><p>Export functionality for kinship matrix, founders, and relationships</p></li>
+<li><p>CSV export for the kinship matrix, founders, relationships, the
+first-order counts and the relationship class table</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

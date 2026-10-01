@@ -12,7 +12,8 @@ hasBothParents(id, ped)
 
 - id:
 
-  character vector of IDs to examine for parents
+  a single ID to examine for parents. A vector of IDs is not supported
+  and gives a recycling warning.
 
 - ped:
 
@@ -20,7 +21,8 @@ hasBothParents(id, ped)
 
 ## Value
 
-TRUE if ID has both sire and dam identified in `ped`.
+TRUE if ID has both sire and dam identified in `ped`, FALSE if one or
+both are unknown, and `logical(0)` if `id` is not in `ped`.
 
 ## Examples
 

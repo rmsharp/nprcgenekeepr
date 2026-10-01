@@ -2,10 +2,11 @@
 
 Internal helper for
 [`markerParentageLikelihood`](https://github.com/rmsharp/nprcgenekeepr/reference/markerParentageLikelihood.md)
-(issue \#147 Slice 1, D2). For a biallelic locus with reference allele
-`refAllele`: a parent homozygous for `refAllele` transmits it with
-probability 1; a heterozygous parent, 0.5; a parent homozygous for the
-other allele, 0.
+(issue \#147 Slice 1, D2). For reference allele `refAllele`, the value
+is the fraction of the parent's two alleles equal to `refAllele`: a
+parent homozygous for `refAllele` transmits it with probability 1; a
+heterozygous parent, 0.5; a parent homozygous for any other allele, 0.
+At a multiallelic locus all non-reference alleles are lumped together.
 
 ## Usage
 

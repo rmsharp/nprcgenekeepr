@@ -18,12 +18,14 @@ getGVPopulation(ped, pop)
 - pop:
 
   character vector with animal IDs to consider as the population of
-  interest. The default is NULL.
+  interest. The default is NULL: an existing `population` column of
+  `ped` is used if there is one, otherwise all animals.
 
 ## Value
 
-A logical vector corresponding to the IDs in the vector of animal IDs
-provided to the function in `pop`.
+A logical vector with one element per row of `ped`, in the order of
+`ped`: `TRUE` if the animal is in the population of interest. IDs in
+`pop` that are not in `ped` are ignored.
 
 ## Examples
 

@@ -18,12 +18,15 @@ getGVGenotype(ped)
 
 A data.frame with the columns `id`, `first`, and `second` extracted from
 a pedigree object (a data.frame) containing genotypic data. If the
-pedigree object does not contain genotypic data the `NULL` is returned.
+pedigree object does not contain genotypic data (columns `id`, `first`
+and `second`, with numeric `first` and `second`), `NULL` is returned.
 
 ## Examples
 
 ``` r
-## We usually define `n` to be >= 1000
+## We usually define `n` to be >= 1000. The first part of this example is
+## the same as the one for `geneDrop()`; `getGVGenotype()` is used on the
+## last lines.
 library(nprcgenekeepr)
 ped <- nprcgenekeepr::lacy1989Ped
 allelesNew <- geneDrop(ped$id, ped$sire, ped$dam, ped$gen,

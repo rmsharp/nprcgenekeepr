@@ -37,7 +37,8 @@ gvaConvergence(
 - pop:
 
   Character vector with animal IDs to consider as the population of
-  interest. The default is NULL (all animals).
+  interest. The default is NULL: an existing `population` column of
+  `ped` is used if there is one, otherwise all animals.
 
 - nMax:
 
@@ -49,8 +50,6 @@ gvaConvergence(
 
   Integer threshold number of animals for defining a rare (unique)
   allele, passed to
-  [`calcGU`](https://github.com/rmsharp/nprcgenekeepr/reference/calcGU.md)
-  /
   [`calcA`](https://github.com/rmsharp/nprcgenekeepr/reference/calcA.md).
   Default 1.
 
@@ -96,7 +95,8 @@ gvaConvergence(
   [`geneDrop()`](https://github.com/rmsharp/nprcgenekeepr/reference/geneDrop.md)
   to update a
   [`shiny::Progress`](https://rdrr.io/pkg/shiny/man/Progress.html)
-  object. Default NULL.
+  object; it is called once at the start and then once for each animal
+  processed. Default NULL.
 
 - breedingTable, gestationTable, breedingAgeDefault, gestationDefault:
 
@@ -137,10 +137,11 @@ An object of class `nprcgenekeeprGVConv`: a list with
 - `convergence` – a data.frame with one row per assessed iteration
   count: `iterations`, `topOverlap` (top-`k` selected-set overlap, from
   0 to 1), and `rankAgreement` (Kendall rank agreement of the
-  commonly-ranked animals, from -1 to 1).
+  commonly-ranked animals, from -1 to 1). Either metric can be `NA` when
+  it cannot be computed.
 
 - `recommendedIter` – the smallest assessed iteration count meeting both
-  criteria, or `NA` if none did within `grid`.
+  criteria, or `NA_integer_` if none did within `grid`.
 
 - `converged` – `TRUE` if any assessed count met both criteria.
 
@@ -207,7 +208,8 @@ sampling reproducibility of the *estimate*.
 
 ``` r
 library(nprcgenekeepr)
-## A quick, small illustration (use a larger nMax in practice).
+## A quick, small illustration (use a larger nMax in practice). With
+## nMax = 200 only the grid counts 25, 50 and 100 can be assessed.
 conv <- gvaConvergence(nprcgenekeepr::qcPed, nMax = 200L, seed = 1L)
 conv$convergence
 #>   iterations topOverlap rankAgreement

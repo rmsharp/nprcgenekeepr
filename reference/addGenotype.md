@@ -22,7 +22,9 @@ addGenotype(ped, genotype)
 
 ## Value
 
-A pedigree object with genotype data added.
+A plain `data.frame` (not a special pedigree class) with the rows of
+`ped` plus integer columns `first` and `second` holding the allele codes
+(numbered from 10001).
 
 ## Details
 
@@ -30,7 +32,10 @@ The two allele columns are coerced to character internally so the
 name-keyed allele dictionary is both built and indexed by allele label.
 This keeps the integer encoding consistent even when the allele columns
 are supplied as factors (a factor would otherwise be indexed by its
-integer codes).
+integer codes). The allele columns are taken by position (columns 2 and
+3 of `genotype`), not by name. The result is the output of a full outer
+[`merge()`](https://rdrr.io/r/base/merge.html) on `id`, so genotype ids
+that are absent from `ped` are added as extra rows.
 
 ## Examples
 

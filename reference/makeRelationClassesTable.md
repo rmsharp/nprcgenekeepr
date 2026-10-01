@@ -1,6 +1,7 @@
 # Make a relation classes table from kinship pairs
 
-From Relations
+Counts the pairs of animals in each relationship class of a long-form
+kinship table.
 
 ## Usage
 
@@ -18,10 +19,12 @@ makeRelationClassesTable(kin)
 
 ## Value
 
-A data.frame with the number of instances of following relationship
-classes: Parent-Offspring, Full-Siblings, Half-Siblings,
-Grandparent-Grandchild, Full-Cousins, Cousin - Other, Full-Avuncular,
-Avuncular - Other, Other, and No Relation.
+A data.frame with columns `Relationship Class` and `Frequency`: the
+number of pairs in each of the following relationship classes:
+Parent-Offspring, Full-Siblings, Half-Siblings, Grandparent-Grandchild,
+Full-Cousins, Cousin - Other, Full-Avuncular, Avuncular - Other, Other,
+and No Relation. Self pairs are not counted, and classes with no pairs
+are left out.
 
 ## Examples
 

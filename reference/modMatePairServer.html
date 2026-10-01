@@ -3,7 +3,8 @@
 reportMatePairs (issue #151 Slice 1), wrapped in a
 curator-facing configuration panel for the D4-ratified population scope
 (populationSource: &quot;allAlive&quot; – ids with no recorded
-ped$exit date; &quot;topRanked&quot; – the top nTopAnimals
+ped$exit date, or every id when the pedigree has no exit
+column; &quot;topRanked&quot; – the top nTopAnimals
 ids in geneticValues' own report order, mirroring
 modBreedingGroupsServer's own topRanked reading;
 &quot;custom&quot; – a pasted, delimiter-separated id list), the D2 minimum-
@@ -13,7 +14,8 @@ this module shares no code with it."><meta property="og:description" content="Re
 reportMatePairs (issue #151 Slice 1), wrapped in a
 curator-facing configuration panel for the D4-ratified population scope
 (populationSource: &quot;allAlive&quot; – ids with no recorded
-ped$exit date; &quot;topRanked&quot; – the top nTopAnimals
+ped$exit date, or every id when the pedigree has no exit
+column; &quot;topRanked&quot; – the top nTopAnimals
 ids in geneticValues' own report order, mirroring
 modBreedingGroupsServer's own topRanked reading;
 &quot;custom&quot; – a pasted, delimiter-separated id list), the D2 minimum-
@@ -74,7 +76,8 @@ this module shares no code with it."><meta property="og:image" content="https://
 <code><a href="reportMatePairs.html">reportMatePairs</a></code> (issue #151 Slice 1), wrapped in a
 curator-facing configuration panel for the D4-ratified population scope
 (<code>populationSource</code>: <code>"allAlive"</code> – ids with no recorded
-<code>ped$exit</code> date; <code>"topRanked"</code> – the top <code>nTopAnimals</code>
+<code>ped$exit</code> date, or every id when the pedigree has no <code>exit</code>
+column; <code>"topRanked"</code> – the top <code>nTopAnimals</code>
 ids in <code>geneticValues</code>' own report order, mirroring
 <code><a href="modBreedingGroupsServer.html">modBreedingGroupsServer</a></code>'s own <code>topRanked</code> reading;
 <code>"custom"</code> – a pasted, delimiter-separated id list), the D2 minimum-
@@ -145,7 +148,9 @@ the results are identical to a run before this argument existed.</p></dd>
 pairs data.frame from the most recent <code><a href="reportMatePairs.html">reportMatePairs()</a></code> run (see
 that function's own return documentation for columns); <code>excluded</code>,
 the corresponding excluded-pairs data.frame; and <code>isReady</code>,
-<code>TRUE</code> once a run has completed.</p>
+<code>TRUE</code> once a run has completed. Before the first run
+<code><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs()</a></code> and <code>excluded()</code> halt (via
+<code><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></code>) rather than returning <code>NULL</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

@@ -63,8 +63,8 @@
 
 
 <dl><dt id="arg-sex">sex<a class="anchor" aria-label="anchor" href="#arg-sex"></a></dt>
-<dd><p>factor with levels: "M", "F", "U". Sex specifier for an
-individual.</p></dd>
+<dd><p>character vector or factor of sex codes (see above) for
+individuals; any other value is treated as unknown.</p></dd>
 
 
 <dt id="arg-ignoreherm">ignoreHerm<a class="anchor" aria-label="anchor" href="#arg-ignoreherm"></a></dt>
@@ -74,8 +74,10 @@ treated as unknown sex ("U"), default is <code>TRUE</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A vector of factors representing standardized sex codes after
-transformation from non-standard codes.</p>
+    <p>A single factor with levels <code>F</code>, <code>M</code>, <code>H</code> and
+<code>U</code> holding the standardized sex codes after transformation from
+non-standard codes. Level <code>H</code> is used only when
+<code>ignoreHerm = FALSE</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

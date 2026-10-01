@@ -24,18 +24,24 @@ calculateSexRatio(ids, ped, additionalMales = 0L, additionalFemales = 0L)
 - additionalMales:
 
   Integer value of males to add to those within the group when
-  calculating the ratio. Ignored if calculated ratio is 0 or Inf.
-  Default is 0.
+  calculating the ratio. The additions always count, except when `ids`
+  has no animals or no males: with no males, the ratio is `Inf` unless
+  `additionalMales` is greater than 0 (then `additionalFemales` still
+  counts); with no animals, see *Value*. Default is 0.
 
 - additionalFemales:
 
   Integer value of females to add to those within the group when
-  calculating the ratio. Ignored if calculated ratio is 0 or Inf.
-  Default is 0.
+  calculating the ratio. The additions always count, except as described
+  for `additionalMales`. Default is 0.
 
 ## Value
 
-Numeric value of sex ratio of the animals provided.
+Numeric value of the sex ratio of the animals provided, expressed as the
+number of non-males per male. It is `Inf` when there are no males (and
+no males are added) but at least one non-male; `0` when `ids` is empty,
+no females are added and males are added; and `NA` when `ids` is empty
+and nothing is added.
 
 ## Examples
 

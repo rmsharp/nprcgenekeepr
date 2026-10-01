@@ -113,9 +113,10 @@ clipped.</p>
 <code><a href="kinship.html">kinship</a></code>'s convention, rather than evaluated from the formula
 above – which divides by zero whenever an individual has no heterozygous
 loci at all.</p>
-<p>When neither individual in a pair has a shared heterozygous locus (the
-formula's denominator is zero), the pair's kinship is undefined; that
-pair's entry is <code>NA</code> and a warning names the pair.</p>
+<p>When at least one individual in a pair has no heterozygous locus among
+the loci genotyped in both (so \(\min(N_{Aa}^{(i)}, N_{Aa}^{(j)}) = 0\)
+and the formula's denominator is zero), the pair's kinship is undefined;
+that pair's entry is <code>NA</code> and a warning names the pair.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

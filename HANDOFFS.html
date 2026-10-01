@@ -63,6 +63,149 @@
 <div class="section level2">
 <h2 id="format--a-fenced-handoff-block">Format — a fenced <code>handoff</code> block<a class="anchor" aria-label="anchor" href="#format--a-fenced-handoff-block"></a></h2>
 <pre><code>```handoff
+session: S842
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE: docs-staleness audit slice 6e, the last 126 man/ pages; all 267 now audited; 26 moderate, 69 minor, 46 code candidates; read-only
+what_was_done: Claim 89042b761; report docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md, BACKLOG and records in the close-out commit. Eight subagents (sets RE-RL); I re-ran or re-read 23 of 26 moderates (not RF2, RH2, RJ3); corrected RE4 line cites and narrowed RJ4.
+next_steps: Fix the 95 slice-6e findings in R/*.R roxygen, then devtools::document() and git checkout man/nprcgenekeepr-package.Rd (READY, Effort M). Or owner decisions on the 46 slice-6e, 22 slice-6d and 8 slice-6c code candidates. Push of 47 local commits only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6E_2026-10-01.md; BACKLOG.md:197; R/trimPedigree.R; R/getAnimalsWithHighKinship.R:5-42; R/readKinshipOverrides.R; R/getPotentialParents.R
+gotchas: Report Location line numbers can be off (RE4 was), grep for the text. SESSION_NOTES.md sits at the token ceiling, so a claim commit needs a trim (removed S804/S805 and S840 records). After document() restore the package Rd. Reword rather than add to inst/WORDLIST. Minors and code candidates are agent-checked only.
+```
+
+```handoff
+session: S841
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE: fixed all 42 slice-6d docs-staleness findings in R/*.R roxygen (15 files), man/ regenerated; docs only, code candidates untouched
+what_was_done: Claim c33cfd543; fixes 8b2e51b54 (RA), 9b66199cd (RB), 53409c805 (RC), 21d33c54f (RD), fd573b5c8 (wordlist rewording); records in the close-out commit. Roxygen only, no code or test change. lintr 0 after each group, wordlist test pass, devtools::check(--no-tests) 0 errors / 0 warnings / 1 note (untracked suggested_NEWS_entry.md). Caught two of my own wrong claims against the code (geneticValues requirement, exhaustive-mode scope) before commit. Minors rest on the audit plus a source read, not a re-run; full suite not run.
+next_steps: Audit slice 6e (126 man/ pages left: obfuscate*, pedigree-tree and getters, get*/calc*/check* helpers, datasets), read-only. Or owner decisions on code (22 slice-6d candidates, 8 slice-6c candidates, PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3) then reword docs (RA3/RA4/RA6, RA8, RB10, RC7 first). suggested_NEWS_entry.md commit-or-drop still unanswered. Master is 46 ahead of origin; push only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md; R/modBreedingGroups.R:205-290; R/modPedigree.R:190-250; R/modSummaryStats.R:235-310; R/runGenekeepr.R:1-40; BACKLOG.md:197
+gotchas: git checkout man/nprcgenekeepr-package.Rd after document(); lint_package() after joined roxygen lines; reword rather than add words to inst/WORDLIST; prose after a @param folds into it, so put it before the first @param; some audit Location line numbers point at code not roxygen, grep the claim text; avoid `echo ====` in the Bash tool (zsh).
+```
+
+```handoff
+session: S840
+date: 2026-10-01
+status: complete
+active_task: DONE: docs-staleness audit slice 6d, 34 Shiny app and module man/ pages (read-only report)
+what_was_done: Audited 34 pages with 4 read-only subagents; report docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md has 8 moderate, 34 minor, 22 code candidates. Re-read all 8 moderates in source, re-ran RA8 and CA4, downgraded RD6. Commits: claim cffbb16cc; close-out commit holds report, BACKLOG, records.
+next_steps: Fix the 42 slice-6d findings in R/*.R roxygen then devtools::document() (decide CA1-CA4, CB1, CC1 first), or audit slice 6e (126 man/ pages left). Start at BACKLOG.md:197 and the report's code-candidates table.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6D_2026-10-01.md; R/modBreedingGroups.R:257-272; R/modGeneticDiversity.R:63-64; R/appServer.R:441-446; R/getKinshipWithMaleStatus.R:49-61; R/modPedigree.R:209-225,878; R/runGeneKeepR.R:27
+gotchas: roxygen folds a blank-line paragraph into the preceding @param (RA1); git checkout man/nprcgenekeepr-package.Rd after document(); minors are agent-checked, not re-run by me; RA12 and RD10 are not findings.
+predecessor_score: 9
+self_score: 8
+```
+
+```handoff
+session: S839
+date: 2026-10-01
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: DONE: fixed all 29 slice-6c docs-staleness findings in R/*.R roxygen (19 files), man/ regenerated; docs only, code candidates untouched
+what_was_done: Claim 3075b7b50; fixes 48aabebb6, 65be5d010, 4d0042987, 03493492a; records in the close-out commit. Roxygen only, no code or test change. Examples run, lintr 0, wordlist test pass, devtools::check(--no-tests) 0 errors / 0 warnings / 1 note (untracked suggested_NEWS_entry.md). Re-ran the behaviors I newly documented (all-NA He, numeric(0) frequency, markerLdBlock edge cases, checker accepts a missing allele); the rest of the wording rests on the audit and a source read
+next_steps: Audit slice 6d (160 man/ pages left, one topic group: Shiny mod* ~28, obfuscate*, pedigree-tree/getters), read-only. Owner decisions on code: 8 slice-6c candidates, PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3, then reword their docs; suggested_NEWS_entry.md commit or drop. Master is 37 ahead of origin; push only on owner say-so
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md, R/computeGenomicROH.R:19-32, R/hasGenotype.R:4-15, R/buildMarkerGenotypeMatrix.R:11-30, BACKLOG.md:197
+gotchas: git checkout man/nprcgenekeepr-package.Rd after document(). Append to inst/WORDLIST rather than re-sort, but prefer rewording (genotype's was flagged). Run lint_package() after roxygen edits that join lines. Code candidate 7 is worse than the audit said: checkMarkerGenotypeFile does not reject a missing allele, so buildMarkerGenotypeMatrix yields "NA/NA" even after it
+```
+
+```handoff
+session: S838
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: docs-staleness audit slice 6c, 35 marker-genetics, genotype and MHC man/ pages (4 moderate, 25 minor, 8 code candidates); findings not yet fixed
+what_was_done: Claim 542ccce38; report docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md, BACKLOG and records in the close-out commit. Read-only; four subagents audited 8-9 pages each; I re-read the source for all 4 moderates and re-ran QA2 and QC1. Minors and code candidates are agent-checked only
+next_steps: Fix the 29 slice-6c findings in R/*.R roxygen then devtools::document() (decide code candidates 1-4 first), or audit slice 6d (160 man/ pages left). Owner decisions open: PB4, PB7, PB11, PB13, PA4, PD12, PD1, MC1, MB3, suggested_NEWS_entry.md commit or drop, stale man/nprcgenekeepr-package.Rd. Master is 31 ahead of origin; push only on owner say-so
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6C_2026-10-01.md, R/computeGenomicROH.R:99-146, R/hasGenotype.R:22-35, R/checkSequenceGenotypeFile.R:126-128, R/markerKinship.R:20-25, BACKLOG.md:197
+gotchas: man/ is generated; fix roxygen then document(), then git checkout man/nprcgenekeepr-package.Rd. Example() fails; use Rd2ex()+source(). Append to inst/WORDLIST, do not re-sort. The earlier 196 pages-left count included man/figures; real count is 160. QB5 and QD5 ids intentionally unused
+```
+
+```handoff
+session: S837
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: fixed 54 of 57 slice-6b docs-staleness findings in R/*.R roxygen (32 files), man/ regenerated; PB4, PB7, PB11 left for owner
+what_was_done: Claim ba41d2fc0; fixes da62c124d, 18f215ec0, b6cd4ffc6, e6c434bec, cfcd9d11f, f2a21abef, fdacad923, 01a6bfda1, 7c1497876; records in the close-out commit. Roxygen and examples only, no code or test change. Three forks edited disjoint file sets; lint 0, wordlist test pass (3 words added), examples run, devtools::check(--no-tests) 0 errors / 0 warnings / 1 note (untracked suggested_NEWS_entry.md). Full suite and runtime smoke not run (no behavior change).
+next_steps: Slice 6c: audit the next topic group of man/ (196 pages left), read-only. Owner decisions: PB4, PB7, PB11 (then their docs), PB13, PA4, PD12, PD1, MC1, MB3, suggested_NEWS_entry.md commit or drop, stale man/nprcgenekeepr-package.Rd. Master is 28 ahead of origin; push only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6B_2026-10-01.md, R/checkRequiredCols.R:6-41, R/checkChangedColsLst.R:8-9, R/getDateErrorsAndConvertDatesInPed.R:6-17, BACKLOG.md:197
+gotchas: git checkout man/nprcgenekeepr-package.Rd after document(). Append to inst/WORDLIST, do not re-sort. Fork 1 (qcStudbook) did not re-run each claim; PC13 and PD10 wording rest on the audit. PB4/PB7/PB11 docs still carry the audited false claims; PB13, PA4, PD12, PD1 document today's behavior and need rewording if the code changes.
+```
+
+```handoff
+session: S836
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: docs-staleness audit slice 6b, 36 pedigree QC and curation man/ pages (20 moderate, 37 minor)
+what_was_done: Claim 714780074; report docs/audits/DOCS_STALENESS_AUDIT_SLICE6B_2026-10-01.md, BACKLOG and records in the close-out commit. Read-only; four subagents audited nine pages each, I re-ran or re-read the source for all 20 moderate findings. No code, test or man/ change; suite, lint, check not run (nothing built changed).
+next_steps: Fix the 57 findings in R/*.R roxygen then devtools::document() (shared reportErrors sentence on all pages at once), or audit slice 6c (196 man/ pages left). Owner decisions: MC1, MB3, seven 6b code candidates (PB4, PB7, PB11, PB13, PA4, PD12, PD1), suggested_NEWS_entry.md. Push master (18 ahead) only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6B_2026-10-01.md, R/qcStudbook.R:67-190, R/checkRequiredCols.R:6-41, R/convertDate.R:19-24, BACKLOG.md:197
+gotchas: man/ is generated; fix roxygen then document(), then git checkout man/nprcgenekeepr-package.Rd. Minor findings are agent-verified (A/R) only. Do not word docs for PB4, PB7, PB11 until the owner decides the code question. PA7 stale DEAD level also in R/getPossibleCols.R (outside the slice).
+```
+
+```handoff
+session: S835
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: fixed 52 of 54 slice-6a docs-staleness findings in R/*.R roxygen (27 genetic-value/kinship pages), man/ regenerated; MC1 and MB3 left for owner
+what_was_done: Claim d84dede31; fixes 7382be400, 4a9d8efdf, 8cecc2e49, 6f65ce721, 42197fb0e, d5129f551, 63f5c7a5d; records in the close-out commit. Roxygen and examples only, no code or test change. Examples run, wordlist test pass, lint 0, devtools::check(--no-tests) 0 errors / 0 warnings / 1 note (owner's untracked suggested_NEWS_entry.md). Full test suite and runtime smoke not run (no behavior change).
+next_steps: Slice 6b: audit the next topic group of man/ (232 pages left), read-only, one group per session. Owner decisions: MC1 filterKinMatrix drop=FALSE, MB3 unknown-sex founder kinship, suggested_NEWS_entry.md commit or drop, stale man/nprcgenekeepr-package.Rd. Master is 16 ahead of origin; push only on the owner's say-so.
+key_files: R/reportGV.R:15-30,110-135, R/geneDrop.R:42-70, R/rankSubjects.R:4-30, R/kinshipMatricesToKValues.R:4-40, BACKLOG.md:197
+gotchas: devtools::document() rewrites man/nprcgenekeepr-package.Rd from DESCRIPTION; git checkout it unless intended. example() fails (package not installed): use tools::Rd2ex() then source(). Roxygen lines over 80 characters fail lint; lint per batch. MA3/MB14 cite only e1071 from recall (moments and e1071 not installed here).
+```
+
+```handoff
+session: S834
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: docs-staleness audit slice 6a, 36 genetic-value/kinship man/ pages (9 moderate, 45 minor)
+what_was_done: Claim 5fc891cb9; report docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md, BACKLOG and records in the close-out commit. Read-only; four subagents audited nine pages each, I re-read the source for 9 findings. No code, test or man/ change; suite, lint, check not run (nothing built changed).
+next_steps: Fix the 54 findings in R/*.R roxygen then devtools::document() (shared sentences on all pages at once), or audit slice 6b (232 man/ pages left). Owner decisions: MC1 filterKinMatrix drop=FALSE, MB3 unknown-sex founder kinship, suggested_NEWS_entry.md. Push master (7 ahead) only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md, BACKLOG.md:197, R/filterKinMatrix.R:27, R/kinship.R:14,216, R/reportGV.R:113-117
+gotchas: man/ is generated; fix roxygen then document(). MA3 and MB14 (moments has no type argument) rest on recall, verify first. Most findings are agent-verified (A/R), 9 re-read by me (S).
+```
+
+```handoff
+session: S833
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: fixed all 30 audit findings (AI1-AI30) in vignettes/a2interactive.Rmd
+what_was_done: Claim 8d41e1229; fixes, BACKLOG and records in the close-out commit. Prose, lists and inline R only. Knit clean with numbers read back; spelling test and baseline test pass; devtools::check(--no-tests) 0 errors, 0 warnings, 2 notes (owner's untracked suggested_NEWS_entry.md; a stray Rplots.pdf from my scratch run, since deleted).
+next_steps: Slice 6 of the docs-staleness audit: man/ (268 pages), one topic group per session. Owner decisions pending: suggested_NEWS_entry adopt/drop, four code defects. Push master (4 ahead) only on the owner's say-so.
+key_files: vignettes/a2interactive.Rmd, docs/audits/DOCS_STALENESS_AUDIT_SLICE5_2026-10-01.md, BACKLOG.md:197
+gotchas: Vignette samples randomly, so keep counts as inline R. Run R scripts from the repo root, not vignettes/ (renv path). Not run: full suite, lint, smoke (no code changed). AI20 and AI26 wording rests on agent runs from the audit.
+```
+
+```handoff
+session: S832
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: docs-staleness audit slice 5, scoped to vignettes/a2interactive.Rmd; report docs/audits/DOCS_STALENESS_AUDIT_SLICE5_2026-10-01.md (12 moderate, 18 minor, no code defects)
+what_was_done: Claim 0838d80d3; report and records in the close-out commit. Four subagents by line range plus a full knit (no chunk error); I re-read the code for 7 findings. BACKLOG item updated with slice 5 result and next steps. No code changed.
+next_steps: Fix AI1-AI30 in vignettes/a2interactive.Rmd (READY, Effort M; knit + devtools::check()), then slice 6 man/ (268 pages) and slice 7 NEWS.Rmd. Owner decisions pending: suggested_NEWS_entry adopt/drop, four code defects.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE5_2026-10-01.md, vignettes/a2interactive.Rmd:920-1019/851-899/680-699/1315, R/groupAddAssign.R:172-186, R/correctParentSex.R:105, R/qcStudbook.R:323
+gotchas: Inline-R counts (AI1, AI2) must be recomputed by running. 23 of 30 findings are agent-run, not re-read by me. Not run: suite, check, lint, smoke (audit only).
+```
+
+```handoff
 session: S831
 date: 2026-09-30
 status: complete

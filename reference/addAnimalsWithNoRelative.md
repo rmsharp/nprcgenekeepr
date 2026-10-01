@@ -40,12 +40,9 @@ an added element set to `NA` for each candidate that has no relative.
 library(nprcgenekeepr)
 qcPed <- nprcgenekeepr::qcPed
 ped <- qcStudbook(qcPed,
-  minParentAge = 2.0, reportChanges = FALSE,
+  minSireAge = 2, minDamAge = 2, reportChanges = FALSE,
   reportErrors = FALSE
 )
-#> Warning: The `minParentAge` argument of `qcStudbook()` is deprecated as of nprcgenekeepr
-#> 2.0.0.
-#> ℹ Use minSireAge and minDamAge instead.
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
 currentGroups <- list(1L)
 currentGroups[[1]] <- examplePedigree$id[1:3]
@@ -61,7 +58,7 @@ conflicts <- unique(c(
 ))
 candidates <- setdiff(candidates, conflicts)
 kin <- addAnimalsWithNoRelative(kin, candidates)
-length(kin) # should be 259
+length(kin) # should be 591
 #> [1] 591
 kin[["0DAV0I"]] # should have 34 IDs
 #>  [1] "95U2JO" "F50D26" "HRBVOE" "HRQJQR" "RD6KMA" "168Q0A" "6IPOZK" "96W7N8"

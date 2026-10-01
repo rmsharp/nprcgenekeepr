@@ -83,7 +83,11 @@ to track the lists of<code>alleles$alleles</code>.</p></dd>
 
 
 <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
-<dd><p>integer indicating the number of iterations to simulate.</p></dd>
+<dd><p>integer indicating the number of iterations to simulate. It is
+used only when <code>parent</code> is <code>NA</code>; for a known parent the number of
+iterations is taken from that parent's already assigned alleles. If a
+known parent has no alleles assigned yet the function stops with the message
+"sire and dam must have had alleles assigned: logic error".</p></dd>
 
 </dl></div>
     <div class="section level2">

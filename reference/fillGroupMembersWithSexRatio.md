@@ -75,6 +75,9 @@ ped <- qcStudbook(examplePedigree,
   minParentAge = 2L, reportChanges = FALSE,
   reportErrors = FALSE
 )
+#> Warning: The `minParentAge` argument of `qcStudbook()` is deprecated as of nprcgenekeepr
+#> 2.0.0.
+#> ℹ Use minSireAge and minDamAge instead.
 
 kmat <- kinship(ped$id, ped$sire, ped$dam, ped$gen, sparse = FALSE)
 currentGroups <- list(1)

@@ -128,10 +128,14 @@ not sufficient. <code>totalRohLength</code> sums the qualifying segments'
 spans across all chromosomes; <code>fRoh</code> divides that sum by
 <code>genomeLength</code>, a single value shared across every individual: the
 sum, per chromosome, of <code>(max(pos) - min(pos))</code> among the
-full-coverage loci in <code>locusMetadata</code> (Ceballos et al. 2018's
-\(L_{autosome}\) convention). A fixed, shared denominator keeps
-<code>fRoh</code> comparable across a cohort and avoids conflating an
-individual's own missingness with inbreeding.</p>
+full-coverage loci in <code>locusMetadata</code> that are also columns of
+<code>genotypeMatrix</code> (Ceballos et al. 2018's \(L_{autosome}\)
+convention). The denominator is fixed across individuals within one call,
+which avoids conflating an individual's own missingness with inbreeding,
+but it changes with the matrix's locus set: a full-coverage locus in
+<code>locusMetadata</code> that is absent from the matrix is excluded silently
+(only matrix loci lacking full coverage warn), so <code>fRoh</code> is
+comparable across a cohort only when the same loci are used.</p>
 <p>Only loci with full <code>locusMetadata</code> coverage (both <code>chrom</code> and
 <code>pos</code> present, per <code><a href="checkLocusMetadata.html">checkLocusMetadata</a></code>'s own
 three-tier classification) can be placed in the ordered walk; a locus

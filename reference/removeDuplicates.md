@@ -26,16 +26,18 @@ removeDuplicates(ped, reportErrors = FALSE)
 
 ## Value
 
-When `reportErrors` is `FALSE`, a `Pedigree` object with duplicate rows
-removed; when `reportErrors` is `TRUE`, a character vector of duplicate
-`id` values, one entry for each extra occurrence of an `id` (or `NULL`
-when none are found).
+When `reportErrors` is `FALSE`, a dataframe (the `Pedigree`) with
+duplicate rows removed; when `reportErrors` is `TRUE`, a character
+vector of duplicate `id` values, one entry for each extra occurrence of
+an `id` (or `NULL` when none are found).
 
 ## Details
 
 Returns an updated dataframe with duplicate rows removed.
 
-Returns an error if the table has duplicate IDs with differing data.
+Returns an error if the table has duplicate IDs with differing data. The
+error applies only when `reportErrors` is `FALSE`. Rows are compared on
+all columns, including `recordStatus`.
 
 ## Examples
 

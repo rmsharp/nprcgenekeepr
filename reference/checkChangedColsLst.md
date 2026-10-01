@@ -12,7 +12,7 @@ checkChangedColsLst(changedCols)
 
 - changedCols:
 
-  list with fields for each type of column change `qcStudbook`.
+  list with fields for each type of column change made by `qcStudbook`.
 
 ## Value
 

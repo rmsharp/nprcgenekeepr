@@ -17,7 +17,8 @@ removePotentialSires(ids, minAge, ped)
 - minAge:
 
   integer value giving the inclusive minimum current age (in years) a
-  male must have to be listed as a potential sire. Default is 1 year.
+  male must have to be listed as a potential sire. Unlike
+  `getPotentialSires`, there is no default; it is required.
 
 - ped:
 

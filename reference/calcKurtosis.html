@@ -84,11 +84,12 @@ coefficient, <code>G2 = ((n + 1) * g2 + 6) * (n - 1) / ((n - 2) * (n -
 second/fourth central sample moments of <code>x</code> – the "Method 2"
 adjustment of Joanes and Gill (1998), the same convention SPSS, SAS, and
 Excel report by default and the <code>type = 2</code> option in the
-<code>moments</code>/<code>e1071</code> CRAN packages. Excess (not raw) kurtosis: a
+<code>e1071</code> CRAN package. Excess (not raw) kurtosis: a
 normal distribution reads <code>0</code>. Positive values indicate heavier
 tails / a sharper peak than normal; negative, lighter tails / a flatter
 peak.</p>
-<p>Returns <code>NA</code> when <code>x</code> has fewer than 4 non-<code>NA</code> values
+<p>Returns <code>NA</code> when <code>na.rm = FALSE</code> and <code>x</code> contains an
+<code>NA</code>, when <code>x</code> has fewer than 4 non-<code>NA</code> values
 (<code>n &lt;= 3</code>, the adjustment term divides by <code>(n - 2) * (n - 3)</code>)
 or has zero variance (all remaining values identical) – both would
 otherwise divide by zero.</p>

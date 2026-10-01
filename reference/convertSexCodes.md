@@ -12,7 +12,8 @@ convertSexCodes(sex, ignoreHerm = TRUE)
 
 - sex:
 
-  factor with levels: "M", "F", "U". Sex specifier for an individual.
+  character vector or factor of sex codes (see above) for individuals;
+  any other value is treated as unknown.
 
 - ignoreHerm:
 
@@ -21,8 +22,9 @@ convertSexCodes(sex, ignoreHerm = TRUE)
 
 ## Value
 
-A vector of factors representing standardized sex codes after
-transformation from non-standard codes.
+A single factor with levels `F`, `M`, `H` and `U` holding the
+standardized sex codes after transformation from non-standard codes.
+Level `H` is used only when `ignoreHerm = FALSE`.
 
 ## Details
 

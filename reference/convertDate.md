@@ -26,17 +26,26 @@ convertDate(ped, timeOrigin = as.Date("1970-01-01"), reportErrors = FALSE)
 
 - reportErrors:
 
-  logical value if TRUE will scan the entire file and make a list of all
-  errors found. The errors will be returned in a list of list where each
-  sublist is a type of error found.
+  logical value. If `FALSE` (default), an invalid date stops with an
+  error naming the column and the rows. If `TRUE`, every date column is
+  scanned and the converted pedigree is not returned; instead the result
+  is a sorted character vector of the row numbers with an invalid date
+  (a row is repeated once for each column in which it has one), or
+  `NULL` when there are none. The row numbers count only the records
+  that are not marked `"added"`, not the positions in the input.
 
 ## Value
 
 A dataframe with an updated table with date columns converted from
-`character` data type to `Date` data type. Values that do not conform to
-the format %Y%m%d are set to NA. NA values are left as NA. Records
-marked `"added"` are not checked and are returned after the other
-records.
+`character` data type to `Date` data type. A date must be in the form
+`YYYY-MM-DD` (month and day may have one digit), or `YYYYMMDD` when no
+date in the column has a separator. A year before 1000 is invalid. A
+value that does not conform is an error (see `reportErrors`), not set to
+NA. NA values and blank strings are left as NA. A date column must be
+`character`, `factor`, `logical`, `integer` or `Date`; any other class
+stops with an error. Records marked `"added"` are not checked and are
+returned after the other records. With `reportErrors = TRUE` see that
+argument instead.
 
 ## Examples
 

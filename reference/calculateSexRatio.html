@@ -85,19 +85,26 @@ information including the IDs listed in <code>ids</code>.</p></dd>
 
 <dt id="arg-additionalmales">additionalMales<a class="anchor" aria-label="anchor" href="#arg-additionalmales"></a></dt>
 <dd><p>Integer value of males to add to those within the
-group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.
-Default is 0.</p></dd>
+group when calculating the ratio. The additions always count, except when
+<code>ids</code> has no animals or no males: with no males, the ratio is
+<code>Inf</code> unless <code>additionalMales</code> is greater than 0 (then
+<code>additionalFemales</code> still counts); with no animals, see
+<em>Value</em>. Default is 0.</p></dd>
 
 
 <dt id="arg-additionalfemales">additionalFemales<a class="anchor" aria-label="anchor" href="#arg-additionalfemales"></a></dt>
 <dd><p>Integer value of females to add to those within the
-group when calculating the ratio. Ignored if calculated ratio is 0 or Inf.
-Default is 0.</p></dd>
+group when calculating the ratio. The additions always count, except as
+described for <code>additionalMales</code>. Default is 0.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Numeric value of sex ratio of the animals provided.</p>
+    <p>Numeric value of the sex ratio of the animals provided, expressed as
+the number of non-males per male. It is <code>Inf</code> when there are no males
+(and no males are added) but at least one non-male; <code>0</code> when
+<code>ids</code> is empty, no females are added and males are added; and
+<code>NA</code> when <code>ids</code> is empty and nothing is added.</p>
     </div>
 
     <div class="section level2">

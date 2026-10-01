@@ -12,7 +12,9 @@ as a sire or dam; a real ID of the full shape (`"U1234"`) is removed
 unless the pedigree's `placeholder` column (see
 [`qcStudbook`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md))
 marks it `FALSE`, and a `TRUE` mark removes a stand-in whatever its ID
-looks like.
+looks like. The "four or more" match is a prefix, so an ID such as
+`"U1234abc"` is removed too. Sire and dam entries that are generated IDs
+are set to `NA`.
 
 ## Usage
 

@@ -19,7 +19,9 @@ checkParentAge(
 - sb:
 
   A dataframe containing a table of pedigree and demographic
-  information.
+  information. It needs the columns `id`, `sire`, `dam`, `birth` and
+  `exit`; `species` is optional (see `minSireAge`). Without `exit` the
+  function fails with an uninformative error.
 
 - minSireAge:
 
@@ -46,15 +48,20 @@ checkParentAge(
 
 - reportErrors:
 
-  logical value if TRUE will scan the entire file and make a list of all
-  errors found. The errors will be returned in a list of list where each
-  sublist is a type of error found.
+  logical value. If `TRUE`, `NULL` is returned instead of stopping (or
+  returning `sb`) when the input cannot be checked: the data frame has
+  no rows, lacks `id`, `sire` or `dam`, or `birth` is not of class
+  `Date`, `POSIXct` or `character`. It does not change the result for
+  valid input.
 
 ## Value
 
 A dataframe containing rows for each animal where one or more parent was
-less than `minParentAge`. It contains all of the columns in the original
-`sb` dataframe with the following added columns:
+younger than the minimum breeding age (`minSireAge` or `minDamAge`, or
+the species floor when they are `NULL`) at the animal's birth. It
+contains all of the columns in the original `sb` dataframe, with `exit`
+converted to character and the rows reordered, plus the following added
+columns:
 
 1.  `sireBirth` – sire's birth date
 

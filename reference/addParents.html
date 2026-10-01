@@ -69,18 +69,21 @@ that lack their own line entry and generate one.</p>
 
 
 <dl><dt id="arg-ped">ped<a class="anchor" aria-label="anchor" href="#arg-ped"></a></dt>
-<dd><p>The pedigree information in data.frame format</p></dd>
+<dd><p>dataframe that is the <code>Pedigree</code>. The <code>id</code>,
+<code>sire</code>, <code>dam</code> and <code>sex</code> columns are required.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An updated pedigree with entries added as necessary.
-Entries have the id and sex specified; all remaining columns are filled
-with <code>NA</code>.</p>
+Entries have the id and sex specified; all remaining columns except
+<code>recordStatus</code> are filled with <code>NA</code>. A <code>recordStatus</code>
+column is added (replacing any existing one) with <code>"original"</code> for
+the existing records and <code>"added"</code> for the new ones.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This must be run after to <code>addUIds</code> since the IDs made there are
+    <p>This must be run after <code>addUIds</code> since the IDs made there are
 used by <code>addParents</code></p>
     </div>
 

@@ -64,10 +64,14 @@ either condition alone is not sufficient. `totalRohLength` sums the
 qualifying segments' spans across all chromosomes; `fRoh` divides that
 sum by `genomeLength`, a single value shared across every individual:
 the sum, per chromosome, of `(max(pos) - min(pos))` among the
-full-coverage loci in `locusMetadata` (Ceballos et al. 2018's
-\\L\_{autosome}\\ convention). A fixed, shared denominator keeps `fRoh`
-comparable across a cohort and avoids conflating an individual's own
-missingness with inbreeding.
+full-coverage loci in `locusMetadata` that are also columns of
+`genotypeMatrix` (Ceballos et al. 2018's \\L\_{autosome}\\ convention).
+The denominator is fixed across individuals within one call, which
+avoids conflating an individual's own missingness with inbreeding, but
+it changes with the matrix's locus set: a full-coverage locus in
+`locusMetadata` that is absent from the matrix is excluded silently
+(only matrix loci lacking full coverage warn), so `fRoh` is comparable
+across a cohort only when the same loci are used.
 
 Only loci with full `locusMetadata` coverage (both `chrom` and `pos`
 present, per

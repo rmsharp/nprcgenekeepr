@@ -91,8 +91,8 @@ birth date</p></li>
 sold or shipped from the colony</p></li>
 <li><p><code>death</code> — date or <code>NA</code> (optional)
 Date of death, if applicable</p></li>
-<li><p><code>status</code> — Factor (levels: ALIVE, DEAD, SHIPPED) (optional)
-Status of an individual</p></li>
+<li><p><code>status</code> — Factor (levels: ALIVE, DECEASED, SHIPPED, UNKNOWN)
+(optional) Status of an individual (see <code>convertStatusCodes</code>)</p></li>
 <li><p><code>origin</code> — Character or <code>NA</code> (optional)
 Facility an individual originated from, if other than ONPRC</p></li>
 <li><p><code>ancestry</code> — Character or <code>NA</code> (optional)
@@ -149,17 +149,26 @@ list of list where each sublist is a type of change or error found.
 Changes will include column names, case of categorical values (male,
 female, unknown), etc.
 Errors will include missing columns, invalid date rows, male dams,
-female sires, and records with one or more parents  below minimum age
-of parents.</p>
-<p>The following changes are made to the cols.</p>
-<ul><li><p>Column cols are converted to all lower case</p></li>
-<li><p>Periods (".") within column cols are collapsed to no space ""</p></li>
-<li><p><code>egoid</code> is converted to <code>id</code></p></li>
-<li><p><code>sireid</code> is convert to <code>sire</code></p></li>
+female sires, an ID that is both a sire and a dam, duplicated IDs,
+IDs with invalid characters, invalid <code>placeholder</code> values, and records
+with one or more parents below minimum age of parents.</p>
+<p>The following changes are made to the column names.</p>
+<ul><li><p>Column names are converted to all lower case</p></li>
+<li><p>Spaces, periods (".") and underscores ("_") within column names are
+removed</p></li>
+<li><p><code>egoid</code> and <code>ego</code> are converted to <code>id</code></p></li>
+<li><p><code>sireid</code> is converted to <code>sire</code></p></li>
 <li><p><code>damid</code> is converted to <code>dam</code></p></li>
-</ul><p>If the dataframe (<code>sb</code> does not contain the five required columns
-(<code>id</code>, <code>sire</code>, <code>dam</code>, <code>sex</code>), and
-<code>birth</code> the function throws an error by calling <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code>.</p>
+<li><p><code>birthdate</code> and <code>deathdate</code> are converted to <code>birth</code>
+and <code>death</code></p></li>
+<li><p><code>recordstatus</code>, <code>fromcenter</code> and <code>geographicorigin</code>
+are converted to <code>recordStatus</code>, <code>fromCenter</code> and
+<code>geographicOrigin</code></p></li>
+</ul><p>If the dataframe (<code>sb</code>) does not contain the five required columns
+(<code>id</code>, <code>sire</code>, <code>dam</code>, <code>sex</code>, and
+<code>birth</code>) and <code>reportErrors == FALSE</code>, the function throws an
+error by calling <code><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop()</a></code>. With <code>reportErrors == TRUE</code> the
+missing names are returned in <code>errorLst$missingColumns</code>.</p>
 <p>Animal IDs (<code>id</code>, <code>sire</code>, <code>dam</code>) must not contain a period
 ("."); other characters are accepted. Periods cause problems
 across software environments (R column-name and formula parsing, file-name
@@ -168,11 +177,12 @@ extensions, programming-language namespaces, and regular expressions), so any
 an error. With <code>reportErrors == TRUE</code> the offending values are returned
 in <code>errorLst$invalidIdChars</code>; otherwise the function throws an error.
 All automatically generated IDs (see <code>addUIds</code>) honor this rule.</p>
-<p>If the <code>id</code> field has the string <em>UNKNOWN</em> (any case) or both
-the fields <code>sire</code> or <code>dam</code> have <code>NA</code> or <em>UNKNOWN</em>
-(any case), the record is removed.
-If either of the fields <code>sire</code> or <code>dam</code> have the
-string <em>UNKNOWN</em> (any case), they are replaced with a unique identifier
+<p>If the <code>id</code> field has the string <em>UNKNOWN</em> (any case), the record
+is removed. A record whose <code>sire</code> and <code>dam</code> are both <code>NA</code> or
+<em>UNKNOWN</em> (any case) is kept as a founder; <em>UNKNOWN</em> in either
+field becomes <code>NA</code>.
+If only one of the fields <code>sire</code> or <code>dam</code> is missing, the missing
+parent is replaced with a unique identifier
 with the form <code>Unnnn</code>, where <code>nnnn</code> represents one of a series
 of sequential integers representing the number of missing sires and
 dams right justified in a pattern of <code>0000</code>. See <code>addUIds</code>
@@ -184,14 +194,21 @@ to convert sex codes according to the following factors of standardized
 codes:</p>
 <ul><li><p><code>F</code> – replacing "FEMALE" or "2"</p></li>
 <li><p><code>M</code> – replacing "MALE" or "1"</p></li>
-<li><p><code>H</code> – replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE</p></li>
-<li><p><code>U</code> – replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE</p></li>
+<li><p><code>H</code> – replacing "HERMAPHRODITE" or "4", if ignoreHerm == FALSE</p></li>
+<li><p><code>U</code> – replacing "HERMAPHRODITE" or "4", if ignoreHerm == TRUE</p></li>
 <li><p><code>U</code> – replacing "UNKNOWN" or "3"</p></li>
 <li><p><code>U</code> – replacing a missing, blank or unrecognized value</p></li>
-</ul><p>Case and any spaces around a code are ignored.</p>
+</ul><p>Case and any spaces around a code are ignored. <code>qcStudbook</code> always uses
+the default <code>ignoreHerm == TRUE</code>, so <code>H</code> is never assigned,
+although the returned factor keeps the level <code>H</code>.</p>
 <p>The function <code>correctParentSex</code> is used to ensure no parent is both
-a sire and a dam. If this error is detected, the function throws an error
-and halts the program.</p>
+a sire and a dam. If this error is detected and
+<code>reportErrors == FALSE</code>, the function throws an error and halts the
+program (with <code>reportErrors == TRUE</code> the IDs are returned in
+<code>errorLst$sireAndDam</code>). It also recodes a female sire as male and a male
+dam as female; with <code>reportErrors == FALSE</code> this is silent, otherwise
+the IDs are reported in <code>errorLst$femaleSires</code> and
+<code>errorLst$maleDams</code>.</p>
 <p>The function <code>convertStatusCodes</code> converts status indicators to the
 following factors of standardized codes. Case of the original status value
 is ignored.</p>
@@ -200,7 +217,7 @@ is ignored.</p>
 <li><p><code>"SHIPPED"</code> — replacing "shipped", "sold", "sale", "s", "3"</p></li>
 <li><p><code>"UNKNOWN"</code> — replacing is.na(status)</p></li>
 <li><p><code>"UNKNOWN"</code> — replacing "unknown", "U", "4"</p></li>
-</ul><p>The function <code>convertAncestry</code> coverts ancestry indicators using
+</ul><p>The function <code>convertAncestry</code> converts ancestry indicators using
 regular expressions such that the following conversions are made from
 character strings that match selected substrings to the following factors.</p>
 <ul><li><p><code>"INDIAN"</code> — replacing "ind" and not "chin"</p></li>
@@ -215,18 +232,18 @@ dates in the columns <code>birth</code>, <code>death</code>, <code>departure</co
 <p>The function <code>setExit</code> uses heuristics and the columns <code>death</code>
 and <code>departure</code> to set <code>exit</code> if it is not already defined.</p>
 <p>The function <code>calcAge</code> uses the <code>birth</code> and the <code>exit</code>
-columns to define the <code>age</code> column. The numerical values is rounded
+columns to define the <code>age</code> column. The numerical value is rounded
 to the nearest 0.1 of a year. If <code>exit</code> is not defined, the
 current system date (<code><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date()</a></code>) is used.</p>
 <p>The function <code>findGeneration</code> is used to define the generation number
 for each animal in the pedigree.</p>
 <p>The function <code>removeDuplicates</code> checks for any duplicated records and
-removes the duplicates. I also throws an error and stops the program if an
+removes the duplicates. It also throws an error and stops the program if an
 ID appears in more
 than one record where one or more of the other columns have a difference.</p>
-<p>Columns that cannot be used subsequently are removed and the rows are
-ordered by generation number and then ID.</p>
-<p>Finally the columns <code>id</code> <code>sire</code>, and <code>dam</code> are coerce to
+<p>The standard columns come first, followed by any unrecognized columns, which
+are retained. The rows are ordered by generation number and then ID.</p>
+<p>Finally the columns <code>id</code>, <code>sire</code>, and <code>dam</code> are coerced to
 character.</p>
 <p>The returned pedigree always has a logical <code>placeholder</code> column with no
 <code>NA</code>: <code>TRUE</code> for the stand-ins made here (see <code>addUIds</code>),
@@ -238,8 +255,10 @@ looks like a stand-in (for example <code>"U1234"</code>) as <code>FALSE</code>.<
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data.frame with standardized and quality controlled pedigree
-information.</p>
+    <p>With <code>reportErrors == FALSE</code>, a data.frame with standardized and
+quality controlled pedigree information. With <code>reportErrors == TRUE</code>,
+an <code>nprcgenekeeprErr</code> list of the changes and errors found, or
+<code>NULL</code> when there are no errors and no column changes to report.</p>
     </div>
 
     <div class="section level2">

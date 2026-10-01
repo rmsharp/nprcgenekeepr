@@ -44,8 +44,8 @@ qcStudbook(
 
   - `death` — date or `NA` (optional) Date of death, if applicable
 
-  - `status` — Factor (levels: ALIVE, DEAD, SHIPPED) (optional) Status
-    of an individual
+  - `status` — Factor (levels: ALIVE, DECEASED, SHIPPED, UNKNOWN)
+    (optional) Status of an individual (see `convertStatusCodes`)
 
   - `origin` — Character or `NA` (optional) Facility an individual
     originated from, if other than ONPRC
@@ -106,23 +106,34 @@ qcStudbook(
   is a type of change or error found. Changes will include column names,
   case of categorical values (male, female, unknown), etc. Errors will
   include missing columns, invalid date rows, male dams, female sires,
-  and records with one or more parents below minimum age of parents.
+  an ID that is both a sire and a dam, duplicated IDs, IDs with invalid
+  characters, invalid `placeholder` values, and records with one or more
+  parents below minimum age of parents.
 
-  The following changes are made to the cols.
+  The following changes are made to the column names.
 
-  - Column cols are converted to all lower case
+  - Column names are converted to all lower case
 
-  - Periods (".") within column cols are collapsed to no space ""
+  - Spaces, periods (".") and underscores ("\_") within column names are
+    removed
 
-  - `egoid` is converted to `id`
+  - `egoid` and `ego` are converted to `id`
 
-  - `sireid` is convert to `sire`
+  - `sireid` is converted to `sire`
 
   - `damid` is converted to `dam`
 
-  If the dataframe (`sb` does not contain the five required columns
-  (`id`, `sire`, `dam`, `sex`), and `birth` the function throws an error
-  by calling [`stop()`](https://rdrr.io/r/base/stop.html).
+  - `birthdate` and `deathdate` are converted to `birth` and `death`
+
+  - `recordstatus`, `fromcenter` and `geographicorigin` are converted to
+    `recordStatus`, `fromCenter` and `geographicOrigin`
+
+  If the dataframe (`sb`) does not contain the five required columns
+  (`id`, `sire`, `dam`, `sex`, and `birth`) and `reportErrors == FALSE`,
+  the function throws an error by calling
+  [`stop()`](https://rdrr.io/r/base/stop.html). With
+  `reportErrors == TRUE` the missing names are returned in
+  `errorLst$missingColumns`.
 
   Animal IDs (`id`, `sire`, `dam`) must not contain a period (".");
   other characters are accepted. Periods cause problems across software
@@ -133,13 +144,14 @@ qcStudbook(
   in `errorLst$invalidIdChars`; otherwise the function throws an error.
   All automatically generated IDs (see `addUIds`) honor this rule.
 
-  If the `id` field has the string *UNKNOWN* (any case) or both the
-  fields `sire` or `dam` have `NA` or *UNKNOWN* (any case), the record
-  is removed. If either of the fields `sire` or `dam` have the string
-  *UNKNOWN* (any case), they are replaced with a unique identifier with
-  the form `Unnnn`, where `nnnn` represents one of a series of
-  sequential integers representing the number of missing sires and dams
-  right justified in a pattern of `0000`. See `addUIds` function.
+  If the `id` field has the string *UNKNOWN* (any case), the record is
+  removed. A record whose `sire` and `dam` are both `NA` or *UNKNOWN*
+  (any case) is kept as a founder; *UNKNOWN* in either field becomes
+  `NA`. If only one of the fields `sire` or `dam` is missing, the
+  missing parent is replaced with a unique identifier with the form
+  `Unnnn`, where `nnnn` represents one of a series of sequential
+  integers representing the number of missing sires and dams right
+  justified in a pattern of `0000`. See `addUIds` function.
 
   The function `addParents` is used to add records for parents missing
   their own record in the pedigree.
@@ -152,19 +164,25 @@ qcStudbook(
 
   - `M` – replacing "MALE" or "1"
 
-  - `H` – replacing "HERMAPHRODITE" or "4", if ignore.herm == FALSE
+  - `H` – replacing "HERMAPHRODITE" or "4", if ignoreHerm == FALSE
 
-  - `U` – replacing "HERMAPHRODITE" or "4", if ignore.herm == TRUE
+  - `U` – replacing "HERMAPHRODITE" or "4", if ignoreHerm == TRUE
 
   - `U` – replacing "UNKNOWN" or "3"
 
   - `U` – replacing a missing, blank or unrecognized value
 
-  Case and any spaces around a code are ignored.
+  Case and any spaces around a code are ignored. `qcStudbook` always
+  uses the default `ignoreHerm == TRUE`, so `H` is never assigned,
+  although the returned factor keeps the level `H`.
 
   The function `correctParentSex` is used to ensure no parent is both a
-  sire and a dam. If this error is detected, the function throws an
-  error and halts the program.
+  sire and a dam. If this error is detected and `reportErrors == FALSE`,
+  the function throws an error and halts the program (with
+  `reportErrors == TRUE` the IDs are returned in `errorLst$sireAndDam`).
+  It also recodes a female sire as male and a male dam as female; with
+  `reportErrors == FALSE` this is silent, otherwise the IDs are reported
+  in `errorLst$femaleSires` and `errorLst$maleDams`.
 
   The function `convertStatusCodes` converts status indicators to the
   following factors of standardized codes. Case of the original status
@@ -180,7 +198,7 @@ qcStudbook(
 
   - `"UNKNOWN"` — replacing "unknown", "U", "4"
 
-  The function `convertAncestry` coverts ancestry indicators using
+  The function `convertAncestry` converts ancestry indicators using
   regular expressions such that the following conversions are made from
   character strings that match selected substrings to the following
   factors.
@@ -205,22 +223,23 @@ qcStudbook(
   `departure` to set `exit` if it is not already defined.
 
   The function `calcAge` uses the `birth` and the `exit` columns to
-  define the `age` column. The numerical values is rounded to the
-  nearest 0.1 of a year. If `exit` is not defined, the current system
-  date ([`Sys.Date()`](https://rdrr.io/r/base/Sys.time.html)) is used.
+  define the `age` column. The numerical value is rounded to the nearest
+  0.1 of a year. If `exit` is not defined, the current system date
+  ([`Sys.Date()`](https://rdrr.io/r/base/Sys.time.html)) is used.
 
   The function `findGeneration` is used to define the generation number
   for each animal in the pedigree.
 
   The function `removeDuplicates` checks for any duplicated records and
-  removes the duplicates. I also throws an error and stops the program
+  removes the duplicates. It also throws an error and stops the program
   if an ID appears in more than one record where one or more of the
   other columns have a difference.
 
-  Columns that cannot be used subsequently are removed and the rows are
-  ordered by generation number and then ID.
+  The standard columns come first, followed by any unrecognized columns,
+  which are retained. The rows are ordered by generation number and then
+  ID.
 
-  Finally the columns `id` `sire`, and `dam` are coerce to character.
+  Finally the columns `id`, `sire`, and `dam` are coerced to character.
 
   The returned pedigree always has a logical `placeholder` column with
   no `NA`: `TRUE` for the stand-ins made here (see `addUIds`), the value
@@ -232,8 +251,10 @@ qcStudbook(
 
 ## Value
 
-A data.frame with standardized and quality controlled pedigree
-information.
+With `reportErrors == FALSE`, a data.frame with standardized and quality
+controlled pedigree information. With `reportErrors == TRUE`, an
+`nprcgenekeeprErr` list of the changes and errors found, or `NULL` when
+there are no errors and no column changes to report.
 
 ## Examples
 

@@ -1,17 +1,16 @@
 # Extract a kValue table from a kinship matrix
 
 A `kValue` matrix has one row for each pair of individuals in the
-kinship matrix and one column for each kinship matrix. A `kValue` matrix
-has one row for each pair of individuals in the kinship matrix and one
-column for each kinship matrix. Thus, in a kinship matrix with 20
-individuals the kinship matrix will have 20 rows by 20 columns but only
-the upper or lower triangle has unique information as the diagonal
-values are each animal's self-kinship, \\(1 + F) / 2\\ (0.5 when not
-inbred), and the upper triangle has the same values as the lower
-triangle. The `kValue` table will have 210 rows. The calculation for the
-number or row in the `kValue` table is \\20 + (20 \* 19) / 2\\ rows with
-the 20 values from the kinship coeficient matrix diagonal and \\(20 \*
-19) / 2\\ elements from one of either of the two triangles.
+kinship matrix and one column for each kinship matrix. Thus, in a
+kinship matrix with 20 individuals the kinship matrix will have 20 rows
+by 20 columns but only the upper or lower triangle has unique
+information as the diagonal values are each animal's self-kinship,
+\\(1 + F) / 2\\ (0.5 when not inbred), and the upper triangle has the
+same values as the lower triangle. The `kValue` table will have 210
+rows. The calculation for the number or row in the `kValue` table is
+\\20 + (20 \* 19) / 2\\ rows with the 20 values from the kinship
+coefficient matrix diagonal and \\(20 \* 19) / 2\\ elements from one of
+either of the two triangles.
 
 ## Usage
 
@@ -24,14 +23,17 @@ kinshipMatrixToKValues(kinshipMatrix)
 - kinshipMatrix:
 
   square kinship matrix. May or may not have named rows and columns.
+  When the matrix has no row and column names, the IDs are generated
+  (`"A"`, `"B"`, ... `"Z"`, `"A1"`, `"B1"`, ...), not the row and column
+  indices.
 
 ## Value
 
-data.frame object with columns `id_1`, `id_2`, and `kinship` where the
+A `data.table` with columns `id_1`, `id_2`, and `kinship` where the
 first two columns contain the IDs of the individuals in the kinship
-matrix provided to the function and the `kinship` columm contains the
-corresponding kinship coefficient. In contrast to the kinship matrix.
-Each possible pairing of IDs appears once.
+matrix provided to the function and the `kinship` column contains the
+corresponding kinship coefficient. Unlike the kinship matrix, each
+possible pairing of IDs appears once.
 
 ## Details
 
@@ -81,21 +83,6 @@ allSimParents <- list(
   simParent_1, simParent_2, simParent_3,
   simParent_4, simParent_5, simParent_6
 )
-
-extractKinship <- function(simKinships, id1, id2, simulation) {
-  ids <- dimnames(simKinships[[simulation]])[[1]]
-  simKinships[[simulation]][
-    seq_along(ids)[ids == id1],
-    seq_along(ids)[ids == id2]
-  ]
-}
-
-extractKValue <- function(kValue, id1, id2, simulation) {
-  kValue[
-    kValue$id_1 == id1 & kValue$id_2 == id2,
-    paste0("sim_", simulation)
-  ]
-}
 
 simPed <- makeSimPed(ped, allSimParents)
 simKinship <- kinship(

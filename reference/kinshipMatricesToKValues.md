@@ -1,17 +1,16 @@
 # Build a kValue table from a list of kinship matrices
 
 A `kValue` matrix has one row for each pair of individuals in the
-kinship matrix and one column for each kinship matrix. A `kValue` matrix
-has one row for each pair of individuals in the kinship matrix and one
-column for each kinship matrix. Thus, in a kinship matrix with 20
-individuals the kinship matrix will have 20 rows by 20 columns but only
-the upper or lower triangle has unique information as the diagonal
-values are the self-kinship coefficients, \\(1 + F) / 2\\ (0.5 for a
-non-inbred animal), and the upper triangle has the same values as the
-lower triangle. The `kValue` table will have 210 rows. The calculation
-for the number or row in the `kValue` table is \\20 + (20 \* 19) / 2\\
-rows with the 20 values from the kinship coeficient matrix diagonal and
-\\(20 \* 19) / 2\\ elements from one of either of the two triangles.
+kinship matrix and one column for each kinship matrix. Thus, in a
+kinship matrix with 20 individuals the kinship matrix will have 20 rows
+by 20 columns but only the upper or lower triangle has unique
+information as the diagonal values are the self-kinship coefficients,
+\\(1 + F) / 2\\ (0.5 for a non-inbred animal), and the upper triangle
+has the same values as the lower triangle. The `kValue` table will have
+210 rows. The calculation for the number or row in the `kValue` table is
+\\20 + (20 \* 19) / 2\\ rows with the 20 values from the kinship
+coefficient matrix diagonal and \\(20 \* 19) / 2\\ elements from one of
+either of the two triangles.
 
 ## Usage
 
@@ -24,16 +23,18 @@ kinshipMatricesToKValues(kinshipMatrices)
 - kinshipMatrices:
 
   list of square matrices of kinship values. May or may not have named
-  rows and columns.
+  rows and columns. The list must contain at least one matrix (an empty
+  list is an error), and every matrix must have its individuals in the
+  same order because the kinship columns are combined by position.
 
 ## Value
 
-Dataframe object with columns `id_1`, `id_2`, and one `kinship` column
-for each kinship matrix in `kinshipMatricies` where the first two
-columns contain the IDs of the individuals in the kinship matrix
-provided to the function and the `kinship` columms contain the
-corresponding kinship coefficients. In contrast to the kinship matrix.
-Each possible pairing of IDs appears once.
+A `data.table` with columns `id_1`, `id_2`, and `sim_1` through `sim_m`,
+one column for each kinship matrix in `kinshipMatrices`. The first two
+columns contain the IDs of the individuals in the kinship matrices
+provided to the function and the `sim_` columns contain the
+corresponding kinship coefficients. Unlike the kinship matrix, each
+possible pairing of IDs appears once.
 
 ## Details
 
@@ -43,7 +44,8 @@ pairs and the third column contains the pair's kinship coefficient.
 
 Thus, the number of rows in the kValues matrix will be \\n + n(n-1) /
 2\\ and the number of columns will be 2 plus one additional column for
-each kinship matrix (\\2 + n\\).
+each kinship matrix (\\2 + m\\, where \\m\\ is the number of kinship
+matrices).
 
 ## Examples
 
@@ -84,14 +86,6 @@ allSimParents <- list(
   simParent_1, simParent_2, simParent_3,
   simParent_4, simParent_5, simParent_6
 )
-
-extractKinship <- function(simKinships, id1, id2, simulation) {
-  ids <- dimnames(simKinships[[simulation]])[[1]]
-  simKinships[[simulation]][
-    seq_along(ids)[ids == id1],
-    seq_along(ids)[ids == id2]
-  ]
-}
 
 extractKValue <- function(kValue, id1, id2, simulation) {
   kValue[kValue$id_1 == id1 & kValue$id_2 == id2, paste0(

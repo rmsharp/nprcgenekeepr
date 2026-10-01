@@ -90,7 +90,11 @@ that locus).</p></dd>
     <p>A list with two elements: <code>perLocus</code>, a named numeric vector
 of expected heterozygosity per locus (names taken from
 <code>colnames(genotypeMatrix)</code>); and <code>meanHe</code>, the unweighted mean
-of <code>perLocus</code> across all loci.</p>
+of <code>perLocus</code> across all loci. A locus with no genotyped individual
+gets <code>1</code> (the empty sum of squared frequencies is 0), not <code>NA</code>,
+and that value is included in <code>meanHe</code>; unlike
+<code><a href="markerObservedHeterozygosity.html">markerObservedHeterozygosity</a></code>, which returns <code>NA</code> for
+an individual with no genotyped locus.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

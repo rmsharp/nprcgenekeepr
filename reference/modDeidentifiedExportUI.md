@@ -3,11 +3,11 @@
 A Shiny workflow around the existing, tested de-identification
 primitives
 ([`obfuscatePed`](https://github.com/rmsharp/nprcgenekeepr/reference/obfuscatePed.md))
-and this file's ` .buildDeidentificationManifest`: configure export
-parameters, preview the de-identified output for the pedigree already
-loaded in the current session, confirm via a modal gate, and download 3
-artifacts – the de-identified pedigree, a transformation manifest, and a
-distinctly labeled re-identification key.
+and an internal manifest builder: configure export parameters, preview
+the de-identified output for the pedigree already loaded in the current
+session, confirm via a modal gate, and download 3 artifacts – the
+de-identified pedigree, a transformation manifest, and a distinctly
+labeled re-identification key.
 
 ## Usage
 

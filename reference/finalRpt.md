@@ -14,6 +14,13 @@ data(finalRpt)
 
 An object of class `list` of length 3.
 
+## Details
+
+It is a list of three data frames: `highGu`, `lowMk` and `lowVal`. Each
+has the 13 columns `id`, `sex`, `age`, `birth`, `exit`, `population`,
+`first_name`, `second_name`, `indivMeanKin`, `zScores`, `gu`,
+`totalOffspring` and `livingOffspring`.
+
 ## Examples
 
 ``` r

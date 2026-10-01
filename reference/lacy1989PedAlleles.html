@@ -63,7 +63,14 @@ lacy1989Ped with 5000 iterations."><meta property="og:image" content="https://gi
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>An object of class <code>data.frame</code> with 14 rows and 5002 columns.</p>
+    <p>A dataframe with 14 rows and 5002 columns. There are 5000 columns
+(<code>V1</code> to <code>V5000</code>), one for each iteration in <code>geneDrop</code>
+containing alleles randomly selected at each
+generation of the pedigree using Mendelian rules.</p>
+<p>Column 5001 is the <code>id</code> column with two rows for each member of the
+pedigree (2 * 7).</p>
+<p>Column 5002 is the <code>parent</code> column with values of <code>sire</code> and
+<code>dam</code> alternating.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -71,18 +78,7 @@ lacy1989Ped with 5000 iterations."><meta property="og:image" content="https://gi
 by Robert C. Lacy in "Analysis of Founder Representation in Pedigrees:
 Founder Equivalents and Founder Genome Equivalents" Zoo Biology 8:111-123
 (1989).</p>
-<dl>
-There are 5000 columns, one for each iteration in geneDrop
-containing alleles randomly selected at each
-generation of the pedigree using Mendelian rules.
-
-Column 5001 is the id column with two rows for each member of the
-pedigree (2 * 7).
-
-Column 5002 is the parent column with values of sire and
-dam alternating.
-
-</dl></div>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

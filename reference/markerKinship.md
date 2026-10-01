@@ -53,9 +53,10 @@ The diagonal is set to `0.5` by definition (self-kinship), matching
 convention, rather than evaluated from the formula above – which divides
 by zero whenever an individual has no heterozygous loci at all.
 
-When neither individual in a pair has a shared heterozygous locus (the
-formula's denominator is zero), the pair's kinship is undefined; that
-pair's entry is `NA` and a warning names the pair.
+When at least one individual in a pair has no heterozygous locus among
+the loci genotyped in both (so \\\min(N\_{Aa}^{(i)}, N\_{Aa}^{(j)}) =
+0\\ and the formula's denominator is zero), the pair's kinship is
+undefined; that pair's entry is `NA` and a warning names the pair.
 
 ## References
 

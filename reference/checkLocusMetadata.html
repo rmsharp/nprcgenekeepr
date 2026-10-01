@@ -6,14 +6,18 @@ issue #153 – and classifies each locus into one of three coverage
 tiers, following a PLINK-style three-state coverage model:
 &quot;full&quot; (both chrom and pos present; cM is
 optional even within &quot;full&quot;), &quot;partial&quot; (exactly one of
-chrom/pos present), or &quot;none&quot; (neither present)."><meta property="og:description" content="Validates the structure of a locus-metadata sidecar table (locus,
+chrom/pos present), or &quot;none&quot; (neither present). A
+value counts as present when it is not NA, so an empty-string
+chrom counts as present."><meta property="og:description" content="Validates the structure of a locus-metadata sidecar table (locus,
 chrom, pos, and optionally cM) – the schema
 introduced by issue #152's own design decision and reused verbatim by
 issue #153 – and classifies each locus into one of three coverage
 tiers, following a PLINK-style three-state coverage model:
 &quot;full&quot; (both chrom and pos present; cM is
 optional even within &quot;full&quot;), &quot;partial&quot; (exactly one of
-chrom/pos present), or &quot;none&quot; (neither present)."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
+chrom/pos present), or &quot;none&quot; (neither present). A
+value counts as present when it is not NA, so an empty-string
+chrom counts as present."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -71,7 +75,9 @@ issue #153 – and classifies each locus into one of three coverage
 tiers, following a PLINK-style three-state coverage model:
 <code>"full"</code> (both <code>chrom</code> and <code>pos</code> present; <code>cM</code> is
 optional even within <code>"full"</code>), <code>"partial"</code> (exactly one of
-<code>chrom</code>/<code>pos</code> present), or <code>"none"</code> (neither present).</p>
+<code>chrom</code>/<code>pos</code> present), or <code>"none"</code> (neither present). A
+value counts as present when it is not <code>NA</code>, so an empty-string
+<code>chrom</code> counts as present.</p>
     </div>
 
     <div class="section level2">
@@ -95,7 +101,9 @@ columns, <code>locus</code>, <code>chrom</code>, <code>pos</code>, and optionall
 count, first-column identity, and row uniqueness are all valid, with a
 new <code>coverage</code> column appended (<code>"full"</code>/<code>"partial"</code>/
 <code>"none"</code>). The returned dataframe has <code>locus</code> and <code>chrom</code>
-coerced to character.</p>
+coerced to character, and its column names forced to <code>locus</code>,
+<code>chrom</code>, <code>pos</code> (and <code>cM</code> when there are four columns)
+whatever the input names were.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

@@ -30,14 +30,15 @@ coefficient, `G2 = ((n + 1) * g2 + 6) * (n - 1) / ((n - 2) * (n - 3))`,
 where `g2 = m4 / m2^2 - 3` and `m2`/`m4` are the second/fourth central
 sample moments of `x` – the "Method 2" adjustment of Joanes and Gill
 (1998), the same convention SPSS, SAS, and Excel report by default and
-the `type = 2` option in the `moments`/`e1071` CRAN packages. Excess
-(not raw) kurtosis: a normal distribution reads `0`. Positive values
-indicate heavier tails / a sharper peak than normal; negative, lighter
-tails / a flatter peak.
+the `type = 2` option in the `e1071` CRAN package. Excess (not raw)
+kurtosis: a normal distribution reads `0`. Positive values indicate
+heavier tails / a sharper peak than normal; negative, lighter tails / a
+flatter peak.
 
-Returns `NA` when `x` has fewer than 4 non-`NA` values (`n <= 3`, the
-adjustment term divides by `(n - 2) * (n - 3)`) or has zero variance
-(all remaining values identical) – both would otherwise divide by zero.
+Returns `NA` when `na.rm = FALSE` and `x` contains an `NA`, when `x` has
+fewer than 4 non-`NA` values (`n <= 3`, the adjustment term divides by
+`(n - 2) * (n - 3)`) or has zero variance (all remaining values
+identical) – both would otherwise divide by zero.
 
 ## References
 

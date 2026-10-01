@@ -26,7 +26,9 @@ correctParentSex(id, sire, dam, sex, recordStatus, reportErrors = FALSE)
 
 - sex:
 
-  factor with levels: "M", "F", "U". Sex specifier for an individual.
+  factor or character vector of sex codes ("M", "F", "H", "U"). Sex
+  specifier for an individual. A character input returns a character
+  vector.
 
 - recordStatus:
 
@@ -40,7 +42,9 @@ correctParentSex(id, sire, dam, sex, recordStatus, reportErrors = FALSE)
 
   logical value if TRUE will scan the entire file and make a list of all
   errors found. The errors will be returned in a list of list where each
-  sublist is a type of error found.
+  sublist is a type of error found. When `FALSE`, an ID listed as both a
+  sire and a dam stops with an error; when `TRUE` it is returned as
+  `sireAndDam`.
 
 ## Value
 
@@ -98,7 +102,7 @@ pedOneCorrected[pedOne$sex != pedOneCorrected$sex, ]
 pedTwoCorrected <- pedTwo
 pedTwoCorrected$sex <- correctParentSex(
   pedTwo$id, pedTwo$sire, pedTwo$dam,
-  pedTwo$sex, pedOne$recordStatus
+  pedTwo$sex, pedTwo$recordStatus
 )
 pedTwo[pedTwo$sex != pedTwoCorrected$sex, ]
 #>   id sire dam sex recordStatus

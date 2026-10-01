@@ -5,17 +5,19 @@ checkMarkerGenotypeFile checks – but sized and hardened for
 sequence-derived panels (issue #152): a soft, overridable warning above a
 sparse/GBS-scale panel-size ceiling, and an explicit rejection of a
 literal &quot;.&quot; allele value (VCF's missing-genotype placeholder),
-rather than silently counting it as a real allele. Optionally
-cross-validates an accompanying locus-metadata sidecar by reusing
-checkLocusMetadata, rather than reinventing that check."><meta property="og:description" content="Validates the structure of a long-format marker genotype table (one row
+rather than silently counting it as a real allele. Optionally validates
+the accompanying locus-metadata sidecar's own structure by reusing
+checkLocusMetadata, rather than reinventing that check; the
+sidecar is not cross-checked against the loci of the genotype table."><meta property="og:description" content="Validates the structure of a long-format marker genotype table (one row
 per id x locus), the same schema
 checkMarkerGenotypeFile checks – but sized and hardened for
 sequence-derived panels (issue #152): a soft, overridable warning above a
 sparse/GBS-scale panel-size ceiling, and an explicit rejection of a
 literal &quot;.&quot; allele value (VCF's missing-genotype placeholder),
-rather than silently counting it as a real allele. Optionally
-cross-validates an accompanying locus-metadata sidecar by reusing
-checkLocusMetadata, rather than reinventing that check."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
+rather than silently counting it as a real allele. Optionally validates
+the accompanying locus-metadata sidecar's own structure by reusing
+checkLocusMetadata, rather than reinventing that check; the
+sidecar is not cross-checked against the loci of the genotype table."><meta property="og:image" content="https://github.com/rmsharp/nprcgenekeepr/reference/figures/card.png"><meta property="og:image:alt" content="Conserve Genes"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -72,9 +74,10 @@ per <code>id</code> x <code>locus</code>), the same schema
 sequence-derived panels (issue #152): a soft, overridable warning above a
 sparse/GBS-scale panel-size ceiling, and an explicit rejection of a
 literal <code>"."</code> allele value (VCF's missing-genotype placeholder),
-rather than silently counting it as a real allele. Optionally
-cross-validates an accompanying locus-metadata sidecar by reusing
-<code><a href="checkLocusMetadata.html">checkLocusMetadata</a></code>, rather than reinventing that check.</p>
+rather than silently counting it as a real allele. Optionally validates
+the accompanying locus-metadata sidecar's own structure by reusing
+<code><a href="checkLocusMetadata.html">checkLocusMetadata</a></code>, rather than reinventing that check; the
+sidecar is not cross-checked against the loci of the genotype table.</p>
     </div>
 
     <div class="section level2">
