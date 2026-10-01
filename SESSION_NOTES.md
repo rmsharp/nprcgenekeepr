@@ -98,41 +98,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### Session 831 Handoff Evaluation (by Session 832)
+**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, no `status: pending` receipt, the one untracked
+file as described, and the BACKLOG item named slice 5's scope and the open owner decisions. **Missing:** it said "master 38 ahead" and push (A) as
+open, but the push had already happened and CI was green by the time of orientation (the ledger commit said so); it did not size `man/` (268
+pages), so slice 5 as worded was too big for one session. **Wrong:** nothing. **ROI:** high.
+
 ### What Session 832 Did
-**Deliverable:** Docs-staleness audit slice 5: one audit report on `vignettes/a2interactive.Rmd` (the executable function tour); `man/` and `NEWS.Rmd` stay later slices (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** docs-staleness audit slice 5, scoped by me to `vignettes/a2interactive.Rmd` (`man/` and `NEWS.Rmd` are slices 6 and 7).
+Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE5_2026-10-01.md`: 12 moderate, 18 minor, 0 critical, no code defects, no chunk error on a full knit.
+Method as slices 3-4: four read-only subagents by line range, then I re-read the cited code for the findings marked R (argument lists, `femaleSires`,
+`lowParentAge.csv` path, `twinRelations`, `isolatedIds`, sex-ratio range). **Commits:** claim `0838d80d3`; report and records in the close-out commit.
+**Verification:** audit only; no code, test, DESCRIPTION or NAMESPACE change, so no suite, check, lint or smoke test was owed. **NEWS.Rmd:** no entry.
+**Learnings:** none new (the argument-list drift is recorded in the report's Structural observations). **Reduction:** removed the S830 handoff
+evaluation and the "What Session 831 Did" block (in git and the S831 receipt).
 
-### Session 830 Handoff Evaluation (by Session 831)
-**Score: 9/10.** The BACKLOG item named the cause (S825 commit `9a2a5ddb7`), both files, the two verification commands and the exact owner
-decision, so the session needed one question and one `git rm`. "Do not push before (A)" was correct. **Missing:** nothing needed; it did not
-say the .Rmd copy must also leave the working tree (the test reads the directory), which I confirmed by running it. **Wrong:** nothing; "master
-is 37 ahead" was 38 by the time of orientation, because the S830 close-out commit landed after the count. **ROI:** high.
-
-### What Session 831 Did
-**Deliverable, DONE:** fixed the pkgdown breakage. Owner chose "untrack both": `git rm` of `vignettes/suggested_NEWS_entry.Rmd` and
-`vignettes/articles/pedigree-diagram.pdf` (both added by S825's `9a2a5ddb7`, still recoverable from it). The untracked top-level
-`suggested_NEWS_entry.md` is untouched. **Commits:** claim `46a7d9e56`; fix `3a8c026bb`; records in the close-out commit.
-**TDD:** RED was the existing `test_pkgdown_reference_config.R` failure (confirmed at HEAD before the change); GREEN the `git rm`; REFACTOR a no-op.
-**Verification:** `test_pkgdown_reference_config.R` passes; `pkgdown::check_pkgdown()` "No problems found"; full clean regression read
-(`load_all`, `NOT_CRAN=true`, no file filter): 0 failed, 0 error over 2,886 results. **Not run:** `devtools::check()` (no R, DESCRIPTION or
-NAMESPACE change); lint (no `.R` file changed); app smoke test (no runtime change). **NEWS.Rmd:** no entry (no feature or behavior change).
-**Learnings:** Learning 836. **Reduction:** removed the S829 handoff evaluation and the "What Session 830 Did" block (in git and the S830 receipt).
-
-**Self-assessment: 9/10.** + One deliverable; confirmed RED before acting; asked the one real question in plain words; ran the unfiltered suite.
-- The first combined command ran past the foreground timeout, so I had to go to a background run and re-run the test file to see its result.
+**Self-assessment: 8/10.** + One deliverable; every finding has evidence; moderates re-read against code; scope narrowed to what fits one session.
+- Of 30 findings only 7 were re-read by me (the rest are agent-run, marked A); the diagram-layout and footnote findings rest on agent runs.
 
 **Next steps:**
-- (A) Push master (38 commits ahead of origin, no push since S819) only on the owner's say-so, then watch all four workflows: this is the first
-  CI run since S819 and covers S820-S831. The pkgdown blocker is gone.
-- (B) Docs-staleness audit slice 5 (BACKLOG, READY, Effort L); owner decisions pending: `suggested_NEWS_entry` adopt/drop, the four code defects.
+- (A) Fix the 30 findings in `vignettes/a2interactive.Rmd` (BACKLOG, READY, Effort M), starting with AI1-AI3 (`:920-1019`) and AI4-AI6; build
+  equivalent is a knit plus `devtools::check()` (the vignette is built).
+- (B) Slice 6: `man/` audit (268 pages; split by topic). Owner decisions still pending: `suggested_NEWS_entry` adopt/drop, the four code defects.
 
-**Key files:** `tests/testthat/test_pkgdown_reference_config.R`, `_pkgdown.yml` (articles list), `BACKLOG.md` (docs-audit item),
-untracked `suggested_NEWS_entry.md` (top level).
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE5_2026-10-01.md`, `vignettes/a2interactive.Rmd:920-1019, 851-899, 680-699, 1315`,
+`R/groupAddAssign.R:172-186`, `R/correctParentSex.R:105`, `R/qcStudbook.R:323`.
 
-**Gotchas:** `R CMD check` NOTEs on the untracked top-level `suggested_NEWS_entry.md` until it is dropped or `.Rbuildignore`d. The first push in
-12 sessions may surface other CI findings unrelated to this fix (estimate, not computed).
+**Gotchas:** AI1/AI2 use inline R, so the numbers change if the chunk's inputs change; recompute by running, do not copy the report's figures
+blindly. `a2interactive.Rmd` is also the file the deferred `a2interactive` checklist and the `inst/doc/` slimming item touch.
 
 ### Session 809 Handoff Evaluation (by Session 810)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S809
