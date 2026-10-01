@@ -98,17 +98,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 834 Did
-**Deliverable:** docs-staleness audit slice 6, first topic group of the `man/` pages (IN PROGRESS)
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+### Session 833 Handoff Evaluation (by Session 834)
+**Score: 9/10.** Orient measurements held: ledger and receipt frontiers at HEAD (`024014dc2`), the one untracked file as described, master 5 ahead (the note said 4 "after this commit", off by the close-out commit itself), and next step (A) named `man/` with the 268-page count. **Missing:** no suggested split of `man/` by topic (I chose the genetic-value/kinship group from the page list); no note that `man/` is generated, so fixes go in `R/*.R` roxygen. **Wrong:** nothing found. **ROI:** high.
 
-### Session 832 Handoff Evaluation (by Session 833)
-**Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, the S832 receipt complete, the one untracked
-file as described, and next step (A) named the exact findings, line ranges and build equivalent. **Missing:** it did not say the findings' inline
-numbers are random-run dependent (the vignette samples, so counts must be inline R, not typed); it did not say `test_wordlist_coverage.R` spell-checks
-the vignette, which flagged 14 new argument names. **Wrong:** nothing found; AI1-AI3 reproduced as reported. **ROI:** high.
+### What Session 834 Did
+**Deliverable, DONE:** docs-staleness audit slice 6a, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md`: the 36 genetic-value and kinship-calculation `man/` pages, 9 moderate and 45 minor findings (ids MA/MB/MC/MD), 8 pages clean. Read-only: no R, test or `man/` change. Method: four subagents (nine pages each) comparing roxygen with code and running the calls; I re-read the source for 9 findings (marked S in the report; all held).
+**Commits:** claim `5fc891cb9`; report, BACKLOG and records in the close-out commit.
+**Not run:** test suite, lint, check (no code or build-relevant file changed; `docs/` is outside the package build), runtime smoke.
+**NEWS.Rmd:** no entry (audit report only). **Reduction:** removed the S832 handoff evaluation (in git and the S833 receipt).
+
+**Self-assessment: 8/10.** + One deliverable; every moderate re-read or run; findings tagged by who verified them; code-change candidates (MC1, MB3) kept out of the doc-fix list.
+- Most findings rest on agent runs (A/R marks), only 9 re-read by me; MA3/MB14 (`moments` has no `type` argument) are recall, flagged as such.
+- A scratch-file name collision between agents happened once (set B renamed its files); no result lost.
+
+**Next steps:**
+- (A) Fix the 54 slice 6a findings in `R/*.R` roxygen, then `devtools::document()` (S823/S833 pattern; Effort M). Fix shared sentences (MC8, MC12/MC16, MD2, MA3/MB14) on every page at once. Build equivalent: `devtools::document()`, `test_wordlist_coverage.R`, `devtools::check(--no-tests)`.
+- (B) Or slice 6b: next `man/` topic group (232 pages left). Owner decisions pending: MC1 and MB3 (code), `suggested_NEWS_entry.md`, the four earlier code defects.
+- (C) Master is 7 ahead of origin after this commit (5 at Orient plus the claim and close-out commits); push only on the owner's say-so.
+
+**Key files:** `docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md`, `BACKLOG.md:197`, `R/filterKinMatrix.R:27`, `R/kinship.R:14,28,216`, `R/reportGV.R:113-117`.
+
+**Gotchas:** editing roxygen changes `man/*.Rd` only through `devtools::document()`; a typed example number in roxygen can go stale. The reportGV example uses `guIter = 50`, so raising it slows the examples. The `moments` claims (MA3, MB14) were not verified by running; check `args(moments::kurtosis)` before editing. The owner's question on `suggested_NEWS_entry.md` (commit or drop?) went unanswered this session.
 
 ### What Session 833 Did
 **Deliverable, DONE:** fixed all 30 findings (AI1-AI30) of the S832 audit in `vignettes/a2interactive.Rmd`. Prose, hand-typed lists and inline R only;

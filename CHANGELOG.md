@@ -60,7 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-10-01 · [ad hoc] S834 claim: docs-staleness audit slice 6, first topic group of the `man/` pages (in progress; close-out entry follows).
+### 2026-10-01 · [ad hoc] S834 close-out: docs-staleness audit slice 6a, the 36 genetic-value and kinship `man/` pages: 9 moderate and 45 minor findings, report `docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md`; BACKLOG docs-audit item updated. Read-only, no code changed. Commits `5fc891cb9` (claim), close-out commit.
+- **Model:** Claude Sonnet 5.5.
 
 ### 2026-10-01 · [ad hoc] S833 close-out: fixed all 30 findings (AI1-AI30, 12 moderate and 18 minor) of the S832 docs-staleness audit in `vignettes/a2interactive.Rmd`; BACKLOG docs-audit item updated. Knit clean, spelling and baseline tests pass, `devtools::check(--no-tests)` 0 errors / 0 warnings. No code changed. Commits `8d41e1229` (claim), close-out commit.
 

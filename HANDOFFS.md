@@ -32,8 +32,14 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S834
 date: 2026-10-01
-status: pending
-active_task: IN PROGRESS: docs-staleness audit slice 6, first topic group of man/ pages
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE: docs-staleness audit slice 6a, 36 genetic-value/kinship man/ pages (9 moderate, 45 minor)
+what_was_done: Claim 5fc891cb9; report docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md, BACKLOG and records in the close-out commit. Read-only; four subagents audited nine pages each, I re-read the source for 9 findings. No code, test or man/ change; suite, lint, check not run (nothing built changed).
+next_steps: Fix the 54 findings in R/*.R roxygen then devtools::document() (shared sentences on all pages at once), or audit slice 6b (232 man/ pages left). Owner decisions: MC1 filterKinMatrix drop=FALSE, MB3 unknown-sex founder kinship, suggested_NEWS_entry.md. Push master (7 ahead) only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE6A_2026-10-01.md, BACKLOG.md:197, R/filterKinMatrix.R:27, R/kinship.R:14,216, R/reportGV.R:113-117
+gotchas: man/ is generated; fix roxygen then document(). MA3 and MB14 (moments has no type argument) rest on recall, verify first. Most findings are agent-verified (A/R), 9 re-read by me (S).
 ```
 
 ```handoff
