@@ -3,15 +3,18 @@
 
 #' Make a relation classes table from kinship pairs
 #'
-#' From Relations
+#' Counts the pairs of animals in each relationship class of a long-form
+#' kinship table.
 #'
 #' @param kin a dataframe with columns \code{id1}, \code{id2}, \code{kinship},
 #' and \code{relation}. It is a long-form table of pairwise kinships, with
 #' relationship categories included for each pair.
-#' @return A data.frame with the number of instances of following relationship
+#' @return A data.frame with columns \code{Relationship Class} and
+#' \code{Frequency}: the number of pairs in each of the following relationship
 #' classes: Parent-Offspring, Full-Siblings, Half-Siblings,
 #' Grandparent-Grandchild, Full-Cousins, Cousin - Other, Full-Avuncular,
-#' Avuncular - Other, Other, and No Relation.
+#' Avuncular - Other, Other, and No Relation. Self pairs are not counted, and
+#' classes with no pairs are left out.
 #'
 #' @export
 #' @examples

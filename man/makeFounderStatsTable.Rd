@@ -23,8 +23,10 @@ Character string containing HTML table markup.
 }
 \description{
 Generates an HTML table displaying founder statistics including counts
-of known founders, male founders, female founders, founder equivalents (FE),
-and founder genome equivalents (FG).
+of known founders, female founders, male founders, founder equivalents (FE),
+and founder genome equivalents (FG). When \code{founderStats} is
+\code{NULL} a paragraph saying that no founder statistics are available is
+returned instead of a table.
 }
 \examples{
 stats <- list(
