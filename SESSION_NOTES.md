@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 833 Did
+**Deliverable:** fix the 30 findings (AI1-AI30) in `vignettes/a2interactive.Rmd` (IN PROGRESS)
+**Started:** 2026-10-01
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 831 Handoff Evaluation (by Session 832)
 **Score: 9/10.** Every Orient measurement held: `CHANGELOG.md` and `HANDOFFS.md` frontiers at HEAD, no `status: pending` receipt, the one untracked
 file as described, and the BACKLOG item named slice 5's scope and the open owner decisions. **Missing:** it said "master 38 ahead" and push (A) as

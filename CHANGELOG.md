@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-01 · [ad hoc] S833 claim: fixing the 30 findings (AI1-AI30) in `vignettes/a2interactive.Rmd` from the S832 audit (in progress; close-out entry follows).
+
 ### 2026-10-01 · [ad hoc] S831 push: pushed master (`7bcfdcc68..07011d2a9`, 38 commits, first push since S819) at the owner's request; all four workflows on `07011d2a9` completed green (R-CMD-check 22m55s, test-coverage 12m6s, pkgdown 6m43s, lint 5m8s).
 - **Model:** Claude Sonnet 5.5.
 
