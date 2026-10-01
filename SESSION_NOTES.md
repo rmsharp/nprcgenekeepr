@@ -98,6 +98,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 824 Did
+**Deliverable:** docs staleness audit slice 4 (read-only report): the 16 `vignettes/manual_components/*.Rmd`, the 8
+`inst/extdata/ui_guidance/*.html` pages and `README.md` (IN PROGRESS). `a2interactive.Rmd`, `man/`, `NEWS.Rmd` and the
+internal docs move to slice 5 (same narrowing S822 made).
+**Started:** 2026-09-30
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### Session 822 Handoff Evaluation (by Session 823)
 **Score: 9/10.** Next-steps (A) and the report's tables were a complete plan: every finding had a location, evidence and fix,
 and the cited files matched today's code (re-checked ~10 of them). The carried-items list matched Orient. **Missing:** nothing

@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-09-30 · [ad hoc] S824 claim (in progress): docs staleness audit slice 4, read-only report on the 16 `vignettes/manual_components/*.Rmd`, the 8 `inst/extdata/ui_guidance/*.html` pages and `README.md`. Owner chose it at the Phase 0 picker. `a2interactive.Rmd`, `man/`, `NEWS.Rmd` and internal docs deferred to slice 5.
+
 ### 2026-09-30 · [ad hoc] S823 close-out: fixed all 29 findings of the docs staleness audit slice 3 (7 moderate, 22 minor) in the 11 `vignettes/articles/*.qmd`, plus the `orderReport` (tier list), `qcStudbook` and `hasInvalidIdChar` roxygen (the ID rule is "no period"; `man/qcStudbook.Rd` regenerated). Highlights: export count now computed inline (233), "six" feature articles now "seven", Undetermined and Production descriptions, `minAge`/`threshold`/`ignore` in the breeding-group article, line citations replaced by names, engineering counts dated "(at 2.0.0)". Commits `5d934ecc3`, `0ca073234`, `930cd1ca8`, `2b42611a4`. All 11 touched articles rendered; related tests and lintr pass; `test_pkgdown_reference_config.R` fails locally on the untracked owner draft `vignettes/suggested_NEWS_entry.Rmd` (not CI-visible). `BACKLOG.md` item updated (still open: slice 4). Nothing pushed; no GitHub issue named; no new learning (S822 handoff evaluated 9/10, self 8/10).
 - **Model:** Claude Sonnet 5.5.
 
