@@ -105,12 +105,11 @@ future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.m
       **Known, accepted:** an unhandled click-time error ends the Shiny session
       (Learning 786).
 
-- [ ] **Decide the release number and the draft file (DECISION NEEDED, Effort S)** -- S851
-      adopted the owner's `suggested_NEWS_entry.md` ideas into the `NEWS.Rmd` dev block (opening
-      summary, the restored marker export fix, a plainer pass over all 11 sections). Still the
-      owner's call: (a) the draft is headed 3.0.0 while `DESCRIPTION` and `NEWS.Rmd` say
-      2.0.0.9000; (b) commit or delete the untracked `suggested_NEWS_entry.md` and
-      `vignettes/suggested_NEWS_entry.Rmd`.
+- [ ] **Decide the release number (DECISION NEEDED, Effort S)** -- S851 adopted the owner's
+      draft ideas into the `NEWS.Rmd` dev block (opening summary, the restored marker export fix,
+      a plainer pass over all 11 sections) and the owner had the two draft files deleted. Still
+      the owner's call: the draft was headed 3.0.0 while `DESCRIPTION` and `NEWS.Rmd` say
+      2.0.0.9000.
 
 - [ ] **Male-on-the-left placement is stricter in the code's documentation than in real layouts
       (found S789, 2026-09-27, DECISION NEEDED, Effort S to find the cause, more to fix)** --

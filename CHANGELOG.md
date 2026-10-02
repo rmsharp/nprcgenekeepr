@@ -60,7 +60,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
-### 2026-10-01 · [ad hoc] S851 close-out: adopted the owner's `suggested_NEWS_entry.md` ideas into the `NEWS.Rmd` dev block, each section shown and approved: opening summary paragraph, the marker-genotype export session-crash fix restored (S846 had removed it), and a plainer pass over all 11 sections (long bullets split, nothing dropped; 2,629 words, 80 bullets). `NEWS.md` re-rendered; guard and wordlist tests pass. Claim `b9c019c5b`. BACKLOG item rewritten to the remaining owner decisions. Docs only.
+### 2026-10-01 · [ad hoc] S851 close-out: adopted the owner's `suggested_NEWS_entry.md` ideas into the `NEWS.Rmd` dev block, each section shown and approved: opening summary paragraph, the marker-genotype export session-crash fix restored (S846 had removed it), and a plainer pass over all 11 sections (long bullets split, nothing dropped; 2,629 words, 80 bullets). `NEWS.md` re-rendered; guard and wordlist tests pass. Claim `b9c019c5b`. Owner-directed after close-out: deleted the untracked `suggested_NEWS_entry.md` and `vignettes/suggested_NEWS_entry.Rmd` (never committed). BACKLOG item rewritten to the one remaining decision (release number). Docs only.
 
 ### 2026-10-01 · [ad hoc] S851 claim: compare the owner's `suggested_NEWS_entry.md` with the shortened `NEWS.Rmd` and settle what to adopt (in progress). Docs only.
 

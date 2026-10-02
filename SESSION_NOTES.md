@@ -108,7 +108,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 **Self-assessment: 8/10.** + Compared the two files and traced the one real gap through git; showed each section before applying. - The guard test caught a pinned phrase I had reworded, and the first approval question was larger than needed.
 
-**Next steps:** (A) Owner decisions left in BACKLOG: the 3.0.0 vs 2.0.0.9000 number, and what to do with the untracked draft files. (B) Slice 7b docs audit (READY, Effort L). (C) Master is 3 ahead of origin after this commit; push only on the owner's say-so.
+**Next steps:** (A) Owner decision left in BACKLOG: the 3.0.0 vs 2.0.0.9000 number. The two draft files were deleted at the owner's request. (B) Slice 7b docs audit (READY, Effort L). (C) Master is 3 ahead of origin after this commit; push only on the owner's say-so.
 
 **Key files:** `NEWS.Rmd:14-390` (dev block), `tests/testthat/test_newsReleaseState.R:473-690` (pinned wording).
 
