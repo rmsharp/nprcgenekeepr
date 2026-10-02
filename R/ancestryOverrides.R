@@ -190,7 +190,10 @@
 #'
 #' One row per rule in \code{rules} -- the rule is the unit a curator
 #' overrides -- recording the rule as written, whether it was overridden
-#' and why, and how many within-group pairs it matched. Run-level fields
+#' and why, and how many within-group pairs it matched. A valid zero-rule
+#' table is "no rules in effect": the manifest is a single row whose
+#' per-rule fields are \code{NA} and whose \code{overrideSummary} says no
+#' ancestry rules were in effect. Run-level fields
 #' (timestamp, package version, the animal census by ancestry level, the
 #' override summary, and a verbatim copy of the confirm-gate warning) are
 #' repeated on every row, so each row of the downloaded CSV stands alone.
@@ -212,12 +215,6 @@
 .buildAncestryOverrideManifest <- function(rules, overrides, report,
                                            warningText) {
   rules <- checkAncestryRules(rules)
-  if (nrow(rules) == 0L) {
-    stop("nprcgenekeepr: no rules in effect; an ancestry override ",
-      "manifest has nothing to record.",
-      call. = FALSE
-    )
-  }
   overrides <- .checkAncestryOverrides(overrides, rules)
   if (!is.list(report) ||
     !all(c("violations", "coverage") %in% names(report))) {
@@ -244,7 +241,9 @@
   census <- function(level) {
     as.integer(sum(coverage$n[coverage$ancestry == level]))
   }
-  overrideSummary <- if (nrow(overrides) == 0L) {
+  overrideSummary <- if (nrow(rules) == 0L) {
+    "No ancestry rules were in effect for this run."
+  } else if (nrow(overrides) == 0L) {
     "No rules were overridden for this run."
   } else {
     sprintf(
@@ -253,15 +252,28 @@
     )
   }
 
+  if (nrow(rules) == 0L) {
+    # A valid zero-rule table is "no rules in effect": one row keeps the
+    # run-level record (census, warning text); the per-rule fields are NA.
+    ruleRows <- data.frame(
+      ancestry1 = NA_character_, ancestry2 = NA_character_,
+      severity = NA_character_, overridden = FALSE,
+      reason = NA_character_, nPairs = 0L,
+      stringsAsFactors = FALSE
+    )
+  } else {
+    ruleRows <- data.frame(
+      ancestry1 = rules$ancestry1, ancestry2 = rules$ancestry2,
+      severity = rules$severity, overridden = ruleKey %in% overrideKey,
+      reason = overrides$reason[match(ruleKey, overrideKey)],
+      nPairs = nPairs, stringsAsFactors = FALSE
+    )
+  }
+
   data.frame(
     timestamp = format(Sys.time()),
     packageVersion = getVersion(date = FALSE),
-    ancestry1 = rules$ancestry1,
-    ancestry2 = rules$ancestry2,
-    severity = rules$severity,
-    overridden = ruleKey %in% overrideKey,
-    reason = overrides$reason[match(ruleKey, overrideKey)],
-    nPairs = nPairs,
+    ruleRows,
     nChinese = census("CHINESE"),
     nIndian = census("INDIAN"),
     nHybrid = census("HYBRID"),

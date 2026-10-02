@@ -213,6 +213,34 @@ test_that(paste(
 })
 
 test_that(paste(
+  "adapter -> .buildAncestryOverrideManifest: a valid zero-rule table gives",
+  "one inactive row with the census and the Mate Pair gate text"
+), {
+  zero <- mmRules[0L, ]
+  res <- mmRun(rules = zero)
+  m <- .buildAncestryOverrideManifest(
+    zero, NULL, .matePairAncestryReport(res),
+    .matePairAncestryOverrideWarningText
+  )
+  expect_identical(nrow(m), 1L)
+  expect_true(all(is.na(m[c("ancestry1", "ancestry2", "severity", "reason")])))
+  expect_false(m$overridden)
+  expect_identical(m$nPairs, 0L)
+  expect_identical(
+    m$overrideSummary, "No ancestry rules were in effect for this run."
+  )
+  expect_identical(m$warningText, mmGateText)
+  ## same ten animals as the rules run; no rule names any level
+  expect_identical(m$nChinese, 2L)
+  expect_identical(m$nIndian, 3L)
+  expect_identical(m$nHybrid, 1L)
+  expect_identical(m$nJapanese, 2L)
+  expect_identical(m$nOther, 1L)
+  expect_identical(m$nUnknown, 1L)
+  expect_identical(m$nUncovered, 10L)
+})
+
+test_that(paste(
   "adapter -> .buildAncestryOverrideManifest: an override is recorded with",
   "its reason on exactly its rule's row, pair counts unchanged"
 ), {

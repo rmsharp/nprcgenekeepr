@@ -270,14 +270,10 @@ test_that("an overridden rule with no matched pairs is still recorded, never sil
   )
 })
 
-test_that(".buildAncestryOverrideManifest stops on zero rules, a reasonless override, a malformed report, or empty warning text", {
+test_that(".buildAncestryOverrideManifest stops on a reasonless override, a malformed report, or empty warning text", {
   ped <- aoPed()
   rules <- aoRules()
   report <- reportAncestryViolations(list(c("I1", "C1")), ped, rules)
-  expect_error(
-    .buildAncestryOverrideManifest(rules[0L, ], NULL, report, "gate text"),
-    "no rules"
-  )
   expect_error(
     .buildAncestryOverrideManifest(
       rules, aoOverride(reason = ""), report, "gate text"
@@ -293,6 +289,77 @@ test_that(".buildAncestryOverrideManifest stops on zero rules, a reasonless over
   expect_error(
     .buildAncestryOverrideManifest(rules, NULL, report, ""),
     "warningText"
+  )
+})
+
+## S864: a valid zero-rule table is "no rules in effect" (inactive), not an
+## error. The manifest is one row carrying the run-level record (census,
+## warning text); the per-rule fields are NA because there is no rule.
+test_that(".buildAncestryOverrideManifest with a valid zero-rule table returns one inactive row, not an error", {
+  ped <- aoPed()
+  zero <- aoRules()[0L, ]
+  report <- reportAncestryViolations(aoGroups, ped, zero)
+  m <- .buildAncestryOverrideManifest(
+    zero, NULL, report, .ancestryOverrideWarningText
+  )
+  expect_s3_class(m, "data.frame")
+  expect_identical(nrow(m), 1L)
+  expect_identical(names(m), manifestCols)
+  for (col in c("ancestry1", "ancestry2", "severity", "reason")) {
+    expect_type(m[[col]], "character")
+    expect_true(is.na(m[[col]]))
+  }
+  expect_type(m$overridden, "logical")
+  expect_false(m$overridden)
+  expect_identical(m$nPairs, 0L)
+  expect_identical(
+    m$overrideSummary, "No ancestry rules were in effect for this run."
+  )
+  expect_identical(m$warningText, .ancestryOverrideWarningText)
+  expect_type(m$timestamp, "character")
+  expect_type(m$packageVersion, "character")
+  ## census over the 8 grouped animals (see aoGroups); no rule names any
+  ## level, so every animal is uncovered
+  expect_identical(m$nChinese, 2L)
+  expect_identical(m$nIndian, 2L)
+  expect_identical(m$nHybrid, 1L)
+  expect_identical(m$nJapanese, 1L)
+  expect_identical(m$nOther, 1L)
+  expect_identical(m$nUnknown, 1L)
+  expect_identical(m$nUncovered, 8L)
+  for (col in c(
+    "nPairs", "nChinese", "nIndian", "nHybrid", "nJapanese", "nOther",
+    "nUnknown", "nUncovered"
+  )) {
+    expect_type(m[[col]], "integer")
+  }
+})
+
+test_that(".buildAncestryOverrideManifest with zero rules still validates the report and warning text", {
+  ped <- aoPed()
+  zero <- aoRules()[0L, ]
+  report <- reportAncestryViolations(aoGroups, ped, zero)
+  expect_error(
+    .buildAncestryOverrideManifest(
+      zero, NULL, list(violations = report$violations), "gate text"
+    ),
+    "reportAncestryViolations"
+  )
+  expect_error(
+    .buildAncestryOverrideManifest(zero, NULL, report, ""),
+    "warningText"
+  )
+})
+
+test_that(".buildAncestryOverrideManifest with zero rules still rejects an override of a rule that does not exist", {
+  ped <- aoPed()
+  zero <- aoRules()[0L, ]
+  report <- reportAncestryViolations(aoGroups, ped, zero)
+  expect_error(
+    .buildAncestryOverrideManifest(
+      zero, aoOverride(), report, "gate text"
+    ),
+    "not present in rules"
   )
 })
 
