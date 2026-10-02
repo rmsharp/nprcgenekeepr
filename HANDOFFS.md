@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S851
 date: 2026-10-01
-status: pending
-active_task: compare suggested_NEWS_entry.md with the shortened NEWS.Rmd and settle what to adopt (IN PROGRESS). Docs only, no TDD phase.
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- adopted the owner's suggested_NEWS_entry.md ideas into the NEWS.Rmd dev block: opening summary, restored marker export fix, plainer pass over all 11 sections (long bullets split, nothing dropped). Docs only, no TDD phase.
+what_was_done: claim b9c019c5b; close-out commit. Each section shown before/after and approved; NEWS.md re-rendered; guard and wordlist tests pass. 2,629 words, 80 bullets.
+next_steps: (A) Owner decides the release number (draft says 3.0.0, package says 2.0.0.9000) and what to do with the untracked draft files. (B) Slice 7b internal-docs audit, READY, Effort L. Push only on the owner's say-so; master is 3 ahead after this commit.
+key_files: NEWS.Rmd:14-390, tests/testthat/test_newsReleaseState.R:473-690 (pinned wording).
+gotchas: Pinned phrases stay verbatim: "male parent on the left", the 400/750 cap once, the 113 count with "duplicate node" and "bundled", one #168 entry. Re-render NEWS.md, then run the guard test.
+runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run (no R/ change)
+changelog_ref: S851 close-out entry
+commit: the close-out commit that carries this receipt; claim b9c019c5b
 ```
 
 ```handoff

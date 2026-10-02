@@ -99,10 +99,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 851 Did
-**Deliverable:** compare `suggested_NEWS_entry.md` with the shortened `NEWS.Rmd` and settle what to adopt (IN PROGRESS). Docs only, no TDD phase.
-**Started:** 2026-10-01
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+**Deliverable, DONE:** adopted the owner's `suggested_NEWS_entry.md` ideas into the `NEWS.Rmd` dev block, section by section, each shown before/after and approved. Docs only, so no TDD phase applies. Claim `b9c019c5b`; edits in the close-out commit.
+**Adopted:** (1) the draft's opening summary paragraph; (2) the marker-genotype export session-crash fix, restored (S846 had removed it, reason not checked); (3) a plainer pass in all 11 sections: long bullets split to one idea each, nothing dropped.
+**Result:** 2,629 words (was about 2,500), 80 bullets, 11 Major and 11 Minor labels. The draft's 3.0.0 heading was not adopted; the version stays 2.0.0.9000.
+**Verified by me:** `test_newsReleaseState.R` and `test_wordlist_coverage.R` pass after each re-render. First pass of the diagram wording broke the pinned phrase "male parent on the left"; restored.
+**Not verified:** full suite and lint (no `.R` changed); the draft's claims against code.
+**Reduction:** removed the S848 evaluation and record.
+
+**Self-assessment: 8/10.** + Compared the two files and traced the one real gap through git; showed each section before applying. - The guard test caught a pinned phrase I had reworded, and the first approval question was larger than needed.
+
+**Next steps:** (A) Owner decisions left in BACKLOG: the 3.0.0 vs 2.0.0.9000 number, and what to do with the untracked draft files. (B) Slice 7b docs audit (READY, Effort L). (C) Master is 3 ahead of origin after this commit; push only on the owner's say-so.
+
+**Key files:** `NEWS.Rmd:14-390` (dev block), `tests/testthat/test_newsReleaseState.R:473-690` (pinned wording).
+
+**Gotchas:** pinned phrases must stay verbatim: "male parent on the left", the 400/750 cap once, the 113 count with "duplicate node" and "bundled", one `#168` entry. Re-render `NEWS.md`, then run the guard test.
+
+### Session 850 Handoff Evaluation (by Session 851)
+**Score: 9/10.** **Helped:** the pinned-phrase gotchas (one of them fired) and the plain account of what was dropped. **Missing:** nothing found. **Wrong:** nothing found. **ROI:** high.
 
 ### What Session 850 Did
 **Deliverable, DONE:** brevity pass on the `NEWS.Rmd` dev block; owner reviewed and approved. Docs only, so no TDD phase applies. Claim `eae700925`; edits in the close-out commit.
@@ -136,27 +149,6 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 **Key files:** `NEWS.Rmd:14-470` (Major/Minor lists), `tests/testthat/test_newsReleaseState.R:96-163` (parser reads `## ` and `- ` only).
 
 **Gotchas:** on macOS use Python, not `sed -i`, for in-place edits. New bullets go under the right Major or Minor label. Re-render `NEWS.md`, then run the guard test.
-
-### Session 848 Handoff Evaluation (by Session 849)
-**Score: 9/10.** **Helped:** the next steps and the note that the Breeding Group and Mate Pair splitting was the owner's call. **Missing:** nothing found. **Wrong:** nothing found. **ROI:** high.
-
-### What Session 848 Did
-**Deliverable, DONE:** made `NEWS.Rmd` complete and accurate before the owner compares it with `suggested_NEWS_entry.md`. Docs only, so no TDD phase applies. Claim `82a5dc655`; edits in the close-out commit.
-**Scoping finding:** S793 already reviewed the draft (`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`); I did not redo it. The `.Rmd` copy no longer exists; only the `.md` remains untracked.
-**Verified by me:** the 400/750 display cap and Rectilinear default are in the S847 text; PNG export = `visExport` in `R/modPedigree.R`; `test_comparePedigreeStructure.R` and `test_newsReleaseState.R` pass.
-**Gap found and fixed:** 9 exports added after v2.0.0 were never named in NEWS (`checkMarkerGenotypeFile`, `buildMarkerGenotypeMatrix`, `markerObserved/ExpectedHeterozygosity`, `markerParentageExclusion`, `markerFst`, `read/check/obfuscateTwinRelations`).
-Added them to five existing bullets (NEWS.Rmd:105-120, 132-165); re-rendered `NEWS.md`; guard and wordlist tests pass. The module UI/server exports were left out as internal.
-**Left on purpose:** splitting the long Breeding Group and Mate Pair paragraphs (S793 findings S7/S8) is the owner's call after comparing with the draft. BACKLOG item rewritten.
-**Not verified:** full suite and lint not run (no `.R` changed). The "default 2" for `maxExclusions` is from roxygen, not a run.
-
-**Self-assessment: 7/10.** + Found a real completeness gap by diffing `NAMESPACE` against the v2.0.0 tag. + Reused S793 instead of redoing it. - I opened with a menu pick and a scoping reading that S793's Learning 807 warns against; the owner's question redirected me.
-
-**Next steps:** (A) Owner compares the draft with `NEWS.Rmd` and decides what to adopt. (B) Slice 7b internal-docs audit (READY, Effort L). (C) Diagram feature decisions. (D) Master is 18 ahead of origin after this commit (16 at Orient, plus
-claim and close-out); push only on the owner's say-so.
-
-**Key files:** `NEWS.Rmd:105-120, 132-165`, `docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`, `BACKLOG.md` (rewritten draft item).
-
-**Gotchas:** `NEWS.Rmd` has a pre-existing over-80 line in the Ancestry bullet. Re-render `NEWS.md` after any text edit, then run the guard test. Keep `SESSION_NOTES.md` lines at or under 280 B.
 
 ### Session 842 Handoff Evaluation (by Session 843)
 **Score: 8/10.** Orient measurements held: both ledger frontiers were at HEAD, the untracked file was the one it named, and the next-step recipe was exact. **What helped:** the explicit ordered options (A)-(C) and the "do not ask about
