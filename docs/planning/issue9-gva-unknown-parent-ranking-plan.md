@@ -1,5 +1,7 @@
 # Issue #9 Plan — Animals missing a parent falsely top-rank in the Genetic Value Analysis
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Shipped** (closed 2026-06-23; the plan was ratified S177). Genome-uniqueness de-inflation was split out to #76. Per-slice session numbers and the closing commit were not traced here. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Tracks:** GitHub issue **#9** ("Animals missing one parent assignment"). Part of the parent-ID cluster (sibling closed umbrella #45; #28 still open/gated). #9 is distinct from #28: #28 *identifies* parents; #9 *consumes* parentage state in the GVA ranking.
 
 **Authored:** Session 174 (2026-06-22), **planning session**. The TDD code-phases (RED / GREEN / REFACTOR) are **inapplicable to this document** — it is a plan. Each implementation slice below is its own strict-TDD session (RED -> GREEN -> REFACTOR), one slice per session (FM #18/#25: do not bundle plan + implementation, do not bundle slices).

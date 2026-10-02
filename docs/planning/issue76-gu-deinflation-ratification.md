@@ -1,5 +1,7 @@
 # Issue #76 — De-inflate the genome-uniqueness statistic for both-unknown founders (Reading A)
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Ratified** S190, **implemented** S191-S192 (PR #80, merge `9f1e46874`); #76 closed 2026-06-24. The "implementation pending" wording below is out of date (`R/reportGV.R`, "Issue #76 (Reading A)" block). Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 > **RATIFIED — this section is authoritative for issue #76.** Ratified by the
 > owner (R. Mark Sharp) in **Session 190 (2026-06-24)** via four `AskUserQuestion`
 > gates, grounded in a 10-agent research + adversarial-critique workflow
