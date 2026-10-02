@@ -99,10 +99,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ## ACTIVE TASK
 
 ### What Session 860 Did
-**Deliverable:** docs-staleness audit slice 7c, live plans only in `docs/planning/` (owner's scope pick, S860); one report under `docs/audits/`, no code (IN PROGRESS)
-**Started:** 2026-10-02
-**Status:** Session claimed. Work beginning.
-**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest. Crash breadcrumb until close-out.
+**Deliverable, DONE:** docs-staleness audit slice 7c, scoped by the owner to live plans only. Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md`; no code changed; the docs themselves are not fixed. Claim `2c2d1aaea`.
+**Measured:** 9 live `docs/planning/` docs (those an open issue or BACKLOG/ROADMAP item points at) audited by 4 read-only subagents; 53 moderate findings (ids XA-XI). I re-checked 18 first-hand (rhub missing, cran-comments marker absent, #145/#154/#167 closed, `getPossibleCols()` 26 not 24, `effGenOf` gone, signature of `modSnapshotTrendsServer`, and more); 36 rest on one agent's read. Header sweep of all 84: 37 of 38 `issue*` plans have a CLOSED issue; 14+ headers still say DRAFT/not implemented; 11 have no status line.
+**Tests/lint:** none run (docs only). **Not done:** fixing any of the findings; `docs/research/` and older audits.
+**Slips:** my first sed used GNU syntax (BSD needs `-i ''`); my first AskUserQuestion call had malformed JSON; both retried at once.
+**Reduction:** removed the S858 record (git and CHANGELOG keep it); the hook had refused the commit 137 tokens over its ceiling.
+
+**Self-assessment: 7/10.** + Asked the scope question before starting; objective definition of "live"; agent claims spot-checked before reporting; limits of checking stated. - Only 18 of 53 moderates re-checked; no fixes landed; the last two agent results arrived late and I wrote the report from them in one pass.
+
+**Next steps:** (A) slice 7c fixes, docs only: banners on the shipped plans, in-place edits to the runbook, outreach plan and Quarto analysis, three BACKLOG pointers (report "Recommended fixes"). (B) Owner decision: `getProductionStatus` 0 dams -> green vs grey. (C) Open: PED_GV decisions, mate-pair residue, CV1/CV2, 3.0.0 release prep. (D) Master is 5 commits ahead of origin after close-out; push only on the owner's say-so.
+
+**Key files:** the 7c report; `BACKLOG.md:100-160,224,445`; `docs/planning/cran-2.0.0-phase5-runbook.md:137,246-259,270-281`.
+
+**Gotchas:** re-check an agent-only finding before editing the doc. Plans are dated records: banner, do not rewrite bodies. Plan headers lag; `CHANGELOG.md` is the authority.
+
+### Session 859 Handoff Evaluation (by Session 860)
+**Score: 8/10.** **Helped:** the Next steps and the BACKLOG list were accurate; the gotcha about pins and figures was not needed but the "push only on owner's say-so" and "ahead of origin" note was true (4 ahead at Orient, 3 plus the close-out). **Wrong/missing:** it said "3 commits ahead", measured 4. The BACKLOG docs-audit item named slice 7c as next but its scope was undecided; I had to ask. **ROI:** high.
 
 ### What Session 859 Did
 **Deliverable, DONE:** the 2 `rhesusPedigree` couples whose mate is drawn as a duplicate node (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`) now draw male-left, by a general rule: every one-mate-each
@@ -134,31 +146,6 @@ decisions, mate-pair residue, CV1/CV2, doc-audit slice-6e fixes. (C) Release pre
 ### Session 858 Handoff Evaluation (by Session 859)
 **Score: 8/10.** **Helped:** the BACKLOG item held the owner's words, the files and lines, the rejected RED file's git hash and the warning not to infer a rule; Orient measurements held. **Wrong/missing:** the pin list
 named 4 pins in 2 files; the full suite found 2 more in `test_resolveEdgeNodeCollisions.R:721-722`. Master was in sync with origin, not ahead (the owner pushed). **ROI:** high.
-
-### What Session 858 Did
-**Deliverable:** the cause of the 2 duplicate-mate male-right couples, a fix tried and rejected by the owner, and a corrected BACKLOG item. Strict TDD began (PRE-RED, RED, GREEN gates asked); the
-owner rejected the result after seeing figures, so the layout code is unchanged. Claim `88f283ea6`; RED `8aeef0da2` (test file removed in the close-out commit).
-**Measured:** in both couples (`D0Z114` x `4CHDK1`, `V1X2X3` x `SH0L6S`) both parents have parents, so `qualifies()` is TRUE but the mate is not in `b1Ids` and `correctableUnitIds` skips the unit; the
-seeding (`R/makePedigreeDiagramData.R:1265`) then takes the children's-mean side. The S857 BACKLOG reading ("the female has a parent edge") was half right: the male has parents too.
-**Tried:** `|| qualifies(u)` in that condition. Flipped exactly the 2 couples; 6 RED tests passed; crossings and every other bundled pedigree unchanged; but 4 census pins moved (nodes 1456 to 1460,
-jog nodes 186 to 190, bar hits 97 to 98 x2) and the parents' connector gained a step.
-**Owner verdict:** reject (quoted in BACKLOG). I then wrongly turned the feedback into a proposed "centered pair, male left" rule; the owner said inferred rules are not accepted. Reverted `R/`,
-removed the RED file, BACKLOG now records the owner's words and says no rule is decided.
-**Verified by me:** old vs new on 8 bundled pedigrees x 2 edge styles (script and `s858_couples_old_vs_new.png` in the session scratchpad); the 6 new tests and the layout test files after the edit.
-**Not run:** full suite, lint, `devtools::check()` (no code kept; `R/` identical to S857 close-out). **NEWS.Rmd:** none.
-**Slips:** I showed myself a figure and described it as if you had seen it (the owner could not see it; fixed by opening the file); I proposed pin updates before showing the picture; I inferred a rule from feedback.
-**Reduction:** removed the S856 evaluation and record.
-
-**Self-assessment: 6/10.** + Cause traced with measurements; blast radius measured; no code change left behind. - Three process slips above; no deliverable code; the owner's time went to a fix they did not want.
-
-**Next steps:** (A) A new session: ask the owner for the rule on these couples (BACKLOG "Placement of couples whose mate is drawn as a duplicate node"); do not infer it. (B) Still open: PED_GV
-decisions, mate-pair residue, CV1/CV2, doc-audit slice-6e fixes. (C) Release prep: BACKLOG "Move the version to 3.0.0". (D) Master is 26 ahead of origin after the close-out commit; push only on the
-owner's say-so.
-
-**Key files:** `R/makePedigreeDiagramData.R:1262-1272` (seeding side), `:1075-1080` (`correctableUnitIds`), `BACKLOG.md:101`; the rejected RED test is `git show 8aeef0da2:tests/testthat/test_maleLeftDuplicateMate.R`.
-
-**Gotchas:** pins that move with any layout change on `rhesusPedigree`: `test_makePedigreeMatingLayout.R:745,774` and `test_addRectilinearWaypoints.R:797-798`. Show the owner figures by opening the
-file (`open`); a figure I read is not a figure they saw. Measure scripts must be run per pedigree with a timeout (`ExamplePedigree.csv` did not finish in 240 s).
 
 ### Session 857 Handoff Evaluation (by Session 858)
 **Score: 8/10.** **Helped:** the BACKLOG item named both couples, the measuring helper and the files; Orient measurements all held (frontiers at HEAD, 23 ahead, CI green). **Wrong:** the likely-cause

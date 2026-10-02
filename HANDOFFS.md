@@ -32,8 +32,17 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S860
 date: 2026-10-02
-status: pending
-active_task: IN PROGRESS -- docs-staleness audit slice 7c: live (open or unfinished) plans in docs/planning/ checked against today's code; one audit report
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: DONE -- docs-staleness audit slice 7c, live docs/planning plans only (owner-scoped); report written, docs not fixed yet
+what_was_done: claim 2c2d1aaea; close-out commit holds docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md, BACKLOG audit item, records. 4 read-only subagents audited 9 live plans; I re-checked 18 of 53 moderates; status sweep of 84 files done here.
+next_steps: (A) Fix slice 7c: one banner per shipped plan (issue112/122/123/144/167 + reference qmd), in-place fixes to cran-2.0.0-phase5-runbook, nprc-outreach plan, quarto analysis, 3 BACKLOG pointers (report section "Recommended fixes"); docs only. (B) Owner call: getProductionStatus 0 dams -> green. (C) Still open: PED_GV decisions, mate-pair residue, CV1/CV2, 3.0.0 release prep. (D) Master is 5 commits ahead of origin; push only on the owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE7C_2026-10-02.md; BACKLOG.md:100-160 (audit item), :224 (wrong Dragon 1 pointer), :445; docs/planning/cran-2.0.0-phase5-runbook.md:137,246-259,270-281
+gotchas: 36 of 53 moderates rest on one agent's read; re-check before editing. Many plan bodies are dated design records: use banners, not rewrites. BSD sed needs -i ''. Plan header status lags; CHANGELOG is the authority.
+runtime_smoke: n/a -- docs only. quality_ratchet: not run (no code change).
+changelog_ref: S860 close-out entry
+commit: the close-out commit that carries this receipt; claim 2c2d1aaea
 ```
 
 ```handoff
