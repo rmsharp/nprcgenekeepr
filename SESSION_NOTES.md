@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 863 Did
+**Deliverable:** `getProductionStatus()` 0-dam status -> NA/grey, plus heat map draws NA grey (IN PROGRESS; strict TDD)
+**Started:** 2026-10-02
+**Status:** Session claimed. Owner chose grey and producer + heatmap scope. PRE-RED.
+**Ledger:** `CHANGELOG: pending` -- the claim commit's `CHANGELOG.md` entry says (in progress); Phase 3F records the rest.
+
 ### What Session 862 Did
 **Deliverable, DONE:** header sweep of `docs/planning/`; docs only, no code, no tests (TDD phases N/A). Claim `b651541d4`; banners `c5c15b6ee`, `fdb24ef30`, `5fed0fb1a`, `026fbf102`, `c2a1ec432` (22 `issue*` plans), `f35538868`, `93670ec95` (9 non-issue plans); the close-out commit holds `docs/planning/README.md`, the BACKLOG update and records.
 **Done:** a `Status banner (S862...)` after the H1 of 31 plans: the 11 status-less (`issue119`, `125`-`130`, `152`, `168`, `30`, `76`, `9`), 10 stale-header `issue*` (`118`, `13`, `133`, `136`, `143`, `148`, `150`, `153`, `2`, `73`) and 9 non-issue plans (module conversion, Document 2, extdata, five pedigree-diagram plans). With S861's five, every plan on the S860 report's sweep list is bannered.

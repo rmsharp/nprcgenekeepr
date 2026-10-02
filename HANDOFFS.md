@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S863
+date: 2026-10-02
+status: pending
+active_task: getProductionStatus 0-dam NA/grey + heatmap NA grey (strict TDD)
+```
+
+```handoff
 session: S862
 date: 2026-10-02
 status: complete

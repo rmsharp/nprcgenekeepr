@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S863 claim: `getProductionStatus()` no-dam status becomes NA (grey, matching `getKinshipWithMaleStatus()`) and `makeGeneticDiversityHeatmap()` draws NA cells grey instead of erroring (in progress). Owner decisions: grey, producer + heatmap scope.
+
 ### 2026-10-02 · [ad hoc] S862 close-out: header sweep of `docs/planning/`, docs only. Status banners on 31 plans (11 status-less, 10 stale-header `issue*`, 9 non-issue; commits `c5c15b6ee`, `fdb24ef30`, `5fed0fb1a`, `026fbf102`, `c2a1ec432`, `f35538868`, `93670ec95`), each checked against issue state, commits and artifacts; new `docs/planning/README.md`; `BACKLOG.md` audit item updated. Claim `b651541d4`. Model: Claude Sonnet 5.5; no non-commit actions (no push).
 
 ### 2026-10-02 · [ad hoc] S862 claim: header sweep of `docs/planning/` (one-line status on the status-less and stale-header plans, plus a `docs/planning/README`) (in progress). Docs only, no code.
