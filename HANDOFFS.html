@@ -63,6 +63,125 @@
 <div class="section level2">
 <h2 id="format--a-fenced-handoff-block">Format — a fenced <code>handoff</code> block<a class="anchor" aria-label="anchor" href="#format--a-fenced-handoff-block"></a></h2>
 <pre><code>```handoff
+session: S858
+date: 2026-10-02
+status: complete
+self_score: 6
+predecessor_score: 8
+active_task: DONE (no code kept) -- cause of the 2 duplicate-mate male-right couples measured; `|| qualifies(u)` fix tried and rejected by the owner after figures; R/ unchanged; BACKLOG item rewritten with the owner's words and no decided rule
+what_was_done: claim 88f283ea6; RED 8aeef0da2 (test file removed in close-out); close-out commit holds BACKLOG, records, test removal. Fix reverted before commit.
+next_steps: (A) New session: ask the owner what the placement rule is for these couples (BACKLOG "Placement of couples whose mate is drawn as a duplicate node"); do not infer it from the quoted feedback. (B) Open: PED_GV decisions, mate-pair residue, CV1/CV2, slice-6e doc fixes.
+key_files: R/makePedigreeDiagramData.R:1262-1272,1075-1080; BACKLOG.md:101; git show 8aeef0da2 (rejected RED test)
+gotchas: census pins that move with any layout change: test_makePedigreeMatingLayout.R:745,774; test_addRectilinearWaypoints.R:797-798. Open figures for the owner with `open`; do not turn owner feedback into a rule.
+runtime_smoke: n/a -- no code kept. quality_ratchet: not run (no code change).
+changelog_ref: S858 close-out entry
+commit: the close-out commit that carries this receipt; claim 88f283ea6
+```
+
+```handoff
+session: S857
+date: 2026-10-02
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- male-left placement fix (strict TDD, three gates asked): in the Decision-1 seeding a unit the S666 pass handled takes the sex rule, so the min-separation sweep can no longer flip the mate side; the 2 squeezed rhesusPedigree couples (and 8 in qcPed, 1 in the MHC pedigree) now draw male-left
+what_was_done: claim acc020703; RED 62cac01de (test_maleLeftSweepSurvival.R, 6 tests, 4 failing as designed); GREEN c4b383978 (R/makePedigreeDiagramData.R seeding, 5 lines); REFACTOR comments and records in the close-out commit. Full unfiltered suite 363 files / 2897 tests, 0 failed, 0 error; lint_package 0; blast radius measured on 22 layouts (crossings, row gaps, drawn relations unchanged); pictures in the scratchpad
+next_steps: (A) Owner decides the BACKLOG duplicate-mate item (2 rhesusPedigree couples with a duplicate-node mate stay male-right): extend the rule (strict TDD) or reword roxygen. (B) Open: PED_GV decisions, mate-pair residue, CV1/CV2. (C) Release prep: BACKLOG item Move the version to 3.0.0. (D) Master 23 ahead of origin; push only on owner say-so
+key_files: R/makePedigreeDiagramData.R:1213-1219,1261-1272; tests/testthat/test_maleLeftSweepSurvival.R; BACKLOG.md:101
+gotchas: .maleFemaleUnitX() must trace through __jog_ and keep __dup_ nodes; never compare layout x with == across versions (QP drift 1e-4); full-suite logs contain Shiny tracebacks, wait for the results file; devtools::check() and a live app launch not run
+```
+
+```handoff
+session: S856
+date: 2026-10-02
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- cause of the 2 one-mate rhesusPedigree male-right pairs found: the S666 correction sets the right side, then sweepMinSepBackstop() pushes the couple past the child's x in a crowded row and the Decision-1 seeding reads the side from the children's mean. Owner chose FIX; BACKLOG item rewritten as a READY strict-TDD fix with the cause
+what_was_done: claim 996cd9d40; read-only investigation (scratch debug copies in the scratchpad, nothing committed but BACKLOG and records) in the close-out commit
+next_steps: (A) Fix session, strict TDD with a gate per phase: BACKLOG item "Male-on-the-left placement: fix the layout" (READY, Effort M); full unfiltered suite plus diagram fidelity checks required. (B) Open: CV1/CV2, PED_GV decisions, mate-pair residue. (C) Master 17 ahead of origin; push only on owner say-so
+key_files: R/makePedigreeDiagramData.R:951-969,1025,1086-1119,1263-1266; tests/testthat/test_positionMatingUnitForest.R
+gotchas: edge sources into __union_ can be __jog_* nodes (trace back); keep __dup_ nodes when mapping with duplicateToReal; sweep runs per component
+```
+
+```handoff
+session: S855
+date: 2026-10-02
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- owner chose 3.0.0 for the next release; recorded as BACKLOG item "Move the version to 3.0.0 just before release". Version files unchanged (2.0.0.9000); an over-reach bump to 2.99.0.9000 was made then reverted at the owner's direction
+what_was_done: claim 2d7189745; BACKLOG item and records in the close-out commits; version edits reverted (diff vs claim empty)
+next_steps: (A) Owner picks another decision (PED_GV items, mate-pair residue, male-left placement, CV1/CV2). (B) At release prep do the new BACKLOG item. (C) Master 16 ahead of origin; push only on owner say-so
+key_files: BACKLOG.md (item Move the version to 3.0.0)
+gotchas: version files intentionally still say 2.0.0.9000
+```
+
+```handoff
+session: S854
+date: 2026-10-02
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- convertDate() invalid-date row numbers (reportErrors = TRUE vector and stop() message) now count positions in the pedigree passed in, so an added record ahead of an original no longer shifts them. Owner chose fix over document-only. Strict TDD RED/GREEN/REFACTOR, every gate asked.
+what_was_done: claim a06651046; fix, 5 tests, roxygen/Rd and BACKLOG item removal in the close-out commit. Full unfiltered suite 362 files / 2891 tests, 0 failed, 0 error; lintr clean on the two changed files.
+next_steps: (A) Owner picks another PED_GV decision from BACKLOG (isAddedRecord helper, sex-code adoption, getPotentialParents split). (B) Optional small slice: pin getDateErrorsAndConvertDatesInPed() with an added row first. (C) Open: release number, CV1/CV2, male-left placement. (D) Master 12 ahead of origin; push only on owner's say-so.
+key_files: R/convertDate.R:109-120,160-170; tests/testthat/test_convertDate.R:140-185; R/getDateErrorsAndConvertDatesInPed.R:33-45; BACKLOG.md PED_GV item.
+gotchas: man/nprcgenekeepr-package.Rd is stale against DESCRIPTION; roxygenise regenerates it and I reverted it, so the diff reappears next run. getDateErrorsAndConvertDatesInPed now drops the right row for an added-first pedigree but no test pins that. devtools::check() not run.
+runtime_smoke: n/a -- no startup/wiring change; unit and full-suite tests only. quality_ratchet: no gates declared/not re-run.
+changelog_ref: S854 close-out entry
+commit: the close-out commit that carries this receipt; claim a06651046
+```
+
+```handoff
+session: S853
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- applied 33 of 35 slice-7b docs-staleness findings (ROADMAP.md, CLAUDE.md, module-contract.md, CLOSEOUT_CHECKLISTS.md, ROXYGEN_EXAMPLES_POLICY.md, BACKLOG.md). Docs only, no TDD phase. CV1/CV2 left as code decisions.
+what_was_done: claim 144d140cb; fixes 61577e834; close-out commit (BACKLOG.md and records). Every changed cite re-read against code; wordlist and rbuildignore tests pass; context budget OK.
+next_steps: (A) Slice 7c: docs/planning (84 files), docs/research, older docs/audits; scope with owner first. (B) Owner: release number 3.0.0 vs 2.0.0.9000; CV1/CV2; male-left placement. (C) Master 10 ahead of origin after this commit; push only on owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md; BACKLOG.md docs-audit item (grep "Slice 7b AUDITED") and regrowth check (grep "Regrowth check (S853)"); ROADMAP.md.
+gotchas: BACKLOG.md is 599 lines and regrowing (docs-audit and chromote items are the next cuts). ROADMAP.md keeps two "not re-checked" statements (Quarto slices 3-4; five audit ids), not verified claims.
+runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run.
+changelog_ref: S853 close-out entry
+commit: the close-out commit that carries this receipt; claim 144d140cb
+```
+
+```handoff
+session: S852
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: DONE -- docs-staleness audit slice 7b (living internal docs, owner-scoped); report docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md, 35 findings (10 moderate, 25 minor), none fixed
+what_was_done: claim 9ab55d5df; close-out commit. Four read-only subagents, then 9 of 10 moderates re-checked first-hand. BACKLOG docs-audit item updated; S849 record removed from SESSION_NOTES (also clears the per-line finding).
+next_steps: (A) Apply the 35 findings, docs only, BACKLOG.md last. (B) Slice 7c: docs/planning, docs/research, older docs/audits (scope with owner). (C) Owner: release number 3.0.0 vs 2.0.0.9000. (D) Master 7 ahead of origin after this commit; push only on owner's say-so.
+key_files: docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md; BACKLOG.md docs-audit item (grep "Slice 7b AUDITED"); BACKLOG.md regrowth figure (grep "Regrowth check"); ROADMAP.md:6-34.
+gotchas: BACKLOG line cites in the report are approximate for the BA ids, re-locate by item name; the second BACKLOG agent's line numbers were off by about 45. Edit BACKLOG.md last when applying fixes.
+runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run.
+changelog_ref: S852 close-out entry
+commit: the close-out commit that carries this receipt; claim 9ab55d5df
+```
+
+```handoff
+session: S851
+date: 2026-10-01
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: DONE -- adopted the owner's suggested_NEWS_entry.md ideas into the NEWS.Rmd dev block: opening summary, restored marker export fix, plainer pass over all 11 sections (long bullets split, nothing dropped). Docs only, no TDD phase.
+what_was_done: claim b9c019c5b; close-out commit. Each section shown before/after and approved; NEWS.md re-rendered; guard and wordlist tests pass. 2,629 words, 80 bullets.
+next_steps: (A) Owner decides the release number (draft said 3.0.0, package says 2.0.0.9000); the two untracked draft files were deleted at the owner's request. (B) Slice 7b internal-docs audit, READY, Effort L. Push only on the owner's say-so; master is 3 ahead after this commit.
+key_files: NEWS.Rmd:14-390, tests/testthat/test_newsReleaseState.R:473-690 (pinned wording).
+gotchas: Pinned phrases stay verbatim: "male parent on the left", the 400/750 cap once, the 113 count with "duplicate node" and "bundled", one #168 entry. Re-render NEWS.md, then run the guard test.
+runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run (no R/ change)
+changelog_ref: S851 close-out entry
+commit: the close-out commit that carries this receipt; claim b9c019c5b
+```
+
+```handoff
 session: S850
 date: 2026-10-01
 status: complete
@@ -70,7 +189,7 @@ self_score: 7
 predecessor_score: 9
 active_task: DONE -- brevity pass on the NEWS.Rmd dev block (about 4,460 to 2,500 words, Major/Minor lists kept), owner reviewed and approved. Docs only, no TDD phase.
 what_was_done: claim eae700925; close-out commit. Merged related Minor bullets, trimmed Major bullets, kept every limit, default and caveat; issue numbers kept because the guard test needs one #168 mention. NEWS.md re-rendered; guard and wordlist tests pass.
-next_steps: (A) Owner compares suggested_NEWS_entry.md with the shortened NEWS.Rmd. (B) Slice 7b internal-docs audit, READY, Effort L. Push only on the owner's say-so; master is 22 ahead after this commit.
+next_steps: (A) Owner compares suggested_NEWS_entry.md with the shortened NEWS.Rmd. (B) Slice 7b internal-docs audit, READY, Effort L. Master was pushed (origin bd6783a3a); check CI with gh run list.
 key_files: NEWS.Rmd:14-354, tests/testthat/test_newsReleaseState.R:473-690 (pinned wording).
 gotchas: Diagram section must keep the 400/750 cap once, one shading entry, one "male parent on the left", and the 113 count with "duplicate node" and "bundled". Re-render NEWS.md, then run the guard test.
 runtime_smoke: n/a -- docs only; no R/ file changed. Full suite and lint not run. quality_ratchet: unchanged, not re-run (no R/ change)

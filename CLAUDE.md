@@ -199,11 +199,12 @@ always needs `dev = TRUE` in this project.** `renv/settings.json` sets
 `snapshot.type: "explicit"`, under which a **plain**
 [`renv::snapshot()`](https://rstudio.github.io/renv/reference/snapshot.html)
 only scans `DESCRIPTION`’s `Imports`/`Depends`/`LinkingTo` — every
-`Suggests`-only package (`testthat`, `dplyr`, `mockery`, `roxygen2`,
-`shinytest2`, `shinyBS`, `devtools`, `quarto`, plus their transitive
-deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on
-an ordinary snapshot, only to resurface as a missing-package crash the
-next time someone hits
+dev-only package (`Suggests` in `DESCRIPTION`, e.g. `testthat`, `dplyr`,
+`mockery`, `shinytest2`, `shinyBS`, plus the dev-profile tools
+`roxygen2`, `devtools` and `quarto`, and their transitive deps like
+`pkgload`/`chromote`) is silently dropped from `renv.lock` on an
+ordinary snapshot, only to resurface as a missing-package crash the next
+time someone hits
 [`renv::restore()`](https://rstudio.github.io/renv/reference/restore.html)
 (a fresh clone, an R-version bump). Always run
 `renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check
@@ -218,8 +219,9 @@ Learning 473/476 for the root-cause diagnosis.
 and `SAFEGUARDS.md` (synced from
 <https://github.com/rmsharp/methodology>, not project-owned). The base
 files govern unless explicitly overridden here. **Do not edit the synced
-files** — put customizations here so `bin/sync` stays friction-free (see
-BOOTSTRAP “Updating an existing project”).*
+files** — put customizations here so upstream’s `bin/sync` (not in this
+repo) stays friction-free (see BOOTSTRAP “Updating an existing
+project”).*
 
 ### Additional Phase 0 steps
 
@@ -324,15 +326,16 @@ other health signal. Expected state since the S725 reduction campaign:
 band — headroom, not a defect); a `CLAUDE.md` red means new growth is
 owed a reduction, and a `SESSION_NOTES.md` red means a
 `methodology_trim.py --budget-bytes 65536` trim is owed (the two
-ceilings are deliberately the same number). A **missing
-`budget:protected` fence** finding on `CLAUDE.md` means someone removed
-the Project Overview fence — restore it before anything else. The
-per-clone pre-commit hook (`python3 context_budget.py install-hook`)
-refuses only commits that *grow* an over-ceiling file; re-install it on
-a fresh clone, bypass with `--no-verify` only when a legitimate growth
-commit is owed (the decision then lands as a `.context-budget.json`
-diff, not a silent override). `.context-budget-history.jsonl` stays
-gitignored (S719 decision).
+ceilings are deliberately the same number); a per-line finding on
+`SESSION_NOTES.md` (280 B ceiling) means an over-long line to wrap. A
+**missing `budget:protected` fence** finding on `CLAUDE.md` means
+someone removed the Project Overview fence — restore it before anything
+else. The per-clone pre-commit hook
+(`python3 context_budget.py install-hook`) refuses only commits that
+*grow* an over-ceiling file; re-install it on a fresh clone, bypass with
+`--no-verify` only when a legitimate growth commit is owed (the decision
+then lands as a `.context-budget.json` diff, not a silent override).
+`.context-budget-history.jsonl` stays gitignored (S719 decision).
 
 ### Additional task-to-workstream mappings
 

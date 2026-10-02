@@ -28,18 +28,19 @@ S808); F2’s other half, real ids mistaken for placeholders, is done
 dam fallback no longer re-admits a female the gestation window ruled
 out). **Open, all owner decisions:** (a) the overhaul roots, none urgent
 – sex-code adoption (PED-2/NEW-29; 28 bare-literal comparison lines in
-10 files remain), the error/return contract (PED-5/6, NEW-28/36),
-splitting `getPotentialParents` (PED-4, NEW-54, and NEW-55 – labelling
-whether a dam list came from proven breeders or the fallback, which the
-owner did not take at S798’s F3 decision), the walk helpers (PED-3,
-NEW-42; all exported, so an API change), the sim driver (NEW-50/51),
-constants and HTML builders (NEW-18/19/21/26/57) and the founder
-definition (NEW-61); (b) NEW-24 is already open issue \#123. **The 11
-settled ids (PED-7, NEW-39, PED-8, PED-9, NEW-27, NEW-33, NEW-44,
-NEW-47, NEW-58, NEW-59, NEW-60) were closed S818**, so 32 remain (the
-report’s “Closure record” lists them). **Trap:** an id grep of the
-ledger both under- and over-counts (`NEWS.md` once used “NEW-47/48/49”
-as entry labels), so use the report’s table, not the old 41-id list.
+10 files remained when measured S781; a broader grep in S852 found 32 in
+13), the error/return contract (PED-5/6, NEW-28/36), splitting
+`getPotentialParents` (PED-4, NEW-54, and NEW-55 – labelling whether a
+dam list came from proven breeders or the fallback, which the owner did
+not take at S798’s F3 decision), the walk helpers (PED-3, NEW-42; all
+exported, so an API change), the sim driver (NEW-50/51), constants and
+HTML builders (NEW-18/19/21/26/57) and the founder definition (NEW-61);
+(b) NEW-24 is already open issue \#123. **The 11 settled ids (PED-7,
+NEW-39, PED-8, PED-9, NEW-27, NEW-33, NEW-44, NEW-47, NEW-58, NEW-59,
+NEW-60) were closed S818**, so 32 remain (the report’s “Closure record”
+lists them). **Trap:** an id grep of the ledger both under- and
+over-counts (`NEWS.md` once used “NEW-47/48/49” as entry labels), so use
+the report’s table, not the old 41-id list.
 
 **(Optional, owner decision) One internal `isAddedRecord()` helper for
 the “added” mask (raised S785, deferred at the S785, S786 and S787
@@ -47,9 +48,9 @@ REFACTORs; DECISION NEEDED, Effort S)** – the mask is written inline
 four times, all meaning “only the exact status `"added"` is special; an
 `NA`, blank or unrecognized status is a real animal”:
 [`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
-(`R/convertDate.R:103`) and
+(`R/convertDate.R:115`) and
 [`removeDuplicates()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeDuplicates.md)
-(`R/removeDuplicates.R:46`) as `!is.na(x) & x == "added"`,
+(`R/removeDuplicates.R:48`) as `!is.na(x) & x == "added"`,
 [`removeUnknownAnimals()`](https://github.com/rmsharp/nprcgenekeepr/reference/removeUnknownAnimals.md)
 (`R/removeUnknownAnimals.R:31`) as its complement, and
 [`correctParentSex()`](https://github.com/rmsharp/nprcgenekeepr/reference/correctParentSex.md)
@@ -62,30 +63,6 @@ short copies enough. **Trap** to keep in any helper or caller: a
 negative subscript built from an index that can be empty
 (`ped[-getRecordStatusIndex(ped, "added"), ]`) drops EVERY row when
 nothing is `"added"`.
-
-**`convertDate(reportErrors = TRUE)` numbers an invalid date among the
-non-added records only (found S785, 2026-09-26, DECISION NEEDED, Effort
-S, low priority)** – probe (S785, a 3-row pedigree: `x1` `"added"`, `a`
-valid, `b` with a bad date on row 3): it reports row `2`, not `3`; the
-pre-change code reports `2` too, so the S785 slice did not cause it.
-With the added row LAST, the order
-[`addParents()`](https://github.com/rmsharp/nprcgenekeepr/reference/addParents.md)
-produces, it reports the right row, so the app and
-[`qcStudbook()`](https://github.com/rmsharp/nprcgenekeepr/reference/qcStudbook.md)
-are unaffected; only a script that puts an added row ahead of an
-original can see it. `R/convertDate.R` numbers
-`seq_along(originalDates)` after the added records are set aside, and
-[`getDateErrorsAndConvertDatesInPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDateErrorsAndConvertDatesInPed.md)
-copies those numbers into `errorLst$invalidDateRows`
-(`R/getDateErrorsAndConvertDatesInPed.R:36`), the list the user reads,
-and uses them as full-pedigree row numbers in `sb[-invalidAndAdded, ]`
-(`:37-41`). **Decision for the owner:** (1) map the reported numbers
-back to full-pedigree rows inside
-[`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
-(`which(!isAdded)[rows]`; one line plus a test; changes the numbers a
-script sees only in that order); or (2) document the numbering in
-`@return` and leave it. The test must pin BOTH orders (added first and
-added last).
 
 **[`getAncestors()`](https://github.com/rmsharp/nprcgenekeepr/reference/getAncestors.md)
 fails cryptically on an id or parent that is absent from the tree, and
@@ -153,46 +130,44 @@ shared shape is a choices builder plus a modal constructor taking the
 warning text and the namespace. **Known, accepted:** an unhandled
 click-time error ends the Shiny session (Learning 786).
 
-**Owner compares `suggested_NEWS_entry.md` with `NEWS.Rmd` and decides
-what to adopt (DECISION NEEDED – the owner’s own comparison, Effort S-M
-after that)** – S793 already judged the draft idea by idea
-(`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`: 8 adopt, 5
-modify, 1 reject). S848 brought `NEWS.Rmd` up to date first (nine
-post-2.0.0 exports it never named are now covered; display cap, default
-style, parity wording checked), so the comparison starts from a complete
-file; S849 then split each section into Major and Minor lists. S850 then
-shortened the dev block by about 44%. Compare against the shortened
-file. Still open for the owner: split the long Breeding Group and Mate
-Pair paragraphs into bullets (review S7/S8, restore the harem-sire
-caveat, fix the draft’s `candidates` mislabel); use the draft as the
-3.0.0 release-note template (add default style, display cap, twin
-consistency, the bug-fix list); decide whether the draft file is
-committed. Only the `.md` remains, untracked.
+**Move the version to 3.0.0 just before release (READY at release time,
+Effort S)** – the owner decided (S855) the next release is **3.0.0**.
+Until then `DESCRIPTION`, the `NEWS.Rmd`/`NEWS.md` heading, `README.md`
+and `ROADMAP.md` stay at 2.0.0.9000 on purpose. At release prep: set
+`DESCRIPTION` to 3.0.0, retitle the `NEWS.Rmd` dev block to 3.0.0 and
+re-knit `NEWS.md`, reinstall the package and re-render `README`
+(Learning 376), and update the 2.0.0.9000 cites in `ROADMAP.md`. The
+paper-dependency item below also waits on a released 3.0.0.
 
-**Male-on-the-left placement is stricter in the code’s documentation
-than in real layouts (found S789, 2026-09-27, DECISION NEEDED, Effort S
-to find the cause, more to fix)** – the roxygen of
-[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)
-(`R/makePedigreeDiagramData.R`, “Male-left/ female-right ordering (issue
-\#145) … is now unconditional”) says every simple two-parent mating
-renders the male on the left. Measured S789 over every mixed-sex mating
-unit (the two parents of each `__union_` node read from `layout$edges`,
-duplicates mapped through `layout$duplicateToReal`, x from
-`layout$nodes`; the 5 example pedigrees, `rhesusPedigree` and
-`smallPed`): 227 of 257 (88.3%) have the male on the left in the
-Rectilinear style (`rhesusPedigree`: 29 of 231 on the right; `smallPed`:
-1 of 6; the Direct style: 30 of 237 and 1 of 6). Most exceptions are
-pairs where a parent has several mates, which the issue \#145 plan
-leaves to the tree structure on purpose
-(`docs/planning/issue145-sire-dam-left-right-placement-plan.md`, D5/D9);
-but 2 of 34 pairs on `rhesusPedigree` where each parent has exactly one
-mate and neither is a duplicate are also on the right, and neither
-parent has a child of unknown parentage, so the plan’s own exclusion
-does not explain them (cause not chased). **Decide:** (1) find the two
-and fix the layout (a placement change, so a re-run of the diagram
-fidelity checks); or (2) correct the roxygen to say the rule covers
-simple pairs “in most cases” and leave the layout alone. The release
-note already says “in most cases” (S789).
+**Placement of couples whose mate is drawn as a duplicate node (found
+S857, tried and rejected S858, 2026-10-02; DECISION NEEDED – needs the
+owner’s rule and its own session, Effort M)** – on `rhesusPedigree` two
+couples render the male right of the female: `D0Z114` (M) x `4CHDK1` (F)
+and `V1X2X3` (M) x `SH0L6S` (F). **Measured S858:** in both, BOTH
+parents have parents of their own (no free-pass mate), so `qualifies()`
+is TRUE but the mate is not in `b1Ids`; `correctableUnitIds` (the S666
+filter) skips the unit and the Decision-1 seeding
+(`R/makePedigreeDiagramData.R:1265`) takes the children’s-mean side.
+**Tried, not kept:** adding `qualifies(u)` to that condition flipped
+exactly these two (male-right 28 to 26 of 237; crossings 1702 to 1700
+rectilinear, 1542 to 1544 direct; no other bundled pedigree moved; 6 new
+tests passed) but changed 4 census pins (nodes 1456 to 1460, jog nodes
+186 to 190, bar hits 97 to 98 twice) and added a small step in the
+parents’ connector. **Owner’s verdict, in the owner’s words (S858):**
+“There is no reason to move the two second generation matings to the
+left. They could comfortably go directly below and centered on the
+initial descender from the mating pairs. The little doglegs to the left
+in the NEW: V1X2X3 (M, blue) x SH0L6S (F, red) drawing is unsightly and
+provides no benefit.” **No rule has been decided:** the owner said an
+inference from this feedback is not accepted; the next session must ask
+the owner what the rule is (for example, whether male-left applies to
+these couples at all) and not derive one from the quote. The change was
+reverted and its RED test file removed (git `8aeef0da2` has them).
+[`makePedigreeMatingLayout()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeMatingLayout.md)’s
+roxygen (`:1604`) and `NEWS.Rmd:59` (“in most cases”) are unchanged. The
+other male-right couples (26 of 177 on `rhesusPedigree`) are multi-mate,
+which the issue \#145 plan leaves to the tree structure on purpose
+(`docs/planning/issue145-sire-dam-left-right-placement-plan.md`, D5/D9).
 
 **Audit the internal and user-facing documentation for stale information
 and stale diagrams** (owner-requested 2026-09-26; READY, Effort L – one
@@ -200,10 +175,13 @@ audit report per session, so expect several slices) – the owner noticed
 that `vignettes/articles/pedigree-diagram.pdf` and
 `vignettes/articles/kinship2-fidelity-validation.pdf` show stale
 figures. Measured 2026-09-26 (the staleness itself is the owner’s
-observation, not yet re-checked): both PDFs are UNTRACKED renders dated
+observation, not yet re-checked): both PDFs were renders dated
 2026-08-25 (`.gitignore:21` ignores `vignettes/*.pdf` but not
-`vignettes/articles/*.pdf`), while their `.qmd` sources were last edited
-2026-09-17/18; the tracked static image files sit under
+`vignettes/articles/*.pdf`). **Corrected S853:**
+`kinship2-fidelity-validation.pdf` is TRACKED (`git ls-files`), and
+`pedigree-diagram.pdf` was untracked by `3a8c026bb` (S831) and is gone
+from disk. Their their `.qmd` sources were last edited 2026-09-17/18;
+the tracked static image files sit under
 `vignettes/articles/pedigree-diagram-img/` (5),
 `vignettes/articles/kinship2-fidelity-validation-img/` (8) and
 `vignettes/articles/shiny_app_use/` (50). **First question for the
@@ -221,12 +199,12 @@ this file. **Method:** check every claim, number, screenshot and diagram
 against today’s code or output (regenerate the figure from the current
 source and compare; count, don’t recall); list each stale item with its
 source path; fix it or file it. **Found S789, for this audit:** the user
-manual (`vignettes/manual_components/_pedigree_browser.Rmd:56`) words
-the Diagram limit as “750 animals … the limit drops to 400 when the
-Rectilinear edge style is selected”, which reads misleadingly since
-Rectilinear is the default (the default limit is 400); the roxygen point
-in the male-left item above is the same kind of finding. **Measured
-S805, for this audit:** the 5 classic-structure figures under
+manual (`vignettes/manual_components/_pedigree_browser.Rmd`) worded the
+Diagram limit as “750 animals … the limit drops to 400 when the
+Rectilinear edge style is selected”, which read misleadingly since
+Rectilinear is the default (the default limit is 400); fixed S828. The
+roxygen point in the male-left item above is the same kind of finding.
+**Measured S805, for this audit:** the 5 classic-structure figures under
 `vignettes/articles/pedigree-diagram-img/` are current (2 re-rendered
 and committed S805; the other 3 differ from a fresh
 `pedigree-diagram-exemplar-renders.R` run by anti-aliasing only), so the
@@ -240,10 +218,11 @@ is in both the local PDFs (rendered 2026-08-25, carry since-retracted
 claims) and the committed images (1 of 8
 `kinship2-fidelity-validation-img/` is stale:
 `trackC-nprc-rectilinear.png`; the other 7 are current). **Open from
-slice 1:** owner decides delete-or-ignore for the two PDFs; regenerate
+slice 1:** owner decides delete-or-ignore for the one remaining PDF, the
+tracked `kinship2-fidelity-validation.pdf` (S853 correction); regenerate
 `trackC-nprc-rectilinear.png` (`data-raw/kinship2FidelityValidation.R`;
 look at the fresh arc touching the `W` square first); fix the stale
-“defaulting to direct” comment at `R/modPedigree.R:440-443` (the
+“defaulting to direct” comment at `R/modPedigree.R:459-461` (the
 `_pedigree_browser.Rmd` wording was fixed S828). **Slice 2 DONE S821**
 (`docs/audits/DOCS_STALENESS_AUDIT_SLICE2_2026-09-30.md`): 31 of 38
 regenerable `shiny_app_use/` images differ from the app (Pedigree
@@ -347,12 +326,25 @@ and `NEWS.md`, 3 moderate (NC1, NC2: “Fixed” bullets for a tab and a
 file that never shipped in 2.0.0; NE1: `NEWS.md` 37 commits stale), 16
 minor; **all FIXED S846** except NA2-NA4, **FIXED S847** (the Diagram
 section rewritten as a new feature described against kinship2; `NEWS.md`
-re-rendered; NB5/NB7 were dropped by S845). **Next in this item: slice
-7b:** the internal docs (`docs/`, `ROADMAP.md`, `CLAUDE.md`,
-`BACKLOG.md`). Four likely code defects the audit found (candidate
-“Upload list” uploads nothing; no-op GU/MK checkboxes; `groupAddAssign`
-roxygen; silent `allele_1/2` genotype drop) are owner decisions,
-DECISION NEEDED, Effort S each, not part of the doc fixes.
+re-rendered; NB5/NB7 were dropped by S845). **Slice 7b AUDITED S852**
+(`docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md`): the living
+internal docs (`ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`,
+`docs/architecture/`, `docs/conventions/`, `docs/setup/`), 10 moderate,
+25 minor (RO/CL/BA/BB/AR/CV ids); 9 of the 10 moderates re-checked
+first-hand; **33 of 35 FIXED S853** (docs only). Left: CV1 and CV2 (code
+decisions, below); RO8 (Quarto slices 3-4 status) and the other ids in
+RO3 (not checkable here) were reworded to say “not recorded” / “not
+re-checked”, not settled; AR3’s “about 53” is now attributed to Learning
+347 and not re-counted. **Next in this item:** slice 7c,
+`docs/planning/` (84 files), `docs/research/` and older `docs/audits/`
+(dated records; scope with the owner first). Two code candidates, owner
+decisions:
+[`getGeneticDiversityStats()`](https://github.com/rmsharp/nprcgenekeepr/reference/getGeneticDiversityStats.md)
+exports with no `@examples`, and the `savePlotToFile` example uses
+`\dontrun`. Four likely code defects the audit found (candidate “Upload
+list” uploads nothing; no-op GU/MK checkboxes; `groupAddAssign` roxygen;
+silent `allele_1/2` genotype drop) are owner decisions, DECISION NEEDED,
+Effort S each, not part of the doc fixes.
 
 **Create a tutorial for prospective contributors** (owner-requested
 2026-09-26; DECISION NEEDED, Effort M) – there is no contributor guide
@@ -505,21 +497,21 @@ interactivity; nprcgenekeepr may eventually consume it, but that is NOT
 the primary goal** (i.e. plan a sibling product first, not an extraction
 nprcgenekeepr must immediately depend on). **Ratified scope (S742, so
 the plan session doesn’t re-derive):** drawing surface IN — lift the
-module-bound decorations (`R/modPedigree.R:675-790`:
-legend/image-export/tooltips) into a script-callable visNetwork renderer
-(the unique value per the gap doc’s ecosystem observation; the one
+module-bound decorations (`R/modPedigree.R`, about `:689-890`: legend,
+image export, tooltips) into a script-callable visNetwork renderer (the
+unique value per the gap doc’s ecosystem observation; the one
 substantive new-work item); parity closers IN — export the shrink
-helpers + `bitSize` (tested internals, `R/shrinkPedigree.R:227-380`),
-port `familycheck` + `ibdMatrix` (the two full absences), and
-user-suppliable layout hints (autohint’s override half — real
-engine-surface design); OUT — block-sparse `makekinship` (dense
-whole-colony matrices are current practice); API shape (data-frame-as-is
-vs kinship2-compat layer) DELIBERATELY OPEN — decide at plan time with a
-prototype in hand. When unblocked, the pickup is a planning session
-(package boundary/plan doc in `docs/planning/`, evidence-based
-inventory); step 0’s prep is complete — D-1 landed S744:
-`makePedigreeMatingLayout(kinshipMatrix = )`
-(`R/makePedigreeDiagramData.R:1685`) is exactly the injectable boundary
+helpers + `bitSize` (tested internals in `R/shrinkPedigree.R`:
+`.bitSizeOf`, `.findUnavailable`, `.findAvailAffected`), port
+`familycheck` + `ibdMatrix` (the two full absences), and user-suppliable
+layout hints (autohint’s override half — real engine-surface design);
+OUT — block-sparse `makekinship` (dense whole-colony matrices are
+current practice); API shape (data-frame-as-is vs kinship2-compat layer)
+DELIBERATELY OPEN — decide at plan time with a prototype in hand. When
+unblocked, the pickup is a planning session (package boundary/plan doc
+in `docs/planning/`, evidence-based inventory); step 0’s prep is
+complete — D-1 landed S744: `makePedigreeMatingLayout(kinshipMatrix = )`
+(`R/makePedigreeDiagramData.R:1661`) is exactly the injectable boundary
 the package needs; D-2 landed S745: no test file outside the layout
 core’s own reaches `.buildMatingUnitForest()` any more (the two
 `test_modPedigree.R` reaches now derive union/duplicate ids from the
@@ -540,7 +532,7 @@ item — its still-open step 4; DECISION NEEDED, Effort M, its own
 session) – `inst/doc/` is 4.38 MB uncompressed = 86% of CRAN’s 5 MB
 documentation guideline and 38% of the tarball;
 `a2interactive`/`gvaConvergence`/`simulatedKValues` declare
-`output: html_document` (`vignettes/a2interactive.Rmd:4-7`,
+`output: html_document` (`vignettes/a2interactive.Rmd:4-6`,
 `gvaConvergence.Rmd:6-8`, `simulatedKValues.Rmd:6-8`). Est. 0.4-0.9 MB
 compressed saved — an ESTIMATE needing its own before/after clean-export
 build measurement (`docs/audits/TARBALL_SIZE_AUDIT_2026-09-19.md`
@@ -565,9 +557,9 @@ never the working tree.
 **(Optional, low priority) Root-cause why the pinned Chrome-for-Testing
 binary hangs on `macos-latest`’s `ChromoteSession$new()` bootstrap**
 (found S619, 2026-08-20, incidental to the chromote CDP-timeout fallback
-fix below, READY, Effort M – research only, not required) – the
-practical problem is FULLY resolved: `macos-latest` reverts to ambient/
-unpinned Chrome (`R-CMD-check.yaml`,
+fix (see `CHANGELOG.md`), READY (optional), Effort M – research only,
+not required) – the practical problem is FULLY resolved: `macos-latest`
+reverts to ambient/ unpinned Chrome (`R-CMD-check.yaml`,
 `if: matrix.config.os != 'macos-latest'` on the 3 Chrome-provisioning
 steps), verified green on real CI. What remains unexplained: raising
 chromote’s `default_timeout` to 60s did NOT resolve the pinned binary’s
@@ -633,9 +625,10 @@ decision’s own scope, per `PROJECT_LEARNINGS.md` Learning 382’s “report,
 don’t fix mid-session” precedent). A future session could measure the
 actual housekeeping-vs-deliverable entry-byte split and decide whether a
 norm analogous to the canonical design’s own deferred H4 remedy
-(`docs/planning/ledger-trimmer-design.md` §10.2, “the lever is receipt
-size, and the mechanism would be a norm plus a check, not an archiver”)
-is worth adopting for `CHANGELOG.md` specifically.
+(recorded as `docs/planning/ledger-trimmer-design.md` §10.2, a file that
+is not in this repo; “the lever is receipt size, and the mechanism would
+be a norm plus a check, not an archiver”) is worth adopting for
+`CHANGELOG.md` specifically.
 
 **`BACKLOG.md`’s own ledger-size housekeeping – editorial compression,
 not a `methodology_trim.py` config** (found S518, 2026-08-11, READY,
@@ -649,55 +642,57 @@ header states the remedy (“Open, actionable work only… for history see
 `CHANGELOG.md`”). Sections **regrow** as later sessions append their own
 progress narrative (S606 found the S531 “fully RESOLVED” claim was only
 a snapshot), so this is a recurring maintenance pass, never a one-time
-fix. **Pass history** (per-pass detail in `CHANGELOG.md`): S529
-Housekeeping section (263 lines removed; its inventory found 2 items
-with NO ledger entry – the `inst/extdata/` reorg S415-418 and the
-non-portable-filename fix S497, a real FM \#27 gap – and both were
-backfilled before compressing); S530 “Pedigree diagram vs kinship2”
-(896-\>286 lines); S531 “Genetic-metrics PDF audit follow-ups”
-(753-\>267; file total 2,501-\>1,173 across the three passes); S606
-re-compressed Genetic-metrics after regrowth (304-\>80) and fixed 2
-stale claims found in the same pass; **S752** (2026-09-21) re-compressed
-Genetic-metrics again (regrown to 91 lines by the issue \#148 chain, all
-14 issues now closed -\> 62 lines incl. the extracted open item),
-condensed this item’s own pass history (91 -\> 38 lines), extracted the
-Genetic-metrics section’s one buried open thread as its own item, and
-ran the S606-requested regrowth check on “Pedigree diagram vs kinship2”:
-**NOT regrown** (286-\>156 lines; S686’s completed-item removals shrank
-it, and what remains is S530’s own ratified summary). **2026-09-24** (ad
-hoc, owner-picked from a staleness review; each cited session, Learning
-and issue checked against the ledger, `PROJECT_LEARNINGS.md` and
-`gh issue view` first): removed 2 completed items (the REUSE-badge
-registration – the live badge now reads “compliant” – and the empty
-`untitled folder`), fixed 4 stale statements, merged the duplicate
-`## Up Next` and dropped the empty/resolved headings, and compressed the
-LabKey item (44 -\> 15 lines) and the kinship2 section’s S435-S500 DONE
-narrative (84 -\> 20 lines; the owner ratified this deeper cut at the
-pick). The LabKey item was compressed in place and the QC’d-copy Diagram
-item rewritten with its measured cause; every other open item is
-byte-identical. **Later the same day**, at the owner’s direction (“if
-the work really was done, it should be in `CHANGELOG.md`”), the last
-three resolved sections – `## Architecture (issue #122 ...)`,
-`## Audit follow-ups` and the Genetic-metrics section, 58 lines – were
-deleted after checking each against the ledger (issue \#122: 7 tagged
-entries; Genetic-metrics: 14 issues closed, 69 tagged entries; Audit
-follow-ups: 7 of its 8 items recorded, and the eighth, NEW-53, fixed
-2026-05-31 in `5f40b7af`, backfilled). The file now ends at
-`## Outreach`. **Method (every pass, all steps):** before compressing
-anything to a pointer, (1) verify `CHANGELOG.md` +
-`docs/archive/CHANGELOG-*.md` carry an entry heading for every session
-number cited AND that the load-bearing facts are inside those entries (a
-heading alone proves little); (2) confirm every cited Learning / doc
-path resolves and every issue state via `gh issue view`, not prose; (3)
-extract any buried open thread as its own item first; (4) replace whole
-line ranges mechanically (Learning 537: a partial `old_string` leaves
-later paragraphs duplicated beside the new bullet); (5) leave open items
-byte-untouched; (6) re-read the compressed result end to end.
-**Candidates for the next pass (measured 2026-09-24; re-grep, sizes not
-anchors):** none – no resolved-narrative section or stub remains, and
-every remaining `##` section holds open items. Regrowth check: 378 lines
-now; the file was 480 lines after S752 and 561 before this pass. The
-next pass is a regrowth check, not a known cut.
+fix. **Pass history** (per-pass detail in `CHANGELOG.md` and
+`docs/archive/CHANGELOG-through-*.md`): S529 Housekeeping section (263
+lines removed; its inventory found 2 items with NO ledger entry – the
+`inst/extdata/` reorg S415-418 and the non-portable-filename fix S497, a
+real FM \#27 gap – and both were backfilled before compressing); S530
+“Pedigree diagram vs kinship2” (896-\>286 lines); S531 “Genetic-metrics
+PDF audit follow-ups” (753-\>267; file total 2,501-\>1,173 across the
+three passes); S606 re-compressed Genetic-metrics after regrowth
+(304-\>80) and fixed 2 stale claims found in the same pass; **S752**
+(2026-09-21) re-compressed Genetic-metrics again (regrown to 91 lines by
+the issue \#148 chain, all 14 issues now closed -\> 62 lines incl. the
+extracted open item), condensed this item’s own pass history (91 -\> 38
+lines), extracted the Genetic-metrics section’s one buried open thread
+as its own item, and ran the S606-requested regrowth check on “Pedigree
+diagram vs kinship2”: **NOT regrown** (286-\>156 lines; S686’s
+completed-item removals shrank it, and what remains is S530’s own
+ratified summary). **2026-09-24** (ad hoc, owner-picked from a staleness
+review; each cited session, Learning and issue checked against the
+ledger, `PROJECT_LEARNINGS.md` and `gh issue view` first): removed 2
+completed items (the REUSE-badge registration – the live badge now reads
+“compliant” – and the empty `untitled folder`), fixed 4 stale
+statements, merged the duplicate `## Up Next` and dropped the
+empty/resolved headings, and compressed the LabKey item (44 -\> 15
+lines) and the kinship2 section’s S435-S500 DONE narrative (84 -\> 20
+lines; the owner ratified this deeper cut at the pick). The LabKey item
+was compressed in place and the QC’d-copy Diagram item rewritten with
+its measured cause; every other open item is byte-identical. **Later the
+same day**, at the owner’s direction (“if the work really was done, it
+should be in `CHANGELOG.md`”), the last three resolved sections –
+`## Architecture (issue #122 ...)`, `## Audit follow-ups` and the
+Genetic-metrics section, 58 lines – were deleted after checking each
+against the ledger (issue \#122: 7 tagged entries; Genetic-metrics: 14
+issues closed, 69 tagged entries; Audit follow-ups: 7 of its 8 items
+recorded, and the eighth, NEW-53, fixed 2026-05-31 in `5f40b7af`,
+backfilled). The file now ends at `## Outreach`. **Method (every pass,
+all steps):** before compressing anything to a pointer, (1) verify
+`CHANGELOG.md` + `docs/archive/CHANGELOG-*.md` carry an entry heading
+for every session number cited AND that the load-bearing facts are
+inside those entries (a heading alone proves little); (2) confirm every
+cited Learning / doc path resolves and every issue state via
+`gh issue view`, not prose; (3) extract any buried open thread as its
+own item first; (4) replace whole line ranges mechanically (Learning
+537: a partial `old_string` leaves later paragraphs duplicated beside
+the new bullet); (5) leave open items byte-untouched; (6) re-read the
+compressed result end to end. **Candidates for the next pass (measured
+2026-09-24; re-grep, sizes not anchors):** none then – no
+resolved-narrative section or stub remained, and every remaining `##`
+section held open items. Regrowth check (S853): 599 lines now, up from
+378 on 2026-09-24 (the file was 480 lines after S752 and 561 before that
+pass); the long narrative items, the docs-audit item and the chromote
+item, are the likely next cuts. The next pass should compress those two.
 
 **Two kinship2 drawing features the Diagram tab still lacks (found S847,
 2026-10-01; DECISION NEEDED – which pedigree column marks “deceased”,
@@ -713,8 +708,8 @@ condition:** `affected` is one logical column
 up to four conditions per animal as separate sections of the symbol,
 with a matching legend. The decision is the input shape (several logical
 columns, or a matrix) and the legend text. Each is its own session; the
-Diagram section of `NEWS.Rmd` says “most of kinship2’s conventions”
-until both ship.
+Diagram section of `NEWS.Rmd` (lines 33-35) says “A deceased marker and
+more than one affected condition are not drawn” until both ship.
 
 ## Pedigree diagram vs kinship2 audit follow-ups (from ISSUE_129_KINSHIP2_FEATURE_COMPARISON_2026-07-30.md)
 

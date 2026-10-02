@@ -93,6 +93,42 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 which re-derives L1/L2/L3 from git; run it rather than trusting this
 sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · \[ad hoc\] S858 close-out: traced why 2 `rhesusPedigree` couples with a duplicate-node mate stay male-right (both parents have parents, so the S666 filter skips the unit); tried `|| qualifies(u)` in the seeding (RED `8aeef0da2`, 6 tests; GREEN measured: flips exactly the 2 couples, 4 census pins move, extra connector step); owner rejected it after seeing figures; reverted, RED test file removed, BACKLOG item rewritten with the owner’s words and no rule decided. `R/` unchanged. Model: Claude Sonnet 5.5; no non-commit actions (no push).
+
+### 2026-10-02 · \[ad hoc\] S858 claim: male-left placement for couples whose mate is drawn as a duplicate node (BACKLOG item; owner chose FIX) (in progress). Strict TDD.
+
+### 2026-10-02 · \[ad hoc\] S857 close-out: fixed the male-left placement (owner chose FIX): in the Decision-1 seeding a unit the S666 pass handled now takes the sex rule, so `sweepMinSepBackstop()` can no longer put the male right of the female. Strict TDD: RED `62cac01de` (`tests/testthat/test_maleLeftSweepSurvival.R`, 6 tests), GREEN `c4b383978`, REFACTOR comments only. Full unfiltered suite 363 files / 2,897 tests, 0 failed, 0 error; `lint_package()` 0. Measured old vs new on 22 layouts: edge crossings, row gaps and drawn relations unchanged; 31 of 375 `rhesusPedigree` animals move; male-right one-mate non-duplicate couples 2 to 0. New finding recorded in BACKLOG: 2 couples with a duplicate-node mate stay male-right. Completed BACKLOG male-left item removed.
+
+### 2026-10-02 · \[ad hoc\] S857 ledger: Model: Claude Sonnet 5.5; no non-commit actions (issue \#145 was already closed; no push).
+
+### 2026-10-02 · \[ad hoc\] S857 claim: fix the male-left placement so the rule survives `sweepMinSepBackstop()` (BACKLOG male-left item; owner chose FIX) (in progress). Strict TDD.
+
+### 2026-10-02 · \[ad hoc\] S856 close-out: found the cause of the 2 one-mate `rhesusPedigree` male-right pairs (correction pass sets the side, `sweepMinSepBackstop()` flips it in a crowded row); owner chose to fix the layout; BACKLOG male-left item rewritten as a READY fix with the cause. Read-only investigation.
+
+### 2026-10-02 · \[ad hoc\] S856 claim: find the cause of the 2 one-mate `rhesusPedigree` pairs placed male-on-the-right (BACKLOG male-left item) (in progress). Investigation first; any layout fix is a later strict-TDD step.
+
+### 2026-10-02 · \[ad hoc\] S855 close-out: owner decided the next release is 3.0.0; recorded as BACKLOG item “Move the version to 3.0.0 just before release”. A version bump I made beyond that was reverted at the owner’s direction; version files unchanged.
+
+### 2026-10-02 · \[ad hoc\] S855 claim: record the owner’s release-number decision (3.0.0) and align the version metadata (in progress). Docs and metadata only.
+
+### 2026-10-02 · \[ad hoc\] S854 close-out: `convertDate()` invalid-date row numbers (the `reportErrors = TRUE` vector and the `stop()` message) now count positions in the pedigree passed in, so an added record ahead of an original no longer shifts them (owner chose fix over document-only). 5 tests in `test_convertDate.R`, `R/convertDate.R` (3 lines), roxygen and `man/convertDate.Rd`; completed BACKLOG item removed. Full suite 0 failed/0 error, lint clean. Claim `a06651046`.
+
+### 2026-10-02 · \[ad hoc\] S854 claim: settle the owner decision on `convertDate(reportErrors = TRUE)` invalid-date row numbering when an added row precedes an original (in progress). Strict TDD.
+
+### 2026-10-01 · \[ad hoc\] S853 close-out: applied 33 of the 35 slice-7b docs-staleness findings: `ROADMAP.md` (alias direction, 2.0.0 shipped, done audit follow-ups, articles, paths), `CLAUDE.md` (dev-only package list, upstream `bin/sync`, per-line budget case), `docs/architecture/module-contract.md`, `docs/conventions/` (launcher name, archive size), and `BACKLOG.md` (code cites re-read, PDF state, regrowth 378 to 599). Left: CV1/CV2 (code decisions); RO8 and the other RO3 ids reworded as not re-checked. Claim `144d140cb`, fixes `61577e834`. Wordlist and rbuildignore tests pass; docs only, full suite and lint not run.
+
+### 2026-10-01 · \[ad hoc\] S853 claim: apply the 35 findings of the slice-7b docs-staleness audit to the living internal docs, `BACKLOG.md` last (in progress). Docs only.
+
+### 2026-10-01 · \[ad hoc\] S852 close-out: docs-staleness audit slice 7b, the living internal docs (`ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`, `docs/architecture/`, `docs/conventions/`, `docs/setup/`), owner-scoped. Report `docs/audits/DOCS_STALENESS_AUDIT_SLICE7B_2026-10-01.md`: 35 findings (10 moderate, 25 minor) from about 270 claims, 9 of 10 moderates re-checked first-hand; none fixed. `BACKLOG.md` docs-audit item updated; S849 record and evaluation removed from `SESSION_NOTES.md`. Claim `9ab55d5df`. Docs only.
+
+### 2026-10-01 · \[ad hoc\] S852 claim: docs-staleness audit slice 7b, the living internal docs (`ROADMAP.md`, `CLAUDE.md`, `BACKLOG.md`, `docs/architecture/`, `docs/conventions/`, `docs/setup/`), owner-scoped (in progress). Docs only.
+
+### 2026-10-01 · \[ad hoc\] S851 close-out: adopted the owner’s `suggested_NEWS_entry.md` ideas into the `NEWS.Rmd` dev block, each section shown and approved: opening summary paragraph, the marker-genotype export session-crash fix restored (S846 had removed it), and a plainer pass over all 11 sections (long bullets split, nothing dropped; 2,629 words, 80 bullets). `NEWS.md` re-rendered; guard and wordlist tests pass. Claim `b9c019c5b`. Owner-directed after close-out: deleted the untracked `suggested_NEWS_entry.md` and `vignettes/suggested_NEWS_entry.Rmd` (never committed). BACKLOG item rewritten to the one remaining decision (release number). Docs only.
+
+### 2026-10-01 · \[ad hoc\] S851 claim: compare the owner’s `suggested_NEWS_entry.md` with the shortened `NEWS.Rmd` and settle what to adopt (in progress). Docs only.
+
+### 2026-10-01 · \[ad hoc\] S850 push: pushed master to origin, `c0632d61d..bd6783a3a` (22 commits, owner-directed; includes the docs-staleness `man/*.Rd` edits and the `NEWS.Rmd` work). CI on `bd6783a3a`: pkgdown, R-CMD-check, test-coverage and lint all completed success.
+
 ### 2026-10-01 · \[ad hoc\] S850 close-out: brevity pass on the `NEWS.Rmd` dev block, owner-approved: about 4,460 to 2,500 words, Major/Minor lists kept, limits, defaults and caveats kept, related Minor bullets merged, issue numbers kept (guard test needs one `#168`). `NEWS.md` re-rendered; guard and wordlist tests pass. Claim `eae700925`. Docs only.
 
 ### 2026-10-01 · \[ad hoc\] S850 claim: brevity pass on the `NEWS.Rmd` dev block, condensing toward the style of the owner’s `suggested_NEWS_entry.md` while keeping limits, defaults and caveats; owner reviews before commit (in progress).

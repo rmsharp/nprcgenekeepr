@@ -31,8 +31,9 @@ convertDate(ped, timeOrigin = as.Date("1970-01-01"), reportErrors = FALSE)
   scanned and the converted pedigree is not returned; instead the result
   is a sorted character vector of the row numbers with an invalid date
   (a row is repeated once for each column in which it has one), or
-  `NULL` when there are none. The row numbers count only the records
-  that are not marked `"added"`, not the positions in the input.
+  `NULL` when there are none. Row numbers, here and in the error
+  message, are positions in `ped` as passed in, so records marked
+  `"added"` count toward the numbering wherever they sit.
 
 ## Value
 

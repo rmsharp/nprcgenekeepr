@@ -168,141 +168,253 @@ sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
-### What Session 850 Did
+### What Session 858 Did
 
-**Deliverable, DONE:** brevity pass on the `NEWS.Rmd` dev block; owner
-reviewed and approved. Docs only, so no TDD phase applies. Claim
-`eae700925`; edits in the close-out commit. **Result:** dev block 4,457
-to about 2,500 words (-44%); Major/Minor lists and all 11 sections kept.
-Related Minor bullets merged (script functions; the “added record”
-fixes, as S793 advised). Issue numbers kept: the guard test needs
-exactly one `#168` mention. **Verified by me:**
-`test_newsReleaseState.R` and `test_wordlist_coverage.R` pass after
-re-render. First pass cut only 25%, so I condensed harder; one pinned
-phrase (“male parent on the left”) had to be restored. **Dropped on
-purpose:** the
-[`makePedigreeDiagramData()`](https://github.com/rmsharp/nprcgenekeepr/reference/makePedigreeDiagramData.md)
-note, sibling-bar and curve-height sentences, several “includes” asides.
-**Not verified:** full suite and lint (no `.R` changed); condensed
-sentences not re-checked against code. **Reduction:** removed the S847
-evaluation and record.
+**Deliverable:** the cause of the 2 duplicate-mate male-right couples, a
+fix tried and rejected by the owner, and a corrected BACKLOG item.
+Strict TDD began (PRE-RED, RED, GREEN gates asked); the owner rejected
+the result after seeing figures, so the layout code is unchanged. Claim
+`88f283ea6`; RED `8aeef0da2` (test file removed in the close-out
+commit). **Measured:** in both couples (`D0Z114` x `4CHDK1`, `V1X2X3` x
+`SH0L6S`) both parents have parents, so `qualifies()` is TRUE but the
+mate is not in `b1Ids` and `correctableUnitIds` skips the unit; the
+seeding (`R/makePedigreeDiagramData.R:1265`) then takes the
+children’s-mean side. The S857 BACKLOG reading (“the female has a parent
+edge”) was half right: the male has parents too. **Tried:**
+`|| qualifies(u)` in that condition. Flipped exactly the 2 couples; 6
+RED tests passed; crossings and every other bundled pedigree unchanged;
+but 4 census pins moved (nodes 1456 to 1460, jog nodes 186 to 190, bar
+hits 97 to 98 x2) and the parents’ connector gained a step. **Owner
+verdict:** reject (quoted in BACKLOG). I then wrongly turned the
+feedback into a proposed “centered pair, male left” rule; the owner said
+inferred rules are not accepted. Reverted `R/`, removed the RED file,
+BACKLOG now records the owner’s words and says no rule is decided.
+**Verified by me:** old vs new on 8 bundled pedigrees x 2 edge styles
+(script and `s858_couples_old_vs_new.png` in the session scratchpad);
+the 6 new tests and the layout test files after the edit. **Not run:**
+full suite, lint, `devtools::check()` (no code kept; `R/` identical to
+S857 close-out). **NEWS.Rmd:** none. **Slips:** I showed myself a figure
+and described it as if you had seen it (the owner could not see it;
+fixed by opening the file); I proposed pin updates before showing the
+picture; I inferred a rule from feedback. **Reduction:** removed the
+S856 evaluation and record.
 
-**Self-assessment: 7/10.** + Read the pinned guard checks before
-writing; showed the result and waited for approval. - My first pass was
-too timid (25%), and my first word count mixed in old text.
+**Self-assessment: 6/10.** + Cause traced with measurements; blast
+radius measured; no code change left behind. - Three process slips
+above; no deliverable code; the owner’s time went to a fix they did not
+want.
 
-**Next steps:** (A) Owner compares `suggested_NEWS_entry.md` with the
-shortened `NEWS.Rmd`. (B) Slice 7b docs audit (READY, Effort L). (C)
-Master is 22 ahead of origin after this commit (20 at last close-out,
-plus claim and close-out); push only on the owner’s say-so.
+**Next steps:** (A) A new session: ask the owner for the rule on these
+couples (BACKLOG “Placement of couples whose mate is drawn as a
+duplicate node”); do not infer it. (B) Still open: PED_GV decisions,
+mate-pair residue, CV1/CV2, doc-audit slice-6e fixes. (C) Release prep:
+BACKLOG “Move the version to 3.0.0”. (D) Master is 26 ahead of origin
+after the close-out commit; push only on the owner’s say-so.
 
-**Key files:** `NEWS.Rmd:14-354`,
-`tests/testthat/test_newsReleaseState.R:473-690` (pinned wording).
+**Key files:** `R/makePedigreeDiagramData.R:1262-1272` (seeding side),
+`:1075-1080` (`correctableUnitIds`), `BACKLOG.md:101`; the rejected RED
+test is
+`git show 8aeef0da2:tests/testthat/test_maleLeftDuplicateMate.R`.
 
-**Gotchas:** the Diagram section must keep: the 400/750 cap once, one
-shading entry, one “male parent on the left”, the 113 count with
-“duplicate node” and “bundled”. Re-render `NEWS.md` after edits, then
-run the guard test.
+**Gotchas:** pins that move with any layout change on `rhesusPedigree`:
+`test_makePedigreeMatingLayout.R:745,774` and
+`test_addRectilinearWaypoints.R:797-798`. Show the owner figures by
+opening the file (`open`); a figure I read is not a figure they saw.
+Measure scripts must be run per pedigree with a timeout
+(`ExamplePedigree.csv` did not finish in 240 s).
 
-### Session 849 Handoff Evaluation (by Session 850)
+### Session 857 Handoff Evaluation (by Session 858)
 
-**Score: 9/10.** **Helped:** the parser note (reads `##` and `-` only)
-and the pointer to pinned wording. **Missing:** the exactly-one `#168`
-rule, which constrained the pass. **Wrong:** nothing found. **ROI:**
-high.
+**Score: 8/10.** **Helped:** the BACKLOG item named both couples, the
+measuring helper and the files; Orient measurements all held (frontiers
+at HEAD, 23 ahead, CI green). **Wrong:** the likely-cause line said only
+the female has a parent edge; both parents do. **Missing:** which census
+pins move under any layout change. **ROI:** high.
 
-### What Session 849 Did
+### What Session 857 Did
 
-**Deliverable, DONE:** labeled the `NEWS.Rmd` dev block: every section
-now has a bold **Major** list then a bold **Minor** list. Docs only, so
-no TDD phase applies. Claim `8415e4fab`; edits in the close-out commit.
-**How:** the owner chose the format (two lists), delayed the brevity
-pass, and approved my sorting table (“go”). A script moved bullets
-whole; no wording changed except three “above” references that became
-“below” (Marker Genetics x2, Mate Pair). **Verified by me:** 75 bullets
-before and after; 11 Major and 11 Minor labels in `NEWS.md`;
-`test_newsReleaseState.R` and `test_wordlist_coverage.R` pass after
-re-render. **Not verified:** full suite and lint not run (no `.R`
-changed). **Reduction:** removed the S846 evaluation and record.
+**Deliverable, DONE:** the diagram layout keeps the male-left rule for
+the two squeezed `rhesusPedigree` couples (`QL6GH4` x `3PD3U5`, `BM40IX`
+x `MTSHHY`) and for every one-mate, non-duplicate couple the S666 pass
+handles. Strict TDD, all three gates asked. Claim `acc020703`; RED
+`62cac01de`; GREEN `c4b383978`; REFACTOR (comments only) and records in
+the close-out commit. **RED:**
+`tests/testthat/test_maleLeftSweepSurvival.R`, 6 tests (the two named
+pairs, every simple pair, a pin that the other simple pairs stay
+male-left; both edge styles). 4 failed for the stated reason (male x \>=
+female x, 6 failure lines); the 2 pins passed. **GREEN:**
+`R/makePedigreeDiagramData.R:1261-1271`: for a unit in
+`correctableUnitIds` the single-unit mate side is the sex rule, not the
+children’s mean (the sweep after the S666 pass can push the anchor past
+its children). All 6 pass. **REFACTOR:** comments only (header bullet
+`:1213-1219` updated; note moved beside the condition). **Verified by
+me:** full unfiltered suite on the GREEN code: 363 files, 2,897 tests, 0
+failed, 0 error, 187 skipped (S854: 362 / 2,891; +6 = the new tests).
+After the comment/format edits I re-ran only the 6 related layout files
+(`maleLeftSweepSurvival`, `positionMatingUnitForest`,
+`makePedigreeMatingLayout`, `makePedigreeDiagramData`,
+`comparePedigreeStructure`, `addRectilinearWaypoints`): all pass.
+`lintr::lint_package()`: 0 lints (GREEN code), the edited file re-linted
+clean. **Blast radius, old vs new code on 11 bundled pedigrees x 2 edge
+styles (22 layouts):** 14 layouts unchanged (smallPed and the 6 example
+CSVs). Changed: `rhesusPedigree` (31 of 375 animals move, mostly a 120
+swap plus re-centering of -19..-6), `qcPed` and `pedWithGenotype` (8
+couples swap, plus a uniform 1e-4 solver drift on most nodes),
+`obfuscated_rhesus_mhc_ped` (1 couple swaps; a 56-node block shifts
+120). Identical old vs new: edge crossings (e.g. 1702, 1542), minimum
+row gaps, the 72-collision warning on `rhesusPedigree`. Coincident
+positions are only `__bar`/`__drop` pairs (no two animals share a spot).
+The drawn parent-child edges (502) and mate pairs (237) of
+`rhesusPedigree` equal the data (also `smallPed`, `qcPed`); one
+zero-length bar-drop connector in the MHC pedigree flipped direction.
+Male-right units on `rhesusPedigree`: 30 to 28 of 237; one-mate
+non-duplicate: 2 to 0. **Pictures:** `img/draw_coupleA.png`,
+`img/draw_coupleB.png` in the session scratchpad (before/after, couple
+highlighted); chromote screenshots raced visNetwork’s auto-fit, so I
+drew the same coordinates with base graphics. **New finding, in BACKLOG
+(DECISION NEEDED):** 2 one-mate couples whose mate is drawn as a
+duplicate node stay male-right on `rhesusPedigree` (`D0Z114` x `4CHDK1`,
+`V1X2X3` x `SH0L6S`); S789 excluded duplicates, so they are outside this
+item. **Not run:** `devtools::check()`; a live Shiny launch (the
+function output was rendered instead; the committed shinytest2 e2e files
+ran in the suite). **NEWS.Rmd:** none (`:59` “in most cases” stays
+true). Issue \#145 was already closed. **Reduction:** removed the S853
+evaluation and record; wrapped the 4 over-long lines the dashboard
+flagged. **Slips caught:** my first measuring script dropped `__dup_`
+nodes (64 units, against S789’s 237), found by comparing with S789; the
+first full-suite monitor fired on a Shiny traceback in the log, not on
+completion (waited for `full.rds`).
 
-**Self-assessment: 8/10.** + Proposed first, applied only after “go”;
-found the directional-wording trap before the owner did. - A BSD
-`sed -i` failure went unnoticed for one step (caught by a count check).
+**Self-assessment: 8/10.** + All three gates asked; cause traced before
+fixing; blast radius measured on 22 layouts, with pictures; two further
+exceptions reported, not buried. - Two rounds lost to chromote
+screenshots; the full suite was not re-run after the comment-only
+REFACTOR edits (targeted files were).
 
-**Next steps:** (A) Brevity pass on `NEWS.Rmd`, to follow the owner’s
-comparison with the draft; the guard test pins wording in the Diagram
-and Ancestry entries, so add checks first. (B) Slice 7b docs audit
-(READY, Effort L). (C) Master is 20 ahead of origin after this commit
-(18 at last close-out, plus claim and close-out); push only on the
+**Next steps:** (A) Owner decides the duplicate-mate item (BACKLOG
+“Male-on-the-left for couples whose mate is drawn as a duplicate node”):
+extend the sex rule (strict TDD) or reword the roxygen. (B) Still open:
+PED_GV decisions, mate-pair residue, CV1/CV2. (C) At release prep:
+BACKLOG “Move the version to 3.0.0 just before release”. (D) Master is
+23 ahead of origin after the close-out commit (22 from `git rev-list`
+plus this one); push only on the owner’s say-so.
+
+**Key files:** `R/makePedigreeDiagramData.R:1213-1219,1261-1272`,
+`tests/testthat/test_maleLeftSweepSurvival.R` (`.maleFemaleUnitX()`
+helper), `BACKLOG.md:101`.
+
+**Gotchas:** `.maleFemaleUnitX()` traces back through `__jog_` nodes and
+keeps `__dup_` nodes (dropping them gives a wrong count). Never compare
+layout x with `==` across code versions: the QP drifts by 1e-4.
+Full-suite logs hold Shiny tracebacks, so wait for the saved results
+file, not for a non-empty log. To compare old and new code, parse
+`git show HEAD:R/makePedigreeDiagramData.R` and
+`assignInNamespace(".positionMatingUnitForest", ...)`.
+
+### Session 855 Handoff Evaluation (by Session 856)
+
+**Score: 8/10.** **Helped:** the BACKLOG male-left item named the
+measurement method and the two-pair count, so I reproduced it in one
+script. **Missing:** which node types appear as edge sources
+(`__jog_*`), which cost me one wrong count. **Wrong:** nothing material.
+**ROI:** high.
+
+### What Session 855 Did
+
+**Deliverable, DONE:** recorded the owner’s release-number decision
+(next release is **3.0.0**) as a pre-release BACKLOG item. Docs only, so
+no TDD phase applies. Claim `2d7189745`; edits and records in the
+close-out commit. **Changed:** only `BACKLOG.md`. The owner chose 3.0.0;
+I wrongly also bumped `DESCRIPTION` (an option I invented), and the
+owner corrected it. All version files were reverted to 2.0.0.9000; the
+“Decide the release number” item became “Move the version to 3.0.0 just
+before release”. **Verified by me:**
+`git diff 2d7189745 -- DESCRIPTION NEWS.Rmd NEWS.md README.md ROADMAP.md`
+is empty (versions back to the claim state). **Not run:** full suite,
+`devtools::check()`, lint (no `.R` changed). The snapshot tests’
+“2.0.0.9000” strings are fixture data and were left alone on purpose.
+**Slip (mine):** my follow-up question offered “Bump DESCRIPTION now”,
+which the owner never asked for; I acted on it. Reverted at the owner’s
+direction. **Reduction:** none this session (`SESSION_NOTES.md` is 50 KB
+of 65 KB).
+
+**Self-assessment: 8/10.** + Reverted cleanly and fast. - Invented an
+option the owner had not asked for and edited 6 files on it; the
+deliverable was a one-line decision record.
+
+**Next steps:** (A) Owner picks another decision: PED_GV items,
+mate-pair guardrails residue, male-left placement, CV1/CV2. (B) At
+release prep: the new BACKLOG item “Move the version to 3.0.0 just
+before release”. (C) Master is 16 ahead of origin after the close-out
+commit (13 at Orient plus the claim, plus this one); push only on the
 owner’s say-so.
 
-**Key files:** `NEWS.Rmd:14-470` (Major/Minor lists),
-`tests/testthat/test_newsReleaseState.R:96-163` (parser reads `##` and
-`-` only).
+**Key files:** `BACKLOG.md` (grep “Move the version to 3.0.0”).
 
-**Gotchas:** on macOS use Python, not `sed -i`, for in-place edits. New
-bullets go under the right Major or Minor label. Re-render `NEWS.md`,
-then run the guard test.
+**Gotchas:** version files intentionally still say 2.0.0.9000.
 
-### Session 848 Handoff Evaluation (by Session 849)
+### Session 854 Handoff Evaluation (by Session 855)
 
-**Score: 9/10.** **Helped:** the next steps and the note that the
-Breeding Group and Mate Pair splitting was the owner’s call.
-**Missing:** nothing found. **Wrong:** nothing found. **ROI:** high.
+**Score: 8/10.** **Helped:** the picker-ready list of open decisions and
+the BACKLOG item for the release number got me to the work in one read.
+**Missing:** nothing material for this task. **Wrong:** the “13 ahead”
+count was 12 in the note; `git status -sb` gave 13 at Orient (the
+close-out commit adds one). **ROI:** high.
 
-### What Session 848 Did
+### What Session 854 Did
 
-**Deliverable, DONE:** made `NEWS.Rmd` complete and accurate before the
-owner compares it with `suggested_NEWS_entry.md`. Docs only, so no TDD
-phase applies. Claim `82a5dc655`; edits in the close-out commit.
-**Scoping finding:** S793 already reviewed the draft
-(`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`); I did not
-redo it. The `.Rmd` copy no longer exists; only the `.md` remains
-untracked. **Verified by me:** the 400/750 display cap and Rectilinear
-default are in the S847 text; PNG export = `visExport` in
-`R/modPedigree.R`; `test_comparePedigreeStructure.R` and
-`test_newsReleaseState.R` pass. **Gap found and fixed:** 9 exports added
-after v2.0.0 were never named in NEWS (`checkMarkerGenotypeFile`,
-`buildMarkerGenotypeMatrix`, `markerObserved/ExpectedHeterozygosity`,
-`markerParentageExclusion`, `markerFst`,
-`read/check/obfuscateTwinRelations`). Added them to five existing
-bullets (NEWS.Rmd:105-120, 132-165); re-rendered `NEWS.md`; guard and
-wordlist tests pass. The module UI/server exports were left out as
-internal. **Left on purpose:** splitting the long Breeding Group and
-Mate Pair paragraphs (S793 findings S7/S8) is the owner’s call after
-comparing with the draft. BACKLOG item rewritten. **Not verified:** full
-suite and lint not run (no `.R` changed). The “default 2” for
-`maxExclusions` is from roxygen, not a run.
+**Deliverable, DONE:**
+[`convertDate()`](https://github.com/rmsharp/nprcgenekeepr/reference/convertDate.md)
+now numbers an invalid date by its row in the pedigree passed in, so an
+“added” record ahead of an original no longer shifts the number (a bad
+date on row 3 was reported as row 2). Strict TDD, all gates asked. Claim
+`a06651046`; fix and tests in the close-out commit. **RED:** 5 tests in
+`tests/testthat/test_convertDate.R` (added first, added between, added
+last pin, two date columns, [`stop()`](https://rdrr.io/r/base/stop.html)
+message); 4 failed for the right reason, the added-last pin passed.
+**GREEN:** `R/convertDate.R` keeps `pedRows` (the original row
+positions) and uses it in both the `reportErrors = TRUE` vector and the
+[`stop()`](https://rdrr.io/r/base/stop.html) message (3 lines); roxygen
+`@return` for `reportErrors` and `man/convertDate.Rd` corrected.
+**REFACTOR:** reviewed, no change. **Owner decision taken:** option (1)
+of the BACKLOG item, fix the number; the
+[`stop()`](https://rdrr.io/r/base/stop.html) message shared the same
+defect so it was fixed too. **Verified by me:** full unfiltered suite
+362 files, 2,891 tests, 0 failed, 0 error (187 skipped); `lintr::lint`
+clean on both files; the downstream `getDateErrorsAndConvertDatesInPed`
+and `qcStudbook` tests pass. **Not run:** `devtools::check()`; runtime
+smoke n/a (no startup/wiring change). **Side effect:**
+[`getDateErrorsAndConvertDatesInPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDateErrorsAndConvertDatesInPed.md)
+feeds these numbers to `sb[-invalidAndAdded, ]`, so it now drops the
+right row when an added row comes first (before, it dropped the wrong
+one); no test pins that path yet. **Reduction:** removed the S851
+evaluation and record, and the completed BACKLOG item; fixed the
+`convertDate.R:113` cite to `:115` in the `isAddedRecord()` item.
 
-**Self-assessment: 7/10.** + Found a real completeness gap by diffing
-`NAMESPACE` against the v2.0.0 tag. + Reused S793 instead of redoing
-it. - I opened with a menu pick and a scoping reading that S793’s
-Learning 807 warns against; the owner’s question redirected me.
+**Self-assessment: 8/10.** + Found the
+[`stop()`](https://rdrr.io/r/base/stop.html) message shared the defect;
+reverted the unrelated `nprcgenekeepr-package.Rd` roxygen drift instead
+of folding it in; all four gates asked. - Did not add a test for the
+`getDateErrorsAndConvertDatesInPed` consequence; did not run
+`devtools::check()`.
 
-**Next steps:** (A) Owner compares the draft with `NEWS.Rmd` and decides
-what to adopt. (B) Slice 7b internal-docs audit (READY, Effort L). (C)
-Diagram feature decisions. (D) Master is 18 ahead of origin after this
-commit (16 at Orient, plus claim and close-out); push only on the
+**Next steps:** (A) Owner picks another PED_GV decision (BACKLOG “PED_GV
+audit follow-through”): `isAddedRecord()` helper, sex-code adoption,
+`getPotentialParents` split. (B) Optional small TDD slice: pin
+[`getDateErrorsAndConvertDatesInPed()`](https://github.com/rmsharp/nprcgenekeepr/reference/getDateErrorsAndConvertDatesInPed.md)
+with an added row first. (C) Still open: release number, CV1/CV2,
+male-left placement. (D) Master is 12 ahead of origin after this commit
+(count from `git rev-list origin/master..HEAD`); push only on the
 owner’s say-so.
 
-**Key files:** `NEWS.Rmd:105-120, 132-165`,
-`docs/audits/SUGGESTED_NEWS_ENTRY_REVIEW_2026-09-27.md`, `BACKLOG.md`
-(rewritten draft item).
+**Key files:** `R/convertDate.R:109-120,160-170`,
+`tests/testthat/test_convertDate.R:140-185`,
+`R/getDateErrorsAndConvertDatesInPed.R:33-45`.
 
-**Gotchas:** `NEWS.Rmd` has a pre-existing over-80 line in the Ancestry
-bullet. Re-render `NEWS.md` after any text edit, then run the guard
-test. Keep `SESSION_NOTES.md` lines at or under 280 B.
-
-### Session 842 Handoff Evaluation (by Session 843)
-
-**Score: 8/10.** Orient measurements held: both ledger frontiers were at
-HEAD, the untracked file was the one it named, and the next-step recipe
-was exact. **What helped:** the explicit ordered options (A)-(C) and the
-“do not ask about `suggested_NEWS_entry.md`” pointer. **Missing:** it
-did not say the dashboard would flag SESSION_NOTES.md as OVER on line
-length, which was the cheapest thing to fix. **Wrong:** its “47 ahead of
-origin” was not re-checked, and CI was already running on the close-out
-commit. **ROI:** high.
+**Gotchas:** `man/nprcgenekeepr-package.Rd` is stale against
+`DESCRIPTION` (roxygenise regenerates it with extra tab text); I
+reverted it, so the next roxygenise will show that diff again. Not in
+scope here; commit it deliberately in a docs pass.
 
 ### What Session 842 Did
 

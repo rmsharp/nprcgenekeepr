@@ -12703,3 +12703,23 @@ pins phrases (“male parent on the left”; “duplicate node” with “bundle
 and the measured count; no “every/all/always/each”) and failed four ways
 on a draft written without reading it. The 113 held when re-run: it
 counts distinct individuals (170 duplicate markers).
+
+#### Learning 839
+
+**When one pass enforces a rule and a later pass can disturb it, make
+the consumer read the rule’s input (here sex), not the post-disturbance
+geometry; and when measuring a layout rule, trace edges through helper
+nodes and keep duplicate nodes.** (S856-S857, 2026-10-02.) The S666 pass
+put the children on the male-left side of a qualifying couple; the
+`sweepMinSepBackstop()` call after it then pushed the anchor 1.0 right
+in a crowded row (neighbours 0.5 apart), and the Decision-1 seeding read
+the side from the children’s mean relative to the anchor, so it chose
+the opposite side: 2 of 34 one-mate couples on `rhesusPedigree`, 8 more
+in `qcPed`, 1 in the MHC pedigree. Printing `tier1X` after the
+correction loop and after the sweep found it in one run; the fix was
+five lines. My first measuring script followed only real-id edges into
+`__union_` nodes and gave 64 units, not S789’s 237 (edges can come from
+`__jog_` nodes, and `__dup_` nodes carry real couples); the mismatch
+with the earlier measurement is what exposed it. Fixing the named pairs
+also surfaced 2 more male-right couples whose mate is a duplicate node,
+recorded as their own BACKLOG item.

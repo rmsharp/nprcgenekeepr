@@ -82,8 +82,9 @@ date stops with an error naming the column and the rows. If <code>TRUE</code>,
 every date column is scanned and the converted pedigree is not returned;
 instead the result is a sorted character vector of the row numbers with an
 invalid date (a row is repeated once for each column in which it has one),
-or <code>NULL</code> when there are none. The row numbers count only the records
-that are not marked <code>"added"</code>, not the positions in the input.</p></dd>
+or <code>NULL</code> when there are none. Row numbers, here and in the error
+message, are positions in <code>ped</code> as passed in, so records marked
+<code>"added"</code> count toward the numbering wherever they sit.</p></dd>
 
 </dl></div>
     <div class="section level2">
