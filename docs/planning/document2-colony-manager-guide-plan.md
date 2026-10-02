@@ -1,4 +1,6 @@
 # Plan — Document 2: Purpose, Approach, and a Colony Manager's Guide to Practice
+
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Fully executed** (Phases A-D). The article ships as `vignettes/articles/colony-manager-guide.qmd`; the old tutorial is now `vignettes/_ColonyManagerTutorial.Rmd`. Only the "(DRAFT)" wording below is out of date. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
 (public Quarto pkgdown article)
 
 **Status:** Plan written Session 345 (DRAFT). Owner confirmed article form (new

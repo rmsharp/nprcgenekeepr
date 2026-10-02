@@ -1,5 +1,7 @@
 # Design: Duplicate-vs-unrelated-individual proximity near-misses
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Ratified S658 and implemented S660** (`11649f6ea`). The code that fix extended (`.deCollideIndividualPoints()`) is no longer in `R/`, probably replaced by the joint QP solver cutover (`13e4bf277`; that link was not confirmed). Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** DRAFT — pending owner ratification (`AskUserQuestion`, this session).
 **Session:** S658 (2026-08-30). Planning-only session (`ARCHITECTURE_WORKSTREAM.md`) — no code
 or test changes ship in this session; implementation is a separate future session, per

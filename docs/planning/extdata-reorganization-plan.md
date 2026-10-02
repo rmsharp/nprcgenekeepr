@@ -1,5 +1,7 @@
 # Plan — Reorganizing `inst/extdata/`
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Fully executed**: Phases 1-4 shipped S415-S418 (close-out `65e291a60`). `inst/extdata` now holds `examples/`, `reference/` and `ui_guidance/`. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** Plan written Session 414 (DRAFT). Owner-directed (not from `BACKLOG.md`):
 triggered by adding `Master_Genetic_metrics_2_14_15.pdf` to the folder, which prompted
 the owner to ask for reorganization suggestions, explicitly flagging that "any changes

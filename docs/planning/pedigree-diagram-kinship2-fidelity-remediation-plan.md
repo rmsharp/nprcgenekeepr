@@ -1,5 +1,7 @@
 # Pedigree Diagram: closing the remaining kinship2 visual-fidelity gaps
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Mostly executed**: Tracks 1-4 shipped S570-S574 (`17d20d3d1` among them), Track 6 shipped S578 (`f65ecbea6`); the plan's own Track 5 note records no gap found. Its "Track 6 implementation pending" text is out of date. Items in section 7b beyond Track 6 were not checked. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** DRAFT plan. No implementation code in this session (SESSION_RUNNER.md Planning
 Sessions: "the plan is the deliverable; do not start implementing it").
 **Session:** S569, 2026-08-14. **Deliverable:** this document.

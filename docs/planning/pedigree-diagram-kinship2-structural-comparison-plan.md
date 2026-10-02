@@ -1,5 +1,7 @@
 # Plan — A Programmatic Structural/Topological Pedigree-Diagram Comparison Against kinship2
 
+> **Status banner (S862, 2026-10-02; a later note, the body below is the original record).** **Fully executed**: Tracks A-D shipped S633-S636 (`d09a51e1a` to `366532426`); the comparator is `R/comparePedigreeStructure.R`. Any status line below that says otherwise is out of date; `CHANGELOG.md` is the authority.
+
 **Status:** DRAFT plan. No implementation code in this session (`SESSION_RUNNER.md` Planning
 Sessions: "the plan is the deliverable; do not start implementing it").
 **Session:** S632, 2026-08-25. **Deliverable:** this document.
