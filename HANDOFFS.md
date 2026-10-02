@@ -30,6 +30,13 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 
 ````
 ```handoff
+session: S854
+date: 2026-10-02
+status: pending
+active_task: IN PROGRESS -- convertDate(reportErrors = TRUE) row numbering decision (PED_GV owner decisions item)
+```
+
+```handoff
 session: S853
 date: 2026-10-01
 status: complete

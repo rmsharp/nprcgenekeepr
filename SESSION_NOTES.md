@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 854 Did
+**Deliverable:** settle `convertDate(reportErrors = TRUE)` row numbering for invalid dates when an added row precedes an original (IN PROGRESS)
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- claim entry in `CHANGELOG.md`; Phase 3F records the rest.
+
 ### What Session 853 Did
 **Deliverable, DONE:** applied the slice-7b docs-staleness findings (33 of 35). Docs only, so no TDD phase applies. Claim `144d140cb`; fixes
 `61577e834` (ROADMAP, CLAUDE.md, module-contract, conventions) and the close-out commit (`BACKLOG.md`, records).
