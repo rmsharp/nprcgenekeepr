@@ -60,6 +60,8 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 Losslessness is proved by [`docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
+### 2026-10-02 · [ad hoc] S857 claim: fix the male-left placement so the rule survives `sweepMinSepBackstop()` (BACKLOG male-left item; owner chose FIX) (in progress). Strict TDD.
+
 ### 2026-10-02 · [ad hoc] S856 close-out: found the cause of the 2 one-mate `rhesusPedigree` male-right pairs (correction pass sets the side, `sweepMinSepBackstop()` flips it in a crowded row); owner chose to fix the layout; BACKLOG male-left item rewritten as a READY fix with the cause. Read-only investigation.
 
 ### 2026-10-02 · [ad hoc] S856 claim: find the cause of the 2 one-mate `rhesusPedigree` pairs placed male-on-the-right (BACKLOG male-left item) (in progress). Investigation first; any layout fix is a later strict-TDD step.

@@ -98,6 +98,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## ACTIVE TASK
 
+### What Session 857 Did
+**Deliverable:** fix male-left placement for qualifying one-mate pairs squeezed by the min-separation sweep (IN PROGRESS). Strict TDD.
+**Started:** 2026-10-02
+**Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` -- claim entry in `CHANGELOG.md`; Phase 3F records the rest.
+
 ### What Session 856 Did
 **Deliverable, DONE:** found the cause of the 2 one-mate `rhesusPedigree` male-on-the-right pairs (BACKLOG male-left item). Read-only investigation; no code or tests changed, so no TDD phase applies. Claim `996cd9d40`; records in the close-out commit.
 **Result:** reproduced S789 (30 of 237 units male-right, Rectilinear; the 2 one-mate non-duplicate exceptions are `__union_28` BM40IX x MTSHHY and `__union_126` QL6GH4 x 3PD3U5). Both pass `qualifies()` and the S666 correction pass sets the right side, then
